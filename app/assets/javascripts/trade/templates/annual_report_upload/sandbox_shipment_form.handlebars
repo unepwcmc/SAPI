@@ -43,14 +43,14 @@
       </div>
 
       <div class="heading">
-        Trade Codes
+        Trade Codes And Quantity
       </div>
       <div class="inner">
         <div class="attribute-area left">
           <p>Term Code</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.termCode}}</p>
             {{view Trade.Select2
-              prompt="Please select term code value"
+              prompt="Select"
               contentBinding="controllers.terms"
               optionValuePath="content.code"
               optionLabelPath="content.code"
@@ -61,7 +61,7 @@
           <p>Unit Code</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.unitCode}}</p>
             {{view Trade.Select2
-              prompt="Please select unit code value"
+              prompt="Select"
               contentBinding="controllers.units"
               optionValuePath="content.code"
               optionLabelPath="content.code"
@@ -72,7 +72,7 @@
           <p>Purpose Code</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.purposeCode}}</p>
             {{view Trade.Select2
-              prompt="Please select purpose code value"
+              prompt="Select"
               contentBinding="controllers.purposes"
               optionValuePath="content.code"
               optionLabelPath="content.code"
@@ -83,11 +83,19 @@
           <p>Source Code</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.sourceCode}}</p>
             {{view Trade.Select2
-              prompt="Please select source code value"
+              prompt="Select"
               contentBinding="controllers.sources"
               optionValuePath="content.code"
               optionLabelPath="content.code"
               valueBinding="currentShipment.sourceCode"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Quantity</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.quantity}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type quantity value"
+              valueBinding="currentShipment.quantity"
             }}
         </div>
       </div>
@@ -121,7 +129,7 @@
       </div>
 
       <div class="heading">
-        Permit & Quantity
+        Permit
       </div>
       <div class="inner">
         <div class="attribute-area left">
@@ -148,14 +156,6 @@
               valueBinding="currentShipment.originPermit"
             }}
         </div>
-        <div class="attribute-area left">
-          <p>Quantity</p>
-          <p class="small">Current value: <span class="blue">{{currentShipment.quantity}}</span></p>
-            {{view Ember.TextField
-              prompt="Please type quantity value"
-              valueBinding="currentShipment.quantity"
-            }}
-        </div>
       </div>
 
     </fieldset>
@@ -164,7 +164,7 @@
 <div class="modal-footer">
   {{confirm-button title="Update" action="updateShipment" shipmentBinding="currentShipment"
   }}
-  <button {{action 'cancelShipmentEdit' currentShipment }} class="pull-right btn btn-primary">
+  <button {{action 'cancelShipmentEdit' currentShipment }} class="pull-right btn">
     Cancel
   </button>
 </div>

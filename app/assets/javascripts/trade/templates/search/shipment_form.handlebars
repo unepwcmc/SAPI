@@ -13,7 +13,7 @@
   <form action="#">
     <fieldset>
       <div class="heading">
-        Name, Appendix and Year
+        Name, Appendix And Year
       </div>
       <div class="inner">
 
@@ -66,13 +66,13 @@
       </div>
 
       <div class="heading">
-        Trade Codes
+        Trade Codes And Quantity
       </div>
       <div class="inner">
         <div class="attribute-area left autocomplete">
           <p>Term Code <span class="error">{{currentShipment.errors.termId}}</span></p>
           {{view Trade.Select2
-              prompt="Please select term code value"
+              prompt="Select"
               contentBinding="controllers.terms"
               optionValuePath="content.id"
               optionLabelPath="content.code"
@@ -82,7 +82,7 @@
         <div class="attribute-area left autocomplete">
           <p>Unit Code <span class="error">{{currentShipment.errors.unitId}}</span></p>
           {{view Trade.Select2
-            prompt="Please select unit code value"
+            prompt="Select"
             contentBinding="controllers.units"
             optionValuePath="content.id"
             optionLabelPath="content.code"
@@ -92,7 +92,7 @@
         <div class="attribute-area left">
           <p>Purpose Code <span class="error">{{currentShipment.errors.purposeId}}</span></p>
             {{view Trade.Select2
-              prompt="Please select purpose code value"
+              prompt="Select"
               contentBinding="controllers.purposes"
               optionValuePath="content.id"
               optionLabelPath="content.code"
@@ -102,11 +102,18 @@
         <div class="attribute-area left">
           <p>Source Code <span class="error">{{currentShipment.errors.sourceId}}</span></p>
             {{view Trade.Select2
-              prompt="Please select source code value"
+              prompt="Select"
               contentBinding="controllers.sources"
               optionValuePath="content.id"
               optionLabelPath="content.code"
               selectionBinding="currentShipment.source"
+            }}
+        </div>
+        <div class="attribute-area left">
+          <p>Quantity <span class="error">{{currentShipment.errors.quantity}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type quantity value"
+              valueBinding="currentShipment.quantity"
             }}
         </div>
       </div>
@@ -156,7 +163,7 @@
       </div>
 
       <div class="heading">
-        Permit & Quantity
+        Permit
       </div>
       <div class="inner">
         <div class="attribute-area left">
@@ -180,13 +187,6 @@
               valueBinding="currentShipment.originPermitNumber"
             }}
         </div>
-        <div class="attribute-area left">
-          <p>Quantity <span class="error">{{currentShipment.errors.quantity}}</span></p>
-            {{view Ember.TextField
-              prompt="Please type quantity value"
-              valueBinding="currentShipment.quantity"
-            }}
-        </div>
       </div>
 
     </fieldset>
@@ -197,7 +197,7 @@
     needsConfirmationBinding="currentShipment.warningsConfirmation"
     ignoreWarningBinding="currentShipment.ignoreWarnings"
   }}
-  <button {{action 'cancelShipment'}} class="pull-right btn btn-primary">
+  <button {{action 'cancelShipment'}} class="pull-right btn">
     Cancel
   </button>
   {{#if currentShipment.warningsPresent}}
