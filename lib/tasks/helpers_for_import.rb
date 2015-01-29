@@ -375,18 +375,22 @@ def db_columns_from_csv_headers(path_to_file, table_name, include_data_type = tr
 end
 
 def create_table_from_csv_headers(path_to_file, table_name)
-    db_columns = db_columns_from_csv_headers(path_to_file, table_name)
-    begin
-      puts "Creating tmp table"
-      ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
-      ActiveRecord::Base.connection.execute "CREATE TABLE #{table_name} (#{db_columns.join(', ')})"
-      puts "Table created"
-    rescue Exception => e
-      puts e.inspect
-      puts "Tmp already exists removing data from tmp table before starting the import"
-      ActiveRecord::Base.connection.execute "DELETE FROM #{table_name};"
-      puts "Data removed"
-    end
+  db_columns = db_columns_from_csv_headers(path_to_file, table_name)
+  create_table_from_column_array(table_name, db_columns)
+end
+
+def create_table_from_column_array(table_name, db_columns)
+  begin
+    puts "Creating tmp table"
+    ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
+    ActiveRecord::Base.connection.execute "CREATE TABLE #{table_name} (#{db_columns.join(', ')})"
+    puts "Table created"
+  rescue Exception => e
+    puts e.inspect
+    puts "Tmp already exists removing data from tmp table before starting the import"
+    ActiveRecord::Base.connection.execute "DELETE FROM #{table_name};"
+    puts "Data removed"
+  end
 end
 
 def drop_table(table_name)
