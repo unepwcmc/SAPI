@@ -48,6 +48,9 @@ Trade.ShipmentBatchUpdate = Ember.Object.extend
   reset: ->
     @get('columns').forEach( (c) =>
       @set(c, null)
+      if @get('nullableColumns').contains(c)
+        blankPropertyName = c + 'Blank'
+        @set(blankPropertyName, false)
     )
 
   export: ->
