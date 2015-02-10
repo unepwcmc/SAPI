@@ -53,16 +53,16 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def object_and_children
-    [object.id]+object.children.select(:id).map(&:id)
+    [object.id] + object.children.pluck(:id)
   end
 
-  def children_and_ancestors
-    ids = object.children.select(:id).map(&:id)+
-            [object.data['kingdom_id'], object.data['phylum_id'],
-              object.data['order_id'], object.data['class_id'],
-              object.data['family_id'], object.data['subfamily_id'],
-              object.data['genus_id']]
-    ids.reject{|r| r.nil?} #remove nils
+  def ancestors
+    [
+      object.data['kingdom_id'], object.data['phylum_id'],
+      object.data['order_id'], object.data['class_id'],
+      object.data['family_id'], object.data['subfamily_id'],
+      object.data['genus_id']
+    ].compact
   end
 
   def common_names

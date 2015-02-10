@@ -12,12 +12,12 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def quotas
     Quota.from('api_cites_quotas_view trade_restrictions').
       where("
-            trade_restrictions.taxon_concept_id = ?
+            trade_restrictions.taxon_concept_id IN (?)
             OR (
               (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
               AND matching_taxon_concept_ids @> ARRAY[?]::INT[]
             )
-      ", object.id, children_and_ancestors, object.id).
+      ", object_and_children, ancestors, object.id).
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.url,
@@ -52,12 +52,12 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def cites_suspensions
     CitesSuspension.from('api_cites_suspensions_view trade_restrictions').
       where("
-            trade_restrictions.taxon_concept_id = ?
+            trade_restrictions.taxon_concept_id IN (?)
             OR (
               (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
               AND matching_taxon_concept_ids @> ARRAY[?]::INT[]
             )
-      ", object.id, children_and_ancestors, object.id).
+      ", object_and_children, ancestors, object.id).
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.start_date,
@@ -90,13 +90,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def eu_decisions
     EuDecision.from('api_eu_decisions_view eu_decisions').
       where("
-            eu_decisions.taxon_concept_id = ?
+            eu_decisions.taxon_concept_id IN (?)
             OR (
               eu_decisions.taxon_concept_id IN (?)
               AND eu_decisions.geo_entity_id IN
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
-      ", object.id, children_and_ancestors, object.id).
+      ", object_and_children, ancestors, object.id).
       select(<<-SQL
               eu_decisions.notes,
               eu_decisions.start_date,
