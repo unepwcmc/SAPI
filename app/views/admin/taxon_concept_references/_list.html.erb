@@ -25,7 +25,7 @@
             </a>
           </td>
           <td>
-            <%= true_false_icon(taxon_reference.taxon_concept_id != @taxon_concept.id) %>
+            <%= true_false_icon(taxon_reference['original_taxon_concept_id'] != @taxon_concept.id) %>
             <% unless taxon_reference.taxon_concept_id == @taxon_concept.id %>
               (<%= link_to taxon_reference.taxon_concept.full_name,
                 admin_taxon_concept_taxon_concept_references_url(taxon_reference.taxon_concept) %>)
