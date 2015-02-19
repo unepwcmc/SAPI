@@ -28,7 +28,7 @@ describe Species::TaxonConceptPrefixMatcher do
           :ranks => []
         })
       }
-      specify{ subject.results.size.should == 1 }
+      specify{ subject.results.size.should == 2 }
     end
     context "when match on common name" do
       subject{
