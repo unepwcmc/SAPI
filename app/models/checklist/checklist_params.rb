@@ -12,7 +12,7 @@ class Checklist::ChecklistParams < Hash
         params[:output_layout] ? params[:output_layout].to_sym : nil,
       :level_of_listing => params[:level_of_listing] && params[:level_of_listing] != '0',
       #filtering options
-      :scientific_name => params[:scientific_name] ? params[:scientific_name] : nil,
+      :scientific_name => params[:scientific_name] ? params[:scientific_name].upcase : nil,
       :countries => params[:country_ids] ? params[:country_ids].sort : [],
       :cites_regions =>
         params[:cites_region_ids] ? params[:cites_region_ids].sort : [],
