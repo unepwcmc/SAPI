@@ -17,15 +17,21 @@
       {{#each taxonConcept in taxon_concepts}}
         <h2>
           {{#link-to 'taxonConcept.legal' taxonConcept queryParams=false}}
-            {{#highlight taxonConcept.searchResultDisplay query=controllers.search.taxonConceptQuery}}
+            {{#highlight taxonConcept.fullName query=controllers.search.taxonConceptQueryForDisplay}}
               {{unbound this}}
             {{/highlight}}
+            <span class="author-year">{{unbound taxonConcept.authorYear}}</span>
+            <span class="synonyms">
+            {{#highlight taxonConcept.matchingNamesForDisplay query=controllers.search.taxonConceptQueryForDisplay}}
+              {{unbound this}}
+            {{/highlight}}
+            </span>
           {{/link-to}}
         </h2>
       {{/each}}
     {{else}}
       <div class="no-results">
-        <p class="no-results-title">Your search for <u>{{unbound controllers.search.taxonConceptQuery}}</u> returned no results.</p>
+        <p class="no-results-title">Your search for <u>{{unbound controllers.search.taxonConceptQueryForDisplay}}</u> returned no results.</p>
         <p class="no-results-subtitle"> Try refining your search or selecting a taxa from the drop-down menu.</p>
         <p>Please note that this database contains species that are listed in the Appendices to CITES and CMS, as well as the Annexes to the EU Wildlife Trade Regulations; it is not a comprehensive source of all species.</p>
       </div>
