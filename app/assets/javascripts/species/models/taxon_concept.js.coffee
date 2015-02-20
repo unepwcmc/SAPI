@@ -30,12 +30,12 @@ Species.TaxonConcept = DS.Model.extend
   nomenclatureNoteFr: DS.attr("string")
   nomenclatureNoteEs: DS.attr("string")
 
-  searchResultDisplay: ( ->
-    baseDisplay = @get('fullName') + ' <span class="author-year">' + @get('authorYear') + '</span>'
+  matchingNamesForDisplay: ( ->
     if @get('matchingNames') != undefined && @get('matchingNames').length > 0
-      baseDisplay = baseDisplay + ' <span class="synonyms">(' + @get('matchingNames').join(', ') + ')</span>'
-    baseDisplay
-  ).property('fullName', 'matchingNames', 'authorYear')
+      '(' + @get('matchingNames').join(', ') + ')'
+    else
+      ''
+  ).property('matchingNames')
 
   currentSubspeciesTooltipText: ( ->
     unless @get('subspecies').length > 0 then return no
