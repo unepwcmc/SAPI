@@ -65,13 +65,7 @@ private
       @query = @query.
         by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => true}).
         select(
-          ActiveRecord::Base.send(:sanitize_sql_array, [
-            "taxon_concepts_mview.*,
-              ARRAY(
-                SELECT * FROM UNNEST(synonyms_ary) name WHERE name ILIKE :sci_name_prefix
-              ) AS synonyms_ary",
-            :sci_name_prefix => "#{@scientific_name}%"
-          ])
+          "taxon_concepts_mview.*, matching_names.matched_names_ary AS synonyms_ary"
         )
     end
     @query = @query
