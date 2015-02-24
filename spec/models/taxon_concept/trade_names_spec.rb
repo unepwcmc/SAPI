@@ -103,8 +103,6 @@ describe TaxonConcept do
         end
         # should not modify a trade_name's full name overnight
         specify { @trade_name.reload.full_name.should == 'Lolcatus lolus furiatus' }
-        # should not list trade_name as subspecies of accepted species
-        specify { MTaxonConcept.find(tc.id).subspecies_not_listed_ary.should_not include(@trade_name.full_name) }
       end
     end
   end
