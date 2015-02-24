@@ -107,7 +107,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
     taxon_concepts.dependents_updated_at,
     common_names.*,
     synonyms.*,
-    subspecies.subspecies_not_listed_ary,
     countries_ids_ary,
     all_distribution_iso_codes_ary,
     -- BEGIN remove once checklist translation has been deployed
@@ -200,45 +199,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
       ON synonym_tc.id = taxon_relationships.other_taxon_concept_id
       GROUP BY taxon_relationships.taxon_concept_id
     ) synonyms ON taxon_concepts.id = synonyms.taxon_concept_id_syn
-    LEFT JOIN (
-      SELECT taxon_concept_id_sub, ARRAY_AGG(subspecies_ary) AS subspecies_not_listed_ary
-      FROM
-      (
-      SELECT taxon_concepts.parent_id AS taxon_concept_id_sub,
-      taxon_concepts.full_name AS subspecies_ary
-      FROM taxon_concepts
-      JOIN ranks ON ranks.id = taxon_concepts.rank_id
-      AND ranks.name = 'VARIETY'
-      WHERE name_status NOT IN ('S', 'T', 'N')
-      GROUP BY taxon_concept_id_sub, taxon_concepts.full_name
-      UNION
-      (
-      SELECT taxon_concepts.parent_id AS taxon_concept_id_sub,
-      taxon_concepts.full_name AS subspecies_ary
-      FROM taxon_concepts
-      JOIN ranks ON ranks.id = taxon_concepts.rank_id
-      AND ranks.name = 'SUBSPECIES'
-      WHERE name_status NOT IN ('S', 'T', 'N')
-      GROUP BY taxon_concept_id_sub, taxon_concepts.full_name
-      EXCEPT
-      SELECT taxon_concepts.parent_id AS taxon_concept_id_sub,
-      taxon_concepts.full_name AS subspecies_ary
-      FROM taxon_concepts
-      JOIN ranks ON ranks.id = taxon_concepts.rank_id
-      AND ranks.name = 'SUBSPECIES'
-      JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
-      WHERE name_status NOT IN ('S', 'T', 'N')
-      AND CASE
-        WHEN taxonomies.name = 'CMS'
-        THEN (listing->'cms_historically_listed')::BOOLEAN
-        ELSE (listing->'cites_historically_listed')::BOOLEAN
-        OR (listing->'eu_historically_listed')::BOOLEAN
-      END
-      GROUP BY taxon_concept_id_sub, taxon_concepts.full_name
-      )
-      ) AS subquery
-      GROUP by taxon_concept_id_sub
-    ) subspecies ON taxon_concepts.id = subspecies.taxon_concept_id_sub
     LEFT JOIN (
       SELECT distributions.taxon_concept_id AS taxon_concept_id_cnt,
       ARRAY_AGG_NOTNULL(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary,
