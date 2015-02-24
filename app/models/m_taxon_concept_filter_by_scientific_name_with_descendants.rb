@@ -9,13 +9,18 @@ class MTaxonConceptFilterByScientificNameWithDescendants
   end
 
   def relation
+    types_of_match = ['SELF']
+    types_of_match << 'SYNONYM' if @match_synonyms
+    types_of_match << 'COMMON_NAME' if @match_common_names
+    types_of_match << 'SUBSPECIES' if @match_subspecies
     subquery = MAutoCompleteTaxonConcept.select(
       'id, ARRAY_AGG_NOTNULL(matched_name) AS matched_names_ary'
     ).
     where(
       ActiveRecord::Base.send(:sanitize_sql_array, [
-        "name_for_matching LIKE :sci_name_prefix",
-        :sci_name_prefix => "#{@scientific_name}%"
+        "name_for_matching LIKE :sci_name_prefix AND type_of_match IN (:types_of_match)",
+        sci_name_prefix: "#{@scientific_name}%",
+        types_of_match: types_of_match
       ])
     ).group(:id)
 
@@ -35,16 +40,6 @@ class MTaxonConceptFilterByScientificNameWithDescendants
     SQL
 
     conditions << cond
-
-    if @match_subspecies
-      cond = <<-SQL
-        EXISTS (
-          SELECT * FROM UNNEST(subspecies_not_listed_ary) name 
-          WHERE UPPER(name) LIKE :sci_name_prefix
-        )
-      SQL
-      conditions << cond
-    end
 
     @relation.where(
       conditions.join("\nOR "),
