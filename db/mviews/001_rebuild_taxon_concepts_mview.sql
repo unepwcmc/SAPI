@@ -347,16 +347,16 @@ CREATE OR REPLACE FUNCTION rebuild_taxon_concepts_mview() RETURNS void
 
     --this one used for Species+ autocomplete (both main and higher taxa in downloads)
     CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_species_plus_ac);
+    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_species_plus_ac);
     --this one used for Checklist autocomplete
     CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_checklist_ac);
+    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_checklist_ac);
     --this one used for Trade autocomplete
     CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_ac);
+    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_ac);
     --this one used for Trade internal autocomplete
     CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, rank_name, show_in_trade_internal_ac);
+    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_internal_ac);
 
     RAISE INFO 'Swapping auto complete taxon concepts materialized view';
     DROP table IF EXISTS auto_complete_taxon_concepts_mview CASCADE;
