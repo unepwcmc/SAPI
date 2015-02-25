@@ -113,7 +113,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def import_permits_ids
-    parse_pg_array(read_attribute(:import_permits_ids))
+    parse_pg_array(read_attribute(:import_permits_ids) || '')
   end
 
   def import_permits_ids=(ary)
@@ -121,7 +121,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def export_permits_ids
-    parse_pg_array(read_attribute(:export_permits_ids))
+    parse_pg_array(read_attribute(:export_permits_ids) || '')
   end
 
   def export_permits_ids=(ary)
@@ -129,11 +129,17 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def origin_permits_ids
-    parse_pg_array(read_attribute(:origin_permits_ids))
+    parse_pg_array(read_attribute(:origin_permits_ids) || '')
   end
 
   def origin_permits_ids=(ary)
     write_attribute(:origin_permits_ids, "{#{ary && ary.join(',')}}")
+  end
+
+  def permits_ids
+    (
+      import_permits_ids + export_permits_ids + origin_permits_ids
+    ).uniq.compact
   end
 
   private
