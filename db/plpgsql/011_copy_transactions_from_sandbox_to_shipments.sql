@@ -131,12 +131,12 @@ BEGIN
       SQUISH(regexp_split_to_table(origin_permit, ''[:;,]'')) AS permit
       FROM '|| table_name || '
     ), permits_to_be_inserted (number) AS (
-      SELECT DISTINCT permit FROM split_permits WHERE permit IS NOT NULL
+      SELECT DISTINCT UPPER(permit) FROM split_permits WHERE permit IS NOT NULL
       EXCEPT
-      SELECT number FROM trade_permits
+      SELECT UPPER(number) FROM trade_permits
     )
     INSERT INTO trade_permits(number, created_at, updated_at)
-    SELECT number, current_timestamp, current_timestamp
+    SELECT UPPER(number), current_timestamp, current_timestamp
     FROM permits_to_be_inserted';
 
   EXECUTE sql;
@@ -242,7 +242,7 @@ BEGIN
       INNER JOIN split_permits
         ON split_permits.id = shipments_for_submit.sandbox_id
       INNER JOIN trade_permits
-        ON trade_permits.number = split_permits.permit
+        ON UPPER(trade_permits.number) = UPPER(split_permits.permit)
     ), agg_shipment_permits AS (
       SELECT trade_shipment_id,
       ARRAY_AGG(trade_permit_id) AS permits_ids,
@@ -251,7 +251,7 @@ BEGIN
       GROUP BY trade_shipment_id
     )
     UPDATE trade_shipments
-    SET ' || permit_type || '_permit_number = sp.permit_number,
+    SET ' || permit_type || '_permit_number = UPPER(sp.permit_number),
     ' || permit_type || '_permits_ids = sp.permits_ids
     FROM agg_shipment_permits sp
     WHERE sp.trade_shipment_id = trade_shipments.id;
