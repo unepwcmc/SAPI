@@ -57,13 +57,13 @@ describe Trade::Shipment do
         )
       end
       context "when export permit" do
-        specify { @shipment.export_permit_number.should == 'a' }
+        specify { @shipment.export_permit_number.should == 'A' }
       end
       context "when import permit" do
-        specify { @shipment.import_permit_number.should == 'b' }
+        specify { @shipment.import_permit_number.should == 'B' }
       end
       context "when origin permit" do
-        specify { @shipment.origin_permit_number.should == 'c' }
+        specify { @shipment.origin_permit_number.should == 'C' }
       end
     end
   end
