@@ -1,1 +1,0 @@
-DROP FUNCTION IF EXISTS rebuild_permit_numbers();
