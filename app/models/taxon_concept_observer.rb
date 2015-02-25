@@ -71,11 +71,11 @@ class TaxonConceptObserver < ActiveRecord::Observer
   end
 
   def after_save(taxon_concept)
-    DownloadsCache.clear_taxon_concepts
+    DownloadsCacheCleanupWorker.perform_async(:taxon_concepts)
   end
 
   def after_destroy(taxon_concept)
-    DownloadsCache.clear_taxon_concepts
+    DownloadsCacheCleanupWorker.perform_async(:taxon_concepts)
   end
 
 end
