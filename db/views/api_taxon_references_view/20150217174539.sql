@@ -29,6 +29,7 @@ WITH RECURSIVE all_tc_refs AS (
 SELECT
   all_tc_refs.id,
   all_tc_refs.taxon_concept_id,
+  all_tc_refs.original_taxon_concept_id,
   all_tc_refs.reference_id,
   all_tc_refs.is_standard,
   refs.citation
