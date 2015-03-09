@@ -14,7 +14,7 @@
   <% collection.each do |opinion| -%>
     <tr class="<%= if opinion.is_current? then "current_listing" end %>">
       <td><%= opinion.year %></td>
-      <td><%= opinion.start_event.name %></td>
+      <td><%= opinion.start_event.try(:name) %></td>
       <td><%= opinion.geo_entity && opinion.geo_entity.name_en %></td>
       <td>
         <%= opinion.eu_decision_type.name %>
