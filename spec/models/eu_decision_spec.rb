@@ -28,7 +28,7 @@
 
 require 'spec_helper'
 
-describe EuDecision do
+describe EuDecision, sidekiq: :inline do
   before do
     @taxon_concept = create(:taxon_concept)
   end

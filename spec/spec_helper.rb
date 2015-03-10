@@ -106,7 +106,7 @@ end
 
 def build_tc_attributes(*args)
   build_attributes(*args).delete_if do |k, v|
-    %w(data listing notes).include? k
+    %w(data listing notes dependents_updated_at dependents_updated_by_id).include? k
   end
 end
 

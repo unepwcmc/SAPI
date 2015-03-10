@@ -1,7 +1,7 @@
 class ChangeObserver < ActiveRecord::Observer
   observe :taxon_common, :distribution, :eu_decision,
     :listing_change, :taxon_concept_reference,
-    :taxon_instrument, :taxon_relationship, :trade_restriction
+    :taxon_instrument, :taxon_relationship, :cites_suspension, :quota
 
   def after_save(model)
     clear_cache model
@@ -28,11 +28,12 @@ class ChangeObserver < ActiveRecord::Observer
   protected
 
   def clear_cache model
-    DownloadsCacheCleanupWorker.perform_async(model.class.to_s.tableize)
+    DownloadsCacheCleanupWorker.perform_async(model.class.to_s.tableize.to_sym)
   end
 
   def bump_dependents_timestamp(taxon_concept, updated_by_id)
-    TaxonConcept.update_all(
+    return unless taxon_concept
+    TaxonConcept.where(id: taxon_concept.id).update_all(
       dependents_updated_at: Time.now,
       dependents_updated_by_id: updated_by_id
     )

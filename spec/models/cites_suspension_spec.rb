@@ -31,7 +31,7 @@
 
 require 'spec_helper'
 
-describe CitesSuspension do
+describe CitesSuspension, sidekiq: :inline do
   let(:tanzania){
     create(
       :geo_entity,
@@ -76,7 +76,7 @@ describe CitesSuspension do
           )
         }
         specify{
-          expect{subject.save}.to change{@taxon_concept.dependents_updated_at}
+          expect{subject.save}.to change{@taxon_concept.reload.dependents_updated_at}
         }
       end
       context "when global suspension" do
@@ -104,7 +104,7 @@ describe CitesSuspension do
         }
         specify{
           expect{subject.update_attribute(:taxon_concept_id, @another_taxon_concept.id)}.
-            to change{@taxon_concept.dependents_updated_at}
+            to change{@taxon_concept.reload.dependents_updated_at}
         }
       end
       context "when global suspension" do
@@ -136,7 +136,7 @@ describe CitesSuspension do
           )
         }
         specify{
-          expect{subject.destroy}.to change{@taxon_concept.dependents_updated_at}
+          expect{subject.destroy}.to change{@taxon_concept.reload.dependents_updated_at}
         }
       end
       context "when global suspension" do
