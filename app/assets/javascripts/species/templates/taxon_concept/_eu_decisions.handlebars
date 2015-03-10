@@ -9,13 +9,17 @@
         <th class="col2">COUNTRY</th>
         <th class="col2">EU DECISIONS</th>
         <th class="col3">NOTES</th>
-        <th class="col3">DOCUMENT</th>       
+        <th class="col3">DOCUMENT</th>
       </tr>
     </thead>
     <tbody {{bindAttr class="controller.euDecisionsExpanded:historic_expanded"}}>
       {{#each decision in currentEuDecisions}}
         <tr class="current">
-          <td>{{decision.start_date}}</td>
+          <td>{{decision.start_date}}
+            {{#if decision.original_start_date}}
+              <br>(valid since {{decision.original_start_date}})
+            {{/if}}
+          </td>
           <td>{{decision.geo_entity.name}}</td>
           <td>
               {{#if decision.eu_decision_type.description}}
@@ -43,9 +47,11 @@
             {{{decision.nomenclature_note_en}}}
           </td>
           <td class="last">
-            <a class="legal-links" href="{{unbound decision.start_event.url}}">
-              {{decision.start_event.name}}
-            </a>
+            {{#if decision.start_event.url}}
+              <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                {{decision.start_event.name}}
+              </a>
+            {{/if}}
           </td>
         </tr>
       {{else}}
@@ -98,9 +104,11 @@
                 {{{decision.nomenclature_note_en}}}
               </td>
               <td class="last">
-                <a class="legal-links" href="{{unbound decision.start_event.url}}">
-                  {{decision.start_event.name}}
-                </a>
+                {{#if decision.start_event.url}}
+                  <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                    {{decision.start_event.name}}
+                  </a>
+                {{/if}}
               </td>
             </tr>
           {{/each}}

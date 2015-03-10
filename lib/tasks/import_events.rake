@@ -34,6 +34,12 @@ namespace :import do
     puts "There are now #{Event.count} events in the database"
   end
 
+  task :ec_srg  => [:environment] do
+    file = 'lib/files/SRG_meetings_and_SoCs_for_IT_CSV.csv'
+    copy_data_into_table(file, 'events', %w(name effective_at url created_at updated_at type))
+    puts "There are now #{EcSrg.count} EcSrg events in the database"
+  end
+
   task :eu_annex_regulations_end_dates => [:environment] do
     TMP_TABLE = "eu_annex_regulations_end_dates_import"
     file = "lib/files/eu_annex_regulations_end_dates_utf8.csv"

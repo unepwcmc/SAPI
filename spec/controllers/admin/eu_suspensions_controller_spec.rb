@@ -6,7 +6,7 @@ describe Admin::EuSuspensionsController do
   before do
     @taxon_concept = create(:taxon_concept)
     @designation = create(:designation, :name => "EU", :taxonomy => @taxon_concept.taxonomy)
-    @eu_suspension_regulation = create(:eu_suspension_regulation, :designation_id => @designation.id)
+    @eu_suspension_regulation = create(:eu_suspension_regulation, :designation_id => @designation.id, :is_current => true)
   end
 
   describe "GET index" do

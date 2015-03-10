@@ -31,9 +31,12 @@ private
     {
       :year => {},
       :appendix => {},
-      :family => {},
       :taxon => {},
       :taxon_concept_id => {:internal => true},
+      :class_name => {},
+      :order_name => {},
+      :family_name => {},
+      :genus_name => {},
       :importer => {},
       :exporter => {},
       :country_of_origin => {},

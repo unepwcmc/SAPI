@@ -31,6 +31,7 @@ class EuSuspensionRegulation < Event
 
   validate :designation_is_eu
   validates :effective_at, :presence => true
+  validate :end_date_presence
 
   def name_and_date
     "#{self.name} (Effective from: #{self.effective_at.strftime("%d/%m/%Y")})"
@@ -42,6 +43,12 @@ class EuSuspensionRegulation < Event
     {
       'EU suspensions' => eu_suspensions
     }
+  end
+
+  def end_date_presence
+    unless is_current? ^ end_date.present?
+      errors.add(:base, "Is current and End date are mutually exclusive")
+    end
   end
 
 end

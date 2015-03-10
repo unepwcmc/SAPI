@@ -67,7 +67,7 @@ class Checklist::DownloadsController < ApplicationController
       "csv" => Checklist::Csv,
       "json" => Checklist::Json
     }
-    format_mapping[params[:format]]
+    format_mapping[params[:format]] || Checklist::Pdf
   end
 
   def send_download

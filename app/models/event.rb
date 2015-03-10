@@ -25,7 +25,7 @@
 class Event < ActiveRecord::Base
   track_who_does_it
   attr_accessible :name, :designation_id, :description, :extended_description,
-    :url, :multilingual_url, :effective_at, :is_current,
+    :url, :multilingual_url, :effective_at, :is_current, :end_date,
     :created_by_id, :updated_by_id
   attr_reader :effective_at_formatted
 

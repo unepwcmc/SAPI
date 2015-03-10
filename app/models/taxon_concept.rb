@@ -156,6 +156,12 @@ class TaxonConcept < ActiveRecord::Base
   validates :name_status, :presence => true
   validate :parent_in_same_taxonomy, :if => lambda { |tc| tc.parent }
   validate :parent_at_immediately_higher_rank, :if => lambda { |tc| tc.parent }
+  validate :parent_name_compatible, :if => lambda { |tc|
+    tc.parent && tc.rank && tc.full_name && (
+      ['A', 'N'].include?(tc.name_status) || tc.name_status.blank?
+    )
+  }
+  validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent }
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
   validates :full_name, :uniqueness => { :scope => [:taxonomy_id, :author_year] }
@@ -291,6 +297,19 @@ class TaxonConcept < ActiveRecord::Base
     standard_taxon_concept_references.keep_if{ |ref| !ref_ids.include? ref.id }
   end
 
+  def expected_full_name(parent)
+    if self.rank &&
+      Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(self.rank.name)
+      parent.full_name + if self.rank.name == Rank::VARIETY
+        ' var. '
+      else
+        ' '
+      end + self.taxon_name.try(:scientific_name).try(:downcase)
+    else
+      self.full_name
+    end
+  end
+
   private
 
   def dependent_objects_map
@@ -322,6 +341,22 @@ class TaxonConcept < ActiveRecord::Base
   def taxonomy_can_be_changed
     if !can_be_deleted?
       errors.add(:taxonomy_id, "dependent objects present, unable to change taxonomy")
+      return false
+    end
+  end
+
+  def parent_name_compatible
+    self.full_name = TaxonConcept.sanitize_full_name(full_name)
+    if Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(rank.name) &&
+      full_name != expected_full_name(parent)
+      errors.add(:parent_id, "must have compatible name if rank is species, subspecies or variety")
+      return false
+    end
+  end
+
+  def parent_is_an_accepted_name
+    unless ['A', 'N'].include?(parent.name_status)
+      errors.add(:parent_id, "must be an accepted name")
       return false
     end
   end

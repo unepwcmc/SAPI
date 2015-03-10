@@ -32,7 +32,7 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
   ).property('taxonConceptQuery')
 
   geoEntityQueryObserver: ( ->
-    re = new RegExp("^"+@get('geoEntityQuery'),"i")
+    re = new RegExp("(^|\\(| )"+@get('geoEntityQuery'),"i")
 
     @set 'autoCompleteCountries', @get('controllers.geoEntities.countries')
     .filter (item, index, enumerable) =>

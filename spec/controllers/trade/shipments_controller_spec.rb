@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Trade::ShipmentsController do
+describe Trade::ShipmentsController, sidekiq: :inline do
   login_admin
 
   include_context 'Shipments'
@@ -39,6 +39,13 @@ describe Trade::ShipmentsController do
           taxon_concept_id: @animal_species.id
         }
       @shipment1.reload.taxon_concept_id.should == @animal_species.id
+    end
+    it "should delete orphaned permits" do
+      put :update, id: @shipment1.id,
+        shipment: {
+          import_permit_number: 'YYY'
+        }
+      Trade::Permit.find_by_id(@import_permit.id).should be_nil
     end
   end
 
@@ -129,6 +136,24 @@ describe Trade::ShipmentsController do
       @shipment1.reload.taxon_concept_id.should == @animal_species.id
     end
 
+    it "should set permit number to blank and delete orphaned permits" do
+      post :update_batch, {
+        filters: { # shipment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          year: 2013,
+          exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+          importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+        },
+        updates: {
+          import_permit_number: nil
+        }
+      }
+      @shipment1.reload.import_permits_ids.should be_blank
+      @shipment1.import_permit_number.should be_nil
+      Trade::Permit.find_by_id(@import_permit.id).should be_nil
+    end
+
   end
 
   describe "POST destroy_batch" do
@@ -194,7 +219,19 @@ describe Trade::ShipmentsController do
       post :destroy_batch, sources_ids: [@source_wild.id.to_s],
         reporter_type: 'I', source_blank: "true"
       Trade::Shipment.count.should == 2
+    end
 
+    it "should delete orphaned permits" do
+      post :destroy_batch, {
+        # shipment1
+        time_range_start: @shipment1.year,
+        time_range_end: @shipment2.year,
+        year: 2013,
+        exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
+        importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+      }
+      Trade::Shipment.find_by_id(@shipment1.id).should be_nil
+      Trade::Permit.find_by_id(@import_permit.id).should be_nil
     end
   end
 
@@ -203,6 +240,10 @@ describe Trade::ShipmentsController do
     it "should delete 1 shipment" do
       delete :destroy, id: @shipment1.id
       Trade::Shipment.where(id: @shipment1.id).should be_empty
+    end
+    it "should delete orphaned permits" do
+      delete :destroy, id: @shipment1.id
+      Trade::Permit.find_by_id(@import_permit.id).should be_nil
     end
   end
 end

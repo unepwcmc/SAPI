@@ -85,7 +85,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     sandbox.destroy
 
     #clear downloads cache
-    DownloadsCache.clear_shipments
+    DownloadsCacheCleanupWorker.perform_async(:shipments)
 
     #flag as submitted
     update_attribute(:is_done, true)

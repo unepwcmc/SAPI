@@ -1,6 +1,8 @@
 <thead>
   <th>Name</th>
   <th>Effective from</th>
+  <th>URL</th>
+  <th>No of listing changes</th>
   <th>Documents</th>
   <th width="10%">Actions</th>
 </thead>
@@ -16,6 +18,21 @@
         </a>
       </td>
       <td><%= ec_srg.effective_at_formatted %></td>
+      <td>
+        <%= link_to_unless(
+          ec_srg.url.blank?,
+          '<i class="icon-share" title="Go to URL"></i>'.html_safe,
+          ec_srg.url
+        ) { '' } %>
+        <%= link_to_unless(
+          ec_srg.multilingual_url.blank?,
+          '<i class="icon-share" title="Go to multilingual URL"></i>'.html_safe,
+          ec_srg.multilingual_url
+        ) { '' } %>
+      </td>
+      <td>
+        <%= ec_srg.eu_opinions.count %>
+      </td>
       <td>
         <%= link_to ec_srg.documents.count, admin_event_documents_path(ec_srg) %>
       </td>

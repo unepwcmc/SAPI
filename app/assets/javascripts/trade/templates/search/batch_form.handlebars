@@ -65,7 +65,7 @@
         <div class="attribute-area left autocomplete">
           <p>Term Code</p>
           {{view Trade.Select2
-              prompt="Please select term code value"
+              prompt="Select"
               contentBinding="controllers.terms"
               optionValuePath="content.id"
               optionLabelPath="content.code"
@@ -75,32 +75,44 @@
         <div class="attribute-area left autocomplete">
           <p>Unit Code</p>
           {{view Trade.Select2
-            prompt="Please select unit code value"
+            prompt="Select"
             contentBinding="controllers.units"
             optionValuePath="content.id"
             optionLabelPath="content.code"
             selectionBinding="currentShipment.unit"
           }}
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.unitBlank"}}
+            blank
+          </label>
         </div>
         <div class="attribute-area left">
           <p>Purpose Code</p>
             {{view Trade.Select2
-              prompt="Please select purpose code value"
+              prompt="Select"
               contentBinding="controllers.purposes"
               optionValuePath="content.id"
               optionLabelPath="content.code"
               selectionBinding="currentShipment.purpose"
             }}
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.purposeBlank"}}
+            blank
+          </label>
         </div>
         <div class="attribute-area left">
           <p>Source Code</p>
             {{view Trade.Select2
-              prompt="Please select source code value"
+              prompt="Select"
               contentBinding="controllers.sources"
               optionValuePath="content.id"
               optionLabelPath="content.code"
               selectionBinding="currentShipment.source"
             }}
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.sourceBlank"}}
+            blank
+          </label>
         </div>
       </div>
 
@@ -137,6 +149,10 @@
               optionLabelPath="content.name"
               selectionBinding="currentShipment.countryOfOrigin"
             }}
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.countryOfOriginBlank"}}
+            blank
+          </label>
         </div>
         <div class="attribute-area left">
           <p>Reporter type</p>
@@ -148,12 +164,40 @@
         </div>
       </div>
 
+      <div class="heading">
+        Permit numbers
+      </div>
+      <div class="inner">
+        <div class="attribute-area left">
+          <p>Import Permit</p>
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.importPermitNumberBlank"}}
+            blank
+          </label>
+        </div>
+        <div class="attribute-area left">
+          <p>Exporter Permit</p>
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.exportPermitNumberBlank"}}
+            blank
+          </label>
+        </div>
+        <div class="attribute-area left">
+          <p>Origin Permit</p>
+          <label class="blank-checkbox">
+            {{view Ember.Checkbox checkedBinding="currentShipment.originPermitNumberBlank"}}
+            blank
+          </label>
+        </div>
+      </div>
+
+
     </fieldset>
   </form>
 </div>
 <div class="modal-footer">
   {{confirm-button title="Save batch" action="updateBatch"}}
-  <button {{action 'cancelBatch'}} class="pull-right btn btn-primary">
+  <button {{action 'cancelBatch'}} class="pull-right btn">
     Cancel
   </button>
 </div>

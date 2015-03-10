@@ -10,6 +10,18 @@ $light-blue: #00a2db;
 $link-blue: #0088cc;
 $warning-yellow: #c09853;
 
+/* full_screen modal window */
+.modal.shipment-form-modal.fade.in, .modal.batch-form-modal.fade.in{
+  top: 0;
+  left: 0;
+  width: 99%;
+  height: 99%;
+  margin-left: 0;
+  .modal-body.filters {
+    max-height: 80%;
+  }
+}
+
 .modal {
   /* new custom width */
   width: 940px;
@@ -276,6 +288,10 @@ div.popup-holder01 {
       margin: 0 0 10px 0;
       input {
         width: 175px;
+      }
+      input[type="checkbox"] {
+        width: 50px;
+        margin: 0;
       }
       select {
         width: 190px;

@@ -21,7 +21,7 @@ private
     columns = [
       :id, :legacy_id, :full_name, :author_year, :rank_name, :name_status,
       :taxonomy_name, :internal_notes,
-      :created_at, :created_by, :updated_at, :updated_by
+      :created_at, :created_by, :updated_at, :dependents_updated_at, :updated_by
     ]
   end
 
@@ -29,7 +29,8 @@ private
     headers = [
       'Id', 'Legacy id', 'Scientific Name', 'Author', 'Rank', 'Name status',
       'Taxonomy', 'Internal notes',
-      'Date added', 'Added by', 'Date updated', 'Updated by'
+      'Date added', 'Added by', 'Taxon Concept updated date',
+      'Taxon Concept associations updated date', 'Updated by'
     ]
   end
 

@@ -44,7 +44,11 @@ class Trade::ShipmentsController < TradeController
   def destroy_batch
     @search = Trade::Filter.new(search_params)
     cnt = @search.query.count
+    disconnected_permits_ids = @search.query.map do |s|
+      s.permits_ids
+    end.flatten.uniq
     @search.query.destroy_all
+    PermitCleanupWorker.perform_async(disconnected_permits_ids)
     render :json => {rows: cnt}, :status => :ok
   end
 
@@ -71,28 +75,39 @@ private
       :country_of_origin_id,
       :purpose_id,
       :source_id,
-      :year
+      :year,
+      :import_permit_number,
+      :export_permit_number,
+      :origin_permit_number
     ]
   end
 
   def shipment_params
     params.require(:shipment).permit(
       *(shipment_attributes + [
-        :import_permit_number,
-        :export_permit_number,
-        :origin_permit_number,
         :ignore_warnings
       ])
     )
   end
 
   def batch_update_params
-    res = params.permit(
+    update_params = params.permit(
       :updates => shipment_attributes
-    ).delete(:updates)
+    )
+    res = update_params && update_params.delete('updates') || {}
+    res.each { |k, v| res[k] = nil if v.blank? }
     reporter_type = res.delete(:reporter_type)
     unless reporter_type.blank?
       res[:reported_by_exporter] = Trade::Shipment.reporter_type_to_reported_by_exporter(reporter_type)
+    end
+    if res.has_key?(:import_permit_number) && res[:import_permit_number].nil?
+      res[:import_permits_ids] = nil
+    end
+    if res.has_key?(:export_permit_number) && res[:export_permit_number].nil?
+      res[:export_permits_ids] = nil
+    end
+    if res.has_key?(:origin_permit_number) && res[:origin_permit_number].nil?
+      res[:origin_permits_ids] = nil
     end
     res
   end

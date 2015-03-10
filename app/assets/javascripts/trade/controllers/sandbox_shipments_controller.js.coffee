@@ -122,6 +122,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
       @get('store').commit()
       @clearModifiedFlags()
       @transitionToParentController()
+      location.reload()
 
     cancelChanges: () ->
       @get('store').get('currentTransaction').rollback()

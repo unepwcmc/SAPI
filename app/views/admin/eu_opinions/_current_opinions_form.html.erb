@@ -18,7 +18,7 @@
 
       <tr>
         <td><%= opinion.year %></td>
-        <td><%= opinion.start_event.name %></td>
+        <td><%= opinion.start_event && opinion.start_event.name %></td>
         <td><%= opinion.geo_entity && opinion.geo_entity.name_en %></td>
         <td>
           <%= opinion.eu_decision_type.name %>

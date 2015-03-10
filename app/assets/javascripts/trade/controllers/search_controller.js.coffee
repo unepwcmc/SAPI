@@ -114,7 +114,11 @@ Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
 
   autoCompleteObjects: (collectionName, columnName, query) ->
     return @get(collectionName) unless query
-    re = new RegExp("^" + query, "i")
+    if collectionName != 'controllers.geoEntities'
+      query = "^" + query
+    else
+      query = "(^|\\(| )" + query
+    re = new RegExp(query, "i")
     @get(collectionName).filter (element) ->
       re.test(element.get(columnName))
 
