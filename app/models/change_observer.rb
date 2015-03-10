@@ -6,22 +6,36 @@ class ChangeObserver < ActiveRecord::Observer
   def after_save(model)
     clear_cache model
     if model.taxon_concept
-      model.taxon_concept.
-        update_column(:dependents_updated_at, Time.now)
+      bump_dependents_timestamp(model.taxon_concept, model.updated_by_id)
+    end
+    if model.taxon_concept.nil? && model.taxon_concept_id_was ||
+      model.taxon_concept && model.taxon_concept_id_was && model.taxon_concept_id != model.taxon_concept_id_was
+      previous_taxon_concept = TaxonConcept.find_by_id(model.taxon_concept_id_was)
+      if previous_taxon_concept
+        bump_dependents_timestamp(previous_taxon_concept, model.updated_by_id)
+      end
     end
   end
 
   def before_destroy(model)
     clear_cache model
     if model.taxon_concept && model.can_be_deleted?
-      model.taxon_concept.
-        update_column(:dependents_updated_at, Time.now)
+      # currently no easy means to tell who deleted the dependent object
+      bump_dependents_timestamp(model.taxon_concept, nil)
     end
   end
 
   protected
 
   def clear_cache model
-    DownloadsCache.send("clear_#{model.class.to_s.tableize}")
+    DownloadsCacheCleanupWorker.perform_async(model.class.to_s.tableize)
+  end
+
+  def bump_dependents_timestamp(taxon_concept, updated_by_id)
+    TaxonConcept.update_all(
+      dependents_updated_at: Time.now,
+      dependents_updated_by_id: updated_by_id
+    )
+    DownloadsCacheCleanupWorker.perform_async(:taxon_concepts)
   end
 end
