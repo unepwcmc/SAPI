@@ -24,7 +24,7 @@ class Checklist::Csv::Index < Checklist::Index
       :introduced_uncertain_distribution, :reintroduced_distribution,
       :extinct_distribution, :extinct_uncertain_distribution,
       :uncertain_distribution
-    ]
+    ].compact
   end
 
   def listing_changes_csv_columns
