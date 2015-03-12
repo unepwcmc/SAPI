@@ -34,10 +34,10 @@ class DownloadWorker
 
       @download.save!
     rescue => msg
-      ExceptionNotifier.notify_exception(msg)
-      puts "Failed: #{msg}"
-      puts "### Backtrace ###"
-      puts msg.backtrace
+      ExceptionNotifier.notify_exception(msg) if defined? ExceptionNotifier
+      logger.warn "Failed: #{msg}"
+      logger.warn "### Backtrace ###"
+      logger.warn msg.backtrace
       @download.status = "failed"
       @download.save!
     end
