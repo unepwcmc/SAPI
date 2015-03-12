@@ -1,5 +1,6 @@
 fr:
   cites_title: "Base de Données sur le Commerce CITES"
+  cites_description: "La base de données sur le commerce CITES, gérée par le Centre mondial de surveillance continue de la conservation de la nature du PNUE (PNUE-WCMC) au nom du Secrétariat CITES"
   cites_sub_title: "S'il vous plaît entrer votre recherche ci-dessous"
   errors:
     no_data_1: "Votre recherche n'a retourné aucune donnée"
