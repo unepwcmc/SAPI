@@ -1,3 +1,23 @@
+### 0.9.4.1 (2015-03-16)
+**Species+ Admin**
+* tracking dependents_updated_by_id
+* copying exclusions to EU listings
+**Trade**
+* automatically expand the shipment year range
+
+### 0.9.4 (2015-03-11)
+**Species+ Admin:**
+* fixes to T -> S and T -> A nomenclature changes processing
+* fix for inherited standard reference flag
+**Species+:**
+* geo entity auto complete matches on parts of name
+* calculation of original start date for current EU suspensions
+* linking EU Opinions to SRG events
+**Trade Admin:**
+* fixes to Trade Admin interface
+* ability to bulk update some shipment fields with blank value
+* speed improvements to permit number auto complete
+
 ### 0.9.2 (2015-01-15)
 **Species+ Admin:**
 * API tracking
