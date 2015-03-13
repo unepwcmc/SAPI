@@ -28,11 +28,21 @@ class TaxonRelationship < ActiveRecord::Base
   before_validation :check_other_taxon_concept_exists
   before_destroy :destroy_opposite, :if => Proc.new { self.is_bidirectional? && self.has_opposite? }
   after_create :create_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
-
+  after_save :update_higher_taxa_for_hybrid_child
   validates :taxon_concept_id, :uniqueness => { :scope => [:taxon_relationship_type_id, :other_taxon_concept_id], :message => 'This relationship already exists, choose another taxa.' }
   validate :intertaxonomic_relationship_uniqueness, :if => "taxon_relationship_type.is_intertaxonomic?"
 
   accepts_nested_attributes_for :other_taxon_concept
+
+  def update_higher_taxa_for_hybrid_child
+    if other_taxon_concept && taxon_relationship_type &&
+      taxon_relationship_type.name == TaxonRelationshipType::HAS_HYBRID
+      tcd = TaxonConceptData.new(other_taxon_concept)
+      data = tcd.to_h
+      other_taxon_concept.update_column(:data, ActiveRecord::Coders::Hstore.dump(data))
+      other_taxon_concept.data = data
+    end
+  end
 
   def opposite
     TaxonRelationship.where(:taxon_concept_id => self.other_taxon_concept_id,
