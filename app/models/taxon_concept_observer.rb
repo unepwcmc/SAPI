@@ -1,18 +1,7 @@
 class TaxonConceptObserver < ActiveRecord::Observer
 
-  #initializes data and full name with values from parent
+  #initializes full name with values from parent
   def before_validation(taxon_concept)
-    data = taxon_concept.data || {}
-    data['rank_name'] = taxon_concept.rank && taxon_concept.rank.name
-    if taxon_concept.parent
-      data = data.merge taxon_concept.parent.data.slice(
-        'kingdom_id', 'kingdom_name', 'phylum_id', 'phylum_name', 'class_id',
-        'class_name', 'order_id', 'order_name', 'family_id', 'family_name',
-        'subfamily_id', 'subfamily_name', 'genus_id', 'genus_name', 'species_id',
-        'species_name'
-      )
-    end
-    taxon_concept.data = data
     return true unless taxon_concept.new_record?
     taxon_concept.full_name = if taxon_concept.rank && taxon_concept.parent &&
       ['A', 'N'].include?(taxon_concept.name_status)
@@ -71,6 +60,12 @@ class TaxonConceptObserver < ActiveRecord::Observer
   end
 
   def after_save(taxon_concept)
+    if ['A', 'N'].include? taxon_concept.name_status
+      tcd = TaxonConceptData.new(taxon_concept)
+      data = tcd.to_h
+      taxon_concept.update_column(:data, ActiveRecord::Coders::Hstore.dump(data))
+      taxon_concept.data = data
+    end
     DownloadsCacheCleanupWorker.perform_async(:taxon_concepts)
   end
 
