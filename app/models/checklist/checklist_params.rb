@@ -13,11 +13,21 @@ class Checklist::ChecklistParams < Hash
       :level_of_listing => params[:level_of_listing] && params[:level_of_listing] != '0',
       #filtering options
       :scientific_name => params[:scientific_name] ? params[:scientific_name].upcase : nil,
-      :countries => params[:country_ids] ? params[:country_ids].sort : [],
-      :cites_regions =>
-        params[:cites_region_ids] ? params[:cites_region_ids].sort : [],
-      :cites_appendices =>
-        params[:cites_appendices] ? params[:cites_appendices].sort : [],
+      :countries => if params[:country_ids].present? && params[:country_ids].is_a?(Array)
+        params[:country_ids].sort
+      else
+        []
+      end,
+      :cites_regions => if params[:cites_region_ids].present? && params[:cites_region_ids].is_a?(Array)
+        params[:cites_region_ids].sort
+      else
+        []
+      end,
+      :cites_appendices => if params[:cites_appendices].present?  && params[:cites_appendices].is_a?(Array)
+        params[:cites_appendices].sort
+      else
+        []
+      end,
       # optional data
       :english_common_names => params[:show_english] && params[:show_english] != '0',
       :spanish_common_names => params[:show_spanish] && params[:show_spanish] != '0',
