@@ -47,6 +47,14 @@
       </div>
       <div class="inner">
         <div class="attribute-area left">
+          <p>Quantity</p>
+          <p class="small">Current value: <span class="blue">{{currentShipment.quantity}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type quantity value"
+              valueBinding="currentShipment.quantity"
+            }}
+        </div>
+        <div class="attribute-area left">
           <p>Term Code</p>
           <p class="small">Current value: <span class="blue">{{currentShipment.termCode}}</p>
             {{view Trade.Select2
@@ -88,14 +96,6 @@
               optionValuePath="content.code"
               optionLabelPath="content.code"
               valueBinding="currentShipment.sourceCode"
-            }}
-        </div>
-        <div class="attribute-area left">
-          <p>Quantity</p>
-          <p class="small">Current value: <span class="blue">{{currentShipment.quantity}}</span></p>
-            {{view Ember.TextField
-              prompt="Please type quantity value"
-              valueBinding="currentShipment.quantity"
             }}
         </div>
       </div>
