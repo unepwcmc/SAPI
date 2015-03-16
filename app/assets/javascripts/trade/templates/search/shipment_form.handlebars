@@ -69,6 +69,13 @@
         Trade Codes & Quantity
       </div>
       <div class="inner">
+        <div class="attribute-area left">
+          <p>Quantity <span class="error">{{currentShipment.errors.quantity}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type quantity value"
+              valueBinding="currentShipment.quantity"
+            }}
+        </div>
         <div class="attribute-area left autocomplete">
           <p>Term Code <span class="error">{{currentShipment.errors.termId}}</span></p>
           {{view Trade.Select2
@@ -107,13 +114,6 @@
               optionValuePath="content.id"
               optionLabelPath="content.code"
               selectionBinding="currentShipment.source"
-            }}
-        </div>
-        <div class="attribute-area left">
-          <p>Quantity <span class="error">{{currentShipment.errors.quantity}}</span></p>
-            {{view Ember.TextField
-              prompt="Please type quantity value"
-              valueBinding="currentShipment.quantity"
             }}
         </div>
       </div>
