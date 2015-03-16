@@ -61,7 +61,7 @@
               <th><%= user.try(:organisation) %></th>
               <th><%= requests.select { |req| req.response_status == 200 }.count %></th>
               <th><%= requests.select { |req| req.response_status == 500 }.count %></th>
-              <th><%= link_to 'View', api_user_overview_path(user) %></th>
+              <th><%= link_to 'View', api_user_usage_path(user) %></th>
             </tr>
           <% end %>
         <% end %>
