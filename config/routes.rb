@@ -11,6 +11,9 @@ SAPI::Application.routes.draw do
   match 'eu_legislation' => 'pages#eu_legislation'
   match 'activities(/:start_week)' => 'activities#activities', as: :activities
 
+  get 'admin/api_usage/overview' => 'admin/api_usage#index', :as => 'api_usage_overview'
+  get 'admin/api_usage/user_overview/:id' => 'admin/api_usage#show', :as => 'api_user_usage'
+
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
   namespace :api do
@@ -34,7 +37,7 @@ SAPI::Application.routes.draw do
     resources :geo_relationship_types, :only => [:index]
   end
   namespace :admin do
-    resources :api_usage, :only => [:index, :show]
+    #resources :api_usage, :only => [:index, :show]
     resources :taxonomies, :only => [:index, :create, :update, :destroy]
     resources :terms, :only => [:index, :create, :update, :destroy]
     resources :sources, :only => [:index, :create, :update, :destroy]
