@@ -3,7 +3,7 @@ class Admin::ApiUsageController < Admin::AdminController
     @last_30_days_requests = ApiRequest.group(:response_status).order(:response_status)
       .group_by_day(:created_at, range: 30.days.ago.midnight..Time.now).count
     @all_requests = ApiRequest.all
-    @users_by_activity = ApiRequest.where('created_at > ?', 30.days.ago).group_by(&:user).sort_by { |k,v| -v.count }[0..4]
+    @users_by_activity = ApiRequest.where('created_at > ? AND user_id IS NOT NULL', 30.days.ago).group_by(&:user).sort_by { |k,v| -v.count }[0..4]
   end
 
   def show
