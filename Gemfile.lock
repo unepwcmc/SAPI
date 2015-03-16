@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/nextupdate/capistrano-slack.git
-  revision: 7e18c4b164866ad7b5f4a2f360eeec1f1c5ccc36
+  revision: f66debff76b2bff27435a049c470e0875740c889
   specs:
     capistrano-slack (1.2.0)
       capistrano (< 3.0.0)
@@ -341,7 +341,7 @@ GEM
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
       rspec-mocks (~> 2.12.0)
-    rvm-capistrano (1.5.1)
+    rvm-capistrano (1.5.6)
       capistrano (~> 2.15.4)
     sass (3.2.7)
     sass-rails (3.2.6)
