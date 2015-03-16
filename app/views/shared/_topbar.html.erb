@@ -181,7 +181,7 @@
             <li><%= link_to 'Species+ Activity Page', activities_path %></li>
 
             <% if current_user && current_user.is_admin? %>
-              <li><%= link_to 'API Usage', admin_api_usage_index_path %></li>
+              <li><%= link_to 'API Usage', api_usage_overview_path %></li>
             <% end %>
           </ul>
         </li>
