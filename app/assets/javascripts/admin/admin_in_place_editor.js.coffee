@@ -221,6 +221,10 @@ class ListingChangesEditor extends AdminEditor
   init: () ->
     @initForm()
     $("[rel='tooltip']").tooltip()
+    $('#listing_change_event_id').change((e) ->
+      if $(this).val() == ""
+        $('#listing_change_hash_annotation_id').removeAttr("disabled")
+    )
 
   initForm: () ->
     super
