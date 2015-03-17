@@ -2,15 +2,13 @@ class TaxonConceptData
 
   def initialize(taxon_concept)
     @taxon_concept = taxon_concept
-    # data = taxon_concept.data || {}
-    # data['rank_name'] = taxon_concept.rank && taxon_concept.rank.name
     @rank_name = taxon_concept.rank && taxon_concept.rank.name
     @higher_taxa = higher_taxa
   end
 
   def to_h
     {
-      rank_name: @rank_name
+      'rank_name' => @rank_name
     }.merge(@higher_taxa)
   end
 
