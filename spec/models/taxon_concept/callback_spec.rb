@@ -36,10 +36,12 @@ describe TaxonConcept do
     end
   end
 
-  context "before create" do
+  context 'after save' do
     let(:genus_tc) {
       create_cites_eu_genus(
-        :data => {:class_name => "Derp"}
+        parent: create_cites_eu_family(
+          taxon_name: create(:taxon_name, scientific_name: 'Derp')
+        )
       )
     }
     context "Data should be copied when creating a children taxon concept" do
@@ -48,8 +50,8 @@ describe TaxonConcept do
           :parent_id => genus_tc.id
         )
       }
-      specify { tc.data["class_name"].should == genus_tc.data["class_name"] }
-      specify { tc.data["rank_name"].should == Rank::SPECIES }
+      specify { expect(tc.data['family_name']).to eq('Derp') }
+      specify { expect(tc.data['rank_name']).to eq(Rank::SPECIES) }
     end
   end
 end
