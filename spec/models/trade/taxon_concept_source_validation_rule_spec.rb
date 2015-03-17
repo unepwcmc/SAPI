@@ -32,8 +32,7 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables => true do
   describe :validation_errors do
     context "when species name is from Kingdom Animalia, source_code can't be A" do
       before do
-        @animal = create(:taxon_concept, :data => {:kingdom_name => 'Animalia'},
-                       :taxonomy_id => cites_eu.id)
+        @animal = create_cites_eu_animal_species
         sandbox_klass.create(:source_code => 'A', :taxon_name => @animal.full_name)
         sandbox_klass.create(:source_code => 'B', :taxon_name => @animal.full_name)
       end
@@ -50,8 +49,7 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables => true do
     end
     context "when species name is from Kingdom Plantae, source_code can't be C or R" do
       before do
-        @plant = create(:taxon_concept, :data => {:kingdom_name => 'Plantae'},
-                       :taxonomy_id => cites_eu.id)
+        @plant = create_cites_eu_plant_species
         sandbox_klass.create(:source_code => 'C', :taxon_name => @plant.full_name)
         sandbox_klass.create(:source_code => 'R', :taxon_name => @plant.full_name)
         sandbox_klass.create(:source_code => 'A', :taxon_name => @plant.full_name)
