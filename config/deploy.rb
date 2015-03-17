@@ -373,7 +373,7 @@ task :smoke_test do
 end
 
 def slack_smoke_notification message
-  uri = URI.parse('https://hooks.slack.com/services/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')
+  uri = URI.parse("https://hooks.slack.com/services/T028F7AGY/B036GEF7T/#{slack_token}")
 
   payload = {
     channel: slack_room,
