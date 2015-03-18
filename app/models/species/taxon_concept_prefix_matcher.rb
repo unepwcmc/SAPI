@@ -69,8 +69,12 @@ class Species::TaxonConceptPrefixMatcher
     @query = @query.
       select('id, full_name, rank_name, name_status,
         ARRAY_AGG_NOTNULL(
-          CASE WHEN matched_name != full_name THEN matched_name ELSE NULL END
-          ORDER BY matched_name
+          DISTINCT CASE
+            WHEN matched_name != full_name THEN matched_name ELSE NULL
+          END
+          ORDER BY CASE
+            WHEN matched_name != full_name THEN matched_name ELSE NULL
+          END
         ) AS matching_names_ary,
         rank_display_name_en, rank_display_name_es, rank_display_name_fr').
       where(type_of_match: types_of_match).
