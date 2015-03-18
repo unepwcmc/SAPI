@@ -353,11 +353,11 @@ task :smoke_test do
     "http://api.speciesplus.net/api/v1/taxon_concepts/9644/cites_legislation"
   ]
 
-  urls.each_with_index do |url, index|
-    if index < 4
-      curl_result = `curl -s -w "%{http_code}" #{url} -o /dev/null`
-    else
+  urls.each do |url|
+    if /api/.match(url)
       curl_result = `curl -i -s -w "%{http_code}" #{url} -H "X-Authentication-Token:#{api_token}" -o /dev/null`
+    else
+      curl_result = `curl -s -w "%{http_code}" #{url} -o /dev/null`
     end
 
     if curl_result == "200"
