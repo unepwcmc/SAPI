@@ -2,6 +2,36 @@ require 'spec_helper'
 describe Species::TaxonConceptPrefixMatcher do
   include_context "Boa constrictor"
   describe :results do
+    context "when searching by common name" do
+
+      context "when searching by hyphenated common name" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'red-t',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should include(@species_ac)}
+      end
+      context "when searching by hyphenated common name without hyphens" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'red t',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should include(@species_ac)}
+      end
+      context "when searching by part of hyphenated common name" do
+        subject {
+          Species::TaxonConceptPrefixMatcher.new({
+            :taxon_concept_query => 'tailed',
+            :ranks => []
+          })
+        }
+        specify { subject.results.should include(@species_ac)}
+      end
+    end
     context "when searching by scientific name" do
       context "when regular query" do
         subject {
