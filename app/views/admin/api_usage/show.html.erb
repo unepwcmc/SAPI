@@ -9,22 +9,36 @@
       <h4>About this User</h4>
     </div>
 
-    <dl class="dl-horizontal">
-      <dt>Email:<dt> 
-      <dd><%= @user.email %></dd>
-      <dt>Organisation:<dt> 
-      <dd><%= @user.try(:organisation) %></dd>
-      <dt>Country:<dt> 
-      <dd><%= @user.try(:geo_entity).try(:name_en) %></dd>
-      <dt>Role:<dt> 
-      <dd><%= @user.role %></dd>
-      <dt>Total Successful Requests:<dt> 
-      <dd><%= number_with_delimiter @user.api_requests.where(response_status: 200).count, delimiter: ',' %></dd>
-      <dt>Total Failed Requests (to date):<dt>
-      <dd><%= number_with_delimiter @user.api_requests.where(response_status: 500).count, delimiter: ',' %></dd>
-      <dt>Date Joined:<dt> 
-      <dd><%= @user.created_at.to_s(:long) %></dd>
-    </dl>
+    <table class="table table-striped">
+      <tr>
+        <td><span class="text-info">Email:</span></td> 
+        <td><%= @user.email %></td>
+      </tr>
+      <tr>
+        <td><span class="text-info">Organisation:</span></td> 
+        <td><%= @user.try(:organisation) %></td>
+      </tr>
+      <tr>
+        <td><span class="text-info">Country:</span></td> 
+        <td><%= @user.try(:geo_entity).try(:name_en) %></td>
+      </tr>
+      <tr>
+        <td><span class="text-info">Role:</span></td> 
+        <td><%= @user.role %></td>
+      </tr>
+      <tr>
+        <td><span class="text-info">Total Successful Requests:</span></td> 
+        <td><%= number_with_delimiter @user.api_requests.where(response_status: 200).count, delimiter: ',' %></td>
+      </tr>
+      <tr>
+        <td><span class="text-info">Total Failed Requests (to date):</span></td>
+        <td><%= number_with_delimiter @user.api_requests.where(response_status: 500).count, delimiter: ',' %></td>
+      </tr>
+      <tr>
+        <td><span class="text-info">Date Joined:</span></td> 
+        <td><%= @user.created_at.to_s(:long) %></td>
+      </tr>
+    </table>
   </div>
 </div>
 
