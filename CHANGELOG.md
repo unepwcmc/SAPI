@@ -1,7 +1,8 @@
-### 0.9.4.1 (2015-03-16)
+### 0.9.4.1 (2015-03-19)
 **Species+ Admin**
 * tracking dependents_updated_by_id
 * copying exclusions to EU listings
+
 **Trade**
 * automatically expand the shipment year range
 
