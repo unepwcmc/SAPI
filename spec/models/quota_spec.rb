@@ -31,7 +31,7 @@
 
 require 'spec_helper'
 
-describe Quota do
+describe Quota, sidekiq: :inline do
   before do
     @taxon_concept = create(:taxon_concept)
   end

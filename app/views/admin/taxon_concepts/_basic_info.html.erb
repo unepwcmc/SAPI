@@ -8,10 +8,11 @@
       %>
     </span>
   </h1>
-  <span class="pull-right">
-    Created by <%= @taxon_concept.creator.try(:name) || "DATA_IMPORT" %> on <%= @taxon_concept.created_at.strftime("%d/%m/%Y") %> <br />
-    Last updated by <%= @taxon_concept.updater.try(:name) || "DATA_IMPORT" %> on <%= @taxon_concept.updated_at.strftime("%d/%m/%Y") %>
-  </span>
+  <dl class="pull-right well well-small dl-horizontal">
+    <dt>Created:</dt><dd><%= @taxon_concept.created_at.strftime("%d/%m/%Y") %> (<%= @taxon_concept.creator.try(:name) || "DATA_IMPORT" %>)</dd>
+    <dt>Updated:</dt><dd><%= @taxon_concept.updated_at.strftime("%d/%m/%Y") %> (<%= @taxon_concept.updater.try(:name) || "DATA_IMPORT" %>)</dd>
+    <dt>Associations updated:</dt><dd><%= @taxon_concept.dependents_updated_at && @taxon_concept.dependents_updated_at.strftime("%d/%m/%Y") %> (<%= @taxon_concept.dependents_updater.try(:name) || "DATA_IMPORT" %>)</dd>
+  </dl>
   <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
   <% if can? :destroy, @taxon_concept %>
     <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), 

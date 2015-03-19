@@ -3,6 +3,7 @@
 
 en:
   cites_title: "CITES Trade Database"
+  cites_description: "The CITES Trade Database, managed by the UNEP World Conservation Monitoring Centre (UNEP-WCMC) on behalf of the CITES Secretariat"
   cites_sub_title: "Please enter your search below"
   errors:
     no_data_1: "Your query has returned no data"

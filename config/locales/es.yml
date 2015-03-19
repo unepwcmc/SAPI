@@ -1,5 +1,6 @@
 es:
   cites_title: "Base de Datos sobre el Comercio CITES"
+  cites_description: "La Base de datos sobre el comercio CITES, administrada por el PNUMA Centro de Monitoreo de la Conservación Mundial (PNUMA-CMCM) en nombre de la Secretaría CITES."
   cites_sub_title: "Por favor introduzca sus criterios de búsqueda más abajo"
   errors:
     no_data_1: "Su consulta ha devuelto ningún dato"
