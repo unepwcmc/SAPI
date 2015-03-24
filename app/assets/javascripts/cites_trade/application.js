@@ -528,11 +528,12 @@ $(document).ready(function(){
 
   function getTaxonLabel (taxonDisplayName, term) {
     var term = term.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&"),
+      termWithHyphens = term.replace(/\s/, '-')
       transform = function (match) {
         return "<span class='match'>" + match + "</span>";
       };
-
-    return taxonDisplayName.replace(new RegExp("(" + term + ")", "gi"), transform);
+    // 'red collared' should highlight 'red-collared'
+    return taxonDisplayName.replace(new RegExp("(" + term + '|' + termWithHyphens+ ")", "gi"), transform);
   }
   
   function parseTaxonData (data, term, showSpp) {
