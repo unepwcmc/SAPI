@@ -17,13 +17,6 @@ set :branch, :master
 set :whenever_environment, defer { stage }
 require 'whenever/capistrano'
 
-set :default_environment, {
-  'PATH' => "/home/rails/.rvm/gems/ruby-2.0.0-p481/bin:/home/rails/.rvm/bin:/home/rails/.rvm/rubies/ruby-2.0.0-p481/bin:$PATH",
-  'RUBY_VERSION' => 'ruby-2.0.0-p481',
-  'GEM_HOME' => '/home/rails/.rvm/gems/ruby-2.0.0-p481',
-  'GEM_PATH' => '/home/rails/.rvm/gems/ruby-2.0.0-p481',
-}
-
 desc "Configure VHost"
 task :config_vhost do
   vhost_config =<<-EOF

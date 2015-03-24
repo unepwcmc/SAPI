@@ -39,7 +39,7 @@ set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the messa
 set :generate_webserver_config, false
 
 require 'rvm/capistrano'
-set :rvm_ruby_string, 'ruby-2.0.0-p481'
+set :rvm_ruby_string, '2.0.0-p643'
 
 ssh_options[:forward_agent] = true
 
