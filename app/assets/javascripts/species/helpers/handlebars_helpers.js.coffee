@@ -23,9 +23,11 @@ Ember.Handlebars.registerHelper('highlight', (suggestion, options) ->
   query = Ember.Handlebars.get(this, options.hash.query, options)
   return suggestion unless query
   query = query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&")
+  # 'red collared' should highlight 'red-collared'
+  queryWithHyphens = query.replace(/\s/, '-')
   transform = ($1, match) ->
     "<span class='match'>" + match + "</span>"
-  new Handlebars.SafeString(suggestion.replace(new RegExp("(" + query + ")", "gi"), transform))
+  new Handlebars.SafeString(suggestion.replace(new RegExp("(" + queryWithHyphens + '|' + query + ")", "gi"), transform))
 )
 
 Ember.Handlebars.registerHelper 'stringToArray', (string, options) ->
