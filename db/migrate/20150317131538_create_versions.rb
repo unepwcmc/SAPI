@@ -20,7 +20,7 @@ class CreateVersions < ActiveRecord::Migration
       t.integer  :taxon_concept_id, :null => false
       t.text     :taxonomy_name, :null => false
       t.text     :full_name, :null => false
-      t.text     :author_year, :null => false
+      t.text     :author_year
       t.text     :name_status, :null => false
       t.text     :rank_name, :null => false
     end
