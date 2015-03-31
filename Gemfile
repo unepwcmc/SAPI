@@ -93,7 +93,7 @@ group :development do
   # Deploy with Capistrano
   gem 'capistrano'
   gem 'capistrano-ext'
-  gem 'rvm-capistrano'
+  gem  'rvm-capistrano', require: false
   gem 'capistrano-sidekiq'
   gem 'capistrano-slack', :git => 'https://github.com/nextupdate/capistrano-slack.git'
   gem 'brightbox', '>=2.3.9'
