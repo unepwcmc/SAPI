@@ -40,7 +40,9 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:geo_entity_types => {:name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]})
     @eu_decision_types = EuDecisionType.opinions
-    @ec_srgs = EcSrg.order("effective_at DESC")
+    @ec_srgs = Event.where("type = 'EcSrg' OR
+      type = 'EuRegulation' AND name IN ('No 338/97', 'No 938/97', 'No 750/2013')"
+    ).order("effective_at DESC")
   end
 
   def collection
