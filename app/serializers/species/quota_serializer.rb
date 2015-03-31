@@ -11,4 +11,7 @@ class Species::QuotaSerializer < ActiveModel::Serializer
   def unit
     object['unit_en'] && JSON.parse(object['unit_en'])
   end
+  def quota
+    object['quota_for_display']
+  end
 end
