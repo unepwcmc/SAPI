@@ -26,7 +26,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.is_current,
               trade_restrictions.geo_entity_id,
               trade_restrictions.unit_id,
-              CASE WHEN quota IS NULL THEN 'in prep.' ELSE quota::TEXT END,
+              CASE WHEN quota IS NULL THEN 'in prep.' ELSE quota::TEXT END AS quota_for_display,
               trade_restrictions.public_display,
               trade_restrictions.nomenclature_note_en,
               trade_restrictions.nomenclature_note_fr,
