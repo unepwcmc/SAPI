@@ -55,7 +55,7 @@ SELECT
   tc.id,
   NULL AS parent_id,
   taxonomies.name,
-  CASE WHEN taxonomies.name = 'CITES' THEN TRUE ELSE FALSE END AS taxonomy_is_cites_eu,
+  CASE WHEN taxonomies.name = 'CITES_EU' THEN TRUE ELSE FALSE END AS taxonomy_is_cites_eu,
   tc.full_name,
   tc.author_year,
   'S' AS name_status,
@@ -100,7 +100,7 @@ SELECT
   taxon_concept_id,
   NULL AS parent_id,
   taxonomy_name,
-  CASE WHEN taxonomy_name = 'CITES' THEN TRUE ELSE FALSE END AS taxonomy_is_cites_eu,
+  CASE WHEN taxonomy_name = 'CITES_EU' THEN TRUE ELSE FALSE END AS taxonomy_is_cites_eu,
   full_name,
   author_year,
   name_status,
@@ -120,5 +120,5 @@ SELECT
   created_at,
   FALSE AS active -- deleted taxa
   FROM taxon_concept_versions
-  WHERE event = 'destroy'
+  WHERE event = 'destroy' AND name_status IN ('A', 'S')
 ;
