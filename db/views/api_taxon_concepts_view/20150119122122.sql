@@ -54,7 +54,7 @@ SELECT
   tc.id,
   NULL AS parent_id,
   taxonomies.name,
-  CASE WHEN taxonomies.name = 'CITES' THEN TRUE ELSE FALSE END AS taxonomy_is_cites_eu,
+  CASE WHEN taxonomies.name = 'CITES_EU' THEN TRUE ELSE FALSE END AS taxonomy_is_cites_eu,
   tc.full_name,
   tc.author_year,
   'S' AS name_status,
