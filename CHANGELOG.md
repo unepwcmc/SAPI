@@ -1,3 +1,29 @@
+### 0.9.5
+** Species+:**
+* adds ability to search by parts of scientific or common name, e.g. 'lupus'
+* adds ability to search by non-hyphenated versions of common names, e.g. 'red collared'
+
+** Species+ Admin:**
+* fixes selecting event in EU listing change form
+* fixes API usage overview page
+
+** Trade:**
+* returns hybrids when searching by higher taxa
+
+** Trade Admin:**
+* speeds up permit auto-complete
+* minor display fixes
+
+** General:**
+* adds post-deploy smoke tests
+
+### 0.9.4.2 (2015-03-31)
+** Species+:**
+* fixes display of quotas in preparation
+
+** Species+ Admin:**
+* fixes event dropdown in EU Opinion form
+
 ### 0.9.4.1 (2015-03-19)
 **Species+ Admin**
 * tracking dependents_updated_by_id
