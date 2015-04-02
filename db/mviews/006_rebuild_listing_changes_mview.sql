@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION rebuild_cites_eu_taxon_concepts_and_ancestors_mview()
   BEGIN
     SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CITES_EU';
     IF FOUND THEN
-      PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
+      PERFORM rebuild_taxonomy_tmp_taxon_concepts_mview(taxonomy);
     END IF;
   END;
   $$;
@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION rebuild_cms_taxon_concepts_and_ancestors_mview() RETU
   BEGIN
     SELECT * INTO taxonomy FROM taxonomies WHERE name = 'CMS';
     IF FOUND THEN
-      PERFORM rebuild_taxonomy_taxon_concepts_and_ancestors_mview(taxonomy);
+      PERFORM rebuild_taxonomy_tmp_taxon_concepts_mview(taxonomy);
     END IF;
   END;
   $$;
