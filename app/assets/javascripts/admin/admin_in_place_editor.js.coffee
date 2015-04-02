@@ -286,6 +286,10 @@ class ListingChangesEditor extends AdminEditor
             $('#listing_change_effective_at').val(data.event.effective_at_formatted)
         )
       )
+    $('#listing_change_event_id').change((e) ->
+      if $(this).val() == ""
+        $('#listing_change_hash_annotation_id').removeAttr("disabled")
+    )
 
 class TaxonReferencesEditor extends AdminEditor
   init: () ->

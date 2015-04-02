@@ -304,6 +304,26 @@ shared_context :sapi do
     )
   }
 
+  def create_cites_eu_animal_species(options = {})
+    create_cites_eu_species(
+      parent: create_cites_eu_genus(
+        parent: create_cites_eu_family(
+          parent: create_cites_eu_order(options.merge({parent: cites_eu_mammalia}))
+        )
+      )
+    )
+  end
+
+  def create_cites_eu_plant_species(options = {})
+    create_cites_eu_species(
+      parent: create_cites_eu_genus(
+        parent: create_cites_eu_family(
+          parent: create_cites_eu_order(options.merge({parent: cites_eu_plantae}))
+        )
+      )
+    )
+  end
+
   %w(kingdom phylum class order family subfamily genus species subspecies variety).each do |rank|
     define_method "create_#{rank}" do |options = {}|
       create(

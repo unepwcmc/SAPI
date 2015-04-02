@@ -59,6 +59,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def last_30_days_api_requests
+    self.api_requests.group(:response_status).order(:response_status).group_by_day(:created_at, range: 30.days.ago.midnight..Time.now).count
+  end
+
   def can_be_deleted?
     tracked_objects = [
       TaxonConcept, TaxonRelationship, CommonName, TaxonCommon,

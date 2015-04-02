@@ -73,7 +73,6 @@
 #  taxon_concept_id_syn                     :integer
 #  synonyms_ary                             :string
 #  synonyms_author_years_ary                :string
-#  subspecies_not_listed_ary                :string
 #  countries_ids_ary                        :string
 #  all_distribution_iso_codes_ary           :string
 #  all_distribution_ary                     :string
