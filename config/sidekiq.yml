@@ -7,7 +7,7 @@
 staging:
   :concurrency: 2
 production:
-  :concurrency: 50
+  :concurrency: 10
 :queues:
   - [default, 7]
   - [admin, 4]
