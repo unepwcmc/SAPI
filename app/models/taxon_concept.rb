@@ -30,6 +30,16 @@
 
 class TaxonConcept < ActiveRecord::Base
   track_who_does_it
+  has_paper_trail class_name: 'TaxonConceptVersion', on: :destroy,
+    meta: {
+      taxon_concept_id: :id,
+      taxonomy_name: :taxonomy_name,
+      full_name: :full_name,
+      author_year: :author_year,
+      name_status: :name_status,
+      rank_name: :rank_name
+    }
+
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
@@ -219,8 +229,12 @@ class TaxonConcept < ActiveRecord::Base
       distribution_comment.try(:note).try(:present?)
   end
 
+  def taxonomy_name
+    taxonomy.try(:name)
+  end
+
   def under_cites_eu?
-    self.taxonomy.name == Taxonomy::CITES_EU
+    taxonomy_name == Taxonomy::CITES_EU
   end
 
   def fixed_order_required?
