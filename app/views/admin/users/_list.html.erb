@@ -1,6 +1,7 @@
 <thead>
   <th>Name</th>
   <th width="30%">Email</th>
+  <th width="10%">CITES Auth</th>
   <th width="10%">Role</th>
   <th width="10%">Actions</th>
 </thead>
@@ -21,6 +22,9 @@
             data-url="<%= resource_url(user) %>" data-pk="<%= user.id %>">
             <%= user.email %>
           </a>
+      </td>
+      <td>
+        <%= true_false_icon(user.is_cites_authority) %>
       </td>
       <td>
         <%= user.role_for_display %>
