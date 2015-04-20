@@ -24,7 +24,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   attr_accessible :email, :name, :password, :password_confirmation,
-    :remember_me, :role, :terms_and_conditions, :is_cites_authority
+    :remember_me, :role, :terms_and_conditions, :is_cites_authority,
+    :organisation, :geo_entity_id
 
   has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
   has_many :ahoy_events, dependent: :nullify, class_name: 'Ahoy::Event'
@@ -35,6 +36,8 @@ class User < ActiveRecord::Base
   validates :name, :presence => true
   validates :role, inclusion: { in: ['default', 'admin', 'api'] },
                    presence: true
+  validates :organisation, presence: true
+  before_create :set_default_role
 
   def is_contributor?
     self.role == 'default'
@@ -78,6 +81,11 @@ class User < ActiveRecord::Base
       end
     end
     true
+  end
+
+  private
+  def set_default_role
+    self.role ||= 'api'
   end
 
 end

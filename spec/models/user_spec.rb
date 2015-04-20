@@ -22,6 +22,12 @@
 require 'spec_helper'
 
 describe User do
+  describe :create do
+    context "when API user organisation is required" do
+      let(:user){ build(:user, role: 'api', organisation: nil) }
+      specify{ expect(user).to_not be_valid}
+    end
+  end
   describe :destroy do
     context "when no dependent objects attached" do
       let(:user){ create(:user) }

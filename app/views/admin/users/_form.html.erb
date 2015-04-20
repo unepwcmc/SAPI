@@ -32,6 +32,23 @@
       <%= f.check_box :is_cites_authority %>
     </div>
   </div>
+  <div class="control-group">
+    <label class="control-label">Organisation</label>
+    <div class="controls">
+      <%= f.text_field :organisation%>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Country</label>
+    <div class="controls">
+      <%= f.select :geo_entity_id,
+        options_for_select(
+          @countries.map{ |c| [c.name, c.id] },
+          @user.geo_entity_id
+        )
+      %>
+    </div>
+  </div>
   <% if current_user.is_admin? %>
     <div class="control-group">
       <label class="control-label">Role</label>
