@@ -45,16 +45,16 @@ describe RegistrationsController do
     end
   end
 
-  context "when signing up" do 
-    it "should create an account with the role set to default" do
+  context "when signing up" do
+    it "should create an account with the role set to api" do
       expect{
         post :create, :user => {
-          :email => @u3.email, :name => @u3.name,
+          :email => @u3.email, :name => @u3.name, :organisation => 'WCMC',
           :password => '22222222', :password_confirmation => '22222222'
         }
       }.to change{User.count}.by(1)
       u = User.last
-      expect(u.role).to eq 'default'
+      expect(u.role).to eq 'api'
     end
   end
 end

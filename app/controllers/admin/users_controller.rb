@@ -27,6 +27,7 @@ class Admin::UsersController < Admin::SimpleCrudController
         if update_result
           render 'create'
         else
+          load_associations
           render 'new'
         end
       }
@@ -37,6 +38,12 @@ class Admin::UsersController < Admin::SimpleCrudController
     def collection
       @users ||= end_of_association_chain.
         order(:name).page(params[:page])
+    end
+
+    def load_associations
+      @countries = GeoEntity.joins(:geo_entity_type).
+        where('geo_entity_types.name' => GeoEntityType::COUNTRY).
+        order('name_en')
     end
 end
 

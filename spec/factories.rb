@@ -7,6 +7,8 @@ FactoryGirl.define do
     password 'asdfasdf'
     password_confirmation { password }
     role 'admin'
+    is_cites_authority false
+    organisation 'WCMC'
   end
 
   factory :taxonomy do
