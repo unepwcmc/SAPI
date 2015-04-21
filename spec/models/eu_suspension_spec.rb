@@ -7,7 +7,7 @@
 #  notes                :text
 #  internal_notes       :text
 #  taxon_concept_id     :integer
-#  geo_entity_id        :integer
+#  geo_entity_id        :integer          not null
 #  start_date           :datetime
 #  start_event_id       :integer
 #  end_date             :datetime

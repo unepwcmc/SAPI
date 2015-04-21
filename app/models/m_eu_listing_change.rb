@@ -13,6 +13,9 @@
 #  designation_id             :integer
 #  designation_name           :string(255)
 #  parent_id                  :integer
+#  nomenclature_note_en       :text
+#  nomenclature_note_fr       :text
+#  nomenclature_note_es       :text
 #  party_id                   :integer
 #  party_iso_code             :string(255)
 #  party_full_name_en         :string(255)
@@ -53,6 +56,8 @@
 #  excluded_taxon_concept_ids :string
 #  dirty                      :boolean
 #  expiry                     :datetime
+#  event_id                   :integer
+#  geo_entity_type            :string(255)
 #
 
 class MEuListingChange < ActiveRecord::Base

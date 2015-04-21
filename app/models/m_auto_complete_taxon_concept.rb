@@ -17,8 +17,9 @@
 #  show_in_trade_internal_ac :boolean
 #  name_for_matching         :text
 #  matched_id                :integer
-#  matched_name              :string
+#  matched_name              :string(255)
 #  full_name                 :string(255)
+#  type_of_match             :text
 #
 
 class MAutoCompleteTaxonConcept < ActiveRecord::Base
