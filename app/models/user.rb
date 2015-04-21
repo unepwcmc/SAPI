@@ -16,7 +16,11 @@
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :string(255)
 #  last_sign_in_ip        :string(255)
-#  role                   :string(255)      default("default")
+#  role                   :text             default("api"), not null
+#  authentication_token   :string(255)
+#  organisation           :text             default("UNKNOWN"), not null
+#  geo_entity_id          :integer
+#  is_cites_authority     :boolean          default(FALSE), not null
 #
 
 class User < ActiveRecord::Base
