@@ -29,8 +29,9 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up).push(:name)
-    devise_parameter_sanitizer.for(:account_update) << :name
+    extra_parameters = [:name, :is_cites_authority, :organisation, :geo_entity_id]
+    devise_parameter_sanitizer.for(:sign_up).push(*extra_parameters)
+    devise_parameter_sanitizer.for(:account_update).push(*extra_parameters)
   end
 
   private
