@@ -42,7 +42,10 @@ class Admin::UsersController < Admin::SimpleCrudController
 
     def load_associations
       @countries = GeoEntity.joins(:geo_entity_type).
-        where('geo_entity_types.name' => GeoEntityType::COUNTRY).
+        where(
+          'geo_entity_types.name' => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY],
+          is_current: true
+        ).
         order('name_en')
     end
 end
