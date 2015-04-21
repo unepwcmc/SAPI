@@ -27,15 +27,6 @@ CREATE OR REPLACE FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255)
 COMMENT ON FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255)) IS
   'Returns an array of rank names above the given rank (sorted lowest first).';
 
-CREATE OR REPLACE FUNCTION squish_null(TEXT) RETURNS TEXT
-  LANGUAGE SQL IMMUTABLE
-  AS $$
-    SELECT CASE WHEN SQUISH($1) = '' THEN NULL ELSE SQUISH($1) END;
-  $$;
-
-COMMENT ON FUNCTION squish_null(TEXT) IS
-  'Squishes whitespace characters in a string and returns null for empty string';
-
 CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
   LANGUAGE sql IMMUTABLE
   AS $$
