@@ -8,7 +8,12 @@ class Api::V1::GeoEntitiesController < ApplicationController
   # needs to handle both geo entity types selection and is_current
   # perhaps a visibility parameter (e.g. checklist, s+, admin trade)
   def index
-    locale = params['locale'] || I18n.locale
+    locale = if params[:locale] &&
+      ['en', 'es', 'fr'].include?(params[:locale])
+      params[:locale]
+    else
+      I18n.locale
+    end
     geo_entity_types_set = GeoEntityType::SETS.has_key?(params[:geo_entity_types_set]) &&
       params[:geo_entity_types_set] || GeoEntityType::DEFAULT_SET
     geo_entity_types = GeoEntityType::SETS[geo_entity_types_set]
