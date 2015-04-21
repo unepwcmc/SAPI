@@ -4,5 +4,6 @@ class ChangeDefaultRoleToApi < ActiveRecord::Migration
   end
 
   def down
+    change_column :users, :role, :text, null: false, default: 'default'
   end
 end
