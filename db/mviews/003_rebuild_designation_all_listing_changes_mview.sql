@@ -17,7 +17,7 @@
     SELECT listing_changes_mview_name('tmp', designation.name, events_ids)
     INTO tmp_lc_table_name;
 
-    SELECT LOWER(taxonomy.name) || '_taxon_concepts_and_ancestors_mview' INTO tc_table_name;
+    SELECT LOWER(taxonomy.name) || '_taxon_concepts_and_ancestors_view' INTO tc_table_name;
 
     EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
 
