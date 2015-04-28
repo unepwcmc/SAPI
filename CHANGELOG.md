@@ -1,27 +1,38 @@
-### 0.9.5
-** Species+:**
+### 0.9.6
+**Species+ Admin:**
+
+* tracking taxon concept deletions
+* new fields in user profile (is CITES authority, organisation, country)
+
+**Species+ API:**
+
+* expose deleted taxon concepts in `taxon_concepts` end-point
+* speed improvements to `references` end-point
+
+### 0.9.5 (2015-04-13)
+**Species+:**
 * adds ability to search by parts of scientific or common name, e.g. 'lupus'
 * adds ability to search by non-hyphenated versions of common names, e.g. 'red collared'
 
-** Species+ Admin:**
+**Species+ Admin:**
 * fixes selecting event in EU listing change form
 * fixes API usage overview page
 
-** Trade:**
+**Trade:**
 * returns hybrids when searching by higher taxa
 
-** Trade Admin:**
+**Trade Admin:**
 * speeds up permit auto-complete
 * minor display fixes
 
-** General:**
+**General:**
 * adds post-deploy smoke tests
 
 ### 0.9.4.2 (2015-03-31)
-** Species+:**
+**Species+:**
 * fixes display of quotas in preparation
 
-** Species+ Admin:**
+**Species+ Admin:**
 * fixes event dropdown in EU Opinion form
 
 ### 0.9.4.1 (2015-03-19)
