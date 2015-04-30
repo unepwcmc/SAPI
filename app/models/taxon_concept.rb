@@ -2,34 +2,46 @@
 #
 # Table name: taxon_concepts
 #
-#  id                    :integer          not null, primary key
-#  taxonomy_id           :integer          default(1), not null
-#  parent_id             :integer
-#  rank_id               :integer          not null
-#  taxon_name_id         :integer          not null
-#  author_year           :string(255)
-#  legacy_id             :integer
-#  legacy_type           :string(255)
-#  data                  :hstore
-#  listing               :hstore
-#  notes                 :text
-#  taxonomic_position    :string(255)      default("0"), not null
-#  full_name             :string(255)
-#  name_status           :string(255)      default("A"), not null
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  touched_at            :datetime
-#  legacy_trade_code     :string(255)
-#  updated_by_id         :integer
-#  created_by_id         :integer
-#  dependents_updated_at :datetime
-#  nomenclature_note_en  :text
-#  nomenclature_note_es  :text
-#  nomenclature_note_fr  :text
+#  id                         :integer          not null, primary key
+#  taxonomy_id                :integer          default(1), not null
+#  parent_id                  :integer
+#  rank_id                    :integer          not null
+#  taxon_name_id              :integer          not null
+#  author_year                :string(255)
+#  legacy_id                  :integer
+#  legacy_type                :string(255)
+#  data                       :hstore
+#  listing                    :hstore
+#  notes                      :text
+#  taxonomic_position         :string(255)      default("0"), not null
+#  full_name                  :string(255)
+#  name_status                :string(255)      default("A"), not null
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  touched_at                 :datetime
+#  legacy_trade_code          :string(255)
+#  updated_by_id              :integer
+#  created_by_id              :integer
+#  dependents_updated_at      :datetime
+#  nomenclature_note_en       :text
+#  nomenclature_note_es       :text
+#  nomenclature_note_fr       :text
+#  internal_nomenclature_note :text
+#  dependents_updated_by_id   :integer
 #
 
 class TaxonConcept < ActiveRecord::Base
   track_who_does_it
+  has_paper_trail class_name: 'TaxonConceptVersion', on: :destroy,
+    meta: {
+      taxon_concept_id: :id,
+      taxonomy_name: :taxonomy_name,
+      full_name: :full_name,
+      author_year: :author_year,
+      name_status: :name_status,
+      rank_name: :rank_name
+    }
+
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
@@ -219,8 +231,12 @@ class TaxonConcept < ActiveRecord::Base
       distribution_comment.try(:note).try(:present?)
   end
 
+  def taxonomy_name
+    taxonomy.try(:name)
+  end
+
   def under_cites_eu?
-    self.taxonomy.name == Taxonomy::CITES_EU
+    taxonomy_name == Taxonomy::CITES_EU
   end
 
   def fixed_order_required?

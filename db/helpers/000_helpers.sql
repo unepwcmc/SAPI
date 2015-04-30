@@ -9,33 +9,6 @@ AS $FUNCTION$
     );
 $FUNCTION$;
 
-CREATE OR REPLACE FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255))
-  RETURNS TEXT[]
-  LANGUAGE sql IMMUTABLE
-  AS $$
-    WITH ranks_in_order(row_no, rank_name) AS (
-      SELECT ROW_NUMBER() OVER(), *
-      FROM UNNEST(ARRAY[
-      'VARIETY', 'SUBSPECIES', 'SPECIES', 'GENUS', 'SUBFAMILY',
-      'FAMILY', 'ORDER', 'CLASS', 'PHYLUM', 'KINGDOM'
-      ])
-    )
-    SELECT ARRAY_AGG(rank_name) FROM ranks_in_order
-    WHERE row_no >= (SELECT row_no FROM ranks_in_order WHERE rank_name = $1);
-  $$;
-
-COMMENT ON FUNCTION higher_or_equal_ranks_names(in_rank_name VARCHAR(255)) IS
-  'Returns an array of rank names above the given rank (sorted lowest first).';
-
-CREATE OR REPLACE FUNCTION squish(TEXT) RETURNS TEXT
-  LANGUAGE SQL IMMUTABLE
-  AS $$
-    SELECT BTRIM(regexp_replace($1, E'\\s+', ' ', 'g'));
-  $$;
-
-COMMENT ON FUNCTION squish(TEXT) IS
-  'Squishes whitespace characters in a string';
-
 CREATE OR REPLACE FUNCTION squish_null(TEXT) RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
   AS $$
@@ -44,11 +17,6 @@ CREATE OR REPLACE FUNCTION squish_null(TEXT) RETURNS TEXT
 
 COMMENT ON FUNCTION squish_null(TEXT) IS
   'Squishes whitespace characters in a string and returns null for empty string';
-
---TODO remove in the future, after this has been ran on production
-DROP FUNCTION IF EXISTS sanitize_species_name(TEXT);
-
-
 
 CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
   LANGUAGE sql IMMUTABLE

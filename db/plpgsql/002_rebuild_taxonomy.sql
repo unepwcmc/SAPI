@@ -300,6 +300,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy() RETURNS void
   AS $$
   BEGIN
     PERFORM rebuild_taxonomy_for_node(NULL);
+    REFRESH MATERIALIZED VIEW taxon_concepts_and_ancestors_mview;
   END;
   $$;
 

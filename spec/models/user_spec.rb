@@ -16,12 +16,22 @@
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :string(255)
 #  last_sign_in_ip        :string(255)
-#  role                   :string(255)      default("default")
+#  role                   :text             default("api"), not null
+#  authentication_token   :string(255)
+#  organisation           :text             default("UNKNOWN"), not null
+#  geo_entity_id          :integer
+#  is_cites_authority     :boolean          default(FALSE), not null
 #
 
 require 'spec_helper'
 
 describe User do
+  describe :create do
+    context "when organisation not given" do
+      let(:user){ build(:user, organisation: nil) }
+      specify{ expect(user).to_not be_valid}
+    end
+  end
   describe :destroy do
     context "when no dependent objects attached" do
       let(:user){ create(:user) }

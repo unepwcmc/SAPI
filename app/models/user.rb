@@ -16,7 +16,11 @@
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :string(255)
 #  last_sign_in_ip        :string(255)
-#  role                   :string(255)      default("default")
+#  role                   :text             default("api"), not null
+#  authentication_token   :string(255)
+#  organisation           :text             default("UNKNOWN"), not null
+#  geo_entity_id          :integer
+#  is_cites_authority     :boolean          default(FALSE), not null
 #
 
 class User < ActiveRecord::Base
@@ -24,7 +28,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   attr_accessible :email, :name, :password, :password_confirmation,
-    :remember_me, :role, :terms_and_conditions
+    :remember_me, :role, :terms_and_conditions, :is_cites_authority,
+    :organisation, :geo_entity_id
 
   has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
   has_many :ahoy_events, dependent: :nullify, class_name: 'Ahoy::Event'
@@ -35,6 +40,8 @@ class User < ActiveRecord::Base
   validates :name, :presence => true
   validates :role, inclusion: { in: ['default', 'admin', 'api'] },
                    presence: true
+  validates :organisation, presence: true
+  before_create :set_default_role
 
   def is_contributor?
     self.role == 'default'
@@ -78,6 +85,11 @@ class User < ActiveRecord::Base
       end
     end
     true
+  end
+
+  private
+  def set_default_role
+    self.role ||= 'api'
   end
 
 end
