@@ -284,7 +284,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def rank_name
-    data['rank_name']
+    data['rank_name'] || self.rank.try(:name)
   end
 
   def cites_accepted
