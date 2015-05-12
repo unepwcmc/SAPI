@@ -15,7 +15,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
             trade_restrictions.taxon_concept_id IN (?)
             OR (
               (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
-              AND matching_taxon_concept_ids @> ARRAY[?]::INT[]
+              AND trade_restrictions.geo_entity_id IN
+                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
       ", object_and_children, ancestors, object.id).
       select(<<-SQL
@@ -55,7 +56,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
             trade_restrictions.taxon_concept_id IN (?)
             OR (
               (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
-              AND matching_taxon_concept_ids @> ARRAY[?]::INT[]
+              AND trade_restrictions.geo_entity_id IN
+                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
       ", object_and_children, ancestors, object.id).
       select(<<-SQL
