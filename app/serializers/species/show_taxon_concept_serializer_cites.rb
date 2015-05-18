@@ -12,13 +12,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def quotas
     Quota.from('api_cites_quotas_view trade_restrictions').
       where("
-            trade_restrictions.taxon_concept_id IN (?)
+            trade_restrictions.taxon_concept_id IN (:object_and_children)
             OR (
-              (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
+              (trade_restrictions.taxon_concept_id IN (:ancestors) OR trade_restrictions.taxon_concept_id IS NULL)
               AND trade_restrictions.geo_entity_id IN
-                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
+                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = :taxon_concept_id)
             )
-      ", object_and_children, ancestors, object.id).
+      ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id).
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.url,
@@ -53,13 +53,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def cites_suspensions
     CitesSuspension.from('api_cites_suspensions_view trade_restrictions').
       where("
-            trade_restrictions.taxon_concept_id IN (?)
+            trade_restrictions.taxon_concept_id IN (:object_and_children)
             OR (
-              (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
+              (trade_restrictions.taxon_concept_id IN (:ancestors) OR trade_restrictions.taxon_concept_id IS NULL)
               AND trade_restrictions.geo_entity_id IN
-                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
+                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = :taxon_concept_id)
             )
-      ", object_and_children, ancestors, object.id).
+            OR (trade_restrictions.geo_entity_id IS NULL AND trade_restrictions.taxon_concept_id IN (:ancestors))
+      ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id).
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.start_date,
