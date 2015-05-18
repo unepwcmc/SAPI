@@ -11,7 +11,7 @@
       line-height: 2em;
       margin-left: 10px;
     }
-  }  
+  }
 
   .a_II &, &.a_II {
     background: url(/assets/species/cms-appendix.png);
@@ -74,7 +74,7 @@
       margin: -25px 0 0 30px;
     }
   }
-  
+
   .w_I &, &.w_I {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 78px;
@@ -131,8 +131,8 @@
       margin: -26px 0 0 31px;
     }
   }
-  
-  
+
+
   .w_II &, &.w_II {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 52px;
@@ -189,7 +189,7 @@
       margin: -26px 0 0 31px;
     }
   }
-  
+
   .w_III &, &.w_III {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 26px;
@@ -205,7 +205,7 @@
       margin: -25px 0 0 29px;
     }
   }
-  
+
   .nc &, .inactive &, &.nc, &.inactive {
     background: url(/assets/species/cites-appendix.png);
     background-position: 0px 182px;
@@ -224,23 +224,39 @@
   }
 
   .a_A &, &.a_A {
-    background: url(/assets/species/eu-annex.png);
-    background-position: 0px 130px;
+    background: url(/assets/species/eu-annex_sprites.png);
+    background-position: 0px 0px;
+    &.deletion {
+      background-position: 0px -104px;
+      width: 44px;
+    }
   }
 
   .a_B &, &.a_B {
-    background: url(/assets/species/eu-annex.png);
-    background-position: 0px 104px;
+    background: url(/assets/species/eu-annex_sprites.png);
+    background-position: 0px -26px;
+    &.deletion {
+      background-position: 0px -130px;
+      width: 44px;
+    }
   }
 
   .a_C &, &.a_C {
-    background: url(/assets/species/eu-annex.png);
-    background-position: 0px 78px;
+    background: url(/assets/species/eu-annex_sprites.png);
+    background-position: 0px 182px;
+    &.deletion {
+      background-position: 0px 78px;
+      width: 44px;
+    }
   }
 
   .a_D &, &.a_D {
-    background: url(/assets/species/eu-annex.png);
-    background-position: 0px 52px;
+    background: url(/assets/species/eu-annex_sprites.png);
+    background-position: 0px 156px;
+    &.deletion {
+      background-position: 0px 52px;
+      width: 44px;
+    }
   }
 
   .nc &, .inactive &, &.nc, &.inactive {
@@ -248,4 +264,3 @@
     background-position: 0px 182px;
   }
 }
-
