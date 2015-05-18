@@ -55,11 +55,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       where("
             trade_restrictions.taxon_concept_id IN (:object_and_children)
             OR (
-              (trade_restrictions.taxon_concept_id IN (:ancestors) OR trade_restrictions.taxon_concept_id IS NULL)
+              NOT applies_to_import
+              AND (trade_restrictions.taxon_concept_id IN (:ancestors) OR trade_restrictions.taxon_concept_id IS NULL)
               AND trade_restrictions.geo_entity_id IN
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = :taxon_concept_id)
             )
-            OR (trade_restrictions.geo_entity_id IS NULL AND trade_restrictions.taxon_concept_id IN (:ancestors))
+            OR (
+              (applies_to_import OR trade_restrictions.geo_entity_id IS NULL)
+              AND trade_restrictions.taxon_concept_id IN (:ancestors))
       ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id).
       select(<<-SQL
               trade_restrictions.notes,
@@ -73,6 +76,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.nomenclature_note_fr,
               trade_restrictions.nomenclature_note_es,
               trade_restrictions.geo_entity_en,
+              trade_restrictions.applies_to_import,
               trade_restrictions.start_notification,
               CASE
                 WHEN taxon_concept->>'rank' = '#{object.rank_name}'
