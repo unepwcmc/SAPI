@@ -42,7 +42,7 @@ h4 {
   font-weight: bold;
 }
 
-  
+
 .page {
 
   // page acts as a container for our grid.
@@ -56,12 +56,12 @@ h4 {
   margin-bottom: -20px;
   position: relative;
   z-index: 666;
-  
+
   strong {
     font-weight: 600;
     color: #444;
   }
-  
+
   p {
     padding: 0 0 0.75em 0;
     line-height: 1.45em;
@@ -91,7 +91,7 @@ h4 {
     margin-top: 1em;
     padding-bottom: 0.6em;
   }
-  
+
   h4.point-header.first {
     margin-top: 0;
   }
@@ -104,14 +104,14 @@ h4 {
     clear: both;
   }
 
-  .column-one { 
+  .column-one {
     @include span-columns(6, 12);
     width: 47.5%;
-    
+
   }
-  
-  .column-two { 
-    @include span-columns(6 omega, 12); 
+
+  .column-two {
+    @include span-columns(6 omega, 12);
     img {
       display: block;
       margin-left: auto;
@@ -137,4 +137,8 @@ h4 {
   width: 500px;
   margin: auto auto;
   padding: 20px 0px;
+}
+
+.column-full-width {
+  @include span-columns(12, 12);
 }
