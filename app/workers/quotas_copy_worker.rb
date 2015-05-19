@@ -15,7 +15,8 @@ class QuotasCopyWorker
           ARRAY[:included_geo_entities_ids]::integer[],
           :from_text,
           :to_text,
-          :current_user_id
+          :current_user_id,
+          :url
         )
       SQL
     ActiveRecord::Base.connection.execute(
@@ -34,7 +35,8 @@ class QuotasCopyWorker
                                        options["included_geo_entities_ids"].map(&:to_i)),
         :from_text => options["from_text"],
         :to_text => options["to_text"],
-        :current_user_id => options["current_user_id"]
+        :current_user_id => options["current_user_id"],
+        :url => options["url"]
     ]))
   end
 end
