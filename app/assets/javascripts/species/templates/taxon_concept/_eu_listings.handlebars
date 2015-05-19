@@ -69,8 +69,11 @@
           {{#each listing in historicEuListings}}
             <tr>
               <td>
-                <div class="eu_appendix a_{{unbound listing.species_listing_name}}">
+                <div class="eu_appendix a_{{unbound listing.species_listing_name}}  {{unbound listing.change_type_class}}">
                   <span>{{listing.species_listing_name}}</span>
+                  {{#unless listing.is_addition}}
+                    <span class="subscript">{{listing.change_type}}</span>
+                  {{/unless}}
                 </div>
               </td>
               <td>{{listing.party_full_name}}</td>
