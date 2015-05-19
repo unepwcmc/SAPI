@@ -183,10 +183,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.nomenclature_note_fr,
               listing_changes_mview.nomenclature_note_es,
               CASE
-                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'} 
+                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'}
                 AND taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   THEN '[SUBSPECIES listing <i>' || taxon_concepts_mview.full_name || '</i>]'
-                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'} 
+                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'}
                 AND taxon_concepts_mview.rank_name = 'VARIETY'
                   THEN '[VARIETY listing <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
@@ -236,6 +236,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.short_note_en,
               listing_changes_mview.auto_note_en,
               listing_changes_mview.hash_full_note_en,
+              listing_changes_mview.change_type_name,
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,
               listing_changes_mview.inclusion_taxon_concept_id,
