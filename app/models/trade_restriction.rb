@@ -37,7 +37,7 @@ class TradeRestriction < ActiveRecord::Base
     :notes, :publication_date, :purpose_ids, :quota, :type,
     :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id
+    :created_by_id, :updated_by_id, :url
 
   belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
@@ -121,7 +121,7 @@ class TradeRestriction < ActiveRecord::Base
   #Gets the display text for each CSV_COLUMNS
   def self.csv_columns_headers
     self::CSV_COLUMNS.map do |b|
-      Array(b).first 
+      Array(b).first
     end.flatten
   end
 
@@ -133,7 +133,7 @@ class TradeRestriction < ActiveRecord::Base
       else ','
     end
     CSV.open(file_path, 'wb', {:col_sep => csv_separator_char}) do |csv|
-      csv << Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES + 
+      csv << Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +
         ['Remarks'] + self.csv_columns_headers
       ids = []
       until (objs = export_query(filters).limit(limit).
@@ -178,8 +178,8 @@ class TradeRestriction < ActiveRecord::Base
     if filters.has_key?("taxon_concepts_ids")
       conds_str = <<-SQL
         ARRAY[
-          taxon_concepts_mview.id, taxon_concepts_mview.family_id, 
-          taxon_concepts_mview.order_id, taxon_concepts_mview.class_id, 
+          taxon_concepts_mview.id, taxon_concepts_mview.family_id,
+          taxon_concepts_mview.order_id, taxon_concepts_mview.class_id,
           taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
         ] && ARRAY[?]
         OR trade_restrictions.taxon_concept_id IS NULL
