@@ -34,6 +34,16 @@
         <%= text_field_tag "quotas[publication_date]", Time.now.strftime("%d/%m/%Y"), :class => "quota datepicker" %>
       </div>
     </div>
+
+    <h5 class="toggle-extra-options">Quotas <span>+</span><span class="hide">-</span></h5>
+    <div class="extra-options hide">
+      <div class="control-group">
+        <%= label_tag "quotas[url]", "URL", :class => 'control-label' %>
+        <div class="controls">
+          <%= text_field_tag "quotas[url]", '', :class => 'quota' %>
+        </div>
+      </div>
+    </div>
     <h5 class="toggle-extra-options">Taxon Concepts <span>+</span><span class="hide">-</span></h5>
     <div class="extra-options hide">
       <div class="control-group">
