@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION copy_quotas_across_years(
   from_year INTEGER, new_start_date DATE, new_end_date DATE, new_publication_date DATE,
   excluded_taxon_concepts_ids INTEGER[], included_taxon_concepts_ids INTEGER[],
   excluded_geo_entities_ids INTEGER[], included_geo_entities_ids INTEGER[],
-  from_text VARCHAR, to_text VARCHAR, current_user_id INTEGER
+  from_text VARCHAR, to_text VARCHAR, current_user_id INTEGER, new_url VARCHAR
   ) RETURNS VOID
   LANGUAGE plpgsql
   AS $$
@@ -73,7 +73,7 @@ BEGIN
       FROM trade_restrictions
       WHERE type = 'Quota' AND EXTRACT(year FROM start_date) =  from_year AND is_current = true
       AND (ARRAY_LENGTH(excluded_taxon_concepts, 1) IS NULL OR NOT excluded_taxon_concepts @> ARRAY[taxon_concept_id])
-      AND (ARRAY_LENGTH(included_taxon_concepts, 1) IS NULL OR included_taxon_concepts @> ARRAY[taxon_concept_id])	
+      AND (ARRAY_LENGTH(included_taxon_concepts, 1) IS NULL OR included_taxon_concepts @> ARRAY[taxon_concept_id])
       AND (ARRAY_LENGTH(excluded_geo_entities, 1) IS NULL OR NOT excluded_geo_entities @> ARRAY[geo_entity_id])
       AND (ARRAY_LENGTH(included_geo_entities, 1) IS NULL OR included_geo_entities  @> ARRAY[geo_entity_id])
     ), original_terms AS (
@@ -92,17 +92,17 @@ BEGIN
       FROM original_current_quotas
       WHERE trade_restrictions.id = original_current_quotas.id
     ), inserted_quotas AS (
-      INSERT INTO trade_restrictions(created_by_id, updated_by_id, type, is_current, start_date, 
-      end_date, geo_entity_id, quota, publication_date, notes, unit_id, taxon_concept_id, 
+      INSERT INTO trade_restrictions(created_by_id, updated_by_id, type, is_current, start_date,
+      end_date, geo_entity_id, quota, publication_date, notes, unit_id, taxon_concept_id,
       public_display, url, created_at, updated_at, excluded_taxon_concepts_ids, original_id)
-      SELECT current_user_id, current_user_id, 'Quota', is_current, new_start_date, new_end_date, geo_entity_id, 
+      SELECT current_user_id, current_user_id, 'Quota', is_current, new_start_date, new_end_date, geo_entity_id,
       quota, new_publication_date,
       CASE
         WHEN LENGTH(from_text) = 0
         THEN notes
       ELSE
         REPLACE(notes, from_text, to_text)
-      END, unit_id, taxon_concept_id, public_display, url,
+      END, unit_id, taxon_concept_id, public_display, new_url,
       NOW(), NOW(), trade_restrictions.excluded_taxon_concepts_ids,
       trade_restrictions.id
       FROM original_current_quotas AS trade_restrictions
@@ -136,5 +136,5 @@ COMMENT ON FUNCTION copy_quotas_across_years(
   new_publication_date DATE, excluded_taxon_concepts_ids INTEGER[],
   included_taxon_concepts_ids INTEGER[], excluded_geo_entities_ids INTEGER[],
   included_geo_entities_ids INTEGER[], from_text VARCHAR, to_text VARCHAR,
-  current_user_id INTEGER) IS
+  current_user_id INTEGER, new_url VARCHAR) IS
   'Procedure to copy quotas across two years with some filtering parameters.';
