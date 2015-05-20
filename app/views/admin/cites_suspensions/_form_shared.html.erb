@@ -17,6 +17,20 @@
   </div>
 
   <div class="control-group">
+    <%= f.label :applies_to_import, "Applies to import into country", :class => 'control-label'%>
+    <div class="controls">
+      <%= f.check_box :applies_to_import %>
+  <span>
+    <a data-placement="right" data-toggle="tooltip" href="#" rel="tooltip"
+      data-original-title="This setting will cascade an 'import' suspension to all descendants of a taxon concept regardless of distribution."
+    >
+      <i class="icon-info-sign"></i>
+    </a>
+  </span>
+    </div>
+  </div>
+
+  <div class="control-group">
     <%= f.label :start_notification_id, "Start notification", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :start_notification_id,

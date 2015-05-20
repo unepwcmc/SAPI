@@ -23,15 +23,17 @@
 #  original_id                 :integer
 #  updated_by_id               :integer
 #  created_by_id               :integer
-#  nomenclature_note_en        :text
 #  internal_notes              :text
+#  nomenclature_note_en        :text
 #  nomenclature_note_es        :text
 #  nomenclature_note_fr        :text
+#  applies_to_import           :boolean          default(FALSE), not null
 #
 
 class CitesSuspension < TradeRestriction
   attr_accessible :start_notification_id, :end_notification_id,
-    :cites_suspension_confirmations_attributes
+    :cites_suspension_confirmations_attributes,
+    :applies_to_import
   belongs_to :taxon_concept
   belongs_to :start_notification, :class_name => 'CitesSuspensionNotification'
   belongs_to :end_notification, :class_name => 'CitesSuspensionNotification'
