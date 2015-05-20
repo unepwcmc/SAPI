@@ -1,4 +1,4 @@
-<%= admin_new_modal({:title => "Current CITES Quotas"}) { 
+<%= admin_new_modal({:title => "Current CITES Quotas"}) {
   render :partial => "current_quotas_form",
     :locals => {:current_quotas => @taxon_concept.current_quotas}
 } %>
@@ -92,6 +92,13 @@
         { :include_blank => true},
         {:class => 'quota select2', :multiple => true, :style => 'width: 220px' }
       %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :url, "URL", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :url, :class => 'quota', :value => @quota.url %>
     </div>
   </div>
 
