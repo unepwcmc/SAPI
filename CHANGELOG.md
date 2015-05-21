@@ -1,3 +1,13 @@
+### 0.9.6.1
+**Species+:**
+
+* fixed cascading CITES suspensions
+* fixed displaying EU Anex removals
+
+**Species+ Admin:**
+
+* enabled amending quota URL
+
 ### 0.9.6
 **Species+ Admin:**
 
