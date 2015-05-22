@@ -3,6 +3,7 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
     :is_current, :subspecies_info, :nomenclature_note_en, :nomenclature_note_fr,
     :nomenclature_note_es,
     :geo_entity,
+    :applies_to_import,
     :start_notification
 
   def geo_entity

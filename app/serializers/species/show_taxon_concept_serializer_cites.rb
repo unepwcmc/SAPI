@@ -12,12 +12,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def quotas
     Quota.from('api_cites_quotas_view trade_restrictions').
       where("
-            trade_restrictions.taxon_concept_id IN (?)
+            trade_restrictions.taxon_concept_id IN (:object_and_children)
             OR (
-              (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
-              AND matching_taxon_concept_ids @> ARRAY[?]::INT[]
+              (trade_restrictions.taxon_concept_id IN (:ancestors) OR trade_restrictions.taxon_concept_id IS NULL)
+              AND trade_restrictions.geo_entity_id IN
+                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = :taxon_concept_id)
             )
-      ", object_and_children, ancestors, object.id).
+      ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id).
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.url,
@@ -52,12 +53,17 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def cites_suspensions
     CitesSuspension.from('api_cites_suspensions_view trade_restrictions').
       where("
-            trade_restrictions.taxon_concept_id IN (?)
+            trade_restrictions.taxon_concept_id IN (:object_and_children)
             OR (
-              (trade_restrictions.taxon_concept_id IN (?) OR trade_restrictions.taxon_concept_id IS NULL)
-              AND matching_taxon_concept_ids @> ARRAY[?]::INT[]
+              NOT applies_to_import
+              AND (trade_restrictions.taxon_concept_id IN (:ancestors) OR trade_restrictions.taxon_concept_id IS NULL)
+              AND trade_restrictions.geo_entity_id IN
+                (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = :taxon_concept_id)
             )
-      ", object_and_children, ancestors, object.id).
+            OR (
+              (applies_to_import OR trade_restrictions.geo_entity_id IS NULL)
+              AND trade_restrictions.taxon_concept_id IN (:ancestors))
+      ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id).
       select(<<-SQL
               trade_restrictions.notes,
               trade_restrictions.start_date,
@@ -70,6 +76,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.nomenclature_note_fr,
               trade_restrictions.nomenclature_note_es,
               trade_restrictions.geo_entity_en,
+              trade_restrictions.applies_to_import,
               trade_restrictions.start_notification,
               CASE
                 WHEN taxon_concept->>'rank' = '#{object.rank_name}'
@@ -181,10 +188,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.nomenclature_note_fr,
               listing_changes_mview.nomenclature_note_es,
               CASE
-                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'} 
+                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'}
                 AND taxon_concepts_mview.rank_name = 'SUBSPECIES'
                   THEN '[SUBSPECIES listing <i>' || taxon_concepts_mview.full_name || '</i>]'
-                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'} 
+                WHEN #{object.rank_name == Rank::SPECIES ? 'TRUE' : 'FALSE'}
                 AND taxon_concepts_mview.rank_name = 'VARIETY'
                   THEN '[VARIETY listing <i>' || taxon_concepts_mview.full_name || '</i>]'
                 ELSE NULL
@@ -234,6 +241,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.short_note_en,
               listing_changes_mview.auto_note_en,
               listing_changes_mview.hash_full_note_en,
+              listing_changes_mview.change_type_name,
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,
               listing_changes_mview.inclusion_taxon_concept_id,

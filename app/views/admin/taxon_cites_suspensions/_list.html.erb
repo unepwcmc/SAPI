@@ -17,7 +17,10 @@
       <td><%= suspension.year %></td>
       <td><%= suspension.start_notification && suspension.start_date_formatted %></td>
       <td><%= suspension.end_notification && suspension.end_date_formatted %></td>
-      <td><%= suspension.geo_entity && suspension.geo_entity.name_en %></td>
+      <td>
+        <%= '[IMPORT]' if suspension.applies_to_import %>
+        <%= suspension.geo_entity && suspension.geo_entity.name_en %>
+      </td>
       <td><%= suspension.purposes && suspension.purposes.map(&:code).join(', ') %></td>
       <td><%= suspension.terms && suspension.terms.map(&:code).join(', ') %></td>
       <td><%= suspension.sources && suspension.sources.map(&:code).join(', ') %></td>

@@ -89,8 +89,12 @@ module Trade::ShipmentReportQueries
     exporters.iso_code2 AS exporter,
     country_of_origin_id,
     countries_of_origin.iso_code2 AS country_of_origin,
-    SUM(CASE WHEN reported_by_exporter THEN NULL ELSE quantity END) AS importer_quantity,
-    SUM(CASE WHEN reported_by_exporter THEN quantity ELSE NULL END) AS exporter_quantity,
+    TRIM_DECIMAL_ZERO(
+      SUM(CASE WHEN reported_by_exporter THEN NULL ELSE quantity END)
+    ) AS importer_quantity,
+    TRIM_DECIMAL_ZERO(
+      SUM(CASE WHEN reported_by_exporter THEN quantity ELSE NULL END)
+    ) AS exporter_quantity,
     term_id,
     terms.code AS term,
     terms.name_en AS term_name_en,
@@ -180,9 +184,11 @@ module Trade::ShipmentReportQueries
     importers.iso_code2 AS importer,
     exporter_id,
     exporters.iso_code2 AS exporter,
-    GREATEST(
-      SUM(CASE WHEN reported_by_exporter THEN NULL ELSE quantity END),
-      SUM(CASE WHEN reported_by_exporter THEN quantity ELSE NULL END)
+    TRIM_DECIMAL_ZERO(
+      GREATEST(
+        SUM(CASE WHEN reported_by_exporter THEN NULL ELSE quantity END),
+        SUM(CASE WHEN reported_by_exporter THEN quantity ELSE NULL END)
+      )
     ) AS gross_quantity,
     term_id,
     terms.code AS term,
@@ -258,7 +264,9 @@ module Trade::ShipmentReportQueries
     unit_name_fr,
     exporter_id AS country_id,
     exporter AS country,
-    SUM(gross_quantity) AS gross_quantity
+    TRIM_DECIMAL_ZERO(
+      SUM(gross_quantity)
+    ) AS gross_quantity
   FROM gross_net_subquery
   GROUP BY
     year,
@@ -310,7 +318,9 @@ module Trade::ShipmentReportQueries
     unit_name_fr,
     importer_id AS country_id,
     importer AS country,
-    SUM(gross_quantity) AS gross_quantity
+    TRIM_DECIMAL_ZERO(
+      SUM(gross_quantity)
+    ) AS gross_quantity
   FROM gross_net_subquery
   GROUP BY
     year,
@@ -364,11 +374,13 @@ module Trade::ShipmentReportQueries
     exports.unit_name_fr,
     exports.country_id,
     exports.country,
-    CASE
-      WHEN (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0
-      THEN exports.gross_quantity - COALESCE(imports.gross_quantity, 0)
-      ELSE NULL
-    END AS gross_quantity
+    TRIM_DECIMAL_ZERO(
+      CASE
+        WHEN (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0
+        THEN exports.gross_quantity - COALESCE(imports.gross_quantity, 0)
+        ELSE NULL
+      END
+    ) AS gross_quantity
   FROM exports
   LEFT JOIN imports
   ON exports.taxon_concept_id = imports.taxon_concept_id
@@ -414,11 +426,13 @@ module Trade::ShipmentReportQueries
     imports.unit_name_fr,
     imports.country_id,
     imports.country,
-    CASE
-      WHEN (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0
-      THEN imports.gross_quantity - COALESCE(exports.gross_quantity, 0)
-      ELSE NULL
-    END AS gross_quantity
+    TRIM_DECIMAL_ZERO(
+      CASE
+        WHEN (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0
+        THEN imports.gross_quantity - COALESCE(exports.gross_quantity, 0)
+        ELSE NULL
+      END
+    ) AS gross_quantity
   FROM imports
   LEFT JOIN exports
   ON exports.taxon_concept_id = imports.taxon_concept_id
