@@ -39,6 +39,20 @@ class EuSuspensionRegulation < Event
     "#{self.name} (Effective from: #{self.effective_at.strftime("%d/%m/%Y")})"
   end
 
+  def touch_suspensions_and_taxa
+    eu_suspensions = EuSuspension.where([
+      "start_event_id = :to_event_id OR end_event_id = :to_event_id",
+      to_event_id: self.id
+    ])
+    eu_suspensions.update_all(
+      updated_at: Time.now, updated_by_id: self.updated_by_id
+    )
+    TaxonConcept.joins(:eu_suspensions).merge(eu_suspensions).update_all(
+      dependents_updated_at: Time.now,
+      dependents_updated_by_id: self.updated_by_id
+    )
+  end
+
   private
 
   def dependent_objects_map
