@@ -28,6 +28,8 @@ class EuSuspensionRegulation < Event
 
   has_many :eu_suspensions, :foreign_key => :start_event_id,
     :dependent => :destroy
+  has_many :ended_eu_suspensions, class_name: EuSuspension,
+    foreign_key: :end_event_id, dependent: :nullify
 
   validate :designation_is_eu
   validates :effective_at, :presence => true
