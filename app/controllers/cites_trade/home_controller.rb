@@ -1,7 +1,9 @@
 class CitesTrade::HomeController < CitesTradeController
 
   def index
-    @years = (1975..Trade::Shipment.maximum('year')).to_a.reverse
+    respond_to do |format|
+      format.html { @years = (1975..Trade::Shipment.maximum('year')).to_a.reverse }
+    end
   end
 
   def download
