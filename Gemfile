@@ -26,7 +26,7 @@ gem 'wicked'
 gem 'groupdate'
 gem "chartkick"
 
-gem 'sidekiq', '~> 3.3.0'
+gem 'sidekiq', '< 3'
 gem 'sidekiq-status', '~> 0.5'
 
 gem 'whenever', :require => false
