@@ -29,3 +29,12 @@ PSQL
   PsqlCommand.new(cmd).execute
   puts "Data copied to tmp table"
 end
+
+def print_pre_import_stats
+  queries = {'rows_in_import_file' => "SELECT COUNT(*) FROM #{import_table}"}
+  queries['rows_to_insert'] = "SELECT COUNT(*) FROM (#{rows_to_insert_sql}) t"
+  queries.each do |q_name, q|
+    res = ActiveRecord::Base.connection.execute(q)
+    puts "#{res[0]['count']} #{q_name.humanize}"
+  end
+end

@@ -13,11 +13,10 @@ namespace 'elibrary:events' do
           WHEN splus_event_type = 'EcSrg' THEN #{eu.id}
           ELSE #{cites.id}
         END AS designation_id,
-        EventName,
-        CAST(EventDate AS DATE) AS EventDate,
-        splus_event_type
+        BTRIM(EventName) AS EventName,
+        CASE WHEN EventDate = 'NULL' THEN NULL ELSE CAST(EventDate AS DATE) END AS EventDate,
+        BTRIM(splus_event_type) AS splus_event_type
       FROM #{import_table}
-      WHERE EventDate IS NOT NULL AND EventDate != 'NULL'
     SQL
   end
 
@@ -30,8 +29,8 @@ namespace 'elibrary:events' do
       FROM (#{all_rows_in_import_table_sql}) ne
       JOIN events e
       ON e.designation_id = ne.designation_id
-        AND e.name = ne.EventName
-        AND e.type = ne.splus_event_type AND ne.splus_event_type = 'CitesCop'
+        AND UPPER(e.name) = UPPER(ne.EventName)
+        AND UPPER(e.type) = UPPER(ne.splus_event_type) AND ne.splus_event_type = 'CitesCop'
       WHERE e.published_at IS NULL OR e.elib_legacy_id IS NULL
     SQL
   end
@@ -41,6 +40,7 @@ namespace 'elibrary:events' do
       SELECT * FROM (
         #{all_rows_in_import_table_sql}
       ) all_rows_in_import_table
+      WHERE EventDate IS NOT NULL
       EXCEPT
       SELECT elib_legacy_id, e.designation_id, name, published_at, type FROM (
         #{all_rows_in_import_table_sql}
@@ -65,15 +65,6 @@ namespace 'elibrary:events' do
     end
   end
 
-  def print_pre_import_stats
-    queries = {'rows_in_import_file' => "SELECT COUNT(*) FROM #{import_table}"}
-    queries['rows_to_insert'] = "SELECT COUNT(*) FROM (#{rows_to_insert_sql}) t"
-    queries.each do |q_name, q|
-      res = ActiveRecord::Base.connection.execute(q)
-      puts "#{res[0]['count']} #{q_name.humanize}"
-    end
-  end
-
   desc 'Import events from csv file'
   task :import => :environment do |task_name|
     check_file_provided(task_name)
@@ -93,11 +84,6 @@ namespace 'elibrary:events' do
     copy_from_csv(
       ENV['FILE'], import_table, columns_with_type.map{ |ct| ct.first }
     )
-    sql = <<-SQL
-      UPDATE #{import_table} t
-      SET splus_event_type = BTRIM(splus_event_type), EventName = BTRIM(EventName)
-    SQL
-    ActiveRecord::Base.connection.execute(sql)
 
     sql = <<-SQL
       WITH cops_to_update AS (
@@ -115,12 +101,16 @@ namespace 'elibrary:events' do
     print_pre_import_stats
 
     sql = <<-SQL
-      WITH rows_to_insert(legacy_id, designation_id, name, published_at, type) AS (
+      WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       )
       INSERT INTO "events" (elib_legacy_id, designation_id, name, published_at, type, created_at, updated_at)
         SELECT
-        rows_to_insert.*,
+        EventID,
+        designation_id,
+        EventName,
+        EventDate,
+        splus_event_type,
         NOW(),
         NOW()
       FROM rows_to_insert
@@ -129,4 +119,5 @@ namespace 'elibrary:events' do
 
     print_events_breakdown
   end
+
 end
