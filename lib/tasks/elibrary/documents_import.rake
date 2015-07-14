@@ -7,13 +7,13 @@ namespace 'elibrary:documents' do
     sql = <<-SQL
       SELECT
         EventID,
-        CASE WHEN DocumentOrder = 'NULL' THEN NULL ELSE DocumentOrder END,
+        CASE WHEN DocumentOrder = 'NULL' THEN NULL ELSE DocumentOrder END AS DocumentOrder,
         BTRIM(splus_document_type) AS splus_document_type,
         DocumentID,
         BTRIM(DocumentTitle) AS DocumentTitle,
         CAST(DocumentDate AS DATE) AS DocumentDate,
         BTRIM(DocumentFileName) AS DocumentFileName,
-        BTRIM(DocumentFilePath) AS DocumentFilePath,
+        REGEXP_REPLACE(BTRIM(DocumentFilePath), BTRIM(DocumentFileName) || '$','') AS DocumentFilePath,
         CASE WHEN DocumentIsPubliclyAccessible = 1 THEN TRUE ELSE FALSE END AS DocumentIsPubliclyAccessible,
         CASE WHEN LanguageName = 'Unspecified' THEN NULL ELSE LanguageName END AS LanguageName,
         MasterDocumentID
@@ -38,13 +38,15 @@ namespace 'elibrary:documents' do
         d.elib_legacy_file_path,
         d.is_public,
         lng.name_en,
-        d.primary_language_document_id
+        d.primary_language_document_id,
+        primary_d.elib_legacy_id
       FROM (
         #{all_rows_in_import_table_sql}
       ) nd
       JOIN documents d ON d.elib_legacy_id = nd.DocumentID
-      JOIN events e ON e.id = d.event_id
-      JOIN languages lng ON lng.id = document.language_id
+      LEFT JOIN events e ON e.id = d.event_id
+      LEFT JOIN languages lng ON lng.id = document.language_id
+      LEFT JOIN documents primary_d ON primary_d.elib_legacy_id = nd.MasterDocumentID
     SQL
   end
 
@@ -52,15 +54,6 @@ namespace 'elibrary:documents' do
     puts "#{Time.now} There are #{Document.count} documents in total"
     Document.group(:type).order(:type).count.each do |type, count|
       puts "\t #{type} #{count}"
-    end
-  end
-
-  def print_pre_import_stats
-    queries = {'rows_in_import_file' => "SELECT COUNT(*) FROM #{import_table}"}
-    queries['rows_to_insert'] = "SELECT COUNT(*) FROM (#{rows_to_insert_sql}) t"
-    queries.each do |q_name, q|
-      res = ActiveRecord::Base.connection.execute(q)
-      puts "#{res[0]['count']} #{q_name.humanize}"
     end
   end
 
@@ -109,7 +102,7 @@ namespace 'elibrary:documents' do
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       ), rows_to_insert_resolved AS (
-        SELECT rows_to_insert.*,
+        SELECT
         events.id AS event_id,
         DocumentOrder,
         splus_document_type,
@@ -122,7 +115,7 @@ namespace 'elibrary:documents' do
         lng.id AS language_id
         FROM rows_to_insert
         JOIN events e ON e.elib_legacy_id = rows_to_insert.EventID
-        JOIN languages lng ON lng.name_en = rows_to_insert.LanguageName
+        JOIN languages lng ON UPPER(lng.name_en) = UPPER(rows_to_insert.LanguageName)
       ), inserted_rows AS (
         INSERT INTO "documents" (
           event_id,
