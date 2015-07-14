@@ -1,5 +1,5 @@
-require Rails.root.join('lib/tasks/elibrary_import/helpers.rb')
-namespace 'elibrary:import' do
+require Rails.root.join('lib/tasks/elibrary/helpers.rb')
+namespace 'elibrary:events' do
 
   def import_table; :elibrary_events_import; end
 
@@ -21,9 +21,9 @@ namespace 'elibrary:import' do
     SQL
   end
 
- # CITES CoPs are special, because they pre-existed in the system
- # need to update them with the elib_legacy_id & published_at date
- # matching depends on the event name & type
+  # CITES CoPs are special, because they pre-existed in the system
+  # need to update them with the elib_legacy_id & published_at date
+  # matching depends on the event name & type
   def cops_to_update_sql
     sql = <<-SQL
       SELECT id, e.designation_id, name, type, ne.EventID AS elib_legacy_id, ne.EventDate AS published_at
@@ -66,7 +66,7 @@ namespace 'elibrary:import' do
   end
 
   def print_pre_import_stats
-    queries = {'rows_to_import' => "SELECT COUNT(*) FROM #{import_table}"}
+    queries = {'rows_in_import_file' => "SELECT COUNT(*) FROM #{import_table}"}
     queries['rows_to_insert'] = "SELECT COUNT(*) FROM (#{rows_to_insert_sql}) t"
     queries.each do |q_name, q|
       res = ActiveRecord::Base.connection.execute(q)
@@ -75,7 +75,7 @@ namespace 'elibrary:import' do
   end
 
   desc 'Import events from csv file'
-  task :events => :environment do |task_name|
+  task :import => :environment do |task_name|
     check_file_provided(task_name)
     drop_table_if_exists(import_table)
     columns_with_type = [
