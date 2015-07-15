@@ -15,4 +15,13 @@ namespace :elibrary do
       importer.run
     end
   end
+  namespace :documents do
+    require Rails.root.join('lib/tasks/elibrary/documents_importer.rb')
+    desc 'Import documents from csv file'
+    task :import => :environment do |task_name|
+      check_file_provided(task_name)
+      importer = Elibrary::DocumentsImporter.new(ENV['FILE'])
+      importer.run
+    end
+  end
 end

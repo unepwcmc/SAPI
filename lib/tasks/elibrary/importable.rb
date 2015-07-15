@@ -1,6 +1,20 @@
 module Elibrary
   module Importable
 
+    def run
+      drop_table_if_exists(table_name)
+      create_table_from_column_array(
+        table_name, columns_with_type.map{ |ct| ct.join(' ') }
+      )
+      copy_from_csv(
+        @file_name, table_name, columns_with_type.map{ |ct| ct.first }
+      )
+      run_preparatory_queries
+      print_pre_import_stats
+      run_queries
+      print_post_import_stats
+    end
+
     def drop_table_if_exists(table_name)
       ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
       puts "Table removed"

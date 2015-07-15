@@ -1,67 +1,16 @@
-require Rails.root.join('lib/tasks/elibrary/helpers.rb')
-namespace 'elibrary:documents' do
+require Rails.root.join('lib/tasks/elibrary/importable.rb')
 
-  def import_table; :elibrary_documents_import; end
+class Elibrary::DocumentsImporter
+  include Elibrary::Importable
 
-  def all_rows_in_import_table_sql
-    sql = <<-SQL
-      SELECT
-        EventID,
-        CASE WHEN DocumentOrder = 'NULL' THEN NULL ELSE DocumentOrder END AS DocumentOrder,
-        BTRIM(splus_document_type) AS splus_document_type,
-        DocumentID,
-        BTRIM(DocumentTitle) AS DocumentTitle,
-        CAST(DocumentDate AS DATE) AS DocumentDate,
-        BTRIM(DocumentFileName) AS DocumentFileName,
-        REGEXP_REPLACE(BTRIM(DocumentFilePath), BTRIM(DocumentFileName) || '$','') AS DocumentFilePath,
-        CASE WHEN DocumentIsPubliclyAccessible = 1 THEN TRUE ELSE FALSE END AS DocumentIsPubliclyAccessible,
-        CASE WHEN LanguageName = 'Unspecified' THEN NULL ELSE LanguageName END AS LanguageName,
-        MasterDocumentID
-      FROM #{import_table}
-    SQL
+  def initialize(file_name)
+    @file_name = file_name
   end
 
-  def rows_to_insert_sql
-    sql = <<-SQL
-      SELECT * FROM (
-        #{all_rows_in_import_table_sql}
-      ) all_rows_in_import_table
-      EXCEPT
-      SELECT
-        e.elib_legacy_id,
-        d.sort_index,
-        d.type,
-        d.elib_legacy_id,
-        d.title,
-        d.date,
-        d.elib_legacy_file_name,
-        d.elib_legacy_file_path,
-        d.is_public,
-        lng.name_en,
-        d.primary_language_document_id,
-        primary_d.elib_legacy_id
-      FROM (
-        #{all_rows_in_import_table_sql}
-      ) nd
-      JOIN documents d ON d.elib_legacy_id = nd.DocumentID
-      LEFT JOIN events e ON e.id = d.event_id
-      LEFT JOIN languages lng ON lng.id = document.language_id
-      LEFT JOIN documents primary_d ON primary_d.elib_legacy_id = nd.MasterDocumentID
-    SQL
-  end
+  def table_name; :elibrary_documents_import; end
 
-  def print_documents_breakdown
-    puts "#{Time.now} There are #{Document.count} documents in total"
-    Document.group(:type).order(:type).count.each do |type, count|
-      puts "\t #{type} #{count}"
-    end
-  end
-
-  desc 'Import documents from csv file'
-  task :import => :environment do |task_name|
-    check_file_provided(task_name)
-    drop_table_if_exists(import_table)
-    columns_with_type = [
+  def columns_with_type
+    [
       ['EventTypeID', 'INT'],
       ['EventTypeName', 'TEXT'],
       ['splus_event_type', 'TEXT'],
@@ -88,27 +37,23 @@ namespace 'elibrary:documents' do
       ['DocumentIsTranslationIntoEnglish', 'TEXT'],
       ['MasterDocumentID', 'INT']
     ]
-    create_table_from_column_array(
-      import_table, columns_with_type.map{ |ct| ct.join(' ') }
-    )
-    copy_from_csv(
-      ENV['FILE'], import_table, columns_with_type.map{ |ct| ct.first }
-    )
+  end
 
-    print_documents_breakdown
-    print_pre_import_stats
+  def run_preparatory_queries; end
 
+  def run_queries
     sql = <<-SQL
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       ), rows_to_insert_resolved AS (
         SELECT
-        events.id AS event_id,
+        e.id AS event_id,
         DocumentOrder,
         splus_document_type,
         DocumentID,
         DocumentTitle,
         DocumentDate,
+        DocumentFileName AS filename,
         DocumentFileName,
         DocumentFilePath,
         DocumentIsPubliclyAccessible,
@@ -124,10 +69,13 @@ namespace 'elibrary:documents' do
           elib_legacy_id,
           title,
           date,
+          filename,
           elib_legacy_file_name,
           elib_legacy_file_path,
           is_public,
-          language_id
+          language_id,
+          created_at,
+          updated_at
         )
         SELECT
           rows_to_insert_resolved.*,
@@ -147,7 +95,74 @@ namespace 'elibrary:documents' do
       WHERE rows_to_insert_with_master_document_id.id = documents.id
     SQL
     ActiveRecord::Base.connection.execute(sql)
+  end
 
+  def all_rows_sql
+    sql = <<-SQL
+      SELECT
+        EventID,
+        CASE WHEN DocumentOrder = 'NULL' THEN NULL ELSE CAST(DocumentOrder AS INT) END AS DocumentOrder,
+        BTRIM(splus_document_type) AS splus_document_type,
+        DocumentID,
+        BTRIM(DocumentTitle) AS DocumentTitle,
+        CASE
+          WHEN DocumentDate = 'NULL' THEN NULL
+          ELSE COALESCE(CAST(DocumentDate AS DATE), CAST(EventDate AS DATE))
+        END AS DocumentDate,
+        BTRIM(DocumentFileName) AS DocumentFileName,
+        REGEXP_REPLACE(BTRIM(DocumentFilePath), BTRIM(DocumentFileName) || '$','') AS DocumentFilePath,
+        CASE WHEN BTRIM(DocumentIsPubliclyAccessible) = '1' THEN TRUE ELSE FALSE END AS DocumentIsPubliclyAccessible,
+        CASE WHEN LanguageName = 'Unspecified' THEN NULL ELSE LanguageName END AS LanguageName,
+        MasterDocumentID
+      FROM #{table_name} t
+    SQL
+  end
+
+  def rows_to_insert_sql
+    sql = <<-SQL
+      SELECT * FROM (
+        #{all_rows_sql}
+      ) all_rows_in_table_name
+      WHERE DocumentDate IS NOT NULL
+        AND splus_document_type IS NOT NULL
+        AND DocumentFileName IS NOT NULL
+      EXCEPT
+      SELECT
+        e.elib_legacy_id,
+        d.sort_index,
+        d.type,
+        d.elib_legacy_id,
+        d.title,
+        d.date,
+        d.elib_legacy_file_name,
+        d.elib_legacy_file_path,
+        d.is_public,
+        lng.name_en,
+        primary_d.elib_legacy_id
+      FROM (
+        #{all_rows_sql}
+      ) nd
+      JOIN documents d ON d.elib_legacy_id = nd.DocumentID
+      LEFT JOIN events e ON e.id = d.event_id
+      LEFT JOIN languages lng ON lng.id = d.language_id
+      LEFT JOIN documents primary_d ON primary_d.elib_legacy_id = nd.MasterDocumentID
+    SQL
+  end
+
+  def print_pre_import_stats
+    print_documents_breakdown
+    print_query_counts
+  end
+
+  def print_post_import_stats
     print_documents_breakdown
   end
+
+  def print_documents_breakdown
+    puts "#{Time.now} There are #{Document.count} documents in total"
+    Document.group(:type).order(:type).count.each do |type, count|
+      puts "\t #{type} #{count}"
+    end
+  end
+
 end

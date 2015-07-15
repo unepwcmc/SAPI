@@ -1,6 +1,6 @@
 class AddFieldsToDocuments < ActiveRecord::Migration
   def change
-    exexute 'DROP VIEW documents_view'
+    execute 'DROP VIEW documents_view'
     rename_column :documents, :legacy_id, :elib_legacy_id
     add_column :documents, :sort_index, :integer
     add_column :documents, :primary_language_document_id, :integer
