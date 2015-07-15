@@ -5,7 +5,6 @@ class AddFieldsToDocuments < ActiveRecord::Migration
     add_column :documents, :sort_index, :integer
     add_column :documents, :primary_language_document_id, :integer
     add_column :documents, :elib_legacy_file_name, :text
-    add_column :documents, :elib_legacy_file_path, :text
     add_foreign_key :documents, :documents, name: 'documents_primary_language_document_id_fk',
       column: 'primary_language_document_id'
     execute "CREATE VIEW documents_view AS #{view_sql('20141223141125', 'documents_view')}"

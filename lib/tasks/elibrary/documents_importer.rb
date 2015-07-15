@@ -55,7 +55,6 @@ class Elibrary::DocumentsImporter
         DocumentDate,
         DocumentFileName AS filename,
         DocumentFileName,
-        DocumentFilePath,
         DocumentIsPubliclyAccessible,
         lng.id AS language_id
         FROM rows_to_insert
@@ -110,7 +109,6 @@ class Elibrary::DocumentsImporter
           ELSE COALESCE(CAST(DocumentDate AS DATE), CAST(EventDate AS DATE))
         END AS DocumentDate,
         BTRIM(DocumentFileName) AS DocumentFileName,
-        REGEXP_REPLACE(BTRIM(DocumentFilePath), BTRIM(DocumentFileName) || '$','') AS DocumentFilePath,
         CASE WHEN BTRIM(DocumentIsPubliclyAccessible) = '1' THEN TRUE ELSE FALSE END AS DocumentIsPubliclyAccessible,
         CASE WHEN LanguageName = 'Unspecified' THEN NULL ELSE LanguageName END AS LanguageName,
         MasterDocumentID
