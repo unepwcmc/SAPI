@@ -59,12 +59,12 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
 
   def load_associations
     @event_types = Event.elibrary_current_event_types.map(&:to_s)
-    @events = Event.where(type: @event_types).order(:effective_at).reverse_order
+    @events = Event.where(type: @event_types).order(:published_at).reverse_order
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
      order(:name_en)
     @english = Language.find_by_iso_code1('EN')
     @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
-    @geo_entities =  GeoEntity.select(['geo_entities.id', :name_en]).
+    @geo_entities = GeoEntity.select(['geo_entities.id', :name_en]).
       joins(:geo_entity_type).where(
       :"geo_entity_types.name" => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
     ).order(:name_en)
