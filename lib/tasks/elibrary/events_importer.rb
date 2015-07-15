@@ -66,11 +66,12 @@ class Elibrary::EventsImporter
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       )
-      INSERT INTO "events" (elib_legacy_id, designation_id, name, published_at, type, created_at, updated_at)
+      INSERT INTO "events" (elib_legacy_id, designation_id, name, effective_at, published_at, type, created_at, updated_at)
         SELECT
         EventID,
         designation_id,
         EventName,
+        EventDate,
         EventDate,
         splus_event_type,
         NOW(),
