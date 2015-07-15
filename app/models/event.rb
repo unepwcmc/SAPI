@@ -25,7 +25,7 @@
 class Event < ActiveRecord::Base
   track_who_does_it
   attr_accessible :name, :designation_id, :description, :extended_description,
-    :url, :multilingual_url, :effective_at, :is_current, :end_date,
+    :url, :multilingual_url, :published_at, :effective_at, :is_current, :end_date,
     :created_by_id, :updated_by_id
   attr_reader :effective_at_formatted
 
@@ -54,6 +54,10 @@ class Event < ActiveRecord::Base
 
   def effective_at_formatted
     effective_at && effective_at.strftime("%d/%m/%Y")
+  end
+
+  def published_at_formatted
+    published_at && published_at.strftime("%d/%m/%Y")
   end
 
   def end_date_formatted
