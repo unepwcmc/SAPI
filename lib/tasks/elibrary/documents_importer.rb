@@ -5,13 +5,15 @@ class Elibrary::DocumentsImporter
 
   def initialize(file_name)
     @file_name = file_name
+    @file_name =~ /documents_(.+)\.csv$/
+    @document_group = $1
   end
 
-  def table_name; :elibrary_documents_import; end
+  def table_name; :"elibrary_documents_#{@document_group}_import"; end
 
   def columns_with_type
     [
-      ['EventTypeID', 'INT'],
+      ['EventTypeID', 'TEXT'],
       ['EventTypeName', 'TEXT'],
       ['splus_event_type', 'TEXT'],
       ['EventID', 'INT'],
@@ -20,7 +22,7 @@ class Elibrary::DocumentsImporter
       ['MeetingType', 'TEXT'],
       ['EventDocumentReference', 'TEXT'],
       ['DocumentOrder', 'TEXT'],
-      ['DocumentTypeID', 'INT'],
+      ['DocumentTypeID', 'TEXT'],
       ['DocumentTypeName', 'TEXT'],
       ['splus_document_type', 'TEXT'],
       ['DocumentID', 'INT'],
@@ -39,7 +41,13 @@ class Elibrary::DocumentsImporter
     ]
   end
 
-  def run_preparatory_queries; end
+  def run_preparatory_queries
+    ActiveRecord::Base.connection.execute("DELETE FROM #{table_name} WHERE DocumentTypeName LIKE 'CoP Proceedings%'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentTitle = NULL WHERE DocumentTitle='NULL'" )
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentDate = NULL WHERE DocumentDate='NULL'" )
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET EventDate = NULL WHERE EventDate='NULL'" )
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentFileName = NULL WHERE DocumentFileName='NULL'" )
+  end
 
   def run_queries
     sql = <<-SQL
@@ -58,8 +66,8 @@ class Elibrary::DocumentsImporter
         DocumentIsPubliclyAccessible,
         lng.id AS language_id
         FROM rows_to_insert
-        JOIN events e ON e.elib_legacy_id = rows_to_insert.EventID
-        JOIN languages lng ON UPPER(lng.name_en) = UPPER(rows_to_insert.LanguageName)
+        LEFT JOIN events e ON e.elib_legacy_id = rows_to_insert.EventID
+        LEFT JOIN languages lng ON UPPER(lng.name_en) = UPPER(rows_to_insert.LanguageName)
       ), inserted_rows AS (
         INSERT INTO "documents" (
           event_id,
@@ -70,7 +78,6 @@ class Elibrary::DocumentsImporter
           date,
           filename,
           elib_legacy_file_name,
-          elib_legacy_file_path,
           is_public,
           language_id,
           created_at,
@@ -104,10 +111,10 @@ class Elibrary::DocumentsImporter
         BTRIM(splus_document_type) AS splus_document_type,
         DocumentID,
         BTRIM(DocumentTitle) AS DocumentTitle,
-        CASE
-          WHEN DocumentDate = 'NULL' THEN NULL
-          ELSE COALESCE(CAST(DocumentDate AS DATE), CAST(EventDate AS DATE))
-        END AS DocumentDate,
+        COALESCE(
+          CAST(DocumentDate AS DATE),
+          CAST(EventDate AS DATE)
+        ) AS DocumentDate,
         BTRIM(DocumentFileName) AS DocumentFileName,
         CASE WHEN BTRIM(DocumentIsPubliclyAccessible) = '1' THEN TRUE ELSE FALSE END AS DocumentIsPubliclyAccessible,
         CASE WHEN LanguageName = 'Unspecified' THEN NULL ELSE LanguageName END AS LanguageName,
@@ -124,6 +131,7 @@ class Elibrary::DocumentsImporter
       WHERE DocumentDate IS NOT NULL
         AND splus_document_type IS NOT NULL
         AND DocumentFileName IS NOT NULL
+        AND DocumentTitle IS NOT NULL
       EXCEPT
       SELECT
         e.elib_legacy_id,
@@ -133,7 +141,6 @@ class Elibrary::DocumentsImporter
         d.title,
         d.date,
         d.elib_legacy_file_name,
-        d.elib_legacy_file_path,
         d.is_public,
         lng.name_en,
         primary_d.elib_legacy_id
