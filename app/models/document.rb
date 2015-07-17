@@ -64,7 +64,7 @@ class Document < ActiveRecord::Base
   end
 
   def set_title
-    if title.blank? && filename_changed?
+    if title.blank? && filename_changed? && filename.file
       self.title = filename.file.filename.sub(/.\w+$/, '').humanize
     end
   end
