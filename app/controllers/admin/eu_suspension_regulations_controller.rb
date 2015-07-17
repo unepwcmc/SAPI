@@ -18,6 +18,7 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
   protected
     def collection
       @eu_suspension_regulations ||= end_of_association_chain.
+        includes([:creator, :updater]).
         order('effective_at DESC, name ASC').
         page(params[:page]).
         search(params[:query])

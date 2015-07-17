@@ -9,5 +9,7 @@ class EventEuSuspensionCopyWorker
         #{to_event_id}
       )
     SQL
+    eu_suspension_regulation = EuSuspensionRegulation.find(to_event_id)
+    eu_suspension_regulation.touch_suspensions_and_taxa
   end
 end
