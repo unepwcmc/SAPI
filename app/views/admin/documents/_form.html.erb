@@ -72,6 +72,22 @@
           %>
         </div>
       </div>
+      <div class="control-group">
+        <%= ff.label :process_stage_id, class: 'control-label' %>
+        <div class="controls">
+          <%= ff.select :process_stage_id,
+            options_for_select(DocumentTag::ProcessStage.all.map { |rp| [rp.name, rp.id] },
+              @document.review_details.process_stage_id),
+            { :class => 'phases', :style => 'width: 220px' }
+          %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= ff.label :recommended_category, class: 'control-label' %>
+        <div class="controls">
+          <%= ff.text_area :recommended_category, :class => "recommended_category", :value => @document.review_details.recommended_category %>
+        </div>
+      </div>
     <% end %>
   <% elsif @document.is_a?(Document::Proposal) %>
     <%= f.fields_for :proposal_details do |ff| %>
