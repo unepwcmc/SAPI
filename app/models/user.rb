@@ -31,6 +31,19 @@ class User < ActiveRecord::Base
     :remember_me, :role, :terms_and_conditions, :is_cites_authority,
     :organisation, :geo_entity_id
 
+  MANAGER = 'admin'
+  CONTRIBUTOR = 'default' # nonsense
+  ELIBRARY_USER = 'elibrary'
+  API_USER = 'api'
+  ROLES = [MANAGER, CONTRIBUTOR, ELIBRARY_USER, API_USER]
+  NON_ADMIN_ROLES = [ELIBRARY_USER, API_USER]
+  ROLES_FOR_DISPLAY = {
+    MANAGER => 'Manager',
+    CONTRIBUTOR => 'Contributor',
+    ELIBRARY_USER => 'E-library User',
+    API_USER => 'API User'
+  }
+
   has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
   has_many :ahoy_events, dependent: :nullify, class_name: 'Ahoy::Event'
   has_many :api_requests
