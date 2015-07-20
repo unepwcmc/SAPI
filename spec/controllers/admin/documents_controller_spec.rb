@@ -7,6 +7,7 @@ describe Admin::DocumentsController do
   let(:geo_entity){ create(:geo_entity) }
   let(:proposal_outcome){ create(:proposal_outcome) }
   let(:review_phase){ create(:review_phase) }
+  let(:process_stage) { create(:process_stage) }
 
   describe "index" do
     before(:each) do
@@ -66,13 +67,17 @@ describe Admin::DocumentsController do
             assigns(:documents).should eq([@document3])
           end
         end
-        context 'by review phase' do
+        context 'by document tags' do
           before(:each) do
             @document3 = create(:review_of_significant_trade, event: create_ec_srg, date: DateTime.new(2014,01,01))
-            create(:review_details, document_id: @document3.id, review_phase_id: review_phase.id)
+            create(:review_details, document_id: @document3.id, review_phase_id: review_phase.id, process_stage_id: process_stage.id)
           end
-          it "retrieves documents for tag" do
+          it "retrieves documents for review_phase tag" do
             get :index, "document-tags-ids" => [review_phase.id]
+            assigns(:documents).should eq([@document3])
+          end
+          it "retrieves documents for process_stage tag" do
+            get :index, "document-tags-ids" => [process_stage.id]
             assigns(:documents).should eq([@document3])
           end
         end
@@ -137,7 +142,9 @@ describe Admin::DocumentsController do
 
     context "with nested review_details attributes" do
       let(:document){ create(:review_of_significant_trade) }
-      let(:review_phase){ create(:document_tag, type: 'DocumentTag::ReviewPhase') }
+      let(:review_phase){ create(:review_phase) }
+      let(:process_stage) { create(:process_stage) }
+      let(:recommended_category) { "A wonderful category" }
 
       it "assign review phase to Review" do
         put :update, id: document.id, document: {
@@ -146,6 +153,24 @@ describe Admin::DocumentsController do
         response.should redirect_to(admin_documents_url)
 
         expect(document.reload.review_details.review_phase_id).to eq(review_phase.id)
+      end
+
+      it "assign process stage to Review" do
+        put :update, id: document.id, document: {
+          date: Date.today, review_details_attributes: {process_stage_id: process_stage.id}
+        }
+        response.should redirect_to(admin_documents_url)
+
+        expect(document.reload.review_details.process_stage_id).to eq(process_stage.id)
+      end
+
+      it "assign recommended category to Review" do
+        put :update, id: document.id, document: {
+          date: Date.today, review_details_attributes: {recommended_category: recommended_category}
+        }
+        response.should redirect_to(admin_documents_url)
+
+        expect(document.reload.review_details.recommended_category).to eq(recommended_category)
       end
     end
 
