@@ -76,7 +76,7 @@
         <%= ff.label :process_stage_id, class: 'control-label' %>
         <div class="controls">
           <%= ff.select :process_stage_id,
-            options_for_select(DocumentTag::ProcessStage.all.map { |rp| [rp.name, rp.id] },
+            options_for_select(DocumentTag::ProcessStage.all.map { |ps| [ps.name, ps.id] },
               @document.review_details.process_stage_id),
             { :class => 'phases', :style => 'width: 220px' }
           %>

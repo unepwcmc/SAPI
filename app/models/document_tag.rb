@@ -15,5 +15,6 @@ class DocumentTag < ActiveRecord::Base
   has_and_belongs_to_many :documents
 
   scope :review_phases, -> { where(type: 'DocumentTag::ReviewPhase') }
+  scope :process_stages, -> { where(type: 'DocumentTag::ProcessStage') }
   scope :proposal_outcomes, -> { where(type: 'DocumentTag::ProposalOutcome') }
 end

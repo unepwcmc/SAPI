@@ -60,7 +60,7 @@ class Document < ActiveRecord::Base
 
   # Returns document tag types (class objects) that are relevant to E-Library
   def self.elibrary_document_tag_types
-    [DocumentTag::ProposalOutcome, DocumentTag::ReviewPhase]
+    [DocumentTag::ProposalOutcome, DocumentTag::ReviewPhase, DocumentTag::ProcessStage]
   end
 
   def set_title
