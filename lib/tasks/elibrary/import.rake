@@ -33,4 +33,40 @@ namespace :elibrary do
       importer.run
     end
   end
+  namespace :citations_cop do
+    require Rails.root.join('lib/tasks/elibrary/citations_cop_importer.rb')
+    desc 'Import citations & proposal details from csv file'
+    task :import => :environment do |task_name|
+      check_file_provided(task_name)
+      importer = Elibrary::CitationsCopImporter.new(ENV['FILE'])
+      importer.run
+    end
+  end
+  namespace :citations_rst do
+    require Rails.root.join('lib/tasks/elibrary/citations_rst_importer.rb')
+    desc 'Import citations & review details from csv file'
+    task :import => :environment do |task_name|
+      check_file_provided(task_name)
+      importer = Elibrary::CitationsRstImporter.new(ENV['FILE'])
+      importer.run
+    end
+  end
+  namespace :citations_ndf do
+    require Rails.root.join('lib/tasks/elibrary/citations_ndf_importer.rb')
+    desc 'Import citations from csv file'
+    task :import => :environment do |task_name|
+      check_file_provided(task_name)
+      importer = Elibrary::CitationsNdfImporter.new(ENV['FILE'])
+      importer.run
+    end
+  end
+  namespace :citations do
+    require Rails.root.join('lib/tasks/elibrary/citations_importer.rb')
+    desc 'Import citations from csv file'
+    task :import => :environment do |task_name|
+      check_file_provided(task_name)
+      importer = Elibrary::CitationsImporter.new(ENV['FILE'])
+      importer.run
+    end
+  end
 end
