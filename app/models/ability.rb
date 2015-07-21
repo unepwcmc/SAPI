@@ -31,7 +31,7 @@ class Ability
 
     user ||= User.new
 
-    if user.is_admin?
+    if user.is_manager?
       can :manage, :all
     elsif user.is_contributor?
       can [:autocomplete, :read], :all
@@ -51,9 +51,12 @@ class Ability
         Trade::Shipment, Trade::Permit, Trade::AnnualReportUpload,
         Trade::ValidationRule
       ]
-    elsif user.is_api?
+    elsif user.is_elibrary_user?
       cannot :manage, :all
+      can :read, Document
+    elsif user.is_api_user?
+      cannot :manage, :all
+      can :read, Document, is_public: true
     end
-    
   end
 end

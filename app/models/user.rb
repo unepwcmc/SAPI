@@ -55,16 +55,24 @@ class User < ActiveRecord::Base
   validates :organisation, presence: true
   before_create :set_default_role
 
+  def is_manager?
+    self.role == MANAGER
+  end
+
   def is_contributor?
-    self.role == 'default'
+    self.role == CONTRIBUTOR
   end
 
-  def is_admin?
-    self.role == 'admin'
+  def is_elibrary_user?
+    self.role == ELIBRARY_USER
   end
 
-  def is_api?
-    self.role == 'api'
+  def is_api_user?
+    self.role == API_USER
+  end
+
+  def is_manager_or_contributor?
+    is_manager? || is_contributor?
   end
 
   def role_for_display
