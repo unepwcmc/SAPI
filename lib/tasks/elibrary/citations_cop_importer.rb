@@ -86,17 +86,26 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
     SQL
     ActiveRecord::Base.connection.execute(sql)
     # in case you need to revert
-    WITH new_docs AS (
-      SELECT * FROM documents WHERE original_id IS NOT NULL
-    ), proposals AS (
-      UPDATE proposal_details
-      SET document_id = d.original_id
-      FROM proposal_details pd
-      JOIN new_docs d ON pd.document_id = d.id
-      WHERE proposal_details.id = pd.id
-    )
-    DELETE FROM documents
-    WHERE original_id IS NOT NULL;
+    # WITH new_docs AS (
+    #   SELECT * FROM documents WHERE original_id IS NOT NULL
+    # ), proposals AS (
+    #   UPDATE proposal_details
+    #   SET document_id = d.original_id
+    #   FROM proposal_details pd
+    #   JOIN new_docs d ON pd.document_id = d.id
+    #   WHERE proposal_details.id = pd.id
+    # )
+    # DELETE FROM documents
+    # WHERE original_id IS NOT NULL;
+
+    sql = <<-SQL
+      UPDATE documents
+      SET title = pd.proposal_nature
+      FROM
+      proposal_details pd
+      WHERE documents.id = pd.document_id;
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
   end
 
   def run_queries
