@@ -28,6 +28,8 @@ class EuSuspensionRegulation < Event
 
   has_many :eu_suspensions, :foreign_key => :start_event_id,
     :dependent => :destroy
+  has_many :ended_eu_suspensions, class_name: EuSuspension,
+    foreign_key: :end_event_id, dependent: :nullify
 
   validate :designation_is_eu
   validates :effective_at, :presence => true
@@ -35,6 +37,20 @@ class EuSuspensionRegulation < Event
 
   def name_and_date
     "#{self.name} (Effective from: #{self.effective_at.strftime("%d/%m/%Y")})"
+  end
+
+  def touch_suspensions_and_taxa
+    eu_suspensions = EuSuspension.where([
+      "start_event_id = :to_event_id OR end_event_id = :to_event_id",
+      to_event_id: self.id
+    ])
+    eu_suspensions.update_all(
+      updated_at: Time.now, updated_by_id: self.updated_by_id
+    )
+    TaxonConcept.joins(:eu_suspensions).merge(eu_suspensions).update_all(
+      dependents_updated_at: Time.now,
+      dependents_updated_by_id: self.updated_by_id
+    )
   end
 
   private

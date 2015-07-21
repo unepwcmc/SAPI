@@ -6,7 +6,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     @geo_entities_ids = filters[:geo_entities_ids]
     @years = filters[:years]
     @decision_types = filters[:decision_types]
-    @set = filters[:current]
+    @set = filters[:set]
     initialize_csv_separator(filters[:csv_separator])
     initialize_file_name
   end
