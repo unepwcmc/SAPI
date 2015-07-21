@@ -100,7 +100,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
 
     sql = <<-SQL
       UPDATE documents
-      SET title = pd.proposal_nature
+      SET title = COALESCE(title, pd.proposal_nature)
       FROM
       proposal_details pd
       WHERE documents.id = pd.document_id;
