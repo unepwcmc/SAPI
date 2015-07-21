@@ -5,6 +5,7 @@ FactoryGirl.define do
     filename { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')) }
     event
     type 'Document'
+    is_public false
 
     factory :review_of_significant_trade, class: Document::ReviewOfSignificantTrade do
       type 'Document::ReviewOfSignificantTrade'
