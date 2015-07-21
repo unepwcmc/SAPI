@@ -1,5 +1,32 @@
-Dir['vendor/plugins/*/recipes/*.rb'].each { |plugin| load(plugin) }
-# Generated with 'brightbox' on 2013-06-27 08:45:55 +0100
-load 'deploy' if respond_to?(:namespace) # cap2 differentiator
-#load 'deploy/assets'
-load 'config/deploy'
+# Load DSL and set up stages
+require 'capistrano/setup'
+
+# Include default deployment tasks
+require 'capistrano/deploy'
+
+# Include tasks from other gems included in your Gemfile
+#
+# For documentation on these, see for example:
+#
+#   https://github.com/capistrano/rvm
+#   https://github.com/capistrano/rbenv
+#   https://github.com/capistrano/chruby
+#   https://github.com/capistrano/bundler
+#   https://github.com/capistrano/rails
+#   https://github.com/capistrano/passenger
+#
+require 'capistrano/rvm'
+# require 'capistrano/rbenv'
+# require 'capistrano/chruby'
+require 'capistrano/bundler'
+require 'capistrano/rails/assets'
+require 'capistrano/rails/migrations'
+require 'capistrano/slack
+require 'capistrano/sidekiq'
+# require 'capistrano/passenger'
+require 'whenever/capistrano'
+
+# Load custom tasks from `lib/capistrano/tasks` if you have any defined
+Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
+
+
