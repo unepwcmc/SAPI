@@ -22,6 +22,83 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
     ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalRepresentation = NULL WHERE ProposalRepresentation='NULL'" )
   end
 
+  def run_final_queries
+    # need to duplicate CoP documents, which are linked to more than one proposal
+    # that applies to old documents
+    sql = <<-SQL
+      WITH proposal_details AS (
+        SELECT proposal_details.*, ROW_NUMBER(*) OVER(PARTITION BY document_id)
+        FROM proposal_details
+      ), proposal_details_to_split AS (
+        SELECT *
+        FROM proposal_details
+        WHERE row_number > 1
+      ), documents_to_split AS (
+        SELECT d.*
+        FROM proposal_details_to_split pd
+        JOIN documents d
+        ON pd.document_id = d.id
+      ), inserted_documents AS (
+        INSERT INTO documents (
+          event_id,
+          sort_index,
+          type,
+          elib_legacy_id,
+          title,
+          date,
+          filename,
+          elib_legacy_file_name,
+          is_public,
+          language_id,
+          created_at,
+          updated_at,
+          original_id
+        )
+        SELECT
+          event_id,
+          sort_index,
+          type,
+          elib_legacy_id,
+          title,
+          date,
+          filename,
+          elib_legacy_file_name,
+          is_public,
+          language_id,
+          created_at,
+          updated_at,
+          id
+        FROM documents_to_split d
+        RETURNING *
+      ), inserted_documents_with_rowno AS (
+        SELECT *, ROW_NUMBER(*) OVER(PARTITION BY original_id)
+        FROM inserted_documents
+      ), proposal_details_to_update AS (
+        SELECT pd.*, d.id AS new_document_id
+        FROM proposal_details_to_split pd
+        JOIN inserted_documents_with_rowno d
+        ON d.original_id = pd.document_id AND (d.row_number + 1) = pd.row_number
+      )
+      UPDATE proposal_details
+      SET document_id = new_document_id
+      FROM proposal_details_to_update pd
+      WHERE proposal_details.id = pd.id;
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+    # in case you need to revert
+    WITH new_docs AS (
+      SELECT * FROM documents WHERE original_id IS NOT NULL
+    ), proposals AS (
+      UPDATE proposal_details
+      SET document_id = d.original_id
+      FROM proposal_details pd
+      JOIN new_docs d ON pd.document_id = d.id
+      WHERE proposal_details.id = pd.id
+    )
+    DELETE FROM documents
+    WHERE original_id IS NOT NULL;
+  end
+
   def run_queries
     super()
     sql = <<-SQL
@@ -38,6 +115,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
       FROM rows_to_insert_resolved
     SQL
     ActiveRecord::Base.connection.execute(sql)
+    run_final_queries
   end
 
   # this performs grouping, the proposal meta data used to be citation-level
