@@ -12,7 +12,7 @@
 #
 
 class Document::ReviewDetails < ActiveRecord::Base
-  attr_accessible :document_id, :review_phase_id
+  attr_accessible :document_id, :review_phase_id, :process_stage_id, :recommended_category
   self.table_name = 'review_details'
 
   def self.display_name; 'Review Details'; end
