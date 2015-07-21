@@ -53,9 +53,7 @@
     <div class="control-group">
       <label class="control-label">Role</label>
       <div class="controls">
-        <%= f.select :role,
-          [["Contributor", "default"],["Manager", "admin"],["API User", "api"]]
-        %>
+        <%= f.select :role, User::ROLES_FOR_DISPLAY.to_a.map(&:reverse) %>
       </div>
     </div>
   <% end %>

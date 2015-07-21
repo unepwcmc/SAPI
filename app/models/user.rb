@@ -51,8 +51,7 @@ class User < ActiveRecord::Base
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
-  validates :role, inclusion: { in: ['default', 'admin', 'api'] },
-                   presence: true
+  validates :role, inclusion: { in: ROLES }, presence: true
   validates :organisation, presence: true
   before_create :set_default_role
 
@@ -69,14 +68,7 @@ class User < ActiveRecord::Base
   end
 
   def role_for_display
-    case self.role
-    when 'default'
-      "Contributor"
-    when 'admin'
-      "Manager"
-    when 'api'
-      "API User"
-    end
+    ROLES_FOR_DISPLAY[self.role] || '(empty)'
   end
 
   def last_30_days_api_requests
