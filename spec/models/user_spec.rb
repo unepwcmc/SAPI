@@ -48,8 +48,6 @@ describe User do
   describe "abilities" do
     subject(:ability){ Ability.new(user) }
     let(:user){ nil }
-    let(:private_document){ create(:document, is_public: false) }
-    let(:public_document){ create(:document, is_public: true) }
 
     context "when is a Data Manager" do
       let(:user){ create(:user, role: User::MANAGER) }
@@ -66,20 +64,12 @@ describe User do
 
     context "when is a E-library Viewer" do
       let(:user){ create(:user, role: User::ELIBRARY_USER) }
-      it{ should_not be_able_to(:create, Document) }
-      it{ should_not be_able_to(:update, Document) }
-      it{ should_not be_able_to(:destroy, Document) }
-      it{ should be_able_to(:read, private_document) }
-      it{ should be_able_to(:read, public_document) }
+      it{ should_not be_able_to(:manage, TaxonConcept) }
     end
 
     context "when is an API User" do
       let(:user){ create(:user, role: User::API_USER) }
-      it{ should_not be_able_to(:create, Document) }
-      it{ should_not be_able_to(:update, Document) }
-      it{ should_not be_able_to(:destroy, Document) }
-      it{ should_not be_able_to(:read, private_document) }
-      it{ should be_able_to(:read, public_document) }
+      it{ should_not be_able_to(:manage, TaxonConcept) }
     end
   end
 end

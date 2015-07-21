@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     rescue_path = if request.referrer && request.referrer != request.url
                     request.referer
                   elsif current_user.is_manager_or_contributor?
-                    signed_in_root_path(current_user)
+                    admin_root_path
                   else
                     root_path
                   end
@@ -49,12 +49,17 @@ class ApplicationController < ActionController::Base
     }
   end
 
-  def after_sign_out_path_for(resource_or_scope)
-    admin_root_path
+  def after_sign_in_path_for(resource)
+    stored_location_for(resource) ||
+      if resource.is_manager_or_contributor?
+        admin_root_path
+      else
+        super
+      end
   end
 
-  def signed_in_root_path(resource_or_scope)
-    admin_root_path
+  def after_sign_out_path_for(scope)
+    request.referrer
   end
 
 end

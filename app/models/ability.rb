@@ -51,12 +51,8 @@ class Ability
         Trade::Shipment, Trade::Permit, Trade::AnnualReportUpload,
         Trade::ValidationRule
       ]
-    elsif user.is_elibrary_user?
+    elsif !user.is_manager_or_contributor?
       cannot :manage, :all
-      can :read, Document
-    elsif user.is_api_user?
-      cannot :manage, :all
-      can :read, Document, is_public: true
     end
   end
 end
