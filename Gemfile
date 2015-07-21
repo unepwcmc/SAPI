@@ -91,9 +91,11 @@ group :development do
   gem 'annotate', ">=2.5.0"
   gem 'sextant'
   # Deploy with Capistrano
-  gem 'capistrano'
+  gem 'capistrano', '~> 3.0', require: false
+  gem 'capistrano-rails',   '~> 1.1', require: false
+  gem 'capistrano-bundler', '~> 1.1', require: false
   gem 'capistrano-ext'
-  gem  'rvm-capistrano', require: false
+  gem 'capistrano-rvm',   '~> 0.1', require: false
   gem 'capistrano-sidekiq'
   gem 'capistrano-slack', :git => 'https://github.com/nextupdate/capistrano-slack.git'
   gem 'brightbox', '>=2.3.9'
