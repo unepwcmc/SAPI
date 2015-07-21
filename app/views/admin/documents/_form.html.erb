@@ -85,7 +85,7 @@
       <div class="control-group">
         <%= ff.label :recommended_category, class: 'control-label' %>
         <div class="controls">
-          <%= ff.text_area :recommended_category, :class => "recommended_category", :value => @document.review_details.recommended_category %>
+          <%= ff.text_area :recommended_category, :rows => 3, :value => @document.review_details.recommended_category %>
         </div>
       </div>
     <% end %>
