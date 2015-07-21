@@ -54,24 +54,26 @@ end
 
 namespace :config do
 task :setup do
-  vhost_config =<<-EOF
+
+vhost_config =<<-EOF
     server {
       listen 80;
       client_max_body_size 4G;
-      server_name #{application}.unepwcmc-013.vm.brightbox.net;
+      server_name #{fetch(:application)}.#{fetch(:server)};
       keepalive_timeout 5;
       root #{deploy_to}/current/public;
       passenger_enabled on;
-      rails_env production;
+      passenger_ruby #{fetch(:deploy_user)}/#{fetch(:rvm_ruby_version)}/wrappers/ruby;
+      rails_env #{fetch(:rails_env)};
       add_header 'Access-Control-Allow-Origin' *;
       add_header 'Access-Control-Allow-Methods' "GET, POST, PUT, DELETE, OPTIONS";
       add_header 'Access-Control-Allow-Headers' "X-Requested-With, X-Prototype-Version";
       add_header 'Access-Control-Max-Age' 1728000;
       # Enable serving files through nginx
-      passenger_set_cgi_param HTTP_X_ACCEL_MAPPING /home/rails/sapi/shared/public/downloads/=/downloads/;
+      passenger_set_cgi_param HTTP_X_ACCEL_MAPPING #{shared_path}/public/downloads/=/downloads/;
       passenger_pass_header X-Accel-Redirect;
       location ~ ^/downloads/(.*)$ {
-        alias /home/rails/sapi/shared/public/downloads/$1;
+        alias #{shared_path}/public/downloads/$1;
         internal;
       }
       gzip on;
@@ -91,7 +93,7 @@ task :setup do
         rewrite  ^(.*)$  /system/maintenance.html break;
       }
     }
-  EOF
+EOF
 
   on roles(:app) do
      execute "sudo mkdir -p /etc/nginx/sites-available"
@@ -114,12 +116,12 @@ task :setup do
   backup_config_db = <<-EOF
 #  encoding: utf-8
 ##
-# Backup Generated: wcmc_website
+# Backup Generated: sapi_website
 # Once configured, you can run the backup with the following command:
 #
-# $ backup perform -t wcmc_website [-c <path_to_configuration_file>]
+# $ backup perform -t sapi_website [-c <path_to_configuration_file>]
 #
-Model.new(:wcmc_website_db, 'wcmc_website_db') do
+Model.new(:sapi_website_db, 'sapi_website_db') do
   ##
   # Split [Splitter]
   #
@@ -198,15 +200,15 @@ namespace :config do
 task :setup do
 backup_config_files = <<-EOF
 # encoding: utf-8
-# Backup Generated: wcmc_files
+# Backup Generated: sapi_files
 # Once configured, you can run the backup with the following command:
 #
-# $ backup perform -t wcmc_files [-c <path_to_configuration_file>]
+# $ backup perform -t sapi_files [-c <path_to_configuration_file>]
 #
 # For more information about Backup's components, see the documentation at:
 # http://meskyanichi.github.io/backup
 #
-Model.new(:wcmc_files, 'wcmc_files') do
+Model.new(:sapi_files, 'sapi_files') do
   ##
   # Amazon Simple Storage Service [Storage]
   #
@@ -221,7 +223,7 @@ Model.new(:wcmc_files, 'wcmc_files') do
     s3.path              = "/files"
 end
  archive :app_archive do |archive|
- archive.add '#{shared_path}/system'
+ archive.add '#{shared_path}/system/public/uploads'
 end
  ##
   # Bzip2 [Compressor]
