@@ -44,7 +44,8 @@ set :linked_files, %w{config/database.yml config/mailer_config.yml config/secret
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
-set :linked_dirs, fetch(:linked_dirs) + %w{'public/uploads','public/downloads','public/cites_trade_guidelines'}
+set :linked_dirs, fetch(:linked_dirs) + %w{public/uploads public/downloads public/cites_trade_guidelines}
+
 
 
 
