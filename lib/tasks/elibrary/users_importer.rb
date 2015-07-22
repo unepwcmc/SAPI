@@ -82,7 +82,7 @@ class Elibrary::UsersImporter
             SUBSTRING(LoweredEmail FROM '(.+)@.+'),
             '[\._]'
           ) AS name_ary,
-          UPPER(BTRIM(SUBSTRING(LoweredEmail FROM '.+\.(.+)$'))) AS iso_code2,
+          UPPER(BTRIM(SUBSTRING(LoweredEmail FROM '.+\\.(.+)$'))) AS iso_code2,
           CASE
             WHEN RoleName = 'Administrator' THEN 'admin'
             WHEN RoleName = 'Data Contributor' THEN 'default'
