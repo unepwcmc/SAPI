@@ -28,7 +28,7 @@ namespace :config do
 setup_config = <<-EOF
 "#{fetch(:rails_env)}" => {
         :default_url_options => {
-          :host => "#{domain}"
+          :host => "#{fetch(:domain)}"
         },
         :smtp_settings => {
           :enable_starttls_auto => true,
@@ -56,43 +56,65 @@ namespace :config do
 task :setup do
 
 vhost_config =<<-EOF
-    server {
-      listen 80;
-      client_max_body_size 4G;
-      server_name #{fetch(:application)}.#{fetch(:server)};
-      keepalive_timeout 5;
-      root #{deploy_to}/current/public;
-      passenger_enabled on;
-      passenger_ruby #{fetch(:deploy_user)}/#{fetch(:rvm_ruby_version)}/wrappers/ruby;
-      rails_env #{fetch(:rails_env)};
-      add_header 'Access-Control-Allow-Origin' *;
-      add_header 'Access-Control-Allow-Methods' "GET, POST, PUT, DELETE, OPTIONS";
-      add_header 'Access-Control-Allow-Headers' "X-Requested-With, X-Prototype-Version";
-      add_header 'Access-Control-Max-Age' 1728000;
-      # Enable serving files through nginx
-      passenger_set_cgi_param HTTP_X_ACCEL_MAPPING #{shared_path}/public/downloads/=/downloads/;
-      passenger_pass_header X-Accel-Redirect;
-      location ~ ^/downloads/(.*)$ {
-        alias #{shared_path}/public/downloads/$1;
-        internal;
-      }
-      gzip on;
-      location ^~ /assets/ {
-        expires max;
-        add_header Cache-Control public;
-      }
-      if (-f $document_root/system/maintenance.html) {
-        return 503;
-      }
-      error_page 500 502 504 /500.html;
-      location = /500.html {
-        root #{deploy_to}/public;
-      }
-      error_page 503 @maintenance;
-      location @maintenance {
-        rewrite  ^(.*)$  /system/maintenance.html break;
-      }
+
+server {
+  listen 80;
+  client_max_body_size 4G;
+  server_name #{fetch(:server_name)};
+
+  keepalive_timeout 5;
+  root #{deploy_to}/current/public;
+
+  location ^~ /sidekiq {
+        passenger_enabled on;
+        rails_env production;
+        auth_basic "Restricted Admin Area";
+        auth_basic_user_file #{deploy_to}/shared/.htpasswd;
     }
+
+  passenger_enabled on;
+
+  passenger_set_cgi_param HTTP_X_ACCEL_MAPPING #{deploy_to}/shared/public/downloads/=/downloads/;
+  passenger_pass_header X-Accel-Redirect;
+  passenger_ruby /home/#{fetch(:deploy_user)}/#{fetch(:rvm_ruby_version)}/wrappers/ruby;
+
+  location ~ ^/downloads/(.*)$ {
+    alias #{deploy_to}/shared/public/downloads/$1;
+    internal;
+  }
+
+  rails_env production;
+
+  add_header 'Access-Control-Allow-Origin' *;
+  add_header 'Access-Control-Allow-Methods' "GET, POST, PUT, DELETE, OPTIONS";
+  add_header 'Access-Control-Allow-Headers' "X-Requested-With, X-Prototype-Version";
+  add_header 'Access-Control-Max-Age' 1728000;
+  
+  gzip on;
+  location ~ ^/assets/ {
+    root #{deploy_to}/current/public;
+    expires max;
+    add_header Cache-Control public;
+    add_header ETag "";
+    break;
+  }
+  
+  if (-f $document_root/system/maintenance.html) {
+    return 503;
+  }
+
+  error_page 500 502 504 /500.html;
+  location = /500.html {
+    root #{deploy_to}/current/public;
+  }
+
+  error_page 503 @maintenance;
+  location @maintenance {
+    rewrite  ^(.*)$  /system/maintenance.html break;
+  }
+}
+
+
 EOF
 
   on roles(:app) do
@@ -223,7 +245,7 @@ Model.new(:sapi_files, 'sapi_files') do
     s3.path              = "/files"
 end
  archive :app_archive do |archive|
- archive.add '#{shared_path}/system/public/uploads'
+ archive.add '"#{shared_path}/system/public/uploads'
 end
  ##
   # Bzip2 [Compressor]
@@ -293,7 +315,7 @@ desc "Upload cron schedule file."
   task :upload_cron do
       execute "mkdir -p #{fetch(:backup_path)}/config"
       execute "touch #{fetch(:backup_path)}/config/cron.log"
-      upload! StringIO.new(File.read("config/backup/schedule.rb")), "#{fetch(:backup_path)}/config/schedule.rb"
+      upload! StringIO.new(File.read("config/backup/schedule.rb")), "#{fetch(:backup_path)}/config/#{fetch(:application)}-schedule.rb"
    end
   end
 end
@@ -308,4 +330,12 @@ namespace :config do
    end
   end
 end
+
+
+
+# Default value for :linked_files is []
+set :linked_files, fetch(:linked_files, []).push('config/database.yml config/mailer_config.yml')
+
+# Default value for linked_dirs is []
+set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 
