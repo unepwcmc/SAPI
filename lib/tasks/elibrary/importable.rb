@@ -49,5 +49,16 @@ module Elibrary
         puts "#{res[0]['count']} #{q_name.humanize}"
       end
     end
+
+    def print_breakdown; end
+
+    def print_pre_import_stats
+      print_breakdown
+      print_query_counts
+    end
+
+    def print_post_import_stats
+      print_breakdown
+    end
   end
 end

@@ -127,16 +127,7 @@ class Elibrary::EventsImporter
     SQL
   end
 
-  def print_pre_import_stats
-    print_events_breakdown
-    print_query_counts
-  end
-
-  def print_post_import_stats
-    print_events_breakdown
-  end
-
-  def print_events_breakdown
+  def print_breakdown
     puts "#{Time.now} There are #{Event.count} events in total"
     Event.group(:type).order(:type).count.each do |type, count|
       puts "\t #{type} #{count}"

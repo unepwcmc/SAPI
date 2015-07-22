@@ -119,16 +119,7 @@ class Elibrary::UsersImporter
     SQL
   end
 
-  def print_pre_import_stats
-    print_users_breakdown
-    print_query_counts
-  end
-
-  def print_post_import_stats
-    print_users_breakdown
-  end
-
-  def print_users_breakdown
+  def print_breakdown
     puts "#{Time.now} There are #{User.count} users in total"
     User.group(:role).order(:role).count.each do |role, count|
       puts "\t #{role} #{count}"

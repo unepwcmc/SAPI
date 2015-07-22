@@ -133,16 +133,7 @@ class Elibrary::CitationsImporter
     SQL
   end
 
-  def print_pre_import_stats
-    print_citations_breakdown
-    print_query_counts
-  end
-
-  def print_post_import_stats
-    print_citations_breakdown
-  end
-
-  def print_citations_breakdown
+  def print_breakdown
     puts "#{Time.now} There are #{DocumentCitation.count} citations in total"
     DocumentCitation.includes(:document).group('documents.type').order('documents.type').count.each do |type, count|
       puts "\t #{type} #{count}"

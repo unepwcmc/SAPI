@@ -154,16 +154,7 @@ class Elibrary::DocumentsImporter
     SQL
   end
 
-  def print_pre_import_stats
-    print_documents_breakdown
-    print_query_counts
-  end
-
-  def print_post_import_stats
-    print_documents_breakdown
-  end
-
-  def print_documents_breakdown
+  def print_breakdown
     puts "#{Time.now} There are #{Document.count} documents in total"
     Document.group(:type).order(:type).count.each do |type, count|
       puts "\t #{type} #{count}"
