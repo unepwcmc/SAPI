@@ -35,7 +35,7 @@ class Elibrary::UsersImporter
               WHEN RoleName = 'Full Viewer' THEN 3
             END
           )
-        FROM elibrary_users_import
+        FROM #{table_name}
       )
       DELETE FROM #{table_name} t
       USING users_with_roles
