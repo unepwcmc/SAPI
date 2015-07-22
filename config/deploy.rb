@@ -43,7 +43,7 @@ set :ssh_options, {
 set :linked_files, %w{config/database.yml config/mailer_config.yml config/secrets.yml}
 
 # Default value for linked_dirs is []
-set :local_shared_dirs, %w('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system') + %w{public/downloads public/uploads public/cites_trade_guidelines}
+set :local_shared_dirs, %w('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system', 'public/downloads', 'public/uploads','public/cites_trade_guidelines'}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
