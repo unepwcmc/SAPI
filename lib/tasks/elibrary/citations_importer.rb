@@ -16,7 +16,7 @@ class Elibrary::CitationsImporter
       ['EventTypeID', 'TEXT'],
       ['EventTypeName', 'TEXT'],
       ['splus_event_type', 'TEXT'],
-      ['EventID', 'INT'],
+      ['EventID', 'TEXT'],
       ['EventName', 'TEXT'],
       ['EventDate', 'TEXT'],
       ['MeetingType', 'TEXT'],
@@ -25,7 +25,7 @@ class Elibrary::CitationsImporter
       ['DocumentTypeID', 'TEXT'],
       ['DocumentTypeName', 'TEXT'],
       ['splus_document_type', 'TEXT'],
-      ['DocumentID', 'INT'],
+      ['DocumentID', 'TEXT'],
       ['DocumentTitle', 'TEXT'],
       ['supertitle', 'TEXT'],
       ['subtitle', 'TEXT'],
@@ -43,14 +43,17 @@ class Elibrary::CitationsImporter
       ['CtyISO2', 'TEXT'],
       ['SpeciesID', 'TEXT'],
       ['SpeciesName', 'TEXT'],
-      ['splus_taxon_concept_id', 'INT'],
+      ['splus_taxon_concept_id', 'TEXT'],
       ['CtyShortCombined', 'TEXT'],
       ['SpeciesNameCombined', 'TEXT']
     ]
   end
 
   def run_preparatory_queries
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET splus_taxon_concept_id = NULL WHERE splus_taxon_concept_id LIKE '%N/A%'" )
     ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET CtyISO2 = NULL WHERE CtyISO2='NULL'" )
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET EventID = NULL WHERE EventID='NULL'" )
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentID = NULL WHERE DocumentID='NULL'" )
   end
 
   def run_queries
@@ -83,21 +86,29 @@ class Elibrary::CitationsImporter
       ), inserted_citations_geo_entity AS (
         INSERT INTO document_citation_geo_entities (
           document_citation_id,
-          geo_entity_id
+          geo_entity_id,
+          created_at,
+          updated_at
         )
         SELECT
           inserted_citations.id,
-          geo_entity_id
+          geo_entity_id,
+          NOW(),
+          NOW()
         FROM rows_to_insert_resolved
         JOIN inserted_citations ON inserted_citations.elib_legacy_id = rows_to_insert_resolved.CitationID
       )
       INSERT INTO document_citation_taxon_concepts (
         document_citation_id,
-        taxon_concept_id
+        taxon_concept_id,
+        created_at,
+        updated_at
       )
       SELECT
         inserted_citations.id,
-        splus_taxon_concept_id
+        splus_taxon_concept_id,
+        NOW(),
+        NOW()
       FROM rows_to_insert_resolved
       JOIN inserted_citations ON inserted_citations.elib_legacy_id = rows_to_insert_resolved.CitationID
     SQL
@@ -105,7 +116,7 @@ class Elibrary::CitationsImporter
   end
 
   def all_rows_sql
-    columns = %w(DocumentID CitationID CtyISO2 splus_taxon_concept_id)
+    columns = ['CAST(DocumentID AS INT)', 'CitationID', 'CtyISO2', 'CAST(splus_taxon_concept_id AS INT)']
     "SELECT #{columns.join(', ')} FROM #{table_name} t"
   end
 

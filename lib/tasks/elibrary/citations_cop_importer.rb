@@ -100,7 +100,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
 
     sql = <<-SQL
       UPDATE documents
-      SET title = COALESCE(title, pd.proposal_nature)
+      SET title = COALESCE(pd.proposal_nature, title)
       FROM
       proposal_details pd
       WHERE documents.id = pd.document_id;
@@ -131,7 +131,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
   # but in the new system it is document-level
   def all_proposal_details_rows_sql
     <<-SQL
-      SELECT DocumentID, ProposalNature, ProposalOutcome, ProposalRepresentation
+      SELECT CAST(DocumentID AS INT), ProposalNature, ProposalOutcome, ProposalRepresentation
       FROM #{table_name}
       GROUP BY DocumentID, ProposalNature, ProposalOutcome, ProposalRepresentation
     SQL

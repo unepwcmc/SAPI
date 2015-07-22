@@ -50,7 +50,7 @@ class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
         SELECT *, phases.id AS review_phase_id, stages.id AS process_stage_id, documents.id AS document_id
         FROM rows_to_insert
         JOIN documents ON DocumentID = documents.elib_legacy_id
-        LEFT JOIN document_tags phases ON BTRIM(UPPER(phases.name)) = BTRIM(UPPER(SigTradeReviewPhase))
+        LEFT JOIN document_tags phases ON BTRIM(UPPER(phases.name)) = BTRIM(UPPER(SigTradePhase))
         LEFT JOIN document_tags stages ON BTRIM(UPPER(stages.name)) = BTRIM(UPPER(SigTradeProcessStage))
       )
       INSERT INTO review_details(document_id, review_phase_id, process_stage_id, recommended_category, created_at, updated_at)
@@ -77,7 +77,7 @@ class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
   def review_details_rows_to_insert_sql
     sql = <<-SQL
       SELECT * FROM (
-        #{all_proposal_details_rows_sql}
+        #{all_review_details_rows_sql}
       ) all_rows_in_table_name
       WHERE SigTradePhase IS NOT NULL
         OR SigTradeProcessStage IS NOT NULL
