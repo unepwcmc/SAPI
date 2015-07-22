@@ -24,4 +24,13 @@ namespace :elibrary do
       importer.run
     end
   end
+  namespace :users do
+    require Rails.root.join('lib/tasks/elibrary/users_importer.rb')
+    desc 'Import users from csv file'
+    task :import => :environment do |task_name|
+      check_file_provided(task_name)
+      importer = Elibrary::UsersImporter.new(ENV['FILE'])
+      importer.run
+    end
+  end
 end
