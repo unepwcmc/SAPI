@@ -3,7 +3,7 @@ set :branch, "LinodeCap3Deploy"
 
 server "178.79.184.157", roles: %w{app web db}
 
-set :domain, "unepwcmc-013.vm.brightbox.net"
+set :domain, "178.79.184.157"
 
 set :application, "sapi"
 
