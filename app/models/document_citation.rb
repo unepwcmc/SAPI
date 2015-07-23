@@ -2,12 +2,13 @@
 #
 # Table name: document_citations
 #
-#  id            :integer          not null, primary key
-#  document_id   :integer
-#  created_by_id :integer
-#  updated_by_id :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id             :integer          not null, primary key
+#  document_id    :integer
+#  created_by_id  :integer
+#  updated_by_id  :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  elib_legacy_id :integer
 #
 
 class DocumentCitation < ActiveRecord::Base
