@@ -33,6 +33,7 @@ FactoryGirl.define do
   factory :event do
     sequence(:name) {|n| "CoP#{n}"}
     effective_at '2011-01-01'
+    published_at '2011-02-01'
     designation
 
     factory :eu_regulation, :class => EuRegulation do

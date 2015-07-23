@@ -18,6 +18,11 @@ FactoryGirl.define do
     document_id 1
   end
 
+  factory :document_citation_taxon_concept do
+    document_citation_id 1
+    taxon_concept_id 1
+  end
+
   factory :proposal_details, class: Document::ProposalDetails do
     document
     proposal_outcome
