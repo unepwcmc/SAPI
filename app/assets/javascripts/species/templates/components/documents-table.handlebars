@@ -1,0 +1,20 @@
+<table class="documents-table">
+  <thead>
+    <tr>
+      <td>Meeting</td>
+      <td>Date</td>
+      <td>Type</td>
+      <td>Title</rd>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each document in documents}}
+      <tr>
+        <td>{{document.event_name}}</td>
+        <td>{{document.event_date}}</td>
+        <td>{{document.event_type}}</td>
+        <td>{{document.title}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
