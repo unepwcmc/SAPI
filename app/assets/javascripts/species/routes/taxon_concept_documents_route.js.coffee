@@ -13,7 +13,6 @@ Species.TaxonConceptDocumentsRoute = Ember.Route.extend
         model.set('cites_ac_docs', data.cites_ac_docs)
         model.set('cites_pc_docs', data.cites_pc_docs)
         model.set('no_event_docs', data.no_event_docs)
-        model.save()
       error: (jqXHR, textStatus, errorThrown) ->
         console.log("AJAX Error:" + textStatus)
     )
