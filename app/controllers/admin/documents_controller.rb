@@ -46,6 +46,17 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     end
   end
 
+  def show
+    @document = Document.find(params[:id])
+    send_file(
+      @document.filename.path,
+        :filename => File.basename(@document.filename.path),
+        :type => @document.filename.content_type,
+        :disposition => 'attachment',
+        :url_based_filename => true
+    )
+  end
+
   protected
 
   def collection
