@@ -1,20 +1,24 @@
-<table class="documents-table">
-  <thead>
-    <tr>
-      <td>Meeting</td>
-      <td>Date</td>
-      <td>Type</td>
-      <td>Title</rd>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each document in documents}}
-      <tr>
-        <td>{{document.event_name}}</td>
-        <td>{{document.event_date}}</td>
-        <td>{{document.event_type}}</td>
-        <td>{{document.title}}</td>
+{{#if documents.length}}
+  <table class="documents-table">
+    <thead>
+      <tr class="documents-head">
+        <td>Meeting</td>
+        <td>Date</td>
+        <td>Type</td>
+        <td>Title</rd>
       </tr>
-    {{/each}}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {{#each document in documents}}
+        <tr class="document-row">
+          <td class="event-name">{{document.event_name}}</td>
+          <td class="event-date">{{document.event_date}}</td>
+          <td class="event-type">{{document.event_type}}</td>
+          <td class="document-title">{{document.title}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <span>No data available</span>
+{{/if}}
