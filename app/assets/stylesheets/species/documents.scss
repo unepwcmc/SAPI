@@ -1,0 +1,27 @@
+div#documents {
+  table.documents-table {
+    margin-bottom: 50px;
+    thead {
+      tr.documents-head{
+        td {
+          padding: 10px 0;
+          border: none;
+        }
+      }
+    }
+    tbody {
+      tr.document-row{
+        border: 1px #DFE1E2;
+        border-style: solid none;
+        td { padding: 10px 0; border-top: none;}
+        td.event-name { width: 50px; }
+        td.event-date { width: 80px; }
+        td.event-type { width: 50px; }
+        td.document-title { width: 100px; }
+      }
+    }
+  }
+  div.doc-section {
+    margin-bottom: 30px;
+  }
+}
