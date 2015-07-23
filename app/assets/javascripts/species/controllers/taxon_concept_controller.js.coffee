@@ -197,8 +197,8 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     )
   ).property('matchedOnSelf', 'subspecies')
 
-  matchInfo: ( -> 
-    unless @get('matchedOnSelf') 
+  matchInfo: ( ->
+    unless @get('matchedOnSelf')
       if @get('matchedOnSynonym') != undefined
         '<i>' + @get('matchedOnSynonym.full_name') + '</i> is a synonym of <i>' + @get('fullName') +
         '</i>. You have been redirected to the species page for <i>' +
