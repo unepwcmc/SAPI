@@ -24,6 +24,15 @@ namespace :elibrary do
       importer.run
     end
   end
+  namespace :document_discussions do
+    require Rails.root.join('lib/tasks/elibrary/document_discussions_importer.rb')
+    desc 'Import document discussions'
+    task :import => :environment do |task_name|
+      check_file_provided(task_name)
+      importer = Elibrary::DocumentDiscussionsImporter.new(ENV['FILE'])
+      importer.run
+    end
+  end
   namespace :document_files do
     require Rails.root.join('lib/tasks/elibrary/document_files_importer.rb')
     desc 'Import document files'
