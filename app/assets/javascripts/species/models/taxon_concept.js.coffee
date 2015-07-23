@@ -29,6 +29,11 @@ Species.TaxonConcept = DS.Model.extend
   nomenclatureNoteEn: DS.attr("string")
   nomenclatureNoteFr: DS.attr("string")
   nomenclatureNoteEs: DS.attr("string")
+  cites_cop_docs: DS.attr("array")
+  ec_srg_docs: DS.attr("array")
+  cites_ac_docs: DS.attr("array")
+  cites_pc_docs: DS.attr("array")
+  no_event_docs: DS.attr("array")
 
   matchingNamesForDisplay: ( ->
     if @get('matchingNames') != undefined && @get('matchingNames').length > 0
