@@ -3,7 +3,7 @@ class Api::V1::DocumentsController < ApplicationController
   def index
     documents = Document.from("api_documents_view adv").
       where("adv.taxon_concept_ids @> ARRAY[?]", params[:taxon_concept_id].to_i).
-      select('adv.id, adv.event_name, adv.event_date, adv.event_type, adv.title')
+      select("adv.id, adv.event_name, adv.event_date, adv.event_type, adv.title")
 
     cites_cop_docs = documents.where("adv.event_type = 'CitesCop'")
     ec_srg_docs = documents.where("adv.event_type = 'EcSrg'")
