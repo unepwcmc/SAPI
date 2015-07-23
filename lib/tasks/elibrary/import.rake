@@ -24,6 +24,17 @@ namespace :elibrary do
       importer.run
     end
   end
+  namespace :document_files do
+    require Rails.root.join('lib/tasks/elibrary/document_files_importer.rb')
+    desc 'Import document files'
+    task :import => :environment do |task_name|
+      if ENV['SOURCE_DIR'].blank? || ENV['TARGET_DIR'].blank?
+        fail "Usage: SOURCE_DIR=/abs/path/to/dir TARGET_DIR=/abs/path/to/dir rake elibrary:import:#{task_name}"
+      end
+      importer = Elibrary::DocumentFilesImporter.new(ENV['SOURCE_DIR'], ENV['TARGET_DIR'])
+      importer.run
+    end
+  end
   namespace :users do
     require Rails.root.join('lib/tasks/elibrary/users_importer.rb')
     desc 'Import users from csv file'
