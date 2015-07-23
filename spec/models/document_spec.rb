@@ -20,6 +20,8 @@
 #  primary_language_document_id :integer
 #  elib_legacy_file_name        :text
 #  original_id                  :integer
+#  discussion_id                :integer
+#  discussion_sort_index        :integer
 #
 
 require 'spec_helper'
