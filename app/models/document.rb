@@ -29,7 +29,8 @@ class Document < ActiveRecord::Base
     :order_within_rank => "documents.date, documents.title, documents.id"
   track_who_does_it
   attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
-    :language_id, :citations_attributes, :number
+    :language_id, :citations_attributes, :number,
+    :sort_index, :discussion_id, :discussion_sort_index
   belongs_to :event
   belongs_to :language
   has_many :citations, class_name: 'DocumentCitation', dependent: :destroy
