@@ -25,6 +25,7 @@ SAPI::Application.routes.draw do
       resources :units, :only => [:index]
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
+      resources :documents, :only => [:index]
       match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
     end
     resources :languages, :only => [:index]
@@ -126,8 +127,8 @@ SAPI::Application.routes.draw do
       resources :taxon_quotas, :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :quotas
 
-      resources :taxon_eu_suspensions, 
-        :only => [:index, :new, :create, :edit, :update, :destroy], 
+      resources :taxon_eu_suspensions,
+        :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :eu_suspensions
 
       resources :taxon_cites_suspensions,
