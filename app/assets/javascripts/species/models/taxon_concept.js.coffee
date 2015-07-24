@@ -33,7 +33,7 @@ Species.TaxonConcept = DS.Model.extend
   ec_srg_docs: DS.attr("array")
   cites_ac_docs: DS.attr("array")
   cites_pc_docs: DS.attr("array")
-  no_event_docs: DS.attr("array")
+  other_docs: DS.attr("array")
 
   matchingNamesForDisplay: ( ->
     if @get('matchingNames') != undefined && @get('matchingNames').length > 0
