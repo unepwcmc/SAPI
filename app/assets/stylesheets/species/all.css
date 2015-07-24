@@ -885,10 +885,7 @@ body.inner #footer .holder{
 	border-left: solid 1px #adc7de;
 	border-right: solid 1px #adc7de;
 }
-#main .tabset >li > ul.document-types > li {
-	float: right;
-	padding-left: 28px;
-}
+
 #main .tabset > li > ul >li {
 	float: left;
 	line-height: 38px;

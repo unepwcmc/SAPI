@@ -59,11 +59,12 @@
     </li>
     {{#unless isCms }}
     <li class="last-child">{{#linkTo 'taxonConcept.documents'}}DOCUMENTS{{/linkTo}}
-      <ul class="document-types">
-          <li><a href="#eu_srg" class="scroll-to">EU SRG</a></li>
+      <ul>
+          <li class="first"><a href="#eu_srg" class="scroll-to">EC SRG</a></li>
           <li><a href="#cites_cop" class="scroll-to">CITES CoP</a></li>
-          <li><a href="#cites_pc" class="scroll-to">CITES Plants Committee</a></li>
-          <li><a href="#cites_ac" class="scroll-to">CITES Animals Committee</a></li>
+          <li><a href="#cites_ac" class="scroll-to">CITES Animals Comm.</a></li>
+          <li><a href="#cites_pc" class="scroll-to">CITES Plants Comm.</a></li>
+          <li class="last"><a href="#no_event" class="scroll-to">Other</a></li>
       </ul>
     </li>
     {{/unless}}
