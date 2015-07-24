@@ -24,6 +24,7 @@
 #
 
 require 'spec_helper'
+require 'cancan/matchers'
 
 describe User do
   describe :create do
@@ -41,6 +42,34 @@ describe User do
       let(:user){ create(:user) }
       before(:each){ user.make_current; create(:shipment) }
       specify { user.destroy.should be_false }
+    end
+  end
+
+  describe "abilities" do
+    subject(:ability){ Ability.new(user) }
+    let(:user){ nil }
+
+    context "when is a Data Manager" do
+      let(:user){ create(:user, role: User::MANAGER) }
+
+      it{ should be_able_to(:manage, :all) }
+    end
+
+    context "when is a Data Contributor" do
+      let(:user){ create(:user, role: User::CONTRIBUTOR) }
+
+      it{ should be_able_to(:create, TaxonConcept)}
+      it{ should_not be_able_to(:destroy, TaxonConcept)}
+    end
+
+    context "when is a E-library Viewer" do
+      let(:user){ create(:user, role: User::ELIBRARY_USER) }
+      it{ should_not be_able_to(:manage, TaxonConcept) }
+    end
+
+    context "when is an API User" do
+      let(:user){ create(:user, role: User::API_USER) }
+      it{ should_not be_able_to(:manage, TaxonConcept) }
     end
   end
 end

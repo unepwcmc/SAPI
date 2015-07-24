@@ -12,7 +12,7 @@
       <%= f.text_field :email %>
     </div>
   </div>
-  <% if @user.new_record? || @user == current_user || current_user.is_admin? %>
+  <% if @user.new_record? || @user == current_user || current_user.is_manager? %>
     <div class="control-group">
       <label class="control-label">Password</label>
       <div class="controls">
@@ -49,13 +49,11 @@
       %>
     </div>
   </div>
-  <% if current_user.is_admin? %>
+  <% if current_user.is_manager? %>
     <div class="control-group">
       <label class="control-label">Role</label>
       <div class="controls">
-        <%= f.select :role,
-          [["Contributor", "default"],["Manager", "admin"],["API User", "api"]]
-        %>
+        <%= f.select :role, User::ROLES_FOR_DISPLAY.to_a.map(&:reverse) %>
       </div>
     </div>
   <% end %>

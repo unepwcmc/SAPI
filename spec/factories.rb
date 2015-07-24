@@ -6,7 +6,7 @@ FactoryGirl.define do
     email { "#{name}@test.pl" }
     password 'asdfasdf'
     password_confirmation { password }
-    role 'admin'
+    role User::MANAGER
     is_cites_authority false
     organisation 'WCMC'
   end

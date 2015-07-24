@@ -5,20 +5,16 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </a>
-    <% if current_user && current_user.is_api? %>
-      <%= link_to "Species+ Admin", api_dashboard_path, :class => "brand" %>
-    <% else %>
+    <% if current_user %>
       <%= link_to "Species+ Admin", admin_root_path, :class => "brand" %>
     <% end %>
     <div class="nav-collapse">
       <ul class="nav">
-        <% if current_user && current_user.is_api? %>
-          <li class="<%= if controller_name == 'taxon_concepts' then 'active' end%>"><a href="/api/dashboard">Home</a></li>
-        <% else %>
+        <% if current_user %>
           <li class="<%= if controller_name == 'taxon_concepts' then 'active' end%>"><a href="/admin">Home</a></li>
         <% end %>
         
-        <% if current_user && current_user.is_admin? %>
+        <% if current_user && current_user.is_manager? %>
           <% controller_matches = ["taxonomies", "ranks", "designations", "change_types",
               "species_listings", "geo_entities", "languages", "tags", "purposes", "sources",
               "terms", "units"] %>
@@ -133,11 +129,11 @@
           </li>
         <% end %>
 
-        <% if current_user && !current_user.is_api? %>
+        <% if current_user %>
           <li class="<%= if controller_name == 'references' then 'active' end%>"><%= link_to 'References', admin_references_path %></li>
         <% end %>
 
-        <% if current_user && current_user.is_admin? %>
+        <% if current_user && current_user.is_manager? %>
           <% controller_matches = ["cites_suspensions"] %>
           <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -163,31 +159,29 @@
             </ul>
           </li>
         <% end %>
+        
+        <% if current_user && current_user.is_manager_or_contributor? %>
+          <% controller_matches = ["exports"] %>
+          <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Stats & Downloads
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><%= link_to 'Data Downloads', admin_exports_path %></li>
+              <li><%= link_to 'Species DB Statistics', admin_stats_path %></li>
+              <li><%= link_to 'Trade DB Statistics', trade_stats_path %></li>
+              <li><%= link_to 'IUCN Taxon Mapping', admin_iucn_mappings_path %></li>
+              <li><%= link_to 'CMS Taxon Mapping', admin_cms_mappings_path %></li>
+              <li><%= link_to 'Species+ Events Tracking', admin_ahoy_events_path %></li>
+              <li><%= link_to 'Species+ Visits Tracking', admin_ahoy_visits_path %></li>
+              <li><%= link_to 'Species+ Activity Page', activities_path %></li>
 
-        <% controller_matches = ["exports"] %>
-        <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Stats & Downloads
-            <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li><%= link_to 'Data Downloads', admin_exports_path %></li>
-            <li><%= link_to 'Species DB Statistics', admin_stats_path %></li>
-            <li><%= link_to 'Trade DB Statistics', trade_stats_path %></li>
-            <li><%= link_to 'IUCN Taxon Mapping', admin_iucn_mappings_path %></li>
-            <li><%= link_to 'CMS Taxon Mapping', admin_cms_mappings_path %></li>
-            <li><%= link_to 'Species+ Events Tracking', admin_ahoy_events_path %></li>
-            <li><%= link_to 'Species+ Visits Tracking', admin_ahoy_visits_path %></li>
-            <li><%= link_to 'Species+ Activity Page', activities_path %></li>
-
-            <% if current_user && current_user.is_admin? %>
-              <li><%= link_to 'API Usage', api_usage_overview_path %></li>
-            <% end %>
-          </ul>
-        </li>
-        <% if user_signed_in? and current_user.is_api? %>
-          <li><%= link_to 'API Documentation', apipie_apipie_path %></li>
-          <li><a href="#">API Tokens</a></li>
+              <% if current_user && current_user.is_manager? %>
+                <li><%= link_to 'API Usage', api_usage_overview_path %></li>
+              <% end %>
+            </ul>
+          </li>
         <% end %>
         <% if user_signed_in? %>
           <li class="dropdown">
@@ -197,7 +191,7 @@
             <ul class="dropdown-menu">
               <li><%= link_to "Log out #{current_user.name}", destroy_user_session_path, :method => :delete %></li>
               <li><%= link_to "Account", edit_user_registration_path(current_user) %></li>
-              <% if current_user.is_admin? %>
+              <% if current_user.is_manager? %>
                 <li><%= link_to 'Manage Users', admin_users_path %></li>
               <% end %>
             </ul>

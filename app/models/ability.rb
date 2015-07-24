@@ -31,7 +31,7 @@ class Ability
 
     user ||= User.new
 
-    if user.is_admin?
+    if user.is_manager?
       can :manage, :all
     elsif user.is_contributor?
       can [:autocomplete, :read], :all
@@ -51,9 +51,8 @@ class Ability
         Trade::Shipment, Trade::Permit, Trade::AnnualReportUpload,
         Trade::ValidationRule
       ]
-    elsif user.is_api?
+    elsif !user.is_manager_or_contributor?
       cannot :manage, :all
     end
-    
   end
 end
