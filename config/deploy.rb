@@ -91,7 +91,7 @@ namespace :deploy do
               # copy over all of the assets from the last release
               execute(:cp, '-r', latest_release_path.join('public', fetch(:assets_prefix)), release_path.join('public', fetch(:assets_prefix)))
             rescue PrecompileRequired
-              execute(:rake, "assets:precompile") 
+              execute(:rake, "assets:precompile")
             end
           end
         end
@@ -102,30 +102,31 @@ end
 
 
 
-#require 'yaml'
-#set :secrets, YAML.load(File.open('config/secrets.yml'))
+require 'yaml'
+require 'json'
+secrets =  YAML.load(File.open('config/secrets.yml'))
 
-#set :slack_token, secrets["development"]["capistrano_slack"] # comes from inbound webhook integration
-#set :api_token, secrets["development"]["api_token"]
-#set :slack_room, "#speciesplus" # the room to send the message to
-#set :slack_subdomain, "wcmc" # if your subdomain is example.slack.com
+set :slack_token, secrets["development"]["capistrano_slack"] # comes from inbound webhook integration
+set :api_token, secrets["development"]["api_token"]
+set :slack_room, "#speciesplus" # the room to send the message to
+set :slack_subdomain, "wcmc" # if your subdomain is example.slack.com
 
-# optional
-#set :slack_application, "SAPI" # override Capistrano `application`
-#deployment_animals = [
-#  ["Loxodonta deployana", ":elephant:"],
-#  ["Canis deployus", ":wolf:"],
-#  ["Panthera capistranis", ":tiger:"],
-#  ["Bison deployon", ":ox:"],
-#  ["Ursus capistranus", ":bear:"],
-#  ["Crotalus rattledeploy", ":snake:"],
-#  ["Caiman assetocompilatus", ":crocodile:"]
-#]
+#optional
+set :slack_application, "SAPI" # override Capistrano `application`
+deployment_animals = [
+ ["Loxodonta deployana", ":elephant:"],
+ ["Canis deployus", ":wolf:"],
+ ["Panthera capistranis", ":tiger:"],
+ ["Bison deployon", ":ox:"],
+ ["Ursus capistranus", ":bear:"],
+ ["Crotalus rattledeploy", ":snake:"],
+ ["Caiman assetocompilatus", ":crocodile:"]
+]
 
-#set :shuffle_deployer, deployment_animals.shuffle.first
+shuffle_deployer = deployment_animals.shuffle.first
 
-#set :slack_username, shuffle_deployer[0] # displayed as name of message sender
-#set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the message
+set :slack_username, shuffle_deployer[0] # displayed as name of message sender
+set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the message
 
 endpoints = [
   {
@@ -147,66 +148,4 @@ endpoints = [
 ]
 set :urls_to_test, endpoints
 
-
-
-
-
-task :smoke_test do
-
-  message = ""
-
-  urls = [
-    "http://www.speciesplus.net", "http://trade.cites.org",
-    "http://www.speciesplus.net/trade", "http://www.speciesplus.net/admin",
-    "http://api.speciesplus.net/api/v1/taxon_concepts?name=Canis%20lupus",
-    "http://api.speciesplus.net/api/v1/taxon_concepts/9644/references",
-    "http://api.speciesplus.net/api/v1/taxon_concepts/9644/eu_legislation",
-    "http://api.speciesplus.net/api/v1/taxon_concepts/9644/distributions",
-    "http://api.speciesplus.net/api/v1/taxon_concepts/9644/cites_legislation"
-  ]
-
-  urls.each do |url|
-    if /api/.match(url)
-      curl_result = `curl -i -s -w "%{http_code}" #{url} -H "X-Authentication-Token:#{api_token}" -o /dev/null`
-    else
-      curl_result = `curl -s -w "%{http_code}" #{url} -o /dev/null`
-    end
-
-    if curl_result == "200"
-      message << "#{url} passed the smoke test\n"
-    elsif curl_result == "302"
-      message << "#{url} passed the smoke test with a redirection\n"
-    else
-      message << "#{url} failed the smoke test\n"
-    end
-  end
-
-  slack_smoke_notification message
-end
-
-def slack_smoke_notification message
-  uri = URI.parse("https://hooks.slack.com/services/T028F7AGY/B036GEF7T/#{slack_token}")
-
-  payload = {
-    channel: slack_room,
-    username: slack_username,
-    text: message,
-    icon_emoji: slack_emoji
-  }
-
-  response = nil
-
-  request = Net::HTTP::Post.new(uri.request_uri)
-  request.set_form_data({ :payload => JSON.generate( payload ) })
-
-  http = Net::HTTP.new(uri.host, uri.port)
-  http.use_ssl = true
-  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-  http.start do |h|
-    response = h.request(request)
-  end
-end
-
-after "deploy", "smoke_test"
-
+after "deploy", "smoke_test:test_endpoints"
