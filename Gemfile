@@ -26,8 +26,8 @@ gem 'wicked'
 gem 'groupdate'
 gem "chartkick"
 
-gem 'sidekiq', '< 3'
-gem 'sidekiq-status', '~> 0.5'
+gem 'sidekiq', '~> 3.4.2'
+gem 'sidekiq-status', '~> 0.5.4'
 
 gem 'whenever', :require => false
 
@@ -91,7 +91,7 @@ group :development do
   gem 'annotate', ">=2.5.0"
   gem 'sextant'
   # Deploy with Capistrano
-  gem 'capistrano', '~> 3.1', require: false
+  gem 'capistrano', '~> 3.4', require: false
   gem 'capistrano-rails',   '~> 1.1', require: false
   gem 'capistrano-bundler', '~> 1.1', require: false
   gem 'capistrano-ext'
