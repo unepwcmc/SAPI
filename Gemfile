@@ -91,12 +91,13 @@ group :development do
   gem 'annotate', ">=2.5.0"
   gem 'sextant'
   # Deploy with Capistrano
-  gem 'capistrano', '~> 3.0', require: false
+  gem 'capistrano', '~> 3.1', require: false
   gem 'capistrano-rails',   '~> 1.1', require: false
   gem 'capistrano-bundler', '~> 1.1', require: false
   gem 'capistrano-ext'
   gem 'capistrano-rvm',   '~> 0.1', require: false
   gem 'capistrano-sidekiq'
+  gem 'slackistrano'
 #  gem 'capistrano-slack', :git => 'https://github.com/nextupdate/capistrano-slack.git'
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
