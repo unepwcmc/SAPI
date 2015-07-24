@@ -8,6 +8,7 @@ Species.Router.map (match) ->
     @route 'names'
     @route 'distribution'
     @route 'references'
+    @route 'documents'
   @route 'about'
 
 Species.Router.reopen

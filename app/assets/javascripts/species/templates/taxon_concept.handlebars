@@ -53,10 +53,21 @@
       <ul>
       </ul>
     </li>
-    <li class="last-child">{{#linkTo 'taxonConcept.references'}}REFERENCES{{/linkTo}}
+    <li {{bindAttr class="isCms:last-child"}}>{{#linkTo 'taxonConcept.references'}}REFERENCES{{/linkTo}}
       <ul>
       </ul>
     </li>
+    {{#unless isCms }}
+    <li class="last-child">{{#linkTo 'taxonConcept.documents'}}DOCUMENTS{{/linkTo}}
+      <ul>
+          <li class="first"><a href="#eu_srg" class="scroll-to">EC SRG</a></li>
+          <li><a href="#cites_cop" class="scroll-to">CITES CoP</a></li>
+          <li><a href="#cites_ac" class="scroll-to">CITES Animals Comm.</a></li>
+          <li><a href="#cites_pc" class="scroll-to">CITES Plants Comm.</a></li>
+          <li class="last"><a href="#other" class="scroll-to">Other</a></li>
+      </ul>
+    </li>
+    {{/unless}}
   </ul>
 
   <div class="tab-content">
