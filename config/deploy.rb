@@ -48,7 +48,7 @@ execute "rsync -av --ignore-existing #{release_path}/public/cites_trade_guidelin
  end
 end
 
-
+before "deploy:symlink:shared", "deploy:rsync"
 
 
 # Default value for :linked_files is []
