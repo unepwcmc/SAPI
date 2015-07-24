@@ -98,7 +98,6 @@ group :development do
   gem 'capistrano-rvm',   '~> 0.1', require: false
   gem 'capistrano-sidekiq'
   gem 'slackistrano'
-#  gem 'capistrano-slack', :git => 'https://github.com/nextupdate/capistrano-slack.git'
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
   gem 'quiet_assets'
