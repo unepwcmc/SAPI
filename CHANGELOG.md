@@ -1,3 +1,19 @@
+### 0.9.6.4
+**E-library:**
+
+* events import
+
+**General:**
+
+* upgrade ruby to 2.1.6
+* upgrade postgres to 9.4
+
+### 0.9.6.3 (2015-07-21)
+Bug fixing
+
+### 0.9.6.2
+Bug fixing
+
 ### 0.9.6.1
 **Species+:**
 

@@ -1,9 +1,11 @@
 language: ruby
+cache: bundler
 bundler_args: --without development production staging
+sudo: false
 rvm:
-  - 2.0.0
+  - 2.1.6
 addons:
-  postgresql: 9.3
+  postgresql: 9.4
   code_climate:
     repo_token: dd9c26c5738d807099d3f35926ddb76902d4e2a7b899a8fe3b866152ffe8bbf1
 # uncomment this line if your project needs to run something other than `rake`:
@@ -12,7 +14,7 @@ before_script:
   - cp config/database.yml.travis config/database.yml
   - cp config/secrets.yml.travis config/secrets.yml
   - RAILS_ENV=test bundle exec rake db:migrate
-script: 
+script:
   - CODECLIMATE_REPO_TOKEN=dd9c26c5738d807099d3f35926ddb76902d4e2a7b899a8fe3b866152ffe8bbf1 bundle exec rspec spec --fail-fast
 notifications:
   slack: wcmc:38bMoeEC28Tm3cnSGmhdGYVh
