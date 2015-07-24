@@ -38,6 +38,14 @@ set :ssh_options, {
 }
 
 
+namespace :deploy do
+on roles(:app) do
+execute "rsync -av --ignore-existing #{release_path}/public/downloads/ #{shared_path}/public/downloads/"
+execute "rsync -av --ignore-existing #{release_path}/public/cites_trade_guidelines/ #{shared_path}/public/cites_trade_guidelines/"
+end
+end
+
+
 
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml config/mailer_config.yml config/secrets.yml}
