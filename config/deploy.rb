@@ -130,24 +130,4 @@ shuffle_deployer = deployment_animals.shuffle.first
 set :slack_username, shuffle_deployer[0] # displayed as name of message sender
 set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the message
 
-endpoints = [
-  {
-    name: "Species+",
-    url: "http://www.speciesplus.net"
-  },
-  {
-    name: "Public Trade",
-    url: "http://trade.cites.org"
-  },
-  {
-    name: "Private Trade",
-    url: "http://www.speciesplus.net/trade"
-  },
-  {
-    name: "Admin",
-    url: "http://www.speciesplus.net/admin"
-  }
-]
-set :urls_to_test, endpoints
-
 after "deploy", "smoke_test:test_endpoints"
