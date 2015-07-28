@@ -180,6 +180,8 @@ GEM
     factory_girl_rails (4.2.1)
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
+    font-awesome-rails (4.3.0.0)
+      railties (>= 3.2, < 5.0)
     foreigner (1.5.0)
       activerecord (>= 3.0.0)
     fssm (0.2.10)
@@ -461,6 +463,7 @@ DEPENDENCIES
   ember-source (= 1.1.2)
   exception_notification!
   factory_girl_rails (~> 4.0)
+  font-awesome-rails
   foreigner
   geoip
   git_pretty_accept
@@ -515,3 +518,6 @@ DEPENDENCIES
   whenever
   wicked
   yajl-ruby
+
+BUNDLED WITH
+   1.10.5
