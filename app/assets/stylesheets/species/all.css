@@ -280,10 +280,11 @@ body.inner .push {
 #footer {
 	background: #A4C5DA;
 	border-top: 1px solid #6b94af;
-	min-height: 201px;
+	min-height: 206px;
 }
 #footer .logos {
-	padding: 20px 0 0;
+	margin: 25px 0 0;
+	padding: 25px 0 0;
 	border-top: 1px solid rgba(118,135,157,0.2);
 }
 #footer .holder {
@@ -298,10 +299,6 @@ body.inner .push {
 	margin: 0 0 65px;
 }
 
-body.inner .power-by {
-  padding: 50px 0 0;
-}
-
 .power-by img { display: block; }
 .power-by .title {
 	display: block;
@@ -313,10 +310,6 @@ body.inner .power-by {
 	float: left;
 }
 
-body.inner #footer .sponsor {
-  padding: 50px 0 0;
-}
-
 #footer .sponsor li {
 	float: left;
 	margin: 0 20px 0 0;
@@ -325,7 +318,7 @@ body.inner #footer .sponsor {
 .inner #main {
 	width: 100%;
 	padding: 0;
-	margin: 0 0 -20px;
+	margin: 0 0 105px;
 	position: relative;
 	z-index: 666;
 }

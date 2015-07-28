@@ -75,17 +75,11 @@
     }]);
     </script>
   <% end %>
-  <% if current_user %>
-    <%= render "layouts/logged_header" %>
-  <% end %>
+  <%= render "layouts/logged_header" %>
   <div id="ember_app"></div>
   <div id="footer">
     <div class="holder">
-      <% if current_user %>
-        <%= render "layouts/logged_footer" %>
-      <% else %>
-        <%= render "layouts/login_form" %>
-      <% end %>
+      <%= render "layouts/login_footer" %>
       <div class="logos">
         <ul class="sponsor">
           <li><a href="http://www.cites.org"><img src="/assets/species/logo-CITES.png" alt="CITES logo" width="77" height="44" /></a></li>

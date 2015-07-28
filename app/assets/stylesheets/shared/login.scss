@@ -86,7 +86,10 @@
 		padding: 6px 115px;
 		color: white;
 		.left { float: left; }
-		.right { float: right; }
+		.right {
+			a { color: white; text-decoration: none; }
+			float: right;
+		}
 	}
 
 	.logged-header-dropdown {
