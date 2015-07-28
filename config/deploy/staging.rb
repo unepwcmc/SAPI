@@ -1,3 +1,22 @@
+set :stage, :staging
+set :branch, "LinodeCap3Deploy"
+
+server "139.162.195.186", roles: %w{app web db}
+
+set :domain, "139.162.195.186"
+
+set :application, "sapi"
+
+set :server_name, "#{fetch(:application)}.#{fetch(:domain)}"
+
+set :sudo_user, "rails"
+
+set :app_port, "80"
+
+set :backup_path, "/home/#{fetch(:deploy_user)}/Backup"
+
+
+
 # server-based syntax
 # ======================
 # Defines a single server with a list of roles and multiple properties.
