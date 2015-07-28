@@ -83,7 +83,7 @@ server {
     internal;
   }
 
-  rails_env production;
+  rails_env #{fetch(:rails_env)};
 
   add_header 'Access-Control-Allow-Origin' *;
   add_header 'Access-Control-Allow-Methods' "GET, POST, PUT, DELETE, OPTIONS";
