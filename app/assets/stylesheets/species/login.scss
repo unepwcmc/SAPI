@@ -1,0 +1,63 @@
+#footer .holder .species-login-form {
+	margin: 20px 0 25px;
+  color: #648aa2;
+	display: none;
+  div {
+    display: inline-block;
+		margin: 0 7px;
+    label {
+      display: block;
+      margin: 7px;
+    }
+    input {
+      background-color: transparent;
+      border: 1px solid rgba(118,135,157,0.4);
+      border-radius: 20px;
+      height: 25px;
+    }
+  }
+
+
+  input[type="submit"] {
+    cursor: pointer;
+    width: 115px;
+    border: none;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0 0 2px;
+    margin: 0 10px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    background: #7089A0;
+    &:hover{
+      background: #253848;
+      -webkit-transition: all 0.5s ease;
+      -moz-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+      -o-transition: all 0.5s ease;
+      transition: all 0.5s ease;
+    }
+  }
+
+  .species-login-forgot {
+    margin: 10px 0 0 614px;
+    a { color: #648aa2; }
+  }
+}
+
+.species-connect {
+	color: #648aa2;
+	margin: 10px 0;
+	span { font-weight: bold; }
+	a {
+		display: block;
+		color: #648aa2;
+		text-decoration: none;
+	}
+	i.fa { float: right; }
+}
