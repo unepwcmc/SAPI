@@ -74,11 +74,16 @@ server {
 
   passenger_enabled on;
 
-  passenger_set_cgi_param HTTP_X_ACCEL_MAPPING #{deploy_to}/shared/public/downloads/=/downloads/;
-  passenger_pass_header X-Accel-Redirect;
-  passenger_ruby /home/#{fetch(:deploy_user)}/#{fetch(:rvm_ruby_version)}/wrappers/ruby;
 
-  location ~ ^/downloads/(.*)$ {
+  passenger_set_header X-Sendfile-Type "X-Accel-Redirect";
+  passenger_env_var X-Sendfile-Type "X-Accel-Redirect";
+  passenger_env_var X-Accel-Mapping  "/home/#{fetch(:deploy_user)}/#{fetch(:application)}/shared/public/downloads/=/downloads/";
+  passenger_pass_header X-Accel-Redirect;
+  passenger_pass_header X-Sendfile-Type;
+
+  passenger_ruby /home/#{fetch(:deploy_user)}/.rvm/gems/ruby-#{fetch(:rvm_ruby_version)}/wrappers/ruby;
+  
+    location ~ ^/downloads/(.*)$ {
     alias #{deploy_to}/shared/public/downloads/$1;
     internal;
   }
