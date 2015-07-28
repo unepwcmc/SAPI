@@ -34,4 +34,23 @@
 //= require ./species/router
 //= require_tree ./species/routes
 
-var Species = Ember.Application.create({LOG_TRANSITIONS: true});
+var Species = Ember.Application.create({
+  LOG_TRANSITIONS: true,
+  rootElement: '#ember_app'
+});
+
+$(document).ready(function(){
+
+  $('.species-connect').on('click', function(e){
+    e.preventDefault();
+    $('.species-login-form').slideToggle("slow");
+    var icon = $(this).find('i');
+    if(icon.hasClass("fa-caret-down")){
+      icon.removeClass("fa-caret-down").addClass("fa-caret-up");
+    }
+    else {
+      icon.removeClass("fa-caret-up").addClass("fa-caret-down");
+    }
+  });
+
+});

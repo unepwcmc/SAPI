@@ -75,5 +75,48 @@
     }]);
     </script>
   <% end %>
+  <div id="ember_app"></div>
+  <div id="footer">
+    <div class="holder">
+      <div class="species-connect">
+        <a href="#">
+          <span>Species+</span> CONNECT
+          <i class="fa fa-caret-down"></i>
+        </a>
+      </div>
+      <div class="species-login-form">
+        <%= form_for(:user, :url => session_path(:user)) do |f| %>
+          <div class="species-login-email">
+            <%= f.label :email %>
+            <%= f.text_field :email %>
+          </div>
+          <div class="species-login-password">
+            <%= f.label :password %>
+            <%= f.password_field :password %>
+          </div>
+          <%= f.check_box :remember_me %>
+          <%= f.label :remember_me %>
+          <%= f.submit 'CONNECT'%><br />
+          <div class="species-login-forgot">
+            <%= link_to "Forgot password?", new_password_path(:user) %>
+          </div>
+        <% end %>
+      </div>
+      <div class="logos">
+        <ul class="sponsor">
+          <li><a href="http://www.cites.org"><img src="/assets/species/logo-CITES.png" alt="CITES logo" width="77" height="44" /></a></li>
+          <li><a href="http://www.cms.int"><img src="/assets/species/logo-CMS.png" alt="CMS logo" width="31" height="44" /></a></li>
+          <li><a href="http://www.unep.org"><img src="/assets/species/logo-UNEP.png" alt="UNEP logo" width="37" height="43" /></a></li>
+          <li><a href="http://ec.europa.eu/environment/cites/home_en.htm"><img src="/assets/species/logo-EU.png" alt="EU logo" width="65" height="44" /></a></li>
+        </ul>
+        <div class="power-by">
+          <a href="http://www.unep-wcmc.org"><img src="/assets/species/powered_by.png" alt="Powered by logo" width="66" height="44" /></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="skip">
+    <a href="#main">skip to content</a>
+  </div>
 </body>
 </html>
