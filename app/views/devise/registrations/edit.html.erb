@@ -1,4 +1,4 @@
-<div class="change-password">
+<div class="user-edit-box">
 
   <div class="edit-container round-text-inputs">
 
@@ -19,7 +19,9 @@
           <%= f.password_field :password_confirmation, autocomplete: "off" %></div>
       </div>
 
-      <div><%= f.submit "Submit", class: "round-button" %></div>
+      <div class="submit-box">
+        <div><%= f.submit "Submit", class: "round-button" %></div>
+      </div>
     <% end %>
 
   </div>
