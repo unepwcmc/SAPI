@@ -147,6 +147,9 @@
 			border-top: 1px solid rgba(118,135,157,0.2);
 			border-bottom: 1px solid rgba(118,135,157,0.2);
 		}
+		.round-button {
+			float: right;
+		}
 	}
 }
 
@@ -163,7 +166,6 @@
 .round-button {
 	cursor: pointer;
 	width: 101px;
-	float: right;
 	border: none;
 	height: 30px;
 	line-height: 30px;
