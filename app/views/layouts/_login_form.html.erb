@@ -4,7 +4,7 @@
     <i class="fa fa-caret-down"></i>
   </a>
 </div>
-<div class="species-login-form">
+<div class="species-login-form round-text-inputs">
   <%= form_for(:user, :url => session_path(:user)) do |f| %>
     <div class="species-login-email">
       <%= f.label :email %>
@@ -18,7 +18,7 @@
     <%= f.label :remember_me %>
     <%= f.submit 'CONNECT'%><br />
     <div class="species-login-forgot">
-      <%= link_to "Forgot password?", new_password_path(:user) %>
+      <%= link_to "Forgot password?", new_password_path(:user), class: "round-button" %>
     </div>
   <% end %>
 </div>

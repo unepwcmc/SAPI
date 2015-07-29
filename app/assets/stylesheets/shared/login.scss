@@ -9,40 +9,16 @@
       display: block;
       margin: 7px;
     }
-    input {
+    input[type="text"], input[type="password"] {
       background-color: transparent;
-      border: 1px solid rgba(118,135,157,0.4);
-      border-radius: 20px;
-      height: 25px;
-			padding: 0 0 0 10px;
     }
   }
 
 
-  input[type="submit"] {
-    cursor: pointer;
+  .round-button {
     width: 115px;
-    border: none;
-    height: 30px;
-    line-height: 30px;
-    color: #fff;
-    font-size: 13px;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-align: center;
-    padding: 0 0 2px;
     margin: 0 10px;
-    -webkit-border-radius: 20px;
-    border-radius: 20px;
     background: #7089A0;
-    &:hover{
-      background: #253848;
-      -webkit-transition: all 0.5s ease;
-      -moz-transition: all 0.5s ease;
-      -ms-transition: all 0.5s ease;
-      -o-transition: all 0.5s ease;
-      transition: all 0.5s ease;
-    }
   }
 
   .species-login-forgot {
@@ -55,7 +31,7 @@
 	color: #648aa2;
 	margin: 10px 0;
 }
-.species-connect {
+#footer .species-connect {
 	span { font-weight: bold; }
 	a {
 		display: block;
@@ -138,3 +114,77 @@
 		}
 	}
 }
+
+.change-password {
+	width: 860px;
+	height: 520px;
+	background-color: #A4C5DA;
+	margin-bottom: 105px;
+	border: 1px solid #6b94af;
+
+	.edit-container {
+		width: 510px;
+		margin: 0 auto;
+		padding: 35px 0;
+		h2 {
+			font-size: 24px;
+			text-transform: none;
+		}
+		input[type="password"] {
+			margin: 10px 0;
+			width: 100%;
+			height: 35px;
+		}
+		p { margin: 0 0 15px 0; }
+		label { margin: 0 0 0 15px; }
+		h2, p {
+			padding-bottom: 20px;
+		}
+		p, label { color: black; }
+		.new-password {
+			margin: 20px 0;
+			padding: 25px 0 10px;
+			border-top: 1px solid rgba(118,135,157,0.2);
+			border-bottom: 1px solid rgba(118,135,157,0.2);
+		}
+	}
+}
+
+.round-text-inputs {
+	input[type="text"], input[type="password"]{
+		border: 1px solid rgba(118,135,157,0.4);
+		border-radius: 20px;
+		height: 25px;
+		padding: 0 0 0 10px;
+		outline: none;
+	}
+}
+
+.round-button {
+	cursor: pointer;
+	width: 101px;
+	float: right;
+	border: none;
+	height: 30px;
+	line-height: 30px;
+	color: #fff;
+	font-size: 13px;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-align: center;
+	padding: 0 0 2px;
+	margin: 0;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+	background: #376382;
+	&:hover{
+		background: #253848;
+		-webkit-transition: all 0.5s ease;
+		-moz-transition: all 0.5s ease;
+		-ms-transition: all 0.5s ease;
+		-o-transition: all 0.5s ease;
+		transition: all 0.5s ease;
+	}
+
+}
+input[type="submit"]:hover { cursor: pointer; }

@@ -21,6 +21,10 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def edit
+    render "edit", layout: "pages"
+  end
+
   private
 
   def after_update_path_for(resource)
