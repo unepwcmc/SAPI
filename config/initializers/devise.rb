@@ -258,5 +258,7 @@ Devise.setup do |config|
   Rails.application.config.to_prepare do
     Devise::RegistrationsController.layout "pages"
     Devise::PasswordsController.layout "pages"
+    Devise::PasswordsController.after_filter :save_email, only: [:create]
+    Devise::PasswordsController.after_filter :delete_email, only: [:update]
   end
 end

@@ -62,4 +62,12 @@ class ApplicationController < ActionController::Base
     request.referrer
   end
 
+  def save_email
+    session[:email] = params[:user][:email] || ""
+  end
+
+  def delete_email
+    session.delete(:email)
+  end
+
 end
