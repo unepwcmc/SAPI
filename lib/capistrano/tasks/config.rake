@@ -316,7 +316,7 @@ EOF
 
 on roles(:db) do
 execute "mkdir -p #{fetch(:backup_path)}/config"
-upload! StringIO.new(backup_schedule), "#{fetch(:backup_path)}/config/schedule.rb"
+upload! StringIO.new(backup_schedule), "#{fetch(:backup_path)}/config/#{fetch(:application)}-schedule.rb"
   end
  end
 end
