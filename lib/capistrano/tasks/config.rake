@@ -74,11 +74,16 @@ server {
 
   passenger_enabled on;
 
-  passenger_set_cgi_param HTTP_X_ACCEL_MAPPING #{deploy_to}/shared/public/downloads/=/downloads/;
-  passenger_pass_header X-Accel-Redirect;
-  passenger_ruby /home/#{fetch(:deploy_user)}/#{fetch(:rvm_ruby_version)}/wrappers/ruby;
 
-  location ~ ^/downloads/(.*)$ {
+  passenger_set_header X-Sendfile-Type "X-Accel-Redirect";
+  passenger_env_var X-Sendfile-Type "X-Accel-Redirect";
+  passenger_env_var X-Accel-Mapping  "/home/#{fetch(:deploy_user)}/#{fetch(:application)}/shared/public/downloads/=/downloads/";
+  passenger_pass_header X-Accel-Redirect;
+  passenger_pass_header X-Sendfile-Type;
+
+  passenger_ruby /home/#{fetch(:deploy_user)}/.rvm/gems/ruby-#{fetch(:rvm_ruby_version)}/wrappers/ruby;
+  
+    location ~ ^/downloads/(.*)$ {
     alias #{deploy_to}/shared/public/downloads/$1;
     internal;
   }
@@ -99,19 +104,27 @@ server {
     break;
   }
   
-  if (-f $document_root/system/maintenance.html) {
-    return 503;
+error_page 503 @503;
+
+# Return a 503 error if the maintenance page exists.
+if (-f #{deploy_to}shared/public/system/maintenance.html) {
+  return 503;
+}
+
+location @503 {
+  # Serve static assets if found.
+  if (-f $request_filename) {
+    break;
   }
 
-  error_page 500 502 504 /500.html;
-  location = /500.html {
-    root #{deploy_to}/current/public;
-  }
+  # Set root to the shared directory.
+  root #{deploy_to}/shared/public;
+  rewrite ^(.*)$ /system/maintenance.html break;
+}
 
-  error_page 503 @maintenance;
-  location @maintenance {
-    rewrite  ^(.*)$  /system/maintenance.html break;
-  }
+}
+
+
 }
 
 
