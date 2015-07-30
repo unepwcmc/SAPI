@@ -97,6 +97,7 @@ group :development do
   gem 'capistrano-ext'
   gem 'capistrano-rvm',   '~> 0.1', require: false
   gem 'capistrano-sidekiq'
+  gem 'capistrano-maintenance', '~> 1.0'
   gem 'slackistrano'
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
