@@ -1,9 +1,14 @@
 class Api::V1::DocumentsController < ApplicationController
 
   def index
+
     documents = Document.from("api_documents_view adv").
       where("adv.taxon_concept_ids @> ARRAY[?]", params[:taxon_concept_id].to_i).
       select("adv.id, adv.event_name, adv.event_date, adv.event_type, adv.title, adv.is_public").order("adv.event_date DESC")
+
+    public_only = !current_user || current_user.role == "api"
+
+    documents = documents.where("adv.is_public = true") if public_only
 
     ec_srg_docs = documents.where("adv.event_type = 'EcSrg'")
     cites_cop_docs = documents.where("adv.event_type = 'CitesCop'")
