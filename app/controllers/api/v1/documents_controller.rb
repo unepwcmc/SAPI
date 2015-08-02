@@ -6,9 +6,7 @@ class Api::V1::DocumentsController < ApplicationController
       where("adv.taxon_concept_ids @> ARRAY[?]", params[:taxon_concept_id].to_i).
       select("adv.id, adv.event_name, adv.event_date, adv.event_type, adv.title, adv.is_public").order("adv.event_date DESC")
 
-    public_only = !current_user || current_user.role == "api"
-
-    documents = documents.where("adv.is_public = true") if public_only
+    documents = documents.where("adv.is_public = true") if access_denied?
 
     ec_srg_docs = documents.where("adv.event_type = 'EcSrg'")
     cites_cop_docs = documents.where("adv.event_type = 'CitesCop'")
@@ -34,13 +32,24 @@ class Api::V1::DocumentsController < ApplicationController
 
   def show
     @document = Document.find(params[:id])
-    send_file(
-      @document.filename.path,
-        :filename => File.basename(@document.filename.path),
-        :type => @document.filename.content_type,
-        :disposition => 'attachment',
-        :url_based_filename => true
-    )
+    path_to_file = @document.filename.path;
+    if access_denied? || !File.exists?(path_to_file)
+      redirect_to "/"
+    else
+      send_file(
+        path_to_file,
+          :filename => File.basename(path_to_file),
+          :type => @document.filename.content_type,
+          :disposition => 'attachment',
+          :url_based_filename => true
+      )
+    end
+  end
+
+  private
+
+  def access_denied?
+    !current_user || current_user.role == User::API_USER
   end
 
 end
