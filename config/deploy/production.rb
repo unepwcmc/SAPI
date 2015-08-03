@@ -15,6 +15,7 @@ set :app_port, "80"
 set :branch, :master
 
 set :whenever_environment, defer { stage }
+set :whenever_command, "bundle exec whenever"
 require 'whenever/capistrano'
 
 desc "Configure VHost"
