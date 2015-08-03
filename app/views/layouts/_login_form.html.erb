@@ -1,14 +1,14 @@
 <div class="species-connect">
   <a href="#">
     <span>Species+</span> CONNECT
-    <i class="fa fa-caret-down"></i>
+    <i class="fa fa-caret-<%=flash[:alert] ? 'up' : 'down' %>"></i>
     <%=
       content_tag(:div, content_tag(:p, flash[:alert], class: "error-message"),
         {id: "flash_alert", class: "error-box"}) if flash[:alert]
     %>
   </a>
 </div>
-<div class="species-login-form round-text-inputs">
+<div class="species-login-form round-text-inputs" style="display: <%= flash[:alert] ? 'block' : 'none' %>">
   <%= form_for(:user, :url => session_path(:user)) do |f| %>
     <div class="species-login-email">
       <%= f.label :email %>
