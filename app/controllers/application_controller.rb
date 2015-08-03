@@ -58,10 +58,6 @@ class ApplicationController < ActionController::Base
       end
   end
 
-  def after_sign_out_path_for(scope)
-    request.referrer
-  end
-
   def save_email
     session[:email] = params[:user][:email] || ""
   end
