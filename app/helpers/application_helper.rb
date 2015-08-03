@@ -14,4 +14,54 @@ module ApplicationHelper
     end
   end
 
+  def error_message_for field
+    return "" if resource.errors[field].empty? && field != :password_confirmation
+    message =
+      if field == :password_confirmation
+        field = :password
+        resource.errors.messages[:password].select do |message|
+          message.include? "confirmation"
+        end
+      elsif field == :password
+        resource.errors.messages[:password].select do |message|
+          !message.include? "confirmation"
+        end
+      else
+        resource.errors.messages[field]
+      end.first
+    return "" unless message
+    to_html "#{field.to_s.humanize.capitalize} #{message}"
+  end
+
+  def to_html message
+    content_tag :div, content_tag(:p, message, class: "error-message"), class: "error-box"
+  end
+
+  def error_message_header
+    return "" if resource.errors.count <= 0
+    message = I18n.t("errors.messages.not_saved",
+                      :count => resource.errors.count,
+                      :resource => resource.class.model_name.human.downcase)
+
+    content_tag :div, content_tag(:i, "", class: "fa fa-exclamation-triangle") + message, class: "error-header"
+  end
+
+  private
+
+  def get_password_error options={}
+    if options[:contains].present?
+      resource.errors[:password].select do |error|
+        error.include? "confirmation"
+      end
+    else
+      resource.errors[:password].select do |error|
+        !error.include? "confirmation"
+      end
+    end
+  end
+
+  def current_password_error
+    resource.errors[:current_password].first || ""
+  end
+
 end

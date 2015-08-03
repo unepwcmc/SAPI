@@ -127,6 +127,7 @@
 		padding: 35px 0;
 		h2 {
 			font-size: 24px;
+			padding-bottom: 0;
 			text-transform: none;
 		}
 		input[type="password"], input[type="email"] {
@@ -135,15 +136,12 @@
 			height: 35px;
 		}
 		p {
-			margin: 0 0 15px 0;
+			padding-bottom: 20px;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
 			strong { font-weight: bold; }
 		}
 		label { margin: 0 0 0 15px; }
-		h2, p {
-			padding-bottom: 20px;
-		}
 		p, label { color: black; }
 		.new-password {
 			margin: 20px 0;
@@ -196,3 +194,19 @@
 
 }
 input[type="submit"]:hover { cursor: pointer; }
+
+div.error-box {
+	background-color: #F2DEDE;
+	height: 35px;
+	margin: 5px 0 0 2px;
+	p.error-message {
+		color: #C00101;
+		padding: 9px 15px;
+	}
+}
+
+div.error-header {
+	color: #C00101;
+	margin: 20px 0;
+	i.fa { margin-right: 5px}
+}
