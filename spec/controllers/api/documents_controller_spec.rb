@@ -4,8 +4,8 @@ describe Api::V1::DocumentsController, :type => :controller do
 
   before(:each) do
     @taxon_concept = create(:taxon_concept)
-    document = create(:proposal, is_public: true, event: create(:cites_cop, designation: cites))
-    citation = create(:document_citation, document_id: document.id)
+    @document = create(:proposal, is_public: true, event: create(:cites_cop, designation: cites))
+    citation = create(:document_citation, document_id: @document.id)
     create(:document_citation_taxon_concept, document_citation_id: citation.id,
       taxon_concept_id: @taxon_concept.id)
     document2 = create(:proposal, event: create(:cites_cop, designation: cites))
@@ -52,6 +52,14 @@ describe Api::V1::DocumentsController, :type => :controller do
       it "returns only public documents" do
         get_public_documents
       end
+    end
+  end
+
+  context "show action fails" do
+    login_api_user
+    it "should return 403 status when permission denied" do
+      get :show, id: @document.id
+      expect(response.status).to eq(403)
     end
   end
 end
