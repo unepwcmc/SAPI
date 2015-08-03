@@ -261,4 +261,9 @@ Devise.setup do |config|
     Devise::PasswordsController.after_filter :save_email, only: [:create]
     Devise::PasswordsController.after_filter :delete_email, only: [:update]
   end
+
+  #custom redirection when login fails
+  config.warden do |manager|
+   manager.failure_app = CustomFailure
+  end
 end
