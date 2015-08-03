@@ -19,4 +19,11 @@ module ControllerMacros
       sign_in FactoryGirl.create(:user, role: User::ELIBRARY_USER)
     end
   end
+
+  def login_api_user
+    before(:each) do
+      @request.env["devise.mapping"] = Devise.mappings[:user]
+      sign_in FactoryGirl.create(:user, role: User::API_USER)
+    end
+  end
 end
