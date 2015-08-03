@@ -46,22 +46,4 @@ module ApplicationHelper
     content_tag :div, content_tag(:i, "", class: "fa fa-exclamation-triangle") + message, class: "error-header"
   end
 
-  private
-
-  def get_password_error options={}
-    if options[:contains].present?
-      resource.errors[:password].select do |error|
-        error.include? "confirmation"
-      end
-    else
-      resource.errors[:password].select do |error|
-        !error.include? "confirmation"
-      end
-    end
-  end
-
-  def current_password_error
-    resource.errors[:current_password].first || ""
-  end
-
 end
