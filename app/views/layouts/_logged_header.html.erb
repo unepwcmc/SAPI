@@ -1,0 +1,28 @@
+<% if current_user %>
+  <div class="logged-header">
+    <div class="logged-header-container">
+      <span class="left">Species+</span>
+      <span class="right">
+        <a href="#">
+          <i class="fa fa-user"></i>
+          <%= current_user.name %>
+          <i class="fa fa-caret-down dropdown"></i>
+        </a>
+      </span>
+    </div>
+    <div class="logged-header-dropdown">
+      <a href="#"><i class="fa fa-times"></i></a>
+      <div class="settings">
+        <i class="fa fa-cog"></i>Settings
+        <ul class="settings-list">
+          <li><%= link_to "Change password", edit_user_registration_path %></li>
+        </ul>
+      </div>
+      <div class="logout">
+        <%= link_to '<i class="fa fa-sign-out"></i>Log out'.html_safe,
+          destroy_user_session_path, method: :delete
+        %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -83,7 +83,7 @@ p.browsehappy a {
 }
 .w1 {
 	width: 940px;
-	margin: 0 auto -30px;
+	margin: 0 auto -35px;
 	padding: 0 0 202px;
 }
 #header {
@@ -279,8 +279,13 @@ body.inner .push {
 }
 #footer {
 	background: #A4C5DA;
-  height: 202px;
 	border-top: 1px solid #6b94af;
+	min-height: 206px;
+}
+#footer .logos {
+	margin: 25px 0 0;
+	padding: 25px 0 0;
+	border-top: 1px solid rgba(118,135,157,0.2);
 }
 #footer .holder {
 	margin: 0 auto;
@@ -289,11 +294,9 @@ body.inner .push {
 }
 .power-by {
 	float: right;
-	padding: 30px 0 0;
 }
-
-body.inner .power-by {
-  padding: 50px 0 0;
+#footer .sponsor, #footer .power-by {
+	margin: 0 0 65px;
 }
 
 .power-by img { display: block; }
@@ -305,11 +308,6 @@ body.inner .power-by {
 }
 #footer .sponsor {
 	float: left;
-  padding: 30px 0 0;
-}
-
-body.inner #footer .sponsor {
-  padding: 50px 0 0;
 }
 
 #footer .sponsor li {
@@ -320,7 +318,7 @@ body.inner #footer .sponsor {
 .inner #main {
 	width: 100%;
 	padding: 0;
-	margin: 0 0 -20px;
+	margin: 0 0 105px;
 	position: relative;
 	z-index: 666;
 }

@@ -1,5 +1,5 @@
 SAPI::Application.routes.draw do
-  devise_for :users, :skip => [:registrations]
+  devise_for :users, :controllers => { :passwords => "passwords", :registrations => "registrations" }
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registration'
     put 'users' => 'registrations#update', :as => 'user_registration'

@@ -38,9 +38,9 @@
 
 </head>
 <body class="inner">
-
+  <%= render "layouts/logged_header" %>
   <div id="wrapper">
-    <div class="w1">   
+    <div class="w1">
       <div id="header">
         <strong class="logo"><a href="/species">Species+</a></strong>
         <ul id="nav">
@@ -65,14 +65,17 @@
 
   <div id="footer">
     <div class="holder">
-      <ul class="sponsor">
-        <li><a href="http://www.cites.org"><img src="/assets/species/logo-CITES.png" alt="CITES logo" width="77" height="44" /></a></li>
-        <li><a href="http://www.cms.int"><img src="/assets/species/logo-CMS.png" alt="CMS logo" width="31" height="44" /></a></li>
-        <li><a href="http://www.unep.org"><img src="/assets/species/logo-UNEP.png" alt="UNEP logo" width="37" height="43" /></a></li>
-        <li><a href="http://ec.europa.eu/environment/cites/home_en.htm"><img src="/assets/species/logo-EU.png" alt="EU logo" width="65" height="44" /></a></li>
-      </ul>
-      <div class="power-by">
-        <a href="http://www.unep-wcmc.org"><img src="/assets/species/powered_by.png" alt="Powered by logo" width="66" height="44" /></a>
+      <%= render "layouts/login_footer" %>
+      <div class="logos">
+        <ul class="sponsor">
+          <li><a href="http://www.cites.org"><img src="/assets/species/logo-CITES.png" alt="CITES logo" width="77" height="44" /></a></li>
+          <li><a href="http://www.cms.int"><img src="/assets/species/logo-CMS.png" alt="CMS logo" width="31" height="44" /></a></li>
+          <li><a href="http://www.unep.org"><img src="/assets/species/logo-UNEP.png" alt="UNEP logo" width="37" height="43" /></a></li>
+          <li><a href="http://ec.europa.eu/environment/cites/home_en.htm"><img src="/assets/species/logo-EU.png" alt="EU logo" width="65" height="44" /></a></li>
+        </ul>
+        <div class="power-by">
+          <a href="http://www.unep-wcmc.org"><img src="/assets/species/powered_by.png" alt="Powered by logo" width="66" height="44" /></a>
+        </div>
       </div>
     </div>
   </div>

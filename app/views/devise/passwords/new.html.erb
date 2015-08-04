@@ -1,0 +1,26 @@
+<div class="user-edit-box">
+  <div class="edit-container">
+
+    <h2>Forgot your password?</h2>
+    <%= error_message_header %>
+    <p>
+      Enter your email address to reset your password. You may need to check
+      your spam folder.
+    </p>
+
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <div class="round-text-inputs">
+          <div>
+            <%= f.label :email %>
+            <%= error_message_for :email %>
+            <%= f.email_field :email, autofocus: true %>
+          </div>
+      </div>
+
+      <div class="submit-box">
+        <div><%= f.submit "Submit", class: "round-button" %></div>
+      </div>
+    <% end %>
+
+  </div>
+</div>

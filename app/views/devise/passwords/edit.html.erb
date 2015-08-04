@@ -1,0 +1,30 @@
+<div class="user-edit-box">
+  <div class="edit-container">
+
+  <h2>Reset your password.</h2>
+  <%= error_message_header %>
+  <p>Please enter a new password for your <strong><%= session[:email] %></strong> account</p>
+
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+    <%= f.hidden_field :reset_password_token %>
+
+    <div class="round-text-inputs">
+      <div>
+        <%= f.label :password, "New password" %>
+        <%= error_message_for :password %>
+        <%= f.password_field :password, autofocus: true, autocomplete: "off" %>
+      </div>
+
+      <div>
+        <%= f.label :password_confirmation, "Confirm new password" %>
+        <%= error_message_for :password_confirmation %>
+        <%= f.password_field :password_confirmation, autocomplete: "off" %>
+      </div>
+    </div>
+
+    <div class="submit-box">
+      <div><%= f.submit "Submit", class: "round-button" %></div>
+    </div>
+  <% end %>
+  </div>
+</div>
