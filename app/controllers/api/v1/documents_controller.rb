@@ -33,7 +33,7 @@ class Api::V1::DocumentsController < ApplicationController
   def show
     @document = Document.find(params[:id])
     path_to_file = @document.filename.path;
-    if access_denied?
+    if access_denied? && !@document.is_public
       render :file => "#{Rails.root}/public/403.html",  :status => 403
     elsif !File.exists?(path_to_file)
       render :file => "#{Rails.root}/public/404.html",  :status => 404
