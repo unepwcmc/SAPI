@@ -1,6 +1,10 @@
 class CustomFailure < Devise::FailureApp
   def redirect_url
-    root_path
+    if request.original_url == request.base_url + "/admin"
+      new_user_session_path
+    else
+      root_path
+    end
   end
 
   def respond
