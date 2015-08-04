@@ -6,11 +6,11 @@ namespace :config do
    ask(:db_host, 'db_host')
 setup_config = <<-EOF
 #{fetch(:rails_env)}:
-adapter: postgresql
-database: #{fetch(:db_name)}
-username: #{fetch(:db_user)}
-password: #{fetch(:db_pass)}
-host: #{fetch(:db_host)}
+  adapter: postgresql
+  database: #{fetch(:db_name)}
+  username: #{fetch(:db_user)}
+  password: #{fetch(:db_pass)}
+  host: #{fetch(:db_host)}
 EOF
   on roles(:app) do
      execute "mkdir -p #{shared_path}/config"
@@ -18,8 +18,6 @@ EOF
     end
   end
 end
-
-
 
 namespace :config do
   task :setup do
@@ -49,9 +47,6 @@ EOF
   end
 end
 
-
-
-
 namespace :config do
 task :setup do
 
@@ -66,24 +61,23 @@ server {
   root #{deploy_to}/current/public;
 
   location ^~ /sidekiq {
-        passenger_enabled on;
-        rails_env production;
-        auth_basic "Restricted Admin Area";
-        auth_basic_user_file #{deploy_to}/shared/.htpasswd;
-    }
+    passenger_enabled on;
+    rails_env production;
+    auth_basic "Restricted Admin Area";
+    auth_basic_user_file #{deploy_to}/shared/.htpasswd;
+  }
 
   passenger_enabled on;
 
-
   passenger_set_header X-Sendfile-Type "X-Accel-Redirect";
   passenger_env_var X-Sendfile-Type "X-Accel-Redirect";
-  passenger_env_var X-Accel-Mapping  "/home/#{fetch(:deploy_user)}/#{fetch(:application)}/shared/public/downloads/=/downloads/";
+  passenger_env_var X-Accel-Mapping "/home/#{fetch(:deploy_user)}/#{fetch(:application)}/shared/public/downloads/=/downloads/";
   passenger_pass_header X-Accel-Redirect;
   passenger_pass_header X-Sendfile-Type;
 
   passenger_ruby /home/#{fetch(:deploy_user)}/.rvm/gems/ruby-#{fetch(:rvm_ruby_version)}/wrappers/ruby;
   
-    location ~ ^/downloads/(.*)$ {
+  location ~ ^/downloads/(.*)$ {
     alias #{deploy_to}/shared/public/downloads/$1;
     internal;
   }
@@ -104,30 +98,24 @@ server {
     break;
   }
   
-error_page 503 @503;
+  error_page 503 @503;
 
-# Return a 503 error if the maintenance page exists.
-if (-f #{deploy_to}shared/public/system/maintenance.html) {
-  return 503;
-}
-
-location @503 {
-  # Serve static assets if found.
-  if (-f $request_filename) {
-    break;
+  # Return a 503 error if the maintenance page exists.
+  if (-f #{deploy_to}shared/public/system/maintenance.html) {
+    return 503;
   }
 
-  # Set root to the shared directory.
-  root #{deploy_to}/shared/public;
-  rewrite ^(.*)$ /system/maintenance.html break;
+  location @503 {
+    # Serve static assets if found.
+    if (-f $request_filename) {
+      break;
+    }
+
+    # Set root to the shared directory.
+    root #{deploy_to}/shared/public;
+    rewrite ^(.*)$ /system/maintenance.html break;
+  }
 }
-
-}
-
-
-}
-
-
 EOF
 
   on roles(:app) do
@@ -139,16 +127,13 @@ EOF
   end
 end
 
-
-
-
 namespace :config do
-task :setup do
-  ask(:s3_access_key_id, 's3_access_key_id')
-  ask(:s3_secret_access_key, 's3_secret_access_key')
-  ask(:s3_bucket, 's3_bucket')
-  ask(:mail_server, 'mail_server')
-  backup_config_db = <<-EOF
+  task :setup do
+    ask(:s3_access_key_id, 's3_access_key_id')
+    ask(:s3_secret_access_key, 's3_secret_access_key')
+    ask(:s3_bucket, 's3_bucket')
+    ask(:mail_server, 'mail_server')
+    backup_config_db = <<-EOF
 #  encoding: utf-8
 ##
 # Backup Generated: sapi_website
@@ -224,16 +209,16 @@ Model.new(:sapi_website_db, 'sapi_website_db') do
 end
 EOF
 
-on roles(:db) do
-  execute "mkdir -p #{fetch(:backup_path)}/models"
-  upload! StringIO.new(backup_config_db), "#{fetch(:backup_path)}/models/db_#{fetch(:application)}.rb"
-   end
- end
+    on roles(:db) do
+      execute "mkdir -p #{fetch(:backup_path)}/models"
+      upload! StringIO.new(backup_config_db), "#{fetch(:backup_path)}/models/db_#{fetch(:application)}.rb"
+    end
+  end
 end
 
 namespace :config do
-task :setup do
-backup_config_files = <<-EOF
+  task :setup do
+    backup_config_files = <<-EOF
 # encoding: utf-8
 # Backup Generated: sapi_files
 # Once configured, you can run the backup with the following command:
@@ -288,67 +273,59 @@ end
 end
 EOF
 
-on roles(:app) do
-   execute "mkdir -p #{fetch(:backup_path)}/models"
-   upload! StringIO.new(backup_config_files), "#{fetch(:backup_path)}/models/files_#{fetch(:application)}.rb"
+    on roles(:app) do
+      execute "mkdir -p #{fetch(:backup_path)}/models"
+      upload! StringIO.new(backup_config_files), "#{fetch(:backup_path)}/models/files_#{fetch(:application)}.rb"
+    end
   end
- end
-end
-
-
-
-namespace :config do
- task :setup do
-  on roles(:app, :db) do
-  execute "/bin/bash -l -c '/home/#{fetch(:deploy_user)}/.rvm/gems/ruby-2.1.3/bin/backup generate:config'"
-  end
- end
 end
 
 namespace :config do
-task :setup do
- backup_schedule = <<-EOF
+  task :setup do
+    on roles(:app, :db) do
+      execute "/bin/bash -l -c '/home/#{fetch(:deploy_user)}/.rvm/gems/ruby-2.1.3/bin/backup generate:config'"
+    end
+  end
+end
+
+namespace :config do
+  task :setup do
+    backup_schedule = <<-EOF
 every 1.day, :at => '11:30 pm' do
   command "backup perform -t sapi_files"
   command "backup perform -t sapi_website_db"
 end
 EOF
 
-on roles(:db) do
-execute "mkdir -p #{fetch(:backup_path)}/config"
-upload! StringIO.new(backup_schedule), "#{fetch(:backup_path)}/config/#{fetch(:application)}-schedule.rb"
+    on roles(:db) do
+      execute "mkdir -p #{fetch(:backup_path)}/config"
+      upload! StringIO.new(backup_schedule), "#{fetch(:backup_path)}/config/#{fetch(:application)}-schedule.rb"
+    end
   end
- end
 end
 
-
 namespace :config do
-task :setup do
-desc "Upload cron schedule file."
-  task :upload_cron do
+  task :setup do
+    desc "Upload cron schedule file."
+    task :upload_cron do
       execute "mkdir -p #{fetch(:backup_path)}/config"
       execute "touch #{fetch(:backup_path)}/config/cron.log"
       upload! StringIO.new(File.read("config/backup/schedule.rb")), "#{fetch(:backup_path)}/config/#{fetch(:application)}-schedule.rb"
-   end
+    end
   end
 end
-
-
 
 namespace :config do
   desc "Update crontab with whenever"
   task :setup do
-   on roles(:app, :db) do
-    execute "cd '#{fetch(:backup_path)}' && /bin/bash -l -c '/home/#{fetch(:deploy_user)}/.rvm/gems/ruby-2.1.3/bin/whenever --update-crontab'"
-   end
+    on roles(:app, :db) do
+      execute "cd '#{fetch(:backup_path)}' && /bin/bash -l -c '/home/#{fetch(:deploy_user)}/.rvm/gems/ruby-2.1.3/bin/whenever --update-crontab'"
+    end
   end
 end
-
-
 
 # Default value for :linked_files is []
 set :linked_files, fetch(:linked_files, []).push('config/database.yml config/mailer_config.yml')
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
-
