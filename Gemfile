@@ -94,11 +94,11 @@ group :development do
   gem 'capistrano', '~> 3.4', require: false
   gem 'capistrano-rails',   '~> 1.1', require: false
   gem 'capistrano-bundler', '~> 1.1', require: false
-  gem 'capistrano-ext'
   gem 'capistrano-rvm',   '~> 0.1', require: false
   gem 'capistrano-sidekiq'
-  gem 'capistrano-maintenance', '~> 1.0'
-  gem 'slackistrano'
+  gem 'capistrano-maintenance', '~> 1.0', require: false
+  gem 'capistrano-passenger', '~> 0.1.1', require: false
+  gem 'slackistrano', require: false
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
   gem 'quiet_assets'
