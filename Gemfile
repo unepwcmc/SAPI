@@ -122,6 +122,7 @@ group :test do
   gem 'simplecov', :require => false
   gem 'coveralls', :require => false
   gem 'capybara'
+  gem 'test-unit', '~> 3.1'
 end
 
 gem 'rake', '~> 10.0.3'
