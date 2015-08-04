@@ -2,20 +2,26 @@
 #
 # Table name: documents
 #
-#  id            :integer          not null, primary key
-#  title         :text             not null
-#  filename      :text             not null
-#  date          :date             not null
-#  type          :string(255)      not null
-#  is_public     :boolean          default(FALSE), not null
-#  event_id      :integer
-#  language_id   :integer
-#  legacy_id     :integer
-#  created_by_id :integer
-#  updated_by_id :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  number        :string(255)
+#  id                           :integer          not null, primary key
+#  title                        :text             not null
+#  filename                     :text             not null
+#  date                         :date             not null
+#  type                         :string(255)      not null
+#  is_public                    :boolean          default(FALSE), not null
+#  event_id                     :integer
+#  language_id                  :integer
+#  elib_legacy_id               :integer
+#  created_by_id                :integer
+#  updated_by_id                :integer
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  number                       :string(255)
+#  sort_index                   :integer
+#  primary_language_document_id :integer
+#  elib_legacy_file_name        :text
+#  original_id                  :integer
+#  discussion_id                :integer
+#  discussion_sort_index        :integer
 #
 
 class Document < ActiveRecord::Base
@@ -25,7 +31,8 @@ class Document < ActiveRecord::Base
     :order_within_rank => "documents.date, documents.title, documents.id"
   track_who_does_it
   attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
-    :language_id, :citations_attributes, :number
+    :language_id, :citations_attributes, :number,
+    :sort_index, :discussion_id, :discussion_sort_index
   belongs_to :event
   belongs_to :language
   has_many :citations, class_name: 'DocumentCitation', dependent: :destroy
@@ -64,7 +71,7 @@ class Document < ActiveRecord::Base
   end
 
   def set_title
-    if title.blank? && filename_changed?
+    if title.blank? && filename_changed? && filename.file
       self.title = filename.file.filename.sub(/.\w+$/, '').humanize
     end
   end

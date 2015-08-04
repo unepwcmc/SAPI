@@ -46,6 +46,22 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     end
   end
 
+  def show
+    @document = Document.find(params[:id])
+    path_to_file = @document.filename.path;
+    if !File.exists?(path_to_file)
+      render :file => "#{Rails.root}/public/404.html", :status => 404
+    else
+      send_file(
+        path_to_file,
+          :filename => File.basename(path_to_file),
+          :type => @document.filename.content_type,
+          :disposition => 'attachment',
+          :url_based_filename => true
+      )
+    end
+  end
+
   protected
 
   def collection

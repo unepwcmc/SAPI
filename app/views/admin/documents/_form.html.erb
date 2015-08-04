@@ -15,8 +15,14 @@
           options_for_select(
             @events.map { |l| [l.name, l.id] },
             @document.event_id
-          )
+          ), include_blank: true
         %>
+      </div>
+    </div>
+    <div class="control-group">
+      <%= f.label :sort_index, class: 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :sort_index %>
       </div>
     </div>
   <% end %>
@@ -118,6 +124,24 @@
 
     <% end %>
   <% end %>
+
+  <div class="control-group">
+    <%= f.label :discussion_id, class: 'control-label' %>
+    <div class="controls">
+      <%= f.select :discussion_id,
+        options_for_select(DocumentTag::Discussion.order(:name).map { |d| [d.name, d.id] },
+          @document.discussion_id),
+          {include_blank: true, style: 'width: 220px'}
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :discussion_sort_index, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :discussion_sort_index %>
+    </div>
+  </div>
 
   <div class="control-group">
     <%= f.label :citations, class: 'control-label' %>

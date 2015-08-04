@@ -79,7 +79,7 @@ SAPI::Application.routes.draw do
     resources :cites_extraordinary_meetings
 
     resource :document_batch, :only => [:new, :create]
-    resources :documents, :only => [:index, :create, :edit, :update, :destroy]
+    resources :documents
 
     resources :cites_suspension_notifications
     resources :references, :only => [:index, :create, :update, :destroy] do

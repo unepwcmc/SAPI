@@ -9,12 +9,8 @@
 #  updated_at :datetime         not null
 #
 
-class DocumentTag::ReviewPhase < DocumentTag
+class DocumentTag::Discussion < DocumentTag
 
-  def self.display_name; 'Review phase'; end
-
-  def self.elibrary_document_types
-    [Document::ReviewOfSignificantTrade]
-  end
+  def self.display_name; 'Discussion'; end
 
 end

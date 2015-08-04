@@ -12,6 +12,7 @@
 /rdoc
 /log/*.log
 /tmp
+/private
 /public/system
 /public/downloads/*.pdf
 #LaTeX
