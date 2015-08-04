@@ -37,7 +37,9 @@ set :ssh_options, {
   forward_agent: true,
 }
 
-#before "deploy:symlink:shared", "rsync:sync"
+
+before "deploy:symlink:shared", "rsync:sync"
+
 
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml config/mailer_config.yml config/secrets.yml}
