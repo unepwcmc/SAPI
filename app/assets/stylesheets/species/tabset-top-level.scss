@@ -12,28 +12,12 @@
     }
   }
 
-
   li:first-child {
     a {
       -webkit-border-radius: 0;
       border-radius: 0;
     }
   }
-  /*
-  li.last-child {
-    a {
-      -webkit-border-radius: 0;
-      border-radius: 0;
-      border-right: solid 1px #376382;
-    }
-  }
-
-  li.last-child.active {
-    a {
-      border-right: solid 1px #8FB7CF;
-    }
-  }
-  */
 
   li, li:hover {
     a {
