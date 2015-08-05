@@ -13,6 +13,7 @@
 //= require underscore
 //= require jquery
 //= require jquery_ujs
+//= require dataTables/jquery.dataTables
 //= require jquery-deparam
 //= require jquery.cookie
 //= require bootstrap-scrollspy
@@ -33,7 +34,7 @@
 //= require_tree ./species/templates
 //= require ./species/router
 //= require_tree ./species/routes
-//= require ./shared/login
+//= require_tree ./shared
 
 var Species = Ember.Application.create({
   LOG_TRANSITIONS: true,
