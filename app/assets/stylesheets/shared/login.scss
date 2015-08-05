@@ -71,10 +71,10 @@
 	.logged-header-dropdown {
 		display: none;
 		color: white;
-		position: relative;
-		left: 1180px;
-		top: 25px;
-		height: 140px;
+		position: absolute;
+		right: 100px;
+		top: 42px;
+		height: 130px;
 		width: 160px;
 		background-color: #376382;
 		z-index: 2;
@@ -88,14 +88,14 @@
 			content: "\f0d8";
 			color: #376382;
 			position: relative;
-			bottom: 22px;
+			bottom: 11px;
 			left: 131px;
 		}
 		i.fa-times{
 			font-size: 14px;
 			float: right;
 			position: relative;
-			bottom: 5px;
+			top: 5px;
 		}
 		.settings {
 			margin: 0 0 10px 10px;
