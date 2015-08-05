@@ -80,3 +80,10 @@ Species.SearchController = Ember.Controller.extend Species.Spinner, Species.Taxo
 
     deleteGeoEntitySelection: (context) ->
       @get('selectedGeoEntities').removeObject(context)
+
+    handleTaxonConceptAutoCompleteSelection: (autoCompleteTaxonConcept) ->
+      rankName = autoCompleteTaxonConcept.get('rankName')
+      if rankName == 'SPECIES' || rankName == 'SUBSPECIES'
+        @openTaxonPage(autoCompleteTaxonConcept.id)
+      else
+        @openSearchPage(autoCompleteTaxonConcept.get('fullName'))
