@@ -1,4 +1,4 @@
-Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
+Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Species.TaxonConceptAutoCompleteLookup,
   needs: ['geoEntities', 'taxonConcepts']
 
 

@@ -1,8 +1,6 @@
-Species.SearchController = Ember.Controller.extend Species.Spinner,
+Species.SearchController = Ember.Controller.extend Species.Spinner, Species.TaxonConceptAutoCompleteLookup,
   needs: ['geoEntities', 'taxonConcepts']
   taxonomy: 'cites_eu'
-  taxonConceptQuery: null
-  taxonConceptQueryForDisplay: null
   geoEntityQuery: null
   autoCompleteRegions: null
   autoCompleteCountries: null
@@ -16,20 +14,6 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
       filtersHash.taxon_concept_query = null
     @set('taxonConceptQueryForDisplay', filtersHash.taxon_concept_query)
     @set('selectedGeoEntitiesIds', filtersHash.geo_entities_ids || [])
-
-  autoCompleteTaxonConcepts: ( ->
-    taxonConceptQuery = @get('taxonConceptQuery')
-    if not taxonConceptQuery or taxonConceptQuery.length < 3
-      return;
-    Species.AutoCompleteTaxonConcept.find(
-      taxonomy: @get('taxonomy')
-      taxon_concept_query: taxonConceptQuery
-    )
-  ).property('taxonConceptQuery')
-
-  taxonConceptQueryRe: ( ->
-    new RegExp("^"+@get('taxonConceptQuery'),"i")
-  ).property('taxonConceptQuery')
 
   geoEntityQueryObserver: ( ->
     re = new RegExp("(^|\\(| )"+@get('geoEntityQuery'),"i")
