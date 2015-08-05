@@ -1,3 +1,3 @@
-Species.ElibraryController = Ember.Controller.extend
+Species.ElibraryController = Ember.Controller.extend Species.SearchContext,
   needs: ['elibrarySearch']
-  #content: null
+  searchContext: 'documents'

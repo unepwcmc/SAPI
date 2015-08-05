@@ -1,10 +1,10 @@
 Species.ElibraryRoute = Ember.Route.extend
 
   renderTemplate: ->
-    # Render the `elibrary` template into
+    # Render the `index` template into
     # the default outlet, and display the `elibrary`
     # controller.
-    @render('elibraryIndex', {
+    @render('index', {
       into: 'application',
       outlet: 'main',
       controller: @controllerFor('elibrary')
@@ -13,7 +13,7 @@ Species.ElibraryRoute = Ember.Route.extend
     # the outlet `search`, and display the `elibrary_search`
     # controller.
     @render('elibrarySearchForm', {
-      into: 'elibraryIndex',
+      into: 'index',
       outlet: 'search',
       controller: @controllerFor('elibrarySearch')
     })
