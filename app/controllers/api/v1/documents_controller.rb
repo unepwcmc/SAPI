@@ -2,9 +2,8 @@ class Api::V1::DocumentsController < ApplicationController
 
   def index
 
-    documents = Document.from("api_documents_view adv").
-      where("adv.taxon_concept_ids @> ARRAY[?]", params[:taxon_concept_id].to_i).
-      select("adv.id, adv.event_name, adv.event_date, adv.event_type, adv.title, adv.is_public").order("adv.event_date DESC")
+    documents = Document.from("api_documents_view adv").select("*").
+      where("adv.taxon_concept_ids @> ARRAY[?]", params[:taxon_concept_id].to_i).order("adv.event_date DESC")
 
     documents = documents.where("adv.is_public = true") if access_denied?
 
