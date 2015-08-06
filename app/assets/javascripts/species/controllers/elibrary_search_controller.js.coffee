@@ -2,9 +2,15 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
   needs: ['geoEntities', 'taxonConcepts']
   autoCompleteTaxonConcept: null
 
+  setFilters: (filtersHash) ->
+    if filtersHash.taxon_concept_query == ''
+      filtersHash.taxon_concept_query = null
+    @set('taxonConceptQueryForDisplay', filtersHash.taxon_concept_query)
+    @set('taxonConceptQuery', filtersHash.taxon_concept_query)
+
   actions:
     openSearchPage:->
-      if @get('autoCompleteTaxonConcept')
+      if @get('autoCompleteTaxonConcept') && @get('autoCompleteTaxonConcept.fullName') == @get('taxonConceptQueryForDisplay')
         query = @get('autoCompleteTaxonConcept.fullName')
       else
         query = @get('taxonConceptQueryForDisplay')

@@ -10,7 +10,9 @@ Species.Router.map (match) ->
     @route 'references'
     @route 'documents'
   @route 'elibrary'
-  @resource 'documents'
+  @resource 'documents', {
+    queryParams: ['taxon_concept_query']
+  }
   @route 'about'
 
 Species.Router.reopen
