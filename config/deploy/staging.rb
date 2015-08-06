@@ -1,7 +1,7 @@
 set :stage, :staging
 set :branch, "develop"
 
-server "139.162.195.186", roles: %w{app web db}
+server "139.162.195.186", user: "wcmc", roles: %w{app web db}
 
 set :domain, "139.162.195.186"
 

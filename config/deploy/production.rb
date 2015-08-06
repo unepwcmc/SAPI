@@ -1,7 +1,7 @@
 set :stage, :production
 set :branch, "LinodeCap3Deploy"
 
-server "178.79.184.157", roles: %w{app web db}
+server "178.79.184.157", user: "wcmc", roles: %w{app web db}
 
 set :domain, "178.79.184.157"
 
