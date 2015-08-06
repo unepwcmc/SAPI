@@ -3,7 +3,7 @@
   <li class="header">{{this.rank_name}}</li>
 
   {{#each taxonConceptId in this.taxon_concept_ids}}
-    {{taxon-concept-auto-complete-suggestion
+    {{taxon-concept-search-suggestion
       action="handleTaxonConceptAutoCompleteSelection"
       taxonConceptId=taxonConceptId
       taxonConceptQuery=controller.taxonConceptQuery

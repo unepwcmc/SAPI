@@ -1,5 +1,5 @@
-Species.TaxonConceptAutoCompleteSuggestionComponent = Ember.Component.extend({
-  layoutName: 'species/components/taxon-concept-auto-complete-suggestion'
+Species.TaxonConceptSearchSuggestionComponent = Ember.Component.extend({
+  layoutName: 'species/components/taxon-concept-search-suggestion'
   tagName: 'li'
   autoCompleteTaxonConcept: ( ->
     Species.AutoCompleteTaxonConcept.find(@get('taxonConceptId'))
