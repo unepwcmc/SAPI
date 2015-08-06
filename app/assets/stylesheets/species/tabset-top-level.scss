@@ -1,7 +1,8 @@
-#main .tabset.top-level {
+#main .tabset.top-level, .inner .tabset.top-level {
   margin: 50px 0 -1px 0;
 
   li {
+    float: left;
     line-height: 10px;
     width: 200px;
     font-size: 15px;
@@ -9,6 +10,11 @@
     a {
       font-weight: normal;
       border-bottom: #A4C5DA;
+      display: block;
+      margin-top: -9px;
+      padding: 15px 0;
+      text-align: center;
+      text-decoration: none;
     }
   }
 
@@ -32,10 +38,16 @@
   li.active, li.active:hover {
     a {
       background: #A4C5DA;
-      color: #376382;
+      color: #2d3237;
       border-left: solid 1px #8FB7CF;
       border-top: solid 1px #8FB7CF;
       border-right: solid 1px #8FB7CF;
     }
   }
+}
+
+#main .tabset.top-level::after, .inner .tabset.top-level::after {
+    clear: both;
+    content: "";
+    display: block;
 }
