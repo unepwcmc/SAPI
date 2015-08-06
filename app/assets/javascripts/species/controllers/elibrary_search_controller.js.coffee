@@ -12,6 +12,6 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
         taxon_concept_query: query
       }})
 
-    handleTaxonConceptAutoCompleteSelection: (autoCompleteTaxonConcept) ->
+    handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)
-
+      @set('taxonConceptQueryForDisplay', autoCompleteTaxonConcept.get('fullName'))

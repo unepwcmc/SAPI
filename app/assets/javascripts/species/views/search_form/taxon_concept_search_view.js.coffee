@@ -1,6 +1,8 @@
 Species.TaxonConceptSearchView = Em.View.extend
   templateName: 'species/taxon_concept_search'
   classNames: ['search-form']
+  classNameBindings: ['showSearchButton:species:documents'],
+  
   mousedOver: false
 
   mouseEnter: (event) ->
@@ -8,3 +10,16 @@ Species.TaxonConceptSearchView = Em.View.extend
 
   mouseLeave: (event) ->
     @set('mousedOver', false)
+
+  hideDropdown: () ->
+    $('.search fieldset').removeClass('parent-focus parent-active')
+
+  showDropdown: () ->
+    $('.search fieldset').addClass('parent-focus parent-active')
+
+  actions:
+    handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
+      @hideDropdown()
+      # auto bubbling didn't seem to work, so bubble to controller manually for now
+      @get('controller').send('handleTaxonConceptSearchSelection', autoCompleteTaxonConcept)
+      false

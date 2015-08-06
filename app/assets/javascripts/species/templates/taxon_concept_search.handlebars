@@ -17,7 +17,7 @@
 
         {{#each taxonConceptId in this.taxon_concept_ids}}
           {{taxon-concept-search-suggestion
-            action="handleTaxonConceptAutoCompleteSelection"
+            action="handleTaxonConceptSearchSelection"
             taxonConceptId=taxonConceptId
             taxonConceptQuery=controller.taxonConceptQuery
           }}

@@ -60,7 +60,6 @@ Species.SearchController = Ember.Controller.extend Species.Spinner, Species.Taxo
 
   openTaxonPage: (taxonConceptId) ->
     @set('redirected', false)
-    $(".search fieldset").removeClass('parent-focus parent-active')
     m = Species.TaxonConcept.find(taxonConceptId)
     @transitionToRoute('taxonConcept.legal', m, {queryParams: false})
 
@@ -79,7 +78,7 @@ Species.SearchController = Ember.Controller.extend Species.Spinner, Species.Taxo
     deleteGeoEntitySelection: (context) ->
       @get('selectedGeoEntities').removeObject(context)
 
-    handleTaxonConceptAutoCompleteSelection: (autoCompleteTaxonConcept) ->
+    handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       rankName = autoCompleteTaxonConcept.get('rankName')
       if rankName == 'SPECIES' || rankName == 'SUBSPECIES'
         @openTaxonPage(autoCompleteTaxonConcept.id)

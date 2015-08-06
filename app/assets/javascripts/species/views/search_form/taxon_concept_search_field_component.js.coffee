@@ -3,23 +3,19 @@ Species.TaxonConceptSearchFieldComponent = Em.TextField.extend
 
   attributeBindings: ['autocomplete']
 
+  targetObject: Em.computed.alias('parentView')
+
   focusOut: (event) ->
     @.$().attr('placeholder', @get('placeholder'))
-    @hideDropdown() if !@get('parentView.mousedOver')
+    @get('targetObject').hideDropdown() if !@get('targetObject.mousedOver')
 
   keyUp: (event) ->
     Ember.run.cancel(@currentTimeout)
     if event.keyCode == 13
-      @hideDropdown()
+      @get('targetObject').hideDropdown()
       return
     @currentTimeout = Ember.run.later(@, ->
-      @showDropdown()
+      if @.$()?.val().length > 2
+        @get('targetObject').showDropdown()
       @set('query', event.target.value)
     , 500)
-
-  hideDropdown: () ->
-    $('.search fieldset').removeClass('parent-focus parent-active')
-
-  showDropdown: () ->
-    if @.$()?.val().length > 2
-      $('.search fieldset').addClass('parent-focus parent-active')
