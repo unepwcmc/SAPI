@@ -22,7 +22,9 @@
   }
 
   .species-login-forgot {
-    margin: 10px 0 0 630px;
+    position: relative;
+		top: 10px;
+		left: 628px;
     a { color: #648aa2; }
   }
 }
@@ -162,6 +164,7 @@
 		border: 1px solid rgba(118,135,157,0.4);
 		border-radius: 20px;
 		height: 25px;
+		width: 220px;
 		padding: 0 0 0 10px;
 		outline: none;
 	}
