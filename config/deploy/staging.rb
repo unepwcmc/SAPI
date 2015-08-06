@@ -1,66 +1,80 @@
-set :rails_env, "staging"
-# Primary domain name of your application. Used in the Apache configs
-set :domain, "unepwcmc-012.vm.brightbox.net"
-## List of servers
-server "unepwcmc-012.vm.brightbox.net", :app, :web, :db, :primary => true
+set :stage, :staging
+set :branch, "LinodeCap3Deploy"
+
+server "139.162.195.186", roles: %w{app web db}
+
+set :domain, "139.162.195.186"
 
 set :application, "sapi"
-set :server_name, "sapi.unepwcmc-012.vm.brightbox.net"
+
+set :server_name, "#{fetch(:application)}.#{fetch(:domain)}"
+
 set :sudo_user, "rails"
+
 set :app_port, "80"
 
-set :branch, :develop
+set :backup_path, "/home/#{fetch(:deploy_user)}/Backup"
 
-desc "Configure VHost"
-task :config_vhost do
-  vhost_config =<<-EOF
-    server {
-      listen 80;
-      client_max_body_size 4G;
-      server_name #{application}.unepwcmc-012.vm.brightbox.net #{application}.sw02.matx.info;
-      keepalive_timeout 5;
-      root #{deploy_to}/current/public;
-      passenger_enabled on;
-      rails_env staging;
 
-      add_header 'Access-Control-Allow-Origin' *;
-      add_header 'Access-Control-Allow-Methods' "GET, POST, PUT, DELETE, OPTIONS";
-      add_header 'Access-Control-Allow-Headers' "X-Requested-With, X-Prototype-Version";
-      add_header 'Access-Control-Max-Age' 1728000;
 
-      # Enable serving files through nginx
-      passenger_set_cgi_param HTTP_X_ACCEL_MAPPING /home/rails/sapi/shared/public/downloads/=/downloads/;
-      passenger_pass_header X-Accel-Redirect;
+# server-based syntax
+# ======================
+# Defines a single server with a list of roles and multiple properties.
+# You can define all roles on a single server, or split them:
 
-      location ~ ^/downloads/(.*)$ {
-        alias /home/rails/sapi/shared/public/downloads/$1;
-        internal;
-      }
+# server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
+# server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
+# server 'db.example.com', user: 'deploy', roles: %w{db}
 
-      gzip on;
-      location ^~ /assets/ {
-        expires max;
-        add_header Cache-Control public;
-      }
 
-      if (-f $document_root/system/maintenance.html) {
-        return 503;
-      }
 
-      error_page 500 502 504 /500.html;
-      location = /500.html {
-        root #{deploy_to}/public;
-      }
+# role-based syntax
+# ==================
 
-      error_page 503 @maintenance;
-      location @maintenance {
-        rewrite  ^(.*)$  /system/maintenance.html break;
-      }
-    }
-  EOF
-  put vhost_config, "/tmp/vhost_config"
-  sudo "mv /tmp/vhost_config /etc/nginx/sites-available/#{application}"
-  sudo "ln -s /etc/nginx/sites-available/#{application} /etc/nginx/sites-enabled/#{application}"
-end
+# Defines a role with one or multiple servers. The primary server in each
+# group is considered to be the first unless any  hosts have the primary
+# property set. Specify the username and a domain or IP for the server.
+# Don't use `:all`, it's a meta role.
 
-after "deploy:setup", :config_vhost
+# role :app, %w{deploy@example.com}, my_property: :my_value
+# role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
+# role :db,  %w{deploy@example.com}
+
+
+
+# Configuration
+# =============
+# You can set any configuration variable like in config/deploy.rb
+# These variables are then only loaded and set in this stage.
+# For available Capistrano configuration variables see the documentation page.
+# http://capistranorb.com/documentation/getting-started/configuration/
+# Feel free to add new variables to customise your setup.
+
+
+
+# Custom SSH Options
+# ==================
+# You may pass any option but keep in mind that net/ssh understands a
+# limited set of options, consult the Net::SSH documentation.
+# http://net-ssh.github.io/net-ssh/classes/Net/SSH.html#method-c-start
+#
+# Global options
+# --------------
+#  set :ssh_options, {
+#    keys: %w(/home/rlisowski/.ssh/id_rsa),
+#    forward_agent: false,
+#    auth_methods: %w(password)
+#  }
+#
+# The server-based syntax can be used to override options:
+# ------------------------------------
+# server 'example.com',
+#   user: 'user_name',
+#   roles: %w{web app},
+#   ssh_options: {
+#     user: 'user_name', # overrides user setting above
+#     keys: %w(/home/user_name/.ssh/id_rsa),
+#     forward_agent: false,
+#     auth_methods: %w(publickey password)
+#     # password: 'please use keys'
+#   }
