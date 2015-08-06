@@ -1,2 +1,4 @@
-Species.DocumentsController = Ember.ArrayController.extend Species.SearchContext,
+Species.DocumentsController = Ember.ObjectController.extend Species.SearchContext,
+  needs: ['elibrarySearch']
   searchContext: 'documents'
+  content: {}

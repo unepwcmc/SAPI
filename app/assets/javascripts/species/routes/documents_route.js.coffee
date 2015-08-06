@@ -3,6 +3,9 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
   beforeModel: (queryParams, transition) ->
     @controllerFor('elibrarySearch').setFilters(queryParams)
 
+  setupController: (controller, model) ->
+    controller.set('content', {data: "something"})
+
   renderTemplate: ->
     # Render the `documents` template into
     # the default outlet, and display the `documents`
