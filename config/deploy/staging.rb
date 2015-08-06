@@ -1,5 +1,5 @@
 set :stage, :staging
-set :branch, "LinodeCap3Deploy"
+set :branch, "develop"
 
 server "139.162.195.186", roles: %w{app web db}
 
