@@ -13,7 +13,6 @@
 //= require underscore
 //= require jquery
 //= require jquery_ujs
-//= require dataTables/jquery.dataTables
 //= require jquery-deparam
 //= require jquery.cookie
 //= require bootstrap-scrollspy

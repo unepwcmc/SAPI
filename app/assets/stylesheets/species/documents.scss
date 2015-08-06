@@ -56,10 +56,14 @@ div#documents {
         div.inner-table-container {
           display: none;
           i { font-size: 12px; }
-          table.dataTable tbody tr { background-color: transparent; }
-          table.dataTable thead th { padding: 0; border-bottom: none; }
-          .dataTables_scrollBody {
-            margin-top: 10px;
+          div.header-container {
+            position: relative;
+            width: 100%;
+          }
+          div.body-container {
+            overflow: auto;
+            height: 400px;
+            width: 100%;
             border-bottom: 1px solid #DFE1E2;
             -webkit-box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
                                 inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
@@ -67,15 +71,20 @@ div#documents {
                              inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
             box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
                         inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
-            thead {
-              .sorting { background-image: none; }
-              th { vertical-align: middle; }
-            }
-            tbody {
-              tr{
-                td { border-top: 1px solid #DFE1E2; }
-                input { margin-left: 29px }
-              }
+          }
+          table {
+            width: 908px;
+            margin: 0 auto;
+            clear: both;
+            th.event-col { width: 77px; }
+            th.event-date-col { width: 135px; }
+            th.title-col { width: 166px; }
+            th.language-col { width: 123px; }
+            th.countries-col { width: 192px; }
+            th.taxon-col { width: 145px; }
+            th.download-col { width: 70px; }
+            &.table-body tbody {
+              input { margin-left: 29px; }
             }
           }
         }

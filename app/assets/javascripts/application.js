@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require dataTables/jquery.dataTables
 //= require jquery.chained
 //= require bootstrap-dropdown
 //= require bootstrap-button
