@@ -1,3 +1,11 @@
-{{view Species.TaxonConceptSearchView controllerBinding="controller" showSearchButton=false}}
+<div class="search-form-container">
+  <div class="search-info">
+    <i class="fa fa-info-circle"></i> Select one or more options
+  </div>
+  <label>Search by species or higher taxon</label>
+  {{view Species.TaxonConceptSearchView controllerBinding="controller" showSearchButton=false}}
 
-<button {{action "openSearchPage"}}>Search</button>
+  <div class="search-button-container">
+    <button {{action "openSearchPage"}}>Search</button>
+  </div>
+</div>
