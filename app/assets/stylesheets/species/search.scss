@@ -287,8 +287,11 @@
 }
 
 
-
-
+.search-block.search-results.documents .search-form {
+  width: 493px;
+  padding: 10px 15px 13px;
+}
+.inner .search-block.search-results.documents .search { width: auto; }
 
 .inner .search-block .search { width: 469px; }
 .inner .search-block .search-form {

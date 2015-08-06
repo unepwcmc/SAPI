@@ -3,4 +3,4 @@ Species.DocumentsView = Ember.View.extend
 
   didInsertElement: () ->
     $('body').addClass('inner')
-    $(".search-block").addClass("search-results")
+    $(".search-block").addClass("search-results documents")
