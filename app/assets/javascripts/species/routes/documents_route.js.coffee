@@ -1,6 +1,10 @@
-Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
+Species.DocumentsRoute = Ember.Route.extend Species.Spinner, Species.GeoEntityLoader,
 
   beforeModel: (queryParams, transition) ->
+    @ensureGeoEntitiesLoaded(@controllerFor('search'))
+    #dirty hack to check if we have an array or comma separated string here
+    if queryParams.geo_entities_ids && queryParams.geo_entities_ids.substring
+      queryParams.geo_entities_ids = queryParams.geo_entities_ids.split(',')
     @controllerFor('elibrarySearch').setFilters(queryParams)
 
   setupController: (controller, model) ->
@@ -30,7 +34,3 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
       outlet: 'search',
       controller: @controllerFor('elibrarySearch')
     })
-
-  actions:
-    ensureGeoEntitiesLoaded: ->
-      @controllerFor('geoEntities').load()

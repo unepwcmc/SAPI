@@ -1,6 +1,7 @@
-Species.TaxonConceptRoute = Ember.Route.extend Species.Spinner,
+Species.TaxonConceptRoute = Ember.Route.extend Species.Spinner, Species.GeoEntityLoader,
 
   beforeModel: ->
+    @ensureGeoEntitiesLoaded(@controllerFor('search'))
     # Setting a spinner until content is loaded.
     $(@spinnerSelector).css("visibility", "visible")
 
@@ -46,9 +47,6 @@ Species.TaxonConceptRoute = Ember.Route.extend Species.Spinner,
     })
 
   actions:
-    ensureGeoEntitiesLoaded: ->
-      @controllerFor('geoEntities').load()
-
     ensureHigherTaxaLoaded: ->
       @controllerFor('higherTaxaCitesEu').load()
       @controllerFor('higherTaxaCms').load()

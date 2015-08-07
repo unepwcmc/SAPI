@@ -1,4 +1,7 @@
-Species.ElibraryRoute = Ember.Route.extend
+Species.ElibraryRoute = Ember.Route.extend Species.GeoEntityLoader,
+
+  beforeModel: () ->
+    @ensureGeoEntitiesLoaded(@controllerFor('elibrarySearch'))
 
   renderTemplate: ->
     # Render the `index` template into
@@ -17,7 +20,3 @@ Species.ElibraryRoute = Ember.Route.extend
       outlet: 'search',
       controller: @controllerFor('elibrarySearch')
     })
-
-  actions:
-    ensureGeoEntitiesLoaded: ->
-      @controllerFor('geoEntities').load()

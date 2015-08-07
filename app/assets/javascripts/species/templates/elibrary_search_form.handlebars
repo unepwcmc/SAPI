@@ -5,6 +5,14 @@
   <label>Search by species or higher taxon</label>
   {{view Species.TaxonConceptSearchView controllerBinding="controller" showSearchButton=false}}
 
+  <div class="location-area popup-area">
+    {{view Species.GeoEntitiesSearchButton
+      selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+      loadedBinding="controllers.geoEntities.loaded"
+    }}
+    {{view Species.GeoEntitiesSearchDropdown  controllerBinding="controller"}}
+  </div>
+
   <div class="search-button-container">
     <button {{action "openSearchPage"}}>Search</button>
   </div>

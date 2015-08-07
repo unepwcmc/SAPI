@@ -1,6 +1,7 @@
-Species.TaxonConceptsRoute = Ember.Route.extend Species.Spinner,
+Species.TaxonConceptsRoute = Ember.Route.extend Species.Spinner, Species.GeoEntityLoader,
 
   beforeModel: (queryParams, transition) ->
+    @ensureGeoEntitiesLoaded(@controllerFor('search'))
     #dirty hack to check if we have an array or comma separated string here
     if queryParams.geo_entities_ids && queryParams.geo_entities_ids.substring
       queryParams.geo_entities_ids = queryParams.geo_entities_ids.split(',')
@@ -56,9 +57,6 @@ Species.TaxonConceptsRoute = Ember.Route.extend Species.Spinner,
     })
 
   actions:
-    ensureGeoEntitiesLoaded: ->
-      @controllerFor('geoEntities').load()
-
     ensureHigherTaxaLoaded: ->
       @controllerFor('higherTaxaCitesEu').load()
       @controllerFor('higherTaxaCms').load()
