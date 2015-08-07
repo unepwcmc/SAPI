@@ -32,6 +32,7 @@ Species.IndexRoute = Ember.Route.extend Species.GeoEntityLoader,
       controller: @controllerFor('downloads')
     })
 
+  actions:
     ensureHigherTaxaLoaded: ->
       @controllerFor('higherTaxaCitesEu').load()
       @controllerFor('higherTaxaCms').load()
