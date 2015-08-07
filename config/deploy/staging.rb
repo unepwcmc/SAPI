@@ -13,8 +13,6 @@ set :sudo_user, "rails"
 
 set :app_port, "80"
 
-set :backup_path, "/home/#{fetch(:deploy_user)}/Backup"
-
 
 
 # server-based syntax

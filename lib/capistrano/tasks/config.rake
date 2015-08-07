@@ -319,13 +319,8 @@ namespace :config do
   desc "Update crontab with whenever"
   task :setup do
     on roles(:app, :db) do
-      execute "cd '#{fetch(:backup_path)}' && /bin/bash -l -c '/home/#{fetch(:deploy_user)}/.rvm/gems/ruby-2.1.3/bin/whenever --update-crontab'"
+      execute "cd '#{fetch(:backup_path)}' && /bin/bash -l -c '/home/#{fetch(:deploy_user)}/.rvm/gems/ruby-2.1.3/bin/whenever -f config/#{fetch(:application)}-schedule.rb --update-crontab'"
     end
   end
 end
 
-# Default value for :linked_files is []
-set :linked_files, fetch(:linked_files, []).push('config/database.yml config/mailer_config.yml')
-
-# Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
