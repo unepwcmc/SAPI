@@ -1,5 +1,6 @@
-Species.SearchController = Ember.Controller.extend Species.Spinner, Species.TaxonConceptAutoCompleteLookup, Species.GeoEntityAutoCompleteLookup,
+Species.SearchController = Ember.Controller.extend Species.Spinner, Species.SearchContext, Species.TaxonConceptAutoCompleteLookup, Species.GeoEntityAutoCompleteLookup,
   needs: ['geoEntities', 'taxonConcepts']
+  searchContext: 'species'
   taxonomy: 'cites_eu'
   redirected: false
 
