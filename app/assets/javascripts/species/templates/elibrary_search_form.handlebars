@@ -1,16 +1,31 @@
 <div class="search-form-container">
+
   <p class="search-info">
     <i class="fa fa-info-circle"></i> Select one or more options
   </p>
-  <label>Search by species or higher taxon</label>
-  {{view Species.TaxonConceptSearchView controllerBinding="controller" showSearchButton=false}}
-
+  <div class="search-form documents">
+    <form class="search">
+      <fieldset>
+        {{view Species.TaxonConceptSearchView controllerBinding="controller" showSearchButton=false}}
+      </fieldset>
+    </form>
+  </div>
   <div class="location-area popup-area">
     {{view Species.GeoEntitiesSearchButton
       selectedGeoEntitiesBinding="controller.selectedGeoEntities"
       loadedBinding="controllers.geoEntities.loaded"
     }}
-    {{view Species.GeoEntitiesSearchDropdown  controllerBinding="controller"}}
+    {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+  </div>
+
+  <div style="clear:both"></div>
+  <label>Search by title keywords</label>
+  <div class="search-form documents">
+    <form class="search">
+      <fieldset>
+        {{input type="text" value=titleQuery placeholder="E.g. significant trade in animal species"}}
+      </fieldset>
+    </form>
   </div>
 
   <div class="search-button-container">
