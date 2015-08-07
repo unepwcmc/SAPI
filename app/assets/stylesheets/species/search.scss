@@ -133,35 +133,7 @@
     }
 
     fieldset.parent-focus.parent-active .popup { display: block; }
-/*
-    button {
-      cursor: pointer;
-      width: 101px;
-      float: right;
-      border: none;
-      height: 30px;
-      line-height: 30px;
-      color: #fff;
-      font-size: 13px;
-      font-weight: bold;
-      text-transform: uppercase;
-      text-align: center;
-      padding: 0 0 2px;
-      margin: 0;
-      -webkit-border-radius: 20px;
-      border-radius: 20px;
-      background: #376382;
-      &:hover{
-        background: #253848;
-        -webkit-transition: all 0.5s ease;
-        -moz-transition: all 0.5s ease;
-        -ms-transition: all 0.5s ease;
-        -o-transition: all 0.5s ease;
-        transition: all 0.5s ease;
-      }
 
-    }
-*/
     @include blue-search-button;
     input[type="submit"]:hover { cursor: pointer; }
 
