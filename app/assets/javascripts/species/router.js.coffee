@@ -11,7 +11,7 @@ Species.Router.map (match) ->
     @route 'documents'
   @route 'elibrary'
   @resource 'documents', {
-    queryParams: ['taxon_concept_query', 'geo_entities_ids']
+    queryParams: ['taxon_concept_query', 'geo_entities_ids', 'title_query']
   }
   @route 'about'
 

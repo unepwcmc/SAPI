@@ -9,6 +9,9 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     @set('taxonConceptQueryForDisplay', filtersHash.taxon_concept_query)
     @set('taxonConceptQuery', filtersHash.taxon_concept_query)
     @set('selectedGeoEntitiesIds', filtersHash.geo_entities_ids || [])
+    if filtersHash.title_query == ''
+      filtersHash.title_query = null
+    @set('titleQuery', filtersHash.title_query)
 
   actions:
     openSearchPage:->
@@ -18,7 +21,8 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
         query = @get('taxonConceptQueryForDisplay')
       @transitionToRoute('documents', {queryParams: {
         taxon_concept_query: query,
-        geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
+        geo_entities_ids: @get('selectedGeoEntities').mapProperty('id'),
+        title_query: @get('titleQuery')
       }})
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
