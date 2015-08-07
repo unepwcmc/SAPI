@@ -1,8 +1,6 @@
-Species.SearchController = Ember.Controller.extend Species.Spinner,
+Species.SearchController = Ember.Controller.extend Species.Spinner, Species.TaxonConceptAutoCompleteLookup,
   needs: ['geoEntities', 'taxonConcepts']
   taxonomy: 'cites_eu'
-  taxonConceptQuery: null
-  taxonConceptQueryForDisplay: null
   geoEntityQuery: null
   autoCompleteRegions: null
   autoCompleteCountries: null
@@ -16,20 +14,6 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
       filtersHash.taxon_concept_query = null
     @set('taxonConceptQueryForDisplay', filtersHash.taxon_concept_query)
     @set('selectedGeoEntitiesIds', filtersHash.geo_entities_ids || [])
-
-  autoCompleteTaxonConcepts: ( ->
-    taxonConceptQuery = @get('taxonConceptQuery')
-    if not taxonConceptQuery or taxonConceptQuery.length < 3
-      return;
-    Species.AutoCompleteTaxonConcept.find(
-      taxonomy: @get('taxonomy')
-      taxon_concept_query: taxonConceptQuery
-    )
-  ).property('taxonConceptQuery')
-
-  taxonConceptQueryRe: ( ->
-    new RegExp("^"+@get('taxonConceptQuery'),"i")
-  ).property('taxonConceptQuery')
 
   geoEntityQueryObserver: ( ->
     re = new RegExp("(^|\\(| )"+@get('geoEntityQuery'),"i")
@@ -76,11 +60,8 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
 
   openTaxonPage: (taxonConceptId) ->
     @set('redirected', false)
-    $(".search fieldset").removeClass('parent-focus parent-active')
     m = Species.TaxonConcept.find(taxonConceptId)
-    @transitionToRoute('taxonConcept.legal', m, {queryParams:
-      {taxon_concept_query: false, page: false}
-    })
+    @transitionToRoute('taxonConcept.legal', m, {queryParams: false})
 
   actions:
     openSearchPage: (taxonFullName, page, perPage) ->
@@ -96,3 +77,10 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
 
     deleteGeoEntitySelection: (context) ->
       @get('selectedGeoEntities').removeObject(context)
+
+    handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
+      rankName = autoCompleteTaxonConcept.get('rankName')
+      if rankName == 'SPECIES' || rankName == 'SUBSPECIES'
+        @openTaxonPage(autoCompleteTaxonConcept.id)
+      else
+        @openSearchPage(autoCompleteTaxonConcept.get('fullName'))

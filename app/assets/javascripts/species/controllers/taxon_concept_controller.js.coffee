@@ -1,5 +1,7 @@
-Species.TaxonConceptController = Ember.ObjectController.extend
+Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchContext,
   needs: ['search']
+  searchContext: 'species'
+
   isCms: ( ->
     if @get('taxonomy') != undefined
       @get('taxonomy') == 'cms'

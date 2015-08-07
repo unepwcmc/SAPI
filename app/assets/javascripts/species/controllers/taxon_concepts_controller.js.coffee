@@ -1,5 +1,6 @@
-Species.TaxonConceptsController = Ember.ArrayController.extend Species.TaxonConceptPagination,
+Species.TaxonConceptsController = Ember.ArrayController.extend Species.TaxonConceptPagination, Species.SearchContext,
   needs: ['search', 'taxonConceptLink']
+  searchContext: 'species'
 
   taxonConceptsByHigherTaxon: ( ->
     return [] unless @get('content.meta.higher_taxa_headers')
