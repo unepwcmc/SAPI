@@ -76,6 +76,8 @@ div#documents {
             width: 908px;
             margin: 0 auto;
             clear: both;
+            table-layout: fixed; //not always necessary
+            td { word-wrap: break-word } //not always necessary
             th.event-col { width: 77px; }
             th.event-date-col { width: 135px; }
             th.title-col { width: 166px; }

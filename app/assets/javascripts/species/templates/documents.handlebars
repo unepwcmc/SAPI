@@ -5,7 +5,6 @@
 
   <div class="results-heading">
     Search Results for Taxon:
-    {{content.data}}
   </div>
 
   <div class="result-block">
@@ -24,6 +23,58 @@
           <td>CITES Animals Committee</td>
           <td>Review of Significant Trade</td>
           <td>2</td>
+        </tr>
+        <tr class="table-row">
+          <td colspan="4">
+            <div class="inner-table-container">
+              <div class="header-container">
+                <table class="table-header">
+                  <thead>
+                    <tr>
+                      <th class="event-col">EVENT</th>
+                      <th class="event-date-col">EVENT DATE</th>
+                      <th class="title-col">TITLE</th>
+                      <th class="language-col">LANGUAGE</th>
+                      <th class="countries-col">No. of COUNTRIES</th>
+                      <th class="taxon-col">TAXON NAME</th>
+                      <th class="download-col">
+                        <i class="fa fa-download"></i>
+                        <input type="checkbox">
+                      </th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+              <div class="body-container">
+                <table class="table-body">
+                  <thead>
+                    <tr>
+                      <th class="event-col"></th>
+                      <th class="event-date-col"></th>
+                      <th class="title-col"></th>
+                      <th class="language-col"></th>
+                      <th class="countries-col"></th>
+                      <th class="taxon-col"></th>
+                      <th class="download-col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each doc in content.cites_cop_docs}}
+                      <tr>
+                        <td>{{doc.event_name}}</td>
+                        <td>{{doc.event_date}}</td>
+                        <td>{{doc.title}}</td>
+                        <td>{{doc.language}}</td>
+                        <td>{{doc.geo_entity_names}}</td>
+                        <td>{{doc.taxon_names}}</td>
+                        <td><input type="checkbox"></td>
+                      </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </td>
         </tr>
         <tr class="group">
           <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
