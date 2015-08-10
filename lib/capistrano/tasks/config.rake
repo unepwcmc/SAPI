@@ -332,7 +332,24 @@ namespace :config do
     on roles(:app) do
       execute "echo command[check_procs_redis]=/usr/lib/nagios/plugins/check_procs -c 1:3000 -C redis-server | sudo tee -a /etc/nagios/nrpe.cfg"
       execute "echo command[check_sapi_sidekiq]=/usr/lib/nagios/plugins/check_file_exists #{shared_path}/tmp/pids/sidekiq.pid | sudo tee -a /etc/nagios/nrpe.cfg"
+      execute "echo command[restart-sapi-sidekiq]=/usr/lib/nagios/plugins/restart-sapi-sidekiq #{shared_path}/tmp/pids/sidekiq.pid | sudo tee -a /etc/nagios/nrpe.cfg"
     end
   end
 end
 
+
+
+
+namespace :nagios do
+  desc "Configure app specific event handler"
+  task :config do
+  nagios_config = <<-EOF
+cd #{deploy_to}/current/ ; nohup bundle exec sidekiq -e production -C #{deploy_to}/current/config/sidekiq.yml -i 0 -P #{shared_path}/tmp/pids/sidekiq.pid >> #{deploy_to}/current/log/sidekiq.log 2>&1 &
+  EOF
+    on roles(:app) do
+    upload! StringIO.new(nagios_config), "/tmp/nagios_config"
+    execute "sudo mv /tmp/nagios_config /usr/lib/nagios/plugins/restart-sapi-sidekiq"
+    execute "chmod a+x /usr/lib/nagios/plugins/restart-sapi-sidekiq"
+    end
+  end
+end
