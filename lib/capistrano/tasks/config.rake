@@ -159,7 +159,7 @@ Model.new(:sapi_website_db, 'sapi_website_db') do
     db.password           = "#{fetch(:db_pass)}"
     db.host               = "#{fetch(:db_host)}"
     db.port               = 5432
-    #db.socket             = "/tmp/pg.sock"
+    db.socket             = "/var/run/postgresql/"
     # When dumping all databases, `skip_tables` and `only_tables` are ignored.
     #db.skip_tables        = ["skip", "these", "tables"]
     #db.only_tables        = ["only", "these", "tables"]
