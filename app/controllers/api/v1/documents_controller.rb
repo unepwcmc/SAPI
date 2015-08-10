@@ -9,7 +9,6 @@ class Api::V1::DocumentsController < ApplicationController
 
     ec_srg_docs = documents.where("adv.event_type = 'EcSrg'")
     cites_cop_docs = Document.find_by_sql(get_documents_by_sql)
-    byebug
     cites_ac_docs = documents.where("adv.event_type = 'CitesAc'")
     cites_pc_docs = documents.where("adv.event_type = 'CitesPc'")
     # other docs can be docs tied to historic types of events (CITES Technical
