@@ -4,14 +4,18 @@ class DocumentSearch
   attr_reader :page, :per_page, :offset, :event_type, :event_id,
     :document_type, :document_title
 
-  def initialize(options)
+  def initialize(options, interface)
     initialize_params(options)
-    initialize_query
+    initialize_query interface
   end
 
   def results
-    results = @query.limit(@per_page).
-      offset(@offset)
+    if @interface == 'admin'
+      results = @query.limit(@per_page).
+        offset(@offset)
+    else
+      results = select_and_group_query
+    end
   end
 
   def total_cnt
@@ -38,12 +42,14 @@ class DocumentSearch
     @offset = @per_page * (@page - 1)
   end
 
-  def initialize_query
-    @query = Document.from('documents_view AS documents')
+  def initialize_query interface
+    @interface = interface
+    view = interface == 'admin' ? 'documents_view' : 'api_documents_view'
+    @query = Document.from("#{view} AS documents")
     add_conditions_for_event
     add_conditions_for_document
     add_extra_conditions
-    add_ordering
+    add_ordering if interface == 'admin'
   end
 
   def add_conditions_for_event
@@ -63,11 +69,13 @@ class DocumentSearch
       @query = @query.where('documents.type' => @document_type)
     end
 
-    if !@document_date_start.blank?
-      @query = @query.where("documents.date >= ?", @document_date_start)
-    end
-    if !@document_date_end.blank?
-      @query = @query.where("documents.date <= ?", @document_date_end)
+    if @interface == 'admin'
+      if !@document_date_start.blank?
+        @query = @query.where("documents.date >= ?", @document_date_start)
+      end
+      if !@document_date_end.blank?
+        @query = @query.where("documents.date <= ?", @document_date_end)
+      end
     end
   end
 
@@ -97,6 +105,28 @@ class DocumentSearch
     else
       @query.order('documents.created_at DESC')
     end
+  end
+
+  def select_and_group_query
+    columns = "event_name, event_date, event_type, is_public, document_type,
+      number, sort_index, proposal_outcome, primary_document_id,
+      geo_entity_names, taxon_names"
+    aggregators = <<-SQL
+      ARRAY_TO_JSON(
+        ARRAY_AGG_NOTNULL(
+          ROW(
+            documents.id,
+            documents.title,
+            CASE
+              WHEN language IS NULL
+              THEN 'English'
+              ELSE language
+          END
+          )::document_language_version
+        )
+      ) AS document_language_versions
+    SQL
+    @query.select(columns + "," + aggregators).group(columns)
   end
 
 end
