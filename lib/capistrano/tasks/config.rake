@@ -159,11 +159,11 @@ Model.new(:sapi_website_db, 'sapi_website_db') do
     db.password           = "#{fetch(:db_pass)}"
     db.host               = "#{fetch(:db_host)}"
     db.port               = 5432
-    db.socket             = "/tmp/pg.sock"
+    #db.socket             = "/tmp/pg.sock"
     # When dumping all databases, `skip_tables` and `only_tables` are ignored.
-    db.skip_tables        = ["skip", "these", "tables"]
-    db.only_tables        = ["only", "these", "tables"]
-    db.additional_options = ["-xc", "-E=utf8"]
+    #db.skip_tables        = ["skip", "these", "tables"]
+    #db.only_tables        = ["only", "these", "tables"]
+    #db.additional_options = ["-xc", "-E=utf8"]
   end
   ##
   # Amazon Simple Storage Service [Storage]
@@ -206,7 +206,6 @@ Model.new(:sapi_website_db, 'sapi_website_db') do
     mail.encryption           = :starttls
   end
  end
-end
 EOF
 
     on roles(:db) do
