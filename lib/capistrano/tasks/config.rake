@@ -324,3 +324,15 @@ namespace :config do
   end
 end
 
+
+
+namespace :config do
+  desc "Configure app specific nagios monitoring"
+  task :setup do
+    on roles(:app) do
+      execute "echo command[check_procs_redis]=/usr/lib/nagios/plugins/check_procs -c 1:3000 -C redis-server | sudo tee -a /etc/nagios/nrpe.cfg"
+      execute "echo command[check_sapi_sidekiq]=/usr/lib/nagios/plugins/check_file_exists #{shared_path}/tmp/pids/sidekiq.pid | sudo tee -a /etc/nagios/nrpe.cfg"
+    end
+  end
+end
+
