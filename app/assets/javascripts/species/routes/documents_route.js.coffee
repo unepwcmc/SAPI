@@ -5,7 +5,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
 
   setupController: (controller, model) ->
     $.ajax(
-      url: "/api/v1/documents?taxon_concept_id=4521",
+      url: "/api/v1/documents?taxon-concepts-ids=4521",
       success: (data) ->
         controller.set('content', data)
       error: (jqXHR, textStatus, errorThrown) ->
