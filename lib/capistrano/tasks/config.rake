@@ -340,9 +340,9 @@ end
 
 
 
-namespace :nagios do
+namespace :config do
   desc "Configure app specific event handler"
-  task :config do
+  task :setup do
   nagios_config = <<-EOF
 cd #{deploy_to}/current/ ; nohup bundle exec sidekiq -e production -C #{deploy_to}/current/config/sidekiq.yml -i 0 -P #{shared_path}/tmp/pids/sidekiq.pid >> #{deploy_to}/current/log/sidekiq.log 2>&1 &
   EOF
