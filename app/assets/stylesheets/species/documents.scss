@@ -31,8 +31,16 @@ div#documents {
   margin: 15px;
   .grouped-results-table {
     width: 100%;
-    thead { margin-bottom: 15px; }
+    thead.grouped-header {
+      th { font-weight: bold; }
+    }
     tbody {
+      &:before {
+        content: "-";
+        display: block;
+        line-height: 1em;
+        color: transparent;
+      }
       tr{
         td{
           padding: 10px 0;
@@ -61,9 +69,11 @@ div#documents {
             width: 100%;
           }
           div.body-container {
-            overflow: auto;
+            overflow-y: scroll;
             height: 400px;
             width: 100%;
+            margin-top: 10px;
+            border-top: 2px solid #DFE1E2;
             border-bottom: 1px solid #DFE1E2;
             -webkit-box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
                                 inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
@@ -74,7 +84,6 @@ div#documents {
           }
           table {
             width: 908px;
-            margin: 0 auto;
             clear: both;
             table-layout: fixed; //not always necessary
             td { word-wrap: break-word } //not always necessary
@@ -86,7 +95,7 @@ div#documents {
             th.taxon-col { width: 145px; }
             th.download-col { width: 70px; }
             &.table-body tbody {
-              input { margin-left: 29px; }
+              input { margin-left: 28px; }
             }
           }
         }
