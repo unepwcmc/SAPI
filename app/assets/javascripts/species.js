@@ -33,7 +33,7 @@
 //= require_tree ./species/templates
 //= require ./species/router
 //= require_tree ./species/routes
-//= require ./shared/login
+//= require_tree ./shared
 
 var Species = Ember.Application.create({
   LOG_TRANSITIONS: true,

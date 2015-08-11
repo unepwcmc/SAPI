@@ -25,3 +25,82 @@ div#documents {
     margin-bottom: 30px;
   }
 }
+
+.result-block {
+  width: inherit;
+  margin: 15px;
+  .grouped-results-table {
+    width: 100%;
+    thead.grouped-header {
+      th { font-weight: bold; }
+    }
+    tbody {
+      &:before {
+        content: "-";
+        display: block;
+        line-height: 1em;
+        color: transparent;
+      }
+      tr{
+        td{
+          padding: 10px 0;
+          vertical-align: middle;
+          i {
+            font-size: 48px;
+            color: #648aa2;
+            margin-left: 10px;
+          }
+        }
+      }
+      tr.group {
+        td { border-top: 1px solid #DFE1E2; }
+      }
+      tr.table-row {
+        display: none;
+        & > td {
+          padding-bottom: 0;
+
+        }
+        div.inner-table-container {
+          display: none;
+          i { font-size: 12px; }
+          div.header-container {
+            position: relative;
+            width: 100%;
+          }
+          div.body-container {
+            overflow-y: scroll;
+            min-height: 100px;
+            max-height: 400px;
+            width: 100%;
+            margin-top: 10px;
+            border-top: 2px solid #DFE1E2;
+            border-bottom: 1px solid #DFE1E2;
+            -webkit-box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
+                                inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
+            -moz-box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
+                             inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
+            box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
+                        inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
+          }
+          table {
+            width: 908px;
+            clear: both;
+            table-layout: fixed; //not always necessary
+            td { word-wrap: break-word } //not always necessary
+            th.event-col { width: 77px; }
+            th.event-date-col { width: 135px; }
+            th.title-col { width: 166px; }
+            th.language-col { width: 123px; }
+            th.countries-col { width: 192px; }
+            th.taxon-col { width: 145px; }
+            th.download-col { width: 70px; }
+            &.table-body tbody {
+              input { margin-left: 28px; }
+            }
+          }
+        }
+      }
+    }
+  }
+}

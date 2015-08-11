@@ -3,6 +3,16 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
   beforeModel: (queryParams, transition) ->
     @controllerFor('elibrarySearch').setFilters(queryParams)
 
+  setupController: (controller, model) ->
+    $.ajax(
+      url: "/api/v1/documents?taxon-concepts-ids=4521",
+      success: (data) ->
+        controller.set('content', data)
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log("AJAX Error:" + textStatus)
+    )
+
+
   renderTemplate: ->
     # Render the `documents` template into
     # the default outlet, and display the `documents`
