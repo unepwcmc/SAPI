@@ -70,7 +70,8 @@ div#documents {
           }
           div.body-container {
             overflow-y: scroll;
-            height: 400px;
+            min-height: 100px;
+            max-height: 400px;
             width: 100%;
             margin-top: 10px;
             border-top: 2px solid #DFE1E2;

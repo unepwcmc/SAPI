@@ -5,9 +5,9 @@ Species.ResultToggleButton = Ember.View.extend
   click: (event) ->
     element = event.target
     @toggleIcon(element)
-    table = $(element).closest('tr').next('tr.table-row')
-    table.slideToggle("slow")
-    table.find('div.inner-table-container').slideToggle("slow")
+    table = $(element).closest('tr').nextAll('.table-row')[0]
+    $(table).slideToggle("slow")
+    $(table).find('div.inner-table-container').slideToggle("slow")
 
   toggleIcon: (icon) ->
     if $(icon).hasClass("fa-plus-circle")
