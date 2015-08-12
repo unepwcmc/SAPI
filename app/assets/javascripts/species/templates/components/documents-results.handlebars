@@ -42,13 +42,18 @@
             <tbody>
               {{#each doc in documents}}
                 <tr>
-                  <td>{{doc.event_name}}</td>
-                  <td>{{doc.event_date}}</td>
-                  <td>{{doc.title}}</td>
-                  <td>{{doc.language}}</td>
-                  <td class='has-tooltip'>{{documents-tooltip data=doc.geo_entity_names type='countries'}}</td>
-                  <td class='has-tooltip'>{{documents-tooltip data=doc.taxon_names type='taxa'}}</td>
-                  <td><input type="checkbox"></td>
+                  <td class="event-col">{{doc.event_name}}</td>
+                  <td class='event-date-col'>{{doc.event_date}}</td>
+                  <td class='title-col'>
+                    <a href='#'>
+                      {{doc.title}}
+                      <i class="fa fa-file-pdf-o"></i>
+                    </a>
+                  </td>
+                  <td class='language-col'>{{doc.language}}</td>
+                  <td class='countries-col has-tooltip'>{{documents-tooltip data=doc.geo_entity_names type='countries'}}</td>
+                  <td class='taxon-col has-tooltip'>{{documents-tooltip data=doc.taxon_names type='taxa'}}</td>
+                  <td class='download-col'><input type="checkbox"></td>
                 </tr>
               {{/each}}
             </tbody>
