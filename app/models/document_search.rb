@@ -119,7 +119,7 @@ class DocumentSearch
   end
 
   def select_and_group_query
-    columns = "event_name, event_date, event_type, is_public, document_type,
+    columns = "id, event_name, event_date, event_type, is_public, document_type,
       number, sort_index, primary_document_id, proposal_outcome_ids,
       review_phase_ids, geo_entity_names, taxon_names"
     aggregators = <<-SQL
