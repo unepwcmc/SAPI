@@ -46,9 +46,6 @@ Species.SearchController = Ember.Controller.extend Species.Spinner, Species.Sear
         @set(property, val)
       @openSearchPage()
 
-    deleteGeoEntitySelection: (context) ->
-      @get('selectedGeoEntities').removeObject(context)
-
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       rankName = autoCompleteTaxonConcept.get('rankName')
       if rankName == 'SPECIES' || rankName == 'SUBSPECIES'

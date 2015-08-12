@@ -29,3 +29,7 @@ Species.GeoEntityAutoCompleteLookup = Ember.Mixin.create
     ))
     @set('autoCompleteRegions', @get('controllers.geoEntities.regions'))
     @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
+
+  actions:
+    deleteGeoEntitySelection: (context) ->
+      @get('selectedGeoEntities').removeObject(context)
