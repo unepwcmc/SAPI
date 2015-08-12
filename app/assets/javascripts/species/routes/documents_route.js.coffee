@@ -6,6 +6,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner, Species.GeoEntityLo
     if queryParams.geo_entities_ids && queryParams.geo_entities_ids.substring
       queryParams.geo_entities_ids = queryParams.geo_entities_ids.split(',')
     @controllerFor('elibrarySearch').setFilters(queryParams)
+    $(@spinnerSelector).css("visibility", "visible")
 
   model: (params, queryParams, transition) ->
     controller = @controllerFor('documents')
@@ -17,6 +18,9 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner, Species.GeoEntityLo
       error: (jqXHR, textStatus, errorThrown) ->
         console.log("AJAX Error:" + textStatus)
     )
+
+  afterModel: (queryParams, transition) ->
+    $(@spinnerSelector).css("visibility", "hidden")
 
   renderTemplate: ->
     # Render the `documents` template into
