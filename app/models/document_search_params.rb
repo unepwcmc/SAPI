@@ -13,6 +13,8 @@ class DocumentSearchParams < Hash
       document_date_end: (Date.parse(params['document_date_end']) rescue nil),
       taxon_concepts_ids: (params['taxon_concepts_ids'].split(',').map(&:to_i) rescue []),
       geo_entities_ids: (params['geo_entities_ids'].map(&:to_i) rescue []),
+      proposal_outcome_ids: (params['proposal_outcome_ids'].split(',').map(&:to_i) rescue []),
+      review_phase_ids: (params['review_phase_ids'].split(',').map(&:to_i) rescue []),
       document_tags_ids: (params['document_tags_ids'].map(&:to_i) rescue []),
       page: params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
       per_page: params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25
