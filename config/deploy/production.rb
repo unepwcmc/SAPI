@@ -9,7 +9,7 @@ set :application, "sapi"
 
 set :server_name, "#{fetch(:application)}.#{fetch(:domain)}"
 
-set :sudo_user, "rails"
+set :sudo_user, "wcmc"
 
 set :app_port, "80"
 
