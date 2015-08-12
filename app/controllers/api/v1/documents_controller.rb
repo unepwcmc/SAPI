@@ -4,7 +4,7 @@ class Api::V1::DocumentsController < ApplicationController
 
     if params[:taxon_concept_query].present?
       @species_search = Species::Search.new(params)
-      params[:taxon_concepts_ids] = @species_search.results.map(&:id)
+      params[:taxon_concepts_ids] = @species_search.results.map(&:id).join(',')
     end
     @search = DocumentSearch.new(params, 'public')
 
