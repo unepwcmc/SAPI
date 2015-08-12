@@ -97,6 +97,22 @@ div#documents {
             th.download-col { width: 70px; }
             &.table-body tbody {
               input { margin-left: 28px; }
+              .multiple-data-container {
+                  position: relative;
+                  z-index: 10;
+                  i { font-size: 16px; }
+              }
+              .data-tooltip {
+                  position: absolute;
+                  max-width: 200px;
+                  bottom: 20px;
+                  left: 20px;
+                  background-color: #FFF;
+                  border: 1px solid #CCC;
+                  display: none;
+              }
+              .multiple-data-container:hover {z-index: 20;}
+              .multiple-data-container:hover .data-tooltip {display: block;}
             }
           }
         }

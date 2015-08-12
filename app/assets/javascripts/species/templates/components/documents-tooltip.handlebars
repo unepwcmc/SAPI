@@ -1,0 +1,13 @@
+{{#if multipleValues}}
+  <div class='multiple-data-container'>
+    <div class='document-data'>
+      {{data.length}}&nbsp{{type}}
+      <i class='fa fa-info-circle'></i>
+    </div>
+    <div class='data-tooltip'>
+      {{data}}
+    </div>
+  </div>
+{{else}}
+  {{data}}
+{{/if}}

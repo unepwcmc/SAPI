@@ -46,8 +46,8 @@
                   <td>{{doc.event_date}}</td>
                   <td>{{doc.title}}</td>
                   <td>{{doc.language}}</td>
-                  <td>{{doc.geo_entity_names}}</td>
-                  <td>{{doc.taxon_names}}</td>
+                  <td class='has-tooltip'>{{documents-tooltip data=doc.geo_entity_names type='countries'}}</td>
+                  <td class='has-tooltip'>{{documents-tooltip data=doc.taxon_names type='taxa'}}</td>
                   <td><input type="checkbox"></td>
                 </tr>
               {{/each}}
