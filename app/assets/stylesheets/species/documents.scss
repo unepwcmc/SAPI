@@ -96,6 +96,7 @@ div#documents {
             th.taxon-col { width: 145px; }
             th.download-col { width: 70px; }
             &.table-body tbody {
+              td{border-bottom: 1px solid #DFE1E2;}
               input { margin-left: 28px; }
               .multiple-data-container {
                   position: relative;
