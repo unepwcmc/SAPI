@@ -1,7 +1,5 @@
 Species.TaxonConceptSearchView = Em.View.extend
   templateName: 'species/taxon_concept_search'
-  classNames: ['search-form']
-  classNameBindings: ['showSearchButton:species:documents'],
   
   mousedOver: false
 

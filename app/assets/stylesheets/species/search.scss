@@ -74,25 +74,26 @@
   .search-form {
     width: 493px;
     padding: 10px 15px 13px 15px;
-  }
-
-  .search-form.species {
     float: left;
     text-transform: uppercase;
     border-right: 1px solid #8fb7cf;
   }
 
   .search-form-container {
-    color: #2d3237;
     font-size: 15px;
     text-align: left;
     margin: auto;
-    width: 523px;
+    width: 683px;
+
+    p, label {
+      color: #2d3237;
+    }
 
     .search-button-container {
       border-top: 1px solid #8fb7cf;
       padding: 20px 0;
       margin: 15px;
+      clear: both;
       @include blue-search-button;
     }
 

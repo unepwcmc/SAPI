@@ -1,4 +1,7 @@
-Species.IndexRoute = Ember.Route.extend
+Species.IndexRoute = Ember.Route.extend Species.GeoEntityLoader,
+
+  beforeModel: () ->
+    @ensureGeoEntitiesLoaded(@controllerFor('search'))
 
   renderTemplate: ->
     # Render the `index` template into
@@ -30,9 +33,6 @@ Species.IndexRoute = Ember.Route.extend
     })
 
   actions:
-    ensureGeoEntitiesLoaded: ->
-      @controllerFor('geoEntities').load()
-
     ensureHigherTaxaLoaded: ->
       @controllerFor('higherTaxaCitesEu').load()
       @controllerFor('higherTaxaCms').load()

@@ -1,11 +1,7 @@
-Species.SearchController = Ember.Controller.extend Species.Spinner, Species.TaxonConceptAutoCompleteLookup,
+Species.SearchController = Ember.Controller.extend Species.Spinner, Species.SearchContext, Species.TaxonConceptAutoCompleteLookup, Species.GeoEntityAutoCompleteLookup,
   needs: ['geoEntities', 'taxonConcepts']
+  searchContext: 'species'
   taxonomy: 'cites_eu'
-  geoEntityQuery: null
-  autoCompleteRegions: null
-  autoCompleteCountries: null
-  selectedGeoEntities: []
-  selectedGeoEntitiesIds: []
   redirected: false
 
   setFilters: (filtersHash) ->
@@ -14,31 +10,6 @@ Species.SearchController = Ember.Controller.extend Species.Spinner, Species.Taxo
       filtersHash.taxon_concept_query = null
     @set('taxonConceptQueryForDisplay', filtersHash.taxon_concept_query)
     @set('selectedGeoEntitiesIds', filtersHash.geo_entities_ids || [])
-
-  geoEntityQueryObserver: ( ->
-    re = new RegExp("(^|\\(| )"+@get('geoEntityQuery'),"i")
-
-    @set 'autoCompleteCountries', @get('controllers.geoEntities.countries')
-    .filter (item, index, enumerable) =>
-      re.test item.get('name')
-
-    re = new RegExp("^[0-9]- "+@get('geoEntityQuery'),"i")
-
-    @set 'autoCompleteRegions', @get('controllers.geoEntities.regions')
-    .filter (item, index, enumerable) =>
-      re.test item.get('name')
-  ).observes('geoEntityQuery')
-
-  geoEntitiesObserver: ( ->
-    Ember.run.once(@, 'initForm')
-  ).observes('controllers.geoEntities.@each.didLoad')
-
-  initForm: ->
-    @set('selectedGeoEntities', @get('controllers.geoEntities.content').filter((geoEntity) =>
-      return geoEntity.get('id') in @get('selectedGeoEntitiesIds')
-    ))
-    @set('autoCompleteRegions', @get('controllers.geoEntities.regions'))
-    @set('autoCompleteCountries', @get('controllers.geoEntities.countries'))
 
   openSearchPage: (taxonFullName, page, perPage) ->
     $(".search fieldset").removeClass('parent-focus parent-active')
@@ -74,9 +45,6 @@ Species.SearchController = Ember.Controller.extend Species.Spinner, Species.Taxo
       for property, val of params
         @set(property, val)
       @openSearchPage()
-
-    deleteGeoEntitySelection: (context) ->
-      @get('selectedGeoEntities').removeObject(context)
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       rankName = autoCompleteTaxonConcept.get('rankName')

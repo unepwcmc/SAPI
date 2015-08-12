@@ -3,7 +3,7 @@
     <div class="row01">
       {{view Species.GeoEntitiesSearchTextField
         valueBinding="controller.geoEntityQuery"
-        placeholder="Type to filter countries or regions"
+        placeholderBinding="view.placeholder"
         autocomplete="off"
       }}
       <input type="submit" value="submit" />
@@ -13,6 +13,15 @@
       contentBinding="controller.selectedGeoEntities"}}
   </div>
   <div class="list-holder">
+
+  {{#if controller.isSearchContextDocuments}}
+    <ul>
+      <li>
+        {{collection Species.GeoEntitiesCollectionView
+          contentBinding="controller.autoCompleteCountries"}}
+      </li>
+    </ul>
+  {{else}}
     <ul>
       <li>
         <h2>REGIONS</h2>
@@ -25,5 +34,7 @@
           contentBinding="controller.autoCompleteCountries"}}
       </li>
     </ul>
+  {{/if}}
+
   </div>
 </div>
