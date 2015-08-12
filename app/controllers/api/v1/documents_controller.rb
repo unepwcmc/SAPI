@@ -2,6 +2,10 @@ class Api::V1::DocumentsController < ApplicationController
 
   def index
 
+    if params[:taxon_concept_query].present?
+      @species_search = Species::Search.new(params)
+      params[:taxon_concepts_ids] = @species_search.results.map(&:id)
+    end
     @search = DocumentSearch.new(params, 'public')
 
     documents = @search.results
