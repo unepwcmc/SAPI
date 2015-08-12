@@ -7,15 +7,16 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner, Species.GeoEntityLo
       queryParams.geo_entities_ids = queryParams.geo_entities_ids.split(',')
     @controllerFor('elibrarySearch').setFilters(queryParams)
 
-  setupController: (controller, model) ->
+  model: (params, queryParams, transition) ->
+    controller = @controllerFor('documents')
     $.ajax(
-      url: "/api/v1/documents?taxon-concepts-ids=4521",
+      url: "/api/v1/documents",
+      data: queryParams,
       success: (data) ->
         controller.set('content', data)
       error: (jqXHR, textStatus, errorThrown) ->
         console.log("AJAX Error:" + textStatus)
     )
-
 
   renderTemplate: ->
     # Render the `documents` template into
