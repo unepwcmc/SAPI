@@ -10,7 +10,6 @@ class Api::V1::DocumentsController < ApplicationController
 
     documents = @search.results
 
-    #this could be done in the sql query
     documents = documents.where(is_public: "true") if access_denied?
 
     cites_cop_docs = documents.where(event_type: "CitesCop")
