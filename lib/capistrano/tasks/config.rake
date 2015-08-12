@@ -353,3 +353,26 @@ cd #{deploy_to}/current/ ; nohup bundle exec sidekiq -e production -C #{deploy_t
     end
   end
 end
+
+
+namespace :config do
+  desc "Configure logrotate"
+  task :setup do
+  logrotate_config = <<-EOF
+#{deploy_to}/current/log/*.log {
+  monthly
+  missingok
+  rotate 12
+  compress
+  delaycompress
+  notifempty
+  copytruncate
+}
+  EOF
+    on roles(:app) do
+    upload! StringIO.new(logrotate_config), "/tmp/logrotate_config"
+    execute "sudo mv /tmp/logrotate_config /etc/logrotate.d/#{fetch(:application)}-logs"
+   end
+  end
+end
+
