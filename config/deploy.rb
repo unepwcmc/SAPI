@@ -25,7 +25,6 @@ set :scm_username, "unepwcmc-read"
 set :rvm_type, :user
 set :rvm_ruby_version, '2.2.2'
 
-
 # Default value for :log_level is :debug
 # set :log_level, :debug
 

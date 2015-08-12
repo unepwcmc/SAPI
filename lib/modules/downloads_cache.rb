@@ -182,11 +182,11 @@ module DownloadsCache
     puts "#{Time.now} all CITES Quotas download generated in #{elapsed_time}s"
 
     elapsed_time = Benchmark.realtime do
-      EuDecision.export('set' => 'current', 'decision_types' => {})
+      Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
     end
     puts "#{Time.now} current EU Decisions download generated in #{elapsed_time}s"
     elapsed_time = Benchmark.realtime do
-      EuDecision.export('set' => 'all', 'decision_types' => {})
+      Species::EuDecisionsExport.new(set: 'all', decision_types: {}).export
     end
     puts "#{Time.now} all EU Decisions download generated in #{elapsed_time}s"
   end
