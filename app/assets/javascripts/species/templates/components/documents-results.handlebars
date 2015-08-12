@@ -45,10 +45,8 @@
                   <td class="event-col">{{doc.event_name}}</td>
                   <td class='event-date-col'>{{doc.event_date}}</td>
                   <td class='title-col'>
-                    <a href='#'>
-                      {{doc.title}}
-                      <i class="fa fa-file-pdf-o"></i>
-                    </a>
+                    <a class="legal-links" href="/api/v1/documents/{{unbound doc.id}}">{{doc.title}}</a>
+                    <i class="fa fa-file-pdf-o"></i>
                   </td>
                   <td class='language-col'>{{doc.language}}</td>
                   <td class='countries-col has-tooltip'>{{documents-tooltip data=doc.geo_entity_names type='countries'}}</td>
