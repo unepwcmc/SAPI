@@ -67,6 +67,16 @@ div#documents {
           div.header-container {
             position: relative;
             width: 100%;
+            table {
+              th.event-col, th.event-date-col, th.title-col {
+                ul {
+                  display: inline-block;
+                  vertical-align: middle;
+                  line-height: 0;
+                  i.fa-caret-up { line-height: 0; }
+                }
+              }
+            }
           }
           div.body-container {
             overflow-y: scroll;
