@@ -94,7 +94,10 @@ div#documents {
             th.language-col { width: 123px; }
             th.countries-col { width: 192px; }
             th.taxon-col { width: 145px; }
-            th.download-col { width: 70px; }
+            th.download-col {
+              width: 70px;
+              i.fa-download { cursor: pointer; }
+            }
             &.table-body tbody {
               td{border-bottom: 1px solid #DFE1E2;}
               td.title-col {

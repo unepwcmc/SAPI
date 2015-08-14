@@ -11,8 +11,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner, Species.GeoEntityLo
   model: (params, queryParams, transition) ->
     controller = @controllerFor('documents')
     $.ajax(
-      url: "/api/v1/documents",
-      data: queryParams,
+      url: "/api/v1/documents?taxon-concepts-ids=4521",
       success: (data) ->
         controller.set('content', data)
       error: (jqXHR, textStatus, errorThrown) ->

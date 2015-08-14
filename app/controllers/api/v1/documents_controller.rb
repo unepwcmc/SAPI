@@ -52,6 +52,30 @@ class Api::V1::DocumentsController < ApplicationController
     end
   end
 
+  def download_zip
+    require 'zip'
+
+    @documents = Document.find(params[:ids].split(','))
+
+    t = Tempfile.new('tmp-zip-' + request.remote_ip)
+    Zip::OutputStream.open(t.path) do |zos|
+      @documents.each do |document|
+        path_to_file = document.filename.path
+        unless File.exists?(path_to_file)
+          render :file => "#{Rails.root}/public/404.html",  :status => 404  and return
+        end
+        zos.put_next_entry(path_to_file.split('/').last)
+        zos.print IO.read(path_to_file)
+      end
+    end
+
+    send_file t.path,
+      :type => "application/zip",
+      :filename => "elibrary-documents.zip"
+
+    t.close
+  end
+
   private
 
   def access_denied?

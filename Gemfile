@@ -24,6 +24,7 @@ gem 'gon'
 gem 'wicked'
 gem 'groupdate'
 gem "chartkick"
+gem 'rubyzip', '>= 1.0.0'
 
 gem 'sidekiq', '~> 3.4.2'
 gem 'sidekiq-status', '~> 0.5.4'

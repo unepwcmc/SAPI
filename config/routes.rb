@@ -25,7 +25,11 @@ SAPI::Application.routes.draw do
       resources :units, :only => [:index]
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
-      resources :documents, :only => [:index, :show]
+      resources :documents do
+        collection do
+          get 'download_zip'
+        end
+      end
       match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
     end
     resources :languages, :only => [:index]
