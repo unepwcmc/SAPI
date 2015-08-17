@@ -143,7 +143,10 @@ class DocumentSearch
         )
       ) AS document_language_versions
     SQL
-    @query.select(columns + "," + aggregators).group(columns)
+
+    @query = Document.from(
+      '(' + @query.to_sql + ') documents'
+    ).select(columns + "," + aggregators).group(columns)
   end
 
 end
