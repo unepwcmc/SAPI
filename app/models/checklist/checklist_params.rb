@@ -1,46 +1,36 @@
 # Constructs a normalised list of parameters, with non-recognised params
 # removed.
 #
-# Array parameters are sorted for caching purposes.
 class Checklist::ChecklistParams < Hash
+  include SearchParamSanitiser
+
   def initialize(params)
     sanitized_params = {
       #possible output layouts are:
       #taxonomic (hierarchic, taxonomic order)
       #alphabetical (flat, alphabetical order)
-      :output_layout =>
-        params[:output_layout] ? params[:output_layout].to_sym : nil,
-      :level_of_listing => params[:level_of_listing] && params[:level_of_listing] != '0',
+      output_layout: whitelist_param(
+        sanitise_symbol(params[:output_layout]),
+        [:taxonomic, :alphabetical, :appendix],
+        :alphabetical
+      ),
+      level_of_listing: sanitise_boolean(params[:level_of_listing], false),
       #filtering options
-      :scientific_name => params[:scientific_name] ? params[:scientific_name].upcase : nil,
-      :countries => if params[:country_ids].present? && params[:country_ids].is_a?(Array)
-        params[:country_ids].sort
-      else
-        []
-      end,
-      :cites_regions => if params[:cites_region_ids].present? && params[:cites_region_ids].is_a?(Array)
-        params[:cites_region_ids].sort
-      else
-        []
-      end,
-      :cites_appendices => if params[:cites_appendices].present?  && params[:cites_appendices].is_a?(Array)
-        params[:cites_appendices].sort
-      else
-        []
-      end,
+      scientific_name: sanitise_upcase_string(params[:scientific_name]),
+      countries: sanitise_integer_array(params[:country_ids]),
+      cites_regions: sanitise_integer_array(params[:cites_region_ids]),
+      cites_appendices: sanitise_string_array(params[:cites_appendices]),
       # optional data
-      :english_common_names => params[:show_english] && params[:show_english] != '0',
-      :spanish_common_names => params[:show_spanish] && params[:show_spanish] != '0',
-      :french_common_names => params[:show_french] && params[:show_french] != '0',
-      :synonyms => params[:show_synonyms] && params[:show_synonyms] != '0',
-      :authors => params[:show_author] && params[:show_author] != '0',
-      :intro => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:intro]),
-      :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
-      :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 20
+      english_common_names: sanitise_boolean(params[:show_english], false),
+      spanish_common_names: sanitise_boolean(params[:show_spanish], false),
+      french_common_names: sanitise_boolean(params[:show_french], false),
+      synonyms: sanitise_boolean(params[:show_synonyms], false),
+      authors: sanitise_boolean(params[:show_author], false),
+      intro: sanitise_boolean(params[:intro], false),
+      page: sanitise_positive_integer(params[:page], 1),
+      per_page: sanitise_positive_integer(params[:per_page], 20)
     }
-    unless [:taxonomic, :alphabetical, :appendix].include? sanitized_params[:output_layout]
-      sanitized_params[:output_layout] = :alphabetical
-    end
+
     super(sanitized_params)
     self.merge!(sanitized_params)
   end
