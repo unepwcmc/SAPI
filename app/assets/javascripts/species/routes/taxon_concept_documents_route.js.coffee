@@ -6,7 +6,7 @@ Species.TaxonConceptDocumentsRoute = Ember.Route.extend
   getDocuments: ->
     model = this.modelFor("taxonConcept")
     $.ajax(
-      url: "/api/v1/documents?taxon-concepts-ids=" + model.get('id'),
+      url: "/api/v1/documents?taxon_concepts_ids=" + model.get('id'),
       success: (data) ->
         model.set('cites_cop_docs', data.cites_cop_docs)
         model.set('ec_srg_docs', data.ec_srg_docs)

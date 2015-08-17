@@ -26,35 +26,35 @@ describe Admin::DocumentsController do
 
       context "search" do
         it "runs a full text search on title" do
-          get :index, 'document-title' => 'good'
+          get :index, 'document_title' => 'good'
           assigns(:documents).should eq([@document2])
         end
         it "retrieves documents inclusive of the given start date" do
-          get :index, "document-date-start" => '25/12/2014'
+          get :index, "document_date_start" => '25/12/2014'
           assigns(:documents).should eq([@document1])
         end
         it "retrieves documents inclusive of the given end date" do
-          get :index, "document-date-end" => '01/01/2014'
+          get :index, "document_date_end" => '01/01/2014'
           assigns(:documents).should eq([@document2])
         end
         it "retrieves documents after the given date" do
-          get :index, "document-date-start" => '10/01/2014'
+          get :index, "document_date_start" => '10/01/2014'
           assigns(:documents).should eq([@document1])
         end
         it "retrieves documents before the given date" do
-          get :index, "document-date-end" => '10/01/2014'
+          get :index, "document_date_end" => '10/01/2014'
           assigns(:documents).should eq([@document2])
         end
         it "ignores invalid dates" do
-          get :index, "document-date-start" => '34/24/12', "document-date-end" => '34/24/12'
+          get :index, "document_date_start" => '34/24/12', "document_date_end" => '34/24/12'
           assigns(:documents).should eq([@document2, @document1])
         end
         it "retrieves documents for taxon concept" do
-          get :index, "taxon-concepts-ids" => taxon_concept.id
+          get :index, "taxon_concepts_ids" => taxon_concept.id
           assigns(:documents).should eq([@document1])
         end
         it "retrieves documents for geo entity" do
-          get :index, "geo-entities-ids" => [geo_entity.id]
+          get :index, "geo_entities_ids" => [geo_entity.id]
           assigns(:documents).should eq([@document2])
         end
         context 'by proposal outcome' do
@@ -63,7 +63,7 @@ describe Admin::DocumentsController do
             create(:proposal_details, document_id: @document3.id, proposal_outcome_id: proposal_outcome.id)
           end
           it "retrieves documents for tag" do
-            get :index, "document-tags-ids" => [proposal_outcome.id]
+            get :index, "document_tags_ids" => [proposal_outcome.id]
             assigns(:documents).should eq([@document3])
           end
         end
@@ -73,11 +73,11 @@ describe Admin::DocumentsController do
             create(:review_details, document_id: @document3.id, review_phase_id: review_phase.id, process_stage_id: process_stage.id)
           end
           it "retrieves documents for review_phase tag" do
-            get :index, "document-tags-ids" => [review_phase.id]
+            get :index, "document_tags_ids" => [review_phase.id]
             assigns(:documents).should eq([@document3])
           end
           it "retrieves documents for process_stage tag" do
-            get :index, "document-tags-ids" => [process_stage.id]
+            get :index, "document_tags_ids" => [process_stage.id]
             assigns(:documents).should eq([@document3])
           end
         end

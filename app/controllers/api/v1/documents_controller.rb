@@ -2,11 +2,14 @@ class Api::V1::DocumentsController < ApplicationController
 
   def index
 
+    if params[:taxon_concept_query].present?
+      @species_search = Species::Search.new(params)
+      params[:taxon_concepts_ids] = @species_search.results.map(&:id).join(',')
+    end
     @search = DocumentSearch.new(params, 'public')
 
     documents = @search.results
 
-    #this could be done in the sql query
     documents = documents.where(is_public: "true") if access_denied?
 
     cites_cop_docs = documents.where(event_type: "CitesCop")

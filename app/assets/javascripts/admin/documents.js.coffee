@@ -1,14 +1,14 @@
 $(document).ready ->
 
   $('#event-id').chained('#event-type')
-  $('#event-id-search').chained('#event-type-search')
-  $('#document-type').chained('#event-type-search')
+  $('#event_id_search').chained('#event_type_search')
+  $('#document_type').chained('#event_type_search')
 
   # Save the children from chained destruction!
-  documentTypeChildren =  $('#document-type').children()
+  documentTypeChildren =  $('#document_type').children()
 
-  $('#event-type-search').change( (e) ->
-    documentType = $('#document-type')
+  $('#event_type_search').change( (e) ->
+    documentType = $('#document_type')
     # if no event type selected
     unless e.target.value
       # enable all document types
