@@ -8,7 +8,7 @@ class DocumentSearchParams < Hash
       event_id: params['event_id_search'] || params['event_id'],
       event_type: params['event_type_search'],
       document_type: params['document_type'],
-      document_title: params['document_title'] ? params['document_title'].strip : nil,
+      title_query: params['title_query'] ? params['title_query'].strip : nil,
       document_date_start: (Date.parse(params['document_date_start']) rescue nil),
       document_date_end: (Date.parse(params['document_date_end']) rescue nil),
       taxon_concepts_ids: (params['taxon_concepts_ids'].split(',').map(&:to_i) rescue []),
