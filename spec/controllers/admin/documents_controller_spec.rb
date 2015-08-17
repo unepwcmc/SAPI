@@ -26,7 +26,7 @@ describe Admin::DocumentsController do
 
       context "search" do
         it "runs a full text search on title" do
-          get :index, 'document_title' => 'good'
+          get :index, 'title_query' => 'good'
           assigns(:documents).should eq([@document2])
         end
         it "retrieves documents inclusive of the given start date" do
