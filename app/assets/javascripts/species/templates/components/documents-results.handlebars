@@ -45,7 +45,7 @@
               {{#each doc in documents}}
                 <tr data-document-id="{{unbound doc.id}}">
                   <td class="event-col">{{unbound doc.event_name}}</td>
-                  <td class='event-date-col'>{{unbound doc.event_date}}</td>
+                  <td class='event-date-col'>{{unbound doc.date}}</td>
                   <td class='title-col'>
                     <a class="legal-links" href="/api/v1/documents/{{unbound doc.id}}">{{unbound doc.title}}</a>
                     <i class="fa fa-file-pdf-o"></i>
