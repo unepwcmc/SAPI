@@ -12,15 +12,17 @@
           <table class="table-header">
             <thead>
               <tr>
-                <th class="event-col">EVENT</th>
-                <th class="event-date-col">EVENT DATE</th>
-                <th class="title-col">TITLE</th>
+                {{sortable-column column_name="EVENT" class="event-col"}}
+                {{sortable-column column_name="EVENT DATE" class="event-date-col"}}</th>
+                {{sortable-column column_name="TITLE" class="title-col"}}
                 <th class="language-col">LANGUAGE</th>
                 <th class="countries-col">No. of COUNTRIES</th>
                 <th class="taxon-col">TAXON NAME</th>
                 <th class="download-col">
-                  <i class="fa fa-download"></i>
-                  <input type="checkbox">
+                  <a href='#'>
+                    {{batch-download}}
+                  </a>
+                  {{download-checkbox}}
                 </th>
               </tr>
             </thead>
@@ -41,14 +43,19 @@
             </thead>
             <tbody>
               {{#each doc in documents}}
-                <tr>
-                  <td>{{doc.event_name}}</td>
-                  <td>{{doc.event_date}}</td>
-                  <td>{{doc.title}}</td>
-                  <td>{{doc.language}}</td>
-                  <td>{{doc.geo_entity_names}}</td>
-                  <td>{{doc.taxon_names}}</td>
-                  <td><input type="checkbox"></td>
+                <tr data-document-id="{{unbound doc.id}}">
+                  <td class="event-col">{{unbound doc.event_name}}</td>
+                  <td class='event-date-col'>{{unbound doc.date}}</td>
+                  <td class='title-col'>
+                    <a class="legal-links" href="/api/v1/documents/{{unbound doc.id}}">{{unbound doc.title}}</a>
+                    <i class="fa fa-file-pdf-o"></i>
+                  </td>
+                  <td class='language-col'>{{unbound doc.language}}</td>
+                  <td class='countries-col has-tooltip'>{{documents-tooltip data=doc.geo_entity_names type='countries'}}</td>
+                  <td class='taxon-col has-tooltip'>{{documents-tooltip data=doc.taxon_names type='taxa'}}</td>
+                  <td class='download-col'>
+                    <input type="checkbox">
+                  </td>
                 </tr>
               {{/each}}
             </tbody>

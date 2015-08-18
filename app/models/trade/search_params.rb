@@ -1,93 +1,42 @@
 # Constructs a normalised list of parameters, with non-recognised params
 # removed.
 #
-# Array parameters are sorted for caching purposes.
 class Trade::SearchParams < Hash
+  include SearchParamSanitiser
+
   def initialize(params)
     sanitized_params = {
-      :taxon_concepts_ids =>
-        if params[:taxon_concepts_ids].blank?
-          []
-        else
-          params[:taxon_concepts_ids].sort
-        end,
-      :reported_taxon_concepts_ids =>
-        if params[:reported_taxon_concepts_ids].blank?
-          []
-        else
-          params[:reported_taxon_concepts_ids].sort
-        end,
-      :appendices =>
-        params[:appendices].blank? ? [] : params[:appendices].sort,
-      :terms_ids => params[:terms_ids].blank? ? [] : params[:terms_ids].sort,
-      :units_ids => params[:units_ids].blank? ? [] : params[:units_ids].sort,
-      :purposes_ids =>
-        params[:purposes_ids].blank? ? [] : params[:purposes_ids].sort,
-      :sources_ids =>
-        params[:sources_ids].blank? ? [] : params[:sources_ids].sort,
-      :importers_ids =>
-        params[:importers_ids].blank? ? [] : params[:importers_ids].sort,
-      :exporters_ids =>
-        params[:exporters_ids].blank? ? [] : params[:exporters_ids].sort,
-      :countries_of_origin_ids=>
-        params[:countries_of_origin_ids].blank? ? [] : params[:countries_of_origin_ids].sort,
-      :permits_ids => params[:permits_ids].blank? ? [] : params[:permits_ids].sort,
-      :reporter_type => params[:reporter_type].blank? ? nil : params[:reporter_type].upcase,
-      :time_range_start => params[:time_range_start],
-      :time_range_end => params[:time_range_end],
-      :quantity => params[:quantity],
-      :unit_blank => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:unit_blank]),
-      :purpose_blank => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:purpose_blank]),
-      :source_blank => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:source_blank]),
-      :country_of_origin_blank => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:country_of_origin_blank]),
-      :permit_blank => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:permit_blank]),
-      :internal => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(params[:internal]),
-      :report_type => params[:report_type] ? params[:report_type].to_sym : :raw,
-      :taxon_with_descendants =>
-        ActiveRecord::ConnectionAdapters::Column.value_to_boolean(
-          params[:taxon_with_descendants]
-        ),
-      :page => params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
-      :per_page => params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 100
+      taxon_concepts_ids: sanitise_integer_array(params[:taxon_concepts_ids]),
+      reported_taxon_concepts_ids: sanitise_integer_array(params[:reported_taxon_concepts_ids]),
+      appendices: sanitise_string_array(params[:appendices]),
+      terms_ids: sanitise_integer_array(params[:terms_ids]),
+      units_ids: sanitise_integer_array(params[:units_ids]),
+      purposes_ids: sanitise_integer_array(params[:purposes_ids]),
+      sources_ids: sanitise_integer_array(params[:sources_ids]),
+      importers_ids: sanitise_integer_array(params[:importers_ids]),
+      exporters_ids: sanitise_integer_array(params[:exporters_ids]),
+      countries_of_origin_ids: sanitise_integer_array(params[:countries_of_origin_ids]),
+      permits_ids: sanitise_integer_array(params[:permits_ids]),
+      reporter_type: whitelist_param(
+        sanitise_upcase_string(params[:reporter_type]),
+        ['I', 'E'],
+        nil
+      ),
+      time_range_start: sanitise_positive_integer(params[:time_range_start], 1975),
+      time_range_end: sanitise_positive_integer(params[:time_range_end], Date.today.year),
+      quantity: sanitise_float(params[:quantity]),
+      unit_blank: sanitise_boolean(params[:unit_blank]),
+      purpose_blank: sanitise_boolean(params[:purpose_blank]),
+      source_blank: sanitise_boolean(params[:source_blank]),
+      country_of_origin_blank: sanitise_boolean(params[:country_of_origin_blank]),
+      permit_blank: sanitise_boolean(params[:permit_blank]),
+      internal: sanitise_boolean(params[:internal]),
+      report_type: sanitise_symbol(params[:report_type], :raw),
+      taxon_with_descendants: sanitise_boolean(params[:taxon_with_descendants]),
+      page: sanitise_positive_integer(params[:page], 1),
+      per_page: sanitise_positive_integer(params[:per_page], 100)
     }
-    unless ['I', 'E'].include? sanitized_params[:reporter_type]
-      sanitized_params[:reporter_type] = nil
-    end
-    # make sure quantity is numeric
-    begin
-      sanitized_params[:quantity] = Float(sanitized_params[:quantity])
-    rescue ArgumentError, TypeError
-      sanitized_params[:quantity] = nil
-    end
-    [:time_range_start, :time_range_end].each do |integer_param|
-      # make sure is integer
-      begin
-        sanitized_params[:integer_param] = Integer(sanitized_params[:integer_param])
-      rescue ArgumentError, TypeError
-        sanitized_params[:integer_param] = nil
-      end
-    end
-    unless sanitized_params[:time_range_start]
-      sanitized_params[:time_range_start] = 1975
-    end
-    unless sanitized_params[:time_range_end]
-      sanitized_params[:time_range_end] = Date.today.year
-    end
-    [
-      :taxon_concepts_ids, :terms_ids, :units_ids, :purposes_ids,
-      :sources_ids, :importers_ids, :exporters_ids, :countries_of_origin_ids,
-      :permits_ids
-    ].each do |integer_array_param|
-      # make sure is array
-      sanitized_params[integer_array_param] = [] unless sanitized_params[integer_array_param].is_a?(Array)
-      # make sure elements are integers
-      begin
-        !sanitized_params[integer_array_param].empty? && Integer(sanitized_params[integer_array_param][0])
-      rescue ArgumentError, TypeError
-        sanitized_params[integer_array_param] = []
-      end
-      sanitized_params[integer_array_param] = sanitized_params[integer_array_param].map(&:to_i)
-    end
+
     super(sanitized_params)
     self.merge!(sanitized_params)
   end

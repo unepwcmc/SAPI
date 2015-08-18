@@ -2,15 +2,16 @@ class DocumentSearch
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
   attr_reader :page, :per_page, :offset, :event_type, :event_id,
-    :document_type, :document_title
+    :document_type, :title_query
 
   def initialize(options, interface)
+    @interface = interface
     initialize_params(options)
-    initialize_query interface
+    initialize_query
   end
 
   def results
-    if @interface == 'admin'
+    if admin_interface?
       results = @query.limit(@per_page).
         offset(@offset)
     else
@@ -36,22 +37,28 @@ class DocumentSearch
 
   private
 
+  def admin_interface?
+    @interface == 'admin'
+  end
+
+  def table_name
+    admin_interface? ? 'documents_view' : 'api_documents_view'
+  end
+
   def initialize_params(options)
     @options = DocumentSearchParams.sanitize(options)
     @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
     @offset = @per_page * (@page - 1)
   end
 
-  def initialize_query interface
-    @interface = interface
-    view = interface == 'admin' ? 'documents_view' : 'api_documents_view'
-    @query = Document.from("#{view} AS documents")
+  def initialize_query
+    @query = Document.from("#{table_name} documents")
     add_conditions_for_event
     add_conditions_for_document
     add_proposal_outcome_condition if @proposal_outcome_ids.present?
     add_review_phase_condition if @review_phase_ids.present?
     add_extra_conditions
-    add_ordering if interface == 'admin'
+    add_ordering if admin_interface?
   end
 
   def add_conditions_for_event
@@ -65,13 +72,13 @@ class DocumentSearch
   end
 
   def add_conditions_for_document
-    @query = @query.search_by_title(@document_title) if @document_title.present?
+    @query = @query.search_by_title(@title_query) if @title_query.present?
 
     if @document_type.present?
       @query = @query.where('documents.type' => @document_type)
     end
 
-    if @interface == 'admin'
+    if admin_interface?
       if !@document_date_start.blank?
         @query = @query.where("documents.date >= ?", @document_date_start)
       end
@@ -101,7 +108,6 @@ class DocumentSearch
 
   def add_proposal_outcome_condition
     @query = @query.where("proposal_outcome_ids && ARRAY[#{@proposal_outcome_ids.join(',')}]")
-
   end
 
   def add_review_phase_condition
@@ -109,7 +115,7 @@ class DocumentSearch
   end
 
   def add_ordering
-    return if @document_title.present?
+    return if @title_query.present?
 
     @query = if @event_id.present?
       @query.order([:date, :title])
@@ -119,7 +125,7 @@ class DocumentSearch
   end
 
   def select_and_group_query
-    columns = "event_name, event_date, event_type, is_public, document_type,
+    columns = "id, event_name, event_type, date, is_public, document_type,
       number, sort_index, primary_document_id, proposal_outcome_ids,
       review_phase_ids, geo_entity_names, taxon_names"
     aggregators = <<-SQL
@@ -137,7 +143,10 @@ class DocumentSearch
         )
       ) AS document_language_versions
     SQL
-    @query.select(columns + "," + aggregators).group(columns)
+
+    @query = Document.from(
+      '(' + @query.to_sql + ') documents'
+    ).select(columns + "," + aggregators).group(columns)
   end
 
 end

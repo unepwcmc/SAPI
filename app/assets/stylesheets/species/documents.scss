@@ -67,6 +67,16 @@ div#documents {
           div.header-container {
             position: relative;
             width: 100%;
+            table {
+              th.event-col, th.event-date-col, th.title-col {
+                ul {
+                  display: inline-block;
+                  vertical-align: middle;
+                  line-height: 0;
+                  i.fa-caret-up { line-height: 0; }
+                }
+              }
+            }
           }
           div.body-container {
             overflow-y: scroll;
@@ -94,9 +104,32 @@ div#documents {
             th.language-col { width: 123px; }
             th.countries-col { width: 192px; }
             th.taxon-col { width: 145px; }
-            th.download-col { width: 70px; }
+            th.download-col {
+              width: 70px;
+              i.fa-download { cursor: pointer; }
+            }
             &.table-body tbody {
+              td{border-bottom: 1px solid #DFE1E2;}
+              td.title-col {
+                i.fa-file-pdf-o { color: #868686; }
+              }
               input { margin-left: 28px; }
+              .multiple-data-container {
+                  position: relative;
+                  z-index: 10;
+                  i { font-size: 16px; }
+              }
+              .data-tooltip {
+                  position: absolute;
+                  max-width: 200px;
+                  bottom: 20px;
+                  left: 20px;
+                  background-color: #FFF;
+                  border: 1px solid #CCC;
+                  display: none;
+              }
+              .multiple-data-container:hover {z-index: 20;}
+              .multiple-data-container:hover .data-tooltip {display: block;}
             }
           }
         }
