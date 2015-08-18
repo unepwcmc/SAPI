@@ -27,6 +27,25 @@
     </form>
   </div>
 
+  <div style="clear:both"></div>
+  {{single-dropdown
+    action="handleEventTypeSelection"
+    clearAction="handleEventTypeDeselection"
+    title="Meeting type"
+    values=controllers.events.eventTypes
+    selection=controller.selectedEventType
+  }}
+  {{single-dropdown
+    isVisible=controller.eventsDropdownVisible
+    action="handleEventSelection"
+    clearAction="handleEventDeselection"
+    title="Meeting"
+    values=controller.filteredEvents
+    selection=controller.selectedEvent
+  }}
+
+  <div style="clear:both"></div>
+
   <div class="search-button-container">
     <button {{action "openSearchPage"}}>Search</button>
   </div>
