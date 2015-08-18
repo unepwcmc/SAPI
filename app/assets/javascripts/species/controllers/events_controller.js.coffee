@@ -1,4 +1,4 @@
-Species.EventsController = Ember.ArrayController.extend
+Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserver,
   eventTypes: [
     {
       id: 'CitesCop',
@@ -25,3 +25,7 @@ Species.EventsController = Ember.ArrayController.extend
       name: 'CITES Extraordinary Meeting'
     }
   ]
+
+  load: ->
+    unless @get('loaded')
+      @set('content', Species.Event.find())

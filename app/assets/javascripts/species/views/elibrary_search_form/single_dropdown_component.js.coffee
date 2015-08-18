@@ -10,9 +10,7 @@ Species.SingleDropdownComponent = Ember.Component.extend
 
   actions:
     handleSelection: (selection) ->
-      console.log('hello', selection)
       @sendAction('action', selection)
 
     handleDeselection: (selection) ->
-      console.log('hello', selection)
       @sendAction('clearAction', selection)

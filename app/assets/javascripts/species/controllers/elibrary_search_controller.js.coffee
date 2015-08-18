@@ -1,4 +1,7 @@
-Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Species.SearchContext, Species.TaxonConceptAutoCompleteLookup, Species.GeoEntityAutoCompleteLookup,
+Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Species.SearchContext,
+  Species.TaxonConceptAutoCompleteLookup,
+  Species.GeoEntityAutoCompleteLookup,
+  Species.EventLookup
   needs: ['geoEntities', 'taxonConcepts', 'events']
   searchContext: 'documents'
   autoCompleteTaxonConcept: null
@@ -15,18 +18,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       filtersHash.title_query = null
     @set('titleQuery', filtersHash.title_query)
     @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
-    @set('selectedEvent', Species.Event.find(filtersHash.event_id))
-
-  filteredEvents: ( ->
-    if @get('selectedEventType')
-      @get('controllers.events.content').filterBy('type', @get('selectedEventType.id'))
-    else
-      []
-  ).property('selectedEventType.id')
-
-  eventsDropdownVisible: ( ->
-    @get('selectedEventType') != null
-  ).property('selectedEventType.id')
+    @set('selectedEventId', filtersHash.event_id)
 
   actions:
     openSearchPage:->
@@ -45,15 +37,3 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)
       @set('taxonConceptQueryForDisplay', autoCompleteTaxonConcept.get('fullName'))
-
-    handleEventTypeSelection: (eventType) ->
-      @set('selectedEventType', eventType)
-
-    handleEventTypeDeselection: (eventType) ->
-      @set('selectedEventType', null)
-
-    handleEventSelection: (event) ->
-      @set('selectedEvent', event)
-
-    handleEventDeselection: (event) ->
-      @set('selectedEvent', null)

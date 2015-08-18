@@ -1,8 +1,9 @@
-Species.DocumentsRoute = Ember.Route.extend Species.Spinner, Species.GeoEntityLoader,
+Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
+  Species.GeoEntityLoader, Species.EventLoader,
 
   beforeModel: (queryParams, transition) ->
     @ensureGeoEntitiesLoaded(@controllerFor('search'))
-    @controllerFor('events').set('content', Species.Event.find())
+    @ensureEventsLoaded(@controllerFor('elibrarySearch'))
     #dirty hack to check if we have an array or comma separated string here
     if queryParams.geo_entities_ids && queryParams.geo_entities_ids.substring
       queryParams.geo_entities_ids = queryParams.geo_entities_ids.split(',')
