@@ -12,12 +12,12 @@
           <table class="table-header">
             <thead>
               <tr>
-                {{sortable-column column_name="EVENT" class="event-col"}}
-                {{sortable-column column_name="EVENT DATE" class="event-date-col"}}</th>
+                {{sortable-column column_name="MEETING" class="event-col"}}
+                {{sortable-column column_name="DATE" class="event-date-col"}}</th>
                 {{sortable-column column_name="TITLE" class="title-col"}}
-                <th class="language-col">LANGUAGE</th>
-                <th class="countries-col">No. of COUNTRIES</th>
-                <th class="taxon-col">TAXON NAME</th>
+                <th class="language-col">LANG</th>
+                <th class="countries-col">COUNTRIES</th>
+                <th class="taxon-col">TAXA</th>
                 <th class="download-col">
                   <a href='#'>
                     {{batch-download}}
@@ -48,7 +48,7 @@
                   <td class='event-date-col'>{{unbound doc.date}}</td>
                   <td class='title-col'>
                     <a class="legal-links" href="/api/v1/documents/{{unbound doc.id}}">{{unbound doc.title}}</a>
-                    <i class="fa fa-file-pdf-o"></i>
+                    [{{unbound doc.extension}}]
                   </td>
                   <td class='language-col'>{{unbound doc.language}}</td>
                   <td class='countries-col has-tooltip'>{{documents-tooltip data=doc.geo_entity_names type='countries'}}</td>

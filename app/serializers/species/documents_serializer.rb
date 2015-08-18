@@ -3,7 +3,7 @@ class Species::DocumentsSerializer < ActiveModel::Serializer
     :document_type, :number, :sort_index, :language,
     :primary_document_id, :taxon_names, :geo_entity_names,
     :taxon_names, :geo_entity_names, :languages, :proposal_outcome_ids,
-    :review_phase_ids
+    :review_phase_ids, :extension
 
   def document_type
     object.document_type.split(":").last

@@ -98,12 +98,12 @@ div#documents {
             clear: both;
             table-layout: fixed; //not always necessary
             td { word-wrap: break-word } //not always necessary
-            th.event-col { width: 77px; }
-            th.event-date-col { width: 135px; }
-            th.title-col { width: 166px; }
-            th.language-col { width: 123px; }
-            th.countries-col { width: 192px; }
-            th.taxon-col { width: 145px; }
+            th.event-col { width: 100px; }
+            th.event-date-col { width: 112px; }
+            th.title-col { width: 198px; }
+            th.language-col { width: 90px; }
+            th.countries-col { width: 169px; }
+            th.taxon-col { width: 169px; }
             th.download-col {
               width: 70px;
               i.fa-download { cursor: pointer; }
