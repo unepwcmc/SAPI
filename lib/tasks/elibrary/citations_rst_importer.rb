@@ -64,7 +64,7 @@ class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
   # but in the new system it is document-level
   def all_review_details_rows_sql
     <<-SQL
-      SELECT DocumentID, SigTradePhase, SigTradeProcessStage, SigTradeRecommendedCategory
+      SELECT CAST(DocumentID AS INT) AS DocumentID, SigTradePhase, SigTradeProcessStage, SigTradeRecommendedCategory
       FROM #{table_name}
       GROUP BY DocumentID, SigTradePhase, SigTradeProcessStage, SigTradeRecommendedCategory
     SQL
