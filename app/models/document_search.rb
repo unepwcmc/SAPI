@@ -63,11 +63,10 @@ class DocumentSearch
 
   def add_conditions_for_event
     return unless @event_id || @event_type
-    @query = @query.joins('LEFT JOIN events ON events.id = documents.event_id')
     if @event_id.present?
       @query = @query.where(event_id: @event_id)
     elsif @event_type.present?
-      @query = @query.where('events.type' => @event_type)
+      @query = @query.where(event_type: @event_type)
     end
   end
 

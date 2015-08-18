@@ -1,27 +1,27 @@
 Species.EventsController = Ember.ArrayController.extend
   eventTypes: [
     {
-      id: 'CoP', name: 'CoP'
+      id: 'CitesCop',
+      name: 'CITES CoP'
     },
     {
-      id: 'SRG', name: 'SRG'
-    }
-  ]
-
-  content: [
-    {
-      id: 1,
-      name: 'CoP15',
-      type: 'CoP'
+      id: 'CitesAc',
+      name: 'CITES Animal Committee'
     },
     {
-      id: 2,
-      name: 'CoP16',
-      type: 'CoP'
+      id: 'CitesPc',
+      name: 'CITES Plant Committee'
     },
     {
-      id: 3,
-      name: 'SRG 72',
-      type: 'SRG'
+      id: 'EcSrg',
+      name: 'EC SRG'
+    },
+    {
+      id: 'CitesTc',
+      name: 'CITES Technical Committee'
+    },
+    {
+      id: 'CitesExtraordinaryMeeting',
+      name: 'CITES Extraordinary Meeting'
     }
   ]

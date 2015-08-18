@@ -14,6 +14,8 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     if filtersHash.title_query == ''
       filtersHash.title_query = null
     @set('titleQuery', filtersHash.title_query)
+    @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
+    @set('selectedEvent', Species.Event.find(filtersHash.event_id))
 
   filteredEvents: ( ->
     if @get('selectedEventType')
@@ -35,7 +37,9 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       @transitionToRoute('documents', {queryParams: {
         taxon_concept_query: query,
         geo_entities_ids: @get('selectedGeoEntities').mapProperty('id'),
-        title_query: @get('titleQuery')
+        title_query: @get('titleQuery'),
+        event_type: @get('selectedEventType.id'),
+        event_id: @get('selectedEvent.id')
       }})
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
