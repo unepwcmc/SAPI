@@ -25,12 +25,21 @@ Species.EventLookup = Ember.Mixin.create
   actions:
     handleEventTypeSelection: (eventType) ->
       @set('selectedEventType', eventType)
+      if @get('selectedEventType.id') != @get('selectedEvent.type')
+        @set('selectedEvent', null)
+        @set('selectedEventId', null)
+      if @get('selectedDocumentType.eventTypes') && @get('selectedDocumentType.eventTypes').indexOf(@get('selectedEvent.type')) < 0
+        @set('selectedDocumentType', null)
 
     handleEventTypeDeselection: (eventType) ->
       @set('selectedEventType', null)
+      @set('selectedEvent', null)
+      @set('selectedEventId', null)
 
     handleEventSelection: (event) ->
       @set('selectedEvent', event)
+      @set('selectedEventId', event.id)
 
     handleEventDeselection: (event) ->
       @set('selectedEvent', null)
+      @set('selectedEventId', null)

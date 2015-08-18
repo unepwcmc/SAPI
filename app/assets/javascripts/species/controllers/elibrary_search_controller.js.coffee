@@ -19,6 +19,16 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     @set('titleQuery', filtersHash.title_query)
     @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
     @set('selectedEventId', filtersHash.event_id)
+    @set('selectedDocumentType', @get('controllers.events.documentTypes').findBy('id', filtersHash.document_type))
+
+  filteredDocumentTypes: ( ->
+    if @get('selectedEventType')
+      @get('controllers.events.documentTypes').filter (dt) =>
+        return false unless dt.eventTypes
+        dt.eventTypes.indexOf(@get('selectedEventType.id')) >= 0
+    else
+      @get('controllers.events.documentTypes')
+  ).property('selectedEventType.id')
 
   actions:
     openSearchPage:->
@@ -31,8 +41,15 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
         geo_entities_ids: @get('selectedGeoEntities').mapProperty('id'),
         title_query: @get('titleQuery'),
         event_type: @get('selectedEventType.id'),
-        event_id: @get('selectedEvent.id')
+        event_id: @get('selectedEvent.id'),
+        document_type: @get('selectedDocumentType.id')
       }})
+
+    handleDocumentTypeSelection: (documentType) ->
+      @set('selectedDocumentType', documentType)
+
+    handleDocumentTypeDeselection: (documentType) ->
+      @set('selectedDocumentType', null)
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)

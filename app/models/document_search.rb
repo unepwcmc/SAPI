@@ -74,7 +74,11 @@ class DocumentSearch
     @query = @query.search_by_title(@title_query) if @title_query.present?
 
     if @document_type.present?
-      @query = @query.where('documents.type' => @document_type)
+      @query = if admin_interface?
+        @query.where('documents.type' => @document_type)
+      else
+        @query.where('document_type' => @document_type)
+      end
     end
 
     if admin_interface?

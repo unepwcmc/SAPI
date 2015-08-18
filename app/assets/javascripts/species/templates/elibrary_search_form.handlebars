@@ -45,6 +45,15 @@
   }}
 
   <div style="clear:both"></div>
+  {{single-dropdown
+    action="handleDocumentTypeSelection"
+    clearAction="handleDocumentTypeDeselection"
+    title="Document type"
+    values=controller.filteredDocumentTypes
+    selection=controller.selectedDocumentType
+  }}
+
+  <div style="clear:both"></div>
 
   <div class="search-button-container">
     <button {{action "openSearchPage"}}>Search</button>
