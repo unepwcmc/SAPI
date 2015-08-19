@@ -13,7 +13,8 @@ Species.Router.map (match) ->
   @resource 'documents', {
     queryParams: [
       'taxon_concept_query', 'geo_entities_ids', 'title_query',
-      'event_type', 'event_id', 'document_type'
+      'event_type', 'event_id', 'document_type',
+      'proposal_outcome_id', 'review_phase_id'
     ]
   }
   @route 'about'

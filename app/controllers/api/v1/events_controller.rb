@@ -1,5 +1,4 @@
 class Api::V1::EventsController < ApplicationController
-  caches_action :index
 
   def index
     @events = Event.

@@ -55,8 +55,6 @@ class DocumentSearch
     @query = Document.from("#{table_name} documents")
     add_conditions_for_event
     add_conditions_for_document
-    add_proposal_outcome_condition if @proposal_outcome_ids.present?
-    add_review_phase_condition if @review_phase_ids.present?
     add_extra_conditions
     add_ordering if admin_interface?
   end
@@ -109,14 +107,6 @@ class DocumentSearch
     @query = @query.where("document_tags_ids && ARRAY[#{@document_tags_ids.join(',')}]")
   end
 
-  def add_proposal_outcome_condition
-    @query = @query.where("proposal_outcome_ids && ARRAY[#{@proposal_outcome_ids.join(',')}]")
-  end
-
-  def add_review_phase_condition
-    @query = @query.where("review_phase_ids && ARRAY[#{@review_phase_ids.join(',')}]")
-  end
-
   def add_ordering
     return if @title_query.present?
 
@@ -129,8 +119,8 @@ class DocumentSearch
 
   def select_and_group_query
     columns = "id, event_name, event_type, date, is_public, document_type,
-      number, sort_index, primary_document_id, proposal_outcome_ids,
-      review_phase_ids, geo_entity_names, taxon_names, extension"
+      number, sort_index, primary_document_id,
+      geo_entity_names, taxon_names, extension"
     aggregators = <<-SQL
       ARRAY_TO_JSON(
         ARRAY_AGG_NOTNULL(

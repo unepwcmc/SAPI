@@ -1,12 +1,12 @@
 Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Species.SearchContext,
   Species.TaxonConceptAutoCompleteLookup,
   Species.GeoEntityAutoCompleteLookup,
-  Species.EventLookup
-  needs: ['geoEntities', 'taxonConcepts', 'events']
+  Species.EventLookup,
+  Species.DocumentTagLookup,
+  needs: ['geoEntities', 'taxonConcepts', 'events', 'documentTags']
   searchContext: 'documents'
   autoCompleteTaxonConcept: null
   selectedEventType: null
-  selectedEvent: null
 
   setFilters: (filtersHash) ->
     if filtersHash.taxon_concept_query == ''
@@ -20,6 +20,8 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
     @set('selectedEventId', filtersHash.event_id)
     @set('selectedDocumentType', @get('controllers.events.documentTypes').findBy('id', filtersHash.document_type))
+    @set('selectedProposalOutcomeId', filtersHash.proposal_outcome_id)
+    @set('selectedReviewPhaseId', filtersHash.review_phase_id)
 
   filteredDocumentTypes: ( ->
     if @get('selectedEventType')
@@ -42,7 +44,9 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
         title_query: @get('titleQuery'),
         event_type: @get('selectedEventType.id'),
         event_id: @get('selectedEvent.id'),
-        document_type: @get('selectedDocumentType.id')
+        document_type: @get('selectedDocumentType.id'),
+        proposal_outcome_id: @get('selectedProposalOutcome.id'),
+        review_phase_id: @get('selectedReviewPhase.id')
       }})
 
     handleDocumentTypeSelection: (documentType) ->

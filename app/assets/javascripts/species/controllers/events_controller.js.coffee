@@ -1,4 +1,6 @@
 Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserver,
+  needs: ['elibrarySearch']
+
   eventTypes: [
     {
       id: 'CitesCop',
@@ -89,3 +91,6 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
   load: ->
     unless @get('loaded')
       @set('content', Species.Event.find())
+
+  handleLoadFinished: ->
+    @get('controllers.elibrarySearch').initEventSelector()

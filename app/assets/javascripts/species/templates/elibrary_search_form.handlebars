@@ -52,6 +52,23 @@
     values=controller.filteredDocumentTypes
     selection=controller.selectedDocumentType
   }}
+  {{single-dropdown
+    isVisible=controller.proposalOutcomeDropdownVisible
+    action="handleProposalOutcomeSelection"
+    clearAction="handleProposalOutcomeDeselection"
+    title="Proposal outcome"
+    values=controllers.documentTags.proposalOutcomes
+    selection=controller.selectedProposalOutcome
+  }}
+  {{single-dropdown
+    isVisible=controller.reviewPhaseDropdownVisible
+    action="handleReviewPhaseSelection"
+    clearAction="handleReviewPhaseDeselection"
+    title="Review phase"
+    values=controllers.documentTags.reviewPhases
+    selection=controller.selectedReviewPhase
+  }}
+
 
   <div style="clear:both"></div>
 

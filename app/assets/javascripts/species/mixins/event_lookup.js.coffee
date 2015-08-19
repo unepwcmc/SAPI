@@ -2,10 +2,6 @@ Species.EventLookup = Ember.Mixin.create
   selectedEvent: null
   selectedEventId: null
 
-  eventsObserver: ( ->
-    Ember.run.once(@, 'initEventSelector')
-  ).observes('controllers.events.@each.didLoad')
-
   initEventSelector: ->
     @set('selectedEvent', @get('controllers.events.content').findBy('id', @get('selectedEventId')))
     if @get('selectedEventType') == null && @get('selectedEvent')

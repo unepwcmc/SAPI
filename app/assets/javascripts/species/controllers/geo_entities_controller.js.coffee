@@ -5,7 +5,7 @@ Species.GeoEntitiesController = Ember.ArrayController.extend Species.ArrayLoadOb
 
   load: ->
     unless @get('loaded')
-      @set('content', Species.GeoEntity.find({geo_entity_types_set: "3"}))
+      @set('content', Species.GeoEntity.find({geo_entity_types_set: "5"}))
 
   handleLoadFinished: () ->
     @set('regions', @get('content').filterProperty('geoEntityType', 'CITES_REGION'))
