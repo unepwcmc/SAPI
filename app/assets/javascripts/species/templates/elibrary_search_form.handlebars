@@ -1,78 +1,87 @@
-<div class="search-form-container">
+<div class="search-form documents">
 
   <p class="search-info">
     <i class="fa fa-info-circle"></i> Select one or more options
   </p>
-  <div class="search-form documents">
-    <form class="search">
-      <fieldset>
+
+  <form class="search">
+    <fieldset class="taxon-search">
+      <div class="documents-control-group">
+        <label>Search by species or higher taxa</label>
         {{view Species.TaxonConceptSearchView controllerBinding="controller" showSearchButton=false}}
-      </fieldset>
-    </form>
-  </div>
-  <div class="location-area popup-area">
-    {{view Species.GeoEntitiesSearchButton
-      selectedGeoEntitiesBinding="controller.selectedGeoEntities"
-      loadedBinding="controllers.geoEntities.loaded"
-    }}
-    {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
-  </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="documents-control-group">
+        <label>Search by title</label>
+        <div class="text-input-wrapper">
+          {{input type="text" value=titleQuery placeholder="E.g. significant trade in animal species"}}
+        </div>
+      </div>
+      <div class="documents-control-group">
+        <div class="location-area popup-area">
+          <label>Country <i class="fa fa-info-circle" title="Including territories and historic names"></i></label>
+          {{view Species.GeoEntitiesSearchButton
+            selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+            loadedBinding="controllers.geoEntities.loaded"
+          }}
+          {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+        </div>
+      </div>
 
-  <div style="clear:both"></div>
-  <div class="search-form documents">
-    <form class="search">
-      <fieldset>
-        {{input type="text" value=titleQuery placeholder="E.g. significant trade in animal species"}}
-      </fieldset>
-    </form>
-  </div>
+      <div class="documents-control-group">
+        {{single-dropdown
+          action="handleEventTypeSelection"
+          clearAction="handleEventTypeDeselection"
+          title="Meeting type"
+          values=controllers.events.eventTypes
+          selection=controller.selectedEventType
+        }}
+      </div>
 
-  <div style="clear:both"></div>
-  {{single-dropdown
-    action="handleEventTypeSelection"
-    clearAction="handleEventTypeDeselection"
-    title="Meeting type"
-    values=controllers.events.eventTypes
-    selection=controller.selectedEventType
-  }}
-  {{single-dropdown
-    isVisible=controller.eventsDropdownVisible
-    action="handleEventSelection"
-    clearAction="handleEventDeselection"
-    title="Meeting"
-    values=controller.filteredEvents
-    selection=controller.selectedEvent
-  }}
+      <div class="documents-control-group">
+        {{single-dropdown
+          isVisible=controller.eventsDropdownVisible
+          action="handleEventSelection"
+          clearAction="handleEventDeselection"
+          title="Meeting"
+          values=controller.filteredEvents
+          selection=controller.selectedEvent
+        }}
+      </div>
+      <div class="documents-control-group">
+        {{single-dropdown
+          action="handleDocumentTypeSelection"
+          clearAction="handleDocumentTypeDeselection"
+          title="Document type"
+          values=controller.filteredDocumentTypes
+          selection=controller.selectedDocumentType
+        }}
+      </div>
+      <div class="documents-control-group">
+        {{single-dropdown
+          isVisible=controller.proposalOutcomeDropdownVisible
+          action="handleProposalOutcomeSelection"
+          clearAction="handleProposalOutcomeDeselection"
+          title="Proposal outcome"
+          values=controllers.documentTags.proposalOutcomes
+          selection=controller.selectedProposalOutcome
+        }}
+      </div>
+      <div class="documents-control-group">
+        {{single-dropdown
+          isVisible=controller.reviewPhaseDropdownVisible
+          action="handleReviewPhaseSelection"
+          clearAction="handleReviewPhaseDeselection"
+          title="Review phase"
+          values=controllers.documentTags.reviewPhases
+          selection=controller.selectedReviewPhase
+        }}
+      </div>
+    </fieldset>
+    <div class="search-button-container">
+      <button {{action "openSearchPage"}}>Search</button>
+    </div>
+  </form>
 
-  <div style="clear:both"></div>
-  {{single-dropdown
-    action="handleDocumentTypeSelection"
-    clearAction="handleDocumentTypeDeselection"
-    title="Document type"
-    values=controller.filteredDocumentTypes
-    selection=controller.selectedDocumentType
-  }}
-  {{single-dropdown
-    isVisible=controller.proposalOutcomeDropdownVisible
-    action="handleProposalOutcomeSelection"
-    clearAction="handleProposalOutcomeDeselection"
-    title="Proposal outcome"
-    values=controllers.documentTags.proposalOutcomes
-    selection=controller.selectedProposalOutcome
-  }}
-  {{single-dropdown
-    isVisible=controller.reviewPhaseDropdownVisible
-    action="handleReviewPhaseSelection"
-    clearAction="handleReviewPhaseDeselection"
-    title="Review phase"
-    values=controllers.documentTags.reviewPhases
-    selection=controller.selectedReviewPhase
-  }}
-
-
-  <div style="clear:both"></div>
-
-  <div class="search-button-container">
-    <button {{action "openSearchPage"}}>Search</button>
-  </div>
 </div>

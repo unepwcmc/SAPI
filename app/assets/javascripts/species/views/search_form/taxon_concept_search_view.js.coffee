@@ -1,5 +1,6 @@
 Species.TaxonConceptSearchView = Em.View.extend
   templateName: 'species/taxon_concept_search'
+  classNames: ['text-input-wrapper']
   
   mousedOver: false
 
