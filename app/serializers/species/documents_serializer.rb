@@ -1,5 +1,5 @@
 class Species::DocumentsSerializer < ActiveModel::Serializer
-  attributes :event_type, :event_name, :date, :is_public,
+  attributes :event_type, :event_name, {date_formatted: :date}, :is_public,
     :document_type, :number,
     :primary_document_id, :taxon_names, :geo_entity_names,
     :taxon_names, :geo_entity_names, :extension,
