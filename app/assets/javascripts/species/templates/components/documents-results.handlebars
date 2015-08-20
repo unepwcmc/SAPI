@@ -43,20 +43,7 @@
             </thead>
             <tbody>
               {{#each doc in documents}}
-                <tr data-document-id="{{unbound doc.id}}">
-                  <td class="event-col">{{unbound doc.event_name}}</td>
-                  <td class='event-date-col'>{{unbound doc.date}}</td>
-                  <td class='title-col'>
-                    <a class="legal-links" href="/api/v1/documents/{{unbound doc.id}}">{{unbound doc.title}}</a>
-                    [{{unbound doc.extension}}]
-                  </td>
-                  <td class='language-col'>{{unbound doc.language}}</td>
-                  <td class='countries-col has-tooltip'>{{documents-tooltip data=doc.geo_entity_names type='countries'}}</td>
-                  <td class='taxon-col has-tooltip'>{{documents-tooltip data=doc.taxon_names type='taxa'}}</td>
-                  <td class='download-col'>
-                    <input type="checkbox">
-                  </td>
-                </tr>
+                {{document-result doc=doc}}
               {{/each}}
             </tbody>
           </table>

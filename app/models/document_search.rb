@@ -118,8 +118,8 @@ class DocumentSearch
   end
 
   def select_and_group_query
-    columns = "id, event_name, event_type, date, is_public, document_type,
-      number, sort_index, primary_document_id,
+    columns = "event_name, event_type, date, is_public, document_type,
+      number, primary_document_id,
       geo_entity_names, taxon_names, extension"
     aggregators = <<-SQL
       ARRAY_TO_JSON(
@@ -127,11 +127,7 @@ class DocumentSearch
           ROW(
             documents.id,
             documents.title,
-            CASE
-              WHEN language IS NULL
-              THEN 'English'
-              ELSE language
-          END
+            documents.language
           )::document_language_version
         )
       ) AS document_language_versions
