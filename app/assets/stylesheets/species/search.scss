@@ -36,6 +36,8 @@
     padding: 20px 60px 20px;
   }
 
+  .search-options-toggle {display: none}
+
   .links-area {
     float: left;
     line-height: 30px;
@@ -303,6 +305,12 @@
 .inner .search-block .search { width: 469px; }
 .inner .search-block .search-form {
   padding: 10px 15px 13px 15px;
+}
+.inner .search-block {
+  .search-options-toggle {display: block}
+}
+.inner .search-block .search-form.documents {
+  display: none;
 }
 .inner .search-block .search input[type="text"] { width: 353px; }
 
