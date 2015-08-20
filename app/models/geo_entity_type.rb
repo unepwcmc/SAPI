@@ -20,7 +20,8 @@ class GeoEntityType < ActiveRecord::Base
     "1" => [CITES_REGION],
     "2" => [COUNTRY, TERRITORY],
     "3" => [CITES_REGION, COUNTRY, TERRITORY],
-    "4" => [COUNTRY, TERRITORY, TRADE_ENTITY]
+    "4" => [COUNTRY, TERRITORY, TRADE_ENTITY],
+    "5" => [COUNTRY, TERRITORY] # E-library
   }
   CURRENT_ONLY_SETS = ['1', '2', '3']
 end

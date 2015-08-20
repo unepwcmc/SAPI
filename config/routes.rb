@@ -30,6 +30,8 @@ SAPI::Application.routes.draw do
           get 'download_zip'
         end
       end
+      resources :events, only: [:index]
+      resources :document_tags, only: [:index]
       match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
     end
     resources :languages, :only => [:index]

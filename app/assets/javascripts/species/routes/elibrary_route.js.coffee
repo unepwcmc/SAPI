@@ -1,7 +1,10 @@
-Species.ElibraryRoute = Ember.Route.extend Species.GeoEntityLoader,
+Species.ElibraryRoute = Ember.Route.extend Species.GeoEntityLoader, Species.EventLoader,
+  Species.DocumentTagLoader,
 
   beforeModel: () ->
     @ensureGeoEntitiesLoaded(@controllerFor('elibrarySearch'))
+    @ensureEventsLoaded(@controllerFor('elibrarySearch'))
+    @ensureDocumentTagsLoaded(@controllerFor('elibrarySearch'))
 
   renderTemplate: ->
     # Render the `index` template into

@@ -1,7 +1,12 @@
-Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Species.SearchContext, Species.TaxonConceptAutoCompleteLookup, Species.GeoEntityAutoCompleteLookup,
-  needs: ['geoEntities', 'taxonConcepts']
+Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Species.SearchContext,
+  Species.TaxonConceptAutoCompleteLookup,
+  Species.GeoEntityAutoCompleteLookup,
+  Species.EventLookup,
+  Species.DocumentTagLookup,
+  needs: ['geoEntities', 'taxonConcepts', 'events', 'documentTags']
   searchContext: 'documents'
   autoCompleteTaxonConcept: null
+  selectedEventType: null
 
   setFilters: (filtersHash) ->
     if filtersHash.taxon_concept_query == ''
@@ -12,6 +17,20 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     if filtersHash.title_query == ''
       filtersHash.title_query = null
     @set('titleQuery', filtersHash.title_query)
+    @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
+    @set('selectedEventId', filtersHash.event_id)
+    @set('selectedDocumentType', @get('controllers.events.documentTypes').findBy('id', filtersHash.document_type))
+    @set('selectedProposalOutcomeId', filtersHash.proposal_outcome_id)
+    @set('selectedReviewPhaseId', filtersHash.review_phase_id)
+
+  filteredDocumentTypes: ( ->
+    if @get('selectedEventType')
+      @get('controllers.events.documentTypes').filter (dt) =>
+        return false unless dt.eventTypes
+        dt.eventTypes.indexOf(@get('selectedEventType.id')) >= 0
+    else
+      @get('controllers.events.documentTypes')
+  ).property('selectedEventType.id')
 
   actions:
     openSearchPage:->
@@ -22,8 +41,19 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       @transitionToRoute('documents', {queryParams: {
         taxon_concept_query: query,
         geo_entities_ids: @get('selectedGeoEntities').mapProperty('id'),
-        title_query: @get('titleQuery')
+        title_query: @get('titleQuery'),
+        event_type: @get('selectedEventType.id'),
+        event_id: @get('selectedEvent.id'),
+        document_type: @get('selectedDocumentType.id'),
+        proposal_outcome_id: @get('selectedProposalOutcome.id'),
+        review_phase_id: @get('selectedReviewPhase.id')
       }})
+
+    handleDocumentTypeSelection: (documentType) ->
+      @set('selectedDocumentType', documentType)
+
+    handleDocumentTypeDeselection: (documentType) ->
+      @set('selectedDocumentType', null)
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)

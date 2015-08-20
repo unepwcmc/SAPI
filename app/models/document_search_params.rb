@@ -14,9 +14,10 @@ class DocumentSearchParams < Hash
       document_date_end: (Date.parse(params['document_date_end']) rescue nil),
       taxon_concepts_ids: sanitise_integer_array(params['taxon_concepts_ids']),
       geo_entities_ids: sanitise_integer_array(params['geo_entities_ids']),
-      proposal_outcome_ids: sanitise_integer_array(params['proposal_outcome_ids']),
-      review_phase_ids: sanitise_integer_array(params['review_phase_ids']),
-      document_tags_ids: sanitise_integer_array(params['document_tags_ids']),
+      document_tags_ids: sanitise_integer_array(params['document_tags_ids']) + [
+        sanitise_positive_integer(params['proposal_outcome_id']),
+        sanitise_positive_integer(params['review_phase_id'])
+      ].compact,
       page: sanitise_positive_integer(params[:page], 1),
       per_page: sanitise_positive_integer(params[:per_page], 25)
     }

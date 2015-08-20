@@ -69,7 +69,7 @@ puts "#{Taxonomy.delete_all} taxonomies deleted"
 puts "#{DocumentTag.delete_all} document tags deleted"
 
 [
- "All Phases", "I", "II", "III", "IV", "June 1986", "None",
+ "I", "II", "III", "IV", "June 1986", "None",
  "Post-CoP11", "Post-CoP12", "Post-CoP13"
 ].each { |tag| DocumentTag::ReviewPhase.create(name: tag) }
 
@@ -82,7 +82,7 @@ puts "#{DocumentTag.delete_all} document tags deleted"
 ].each {|tag| DocumentTag::ProcessStage.create(name: tag) }
 
 [
- "All Outcomes", "Accepted", "Cancelled", "Deferred",
+ "Accepted", "Cancelled", "Deferred",
  "Redundant", "Rejected", "Transferred to other proposals",
  "Withdrawn", "Accepted as amended", "Rejected as amended",
  "Adopted"

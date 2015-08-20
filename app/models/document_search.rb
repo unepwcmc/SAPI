@@ -55,19 +55,16 @@ class DocumentSearch
     @query = Document.from("#{table_name} documents")
     add_conditions_for_event
     add_conditions_for_document
-    add_proposal_outcome_condition if @proposal_outcome_ids.present?
-    add_review_phase_condition if @review_phase_ids.present?
     add_extra_conditions
     add_ordering if admin_interface?
   end
 
   def add_conditions_for_event
     return unless @event_id || @event_type
-    @query = @query.joins('LEFT JOIN events ON events.id = documents.event_id')
     if @event_id.present?
       @query = @query.where(event_id: @event_id)
     elsif @event_type.present?
-      @query = @query.where('events.type' => @event_type)
+      @query = @query.where(event_type: @event_type)
     end
   end
 
@@ -75,7 +72,11 @@ class DocumentSearch
     @query = @query.search_by_title(@title_query) if @title_query.present?
 
     if @document_type.present?
-      @query = @query.where('documents.type' => @document_type)
+      @query = if admin_interface?
+        @query.where('documents.type' => @document_type)
+      else
+        @query.where('document_type' => @document_type)
+      end
     end
 
     if admin_interface?
@@ -106,14 +107,6 @@ class DocumentSearch
     @query = @query.where("document_tags_ids && ARRAY[#{@document_tags_ids.join(',')}]")
   end
 
-  def add_proposal_outcome_condition
-    @query = @query.where("proposal_outcome_ids && ARRAY[#{@proposal_outcome_ids.join(',')}]")
-  end
-
-  def add_review_phase_condition
-    @query = @query.where("review_phase_ids && ARRAY[#{@review_phase_ids.join(',')}]")
-  end
-
   def add_ordering
     return if @title_query.present?
 
@@ -126,8 +119,8 @@ class DocumentSearch
 
   def select_and_group_query
     columns = "id, event_name, event_type, date, is_public, document_type,
-      number, sort_index, primary_document_id, proposal_outcome_ids,
-      review_phase_ids, geo_entity_names, taxon_names"
+      number, sort_index, primary_document_id,
+      geo_entity_names, taxon_names, extension"
     aggregators = <<-SQL
       ARRAY_TO_JSON(
         ARRAY_AGG_NOTNULL(
