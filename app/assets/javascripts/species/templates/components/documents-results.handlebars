@@ -11,6 +11,12 @@
             <th class="language-col">LANG</th>
             <th class="countries-col">COUNTRIES</th>
             <th class="taxon-col">TAXA</th>
+            {{#if proposalOutcome}}
+              <th>OUTCOME</th>
+            {{/if}}
+            {{#if reviewPhase}}
+              <th>PHASE</th>
+            {{/if}}
             <th class="download-col">
               <a href='#'>
                 {{batch-download}}
@@ -30,12 +36,18 @@
             <th class="language-col"></th>
             <th class="countries-col"></th>
             <th class="taxon-col"></th>
+            {{#if proposalOutcome}}
+              <th></th>
+            {{/if}}
+            {{#if reviewPhase}}
+              <th></th>
+            {{/if}}
             <th class="download-col"></th>
           </tr>
         </thead>
         <tbody>
           {{#each doc in documents}}
-            {{document-result doc=doc}}
+            {{document-result doc=doc proposalOutcome=proposalOutcome reviewPhase=reviewPhase}}
           {{/each}}
         </tbody>
       </table>

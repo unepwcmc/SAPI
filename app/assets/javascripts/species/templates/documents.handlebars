@@ -23,19 +23,19 @@
           <td>CITES CoP</td>
           <td>{{content.cites_cop_docs.length}}</td>
         </tr>
-        {{documents-results documents=content.cites_cop_docs}}
+        {{documents-results documents=content.cites_cop_docs proposalOutcome=true}}
         <tr class="group">
           <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
           <td>CITES Animals Committee</td>
           <td>{{content.cites_ac_docs.length}}</td>
         </tr>
-        {{documents-results documents=content.cites_ac_docs}}
+        {{documents-results documents=content.cites_ac_docs reviewPhase=true}}
         <tr class="group">
           <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
           <td>CITES Plants Committee</td>
           <td>{{content.cites_pc_docs.length}}</td>
         </tr>
-        {{documents-results documents=content.cites_pc_docs}}
+        {{documents-results documents=content.cites_pc_docs reviewPhase=true}}
         <tr class="group">
           <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
           <td>Other</td>
