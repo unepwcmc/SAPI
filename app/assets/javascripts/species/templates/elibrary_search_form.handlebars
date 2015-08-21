@@ -1,6 +1,10 @@
-<a class="search-options-toggle" {{action toggleSearchOptions target=view}}>
-  <i class="fa fa-plus-circle"></i>Show search options
-</a>
+<strong class="documents-search-results-header">Search Results</strong>
+<p class="search-options-toggle">
+  <i class="fa fa-plus-circle"></i>
+  <span {{action toggleSearchOptions target=view}}>
+    Show search options
+  </span>
+</p>
 <div class="search-form documents">
 
   <p class="search-info">
@@ -27,6 +31,7 @@
           {{view Species.GeoEntitiesSearchButton
             selectedGeoEntitiesBinding="controller.selectedGeoEntities"
             loadedBinding="controllers.geoEntities.loaded"
+            shortPlaceholder=false
           }}
           {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
         </div>
@@ -37,6 +42,7 @@
           action="handleEventTypeSelection"
           clearAction="handleEventTypeDeselection"
           title="Meeting type"
+          placeholder="All meeting types"
           values=controllers.events.eventTypes
           selection=controller.selectedEventType
         }}
@@ -48,6 +54,7 @@
           action="handleEventSelection"
           clearAction="handleEventDeselection"
           title="Meeting"
+          placeholder="All meetings"
           values=controller.filteredEvents
           selection=controller.selectedEvent
         }}
@@ -57,6 +64,7 @@
           action="handleDocumentTypeSelection"
           clearAction="handleDocumentTypeDeselection"
           title="Document type"
+          placeholder="All document types"
           values=controller.filteredDocumentTypes
           selection=controller.selectedDocumentType
         }}
@@ -67,6 +75,7 @@
           action="handleProposalOutcomeSelection"
           clearAction="handleProposalOutcomeDeselection"
           title="Proposal outcome"
+          placeholder="All outcomes"
           values=controllers.documentTags.proposalOutcomes
           selection=controller.selectedProposalOutcome
         }}
@@ -77,6 +86,7 @@
           action="handleReviewPhaseSelection"
           clearAction="handleReviewPhaseDeselection"
           title="Review phase"
+          placeholder="All phases"
           values=controllers.documentTags.reviewPhases
           selection=controller.selectedReviewPhase
         }}

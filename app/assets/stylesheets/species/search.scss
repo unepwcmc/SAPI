@@ -36,7 +36,10 @@
     padding: 20px 60px 20px;
   }
 
-  .search-options-toggle {display: none}
+  .search-options-toggle {
+    display: none;
+    color: #2d3237;
+  }
 
   .links-area {
     float: left;
@@ -95,7 +98,7 @@
         text-transform: none;
         display: block;
         height: 20px;
-        padding: 0;
+        padding: 10px 0;
       }
       .popup-area: {
         margin: 10px 0;
@@ -115,7 +118,7 @@
       .popup-holder01 {
         display: none;
         left: 75px;
-        top: 50px;
+        top: 70px;
       }
     }
     .popup-area:hover {
@@ -378,4 +381,11 @@
 
 html.lt-ie9 .search-block .search-form {
   width: 490px;
+}
+
+.documents-search-results-header {
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 30px;
+  color: #2d3237;
 }
