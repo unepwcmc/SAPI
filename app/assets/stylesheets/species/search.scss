@@ -90,6 +90,7 @@
 
     .documents-control-group {
       clear:both;
+      padding: 0 8px;
       label {
         text-transform: none;
         display: block;
@@ -123,7 +124,7 @@
 
     .search-button-container {
       padding: 20px 0;
-      margin: 15px;
+      margin: 15px 0;
       clear: both;
       @include blue-search-button;
     }
@@ -131,7 +132,7 @@
     .search-info {
       background: #97b6c9;
       padding: 15px;
-      margin: 15px;
+      margin: 15px 0;
     }
 
     label {
@@ -302,7 +303,7 @@
 }
 .inner .search-block.search-results.documents .search { width: auto; }
 
-.inner .search-block .search { width: 469px; }
+.inner .search-block .search-form.species .search { width: 469px; }
 .inner .search-block .search-form {
   padding: 10px 15px 13px 15px;
 }
@@ -320,13 +321,13 @@
 .inner .search-block.add .search input[type="text"] { width: 395px; }
 
 /* When in search results page, need more room to fit the total results */
-.search-block.search-results .search-form {
+.search-block.search-results .search-form.species {
   width: 420px;
 }
-.inner .search-block.search-results .search {
+.inner .search-block.search-results .search-form.species .search {
   width: 410px;
 }
-.inner .search-block.search-results .search input[type="text"] {
+.inner .search-block.search-results .search-form.species .search input[type="text"] {
   width: 295px;
 }
 
