@@ -8,16 +8,40 @@
         <tr>
           <th></th>
           <th>MEETING TYPE</th>
-          <th>DOCUMENT TYPE</th>
           <th>No of DOCUMENTS<th>
         </tr>
       </thead>
       <tbody>
-        {{documents-results documents=content.cites_cop_docs event='CITES CoP'}}
-        {{documents-results documents=content.ec_srg_docs event='EcSrg'}}
-        {{documents-results documents=content.cites_ac_docs event='CITES Animals Committee'}}
-        {{documents-results documents=content.cites_pc_docs event='CITES Plants Committee'}}
-        {{documents-results documents=content.other_docs event='Other'}}
+        <tr class="group">
+          <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
+          <td>EC SRG</td>
+          <td>{{content.ec_srg_docs.length}}</td>
+        </tr>
+        {{documents-results documents=content.ec_srg_docs}}
+        <tr class="group">
+          <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
+          <td>CITES CoP</td>
+          <td>{{content.cites_cop_docs.length}}</td>
+        </tr>
+        {{documents-results documents=content.cites_cop_docs}}
+        <tr class="group">
+          <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
+          <td>CITES Animals Committee</td>
+          <td>{{content.cites_ac_docs.length}}</td>
+        </tr>
+        {{documents-results documents=content.cites_ac_docs}}
+        <tr class="group">
+          <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
+          <td>CITES Plants Committee</td>
+          <td>{{content.cites_pc_docs.length}}</td>
+        </tr>
+        {{documents-results documents=content.cites_pc_docs}}
+        <tr class="group">
+          <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
+          <td>Other</td>
+          <td>{{content.other_docs.length}}</td>
+        </tr>
+        {{documents-results documents=content.other_docs}}
       </tbody>
     </table>
   </div>

@@ -1,54 +1,48 @@
-<tr class="group">
-  <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
-  <td>{{event}}</td>
-  <td>DocumentType</td>
-  <td>{{documents.length}}</td>
-</tr>
 {{#if documents.length}}
-  <tr class="table-row">
-    <td colspan="4">
-      <div class="inner-table-container">
-        <div class="header-container">
-          <table class="table-header">
-            <thead>
-              <tr>
-                {{sortable-column column_name="MEETING" class="event-col"}}
-                {{sortable-column column_name="DATE" class="event-date-col"}}</th>
-                {{sortable-column column_name="TITLE" class="title-col"}}
-                <th class="language-col">LANG</th>
-                <th class="countries-col">COUNTRIES</th>
-                <th class="taxon-col">TAXA</th>
-                <th class="download-col">
-                  <a href='#'>
-                    {{batch-download}}
-                  </a>
-                  {{download-checkbox}}
-                </th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-        <div class="body-container">
-          <table class="table-body">
-            <thead>
-              <tr>
-                <th class="event-col"></th>
-                <th class="event-date-col"></th>
-                <th class="title-col"></th>
-                <th class="language-col"></th>
-                <th class="countries-col"></th>
-                <th class="taxon-col"></th>
-                <th class="download-col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {{#each doc in documents}}
-                {{document-result doc=doc}}
-              {{/each}}
-            </tbody>
-          </table>
-        </div>
+  <td colspan="3">
+    <div class="inner-table-container">
+      <div class="header-container">
+        <table class="table-header">
+          <thead>
+            <tr>
+              {{sortable-column column_name="MEETING" class="event-col"}}
+              {{sortable-column column_name="DATE" class="event-date-col"}}</th>
+              {{sortable-column column_name="TITLE" class="title-col"}}
+              <th class="language-col">LANG</th>
+              <th class="countries-col">COUNTRIES</th>
+              <th class="taxon-col">TAXA</th>
+              <th class="download-col">
+                <a href='#'>
+                  {{batch-download}}
+                </a>
+                {{download-checkbox}}
+              </th>
+            </tr>
+          </thead>
+        </table>
       </div>
-    </td>
-  </tr>
+      <div class="body-container">
+        <table class="table-body">
+          <thead>
+            <tr>
+              <th class="event-col"></th>
+              <th class="event-date-col"></th>
+              <th class="title-col"></th>
+              <th class="language-col"></th>
+              <th class="countries-col"></th>
+              <th class="taxon-col"></th>
+              <th class="download-col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each doc in documents}}
+              {{document-result doc=doc}}
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </td>
+{{else}}
+  <td colspan="3"><span>No data available</span></td>
 {{/if}}
