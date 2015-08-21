@@ -315,10 +315,10 @@
 }
 .inner .search-block .search input[type="text"] { width: 353px; }
 
-.inner .search-block.add .search-form { width: 522px; }
+.inner .search-block.add .search-form.species { width: 522px; }
 
-.inner .search-block.add .search { width: 509px; }
-.inner .search-block.add .search input[type="text"] { width: 395px; }
+.inner .search-block.add .search-form.species .search { width: 509px; }
+.inner .search-block.add .search-form.species .search input[type="text"] { width: 395px; }
 
 /* When in search results page, need more room to fit the total results */
 .search-block.search-results .search-form.species {

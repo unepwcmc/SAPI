@@ -1,54 +1,18 @@
-div#documents {
-  table.documents-table {
-    margin-bottom: 50px;
-    thead {
-      tr.documents-head{
-        td {
-          padding: 10px 0;
-          border: none;
-        }
-      }
-    }
-    tbody {
-      tr.document-row{
-        border: 1px #DFE1E2;
-        border-style: solid none;
-        td { padding: 10px 0; border-top: none;}
-        td.event-name { width: 50px; }
-        td.event-date { width: 80px; }
-        td.event-type { width: 50px; }
-        td.document-title { width: 100px; }
-      }
-    }
-  }
-}
-
-#documents {
-  .grouped-results-table {
-    tr.table-row {
-      display: block;
-      div.inner-table-container {
-        display: block;
-      }
-    }
-  }
-}
-
-  .grouped-results-table {
+table.grouped-results-table {
     width: 100%;
     thead.grouped-header {
       th { font-weight: bold; }
     }
+    tr {background: none;}
     tbody {
       &:before {
-        content: "-";
         display: block;
         line-height: 1em;
         color: transparent;
       }
       tr{
         td{
-          padding: 10px 0;
+          padding: 10px 1px;
           vertical-align: middle;
           i {
             font-size: 48px;
@@ -69,22 +33,21 @@ div#documents {
         div.inner-table-container {
           display: none;
           i { font-size: 12px; }
-          div.header-container {
-            position: relative;
+
+          table.table-header {
             width: 100%;
-            table {
-              th.event-col, th.event-date-col, th.title-col {
-                ul {
-                  display: inline-block;
-                  vertical-align: middle;
-                  line-height: 0;
-                  i.fa-caret-up { line-height: 0; }
-                }
+            th.event-col, th.event-date-col, th.title-col {
+              ul {
+                display: inline-block;
+                vertical-align: middle;
+                line-height: 0;
+                i.fa-caret-up { line-height: 0; }
               }
             }
           }
-          div.body-container {
-            overflow-y: scroll;
+
+          table.table-body {
+            overflow-y: auto;
             min-height: 100px;
             max-height: 400px;
             width: 100%;
@@ -102,6 +65,10 @@ div#documents {
             width: 908px;
             clear: both;
             table-layout: fixed; //not always necessary
+            td { cell-spacing: 2px; }
+            td:first-child, th:first-child {
+              padding-left: 20px;
+            }
             td { word-wrap: break-word } //not always necessary
             th.event-col { max-width: 100px; }
             th.event-date-col { max-width: 112px; }
@@ -141,3 +108,26 @@ div#documents {
       }
     }
   }
+
+#documents {
+  .grouped-results-table {
+    tr {
+      background: none;
+    }
+    tr.table-row {
+      display: block;
+      div.inner-table-container {
+        display: block;
+      }
+    }
+    th {
+      border-bottom: none;
+      color: none;
+      padding: 0;
+    }
+    td {
+      border-top: none;
+    }
+    table.table-body { margin-top: 10px; }
+  }
+}

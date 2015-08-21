@@ -1,48 +1,47 @@
 {{#if documents.length}}
   <td colspan="3">
     <div class="inner-table-container">
-      <div class="header-container">
-        <table class="table-header">
-          <thead>
-            <tr>
-              {{sortable-column column_name="MEETING" class="event-col"}}
-              {{sortable-column column_name="DATE" class="event-date-col"}}</th>
-              {{sortable-column column_name="TITLE" class="title-col"}}
-              <th class="language-col">LANG</th>
-              <th class="countries-col">COUNTRIES</th>
-              <th class="taxon-col">TAXA</th>
-              <th class="download-col">
-                <a href='#'>
-                  {{batch-download}}
-                </a>
-                {{download-checkbox}}
-              </th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-      <div class="body-container">
-        <table class="table-body">
-          <thead>
-            <tr>
-              <th class="event-col"></th>
-              <th class="event-date-col"></th>
-              <th class="title-col"></th>
-              <th class="language-col"></th>
-              <th class="countries-col"></th>
-              <th class="taxon-col"></th>
-              <th class="download-col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each doc in documents}}
-              {{document-result doc=doc}}
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
+
+      <table class="table-header">
+        <thead>
+          <tr>
+            {{sortable-column column_name="MEETING" class="event-col"}}
+            {{sortable-column column_name="DATE" class="event-date-col"}}</th>
+            {{sortable-column column_name="TITLE" class="title-col"}}
+            <th class="language-col">LANG</th>
+            <th class="countries-col">COUNTRIES</th>
+            <th class="taxon-col">TAXA</th>
+            <th class="download-col">
+              <a href='#'>
+                {{batch-download}}
+              </a>
+              {{download-checkbox}}
+            </th>
+          </tr>
+        </thead>
+      </table>
+
+      <table class="table-body">
+        <thead>
+          <tr>
+            <th class="event-col"></th>
+            <th class="event-date-col"></th>
+            <th class="title-col"></th>
+            <th class="language-col"></th>
+            <th class="countries-col"></th>
+            <th class="taxon-col"></th>
+            <th class="download-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each doc in documents}}
+            {{document-result doc=doc}}
+          {{/each}}
+        </tbody>
+      </table>
+
     </div>
   </td>
 {{else}}
-  <td colspan="3"><span>No data available</span></td>
+  <td><div>No data available</div></td>
 {{/if}}
