@@ -47,26 +47,8 @@ ssh_options[:forward_agent] = true
 # and Apache configs. Should be unique on the Brightbox
 set :application, "sapi"
 
-
-# got sick of "gem X not found in any of the sources" when using the default whenever recipe
-# probable source of issue:
-# https://github.com/javan/whenever/commit/7ae1009c31deb03c5db4a68f5fc99ea099ce5655
-namespace :deploy do
-
-  task :default do
-    update
-    assets.precompile
-    restart
-    cleanup
-    # etc
-  end
-
-  desc "Restarting mod_rails with restart.txt"
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    run "touch #{current_path}/tmp/restart.txt"
-  end
-
-end
+set :whenever_environment, defer { stage }
+require "whenever/capistrano"
 
 namespace :assets do
   desc "Precompile assets locally and then rsync to app servers"
