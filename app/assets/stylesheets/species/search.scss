@@ -36,6 +36,11 @@
     padding: 20px 60px 20px;
   }
 
+  .search-options-toggle {
+    display: none;
+    color: #2d3237;
+  }
+
   .links-area {
     float: left;
     line-height: 30px;
@@ -88,11 +93,12 @@
 
     .documents-control-group {
       clear:both;
+      padding: 0 8px;
       label {
         text-transform: none;
         display: block;
         height: 20px;
-        padding: 0;
+        padding: 10px 0;
       }
       .popup-area: {
         margin: 10px 0;
@@ -112,7 +118,7 @@
       .popup-holder01 {
         display: none;
         left: 75px;
-        top: 50px;
+        top: 70px;
       }
     }
     .popup-area:hover {
@@ -121,7 +127,7 @@
 
     .search-button-container {
       padding: 20px 0;
-      margin: 15px;
+      margin: 15px 0;
       clear: both;
       @include blue-search-button;
     }
@@ -129,7 +135,7 @@
     .search-info {
       background: #97b6c9;
       padding: 15px;
-      margin: 15px;
+      margin: 15px 0;
     }
 
     label {
@@ -300,25 +306,31 @@
 }
 .inner .search-block.search-results.documents .search { width: auto; }
 
-.inner .search-block .search { width: 469px; }
+.inner .search-block .search-form.species .search { width: 469px; }
 .inner .search-block .search-form {
   padding: 10px 15px 13px 15px;
 }
+.inner .search-block {
+  .search-options-toggle {display: block}
+}
+.inner .search-block .search-form.documents {
+  display: none;
+}
 .inner .search-block .search input[type="text"] { width: 353px; }
 
-.inner .search-block.add .search-form { width: 522px; }
+.inner .search-block.add .search-form.species { width: 522px; }
 
-.inner .search-block.add .search { width: 509px; }
-.inner .search-block.add .search input[type="text"] { width: 395px; }
+.inner .search-block.add .search-form.species .search { width: 509px; }
+.inner .search-block.add .search-form.species .search input[type="text"] { width: 395px; }
 
 /* When in search results page, need more room to fit the total results */
-.search-block.search-results .search-form {
+.search-block.search-results .search-form.species {
   width: 420px;
 }
-.inner .search-block.search-results .search {
+.inner .search-block.search-results .search-form.species .search {
   width: 410px;
 }
-.inner .search-block.search-results .search input[type="text"] {
+.inner .search-block.search-results .search-form.species .search input[type="text"] {
   width: 295px;
 }
 
@@ -369,4 +381,11 @@
 
 html.lt-ie9 .search-block .search-form {
   width: 490px;
+}
+
+.documents-search-results-header {
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 30px;
+  color: #2d3237;
 }

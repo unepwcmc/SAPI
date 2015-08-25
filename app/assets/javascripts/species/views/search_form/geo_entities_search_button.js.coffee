@@ -3,6 +3,7 @@ Species.GeoEntitiesSearchButton = Ember.View.extend
   href: '#'
   classNames: ['link']
   classNameBindings: ['loading']
+  shortPlaceholder: true
 
   loading: ( ->
     "loading" unless @get('loaded')
@@ -11,11 +12,21 @@ Species.GeoEntitiesSearchButton = Ember.View.extend
   template: Ember.Handlebars.compile("{{view.summary}}"),
 
   summary: ( ->
+    short = (@get('shortPlaceholder') == true)
     if (@get('selectedGeoEntities').length == 0)
-      return "LOCATIONS"
+      if short
+        "LOCATIONS"
+      else
+        "All locations"
     else if (@get('selectedGeoEntities').length == 1)
-      return "1 LOC"
+      if short
+        "1 LOC"
+      else
+       "1 location"
     else
-      return @get('selectedGeoEntities').length + " LOCS"
+      if short
+        @get('selectedGeoEntities').length + " LOCS"
+      else
+        @get('selectedGeoEntities').length + " locations"
   ).property("selectedGeoEntities.@each")
     

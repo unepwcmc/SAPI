@@ -1,7 +1,7 @@
 Species.ElibraryRoute = Ember.Route.extend Species.GeoEntityLoader, Species.EventLoader,
   Species.DocumentTagLoader,
 
-  beforeModel: () ->
+  beforeModel: (queryParams, transition) ->
     @ensureGeoEntitiesLoaded(@controllerFor('elibrarySearch'))
     @ensureEventsLoaded(@controllerFor('elibrarySearch'))
     @ensureDocumentTagsLoaded(@controllerFor('elibrarySearch'))

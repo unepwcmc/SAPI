@@ -34,14 +34,15 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
 
   actions:
     openSearchPage:->
-      if @get('autoCompleteTaxonConcept') && @get('autoCompleteTaxonConcept.fullName') == @get('taxonConceptQueryForDisplay')
-        query = @get('autoCompleteTaxonConcept.fullName')
-      else
-        query = @get('taxonConceptQueryForDisplay')
+      if @get('taxonConceptQueryForDisplay') && @get('taxonConceptQueryForDisplay').length > 0
+        taxonConceptQuery = @get('taxonConceptQueryForDisplay')
+      if @get('titleQuery') && @get('titleQuery').length > 0
+        titleQuery = @get('titleQuery')
+
       @transitionToRoute('documents', {queryParams: {
-        taxon_concept_query: query,
+        taxon_concept_query: taxonConceptQuery,
         geo_entities_ids: @get('selectedGeoEntities').mapProperty('id'),
-        title_query: @get('titleQuery'),
+        title_query: titleQuery,
         event_type: @get('selectedEventType.id'),
         event_id: @get('selectedEvent.id'),
         document_type: @get('selectedDocumentType.id'),
