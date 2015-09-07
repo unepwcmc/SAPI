@@ -20,7 +20,11 @@ class Species::ExportsController < ApplicationController
     respond_to do |format|
       format.html {
         if result.is_a?(Array)
-          send_file Pathname.new(result[0]).realpath, result[1]
+          # this was added in order to prevent download managers from
+          # failing when chunked_transfer_encoding is set in nginx (1.8.1)
+          file_path = Pathname.new(result[0]).realpath
+          response.headers['Content-Length'] = File.size(file_path).to_s
+          send_file file_path, result[1]
         else
           redirect_to species_exports_path, :notice => "There are no #{params[:data_type]} to download."
         end
