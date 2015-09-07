@@ -1,7 +1,7 @@
 set :stage, :production
 set :branch, "LinodeCap3Deploy"
 
-server "sapi-production.linode.unep-wcmc.org", roles: %w{app web db}
+server "sapi-production.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
 
 set :domain, "sapi-production.linode.unep-wcmc.org"
 
