@@ -3,14 +3,15 @@ namespace :config do
    ask(:db_user, 'db_user')
    ask(:db_pass, 'db_pass')
    ask(:db_name, 'db_name')
-   ask(:db_host, 'db_host')
+#   ask(:db_host, 'db_host')
 setup_config = <<-EOF
 #{fetch(:rails_env)}:
   adapter: postgresql
   database: #{fetch(:db_name)}
   username: #{fetch(:db_user)}
   password: #{fetch(:db_pass)}
-  host: #{fetch(:db_host)}
+  socket: /var/run/postgresql/.s.PGSQL.5432
+#  host: #{fetch(:db_host)}
 EOF
   on roles(:app) do
      execute "mkdir -p #{shared_path}/config"
@@ -159,11 +160,11 @@ Model.new(:sapi_website_db, 'sapi_website_db') do
     db.password           = "#{fetch(:db_pass)}"
     db.host               = "#{fetch(:db_host)}"
     db.port               = 5432
-    db.socket             = "/tmp/pg.sock"
+    db.socket             = "/var/run/postgresql/"
     # When dumping all databases, `skip_tables` and `only_tables` are ignored.
-    db.skip_tables        = ["skip", "these", "tables"]
-    db.only_tables        = ["only", "these", "tables"]
-    db.additional_options = ["-xc", "-E=utf8"]
+    #db.skip_tables        = ["skip", "these", "tables"]
+    #db.only_tables        = ["only", "these", "tables"]
+    #db.additional_options = ["-xc", "-E=utf8"]
   end
   ##
   # Amazon Simple Storage Service [Storage]
@@ -206,7 +207,6 @@ Model.new(:sapi_website_db, 'sapi_website_db') do
     mail.encryption           = :starttls
   end
  end
-end
 EOF
 
     on roles(:db) do
@@ -319,13 +319,60 @@ namespace :config do
   desc "Update crontab with whenever"
   task :setup do
     on roles(:app, :db) do
-      execute "cd '#{fetch(:backup_path)}' && /bin/bash -l -c '/home/#{fetch(:deploy_user)}/.rvm/gems/ruby-2.1.3/bin/whenever --update-crontab'"
+      execute "cd '#{fetch(:backup_path)}' && /bin/bash -l -c '/home/#{fetch(:deploy_user)}/.rvm/gems/ruby-2.1.3/bin/whenever -f config/#{fetch(:application)}-schedule.rb --update-crontab'"
     end
   end
 end
 
-# Default value for :linked_files is []
-set :linked_files, fetch(:linked_files, []).push('config/database.yml config/mailer_config.yml')
 
-# Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
+
+namespace :config do
+  desc "Configure app specific nagios monitoring"
+  task :setup do
+    on roles(:app) do
+      execute "echo command[check_procs_redis]=/usr/lib/nagios/plugins/check_procs -c 1:3000 -C redis-server | sudo tee -a /etc/nagios/nrpe.cfg"
+      execute "echo command[check_sapi_sidekiq]=/usr/lib/nagios/plugins/check_file_exists #{shared_path}/tmp/pids/sidekiq.pid | sudo tee -a /etc/nagios/nrpe.cfg"
+      execute "echo command[restart-sapi-sidekiq]=/usr/lib/nagios/plugins/restart-sapi-sidekiq #{shared_path}/tmp/pids/sidekiq.pid | sudo tee -a /etc/nagios/nrpe.cfg"
+    end
+  end
+end
+
+
+
+
+namespace :config do
+  desc "Configure app specific event handler"
+  task :setup do
+  nagios_config = <<-EOF
+cd #{deploy_to}/current/ ; nohup bundle exec sidekiq -e production -C #{deploy_to}/current/config/sidekiq.yml -i 0 -P #{shared_path}/tmp/pids/sidekiq.pid >> #{deploy_to}/current/log/sidekiq.log 2>&1 &
+  EOF
+    on roles(:app) do
+    upload! StringIO.new(nagios_config), "/tmp/nagios_config"
+    execute "sudo mv /tmp/nagios_config /usr/lib/nagios/plugins/restart-sapi-sidekiq"
+    execute "chmod a+x /usr/lib/nagios/plugins/restart-sapi-sidekiq"
+    end
+  end
+end
+
+
+namespace :config do
+  desc "Configure logrotate"
+  task :setup do
+  logrotate_config = <<-EOF
+#{deploy_to}/current/log/*.log {
+  monthly
+  missingok
+  rotate 12
+  compress
+  delaycompress
+  notifempty
+  copytruncate
+}
+  EOF
+    on roles(:app) do
+    upload! StringIO.new(logrotate_config), "/tmp/logrotate_config"
+    execute "sudo mv /tmp/logrotate_config /etc/logrotate.d/#{fetch(:application)}-logs"
+   end
+  end
+end
+

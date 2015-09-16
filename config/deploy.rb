@@ -11,7 +11,7 @@ set :repo_url, 'git@github.com:unepwcmc/SAPI.git'
 set :deploy_user, 'wcmc'
 set :deploy_to, "/home/#{fetch(:deploy_user)}/#{fetch(:application)}"
 
-
+set :backup_path, "/home/#{fetch(:deploy_user)}/Backup"
 
 
 # Default value for :scm is :git
@@ -24,7 +24,6 @@ set :scm_username, "unepwcmc-read"
 
 set :rvm_type, :user
 set :rvm_ruby_version, '2.2.2'
-
 
 # Default value for :log_level is :debug
 # set :log_level, :debug

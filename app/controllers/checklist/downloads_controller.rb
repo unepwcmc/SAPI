@@ -40,8 +40,11 @@ class Checklist::DownloadsController < ApplicationController
     if @download.status == Download::COMPLETED
       # Update access time for cache cleaning purposes
       FileUtils.touch(@download.path)
-
-      send_file(Pathname.new(@download.path).realpath,
+      # this was added in order to prevent download managers from
+      # failing when chunked_transfer_encoding is set in nginx (1.8.1)
+      file_path = Pathname.new(@download.path).realpath
+      response.headers['Content-Length'] = File.size(file_path).to_s
+      send_file(file_path,
         :filename => @download.filename,
         :type => @download.format)
     else
@@ -72,7 +75,11 @@ class Checklist::DownloadsController < ApplicationController
 
   def send_download
     @download_path = @doc.generate
-    send_file(Pathname.new(@download_path).realpath,
+    # this was added in order to prevent download managers from
+    # failing when chunked_transfer_encoding is set in nginx (1.8.1)
+    file_path = Pathname.new(@download_path).realpath
+    response.headers['Content-Length'] = File.size(file_path).to_s
+    send_file(file_path,
       :filename => @doc.download_name,
       :type => @doc.ext)
   end
