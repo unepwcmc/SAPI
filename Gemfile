@@ -144,7 +144,6 @@ gem 'geoip'
 gem 'clerk'
 gem 'paper_trail', '~> 4.0.0.beta'
 
-
 gem 'rails-secrets'
 gem 'dotenv-rails'
 
