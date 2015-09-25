@@ -124,7 +124,6 @@ group :test do
   gem 'simplecov', :require => false
   gem 'coveralls', :require => false
   gem 'capybara'
-  gem 'test-unit', '~> 3.1'
 end
 
 gem 'rake', '~> 10.0.3'
@@ -143,3 +142,5 @@ gem 'geoip'
 #track who created or edited a given object
 gem 'clerk'
 gem 'paper_trail', '~> 4.0.0.beta'
+
+gem 'test-unit', '~> 3.1' # annoyingly, rails console won't start without it in staging / production
