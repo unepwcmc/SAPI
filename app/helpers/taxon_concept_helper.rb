@@ -8,27 +8,7 @@ module TaxonConceptHelper
         else
           controller_name.titleize
         end
-      ) + (content_tag(:div, :class => 'action-buttons') do
-        admin_add_new_taxon_concept_multi
-      end)
-    end
-  end
-
-  def admin_add_new_taxon_concept_multi
-    content_tag(:div, :class => 'btn-group', :style => 'float:right') do
-      link_to('<i class="icon-plus-sign"></i> Add new Taxon Concept'.html_safe, '#', :class => 'btn') +
-      link_to('<span class="caret"></span>'.html_safe, '#', :class => 'btn dropdown-toggle', :"data-toggle" => 'dropdown') +
-      content_tag(:ul, :class => 'dropdown-menu') do
-        content_tag(:li) do
-          link_to('Accepted name', '#new-taxon_concept', :"data-toggle" => 'modal')
-        end +
-        content_tag(:li) do
-          link_to('Synonym', '#new-taxon_concept_synonym', :"data-toggle" => 'modal')
-        end +
-        content_tag(:li) do
-          link_to('Hybrid', '#new-taxon_concept_hybrid', :"data-toggle" => 'modal')
-        end
-      end
+      )
     end
   end
 
