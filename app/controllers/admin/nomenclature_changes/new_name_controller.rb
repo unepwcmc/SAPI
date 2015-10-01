@@ -8,8 +8,10 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
     when :name_status
       builder.build_output
     when :parent
+      #for synonyms not setting the parent will lead to a failure of the new_full_name method for output
       set_new_name_taxonomy
-      skip_or_previous_step if @nomenclature_change.output.new_name_status != 'A'
+      #skip_or_previous_step if @nomenclature_change.output.new_name_status != 'A'
+      skip_or_previous_step unless ['A','N'].include?(@nomenclature_change.output.new_name_status)
     when :accepted_names
       set_new_name_taxonomy
       skip_or_previous_step if ['A','H','N'].include?(@nomenclature_change.output.new_name_status)
