@@ -34,7 +34,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
   track_who_does_it
   attr_accessible :nomenclature_change_id, :taxon_concept_id,
     :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
-    :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
+    :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id, :accepted_taxon_id,
     :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
     :parent_reassignments_attributes, :name_reassignments_attributes,
     :distribution_reassignments_attributes, :legislation_reassignments_attributes
@@ -67,6 +67,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :class_name => NomenclatureChange::ReassignmentTarget,
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy
   belongs_to :new_parent, :class_name => TaxonConcept, :foreign_key => :new_parent_id
+  belongs_to :accepted_taxon, :class_name => TaxonConcept, :foreign_key => :accepted_taxon_id
   belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id
   validates :nomenclature_change, :presence => true
   validates :new_scientific_name, :presence => true,
@@ -136,15 +137,23 @@ class NomenclatureChange::Output < ActiveRecord::Base
       TaxonConcept.new(
         taxon_concept_attrs.merge({
           :taxonomy_id => taxonomy.id,
-          :full_name => display_full_name
+          :full_name => display_full_name,
         })
-      )
+      ).tap{ |tc| add_synonym_relationship(tc, accepted_taxon_id) }
     elsif will_update_taxon?
       taxon_concept.assign_attributes(taxon_concept_attrs)
       taxon_concept
     else
       nil
     end
+  end
+
+  def add_synonym_relationship(tc, accepted_taxon_id)
+    tc.inverse_taxon_relationships.build(
+      :taxon_concept_id => accepted_taxon_id,
+      :taxon_relationship_type_id => TaxonRelationshipType.
+      find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
+    ) if accepted_taxon_id
   end
 
   def validate_tmp_taxon_concept
