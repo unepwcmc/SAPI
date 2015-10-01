@@ -4,19 +4,30 @@
   Assign hybrid parents
 </p>
 <%= nomenclature_change_form do |f| %>
-  <div class="control-group">
-    <%= f.fields_for :output do |ff| %>
-      <label class="control-label">Select hybrid parents:</label>
+  <%= f.fields_for :output do |ff| %>
+    <div class="control-group">
+      <label class="control-label">Select first hybrid parent:</label>
       <div class="controls">
-        <!-- Check how to assign hybrid parents -->
-        <%= ff.text_field :new_parent_id, {
-            :class => 'taxon-concept parent-taxon',
-            :'data-name' => ff.object.new_parent.try(:full_name),
-            :'data-name-status' => ff.object.new_parent.try(:name_status),
-            :'data-name-status-filter' => ['A'].to_json,
-            :'data-taxonomy-id' => @taxonomy.id
-          } %>
+        <%= ff.text_field :hybrid_parent_id, {
+          :class => 'taxon-concept',
+          :'data-name' => ff.object.new_parent.try(:full_name),
+          :'data-name-status' => ff.object.new_parent.try(:name_status),
+          :'data-name-status-filter' => ['A'].to_json,
+          :'data-taxonomy-id' => @taxonomy.id
+        } %>
       </div>
-    <% end %>
-  </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Select second hybrid parent:</label>
+      <div class="controls">
+        <%= ff.text_field :other_hybrid_parent_id, {
+          :class => 'taxon-concept',
+          :'data-name' => ff.object.new_parent.try(:full_name),
+          :'data-name-status' => ff.object.new_parent.try(:name_status),
+          :'data-name-status-filter' => ['A'].to_json,
+          :'data-taxonomy-id' => @taxonomy.id
+        } %>
+      </div>
+    </div>
+  <% end %>
 <% end %>
