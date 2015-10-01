@@ -47,6 +47,10 @@ class NomenclatureChange::NewName < NomenclatureChange
     end
   end
 
+  def new_output_parent
+    nil
+  end
+
   def parent_at_immediately_higher_rank
     return true if (output.new_parent.rank.name == 'KINGDOM' && output.new_parent.full_name == 'Plantae' && output.new_rank.name == 'ORDER')
     unless output.new_parent.rank.taxonomic_position >= output.new_rank.parent_rank_lower_bound &&
