@@ -37,7 +37,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id, :accepted_taxon_id,
     :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
     :parent_reassignments_attributes, :name_reassignments_attributes,
-    :distribution_reassignments_attributes, :legislation_reassignments_attributes
+    :distribution_reassignments_attributes, :legislation_reassignments_attributes, :hybrid_parent_id, :other_hybrid_parent_id
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
   belongs_to :parent, :class_name => TaxonConcept, :foreign_key => :parent_id
@@ -139,7 +139,11 @@ class NomenclatureChange::Output < ActiveRecord::Base
           :taxonomy_id => taxonomy.id,
           :full_name => display_full_name,
         })
-      ).tap{ |tc| add_synonym_relationship(tc, accepted_taxon_id) }
+      ).tap do |tc|
+        add_taxon_relationship(tc, accepted_taxon_id, "HAS_SYNONYM")
+        add_taxon_relationship(tc, hybrid_parent_id, "HAS_HYBRID")
+        add_taxon_relationship(tc, other_hybrid_parent_id, "HAS_HYBRID")
+      end
     elsif will_update_taxon?
       taxon_concept.assign_attributes(taxon_concept_attrs)
       taxon_concept
@@ -148,12 +152,12 @@ class NomenclatureChange::Output < ActiveRecord::Base
     end
   end
 
-  def add_synonym_relationship(tc, accepted_taxon_id)
+  def add_taxon_relationship(tc, other_taxon_id, rel_type)
     tc.inverse_taxon_relationships.build(
-      :taxon_concept_id => accepted_taxon_id,
+      :taxon_concept_id => other_taxon_id,
       :taxon_relationship_type_id => TaxonRelationshipType.
-      find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
-    ) if accepted_taxon_id
+      find_by_name(TaxonRelationshipType.const_get(rel_type)).id
+    ) if other_taxon_id
   end
 
   def validate_tmp_taxon_concept
