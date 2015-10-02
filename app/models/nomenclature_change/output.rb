@@ -31,10 +31,11 @@
 # Outputs may be new taxon concepts, created as a result of the nomenclature
 # change.
 class NomenclatureChange::Output < ActiveRecord::Base
+  include PgArrayParser
   track_who_does_it
   attr_accessible :nomenclature_change_id, :taxon_concept_id,
     :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
-    :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id, :accepted_taxon_id,
+    :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id, :accepted_taxon_ids,
     :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
     :parent_reassignments_attributes, :name_reassignments_attributes,
     :distribution_reassignments_attributes, :legislation_reassignments_attributes, :hybrid_parent_id, :other_hybrid_parent_id
@@ -78,6 +79,14 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :if => Proc.new { |c| (c.will_create_taxon? || c.will_update_taxon?) && !c.nomenclature_change.is_a?(NomenclatureChange::NewName) }
   before_validation :populate_taxon_concept_fields,
     :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
+
+  def accepted_taxon_ids
+    parse_pg_array(read_attribute(:accepted_taxon_ids)||"").compact
+  end
+
+  def accepted_taxon_ids=(ary)
+    write_attribute(:accepted_taxon_ids, "{#{ary && ary.join(',')}}")
+  end
 
   def populate_taxon_concept_fields
     self.parent_id = taxon_concept.parent_id_changed? ? taxon_concept.parent_id_was : taxon_concept.parent_id
@@ -140,9 +149,9 @@ class NomenclatureChange::Output < ActiveRecord::Base
           :full_name => display_full_name,
         })
       ).tap do |tc|
-        add_taxon_relationship(tc, accepted_taxon_id, "HAS_SYNONYM")
-        add_taxon_relationship(tc, hybrid_parent_id, "HAS_HYBRID")
-        add_taxon_relationship(tc, other_hybrid_parent_id, "HAS_HYBRID")
+        add_taxon_synonym(tc, accepted_taxon_ids)
+        add_taxon_hybrid(tc, hybrid_parent_id)
+        add_taxon_hybrid(tc, other_hybrid_parent_id)
       end
     elsif will_update_taxon?
       taxon_concept.assign_attributes(taxon_concept_attrs)
@@ -152,11 +161,21 @@ class NomenclatureChange::Output < ActiveRecord::Base
     end
   end
 
-  def add_taxon_relationship(tc, other_taxon_id, rel_type)
+  def add_taxon_synonym(tc, accepted_taxon_ids)
+    accepted_taxon_ids.each do |accepted_taxon_id|
+      tc.inverse_taxon_relationships.build(
+        :taxon_concept_id => accepted_taxon_id,
+        :taxon_relationship_type_id => TaxonRelationshipType.
+        find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
+      )
+    end
+  end
+
+  def add_taxon_hybrid(tc, other_taxon_id)
     tc.inverse_taxon_relationships.build(
       :taxon_concept_id => other_taxon_id,
       :taxon_relationship_type_id => TaxonRelationshipType.
-      find_by_name(TaxonRelationshipType.const_get(rel_type)).id
+      find_by_name(TaxonRelationshipType::HAS_HYBRID).id
     ) if other_taxon_id
   end
 
