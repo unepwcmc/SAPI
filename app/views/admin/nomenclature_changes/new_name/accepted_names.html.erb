@@ -8,12 +8,13 @@
     <%= f.fields_for :output do |ff| %>
       <label class="control-label">Select accepted names:</label>
       <div class="controls">
-        <%= ff.text_field :accepted_taxon_id, {
-            :class => 'taxon-concept',
+        <%= ff.text_field :accepted_taxon_ids, {
+            :class => 'taxon-concept-multiple',
             :'data-name' => ff.object.accepted_taxon.try(:full_name),
             :'data-name-status' => ff.object.accepted_taxon.try(:name_status),
             :'data-name-status-filter' => ['A'].to_json,
-            :'data-taxonomy-id' => @taxonomy.id
+            :'data-taxonomy-id' => @taxonomy.id,
+            :multiple => 'multiple'
           } %>
       </div>
     <% end %>
