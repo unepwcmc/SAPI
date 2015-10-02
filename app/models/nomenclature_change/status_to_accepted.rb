@@ -25,6 +25,7 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   before_validation :set_output_name_status, if: :primary_output_or_submitting?
   before_validation :set_output_rank_id, if: :primary_output_or_submitting?
   before_validation :set_output_parent_id, if: :primary_output_or_submitting?
+  before_save :build_auto_reassignments, if: :parent?
 
   def set_output_name_status
     primary_output && primary_output.new_name_status = 'A'

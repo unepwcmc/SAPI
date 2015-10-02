@@ -24,8 +24,6 @@ module NomenclatureChange::StatusChangeHelpers
       accepts_nested_attributes_for :secondary_output, :allow_destroy => true
 
       validate :required_primary_output, if: :primary_output_or_submitting?
-
-      before_save :build_auto_reassignments, if: :summary?
     end
   end
 

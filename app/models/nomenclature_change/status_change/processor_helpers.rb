@@ -5,7 +5,7 @@ module NomenclatureChange::StatusChange::ProcessorHelpers
 
     # if input is not one of outputs, that means it only acts as a template
     # for associations and reassignment processor should copy rather than
-    # transfer associations
+    # transfer associations; if it is one of the outputs it is probably a swap
     transfer = [@primary_output, @secondary_output].compact.map(&:taxon_concept).include?(
       @input.taxon_concept
     )
