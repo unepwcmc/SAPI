@@ -7,8 +7,8 @@
 #  updated_at    :datetime         not null
 
 class NomenclatureChange::NewName < NomenclatureChange
-  build_steps(:name_status, :taxonomy, :rank, :parent, :hybrid_parents, 
-    :scientific_name, :author_year, :accepted_names,
+  build_steps(:name_status, :taxonomy, :rank, :parent, :accepted_names,
+    :hybrid_parents, :scientific_name, :author_year,
     :summary)
   attr_accessible :output_attributes
 

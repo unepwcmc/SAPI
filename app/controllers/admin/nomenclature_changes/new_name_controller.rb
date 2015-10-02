@@ -2,22 +2,22 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
 
   steps *NomenclatureChange::NewName::STEPS
 
+  before_filter :set_name_status, only: [:show]
+
   def show
     builder = NomenclatureChange::NewName::Constructor.new(@nomenclature_change)
     case step
     when :name_status
       builder.build_output
     when :parent
-      #for synonyms not setting the parent will lead to a failure of the new_full_name method for output
       set_new_name_taxonomy
-      #skip_or_previous_step if @nomenclature_change.output.new_name_status != 'A'
-      skip_or_previous_step unless ['A','N'].include?(@nomenclature_change.output.new_name_status)
+      skip_or_previous_step unless ['A','N'].include?(@name_status)
     when :accepted_names
       set_new_name_taxonomy
-      skip_or_previous_step if ['A','H','N'].include?(@nomenclature_change.output.new_name_status)
+      skip_or_previous_step if ['A','H','N'].include?(@name_status)
     when :hybrid_parents
       set_new_name_taxonomy
-      hybrid_skip_or_previous_step if @nomenclature_change.output.new_name_status != 'H'
+      skip_or_previous_step if @name_status != 'H'
     when :summary
       processor = NomenclatureChange::NewName::Processor.new(@nomenclature_change)
       @summary = processor.summary
@@ -33,6 +33,11 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
     )
 
     case step
+    when :rank
+      case @nomenclature_change.output.new_name_status
+      when 'S' then jump_to(:accepted_names)
+      when 'H' then jump_to(:hybrid_parents)
+      end
     when :parent
       set_new_name_taxonomy
     end
@@ -45,6 +50,14 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
   private
   def klass
     NomenclatureChange::NewName
+  end
+
+  def set_name_status
+    @name_status = ''
+    if @nomenclature_change.output and
+      [:parent, :accepted_names, :hybrid_parents].include?(step)
+      @name_status = @nomenclature_change.output.new_name_status
+    end
   end
 
   def init_new_name nomenclature_change
@@ -79,12 +92,15 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
     @taxonomy = Taxonomy.find(@nomenclature_change.output.taxonomy_id)
   end
 
-  def hybrid_skip_or_previous_step
+  def skip_or_previous_step
     if params[:back]
-      if @nomenclature_change.output.new_name_status != 'A'
+      if step == :accepted_names || step == :parent
         jump_to(:rank)
-      else
-        jump_to(previous_step)
+      elsif step == :hybrid_parents
+        case @nomenclature_change.output.new_name_status
+        when 'A' then jump_to(:parent)
+        when 'S' then jump_to(:accepted_names)
+        end
       end
     else
       skip_step
