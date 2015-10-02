@@ -25,6 +25,7 @@ class NomenclatureChange::NewName < NomenclatureChange
   }
   validate :required_different_name, if: :scientific_name_step?
   validate :parent_at_immediately_higher_rank, if: :parent_step?
+  validate :required_hybrids, if: :hybrid_parents_step?
 
   def scientific_name_step?
     status == 'scientific_name'
@@ -32,6 +33,19 @@ class NomenclatureChange::NewName < NomenclatureChange
 
   def parent_step?
     status == 'parent'
+  end
+
+  def hybrid_parents_step?
+    status == 'hybrid_parents'
+  end
+
+  def required_hybrids
+    if output.present?
+      unless output.hybrid_parent_id && output.other_hybrid_parent_id
+        errors.add(:outputs, "Hybrid parents are required")
+        return false;
+      end
+    end
   end
 
   def required_different_name
