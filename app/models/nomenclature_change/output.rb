@@ -68,8 +68,9 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :class_name => NomenclatureChange::ReassignmentTarget,
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy
   belongs_to :new_parent, :class_name => TaxonConcept, :foreign_key => :new_parent_id
-  belongs_to :accepted_taxon, :class_name => TaxonConcept, :foreign_key => :accepted_taxon_id
   belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id
+  belongs_to :hybrid_parent, :class_name => TaxonConcept, :foreign_key => :hybrid_parent_id
+  belongs_to :other_hybrid_parent, :class_name => TaxonConcept, :foreign_key => :other_hybrid_parent_id
   validates :nomenclature_change, :presence => true
   validates :new_scientific_name, :presence => true,
     :if => Proc.new { |c| c.taxon_concept_id.blank? && !c.nomenclature_change.is_a?(NomenclatureChange::NewName) }
