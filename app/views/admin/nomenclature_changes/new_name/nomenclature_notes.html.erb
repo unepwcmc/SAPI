@@ -1,0 +1,12 @@
+<h2>New name: nomenclature change notes</h2>
+<%= nomenclature_change_form do |f| %>
+  <%= f.fields_for :output do |ff| %>
+    <div class="control-group">
+      <div class="controls">
+        <%= render partial: 'admin/nomenclature_changes/build/nomenclature_notes',
+          locals: {ff: ff}
+        %>
+    </div>
+    </div>
+  <% end %>
+<% end %>

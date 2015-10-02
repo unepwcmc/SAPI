@@ -9,7 +9,7 @@
 class NomenclatureChange::NewName < NomenclatureChange
   build_steps(:name_status, :taxonomy, :rank, :parent, :accepted_names,
     :hybrid_parents, :scientific_name, :author_year,
-    :summary)
+    :nomenclature_notes, :summary)
   attr_accessible :output_attributes
 
   has_one :output, :inverse_of => :nomenclature_change,

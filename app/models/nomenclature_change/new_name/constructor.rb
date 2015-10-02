@@ -8,5 +8,4 @@ class NomenclatureChange::NewName::Constructor
   def build_output
     @nomenclature_change.build_output if @nomenclature_change.output.nil?
   end
-
 end
