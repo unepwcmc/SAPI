@@ -29,13 +29,17 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
     message: "%{value} is not a valid status"
   }
   before_save :build_input_for_swap, if: :swap?
+  before_save :build_auto_reassignments, if: :legislation?
 
   def build_input_for_swap
     # In case the primary output is an S name turning A
     # as part of status swap with another A name
-    # this other name becomes an input of the nomenclature change, so that
-    # reassignments can be put in place between this input and
-    # the primary output
+    # the secondary output becomes a pseudo-input for reassignments
+    # to the primary output.
+    # In case the primary output is an A name turning S
+    # as part of status swap with anoter S name
+    # the primary output becomes a pseudo-input for reassignments
+    # to the secondary output.
     if needs_to_receive_associations? && (
       input.nil? || input.taxon_concept_id.blank?)
       build_input(taxon_concept_id: secondary_output.taxon_concept_id)
