@@ -10,8 +10,8 @@
       <div class="controls">
         <%= ff.text_field :hybrid_parent_id, {
           :class => 'taxon-concept',
-          :'data-name' => ff.object.new_parent.try(:full_name),
-          :'data-name-status' => ff.object.new_parent.try(:name_status),
+          :'data-name' => ff.object.hybrid_parent.try(:full_name),
+          :'data-name-status' => ff.object.hybrid_parent.try(:name_status),
           :'data-name-status-filter' => ['A'].to_json,
           :'data-taxonomy-id' => @taxonomy.id
         } %>
@@ -22,8 +22,8 @@
       <div class="controls">
         <%= ff.text_field :other_hybrid_parent_id, {
           :class => 'taxon-concept',
-          :'data-name' => ff.object.new_parent.try(:full_name),
-          :'data-name-status' => ff.object.new_parent.try(:name_status),
+          :'data-name' => ff.object.other_hybrid_parent.try(:full_name),
+          :'data-name-status' => ff.object.other_hybrid_parent.try(:name_status),
           :'data-name-status-filter' => ['A'].to_json,
           :'data-taxonomy-id' => @taxonomy.id
         } %>
