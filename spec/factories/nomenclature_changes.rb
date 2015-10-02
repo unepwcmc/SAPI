@@ -20,6 +20,9 @@ FactoryGirl.define do
     factory :nomenclature_change_status_to_synonym, class: NomenclatureChange::StatusToSynonym do
       type 'NomenclatureChange::StatusToSynonym'
     end
+    factory :nomenclature_change_new_name, class: NomenclatureChange::NewName do
+      type 'NomenclatureChange::NewName'
+    end
   end
 
   factory :nomenclature_change_input, class: NomenclatureChange::Input,
