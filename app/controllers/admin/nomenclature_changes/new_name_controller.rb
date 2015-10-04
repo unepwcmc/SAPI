@@ -60,34 +60,6 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
     end
   end
 
-  def init_new_name nomenclature_change
-    #output = nomenclature_change.build_output
-    #tc = @nomenclature_change.output.build_new_taxon_concept
-    nomenclature_change.assign_attributes({"output_attributes" =>
-      { 
-        "taxon_concept_id"=>"", 
-        "new_parent_id"=>"2036", 
-        "new_scientific_name"=>"lumpus#{@nomenclature_change.id}", 
-        "new_author_year"=>"Ferdinando, 2014",
-        "new_rank_id"=>8,
-        "new_name_status"=>"A"
-      }
-    })
-  end
-
-  def output_attributes
-    {"output_attributes" =>
-      { 
-        "taxon_concept_id"=>"", 
-        "new_parent_id"=>"2036", 
-        "new_scientific_name"=>"lumpus#{@nomenclature_change.id}", 
-        "new_author_year"=>"Ferdinando, 2014",
-        "new_rank_id"=>8,
-        "new_name_status"=>"A"
-      }.merge(params[:nomenclature_change_new_name][:output_attributes])
-    }
-  end
-
   def set_new_name_taxonomy
     @taxonomy = Taxonomy.find(@nomenclature_change.output.taxonomy_id)
   end
