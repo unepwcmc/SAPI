@@ -8,7 +8,7 @@ $(document).ready ->
     initSelection: (element, callback) =>
       id = $(element).val()
       if (id != null && id != '')
-        callback({id: id, text: $(element).attr('data-name') + ' ' + $(element).attr('data-name-status')})
+        callback({id: id, text: $(element).data('name') + ' ' + $(element).data('name-status')})
 
     ajax:
       url: '/admin/taxon_concepts/autocomplete'
@@ -27,8 +27,23 @@ $(document).ready ->
           text: tc.full_name + ' ' + tc.name_status
         results: formatted_taxon_concepts
   }
+  multiTaxonSelect2Options = {
+    multiple: true,
+    initSelection: (element, callback) =>
+      id = $(element).val()
+      $(element).attr('value','')
+      if (id != null && id != '')
+        ids = id.substr(1,id.length-2).split(',')
+        names = $(element).data('name')
+        name_status = $(element).data('name-status')
+        result = []
+        for id, i in ids
+          result.push({id: id, text: names[i] + ' ' + name_status})
+        callback(result)
+  }
+
   $('.taxon-concept').select2(defaultTaxonSelect2Options)
-  $('.taxon-concept-multiple').select2($.extend(defaultTaxonSelect2Options,{multiple: true}))
+  $('.taxon-concept-multiple').select2($.extend(defaultTaxonSelect2Options,multiTaxonSelect2Options))
   $('.taxon-concept').on('change', (event) ->
     return false unless event.val
     $.when($.ajax( '/admin/taxon_concepts/' + event.val + '.json' ) ).then(( data, textStatus, jqXHR ) =>
