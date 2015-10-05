@@ -30,6 +30,13 @@ class NomenclatureChange::OutputTaxonConceptProcessor
     name_status = @output.new_name_status || @output.taxon_concept.try(:name_status)
     if @output.taxon_concept.blank?
       res << "New #{rank_name} #{full_name} (#{name_status}) will be created"
+      if @output.nomenclature_change.type == "NomenclatureChange::NewName"
+        case name_status
+        when 'A' then res << "Parent: #{@output.new_parent.full_name}"
+        when 'S' then res << "Accepted names: #{@output.fetch_accepted_taxons_full_name.join(',')}"
+        when 'H' then res << "Parents: #{@output.hybrid_parent.full_name},#{@output.other_hybrid_parent.full_name}"
+        end
+      end
     elsif @output.will_create_taxon?
       res << "New #{rank_name} #{full_name} (#{name_status}) will be created, based on #{@output.taxon_concept.full_name}"
       if ['A', 'N', 'H'].include? @output.taxon_concept.name_status

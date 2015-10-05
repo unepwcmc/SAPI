@@ -1,7 +1,9 @@
 class NomenclatureChange::NewName::Processor < NomenclatureChange::Processor
 
   def summary
-    "Summary"
+    result = []
+    @subprocessors.each{ |processor| result << processor.summary }
+    result.flatten(1)
   end
 
   private
