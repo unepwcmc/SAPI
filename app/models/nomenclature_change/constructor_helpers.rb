@@ -121,8 +121,8 @@ module NomenclatureChange::ConstructorHelpers
     input.legislation_reassignments.each do |reassignment|
       if input.is_a?(NomenclatureChange::Input)
         _build_multiple_targets(reassignment, outputs)
-        #input.reassignments << reassignment
       end
+      input.reassignments << reassignment
     end
   end
 
