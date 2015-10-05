@@ -30,11 +30,11 @@ $(document).ready ->
   multiTaxonSelect2Options = {
     multiple: true,
     initSelection: (element, callback) =>
-      id = $(element).val()
+      id = $(element).val().match(/{(.*)}/)[1]
       # Reset value attribute to let Select2 work properly when submitting the values again
       $(element).attr('value','')
       if (id != null && id != '')
-        ids = id.substr(1,id.length-2).split(',')
+        ids = id.split(',')
         names = $(element).data('name')
         name_status = $(element).data('name-status')
         result = []

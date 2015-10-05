@@ -25,6 +25,7 @@ class NomenclatureChange::NewName < NomenclatureChange
   }
   validate :required_different_name, if: :scientific_name_step?
   validate :parent_at_immediately_higher_rank, if: :parent_step?
+  validate :required_accepted_names, if: :accepted_names_step?
   validate :required_hybrids, if: :hybrid_parents_step?
 
   def scientific_name_step?
@@ -35,8 +36,21 @@ class NomenclatureChange::NewName < NomenclatureChange
     status == 'parent'
   end
 
+  def accepted_names_step?
+    status == 'accepted_names'
+  end
+
   def hybrid_parents_step?
     status == 'hybrid_parents'
+  end
+
+  def required_accepted_names
+    if output.present?
+      unless output.accepted_taxon_ids.present?
+        errors.add(:outputs, "at least an accepted name is required")
+        return false
+      end
+    end
   end
 
   def required_hybrids
