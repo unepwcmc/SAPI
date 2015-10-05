@@ -31,6 +31,7 @@ $(document).ready ->
     multiple: true,
     initSelection: (element, callback) =>
       id = $(element).val()
+      # Reset value attribute to let Select2 work properly when submitting the values again
       $(element).attr('value','')
       if (id != null && id != '')
         ids = id.substr(1,id.length-2).split(',')
