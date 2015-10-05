@@ -8,11 +8,14 @@
     <%= f.fields_for :output do |ff| %>
       <label class="control-label">Select accepted names:</label>
       <div class="controls">
-        <!-- Find a solution in order to assign the taxon_relationship_ids to the taxon concept, which is nil at this stage -->
-        <%= ff.select :taxon_relationship_ids,
-          options_for_select(taxon_concepts_collection,''),
-          {}, {:class => 'simple-taxon-concept', :multiple => ''}
-        %>
+        <%= ff.text_field :accepted_taxon_ids, {
+            :class => 'taxon-concept-multiple',
+            :'data-name' => ff.object.fetch_accepted_taxons_full_name.to_s,
+            :'data-name-status' => 'A',
+            :'data-name-status-filter' => ['A'].to_json,
+            :'data-taxonomy-id' => @taxonomy.id,
+            :multiple => 'multiple'
+          } %>
       </div>
     <% end %>
   </div>
