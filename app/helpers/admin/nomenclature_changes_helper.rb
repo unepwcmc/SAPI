@@ -169,12 +169,17 @@ module Admin::NomenclatureChangesHelper
       when @nc.is_a?(NomenclatureChange::StatusToAccepted)
         content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO ACCEPTED", nil) +
         content_tag(:div, @nc.primary_output.note_en.html_safe, class: 'well well-small')
+      when @nc.is_a?(NomenclatureChange::NewName)
+        content_tag(:h1, "NomenclatureChange #{@nc.id} - NEW NAME", nil) +
+        content_tag(:div, @nc.output.note_en.html_safe, class: 'well well-small')
     end
   end
 
   def generate_input_content
     if @nc.is_a?(NomenclatureChange::Lump)
       lump_inputs_tags + lump_inputs_content
+    elsif @nc.is_a?(NomenclatureChange::NewName)
+      ''
     else
       split_input_tag + split_input_content
     end
@@ -184,7 +189,7 @@ module Admin::NomenclatureChangesHelper
     if @nc.is_a?(NomenclatureChange::Lump)
       lump_output_tag + lump_output_content
     else
-      split_outputs_tags + split_outputs_content
+      outputs_tags + outputs_content
     end
   end
 
@@ -256,8 +261,8 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def split_outputs_tags
-    outputs = select_outputs
+  def outputs_tags
+    outputs = Array.wrap(select_outputs)
     content_tag(:ul, class: 'nav nav-tabs') do
       outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
@@ -266,8 +271,8 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def split_outputs_content
-    outputs = select_outputs
+  def outputs_content
+    outputs = Array.wrap(select_outputs)
     content_tag(:div, class: 'tab-content') do
       outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
@@ -286,6 +291,9 @@ module Admin::NomenclatureChangesHelper
     content_tag(:p, content_tag(:i, link_to(tc.full_name,
       admin_taxon_concept_names_path(tc)), nil)
     ) +
+    if input_or_output.nomenclature_change.is_a?(NomenclatureChange::NewName)
+      content_tag(:p, "Name status: #{input_or_output.new_name_status}")
+    end +
     content_tag(:p, "Author: #{tc.author_year || tc.new_author_year}") +
     content_tag(:p, "Internal note: #{input_or_output.internal_note}")
   end
@@ -293,6 +301,8 @@ module Admin::NomenclatureChangesHelper
   def select_outputs
     if @nc.is_a?(NomenclatureChange::Split)
       @nc.outputs
+    elsif @nc.is_a?(NomenclatureChange::NewName)
+      @nc.output
     else
       [@nc.primary_output, @nc.secondary_output].compact
     end
