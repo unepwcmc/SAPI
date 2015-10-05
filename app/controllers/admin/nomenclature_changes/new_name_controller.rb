@@ -38,7 +38,7 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
       when 'S' then jump_to(:accepted_names)
       when 'H' then jump_to(:hybrid_parents)
       end
-    when :parent, :hybrid_parents
+    when :parent, :accepted_names, :hybrid_parents
       set_new_name_taxonomy
     end
     
