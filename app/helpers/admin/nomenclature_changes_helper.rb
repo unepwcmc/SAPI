@@ -180,7 +180,7 @@ module Admin::NomenclatureChangesHelper
       lump_inputs_tags + lump_inputs_content
     elsif @nc.is_a?(NomenclatureChange::NewName)
       ''
-    else
+    elsif @nc.input
       split_input_tag + split_input_content
     end
   end
@@ -291,8 +291,8 @@ module Admin::NomenclatureChangesHelper
     content_tag(:p, content_tag(:i, link_to(tc.full_name,
       admin_taxon_concept_names_path(tc)), nil)
     ) +
-    if input_or_output.nomenclature_change.is_a?(NomenclatureChange::NewName)
-      content_tag(:p, "Name status: #{input_or_output.new_name_status}")
+    if input_or_output.is_a?(NomenclatureChange::Output)
+      content_tag(:p, "Name status: #{input_or_output.new_name_status || input_or_output.name_status}")
     end +
     content_tag(:p, "Author: #{tc.author_year || tc.new_author_year}") +
     content_tag(:p, "Internal note: #{input_or_output.internal_note}")
