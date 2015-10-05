@@ -335,4 +335,11 @@ module Admin::NomenclatureChangesHelper
   def taxon_concepts_collection
     TaxonConcept.where(:taxonomy_id => 1).collect {|t| [t.full_name, t.id]}
   end
+
+  def new_name_scientific_name_hint
+    case @nomenclature_change.output.new_name_status
+    when 'A' then "e.g. 'africana' for Loxodonta africana"
+    when 'S','H' then "e.g. Loxodonta africana"
+    end
+  end
 end
