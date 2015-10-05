@@ -95,7 +95,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
         <<-SQL
      SELECT tc.full_name FROM taxon_concepts tc WHERE tc.id = ANY (ARRAY#{accepted_taxon_ids.map(&:to_i)})
         SQL
-      ).map{ |row| row['full_name']}.to_s
+      ).map{ |row| row['full_name']}
     end
   end
 
