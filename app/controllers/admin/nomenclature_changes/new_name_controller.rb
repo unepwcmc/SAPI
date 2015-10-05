@@ -11,10 +11,10 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
       builder.build_output
     when :parent
       set_new_name_taxonomy
-      skip_or_previous_step unless ['A','N'].include?(@name_status)
+      skip_or_previous_step if @name_status != 'A'
     when :accepted_names
       set_new_name_taxonomy
-      skip_or_previous_step if ['A','H','N'].include?(@name_status)
+      skip_or_previous_step if @name_status != 'S' 
     when :hybrid_parents
       set_new_name_taxonomy
       skip_or_previous_step if @name_status != 'H'
