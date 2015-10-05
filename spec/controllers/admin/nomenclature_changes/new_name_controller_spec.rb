@@ -74,6 +74,14 @@ describe Admin::NomenclatureChanges::NewNameController do
       end
     end
     context :summary do
+      before(:each) do
+        @taxonomy = create(:taxonomy, name: "CITES_EU")
+        create(:nomenclature_change_output,
+          nomenclature_change: @new_name,
+          new_name_status: 'S',
+          taxonomy_id: @taxonomy.id
+        )
+      end
       it 'renders the summary template' do
         get :show, id: :summary, nomenclature_change_id: @new_name.id
         response.should render_template('summary')
