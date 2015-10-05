@@ -10,7 +10,7 @@
       <div class="controls">
         <%= ff.text_field :accepted_taxon_ids, {
             :class => 'taxon-concept-multiple',
-            :'data-name' => ff.object.fetch_accepted_taxons_full_name,
+            :'data-name' => ff.object.fetch_accepted_taxons_full_name.to_s,
             :'data-name-status' => 'A',
             :'data-name-status-filter' => ['A'].to_json,
             :'data-taxonomy-id' => @taxonomy.id,
