@@ -38,7 +38,8 @@ class TradeRestriction < ActiveRecord::Base
     :notes, :publication_date, :purpose_ids, :quota, :type,
     :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id, :url
+    :created_by_id, :updated_by_id, :url,
+    :taxon_concept_id
 
   belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
