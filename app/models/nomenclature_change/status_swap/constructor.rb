@@ -45,6 +45,7 @@ class NomenclatureChange::StatusSwap::Constructor
     input = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     note = '<p>'
     note << yield(input, output)
+    note << in_year(@event, lng)
     if @event
       note << following_taxonomic_changes(@event, lng)
     end
