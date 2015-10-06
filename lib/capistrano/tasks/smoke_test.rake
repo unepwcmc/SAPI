@@ -1,3 +1,5 @@
+require 'net/http'
+
 namespace :smoke_test do
   task :test_endpoints do
 
