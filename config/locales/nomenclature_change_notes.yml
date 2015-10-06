@@ -1,6 +1,8 @@
 en:
   following_taxonomic_changes: ', following taxonomic changes adopted at %{event}'
   in_year: ' in %{year}'
+  new_name:
+    new_name_note: '%{output_taxon} was added to the database in %{year}'
   split:
     output_split_from: '%{output_taxon} was split from %{input_taxon}'
     input_split_into: '%{input_taxon} was split into %{output_taxa}'

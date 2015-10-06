@@ -8,6 +8,7 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
     builder = NomenclatureChange::NewName::Constructor.new(@nomenclature_change)
     case step
     when :name_status
+      set_events
       builder.build_output
     when :parent
       set_new_name_taxonomy
@@ -18,6 +19,8 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
     when :hybrid_parents
       set_new_name_taxonomy
       skip_or_previous_step if @name_status != 'H'
+    when :nomenclature_notes
+      builder.build_output_notes
     when :summary
       processor = NomenclatureChange::NewName::Processor.new(@nomenclature_change)
       @summary = processor.summary
@@ -32,7 +35,11 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
       })
     )
 
+    success = @nomenclature_change.valid?
+
     case step
+    when :name_status
+      set_events unless success
     when :rank
       case @nomenclature_change.output.new_name_status
       when 'S' then jump_to(:accepted_names)
@@ -41,8 +48,6 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
     when :parent, :accepted_names, :hybrid_parents
       set_new_name_taxonomy
     end
-    
-    success = @nomenclature_change.valid?
 
     render_wizard @nomenclature_change
   end
