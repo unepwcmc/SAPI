@@ -21,6 +21,7 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
       skip_or_previous_step if @name_status != 'H'
     when :nomenclature_notes
       builder.build_output_notes
+      load_tags
     when :summary
       processor = NomenclatureChange::NewName::Processor.new(@nomenclature_change)
       @summary = processor.summary
@@ -82,6 +83,10 @@ class Admin::NomenclatureChanges::NewNameController < Admin::NomenclatureChanges
     else
       skip_step
     end
+  end
+
+  def load_tags
+    @tags = PresetTag.where(:model => PresetTag::TYPES[:TaxonConcept])
   end
 
 end
