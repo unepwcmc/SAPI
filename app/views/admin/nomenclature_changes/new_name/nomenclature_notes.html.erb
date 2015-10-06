@@ -2,11 +2,21 @@
 <%= nomenclature_change_form do |f| %>
   <%= f.fields_for :output do |ff| %>
     <div class="control-group">
+      <label class="control-label">Tags</label>
       <div class="controls">
-        <%= render partial: 'admin/nomenclature_changes/build/nomenclature_notes',
-          locals: {ff: ff}
+        <%= ff.select :tag_list,
+          options_from_collection_for_select(
+            @tags,
+            :name,
+            :name,
+            ff.object.tag_list
+        ), {},
+          { :multiple => true, :class => 'tags', :style => "width: 220px"}
         %>
+      </div>
     </div>
-    </div>
+    <%= render partial: 'admin/nomenclature_changes/build/nomenclature_notes',
+      locals: {ff: ff}
+    %>
   <% end %>
 <% end %>
