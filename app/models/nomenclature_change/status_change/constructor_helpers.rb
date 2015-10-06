@@ -85,7 +85,6 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
         output_taxon: output_html,
         old_status: output.taxon_concept.name_status,
         new_status: output.new_name_status,
-        year: Date.today.year,
         default: 'Translation missing'
       )
     end
@@ -110,6 +109,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
   def public_output_note(output, event, lng)
     note = '<p>'
     note << status_elevated_to_accepted_name(output, lng)
+    note << in_year(event, lng)
     note << following_taxonomic_changes(event, lng) if event
     note << '.</p>'
     note
@@ -118,6 +118,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
   def private_output_note(output, event, lng)
     note = '<p>'
     note << status_change_from_to(output, lng)
+    note << in_year(event, lng)
     note << following_taxonomic_changes(event, lng) if event
     note << '.</p>'
     note

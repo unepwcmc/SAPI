@@ -196,6 +196,16 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
+  def in_year(event, lng)
+    I18n.with_locale(lng) do
+      I18n.translate(
+        'in_year',
+        year: event && event.effective_at.try(:year) || Date.today.year,
+        default: 'Translation missing'
+      )
+    end
+  end
+
   def multi_lingual_legislation_note(note_type)
     result = {}
     [:en, :es, :fr].each do |lng|
