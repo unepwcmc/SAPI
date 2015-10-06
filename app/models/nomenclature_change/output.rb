@@ -38,7 +38,8 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id, :accepted_taxon_ids,
     :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
     :parent_reassignments_attributes, :name_reassignments_attributes,
-    :distribution_reassignments_attributes, :legislation_reassignments_attributes, :hybrid_parent_id, :other_hybrid_parent_id
+    :distribution_reassignments_attributes, :legislation_reassignments_attributes, :hybrid_parent_id, :other_hybrid_parent_id, :tag_list
+
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
   belongs_to :parent, :class_name => TaxonConcept, :foreign_key => :parent_id
@@ -87,6 +88,14 @@ class NomenclatureChange::Output < ActiveRecord::Base
 
   def accepted_taxon_ids=(ary)
     write_attribute(:accepted_taxon_ids, "{#{ary && ary.join(',')}}")
+  end
+
+  def tag_list
+    parse_pg_array(read_attribute(:tag_list)||"").compact
+  end
+
+  def tag_list=(ary)
+    write_attribute(:tag_list, "{#{ary && ary.join(',')}}")
   end
 
   def fetch_accepted_taxons_full_name
@@ -158,6 +167,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
         taxon_concept_attrs.merge({
           :taxonomy_id => taxonomy.id,
           :full_name => display_full_name,
+          :tag_list => tag_list
         })
       ).tap do |tc|
         add_taxon_synonym(tc, accepted_taxon_ids)
