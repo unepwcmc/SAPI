@@ -288,13 +288,14 @@ module Admin::NomenclatureChangesHelper
   end
 
   def inner_content(input_or_output,tc)
+    is_output = input_or_output.is_a?(NomenclatureChange::Output)
     content_tag(:p, content_tag(:i, link_to(tc.full_name,
       admin_taxon_concept_names_path(tc)), nil)
     ) +
-    if input_or_output.is_a?(NomenclatureChange::Output)
+    if is_output
       content_tag(:p, "Name status: #{input_or_output.new_name_status || input_or_output.name_status}")
     end +
-    content_tag(:p, "Author: #{tc.author_year || tc.new_author_year}") +
+    content_tag(:p, "Author: #{tc.author_year || is_output && input_or_output.new_author_year}") +
     content_tag(:p, "Internal note: #{input_or_output.internal_note}")
   end
 
