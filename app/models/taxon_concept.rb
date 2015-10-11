@@ -327,6 +327,12 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
+  def rebuild_taxonomy?(new_full_name)
+    new_full_name and new_full_name != full_name and
+      Rank.in_range(Rank::VARIETY, Rank::GENUS).include?(rank.name)
+  end
+
+
   private
 
   def dependent_objects_map
@@ -505,5 +511,6 @@ class TaxonConcept < ActiveRecord::Base
     end
     true
   end
+
 
 end
