@@ -48,8 +48,12 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   end
 
   def update
+    @taxon_concept = TaxonConcept.find(params[:id])
+    rebuild_taxonomy =
+      @taxon_concept.rebuild_taxonomy?(params[:taxon_concept][:full_name])
     update! do |success, failure|
       success.js {
+        UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         render 'update'
       }
       failure.js {
@@ -59,6 +63,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         render 'new'
       }
       success.html {
+        UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         redirect_to edit_admin_taxon_concept_url(@taxon_concept),
           :notice => 'Operation successful'
       }
