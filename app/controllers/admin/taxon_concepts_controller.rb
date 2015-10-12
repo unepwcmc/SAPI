@@ -50,7 +50,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   def update
     @taxon_concept = TaxonConcept.find(params[:id])
     rebuild_taxonomy =
-      @taxon_concept.rebuild_taxonomy?(params[:taxon_concept][:full_name])
+      @taxon_concept.rebuild_taxonomy?(params)
     update! do |success, failure|
       success.js {
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
