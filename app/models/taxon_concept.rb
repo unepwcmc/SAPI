@@ -327,7 +327,8 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
-  def rebuild_taxonomy?(new_full_name)
+  def rebuild_taxonomy?(params)
+    new_full_name = params[:taxon_concept] ? params[:taxon_concept][:full_name] : ''
     new_full_name and new_full_name != full_name and
       Rank.in_range(Rank::VARIETY, Rank::GENUS).include?(rank.name)
   end
