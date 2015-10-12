@@ -52,11 +52,11 @@ module TaxonConceptHelper
     ){ '' }
   end
 
-  def admin_new_trade_name_modal(nested = false)
+  def admin_new_trade_name_modal
     admin_new_modal(
       :resource => 'taxon_concept_trade_name',
       :title => 'Add new Trade name'
-    ){ nested ? '' : render('trade_name_form') }
+    ){ '' }
   end
 
   def admin_add_new_distribution_button
