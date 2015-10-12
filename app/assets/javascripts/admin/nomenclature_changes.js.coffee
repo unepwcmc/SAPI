@@ -1,5 +1,5 @@
 $(document).ready ->
-  defaultTaxonSelect2Options = {
+  window.defaultTaxonSelect2Options = {
     placeholder: 'Start typing scientific name'
     width: '300px'
     minimumInputLength: 3
@@ -43,8 +43,8 @@ $(document).ready ->
         callback(result)
   }
 
-  $('.taxon-concept').select2(defaultTaxonSelect2Options)
-  $('.taxon-concept-multiple').select2($.extend(defaultTaxonSelect2Options,multiTaxonSelect2Options))
+  $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
+  $('.taxon-concept-multiple').select2($.extend(window.defaultTaxonSelect2Options,multiTaxonSelect2Options))
   $('.taxon-concept').on('change', (event) ->
     return false unless event.val
     $.when($.ajax( '/admin/taxon_concepts/' + event.val + '.json' ) ).then(( data, textStatus, jqXHR ) =>
@@ -82,7 +82,7 @@ $(document).ready ->
     # it's a jQuery object already
     taxonField = field.find('.taxon-concept')
     # and activate select2
-    taxonField.select2(defaultTaxonSelect2Options)
+    taxonField.select2(window.defaultTaxonSelect2Options)
   )
 
   simpleTaxonSelect2Options = {
