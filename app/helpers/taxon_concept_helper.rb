@@ -45,11 +45,11 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_synonym_modal(nested = false)
+  def admin_new_synonym_modal
     admin_new_modal(
-      :resource => 'taxon_concept_synonym',
-      :title => 'Add new Synonym'
-    ){ nested ? '' : render('synonym_form') }
+      resource: 'taxon_concept_synonym',
+      title: 'Add new Synonym'
+    ){ '' }
   end
 
   def admin_new_trade_name_modal(nested = false)
