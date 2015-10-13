@@ -19,4 +19,7 @@
 
 # Reassignable is legislation that is assigned to a new taxon concept
 class NomenclatureChange::LegislationReassignment < NomenclatureChange::Reassignment
+  belongs_to :input, class_name: NomenclatureChange::Input,
+    inverse_of: :legislation_reassignments,
+    foreign_key: :nomenclature_change_input_id
 end
