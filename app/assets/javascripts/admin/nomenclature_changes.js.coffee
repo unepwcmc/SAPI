@@ -44,7 +44,7 @@ $(document).ready ->
   }
 
   $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
-  $('.taxon-concept-multiple').select2($.extend(window.defaultTaxonSelect2Options,multiTaxonSelect2Options))
+  $('.taxon-concept-multiple').select2($.extend({}, window.defaultTaxonSelect2Options, multiTaxonSelect2Options))
   $('.taxon-concept').on('change', (event) ->
     return false unless event.val
     $.when($.ajax( '/admin/taxon_concepts/' + event.val + '.json' ) ).then(( data, textStatus, jqXHR ) =>
