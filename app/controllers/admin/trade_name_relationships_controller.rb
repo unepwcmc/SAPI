@@ -6,16 +6,9 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
 
   def new
     new! do |format|
-      load_taxonomies_and_ranks
       @trade_name_relationship = TaxonRelationship.new(
         :taxon_relationship_type_id => @trade_name_relationship_type.id
       )
-      @trade_name_relationship.build_other_taxon_concept(
-        :taxonomy_id => @taxon_concept.taxonomy_id,
-        :rank_id => @taxon_concept.rank_id,
-        :name_status => 'T'
-      )
-      @trade_name_relationship.other_taxon_concept.build_taxon_name
     end
   end
 
@@ -29,16 +22,6 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
         render 'create'
       }
       failure.js {
-        @trade_name_relationship.build_other_taxon_concept(
-          :taxonomy_id => @taxon_concept.taxonomy_id,
-          :rank_id => @taxon_concept.rank_id,
-          :name_status => 'T',
-          :full_name => params[:taxon_relationship][:other_taxon_concept_attributes][:full_name],
-          :author_year => params[:taxon_relationship][:other_taxon_concept_attributes][:author_year]
-
-        )
-        @trade_name_relationship.other_taxon_concept.build_taxon_name
-        load_taxonomies_and_ranks
         render 'new'
       }
     end
@@ -46,7 +29,6 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
 
   def edit
     edit! do |format|
-      load_taxonomies_and_ranks
       format.js { render 'new' }
     end
   end
@@ -61,7 +43,6 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
         render 'create'
       }
       failure.js {
-        load_taxonomies_and_ranks
         render 'new'
       }
     end
@@ -76,11 +57,6 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
   end
 
   protected
-
-  def load_taxonomies_and_ranks
-    @taxonomies = Taxonomy.order(:name)
-    @ranks = Rank.order(:taxonomic_position)
-  end
 
   def load_trade_name_relationship_type
     @trade_name_relationship_type = TaxonRelationshipType.
