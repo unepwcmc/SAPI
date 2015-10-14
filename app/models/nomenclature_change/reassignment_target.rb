@@ -17,8 +17,9 @@ class NomenclatureChange::ReassignmentTarget < ActiveRecord::Base
     :nomenclature_change_reassignment_id, :note
   belongs_to :output, :class_name => NomenclatureChange::Output,
     :foreign_key => :nomenclature_change_output_id
-  belongs_to :reassignment, :class_name => NomenclatureChange::Reassignment,
-    :foreign_key => :nomenclature_change_reassignment_id
+  belongs_to :reassignment,
+    class_name: 'NomenclatureChange::Reassignment',
+    foreign_key: :nomenclature_change_reassignment_id
 
   validates :reassignment, :presence => true
   validates :output, :presence => true

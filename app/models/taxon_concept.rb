@@ -158,7 +158,10 @@ class TaxonConcept < ActiveRecord::Base
     conditions: {comment_type: 'Nomenclature'}
   has_one :distribution_comment, class_name: 'Comment', as: 'commentable',
     conditions: {comment_type: 'Distribution'}
-  has_many :nomenclature_change_reassignments, :as => :reassignable
+  has_many :parent_reassignments,
+    class_name: 'NomenclatureChange::ParentReassignment',
+    as: :reassignable,
+    dependent: :destroy
   has_many :nomenclature_change_inputs, class_name: 'NomenclatureChange::Input'
   has_many :nomenclature_change_outputs, class_name: 'NomenclatureChange::Output'
   has_many :nomenclature_change_outputs_as_new, class_name: 'NomenclatureChange::Output',
