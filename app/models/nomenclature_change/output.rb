@@ -98,16 +98,6 @@ class NomenclatureChange::Output < ActiveRecord::Base
     write_attribute(:tag_list, "{#{ary && ary.join(',')}}")
   end
 
-  def fetch_accepted_taxons_full_name
-    if accepted_taxon_ids.present?
-      ActiveRecord::Base.connection.execute(
-        <<-SQL
-     SELECT tc.full_name FROM taxon_concepts tc WHERE tc.id = ANY (ARRAY#{accepted_taxon_ids.map(&:to_i)})
-        SQL
-      ).map{ |row| row['full_name']}
-    end
-  end
-
   def populate_taxon_concept_fields
     self.parent_id = taxon_concept.parent_id_changed? ? taxon_concept.parent_id_was : taxon_concept.parent_id
     self.rank_id = taxon_concept.rank_id_changed? ? taxon_concept.rank_id_was : taxon_concept.rank_id
