@@ -15,31 +15,28 @@ describe TaxonConcept do
       )
     }
     let(:synonym){
-      build_cites_eu_species(
+      create_cites_eu_species(
         :name_status => 'S',
         :author_year => 'Taxonomus 2013',
-        :accepted_scientific_name => tc.full_name,
-        :full_name => 'Lolcatus lolus'
+        taxon_name: create(:taxon_name, scientific_name: 'Lolcatus lolus')
+      )
+    }
+    let!(:synonym_rel){
+      create(:taxon_relationship,
+        taxon_relationship_type: synonym_relationship_type,
+        taxon_concept_id: tc.id,
+        other_taxon_concept_id: synonym.id
       )
     }
     context "when new" do
       specify {
-        lambda do
-          synonym.save
-        end.should change(TaxonConcept, :count).by(1)
-      }
-      pending {
-        lambda do
-          synonym.save
-        end.should change(TaxonRelationship, :count).by(1)
-      }
-      pending {
-        synonym.save
         tc.has_synonyms?.should be_true
       }
       specify {
-        synonym.save
         synonym.is_synonym?.should be_true
+      }
+      specify {
+        synonym.full_name.should == 'Lolcatus lolus'
       }
     end
     context "when duplicate" do
@@ -48,15 +45,8 @@ describe TaxonConcept do
       }
       specify {
         lambda do
-          synonym.save
           duplicate.save
-        end.should change(TaxonConcept, :count).by(1)
-      }
-      pending {
-        lambda do
-          synonym.save
-          duplicate.save
-        end.should change(TaxonRelationship, :count).by(2)
+        end.should change(TaxonConcept, :count).by(0)
       }
     end
     context "when duplicate but author name different" do
@@ -67,13 +57,8 @@ describe TaxonConcept do
       }
       specify {
         lambda do
-          synonym.save
           duplicate.save
-        end.should change(TaxonConcept, :count).by(2)
-      }
-      specify {
-        synonym.save
-        synonym.full_name.should == 'Lolcatus lolus'
+        end.should change(TaxonConcept, :count).by(1)
       }
     end
     context "when has accepted parent" do
