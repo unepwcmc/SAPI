@@ -47,7 +47,7 @@ class TaxonConcept < ActiveRecord::Base
     :legacy_id, :legacy_type, :full_name, :name_status,
     :accepted_scientific_name, :parent_scientific_name,
     :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list, :legacy_trade_code,
+    :tag_list, :legacy_trade_code, :accepted_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
 
@@ -218,6 +218,16 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
+  def self.fetch_taxons_full_name(taxon_ids)
+    if taxon_ids.present?
+      ActiveRecord::Base.connection.execute(
+        <<-SQL
+     SELECT tc.full_name FROM taxon_concepts tc WHERE tc.id = ANY (ARRAY#{taxon_ids.map(&:to_i)})
+        SQL
+      ).map{ |row| row['full_name']}
+    end
+  end
+
   def has_comments?
     general_comment.try(:note).try(:present?) ||
       nomenclature_comment.try(:note).try(:present?) ||
@@ -324,6 +334,38 @@ class TaxonConcept < ActiveRecord::Base
     new_full_name = params[:taxon_concept] ? params[:taxon_concept][:full_name] : ''
     new_full_name and new_full_name != full_name and
       Rank.in_range(Rank::VARIETY, Rank::GENUS).include?(rank.name)
+  end
+
+  def rebuild_relationships(params)
+    all_accepted_name_ids =
+      params[:taxon_concept][:accepted_name_ids].first.split(',').map(&:to_i)
+    new_accepted_name_ids = all_accepted_name_ids - accepted_name_ids
+    removed_accepted_name_ids = accepted_name_ids - all_accepted_name_ids
+    new_accepted_names = TaxonConcept.where(id: new_accepted_name_ids)
+    removed_accepted_names = TaxonConcept.where(id: removed_accepted_name_ids)
+    rel_type =
+      if name_status == 'S'
+        TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+      elsif name_status == 'T'
+        TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
+      end
+
+    removed_accepted_names.each do |accepted_name|
+      accepted_name.taxon_relationships.
+        where('other_taxon_concept_id = ? AND rel_type = ?', id, rel_type).
+        first.destroy
+    end
+
+    new_accepted_names.each do |accepted_name|
+      Rails.logger.debug "Creating #{rel_type.name} inverse relationship with #{accepted_name.full_name}"
+      accepted_name.taxon_relationships << TaxonRelationship.new(
+        :taxon_relationship_type_id => rel_type.id,
+        :other_taxon_concept_id => id
+      )
+      accepted_name.save
+    end
   end
 
 
