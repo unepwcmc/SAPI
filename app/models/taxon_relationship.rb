@@ -15,7 +15,7 @@
 class TaxonRelationship < ActiveRecord::Base
   track_who_does_it
   attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
-    :other_taxon_concept_attributes, :created_by_id, :updated_by_id
+    :created_by_id, :updated_by_id
   belongs_to :taxon_relationship_type
   belongs_to :taxon_concept
   belongs_to :other_taxon_concept, :class_name => 'TaxonConcept',
@@ -25,7 +25,6 @@ class TaxonRelationship < ActiveRecord::Base
 
   delegate :is_bidirectional?, :to => :taxon_relationship_type
 
-  before_validation :check_other_taxon_concept_exists
   before_destroy :destroy_opposite, :if => Proc.new { self.is_bidirectional? && self.has_opposite? }
   after_create :create_opposite, :if => Proc.new { self.is_bidirectional? && !self.has_opposite? }
   after_save :update_higher_taxa_for_hybrid_child
@@ -57,37 +56,6 @@ class TaxonRelationship < ActiveRecord::Base
   end
 
   private
-
-  def check_other_taxon_concept_exists
-    return true unless other_taxon_concept
-    required_name_status = case taxon_relationship_type.name
-      when TaxonRelationshipType::HAS_SYNONYM
-        'S'
-      when TaxonRelationshipType::HAS_TRADE_NAME
-        'T'
-      when TaxonRelationshipType::HAS_HYBRID
-        'H'
-      else
-        'A'
-    end
-    existing_tc = TaxonConcept.
-      where(:taxonomy_id => other_taxon_concept.taxonomy_id).
-      where(:rank_id => other_taxon_concept.rank_id).
-      where(:full_name => other_taxon_concept.full_name).
-      where(
-        if other_taxon_concept.author_year.blank?
-          'SQUISH_NULL(author_year) IS NULL'
-        else
-          {:author_year => other_taxon_concept.author_year}
-        end
-      ).
-      where(:name_status => required_name_status).first
-    if existing_tc
-      self.other_taxon_concept = existing_tc
-      self.other_taxon_concept_id = existing_tc.id
-    end
-    true
-  end
 
   def create_opposite
     TaxonRelationship.create(
