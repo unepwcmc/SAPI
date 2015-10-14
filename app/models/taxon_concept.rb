@@ -190,14 +190,7 @@ class TaxonConcept < ActiveRecord::Base
     :if => lambda { |tc| tc.full_name }
   before_validation :check_parent_taxon_concept_exists,
     :if => lambda { |tc| tc.parent_scientific_name }
-  before_validation :check_hybrid_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_hybrid? && tc.hybrid_parent_scientific_name }
-  before_validation :check_other_hybrid_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_hybrid? && tc.other_hybrid_parent_scientific_name }
-  before_validation :check_accepted_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
-  before_validation :check_accepted_taxon_concept_for_trade_name_exists,
-    :if => lambda { |tc| tc.is_trade_name? && tc.accepted_scientific_name }
+
   before_validation :ensure_taxonomic_position
 
   translates :nomenclature_note
@@ -418,46 +411,6 @@ class TaxonConcept < ActiveRecord::Base
     end
 
     true
-  end
-
-  def check_hybrid_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:hybrid_parent_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-      )
-    end
-  end
-
-  def check_other_hybrid_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:other_hybrid_parent_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-      )
-    end
-  end
-
-  def check_accepted_taxon_concept_exists
-    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
-      )
-    end
-  end
-
-  def check_accepted_taxon_concept_for_trade_name_exists
-    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_TRADE_NAME).id
-      )
-    end
   end
 
   def check_parent_taxon_concept_exists
