@@ -29,8 +29,7 @@ describe Admin::SynonymRelationshipsController do
       xhr :post, :create,
         :taxon_concept_id => taxon_concept.id,
         :taxon_relationship => {
-          :other_taxon_concept_attributes =>
-            build_tc_attributes(:taxon_concept, :name_status => 'S')
+          other_taxon_concept_id: synonym.id
         }
       response.should render_template("create")
     end
@@ -38,7 +37,7 @@ describe Admin::SynonymRelationshipsController do
       xhr :post, :create,
         :taxon_concept_id => taxon_concept.id,
         :taxon_relationship => {
-          :other_taxon_concept_attributes => {}
+          other_taxon_concept_id: nil
         }
       response.should render_template("new")
     end
@@ -63,8 +62,7 @@ describe Admin::SynonymRelationshipsController do
         :taxon_concept_id => taxon_concept.id,
         :id => synonym_relationship.id,
         :taxon_relationship => {
-          :other_taxon_concept_attributes =>
-            build_tc_attributes(:taxon_concept, :name_status => 'S')
+          other_taxon_concept_id: synonym.id
         }
       response.should be_success
     end
@@ -73,7 +71,7 @@ describe Admin::SynonymRelationshipsController do
         :taxon_concept_id => taxon_concept.id,
         :id => synonym_relationship.id,
         :taxon_relationship => {
-          :other_taxon_concept_attributes => { }
+          other_taxon_concept_id: nil
         }
       JSON.parse(response.body).should include('errors')
     end
