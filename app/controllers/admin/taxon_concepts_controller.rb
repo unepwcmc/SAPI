@@ -36,7 +36,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     rebuild_taxonomy = @taxon_concept.rebuild_taxonomy?(params)
     update! do |success, failure|
       success.js {
-        @taxon_concept.rebuild_relationships(params)
+        @taxon_concept.rebuild_relationships(params[:taxon_concept])
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         render 'update'
       }
@@ -47,7 +47,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         render 'new'
       }
       success.html {
-        @taxon_concept.rebuild_relationships(params)
+        @taxon_concept.rebuild_relationships(params[:taxon_concept])
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         redirect_to edit_admin_taxon_concept_url(@taxon_concept),
           :notice => 'Operation successful'

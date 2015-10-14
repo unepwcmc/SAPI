@@ -337,12 +337,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def rebuild_relationships(params)
-    all_accepted_name_ids =
-      params[:taxon_concept][:accepted_name_ids].first.split(',').map(&:to_i)
-    new_accepted_name_ids = all_accepted_name_ids - accepted_name_ids
-    removed_accepted_name_ids = accepted_name_ids - all_accepted_name_ids
-    new_accepted_names = TaxonConcept.where(id: new_accepted_name_ids)
-    removed_accepted_names = TaxonConcept.where(id: removed_accepted_name_ids)
+    new_accepted_taxa, removed_accepted_taxa = init_accepted_taxa(params)
     rel_type =
       if name_status == 'S'
         TaxonRelationshipType.
@@ -352,13 +347,13 @@ class TaxonConcept < ActiveRecord::Base
           find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
       end
 
-    removed_accepted_names.each do |accepted_name|
+    removed_accepted_taxa.each do |accepted_name|
       accepted_name.taxon_relationships.
         where('other_taxon_concept_id = ? AND rel_type = ?', id, rel_type).
         first.destroy
     end
 
-    new_accepted_names.each do |accepted_name|
+    new_accepted_taxa.each do |accepted_name|
       Rails.logger.debug "Creating #{rel_type.name} inverse relationship with #{accepted_name.full_name}"
       accepted_name.taxon_relationships << TaxonRelationship.new(
         :taxon_relationship_type_id => rel_type.id,
@@ -370,6 +365,18 @@ class TaxonConcept < ActiveRecord::Base
 
 
   private
+
+  def init_accepted_taxa(params)
+    all_accepted_name_ids =
+      params ? params[:accepted_name_ids].first.split(',').map(&:to_i) : []
+    new_accepted_name_ids = all_accepted_name_ids - accepted_name_ids
+    removed_accepted_name_ids = accepted_name_ids - all_accepted_name_ids
+
+    [
+      TaxonConcept.where(id: new_accepted_name_ids),
+      TaxonConcept.where(id: removed_accepted_name_ids)
+    ]
+  end
 
   def dependent_objects_map
     {
