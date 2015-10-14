@@ -20,8 +20,10 @@ class TaxonRelationship < ActiveRecord::Base
   belongs_to :taxon_concept
   belongs_to :other_taxon_concept, :class_name => 'TaxonConcept',
     :foreign_key => :other_taxon_concept_id
-  has_many :name_reassignments, :class_name => 'NomenclatureChange::NameReassignment',
-    as: :reassignable, dependent: :destroy
+  has_many :name_reassignments,
+    class_name: 'NomenclatureChange::NameReassignment',
+    as: :reassignable,
+    dependent: :destroy
 
   delegate :is_bidirectional?, :to => :taxon_relationship_type
 
