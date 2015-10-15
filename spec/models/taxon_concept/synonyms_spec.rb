@@ -35,6 +35,9 @@ describe TaxonConcept do
       specify {
         synonym.is_synonym?.should be_true
       }
+      specify{
+        synonym.has_accepted_names?.should be_true
+      }
       specify {
         synonym.full_name.should == 'Lolcatus lolus'
       }

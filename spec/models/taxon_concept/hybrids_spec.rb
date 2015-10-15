@@ -35,6 +35,9 @@ describe TaxonConcept do
       specify {
         hybrid.is_hybrid?.should be_true
       }
+      specify{
+        hybrid.has_hybrid_parents?.should be_true
+      }
       specify {
         hybrid.full_name.should == 'Lolcatus lolcatus x lolatus'
       }
