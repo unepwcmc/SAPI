@@ -222,7 +222,10 @@ class TaxonConcept < ActiveRecord::Base
     if taxon_ids.present?
       ActiveRecord::Base.connection.execute(
         <<-SQL
-     SELECT tc.full_name FROM taxon_concepts tc WHERE tc.id = ANY (ARRAY#{taxon_ids.map(&:to_i)})
+          SELECT tc.full_name
+          FROM taxon_concepts tc
+          WHERE tc.id = ANY (ARRAY#{taxon_ids.map(&:to_i)})
+          ORDER BY tc.id
         SQL
       ).map{ |row| row['full_name']}
     end
@@ -336,6 +339,8 @@ class TaxonConcept < ActiveRecord::Base
       Rank.in_range(Rank::VARIETY, Rank::GENUS).include?(rank.name)
   end
 
+  #TODO
+  # save changes button won't work once already submitted
   def rebuild_relationships(params)
     new_accepted_taxa, removed_accepted_taxa = init_accepted_taxa(params)
     rel_type =

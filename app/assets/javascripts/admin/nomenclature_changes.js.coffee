@@ -34,12 +34,14 @@ $(document).ready ->
       # Reset value attribute to let Select2 work properly when submitting the values again
       $(element).attr('value','')
       if (id != null && id != '')
-        ids = id.split(',')
+        ids = id.split(',').map( (id) ->
+          parseInt(id.trim())
+        ).sort( (a, b) -> a - b)
         names = $(element).data('name')
         name_status = $(element).data('name-status')
         result = []
         for id, i in ids
-          result.push({id: id.trim(), text: names[i] + ' ' + name_status})
+          result.push({id: id, text: names[i] + ' ' + name_status})
         callback(result)
   }
 
