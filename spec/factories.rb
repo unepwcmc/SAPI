@@ -73,9 +73,6 @@ FactoryGirl.define do
     data {}
     listing {}
     parent_scientific_name ''
-    accepted_scientific_name ''
-    hybrid_parent_scientific_name ''
-    other_hybrid_parent_scientific_name ''
   end
 
   factory :cites_suspension do
