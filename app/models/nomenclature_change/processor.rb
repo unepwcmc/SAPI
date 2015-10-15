@@ -11,6 +11,7 @@ class NomenclatureChange::Processor
     Rails.logger.warn("[#{@nc.type}] BEGIN")
     @subprocessors.each{ |processor| processor.run }
     Rails.logger.warn("[#{@nc.type}] END")
+    DownloadsCache.clear
   end
 
   def summary
