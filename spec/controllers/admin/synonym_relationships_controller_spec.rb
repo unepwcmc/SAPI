@@ -58,22 +58,22 @@ describe Admin::SynonymRelationshipsController do
 
   describe "XHR PUT update" do
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json',
+      xhr :put, :update, :format => 'js',
         :taxon_concept_id => taxon_concept.id,
         :id => synonym_relationship.id,
         :taxon_relationship => {
           other_taxon_concept_id: synonym.id
         }
-      response.should be_success
+      response.should render_template('create')
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json',
+      xhr :put, :update, :format => 'js',
         :taxon_concept_id => taxon_concept.id,
         :id => synonym_relationship.id,
         :taxon_relationship => {
           other_taxon_concept_id: nil
         }
-      JSON.parse(response.body).should include('errors')
+      response.should render_template('new')
     end
   end
 
