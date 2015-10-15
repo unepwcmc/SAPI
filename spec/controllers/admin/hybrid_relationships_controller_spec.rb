@@ -83,7 +83,7 @@ describe Admin::HybridRelationshipsController do
         :taxon_concept_id => taxon_concept.id,
         :id => hybrid_relationship.id
       response.should redirect_to(
-        edit_admin_taxon_concept_url(hybrid_relationship.taxon_concept)
+        admin_taxon_concept_names_url(hybrid_relationship.taxon_concept)
       )
     end
   end
