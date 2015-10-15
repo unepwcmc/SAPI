@@ -46,7 +46,8 @@ class TaxonConcept < ActiveRecord::Base
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :parent_scientific_name,
-    :tag_list, :legacy_trade_code, :accepted_name_ids,
+    :tag_list, :legacy_trade_code,
+    :accepted_name_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
 
@@ -372,8 +373,15 @@ class TaxonConcept < ActiveRecord::Base
   private
 
   def init_accepted_taxa(params)
+    name_ids =
+      case name_status
+      when 'S' then :accepted_name_ids
+      when 'T' then :accepted_names_for_trade_name_ids
+      else return []
+      end
+
     all_accepted_name_ids =
-      params ? params[:accepted_name_ids].first.split(',').map(&:to_i) : []
+      params ? params[name_ids].first.split(',').map(&:to_i) : []
     new_accepted_name_ids = all_accepted_name_ids - accepted_name_ids
     removed_accepted_name_ids = accepted_name_ids - all_accepted_name_ids
 
