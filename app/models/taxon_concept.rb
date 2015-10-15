@@ -377,7 +377,7 @@ class TaxonConcept < ActiveRecord::Base
       case name_status
       when 'S' then :accepted_name_ids
       when 'T' then :accepted_names_for_trade_name_ids
-      else return []
+      else return [[],[]]
       end
 
     all_accepted_name_ids =
