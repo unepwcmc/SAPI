@@ -48,6 +48,14 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
     end
   end
 
+  def destroy
+    destroy! do |success|
+      success.html {
+        redirect_to admin_taxon_concept_names_path(@taxon_concept)
+      }
+    end
+  end
+
   protected
 
   def load_hybrid_relationship_type
