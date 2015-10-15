@@ -59,8 +59,14 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
       transfer_distribution_references(reassigned_object, reassignable)
       transfer_distribution_taggings(reassigned_object, reassignable)
     end
+    if reassigned_object.is_a?(ListingChange)
+      transfer_party_listing_distribution(reassigned_object, reassignable)
+      transfer_listing_distributions(reassigned_object, reassignable)
+      transfer_taxonomic_exclusions(reassigned_object, reassignable)
+      transfer_geographic_exclusions(reassigned_object, reassignable)
+    end
     # destroy the original object
-    reassignable.delete
+    reassignable.destroy
   end
 
   def transfer_distribution_references(reassigned_object, reassignable)
