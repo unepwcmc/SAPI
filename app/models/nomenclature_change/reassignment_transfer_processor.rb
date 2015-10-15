@@ -96,4 +96,44 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
     taggings_to_transfer.update_all(taggable_id: reassigned_object.id)
   end
 
+  def transfer_party_listing_distribution(reassigned_object, reassignable)
+    return if reassigned_object.party_listing_distribution
+    return if !reassignable.party_listing_distribution
+    reassignable.party_listing_distribution.update_attribute(:listing_change_id, reassigned_object.id)
+  end
+
+  def transfer_listing_distributions(reassigned_object, reassignable)
+    return if reassignable.listing_distributions.count == 0
+    listing_distributions_to_transfer = reassignable.listing_distributions
+
+    if reassigned_object.listing_distributions.count > 0
+      listing_distributions_to_transfer = listing_distributions_to_transfer.
+      where(
+        'geo_entity_id NOT IN (?)',
+        reassigned_object.listing_distributions.select(:geo_entity_id)
+          .map(&:geo_entity_id)
+      )
+    end
+    listing_distributions_to_transfer.update_all(listing_change_id: reassigned_object.id)
+  end
+
+
+  def transfer_taxonomic_exclusions(reassigned_object, reassignable)
+    return if reassignable.taxonomic_exclusions.count == 0
+    taxonomic_exclusions_to_transfer = reassignable.taxonomic_exclusions
+    if reassigned_object.taxonomic_exclusions.count > 0
+      taxonomic_exclusions_to_transfer = taxonomic_exclusions_to_transfer.
+      where(
+        'taxon_concept_id NOT IN (?)',
+        reassigned_object.taxonomic_exclusions.select(:taxon_concept_id).
+          map(&:taxon_concept_id)
+      )
+    end
+    taxonomic_exclusions_to_transfer.update_all(parent_id: reassigned_object.id)
+  end
+
+  def transfer_geographic_exclusions(reassigned_object, reassignable)
+    reassignable.geographic_exclusions.update_all(parent_id: reassigned_object.id)
+  end
+
 end
