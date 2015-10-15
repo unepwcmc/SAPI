@@ -73,17 +73,13 @@ form.documents {
   width: 50%;
 }
 
-ol {
+form ol {
   counter-reset: listCounter;
   list-style-type: none;
-}
-
-ol li {
-  counter-increment: listCounter;
-}
-
-ol li:before {
-  content: "Taxon " counter(listCounter) ".";
+  .fields > li { counter-increment: listCounter; }
+  .fields > li:before {
+    content: "Taxon " counter(listCounter) ".";
+  }
 }
 
 .new-scientific-name-eg {
