@@ -35,6 +35,9 @@ describe TaxonConcept do
       specify {
         trade_name.is_trade_name?.should be_true
       }
+      specify{
+        trade_name.has_accepted_names_for_trade_name?.should be_true
+      }
       specify {
         trade_name.full_name.should == 'Lolcatus lolus'
       }
