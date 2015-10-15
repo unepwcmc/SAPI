@@ -125,4 +125,9 @@ describe TaxonConcept do
       specify { tc2.should have(1).error_on(:full_name) }
     end
   end
+  context "update" do
+    let(:tc){ create_cites_eu_species }
+    let!(:tc_child) { create_cites_eu_subspecies(parent_id: tc.id) }
+    specify { tc.taxonomy = cms; tc.should have(1).error_on(:taxonomy_id) }
+  end
 end
