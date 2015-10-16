@@ -46,13 +46,12 @@ class TaxonConcept < ActiveRecord::Base
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :parent_scientific_name,
-    :tag_list, :legacy_trade_code,
+    :tag_list, :legacy_trade_code, :hybrid_parent_ids,
     :accepted_name_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
 
   attr_writer :parent_scientific_name
-
   acts_as_taggable
 
   serialize :data, ActiveRecord::Coders::Hstore
@@ -340,54 +339,55 @@ class TaxonConcept < ActiveRecord::Base
       Rank.in_range(Rank::VARIETY, Rank::GENUS).include?(rank.name)
   end
 
-  #TODO
-  # save changes button won't work once already submitted
-  def rebuild_relationships(params)
-    new_accepted_taxa, removed_accepted_taxa = init_accepted_taxa(params)
-    rel_type =
-      if name_status == 'S'
-        TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_SYNONYM)
-      elsif name_status == 'T'
-        TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
-      end
-
-    removed_accepted_taxa.each do |accepted_name|
-      accepted_name.taxon_relationships.
-        where('other_taxon_concept_id = ? AND rel_type = ?', id, rel_type).
-        first.destroy
-    end
-
-    new_accepted_taxa.each do |accepted_name|
-      Rails.logger.debug "Creating #{rel_type.name} inverse relationship with #{accepted_name.full_name}"
-      accepted_name.taxon_relationships << TaxonRelationship.new(
-        :taxon_relationship_type_id => rel_type.id,
-        :other_taxon_concept_id => id
-      )
-      accepted_name.save
+  def rebuild_relationships(taxa_ids)
+    if ['S', 'T', 'H'].include? name_status
+      new_taxa, removed_taxa = init_accepted_taxa(taxa_ids)
+      rel_type =
+        case name_status
+        when 'S'
+          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+        when 'T'
+          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
+        when 'H'
+          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_HYBRID)
+        end
+      add_remove_relationships(new_taxa, removed_taxa, rel_type)
     end
   end
 
-
   private
 
-  def init_accepted_taxa(params)
+  def add_remove_relationships(new_taxa, removed_taxa, rel_type)
+    removed_taxa.each do |taxon_concept|
+      taxon_concept.taxon_relationships.
+        where('other_taxon_concept_id = ? AND
+              taxon_relationship_type_id = ?', id, rel_type.id).
+        first.destroy
+    end
+
+    new_taxa.each do |taxon_concept|
+      taxon_concept.taxon_relationships << TaxonRelationship.new(
+        :taxon_relationship_type_id => rel_type.id,
+        :other_taxon_concept_id => id
+      )
+    end
+  end
+
+  def init_accepted_taxa(all_taxa_ids)
     name_ids =
       case name_status
       when 'S' then :accepted_name_ids
       when 'T' then :accepted_names_for_trade_name_ids
+      when 'H' then :hybrid_parent_ids
       else return [[],[]]
       end
-
-    all_accepted_name_ids =
-      params ? params[name_ids].first.split(',').map(&:to_i) : []
-    new_accepted_name_ids = all_accepted_name_ids - accepted_name_ids
-    removed_accepted_name_ids = accepted_name_ids - all_accepted_name_ids
+    current_name_ids = send(name_ids)
+    new_taxa_ids = all_taxa_ids - current_name_ids
+    removed_taxa_ids = current_name_ids - all_taxa_ids
 
     [
-      TaxonConcept.where(id: new_accepted_name_ids),
-      TaxonConcept.where(id: removed_accepted_name_ids)
+      TaxonConcept.where(id: new_taxa_ids),
+      TaxonConcept.where(id: removed_taxa_ids)
     ]
   end
 
@@ -527,6 +527,5 @@ class TaxonConcept < ActiveRecord::Base
     end
     true
   end
-
 
 end
