@@ -2,7 +2,6 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   respond_to :json
   layout :determine_layout
   before_filter :sanitize_search_params, :only => [:index, :autocomplete]
-  before_filter :sanitize_update_params, :only => [:update]
   before_filter :load_tags, :only => [:index, :edit, :create]
 
   def index
@@ -34,10 +33,11 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
 
   def update
     @taxon_concept = TaxonConcept.find(params[:id])
+    taxa_ids = sanitize_update_params
     rebuild_taxonomy = @taxon_concept.rebuild_taxonomy?(params)
     update! do |success, failure|
       success.js {
-        @taxon_concept.rebuild_relationships(@taxa_ids)
+        @taxon_concept.rebuild_relationships(taxa_ids) if taxa_ids.present?
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         render 'update'
       }
@@ -48,7 +48,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         render 'new'
       }
       success.html {
-        @taxon_concept.rebuild_relationships(@taxa_ids)
+        @taxon_concept.rebuild_relationships(taxa_ids) if taxa_ids.present?
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         redirect_to edit_admin_taxon_concept_url(@taxon_concept),
           :notice => 'Operation successful'
@@ -93,6 +93,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
 
     def sanitize_update_params
       name_status = params[:taxon_concept][:name_status]
+      taxa_ids = []
       if params[:taxon_concept]
         name_ids =
           case name_status
@@ -101,9 +102,10 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
           when 'H' then :hybrid_parent_ids
           else return []
           end
-          @taxa_ids =
+          taxa_ids =
             params[:taxon_concept].delete(name_ids).first.split(',').map(&:to_i)
       end
+      taxa_ids
     end
 
     def load_tags
