@@ -92,7 +92,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     end
 
     def sanitize_update_params
-      name_status = params[:taxon_concept][:name_status]
+      name_status = params[:taxon_concept] ? params[:taxon_concept][:name_status] : ''
       taxa_ids = []
       if params[:taxon_concept]
         name_ids =
