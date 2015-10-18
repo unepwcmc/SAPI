@@ -44,6 +44,11 @@ $(document).ready ->
           result.push({id: id, text: names[i] + ' ' + name_status})
         callback(result)
   }
+  window.hybridsSelect2Options = {
+    maximumSelectionSize: 2,
+    formatSelectionTooBig: (limit) ->
+      return 'You can only select ' + limit + ' items'
+  }
 
   $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
   $('.taxon-concept-multiple').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options))

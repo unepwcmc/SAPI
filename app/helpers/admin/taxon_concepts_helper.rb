@@ -34,6 +34,7 @@ module Admin::TaxonConceptsHelper
       })
     when 'H'
       DEFAULT_OPTS.merge({
+       klass: 'hybrids-selection',
        label: 'Parents',
        field_name: :hybrid_parent_ids,
        data_name: TaxonConcept.fetch_taxons_full_name(
