@@ -196,6 +196,11 @@ class AdminInPlaceEditor extends AdminEditor
       'option', 'emptytext', 'not current'
     )
 
+  initSelect2Inputs: () ->
+    $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
+    $('.taxon-concept-multiple').select2($.extend({}, window.defaultTaxonSelect2Options,window.multiTaxonSelect2Options))
+    $('.hybrids-selection').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options, window.hybridsSelect2Options))
+
 class TaxonConceptsEditor extends AdminEditor
   init: () ->
     super

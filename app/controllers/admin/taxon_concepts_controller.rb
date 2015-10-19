@@ -31,28 +31,13 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     end
   end
 
-  def create
-    create! do |success, failure|
-      @taxonomies = Taxonomy.order(:name)
-      @ranks = Rank.order(:taxonomic_position)
-      success.js { render('create') }
-      failure.js {
-        if @taxon_concept.is_synonym?
-          @synonym = @taxon_concept
-          render('new_synonym')
-        else
-          render('new')
-        end
-      }
-    end
-  end
-
   def update
     @taxon_concept = TaxonConcept.find(params[:id])
-    rebuild_taxonomy =
-      @taxon_concept.rebuild_taxonomy?(params)
+    taxa_ids = sanitize_update_params
+    rebuild_taxonomy = @taxon_concept.rebuild_taxonomy?(params)
     update! do |success, failure|
       success.js {
+        @taxon_concept.rebuild_relationships(taxa_ids) if taxa_ids.present?
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         render 'update'
       }
@@ -63,6 +48,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         render 'new'
       }
       success.html {
+        @taxon_concept.rebuild_relationships(taxa_ids) if taxa_ids.present?
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         redirect_to edit_admin_taxon_concept_url(@taxon_concept),
           :notice => 'Operation successful'
@@ -103,6 +89,23 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         { :taxonomy => { :id => Taxonomy.
           where(:name => Taxonomy::CITES_EU).limit(1).select(:id).first.id }
         })
+    end
+
+    def sanitize_update_params
+      name_status = params[:taxon_concept] ? params[:taxon_concept][:name_status] : ''
+      taxa_ids = []
+      if params[:taxon_concept]
+        name_ids =
+          case name_status
+          when 'S' then :accepted_name_ids
+          when 'T' then :accepted_names_for_trade_name_ids
+          when 'H' then :hybrid_parent_ids
+          else return []
+          end
+          taxa_ids =
+            params[:taxon_concept].delete(name_ids).first.split(',').map(&:to_i)
+      end
+      taxa_ids
     end
 
     def load_tags

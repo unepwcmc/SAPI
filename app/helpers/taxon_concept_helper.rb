@@ -45,18 +45,18 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_synonym_modal(nested = false)
+  def admin_new_synonym_modal
     admin_new_modal(
-      :resource => 'taxon_concept_synonym',
-      :title => 'Add new Synonym'
-    ){ nested ? '' : render('synonym_form') }
+      resource: 'taxon_concept_synonym',
+      title: 'Add new Synonym'
+    ){ '' }
   end
 
-  def admin_new_trade_name_modal(nested = false)
+  def admin_new_trade_name_modal
     admin_new_modal(
       :resource => 'taxon_concept_trade_name',
       :title => 'Add new Trade name'
-    ){ nested ? '' : render('trade_name_form') }
+    ){ '' }
   end
 
   def admin_add_new_distribution_button
@@ -96,11 +96,11 @@ module TaxonConceptHelper
     ){ nested ? '' : render('admin/distributions/form') }
   end
 
-  def admin_new_hybrid_modal(nested = false)
+  def admin_new_hybrid_modal
     admin_new_modal(
       :resource => 'taxon_concept_hybrid',
       :title => 'Add new Hybrid'
-    ){ nested ? '' : render('hybrid_form') }
+    ){ '' }
   end
 
   def admin_add_new_reference_button

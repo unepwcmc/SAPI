@@ -1,5 +1,5 @@
 $(document).ready ->
-  defaultTaxonSelect2Options = {
+  window.defaultTaxonSelect2Options = {
     placeholder: 'Start typing scientific name'
     width: '300px'
     minimumInputLength: 3
@@ -27,14 +27,16 @@ $(document).ready ->
           text: tc.full_name + ' ' + tc.name_status
         results: formatted_taxon_concepts
   }
-  multiTaxonSelect2Options = {
+  window.multiTaxonSelect2Options = {
     multiple: true,
     initSelection: (element, callback) =>
-      id = $(element).val().match(/{(.*)}/)[1]
+      id = $(element).val().match(/({|\[)(.*)(}|\])/)[2]
       # Reset value attribute to let Select2 work properly when submitting the values again
       $(element).attr('value','')
       if (id != null && id != '')
-        ids = id.split(',')
+        ids = id.split(',').map( (id) ->
+          parseInt(id.trim())
+        ).sort( (a, b) -> a - b)
         names = $(element).data('name')
         name_status = $(element).data('name-status')
         result = []
@@ -42,9 +44,14 @@ $(document).ready ->
           result.push({id: id, text: names[i] + ' ' + name_status})
         callback(result)
   }
+  window.hybridsSelect2Options = {
+    maximumSelectionSize: 2,
+    formatSelectionTooBig: (limit) ->
+      return 'You can only select ' + limit + ' items'
+  }
 
-  $('.taxon-concept').select2(defaultTaxonSelect2Options)
-  $('.taxon-concept-multiple').select2($.extend(defaultTaxonSelect2Options,multiTaxonSelect2Options))
+  $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
+  $('.taxon-concept-multiple').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options))
   $('.taxon-concept').on('change', (event) ->
     return false unless event.val
     $.when($.ajax( '/admin/taxon_concepts/' + event.val + '.json' ) ).then(( data, textStatus, jqXHR ) =>
@@ -82,7 +89,7 @@ $(document).ready ->
     # it's a jQuery object already
     taxonField = field.find('.taxon-concept')
     # and activate select2
-    taxonField.select2(defaultTaxonSelect2Options)
+    taxonField.select2(window.defaultTaxonSelect2Options)
   )
 
   simpleTaxonSelect2Options = {

@@ -7,10 +7,12 @@ module NomenclatureChange::ReassignmentHelpers
         :nomenclature_change_input_id, :nomenclature_change_output_id,
         :note_en, :note_es, :note_fr, :internal_note, :output_ids
       belongs_to :reassignable, :polymorphic => true
-      has_many :reassignment_targets, :inverse_of => :reassignment,
-        :class_name => NomenclatureChange::ReassignmentTarget,
-        :foreign_key => :nomenclature_change_reassignment_id,
-        :dependent => :destroy, :autosave => true
+      has_many :reassignment_targets,
+        inverse_of: :reassignment,
+        class_name: 'NomenclatureChange::ReassignmentTarget',
+        foreign_key: :nomenclature_change_reassignment_id,
+        dependent: :destroy,
+        autosave: true
       has_many :outputs, :through => :reassignment_targets
 
       validates :reassignable_type, :presence => true

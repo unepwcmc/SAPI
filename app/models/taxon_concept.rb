@@ -45,16 +45,13 @@ class TaxonConcept < ActiveRecord::Base
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
-    :accepted_scientific_name, :parent_scientific_name,
-    :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list, :legacy_trade_code,
+    :parent_scientific_name,
+    :tag_list, :legacy_trade_code, :hybrid_parent_ids,
+    :accepted_name_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
 
   attr_writer :parent_scientific_name
-  attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
-    :other_hybrid_parent_scientific_name
-
   acts_as_taggable
 
   serialize :data, ActiveRecord::Coders::Hstore
@@ -158,7 +155,10 @@ class TaxonConcept < ActiveRecord::Base
     conditions: {comment_type: 'Nomenclature'}
   has_one :distribution_comment, class_name: 'Comment', as: 'commentable',
     conditions: {comment_type: 'Distribution'}
-  has_many :nomenclature_change_reassignments, :as => :reassignable
+  has_many :parent_reassignments,
+    class_name: 'NomenclatureChange::ParentReassignment',
+    as: :reassignable,
+    dependent: :destroy
   has_many :nomenclature_change_inputs, class_name: 'NomenclatureChange::Input'
   has_many :nomenclature_change_outputs, class_name: 'NomenclatureChange::Output'
   has_many :nomenclature_change_outputs_as_new, class_name: 'NomenclatureChange::Output',
@@ -190,14 +190,7 @@ class TaxonConcept < ActiveRecord::Base
     :if => lambda { |tc| tc.full_name }
   before_validation :check_parent_taxon_concept_exists,
     :if => lambda { |tc| tc.parent_scientific_name }
-  before_validation :check_hybrid_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_hybrid? && tc.hybrid_parent_scientific_name }
-  before_validation :check_other_hybrid_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_hybrid? && tc.other_hybrid_parent_scientific_name }
-  before_validation :check_accepted_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
-  before_validation :check_accepted_taxon_concept_for_trade_name_exists,
-    :if => lambda { |tc| tc.is_trade_name? && tc.accepted_scientific_name }
+
   before_validation :ensure_taxonomic_position
 
   translates :nomenclature_note
@@ -224,6 +217,19 @@ class TaxonConcept < ActiveRecord::Base
       sanitize_sql_array([joins_sql, rank.taxonomic_position])
     )
   }
+
+  def self.fetch_taxons_full_name(taxon_ids)
+    if taxon_ids.present?
+      ActiveRecord::Base.connection.execute(
+        <<-SQL
+          SELECT tc.full_name
+          FROM taxon_concepts tc
+          WHERE tc.id = ANY (ARRAY#{taxon_ids.map(&:to_i)})
+          ORDER BY tc.id
+        SQL
+      ).map{ |row| row['full_name']}
+    end
+  end
 
   def has_comments?
     general_comment.try(:note).try(:present?) ||
@@ -333,8 +339,57 @@ class TaxonConcept < ActiveRecord::Base
       Rank.in_range(Rank::VARIETY, Rank::GENUS).include?(rank.name)
   end
 
+  def rebuild_relationships(taxa_ids)
+    if ['S', 'T', 'H'].include? name_status
+      new_taxa, removed_taxa = init_accepted_taxa(taxa_ids)
+      rel_type =
+        case name_status
+        when 'S'
+          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+        when 'T'
+          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
+        when 'H'
+          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_HYBRID)
+        end
+      add_remove_relationships(new_taxa, removed_taxa, rel_type)
+    end
+  end
 
   private
+
+  def add_remove_relationships(new_taxa, removed_taxa, rel_type)
+    removed_taxa.each do |taxon_concept|
+      taxon_concept.taxon_relationships.
+        where('other_taxon_concept_id = ? AND
+              taxon_relationship_type_id = ?', id, rel_type.id).
+        first.destroy
+    end
+
+    new_taxa.each do |taxon_concept|
+      taxon_concept.taxon_relationships << TaxonRelationship.new(
+        :taxon_relationship_type_id => rel_type.id,
+        :other_taxon_concept_id => id
+      )
+    end
+  end
+
+  def init_accepted_taxa(all_taxa_ids)
+    name_ids =
+      case name_status
+      when 'S' then :accepted_name_ids
+      when 'T' then :accepted_names_for_trade_name_ids
+      when 'H' then :hybrid_parent_ids
+      else return [[],[]]
+      end
+    current_name_ids = send(name_ids)
+    new_taxa_ids = all_taxa_ids - current_name_ids
+    removed_taxa_ids = current_name_ids - all_taxa_ids
+
+    [
+      TaxonConcept.where(id: new_taxa_ids),
+      TaxonConcept.where(id: removed_taxa_ids)
+    ]
+  end
 
   def dependent_objects_map
     {
@@ -420,46 +475,6 @@ class TaxonConcept < ActiveRecord::Base
     true
   end
 
-  def check_hybrid_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:hybrid_parent_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-      )
-    end
-  end
-
-  def check_other_hybrid_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:other_hybrid_parent_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-      )
-    end
-  end
-
-  def check_accepted_taxon_concept_exists
-    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
-      )
-    end
-  end
-
-  def check_accepted_taxon_concept_for_trade_name_exists
-    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_TRADE_NAME).id
-      )
-    end
-  end
-
   def check_parent_taxon_concept_exists
     check_associated_taxon_concept_exists(:parent_scientific_name) do |tc|
       self.parent_id = tc.id
@@ -512,6 +527,5 @@ class TaxonConcept < ActiveRecord::Base
     end
     true
   end
-
 
 end
