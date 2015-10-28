@@ -90,7 +90,7 @@ class Elibrary::CitationsImporter
           created_at,
           updated_at
         )
-        SELECT
+        SELECT DISTINCT
           inserted_citations.id,
           geo_entity_id,
           NOW(),
@@ -104,7 +104,7 @@ class Elibrary::CitationsImporter
         created_at,
         updated_at
       )
-      SELECT
+      SELECT DISTINCT
         inserted_citations.id,
         splus_taxon_concept_id,
         NOW(),
@@ -122,9 +122,10 @@ class Elibrary::CitationsImporter
 
   def rows_to_insert_sql
     sql = <<-SQL
-      SELECT * FROM (
+      SELECT all_rows_in_table_name.* FROM (
         #{all_rows_sql}
       ) all_rows_in_table_name
+      JOIN taxon_concepts ON splus_taxon_concept_id = taxon_concepts.id
       WHERE CtyISO2 IS NOT NULL
         AND splus_taxon_concept_id IS NOT NULL
       EXCEPT
