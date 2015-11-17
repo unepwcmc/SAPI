@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Api::V1::EventsController do
   describe "GET index" do
     before(:each) do
-      @copX = create(:cites_cop, designation: cites, name: 'CoPX', effective_at: '2015-11-01')
-      @copY = create(:cites_cop, designation: cites, name: 'CoPY', effective_at: '2015-11-02')
+      @copX = create(:cites_cop, designation: cites, name: 'CoPX', published_at: '2015-11-01')
+      @copY = create(:cites_cop, designation: cites, name: 'CoPY', published_at: '2015-11-02')
       create(:eu_regulation, designation: eu)
     end
     it "returns only E-library events most recent first" do
