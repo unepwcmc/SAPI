@@ -4,7 +4,7 @@ class Api::V1::EventsController < ApplicationController
     @events = Event.
       select([:id, :name, :type]).
       where(type: Event.elibrary_event_types.map(&:name)).
-      order(:published_at)
+      order('type, effective_at DESC')
     render :json => @events,
       :each_serializer => Species::EventSerializer,
       :meta => {:total => @events.count}
