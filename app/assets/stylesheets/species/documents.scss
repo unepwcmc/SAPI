@@ -84,6 +84,7 @@ table.grouped-results-table {
               td{border-bottom: 1px solid #DFE1E2;}
               td.title-col {
                 i.fa-file-pdf-o { color: #868686; }
+                .tooltip[data-descr] { cursor: pointer; }
               }
               input { margin-left: 28px; }
               .multiple-data-container {
@@ -91,17 +92,6 @@ table.grouped-results-table {
                   z-index: 10;
                   i { font-size: 16px; }
               }
-              .data-tooltip {
-                  position: absolute;
-                  max-width: 200px;
-                  bottom: 20px;
-                  left: 20px;
-                  background-color: #FFF;
-                  border: 1px solid #CCC;
-                  display: none;
-              }
-              .multiple-data-container:hover {z-index: 20;}
-              .multiple-data-container:hover .data-tooltip {display: block;}
             }
           }
         }

@@ -4,3 +4,7 @@ Species.DocumentsTooltipComponent = Ember.Component.extend
   multipleValues: ( ->
     this.get('data').length > 1
   ).property('person')
+
+  formattedData: ( ->
+    this.get('data').join(', ')
+  ).property()
