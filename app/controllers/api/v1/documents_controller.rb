@@ -8,7 +8,7 @@ class Api::V1::DocumentsController < ApplicationController
     end
     @search = DocumentSearch.new(params, 'public')
 
-    documents = @search.results
+    documents = @search.results.order('date_raw DESC').limit(100)
 
     documents = documents.where(is_public: "true") if access_denied?
 
@@ -84,7 +84,7 @@ class Api::V1::DocumentsController < ApplicationController
 
   def serialize_documents(documents)
     ActiveModel::ArraySerializer.new(
-      documents.sort_by{ |doc| doc.date.strftime("%F") }.reverse.first(100),
+      documents,
       each_serializer: Species::DocumentsSerializer
     )
   end
