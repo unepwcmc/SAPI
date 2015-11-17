@@ -51,7 +51,7 @@ describe Admin::DocumentsController do
         end
         it "retrieves documents for taxon concept" do
           get :index, "taxon_concepts_ids" => taxon_concept.id
-          assigns(:documents).should eq([@document1])
+          assigns(:documents).should eq([@document2, @document1])
         end
         it "retrieves documents for geo entity" do
           get :index, "geo_entities_ids" => [geo_entity.id]

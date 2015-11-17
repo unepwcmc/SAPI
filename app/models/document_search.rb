@@ -96,7 +96,10 @@ class DocumentSearch
   end
 
   def add_taxon_concepts_condition
-    @query = @query.where("taxon_concept_ids && ARRAY[#{@taxon_concepts_ids.join(',')}]")
+    @query = @query.where(
+      "taxon_concept_ids && ARRAY[#{@taxon_concepts_ids.join(',')}]
+      OR taxon_concept_ids = ARRAY[]::INT[]"
+    )
   end
 
   def add_geo_entities_condition
