@@ -31,6 +31,7 @@ class Document::ReviewOfSignificantTrade < Document
 
   has_one :review_details,
     :class_name => 'Document::ReviewDetails',
-    :foreign_key => 'document_id'
+    :foreign_key => 'document_id',
+    dependent: :destroy
   accepts_nested_attributes_for :review_details, :allow_destroy => true
 end
