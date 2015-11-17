@@ -26,11 +26,11 @@ class Api::V1::DocumentsController < ApplicationController
     )
 
     render :json => {
-      cites_cop_docs: ActiveModel::ArraySerializer.new(cites_cop_docs, each_serializer: Species::DocumentsSerializer),
-      ec_srg_docs: ActiveModel::ArraySerializer.new(ec_srg_docs, each_serializer: Species::DocumentsSerializer),
-      cites_ac_docs: ActiveModel::ArraySerializer.new(cites_ac_docs, each_serializer: Species::DocumentsSerializer),
-      cites_pc_docs: ActiveModel::ArraySerializer.new(cites_pc_docs, each_serializer: Species::DocumentsSerializer),
-      other_docs: ActiveModel::ArraySerializer.new(other_docs, each_serializer: Species::DocumentsSerializer)
+      cites_cop_docs: serialize_documents(cites_cop_docs),
+      ec_srg_docs: serialize_documents(ec_srg_docs),
+      cites_ac_docs: serialize_documents(cites_ac_docs),
+      cites_pc_docs: serialize_documents(cites_pc_docs),
+      other_docs: serialize_documents(other_docs)
     }
   end
 
@@ -80,6 +80,13 @@ class Api::V1::DocumentsController < ApplicationController
 
   def access_denied?
     !current_user || current_user.role == User::API_USER
+  end
+
+  def serialize_documents(documents)
+    ActiveModel::ArraySerializer.new(
+      documents.sort_by{ |doc| doc.date.strftime("%F") }.reverse.first(100),
+      each_serializer: Species::DocumentsSerializer
+    )
   end
 
 end
