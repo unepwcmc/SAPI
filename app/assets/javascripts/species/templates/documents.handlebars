@@ -12,36 +12,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="group">
-          <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
-          <td>EC SRG</td>
-          <td>{{content.ec_srg_docs.length}}</td>
-        </tr>
-        {{documents-results documents=content.ec_srg_docs}}
-        <tr class="group">
-          <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
-          <td>CITES CoP</td>
-          <td>{{content.cites_cop_docs.length}}</td>
-        </tr>
-        {{documents-results documents=content.cites_cop_docs proposalOutcome=true}}
-        <tr class="group">
-          <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
-          <td>CITES Animals Committee</td>
-          <td>{{content.cites_ac_docs.length}}</td>
-        </tr>
-        {{documents-results documents=content.cites_ac_docs reviewPhase=true}}
-        <tr class="group">
-          <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
-          <td>CITES Plants Committee</td>
-          <td>{{content.cites_pc_docs.length}}</td>
-        </tr>
-        {{documents-results documents=content.cites_pc_docs reviewPhase=true}}
-        <tr class="group">
-          <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
-          <td>Other</td>
-          <td>{{content.other_docs.length}}</td>
-        </tr>
-        {{documents-results documents=content.other_docs}}
+        {{documents-row meeting_type="EC SRG" documents=content.ec_srg}}
+        {{documents-row meeting_type="CITES CoP" documents=content.cites_cop}}
+        {{documents-row meeting_type="CITES Animals Committee" documents=content.cites_ac}}
+        {{documents-row meeting_type="CITES Plants Committee" documents=content.cites_pc}}
+        {{documents-row meeting_type="Other" documents=content.other}}
       </tbody>
     </table>
   </div>
