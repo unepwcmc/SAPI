@@ -60,7 +60,7 @@ class Elibrary::DocumentsImporter
         splus_document_type,
         DocumentID,
         DocumentTitle,
-        DocumentDate,
+        COALESCE(DocumentDate, events.published_at) As DocumentDate,
         DocumentFileName AS filename,
         DocumentFileName,
         DocumentIsPubliclyAccessible,
