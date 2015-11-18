@@ -29,6 +29,7 @@ table.grouped-results-table {
       display: none;
       & > td {
         padding-bottom: 0;
+        width: 820px; //Temporary fix for FF on Windows
 
       }
       div.inner-table-container {
@@ -99,3 +100,28 @@ table.grouped-results-table {
     }
   }
 }
+
+//TaxonConcept documents table
+#documents {
+  .grouped-results-table {
+    tr {
+      background: none;
+    }
+    tr.table-row {
+      display: block;
+      div.inner-table-container {
+        display: block;
+      }
+    }
+    th {
+      border-bottom: none;
+      color: none;
+      padding: 0;
+    }
+    td {
+      border-top: none;
+    }
+    table.table-body { margin-top: 10px; }
+  }
+}
+
