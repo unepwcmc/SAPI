@@ -111,7 +111,9 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def no_of_excluded_docs(documents, limit)
-    excluded = documents.length - limit
+    query = "SELECT count(*) AS count_all FROM (#{documents.to_sql}) x"
+    count = ActiveRecord::Base.connection.execute(query).first.try(:[], "count_all").to_i
+    excluded = count - limit
     excluded < 0 ? 0 : excluded
   end
 
