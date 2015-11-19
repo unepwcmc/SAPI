@@ -40,6 +40,7 @@
     display: none;
     color: #2d3237;
   }
+  .documents-search-results-header { display: none; }
 
   .links-area {
     float: left;
@@ -311,7 +312,8 @@
   padding: 10px 15px 13px 15px;
 }
 .inner .search-block {
-  .search-options-toggle {display: block}
+  .search-options-toggle { display: block; }
+  .documents-search-results-header { display: block; }
 }
 .inner .search-block .search-form.documents {
   display: none;
