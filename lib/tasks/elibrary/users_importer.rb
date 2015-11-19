@@ -19,32 +19,7 @@ class Elibrary::UsersImporter
     ]
   end
 
-  def run_preparatory_queries
-    # delete public viewers
-    ActiveRecord::Base.connection.execute("DELETE FROM #{table_name} WHERE RoleName = 'Public Viewer'")
-
-    # only keep 1 highest priority role per user
-    sql = <<-SQL
-      WITH users_with_roles AS (
-        SELECT *,
-          ROW_NUMBER() OVER (
-            PARTITION BY LoweredUserName
-            ORDER BY CASE
-              WHEN RoleName = 'Administrator' THEN 1
-              WHEN RoleName = 'Data Contributor' THEN 2
-              WHEN RoleName = 'Full Viewer' THEN 3
-            END
-          )
-        FROM #{table_name}
-      )
-      DELETE FROM #{table_name} t
-      USING users_with_roles
-      WHERE t.LoweredUserNAme = users_with_roles.LoweredUserName
-      AND t.RoleName = users_with_roles.RoleName
-      AND row_number > 1
-    SQL
-    ActiveRecord::Base.connection.execute(sql)
-  end
+  def run_preparatory_queries; end
 
   def run_queries
     sql = <<-SQL
