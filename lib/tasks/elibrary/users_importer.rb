@@ -28,7 +28,7 @@ class Elibrary::UsersImporter
       )
       INSERT INTO "users" (email, name, role, geo_entity_id, created_at, updated_at)
         SELECT
-        email,
+        LOWER(email),
         name,
         splus_role,
         splus_geo_entity_id,
