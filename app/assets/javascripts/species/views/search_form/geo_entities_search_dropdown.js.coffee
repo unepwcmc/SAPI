@@ -3,7 +3,7 @@ Species.GeoEntitiesSearchDropdown = Ember.View.extend
   classNames: ['popup-holder01']
   placeholder: ( ->
     if @get('controller.isSearchContextDocuments')
-      'Type to filetr countries or territories'
+      'Type to filter countries or territories'
     else
       'Type to filter countries or regions'
   ).property('controller.isSearchContextDocuments')
