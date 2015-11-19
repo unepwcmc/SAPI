@@ -8,14 +8,19 @@ class Api::V1::DocumentsController < ApplicationController
     end
     @search = DocumentSearch.new(params, 'public')
 
-    documents = @search.results.order('date_raw DESC').limit(100)
+    documents = @search.results.order('date_raw DESC')
 
     documents = documents.where(is_public: "true") if access_denied?
 
+    limit = 200
     cites_cop_docs = documents.where(event_type: "CitesCop")
+    cites_cop_excluded = no_of_excluded_docs(cites_cop_docs, limit)
     ec_srg_docs = documents.where(event_type: "EcSrg")
+    ec_srg_excluded = no_of_excluded_docs(ec_srg_docs, limit)
     cites_ac_docs = documents.where(event_type: "CitesAc")
+    cites_ac_excluded = no_of_excluded_docs(cites_ac_docs, limit)
     cites_pc_docs = documents.where(event_type: "CitesPc")
+    cites_pc_excluded = no_of_excluded_docs(cites_pc_docs, limit)
     # other docs can be docs tied to historic types of events (CITES Technical
     # Committe, CITES Extraordinary Meeting) or ones without event
     other_docs = documents.where(
@@ -24,13 +29,29 @@ class Api::V1::DocumentsController < ApplicationController
         OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc')
       SQL
     )
+    other_excluded = no_of_excluded_docs(other_docs, limit)
 
     render :json => {
-      cites_cop_docs: serialize_documents(cites_cop_docs),
-      ec_srg_docs: serialize_documents(ec_srg_docs),
-      cites_ac_docs: serialize_documents(cites_ac_docs),
-      cites_pc_docs: serialize_documents(cites_pc_docs),
-      other_docs: serialize_documents(other_docs)
+      cites_cop: {
+        docs: serialize_documents(cites_cop_docs, limit),
+        excluded_docs: cites_cop_excluded,
+      },
+      ec_srg: {
+        docs: serialize_documents(ec_srg_docs, limit),
+        excluded_docs: ec_srg_excluded
+      },
+      cites_ac: {
+        docs: serialize_documents(cites_ac_docs, limit),
+        excluded_docs: cites_ac_excluded
+      },
+      cites_pc: {
+        docs: serialize_documents(cites_pc_docs, limit),
+        excluded_docs: cites_pc_excluded
+      },
+      other: {
+        docs: serialize_documents(other_docs, limit),
+        excluded_docs: other_excluded
+      }
     }
   end
 
@@ -82,11 +103,18 @@ class Api::V1::DocumentsController < ApplicationController
     !current_user || current_user.role == User::API_USER
   end
 
-  def serialize_documents(documents)
+  def serialize_documents(documents, limit)
     ActiveModel::ArraySerializer.new(
-      documents,
+      documents.limit(limit),
       each_serializer: Species::DocumentsSerializer
     )
+  end
+
+  def no_of_excluded_docs(documents, limit)
+    query = "SELECT count(*) AS count_all FROM (#{documents.to_sql}) x"
+    count = ActiveRecord::Base.connection.execute(query).first.try(:[], "count_all").to_i
+    excluded = count - limit
+    excluded < 0 ? 0 : excluded
   end
 
 end

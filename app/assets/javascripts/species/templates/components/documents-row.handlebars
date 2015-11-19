@@ -1,0 +1,11 @@
+<tr class="group">
+  <td>{{#view Species.ResultToggleButton}}{{/view}}</td>
+  <td class="meeting-type">{{meeting_type}}</td>
+  <td>
+    <span class="no-of-documents">{{documents.docs.length}}</span>
+    {{#if documents.excluded_docs}}
+      <span>(excluded: {{documents.excluded_docs}})</span>
+    {{/if}}
+  </td>
+</tr>
+{{documents-results documents=documents.docs}}
