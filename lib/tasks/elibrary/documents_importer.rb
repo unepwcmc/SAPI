@@ -110,7 +110,10 @@ class Elibrary::DocumentsImporter
         CASE WHEN DocumentOrder = 'NULL' THEN NULL ELSE CAST(DocumentOrder AS INT) END AS DocumentOrder,
         BTRIM(splus_document_type) AS splus_document_type,
         DocumentID,
-        BTRIM(DocumentTitle) AS DocumentTitle,
+        CASE
+        WHEN DocumentTitle IS NULL AND splus_event_type = 'CitesCop' THEN 'title placeholder for CoP Proposal Nature'
+        ELSE BTRIM(DocumentTitle)
+        END AS DocumentTitle,
         COALESCE(
           CAST(DocumentDate AS DATE),
           CAST(EventDate AS DATE)
