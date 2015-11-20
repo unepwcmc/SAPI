@@ -35,6 +35,7 @@ class Document < ActiveRecord::Base
     :sort_index, :discussion_id, :discussion_sort_index
   belongs_to :event
   belongs_to :language
+  belongs_to :primary_language_document, class_name: 'Document', foreign_key: 'primary_language_document_id'
   has_many :citations, class_name: 'DocumentCitation', dependent: :destroy
   has_and_belongs_to_many :tags, class_name: 'DocumentTag', join_table: 'document_tags_documents'
   validates :title, presence: true

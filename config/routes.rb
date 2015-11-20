@@ -85,7 +85,9 @@ SAPI::Application.routes.draw do
     resources :cites_extraordinary_meetings
 
     resource :document_batch, :only => [:new, :create]
-    resources :documents
+    resources :documents do
+      get :autocomplete, :on => :collection
+    end
 
     resources :cites_suspension_notifications
     resources :references, :only => [:index, :create, :update, :destroy] do

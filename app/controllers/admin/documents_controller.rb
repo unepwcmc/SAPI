@@ -62,6 +62,15 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     end
   end
 
+  def autocomplete
+    title = params[:search_params][:title]
+    @matched_documents = Document.where("title LIKE ?", "%#{title}%")
+
+    render :json => @matched_documents.to_json(
+      :only => [:id, :title]
+    )
+  end
+
   protected
 
   def collection

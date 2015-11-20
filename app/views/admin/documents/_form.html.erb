@@ -43,6 +43,13 @@
         )
       %>
     </div>
+    <%= f.label :primary_language_document_id, class: 'control-label' %>
+    <div class="controls">
+      <%= f.hidden_field :primary_language_document_id, {
+        :class => 'primary-language-document',
+        :'data-init-selection' => {id: f.object.primary_language_document.id, text: f.object.primary_language_document.title}.to_json,
+      } %>
+    </div>
   </div>
 
   <div class="control-group">
