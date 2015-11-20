@@ -63,19 +63,10 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   def autocomplete
-    title = params[:search_params][:title]
-    event_id = params[:search_params][:event_id]
-    sql_query = "LOWER(title) LIKE :title"
-    sql_query = "#{sql_query} AND event_id = :event_id"
-    @matched_documents = Document.where(
-      ActiveRecord::Base.send(:sanitize_sql_array, [
-        sql_query,
-        :title => "#{title}%",
-        :event_id => event_id
-
-      ])
-    )
-
+    title = params[:title]
+    event_id = params[:event_id]
+    @matched_documents = event_id.present? ? Document.where(event_id: event_id) : Document
+    @matched_documents = @matched_documents.search_by_title(title)
     render :json => @matched_documents.to_json(
       :only => [:id, :title]
     )
