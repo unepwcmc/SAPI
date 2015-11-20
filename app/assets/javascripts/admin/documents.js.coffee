@@ -50,6 +50,7 @@ $(document).ready ->
         {
           search_params:
             title: query
+            event_id: $('#document_event_id').val()
         }
       results: (data, page) ->
         formatted_documents = data.map (doc) =>
