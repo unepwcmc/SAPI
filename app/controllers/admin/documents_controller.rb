@@ -62,6 +62,16 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     end
   end
 
+  def autocomplete
+    title = params[:title]
+    event_id = params[:event_id]
+    @matched_documents = event_id.present? ? Document.where(event_id: event_id) : Document
+    @matched_documents = @matched_documents.search_by_title(title)
+    render :json => @matched_documents.to_json(
+      :only => [:id, :title]
+    )
+  end
+
   protected
 
   def collection

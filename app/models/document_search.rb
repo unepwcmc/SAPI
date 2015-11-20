@@ -119,7 +119,11 @@ class DocumentSearch
 
   def select_and_group_query
     columns = "event_name, event_type, date, date_raw, is_public, document_type,
-      number, primary_document_id,
+      SQUISH_NULL(number) AS number, primary_document_id,
+      geo_entity_names, taxon_names, extension,
+      proposal_outcome, review_phase"
+    columns_for_grouping = "event_name, event_type, date, date_raw, is_public, document_type,
+      SQUISH_NULL(number), primary_document_id,
       geo_entity_names, taxon_names, extension,
       proposal_outcome, review_phase"
     aggregators = <<-SQL
@@ -136,7 +140,7 @@ class DocumentSearch
 
     @query = Document.from(
       '(' + @query.to_sql + ') documents'
-    ).select(columns + "," + aggregators).group(columns)
+    ).select(columns + "," + aggregators).group(columns_for_grouping)
   end
 
 end

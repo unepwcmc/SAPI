@@ -35,6 +35,29 @@ $(document).ready ->
       newEventLink.show()
   )
 
+  primaryDocumentSelect2Options = {
+    placeholder: 'Start typing title'
+    width: '500px'
+    minimumInputLength: 3
+    quietMillis: 500
+    allowClear: true
+    initSelection: (element, callback) ->
+      callback($(element).data('init-selection'))
+    ajax:
+      url: '/admin/documents/autocomplete'
+      dataType: 'json'
+      data: (query, page) ->
+        {
+          title: query
+          event_id: $('#document_event_id').val()
+        }
+      results: (data, page) ->
+        formatted_documents = data.map (doc) =>
+          id: doc.id
+          text: doc.title
+        results: formatted_documents
+  }
+
   citationTaxonSelect2Options = {
     placeholder: 'Start typing scientific name'
     multiple: true
@@ -76,6 +99,7 @@ $(document).ready ->
     allowClear: true
   }
 
+  $('.primary-language-document').select2(primaryDocumentSelect2Options)
   $('.citation-taxon-concept').select2(citationTaxonSelect2Options)
   $('.citation-geo-entity').select2(citationGeoEntitySelect2Options)
   $('.document-tag').select2(documentTagSelect2Options)

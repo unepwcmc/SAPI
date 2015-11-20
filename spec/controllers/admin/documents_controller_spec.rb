@@ -208,4 +208,33 @@ describe Admin::DocumentsController do
     end
   end
 
+  describe "XHR GET JSON autocomplete" do
+    let!(:document){
+      create(:document,
+        :title => 'Title',
+        :event_id => event.id
+      )
+    }
+    let!(:document2){ create(:document, :title => 'Title2') }
+
+    context "When no event specified" do
+      it "returns properly formatted json" do
+        xhr :get, :autocomplete, :format => 'json',
+          :title => 'tit'
+        response.body.should have_json_size(2)
+        parse_json(response.body, "0/title").should == 'Title'
+        parse_json(response.body, "1/title").should == 'Title2'
+      end
+    end
+
+    context "When an event is specified" do
+      it "returns properly formatted json" do
+        xhr :get, :autocomplete, :format => 'json',
+          :title => 'tit', :event_id => event.id
+        response.body.should have_json_size(1)
+        parse_json(response.body, "0/title").should == 'Title'
+      end
+    end
+  end
+
 end

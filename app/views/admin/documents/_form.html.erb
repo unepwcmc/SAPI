@@ -46,6 +46,16 @@
   </div>
 
   <div class="control-group">
+    <%= f.label :primary_language_document_id, class: 'control-label' %>
+    <div class="controls">
+      <%= f.hidden_field :primary_language_document_id, {
+        :class => 'primary-language-document',
+        :'data-init-selection' => {id: f.object.primary_language_document.try(:id), text: f.object.primary_language_document.try(:title)}.to_json,
+      } %>
+    </div>
+  </div>
+
+  <div class="control-group">
     <%= f.label :date, class: 'control-label' %>
     <div class="controls">
       <%= f.text_field :date, :class => "datepicker", :value => @document.date_formatted %>
