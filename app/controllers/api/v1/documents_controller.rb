@@ -79,14 +79,25 @@ class Api::V1::DocumentsController < ApplicationController
     @documents = Document.find(params[:ids].split(','))
 
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
+    missing_files = []
     Zip::OutputStream.open(t.path) do |zos|
       @documents.each do |document|
         path_to_file = document.filename.path
+        filename = path_to_file.split('/').last
         unless File.exists?(path_to_file)
+          missing_files <<
+            "{\n  title: #{document.title},\n  filename: #{filename}\n}"
+        else
+          zos.put_next_entry(filename)
+          zos.print IO.read(path_to_file)
+        end
+      end
+      if missing_files.present?
+        if missing_files.length == @documents.count
           render :file => "#{Rails.root}/public/404.html",  :status => 404  and return
         end
-        zos.put_next_entry(path_to_file.split('/').last)
-        zos.print IO.read(path_to_file)
+        zos.put_next_entry('missing_files.txt')
+        zos.print missing_files.join("\n\n")
       end
     end
 
