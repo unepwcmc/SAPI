@@ -32,7 +32,8 @@ class Document < ActiveRecord::Base
   track_who_does_it
   attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
     :language_id, :citations_attributes, :number,
-    :sort_index, :discussion_id, :discussion_sort_index
+    :sort_index, :discussion_id, :discussion_sort_index,
+    :primary_language_document_id
   belongs_to :event
   belongs_to :language
   belongs_to :primary_language_document, class_name: 'Document', foreign_key: 'primary_language_document_id'
