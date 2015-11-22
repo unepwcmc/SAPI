@@ -116,7 +116,12 @@ class Elibrary::CitationsImporter
   end
 
   def all_rows_sql
-    columns = ['CAST(DocumentID AS INT) AS DocumentID', 'CitationID', 'CtyISO2', 'CAST(splus_taxon_concept_id AS INT) AS splus_taxon_concept_id']
+    columns = [
+      'CAST(DocumentID AS INT) AS DocumentID',
+      'CAST(CitationID AS INT) AS CitationID',
+      'CtyISO2',
+      'CAST(splus_taxon_concept_id AS INT) AS splus_taxon_concept_id'
+    ]
     "SELECT #{columns.join(', ')} FROM #{table_name} t"
   end
 
