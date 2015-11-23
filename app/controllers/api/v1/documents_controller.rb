@@ -3,7 +3,7 @@ class Api::V1::DocumentsController < ApplicationController
   def index
 
     if params[:taxon_concept_query].present?
-      @species_search = Species::Search.new(params)
+      @species_search = Species::Search.new(params.merge({visibility: 'elibrary'}))
       params[:taxon_concepts_ids] = @species_search.results.map(&:id).join(',')
     end
     @search = DocumentSearch.new(params, 'public')
