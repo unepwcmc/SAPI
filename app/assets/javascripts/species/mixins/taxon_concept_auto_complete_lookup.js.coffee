@@ -7,10 +7,12 @@ Species.TaxonConceptAutoCompleteLookup = Ember.Mixin.create({
     taxonConceptQuery = @get('taxonConceptQuery')
     if not taxonConceptQuery or taxonConceptQuery.length < 3
       return;
-    Species.AutoCompleteTaxonConcept.find(
+    ac_params = {
       taxonomy: @get('taxonomy')
       taxon_concept_query: taxonConceptQuery
-    )
+    }
+    ac_params['visibility'] = 'elibrary' if @get('searchContext') == 'documents'
+    Species.AutoCompleteTaxonConcept.find(ac_params)
   ).property('taxonConceptQuery')
 
   taxonConceptQueryRe: ( ->

@@ -18,6 +18,15 @@ namespace :elibrary do
     Document.delete_all
   end
 
+  namespace :non_cites_taxa do
+    require Rails.root.join('lib/tasks/elibrary/non_cites_taxa_importer.rb')
+    desc 'Import non-CITES taxa from csv file'
+    task :import => :environment do |task_name|
+      check_file_provided(task_name)
+      importer = Elibrary::NonCitesTaxaImporter.new(ENV['FILE'])
+      importer.run
+    end
+  end
   namespace :events do
     require Rails.root.join('lib/tasks/elibrary/events_importer.rb')
     desc 'Import events from csv file'
