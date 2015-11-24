@@ -5,3 +5,8 @@ Species.ElibrarySearchFormView = Ember.View.extend
   actions:
     toggleSearchOptions: () ->
       @.$('.search-form').toggle()
+      icon = @.$('.search-options-toggle > i')
+      if icon.hasClass('fa-plus-circle')
+        icon.addClass('fa-minus-circle').removeClass('fa-plus-circle')
+      else
+        icon.addClass('fa-plus-circle').removeClass('fa-minus-circle')
