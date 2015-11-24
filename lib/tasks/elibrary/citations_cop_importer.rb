@@ -20,6 +20,23 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
     ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalNature = NULL WHERE ProposalNature='NULL'" )
     ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalOutcome = NULL WHERE ProposalOutcome='NULL'" )
     ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalRepresentation = NULL WHERE ProposalRepresentation='NULL'" )
+
+    # revert any previous CoP document duplication
+    sql =<<-SQL
+      WITH new_docs AS (
+        SELECT id, original_id FROM documents
+        WHERE type = 'Document::Proposal' AND original_id IS NOT NULL
+      ), proposals AS (
+        UPDATE proposal_details
+        SET document_id = d.original_id
+        FROM proposal_details pd
+        JOIN new_docs d ON pd.document_id = d.id
+        WHERE proposal_details.id = pd.id
+      )
+      DELETE FROM documents
+      WHERE original_id IS NOT NULL;
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
   end
 
   def run_final_queries
