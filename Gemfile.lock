@@ -58,6 +58,9 @@ GEM
       uuidtools
     annotate (2.5.0)
       rake
+    appsignal (0.12.rc.8)
+      rack
+      thread_safe
     arel (3.0.3)
     barber (0.4.2)
       ember-source
@@ -445,6 +448,7 @@ DEPENDENCIES
   acts-as-taggable-on (~> 2.3.1)
   ahoy_matey
   annotate (>= 2.5.0)
+  appsignal (~> 0.12.rc)
   better_errors (~> 1.1.0)
   binding_of_caller (>= 0.7.2)
   bootstrap-sass (~> 2.3.1.0)
