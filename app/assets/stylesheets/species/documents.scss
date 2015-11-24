@@ -1,7 +1,10 @@
 table.grouped-results-table {
   width: 100%;
   thead.grouped-header {
-    th { font-weight: bold; }
+    th {
+      font-weight: bold;
+      padding: 15px 1px;
+    }
   }
   tr {background: none;}
   tbody {
