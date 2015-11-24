@@ -23,7 +23,7 @@ table.grouped-results-table {
     }
     tr.group {
       td { border-top: 1px solid #DFE1E2; }
-      .meeting-type, .no-of-documents { font-weight: bold; }
+      td .excluded-documents { font-style: italic; }
     }
     tr.table-row {
       display: none;
