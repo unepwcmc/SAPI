@@ -3,3 +3,6 @@ Species.ApplicationView = Ember.View.extend
   didInsertElement: () ->
     $("button#remove").click ->
       $("div#banner").slideUp "normal"
+
+  click: (event) ->
+    $('.popup-clickable').hide()
