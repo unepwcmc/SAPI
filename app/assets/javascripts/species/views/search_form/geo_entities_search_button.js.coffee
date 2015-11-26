@@ -1,4 +1,4 @@
-Species.GeoEntitiesSearchButton = Ember.View.extend
+Species.GeoEntitiesSearchButton = Ember.View.extend(Species.SearchFormDropdowns,
   tagName: 'a'
   href: '#'
   classNames: ['link']
@@ -29,4 +29,4 @@ Species.GeoEntitiesSearchButton = Ember.View.extend
       else
         @get('selectedGeoEntities').length + " locations"
   ).property("selectedGeoEntities.@each")
-    
+)

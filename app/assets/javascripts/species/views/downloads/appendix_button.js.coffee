@@ -1,4 +1,4 @@
-Species.AppendixButton = Ember.View.extend
+Species.AppendixButton = Ember.View.extend(Species.SearchFormDropdowns,
   tagName: 'a'
   href: '#'
   classNames: ['link']
@@ -16,3 +16,4 @@ Species.AppendixButton = Ember.View.extend
     else
       return selectedAppendices.sort().join(" & ")
   ).property("selectedAppendices.@each")
+)
