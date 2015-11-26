@@ -22,10 +22,10 @@
           appendicesBinding="controller.appendices"
           title="ANNEX"
         }}
-        <div class="popup-holder-appendix">
+        <div class="popup-clickable popup-holder-appendix">
           <div class="popup">
             <div class="list-holder">
-              {{collection Species.AppendixDropdownCollectionView 
+              {{collection Species.AppendixDropdownCollectionView
                 controllerBinding="controller"
                 contentBinding="controller.appendices"
               }}
@@ -63,7 +63,7 @@
       </div>
     </div>
   </div>
-  <div class="btn-holder">     
+  <div class="btn-holder">
     {{view Species.StartDownloadButton controllerBinding="controller"}}
     <div class="message-area">
       {{#if controller.downloadInProgress}}
