@@ -79,7 +79,7 @@ group :staging, :production do
   gem 'slack-notifier', '~> 1.0'
 end
 
-gem 'rest_client', require: false
+gem 'rest-client', require: false
 
 group :development do
   gem "better_errors", '~>1.1.0'
