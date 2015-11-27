@@ -5,4 +5,4 @@ Species.ApplicationView = Ember.View.extend
       $("div#banner").slideUp "normal"
 
   click: (event) ->
-    $('.popup-clickable').hide()
+    $('.popup-clickable').hide() unless $(event.target).closest('.search-block01').length
