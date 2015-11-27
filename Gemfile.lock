@@ -322,8 +322,6 @@ GEM
     rest-client (1.7.2)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
-    rest_client (1.8.2)
-      netrc (~> 0.7.7)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -496,7 +494,7 @@ DEPENDENCIES
   rack-livereload
   rails (= 3.2.22)
   rake (~> 10.0.3)
-  rest_client
+  rest-client
   rspec-mocks
   rspec-rails
   sass-rails (~> 3.2.3)
