@@ -68,37 +68,44 @@ class Elibrary::DocumentsImporter
         FROM rows_to_insert
         LEFT JOIN events e ON e.elib_legacy_id = rows_to_insert.EventID
         LEFT JOIN languages lng ON UPPER(lng.name_en) = UPPER(rows_to_insert.LanguageName)
-      ), inserted_rows AS (
-        INSERT INTO "documents" (
-          event_id,
-          sort_index,
-          type,
-          elib_legacy_id,
-          title,
-          date,
-          filename,
-          elib_legacy_file_name,
-          is_public,
-          language_id,
-          created_at,
-          updated_at
-        )
-        SELECT
-          rows_to_insert_resolved.*,
-          NOW(),
-          NOW()
-        FROM rows_to_insert_resolved
-      ), rows_to_insert_with_master_document_id AS (
+      )
+      INSERT INTO "documents" (
+        event_id,
+        sort_index,
+        type,
+        elib_legacy_id,
+        title,
+        date,
+        filename,
+        elib_legacy_file_name,
+        is_public,
+        language_id,
+        created_at,
+        updated_at
+      )
+      SELECT
+        rows_to_insert_resolved.*,
+        NOW(),
+        NOW()
+      FROM rows_to_insert_resolved
+    SQL
+    ActiveRecord::Base.connection.execute(sql)
+
+    sql = <<-SQL
+      WITH rows_with_master_document_id AS (
         SELECT documents.id, master_documents.id AS primary_language_document_id
-        FROM rows_to_insert
+        FROM #{table_name} rows_to_insert
         JOIN documents ON documents.elib_legacy_id = rows_to_insert.DocumentID
         JOIN documents master_documents ON master_documents.elib_legacy_id = rows_to_insert.MasterDocumentID
+          AND documents.date = master_documents.date
+          AND documents.type = master_documents.type
+          AND documents.language_id <> master_documents.language_id
       )
       -- now resolve the self-reference to master document
       UPDATE documents
-      SET primary_language_document_id = rows_to_insert_with_master_document_id.primary_language_document_id
-      FROM rows_to_insert_with_master_document_id
-      WHERE rows_to_insert_with_master_document_id.id = documents.id
+      SET primary_language_document_id = rows_with_master_document_id.primary_language_document_id
+      FROM rows_with_master_document_id
+      WHERE rows_with_master_document_id.id = documents.id
     SQL
     ActiveRecord::Base.connection.execute(sql)
   end
