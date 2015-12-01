@@ -142,4 +142,8 @@ class DocumentSearch
     ).select(columns + "," + aggregators).group(columns)
   end
 
+  def self.refresh
+    ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
+  end
+
 end
