@@ -42,7 +42,7 @@ class DocumentSearch
   end
 
   def table_name
-    admin_interface? ? 'documents_view' : 'api_documents_view'
+    admin_interface? ? 'documents_view' : 'api_documents_mview'
   end
 
   def initialize_params(options)
