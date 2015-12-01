@@ -1,7 +1,6 @@
 <thead>
   <th>Type</th>
   <th>Date</th>
-  <th>Number</th>
   <% unless @event %>
     <th>Event</th>
   <% end %>
@@ -17,7 +16,6 @@
     <tr class="<%= if document.is_public? then "current_listing" end %>">
       <td><%= document.type %></td>
       <td><%= document.date_formatted %></td>
-      <td><%= document.number %></td>
       <% unless @event %>
         <td><%= link_to document.event.name, admin_event_documents_path(document.event) if document.event %></td>
       <% end %>

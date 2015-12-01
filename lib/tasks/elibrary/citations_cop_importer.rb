@@ -136,8 +136,8 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
         JOIN documents ON DocumentID = documents.elib_legacy_id
         LEFT JOIN document_tags outcomes ON BTRIM(UPPER(outcomes.name)) = BTRIM(UPPER(ProposalOutcome))
       )
-      INSERT INTO proposal_details(document_id, proposal_outcome_id, proposal_nature, representation, created_at, updated_at)
-      SELECT document_id, proposal_outcome_id, ProposalNature, ProposalRepresentation, NOW(), NOW()
+      INSERT INTO proposal_details(document_id, proposal_outcome_id, proposal_nature, representation, proposal_number, created_at, updated_at)
+      SELECT document_id, proposal_outcome_id, ProposalNature, ProposalRepresentation, ProposalNo, NOW(), NOW()
       FROM rows_to_insert_resolved
     SQL
     ActiveRecord::Base.connection.execute(sql)
@@ -148,9 +148,9 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
   # but in the new system it is document-level
   def all_proposal_details_rows_sql
     <<-SQL
-      SELECT CAST(DocumentID AS INT), ProposalNature, ProposalOutcome, ProposalRepresentation
+      SELECT CAST(DocumentID AS INT), ProposalNature, ProposalOutcome, ProposalRepresentation, ProposalNo
       FROM #{table_name}
-      GROUP BY DocumentID, ProposalNature, ProposalOutcome, ProposalRepresentation
+      GROUP BY DocumentID, ProposalNature, ProposalOutcome, ProposalRepresentation, ProposalNo
     SQL
   end
 
@@ -171,7 +171,8 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
         d.elib_legacy_id,
         dd.proposal_nature,
         outcomes.name,
-        dd.representation
+        dd.representation,
+        dd.proposal_number
       FROM (
         #{all_rows_sql}
       ) nc
