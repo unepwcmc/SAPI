@@ -23,7 +23,7 @@ SELECT d.id,
       WHEN d.primary_language_document_id IS NULL THEN d.id
       ELSE d.primary_language_document_id
   END AS primary_document_id,
-  pd.proposal_number,
+  SQUISH_NULL(pd.proposal_number) AS proposal_number,
   po.name AS proposal_outcome,
   rp.name AS review_phase,
   array_agg_notnull(po.id) || array_agg_notnull(rp.id) AS document_tags_ids,
