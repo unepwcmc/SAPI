@@ -12,7 +12,7 @@ class Api::V1::DocumentsController < ApplicationController
 
     documents = documents.where(is_public: "true") if access_denied?
 
-    limit = 200
+    limit = 100
     cites_cop_docs = documents.where(event_type: "CitesCop")
     cites_cop_excluded = no_of_excluded_docs(cites_cop_docs, limit)
     ec_srg_docs = documents.where(event_type: "EcSrg")
