@@ -42,7 +42,7 @@ class DocumentSearch
   end
 
   def table_name
-    admin_interface? ? 'documents_view' : 'api_documents_view'
+    admin_interface? ? 'documents_view' : 'api_documents_mview'
   end
 
   def initialize_params(options)
@@ -140,6 +140,10 @@ class DocumentSearch
     @query = Document.from(
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
+  end
+
+  def self.refresh
+    ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
   end
 
 end
