@@ -55,5 +55,11 @@
     </div>
   </td>
 {{else}}
-  <td colspan="3"><div>No data available</div></td>
+  <td colspan="3">
+  {{#if isLoading}}
+    <img src="/assets/loading.gif">
+  {{else}}
+    <div>No data available</div>
+  {{/if}}
+  </td>
 {{/if}}

@@ -1,7 +1,9 @@
 Species.TaxonConceptDocumentsRoute = Ember.Route.extend
   renderTemplate: ->
-    @getDocuments()
     @render('taxon_concept/documents')
+    Ember.run.scheduleOnce('afterRender', @, () ->
+      @getDocuments()
+    )
 
   getDocuments: ->
     model = this.modelFor("taxonConcept")
