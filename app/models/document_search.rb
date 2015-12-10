@@ -97,8 +97,7 @@ class DocumentSearch
 
   def add_taxon_concepts_condition
     @query = @query.where(
-      "taxon_concept_ids && ARRAY[#{@taxon_concepts_ids.join(',')}]
-      OR taxon_concept_ids = ARRAY[]::INT[] OR taxon_concept_ids IS NULL"
+      "taxon_concept_ids && ARRAY[#{@taxon_concepts_ids.join(',')}]"
     )
   end
 

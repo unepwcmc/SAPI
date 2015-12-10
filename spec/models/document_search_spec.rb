@@ -14,14 +14,14 @@ describe DocumentSearch do
           taxon_concept_id: tc.id
         )
       }
-      subject { DocumentSearch.new({taxon_concepts_ids: [tc.id]}, 'admin').results }
+      subject { DocumentSearch.new({'taxon_concepts_ids' => [tc.id]}, 'admin').results }
       specify { subject.should include(document_with_tc_citation) }
       
       context "when documents without tc citations present" do
         let!(:document_without_tc_citation){
           create(:proposal, is_public: true, event: document_with_tc_citation.event)
         }
-        specify { subject.should include(document_without_tc_citation) }
+        specify { subject.should_not include(document_without_tc_citation) }
       end
     end
   end
