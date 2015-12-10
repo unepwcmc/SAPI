@@ -22,7 +22,7 @@ class Api::V1::DocumentsController < ApplicationController
     cites_pc_docs = documents.where(event_type: "CitesPc")
     cites_pc_excluded = no_of_excluded_docs(cites_pc_docs, limit)
     # other docs can be docs tied to historic types of events (CITES Technical
-    # Committe, CITES Extraordinary Meeting) or ones without event
+    # Committee, CITES Extraordinary Meeting) or ones without event
     other_docs = documents.where(
       <<-SQL
         event_type IS NULL
