@@ -94,9 +94,9 @@ table.grouped-results-table {
             input { margin-left: 28px; }
             .multiple-data-container {
               position: relative;
-              z-index: 10;
               i { font-size: 16px; }
             }
+            .multiple-data-container:hover {z-index: 20;}
           }
         }
       }
