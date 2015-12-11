@@ -52,9 +52,12 @@
     {{#if controllers.taxonConcept.hasSubspecies}}
     <div class="block04 block05" id="subspecies">
       <strong class="title">SUBSPECIES
-      <span class="tooltip"
-      {{bind-attr data-descr=controllers.taxonConcept.currentSubspeciesTooltipText}}>
-      *</span>
+        <a class="tooltip">
+          <i class='fa fa-info-circle'></i>
+          <span>
+            {{controllers.taxonConcept.currentSubspeciesTooltipText}}
+          </span>
+        </a>
       </strong>
       <div class="columns-holder">
         <ul class="col">

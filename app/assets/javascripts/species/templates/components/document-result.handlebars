@@ -1,8 +1,13 @@
 <td class="event-col">{{unbound doc.event_name}}</td>
 <td class='event-date-col'>{{unbound doc.date}}</td>
 <td class='title-col'>
-  <a class="legal-links tooltip" {{bind-attr data-descr=title}} {{bind-attr href=view.documentUrl}}>{{truncate title}}</a>
-  [{{unbound doc.extension}}]
+
+<a class="legal-links tooltip" {{bind-attr href=view.documentUrl}}>
+    {{truncate title}} [{{unbound doc.extension}}]
+    <span>
+        {{unbound title}}
+    </span>
+</a>
 </td>
 <td class='language-col'>
   {{#if moreThanOneLanguage}}

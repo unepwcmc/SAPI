@@ -2,9 +2,10 @@
   <div class='multiple-data-container'>
     <div class='document-data'>
       {{data.length}}&nbsp{{type}}
-      <span class='tooltip' {{bind-attr data-descr=formattedData}}>
+      <a class="tooltip">
         <i class='fa fa-info-circle'></i>
-      </span>
+        <span>{{unbound formattedData}}
+      </a>
     </div>
   </div>
 {{else}}
