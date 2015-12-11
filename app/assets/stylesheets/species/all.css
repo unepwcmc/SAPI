@@ -1400,6 +1400,10 @@ div#banner p button#remove {
     width: 10px;
 }
 
+.tooltip[data-descr]:hover {
+  /* please leave me in here I'm an IE 10 hack */
+}
+
 .tooltip[data-descr]:hover::after {
     content: attr(data-descr);
     position: absolute;
