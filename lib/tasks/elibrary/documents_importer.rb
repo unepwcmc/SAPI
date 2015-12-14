@@ -100,6 +100,7 @@ class Elibrary::DocumentsImporter
           AND documents.date = master_documents.date
           AND documents.type = master_documents.type
           AND documents.language_id <> master_documents.language_id
+          AND documents.language_id IS NOT NULL
       )
       -- now resolve the self-reference to master document
       UPDATE documents
