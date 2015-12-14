@@ -45,12 +45,12 @@
 <div class="row">
   <div class="span12">
     <div class="page-header">
-      <h4>Last 30 Days Requests by Response Status</h4>
+      <h4>Last <%= ApiRequest::RECENT_DAYS %> Days Requests by Response Status</h4>
     </div>
 
-    <%= line_chart sanitise_hash_for_line_graph(@last_30_days_requests),
-      library: { 
-      title: 'Requests by HTTP Status', 
+    <%= line_chart sanitise_hash_for_line_graph(@recent_requests),
+      library: {
+      title: 'Requests by HTTP Status',
       titlePosition: 'out',
       colors: ['#4AC948', '#EE3B3B']
       }
@@ -63,7 +63,7 @@
     <div class="page-header">
       <h4>All Requests by Response Status</h4>
     </div>
-    <%= pie_chart @user.api_requests.order(:response_status).group(:response_status).count, library: { legend: 'none', colors: ['#4AC948', '#EE3B3B'] } %>
+    <%= pie_chart ApiRequest.requests_by_response_status(@user), library: { legend: 'left', colors: status_colours } %>
   </div>
 
   <div class="span6">
