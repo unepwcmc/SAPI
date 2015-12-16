@@ -12,10 +12,10 @@ namespace :elibrary do
     DocumentCitationTaxonConcept.delete_all
     DocumentCitation.delete_all
     puts "Deleting documents"
-    DocumentTag.delete_all
     Document::ProposalDetails.delete_all
     Document::ReviewDetails.delete_all
     Document.delete_all
+    DocumentTag.delete_all
   end
 
   namespace :document_tags do
