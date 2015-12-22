@@ -1,6 +1,6 @@
 Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
   Species.GeoEntityLoader, Species.EventLoader,
-  Species.DocumentTagLoader,
+  Species.DocumentTagLoader, Species.DocumentLoader,
 
   beforeModel: (queryParams, transition) ->
     @ensureGeoEntitiesLoaded(@controllerFor('search'))
@@ -13,15 +13,14 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     $(@spinnerSelector).css("visibility", "visible")
 
   model: (params, queryParams, transition) ->
-    controller = @controllerFor('documents')
-    $.ajax(
-      url: "/api/v1/documents",
-      data: queryParams,
-      success: (data) ->
-        controller.set('content', data)
-      error: (jqXHR, textStatus, errorThrown) ->
-        console.log("AJAX Error:" + textStatus)
-    )
+    if queryParams['event_type']
+      @loadDocumentsForEventType(queryParams['event_type'], queryParams)
+    else
+      ['EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'Other'].forEach((eventType) =>
+        eventTypeQueryParams = {}
+        $.extend(eventTypeQueryParams, queryParams, {event_type: eventType})
+        @loadDocumentsForEventType(eventType, eventTypeQueryParams)
+      )
 
   afterModel: (queryParams, transition) ->
     $(@spinnerSelector).css("visibility", "hidden")
@@ -43,3 +42,10 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
       outlet: 'search',
       controller: @controllerFor('elibrarySearch')
     })
+
+  loadDocumentsForEventType: (eventType, eventTypeQueryParams) ->
+    controller = @controllerFor('documents')
+    eventTypeKey = eventType.camelize() + 'Documents'
+    @loadDocuments(eventTypeQueryParams, (documents) ->
+      controller.set(eventTypeKey, documents)
+    )

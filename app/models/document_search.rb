@@ -11,16 +11,21 @@ class DocumentSearch
   end
 
   def results
-    if admin_interface?
-      results = @query.limit(@per_page).
-        offset(@offset)
+    # TODO apply limit & offset after grouping for public
+    if !admin_interface?
+      select_and_group_query.limit(@per_page).offset(@offset)
     else
-      results = select_and_group_query
+      @query.limit(@per_page).offset(@offset)
     end
   end
 
   def total_cnt
-    @query.count
+    if admin_interface?
+      @query.count
+    else
+      query = "SELECT count(*) AS count_all FROM (#{@query.to_sql}) x"
+      count = ActiveRecord::Base.connection.execute(query).first.try(:[], "count_all").to_i
+    end
   end
 
   def taxon_concepts
@@ -42,7 +47,7 @@ class DocumentSearch
   end
 
   def table_name
-    admin_interface? ? 'documents_view' : 'api_documents_mview'
+    'api_documents_mview'
   end
 
   def initialize_params(options)
@@ -66,10 +71,20 @@ class DocumentSearch
   end
 
   def add_conditions_for_event
-    return unless @event_id || @event_type
-    if @event_id.present?
+    if @event_id
       @query = @query.where(event_id: @event_id)
-    elsif @event_type.present?
+      return
+    end
+    return unless @event_type.present?
+    if @event_type == 'other'
+      # public interface event type "other"
+      @query = @query.where(
+        <<-SQL
+          event_type IS NULL
+          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc')
+        SQL
+      )
+    else
       @query = @query.where(event_type: @event_type)
     end
   end
@@ -126,7 +141,7 @@ class DocumentSearch
   end
 
   def add_ordering_for_public
-    @query.order('date_raw DESC')
+    @query = @query.order('date_raw DESC')
   end
 
   def select_and_group_query
@@ -146,9 +161,9 @@ class DocumentSearch
       ) AS document_language_versions
     SQL
 
-    @query = Document.from(
+    Document.from(
       '(' + @query.to_sql + ') documents'
-    ).select(columns + "," + aggregators).group(columns)
+    ).select(columns + "," + aggregators).group(columns).order('date_raw DESC')
   end
 
   def self.refresh

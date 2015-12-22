@@ -1,6 +1,6 @@
 {{#if documents.length}}
   <td colspan="3">
-    <div class="inner-table-container">
+    <div {{bindAttr class=":inner-table-container :block loadMore:show_more"}}>
 
       <table class="table-header">
         <thead>
@@ -51,7 +51,11 @@
           {{/each}}
         </tbody>
       </table>
-
+      {{#if loadMore}}
+        <div class="btn-hloder">
+          <a class="link" {{action "loadMoreDocuments" eventType target=dataController}}>SHOW MORE</a>
+        </div>
+      {{/if}}
     </div>
   </td>
 {{else}}
