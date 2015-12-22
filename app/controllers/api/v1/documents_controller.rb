@@ -1,16 +1,13 @@
 class Api::V1::DocumentsController < ApplicationController
 
   def index
-
     if params[:taxon_concept_query].present?
       @species_search = Species::Search.new(params.merge({visibility: 'elibrary'}))
       params[:taxon_concepts_ids] = @species_search.results.map(&:id).join(',')
     end
-    @search = DocumentSearch.new(params, 'public')
+    @search = DocumentSearch.new(params.merge(show_private: !access_denied?), 'public')
 
     documents = @search.results.order('date_raw DESC')
-
-    documents = documents.where(is_public: "true") if access_denied?
 
     limit = 100
     cites_cop_docs = documents.where(event_type: "CitesCop")
