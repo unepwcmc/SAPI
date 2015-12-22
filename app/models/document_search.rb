@@ -58,7 +58,11 @@ class DocumentSearch
     add_conditions_for_event
     add_conditions_for_document
     add_extra_conditions
-    add_ordering if admin_interface?
+    if admin_interface?
+      add_ordering_for_admin
+    else
+      add_ordering_for_public
+    end
   end
 
   def add_conditions_for_event
@@ -111,14 +115,18 @@ class DocumentSearch
     @query = @query.where("document_tags_ids && ARRAY[#{@document_tags_ids.join(',')}]")
   end
 
-  def add_ordering
+  def add_ordering_for_admin
     return if @title_query.present?
 
     @query = if @event_id.present?
       @query.order([:date, :title])
     else
-      @query.order('documents.created_at DESC')
+      @query.order('created_at DESC')
     end
+  end
+
+  def add_ordering_for_public
+    @query.order('date_raw DESC')
   end
 
   def select_and_group_query

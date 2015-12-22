@@ -7,8 +7,6 @@ class Api::V1::DocumentsController < ApplicationController
     end
     @search = DocumentSearch.new(params.merge(show_private: !access_denied?), 'public')
 
-    documents = @search.results.order('date_raw DESC')
-
     limit = 100
     cites_cop_docs = documents.where(event_type: "CitesCop")
     cites_cop_excluded = no_of_excluded_docs(cites_cop_docs, limit)
