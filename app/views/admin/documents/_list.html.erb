@@ -5,7 +5,8 @@
     <th>Event</th>
   <% end %>
   <th width="30%">Title</th>
-  <th width="30%">Citations</th>
+  <th width="30%">Countries</th>
+  <th width="30%">Taxa</th>
   <th>Public</th>
   <th>Lng</th>
   <th width="5%">Actions</th>
@@ -14,7 +15,7 @@
 <tbody>
   <% collection.each do |document| -%>
     <tr class="<%= if document.is_public? then "current_listing" end %>">
-      <td><%= document.type %></td>
+      <td><%= document.document_type %></td>
       <td><%= document.date_formatted %></td>
       <% unless @event %>
         <td><%= link_to document.event.name, admin_event_documents_path(document.event) if document.event %></td>
@@ -23,14 +24,25 @@
         rel: 'tooltip', :'data-title' => document.becomes(Document).filename.url
       } %></td>
       <td>
-        <% if document.citations_cnt > 0 %>
-          <%= link_to "#{document.citations_cnt} citations", '#', {
+        <% if document.geo_entity_names.length > 0 %>
+          <%= link_to "#{document.geo_entity_names.length} countries", '#', {
             rel: 'tooltip',
             'data-html' => true,
-            'data-title' => document_citations_tooltip(document).html_safe
+            'data-title' => document.geo_entity_names.join(', ').html_safe
           } %>
         <% else %>
-          0 citations
+          0 countries
+        <% end %>
+      </td>
+      <td>
+        <% if document.taxon_names.length > 0 %>
+          <%= link_to "#{document.taxon_names.length} taxa", '#', {
+            rel: 'tooltip',
+            'data-html' => true,
+            'data-title' => document.taxon_names.join(', ').html_safe
+          } %>
+        <% else %>
+          0 taxa
         <% end %>
       </td>
       <td><%= true_false_icon(document.is_public) %></td>
