@@ -1,58 +1,21 @@
 class Api::V1::DocumentsController < ApplicationController
 
   def index
-
     if params[:taxon_concept_query].present?
       @species_search = Species::Search.new(params.merge({visibility: 'elibrary'}))
       params[:taxon_concepts_ids] = @species_search.results.map(&:id).join(',')
     end
-    @search = DocumentSearch.new(params, 'public')
-
-    documents = @search.results.order('date_raw DESC')
-
-    documents = documents.where(is_public: "true") if access_denied?
-
-    limit = 100
-    cites_cop_docs = documents.where(event_type: "CitesCop")
-    cites_cop_excluded = no_of_excluded_docs(cites_cop_docs, limit)
-    ec_srg_docs = documents.where(event_type: "EcSrg")
-    ec_srg_excluded = no_of_excluded_docs(ec_srg_docs, limit)
-    cites_ac_docs = documents.where(event_type: "CitesAc")
-    cites_ac_excluded = no_of_excluded_docs(cites_ac_docs, limit)
-    cites_pc_docs = documents.where(event_type: "CitesPc")
-    cites_pc_excluded = no_of_excluded_docs(cites_pc_docs, limit)
-    # other docs can be docs tied to historic types of events (CITES Technical
-    # Committee, CITES Extraordinary Meeting) or ones without event
-    other_docs = documents.where(
-      <<-SQL
-        event_type IS NULL
-        OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc')
-      SQL
+    @search = DocumentSearch.new(
+      params.merge(show_private: !access_denied?, per_page: 100), 'public'
     )
-    other_excluded = no_of_excluded_docs(other_docs, limit)
 
-    render :json => {
-      cites_cop: {
-        docs: serialize_documents(cites_cop_docs, limit),
-        excluded_docs: cites_cop_excluded,
-      },
-      ec_srg: {
-        docs: serialize_documents(ec_srg_docs, limit),
-        excluded_docs: ec_srg_excluded
-      },
-      cites_ac: {
-        docs: serialize_documents(cites_ac_docs, limit),
-        excluded_docs: cites_ac_excluded
-      },
-      cites_pc: {
-        docs: serialize_documents(cites_pc_docs, limit),
-        excluded_docs: cites_pc_excluded
-      },
-      other: {
-        docs: serialize_documents(other_docs, limit),
-        excluded_docs: other_excluded
+    render :json => @search.cached_results,
+      each_serializer: Species::DocumentSerializer,
+      meta: {
+        total: @search.cached_total_cnt,
+        page: @search.page,
+        per_page: @search.per_page
       }
-    }
   end
 
   def show
@@ -112,20 +75,6 @@ class Api::V1::DocumentsController < ApplicationController
 
   def access_denied?
     !current_user || current_user.role == User::API_USER
-  end
-
-  def serialize_documents(documents, limit)
-    ActiveModel::ArraySerializer.new(
-      documents.limit(limit),
-      each_serializer: Species::DocumentsSerializer
-    )
-  end
-
-  def no_of_excluded_docs(documents, limit)
-    query = "SELECT count(*) AS count_all FROM (#{documents.to_sql}) x"
-    count = ActiveRecord::Base.connection.execute(query).first.try(:[], "count_all").to_i
-    excluded = count - limit
-    excluded < 0 ? 0 : excluded
   end
 
 end

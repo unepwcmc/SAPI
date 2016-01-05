@@ -5,7 +5,11 @@
 
     <table class="grouped-results-table">
       <tbody>
-        {{documents-results documents=controllers.taxonConcept.ec_srg_docs
+        {{documents-results
+          eventType="EcSrg"
+          dataController=controller
+          loadMore=controller.ecSrgDocsLoadMore
+          documents=controller.ecSrgDocuments.docs
           isLoading=controller.ecSrgDocsIsLoading}}
       </tbody>
     </table>
@@ -14,7 +18,11 @@
 
     <table class="grouped-results-table">
       <tbody>
-        {{documents-results documents=controllers.taxonConcept.cites_cop_docs
+        {{documents-results
+          eventType="CitesCop"
+          dataController=controller
+          loadMore=controller.citesCopDocsLoadMore
+          documents=controller.citesCopDocuments.docs
           proposalOutcome=true
           isLoading=controller.citesCopDocsIsLoading}}
       </tbody>
@@ -24,9 +32,13 @@
 
     <table class="grouped-results-table">
       <tbody>
-        {{documents-results documents=controllers.taxonConcept.cites_ac_docs
-        reviewPhase=true
-        isLoading=controller.citesAcDocsIsLoading}}
+        {{documents-results
+          eventType="CitesAc"
+          dataController=controller
+          loadMore=controller.citesAcDocsLoadMore
+          documents=controller.citesAcDocuments.docs
+          reviewPhase=true
+          isLoading=controller.citesAcDocsIsLoading}}
       </tbody>
     </table>
 
@@ -34,7 +46,11 @@
 
     <table class="grouped-results-table">
       <tbody>
-        {{documents-results documents=controllers.taxonConcept.cites_pc_docs
+        {{documents-results
+          eventType="CitesPc"
+          dataController=controller
+          loadMore=controller.citesPcDocsLoadMore
+          documents=controller.citesPcDocuments.docs
           reviewPhase=true
           isLoading=controller.citesPcDocsIsLoading}}
       </tbody>
@@ -44,7 +60,11 @@
 
     <table class="grouped-results-table">
       <tbody>
-        {{documents-results documents=controllers.taxonConcept.other_docs
+        {{documents-results
+          eventType="other"
+          dataController=controller
+          loadMore=controller.otherDocsLoadMore
+          documents=controller.otherDocuments.docs
           isLoading=controller.otherDocsIsLoading}}
       </tbody>
     </table>

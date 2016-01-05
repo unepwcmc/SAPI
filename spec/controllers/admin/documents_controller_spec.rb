@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Admin::DocumentsController do
   login_admin
-  let(:event){ create(:event) }
+  let(:event){ create(:event, published_at: DateTime.new(2014,12,25)) }
   let(:taxon_concept){ create(:taxon_concept) }
   let(:geo_entity){ create(:geo_entity) }
   let(:proposal_outcome){ create(:proposal_outcome) }
@@ -11,15 +11,19 @@ describe Admin::DocumentsController do
 
   describe "index" do
     before(:each) do
-      @document1 = create(:document, :title => 'BB hello world', event: event, date: DateTime.new(2014,12,25))
-      @document2 = create(:document, :title => 'AA goodbye world', event: event, date: DateTime.new(2014,01,01))
+      @document1 = create(:document, :title => 'BB hello world', event: event)
+      @document2 = create(:document, :title => 'AA goodbye world', event: event)
       create(:document_citation, :document_id => @document1.id, :taxon_concepts => [taxon_concept])
       create(:document_citation, :document_id => @document2.id, :geo_entities => [geo_entity])
     end
 
     describe "GET index" do
+      before(:each) do
+        @document3 = create(:document, :title => 'CC no event!', date: DateTime.new(2014,01,01))
+        DocumentSearch.refresh
+      end
+
       it "assigns @documents sorted by time of creation" do
-        @document3 = create(:document, :title => 'CC no event!')
         get :index
         assigns(:documents).should eq([@document3, @document2, @document1])
       end
@@ -31,23 +35,23 @@ describe Admin::DocumentsController do
         end
         it "retrieves documents inclusive of the given start date" do
           get :index, "document_date_start" => '25/12/2014'
-          assigns(:documents).should eq([@document1])
+          assigns(:documents).should eq([@document2, @document1])
         end
         it "retrieves documents inclusive of the given end date" do
           get :index, "document_date_end" => '01/01/2014'
-          assigns(:documents).should eq([@document2])
+          assigns(:documents).should eq([@document3])
         end
         it "retrieves documents after the given date" do
           get :index, "document_date_start" => '10/01/2014'
-          assigns(:documents).should eq([@document1])
+          assigns(:documents).should eq([@document2, @document1])
         end
         it "retrieves documents before the given date" do
           get :index, "document_date_end" => '10/01/2014'
-          assigns(:documents).should eq([@document2])
+          assigns(:documents).should eq([@document3])
         end
         it "ignores invalid dates" do
           get :index, "document_date_start" => '34/24/12', "document_date_end" => '34/24/12'
-          assigns(:documents).should eq([@document2, @document1])
+          assigns(:documents).should eq([@document3, @document2, @document1])
         end
         it "retrieves documents for taxon concept" do
           get :index, "taxon_concepts_ids" => taxon_concept.id
@@ -59,26 +63,28 @@ describe Admin::DocumentsController do
         end
         context 'by proposal outcome' do
           before(:each) do
-            @document3 = create(:proposal, event: create_cites_cop, date: DateTime.new(2014,01,01))
+            @document3 = create(:proposal, event: create_cites_cop(published_at: DateTime.new(2014,01,01)))
             create(:proposal_details, document_id: @document3.id, proposal_outcome_id: proposal_outcome.id)
+            DocumentSearch.refresh
           end
           it "retrieves documents for tag" do
             get :index, "document_tags_ids" => [proposal_outcome.id]
-            assigns(:documents).should eq([@document3])
+            assigns(:documents).map(&:id).should eq([@document3].map(&:id))
           end
         end
         context 'by document tags' do
           before(:each) do
-            @document3 = create(:review_of_significant_trade, event: create_ec_srg, date: DateTime.new(2014,01,01))
+            @document3 = create(:review_of_significant_trade, event: create_ec_srg(published_at: DateTime.new(2014,01,01)))
             create(:review_details, document_id: @document3.id, review_phase_id: review_phase.id, process_stage_id: process_stage.id)
+            DocumentSearch.refresh
           end
           it "retrieves documents for review_phase tag" do
             get :index, "document_tags_ids" => [review_phase.id]
-            assigns(:documents).should eq([@document3])
+            assigns(:documents).map(&:id).should eq([@document3].map(&:id))
           end
           it "retrieves documents for process_stage tag" do
             get :index, "document_tags_ids" => [process_stage.id]
-            assigns(:documents).should eq([@document3])
+            assigns(:documents).map(&:id).should eq([@document3].map(&:id))
           end
         end
       end

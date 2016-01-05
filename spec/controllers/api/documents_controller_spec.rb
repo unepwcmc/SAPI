@@ -18,8 +18,7 @@ describe Api::V1::DocumentsController, :type => :controller do
   context "GET index returns all documents" do
     def get_all_documents
       get :index, taxon_concept_id: @taxon_concept.id
-      response.body.should have_json_size(2).at_path('cites_cop/docs')
-      response.body.should have_json_path('cites_cop/excluded_docs')
+      response.body.should have_json_size(2).at_path('documents')
     end
     context "GET index contributor" do
       login_contributor
@@ -41,8 +40,7 @@ describe Api::V1::DocumentsController, :type => :controller do
   context "GET index returns only public documents" do
     def get_public_documents
       get :index, taxon_concept_id: @taxon_concept.id
-      response.body.should have_json_size(1).at_path('cites_cop/docs')
-      response.body.should have_json_path('cites_cop/excluded_docs')
+      response.body.should have_json_size(1).at_path('documents')
     end
     context "GET index api user " do
       login_api_user

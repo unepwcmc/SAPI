@@ -11,16 +11,20 @@ class DocumentSearch
   end
 
   def results
-    if admin_interface?
-      results = @query.limit(@per_page).
-        offset(@offset)
+    if !admin_interface?
+      select_and_group_query.limit(@per_page).offset(@offset)
     else
-      results = select_and_group_query
+      @query.limit(@per_page).offset(@offset)
     end
   end
 
   def total_cnt
-    @query.count
+    if admin_interface?
+      @query.count
+    else
+      query = "SELECT count(*) AS count_all FROM (#{@query.to_sql}) x"
+      count = ActiveRecord::Base.connection.execute(query).first.try(:[], "count_all").to_i
+    end
   end
 
   def taxon_concepts
@@ -42,28 +46,44 @@ class DocumentSearch
   end
 
   def table_name
-    admin_interface? ? 'documents_view' : 'api_documents_mview'
+    'api_documents_mview'
   end
 
   def initialize_params(options)
     @options = DocumentSearchParams.sanitize(options)
+    @options[:show_private] = true if admin_interface?
     @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
     @offset = @per_page * (@page - 1)
   end
 
   def initialize_query
     @query = Document.from("#{table_name} documents")
+    @query = @query.where(is_public: true) if !admin_interface? && !@show_private
     add_conditions_for_event
     add_conditions_for_document
     add_extra_conditions
-    add_ordering if admin_interface?
+    if admin_interface?
+      add_ordering_for_admin
+    else
+      add_ordering_for_public
+    end
   end
 
   def add_conditions_for_event
-    return unless @event_id || @event_type
-    if @event_id.present?
+    if @event_id
       @query = @query.where(event_id: @event_id)
-    elsif @event_type.present?
+      return
+    end
+    return unless @event_type.present?
+    if @event_type == 'other'
+      # public interface event type "other"
+      @query = @query.where(
+        <<-SQL
+          event_type IS NULL
+          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc')
+        SQL
+      )
+    else
       @query = @query.where(event_type: @event_type)
     end
   end
@@ -109,14 +129,19 @@ class DocumentSearch
     @query = @query.where("document_tags_ids && ARRAY[#{@document_tags_ids.join(',')}]")
   end
 
-  def add_ordering
+  def add_ordering_for_admin
     return if @title_query.present?
 
     @query = if @event_id.present?
       @query.order([:date, :title])
     else
-      @query.order('documents.created_at DESC')
+      @query.order('created_at DESC')
     end
+  end
+
+  def add_ordering_for_public
+    # sort_col and sort_dir are sanitized
+    @query = @query.order("#{@sort_col} #{@sort_dir}")
   end
 
   def select_and_group_query
@@ -135,10 +160,16 @@ class DocumentSearch
         )
       ) AS document_language_versions
     SQL
-
-    @query = Document.from(
+    # sort_col and sort_dir are sanitized
+    tmp = Document.from(
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
+    if @sort_col != 'title'
+      tmp = tmp.order("#{@sort_col} #{@sort_dir}")
+    else
+      tmp = tmp.order("MAX(title) #{@sort_dir}")
+    end
+    tmp
   end
 
   def self.refresh

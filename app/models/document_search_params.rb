@@ -18,8 +18,19 @@ class DocumentSearchParams < Hash
         sanitise_positive_integer(params['proposal_outcome_id']),
         sanitise_positive_integer(params['review_phase_id'])
       ].compact,
+      show_private: sanitise_boolean(params[:show_private], false),
       page: sanitise_positive_integer(params[:page], 1),
-      per_page: sanitise_positive_integer(params[:per_page], 25)
+      per_page: sanitise_positive_integer(params[:per_page], 25),
+      sort_col: whitelist_param(
+        sanitise_string(params[:sort_col]),
+        ['date_raw', 'event_name', 'title'],
+        'date_raw'
+      ),
+      sort_dir: whitelist_param(
+        sanitise_string(params[:sort_dir]),
+        ['asc', 'desc'],
+        'desc'
+      )
     }
 
     super(sanitized_params)
