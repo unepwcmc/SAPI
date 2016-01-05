@@ -65,21 +65,39 @@ Species.DocumentLoader = Ember.Mixin.create
         console.log("AJAX Error:" + textStatus)
     )
 
+  getSearchParams: (eventType) ->
+    if @get('searchContext') == 'documents'
+      params = @get('controllers.elibrarySearch').getFilters()
+    else
+      params = {
+        taxon_concepts_ids: [@get('controllers.taxonConcept.id')],
+      }
+    params['event_type'] = eventType
+    params['sort_col'] = @get('sortCol') || 'date'
+    params['sort_dir'] = @get('sortDir') || 'desc'
+    params
+
   actions:
     loadMoreDocuments: (eventType) ->
-      if @get('searchContext') == 'documents'
-        params = @get('controllers.elibrarySearch').getFilters()
-        params['event_type'] = eventType
-      else
-        params = {
-          taxon_concepts_ids: [@get('controllers.taxonConcept.id')],
-          event_type: eventType
-        }
+      params = @getSearchParams(eventType)
       contextKey = eventType.camelize() + 'Documents'
       params['page'] = @get(contextKey + '.meta.page') + 1
       @loadDocuments(params, (documents) =>
         docsKey = contextKey + '.docs'
         docs = @get(docsKey).pushObjects(documents.docs)
+        metaKey = contextKey + '.meta'
+        @set(metaKey, documents.meta)
+      )
+
+    reorderDocuments: (eventType, sortCol, sortDir) ->
+      @set('sortCol', sortCol)
+      @set('sortDir', sortDir)
+      contextKey = eventType.camelize() + 'Documents'
+      params = @getSearchParams(eventType)
+      params['page'] = 1
+      @loadDocuments(params, (documents) =>
+        docsKey = contextKey + '.docs'
+        @set(docsKey, documents.docs)
         metaKey = contextKey + '.meta'
         @set(metaKey, documents.meta)
       )

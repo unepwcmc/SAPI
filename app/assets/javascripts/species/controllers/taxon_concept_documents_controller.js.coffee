@@ -1,2 +1,2 @@
-Species.TaxonConceptDocumentsController = Ember.ObjectController.extend Species.DocumentLoader,
+Species.TaxonConceptDocumentsController = Ember.ArrayController.extend Species.DocumentLoader,
   needs: 'taxonConcept'
