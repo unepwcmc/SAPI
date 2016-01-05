@@ -6,7 +6,7 @@ class Api::V1::DocumentsController < ApplicationController
       params[:taxon_concepts_ids] = @species_search.results.map(&:id).join(',')
     end
     @search = DocumentSearch.new(
-      params.merge(show_private: !access_denied?, per_page: 50), 'public'
+      params.merge(show_private: !access_denied?, per_page: 100), 'public'
     )
 
     render :json => @search.cached_results,
