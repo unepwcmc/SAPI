@@ -37,7 +37,10 @@ table.grouped-results-table {
       }
       div.inner-table-container {
         display: none;
-        i { font-size: 12px; }
+        i {
+          font-size: 12px;
+          cursor: pointer;
+        }
 
         table.table-header {
           width: 100%;
