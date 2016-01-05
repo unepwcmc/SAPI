@@ -11,7 +11,6 @@ class DocumentSearch
   end
 
   def results
-    # TODO apply limit & offset after grouping for public
     if !admin_interface?
       select_and_group_query.limit(@per_page).offset(@offset)
     else
