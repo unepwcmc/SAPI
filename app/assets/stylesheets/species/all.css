@@ -1093,7 +1093,7 @@ html.lt-ie9 #main .tabset > li > ul >li.first {
   display: block;
 }
 .inner-table-container.show_more .btn-hloder {
-  margin: 0 0 -14px 0;
+  margin: -10px 0 -2px 0;
 }
 .block.show_more:hover .btn-hloder {
 	display: block;
