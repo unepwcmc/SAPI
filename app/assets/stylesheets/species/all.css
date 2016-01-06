@@ -1133,7 +1133,8 @@ html.lt-ie9 #main .tabset > li > ul >li.first {
 	padding-right: 23px;
 }
 
-.block.show_more .btn-hloder .link:hover, .block.show_more:hover .btn-hloder .link {
+.block.show_more .btn-hloder .link:hover, .block.show_more:hover .btn-hloder .link,
+#main .block.show_more .btn-hloder .link:hover, #main .block.show_more:hover .btn-hloder .link {
 	color: #fff;
 	background: #376382;
 	border: 1px solid #376382;
