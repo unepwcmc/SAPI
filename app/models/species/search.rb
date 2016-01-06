@@ -41,6 +41,8 @@ private
 
     if @visibility == :speciesplus
       @query = @query.where(:show_in_species_plus => true)
+    elsif @visibility == :elibrary
+      @query = @query.where("show_in_species_plus OR name_status = 'N'")
     end
 
     if !@geo_entities.empty? && @geo_entity_scope == :cms

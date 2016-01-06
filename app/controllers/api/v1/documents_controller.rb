@@ -3,7 +3,7 @@ class Api::V1::DocumentsController < ApplicationController
   def index
     if params[:taxon_concept_query].present?
       @species_search = Species::Search.new({
-        visibility: 'elibrary',
+        visibility: :elibrary,
         taxon_concept_query: params[:taxon_concept_query]
       })
       params[:taxon_concepts_ids] = @species_search.results.map(&:id).join(',')
