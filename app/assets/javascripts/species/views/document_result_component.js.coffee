@@ -6,6 +6,9 @@ Species.DocumentResultComponent = Ember.Component.extend
   setup: ( ->
     primaryDocumentId = parseInt(@get('doc.primary_document_id'))
     primaryDocumentVersion = @get('doc.document_language_versions').findBy('id', primaryDocumentId)
+    # when things went wrong with translations
+    unless primaryDocumentVersion
+      primaryDocumentVersion = @get('doc.document_language_versions.firstObject')
     primaryLanguage = primaryDocumentVersion['language']
     allLanguages = @get('doc.document_language_versions').mapBy('language').sort()
     @setProperties(
