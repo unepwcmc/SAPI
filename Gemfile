@@ -145,7 +145,5 @@ gem 'clerk'
 gem 'paper_trail', '~> 4.0.0.beta'
 
 gem 'dotenv-rails'
-gem 'skylight'
-gem 'appsignal', '~> 0.12.rc'
 
 gem 'test-unit', '~> 3.1' # annoyingly, rails console won't start without it in staging / production

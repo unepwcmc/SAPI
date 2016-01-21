@@ -58,9 +58,6 @@ GEM
       uuidtools
     annotate (2.5.0)
       rake
-    appsignal (0.12.rc.8)
-      rack
-      thread_safe
     arel (3.0.3)
     barber (0.4.2)
       ember-source
@@ -382,8 +379,6 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.3)
       tilt (~> 1.3, >= 1.3.3)
-    skylight (0.9.4)
-      activesupport (>= 3.0.0)
     slack-notifier (1.0.0)
     slackistrano (0.1.9)
       capistrano (>= 3.0.1)
@@ -457,7 +452,6 @@ DEPENDENCIES
   acts-as-taggable-on (~> 2.3.1)
   ahoy_matey
   annotate (>= 2.5.0)
-  appsignal (~> 0.12.rc)
   better_errors (~> 1.1.0)
   binding_of_caller (>= 0.7.2)
   bootstrap-sass (~> 2.3.1.0)
@@ -531,7 +525,6 @@ DEPENDENCIES
   sidekiq-unique-jobs
   simplecov
   sinatra (>= 1.3.0)
-  skylight
   slack-notifier (~> 1.0)
   slackistrano
   slim
