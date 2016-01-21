@@ -5,6 +5,10 @@ Sidekiq.configure_client do |config|
   config.client_middleware do |chain|
     chain.add Sidekiq::Status::ClientMiddleware unless Rails.env.test?
   end
+  config.redis = {
+    :namespace => Rails.application.secrets.redis['namespace'],
+    :url => Rails.application.secrets.redis['url']
+  }
 end
 
 Sidekiq.configure_server do |config|
@@ -14,4 +18,8 @@ Sidekiq.configure_server do |config|
   config.client_middleware do |chain|
     chain.add Sidekiq::Status::ClientMiddleware unless Rails.env.test?
   end
+  config.redis = {
+    :namespace => Rails.application.secrets.redis['namespace'],
+    :url => Rails.application.secrets.redis['url']
+  }
 end
