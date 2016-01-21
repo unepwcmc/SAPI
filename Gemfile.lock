@@ -302,6 +302,8 @@ GEM
       activesupport (= 3.2.22)
       bundler (~> 1.0)
       railties (= 3.2.22)
+    rails-secrets (1.0.2)
+      rails (>= 3.2.0, <= 4.1.0)
     railties (3.2.22)
       actionpack (= 3.2.22)
       activesupport (= 3.2.22)
@@ -495,6 +497,7 @@ DEPENDENCIES
   rack-cors
   rack-livereload
   rails (= 3.2.22)
+  rails-secrets
   rake (~> 10.0.3)
   rest_client
   rspec-mocks
