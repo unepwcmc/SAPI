@@ -107,8 +107,6 @@ group :development do
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
-  gem 'dogapi', '~> 1.21'
-  gem 'datadoge'
 end
 
 group :test, :development do
@@ -150,3 +148,6 @@ gem 'rails-secrets'
 gem 'dotenv-rails'
 
 gem 'test-unit', '~> 3.1' # annoyingly, rails console won't start without it in staging / production
+
+gem 'dogapi', '~> 1.21'
+gem 'datadoge'
