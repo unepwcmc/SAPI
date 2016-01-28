@@ -56,6 +56,7 @@ namespace :elibrary do
       importer.run
     end
   end
+
   namespace :events do
     require Rails.root.join('lib/tasks/elibrary/events_importer.rb')
     desc 'Import events from csv file'

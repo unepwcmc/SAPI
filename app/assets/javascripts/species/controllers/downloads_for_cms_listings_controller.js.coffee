@@ -87,6 +87,12 @@ Species.DownloadsForCmsListingsController = Ember.Controller.extend
         @set('downloadInProgress', false)
         if data.total > 0
           @set('downloadMessage', null)
+          ga('send', {
+            hitType: 'event',
+            eventCategory: 'Downloads: CMS Listings',
+            eventAction: 'Format: CSV',
+            eventLabel: @get('controllers.downloads.csvSeparator')
+          })
           window.location = @get('downloadUrl')
           return
         else

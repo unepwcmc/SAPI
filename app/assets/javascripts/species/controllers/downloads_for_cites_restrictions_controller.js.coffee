@@ -100,6 +100,12 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
         @set('downloadInProgress', false)
         if data.total > 0
           @set('downloadMessage', null)
+          ga('send', {
+            hitType: 'event',
+            eventCategory: 'Downloads: ' + @get('documentType'),
+            eventAction: 'Format: CSV',
+            eventLabel: @get('controllers.downloads.csvSeparator')
+          })
           window.location = @get('downloadUrl')
           return
         else
