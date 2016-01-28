@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.22'
+gem 'rails', '3.2.22.1'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -77,7 +77,7 @@ group :staging, :production do
   gem 'slack-notifier', '~> 1.0'
 end
 
-gem 'rest_client', require: false
+gem 'rest-client', require: false
 
 group :development do
   gem "better_errors", '~>1.1.0'

@@ -789,6 +789,12 @@ $(document).ready(function(){
     } else {
       $.cookie('cites_trade.csv_separator', csv_separator)
       query += '&filters[csv_separator]=' + csv_separator;
+      ga('send', {
+        hitType: 'event',
+        eventCategory: 'Downloads: ' + report_type,
+        eventAction: 'Format: CSV',
+        eventLabel: csv_separator
+      });
       downloadResults( decodeURIComponent( query ) );
       return
     }

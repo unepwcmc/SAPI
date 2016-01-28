@@ -5,12 +5,12 @@
     </div>
 
     <div class="page-header">
-      <h4>Last 30 Days Requests by Response Status</h4>
+      <h4>Last <%= ApiRequest::RECENT_DAYS %> Days Requests by Response Status</h4>
     </div>
 
-    <%= line_chart sanitise_hash_for_line_graph(@last_30_days_requests),
-      library: { 
-      title: 'Requests by HTTP Status', 
+    <%= line_chart sanitise_hash_for_line_graph(@recent_requests),
+      library: {
+      title: 'Requests by HTTP Status',
       titlePosition: 'out',
       colors: ['#4AC948', '#EE3B3B']
       }
@@ -23,21 +23,21 @@
     <div class="page-header">
       <h4>All Requests by Response Status</h4>
     </div>
-    <%= pie_chart ApiRequest.order(:response_status).group(:response_status).count, library: { legend: 'left', colors: ['#4AC948', '#EE3B3B'] } %>
+    <%= pie_chart ApiRequest.requests_by_response_status, library: { legend: 'left', colors: status_colours } %>
   </div>
 
   <div class="span6">
     <div class="page-header">
       <h4>All Requests by Endpoint</h4>
     </div>
-    <%= pie_chart ApiRequest.group(:controller).count, library: { legend: 'left' } %>
+    <%= pie_chart ApiRequest.requests_by_controller, library: { legend: 'left', colors: controller_colours } %>
   </div>
 </div>
 
 <div class="row">
   <div class="span12">
     <div class="page-header">
-      <h4>Top 5 Most Active Users in the last 30 days</h4>
+      <h4>Top 5 Most Active Users in the last <%= ApiRequest::RECENT_DAYS %> days</h4>
     </div>
     <table class="table">
       <thead>
@@ -53,15 +53,15 @@
       </thead>
       <tbody>
         <% unless @users_by_activity.blank? %>
-          <% @users_by_activity.each do |user, requests| %>
+          <% @users_by_activity.each do |r| %>
             <tr>
-              <th><%= user.try(:name) %></th>
-              <th><%= user.try(:email) %></th>
-              <th><%= user.try(:organisation) %></th>
-              <th><%= user.try(:geo_entity).try(:name_en) %></th>
-              <th><%= requests.select { |req| req.response_status == 200 }.count %></th>
-              <th><%= requests.select { |req| req.response_status == 500 }.count %></th>
-              <th><%= link_to 'View', api_user_usage_path(user) %></th>
+              <th><%= r.user.try(:name) %></th>
+              <th><%= r.user.try(:email) %></th>
+              <th><%= r.user.try(:organisation) %></th>
+              <th><%= r.user.try(:geo_entity).try(:name_en) %></th>
+              <th><%= r.success_cnt %></th>
+              <th><%= r.failure_cnt %></th>
+              <th><%= link_to 'View', api_user_usage_path(r.user) %></th>
             </tr>
           <% end %>
         <% end %>
