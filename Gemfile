@@ -107,7 +107,8 @@ group :development do
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
-  gem 'dogapi', '>= 1.3.0'
+  gem 'dogapi', '~> 1.21'
+  gem 'datadoge'
 end
 
 group :test, :development do
