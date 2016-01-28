@@ -71,9 +71,5 @@ module SAPI
 
     # Change Ember's template root. Doesn't seem to be working though :(
     # config.handlebars.templates_root = "trade/templates"
-
-    Datadoge.configure do |config|
-      config.environments = ['staging', 'production']
-    end
   end
 end
