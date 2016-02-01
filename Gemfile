@@ -152,3 +152,4 @@ gem 'test-unit', '~> 3.1' # annoyingly, rails console won't start without it in 
 gem 'dogapi', '~> 1.21'
 gem 'datadoge'
 gem 'scout_apm'
+gem 'appsignal'
