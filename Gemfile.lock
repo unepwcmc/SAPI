@@ -148,9 +148,6 @@ GEM
       term-ansicolor
       thor
     database_cleaner (1.2.0)
-    datadoge (0.0.3)
-      dogstatsd-ruby (> 0)
-      gem_config (~> 0)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
     devise (3.2.4)
@@ -161,9 +158,6 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.1.3)
     docile (1.1.5)
-    dogapi (1.21.0)
-      multi_json
-    dogstatsd-ruby (1.6.0)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.0.1)
@@ -198,7 +192,6 @@ GEM
     foreigner (1.5.0)
       activerecord (>= 3.0.0)
     fssm (0.2.10)
-    gem_config (0.3.1)
     geocoder (1.2.2)
     geoip (1.3.5)
     git (1.2.6)
@@ -489,9 +482,7 @@ DEPENDENCIES
   compass-rails (>= 1.0.3)
   coveralls
   database_cleaner (>= 1.2.0)
-  datadoge
   devise
-  dogapi (~> 1.21)
   dotenv-rails
   ember-rails
   ember-source (= 1.1.2)
