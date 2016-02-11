@@ -12,13 +12,17 @@ describe Api::V1::DocumentsController, :type => :controller do
     citation2 = create(:document_citation, document_id: @document2.id)
     create(:document_citation_taxon_concept, document_citation_id: citation2.id,
       taxon_concept_id: @taxon_concept.id)
+    @document3 = create(:proposal, is_public: true, event: nil)
+    citation3 = create(:document_citation, document_id: @document3.id)
+    create(:document_citation_taxon_concept, document_citation_id: citation3.id,
+      taxon_concept_id: @taxon_concept.id)
     DocumentSearch.refresh
   end
 
   context "GET index returns all documents" do
     def get_all_documents
       get :index, taxon_concept_id: @taxon_concept.id
-      response.body.should have_json_size(2).at_path('documents')
+      response.body.should have_json_size(3).at_path('documents')
     end
     context "GET index contributor" do
       login_contributor
@@ -40,7 +44,7 @@ describe Api::V1::DocumentsController, :type => :controller do
   context "GET index returns only public documents" do
     def get_public_documents
       get :index, taxon_concept_id: @taxon_concept.id
-      response.body.should have_json_size(1).at_path('documents')
+      response.body.should have_json_size(2).at_path('documents')
     end
     context "GET index api user " do
       login_api_user
@@ -61,6 +65,13 @@ describe Api::V1::DocumentsController, :type => :controller do
     it "should return 403 status when permission denied" do
       get :show, id: @document2.id
       expect(response.status).to eq(403)
+    end
+  end
+
+  context "GET should retrieve documents with no event_type" do
+    it "returns documents with no event_type" do
+      get :index, event_type: "Other"
+      response.body.should have_json_size(1).at_path('documents')
     end
   end
 
