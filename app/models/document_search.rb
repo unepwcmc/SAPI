@@ -75,7 +75,7 @@ class DocumentSearch
       return
     end
     return unless @event_type.present?
-    if @event_type == 'other'
+    if @event_type == 'Other'
       # public interface event type "other"
       @query = @query.where(
         <<-SQL
