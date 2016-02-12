@@ -4,7 +4,7 @@ default: &defaults
   push_api_key: "<%= ENV['APPSIGNAL_PUSH_API_KEY'] %>"
 
   # Your app's name
-  name: "E-library"
+  name: "Species+"
 
   # The cuttoff point in ms above which a request is considered slow, default is 200
   # slow_request_threshold: 200
@@ -17,16 +17,17 @@ default: &defaults
 # to false to not push metrics for that environment.
 development:
   <<: *defaults
-  active: false
-
-production:
-  <<: *defaults
   active: true
 
-elibrary_staging:
+production:
   <<: *defaults
   active: true
 
 staging:
   <<: *defaults
   active: true
+
+elibrary_staging:
+  <<: *defaults
+  active: true
+  name: "E-Library"
