@@ -149,5 +149,4 @@ gem 'dotenv-rails'
 
 gem 'test-unit', '~> 3.1' # annoyingly, rails console won't start without it in staging / production
 
-gem 'scout_apm'
 gem 'appsignal'
