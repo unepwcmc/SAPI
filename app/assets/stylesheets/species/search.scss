@@ -124,12 +124,17 @@
       }
     }
 
-    .search-button-container {
-      padding: 20px 0;
-      margin: 15px 0;
-      clear: both;
-      @include blue-search-button;
-    }
+    .search-buttons-container {
+      float: right;
+
+      .search-button-container, .clear-search-button-container {
+        padding: 20px 0;
+        margin: 15px 0;
+        clear: both;
+        display: inline-block;
+        @include blue-search-button;
+      }
+  }
 
     .search-info {
       background: #97b6c9;

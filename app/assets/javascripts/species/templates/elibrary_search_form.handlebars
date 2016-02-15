@@ -92,8 +92,13 @@
         }}
       </div>
     </fieldset>
-    <div class="search-button-container">
-      <button {{action "openSearchPage"}}>Search</button>
+    <div class="search-buttons-container">
+      <div class="clear-search-button-container">
+        <button {{action "clearSearch"}}>Clear</button>
+      </div>
+      <div class="search-button-container">
+        <button {{action "openSearchPage"}}>Search</button>
+      </div>
     </div>
   </form>
 
