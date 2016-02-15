@@ -15,7 +15,6 @@
 #  updated_by_id                :integer
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
-#  number                       :string(255)
 #  sort_index                   :integer
 #  primary_language_document_id :integer
 #  elib_legacy_file_name        :text
@@ -32,7 +31,7 @@ class Document < ActiveRecord::Base
     :order_within_rank => "documents.date, documents.title, documents.id"
   track_who_does_it
   attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
-    :language_id, :citations_attributes, :number,
+    :language_id, :citations_attributes,
     :sort_index, :discussion_id, :discussion_sort_index,
     :primary_language_document_id
   belongs_to :event
