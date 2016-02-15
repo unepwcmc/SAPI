@@ -80,11 +80,11 @@ class DocumentSearch
       @query = @query.where(
         <<-SQL
           event_type IS NULL
-          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc')
+          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'CitesTc', 'CitesExtraordinaryMeeting')
         SQL
       )
     else
-      @query = @query.where('event_type IN (?)', @event_type)
+      @query = @query.where('event_type IN (?)', @event_type.split(','))
     end
   end
 
