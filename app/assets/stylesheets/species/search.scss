@@ -1,12 +1,14 @@
-@mixin blue-search-button {
+@mixin search-button($color:#fff, $border: none,
+  $background: #376382) {
+
   button {
     cursor: pointer;
     width: 101px;
     float: right;
-    border: none;
+    border: $border;
     height: 30px;
     line-height: 30px;
-    color: #fff;
+    color: $color;
     font-size: 13px;
     font-weight: bold;
     text-transform: uppercase;
@@ -15,7 +17,7 @@
     margin: 0;
     -webkit-border-radius: 20px;
     border-radius: 20px;
-    background: #376382;
+    background: $background;
     &:hover{
       background: #253848;
       -webkit-transition: all 0.5s ease;
@@ -132,9 +134,16 @@
         margin: 15px 0;
         clear: both;
         display: inline-block;
-        @include blue-search-button;
       }
-  }
+      .clear-search-button-container {
+        @include search-button(
+          $color: #376382,
+          $border: (1px solid #376382),
+          $background: #fff
+        );
+        button:hover { color: #fff; }
+      }
+    }
 
     .search-info {
       background: #97b6c9;
@@ -177,7 +186,7 @@
 
     fieldset.parent-focus.parent-active .popup { display: block; }
 
-    @include blue-search-button;
+    @include search-button;
     input[type="submit"]:hover { cursor: pointer; }
 
     .taxon-search {
