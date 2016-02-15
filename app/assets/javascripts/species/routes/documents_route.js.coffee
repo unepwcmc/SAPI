@@ -46,6 +46,13 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
   loadDocumentsForEventType: (eventType, eventTypeQueryParams) ->
     controller = @controllerFor('documents')
     eventTypeKey = @getEventTypeKey(eventType).camelize() + 'Documents'
-    @loadDocuments(eventTypeQueryParams, (documents) ->
+    @loadDocuments(eventTypeQueryParams, (documents) =>
+      @resetDocumentsResults(controller)
       controller.set(eventTypeKey, documents)
     )
+
+  resetDocumentsResults: (controller) ->
+    controller.set('euSrgDocuments', {})
+    controller.set('citesCopProposalsDocuments', {})
+    controller.set('citesRSTDocuments', {})
+    controller.set('otherDocuments', {})
