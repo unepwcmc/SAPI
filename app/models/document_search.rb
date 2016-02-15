@@ -84,7 +84,7 @@ class DocumentSearch
         SQL
       )
     else
-      @query = @query.where(event_type: @event_type)
+      @query = @query.where('event_type IN (?)', @event_type)
     end
   end
 
