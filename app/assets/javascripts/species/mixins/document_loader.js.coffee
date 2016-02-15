@@ -69,8 +69,8 @@ Species.DocumentLoader = Ember.Mixin.create
 
   getEventTypeKey: (eventType) ->
     key = switch eventType
-      when 'CitesCop,CitesExtraordinaryMeeting' then 'CitesCopProposals'
-      when 'CitesAc,CitesPc,CitesTc' then 'CitesRST'
+      when 'CitesCop', 'CitesCop,CitesExtraordinaryMeeting' then 'CitesCopProposals'
+      when 'CitesAc', 'CitesPc', 'CitesTc', 'CitesAc,CitesPc,CitesTc' then 'CitesRST'
       when 'EcSrg' then 'EuSrg'
       else 'Other'
 
