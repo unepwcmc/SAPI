@@ -61,3 +61,15 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)
       @set('taxonConceptQueryForDisplay', autoCompleteTaxonConcept.get('fullName'))
+
+    clearSearch: ->
+      @set('taxonConceptQueryForDisplay', '')
+      @set('taxonConceptQuery', '')
+      @set('selectedGeoEntities', [])
+      @set('titleQuery', '')
+      @set('selectedEventType', null)
+      @set('selectedEvent', null)
+      @set('selectedEventId', null)
+      @set('selectedDocumentType', null)
+      @set('selectedProposalOutcome', null)
+      @set('selectedReviewPhase', null)

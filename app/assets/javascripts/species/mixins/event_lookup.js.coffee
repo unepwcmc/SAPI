@@ -15,7 +15,7 @@ Species.EventLookup = Ember.Mixin.create
   ).property('selectedEventType.id')
 
   eventsDropdownVisible: ( ->
-    @get('selectedEventType') != null
+    @get('selectedEventType')?
   ).property('selectedEventType.id')
 
   actions:
