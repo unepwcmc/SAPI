@@ -16,7 +16,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     if queryParams['event_type']
       @loadDocumentsForEventType(queryParams['event_type'], queryParams)
     else
-      ['EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'Other'].forEach((eventType) =>
+      ['EcSrg', 'CitesCop,CitesExtraordinaryMeeting', 'CitesAc,CitesPc,CitesTc', 'Other'].forEach((eventType) =>
         eventTypeQueryParams = {}
         $.extend(eventTypeQueryParams, queryParams, {event_type: eventType})
         @loadDocumentsForEventType(eventType, eventTypeQueryParams)
@@ -45,9 +45,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
 
   loadDocumentsForEventType: (eventType, eventTypeQueryParams) ->
     controller = @controllerFor('documents')
-    if eventType in ['CitesTc', 'CitesExtraordinaryMeeting']
-      eventType = 'Other'
-    eventTypeKey = eventType.camelize() + 'Documents'
+    eventTypeKey = @getEventTypeKey(eventType).camelize() + 'Documents'
     @loadDocuments(eventTypeQueryParams, (documents) ->
       controller.set(eventTypeKey, documents)
     )
