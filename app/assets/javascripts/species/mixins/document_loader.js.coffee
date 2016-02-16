@@ -1,51 +1,41 @@
 Species.DocumentLoader = Ember.Mixin.create
-  ecSrgDocuments: {}
-  citesCopDocuments: {}
-  citesAcDocuments: {}
-  citesPcDocuments: {}
+  euSrgDocuments: {}
+  citesCopProposalsDocuments: {}
+  citesRSTDocuments: {}
   otherDocuments: {}
 
-  ecSrgDocsIsLoading: true
-  citesCopDocsIsLoading: true
-  citesAcDocsIsLoading: true
-  citesPcDocsIsLoading: true
+  euSrgDocsIsLoading: true
+  citesCopProposalsDocsIsLoading: true
+  citesRSTDocsIsLoading: true
   otherDocsIsLoading: true
 
-  ecSrgDocsLoadMore: ( ->
-    @get('ecSrgDocuments.docs.length') < @get('ecSrgDocuments.meta.total')
-  ).property('ecSrgDocuments.docs.length', 'ecSrgDocuments.meta.total')
+  euSrgDocsLoadMore: ( ->
+    @get('euSrgDocuments.docs.length') < @get('euSrgDocuments.meta.total')
+  ).property('euSrgDocuments.docs.length', 'euSrgDocuments.meta.total')
 
-  citesCopDocsLoadMore: ( ->
-    @get('citesCopDocuments.docs.length') < @get('citesCopDocuments.meta.total')
-  ).property('citesCopDocuments.docs.length', 'citesCopDocuments.meta.total')
+  citesCopProposalsDocsLoadMore: ( ->
+    @get('citesCopProposalsDocuments.docs.length') < @get('citesCopProposalsDocuments.meta.total')
+  ).property('citesCopProposalsDocuments.docs.length', 'citesCopProposalsDocuments.meta.total')
 
-  citesAcDocsLoadMore: ( ->
-    @get('citesAcDocuments.docs.length') < @get('citesAcDocuments.meta.total')
-  ).property('citesAcDocuments.docs.length', 'citesAcDocuments.meta.total')
-
-  citesPcDocsLoadMore: ( ->
-    @get('citesPcDocuments.docs.length') < @get('citesPcDocuments.meta.total')
-  ).property('citesPcDocuments.docs.length', 'citesPcDocuments.meta.total')
+  citesRSTDocsLoadMore: ( ->
+    @get('citesRSTDocuments.docs.length') < @get('citesRSTDocuments.meta.total')
+  ).property('citesRSTDocuments.docs.length', 'citesRSTDocuments.meta.total')
 
   otherDocsLoadMore: ( ->
     @get('otherDocuments.docs.length') < @get('otherDocuments.meta.total')
   ).property('otherDocuments.docs.length', 'otherDocuments.meta.total')
 
-  ecSrgDocsObserver: ( ->
-    @set('ecSrgDocsIsLoading', false)
-  ).observes('ecSrgDocuments.docs.@each.didLoad')
+  euSrgDocsObserver: ( ->
+    @set('euSrgDocsIsLoading', false)
+  ).observes('euSrgDocuments.docs.@each.didLoad')
 
-  citesCopDocsObserver: ( ->
-    @set('citesCopDocsIsLoading', false)
-  ).observes('citesCopDocuments.docs.@each.didLoad')
+  citesCopProposalsDocsObserver: ( ->
+    @set('citesCopProposalsDocsIsLoading', false)
+  ).observes('citesCopProposalsDocuments.docs.@each.didLoad')
 
-  citesAcDocsObserver: ( ->
-    @set('citesAcDocsIsLoading', false)
-  ).observes('citesAcDocuments.docs.@each.didLoad')
-
-  citesPcDocsObserver: ( ->
-    @set('citesPcDocsIsLoading', false)
-  ).observes('citesPcDocuments.docs.@each.didLoad')
+  citesRSTDocsObserver: ( ->
+    @set('citesRSTDocsIsLoading', false)
+  ).observes('citesRSTDocuments.docs.@each.didLoad')
 
   citesOtherDocsObserver: ( ->
     @set('otherDocsIsLoading', false)
@@ -77,10 +67,17 @@ Species.DocumentLoader = Ember.Mixin.create
     params['sort_dir'] = @get('sortDir') || 'desc'
     params
 
+  getEventTypeKey: (eventType) ->
+    key = switch eventType
+      when 'CitesCop', 'CitesCop,CitesExtraordinaryMeeting' then 'CitesCopProposals'
+      when 'CitesAc', 'CitesPc', 'CitesTc', 'CitesAc,CitesPc,CitesTc' then 'CitesRST'
+      when 'EcSrg' then 'EuSrg'
+      else 'Other'
+
   actions:
     loadMoreDocuments: (eventType) ->
       params = @getSearchParams(eventType)
-      contextKey = eventType.camelize() + 'Documents'
+      contextKey = @getEventTypeKey(eventType).camelize() + 'Documents'
       params['page'] = @get(contextKey + '.meta.page') + 1
       @loadDocuments(params, (documents) =>
         docsKey = contextKey + '.docs'
@@ -92,7 +89,7 @@ Species.DocumentLoader = Ember.Mixin.create
     reorderDocuments: (eventType, sortCol, sortDir) ->
       @set('sortCol', sortCol)
       @set('sortDir', sortDir)
-      contextKey = eventType.camelize() + 'Documents'
+      contextKey = @getEventTypeKey(eventType).camelize() + 'Documents'
       params = @getSearchParams(eventType)
       params['page'] = 1
       @loadDocuments(params, (documents) =>

@@ -12,30 +12,24 @@
         </tr>
       </thead>
       <tbody>
-        {{documents-row meeting_type="EC SRG"
+        {{documents-row meeting_type="CITES CoP Proposals"
+          eventType="CitesCop,CitesExtraordinaryMeeting"
+          dataController=controller
+          loadMore=controller.citesCopProposalsDocsLoadMore
+          documents=controller.citesCopProposalsDocuments
+          isLoading=controller.citesCopProposalsDocsIsLoading}}
+        {{documents-row meeting_type="CITES RST"
+          eventType="CitesAc,CitesPc,CitesTc"
+          dataController=controller
+          loadMore=controller.citesRSTDocsLoadMore
+          documents=controller.citesRSTDocuments
+          isLoading=controller.citesRSTDocsIsLoading}}
+        {{documents-row meeting_type="EU SRG"
           eventType="EcSrg"
           dataController=controller
-          loadMore=controller.ecSrgDocsLoadMore
-          documents=controller.ecSrgDocuments
-          isLoading=controller.ecSrgDocsIsLoading}}
-        {{documents-row meeting_type="CITES CoP"
-          eventType="CitesCop"
-          dataController=controller
-          loadMore=controller.citesCopDocsLoadMore
-          documents=controller.citesCopDocuments
-          isLoading=controller.citesCopDocsIsLoading}}
-        {{documents-row meeting_type="CITES Animals Committee"
-          eventType="CitesAc"
-          dataController=controller
-          loadMore=controller.citesAcDocsLoadMore
-          documents=controller.citesAcDocuments
-          isLoading=controller.citesAcDocsIsLoading}}
-        {{documents-row meeting_type="CITES Plants Committee"
-          eventType="CitesPc"
-          dataController=controller
-          loadMore=controller.citesPcDocsLoadMore
-          documents=controller.citesPcDocuments
-          isLoading=controller.citesPcDocsIsLoading}}
+          loadMore=controller.euSrgDocsLoadMore
+          documents=controller.euSrgDocuments
+          isLoading=controller.euSrgDocsIsLoading}}
         {{documents-row meeting_type="Other"
           eventType="other"
           dataController=controller
