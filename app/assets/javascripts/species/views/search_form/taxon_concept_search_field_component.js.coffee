@@ -17,5 +17,7 @@ Species.TaxonConceptSearchFieldComponent = Em.TextField.extend
     @currentTimeout = Ember.run.later(@, ->
       if @.$()?.val().length > 2
         @get('targetObject').showDropdown()
+      else
+        @get('targetObject').hideDropdown()
       @set('query', event.target.value)
     , 500)
