@@ -8,6 +8,7 @@ table.grouped-results-table {
   }
   tr {background: none;}
   tbody {
+    div.no-documents { text-align: center; }
     &:before {
       display: block;
       line-height: 1em;
