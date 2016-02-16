@@ -30,6 +30,7 @@ module ApplicationHelper
         resource.errors.messages[field]
       end.first
     return "" unless message
+    message = message.sub("confirmation", "")
     to_html "#{field.to_s.humanize.capitalize} #{message}"
   end
 

@@ -8,6 +8,7 @@ table.grouped-results-table {
   }
   tr {background: none;}
   tbody {
+    div.no-documents { text-align: center; }
     &:before {
       display: block;
       line-height: 1em;
@@ -17,7 +18,7 @@ table.grouped-results-table {
       td{
         padding: 10px 1px;
         vertical-align: middle;
-        i {
+        i.fa-plus-circle, i.fa-minus-circle {
           font-size: 48px;
           color: #648aa2;
           margin-left: 10px;
@@ -94,11 +95,13 @@ table.grouped-results-table {
               i.fa-file-pdf-o { color: #868686; }
             }
             input { margin-left: 28px; }
-            .multiple-data-container {
-              position: relative;
-              i { font-size: 16px; }
+            td.taxon-col {
+              i { font-size: 14px; }
+              .multiple-data-container {
+                position: relative;
+              }
+              .multiple-data-container:hover {z-index: 20;}
             }
-            .multiple-data-container:hover {z-index: 20;}
           }
         }
       }

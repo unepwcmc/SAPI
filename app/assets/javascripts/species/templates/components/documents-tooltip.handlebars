@@ -4,10 +4,20 @@
       {{data.length}}&nbsp{{type}}
       <a class="tooltip">
         <i class='fa fa-info-circle'></i>
-        <span>{{unbound formattedData}}
+        <span>
+          {{#if isTaxa}}
+            <i>{{unbound formattedData}}</i>
+          {{else}}
+            {{unbound formattedData}}
+          {{/if}}
+        </span>
       </a>
     </div>
   </div>
 {{else}}
-  {{data}}
+  {{#if isTaxa}}
+    <i>{{data}}</i>
+  {{else}}
+    {{data}}
+  {{/if}}
 {{/if}}
