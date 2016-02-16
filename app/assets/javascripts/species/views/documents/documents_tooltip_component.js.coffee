@@ -8,3 +8,7 @@ Species.DocumentsTooltipComponent = Ember.Component.extend
   formattedData: ( ->
     this.get('data').join(', ')
   ).property()
+
+  isTaxa: ( ->
+    this.get('type') == 'taxa'
+  ).property()
