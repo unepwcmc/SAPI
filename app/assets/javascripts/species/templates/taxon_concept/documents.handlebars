@@ -1,58 +1,44 @@
 <div id="documents">
   <div class="block">
 
-    <h2 id="eu_srg" >EC SRG</h2>
+    <h2 id="cites_cop">CITES CoP Proposals</h2>
+
+    <table class="grouped-results-table">
+      <tbody>
+        {{documents-results
+          eventType="CitesCop,CitesExtraordinaryMeeting"
+          dataController=controller
+          loadMore=controller.citesCopProposalsDocsLoadMore
+          documents=controller.citesCopProposalsDocuments.docs
+          proposalOutcome=true
+          isLoading=controller.citesCopProposalsDocsIsLoading}}
+      </tbody>
+    </table>
+
+    <h2 id="cites_rst">CITES RST</h2>
+
+    <table class="grouped-results-table">
+      <tbody>
+        {{documents-results
+          eventType="CitesAc,CitesPc,CitesTc"
+          dataController=controller
+          loadMore=controller.citesRSTDocsLoadMore
+          documents=controller.citesRSTDocuments.docs
+          reviewPhase=true
+          isLoading=controller.citesRSTDocsIsLoading}}
+      </tbody>
+    </table>
+
+    <h2 id="eu_srg" >EU SRG</h2>
 
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
           eventType="EcSrg"
           dataController=controller
-          loadMore=controller.ecSrgDocsLoadMore
-          documents=controller.ecSrgDocuments.docs
-          isLoading=controller.ecSrgDocsIsLoading}}
-      </tbody>
-    </table>
-
-    <h2 id="cites_cop">CITES CoP</h2>
-
-    <table class="grouped-results-table">
-      <tbody>
-        {{documents-results
-          eventType="CitesCop"
-          dataController=controller
-          loadMore=controller.citesCopDocsLoadMore
-          documents=controller.citesCopDocuments.docs
-          proposalOutcome=true
-          isLoading=controller.citesCopDocsIsLoading}}
-      </tbody>
-    </table>
-
-    <h2 id="cites_ac">CITES Animals Committee</h2>
-
-    <table class="grouped-results-table">
-      <tbody>
-        {{documents-results
-          eventType="CitesAc"
-          dataController=controller
-          loadMore=controller.citesAcDocsLoadMore
-          documents=controller.citesAcDocuments.docs
-          reviewPhase=true
-          isLoading=controller.citesAcDocsIsLoading}}
-      </tbody>
-    </table>
-
-    <h2 id="cites_pc">CITES Plants Committee</h2>
-
-    <table class="grouped-results-table">
-      <tbody>
-        {{documents-results
-          eventType="CitesPc"
-          dataController=controller
-          loadMore=controller.citesPcDocsLoadMore
-          documents=controller.citesPcDocuments.docs
-          reviewPhase=true
-          isLoading=controller.citesPcDocsIsLoading}}
+          loadMore=controller.euSrgDocsLoadMore
+          documents=controller.euSrgDocuments.docs
+          isLoading=controller.euSrgDocsIsLoading}}
       </tbody>
     </table>
 
@@ -61,7 +47,7 @@
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
-          eventType="other"
+          eventType="Other"
           dataController=controller
           loadMore=controller.otherDocsLoadMore
           documents=controller.otherDocuments.docs
