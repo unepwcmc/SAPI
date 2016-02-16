@@ -127,3 +127,5 @@ set :slack_username, shuffle_deployer[0] # displayed as name of message sender
 set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the message
 
 after "deploy", "smoke_test:test_endpoints"
+
+require 'appsignal/capistrano'
