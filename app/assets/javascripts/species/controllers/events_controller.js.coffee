@@ -16,7 +16,7 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     },
     {
       id: 'EcSrg',
-      name: 'EC SRG'
+      name: 'EU SRG'
     },
     {
       id: 'CitesTc',
