@@ -13,6 +13,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     $(@spinnerSelector).css("visibility", "visible")
 
   model: (params, queryParams, transition) ->
+    @resetDocumentsResults()
     if queryParams['event_type']
       @loadDocumentsForEventType(queryParams['event_type'], queryParams)
     else
@@ -47,11 +48,11 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     controller = @controllerFor('documents')
     eventTypeKey = @getEventTypeKey(eventType).camelize() + 'Documents'
     @loadDocuments(eventTypeQueryParams, (documents) =>
-      @resetDocumentsResults(controller)
       controller.set(eventTypeKey, documents)
     )
 
-  resetDocumentsResults: (controller) ->
+  resetDocumentsResults: () ->
+    controller = @controllerFor('documents')
     controller.set('euSrgDocuments', {})
     controller.set('citesCopProposalsDocuments', {})
     controller.set('citesRSTDocuments', {})
