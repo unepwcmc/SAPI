@@ -79,12 +79,12 @@ table.grouped-results-table {
             padding-left: 20px;
           }
           td { word-wrap: break-word } //not always necessary
-          th.event-col { max-width: 100px; }
-          th.event-date-col { max-width: 112px; }
-          th.title-col { max-width: 198px; }
-          th.language-col { max-width: 90px; }
-          th.countries-col { max-width: 169px; }
-          th.taxon-col { max-width: 169px; }
+          th.event-col { width: 90px; }
+          th.event-date-col { width: 100px; }
+          th.title-col { width: 230px; }
+          th.language-col { width: 80px; }
+          th.countries-col { width: 169px; }
+          th.taxon-col { width: 169px; }
           th.download-col {
             width: 70px;
             i.fa-download { cursor: pointer; }
@@ -94,6 +94,7 @@ table.grouped-results-table {
             td.title-col {
               i.fa-file-pdf-o { color: #868686; }
             }
+            td.language-col { padding-left: 5px; }
             input { margin-left: 28px; }
             td.taxon-col {
               i { font-size: 14px; }
