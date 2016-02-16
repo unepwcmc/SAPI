@@ -143,3 +143,4 @@ gem 'clerk'
 gem 'paper_trail', '~> 4.0.0.beta'
 
 gem 'dotenv-rails'
+gem 'appsignal'
