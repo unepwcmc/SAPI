@@ -84,12 +84,13 @@ div.inner-table-container {
       padding-left: 20px;
     }
     td { word-wrap: break-word } //not always necessary
-    th.event-col { max-width: 100px; }
-    th.event-date-col { max-width: 112px; }
-    th.title-col { max-width: 198px; }
-    th.language-col { max-width: 90px; }
-    th.countries-col { max-width: 169px; }
-    th.taxon-col { max-width: 169px; }
+    th.event-col { width: 100px; }
+    th.event-date-col { width: 100px; }
+    th.title-col { width: 220px; }
+    th.language-col { width: 90px; }
+    th.language-col, td.language-col { padding-left: 5px; }
+    th.countries-col { width: 149px; }
+    th.taxon-col { width: 149px; }
     th.download-col {
       width: 70px;
     }
@@ -125,6 +126,18 @@ div.inner-table-container {
       display: block;
       div.inner-table-container {
         display: block;
+        table {
+          th.event-col { width: auto; }
+          th.event-date-col { width: auto; }
+          th.title-col { width: 160px; }
+          th.language-col { width: auto; }
+          th.language-col, td.language-col { padding-left: 5px; }
+          th.countries-col { width: auto; }
+          th.taxon-col { width: auto; }
+          th.outcome-col { width: auto; }
+          th.review-phase-col { width: auto; }
+          th.download-col { width: auto; }
+        }
       }
     }
     th {
