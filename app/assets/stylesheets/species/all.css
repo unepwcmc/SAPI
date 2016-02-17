@@ -880,6 +880,7 @@ body.inner #footer .holder{
 	width: 938px;
 	border-left: solid 1px #adc7de;
 	border-right: solid 1px #adc7de;
+	border-bottom: solid 1px #D5E0E8;
 }
 
 #main .tabset > li > ul >li {
@@ -890,7 +891,6 @@ body.inner #footer .holder{
 	text-align: center;
 	text-transform: none;
 	padding: 5px 81px 0 0;
-	border-bottom: solid 1px #D5E0E8;
 }
 
 #main .tabset > li > ul >li.first {
