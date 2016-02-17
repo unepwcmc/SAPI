@@ -55,7 +55,7 @@ Ember.Handlebars.registerHelper 'tolower', (str, options) ->
 
 Ember.Handlebars.registerHelper 'truncate', (text, options) ->
   text = Ember.Handlebars.get(this, text)
-  limit = options.hash.limit || 50
+  limit = options.hash.limit || 60
   if text.length > limit
     text = text.substr(0, limit - 3) + "..."
   return text
