@@ -36,74 +36,80 @@ table.grouped-results-table {
         width: 820px; //Temporary fix for FF on Windows
 
       }
-      div.inner-table-container {
-        display: none;
-        i {
-          font-size: 12px;
-          cursor: pointer;
-        }
+    }
+  }
+}
 
-        table.table-header {
-          width: 100%;
-          th.event-col, th.event-date-col, th.title-col {
-            ul {
-              display: inline-block;
-              vertical-align: middle;
-              line-height: 0;
-              i.fa-caret-up { line-height: 0; }
-            }
-          }
-        }
+//Inner table
+div.inner-table-container {
+  display: none;
+  i {
+    font-size: 12px;
+    cursor: pointer;
+  }
 
-        table.table-body {
-          overflow-y: auto;
-          min-height: 100px;
-          max-height: 400px;
-          width: 100%;
-          margin-top: 10px;
-          border-top: 2px solid #DFE1E2;
-          border-bottom: 1px solid #DFE1E2;
-          -webkit-box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
-          inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
-          -moz-box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
-          inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
-          box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
-          inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
+  table.table-header {
+    width: 100%;
+    th.event-col, th.event-date-col, th.title-col {
+      ul {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 0;
+        i.fa-caret-up { line-height: 0; }
+      }
+    }
+  }
+
+  table.table-body {
+    overflow-y: auto;
+    min-height: 100px;
+    max-height: 400px;
+    width: 100%;
+    margin-top: 10px;
+    border-top: 2px solid #DFE1E2;
+    border-bottom: 1px solid #DFE1E2;
+    -webkit-box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
+    inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
+    -moz-box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
+    inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
+    box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
+    inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
+  }
+  table {
+    width: 908px;
+    clear: both;
+    table-layout: fixed; //not always necessary
+    td { cell-spacing: 2px; }
+    td:first-child, th:first-child {
+      padding-left: 20px;
+    }
+    td { word-wrap: break-word } //not always necessary
+    th.event-col { max-width: 100px; }
+    th.event-date-col { max-width: 112px; }
+    th.title-col { max-width: 198px; }
+    th.language-col { max-width: 90px; }
+    th.countries-col { max-width: 169px; }
+    th.taxon-col { max-width: 169px; }
+    th.download-col {
+      width: 70px;
+    }
+    i.fa-sort, i.fa-download {
+      cursor: pointer;
+      color: #648aa2;
+      margin-left: 10px;
+    }
+    &.table-body tbody {
+      td{border-bottom: 1px solid #DFE1E2;}
+      td.title-col {
+        i.fa-file-pdf-o { color: #868686; }
+      }
+      input { margin-left: 28px; }
+      td.taxon-col {
+        i { font-size: 14px; }
+        .multiple-data-container {
+          position: relative;
         }
-        table {
-          width: 908px;
-          clear: both;
-          table-layout: fixed; //not always necessary
-          td { cell-spacing: 2px; }
-          td:first-child, th:first-child {
-            padding-left: 20px;
-          }
-          td { word-wrap: break-word } //not always necessary
-          th.event-col { max-width: 100px; }
-          th.event-date-col { max-width: 112px; }
-          th.title-col { max-width: 198px; }
-          th.language-col { max-width: 90px; }
-          th.countries-col { max-width: 169px; }
-          th.taxon-col { max-width: 169px; }
-          th.download-col {
-            width: 70px;
-            i.fa-download { cursor: pointer; }
-          }
-          &.table-body tbody {
-            td{border-bottom: 1px solid #DFE1E2;}
-            td.title-col {
-              i.fa-file-pdf-o { color: #868686; }
-            }
-            input { margin-left: 28px; }
-            td.taxon-col {
-              i { font-size: 14px; }
-              .multiple-data-container {
-                position: relative;
-              }
-              .multiple-data-container:hover {z-index: 20;}
-            }
-          }
-        }
+        .multiple-data-container:hover {z-index: 20;}
       }
     }
   }
