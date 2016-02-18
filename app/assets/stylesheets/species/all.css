@@ -283,17 +283,20 @@ a.learn-more:hover {
 #footer .logos {
 	margin: 25px 0 0;
 	padding: 25px 0 0;
+  height: 70px;
 }
 #footer .holder {
 	margin: 0 auto;
 	width: 940px;
 	overflow: hidden;
 }
-.power-by {
+.power-by, .login-link {
 	float: right;
 }
-#footer .sponsor, #footer .power-by {
-	margin: 0 0 65px;
+.login-link a {
+  color: #648aa2;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .power-by img { display: block; }
