@@ -1,7 +1,3 @@
-# DataDog deployment events
-require "capistrano/datadog"
-set :datadog_api_key, "5a2b3ffdb12de3ae0f25b12610457dbb"
-
 # Load DSL and set up stages
 require 'capistrano/setup'
 
