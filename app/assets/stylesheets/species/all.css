@@ -1414,6 +1414,12 @@ div.alert-success {
   color: #468847;
 }
 
+div.alert-error {
+  background-color: #f2dede;
+  border-color: #eed3d7;
+  color: #b94a48;
+}
+
 div.alert .close {
   position: relative;
   top: -2px;
