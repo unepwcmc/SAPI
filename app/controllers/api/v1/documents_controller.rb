@@ -6,7 +6,7 @@ class Api::V1::DocumentsController < ApplicationController
         visibility: :elibrary,
         taxon_concept_query: params[:taxon_concept_query]
       })
-      params[:taxon_concepts_ids] = @species_search.all_results.map(&:id).join(',')
+      params[:taxon_concepts_ids] = @species_search.ids.join(',')
     end
     @search = DocumentSearch.new(
       params.merge(show_private: !access_denied?, per_page: 100), 'public'

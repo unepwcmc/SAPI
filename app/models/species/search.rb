@@ -18,10 +18,6 @@ class Species::Search
       offset(@per_page * (@page - 1)).all
   end
 
-  def all_results
-    @query.all
-  end
-
   def total_cnt
     @query.count
   end
