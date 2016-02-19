@@ -97,9 +97,11 @@
             </a>
           </div>
         </div>
-        <div class="login-link">
-          <a href="#login_modal"><i class="fa fa-sign-in"></i> EU Member Login</a>
-        </div>
+        <% unless current_user %>
+          <div class="login-link">
+            <a href="#login_modal"><i class="fa fa-sign-in"></i> EU Member Login</a>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="skip">
