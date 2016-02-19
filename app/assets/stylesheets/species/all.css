@@ -276,6 +276,7 @@ a.learn-more:hover {
   border-top: 1px solid #6b94af;
   min-height: 206px;
   left: 0;
+  bottom: 0;
   position: absolute;
   width: 100%;
 }
