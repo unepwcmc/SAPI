@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+  $('.alert .close').on('click', function(e) {
+    $(this).parent().remove();
+  });
+
   $('#login_form form').submit( function(e) {
     e.preventDefault();
     var form = this;
