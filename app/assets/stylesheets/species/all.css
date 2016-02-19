@@ -1413,3 +1413,17 @@ div.alert-success {
   border-color: #d6e9c6;
   color: #468847;
 }
+
+div.alert .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  line-height: 20px;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  text-shadow: 0 1px 0 white;
+  text-decoration: none;
+  opacity: 0.2;
+}
