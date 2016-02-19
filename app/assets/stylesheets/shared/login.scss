@@ -1,32 +1,102 @@
-#footer .holder .species-login-form {
-	margin: 20px 0 25px;
-  color: #648aa2;
-	display: none;
-  div {
-    display: inline-block;
-		margin: 0 7px;
-    label {
-      display: block;
-      margin: 7px;
-    }
-    input[type="text"], input[type="password"] {
-      background-color: transparent;
+@mixin edit-container($width: 510) {
+	.edit-container {
+		width: $width;
+		margin: 0 auto;
+		padding: 35px 0;
+		h2 {
+			font-size: 24px;
+			padding-bottom: 0;
+			text-transform: none;
+		}
+		input[type="password"], input[type="email"] {
+			margin: 10px 0;
+			width: 100%;
+			height: 35px;
+		}
+		p {
+			padding-bottom: 20px;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			strong { font-weight: bold; }
+		}
+		label { margin: 0 0 0 15px; }
+		p, label { color: black; }
+		.new-password {
+			margin: 20px 0;
+			padding: 25px 0 0;
+			border-top: 1px solid rgba(118,135,157,0.2);
+		}
+		.submit-box {
+			border-top: 1px solid rgba(118,135,157,0.2);
+			margin: 15px 0 0;
+			padding: 20px 0 40px;
+			.round-button { float: right; }
+		}
+	}
+}
+#login_modal{
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+#login_form
+{
+  height: 400px;
+  width: 560px;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: block;
+	background-color: #A4C5DA;
+  .login-cancel {
+    float: right;
+    margin: 15px;
+    color: #376382;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .login-header {
+    clear: both;
+    margin-bottom: 35px;
+    &.less-margin { margin: 0 0 10px; }
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+      color: black;
     }
   }
-
-
-  .round-button {
-    width: 115px;
-    margin: 0 10px;
-    background: #7089A0;
+  .login-error {
+    margin: 5px 0 10px 0px;
   }
-
   .species-login-forgot {
-    position: relative;
-		top: 10px;
-		left: 628px;
-    a { color: #648aa2; }
+    float: right;
+    margin: 10px -10px 0 0;
+    a {
+      color: #376382;
+      font-weight: bold;
+    }
   }
+  .remember-me {
+    float: left;
+    margin-top: 6px;
+  }
+  .login-button { float: right; }
+
+  @include edit-container($width: 400px)
+}
+
+#login_modal:target {
+  display: block;
+  opacity: 2;
 }
 
 .species-connect, .logged-footer {
@@ -123,40 +193,7 @@
 	margin-bottom: 105px;
 	border: 1px solid #6b94af;
 
-	.edit-container {
-		width: 510px;
-		margin: 0 auto;
-		padding: 35px 0;
-		h2 {
-			font-size: 24px;
-			padding-bottom: 0;
-			text-transform: none;
-		}
-		input[type="password"], input[type="email"] {
-			margin: 10px 0;
-			width: 100%;
-			height: 35px;
-		}
-		p {
-			padding-bottom: 20px;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-			strong { font-weight: bold; }
-		}
-		label { margin: 0 0 0 15px; }
-		p, label { color: black; }
-		.new-password {
-			margin: 20px 0;
-			padding: 25px 0 0;
-			border-top: 1px solid rgba(118,135,157,0.2);
-		}
-		.submit-box {
-			border-top: 1px solid rgba(118,135,157,0.2);
-			margin: 15px 0 0;
-			padding: 20px 0 40px;
-			.round-button { float: right; }
-		}
-	}
+  @include edit-container($width: 510px)
 }
 
 .round-text-inputs {
@@ -184,7 +221,7 @@
 	padding: 0 0 2px;
 	margin: 0;
 	-webkit-border-radius: 20px;
-	border-radius: 20px;
+	border-radiu: 20px;
 	background: #376382;
 	&:hover{
 		background: #253848;

@@ -39,6 +39,7 @@
 </head>
 <body class="inner">
   <%= render "layouts/logged_header" %>
+  <%= render "layouts/login_modal" %>
   <div id="wrapper">
     <div class="w1">
       <div id="header">
@@ -66,7 +67,6 @@
 
   <div id="footer">
     <div class="holder">
-      <%= render "layouts/login_footer" %>
       <div class="logos">
         <ul class="sponsor">
           <li><a href="http://www.cites.org"><img src="/assets/species/logo-CITES.png" alt="CITES logo" width="77" height="44" /></a></li>
@@ -77,6 +77,9 @@
         <div class="power-by">
           <a href="http://www.unep-wcmc.org"><img src="/assets/species/powered_by.png" alt="Powered by logo" width="66" height="44" /></a>
         </div>
+      </div>
+      <div class="login-link">
+        <a href="#login_modal"><i class="fa fa-sign-in"></i> EU Member Login</a>
       </div>
     </div>
   </div>

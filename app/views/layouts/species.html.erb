@@ -65,9 +65,9 @@
 <div class="top-level-container">
   <%= render "layouts/logged_header" %>
   <div id="ember_app"></div>
+    <%= render "layouts/login_modal" %>
     <div id="footer">
       <div class="holder">
-        <%= render "layouts/login_footer" %>
         <div class="logos">
           <ul class="sponsor">
             <li>
@@ -97,6 +97,11 @@
             </a>
           </div>
         </div>
+        <% unless current_user %>
+          <div class="login-link">
+            <a href="#login_modal"><i class="fa fa-sign-in"></i> EU Member Login</a>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="skip">

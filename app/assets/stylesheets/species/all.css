@@ -276,6 +276,7 @@ a.learn-more:hover {
   border-top: 1px solid #6b94af;
   min-height: 206px;
   left: 0;
+  bottom: 0;
   position: absolute;
   width: 100%;
 }
@@ -283,18 +284,20 @@ a.learn-more:hover {
 #footer .logos {
 	margin: 25px 0 0;
 	padding: 25px 0 0;
-	border-top: 1px solid rgba(118,135,157,0.2);
+  height: 70px;
 }
 #footer .holder {
 	margin: 0 auto;
 	width: 940px;
 	overflow: hidden;
 }
-.power-by {
+.power-by, .login-link {
 	float: right;
 }
-#footer .sponsor, #footer .power-by {
-	margin: 0 0 65px;
+.login-link a {
+  color: #648aa2;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .power-by img { display: block; }
@@ -1396,4 +1399,38 @@ div#banner p button#remove {
   border: none;
   background: none;
   outline: none;
+}
+
+div.alert {
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 20px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  border: 1px solid #fbeed5;
+  border-radius: 4px;
+}
+
+div.alert-success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #468847;
+}
+
+div.alert-error {
+  background-color: #f2dede;
+  border-color: #eed3d7;
+  color: #b94a48;
+}
+
+div.alert .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  line-height: 20px;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  color: black;
+  text-shadow: 0 1px 0 white;
+  text-decoration: none;
+  opacity: 0.2;
 }
