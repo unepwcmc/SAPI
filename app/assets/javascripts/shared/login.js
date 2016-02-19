@@ -1,10 +1,28 @@
 $(document).ready(function(){
 
-  $('.species-connect').on('click', function(e){
+  $('#login_form form').submit( function(e) {
     e.preventDefault();
-    $('.species-login-form').slideToggle("slow");
-    var icon = $(this).find('i');
-    toggleCaretIcon(icon);
+    var form = this;
+    $.ajax({
+      url: '/users/sign_in',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        user: {
+          email: $(form).find('#user_email').val(),
+          password: $(form).find('#user_password').val()
+        }
+      },
+      success: function(data) {
+        location.href = '/'
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        var error = "<div class='error-box'><p class='error-message'>" +
+          xhr.responseText + "</p></div>"
+        $('.login-header').addClass('less-margin');
+        $('.login-error').append(error)
+      }
+    });
   });
 
   $('.logged-header-container .right').on('click', function(e){

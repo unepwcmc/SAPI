@@ -67,15 +67,19 @@
   .login-header {
     clear: both;
     margin-bottom: 35px;
+    &.less-margin { margin: 0 0 10px; }
     h2 {
       font-size: 24px;
       font-weight: bold;
       color: black;
     }
   }
+  .login-error {
+    margin: 5px 0 10px 0px;
+  }
   .species-login-forgot {
     float: right;
-    margin: 10px  -10px 0 0;
+    margin: 10px -10px 0 0;
     a {
       color: #376382;
       font-weight: bold;

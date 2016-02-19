@@ -6,10 +6,6 @@
         <h2>EU Member login</h2>
       </div>
       <div class="login-error">
-        <%=
-          content_tag(:div, content_tag(:p, (flash[:alert] || flash[:notice]), class: "error-message"),
-          {id: "flash_alert", class: "error-box"}) if (flash[:alert] || flash[:notice])
-        %>
       </div>
       <div class="round-text-inputs">
         <%= form_for(:user, :url => session_path(:user)) do |f| %>
