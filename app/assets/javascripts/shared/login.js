@@ -14,7 +14,8 @@ $(document).ready(function(){
       data: {
         user: {
           email: $(form).find('#user_email').val(),
-          password: $(form).find('#user_password').val()
+          password: $(form).find('#user_password').val(),
+          remember_me: $(form).find('#user_remember_me:checked').length
         }
       },
       success: function(data) {
