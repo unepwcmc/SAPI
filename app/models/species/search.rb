@@ -26,6 +26,10 @@ class Species::Search
     @query.count
   end
 
+  def ids
+    @query.pluck(:id)
+  end
+
 private
 
   def initialize_params(options)
