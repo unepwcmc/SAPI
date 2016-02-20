@@ -11,11 +11,7 @@ class DocumentSearch
   end
 
   def results
-    if !admin_interface?
-      select_and_group_query.limit(@per_page).offset(@offset)
-    else
-      @query.limit(@per_page).offset(@offset)
-    end
+    @query.limit(@per_page).offset(@offset)
   end
 
   def total_cnt
@@ -66,6 +62,7 @@ class DocumentSearch
       add_ordering_for_admin
     else
       add_ordering_for_public
+      select_and_group_query
     end
   end
 
@@ -161,15 +158,14 @@ class DocumentSearch
       ) AS document_language_versions
     SQL
     # sort_col and sort_dir are sanitized
-    tmp = Document.from(
+    @query = Document.from(
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
     if @sort_col != 'title'
-      tmp = tmp.order("#{@sort_col} #{@sort_dir}")
+      @query = @query.order("#{@sort_col} #{@sort_dir}")
     else
-      tmp = tmp.order("MAX(title) #{@sort_dir}")
+      @query = @query.order("MAX(title) #{@sort_dir}")
     end
-    tmp
   end
 
   def self.refresh
