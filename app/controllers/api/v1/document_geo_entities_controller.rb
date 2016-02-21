@@ -1,4 +1,4 @@
-class Api::V1::DocumentsGeoEntitiesController < ApplicationController
+class Api::V1::DocumentGeoEntitiesController < ApplicationController
   before_filter :set_locale
 
   def index
@@ -23,7 +23,6 @@ class Api::V1::DocumentsGeoEntitiesController < ApplicationController
     end
 
     render :json => @geo_entities,
-      root: 'geo_entities',
       each_serializer: Species::GeoEntitySerializer,
       meta: {total: @geo_entities.count}
   end

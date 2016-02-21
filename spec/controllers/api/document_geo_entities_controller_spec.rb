@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Api::V1::DocumentsGeoEntitiesController do
+describe Api::V1::DocumentGeoEntitiesController do
   context "when searching by taxon concept name" do
     include_context "Canis lupus"
     let!(:document_about_wolf_in_poland){
@@ -25,17 +25,17 @@ describe Api::V1::DocumentsGeoEntitiesController do
 
     it "returns Poland when searching by wolf" do
       get :index, taxon_concept_query: 'Canis lu'
-      response.body.should have_json_size(1).at_path('geo_entities')
+      response.body.should have_json_size(1).at_path('document_geo_entities')
     end
 
     it "returns 0 geo entities when no match for taxon name" do
       get :index, taxon_concept_query: 'Lynx'
-      response.body.should have_json_size(0).at_path('geo_entities')
+      response.body.should have_json_size(0).at_path('document_geo_entities')
     end
 
     it "returns all geo entities when no taxon name given" do
       get :index
-      response.body.should have_json_size(7).at_path('geo_entities')
+      response.body.should have_json_size(7).at_path('document_geo_entities')
     end
 
   end
