@@ -10,6 +10,7 @@ Species.SearchController = Ember.Controller.extend Species.Spinner, Species.Sear
       filtersHash.taxon_concept_query = null
     @set('taxonConceptQueryForDisplay', filtersHash.taxon_concept_query)
     @set('selectedGeoEntitiesIds', filtersHash.geo_entities_ids || [])
+    @initForm()
 
   openSearchPage: (taxonFullName, page, perPage) ->
     $("fieldset.taxon-search").removeClass('parent-focus parent-active')
