@@ -1,5 +1,5 @@
 @mixin search-button($color:#fff, $border: none,
-  $background: #376382, $line-height: 28px) {
+  $background: #376382, $line-height: 30px) {
 
   button {
     cursor: pointer;
@@ -140,7 +140,7 @@
           $color: #376382,
           $border: (1px solid #376382),
           $background: #fff,
-          $line-height: 26px
+          $line-height: 28px
         );
         button:hover { color: #fff; }
       }
