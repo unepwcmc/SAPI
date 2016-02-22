@@ -1,7 +1,7 @@
 Species.GeoEntityLoader = Ember.Mixin.create
   ensureGeoEntitiesLoaded: (searchController) ->
-    geoEntitiesLoaded = @controllerFor('geoEntities').get('loaded')
+    geoEntitiesLoaded = searchController.get('geoEntities.loaded')
     if geoEntitiesLoaded
       searchController.initForm()
     else
-      @controllerFor('geoEntities').load()
+      searchController.get('geoEntities').load()
