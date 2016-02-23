@@ -2,10 +2,13 @@
 <td class='event-date-col'>{{unbound doc.date}}</td>
 <td class='title-col'>
 
-<a class="legal-links tooltip" {{bind-attr href=view.documentUrl}}>
-    {{truncate title}}
+<a {{bind-attr class=":legal-links isLongTitle:tooltip"}} {{bind-attr href=view.documentUrl}}>
+
+    {{#if isLongTitle}}
+      {{truncate title}}
+    {{/if}}
     <span>
-        {{unbound title}}
+      {{unbound title}}
     </span>
 </a>
 </td>

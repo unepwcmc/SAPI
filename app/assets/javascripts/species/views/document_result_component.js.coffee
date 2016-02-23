@@ -33,3 +33,7 @@ Species.DocumentResultComponent = Ember.Component.extend
   title: ( ->
     @get('documentVersion.title')
   ).property('documentVersion.title')
+
+  isLongTitle: ( ->
+    @get('documentVersion.title').length > 60
+  ).property('documentVersion.title')
