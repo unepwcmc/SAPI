@@ -16,12 +16,6 @@
     </fieldset>
     <fieldset>
       <div class="documents-control-group">
-        <label>Search by title keyword(s)</label>
-        <div class="text-input-wrapper">
-          {{input type="text" value=titleQuery placeholder='e.g. "ranching or quotas"'}}
-        </div>
-      </div>
-      <div class="documents-control-group">
         <div class="location-area popup-area">
           <label>Country <i class="fa fa-info-circle" title="Including territories and historic names"></i></label>
           {{view Species.GeoEntitiesSearchButton
@@ -87,6 +81,12 @@
           values=controllers.documentTags.reviewPhases
           selection=controller.selectedReviewPhase
         }}
+      </div>
+      <div class="documents-control-group">
+        <label>Search by title keyword(s)</label>
+        <div class="text-input-wrapper keyword-search">
+          {{input type="text" value=titleQuery placeholder='e.g. "ranching or quotas"'}}
+        </div>
       </div>
     </fieldset>
     <div class="search-buttons-container">
