@@ -168,6 +168,12 @@
       border-radius: 20px;
       border: 1px solid #8fb7cf;
       width: 100%;
+      &.keyword-search {
+        height: 30px;
+        width: 338px;
+        padding: 0;
+        .input[type="text"] { height: initial; }
+      }
     }
 
     input[type="text"] {
