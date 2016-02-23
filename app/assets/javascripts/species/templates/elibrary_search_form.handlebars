@@ -26,8 +26,9 @@
           <label>Country <i class="fa fa-info-circle" title="Including territories and historic names"></i></label>
           {{view Species.GeoEntitiesSearchButton
             selectedGeoEntitiesBinding="controller.selectedGeoEntities"
-            loadedBinding="controllers.geoEntities.loaded"
+            loadedBinding="geoEntities.loaded"
             shortPlaceholder=false
+            taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
           }}
           {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
         </div>

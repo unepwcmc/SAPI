@@ -16,12 +16,17 @@ FactoryGirl.define do
   end
 
   factory :document_citation do
-    document_id 1
+    document
   end
 
   factory :document_citation_taxon_concept do
-    document_citation_id 1
-    taxon_concept_id 1
+    document_citation
+    taxon_concept
+  end
+
+  factory :document_citation_geo_entity do
+    document_citation
+    geo_entity
   end
 
   factory :proposal_details, class: Document::ProposalDetails do

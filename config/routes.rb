@@ -30,6 +30,7 @@ SAPI::Application.routes.draw do
           get 'download_zip'
         end
       end
+      resources :document_geo_entities, only: [:index]
       resources :events, only: [:index]
       resources :document_tags, only: [:index]
       match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'

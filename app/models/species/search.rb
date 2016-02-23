@@ -8,7 +8,6 @@ class Species::Search
   #
   # @param [Hash] a hash of search params and their values
   def initialize(options)
-    @id = 1
     initialize_params(options)
     initialize_query
   end
@@ -20,6 +19,10 @@ class Species::Search
 
   def total_cnt
     @query.count
+  end
+
+  def ids
+    @query.pluck(:id)
   end
 
 private

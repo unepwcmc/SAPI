@@ -3,7 +3,8 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
   Species.GeoEntityAutoCompleteLookup,
   Species.EventLookup,
   Species.DocumentTagLookup,
-  needs: ['geoEntities', 'taxonConcepts', 'events', 'documentTags']
+  needs: ['documentGeoEntities', 'taxonConcepts', 'events', 'documentTags']
+  geoEntities: Ember.computed.alias("controllers.documentGeoEntities")
   searchContext: 'documents'
   autoCompleteTaxonConcept: null
   selectedEventType: null
