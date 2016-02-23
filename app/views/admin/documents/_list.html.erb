@@ -48,7 +48,7 @@
         <% end %>
       </td>
       <td><%= true_false_icon(document.is_public) %></td>
-      <td><%= document.language.try(:iso_code1) %> </td>
+      <td><%= document.attributes['language'] %> </td>
       <td>
         <%= link_to edit_icon,
           (@event ? edit_admin_event_document_path(@event, document) : edit_admin_document_path(document))
