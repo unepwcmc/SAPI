@@ -42,5 +42,12 @@ describe Document do
       let(:document){ create(:document) }
       specify{ expect(document.title).to eq('Annual report upload exporter') }
     end
+    context "when specified designation conflicts with event" do
+      let(:cites_cop){ create_cites_cop }
+      let(:document){
+        create(:document, event: cites_cop, designation: eu)
+      }
+      specify{ expect(document.designation).to eq(cites) }
+    end
   end
 end

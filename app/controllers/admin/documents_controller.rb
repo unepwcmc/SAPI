@@ -84,6 +84,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   def load_associations
+    @designations = Designation.where(name: ['CITES', 'EU']).select([:id, :name]).order(:name)
     @event_types = Event.elibrary_current_event_types.map(&:to_s)
     @events = Event.where(type: @event_types).order(:published_at).reverse_order
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).

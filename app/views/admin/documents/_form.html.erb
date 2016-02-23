@@ -5,6 +5,18 @@
 
   <%= error_messages_for(@document) %>
 
+  <div class="control-group">
+    <%= f.label :designation_id, class: 'control-label' %>
+    <div class="controls">
+      <%= f.select :designation_id,
+        options_for_select(
+          @designations.map { |l| [l.name, l.id] },
+          @document.designation_id
+        ), include_blank: true
+      %>
+    </div>
+  </div>
+
   <% if @event %>
     <%= f.hidden_field :event_id %>
   <% else %>
