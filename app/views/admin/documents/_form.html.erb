@@ -4,40 +4,40 @@
   html: { class: 'form-horizontal' } do |f| %>
 
   <%= error_messages_for(@document) %>
-
-  <div class="control-group">
-    <%= f.label :designation_id, class: 'control-label' %>
-    <div class="controls">
-      <%= f.select :designation_id,
-        options_for_select(
-          @designations.map { |l| [l.name, l.id] },
-          @document.designation_id
-        ), include_blank: true
-      %>
-    </div>
-  </div>
-
-  <% if @event %>
-    <%= f.hidden_field :event_id %>
-  <% else %>
+  
+  <% unless @document.event && @document.event.designation %>
     <div class="control-group">
-      <%= f.label :event_id, class: 'control-label' %>
+      <%= f.label :designation_id, class: 'control-label' %>
       <div class="controls">
-        <%= f.select :event_id,
+        <%= f.select :designation_id,
           options_for_select(
-            @events.map { |l| [l.name, l.id] },
-            @document.event_id
+            @designations.map { |l| [l.name, l.id] },
+            @document.designation_id
           ), include_blank: true
         %>
       </div>
     </div>
-    <div class="control-group">
-      <%= f.label :sort_index, class: 'control-label' %>
-      <div class="controls">
-        <%= f.text_field :sort_index %>
-      </div>
-    </div>
   <% end %>
+
+  <div class="control-group">
+    <%= f.label :event_id, class: 'control-label' %>
+    <div class="controls">
+      <%= f.select :event_id,
+        options_for_select(
+          @events.map { |l| [l.name, l.id] },
+          @document.event_id
+        ), include_blank: true
+      %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :sort_index, class: 'control-label' do %>
+      Event sort index
+    <% end %>
+    <div class="controls">
+      <%= f.text_field :sort_index %>
+    </div>
+  </div>
 
   <div class="control-group">
     <%= f.label :title, class: 'control-label' %>
