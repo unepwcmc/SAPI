@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe DocumentSearch do
+describe DocumentSearch, sidekiq: :inline do
   describe :results do
     context "when searching by taxon concept" do
       let(:tc){ create_cites_eu_species }

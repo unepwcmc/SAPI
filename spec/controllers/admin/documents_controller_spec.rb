@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::DocumentsController do
+describe Admin::DocumentsController, sidekiq: :inline do
   login_admin
   let(:event){ create(:event, published_at: DateTime.new(2014,12,25)) }
   let(:taxon_concept){ create(:taxon_concept) }

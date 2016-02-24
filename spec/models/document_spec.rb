@@ -25,7 +25,7 @@
 
 require 'spec_helper'
 
-describe Document do
+describe Document, sidekiq: :inline do
 
   describe :create do
     context "when date is blank" do

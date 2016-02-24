@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin::DocumentBatchesController do
+describe Admin::DocumentBatchesController, sidekiq: :inline do
   login_admin
   let(:event){ create(:event) }
   before(:each){ create(:language, iso_code1: 'EN') }
