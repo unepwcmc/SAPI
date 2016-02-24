@@ -900,6 +900,14 @@ body.inner #footer .holder{
   padding-left: 59px;
 }
 
+#main .tabset > li.documents-tab > ul > li {
+  padding: 5px 51px 0 0
+}
+
+#main .tabset > li.documents-tab > ul > li.first {
+  padding-left: 59px;
+}
+
 html.lt-ie9 #main .tabset > li > ul >li.first {
   padding-left: 30px;
 }
