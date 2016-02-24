@@ -1,12 +1,13 @@
 <thead>
+  <th>Design.</th>
   <th>Type</th>
   <th>Date</th>
   <% unless @event %>
     <th>Event</th>
   <% end %>
   <th width="30%">Title</th>
-  <th width="30%">Countries</th>
-  <th width="30%">Taxa</th>
+  <th width="15%">Countries</th>
+  <th width="15%">Taxa</th>
   <th>Public</th>
   <th>Lng</th>
   <th width="5%">Actions</th>
@@ -15,7 +16,8 @@
 <tbody>
   <% collection.each do |document| -%>
     <tr class="<%= if document.is_public? then "current_listing" end %>">
-      <td><%= document.document_type %></td>
+      <td><%= document.designation_name %></td>
+      <td><%= document.document_type.sub(/^Document::/, '') %></td>
       <td><%= document.date_formatted %></td>
       <% unless @event %>
         <td><%= link_to document.event.name, admin_event_documents_path(document.event) if document.event %></td>
@@ -46,7 +48,7 @@
         <% end %>
       </td>
       <td><%= true_false_icon(document.is_public) %></td>
-      <td><%= document.language.try(:iso_code1) %> </td>
+      <td><%= document.attributes['language'] %> </td>
       <td>
         <%= link_to edit_icon,
           (@event ? edit_admin_event_document_path(@event, document) : edit_admin_document_path(document))

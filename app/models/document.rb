@@ -33,7 +33,9 @@ class Document < ActiveRecord::Base
   attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
     :language_id, :citations_attributes,
     :sort_index, :discussion_id, :discussion_sort_index,
-    :primary_language_document_id
+    :primary_language_document_id,
+    :designation_id
+  belongs_to :designation
   belongs_to :event
   belongs_to :language
   belongs_to :primary_language_document, class_name: 'Document', foreign_key: 'primary_language_document_id'
@@ -51,6 +53,7 @@ class Document < ActiveRecord::Base
   mount_uploader :filename, DocumentFileUploader
 
   before_validation :set_title
+  before_validation :reset_designation_if_event_set
 
   def self.display_name; 'Document'; end
 
@@ -75,6 +78,12 @@ class Document < ActiveRecord::Base
   def set_title
     if title.blank? && filename_changed? && filename.file
       self.title = filename.file.filename.sub(/.\w+$/, '').humanize
+    end
+  end
+
+  def reset_designation_if_event_set
+    if event.present? && event.designation.present?
+      self.designation = event.designation
     end
   end
 

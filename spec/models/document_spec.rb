@@ -25,7 +25,7 @@
 
 require 'spec_helper'
 
-describe Document do
+describe Document, sidekiq: :inline do
 
   describe :create do
     context "when date is blank" do
@@ -41,6 +41,13 @@ describe Document do
     context "setting title from filename" do
       let(:document){ create(:document) }
       specify{ expect(document.title).to eq('Annual report upload exporter') }
+    end
+    context "when specified designation conflicts with event" do
+      let(:cites_cop){ create_cites_cop }
+      let(:document){
+        create(:document, event: cites_cop, designation: eu)
+      }
+      specify{ expect(document.designation).to eq(cites) }
     end
   end
 end
