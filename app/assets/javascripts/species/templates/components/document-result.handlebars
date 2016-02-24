@@ -5,10 +5,10 @@
 <a {{bind-attr class=":legal-links isLongTitle:tooltip"}} {{bind-attr href=view.documentUrl}}>
 
     {{#if isLongTitle}}
-      {{truncate title}}
+      {{truncate title doc}}
     {{/if}}
     <span>
-      {{unbound title}}
+      {{doc.proposal_number}} {{unbound title}}
     </span>
 </a>
 </td>
