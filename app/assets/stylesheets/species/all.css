@@ -81,6 +81,9 @@ p.browsehappy a {
 
 #wrapper {
   margin: 0 auto;
+  position: relative;
+  padding-bottom: 206px;
+  min-height: 100%;
 }
 .w1 {
   width: 940px;
