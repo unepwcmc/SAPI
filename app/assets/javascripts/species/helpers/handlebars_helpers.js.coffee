@@ -53,12 +53,8 @@ Ember.Handlebars.registerHelper 'tolower', (str, options) ->
   defaultString = options.hash?.default or ""
   if str then str.toLowerCase() else defaultString
 
-Ember.Handlebars.registerHelper 'truncate', (title, doc, options) ->
-  title = Ember.Handlebars.get(this, title)
-  proposal_number = Ember.Handlebars.get(this, doc).proposal_number
-  number = if proposal_number then proposal_number.toString() else ''
-  text = number + title
+Ember.Handlebars.helper 'truncate', (text, options) ->
   limit = options.hash.limit || 60
-  if (number.length + title.length) > limit
-    text = (number + title).substr(0, limit - 3) + "..."
+  if text.length > limit
+    text = text.substr(0, limit - 3) + "..."
   return text
