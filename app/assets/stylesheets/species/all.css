@@ -40,7 +40,7 @@ body {
 }
 
 .top-level-container {
-  padding-bottom: 206px; /* reflects height of footer */
+  padding-bottom: 150px; /* reflects height of footer */
   position:relative;
   min-height: 100%;
   box-sizing: border-box;
@@ -81,6 +81,9 @@ p.browsehappy a {
 
 #wrapper {
   margin: 0 auto;
+  position: relative;
+  padding-bottom: 150px; /* reflects height of footer */
+  min-height: 100%;
 }
 .w1 {
   width: 940px;
@@ -274,7 +277,6 @@ a.learn-more:hover {
 #footer {
   background: #A4C5DA;
   border-top: 1px solid #6b94af;
-  min-height: 206px;
   left: 0;
   bottom: 0;
   position: absolute;
@@ -283,7 +285,6 @@ a.learn-more:hover {
 
 #footer .logos {
 	margin: 25px 0 0;
-	padding: 25px 0 0;
   height: 70px;
 }
 #footer .holder {
@@ -293,6 +294,7 @@ a.learn-more:hover {
 }
 .power-by, .login-link {
 	float: right;
+  margin-bottom: 15px;
 }
 .login-link a {
   color: #648aa2;
