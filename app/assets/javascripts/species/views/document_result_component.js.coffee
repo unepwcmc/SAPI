@@ -11,6 +11,7 @@ Species.DocumentResultComponent = Ember.Component.extend
       primaryDocumentVersion = @get('doc.document_language_versions.firstObject')
     primaryLanguage = primaryDocumentVersion['language']
     allLanguages = @get('doc.document_language_versions').mapBy('language').sort()
+
     @setProperties(
       language: primaryLanguage,
       languages: allLanguages,
@@ -35,5 +36,12 @@ Species.DocumentResultComponent = Ember.Component.extend
   ).property('documentVersion.title')
 
   isLongTitle: ( ->
-    @get('documentVersion.title').length > 60
-  ).property('documentVersion.title')
+    @get('fullTitle').length > 60
+  ).property('fullTitle')
+
+  fullTitle: ( ->
+    if @get('doc.event_type') == 'CitesCop'
+      'Prop ' + (@get('doc.proposal_number') || '') + ': ' + @get('title')
+    else
+      @get('title')
+  ).property('doc.event_type', 'doc.proposal_number', 'title')

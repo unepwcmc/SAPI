@@ -53,8 +53,7 @@ Ember.Handlebars.registerHelper 'tolower', (str, options) ->
   defaultString = options.hash?.default or ""
   if str then str.toLowerCase() else defaultString
 
-Ember.Handlebars.registerHelper 'truncate', (text, options) ->
-  text = Ember.Handlebars.get(this, text)
+Ember.Handlebars.helper 'truncate', (text, options) ->
   limit = options.hash.limit || 60
   if text.length > limit
     text = text.substr(0, limit - 3) + "..."
