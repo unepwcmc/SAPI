@@ -11,6 +11,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
       queryParams.geo_entities_ids = queryParams.geo_entities_ids.split(',')
     @controllerFor('elibrarySearch').setFilters(queryParams)
     $(@spinnerSelector).css("visibility", "visible")
+    $('tr.group i.fa-minus-circle').click()
 
   model: (params, queryParams, transition) ->
     @resetDocumentsResults()
