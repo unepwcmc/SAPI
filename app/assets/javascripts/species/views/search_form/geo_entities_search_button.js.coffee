@@ -31,12 +31,12 @@ Species.GeoEntitiesSearchButton = Ember.View.extend Species.SearchFormDropdowns,
   ).property("selectedGeoEntities.@each")
 
   click: (event) ->
-    if (@get('controller.isSearchContextDocuments') &&
-    @get('taxonConceptQuery') != @get('taxonConceptQueryLastCheck') &&
-    @get('taxonConceptQuery.length') >= 3)
+    if @get('controller.isSearchContextDocuments') &&
+    @get('taxonConceptQuery') != @get('taxonConceptQueryLastCheck')
       @set('taxonConceptQueryLastCheck', @get('taxonConceptQuery'))
+      if @get('taxonConceptQuery.length') >= 3
+        query = @get('taxonConceptQuery')
       # we're in the E-Library search, need to check if
       # filtering by taxon is required for locations
-      @get('controller.geoEntities').reload(@get('taxonConceptQuery'))
+      @get('controller.geoEntities').reload(query)
     @handlePopupClick(event)
-
