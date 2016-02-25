@@ -40,7 +40,7 @@ body {
 }
 
 .top-level-container {
-  padding-bottom: 206px; /* reflects height of footer */
+  padding-bottom: 150px; /* reflects height of footer */
   position:relative;
   min-height: 100%;
   box-sizing: border-box;
@@ -82,7 +82,7 @@ p.browsehappy a {
 #wrapper {
   margin: 0 auto;
   position: relative;
-  padding-bottom: 206px;
+  padding-bottom: 150px; /* reflects height of footer */
   min-height: 100%;
 }
 .w1 {
