@@ -41,7 +41,7 @@ Species.DocumentResultComponent = Ember.Component.extend
 
   fullTitle: ( ->
     if @get('doc.event_type') == 'CitesCop'
-      (@get('doc.proposal_number') || '') + @get('title')
+      'Prop ' + (@get('doc.proposal_number') || '') + ': ' + @get('title')
     else
       @get('title')
   ).property('doc.event_type', 'doc.proposal_number', 'title')
