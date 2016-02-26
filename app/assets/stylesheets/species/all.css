@@ -976,11 +976,11 @@ html.lt-ie9 #main .tabset > li > ul >li.first {
 	margin: 0 -1px 12px;
 }
 
-#main .block.show_more {
+#main .show_more {
 	border-bottom: 1px solid #ddd;
 }
 
-#main .block.show_more:hover, #main .block.show_more.active {
+#main .show_more:hover, #main .show_more.active {
 	border-bottom: 1px solid #376382;
 }
 
@@ -1100,7 +1100,7 @@ html.lt-ie9 #main .tabset > li > ul >li.first {
 	background: #f5f5f7;
 	}
 #main .block thead tr { background: #f5f5f7; }
-.block.show_more .btn-hloder {
+.show_more .btn-hloder {
 	margin: 0;
 	text-align: center;
   display: block;
@@ -1108,7 +1108,7 @@ html.lt-ie9 #main .tabset > li > ul >li.first {
 .inner-table-container.show_more .btn-hloder {
   margin: -10px 0 -2px 0;
 }
-.block.show_more:hover .btn-hloder {
+.show_more:hover .btn-hloder {
 	display: block;
 	-webkit-transition: all 0.5s ease;
 	-moz-transition: all 0.5s ease;
@@ -1146,8 +1146,8 @@ html.lt-ie9 #main .tabset > li > ul >li.first {
 	padding-right: 23px;
 }
 
-.block.show_more .btn-hloder .link:hover, .block.show_more:hover .btn-hloder .link,
-#main .block.show_more .btn-hloder .link:hover, #main .block.show_more:hover .btn-hloder .link {
+.show_more .btn-hloder .link:hover, .show_more:hover .btn-hloder .link,
+#main .show_more .btn-hloder .link:hover, #main .show_more:hover .btn-hloder .link {
 	color: #fff;
 	background: #376382;
 	border: 1px solid #376382;
