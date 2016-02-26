@@ -7,6 +7,15 @@ class Api::V1::DocumentsController < ApplicationController
         taxon_concept_query: params[:taxon_concept_query]
       })
       params[:taxon_concepts_ids] = @species_search.ids.join(',')
+    else
+      if params[:taxon_concepts_ids].present?
+        taxa = TaxonConcept.find(params[:taxon_concepts_ids])
+        children_ids = taxa.map(&:children).map do
+          |children| children.pluck(:id) if children.present?
+        end.flatten.uniq.compact
+        taxa_ids = taxa.map(&:id) + children_ids
+        params[:taxon_concepts_ids] = taxa_ids
+      end
     end
     @search = DocumentSearch.new(
       params.merge(show_private: !access_denied?, per_page: 100), 'public'
