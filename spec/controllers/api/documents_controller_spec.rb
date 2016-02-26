@@ -3,11 +3,17 @@ require 'spec_helper'
 describe Api::V1::DocumentsController, :type => :controller do
 
   before(:each) do
-    @taxon_concept = create(:taxon_concept)
+    @taxon_concept = create(:taxon_concept, rank: species_rank, taxonomy: cites_eu)
+    @subspecies = create_cites_eu_subspecies(parent: @taxon_concept)
     @document = create(:proposal, is_public: true, event: create(:cites_cop, designation: cites))
     citation = create(:document_citation, document_id: @document.id)
     create(:document_citation_taxon_concept, document_citation_id: citation.id,
       taxon_concept_id: @taxon_concept.id)
+    @subspecies_document = create(:proposal, is_public: true,
+      event: create(:cites_cop, designation: cites))
+    subspecies_citation = create(:document_citation, document_id: @subspecies_document.id)
+    create(:document_citation_taxon_concept, document_citation_id: subspecies_citation.id,
+      taxon_concept_id: @subspecies.id)
     @document2 = create(:proposal, event: create(:cites_cop, designation: cites))
     citation2 = create(:document_citation, document_id: @document2.id)
     create(:document_citation_taxon_concept, document_citation_id: citation2.id,
@@ -22,7 +28,7 @@ describe Api::V1::DocumentsController, :type => :controller do
   context "GET index returns all documents" do
     def get_all_documents
       get :index, taxon_concept_id: @taxon_concept.id
-      response.body.should have_json_size(3).at_path('documents')
+      response.body.should have_json_size(4).at_path('documents')
     end
     context "GET index contributor" do
       login_contributor
@@ -44,7 +50,7 @@ describe Api::V1::DocumentsController, :type => :controller do
   context "GET index returns only public documents" do
     def get_public_documents
       get :index, taxon_concept_id: @taxon_concept.id
-      response.body.should have_json_size(2).at_path('documents')
+      response.body.should have_json_size(3).at_path('documents')
     end
     context "GET index api user " do
       login_api_user
@@ -101,6 +107,13 @@ describe Api::V1::DocumentsController, :type => :controller do
         File.stub!(:exists?).and_return(false, true)
         get :download_zip, ids: "#{@document.id},#{@document2.id}"
         response.headers['Content-Type'].should eq 'application/zip'
+      end
+    end
+
+    context "cascading documents logic" do
+      it "should get subspecies documents" do
+        get :index, taxon_concepts_ids: [@taxon_concept.id]
+        response.body.should have_json_size(3).at_path('documents')
       end
     end
   end
