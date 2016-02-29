@@ -3,18 +3,18 @@ require 'spec_helper'
 describe Api::V1::DocumentsController, :type => :controller do
 
   before(:each) do
-    @taxon_concept = create(:taxon_concept, rank: species_rank, taxonomy: cites_eu)
+    @taxon_concept = create_cites_eu_species
     @subspecies = create_cites_eu_subspecies(parent: @taxon_concept)
-    @document = create(:proposal, is_public: true, event: create(:cites_cop, designation: cites))
+    @document = create(:proposal, is_public: true, event: create_cites_cop)
     citation = create(:document_citation, document_id: @document.id)
     create(:document_citation_taxon_concept, document_citation_id: citation.id,
       taxon_concept_id: @taxon_concept.id)
     @subspecies_document = create(:proposal, is_public: true,
-      event: create(:cites_cop, designation: cites))
+      event: create_cites_cop)
     subspecies_citation = create(:document_citation, document_id: @subspecies_document.id)
     create(:document_citation_taxon_concept, document_citation_id: subspecies_citation.id,
       taxon_concept_id: @subspecies.id)
-    @document2 = create(:proposal, event: create(:cites_cop, designation: cites))
+    @document2 = create(:proposal, event: create_cites_cop)
     citation2 = create(:document_citation, document_id: @document2.id)
     create(:document_citation_taxon_concept, document_citation_id: citation2.id,
       taxon_concept_id: @taxon_concept.id)
