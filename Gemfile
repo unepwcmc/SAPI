@@ -13,7 +13,7 @@ gem 'nested-hstore'
 gem 'pg_search', '~> 0.5.7'
 gem 'foreigner'
 gem 'oj' #optimised JSON (picked by multi_json)
-gem 'nokogiri'
+gem 'nokogiri', '>= 1.6.7.2'
 gem 'inherited_resources'
 gem 'traco', '~> 2.0.0'
 gem 'strong_parameters'
