@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.22.1'
+gem 'rails', '3.2.22.2'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -13,11 +13,11 @@ gem 'nested-hstore'
 gem 'pg_search', '~> 0.5.7'
 gem 'foreigner'
 gem 'oj' #optimised JSON (picked by multi_json)
-gem 'nokogiri'
+gem 'nokogiri', '>= 1.6.7.2'
 gem 'inherited_resources'
 gem 'traco', '~> 2.0.0'
 gem 'strong_parameters'
-gem 'devise'
+gem 'devise', '>= 3.5.4'
 gem 'cancan'
 gem 'ahoy_matey'
 gem 'gon'
