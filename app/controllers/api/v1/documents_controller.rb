@@ -34,9 +34,9 @@ class Api::V1::DocumentsController < ApplicationController
     @document = Document.find(params[:id])
     path_to_file = @document.filename.path;
     if access_denied? && !@document.is_public
-      render :file => "#{Rails.root}/public/403.html",  :status => 403
+      render_403
     elsif !File.exists?(path_to_file)
-      render :file => "#{Rails.root}/public/404.html",  :status => 404
+      render_404
     else
       send_file(
         path_to_file,
@@ -69,7 +69,7 @@ class Api::V1::DocumentsController < ApplicationController
       end
       if missing_files.present?
         if missing_files.length == @documents.count
-          render :file => "#{Rails.root}/public/404.html",  :status => 404  and return
+          render_404 and return
         end
         zos.put_next_entry('missing_files.txt')
         zos.print missing_files.join("\n\n")
@@ -87,6 +87,17 @@ class Api::V1::DocumentsController < ApplicationController
 
   def access_denied?
     !current_user || current_user.role == User::API_USER
+  end
+
+  def render_404
+    render file: "#{Rails.root}/public/404", layout: false, formats: [:html],
+    status: 404
+  end
+
+
+  def render_403
+    render file: "#{Rails.root}/public/403", layout: false, formats: [:html],
+    status: 403
   end
 
 end
