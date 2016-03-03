@@ -13,6 +13,7 @@ Species.TaxonConceptSearchFieldComponent = Em.TextField.extend
     Ember.run.cancel(@currentTimeout)
     if event.keyCode == 13
       @get('targetObject').hideDropdown()
+      $('.elibrary-search-button').click()
       return
     @currentTimeout = Ember.run.later(@, ->
       if @.$()?.val().length > 2
