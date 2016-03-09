@@ -125,6 +125,19 @@ class NomenclatureChange::Output < ActiveRecord::Base
     try(:new_rank).try(:name) || taxon_concept.try(:rank).try(:name)
   end
 
+  def fetch_accepted_taxons_full_name
+    if accepted_taxon_ids.present?
+      ActiveRecord::Base.connection.execute(
+        <<-SQL
+          SELECT tc.full_name
+          FROM taxon_concepts tc
+          WHERE tc.id = ANY (ARRAY#{accepted_taxon_ids.map(&:to_i)})
+          ORDER BY tc.id
+        SQL
+      ).map{ |row| row['full_name']}
+    end
+  end
+
   # Returns true when the new taxon has a different name from old one
   def will_create_taxon?
     taxon_concept.nil? ||
