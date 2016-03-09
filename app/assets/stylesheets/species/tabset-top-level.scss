@@ -51,3 +51,26 @@
     content: "";
     display: block;
 }
+
+.new-tag {
+  position: absolute;
+  top: 0;
+  right: 400px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 30px 30px 0;
+  border-color: transparent #ff0000 transparent transparent;
+}
+.new-text {
+  position: absolute;
+  top: 5px;
+  right: 401px;
+  font-size: 9px;
+  color: white;
+  transform:rotate(45deg);
+  -ms-transform:rotate(45deg);
+  -moz-transform:rotate(45deg);
+  -webkit-transform:rotate(45deg);
+  -o-transform:rotate(45deg);
+}
