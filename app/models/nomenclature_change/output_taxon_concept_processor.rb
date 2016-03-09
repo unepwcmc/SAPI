@@ -13,13 +13,16 @@ class NomenclatureChange::OutputTaxonConceptProcessor
     nomenclature_comment.note = "#{nomenclature_comment.note} #{@output.internal_note}"
     Rails.logger.debug("Processing output #{tc.full_name}")
     new_record = tc.new_record?
-    unless tc.save
-      Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
-      return false
-    end
+    save_taxon_concept(tc)
     if new_record
       Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
       @output.update_column(:new_taxon_concept_id, tc.id)
+      if @output.nomenclature_change.is_a?(NomenclatureChange::NewName)
+        @output.add_taxon_synonym(tc, @output.accepted_taxon_ids)
+        @output.add_taxon_hybrid(tc, @output.hybrid_parent_id)
+        @output.add_taxon_hybrid(tc, @output.other_hybrid_parent_id)
+        save_taxon_concept(tc)
+      end
     end
   end
 
@@ -61,6 +64,13 @@ class NomenclatureChange::OutputTaxonConceptProcessor
       end
     end
     res
+  end
+
+  def save_taxon_concept(tc)
+    unless tc.save
+      Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
+      return false
+    end
   end
 
 end
