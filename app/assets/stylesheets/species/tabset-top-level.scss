@@ -52,9 +52,13 @@
     display: block;
 }
 
-.new-tag {
-  position: absolute;
-  top: 0;
-  right: 400px;
-  height: 30px;
+.elibrary-tab {
+
+  a { height: 10px; }
+  .new-tag {
+    position: relative;
+    top: -26px;
+    right: -100px;
+    height: 30px;
+  }
 }
