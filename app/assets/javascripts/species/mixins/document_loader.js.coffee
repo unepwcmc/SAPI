@@ -1,12 +1,14 @@
 Species.DocumentLoader = Ember.Mixin.create
   euSrgDocuments: {}
   citesCopProposalsDocuments: {}
-  citesRSTDocuments: {}
+  citesAcDocuments: {}
+  citesPcDocuments: {}
   otherDocuments: {}
 
   euSrgDocsIsLoading: true
   citesCopProposalsDocsIsLoading: true
-  citesRSTDocsIsLoading: true
+  citesAcDocsIsLoading: true
+  citesPcDocsIsLoading: true
   otherDocsIsLoading: true
 
   euSrgDocsLoadMore: ( ->
@@ -17,9 +19,13 @@ Species.DocumentLoader = Ember.Mixin.create
     @get('citesCopProposalsDocuments.docs.length') < @get('citesCopProposalsDocuments.meta.total')
   ).property('citesCopProposalsDocuments.docs.length', 'citesCopProposalsDocuments.meta.total')
 
-  citesRSTDocsLoadMore: ( ->
-    @get('citesRSTDocuments.docs.length') < @get('citesRSTDocuments.meta.total')
-  ).property('citesRSTDocuments.docs.length', 'citesRSTDocuments.meta.total')
+  citesAcDocsLoadMore: ( ->
+    @get('citesAcDocuments.docs.length') < @get('citesAcDocuments.meta.total')
+  ).property('citesAcDocuments.docs.length', 'citesAcDocuments.meta.total')
+
+  citesPcDocsLoadMore: ( ->
+    @get('citesPcDocuments.docs.length') < @get('citesPcDocuments.meta.total')
+  ).property('citesPcDocuments.docs.length', 'citesPcDocuments.meta.total')
 
   otherDocsLoadMore: ( ->
     @get('otherDocuments.docs.length') < @get('otherDocuments.meta.total')
@@ -33,9 +39,13 @@ Species.DocumentLoader = Ember.Mixin.create
     @set('citesCopProposalsDocsIsLoading', false)
   ).observes('citesCopProposalsDocuments.docs.@each.didLoad')
 
-  citesRSTDocsObserver: ( ->
-    @set('citesRSTDocsIsLoading', false)
-  ).observes('citesRSTDocuments.docs.@each.didLoad')
+  citesAcDocsObserver: ( ->
+    @set('citesAcDocsIsLoading', false)
+  ).observes('citesAcDocuments.docs.@each.didLoad')
+
+  citesPcDocsObserver: ( ->
+    @set('citesPcDocsIsLoading', false)
+  ).observes('citesPcDocuments.docs.@each.didLoad')
 
   citesOtherDocsObserver: ( ->
     @set('otherDocsIsLoading', false)
@@ -69,8 +79,9 @@ Species.DocumentLoader = Ember.Mixin.create
 
   getEventTypeKey: (eventType) ->
     key = switch eventType
-      when 'CitesCop', 'CitesCop,CitesExtraordinaryMeeting' then 'CitesCopProposals'
-      when 'CitesAc', 'CitesPc', 'CitesTc', 'CitesAc,CitesPc,CitesTc' then 'CitesRST'
+      when 'CitesCop' then 'CitesCopProposals'
+      when 'CitesAc', 'CitesTc', 'CitesAc,CitesTc' then 'CitesAc'
+      when 'CitesPc' then 'CitesPc'
       when 'EcSrg' then 'EuSrg'
       else 'Other'
 

@@ -14,19 +14,26 @@
       </thead>
       <tbody>
         {{documents-row meeting_type="CITES CoP Proposals"
-          eventType="CitesCop,CitesExtraordinaryMeeting"
+          eventType="CitesCop"
           dataController=controller
           loadMore=controller.citesCopProposalsDocsLoadMore
           documents=controller.citesCopProposalsDocuments
           proposalOutcome=true
           isLoading=controller.citesCopProposalsDocsIsLoading}}
-        {{documents-row meeting_type="CITES Review of Significant Trade"
-          eventType="CitesAc,CitesPc,CitesTc"
+        {{documents-row meeting_type="CITES Review of Significant Trade (animals)"
+          eventType="CitesAc,CitesTc"
           dataController=controller
-          loadMore=controller.citesRSTDocsLoadMore
-          documents=controller.citesRSTDocuments
+          loadMore=controller.citesAcDocsLoadMore
+          documents=controller.citesAcDocuments
           reviewPhase=true
-          isLoading=controller.citesRSTDocsIsLoading}}
+          isLoading=controller.citesAcDocsIsLoading}}
+        {{documents-row meeting_type="CITES Review of Significant Trade (plants)"
+          eventType="CitesPc"
+          dataController=controller
+          loadMore=controller.citesPcDocsLoadMore
+          documents=controller.citesPcDocuments
+          reviewPhase=true
+          isLoading=controller.citesPcDocsIsLoading}}
         {{documents-row meeting_type="EU Scientific Review Group"
           eventType="EcSrg"
           dataController=controller
