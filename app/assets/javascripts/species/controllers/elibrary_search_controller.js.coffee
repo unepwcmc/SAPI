@@ -20,7 +20,11 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     @set('titleQuery', filtersHash.title_query)
     @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
     @set('selectedEventId', filtersHash.event_id)
-    @set('selectedDocumentType', @get('controllers.events.documentTypes').findBy('id', filtersHash.document_type))
+    documentType = @get('controllers.events.documentTypes').findBy('id', filtersHash.document_type)
+    if documentType
+      @set('selectedDocumentType', documentType)
+    else
+      @set('selectedInterSessionalDocType', @get('controllers.events.interSessionalDocumentTypes').findBy('id', filtersHash.document_type))
     @set('selectedProposalOutcomeId', filtersHash.proposal_outcome_id)
     @set('selectedReviewPhaseId', filtersHash.review_phase_id)
 
@@ -29,13 +33,18 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       taxonConceptQuery = @get('taxonConceptQueryForDisplay')
     if @get('titleQuery') && @get('titleQuery').length > 0
       titleQuery = @get('titleQuery')
+    documentType = null
+    if @get('documentTypeDropdownVisible')
+      documentType = @get('selectedDocumentType.id')
+    else if @get('interSessionalDocTypeDropdownVisible')
+      documentType = @get('selectedInterSessionalDocType.id')
     {
       taxon_concept_query: taxonConceptQuery,
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id'),
       title_query: titleQuery,
       event_type: @get('selectedEventType.id'),
       event_id: @get('selectedEvent.id'),
-      document_type: @get('selectedDocumentType.id'),
+      document_type: documentType,
       proposal_outcome_id: @get('selectedProposalOutcome.id'),
       review_phase_id: @get('selectedReviewPhase.id')
     }
@@ -49,6 +58,18 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       @get('controllers.events.documentTypes')
   ).property('selectedEventType.id')
 
+  interSessionalDocumentTypes: ( ->
+    @get('controllers.events.interSessionalDocumentTypes')
+  ).property()
+
+  documentTypeDropdownVisible: ( ->
+    @get('selectedEventType.id') == 'EcSrg'
+  ).property('selectedEventType')
+
+  interSessionalDocTypeDropdownVisible: ( ->
+    !@get('selectedEventType.id')?
+  ).property('selectedEventType')
+
   actions:
     openSearchPage:->
       @transitionToRoute('documents', {queryParams: @getFilters()})
@@ -56,8 +77,14 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     handleDocumentTypeSelection: (documentType) ->
       @set('selectedDocumentType', documentType)
 
-    handleDocumentTypeDeselection: (documentType) ->
+    handleDocumentTypeDeselection:  ->
       @set('selectedDocumentType', null)
+
+    handleInterSessionalDocTypeSelection: (documentType) ->
+      @set('selectedInterSessionalDocType', documentType)
+
+    handleInterSessionalDocTypeDeselection:  ->
+      @set('selectedInterSessionalDocType', null)
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)
@@ -72,5 +99,6 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       @set('selectedEvent', null)
       @set('selectedEventId', null)
       @set('selectedDocumentType', null)
+      @set('selectedInterSessionalDocType', null)
       @set('selectedProposalOutcome', null)
       @set('selectedReviewPhase', null)

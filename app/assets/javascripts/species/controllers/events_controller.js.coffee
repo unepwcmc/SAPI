@@ -68,14 +68,13 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
       id: 'Document::ListOfParticipants',
       name: 'List of Participants',
       eventTypes: ['EcSrg']
-    },
+    }
+  ]
+
+  interSessionalDocumentTypes: [
     {
       id: 'Document::CommissionNotes',
       name: 'Commission Notes'
-    },
-    {
-      id: 'Document::NdfConsultation',
-      name: 'NDF Consultation'
     },
     {
       id: 'Document::NonDetrimentFindings',
