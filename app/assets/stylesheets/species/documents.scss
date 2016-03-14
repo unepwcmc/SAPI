@@ -97,7 +97,7 @@ div.inner-table-container {
     th.review-phase-col { width: auto; }
     th.outcome-col, td.outcome-col { padding-left: 10px; }
     th.review-phase-col, td.review-phase { padding-left: 10px; }
-    th.download-col { width: 60px; }
+    td.download-col, th.download-col { width: 60px; text-align: right; padding-right:10px }
     i.fa-sort, i.fa-download {
       cursor: pointer;
       color: #648aa2;
