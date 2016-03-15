@@ -19,7 +19,7 @@ shared_context 'status_change_definitions' do
     )
     tc
   }
-  let(:a_to_s_with_primary_output){
+  let(:n_to_s_with_primary_output){
     create(:nomenclature_change_status_to_synonym,
       primary_output_attributes: {
         is_primary_output: true,
@@ -53,7 +53,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusToSynonym::RELAY
     ).reload
   }
-  let(:a_to_s_with_input_and_secondary_output){
+  let(:n_to_s_with_input_and_secondary_output){
     create(:nomenclature_change_status_to_synonym,
       primary_output_attributes: {
         is_primary_output: true,
@@ -66,6 +66,16 @@ shared_context 'status_change_definitions' do
         taxon_concept_id: accepted_name.id
       },
       status: NomenclatureChange::StatusToSynonym::RELAY
+    ).reload
+  }
+  let(:a_to_s_with_swap_with_primary_output){
+    create(:nomenclature_change_status_swap,
+      primary_output_attributes: {
+        is_primary_output: true,
+        taxon_concept_id: accepted_name.id,
+        new_name_status: 'S'
+      },
+      status: NomenclatureChange::StatusSwap::PRIMARY_OUTPUT
     ).reload
   }
   let(:a_to_s_with_swap){

@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Admin::NomenclatureChanges::StatusToSynonymController do
   login_admin
   include_context 'status_change_definitions'
+  let(:input_species){ create_cites_eu_species(name_status: 'N') }
 
   describe 'GET show' do
     context :primary_output do
@@ -16,38 +17,17 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
     end
     context :relay do
       before(:each) do
-        @status_change = a_to_s_with_primary_output
+        @status_change = n_to_s_with_primary_output
       end
       it 'renders the relay template' do
         get :show, id: :relay, nomenclature_change_id: @status_change.id
         response.should render_template('relay')
       end
     end
-    context :reassignments do
-      before(:each) do
-        @status_change = a_to_s_with_input_and_secondary_output
-      end
-      context "when legislation present" do
-        before(:each) do
-          create_cites_I_addition(taxon_concept: input_species)
-        end
-        it 'renders the legislation template' do
-          get :show, id: :legislation, nomenclature_change_id: @status_change.id
-          response.should render_template('legislation')
-        end
-      end
-      context "when no legislation" do
-        it 'redirects to next step' do
-          get :show, id: :legislation, nomenclature_change_id: @status_change.id
-          response.should redirect_to(admin_nomenclature_change_status_to_synonym_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
-          ))
-        end
-      end
-    end
+
     context :summary do
       before(:each) do
-        @status_change = a_to_s_with_input_and_secondary_output
+        @status_change = n_to_s_with_input_and_secondary_output
       end
       it 'renders the summary template' do
         get :show, id: :summary, nomenclature_change_id: @status_change.id
@@ -73,7 +53,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
       it 'redirects to next step' do
         put :update, nomenclature_change_status_to_synonym: {
           primary_output_attributes: {
-            taxon_concept_id: create_cites_eu_species.id,
+            taxon_concept_id: create_cites_eu_species(name_status: 'N').id,
             new_name_status: 'S'
           }
         }, nomenclature_change_id: @status_change.id, id: 'primary_output'

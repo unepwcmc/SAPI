@@ -21,7 +21,7 @@ describe NomenclatureChange::StatusSwap::Constructor do
 
   describe :build_secondary_output do
     context :downgrade do
-      let(:status_change){ a_to_s_with_primary_output }
+      let(:status_change){ a_to_s_with_swap_with_primary_output }
       before(:each) do
         @old_output = status_change.secondary_output
         constructor.build_secondary_output

@@ -13,8 +13,8 @@
 #
 
 # A status change to S needs to have at least one output and at most two
-# The cases where there are 2 are as follows:
-# 1. accepted taxon t1 (input) downgraded to synonym t1 (output1),
+# The case where there are 2 is as follows:
+# N taxon t1 (input) downgraded to synonym t1 (output1),
 # with any associations transferred to accepted taxon t2 (output2)
 
 # As a rule of thumb, if there are 2 outputs that means there are reassignments
@@ -38,7 +38,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   end
 
   # we only need two outputs if we need a target for reassignments
-  # (which happens when one of the outputs is an A / N name turning S)
+  # (which happens when one of the outputs is an N name turning S)
   def required_secondary_output
     if (needs_to_relay_associations? || requires_accepted_name_assignment?) &&
       secondary_output.nil?
@@ -49,7 +49,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   end
 
   def build_input_for_relay
-    # In case the primary output is an A / N name turning S
+    # In case the primary output is a N name turning S
     # this same name becomes an input of the nomenclature change, so that
     # reassignments can be put in place between this input and
     # the secondary output
@@ -63,7 +63,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   end
 
   def needs_to_relay_associations?
-    ['A', 'N'].include?(primary_output.try(:name_status))
+    primary_output.try(:name_status) == 'N'
   end
 
   def requires_accepted_name_assignment?
