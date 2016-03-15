@@ -50,7 +50,7 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   end
 
   def needs_to_set_parent?
-    ['S', 'T'].include? primary_output.try(:name_status)
+    primary_output.try(:name_status) == 'T'
   end
 
 end
