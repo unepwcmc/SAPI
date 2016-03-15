@@ -67,10 +67,6 @@ class Event < ActiveRecord::Base
       {
         id: 'CitesTc',
         name: 'CITES Technical Committee'
-      },
-      {
-        id: 'CitesExtraordinaryMeeting',
-        name: 'CITES Extraordinary Meeting'
       }
     ]
   end
