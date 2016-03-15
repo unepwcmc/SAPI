@@ -64,12 +64,12 @@
       <div class="documents-control-group">
         {{single-dropdown
           isVisible=controller.interSessionalDocTypeDropdownVisible
-          action="handleInterSessionalDocTypeSelection"
-          clearAction="handleInterSessionalDocTypeDeselection"
+          action="handleDocumentTypeSelection"
+          clearAction="handleDocumentTypeDeSelection"
           title="Inter-sessional documents type"
           placeholder="Document types"
           values=controller.interSessionalDocumentTypes
-          selection=controller.selectedInterSessionalDocType
+          selection=controller.selectedDocumentType
         }}
       </div>
       <div class="documents-control-group">

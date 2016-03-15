@@ -24,13 +24,14 @@ Species.EventLookup = Ember.Mixin.create
       if @get('selectedEventType.id') != @get('selectedEvent.type')
         @set('selectedEvent', null)
         @set('selectedEventId', null)
-      if @get('selectedDocumentType.eventTypes') && @get('selectedDocumentType.eventTypes').indexOf(@get('selectedEvent.type')) < 0
+      if (@get('selectedDocumentType.eventTypes') && @get('selectedDocumentType.eventTypes').indexOf(@get('selectedEvent.type')) < 0) || eventType.id == 'EcSrg'
         @set('selectedDocumentType', null)
 
     handleEventTypeDeselection: (eventType) ->
       @set('selectedEventType', null)
       @set('selectedEvent', null)
       @set('selectedEventId', null)
+      @set('selectedDocumentType', null)
 
     handleEventSelection: (event) ->
       @set('selectedEvent', event)
