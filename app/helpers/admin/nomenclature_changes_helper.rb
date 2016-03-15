@@ -184,17 +184,12 @@ module Admin::NomenclatureChangesHelper
       when @nc.is_a?(NomenclatureChange::StatusToAccepted)
         content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO ACCEPTED", nil) +
         content_tag(:div, @nc.primary_output.note_en.html_safe, class: 'well well-small')
-      when @nc.is_a?(NomenclatureChange::NewName)
-        content_tag(:h1, "NomenclatureChange #{@nc.id} - NEW NAME", nil) +
-        content_tag(:div, @nc.output.note_en.html_safe, class: 'well well-small')
     end
   end
 
   def generate_input_content
     if @nc.is_a?(NomenclatureChange::Lump)
       lump_inputs_tags + lump_inputs_content
-    elsif @nc.is_a?(NomenclatureChange::NewName)
-      ''
     elsif @nc.input
       split_input_tag + split_input_content
     end
@@ -317,8 +312,6 @@ module Admin::NomenclatureChangesHelper
   def select_outputs
     if @nc.is_a?(NomenclatureChange::Split)
       @nc.outputs
-    elsif @nc.is_a?(NomenclatureChange::NewName)
-      @nc.output
     else
       [@nc.primary_output, @nc.secondary_output].compact
     end

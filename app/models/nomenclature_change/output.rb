@@ -77,11 +77,11 @@ class NomenclatureChange::Output < ActiveRecord::Base
   belongs_to :other_hybrid_parent, :class_name => TaxonConcept, :foreign_key => :other_hybrid_parent_id
   validates :nomenclature_change, :presence => true
   validates :new_scientific_name, :presence => true,
-    :if => Proc.new { |c| c.taxon_concept_id.blank? && !c.nomenclature_change.is_a?(NomenclatureChange::NewName) }
+    :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validates :new_parent_id, :presence => true,
-    :if => Proc.new { |c| c.taxon_concept_id.blank? && !c.nomenclature_change.is_a?(NomenclatureChange::NewName) }
+    :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validate :validate_tmp_taxon_concept,
-    :if => Proc.new { |c| (c.will_create_taxon? || c.will_update_taxon?) && !c.nomenclature_change.is_a?(NomenclatureChange::NewName) }
+    :if => Proc.new { |c| (c.will_create_taxon? || c.will_update_taxon?) }
   before_validation :populate_taxon_concept_fields,
     :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
 
