@@ -21,7 +21,7 @@ describe NomenclatureChange::StatusToSynonym do
         let(:status_change){
           build(
             :nomenclature_change_status_to_synonym,
-            :status => NomenclatureChange::StatusToSynonym::PRIMARY_OUTPUT
+            status: NomenclatureChange::StatusToSynonym::PRIMARY_OUTPUT
           )
         }
         specify { expect(status_change).to have(1).error_on(:primary_output) }
@@ -30,7 +30,7 @@ describe NomenclatureChange::StatusToSynonym do
         let(:status_change){
           build(
             :nomenclature_change_status_to_synonym,
-            :status => NomenclatureChange::StatusToSynonym::SUBMITTED
+            status: NomenclatureChange::StatusToSynonym::SUBMITTED
           )
         }
         specify { expect(status_change).to have(1).error_on(:primary_output) }
@@ -41,8 +41,8 @@ describe NomenclatureChange::StatusToSynonym do
         let(:status_change){
           build(
             :nomenclature_change_status_to_synonym,
-            :primary_output_attributes => { taxon_concept_id: create_cites_eu_species(name_status: 'N').id },
-            :status => NomenclatureChange::StatusToSynonym::RELAY
+            primary_output_attributes: { taxon_concept_id: create_cites_eu_species(name_status: 'N').id },
+            status: NomenclatureChange::StatusToSynonym::RELAY
           )
         }
         specify { expect(status_change).to have(1).error_on(:secondary_output) }
@@ -51,8 +51,8 @@ describe NomenclatureChange::StatusToSynonym do
         let(:status_change){
           build(
             :nomenclature_change_status_to_synonym,
-            :primary_output_attributes => { taxon_concept_id: create_cites_eu_species(name_status: 'N').id },
-            :status => NomenclatureChange::StatusToSynonym::SUBMITTED
+            primary_output_attributes: { taxon_concept_id: create_cites_eu_species(name_status: 'N').id },
+            status: NomenclatureChange::StatusToSynonym::SUBMITTED
           )
         }
         specify { expect(status_change).to have(1).error_on(:secondary_output) }
