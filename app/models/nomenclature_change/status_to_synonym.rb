@@ -28,7 +28,6 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
     in: self.status_dict,
     message: "%{value} is not a valid status"
   }
-  validate :required_primary_output, if: :primary_output_or_submitting?
   validate :required_primary_output_name_status, if: :primary_output_or_submitting?
   validate :required_secondary_output, if: :relay_or_submitting?
   before_save :build_input_for_relay, if: :relay?
@@ -37,14 +36,6 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
 
   def ensure_new_name_status
     primary_output && primary_output.new_name_status = 'S'
-  end
-
-  def required_primary_output
-    if primary_output.nil?
-      errors.add(:primary_output, "Must have a primary output")
-      return false
-    end
-    true
   end
 
   def required_primary_output_name_status
