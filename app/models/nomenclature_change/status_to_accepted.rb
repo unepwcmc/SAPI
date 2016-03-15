@@ -22,9 +22,18 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
     in: self.status_dict,
     message: "%{value} is not a valid status"
   }
+  validate :required_primary_output_name_status, if: :primary_output_or_submitting?
   before_validation :set_output_name_status, if: :primary_output_or_submitting?
   before_validation :set_output_rank_id, if: :primary_output_or_submitting?
   before_validation :set_output_parent_id, if: :primary_output_or_submitting?
+
+  def required_primary_output_name_status
+    if primary_output && !['N', 'T'].include?(primary_output.name_status)
+      errors.add(:primary_output, "Must be N or T taxon")
+      return false
+    end
+    true
+  end
 
   def set_output_name_status
     primary_output && primary_output.new_name_status = 'A'
