@@ -5,12 +5,13 @@ describe NomenclatureChange::StatusToSynonym::Processor do
 
   before(:each){ synonym_relationship_type }
   let(:processor){ NomenclatureChange::StatusToSynonym::Processor.new(status_change) }
+  let(:input_species){ create_cites_eu_species(name_status: 'N') }
   let(:primary_output_taxon_concept){ status_change.primary_output.taxon_concept }
   let(:secondary_output_taxon_concept){ status_change.secondary_output.taxon_concept }
 
   describe :run do
-    context "from accepted name" do
-      let(:status_change){ a_to_s_with_input_and_secondary_output }
+    context "from N name" do
+      let(:status_change){ n_to_s_with_input_and_secondary_output }
       before(:each){
         @shipment = create(:shipment,
           taxon_concept: primary_output_taxon_concept,
