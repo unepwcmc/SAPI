@@ -102,25 +102,24 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   def success_redirect
-    url = if @event.present?
-      admin_event_documents_url(@event)
-    else
-      admin_documents_url
-    end
-    redirect_to url, :notice => 'Operation succeeded'
+    redirect_to redirect_url, :notice => 'Operation succeeded'
   end
 
   def failure_redirect
-    url = if @event.present?
-      admin_event_documents_url(@event)
-    else
-      admin_documents_url
-    end
     alert = if resource.errors.present?
       "Operation #{resource.errors.messages[:base].join(", ")}"
     else
       "Operation failed"
     end
-    redirect_to url, :alert => alert
+    redirect_to redirect_url, :alert => alert
+  end
+
+  def redirect_url
+    event_id = params[:event_id]
+    url = if event_id.present?
+      admin_event_documents_url(Event.find(event_id))
+    else
+      admin_documents_url
+    end
   end
 end
