@@ -60,10 +60,10 @@ describe NomenclatureChange::Output do
           :new_scientific_name => 'xxx',
           :new_parent_id => create_cites_eu_species.id,
           :new_rank_id => species_rank.id,
-          :new_name_status => nil
+          :new_name_status => 'A'
         )
       }
-      specify { expect(output).to have(2).errors_on(:new_parent_id) }
+      specify { expect(output).to have(1).error_on(:new_parent_id) }
     end
     context "when taxon concept specified" do
       let(:tc){ create_cites_eu_species }

@@ -168,7 +168,8 @@ class TaxonConcept < ActiveRecord::Base
   validates :rank_id, :presence => true
   validates :name_status, :presence => true
   validate :parent_in_same_taxonomy, :if => lambda { |tc| tc.parent }
-  validate :parent_at_immediately_higher_rank, :if => lambda { |tc| tc.parent }
+  validate :parent_at_immediately_higher_rank,
+    :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
   validate :parent_name_compatible, :if => lambda { |tc|
     tc.parent && tc.rank && tc.full_name && (
       ['A', 'N'].include?(tc.name_status) || tc.name_status.blank?
