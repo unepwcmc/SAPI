@@ -42,8 +42,8 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
       it 'redirects to next step' do
         put :update, nomenclature_change_status_to_accepted: {
           primary_output_attributes: {
-            taxon_concept_id: create_cites_eu_species.id,
-            new_name_status: 'S'
+            taxon_concept_id: create_cites_eu_species(name_status: 'N').id,
+            new_name_status: 'A'
           }
         }, nomenclature_change_id: @status_change.id, id: 'primary_output'
         response.should redirect_to(admin_nomenclature_change_status_to_accepted_url(
