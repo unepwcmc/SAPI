@@ -8,7 +8,7 @@
       <legend>Upload documents</legend>
       <div class="form-group">
       <%= select_tag 'event-type', options_for_select(
-        @event_types.map{ |t| [t, t, {'data-path' => t.pluralize.underscore}] }
+        @event_types.map{ |t| [t[:name], t[:id], {'data-path' => t[:id].pluralize.underscore}] }
         ), {:prompt => "Select an event type"}
       %>
       <%= select_tag 'event-id',
@@ -32,7 +32,7 @@
       <legend>Filter documents</legend>
       <div class="form-group">
         <%= select_tag 'event_type_search',
-          options_for_select(@event_types, @search.event_type), {
+          options_for_select(@event_types.map{ |t| [t[:name], t[:id]] }, @search.event_type), {
             :prompt => 'Select an event type...', class: 'input-large', name: 'event_type'
           }
         %>
