@@ -1,13 +1,12 @@
 # /admin/event/:event_id/documents
 # /admin/documents
 class Admin::DocumentsController < Admin::StandardAuthorizationController
-  belongs_to :event, optional: true
 
   def index
     load_associations
     @search = DocumentSearch.new(params.merge(show_private: true), 'admin')
     index! do
-      if @event
+      if @event.present?
         render 'admin/event_documents/index'
       else
         render 'index'
@@ -91,6 +90,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
       Event.elibrary_current_event_types.map(&:to_s)
     end
     @events = Event.where(type: @event_types).order(:published_at).reverse_order
+    @event = Event.find(params[:event_id]) if params[:event_id].present?
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
      order(:name_en)
     @english = Language.find_by_iso_code1('EN')
@@ -102,7 +102,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   def success_redirect
-    url = if @event
+    url = if @event.present?
       admin_event_documents_url(@event)
     else
       admin_documents_url
@@ -111,7 +111,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   def failure_redirect
-    url = if @event
+    url = if @event.present?
       admin_event_documents_url(@event)
     else
       admin_documents_url

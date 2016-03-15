@@ -67,7 +67,7 @@ class DocumentSearch
   end
 
   def add_conditions_for_event
-    if @event_id
+    if @event_id.present?
       @query = @query.where(event_id: @event_id)
       return
     end
