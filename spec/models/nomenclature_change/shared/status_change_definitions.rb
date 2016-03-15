@@ -2,13 +2,20 @@ shared_context 'status_change_definitions' do
   let(:input_species){ create_cites_eu_species }
   let(:accepted_name){ create_cites_eu_species }
   let(:input_trade_name){
-    tc = create_cites_eu_species(name_status: 'T')
+    tc = create_cites_eu_species(name_status: 'T',
+      taxon_name: create(:taxon_name, scientific_name: 'Ridiculus fatalus')
+    )
     create(:taxon_relationship,
       taxon_concept: accepted_name,
       other_taxon_concept: tc,
       taxon_relationship_type: trade_name_relationship_type
     )
     tc
+  }
+  let(:input_trade_name_genus){
+    create_cites_eu_genus(
+      taxon_name: create(:taxon_name, scientific_name: 'Ridiculus')
+    )
   }
   let(:input_synonym){
     tc = create_cites_eu_species(name_status: 'S',
@@ -36,13 +43,13 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusToSynonym::PRIMARY_OUTPUT
     ).reload
   }
-  let(:s_to_a_with_primary_output){
+  let(:t_to_a_with_primary_output){
     create(:nomenclature_change_status_to_accepted,
       primary_output_attributes: {
         is_primary_output: true,
-        taxon_concept_id: input_synonym.id,
+        taxon_concept_id: input_trade_name.id,
         new_name_status: 'A',
-        new_parent_id: input_synonym_genus.id
+        new_parent_id: input_trade_name_genus.id
       },
       status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
     ).reload
@@ -103,13 +110,13 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusSwap::SWAP
     ).reload
   }
-  let(:s_to_a_with_input){
+  let(:t_to_a_with_input){
     create(:nomenclature_change_status_to_accepted,
       primary_output_attributes: {
         is_primary_output: true,
-        taxon_concept_id: input_synonym.id,
+        taxon_concept_id: input_trade_name.id,
         new_name_status: 'A',
-        new_parent_id: input_synonym_genus.id
+        new_parent_id: input_trade_name_genus.id
       },
       status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
     ).reload

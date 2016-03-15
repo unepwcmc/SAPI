@@ -16,7 +16,7 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
     end
     context :summary do
       before(:each) do
-        @status_change = s_to_a_with_input
+        @status_change = t_to_a_with_input
       end
       it 'renders the summary template' do
         get :show, id: :summary, nomenclature_change_id: @status_change.id
