@@ -173,9 +173,11 @@ class NomenclatureChange::Output < ActiveRecord::Base
           :tag_list => tag_list
         })
       ).tap do |tc|
-        add_taxon_synonym(tc, accepted_taxon_ids)
-        add_taxon_hybrid(tc, hybrid_parent_id)
-        add_taxon_hybrid(tc, other_hybrid_parent_id)
+        unless nomenclature_change.is_a?(NomenclatureChange::NewName)
+          add_taxon_synonym(tc, accepted_taxon_ids)
+          add_taxon_hybrid(tc, hybrid_parent_id)
+          add_taxon_hybrid(tc, other_hybrid_parent_id)
+        end
       end
     elsif will_update_taxon?
       taxon_concept.assign_attributes(taxon_concept_attrs)
