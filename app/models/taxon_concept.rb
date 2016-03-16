@@ -194,12 +194,13 @@ class TaxonConcept < ActiveRecord::Base
     :if => lambda { |tc| tc.full_name }
   before_validation :check_parent_taxon_concept_exists,
     :if => lambda { |tc| tc.parent_scientific_name }
-  before_validation :check_accepted_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
 
   before_validation :ensure_taxonomic_position
 
   translates :nomenclature_note
+
+  after_save :check_accepted_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
 
   scope :at_parent_ranks, lambda{ |rank|
     joins_sql = <<-SQL
@@ -483,8 +484,9 @@ class TaxonConcept < ActiveRecord::Base
 
   def check_accepted_taxon_concept_exists
     check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
+      inverse_taxon_relationships.create(
         taxon_concept_id: tc.id,
+        other_taxon_concept_id: self.id,
         taxon_relationship_type_id: TaxonRelationshipType.
         find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
       )
