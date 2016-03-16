@@ -118,7 +118,7 @@ SAPI::Application.routes.draw do
     resources :ahoy_visits, :only => [:index, :show]
     resources :ahoy_events, :only => [:index, :show]
 
-    resources :taxon_concepts, only: [:index, :edit, :update, :show, :destroy] do
+    resources :taxon_concepts do
       get :autocomplete, :on => :collection
       resources :children, :only => [:index]
       resources :taxon_relationships, :only => [:index, :create, :destroy]

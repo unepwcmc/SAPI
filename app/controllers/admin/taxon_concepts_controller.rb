@@ -31,6 +31,22 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     end
   end
 
+  def create
+    create! do |success, failure|
+      @taxonomies = Taxonomy.order(:name)
+      @ranks = Rank.order(:taxonomic_position)
+      success.js { render('create') }
+      failure.js {
+        if @taxon_concept.is_synonym?
+          @synonym = @taxon_concept
+          render('new_synonym')
+        else
+          render('new')
+        end
+      }
+    end
+  end
+
   def update
     @taxon_concept = TaxonConcept.find(params[:id])
     taxa_ids = sanitize_update_params
@@ -85,7 +101,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
 
     def sanitize_search_params
       @search_params = SearchParams.new(
-        params[:search_params] || 
+        params[:search_params] ||
         { :taxonomy => { :id => Taxonomy.
           where(:name => Taxonomy::CITES_EU).limit(1).select(:id).first.id }
         })
