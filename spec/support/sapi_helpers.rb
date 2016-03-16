@@ -134,66 +134,6 @@ shared_context :sapi do
     end
   end
 
-  let(:kingdom_rank){
-    create(
-      :rank,
-      :name => Rank::KINGDOM, :taxonomic_position => '1', :fixed_order => true
-    )
-  }
-  let(:phylum_rank){
-    create(
-      :rank,
-      :name => Rank::PHYLUM, :taxonomic_position => '2', :fixed_order => true
-    )
-  }
-  let(:class_rank){
-    create(
-      :rank,
-      :name => Rank::CLASS, :taxonomic_position => '3', :fixed_order => true
-    )
-  }
-  let(:order_rank){
-    create(
-      :rank,
-      :name => Rank::ORDER, :taxonomic_position => '4', :fixed_order => false
-    )
-  }
-  let(:family_rank){
-    create(
-      :rank,
-      :name => Rank::FAMILY, :taxonomic_position => '5', :fixed_order => false
-    )
-  }
-  let(:subfamily_rank){
-    create(
-      :rank,
-      :name => Rank::SUBFAMILY, :taxonomic_position => '5.1', :fixed_order => false
-    )
-  }
-  let(:genus_rank){
-    create(
-      :rank,
-      :name => Rank::GENUS, :taxonomic_position => '6', :fixed_order => false
-    )
-  }
-  let(:species_rank){
-    create(
-      :rank,
-      :name => Rank::SPECIES, :taxonomic_position => '7', :fixed_order => false
-    )
-  }
-  let(:subspecies_rank){
-    create(
-      :rank,
-      :name => Rank::SUBSPECIES, :taxonomic_position => '7.1', :fixed_order => false
-    )
-  }
-  let(:variety){
-    create(
-      :rank,
-      :name => Rank::VARIETY, :taxonomic_position => '7.2', :fixed_order => false
-    )
-  }
   let(:cites_eu_animalia){
     create_cites_eu_kingdom(
       :taxonomic_position => '1',
@@ -324,52 +264,52 @@ shared_context :sapi do
     )
   end
 
-  %w(kingdom phylum class order family subfamily genus species subspecies variety).each do |rank|
-    define_method "create_#{rank}" do |options = {}|
+  %w(KINGDOM PHYLUM CLASS ORDER FAMILY SUBFAMILY GENUS SPECIES SUBSPECIES VARIETY).each do |rank|
+    define_method "create_#{rank.downcase}" do |options = {}|
       create(
         :taxon_concept,
-        options.merge({:rank => send("#{rank}_rank")})
+        options.merge({rank: create(:rank, name: rank)})
       )
     end
-    define_method "build_#{rank}" do |options = {}|
+    define_method "build_#{rank.downcase}" do |options = {}|
       build(
         :taxon_concept,
-        options.merge({:rank => send("#{rank}_rank")})
+        options.merge({rank: create(:rank, name: rank)})
       )
     end
-    define_method "create_cites_eu_#{rank}" do |options = {}|
-      create(
-        :taxon_concept,
-        options.merge({
-          :rank => send("#{rank}_rank"),
-          :taxonomy => cites_eu
-        })
-      )
-    end
-    define_method "build_cites_eu_#{rank}" do |options = {}|
-      build(
-        :taxon_concept,
-        options.merge({
-          :rank => send("#{rank}_rank"),
-          :taxonomy => cites_eu
-        })
-      )
-    end
-    define_method "create_cms_#{rank}" do |options = {}|
+    define_method "create_cites_eu_#{rank.downcase}" do |options = {}|
       create(
         :taxon_concept,
         options.merge({
-          :rank => send("#{rank}_rank"),
-          :taxonomy => cms
+          rank: create(:rank, name: rank),
+          taxonomy: cites_eu
         })
       )
     end
-    define_method "build_cms_#{rank}" do |options = {}|
+    define_method "build_cites_eu_#{rank.downcase}" do |options = {}|
       build(
         :taxon_concept,
         options.merge({
-          :rank => send("#{rank}_rank"),
-          :taxonomy => cms
+          rank: create(:rank, name: rank),
+          taxonomy: cites_eu
+        })
+      )
+    end
+    define_method "create_cms_#{rank.downcase}" do |options = {}|
+      create(
+        :taxon_concept,
+        options.merge({
+          rank: create(:rank, name: rank),
+          taxonomy: cms
+        })
+      )
+    end
+    define_method "build_cms_#{rank.downcase}" do |options = {}|
+      build(
+        :taxon_concept,
+        options.merge({
+          rank: create(:rank, name: rank),
+          taxonomy: cms
         })
       )
     end

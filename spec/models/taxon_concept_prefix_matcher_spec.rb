@@ -1,38 +1,35 @@
 require 'spec_helper'
 
 describe TaxonConceptPrefixMatcher do
-  let(:taxonomy){ create(:taxonomy) }
-  let!(:rank1){ create(:rank, :taxonomic_position => '1') }
-  let!(:rank2){ create(:rank, :taxonomic_position => '2') }
-  let!(:rank3){ create(:rank, :taxonomic_position => '2.1') }
-  let!(:rank4){ create(:rank, :taxonomic_position => '3') }
+  let(:taxonomy){ cites_eu }
 
   let!(:taxon_concept1){
-    create(:taxon_concept, :rank => rank1, :taxonomy => taxonomy,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Aaa')
+    create_cites_eu_order(
+      taxon_name: create(:taxon_name, scientific_name: 'Aaa')
     )
   }
   let!(:taxon_concept2){
-    create(:taxon_concept, :rank => rank2, :taxonomy => taxonomy,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Aac'),
-      :parent => taxon_concept1
+    create_cites_eu_family(
+      taxon_name: create(:taxon_name, scientific_name: 'Aac'),
+      parent: taxon_concept1
     )
   }
   let!(:taxon_concept3){
-    create(:taxon_concept, :rank => rank3, :taxonomy => taxonomy,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Aab')
+    create_cites_eu_subfamily(
+      taxon_name: create(:taxon_name, scientific_name: 'Aab'),
+      parent: taxon_concept2
     )
   }
   let!(:taxon_concept4){
-    create(:taxon_concept, :rank => rank4, :taxonomy => taxonomy,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Abb'),
-      :parent => taxon_concept2
+    create_cites_eu_genus(
+      taxon_name: create(:taxon_name, scientific_name: 'Abb'),
+      parent: taxon_concept3
     )
   }
   let!(:hybrid){
-    tmp = create(:taxon_concept, :taxonomy => taxonomy,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Abc'),
-      :name_status => 'H'
+    tmp = create_cites_eu_genus(
+      taxon_name: create(:taxon_name, scientific_name: 'Abc'),
+      name_status: 'H'
     )
     create(
       :taxon_relationship,
@@ -102,7 +99,7 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify{ ancestor_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Aaa', 'Aac'] }
+      ['Aaa', 'Aab', 'Aac'] }
 
     let(:descendant_matcher_params){
       SearchParams.new(
@@ -116,7 +113,7 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify{ descendant_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Abb'] }
+      ['Aab', 'Abb'] }
   end
 
 end

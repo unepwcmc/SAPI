@@ -11,13 +11,20 @@ shared_context 'status_change_definitions' do
     tc
   }
   let(:input_synonym){
-    tc = create_cites_eu_species(name_status: 'S')
+    tc = create_cites_eu_species(name_status: 'S',
+      taxon_name: create(:taxon_name, scientific_name: 'Confundus totalus')
+    )
     create(:taxon_relationship,
       taxon_concept: accepted_name,
       other_taxon_concept: tc,
       taxon_relationship_type: synonym_relationship_type
     )
     tc
+  }
+  let(:input_synonym_genus){
+    create_cites_eu_genus(
+      taxon_name: create(:taxon_name, scientific_name: 'Confundus')
+    )
   }
   let(:n_to_s_with_primary_output){
     create(:nomenclature_change_status_to_synonym,
@@ -34,7 +41,8 @@ shared_context 'status_change_definitions' do
       primary_output_attributes: {
         is_primary_output: true,
         taxon_concept_id: input_synonym.id,
-        new_name_status: 'A'
+        new_name_status: 'A',
+        new_parent_id: input_synonym_genus.id
       },
       status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
     ).reload
@@ -89,7 +97,8 @@ shared_context 'status_change_definitions' do
       secondary_output_attributes: {
         is_primary_output: false,
         taxon_concept_id: input_synonym.id,
-        new_name_status: 'A'
+        new_name_status: 'A',
+        new_parent_id: input_synonym_genus.id
       },
       status: NomenclatureChange::StatusSwap::SWAP
     ).reload
@@ -99,7 +108,8 @@ shared_context 'status_change_definitions' do
       primary_output_attributes: {
         is_primary_output: true,
         taxon_concept_id: input_synonym.id,
-        new_name_status: 'A'
+        new_name_status: 'A',
+        new_parent_id: input_synonym_genus.id
       },
       status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
     ).reload
@@ -109,7 +119,8 @@ shared_context 'status_change_definitions' do
       primary_output_attributes: {
         is_primary_output: true,
         taxon_concept_id: input_synonym.id,
-        new_name_status: 'A'
+        new_name_status: 'A',
+        new_parent_id: input_synonym_genus.id
       },
       input_attributes: { taxon_concept_id: input_species.id },
       secondary_output_attributes: {

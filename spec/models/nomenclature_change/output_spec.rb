@@ -59,7 +59,7 @@ describe NomenclatureChange::Output do
           :nomenclature_change_output, :taxon_concept_id => nil,
           :new_scientific_name => 'xxx',
           :new_parent_id => create_cites_eu_species.id,
-          :new_rank_id => species_rank.id,
+          :new_rank_id => create(:rank, name: Rank::SPECIES).id,
           :new_name_status => 'A'
         )
       }

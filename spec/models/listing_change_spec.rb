@@ -45,41 +45,13 @@ describe ListingChange do
         specify{ listing_change.exclusions.size == 0 }
       end
       context "inclusion taxon concept is lower rank" do
-        let(:rank1){ create(:rank, :taxonomic_position => '1')}
-        let(:rank2){ create(:rank, :taxonomic_position => '1.2')}
-        let(:inclusion){
-          create(
-            :taxon_concept,
-            :rank => rank2,
-            :taxon_name => create(:taxon_name, :scientific_name => 'Abc')
-          )
-        }
-        let(:taxon_concept){ create(:taxon_concept, :rank => rank1) }
+        let(:inclusion){ create_cites_eu_subspecies }
+        let(:taxon_concept){ create_cites_eu_species }
         let(:listing_change){
           build(
             :listing_change,
-            :taxon_concept => taxon_concept,
-            :inclusion_taxon_concept_id => inclusion.id
-          )
-        }
-        specify{listing_change.should have(1).error_on(:inclusion_taxon_concept_id)}
-      end
-      context "inclusion taxon concept is lower rank" do
-        let(:rank1){ create(:rank, :taxonomic_position => '1')}
-        let(:rank2){ create(:rank, :taxonomic_position => '1.2')}
-        let(:inclusion){
-          create(
-            :taxon_concept,
-            :rank => rank2,
-            :taxon_name => create(:taxon_name, :scientific_name => 'Abc')
-          )
-        }
-        let(:taxon_concept){ create(:taxon_concept, :rank => rank1) }
-        let(:listing_change){
-          build(
-            :listing_change,
-            :taxon_concept => taxon_concept,
-            :inclusion_taxon_concept_id => inclusion.id
+            taxon_concept: taxon_concept,
+            inclusion_taxon_concept_id: inclusion.id
           )
         }
         specify{listing_change.should have(1).error_on(:inclusion_taxon_concept_id)}

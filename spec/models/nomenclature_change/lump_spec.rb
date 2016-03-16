@@ -71,7 +71,7 @@ describe NomenclatureChange::Lump do
           },
           :output_attributes => {
             :taxon_concept_id => create_cites_eu_species.id,
-            :new_rank_id => species_rank.id
+            :new_rank_id => create(:rank, name: Rank::SPECIES).id
           }
         )
       }
