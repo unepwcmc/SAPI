@@ -34,7 +34,6 @@ class TaxonRelationship < ActiveRecord::Base
     scope: [:taxon_relationship_type_id, :other_taxon_concept_id],
     message: 'This relationship already exists, choose another taxon.'
   }
-  validates :other_taxon_concept_id, presence: true
   validate :intertaxonomic_relationship_uniqueness, :if => "taxon_relationship_type.is_intertaxonomic?"
 
   def update_higher_taxa_for_hybrid_child
