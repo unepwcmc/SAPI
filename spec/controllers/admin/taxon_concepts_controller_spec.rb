@@ -111,7 +111,7 @@ describe Admin::TaxonConceptsController do
 
   describe "XHR GET JSON autocomplete" do
     let!(:taxon_concept){
-      create(:taxon_concept,
+      create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'AAA')
       )
     }
@@ -119,7 +119,7 @@ describe Admin::TaxonConceptsController do
       xhr :get, :autocomplete, :format => 'json',
         :search_params => {:scientific_name => 'AAA'}
       response.body.should have_json_size(1)
-      parse_json(response.body, "0/full_name").should == 'AAA'
+      parse_json(response.body, "0/full_name").should == 'Aaa'
     end
   end
 

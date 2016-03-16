@@ -6,7 +6,10 @@ describe NomenclatureChange::StatusToAccepted::Processor do
   let(:accepted_name){ create_cites_eu_species }
 
   let(:trade_name){
-    tc = create_cites_eu_species(name_status: 'T')
+    tc = create_cites_eu_species(
+      name_status: 'T',
+      taxon_name: create(:taxon_name, scientific_name: 'Lolcatus nonsensus')
+    )
     create(:taxon_relationship,
       taxon_concept: accepted_name,
       other_taxon_concept: tc,
@@ -14,9 +17,16 @@ describe NomenclatureChange::StatusToAccepted::Processor do
     )
     tc
   }
-
+  let(:trade_name_genus){
+    create_cites_eu_genus(
+      taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
+    )
+  }
   let(:synonym){
-    tc = create_cites_eu_species(name_status: 'S')
+    tc = create_cites_eu_species(
+      name_status: 'S',
+      taxon_name: create(:taxon_name, scientific_name: 'Foobarus ridiculus')
+    )
     create(:taxon_relationship,
       taxon_concept: accepted_name,
       other_taxon_concept: tc,
@@ -24,7 +34,11 @@ describe NomenclatureChange::StatusToAccepted::Processor do
     )
     tc
   }
-
+  let(:synonym_genus){
+    create_cites_eu_genus(
+      taxon_name: create(:taxon_name, scientific_name: 'Foobarus')
+    )
+  }
   before(:each){ synonym_relationship_type }
   let(:processor){ NomenclatureChange::StatusToAccepted::Processor.new(status_change) }
   let(:primary_output_taxon_concept){ status_change.primary_output.taxon_concept }
@@ -38,7 +52,8 @@ describe NomenclatureChange::StatusToAccepted::Processor do
           primary_output_attributes: {
             is_primary_output: true,
             taxon_concept_id: synonym.id,
-            new_name_status: 'A'
+            new_name_status: 'A',
+            new_parent_id: synonym_genus.id
           },
           input_attributes: { taxon_concept_id: input_species.id },
           status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
@@ -65,7 +80,8 @@ describe NomenclatureChange::StatusToAccepted::Processor do
           primary_output_attributes: {
             is_primary_output: true,
             taxon_concept_id: trade_name.id,
-            new_name_status: 'A'
+            new_name_status: 'A',
+            new_parent_id: trade_name_genus.id
           },
           input_attributes: { taxon_concept_id: input_species.id },
           status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT

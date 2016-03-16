@@ -5,8 +5,8 @@ describe Admin::RanksController do
 
   describe "GET index" do
     it "assigns @ranks sorted by taxonomic position" do
-      rank2 = create(:rank, :taxonomic_position => '2')
-      rank1 = create(:rank, :taxonomic_position => '1')
+      rank2 = create(:rank, name: Rank::PHYLUM, taxonomic_position: '2')
+      rank1 = create(:rank, name: Rank::KINGDOM, taxonomic_position: '1')
       get :index
       assigns(:ranks).should eq([rank1, rank2])
     end
