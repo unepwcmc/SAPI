@@ -1,13 +1,12 @@
 # /admin/event/:event_id/documents
 # /admin/documents
 class Admin::DocumentsController < Admin::StandardAuthorizationController
-  belongs_to :event, optional: true
 
   def index
     load_associations
     @search = DocumentSearch.new(params.merge(show_private: true), 'admin')
     index! do
-      if @event
+      if @event.present?
         render 'admin/event_documents/index'
       else
         render 'index'
@@ -86,11 +85,12 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def load_associations
     @designations = Designation.where(name: ['CITES', 'EU']).select([:id, :name]).order(:name)
     @event_types = if @document && @document.event
-      @event_types = [@document.event.type]
+      @event_types = [{id: @document.event.type}]
     else
-      Event.elibrary_current_event_types.map(&:to_s)
+      Event.event_types_with_names
     end
-    @events = Event.where(type: @event_types).order(:published_at).reverse_order
+    @events = Event.where(type: @event_types.map{ |t| t[:id] }).order(:published_at).reverse_order
+    @event = Event.find(params[:event_id]) if params[:event_id].present?
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
      order(:name_en)
     @english = Language.find_by_iso_code1('EN')
@@ -102,25 +102,24 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   def success_redirect
-    url = if @event
-      admin_event_documents_url(@event)
-    else
-      admin_documents_url
-    end
-    redirect_to url, :notice => 'Operation succeeded'
+    redirect_to redirect_url, :notice => 'Operation succeeded'
   end
 
   def failure_redirect
-    url = if @event
-      admin_event_documents_url(@event)
-    else
-      admin_documents_url
-    end
     alert = if resource.errors.present?
       "Operation #{resource.errors.messages[:base].join(", ")}"
     else
       "Operation failed"
     end
-    redirect_to url, :alert => alert
+    redirect_to redirect_url, :alert => alert
+  end
+
+  def redirect_url
+    event_id = params[:event_id]
+    url = if event_id.present?
+      admin_event_documents_url(Event.find(event_id))
+    else
+      admin_documents_url
+    end
   end
 end

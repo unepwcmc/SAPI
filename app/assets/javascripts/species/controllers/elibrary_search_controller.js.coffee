@@ -20,7 +20,8 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     @set('titleQuery', filtersHash.title_query)
     @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
     @set('selectedEventId', filtersHash.event_id)
-    @set('selectedDocumentType', @get('controllers.events.documentTypes').findBy('id', filtersHash.document_type))
+    allDocumentTypes = @get('controllers.events.documentTypes').concat @get('controllers.events.interSessionalDocumentTypes')
+    @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
     @set('selectedProposalOutcomeId', filtersHash.proposal_outcome_id)
     @set('selectedReviewPhaseId', filtersHash.review_phase_id)
 
@@ -49,6 +50,18 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       @get('controllers.events.documentTypes')
   ).property('selectedEventType.id')
 
+  interSessionalDocumentTypes: ( ->
+    @get('controllers.events.interSessionalDocumentTypes')
+  ).property()
+
+  documentTypeDropdownVisible: ( ->
+    @get('selectedEventType.id') == 'EcSrg'
+  ).property('selectedEventType')
+
+  interSessionalDocTypeDropdownVisible: ( ->
+    !@get('selectedEventType.id')?
+  ).property('selectedEventType')
+
   actions:
     openSearchPage:->
       @transitionToRoute('documents', {queryParams: @getFilters()})
@@ -56,7 +69,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     handleDocumentTypeSelection: (documentType) ->
       @set('selectedDocumentType', documentType)
 
-    handleDocumentTypeDeselection: (documentType) ->
+    handleDocumentTypeDeselection:  ->
       @set('selectedDocumentType', null)
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
@@ -72,5 +85,6 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       @set('selectedEvent', null)
       @set('selectedEventId', null)
       @set('selectedDocumentType', null)
+      @set('selectedInterSessionalDocType', null)
       @set('selectedProposalOutcome', null)
       @set('selectedReviewPhase', null)

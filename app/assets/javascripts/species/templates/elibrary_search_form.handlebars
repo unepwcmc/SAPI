@@ -52,11 +52,23 @@
       </div>
       <div class="documents-control-group">
         {{single-dropdown
+          isVisible=controller.documentTypeDropdownVisible
           action="handleDocumentTypeSelection"
           clearAction="handleDocumentTypeDeselection"
           title="Document type"
           placeholder="All document types"
           values=controller.filteredDocumentTypes
+          selection=controller.selectedDocumentType
+        }}
+      </div>
+      <div class="documents-control-group">
+        {{single-dropdown
+          isVisible=controller.interSessionalDocTypeDropdownVisible
+          action="handleDocumentTypeSelection"
+          clearAction="handleDocumentTypeDeSelection"
+          title="Inter-sessional documents type"
+          placeholder="Document types"
+          values=controller.interSessionalDocumentTypes
           selection=controller.selectedDocumentType
         }}
       </div>

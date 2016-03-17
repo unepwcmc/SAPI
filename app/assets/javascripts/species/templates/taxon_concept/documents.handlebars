@@ -6,7 +6,7 @@
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
-          eventType="CitesCop,CitesExtraordinaryMeeting"
+          eventType="CitesCop"
           dataController=controller
           loadMore=controller.citesCopProposalsDocsLoadMore
           documents=controller.citesCopProposalsDocuments.docs
@@ -15,17 +15,31 @@
       </tbody>
     </table>
 
-    <h2 id="cites_rst">CITES Review of Significant Trade</h2>
+    <h2 id="cites_rst_animals">CITES Review of Significant Trade (animals)</h2>
 
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
-          eventType="CitesAc,CitesPc,CitesTc"
+          eventType="CitesAc,CitesTc"
           dataController=controller
-          loadMore=controller.citesRSTDocsLoadMore
-          documents=controller.citesRSTDocuments.docs
+          loadMore=controller.citesAcDocsLoadMore
+          documents=controller.citesAcDocuments.docs
           reviewPhase=true
-          isLoading=controller.citesRSTDocsIsLoading}}
+          isLoading=controller.citesAcDocsIsLoading}}
+      </tbody>
+    </table>
+
+    <h2 id="cites_rst_plants">CITES Review of Significant Trade (plants)</h2>
+
+    <table class="grouped-results-table">
+      <tbody>
+        {{documents-results
+          eventType="CitesPc"
+          dataController=controller
+          loadMore=controller.citesPcDocsLoadMore
+          documents=controller.citesPcDocuments.docs
+          reviewPhase=true
+          isLoading=controller.citesPcDocsIsLoading}}
       </tbody>
     </table>
 
@@ -42,7 +56,7 @@
       </tbody>
     </table>
 
-    <h2 id="other">Other</h2>
+    <h2 id="other">Inter-sessional documents</h2>
 
     <table class="grouped-results-table">
       <tbody>

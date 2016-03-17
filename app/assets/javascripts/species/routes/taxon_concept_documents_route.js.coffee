@@ -8,7 +8,7 @@ Species.TaxonConceptDocumentsRoute = Ember.Route.extend Species.DocumentLoader,
   getDocuments: ->
     model = @modelFor("taxonConcept")
     controller = @controllerFor('taxonConceptDocuments')
-    ['EcSrg', 'CitesCop,CitesExtraordinaryMeeting', 'CitesAc,CitesPc,CitesTc', 'Other'].forEach((eventType) =>
+    ['EcSrg', 'CitesCop', 'CitesAc,CitesTc', 'CitesPc', 'Other'].forEach((eventType) =>
       params = {
         event_type: eventType,
         taxon_concepts_ids: [model.get('id')]
