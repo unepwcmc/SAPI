@@ -14,15 +14,6 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
         response.should render_template('primary_output')
       end
     end
-    context :parent do
-      before(:each) do
-        @status_change = s_to_a_with_input
-      end
-      it 'renders the parent template' do
-        get :show, id: :parent, nomenclature_change_id: @status_change.id
-        response.should render_template('parent')
-      end
-    end
     context :summary do
       before(:each) do
         @status_change = s_to_a_with_input
@@ -56,7 +47,7 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
           }
         }, nomenclature_change_id: @status_change.id, id: 'primary_output'
         response.should redirect_to(admin_nomenclature_change_status_to_accepted_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'parent'
+          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
         ))
       end
     end

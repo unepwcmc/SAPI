@@ -2,17 +2,18 @@
 <%= nomenclature_change_form do |f| %>
   <%= render 'admin/nomenclature_changes/build/event_selector', :f => f %>
   <%= f.fields_for :primary_output do |ff| %>
-  <div class="control-group">
-    <label class="control-label">Taxon concept to change:</label>
-    <div class="controls">
-      <%= ff.text_field :taxon_concept_id, {
-        :class => 'taxon-concept status-change',
-        :'data-name' => ff.object.taxon_concept.try(:full_name),
-        :'data-name-status' => ff.object.taxon_concept.try(:name_status),
-        :'data-name-status-filter' => ['N', 'S', 'T'].to_json,
-        :'data-taxonomy-id' => @taxonomy.id
-      } %>
+    <div class="control-group">
+      <label class="control-label">Taxon concept to change:</label>
+      <div class="controls">
+        <%= ff.text_field :taxon_concept_id, {
+          :class => 'taxon-concept status-change',
+          :'data-name' => ff.object.taxon_concept.try(:full_name),
+          :'data-name-status' => ff.object.taxon_concept.try(:name_status),
+          :'data-name-status-filter' => ['N', 'S', 'T'].to_json,
+          :'data-taxonomy-id' => @taxonomy.id
+        } %>
+      </div>
     </div>
-  </div>
+    <%= render 'admin/nomenclature_changes/build/new_parent', :ff => ff %>
   <% end %>
 <% end %>
