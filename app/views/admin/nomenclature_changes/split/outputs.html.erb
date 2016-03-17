@@ -17,7 +17,7 @@
           :'data-name' => ff.object.taxon_concept.try(:full_name),
           :'data-taxonomy-id' => @taxonomy.id,
           :'data-name-status' => ff.object.taxon_concept.try(:name_status),
-          :'data-name-status-filter' => ['A', 'N', 'S', 'T'].to_json
+          :'data-name-status-filter' => ['A', 'S'].to_json
         } %>
       </div>
     </div>
@@ -25,7 +25,6 @@
       <div class="control-group">
         <label class="control-label">New taxon parent:</label>
         <div class="controls">
-          <!-- TODO figure out the restrictions on the auto complete here, none for now -->
           <%= ff.text_field :new_parent_id, {
             :class => 'taxon-concept parent-taxon',
             :'data-name' => ff.object.new_parent.try(:full_name),
