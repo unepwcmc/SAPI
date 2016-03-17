@@ -16,7 +16,7 @@
 class NomenclatureChange::StatusToAccepted < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
   build_steps(
-    :primary_output, :parent, :summary
+    :primary_output, :summary
   )
   validates :status, inclusion: {
     in: self.status_dict,
@@ -25,7 +25,6 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   before_validation :set_output_name_status, if: :primary_output_or_submitting?
   before_validation :set_output_rank_id, if: :primary_output_or_submitting?
   before_validation :set_output_parent_id, if: :primary_output_or_submitting?
-  before_save :build_auto_reassignments, if: :parent?
 
   def set_output_name_status
     primary_output && primary_output.new_name_status = 'A'
@@ -52,10 +51,6 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
 
   def needs_to_set_parent?
     ['S', 'T'].include? primary_output.try(:name_status)
-  end
-
-  def build_auto_reassignments
-    true
   end
 
 end
