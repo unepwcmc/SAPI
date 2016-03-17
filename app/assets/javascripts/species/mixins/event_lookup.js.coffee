@@ -9,7 +9,11 @@ Species.EventLookup = Ember.Mixin.create
 
   filteredEvents: ( ->
     if @get('selectedEventType')
-      @get('controllers.events.content').filterBy('type', @get('selectedEventType.id'))
+      event_ids = @get('selectedEventType.id').split(',')
+      events = []
+      for event_id in event_ids
+        events = events.concat @get('controllers.events.content').filterBy('type', event_id)
+      events
     else
       []
   ).property('selectedEventType.id')
