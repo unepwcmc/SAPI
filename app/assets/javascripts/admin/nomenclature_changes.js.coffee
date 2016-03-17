@@ -126,11 +126,11 @@ $(document).ready ->
   $('form').on('click', '.output-radio', (e) ->
     value = $(this).val()
     switch value
-      when "New taxon"
+      when "new_taxon"
         NewTaxonForm(this)
-      when "Existing taxon"
+      when "existing_taxon"
         ExistingTaxonForm(this)
-      when "Existing subspecies"
+      when "existing_subspecies"
         UpgradedTaxonForm(this)
   )
 
@@ -145,6 +145,9 @@ $(document).ready ->
     input_taxon.show()
     input_taxon.closest('.control-group').find('label').show()
 
+  ShowUpgradeInfo = (obj) ->
+    $(obj).closest('.fields').find('.upgrade-info').first().show()
+
   HideUpgradeInfo = (obj) ->
     upgrade_info = $(obj).closest('.fields').find('.upgrade-info')
     upgrade_info.first().hide()
@@ -153,7 +156,7 @@ $(document).ready ->
 
   NewTaxonForm = (obj) ->
     HideInputTaxon(obj)
-    $(obj).closest('.fields').find('.upgrade-info').first().show()
+    ShowUpgradeInfo(obj)
 
   ExistingTaxonForm = (obj) ->
     ShowInputTaxon(obj)
@@ -161,25 +164,20 @@ $(document).ready ->
 
   UpgradedTaxonForm = (obj) ->
     ShowInputTaxon(obj)
-    $(obj).closest('.fields').find('.upgrade-info').first().show()
+    ShowUpgradeInfo(obj)
 
   DefaultExistingTaxon = (obj) ->
-    $(obj).find('.output-radio[value="Existing taxon"]').attr("checked","checked")
+    $(obj).find('.output-radio[value="existing_taxon"]').attr("checked","checked")
     ExistingTaxonForm(obj)
 
   OutputsDefaultConfiguration = ->
     $('.fields').each (index) ->
-      taxon_concept = $(this).find('input.input-taxon')
-      parent = $(this).find('input.parent-taxon')
-
-      if typeof taxon_concept.attr("data-name") == 'undefined'
-        $(this).find('.output-radio[value="New taxon"]').attr("checked","checked")
+      outputType = $(this).find('input[type=radio]:checked')
+      if outputType.val() == 'new_taxon'
         NewTaxonForm(this)
-      else if typeof parent.attr("data-name") == 'undefined'
-        $(this).find('.output-radio[value="Existing taxon"]').attr("checked","checked")
+      else if outputType.val() == 'existing_taxon'
         ExistingTaxonForm(this)
       else
-        $(this).find('.output-radio[value="Existing subspecies"]').attr("checked","checked")
         UpgradedTaxonForm(this)
 
   OutputsDefaultConfiguration()
