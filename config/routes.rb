@@ -126,8 +126,8 @@ SAPI::Application.routes.draw do
       resources :taxon_quotas, :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :quotas
 
-      resources :taxon_eu_suspensions, 
-        :only => [:index, :new, :create, :edit, :update, :destroy], 
+      resources :taxon_eu_suspensions,
+        :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :eu_suspensions
 
       resources :taxon_cites_suspensions,
@@ -143,7 +143,6 @@ SAPI::Application.routes.draw do
       resources :status_to_synonym,
         controller: 'nomenclature_changes/status_to_synonym'
       resources :status_swap, controller: 'nomenclature_changes/status_swap'
-      resources :new_name, controller: 'nomenclature_changes/new_name'
     end
     match 'exports' => 'exports#index'
     match 'exports/download' => 'exports#download'
