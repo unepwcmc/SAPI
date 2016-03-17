@@ -230,16 +230,26 @@ class NomenclatureChange::Output < ActiveRecord::Base
     return !TaxonConcept.where("lower(full_name) = ?", display_full_name.downcase).empty?
   end
 
+  def expected_parent_name
+    if rank.name == Rank::SPECIES
+      display_full_name.split[0]
+    elsif [Rank::SUBSPECIES, Rank::VARIETY].include?(rank.name)
+      display_full_name.split[0..1].join (' ')
+    else
+      nil
+    end
+  end
+
   def default_parent
-    if name_status == 'T' &&
-      Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(rank.name)
+    if ['S', 'T'].include? name_status &&
+      parent_full_name = expected_parent_name
       TaxonConcept.where(
         taxonomy_id: Taxonomy.find_by_name(Taxonomy::CITES_EU).try(:id),
         rank_id: Rank.find_by_name(rank.parent_rank_name).try(:id),
         name_status: 'A'
       ).where(
         'UPPER(SQUISH_NULL(full_name)) = UPPER(?)',
-        display_full_name.split.first
+        parent_full_name
       ).first
     else
       new_parent
