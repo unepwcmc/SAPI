@@ -246,10 +246,11 @@ module Admin::NomenclatureChangesHelper
   end
 
   def lump_output_tag
+    tc = @nc.output.new_taxon_concept || @nc.output.taxon_concept
     content_tag(:ul, class: 'nav nav-tabs') do
       content_tag(:li, class: 'active') do
-        concat link_to("#{@nc.output.taxon_concept.full_name}",
-          "#output_#{@nc.output.taxon_concept.full_name.downcase.tr(' ', '_')}")
+        concat link_to("#{tc.full_name}",
+          "#output_#{tc.full_name.downcase.tr(' ', '_')}")
       end
     end
   end
