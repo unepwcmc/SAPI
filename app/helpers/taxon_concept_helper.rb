@@ -27,6 +27,9 @@ module TaxonConceptHelper
         end +
         content_tag(:li) do
           link_to('Hybrid', '#new-taxon_concept_hybrid', :"data-toggle" => 'modal')
+        end +
+        content_tag(:li) do
+          link_to('N name', '#new-taxon_concept_n_name', :"data-toggle" => 'modal')
         end
       end
     end
@@ -121,6 +124,13 @@ module TaxonConceptHelper
       :resource => 'taxon_concept_hybrid',
       :title => 'Add new Hybrid'
     ){ nested ? '' : render('hybrid_form') }
+  end
+
+  def admin_new_n_name_modal
+    admin_new_modal(
+      resource: 'taxon_concept_n_name',
+      title: 'Add new N name'
+    ){ render('n_name_form') }
   end
 
   def admin_add_new_reference_button

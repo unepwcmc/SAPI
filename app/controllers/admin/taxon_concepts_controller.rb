@@ -7,12 +7,14 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   def index
     @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
-    @taxon_concept = TaxonConcept.new(:name_status => 'A')
+    @taxon_concept = TaxonConcept.new(name_status: 'A')
     @taxon_concept.build_taxon_name
-    @synonym = TaxonConcept.new(:name_status => 'S')
+    @synonym = TaxonConcept.new(name_status: 'S')
     @synonym.build_taxon_name
-    @hybrid = TaxonConcept.new(:name_status => 'H')
+    @hybrid = TaxonConcept.new(name_status: 'H')
     @hybrid.build_taxon_name
+    @n_name = TaxonConcept.new(name_status: 'N')
+    @n_name.build_taxon_name
     @taxon_concepts = TaxonConceptMatcher.new(@search_params).taxon_concepts.
       includes([:rank, :taxonomy, :taxon_name, :parent]).
       order("taxon_concepts.taxonomic_position").page(params[:page])
