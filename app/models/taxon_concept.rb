@@ -272,6 +272,10 @@ class TaxonConcept < ActiveRecord::Base
     inverse_synonym_relationships.limit(1).count > 0
   end
 
+  def is_accepted_name?
+    name_status == 'A'
+  end
+
   def is_synonym?
     name_status == 'S'
   end
@@ -473,10 +477,10 @@ class TaxonConcept < ActiveRecord::Base
 
   def check_taxon_name_exists
     self.full_name = TaxonConcept.sanitize_full_name(full_name)
-    scientific_name = if is_synonym? || is_trade_name? || is_hybrid?
-      full_name
-    else
+    scientific_name = if is_accepted_name?
       TaxonName.sanitize_scientific_name(self.full_name)
+    else
+      full_name
     end
 
     tn = taxon_name && TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
