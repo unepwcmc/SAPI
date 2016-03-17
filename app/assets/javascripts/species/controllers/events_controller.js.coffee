@@ -4,23 +4,19 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
   eventTypes: [
     {
       id: 'CitesCop',
-      name: 'CITES CoP'
+      name: 'CITES CoP Proposals'
     },
     {
-      id: 'CitesAc',
-      name: 'CITES Animals Committee'
+      id: 'CitesAc,CitesTc',
+      name: 'Review of Significant Trade (animals)'
     },
     {
       id: 'CitesPc',
-      name: 'CITES Plants Committee'
+      name: 'Review of Significant Trade (plants)'
     },
     {
       id: 'EcSrg',
       name: 'EU Scientific Review Group'
-    },
-    {
-      id: 'CitesTc',
-      name: 'CITES Technical Committee'
     }
   ]
 
