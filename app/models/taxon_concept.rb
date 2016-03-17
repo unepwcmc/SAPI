@@ -46,13 +46,15 @@ class TaxonConcept < ActiveRecord::Base
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
     :parent_scientific_name, :accepted_scientific_name,
+    :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
     :tag_list, :legacy_trade_code, :hybrid_parent_ids,
     :accepted_name_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
 
   attr_writer :parent_scientific_name
-  attr_accessor :accepted_scientific_name
+  attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
+    :other_hybrid_parent_scientific_name
   acts_as_taggable
 
   serialize :data, ActiveRecord::Coders::Hstore
@@ -201,6 +203,12 @@ class TaxonConcept < ActiveRecord::Base
 
   after_save :check_accepted_taxon_concept_exists,
     :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
+
+  after_save :check_hybrid_parent_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_hybrid? && tc.hybrid_parent_scientific_name }
+
+  after_save :check_other_hybrid_parent_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_hybrid? && tc.other_hybrid_parent_scientific_name }
 
   scope :at_parent_ranks, lambda{ |rank|
     joins_sql = <<-SQL
@@ -480,6 +488,28 @@ class TaxonConcept < ActiveRecord::Base
     end
 
     true
+  end
+
+  def check_hybrid_parent_taxon_concept_exists
+    check_associated_taxon_concept_exists(:hybrid_parent_scientific_name) do |tc|
+      inverse_taxon_relationships.create(
+        :taxon_concept_id => tc.id,
+        :other_taxon_concept_id => self.id,
+        :taxon_relationship_type_id => TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
+      )
+    end
+  end
+
+  def check_other_hybrid_parent_taxon_concept_exists
+    check_associated_taxon_concept_exists(:other_hybrid_parent_scientific_name) do |tc|
+      inverse_taxon_relationships.create(
+        :taxon_concept_id => tc.id,
+        :other_taxon_concept_id => self.id,
+        :taxon_relationship_type_id => TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
+      )
+    end
   end
 
   def check_accepted_taxon_concept_exists
