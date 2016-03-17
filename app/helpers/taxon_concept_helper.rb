@@ -116,11 +116,11 @@ module TaxonConceptHelper
     ){ nested ? '' : render('admin/distributions/form') }
   end
 
-  def admin_new_hybrid_modal
+  def admin_new_hybrid_modal(nested = false)
     admin_new_modal(
       :resource => 'taxon_concept_hybrid',
       :title => 'Add new Hybrid'
-    ){ '' }
+    ){ nested ? '' : render('hybrid_form') }
   end
 
   def admin_add_new_reference_button

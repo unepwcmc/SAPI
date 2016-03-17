@@ -43,7 +43,7 @@
   <div class="span4">
     <h3>Hybrids</h3>
     <%= admin_add_new_hybrid_button %>
-    <%= admin_new_hybrid_modal %>
+    <%= admin_new_hybrid_modal(true) %>
     <hr>
     <div id="hybrids-list">
       <% if @taxon_concept.has_hybrids? %>
