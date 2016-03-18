@@ -112,13 +112,16 @@ describe TaxonConcept do
       specify { tc.should have(1).error_on(:taxonomic_position) }
     end
     context "when full name is already given" do
+      let(:tc_parent){ create_cites_eu_species }
       let!(:tc1) {
         create_cites_eu_subspecies(
+          parent: tc_parent,
           taxon_name: create(:taxon_name, scientific_name: 'duplicatus'),
         )
       }
-      let!(:tc2) {
+      let(:tc2) {
         build_cites_eu_subspecies(
+          parent: tc_parent,
           taxon_name: build(:taxon_name, scientific_name: 'duplicatus'),
         )
       }

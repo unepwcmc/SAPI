@@ -141,11 +141,26 @@ module Admin::NomenclatureChangesHelper
   end
 
   def outputs_selection ff
+    ff.object.output_type ||= if ff.object.taxon_concept_id.nil?
+      'new_taxon'
+    elsif ff.object.taxon_concept &&
+      !ff.object.new_scientific_name.blank? &&
+      ff.object.taxon_concept.full_name != ff.object.new_scientific_name
+      # this scenario occurrs when an existing taxon will change name
+      'existing_subspecies'
+    else
+      'existing_taxon'
+    end
     content_tag(:div, class: 'outputs_selection') do
-      [ 'New taxon', 'Existing subspecies', 'Existing taxon'].each do |opt|
+      ['New taxon', 'Existing subspecies', 'Existing taxon'].each do |opt|
+        opt_val = opt.downcase.gsub(/\s+/, '_')
         concat content_tag(:span,
-          radio_button_tag(ff.object.taxon_concept.try(:full_name) || 'output'+ff.options[:child_index].to_s,
-          opt, false, class: 'output-radio') + ' ' + opt)
+          ff.radio_button(
+            :output_type,
+            opt_val,
+            {class: 'output-radio'}
+          ) + ' ' + opt
+        )
       end
       concat ff.link_to_remove 'Remove output'
     end

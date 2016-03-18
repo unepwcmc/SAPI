@@ -104,12 +104,6 @@ def build_attributes(*args)
   end
 end
 
-def build_tc_attributes(*args)
-  build_attributes(*args).delete_if do |k, v|
-    %w(data listing notes dependents_updated_at dependents_updated_by_id).include? k
-  end
-end
-
 def sign_up(user, opts = {})
   options = {
     terms_and_conditions: true

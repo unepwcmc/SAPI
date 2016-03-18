@@ -39,7 +39,17 @@ describe NomenclatureChange::Split::Processor do
       end
     end
     context "when output is existing taxon with new status" do
-      let(:output_species2){ create_cites_eu_species(:name_status => 'S') }
+      let(:output_species2){
+        create_cites_eu_species(
+          name_status: 'S',
+          taxon_name: create(:taxon_name, scientific_name: 'Notio mirabilis')
+        )
+      }
+      let(:genus2){
+        create_cites_eu_genus(
+          taxon_name: create(:taxon_name, scientific_name: 'Notio')
+        )
+      }
       let!(:split){ split_with_input_and_outputs_status_change }
       specify { expect{ processor.run }.not_to change(TaxonConcept, :count) }
       specify { expect{ processor.run }.not_to change(output_species1, :full_name) }
