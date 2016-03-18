@@ -34,10 +34,15 @@ describe Admin::TaxonConceptsController do
   end
 
   describe "XHR POST create" do
-    let(:taxon_concept_attributes){ build_tc_attributes(:taxon_concept) }
     it "renders create when successful" do
       xhr :post, :create,
-        taxon_concept: taxon_concept_attributes
+       taxon_concept: {
+          name_status: 'A',
+          taxonomy_id: cites_eu.id,
+          rank_id: create(:rank, name: Rank::GENUS),
+          full_name: 'Canis',
+          parent_id: create_cites_eu_family,
+        }
       response.should render_template("create")
     end
     it "renders new when not successful" do
