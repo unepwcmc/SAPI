@@ -81,11 +81,13 @@ class NomenclatureChange::Lump < NomenclatureChange
   end
 
   def set_output_rank_id
-    if output.new_rank_id.blank? && (
-      output.new_scientific_name.present? ||
-      output.taxon_concept
-      )
-      output.new_rank_id = output.taxon_concept.rank_id
+    if output.new_rank_id.blank?
+      if output.new_scientific_name.present? && output.new_parent_id.present?
+        child_rank = output.new_parent.rank.child_rank_name
+        output.new_rank_id = Rank.find_by_name(child_rank).id
+      elsif output.taxon_concept
+        output.new_rank_id = output.taxon_concept.rank_id
+      end
     end
   end
 
