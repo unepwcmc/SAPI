@@ -59,6 +59,15 @@ class Rank < ActiveRecord::Base
     end
   end
 
+  def child_rank_name
+    if name != Rank::VARIETY
+      rank_index = self.class.dict.index(name)
+      self.class.dict[rank_index+1]
+    else
+      nil
+    end
+  end
+
   private
 
   def dependent_objects_map
