@@ -7,12 +7,14 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   def index
     @taxonomies = Taxonomy.order(:name)
     @ranks = Rank.order(:taxonomic_position)
-    @taxon_concept = TaxonConcept.new(:name_status => 'A')
+    @taxon_concept = TaxonConcept.new(name_status: 'A')
     @taxon_concept.build_taxon_name
-    @synonym = TaxonConcept.new(:name_status => 'S')
+    @synonym = TaxonConcept.new(name_status: 'S')
     @synonym.build_taxon_name
-    @hybrid = TaxonConcept.new(:name_status => 'H')
+    @hybrid = TaxonConcept.new(name_status: 'H')
     @hybrid.build_taxon_name
+    @n_name = TaxonConcept.new(name_status: 'N')
+    @n_name.build_taxon_name
     @taxon_concepts = TaxonConceptMatcher.new(@search_params).taxon_concepts.
       includes([:rank, :taxonomy, :taxon_name, :parent]).
       order("taxon_concepts.taxonomic_position").page(params[:page])
@@ -28,6 +30,22 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     edit! do |format|
       load_search
       format.js { render 'new' }
+    end
+  end
+
+  def create
+    create! do |success, failure|
+      @taxonomies = Taxonomy.order(:name)
+      @ranks = Rank.order(:taxonomic_position)
+      success.js { render('create') }
+      failure.js {
+        if @taxon_concept.is_synonym?
+          @synonym = @taxon_concept
+          render('new_synonym')
+        else
+          render('new')
+        end
+      }
     end
   end
 
@@ -85,7 +103,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
 
     def sanitize_search_params
       @search_params = SearchParams.new(
-        params[:search_params] || 
+        params[:search_params] ||
         { :taxonomy => { :id => Taxonomy.
           where(:name => Taxonomy::CITES_EU).limit(1).select(:id).first.id }
         })

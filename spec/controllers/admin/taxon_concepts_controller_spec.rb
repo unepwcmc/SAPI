@@ -33,6 +33,19 @@ describe Admin::TaxonConceptsController do
     end
   end
 
+  describe "XHR POST create" do
+    let(:taxon_concept_attributes){ build_tc_attributes(:taxon_concept) }
+    it "renders create when successful" do
+      xhr :post, :create,
+        taxon_concept: taxon_concept_attributes
+      response.should render_template("create")
+    end
+    it "renders new when not successful" do
+      xhr :post, :create, taxon_concept: {}
+      response.should render_template("new")
+    end
+  end
+
   describe "XHR PUT update" do
     let(:taxon_concept){ create(:taxon_concept) }
     context "when JSON" do

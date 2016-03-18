@@ -45,13 +45,16 @@ class TaxonConcept < ActiveRecord::Base
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
-    :parent_scientific_name,
+    :parent_scientific_name, :accepted_scientific_name,
+    :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
     :tag_list, :legacy_trade_code, :hybrid_parent_ids,
     :accepted_name_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
 
   attr_writer :parent_scientific_name
+  attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
+    :other_hybrid_parent_scientific_name
   acts_as_taggable
 
   serialize :data, ActiveRecord::Coders::Hstore
@@ -198,6 +201,15 @@ class TaxonConcept < ActiveRecord::Base
 
   translates :nomenclature_note
 
+  after_save :check_accepted_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
+
+  after_save :check_hybrid_parent_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_hybrid? && tc.hybrid_parent_scientific_name }
+
+  after_save :check_other_hybrid_parent_taxon_concept_exists,
+    :if => lambda { |tc| tc.is_hybrid? && tc.other_hybrid_parent_scientific_name }
+
   scope :at_parent_ranks, lambda{ |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
@@ -258,6 +270,10 @@ class TaxonConcept < ActiveRecord::Base
 
   def has_accepted_names?
     inverse_synonym_relationships.limit(1).count > 0
+  end
+
+  def is_accepted_name?
+    name_status == 'A'
   end
 
   def is_synonym?
@@ -461,10 +477,10 @@ class TaxonConcept < ActiveRecord::Base
 
   def check_taxon_name_exists
     self.full_name = TaxonConcept.sanitize_full_name(full_name)
-    scientific_name = if is_synonym? || is_trade_name? || is_hybrid?
-      full_name
-    else
+    scientific_name = if is_accepted_name?
       TaxonName.sanitize_scientific_name(self.full_name)
+    else
+      full_name
     end
 
     tn = taxon_name && TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
@@ -476,6 +492,39 @@ class TaxonConcept < ActiveRecord::Base
     end
 
     true
+  end
+
+  def check_hybrid_parent_taxon_concept_exists
+    check_associated_taxon_concept_exists(:hybrid_parent_scientific_name) do |tc|
+      inverse_taxon_relationships.create(
+        :taxon_concept_id => tc.id,
+        :other_taxon_concept_id => self.id,
+        :taxon_relationship_type_id => TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
+      )
+    end
+  end
+
+  def check_other_hybrid_parent_taxon_concept_exists
+    check_associated_taxon_concept_exists(:other_hybrid_parent_scientific_name) do |tc|
+      inverse_taxon_relationships.create(
+        :taxon_concept_id => tc.id,
+        :other_taxon_concept_id => self.id,
+        :taxon_relationship_type_id => TaxonRelationshipType.
+          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
+      )
+    end
+  end
+
+  def check_accepted_taxon_concept_exists
+    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
+      inverse_taxon_relationships.create(
+        taxon_concept_id: tc.id,
+        other_taxon_concept_id: self.id,
+        taxon_relationship_type_id: TaxonRelationshipType.
+        find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
+      )
+    end
   end
 
   def check_parent_taxon_concept_exists

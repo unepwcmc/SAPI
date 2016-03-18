@@ -105,7 +105,7 @@ SAPI::Application.routes.draw do
     resources :ahoy_visits, :only => [:index, :show]
     resources :ahoy_events, :only => [:index, :show]
 
-    resources :taxon_concepts, only: [:index, :edit, :update, :show, :destroy] do
+    resources :taxon_concepts do
       get :autocomplete, :on => :collection
       resources :children, :only => [:index]
       resources :taxon_relationships, :only => [:index, :create, :destroy]
@@ -126,8 +126,8 @@ SAPI::Application.routes.draw do
       resources :taxon_quotas, :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :quotas
 
-      resources :taxon_eu_suspensions, 
-        :only => [:index, :new, :create, :edit, :update, :destroy], 
+      resources :taxon_eu_suspensions,
+        :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :eu_suspensions
 
       resources :taxon_cites_suspensions,
@@ -143,7 +143,6 @@ SAPI::Application.routes.draw do
       resources :status_to_synonym,
         controller: 'nomenclature_changes/status_to_synonym'
       resources :status_swap, controller: 'nomenclature_changes/status_swap'
-      resources :new_name, controller: 'nomenclature_changes/new_name'
     end
     match 'exports' => 'exports#index'
     match 'exports/download' => 'exports#download'
