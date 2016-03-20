@@ -75,6 +75,62 @@ describe NomenclatureChange::Split::Processor do
         specify{ expect(output_species1.shipments).to include(@shipment) }
       end
     end
+    context "when input with children that change name" do
+      let!(:input_species_child){
+        create_cites_eu_subspecies(parent: input_species)
+      }
+      let(:split){
+        create(:nomenclature_change_split,
+          input_attributes: {
+            taxon_concept_id: input_species.id,
+            note_en: 'input EN note',
+            internal_note: 'input internal note'
+          },
+          outputs_attributes: {
+            0 => {
+              taxon_concept_id: output_species1.id,
+              note_en: 'output EN note',
+              internal_note: 'output internal note'
+            },
+            1 => { taxon_concept_id: output_species2.id }
+          },
+          status: NomenclatureChange::Split::LEGISLATION
+        )
+      }
+      let(:input){ split.input }
+      let(:output){ split.outputs.first }
+      let(:reassignment){
+        create(:nomenclature_change_parent_reassignment,
+          input: input,
+          reassignable_id: input_species_child.id
+        )
+      }
+      let!(:reassignment_target){
+        create(:nomenclature_change_reassignment_target,
+          reassignment: reassignment,
+          output: output
+        )
+      }
+      let(:output_species){ output.taxon_concept.reload }
+      let(:output_species_child){ output.taxon_concept.children.first.reload }
+      before(:each){ processor.run }
+      specify do
+        expect(input_species.reload.nomenclature_note_en).to eq(' input EN note')
+        expect(input_species_child.reload.nomenclature_note_en).to eq(input_species.nomenclature_note_en)
+      end
+      specify do
+        expect(input_species.nomenclature_comment.note).to eq(' input internal note')
+        expect(input_species_child.nomenclature_comment.note).to eq(input_species.nomenclature_comment.note)
+      end
+      specify do
+        expect(output_species.reload.nomenclature_note_en).to eq(' output EN note')
+        expect(output_species_child.reload.nomenclature_note_en).to eq(output_species.nomenclature_note_en)
+      end
+      specify do
+        expect(output_species.nomenclature_comment.note).to eq(' output internal note')
+        expect(output_species_child.nomenclature_comment.note).to eq(output_species.nomenclature_comment.note)
+      end
+    end
   end
   describe :summary do
     let(:split){ split_with_input_and_output_existing_taxon }
