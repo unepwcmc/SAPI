@@ -66,6 +66,9 @@ describe NomenclatureChange::Lump::Processor do
       let!(:input_species1_child){
         create_cites_eu_subspecies(parent: input_species1)
       }
+      let!(:input_species1_child_listing){
+        create_cites_I_addition(taxon_concept: input_species1_child)
+      }
       let(:lump){
         create(:nomenclature_change_lump,
           inputs_attributes: {
@@ -115,6 +118,12 @@ describe NomenclatureChange::Lump::Processor do
       specify do
         expect(output_species.nomenclature_comment.note).to eq(' output internal note')
         expect(output_species_child.nomenclature_comment.note).to eq(output_species.nomenclature_comment.note)
+      end
+      specify do
+        expect(output_species_child.listing_changes.count).to eq(1)
+        expect(
+          output_species_child.listing_changes.first.nomenclature_note_en
+        ).to include(output_species.reload.nomenclature_note_en)
       end
     end
   end
