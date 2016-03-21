@@ -33,7 +33,10 @@ shared_context 'lump_definitions' do
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
       },
-      output_attributes: { taxon_concept_id: input_species1.id },
+      output_attributes: {
+        new_rank_id: input_species1.rank_id,
+        taxon_concept_id: input_species1.id
+      },
       status: NomenclatureChange::Lump::OUTPUTS
     )
   }
@@ -43,7 +46,10 @@ shared_context 'lump_definitions' do
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
       },
-      output_attributes: { taxon_concept_id: output_species.id },
+      output_attributes: {
+        new_rank_id: output_species.rank_id,
+        taxon_concept_id: output_species.id
+      },
       status: NomenclatureChange::Lump::OUTPUTS
     )
   }
@@ -54,6 +60,7 @@ shared_context 'lump_definitions' do
         1 => { taxon_concept_id: input_species2.id }
       },
       output_attributes: {
+        new_rank_id: output_species.rank_id,
         new_scientific_name: 'fatalus',
         new_parent_id: errorus_genus.id
       },
@@ -67,6 +74,7 @@ shared_context 'lump_definitions' do
         1 => { taxon_concept_id: input_species2.id }
       },
       output_attributes: {
+        new_rank_id: output_species.rank_id,
         taxon_concept_id: output_species.id
       },
       status: NomenclatureChange::Lump::OUTPUTS
@@ -79,6 +87,7 @@ shared_context 'lump_definitions' do
         1 => { taxon_concept_id: input_species2.id }
       },
       output_attributes: {
+        new_rank_id: output_species.rank_id,
         taxon_concept_id: output_subspecies.id,
         new_scientific_name: 'lolcatus',
         new_parent_id: errorus_genus.id
