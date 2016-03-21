@@ -14,6 +14,15 @@ class NomenclatureChange::CascadingNotesProcessor
     descendents_for_note_cascading(@taxon_concept).each do |d|
       Rails.logger.debug("Processing note for descendant #{d.full_name} of input #{@taxon_concept.full_name}")
       append_nomenclature_notes(d, @input_or_output)
+      (
+        d.listing_changes +
+        d.cites_suspensions +
+        d.quotas +
+        d.eu_opinions +
+        d.eu_suspensions
+      ).each do |legislation|
+        append_nomenclature_notes_to_legislation(legislation, @input_or_output)
+      end
     end
   end
 
@@ -68,6 +77,14 @@ class NomenclatureChange::CascadingNotesProcessor
       :note,
       "#{nomenclature_comment.note} #{input_or_output.internal_note}"
     )
+  end
+
+  def append_nomenclature_notes_to_legislation(legislation, input_or_output)
+    legislation.nomenclature_note_en = "#{legislation.nomenclature_note_en} #{input_or_output.note_en}"
+    legislation.nomenclature_note_es = "#{legislation.nomenclature_note_es} #{input_or_output.note_es}"
+    legislation.nomenclature_note_fr = "#{legislation.nomenclature_note_es} #{input_or_output.note_fr}"
+    legislation.internal_notes = "#{legislation.internal_notes} #{input_or_output.internal_note}"
+    legislation.save(validate: false)
   end
 
 end
