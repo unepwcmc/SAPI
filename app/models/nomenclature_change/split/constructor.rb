@@ -148,19 +148,15 @@ class NomenclatureChange::Split::Constructor
   def build_input_and_output_notes
     input = @nomenclature_change.input
     event = @nomenclature_change.event
-    if input.note_en.blank?
-      note = multi_lingual_input_note(input, @nomenclature_change.outputs, event)
-      input.note_en = note[:en]
-      input.note_es = note[:es]
-      input.note_fr = note[:fr]
-    end
+    note = multi_lingual_input_note(input, @nomenclature_change.outputs, event)
+    input.note_en = note[:en]
+    input.note_es = note[:es]
+    input.note_fr = note[:fr]
     @nomenclature_change.outputs_except_inputs.each do |output|
-      if output.note_en.blank?
-        note = multi_lingual_output_note(output, input, event)
-        output.note_en = note[:en]
-        output.note_es = note[:es]
-        output.note_fr = note[:fr]
-      end
+      note = multi_lingual_output_note(output, input, event)
+      output.note_en = note[:en]
+      output.note_es = note[:es]
+      output.note_fr = note[:fr]
     end
   end
 
