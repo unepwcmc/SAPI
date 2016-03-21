@@ -85,6 +85,10 @@ class NomenclatureChange::Lump < NomenclatureChange
     inputs.select{ |o| o.taxon_concept == output.try(:taxon_concept) }
   end
 
+  def new_output_rank
+    inputs.first.taxon_concept.rank
+  end
+
   def new_output_parent
     inputs.first.taxon_concept.parent
   end

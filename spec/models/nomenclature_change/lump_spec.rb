@@ -62,4 +62,17 @@ describe NomenclatureChange::Lump do
       end
     end
   end
+  describe :new_output_rank do
+    let(:lump){
+      build(
+        :nomenclature_change_lump,
+        inputs_attributes: {
+          0 => { taxon_concept_id: create_cites_eu_species.id },
+          1 => { taxon_concept_id: create_cites_eu_subspecies.id }
+        },
+        status: NomenclatureChange::Lump::INPUTS
+      )
+    }
+    specify{ expect(lump.new_output_rank.name).to eq(Rank::SPECIES) }
+  end
 end

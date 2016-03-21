@@ -15,15 +15,6 @@
     <%= outputs_selection ff %>
 
     <div class="control-group">
-      <label class="control-label">Rank</label>
-      <div class="controls">
-        <%= ff.select :new_rank_id,
-          options_from_collection_for_select(@ranks, :id, :name),
-          { class: 'new-rank' }
-        %>
-      </div>
-    </div>
-    <div class="control-group">
       <label class="control-label">Taxon concept:</label>
       <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
@@ -53,6 +44,15 @@
             :class => 'new-author-year'
           } %>
         </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Rank</label>
+      <div class="controls">
+        <%= ff.select :new_rank_id,
+          options_from_collection_for_select(@ranks, :id, :name, ff.object.new_rank_id || f.object.new_output_rank.id),
+          { class: 'new-rank' }
+        %>
       </div>
     </div>
   <% end %>
