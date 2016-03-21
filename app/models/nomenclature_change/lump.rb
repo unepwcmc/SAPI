@@ -61,13 +61,6 @@ class NomenclatureChange::Lump < NomenclatureChange
     end
   end
 
-  def required_different_name
-    if output.taxon_name_already_existing? && !output.new_full_name.nil?
-      errors.add(:output, "Name already existing")
-      return false
-    end
-  end
-
   def set_output_name_status
     if output.new_name_status.blank? && (
       output.new_scientific_name.present? ||
