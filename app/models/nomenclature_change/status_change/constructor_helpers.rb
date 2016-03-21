@@ -125,23 +125,21 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
   end
 
   def build_primary_output_note
-    if @nomenclature_change.primary_output.note_en.blank?
-      if @nomenclature_change.primary_output.needs_public_note?
-        primary_note = multi_lingual_public_output_note(
-          @nomenclature_change.primary_output,
-          @event
-        )
-        @nomenclature_change.primary_output.note_en = primary_note[:en]
-        @nomenclature_change.primary_output.note_es = primary_note[:es]
-        @nomenclature_change.primary_output.note_fr = primary_note[:fr]
-      else
-        primary_note = private_output_note(
-          @nomenclature_change.primary_output,
-          @event,
-          :en
-        )
-        @nomenclature_change.primary_output.internal_note = primary_note
-      end
+    if @nomenclature_change.primary_output.needs_public_note?
+      primary_note = multi_lingual_public_output_note(
+        @nomenclature_change.primary_output,
+        @event
+      )
+      @nomenclature_change.primary_output.note_en = primary_note[:en]
+      @nomenclature_change.primary_output.note_es = primary_note[:es]
+      @nomenclature_change.primary_output.note_fr = primary_note[:fr]
+    else
+      primary_note = private_output_note(
+        @nomenclature_change.primary_output,
+        @event,
+        :en
+      )
+      @nomenclature_change.primary_output.internal_note = primary_note
     end
   end
 
