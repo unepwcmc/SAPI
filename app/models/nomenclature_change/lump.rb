@@ -35,9 +35,6 @@ class NomenclatureChange::Lump < NomenclatureChange
   before_validation :set_output_name_status, if: Proc.new{ |nc|
     !nc.inputs.empty? && nc.output && nc.outputs_or_submitting?
   }
-  before_validation :set_output_rank_id, if: Proc.new{ |nc|
-    !nc.inputs.empty? && nc.output && nc.outputs_or_submitting?
-  }
   before_save :build_auto_reassignments, if: :notes?
 
   def build_auto_reassignments
@@ -80,27 +77,12 @@ class NomenclatureChange::Lump < NomenclatureChange
     end
   end
 
-  def set_output_rank_id
-    if output.new_rank_id.blank?
-      if output.new_scientific_name.present? && output.new_parent_id.present?
-        child_rank = output.new_parent.rank.child_rank_name
-        output.new_rank_id = Rank.find_by_name(child_rank).id
-      elsif output.taxon_concept
-        output.new_rank_id = output.taxon_concept.rank_id
-      end
-    end
-  end
-
   def inputs_except_outputs
     inputs.reject{ |i| i.taxon_concept == output.try(:taxon_concept) }
   end
 
   def inputs_intersect_outputs
     inputs.select{ |o| o.taxon_concept == output.try(:taxon_concept) }
-  end
-
-  def new_output_rank
-    inputs.first.taxon_concept.rank
   end
 
   def new_output_parent
