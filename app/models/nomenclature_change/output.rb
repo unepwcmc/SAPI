@@ -185,10 +185,6 @@ class NomenclatureChange::Output < ActiveRecord::Base
     end
   end
 
-  def taxon_name_already_existing?
-    return !TaxonConcept.where("lower(full_name) = ?", display_full_name.downcase).empty?
-  end
-
   def expected_parent_name
     if rank.name == Rank::SPECIES
       display_full_name.split[0]
