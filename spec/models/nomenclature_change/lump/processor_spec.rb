@@ -105,19 +105,27 @@ describe NomenclatureChange::Lump::Processor do
       before(:each){ processor.run }
       specify do
         expect(input_species1.reload.nomenclature_note_en).to eq(' input EN note')
-        expect(input_species1_child.reload.nomenclature_note_en).to eq(input_species1.nomenclature_note_en)
+        expect(
+          input_species1_child.reload.nomenclature_note_en
+        ).to eq(input_species1.nomenclature_note_en)
       end
       specify do
         expect(input_species1.nomenclature_comment.note).to eq(' input internal note')
-        expect(input_species1_child.nomenclature_comment.note).to eq(input_species1.nomenclature_comment.note)
+        expect(
+          input_species1_child.nomenclature_comment.note
+        ).to eq(input_species1.nomenclature_comment.note)
       end
       specify do
         expect(output_species.reload.nomenclature_note_en).to eq(' output EN note')
-        expect(output_species_child.reload.nomenclature_note_en).to eq(output_species.nomenclature_note_en)
+        expect(
+          output_species_child.reload.nomenclature_note_en
+        ).to eq(output_species.nomenclature_note_en)
       end
       specify do
         expect(output_species.nomenclature_comment.note).to eq(' output internal note')
-        expect(output_species_child.nomenclature_comment.note).to eq(output_species.nomenclature_comment.note)
+        expect(
+          output_species_child.nomenclature_comment.note
+        ).to eq(output_species.nomenclature_comment.note)
       end
       specify do
         expect(output_species_child.listing_changes.count).to eq(1)
