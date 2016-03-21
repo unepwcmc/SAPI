@@ -154,17 +154,26 @@ $(document).ready ->
     upgrade_info.find('input').prop("value", '')
     $(obj).closest('.fields').find('.parent-taxon').select2('data',null)
 
+  ShowEgLabel = (obj) ->
+    $(obj).closest('.fields').find('.new-scientific-name-eg').show()
+
+  HideEgLabel = (obj) ->
+    $(obj).closest('.fields').find('.new-scientific-name-eg').hide()
+
   NewTaxonForm = (obj) ->
     HideInputTaxon(obj)
     ShowUpgradeInfo(obj)
+    ShowEgLabel(obj)
 
   ExistingTaxonForm = (obj) ->
     ShowInputTaxon(obj)
     HideUpgradeInfo(obj)
+    HideEgLabel(obj)
 
   UpgradedTaxonForm = (obj) ->
     ShowInputTaxon(obj)
     ShowUpgradeInfo(obj)
+    HideEgLabel(obj)
 
   DefaultExistingTaxon = (obj) ->
     $(obj).find('.output-radio[value="existing_taxon"]').attr("checked","checked")
