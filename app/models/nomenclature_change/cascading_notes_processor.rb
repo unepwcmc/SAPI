@@ -17,7 +17,7 @@ class NomenclatureChange::CascadingNotesProcessor
     end
   end
 
-  def summary; end
+  def summary; []; end
 
   private
 
