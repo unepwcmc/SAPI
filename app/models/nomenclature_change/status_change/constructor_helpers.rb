@@ -133,13 +133,6 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
       @nomenclature_change.primary_output.note_en = primary_note[:en]
       @nomenclature_change.primary_output.note_es = primary_note[:es]
       @nomenclature_change.primary_output.note_fr = primary_note[:fr]
-    else
-      primary_note = private_output_note(
-        @nomenclature_change.primary_output,
-        @event,
-        :en
-      )
-      @nomenclature_change.primary_output.internal_note = primary_note
     end
   end
 
