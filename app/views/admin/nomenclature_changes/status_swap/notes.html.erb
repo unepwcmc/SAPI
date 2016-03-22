@@ -1,12 +1,12 @@
 <h2>New status swap: nomenclature change notes</h2>
 <%= status_change_blurb %>
 <%= nomenclature_change_form do |f| %>
-<h3>Input</h3>
+<h3>Primary output</h3>
   <p>
     <i class="icon-info-sign"></i>
     Original taxon concept being swapped
   </p>
-  <%= f.fields_for :input do |ff| %>
+  <%= f.fields_for :primary_output do |ff| %>
     <div class="control-group">
       <label class="control-label">
         <%= ff.object.taxon_concept.try(:full_name) %>
@@ -19,12 +19,12 @@
     </div>
   <% end %>
 
-<h3>Output</h3>
+<h3>Secondary output</h3>
   <p>
     <i class="icon-info-sign"></i>
     Taxon resulting from the swap
   </p>
-  <%= f.fields_for :primary_output do |ff| %>
+  <%= f.fields_for :secondary_output do |ff| %>
     <div class="control-group">
       <label class="control-label">
         <%= ff.object.display_full_name %>
