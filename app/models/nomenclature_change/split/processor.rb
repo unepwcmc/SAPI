@@ -20,7 +20,9 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
       map(&:taxon_concept_id).include?(@input.taxon_concept_id)
 
     chain << NomenclatureChange::InputTaxonConceptProcessor.new(@input)
-    chain << NomenclatureChange::CascadingNotesProcessor.new(@input)
+    if !input_is_one_of_outputs
+      chain << NomenclatureChange::CascadingNotesProcessor.new(@input)
+    end
     @outputs.each_with_index do |output, idx|
       if @input.taxon_concept_id != output.taxon_concept_id
         chain << NomenclatureChange::OutputTaxonConceptProcessor.new(output)
@@ -38,7 +40,7 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
       elsif !output.will_create_taxon? && output.name_status == 'S'
         chain << NomenclatureChange::StatusUpgradeProcessor.new(output)
       end
-      unless @input.taxon_concept_id == output.taxon_concept_id && !output.will_create_taxon?
+      if @input.taxon_concept_id != output.taxon_concept_id || output.will_create_taxon?
         # if input is not one of outputs and this is the last output
         # transfer the associations rather than copy them
         transfer = !input_is_one_of_outputs && (idx == (@outputs.length - 1))

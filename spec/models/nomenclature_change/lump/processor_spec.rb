@@ -66,6 +66,9 @@ describe NomenclatureChange::Lump::Processor do
       let!(:input_species1_child){
         create_cites_eu_subspecies(parent: input_species1)
       }
+      let!(:input_species1_child_listing){
+        create_cites_I_addition(taxon_concept: input_species1_child)
+      }
       let(:lump){
         create(:nomenclature_change_lump,
           inputs_attributes: {
@@ -102,19 +105,33 @@ describe NomenclatureChange::Lump::Processor do
       before(:each){ processor.run }
       specify do
         expect(input_species1.reload.nomenclature_note_en).to eq(' input EN note')
-        expect(input_species1_child.reload.nomenclature_note_en).to eq(input_species1.nomenclature_note_en)
+        expect(
+          input_species1_child.reload.nomenclature_note_en
+        ).to eq(input_species1.nomenclature_note_en)
       end
       specify do
         expect(input_species1.nomenclature_comment.note).to eq(' input internal note')
-        expect(input_species1_child.nomenclature_comment.note).to eq(input_species1.nomenclature_comment.note)
+        expect(
+          input_species1_child.nomenclature_comment.note
+        ).to eq(input_species1.nomenclature_comment.note)
       end
       specify do
         expect(output_species.reload.nomenclature_note_en).to eq(' output EN note')
-        expect(output_species_child.reload.nomenclature_note_en).to eq(output_species.nomenclature_note_en)
+        expect(
+          output_species_child.reload.nomenclature_note_en
+        ).to eq(output_species.nomenclature_note_en)
       end
       specify do
         expect(output_species.nomenclature_comment.note).to eq(' output internal note')
-        expect(output_species_child.nomenclature_comment.note).to eq(output_species.nomenclature_comment.note)
+        expect(
+          output_species_child.nomenclature_comment.note
+        ).to eq(output_species.nomenclature_comment.note)
+      end
+      specify do
+        expect(output_species_child.listing_changes.count).to eq(1)
+        expect(
+          output_species_child.listing_changes.first.nomenclature_note_en
+        ).to include(output_species.reload.nomenclature_note_en)
       end
     end
   end
