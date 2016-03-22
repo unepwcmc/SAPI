@@ -109,10 +109,10 @@ class NomenclatureChange::Lump::Constructor
     output = @nomenclature_change.output
     event = @nomenclature_change.event
     @nomenclature_change.inputs_except_outputs.each do |input|
-        note = multi_lingual_input_note(input, output, event)
-        input.note_en = note[:en]
-        input.note_es = note[:es]
-        input.note_fr = note[:fr]
+      note = multi_lingual_input_note(input, output, event)
+      input.note_en = note[:en]
+      input.note_es = note[:es]
+      input.note_fr = note[:fr]
     end
     note = multi_lingual_output_note(output, @nomenclature_change.inputs, event)
     output.note_en = note[:en]
