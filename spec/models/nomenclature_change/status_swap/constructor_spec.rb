@@ -46,7 +46,7 @@ describe NomenclatureChange::StatusSwap::Constructor do
     end
     let(:status_change){ a_to_s_with_swap }
     context "when previously no notes in place" do
-      specify{ expect(primary_output.internal_note).not_to be_blank }
+      specify{ expect(primary_output.internal_note).to be_blank }
       specify{ expect(secondary_output.note_en).not_to be_blank }
     end
     context "when previously notes in place" do
