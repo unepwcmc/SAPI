@@ -69,7 +69,7 @@ class NomenclatureChange::CascadingNotesProcessor
   def append_nomenclature_notes(tc, input_or_output)
     tc.nomenclature_note_en = "#{tc.nomenclature_note_en} #{input_or_output.note_en}"
     tc.nomenclature_note_es = "#{tc.nomenclature_note_es} #{input_or_output.note_es}"
-    tc.nomenclature_note_fr = "#{tc.nomenclature_note_es} #{input_or_output.note_fr}"
+    tc.nomenclature_note_fr = "#{tc.nomenclature_note_fr} #{input_or_output.note_fr}"
     tc.save(validate: false)
     nomenclature_comment = tc.nomenclature_comment ||
       tc.create_nomenclature_comment
@@ -82,7 +82,7 @@ class NomenclatureChange::CascadingNotesProcessor
   def append_nomenclature_notes_to_legislation(legislation, input_or_output)
     legislation.nomenclature_note_en = "#{legislation.nomenclature_note_en} #{input_or_output.note_en}"
     legislation.nomenclature_note_es = "#{legislation.nomenclature_note_es} #{input_or_output.note_es}"
-    legislation.nomenclature_note_fr = "#{legislation.nomenclature_note_es} #{input_or_output.note_fr}"
+    legislation.nomenclature_note_fr = "#{legislation.nomenclature_note_fr} #{input_or_output.note_fr}"
     legislation.internal_notes = "#{legislation.internal_notes} #{input_or_output.internal_note}"
     legislation.save(validate: false)
   end
