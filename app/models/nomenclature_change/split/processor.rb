@@ -38,7 +38,7 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
       elsif !output.will_create_taxon? && output.name_status == 'S'
         chain << NomenclatureChange::StatusUpgradeProcessor.new(output)
       end
-      unless @input.taxon_concept_id == output.taxon_concept_id && !output.will_create_taxon?
+      if @input.taxon_concept_id != output.taxon_concept_id || output.will_create_taxon?
         # if input is not one of outputs and this is the last output
         # transfer the associations rather than copy them
         transfer = !input_is_one_of_outputs && (idx == (@outputs.length - 1))
