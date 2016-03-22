@@ -1,7 +1,8 @@
 class NomenclatureChange::TaxonomicTreeNameResolver
 
-  def initialize(taxon_concept)
+  def initialize(taxon_concept, taxon_concept_old_copy)
     @node = taxon_concept
+    @node_old_copy = taxon_concept_old_copy
   end
 
   # turn taxa into synonyms when name changes involved
@@ -36,13 +37,13 @@ class NomenclatureChange::TaxonomicTreeNameResolver
           t.process
         end
       end
+      # restore old parent, even though this ends up as a synonym it should
+      # have sane ancestry
+      node.update_attribute(:parent_id, @node_old_copy.parent_id)
       r = NomenclatureChange::FullReassignment.new(node, compatible_node)
       r.process
       t = NomenclatureChange::ToSynonymTransformation.new(node, compatible_node)
       t.process
-      node.children.each do |child|
-        child.update_attribute(:parent_id, compatible_node.id)
-      end
     else
       compatible_node = node
     end

@@ -87,7 +87,7 @@ class NomenclatureChange::ReassignmentProcessor
   def post_process(reassigned_object, object_before_reassignment)
     Rails.logger.warn("Reassignment post processing BEGIN")
     if reassigned_object.is_a?(TaxonConcept)
-      resolver = NomenclatureChange::TaxonomicTreeNameResolver.new(reassigned_object)
+      resolver = NomenclatureChange::TaxonomicTreeNameResolver.new(reassigned_object, object_before_reassignment)
       resolver.process
     elsif reassigned_object.is_a?(TaxonRelationship)
       resolver = NomenclatureChange::TradeShipmentsResolver.new(reassigned_object, object_before_reassignment)
