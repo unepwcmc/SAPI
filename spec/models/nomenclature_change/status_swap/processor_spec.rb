@@ -23,6 +23,8 @@ describe NomenclatureChange::StatusSwap::Processor do
 
   describe :run do
     context "from accepted name" do
+      let(:accepted_name_parent){ create_cites_eu_genus }
+      let(:accepted_name){ create_cites_eu_species(parent: accepted_name_parent) }
       let(:status_change){ a_to_s_with_swap }
       before(:each){
         @shipment = create(:shipment,
@@ -32,6 +34,7 @@ describe NomenclatureChange::StatusSwap::Processor do
         processor.run
       }
       specify{ expect(primary_output_taxon_concept).to be_is_synonym }
+      specify{ expect(primary_output_taxon_concept.parent).to eq(accepted_name_parent) }
       specify{ expect(secondary_output_taxon_concept.name_status).to eq('A') }
       specify{ expect(primary_output_taxon_concept.accepted_names).to include(secondary_output_taxon_concept) }
     end

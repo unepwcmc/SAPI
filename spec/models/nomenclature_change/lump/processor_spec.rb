@@ -48,6 +48,8 @@ describe NomenclatureChange::Lump::Processor do
       end
     end
     context "when output is existing taxon with new name" do
+      let(:input_genus1){ create_cites_eu_genus }
+      let(:input_species1){ create_cites_eu_species(parent: input_genus1) }
       let(:output_species2){ create_cites_eu_subspecies }
       let!(:lump){ lump_with_inputs_and_output_name_change }
       specify { expect{ processor.run }.to change(TaxonConcept, :count).by(1) }
@@ -55,7 +57,7 @@ describe NomenclatureChange::Lump::Processor do
       context "relationships and trade" do
         before(:each){ processor.run }
         specify{ expect(input_species1.reload).to be_is_synonym }
-        specify{ expect(input_species1.reload.parent_id).to be_nil }
+        specify{ expect(input_species1.reload.parent).to eq(input_genus1) }
         specify{ expect(input_species1.accepted_names).to include(lump.output.new_taxon_concept) }
         specify{ expect(lump.output.new_taxon_concept.shipments).to include(@shipment) }
       end
