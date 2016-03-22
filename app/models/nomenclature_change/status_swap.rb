@@ -22,7 +22,7 @@
 class NomenclatureChange::StatusSwap < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
   build_steps(
-    :primary_output, :swap, :legislation, :summary
+    :primary_output, :swap, :notes, :legislation, :summary
   )
   validates :status, inclusion: {
     in: self.status_dict,
