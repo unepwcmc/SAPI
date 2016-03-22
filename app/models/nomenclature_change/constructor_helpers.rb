@@ -129,8 +129,7 @@ module NomenclatureChange::ConstructorHelpers
   def _build_legislation_type_reassignment(legislation_collection_name, input)
     legislation_type = legislation_collection_name.to_s.singularize.camelize
     public_note = send(:"multi_lingual_#{legislation_collection_name.to_s.singularize}_note")
-    input.send(:"#{legislation_collection_name}_reassignments").first ||
-      input.taxon_concept.send(legislation_collection_name).limit(1).count > 0 &&
+    input.taxon_concept.send(legislation_collection_name).limit(1).count > 0 &&
       input.legislation_reassignment_class.new(
         reassignable_type: legislation_type,
         note_en: public_note[:en],
