@@ -20,7 +20,9 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
       map(&:taxon_concept_id).include?(@input.taxon_concept_id)
 
     chain << NomenclatureChange::InputTaxonConceptProcessor.new(@input)
-    chain << NomenclatureChange::CascadingNotesProcessor.new(@input)
+    if !input_is_one_of_outputs
+      chain << NomenclatureChange::CascadingNotesProcessor.new(@input)
+    end
     @outputs.each_with_index do |output, idx|
       if @input.taxon_concept_id != output.taxon_concept_id
         chain << NomenclatureChange::OutputTaxonConceptProcessor.new(output)
