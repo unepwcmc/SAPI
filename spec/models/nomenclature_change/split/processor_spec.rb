@@ -70,7 +70,7 @@ describe NomenclatureChange::Split::Processor do
       context "relationships and trade" do
         before(:each){ processor.run }
         specify{ expect(input_species.reload).to be_is_synonym }
-        specify{ expect(input_species.reload.parent_id).to be_nil }
+        specify{ expect(input_species.reload.parent).to eq(genus1) }
         specify{ expect(input_species.accepted_names).to include(split.outputs.last.new_taxon_concept) }
         specify{ expect(output_species1.shipments).to include(@shipment) }
       end

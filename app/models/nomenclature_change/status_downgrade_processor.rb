@@ -9,20 +9,9 @@ class NomenclatureChange::StatusDowngradeProcessor < NomenclatureChange::StatusC
     if @input_or_output.kind_of?(NomenclatureChange::Output) && @input_or_output.new_taxon_concept
       @linked_names << @input_or_output.new_taxon_concept
     end
-    higher_taxa_hstore_fields = Rank.in_range(nil, nil).map do |r|
-      ["#{r.downcase}_id", "#{r.downcase}_name"]
-    end.flatten
-    new_data = @input_or_output.taxon_concept.data &&
-      @input_or_output.taxon_concept.data.except(*higher_taxa_hstore_fields) ||
-      {}
 
-    # work-around to avoid 3 separate update_column calls
     TaxonConcept.where(id: @input_or_output.taxon_concept_id).update_all(
-      name_status: 'S',
-      parent_id: nil,
-      data: ActiveRecord::Coders::Hstore.dump(
-        new_data
-      )
+      name_status: 'S'
     )
 
     if @old_status == 'T'
