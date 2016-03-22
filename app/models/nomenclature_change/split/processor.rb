@@ -20,21 +20,22 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
       map(&:taxon_concept_id).include?(@input.taxon_concept_id)
 
     chain << NomenclatureChange::InputTaxonConceptProcessor.new(@input)
+    chain << NomenclatureChange::CascadingNotesProcessor.new(@input)
     @outputs.each_with_index do |output, idx|
       if @input.taxon_concept_id != output.taxon_concept_id
         chain << NomenclatureChange::OutputTaxonConceptProcessor.new(output)
       end
       if output.will_create_taxon?
         # for the case when an existing accepted subspecies is turned into a species
-        if ['A', 'N'].include?(output.name_status)
+        if output.name_status == 'A'
           chain << NomenclatureChange::ReassignmentTransferProcessor.new(output, output)
 
           chain << NomenclatureChange::StatusDowngradeProcessor.new(output)
         # for the case when an existing synonym subspecies is turned into a species
-        elsif ['S', 'T'].include?(output.name_status)
+        elsif output.name_status == 'S'
           chain << NomenclatureChange::StatusDowngradeProcessor.new(output, [output])
         end
-      elsif !output.will_create_taxon? && ['S', 'T'].include?(output.name_status)
+      elsif !output.will_create_taxon? && output.name_status == 'S'
         chain << NomenclatureChange::StatusUpgradeProcessor.new(output)
       end
       unless @input.taxon_concept_id == output.taxon_concept_id && !output.will_create_taxon?
@@ -47,6 +48,7 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
           chain << NomenclatureChange::ReassignmentCopyProcessor.new(@input, output)
         end
       end
+      chain << NomenclatureChange::CascadingNotesProcessor.new(output)
     end
     unless input_is_one_of_outputs
       chain << NomenclatureChange::StatusDowngradeProcessor.new(@input, @outputs)

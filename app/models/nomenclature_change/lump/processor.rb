@@ -18,12 +18,14 @@ class NomenclatureChange::Lump::Processor < NomenclatureChange::Processor
     chain = []
     chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@output)
     @inputs.each do |input|
-      unless input.taxon_concept_id == @output.taxon_concept_id && !@output.will_create_taxon?
+      if !(input.taxon_concept_id == @output.taxon_concept_id && !@output.will_create_taxon?)
+        chain << NomenclatureChange::InputTaxonConceptProcessor.new(input)
+        chain << NomenclatureChange::CascadingNotesProcessor.new(input)
         chain << NomenclatureChange::ReassignmentTransferProcessor.new(input, @output)
         chain << NomenclatureChange::StatusDowngradeProcessor.new(input, [@output])
-        chain << NomenclatureChange::InputTaxonConceptProcessor.new(input)
       end
     end
+    chain << NomenclatureChange::CascadingNotesProcessor.new(@output)
     chain
   end
 
