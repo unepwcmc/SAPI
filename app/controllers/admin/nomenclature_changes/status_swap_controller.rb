@@ -12,6 +12,8 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
     when :swap
       set_taxonomy
       builder.build_secondary_output
+    when :notes
+      builder.build_output_notes
     when :legislation
       builder.build_legislation_reassignments
       skip_or_previous_step if @nomenclature_change.input.legislation_reassignments.empty?

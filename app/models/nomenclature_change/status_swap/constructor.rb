@@ -16,13 +16,6 @@ class NomenclatureChange::StatusSwap::Constructor
       @nomenclature_change.secondary_output.note_en = secondary_note[:en]
       @nomenclature_change.secondary_output.note_es = secondary_note[:es]
       @nomenclature_change.secondary_output.note_fr = secondary_note[:fr]
-    else
-      secondary_note = private_output_note(
-        @nomenclature_change.secondary_output,
-        @event,
-        :en
-      )
-      @nomenclature_change.secondary_output.internal_note = secondary_note
     end
   end
 
