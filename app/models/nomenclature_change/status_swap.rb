@@ -67,6 +67,10 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
     end
   end
 
+  def new_synonym
+    new_accepted_name.is_primary_output ? secondary_output : primary_output
+  end
+
   def build_auto_reassignments
     # Reassignments will only be required when there is an input
     # from which to reassign

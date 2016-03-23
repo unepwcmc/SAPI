@@ -126,13 +126,13 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
 
   def build_new_accepted_name_note
     if @nomenclature_change.new_accepted_name.needs_public_note?
-      primary_note = multi_lingual_public_output_note(
-        @nomenclature_change.new_accepted_name,
+      new_accepted_name_note = multi_lingual_public_output_note(
+        @nomenclature_change.new_synonym,
         @event
       )
-      @nomenclature_change.new_accepted_name.note_en = primary_note[:en]
-      @nomenclature_change.new_accepted_name.note_es = primary_note[:es]
-      @nomenclature_change.new_accepted_name.note_fr = primary_note[:fr]
+      @nomenclature_change.new_accepted_name.note_en = new_accepted_name_note[:en]
+      @nomenclature_change.new_accepted_name.note_es = new_accepted_name_note[:es]
+      @nomenclature_change.new_accepted_name.note_fr = new_accepted_name_note[:fr]
     end
   end
 
