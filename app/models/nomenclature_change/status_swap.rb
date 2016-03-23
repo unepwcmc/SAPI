@@ -59,6 +59,18 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
       primary_output.try(:new_name_status) == 'S'
   end
 
+  def new_accepted_name
+    if primary_output.try(:new_name_status) == 'A'
+      primary_output
+    elsif secondary_output.try(:new_name_status) == 'A'
+      secondary_output
+    end
+  end
+
+  def new_synonym
+    new_accepted_name.is_primary_output ? secondary_output : primary_output
+  end
+
   def build_auto_reassignments
     # Reassignments will only be required when there is an input
     # from which to reassign
