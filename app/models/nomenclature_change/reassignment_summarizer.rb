@@ -37,8 +37,7 @@ class NomenclatureChange::ReassignmentSummarizer
       output_generic_summary(
         @input.taxon_concept.taxon_concept_references,
         'TaxonConceptReference', 'references'
-      ),
-      output_shipments_summary
+      )
     ].compact
   end
 
@@ -107,17 +106,6 @@ class NomenclatureChange::ReassignmentSummarizer
         'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
       ).where(:reassignable_type => reassignable_type).count
     "#{(cnt == 1 || @input.is_a?(NomenclatureChange::Output) ? objects_cnt : 0)} (of #{objects_cnt}) #{title}"
-  end
-
-  def output_shipments_summary
-    shipments_cnt = @input.taxon_concept.shipments.count
-    return nil unless shipments_cnt > 0
-    default_output = if @output.nomenclature_change.respond_to?(:outputs)
-                      @output.nomenclature_change.outputs.first
-                    else
-                      @output
-                    end
-    "#{(default_output.id == @output.id || @input.is_a?(NomenclatureChange::Output) ? shipments_cnt : 0)} (of #{shipments_cnt} shipments)"
   end
 
 end
