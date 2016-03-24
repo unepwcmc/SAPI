@@ -26,7 +26,12 @@ class NomenclatureChange::StatusChangeProcessor
       ]
     else
       [summary_line]
-    end
+    end + [
+      "#{@trade_to_reassign.count} shipments will be reassigned
+      from #{@where_to_reassign_trade_from.taxon_concept.full_name}
+      to #{@where_to_reassign_trade_to.display_full_name}
+      (accepted taxon concept)"
+    ]
   end
 
   private
