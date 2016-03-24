@@ -169,22 +169,6 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
-  def _build_trade_reassignments(input, output)
-    input_class = input.reassignment_class
-    unless input.reassignments.where(
-      reassignable_type: 'Trade::Shipment'
-    ).first || input.taxon_concept.shipments.limit(1).count == 0
-      reassignment = input.reassignment_class.new(
-        reassignable_type: 'Trade::Shipment',
-        type: input_class.to_s
-      )
-      if input.is_a?(NomenclatureChange::Input)
-        _build_single_target(reassignment, output)
-      end
-      input.reassignments << reassignment
-    end
-  end
-
   def following_taxonomic_changes(event, lng)
     I18n.with_locale(lng) do
       I18n.translate(

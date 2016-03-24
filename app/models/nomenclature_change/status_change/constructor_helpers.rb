@@ -68,12 +68,6 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     end
   end
 
-  def build_trade_reassignments
-    input_output_for_reassignment do |input, output|
-      _build_trade_reassignments(input, output)
-    end
-  end
-
   def status_change_note(locale_key, output, lng)
     output_html = taxon_concept_html(
       output.display_full_name,
