@@ -70,7 +70,6 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
       builder.build_legislation_reassignments
       builder.build_common_names_reassignments
       builder.build_references_reassignments
-      builder.build_trade_reassignments
     end
     true
   end
