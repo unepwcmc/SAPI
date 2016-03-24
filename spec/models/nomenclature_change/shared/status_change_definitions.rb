@@ -107,7 +107,7 @@ shared_context 'status_change_definitions' do
         new_name_status: 'A',
         new_parent_id: input_synonym_genus.id
       },
-      status: NomenclatureChange::StatusSwap::SWAP
+      status: NomenclatureChange::StatusSwap::SECONDARY_OUTPUT
     ).reload
   }
   let(:t_to_a_with_input){
@@ -119,23 +119,6 @@ shared_context 'status_change_definitions' do
         new_parent_id: input_trade_name_genus.id
       },
       status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
-    ).reload
-  }
-  let(:s_to_a_with_swap){
-    create(:nomenclature_change_status_swap,
-      primary_output_attributes: {
-        is_primary_output: true,
-        taxon_concept_id: input_synonym.id,
-        new_name_status: 'A',
-        new_parent_id: input_synonym_genus.id
-      },
-      input_attributes: { taxon_concept_id: input_species.id },
-      secondary_output_attributes: {
-        is_primary_output: false,
-        taxon_concept_id: input_species.id,
-        new_name_status: 'S'
-      },
-      status: NomenclatureChange::StatusSwap::SWAP
     ).reload
   }
 end

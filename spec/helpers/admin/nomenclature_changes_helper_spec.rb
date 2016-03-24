@@ -48,7 +48,7 @@ describe Admin::NomenclatureChangesHelper do
       specify{ expect(helper.status_change_blurb).to match(@nomenclature_change.primary_output.taxon_concept.full_name) }
     end
     context "status upgrade with swap" do
-      before(:each) { @nomenclature_change = s_to_a_with_swap }
+      before(:each) { @nomenclature_change = a_to_s_with_swap }
       specify{ expect(helper.status_change_blurb).to match(@nomenclature_change.secondary_output.taxon_concept.full_name) }
     end
   end
