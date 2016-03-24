@@ -16,16 +16,16 @@ describe Admin::NomenclatureChanges::StatusSwapController do
     end
     context :swap do
       before(:each) do
-        @status_change = s_to_a_with_swap
+        @status_change = a_to_s_with_swap
       end
       it 'renders the swap template' do
-        get :show, id: :swap, nomenclature_change_id: @status_change.id
-        response.should render_template('swap')
+        get :show, id: :secondary_output, nomenclature_change_id: @status_change.id
+        response.should render_template('secondary_output')
       end
     end
     context :reassignments do
       before(:each) do
-        @status_change = s_to_a_with_swap
+        @status_change = a_to_s_with_swap
       end
       context "when legislation present" do
         before(:each) do
@@ -47,7 +47,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
     end
     context :summary do
       before(:each) do
-        @status_change = s_to_a_with_swap
+        @status_change = a_to_s_with_swap
       end
       it 'renders the summary template' do
         get :show, id: :summary, nomenclature_change_id: @status_change.id
@@ -78,7 +78,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
           }
         }, nomenclature_change_id: @status_change.id, id: 'primary_output'
         response.should redirect_to(admin_nomenclature_change_status_swap_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'swap'
+          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'secondary_output'
         ))
       end
     end

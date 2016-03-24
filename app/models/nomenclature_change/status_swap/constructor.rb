@@ -20,7 +20,6 @@ class NomenclatureChange::StatusSwap::Constructor
   end
 
   def build_output_notes
-    build_primary_output_note
     build_secondary_output_note
   end
 
