@@ -15,10 +15,10 @@ class NomenclatureChange::StatusChangeProcessor
       [
         summary_line_long,
         @linked_inputs_or_outputs.map do |l|
-          if l.taxon_concept
+          if l.kind_of?(NomenclatureChange::Output)
+            l.display_full_name
+          elsif l.taxon_concept
             l.taxon_concept.full_name
-          elsif l.new_taxon_concept
-            l.new_taxon_concept.full_name
           else
             l.new_full_name
           end
