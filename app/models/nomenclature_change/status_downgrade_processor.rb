@@ -1,5 +1,19 @@
 class NomenclatureChange::StatusDowngradeProcessor < NomenclatureChange::StatusChangeProcessor
 
+  def initialize(input_or_output, linked_inputs_or_outputs = [])
+    super(input_or_output, linked_inputs_or_outputs)
+    @where_to_reassign_trade_from = @input_or_output
+    @where_to_reassign_trade_to = @linked_inputs_or_outputs.first ||
+      @input_or_output.kind_of?(NomenclatureChange::Output) &&
+      @input_or_output.will_create_taxon? &&
+      @input_or_output
+    @trade_to_reassign = Trade::Shipment.where([
+      "taxon_concept_id = :taxon_concept_id OR
+      reported_taxon_concept_id = :taxon_concept_id",
+      taxon_concept_id: @where_to_reassign_trade_from.taxon_concept_id
+    ])
+  end
+
   def run
     Rails.logger.debug "#{@input_or_output.taxon_concept.full_name} status downgrade from #{@old_status}"
     @linked_names = @linked_inputs_or_outputs.map do |an|
@@ -19,6 +33,15 @@ class NomenclatureChange::StatusDowngradeProcessor < NomenclatureChange::StatusC
     else
       run_an_to_s
     end
+
+    default_accepted_name = @where_to_reassign_trade_to.kind_of?(NomenclatureChange::Output) &&
+      @where_to_reassign_trade_to.new_taxon_concept ||
+      @where_to_reassign_trade_to.taxon_concept
+    if default_accepted_name
+      Rails.logger.debug "Updating shipments to have taxon concept = #{default_accepted_name.full_name}"
+      @trade_to_reassign.update_all(taxon_concept_id: default_accepted_name.id)
+    end
+
   end
 
   private
@@ -42,13 +65,6 @@ class NomenclatureChange::StatusDowngradeProcessor < NomenclatureChange::StatusC
       find_by_name(TaxonRelationshipType::HAS_SYNONYM)
     # set input_or_output as synonym of linked names
     create_inverse_relationships(@input_or_output.taxon_concept, rel_type)
-    default_accepted_name = @linked_names.first
-    if default_accepted_name
-      update_shipments(@input_or_output.taxon_concept, default_accepted_name)
-      old_accepted_names.each do |old_accepted_name|
-        update_shipments_by_reported(@input_or_output.taxon_concept, old_accepted_name, default_accepted_name)
-      end
-    end
   end
 
   def run_an_to_s
@@ -65,26 +81,6 @@ class NomenclatureChange::StatusDowngradeProcessor < NomenclatureChange::StatusC
       find_by_name(TaxonRelationshipType::HAS_SYNONYM)
     # set input_or_output as synonym of linked names
     create_inverse_relationships(@input_or_output.taxon_concept, rel_type)
-    default_accepted_name = @linked_names.first
-    if default_accepted_name
-      update_shipments(@input_or_output.taxon_concept, default_accepted_name)
-    end
-  end
-
-  def update_shipments(old_taxon_concept, new_taxon_concept)
-    Rails.logger.debug "Updating shipments where taxon concept = #{old_taxon_concept.full_name} to have taxon concept = #{new_taxon_concept.full_name}"
-    Trade::Shipment.update_all(
-      {taxon_concept_id: new_taxon_concept.id},
-      {taxon_concept_id: old_taxon_concept.id}
-    )
-  end
-
-  def update_shipments_by_reported(old_reported_taxon_concept, old_accepted_taxon_concept, new_taxon_concept)
-    Rails.logger.debug "Updating shipments where taxon concept = #{old_accepted_taxon_concept.full_name}, reported taxon concept =  #{old_reported_taxon_concept.full_name}, to have taxon concept = #{new_taxon_concept.full_name}"
-    Trade::Shipment.update_all(
-      {taxon_concept_id: new_taxon_concept.id},
-      {reported_taxon_concept_id: old_reported_taxon_concept.id, taxon_concept_id: old_accepted_taxon_concept.id }
-    )
   end
 
 end
