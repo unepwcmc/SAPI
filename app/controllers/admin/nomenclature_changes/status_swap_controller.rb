@@ -9,8 +9,9 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
       set_events
       set_taxonomy
       builder.build_primary_output
-    when :swap
+    when :secondary_output
       set_taxonomy
+      set_ranks
       builder.build_secondary_output
     when :notes
       builder.build_output_notes
@@ -37,8 +38,11 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
         set_events
         set_taxonomy
       end
-    when :swap
-      set_taxonomy unless success
+    when :secondary_output
+      unless success
+        set_taxonomy
+        set_ranks
+      end
     end
     render_wizard @nomenclature_change
   end
@@ -46,6 +50,10 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
   private
   def klass
     NomenclatureChange::StatusSwap
+  end
+
+  def set_ranks
+    @ranks = Rank.order(:taxonomic_position)
   end
 
 end

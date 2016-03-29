@@ -38,21 +38,6 @@ describe NomenclatureChange::StatusSwap::Processor do
       specify{ expect(secondary_output_taxon_concept.name_status).to eq('A') }
       specify{ expect(primary_output_taxon_concept.accepted_names).to include(secondary_output_taxon_concept) }
     end
-    context "from synonym" do
-      let(:output_species){ secondary_output_taxon_concept }
-      let(:status_change){ s_to_a_with_swap }
-      before(:each){
-        @shipment = create(:shipment,
-          taxon_concept: accepted_name,
-          reported_taxon_concept: primary_output_taxon_concept
-        )
-        processor.run
-      }
-
-      specify{ expect(primary_output_taxon_concept.name_status).to eq('A') }
-      specify{ expect(secondary_output_taxon_concept).to be_is_synonym }
-      specify{ expect(secondary_output_taxon_concept.accepted_names).to include(primary_output_taxon_concept) }
-    end
   end
 
 
