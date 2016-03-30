@@ -17,10 +17,10 @@ class GeoEntityType < ActiveRecord::Base
 
   DEFAULT_SET = "2"
   SETS = {
-    "1" => [CITES_REGION],
-    "2" => [COUNTRY, TERRITORY],
-    "3" => [CITES_REGION, COUNTRY, TERRITORY],
-    "4" => [COUNTRY, TERRITORY, TRADE_ENTITY]
+    "1" => [CITES_REGION], # CITES Checklist
+    "2" => [COUNTRY, TERRITORY], # CITES Checklist
+    "3" => [CITES_REGION, COUNTRY, TERRITORY], # Species+
+    "4" => [COUNTRY, TERRITORY, TRADE_ENTITY] # CITES Trade
   }
-  CURRENT_ONLY_SETS = ['1', '2', '3']
+  CURRENT_ONLY_SETS = ['3']
 end
