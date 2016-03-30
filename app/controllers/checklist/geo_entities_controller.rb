@@ -1,9 +1,5 @@
 #TODO remove this once Checklist is upgraded to use the API
 class Checklist::GeoEntitiesController < ApplicationController
-  caches_action :index, :cache_path => Proc.new { |c|
-    { :geo_entity_types_set => GeoEntityType::DEFAULT_SET, :locale => "en" }.
-      merge(c.params.select{|k,v| ["geo_entity_types_set", "locale"].include?(k)})
-  }
 
   #override the serializer by using render :text, old ember-data won't handle json root
   def index
