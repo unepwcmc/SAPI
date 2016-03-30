@@ -1,7 +1,6 @@
 class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
 
   before_filter :load_geo_entity_types, :only => [:index, :create]
-  cache_sweeper :geo_entity_sweeper
 
   def index
     index! do |format|

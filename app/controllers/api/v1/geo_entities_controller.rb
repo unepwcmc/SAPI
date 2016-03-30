@@ -1,8 +1,4 @@
 class Api::V1::GeoEntitiesController < ApplicationController
-  caches_action :index, :cache_path => Proc.new { |c|
-    { :geo_entity_types_set => GeoEntityType::DEFAULT_SET, :locale => "en" }.
-      merge(c.params.select{|k,v| !v.blank? && ["geo_entity_types_set", "locale"].include?(k)})
-  }
 
   # TODO refactor this into a search class with low level caching
   # needs to handle both geo entity types selection and is_current
