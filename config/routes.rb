@@ -204,7 +204,6 @@ SAPI::Application.routes.draw do
 
   namespace :checklist do
     resources :geo_entities, :only => [:index] #TODO move to API
-    resources :species_listings, :only => [:index] #TODO move to API
     resources :downloads do
       member do
         get :download
