@@ -102,7 +102,7 @@ class GeoEntity < ActiveRecord::Base
   end
 
   def as_json(options={})
-    super(:only =>[:id, :iso_code2], :methods => [:name])
+    super(:only =>[:id, :iso_code2, :is_current], :methods => [:name])
   end
 
   def self.search query
