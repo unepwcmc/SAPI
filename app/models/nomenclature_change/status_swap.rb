@@ -30,7 +30,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
   validate :required_primary_output_name_status, if: :primary_output_or_submitting?
   validate :required_secondary_output_name_status, if: :secondary_output_or_submitting?
   before_save :build_input_for_auto_reassignments, if: :secondary_output?
-  before_save :build_auto_reassignments, if: :legislation?
+  before_save :build_auto_reassignments, if: :notes?
 
   def required_secondary_output
     if secondary_output.nil?
