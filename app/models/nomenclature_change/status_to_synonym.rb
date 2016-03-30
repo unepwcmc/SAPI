@@ -31,7 +31,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   validate :required_primary_output_name_status, if: :primary_output_or_submitting?
   validate :required_secondary_output, if: :relay_or_submitting?
   before_save :build_input_for_relay, if: :relay?
-  before_save :build_auto_reassignments, if: :legislation?
+  after_save :build_auto_reassignments, if: :relay?
   before_validation :ensure_new_name_status, if: :primary_output?
 
   def ensure_new_name_status
