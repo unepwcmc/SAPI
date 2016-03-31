@@ -173,6 +173,7 @@ class DocumentSearch
 
   def self.refresh
     ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
+    DocumentSearch.increment_cache_iterator
   end
 
 end
