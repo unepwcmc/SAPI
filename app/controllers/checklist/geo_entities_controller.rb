@@ -1,11 +1,21 @@
 class Checklist::GeoEntitiesController < ApplicationController
 
-  #override the serializer by using render :text, old ember-data won't handle json root
   def index
     @geo_entities = GeoEntitySearch.new(
       params.slice(:geo_entity_types_set, :locale)
     ).results
-    render :text => @geo_entities.to_json
+
+    render :json => @geo_entities,
+      :each_serializer => Checklist::GeoEntitySerializer
+  end
+
+  private
+  # this disables json root for this controller
+  # remove when checklist frontend upgraded to new Ember.js
+  def default_serializer_options
+    {
+      root: false
+    }
   end
 
 end
