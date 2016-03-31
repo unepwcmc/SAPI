@@ -8,7 +8,7 @@ class GeoEntitySearch
   end
 
   def results
-    @query.all
+    @query.reload
   end
 
   private
@@ -34,9 +34,6 @@ class GeoEntitySearch
   def initialize_query
     geo_entity_types = GeoEntityType::SETS[@geo_entity_types_set]
     @query = GeoEntity.
-      select([
-        'id', 'name', 'iso_code2', 'geo_entity_types.name', 'is_current'
-      ]).
       joins(:geo_entity_type).
       includes(:geo_entity_type).
       order("name_#{@locale}")
