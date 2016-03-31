@@ -1,11 +1,8 @@
 namespace :elibrary do
   task :refresh_document_search => :environment do
-    Document.all.each do |document|
-      if document.recently_updated?
-        DocumentSearch.refresh
-        puts "Document search refreshed!"
-        break
-      end
+    if Document.where('updated_at > ?', 5.minutes.ago).limit(1).count > 0
+      DocumentSearch.refresh
+      puts "Document search refreshed!"
     end
   end
 end

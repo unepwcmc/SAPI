@@ -75,10 +75,6 @@ class Document < ActiveRecord::Base
     [DocumentTag::ProposalOutcome, DocumentTag::ReviewPhase, DocumentTag::ProcessStage]
   end
 
-  def recently_updated?
-    updated_at <= 5.minutes.ago
-  end
-
   def set_title
     if title.blank? && filename_changed? && filename.file
       self.title = filename.file.filename.sub(/.\w+$/, '').humanize
