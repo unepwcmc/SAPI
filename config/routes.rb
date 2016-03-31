@@ -85,7 +85,6 @@ SAPI::Application.routes.draw do
       get :autocomplete, :on => :collection
     end
     resources :geo_entities, :only => [:index, :create, :update, :destroy] do
-      get :autocomplete, :on => :collection
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
     end
     resources :cites_hash_annotations, :only => [:index, :create, :update, :destroy]
@@ -191,7 +190,6 @@ SAPI::Application.routes.draw do
 
   namespace :checklist do
     resources :geo_entities, :only => [:index] #TODO move to API
-    resources :species_listings, :only => [:index] #TODO move to API
     resources :downloads do
       member do
         get :download

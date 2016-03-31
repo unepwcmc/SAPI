@@ -1,21 +1,11 @@
 class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
 
   before_filter :load_geo_entity_types, :only => [:index, :create]
-  cache_sweeper :geo_entity_sweeper
 
   def index
     index! do |format|
       @geo_entity = GeoEntity.new(:is_current => true)
     end
-  end
-
-  def autocomplete
-    render :json => GeoEntity.
-      select([:"geo_entities.id", :"geo_entities.name_en", :"geo_entities.iso_code2"]).
-      where("geo_entities.name_en ILIKE '#{params[:name]}%'").
-      current.
-      order(:name_en).
-      limit(5)
   end
 
   protected
