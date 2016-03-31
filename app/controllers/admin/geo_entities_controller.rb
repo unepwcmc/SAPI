@@ -8,15 +8,6 @@ class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
     end
   end
 
-  def autocomplete
-    render :json => GeoEntity.
-      select([:"geo_entities.id", :"geo_entities.name_en", :"geo_entities.iso_code2"]).
-      where("geo_entities.name_en ILIKE '#{params[:name]}%'").
-      current.
-      order(:name_en).
-      limit(5)
-  end
-
   protected
 
   def load_geo_entity_types
