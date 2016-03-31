@@ -13,3 +13,11 @@ form {
 .outputs_selection span {
   margin-right: 10px
 }
+
+.more-split-outputs {
+  .existing-taxon-input {
+    .control-label, .input-taxon {
+      display:none;
+    }
+  }
+}
