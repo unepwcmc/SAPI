@@ -9,7 +9,7 @@
 
     <li>
     <%= outputs_selection ff %>
-    <div class="control-group">
+    <div class="control-group existing-taxon-input">
       <label class="control-label">Existing taxon concept:</label>
       <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
@@ -43,6 +43,7 @@
     </div>
     </li>
   <% end %>
-  <p><%= f.link_to_add 'Add another output', :outputs %></p>
+  <div class='more-split-outputs'></div>
+  <p><%= f.link_to_add 'Add another output', :outputs, data: {target: '.more-split-outputs'} %></p>
   </ol>
 <% end %>
