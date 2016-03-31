@@ -1,10 +1,10 @@
 # This module can be used to cache queries encapsulated in their own search
-# classes. It s used to cache TaxonConcept searches in Species+ and Checklist.
-# 
+# classes. It is used to cache TaxonConcept searches in Species+ and Checklist,
+# as well as documents search in the new E-Library and geo entities search.
+#
 # This module makes the following assumptions about cached classes:
-# - responds to cache_key and returns an object that can be used as Rails.cache key
-# e.g. normalised search parameters
-# - responds to results (which returs expected results for given parameters)
+# - has an @options hash property with all parameters to construct a unique cache key
+# - responds to results (which returns expected results for given parameters)
 # - responds to total_cnt (which returns total number of results for given parameters)
 
 require 'digest/md5'
@@ -23,21 +23,20 @@ module SearchCache
   end
 
 private
-
-  def results_cache_key
+  def generic_cache_key(suffix)
     raw_key = @options.merge(:locale => I18n.locale).to_a.sort.
-      unshift("#{self.class.name}-results").
+      unshift("#{self.class.name}-#{suffix}").
       push(self.class.cache_iterator).inspect
     Rails.logger.debug raw_key
     Digest::MD5.hexdigest(raw_key)
   end
 
+  def results_cache_key
+    generic_cache_key('results')
+  end
+
   def total_cnt_cache_key
-    raw_key = @options.merge(:locale => I18n.locale).to_a.sort.
-      unshift("#{self.class.name}-total_cnt").
-      push(self.class.cache_iterator).inspect
-    Rails.logger.debug raw_key
-    Digest::MD5.hexdigest(raw_key)
+    generic_cache_key('total_cnt')
   end
 
 end
