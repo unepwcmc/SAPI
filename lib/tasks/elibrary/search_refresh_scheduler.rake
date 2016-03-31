@@ -1,8 +1,10 @@
 namespace :elibrary do
   task :refresh_document_search => :environment do
-    if Document.where('updated_at > ?', 5.minutes.ago).limit(1).count > 0
-      DocumentSearch.refresh
-      puts "Document search refreshed!"
+    if DocumentSearch.needs_refreshing?
+      elapsed_time = Benchmark.realtime do
+        DocumentSearch.refresh
+      end
+      puts "#{Time.now} Document search refreshed in #{elapsed_time}s"
     end
   end
 end
