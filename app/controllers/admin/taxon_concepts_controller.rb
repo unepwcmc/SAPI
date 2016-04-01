@@ -42,6 +42,12 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         if @taxon_concept.is_synonym?
           @synonym = @taxon_concept
           render('new_synonym')
+        elsif @taxon_concept.is_hybrid?
+          @hybrid = @taxon_concept
+          render('new_hybrid')
+        elsif @taxon_concept.name_status == 'N'
+          @n_name = @taxon_concept
+          render('new_n_name')
         else
           render('new')
         end
