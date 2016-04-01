@@ -233,6 +233,16 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
+  scope :at_self_and_ancestor_ranks, lambda{ |rank|
+    joins_sql = <<-SQL
+      INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
+        AND ranks.taxonomic_position <= ?
+    SQL
+    joins(
+      sanitize_sql_array([joins_sql, rank.taxonomic_position])
+    )
+  }
+
   def self.fetch_taxons_full_name(taxon_ids)
     if taxon_ids.present?
       ActiveRecord::Base.connection.execute(

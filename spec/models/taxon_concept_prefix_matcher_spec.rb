@@ -26,6 +26,12 @@ describe TaxonConceptPrefixMatcher do
       parent: taxon_concept3
     )
   }
+  let!(:taxon_concept4_sibling){
+    create_cites_eu_genus(
+      taxon_name: create(:taxon_name, scientific_name: 'Aaab'),
+      parent: taxon_concept3
+    )
+  }
   let!(:hybrid){
     tmp = create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Abc'),
@@ -82,9 +88,24 @@ describe TaxonConceptPrefixMatcher do
     let(:ancestor_matcher){
       TaxonConceptPrefixMatcher.new ancestor_matcher_params
     }
-  
+
     specify{ ancestor_matcher.taxon_concepts.map(&:full_name).should ==
       ['Aaa'] }
+
+    let(:self_and_ancestor_matcher_params){
+      SearchParams.new(
+        :taxonomy => {:id => taxonomy.id},
+        :rank => {:id => taxon_concept4.rank_id, :scope => :self_and_ancestors},
+        :scientific_name => 'AAA'
+      )
+    }
+    let(:self_and_ancestor_matcher){
+      TaxonConceptPrefixMatcher.new self_and_ancestor_matcher_params
+    }
+  
+    specify{ self_and_ancestor_matcher.taxon_concepts.map(&:full_name).should ==
+      ['Aaa', 'Aaab'] }
+
   end
   context "when taxon concept scope applied" do
     let(:ancestor_matcher_params){
@@ -113,7 +134,7 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify{ descendant_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Aab', 'Abb'] }
+      ['Aaab', 'Aab', 'Abb'] }
   end
 
 end
