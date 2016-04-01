@@ -66,6 +66,15 @@ class TaxonConceptObserver < ActiveRecord::Observer
       taxon_concept.update_column(:data, ActiveRecord::Coders::Hstore.dump(data))
       taxon_concept.data = data
     end
+    if taxon_concept.name_status == 'S'
+      taxon_concept.rebuild_relationships(taxon_concept.accepted_names_ids)
+    end
+    if taxon_concept.name_status == 'T'
+      taxon_concept.rebuild_relationships(taxon_concept.accepted_names_for_trade_name_ids)
+    end
+    if taxon_concept.name_status == 'H'
+      taxon_concept.rebuild_relationships(taxon_concept.hybrid_parents_ids)
+    end
     DownloadsCacheCleanupWorker.perform_async(:taxon_concepts)
   end
 

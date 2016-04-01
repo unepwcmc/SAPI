@@ -381,7 +381,7 @@ class TaxonConcept < ActiveRecord::Base
       taxon_concept.taxon_relationships.
         where('other_taxon_concept_id = ? AND
               taxon_relationship_type_id = ?', id, rel_type.id).
-        first.destroy
+        destroy
     end
 
     new_taxa.each do |taxon_concept|
@@ -392,21 +392,19 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
-  def init_accepted_taxa(all_taxa_ids)
-    name_ids =
-      case name_status
-      when 'S' then :accepted_name_ids
-      when 'T' then :accepted_names_for_trade_name_ids
-      when 'H' then :hybrid_parent_ids
-      else return [[],[]]
-      end
-    current_name_ids = send(name_ids)
-    new_taxa_ids = all_taxa_ids - current_name_ids
-    removed_taxa_ids = current_name_ids - all_taxa_ids
+  def init_accepted_taxa(new_ids)
+    return [[],[]] unless ['S', 'T', 'H'].include?(name_status)
+    current_ids = case name_status
+      when 'S' then accepted_names.pluck(:id)
+      when 'T' then accepted_names_for_trade_name.pluck(:id)
+      when 'H' then hybrid_parents.pluck(:id)
+    end
+    ids_to_add = new_ids - current_ids
+    ids_to_remove = current_ids - new_ids
 
     [
-      TaxonConcept.where(id: new_taxa_ids),
-      TaxonConcept.where(id: removed_taxa_ids)
+      TaxonConcept.where(id: ids_to_add),
+      TaxonConcept.where(id: ids_to_remove)
     ]
   end
 
