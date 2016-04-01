@@ -38,6 +38,9 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
       elsif @rank_scope.to_sym == :ancestors
         #search at ancestor ranks
         @taxon_concepts = @taxon_concepts.at_ancestor_ranks(rank)
+      elsif @rank_scope.to_sym == :self_and_ancestors
+        #search at self and ancestor ranks
+        @taxon_concepts = @taxon_concepts.at_self_and_ancestor_ranks(rank)
       end
     end
   end
