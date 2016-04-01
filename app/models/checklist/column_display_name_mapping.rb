@@ -4,7 +4,6 @@ module Checklist::ColumnDisplayNameMapping
     :id => 'TaxonId',
     :change_type_name => 'ChangeType',
     :species_listing_name => 'Appendix',
-    :change_type_name => 'ChangeType',
     :hash_full_note_en => '#Annotation',
     :full_hash_ann_symbol => '#AnnotationSymbol',
     :hash_ann_symbol => '#AnnotationSymbol',
