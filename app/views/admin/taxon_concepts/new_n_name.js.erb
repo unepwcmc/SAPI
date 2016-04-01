@@ -1,0 +1,4 @@
+$('#admin-new-taxon_concept_n_name-form').html(
+  "<%= escape_javascript(render('n_name_form')) %>");
+$('#new-taxon_concept_n_name').modal('show');
+window.adminEditor.initTaxonConceptTypeaheads();

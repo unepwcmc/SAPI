@@ -49,6 +49,18 @@ describe Admin::TaxonConceptsController do
       xhr :post, :create, taxon_concept: {}
       response.should render_template("new")
     end
+    it "renders new_synonym when not successful S" do
+      xhr :post, :create, taxon_concept: {name_status: 'S'}
+      response.should render_template("new_synonym")
+    end
+    it "renders new_hybrid when not successful H" do
+      xhr :post, :create, taxon_concept: {name_status: 'H'}
+      response.should render_template("new_hybrid")
+    end
+    it "renders new_synonym when not successful N" do
+      xhr :post, :create, taxon_concept: {name_status: 'N'}
+      response.should render_template("new_n_name")
+    end
   end
 
   describe "XHR PUT update" do
