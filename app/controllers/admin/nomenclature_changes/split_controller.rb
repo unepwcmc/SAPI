@@ -46,8 +46,6 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         set_events
         set_taxonomy
       end
-    when :summary
-      session.delete(:back) if success
     end
     render_wizard @nomenclature_change
   end
