@@ -508,59 +508,6 @@ class TaxonConcept < ActiveRecord::Base
     true
   end
 
-  def check_hybrid_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:hybrid_parent_scientific_name) do |tc|
-      inverse_taxon_relationships.create(
-        :taxon_concept_id => tc.id,
-        :other_taxon_concept_id => self.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-      )
-    end
-  end
-
-  def check_other_hybrid_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:other_hybrid_parent_scientific_name) do |tc|
-      inverse_taxon_relationships.create(
-        :taxon_concept_id => tc.id,
-        :other_taxon_concept_id => self.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-      )
-    end
-  end
-
-  def check_accepted_taxon_concept_exists
-    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
-      inverse_taxon_relationships.create(
-        taxon_concept_id: tc.id,
-        other_taxon_concept_id: self.id,
-        taxon_relationship_type_id: TaxonRelationshipType.
-        find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
-      )
-    end
-  end
-
-  def check_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:parent_scientific_name) do |tc|
-      self.parent_id = tc.id
-    end
-  end
-
-  def check_associated_taxon_concept_exists(full_name_attr)
-    full_name_var = self.instance_variable_get("@#{full_name_attr}")
-    return true if full_name_var.blank?
-    tc = TaxonConcept.find_by_full_name_and_name_status(full_name_var, 'A', taxonomy_id)
-    unless tc
-      errors.add(full_name_attr, "does not exist")
-      return true
-    end
-    if block_given?
-      yield(tc)
-    end
-    true
-  end
-
   def self.find_by_full_name_and_name_status(full_name, name_status, taxonomy_id=nil)
     full_name = TaxonConcept.sanitize_full_name(full_name)
     res = TaxonConcept.
