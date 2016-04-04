@@ -26,6 +26,7 @@
         } %>
       </div>
     </div>
+    <%= render 'admin/nomenclature_changes/build/new_rank', ff: ff, f: f %>
     <%= render 'admin/nomenclature_changes/build/new_parent', :ff => ff %>
     <div class="upgrade-info">
       <div class="control-group">
@@ -46,6 +47,5 @@
         </div>
       </div>
     </div>
-    <%= render 'admin/nomenclature_changes/build/new_rank', ff: ff, f: f %>
   <% end %>
 <% end %>
