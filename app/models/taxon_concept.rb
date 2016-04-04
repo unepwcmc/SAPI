@@ -180,6 +180,8 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
   validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent }
+  validate :maximum_2_hybrid_parents,
+    :if => lambda { |tc| tc.name_status == 'H' }
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
   validates :full_name, :uniqueness => { :scope => [:taxonomy_id, :author_year] }
@@ -477,6 +479,14 @@ class TaxonConcept < ActiveRecord::Base
       errors.add(:parent_id, "must be at immediately higher rank")
       return false
     end
+  end
+
+  def maximum_2_hybrid_parents
+    if hybrid_parents_ids.size > 2
+      errors.add(:hybrid_parents_ids, "maximum 2 hybrid parents")
+      return false
+    end
+    true
   end
 
   def check_taxon_name_exists
