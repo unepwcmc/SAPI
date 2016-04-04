@@ -52,8 +52,4 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
     NomenclatureChange::StatusSwap
   end
 
-  def set_ranks
-    @ranks = Rank.order(:taxonomic_position)
-  end
-
 end

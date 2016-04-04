@@ -32,6 +32,10 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
   end
 
+  def set_ranks
+    @ranks = Rank.order(:taxonomic_position)
+  end
+
   def skip_or_previous_step
     if params[:back] || session[:back]
       jump_to(previous_step)
