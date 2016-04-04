@@ -40,7 +40,7 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   end
 
   def set_output_rank_id
-    return true unless primary_output.new_rank_id.nil?
+    return true if primary_output && primary_output.new_rank_id.present?
     primary_output && primary_output.taxon_concept &&
       primary_output.new_rank_id = primary_output.taxon_concept.rank_id
   end
