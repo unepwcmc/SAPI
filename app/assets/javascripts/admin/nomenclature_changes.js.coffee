@@ -36,18 +36,18 @@ $(document).ready ->
   window.multiTaxonSelect2Options = {
     multiple: true,
     initSelection: (element, callback) =>
-      id = $(element).val().match(/({|\[)(.*)(}|\])/)[2]
+      elementValue = $(element).val()
       # Reset value attribute to let Select2 work properly when submitting the values again
       $(element).attr('value','')
-      if (id != null && id != '')
-        ids = id.split(',').map( (id) ->
-          parseInt(id.trim())
-        ).sort( (a, b) -> a - b)
+      if elementValue?
+        ids = elementValue.match(/({|\[)(.*)(}|\])/)[2]
         names = $(element).data('name')
         name_status = $(element).data('name-status')
         result = []
-        for id, i in ids
-          result.push({id: id, text: names[i] + ' ' + name_status})
+        if ids != ''
+          ids = ids.split(',')
+          for id, i in ids
+            result.push({id: id, text: names && names[i] + ' ' + name_status})
         callback(result)
   }
   window.hybridsSelect2Options = {
