@@ -151,7 +151,7 @@ class AdminEditor
   initSelect2Inputs: () ->
     $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
     $('.taxon-concept-multiple').select2($.extend({}, window.defaultTaxonSelect2Options,window.multiTaxonSelect2Options))
-    $('.hybrids-selection').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options, window.hybridsSelect2Options))
+    $('.taxon-concept-multiple-max-2').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options, window.max2Select2Options))
 
 
 class AdminInPlaceEditor extends AdminEditor
