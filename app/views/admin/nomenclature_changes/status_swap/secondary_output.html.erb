@@ -17,7 +17,7 @@
         <%= ff.hidden_field :new_name_status %>
       </div>
     </div>
-    <%= render 'admin/nomenclature_changes/build/new_parent', :ff => ff %>
     <%= render 'admin/nomenclature_changes/build/new_rank', ff: ff, f: f %>
+    <%= render 'admin/nomenclature_changes/build/new_parent', :ff => ff %>
   <% end %>
 <% end %>
