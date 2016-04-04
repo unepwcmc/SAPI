@@ -8,7 +8,9 @@ class TaxonConceptObserver < ActiveRecord::Observer
       rank_name = taxon_concept.rank.name
       parent_full_name = taxon_concept.parent.full_name
       name = taxon_concept.taxon_name && taxon_concept.taxon_name.scientific_name
-      if [Rank::SPECIES, Rank::SUBSPECIES].include? rank_name
+      if name.blank?
+        nil
+      elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
          "#{parent_full_name} #{name.downcase}"
       elsif rank_name == Rank::VARIETY
         "#{parent_full_name} var. #{name.downcase}"
