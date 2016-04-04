@@ -50,7 +50,7 @@ $(document).ready ->
             result.push({id: id, text: names && names[i] + ' ' + name_status})
         callback(result)
   }
-  window.hybridsSelect2Options = {
+  window.max2Select2Options = {
     maximumSelectionSize: 2,
     formatSelectionTooBig: (limit) ->
       return 'You can only select ' + limit + ' items'
@@ -58,6 +58,7 @@ $(document).ready ->
 
   $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
   $('.taxon-concept-multiple').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options))
+  $('.taxon-concept-multiple-max-2').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options, window.max2Select2Options))
   $('.taxon-concept').on('change', (event) ->
     return false unless event.val
     $.when($.ajax( '/admin/taxon_concepts/' + event.val + '.json' ) ).then(( data, textStatus, jqXHR ) =>
