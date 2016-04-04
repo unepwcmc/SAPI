@@ -6,7 +6,9 @@
       :'data-name' => ff.object.new_parent.try(:full_name),
       :'data-name-status' => ff.object.new_parent.try(:name_status),
       :'data-name-status-filter' => ['A'].to_json,
-      :'data-taxonomy-id' => @taxonomy.id
+      :'data-taxonomy-id' => @taxonomy.id,
+      :'data-rank-id' => ff.object.new_rank_id,
+      :'data-rank-scope' => 'parent'
     } %>
   </div>
 </div>
