@@ -14,11 +14,17 @@ $(document).ready ->
       url: '/admin/taxon_concepts/autocomplete'
       dataType: 'json'
       data: (query, page) ->
+        form = $(@).closest('form')
+        taxonomySelector = form && form.find('.taxonomy-selector')
+        rankSelector = form && form.find('.rank-selector')
         search_params:
           scientific_name: query
-          name_status: this.data('name-status-filter')
+          name_status: @data('name-status-filter')
           taxonomy:
-            id: this.data('taxonomy-id')
+            id: taxonomySelector && taxonomySelector.val() || @data('taxonomy-id')
+          rank:
+            id: rankSelector && rankSelector.val() || @data('rank-id')
+            scope: $(@).attr('data-rank-scope')
         per_page: 25
         page: 1
       results: (data, page) => # parse the results into the format expected by Select2.
