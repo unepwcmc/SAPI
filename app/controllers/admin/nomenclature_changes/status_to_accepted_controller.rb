@@ -29,6 +29,8 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
         set_events
         set_taxonomy
       end
+    when :summary
+      session.delete(:back) if success
     end
     render_wizard @nomenclature_change
   end
