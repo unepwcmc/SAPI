@@ -40,6 +40,7 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   end
 
   def set_output_rank_id
+    return true unless primary_output.new_rank_id.nil?
     primary_output && primary_output.taxon_concept &&
       primary_output.new_rank_id = primary_output.taxon_concept.rank_id
   end
@@ -48,6 +49,10 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
     return true unless needs_to_set_parent? && primary_output.new_parent_id.nil?
     primary_output && primary_output.taxon_concept &&
       primary_output.new_parent_id = primary_output.default_parent.try(:id)
+  end
+
+  def new_output_rank
+    primary_output && primary_output.taxon_concept.try(:rank)
   end
 
   def needs_to_receive_associations?
