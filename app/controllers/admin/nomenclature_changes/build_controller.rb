@@ -3,7 +3,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
 
   before_filter :set_nomenclature_change, :only => [:show, :update, :destroy]
   before_filter :redirect_in_production
-  before_filter :set_back, only: [:update]
+  before_filter :unset_back, only: [:update]
 
   def finish_wizard_path
     admin_nomenclature_changes_path
@@ -46,7 +46,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     NomenclatureChange
   end
 
-  def set_back
+  def unset_back
     session[:back] = false
   end
 
