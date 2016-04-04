@@ -64,22 +64,6 @@ $(document).ready ->
     $.when($.ajax( '/admin/taxon_concepts/' + event.val + '.json' ) ).then(( data, textStatus, jqXHR ) =>
       $(this).attr('data-name', data.full_name)
       $(this).attr('data-name-status', data.name_status)
-      if $(this).hasClass('status-change')
-        # reload the name status dropdown based on selection
-        statusDropdown = $(this).closest('.fields').find('select')
-        statusFrom = data.name_status
-        $(statusDropdown).find('option').attr('disabled', true)
-        statusMap =
-          'A': ['S']
-          'N': ['A', 'S']
-          'S': ['A']
-          'T': ['A', 'S']
-        $(statusDropdown).find('option[value=' + statusFrom + ']').removeAttr('selected')
-        defaultStatus = statusMap[statusFrom][0]
-        $(statusDropdown).find('option[value=' + defaultStatus + ']').attr('selected', true)
-        $.each(statusMap[statusFrom], (i, status) ->
-          $(statusDropdown).find('option[value=' + status + ']').removeAttr('disabled')
-        )
     )
     if $(this).hasClass('clear-others')
       # reset selection in other taxon concept select2 instances
