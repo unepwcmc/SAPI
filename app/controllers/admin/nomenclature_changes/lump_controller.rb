@@ -47,8 +47,6 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
         set_taxonomy
         set_ranks
       end
-    when :summary
-      session.delete(:back) if success
     end
     render_wizard @nomenclature_change
   end

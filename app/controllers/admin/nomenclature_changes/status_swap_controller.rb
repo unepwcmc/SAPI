@@ -43,8 +43,6 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
         set_taxonomy
         set_ranks
       end
-    when :summary
-      session.delete(:back) if success
     end
     render_wizard @nomenclature_change
   end

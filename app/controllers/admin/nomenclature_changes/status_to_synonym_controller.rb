@@ -42,8 +42,6 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
       end
     when :relay, :accepted_name
       set_taxonomy unless success
-    when :summary
-      session.delete(:back) if success
     end
     render_wizard @nomenclature_change
   end
