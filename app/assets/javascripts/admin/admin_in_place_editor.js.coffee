@@ -21,14 +21,17 @@ class AdminEditor
     $('.modal .modal-footer .save-button').click () ->
       $(@).closest('.modal').find('form').submit()
     $('.modal').on 'hidden', () =>
-      @clearModalForm($(@))
+      $('.modal.hide.fade').each((idx, element) =>
+        @clearModalForm($(element))
+      )
     @initModals()
     @initSearchTypeahead()
     $("[rel='tooltip']").tooltip()
 
-  clearModalForm: (modal) ->
-    form = modal.find('form')
-    form[0].reset() if form.length > 0
+  clearModalForm: (modalElement) ->
+    modalElement.find('form').each(() ->
+      @reset()
+    )
 
   initForm: () ->
     $(".datepicker").datepicker
