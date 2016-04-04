@@ -3,6 +3,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
 
   before_filter :set_nomenclature_change, :only => [:show, :update, :destroy]
   before_filter :redirect_in_production
+  before_filter :set_back, only: [:update]
 
   def finish_wizard_path
     admin_nomenclature_changes_path
@@ -32,8 +33,9 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   end
 
   def skip_or_previous_step
-    if params[:back]
+    if params[:back] || session[:back]
       jump_to(previous_step)
+      session[:back] = true
     else
       skip_step
     end
@@ -42,6 +44,10 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   private
   def klass
     NomenclatureChange
+  end
+
+  def set_back
+    session[:back] = false
   end
 
 end
