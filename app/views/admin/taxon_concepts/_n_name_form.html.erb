@@ -5,13 +5,21 @@
   <div class="control-group">
     <label>Taxonomy</label>
     <%= f.select :taxonomy_id,
-      options_from_collection_for_select(@taxonomies, :id, :name, @n_name && @n_name.taxonomy_id)
+      options_from_collection_for_select(
+        @taxonomies, :id, :name, @n_name && @n_name.taxonomy_id
+      ),
+      {},
+      {class: 'taxonomy-selector'}
     %>
   </div>
   <div class="control-group">
     <label>Rank</label>
     <%= f.select :rank_id,
-      options_from_collection_for_select(@ranks, :id, :name, @n_name && @n_name.rank_id)
+      options_from_collection_for_select(
+        @ranks, :id, :name, @n_name && @n_name.rank_id
+      ),
+      {},
+      {class: 'rank-selector'}
     %>
   </div>
   <div class="control-group">

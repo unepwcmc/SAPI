@@ -7,16 +7,19 @@
     <%= f.select :taxonomy_id,
       options_from_collection_for_select(
         @taxonomies, :id, :name, @hybrid && @hybrid.taxonomy_id
-      )
+      ),
+      {},
+      {class: 'taxonomy-selector'}
     %>
   </div>
   <div class="control-group">
     <label>Rank</label>
     <%= f.select :rank_id,
       options_from_collection_for_select(
-        @ranks, :id, :name,
-        @hybrid && @hybrid.rank_id
-      )
+        @ranks, :id, :name, @hybrid && @hybrid.rank_id
+      ),
+      {},
+      {class: 'rank-selector'}
     %>
   </div>
   <div class="control-group">
