@@ -211,7 +211,6 @@ class TaxonConceptsEditor extends AdminEditor
   initModals: () ->
     super
     @saveAndReopen = false
-    @initTaxonConceptTypeaheads()
     $('.distributions-list > a').popover({});
 
   alertSuccess: (txt) ->
@@ -237,7 +236,6 @@ class ListingChangesEditor extends AdminEditor
       event.field.find('.distribution').select2({
         placeholder: 'Select countries'
       })
-      @_initTaxonConceptTypeaheads(event.field.find('.typeahead'))
     )
 
   initDistributionSelectors: () ->

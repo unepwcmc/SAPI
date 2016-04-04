@@ -45,16 +45,15 @@ class TaxonConcept < ActiveRecord::Base
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
-    :parent_scientific_name, :accepted_scientific_name,
-    :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list, :legacy_trade_code, :hybrid_parent_ids,
-    :accepted_name_ids, :accepted_names_for_trade_name_ids,
+    :tag_list, :legacy_trade_code, :hybrid_parents_ids,
+    :accepted_names_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
 
-  attr_writer :parent_scientific_name
-  attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
-    :other_hybrid_parent_scientific_name
+  attr_writer :accepted_names_ids,
+    :accepted_names_for_trade_name_ids,
+    :hybrid_parents_ids
+
   acts_as_taggable
 
   serialize :data, ActiveRecord::Coders::Hstore
@@ -194,21 +193,10 @@ class TaxonConcept < ActiveRecord::Base
 
   before_validation :check_taxon_name_exists,
     :if => lambda { |tc| tc.full_name }
-  before_validation :check_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.parent_scientific_name }
 
   before_validation :ensure_taxonomic_position
 
   translates :nomenclature_note
-
-  after_save :check_accepted_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
-
-  after_save :check_hybrid_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_hybrid? && tc.hybrid_parent_scientific_name }
-
-  after_save :check_other_hybrid_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_hybrid? && tc.other_hybrid_parent_scientific_name }
 
   scope :at_parent_ranks, lambda{ |rank|
     joins_sql = <<-SQL
@@ -334,11 +322,6 @@ class TaxonConcept < ActiveRecord::Base
     listing['eu_status'] == 'LISTED' && listing['eu_level_of_listing']
   end
 
-  def parent_scientific_name
-    @parent_scientific_name ||
-    parent && parent.full_name
-  end
-
   def standard_taxon_concept_references
     TaxonConceptReference.from('api_taxon_references_view taxon_concept_references').
       where(taxon_concept_id: self.id, is_standard: true)
@@ -366,6 +349,19 @@ class TaxonConcept < ActiveRecord::Base
     new_full_name = params[:taxon_concept] ? params[:taxon_concept][:full_name] : ''
     new_full_name and new_full_name != full_name and
       Rank.in_range(Rank::VARIETY, Rank::GENUS).include?(rank.name)
+  end
+
+  def accepted_names_ids
+    @accepted_names_ids || accepted_names.pluck(:id)
+  end
+
+  def accepted_names_for_trade_name_ids
+    @accepted_names_for_trade_name_ids ||
+    accepted_names_for_trade_name.pluck(:id)
+  end
+
+  def hybrid_parents_ids
+    @hybrid_parents_ids || hybrid_parents.pluck(:id)
   end
 
   def rebuild_relationships(taxa_ids)

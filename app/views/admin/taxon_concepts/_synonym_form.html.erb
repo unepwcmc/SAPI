@@ -20,8 +20,15 @@
     %>
   </div>
   <div class="control-group">
-    <label>Accepted name</label>
-    <%= f.text_field :accepted_scientific_name, :class => 'typeahead' %>
+    <label class="control-label">Accepted names</label>
+    <div class="controls">
+      <%= f.text_field :accepted_names_ids, {
+        class: 'taxon-concept-multiple',
+        :'data-name-status-filter' => ['A'].to_json,
+        :'data-name-status' => 'A',
+        :'data-name' => TaxonConcept.where(id: @synonym.accepted_names_ids).pluck(:full_name).to_s
+      } %>
+    </div>
   </div>
   <div class="control-group">
     <label>Synonym</label>
