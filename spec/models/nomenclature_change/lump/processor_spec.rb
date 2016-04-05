@@ -69,6 +69,9 @@ describe NomenclatureChange::Lump::Processor do
       let!(:input_species1_child_listing){
         create_cites_I_addition(taxon_concept: input_species1_child)
       }
+      let!(:output_species_child){
+        create_cites_eu_subspecies(parent: output_species)
+      }
       let(:lump){
         create(:nomenclature_change_lump,
           inputs_attributes: {
@@ -101,7 +104,10 @@ describe NomenclatureChange::Lump::Processor do
           output: output
         )
       }
-      let(:output_species_child){ output_species.children.first.reload }
+      let(:output_species_children){ output_species.children }
+      let(:output_species1_child){
+        output_species_children.where('id != ?', output_species_child.id).first
+      }
       before(:each){ processor.run }
       specify do
         expect(input_species1.reload.nomenclature_note_en).to eq(' input EN note')
@@ -132,6 +138,19 @@ describe NomenclatureChange::Lump::Processor do
         expect(
           output_species_child.listing_changes.first.nomenclature_note_en
         ).to include(output_species.reload.nomenclature_note_en)
+      end
+      let(:output_species_genus_name){ output_species.parent.full_name }
+      specify "original output species child retains higher taxa intact" do
+        expect(output_species_child.data['genus_name']).to eq(output_species_genus_name)
+      end
+      specify "new output species child has higher taxa set correctly" do
+        expect(output_species1_child.reload.data['genus_name']).to eq(output_species_genus_name)
+      end
+      specify "original input species child retains higher taxa intact" do
+        expect(input_species1_child.data['genus_name']).to eq(input_species1.parent.full_name)
+      end
+      specify "original input species child is a synonym" do
+        expect(input_species1_child.reload.name_status).to eq('S')
       end
     end
   end
