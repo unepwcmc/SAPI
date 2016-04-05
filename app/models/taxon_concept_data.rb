@@ -1,7 +1,7 @@
 class TaxonConceptData
 
   def initialize(taxon_concept)
-    @taxon_concept = taxon_concept
+    @taxon_concept = taxon_concept.reload
     @rank_name = taxon_concept.rank && taxon_concept.rank.name
     @higher_taxa = higher_taxa
   end
@@ -30,7 +30,7 @@ class TaxonConceptData
     return nil unless @rank_name
     {
       "#{@rank_name.downcase}_id" => @taxon_concept.id,
-      "#{@rank_name.downcase}_name" => @taxon_concept.full_name
+      "#{@rank_name.downcase}_name" => @taxon_concept.taxon_name.try(:scientific_name)
     }
   end
 
