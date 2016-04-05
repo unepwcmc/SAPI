@@ -96,4 +96,38 @@ describe Admin::NomenclatureChanges::LumpController do
     end
   end
 
+  describe 'Previous button' do
+    before(:each) do
+      @input_species = create_cites_eu_species
+      @lump = create(:nomenclature_change_lump)
+      create(:nomenclature_change_input, nomenclature_change: @lump, taxon_concept: @input_species)
+      create(:nomenclature_change_output, nomenclature_change: @lump)
+    end
+    context 'when step is legislation' do
+      it 'renders notes step' do
+        get :show, id: :notes, nomenclature_change_id: @lump.id, back: true
+        response.should render_template('notes')
+      end
+    end
+    context 'when step is summary' do
+      context 'when legislation' do
+        before(:each) do
+          create_cites_I_addition(taxon_concept: @input_species)
+        end
+        it 'renders legislation step' do
+          get :show, id: :legislation, nomenclature_change_id: @lump.id, back: true
+          response.should render_template('legislation')
+        end
+      end
+      context 'when no legislation' do
+        it 'redirects to notes step' do
+          get :show, id: :legislation, nomenclature_change_id: @lump.id, back: true
+          response.should redirect_to action: :show, id: :notes
+          get :show, id: :notes, nomenclature_change_id: @lump.id
+          response.should redirect_to action: :show, id: :notes
+        end
+      end
+    end
+  end
+
 end
