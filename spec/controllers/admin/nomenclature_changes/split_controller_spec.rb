@@ -162,7 +162,7 @@ describe Admin::NomenclatureChanges::SplitController do
           get :show, id: :children, nomenclature_change_id: @split.id, back: true
           response.should redirect_to action: :show, id: :notes
           get :show, id: :notes, nomenclature_change_id: @split.id
-          response.location.should include("/admin/nomenclature_changes/#{@split.id}/split/notes")
+          response.should redirect_to action: :show, id: :notes
         end
       end
     end
@@ -180,27 +180,12 @@ describe Admin::NomenclatureChanges::SplitController do
           response.should render_template('names')
         end
       end
-      context 'when no names' do
-        context 'when children' do
-          before(:each) do
-            create_cites_eu_subspecies(parent: input_species)
-          end
-          it 'redirects to children step' do
-            get :show, id: :names, nomenclature_change_id: @split.id, back: true
-            response.should redirect_to action: :show, id: :children
-            get :show, id: :children, nomenclature_change_id: @split.id
-            response.location.should include("/admin/nomenclature_changes/#{@split.id}/split/children")
-          end
-        end
-        context 'when no children' do
-          it 'redirects to notes step' do
-            get :show, id: :names, nomenclature_change_id: @split.id, back: true
-            response.should redirect_to action: :show, id: :children
-            get :show, id: :children, nomenclature_change_id: @split.id
-            response.should redirect_to action: :show, id: :notes
-            get :show, id: :notes, nomenclature_change_id: @split.id
-            response.location.should include("/admin/nomenclature_changes/#{@split.id}/split/notes")
-          end
+      context 'when no names and no children' do
+        it 'redirects to notes step' do
+          get :show, id: :names, nomenclature_change_id: @split.id, back: true
+          response.should redirect_to action: :show, id: :children
+          get :show, id: :children, nomenclature_change_id: @split.id
+          response.should redirect_to action: :show, id: :notes
         end
       end
     end
@@ -214,48 +199,12 @@ describe Admin::NomenclatureChanges::SplitController do
           response.should render_template('distribution')
         end
       end
-      context 'when no distribution' do
-        context 'when names' do
-          before(:each) do
-            create(:taxon_relationship,
-              taxon_concept: input_species,
-              other_taxon_concept: create_cites_eu_species(name_status: 'S'),
-              taxon_relationship_type: synonym_relationship_type
-            )
-          end
-          it 'redirects to names step' do
-            get :show, id: :distribution, nomenclature_change_id: @split.id, back: true
-            response.should redirect_to action: :show, id: :names
-            get :show, id: :names, nomenclature_change_id: @split.id
-            response.location.should include("/admin/nomenclature_changes/#{@split.id}/split/names")
-          end
-        end
-        context 'when no names' do
-          context 'when children' do
-            before(:each) do
-              create_cites_eu_subspecies(parent: input_species)
-            end
-            it 'redirects to children step' do
-              get :show, id: :distribution, nomenclature_change_id: @split.id, back: true
-              response.should redirect_to action: :show, id: :names
-              get :show, id: :names, nomenclature_change_id: @split.id
-              response.should redirect_to action: :show, id: :children
-              get :show, id: :children, nomenclature_change_id: @split.id
-              response.location.should include("/admin/nomenclature_changes/#{@split.id}/split/children")
-            end
-          end
-          context 'when no children' do
-            it 'redirects to notes step' do
-              get :show, id: :distribution, nomenclature_change_id: @split.id, back: true
-              response.should redirect_to action: :show, id: :names
-              get :show, id: :names, nomenclature_change_id: @split.id
-              response.should redirect_to action: :show, id: :children
-              get :show, id: :children, nomenclature_change_id: @split.id
-              response.should redirect_to action: :show, id: :notes
-              get :show, id: :notes, nomenclature_change_id: @split.id
-              response.location.should include("/admin/nomenclature_changes/#{@split.id}/split/notes")
-            end
-          end
+      context 'when no distribution and no names' do
+        it 'redirects to children step' do
+          get :show, id: :distribution, nomenclature_change_id: @split.id, back: true
+          response.should redirect_to action: :show, id: :names
+          get :show, id: :names, nomenclature_change_id: @split.id
+          response.should redirect_to action: :show, id: :children
         end
       end
     end
@@ -269,67 +218,12 @@ describe Admin::NomenclatureChanges::SplitController do
           response.should render_template('legislation')
         end
       end
-      context 'when no legislation' do
-        context 'when distribution' do
-          before(:each) do
-            create(:distribution, taxon_concept: input_species)
-          end
-          it 'redirects to distribution step' do
-            get :show, id: :legislation, nomenclature_change_id: @split.id, back: true
-            response.should redirect_to action: :show, id: :distribution
-            get :show, id: :distribution, nomenclature_change_id: @split.id
-            response.location.should include("/admin/nomenclature_changes/#{@split.id}/split/distribution")
-          end
-        end
-        context 'when no distribution' do
-          context 'when names' do
-            before(:each) do
-              create(:taxon_relationship,
-                taxon_concept: input_species,
-                other_taxon_concept: create_cites_eu_species(name_status: 'S'),
-                taxon_relationship_type: synonym_relationship_type
-              )
-            end
-            it 'redirects to names step' do
-              get :show, id: :legislation, nomenclature_change_id: @split.id, back: true
-              response.should redirect_to action: :show, id: :distribution
-              get :show, id: :distribution, nomenclature_change_id: @split.id
-              response.should redirect_to action: :show, id: :names
-              get :show, id: :names, nomenclature_change_id: @split.id
-              response.location.should include("/admin/nomenclature_changes/#{@split.id}/split/names")
-            end
-          end
-          context 'when no names' do
-            context 'when children' do
-              before(:each) do
-                create_cites_eu_subspecies(parent: input_species)
-              end
-              it 'redirects to children step' do
-                get :show, id: :legislation, nomenclature_change_id: @split.id, back: true
-                response.should redirect_to action: :show, id: :distribution
-                get :show, id: :distribution, nomenclature_change_id: @split.id
-                response.should redirect_to action: :show, id: :names
-                get :show, id: :names, nomenclature_change_id: @split.id
-                response.should redirect_to action: :show, id: :children
-                get :show, id: :children, nomenclature_change_id: @split.id
-                response.location.should include("/admin/nomenclature_changes/#{@split.id}/split/children")
-              end
-            end
-            context 'when no children' do
-              it 'redirects to notes step' do
-                get :show, id: :legislation, nomenclature_change_id: @split.id, back: true
-                response.should redirect_to action: :show, id: :distribution
-                get :show, id: :distribution, nomenclature_change_id: @split.id
-                response.should redirect_to action: :show, id: :names
-                get :show, id: :names, nomenclature_change_id: @split.id
-                response.should redirect_to action: :show, id: :children
-                get :show, id: :children, nomenclature_change_id: @split.id
-                response.should redirect_to action: :show, id: :notes
-                get :show, id: :notes, nomenclature_change_id: @split.id
-                response.location.should include("/admin/nomenclature_changes/#{@split.id}/split/notes")
-              end
-            end
-          end
+      context 'when no legislation and no distribution' do
+        it 'redirects to names step' do
+          get :show, id: :legislation, nomenclature_change_id: @split.id, back: true
+          response.should redirect_to action: :show, id: :distribution
+          get :show, id: :distribution, nomenclature_change_id: @split.id
+          response.should redirect_to action: :show, id: :names
         end
       end
     end
