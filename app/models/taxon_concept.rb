@@ -170,13 +170,13 @@ class TaxonConcept < ActiveRecord::Base
   validates :rank_id, :presence => true
   validates :name_status, :presence => true
   validates :parent_id, presence: true,
-    if: lambda { |tc| tc.name_status == 'A' && tc.rank.try(:name) != 'KINGDOM' }
+    if: lambda { |tc| ['A', 'N'].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM' }
   validate :parent_in_same_taxonomy, :if => lambda { |tc| tc.parent }
   validate :parent_at_immediately_higher_rank,
     :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
   validate :parent_name_compatible, :if => lambda { |tc|
     tc.parent && tc.rank && tc.full_name && (
-      ['A', 'N'].include?(tc.name_status) || tc.name_status.blank?
+      tc.name_status == 'A' || tc.name_status.blank?
     )
   }
   validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent }
