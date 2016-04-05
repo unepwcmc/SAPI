@@ -118,34 +118,46 @@ describe NomenclatureChange::Split::Processor do
         )
       }
       let(:output_species){ output.taxon_concept.reload }
-      let(:output_species_child){ output.taxon_concept.children.first.reload }
+      let(:output_species_child) do
+        output.taxon_concept.children.where(['id != ?', output_species1_child.id]).first
+      end
       before(:each){ processor.run }
-      specify do
+      specify "input species has public nomenclature note set" do
         expect(input_species.reload.nomenclature_note_en).to eq(' input EN note')
+      end
+      specify "child of input species inherits public nomenclature note" do
         expect(
           input_species_child.reload.nomenclature_note_en
-        ).to eq(input_species.nomenclature_note_en)
+        ).to eq(input_species.reload.nomenclature_note_en)
       end
-      specify do
+      specify "input species has internal nomenclature note set" do
         expect(input_species.nomenclature_comment.note).to eq(' input internal note')
+      end
+      specify "child of input species inherits internal nomenclature note" do
         expect(
           input_species_child.nomenclature_comment.note
         ).to eq(input_species.nomenclature_comment.note)
       end
-      specify do
+      specify "output species has public nomenclature note set" do
         expect(output_species.reload.nomenclature_note_en).to eq(' output EN note')
+      end
+      specify "child of output species inherits public nomenclature note" do
         expect(
           output_species_child.reload.nomenclature_note_en
         ).to eq(output_species.nomenclature_note_en)
       end
-      specify do
+      specify "output species has internal nomenclature note set" do
         expect(output_species.nomenclature_comment.note).to eq(' output internal note')
+      end
+      specify "output species child inherits internal nomenclature note" do
         expect(
           output_species_child.nomenclature_comment.note
         ).to eq(output_species.nomenclature_comment.note)
       end
-      specify do
+      specify "output species child has listing changes from input species child transferred" do
         expect(output_species_child.listing_changes.count).to eq(1)
+      end
+      specify "output species child has legislation nomenclature note set" do
         expect(
           output_species_child.listing_changes.first.nomenclature_note_en
         ).to include(output_species.nomenclature_note_en)
