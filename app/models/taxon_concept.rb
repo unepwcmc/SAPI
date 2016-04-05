@@ -45,16 +45,15 @@ class TaxonConcept < ActiveRecord::Base
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
     :legacy_id, :legacy_type, :full_name, :name_status,
-    :parent_scientific_name, :accepted_scientific_name,
-    :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list, :legacy_trade_code, :hybrid_parent_ids,
-    :accepted_name_ids, :accepted_names_for_trade_name_ids,
+    :tag_list, :legacy_trade_code, :hybrid_parents_ids,
+    :accepted_names_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
 
-  attr_writer :parent_scientific_name
-  attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
-    :other_hybrid_parent_scientific_name
+  attr_writer :accepted_names_ids,
+    :accepted_names_for_trade_name_ids,
+    :hybrid_parents_ids
+
   acts_as_taggable
 
   serialize :data, ActiveRecord::Coders::Hstore
@@ -171,16 +170,18 @@ class TaxonConcept < ActiveRecord::Base
   validates :rank_id, :presence => true
   validates :name_status, :presence => true
   validates :parent_id, presence: true,
-    if: lambda { |tc| tc.name_status == 'A' && tc.rank.try(:name) != 'KINGDOM' }
+    if: lambda { |tc| ['A', 'N'].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM' }
   validate :parent_in_same_taxonomy, :if => lambda { |tc| tc.parent }
   validate :parent_at_immediately_higher_rank,
     :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
   validate :parent_name_compatible, :if => lambda { |tc|
     tc.parent && tc.rank && tc.full_name && (
-      ['A', 'N'].include?(tc.name_status) || tc.name_status.blank?
+      tc.name_status == 'A' || tc.name_status.blank?
     )
   }
   validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent }
+  validate :maximum_2_hybrid_parents,
+    :if => lambda { |tc| tc.name_status == 'H' }
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
   validates :full_name, :uniqueness => { :scope => [:taxonomy_id, :author_year] }
@@ -194,21 +195,10 @@ class TaxonConcept < ActiveRecord::Base
 
   before_validation :check_taxon_name_exists,
     :if => lambda { |tc| tc.full_name }
-  before_validation :check_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.parent_scientific_name }
 
   before_validation :ensure_taxonomic_position
 
   translates :nomenclature_note
-
-  after_save :check_accepted_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
-
-  after_save :check_hybrid_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_hybrid? && tc.hybrid_parent_scientific_name }
-
-  after_save :check_other_hybrid_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_hybrid? && tc.other_hybrid_parent_scientific_name }
 
   scope :at_parent_ranks, lambda{ |rank|
     joins_sql = <<-SQL
@@ -227,6 +217,16 @@ class TaxonConcept < ActiveRecord::Base
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position < ?
+    SQL
+    joins(
+      sanitize_sql_array([joins_sql, rank.taxonomic_position])
+    )
+  }
+
+  scope :at_self_and_ancestor_ranks, lambda{ |rank|
+    joins_sql = <<-SQL
+      INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
+        AND ranks.taxonomic_position <= ?
     SQL
     joins(
       sanitize_sql_array([joins_sql, rank.taxonomic_position])
@@ -324,11 +324,6 @@ class TaxonConcept < ActiveRecord::Base
     listing['eu_status'] == 'LISTED' && listing['eu_level_of_listing']
   end
 
-  def parent_scientific_name
-    @parent_scientific_name ||
-    parent && parent.full_name
-  end
-
   def standard_taxon_concept_references
     TaxonConceptReference.from('api_taxon_references_view taxon_concept_references').
       where(taxon_concept_id: self.id, is_standard: true)
@@ -358,6 +353,19 @@ class TaxonConcept < ActiveRecord::Base
       Rank.in_range(Rank::VARIETY, Rank::GENUS).include?(rank.name)
   end
 
+  def accepted_names_ids
+    @accepted_names_ids || accepted_names.pluck(:id)
+  end
+
+  def accepted_names_for_trade_name_ids
+    @accepted_names_for_trade_name_ids ||
+    accepted_names_for_trade_name.pluck(:id)
+  end
+
+  def hybrid_parents_ids
+    @hybrid_parents_ids || hybrid_parents.pluck(:id)
+  end
+
   def rebuild_relationships(taxa_ids)
     if ['S', 'T', 'H'].include? name_status
       new_taxa, removed_taxa = init_accepted_taxa(taxa_ids)
@@ -381,7 +389,7 @@ class TaxonConcept < ActiveRecord::Base
       taxon_concept.taxon_relationships.
         where('other_taxon_concept_id = ? AND
               taxon_relationship_type_id = ?', id, rel_type.id).
-        first.destroy
+        destroy
     end
 
     new_taxa.each do |taxon_concept|
@@ -392,21 +400,19 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
-  def init_accepted_taxa(all_taxa_ids)
-    name_ids =
-      case name_status
-      when 'S' then :accepted_name_ids
-      when 'T' then :accepted_names_for_trade_name_ids
-      when 'H' then :hybrid_parent_ids
-      else return [[],[]]
-      end
-    current_name_ids = send(name_ids)
-    new_taxa_ids = all_taxa_ids - current_name_ids
-    removed_taxa_ids = current_name_ids - all_taxa_ids
+  def init_accepted_taxa(new_ids)
+    return [[],[]] unless ['S', 'T', 'H'].include?(name_status)
+    current_ids = case name_status
+      when 'S' then accepted_names.pluck(:id)
+      when 'T' then accepted_names_for_trade_name.pluck(:id)
+      when 'H' then hybrid_parents.pluck(:id)
+    end
+    ids_to_add = new_ids - current_ids
+    ids_to_remove = current_ids - new_ids
 
     [
-      TaxonConcept.where(id: new_taxa_ids),
-      TaxonConcept.where(id: removed_taxa_ids)
+      TaxonConcept.where(id: ids_to_add),
+      TaxonConcept.where(id: ids_to_remove)
     ]
   end
 
@@ -475,6 +481,14 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
+  def maximum_2_hybrid_parents
+    if hybrid_parents_ids.size > 2
+      errors.add(:hybrid_parents_ids, "maximum 2 hybrid parents")
+      return false
+    end
+    true
+  end
+
   def check_taxon_name_exists
     self.full_name = TaxonConcept.sanitize_full_name(full_name)
     scientific_name = if is_accepted_name?
@@ -491,59 +505,6 @@ class TaxonConcept < ActiveRecord::Base
       self.build_taxon_name(:scientific_name => scientific_name)
     end
 
-    true
-  end
-
-  def check_hybrid_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:hybrid_parent_scientific_name) do |tc|
-      inverse_taxon_relationships.create(
-        :taxon_concept_id => tc.id,
-        :other_taxon_concept_id => self.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-      )
-    end
-  end
-
-  def check_other_hybrid_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:other_hybrid_parent_scientific_name) do |tc|
-      inverse_taxon_relationships.create(
-        :taxon_concept_id => tc.id,
-        :other_taxon_concept_id => self.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-      )
-    end
-  end
-
-  def check_accepted_taxon_concept_exists
-    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
-      inverse_taxon_relationships.create(
-        taxon_concept_id: tc.id,
-        other_taxon_concept_id: self.id,
-        taxon_relationship_type_id: TaxonRelationshipType.
-        find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
-      )
-    end
-  end
-
-  def check_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:parent_scientific_name) do |tc|
-      self.parent_id = tc.id
-    end
-  end
-
-  def check_associated_taxon_concept_exists(full_name_attr)
-    full_name_var = self.instance_variable_get("@#{full_name_attr}")
-    return true if full_name_var.blank?
-    tc = TaxonConcept.find_by_full_name_and_name_status(full_name_var, 'A', taxonomy_id)
-    unless tc
-      errors.add(full_name_attr, "does not exist")
-      return true
-    end
-    if block_given?
-      yield(tc)
-    end
     true
   end
 

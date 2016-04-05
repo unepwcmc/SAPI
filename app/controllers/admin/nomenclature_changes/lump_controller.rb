@@ -56,8 +56,4 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
     NomenclatureChange::Lump
   end
 
-  def set_ranks
-    @ranks = Rank.order(:taxonomic_position)
-  end
-
 end

@@ -21,14 +21,17 @@ class AdminEditor
     $('.modal .modal-footer .save-button').click () ->
       $(@).closest('.modal').find('form').submit()
     $('.modal').on 'hidden', () =>
-      @clearModalForm($(@))
+      $('.modal.hide.fade').each((idx, element) =>
+        @clearModalForm($(element))
+      )
     @initModals()
     @initSearchTypeahead()
     $("[rel='tooltip']").tooltip()
 
-  clearModalForm: (modal) ->
-    form = modal.find('form')
-    form[0].reset() if form.length > 0
+  clearModalForm: (modalElement) ->
+    modalElement.find('form').each(() ->
+      @reset()
+    )
 
   initForm: () ->
     $(".datepicker").datepicker
@@ -46,46 +49,6 @@ class AdminEditor
     alert.append(txt)
 
     $(alert).insertBefore($('h1'))
-
-  initTaxonConceptTypeaheads: () ->
-
-    $('input.typeahead').each (idx) ->
-      formId = $(@).closest('form').attr('id')
-
-      if formId?
-        matches = formId.match('^(.+_)?(new|edit)_(.+)$')
-        prefix = matches[3]
-        prefix = matches[1] + prefix unless matches[1] == undefined
-
-        taxonomyEl = $('#' + prefix + '_taxonomy_id')
-        rankEl = $('#' + prefix + '_rank_id')
-
-        #initialize this typeahead
-        $(@).typeahead
-          source: (query, process) =>
-            $.get('/admin/taxon_concepts/autocomplete',
-            {
-              search_params: {
-                scientific_name: query,
-                taxonomy: {
-                  id: taxonomyEl && taxonomyEl.val() || $(@).attr('data-taxonomy-id')
-                },
-                rank: {
-                  id: rankEl && rankEl.val() || $(@).attr('data-rank-id'),
-                  scope: $(@).attr('data-rank-scope')
-                }
-              }
-              limit: 25
-            }, (data) =>
-              labels = []
-              $.each(data, (i, item) =>
-                label = item.full_name + ' ' + item.rank_name
-                labels.push(label)
-              )
-              return process(labels)
-            )
-          $().add(taxonomyEl).add(rankEl).change () =>
-            $(@).val(null)
 
   initSearchTypeahead: () ->
     $('.search-typeahead').typeahead
@@ -151,7 +114,7 @@ class AdminEditor
   initSelect2Inputs: () ->
     $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
     $('.taxon-concept-multiple').select2($.extend({}, window.defaultTaxonSelect2Options,window.multiTaxonSelect2Options))
-    $('.hybrids-selection').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options, window.hybridsSelect2Options))
+    $('.taxon-concept-multiple-max-2').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options, window.max2Select2Options))
 
 
 class AdminInPlaceEditor extends AdminEditor
@@ -211,7 +174,6 @@ class TaxonConceptsEditor extends AdminEditor
   initModals: () ->
     super
     @saveAndReopen = false
-    @initTaxonConceptTypeaheads()
     $('.distributions-list > a').popover({});
 
   alertSuccess: (txt) ->
@@ -237,7 +199,6 @@ class ListingChangesEditor extends AdminEditor
       event.field.find('.distribution').select2({
         placeholder: 'Select countries'
       })
-      @_initTaxonConceptTypeaheads(event.field.find('.typeahead'))
     )
 
   initDistributionSelectors: () ->

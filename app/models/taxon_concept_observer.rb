@@ -8,7 +8,9 @@ class TaxonConceptObserver < ActiveRecord::Observer
       rank_name = taxon_concept.rank.name
       parent_full_name = taxon_concept.parent.full_name
       name = taxon_concept.taxon_name && taxon_concept.taxon_name.scientific_name
-      if [Rank::SPECIES, Rank::SUBSPECIES].include? rank_name
+      if name.blank?
+        nil
+      elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
          "#{parent_full_name} #{name.downcase}"
       elsif rank_name == Rank::VARIETY
         "#{parent_full_name} var. #{name.downcase}"
@@ -65,6 +67,15 @@ class TaxonConceptObserver < ActiveRecord::Observer
       data = tcd.to_h
       taxon_concept.update_column(:data, ActiveRecord::Coders::Hstore.dump(data))
       taxon_concept.data = data
+    end
+    if taxon_concept.name_status == 'S'
+      taxon_concept.rebuild_relationships(taxon_concept.accepted_names_ids)
+    end
+    if taxon_concept.name_status == 'T'
+      taxon_concept.rebuild_relationships(taxon_concept.accepted_names_for_trade_name_ids)
+    end
+    if taxon_concept.name_status == 'H'
+      taxon_concept.rebuild_relationships(taxon_concept.hybrid_parents_ids)
     end
     DownloadsCacheCleanupWorker.perform_async(:taxon_concepts)
   end

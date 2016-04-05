@@ -14,11 +14,17 @@ $(document).ready ->
       url: '/admin/taxon_concepts/autocomplete'
       dataType: 'json'
       data: (query, page) ->
+        form = $(@).closest('form')
+        taxonomySelector = form && form.find('.taxonomy-selector')
+        rankSelector = form && form.find('.rank-selector')
         search_params:
           scientific_name: query
-          name_status: this.data('name-status-filter')
+          name_status: @data('name-status-filter')
           taxonomy:
-            id: this.data('taxonomy-id')
+            id: taxonomySelector && taxonomySelector.val() || @data('taxonomy-id')
+          rank:
+            id: rankSelector && rankSelector.val() || @data('rank-id')
+            scope: $(@).attr('data-rank-scope')
         per_page: 25
         page: 1
       results: (data, page) => # parse the results into the format expected by Select2.
@@ -30,21 +36,21 @@ $(document).ready ->
   window.multiTaxonSelect2Options = {
     multiple: true,
     initSelection: (element, callback) =>
-      id = $(element).val().match(/({|\[)(.*)(}|\])/)[2]
+      elementValue = $(element).val()
       # Reset value attribute to let Select2 work properly when submitting the values again
       $(element).attr('value','')
-      if (id != null && id != '')
-        ids = id.split(',').map( (id) ->
-          parseInt(id.trim())
-        ).sort( (a, b) -> a - b)
+      if elementValue?
+        ids = elementValue.match(/({|\[)(.*)(}|\])/)[2]
         names = $(element).data('name')
         name_status = $(element).data('name-status')
         result = []
-        for id, i in ids
-          result.push({id: id, text: names[i] + ' ' + name_status})
+        if ids != ''
+          ids = ids.split(',')
+          for id, i in ids
+            result.push({id: id, text: names && names[i] + ' ' + name_status})
         callback(result)
   }
-  window.hybridsSelect2Options = {
+  window.max2Select2Options = {
     maximumSelectionSize: 2,
     formatSelectionTooBig: (limit) ->
       return 'You can only select ' + limit + ' items'
@@ -52,27 +58,12 @@ $(document).ready ->
 
   $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
   $('.taxon-concept-multiple').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options))
+  $('.taxon-concept-multiple-max-2').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options, window.max2Select2Options))
   $('.taxon-concept').on('change', (event) ->
     return false unless event.val
     $.when($.ajax( '/admin/taxon_concepts/' + event.val + '.json' ) ).then(( data, textStatus, jqXHR ) =>
       $(this).attr('data-name', data.full_name)
       $(this).attr('data-name-status', data.name_status)
-      if $(this).hasClass('status-change')
-        # reload the name status dropdown based on selection
-        statusDropdown = $(this).closest('.fields').find('select')
-        statusFrom = data.name_status
-        $(statusDropdown).find('option').attr('disabled', true)
-        statusMap =
-          'A': ['S']
-          'N': ['A', 'S']
-          'S': ['A']
-          'T': ['A', 'S']
-        $(statusDropdown).find('option[value=' + statusFrom + ']').removeAttr('selected')
-        defaultStatus = statusMap[statusFrom][0]
-        $(statusDropdown).find('option[value=' + defaultStatus + ']').attr('selected', true)
-        $.each(statusMap[statusFrom], (i, status) ->
-          $(statusDropdown).find('option[value=' + status + ']').removeAttr('disabled')
-        )
     )
     if $(this).hasClass('clear-others')
       # reset selection in other taxon concept select2 instances

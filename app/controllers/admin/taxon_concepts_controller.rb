@@ -3,6 +3,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   layout :determine_layout
   before_filter :sanitize_search_params, :only => [:index, :autocomplete]
   before_filter :load_tags, :only => [:index, :edit, :create]
+  before_filter :split_stringified_ids_lists, only: [:create, :update]
 
   def index
     @taxonomies = Taxonomy.order(:name)
@@ -57,11 +58,9 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
 
   def update
     @taxon_concept = TaxonConcept.find(params[:id])
-    taxa_ids = sanitize_update_params
     rebuild_taxonomy = @taxon_concept.rebuild_taxonomy?(params)
     update! do |success, failure|
       success.js {
-        @taxon_concept.rebuild_relationships(taxa_ids) if taxa_ids.present?
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         render 'update'
       }
@@ -72,7 +71,6 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         render 'new'
       }
       success.html {
-        @taxon_concept.rebuild_relationships(taxa_ids) if taxa_ids.present?
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         redirect_to edit_admin_taxon_concept_url(@taxon_concept),
           :notice => 'Operation successful'
@@ -115,24 +113,23 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         })
     end
 
-    def sanitize_update_params
-      name_status = params[:taxon_concept] ? params[:taxon_concept][:name_status] : ''
-      taxa_ids = []
-      if params[:taxon_concept]
-        name_ids =
-          case name_status
-          when 'S' then :accepted_name_ids
-          when 'T' then :accepted_names_for_trade_name_ids
-          when 'H' then :hybrid_parent_ids
-          else return []
-          end
-          taxa_ids =
-            params[:taxon_concept].delete(name_ids).first.split(',').map(&:to_i)
-      end
-      taxa_ids
-    end
-
     def load_tags
       @tags = PresetTag.where(:model => PresetTag::TYPES[:TaxonConcept])
+    end
+
+    def split_stringified_ids_lists
+      return true if !params[:taxon_concept] || !params[:taxon_concept][:name_status]
+      ids_list_key = case params[:taxon_concept][:name_status]
+        when 'S' then :accepted_names_ids
+        when 'T' then :accepted_names_for_trade_name_ids
+        when 'H' then :hybrid_parents_ids
+        else nil
+      end
+      if ids_list_key &&
+        params[:taxon_concept].has_key?(ids_list_key) &&
+        (stringified_ids_list = params[:taxon_concept][ids_list_key]) &&
+        stringified_ids_list.is_a?(String)
+        params[:taxon_concept][ids_list_key] = stringified_ids_list.split(',')
+      end
     end
 end

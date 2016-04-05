@@ -17,15 +17,7 @@
         <%= ff.hidden_field :new_name_status %>
       </div>
     </div>
+    <%= render 'admin/nomenclature_changes/build/new_rank', ff: ff, f: f %>
     <%= render 'admin/nomenclature_changes/build/new_parent', :ff => ff %>
-    <div class="control-group">
-      <label class="control-label">Rank</label>
-      <div class="controls">
-        <%= ff.select :new_rank_id,
-          options_from_collection_for_select(@ranks, :id, :name, ff.object.new_rank_id || f.object.new_output_rank.id),
-          { class: 'new-rank' }
-        %>
-      </div>
-    </div>
   <% end %>
 <% end %>

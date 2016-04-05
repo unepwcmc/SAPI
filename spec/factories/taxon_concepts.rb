@@ -7,9 +7,8 @@ FactoryGirl.define do
     name_status 'A'
     data {}
     listing {}
-    parent_scientific_name ''
     before(:create){ |tc|
-      if tc.parent.nil? && tc.name_status == 'A' && tc.rank.try(:name) != 'KINGDOM'
+      if tc.parent.nil? && ['A', 'N'].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM'
         tc.parent = create(
           :taxon_concept,
           taxonomy: tc.taxonomy,

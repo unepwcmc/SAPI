@@ -43,7 +43,7 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
         put :update, nomenclature_change_status_to_accepted: {
           primary_output_attributes: {
             taxon_concept_id: create_cites_eu_species(
-              name_status: 'N',
+              name_status: 'T',
               taxon_name: create(:taxon_name, scientific_name: 'Patagonus miserabilis')
             ).id,
             new_parent_id: create_cites_eu_genus(
