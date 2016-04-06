@@ -508,20 +508,6 @@ class TaxonConcept < ActiveRecord::Base
     true
   end
 
-  def self.find_by_full_name_and_name_status(full_name, name_status, taxonomy_id=nil)
-    full_name = TaxonConcept.sanitize_full_name(full_name)
-    res = TaxonConcept.
-      where([
-        "UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = ?",
-        full_name,
-        name_status
-      ])
-    if taxonomy_id
-      res = res.where(:taxonomy_id => taxonomy_id)
-    end
-    res.first
-  end
-
   def ensure_taxonomic_position
     if new_record? && fixed_order_required? && taxonomic_position.blank?
       prev_taxonomic_position =
