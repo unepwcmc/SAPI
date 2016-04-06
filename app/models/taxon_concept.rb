@@ -341,7 +341,7 @@ class TaxonConcept < ActiveRecord::Base
         ' var. '
       else
         ' '
-      end + self.taxon_name.try(:scientific_name).try(:downcase)
+      end + (self.taxon_name.try(:scientific_name).try(:downcase) || '')
     else
       self.full_name
     end
