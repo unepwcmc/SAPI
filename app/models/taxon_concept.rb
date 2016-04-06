@@ -174,11 +174,6 @@ class TaxonConcept < ActiveRecord::Base
   validate :parent_in_same_taxonomy, :if => lambda { |tc| tc.parent }
   validate :parent_at_immediately_higher_rank,
     :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
-  validate :parent_name_compatible, :if => lambda { |tc|
-    tc.parent && tc.rank && tc.full_name && (
-      tc.name_status == 'A' || tc.name_status.blank?
-    )
-  }
   validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
   validate :maximum_2_hybrid_parents,
     :if => lambda { |tc| tc.name_status == 'H' }
@@ -485,15 +480,6 @@ class TaxonConcept < ActiveRecord::Base
   def taxonomy_can_be_changed
     if !can_be_deleted?
       errors.add(:taxonomy_id, "dependent objects present, unable to change taxonomy")
-      return false
-    end
-  end
-
-  def parent_name_compatible
-    self.full_name = TaxonConcept.sanitize_full_name(full_name)
-    if Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(rank.name) &&
-      full_name != expected_full_name(parent)
-      errors.add(:parent_id, "must have compatible name if rank is species, subspecies or variety")
       return false
     end
   end
