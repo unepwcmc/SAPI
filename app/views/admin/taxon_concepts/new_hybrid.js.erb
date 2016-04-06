@@ -1,4 +1,6 @@
-$('#admin-new-taxon_concept_hybrid-form').html(
-  "<%= escape_javascript(render('hybrid_form')) %>");
+var form = $("<%= escape_javascript(render('hybrid_form')) %>");
+form.find('.tags').select2();
+
+$('#admin-new-taxon_concept_hybrid-form').html(form);
 $('#new-taxon_concept_hybrid').modal('show');
 window.adminEditor.initSelect2Inputs();
