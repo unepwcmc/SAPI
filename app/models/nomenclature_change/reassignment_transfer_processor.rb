@@ -81,15 +81,17 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
   end
 
   def transfer_distribution_taggings(reassigned_object, reassignable)
-    return if reassignable.taggings.count == 0
-    taggings_to_transfer = reassignable.taggings
-    if reassigned_object.taggings.count > 0
-      taggings_to_transfer = taggings_to_transfer.
-      where(
-        'tag_id NOT IN (?)',
-        reassigned_object.taggings.select(:tag_id).map(&:tag_id)
-      )
+    if reassignable.taggings.count == 0
+      reassigned_object.taggings.destroy_all if reassigned_object.taggings.count > 0
+      return
+    elsif reassigned_object.taggings.count == 0
+      return
     end
+    taggings_to_transfer = reassignable.taggings.
+    where(
+      'tag_id NOT IN (?)',
+      reassigned_object.taggings.select(:tag_id).map(&:tag_id)
+    )
     taggings_to_transfer.update_all(taggable_id: reassigned_object.id)
   end
 
