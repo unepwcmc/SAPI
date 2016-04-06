@@ -448,7 +448,6 @@ describe Trade::Shipment do
           create(
             :shipment,
             :taxon_concept => @taxon_concept,
-            :taxon_concept => @taxon_concept,
             :source => @wild
           )
         }
