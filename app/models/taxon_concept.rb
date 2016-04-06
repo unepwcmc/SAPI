@@ -180,6 +180,7 @@ class TaxonConcept < ActiveRecord::Base
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
   validates :full_name, :uniqueness => { :scope => [:taxonomy_id, :author_year] }
+  validate :full_name_cannot_be_changed, on: :update
   validates :taxonomic_position,
     :presence => true,
     :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },
@@ -530,6 +531,14 @@ class TaxonConcept < ActiveRecord::Base
       prev_taxonomic_position_parts = prev_taxonomic_position.split('.')
       prev_taxonomic_position_parts << (prev_taxonomic_position_parts.pop || 0).to_i + 1
       self.taxonomic_position = prev_taxonomic_position_parts.join('.')
+    end
+    true
+  end
+
+  def full_name_cannot_be_changed
+    if full_name != full_name_was
+      errors.add(:full_name, "cannot be changed")
+      return false
     end
     true
   end
