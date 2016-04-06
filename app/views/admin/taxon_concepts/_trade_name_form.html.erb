@@ -1,12 +1,12 @@
-<%= form_for [:admin, @trade_name], :remote => true, :namespace => 'trade_name' do |f| %>
-  <%= error_messages_for(@trade_name) %>
-  <%= f.hidden_field :name_status %>
+<%= form_for [:admin, @taxon_concept], :remote => true, :namespace => 'trade_name' do |f| %>
+  <%= error_messages_for(@taxon_concept) %>
+  <%= f.hidden_field :name_status, value: 'T' %>
 
   <div class="control-group">
     <label>Taxonomy</label>
     <%= f.select :taxonomy_id,
       options_from_collection_for_select(
-        @taxonomies, :id, :name, @trade_name && @trade_name.taxonomy_id
+        @taxonomies, :id, :name, @taxon_concept && @taxon_concept.taxonomy_id
       ),
       {},
       {class: 'taxonomy-selector'}
@@ -16,7 +16,7 @@
     <label>Rank</label>
     <%= f.select :rank_id,
       options_from_collection_for_select(
-        @ranks, :id, :name, @trade_name && @trade_name.rank_id
+        @ranks, :id, :name, @taxon_concept && @taxon_concept.rank_id
       ),
       {},
       {class: 'rank-selector'}
@@ -29,7 +29,7 @@
         class: 'taxon-concept-multiple',
         :'data-name-status-filter' => ['A'].to_json,
         :'data-name-status' => 'A',
-        :'data-name' => TaxonConcept.where(id: @trade_name.accepted_names_for_trade_name_ids).pluck(:full_name).to_s
+        :'data-name' => TaxonConcept.where(id: @taxon_concept.accepted_names_for_trade_name_ids).pluck(:full_name).to_s
       } %>
     </div>
   </div>
