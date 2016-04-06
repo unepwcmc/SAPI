@@ -30,7 +30,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
       load_search
-      format.js { render 'new' }
+      format.js { render_new_by_name_status }
     end
   end
 
@@ -39,20 +39,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
       @taxonomies = Taxonomy.order(:name)
       @ranks = Rank.order(:taxonomic_position)
       success.js { render('create') }
-      failure.js {
-        if @taxon_concept.is_synonym?
-          @synonym = @taxon_concept
-          render('new_synonym')
-        elsif @taxon_concept.is_hybrid?
-          @hybrid = @taxon_concept
-          render('new_hybrid')
-        elsif @taxon_concept.name_status == 'N'
-          @n_name = @taxon_concept
-          render('new_n_name')
-        else
-          render('new')
-        end
-      }
+      failure.js { render_new_by_name_status }
     end
   end
 
@@ -68,7 +55,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         @taxonomies = Taxonomy.order(:name)
         @ranks = Rank.order(:taxonomic_position)
         load_tags
-        render 'new'
+        render_new_by_name_status
       }
       success.html {
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
@@ -132,4 +119,23 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         params[:taxon_concept][ids_list_key] = stringified_ids_list.split(',')
       end
     end
+
+    def render_new_by_name_status
+      if @taxon_concept.is_synonym?
+        @synonym = @taxon_concept
+        render('new_synonym')
+      elsif @taxon_concept.is_hybrid?
+        @hybrid = @taxon_concept
+        render('new_hybrid')
+      elsif @taxon_concept.is_trade_name?
+        @trade_name = @taxon_concept
+        render('new_trade_name')
+      elsif @taxon_concept.name_status == 'N'
+        @n_name = @taxon_concept
+        render('new_n_name')
+      else
+        render('new')
+      end
+    end
+
 end

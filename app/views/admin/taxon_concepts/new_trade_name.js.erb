@@ -1,0 +1,4 @@
+$('#admin-new-taxon_concept_trade_name-form').html(
+  "<%= escape_javascript(render('trade_name_form')) %>");
+$('#new-taxon_concept_trade_name').modal('show');
+window.adminEditor.initSelect2Inputs();
