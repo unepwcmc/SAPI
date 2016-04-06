@@ -189,7 +189,6 @@ class TaxonConcept < ActiveRecord::Base
     tc.taxonomy && tc.taxonomy_id_changed?
   }
 
-  before_validation :set_full_name
   before_validation :ensure_taxonomic_position
 
   translates :nomenclature_note
@@ -257,29 +256,6 @@ class TaxonConcept < ActiveRecord::Base
 
   def scientific_name
     taxon_name.try(:scientific_name)
-  end
-
-  def set_full_name
-    self.full_name = current_full_name
-  end
-
-  def current_full_name
-    if self.rank && self.parent && ['A', 'N'].include?(self.name_status)
-      rank_name = self.rank.name
-      parent_full_name = self.parent.full_name
-      name = self.scientific_name
-      if name.blank?
-        nil
-      elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
-         "#{parent_full_name} #{name.downcase}"
-      elsif rank_name == Rank::VARIETY
-        "#{parent_full_name} var. #{name.downcase}"
-      else
-        name
-      end
-    else
-      self.scientific_name
-    end
   end
 
   def has_comments?

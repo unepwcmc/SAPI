@@ -1,5 +1,26 @@
 class TaxonConceptObserver < ActiveRecord::Observer
 
+  def before_validation(taxon_concept)
+    taxon_concept.full_name = if taxon_concept.rank &&
+      taxon_concept.parent &&
+      ['A', 'N'].include?(taxon_concept.name_status)
+      rank_name = taxon_concept.rank.name
+      parent_full_name = taxon_concept.parent.full_name
+      name = taxon_concept.scientific_name
+      if name.blank?
+        nil
+      elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
+         "#{parent_full_name} #{name.downcase}"
+      elsif rank_name == Rank::VARIETY
+        "#{parent_full_name} var. #{name.downcase}"
+      else
+        name
+      end
+    else
+      taxon_concept.full_name || taxon_concept.scientific_name
+    end
+  end
+
   def after_create(taxon_concept)
     ensure_species_touched(taxon_concept)
     Species::Search.increment_cache_iterator
