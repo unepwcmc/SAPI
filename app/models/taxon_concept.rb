@@ -389,7 +389,7 @@ class TaxonConcept < ActiveRecord::Base
       taxon_concept.taxon_relationships.
         where('other_taxon_concept_id = ? AND
               taxon_relationship_type_id = ?', id, rel_type.id).
-        destroy
+        destroy_all
     end
 
     new_taxa.each do |taxon_concept|
