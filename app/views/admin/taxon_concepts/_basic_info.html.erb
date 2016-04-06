@@ -30,7 +30,8 @@
         <% @taxon_concept.inverse_synonym_relationships.includes(:taxon_concept).each do |rel| %>
           <li>
             <%= link_to rel.taxon_concept.try(:full_name),
-              params.merge(:taxon_concept_id => rel.taxon_concept_id) %>
+              admin_taxon_concept_names_url(taxon_concept_id: rel.taxon_concept_id)
+            %>
             <% if can? :destroy, rel %>
               <%= link_to delete_icon,
                 admin_taxon_concept_synonym_relationship_url(rel.taxon_concept, rel),
@@ -48,7 +49,8 @@
         <% @taxon_concept.inverse_hybrid_relationships.includes(:taxon_concept).each do |rel| %>
           <li>
             <%= link_to rel.taxon_concept.try(:full_name),
-              params.merge(:taxon_concept_id => rel.taxon_concept_id) %>
+              admin_taxon_concept_names_url(taxon_concept_id: rel.taxon_concept_id)
+            %>
             <% if can? :destroy, rel %>
               <%= link_to delete_icon,
                 admin_taxon_concept_hybrid_relationship_url(rel.taxon_concept, rel),
@@ -66,7 +68,8 @@
         <% @taxon_concept.inverse_trade_name_relationships.includes(:taxon_concept).each do |rel| %>
           <li>
             <%= link_to rel.taxon_concept.try(:full_name),
-              params.merge(:taxon_concept_id => rel.taxon_concept_id) %>
+              admin_taxon_concept_names_url(taxon_concept_id: rel.taxon_concept_id)
+            %>
             <% if can? :destroy, rel %>
               <%= link_to delete_icon,
                 admin_taxon_concept_trade_name_relationship_url(rel.taxon_concept, rel),
