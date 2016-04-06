@@ -81,7 +81,18 @@
   <%= ancestors_path(@taxon_concept) %>
 </div>
 
-<%= admin_new_taxon_concept_modal(:title => 'Edit Taxon Concept') %>
+<% case @taxon_concept.name_status %>
+<% when 'A' %>
+  <%= admin_new_taxon_concept_modal(:title => 'Edit Taxon Concept') %>
+<% when 'N' %>
+  <%= admin_new_n_name_modal(:title => 'Edit Taxon Concept') %>
+<% when 'S' %>
+  <%= admin_new_synonym_modal(:title => 'Edit Taxon Concept') %>
+<% when 'T' %>
+  <%= admin_new_trade_name_modal(:title => 'Edit Taxon Concept') %>
+<% when 'H' %>
+  <%= admin_new_hybrid_modal(:title => 'Edit Taxon Concept') %>
+<% end %>
 <% unless @taxon_concept.is_synonym? || @taxon_concept.is_hybrid? || @taxon_concept.is_trade_name? %>
 <ul id="taxon-concept-tabs" class="nav nav-tabs">
 
