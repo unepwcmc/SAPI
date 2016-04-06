@@ -8,14 +8,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   before_filter :split_stringified_ids_lists, only: [:create, :update]
 
   def index
-    @taxon_concept = TaxonConcept.new(name_status: 'A')
-    @taxon_concept.build_taxon_name
-    @synonym = TaxonConcept.new(name_status: 'S')
-    @synonym.build_taxon_name
-    @hybrid = TaxonConcept.new(name_status: 'H')
-    @hybrid.build_taxon_name
-    @n_name = TaxonConcept.new(name_status: 'N')
-    @n_name.build_taxon_name
+    @taxon_concept = TaxonConcept.new
     @taxon_concepts = TaxonConceptMatcher.new(@search_params).taxon_concepts.
       includes([:rank, :taxonomy, :taxon_name, :parent]).
       order("taxon_concepts.taxonomic_position").page(params[:page])
@@ -124,16 +117,12 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
 
     def render_new_by_name_status
       if @taxon_concept.is_synonym?
-        @synonym = @taxon_concept
         render('new_synonym')
       elsif @taxon_concept.is_hybrid?
-        @hybrid = @taxon_concept
         render('new_hybrid')
       elsif @taxon_concept.is_trade_name?
-        @trade_name = @taxon_concept
         render('new_trade_name')
       elsif @taxon_concept.name_status == 'N'
-        @n_name = @taxon_concept
         render('new_n_name')
       else
         render('new')
