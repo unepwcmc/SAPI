@@ -179,7 +179,7 @@ class TaxonConcept < ActiveRecord::Base
       tc.name_status == 'A' || tc.name_status.blank?
     )
   }
-  validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent }
+  validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
   validate :maximum_2_hybrid_parents,
     :if => lambda { |tc| tc.name_status == 'H' }
   validates :taxon_name_id, :presence => true,
