@@ -68,39 +68,44 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_synonym_modal(nested = false)
+  def admin_new_synonym_modal(options = {})
+    nested = options[:nested] || false
     admin_new_modal(
       resource: 'taxon_concept_synonym',
-      title: 'Add new Synonym'
+      title: options[:title] || nil
     ){ nested ? '' : render('synonym_form') }
   end
 
-  def admin_new_trade_name_modal(nested = false)
+  def admin_new_trade_name_modal(options = {})
+    nested = options[:nested] || false
     admin_new_modal(
-      :resource => 'taxon_concept_trade_name',
-      :title => 'Add new Trade name'
+      resource: 'taxon_concept_trade_name',
+      title: options[:title] || nil
     ){ nested ? '' : render('trade_name_form') }
   end
 
-  def admin_new_hybrid_modal(nested = false)
+  def admin_new_hybrid_modal(options = {})
+    nested = options[:nested] || false
     admin_new_modal(
-      :resource => 'taxon_concept_hybrid',
-      :title => 'Add new Hybrid'
+      resource: 'taxon_concept_hybrid',
+      title: options[:title] || nil
     ){ nested ? '' : render('hybrid_form') }
   end
 
-  def admin_new_n_name_modal
+  def admin_new_n_name_modal(options = {})
+    nested = options[:nested] || false
     admin_new_modal(
       resource: 'taxon_concept_n_name',
-      title: 'Add new N name'
-    ){ render('n_name_form') }
+      title: options[:title] || nil
+    ){ nested ? '' : render('n_name_form') }
   end
 
-  def admin_new_taxon_concept_modal options= {}
+  def admin_new_taxon_concept_modal(options = {})
+    nested = options[:nested] || false
     admin_new_modal(
-      :resource => 'taxon_concept',
-      :title => options[:title] || nil
-    ){ '' }
+      resource: 'taxon_concept',
+      title: options[:title] || nil
+    ){ nested ? '' : render('form') }
   end
 
   def admin_add_new_distribution_button
