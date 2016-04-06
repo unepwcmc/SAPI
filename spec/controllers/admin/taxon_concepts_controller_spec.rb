@@ -40,7 +40,7 @@ describe Admin::TaxonConceptsController do
           name_status: 'A',
           taxonomy_id: cites_eu.id,
           rank_id: create(:rank, name: Rank::GENUS),
-          full_name: 'Canis',
+          scientific_name: 'Canis',
           parent_id: create_cites_eu_family,
         }
       response.should render_template("create")

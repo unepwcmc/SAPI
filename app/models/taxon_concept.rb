@@ -44,7 +44,7 @@ class TaxonConcept < ActiveRecord::Base
 
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
-    :legacy_id, :legacy_type, :full_name, :name_status,
+    :legacy_id, :legacy_type, :scientific_name, :name_status,
     :tag_list, :legacy_trade_code, :hybrid_parents_ids,
     :accepted_names_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
@@ -193,9 +193,7 @@ class TaxonConcept < ActiveRecord::Base
     tc.taxonomy && tc.taxonomy_id_changed?
   }
 
-  before_validation :check_taxon_name_exists,
-    :if => lambda { |tc| tc.full_name }
-
+  before_validation :set_full_name
   before_validation :ensure_taxonomic_position
 
   translates :nomenclature_note
@@ -243,6 +241,48 @@ class TaxonConcept < ActiveRecord::Base
           ORDER BY tc.id
         SQL
       ).map{ |row| row['full_name']}
+    end
+  end
+
+  def scientific_name=(str)
+    scientific_name = if ['A', 'N'].include?(name_status)
+      TaxonName.sanitize_scientific_name(str)
+    else
+      str
+    end
+    tn = TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
+    if tn
+      self.taxon_name = tn
+      self.taxon_name_id = tn.id
+    else
+      self.build_taxon_name(scientific_name: scientific_name)
+    end
+  end
+
+  def scientific_name
+    taxon_name.try(:scientific_name)
+  end
+
+  def set_full_name
+    self.full_name = current_full_name
+  end
+
+  def current_full_name
+    if self.rank && self.parent && ['A', 'N'].include?(self.name_status)
+      rank_name = self.rank.name
+      parent_full_name = self.parent.full_name
+      name = self.scientific_name
+      if name.blank?
+        nil
+      elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
+         "#{parent_full_name} #{name.downcase}"
+      elsif rank_name == Rank::VARIETY
+        "#{parent_full_name} var. #{name.downcase}"
+      else
+        name
+      end
+    else
+      self.scientific_name
     end
   end
 
@@ -486,25 +526,6 @@ class TaxonConcept < ActiveRecord::Base
       errors.add(:hybrid_parents_ids, "maximum 2 hybrid parents")
       return false
     end
-    true
-  end
-
-  def check_taxon_name_exists
-    self.full_name = TaxonConcept.sanitize_full_name(full_name)
-    scientific_name = if is_accepted_name?
-      TaxonName.sanitize_scientific_name(self.full_name)
-    else
-      full_name
-    end
-
-    tn = taxon_name && TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
-    if tn
-      self.taxon_name = tn
-      self.taxon_name_id = tn.id
-    else
-      self.build_taxon_name(:scientific_name => scientific_name)
-    end
-
     true
   end
 

@@ -209,7 +209,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       before(:each) do
         @synonym = create_cites_eu_species(
           :name_status => 'S',
-          :full_name => 'Acipenser stenorrhynchus'
+          scientific_name: 'Acipenser stenorrhynchus'
         )
         create(:taxon_relationship,
           :taxon_relationship_type_id => synonym_relationship_type.id,
