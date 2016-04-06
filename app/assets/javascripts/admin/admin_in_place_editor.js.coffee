@@ -18,12 +18,6 @@ $(document).ready ->
 
 class AdminEditor
   init: () ->
-    $('.modal .modal-footer .save-button').click () ->
-      $(@).closest('.modal').find('form').submit()
-    $('.modal').on 'hidden', () =>
-      $('.modal.hide.fade').each((idx, element) =>
-        @clearModalForm($(element))
-      )
     @initModals()
     @initSearchTypeahead()
     $("[rel='tooltip']").tooltip()
@@ -39,6 +33,12 @@ class AdminEditor
       autoclose: true
 
   initModals: () ->
+    $('.modal .modal-footer .save-button').click () ->
+      $(@).closest('.modal').find('form').submit()
+    $('.modal').on 'hidden', () =>
+      $('.modal.hide.fade').each((idx, element) =>
+        @clearModalForm($(element))
+      )
     $(@).find('.alert').remove()
 
   alertSuccess: (txt) ->
@@ -115,7 +115,6 @@ class AdminEditor
     $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
     $('.taxon-concept-multiple').select2($.extend({}, window.defaultTaxonSelect2Options,window.multiTaxonSelect2Options))
     $('.taxon-concept-multiple-max-2').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options, window.max2Select2Options))
-
 
 class AdminInPlaceEditor extends AdminEditor
   init: () ->

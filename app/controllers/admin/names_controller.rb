@@ -18,4 +18,5 @@ class Admin::NamesController < Admin::SimpleCrudController
     @hybrid_relationships = @taxon_concept.hybrid_relationships.
       includes(:other_taxon_concept).order('taxon_concepts.full_name')
   end
+
 end
