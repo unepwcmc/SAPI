@@ -18,6 +18,8 @@ class Distribution < ActiveRecord::Base
     :references_attributes, :internal_notes, :created_by_id, :updated_by_id
   acts_as_taggable
 
+  normalise_blank_values
+
   belongs_to :geo_entity
   belongs_to :taxon_concept
   has_many :distribution_references, :dependent => :destroy
