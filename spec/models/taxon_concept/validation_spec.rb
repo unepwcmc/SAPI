@@ -104,8 +104,81 @@ describe TaxonConcept do
     end
   end
   context "update" do
-    let(:tc){ create_cites_eu_species }
-    let!(:tc_child) { create_cites_eu_subspecies(parent_id: tc.id) }
-    specify { tc.taxonomy = cms; tc.should have(1).error_on(:taxonomy_id) }
+    let(:family) do
+      create_cites_eu_family(
+        taxon_name: create(:taxon_name, scientific_name: 'Felidae')
+      )
+    end
+    let(:genus) do
+      create_cites_eu_genus(
+        parent: family,
+        taxon_name: create(:taxon_name, scientific_name: 'Lynx')
+      )
+    end
+    let(:species) do
+      create_cites_eu_species(
+        parent: genus,
+        taxon_name: create(:taxon_name, scientific_name: 'Domesticus')
+      )
+    end
+    let(:s_species) do
+      create_cites_eu_species(
+        parent: genus,
+        taxon_name: create(:taxon_name, scientific_name: 'Felis domesticus'),
+        name_status: 'S'
+      )
+    end
+    context "taxonomy" do
+      let!(:species_child) { create_cites_eu_subspecies(parent_id: species.id) }
+      specify "cannot change taxonomy when dependents present" do
+        species.taxonomy = cms
+        expect(species).to have(1).error_on(:taxonomy_id)
+      end
+    end
+    context "scientific name" do
+      specify "cannot change species scientific name" do
+        species.scientific_name = 'Vulgaris'
+        expect(species).to have(1).error_on(:full_name)
+      end
+      specify "cannot change genus scientific name" do
+        genus.scientific_name = 'Felis'
+        expect(genus).to have(1).error_on(:full_name)
+      end
+    end
+    context "parent" do
+      let(:new_family) do
+        create_cites_eu_family(
+          taxon_name: create(:taxon_name, scientific_name: 'Canidae')
+        )
+      end
+      let(:new_genus) do
+        create_cites_eu_genus(
+          parent: new_family,
+          taxon_name: create(:taxon_name, scientific_name: 'Felis')
+        )
+      end
+      specify "cannot change A species parent" do
+        species.parent = new_genus
+        expect(species).to have(1).error_on(:full_name)
+      end
+      specify "can change S species parent" do
+        s_species.parent = new_genus
+        expect(s_species).to have(0).error_on(:full_name)
+      end
+      specify "can change A genus parent" do
+        genus.parent = new_family
+        expect(genus).to have(0).error_on(:full_name)
+      end
+    end
+    context "rank" do
+      specify "cannot change A species rank" do
+        species.rank = create(:rank, name: 'GENUS')
+        expect(species).to have(1).error_on(:full_name)
+      end
+      specify "can change S species rank" do
+        s_species.rank = create(:rank, name: 'GENUS')
+        expect(s_species).to have(0).error_on(:full_name)
+      end
+    end
   end
 end
