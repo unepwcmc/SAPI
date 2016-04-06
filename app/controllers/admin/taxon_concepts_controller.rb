@@ -2,12 +2,12 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   respond_to :json
   layout :determine_layout
   before_filter :sanitize_search_params, :only => [:index, :autocomplete]
-  before_filter :load_tags, :only => [:index, :edit, :create]
+  before_filter :load_taxonomies, only: [:index, :edit]
+  before_filter :load_ranks, only: [:index, :edit]
+  before_filter :load_tags, :only => [:index, :edit]
   before_filter :split_stringified_ids_lists, only: [:create, :update]
 
   def index
-    @taxonomies = Taxonomy.order(:name)
-    @ranks = Rank.order(:taxonomic_position)
     @taxon_concept = TaxonConcept.new(name_status: 'A')
     @taxon_concept.build_taxon_name
     @synonym = TaxonConcept.new(name_status: 'S')
@@ -27,7 +27,6 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   end
 
   def edit
-    @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
       load_search
       format.js { render_new_by_name_status }
@@ -36,10 +35,13 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
 
   def create
     create! do |success, failure|
-      @taxonomies = Taxonomy.order(:name)
-      @ranks = Rank.order(:taxonomic_position)
       success.js { render('create') }
-      failure.js { render_new_by_name_status }
+      failure.js {
+        load_taxonomies
+        load_ranks
+        load_tags
+        render_new_by_name_status
+      }
     end
   end
 
@@ -52,8 +54,8 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         render 'update'
       }
       failure.js {
-        @taxonomies = Taxonomy.order(:name)
-        @ranks = Rank.order(:taxonomic_position)
+        load_taxonomies
+        load_ranks
         load_tags
         render_new_by_name_status
       }
@@ -63,8 +65,8 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
           :notice => 'Operation successful'
       }
       failure.html {
-        @taxonomies = Taxonomy.order(:name)
-        @ranks = Rank.order(:taxonomic_position)
+        load_taxonomies
+        load_ranks
         load_tags
         render 'edit'
       }
