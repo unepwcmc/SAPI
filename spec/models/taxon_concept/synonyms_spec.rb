@@ -74,7 +74,7 @@ describe TaxonConcept do
           :parent_id => tc.id,
           :name_status => 'S',
           :author_year => 'Taxonomus 2013',
-          :full_name => 'Lolcatus lolus furiatus'
+          scientific_name: 'Lolcatus lolus furiatus'
         )
         create(
           :taxon_relationship,

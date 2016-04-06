@@ -33,7 +33,7 @@ shared_context "Boa constrictor" do
       :parent => @species
     )
     @synonym = create_cites_eu_species(
-      :full_name => 'Constrictor constrictor',
+      scientific_name: 'Constrictor constrictor',
       :name_status => 'S'
     )
     create(

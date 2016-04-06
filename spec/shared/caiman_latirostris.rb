@@ -45,7 +45,7 @@ shared_context "Caiman latirostris" do
       ]
     )
     @species1 = create_cites_eu_species(
-      :full_name => 'Alligator cynocephalus',
+      scientific_name: 'Alligator cynocephalus',
       :name_status => 'S'
     )
 
