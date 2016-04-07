@@ -19,7 +19,7 @@ describe NomenclatureChange::ReassignmentCopyProcessor do
     end
     context "when distribution" do
       include_context 'distribution_reassignments_processor_examples'
-      specify{ expect(input_species.distributions.count).to eq(2) }
+      specify{ expect(input_species.distributions.count).to eq(4) }
     end
     context "when legislation" do
       include_context 'legislation_reassignments_processor_examples'

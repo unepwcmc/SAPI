@@ -66,11 +66,23 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
       }).first || copied_object.distribution_references.build(distr_ref.comparison_attributes)
     end
     # taggings
+    copy_distribution_taggings(reassignable, copied_object)
+    end
+  end
+
+  def copy_distribution_taggings(reassignable, copied_object)
+    if reassignable.taggings.count == 0
+      copied_object.taggings.destroy_all if copied_object.taggings.count > 0
+      return
+    elsif copied_object.taggings.count == 0
+      return
+    end
+
     reassignable.taggings.each do |tagging|
       !copied_object.new_record? && tagging.duplicates({
         taggable_id: copied_object.id
       }).first || copied_object.taggings.build(tagging.comparison_attributes)
-    end
+
   end
 
   def build_listing_change_associations(reassignable, copied_object)
