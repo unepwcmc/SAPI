@@ -179,7 +179,7 @@ class TaxonConcept < ActiveRecord::Base
       tc.name_status == 'A' || tc.name_status.blank?
     )
   }
-  validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent }
+  validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
   validate :maximum_2_hybrid_parents,
     :if => lambda { |tc| tc.name_status == 'H' }
   validates :taxon_name_id, :presence => true,
@@ -341,7 +341,7 @@ class TaxonConcept < ActiveRecord::Base
         ' var. '
       else
         ' '
-      end + self.taxon_name.try(:scientific_name).try(:downcase)
+      end + (self.taxon_name.try(:scientific_name).try(:downcase) || '')
     else
       self.full_name
     end
@@ -389,7 +389,7 @@ class TaxonConcept < ActiveRecord::Base
       taxon_concept.taxon_relationships.
         where('other_taxon_concept_id = ? AND
               taxon_relationship_type_id = ?', id, rel_type.id).
-        destroy
+        destroy_all
     end
 
     new_taxa.each do |taxon_concept|
@@ -506,20 +506,6 @@ class TaxonConcept < ActiveRecord::Base
     end
 
     true
-  end
-
-  def self.find_by_full_name_and_name_status(full_name, name_status, taxonomy_id=nil)
-    full_name = TaxonConcept.sanitize_full_name(full_name)
-    res = TaxonConcept.
-      where([
-        "UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = ?",
-        full_name,
-        name_status
-      ])
-    if taxonomy_id
-      res = res.where(:taxonomy_id => taxonomy_id)
-    end
-    res.first
   end
 
   def ensure_taxonomic_position

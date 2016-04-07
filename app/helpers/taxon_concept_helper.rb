@@ -68,18 +68,44 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_synonym_modal(nested = false)
+  def admin_new_synonym_modal(options = {})
+    nested = options[:nested] || false
     admin_new_modal(
       resource: 'taxon_concept_synonym',
-      title: 'Add new Synonym'
+      title: options[:title] || nil
     ){ nested ? '' : render('synonym_form') }
   end
 
-  def admin_new_trade_name_modal
+  def admin_new_trade_name_modal(options = {})
+    nested = options[:nested] || false
     admin_new_modal(
-      :resource => 'taxon_concept_trade_name',
-      :title => 'Add new Trade name'
-    ){ '' }
+      resource: 'taxon_concept_trade_name',
+      title: options[:title] || nil
+    ){ nested ? '' : render('trade_name_form') }
+  end
+
+  def admin_new_hybrid_modal(options = {})
+    nested = options[:nested] || false
+    admin_new_modal(
+      resource: 'taxon_concept_hybrid',
+      title: options[:title] || nil
+    ){ nested ? '' : render('hybrid_form') }
+  end
+
+  def admin_new_n_name_modal(options = {})
+    nested = options[:nested] || false
+    admin_new_modal(
+      resource: 'taxon_concept_n_name',
+      title: options[:title] || nil
+    ){ nested ? '' : render('n_name_form') }
+  end
+
+  def admin_new_taxon_concept_modal(options = {})
+    nested = options[:nested] || false
+    admin_new_modal(
+      resource: 'taxon_concept',
+      title: options[:title] || nil
+    ){ nested ? '' : render('form') }
   end
 
   def admin_add_new_distribution_button
@@ -119,20 +145,6 @@ module TaxonConceptHelper
     ){ nested ? '' : render('admin/distributions/form') }
   end
 
-  def admin_new_hybrid_modal(nested = false)
-    admin_new_modal(
-      :resource => 'taxon_concept_hybrid',
-      :title => 'Add new Hybrid'
-    ){ nested ? '' : render('hybrid_form') }
-  end
-
-  def admin_new_n_name_modal
-    admin_new_modal(
-      resource: 'taxon_concept_n_name',
-      title: 'Add new N name'
-    ){ render('n_name_form') }
-  end
-
   def admin_add_new_reference_button
     admin_add_new_button(
       :resource => 'taxon_concept_reference',
@@ -149,13 +161,6 @@ module TaxonConceptHelper
       :resource => 'taxon_concept_reference',
       :save_and_reopen => true
     )
-  end
-
-  def admin_new_taxon_concept_modal options= {}
-    admin_new_modal(
-      :resource => 'taxon_concept',
-      :title => options[:title] || nil
-    ){ '' }
   end
 
   def admin_new_cites_suspension_modal

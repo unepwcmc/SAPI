@@ -2,20 +2,13 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   respond_to :json
   layout :determine_layout
   before_filter :sanitize_search_params, :only => [:index, :autocomplete]
-  before_filter :load_tags, :only => [:index, :edit, :create]
+  before_filter :load_taxonomies, only: [:index, :edit]
+  before_filter :load_ranks, only: [:index, :edit]
+  before_filter :load_tags, :only => [:index, :edit]
   before_filter :split_stringified_ids_lists, only: [:create, :update]
 
   def index
-    @taxonomies = Taxonomy.order(:name)
-    @ranks = Rank.order(:taxonomic_position)
-    @taxon_concept = TaxonConcept.new(name_status: 'A')
-    @taxon_concept.build_taxon_name
-    @synonym = TaxonConcept.new(name_status: 'S')
-    @synonym.build_taxon_name
-    @hybrid = TaxonConcept.new(name_status: 'H')
-    @hybrid.build_taxon_name
-    @n_name = TaxonConcept.new(name_status: 'N')
-    @n_name.build_taxon_name
+    @taxon_concept = TaxonConcept.new
     @taxon_concepts = TaxonConceptMatcher.new(@search_params).taxon_concepts.
       includes([:rank, :taxonomy, :taxon_name, :parent]).
       order("taxon_concepts.taxonomic_position").page(params[:page])
@@ -27,31 +20,20 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   end
 
   def edit
-    @ranks = Rank.order(:taxonomic_position)
     edit! do |format|
       load_search
-      format.js { render 'new' }
+      format.js { render_new_by_name_status }
     end
   end
 
   def create
     create! do |success, failure|
-      @taxonomies = Taxonomy.order(:name)
-      @ranks = Rank.order(:taxonomic_position)
       success.js { render('create') }
       failure.js {
-        if @taxon_concept.is_synonym?
-          @synonym = @taxon_concept
-          render('new_synonym')
-        elsif @taxon_concept.is_hybrid?
-          @hybrid = @taxon_concept
-          render('new_hybrid')
-        elsif @taxon_concept.name_status == 'N'
-          @n_name = @taxon_concept
-          render('new_n_name')
-        else
-          render('new')
-        end
+        load_taxonomies
+        load_ranks
+        load_tags
+        render_new_by_name_status
       }
     end
   end
@@ -65,10 +47,10 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         render 'update'
       }
       failure.js {
-        @taxonomies = Taxonomy.order(:name)
-        @ranks = Rank.order(:taxonomic_position)
+        load_taxonomies
+        load_ranks
         load_tags
-        render 'new'
+        render_new_by_name_status
       }
       success.html {
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
@@ -76,8 +58,8 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
           :notice => 'Operation successful'
       }
       failure.html {
-        @taxonomies = Taxonomy.order(:name)
-        @ranks = Rank.order(:taxonomic_position)
+        load_taxonomies
+        load_ranks
         load_tags
         render 'edit'
       }
@@ -129,7 +111,22 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
         params[:taxon_concept].has_key?(ids_list_key) &&
         (stringified_ids_list = params[:taxon_concept][ids_list_key]) &&
         stringified_ids_list.is_a?(String)
-        params[:taxon_concept][ids_list_key] = stringified_ids_list.split(',')
+        params[:taxon_concept][ids_list_key] = stringified_ids_list.split(',').map(&:to_i)
       end
     end
+
+    def render_new_by_name_status
+      if @taxon_concept.is_synonym?
+        render('new_synonym')
+      elsif @taxon_concept.is_hybrid?
+        render('new_hybrid')
+      elsif @taxon_concept.is_trade_name?
+        render('new_trade_name')
+      elsif @taxon_concept.name_status == 'N'
+        render('new_n_name')
+      else
+        render('new')
+      end
+    end
+
 end

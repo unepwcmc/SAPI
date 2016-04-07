@@ -1,6 +1,6 @@
-<%= form_for [:admin, @taxon_concept], :remote => true, :namespace => 'synonym' do |f| %>
+<%= form_for [:admin, @taxon_concept], :remote => true, :namespace => 'trade_name' do |f| %>
   <%= error_messages_for(@taxon_concept) %>
-  <%= f.hidden_field :name_status, value: 'S' %>
+  <%= f.hidden_field :name_status, value: 'T' %>
 
   <div class="control-group">
     <label>Taxonomy</label>
@@ -25,16 +25,16 @@
   <div class="control-group">
     <label class="control-label">Accepted names</label>
     <div class="controls">
-      <%= f.text_field :accepted_names_ids, {
+      <%= f.text_field :accepted_names_for_trade_name_ids, {
         class: 'taxon-concept-multiple',
         :'data-name-status-filter' => ['A'].to_json,
         :'data-name-status' => 'A',
-        :'data-name' => TaxonConcept.where(id: @taxon_concept.accepted_names_ids).pluck(:full_name).to_s
+        :'data-name' => TaxonConcept.where(id: @taxon_concept.accepted_names_for_trade_name_ids).pluck(:full_name).to_s
       } %>
     </div>
   </div>
   <div class="control-group">
-    <label>Synonym</label>
+    <label>Trade name</label>
     <%= f.text_field :full_name %>
   </div>
   <div class="control-group">
