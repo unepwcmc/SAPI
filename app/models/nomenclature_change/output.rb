@@ -138,21 +138,27 @@ class NomenclatureChange::Output < ActiveRecord::Base
   end
 
   def tmp_taxon_concept
+    name_status_to_save = (new_name_status.present? ? new_name_status : name_status)
     taxon_concept_attrs = {
-      :parent_id => new_parent_id || parent_id,
-      :rank_id => new_rank_id || rank_id,
-      :author_year => (new_author_year.present? ? new_author_year : author_year),
-      :name_status => (new_name_status.present? ? new_name_status : name_status)
+      parent_id: new_parent_id || parent_id,
+      rank_id: new_rank_id || rank_id,
+      author_year: (new_author_year.present? ? new_author_year : author_year),
+      name_status: name_status_to_save
     }
     if will_create_taxon?
       taxonomy = (taxonomy_id.present? ? Taxonomy.find(taxonomy_id) :
         Taxonomy.find_by_name(Taxonomy::CITES_EU)
       )
+      scientific_name = if ['A', 'N'].include?(name_status_to_save)
+        display_full_name.split.last
+      else
+        display_full_name
+      end
       TaxonConcept.new(
         taxon_concept_attrs.merge({
-          :taxonomy_id => taxonomy.id,
-          :full_name => display_full_name,
-          :tag_list => tag_list
+          taxonomy_id: taxonomy.id,
+          scientific_name: scientific_name,
+          tag_list: tag_list
         })
       )
     elsif will_update_taxon?
