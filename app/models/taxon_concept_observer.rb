@@ -23,7 +23,7 @@ class TaxonConceptObserver < ActiveRecord::Observer
         name
       end
     else
-      taxon_concept.full_name || taxon_concept.scientific_name
+      taxon_concept.scientific_name
     end
   end
 
