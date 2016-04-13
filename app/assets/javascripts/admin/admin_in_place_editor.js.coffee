@@ -26,6 +26,9 @@ class AdminEditor
     modalElement.find('form').each(() ->
       @reset()
     )
+    $('.taxon-concept').select2('data', null)
+    $('.taxon-concept-multiple').select2('data', null)
+    $('.taxon-concept-multiple-max-2').select2('data', null)
 
   initForm: () ->
     $(".datepicker").datepicker
