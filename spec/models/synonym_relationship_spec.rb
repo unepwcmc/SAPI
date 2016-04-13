@@ -23,14 +23,14 @@ describe TaxonRelationship do
       create_cites_eu_species(
         name_status: 'S',
         author_year: 'Hemulen 2013',
-        full_name: 'Lolcatus lolus'
+        scientific_name: 'Lolcatus lolus'
       )
     }
     let(:another_synonym){
       create_cites_eu_species(
         name_status: 'S',
         author_year: 'Hemulen 2013',
-        full_name: 'Lolcatus lolatus'
+        scientific_name: 'Lolcatus lolatus'
       )
     }
     let(:synonymy_rel){

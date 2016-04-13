@@ -44,7 +44,7 @@ class TaxonConcept < ActiveRecord::Base
 
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
-    :legacy_id, :legacy_type, :full_name, :name_status,
+    :legacy_id, :legacy_type, :scientific_name, :name_status,
     :tag_list, :legacy_trade_code, :hybrid_parents_ids,
     :accepted_names_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
@@ -174,17 +174,13 @@ class TaxonConcept < ActiveRecord::Base
   validate :parent_in_same_taxonomy, :if => lambda { |tc| tc.parent }
   validate :parent_at_immediately_higher_rank,
     :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
-  validate :parent_name_compatible, :if => lambda { |tc|
-    tc.parent && tc.rank && tc.full_name && (
-      tc.name_status == 'A' || tc.name_status.blank?
-    )
-  }
   validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
   validate :maximum_2_hybrid_parents,
     :if => lambda { |tc| tc.name_status == 'H' }
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
   validates :full_name, :uniqueness => { :scope => [:taxonomy_id, :author_year] }
+  validate :full_name_cannot_be_changed, on: :update
   validates :taxonomic_position,
     :presence => true,
     :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },
@@ -192,9 +188,6 @@ class TaxonConcept < ActiveRecord::Base
   validate :taxonomy_can_be_changed, :on => :update, :if => lambda { |tc|
     tc.taxonomy && tc.taxonomy_id_changed?
   }
-
-  before_validation :check_taxon_name_exists,
-    :if => lambda { |tc| tc.full_name }
 
   before_validation :ensure_taxonomic_position
 
@@ -244,6 +237,25 @@ class TaxonConcept < ActiveRecord::Base
         SQL
       ).map{ |row| row['full_name']}
     end
+  end
+
+  def scientific_name=(str)
+    scientific_name = if ['A', 'N'].include?(name_status)
+      TaxonName.sanitize_scientific_name(str)
+    else
+      str
+    end
+    tn = TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
+    if tn
+      self.taxon_name = tn
+      self.taxon_name_id = tn.id
+    else
+      self.build_taxon_name(scientific_name: scientific_name)
+    end
+  end
+
+  def scientific_name
+    taxon_name.try(:scientific_name)
   end
 
   def has_comments?
@@ -449,15 +461,6 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
-  def parent_name_compatible
-    self.full_name = TaxonConcept.sanitize_full_name(full_name)
-    if Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(rank.name) &&
-      full_name != expected_full_name(parent)
-      errors.add(:parent_id, "must have compatible name if rank is species, subspecies or variety")
-      return false
-    end
-  end
-
   def parent_is_an_accepted_name
     unless ['A', 'N'].include?(parent.name_status)
       errors.add(:parent_id, "must be an accepted name")
@@ -489,25 +492,6 @@ class TaxonConcept < ActiveRecord::Base
     true
   end
 
-  def check_taxon_name_exists
-    self.full_name = TaxonConcept.sanitize_full_name(full_name)
-    scientific_name = if is_accepted_name?
-      TaxonName.sanitize_scientific_name(self.full_name)
-    else
-      full_name
-    end
-
-    tn = taxon_name && TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
-    if tn
-      self.taxon_name = tn
-      self.taxon_name_id = tn.id
-    else
-      self.build_taxon_name(:scientific_name => scientific_name)
-    end
-
-    true
-  end
-
   def ensure_taxonomic_position
     if new_record? && fixed_order_required? && taxonomic_position.blank?
       prev_taxonomic_position =
@@ -523,6 +507,14 @@ class TaxonConcept < ActiveRecord::Base
       prev_taxonomic_position_parts = prev_taxonomic_position.split('.')
       prev_taxonomic_position_parts << (prev_taxonomic_position_parts.pop || 0).to_i + 1
       self.taxonomic_position = prev_taxonomic_position_parts.join('.')
+    end
+    true
+  end
+
+  def full_name_cannot_be_changed
+    if full_name != full_name_was
+      errors.add(:full_name, "cannot be changed")
+      return false
     end
     true
   end

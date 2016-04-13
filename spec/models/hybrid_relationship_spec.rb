@@ -24,14 +24,14 @@ describe TaxonRelationship do
       create_cites_eu_species(
         name_status: 'H',
         author_year: 'Hemulen 2013',
-        full_name: 'Lolcatus lolatus x lolcatus'
+        scientific_name: 'Lolcatus lolatus x lolcatus'
       )
     }
     let(:another_hybrid){
       create_cites_eu_species(
         name_status: 'H',
         author_year: 'Hemulen 2013',
-        full_name: 'Lolcatus lolcatus x ?'
+        scientific_name: 'Lolcatus lolcatus x ?'
       )
     }
     let(:hybrid_rel){

@@ -1,13 +1,18 @@
 class TaxonConceptObserver < ActiveRecord::Observer
 
-  #initializes full name with values from parent
   def before_validation(taxon_concept)
-    return true unless taxon_concept.new_record?
-    taxon_concept.full_name = if taxon_concept.rank && taxon_concept.parent &&
+    taxon_concept.full_name = if taxon_concept.rank &&
+      taxon_concept.parent &&
       ['A', 'N'].include?(taxon_concept.name_status)
       rank_name = taxon_concept.rank.name
       parent_full_name = taxon_concept.parent.full_name
-      name = taxon_concept.taxon_name && taxon_concept.taxon_name.scientific_name
+      name = taxon_concept.scientific_name
+      # if name is present, just in case it is a multipart name
+      # e.g. when changing status from S, T, H
+      # make sure to only use last part
+      if name.present?
+        name = TaxonName.sanitize_scientific_name(name)
+      end
       if name.blank?
         nil
       elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
@@ -18,7 +23,7 @@ class TaxonConceptObserver < ActiveRecord::Observer
         name
       end
     else
-      taxon_concept.taxon_name && taxon_concept.taxon_name.scientific_name
+      taxon_concept.scientific_name
     end
   end
 

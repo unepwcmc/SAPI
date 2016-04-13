@@ -14,22 +14,28 @@ class NomenclatureChange::TaxonomicTreeNameResolver
   private
   def resolve(node)
     expected_full_name = node.expected_full_name(node.parent)
+
+    expected_scientific_name = if ['A', 'N'].include?(node.name_status)
+      expected_full_name.split.last
+    else
+      expected_full_name
+    end
+
     Rails.logger.debug("Resolving node name: #{node.full_name} (expected: #{expected_full_name})")
     unless name_compatible_with_parent?(node)
-      compatible_node_attributes = {
+      # find or create a new accepted name compatible with this parent
+      compatible_node = TaxonConcept.where(
         taxonomy_id: node.taxonomy_id,
         full_name: expected_full_name
-      }
-      # find or create a new accepted name compatible with this parent
-      compatible_node = TaxonConcept.where(compatible_node_attributes).first
+      ).first
       unless compatible_node
         compatible_node = TaxonConcept.create(
-          compatible_node_attributes.merge({
-            parent_id: node.parent_id,
-            name_status: node.name_status,
-            rank_id: node.rank_id,
-            author_year: node.author_year
-          })
+          taxonomy_id: node.taxonomy_id,
+          scientific_name: expected_scientific_name,
+          parent_id: node.parent_id,
+          name_status: node.name_status,
+          rank_id: node.rank_id,
+          author_year: node.author_year
         )
       else
         unless ['A', 'N'].include?(compatible_node.name_status)
