@@ -67,7 +67,6 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     end
     # taggings
     copy_distribution_taggings(reassignable, copied_object)
-    end
   end
 
   def copy_distribution_taggings(reassignable, copied_object)
@@ -82,6 +81,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
       !copied_object.new_record? && tagging.duplicates({
         taggable_id: copied_object.id
       }).first || copied_object.taggings.build(tagging.comparison_attributes)
+    end
 
   end
 
