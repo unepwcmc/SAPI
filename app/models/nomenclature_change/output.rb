@@ -183,16 +183,6 @@ class NomenclatureChange::Output < ActiveRecord::Base
     end
   end
 
-  def needs_public_note?
-    if nomenclature_change.is_a?(NomenclatureChange::StatusToSynonym) ||
-      nomenclature_change.is_a?(NomenclatureChange::StatusSwap) &&
-      new_name_status != 'A'
-      false
-    else
-      true
-    end
-  end
-
   def expected_parent_name
     if rank.name == Rank::SPECIES
       display_full_name.split[0]

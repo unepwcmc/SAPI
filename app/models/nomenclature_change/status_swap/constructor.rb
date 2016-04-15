@@ -8,15 +8,13 @@ class NomenclatureChange::StatusSwap::Constructor
   end
 
   def build_secondary_output_note
-    if @nomenclature_change.secondary_output.needs_public_note?
-      secondary_note = multi_lingual_public_output_note(
-        @nomenclature_change.secondary_output,
-        @event
-      )
-      @nomenclature_change.secondary_output.note_en = secondary_note[:en]
-      @nomenclature_change.secondary_output.note_es = secondary_note[:es]
-      @nomenclature_change.secondary_output.note_fr = secondary_note[:fr]
-    end
+    secondary_note = multi_lingual_public_output_note(
+      @nomenclature_change.secondary_output,
+      @event
+    )
+    @nomenclature_change.secondary_output.note_en = secondary_note[:en]
+    @nomenclature_change.secondary_output.note_es = secondary_note[:es]
+    @nomenclature_change.secondary_output.note_fr = secondary_note[:fr]
   end
 
   private
