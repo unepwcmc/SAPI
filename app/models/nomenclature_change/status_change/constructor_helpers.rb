@@ -109,15 +109,6 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     note
   end
 
-  def private_output_note(output, event, lng)
-    note = '<p>'
-    note << status_change_from_to(output, lng)
-    note << in_year(event, lng)
-    note << following_taxonomic_changes(event, lng) if event
-    note << '.</p>'
-    note
-  end
-
   def build_primary_output_note
     if @nomenclature_change.primary_output.needs_public_note?
       primary_note = multi_lingual_public_output_note(
