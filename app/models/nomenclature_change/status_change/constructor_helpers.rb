@@ -109,18 +109,6 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     note
   end
 
-  def build_primary_output_note
-    if @nomenclature_change.primary_output.needs_public_note?
-      primary_note = multi_lingual_public_output_note(
-        @nomenclature_change.primary_output,
-        @event
-      )
-      @nomenclature_change.primary_output.note_en = primary_note[:en]
-      @nomenclature_change.primary_output.note_es = primary_note[:es]
-      @nomenclature_change.primary_output.note_fr = primary_note[:fr]
-    end
-  end
-
   def multi_lingual_listing_change_note
     multi_lingual_legislation_note('status_change.listing_change')
   end
