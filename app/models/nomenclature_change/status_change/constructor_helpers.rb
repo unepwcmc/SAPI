@@ -84,10 +84,6 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     end
   end
 
-  def status_change_from_to(output, lng)
-    status_change_note('status_change_from_to', output, lng)
-  end
-
   def status_elevated_to_accepted_name(output, lng)
     status_change_note('status_elevated_to_accepted_name', output, lng)
   end
