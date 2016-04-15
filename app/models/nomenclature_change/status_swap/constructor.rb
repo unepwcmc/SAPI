@@ -10,6 +10,7 @@ class NomenclatureChange::StatusSwap::Constructor
   def build_secondary_output_note
     secondary_note = multi_lingual_public_output_note(
       @nomenclature_change.secondary_output,
+      @nomenclature_change.primary_output,
       @event
     )
     @nomenclature_change.secondary_output.note_en = secondary_note[:en]
