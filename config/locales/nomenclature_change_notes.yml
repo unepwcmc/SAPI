@@ -18,8 +18,7 @@ en:
     opinion: 'Opinion originally formed for %{input_taxon}, which was lumped into %{output_taxon}'
     quota: 'Quota originally formed for %{input_taxon}, which was lumped into %{output_taxon}'
   status_change:
-    status_elevated_to_accepted_name: '%{output_taxon} was elevated to an accepted name'
-    status_change_from_to: '%{output_taxon} status change from %{old_status} to %{new_status}'
+    status_elevated_to_accepted_name: '%{output_new_taxon} was originally listed as %{output_old_taxon}, which was subject to a nomenclature change'
     listing_change: 'Originally listed as %{input_taxon}, which became a synonym of %{output_taxon}'
     suspension: 'Suspension originally formed for %{input_taxon}, which became a synonym of %{output_taxon}'
     opinion: 'Opinion originally formed for %{input_taxon}, which became a synonym of %{output_taxon}'

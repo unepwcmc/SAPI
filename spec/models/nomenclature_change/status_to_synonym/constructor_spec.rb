@@ -21,26 +21,4 @@ describe NomenclatureChange::StatusToSynonym::Constructor do
     end
   end
 
-  describe :build_output_notes do
-    let(:primary_output){ status_change.primary_output }
-    let(:secondary_output){ status_change.secondary_output }
-    before(:each) do
-      @old_primary_output_note = primary_output.internal_note
-      @old_secondary_output_note = secondary_output.note_en
-      constructor.build_output_notes
-    end
-
-    let(:status_change){ n_to_s_with_input_and_secondary_output }
-    context "when previously no notes in place" do
-      specify{ expect(primary_output.internal_note).to be_blank }
-      specify{ expect(secondary_output.note_en).to be_blank }
-    end
-    context "when previously notes in place" do
-      let(:primary_output){
-        create(:nomenclature_change_input, nomenclature_change: status_change, internal_note: 'blah')
-      }
-      specify{ expect(primary_output.internal_note).to eq(@old_primary_output_note) }
-    end
-  end
-
 end

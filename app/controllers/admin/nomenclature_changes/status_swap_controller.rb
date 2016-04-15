@@ -14,7 +14,7 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
       set_ranks
       builder.build_secondary_output
     when :notes
-      builder.build_output_notes
+      builder.build_secondary_output_note
     when :legislation
       builder.build_legislation_reassignments
       skip_or_previous_step if @nomenclature_change.input.legislation_reassignments.empty?
