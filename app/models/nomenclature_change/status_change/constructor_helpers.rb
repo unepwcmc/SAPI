@@ -121,10 +121,6 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     end
   end
 
-  def build_output_notes
-    build_primary_output_note
-  end
-
   def multi_lingual_listing_change_note
     multi_lingual_legislation_note('status_change.listing_change')
   end
