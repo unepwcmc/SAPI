@@ -36,13 +36,13 @@ describe NomenclatureChange::StatusSwap::Constructor do
     end
   end
 
-  describe :build_output_notes do
+  describe :build_secondary_output_note do
     let(:primary_output){ status_change.primary_output }
     let(:secondary_output){ status_change.secondary_output }
     before(:each) do
       @old_primary_output_note = primary_output.internal_note
       @old_secondary_output_note = secondary_output.note_en
-      constructor.build_output_notes
+      constructor.build_secondary_output_note
     end
     let(:status_change){ a_to_s_with_swap }
     context "when previously no notes in place" do
