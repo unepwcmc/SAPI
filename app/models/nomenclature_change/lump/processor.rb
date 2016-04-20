@@ -24,7 +24,7 @@ class NomenclatureChange::Lump::Processor < NomenclatureChange::Processor
       chain << NomenclatureChange::InputTaxonConceptProcessor.new(input)
       chain << NomenclatureChange::CascadingNotesProcessor.new(input)
     end
-    if !@output.will_create_taxon?
+    if !@output.will_create_taxon? && @nc.inputs_intersect_outputs.empty?
       chain << NomenclatureChange::CascadingNotesProcessor.new(@output)
     end
     inputs_that_are_not_output.each do |input|
