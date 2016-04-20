@@ -75,6 +75,58 @@ describe NomenclatureChange::Split::Processor do
         specify{ expect(output_species1.shipments).to include(@shipment) }
       end
     end
+
+    context "when input with children that don't change name" do
+      let!(:input_species_child){
+        create_cites_eu_subspecies(parent: input_species)
+      }
+      let!(:input_species_child_listing){
+        create_cites_I_addition(taxon_concept: input_species_child)
+      }
+      let(:split){
+        create(:nomenclature_change_split,
+          input_attributes: {
+            taxon_concept_id: input_species.id,
+            note_en: 'input species was split into input species and output species 2',
+            internal_note: 'input internal note'
+          },
+          outputs_attributes: {
+            0 => {
+              taxon_concept_id: input_species.id,
+              note_en: nil
+            },
+            1 => {
+              taxon_concept_id: output_species2.id,
+              note_en: 'output species 2 was split from input species'
+            }
+          },
+          status: NomenclatureChange::Split::LEGISLATION
+        )
+      }
+      before(:each){ processor.run }
+      specify "input / output species has public nomenclature note set" do
+        expect(input_species.reload.nomenclature_note_en).to eq(' input species was split into input species and output species 2')
+      end
+      specify "child of input / output species does not inherit public nomenclature note" do
+        expect(
+          input_species_child.reload.nomenclature_note_en
+        ).to be_nil
+      end
+      specify "input / output species has internal nomenclature note set" do
+        expect(input_species.nomenclature_comment.note).to eq(' input internal note')
+      end
+      specify "child of input / output species does not inherit internal nomenclature note" do
+        expect(
+          input_species_child.nomenclature_comment.try(:note)
+        ).to be_nil
+      end
+      specify "child of input / output species does not have legislation nomenclature note" do
+        expect(
+          input_species_child.listing_changes.first.nomenclature_note_en
+        ).to be_nil
+      end
+    end
+
     context "when input with children that change name" do
       let!(:input_species_child){
         create_cites_eu_subspecies(parent: input_species)
