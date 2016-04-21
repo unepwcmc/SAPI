@@ -15,7 +15,7 @@ Ember.Handlebars.helper "formattedTags", (value, options) ->
   escaped = Handlebars.Utils.escapeExpression(value)
   formatted = escaped.split(',').map((item) ->
   	"<span class=\"tage\">" + item + "</span>"
-  ).join ""
+  ).reverse().join ""
   new Handlebars.SafeString(formatted)
 
 Ember.Handlebars.registerHelper('highlight', (suggestion, options) ->
