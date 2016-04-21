@@ -35,8 +35,14 @@ class NomenclatureChange::TaxonomicTreeNameResolver
           parent_id: node.parent_id,
           name_status: node.name_status,
           rank_id: node.rank_id,
-          author_year: node.author_year
+          author_year: node.author_year,
+          nomenclature_note_en: node.nomenclature_note_en,
+          nomenclature_note_es: node.nomenclature_note_es,
+          nomenclature_note_fr: node.nomenclature_note_fr
         )
+        if node.nomenclature_comment
+          compatible_node.create_nomenclature_comment(note: node.nomenclature_comment.note)
+        end
       else
         unless ['A', 'N'].include?(compatible_node.name_status)
           t = NomenclatureChange::ToAcceptedNameTransformation.new(compatible_node, node.parent)
