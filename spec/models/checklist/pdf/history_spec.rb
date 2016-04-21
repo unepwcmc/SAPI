@@ -81,7 +81,7 @@ describe Checklist::Pdf::History do
         create(
           :annotation,
           :short_note_en => 'Except <i>Foobarus cracoviensis</i>',
-          :full_note_en => 'They have plenty of <i>Foobarus cracoviensis</i> in Kraków',
+          :full_note_en => '...',
           :display_in_footnote => true
         )
       }
@@ -90,15 +90,15 @@ describe Checklist::Pdf::History do
         lc = create_cites_I_addition(
           :taxon_concept_id => tc.id,
           :annotation_id => annotation.id,
-          :is_current => true
+          :is_current => true,
+          :nomenclature_note_en => 'Previously listed as <i>Foobarus polonicus</i>.'
         )
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MCitesListingChange.find(lc.id)
       }
       subject{ Checklist::Pdf::History.new({}) }
       specify{
-        LatexToPdf.stub(:html2latex).and_return('x')
-        subject.annotation_for_language(lc, 'en').should == 'x\footnote{x}'
+        subject.annotation_for_language(lc, 'en').should == "Except \\textit{Foobarus cracoviensis}\n\nPreviously listed as \\textit{Foobarus polonicus}.\\footnote{...}"
       }
     end
   end

@@ -47,7 +47,8 @@ class Checklist::Csv::History < Checklist::History
       "(strip_tags(cites_listing_changes_mview.full_note_en) || ' ' || strip_tags(cites_listing_changes_mview.nomenclature_note_en)) AS full_note_en",
       "strip_tags(cites_listing_changes_mview.short_note_en) AS short_note_en",
       "strip_tags(cites_listing_changes_mview.short_note_es) AS short_note_es",
-      "strip_tags(cites_listing_changes_mview.short_note_fr) AS short_note_fr"
+      "strip_tags(cites_listing_changes_mview.short_note_fr) AS short_note_fr",
+      "strip_tags(cites_listing_changes_mview.nomenclature_note_en) AS nomenclature_note_en"
     ]
   end
  
@@ -65,7 +66,8 @@ class Checklist::Csv::History < Checklist::History
       :species_listing_name, :party_iso_code, :party_full_name,
       :change_type_name, :effective_at_formatted, :is_current,
       :hash_ann_symbol, :hash_full_note_en,
-      :full_note_en, :short_note_en, :short_note_es, :short_note_fr
+      :full_note_en, :short_note_en, :short_note_es, :short_note_fr,
+      :nomenclature_note_en
     ]
   end
 
