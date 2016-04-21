@@ -11,6 +11,7 @@ module Checklist::ColumnDisplayNameMapping
     :short_note_en => 'AnnotationEnglish',
     :short_note_es => 'AnnotationSpanish',
     :short_note_fr => 'AnnotationFrench',
+    :nomenclature_note_en => 'NomenclatureNote',
     :kingdom_name => 'Kingdom',
     :phylum_name => 'Phylum',
     :class_name => 'Class',
