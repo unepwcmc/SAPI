@@ -51,8 +51,13 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
   ).property('selectedEventType.id')
 
   interSessionalDocumentTypes: ( ->
-    @get('controllers.events.interSessionalDocumentTypes')
-  ).property()
+    nonPublicTypes = @get('controllers.events.interSessionalNonPublicDocumentTypes')
+    publicTypes = @get('controllers.events.interSessionalDocumentTypes')
+    if @get('isSignedIn')
+      nonPublicTypes.pushObjects(publicTypes)
+    else
+      publicTypes
+  ).property('isSignedIn')
 
   documentTypeDropdownVisible: ( ->
     @get('selectedEventType.id') == 'EcSrg'
@@ -61,6 +66,10 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
   interSessionalDocTypeDropdownVisible: ( ->
     !@get('selectedEventType.id')?
   ).property('selectedEventType')
+
+  isSignedIn: ( ->
+    $.cookie('speciesplus.signed_in') == '1'
+  ).property()
 
   actions:
     openSearchPage:->

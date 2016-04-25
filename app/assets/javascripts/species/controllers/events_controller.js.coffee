@@ -63,11 +63,14 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     }
   ]
 
-  interSessionalDocumentTypes: [
+  interSessionalNonPublicDocumentTypes: [
     {
       id: 'Document::CommissionNotes',
       name: 'Commission Notes'
-    },
+    }
+  ]
+
+  interSessionalDocumentTypes: [
     {
       id: 'Document::NonDetrimentFindings',
       name: 'Non-Detriment Findings'
@@ -77,7 +80,6 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
       name: 'UNEP-WCMC Report'
     }
   ]
-
 
   load: ->
     unless @get('loaded')
