@@ -62,6 +62,10 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
     !@get('selectedEventType.id')?
   ).property('selectedEventType')
 
+  isSignedIn: ( ->
+    $.cookie('speciesplus.signed_in') == '1'
+  ).property()
+
   actions:
     openSearchPage:->
       @transitionToRoute('documents', {queryParams: @getFilters()})
