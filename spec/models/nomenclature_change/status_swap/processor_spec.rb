@@ -31,12 +31,19 @@ describe NomenclatureChange::StatusSwap::Processor do
           taxon_concept: primary_output_taxon_concept,
           reported_taxon_concept: primary_output_taxon_concept
         )
+        secondary_output_taxon_concept.create_nomenclature_comment
         processor.run
       }
       specify{ expect(primary_output_taxon_concept).to be_is_synonym }
       specify{ expect(primary_output_taxon_concept.parent).to eq(accepted_name_parent) }
       specify{ expect(secondary_output_taxon_concept.name_status).to eq('A') }
       specify{ expect(primary_output_taxon_concept.accepted_names).to include(secondary_output_taxon_concept) }
+      specify "public nomenclature note is set" do
+        expect(secondary_output_taxon_concept.nomenclature_note_en).to eq(' public')
+      end
+      specify "internal nomenclature note is set" do
+        expect(secondary_output_taxon_concept.nomenclature_comment.try(:note)).to eq(' internal')
+      end
     end
   end
 
