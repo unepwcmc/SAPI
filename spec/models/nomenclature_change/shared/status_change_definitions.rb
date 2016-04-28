@@ -105,7 +105,9 @@ shared_context 'status_change_definitions' do
         is_primary_output: false,
         taxon_concept_id: input_synonym.id,
         new_name_status: 'A',
-        new_parent_id: input_synonym_genus.id
+        new_parent_id: input_synonym_genus.id,
+        note_en: 'public',
+        internal_note: 'internal'
       },
       status: NomenclatureChange::StatusSwap::SECONDARY_OUTPUT
     ).reload
