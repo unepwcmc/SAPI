@@ -21,11 +21,7 @@ class NomenclatureChange::StatusSwap::Constructor
   private
   def legislation_note(lng)
     input = @nomenclature_change.input
-    output = if @nomenclature_change.needs_to_relay_associations?
-      @nomenclature_change.secondary_output
-    elsif @nomenclature_change.needs_to_receive_associations?
-      @nomenclature_change.primary_output
-    end
+    output = @nomenclature_change.secondary_output
     output = taxon_concept_html(output.display_full_name, output.display_rank_name)
     input = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     note = '<p>'
