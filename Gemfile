@@ -28,7 +28,7 @@ gem 'rubyzip', '>= 1.0.0'
 
 gem 'sidekiq', '~> 3.4.2'
 gem 'sidekiq-status', '~> 0.5.4'
-gem 'sidekiq-unique-jobs', '>=4.0.17'
+gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
 
 gem 'whenever', :require => false
 
