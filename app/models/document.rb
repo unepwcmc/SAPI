@@ -43,6 +43,7 @@ class Document < ActiveRecord::Base
   has_and_belongs_to_many :tags, class_name: 'DocumentTag', join_table: 'document_tags_documents'
   validates :title, presence: true
   validates :date, presence: true
+  validates_uniqueness_of :primary_language_document_id, scope: :language_id
   # TODO validates inclusion of type in available types
   accepts_nested_attributes_for :citations, :allow_destroy => true,
     :reject_if => proc { |attributes|
