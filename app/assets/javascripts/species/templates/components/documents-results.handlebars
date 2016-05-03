@@ -5,15 +5,9 @@
       <table class="table-header">
         <thead>
           <tr>
-            {{sortable-column column_name="MEETING" class="event-col"
-              action="reorderDocuments" eventType=eventType targetObject=dataController
-            }}
-            {{sortable-column column_name="DATE" class="event-date-col"
-              action="reorderDocuments" eventType=eventType targetObject=dataController
-            }}
-            {{sortable-column column_name="TITLE" class="title-col"
-              action="reorderDocuments" eventType=eventType targetObject=dataController
-            }}
+            <th class="event-col">MEETING</th>
+            <th class="event-date-col">DATE</th>
+            <th class="title-col">TITLE</th>
             <th class="language-col">LANG</th>
             <th class="countries-col">COUNTRIES</th>
             <th class="taxon-col">TAXA</th>

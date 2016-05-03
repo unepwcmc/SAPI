@@ -96,16 +96,3 @@ Species.DocumentLoader = Ember.Mixin.create
         metaKey = contextKey + '.meta'
         @set(metaKey, documents.meta)
       )
-
-    reorderDocuments: (eventType, sortCol, sortDir) ->
-      @set('sortCol', sortCol)
-      @set('sortDir', sortDir)
-      contextKey = @getEventTypeKey(eventType).camelize() + 'Documents'
-      params = @getSearchParams(eventType)
-      params['page'] = 1
-      @loadDocuments(params, (documents) =>
-        docsKey = contextKey + '.docs'
-        @set(docsKey, documents.docs)
-        metaKey = contextKey + '.meta'
-        @set(metaKey, documents.meta)
-      )
