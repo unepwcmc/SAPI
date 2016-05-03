@@ -27,7 +27,13 @@ class NomenclatureChange::TaxonomicTreeNameResolver
       compatible_node = TaxonConcept.where(
         taxonomy_id: node.taxonomy_id,
         full_name: expected_full_name
-      ).first
+      )
+      # match on author & year as well
+      compatible_node = if node.author_year.blank?
+        compatible_node.where('SQUISH_NULL(author_year) IS NULL')
+      else
+        compatible_node.where(author_year: node.author_year)
+      end.first
       unless compatible_node
         compatible_node = TaxonConcept.create(
           taxonomy_id: node.taxonomy_id,
