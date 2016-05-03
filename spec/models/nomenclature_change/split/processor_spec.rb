@@ -229,6 +229,70 @@ describe NomenclatureChange::Split::Processor do
       end
     end
   end
+  context "when input is genus and parent ressignments occur" do
+    let(:input_genus) do
+      create_cites_eu_genus(
+        taxon_name: create(:taxon_name, scientific_name: 'Crotalus')
+      )
+    end
+    let(:input_genus_child) do
+      create_cites_eu_species(
+        parent: input_genus,
+        taxon_name: create(:taxon_name, scientific_name: 'durissus')
+      )
+    end
+    let!(:input_genus_child_child) do
+      create_cites_eu_subspecies(
+        parent: input_genus_child,
+        taxon_name: create(:taxon_name, scientific_name: 'unicolor')
+      )
+    end
+    let(:output_genus) do
+      create_cites_eu_genus(
+        taxon_name: create(:taxon_name, scientific_name: 'Paracrotalus')
+      )
+    end
+    let(:split){
+      create(:nomenclature_change_split,
+        input_attributes: { taxon_concept_id: input_genus.id },
+        outputs_attributes: {
+          0 => { taxon_concept_id: input_genus.id },
+          1 => { taxon_concept_id: output_genus.id }
+        },
+        status: NomenclatureChange::Split::LEGISLATION
+      )
+    }
+    let(:reassignment){
+      create(:nomenclature_change_parent_reassignment,
+        input: split.input,
+        reassignable_id: input_genus_child.id
+      )
+    }
+    let!(:reassignment_target){
+      create(:nomenclature_change_reassignment_target,
+        reassignment: reassignment,
+        output: split.outputs.last
+      )
+    }
+    before(:each){ processor.run }
+    specify "input genus child is a synonym" do
+      expect(input_genus_child.reload.name_status).to eq('S')
+    end
+    specify "input genus child's child is a synonym" do
+      expect(input_genus_child_child.reload.name_status).to eq('S')
+    end
+    specify "output genus should have child with resolved name" do
+      output_genus_child = output_genus.children.first
+      expect(output_genus_child).not_to be_nil
+      expect(output_genus_child.full_name).to eq('Paracrotalus durissus')
+    end
+    specify "output genus child should have child with resolved name" do
+      output_genus_child = output_genus.children.first
+      output_genus_child_child = output_genus_child.children.first
+      expect(output_genus_child_child).not_to be_nil
+      expect(output_genus_child_child.full_name).to eq('Paracrotalus durissus unicolor')
+    end
+  end
   describe :summary do
     let(:split){ split_with_input_and_output_existing_taxon }
     specify { expect(processor.summary).to be_kind_of(Array) }
