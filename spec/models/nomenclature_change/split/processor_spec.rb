@@ -247,6 +247,7 @@ describe NomenclatureChange::Split::Processor do
         taxon_name: create(:taxon_name, scientific_name: 'unicolor')
       )
     end
+    let!(:quota){ create(:quota, taxon_concept: input_genus_child, geo_entity: create(:geo_entity)) }
     let(:output_genus) do
       create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Paracrotalus')
@@ -278,6 +279,10 @@ describe NomenclatureChange::Split::Processor do
     specify "input genus child is a synonym" do
       expect(input_genus_child.reload.name_status).to eq('S')
     end
+    specify "input genus child is a synonym of output genus child" do
+      output_genus_child = output_genus.children.first
+      expect(input_genus_child.accepted_names).to include(output_genus_child)
+    end
     specify "input genus child's child is a synonym" do
       expect(input_genus_child_child.reload.name_status).to eq('S')
     end
@@ -291,6 +296,13 @@ describe NomenclatureChange::Split::Processor do
       output_genus_child_child = output_genus_child.children.first
       expect(output_genus_child_child).not_to be_nil
       expect(output_genus_child_child.full_name).to eq('Paracrotalus durissus unicolor')
+    end
+    specify "input genus child has no quotas" do
+      expect(input_genus_child.quotas).to be_empty
+    end
+    specify "input genus child's accepted name has 1 quota" do
+      output_genus_child = output_genus.children.first
+      expect(output_genus_child.quotas.size).to eq(1)
     end
   end
   describe :summary do
