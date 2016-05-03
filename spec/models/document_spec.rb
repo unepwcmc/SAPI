@@ -49,5 +49,22 @@ describe Document, sidekiq: :inline do
       }
       specify{ expect(document.designation).to eq(cites) }
     end
+    context "when documents with same language and same primary document" do
+      let(:language){ create(:language) }
+      let(:primary_document){ create(:document) }
+      let!(:document1){ create(:document,
+                              language_id: language.id,
+                              primary_language_document_id: primary_document.id)
+      }
+
+      let(:document2){ build(:document,
+                            language_id: language.id,
+                            primary_language_document_id: primary_document.id)
+      }
+
+      specify{ expect(document2).to be_invalid }
+      specify{ expect(document2).to have(1).error_on(:primary_language_document_id) }
+
+    end
   end
 end
