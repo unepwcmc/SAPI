@@ -10,8 +10,8 @@ Species.DocumentTagLookup = Ember.Mixin.create
       @set('selectedProposalOutcome', po)
 
   proposalOutcomeDropdownVisible: ( ->
-    @get('selectedDocumentType.id') == 'Document::Proposal'
-  ).property('selectedDocumentType')
+    @get('selectedEventType.id') == 'CitesCop'
+  ).property('selectedEventType')
 
   actions:
     handleProposalOutcomeSelection: (proposalOutcome) ->
