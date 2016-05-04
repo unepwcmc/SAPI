@@ -4,7 +4,7 @@ class Species::DocumentSerializer < ActiveModel::Serializer
     :primary_document_id, :taxon_names, :geo_entity_names,
     :taxon_names, :geo_entity_names,
     :document_language_versions,
-    :proposal_outcome, :review_phase
+    :proposal_outcome
   include PgArrayParser
 
   def document_type
