@@ -14,9 +14,6 @@
             {{#if proposalOutcome}}
               <th class="outcome-col">OUTCOME</th>
             {{/if}}
-            {{#if reviewPhase}}
-              <th class="review-phase-col">PHASE</th>
-            {{/if}}
             <th class="download-col">
               {{batch-download}}
               {{download-checkbox}}
@@ -37,15 +34,12 @@
             {{#if proposalOutcome}}
               <th></th>
             {{/if}}
-            {{#if reviewPhase}}
-              <th></th>
-            {{/if}}
             <th class="download-col"></th>
           </tr>
         </thead>
         <tbody>
           {{#each doc in documents}}
-            {{document-result doc=doc proposalOutcome=proposalOutcome reviewPhase=reviewPhase}}
+            {{document-result doc=doc proposalOutcome=proposalOutcome}}
           {{/each}}
         </tbody>
       </table>
