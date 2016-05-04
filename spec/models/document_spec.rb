@@ -67,4 +67,31 @@ describe Document, sidekiq: :inline do
 
     end
   end
+
+  describe :destroy do
+    let(:primary_document){
+      create(:proposal)
+    }
+    let!(:secondary_document){
+      create(:proposal, primary_language_document_id: primary_document.id)
+    }
+    context "when secondary document destroyed" do
+      specify "document count decreases by 1" do
+        expect {
+          secondary_document.destroy
+        }.to change{ Document.count }.by(-1)
+      end
+    end
+    context "when primary document destroyed" do
+      specify "document count decreases by 1" do
+        expect{
+          primary_document.destroy
+        }.to change{ Document.count }.by(-1)
+      end
+      specify "secondary document becomes primary" do
+        primary_document.destroy
+        expect(secondary_document.primary_language_document).to be_nil
+      end
+    end
+  end
 end
