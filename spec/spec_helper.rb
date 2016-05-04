@@ -16,7 +16,6 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 require 'sidekiq/testing'
-require 'sidekiq_unique_jobs/testing'
 require 'capybara/rspec'
 require 'capybara/rails'
 
