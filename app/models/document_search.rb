@@ -133,8 +133,7 @@ class DocumentSearch
   end
 
   def add_ordering_for_public
-    # sort_col and sort_dir are sanitized
-    @query = @query.order("#{@sort_col} #{@sort_dir}")
+    @query = @query.order("date_raw DESC")
   end
 
   def select_and_group_query
@@ -153,15 +152,10 @@ class DocumentSearch
         )
       ) AS document_language_versions
     SQL
-    # sort_col and sort_dir are sanitized
     @query = Document.from(
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
-    if @sort_col != 'title'
-      @query = @query.order("#{@sort_col} #{@sort_dir}")
-    else
-      @query = @query.order("MAX(title) #{@sort_dir}")
-    end
+    @query = @query.order('date_raw DESC')
   end
 
   def self.refresh
