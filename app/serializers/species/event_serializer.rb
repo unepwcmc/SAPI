@@ -3,6 +3,6 @@ class Species::EventSerializer < ActiveModel::Serializer
 
   def name
     name = object.name
-    "#{name} #{object.effective_at.strftime('(%B %Y)')}" if object.effective_at
+    "#{name} #{object.published_at.strftime('(%B %Y)')}" if object.published_at
   end
 end
