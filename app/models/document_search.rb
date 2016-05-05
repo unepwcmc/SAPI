@@ -155,7 +155,7 @@ class DocumentSearch
     @query = Document.from(
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
-    @query = @query.order('date_raw DESC')
+    @query = @query.order('date_raw DESC, MAX(sort_index), MAX(title)')
   end
 
   def self.refresh
