@@ -84,6 +84,3 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
   load: ->
     unless @get('loaded')
       @set('content', Species.Event.find())
-
-  handleLoadFinished: ->
-    @get('controllers.elibrarySearch').initEventSelector()

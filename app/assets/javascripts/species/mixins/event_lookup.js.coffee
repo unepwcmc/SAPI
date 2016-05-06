@@ -2,11 +2,6 @@ Species.EventLookup = Ember.Mixin.create
   selectedEvents: []
   selectedEventsIds: []
 
-  initEventSelector: ->
-    @set('selectedEvents', @get('controllers.events.content').findBy('id', @get('selectedEventsIds')))
-    if @get('selectedEventType') == null && @get('selectedEvents')
-      @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', @get('selectedEvents.type')))
-
   filteredEvents: ( ->
     if @get('selectedEventType')
       event_ids = @get('selectedEventType.id').split(',')
