@@ -19,7 +19,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       filtersHash.title_query = null
     @set('titleQuery', filtersHash.title_query)
     @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
-    @set('selectedEventsIds', filtersHash.events_ids)
+    @set('selectedEventsIds', filtersHash.events_ids || [])
     allDocumentTypes = @get('controllers.events.documentTypes').concat @get('controllers.events.interSessionalDocumentTypes')
     @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
     @set('selectedProposalOutcomeId', filtersHash.proposal_outcome_id)
