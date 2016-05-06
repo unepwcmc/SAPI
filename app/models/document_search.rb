@@ -1,7 +1,7 @@
 class DocumentSearch
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
-  attr_reader :page, :per_page, :offset, :event_type, :event_id,
+  attr_reader :page, :per_page, :offset, :event_type, :event_ids,
     :document_type, :title_query
 
   def initialize(options, interface)
@@ -67,8 +67,8 @@ class DocumentSearch
   end
 
   def add_conditions_for_event
-    if @event_id.present?
-      @query = @query.where(event_id: @event_id)
+    if @event_ids.present?
+      @query = @query.where(event_id: @event_ids)
       return
     end
     return unless @event_type.present?
@@ -125,7 +125,7 @@ class DocumentSearch
   def add_ordering_for_admin
     return if @title_query.present?
 
-    @query = if @event_id.present?
+    @query = if @event_ids.present?
       @query.order([:date_raw, :title])
     else
       @query.order('created_at DESC')
