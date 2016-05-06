@@ -38,6 +38,7 @@ class Api::V1::DocumentsController < ApplicationController
     elsif !File.exists?(path_to_file)
       render_404
     else
+      response.headers['Content-Length'] = File.size(path_to_file).to_s
       send_file(
         path_to_file,
           :filename => File.basename(path_to_file),
