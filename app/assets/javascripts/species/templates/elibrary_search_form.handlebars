@@ -40,16 +40,18 @@
       </div>
 
       <div class="documents-control-group">
-        {{single-dropdown
-          isVisible=controller.eventsDropdownVisible
-          action="handleEventSelection"
-          clearAction="handleEventDeselection"
-          title="Meeting"
-          placeholder="All meetings"
-          values=controller.filteredEvents
-          selection=controller.selectedEvent
-        }}
+        <div class="location-area popup-area">
+          <label>Meeting</label>
+          {{view Species.EventsSearchButton
+            selectedEventsBinding="controller.selectedEvents"
+            loadedBinding="events.loaded"
+            shortPlaceholder=false
+            taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
+          }}
+          {{view Species.EventsSearchDropdown controllerBinding="controller"}}
+        </div>
       </div>
+
       <div class="documents-control-group">
         {{single-dropdown
           isVisible=controller.documentTypeDropdownVisible
@@ -61,6 +63,7 @@
           selection=controller.selectedDocumentType
         }}
       </div>
+
       <div class="documents-control-group">
         {{single-dropdown
           isVisible=controller.interSessionalDocTypeDropdownVisible
@@ -72,6 +75,7 @@
           selection=controller.selectedDocumentType
         }}
       </div>
+
       <div class="documents-control-group">
         {{single-dropdown
           isVisible=controller.proposalOutcomeDropdownVisible
@@ -83,6 +87,7 @@
           selection=controller.selectedProposalOutcome
         }}
       </div>
+
       <div class="documents-control-group">
         <label>Search by title keyword(s)
           <i class="fa fa-info-circle"
