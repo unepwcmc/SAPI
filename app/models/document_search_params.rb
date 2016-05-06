@@ -6,7 +6,7 @@ class DocumentSearchParams < Hash
 
   def initialize(params)
     sanitized_params = {
-      event_ids: sanitise_integer_array(params['events_ids']),
+      events_ids: sanitise_integer_array(params['events_ids']),
       event_type: sanitise_string(params['event_type']),
       document_type: sanitise_string(params['document_type']),
       title_query: sanitise_string(params['title_query']),

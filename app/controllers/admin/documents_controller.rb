@@ -6,7 +6,8 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     load_associations
     @search = DocumentSearch.new(params.merge(show_private: true), 'admin')
     index! do
-      if @event.present?
+      if @search.events_ids.present? && @search.events_ids.length == 1
+        @event = Event.find(@search.events_ids.first)
         render 'admin/event_documents/index'
       else
         render 'index'
