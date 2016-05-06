@@ -68,6 +68,30 @@ describe Document, sidekiq: :inline do
     end
   end
 
+  describe :update do
+    let(:primary_document){
+      create(:proposal, sort_index: 1)
+    }
+    let!(:secondary_document){
+      create(:proposal,
+        sort_index: 2,
+        primary_language_document_id: primary_document.id
+      )
+    }
+    context "when primary document sort_index_updated" do
+      specify "secondary document sort_index is in sync" do
+        primary_document.update_attributes(sort_index: 3)
+        expect(secondary_document.reload.sort_index).to eq(3)
+      end
+    end
+    context "when secondary document sort_index_updated" do
+      specify "primary document sort_index is in sync" do
+        secondary_document.update_attributes(sort_index: 3)
+        expect(primary_document.reload.sort_index).to eq(3)
+      end
+    end
+  end
+
   describe :destroy do
     let(:primary_document){
       create(:proposal)
