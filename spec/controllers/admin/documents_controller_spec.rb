@@ -106,7 +106,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
           @document3 = create(:document, title: 'CC hello world', event: event2)
           DocumentSearch.refresh
           get :index, events_ids: [event.id, event2.id]
-          assigns(:documents).should eq([@document2, @document1, @document3])
+          assigns(:documents).should eq([@document3, @document2, @document1])
         end
       end
     end

@@ -126,7 +126,7 @@ class DocumentSearch
     return if @title_query.present?
 
     @query = if @events_ids.present?
-      @query.order([:date_raw, :title])
+      @query.order(['date_raw DESC', :title])
     else
       @query.order('created_at DESC')
     end
