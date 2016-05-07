@@ -1,9 +1,4 @@
 Species.EventsSearchButton = Ember.View.extend Species.MultipleSelectionSearchButton, Species.SearchFormDropdowns,
-  tagName: 'a'
-  href: '#'
-  classNames: ['link']
-  classNameBindings: ['loading']
-  shortPlaceholder: true
 
   summary: ( ->
     short = (@get('shortPlaceholder') == true)
