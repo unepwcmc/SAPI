@@ -1,15 +1,4 @@
-Species.GeoEntitiesSearchButton = Ember.View.extend Species.SearchFormDropdowns,
-  tagName: 'a'
-  href: '#'
-  classNames: ['link']
-  classNameBindings: ['loading']
-  shortPlaceholder: true
-
-  loading: ( ->
-    "loading" unless @get('loaded')
-  ).property('loaded').volatile()
-
-  template: Ember.Handlebars.compile("{{view.summary}}"),
+Species.GeoEntitiesSearchButton = Ember.View.extend Species.MultipleSelectionSearchButton, Species.SearchFormDropdowns,
 
   summary: ( ->
     short = (@get('shortPlaceholder') == true)
@@ -31,12 +20,4 @@ Species.GeoEntitiesSearchButton = Ember.View.extend Species.SearchFormDropdowns,
   ).property("selectedGeoEntities.@each")
 
   click: (event) ->
-    if @get('controller.isSearchContextDocuments') &&
-    @get('taxonConceptQuery') != @get('taxonConceptQueryLastCheck')
-      @set('taxonConceptQueryLastCheck', @get('taxonConceptQuery'))
-      if @get('taxonConceptQuery.length') >= 3
-        query = @get('taxonConceptQuery')
-      # we're in the E-Library search, need to check if
-      # filtering by taxon is required for locations
-      @get('controller.geoEntities').reload(query)
-    @handlePopupClick(event)
+    @_super(event, 'controller.geoEntities')

@@ -1,11 +1,6 @@
 Species.EventLookup = Ember.Mixin.create
-  selectedEvent: null
-  selectedEventId: null
-
-  initEventSelector: ->
-    @set('selectedEvent', @get('controllers.events.content').findBy('id', @get('selectedEventId')))
-    if @get('selectedEventType') == null && @get('selectedEvent')
-      @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', @get('selectedEvent.type')))
+  selectedEvents: []
+  selectedEventsIds: []
 
   filteredEvents: ( ->
     if @get('selectedEventType')
@@ -26,21 +21,16 @@ Species.EventLookup = Ember.Mixin.create
     handleEventTypeSelection: (eventType) ->
       @set('selectedEventType', eventType)
       if @get('selectedEventType.id') != @get('selectedEvent.type')
-        @set('selectedEvent', null)
-        @set('selectedEventId', null)
+        @set('selectedEvents', [])
+        @set('selectedEventsIds', [])
       if (@get('selectedDocumentType.eventTypes') && @get('selectedDocumentType.eventTypes').indexOf(@get('selectedEvent.type')) < 0) || eventType.id == 'EcSrg'
         @set('selectedDocumentType', null)
 
     handleEventTypeDeselection: (eventType) ->
       @set('selectedEventType', null)
-      @set('selectedEvent', null)
-      @set('selectedEventId', null)
+      @set('selectedEvents', [])
+      @set('selectedEventsIds', [])
       @set('selectedDocumentType', null)
 
-    handleEventSelection: (event) ->
-      @set('selectedEvent', event)
-      @set('selectedEventId', event.id)
-
-    handleEventDeselection: (event) ->
-      @set('selectedEvent', null)
-      @set('selectedEventId', null)
+    deleteEventSelection: (context) ->
+      @get('selectedEvents').removeObject(context)

@@ -40,9 +40,9 @@
         <%= select_tag 'event_id_search',
           options_for_select(
             @events.map { |e| [e.name, e.id, {:class => e.type}] },
-            @search.event_id
+            @search.events_ids
           ), {
-            :prompt => 'Select an event...', class: 'input-large', name: 'event_id'
+            class: 'events-search', name: 'events_ids[]', multiple: true
           }
         %>
         <%= select_tag 'document_type', options_for_select(

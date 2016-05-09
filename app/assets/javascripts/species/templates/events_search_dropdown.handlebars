@@ -1,0 +1,15 @@
+<div class="popup">
+  <div class="search-block01">
+    <strong class="title01">SELECTED MEETINGS</strong>
+    {{collection Species.SelectedEventsCollectionView
+      contentBinding="controller.selectedEvents"}}
+  </div>
+  <div class="list-holder">
+    <ul>
+      <li>
+        {{collection Species.EventsCollectionView
+          contentBinding="controller.filteredEvents"}}
+      </li>
+    </ul>
+  </div>
+</div>

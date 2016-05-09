@@ -1,6 +1,4 @@
 Species.EventLoader = Ember.Mixin.create
   ensureEventsLoaded: (searchController) ->
-    if @controllerFor('events').get('loaded')
-      searchController.initEventSelector()
-    else
+    unless @controllerFor('events').get('loaded')
       @controllerFor('events').load()
