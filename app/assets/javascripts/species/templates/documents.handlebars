@@ -13,37 +13,81 @@
         </tr>
       </thead>
       <tbody>
-        {{documents-row meeting_type="CITES CoP Proposals"
-          eventType="CitesCop"
-          dataController=controller
-          loadMore=controller.citesCopProposalsDocsLoadMore
+        {{documents-results-header
+          isVisible=controller.citesCopProposalsDocsPresent
+          meetingType="CITES CoP Proposals"
           documents=controller.citesCopProposalsDocuments
+          }}
+        {{documents-results
+          isVisible=controller.citesCopProposalsDocsPresent
+          eventType="CitesCop"
+          documents=controller.citesCopProposalsDocuments.docs
+          dataController=controller
           proposalOutcome=true
-          isLoading=controller.citesCopProposalsDocsIsLoading}}
-        {{documents-row meeting_type="CITES Review of Significant Trade (animals)"
+          isLoading=controller.citesCopProposalsDocsIsLoading
+          loadMore=controller.citesCopProposalsDocsLoadMore
+          block=true
+          }}
+
+        {{documents-results-header
+          isVisible=controller.citesAcDocsPresent
+          meetingType="CITES Review of Significant Trade (animals)"
+          documents=controller.citesAcDocuments
+          }}
+        {{documents-results
+          isVisible=controller.citesAcDocsPresent
           eventType="CitesAc,CitesTc"
           dataController=controller
+          documents=controller.citesAcDocuments.docs
           loadMore=controller.citesAcDocsLoadMore
-          documents=controller.citesAcDocuments
-          isLoading=controller.citesAcDocsIsLoading}}
-        {{documents-row meeting_type="CITES Review of Significant Trade (plants)"
+          isLoading=controller.citesAcDocsIsLoading
+          block=true
+          }}
+
+        {{documents-results-header
+          isVisible=controller.citesPcDocsPresent
+          meetingType="CITES Review of Significant Trade (plants)"
+          documents=controller.citesPcDocuments
+          }}
+        {{documents-results
+          isVisible=controller.citesPcDocsPresent
           eventType="CitesPc"
           dataController=controller
+          documents=controller.citesPcDocuments.docs
           loadMore=controller.citesPcDocsLoadMore
-          documents=controller.citesPcDocuments
-          isLoading=controller.citesPcDocsIsLoading}}
-        {{documents-row meeting_type="EU Scientific Review Group"
+          isLoading=controller.citesPcDocsIsLoading
+          block=true
+          }}
+
+        {{documents-results-header
+          isVisible=controller.euSrgDocsPresent
+          meetingType="EU Scientific Review Group"
+          documents=controller.euSrgDocuments
+          }}
+        {{documents-results
+          isVisible=controller.euSrgDocsPresent
           eventType="EcSrg"
           dataController=controller
+          documents=controller.euSrgDocuments.docs
           loadMore=controller.euSrgDocsLoadMore
-          documents=controller.euSrgDocuments
-          isLoading=controller.euSrgDocsIsLoading}}
-        {{documents-row meeting_type="Intersessional documents"
+          isLoading=controller.euSrgDocsIsLoading
+          block=true
+          }}
+
+        {{documents-results-header
+          isVisible=controller.otherDocsPresent
+          meetingType="Intersessional documents"
+          documents=controller.otherDocuments
+          }}
+        {{documents-results
+          isVisible=controller.otherDocsPresent
           eventType="other"
           dataController=controller
+          documents=controller.otherDocuments.docs
           loadMore=controller.otherDocsLoadMore
-          documents=controller.otherDocuments
-          isLoading=controller.otherDocsIsLoading}}
+          isLoading=controller.otherDocsIsLoading
+          block=true
+          }}
       </tbody>
     </table>
   </div>
