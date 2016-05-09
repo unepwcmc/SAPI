@@ -40,7 +40,7 @@
       </div>
 
       <div class="documents-control-group">
-        <div class="location-area popup-area">
+        <div {{bind-attr class=":popup-area :events-area selectedEventType:events-visible"}}>
           <label>Meeting</label>
           {{view Species.EventsSearchButton
             selectedEventsBinding="controller.selectedEvents"
