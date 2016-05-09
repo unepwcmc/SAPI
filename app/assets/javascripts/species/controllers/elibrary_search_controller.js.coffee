@@ -88,6 +88,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       @set('taxonConceptQueryForDisplay', '')
       @set('taxonConceptQuery', '')
       @set('selectedGeoEntities', [])
+      @set('selectedGeoEntitiesIds', [])
       @set('titleQuery', '')
       @set('selectedEventType', null)
       @set('selectedEvents', [])
