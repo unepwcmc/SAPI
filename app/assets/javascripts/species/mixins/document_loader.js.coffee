@@ -73,8 +73,6 @@ Species.DocumentLoader = Ember.Mixin.create
         taxon_concepts_ids: [@get('controllers.taxonConcept.id')],
       }
     params['event_type'] = eventType
-    params['sort_col'] = @get('sortCol') || 'date'
-    params['sort_dir'] = @get('sortDir') || 'desc'
     params
 
   getEventTypeKey: (eventType) ->
