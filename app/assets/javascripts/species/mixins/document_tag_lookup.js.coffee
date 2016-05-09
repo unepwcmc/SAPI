@@ -1,8 +1,6 @@
 Species.DocumentTagLookup = Ember.Mixin.create
   selectedProposalOutcome: null
   selectedProposalOutcomeId: null
-  selectedReviewPhase: null
-  selectedReviewPhaseId: null
 
   initDocumentTagsSelectors: ->
     if @get('selectedProposalOutcomeId')

@@ -38,7 +38,6 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       event_id: @get('selectedEvent.id'),
       document_type: @get('selectedDocumentType.id'),
       proposal_outcome_id: @get('selectedProposalOutcome.id'),
-      review_phase_id: @get('selectedReviewPhase.id')
     }
 
   filteredDocumentTypes: ( ->
@@ -96,4 +95,3 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       @set('selectedDocumentType', null)
       @set('selectedInterSessionalDocType', null)
       @set('selectedProposalOutcome', null)
-      @set('selectedReviewPhase', null)
