@@ -5,12 +5,6 @@ Species.DocumentLoader = Ember.Mixin.create
   citesPcDocuments: {}
   otherDocuments: {}
 
-  euSrgDocsIsLoading: true
-  citesCopProposalsDocsIsLoading: true
-  citesAcDocsIsLoading: true
-  citesPcDocsIsLoading: true
-  otherDocsIsLoading: true
-
   euSrgDocsTotal: ( ->
     @get('euSrgDocuments.meta.total')
   ).property('euSrgDocuments.meta.total')
@@ -60,6 +54,34 @@ Species.DocumentLoader = Ember.Mixin.create
   otherDocsLoadMore: ( ->
     @get('otherDocuments.docs.length') < @get('otherDocsTotal')
   ).property('otherDocuments.docs.length', 'otherDocsTotal')
+
+  anyDocumentsPresent: ( ->
+    @get('euSrgDocsPresent') ||
+    @get('citesCopProposalsDocsPresent') ||
+    @get('citesAcDocsPresent') ||
+    @get('citesPcDocsPresent') ||
+    @get('otherDocsPresent')
+  ).property(
+    'euSrgDocsPresent',
+    'citesCopProposalsDocsPresent',
+    'citesAcDocsPresent',
+    'citesPcDocsPresent',
+    'otherDocsPresent'
+  )
+
+  anyDocumentsLoading: (->
+    @get('euSrgDocsIsLoading') ||
+    @get('citesCopProposalsDocsIsLoading') ||
+    @get('citesAcDocsIsLoading') ||
+    @get('citesPcDocsIsLoading') ||
+    @get('otherDocsIsLoading')
+  ).property(
+    'euSrgDocsIsLoading',
+    'citesCopProposalsDocsIsLoading',
+    'citesAcDocsIsLoading',
+    'citesPcDocsIsLoading',
+    'otherDocsIsLoading'
+  )
 
   euSrgDocsObserver: ( ->
     @set('euSrgDocsIsLoading', false)
