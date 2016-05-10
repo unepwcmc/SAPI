@@ -5,6 +5,12 @@ Species.DocumentLoader = Ember.Mixin.create
   citesPcDocuments: {}
   otherDocuments: {}
 
+  euSrgDocsIsLoading: true
+  citesCopProposalsDocsIsLoading: true
+  citesAcDocsIsLoading: true
+  citesPcDocsIsLoading: true
+  otherDocsIsLoading: true
+
   euSrgDocsTotal: ( ->
     @get('euSrgDocuments.meta.total')
   ).property('euSrgDocuments.meta.total')
