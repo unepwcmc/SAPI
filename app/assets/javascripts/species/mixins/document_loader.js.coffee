@@ -11,25 +11,83 @@ Species.DocumentLoader = Ember.Mixin.create
   citesPcDocsIsLoading: true
   otherDocsIsLoading: true
 
+  euSrgDocsTotal: ( ->
+    @get('euSrgDocuments.meta.total')
+  ).property('euSrgDocuments.meta.total')
+  euSrgDocsPresent: ( ->
+    @get('euSrgDocsTotal') > 0
+  ).property('euSrgDocsTotal')
   euSrgDocsLoadMore: ( ->
-    @get('euSrgDocuments.docs.length') < @get('euSrgDocuments.meta.total')
-  ).property('euSrgDocuments.docs.length', 'euSrgDocuments.meta.total')
+    @get('euSrgDocuments.docs.length') < @get('euSrgDocsTotal')
+  ).property('euSrgDocuments.docs.length', 'euSrgDocsTotal')
 
+  citesCopProposalsDocsTotal: ( ->
+    @get('citesCopProposalsDocuments.meta.total')
+  ).property('citesCopProposalsDocuments.meta.total')
+  citesCopProposalsDocsPresent: ( ->
+    @get('citesCopProposalsDocsTotal') > 0
+  ).property('citesCopProposalsDocsTotal')
   citesCopProposalsDocsLoadMore: ( ->
-    @get('citesCopProposalsDocuments.docs.length') < @get('citesCopProposalsDocuments.meta.total')
-  ).property('citesCopProposalsDocuments.docs.length', 'citesCopProposalsDocuments.meta.total')
+    @get('citesCopProposalsDocuments.docs.length') < @get('citesCopProposalsDocsTotal')
+  ).property('citesCopProposalsDocuments.docs.length', 'citesCopProposalsDocsTotal')
 
+  citesAcDocsTotal: ( ->
+    @get('citesAcDocuments.meta.total')
+  ).property('citesAcDocuments.meta.total')
+  citesAcDocsPresent: ( ->
+    @get('citesAcDocsTotal') > 0
+  ).property('citesAcDocsTotal')
   citesAcDocsLoadMore: ( ->
-    @get('citesAcDocuments.docs.length') < @get('citesAcDocuments.meta.total')
-  ).property('citesAcDocuments.docs.length', 'citesAcDocuments.meta.total')
+    @get('citesAcDocuments.docs.length') < @get('citesAcDocsTotal')
+  ).property('citesAcDocuments.docs.length', 'citesAcDocsTotal')
 
+  citesPcDocsTotal: ( ->
+    @get('citesPcDocuments.meta.total')
+  ).property('citesPcDocuments.meta.total')
+  citesPcDocsPresent: ( ->
+    @get('citesPcDocsTotal') > 0
+  ).property('citesPcDocsTotal')
   citesPcDocsLoadMore: ( ->
-    @get('citesPcDocuments.docs.length') < @get('citesPcDocuments.meta.total')
-  ).property('citesPcDocuments.docs.length', 'citesPcDocuments.meta.total')
+    @get('citesPcDocuments.docs.length') < @get('citesPcDocsTotal')
+  ).property('citesPcDocuments.docs.length', 'citesPcDocsTotal')
 
+  otherDocsTotal: ( ->
+    @get('otherDocuments.meta.total')
+  ).property('otherDocuments.meta.total')
+  otherDocsPresent: ( ->
+    @get('otherDocsTotal') > 0
+  ).property('otherDocsTotal')
   otherDocsLoadMore: ( ->
-    @get('otherDocuments.docs.length') < @get('otherDocuments.meta.total')
-  ).property('otherDocuments.docs.length', 'otherDocuments.meta.total')
+    @get('otherDocuments.docs.length') < @get('otherDocsTotal')
+  ).property('otherDocuments.docs.length', 'otherDocsTotal')
+
+  anyDocumentsPresent: ( ->
+    @get('euSrgDocsPresent') ||
+    @get('citesCopProposalsDocsPresent') ||
+    @get('citesAcDocsPresent') ||
+    @get('citesPcDocsPresent') ||
+    @get('otherDocsPresent')
+  ).property(
+    'euSrgDocsPresent',
+    'citesCopProposalsDocsPresent',
+    'citesAcDocsPresent',
+    'citesPcDocsPresent',
+    'otherDocsPresent'
+  )
+
+  anyDocumentsLoading: (->
+    @get('euSrgDocsIsLoading') ||
+    @get('citesCopProposalsDocsIsLoading') ||
+    @get('citesAcDocsIsLoading') ||
+    @get('citesPcDocsIsLoading') ||
+    @get('otherDocsIsLoading')
+  ).property(
+    'euSrgDocsIsLoading',
+    'citesCopProposalsDocsIsLoading',
+    'citesAcDocsIsLoading',
+    'citesPcDocsIsLoading',
+    'otherDocsIsLoading'
+  )
 
   euSrgDocsObserver: ( ->
     @set('euSrgDocsIsLoading', false)

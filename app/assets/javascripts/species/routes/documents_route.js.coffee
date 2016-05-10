@@ -51,7 +51,10 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
 
   loadDocumentsForEventType: (eventType, eventTypeQueryParams) ->
     controller = @controllerFor('documents')
-    eventTypeKey = @getEventTypeKey(eventType).camelize() + 'Documents'
+    eventType = @getEventTypeKey(eventType).camelize()
+    eventTypeKey = eventType + 'Documents'
+    isLoadingProperty = eventType + 'DocsIsLoading'
+    controller.set(isLoadingProperty, true)
     @loadDocuments(eventTypeQueryParams, (documents) =>
       controller.set(eventTypeKey, documents)
     )

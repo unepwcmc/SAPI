@@ -13,7 +13,10 @@ Species.TaxonConceptDocumentsRoute = Ember.Route.extend Species.DocumentLoader,
         event_type: eventType,
         taxon_concepts_ids: [model.get('id')]
       }
-      eventTypeKey = @getEventTypeKey(eventType).camelize() + 'Documents'
+      eventType = @getEventTypeKey(eventType).camelize()
+      eventTypeKey = eventType + 'Documents'
+      isLoadingProperty = eventType + 'DocsIsLoading'
+      controller.set(isLoadingProperty, true)
       @loadDocuments(params, (documents) ->
         controller.set(eventTypeKey, documents)
       )
