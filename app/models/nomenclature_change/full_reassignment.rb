@@ -44,6 +44,7 @@ class NomenclatureChange::FullReassignment
       {taxon_concept_id: @old_taxon_concept.id}
     )
     @old_taxon_concept.update_attributes(dependents_updated_at: update_timestamp)
+    @old_taxon_concept.reload
     @new_taxon_concept.update_attributes(dependents_updated_at: update_timestamp)
   end
 
