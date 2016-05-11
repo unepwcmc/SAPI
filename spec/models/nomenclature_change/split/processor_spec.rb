@@ -286,6 +286,9 @@ describe NomenclatureChange::Split::Processor do
     specify "input genus child's child is a synonym" do
       expect(input_genus_child_child.reload.name_status).to eq('S')
     end
+    specify "input genus child's child's name did not change" do
+      expect(input_genus_child_child.reload.full_name).to eq('Crotalus durissus unicolor')
+    end
     specify "output genus should have child with resolved name" do
       output_genus_child = output_genus.children.first
       expect(output_genus_child).not_to be_nil
