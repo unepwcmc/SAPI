@@ -216,6 +216,85 @@ describe NomenclatureChange::Lump::Processor do
       end
     end
   end
+  context "when input is genus and parent ressignments occur" do
+    let(:input_genus) do
+      create_cites_eu_genus(
+        taxon_name: create(:taxon_name, scientific_name: 'Crotalus')
+      )
+    end
+    let(:input_genus_child) do
+      create_cites_eu_species(
+        parent: input_genus,
+        taxon_name: create(:taxon_name, scientific_name: 'durissus')
+      )
+    end
+    let!(:input_genus_child_child) do
+      create_cites_eu_subspecies(
+        parent: input_genus_child,
+        taxon_name: create(:taxon_name, scientific_name: 'unicolor')
+      )
+    end
+    let!(:quota){ create(:quota, taxon_concept: input_genus_child, geo_entity: create(:geo_entity)) }
+    let(:output_genus) do
+      create_cites_eu_genus(
+        taxon_name: create(:taxon_name, scientific_name: 'Paracrotalus')
+      )
+    end
+    let(:lump){
+      create(:nomenclature_change_lump,
+        inputs_attributes: {
+          0 => { taxon_concept_id: input_genus.id },
+          1 => { taxon_concept_id: output_genus.id }
+        },
+        output_attributes: { taxon_concept_id: output_genus.id },
+        status: NomenclatureChange::Lump::LEGISLATION
+      )
+    }
+    let(:reassignment){
+      create(:nomenclature_change_parent_reassignment,
+        input: lump.inputs.first,
+        reassignable_id: input_genus_child.id
+      )
+    }
+    let!(:reassignment_target){
+      create(:nomenclature_change_reassignment_target,
+        reassignment: reassignment,
+        output: lump.output
+      )
+    }
+    before(:each){ processor.run }
+    specify "input genus child is a synonym" do
+      expect(input_genus_child.reload.name_status).to eq('S')
+    end
+    specify "input genus child is a synonym of output genus child" do
+      output_genus_child = output_genus.children.first
+      expect(input_genus_child.accepted_names).to include(output_genus_child)
+    end
+    specify "input genus child's child is a synonym" do
+      expect(input_genus_child_child.reload.name_status).to eq('S')
+    end
+    specify "input genus child's child's name did not change" do
+      expect(input_genus_child_child.reload.full_name).to eq('Crotalus durissus unicolor')
+    end
+    specify "output genus should have child with resolved name" do
+      output_genus_child = output_genus.children.first
+      expect(output_genus_child).not_to be_nil
+      expect(output_genus_child.full_name).to eq('Paracrotalus durissus')
+    end
+    specify "output genus child should have child with resolved name" do
+      output_genus_child = output_genus.children.first
+      output_genus_child_child = output_genus_child.children.first
+      expect(output_genus_child_child).not_to be_nil
+      expect(output_genus_child_child.full_name).to eq('Paracrotalus durissus unicolor')
+    end
+    specify "input genus child has no quotas" do
+      expect(input_genus_child.quotas).to be_empty
+    end
+    specify "input genus child's accepted name has 1 quota" do
+      output_genus_child = output_genus.children.first
+      expect(output_genus_child.quotas.size).to eq(1)
+    end
+  end
   describe :summary do
     let(:lump){ lump_with_inputs_and_output_existing_taxon }
     specify { expect(processor.summary).to be_kind_of(Array) }
