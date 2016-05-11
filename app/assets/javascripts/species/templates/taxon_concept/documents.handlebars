@@ -24,7 +24,7 @@
     </table>
 
     {{documents-header
-      isVisible=controller.citesAcDocsDocsPresent
+      isVisible=controller.citesAcDocsPresent
       meetingType="CITES Review of Significant Trade"
       meetingTypeId="cites_rst_animals"
     }}
@@ -32,7 +32,7 @@
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
-          isVisible=controller.citesAcDocsDocsPresent
+          isVisible=controller.citesAcDocsPresent
           eventType="CitesAc,CitesTc"
           dataController=controller
           loadMore=controller.citesAcDocsLoadMore
@@ -42,7 +42,7 @@
     </table>
 
     {{documents-header
-      isVisible=controller.citesPcDocsDocsPresent
+      isVisible=controller.citesPcDocsPresent
       meetingType="CITES Review of Significant Trade"
       meetingTypeId="cites_rst_plants"
     }}
@@ -50,7 +50,7 @@
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
-          isVisible=controller.citesPcDocsDocsPresent
+          isVisible=controller.citesPcDocsPresent
           eventType="CitesPc"
           dataController=controller
           loadMore=controller.citesPcDocsLoadMore
