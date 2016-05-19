@@ -38,14 +38,22 @@ class Api::V1::DocumentsController < ApplicationController
     elsif !File.exists?(path_to_file)
       render_404
     else
-      response.headers['Content-Length'] = File.size(path_to_file).to_s
-      send_file(
-        path_to_file,
-          :filename => File.basename(path_to_file),
-          :type => @document.filename.content_type,
-          :disposition => 'attachment',
-          :url_based_filename => true
-      )
+      respond_to do |format|
+        format.html do
+          response.headers['Content-Length'] = File.size(path_to_file).to_s
+          send_file(
+            path_to_file,
+              :filename => File.basename(path_to_file),
+              :type => @document.filename.content_type,
+              :disposition => 'attachment',
+              :url_based_filename => true
+          )
+        end
+        format.js do
+          render :json => @document,
+            serializer: Species::DocumentDownloadSerializer
+        end
+      end
     end
   end
 
@@ -56,6 +64,7 @@ class Api::V1::DocumentsController < ApplicationController
 
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
+    existing_documents = []
     Zip::OutputStream.open(t.path) do |zos|
       @documents.each do |document|
         path_to_file = document.filename.path
@@ -64,6 +73,7 @@ class Api::V1::DocumentsController < ApplicationController
           missing_files <<
             "{\n  title: #{document.title},\n  filename: #{filename}\n}"
         else
+          existing_documents << document
           zos.put_next_entry(filename)
           zos.print IO.read(path_to_file)
         end
@@ -77,11 +87,19 @@ class Api::V1::DocumentsController < ApplicationController
       end
     end
 
-    send_file t.path,
-      :type => "application/zip",
-      :filename => "elibrary-documents.zip"
+    respond_to do |format|
+      format.html do
+        send_file t.path,
+          :type => "application/zip",
+          :filename => "elibrary-documents.zip"
 
-    t.close
+        t.close
+      end
+      format.js do
+        render :json => existing_documents,
+          each_serializer: Species::DocumentDownloadSerializer
+      end
+    end
   end
 
   private
