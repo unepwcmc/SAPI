@@ -15,7 +15,20 @@ Species.BatchDownloadComponent = Ember.Component.extend
       url: "/api/v1/documents/download_zip"
       data: { ids: documentIds.join() }
     }).done((data) =>
-      for doc in data.documents
+      documents = data.documents
+      if documents.length > 1
+        event_types = documents.map((doc) -> doc.event_type)
+        event_names = documents.map((doc) -> doc.event_name)
+        document_types = documents.map((doc) -> doc.document_type)
+        values = documents.map((doc) -> doc.id)
+        ga('send', {
+          hitType: 'event',
+          eventCategory: "BatchDownloads: #{documents.map((doc) -> doc.event_type)}",
+          eventAction: documents.map((doc) -> doc.event_name),
+          label: documents.map((doc) -> doc.document_type),
+          value: documents.map((doc) -> doc.id)
+        })
+      for doc in documents
         ga('send', {
           hitType: 'event',
           eventCategory: "Downloads: #{doc.event_type}",
