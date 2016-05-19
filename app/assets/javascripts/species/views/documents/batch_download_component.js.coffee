@@ -20,13 +20,13 @@ Species.BatchDownloadComponent = Ember.Component.extend
         event_types = documents.map((doc) -> doc.event_type)
         event_names = documents.map((doc) -> doc.event_name)
         document_types = documents.map((doc) -> doc.document_type)
-        values = documents.map((doc) -> doc.id)
+        document_ids = documents.map((doc) -> doc.id)
         ga('send', {
           hitType: 'event',
-          eventCategory: "BatchDownloads: #{documents.map((doc) -> doc.event_type)}",
-          eventAction: documents.map((doc) -> doc.event_name),
-          label: documents.map((doc) -> doc.document_type),
-          value: documents.map((doc) -> doc.id)
+          eventCategory: "BatchDownloads: #{event_types}",
+          eventAction: event_names,
+          label: document_types,
+          value: document_ids
         })
       for doc in documents
         ga('send', {
