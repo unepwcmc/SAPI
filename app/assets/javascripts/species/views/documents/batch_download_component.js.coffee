@@ -15,7 +15,6 @@ Species.BatchDownloadComponent = Ember.Component.extend
       url: "/api/v1/documents/download_zip"
       data: { ids: documentIds.join() }
     }).done((data) =>
-      debugger
       for doc in data.documents
         ga('send', {
           hitType: 'event',
