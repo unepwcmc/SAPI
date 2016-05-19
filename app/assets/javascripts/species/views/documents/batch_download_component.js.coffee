@@ -8,6 +8,21 @@ Species.BatchDownloadComponent = Ember.Component.extend
     documentIds = checked.map( ->
       $(@).closest('tr').data('document-id')
     ).toArray()
-    @.$().prop('href', '/api/v1/documents/download_zip?ids=' +
-      documentIds.join()
+    url = "/api/v1/documents/download_zip?ids=#{documentIds.join()}"
+    $.ajax({
+      type: 'GET'
+      dataType: 'json'
+      url: "/api/v1/documents/download_zip"
+      data: { ids: documentIds.join() }
+    }).done((data) =>
+      debugger
+      for doc in data.documents
+        ga('send', {
+          hitType: 'event',
+          eventCategory: "Downloads: #{doc.event_type}",
+          eventAction: doc.event_name,
+          label: doc.document_type,
+          value: doc.id
+        })
     )
+    window.location = url
