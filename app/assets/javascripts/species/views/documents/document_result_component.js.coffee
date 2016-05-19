@@ -45,3 +45,24 @@ Species.DocumentResultComponent = Ember.Component.extend
     else
       @get('title')
   ).property('doc.event_type', 'doc.proposal_number', 'title')
+
+  actions:
+    startDownload: () ->
+      document_id = @get('doc.id')
+      url = "/api/v1/documents/#{document_id}"
+      $.ajax({
+        type: 'GET'
+        dataType: 'json'
+        url: url
+      }).done((data) =>
+        doc = data.document_download
+        ga('send', {
+          hitType: 'event',
+          eventCategory: "Downloads: #{doc.event_type}",
+          eventAction: doc.event_name,
+          label: doc.document_type,
+          value: doc.id
+        })
+      )
+      window.location = url
+

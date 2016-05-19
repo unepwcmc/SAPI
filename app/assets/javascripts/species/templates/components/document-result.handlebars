@@ -2,7 +2,7 @@
 <td class='event-date-col'>{{unbound doc.date}}</td>
 <td class='title-col'>
 
-<a {{bind-attr class=":legal-links isLongTitle:tooltip"}} {{bind-attr href=view.documentUrl}}>
+  <a {{bind-attr class=":legal-links isLongTitle:tooltip"}} {{action "startDownload" on="click"}}>
 
     {{#if isLongTitle}}
       {{truncate fullTitle}}
