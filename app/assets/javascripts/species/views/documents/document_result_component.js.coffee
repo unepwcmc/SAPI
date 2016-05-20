@@ -46,15 +46,19 @@ Species.DocumentResultComponent = Ember.Component.extend
       @get('title')
   ).property('doc.event_type', 'doc.proposal_number', 'title')
 
+  searchContextInfo: ( ->
+    "#{@get('searchContext')} search: #{@get('species')}"
+  ).property('searchContext', 'species')
+
   actions:
     startDownload: () ->
       url = "/api/v1/documents/#{@get('documentId')}"
-      ga('send', {
+      trackingInfo = {
         hitType: 'event',
         eventCategory: "Downloads: #{@get('doc.event_type')}",
         eventAction: @get('doc.event_name') + ': ' + @get('doc.document_type'),
-        label: 'Context: TODO',
+        label: 'Context: ' + @get('searchContextInfo') + ' TODO',
         value: @get('documentId')
-      })
+      }
+      ga('send', trackingInfo)
       window.location = url
-

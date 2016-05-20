@@ -30,6 +30,8 @@
           proposalOutcome=true
           loadMore=controller.citesCopProposalsDocsLoadMore
           block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
           }}
 
         {{documents-results-header
@@ -44,6 +46,8 @@
           documents=controller.citesAcDocuments.docs
           loadMore=controller.citesAcDocsLoadMore
           block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
           }}
 
         {{documents-results-header
@@ -58,6 +62,8 @@
           documents=controller.citesPcDocuments.docs
           loadMore=controller.citesPcDocsLoadMore
           block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
           }}
 
         {{documents-results-header
@@ -72,6 +78,8 @@
           documents=controller.euSrgDocuments.docs
           loadMore=controller.euSrgDocsLoadMore
           block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
           }}
 
         {{documents-results-header
@@ -86,6 +94,8 @@
           documents=controller.otherDocuments.docs
           loadMore=controller.otherDocsLoadMore
           block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
           }}
       </tbody>
     </table>
