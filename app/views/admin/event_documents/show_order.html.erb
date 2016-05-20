@@ -18,7 +18,7 @@
     <% @documents.each do |document| %>
 
       <li>
-        <%= hidden_field_tag "documents[#{document.id}]", nil, class: 'document-reorder-input' %>
+        <%= hidden_field_tag "documents[#{document.id}]", document.sort_index, class: 'document-reorder-input' %>
         <i class="icon-move"></i>
         <% if document.type == 'Document::Proposal' %>
           Prop: <%= document.proposal_number %>
