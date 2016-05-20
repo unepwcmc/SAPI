@@ -56,7 +56,6 @@ class Api::V1::DocumentsController < ApplicationController
 
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
-    existing_documents = []
     Zip::OutputStream.open(t.path) do |zos|
       @documents.each do |document|
         path_to_file = document.filename.path
@@ -65,7 +64,6 @@ class Api::V1::DocumentsController < ApplicationController
           missing_files <<
             "{\n  title: #{document.title},\n  filename: #{filename}\n}"
         else
-          existing_documents << document
           zos.put_next_entry(filename)
           zos.print IO.read(path_to_file)
         end
@@ -79,19 +77,11 @@ class Api::V1::DocumentsController < ApplicationController
       end
     end
 
-    respond_to do |format|
-      format.html do
-        send_file t.path,
-          :type => "application/zip",
-          :filename => "elibrary-documents.zip"
+    send_file t.path,
+      :type => "application/zip",
+      :filename => "elibrary-documents.zip"
 
-        t.close
-      end
-      format.js do
-        render :json => existing_documents,
-          each_serializer: Species::DocumentDownloadSerializer
-      end
-    end
+    t.close
   end
 
   private
