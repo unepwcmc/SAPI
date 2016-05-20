@@ -38,22 +38,14 @@ class Api::V1::DocumentsController < ApplicationController
     elsif !File.exists?(path_to_file)
       render_404
     else
-      respond_to do |format|
-        format.html do
-          response.headers['Content-Length'] = File.size(path_to_file).to_s
-          send_file(
-            path_to_file,
-              :filename => File.basename(path_to_file),
-              :type => @document.filename.content_type,
-              :disposition => 'attachment',
-              :url_based_filename => true
-          )
-        end
-        format.js do
-          render :json => @document,
-            serializer: Species::DocumentDownloadSerializer
-        end
-      end
+      response.headers['Content-Length'] = File.size(path_to_file).to_s
+      send_file(
+        path_to_file,
+          :filename => File.basename(path_to_file),
+          :type => @document.filename.content_type,
+          :disposition => 'attachment',
+          :url_based_filename => true
+      )
     end
   end
 
