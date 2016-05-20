@@ -48,21 +48,13 @@ Species.DocumentResultComponent = Ember.Component.extend
 
   actions:
     startDownload: () ->
-      document_id = @get('doc.id')
-      url = "/api/v1/documents/#{document_id}"
-      $.ajax({
-        type: 'GET'
-        dataType: 'json'
-        url: url
-      }).done((data) =>
-        doc = data.document_download
-        ga('send', {
-          hitType: 'event',
-          eventCategory: "Downloads: #{doc.event_type}",
-          eventAction: doc.event_name,
-          label: doc.document_type,
-          value: doc.id
-        })
-      )
+      url = "/api/v1/documents/#{@get('documentId')}"
+      ga('send', {
+        hitType: 'event',
+        eventCategory: "Downloads: #{@get('doc.event_type')}",
+        eventAction: @get('doc.event_name') + ': ' + @get('doc.document_type'),
+        label: 'Context: TODO',
+        value: @get('documentId')
+      })
       window.location = url
 
