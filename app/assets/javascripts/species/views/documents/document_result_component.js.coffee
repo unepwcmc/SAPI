@@ -46,17 +46,6 @@ Species.DocumentResultComponent = Ember.Component.extend
       @get('title')
   ).property('doc.event_type', 'doc.proposal_number', 'title')
 
-  searchContextInfo: ( ->
-    "#{@get('searchContext')} search for #{@get('species')}"
-  ).property('searchContext', 'species')
-
-  signedInInfo: ( ->
-    'Logged in: ' + if @get('isSignedIn')
-      'yes'
-    else
-      'no'
-  ).property('isSignedIn')
-
   actions:
     startDownload: () ->
       url = "/api/v1/documents/#{@get('documentId')}"

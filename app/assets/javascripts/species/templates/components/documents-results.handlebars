@@ -14,7 +14,11 @@
             <th class="outcome-col">OUTCOME</th>
           {{/if}}
           <th class="download-col">
-            {{batch-download}}
+            {{batch-download
+              eventType=eventType
+              searchContextInfo=searchContextInfo
+              signedInInfo=signedInInfo
+            }}
             {{download-checkbox}}
           </th>
         </tr>
@@ -41,9 +45,8 @@
           {{document-result
             doc=doc
             proposalOutcome=proposalOutcome
-            searchContext=searchContext
-            species=species
-            isSignedIn=isSignedIn
+            searchContextInfo=searchContextInfo
+            signedInInfo=signedInInfo
           }}
         {{/each}}
       </tbody>
