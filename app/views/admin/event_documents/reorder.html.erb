@@ -1,1 +1,18 @@
-REORDER ME
+<h1>Reorder <%= @event.name %> documents</h1>
+
+<ul>
+<% @documents.each do |document| %>
+
+  <li>
+    <i class="icon-move"></i>
+    <% if document.document_type == 'Document::Proposal' %>
+      Prop: <%= document.proposal_number %>
+    <% end %>
+    <%= document.title %> [<%= document.document_type %> <%= document['language'] %>]
+    <%= link_to '<i class="icon-pencil"></i>'.html_safe,
+      edit_admin_document_path(document)
+    %>
+  </li>
+
+<% end %>
+</ul>
