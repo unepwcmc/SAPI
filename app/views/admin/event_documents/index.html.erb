@@ -3,7 +3,7 @@
 <%= admin_new_modal { '' } %>
 
 <p>
-  <%= link_to "Reorder #{@event.name} documents", reorder_admin_event_documents_path(@event) %>
+  <%= link_to "Reorder #{@event.name} documents", show_order_admin_event_documents_path(@event) %>
 </p>
 
 <%= admin_table do %>

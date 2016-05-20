@@ -30,7 +30,7 @@
       %>
       <% if @document.event %>
         <p>
-          <%= link_to "Reorder #{@document.event.name} documents", reorder_admin_event_documents_path(@document.event) %>
+          <%= link_to "Reorder #{@document.event.name} documents", show_order_admin_event_documents_path(@document.event) %>
         </p>
       <% end %>
     </div>

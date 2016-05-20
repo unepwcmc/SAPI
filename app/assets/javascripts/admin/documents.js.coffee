@@ -122,4 +122,8 @@ $(document).ready ->
 
   $('ul.documents-reorder-list').sortable(
     items: 'li'
+  ).bind('sortupdate', (e, ui) ->
+    ui.startparent.find('input').each( (idx) ->
+      $(@).val(idx)
+    )
   )

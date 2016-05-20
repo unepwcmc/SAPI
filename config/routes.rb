@@ -65,8 +65,8 @@ SAPI::Application.routes.draw do
     resources :events do
       resource :document_batch, :only => [:new, :create]
       resources :documents, :only => [:index, :edit, :update, :destroy] do
-        get :reorder, on: :collection, controller: :event_documents
-        post :reorder, on: :collection, controller: :event_documents
+        get :show_order, on: :collection, controller: :event_documents
+        post :update_order, on: :collection, controller: :event_documents
       end
     end
     resources :eu_regulations do
