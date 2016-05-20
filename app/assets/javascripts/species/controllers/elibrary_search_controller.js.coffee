@@ -1,8 +1,10 @@
-Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Species.SearchContext,
+Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
+  Species.SearchContext,
   Species.TaxonConceptAutoCompleteLookup,
   Species.GeoEntityAutoCompleteLookup,
   Species.EventLookup,
   Species.DocumentTagLookup,
+  Species.SignedInStatus,
   needs: ['documentGeoEntities', 'taxonConcepts', 'events', 'documentTags']
   geoEntities: Ember.computed.alias("controllers.documentGeoEntities")
   searchContext: 'documents'
@@ -65,10 +67,6 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
   interSessionalDocTypeDropdownVisible: ( ->
     !@get('selectedEventType.id')?
   ).property('selectedEventType')
-
-  isSignedIn: ( ->
-    $.cookie('speciesplus.signed_in') == '1'
-  ).property()
 
   actions:
     openSearchPage:->

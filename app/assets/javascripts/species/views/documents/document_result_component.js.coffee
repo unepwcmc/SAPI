@@ -47,8 +47,15 @@ Species.DocumentResultComponent = Ember.Component.extend
   ).property('doc.event_type', 'doc.proposal_number', 'title')
 
   searchContextInfo: ( ->
-    "#{@get('searchContext')} search: #{@get('species')}"
+    "#{@get('searchContext')} search for #{@get('species')}"
   ).property('searchContext', 'species')
+
+  signedInInfo: ( ->
+    'Logged in: ' + if @get('isSignedIn')
+      'yes'
+    else
+      'no'
+  ).property('isSignedIn')
 
   actions:
     startDownload: () ->
@@ -57,7 +64,7 @@ Species.DocumentResultComponent = Ember.Component.extend
         hitType: 'event',
         eventCategory: "Downloads: #{@get('doc.event_type')}",
         eventAction: @get('doc.event_name') + ': ' + @get('doc.document_type'),
-        label: 'Context: ' + @get('searchContextInfo') + ' TODO',
+        label: "Context: #{@get('searchContextInfo')} (#{@get('signedInInfo')})",
         value: @get('documentId')
       }
       ga('send', trackingInfo)
