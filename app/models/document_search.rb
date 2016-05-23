@@ -158,6 +158,10 @@ class DocumentSearch
     @query = @query.order('date_raw DESC, MAX(sort_index), MAX(title)')
   end
 
+  def self.refresh
+    ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
+  end
+
   def self.clear_cache
     RefreshDocumentsWorker.perform_async
     DownloadsCacheCleanupWorker.perform_async(:documents)
