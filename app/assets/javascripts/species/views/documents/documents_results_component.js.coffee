@@ -4,7 +4,10 @@ Species.DocumentsResultsComponent = Ember.Component.extend
   classNames: ['table-row']
 
   searchContextInfo: ( ->
-    "#{@get('searchContext')} search for #{@get('species')}"
+    if @get('species')
+      "#{@get('searchContext')} search for #{@get('species')}"
+    else
+      "#{@get('searchContext')} search"
   ).property('searchContext', 'species')
 
   signedInInfo: ( ->
