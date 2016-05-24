@@ -53,8 +53,8 @@ Species.DocumentResultComponent = Ember.Component.extend
         hitType: 'event',
         eventCategory: "Downloads: #{@get('doc.event_type')}",
         eventAction: @get('doc.event_name') + ': ' + @get('doc.document_type'),
-        label: "Context: #{@get('searchContextInfo')} (#{@get('signedInInfo')})",
-        value: @get('documentId')
+        eventLabel: "Context: #{@get('searchContextInfo')} (#{@get('signedInInfo')})",
+        eventValue: 1
       }
       ga('send', trackingInfo)
       window.location = url
