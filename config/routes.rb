@@ -64,7 +64,10 @@ SAPI::Application.routes.draw do
     resources :eu_decision_types, :only => [:index, :create, :update, :destroy]
     resources :events do
       resource :document_batch, :only => [:new, :create]
-      resources :documents, :only => [:index, :edit, :update, :destroy]
+      resources :documents, :only => [:index, :edit, :update, :destroy] do
+        get :show_order, on: :collection, controller: :event_documents
+        post :update_order, on: :collection, controller: :event_documents
+      end
     end
     resources :eu_regulations do
       post :activate, :on => :member

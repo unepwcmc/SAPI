@@ -28,14 +28,11 @@
           @document.event_id
         ), include_blank: true
       %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :sort_index, class: 'control-label' do %>
-      Event sort index
-    <% end %>
-    <div class="controls">
-      <%= f.text_field :sort_index %>
+      <% if @document.event %>
+        <p>
+          <%= link_to "Reorder #{@document.event.name} documents", show_order_admin_event_documents_path(@document.event) %>
+        </p>
+      <% end %>
     </div>
   </div>
 

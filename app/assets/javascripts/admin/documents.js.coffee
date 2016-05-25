@@ -119,3 +119,11 @@ $(document).ready ->
     citationTaxonField.select2(citationTaxonSelect2Options)
     citationGeoEntityField.select2(citationGeoEntitySelect2Options)
   )
+
+  $('ul.documents-reorder-list').sortable(
+    items: 'li'
+  ).bind('sortupdate', (e, ui) ->
+    ui.startparent.find('input').each( (idx) ->
+      $(@).val(idx)
+    )
+  )

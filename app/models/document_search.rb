@@ -162,4 +162,9 @@ class DocumentSearch
     ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
   end
 
+  def self.clear_cache
+    RefreshDocumentsWorker.perform_async
+    DownloadsCacheCleanupWorker.perform_async(:documents)
+  end
+
 end

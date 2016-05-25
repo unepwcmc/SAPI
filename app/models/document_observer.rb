@@ -2,20 +2,14 @@ class DocumentObserver < ActiveRecord::Observer
 
   def after_save(document)
     sync_sort_index(document)
-    clear_cache
+    DocumentSearch.clear_cache
   end
 
   def after_destroy(document)
-    clear_cache
+    DocumentSearch.clear_cache
   end
 
   private
-
-  def clear_cache
-    DocumentSearch.increment_cache_iterator
-    RefreshDocumentsWorker.perform_async
-    DownloadsCacheCleanupWorker.perform_async(:documents)
-  end
 
   def sync_sort_index(document)
     if document.sort_index_changed?
