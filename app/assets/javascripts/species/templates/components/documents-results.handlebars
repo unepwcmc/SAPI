@@ -1,73 +1,60 @@
-{{#if documents.length}}
-  <td colspan="3">
-    <div {{bindAttr class=":inner-table-container block:block loadMore:show_more"}}>
+<td colspan="3">
+  <div {{bindAttr class=":inner-table-container block:block loadMore:show_more"}}>
 
-      <table class="table-header">
-        <thead>
-          <tr>
-            {{sortable-column column_name="MEETING" class="event-col"
-              action="reorderDocuments" eventType=eventType targetObject=dataController
+    <table class="table-header">
+      <thead>
+        <tr>
+          <th class="event-col">MEETING</th>
+          <th class="event-date-col">DATE</th>
+          <th class="title-col">TITLE</th>
+          <th class="language-col">LANG</th>
+          <th class="countries-col">COUNTRIES</th>
+          <th class="taxon-col">TAXA</th>
+          {{#if proposalOutcome}}
+            <th class="outcome-col">OUTCOME</th>
+          {{/if}}
+          <th class="download-col">
+            {{batch-download
+              eventType=eventType
+              searchContextInfo=searchContextInfo
+              signedInInfo=signedInInfo
             }}
-            {{sortable-column column_name="DATE" class="event-date-col"
-              action="reorderDocuments" eventType=eventType targetObject=dataController
-            }}
-            {{sortable-column column_name="TITLE" class="title-col"
-              action="reorderDocuments" eventType=eventType targetObject=dataController
-            }}
-            <th class="language-col">LANG</th>
-            <th class="countries-col">COUNTRIES</th>
-            <th class="taxon-col">TAXA</th>
-            {{#if proposalOutcome}}
-              <th class="outcome-col">OUTCOME</th>
-            {{/if}}
-            {{#if reviewPhase}}
-              <th class="review-phase-col">PHASE</th>
-            {{/if}}
-            <th class="download-col">
-              {{batch-download}}
-              {{download-checkbox}}
-            </th>
-          </tr>
-        </thead>
-      </table>
+            {{download-checkbox}}
+          </th>
+        </tr>
+      </thead>
+    </table>
 
-      <table class="table-body">
-        <thead>
-          <tr>
-            <th class="event-col"></th>
-            <th class="event-date-col"></th>
-            <th class="title-col"></th>
-            <th class="language-col"></th>
-            <th class="countries-col"></th>
-            <th class="taxon-col"></th>
-            {{#if proposalOutcome}}
-              <th></th>
-            {{/if}}
-            {{#if reviewPhase}}
-              <th></th>
-            {{/if}}
-            <th class="download-col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each doc in documents}}
-            {{document-result doc=doc proposalOutcome=proposalOutcome reviewPhase=reviewPhase}}
-          {{/each}}
-        </tbody>
-      </table>
-      {{#if loadMore}}
-        <div class="btn-hloder">
-          <a class="link" {{action "loadMoreDocuments" eventType target=dataController}}>SHOW MORE</a>
-        </div>
-      {{/if}}
-    </div>
-  </td>
-{{else}}
-  <td colspan="3">
-  {{#if isLoading}}
-    <img src="/assets/loading.gif">
-  {{else}}
-    <div class='no-documents'>No documents available</div>
-  {{/if}}
-  </td>
-{{/if}}
+    <table class="table-body">
+      <thead>
+        <tr>
+          <th class="event-col"></th>
+          <th class="event-date-col"></th>
+          <th class="title-col"></th>
+          <th class="language-col"></th>
+          <th class="countries-col"></th>
+          <th class="taxon-col"></th>
+          {{#if proposalOutcome}}
+            <th></th>
+          {{/if}}
+          <th class="download-col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each doc in documents}}
+          {{document-result
+            doc=doc
+            proposalOutcome=proposalOutcome
+            searchContextInfo=searchContextInfo
+            signedInInfo=signedInInfo
+          }}
+        {{/each}}
+      </tbody>
+    </table>
+    {{#if loadMore}}
+      <div class="btn-hloder">
+        <a class="link" {{action "loadMoreDocuments" eventType target=dataController}}>SHOW MORE</a>
+      </div>
+    {{/if}}
+  </div>
+</td>

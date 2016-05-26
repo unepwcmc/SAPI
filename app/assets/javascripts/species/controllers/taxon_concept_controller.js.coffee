@@ -1,5 +1,6 @@
 Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchContext,
-  needs: ['search']
+  Species.SignedInStatus,
+  needs: ['search', 'taxonConceptDocuments']
   searchContext: 'species'
 
   isCms: ( ->

@@ -2,7 +2,7 @@
 <td class='event-date-col'>{{unbound doc.date}}</td>
 <td class='title-col'>
 
-<a {{bind-attr class=":legal-links isLongTitle:tooltip"}} {{bind-attr href=view.documentUrl}}>
+  <a {{bind-attr class=":legal-links isLongTitle:tooltip"}} {{action "startDownload" on="click"}}>
 
     {{#if isLongTitle}}
       {{truncate fullTitle}}
@@ -23,9 +23,6 @@
 <td class='taxon-col'>{{documents-tooltip data=doc.taxon_names type='taxa'}}</td>
 {{#if proposalOutcome}}
   <td class='outcome-col'>{{unbound doc.proposal_outcome}}</td>
-{{/if}}
-{{#if reviewPhase}}
-  <td class='review-phase-col'>{{unbound doc.review_phase}}</td>
 {{/if}}
 <td class='download-col'>
   <input type="checkbox">

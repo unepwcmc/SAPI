@@ -8,11 +8,11 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     },
     {
       id: 'CitesAc,CitesTc',
-      name: 'Review of Significant Trade (animals)'
+      name: 'CITES Review of Significant Trade (animals)'
     },
     {
       id: 'CitesPc',
-      name: 'Review of Significant Trade (plants)'
+      name: 'CITES Review of Significant Trade (plants)'
     },
     {
       id: 'EcSrg',
@@ -63,11 +63,14 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     }
   ]
 
-  interSessionalDocumentTypes: [
+  interSessionalNonPublicDocumentTypes: [
     {
       id: 'Document::CommissionNotes',
       name: 'Commission Notes'
-    },
+    }
+  ]
+
+  interSessionalDocumentTypes: [
     {
       id: 'Document::NonDetrimentFindings',
       name: 'Non-Detriment Findings'
@@ -78,10 +81,6 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     }
   ]
 
-
   load: ->
     unless @get('loaded')
       @set('content', Species.Event.find())
-
-  handleLoadFinished: ->
-    @get('controllers.elibrarySearch').initEventSelector()

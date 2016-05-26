@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Admin::DocumentsController, sidekiq: :inline do
   login_admin
   let(:event){ create(:event, published_at: DateTime.new(2014,12,25)) }
+  let(:event2){ create(:event, published_at: DateTime.new(2015,12,12)) }
   let(:taxon_concept){ create(:taxon_concept) }
   let(:geo_entity){ create(:geo_entity) }
   let(:proposal_outcome){ create(:proposal_outcome) }
@@ -98,12 +99,14 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       context "when event" do
         it "renders the event/documents/index template" do
-          get :index, event_id: event.id
+          get :index, events_ids: [event.id]
           response.should render_template('admin/event_documents/index')
         end
         it "assigns @documents for event, sorted by title" do
-          get :index, event_id: event.id
-          assigns(:documents).should eq([@document2, @document1])
+          @document3 = create(:document, title: 'CC hello world', event: event2)
+          DocumentSearch.refresh
+          get :index, events_ids: [event.id, event2.id]
+          assigns(:documents).should eq([@document3, @document2, @document1])
         end
       end
     end

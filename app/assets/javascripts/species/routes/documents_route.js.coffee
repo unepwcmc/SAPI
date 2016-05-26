@@ -9,6 +9,10 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     #dirty hack to check if we have an array or comma separated string here
     if queryParams.geo_entities_ids && queryParams.geo_entities_ids.substring
       queryParams.geo_entities_ids = queryParams.geo_entities_ids.split(',')
+    if queryParams.events_ids && queryParams.events_ids.substring
+      queryParams.events_ids = queryParams.events_ids.split(',')
+    queryParams.geo_entities_ids = [] if queryParams.geo_entities_ids == true
+    queryParams.events_ids = [] if queryParams.events_ids == true
     @controllerFor('elibrarySearch').setFilters(queryParams)
     $(@spinnerSelector).css("visibility", "visible")
     $('tr.group i.fa-minus-circle').click()
@@ -47,7 +51,10 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
 
   loadDocumentsForEventType: (eventType, eventTypeQueryParams) ->
     controller = @controllerFor('documents')
-    eventTypeKey = @getEventTypeKey(eventType).camelize() + 'Documents'
+    eventType = @getEventTypeKey(eventType).camelize()
+    eventTypeKey = eventType + 'Documents'
+    isLoadingProperty = eventType + 'DocsIsLoading'
+    controller.set(isLoadingProperty, true)
     @loadDocuments(eventTypeQueryParams, (documents) =>
       controller.set(eventTypeKey, documents)
     )

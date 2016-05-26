@@ -1,73 +1,118 @@
 <div id="documents">
+  {{#if anyDocumentsLoading}}
+    <p>Please wait... <img src="/assets/loading.gif"></p>
+  {{else}}
+    {{#if anyDocumentsPresent}}
   <div class="block">
-
-    <h2 id="cites_cop">CITES CoP Proposals</h2>
+    {{documents-header
+      isVisible=controller.citesCopProposalsDocsPresent
+      meetingType="CITES CoP Proposals"
+      meetingTypeId="cites_cop"
+    }}
 
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
+          isVisible=controller.citesCopProposalsDocsPresent
           eventType="CitesCop"
           dataController=controller
           loadMore=controller.citesCopProposalsDocsLoadMore
           documents=controller.citesCopProposalsDocuments.docs
           proposalOutcome=true
-          isLoading=controller.citesCopProposalsDocsIsLoading}}
+          searchContext="species"
+          species=controllers.taxonConcept.fullName
+          isSignedIn=controllers.taxonConcept.isSignedIn
+        }}
       </tbody>
     </table>
 
-    <h2 id="cites_rst_animals">CITES Review of Significant Trade (animals)</h2>
+    {{documents-header
+      isVisible=controller.citesAcDocsPresent
+      meetingType="CITES Review of Significant Trade"
+      meetingTypeId="cites_rst_animals"
+    }}
 
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
+          isVisible=controller.citesAcDocsPresent
           eventType="CitesAc,CitesTc"
           dataController=controller
           loadMore=controller.citesAcDocsLoadMore
           documents=controller.citesAcDocuments.docs
-          reviewPhase=true
-          isLoading=controller.citesAcDocsIsLoading}}
+          searchContext="species"
+          species=controllers.taxonConcept.fullName
+          isSignedIn=controllers.taxonConcept.isSignedIn
+        }}
       </tbody>
     </table>
 
-    <h2 id="cites_rst_plants">CITES Review of Significant Trade (plants)</h2>
+    {{documents-header
+      isVisible=controller.citesPcDocsPresent
+      meetingType="CITES Review of Significant Trade"
+      meetingTypeId="cites_rst_plants"
+    }}
 
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
+          isVisible=controller.citesPcDocsPresent
           eventType="CitesPc"
           dataController=controller
           loadMore=controller.citesPcDocsLoadMore
           documents=controller.citesPcDocuments.docs
-          reviewPhase=true
-          isLoading=controller.citesPcDocsIsLoading}}
+          searchContext="species"
+          species=controllers.taxonConcept.fullName
+          isSignedIn=controllers.taxonConcept.isSignedIn
+        }}
       </tbody>
     </table>
 
-    <h2 id="eu_srg" >EU Scientific Review Group</h2>
+    {{documents-header
+      isVisible=controller.euSrgDocsPresent
+      meetingType="EU Scientific Review Group"
+      meetingTypeId="eu_srg"
+    }}
 
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
+          isVisible=controller.euSrgDocsPresent
           eventType="EcSrg"
           dataController=controller
           loadMore=controller.euSrgDocsLoadMore
           documents=controller.euSrgDocuments.docs
-          isLoading=controller.euSrgDocsIsLoading}}
+          searchContext="species"
+          species=controllers.taxonConcept.fullName
+          isSignedIn=controllers.taxonConcept.isSignedIn
+        }}
       </tbody>
     </table>
 
-    <h2 id="other">Inter-sessional documents</h2>
+    {{documents-header
+      isVisible=controller.otherDocsPresent
+      meetingType="Inter-sessional documents"
+      meetingTypeId="other"
+    }}
 
     <table class="grouped-results-table">
       <tbody>
         {{documents-results
+          isVisible=controller.otherDocsPresent
           eventType="Other"
           dataController=controller
           loadMore=controller.otherDocsLoadMore
           documents=controller.otherDocuments.docs
-          isLoading=controller.otherDocsIsLoading}}
+          searchContext="species"
+          species=controllers.taxonConcept.fullName
+          isSignedIn=controllers.taxonConcept.isSignedIn
+        }}
       </tbody>
     </table>
-
   </div>
+  {{else}}
+    <p>There are currently no documents available for your search.</p>
+    <p>For further details on specific taxa and to check for CITES listings, please refer to <a href="http://speciesplus.net">speciesplus.net</a>.</p>
+  {{/if}}
+{{/if}}
 </div>

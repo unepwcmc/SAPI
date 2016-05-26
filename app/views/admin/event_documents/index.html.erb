@@ -2,6 +2,10 @@
 
 <%= admin_new_modal { '' } %>
 
+<p>
+  <%= link_to "Reorder #{@event.name} documents", show_order_admin_event_documents_path(@event) %>
+</p>
+
 <%= admin_table do %>
   <%= render 'admin/documents/list' %>
 <% end %>

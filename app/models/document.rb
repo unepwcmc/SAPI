@@ -38,11 +38,16 @@ class Document < ActiveRecord::Base
   belongs_to :designation
   belongs_to :event
   belongs_to :language
-  belongs_to :primary_language_document, class_name: 'Document', foreign_key: 'primary_language_document_id'
+  belongs_to :primary_language_document, class_name: 'Document',
+    foreign_key: 'primary_language_document_id'
+  has_many :secondary_language_documents, class_name: 'Document',
+    foreign_key: 'primary_language_document_id',
+    dependent: :nullify
   has_many :citations, class_name: 'DocumentCitation', dependent: :destroy
   has_and_belongs_to_many :tags, class_name: 'DocumentTag', join_table: 'document_tags_documents'
   validates :title, presence: true
   validates :date, presence: true
+  validates_uniqueness_of :primary_language_document_id, scope: :language_id, allow_nil: true
   # TODO validates inclusion of type in available types
   accepts_nested_attributes_for :citations, :allow_destroy => true,
     :reject_if => proc { |attributes|

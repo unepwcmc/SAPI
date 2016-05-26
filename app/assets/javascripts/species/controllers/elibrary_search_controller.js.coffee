@@ -1,8 +1,10 @@
-Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Species.SearchContext,
+Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
+  Species.SearchContext,
   Species.TaxonConceptAutoCompleteLookup,
   Species.GeoEntityAutoCompleteLookup,
   Species.EventLookup,
   Species.DocumentTagLookup,
+  Species.SignedInStatus,
   needs: ['documentGeoEntities', 'taxonConcepts', 'events', 'documentTags']
   geoEntities: Ember.computed.alias("controllers.documentGeoEntities")
   searchContext: 'documents'
@@ -19,7 +21,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       filtersHash.title_query = null
     @set('titleQuery', filtersHash.title_query)
     @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
-    @set('selectedEventId', filtersHash.event_id)
+    @set('selectedEventsIds', filtersHash.events_ids || [])
     allDocumentTypes = @get('controllers.events.documentTypes').concat @get('controllers.events.interSessionalDocumentTypes')
     @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
     @set('selectedProposalOutcomeId', filtersHash.proposal_outcome_id)
@@ -35,10 +37,9 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id'),
       title_query: titleQuery,
       event_type: @get('selectedEventType.id'),
-      event_id: @get('selectedEvent.id'),
+      events_ids: @get('selectedEvents').mapProperty('id'),
       document_type: @get('selectedDocumentType.id'),
       proposal_outcome_id: @get('selectedProposalOutcome.id'),
-      review_phase_id: @get('selectedReviewPhase.id')
     }
 
   filteredDocumentTypes: ( ->
@@ -51,8 +52,13 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
   ).property('selectedEventType.id')
 
   interSessionalDocumentTypes: ( ->
-    @get('controllers.events.interSessionalDocumentTypes')
-  ).property()
+    nonPublicTypes = @get('controllers.events.interSessionalNonPublicDocumentTypes')
+    publicTypes = @get('controllers.events.interSessionalDocumentTypes')
+    if @get('isSignedIn')
+      nonPublicTypes.pushObjects(publicTypes)
+    else
+      publicTypes
+  ).property('isSignedIn')
 
   documentTypeDropdownVisible: ( ->
     @get('selectedEventType.id') == 'EcSrg'
@@ -80,11 +86,11 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner, Spec
       @set('taxonConceptQueryForDisplay', '')
       @set('taxonConceptQuery', '')
       @set('selectedGeoEntities', [])
+      @set('selectedGeoEntitiesIds', [])
       @set('titleQuery', '')
       @set('selectedEventType', null)
-      @set('selectedEvent', null)
-      @set('selectedEventId', null)
+      @set('selectedEvents', [])
+      @set('selectedEventsIds', [])
       @set('selectedDocumentType', null)
       @set('selectedInterSessionalDocType', null)
       @set('selectedProposalOutcome', null)
-      @set('selectedReviewPhase', null)

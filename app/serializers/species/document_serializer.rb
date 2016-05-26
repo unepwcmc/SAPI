@@ -2,9 +2,9 @@ class Species::DocumentSerializer < ActiveModel::Serializer
   attributes :event_type, :event_name, {date_formatted: :date}, :is_public,
     :document_type, :proposal_number,
     :primary_document_id, :taxon_names, :geo_entity_names,
-    :taxon_names, :geo_entity_names, :extension,
+    :taxon_names, :geo_entity_names,
     :document_language_versions,
-    :proposal_outcome, :review_phase
+    :proposal_outcome
   include PgArrayParser
 
   def document_type

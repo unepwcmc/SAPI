@@ -1,5 +1,6 @@
 table.grouped-results-table {
   width: 100%;
+  border-collapse: separate;
   thead.grouped-header {
     th {
       font-weight: bold;
@@ -153,3 +154,9 @@ div.inner-table-container {
   }
 }
 
+.container p {
+  margin: 20px 0 28px 0;
+  font-size: 15px;
+  color: #2D3237;
+  text-align: center;
+}

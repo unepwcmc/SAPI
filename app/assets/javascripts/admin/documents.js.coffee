@@ -99,9 +99,16 @@ $(document).ready ->
     allowClear: true
   }
 
+  eventsSelect2Options = {
+    placeholder: 'Start typing an event'
+    width: '300px'
+    allowClear: true
+  }
+
   $('.primary-language-document').select2(primaryDocumentSelect2Options)
   $('.citation-taxon-concept').select2(citationTaxonSelect2Options)
   $('.citation-geo-entity').select2(citationGeoEntitySelect2Options)
+  $('.events-search').select2(eventsSelect2Options)
   $('.document-tag').select2(documentTagSelect2Options)
 
   $(document).on('nested:fieldAdded', (event) ->
@@ -111,4 +118,12 @@ $(document).ready ->
     # and activate select2
     citationTaxonField.select2(citationTaxonSelect2Options)
     citationGeoEntityField.select2(citationGeoEntitySelect2Options)
+  )
+
+  $('ul.documents-reorder-list').sortable(
+    items: 'li'
+  ).bind('sortupdate', (e, ui) ->
+    ui.startparent.find('input').each( (idx) ->
+      $(@).val(idx)
+    )
   )

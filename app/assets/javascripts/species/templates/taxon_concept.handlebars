@@ -61,11 +61,21 @@
     {{#unless isCms }}
     <li class="last-child documents-tab">{{#linkTo 'taxonConcept.documents'}}DOCUMENTS{{/linkTo}}
       <ul>
-          <li class="first"><a href="#cites_cop" class="scroll-to">CITES CoP Proposals</a></li>
-          <li><a href="#cites_rst_animals" class="scroll-to">CITES RST (animals)</a></li>
-          <li><a href="#cites_rst_animals" class="scroll-to">CITES RST (plants)</a></li>
-          <li><a href="#eu_srg" class="scroll-to">EU SRG</a></li>
-          <li><a href="#other" class="scroll-to">Inter-sessional docs</a></li>
+      {{#if controllers.taxonConceptDocuments.citesCopProposalsDocsPresent}}
+        <li class="first"><a href="#cites_cop" class="scroll-to">CITES CoP Proposals</a></li>
+      {{/if}}
+      {{#if controllers.taxonConceptDocuments.citesAcDocsPresent}}
+        <li><a href="#cites_rst_animals" class="scroll-to">CITES Review of Significant Trade</a></li>
+      {{/if}}
+      {{#if controllers.taxonConceptDocuments.citesPcDocsPresent}}
+        <li><a href="#cites_rst_plants" class="scroll-to">CITES Review of Significant Trade</a></li>
+      {{/if}}
+      {{#if controllers.taxonConceptDocuments.euSrgDocsPresent}}
+        <li><a href="#eu_srg" class="scroll-to">EU SRG</a></li>
+      {{/if}}
+      {{#if controllers.taxonConceptDocuments.otherDocsPresent}}
+        <li><a href="#other" class="scroll-to">Inter-sessional docs</a></li>
+      {{/if}}
       </ul>
     </li>
     {{/unless}}

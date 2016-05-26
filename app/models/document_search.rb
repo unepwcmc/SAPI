@@ -1,7 +1,7 @@
 class DocumentSearch
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
-  attr_reader :page, :per_page, :offset, :event_type, :event_id,
+  attr_reader :page, :per_page, :offset, :event_type, :events_ids,
     :document_type, :title_query
 
   def initialize(options, interface)
@@ -67,8 +67,8 @@ class DocumentSearch
   end
 
   def add_conditions_for_event
-    if @event_id.present?
-      @query = @query.where(event_id: @event_id)
+    if @events_ids.present?
+      @query = @query.where(event_id: @events_ids)
       return
     end
     return unless @event_type.present?
@@ -125,22 +125,21 @@ class DocumentSearch
   def add_ordering_for_admin
     return if @title_query.present?
 
-    @query = if @event_id.present?
-      @query.order([:date, :title])
+    @query = if @events_ids.present?
+      @query.order(['date_raw DESC', :title])
     else
       @query.order('created_at DESC')
     end
   end
 
   def add_ordering_for_public
-    # sort_col and sort_dir are sanitized
-    @query = @query.order("#{@sort_col} #{@sort_dir}")
+    @query = @query.order("date_raw DESC")
   end
 
   def select_and_group_query
     columns = "event_name, event_type, date, date_raw, is_public, document_type,
       proposal_number, primary_document_id,
-      geo_entity_names, taxon_names, extension,
+      geo_entity_names, taxon_names,
       proposal_outcome, review_phase"
     aggregators = <<-SQL
       ARRAY_TO_JSON(
@@ -153,15 +152,10 @@ class DocumentSearch
         )
       ) AS document_language_versions
     SQL
-    # sort_col and sort_dir are sanitized
     @query = Document.from(
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
-    if @sort_col != 'title'
-      @query = @query.order("#{@sort_col} #{@sort_dir}")
-    else
-      @query = @query.order("MAX(title) #{@sort_dir}")
-    end
+    @query = @query.order('date_raw DESC, MAX(sort_index), MAX(title)')
   end
 
   REFRESH_INTERVAL = 5
@@ -174,6 +168,11 @@ class DocumentSearch
   def self.refresh
     ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
     DocumentSearch.increment_cache_iterator
+  end
+
+  def self.clear_cache
+    RefreshDocumentsWorker.perform_async
+    DownloadsCacheCleanupWorker.perform_async(:documents)
   end
 
 end

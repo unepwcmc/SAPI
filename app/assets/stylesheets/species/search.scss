@@ -41,7 +41,7 @@
   .search-options-toggle {
     display: none;
     color: #2d3237;
-    cursor: pointer;
+    i{ cursor: pointer };
   }
   .documents-search-results-header { display: none; }
 
@@ -117,7 +117,7 @@
       float: none;
       padding: 0;
       a {
-        width: 300px;
+        width: 330px;
       }
       .popup-holder01 {
         display: none;
@@ -170,7 +170,7 @@
       width: 100%;
       &.keyword-search {
         height: 30px;
-        width: 338px;
+        width: 368px;
         padding: 0;
         .input[type="text"] { height: initial; }
       }
@@ -180,7 +180,7 @@
       padding: 3px;
       padding-left: 10px;
       float: left;
-      width: 326px;
+      width: 356px;
       height: 26px;
       font-size: 13px;
       line-height: 26px;
@@ -410,3 +410,6 @@ html.lt-ie9 .search-block .search-form {
   line-height: 30px;
   color: #2d3237;
 }
+
+.events-area { display: none; }
+.events-visible { display: block; }
