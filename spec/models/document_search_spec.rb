@@ -26,4 +26,41 @@ describe DocumentSearch, sidekiq: :inline do
       specify { subject.map(&:id).should_not include(@document_without_tc_citation.id) }
     end
   end
+
+  describe :needs_refreshing? do
+    before(:each) do
+      @d = nil
+      Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
+        @d = create(:proposal)
+        DocumentSearch.refresh
+      end
+    end
+    context "when no changes in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+      specify { expect(DocumentSearch.needs_refreshing?).to be_false }
+    end
+    context "when document created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+      specify do
+        Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          create(:proposal)
+        end
+        expect(DocumentSearch.needs_refreshing?).to be_true
+      end
+    end
+    context "when document destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+      specify do
+        Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          @d.destroy
+        end
+        expect(DocumentSearch.needs_refreshing?).to be_true
+      end
+    end
+    context "when document updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+      specify do
+        Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          @d.update_attributes(is_public: true)
+        end
+        expect(DocumentSearch.needs_refreshing?).to be_true
+      end
+    end
+  end
 end

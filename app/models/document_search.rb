@@ -158,8 +158,16 @@ class DocumentSearch
     @query = @query.order('date_raw DESC, MAX(sort_index), MAX(title)')
   end
 
+  REFRESH_INTERVAL = 5
+
+  def self.needs_refreshing?
+    Document.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).limit(1).count > 0 ||
+    Document.count < Document.from('api_documents_mview documents').count
+  end
+
   def self.refresh
     ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
+    DocumentSearch.increment_cache_iterator
   end
 
   def self.clear_cache

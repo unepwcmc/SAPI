@@ -13,3 +13,7 @@ every :sunday, :at => '4:45am' do
   rake "db:common_names:cleanup"
   rake "db:taxon_names:cleanup"
 end
+
+every 5.minutes do
+  rake "elibrary:refresh_document_search"
+end
