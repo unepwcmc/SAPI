@@ -175,7 +175,8 @@ describe Trade::ShipmentsController, sidekiq: :inline do
         time_range_end: @shipment2.year,
         reporter_type: 'I',
         exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
-        importers_ids: [@portugal.id.to_s, @argentina.id.to_s]}
+        importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
+      }
       Trade::Shipment.count.should == 1
     end
 

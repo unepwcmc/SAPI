@@ -555,19 +555,6 @@ Style/MultilineBlockChain:
 Style/MultilineBlockLayout:
   Enabled: false
 
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: symmetrical, new_line, same_line
-Style/MultilineHashBraceLayout:
-  Exclude:
-    - 'app/controllers/admin/simple_crud_controller.rb'
-    - 'app/controllers/admin/taxon_concepts_controller.rb'
-    - 'app/models/checklist/pdf/index_query.rb'
-    - 'app/models/preset_tag.rb'
-    - 'spec/controllers/api/taxon_concepts_controller_spec.rb'
-    - 'spec/controllers/trade/shipments_controller_spec.rb'
-
 # Offense count: 147
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
