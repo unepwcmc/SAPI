@@ -131,7 +131,7 @@ namespace :elibrary do
       importer.run
     end
   end
-    namespace :citations_no_event do
+  namespace :citations_no_event do
     require Rails.root.join('lib/tasks/elibrary/citations_no_event_importer.rb')
     desc 'Import citations from csv file'
     task :import => :environment do |task_name|

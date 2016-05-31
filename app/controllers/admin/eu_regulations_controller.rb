@@ -16,16 +16,15 @@ class Admin::EuRegulationsController < Admin::EventsController
   end
 
   protected
-    def collection
-      @eu_regulations ||= end_of_association_chain.
-        order('effective_at DESC, name ASC').
-        page(params[:page]).
-        search(params[:query])
-    end
+  def collection
+    @eu_regulations ||= end_of_association_chain.
+      order('effective_at DESC, name ASC').
+      page(params[:page]).
+      search(params[:query])
+  end
 
-    def load_associations
-      @eu_regulations_for_dropdown = EuRegulation.
-        order('effective_at DESC, name ASC')
-    end
-
+  def load_associations
+    @eu_regulations_for_dropdown = EuRegulation.
+      order('effective_at DESC, name ASC')
+  end
 end

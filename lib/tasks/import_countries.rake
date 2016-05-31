@@ -50,7 +50,7 @@ namespace :import do
         )
       end
     end
-  puts "Countries updated with french and spanish names"
+    puts "Countries updated with french and spanish names"
   end
 end
 

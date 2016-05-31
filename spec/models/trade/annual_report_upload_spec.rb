@@ -70,7 +70,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       }
       specify {subject.should be_valid}
     end
-     context "when uploaded file as exporter with importer column headers" do
+    context "when uploaded file as exporter with importer column headers" do
       subject{
         build(
           :annual_report_upload,
@@ -86,14 +86,14 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
     let!(:format_validation_rule){
       create_year_format_validation
     }
-      subject{
-        create(
-          :annual_report_upload,
-          :point_of_view => 'I',
-          :csv_source_file => importer_file
-        )
-      }
-      specify{ subject.validation_errors.should be_empty}
+    subject{
+      create(
+        :annual_report_upload,
+        :point_of_view => 'I',
+        :csv_source_file => importer_file
+      )
+    }
+    specify{ subject.validation_errors.should be_empty }
   end
 
   describe :create do 
