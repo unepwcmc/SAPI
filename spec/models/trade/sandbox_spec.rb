@@ -1,29 +1,29 @@
 require 'spec_helper'
 
 describe Trade::Sandbox, :drops_tables => true do
-    before(:each) do
-      genus = create_cites_eu_genus(
-        :taxon_name => create(:taxon_name, :scientific_name => 'Acipenser')
-      )
-      @species = create_cites_eu_species(
-        :taxon_name => create(:taxon_name, :scientific_name => 'baerii'),
-        :parent_id => genus.id
-      )
-      create(:term, :code => 'CAV')
-      create(:unit, :code => 'KIL')
-      country = create(:geo_entity_type, :name => 'COUNTRY')
-      @argentina = create(:geo_entity,
-                          :geo_entity_type => country,
-                          :name => 'Argentina',
-                          :iso_code2 => 'AR'
-                         )
+  before(:each) do
+    genus = create_cites_eu_genus(
+      :taxon_name => create(:taxon_name, :scientific_name => 'Acipenser')
+    )
+    @species = create_cites_eu_species(
+      :taxon_name => create(:taxon_name, :scientific_name => 'baerii'),
+      :parent_id => genus.id
+    )
+    create(:term, :code => 'CAV')
+    create(:unit, :code => 'KIL')
+    country = create(:geo_entity_type, :name => 'COUNTRY')
+    @argentina = create(:geo_entity,
+                        :geo_entity_type => country,
+                        :name => 'Argentina',
+                        :iso_code2 => 'AR'
+                       )
 
-      @portugal = create(:geo_entity,
-                         :geo_entity_type => country,
-                         :name => 'Portugal',
-                         :iso_code2 => 'PT'
-                        )
-    end
+    @portugal = create(:geo_entity,
+                       :geo_entity_type => country,
+                       :name => 'Portugal',
+                       :iso_code2 => 'PT'
+                      )
+  end
   let(:annual_report_upload){
     aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
     aru.save(:validate => false)

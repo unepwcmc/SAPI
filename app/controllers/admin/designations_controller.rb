@@ -13,15 +13,13 @@ class Admin::DesignationsController < Admin::StandardAuthorizationController
   end
 
   protected
-    def collection
-      @designations ||= end_of_association_chain.order(:name).
-        page(params[:page]).
-        search(params[:query])
-    end
+  def collection
+    @designations ||= end_of_association_chain.order(:name).
+      page(params[:page]).
+      search(params[:query])
+  end
 
-    def load_associations
-      @taxonomies = Taxonomy.order(:name)
-    end
-
+  def load_associations
+    @taxonomies = Taxonomy.order(:name)
+  end
 end
-

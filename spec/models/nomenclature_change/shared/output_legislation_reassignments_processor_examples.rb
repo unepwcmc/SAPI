@@ -59,7 +59,7 @@ shared_context 'output_legislation_reassignments_processor_examples' do
       output: output,
       reassignable_type: 'CitesSuspension'
     )
-     create(
+    create(
       :nomenclature_change_output_legislation_reassignment,
       output: output,
       reassignable_type: 'Quota'

@@ -28,10 +28,10 @@ class Admin::SimpleCrudController < Admin::AdminController
       failure.html {
         redirect_to collection_url,
           :alert => if resource.errors.present?
-            "Operation #{resource.errors.messages[:base].join(", ")}"
-          else
-            "Operation failed"
-          end
+              "Operation #{resource.errors.messages[:base].join(", ")}"
+            else
+              "Operation failed"
+            end
       }
     end
   end

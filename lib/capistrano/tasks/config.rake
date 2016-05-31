@@ -1,10 +1,10 @@
 namespace :config do
   task :setup do
-   ask(:db_user, 'db_user')
-   ask(:db_pass, 'db_pass')
-   ask(:db_name, 'db_name')
-#   ask(:db_host, 'db_host')
-setup_config = <<-EOF
+    ask(:db_user, 'db_user')
+    ask(:db_pass, 'db_pass')
+    ask(:db_name, 'db_name')
+    # ask(:db_host, 'db_host')
+    setup_config = <<-EOF
 #{fetch(:rails_env)}:
   adapter: postgresql
   database: #{fetch(:db_name)}
@@ -13,18 +13,18 @@ setup_config = <<-EOF
   socket: /var/run/postgresql/.s.PGSQL.5432
 #  host: #{fetch(:db_host)}
 EOF
-  on roles(:app) do
-     execute "mkdir -p #{shared_path}/config"
-     upload! StringIO.new(setup_config), "#{shared_path}/config/database.yml"
+    on roles(:app) do
+      execute "mkdir -p #{shared_path}/config"
+      upload! StringIO.new(setup_config), "#{shared_path}/config/database.yml"
     end
   end
 end
 
 namespace :config do
   task :setup do
-   ask(:smtp_user, 'smtp_user')
-   ask(:smtp_password, 'smtp_password')
-setup_config = <<-EOF
+    ask(:smtp_user, 'smtp_user')
+    ask(:smtp_password, 'smtp_password')
+    setup_config = <<-EOF
 "#{fetch(:rails_env)}" => {
         :default_url_options => {
           :host => "#{fetch(:domain)}"
@@ -41,17 +41,17 @@ setup_config = <<-EOF
       }
     }
 EOF
-  on roles(:app) do
-     execute "mkdir -p #{shared_path}/config"
-     upload! StringIO.new(setup_config), "#{shared_path}/config/mailer_config.yml"
+    on roles(:app) do
+      execute "mkdir -p #{shared_path}/config"
+      upload! StringIO.new(setup_config), "#{shared_path}/config/mailer_config.yml"
     end
   end
 end
 
 namespace :config do
-task :setup do
+  task :setup do
 
-vhost_config =<<-EOF
+    vhost_config =<<-EOF
 
 server {
   listen 80;
@@ -119,11 +119,11 @@ server {
 }
 EOF
 
-  on roles(:app) do
-     execute "sudo mkdir -p /etc/nginx/sites-available"
-     upload! StringIO.new(vhost_config), "/tmp/vhost_config"
-     execute "sudo mv /tmp/vhost_config /etc/nginx/sites-available/#{fetch(:application)}"
-     execute "sudo ln -s /etc/nginx/sites-available/#{fetch(:application)} /etc/nginx/sites-enabled/#{fetch(:application)}"
+    on roles(:app) do
+      execute "sudo mkdir -p /etc/nginx/sites-available"
+      upload! StringIO.new(vhost_config), "/tmp/vhost_config"
+      execute "sudo mv /tmp/vhost_config /etc/nginx/sites-available/#{fetch(:application)}"
+      execute "sudo ln -s /etc/nginx/sites-available/#{fetch(:application)} /etc/nginx/sites-enabled/#{fetch(:application)}"
     end
   end
 end
@@ -343,13 +343,13 @@ end
 namespace :config do
   desc "Configure app specific event handler"
   task :setup do
-  nagios_config = <<-EOF
+    nagios_config = <<-EOF
 cd #{deploy_to}/current/ ; nohup bundle exec sidekiq -e production -C #{deploy_to}/current/config/sidekiq.yml -i 0 -P #{shared_path}/tmp/pids/sidekiq.pid >> #{deploy_to}/current/log/sidekiq.log 2>&1 &
   EOF
     on roles(:app) do
-    upload! StringIO.new(nagios_config), "/tmp/nagios_config"
-    execute "sudo mv /tmp/nagios_config /usr/lib/nagios/plugins/restart-sapi-sidekiq"
-    execute "chmod a+x /usr/lib/nagios/plugins/restart-sapi-sidekiq"
+      upload! StringIO.new(nagios_config), "/tmp/nagios_config"
+      execute "sudo mv /tmp/nagios_config /usr/lib/nagios/plugins/restart-sapi-sidekiq"
+      execute "chmod a+x /usr/lib/nagios/plugins/restart-sapi-sidekiq"
     end
   end
 end
@@ -358,7 +358,7 @@ end
 namespace :config do
   desc "Configure logrotate"
   task :setup do
-  logrotate_config = <<-EOF
+    logrotate_config = <<-EOF
 #{deploy_to}/current/log/*.log {
   monthly
   missingok
@@ -370,9 +370,8 @@ namespace :config do
 }
   EOF
     on roles(:app) do
-    upload! StringIO.new(logrotate_config), "/tmp/logrotate_config"
-    execute "sudo mv /tmp/logrotate_config /etc/logrotate.d/#{fetch(:application)}-logs"
-   end
+      upload! StringIO.new(logrotate_config), "/tmp/logrotate_config"
+      execute "sudo mv /tmp/logrotate_config /etc/logrotate.d/#{fetch(:application)}-logs"
+    end
   end
 end
-

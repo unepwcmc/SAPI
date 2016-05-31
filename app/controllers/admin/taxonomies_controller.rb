@@ -11,10 +11,9 @@ class Admin::TaxonomiesController < Admin::StandardAuthorizationController
   end
 
   protected
-    def collection
-      @taxonomies ||= end_of_association_chain.order(:name).
-        page(params[:page]).
-        search(params[:query])
-    end
+  def collection
+    @taxonomies ||= end_of_association_chain.order(:name).
+      page(params[:page]).
+      search(params[:query])
+  end
 end
-

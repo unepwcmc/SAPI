@@ -46,7 +46,7 @@ describe Admin::TaxonEuSuspensionsController do
             )
           },
           :taxon_concept_id => @taxon_concept.id
-          response.should redirect_to(admin_taxon_concept_eu_suspensions_url(@taxon_concept.id))
+        response.should redirect_to(admin_taxon_concept_eu_suspensions_url(@taxon_concept.id))
       end
     end
 

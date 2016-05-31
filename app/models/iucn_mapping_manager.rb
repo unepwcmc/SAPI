@@ -33,7 +33,7 @@ class IucnMappingManager
       @config ||= YAML.load_file(@config_location)[Rails.env]
       @token ||= @config['iucn_redlist']['token']
       @url ||= @config['iucn_redlist']['url']
-puts "#{@url}#{full_name.downcase}?token=#{@token}"
+      puts "#{@url}#{full_name.downcase}?token=#{@token}"
       url = URI.escape("#{@url}#{full_name.downcase}?token=#{@token}")
       JSON.parse(RestClient.get(url))
     end

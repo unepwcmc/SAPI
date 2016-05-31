@@ -107,7 +107,7 @@ describe Checklist do
         end
       end
       context "when App II" do
-         subject{
+        subject{
           checklist = Checklist::Checklist.new({
             :cites_appendices => ['II'],
             :country_ids => [poland.id]
@@ -147,7 +147,7 @@ describe Checklist do
     end
     context "when App I or II" do
       context "when Poland" do
-         subject{
+        subject{
           checklist = Checklist::Checklist.new({
             :cites_appendices => ['I', 'II'],
             :country_ids => [poland.id]

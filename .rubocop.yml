@@ -17,3 +17,12 @@ Style/IndentArray:
 # SupportedStyles: special_inside_parentheses, consistent, align_braces
 Style/IndentHash:
   EnforcedStyle: consistent
+
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: normal, rails
+Style/IndentationConsistency:
+  EnforcedStyle: normal
+  Exclude:
+    - 'lib/tasks/bbgem.rake'
+    - 'db/migrate/*'
+    - 'old_cap/*'
