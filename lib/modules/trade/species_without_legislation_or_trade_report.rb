@@ -99,7 +99,8 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
   def export(file_path)
     export_to_csv(
       :query => @report_query,
-      :csv_columns => ["ID", "Legacy id", "Kingdom", "Phylum", "Class",
+      :csv_columns => [
+        "ID", "Legacy id", "Kingdom", "Phylum", "Class",
         "Order", "Family", "Genus", "Species",
         "Full name", "Author year", "Name Status",
         "Has CITES listed descendants?", "Has EU listed descendants?",

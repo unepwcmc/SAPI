@@ -545,22 +545,6 @@ Style/MethodCallParentheses:
 Style/MethodDefParentheses:
   Enabled: false
 
-# Offense count: 16
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: symmetrical, new_line, same_line
-Style/MultilineArrayBraceLayout:
-  Exclude:
-    - 'app/models/country_dictionary.rb'
-    - 'app/models/quota.rb'
-    - 'app/models/taxon_concept.rb'
-    - 'app/models/trade/validation_rule.rb'
-    - 'app/workers/permit_cleanup_worker.rb'
-    - 'app/workers/quotas_copy_worker.rb'
-    - 'lib/modules/downloads_cache.rb'
-    - 'lib/modules/trade/appendix_report.rb'
-    - 'lib/modules/trade/species_without_legislation_or_trade_report.rb'
-
 # Offense count: 2
 Style/MultilineBlockChain:
   Exclude:
