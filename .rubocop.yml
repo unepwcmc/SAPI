@@ -12,3 +12,8 @@ Style/AccessModifierIndentation:
 # SupportedStyles: special_inside_parentheses, consistent, align_brackets
 Style/IndentArray:
   EnforcedStyle: consistent
+
+# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
+# SupportedStyles: special_inside_parentheses, consistent, align_braces
+Style/IndentHash:
+  EnforcedStyle: consistent

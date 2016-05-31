@@ -506,13 +506,6 @@ Style/IndentAssignment:
     - 'app/models/nomenclature_change/split/constructor.rb'
     - 'app/models/taxon_concept.rb'
 
-# Offense count: 329
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: special_inside_parentheses, consistent, align_braces
-Style/IndentHash:
-  Enabled: false
-
 # Offense count: 82
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

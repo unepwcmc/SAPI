@@ -37,7 +37,7 @@ describe QuotasCopyWorker do
       "from_text" => '',
       "to_text" => '',
       "url" => ''
-   }
+    }
   }
 
   describe "Copy single quota, for a given year" do
@@ -53,7 +53,7 @@ describe QuotasCopyWorker do
   describe "Try to copy quota from wrong year" do
     before(:each) do
       QuotasCopyWorker.new.perform(job_defaults.merge({
-          "from_year" => quota.start_date.year+1
+        "from_year" => quota.start_date.year+1
       }))
     end
     specify { Quota.count(true).should == 1}

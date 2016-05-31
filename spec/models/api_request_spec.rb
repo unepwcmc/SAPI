@@ -57,13 +57,14 @@ describe ApiRequest do
     subject {
       ApiRequest.requests_by_response_status
     }
-    specify { expect(subject).to eq({
-      '200' => 1,
-      '400' => 0,
-      '401' => 0,
-      '404' => 0,
-      '422' => 0,
-      '500' => 1
+    specify {
+      expect(subject).to eq({
+        '200' => 1,
+        '400' => 0,
+        '401' => 0,
+        '404' => 0,
+        '422' => 0,
+        '500' => 1
       })
     }
   end
@@ -72,12 +73,13 @@ describe ApiRequest do
     subject {
       ApiRequest.requests_by_controller
     }
-    specify { expect(subject).to eq({
-      'taxon_concepts' => 2,
-      'distributions' => 0,
-      'cites_legislation' => 0,
-      'eu_legislation' => 0,
-      'references' => 0
+    specify {
+      expect(subject).to eq({
+        'taxon_concepts' => 2,
+        'distributions' => 0,
+        'cites_legislation' => 0,
+        'eu_legislation' => 0,
+        'references' => 0
       })
     }
   end

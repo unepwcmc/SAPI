@@ -36,7 +36,8 @@ describe Admin::TaxonQuotasController do
   describe "POST create" do
     context "when successful" do
       it "renders index" do
-        post :create, :quota => {
+        post :create,
+          :quota => {
             :quota => 1,
             :unit_id => @unit.id,
             :publication_date => 1.week.ago,
@@ -88,7 +89,8 @@ describe Admin::TaxonQuotasController do
 
     context "when successful" do
       it "renders taxon_concepts quotas page" do
-        put :update, :quota => {
+        put :update,
+          :quota => {
             :publication_date => 1.week.ago
           },
           :id => @quota.id,
@@ -100,7 +102,8 @@ describe Admin::TaxonQuotasController do
     end
 
     it "renders new when not successful" do
-      put :update, :quota => {
+      put :update,
+        :quota => {
           :publication_date => nil
         },
         :id => @quota.id,

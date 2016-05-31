@@ -40,9 +40,9 @@ class Distribution < ActiveRecord::Base
       unless reference.nil?
         self.distribution_references.
           create({
-          :distribution_id => self.id,
-          :reference_id => reference.id
-        })
+            :distribution_id => self.id,
+            :reference_id => reference.id
+          })
       end
     end
   end
