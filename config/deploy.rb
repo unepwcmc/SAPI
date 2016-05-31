@@ -112,13 +112,13 @@ set :slack_subdomain, "wcmc" # if your subdomain is example.slack.com
 #optional
 set :slack_application, "SAPI" # override Capistrano `application`
 deployment_animals = [
- ["Loxodonta deployana", ":elephant:"],
- ["Canis deployus", ":wolf:"],
- ["Panthera capistranis", ":tiger:"],
- ["Bison deployon", ":ox:"],
- ["Ursus capistranus", ":bear:"],
- ["Crotalus rattledeploy", ":snake:"],
- ["Caiman assetocompilatus", ":crocodile:"]
+  ["Loxodonta deployana", ":elephant:"],
+  ["Canis deployus", ":wolf:"],
+  ["Panthera capistranis", ":tiger:"],
+  ["Bison deployon", ":ox:"],
+  ["Ursus capistranus", ":bear:"],
+  ["Crotalus rattledeploy", ":snake:"],
+  ["Caiman assetocompilatus", ":crocodile:"]
 ]
 
 shuffle_deployer = deployment_animals.shuffle.first

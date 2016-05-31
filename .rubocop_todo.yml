@@ -498,13 +498,6 @@ Style/IfInsideElse:
 Style/IfUnlessModifier:
   Enabled: false
 
-# Offense count: 68
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: special_inside_parentheses, consistent, align_brackets
-Style/IndentArray:
-  Enabled: false
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: IndentationWidth.

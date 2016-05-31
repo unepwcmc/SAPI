@@ -7,3 +7,8 @@ Style/StringLiterals:
 # SupportedStyles: outdent, indent
 Style/AccessModifierIndentation:
   EnforcedStyle: indent
+
+# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
+# SupportedStyles: special_inside_parentheses, consistent, align_brackets
+Style/IndentArray:
+  EnforcedStyle: consistent

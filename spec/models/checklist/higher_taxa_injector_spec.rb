@@ -133,8 +133,8 @@ describe Checklist::HigherTaxaInjector do
             [
               @species1_1_1,
               @species2_1_1_1_1
-              ], {:expand_headers => true}
-              )
+            ], {:expand_headers => true}
+          )
         }
         specify{
           headers = hti_different_class.higher_taxa_headers(
@@ -165,8 +165,8 @@ describe Checklist::HigherTaxaInjector do
             [
               @species1_1_1,
               @species2_1_1
-              ], {:skip_ancestor_ids => [@family1.id]}
-              )
+            ], {:skip_ancestor_ids => [@family1.id]}
+          )
         }
         specify{
           hti_different_family.run.size.should == 3
@@ -195,8 +195,8 @@ describe Checklist::HigherTaxaInjector do
           Checklist::HigherTaxaInjector.new(
             [
               @species1_1_1
-              ], {:skip_ancestor_ids => [@family1.id]}
-              )
+            ], {:skip_ancestor_ids => [@family1.id]}
+          )
         }
         specify{
           hti_one_species_skip_family.higher_taxa_headers(nil, @species1_1_1).should be_empty
@@ -207,8 +207,8 @@ describe Checklist::HigherTaxaInjector do
           Checklist::HigherTaxaInjector.new(
             [
               @species1_1_1
-              ], {:expand_headers => true}
-              )
+            ], {:expand_headers => true}
+          )
         }
         specify{
           headers = hti_one_species_expand_headers.higher_taxa_headers(nil, @species1_1_1)
@@ -280,8 +280,8 @@ describe Checklist::HigherTaxaInjector do
             [
               @species1_1_1,
               @species2_1_1
-              ], {:expand_headers => true}
-              )
+            ], {:expand_headers => true}
+          )
         }
         specify{
           headers = hti_different_family.higher_taxa_headers(@species1_1_1, @species2_1_1)
@@ -342,8 +342,8 @@ describe Checklist::HigherTaxaInjector do
             [
               @order2,
               @genus2_1
-              ], {:expand_headers => true}
-              )
+            ], {:expand_headers => true}
+          )
         }
         specify{
           headers = hti_different_orders_expand.higher_taxa_headers(@order2, @genus2_1)
