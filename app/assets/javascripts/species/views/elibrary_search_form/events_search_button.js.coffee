@@ -21,6 +21,3 @@ Species.EventsSearchButton = Ember.View.extend Species.MultipleSelectionSearchBu
     else
       "MEETINGS"
   ).property("selectedEvents.@each")
-
-  click: (event) ->
-    @_super(event, 'controller.events')
