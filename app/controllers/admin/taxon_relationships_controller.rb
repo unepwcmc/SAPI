@@ -55,9 +55,9 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
 
   def load_taxon_relationship_types
     @taxon_relationship_type = if params[:taxon_relationship]
-       TaxonRelationshipType.find(params[:taxon_relationship][:taxon_relationship_type_id])
-      else
-       TaxonRelationshipType.find_by_name(params[:type] || TaxonRelationshipType::EQUAL_TO)
+      TaxonRelationshipType.find(params[:taxon_relationship][:taxon_relationship_type_id])
+    else
+      TaxonRelationshipType.find_by_name(params[:type] || TaxonRelationshipType::EQUAL_TO)
     end
     @taxon_relationship_types = TaxonRelationshipType.order(:name).
       intertaxonomic

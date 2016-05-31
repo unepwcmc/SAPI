@@ -85,14 +85,14 @@ module Checklist::Pdf::HistoryContent
       listing_change.species_listing_name
     end
     change_type = if listing_change.change_type_name == ChangeType::RESERVATION
-        '/r'
-      elsif listing_change.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
-        '/w'
-      elsif listing_change.change_type_name == ChangeType::DELETION
-        'Del'
-      else
-        nil
-      end
+      '/r'
+    elsif listing_change.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
+      '/w'
+    elsif listing_change.change_type_name == ChangeType::DELETION
+      'Del'
+    else
+      nil
+    end
     "#{appendix}#{change_type}"
   end
 

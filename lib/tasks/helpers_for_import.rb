@@ -364,14 +364,14 @@ def csv_headers(path_to_file)
 end
 
 def db_columns_from_csv_headers(path_to_file, table_name, include_data_type = true)
-    m = CsvToDbMap.instance
-    #work out the db columns to create
-    csv_columns = csv_headers(path_to_file)
-    db_columns = csv_columns.map{ |col| m.csv_to_db(table_name, col) }
-    db_columns = db_columns.map{ |col| col.sub(/\s\w+$/,'')} unless include_data_type
-    puts csv_columns.inspect
-    puts db_columns.inspect
-    db_columns
+  m = CsvToDbMap.instance
+  #work out the db columns to create
+  csv_columns = csv_headers(path_to_file)
+  db_columns = csv_columns.map{ |col| m.csv_to_db(table_name, col) }
+  db_columns = db_columns.map{ |col| col.sub(/\s\w+$/,'')} unless include_data_type
+  puts csv_columns.inspect
+  puts db_columns.inspect
+  db_columns
 end
 
 def create_table_from_csv_headers(path_to_file, table_name)

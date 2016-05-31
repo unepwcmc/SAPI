@@ -45,7 +45,7 @@ class Checklist::Checklist
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
         by_name(
-          @scientific_name, 
+          @scientific_name,
           {:synonyms => true, :common_names => true, :subspecies => false}
         )
     end
@@ -82,10 +82,10 @@ class Checklist::Checklist
   def generate
     @animalia, @plantae = cached_results.partition{ |item| item.kingdom_position == 0 }
     if @output_layout == :taxonomic
-       injector = Checklist::HigherTaxaInjector.new(@animalia)
-       @animalia = injector.run
-       injector = Checklist::HigherTaxaInjector.new(@plantae)
-       @plantae = injector.run
+      injector = Checklist::HigherTaxaInjector.new(@animalia)
+      @animalia = injector.run
+      injector = Checklist::HigherTaxaInjector.new(@plantae)
+      @plantae = injector.run
     end
     [self] #TODO just for compatibility with frontend, no sensible reason for this
   end
@@ -106,7 +106,7 @@ class Checklist::Checklist
     # country
     @countries_count = 0
     unless @countries.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.length == 0
 
       countries = GeoEntity.find_all_by_id(@countries)
 
@@ -121,20 +121,20 @@ class Checklist::Checklist
     # region
     @regions_count = 0
     unless @cites_regions.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.length == 0
 
       regions = GeoEntity.find_all_by_id(params[:cites_region_ids])
 
       @regions_count = regions.count
       if @regions_count > 0
-        summary << I18n.t('filter_summary.within_regions')  if @countries_count > 0
+        summary << I18n.t('filter_summary.within_regions') if @countries_count > 0
         summary << "#{regions.count} #{'region'.pluralize(regions.count)}"
       end
     end
 
     # appendix
     unless @cites_appendices.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.length == 0
 
       if (!@cites_regions.empty? ||
           !@countries.empty?) &&
@@ -150,7 +150,7 @@ class Checklist::Checklist
 
     # name
     unless @scientific_name.blank?
-      summary = [I18n.t('filter_summary.when_taxon')]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_taxon')] if summary.length == 0
 
       summary << "'#{@scientific_name}'"
     end
