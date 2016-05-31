@@ -24,8 +24,8 @@ namespace :elibrary do
       puts "#{DocumentTag.count} document tags"
 
       [
-       "I", "II", "III", "IV", "June 1986", "None",
-       "Post-CoP11", "Post-CoP12", "Post-CoP13"
+        "I", "II", "III", "IV", "June 1986", "None",
+        "Post-CoP11", "Post-CoP12", "Post-CoP13"
       ].each { |tag| DocumentTag::ReviewPhase.find_or_create_by_name(name: tag) }
 
       [
@@ -37,10 +37,10 @@ namespace :elibrary do
       ].each {|tag| DocumentTag::ProcessStage.find_or_create_by_name(name: tag) }
 
       [
-       "Accepted", "Cancelled", "Deferred",
-       "Redundant", "Rejected", "Transferred to other proposals",
-       "Withdrawn", "Accepted as amended", "Rejected as amended",
-       "Adopted"
+        "Accepted", "Cancelled", "Deferred",
+        "Redundant", "Rejected", "Transferred to other proposals",
+        "Withdrawn", "Accepted as amended", "Rejected as amended",
+        "Adopted"
       ].each { |tag| DocumentTag::ProposalOutcome.find_or_create_by_name(name: tag) }
 
       puts "#{DocumentTag.count} document tags"
