@@ -349,12 +349,7 @@ Style/CommentIndentation:
 # Configuration parameters: EnforcedStyle, SupportedStyles, SingleLineConditionsOnly.
 # SupportedStyles: assign_to_condition, assign_inside_condition
 Style/ConditionalAssignment:
-  Exclude:
-    - 'app/controllers/api/v1/taxon_concepts_controller.rb'
-    - 'app/models/checklist/checklist.rb'
-    - 'app/models/trade/filter.rb'
-    - 'lib/modules/html_to_latex.rb'
-    - 'old_cap/deploy.rb'
+  Enabled: false
 
 # Offense count: 10
 # Cop supports --auto-correct.
@@ -481,13 +476,7 @@ Style/For:
 # Offense count: 6
 # Configuration parameters: MinBodyLength.
 Style/GuardClause:
-  Exclude:
-    - 'app/models/annotation_observer.rb'
-    - 'app/models/cites_suspension_notification.rb'
-    - 'app/models/nomenclature_change.rb'
-    - 'app/models/nomenclature_change/lump.rb'
-    - 'app/models/nomenclature_change/split.rb'
-    - 'lib/tasks/bbgem.rake'
+  Enabled: false
 
 # Offense count: 8225
 # Cop supports --auto-correct.
