@@ -160,10 +160,10 @@ namespace :import do
     end
     TaxonName.joins('LEFT JOIN taxon_concepts ON taxon_name_id = taxon_names.id').
       where('taxon_concepts.id IS NULL').each do |t_name|
-        unless TaxonConcept.where(:taxon_name_id => t_name.id).any?
-          puts "deleting unnused taxon_name #{t_name.scientific_name}"
-          t_name.delete
-        end
+      unless TaxonConcept.where(:taxon_name_id => t_name.id).any?
+        puts "deleting unnused taxon_name #{t_name.scientific_name}"
+        t_name.delete
+      end
     end
     puts "Create trade_names relationship"
 

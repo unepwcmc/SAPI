@@ -27,7 +27,7 @@ class ListingChangeObserver < ActiveRecord::Observer
     )
 
     #geographic exclusions
-    excluded_geo_entities_ids = listing_change.excluded_geo_entities_ids && 
+    excluded_geo_entities_ids = listing_change.excluded_geo_entities_ids &&
       listing_change.excluded_geo_entities_ids.reject(&:blank?)
     excluded_geo_entities = if excluded_geo_entities_ids && excluded_geo_entities_ids.size > 0
       new_exclusions << ListingChange.new(

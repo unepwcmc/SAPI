@@ -2,8 +2,8 @@ class Trade::StatisticsController < TradeController
   layout 'admin'
 
   def index
-  	@start_date = params[:stats_start_date] ? Date.parse(params[:stats_start_date]) : Date.today.beginning_of_year
-  	@end_date = params[:stats_end_date] ? Date.parse(params[:stats_end_date]) : Date.today
+    @start_date = params[:stats_start_date] ? Date.parse(params[:stats_start_date]) : Date.today.beginning_of_year
+    @end_date = params[:stats_end_date] ? Date.parse(params[:stats_end_date]) : Date.today
     @years = (1975..Date.today.year).to_a.reverse
     @total_shipments = Trade::Shipment.count
     @last_updated = Trade::Shipment.maximum(:updated_at).strftime("%d/%m/%Y %H:%M")

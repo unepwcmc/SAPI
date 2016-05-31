@@ -53,12 +53,12 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
   def to_jq_upload
     if valid?
-    {
-      "id" => self.id,
-      "name" => read_attribute(:csv_source_file),
-      "size" => csv_source_file.size,
-      "url" => csv_source_file.url
-    }
+      {
+        "id" => self.id,
+        "name" => read_attribute(:csv_source_file),
+        "size" => csv_source_file.size,
+        "url" => csv_source_file.url
+      }
     else
       {
         "name" => read_attribute(:csv_source_file),

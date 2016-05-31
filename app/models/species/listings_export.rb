@@ -12,7 +12,7 @@ class Species::ListingsExport < Species::CsvCopyExport
         :designation_id => @designation.id
       ).map(&:abbreviation)
     elsif filters[:appendices]
-       SpeciesListing.where(
+      SpeciesListing.where(
         :abbreviation => filters[:appendices],
         :designation_id => @designation.id
       ).map(&:abbreviation)

@@ -86,7 +86,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def load_associations
     @designations = Designation.where(name: ['CITES', 'EU']).select([:id, :name]).order(:name)
     @event_types = if @document && @document.event
-      @event_types = [{id: @document.event.type}]
+      [{id: @document.event.type}]
     else
       Event.event_types_with_names
     end
