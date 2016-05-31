@@ -498,14 +498,6 @@ Style/IfInsideElse:
 Style/IfUnlessModifier:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: IndentationWidth.
-Style/IndentAssignment:
-  Exclude:
-    - 'app/models/nomenclature_change/split/constructor.rb'
-    - 'app/models/taxon_concept.rb'
-
 # Offense count: 126
 # Cop supports --auto-correct.
 # Configuration parameters: Width.

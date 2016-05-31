@@ -494,8 +494,7 @@ class TaxonConcept < ActiveRecord::Base
 
   def ensure_taxonomic_position
     if new_record? && fixed_order_required? && taxonomic_position.blank?
-      prev_taxonomic_position =
-      if parent
+      prev_taxonomic_position = if parent
         last_sibling = TaxonConcept.where(:parent_id => parent_id).
           maximum(:taxonomic_position)
         last_sibling || (parent.taxonomic_position + '.0')
