@@ -7,7 +7,7 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
     csv_column_headers + years
   end
 
-private
+  private
 
   def query_sql(options)
     headers = csv_column_headers

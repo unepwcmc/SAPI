@@ -25,7 +25,7 @@ class Species::Search
     @query.pluck(:id)
   end
 
-private
+  private
 
   def initialize_params(options)
     @options = Species::SearchParams.sanitize(options)

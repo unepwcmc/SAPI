@@ -45,7 +45,7 @@ class Trade::AnnualReportUploadsController < TradeController
     end
   end
 
-private
+  private
 
   def annual_report_upload_params
     params.require(:annual_report_upload).permit(

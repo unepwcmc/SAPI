@@ -9,7 +9,7 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
     ActiveRecord::Base.connection.execute(query_sql(:limit => true))
   end
 
-private
+  private
 
   def query_sql(options)
     headers = csv_column_headers

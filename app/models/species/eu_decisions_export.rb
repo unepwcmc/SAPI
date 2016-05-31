@@ -54,7 +54,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     rel
   end
 
-private
+  private
 
   def resource_name
     'eu_decisions'

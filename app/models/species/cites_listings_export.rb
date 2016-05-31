@@ -1,6 +1,6 @@
 class Species::CitesListingsExport < Species::ListingsExport
 
-private
+  private
 
   def designation_name
     'cites'
