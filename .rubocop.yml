@@ -3,3 +3,7 @@ inherit_from: .rubocop_todo.yml
 Style/StringLiterals:
   EnforcedStyle: single_quotes
 
+# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
+# SupportedStyles: outdent, indent
+Style/AccessModifierIndentation:
+  EnforcedStyle: indent

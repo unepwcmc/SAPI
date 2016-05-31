@@ -46,7 +46,7 @@ class Trade::SandboxShipmentsController < TradeController
     head :no_content
   end
 
-private
+  private
 
   def sandbox_shipment_params
     params.require(:sandbox_shipment).permit(*sandbox_shipment_attributes)

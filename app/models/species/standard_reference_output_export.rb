@@ -7,7 +7,7 @@ class Species::StandardReferenceOutputExport < Species::CsvCopyExport
     rel.select(sql_columns)
   end
 
-private
+  private
 
   def resource_name
     'standard_reference_output'

@@ -201,13 +201,6 @@ Performance/Sample:
 Performance/TimesMap:
   Enabled: false
 
-# Offense count: 27
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: outdent, indent
-Style/AccessModifierIndentation:
-  Enabled: false
-
 # Offense count: 4
 Style/AccessorMethodName:
   Exclude:

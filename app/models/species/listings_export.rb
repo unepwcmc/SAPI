@@ -42,7 +42,7 @@ class Species::ListingsExport < Species::CsvCopyExport
     rel
   end
 
-private
+  private
 
   def resource_name
     "#{designation_name}_listings"
