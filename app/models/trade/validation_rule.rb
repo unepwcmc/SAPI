@@ -158,7 +158,8 @@ class Trade::ValidationRule < ActiveRecord::Base
     if is_strict
       column_names
     else
-      column_names & ['taxon_concept_id', 'taxon_name', 'appendix', 'year', 'term_code',
+      column_names & [
+        'taxon_concept_id', 'taxon_name', 'appendix', 'year', 'term_code',
         'trading_partner', 'importer', 'exporter', 'reporter_type', 'quantity'
       ]
     end
@@ -168,7 +169,8 @@ class Trade::ValidationRule < ActiveRecord::Base
     if is_strict
       shipments_columns
     else
-      shipments_columns & ['taxon_concept_id', 'appendix', 'year', 'term_id',
+      shipments_columns & [
+        'taxon_concept_id', 'appendix', 'year', 'term_id',
         'exporter_id', 'importer_id', 'reporter_type', 'quantity'
       ]
     end

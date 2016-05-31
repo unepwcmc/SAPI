@@ -29,3 +29,8 @@ Style/IndentationConsistency:
     - 'lib/tasks/bbgem.rake'
     - 'db/migrate/*'
     - 'old_cap/*'
+
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: symmetrical, new_line, same_line
+Style/MultilineArrayBraceLayout:
+  EnforcedStyle: symmetrical
