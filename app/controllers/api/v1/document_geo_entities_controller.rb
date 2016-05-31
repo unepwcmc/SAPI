@@ -18,7 +18,7 @@ class Api::V1::DocumentGeoEntitiesController < ApplicationController
           document_citation: :document_citation_taxon_concepts
         }
       ).where(
-        'document_citation_taxon_concepts.taxon_concept_id': @species_search.ids
+        'document_citation_taxon_concepts.taxon_concept_id' => @species_search.ids
       )
     end
 
