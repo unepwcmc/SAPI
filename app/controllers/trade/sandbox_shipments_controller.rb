@@ -6,10 +6,10 @@ class Trade::SandboxShipmentsController < TradeController
     render :json => @search.results,
       :each_serializer => Trade::SandboxShipmentSerializer,
       :meta => {
-      :total => @search.total_cnt,
-      :page => @search.page,
-      :per_page => @search.per_page
-    }
+        :total => @search.total_cnt,
+        :page => @search.page,
+        :per_page => @search.per_page
+      }
   end
 
   def update

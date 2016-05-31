@@ -15,11 +15,11 @@ describe Trade::ExportsController do
         Trade::ShipmentsExport.any_instance.stub(:public_file_name).and_return('shipments.csv')
         lambda do
           get :download, :filters => {
-              :report_type => :raw,
-              :exporters_ids => ['40'],
-              :time_range_start => '1975',
-              :time_range_end => '2000'
-            }
+            :report_type => :raw,
+            :exporters_ids => ['40'],
+            :time_range_start => '1975',
+            :time_range_end => '2000'
+          }
         end.should_not change(Trade::TradeDataDownload, :count).by(1)
       end
     end

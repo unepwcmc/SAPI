@@ -227,16 +227,16 @@ higher_taxa = [
             :legacy_type => 'Animalia'
           },
           {
-          :name => 'Sarcopterygii',
-          :taxonomic_position => '1.1.7',
-          :legacy_id => 24,
-          :legacy_type => 'Animalia'
+            :name => 'Sarcopterygii',
+            :taxonomic_position => '1.1.7',
+            :legacy_id => 24,
+            :legacy_type => 'Animalia'
           },
           {
-          :name => 'Cephalaspidomorphi',
-          :taxonomic_position => '1.1.8',
-          :legacy_id => 7,
-          :legacy_type => 'Animalia'
+            :name => 'Cephalaspidomorphi',
+            :taxonomic_position => '1.1.8',
+            :legacy_id => 7,
+            :legacy_type => 'Animalia'
           }
         ]
       },

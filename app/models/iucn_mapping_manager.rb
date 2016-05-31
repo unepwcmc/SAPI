@@ -48,7 +48,7 @@ puts "#{@url}#{full_name.downcase}?token=#{@token}"
           :iucn_author => match['authority'],
           :iucn_category => match['category'],
           :details => {
-          :match => type_of_match(taxon_concept, match),
+            :match => type_of_match(taxon_concept, match),
             :no_matches => data["result"].size
           },
           :accepted_name_id => taxon_concept.name_status == 'S' ? taxon_concept.accepted_names.first.try(:id) : nil

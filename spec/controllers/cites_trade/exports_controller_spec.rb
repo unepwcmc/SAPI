@@ -27,11 +27,11 @@ describe CitesTrade::ExportsController do
         Trade::TradeDataDownloadLogger.stub(:organization_from).and_return("UNEP-WCMC")
         lambda do
           get :download, :filters => {
-              :report_type => 'comptab',
-              :exporters_ids => ['40'],
-              :time_range_start => '1975',
-              :time_range_end => '2000'
-            }
+            :report_type => 'comptab',
+            :exporters_ids => ['40'],
+            :time_range_start => '1975',
+            :time_range_end => '2000'
+          }
         end.should change(Trade::TradeDataDownload, :count).by(1)
       end
     end

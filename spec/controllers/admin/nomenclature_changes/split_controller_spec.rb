@@ -135,7 +135,8 @@ describe Admin::NomenclatureChanges::SplitController do
     end
     context 'when unsuccessful' do
       it 're-renders step' do
-        put :update, nomenclature_change_split: {
+        put :update,
+          nomenclature_change_split: {
             input_attributes: {taxon_concept_id: nil}
           }, nomenclature_change_id: @split.id, id: 'inputs'
         response.should render_template('inputs')

@@ -35,7 +35,8 @@ describe Admin::CitesSuspensionsController do
   describe "POST create" do
     context "when successful" do
       it "renders index" do
-        post :create, :cites_suspension => {
+        post :create,
+          :cites_suspension => {
             :start_notification_id => create_cites_suspension_notification.id
           }
         response.should redirect_to(
@@ -79,7 +80,8 @@ describe Admin::CitesSuspensionsController do
 
     context "when successful" do
       it "redirects to taxon_concepts cites suspensions page" do
-        put :update, :cites_suspension => {
+        put :update,
+          :cites_suspension => {
             :publication_date => 1.week.ago
           },
           :id => @cites_suspension.id
@@ -90,7 +92,8 @@ describe Admin::CitesSuspensionsController do
     end
 
     it "renders edit when not successful" do
-      put :update, :cites_suspension => {
+      put :update,
+        :cites_suspension => {
           :start_notification_id => nil
         },
         :id => @cites_suspension.id

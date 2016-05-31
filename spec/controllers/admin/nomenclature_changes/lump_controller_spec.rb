@@ -86,7 +86,8 @@ describe Admin::NomenclatureChanges::LumpController do
     end
     context 'when unsuccessful' do
       it 're-renders step' do
-        put :update, nomenclature_change_lump: {
+        put :update,
+          nomenclature_change_lump: {
             inputs_attributes: {
               0 => {taxon_concept_id: nil}
             }
