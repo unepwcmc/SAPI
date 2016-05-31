@@ -101,8 +101,8 @@ class NomenclatureChange::Split::Constructor
   end
 
   def output_split_from(output, input, lng)
-    output_html =
-    if output.scientific_name.present? && output.new_scientific_name.present?
+    output_html = if output.scientific_name.present? &&
+      output.new_scientific_name.present?
       taxon_concept_html(output.display_full_name, output.display_rank_name,
         output.scientific_name, output.rank.name)
     else
