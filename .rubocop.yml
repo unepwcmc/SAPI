@@ -34,3 +34,8 @@ Style/IndentationConsistency:
 # SupportedStyles: symmetrical, new_line, same_line
 Style/MultilineArrayBraceLayout:
   EnforcedStyle: symmetrical
+
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: symmetrical, new_line, same_line
+Style/MultilineHashBraceLayout:
+  EnforcedStyle: symmetrical

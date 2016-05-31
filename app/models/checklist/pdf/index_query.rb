@@ -18,7 +18,8 @@ class Checklist::Pdf::IndexQuery
 
     distinct_columns = [:name_type, :sort_name, :lng]
     distinct_columns_values = {
-      :name_type => {:basic => "'basic'",
+      :name_type => {
+        :basic => "'basic'",
         :english => "'common'",
         :spanish => "'common'",
         :french => "'common'",
