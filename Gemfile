@@ -107,6 +107,7 @@ group :development do
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
+  gem 'rubocop', '~> 0.40.0', require: false
 end
 
 group :test, :development do
