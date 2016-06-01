@@ -62,7 +62,6 @@ class Checklist::HigherTaxaInjector
     res
   end
 
-
   #returns array of HigherTaxaItems that need to be inserted
   #between prev_item and curr_item in the taxonomic layout
   def higher_taxa_headers(prev_item, curr_item)

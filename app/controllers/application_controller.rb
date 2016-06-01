@@ -40,7 +40,6 @@ class ApplicationController < ActionController::Base
     I18n.locale = params[:locale] || I18n.default_locale
   end
 
-
   def metadata_for_search(search)
     {
       :total => search.total_cnt,

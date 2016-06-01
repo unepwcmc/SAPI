@@ -1,7 +1,6 @@
 class Admin::ListingChangesController < Admin::StandardAuthorizationController
   belongs_to :eu_regulation
 
-
   protected
   def collection
     @listing_changes ||= end_of_association_chain.

@@ -10,7 +10,6 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
 
-
   def rank_name
     object.data['rank_name']
   end

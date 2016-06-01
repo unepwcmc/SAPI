@@ -50,7 +50,6 @@ shared_context "Cervus elaphus" do
      :is_current => true
     )
 
-
     create_eu_B_addition(
      :taxon_concept => @subspecies1,
      :effective_at => '2013-10-08',

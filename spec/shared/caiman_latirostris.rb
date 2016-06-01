@@ -152,7 +152,6 @@ shared_context "Caiman latirostris" do
       :is_party => false
     )
 
-
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)

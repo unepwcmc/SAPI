@@ -71,7 +71,6 @@ end
 # Use unicorn as the app server
 # gem 'unicorn'
 
-
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 

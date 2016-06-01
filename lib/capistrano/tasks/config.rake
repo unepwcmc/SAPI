@@ -324,8 +324,6 @@ namespace :config do
   end
 end
 
-
-
 namespace :config do
   desc "Configure app specific nagios monitoring"
   task :setup do
@@ -336,9 +334,6 @@ namespace :config do
     end
   end
 end
-
-
-
 
 namespace :config do
   desc "Configure app specific event handler"
@@ -353,7 +348,6 @@ cd #{deploy_to}/current/ ; nohup bundle exec sidekiq -e production -C #{deploy_t
     end
   end
 end
-
 
 namespace :config do
   desc "Configure logrotate"

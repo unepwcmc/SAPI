@@ -13,14 +13,12 @@ set :deploy_to, "/home/#{fetch(:deploy_user)}/#{fetch(:application)}"
 
 set :backup_path, "/home/#{fetch(:deploy_user)}/Backup"
 
-
 # Default value for :scm is :git
 set :scm, :git
 set :scm_username, "unepwcmc-read"
 
 # Default value for :format is :pretty
 # set :format, :pretty
-
 
 set :rvm_type, :user
 set :rvm_ruby_version, '2.2.3'
@@ -31,14 +29,11 @@ set :rvm_ruby_version, '2.2.3'
 # Default value for :pty is false
 set :pty, true
 
-
 set :ssh_options, {
   forward_agent: true,
 }
 
-
 before "deploy:symlink:shared", "rsync:sync"
-
 
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml config/mailer_config.yml config/secrets.yml .env}
@@ -97,8 +92,6 @@ namespace :deploy do
     end
   end
 end
-
-
 
 require 'yaml'
 require 'json'

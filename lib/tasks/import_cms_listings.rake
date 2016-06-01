@@ -194,7 +194,6 @@ namespace :import do
       puts "INSERTING listed populations (listing distributions)"
       ActiveRecord::Base.connection.execute(sql)
 
-
       sql = <<-SQL
         INSERT INTO instruments(name, designation_id, created_at, updated_at)
         SELECT DISTINCT BTRIM(#{TMP_TABLE}.designation), #{designation.id},
