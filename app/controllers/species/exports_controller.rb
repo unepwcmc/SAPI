@@ -53,7 +53,7 @@ class Species::ExportsController < ApplicationController
 
   def ensure_data_type_and_filters
     unless params[:data_type] && params[:filters]
-      render :nothing => true, :status => :unprocessable_entity and return false
+      render(:nothing => true, :status => :unprocessable_entity) && (return false)
     end
   end
 end

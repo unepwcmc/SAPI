@@ -238,18 +238,6 @@ Style/AlignHash:
 Style/AlignParameters:
   Enabled: false
 
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: always, conditionals
-Style/AndOr:
-  Exclude:
-    - 'app/controllers/api/v1/documents_controller.rb'
-    - 'app/controllers/species/exports_controller.rb'
-    - 'db/migrate/20120530135534_setup_hstore.rb'
-    - 'db/migrate/20120703141230_setup_tablefunc.rb'
-    - 'lib/tasks/bbgem.rake'
-
 # Offense count: 993
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, ProceduralMethods, FunctionalMethods, IgnoredMethods.

@@ -39,3 +39,10 @@ Style/MultilineArrayBraceLayout:
 # SupportedStyles: symmetrical, new_line, same_line
 Style/MultilineHashBraceLayout:
   EnforcedStyle: symmetrical
+
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: always, conditionals
+Style/AndOr:
+  Exclude:
+    - 'lib/tasks/bbgem.rake'
+    - 'db/migrate/*'
