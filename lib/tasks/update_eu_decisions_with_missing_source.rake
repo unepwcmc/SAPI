@@ -44,6 +44,6 @@ namespace :update do
     SQL
 
     res = ActiveRecord::Base.connection.execute update_query
-    puts "#{res.cmd_tuples()} rows linked to 'W' source"
+    puts "#{res.cmd_tuples} rows linked to 'W' source"
   end
 end

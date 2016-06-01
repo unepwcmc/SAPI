@@ -14,7 +14,7 @@ class Trade::StatisticsController < TradeController
       where("created_at::DATE BETWEEN ? AND ?", @start_date, @end_date).
       where('created_at != updated_at').
       count
-    @taxon_concepts_in_trade = Trade::Shipment.from('(SELECT taxon_concept_id FROM trade_shipments GROUP BY taxon_concept_id) s').count()
+    @taxon_concepts_in_trade = Trade::Shipment.from('(SELECT taxon_concept_id FROM trade_shipments GROUP BY taxon_concept_id) s').count
   end
 
   def summary_creation

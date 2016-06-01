@@ -23,7 +23,7 @@ class Trade::ExportsController < TradeController
   end
 
   def download_stats
-    stats = Trade::TradeDataDownloadsExport.new()
+    stats = Trade::TradeDataDownloadsExport.new
     respond_to do |format|
       format.html {
         result = stats.export

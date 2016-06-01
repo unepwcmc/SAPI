@@ -525,19 +525,6 @@ Style/LineEndConcatenation:
   Exclude:
     - 'app/helpers/admin_helper.rb'
 
-# Offense count: 10
-# Cop supports --auto-correct.
-Style/MethodCallParentheses:
-  Exclude:
-    - 'app/controllers/trade/exports_controller.rb'
-    - 'app/controllers/trade/statistics_controller.rb'
-    - 'app/models/nomenclature_change/split/constructor.rb'
-    - 'lib/tasks/import_countries.rake'
-    - 'lib/tasks/map_eu_opinions_to_ec_srgs.rake'
-    - 'lib/tasks/map_eu_suspensions_to_terminating_regulations.rake'
-    - 'lib/tasks/taxonomy_mapping.rake'
-    - 'lib/tasks/update_eu_decisions_with_missing_source.rake'
-
 # Offense count: 2
 Style/MultilineBlockChain:
   Exclude:

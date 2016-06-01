@@ -33,7 +33,7 @@ namespace :import do
           )
       SQL
       ActiveRecord::Base.connection.execute(sql)
-      link_countries()
+      link_countries
     end
     puts "There are now #{GeoEntity.count(conditions: {geo_entity_type_id: country_type.id})} countries in the database"
     puts "There are now #{GeoEntity.count(conditions: {geo_entity_type_id: territory_type.id})} territories in the database."
