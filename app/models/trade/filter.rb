@@ -29,19 +29,20 @@ class Trade::Filter
     @query = Trade::Shipment.from('trade_shipments_with_taxa_view trade_shipments')
 
     unless @taxon_concepts_ids.empty?
-      cascading_ranks = if @internal
-        # always cascade if query is coming from the internal interface
-        Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
-      elsif @taxon_with_descendants && !@internal
-        # the magnificent hack to make sure that queries coming from the public
-        # interface cascade to taxon descendants when searching by genus,
-        # but only through the 'genus' selector, not 'taxon'
-        Rank.in_range(Rank::SPECIES, Rank::GENUS)
-      else
-        # this has to be public interface + search by taxon
-        # only cascade for species
-        Rank.in_range(Rank::SPECIES, Rank::SPECIES)
-      end
+      cascading_ranks =
+        if @internal
+          # always cascade if query is coming from the internal interface
+          Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
+        elsif @taxon_with_descendants && !@internal
+          # the magnificent hack to make sure that queries coming from the public
+          # interface cascade to taxon descendants when searching by genus,
+          # but only through the 'genus' selector, not 'taxon'
+          Rank.in_range(Rank::SPECIES, Rank::GENUS)
+        else
+          # this has to be public interface + search by taxon
+          # only cascade for species
+          Rank.in_range(Rank::SPECIES, Rank::SPECIES)
+        end
       taxon_concepts = MTaxonConcept.where(id: @taxon_concepts_ids)
       taxon_concepts_conditions = 
         taxon_concepts.map do |tc|

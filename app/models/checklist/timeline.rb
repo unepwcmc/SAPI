@@ -66,34 +66,35 @@ class Checklist::Timeline
   def add_intervals
     (@timelines + [self]).flatten.each do |timeline|
       timeline.timeline_events.each_with_index do |event, idx|
-        interval = if idx < (timeline.timeline_events.size - 1)
-          next_event = timeline.timeline_events[idx + 1]
-          if !(
-            event.is_deletion? && next_event.is_addition? ||
-            event.is_reservation_withdrawal? && next_event.is_reservation?
-            )
-            Checklist::TimelineInterval.new(
-              :taxon_concept_id => @taxon_concept_id,
-              :listing_change_id => event.id,
-              :start_pos => event.pos,
-              :end_pos => next_event.pos
-            )
+        interval =
+          if idx < (timeline.timeline_events.size - 1)
+            next_event = timeline.timeline_events[idx + 1]
+            if !(
+              event.is_deletion? && next_event.is_addition? ||
+              event.is_reservation_withdrawal? && next_event.is_reservation?
+              )
+              Checklist::TimelineInterval.new(
+                :taxon_concept_id => @taxon_concept_id,
+                :listing_change_id => event.id,
+                :start_pos => event.pos,
+                :end_pos => next_event.pos
+              )
+            end
+          else
+            # the meaning of @current: there is a current listing in this appdx
+            # this is to ensure an appdx III deletion does not terminate
+            # the timeline if appdx III is still current
+            if (event.is_addition? || event.is_amendment? || event.is_deletion?) &&
+              @current || event.is_reservation? && event.is_current
+              @continues_in_present = true
+              Checklist::TimelineInterval.new(
+                :taxon_concept_id => @taxon_concept_id,
+                :listing_change_id => event.id,
+                :start_pos => event.pos,
+                :end_pos => 1
+              )
+            end
           end
-        else
-          # the meaning of @current: there is a current listing in this appdx
-          # this is to ensure an appdx III deletion does not terminate
-          # the timeline if appdx III is still current
-          if (event.is_addition? || event.is_amendment? || event.is_deletion?) &&
-            @current || event.is_reservation? && event.is_current
-            @continues_in_present = true
-            Checklist::TimelineInterval.new(
-              :taxon_concept_id => @taxon_concept_id,
-              :listing_change_id => event.id,
-              :start_pos => event.pos,
-              :end_pos => 1
-            )
-          end
-        end
         timeline.timeline_intervals << interval if interval
       end
     end

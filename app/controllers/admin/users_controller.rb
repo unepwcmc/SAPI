@@ -17,11 +17,12 @@ class Admin::UsersController < Admin::SimpleCrudController
   end
 
   def update
-    update_result = if params[:user][:password].blank?
-      @user.update_without_password(params[:user])
-    else
-      @user.update_attributes(params[:user])
-    end
+    update_result =
+      if params[:user][:password].blank?
+        @user.update_without_password(params[:user])
+      else
+        @user.update_attributes(params[:user])
+      end
     respond_to do |format|
       format.js {
         if update_result

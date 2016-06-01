@@ -95,20 +95,22 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
     @species_listings = @designation.species_listings.order(:abbreviation)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
-    @hash_annotations = if @designation.is_eu?
-      Annotation.for_eu
-    elsif @designation.is_cites?
-      Annotation.for_cites
-    else
-      []
-    end
-    @events = if @designation.is_eu?
-      EuRegulation.order('effective_at DESC')
-    elsif @designation.is_cites?
-      CitesCop.order('effective_at DESC')
-    else
-      []
-    end
+    @hash_annotations =
+      if @designation.is_eu?
+        Annotation.for_eu
+      elsif @designation.is_cites?
+        Annotation.for_cites
+      else
+        []
+      end
+    @events =
+      if @designation.is_eu?
+        EuRegulation.order('effective_at DESC')
+      elsif @designation.is_cites?
+        CitesCop.order('effective_at DESC')
+      else
+        []
+      end
   end
 
   def load_listing_changes

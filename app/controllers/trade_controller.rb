@@ -41,19 +41,21 @@ class TradeController < ApplicationController
       :internal => true,
       # always search descendants
       :taxon_with_descendants => true,
-      :report_type => if params[:filters] && params[:filters][:report_type] &&
-        Trade::ShipmentsExportFactory.report_types &
-        [report_type = params[:filters][:report_type].downcase.strip.to_sym]
-        report_type
-      else
-        :raw
-      end,
-      :csv_separator => if params[:filters] && params[:filters][:csv_separator] &&
-        params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
-        :semicolon
-      else
-        :comma
-      end
+      :report_type =>
+        if params[:filters] && params[:filters][:report_type] &&
+          Trade::ShipmentsExportFactory.report_types &
+          [report_type = params[:filters][:report_type].downcase.strip.to_sym]
+          report_type
+        else
+          :raw
+        end,
+      :csv_separator =>
+        if params[:filters] && params[:filters][:csv_separator] &&
+          params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
+          :semicolon
+        else
+          :comma
+        end
     })
   end
 
