@@ -16,7 +16,6 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-
       # Importing Hybrids, step by step:
       # TaxonConcepts  many to one relationship with taxon_names [scientific_name]
       # 1- Insert all scientific_names into taxon_names table (DISTINCT)

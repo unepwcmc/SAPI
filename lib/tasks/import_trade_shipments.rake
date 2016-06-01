@@ -74,7 +74,6 @@ namespace :import do
   end
 end
 
-
 def drop_create_and_copy_temp(tmp_table, file)
   puts "Creating temp table"
   drop_table(tmp_table)

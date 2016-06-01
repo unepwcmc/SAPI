@@ -274,7 +274,6 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       ).all
   end
 
-
   def cites_listing
     object.listing && object.listing['cites_listing']
   end

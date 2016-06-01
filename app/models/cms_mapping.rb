@@ -20,7 +20,6 @@ class CmsMapping < ActiveRecord::Base
   belongs_to :taxon_concept
   belongs_to :accepted_name, :class_name => 'TaxonConcept'
 
-
   scope :filter, lambda { |option|
     case option
     when "MATCHES"

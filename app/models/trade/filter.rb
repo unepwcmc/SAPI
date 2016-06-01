@@ -118,7 +118,6 @@ class Trade::Filter
       @query = @query.where(:source_id => nil)
     end
 
-
     if !@countries_of_origin_ids.empty?
       local_field = "country_of_origin_id"
       blank_query = @country_of_origin_blank ? "OR country_of_origin_id IS NULL" : ""

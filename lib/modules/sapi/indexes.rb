@@ -180,6 +180,5 @@ module Sapi
       ActiveRecord::Base.connection.execute(sql)
     end
 
-
   end
 end

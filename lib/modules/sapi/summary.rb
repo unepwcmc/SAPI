@@ -1,7 +1,6 @@
 module Sapi
   module Summary
 
-
     def self.database_stats
       stats = {}
       stats[:core] = self.core_stats

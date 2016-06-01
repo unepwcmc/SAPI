@@ -47,7 +47,6 @@ describe NomenclatureChange::StatusSwap::Processor do
     end
   end
 
-
   describe :summary do
     let(:status_change){ a_to_s_with_swap }
     specify { expect(processor.summary).to be_kind_of(Array) }

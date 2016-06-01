@@ -346,11 +346,6 @@ Style/EmptyElse:
     - 'app/models/rank.rb'
     - 'app/models/trade/shipment.rb'
 
-# Offense count: 67
-# Cop supports --auto-correct.
-Style/EmptyLines:
-  Enabled: false
-
 # Offense count: 54
 # Cop supports --auto-correct.
 Style/EmptyLinesAroundAccessModifier:

@@ -7,7 +7,6 @@ namespace :import do
     trade_shipments_indexed = {"trade_shipments" => ["export_permits_ids", "import_permits_ids", "origin_permits_ids"]}
     trade_shipments_to_index = {"trade_shipments" => ["legacy_shipment_number"]}
 
-
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(TMP_TABLE)
