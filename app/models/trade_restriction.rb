@@ -168,7 +168,7 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.filter_geo_entities(filters)
-    if filters.has_key?("geo_entities_ids")
+    if filters.key?("geo_entities_ids")
       geo_entities_ids = GeoEntity.nodes_and_descendants(
         filters["geo_entities_ids"]
       ).map(&:id)
@@ -178,7 +178,7 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.filter_taxon_concepts(filters)
-    if filters.has_key?("taxon_concepts_ids")
+    if filters.key?("taxon_concepts_ids")
       conds_str = <<-SQL
         ARRAY[
           taxon_concepts_mview.id, taxon_concepts_mview.family_id,
@@ -193,7 +193,7 @@ class TradeRestriction < ActiveRecord::Base
   end
 
   def self.filter_years(filters)
-    if filters.has_key?("years")
+    if filters.key?("years")
       return where('EXTRACT(YEAR FROM trade_restrictions.start_date) IN (?)',
                    filters["years"])
     end
