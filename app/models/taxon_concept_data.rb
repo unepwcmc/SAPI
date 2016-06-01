@@ -39,14 +39,15 @@ class TaxonConceptData
     data = if @taxon_concept.parent && @taxon_concept.parent.data
       @taxon_concept.parent.data
     else
-      fake_parent = case @taxon_concept.name_status
-      when 'H'
-        @taxon_concept.hybrid_parents.first
-      when 'S'
-        @taxon_concept.accepted_names.first
-      when 'T'
-        @taxon_concept.accepted_names_for_trade_name.first
-      end
+      fake_parent =
+        case @taxon_concept.name_status
+        when 'H'
+          @taxon_concept.hybrid_parents.first
+        when 'S'
+          @taxon_concept.accepted_names.first
+        when 'T'
+          @taxon_concept.accepted_names_for_trade_name.first
+        end
       fake_parent && fake_parent.data
     end
     return nil unless data

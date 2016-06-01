@@ -34,11 +34,12 @@ class Species::CsvCopyExport
   private
 
   def initialize_csv_separator(csv_separator)
-    @csv_separator, @csv_separator_char = case csv_separator
+    @csv_separator, @csv_separator_char =
+      case csv_separator
       when :semicolon then [:semicolon, ';']
       else [:comma, ',']
-    end
-  end 
+      end
+  end
 
   def initialize_file_name
     @file_name = path + Digest::SHA1.hexdigest(

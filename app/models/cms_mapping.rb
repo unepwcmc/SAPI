@@ -23,12 +23,12 @@ class CmsMapping < ActiveRecord::Base
 
   scope :filter, lambda { |option|
     case option
-      when "MATCHES"
-        where('taxon_concept_id IS NOT NULL')
-      when "MISSING_SPECIES_PLUS"
-        where(:taxon_concept_id => nil)
-      else
-        scoped
+    when "MATCHES"
+      where('taxon_concept_id IS NOT NULL')
+    when "MISSING_SPECIES_PLUS"
+      where(:taxon_concept_id => nil)
+    else
+      scoped
     end
   }
 end

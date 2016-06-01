@@ -168,22 +168,22 @@ module Admin::NomenclatureChangesHelper
 
   def nomenclature_change_header
     case
-      when @nc.is_a?(NomenclatureChange::Split)
-        concat content_tag(:h1, "NomenclatureChange #{@nc.id} - SPLIT", nil)
-        content_tag(:div, @nc.input.note_en.html_safe, class: 'well well-small')
-      when @nc.is_a?(NomenclatureChange::Lump)
-        concat content_tag(:h1, "NomenclatureChange #{@nc.id} - LUMP", nil)
-        content_tag(:div, @nc.output.note_en.html_safe, class: 'well well-small')
-      when @nc.is_a?(NomenclatureChange::StatusSwap)
-        content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS SWAP", nil) +
-        content_tag(:div, @nc.primary_output.internal_note.html_safe, class: 'well well-small') +
-        content_tag(:div, @nc.secondary_output.note_en.html_safe, class: 'well well-small')
-      when @nc.is_a?(NomenclatureChange::StatusToSynonym)
-        content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO SYNONYM", nil) +
-        content_tag(:div, @nc.primary_output.internal_note.html_safe, class: 'well well-small')
-      when @nc.is_a?(NomenclatureChange::StatusToAccepted)
-        content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO ACCEPTED", nil) +
-        content_tag(:div, @nc.primary_output.note_en.html_safe, class: 'well well-small')
+    when @nc.is_a?(NomenclatureChange::Split)
+      concat content_tag(:h1, "NomenclatureChange #{@nc.id} - SPLIT", nil)
+      content_tag(:div, @nc.input.note_en.html_safe, class: 'well well-small')
+    when @nc.is_a?(NomenclatureChange::Lump)
+      concat content_tag(:h1, "NomenclatureChange #{@nc.id} - LUMP", nil)
+      content_tag(:div, @nc.output.note_en.html_safe, class: 'well well-small')
+    when @nc.is_a?(NomenclatureChange::StatusSwap)
+      content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS SWAP", nil) +
+      content_tag(:div, @nc.primary_output.internal_note.html_safe, class: 'well well-small') +
+      content_tag(:div, @nc.secondary_output.note_en.html_safe, class: 'well well-small')
+    when @nc.is_a?(NomenclatureChange::StatusToSynonym)
+      content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO SYNONYM", nil) +
+      content_tag(:div, @nc.primary_output.internal_note.html_safe, class: 'well well-small')
+    when @nc.is_a?(NomenclatureChange::StatusToAccepted)
+      content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO ACCEPTED", nil) +
+      content_tag(:div, @nc.primary_output.note_en.html_safe, class: 'well well-small')
     end
   end
 

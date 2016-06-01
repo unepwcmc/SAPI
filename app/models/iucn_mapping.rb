@@ -24,18 +24,18 @@ class IucnMapping < ActiveRecord::Base
 
   scope :filter, lambda { |option|
     case option
-      when "ALL"
-        scoped
-      when "MATCHING"
-        where('iucn_taxon_id IS NOT NULL')
-      when "NON_MATCHING"
-        where(:iucn_taxon_id => nil)
-      when 'SYNONYMS'
-        where('accepted_name_id IS NOT NULL')
-      when 'ACCEPTED'
-        where(:accepted_name_id => nil)
-      else
-        where("details->'match' = ?", option)
+    when "ALL"
+      scoped
+    when "MATCHING"
+      where('iucn_taxon_id IS NOT NULL')
+    when "NON_MATCHING"
+      where(:iucn_taxon_id => nil)
+    when 'SYNONYMS'
+      where('accepted_name_id IS NOT NULL')
+    when 'ACCEPTED'
+      where(:accepted_name_id => nil)
+    else
+      where("details->'match' = ?", option)
     end
   }
 end
