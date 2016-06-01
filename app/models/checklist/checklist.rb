@@ -187,13 +187,15 @@ class Checklist::Checklist
     params.delete(:action)
     params.delete(:controller)
 
-    @filename = Digest::SHA1.hexdigest(params
-                                       .merge(type: type)
-                                       .merge(locale: I18n.locale)
-                                       .to_hash
-                                       .symbolize_keys!
-                                       .sort
-                                       .to_s)
+    @filename = Digest::SHA1.hexdigest(
+      params.
+      merge(type: type).
+      merge(locale: I18n.locale).
+      to_hash.
+      symbolize_keys!.
+      sort.
+      to_s
+    )
 
     return [Rails.root, '/public/downloads/checklist/', @filename, '.', format].join
   end
