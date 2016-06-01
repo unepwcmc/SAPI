@@ -46,3 +46,10 @@ Style/AndOr:
   Exclude:
     - 'lib/tasks/bbgem.rake'
     - 'db/migrate/*'
+
+# Offense count: 551
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: leading, trailing
+Style/DotPosition:
+  EnforcedStyle: trailing

@@ -89,8 +89,8 @@ class TradeRestriction < ActiveRecord::Base
     file_name = Digest::SHA1.hexdigest(
       filters.merge(:latest_date => latest).
       to_hash.
-      symbolize_keys!.sort
-      .to_s
+      symbolize_keys!.sort.
+      to_s
     )+"_cites_#{self.to_s.downcase}s.csv"
     if !File.file?(path+file_name)
       self.to_csv(path+file_name, filters)
