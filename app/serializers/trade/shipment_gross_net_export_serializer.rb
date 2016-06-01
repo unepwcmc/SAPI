@@ -3,6 +3,7 @@ class Trade::ShipmentGrossNetExportSerializer < Trade::ShipmentComptabExportSeri
   def rows
     object.query
   end
+
   def column_headers
     object.full_csv_column_headers
   end

@@ -73,6 +73,7 @@ class Checklist::Checklist
   end
 
   def prepare_main_query; end
+
   def prepare_kindom_queries; end
 
   # Takes the current search query and adds metadata

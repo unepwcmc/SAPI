@@ -4,6 +4,7 @@ class Checklist::Pdf::IndexFetcher
     @limit = 5000
     @offset = 0
   end
+
   def next
     results = MTaxonConcept.find_by_sql(
       @query.to_sql(@limit, @offset)

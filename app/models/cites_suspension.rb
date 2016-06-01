@@ -66,6 +66,7 @@ class CitesSuspension < TradeRestriction
   def start_notification_name
     start_notification && start_notification.name
   end
+
   def end_notification_name
     end_notification && end_notification.name
   end

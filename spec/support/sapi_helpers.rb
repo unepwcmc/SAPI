@@ -354,12 +354,14 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_appendix_year_validation
     create(:taxon_concept_appendix_year_validation_rule,
       :is_primary => false,
       :is_strict => true
     )
   end
+
   def create_term_unit_validation
     create(:inclusion_validation_rule,
       :column_names => ['term_code', 'unit_code'],
@@ -367,6 +369,7 @@ shared_context :sapi do
       :is_primary => false
     )
   end
+
   def create_term_purpose_validation
     create(:inclusion_validation_rule,
       :column_names => ['term_code', 'purpose_code'],
@@ -374,6 +377,7 @@ shared_context :sapi do
       :is_primary => false
     )
   end
+
   def create_taxon_concept_term_validation
     create(:inclusion_validation_rule,
       :column_names => ['taxon_concept_id', 'term_code'],
@@ -382,6 +386,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_country_of_origin_validation
     create(:inclusion_validation_rule,
       :scope => {
@@ -395,6 +400,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_exporter_validation
     create(:inclusion_validation_rule,
       :scope => {
@@ -409,6 +415,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_exporter_country_of_origin_validation
     create(:distinct_values_validation_rule,
       :column_names => ['exporter', 'country_of_origin'],
@@ -416,6 +423,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_exporter_importer_validation
     create(:distinct_values_validation_rule,
       :column_names => ['exporter', 'importer'],
@@ -423,6 +431,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_source_validation
     create(:taxon_concept_source_validation_rule,
       :column_names => ['taxon_concept_id', 'source_code'],

@@ -8,6 +8,7 @@ module ComparisonAttributes
     def ignored_attributes
       [:id, :created_at, :updated_at, :created_by_id, :updated_by_id, :original_id]
     end
+
     def text_attributes; []; end
   end
 

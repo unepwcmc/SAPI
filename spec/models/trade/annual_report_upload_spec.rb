@@ -24,16 +24,19 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')
     )
   end
+
   def importer_file
     Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_importer.csv')
     )
   end
+
   def importer_file_w_blanks
     Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_importer_blanks.csv')
     )
   end
+
   def invalid_file
     Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_invalid.csv')
