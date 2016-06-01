@@ -127,9 +127,15 @@
         <%= ff.label :proposal_outcome_id, class: 'control-label' %>
         <div class="controls">
           <%= ff.select :proposal_outcome_id,
-            options_for_select(DocumentTag::ProposalOutcome.all.map { |po| [po.name, po.id] },
-              @document.proposal_details.proposal_outcome_id),
-            { :class => 'phases', :style => 'width: 220px' }
+            options_for_select(
+              DocumentTag::ProposalOutcome.all.map { |po| [po.name, po.id] },
+              @document.proposal_details.proposal_outcome_id
+            ),
+            {
+              include_blank: true,
+              class: 'phases',
+              style: 'width: 220px'
+            }
           %>
         </div>
       </div>
