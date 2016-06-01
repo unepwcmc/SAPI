@@ -198,6 +198,7 @@ module DownloadsCache
     end
     puts "#{Time.now} all EU Decisions download generated in #{elapsed_time}s"
   end
+
   def self.update_admin_downloads
     puts "Updating admin downloads"
     [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|

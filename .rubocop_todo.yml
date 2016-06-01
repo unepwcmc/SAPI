@@ -346,12 +346,6 @@ Style/EmptyElse:
     - 'app/models/rank.rb'
     - 'app/models/trade/shipment.rb'
 
-# Offense count: 53
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAdjacentOneLineDefs.
-Style/EmptyLineBetweenDefs:
-  Enabled: false
-
 # Offense count: 67
 # Cop supports --auto-correct.
 Style/EmptyLines:
