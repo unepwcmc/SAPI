@@ -18,5 +18,5 @@ task :map_eu_suspensions_to_terminating_regulations => :environment do
   RETURNING *;
   SQL
   res = ActiveRecord::Base.connection.execute update_query
-  puts "#{res.cmd_tuples()} rows linked to terminating EU Suspension Regulations"
+  puts "#{res.cmd_tuples} rows linked to terminating EU Suspension Regulations"
 end

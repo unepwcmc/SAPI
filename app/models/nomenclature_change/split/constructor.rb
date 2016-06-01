@@ -14,7 +14,7 @@ class NomenclatureChange::Split::Constructor
       @nomenclature_change.outputs.build(
         taxon_concept_id: @nomenclature_change.input.taxon_concept_id
       )
-      @nomenclature_change.outputs.build()
+      @nomenclature_change.outputs.build
     end
   end
 
