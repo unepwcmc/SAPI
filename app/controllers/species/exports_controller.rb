@@ -8,14 +8,14 @@ class Species::ExportsController < ApplicationController
       :csv_separator => cookies['speciesplus.csv_separator'].try(:to_sym)
     })
     case params[:data_type]
-      when 'Quotas'
-        result = Quota.export @filters
-      when 'CitesSuspensions'
-        result = CitesSuspension.export @filters
-      when 'Listings'
-        result = Species::ListingsExportFactory.new(@filters).export
-      when 'EuDecisions'
-        result = Species::EuDecisionsExport.new(@filters).export
+    when 'Quotas'
+      result = Quota.export @filters
+    when 'CitesSuspensions'
+      result = CitesSuspension.export @filters
+    when 'Listings'
+      result = Species::ListingsExportFactory.new(@filters).export
+    when 'EuDecisions'
+      result = Species::EuDecisionsExport.new(@filters).export
     end
     respond_to do |format|
       format.html {

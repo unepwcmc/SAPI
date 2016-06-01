@@ -255,13 +255,6 @@ Style/BlockDelimiters:
 Style/BracesAroundHashParameters:
   Enabled: false
 
-# Offense count: 45
-# Cop supports --auto-correct.
-# Configuration parameters: IndentWhenRelativeTo, SupportedStyles, IndentOneStep, IndentationWidth.
-# SupportedStyles: case, end
-Style/CaseIndentation:
-  Enabled: false
-
 # Offense count: 348
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: nested, compact

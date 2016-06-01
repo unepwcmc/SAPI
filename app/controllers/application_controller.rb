@@ -16,10 +16,10 @@ class ApplicationController < ActionController::Base
     redirect_to rescue_path,
       alert:  if current_user.is_manager_or_contributor?
                 case exception.action
-                  when :destroy
-                    "You are not authorised to destroy that record"
-                  else
-                    exception.message
+                when :destroy
+                  "You are not authorised to destroy that record"
+                else
+                  exception.message
                 end
               else
                 "You are not authorised to access this page"
