@@ -22,20 +22,14 @@ describe Source do
     end
     context "when dependent objects attached" do
       let(:source){ create(:source) }
-      #context "when EU opinion" do
-      #  let!(:eu_opinion){ create(:eu_opinion, :source => source)}
-      #  specify { source.destroy.should be_false }
-      #end
-      #context "when EU suspension" do
-      #  let!(:eu_suspension){ create(:eu_suspension, :source => source)}
-      #  specify { source.destroy.should be_false }
-      #end
       context "when CITES suspension" do
-        let!(:cites_suspension){ create(
-          :cites_suspension,
-          :sources => [source],
-          :start_notification_id => create_cites_suspension_notification.id
-        ) }
+        let!(:cites_suspension){
+          create(
+            :cites_suspension,
+            :sources => [source],
+            :start_notification_id => create_cites_suspension_notification.id
+          )
+        }
         specify { source.destroy.should be_false }
       end
       context "when CITES quota" do

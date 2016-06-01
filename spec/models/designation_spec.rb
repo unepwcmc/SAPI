@@ -32,14 +32,18 @@ describe Designation do
   describe :update do
     context "when updating a non-protected name" do
       let(:designation){ create(:designation) }
-      specify{ designation.update_attributes(
-        {:name => 'RULES OF INTERGALACTIC TRADE'}
-      ).should be_true }
+      specify{
+        designation.update_attributes(
+          {:name => 'RULES OF INTERGALACTIC TRADE'}
+        ).should be_true
+      }
     end
     context "when updating a protected name" do
-      specify{ cites.update_attributes(
-        {:name => 'RULES OF INTERGALACTIC TRADE'}
-      ).should be_false }
+      specify{
+        cites.update_attributes(
+          {:name => 'RULES OF INTERGALACTIC TRADE'}
+        ).should be_false
+      }
     end
     context "when updating taxonomy with no dependent objects attached" do
       let(:designation){ create(:designation) }

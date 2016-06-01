@@ -248,21 +248,6 @@ Style/AlignParameters:
 Style/BlockDelimiters:
   Enabled: false
 
-# Offense count: 25
-# Cop supports --auto-correct.
-Style/BlockEndNewline:
-  Exclude:
-    - 'spec/controllers/admin/ahoy_events_controller_spec.rb'
-    - 'spec/controllers/api/taxon_concepts_controller_spec.rb'
-    - 'spec/models/cites_suspension_notification_spec.rb'
-    - 'spec/models/designation_spec.rb'
-    - 'spec/models/nomenclature_change/shared/split_definitions.rb'
-    - 'spec/models/purpose_spec.rb'
-    - 'spec/models/source_spec.rb'
-    - 'spec/models/taxon_concept_prefix_matcher_spec.rb'
-    - 'spec/models/taxon_relationship_spec.rb'
-    - 'spec/models/term_spec.rb'
-
 # Offense count: 243
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

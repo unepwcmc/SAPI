@@ -105,7 +105,8 @@ shared_context 'split_definitions' do
       taxon_concept: input_species,
       other_taxon_concept: create_cites_eu_species(name_status: 'S'),
       taxon_relationship_type: synonym_relationship_type
-    )}
+    )
+    }
     name1 = create(:taxon_relationship,
       taxon_concept: input_species,
       other_taxon_concept: create_cites_eu_species(name_status: 'S'),
