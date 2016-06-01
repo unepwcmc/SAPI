@@ -19,7 +19,7 @@ class SpeciesListing < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => {:scope => :designation_id}
   validates :abbreviation, :presence => true, :uniqueness => {:scope => :designation_id}
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(species_listings.name) LIKE UPPER(:query) 
             OR UPPER(species_listings.abbreviation) LIKE UPPER(:query)

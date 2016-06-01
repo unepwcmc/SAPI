@@ -15,7 +15,7 @@ module AdminHelper
     end.compact.join(' > ').html_safe
   end
 
-  def tracking_info record
+  def tracking_info(record)
     info = <<-HTML
       <p>Created by #{record.creator.try(:name) || "DATA_IMPORT"} on
         #{record.created_at.strftime("%d/%m/%Y")}<br />
@@ -30,7 +30,7 @@ module AdminHelper
     end.html_safe
   end
 
-  def internal_notes record
+  def internal_notes(record)
     return '' unless record.internal_notes.present?
     info = content_tag(:div) do
       content_tag(:b, 'Internal notes:') +

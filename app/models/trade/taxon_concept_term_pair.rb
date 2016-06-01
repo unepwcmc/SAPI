@@ -18,7 +18,7 @@ class Trade::TaxonConceptTermPair < ActiveRecord::Base
   belongs_to :taxon_concept
   belongs_to :term, :class_name => "TradeCode"
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query) 
             OR UPPER(trade_codes.code) LIKE UPPER(:query)", 

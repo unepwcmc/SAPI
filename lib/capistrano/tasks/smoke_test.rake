@@ -34,7 +34,7 @@ namespace :smoke_test do
     slack_smoke_notification message
   end
 
-  def slack_smoke_notification message
+  def slack_smoke_notification(message)
     uri = URI.parse("https://hooks.slack.com/services/T028F7AGY/B036GEF7T/#{fetch(:slack_token)}")
 
     payload = {

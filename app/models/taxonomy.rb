@@ -22,7 +22,7 @@ class Taxonomy < ActiveRecord::Base
     :if => lambda { |t| t.name_changed? && t.class.dict.include?(t.name_was) },
     :on => :update
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(name) LIKE UPPER(:query)", 
             :query => "%#{query}%")

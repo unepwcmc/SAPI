@@ -14,7 +14,7 @@ module ApplicationHelper
     end
   end
 
-  def error_message_for field
+  def error_message_for(field)
     return "" if resource.errors[field].empty? && field != :password_confirmation
     message =
       if field == :password_confirmation
@@ -34,7 +34,7 @@ module ApplicationHelper
     to_html "#{field.to_s.humanize.capitalize} #{message}"
   end
 
-  def to_html message
+  def to_html(message)
     content_tag :div, content_tag(:p, message, class: "error-message"), class: "error-box"
   end
 

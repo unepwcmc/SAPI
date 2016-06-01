@@ -202,7 +202,7 @@ class MTaxonConcept < ActiveRecord::Base
     synonyms.each_with_index.map { |syn, idx| "#{syn} #{synonyms_author_years[idx]}" }
   end
 
-  def db_ary_to_array ary
+  def db_ary_to_array(ary)
     if respond_to?(ary)
       parse_pg_array( send(ary)|| '').compact.map do |e|
         e.force_encoding('utf-8')

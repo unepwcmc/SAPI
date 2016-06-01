@@ -80,7 +80,7 @@ class TradeRestriction < ActiveRecord::Base
     unit_id ? unit.name_en : ''
   end
 
-  def self.export filters
+  def self.export(filters)
     return false unless export_query(filters).any?
     path = "public/downloads/#{self.to_s.tableize}/"
     latest = self.order("updated_at DESC").
@@ -101,7 +101,7 @@ class TradeRestriction < ActiveRecord::Base
     ]
   end
 
-  def self.export_query filters
+  def self.export_query(filters)
     self.joins(:geo_entity).
       joins(<<-SQL
           LEFT JOIN taxon_concepts ON taxon_concepts.id = trade_restrictions.taxon_concept_id
@@ -127,7 +127,7 @@ class TradeRestriction < ActiveRecord::Base
     end.flatten
   end
 
-  def self.to_csv file_path, filters
+  def self.to_csv(file_path, filters)
     limit = 1000
     offset = 0
     csv_separator_char = case filters[:csv_separator]
@@ -159,14 +159,14 @@ class TradeRestriction < ActiveRecord::Base
       end
   end
 
-  def self.filter_is_current set
+  def self.filter_is_current(set)
     if set == "current"
       return where(:is_current => true)
     end
     scoped
   end
 
-  def self.filter_geo_entities filters
+  def self.filter_geo_entities(filters)
     if filters.has_key?("geo_entities_ids")
       geo_entities_ids = GeoEntity.nodes_and_descendants(
         filters["geo_entities_ids"]
@@ -176,7 +176,7 @@ class TradeRestriction < ActiveRecord::Base
     scoped
   end
 
-  def self.filter_taxon_concepts filters
+  def self.filter_taxon_concepts(filters)
     if filters.has_key?("taxon_concepts_ids")
       conds_str = <<-SQL
         ARRAY[
@@ -191,7 +191,7 @@ class TradeRestriction < ActiveRecord::Base
     scoped
   end
 
-  def self.filter_years filters
+  def self.filter_years(filters)
     if filters.has_key?("years")
       return where('EXTRACT(YEAR FROM trade_restrictions.start_date) IN (?)',
                    filters["years"])
