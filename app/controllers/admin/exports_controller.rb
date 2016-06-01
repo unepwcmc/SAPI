@@ -4,12 +4,13 @@ class Admin::ExportsController < Admin::AdminController
 
   def download
     filters = (params[:filters] || {}).merge({
-      :csv_separator => if params[:filters] && params[:filters][:csv_separator] &&
-        params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
-        :semicolon
-      else
-        :comma
-      end
+      :csv_separator =>
+        if params[:filters] && params[:filters][:csv_separator] &&
+          params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
+          :semicolon
+        else
+          :comma
+        end
     })
     case params[:data_type]
     when 'Names'

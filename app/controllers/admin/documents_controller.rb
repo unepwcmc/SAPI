@@ -85,11 +85,12 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
 
   def load_associations
     @designations = Designation.where(name: ['CITES', 'EU']).select([:id, :name]).order(:name)
-    @event_types = if @document && @document.event
-      [{id: @document.event.type}]
-    else
-      Event.event_types_with_names
-    end
+    @event_types =
+      if @document && @document.event
+        [{id: @document.event.type}]
+      else
+        Event.event_types_with_names
+      end
     @events = Event.where(type: @event_types.map{ |t| t[:id] }).order(:published_at).reverse_order
     @event = Event.find(params[:event_id]) if params[:event_id].present?
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
@@ -107,20 +108,22 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   def failure_redirect
-    alert = if resource.errors.present?
-      "Operation #{resource.errors.messages[:base].join(", ")}"
-    else
-      "Operation failed"
-    end
+    alert =
+      if resource.errors.present?
+        "Operation #{resource.errors.messages[:base].join(", ")}"
+      else
+        "Operation failed"
+      end
     redirect_to redirect_url, :alert => alert
   end
 
   def redirect_url
     event_id = params[:event_id]
-    url = if event_id.present?
-      admin_event_documents_url(Event.find(event_id))
-    else
-      admin_documents_url
-    end
+    url =
+      if event_id.present?
+        admin_event_documents_url(Event.find(event_id))
+      else
+        admin_documents_url
+      end
   end
 end

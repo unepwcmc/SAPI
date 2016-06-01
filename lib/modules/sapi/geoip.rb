@@ -18,11 +18,12 @@ class Sapi::GeoIP
   def resolve(ip)
     result = country_and_city(ip).merge(organisation(ip))
     result.each do |k, v|
-      result[k] = if v.nil?
-        'Unknown'
-      else
-        v.force_encoding("ISO-8859-1").encode("UTF-8")
-      end
+      result[k] =
+        if v.nil?
+          'Unknown'
+        else
+          v.force_encoding("ISO-8859-1").encode("UTF-8")
+        end
     end
   end
 

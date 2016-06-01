@@ -71,11 +71,12 @@ class Trade::Sandbox
 
   def copy_csv_to_target_table
     require 'psql_command'
-    columns_in_csv_order = if (@annual_report_upload.point_of_view == 'E')
-      Trade::SandboxTemplate::EXPORTER_COLUMNS
-    else
-      Trade::SandboxTemplate::IMPORTER_COLUMNS
-    end
+    columns_in_csv_order =
+      if (@annual_report_upload.point_of_view == 'E')
+        Trade::SandboxTemplate::EXPORTER_COLUMNS
+      else
+        Trade::SandboxTemplate::IMPORTER_COLUMNS
+      end
     cmd = Trade::SandboxTemplate.copy_stmt(@table_name, @csv_file_path, columns_in_csv_order)
     PsqlCommand.new(cmd).execute
   end

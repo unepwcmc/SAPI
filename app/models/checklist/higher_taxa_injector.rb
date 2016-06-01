@@ -66,22 +66,23 @@ class Checklist::HigherTaxaInjector
   #returns array of HigherTaxaItems that need to be inserted
   #between prev_item and curr_item in the taxonomic layout
   def higher_taxa_headers(prev_item, curr_item)
-    ranks = if prev_item.nil?
-      @header_ranks
-    else
-      tmp = []
+    ranks =
+      if prev_item.nil?
+        @header_ranks
+      else
+        tmp = []
 
-      for rank in @header_ranks.reverse
-        rank_id_attr = "#{rank.downcase}_id"
-        curr_item.send(rank_id_attr)
-        if prev_item.send(rank_id_attr) != curr_item.send(rank_id_attr)
-          tmp << rank
-        else
-          break
+        for rank in @header_ranks.reverse
+          rank_id_attr = "#{rank.downcase}_id"
+          curr_item.send(rank_id_attr)
+          if prev_item.send(rank_id_attr) != curr_item.send(rank_id_attr)
+            tmp << rank
+          else
+            break
+          end
         end
+        tmp.reverse
       end
-      tmp.reverse
-    end
 
     ranks = [ranks.last].compact unless @expand_headers
 

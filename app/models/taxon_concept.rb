@@ -78,15 +78,13 @@ class TaxonConcept < ActiveRecord::Base
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"
-    ]
+        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"]
   has_many :inverse_synonym_relationships, :class_name => 'TaxonRelationship',
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"
-    ]
+        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"]
   has_many :synonyms, :class_name => 'TaxonConcept',
     :through => :synonym_relationships, :source => :other_taxon_concept
   has_many :accepted_names, :class_name => 'TaxonConcept',
@@ -104,8 +102,7 @@ class TaxonConcept < ActiveRecord::Base
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}')"
-    ]
+        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}')"]
   has_many :hybrids, :class_name => 'TaxonConcept',
     :through => :hybrid_relationships, :source => :other_taxon_concept
   has_many :hybrid_parents, :class_name => 'TaxonConcept',
@@ -115,15 +112,13 @@ class TaxonConcept < ActiveRecord::Base
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"
-    ]
+        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"]
   has_many :inverse_trade_name_relationships, :class_name => 'TaxonRelationship',
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"
-    ]
+        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"]
   has_many :trade_names, :class_name => 'TaxonConcept',
     :through => :trade_name_relationships, :source => :other_taxon_concept
   has_many :accepted_names_for_trade_name, :class_name => 'TaxonConcept',
@@ -499,7 +494,8 @@ class TaxonConcept < ActiveRecord::Base
 
   def ensure_taxonomic_position
     if new_record? && fixed_order_required? && taxonomic_position.blank?
-      prev_taxonomic_position = if parent
+      prev_taxonomic_position =
+      if parent
         last_sibling = TaxonConcept.where(:parent_id => parent_id).
           maximum(:taxonomic_position)
         last_sibling || (parent.taxonomic_position + '.0')

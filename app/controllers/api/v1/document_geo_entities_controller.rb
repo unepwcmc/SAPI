@@ -31,10 +31,11 @@ class Api::V1::DocumentGeoEntitiesController < ApplicationController
   def set_locale
     locale = params[:locale].try(:downcase).try(:strip) ||
       'en'
-    I18n.locale = if ['en', 'es', 'fr'].include?(locale)
-      locale
-    else
-      'en'
-    end
+    I18n.locale =
+      if ['en', 'es', 'fr'].include?(locale)
+        locale
+      else
+        'en'
+      end
   end
 end

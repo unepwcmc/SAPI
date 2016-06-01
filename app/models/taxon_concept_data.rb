@@ -36,32 +36,34 @@ class TaxonConceptData
 
   def higher_taxa_from_parent
     field_names = higher_taxa_field_names
-    data = if @taxon_concept.parent && @taxon_concept.parent.data
-      @taxon_concept.parent.data
-    else
-      fake_parent =
-        case @taxon_concept.name_status
-        when 'H'
-          @taxon_concept.hybrid_parents.first
-        when 'S'
-          @taxon_concept.accepted_names.first
-        when 'T'
-          @taxon_concept.accepted_names_for_trade_name.first
-        end
-      fake_parent && fake_parent.data
-    end
+    data =
+      if @taxon_concept.parent && @taxon_concept.parent.data
+        @taxon_concept.parent.data
+      else
+        fake_parent =
+          case @taxon_concept.name_status
+          when 'H'
+            @taxon_concept.hybrid_parents.first
+          when 'S'
+            @taxon_concept.accepted_names.first
+          when 'T'
+            @taxon_concept.accepted_names_for_trade_name.first
+          end
+        fake_parent && fake_parent.data
+      end
     return nil unless data
     data.slice(*field_names)
   end
 
   def higher_taxa_field_names
-    higher_taxa_ranks = if @rank_name
-      # ranks above this taxon (inclusive of this taxon's rank)
-      Rank.in_range(@rank_name, Rank::KINGDOM)
-    else
-      # all ranks
-      Rank.in_range(nil, nil)
-    end
+    higher_taxa_ranks =
+      if @rank_name
+        # ranks above this taxon (inclusive of this taxon's rank)
+        Rank.in_range(@rank_name, Rank::KINGDOM)
+      else
+        # all ranks
+        Rank.in_range(nil, nil)
+      end
     higher_taxa_ranks.map do |r|
       ["#{r.downcase}_id", "#{r.downcase}_name"]
     end.flatten

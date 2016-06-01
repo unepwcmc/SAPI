@@ -127,11 +127,12 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
 
   def input_output_for_reassignment
     input = @nomenclature_change.input
-    output = if @nomenclature_change.needs_to_relay_associations?
-      @nomenclature_change.secondary_output
-    elsif @nomenclature_change.needs_to_receive_associations?
-      @nomenclature_change.primary_output
-    end
+    output =
+      if @nomenclature_change.needs_to_relay_associations?
+        @nomenclature_change.secondary_output
+      elsif @nomenclature_change.needs_to_receive_associations?
+        @nomenclature_change.primary_output
+      end
     return false unless input && output
     yield(input, output)
   end

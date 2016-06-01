@@ -55,11 +55,12 @@ class Checklist::Checklist
     end
 
     #order
-    @taxon_concepts_rel = if @output_layout == :taxonomic
-      @taxon_concepts_rel.taxonomic_layout
-    else
-      @taxon_concepts_rel.alphabetical_layout
-    end
+    @taxon_concepts_rel =
+      if @output_layout == :taxonomic
+        @taxon_concepts_rel.taxonomic_layout
+      else
+        @taxon_concepts_rel.alphabetical_layout
+      end
 
     @query = @taxon_concepts_rel.
       includes(:current_cites_additions).
