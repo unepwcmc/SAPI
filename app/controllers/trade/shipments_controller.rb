@@ -100,13 +100,13 @@ class Trade::ShipmentsController < TradeController
     unless reporter_type.blank?
       res[:reported_by_exporter] = Trade::Shipment.reporter_type_to_reported_by_exporter(reporter_type)
     end
-    if res.has_key?(:import_permit_number) && res[:import_permit_number].nil?
+    if res.key?(:import_permit_number) && res[:import_permit_number].nil?
       res[:import_permits_ids] = nil
     end
-    if res.has_key?(:export_permit_number) && res[:export_permit_number].nil?
+    if res.key?(:export_permit_number) && res[:export_permit_number].nil?
       res[:export_permits_ids] = nil
     end
-    if res.has_key?(:origin_permit_number) && res[:origin_permit_number].nil?
+    if res.key?(:origin_permit_number) && res[:origin_permit_number].nil?
       res[:origin_permits_ids] = nil
     end
     res
