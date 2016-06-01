@@ -18,7 +18,7 @@ class TermTradeCodesPair < ActiveRecord::Base
 
   validates :term_id, :presence => true, :uniqueness => {:scope => :trade_code_id}
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(trade_codes.code) LIKE UPPER(:query) 
             OR UPPER(terms.code) LIKE UPPER(:query)", 

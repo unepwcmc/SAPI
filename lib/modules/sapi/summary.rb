@@ -75,7 +75,7 @@ module Sapi
       trade
     end
 
-    def self.taxonomy_kingdom_stats taxonomy, kingdom
+    def self.taxonomy_kingdom_stats(taxonomy, kingdom)
       stats = {}
       t = Taxonomy.find_by_name(taxonomy)
       k = TaxonConcept.find_by_full_name_and_taxonomy_id(kingdom, t.id)
@@ -210,7 +210,7 @@ module Sapi
       puts ""
     end
 
-    def self.print_count_for klass, count
+    def self.print_count_for(klass, count)
       puts "#{count} #{klass}"
     end
 

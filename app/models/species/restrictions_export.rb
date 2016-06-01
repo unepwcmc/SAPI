@@ -15,7 +15,7 @@ class Species::RestrictionsExport
     'Full Name', 'Rank'
   ]
 
-  def self.fill_taxon_columns restriction
+  def self.fill_taxon_columns(restriction)
     columns = []
     remark = ""
     case restriction.taxon_concept.try(:name_status)

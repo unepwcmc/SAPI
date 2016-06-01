@@ -13,7 +13,7 @@ class IucnMappingManager
       end
     end
 
-    def sync_taxon_concept taxon_concept
+    def sync_taxon_concept(taxon_concept)
       mapping = IucnMapping.find_or_create_by_taxon_concept_id(taxon_concept.id)
       full_name = if taxon_concept.rank_id == @subspecies.id
                     taxon_concept.full_name.insert(taxon_concept.full_name.rindex(/ /), " ssp.")
@@ -28,7 +28,7 @@ class IucnMappingManager
       end
     end
 
-    def fetch_data_for_name full_name
+    def fetch_data_for_name(full_name)
       @config_location ||= Rails.root.join('config/secrets.yml')
       @config ||= YAML.load_file(@config_location)[Rails.env]
       @token ||= @config['iucn_redlist']['token']
@@ -38,7 +38,7 @@ class IucnMappingManager
       JSON.parse(RestClient.get(url))
     end
 
-    def map_taxon_concept taxon_concept, map, data
+    def map_taxon_concept(taxon_concept, map, data)
       begin
         match = data["result"].first
         puts "#{taxon_concept.full_name} #{taxon_concept.author_year} <=>  #{match["scientific_name"]} #{match["authority"]}"
@@ -60,7 +60,7 @@ class IucnMappingManager
       end
     end
 
-    def type_of_match tc, match
+    def type_of_match(tc, match)
       if tc.full_name == match["scientific_name"]
         if strip_authors(tc.author_year) == strip_authors(match["authority"])
           puts "FULL_MATCH!"
@@ -72,7 +72,7 @@ class IucnMappingManager
       end
     end
 
-    def strip_authors author
+    def strip_authors(author)
       return '' unless author
       author.split(" ").
         reject{|p| ["and", "&", "&amp;", ","].include?(p)}.

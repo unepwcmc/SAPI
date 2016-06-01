@@ -28,7 +28,7 @@
 
 class EuSuspension < EuDecision
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
             ", :query => "%#{query}%")

@@ -43,7 +43,7 @@ class Designation < ActiveRecord::Base
     super() && !has_protected_name?
   end
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(name) LIKE UPPER(:query)", 
             :query => "%#{query}%")

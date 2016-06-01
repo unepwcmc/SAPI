@@ -19,7 +19,7 @@ class TradeCode < ActiveRecord::Base
 
   validates :code, :presence => true, :uniqueness => {:scope => :type}
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(code) LIKE UPPER(:query) 
             OR UPPER(name_en) LIKE UPPER(:query)

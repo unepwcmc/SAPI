@@ -90,7 +90,7 @@ class Event < ActiveRecord::Base
     end_date && end_date.strftime("%d/%m/%Y")
   end
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(events.name) LIKE UPPER(:query)
             OR UPPER(events.description) LIKE UPPER(:query)",

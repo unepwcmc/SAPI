@@ -37,11 +37,11 @@ namespace :import do
   end
 end
 
-def execute_query sql
+def execute_query(sql)
   ActiveRecord::Base.connection.execute(sql)
 end
 
-def drop_indices index
+def drop_indices(index)
   index.each do |table, columns|
     columns.each do |column|
       sql = <<-SQL
@@ -53,7 +53,7 @@ def drop_indices index
   end
 end
 
-def create_indices table_columns, method
+def create_indices(table_columns, method)
   table_columns.each do |table,columns|
     columns.each do |column|
       sql = <<-SQL

@@ -205,7 +205,7 @@ module NomenclatureChange::ConstructorHelpers
     result
   end
 
-  def lower_ranks_cases full_name, existing_name, existing_rank_name
+  def lower_ranks_cases(full_name, existing_name, existing_rank_name)
     if existing_name.blank?
       "<i>#{full_name}</i>"
     elsif LOWER_RANKS.include?(existing_rank_name) && existing_name.present?
@@ -215,7 +215,7 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
-  def higher_ranks_cases full_name, existing_name, existing_rank_name
+  def higher_ranks_cases(full_name, existing_name, existing_rank_name)
     if existing_name.blank?
       full_name.upcase
     elsif LOWER_RANKS.include?(existing_rank_name) && existing_name.present?

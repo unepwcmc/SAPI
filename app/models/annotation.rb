@@ -40,7 +40,7 @@ class Annotation < ActiveRecord::Base
   scope :for_eu, joins(:event).where("events.type = 'EuRegulation'").
     order([:parent_symbol, :symbol])
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(symbol) LIKE UPPER(:query)
             OR UPPER(parent_symbol) LIKE UPPER(:query)
