@@ -14,8 +14,8 @@ describe Checklist do
         checklist.results
       }
       specify{
-      	subject.first.full_name.should == @species2.full_name
-      	subject.size.should == 1
+        subject.first.full_name.should == @species2.full_name
+        subject.size.should == 1
       }
     end
     context "by common name" do
@@ -27,8 +27,8 @@ describe Checklist do
         checklist.results
       }
       specify{
-      	subject.first.full_name.should == @species2.full_name
-      	subject.size.should == 1
+        subject.first.full_name.should == @species2.full_name
+        subject.size.should == 1
       }
     end
   end

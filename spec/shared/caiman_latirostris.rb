@@ -2,9 +2,9 @@
 shared_context "Caiman latirostris" do
 
   let(:en){ 
-   create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
-   create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')   
-   create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') 
+    create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
+    create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')   
+    create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') 
   }
   let(:argentina){
     create(

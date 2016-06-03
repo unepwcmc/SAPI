@@ -18,12 +18,12 @@ describe Api::V1::GeoEntitiesController do
     )
   }
   let!(:andorra){
-        create(
-          :geo_entity,
-          :geo_entity_type => country_geo_entity_type,
-          :name => 'andorra',
-          :iso_code2 => 'AD'
-        )
+    create(
+      :geo_entity,
+      :geo_entity_type => country_geo_entity_type,
+      :name => 'andorra',
+      :iso_code2 => 'AD'
+    )
   }
   let!(:french_guiana){
     create(
