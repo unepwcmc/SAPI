@@ -30,7 +30,7 @@ set :rvm_ruby_version, '2.2.3'
 set :pty, true
 
 set :ssh_options, {
-  forward_agent: true,
+  forward_agent: true
 }
 
 before "deploy:symlink:shared", "rsync:sync"

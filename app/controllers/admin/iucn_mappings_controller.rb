@@ -10,7 +10,7 @@ class Admin::IucnMappingsController < Admin::SimpleCrudController
       :non_matching => IucnMapping.filter("NON_MATCHING").count,
       :synonyms => IucnMapping.filter('SYNONYMS').count,
       :accepted => IucnMapping.filter('ACCEPTED').count,
-      :all => IucnMapping.count,
+      :all => IucnMapping.count
 
     }
   end
