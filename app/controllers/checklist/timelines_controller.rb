@@ -11,6 +11,7 @@ class Checklist::TimelinesController < ApplicationController
   end
 
   private
+
   # this disables json root for this controller
   # remove when checklist frontent upgraded to new Ember.js
   def default_serializer_options

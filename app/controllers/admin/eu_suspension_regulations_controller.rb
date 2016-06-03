@@ -16,6 +16,7 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
   end
 
   protected
+
   def collection
     @eu_suspension_regulations ||= end_of_association_chain.
       includes([:creator, :updater]).

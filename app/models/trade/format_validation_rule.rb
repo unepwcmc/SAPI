@@ -23,6 +23,7 @@ class Trade::FormatValidationRule < Trade::ValidationRule
   end
 
   private
+
   # Returns records that do not pass the regex test for all columns
   # specified in column_names.
   def matching_records(table_name)

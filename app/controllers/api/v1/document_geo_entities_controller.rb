@@ -28,6 +28,7 @@ class Api::V1::DocumentGeoEntitiesController < ApplicationController
   end
 
   private
+
   def set_locale
     locale = params[:locale].try(:downcase).try(:strip) ||
       'en'

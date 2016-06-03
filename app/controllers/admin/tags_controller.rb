@@ -2,6 +2,7 @@ class Admin::TagsController < Admin::SimpleCrudController
   defaults :resource_class => PresetTag, :collection_name => 'tags', :instance_name => 'tag'
 
   authorize_resource :class => false
+
   protected
 
   def collection

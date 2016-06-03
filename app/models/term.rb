@@ -20,6 +20,7 @@ class Term < TradeCode
   has_many :shipments, :class_name => 'Trade::Shipment'
 
   protected
+
   def dependent_objects_map
     {
       'EU decisions' => eu_decisions,

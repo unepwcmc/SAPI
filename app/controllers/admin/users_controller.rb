@@ -36,6 +36,7 @@ class Admin::UsersController < Admin::SimpleCrudController
   end
 
   protected
+
   def collection
     @users ||= end_of_association_chain.
       order(:name).page(params[:page])

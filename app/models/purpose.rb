@@ -19,6 +19,7 @@ class Purpose < TradeCode
   has_many :shipments, :class_name => 'Trade::Shipment'
 
   protected
+
   def dependent_objects_map
     {
       'trade restrictions' => trade_restriction_purposes,

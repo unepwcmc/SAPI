@@ -11,6 +11,7 @@ class NomenclatureChange::TaxonomicTreeNameResolver
   end
 
   private
+
   def resolve(node)
     @expected_full_name = node.expected_full_name(node.parent)
     return node if name_compatible_with_parent?(node)

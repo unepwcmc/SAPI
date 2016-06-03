@@ -33,6 +33,7 @@ class Trade::DistinctValuesValidationRule < Trade::InclusionValidationRule
   end
 
   private
+
   # Returns records that have the same value for both columns
   # specified in column_names. If more then 2 columns are specified,
   # only the first two are taken into consideration.

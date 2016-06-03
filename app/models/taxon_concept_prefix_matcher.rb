@@ -7,6 +7,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
   end
 
   protected
+
   def build_rel
     super
     apply_rank_options_to_rel

@@ -12,6 +12,7 @@ class Admin::InstrumentsController < Admin::StandardAuthorizationController
   end
 
   protected
+
   def collection
     @instruments ||= end_of_association_chain.order(:name).
       page(params[:page]).

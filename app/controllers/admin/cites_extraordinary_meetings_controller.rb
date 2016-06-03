@@ -5,6 +5,7 @@ class Admin::CitesExtraordinaryMeetingsController < Admin::EventsController
     :instance_name => 'cites_extraordinary_meeting'
 
   protected
+
   def collection
     @cites_extraordinary_meetings ||= end_of_association_chain.
       order(:designation_id, :name).includes(:designation).

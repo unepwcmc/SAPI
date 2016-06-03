@@ -72,6 +72,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   end
 
   protected
+
   def build_dependants
     unless @listing_change.party_listing_distribution
       @listing_change.build_party_listing_distribution(

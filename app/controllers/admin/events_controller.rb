@@ -32,6 +32,7 @@ class Admin::EventsController < Admin::StandardAuthorizationController
   end
 
   protected
+
   def collection
     @events ||= end_of_association_chain.order(:designation_id, :name).
       includes(:designation).

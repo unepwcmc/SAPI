@@ -42,6 +42,7 @@ class Checklist::Pdf::IndexAnnotationsKey
   end
 
   private
+
   def non_hash_annotations
     MCitesListingChange.
       joins(:taxon_concept).

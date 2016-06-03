@@ -36,6 +36,7 @@ class NomenclatureChange::StatusChangeProcessor
   end
 
   private
+
   def create_relationships(taxon_concept, rel_type)
     @linked_names.each do |linked_name|
       Rails.logger.debug "Creating #{rel_type.name} relationship with #{linked_name.full_name}"

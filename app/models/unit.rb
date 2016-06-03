@@ -20,6 +20,7 @@ class Unit < TradeCode
   has_many :shipments, :class_name => 'Trade::Shipment'
 
   protected
+
   def dependent_objects_map
     {
       'quotas' => quotas,

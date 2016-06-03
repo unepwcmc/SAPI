@@ -4,6 +4,7 @@ class Admin::CitesCopsController < Admin::EventsController
     :collection_name => 'cites_cops', :instance_name => 'cites_cop'
 
   protected
+
   def collection
     @cites_cops ||= end_of_association_chain.
       order(:designation_id, :name).includes(:designation).
