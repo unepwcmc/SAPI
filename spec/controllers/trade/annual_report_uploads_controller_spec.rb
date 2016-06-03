@@ -19,7 +19,7 @@ describe Trade::AnnualReportUploadsController do
     create(
       :annual_report_upload,
       :point_of_view => 'E',
-      :trading_country_id => france.id, 
+      :trading_country_id => france.id,
       :csv_source_file => exporter_csv
     )
   }
@@ -40,7 +40,7 @@ describe Trade::AnnualReportUploadsController do
       get :index, is_done: 0, format: :json
       response.body.should have_json_size(1).at_path('annual_report_uploads')
     end
- end
+  end
 
   describe "GET show" do
     it "should return success" do

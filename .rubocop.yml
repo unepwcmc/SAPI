@@ -64,3 +64,10 @@ Style/ExtraSpacing:
 # SupportedStyles: consistent, special_for_inner_method_call, special_for_inner_method_call_in_parentheses
 Style/FirstParameterIndentation:
   Enabled: true
+
+# Configuration parameters: Width.
+Style/IndentationWidth:
+  Exclude:
+    - 'lib/tasks/bbgem.rake'
+    - 'db/migrate/*'
+    - 'old_cap/*'

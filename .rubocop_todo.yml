@@ -369,12 +369,6 @@ Style/IfInsideElse:
 Style/IfUnlessModifier:
   Enabled: false
 
-# Offense count: 126
-# Cop supports --auto-correct.
-# Configuration parameters: Width.
-Style/IndentationWidth:
-  Enabled: false
-
 # Offense count: 12
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

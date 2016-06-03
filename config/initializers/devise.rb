@@ -264,7 +264,7 @@ Devise.setup do |config|
 
   #custom redirection when login fails
   config.warden do |manager|
-   manager.failure_app = CustomFailure
+    manager.failure_app = CustomFailure
   end
 
   Warden::Manager.after_set_user do |user,auth,opts|

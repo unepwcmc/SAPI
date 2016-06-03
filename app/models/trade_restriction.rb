@@ -156,8 +156,8 @@ class TradeRestriction < ActiveRecord::Base
           csv << row
         end
         offset += limit
-       end
       end
+    end
   end
 
   def self.filter_is_current(set)

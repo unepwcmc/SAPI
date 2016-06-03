@@ -117,17 +117,17 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
   end
 
   describe :destroy do
-      subject{
-        create(
-          :annual_report_upload,
-          :point_of_view => 'I',
-          :csv_source_file => importer_file
-        )
-      }
-      specify{
-          subject.sandbox.should_receive(:destroy)
-          subject.destroy
-      }
+    subject{
+      create(
+        :annual_report_upload,
+        :point_of_view => 'I',
+        :csv_source_file => importer_file
+      )
+    }
+    specify{
+      subject.sandbox.should_receive(:destroy)
+      subject.destroy
+    }
   end
 
   describe :submit do
