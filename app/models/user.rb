@@ -97,6 +97,7 @@ class User < ActiveRecord::Base
   end
 
   private
+
   def set_default_role
     self.role ||= 'api'
   end

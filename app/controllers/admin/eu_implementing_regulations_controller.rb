@@ -4,6 +4,7 @@ class Admin::EuImplementingRegulationsController < Admin::EventsController
     :collection_name => 'eu_implementing_regulations', :instance_name => 'eu_implementing_regulation'
 
   protected
+
   def collection
     @eu_implementing_regulations ||= end_of_association_chain.
       order('effective_at DESC, name ASC').

@@ -19,6 +19,7 @@ class NomenclatureChange::StatusSwap::Constructor
   end
 
   private
+
   def legislation_note(lng)
     input = @nomenclature_change.input
     output = @nomenclature_change.secondary_output

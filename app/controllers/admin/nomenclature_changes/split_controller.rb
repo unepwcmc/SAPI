@@ -53,6 +53,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
   end
 
   private
+
   def klass
     NomenclatureChange::Split
   end

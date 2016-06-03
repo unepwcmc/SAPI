@@ -92,6 +92,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   end
 
   private
+
   # Expects a relation object
   def run_validations(validation_rules)
     validation_errors = []

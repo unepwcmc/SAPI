@@ -27,6 +27,7 @@ class Checklist::TaxonConceptsController < ApplicationController
   end
 
   private
+
   # this disables json root for this controller
   # remove when checklist frontend upgraded to new Ember.js
   def default_serializer_options

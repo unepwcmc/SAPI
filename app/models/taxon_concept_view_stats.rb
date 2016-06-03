@@ -11,6 +11,7 @@ class TaxonConceptViewStats
   end
 
   private
+
   def query
     Ahoy::Event.select(<<-SQL
       properties->>'id' AS tc_id,

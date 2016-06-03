@@ -2,6 +2,7 @@ class Admin::EuSuspensionsController < Admin::StandardAuthorizationController
   belongs_to :eu_suspension_regulation
 
   protected
+
   def collection
     @eu_suspensions ||= end_of_association_chain.
       includes([

@@ -109,6 +109,7 @@ class Event < ActiveRecord::Base
   end
 
   protected
+
   def designation_is_cites
     cites = Designation.find_by_name('CITES')
     unless designation_id && cites && designation_id == cites.id

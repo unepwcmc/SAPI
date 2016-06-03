@@ -4,6 +4,7 @@ class Admin::HashAnnotationsController < Admin::SimpleCrudController
     :instance_name => 'annotation'
 
   protected
+
   def collection
     @annotations = load_collection.page(params[:page]).
       search(params[:query])

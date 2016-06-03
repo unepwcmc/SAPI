@@ -36,6 +36,7 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
   end
 
   private
+
   def klass
     NomenclatureChange::StatusToAccepted
   end

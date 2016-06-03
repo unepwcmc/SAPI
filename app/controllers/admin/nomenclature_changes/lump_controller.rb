@@ -52,6 +52,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
   end
 
   private
+
   def klass
     NomenclatureChange::Lump
   end

@@ -16,6 +16,7 @@ class Admin::EuRegulationsController < Admin::EventsController
   end
 
   protected
+
   def collection
     @eu_regulations ||= end_of_association_chain.
       order('effective_at DESC, name ASC').
