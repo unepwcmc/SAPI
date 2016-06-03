@@ -23,27 +23,27 @@ shared_context 'Varanidae' do
     )
 
     create_cites_II_addition(
-     :taxon_concept => @genus,
-     :effective_at => '1975-07-01',
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '1975-07-01',
+      :is_current => true
     )
     create_cites_I_addition(
-     :taxon_concept => @species1,
-     :effective_at => '1975-07-01',
-     :is_current => true
+      :taxon_concept => @species1,
+      :effective_at => '1975-07-01',
+      :is_current => true
     )
 
     create_eu_B_addition(
-     :taxon_concept => @genus,
-     :effective_at => '2013-10-08',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '2013-10-08',
+      :event => reg2013,
+      :is_current => true
     )
     create_eu_A_addition(
-     :taxon_concept => @species1,
-     :effective_at => '2013-10-08',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @species1,
+      :effective_at => '2013-10-08',
+      :event => reg2013,
+      :is_current => true
     )
 
     @ref1 = create(

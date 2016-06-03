@@ -28,9 +28,9 @@ shared_context 'Colophon' do
     )
 
     cites_lc = create_cites_III_addition(
-     :taxon_concept => @genus,
-     :effective_at => '2000-09-13',
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '2000-09-13',
+      :is_current => true
     )
     create(
       :listing_distribution,
@@ -40,10 +40,10 @@ shared_context 'Colophon' do
     )
 
     eu_lc = create_eu_C_addition(
-     :taxon_concept => @genus,
-     :effective_at => '2013-10-08',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '2013-10-08',
+      :event => reg2013,
+      :is_current => true
     )
     create(
       :listing_distribution,

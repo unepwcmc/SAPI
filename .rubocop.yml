@@ -59,3 +59,8 @@ Style/ExtraSpacing:
   AllowForAlignment: true
   Exclude:
     - 'db/migrate/*'
+
+# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
+# SupportedStyles: consistent, special_for_inner_method_call, special_for_inner_method_call_in_parentheses
+Style/FirstParameterIndentation:
+  Enabled: true

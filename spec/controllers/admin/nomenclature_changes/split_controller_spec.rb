@@ -43,9 +43,11 @@ describe Admin::NomenclatureChanges::SplitController do
       context "when no children" do
         it 'redirects to next step' do
           get :show, id: :children, nomenclature_change_id: @split.id
-          response.should redirect_to(admin_nomenclature_change_split_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'names'
-          ))
+          response.should redirect_to(
+            admin_nomenclature_change_split_url(
+              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'names'
+            )
+          )
         end
       end
       context "when names present" do
@@ -64,9 +66,11 @@ describe Admin::NomenclatureChanges::SplitController do
       context "when no names" do
         it 'redirects to next step' do
           get :show, id: :names, nomenclature_change_id: @split.id
-          response.should redirect_to(admin_nomenclature_change_split_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'distribution'
-          ))
+          response.should redirect_to(
+            admin_nomenclature_change_split_url(
+              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'distribution'
+            )
+          )
         end
       end
       context "when distribution present" do
@@ -81,9 +85,11 @@ describe Admin::NomenclatureChanges::SplitController do
       context "when no distribution" do
         it 'redirects to next step' do
           get :show, id: :distribution, nomenclature_change_id: @split.id
-          response.should redirect_to(admin_nomenclature_change_split_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'legislation'
-          ))
+          response.should redirect_to(
+            admin_nomenclature_change_split_url(
+              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'legislation'
+            )
+          )
         end
       end
       context "when legislation present" do
@@ -98,9 +104,11 @@ describe Admin::NomenclatureChanges::SplitController do
       context "when no legislation" do
         it 'redirects to next step' do
           get :show, id: :legislation, nomenclature_change_id: @split.id
-          response.should redirect_to(admin_nomenclature_change_split_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
-          ))
+          response.should redirect_to(
+            admin_nomenclature_change_split_url(
+              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
+            )
+          )
         end
       end
       it 'renders the summary template' do
@@ -113,9 +121,11 @@ describe Admin::NomenclatureChanges::SplitController do
   describe 'POST create' do
     it 'redirects to split wizard' do
       post :create, nomenclature_change_id: 'new'
-      response.should redirect_to(admin_nomenclature_change_split_url(
-        nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'inputs'
-      ))
+      response.should redirect_to(
+        admin_nomenclature_change_split_url(
+          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'inputs'
+        )
+      )
     end
   end
 
@@ -128,9 +138,11 @@ describe Admin::NomenclatureChanges::SplitController do
         put :update, nomenclature_change_split: {
           input_attributes: {taxon_concept_id: create_cites_eu_species.id}
         }, nomenclature_change_id: @split.id, id: 'inputs'
-        response.should redirect_to(admin_nomenclature_change_split_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'outputs'
-        ))
+        response.should redirect_to(
+          admin_nomenclature_change_split_url(
+            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'outputs'
+          )
+        )
       end
     end
     context 'when unsuccessful' do

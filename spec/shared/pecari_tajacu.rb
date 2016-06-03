@@ -64,9 +64,9 @@ shared_context "Pecari tajacu" do
     )
 
     cites_lc1 = create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1987-10-22',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '1987-10-22',
+      :is_current => true
     )
     cites_lc1_exc = create_cites_II_exception(
       :taxon_concept => @species,

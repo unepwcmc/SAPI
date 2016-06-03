@@ -132,7 +132,8 @@ describe Admin::TaxonQuotasController do
 
   describe "Authorization for contributors" do
     login_contributor
-    let!(:quota) { create(
+    let!(:quota) {
+      create(
         :quota,
         :unit_id => @unit.id,
         :taxon_concept_id => @taxon_concept.id,

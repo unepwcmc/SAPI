@@ -3,7 +3,8 @@ shared_context 'lump_definitions' do
   let(:input_species1){ input_species }
   let(:input_species2){ create_cites_eu_species }
   let(:output_species){ create_cites_eu_species }
-  let(:errorus_genus){ create_cites_eu_genus(
+  let(:errorus_genus){
+    create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Errorus')
     )
   }

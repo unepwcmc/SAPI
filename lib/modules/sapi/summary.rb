@@ -79,17 +79,17 @@ module Sapi
       t = Taxonomy.find_by_name(taxonomy)
       k = TaxonConcept.find_by_full_name_and_taxonomy_id(kingdom, t.id)
       stats[:accepted_taxa] = TaxonConcept.where(
-          :taxonomy_id => t.id, 
-          :name_status => 'A').
-        where(["(data->'kingdom_id')::INT = ?", k.id]).count
-      stats[:synonym_taxa] =  TaxonConcept.where(
-          :taxonomy_id => t.id, :name_status => 'S'
-        ).where(["(data->'kingdom_id')::INT = ?", k.id]).count
+        :taxonomy_id => t.id,
+        :name_status => 'A'
+      ).where(["(data->'kingdom_id')::INT = ?", k.id]).count
+      stats[:synonym_taxa] = TaxonConcept.where(
+        :taxonomy_id => t.id, :name_status => 'S'
+      ).where(["(data->'kingdom_id')::INT = ?", k.id]).count
       stats[:other_taxa] = TaxonConcept.where(
-          :taxonomy_id => t.id
-        ).where(["(data->'kingdom_id')::INT = ?", k.id]).
+        :taxonomy_id => t.id
+      ).where(["(data->'kingdom_id')::INT = ?", k.id]).
         where("name_status NOT IN ('A', 'S')").count
-      stats[:listing_changes] =  ListingChange.joins(:taxon_concept).
+      stats[:listing_changes] = ListingChange.joins(:taxon_concept).
         where(:taxon_concepts => {:taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
       distributions = Distribution.joins(:taxon_concept).
@@ -102,7 +102,7 @@ module Sapi
                 taggings.taggable_id = distributions.id AND
                 taggings.taggable_type = 'Distribution'
               INNER JOIN taxon_concepts ON
-                distributions.taxon_concept_id = taxon_concepts.id 
+                distributions.taxon_concept_id = taxon_concepts.id
                 AND taxon_concepts.taxonomy_id = #{t.id}
                 AND (data->'kingdom_id')::INT = #{k.id};
            SQL

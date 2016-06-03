@@ -99,8 +99,8 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
     @geo_entities = GeoEntity.select(['geo_entities.id', :name_en]).
       joins(:geo_entity_type).where(
-      :"geo_entity_types.name" => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
-    ).order(:name_en)
+        :"geo_entity_types.name" => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
+      ).order(:name_en)
   end
 
   def success_redirect

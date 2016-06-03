@@ -99,8 +99,8 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
         listing_change_id: copied_object.id
       }).first || party_listing_distribution &&
         copied_object.build_party_listing_distribution(
-        party_listing_distribution.comparison_attributes
-      )
+          party_listing_distribution.comparison_attributes
+        )
     # taxonomic exclusions (population exclusions already duplicated)
     reassignable.exclusions.where('taxon_concept_id IS NOT NULL').each do |exclusion|
       !copied_object.new_record? && exclusion.duplicates({

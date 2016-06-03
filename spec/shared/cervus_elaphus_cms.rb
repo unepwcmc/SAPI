@@ -26,24 +26,24 @@ shared_context "Cervus elaphus CMS" do
     )
 
     create_cms_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '1979-01-01',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '1979-01-01',
+      :is_current => true
     )
     create_cms_I_addition(
-     :taxon_concept => @subspecies2,
-     :effective_at => '1979-01-01',
-     :is_current => true
+      :taxon_concept => @subspecies2,
+      :effective_at => '1979-01-01',
+      :is_current => true
     )
     create_cms_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '2006-02-23',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2006-02-23',
+      :is_current => true
     )
     create_cms_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '2006-02-23',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2006-02-23',
+      :is_current => true
     )
 
     create(
