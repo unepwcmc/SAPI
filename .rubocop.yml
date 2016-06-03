@@ -53,3 +53,9 @@ Style/AndOr:
 # SupportedStyles: leading, trailing
 Style/DotPosition:
   EnforcedStyle: trailing
+
+# Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
+Style/ExtraSpacing:
+  AllowForAlignment: true
+  Exclude:
+    - 'db/migrate/*'

@@ -17,7 +17,7 @@ class Trade::ShipmentObserver < ActiveRecord::Observer
         end
     end
     unless shipment.reported_taxon_concept_id
-      shipment.reported_taxon_concept_id  = shipment.taxon_concept_id
+      shipment.reported_taxon_concept_id = shipment.taxon_concept_id
     end
   end
 

@@ -85,7 +85,7 @@ module Sapi
       stats[:synonym_taxa] =  TaxonConcept.where(
           :taxonomy_id => t.id, :name_status => 'S'
         ).where(["(data->'kingdom_id')::INT = ?", k.id]).count
-      stats[:other_taxa] =  TaxonConcept.where(
+      stats[:other_taxa] = TaxonConcept.where(
           :taxonomy_id => t.id
         ).where(["(data->'kingdom_id')::INT = ?", k.id]).
         where("name_status NOT IN ('A', 'S')").count
@@ -95,8 +95,8 @@ module Sapi
       distributions = Distribution.joins(:taxon_concept).
         where(:taxon_concepts => {:taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id])
-      stats[:distributions] =  distributions.count
-      stats[:distribution_tags] =  ActiveRecord::Base.connection.execute(<<-SQL
+      stats[:distributions] = distributions.count
+      stats[:distribution_tags] = ActiveRecord::Base.connection.execute(<<-SQL
             SELECT COUNT(*) FROM taggings
               INNER JOIN distributions ON
                 taggings.taggable_id = distributions.id AND
@@ -107,14 +107,14 @@ module Sapi
                 AND (data->'kingdom_id')::INT = #{k.id};
            SQL
         ).values.flatten[0]
-      stats[:distribution_references] =  DistributionReference.
+      stats[:distribution_references] = DistributionReference.
         joins(:distribution => :taxon_concept).
         where(:taxon_concepts => {:taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
-      stats[:taxon_references] =  TaxonConceptReference.joins(:taxon_concept).
+      stats[:taxon_references] = TaxonConceptReference.joins(:taxon_concept).
         where(:taxon_concepts => {:taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
-      stats[:taxon_standard_references] =  TaxonConceptReference.joins(:taxon_concept).
+      stats[:taxon_standard_references] = TaxonConceptReference.joins(:taxon_concept).
         where(:taxon_concepts => {:taxonomy_id => t.id }, :taxon_concept_references => {:is_standard => true}).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
       stats[:common_names] =  TaxonCommon.joins(:taxon_concept).
