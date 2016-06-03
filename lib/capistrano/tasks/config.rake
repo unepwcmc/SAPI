@@ -77,7 +77,7 @@ server {
   passenger_pass_header X-Sendfile-Type;
 
   passenger_ruby /home/#{fetch(:deploy_user)}/.rvm/gems/ruby-#{fetch(:rvm_ruby_version)}/wrappers/ruby;
-  
+
   location ~ ^/downloads/(.*)$ {
     alias #{deploy_to}/shared/public/downloads/$1;
     internal;
@@ -89,7 +89,7 @@ server {
   add_header 'Access-Control-Allow-Methods' "GET, POST, PUT, DELETE, OPTIONS";
   add_header 'Access-Control-Allow-Headers' "X-Requested-With, X-Prototype-Version";
   add_header 'Access-Control-Max-Age' 1728000;
-  
+
   gzip on;
   location ~ ^/assets/ {
     root #{deploy_to}/current/public;
@@ -98,7 +98,7 @@ server {
     add_header ETag "";
     break;
   }
-  
+
   error_page 503 @503;
 
   # Return a 503 error if the maintenance page exists.

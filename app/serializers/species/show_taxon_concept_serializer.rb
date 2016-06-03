@@ -108,7 +108,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     distributions_with_tags_and_references
   end
 
-  def cache_key  
+  def cache_key
     key = [
       self.class.name,
       self.id,

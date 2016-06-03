@@ -113,7 +113,7 @@ class Trade::ValidationRule < ActiveRecord::Base
           tmp_def[k] = scope_def[k].map{ |value| GeoEntity.find_by_iso_code2(value).id }
         end
         tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
-        res[scope_column + '_id'] = tmp_def        
+        res[scope_column + '_id'] = tmp_def
       when /(.+)_code$/
         tmp_def = {}
         (scope_def.keys & ['inclusion', 'exclusion']).each do |k|

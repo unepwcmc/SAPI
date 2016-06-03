@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe Checklist::Pdf::IndexFetcher do
-  let(:en){ 
+  let(:en){
     create(:language, :name_en => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')
     create(:language, :name_en => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
     create(:language, :name_en => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG')
   }
-  let(:es){ 
+  let(:es){
     Language.find_by_name_en("Spanish")
   }
 
@@ -17,7 +17,7 @@ describe Checklist::Pdf::IndexFetcher do
       :language => en
     )
   }
-  let(:spanish_common_name){ 
+  let(:spanish_common_name){
     create(
       :common_name,
       :name => 'Lolgato domestico',

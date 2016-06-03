@@ -27,7 +27,7 @@ class RemoveStatusChangeFromNomenclatureChanges < ActiveRecord::Migration
         SELECT reassignment_targets.*
         FROM nomenclature_change_reassignment_targets reassignment_targets
         JOIN outputs
-        ON outputs.id = reassignment_targets.nomenclature_change_output_id 
+        ON outputs.id = reassignment_targets.nomenclature_change_output_id
       ), deleted_reassignment_targets AS (
         DELETE FROM nomenclature_change_reassignment_targets
         USING reassignment_targets

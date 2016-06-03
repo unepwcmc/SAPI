@@ -57,7 +57,7 @@ shared_context "Dalbergia" do
       :effective_at => '2013-06-12',
       :is_current => true
     )
-    
+
     create(
       :listing_distribution,
       :listing_change => cites_lc,

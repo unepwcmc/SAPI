@@ -89,7 +89,7 @@ class Checklist::HigherTaxaInjector
     @last_ancestor_ids = @header_ranks.map{ |rank| curr_item.send("#{rank.downcase}_id") }
     ranks.each_with_index do |rank, idx|
       higher_taxon_id = curr_item.send("#{rank.downcase}_id")
-      
+
       unless (prev_item && prev_item.send("#{rank.downcase}_id") == higher_taxon_id && !@expand_headers)
         higher_taxon = @higher_taxa[higher_taxon_id]
         if higher_taxon && !(@skip_ancestor_ids && @skip_ancestor_ids.include?(higher_taxon.id))

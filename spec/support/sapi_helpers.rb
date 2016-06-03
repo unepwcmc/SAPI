@@ -27,18 +27,18 @@ shared_context :sapi do
         end
       end
     end
-    d  
+    d
   }
 
   let(:eu){
     d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::EU)
     unless d
       d = create(:designation, :name => Designation::EU, :taxonomy => cites_eu)
-      %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch| 
+      %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
         unless ChangeType.find_by_designation_id_and_name(d.id, ch)
           create(:change_type, :name => ch, :designation => d)
         end
-        %w(A B C D).each do |app| 
+        %w(A B C D).each do |app|
           unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
             create(
               :species_listing, :name => "Annex #{app}", :abbreviation => app,

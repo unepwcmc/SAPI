@@ -8,7 +8,7 @@ class Trade::ShipmentFromViewSerializer < ActiveModel::Serializer
 
   def taxon_concept
     {
-      id: object.taxon_concept_id, 
+      id: object.taxon_concept_id,
       full_name: object.taxon_concept_full_name + " (#{object.taxon_concept_name_status})",
       author_year: object.taxon_concept_author_year
     }
@@ -16,7 +16,7 @@ class Trade::ShipmentFromViewSerializer < ActiveModel::Serializer
 
   def reported_taxon_concept
     {
-      id: object.reported_taxon_concept_id, 
+      id: object.reported_taxon_concept_id,
       full_name: object.reported_taxon_concept_full_name + " (#{object.reported_taxon_concept_name_status})",
       author_year: object.reported_taxon_concept_author_year
     }

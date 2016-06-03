@@ -236,16 +236,16 @@ namespace :import do
     # Acipenser fulvescens, Incilius periglenes
     sql = <<-SQL
     WITH explicit_not_current_deletions AS (
-      SELECT listing_changes.* FROM taxon_concepts 
-      JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id 
+      SELECT listing_changes.* FROM taxon_concepts
+      JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id
       AND change_type_id = #{d.id} AND effective_at = '1983-07-29'
-      WHERE taxonomy_id = #{taxonomy.id} 
+      WHERE taxonomy_id = #{taxonomy.id}
       AND legacy_type = 'Animalia' and legacy_id = 223
       UNION
-      SELECT listing_changes.* FROM taxon_concepts 
-      JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id 
+      SELECT listing_changes.* FROM taxon_concepts
+      JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id
       AND change_type_id = #{d.id} AND effective_at = '1985-08-01'
-      WHERE taxonomy_id = #{taxonomy.id} 
+      WHERE taxonomy_id = #{taxonomy.id}
       AND legacy_type = 'Animalia' and legacy_id = 3172
     )
     UPDATE listing_changes SET explicit_change = TRUE
