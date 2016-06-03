@@ -61,7 +61,7 @@ describe Checklist::Pdf::IndexFetcher do
         :taxon_relationship,
         :taxon_relationship_type => synonym_relationship_type,
         :taxon_concept_id => tc.id,
-        :other_taxon_concept_id => synonym.id,
+        :other_taxon_concept_id => synonym.id
       )
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     }

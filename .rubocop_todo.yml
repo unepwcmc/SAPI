@@ -787,16 +787,6 @@ Style/Tab:
 Style/TrailingBlankLines:
   Enabled: false
 
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
-# SupportedStyles: comma, consistent_comma, no_comma
-Style/TrailingCommaInArguments:
-  Exclude:
-    - 'spec/models/checklist/pdf/index_fetcher_spec.rb'
-    - 'spec/models/taxon_concept/validation_spec.rb'
-    - 'spec/shared/colophon.rb'
-
 # Offense count: 7
 # Cop supports --auto-correct.
 Style/UnlessElse:
