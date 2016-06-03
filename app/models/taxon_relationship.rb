@@ -68,9 +68,10 @@ class TaxonRelationship < ActiveRecord::Base
 
   def destroy_opposite
     TaxonRelationship.where(
-        :taxon_concept_id => self.other_taxon_concept_id,
-        :other_taxon_concept_id => self.taxon_concept_id,
-        :taxon_relationship_type_id => self.taxon_relationship_type_id).
+      :taxon_concept_id => self.other_taxon_concept_id,
+      :other_taxon_concept_id => self.taxon_concept_id,
+      :taxon_relationship_type_id => self.taxon_relationship_type_id
+    ).
       delete_all
   end
 
@@ -78,8 +79,10 @@ class TaxonRelationship < ActiveRecord::Base
   # ONE intertaxonomic Taxon Relationship. Unless the TaxonRelationships
   # share the same TaxonRelationshipType and this is bidirectional
   def intertaxonomic_relationship_uniqueness
-    if TaxonRelationship.where(:taxon_concept_id => self.taxon_concept_id,
-         :other_taxon_concept_id => self.other_taxon_concept_id).
+    if TaxonRelationship.where(
+      :taxon_concept_id => self.taxon_concept_id,
+      :other_taxon_concept_id => self.other_taxon_concept_id
+    ).
          joins(:taxon_relationship_type).
          where(:taxon_relationship_types => { :is_intertaxonomic => true }).any? ||
       TaxonRelationship.where(:taxon_concept_id => self.other_taxon_concept_id,

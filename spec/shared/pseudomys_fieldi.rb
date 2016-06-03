@@ -24,8 +24,8 @@ shared_context "Pseudomys fieldi" do
     )
 
     create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '1975-07-01'
+      :taxon_concept => @species,
+      :effective_at => '1975-07-01'
     )
     cites_del = create_cites_I_deletion(
       :taxon_concept => @species,
@@ -38,16 +38,16 @@ shared_context "Pseudomys fieldi" do
       :parent_id => cites_del.id
     )
     create_cites_I_addition(
-     :taxon_concept => @subspecies,
-     :effective_at => '1975-07-01',
-     :is_current => true
+      :taxon_concept => @subspecies,
+      :effective_at => '1975-07-01',
+      :is_current => true
     )
 
     create_eu_A_addition(
-     :taxon_concept => @subspecies,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @subspecies,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings

@@ -36,18 +36,18 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           :parent_id => genus.id
         )
         create_cites_I_addition(
-         :taxon_concept => @species,
-         :effective_at => '1990-01-18'
+          :taxon_concept => @species,
+          :effective_at => '1990-01-18'
         )
         create_cites_I_addition(
-         :taxon_concept => @species,
-         :effective_at => '1997-09-18',
-         :is_current => true
+          :taxon_concept => @species,
+          :effective_at => '1997-09-18',
+          :is_current => true
         )
         cites_lc2 = create_cites_II_addition(
-         :taxon_concept => @species,
-         :effective_at => '1997-09-18',
-         :is_current => true
+          :taxon_concept => @species,
+          :effective_at => '1997-09-18',
+          :is_current => true
         )
         synonym = create_cites_eu_species(
           :taxon_name => create(:taxon_name, :scientific_name => 'Loxodonta cyclotis'),

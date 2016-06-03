@@ -20,27 +20,27 @@ shared_context 'Pristis microdon' do
     )
 
     create_cites_I_addition(
-     :taxon_concept => @family,
-     :effective_at => '2007-09-13',
-     :is_current => true
+      :taxon_concept => @family,
+      :effective_at => '2007-09-13',
+      :is_current => true
     )
     create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '2007-09-13',
-     :is_current => false
+      :taxon_concept => @species,
+      :effective_at => '2007-09-13',
+      :is_current => false
     )
     create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '2013-06-12',
-     :inclusion_taxon_concept_id => @family.id,
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2013-06-12',
+      :inclusion_taxon_concept_id => @family.id,
+      :is_current => true
     )
 
     eu_lc = create_eu_A_addition(
-     :taxon_concept => @family,
-     :effective_at => '2012-12-15',
-     :event => reg2012,
-     :is_current => false
+      :taxon_concept => @family,
+      :effective_at => '2012-12-15',
+      :event => reg2012,
+      :is_current => false
     )
     create_eu_A_exception(
       :taxon_concept => @species,
@@ -48,16 +48,16 @@ shared_context 'Pristis microdon' do
       :parent_id => eu_lc.id
     )
     create_eu_B_addition(
-     :taxon_concept => @family,
-     :effective_at => '2012-12-15',
-     :event => reg2012,
-     :is_current => false
+      :taxon_concept => @family,
+      :effective_at => '2012-12-15',
+      :event => reg2012,
+      :is_current => false
     )
     create_eu_A_addition(
-     :taxon_concept => @family,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @family,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings

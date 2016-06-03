@@ -18,10 +18,10 @@ shared_context "Cedrela montana" do
     )
 
     create_eu_D_addition(
-     :taxon_concept => @species,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings

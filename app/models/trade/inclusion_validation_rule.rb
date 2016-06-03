@@ -48,12 +48,12 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
       values_hash = Hash[column_names_for_display.map{ |cn| [cn, mr.send(cn)] }]
       Trade::ValidationError.new(
-          :error_message => error_message(values_hash),
-          :annual_report_upload_id => annual_report_upload.id,
-          :validation_rule_id => self.id,
-          :error_count => mr.error_count,
-          :matching_records_ids => parse_pg_array(mr.matching_records_ids),
-          :is_primary => self.is_primary
+        :error_message => error_message(values_hash),
+        :annual_report_upload_id => annual_report_upload.id,
+        :validation_rule_id => self.id,
+        :error_count => mr.error_count,
+        :matching_records_ids => parse_pg_array(mr.matching_records_ids),
+        :is_primary => self.is_primary
       )
     end
   end

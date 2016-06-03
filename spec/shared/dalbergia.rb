@@ -53,9 +53,9 @@ shared_context "Dalbergia" do
     )
 
     cites_lc = create_cites_II_addition(
-     :taxon_concept => @genus,
-     :effective_at => '2013-06-12',
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '2013-06-12',
+      :is_current => true
     )
     
     create(

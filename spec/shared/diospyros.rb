@@ -50,9 +50,9 @@ shared_context "Diospyros" do
     )
 
     cites_lc = create_cites_III_addition(
-     :taxon_concept => @species1,
-     :effective_at => '2011-12-22',
-     :is_current => false
+      :taxon_concept => @species1,
+      :effective_at => '2011-12-22',
+      :is_current => false
     )
 
     create(
@@ -63,10 +63,10 @@ shared_context "Diospyros" do
     )
 
     eu_lc = create_eu_C_addition(
-     :taxon_concept => @species1,
-     :effective_at => '2012-12-15',
-     :event => reg2012,
-     :is_current => false
+      :taxon_concept => @species1,
+      :effective_at => '2012-12-15',
+      :event => reg2012,
+      :is_current => false
     )
 
     create(
@@ -77,9 +77,9 @@ shared_context "Diospyros" do
     )
 
     cites_lc = create_cites_III_deletion(
-     :taxon_concept => @species1,
-     :effective_at => '2013-06-12',
-     :is_current => false
+      :taxon_concept => @species1,
+      :effective_at => '2013-06-12',
+      :is_current => false
     )
 
     create(
@@ -90,9 +90,9 @@ shared_context "Diospyros" do
     )
 
     cites_lc = create_cites_II_addition(
-     :taxon_concept => @genus,
-     :effective_at => '2013-06-12',
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '2013-06-12',
+      :is_current => true
     )
 
     create(
@@ -103,17 +103,17 @@ shared_context "Diospyros" do
     )
 
     create_cites_II_addition(
-     :taxon_concept => @species1,
-     :effective_at => '2013-06-12',
-     :inclusion_taxon_concept_id => @genus.id,
-     :is_current => true
+      :taxon_concept => @species1,
+      :effective_at => '2013-06-12',
+      :inclusion_taxon_concept_id => @genus.id,
+      :is_current => true
     )
 
     eu_lc = create_eu_B_addition(
-     :taxon_concept => @genus,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
 
     create(
