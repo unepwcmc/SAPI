@@ -229,9 +229,9 @@ namespace :import do
     end
 
     puts "DROPPING temporary column and view"
-#    ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
-#    ActiveRecord::Base.connection.execute("ALTER TABLE annotations DROP COLUMN import_row_id")
-#    ActiveRecord::Base.connection.execute("DROP VIEW cms_listings_import_view")
+    #    ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
+    #    ActiveRecord::Base.connection.execute("ALTER TABLE annotations DROP COLUMN import_row_id")
+    #    ActiveRecord::Base.connection.execute("DROP VIEW cms_listings_import_view")
 
     new_listings_count = ListingChange.joins(:species_listing).
       where(:species_listings => {:designation_id => designation.id}).count

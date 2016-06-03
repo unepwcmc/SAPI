@@ -281,16 +281,6 @@ Style/ColonMethodCall:
     - 'lib/tasks/db_migrate_plpgsql.rake'
     - 'lib/tasks/import.rake'
 
-# Offense count: 5
-# Cop supports --auto-correct.
-Style/CommentIndentation:
-  Exclude:
-    - 'app/controllers/cites_trade/shipments_controller.rb'
-    - 'app/models/search_params.rb'
-    - 'config/initializers/geocoder.rb'
-    - 'db/schema.rb'
-    - 'lib/tasks/import_cms_listings.rake'
-
 # Offense count: 6
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, SingleLineConditionsOnly.
