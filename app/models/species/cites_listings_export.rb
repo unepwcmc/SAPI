@@ -33,7 +33,6 @@ class Species::CitesListingsExport < Species::ListingsExport
       'Extinct_Distribution', 'Extinct(?)_Distribution',
       'Distribution_Uncertain'
     ]
-
   end
 
 end

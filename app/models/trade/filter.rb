@@ -138,7 +138,6 @@ class Trade::Filter
     end
 
     initialize_internal_query if @internal
-
   end
 
   def initialize_internal_query
@@ -178,7 +177,6 @@ class Trade::Filter
         @query = @query.where(:quantity => @quantity)
       end
     end
-
   end
 
 end
