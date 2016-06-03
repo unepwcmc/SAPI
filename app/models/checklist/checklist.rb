@@ -89,7 +89,7 @@ class Checklist::Checklist
       injector = Checklist::HigherTaxaInjector.new(@plantae)
       @plantae = injector.run
     end
-    [self] #TODO just for compatibility with frontend, no sensible reason for this
+    [self] #TODO: just for compatibility with frontend, no sensible reason for this
   end
 
   # Converts a list of search filters into a limited length
@@ -166,7 +166,7 @@ class Checklist::Checklist
       end
     end
 
-    #TODO common names, authors
+    #TODO: common names, authors
 
     if summary.length > 0
       summary.join(" ")
