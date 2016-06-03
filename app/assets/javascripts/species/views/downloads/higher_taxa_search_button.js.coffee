@@ -1,4 +1,4 @@
-Species.HigherTaxaSearchButton = Ember.View.extend
+Species.HigherTaxaSearchButton = Ember.View.extend(Species.SearchFormDropdowns,
   tagName: 'a'
   href: '#'
   classNames: ['link']
@@ -14,4 +14,4 @@ Species.HigherTaxaSearchButton = Ember.View.extend
     else
       return "TAXON"
   ).property("controller.selectedTaxonConcepts.@each")
-  
+)

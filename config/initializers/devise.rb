@@ -253,5 +253,26 @@ Devise.setup do |config|
   # When using omniauth, Devise cannot automatically set Omniauth path,
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
-end
 
+  #use custom layouts for devise
+  Rails.application.config.to_prepare do
+    Devise::RegistrationsController.layout "pages"
+    Devise::PasswordsController.layout "pages"
+    Devise::PasswordsController.after_filter :save_email, only: [:create]
+    Devise::PasswordsController.after_filter :delete_email, only: [:update]
+  end
+
+  #custom redirection when login fails
+  config.warden do |manager|
+   manager.failure_app = CustomFailure
+  end
+
+  Warden::Manager.after_set_user do |user,auth,opts|
+    auth.cookies[:"speciesplus.signed_in"] = 1
+  end
+
+  Warden::Manager.before_logout do |user,auth,opts|
+    auth.cookies.delete :"speciesplus.signed_in"
+  end
+
+end

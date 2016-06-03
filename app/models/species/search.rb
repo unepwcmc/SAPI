@@ -8,7 +8,6 @@ class Species::Search
   #
   # @param [Hash] a hash of search params and their values
   def initialize(options)
-    @id = 1
     initialize_params(options)
     initialize_query
   end
@@ -20,6 +19,10 @@ class Species::Search
 
   def total_cnt
     @query.count
+  end
+
+  def ids
+    @query.pluck(:id)
   end
 
 private
@@ -41,6 +44,8 @@ private
 
     if @visibility == :speciesplus
       @query = @query.where(:show_in_species_plus => true)
+    elsif @visibility == :elibrary
+      @query = @query.where("show_in_species_plus OR name_status = 'N'")
     end
 
     if !@geo_entities.empty? && @geo_entity_scope == :cms

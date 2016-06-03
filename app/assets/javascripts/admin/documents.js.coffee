@@ -1,14 +1,14 @@
 $(document).ready ->
 
   $('#event-id').chained('#event-type')
-  $('#event-id-search').chained('#event-type-search')
-  $('#document-type').chained('#event-type-search')
+  $('#event_id_search').chained('#event_type_search')
+  $('#document_type').chained('#event_type_search')
 
   # Save the children from chained destruction!
-  documentTypeChildren =  $('#document-type').children()
+  documentTypeChildren =  $('#document_type').children()
 
-  $('#event-type-search').change( (e) ->
-    documentType = $('#document-type')
+  $('#event_type_search').change( (e) ->
+    documentType = $('#document_type')
     # if no event type selected
     unless e.target.value
       # enable all document types
@@ -34,6 +34,29 @@ $(document).ready ->
       newEventLink.attr('href', $(this).find('option:selected').data('path'))
       newEventLink.show()
   )
+
+  primaryDocumentSelect2Options = {
+    placeholder: 'Start typing title'
+    width: '500px'
+    minimumInputLength: 3
+    quietMillis: 500
+    allowClear: true
+    initSelection: (element, callback) ->
+      callback($(element).data('init-selection'))
+    ajax:
+      url: '/admin/documents/autocomplete'
+      dataType: 'json'
+      data: (query, page) ->
+        {
+          title: query
+          event_id: $('#document_event_id').val()
+        }
+      results: (data, page) ->
+        formatted_documents = data.map (doc) =>
+          id: doc.id
+          text: doc.title
+        results: formatted_documents
+  }
 
   citationTaxonSelect2Options = {
     placeholder: 'Start typing scientific name'
@@ -76,8 +99,16 @@ $(document).ready ->
     allowClear: true
   }
 
+  eventsSelect2Options = {
+    placeholder: 'Start typing an event'
+    width: '300px'
+    allowClear: true
+  }
+
+  $('.primary-language-document').select2(primaryDocumentSelect2Options)
   $('.citation-taxon-concept').select2(citationTaxonSelect2Options)
   $('.citation-geo-entity').select2(citationGeoEntitySelect2Options)
+  $('.events-search').select2(eventsSelect2Options)
   $('.document-tag').select2(documentTagSelect2Options)
 
   $(document).on('nested:fieldAdded', (event) ->
@@ -87,4 +118,12 @@ $(document).ready ->
     # and activate select2
     citationTaxonField.select2(citationTaxonSelect2Options)
     citationGeoEntityField.select2(citationGeoEntitySelect2Options)
+  )
+
+  $('ul.documents-reorder-list').sortable(
+    items: 'li'
+  ).bind('sortupdate', (e, ui) ->
+    ui.startparent.find('input').each( (idx) ->
+      $(@).val(idx)
+    )
   )

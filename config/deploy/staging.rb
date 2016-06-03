@@ -1,5 +1,5 @@
 set :stage, :staging
-set :branch, "LinodeCap3Deploy"
+set :branch, "nomenclature_changes"
 
 server "sapi-staging.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
 

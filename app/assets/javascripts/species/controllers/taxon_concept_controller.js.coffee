@@ -1,5 +1,8 @@
-Species.TaxonConceptController = Ember.ObjectController.extend
-  needs: ['search']
+Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchContext,
+  Species.SignedInStatus,
+  needs: ['search', 'taxonConceptDocuments']
+  searchContext: 'species'
+
   isCms: ( ->
     if @get('taxonomy') != undefined
       @get('taxonomy') == 'cms'
@@ -197,8 +200,8 @@ Species.TaxonConceptController = Ember.ObjectController.extend
     )
   ).property('matchedOnSelf', 'subspecies')
 
-  matchInfo: ( -> 
-    unless @get('matchedOnSelf') 
+  matchInfo: ( ->
+    unless @get('matchedOnSelf')
       if @get('matchedOnSynonym') != undefined
         '<i>' + @get('matchedOnSynonym.full_name') + '</i> is a synonym of <i>' + @get('fullName') +
         '</i>. You have been redirected to the species page for <i>' +

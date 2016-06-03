@@ -1,0 +1,34 @@
+<div id="login_modal">
+  <div id="login_form">
+    <a href="#" class="login-cancel"><i class="fa fa-times"></i></a>
+    <div class="edit-container">
+      <div class="login-header">
+        <h2>EU Member login</h2>
+      </div>
+      <div class="login-error">
+      </div>
+      <div class="round-text-inputs">
+        <%= form_for(:user, :url => session_path(:user)) do |f| %>
+          <div class="species-login-email">
+            <%= f.label :email %>
+            <%= f.email_field :email %>
+          </div>
+          <div class="species-login-password">
+            <%= f.label :password %>
+            <%= f.password_field :password %>
+          </div>
+          <div class="submit-box">
+            <div class="remember-me">
+              <%= f.check_box :remember_me %>
+              <%= f.label :remember_me %>
+            </div>
+            <div class="login-button"><%= f.submit "Login", class: "round-button" %></div>
+          </div>
+          <div class="species-login-forgot">
+            <%= link_to "Forgot password?", new_password_path(:user) %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

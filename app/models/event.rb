@@ -20,6 +20,7 @@
 #  created_by_id        :integer
 #  extended_description :text
 #  multilingual_url     :text
+#  elib_legacy_id       :integer
 #
 
 class Event < ActiveRecord::Base
@@ -45,8 +46,33 @@ class Event < ActiveRecord::Base
     elibrary_current_event_types + [CitesTc, CitesExtraordinaryMeeting]
   end
 
+  def self.event_types_with_names
+    [
+      {
+        id: 'CitesCop',
+        name: 'CITES CoP'
+      },
+      {
+        id: 'CitesAc',
+        name: 'CITES Animals Committee'
+      },
+      {
+        id: 'CitesPc',
+        name: 'CITES Plants Committee'
+      },
+      {
+        id: 'EcSrg',
+        name: 'EU Scientific Review Group'
+      },
+      {
+        id: 'CitesTc',
+        name: 'CITES Technical Committee'
+      }
+    ]
+  end
+
   # Returns document types (class objects) that are relevant to E-Library and
-  # that can be associated with this event type  
+  # that can be associated with this event type
   # Should be overriden in subclasses
   def self.elibrary_document_types
     [Document]
@@ -67,7 +93,7 @@ class Event < ActiveRecord::Base
   def self.search query
     if query.present?
       where("UPPER(events.name) LIKE UPPER(:query)
-            OR UPPER(events.description) LIKE UPPER(:query)", 
+            OR UPPER(events.description) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
       scoped

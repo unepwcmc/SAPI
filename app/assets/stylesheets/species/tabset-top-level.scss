@@ -1,0 +1,64 @@
+#main .tabset.top-level, .inner .tabset.top-level {
+  margin: 0 0 -1px 0;
+
+  li {
+    float: left;
+    line-height: 10px;
+    width: 230px;
+    font-size: 15px;
+    text-transform: none;
+    a {
+      font-weight: normal;
+      border-bottom: #A4C5DA;
+      display: block;
+      margin-top: 0px;
+      padding: 15px 0;
+      text-align: center;
+      text-decoration: none;
+    }
+  }
+
+  li:first-child {
+    a {
+      -webkit-border-radius: 0;
+      border-radius: 0;
+    }
+  }
+
+  li, li:hover {
+    a {
+      background: #376382;
+      color: #f5f5f7;
+      border-left: solid 1px #376382;
+      border-top: solid 1px #376382;
+      border-right: solid 1px #376382;
+    }
+  }
+
+  li.active, li.active:hover {
+    a {
+      background: #A4C5DA;
+      color: #2d3237;
+      border-left: solid 1px #8FB7CF;
+      border-top: solid 1px #8FB7CF;
+      border-right: solid 1px #8FB7CF;
+    }
+  }
+}
+
+#main .tabset.top-level::after, .inner .tabset.top-level::after {
+    clear: both;
+    content: "";
+    display: block;
+}
+
+.elibrary-tab {
+
+  a { height: 10px; }
+  .new-tag {
+    position: relative;
+    top: -26px;
+    right: -100px;
+    height: 30px;
+  }
+}

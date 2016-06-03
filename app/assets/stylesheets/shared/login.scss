@@ -1,0 +1,252 @@
+@mixin edit-container($width: 510) {
+	.edit-container {
+		width: $width;
+		margin: 0 auto;
+		padding: 35px 0;
+		h2 {
+			font-size: 24px;
+			padding-bottom: 0;
+			text-transform: none;
+		}
+		input[type="password"], input[type="email"] {
+			margin: 10px 0;
+			width: 100%;
+			height: 35px;
+		}
+		p {
+			padding-bottom: 20px;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			strong { font-weight: bold; }
+		}
+		label { margin: 0 0 0 15px; }
+		p, label { color: black; }
+		.new-password {
+			margin: 20px 0;
+			padding: 25px 0 0;
+			border-top: 1px solid rgba(118,135,157,0.2);
+		}
+		.submit-box {
+			border-top: 1px solid rgba(118,135,157,0.2);
+			margin: 15px 0 0;
+			padding: 20px 0 40px;
+			.round-button { float: right; }
+		}
+	}
+}
+#login_modal{
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+#login_form
+{
+  height: 400px;
+  width: 560px;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: block;
+	background-color: #A4C5DA;
+  .login-cancel {
+    float: right;
+    margin: 15px;
+    color: #376382;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .login-header {
+    clear: both;
+    margin-bottom: 35px;
+    &.less-margin { margin: 0 0 10px; }
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+      color: black;
+    }
+  }
+  .login-error {
+    margin: 5px 0 10px 0px;
+  }
+  .species-login-forgot {
+    float: right;
+    margin: 10px -10px 0 0;
+    a {
+      color: #376382;
+      font-weight: bold;
+    }
+  }
+  .remember-me {
+    float: left;
+    margin-top: 6px;
+  }
+  .login-button { float: right; }
+
+  @include edit-container($width: 400px)
+}
+
+#login_modal:target {
+  display: block;
+  opacity: 2;
+}
+
+.species-connect, .logged-footer {
+	color: #648aa2;
+	margin: 20px 0;
+}
+#footer .species-connect {
+	span { font-weight: bold; }
+	a {
+		display: block;
+		color: #648aa2;
+		text-decoration: none;
+	}
+	i.fa { float: right; }
+}
+
+.logged-footer, .logged-header {
+	i.fa {
+		margin: 0 7px;
+	}
+}
+.logged-footer {
+	a {
+		text-decoration: none;
+		float: right;
+		color: #648aa2;
+	}
+}
+
+.logged-header {
+	font-size: 12px;
+	background-color: #376382;
+	height: 30px;
+	.logged-header-container {
+		padding: 6px 115px;
+		color: white;
+		.left { float: left; }
+		.right {
+			a { color: white; text-decoration: none; }
+			float: right;
+		}
+	}
+
+	.logged-header-dropdown {
+		display: none;
+		color: white;
+		position: absolute;
+		right: 100px;
+		top: 42px;
+		height: 130px;
+		width: 160px;
+		background-color: #376382;
+		z-index: 2;
+		font-size: 14px;
+		a {
+			color: white;
+			text-decoration: none;
+		}
+		&:before{
+			font-family: FontAwesome;
+			content: "\f0d8";
+			color: #376382;
+			position: relative;
+			bottom: 11px;
+			left: 131px;
+		}
+		i.fa-times{
+			font-size: 14px;
+			float: right;
+			position: relative;
+			top: 5px;
+		}
+		.settings {
+			margin: 0 0 10px 10px;
+			.settings-list {
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				font-weight: 100;
+				font-size: 12px;
+				margin: 5px 0 0 7px;
+			}
+		}
+		.logout {
+			margin: 20px 0 0;
+			padding: 10px 0 10px 10px;
+			border-top: 1px solid black;
+		}
+	}
+}
+
+.user-edit-box {
+	width: 860px;
+	background-color: #A4C5DA;
+	margin-bottom: 105px;
+	border: 1px solid #6b94af;
+
+  @include edit-container($width: 510px)
+}
+
+.round-text-inputs {
+	input[type="text"], input[type="password"], input[type="email"] {
+		border: 1px solid rgba(118,135,157,0.4);
+		border-radius: 20px;
+		height: 25px;
+		width: 220px;
+		padding: 0 0 0 10px;
+		outline: none;
+	}
+}
+
+.round-button {
+	cursor: pointer;
+	width: 101px;
+	border: none;
+	height: 30px;
+	line-height: 30px;
+	color: #fff;
+	font-size: 13px;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-align: center;
+	padding: 0 0 2px;
+	margin: 0;
+	-webkit-border-radius: 20px;
+	border-radiu: 20px;
+	background: #376382;
+	&:hover{
+		background: #253848;
+		-webkit-transition: all 0.5s ease;
+		-moz-transition: all 0.5s ease;
+		-ms-transition: all 0.5s ease;
+		-o-transition: all 0.5s ease;
+		transition: all 0.5s ease;
+	}
+
+}
+input[type="submit"]:hover { cursor: pointer; }
+
+div.error-box {
+	background-color: #F2DEDE;
+	height: 35px;
+	margin: 5px 0 0 2px;
+	p.error-message {
+		color: #C00101;
+		padding: 9px 15px;
+	}
+}
+
+div.error-header {
+	color: #C00101;
+	margin: 20px 0;
+	i.fa { margin-right: 5px}
+}

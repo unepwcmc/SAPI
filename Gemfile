@@ -24,9 +24,11 @@ gem 'gon'
 gem 'wicked'
 gem 'groupdate'
 gem "chartkick"
+gem 'rubyzip', '>= 1.0.0'
 
-gem 'sidekiq', '~> 3.4.2'
-gem 'sidekiq-status', '~> 0.5.4'
+gem 'sidekiq', '< 5'
+gem 'sidekiq-status'
+gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
 
 gem 'whenever', :require => false
 
@@ -43,6 +45,7 @@ gem 'acts-as-taggable-on', '~> 2.3.1'
 gem 'carrierwave'
 
 gem 'underscore-rails'
+gem "font-awesome-rails"
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -122,7 +125,6 @@ group :test do
   gem 'simplecov', :require => false
   gem 'coveralls', :require => false
   gem 'capybara'
-  gem 'test-unit', '~> 3.1'
 end
 
 gem 'rake', '~> 10.0.3'
@@ -142,5 +144,10 @@ gem 'geoip'
 gem 'clerk'
 gem 'paper_trail', '~> 4.0.0.beta'
 
+
+gem 'rails-secrets'
 gem 'dotenv-rails'
+
+gem 'test-unit', '~> 3.1' # annoyingly, rails console won't start without it in staging / production
+
 gem 'appsignal'

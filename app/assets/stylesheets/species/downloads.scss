@@ -17,7 +17,7 @@
 		-webkit-border-radius: 5px;
 		border-radius: 5px;
 		border: #8fb7cf solid 1px;
-		
+
 
 		.search-block01 {
 			-webkit-border-radius: 5px 5px 0 0;
@@ -98,7 +98,7 @@
 		}
 		.list-holder {
 			height: 188px;
-			width: 220px;
+			width: 221px;
 			overflow: auto;
 			margin: 17px 0 15px;
 			padding: 0 0 20px 19px;
@@ -132,13 +132,13 @@
 		line-height: 15px;
 
 		ul { margin: 0 0 17px; }
-		ul li { 
+		ul li {
 			cursor: pointer;
 			&:hover{
 				text-decoration: underline;
 			}
 		}
-		a { 
+		a {
 			color: #666;
 			span { text-decoration: underline; }
 		}
@@ -159,8 +159,8 @@
 }
 .popup-area.add .popup-holder01 {
 	left: -50px;
-	.popup { 
-		width: 360px; 
+	.popup {
+		width: 360px;
 		.search-block01 .row01 {
 			width: 313px;
 			height: 24px;
@@ -169,7 +169,7 @@
 				height: 18px;
 				line-height: 18px;
 				width: 275px;
-			}			
+			}
 		}
 	}
 	.popup:after { left: 126px; }
@@ -237,7 +237,7 @@
 
 
 
-.col .row { 
+.col .row {
   overflow: hidden;
   padding-left: 15px;
   }
@@ -270,9 +270,7 @@
 }
 
 .popup-area .link { cursor: pointer; }
-.popup-area:hover .link { background: #253848; }
-.popup-area:hover .popup-holder01 { display: block; }
-.popup-area:hover .popup-holder-appendix { display: block; }
+.popup-area .link:hover { background: #253848; }
 
 .bottom-columns {
 	border-top: 1px solid #d6d7d7;

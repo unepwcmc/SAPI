@@ -5,6 +5,12 @@ class TradeController < ApplicationController
 
   private
 
+  def verify_manager
+    unless current_user.is_manager?
+      redirect_to signed_in_root_path(current_user)
+    end
+  end
+
   def search_params
     (params[:filters] || params).permit(
       {:taxon_concepts_ids => []},

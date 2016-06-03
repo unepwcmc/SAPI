@@ -1,0 +1,23 @@
+{{#if multipleValues}}
+  <div class='multiple-data-container'>
+    <div class='document-data'>
+      {{data.length}}&nbsp{{type}}
+      <a class="tooltip">
+        <i class='fa fa-info-circle'></i>
+        <span>
+          {{#if isTaxa}}
+            <i>{{unbound formattedData}}</i>
+          {{else}}
+            {{unbound formattedData}}
+          {{/if}}
+        </span>
+      </a>
+    </div>
+  </div>
+{{else}}
+  {{#if isTaxa}}
+    <i>{{data}}</i>
+  {{else}}
+    {{data}}
+  {{/if}}
+{{/if}}

@@ -7,23 +7,23 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exception|
     rescue_path = if request.referrer && request.referrer != request.url
                     request.referer
-                  elsif current_user.is_api?
-                    root_path
+                  elsif current_user.is_manager_or_contributor?
+                    admin_root_path
                   else
-                    signed_in_root_path(current_user)
+                    root_path
                   end
 
-    redirect_to rescue_path, 
-      :alert => if current_user.is_api?
-                  "You must log out of Species+ API before you can log into this site"
-                else
-                  case exception.action
-                    when :destroy
-                      "You are not authorized to destroy that record"
-                    else
-                      exception.message
-                  end
+    redirect_to rescue_path,
+      alert:  if current_user.is_manager_or_contributor?
+                case exception.action
+                  when :destroy
+                    "You are not authorised to destroy that record"
+                  else
+                    exception.message
                 end
+              else
+                "You are not authorised to access this page"
+              end
   end
 
   protected
@@ -49,16 +49,21 @@ class ApplicationController < ActionController::Base
     }
   end
 
-  def after_sign_out_path_for(resource_or_scope)
-    admin_root_path
+  def after_sign_in_path_for(resource)
+    stored_location_for(resource) ||
+      if resource.is_manager_or_contributor?
+        admin_root_path
+      else
+        super
+      end
   end
 
-  def signed_in_root_path(resource_or_scope)
-    admin_root_path
+  def save_email
+    session[:email] = params[:user][:email] || ""
   end
 
-  def verify_manager
-    redirect_to signed_in_root_path(current_user),
-      :alert => "You are not authorized to access the trade admin page" unless current_user.is_admin?
+  def delete_email
+    session.delete(:email)
   end
+
 end

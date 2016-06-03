@@ -1,5 +1,5 @@
 SAPI::Application.routes.draw do
-  devise_for :users, :skip => [:registrations]
+  devise_for :users, :controllers => { :passwords => "passwords", :registrations => "registrations", :sessions => "sessions" }
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registration'
     put 'users' => 'registrations#update', :as => 'user_registration'
@@ -25,6 +25,14 @@ SAPI::Application.routes.draw do
       resources :units, :only => [:index]
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
+      resources :documents do
+        collection do
+          get 'download_zip'
+        end
+      end
+      resources :document_geo_entities, only: [:index]
+      resources :events, only: [:index]
+      resources :document_tags, only: [:index]
       match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
     end
     resources :languages, :only => [:index]
@@ -56,7 +64,10 @@ SAPI::Application.routes.draw do
     resources :eu_decision_types, :only => [:index, :create, :update, :destroy]
     resources :events do
       resource :document_batch, :only => [:new, :create]
-      resources :documents, :only => [:index, :edit, :update, :destroy]
+      resources :documents, :only => [:index, :edit, :update, :destroy] do
+        get :show_order, on: :collection, controller: :event_documents
+        post :update_order, on: :collection, controller: :event_documents
+      end
     end
     resources :eu_regulations do
       post :activate, :on => :member
@@ -78,7 +89,9 @@ SAPI::Application.routes.draw do
     resources :cites_extraordinary_meetings
 
     resource :document_batch, :only => [:new, :create]
-    resources :documents, :only => [:index, :create, :edit, :update, :destroy]
+    resources :documents do
+      get :autocomplete, :on => :collection
+    end
 
     resources :cites_suspension_notifications
     resources :references, :only => [:index, :create, :update, :destroy] do
@@ -126,8 +139,8 @@ SAPI::Application.routes.draw do
       resources :taxon_quotas, :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :quotas
 
-      resources :taxon_eu_suspensions, 
-        :only => [:index, :new, :create, :edit, :update, :destroy], 
+      resources :taxon_eu_suspensions,
+        :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :eu_suspensions
 
       resources :taxon_cites_suspensions,

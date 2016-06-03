@@ -23,6 +23,14 @@ class RegistrationsController < Devise::RegistrationsController
 
   private
 
+  def after_update_path_for(resource)
+    if resource.is_manager_or_contributor?
+      admin_root_path
+    else
+      super
+    end
+  end
+
   # check if we need password to update user data
   # ie if password or email was changed
   # extend this as needed

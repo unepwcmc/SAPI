@@ -1,0 +1,36 @@
+<h1>Reorder <%= @event.name %> documents</h1>
+
+<p>
+  <i class="icon-info-sign"></i>
+  Please use drag and drop to order documents and press the 'Save' button for changes to take effect.
+</p>
+
+<%= form_tag update_order_admin_event_documents_url(@event), method: :post do %>
+  <fieldset>
+    <div class="control-group clearfix">
+      <div class="controls pull-right">
+        <%= link_to 'Cancel', admin_documents_path, class: "btn" %>
+        <%= submit_tag 'Save', class: "btn btn-primary save-button" %>
+      </div>
+    </div>
+
+    <ul class="documents-reorder-list">
+    <% @documents.each do |document| %>
+
+      <li>
+        <%= hidden_field_tag "documents[#{document.id}]", document.sort_index, class: 'document-reorder-input' %>
+        <i class="icon-move"></i>
+        <% if document.type == 'Document::Proposal' %>
+          Prop: <%= document.proposal_number %>
+        <% end %>
+        <%= document.title %> (<%= document.type %>) <%= document['language'] %>
+        <%= link_to '<i class="icon-pencil"></i>'.html_safe,
+          edit_admin_document_path(document)
+        %>
+      </li>
+
+    <% end %>
+    </ul>
+
+  </fieldset>
+<% end %>

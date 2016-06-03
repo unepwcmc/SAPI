@@ -1,0 +1,116 @@
+<strong class="documents-search-results-header">Search Results
+  <i class="fa fa-info-circle"
+    title="Available documents for your selection are displayed below, by category.">
+  </i>
+</strong>
+<p class="search-options-toggle">
+  <span {{action toggleSearchOptions target=view}}>
+    <i class="fa fa-plus-circle"></i>
+  </span>
+  <span class="search-text">Show search options</span>
+</p>
+<div class="search-form documents">
+
+  <form class="search">
+    <fieldset class="taxon-search">
+      <div class="documents-control-group">
+        <label>Search by species or higher taxa</label>
+        {{view Species.TaxonConceptSearchView controllerBinding="controller" showSearchButton=false}}
+      </div>
+    </fieldset>
+    <fieldset>
+      <div class="documents-control-group">
+        <div class="location-area popup-area">
+          <label>Country <i class="fa fa-info-circle" title="Including territories and historic names"></i></label>
+          {{view Species.GeoEntitiesSearchButton
+            selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+            loadedBinding="geoEntities.loaded"
+            shortPlaceholder=false
+            taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
+          }}
+          {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+        </div>
+      </div>
+
+      <div class="documents-control-group">
+        {{single-dropdown
+          action="handleEventTypeSelection"
+          clearAction="handleEventTypeDeselection"
+          title="Meeting documents"
+          placeholder="All meeting types"
+          values=controllers.events.eventTypes
+          selection=controller.selectedEventType
+        }}
+      </div>
+
+      <div class="documents-control-group">
+        <div {{bind-attr class=":popup-area :events-area selectedEventType:events-visible"}}>
+          <label>Meeting</label>
+          {{view Species.EventsSearchButton
+            selectedEventsBinding="controller.selectedEvents"
+            loadedBinding="events.loaded"
+            shortPlaceholder=false
+            taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
+          }}
+          {{view Species.EventsSearchDropdown controllerBinding="controller"}}
+        </div>
+      </div>
+
+      <div class="documents-control-group">
+        {{single-dropdown
+          isVisible=controller.documentTypeDropdownVisible
+          action="handleDocumentTypeSelection"
+          clearAction="handleDocumentTypeDeselection"
+          title="Document type"
+          placeholder="All document types"
+          values=controller.filteredDocumentTypes
+          selection=controller.selectedDocumentType
+        }}
+      </div>
+
+      <div class="documents-control-group">
+        {{single-dropdown
+          isVisible=controller.interSessionalDocTypeDropdownVisible
+          action="handleDocumentTypeSelection"
+          clearAction="handleDocumentTypeDeSelection"
+          title="Inter-sessional documents"
+          placeholder="Document types"
+          values=controller.interSessionalDocumentTypes
+          selection=controller.selectedDocumentType
+        }}
+      </div>
+
+      <div class="documents-control-group">
+        {{single-dropdown
+          isVisible=controller.proposalOutcomeDropdownVisible
+          action="handleProposalOutcomeSelection"
+          clearAction="handleProposalOutcomeDeselection"
+          title="Proposal outcome"
+          placeholder="All outcomes"
+          values=controllers.documentTags.proposalOutcomes
+          selection=controller.selectedProposalOutcome
+        }}
+      </div>
+
+      <div class="documents-control-group">
+        <label>Search by title keyword(s)
+          <i class="fa fa-info-circle"
+            title="This search will only return results if there is an exact match with the word or phrase in the title of the document.">
+          </i>
+        </label>
+        <div class="text-input-wrapper keyword-search">
+          {{input type="text" value=titleQuery placeholder='e.g. NDF'}}
+        </div>
+      </div>
+    </fieldset>
+    <div class="search-buttons-container">
+      <div class="clear-search-button-container">
+        <button {{action "clearSearch"}}>Clear</button>
+      </div>
+      <div class="search-button-container">
+        <button class='elibrary-search-button' {{action "openSearchPage"}}>Search</button>
+      </div>
+    </div>
+  </form>
+
+</div>

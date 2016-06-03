@@ -8,6 +8,15 @@ Species.Router.map (match) ->
     @route 'names'
     @route 'distribution'
     @route 'references'
+    @route 'documents'
+  @route 'elibrary'
+  @resource 'documents', {
+    queryParams: [
+      'taxon_concept_query', 'geo_entities_ids', 'title_query',
+      'event_type', 'events_ids', 'document_type',
+      'proposal_outcome_id', 'review_phase_id'
+    ]
+  }
   @route 'about'
 
 Species.Router.reopen

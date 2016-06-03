@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe DocumentBatch do
+describe DocumentBatch, sidekiq: :inline do
 
   describe :save do
     context "when invalid" do

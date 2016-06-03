@@ -93,6 +93,22 @@ describe Admin::TaxonConceptsController do
     end
   end
 
+  describe "when E-library Viewer" do
+    login_elibrary_viewer
+    let(:taxon_concept) { create(:taxon_concept) }
+
+    it "redirects to root path" do
+      get :index
+      response.should redirect_to(root_path)
+    end
+
+    it "redirects to root path and doesn't delete" do
+      delete :destroy, :id => taxon_concept.id
+      response.should redirect_to(root_path)
+      TaxonConcept.where(:id => taxon_concept.id).size.should == 1
+    end
+  end
+
   describe "XHR GET JSON autocomplete" do
     let!(:taxon_concept){
       create(:taxon_concept,

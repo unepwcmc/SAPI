@@ -1,4 +1,5 @@
 <div id="main">
+  {{partial 'species/tabs'}}
   {{outlet search}}
   {{#if matchInfo}}
     <div id="match-info">
@@ -53,10 +54,31 @@
       <ul>
       </ul>
     </li>
-    <li class="last-child">{{#linkTo 'taxonConcept.references'}}REFERENCES{{/linkTo}}
+    <li {{bindAttr class="isCms:last-child"}}>{{#linkTo 'taxonConcept.references'}}REFERENCES{{/linkTo}}
       <ul>
       </ul>
     </li>
+    {{#unless isCms }}
+    <li class="last-child documents-tab">{{#linkTo 'taxonConcept.documents'}}DOCUMENTS{{/linkTo}}
+      <ul>
+      {{#if controllers.taxonConceptDocuments.citesCopProposalsDocsPresent}}
+        <li class="first"><a href="#cites_cop" class="scroll-to">CITES CoP Proposals</a></li>
+      {{/if}}
+      {{#if controllers.taxonConceptDocuments.citesAcDocsPresent}}
+        <li><a href="#cites_rst_animals" class="scroll-to">CITES Review of Significant Trade</a></li>
+      {{/if}}
+      {{#if controllers.taxonConceptDocuments.citesPcDocsPresent}}
+        <li><a href="#cites_rst_plants" class="scroll-to">CITES Review of Significant Trade</a></li>
+      {{/if}}
+      {{#if controllers.taxonConceptDocuments.euSrgDocsPresent}}
+        <li><a href="#eu_srg" class="scroll-to">EU SRG</a></li>
+      {{/if}}
+      {{#if controllers.taxonConceptDocuments.otherDocsPresent}}
+        <li><a href="#other" class="scroll-to">Inter-sessional docs</a></li>
+      {{/if}}
+      </ul>
+    </li>
+    {{/unless}}
   </ul>
 
   <div class="tab-content">

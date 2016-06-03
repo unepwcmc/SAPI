@@ -1,28 +1,37 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<div class="user-edit-box">
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= devise_error_messages! %>
+  <div class="edit-container round-text-inputs">
 
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, autofocus: true %></div>
+    <h2>Change your password.</h2>
+    <%= error_message_header %>
+    <p> Please enter a new password for your account </p>
 
-  <div><%= f.label :name %><br />
-  <%= f.text_field :name %></div>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <div>
+        <%= f.label :current_password %> <br />
+        <%= error_message_for :current_password %>
+        <%= f.password_field :current_password, autocomplete: "off" %>
+      </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+      <div class="new-password">
+        <div>
+          <%= f.label :new_password %> <br />
+          <%= error_message_for :password %>
+          <%= f.password_field :password, autocomplete: "off" %>
+        </div>
 
-  <div><%= f.label :new_password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "off" %></div>
+        <div>
+          <%= f.label :new_password_confirmation %><br />
+          <%= error_message_for :password_confirmation %>
+          <%= f.password_field :password_confirmation, autocomplete: "off" %>
+        </div>
+      </div>
 
-  <div><%= f.label :new_password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %></div>
+      <div class="submit-box">
+        <div><%= f.submit "Submit", class: "round-button" %></div>
+      </div>
+    <% end %>
 
-  <div><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "off" %></div>
+  </div>
 
-  <div><%= f.submit "Update" %></div>
-<% end %>
-
-<%= link_to "Back", :back %>
+</div>

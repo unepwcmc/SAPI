@@ -8,7 +8,7 @@
       <legend>Upload documents</legend>
       <div class="form-group">
       <%= select_tag 'event-type', options_for_select(
-        @event_types.map{ |t| [t, t, {'data-path' => t.pluralize.underscore}] }
+        @event_types.map{ |t| [t[:name], t[:id], {'data-path' => t[:id].pluralize.underscore}] }
         ), {:prompt => "Select an event type"}
       %>
       <%= select_tag 'event-id',
@@ -31,21 +31,21 @@
     <fieldset>
       <legend>Filter documents</legend>
       <div class="form-group">
-        <%= select_tag 'event-type-search',
-          options_for_select(@event_types, @search.event_type), {
-            :prompt => 'Select an event type...', class: 'input-large'
+        <%= select_tag 'event_type_search',
+          options_for_select(@event_types.map{ |t| [t[:name], t[:id]] }, @search.event_type), {
+            :prompt => 'Select an event type...', class: 'input-large', name: 'event_type'
           }
         %>
 
-        <%= select_tag 'event-id-search',
+        <%= select_tag 'event_id_search',
           options_for_select(
             @events.map { |e| [e.name, e.id, {:class => e.type}] },
-            @search.event_id
+            @search.events_ids
           ), {
-            :prompt => 'Select an event...', class: 'input-large'
+            class: 'events-search', name: 'events_ids[]', multiple: true
           }
         %>
-        <%= select_tag 'document-type', options_for_select(
+        <%= select_tag 'document_type', options_for_select(
             Document.elibrary_document_types.map { |document_klass|
               [
                 document_klass.display_name,
@@ -60,7 +60,7 @@
       </div>
 
       <div class="form-group" style="padding-bottom: 8px">
-        <%= hidden_field_tag 'taxon-concepts-ids', params['taxon-concepts-ids'], {
+        <%= hidden_field_tag 'taxon_concepts_ids', params['taxon_concepts_ids'], {
           :class => 'citation-taxon-concept',
           :'data-taxonomy-id' => @taxonomy.id,
           :'data-name-status-filter' => ['A', 'N'].to_json,
@@ -68,7 +68,7 @@
           :multiple => true
         } %>
 
-        <%= select_tag 'geo-entities-ids',
+        <%= select_tag 'geo_entities_ids',
           options_from_collection_for_select(
             @geo_entities,
             :id,
@@ -78,14 +78,14 @@
           {
             :multiple => true, :class => 'citation-geo-entity'
           }
-        %>  
+        %>
 
-        <%= select_tag 'document-tags-ids',
+        <%= select_tag 'document_tags_ids',
           option_groups_from_collection_for_select(
             Document.elibrary_document_tag_types,
             :scoped,
             :display_name,
-            :id, 
+            :id,
             :name,
             @search.document_tags
           ), {
@@ -97,15 +97,15 @@
       <div class="form-group">
         <div class="input-prepend">
           <span class="add-on"><i class="icon-search"></i></span>
-          <%= text_field_tag 'document-title', @search.document_title|| nil,
+          <%= text_field_tag 'title_query', @search.title_query|| nil,
             :class => "align-on-select input-xxlarge", :placeholder => 'Enter a document title...', autocomplete: 'off' %>
         </div>
-        <%= text_field_tag 'document-date-start',
-          params["document-date-start"] || nil, class: 'align-on-select datepicker input-medium',
+        <%= text_field_tag 'document_date_start',
+          params["document_date_start"] || nil, class: 'align-on-select datepicker input-medium',
           placeholder: 'Date after...' %>
 
-        <%= text_field_tag 'document-date-end',
-          params["document-date-end"] || nil, class: 'align-on-select datepicker input-medium',
+        <%= text_field_tag 'document_date_end',
+          params["document_date_end"] || nil, class: 'align-on-select datepicker input-medium',
           placeholder: 'Date before...' %>
       </div>
 
@@ -122,4 +122,3 @@
 <%= admin_table %>
 
 <%= paginate collection %>
-

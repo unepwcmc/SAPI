@@ -6,13 +6,17 @@
       CMS
     {{/view}}
   </div>
-
-  {{view Species.TaxonConceptSearchView controllerBinding="controller"}}
-
+  <div class="search-form species">
+    <form action="#" class="search">
+      <fieldset class="taxon-search">
+      {{view Species.TaxonConceptSearchView controllerBinding="controller" showSearchButton=true}}
+      </fieldset>
+    </form>
+  </div>
   <div class="location-area popup-area">
     {{view Species.GeoEntitiesSearchButton
       selectedGeoEntitiesBinding="controller.selectedGeoEntities"
-      loadedBinding="controllers.geoEntities.loaded"
+      loadedBinding="geoEntities.loaded"
     }}
     {{view Species.GeoEntitiesSearchDropdown  controllerBinding="controller"}}
   </div>

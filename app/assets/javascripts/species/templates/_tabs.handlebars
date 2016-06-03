@@ -1,0 +1,11 @@
+<ul class="tabset top-level">
+  <li {{bind-attr class="isSearchContextSpecies:active"}}>
+    {{#linkTo 'index'}}Search for Species{{/linkTo}}
+  </li>
+  <li {{bind-attr class="isSearchContextDocuments:active :elibrary-tab"}}>
+    {{#linkTo 'elibrary'}}
+      Search for CITES Documents
+      <img class="new-tag" src="/assets/species/new-tag.png">
+    {{/linkTo}}
+  </li>
+</ul>

@@ -9,13 +9,13 @@
 #  year_to        :integer
 #  taxon          :string(255)
 #  appendix       :string(255)
-#  importer       :string(255)
-#  exporter       :string(255)
-#  origin         :string(255)
-#  term           :string(255)
-#  unit           :string(255)
-#  source         :string(255)
-#  purpose        :string(255)
+#  importer       :text
+#  exporter       :text
+#  origin         :text
+#  term           :text
+#  unit           :text
+#  source         :text
+#  purpose        :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  number_of_rows :integer

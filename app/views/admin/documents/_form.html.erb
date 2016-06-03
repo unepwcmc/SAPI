@@ -4,22 +4,37 @@
   html: { class: 'form-horizontal' } do |f| %>
 
   <%= error_messages_for(@document) %>
-
-  <% if @event %>
-    <%= f.hidden_field :event_id %>
-  <% else %>
+  
+  <% unless @document.event && @document.event.designation %>
     <div class="control-group">
-      <%= f.label :event_id, class: 'control-label' %>
+      <%= f.label :designation_id, class: 'control-label' %>
       <div class="controls">
-        <%= f.select :event_id,
+        <%= f.select :designation_id,
           options_for_select(
-            @events.map { |l| [l.name, l.id] },
-            @document.event_id
-          )
+            @designations.map { |l| [l.name, l.id] },
+            @document.designation_id
+          ), include_blank: true
         %>
       </div>
     </div>
   <% end %>
+
+  <div class="control-group">
+    <%= f.label :event_id, class: 'control-label' %>
+    <div class="controls">
+      <%= f.select :event_id,
+        options_for_select(
+          @events.map { |l| [l.name, l.id] },
+          @document.event_id
+        ), include_blank: true
+      %>
+      <% if @document.event %>
+        <p>
+          <%= link_to "Reorder #{@document.event.name} documents", show_order_admin_event_documents_path(@document.event) %>
+        </p>
+      <% end %>
+    </div>
+  </div>
 
   <div class="control-group">
     <%= f.label :title, class: 'control-label' %>
@@ -40,16 +55,19 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :date, class: 'control-label' %>
+    <%= f.label :primary_language_document_id, class: 'control-label' %>
     <div class="controls">
-      <%= f.text_field :date, :class => "datepicker", :value => @document.date_formatted %>
+      <%= f.hidden_field :primary_language_document_id, {
+        :class => 'primary-language-document',
+        :'data-init-selection' => {id: f.object.primary_language_document.try(:id), text: f.object.primary_language_document.try(:title)}.to_json,
+      } %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label :number, class: 'control-label' %>
+    <%= f.label :date, class: 'control-label' %>
     <div class="controls">
-      <%= f.text_field :number, :value => @document.number %>
+      <%= f.text_field :date, :class => "datepicker", :value => @document.date_formatted %>
     </div>
   </div>
 
@@ -72,17 +90,29 @@
           %>
         </div>
       </div>
+      <div class="control-group">
+        <%= ff.label :process_stage_id, class: 'control-label' %>
+        <div class="controls">
+          <%= ff.select :process_stage_id,
+            options_for_select(DocumentTag::ProcessStage.all.map { |ps| [ps.name, ps.id] },
+              @document.review_details.process_stage_id),
+            { :class => 'phases', :style => 'width: 220px' }
+          %>
+        </div>
+      </div>
+      <div class="control-group">
+        <%= ff.label :recommended_category, class: 'control-label' %>
+        <div class="controls">
+          <%= ff.text_area :recommended_category, :rows => 3, :value => @document.review_details.recommended_category %>
+        </div>
+      </div>
     <% end %>
   <% elsif @document.is_a?(Document::Proposal) %>
     <%= f.fields_for :proposal_details do |ff| %>
       <div class="control-group">
-        <%= ff.label :proposal_outcome_id, class: 'control-label' %>
+        <%= ff.label :proposal_number, class: 'control-label' %>
         <div class="controls">
-          <%= ff.select :proposal_outcome_id,
-            options_for_select(DocumentTag::ProposalOutcome.all.map { |po| [po.name, po.id] },
-              @document.proposal_details.proposal_outcome_id),
-            { :class => 'phases', :style => 'width: 220px' }
-          %>
+          <%= ff.text_field :proposal_number, :value => @document.proposal_details.proposal_number %>
         </div>
       </div>
 
@@ -90,6 +120,23 @@
         <%= ff.label :proposal_nature, class: 'control-label' %>
         <div class="controls">
           <%= ff.text_field :proposal_nature %>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <%= ff.label :proposal_outcome_id, class: 'control-label' %>
+        <div class="controls">
+          <%= ff.select :proposal_outcome_id,
+            options_for_select(
+              DocumentTag::ProposalOutcome.all.map { |po| [po.name, po.id] },
+              @document.proposal_details.proposal_outcome_id
+            ),
+            {
+              include_blank: true,
+              class: 'phases',
+              style: 'width: 220px'
+            }
+          %>
         </div>
       </div>
 
@@ -102,6 +149,24 @@
 
     <% end %>
   <% end %>
+
+  <div class="control-group">
+    <%= f.label :discussion_id, class: 'control-label' %>
+    <div class="controls">
+      <%= f.select :discussion_id,
+        options_for_select(DocumentTag::Discussion.order(:name).map { |d| [d.name, d.id] },
+          @document.discussion_id),
+          {include_blank: true, style: 'width: 220px'}
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :discussion_sort_index, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :discussion_sort_index %>
+    </div>
+  </div>
 
   <div class="control-group">
     <%= f.label :citations, class: 'control-label' %>

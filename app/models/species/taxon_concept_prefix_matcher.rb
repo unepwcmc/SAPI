@@ -49,6 +49,8 @@ class Species::TaxonConceptPrefixMatcher
       @query.where(:show_in_trade_internal_ac => true)
     elsif @visibility == :trade
       @query.where(:show_in_trade_ac => true)
+    elsif @visibility == :elibrary
+      @query.where("show_in_species_plus_ac OR name_status = 'N'")
     else
       @query.where(:show_in_species_plus_ac => true)
     end

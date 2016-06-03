@@ -1,0 +1,113 @@
+{{partial 'species/tabs'}}
+<div style="clear:both"></div>
+{{outlet search}}
+
+<div class="container">
+  {{#if anyDocumentsLoading}}
+    <p>Please wait... <img src="/assets/loading.gif"></p>
+  {{else}}
+    {{#if anyDocumentsPresent}}
+  <div class="result-block">
+    <table class="grouped-results-table">
+      <thead class="grouped-header">
+        <tr>
+          <th></th>
+          <th>MEETING TYPE</th>
+          <th>No of DOCUMENTS<th>
+        </tr>
+      </thead>
+      <tbody>
+        {{documents-results-header
+          isVisible=controller.citesCopProposalsDocsPresent
+          meetingType="CITES CoP Proposals"
+          documents=controller.citesCopProposalsDocuments
+          }}
+        {{documents-results
+          isVisible=controller.citesCopProposalsDocsPresent
+          eventType="CitesCop"
+          documents=controller.citesCopProposalsDocuments.docs
+          dataController=controller
+          proposalOutcome=true
+          loadMore=controller.citesCopProposalsDocsLoadMore
+          block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
+          isSignedIn=controllers.elibrarySearch.isSignedIn
+          }}
+
+        {{documents-results-header
+          isVisible=controller.citesAcDocsPresent
+          meetingType="CITES Review of Significant Trade (animals)"
+          documents=controller.citesAcDocuments
+          }}
+        {{documents-results
+          isVisible=controller.citesAcDocsPresent
+          eventType="CitesAc,CitesTc"
+          dataController=controller
+          documents=controller.citesAcDocuments.docs
+          loadMore=controller.citesAcDocsLoadMore
+          block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
+          isSignedIn=controllers.elibrarySearch.isSignedIn
+          }}
+
+        {{documents-results-header
+          isVisible=controller.citesPcDocsPresent
+          meetingType="CITES Review of Significant Trade (plants)"
+          documents=controller.citesPcDocuments
+          }}
+        {{documents-results
+          isVisible=controller.citesPcDocsPresent
+          eventType="CitesPc"
+          dataController=controller
+          documents=controller.citesPcDocuments.docs
+          loadMore=controller.citesPcDocsLoadMore
+          block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
+          isSignedIn=controllers.elibrarySearch.isSignedIn
+          }}
+
+        {{documents-results-header
+          isVisible=controller.euSrgDocsPresent
+          meetingType="EU Scientific Review Group"
+          documents=controller.euSrgDocuments
+          }}
+        {{documents-results
+          isVisible=controller.euSrgDocsPresent
+          eventType="EcSrg"
+          dataController=controller
+          documents=controller.euSrgDocuments.docs
+          loadMore=controller.euSrgDocsLoadMore
+          block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
+          isSignedIn=controllers.elibrarySearch.isSignedIn
+          }}
+
+        {{documents-results-header
+          isVisible=controller.otherDocsPresent
+          meetingType="Intersessional documents"
+          documents=controller.otherDocuments
+          }}
+        {{documents-results
+          isVisible=controller.otherDocsPresent
+          eventType="other"
+          dataController=controller
+          documents=controller.otherDocuments.docs
+          loadMore=controller.otherDocsLoadMore
+          block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
+          isSignedIn=controllers.elibrarySearch.isSignedIn
+          }}
+      </tbody>
+    </table>
+  </div>
+  {{else}}
+    <p>There are currently no documents available for your search.</p>
+    <p>For further details on specific taxa and to check for CITES listings, please refer to <a href="http://speciesplus.net">speciesplus.net</a>.</p>
+  {{/if}}
+{{/if}}
+</div>

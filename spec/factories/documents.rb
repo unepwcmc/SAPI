@@ -3,8 +3,10 @@ FactoryGirl.define do
   factory :document do
     date { Date.today }
     filename { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')) }
+    designation
     event
     type 'Document'
+    is_public false
 
     factory :review_of_significant_trade, class: Document::ReviewOfSignificantTrade do
       type 'Document::ReviewOfSignificantTrade'
@@ -15,7 +17,17 @@ FactoryGirl.define do
   end
 
   factory :document_citation do
-    document_id 1
+    document
+  end
+
+  factory :document_citation_taxon_concept do
+    document_citation
+    taxon_concept
+  end
+
+  factory :document_citation_geo_entity do
+    document_citation
+    geo_entity
   end
 
   factory :proposal_details, class: Document::ProposalDetails do

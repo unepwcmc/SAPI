@@ -1,21 +1,31 @@
-Species.GeoEntitiesSearchButton = Ember.View.extend
-  tagName: 'a'
-  href: '#'
-  classNames: ['link']
-  classNameBindings: ['loading']
-
-  loading: ( ->
-    "loading" unless @get('loaded')
-  ).property('loaded').volatile()
-
-  template: Ember.Handlebars.compile("{{view.summary}}"),
+Species.GeoEntitiesSearchButton = Ember.View.extend Species.MultipleSelectionSearchButton, Species.SearchFormDropdowns,
 
   summary: ( ->
+    short = (@get('shortPlaceholder') == true)
     if (@get('selectedGeoEntities').length == 0)
-      return "LOCATIONS"
+      if short
+        "LOCATIONS"
+      else
+        "All locations"
     else if (@get('selectedGeoEntities').length == 1)
-      return "1 LOC"
+      if short
+        "1 LOC"
+      else
+       "1 location"
     else
-      return @get('selectedGeoEntities').length + " LOCS"
+      if short
+        @get('selectedGeoEntities').length + " LOCS"
+      else
+        @get('selectedGeoEntities').length + " locations"
   ).property("selectedGeoEntities.@each")
-    
+
+  click: (event) ->
+    if @get('controller.isSearchContextDocuments') &&
+    @get('taxonConceptQuery') != @get('taxonConceptQueryLastCheck')
+      @set('taxonConceptQueryLastCheck', @get('taxonConceptQuery'))
+      if @get('taxonConceptQuery.length') >= 3
+        query = @get('taxonConceptQuery')
+      # we're in the E-Library search, need to check if
+      # filtering by taxon is required for locations
+      @get('controller.geoEntities').reload(query)
+    @handlePopupClick(event)

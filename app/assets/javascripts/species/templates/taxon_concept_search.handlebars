@@ -1,15 +1,26 @@
-<form action="#" class="search">
-  <fieldset>
-    {{view Species.TaxonConceptSearchTextField
+    {{taxon-concept-search-field
       valueBinding="controller.taxonConceptQueryForDisplay"
       queryBinding="controller.taxonConceptQuery"
       title="search"
       placeholder="Species, higher taxon, synonym or common name..."
       autocomplete="off"
     }}
-    <button {{action "openSearchPage"}}>Search</button>
-    {{view Species.TaxonConceptSearchDropdown
-      valueBinding="controller.autoCompleteTaxonConcepts"
-    }}
-  </fieldset>
-</form>
+    {{#if view.showSearchButton}}
+      <button {{action "openSearchPage"}}>Search</button>
+    {{/if}}
+    <div class="popup">
+      <ul>
+      {{#each controller.autoCompleteTaxonConcepts.meta.rank_headers}}
+        <li class="header">{{this.rank_name}}</li>
+
+        {{#each taxonConceptId in this.taxon_concept_ids}}
+          {{taxon-concept-search-suggestion
+            action="handleTaxonConceptSearchSelection"
+            taxonConceptId=taxonConceptId
+            taxonConceptQuery=controller.taxonConceptQuery
+          }}
+        {{/each}}
+
+      {{/each}}
+      </ul>
+    </div>

@@ -1,0 +1,162 @@
+table.grouped-results-table {
+  width: 100%;
+  border-collapse: separate;
+  thead.grouped-header {
+    th {
+      font-weight: bold;
+      padding: 15px 1px;
+      text-align: left;
+    }
+  }
+  tr {background: none;}
+  tbody {
+    div.no-documents { text-align: center; }
+    &:before {
+      display: block;
+      line-height: 1em;
+      color: transparent;
+    }
+    tr{
+      td{
+        padding: 10px 1px;
+        vertical-align: middle;
+        i.fa-plus-circle, i.fa-minus-circle {
+          font-size: 48px;
+          color: #648aa2;
+          margin-left: 10px;
+        }
+      }
+    }
+    tr.group {
+      td { border-top: 1px solid #DFE1E2; }
+      td .excluded-documents { font-style: italic; }
+    }
+    tr.table-row {
+      display: none;
+      & > td {
+        padding-bottom: 0;
+        width: 820px; //Temporary fix for FF on Windows
+
+      }
+    }
+  }
+}
+
+//Inner table
+div.inner-table-container {
+  display: none;
+  i {
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  table.table-header {
+    width: 100%;
+    th.event-col, th.event-date-col, th.title-col {
+      ul {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 0;
+        i.fa-caret-up { line-height: 0; }
+      }
+    }
+  }
+
+  table.table-body {
+    overflow-y: auto;
+    min-height: 100px;
+    max-height: 400px;
+    width: 100%;
+    margin-top: 10px;
+    border-top: 2px solid #DFE1E2;
+    border-bottom: 1px solid #DFE1E2;
+    -webkit-box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
+    inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
+    -moz-box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
+    inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
+    box-shadow: inset 0px 10px 10px -6px rgba(223, 225, 226, 0.75),
+    inset 0px -10px 10px -6px rgba(223, 225, 226, 0.75);
+  }
+  table {
+    width: 908px;
+    clear: both;
+    table-layout: fixed; //not always necessary
+    td { cell-spacing: 2px; }
+    td:first-child, th:first-child {
+      padding-left: 20px;
+    }
+    td { word-wrap: break-word } //not always necessary
+    th.event-col { width: 90px; }
+    th.event-date-col { width: 90px; }
+    th.title-col { width: 210px; }
+    th.language-col { width: 60px; }
+    th.language-col, td.language-col { padding-left: 10px; }
+    th.countries-col { width: 120px; }
+    th.taxon-col { width: 125px; }
+    th.taxon-col, td.taxon-col { padding-left: 10px; }
+    th.outcome-col { width: auto; }
+    th.review-phase-col { width: auto; }
+    th.outcome-col, td.outcome-col { padding-left: 10px; }
+    th.review-phase-col, td.review-phase { padding-left: 10px; }
+    td.download-col, th.download-col { width: 60px; text-align: right; padding-right:10px }
+    i.fa-sort, i.fa-download {
+      cursor: pointer;
+      color: #648aa2;
+      margin-left: 10px;
+    }
+    &.table-body tbody {
+      td{border-bottom: 1px solid #DFE1E2;}
+      td.title-col {
+        i.fa-file-pdf-o { color: #868686; }
+      }
+      input { margin-left: 28px; }
+      td.taxon-col {
+        i { font-size: 14px; }
+        .multiple-data-container {
+          position: relative;
+        }
+        .multiple-data-container:hover {z-index: 20;}
+      }
+    }
+  }
+}
+
+//TaxonConcept documents table
+#documents {
+  .grouped-results-table {
+    tr {
+      background: none;
+    }
+    tr.table-row {
+      display: block;
+      div.inner-table-container {
+        display: block;
+        table {
+          th.title-col { width: 170px; }
+          th.countries-col { width: 110px; }
+          th.taxon-col { width: 121px; }
+          th.language-col, td.language-col { padding-left: 10px; }
+          th.taxon-col, td.taxon-col { padding-left: 10px; }
+          th.outcome-col, td.outcome-col { padding-left: 10px; }
+          th.review-phase-col, td.review-phase { padding-left: 10px; }
+        }
+      }
+    }
+    th {
+      border-bottom: none;
+      color: none;
+      padding: 0;
+    }
+    td {
+      border-top: none;
+    }
+    table.table-body { margin-top: 10px; }
+  }
+}
+
+.container p {
+  margin: 20px 0 28px 0;
+  font-size: 15px;
+  color: #2D3237;
+  text-align: center;
+}

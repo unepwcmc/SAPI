@@ -1,6 +1,7 @@
-/* 
+/*
  *= require_self
+ *= require_tree ./shared
+ *= require font-awesome
  *= require ./species/all
  *= require ./pages/pages
 */
-

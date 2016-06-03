@@ -114,6 +114,17 @@
                                                           :filters => {:taxonomy => 'CMS'}) %>
       </td>
     </tr>
+    <tr>
+      <th colspan=3>Documents</th>
+    </tr>
+    <tr>
+      <td>Documents</td>
+      <td>
+        <%= link_to 'Download', admin_exports_download_path(:data_type => "Documents",
+                                                    :filters => {}) %>
+      </td>
+      <td></td>
+    </tr>
   </tbody>
 </table>
 

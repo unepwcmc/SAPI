@@ -1,4 +1,4 @@
-Species.YearSearchButton = Ember.View.extend
+Species.YearSearchButton = Ember.View.extend(Species.SearchFormDropdowns,
   tagName: 'a'
   href: '#'
   classNames: ['link']
@@ -16,3 +16,4 @@ Species.YearSearchButton = Ember.View.extend
     else
       return selectedYears.length + " YEARS"
   ).property("controller.selectedYears.@each")
+)

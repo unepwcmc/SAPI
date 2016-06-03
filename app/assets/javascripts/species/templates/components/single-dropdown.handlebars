@@ -1,0 +1,27 @@
+<label>{{title}}</label>
+{{view Species.SingleDropdownButton placeholder=placeholderOrSelection}}
+<div class="popup-clickable popup-holder01">
+  <div class="popup">
+    <div class="search-block01">
+      <strong class="title01">SELECTED {{title}}</strong>
+      {{#if selection}}
+      <ul>
+        <li>{{selection.name}} <span {{action "handleDeselection" selection}} class="delete">x</span></li>
+      </ul>
+      {{/if}}
+    </div>
+    <div class="list-holder">
+      <ul>
+        <li class="header">
+          <ul>
+            {{#each values}}
+            <li {{action "handleSelection" this}}>{{this.name}}</li>
+            {{else}}
+            <li>No matches</li>
+            {{/each}}
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

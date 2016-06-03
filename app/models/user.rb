@@ -31,6 +31,19 @@ class User < ActiveRecord::Base
     :remember_me, :role, :terms_and_conditions, :is_cites_authority,
     :organisation, :geo_entity_id
 
+  MANAGER = 'admin'
+  CONTRIBUTOR = 'default' # nonsense
+  ELIBRARY_USER = 'elibrary'
+  API_USER = 'api'
+  ROLES = [MANAGER, CONTRIBUTOR, ELIBRARY_USER, API_USER]
+  NON_ADMIN_ROLES = [ELIBRARY_USER, API_USER]
+  ROLES_FOR_DISPLAY = {
+    MANAGER => 'Manager',
+    CONTRIBUTOR => 'Contributor',
+    ELIBRARY_USER => 'E-library User',
+    API_USER => 'API User'
+  }
+
   has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
   has_many :ahoy_events, dependent: :nullify, class_name: 'Ahoy::Event'
   has_many :api_requests
@@ -38,32 +51,32 @@ class User < ActiveRecord::Base
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
-  validates :role, inclusion: { in: ['default', 'admin', 'api'] },
-                   presence: true
+  validates :role, inclusion: { in: ROLES }, presence: true
   validates :organisation, presence: true
   before_create :set_default_role
 
+  def is_manager?
+    self.role == MANAGER
+  end
+
   def is_contributor?
-    self.role == 'default'
+    self.role == CONTRIBUTOR
   end
 
-  def is_admin?
-    self.role == 'admin'
+  def is_elibrary_user?
+    self.role == ELIBRARY_USER
   end
 
-  def is_api?
-    self.role == 'api'
+  def is_api_user?
+    self.role == API_USER
+  end
+
+  def is_manager_or_contributor?
+    is_manager? || is_contributor?
   end
 
   def role_for_display
-    case self.role
-    when 'default'
-      "Contributor"
-    when 'admin'
-      "Manager"
-    when 'api'
-      "API User"
-    end
+    ROLES_FOR_DISPLAY[self.role] || '(empty)'
   end
 
   def can_be_deleted?

@@ -43,7 +43,7 @@ Ember.Handlebars.registerHelper 'getItem', (id, options) ->
   field = options.hash.field
   model = options.hash.model
   Species[model].find(id).get(field)
-  
+
 Ember.Handlebars.registerHelper 'sizeGt', (str, options) ->
   str = Ember.Handlebars.get(this, str, options)
   if str.length > options.hash.max then options.fn(@) else options.inverse(@)
@@ -52,3 +52,9 @@ Ember.Handlebars.registerHelper 'tolower', (str, options) ->
   str = Ember.Handlebars.get(this, str)
   defaultString = options.hash?.default or ""
   if str then str.toLowerCase() else defaultString
+
+Ember.Handlebars.helper 'truncate', (text, options) ->
+  limit = options.hash.limit || 60
+  if text.length > limit
+    text = text.substr(0, limit - 3) + "..."
+  return text

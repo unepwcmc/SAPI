@@ -6,7 +6,7 @@ FactoryGirl.define do
     email { "#{name}@test.pl" }
     password 'asdfasdf'
     password_confirmation { password }
-    role 'admin'
+    role User::MANAGER
     is_cites_authority false
     organisation 'WCMC'
   end
@@ -33,6 +33,7 @@ FactoryGirl.define do
   factory :event do
     sequence(:name) {|n| "CoP#{n}"}
     effective_at '2011-01-01'
+    published_at '2011-02-01'
     designation
 
     factory :eu_regulation, :class => EuRegulation do

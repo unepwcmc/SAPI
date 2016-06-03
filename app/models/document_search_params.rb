@@ -1,22 +1,28 @@
 # Constructs a normalised list of parameters, with non-recognised params
 # removed.
 #
-# Array parameters are sorted for caching purposes.
 class DocumentSearchParams < Hash
+  include SearchParamSanitiser
+
   def initialize(params)
     sanitized_params = {
-      event_id: params['event-id-search'] || params['event_id'],
-      event_type: params['event-type-search'],
-      document_type: params['document-type'],
-      document_title: params['document-title'] ? params['document-title'].strip : nil,
-      document_date_start: (Date.parse(params['document-date-start']) rescue nil),
-      document_date_end: (Date.parse(params['document-date-end']) rescue nil),
-      taxon_concepts_ids: (params['taxon-concepts-ids'].split(',').map(&:to_i) rescue []),
-      geo_entities_ids: (params['geo-entities-ids'].map(&:to_i) rescue []),
-      document_tags_ids: (params['document-tags-ids'].map(&:to_i) rescue []),
-      page: params[:page] && params[:page].to_i > 0 ? params[:page].to_i : 1,
-      per_page: params[:per_page] && params[:per_page].to_i > 0 ? params[:per_page].to_i : 25
+      events_ids: sanitise_integer_array(params['events_ids']),
+      event_type: sanitise_string(params['event_type']),
+      document_type: sanitise_string(params['document_type']),
+      title_query: sanitise_string(params['title_query']),
+      document_date_start: (Date.parse(params['document_date_start']) rescue nil),
+      document_date_end: (Date.parse(params['document_date_end']) rescue nil),
+      taxon_concepts_ids: sanitise_integer_array(params['taxon_concepts_ids']),
+      geo_entities_ids: sanitise_integer_array(params['geo_entities_ids']),
+      document_tags_ids: sanitise_integer_array(params['document_tags_ids']) + [
+        sanitise_positive_integer(params['proposal_outcome_id']),
+        sanitise_positive_integer(params['review_phase_id'])
+      ].compact,
+      show_private: sanitise_boolean(params[:show_private], false),
+      page: sanitise_positive_integer(params[:page], 1),
+      per_page: sanitise_positive_integer(params[:per_page], 25)
     }
+
     super(sanitized_params)
     self.merge!(sanitized_params)
   end

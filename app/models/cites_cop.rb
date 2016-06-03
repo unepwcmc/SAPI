@@ -20,6 +20,7 @@
 #  created_by_id        :integer
 #  extended_description :text
 #  multilingual_url     :text
+#  elib_legacy_id       :integer
 #
 
 class CitesCop < Event
