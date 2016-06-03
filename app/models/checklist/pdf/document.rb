@@ -41,7 +41,7 @@ module Checklist::Pdf::Document
     end
 
     @template_tex = [tmp_dir_path, "/#{@input_name}.tex"].join
-    @tmp_tex    = [tmp_dir_path, "/_#{@input_name}.tex"].join
+    @tmp_tex = [tmp_dir_path, "/_#{@input_name}.tex"].join
     # create the dynamic part
     File.open(@tmp_tex, "wb") do |tex|
       yield tex

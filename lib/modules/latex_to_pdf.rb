@@ -60,7 +60,7 @@ class LatexToPdf
             '>' => 'greater'
           }
 
-          def latex_esc(text)   # :nodoc:
+          def latex_esc(text) # :nodoc:
             text.gsub(ESCAPE_RE) {|m|
               if $1
                 "\\#{m}"

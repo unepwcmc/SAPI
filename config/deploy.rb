@@ -95,7 +95,7 @@ end
 
 require 'yaml'
 require 'json'
-secrets =  YAML.load(File.open('config/secrets.yml'))
+secrets = YAML.load(File.open('config/secrets.yml'))
 
 set :slack_token, secrets["development"]["capistrano_slack"] # comes from inbound webhook integration
 set :api_token, secrets["development"]["api_token"]

@@ -68,9 +68,9 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     headers = [
       'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
       'Genus', 'Species', 'Subspecies',
-      'Full Name', 'Rank', 'Date of Decision',  'Valid since', 'Party',
-      'EU Decision', 'Source',  'Term',
-      'Notes', 'Document',  "Valid on Date: #{DateTime.now.strftime('%d/%m/%Y')}"
+      'Full Name', 'Rank', 'Date of Decision', 'Valid since', 'Party',
+      'EU Decision', 'Source', 'Term',
+      'Notes', 'Document', "Valid on Date: #{DateTime.now.strftime('%d/%m/%Y')}"
     ]
   end
 
