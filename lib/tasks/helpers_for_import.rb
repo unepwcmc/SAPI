@@ -71,7 +71,7 @@ class CsvToDbMap
       'name_es' => 'name_es varchar',
       'name_fr' => 'name_fr varchar'
     },
-    #TODO legacy type for countries?
+    #TODO: legacy type for countries?
     'countries_import' => {
       'ISO2' => 'iso2 varchar',
       'short_name' => 'name varchar',

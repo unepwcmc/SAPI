@@ -48,7 +48,7 @@ class Document < ActiveRecord::Base
   validates :title, presence: true
   validates :date, presence: true
   validates_uniqueness_of :primary_language_document_id, scope: :language_id, allow_nil: true
-  # TODO validates inclusion of type in available types
+  # TODO: validates inclusion of type in available types
   accepts_nested_attributes_for :citations, :allow_destroy => true,
     :reject_if => proc { |attributes|
     attributes['stringy_taxon_concept_ids'].blank? && (

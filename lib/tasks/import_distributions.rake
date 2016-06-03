@@ -41,7 +41,7 @@ namespace :import do
 
           ) AS subquery
           SQL
-        #TODO do sth about those unknown distributions!
+        #TODO: do sth about those unknown distributions!
         ActiveRecord::Base.connection.execute(sql)
       end
     end

@@ -44,7 +44,7 @@ class Trade::Sandbox
   end
 
   def shipments=(new_shipments)
-    #TODO handle errors
+    #TODO: handle errors
     new_shipments.each do |shipment|
       s = @ar_klass.find_by_id(shipment.delete('id'))
       s.delete_or_update_attributes(shipment)

@@ -281,25 +281,6 @@ Style/ColonMethodCall:
     - 'lib/tasks/db_migrate_plpgsql.rake'
     - 'lib/tasks/import.rake'
 
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: Keywords.
-# Keywords: TODO, FIXME, OPTIMIZE, HACK, REVIEW
-Style/CommentAnnotation:
-  Exclude:
-    - 'app/controllers/api/v1/geo_entities_controller.rb'
-    - 'app/controllers/checklist/geo_entities_controller.rb'
-    - 'app/models/checklist/checklist.rb'
-    - 'app/models/checklist/pdf/index_content.rb'
-    - 'app/models/checklist/timeline.rb'
-    - 'app/models/document.rb'
-    - 'app/models/trade/distinct_values_validation_rule.rb'
-    - 'app/models/trade/sandbox.rb'
-    - 'app/serializers/checklist/checklist_serializer.rb'
-    - 'config/routes.rb'
-    - 'lib/tasks/helpers_for_import.rb'
-    - 'lib/tasks/import_distributions.rake'
-
 # Offense count: 5
 # Cop supports --auto-correct.
 Style/CommentIndentation:
