@@ -331,21 +331,6 @@ Style/EmptyLinesAroundBlockBody:
 Style/EmptyLinesAroundClassBody:
   Enabled: false
 
-# Offense count: 11
-# Cop supports --auto-correct.
-Style/EmptyLinesAroundMethodBody:
-  Exclude:
-    - 'app/models/listing_change_observer.rb'
-    - 'app/models/m_taxon_concept_filter_by_appendix_population_query.rb'
-    - 'app/models/nomenclature_change/status_change/processor_helpers.rb'
-    - 'app/models/species/cites_listings_export.rb'
-    - 'app/models/trade/filter.rb'
-    - 'db/migrate/20140606102741_create_nomenclature_change_inputs.rb'
-    - 'db/migrate/20140811101246_add_timestamps_to_documents.rb'
-    - 'db/migrate/20140918090432_create_document_proposal_details.rb'
-    - 'db/migrate/20141014125738_change_multi_permit_number_columns_to_text.rb'
-    - 'db/migrate/20150421112808_create_unique_index_on_taxon_concept_references.rb'
-
 # Offense count: 71
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

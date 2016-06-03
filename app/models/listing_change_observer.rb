@@ -1,7 +1,6 @@
 class ListingChangeObserver < ActiveRecord::Observer
 
   def before_save(listing_change)
-
     #check if annotation should be deleted
     if listing_change.annotation &&
        listing_change.annotation.short_note_en.blank? &&

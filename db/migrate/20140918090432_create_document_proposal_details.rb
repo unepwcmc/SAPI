@@ -13,6 +13,5 @@ class CreateDocumentProposalDetails < ActiveRecord::Migration
       column: :document_id
     add_foreign_key :proposal_details, :document_tags, name: :proposal_details_proposal_outcome_id_fk,
       column: :proposal_outcome_id
-
   end
 end

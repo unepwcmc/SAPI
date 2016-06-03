@@ -14,7 +14,6 @@ module NomenclatureChange::StatusChange::ProcessorHelpers
     else
       NomenclatureChange::ReassignmentCopyProcessor.new(@input, output)
     end
-
   end
 
   # Generate a summary based on the subprocessors chain

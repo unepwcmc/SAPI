@@ -37,7 +37,6 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
     ).where(
       "countries_ids_ary && ARRAY[#{@geo_entities_in_clause}]"
     )
-
   end
 
 end
