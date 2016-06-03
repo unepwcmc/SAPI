@@ -799,17 +799,6 @@ Style/TrailingCommaInArguments:
 
 # Offense count: 7
 # Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
-# SupportedStyles: comma, consistent_comma, no_comma
-Style/TrailingCommaInLiteral:
-  Exclude:
-    - 'app/controllers/admin/iucn_mappings_controller.rb'
-    - 'config/deploy.rb'
-    - 'lib/modules/trade/appendix_report.rb'
-    - 'spec/controllers/cites_trade/shipments_controller_spec.rb'
-
-# Offense count: 7
-# Cop supports --auto-correct.
 Style/UnlessElse:
   Exclude:
     - 'app/controllers/api/v1/documents_controller.rb'
