@@ -44,7 +44,7 @@ class Trade::Filter
           Rank.in_range(Rank::SPECIES, Rank::SPECIES)
         end
       taxon_concepts = MTaxonConcept.where(id: @taxon_concepts_ids)
-      taxon_concepts_conditions = 
+      taxon_concepts_conditions =
         taxon_concepts.map do |tc|
           [:id, tc.id]
         end + taxon_concepts.select do |tc|
@@ -60,7 +60,7 @@ class Trade::Filter
     unless @reported_taxon_concepts_ids.empty?
       cascading_ranks = Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
       reported_taxon_concepts = MTaxonConcept.where(id: @reported_taxon_concepts_ids)
-      reported_taxon_concepts_conditions = 
+      reported_taxon_concepts_conditions =
         reported_taxon_concepts.map do |tc|
           [:id, tc.id]
         end + reported_taxon_concepts.select do |tc|

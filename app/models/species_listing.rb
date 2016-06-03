@@ -21,9 +21,9 @@ class SpeciesListing < ActiveRecord::Base
 
   def self.search(query)
     if query.present?
-      where("UPPER(species_listings.name) LIKE UPPER(:query) 
+      where("UPPER(species_listings.name) LIKE UPPER(:query)
             OR UPPER(species_listings.abbreviation) LIKE UPPER(:query)
-            OR UPPER(designations.name) LIKE UPPER(:query)", 
+            OR UPPER(designations.name) LIKE UPPER(:query)",
             :query => "%#{query}%").
         joins(:designation)
     else

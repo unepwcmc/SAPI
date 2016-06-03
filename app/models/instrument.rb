@@ -19,7 +19,7 @@ class Instrument < ActiveRecord::Base
 
   def self.search(query)
     if query.present?
-      where("UPPER(name) LIKE UPPER(:query)", 
+      where("UPPER(name) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
       scoped

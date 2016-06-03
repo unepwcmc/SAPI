@@ -51,7 +51,7 @@ class Checklist::Csv::History < Checklist::History
       "strip_tags(cites_listing_changes_mview.nomenclature_note_en) AS nomenclature_note_en"
     ]
   end
- 
+
   def taxon_concepts_csv_columns
     [
       :id,

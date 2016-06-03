@@ -99,7 +99,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
     specify{ subject.validation_errors.should be_empty }
   end
 
-  describe :create do 
+  describe :create do
     before(:each){ Trade::CsvSourceFileUploader.enable_processing = true }
     context "when blank lines in import file" do
       subject{

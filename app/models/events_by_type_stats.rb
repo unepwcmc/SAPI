@@ -32,5 +32,5 @@ class EventsByTypeStats
       ) q
       SQL
     ).select([:start_date, :taxon_concept_cnt, :search_cnt])
-  end 
+  end
 end

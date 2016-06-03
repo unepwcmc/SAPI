@@ -1,8 +1,8 @@
 shared_context "Boa constrictor" do
   let(:en){
     create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
-    create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')   
-    create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') 
+    create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')
+    create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG')
   }
   before(:all) do
     @order = create_cites_eu_order(

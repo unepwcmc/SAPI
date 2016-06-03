@@ -20,8 +20,8 @@ class TermTradeCodesPair < ActiveRecord::Base
 
   def self.search(query)
     if query.present?
-      where("UPPER(trade_codes.code) LIKE UPPER(:query) 
-            OR UPPER(terms.code) LIKE UPPER(:query)", 
+      where("UPPER(trade_codes.code) LIKE UPPER(:query)
+            OR UPPER(terms.code) LIKE UPPER(:query)",
             :query => "%#{query}%").
       joins(<<-SQL
           LEFT JOIN trade_codes

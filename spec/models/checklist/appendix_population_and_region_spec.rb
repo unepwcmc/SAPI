@@ -1,7 +1,7 @@
 #Encoding: UTF-8
 require 'spec_helper'
 
-describe Checklist do 
+describe Checklist do
   include_context "Pecari tajacu"
 
   context "search by cites populations" do

@@ -808,11 +808,6 @@ Style/TrailingCommaInLiteral:
     - 'lib/modules/trade/appendix_report.rb'
     - 'spec/controllers/cites_trade/shipments_controller_spec.rb'
 
-# Offense count: 98
-# Cop supports --auto-correct.
-Style/TrailingWhitespace:
-  Enabled: false
-
 # Offense count: 7
 # Cop supports --auto-correct.
 Style/UnlessElse:

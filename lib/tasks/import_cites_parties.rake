@@ -14,7 +14,7 @@ namespace :import do
           ON designations.name = '#{Designation::CITES}'
           EXCEPT
             SELECT q.designation_id, q.geo_entity_id FROM designation_geo_entities q
-            INNER JOIN designations ON q.designation_id = designations.id 
+            INNER JOIN designations ON q.designation_id = designations.id
             WHERE designations.name = '#{Designation::CITES}'
       ) AS subquery
     SQL
