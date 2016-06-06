@@ -25,6 +25,7 @@ $(document).ready(function(){
         var error = "<div class='error-box'><p class='error-message'>" +
           xhr.responseText + "</p></div>"
         $('.login-header').addClass('less-margin');
+        $('.error-box').remove()
         $('.login-error').append(error)
       }
     });
