@@ -31,17 +31,8 @@ class NomenclatureChange::Lump < NomenclatureChange
     message: "%{value} is not a valid status"
   }
   validate :required_inputs, if: :inputs_or_submitting?
-  validate :required_inputs_ranks, if: Proc.new{ |nc|
-    !nc.inputs.empty? && nc.inputs_or_submitting?
-  }
   validate :required_outputs, if: :outputs_or_submitting?
-  validate :required_ranks, if: Proc.new{ |nc|
-    nc.output && nc.outputs_or_submitting?
-  }
   before_validation :set_output_name_status, if: Proc.new{ |nc|
-    !nc.inputs.empty? && nc.output && nc.outputs_or_submitting?
-  }
-  before_validation :set_output_rank_id, if: Proc.new{ |nc|
     !nc.inputs.empty? && nc.output && nc.outputs_or_submitting?
   }
   before_save :build_auto_reassignments, if: :notes?
@@ -63,34 +54,9 @@ class NomenclatureChange::Lump < NomenclatureChange
     end
   end
 
-  def required_inputs_ranks
-    if inputs.map{ |i| i.taxon_concept.try(:rank_id) }.uniq.size > 1
-      errors.add(:inputs, "must be of same rank")
-      return false
-    end
-  end
-
   def required_outputs
     unless output
       errors.add(:output, "Must have one output")
-      return false
-    end
-  end
-
-  def required_ranks
-    if inputs.first.try(:taxon_concept).try(:rank_id) != (
-        output.will_create_taxon? ?
-          output.new_rank_id :
-          output.try(:taxon_concept).try(:rank_id)
-        )
-      errors.add(:output, "must be at same rank as inputs")
-      return false
-    end
-  end
-
-  def required_different_name
-    if output.taxon_name_already_existing? && !output.new_full_name.nil?
-      errors.add(:output, "Name already existing")
       return false
     end
   end
@@ -101,15 +67,6 @@ class NomenclatureChange::Lump < NomenclatureChange
       output.taxon_concept && output.taxon_concept.name_status != 'A'
       )
       output.new_name_status = 'A'
-    end
-  end
-
-  def set_output_rank_id
-    if output.new_rank_id.blank? && (
-      output.new_scientific_name.present? ||
-      output.taxon_concept && output.taxon_concept.rank_id != new_output_rank.id
-      )
-      output.new_rank_id = new_output_rank.id
     end
   end
 

@@ -1,0 +1,44 @@
+<%= form_for [:admin, @taxon_concept], :remote => true, :namespace => 'trade_name' do |f| %>
+  <%= error_messages_for(@taxon_concept) %>
+  <%= f.hidden_field :name_status, value: 'T' %>
+
+  <div class="control-group">
+    <label>Taxonomy</label>
+    <%= f.select :taxonomy_id,
+      options_from_collection_for_select(
+        @taxonomies, :id, :name, @taxon_concept && @taxon_concept.taxonomy_id
+      ),
+      {},
+      {class: 'taxonomy-selector'}
+    %>
+  </div>
+  <div class="control-group">
+    <label>Rank</label>
+    <%= f.select :rank_id,
+      options_from_collection_for_select(
+        @ranks, :id, :name, @taxon_concept && @taxon_concept.rank_id
+      ),
+      {},
+      {class: 'rank-selector'}
+    %>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Accepted names</label>
+    <div class="controls">
+      <%= f.text_field :accepted_names_for_trade_name_ids, {
+        class: 'taxon-concept-multiple',
+        :'data-name-status-filter' => ['A'].to_json,
+        :'data-name-status' => 'A',
+        :'data-name' => TaxonConcept.where(id: @taxon_concept.accepted_names_for_trade_name_ids).pluck(:full_name).to_s
+      } %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label>Trade name</label>
+    <%= f.text_field :scientific_name %>
+  </div>
+  <div class="control-group">
+    <label>Author & year</label>
+    <%= f.text_field :author_year %>
+  </div>
+<% end %>

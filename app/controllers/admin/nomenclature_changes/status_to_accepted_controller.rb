@@ -8,10 +8,8 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
     when :primary_output
       set_events
       set_taxonomy
+      set_ranks
       builder.build_primary_output
-    when :parent
-      skip_or_previous_step unless @nomenclature_change.needs_to_set_parent?
-      set_taxonomy
     when :summary
       processor = klass::Processor.new(@nomenclature_change)
       @summary = processor.summary
@@ -31,9 +29,8 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
       unless success
         set_events
         set_taxonomy
+        set_ranks
       end
-    when :parent
-      set_taxonomy unless success
     end
     render_wizard @nomenclature_change
   end

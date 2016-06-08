@@ -31,13 +31,17 @@
 # Outputs may be new taxon concepts, created as a result of the nomenclature
 # change.
 class NomenclatureChange::Output < ActiveRecord::Base
+  include PgArrayParser
   track_who_does_it
+  attr_accessor :output_type # New taxon, Existing subspecies, Existing taxon
   attr_accessible :nomenclature_change_id, :taxon_concept_id,
-    :new_taxon_concept_id, :new_scientific_name, :new_author_year,
-    :new_name_status, :new_parent_id, :new_rank_id,
+    :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
+    :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
     :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
     :parent_reassignments_attributes, :name_reassignments_attributes,
-    :distribution_reassignments_attributes, :legislation_reassignments_attributes
+    :distribution_reassignments_attributes, :legislation_reassignments_attributes,
+    :tag_list, :output_type
+
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
   belongs_to :parent, :class_name => TaxonConcept, :foreign_key => :parent_id
@@ -68,15 +72,26 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy
   belongs_to :new_parent, :class_name => TaxonConcept, :foreign_key => :new_parent_id
   belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id
+
   validates :nomenclature_change, :presence => true
   validates :new_scientific_name, :presence => true,
     :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validates :new_parent_id, :presence => true,
     :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validate :validate_tmp_taxon_concept,
-    :if => Proc.new { |c| c.will_create_taxon? || c.will_update_taxon? }
+    :if => Proc.new { |c| (c.will_create_taxon? || c.will_update_taxon?) }
   before_validation :populate_taxon_concept_fields,
     :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
+
+
+  def tag_list
+    parse_pg_array(read_attribute(:tag_list)||"").compact
+  end
+
+  def tag_list=(ary)
+    write_attribute(:tag_list, "{#{ary && ary.join(',')}}")
+  end
+
 
   def populate_taxon_concept_fields
     self.parent_id = taxon_concept.parent_id_changed? ? taxon_concept.parent_id_was : taxon_concept.parent_id
@@ -123,18 +138,28 @@ class NomenclatureChange::Output < ActiveRecord::Base
   end
 
   def tmp_taxon_concept
+    name_status_to_save = (new_name_status.present? ? new_name_status : name_status)
+    scientific_name = if ['A', 'N'].include?(name_status_to_save)
+      display_full_name.split.last
+    else
+      display_full_name
+    end
     taxon_concept_attrs = {
-      :parent_id => new_parent_id || parent_id,
-      :rank_id => new_rank_id || rank_id,
-      :author_year => (new_author_year.present? ? new_author_year : author_year),
-      :name_status => (new_name_status.present? ? new_name_status : name_status)
+      parent_id: new_parent_id || parent_id,
+      rank_id: new_rank_id || rank_id,
+      author_year: (new_author_year.present? ? new_author_year : author_year),
+      name_status: name_status_to_save,
+      scientific_name: scientific_name
     }
+
     if will_create_taxon?
-      taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+      taxonomy = (taxonomy_id.present? ? Taxonomy.find(taxonomy_id) :
+        Taxonomy.find_by_name(Taxonomy::CITES_EU)
+      )
       TaxonConcept.new(
         taxon_concept_attrs.merge({
-          :taxonomy_id => taxonomy.id,
-          :full_name => display_full_name
+          taxonomy_id: taxonomy.id,
+          tag_list: tag_list
         })
       )
     elsif will_update_taxon?
@@ -158,30 +183,26 @@ class NomenclatureChange::Output < ActiveRecord::Base
     end
   end
 
-  def needs_public_note?
-    if nomenclature_change.is_a?(NomenclatureChange::StatusToSynonym) ||
-      nomenclature_change.is_a?(NomenclatureChange::StatusSwap) &&
-      new_name_status != 'A'
-      false
+  def expected_parent_name
+    if rank.name == Rank::SPECIES
+      display_full_name.split[0]
+    elsif [Rank::SUBSPECIES, Rank::VARIETY].include?(rank.name)
+      display_full_name.split[0..1].join (' ')
     else
-      true
+      nil
     end
   end
 
-  def taxon_name_already_existing?
-    return !TaxonConcept.where("lower(full_name) = ?", display_full_name.downcase).empty?
-  end
-
   def default_parent
-    if name_status == 'T' &&
-      Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(rank.name)
+    if ['S', 'T'].include? name_status &&
+      parent_full_name = expected_parent_name
       TaxonConcept.where(
         taxonomy_id: Taxonomy.find_by_name(Taxonomy::CITES_EU).try(:id),
         rank_id: Rank.find_by_name(rank.parent_rank_name).try(:id),
         name_status: 'A'
       ).where(
         'UPPER(SQUISH_NULL(full_name)) = UPPER(?)',
-        display_full_name.split.first
+        parent_full_name
       ).first
     else
       new_parent

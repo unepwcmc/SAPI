@@ -1,4 +1,5 @@
 #Encoding: utf-8
+
 FactoryGirl.define do
 
   factory :user do
@@ -56,26 +57,6 @@ FactoryGirl.define do
 
   factory :taxon_name do
     sequence(:scientific_name) {|n| "Lupus#{n}"}
-  end
-
-  factory :rank do
-    sequence(:name) {|n| "rank#{n}"}
-    display_name_en { name }
-    taxonomic_position '1'
-  end
-
-  factory :taxon_concept, :aliases => [:other_taxon_concept] do
-    taxonomy
-    rank
-    taxon_name
-    taxonomic_position '1'
-    name_status 'A'
-    data {}
-    listing {}
-    parent_scientific_name ''
-    accepted_scientific_name ''
-    hybrid_parent_scientific_name ''
-    other_hybrid_parent_scientific_name ''
   end
 
   factory :cites_suspension do

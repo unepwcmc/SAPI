@@ -1,5 +1,5 @@
 $(document).ready ->
-  defaultTaxonSelect2Options = {
+  window.defaultTaxonSelect2Options = {
     placeholder: 'Start typing scientific name'
     width: '300px'
     minimumInputLength: 3
@@ -8,17 +8,23 @@ $(document).ready ->
     initSelection: (element, callback) =>
       id = $(element).val()
       if (id != null && id != '')
-        callback({id: id, text: $(element).attr('data-name') + ' ' + $(element).attr('data-name-status')})
+        callback({id: id, text: $(element).data('name') + ' ' + $(element).data('name-status')})
 
     ajax:
       url: '/admin/taxon_concepts/autocomplete'
       dataType: 'json'
       data: (query, page) ->
+        form = $(@).closest('form')
+        taxonomySelector = form && form.find('.taxonomy-selector')
+        rankSelector = form && form.find('.rank-selector')
         search_params:
           scientific_name: query
-          name_status: this.data('name-status-filter')
+          name_status: @data('name-status-filter')
           taxonomy:
-            id: this.data('taxonomy-id')
+            id: taxonomySelector && taxonomySelector.val() || @data('taxonomy-id')
+          rank:
+            id: rankSelector && rankSelector.val() || @data('rank-id')
+            scope: $(@).attr('data-rank-scope')
         per_page: 25
         page: 1
       results: (data, page) => # parse the results into the format expected by Select2.
@@ -27,28 +33,37 @@ $(document).ready ->
           text: tc.full_name + ' ' + tc.name_status
         results: formatted_taxon_concepts
   }
-  $('.taxon-concept').select2(defaultTaxonSelect2Options)
+  window.multiTaxonSelect2Options = {
+    multiple: true,
+    initSelection: (element, callback) =>
+      elementValue = $(element).val()
+      # Reset value attribute to let Select2 work properly when submitting the values again
+      $(element).attr('value','')
+      if elementValue?
+        ids = elementValue.match(/({|\[)(.*)(}|\])/)[2]
+        names = $(element).data('name')
+        name_status = $(element).data('name-status')
+        result = []
+        if ids != ''
+          ids = ids.split(',')
+          for id, i in ids
+            result.push({id: id, text: names && names[i] + ' ' + name_status})
+        callback(result)
+  }
+  window.max2Select2Options = {
+    maximumSelectionSize: 2,
+    formatSelectionTooBig: (limit) ->
+      return 'You can only select ' + limit + ' items'
+  }
+
+  $('.taxon-concept').select2(window.defaultTaxonSelect2Options)
+  $('.taxon-concept-multiple').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options))
+  $('.taxon-concept-multiple-max-2').select2($.extend({}, window.defaultTaxonSelect2Options, window.multiTaxonSelect2Options, window.max2Select2Options))
   $('.taxon-concept').on('change', (event) ->
     return false unless event.val
     $.when($.ajax( '/admin/taxon_concepts/' + event.val + '.json' ) ).then(( data, textStatus, jqXHR ) =>
       $(this).attr('data-name', data.full_name)
       $(this).attr('data-name-status', data.name_status)
-      if $(this).hasClass('status-change')
-        # reload the name status dropdown based on selection
-        statusDropdown = $(this).closest('.fields').find('select')
-        statusFrom = data.name_status
-        $(statusDropdown).find('option').attr('disabled', true)
-        statusMap =
-          'A': ['S']
-          'N': ['A', 'S']
-          'S': ['A']
-          'T': ['A', 'S']
-        $(statusDropdown).find('option[value=' + statusFrom + ']').removeAttr('selected')
-        defaultStatus = statusMap[statusFrom][0]
-        $(statusDropdown).find('option[value=' + defaultStatus + ']').attr('selected', true)
-        $.each(statusMap[statusFrom], (i, status) ->
-          $(statusDropdown).find('option[value=' + status + ']').removeAttr('disabled')
-        )
     )
     if $(this).hasClass('clear-others')
       # reset selection in other taxon concept select2 instances
@@ -65,7 +80,7 @@ $(document).ready ->
     # it's a jQuery object already
     taxonField = field.find('.taxon-concept')
     # and activate select2
-    taxonField.select2(defaultTaxonSelect2Options)
+    taxonField.select2(window.defaultTaxonSelect2Options)
   )
 
   simpleTaxonSelect2Options = {
@@ -102,11 +117,11 @@ $(document).ready ->
   $('form').on('click', '.output-radio', (e) ->
     value = $(this).val()
     switch value
-      when "New taxon"
+      when "new_taxon"
         NewTaxonForm(this)
-      when "Existing taxon"
+      when "existing_taxon"
         ExistingTaxonForm(this)
-      when "Existing subspecies"
+      when "existing_subspecies"
         UpgradedTaxonForm(this)
   )
 
@@ -121,41 +136,48 @@ $(document).ready ->
     input_taxon.show()
     input_taxon.closest('.control-group').find('label').show()
 
+  ShowUpgradeInfo = (obj) ->
+    $(obj).closest('.fields').find('.upgrade-info').first().show()
+
   HideUpgradeInfo = (obj) ->
     upgrade_info = $(obj).closest('.fields').find('.upgrade-info')
     upgrade_info.first().hide()
     upgrade_info.find('input').prop("value", '')
     $(obj).closest('.fields').find('.parent-taxon').select2('data',null)
 
+  ShowEgLabel = (obj) ->
+    $(obj).closest('.fields').find('.new-scientific-name-eg').show()
+
+  HideEgLabel = (obj) ->
+    $(obj).closest('.fields').find('.new-scientific-name-eg').hide()
+
   NewTaxonForm = (obj) ->
     HideInputTaxon(obj)
-    $(obj).closest('.fields').find('.upgrade-info').first().show()
+    ShowUpgradeInfo(obj)
+    ShowEgLabel(obj)
 
   ExistingTaxonForm = (obj) ->
     ShowInputTaxon(obj)
     HideUpgradeInfo(obj)
+    HideEgLabel(obj)
 
   UpgradedTaxonForm = (obj) ->
     ShowInputTaxon(obj)
-    $(obj).closest('.fields').find('.upgrade-info').first().show()
+    ShowUpgradeInfo(obj)
+    HideEgLabel(obj)
 
   DefaultExistingTaxon = (obj) ->
-    $(obj).find('.output-radio[value="Existing taxon"]').attr("checked","checked")
+    $(obj).find('.output-radio[value="existing_taxon"]').attr("checked","checked")
     ExistingTaxonForm(obj)
 
   OutputsDefaultConfiguration = ->
     $('.fields').each (index) ->
-      taxon_concept = $(this).find('input.input-taxon')
-      parent = $(this).find('input.parent-taxon')
-
-      if typeof taxon_concept.attr("data-name") == 'undefined'
-        $(this).find('.output-radio[value="New taxon"]').attr("checked","checked")
+      outputType = $(this).find('input[type=radio]:checked')
+      if outputType.val() == 'new_taxon'
         NewTaxonForm(this)
-      else if typeof parent.attr("data-name") == 'undefined'
-        $(this).find('.output-radio[value="Existing taxon"]').attr("checked","checked")
+      else if outputType.val() == 'existing_taxon'
         ExistingTaxonForm(this)
       else
-        $(this).find('.output-radio[value="Existing subspecies"]').attr("checked","checked")
         UpgradedTaxonForm(this)
 
   OutputsDefaultConfiguration()

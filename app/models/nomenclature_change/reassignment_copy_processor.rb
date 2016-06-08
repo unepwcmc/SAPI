@@ -18,9 +18,6 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     if reassignment.kind_of?(NomenclatureChange::ParentReassignment)
       reassignable.parent_id = new_taxon_concept.id
       reassignable
-    elsif reassignable.kind_of?(Trade::Shipment)
-      reassignable.taxon_concept_id = new_taxon_concept.id
-      reassignable
     elsif reassignable.is_a?(TaxonRelationship) &&
       reassignable.taxon_relationship_type.name == TaxonRelationshipType::HAS_TRADE_NAME
 
@@ -69,11 +66,23 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
       }).first || copied_object.distribution_references.build(distr_ref.comparison_attributes)
     end
     # taggings
+    copy_distribution_taggings(reassignable, copied_object)
+  end
+
+  def copy_distribution_taggings(reassignable, copied_object)
+    if reassignable.taggings.count == 0
+      copied_object.taggings.destroy_all if copied_object.taggings.count > 0
+      return
+    elsif copied_object.taggings.count == 0
+      return
+    end
+
     reassignable.taggings.each do |tagging|
       !copied_object.new_record? && tagging.duplicates({
         taggable_id: copied_object.id
       }).first || copied_object.taggings.build(tagging.comparison_attributes)
     end
+
   end
 
   def build_listing_change_associations(reassignable, copied_object)

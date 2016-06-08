@@ -15,6 +15,23 @@ shared_context 'legislation_reassignments_processor_examples' do
   }
   before(:each) do
     lc1_annotation = create(:annotation)
+    original_lc1 = create_cites_III_addition(
+      taxon_concept: output_species1,
+      annotation: lc1_annotation,
+      effective_at: '2013-01-01'
+    )
+    create(
+      :listing_distribution,
+      geo_entity: poland,
+      listing_change: original_lc1,
+      is_party: true
+    )
+    create(
+      :listing_distribution,
+      geo_entity: portugal,
+      listing_change: original_lc1,
+      is_party: false
+    )
     lc1 = create_cites_III_addition(
       taxon_concept: input_species,
       annotation: lc1_annotation,
@@ -99,8 +116,8 @@ shared_context 'legislation_reassignments_processor_examples' do
     expect(
       output_species1.listing_changes.
       find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id).
-      listing_distributions
-    ).to_not be_empty
+      listing_distributions.count
+    ).to eq(2)
   }
   specify{
     expect(

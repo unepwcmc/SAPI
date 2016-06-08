@@ -1,0 +1,6 @@
+var form = $("<%= escape_javascript(render('n_name_form')) %>");
+form.find('.tags').select2();
+
+$('#admin-new-taxon_concept_n_name-form').html(form);
+$('#new-taxon_concept_n_name').modal('show');
+window.adminEditor.initSelect2Inputs();

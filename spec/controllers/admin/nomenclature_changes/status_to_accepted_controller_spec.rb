@@ -14,18 +14,9 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
         response.should render_template('primary_output')
       end
     end
-    context :parent do
-      before(:each) do
-        @status_change = s_to_a_with_input
-      end
-      it 'renders the parent template' do
-        get :show, id: :parent, nomenclature_change_id: @status_change.id
-        response.should render_template('parent')
-      end
-    end
     context :summary do
       before(:each) do
-        @status_change = s_to_a_with_input
+        @status_change = t_to_a_with_input
       end
       it 'renders the summary template' do
         get :show, id: :summary, nomenclature_change_id: @status_change.id
@@ -51,12 +42,18 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
       it 'redirects to next step' do
         put :update, nomenclature_change_status_to_accepted: {
           primary_output_attributes: {
-            taxon_concept_id: create_cites_eu_species.id,
-            new_name_status: 'S'
+            taxon_concept_id: create_cites_eu_species(
+              name_status: 'T',
+              taxon_name: create(:taxon_name, scientific_name: 'Patagonus miserabilis')
+            ).id,
+            new_parent_id: create_cites_eu_genus(
+              taxon_name: create(:taxon_name, scientific_name: 'Patagonus')
+            ).id,
+            new_name_status: 'A'
           }
         }, nomenclature_change_id: @status_change.id, id: 'primary_output'
         response.should redirect_to(admin_nomenclature_change_status_to_accepted_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'parent'
+          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
         ))
       end
     end

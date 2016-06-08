@@ -53,7 +53,7 @@ describe Checklist::Pdf::IndexFetcher do
       create(
         :taxon_concept,
         :name_status => 'S',
-        :full_name => 'Catus fluffianus'
+        scientific_name: 'Catus fluffianus'
       )
     }
     let!(:synonymy_rel){

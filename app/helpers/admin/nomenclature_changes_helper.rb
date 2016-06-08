@@ -141,11 +141,26 @@ module Admin::NomenclatureChangesHelper
   end
 
   def outputs_selection ff
+    ff.object.output_type ||= if ff.object.taxon_concept_id.nil?
+      'new_taxon'
+    elsif ff.object.taxon_concept &&
+      !ff.object.new_scientific_name.blank? &&
+      ff.object.taxon_concept.full_name != ff.object.new_scientific_name
+      # this scenario occurrs when an existing taxon will change name
+      'existing_subspecies'
+    else
+      'existing_taxon'
+    end
     content_tag(:div, class: 'outputs_selection') do
-      [ 'New taxon', 'Existing subspecies', 'Existing taxon'].each do |opt|
+      ['New taxon', 'Existing subspecies', 'Existing taxon'].each do |opt|
+        opt_val = opt.downcase.gsub(/\s+/, '_')
         concat content_tag(:span,
-          radio_button_tag(ff.object.taxon_concept.try(:full_name) || 'output'+ff.options[:child_index].to_s,
-          opt, false, class: 'output-radio') + ' ' + opt)
+          ff.radio_button(
+            :output_type,
+            opt_val,
+            {class: 'output-radio'}
+          ) + ' ' + opt
+        )
       end
       concat ff.link_to_remove 'Remove output'
     end
@@ -175,7 +190,7 @@ module Admin::NomenclatureChangesHelper
   def generate_input_content
     if @nc.is_a?(NomenclatureChange::Lump)
       lump_inputs_tags + lump_inputs_content
-    else
+    elsif @nc.input
       split_input_tag + split_input_content
     end
   end
@@ -184,7 +199,7 @@ module Admin::NomenclatureChangesHelper
     if @nc.is_a?(NomenclatureChange::Lump)
       lump_output_tag + lump_output_content
     else
-      split_outputs_tags + split_outputs_content
+      outputs_tags + outputs_content
     end
   end
 
@@ -231,10 +246,11 @@ module Admin::NomenclatureChangesHelper
   end
 
   def lump_output_tag
+    tc = @nc.output.new_taxon_concept || @nc.output.taxon_concept
     content_tag(:ul, class: 'nav nav-tabs') do
       content_tag(:li, class: 'active') do
-        concat link_to("#{@nc.output.taxon_concept.full_name}",
-          "#output_#{@nc.output.taxon_concept.full_name.downcase.tr(' ', '_')}")
+        concat link_to("#{tc.full_name}",
+          "#output_#{tc.full_name.downcase.tr(' ', '_')}")
       end
     end
   end
@@ -256,8 +272,8 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def split_outputs_tags
-    outputs = select_outputs
+  def outputs_tags
+    outputs = Array.wrap(select_outputs)
     content_tag(:ul, class: 'nav nav-tabs') do
       outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
@@ -266,8 +282,8 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def split_outputs_content
-    outputs = select_outputs
+  def outputs_content
+    outputs = Array.wrap(select_outputs)
     content_tag(:div, class: 'tab-content') do
       outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
@@ -283,10 +299,14 @@ module Admin::NomenclatureChangesHelper
   end
 
   def inner_content(input_or_output,tc)
+    is_output = input_or_output.is_a?(NomenclatureChange::Output)
     content_tag(:p, content_tag(:i, link_to(tc.full_name,
       admin_taxon_concept_names_path(tc)), nil)
     ) +
-    content_tag(:p, "Author: #{tc.author_year || tc.new_author_year}") +
+    if is_output
+      content_tag(:p, "Name status: #{input_or_output.new_name_status || input_or_output.name_status}")
+    end +
+    content_tag(:p, "Author: #{tc.author_year || is_output && input_or_output.new_author_year}") +
     content_tag(:p, "Internal note: #{input_or_output.internal_note}")
   end
 
@@ -320,4 +340,26 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
+  def select_taxonomy
+    select("taxonomy","taxonomy_id", Taxonomy.all.collect {|t| [t.name, t.id]})
+  end
+
+  def select_rank
+    select("rank", "rank_id", ranks_collection)
+  end
+
+  def ranks_collection
+    Rank.all.collect {|r| [r.name, r.id]}
+  end
+
+  def taxon_concepts_collection
+    TaxonConcept.where(:taxonomy_id => 1).collect {|t| [t.full_name, t.id]}
+  end
+
+  def new_name_scientific_name_hint
+    case @nomenclature_change.output.new_name_status
+    when 'A' then "e.g. 'africana' for Loxodonta africana"
+    when 'S','H' then "e.g. Loxodonta africana"
+    end
+  end
 end

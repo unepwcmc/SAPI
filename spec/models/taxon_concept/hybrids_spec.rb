@@ -14,34 +14,32 @@ describe TaxonConcept do
         :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
       )
     }
-    let!(:another_tc){
+    let(:hybrid){
       create_cites_eu_species(
-        :parent_id => parent.id,
-        :taxon_name => create(:taxon_name, :scientific_name => 'lolcatus')
+        name_status: 'H',
+        author_year: 'Taxonomus 2013',
+        taxon_name: create(:taxon_name, :scientific_name => 'Lolcatus lolcatus x lolatus')
       )
     }
-    let(:hybrid){
-      build_cites_eu_species(
-        :name_status => 'H',
-        :author_year => 'Taxonomus 2013',
-        :hybrid_parent_scientific_name => tc.full_name,
-        :other_hybrid_parent_scientific_name => another_tc.full_name,
-        :full_name => 'Lolcatus lolcatus x lolatus'
+    let!(:hybrid_rel){
+      create(:taxon_relationship,
+        taxon_relationship_type: hybrid_relationship_type,
+        taxon_concept_id: tc.id,
+        other_taxon_concept_id: hybrid.id
       )
     }
     context "when new" do
       specify {
-        lambda do
-          hybrid.save
-        end.should change(TaxonConcept, :count).by(1)
-      }
-      pending {
-        hybrid.save
         tc.has_hybrids?.should be_true
       }
       specify {
-        hybrid.save
         hybrid.is_hybrid?.should be_true
+      }
+      specify{
+        hybrid.has_hybrid_parents?.should be_true
+      }
+      specify {
+        hybrid.full_name.should == 'Lolcatus lolcatus x lolatus'
       }
     end
     context "when duplicate" do
@@ -50,9 +48,8 @@ describe TaxonConcept do
       }
       specify {
         lambda do
-          hybrid.save
           duplicate.save
-        end.should change(TaxonConcept, :count).by(1)
+        end.should change(TaxonConcept, :count).by(0)
       }
     end
     context "when duplicate but author name different" do
@@ -63,13 +60,8 @@ describe TaxonConcept do
       }
       specify {
         lambda do
-          hybrid.save
           duplicate.save
-        end.should change(TaxonConcept, :count).by(2)
-      }
-      specify {
-        hybrid.save
-        hybrid.full_name.should == 'Lolcatus lolcatus x lolatus'
+        end.should change(TaxonConcept, :count).by(1)
       }
     end
   end

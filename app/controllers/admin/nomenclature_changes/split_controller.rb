@@ -11,6 +11,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       builder.build_input
     when :outputs
       set_taxonomy
+      set_ranks
       builder.build_outputs
     when :notes
       builder.build_input_and_output_notes
@@ -45,6 +46,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       unless success
         set_events
         set_taxonomy
+        set_ranks
       end
     end
     render_wizard @nomenclature_change

@@ -89,7 +89,6 @@ class NomenclatureChange::Split::Constructor
         'split.input_split_into',
         output_taxa: outputs_html,
         input_taxon: input_html,
-        year: Date.today.year,
         default: 'Translation missing'
       )
     end
@@ -115,7 +114,6 @@ class NomenclatureChange::Split::Constructor
         'split.output_split_from',
         output_taxon: output_html,
         input_taxon: input_html,
-        year: Date.today.year,
         default: 'Translation missing'
       )
     end
@@ -126,6 +124,7 @@ class NomenclatureChange::Split::Constructor
     [:en, :es, :fr].each do |lng|
       note = '<p>'
       note << input_split_into(input, @nomenclature_change.outputs, lng)
+      note << in_year(event, lng)
       note << following_taxonomic_changes(event, lng) if event
       note << '.</p>'
       result[lng] = note
@@ -138,6 +137,7 @@ class NomenclatureChange::Split::Constructor
     [:en, :es, :fr].each do |lng|
       note = '<p>'
       note << output_split_from(output, input, lng)
+      note << in_year(event, lng)
       note << following_taxonomic_changes(event, lng) if event
       note << '.</p>'
       result[lng] = note
@@ -148,19 +148,15 @@ class NomenclatureChange::Split::Constructor
   def build_input_and_output_notes
     input = @nomenclature_change.input
     event = @nomenclature_change.event
-    if input.note_en.blank?
-      note = multi_lingual_input_note(input, @nomenclature_change.outputs, event)
-      input.note_en = note[:en]
-      input.note_es = note[:es]
-      input.note_fr = note[:fr]
-    end
+    note = multi_lingual_input_note(input, @nomenclature_change.outputs, event)
+    input.note_en = note[:en]
+    input.note_es = note[:es]
+    input.note_fr = note[:fr]
     @nomenclature_change.outputs_except_inputs.each do |output|
-      if output.note_en.blank?
-        note = multi_lingual_output_note(output, input, event)
-        output.note_en = note[:en]
-        output.note_es = note[:es]
-        output.note_fr = note[:fr]
-      end
+      note = multi_lingual_output_note(output, input, event)
+      output.note_en = note[:en]
+      output.note_es = note[:es]
+      output.note_fr = note[:fr]
     end
   end
 
@@ -170,6 +166,7 @@ class NomenclatureChange::Split::Constructor
     output_html = taxon_concept_html('[[output]]', input.taxon_concept.rank.name)
     note = '<p>'
     note << yield(input_html, output_html)
+    note << in_year(@nomenclature_change.event, lng)
     if @nomenclature_change.event
       note << following_taxonomic_changes(@nomenclature_change.event, lng)
     end

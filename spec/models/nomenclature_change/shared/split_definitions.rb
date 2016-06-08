@@ -61,7 +61,7 @@ shared_context 'split_definitions' do
         1 => {
           new_scientific_name: 'fatalus',
           new_parent_id: errorus_genus.id,
-          new_rank_id: species_rank.id,
+          new_rank_id: create(:rank, name: Rank::SPECIES).id,
           new_name_status: 'A'
         }
       },
@@ -73,7 +73,10 @@ shared_context 'split_definitions' do
       input_attributes: {taxon_concept_id: input_species.id},
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
-        1 => { taxon_concept_id: output_species2.id, new_name_status: 'A' }
+        1 => { taxon_concept_id: output_species2.id,
+          new_name_status: 'A',
+          new_parent_id: genus2.id
+        }
       },
       status: NomenclatureChange::Split::OUTPUTS
     )
@@ -87,7 +90,7 @@ shared_context 'split_definitions' do
           taxon_concept_id: output_subspecies2.id,
           new_scientific_name: 'lolcatus',
           new_parent_id: errorus_genus.id,
-          new_rank_id: species_rank.id,
+          new_rank_id: create(:rank, name: Rank::SPECIES).id,
           new_name_status: 'A'
         }
       },

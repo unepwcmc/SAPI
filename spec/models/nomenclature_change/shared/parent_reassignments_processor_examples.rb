@@ -19,7 +19,7 @@ shared_context 'parent_reassignments_processor_examples' do
     processor.run
     input_species_child.reload
   end
-  specify{ expect(input_species_child.parent).to be_nil }
+  specify{ expect(input_species_child.parent).to eq(input_species) }
   specify{ expect(input_species_child.name_status).to eq('S') }
   specify{ expect(input_species.children.count).to eq(0) }
   specify do

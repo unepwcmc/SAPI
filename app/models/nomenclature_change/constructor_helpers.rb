@@ -121,16 +121,15 @@ module NomenclatureChange::ConstructorHelpers
     input.legislation_reassignments.each do |reassignment|
       if input.is_a?(NomenclatureChange::Input)
         _build_multiple_targets(reassignment, outputs)
-        #input.reassignments << reassignment
       end
+      input.reassignments << reassignment
     end
   end
 
   def _build_legislation_type_reassignment(legislation_collection_name, input)
     legislation_type = legislation_collection_name.to_s.singularize.camelize
     public_note = send(:"multi_lingual_#{legislation_collection_name.to_s.singularize}_note")
-    input.send(:"#{legislation_collection_name}_reassignments").first ||
-      input.taxon_concept.send(legislation_collection_name).limit(1).count > 0 &&
+    input.taxon_concept.send(legislation_collection_name).limit(1).count > 0 &&
       input.legislation_reassignment_class.new(
         reassignable_type: legislation_type,
         note_en: public_note[:en],
@@ -170,28 +169,22 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
-  def _build_trade_reassignments(input, output)
-    input_class = input.reassignment_class
-    unless input.reassignments.where(
-      reassignable_type: 'Trade::Shipment'
-    ).first || input.taxon_concept.shipments.limit(1).count == 0
-      reassignment = input.reassignment_class.new(
-        reassignable_type: 'Trade::Shipment',
-        type: input_class.to_s
-      )
-      if input.is_a?(NomenclatureChange::Input)
-        _build_single_target(reassignment, output)
-      end
-      input.reassignments << reassignment
-    end
-  end
-
   def following_taxonomic_changes(event, lng)
     I18n.with_locale(lng) do
       I18n.translate(
         'following_taxonomic_changes',
         event: event.name,
         default: ''
+      )
+    end
+  end
+
+  def in_year(event, lng)
+    I18n.with_locale(lng) do
+      I18n.translate(
+        'in_year',
+        year: event && event.effective_at.try(:year) || Date.today.year,
+        default: 'Translation missing'
       )
     end
   end

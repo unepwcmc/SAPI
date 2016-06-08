@@ -97,15 +97,19 @@ module Checklist::Pdf::HistoryContent
   end
 
   def annotation_for_language(listing_change, lng)
-    short_note = listing_change.send("short_note_#{lng}")
-    short_note = LatexToPdf.html2latex(short_note)
+    short_note = LatexToPdf.html2latex(
+      listing_change.send("short_note_#{lng}")
+    )
+    nomenclature_note = LatexToPdf.html2latex(
+      listing_change.nomenclature_note_en
+    )
     if listing_change.display_in_footnote
       full_note = listing_change.send("full_note_#{lng}")
       full_note && full_note.gsub!(/[\n\r]/, ' ')
       full_note = LatexToPdf.html2latex(full_note)
-      "#{short_note}\\footnote{#{full_note}}"
+      "#{short_note}\n\n#{nomenclature_note}\\footnote{#{full_note}}"
     else
-      short_note
+      "#{short_note}\n\n#{nomenclature_note}"
     end
   end
 

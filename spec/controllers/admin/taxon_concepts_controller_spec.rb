@@ -34,15 +34,32 @@ describe Admin::TaxonConceptsController do
   end
 
   describe "XHR POST create" do
-    let(:taxon_concept_attributes){ build_tc_attributes(:taxon_concept) }
     it "renders create when successful" do
       xhr :post, :create,
-        taxon_concept: taxon_concept_attributes
+       taxon_concept: {
+          name_status: 'A',
+          taxonomy_id: cites_eu.id,
+          rank_id: create(:rank, name: Rank::GENUS),
+          scientific_name: 'Canis',
+          parent_id: create_cites_eu_family,
+        }
       response.should render_template("create")
     end
     it "renders new when not successful" do
       xhr :post, :create, taxon_concept: {}
       response.should render_template("new")
+    end
+    it "renders new_synonym when not successful S" do
+      xhr :post, :create, taxon_concept: {name_status: 'S'}
+      response.should render_template("new_synonym")
+    end
+    it "renders new_hybrid when not successful H" do
+      xhr :post, :create, taxon_concept: {name_status: 'H'}
+      response.should render_template("new_hybrid")
+    end
+    it "renders new_synonym when not successful N" do
+      xhr :post, :create, taxon_concept: {name_status: 'N'}
+      response.should render_template("new_n_name")
     end
   end
 
@@ -111,7 +128,7 @@ describe Admin::TaxonConceptsController do
 
   describe "XHR GET JSON autocomplete" do
     let!(:taxon_concept){
-      create(:taxon_concept,
+      create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'AAA')
       )
     }
@@ -119,7 +136,7 @@ describe Admin::TaxonConceptsController do
       xhr :get, :autocomplete, :format => 'json',
         :search_params => {:scientific_name => 'AAA'}
       response.body.should have_json_size(1)
-      parse_json(response.body, "0/full_name").should == 'AAA'
+      parse_json(response.body, "0/full_name").should == 'Aaa'
     end
   end
 

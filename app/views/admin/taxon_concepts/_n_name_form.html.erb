@@ -1,0 +1,63 @@
+<%= form_for [:admin, @taxon_concept], :remote => true do |f| %>
+
+  <%= error_messages_for(@taxon_concept) %>
+  <%= f.hidden_field :name_status, value: 'N' %>
+  <div class="control-group">
+    <label>Taxonomy</label>
+    <%= f.select :taxonomy_id,
+      options_from_collection_for_select(
+        @taxonomies, :id, :name, @taxon_concept && @taxon_concept.taxonomy_id
+      ),
+      {},
+      {class: 'taxonomy-selector'}
+    %>
+  </div>
+  <div class="control-group">
+    <label>Rank</label>
+    <%= f.select :rank_id,
+      options_from_collection_for_select(
+        @ranks, :id, :name, @taxon_concept && @taxon_concept.rank_id
+      ),
+      {},
+      {class: 'rank-selector'}
+    %>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Parent</label>
+    <div class="controls">
+      <%= f.text_field :parent_id, {
+        class: 'taxon-concept parent-taxon',
+        :'data-name' => @taxon_concept.parent.try(:full_name),
+        :'data-name-status' => @taxon_concept.parent.try(:name_status),
+        :'data-name-status-filter' => ['A', 'N'].to_json,
+        :'data-rank-scope' => 'parent'
+      } %>
+    </div>
+  </div>
+  <div class="control-group">
+    <label>Scientific name</label>
+    <%= f.text_field :scientific_name %>
+  </div>
+  <div class="control-group">
+    <label>Tags</label>
+    <%= f.select :tag_list,
+      options_from_collection_for_select(
+        @tags,
+        :name,
+        :name,
+        @taxon_concept.tag_list
+      ), {},
+      { :multiple => true, :class => 'tags', :style => "width: 220px"}
+    %>
+  </div>
+  <div class="control-group">
+    <label>Author & year</label>
+    <%= f.text_field :author_year %>
+  </div>
+  <%= render :partial => 'admin/shared/nomenclature_notes_form',
+    locals: {
+      f: f,
+      locale_columns: TaxonConcept.locale_columns(:nomenclature_note)
+    }
+  %>
+<% end %>

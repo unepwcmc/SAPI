@@ -68,84 +68,40 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     end
   end
 
-  def build_trade_reassignments
-    input_output_for_reassignment do |input, output|
-      _build_trade_reassignments(input, output)
-    end
-  end
-
-  def status_change_note(locale_key, output, lng)
-    output_html = taxon_concept_html(
-      output.display_full_name,
-      output.display_rank_name
+  def status_elevated_to_accepted_name(output_new, output_old, lng)
+    output_new_html = taxon_concept_html(
+      output_new.display_full_name,
+      output_new.display_rank_name
+    )
+    output_old_html = taxon_concept_html(
+      output_old.display_full_name,
+      output_old.display_rank_name
     )
     I18n.with_locale(lng) do
       I18n.translate(
-        "status_change.#{locale_key}",
-        output_taxon: output_html,
-        old_status: output.taxon_concept.name_status,
-        new_status: output.new_name_status,
-        year: Date.today.year,
+        "status_change.status_elevated_to_accepted_name",
+        output_new_taxon: output_new_html,
+        output_old_taxon: output_old_html,
         default: 'Translation missing'
       )
     end
   end
 
-  def status_change_from_to(output, lng)
-    status_change_note('status_change_from_to', output, lng)
-  end
-
-  def status_elevated_to_accepted_name(output, lng)
-    status_change_note('status_elevated_to_accepted_name', output, lng)
-  end
-
-  def multi_lingual_public_output_note(output, event)
+  def multi_lingual_public_output_note(output_new, output_old, event)
     result = {}
     [:en, :es, :fr].each do |lng|
-      result[lng] = public_output_note(output, event, lng)
+      result[lng] = public_output_note(output_new, output_old, event, lng)
     end
     result
   end
 
-  def public_output_note(output, event, lng)
+  def public_output_note(output_new, output_old, event, lng)
     note = '<p>'
-    note << status_elevated_to_accepted_name(output, lng)
+    note << status_elevated_to_accepted_name(output_new, output_old, lng)
+    note << in_year(event, lng)
     note << following_taxonomic_changes(event, lng) if event
     note << '.</p>'
     note
-  end
-
-  def private_output_note(output, event, lng)
-    note = '<p>'
-    note << status_change_from_to(output, lng)
-    note << following_taxonomic_changes(event, lng) if event
-    note << '.</p>'
-    note
-  end
-
-  def build_primary_output_note
-    if @nomenclature_change.primary_output.note_en.blank?
-      if @nomenclature_change.primary_output.needs_public_note?
-        primary_note = multi_lingual_public_output_note(
-          @nomenclature_change.primary_output,
-          @event
-        )
-        @nomenclature_change.primary_output.note_en = primary_note[:en]
-        @nomenclature_change.primary_output.note_es = primary_note[:es]
-        @nomenclature_change.primary_output.note_fr = primary_note[:fr]
-      else
-        primary_note = private_output_note(
-          @nomenclature_change.primary_output,
-          @event,
-          :en
-        )
-        @nomenclature_change.primary_output.internal_note = primary_note
-      end
-    end
-  end
-
-  def build_output_notes
-    build_primary_output_note
   end
 
   def multi_lingual_listing_change_note

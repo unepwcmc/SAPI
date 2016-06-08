@@ -44,11 +44,11 @@ describe Admin::NomenclatureChangesHelper do
   describe :status_change_blurb do
     include_context 'status_change_definitions'
     context "status upgrade with primary output" do
-      before(:each) { @nomenclature_change = s_to_a_with_primary_output }
+      before(:each) { @nomenclature_change = t_to_a_with_primary_output }
       specify{ expect(helper.status_change_blurb).to match(@nomenclature_change.primary_output.taxon_concept.full_name) }
     end
     context "status upgrade with swap" do
-      before(:each) { @nomenclature_change = s_to_a_with_swap }
+      before(:each) { @nomenclature_change = a_to_s_with_swap }
       specify{ expect(helper.status_change_blurb).to match(@nomenclature_change.secondary_output.taxon_concept.full_name) }
     end
   end

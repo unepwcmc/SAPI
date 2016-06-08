@@ -244,7 +244,7 @@ class MTaxonConcept < ActiveRecord::Base
     ["hash_full_note_#{lng.downcase}", "full_note_#{lng.downcase}", "short_note_#{lng.downcase}"].each do |method_name|
       define_method(method_name) do
         current_cites_additions.map do |lc|
-          note = lc.send(method_name)
+          note = lc.send(method_name) || ''
           note && "Appendix #{lc.species_listing_name}:" + (note || '') + (" #{lc.nomenclature_note}" || '')
         end.join("\n")
       end

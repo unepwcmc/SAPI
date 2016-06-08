@@ -9,8 +9,11 @@ describe Species::TaxonConceptPrefixMatcher do
       :name_status => 'T'
     )
     @status_N_species = create_cites_eu_species(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Vidua paradisaea'),
-      :name_status => 'N'
+      taxon_name: create(:taxon_name, scientific_name: 'Paradisaea'),
+      parent: create_cites_eu_genus(
+        taxon_name: create(:taxon_name, scientific_name: 'Vidua')
+      ),
+      name_status: 'N'
     )
     create(:taxon_relationship,
       :taxon_concept => @accepted_name,

@@ -4,18 +4,20 @@
 <%= nomenclature_change_form do |f| %>
   <%= f.fields_for :secondary_output do |ff| %>
     <div class="control-group">
-      <label class="control-label">Swap status with another <%= f.object.primary_output.new_name_status %> name:</label>
+      <label class="control-label">Swap status with a synonym:</label>
       <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
           :class => 'taxon-concept clear-others',
           :'data-name' => ff.object.taxon_concept.try(:full_name),
           :'data-name-status' => ff.object.taxon_concept.try(:name_status),
-          :'data-name-status-filter' => [f.object.primary_output.new_name_status],
+          :'data-name-status-filter' => ['S'],
           :'data-taxonomy-id' => @taxonomy.id
         } %>
         <%= ff.hidden_field :is_primary_output %>
         <%= ff.hidden_field :new_name_status %>
       </div>
     </div>
+    <%= render 'admin/nomenclature_changes/build/new_rank', ff: ff, f: f %>
+    <%= render 'admin/nomenclature_changes/build/new_parent', :ff => ff %>
   <% end %>
 <% end %>

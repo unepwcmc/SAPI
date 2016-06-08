@@ -11,6 +11,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       builder.build_inputs
     when :outputs
       set_taxonomy
+      set_ranks
       builder.build_output
     when :notes
       builder.build_input_and_output_notes
@@ -39,10 +40,12 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       unless success
         set_events
         set_taxonomy
+        set_ranks
       end
     when :outputs
       unless success
         set_taxonomy
+        set_ranks
       end
     end
     render_wizard @nomenclature_change

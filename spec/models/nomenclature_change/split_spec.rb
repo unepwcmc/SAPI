@@ -60,11 +60,11 @@ describe NomenclatureChange::Split do
           :outputs_attributes => {
             0 => {
               :taxon_concept_id => create_cites_eu_subspecies.id,
-              :new_rank_id => subspecies_rank.id
+              :new_rank_id => create(:rank, name: Rank::SUBSPECIES).id
             },
             1 => {
               :taxon_concept_id => create_cites_eu_subspecies.id,
-              :new_rank_id => subspecies_rank.id
+              :new_rank_id => create(:rank, name: Rank::SUBSPECIES).id
             }
           }
         )

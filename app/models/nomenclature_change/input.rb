@@ -27,26 +27,36 @@ class NomenclatureChange::Input < ActiveRecord::Base
     :legislation_reassignments_attributes
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
-  has_many :reassignments, :inverse_of => :input,
-    :class_name => NomenclatureChange::Reassignment,
-    :foreign_key => :nomenclature_change_input_id, :dependent => :destroy,
-    :autosave => true
-  has_many :parent_reassignments, :inverse_of => :input,
-    :class_name => NomenclatureChange::ParentReassignment,
-    :foreign_key => :nomenclature_change_input_id, :dependent => :destroy,
-    :autosave => true
-  has_many :name_reassignments, :inverse_of => :input,
-    :class_name => NomenclatureChange::NameReassignment,
-    :foreign_key => :nomenclature_change_input_id, :dependent => :destroy,
-    :autosave => true
-  has_many :distribution_reassignments, :inverse_of => :input,
-    :class_name => NomenclatureChange::DistributionReassignment,
-    :foreign_key => :nomenclature_change_input_id, :dependent => :destroy,
-    :autosave => true
-  has_many :legislation_reassignments, :inverse_of => :input,
-    :class_name => NomenclatureChange::LegislationReassignment,
-    :foreign_key => :nomenclature_change_input_id, :dependent => :destroy,
-    :autosave => true
+  has_many :reassignments,
+    inverse_of: :input,
+    class_name: 'NomenclatureChange::Reassignment',
+    foreign_key: :nomenclature_change_input_id,
+    dependent: :destroy,
+    autosave: true
+  has_many :parent_reassignments,
+    inverse_of: :input,
+    class_name: 'NomenclatureChange::ParentReassignment',
+    foreign_key: :nomenclature_change_input_id,
+    dependent: :destroy,
+    autosave: true
+  has_many :name_reassignments,
+    inverse_of: :input,
+    class_name: 'NomenclatureChange::NameReassignment',
+    foreign_key: :nomenclature_change_input_id,
+    dependent: :destroy,
+    autosave: true
+  has_many :distribution_reassignments,
+    inverse_of: :input,
+    class_name: 'NomenclatureChange::DistributionReassignment',
+    foreign_key: :nomenclature_change_input_id,
+    dependent: :destroy,
+    autosave: true
+  has_many :legislation_reassignments,
+    inverse_of: :input,
+    class_name: 'NomenclatureChange::LegislationReassignment',
+    foreign_key: :nomenclature_change_input_id,
+    dependent: :destroy,
+    autosave: true
   validates :nomenclature_change, :presence => true
   validates :taxon_concept, :presence => true
   accepts_nested_attributes_for :parent_reassignments, :allow_destroy => true

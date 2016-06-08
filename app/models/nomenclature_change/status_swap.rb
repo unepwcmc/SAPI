@@ -13,51 +13,64 @@
 #
 
 # A status swap requires 2 outputs.
-# 1. accepted taxon t1 (input) downgraded to synonym t1 (output1), as part of
-# status swap with synonym t2, with any associations transferred to accepted
-# taxon t2 (output2)
-# 2. synonym t1 upgraded to accepted taxon t1 (output1), as part of status swap
-# with accepted taxon t2 (input), which becomes synonym t2 (output2), with
-# any associations of t2 transferred to t1
+# 1. primary output - accepted taxon
+# 2. secondary output - synonym
+# As part of the status swap, any associations transferred from primary
+# to secondary output
 class NomenclatureChange::StatusSwap < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
   build_steps(
-    :primary_output, :swap, :legislation, :summary
+    :primary_output, :secondary_output, :notes, :legislation, :summary
   )
   validates :status, inclusion: {
     in: self.status_dict,
     message: "%{value} is not a valid status"
   }
-  before_save :build_input_for_swap, if: :swap?
+  validate :required_secondary_output, if: :secondary_output_or_submitting?
+  validate :required_primary_output_name_status, if: :primary_output_or_submitting?
+  validate :required_secondary_output_name_status, if: :secondary_output_or_submitting?
+  before_save :build_input_for_auto_reassignments, if: :secondary_output?
+  before_save :build_auto_reassignments, if: :notes?
 
-  def build_input_for_swap
-    # In case the primary output is an S name turning A
-    # as part of status swap with another A name
-    # this other name becomes an input of the nomenclature change, so that
-    # reassignments can be put in place between this input and
-    # the primary output
-    if needs_to_receive_associations? && (
-      input.nil? || input.taxon_concept_id.blank?)
-      build_input(taxon_concept_id: secondary_output.taxon_concept_id)
-    elsif needs_to_relay_associations? && (
-      input.nil? || input.taxon_concept_id.blank?)
+  def required_secondary_output
+    if secondary_output.nil?
+      errors.add(:secondary_output, "Must have a secondary output")
+      return false
+    end
+    true
+  end
+
+  def required_primary_output_name_status
+    if primary_output && primary_output.name_status != 'A'
+      errors.add(:primary_output, "Must be A taxon")
+      return false
+    end
+    true
+  end
+
+  def required_secondary_output_name_status
+    if secondary_output && secondary_output.name_status != 'S'
+      errors.add(:secondary_output, "Must be S taxon")
+      return false
+    end
+    true
+  end
+
+  def needs_to_receive_associations?
+    false
+  end
+
+  def needs_to_relay_associations?
+    true
+  end
+
+  def build_input_for_auto_reassignments
+    if input.nil? || input.taxon_concept_id.blank?
       build_input(taxon_concept_id: primary_output.taxon_concept_id)
     end
   end
 
-  def needs_to_receive_associations?
-    primary_output.try(:name_status) == 'S' &&
-      primary_output.try(:new_name_status) == 'A'
-  end
-
-  def needs_to_relay_associations?
-    primary_output.try(:name_status) == 'A' &&
-      primary_output.try(:new_name_status) == 'S'
-  end
-
   def build_auto_reassignments
-    # Reassignments will only be required when there is an input
-    # from which to reassign
     if input
       builder = NomenclatureChange::StatusSwap::Constructor.new(self)
       builder.build_parent_reassignments
@@ -66,9 +79,13 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
       builder.build_legislation_reassignments
       builder.build_common_names_reassignments
       builder.build_references_reassignments
-      builder.build_trade_reassignments
     end
     true
+  end
+
+  def new_output_rank
+    secondary_output && secondary_output.taxon_concept.try(:rank) ||
+    primary_output && primary_output.taxon_concept.try(:rank)
   end
 
 end

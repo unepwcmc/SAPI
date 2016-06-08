@@ -143,4 +143,89 @@ describe Admin::NomenclatureChanges::SplitController do
     end
   end
 
+  describe 'Previous button' do
+    before(:each) do
+      @split = split_with_input_and_output
+    end
+    context 'when step is names' do
+      context 'when children' do
+        before(:each) do
+          create_cites_eu_subspecies(parent: input_species)
+        end
+        it 'renders children template' do
+          get :show, id: :children, nomenclature_change_id: @split.id, back: true
+          response.should render_template('children')
+        end
+      end
+      context 'when no children' do
+        it 'redirects to notes step' do
+          get :show, id: :children, nomenclature_change_id: @split.id, back: true
+          response.should redirect_to action: :show, id: :notes
+          get :show, id: :notes, nomenclature_change_id: @split.id
+          response.should redirect_to action: :show, id: :notes
+        end
+      end
+    end
+    context 'when step is distribution' do
+      context 'when names' do
+        before(:each) do
+          create(:taxon_relationship,
+            taxon_concept: input_species,
+            other_taxon_concept: create_cites_eu_species(name_status: 'S'),
+            taxon_relationship_type: synonym_relationship_type
+          )
+        end
+        it 'renders names template' do
+          get :show, id: :names, nomenclature_change_id: @split.id, back: :true
+          response.should render_template('names')
+        end
+      end
+      context 'when no names and no children' do
+        it 'redirects to notes step' do
+          get :show, id: :names, nomenclature_change_id: @split.id, back: true
+          response.should redirect_to action: :show, id: :children
+          get :show, id: :children, nomenclature_change_id: @split.id
+          response.should redirect_to action: :show, id: :notes
+        end
+      end
+    end
+    context 'when step is legislation' do
+      context 'when distribution' do
+        before(:each) do
+          create(:distribution, taxon_concept: input_species)
+        end
+        it 'renders distribution template' do
+          get :show, id: :distribution, nomenclature_change_id: @split.id, back: true
+          response.should render_template('distribution')
+        end
+      end
+      context 'when no distribution and no names' do
+        it 'redirects to children step' do
+          get :show, id: :distribution, nomenclature_change_id: @split.id, back: true
+          response.should redirect_to action: :show, id: :names
+          get :show, id: :names, nomenclature_change_id: @split.id
+          response.should redirect_to action: :show, id: :children
+        end
+      end
+    end
+    context 'when step is summary' do
+      context 'when legislation' do
+        before(:each) do
+          create_cites_I_addition(taxon_concept: input_species)
+        end
+        it 'renders legislation template' do
+          get :show, id: :legislation, nomenclature_change_id: @split.id, back: true
+          response.should render_template('legislation')
+        end
+      end
+      context 'when no legislation and no distribution' do
+        it 'redirects to names step' do
+          get :show, id: :legislation, nomenclature_change_id: @split.id, back: true
+          response.should redirect_to action: :show, id: :distribution
+          get :show, id: :distribution, nomenclature_change_id: @split.id
+          response.should redirect_to action: :show, id: :names
+        end
+      end
+    end
+  end
 end
