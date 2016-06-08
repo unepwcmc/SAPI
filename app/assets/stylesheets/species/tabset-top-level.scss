@@ -56,9 +56,9 @@
 
   a { height: 10px; }
   .new-tag {
-    position: relative;
-    top: -26px;
-    right: -100px;
+    position: absolute;
+    top: 0px;
+    left: 430px;
     height: 30px;
   }
 }
