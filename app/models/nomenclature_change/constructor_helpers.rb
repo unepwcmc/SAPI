@@ -184,7 +184,7 @@ module NomenclatureChange::ConstructorHelpers
       I18n.translate(
         'in_year',
         year: event && event.effective_at.try(:year) || Date.today.year,
-        default: 'Translation missing'
+        default: ''
       )
     end
   end
@@ -197,7 +197,7 @@ module NomenclatureChange::ConstructorHelpers
           I18n.translate(
             note_type,
             input_taxon: input_html, output_taxon: output_html,
-            default: 'Translation missing'
+            default: ''
           )
         end
       end
