@@ -697,9 +697,9 @@ $(document).ready(function(){
   function buildRows (data_headers, data_rows) {
     var t = "";
     _.each(data_rows, function(data_row) {
-      var row = 
+      var row =
         "<tr><% _.each(d, function(value) { %>"+
-          "<td class=\"c-<%= value.toLowerCase().replace(/\\./g,'').replace(/ /g, '-')%>\">" + 
+          "<td class=\"c-<%= value.toString().toLowerCase().replace(/\\./g,'').replace(/ /g, '-')%>\">" +
         "<%= data_row[value] %> </td> <% }); %></tr>";
       t += _.template(row, { d: data_headers, data_row: data_row });
     });
