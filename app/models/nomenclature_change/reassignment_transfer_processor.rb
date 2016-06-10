@@ -73,8 +73,8 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
       distribution_references_to_transfer = distribution_references_to_transfer.
       where(
         'reference_id NOT IN (?)',
-        reassigned_object.distribution_references.select(:reference_id)
-          .map(&:reference_id)
+        reassigned_object.distribution_references.select(:reference_id).
+          map(&:reference_id)
       )
     end
     distribution_references_to_transfer.update_all(distribution_id: reassigned_object.id)
@@ -97,7 +97,7 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
 
   def transfer_party_listing_distribution(reassigned_object, reassignable)
     return if reassigned_object.party_listing_distribution
-    return if !reassignable.party_listing_distribution
+    return unless reassignable.party_listing_distribution
     reassignable.party_listing_distribution.update_attribute(:listing_change_id, reassigned_object.id)
   end
 
@@ -109,13 +109,12 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
       listing_distributions_to_transfer = listing_distributions_to_transfer.
       where(
         'geo_entity_id NOT IN (?)',
-        reassigned_object.listing_distributions.select(:geo_entity_id)
-          .map(&:geo_entity_id)
+        reassigned_object.listing_distributions.select(:geo_entity_id).
+          map(&:geo_entity_id)
       )
     end
     listing_distributions_to_transfer.update_all(listing_change_id: reassigned_object.id)
   end
-
 
   def transfer_taxonomic_exclusions(reassigned_object, reassignable)
     return if reassignable.taxonomic_exclusions.count == 0

@@ -31,7 +31,7 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def print_summary summary
+  def print_summary(summary)
     if summary.kind_of?(Array)
       content_tag(:ul) do
         summary.each{ |line| concat print_summary(line) }
@@ -140,17 +140,18 @@ module Admin::NomenclatureChangesHelper
     html.html_safe
   end
 
-  def outputs_selection ff
-    ff.object.output_type ||= if ff.object.taxon_concept_id.nil?
-      'new_taxon'
-    elsif ff.object.taxon_concept &&
-      !ff.object.new_scientific_name.blank? &&
-      ff.object.taxon_concept.full_name != ff.object.new_scientific_name
-      # this scenario occurrs when an existing taxon will change name
-      'existing_subspecies'
-    else
-      'existing_taxon'
-    end
+  def outputs_selection(ff)
+    ff.object.output_type ||=
+      if ff.object.taxon_concept_id.nil?
+        'new_taxon'
+      elsif ff.object.taxon_concept &&
+        !ff.object.new_scientific_name.blank? &&
+        ff.object.taxon_concept.full_name != ff.object.new_scientific_name
+        # this scenario occurrs when an existing taxon will change name
+        'existing_subspecies'
+      else
+        'existing_taxon'
+      end
     content_tag(:div, class: 'outputs_selection') do
       ['New taxon', 'Existing subspecies', 'Existing taxon'].each do |opt|
         opt_val = opt.downcase.gsub(/\s+/, '_')
@@ -318,7 +319,7 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def sorted_parent_reassignments ff
+  def sorted_parent_reassignments(ff)
     ff.object.parent_reassignments.sort_by{ |reassignment| reassignment.reassignable.full_name }
   end
 

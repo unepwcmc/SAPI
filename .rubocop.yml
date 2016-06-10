@@ -2,6 +2,10 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   TargetRubyVersion: 2.2
+  Exclude:
+    - 'lib/tasks/bbgem.rake'
+    - 'db/schema.rb'
+    - 'old_cap/*'
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
@@ -26,9 +30,8 @@ Style/IndentHash:
 Style/IndentationConsistency:
   EnforcedStyle: normal
   Exclude:
-    - 'lib/tasks/bbgem.rake'
     - 'db/migrate/*'
-    - 'old_cap/*'
+    - 'config/initializers/normalise_blank_values.rb'
 
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: symmetrical, new_line, same_line
@@ -44,7 +47,6 @@ Style/MultilineHashBraceLayout:
 # SupportedStyles: always, conditionals
 Style/AndOr:
   Exclude:
-    - 'lib/tasks/bbgem.rake'
     - 'db/migrate/*'
 
 # Offense count: 551
@@ -68,6 +70,4 @@ Style/FirstParameterIndentation:
 # Configuration parameters: Width.
 Style/IndentationWidth:
   Exclude:
-    - 'lib/tasks/bbgem.rake'
     - 'db/migrate/*'
-    - 'old_cap/*'

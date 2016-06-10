@@ -54,7 +54,7 @@ describe TaxonRelationship do
       hybrid_rel.save
       tc.hybrids.map(&:full_name).should include('Lolcatus lolatus x lolcatus')
     }
-     specify{
+    specify{
       hybrid_rel.save
       another_hybrid_rel.save
       hybrid_rel.other_taxon_concept = another_hybrid

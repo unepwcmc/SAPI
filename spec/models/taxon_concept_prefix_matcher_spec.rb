@@ -75,8 +75,10 @@ describe TaxonConceptPrefixMatcher do
       TaxonConceptPrefixMatcher.new parent_matcher_params
     }
 
-    specify{ parent_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Aab', 'Aac'] }
+    specify{
+      parent_matcher.taxon_concepts.map(&:full_name).should ==
+      ['Aab', 'Aac']
+    }
 
     let(:ancestor_matcher_params){
       SearchParams.new(
@@ -89,8 +91,10 @@ describe TaxonConceptPrefixMatcher do
       TaxonConceptPrefixMatcher.new ancestor_matcher_params
     }
 
-    specify{ ancestor_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Aaa'] }
+    specify{
+      ancestor_matcher.taxon_concepts.map(&:full_name).should ==
+      ['Aaa']
+    }
 
     let(:self_and_ancestor_matcher_params){
       SearchParams.new(
@@ -102,9 +106,11 @@ describe TaxonConceptPrefixMatcher do
     let(:self_and_ancestor_matcher){
       TaxonConceptPrefixMatcher.new self_and_ancestor_matcher_params
     }
-  
-    specify{ self_and_ancestor_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Aaa', 'Aaab'] }
+
+    specify{
+      self_and_ancestor_matcher.taxon_concepts.map(&:full_name).should ==
+      ['Aaa', 'Aaab']
+    }
 
   end
   context "when taxon concept scope applied" do
@@ -119,8 +125,10 @@ describe TaxonConceptPrefixMatcher do
       TaxonConceptPrefixMatcher.new ancestor_matcher_params
     }
 
-    specify{ ancestor_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Aaa', 'Aab', 'Aac'] }
+    specify{
+      ancestor_matcher.taxon_concepts.map(&:full_name).should ==
+      ['Aaa', 'Aab', 'Aac']
+    }
 
     let(:descendant_matcher_params){
       SearchParams.new(
@@ -133,8 +141,10 @@ describe TaxonConceptPrefixMatcher do
       TaxonConceptPrefixMatcher.new descendant_matcher_params
     }
 
-    specify{ descendant_matcher.taxon_concepts.map(&:full_name).should ==
-      ['Aaab', 'Aab', 'Abb'] }
+    specify{
+      descendant_matcher.taxon_concepts.map(&:full_name).should ==
+      ['Aaab', 'Aab', 'Abb']
+    }
   end
 
 end

@@ -22,7 +22,8 @@ module SearchCache
     end
   end
 
-private
+  private
+
   def generic_cache_key(suffix)
     raw_key = @options.merge(:locale => I18n.locale).to_a.sort.
       unshift("#{self.class.name}-#{suffix}").

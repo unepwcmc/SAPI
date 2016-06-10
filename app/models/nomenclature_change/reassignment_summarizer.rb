@@ -46,14 +46,15 @@ class NomenclatureChange::ReassignmentSummarizer
   def output_children_summary
     children_cnt = @input.taxon_concept.children.count
     return nil unless children_cnt > 0
-    cnt = if @input.is_a?(NomenclatureChange::Output)
-      children_cnt
-    else
-      @input.parent_reassignments.includes(:reassignment_targets).
-      where(
-        'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
-      ).count
-    end
+    cnt =
+      if @input.is_a?(NomenclatureChange::Output)
+        children_cnt
+      else
+        @input.parent_reassignments.includes(:reassignment_targets).
+        where(
+          'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
+        ).count
+      end
     "#{cnt} (of #{children_cnt}) children"
   end
 
@@ -63,28 +64,30 @@ class NomenclatureChange::ReassignmentSummarizer
       @input.taxon_concept.hybrids.count +
       @input.taxon_concept.trade_names.count
     return nil unless names_cnt > 0
-    cnt = if @input.is_a?(NomenclatureChange::Output)
-      names_cnt
-    else
-      @input.name_reassignments.includes(:reassignment_targets).
-      where(
-        'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
-      ).count
-    end
+    cnt =
+      if @input.is_a?(NomenclatureChange::Output)
+        names_cnt
+      else
+        @input.name_reassignments.includes(:reassignment_targets).
+        where(
+          'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
+        ).count
+      end
     "#{cnt} (of #{names_cnt}) names"
   end
 
   def output_distribution_summary
     distributions_cnt = @input.taxon_concept.distributions.count
     return nil unless distributions_cnt > 0
-    cnt = if @input.is_a?(NomenclatureChange::Output)
-      distributions_cnt
-    else
-      @input.distribution_reassignments.includes(:reassignment_targets).
-      where(
-        'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
-      ).count
-    end
+    cnt =
+      if @input.is_a?(NomenclatureChange::Output)
+        distributions_cnt
+      else
+        @input.distribution_reassignments.includes(:reassignment_targets).
+        where(
+          'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
+        ).count
+      end
     "#{cnt} (of #{distributions_cnt}) distributions"
   end
 

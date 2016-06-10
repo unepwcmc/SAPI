@@ -51,7 +51,7 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
         chain << NomenclatureChange::CascadingNotesProcessor.new(output)
       end
     end
-    if !input_is_one_of_outputs
+    unless input_is_one_of_outputs
       chain << NomenclatureChange::CascadingNotesProcessor.new(@input)
     end
     unless input_is_one_of_outputs

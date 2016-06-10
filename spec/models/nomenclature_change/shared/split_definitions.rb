@@ -74,7 +74,8 @@ shared_context 'split_definitions' do
       input_attributes: {taxon_concept_id: input_species.id},
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
-        1 => { taxon_concept_id: output_species2.id,
+        1 => {
+          taxon_concept_id: output_species2.id,
           new_name_status: 'A',
           new_parent_id: genus2.id
         }
