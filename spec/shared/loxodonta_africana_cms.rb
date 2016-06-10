@@ -19,9 +19,9 @@ shared_context "Loxodonta africana CMS" do
     )
 
     create_cms_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1979-01-01',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '1979-01-01',
+      :is_current => true
     )
 
     Sapi::StoredProcedures.rebuild_cms_taxonomy_and_listings

@@ -10,7 +10,7 @@ class NomenclatureChange::DeleteUnreassignedProcessor
   end
 
   def process_unreassigned_distributions
-    distributions = @input.distribution_reassignments.map{ |dr| 
+    distributions = @input.distribution_reassignments.map{ |dr|
       dr.reassignable if _is_input_reassignment(dr)
     }.compact
 

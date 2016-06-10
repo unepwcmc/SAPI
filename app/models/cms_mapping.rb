@@ -20,15 +20,14 @@ class CmsMapping < ActiveRecord::Base
   belongs_to :taxon_concept
   belongs_to :accepted_name, :class_name => 'TaxonConcept'
 
-
   scope :filter, lambda { |option|
     case option
-      when "MATCHES"
-        where('taxon_concept_id IS NOT NULL')
-      when "MISSING_SPECIES_PLUS"
-        where(:taxon_concept_id => nil)
-      else
-        scoped
+    when "MATCHES"
+      where('taxon_concept_id IS NOT NULL')
+    when "MISSING_SPECIES_PLUS"
+      where(:taxon_concept_id => nil)
+    else
+      scoped
     end
   }
 end

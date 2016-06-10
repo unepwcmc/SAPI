@@ -27,46 +27,50 @@ class Species::TaxonConceptPrefixMatcher
   def initialize_query
     @query = MAutoCompleteTaxonConcept.scoped
 
-    @query = if @visibility == :trade
-      @query.order(:full_name)
-    else
-      @query.order([:rank_order, :full_name])
-    end
+    @query =
+      if @visibility == :trade
+        @query.order(:full_name)
+      else
+        @query.order([:rank_order, :full_name])
+      end
 
     unless @ranks.empty?
       @query = @query.where(:rank_name => @ranks)
     end
 
-    @query = if @taxonomy == :cms
-      @query.by_cms_taxonomy
-    else
-      @query.by_cites_eu_taxonomy
-    end
+    @query =
+      if @taxonomy == :cms
+        @query.by_cms_taxonomy
+      else
+        @query.by_cites_eu_taxonomy
+      end
 
-    @query = if @visibility == :trade_internal && @include_synonyms
-      @query # no filter on name_status for internal search on reported taxon
-    elsif @visibility == :trade_internal && !@include_synonyms
-      @query.where(:show_in_trade_internal_ac => true)
-    elsif @visibility == :trade
-      @query.where(:show_in_trade_ac => true)
-    elsif @visibility == :elibrary
-      @query.where("show_in_species_plus_ac OR name_status = 'N'")
-    else
-      @query.where(:show_in_species_plus_ac => true)
-    end
+    @query =
+      if @visibility == :trade_internal && @include_synonyms
+        @query # no filter on name_status for internal search on reported taxon
+      elsif @visibility == :trade_internal && !@include_synonyms
+        @query.where(:show_in_trade_internal_ac => true)
+      elsif @visibility == :trade
+        @query.where(:show_in_trade_ac => true)
+      elsif @visibility == :elibrary
+        @query.where("show_in_species_plus_ac OR name_status = 'N'")
+      else
+        @query.where(:show_in_species_plus_ac => true)
+      end
 
     # different types of name matching are required
     # in Species+ & Checklist the name may match any of: scientific name, synonyms,
     # common names as well as not CITES listed subspecies
     # in trade dropdowns the matching on subspecies does not occur
     # in addition, the 'reported taxon' in internal trade matches only on self
-    types_of_match = if @visibility == :trade_internal && @include_synonyms
-      ['SELF']
-    elsif [:trade_internal, :trade].include? @visibility
-      ['SELF', 'SYNONYM', 'COMMON_NAME']
-    else
-      ['SELF', 'SYNONYM', 'COMMON_NAME', 'SUBSPECIES']
-    end
+    types_of_match =
+      if @visibility == :trade_internal && @include_synonyms
+        ['SELF']
+      elsif [:trade_internal, :trade].include? @visibility
+        ['SELF', 'SYNONYM', 'COMMON_NAME']
+      else
+        ['SELF', 'SYNONYM', 'COMMON_NAME', 'SUBSPECIES']
+      end
 
     @query = @query.
       select('id, full_name, rank_name, name_status,

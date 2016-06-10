@@ -94,24 +94,24 @@ shared_context "Canis lupus" do
     end
 
     create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1977-02-04'
+      :taxon_concept => @species,
+      :effective_at => '1977-02-04'
     )
     create_cites_II_addition(
-     :taxon_concept => @subspecies,
-     :effective_at => '1977-02-04',
-     :inclusion_taxon_concept_id => @species.id,
-     :is_current => true
+      :taxon_concept => @subspecies,
+      :effective_at => '1977-02-04',
+      :inclusion_taxon_concept_id => @species.id,
+      :is_current => true
     )
     cites_lc_I = create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '2010-06-23',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2010-06-23',
+      :is_current => true
     )
     cites_lc_II = create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '2010-06-23',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2010-06-23',
+      :is_current => true
     )
     cites_lc_II_exc = create_cites_II_exception(
       :taxon_concept => @species,

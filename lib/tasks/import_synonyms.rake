@@ -63,7 +63,7 @@ namespace :import do
                     end
                  }
 
-            EXCEPT 
+            EXCEPT
 
             SELECT taxon_concept_id, other_taxon_concept_id
             FROM taxon_relationships

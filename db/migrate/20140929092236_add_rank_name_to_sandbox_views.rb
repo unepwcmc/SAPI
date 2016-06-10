@@ -48,7 +48,7 @@ CREATE OR REPLACE FUNCTION create_trade_sandbox_view(
       CASE
         WHEN aru.point_of_view = ''E''
         THEN trading_partner
-        ELSE geo_entities.iso_code2 
+        ELSE geo_entities.iso_code2
       END AS importer,
       taxon_concepts.full_name AS accepted_taxon_name,
       taxon_concepts.data->''rank_name'' AS rank,

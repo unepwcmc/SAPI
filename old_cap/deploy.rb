@@ -35,7 +35,6 @@ set :shuffle_deployer, deployment_animals.shuffle.first
 set :slack_username, shuffle_deployer[0] # displayed as name of message sender
 set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the message
 
-
 set :generate_webserver_config, false
 
 require 'rvm/capistrano'
@@ -46,7 +45,6 @@ ssh_options[:forward_agent] = true
 # The name of your application.  Used for deployment directory and filenames
 # and Apache configs. Should be unique on the Brightbox
 set :application, "sapi"
-
 
 # got sick of "gem X not found in any of the sources" when using the default whenever recipe
 # probable source of issue:
@@ -80,7 +78,6 @@ namespace :assets do
     run "ln -nfs #{deploy_to}/shared/assets #{deploy_to}/current/public/assets"
   end
 end
-
 
 # Target directory for the application on the web and app servers.
 set(:deploy_to) { File.join("", "home", user, application) }
@@ -372,7 +369,7 @@ task :smoke_test do
   slack_smoke_notification message
 end
 
-def slack_smoke_notification message
+def slack_smoke_notification(message)
   uri = URI.parse("https://hooks.slack.com/services/T028F7AGY/B036GEF7T/#{slack_token}")
 
   payload = {

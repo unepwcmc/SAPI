@@ -1,7 +1,7 @@
 #Encoding: UTF-8
 require 'spec_helper'
 
-describe Checklist do 
+describe Checklist do
   include_context "Pecari tajacu"
 
   context "search by cites populations" do
@@ -50,15 +50,15 @@ describe Checklist do
       end
     end
     context "when South America" do
-     subject{
-       checklist = Checklist::Checklist.new({
-         :cites_region_ids => [south_america.id]
-       })
-       checklist.results
-     }
-     specify do
-       subject.should include(@species)
-     end
+      subject{
+        checklist = Checklist::Checklist.new({
+          :cites_region_ids => [south_america.id]
+        })
+        checklist.results
+      }
+      specify do
+        subject.should include(@species)
+      end
     end
     context "when North America" do
       subject{

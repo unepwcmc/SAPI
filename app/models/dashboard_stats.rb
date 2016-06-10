@@ -29,7 +29,7 @@ class DashboardStats
 
   private
 
-  def species_stats_per_taxonomy taxonomy_name
+  def species_stats_per_taxonomy(taxonomy_name)
     taxonomy = Taxonomy.find_by_name(taxonomy_name)
     classes = taxonomy && MTaxonConcept.where(
       :taxonomy_id => taxonomy.id,
@@ -49,7 +49,7 @@ class DashboardStats
     end || []
   end
 
-  def trade_stats_per_reporter_type reporter_type
+  def trade_stats_per_reporter_type(reporter_type)
     source = Source.find_by_code('W')
     term = Term.find_by_code('LIV')
     purpose = Purpose.find_by_code('T')

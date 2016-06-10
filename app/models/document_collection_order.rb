@@ -32,5 +32,4 @@ class DocumentCollectionOrder
     DocumentSearch.clear_cache
   end
 
-
 end

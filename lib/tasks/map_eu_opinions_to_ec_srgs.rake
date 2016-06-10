@@ -38,5 +38,5 @@ task :map_eu_opinions_to_ec_srgs => :environment do
     RETURNING *;
   SQL
   res = ActiveRecord::Base.connection.execute update_query
-  puts "#{res.cmd_tuples()} rows linked to EC SRG meetings"
+  puts "#{res.cmd_tuples} rows linked to EC SRG meetings"
 end

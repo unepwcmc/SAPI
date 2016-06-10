@@ -70,7 +70,6 @@ describe Trade::Shipment do
 
   describe "secondary validations" do
 
-
     before(:each) do
       # an animal
       @genus = create_cites_eu_genus(

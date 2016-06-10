@@ -90,7 +90,7 @@ class Event < ActiveRecord::Base
     end_date && end_date.strftime("%d/%m/%Y")
   end
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(events.name) LIKE UPPER(:query)
             OR UPPER(events.description) LIKE UPPER(:query)",
@@ -109,17 +109,18 @@ class Event < ActiveRecord::Base
   end
 
   protected
-    def designation_is_cites
-      cites = Designation.find_by_name('CITES')
-      unless designation_id && cites && designation_id == cites.id
-        errors.add(:designation_id, 'should be CITES')
-      end
-    end
 
-    def designation_is_eu
-      eu = Designation.find_by_name('EU')
-      unless designation_id && eu && designation_id == eu.id
-        errors.add(:designation_id, 'should be EU')
-      end
+  def designation_is_cites
+    cites = Designation.find_by_name('CITES')
+    unless designation_id && cites && designation_id == cites.id
+      errors.add(:designation_id, 'should be CITES')
     end
+  end
+
+  def designation_is_eu
+    eu = Designation.find_by_name('EU')
+    unless designation_id && eu && designation_id == eu.id
+      errors.add(:designation_id, 'should be EU')
+    end
+  end
 end

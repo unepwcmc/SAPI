@@ -12,9 +12,10 @@ shared_context 'split_definitions' do
   let(:input_species){ create_cites_eu_species(parent: genus1) }
   let(:output_species1){ create_cites_eu_species(parent: genus1) }
   let(:output_species2){ create_cites_eu_species(parent: genus2) }
-  let(:errorus_genus){ create_cites_eu_genus(
-        taxon_name: create(:taxon_name, scientific_name: 'Errorus')
-      )
+  let(:errorus_genus){
+    create_cites_eu_genus(
+      taxon_name: create(:taxon_name, scientific_name: 'Errorus')
+    )
   }
   let(:output_subspecies2){
     create_cites_eu_subspecies(
@@ -73,7 +74,8 @@ shared_context 'split_definitions' do
       input_attributes: {taxon_concept_id: input_species.id},
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
-        1 => { taxon_concept_id: output_species2.id,
+        1 => {
+          taxon_concept_id: output_species2.id,
           new_name_status: 'A',
           new_parent_id: genus2.id
         }
@@ -105,7 +107,8 @@ shared_context 'split_definitions' do
       taxon_concept: input_species,
       other_taxon_concept: create_cites_eu_species(name_status: 'S'),
       taxon_relationship_type: synonym_relationship_type
-    )}
+    )
+    }
     name1 = create(:taxon_relationship,
       taxon_concept: input_species,
       other_taxon_concept: create_cites_eu_species(name_status: 'S'),

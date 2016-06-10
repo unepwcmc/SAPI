@@ -83,5 +83,4 @@ describe EuDecision, sidekiq: :inline do
     end
   end
 
-
 end

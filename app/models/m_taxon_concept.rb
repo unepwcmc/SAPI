@@ -202,7 +202,7 @@ class MTaxonConcept < ActiveRecord::Base
     synonyms.each_with_index.map { |syn, idx| "#{syn} #{synonyms_author_years[idx]}" }
   end
 
-  def db_ary_to_array ary
+  def db_ary_to_array(ary)
     if respond_to?(ary)
       parse_pg_array( send(ary)|| '').compact.map do |e|
         e.force_encoding('utf-8')
@@ -223,15 +223,25 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   def countries_iso_codes; all_distribution_iso_codes; end
+
   def countries_full_names; all_distribution; end
+
   def all_distribution; parse_pg_array(all_distribution_ary || ''); end
+
   def all_distribution_iso_codes; parse_pg_array(all_distribution_iso_codes_ary || ''); end
+
   def native_distribution; parse_pg_array(native_distribution_ary || ''); end
+
   def introduced_distribution; parse_pg_array(introduced_distribution_ary || ''); end
+
   def introduced_uncertain_distribution; parse_pg_array(introduced_uncertain_distribution_ary || ''); end
+
   def reintroduced_distribution; parse_pg_array(reintroduced_distribution_ary || ''); end
+
   def extinct_distribution; parse_pg_array(extinct_distribution_ary || ''); end
+
   def extinct_uncertain_distribution; parse_pg_array(extinct_uncertain_distribution_ary || ''); end
+
   def uncertain_distribution; parse_pg_array(uncertain_distribution_ary || ''); end
 
   def recently_changed

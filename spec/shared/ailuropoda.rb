@@ -19,27 +19,27 @@ shared_context "Ailuropoda" do
     )
 
     create_cites_II_addition(
-     :taxon_concept => @family,
-     :effective_at => '1992-06-11',
-     :is_current => true
+      :taxon_concept => @family,
+      :effective_at => '1992-06-11',
+      :is_current => true
     )
     create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '1984-03-14',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '1984-03-14',
+      :is_current => true
     )
 
     create_eu_B_addition(
-     :taxon_concept => @family,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @family,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
     create_eu_A_addition(
-     :taxon_concept => @species,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings

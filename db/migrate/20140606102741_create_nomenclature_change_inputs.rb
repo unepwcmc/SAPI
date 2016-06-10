@@ -21,6 +21,5 @@ class CreateNomenclatureChangeInputs < ActiveRecord::Migration
     add_foreign_key 'nomenclature_change_inputs', 'taxon_concepts',
       name: 'nomenclature_change_inputs_taxon_concept_id_fk',
       column: 'taxon_concept_id'
-
   end
 end

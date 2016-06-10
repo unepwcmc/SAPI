@@ -112,6 +112,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
   end
 
   private
+
   def self.create_table_stmt(target_table_name)
     sql = <<-SQL
       CREATE TABLE #{target_table_name} (PRIMARY KEY(id))

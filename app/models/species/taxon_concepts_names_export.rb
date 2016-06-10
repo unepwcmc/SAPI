@@ -7,7 +7,7 @@ class Species::TaxonConceptsNamesExport < Species::CsvCopyExport
     rel.select(sql_columns)
   end
 
-private
+  private
 
   def resource_name
     'taxon_concepts_names'

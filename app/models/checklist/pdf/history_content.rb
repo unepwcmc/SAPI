@@ -79,12 +79,14 @@ module Checklist::Pdf::HistoryContent
   end
 
   def listing_with_change_type(listing_change)
-    appendix = if listing_change.change_type_name == ChangeType::DELETION
-      nil
-    else
-      listing_change.species_listing_name
-    end
-    change_type = if listing_change.change_type_name == ChangeType::RESERVATION
+    appendix =
+      if listing_change.change_type_name == ChangeType::DELETION
+        nil
+      else
+        listing_change.species_listing_name
+      end
+    change_type =
+      if listing_change.change_type_name == ChangeType::RESERVATION
         '/r'
       elsif listing_change.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
         '/w'
@@ -114,11 +116,12 @@ module Checklist::Pdf::HistoryContent
   end
 
   def listed_taxon_name(taxon_concept)
-    res = if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
-      taxon_concept.full_name.upcase
-    else
-      taxon_concept.full_name
-    end
+    res =
+      if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
+        taxon_concept.full_name.upcase
+      else
+        taxon_concept.full_name
+      end
     if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name
       res = "\\emph{#{res}}"
     end

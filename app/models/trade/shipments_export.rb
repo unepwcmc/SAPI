@@ -50,7 +50,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
     resource_name
   end
 
-private
+  private
 
   def basic_query(options)
     options[:limit] ? @search.query_with_limit : @search.query

@@ -14,7 +14,7 @@ class NomenclatureChange::Split::Constructor
       @nomenclature_change.outputs.build(
         taxon_concept_id: @nomenclature_change.input.taxon_concept_id
       )
-      @nomenclature_change.outputs.build()
+      @nomenclature_change.outputs.build
     end
   end
 
@@ -102,12 +102,13 @@ class NomenclatureChange::Split::Constructor
 
   def output_split_from(output, input, lng)
     output_html =
-    if output.scientific_name.present? && output.new_scientific_name.present?
-      taxon_concept_html(output.display_full_name, output.display_rank_name,
-        output.scientific_name, output.rank.name)
-    else
-      taxon_concept_html(output.display_full_name, output.display_rank_name)
-    end
+      if output.scientific_name.present? &&
+        output.new_scientific_name.present?
+        taxon_concept_html(output.display_full_name, output.display_rank_name,
+          output.scientific_name, output.rank.name)
+      else
+        taxon_concept_html(output.display_full_name, output.display_rank_name)
+      end
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     I18n.with_locale(lng) do
       I18n.translate(

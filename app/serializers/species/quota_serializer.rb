@@ -8,9 +8,11 @@ class Species::QuotaSerializer < ActiveModel::Serializer
   def geo_entity
     object['geo_entity_en'] && JSON.parse(object['geo_entity_en'])
   end
+
   def unit
     object['unit_en'] && JSON.parse(object['unit_en'])
   end
+
   def quota
     object['quota_for_display']
   end

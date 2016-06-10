@@ -7,8 +7,8 @@ class CitesTrade::ShipmentsController < CitesTradeController
     }))
     render :json => @search,
       :serializer => serializer_for_search(@search)
-      # note: not returning search metadata here, since we're not paginating
-      # and calculating the total # of results for reports is expensive
+    # note: not returning search metadata here, since we're not paginating
+    # and calculating the total # of results for reports is expensive
   end
 
   private

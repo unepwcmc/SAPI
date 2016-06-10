@@ -1,7 +1,8 @@
 module DownloadsCache
 
   LISTINGS_DOWNLOAD_DIRS = ['checklist', 'eu_listings', 'cites_listings', 'cms_listings']
-  ADMIN_DOWNLOAD_DIRS = ['taxon_concepts_names', 'synonyms_and_trade_names',
+  ADMIN_DOWNLOAD_DIRS = [
+    'taxon_concepts_names', 'synonyms_and_trade_names',
     'orphaned_taxon_concepts', 'taxon_concepts_distributions', 'common_names',
     'species_reference_output', 'standard_reference_output',
     'documents'
@@ -9,7 +10,8 @@ module DownloadsCache
   DOWNLOAD_DIRS = LISTINGS_DOWNLOAD_DIRS + [
     'quotas', 'cites_suspensions', 'eu_decisions', 'shipments', 'comptab',
     'gross_exports', 'gross_imports', 'net_exports', 'net_imports',
-    'trade_download_stats'] + ADMIN_DOWNLOAD_DIRS
+    'trade_download_stats'
+  ] + ADMIN_DOWNLOAD_DIRS
 
   def self.quotas_path
     downloads_path('quotas')
@@ -196,6 +198,7 @@ module DownloadsCache
     end
     puts "#{Time.now} all EU Decisions download generated in #{elapsed_time}s"
   end
+
   def self.update_admin_downloads
     puts "Updating admin downloads"
     [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|

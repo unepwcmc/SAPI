@@ -13,6 +13,7 @@ class Admin::EuDecisionTypesController < Admin::StandardAuthorizationController
       failure.js { render 'new' }
     end
   end
+
   protected
 
   def collection

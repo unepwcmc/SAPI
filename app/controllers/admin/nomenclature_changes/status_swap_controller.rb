@@ -48,6 +48,7 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
   end
 
   private
+
   def klass
     NomenclatureChange::StatusSwap
   end

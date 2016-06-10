@@ -12,7 +12,7 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
   def update
     update! do |success, failure|
       success.html {
-        if  "1" == params[:redirect_to_eu_suspension_reg]
+        if "1" == params[:redirect_to_eu_suspension_reg]
           redirect_to admin_eu_suspension_regulation_eu_suspensions_url(
             @eu_suspension.start_event_id)
         else

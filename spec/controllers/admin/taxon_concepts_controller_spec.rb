@@ -36,12 +36,12 @@ describe Admin::TaxonConceptsController do
   describe "XHR POST create" do
     it "renders create when successful" do
       xhr :post, :create,
-       taxon_concept: {
+        taxon_concept: {
           name_status: 'A',
           taxonomy_id: cites_eu.id,
           rank_id: create(:rank, name: Rank::GENUS),
           scientific_name: 'Canis',
-          parent_id: create_cites_eu_family,
+          parent_id: create_cites_eu_family
         }
       response.should render_template("create")
     end

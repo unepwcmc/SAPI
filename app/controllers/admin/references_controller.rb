@@ -24,10 +24,11 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
   end
 
   protected
-    def collection
-      @references ||= end_of_association_chain.order(:citation).
-        page(params[:page]).
-        search(params[:query])
-    end
+
+  def collection
+    @references ||= end_of_association_chain.order(:citation).
+      page(params[:page]).
+      search(params[:query])
+  end
 end
 

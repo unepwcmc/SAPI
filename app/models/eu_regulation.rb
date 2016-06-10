@@ -33,8 +33,6 @@ class EuRegulation < Event
   validate :designation_is_eu
   validates :effective_at, :presence => true
 
-
-
   def activate!
     super
     notify_observers(:after_activate)

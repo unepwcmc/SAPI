@@ -9,7 +9,7 @@ class Species::IucnMappingsExport < Species::CsvCopyExport
     rel.select(sql_columns)
   end
 
-private
+  private
 
   def resource_name
     'iucn_mappings'

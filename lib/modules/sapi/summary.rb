@@ -1,7 +1,6 @@
 module Sapi
   module Summary
 
-
     def self.database_stats
       stats = {}
       stats[:core] = self.core_stats
@@ -75,47 +74,47 @@ module Sapi
       trade
     end
 
-    def self.taxonomy_kingdom_stats taxonomy, kingdom
+    def self.taxonomy_kingdom_stats(taxonomy, kingdom)
       stats = {}
       t = Taxonomy.find_by_name(taxonomy)
       k = TaxonConcept.find_by_full_name_and_taxonomy_id(kingdom, t.id)
       stats[:accepted_taxa] = TaxonConcept.where(
-          :taxonomy_id => t.id, 
-          :name_status => 'A').
-        where(["(data->'kingdom_id')::INT = ?", k.id]).count
-      stats[:synonym_taxa] =  TaxonConcept.where(
-          :taxonomy_id => t.id, :name_status => 'S'
-        ).where(["(data->'kingdom_id')::INT = ?", k.id]).count
-      stats[:other_taxa] =  TaxonConcept.where(
-          :taxonomy_id => t.id
-        ).where(["(data->'kingdom_id')::INT = ?", k.id]).
+        :taxonomy_id => t.id,
+        :name_status => 'A'
+      ).where(["(data->'kingdom_id')::INT = ?", k.id]).count
+      stats[:synonym_taxa] = TaxonConcept.where(
+        :taxonomy_id => t.id, :name_status => 'S'
+      ).where(["(data->'kingdom_id')::INT = ?", k.id]).count
+      stats[:other_taxa] = TaxonConcept.where(
+        :taxonomy_id => t.id
+      ).where(["(data->'kingdom_id')::INT = ?", k.id]).
         where("name_status NOT IN ('A', 'S')").count
-      stats[:listing_changes] =  ListingChange.joins(:taxon_concept).
+      stats[:listing_changes] = ListingChange.joins(:taxon_concept).
         where(:taxon_concepts => {:taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
       distributions = Distribution.joins(:taxon_concept).
         where(:taxon_concepts => {:taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id])
-      stats[:distributions] =  distributions.count
-      stats[:distribution_tags] =  ActiveRecord::Base.connection.execute(<<-SQL
+      stats[:distributions] = distributions.count
+      stats[:distribution_tags] = ActiveRecord::Base.connection.execute(<<-SQL
             SELECT COUNT(*) FROM taggings
               INNER JOIN distributions ON
                 taggings.taggable_id = distributions.id AND
                 taggings.taggable_type = 'Distribution'
               INNER JOIN taxon_concepts ON
-                distributions.taxon_concept_id = taxon_concepts.id 
+                distributions.taxon_concept_id = taxon_concepts.id
                 AND taxon_concepts.taxonomy_id = #{t.id}
                 AND (data->'kingdom_id')::INT = #{k.id};
            SQL
         ).values.flatten[0]
-      stats[:distribution_references] =  DistributionReference.
+      stats[:distribution_references] = DistributionReference.
         joins(:distribution => :taxon_concept).
         where(:taxon_concepts => {:taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
-      stats[:taxon_references] =  TaxonConceptReference.joins(:taxon_concept).
+      stats[:taxon_references] = TaxonConceptReference.joins(:taxon_concept).
         where(:taxon_concepts => {:taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
-      stats[:taxon_standard_references] =  TaxonConceptReference.joins(:taxon_concept).
+      stats[:taxon_standard_references] = TaxonConceptReference.joins(:taxon_concept).
         where(:taxon_concepts => {:taxonomy_id => t.id }, :taxon_concept_references => {:is_standard => true}).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
       stats[:common_names] =  TaxonCommon.joins(:taxon_concept).
@@ -210,7 +209,7 @@ module Sapi
       puts ""
     end
 
-    def self.print_count_for klass, count
+    def self.print_count_for(klass, count)
       puts "#{count} #{klass}"
     end
 

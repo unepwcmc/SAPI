@@ -1,4 +1,4 @@
-# TODO replace rank name strings with constants from the Rank model
+# TODO: replace rank name strings with constants from the Rank model
 # or better yet, define methods such as "ranks_below_family"
 # in the rank class to clean up the code here
 module Checklist::Pdf::IndexContent

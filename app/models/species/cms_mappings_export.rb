@@ -8,7 +8,7 @@ class Species::CmsMappingsExport < Species::CsvCopyExport
     rel.select(sql_columns)
   end
 
-private
+  private
 
   def resource_name
     'cms_mappings'

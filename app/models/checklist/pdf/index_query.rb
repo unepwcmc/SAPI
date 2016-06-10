@@ -18,7 +18,8 @@ class Checklist::Pdf::IndexQuery
 
     distinct_columns = [:name_type, :sort_name, :lng]
     distinct_columns_values = {
-      :name_type => {:basic => "'basic'",
+      :name_type => {
+        :basic => "'basic'",
         :english => "'common'",
         :spanish => "'common'",
         :french => "'common'",
@@ -29,25 +30,26 @@ class Checklist::Pdf::IndexQuery
         :english => "REGEXP_REPLACE(UNNEST(english_names_ary), '(.+) (.+)', '\\2, \\1')",
         :spanish => 'UNNEST(spanish_names_ary)',
         :french => 'UNNEST(french_names_ary)',
-        :synonym => if @authors
-          <<-SQL
-          UNNEST(ARRAY(SELECT synonym ||
-          CASE
-          WHEN author_year IS NOT NULL
-          THEN ' ' || author_year
-          ELSE ''
-          END
-          FROM (
-            (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms
-            LEFT JOIN
-            (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
-            ON synonyms.id = author_years.id
-          )
-          ))
-          SQL
-        else
-          'UNNEST(synonyms_ary)'
-        end
+        :synonym =>
+          if @authors
+            <<-SQL
+            UNNEST(ARRAY(SELECT synonym ||
+            CASE
+            WHEN author_year IS NOT NULL
+            THEN ' ' || author_year
+            ELSE ''
+            END
+            FROM (
+              (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms
+              LEFT JOIN
+              (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
+              ON synonyms.id = author_years.id
+            )
+            ))
+            SQL
+          else
+            'UNNEST(synonyms_ary)'
+          end
       },
       :lng => {
         :english => "'E'",

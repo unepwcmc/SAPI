@@ -1,5 +1,5 @@
 # Generated with 'brightbox' on 2013-06-27 08:45:55 +0100
-unless Rake::Task.task_defined?("db:create") 
+unless Rake::Task.task_defined?("db:create")
   namespace(:db) do
 task :create do
   puts "This is a dummy task installed by the Brightbox command"
@@ -9,7 +9,7 @@ task :create do
 end
   end
 end
-unless Rake::Task.task_defined?("db:check:config") 
+unless Rake::Task.task_defined?("db:check:config")
 
   def rails_env
 if defined?(Rails) and Rails.respond_to? :env
@@ -37,7 +37,7 @@ elsif db && db !~ /\A#{config['username']}/
   pe "database name should start with '#{config['username']}' if using cluster"
 end
   end
-  
+
 require 'yaml'
 
 def read_database_yml

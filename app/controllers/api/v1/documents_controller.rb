@@ -70,7 +70,7 @@ class Api::V1::DocumentsController < ApplicationController
       end
       if missing_files.present?
         if missing_files.length == @documents.count
-          render_404 and return
+          render_404 && return
         end
         zos.put_next_entry('missing_files.txt')
         zos.print missing_files.join("\n\n")
@@ -94,7 +94,6 @@ class Api::V1::DocumentsController < ApplicationController
     render file: "#{Rails.root}/public/404", layout: false, formats: [:html],
     status: 404
   end
-
 
   def render_403
     render file: "#{Rails.root}/public/403", layout: false, formats: [:html],

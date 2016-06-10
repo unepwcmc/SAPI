@@ -41,8 +41,8 @@ namespace :import do
 
           ) AS subquery
           SQL
-          #TODO do sth about those unknown distributions!
-          ActiveRecord::Base.connection.execute(sql)
+        #TODO: do sth about those unknown distributions!
+        ActiveRecord::Base.connection.execute(sql)
       end
     end
     puts "There are now #{Distribution.count} taxon concept distributions in the database"

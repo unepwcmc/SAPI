@@ -3,11 +3,12 @@ class NomenclatureChange::StatusChangeProcessor
   def initialize(input_or_output, linked_inputs_or_outputs = [])
     @input_or_output = input_or_output
     @linked_inputs_or_outputs = linked_inputs_or_outputs
-    @old_status = if @input_or_output.kind_of? NomenclatureChange::Output
-      @input_or_output.name_status.dup
-    else
-      @input_or_output.taxon_concept.name_status.dup
-    end
+    @old_status =
+      if @input_or_output.kind_of? NomenclatureChange::Output
+        @input_or_output.name_status.dup
+      else
+        @input_or_output.taxon_concept.name_status.dup
+      end
   end
 
   def summary
@@ -35,6 +36,7 @@ class NomenclatureChange::StatusChangeProcessor
   end
 
   private
+
   def create_relationships(taxon_concept, rel_type)
     @linked_names.each do |linked_name|
       Rails.logger.debug "Creating #{rel_type.name} relationship with #{linked_name.full_name}"

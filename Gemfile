@@ -71,7 +71,6 @@ end
 # Use unicorn as the app server
 # gem 'unicorn'
 
-
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
@@ -96,7 +95,7 @@ group :development do
   gem 'capistrano', '~> 3.4', require: false
   gem 'capistrano-rails',   '~> 1.1', require: false
   gem 'capistrano-bundler', '~> 1.1', require: false
-  gem 'capistrano-rvm',   '~> 0.1', require: false
+  gem 'capistrano-rvm', '~> 0.1', require: false
   gem 'capistrano-sidekiq'
   gem 'capistrano-maintenance', '~> 1.0', require: false
   gem 'capistrano-passenger', '~> 0.2.0', require: false
@@ -107,6 +106,7 @@ group :development do
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
+  gem 'rubocop', '~> 0.40.0', require: false
 end
 
 group :test, :development do

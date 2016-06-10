@@ -22,6 +22,7 @@ class Trade::NumericalityValidationRule < Trade::ValidationRule
   end
 
   private
+
   # Returns records that do not pass the ISNUMERIC test for all columns
   # specified in column_names.
   def matching_records(table_name)

@@ -5,11 +5,11 @@ class Admin::CitesTcsController < Admin::EventsController
     :instance_name => 'cites_tc'
 
   protected
-    def collection
-      @cites_tcs ||= end_of_association_chain.
-        order(:designation_id, :name).includes(:designation).
-        page(params[:page]).
-        search(params[:query])
-    end
 
+  def collection
+    @cites_tcs ||= end_of_association_chain.
+      order(:designation_id, :name).includes(:designation).
+      page(params[:page]).
+      search(params[:query])
+  end
 end

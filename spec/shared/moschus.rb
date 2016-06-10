@@ -73,21 +73,21 @@ shared_context "Moschus" do
     end
 
     create_cites_I_addition(
-     :taxon_concept => @subspecies,
-     :effective_at => '1975-07-01',
-     :is_current => false
+      :taxon_concept => @subspecies,
+      :effective_at => '1975-07-01',
+      :is_current => false
     )
 
     create_cites_II_addition(
-     :taxon_concept => @genus,
-     :effective_at => '1979-06-28',
-     :is_current => false
+      :taxon_concept => @genus,
+      :effective_at => '1979-06-28',
+      :is_current => false
     )
 
     lc = create_cites_I_addition(
-     :taxon_concept => @species2,
-     :effective_at => '1979-06-28',
-     :is_current => false
+      :taxon_concept => @species2,
+      :effective_at => '1979-06-28',
+      :is_current => false
     )
     create(
       :listing_distribution,
@@ -97,23 +97,23 @@ shared_context "Moschus" do
     )
 
     create_cites_II_addition(
-     :taxon_concept => @species2,
-     :effective_at => '1979-06-28',
-     :inclusion_taxon_concept_id => @genus.id,
-     :is_current => false
+      :taxon_concept => @species2,
+      :effective_at => '1979-06-28',
+      :inclusion_taxon_concept_id => @genus.id,
+      :is_current => false
     )
 
     create_cites_I_addition(
-     :taxon_concept => @subspecies,
-     :effective_at => '1979-06-28',
-     :inclusion_taxon_concept_id => @species2.id,
-     :is_current => true
+      :taxon_concept => @subspecies,
+      :effective_at => '1979-06-28',
+      :inclusion_taxon_concept_id => @species2.id,
+      :is_current => true
     )
 
     cites_lc1 = create_cites_I_addition(
-     :taxon_concept => @genus,
-     :effective_at => '1983-07-29',
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '1983-07-29',
+      :is_current => true
     )
     [bhutan, india, nepal].each do |country|
       create(
@@ -124,9 +124,9 @@ shared_context "Moschus" do
       )
     end
     cites_lc2 = create_cites_II_addition(
-     :taxon_concept => @genus,
-     :effective_at => '1983-07-29',
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '1983-07-29',
+      :is_current => true
     )
 
     cites_lc2_exc = create_cites_II_exception(
@@ -144,9 +144,9 @@ shared_context "Moschus" do
     end
 
     cites_lc3 = create_cites_I_deletion(
-     :taxon_concept => @species2,
-     :effective_at => '1983-07-29',
-     :is_current => false
+      :taxon_concept => @species2,
+      :effective_at => '1983-07-29',
+      :is_current => false
     )
 
     create(

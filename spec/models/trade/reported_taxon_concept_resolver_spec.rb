@@ -12,7 +12,7 @@ describe Trade::ReportedTaxonConceptResolver do
         :taxon_concept => @accepted_name,
         :other_taxon_concept => @trade_name,
         :taxon_relationship_type => trade_name_relationship_type
-      )    
+      )
     end
     let(:resolver){
       Trade::ReportedTaxonConceptResolver.new(@trade_name.id)
@@ -31,7 +31,7 @@ describe Trade::ReportedTaxonConceptResolver do
         :taxon_concept => @accepted_name,
         :other_taxon_concept => @synonym,
         :taxon_relationship_type => synonym_relationship_type
-      )    
+      )
     end
     let(:resolver){
       Trade::ReportedTaxonConceptResolver.new(@synonym.id)

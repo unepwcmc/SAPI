@@ -20,7 +20,8 @@ class QuotasCopyWorker
         )
       SQL
     ActiveRecord::Base.connection.execute(
-      ActiveRecord::Base.send(:sanitize_sql_array, [sql,
+      ActiveRecord::Base.send(:sanitize_sql_array, [
+        sql,
         :from_year => options["from_year"],
         :start_date => Date.parse(options["start_date"]),
         :end_date => Date.parse(options["end_date"]),
@@ -37,6 +38,7 @@ class QuotasCopyWorker
         :to_text => options["to_text"],
         :current_user_id => options["current_user_id"],
         :url => options["url"]
-    ]))
+      ])
+    )
   end
 end

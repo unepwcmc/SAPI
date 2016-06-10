@@ -24,7 +24,7 @@ class Reference < ActiveRecord::Base
   has_many :taxon_concept_references
   has_many :distribution_references
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(citation) LIKE UPPER(:query)",
         :query => "%#{query}%")

@@ -46,6 +46,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   end
 
   private
+
   def klass
     NomenclatureChange
   end

@@ -17,9 +17,9 @@ class Instrument < ActiveRecord::Base
   belongs_to :designation
   has_many :taxon_instruments
 
-  def self.search query
+  def self.search(query)
     if query.present?
-      where("UPPER(name) LIKE UPPER(:query)", 
+      where("UPPER(name) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
       scoped

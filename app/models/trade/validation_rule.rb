@@ -112,14 +112,14 @@ class Trade::ValidationRule < ActiveRecord::Base
         (scope_def.keys & ['inclusion', 'exclusion']).each do |k|
           tmp_def[k] = scope_def[k].map{ |value| GeoEntity.find_by_iso_code2(value).id }
         end
-        tmp_def['blank'] = scope_def['blank'] if scope_def.has_key?('blank')
-        res[scope_column + '_id'] = tmp_def        
+        tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
+        res[scope_column + '_id'] = tmp_def
       when /(.+)_code$/
         tmp_def = {}
         (scope_def.keys & ['inclusion', 'exclusion']).each do |k|
           tmp_def[k] = scope_def[k].map{ |value| TradeCode.find_by_type_and_code($1.capitalize, value).id }
         end
-        tmp_def['blank'] = scope_def['blank'] if scope_def.has_key?('blank')
+        tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
         res[$1 + '_id'] = tmp_def
       else
         tmp_def = {}
@@ -158,7 +158,8 @@ class Trade::ValidationRule < ActiveRecord::Base
     if is_strict
       column_names
     else
-      column_names & ['taxon_concept_id', 'taxon_name', 'appendix', 'year', 'term_code',
+      column_names & [
+        'taxon_concept_id', 'taxon_name', 'appendix', 'year', 'term_code',
         'trading_partner', 'importer', 'exporter', 'reporter_type', 'quantity'
       ]
     end
@@ -168,7 +169,8 @@ class Trade::ValidationRule < ActiveRecord::Base
     if is_strict
       shipments_columns
     else
-      shipments_columns & ['taxon_concept_id', 'appendix', 'year', 'term_id',
+      shipments_columns & [
+        'taxon_concept_id', 'appendix', 'year', 'term_id',
         'exporter_id', 'importer_id', 'reporter_type', 'quantity'
       ]
     end

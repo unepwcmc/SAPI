@@ -13,14 +13,12 @@ set :deploy_to, "/home/#{fetch(:deploy_user)}/#{fetch(:application)}"
 
 set :backup_path, "/home/#{fetch(:deploy_user)}/Backup"
 
-
 # Default value for :scm is :git
 set :scm, :git
 set :scm_username, "unepwcmc-read"
 
 # Default value for :format is :pretty
 # set :format, :pretty
-
 
 set :rvm_type, :user
 set :rvm_ruby_version, '2.2.3'
@@ -31,14 +29,11 @@ set :rvm_ruby_version, '2.2.3'
 # Default value for :pty is false
 set :pty, true
 
-
 set :ssh_options, {
-  forward_agent: true,
+  forward_agent: true
 }
 
-
 before "deploy:symlink:shared", "rsync:sync"
-
 
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml config/mailer_config.yml config/secrets.yml .env}
@@ -98,11 +93,9 @@ namespace :deploy do
   end
 end
 
-
-
 require 'yaml'
 require 'json'
-secrets =  YAML.load(File.open('config/secrets.yml'))
+secrets = YAML.load(File.open('config/secrets.yml'))
 
 set :slack_token, secrets["development"]["capistrano_slack"] # comes from inbound webhook integration
 set :api_token, secrets["development"]["api_token"]
@@ -112,13 +105,13 @@ set :slack_subdomain, "wcmc" # if your subdomain is example.slack.com
 #optional
 set :slack_application, "SAPI" # override Capistrano `application`
 deployment_animals = [
- ["Loxodonta deployana", ":elephant:"],
- ["Canis deployus", ":wolf:"],
- ["Panthera capistranis", ":tiger:"],
- ["Bison deployon", ":ox:"],
- ["Ursus capistranus", ":bear:"],
- ["Crotalus rattledeploy", ":snake:"],
- ["Caiman assetocompilatus", ":crocodile:"]
+  ["Loxodonta deployana", ":elephant:"],
+  ["Canis deployus", ":wolf:"],
+  ["Panthera capistranis", ":tiger:"],
+  ["Bison deployon", ":ox:"],
+  ["Ursus capistranus", ":bear:"],
+  ["Crotalus rattledeploy", ":snake:"],
+  ["Caiman assetocompilatus", ":crocodile:"]
 ]
 
 shuffle_deployer = deployment_animals.shuffle.first

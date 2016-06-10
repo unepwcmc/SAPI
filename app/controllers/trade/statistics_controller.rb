@@ -2,8 +2,8 @@ class Trade::StatisticsController < TradeController
   layout 'admin'
 
   def index
-  	@start_date = params[:stats_start_date] ? Date.parse(params[:stats_start_date]) : Date.today.beginning_of_year
-  	@end_date = params[:stats_end_date] ? Date.parse(params[:stats_end_date]) : Date.today
+    @start_date = params[:stats_start_date] ? Date.parse(params[:stats_start_date]) : Date.today.beginning_of_year
+    @end_date = params[:stats_end_date] ? Date.parse(params[:stats_end_date]) : Date.today
     @years = (1975..Date.today.year).to_a.reverse
     @total_shipments = Trade::Shipment.count
     @last_updated = Trade::Shipment.maximum(:updated_at).strftime("%d/%m/%Y %H:%M")
@@ -14,12 +14,12 @@ class Trade::StatisticsController < TradeController
       where("created_at::DATE BETWEEN ? AND ?", @start_date, @end_date).
       where('created_at != updated_at').
       count
-    @taxon_concepts_in_trade = Trade::Shipment.from('(SELECT taxon_concept_id FROM trade_shipments GROUP BY taxon_concept_id) s').count()
+    @taxon_concepts_in_trade = Trade::Shipment.from('(SELECT taxon_concept_id FROM trade_shipments GROUP BY taxon_concept_id) s').count
   end
 
   def summary_creation
-    @created_date_selected = if params[:date] 
-                               params[:date]['createdDateSelected'].to_i 
+    @created_date_selected = if params[:date]
+                               params[:date]['createdDateSelected'].to_i
                              else
                                Time.now.year
                              end
@@ -28,8 +28,8 @@ class Trade::StatisticsController < TradeController
   end
 
   def summary_year
-    @date_selected = if params[:date] 
-                       Date.parse("01/01/#{params[:date]['yearSelected']}") 
+    @date_selected = if params[:date]
+                       Date.parse("01/01/#{params[:date]['yearSelected']}")
                      else
                        Date.today
                      end

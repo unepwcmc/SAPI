@@ -5,11 +5,12 @@ class NomenclatureChange::CascadingNotesProcessor
   end
 
   def run
-    @taxon_concept = if @input_or_output.kind_of? NomenclatureChange::Output
-      @input_or_output.new_taxon_concept || @input_or_output.taxon_concept
-    else
-      @input_or_output.taxon_concept
-    end
+    @taxon_concept =
+      if @input_or_output.kind_of? NomenclatureChange::Output
+        @input_or_output.new_taxon_concept || @input_or_output.taxon_concept
+      else
+        @input_or_output.taxon_concept
+      end
     return false unless @taxon_concept
     descendents_for_note_cascading(@taxon_concept).each do |d|
       Rails.logger.debug("Processing note for descendant #{d.full_name} of input #{@taxon_concept.full_name}")

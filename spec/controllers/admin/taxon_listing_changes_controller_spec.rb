@@ -72,7 +72,8 @@ describe Admin::TaxonListingChangesController do
   describe "POST create" do
     context "when successful" do
       it "redirects to taxon_concept listing_changes page" do
-        post :create, :listing_change => {
+        post :create,
+          :listing_change => {
             :change_type_id => @addition.id,
             :species_listing_id => @appendix.id,
             :effective_at => 1.week.ago
@@ -131,7 +132,8 @@ describe Admin::TaxonListingChangesController do
     end
     context "when successful" do
       it "redirects to taxon_concept listing_changes page" do
-        put :update, :listing_change => {
+        put :update,
+          :listing_change => {
             :change_type_id => @addition.id,
             :species_listing_id => @appendix.id,
             :effective_at => 1.week.ago
@@ -167,7 +169,8 @@ describe Admin::TaxonListingChangesController do
           :effective_at => 1.week.ago,
           :event_id => eu_regulation.id
         )
-        put :update, :listing_change => {
+        put :update,
+          :listing_change => {
             :change_type_id => addition.id,
             :species_listing_id => annex.id,
             :effective_at => 1.week.ago
@@ -195,13 +198,13 @@ describe Admin::TaxonListingChangesController do
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id,
         :listing_change => {
-        :annotation_attributes => {
-          "short_note_en"=>"", "short_note_es"=>"",
-          "short_note_fr"=>"", "full_note_en"=>"",
-          "full_note_es"=>"", "full_note_fr"=>"",
-          "id"=> @annotation.id
+          :annotation_attributes => {
+            "short_note_en"=>"", "short_note_es"=>"",
+            "short_note_fr"=>"", "full_note_en"=>"",
+            "full_note_es"=>"", "full_note_fr"=>"",
+            "id"=> @annotation.id
+          }
         }
-      }
       response.should redirect_to(
         admin_taxon_concept_designation_listing_changes_url(
           @taxon_concept, @designation)

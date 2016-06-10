@@ -66,6 +66,7 @@ class CitesSuspension < TradeRestriction
   def start_notification_name
     start_notification && start_notification.name
   end
+
   def end_notification_name
     end_notification && end_notification.name
   end
@@ -78,7 +79,7 @@ class CitesSuspension < TradeRestriction
     end_date ? end_date.strftime('%d/%m/%Y') : ''
   end
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(geo_entities.name_en) LIKE UPPER(:query)
             OR UPPER(geo_entities.iso_code2) LIKE UPPER(:query)

@@ -15,15 +15,16 @@ module Checklist::Pdf::Helpers
   end
 
   def taxon_name_at_rank(taxon_concept)
-    res = if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
-      LatexToPdf.escape_latex(taxon_concept.full_name.upcase)
-    else
-      if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name
-        "\\textit{#{LatexToPdf.escape_latex(taxon_concept.full_name)}}"
+    res =
+      if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
+        LatexToPdf.escape_latex(taxon_concept.full_name.upcase)
       else
-        LatexToPdf.escape_latex(taxon_concept.full_name)
+        if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name
+          "\\textit{#{LatexToPdf.escape_latex(taxon_concept.full_name)}}"
+        else
+          LatexToPdf.escape_latex(taxon_concept.full_name)
+        end
       end
-    end
     res += " #{LatexToPdf.escape_latex(taxon_concept.spp)}" if taxon_concept.spp
     res
   end

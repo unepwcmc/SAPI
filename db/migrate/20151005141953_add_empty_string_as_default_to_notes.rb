@@ -41,6 +41,6 @@ class AddEmptyStringAsDefaultToNotes < ActiveRecord::Migration
         SET internal_note=''
         WHERE internal_note IS NULL;
       SQL
-    )     
+    )
   end
 end

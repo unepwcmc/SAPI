@@ -27,18 +27,18 @@ shared_context :sapi do
         end
       end
     end
-    d  
+    d
   }
 
   let(:eu){
     d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::EU)
     unless d
       d = create(:designation, :name => Designation::EU, :taxonomy => cites_eu)
-      %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch| 
+      %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
         unless ChangeType.find_by_designation_id_and_name(d.id, ch)
           create(:change_type, :name => ch, :designation => d)
         end
-        %w(A B C D).each do |app| 
+        %w(A B C D).each do |app|
           unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
             create(
               :species_listing, :name => "Annex #{app}", :abbreviation => app,
@@ -354,12 +354,14 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_appendix_year_validation
     create(:taxon_concept_appendix_year_validation_rule,
       :is_primary => false,
       :is_strict => true
     )
   end
+
   def create_term_unit_validation
     create(:inclusion_validation_rule,
       :column_names => ['term_code', 'unit_code'],
@@ -367,6 +369,7 @@ shared_context :sapi do
       :is_primary => false
     )
   end
+
   def create_term_purpose_validation
     create(:inclusion_validation_rule,
       :column_names => ['term_code', 'purpose_code'],
@@ -374,6 +377,7 @@ shared_context :sapi do
       :is_primary => false
     )
   end
+
   def create_taxon_concept_term_validation
     create(:inclusion_validation_rule,
       :column_names => ['taxon_concept_id', 'term_code'],
@@ -382,6 +386,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_country_of_origin_validation
     create(:inclusion_validation_rule,
       :scope => {
@@ -395,6 +400,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_exporter_validation
     create(:inclusion_validation_rule,
       :scope => {
@@ -409,6 +415,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_exporter_country_of_origin_validation
     create(:distinct_values_validation_rule,
       :column_names => ['exporter', 'country_of_origin'],
@@ -416,6 +423,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_exporter_importer_validation
     create(:distinct_values_validation_rule,
       :column_names => ['exporter', 'importer'],
@@ -423,6 +431,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_source_validation
     create(:taxon_concept_source_validation_rule,
       :column_names => ['taxon_concept_id', 'source_code'],

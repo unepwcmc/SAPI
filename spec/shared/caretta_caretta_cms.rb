@@ -19,15 +19,15 @@ shared_context "Caretta caretta CMS" do
     )
 
     create_cms_II_addition(
-     :taxon_concept => @family,
-     :effective_at => '1983-11-01',
-     :is_current => true
+      :taxon_concept => @family,
+      :effective_at => '1983-11-01',
+      :is_current => true
     )
 
     create_cms_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '1986-01-24',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '1986-01-24',
+      :is_current => true
     )
 
     Sapi::StoredProcedures.rebuild_cms_taxonomy_and_listings

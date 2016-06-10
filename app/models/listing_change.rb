@@ -31,7 +31,7 @@ class ListingChange < ActiveRecord::Base
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
     :party_listing_distribution_attributes, :inclusion_taxon_concept_id,
-    :annotation_attributes, :hash_annotation_id, :event_id, 
+    :annotation_attributes, :hash_annotation_id, :event_id,
     :excluded_geo_entities_ids, :excluded_taxon_concepts_ids, :internal_notes,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id
@@ -112,7 +112,7 @@ class ListingChange < ActiveRecord::Base
     taxon_concept && taxon_concept.full_name
   end
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
              OR UPPER(change_types.name) LIKE UPPER(:query)

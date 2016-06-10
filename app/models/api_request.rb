@@ -30,12 +30,14 @@ class ApiRequest < ActiveRecord::Base
   CONTROLLERS = ['taxon_concepts', 'distributions', 'cites_legislation', 'eu_legislation', 'references']
 
   def self.top_5_most_active_users
-    subquery = self.recent.select([
-      :user_id,
-      'COUNT(*) AS cnt',
-      'COUNT(NULLIF(response_status = 200, FALSE)) AS success_cnt',
-      'COUNT(NULLIF(response_status = 200, TRUE)) AS failure_cnt'
-      ]).group(:user_id).
+    subquery = self.recent.select(
+      [
+        :user_id,
+        'COUNT(*) AS cnt',
+        'COUNT(NULLIF(response_status = 200, FALSE)) AS success_cnt',
+        'COUNT(NULLIF(response_status = 200, TRUE)) AS failure_cnt'
+      ]
+    ).group(:user_id).
       where('user_id IS NOT NULL')
     self.from("(#{subquery.to_sql}) api_requests").
       order('cnt DESC').limit(5)

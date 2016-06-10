@@ -27,7 +27,7 @@ class ChangeObserver < ActiveRecord::Observer
 
   protected
 
-  def clear_cache model
+  def clear_cache(model)
     DownloadsCacheCleanupWorker.perform_async(model.class.to_s.tableize.to_sym)
   end
 

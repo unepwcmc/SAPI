@@ -3,7 +3,7 @@ module Trade::TradeDataDownloadLogger
 
   module_function
 
-  def log_download request, search_params, rows
+  def log_download(request, search_params, rows)
     data = {}
     data["user_ip"] = request.ip
     data["number_of_rows"] = rows
@@ -29,7 +29,7 @@ module Trade::TradeDataDownloadLogger
 
   private
 
-  def self.get_field_values param, model
+  def self.get_field_values(param, model)
     if param == "" then return 'All' end
     if param == nil then return '' end
     if model.to_s == 'GeoEntity'

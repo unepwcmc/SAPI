@@ -32,7 +32,7 @@ class Distribution < ActiveRecord::Base
 
   validates :taxon_concept_id, :uniqueness => { :scope => :geo_entity_id, :message => 'already has this distribution' }
 
-  def add_existing_references ids
+  def add_existing_references(ids)
     reference_ids = ids.split(",")
 
     reference_ids.each do |r|
@@ -40,9 +40,9 @@ class Distribution < ActiveRecord::Base
       unless reference.nil?
         self.distribution_references.
           create({
-          :distribution_id => self.id,
-          :reference_id => reference.id
-        })
+            :distribution_id => self.id,
+            :reference_id => reference.id
+          })
       end
     end
   end

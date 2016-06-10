@@ -56,25 +56,31 @@ describe CitesSuspensionNotification do
     end
     context "when dependent objects attached" do
       context "when start notification" do
-        let!(:cites_suspension){ create(
-          :cites_suspension, :start_notification => cites_suspension_notification
-        ) }
+        let!(:cites_suspension){
+          create(
+            :cites_suspension, :start_notification => cites_suspension_notification
+          )
+        }
         specify { cites_suspension_notification.destroy.should be_false }
       end
       context "when end notification" do
-        let!(:cites_suspension){ create(
-          :cites_suspension,
-          :start_notification => create_cites_suspension_notification,
-          :end_notification => cites_suspension_notification
-        ) }
+        let!(:cites_suspension){
+          create(
+            :cites_suspension,
+            :start_notification => create_cites_suspension_notification,
+            :end_notification => cites_suspension_notification
+          )
+        }
         specify { cites_suspension_notification.destroy.should be_false }
       end
       context "when confirmation notification, make sure it gets destroyed" do
-        let!(:cites_suspension){ create(
-          :cites_suspension,
-          :start_notification => create_cites_suspension_notification,
-          :confirmation_notifications => [cites_suspension_notification]
-        ) }
+        let!(:cites_suspension){
+          create(
+            :cites_suspension,
+            :start_notification => create_cites_suspension_notification,
+            :confirmation_notifications => [cites_suspension_notification]
+          )
+        }
         subject { cites_suspension_notification.cites_suspension_confirmations }
         specify{
           cites_suspension_notification.destroy

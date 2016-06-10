@@ -17,7 +17,7 @@
 
 class Trade::DistinctValuesValidationRule < Trade::InclusionValidationRule
 
-  # TODO should have a validation for at least 2 column names
+  # TODO: should have a validation for at least 2 column names
 
   def validation_errors_for_shipment(shipment)
     return nil unless shipment_in_scope?(shipment)
@@ -33,6 +33,7 @@ class Trade::DistinctValuesValidationRule < Trade::InclusionValidationRule
   end
 
   private
+
   # Returns records that have the same value for both columns
   # specified in column_names. If more then 2 columns are specified,
   # only the first two are taken into consideration.

@@ -19,22 +19,24 @@ module SearchParamSanitiser
   end
 
   def sanitise_positive_integer(i, default = nil)
-    new_i = if i.is_a?(String)
-      tmp = i.to_i
-      tmp.to_s == i ? tmp : nil
-    else
-      i
-    end
+    new_i =
+      if i.is_a?(String)
+        tmp = i.to_i
+        tmp.to_s == i ? tmp : nil
+      else
+        i
+      end
     new_i && new_i > 0 ? new_i : default
   end
 
   def sanitise_float(f, default = nil)
-    new_f = if f.is_a?(String)
-      tmp = f.to_f
-      tmp.to_s == f ? tmp : nil
-    else
-      f
-    end
+    new_f =
+      if f.is_a?(String)
+        tmp = f.to_f
+        tmp.to_s == f ? tmp : nil
+      else
+        f
+      end
     new_f || default
   end
 

@@ -19,8 +19,10 @@ class PermitCleanupWorker
       WHERE trade_permits.id = unused_permits.id
       SQL
     ActiveRecord::Base.connection.execute(
-      ActiveRecord::Base.send(:sanitize_sql_array, [sql,
+      ActiveRecord::Base.send(:sanitize_sql_array, [
+        sql,
         permits_ids: permits_ids.map(&:to_i)
-    ]))
+      ])
+    )
   end
 end

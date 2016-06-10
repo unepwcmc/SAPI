@@ -5,11 +5,11 @@ class Admin::EcSrgsController < Admin::EventsController
     :instance_name => 'ec_srg'
 
   protected
-    def collection
-      @ec_srgs ||= end_of_association_chain.
-        order('designation_id, effective_at DESC').includes(:designation).
-        page(params[:page]).
-        search(params[:query])
-    end
 
+  def collection
+    @ec_srgs ||= end_of_association_chain.
+      order('designation_id, effective_at DESC').includes(:designation).
+      page(params[:page]).
+      search(params[:query])
+  end
 end

@@ -47,6 +47,7 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
   end
 
   private
+
   def klass
     NomenclatureChange::StatusToSynonym
   end

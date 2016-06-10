@@ -37,7 +37,8 @@ describe Admin::EuOpinionsController do
         @eu_decision_type = create(:eu_decision_type)
       end
       it "redirects to the EU Opinions index" do
-        post :create, :eu_opinion => {
+        post :create,
+          :eu_opinion => {
             :eu_decision_type_id => @eu_decision_type.id,
             :start_date => Date.today,
             :geo_entity_id => create(
@@ -45,7 +46,7 @@ describe Admin::EuOpinionsController do
             )
           },
           :taxon_concept_id => @taxon_concept.id
-          response.should redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept.id))
+        response.should redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept.id))
       end
     end
 
@@ -87,7 +88,8 @@ describe Admin::EuOpinionsController do
 
     context "when successful" do
       it "renders taxon_concepts EU Opinions page" do
-        put :update, :eu_opinion => {
+        put :update,
+          :eu_opinion => {
             :eu_decision_type_id => @eu_decision_type.id
           },
           :id => @eu_opinion.id,
@@ -100,7 +102,8 @@ describe Admin::EuOpinionsController do
 
     context "when not successful" do
       it "renders new" do
-        put :update, :eu_opinion => {
+        put :update,
+          :eu_opinion => {
             :eu_decision_type_id => nil
           },
           :id => @eu_opinion.id,

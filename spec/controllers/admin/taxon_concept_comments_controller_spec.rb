@@ -26,7 +26,6 @@ describe Admin::TaxonConceptCommentsController do
     end
   end
 
-
   describe 'PUT update' do
     let(:comment){ @taxon_concept.comments.create({note: 'bleh'}) }
     it 'redirects to index with notice when success' do

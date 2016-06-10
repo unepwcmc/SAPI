@@ -1,4 +1,73 @@
 inherit_from: .rubocop_todo.yml
 
+AllCops:
+  TargetRubyVersion: 2.2
+  Exclude:
+    - 'lib/tasks/bbgem.rake'
+    - 'db/schema.rb'
+    - 'old_cap/*'
+
 Style/StringLiterals:
   EnforcedStyle: single_quotes
+
+# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
+# SupportedStyles: outdent, indent
+Style/AccessModifierIndentation:
+  EnforcedStyle: indent
+
+# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
+# SupportedStyles: special_inside_parentheses, consistent, align_brackets
+Style/IndentArray:
+  EnforcedStyle: consistent
+
+# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
+# SupportedStyles: special_inside_parentheses, consistent, align_braces
+Style/IndentHash:
+  EnforcedStyle: consistent
+
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: normal, rails
+Style/IndentationConsistency:
+  EnforcedStyle: normal
+  Exclude:
+    - 'db/migrate/*'
+    - 'config/initializers/normalise_blank_values.rb'
+
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: symmetrical, new_line, same_line
+Style/MultilineArrayBraceLayout:
+  EnforcedStyle: symmetrical
+
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: symmetrical, new_line, same_line
+Style/MultilineHashBraceLayout:
+  EnforcedStyle: symmetrical
+
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: always, conditionals
+Style/AndOr:
+  Exclude:
+    - 'db/migrate/*'
+
+# Offense count: 551
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# SupportedStyles: leading, trailing
+Style/DotPosition:
+  EnforcedStyle: trailing
+
+# Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
+Style/ExtraSpacing:
+  AllowForAlignment: true
+  Exclude:
+    - 'db/migrate/*'
+
+# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
+# SupportedStyles: consistent, special_for_inner_method_call, special_for_inner_method_call_in_parentheses
+Style/FirstParameterIndentation:
+  Enabled: true
+
+# Configuration parameters: Width.
+Style/IndentationWidth:
+  Exclude:
+    - 'db/migrate/*'

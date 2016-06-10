@@ -15,7 +15,6 @@ describe NomenclatureChange::StatusSwap::Processor do
     tc
   }
 
-
   before(:each){ synonym_relationship_type }
   let(:processor){ NomenclatureChange::StatusSwap::Processor.new(status_change) }
   let(:primary_output_taxon_concept){ status_change.primary_output.taxon_concept }
@@ -46,7 +45,6 @@ describe NomenclatureChange::StatusSwap::Processor do
       end
     end
   end
-
 
   describe :summary do
     let(:status_change){ a_to_s_with_swap }

@@ -46,9 +46,11 @@ describe Admin::NomenclatureChanges::LumpController do
       context "when no legislation" do
         it 'redirects to next step' do
           get :show, id: :legislation, nomenclature_change_id: @lump.id
-          response.should redirect_to(admin_nomenclature_change_lump_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
-          ))
+          response.should redirect_to(
+            admin_nomenclature_change_lump_url(
+              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
+            )
+          )
         end
       end
       it 'renders the summary template' do
@@ -61,9 +63,11 @@ describe Admin::NomenclatureChanges::LumpController do
   describe 'POST create' do
     it 'redirects to lump wizard' do
       post :create, nomenclature_change_id: 'new'
-      response.should redirect_to(admin_nomenclature_change_lump_url(
-        nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'inputs'
-      ))
+      response.should redirect_to(
+        admin_nomenclature_change_lump_url(
+          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'inputs'
+        )
+      )
     end
   end
 
@@ -79,14 +83,17 @@ describe Admin::NomenclatureChanges::LumpController do
             1 => {taxon_concept_id: create_cites_eu_species.id}
           }
         }, nomenclature_change_id: @lump.id, id: 'inputs'
-        response.should redirect_to(admin_nomenclature_change_lump_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'outputs'
-        ))
+        response.should redirect_to(
+          admin_nomenclature_change_lump_url(
+            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'outputs'
+          )
+        )
       end
     end
     context 'when unsuccessful' do
       it 're-renders step' do
-        put :update, nomenclature_change_lump: {
+        put :update,
+          nomenclature_change_lump: {
             inputs_attributes: {
               0 => {taxon_concept_id: nil}
             }

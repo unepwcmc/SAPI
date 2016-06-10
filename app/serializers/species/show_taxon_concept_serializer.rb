@@ -10,7 +10,6 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
 
-
   def rank_name
     object.data['rank_name']
   end
@@ -109,7 +108,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     distributions_with_tags_and_references
   end
 
-  def cache_key  
+  def cache_key
     key = [
       self.class.name,
       self.id,

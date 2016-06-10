@@ -29,21 +29,22 @@ class Trade::Filter
     @query = Trade::Shipment.from('trade_shipments_with_taxa_view trade_shipments')
 
     unless @taxon_concepts_ids.empty?
-      cascading_ranks = if @internal
-        # always cascade if query is coming from the internal interface
-        Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
-      elsif @taxon_with_descendants && !@internal
-        # the magnificent hack to make sure that queries coming from the public
-        # interface cascade to taxon descendants when searching by genus,
-        # but only through the 'genus' selector, not 'taxon'
-        Rank.in_range(Rank::SPECIES, Rank::GENUS)
-      else
-        # this has to be public interface + search by taxon
-        # only cascade for species
-        Rank.in_range(Rank::SPECIES, Rank::SPECIES)
-      end
+      cascading_ranks =
+        if @internal
+          # always cascade if query is coming from the internal interface
+          Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
+        elsif @taxon_with_descendants && !@internal
+          # the magnificent hack to make sure that queries coming from the public
+          # interface cascade to taxon descendants when searching by genus,
+          # but only through the 'genus' selector, not 'taxon'
+          Rank.in_range(Rank::SPECIES, Rank::GENUS)
+        else
+          # this has to be public interface + search by taxon
+          # only cascade for species
+          Rank.in_range(Rank::SPECIES, Rank::SPECIES)
+        end
       taxon_concepts = MTaxonConcept.where(id: @taxon_concepts_ids)
-      taxon_concepts_conditions = 
+      taxon_concepts_conditions =
         taxon_concepts.map do |tc|
           [:id, tc.id]
         end + taxon_concepts.select do |tc|
@@ -59,7 +60,7 @@ class Trade::Filter
     unless @reported_taxon_concepts_ids.empty?
       cascading_ranks = Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
       reported_taxon_concepts = MTaxonConcept.where(id: @reported_taxon_concepts_ids)
-      reported_taxon_concepts_conditions = 
+      reported_taxon_concepts_conditions =
         reported_taxon_concepts.map do |tc|
           [:id, tc.id]
         end + reported_taxon_concepts.select do |tc|
@@ -117,7 +118,6 @@ class Trade::Filter
       @query = @query.where(:source_id => nil)
     end
 
-
     if !@countries_of_origin_ids.empty?
       local_field = "country_of_origin_id"
       blank_query = @country_of_origin_blank ? "OR country_of_origin_id IS NULL" : ""
@@ -138,7 +138,6 @@ class Trade::Filter
     end
 
     initialize_internal_query if @internal
-
   end
 
   def initialize_internal_query
@@ -178,7 +177,6 @@ class Trade::Filter
         @query = @query.where(:quantity => @quantity)
       end
     end
-
   end
 
 end

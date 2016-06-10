@@ -69,7 +69,7 @@ describe TaxonConcept do
         end
         context "for subspecies Boa constrictor constrictor" do
           specify{ @subspecies2.cites_listed.should be_false }
-        end        
+        end
       end
 
       describe :cites_show do

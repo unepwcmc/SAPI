@@ -134,20 +134,17 @@ describe Trade::Filter do
       specify { subject.length.should == 2 }
     end
 
-
     context "when searching for units_ids" do
       subject { Trade::Filter.new({:units_ids => [@unit.id]}).results }
       specify { subject.should include(@shipment1) }
       specify { subject.length.should == 2 }
     end
 
-
     context "when searching for purposes_ids" do
       subject { Trade::Filter.new({:purposes_ids => [@purpose.id]}).results }
       specify { subject.should include(@shipment1) }
       specify { subject.length.should == 6 }
     end
-
 
     context "when searching for sources_ids" do
       context "when code" do
@@ -238,7 +235,6 @@ describe Trade::Filter do
       end
     end
 
-
     context "when searching by permit" do
       context "when permit number" do
         subject { Trade::Filter.new({:internal => true, :permits_ids => [@export_permit1.id]}).results }
@@ -278,7 +274,6 @@ describe Trade::Filter do
       subject { Trade::Filter.new({:purposes_ids => [@purpose.id]}) }
       specify { subject.total_cnt.should == 6 }
     end
-
 
   end
 end

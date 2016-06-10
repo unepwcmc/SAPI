@@ -91,13 +91,13 @@ describe TaxonConcept do
       let!(:tc1) {
         create_cites_eu_subspecies(
           parent: tc_parent,
-          taxon_name: create(:taxon_name, scientific_name: 'duplicatus'),
+          taxon_name: create(:taxon_name, scientific_name: 'duplicatus')
         )
       }
       let(:tc2) {
         build_cites_eu_subspecies(
           parent: tc_parent,
-          taxon_name: build(:taxon_name, scientific_name: 'duplicatus'),
+          taxon_name: build(:taxon_name, scientific_name: 'duplicatus')
         )
       }
       specify { tc2.should have(1).error_on(:full_name) }

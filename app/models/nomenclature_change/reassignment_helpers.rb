@@ -20,7 +20,7 @@ module NomenclatureChange::ReassignmentHelpers
   end
 
   def note_with_resolved_placeholders_en(input, output)
-      note_with_resolved_placeholders(note_en, input, output)
+    note_with_resolved_placeholders(note_en, input, output)
   end
 
   def note_with_resolved_placeholders_es(input, output)

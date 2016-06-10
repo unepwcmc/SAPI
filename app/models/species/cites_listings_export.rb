@@ -1,6 +1,6 @@
 class Species::CitesListingsExport < Species::ListingsExport
 
-private
+  private
 
   def designation_name
     'cites'
@@ -33,7 +33,6 @@ private
       'Extinct_Distribution', 'Extinct(?)_Distribution',
       'Distribution_Uncertain'
     ]
-
   end
 
 end

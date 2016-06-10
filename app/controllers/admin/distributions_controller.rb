@@ -49,7 +49,7 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
   def destroy
     destroy! do |success, failure|
       success.html {
-        redirect_to admin_taxon_concept_distributions_url(@taxon_concept), 
+        redirect_to admin_taxon_concept_distributions_url(@taxon_concept),
           :notice => 'Operation succeeded'
       }
       failure.html {
@@ -60,6 +60,7 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
   end
 
   protected
+
   def load_tags_and_geo_entities
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:is_current => true,
