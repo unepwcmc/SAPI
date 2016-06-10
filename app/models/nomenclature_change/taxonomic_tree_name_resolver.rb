@@ -23,11 +23,12 @@ class NomenclatureChange::TaxonomicTreeNameResolver
       full_name: @expected_full_name
     )
     # match on author & year as well
-    compatible_node = if node.author_year.blank?
-      compatible_node.where('SQUISH_NULL(author_year) IS NULL')
-    else
-      compatible_node.where(author_year: node.author_year)
-    end.first
+    compatible_node =
+      if node.author_year.blank?
+        compatible_node.where('SQUISH_NULL(author_year) IS NULL')
+      else
+        compatible_node.where(author_year: node.author_year)
+      end.first
     if !compatible_node
       compatible_node = create_compatible_node(node)
     elsif compatible_node && !['A', 'N'].include?(compatible_node.name_status)
@@ -49,11 +50,12 @@ class NomenclatureChange::TaxonomicTreeNameResolver
   end
 
   def create_compatible_node(node)
-    expected_scientific_name = if ['A', 'N'].include?(node.name_status)
-      @expected_full_name.split.last
-    else
-      @expected_full_name
-    end
+    expected_scientific_name =
+      if ['A', 'N'].include?(node.name_status)
+        @expected_full_name.split.last
+      else
+        @expected_full_name
+      end
     compatible_node = TaxonConcept.create(
       taxonomy_id: node.taxonomy_id,
       scientific_name: expected_scientific_name,

@@ -20,6 +20,5 @@ class UpdateTaxonomyWorker
         'touched_at IS NOT NULL AND touched_at > updated_at'
       )
     end
-
   end
 end

@@ -39,9 +39,11 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
   describe 'POST create' do
     it 'redirects to status_change wizard' do
       post :create, nomenclature_change_id: 'new'
-      response.should redirect_to(admin_nomenclature_change_status_to_synonym_url(
-        nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'primary_output'
-      ))
+      response.should redirect_to(
+        admin_nomenclature_change_status_to_synonym_url(
+          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'primary_output'
+        )
+      )
     end
   end
 
@@ -57,9 +59,11 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
             new_name_status: 'S'
           }
         }, nomenclature_change_id: @status_change.id, id: 'primary_output'
-        response.should redirect_to(admin_nomenclature_change_status_to_synonym_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'relay'
-        ))
+        response.should redirect_to(
+          admin_nomenclature_change_status_to_synonym_url(
+            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'relay'
+          )
+        )
       end
     end
     context 'when unsuccessful' do

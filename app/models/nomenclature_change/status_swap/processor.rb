@@ -12,13 +12,14 @@ class NomenclatureChange::StatusSwap::Processor < NomenclatureChange::Processor
 
     chain << reassignment_processor(@secondary_output)
 
-    chain << if @primary_output.new_name_status == 'A'
-      linked_names = @secondary_output ? [@secondary_output] : []
-      NomenclatureChange::StatusUpgradeProcessor.new(@primary_output, linked_names)
-    else
-      accepted_names = @secondary_output ? [@secondary_output] : []
-      NomenclatureChange::StatusDowngradeProcessor.new(@primary_output, accepted_names)
-    end
+    chain <<
+      if @primary_output.new_name_status == 'A'
+        linked_names = @secondary_output ? [@secondary_output] : []
+        NomenclatureChange::StatusUpgradeProcessor.new(@primary_output, linked_names)
+      else
+        accepted_names = @secondary_output ? [@secondary_output] : []
+        NomenclatureChange::StatusDowngradeProcessor.new(@primary_output, accepted_names)
+      end
     chain.compact
   end
 

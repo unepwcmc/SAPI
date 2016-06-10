@@ -83,7 +83,6 @@ class NomenclatureChange::Output < ActiveRecord::Base
   before_validation :populate_taxon_concept_fields,
     :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
 
-
   def tag_list
     parse_pg_array(read_attribute(:tag_list)||"").compact
   end
@@ -91,7 +90,6 @@ class NomenclatureChange::Output < ActiveRecord::Base
   def tag_list=(ary)
     write_attribute(:tag_list, "{#{ary && ary.join(',')}}")
   end
-
 
   def populate_taxon_concept_fields
     self.parent_id = taxon_concept.parent_id_changed? ? taxon_concept.parent_id_was : taxon_concept.parent_id
@@ -139,11 +137,12 @@ class NomenclatureChange::Output < ActiveRecord::Base
 
   def tmp_taxon_concept
     name_status_to_save = (new_name_status.present? ? new_name_status : name_status)
-    scientific_name = if ['A', 'N'].include?(name_status_to_save)
-      display_full_name.split.last
-    else
-      display_full_name
-    end
+    scientific_name =
+      if ['A', 'N'].include?(name_status_to_save)
+        display_full_name.split.last
+      else
+        display_full_name
+      end
     taxon_concept_attrs = {
       parent_id: new_parent_id || parent_id,
       rank_id: new_rank_id || rank_id,
@@ -153,9 +152,12 @@ class NomenclatureChange::Output < ActiveRecord::Base
     }
 
     if will_create_taxon?
-      taxonomy = (taxonomy_id.present? ? Taxonomy.find(taxonomy_id) :
-        Taxonomy.find_by_name(Taxonomy::CITES_EU)
-      )
+      taxonomy =
+        if taxonomy_id.present?
+          Taxonomy.find(taxonomy_id)
+        else
+          Taxonomy.find_by_name(Taxonomy::CITES_EU)
+        end
       TaxonConcept.new(
         taxon_concept_attrs.merge({
           taxonomy_id: taxonomy.id,
@@ -187,14 +189,14 @@ class NomenclatureChange::Output < ActiveRecord::Base
     if rank.name == Rank::SPECIES
       display_full_name.split[0]
     elsif [Rank::SUBSPECIES, Rank::VARIETY].include?(rank.name)
-      display_full_name.split[0..1].join (' ')
+      display_full_name.split[0..1].join ' '
     else
       nil
     end
   end
 
   def default_parent
-    if ['S', 'T'].include? name_status &&
+    if ['S', 'T'].include?(name_status) &&
       parent_full_name = expected_parent_name
       TaxonConcept.where(
         taxonomy_id: Taxonomy.find_by_name(Taxonomy::CITES_EU).try(:id),

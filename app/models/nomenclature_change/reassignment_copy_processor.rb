@@ -82,7 +82,6 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
         taggable_id: copied_object.id
       }).first || copied_object.taggings.build(tagging.comparison_attributes)
     end
-
   end
 
   def build_listing_change_associations(reassignable, copied_object)

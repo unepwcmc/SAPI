@@ -39,9 +39,11 @@ describe Admin::NomenclatureChanges::StatusSwapController do
       context "when no legislation" do
         it 'redirects to next step' do
           get :show, id: :legislation, nomenclature_change_id: @status_change.id
-          response.should redirect_to(admin_nomenclature_change_status_swap_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
-          ))
+          response.should redirect_to(
+            admin_nomenclature_change_status_swap_url(
+              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
+            )
+          )
         end
       end
     end
@@ -59,9 +61,11 @@ describe Admin::NomenclatureChanges::StatusSwapController do
   describe 'POST create' do
     it 'redirects to status_change wizard' do
       post :create, nomenclature_change_id: 'new'
-      response.should redirect_to(admin_nomenclature_change_status_swap_url(
-        nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'primary_output'
-      ))
+      response.should redirect_to(
+        admin_nomenclature_change_status_swap_url(
+          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'primary_output'
+        )
+      )
     end
   end
 
@@ -77,9 +81,11 @@ describe Admin::NomenclatureChanges::StatusSwapController do
             new_name_status: 'S'
           }
         }, nomenclature_change_id: @status_change.id, id: 'primary_output'
-        response.should redirect_to(admin_nomenclature_change_status_swap_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'secondary_output'
-        ))
+        response.should redirect_to(
+          admin_nomenclature_change_status_swap_url(
+            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'secondary_output'
+          )
+        )
       end
     end
     context 'when unsuccessful' do

@@ -76,57 +76,62 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   end
 
   protected
-    # used in create
-    def collection
-      @taxon_concepts ||= end_of_association_chain.where(:name_status => 'A').
-        includes([:rank, :taxonomy, :taxon_name, :parent]).
-        order(:taxonomic_position).page(params[:page])
-    end
 
-    def determine_layout
-      action_name == 'index' ? 'admin' : 'taxon_concepts'
-    end
+  # used in create
+  def collection
+    @taxon_concepts ||= end_of_association_chain.where(:name_status => 'A').
+      includes([:rank, :taxonomy, :taxon_name, :parent]).
+      order(:taxonomic_position).page(params[:page])
+  end
 
-    def sanitize_search_params
-      @search_params = SearchParams.new(
-        params[:search_params] ||
-        { :taxonomy => { :id => Taxonomy.
-          where(:name => Taxonomy::CITES_EU).limit(1).select(:id).first.id }
-        })
-    end
+  def determine_layout
+    action_name == 'index' ? 'admin' : 'taxon_concepts'
+  end
 
-    def load_tags
-      @tags = PresetTag.where(:model => PresetTag::TYPES[:TaxonConcept])
-    end
+  def sanitize_search_params
+    @search_params = SearchParams.new(
+      params[:search_params] ||
+      {
+        :taxonomy => {
+          :id => Taxonomy.where(:name => Taxonomy::CITES_EU).limit(1).
+            select(:id).first.id
+        }
+      }
+    )
+  end
 
-    def split_stringified_ids_lists
-      return true if !params[:taxon_concept] || !params[:taxon_concept][:name_status]
-      ids_list_key = case params[:taxon_concept][:name_status]
-        when 'S' then :accepted_names_ids
-        when 'T' then :accepted_names_for_trade_name_ids
-        when 'H' then :hybrid_parents_ids
-        else nil
+  def load_tags
+    @tags = PresetTag.where(:model => PresetTag::TYPES[:TaxonConcept])
+  end
+
+  def split_stringified_ids_lists
+    return true if !params[:taxon_concept] || !params[:taxon_concept][:name_status]
+    ids_list_key =
+      case params[:taxon_concept][:name_status]
+      when 'S' then :accepted_names_ids
+      when 'T' then :accepted_names_for_trade_name_ids
+      when 'H' then :hybrid_parents_ids
       end
-      if ids_list_key &&
-        params[:taxon_concept].has_key?(ids_list_key) &&
-        (stringified_ids_list = params[:taxon_concept][ids_list_key]) &&
-        stringified_ids_list.is_a?(String)
-        params[:taxon_concept][ids_list_key] = stringified_ids_list.split(',').map(&:to_i)
-      end
+    if ids_list_key &&
+      params[:taxon_concept].key?(ids_list_key) &&
+      (stringified_ids_list = params[:taxon_concept][ids_list_key]) &&
+      stringified_ids_list.is_a?(String)
+      params[:taxon_concept][ids_list_key] = stringified_ids_list.split(',').map(&:to_i)
     end
+  end
 
-    def render_new_by_name_status
-      if @taxon_concept.is_synonym?
-        render('new_synonym')
-      elsif @taxon_concept.is_hybrid?
-        render('new_hybrid')
-      elsif @taxon_concept.is_trade_name?
-        render('new_trade_name')
-      elsif @taxon_concept.name_status == 'N'
-        render('new_n_name')
-      else
-        render('new')
-      end
+  def render_new_by_name_status
+    if @taxon_concept.is_synonym?
+      render('new_synonym')
+    elsif @taxon_concept.is_hybrid?
+      render('new_hybrid')
+    elsif @taxon_concept.is_trade_name?
+      render('new_trade_name')
+    elsif @taxon_concept.name_status == 'N'
+      render('new_n_name')
+    else
+      render('new')
     end
+  end
 
 end

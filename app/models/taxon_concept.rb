@@ -78,13 +78,15 @@ class TaxonConcept < ActiveRecord::Base
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"]
+        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"
+    ]
   has_many :inverse_synonym_relationships, :class_name => 'TaxonRelationship',
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"]
+        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"
+    ]
   has_many :synonyms, :class_name => 'TaxonConcept',
     :through => :synonym_relationships, :source => :other_taxon_concept
   has_many :accepted_names, :class_name => 'TaxonConcept',
@@ -102,7 +104,8 @@ class TaxonConcept < ActiveRecord::Base
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}')"]
+        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}')"
+    ]
   has_many :hybrids, :class_name => 'TaxonConcept',
     :through => :hybrid_relationships, :source => :other_taxon_concept
   has_many :hybrid_parents, :class_name => 'TaxonConcept',
@@ -112,13 +115,15 @@ class TaxonConcept < ActiveRecord::Base
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"]
+        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"
+    ]
   has_many :inverse_trade_name_relationships, :class_name => 'TaxonRelationship',
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"]
+        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"
+    ]
   has_many :trade_names, :class_name => 'TaxonConcept',
     :through => :trade_name_relationships, :source => :other_taxon_concept
   has_many :accepted_names_for_trade_name, :class_name => 'TaxonConcept',
@@ -240,11 +245,12 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def scientific_name=(str)
-    scientific_name = if ['A', 'N'].include?(name_status)
-      TaxonName.sanitize_scientific_name(str)
-    else
-      str
-    end
+    scientific_name =
+      if ['A', 'N'].include?(name_status)
+        TaxonName.sanitize_scientific_name(str)
+      else
+        str
+      end
     tn = TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
     if tn
       self.taxon_name = tn
@@ -349,11 +355,12 @@ class TaxonConcept < ActiveRecord::Base
   def expected_full_name(parent)
     if self.rank &&
       Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(self.rank.name)
-      parent.full_name + if self.rank.name == Rank::VARIETY
-        ' var. '
-      else
-        ' '
-      end + (self.taxon_name.try(:scientific_name).try(:downcase) || '')
+      parent.full_name +
+        if self.rank.name == Rank::VARIETY
+          ' var. '
+        else
+          ' '
+        end + (self.taxon_name.try(:scientific_name).try(:downcase) || '')
     else
       self.full_name
     end
@@ -361,7 +368,7 @@ class TaxonConcept < ActiveRecord::Base
 
   def rebuild_taxonomy?(params)
     new_full_name = params[:taxon_concept] ? params[:taxon_concept][:full_name] : ''
-    new_full_name and new_full_name != full_name and
+    new_full_name && new_full_name != full_name &&
       Rank.in_range(Rank::VARIETY, Rank::GENUS).include?(rank.name)
   end
 
@@ -414,11 +421,12 @@ class TaxonConcept < ActiveRecord::Base
 
   def init_accepted_taxa(new_ids)
     return [[],[]] unless ['S', 'T', 'H'].include?(name_status)
-    current_ids = case name_status
+    current_ids =
+      case name_status
       when 'S' then accepted_names.pluck(:id)
       when 'T' then accepted_names_for_trade_name.pluck(:id)
       when 'H' then hybrid_parents.pluck(:id)
-    end
+      end
     ids_to_add = new_ids - current_ids
     ids_to_remove = current_ids - new_ids
 
@@ -495,15 +503,15 @@ class TaxonConcept < ActiveRecord::Base
   def ensure_taxonomic_position
     if new_record? && fixed_order_required? && taxonomic_position.blank?
       prev_taxonomic_position =
-      if parent
-        last_sibling = TaxonConcept.where(:parent_id => parent_id).
-          maximum(:taxonomic_position)
-        last_sibling || (parent.taxonomic_position + '.0')
-      else
-        last_root = TaxonConcept.where(:parent_id => nil).
-          maximum(:taxonomic_position)
-        last_root || '0'
-      end
+        if parent
+          last_sibling = TaxonConcept.where(:parent_id => parent_id).
+            maximum(:taxonomic_position)
+          last_sibling || (parent.taxonomic_position + '.0')
+        else
+          last_root = TaxonConcept.where(:parent_id => nil).
+            maximum(:taxonomic_position)
+          last_root || '0'
+        end
       prev_taxonomic_position_parts = prev_taxonomic_position.split('.')
       prev_taxonomic_position_parts << (prev_taxonomic_position_parts.pop || 0).to_i + 1
       self.taxonomic_position = prev_taxonomic_position_parts.join('.')

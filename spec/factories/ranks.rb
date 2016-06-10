@@ -44,18 +44,20 @@ end
 
 FactoryGirl.define do
   factory :rank do
-    name { [
-      Rank::KINGDOM,
-      Rank::PHYLUM,
-      Rank::CLASS,
-      Rank::ORDER,
-      Rank::FAMILY,
-      Rank::SUBFAMILY,
-      Rank::GENUS,
-      Rank::SPECIES,
-      Rank::SUBSPECIES,
-      Rank::VARIETY
-    ].sample }
+    name {
+      [
+        Rank::KINGDOM,
+        Rank::PHYLUM,
+        Rank::CLASS,
+        Rank::ORDER,
+        Rank::FAMILY,
+        Rank::SUBFAMILY,
+        Rank::GENUS,
+        Rank::SPECIES,
+        Rank::SUBSPECIES,
+        Rank::VARIETY
+      ].sample
+    }
     display_name_en { |r| r.name }
     initialize_with { Rank.find_by_name(name) || new(attributes_for_rank(name)) }
   end

@@ -19,6 +19,7 @@ Lint/AmbiguousOperator:
 # Configuration parameters: AllowSafeAssignment.
 Lint/AssignmentInCondition:
   Exclude:
+    - 'app/models/nomenclature_change/output.rb'
     - 'lib/tasks/bbgem.rake'
 
 # Offense count: 21
@@ -766,6 +767,7 @@ Style/SymbolProc:
     - 'app/serializers/trade/show_annual_report_upload_serializer.rb'
     - 'lib/tasks/db_migrate_plpgsql.rake'
     - 'lib/tasks/elibrary/importable.rb'
+    - 'spec/factories/ranks.rb'
     - 'spec/models/nomenclature_change/lump/constructor_spec.rb'
     - 'spec/models/nomenclature_change/split/constructor_spec.rb'
 
