@@ -89,7 +89,7 @@ class NomenclatureChange::Split::Constructor
         'split.input_split_into',
         output_taxa: outputs_html,
         input_taxon: input_html,
-        default: 'Translation missing'
+        default: ''
       )
     end
   end
@@ -115,7 +115,7 @@ class NomenclatureChange::Split::Constructor
         'split.output_split_from',
         output_taxon: output_html,
         input_taxon: input_html,
-        default: 'Translation missing'
+        default: ''
       )
     end
   end
