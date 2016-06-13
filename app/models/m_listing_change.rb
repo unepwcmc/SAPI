@@ -11,6 +11,7 @@ module MListingChange
       translates :full_note, fallback: false
       translates :hash_full_note, :inherited_short_note, :inherited_full_note,
         :auto_note, :party_full_name
+      translates :nomenclature_note, fallback: false
     end
   end
 
