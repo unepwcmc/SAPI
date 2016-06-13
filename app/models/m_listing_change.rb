@@ -41,10 +41,6 @@ module MListingChange
     CountryDictionary.instance.get_names_by_ids(countries_ids).compact
   end
 
-  def nomenclature_note
-    self.nomenclature_note_en
-  end
-
   def to_timeline_event
     Checklist::TimelineEvent.new(
       self.as_json(
