@@ -82,7 +82,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
         "status_change.status_elevated_to_accepted_name",
         output_new_taxon: output_new_html,
         output_old_taxon: output_old_html,
-        default: 'Translation missing'
+        default: ''
       )
     end
   end

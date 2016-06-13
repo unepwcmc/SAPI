@@ -59,7 +59,7 @@ class NomenclatureChange::Lump::Constructor
         'lump.input_lumped_into',
         input_taxon: input_html,
         output_taxon: output_html,
-        default: 'Translation missing'
+        default: ''
       )
     end
   end
@@ -74,7 +74,7 @@ class NomenclatureChange::Lump::Constructor
         'lump.output_lumped_from',
         output_taxon: output_html,
         input_taxa: inputs_html,
-        default: 'Translation missing'
+        default: ''
       )
     end
   end
@@ -124,13 +124,13 @@ class NomenclatureChange::Lump::Constructor
     output = @nomenclature_change.output
     input_html = taxon_concept_html('[[input]]', output.display_rank_name)
     output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
-    note = '<p>'
+    note = ''
     note << yield(input_html, output_html)
     note << in_year(@nomenclature_change.event, lng)
     if @nomenclature_change.event
       note << following_taxonomic_changes(@nomenclature_change.event, lng)
     end
-    note + '.</p>'
+    note = "<p>#{note}.</p>" if note.present?
   end
 
   def multi_lingual_listing_change_note

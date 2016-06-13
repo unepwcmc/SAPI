@@ -89,7 +89,7 @@ class NomenclatureChange::Split::Constructor
         'split.input_split_into',
         output_taxa: outputs_html,
         input_taxon: input_html,
-        default: 'Translation missing'
+        default: ''
       )
     end
   end
@@ -115,7 +115,7 @@ class NomenclatureChange::Split::Constructor
         'split.output_split_from',
         output_taxon: output_html,
         input_taxon: input_html,
-        default: 'Translation missing'
+        default: ''
       )
     end
   end
@@ -165,13 +165,13 @@ class NomenclatureChange::Split::Constructor
     input = @nomenclature_change.input
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     output_html = taxon_concept_html('[[output]]', input.taxon_concept.rank.name)
-    note = '<p>'
+    note = ''
     note << yield(input_html, output_html)
     note << in_year(@nomenclature_change.event, lng)
     if @nomenclature_change.event
       note << following_taxonomic_changes(@nomenclature_change.event, lng)
     end
-    note + '.</p>'
+    note = "<p>#{note}.</p>" if note.present?
   end
 
   def multi_lingual_listing_change_note
