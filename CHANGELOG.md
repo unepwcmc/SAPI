@@ -1,3 +1,5 @@
+### 0.10.1 - E-Library bug fix (deleting documents)
+
 ### 0.10.0 - E-Library
 
 ### 0.9.6.4
