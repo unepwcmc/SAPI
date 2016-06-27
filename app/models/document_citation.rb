@@ -30,4 +30,8 @@ class DocumentCitation < ActiveRecord::Base
     self.taxon_concept_ids = ids.split(',')
   end
 
+  after_destroy do |dc|
+    dc.document.touch
+  end
+
 end
