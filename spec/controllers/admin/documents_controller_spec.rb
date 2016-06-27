@@ -21,7 +21,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
     describe "GET index" do
       before(:each) do
         @document3 = create(:document, :title => 'CC no event!', date: DateTime.new(2014,01,01))
-        DocumentSearch.refresh
+        DocumentSearch.refresh_citations_and_documents
       end
 
       it "assigns @documents sorted by time of creation" do
@@ -66,7 +66,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
           before(:each) do
             @document3 = create(:proposal, event: create_cites_cop(published_at: DateTime.new(2014,01,01)))
             create(:proposal_details, document_id: @document3.id, proposal_outcome_id: proposal_outcome.id)
-            DocumentSearch.refresh
+            DocumentSearch.refresh_citations_and_documents
           end
           it "retrieves documents for tag" do
             get :index, "document_tags_ids" => [proposal_outcome.id]
@@ -77,7 +77,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
           before(:each) do
             @document3 = create(:review_of_significant_trade, event: create_ec_srg(published_at: DateTime.new(2014,01,01)))
             create(:review_details, document_id: @document3.id, review_phase_id: review_phase.id, process_stage_id: process_stage.id)
-            DocumentSearch.refresh
+            DocumentSearch.refresh_citations_and_documents
           end
           it "retrieves documents for review_phase tag" do
             get :index, "document_tags_ids" => [review_phase.id]
@@ -104,7 +104,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
         end
         it "assigns @documents for event, sorted by title" do
           @document3 = create(:document, title: 'CC hello world', event: event2)
-          DocumentSearch.refresh
+          DocumentSearch.refresh_citations_and_documents
           get :index, events_ids: [event.id, event2.id]
           assigns(:documents).should eq([@document3, @document2, @document1])
         end

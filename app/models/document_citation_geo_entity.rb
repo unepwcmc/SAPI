@@ -16,4 +16,8 @@ class DocumentCitationGeoEntity < ActiveRecord::Base
   attr_accessible :created_by_id, :document_citation_id, :geo_entity_id, :updated_by_id
   belongs_to :geo_entity
   belongs_to :document_citation, touch: true
+
+  after_destroy do |dc_ge|
+    dc_ge.document_citation.touch
+  end
 end
