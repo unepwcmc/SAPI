@@ -103,19 +103,56 @@ class DocumentSearch
   end
 
   def add_extra_conditions
-    add_taxon_concepts_condition if @taxon_concepts_ids.present?
-    add_geo_entities_condition if @geo_entities_ids.present?
+    if @taxon_concepts_ids.present? && @geo_entities_ids.present?
+      add_citations_condition
+    elsif @taxon_concepts_ids.present?
+      add_taxon_concepts_condition
+    elsif @geo_entities_ids.present?
+      add_geo_entities_condition
+    end
     add_document_tags_condition if @document_tags_ids.present?
   end
 
+  def add_citations_condition
+    combinations = @taxon_concepts_ids.product(@geo_entities_ids)
+    condition_values = []
+    condition_string = combinations.map do |c|
+      condition_values += c
+      'taxon_concept_id = ? AND geo_entity_id = ?'
+    end.join(' OR ')
+    filter_by_citations(
+      condition_string,
+      condition_values
+    )
+  end
+
   def add_taxon_concepts_condition
-    @query = @query.where(
-      "taxon_concept_ids && ARRAY[#{@taxon_concepts_ids.join(',')}]"
+    filter_by_citations(
+      'taxon_concept_id IN (?)',
+      [@taxon_concepts_ids]
     )
   end
 
   def add_geo_entities_condition
-    @query = @query.where("geo_entity_ids && ARRAY[#{@geo_entities_ids.join(',')}]")
+    filter_by_citations(
+      'geo_entity_id IN (?)',
+      [@geo_entities_ids]
+    )
+  end
+
+  def filter_by_citations(condition_string, condition_values)
+    join_sql = ActiveRecord::Base.send(
+      :sanitize_sql_array,
+      [
+        "JOIN (
+        SELECT DISTINCT document_id
+        FROM document_citations_mview
+        WHERE #{condition_string}
+        ) t ON t.document_id = documents.id",
+        *condition_values
+      ]
+    )
+    @query = @query.joins(join_sql)
   end
 
   def add_document_tags_condition
@@ -161,14 +198,25 @@ class DocumentSearch
 
   REFRESH_INTERVAL = 5
 
-  def self.needs_refreshing?
+  def self.documents_need_refreshing?
     Document.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).limit(1).count > 0 ||
     Document.count < Document.from('api_documents_mview documents').count
   end
 
-  def self.refresh
+  def self.citations_need_refreshing?
+    DocumentCitation.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).limit(1).count > 0 ||
+    DocumentCitation.count < DocumentCitation.select('DISTINCT id').
+      from('document_citations_mview citations').count
+  end
+
+  def self.refresh_documents
     ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
     DocumentSearch.increment_cache_iterator
+  end
+
+  def self.refresh_citations_and_documents
+    ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW document_citations_mview')
+    refresh_documents
   end
 
   def self.clear_cache

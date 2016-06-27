@@ -8,7 +8,7 @@ describe Admin::EventDocumentsController, sidekiq: :inline do
     before(:each) do
       @document1 = create(:document, event: event, sort_index: 2)
       @document2 = create(:document, event: event, sort_index: 1)
-      DocumentSearch.refresh
+      DocumentSearch.refresh_citations_and_documents
     end
 
     describe "GET show_order" do

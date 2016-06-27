@@ -22,7 +22,7 @@ describe Api::V1::DocumentsController, :type => :controller do
     citation3 = create(:document_citation, document_id: @document3.id)
     create(:document_citation_taxon_concept, document_citation_id: citation3.id,
       taxon_concept_id: @taxon_concept.id)
-    DocumentSearch.refresh
+    DocumentSearch.refresh_citations_and_documents
   end
 
   context "GET index returns all documents" do
