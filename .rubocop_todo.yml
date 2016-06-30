@@ -34,11 +34,6 @@ Lint/DeprecatedClassMethods:
     - 'lib/tasks/elibrary/document_files_importer.rb'
     - 'lib/tasks/trade_appendix_report.rake'
 
-# Offense count: 1
-Lint/DuplicateMethods:
-  Exclude:
-    - 'app/models/taxon_concept_observer.rb'
-
 # Offense count: 2
 Lint/DuplicatedKey:
   Exclude:
