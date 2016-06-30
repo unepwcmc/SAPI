@@ -52,10 +52,10 @@ class Document < ActiveRecord::Base
   # TODO: validates inclusion of type in available types
   accepts_nested_attributes_for :citations, :allow_destroy => true,
     :reject_if => proc { |attributes|
-    attributes['stringy_taxon_concept_ids'].blank? && (
-      attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].reject(&:blank?).empty?
-    )
-  }
+      attributes['stringy_taxon_concept_ids'].blank? && (
+        attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].reject(&:blank?).empty?
+      )
+    }
   mount_uploader :filename, DocumentFileUploader
 
   before_validation :set_title
