@@ -261,7 +261,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS vo
       FROM taxon_concepts h
       INNER JOIN taxon_names ON h.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON h.rank_id = ranks.id
-      WHERE name_status = 'A' AND
+      WHERE name_status IN ('A', 'N') AND
         CASE
         WHEN node_id IS NOT NULL THEN h.id = node_id
         ELSE h.parent_id IS NULL
@@ -275,7 +275,7 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS vo
       hstore(LOWER(ranks.name) || '_id', (hi.id)::VARCHAR)
       FROM q
       JOIN taxon_concepts hi
-      ON hi.parent_id = q.id AND hi.name_status = 'A'
+      ON hi.parent_id = q.id AND hi.name_status IN ('A', 'N')
       INNER JOIN taxon_names ON hi.taxon_name_id = taxon_names.id
       INNER JOIN ranks ON hi.rank_id = ranks.id
     )
