@@ -103,7 +103,7 @@ module Checklist::Pdf::HistoryContent
       listing_change.send("short_note_#{lng}")
     )
     nomenclature_note = LatexToPdf.html2latex(
-      listing_change.nomenclature_note_en
+      listing_change.send("nomenclature_note_#{lng}")
     )
     if listing_change.display_in_footnote
       full_note = listing_change.send("full_note_#{lng}")
