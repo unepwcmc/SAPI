@@ -266,6 +266,7 @@ Style/ColonMethodCall:
 # Configuration parameters: EnforcedStyle, SupportedStyles, SingleLineConditionsOnly.
 # SupportedStyles: assign_to_condition, assign_inside_condition
 Style/ConditionalAssignment:
+  Enabled: false
   Exclude:
     - 'app/controllers/api/v1/taxon_concepts_controller.rb'
     - 'app/models/checklist/checklist.rb'
@@ -331,6 +332,7 @@ Style/For:
 # Offense count: 5
 # Configuration parameters: MinBodyLength.
 Style/GuardClause:
+  Enabled: false
   Exclude:
     - 'app/models/annotation_observer.rb'
     - 'app/models/cites_suspension_notification.rb'
