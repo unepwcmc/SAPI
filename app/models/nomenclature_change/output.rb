@@ -11,20 +11,22 @@
 #  new_scientific_name    :string(255)
 #  new_author_year        :string(255)
 #  new_name_status        :string(255)
-#  note_en                :text
-#  note_es                :text
-#  note_fr                :text
+#  note_en                :text             default("")
 #  created_by_id          :integer          not null
 #  updated_by_id          :integer          not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  internal_note          :text
+#  internal_note          :text             default("")
 #  is_primary_output      :boolean          default(TRUE)
 #  parent_id              :integer
 #  rank_id                :integer
 #  scientific_name        :string(255)
 #  author_year            :string(255)
 #  name_status            :string(255)
+#  note_es                :text             default("")
+#  note_fr                :text             default("")
+#  taxonomy_id            :integer
+#  tag_list               :text             default("--- []\n")
 #
 
 # Represents an output of a nomenclature change.

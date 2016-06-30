@@ -5,14 +5,14 @@
 #  id                     :integer          not null, primary key
 #  nomenclature_change_id :integer          not null
 #  taxon_concept_id       :integer          not null
-#  note_en                :text
-#  note_es                :text
-#  note_fr                :text
-#  internal_note          :text
+#  note_en                :text             default("")
 #  created_by_id          :integer          not null
 #  updated_by_id          :integer          not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  internal_note          :text             default("")
+#  note_es                :text             default("")
+#  note_fr                :text             default("")
 #
 
 # Represents an input of a nomenclature change.
