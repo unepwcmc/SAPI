@@ -1,6 +1,6 @@
 task :resolve_host_to_country => :environment do
   require 'csv'
-  hosts = CSV.read('/home/agnessa/Data/hosts.csv', headers:true)
+  hosts = CSV.read('/home/agnessa/Data/hosts.csv', headers: true)
   hosts_and_countries = hosts.map do |row|
     geo_ip_data = Sapi::GeoIP.instance.resolve(row[0])
     [row[0], geo_ip_data[:country]]
