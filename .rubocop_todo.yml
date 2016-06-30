@@ -34,13 +34,6 @@ Lint/DeprecatedClassMethods:
     - 'lib/tasks/elibrary/document_files_importer.rb'
     - 'lib/tasks/trade_appendix_report.rake'
 
-# Offense count: 69
-# Cop supports --auto-correct.
-# Configuration parameters: AlignWith, SupportedStyles, AutoCorrect.
-# SupportedStyles: keyword, variable, start_of_line
-Lint/EndAlignment:
-  Enabled: false
-
 # Offense count: 2
 Lint/HandleExceptions:
   Exclude:
