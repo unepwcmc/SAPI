@@ -229,16 +229,16 @@ module TaxonConceptHelper
 
   def taxon_concept_internal_note_form(comment)
     form_for [:admin, @taxon_concept, comment] do |f|
-      content_tag(:table, style:'width:100%') do
+      content_tag(:table, style: 'width:100%') do
         content_tag(:tr) do
-          content_tag(:td, style:'width:30%') do
+          content_tag(:td, style: 'width:30%') do
             taxon_concept_internal_note_label(comment)
           end +
           content_tag(:td) do
             f.text_area(
               :note,
               rows: 4,
-              style:'width:100%'
+              style: 'width:100%'
             ) +
             f.hidden_field(:comment_type) +
             f.submit('Update', class: 'btn btn-primary')
@@ -250,9 +250,9 @@ module TaxonConceptHelper
 
   def taxon_concept_internal_note_display(comment)
     return '' unless comment
-    content_tag(:table, style:'width:100%') do
+    content_tag(:table, style: 'width:100%') do
       content_tag(:tr) do
-        content_tag(:td, style:'width:30%') do
+        content_tag(:td, style: 'width:30%') do
           taxon_concept_internal_note_label(comment)
         end +
         content_tag(:td, comment.note)
