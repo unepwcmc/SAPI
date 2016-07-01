@@ -39,6 +39,8 @@ class NomenclatureChange::DeleteUnreassignedProcessor
     end
   end
 
-  def summary; []; end
+  def summary
+    []
+  end
 
 end

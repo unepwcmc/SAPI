@@ -9,7 +9,9 @@ class Elibrary::DocumentsImporter
     @document_group = $1
   end
 
-  def table_name; :"elibrary_documents_#{@document_group}_import"; end
+  def table_name
+    :"elibrary_documents_#{@document_group}_import"
+  end
 
   def columns_with_type
     [

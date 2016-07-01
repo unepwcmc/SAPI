@@ -61,7 +61,9 @@ class Document < ActiveRecord::Base
   before_validation :set_title
   before_validation :reset_designation_if_event_set
 
-  def self.display_name; 'Document'; end
+  def self.display_name
+    'Document'
+  end
 
   # Returns document types (class objects) that are relevant to E-Library
   def self.elibrary_document_types

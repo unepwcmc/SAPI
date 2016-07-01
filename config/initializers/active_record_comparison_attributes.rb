@@ -9,7 +9,9 @@ module ComparisonAttributes
       [:id, :created_at, :updated_at, :created_by_id, :updated_by_id, :original_id]
     end
 
-    def text_attributes; []; end
+    def text_attributes
+      []
+    end
   end
 
   def comparison_attributes

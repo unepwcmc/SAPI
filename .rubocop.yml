@@ -81,3 +81,7 @@ Style/SpaceInsideHashLiteralBraces:
 # Configuration parameters: AllowForAlignment.
 Style/SpaceAroundOperators:
   AllowForAlignment: true
+
+# Configuration parameters: AllowIfMethodIsEmpty.
+Style/SingleLineMethods:
+  AllowIfMethodIsEmpty: true

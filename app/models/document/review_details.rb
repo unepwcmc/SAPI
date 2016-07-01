@@ -16,6 +16,8 @@ class Document::ReviewDetails < ActiveRecord::Base
   self.table_name = 'review_details'
   belongs_to :document, touch: true
 
-  def self.display_name; 'Review Details'; end
+  def self.display_name
+    'Review Details'
+  end
 
 end
