@@ -54,11 +54,11 @@ namespace :import do
             LEFT JOIN taxonomies ON taxonomies.id = accepted.taxonomy_id AND taxonomies.id = synonym.taxonomy_id
             WHERE taxonomies.id = #{taxonomy.id}
               AND
-                 #{if taxonomy_name == Taxonomy::CITES_EU
-                     "( UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%EU%')"
-                   else
-                     "UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%CMS%'"
-                    end}
+                #{if taxonomy_name == Taxonomy::CITES_EU
+                    "( UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%EU%')"
+                  else
+                    "UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%CMS%'"
+                  end}
 
             EXCEPT
 

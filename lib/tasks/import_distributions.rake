@@ -28,11 +28,11 @@ namespace :import do
           INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
           WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
             AND
-               #{if taxonomy_name == Taxonomy::CITES_EU
-                   "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
-                 else
-                   "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
-                  end}
+              #{if taxonomy_name == Taxonomy::CITES_EU
+                  "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
+                else
+                  "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
+                end}
             AND taxonomies.id = #{taxonomy.id}
 
             EXCEPT

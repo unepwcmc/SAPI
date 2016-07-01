@@ -50,11 +50,11 @@ namespace :import do
             SELECT DISTINCT legacy_id, rank, geo_entity_type, iso_code2, regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
             FROM #{TMP_TABLE}
             WHERE
-               #{if taxonomy_name == Taxonomy::CITES_EU
-                   "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
-                 else
-                   "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
-                  end}
+              #{if taxonomy_name == Taxonomy::CITES_EU
+                  "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
+                else
+                  "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
+                end}
           )
           INSERT INTO taggings(tag_id, taggable_id, taggable_type, context, created_at)
           SELECT subquery.*, NOW()
