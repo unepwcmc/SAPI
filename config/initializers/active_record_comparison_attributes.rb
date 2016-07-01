@@ -16,7 +16,7 @@ module ComparisonAttributes
     attributes.except(*self.class.ignored_attributes.map(&:to_s)).symbolize_keys
   end
 
-  def comparison_conditions(comparison_attributes=nil)
+  def comparison_conditions(comparison_attributes = nil)
     comparison_attributes ||= self.comparison_attributes
     a = self.class.scoped
     arel_nodes = []
