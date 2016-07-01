@@ -131,7 +131,7 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_distribution_modal( nested = false)
+  def admin_new_distribution_modal(nested = false)
     admin_new_modal(
       :resource => 'distribution'
     ){ nested ? '' : render('admin/distributions/form') }

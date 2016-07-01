@@ -50,10 +50,10 @@ class Elibrary::CitationsImporter
   end
 
   def run_preparatory_queries
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET splus_taxon_concept_id = NULL WHERE splus_taxon_concept_id LIKE '%N/A%'" )
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET CtyISO2 = NULL WHERE CtyISO2='NULL'" )
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET EventID = NULL WHERE EventID='NULL'" )
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentID = NULL WHERE DocumentID='NULL'" )
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET splus_taxon_concept_id = NULL WHERE splus_taxon_concept_id LIKE '%N/A%'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET CtyISO2 = NULL WHERE CtyISO2='NULL'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET EventID = NULL WHERE EventID='NULL'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentID = NULL WHERE DocumentID='NULL'")
   end
 
   def run_queries
