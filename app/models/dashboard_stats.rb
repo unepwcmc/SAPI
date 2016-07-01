@@ -5,7 +5,7 @@ class DashboardStats
   attr_reader :geo_entity, :kingdom, :time_range_start, :time_range_end,
     :trade_limit
 
-  def initialize (geo_entity, options)
+  def initialize(geo_entity, options)
     @geo_entity = geo_entity
     @kingdom = options[:kingdom] || 'Animalia'
     @trade_limit = options[:trade_limit]
