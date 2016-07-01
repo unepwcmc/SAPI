@@ -370,11 +370,6 @@ Style/Lambda:
     - 'app/models/taxon_concept.rb'
     - 'app/models/taxonomy.rb'
 
-# Offense count: 167
-# Cop supports --auto-correct.
-Style/LeadingCommentSpace:
-  Enabled: false
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/LineEndConcatenation:

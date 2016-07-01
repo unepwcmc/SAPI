@@ -102,7 +102,7 @@ set :api_token, secrets["development"]["api_token"]
 set :slack_room, "#speciesplus" # the room to send the message to
 set :slack_subdomain, "wcmc" # if your subdomain is example.slack.com
 
-#optional
+# optional
 set :slack_application, "SAPI" # override Capistrano `application`
 deployment_animals = [
   ["Loxodonta deployana", ":elephant:"],

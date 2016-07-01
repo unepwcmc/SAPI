@@ -36,7 +36,7 @@ class Checklist::HigherTaxaInjector
   end
 
   def run_summary
-    @expand_headers = false #use this only for collapsed headers
+    @expand_headers = false # use this only for collapsed headers
     # such as the Checklist or Species+ website
     res = []
     current_higher_taxon = nil
@@ -62,8 +62,8 @@ class Checklist::HigherTaxaInjector
     res
   end
 
-  #returns array of HigherTaxaItems that need to be inserted
-  #between prev_item and curr_item in the taxonomic layout
+  # returns array of HigherTaxaItems that need to be inserted
+  # between prev_item and curr_item in the taxonomic layout
   def higher_taxa_headers(prev_item, curr_item)
     ranks =
       if prev_item.nil?

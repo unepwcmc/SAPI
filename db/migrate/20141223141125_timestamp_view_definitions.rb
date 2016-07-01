@@ -33,7 +33,7 @@ class TimestampViewDefinitions < ActiveRecord::Migration
     execute "CREATE VIEW valid_taxon_concept_country_of_origin_view AS #{view_sql('20141223141125', 'valid_taxon_concept_country_of_origin_view')}"
     execute "DROP VIEW IF EXISTS valid_taxon_concept_exporter_view"
     execute "CREATE VIEW valid_taxon_concept_exporter_view AS #{view_sql('20141223141125', 'valid_taxon_concept_exporter_view')}"
-    execute "DROP VIEW IF EXISTS valid_taxon_concept_country_view" #obsolete view
+    execute "DROP VIEW IF EXISTS valid_taxon_concept_country_view" # obsolete view
     execute "DROP VIEW IF EXISTS valid_taxon_concept_term_view"
     execute "CREATE VIEW valid_taxon_concept_term_view AS #{view_sql('20141223141125', 'valid_taxon_concept_term_view')}"
     execute "DROP VIEW IF EXISTS valid_taxon_name_view"

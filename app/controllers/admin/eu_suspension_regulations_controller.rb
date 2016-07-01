@@ -1,5 +1,5 @@
 class Admin::EuSuspensionRegulationsController < Admin::EventsController
-  #this needs to be specified, because otherwise defaults to 'event'
+  # this needs to be specified, because otherwise defaults to 'event'
   defaults :resource_class => EuSuspensionRegulation,
     :collection_name => 'eu_suspension_regulations', :instance_name => 'eu_suspension_regulation'
 

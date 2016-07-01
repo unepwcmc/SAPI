@@ -454,11 +454,11 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def self.sanitize_full_name(some_full_name)
-    #strip ranks
+    # strip ranks
     if some_full_name =~ /\A(.+)\s+(#{Rank.dict.join('|')})\s*\Z/
       some_full_name = $1
     end
-    #strip redundant whitespace between words
+    # strip redundant whitespace between words
     some_full_name = some_full_name.split(/\s/).join(' ').capitalize
   end
 

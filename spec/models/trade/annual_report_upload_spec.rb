@@ -155,7 +155,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
                         )
     end
     context "when no primary errors" do
-      subject { #aru no primary errors
+      subject { # aru no primary errors
         aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
@@ -179,7 +179,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       specify {
         expect { subject.submit }.to change { Trade::Permit.count }.by(3)
       }
-      specify { #make sure leading space is stripped
+      specify { # make sure leading space is stripped
         subject.submit; Trade::Permit.find_by_number('BBB').should_not be_nil
       }
       context "when permit previously reported" do
@@ -190,7 +190,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       end
     end
     context "when primary errors present" do
-      subject { #aru with primary errors
+      subject { # aru with primary errors
         aru = build(:annual_report_upload)
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
@@ -220,7 +220,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :other_taxon_concept => @synonym
         )
       end
-      subject { #aru no primary errors
+      subject { # aru no primary errors
         aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)

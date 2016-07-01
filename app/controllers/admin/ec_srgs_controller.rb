@@ -1,5 +1,5 @@
 class Admin::EcSrgsController < Admin::EventsController
-  #this needs to be specified, because otherwise defaults to 'event'
+  # this needs to be specified, because otherwise defaults to 'event'
   defaults :resource_class => EcSrg,
     :collection_name => 'ec_srgs',
     :instance_name => 'ec_srg'

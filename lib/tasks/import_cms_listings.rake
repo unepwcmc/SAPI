@@ -110,7 +110,7 @@ namespace :import do
       puts "INSERTING listing_changes"
       ActiveRecord::Base.connection.execute(sql)
 
-      #add taxonomic exceptions
+      # add taxonomic exceptions
       sql = <<-SQL
       INSERT INTO listing_changes (parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at)
       SELECT * FROM (
@@ -145,7 +145,7 @@ namespace :import do
       puts "INSERTING taxonomic exceptions"
       ActiveRecord::Base.connection.execute(sql)
 
-      #add population exceptions
+      # add population exceptions
       sql = <<-SQL
       WITH exceptions AS (
               -- first insert the exception records -- there's just one / listing change

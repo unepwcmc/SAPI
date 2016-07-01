@@ -105,7 +105,7 @@ describe Species::TaxonConceptPrefixMatcher do
         }
         specify { subject.results.should include(@family_ac) }
       end
-      #check ranks filtering
+      # check ranks filtering
       context "when explicitly listed higher taxon but ranks expected FAMILY" do
         subject {
           Species::TaxonConceptPrefixMatcher.new({

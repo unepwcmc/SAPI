@@ -38,8 +38,8 @@ class Quota < TradeRestriction
   validates :quota, :numericality => { :greater_than_or_equal_to => -1.0 }
   validates :geo_entity_id, :presence => true
 
-  #Each element of CSV columns can be either an array [display_text, method]
-  #or a single symbol if the display text and the method are the same
+  # Each element of CSV columns can be either an array [display_text, method]
+  # or a single symbol if the display text and the method are the same
   CSV_COLUMNS = [
     :year, :party, :quota,
     [:unit, :unit_name], :publication_date,

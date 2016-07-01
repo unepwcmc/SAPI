@@ -71,7 +71,7 @@ class CsvToDbMap
       'name_es' => 'name_es varchar',
       'name_fr' => 'name_fr varchar'
     },
-    #TODO: legacy type for countries?
+    # TODO: legacy type for countries?
     'countries_import' => {
       'ISO2' => 'iso2 varchar',
       'short_name' => 'name varchar',
@@ -346,7 +346,7 @@ def files_from_args(t, args)
 end
 
 def file_ok?(path_to_file)
-  if !File.file?(Rails.root.join(path_to_file)) #if the file is not defined, explain and leave.
+  if !File.file?(Rails.root.join(path_to_file)) # if the file is not defined, explain and leave.
     puts "Please specify a valid csv file from which to import data"
     puts "Usage: rake import:XXX[path/to/file,path/to/another]"
     return false
@@ -365,7 +365,7 @@ end
 
 def db_columns_from_csv_headers(path_to_file, table_name, include_data_type = true)
   m = CsvToDbMap.instance
-  #work out the db columns to create
+  # work out the db columns to create
   csv_columns = csv_headers(path_to_file)
   db_columns = csv_columns.map { |col| m.csv_to_db(table_name, col) }
   db_columns = db_columns.map { |col| col.sub(/\s\w+$/, '') } unless include_data_type

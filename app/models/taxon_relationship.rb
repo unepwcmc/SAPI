@@ -75,7 +75,7 @@ class TaxonRelationship < ActiveRecord::Base
       delete_all
   end
 
-  #A taxon concept can only be related with another taxon concept through
+  # A taxon concept can only be related with another taxon concept through
   # ONE intertaxonomic Taxon Relationship. Unless the TaxonRelationships
   # share the same TaxonRelationshipType and this is bidirectional
   def intertaxonomic_relationship_uniqueness

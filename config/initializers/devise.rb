@@ -254,7 +254,7 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
-  #use custom layouts for devise
+  # use custom layouts for devise
   Rails.application.config.to_prepare do
     Devise::RegistrationsController.layout "pages"
     Devise::PasswordsController.layout "pages"
@@ -262,7 +262,7 @@ Devise.setup do |config|
     Devise::PasswordsController.after_filter :delete_email, only: [:update]
   end
 
-  #custom redirection when login fails
+  # custom redirection when login fails
   config.warden do |manager|
     manager.failure_app = CustomFailure
   end

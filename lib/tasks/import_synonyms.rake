@@ -20,7 +20,7 @@ namespace :import do
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
-      #[BEGIN]copied over from import:species
+      # [BEGIN]copied over from import:species
       import_data_for kingdom, Rank::PHYLUM, true
       import_data_for kingdom, Rank::CLASS, true
       import_data_for kingdom, Rank::ORDER, true
@@ -32,7 +32,7 @@ namespace :import do
       if kingdom == 'Plantae'
         import_data_for kingdom, Rank::VARIETY
       end
-      #[END]copied over from import:species
+      # [END]copied over from import:species
 
       [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
         puts "Import #{taxonomy_name} taxa"

@@ -99,7 +99,7 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
     source_sql = "SELECT ARRAY[#{sql_row_name_columns.join(', ')}],
       #{sql_crosstab_columns.join(', ')}, year, gross_quantity
       FROM (#{subquery_sql(options)}) subquery
-      ORDER BY 1, #{sql_crosstab_columns.length + 2}" #order by row_name and year
+      ORDER BY 1, #{sql_crosstab_columns.length + 2}" # order by row_name and year
     source_sql = ActiveRecord::Base.send(:sanitize_sql_array, [source_sql, years])
     source_sql = ActiveRecord::Base.connection.quote_string(source_sql)
     # the categories query returns values by which to pivot (years)

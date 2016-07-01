@@ -12,7 +12,7 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
 
   def id
     if object.is_a? Checklist::HigherTaxaItem
-      object.id + 1000000 #unless ids differ, Ember will create a single object
+      object.id + 1000000 # unless ids differ, Ember will create a single object
     else
       object.id
     end

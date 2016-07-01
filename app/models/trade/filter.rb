@@ -142,7 +142,7 @@ class Trade::Filter
 
   def initialize_internal_query
     if @report_type == :raw
-      #includes would override the select clause
+      # includes would override the select clause
       @query = @query.preload(:reported_taxon_concept)
     end
 

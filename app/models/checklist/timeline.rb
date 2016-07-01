@@ -102,10 +102,10 @@ class Checklist::Timeline
 
   def get_party_timeline(party_id)
     unless (party_idx = @parties.index(party_id)).nil?
-      #fetch existing party timeline
+      # fetch existing party timeline
       @timelines[party_idx]
     else
-      #create party timeline
+      # create party timeline
       @parties << party_id
       party_timeline = Checklist::Timeline.new(
         :taxon_concept_id => @taxon_concept_id,

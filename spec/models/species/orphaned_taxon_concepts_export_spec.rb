@@ -16,7 +16,7 @@ describe Species::OrphanedTaxonConceptsExport do
     context "when results" do
       before(:each) {
         tc = create(:taxon_concept)
-        tc.update_attribute(:parent_id, nil) #skipping validations
+        tc.update_attribute(:parent_id, nil) # skipping validations
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/orphaned_taxon_concepts")
         )
