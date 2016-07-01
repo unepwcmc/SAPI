@@ -21,14 +21,14 @@ describe Species::ListingsExport do
       specify { subject.export.should be_false }
     end
     context "when results" do
-      before(:each){
+      before(:each) {
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/cites_listings")
         )
         Species::ListingsExport.any_instance.stub(:path).
           and_return("spec/public/downloads/cites_listings/")
       }
-      after(:each){
+      after(:each) {
         FileUtils.remove_dir("spec/public/downloads/cites_listings", true)
       }
       subject {

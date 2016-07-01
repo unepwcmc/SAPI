@@ -31,7 +31,7 @@ describe Admin::SpeciesListingsController do
   end
 
   describe "XHR PUT update" do
-    let(:species_listing){ create(:species_listing) }
+    let(:species_listing) { create(:species_listing) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => species_listing.id, :species_listing => { :name => 'ZZ' }
       response.should be_success
@@ -43,7 +43,7 @@ describe Admin::SpeciesListingsController do
   end
 
   describe "DELETE destroy" do
-    let(:species_listing){ create(:species_listing) }
+    let(:species_listing) { create(:species_listing) }
     it "redirects after delete" do
       delete :destroy, :id => species_listing.id
       response.should redirect_to(admin_species_listings_url)

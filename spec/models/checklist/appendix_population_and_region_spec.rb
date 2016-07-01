@@ -6,7 +6,7 @@ describe Checklist do
 
   context "search by cites populations" do
     context "when America" do
-      subject{
+      subject {
         checklist = Checklist::Checklist.new({
           :country_ids => [america.id]
         })
@@ -17,7 +17,7 @@ describe Checklist do
       end
     end
     context "when Mexico" do
-      subject{
+      subject {
         checklist = Checklist::Checklist.new({
           :country_ids => [mexico.id]
         })
@@ -28,7 +28,7 @@ describe Checklist do
       end
     end
     context "when Canada" do
-      subject{
+      subject {
         checklist = Checklist::Checklist.new({
           :country_ids => [canada.id]
         })
@@ -39,7 +39,7 @@ describe Checklist do
       end
     end
     context "when Argentina" do
-      subject{
+      subject {
         checklist = Checklist::Checklist.new({
           :country_ids => [argentina.id]
         })
@@ -50,7 +50,7 @@ describe Checklist do
       end
     end
     context "when South America" do
-      subject{
+      subject {
         checklist = Checklist::Checklist.new({
           :cites_region_ids => [south_america.id]
         })
@@ -61,7 +61,7 @@ describe Checklist do
       end
     end
     context "when North America" do
-      subject{
+      subject {
         checklist = Checklist::Checklist.new({
           :cites_region_ids => [north_america.id]
         })
@@ -72,7 +72,7 @@ describe Checklist do
       end
     end
     context "when North America and Argentina" do
-      subject{
+      subject {
         checklist = Checklist::Checklist.new({
           :cites_region_ids => [north_america.id],
           :country_ids => [argentina.id]

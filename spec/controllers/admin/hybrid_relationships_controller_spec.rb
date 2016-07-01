@@ -3,10 +3,10 @@ require 'spec_helper'
 describe Admin::HybridRelationshipsController do
   login_admin
 
-  before(:each){ hybrid_relationship_type }
-  let(:taxon_concept){ create(:taxon_concept) }
-  let(:hybrid){ create(:taxon_concept, :name_status => 'H') }
-  let(:hybrid_relationship){
+  before(:each) { hybrid_relationship_type }
+  let(:taxon_concept) { create(:taxon_concept) }
+  let(:hybrid) { create(:taxon_concept, :name_status => 'H') }
+  let(:hybrid_relationship) {
     create(:taxon_relationship,
       :taxon_relationship_type_id => hybrid_relationship_type.id,
       :taxon_concept => taxon_concept,

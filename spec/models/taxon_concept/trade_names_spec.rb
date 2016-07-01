@@ -1,27 +1,27 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  before(:each){ trade_name_relationship_type }
+  before(:each) { trade_name_relationship_type }
   describe :create do
-    let(:parent){
+    let(:parent) {
       create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
       )
     }
-    let!(:tc){
+    let!(:tc) {
       create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
       )
     }
-    let(:trade_name){
+    let(:trade_name) {
       create_cites_eu_species(
         :name_status => 'T',
         :author_year => 'Taxonomus 2014',
         taxon_name: create(:taxon_name, scientific_name: 'Lolcatus lolus')
       )
     }
-    let!(:trade_name_rel){
+    let!(:trade_name_rel) {
       create(:taxon_relationship,
         taxon_relationship_type: trade_name_relationship_type,
         taxon_concept_id: tc.id,
@@ -35,7 +35,7 @@ describe TaxonConcept do
       specify {
         trade_name.is_trade_name?.should be_true
       }
-      specify{
+      specify {
         trade_name.has_accepted_names_for_trade_name?.should be_true
       }
       specify {
@@ -43,7 +43,7 @@ describe TaxonConcept do
       }
     end
     context "when duplicate" do
-      let(:duplicate){
+      let(:duplicate) {
         trade_name.dup
       }
       specify {
@@ -53,7 +53,7 @@ describe TaxonConcept do
       }
     end
     context "when duplicate but author name different" do
-      let(:duplicate){
+      let(:duplicate) {
         res = trade_name.dup
         res.author_year = 'Hemulen 2013'
         res

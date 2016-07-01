@@ -7,6 +7,6 @@ task :resolve_host_to_country => :environment do
   end
   CSV.open('/home/agnessa/Data/hosts_and_countries.csv', 'w') do |csv|
     csv << ['Host', 'Country']
-    hosts_and_countries.each{ |row| csv << row }
+    hosts_and_countries.each { |row| csv << row }
   end
 end

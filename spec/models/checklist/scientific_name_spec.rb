@@ -13,7 +13,7 @@ describe Checklist do
         })
         checklist.results
       }
-      specify{
+      specify {
         subject.first.full_name.should == @species2.full_name
         subject.size.should == 1
       }
@@ -26,7 +26,7 @@ describe Checklist do
         })
         checklist.results
       }
-      specify{
+      specify {
         subject.first.full_name.should == @species2.full_name
         subject.size.should == 1
       }

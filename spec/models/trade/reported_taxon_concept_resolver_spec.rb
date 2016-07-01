@@ -14,10 +14,10 @@ describe Trade::ReportedTaxonConceptResolver do
         :taxon_relationship_type => trade_name_relationship_type
       )
     end
-    let(:resolver){
+    let(:resolver) {
       Trade::ReportedTaxonConceptResolver.new(@trade_name.id)
     }
-    specify{ expect(resolver.accepted_taxa).to include(@accepted_name) }
+    specify { expect(resolver.accepted_taxa).to include(@accepted_name) }
   end
 
   context "resolving synonyms" do
@@ -33,20 +33,20 @@ describe Trade::ReportedTaxonConceptResolver do
         :taxon_relationship_type => synonym_relationship_type
       )
     end
-    let(:resolver){
+    let(:resolver) {
       Trade::ReportedTaxonConceptResolver.new(@synonym.id)
     }
-    specify{ expect(resolver.accepted_taxa).to include(@accepted_name) }
+    specify { expect(resolver.accepted_taxa).to include(@accepted_name) }
   end
 
   context "resolving accepted names" do
     before(:each) do
       @accepted_name = create_cites_eu_species
     end
-    let(:resolver){
+    let(:resolver) {
       Trade::ReportedTaxonConceptResolver.new(@accepted_name.id)
     }
-    specify{ expect(resolver.accepted_taxa).to include(@accepted_name) }
+    specify { expect(resolver.accepted_taxa).to include(@accepted_name) }
   end
 
 end

@@ -4,7 +4,7 @@ describe Trade::Filter do
 
   describe :results do
     context "when searching by taxon concepts ids" do
-      before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+      before(:each) { Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
       context "in the public interface" do
         context "at GENUS rank" do
           subject { Trade::Filter.new({
@@ -105,7 +105,7 @@ describe Trade::Filter do
       end
     end
     context "when searching by reported taxon concepts ids" do
-      before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+      before(:each) { Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
       context "when trade names shipments present" do
         before(:each) do
           @shipment_of_trade_name = create(

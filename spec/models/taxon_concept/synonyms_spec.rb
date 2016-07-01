@@ -1,27 +1,27 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  before(:each){ synonym_relationship_type }
+  before(:each) { synonym_relationship_type }
   describe :create do
-    let(:parent){
+    let(:parent) {
       create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
       )
     }
-    let!(:tc){
+    let!(:tc) {
       create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
       )
     }
-    let(:synonym){
+    let(:synonym) {
       create_cites_eu_species(
         :name_status => 'S',
         :author_year => 'Taxonomus 2013',
         taxon_name: create(:taxon_name, scientific_name: 'Lolcatus lolus')
       )
     }
-    let!(:synonym_rel){
+    let!(:synonym_rel) {
       create(:taxon_relationship,
         taxon_relationship_type: synonym_relationship_type,
         taxon_concept_id: tc.id,
@@ -35,7 +35,7 @@ describe TaxonConcept do
       specify {
         synonym.is_synonym?.should be_true
       }
-      specify{
+      specify {
         synonym.has_accepted_names?.should be_true
       }
       specify {
@@ -43,7 +43,7 @@ describe TaxonConcept do
       }
     end
     context "when duplicate" do
-      let(:duplicate){
+      let(:duplicate) {
         synonym.dup
       }
       specify {
@@ -53,7 +53,7 @@ describe TaxonConcept do
       }
     end
     context "when duplicate but author name different" do
-      let(:duplicate){
+      let(:duplicate) {
         res = synonym.dup
         res.author_year = 'Hemulen 2013'
         res

@@ -11,22 +11,22 @@ require 'spec_helper'
 #   end
 # end
 describe ListingChangesHelper do
-  let(:poland){
+  let(:poland) {
     GeoEntity.find_by_iso_code2('PL') || create(:geo_entity, :iso_code2 => 'PL', :name => 'Poland')
   }
-  let(:taxon_concept){
+  let(:taxon_concept) {
     create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
     )
   }
-  let(:annotation){
+  let(:annotation) {
     create(
       :annotation,
       :short_note_en => 'Only population of PL',
       :full_note_en => 'Only population of Poland'
     )
   }
-  let(:hash_annotation){
+  let(:hash_annotation) {
     create(
       :annotation,
       :symbol => '#1',
@@ -34,7 +34,7 @@ describe ListingChangesHelper do
       :full_note_en => 'Only seeds and roots.'
     )
   }
-  let(:listing_change){
+  let(:listing_change) {
     create_cites_I_addition(
       :taxon_concept_id => taxon_concept.id,
       :annotation_id => annotation.id,
@@ -43,7 +43,7 @@ describe ListingChangesHelper do
   }
 
   describe :geo_entities_tooltip do
-    let!(:listing_distribution){
+    let!(:listing_distribution) {
       create(
         :listing_distribution,
         :listing_change_id => listing_change.id,
@@ -75,13 +75,13 @@ describe ListingChangesHelper do
     end
 
     context "geographic exclusion" do
-      let(:exclusion){
+      let(:exclusion) {
         create_cites_I_exception(
           :parent_id => listing_change.id,
           :taxon_concept_id => listing_change.taxon_concept_id
         )
       }
-      let!(:listing_distribution){
+      let!(:listing_distribution) {
         create(
           :listing_distribution,
           :listing_change_id => exclusion.id,
@@ -95,7 +95,7 @@ describe ListingChangesHelper do
     end
   end
   describe :excluded_taxon_concepts_tooltip do
-    let(:child_taxon_concept){
+    let(:child_taxon_concept) {
       create_cites_eu_species(
         :parent_id => taxon_concept.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'cracovianus')
@@ -108,7 +108,7 @@ describe ListingChangesHelper do
     end
 
     context "taxonomic exclusion" do
-      let!(:exclusion){
+      let!(:exclusion) {
         create_cites_I_exception(
           :taxon_concept_id => child_taxon_concept.id,
           :parent_id => listing_change.id

@@ -1,6 +1,6 @@
 #Encoding: utf-8
 shared_context 'Colophon' do
-  let(:south_africa){
+  let(:south_africa) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,

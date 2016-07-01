@@ -18,7 +18,7 @@ describe NomenclatureChange::StatusToAccepted do
   describe :validate do
     context "when required primary output missing" do
       context "when primary_output" do
-        let(:status_change){
+        let(:status_change) {
           build(
             :nomenclature_change_status_to_accepted,
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
@@ -27,7 +27,7 @@ describe NomenclatureChange::StatusToAccepted do
         specify { expect(status_change).to have(1).error_on(:primary_output) }
       end
       context "when submitting" do
-        let(:status_change){
+        let(:status_change) {
           build(
             :nomenclature_change_status_to_accepted,
             status: NomenclatureChange::StatusToAccepted::SUBMITTED
@@ -38,7 +38,7 @@ describe NomenclatureChange::StatusToAccepted do
     end
     context "when primary output has invalid name status" do
       context "when primary_output" do
-        let(:status_change){
+        let(:status_change) {
           build(
             :nomenclature_change_status_to_accepted,
             :primary_output_attributes => {
@@ -52,7 +52,7 @@ describe NomenclatureChange::StatusToAccepted do
     end
     context "when primary output has valid name status" do
       context "when primary_output" do
-        let(:status_change){
+        let(:status_change) {
           build(
             :nomenclature_change_status_to_accepted,
             :primary_output_attributes => {

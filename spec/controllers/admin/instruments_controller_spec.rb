@@ -40,7 +40,7 @@ describe Admin::InstrumentsController do
   end
 
   describe "XHR PUT update" do
-    let(:instrument){ create(:instrument) }
+    let(:instrument) { create(:instrument) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => instrument.id, :instrument => { :name => 'ZZ' }
       response.should be_success
@@ -52,15 +52,15 @@ describe Admin::InstrumentsController do
   end
 
   describe "DELETE destroy" do
-    let(:instrument){ create(:instrument) }
+    let(:instrument) { create(:instrument) }
     it "redirects after delete" do
       delete :destroy, :id => instrument.id
       flash[:notice].should_not be_nil
       flash[:alert].should be_nil
       response.should redirect_to(admin_instruments_url)
     end
-    let(:instrument2){ create(:instrument) }
-    let!(:taxon_instrument){ create(:taxon_instrument, :instrument_id => instrument2.id) }
+    let(:instrument2) { create(:instrument) }
+    let!(:taxon_instrument) { create(:taxon_instrument, :instrument_id => instrument2.id) }
     it "fails to delete instrument because there are dependent objects" do
       delete :destroy, :id => instrument2.id
       flash[:notice].should be_nil

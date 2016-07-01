@@ -64,7 +64,7 @@ describe Admin::TaxonConceptsController do
   end
 
   describe "XHR PUT update" do
-    let(:taxon_concept){ create(:taxon_concept) }
+    let(:taxon_concept) { create(:taxon_concept) }
     context "when JSON" do
       it "responds with 200 when successful" do
         xhr :put, :update, :format => 'json', :id => taxon_concept.id,
@@ -92,7 +92,7 @@ describe Admin::TaxonConceptsController do
   end
 
   describe "DELETE destroy" do
-    let(:taxon_concept){ create(:taxon_concept) }
+    let(:taxon_concept) { create(:taxon_concept) }
     it "redirects after delete" do
       delete :destroy, :id => taxon_concept.id
       response.should redirect_to(admin_taxon_concepts_url)
@@ -127,7 +127,7 @@ describe Admin::TaxonConceptsController do
   end
 
   describe "XHR GET JSON autocomplete" do
-    let!(:taxon_concept){
+    let!(:taxon_concept) {
       create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'AAA')
       )

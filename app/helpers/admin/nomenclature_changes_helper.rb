@@ -34,7 +34,7 @@ module Admin::NomenclatureChangesHelper
   def print_summary(summary)
     if summary.kind_of?(Array)
       content_tag(:ul) do
-        summary.each{ |line| concat print_summary(line) }
+        summary.each { |line| concat print_summary(line) }
       end
     else
       content_tag(:li, summary)
@@ -320,7 +320,7 @@ module Admin::NomenclatureChangesHelper
   end
 
   def sorted_parent_reassignments(ff)
-    ff.object.parent_reassignments.sort_by{ |reassignment| reassignment.reassignable.full_name }
+    ff.object.parent_reassignments.sort_by { |reassignment| reassignment.reassignable.full_name }
   end
 
   def name_reassignment_label(reassignment)

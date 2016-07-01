@@ -12,12 +12,12 @@ FactoryGirl.define do
     end
 
     factory :term, :class => Term do
-      sequence(:code) { |n| [n, n + 1, n + 2].map{ |i| (97 + i % 26).chr }.join }
+      sequence(:code) { |n| [n, n + 1, n + 2].map { |i| (97 + i % 26).chr }.join }
       sequence(:name_en) { |n| "Term @{n}" }
     end
 
     factory :unit, :class => Unit do
-      sequence(:code) { |n| [n, n + 1, n + 2].map{ |i| (97 + i % 26).chr }.join }
+      sequence(:code) { |n| [n, n + 1, n + 2].map { |i| (97 + i % 26).chr }.join }
       sequence(:name_en) { |n| "Unit @{n}" }
     end
   end

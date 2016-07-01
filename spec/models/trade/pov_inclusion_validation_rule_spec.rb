@@ -17,7 +17,7 @@
 require 'spec_helper'
 
 describe Trade::InclusionValidationRule, :drops_tables => true do
-  let(:canada){
+  let(:canada) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -25,7 +25,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       :iso_code2 => 'CA'
     )
   }
-  let(:argentina){
+  let(:argentina) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -33,7 +33,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       :iso_code2 => 'AR'
     )
   }
-  let(:xx){
+  let(:xx) {
     create(
       :geo_entity,
       :geo_entity_type => trade_geo_entity_type,
@@ -68,10 +68,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :taxon_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.iso_code2
         )
       end
-      subject{
+      subject {
         create_taxon_concept_exporter_validation
       }
-      specify{
+      specify {
         subject.validation_errors(@aru).size.should == 1
       }
     end
@@ -90,10 +90,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :country_of_origin => argentina.iso_code2
         )
       end
-      subject{
+      subject {
         create_taxon_concept_exporter_validation
       }
-      specify{
+      specify {
         subject.validation_errors(@aru).size.should == 1
       }
     end
@@ -112,10 +112,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :country_of_origin => argentina.iso_code2
         )
       end
-      subject{
+      subject {
         create_taxon_concept_exporter_validation
       }
-      specify{
+      specify {
         subject.validation_errors(@aru).should be_empty
       }
     end
@@ -134,10 +134,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :country_of_origin => canada.iso_code2
         )
       end
-      subject{
+      subject {
         create_taxon_concept_exporter_validation
       }
-      specify{
+      specify {
         subject.validation_errors(@aru).should be_empty
       }
     end
@@ -150,11 +150,11 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :taxon_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => argentina.iso_code2
         )
       end
-      subject{
+      subject {
         create_taxon_concept_exporter_validation
       }
-      specify{
-        expect{ subject.validation_errors(@aru) }.to_not raise_error(ActiveRecord::StatementInvalid)
+      specify {
+        expect { subject.validation_errors(@aru) }.to_not raise_error(ActiveRecord::StatementInvalid)
       }
     end
   end

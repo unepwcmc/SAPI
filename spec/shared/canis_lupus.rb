@@ -1,5 +1,5 @@
 shared_context "Canis lupus" do
-  let(:bhutan){
+  let(:bhutan) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -7,7 +7,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'BT'
     )
   }
-  let(:india){
+  let(:india) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -15,7 +15,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'IN'
     )
   }
-  let(:nepal){
+  let(:nepal) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -23,7 +23,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'NP'
     )
   }
-  let(:pakistan){
+  let(:pakistan) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -31,7 +31,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'PK'
     )
   }
-  let(:poland){
+  let(:poland) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -39,7 +39,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'PL'
     )
   }
-  let(:argentina){
+  let(:argentina) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -47,7 +47,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'AR'
     )
   }
-  let(:spain){
+  let(:spain) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -55,7 +55,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'ES'
     )
   }
-  let(:greece){
+  let(:greece) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,

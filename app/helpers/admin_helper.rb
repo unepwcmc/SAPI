@@ -70,7 +70,7 @@ module AdminHelper
   end
 
   def tag_list(tags_ary)
-    tags_ary.map{ |t| content_tag(:span, :class => 'myMinTag'){ t } }.join(', ').html_safe
+    tags_ary.map { |t| content_tag(:span, :class => 'myMinTag') { t } }.join(', ').html_safe
   end
 
   def error_messages_for(resource)
@@ -135,10 +135,10 @@ module AdminHelper
         button_tag(
           :type => "button", :class => "close", :"data-dismiss" => "modal",
           :"aria-hidden" => true
-        ){ '×' } +
+        ) { '×' } +
         content_tag(:h3,
           :id => "#{id}-label"
-        ){ title }
+        ) { title }
       end +
       content_tag(
         :div, :id => "admin-#{id}-form", :class => "modal-body" #TODO
@@ -153,18 +153,18 @@ module AdminHelper
         button_tag(
           :type => "button", :class => "btn", :"data-dismiss" => "modal",
           :"aria-hidden" => "true"
-        ){ 'Close' } +
+        ) { 'Close' } +
         if options[:save_and_reopen]
           button_tag(
             :type => "button", :class => "btn btn-primary save-button save-and-reopen-button"
-          ){ 'Save changes' } +
+          ) { 'Save changes' } +
           button_tag(
             :type => "button", :class => "btn btn-primary save-button"
-          ){ 'Save changes & close' }
+          ) { 'Save changes & close' }
         else
           button_tag(
             :type => "button", :class => "btn btn-primary save-button"
-          ){ 'Save changes' }
+          ) { 'Save changes' }
         end
       end
     end

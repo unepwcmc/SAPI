@@ -105,7 +105,7 @@ describe GeoEntitySearch do
         iso_code2: 'BU'
       )
     end
-    subject{ GeoEntitySearch.new({ geo_entity_types_set: '3' }) }
+    subject { GeoEntitySearch.new({ geo_entity_types_set: '3' }) }
     specify do
       subject.cached_results
       @burma.update_attributes({ is_current: false })

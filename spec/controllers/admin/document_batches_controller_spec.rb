@@ -2,19 +2,19 @@ require 'spec_helper'
 
 describe Admin::DocumentBatchesController, sidekiq: :inline do
   login_admin
-  let(:event){ create(:event) }
-  before(:each){ create(:language, iso_code1: 'EN') }
+  let(:event) { create(:event) }
+  before(:each) { create(:language, iso_code1: 'EN') }
 
   describe "GET new" do
     context "when no event" do
-      let(:document){ create(:document) }
+      let(:document) { create(:document) }
       it "renders the new template" do
         get :new
         response.should render_template('new')
       end
     end
     context "when event" do
-      let(:document){ create(:document, event_id: event.id) }
+      let(:document) { create(:document, event_id: event.id) }
       it "renders the new template" do
         get :new
         response.should render_template('new')
@@ -23,15 +23,15 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
   end
 
   describe "POST create" do
-    let(:document_attrs){
+    let(:document_attrs) {
       { 'type' => 'Document::Proposal' }
     }
-    let(:files){
+    let(:files) {
       [Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv'))]
     }
 
     context "when no event" do
-      let(:document){ create(:document) }
+      let(:document) { create(:document) }
 
       it "creates a new Document" do
         expect {
@@ -65,7 +65,7 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
     end
 
     context "when event" do
-      let(:document){ create(:document, event_id: event.id) }
+      let(:document) { create(:document, event_id: event.id) }
 
       it "redirects to index when successful" do
         post :create, event_id: event.id, document_batch: {

@@ -24,7 +24,7 @@ describe Admin::UsersController do
   end
 
   describe "XHR GET edit" do
-    let(:user){ create(:user) }
+    let(:user) { create(:user) }
     it "renders the edit template" do
       xhr :get, :edit, :id => user.id
       response.should render_template('new')
@@ -36,7 +36,7 @@ describe Admin::UsersController do
   end
 
   describe "XHR PUT update JS" do
-    let(:user){ create(:user) }
+    let(:user) { create(:user) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'js', :id => user.id, :user => { :name => 'ZZ' }
       response.should be_success
@@ -49,7 +49,7 @@ describe Admin::UsersController do
   end
 
   describe "DELETE destroy" do
-    let(:user){ create(:user) }
+    let(:user) { create(:user) }
     it "redirects after delete" do
       delete :destroy, :id => user.id
       response.should redirect_to(admin_users_url)

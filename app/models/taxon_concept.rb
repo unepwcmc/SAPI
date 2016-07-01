@@ -198,7 +198,7 @@ class TaxonConcept < ActiveRecord::Base
 
   translates :nomenclature_note
 
-  scope :at_parent_ranks, lambda{ |rank|
+  scope :at_parent_ranks, lambda { |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position >= ?
@@ -211,7 +211,7 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
-  scope :at_ancestor_ranks, lambda{ |rank|
+  scope :at_ancestor_ranks, lambda { |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position < ?
@@ -221,7 +221,7 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
-  scope :at_self_and_ancestor_ranks, lambda{ |rank|
+  scope :at_self_and_ancestor_ranks, lambda { |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position <= ?
@@ -240,7 +240,7 @@ class TaxonConcept < ActiveRecord::Base
           WHERE tc.id = ANY (ARRAY#{taxon_ids.map(&:to_i)})
           ORDER BY tc.id
         SQL
-      ).map{ |row| row['full_name'] }
+      ).map { |row| row['full_name'] }
     end
   end
 
@@ -349,7 +349,7 @@ class TaxonConcept < ActiveRecord::Base
 
   def inherited_standard_taxon_concept_references
     ref_ids = taxon_concept_references.map(&:reference_id)
-    standard_taxon_concept_references.keep_if{ |ref| !ref_ids.include? ref.id }
+    standard_taxon_concept_references.keep_if { |ref| !ref_ids.include? ref.id }
   end
 
   def expected_full_name(parent)

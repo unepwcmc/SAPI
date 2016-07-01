@@ -31,8 +31,8 @@ class Trade::SandboxTemplate < ActiveRecord::Base
   ]
   CSV_IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
   CSV_EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - ['import_permit']
-  IMPORTER_COLUMNS = CSV_IMPORTER_COLUMNS.map{ |c| c == 'species_name' ? 'taxon_name' : c }
-  EXPORTER_COLUMNS = CSV_EXPORTER_COLUMNS.map{ |c| c == 'species_name' ? 'taxon_name' : c }
+  IMPORTER_COLUMNS = CSV_IMPORTER_COLUMNS.map { |c| c == 'species_name' ? 'taxon_name' : c }
+  EXPORTER_COLUMNS = CSV_EXPORTER_COLUMNS.map { |c| c == 'species_name' ? 'taxon_name' : c }
 
   # Dynamically define AR class for table_name
   # (unless one exists already)

@@ -1,7 +1,7 @@
 shared_context 'status_change_definitions' do
-  let(:input_species){ create_cites_eu_species }
-  let(:accepted_name){ create_cites_eu_species }
-  let(:input_trade_name){
+  let(:input_species) { create_cites_eu_species }
+  let(:accepted_name) { create_cites_eu_species }
+  let(:input_trade_name) {
     tc = create_cites_eu_species(name_status: 'T',
       taxon_name: create(:taxon_name, scientific_name: 'Ridiculus fatalus')
     )
@@ -12,12 +12,12 @@ shared_context 'status_change_definitions' do
     )
     tc
   }
-  let(:input_trade_name_genus){
+  let(:input_trade_name_genus) {
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Ridiculus')
     )
   }
-  let(:input_synonym){
+  let(:input_synonym) {
     tc = create_cites_eu_species(name_status: 'S',
       taxon_name: create(:taxon_name, scientific_name: 'Confundus totalus')
     )
@@ -28,12 +28,12 @@ shared_context 'status_change_definitions' do
     )
     tc
   }
-  let(:input_synonym_genus){
+  let(:input_synonym_genus) {
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Confundus')
     )
   }
-  let(:n_to_s_with_primary_output){
+  let(:n_to_s_with_primary_output) {
     create(:nomenclature_change_status_to_synonym,
       primary_output_attributes: {
         is_primary_output: true,
@@ -43,7 +43,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusToSynonym::PRIMARY_OUTPUT
     ).reload
   }
-  let(:t_to_a_with_primary_output){
+  let(:t_to_a_with_primary_output) {
     create(:nomenclature_change_status_to_accepted,
       primary_output_attributes: {
         is_primary_output: true,
@@ -54,7 +54,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
     ).reload
   }
-  let(:t_to_s_with_primary_and_secondary_output){
+  let(:t_to_s_with_primary_and_secondary_output) {
     create(:nomenclature_change_status_to_synonym,
       primary_output_attributes: {
         is_primary_output: true,
@@ -68,7 +68,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusToSynonym::RELAY
     ).reload
   }
-  let(:n_to_s_with_input_and_secondary_output){
+  let(:n_to_s_with_input_and_secondary_output) {
     create(:nomenclature_change_status_to_synonym,
       primary_output_attributes: {
         is_primary_output: true,
@@ -83,7 +83,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusToSynonym::RELAY
     ).reload
   }
-  let(:a_to_s_with_swap_with_primary_output){
+  let(:a_to_s_with_swap_with_primary_output) {
     create(:nomenclature_change_status_swap,
       primary_output_attributes: {
         is_primary_output: true,
@@ -93,7 +93,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusSwap::PRIMARY_OUTPUT
     ).reload
   }
-  let(:a_to_s_with_swap){
+  let(:a_to_s_with_swap) {
     create(:nomenclature_change_status_swap,
       primary_output_attributes: {
         is_primary_output: true,
@@ -112,7 +112,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusSwap::SECONDARY_OUTPUT
     ).reload
   }
-  let(:t_to_a_with_input){
+  let(:t_to_a_with_input) {
     create(:nomenclature_change_status_to_accepted,
       primary_output_attributes: {
         is_primary_output: true,

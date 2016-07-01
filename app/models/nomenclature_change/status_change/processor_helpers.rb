@@ -19,7 +19,7 @@ module NomenclatureChange::StatusChange::ProcessorHelpers
   # Generate a summary based on the subprocessors chain
   def summary
     result = []
-    @subprocessors.each{ |processor| result << processor.summary }
+    @subprocessors.each { |processor| result << processor.summary }
     result.flatten(1).compact
   end
 

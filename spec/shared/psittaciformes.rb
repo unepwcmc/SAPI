@@ -1,5 +1,5 @@
 shared_context "Psittaciformes" do
-  let(:ghana){
+  let(:ghana) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,

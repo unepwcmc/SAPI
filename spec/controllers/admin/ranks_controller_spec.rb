@@ -28,7 +28,7 @@ describe Admin::RanksController do
   end
 
   describe "XHR PUT update" do
-    let(:rank){ create(:rank) }
+    let(:rank) { create(:rank) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => rank.id, :rank => { :name => 'ZZ' }
       response.should be_success
@@ -40,7 +40,7 @@ describe Admin::RanksController do
   end
 
   describe "DELETE destroy" do
-    let(:rank){ create(:rank) }
+    let(:rank) { create(:rank) }
     it "redirects after delete" do
       delete :destroy, :id => rank.id
       response.should redirect_to(admin_ranks_url)

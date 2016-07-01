@@ -95,11 +95,11 @@ class NomenclatureChange::Split < NomenclatureChange
   end
 
   def outputs_except_inputs
-    outputs.reject{ |o| o.taxon_concept == input.try(:taxon_concept) }
+    outputs.reject { |o| o.taxon_concept == input.try(:taxon_concept) }
   end
 
   def outputs_intersect_inputs
-    outputs.select{ |o| o.taxon_concept == input.try(:taxon_concept) }
+    outputs.select { |o| o.taxon_concept == input.try(:taxon_concept) }
   end
 
   def new_output_rank

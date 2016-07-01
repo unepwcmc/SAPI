@@ -27,11 +27,11 @@ class Trade::NumericalityValidationRule < Trade::ValidationRule
   # specified in column_names.
   def matching_records(table_name)
     s = Arel::Table.new(table_name)
-    arel_columns = column_names.map{ |c| Arel::Attribute.new(s, c) }
+    arel_columns = column_names.map { |c| Arel::Attribute.new(s, c) }
     isnumeric_columns = arel_columns.map do |a|
       Arel::Nodes::NamedFunction.new 'isnumeric', [a]
     end
-    arel_nodes = isnumeric_columns.map{ |c| c.eq(false) }
+    arel_nodes = isnumeric_columns.map { |c| c.eq(false) }
     Trade::SandboxTemplate.select('*').from(table_name).where(arel_nodes.inject(&:or))
   end
 end
