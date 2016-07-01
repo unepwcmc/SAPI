@@ -1,5 +1,3 @@
-#Encoding: utf-8
-
 namespace :import do
 
   desc "Import standard reference links from csv file (usage: rake import:standard_references[path/to/file,path/to/another])"

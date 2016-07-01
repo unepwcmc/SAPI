@@ -1,4 +1,3 @@
-#Encoding: utf-8
 shared_context 'Shipments' do
   before(:each) do
     @animal_family = create_cites_eu_family(

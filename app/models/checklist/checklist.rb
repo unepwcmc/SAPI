@@ -1,4 +1,3 @@
-#Encoding: utf-8
 class Checklist::Checklist
   include ActiveModel::SerializerSupport
   include CacheIterator

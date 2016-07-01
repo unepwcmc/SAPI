@@ -1,4 +1,3 @@
-#encoding: utf-8
 module AdminHelper
 
   def ancestors_path(taxon_concept)

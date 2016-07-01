@@ -1,4 +1,3 @@
-#Encoding: UTF-8
 shared_context "Ailuropoda" do
   before(:all) do
     @order = create_cites_eu_order(

@@ -1,4 +1,3 @@
-#Encoding: utf-8
 shared_context 'Colophon' do
   let(:south_africa) {
     create(
