@@ -1,4 +1,3 @@
-#Encoding: utf-8
 shared_context "Caiman latirostris" do
 
   let(:en) {

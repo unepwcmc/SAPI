@@ -1,4 +1,3 @@
-#Encoding: utf-8
 shared_context 'Platysternon megacephalum' do
   before(:all) do
     @klass = cites_eu_reptilia

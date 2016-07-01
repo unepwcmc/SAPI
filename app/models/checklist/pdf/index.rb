@@ -1,4 +1,3 @@
-#Encoding: utf-8
 class Checklist::Pdf::Index < Checklist::Index
   include Checklist::Pdf::Document
   include Checklist::Pdf::Helpers

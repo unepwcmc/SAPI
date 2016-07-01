@@ -1,4 +1,3 @@
-#Encoding: UTF-8
 shared_context "Arctocephalus" do
   let(:en) { create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') }
   let(:es) { create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA') }

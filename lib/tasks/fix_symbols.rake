@@ -1,5 +1,3 @@
-#encoding: utf-8
-
 namespace :import do
 
   desc 'Fix symbols in the data files'

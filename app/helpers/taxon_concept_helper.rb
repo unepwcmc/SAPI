@@ -1,4 +1,3 @@
-#encoding: utf-8
 module TaxonConceptHelper
   def admin_taxon_concept_title
     content_tag(:div, :class => 'admin-header') do

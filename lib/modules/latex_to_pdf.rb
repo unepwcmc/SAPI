@@ -1,4 +1,3 @@
-#Encoding: UTF-8
 class LatexToPdf
   def self.config
     @config ||= {
