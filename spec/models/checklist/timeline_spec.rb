@@ -17,7 +17,7 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject){ ttc.timelines.first }
 
     specify{ subject.timeline_intervals.count.should == 1 }
@@ -77,7 +77,7 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject){ ttc.timelines.last }
 
     specify{ subject.timeline_intervals.count.should == 3 }
@@ -106,7 +106,7 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject){ ttc.timelines.first }
 
     specify{ subject.timeline_intervals.count.should == 2 }
@@ -148,7 +148,7 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject){ ttc.timelines.first.timelines.first }
 
     specify{ puts subject.timeline_events.inspect; puts subject.timeline_intervals.inspect; subject.timeline_intervals.count.should == 1 }
@@ -196,7 +196,7 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject){ ttc.timelines.last.timelines.first }
 
     specify{ subject.timeline_intervals.count.should == 2 }
@@ -221,7 +221,7 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject){ ttc.timelines.first }
 
     specify{
@@ -250,7 +250,7 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc)}
+    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject){ ttc.timelines.first }
 
     specify{

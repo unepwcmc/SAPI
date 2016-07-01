@@ -14,11 +14,11 @@ describe Taxonomy do
   describe :create do
     context "when valid" do
       let(:taxonomy){ build(:taxonomy, :name => 'WILDLIFE') }
-      specify {taxonomy.should be_valid}
+      specify { taxonomy.should be_valid }
     end
     context "when name missing" do
       let(:taxonomy){ build(:taxonomy, :name => nil) }
-      specify { taxonomy.should be_invalid}
+      specify { taxonomy.should be_invalid }
       specify { taxonomy.should have(1).error_on(:name) }
     end
     context "when name duplicated" do
@@ -44,7 +44,7 @@ describe Taxonomy do
     end
     context "when dependent objects attached" do
       let(:taxonomy){ create(:taxonomy, :name => 'WILDLIFE') }
-      let!(:designation){ create(:designation, :taxonomy => taxonomy)}
+      let!(:designation){ create(:designation, :taxonomy => taxonomy) }
       specify { taxonomy.destroy.should be_false }
     end
     context "when protected name" do

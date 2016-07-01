@@ -34,7 +34,7 @@ describe Term do
       end
       context "when CITES quota" do
         let(:geo_entity) { create(:geo_entity) }
-        let!(:quota){ create(:quota, :terms => [term], :geo_entity_id => geo_entity.id)}
+        let!(:quota){ create(:quota, :terms => [term], :geo_entity_id => geo_entity.id) }
         specify { term.destroy.should be_false }
       end
       context "when shipments" do

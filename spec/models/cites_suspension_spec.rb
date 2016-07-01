@@ -78,7 +78,7 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
         specify{
-          expect{subject.save}.to change{@taxon_concept.reload.dependents_updated_at}
+          expect{ subject.save }.to change{ @taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when global suspension" do
@@ -91,7 +91,7 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
         specify{
-          expect{subject.save}.to change{@taxon_concept.reload.dependents_updated_at}
+          expect{ subject.save }.to change{ @taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when suspension at higher taxonomic level" do
@@ -103,7 +103,7 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
         specify{
-          expect{subject.save}.to change{@taxon_concept.reload.dependents_updated_at}
+          expect{ subject.save }.to change{ @taxon_concept.reload.dependents_updated_at }
         }
       end
     end
@@ -117,8 +117,8 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
         specify{
-          expect{subject.update_attribute(:taxon_concept_id, @another_taxon_concept.id)}.
-            to change{@taxon_concept.reload.dependents_updated_at}
+          expect{ subject.update_attribute(:taxon_concept_id, @another_taxon_concept.id) }.
+            to change{ @taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when global suspension" do
@@ -131,12 +131,12 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
         specify{
-          expect{subject.update_attribute(:geo_entity_id, rwanda.id)}.
-            to change{@taxon_concept.reload.dependents_updated_at}
+          expect{ subject.update_attribute(:geo_entity_id, rwanda.id) }.
+            to change{ @taxon_concept.reload.dependents_updated_at }
         }
         specify{
-          expect{subject.update_attribute(:geo_entity_id, rwanda.id)}.
-            to change{@another_taxon_concept.reload.dependents_updated_at}
+          expect{ subject.update_attribute(:geo_entity_id, rwanda.id) }.
+            to change{ @another_taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when suspension at higher taxonomic level" do
@@ -148,8 +148,8 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
         specify{
-          expect{subject.update_attribute(:geo_entity_id, rwanda.id)}.
-            to change{@taxon_concept.reload.dependents_updated_at}
+          expect{ subject.update_attribute(:geo_entity_id, rwanda.id) }.
+            to change{ @taxon_concept.reload.dependents_updated_at }
         }
       end
     end
@@ -163,7 +163,7 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
         specify{
-          expect{subject.destroy}.to change{@taxon_concept.reload.dependents_updated_at}
+          expect{ subject.destroy }.to change{ @taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when global suspension" do
@@ -176,8 +176,8 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
         specify{
-          expect{subject.destroy}.
-            to change{@taxon_concept.reload.dependents_updated_at}
+          expect{ subject.destroy }.
+            to change{ @taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when suspension at higher taxonomic level" do
@@ -189,8 +189,8 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
         specify{
-          expect{subject.destroy}.
-            to change{@taxon_concept.reload.dependents_updated_at}
+          expect{ subject.destroy }.
+            to change{ @taxon_concept.reload.dependents_updated_at }
         }
       end
     end

@@ -139,7 +139,7 @@ namespace :import do
     count_trade_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_trade_name).count
     count_synonym_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_synonym).count
     taxon_concept_ids = ActiveRecord::Base.connection.execute("SELECT cites_taxon_code, species_plus_id AS id FROM #{TMP_TABLE}").
-      map {|h| [h["cites_taxon_code"], h["id"]]}
+      map { |h| [h["cites_taxon_code"], h["id"]] }
     taxon_concept_ids.each do |cites_code, id|
       tc = TaxonConcept.find id
       next if tc.name_status != "S"

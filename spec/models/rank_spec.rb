@@ -19,7 +19,7 @@ describe Rank do
   describe :parent_rank_lower_bound do
     context "obligatory rank" do
       let(:rank) { create(:rank, name: Rank::KINGDOM) }
-      specify { rank.parent_rank_lower_bound.should == '0'}
+      specify { rank.parent_rank_lower_bound.should == '0' }
     end
     context "optional rank" do
       let(:rank) { create(:rank, name: Rank::SUBFAMILY) }

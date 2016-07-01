@@ -7,6 +7,6 @@ class Api::RanksController < ApplicationController
   def collection
     @ranks ||= end_of_association_chain.
       select([:id, :name]).
-      map{|d| {:value => d.id, :text => d.name}}
+      map{ |d| {:value => d.id, :text => d.name} }
   end
 end

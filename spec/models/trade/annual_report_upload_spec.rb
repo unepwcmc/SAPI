@@ -51,7 +51,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :csv_source_file => exporter_file
         )
       }
-      specify {subject.should be_valid}
+      specify { subject.should be_valid }
     end
     context "when uploaded file as importer with exporter column headers" do
       subject{
@@ -61,7 +61,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :csv_source_file => exporter_file
         )
       }
-      specify {subject.should_not be_valid}
+      specify { subject.should_not be_valid }
     end
     context "when uploaded file as importer with importer column headers" do
       subject{
@@ -71,7 +71,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :csv_source_file => importer_file
         )
       }
-      specify {subject.should be_valid}
+      specify { subject.should be_valid }
     end
     context "when uploaded file as exporter with importer column headers" do
       subject{
@@ -81,7 +81,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :csv_source_file => importer_file
         )
       }
-      specify {subject.should_not be_valid}
+      specify { subject.should_not be_valid }
     end
   end
 
@@ -174,10 +174,10 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru
       }
       specify {
-        expect{subject.submit}.to change{Trade::Shipment.count}.by(1)
+        expect{ subject.submit }.to change{ Trade::Shipment.count }.by(1)
       }
       specify {
-        expect{subject.submit}.to change{Trade::Permit.count}.by(3)
+        expect{ subject.submit }.to change{ Trade::Permit.count }.by(3)
       }
       specify { #make sure leading space is stripped
         subject.submit; Trade::Permit.find_by_number('BBB').should_not be_nil
@@ -185,7 +185,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       context "when permit previously reported" do
         before(:each) { create(:permit, :number => 'xxx') }
         specify {
-          expect{subject.submit}.to change{Trade::Permit.count}.by(2)
+          expect{ subject.submit }.to change{ Trade::Permit.count }.by(2)
         }
       end
     end
@@ -205,7 +205,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru
       }
       specify {
-        expect{subject.submit}.not_to change{Trade::Shipment.count}
+        expect{ subject.submit }.not_to change{ Trade::Shipment.count }
       }
     end
     context "when reported under a synonym" do
@@ -239,7 +239,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru
       }
       specify {
-        expect{subject.submit}.to change{Trade::Shipment.count}.by(1)
+        expect{ subject.submit }.to change{ Trade::Shipment.count }.by(1)
       }
       specify {
         subject.submit

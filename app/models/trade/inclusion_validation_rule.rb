@@ -90,7 +90,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       ['COUNT(*) AS error_count', 'ARRAY_AGG(id) AS matching_records_ids']
     ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
     group(column_names_for_display).having(
-      required_column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND ')
+      required_column_names.map{ |cn| "#{cn} IS NOT NULL" }.join(' AND ')
     )
   end
 

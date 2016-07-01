@@ -53,7 +53,7 @@ class Trade::Filter
           [:"#{tc.rank_name.downcase}_id", tc.id]
         end
       @query = @query.where(
-        taxon_concepts_conditions.map{ |c| "taxon_concept_#{c[0]} = #{c[1]}"}.join(' OR ')
+        taxon_concepts_conditions.map{ |c| "taxon_concept_#{c[0]} = #{c[1]}" }.join(' OR ')
       )
     end
 
@@ -69,7 +69,7 @@ class Trade::Filter
           [:"#{tc.rank_name.downcase}_id", tc.id]
         end
       @query = @query.where(
-        reported_taxon_concepts_conditions.map{ |c| "reported_taxon_concept_#{c[0]} = #{c[1]}"}.join(' OR ')
+        reported_taxon_concepts_conditions.map{ |c| "reported_taxon_concept_#{c[0]} = #{c[1]}" }.join(' OR ')
       )
     end
 

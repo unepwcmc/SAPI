@@ -17,12 +17,12 @@ require 'spec_helper'
 describe TaxonRelationship do
   describe :has_opposite? do
     context 'a relationship with no opposite' do
-      let(:taxon_relationship_type) {create(:taxon_relationship_type, :is_bidirectional => false)}
+      let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_bidirectional => false) }
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
       specify { taxon_relationship.has_opposite?.should == false }
     end
     context 'with an opposite' do
-      let(:taxon_relationship_type) {create(:taxon_relationship_type, :is_bidirectional => true)}
+      let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_bidirectional => true) }
       let(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
       specify { taxon_relationship.has_opposite?.should == true }
     end
@@ -30,13 +30,13 @@ describe TaxonRelationship do
 
   describe :after_create_create_opposite do
     context 'when creating a bidirectional relationship' do
-      let(:taxon_relationship_type) {create(:taxon_relationship_type, :is_bidirectional => true)}
+      let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_bidirectional => true) }
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
       specify { taxon_relationship.has_opposite?.should == true }
     end
 
     context 'when creating a non bidirectional relationship' do
-      let(:taxon_relationship_type) {create(:taxon_relationship_type, :is_bidirectional => false)}
+      let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_bidirectional => false) }
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
       specify { taxon_relationship.has_opposite?.should == false }
     end
