@@ -185,7 +185,7 @@ describe Admin::TaxonListingChangesController do
       end
     end
     it "renders edit when not successful" do
-      put :update, :listing_change => {:effective_at => nil},
+      put :update, :listing_change => { :effective_at => nil },
         :id => @listing_change.id,
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id

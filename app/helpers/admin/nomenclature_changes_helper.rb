@@ -2,7 +2,7 @@ module Admin::NomenclatureChangesHelper
 
   def nomenclature_change_form(submit_label = 'Next', &block)
     nested_form_for @nomenclature_change, url: wizard_path, method: :put,
-      html: {class: 'form-horizontal'} do |f|
+      html: { class: 'form-horizontal' } do |f|
       html = error_messages_for(@nomenclature_change)
       html += capture { block.yield(f) } if block_given?
       html += nomenclature_change_form_buttons(f, submit_label)
@@ -133,7 +133,7 @@ module Admin::NomenclatureChangesHelper
       "Select a taxon below to populate all fields with that taxon.")
     @nomenclature_change.outputs.map do |output|
       html += content_tag(:div, class: 'species-checkbox') do
-        tag("input", {type: "checkbox", class: 'select-partial-checkbox', checked: checked}) +
+        tag("input", { type: "checkbox", class: 'select-partial-checkbox', checked: checked }) +
         content_tag(:span, output.display_full_name, class: 'species-name')
       end
     end
@@ -159,7 +159,7 @@ module Admin::NomenclatureChangesHelper
           ff.radio_button(
             :output_type,
             opt_val,
-            {class: 'output-radio'}
+            { class: 'output-radio' }
           ) + ' ' + opt
         )
       end
@@ -220,10 +220,10 @@ module Admin::NomenclatureChangesHelper
         tc = input.taxon_concept
         if idx == 0
           concat content_tag(:div, inner_content(input, tc),
-            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active"})
+            { id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active" })
         else
           concat content_tag(:div, inner_content(input, tc),
-            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade"})
+            { id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade" })
         end
       end
     end
@@ -242,7 +242,7 @@ module Admin::NomenclatureChangesHelper
     tc = @nc.output.new_taxon_concept || @nc.output.taxon_concept
     content_tag(:div, class: 'tab-content') do
       content_tag(:div, inner_content(@nc.output, tc),
-        {id: "output_#{tc.full_name.downcase.tr(" ", "_")}", class: 'tab-pane fade in active'})
+        { id: "output_#{tc.full_name.downcase.tr(" ", "_")}", class: 'tab-pane fade in active' })
     end
   end
 
@@ -268,8 +268,8 @@ module Admin::NomenclatureChangesHelper
   def split_input_content
     content_tag(:div, class: 'tab-content') do
       content_tag(:div, inner_content(@nc.input, @nc.input.taxon_concept),
-        {id: "input_#{@nc.input.taxon_concept.full_name.downcase.tr(" ", "_")}",
-        class: 'tab-pane fade in active'})
+        { id: "input_#{@nc.input.taxon_concept.full_name.downcase.tr(" ", "_")}",
+        class: 'tab-pane fade in active' })
     end
   end
 
@@ -290,10 +290,10 @@ module Admin::NomenclatureChangesHelper
         tc = output.new_taxon_concept || output.taxon_concept
         if idx == 0
           concat content_tag(:div, inner_content(output, tc),
-            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active"})
+            { id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active" })
         else
           concat content_tag(:div, inner_content(output, tc),
-            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade"})
+            { id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade" })
         end
       end
     end

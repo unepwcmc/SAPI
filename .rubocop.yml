@@ -71,3 +71,9 @@ Style/FirstParameterIndentation:
 Style/IndentationWidth:
   Exclude:
     - 'db/migrate/*'
+
+# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SupportedStyles.
+# SupportedStyles: space, no_space
+Style/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: no_space

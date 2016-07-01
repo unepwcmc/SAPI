@@ -7,7 +7,7 @@ describe Trade::ExportsController do
     context "raw format" do
       it "returns count of shipments" do
         create(:shipment)
-        get :download, :filters => {:report_type => 'raw'}, :format => :json
+        get :download, :filters => { :report_type => 'raw' }, :format => :json
         parse_json(response.body)['total'].should == 1
       end
       it "does not log download information from the admin interface" do
@@ -28,7 +28,7 @@ describe Trade::ExportsController do
         Trade::ShipmentsExport.any_instance.stub(:export).and_return(false)
       end
       it "redirects to home page" do
-        get :download, :filters => {:report_type => :comptab}
+        get :download, :filters => { :report_type => :comptab }
         expect(response).to redirect_to(trade_root_url)
       end
     end

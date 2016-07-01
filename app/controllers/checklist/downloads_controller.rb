@@ -30,7 +30,7 @@ class Checklist::DownloadsController < ApplicationController
   def show
     @download = Download.find(params[:id])
 
-    render :text => {status: @download.status}.to_json
+    render :text => { status: @download.status }.to_json
   end
 
   # GET downloads/:id/download
@@ -48,7 +48,7 @@ class Checklist::DownloadsController < ApplicationController
         :filename => @download.filename,
         :type => @download.format)
     else
-      render :text => {error: "Download not processed"}.to_json
+      render :text => { error: "Download not processed" }.to_json
     end
   end
 
@@ -85,7 +85,7 @@ class Checklist::DownloadsController < ApplicationController
   end
 
   def not_found
-    render :text => {error: "No downloads available"}.to_json
+    render :text => { error: "No downloads available" }.to_json
   end
 
 end

@@ -28,7 +28,7 @@ describe Admin::TagsController do
     context "when JSON" do
       it "responds with 200 when successful" do
         xhr :put, :update, :format => 'json', :id => preset_tag.id,
-          :preset_tag => { }
+          :preset_tag => {}
         response.should be_success
       end
       it "responds with json error when not successful" do

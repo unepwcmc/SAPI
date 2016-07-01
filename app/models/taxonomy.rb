@@ -18,7 +18,7 @@ class Taxonomy < ActiveRecord::Base
 
   validates :name, :presence => true, :uniqueness => true
   validates :name,
-    :inclusion => {:in => self.dict, :message => 'cannot change protected name'},
+    :inclusion => { :in => self.dict, :message => 'cannot change protected name' },
     :if => lambda { |t| t.name_changed? && t.class.dict.include?(t.name_was) },
     :on => :update
 

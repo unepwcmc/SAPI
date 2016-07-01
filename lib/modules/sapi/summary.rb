@@ -31,9 +31,9 @@ module Sapi
       taxonomic[:taxon_names] = TaxonName.count
       taxonomic[:taxon_concepts] = TaxonConcept.count
       taxonomic[:common_names] = CommonName.count
-      taxonomic[:common_names_en] = CommonName.joins(:language).where(:languages => {:name_en => 'English'}).count
-      taxonomic[:common_names_fr] = CommonName.joins(:language).where(:languages => {:name_en => 'French'}).count
-      taxonomic[:common_names_es] = CommonName.joins(:language).where(:languages => {:name_en => 'Spanish'}).count
+      taxonomic[:common_names_en] = CommonName.joins(:language).where(:languages => { :name_en => 'English' }).count
+      taxonomic[:common_names_fr] = CommonName.joins(:language).where(:languages => { :name_en => 'French' }).count
+      taxonomic[:common_names_es] = CommonName.joins(:language).where(:languages => { :name_en => 'Spanish' }).count
       taxonomic
     end
 
@@ -41,9 +41,9 @@ module Sapi
       geo = {}
       geo[:geo_entity_types] = GeoEntityType.count
       geo[:geo_entities] = GeoEntity.count
-      geo[:countries] = GeoEntity.joins(:geo_entity_type).where(:geo_entity_types => {:name => GeoEntityType::COUNTRY}).count
-      geo[:cites_regions] = GeoEntity.joins(:geo_entity_type).where(:geo_entity_types => {:name => GeoEntityType::CITES_REGION}).count
-      geo[:territories] = GeoEntity.joins(:geo_entity_type).where(:geo_entity_types => {:name => GeoEntityType::TERRITORY}).count
+      geo[:countries] = GeoEntity.joins(:geo_entity_type).where(:geo_entity_types => { :name => GeoEntityType::COUNTRY }).count
+      geo[:cites_regions] = GeoEntity.joins(:geo_entity_type).where(:geo_entity_types => { :name => GeoEntityType::CITES_REGION }).count
+      geo[:territories] = GeoEntity.joins(:geo_entity_type).where(:geo_entity_types => { :name => GeoEntityType::TERRITORY }).count
       geo
     end
 
@@ -90,10 +90,10 @@ module Sapi
       ).where(["(data->'kingdom_id')::INT = ?", k.id]).
         where("name_status NOT IN ('A', 'S')").count
       stats[:listing_changes] = ListingChange.joins(:taxon_concept).
-        where(:taxon_concepts => {:taxonomy_id => t.id }).
+        where(:taxon_concepts => { :taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
       distributions = Distribution.joins(:taxon_concept).
-        where(:taxon_concepts => {:taxonomy_id => t.id }).
+        where(:taxon_concepts => { :taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id])
       stats[:distributions] = distributions.count
       stats[:distribution_tags] = ActiveRecord::Base.connection.execute(<<-SQL
@@ -109,16 +109,16 @@ module Sapi
         ).values.flatten[0]
       stats[:distribution_references] = DistributionReference.
         joins(:distribution => :taxon_concept).
-        where(:taxon_concepts => {:taxonomy_id => t.id }).
+        where(:taxon_concepts => { :taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
       stats[:taxon_references] = TaxonConceptReference.joins(:taxon_concept).
-        where(:taxon_concepts => {:taxonomy_id => t.id }).
+        where(:taxon_concepts => { :taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
       stats[:taxon_standard_references] = TaxonConceptReference.joins(:taxon_concept).
-        where(:taxon_concepts => {:taxonomy_id => t.id }, :taxon_concept_references => {:is_standard => true}).
+        where(:taxon_concepts => { :taxonomy_id => t.id }, :taxon_concept_references => { :is_standard => true }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
       stats[:common_names] =  TaxonCommon.joins(:taxon_concept).
-        where(:taxon_concepts => {:taxonomy_id => t.id }).
+        where(:taxon_concepts => { :taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id]).count
       stats
     end

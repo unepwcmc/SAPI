@@ -21,7 +21,7 @@ describe Species::ExportsController do
 
     it 'sets separator to comma with UK ip address' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("194.59.188.126")
-      Sapi::GeoIP.any_instance.stub(:country_and_city).and_return({:country=>"GB", :city=>"Cambridge"})
+      Sapi::GeoIP.any_instance.stub(:country_and_city).and_return({ :country=>"GB", :city=>"Cambridge" })
       get :download, data_type: 'EuDecisions', :filters => {
         'set' => 'current', 'decision_types' => {}, :csv_separator => ''
       }
@@ -32,7 +32,7 @@ describe Species::ExportsController do
 
     it 'sets separator to semicolon with AF ip address' do
       ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("175.106.59.78")
-      Sapi::GeoIP.any_instance.stub(:country_and_city).and_return({:country=>"AF", :city=>"Kabul"})
+      Sapi::GeoIP.any_instance.stub(:country_and_city).and_return({ :country=>"AF", :city=>"Kabul" })
       get :download, data_type: 'EuDecisions', :filters => {
         'set' => 'current', 'decision_types' => {}, :csv_separator => ''
       }

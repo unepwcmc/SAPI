@@ -24,7 +24,7 @@ class Api::V1::DocumentGeoEntitiesController < ApplicationController
 
     render :json => @geo_entities,
       each_serializer: Species::GeoEntitySerializer,
-      meta: {total: @geo_entities.count}
+      meta: { total: @geo_entities.count }
   end
 
   private

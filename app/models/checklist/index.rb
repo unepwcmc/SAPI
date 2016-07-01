@@ -2,7 +2,7 @@ class Checklist::Index < Checklist::Checklist
   attr_reader :download_name
 
   def initialize(options = {})
-    params = options.merge({:output_layout => :alphabetical})
+    params = options.merge({ :output_layout => :alphabetical })
     @download_path = download_location(params, "index", ext)
     # If a cached download exists, only initialize the params for the
     # helper methods, otherwise run the generation queries.

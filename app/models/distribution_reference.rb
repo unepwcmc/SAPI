@@ -19,5 +19,5 @@ class DistributionReference < ActiveRecord::Base
   belongs_to :reference
   belongs_to :distribution, :touch => true
 
-  validates :distribution_id, :uniqueness => {:scope => :reference_id}
+  validates :distribution_id, :uniqueness => { :scope => :reference_id }
 end

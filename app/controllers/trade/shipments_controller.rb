@@ -32,7 +32,7 @@ class Trade::ShipmentsController < TradeController
     affected_rows = @batch_update.execute(
       populate_accepted_taxon_concept(batch_update_params)
     )
-    render :json => {rows: affected_rows}, :status => :ok
+    render :json => { rows: affected_rows }, :status => :ok
   end
 
   def destroy
@@ -49,7 +49,7 @@ class Trade::ShipmentsController < TradeController
     end.flatten.uniq
     @search.query.destroy_all
     PermitCleanupWorker.perform_async(disconnected_permits_ids)
-    render :json => {rows: cnt}, :status => :ok
+    render :json => { rows: cnt }, :status => :ok
   end
 
   def accepted_taxa_for_reported_taxon_concept

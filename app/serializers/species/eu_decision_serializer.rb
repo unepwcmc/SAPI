@@ -1,5 +1,5 @@
 class Species::EuDecisionSerializer < ActiveModel::Serializer
-  attributes :notes, {:start_date_formatted => :start_date},
+  attributes :notes, { :start_date_formatted => :start_date },
     :is_current, :subspecies_info, :nomenclature_note_en, :nomenclature_note_fr,
     :nomenclature_note_es,
     :eu_decision_type,
@@ -7,7 +7,7 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     :start_event,
     :source,
     :term,
-    {:original_start_date_formatted => :original_start_date}
+    { :original_start_date_formatted => :original_start_date }
 
   def eu_decision_type
     object['eu_decision_type'] && JSON.parse(object['eu_decision_type'])

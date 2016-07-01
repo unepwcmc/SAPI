@@ -10,9 +10,9 @@ module Statistics
         reported_by_importer = Trade::Shipment.where(:year => y,
                                                      :reported_by_exporter => false).count
         total_transactions = Trade::Shipment.where(:year => y).count
-        trade_transactions[y] = {:total => total_transactions,
+        trade_transactions[y] = { :total => total_transactions,
           :reported_by_exporter => reported_by_exporter,
-          :reported_by_importer => reported_by_importer}
+          :reported_by_importer => reported_by_importer }
       end
     }
     trade_transactions[:total] = {}

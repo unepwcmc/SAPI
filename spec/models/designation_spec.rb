@@ -34,14 +34,14 @@ describe Designation do
       let(:designation){ create(:designation) }
       specify{
         designation.update_attributes(
-          {:name => 'RULES OF INTERGALACTIC TRADE'}
+          { :name => 'RULES OF INTERGALACTIC TRADE' }
         ).should be_true
       }
     end
     context "when updating a protected name" do
       specify{
         cites.update_attributes(
-          {:name => 'RULES OF INTERGALACTIC TRADE'}
+          { :name => 'RULES OF INTERGALACTIC TRADE' }
         ).should be_false
       }
     end

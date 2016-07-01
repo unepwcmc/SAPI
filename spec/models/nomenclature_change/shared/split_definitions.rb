@@ -71,7 +71,7 @@ shared_context 'split_definitions' do
   }
   let(:split_with_input_and_outputs_status_change){
     create(:nomenclature_change_split,
-      input_attributes: {taxon_concept_id: input_species.id},
+      input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
         1 => {
@@ -85,7 +85,7 @@ shared_context 'split_definitions' do
   }
   let(:split_with_input_and_outputs_name_change){
     create(:nomenclature_change_split,
-      input_attributes: {taxon_concept_id: input_species.id},
+      input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
         1 => {
@@ -121,7 +121,7 @@ shared_context 'split_definitions' do
     )
 
     nc = create(:nomenclature_change_split,
-      input_attributes: {taxon_concept_id: input_species.id},
+      input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
         1 => { taxon_concept_id: input_species.id }

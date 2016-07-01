@@ -6,7 +6,7 @@ class Api::V1::GeoEntitiesController < ApplicationController
     ).cached_results
     render :json => @geo_entities,
       :each_serializer => Species::GeoEntitySerializer,
-      :meta => {:total => @geo_entities.count}
+      :meta => { :total => @geo_entities.count }
   end
 
 end

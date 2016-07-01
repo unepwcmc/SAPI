@@ -12,7 +12,7 @@ shared_context 'Uroplatus' do
     @genus = create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Uroplatus'),
       :parent => @family,
-      :data => {:usr_no_std_ref => true}
+      :data => { :usr_no_std_ref => true }
     )
     @species1 = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'Alluaudi'),

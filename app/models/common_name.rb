@@ -17,7 +17,7 @@ class CommonName < ActiveRecord::Base
     :created_by_id, :updated_by_id
   belongs_to :language
   validates :name, :presence => true,
-    :uniqueness => {:scope => :language_id}
+    :uniqueness => { :scope => :language_id }
 
   def self.english_to_pdf(common_name)
     words = common_name.split

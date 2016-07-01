@@ -4,7 +4,7 @@ namespace :import do
   task :cites_regions, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     tmp_table = 'cites_regions_import'
     regions_type = GeoEntityType.find_by_name(GeoEntityType::CITES_REGION)
-    puts "There are #{GeoEntity.count(conditions: {geo_entity_type_id: regions_type.id})} CITES Regions in the database."
+    puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: regions_type.id })} CITES Regions in the database."
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(tmp_table)
@@ -21,7 +21,7 @@ namespace :import do
       SQL
       ActiveRecord::Base.connection.execute(sql)
     end
-    puts "There are now #{GeoEntity.count(conditions: {geo_entity_type_id: regions_type.id})} CITES Regions in the database"
+    puts "There are now #{GeoEntity.count(conditions: { geo_entity_type_id: regions_type.id })} CITES Regions in the database"
   end
 
   task :cites_regions_translations => :environment do

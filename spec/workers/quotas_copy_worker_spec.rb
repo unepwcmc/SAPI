@@ -240,7 +240,7 @@ describe QuotasCopyWorker do
              :geo_entity_id => geo_entity2.id,
              :taxon_concept_id => tc.id,
              :notes => "Derp di doo wildlife")
-      QuotasCopyWorker.new.perform(job_defaults.merge({"url" => 'http://myurl.co.uk'}))
+      QuotasCopyWorker.new.perform(job_defaults.merge({ "url" => 'http://myurl.co.uk' }))
     end
     specify { Quota.count(true).should == 4 }
     specify { Quota.where(:is_current => true).count(true).should == 2 }

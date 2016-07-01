@@ -6,9 +6,9 @@ namespace :import do
     designation = Designation.find_by_name(Designation::CITES)
     taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
     puts "There are #{ListingChange.joins(:species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count} CITES listings in the database"
+      where(:species_listings => { :designation_id => designation.id }).count} CITES listings in the database"
     puts "There are #{ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count} CITES listing distributions in the database"
+      where(:species_listings => { :designation_id => designation.id }).count} CITES listing distributions in the database"
     appendix_1 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'I')
     appendix_2 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'II')
     appendix_3 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'III')
@@ -19,9 +19,9 @@ namespace :import do
     rw = ChangeType.find_by_name_and_designation_id(ChangeType::RESERVATION_WITHDRAWAL, designation.id)
     english = Language.find_by_name_en('English')
     listings_count = ListingChange.joins(:species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
     listings_d_count = ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -225,9 +225,9 @@ namespace :import do
     ActiveRecord::Base.connection.execute("DROP VIEW cites_listings_import_view")
 
     new_listings_count = ListingChange.joins(:species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
     new_listings_d_count = ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
     puts "#{new_listings_count - listings_count} CITES listings were added to the database"
     puts "#{new_listings_d_count - listings_d_count} CITES listing distributions were added to the database"
 
@@ -272,11 +272,11 @@ namespace :import do
     task :delete_all => :environment do
       designation = Designation.find_by_name("CITES")
       AnnotationTranslation.joins(:annotation => :event).
-        where(:events => {:designation_id => designation.id}).delete_all
+        where(:events => { :designation_id => designation.id }).delete_all
       Annotation.joins(:event).
-        where(:events => {:designation_id => designation.id}).delete_all
+        where(:events => { :designation_id => designation.id }).delete_all
       ListingDistribution.joins(:listing_change).
-        where(:listing_changes => {:desigantion_id => designation.id}).delete_all
+        where(:listing_changes => { :desigantion_id => designation.id }).delete_all
       ListingChange.where(:designation_id => designation.id).delete_all
     end
   end
