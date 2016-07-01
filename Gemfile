@@ -134,7 +134,6 @@ gem 'slim'
 gem 'sinatra', '>= 1.3.0', :require => nil
 
 gem 'memcache-client'
-#gem 'high_voltage'
 
 gem 'jquery-ui-rails'
 

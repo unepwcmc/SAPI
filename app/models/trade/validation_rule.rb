@@ -69,7 +69,6 @@ class Trade::ValidationRule < ActiveRecord::Base
   end
 
   def validation_errors_for_shipment(shipment)
-    #raise "Not implemented"
     return nil if is_primary # primary validations are handled by AR
     'shipment validation not implemented'
   end

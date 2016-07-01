@@ -105,8 +105,6 @@ module DownloadsCache
   class << self
     alias :clear_eu_opinions :clear_eu_decisions
     alias :clear_eu_suspensions :clear_eu_decisions
-
-    #alias :clear_taxon_concepts_distributions :clear_distributions
   end
 
   # cleared after save & destroy
