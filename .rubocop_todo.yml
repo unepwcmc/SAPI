@@ -612,17 +612,6 @@ Style/SingleLineMethods:
 Style/SpaceBeforeBlockBraces:
   Enabled: false
 
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: space, no_space
-Style/SpaceInsideStringInterpolation:
-  Exclude:
-    - 'app/helpers/admin/trade_codes_helper.rb'
-    - 'lib/tasks/import_distribution_tags.rake'
-    - 'lib/tasks/import_distributions.rake'
-    - 'lib/tasks/import_synonyms.rake'
-
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: SupportedStyles.
