@@ -13,7 +13,7 @@ set :branch, :develop
 
 desc "Configure VHost"
 task :config_vhost do
-  vhost_config =<<-EOF
+  vhost_config = <<-EOF
     server {
       listen 80;
       client_max_body_size 4G;

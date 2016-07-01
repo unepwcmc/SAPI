@@ -7,7 +7,7 @@ class Checklist::TimelinesController < ApplicationController
       tc = MTaxonConcept.find_by_id(tc_id)
       Checklist::TimelinesForTaxonConcept.new(tc) unless tc.nil?
     end
-    render :json =>  res, :each_serializer => Checklist::TimelinesForTaxonConceptSerializer
+    render :json => res, :each_serializer => Checklist::TimelinesForTaxonConceptSerializer
   end
 
   private

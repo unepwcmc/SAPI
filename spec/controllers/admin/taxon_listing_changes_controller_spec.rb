@@ -199,10 +199,10 @@ describe Admin::TaxonListingChangesController do
         :designation_id => @designation.id,
         :listing_change => {
           :annotation_attributes => {
-            "short_note_en"=>"", "short_note_es"=>"",
-            "short_note_fr"=>"", "full_note_en"=>"",
-            "full_note_es"=>"", "full_note_fr"=>"",
-            "id"=> @annotation.id
+            "short_note_en" => "", "short_note_es" => "",
+            "short_note_fr" => "", "full_note_en" => "",
+            "full_note_es" => "", "full_note_fr" => "",
+            "id" => @annotation.id
           }
         }
       response.should redirect_to(

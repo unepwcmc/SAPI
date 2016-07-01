@@ -102,7 +102,7 @@ class GeoEntity < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    super(:only =>[:id, :iso_code2, :is_current], :methods => [:name])
+    super(:only => [:id, :iso_code2, :is_current], :methods => [:name])
   end
 
   def self.search(query)
@@ -130,7 +130,7 @@ class GeoEntity < ActiveRecord::Base
       'EU opinions' => eu_opinions,
       'shipments (exporter)' => exported_shipments,
       'shipments (importer)' => imported_shipments,
-      'shipments (origin)' =>originated_shipments
+      'shipments (origin)' => originated_shipments
     }
   end
 

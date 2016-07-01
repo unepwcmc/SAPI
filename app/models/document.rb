@@ -98,11 +98,11 @@ class Document < ActiveRecord::Base
   end
 
   def taxon_names
-    parse_pg_array(read_attribute(:taxon_names)||"").compact
+    parse_pg_array(read_attribute(:taxon_names) || "").compact
   end
 
   def geo_entity_names
-    parse_pg_array(read_attribute(:geo_entity_names)||"").compact
+    parse_pg_array(read_attribute(:geo_entity_names) || "").compact
   end
 
 end

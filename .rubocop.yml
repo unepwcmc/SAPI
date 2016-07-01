@@ -77,3 +77,7 @@ Style/IndentationWidth:
 Style/SpaceInsideHashLiteralBraces:
   EnforcedStyle: space
   EnforcedStyleForEmptyBraces: no_space
+
+# Configuration parameters: AllowForAlignment.
+Style/SpaceAroundOperators:
+  AllowForAlignment: true

@@ -210,15 +210,15 @@ namespace :import do
 
     puts "############# SUMMARY ###################"
     puts "Pre-Existing trade_names: #{count_trade_names}; Final count trade_names: #{final_count_trade_names};\
-      Diff: #{final_count_trade_names-count_trade_names}"
+      Diff: #{final_count_trade_names - count_trade_names}"
     puts "Pre-Existing synonyms: #{count_synonyms}; Final count synonyms: #{final_count_synonyms};\
-      Diff: #{final_count_synonyms-count_synonyms}"
+      Diff: #{final_count_synonyms - count_synonyms}"
     puts "Pre-Existing taxon_names: #{count_taxon_names}; Final count taxon_names: #{final_count_taxon_names};\
-      Diff: #{final_count_taxon_names-count_taxon_names}"
+      Diff: #{final_count_taxon_names - count_taxon_names}"
     puts "Pre-Existing trade_relationships: #{count_trade_relationships}; Final count trade_relationships: #{final_count_trade_relationships};\
-      Diff: #{final_count_trade_relationships-count_trade_relationships}"
+      Diff: #{final_count_trade_relationships - count_trade_relationships}"
     puts "Pre-Existing synonym_relationships: #{count_synonym_relationships}; Final count synonym_relationships: #{final_count_synonym_relationships};\
-      Diff: #{final_count_synonym_relationships-count_synonym_relationships}"
+      Diff: #{final_count_synonym_relationships - count_synonym_relationships}"
     Sapi::Indexes.create_indexes_on_trade_names
   end
 end

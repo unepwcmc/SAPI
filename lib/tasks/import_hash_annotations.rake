@@ -44,7 +44,7 @@ namespace :import do
     res = ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM #{TMP_TABLE}")
     puts "Attempting to import #{res[0]['count']} rows"
 
-    sql =<<-SQL
+    sql = <<-SQL
       WITH translated_annotations AS (
         SELECT
         annotations.id,

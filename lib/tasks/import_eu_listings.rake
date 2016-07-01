@@ -148,7 +148,7 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
 
       #add population exceptions
-      sql =<<-SQL
+      sql = <<-SQL
       WITH exceptions AS (
               -- first insert the exception records -- there's just one / listing change
               INSERT INTO listing_changes (parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at)

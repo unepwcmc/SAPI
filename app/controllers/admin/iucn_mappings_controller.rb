@@ -19,7 +19,7 @@ class Admin::IucnMappingsController < Admin::SimpleCrudController
 
   def collection
     @iucn_mappings ||= end_of_association_chain.order(:taxon_concept_id).
-      page(params[:page]).filter(params[:show]||"ALL").includes(:taxon_concept).
+      page(params[:page]).filter(params[:show] || "ALL").includes(:taxon_concept).
       includes(:accepted_name)
   end
 end

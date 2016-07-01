@@ -20,7 +20,7 @@ class LatexToPdf
           Dir.chdir dir
           original_stdout, original_stderr = $stdout, $stderr
           $stderr = $stdout = File.open("#{input}.log", "a")
-          args=config[:arguments] + %w[-shell-escape -interaction batchmode] + ["#{input}.tex"]
+          args = config[:arguments] + %w[-shell-escape -interaction batchmode] + ["#{input}.tex"]
           exec config[:command], *args
         rescue
           File.open("#{input}.log", 'a') {|io|
@@ -31,7 +31,7 @@ class LatexToPdf
           Process.exit! 1
         end
       end)
-    if File.exist?(pdf_file=[dir, "/#{input}.pdf"].join)
+    if File.exist?(pdf_file = [dir, "/#{input}.pdf"].join)
       pdf_file
     else
       raise "pdflatex failed: See #{[dir, "/#{input}.log"].join} for details"
@@ -45,13 +45,13 @@ class LatexToPdf
     # :stopdoc:
     unless @latex_escaper
       if defined?(RedCloth::Formatters::LATEX)
-        class << (@latex_escaper=RedCloth.new(''))
+        class << (@latex_escaper = RedCloth.new(''))
           include RedCloth::Formatters::LATEX
         end
       else
-        class << (@latex_escaper=Object.new)
-          ESCAPE_RE=/([{}_$&%#\r])|([\\^~|<>])/
-          ESC_MAP={
+        class << (@latex_escaper = Object.new)
+          ESCAPE_RE = /([{}_$&%#\r])|([\\^~|<>])/
+          ESC_MAP = {
             '\\' => 'backslash',
             '^' => 'asciicircum',
             '~' => 'asciitilde',
