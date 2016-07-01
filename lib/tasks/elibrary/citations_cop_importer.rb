@@ -17,9 +17,9 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
 
   def run_preparatory_queries
     super()
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalNature = NULL WHERE ProposalNature='NULL'" )
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalOutcome = NULL WHERE ProposalOutcome='NULL'" )
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalRepresentation = NULL WHERE ProposalRepresentation='NULL'" )
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalNature = NULL WHERE ProposalNature='NULL'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalOutcome = NULL WHERE ProposalOutcome='NULL'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalRepresentation = NULL WHERE ProposalRepresentation='NULL'")
 
     # revert any previous CoP document duplication
     sql = <<-SQL

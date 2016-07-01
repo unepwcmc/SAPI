@@ -234,7 +234,7 @@ describe Admin::TaxonListingChangesController do
   end
   describe "Authorization for contributors" do
     login_contributor
-    let!(:listing_change ) {
+    let!(:listing_change) {
       create(
         :listing_change,
         :taxon_concept_id => @taxon_concept.id,

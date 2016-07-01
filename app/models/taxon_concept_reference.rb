@@ -40,7 +40,7 @@ class TaxonConceptReference < ActiveRecord::Base
   end
 
   def excluded_taxon_concepts_ids=(ary)
-    write_attribute(:excluded_taxon_concepts_ids, '{' + ary + '}' )
+    write_attribute(:excluded_taxon_concepts_ids, '{' + ary + '}')
   end
 
 end

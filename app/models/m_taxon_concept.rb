@@ -196,7 +196,7 @@ class MTaxonConcept < ActiveRecord::Base
 
   def db_ary_to_array(ary)
     if respond_to?(ary)
-      parse_pg_array( send(ary) || '').compact.map do |e|
+      parse_pg_array(send(ary) || '').compact.map do |e|
         e.force_encoding('utf-8')
       end
     else

@@ -612,25 +612,6 @@ Style/SingleLineMethods:
 Style/SpaceBeforeBlockBraces:
   Enabled: false
 
-# Offense count: 33
-# Cop supports --auto-correct.
-Style/SpaceInsideParens:
-  Exclude:
-    - 'app/helpers/taxon_concept_helper.rb'
-    - 'app/models/eu_suspension.rb'
-    - 'app/models/events_by_type_stats.rb'
-    - 'app/models/m_taxon_concept.rb'
-    - 'app/models/taxon_concept_reference.rb'
-    - 'app/uploaders/trade/csv_source_file_uploader.rb'
-    - 'lib/capistrano/tasks/smoke_test.rake'
-    - 'lib/tasks/elibrary/citations_cop_importer.rb'
-    - 'lib/tasks/elibrary/citations_importer.rb'
-    - 'lib/tasks/elibrary/citations_rst_importer.rb'
-    - 'lib/tasks/elibrary/document_discussions_importer.rb'
-    - 'lib/tasks/elibrary/documents_importer.rb'
-    - 'spec/controllers/admin/taxon_eu_suspensions_controller_spec.rb'
-    - 'spec/controllers/admin/taxon_listing_changes_controller_spec.rb'
-
 # Offense count: 6
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

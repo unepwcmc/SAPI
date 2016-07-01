@@ -36,9 +36,9 @@ class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
 
   def run_preparatory_queries
     super()
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET SigTradePhase = NULL WHERE SigTradePhase='NULL'" )
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET SigTradeProcessStage = NULL WHERE SigTradeProcessStage='NULL'" )
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET SigTradeRecommendedCategory = NULL WHERE SigTradeRecommendedCategory='NULL'" )
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET SigTradePhase = NULL WHERE SigTradePhase='NULL'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET SigTradeProcessStage = NULL WHERE SigTradeProcessStage='NULL'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET SigTradeRecommendedCategory = NULL WHERE SigTradeRecommendedCategory='NULL'")
   end
 
   def run_queries
