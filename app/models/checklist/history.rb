@@ -1,7 +1,7 @@
 class Checklist::History < Checklist::Checklist
   attr_reader :download_name
 
-  def initialize(options={})
+  def initialize(options = {})
     options = {
       :output_layout => :taxonomic,
       :show_english => true,

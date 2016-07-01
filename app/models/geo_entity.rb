@@ -101,7 +101,7 @@ class GeoEntity < ActiveRecord::Base
     GeoEntity.contained_geo_entities(self.id)
   end
 
-  def as_json(options={})
+  def as_json(options = {})
     super(:only =>[:id, :iso_code2, :is_current], :methods => [:name])
   end
 

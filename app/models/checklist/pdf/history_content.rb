@@ -48,7 +48,7 @@ module Checklist::Pdf::HistoryContent
     end while not kingdom.empty?
   end
 
-  def listed_taxa(tex, listed_taxa_ary, kingdom_name='FAUNA')
+  def listed_taxa(tex, listed_taxa_ary, kingdom_name = 'FAUNA')
     tex << "\\listingtable#{kingdom_name.downcase}{"
     rows = []
     listed_taxa_ary.each do |tc|

@@ -4,7 +4,7 @@ class Checklist::Pdf::Index < Checklist::Index
   include Checklist::Pdf::Helpers
   include Checklist::Pdf::IndexContent
 
-  def initialize(options={})
+  def initialize(options = {})
     super(options)
     @input_name = 'index'
   end

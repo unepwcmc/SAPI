@@ -620,13 +620,6 @@ Style/SpaceAfterNot:
     - 'app/models/checklist/pdf/history_content.rb'
     - 'app/models/checklist/pdf/index_content.rb'
 
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: space, no_space
-Style/SpaceAroundEqualsInParameterDefault:
-  Enabled: false
-
 # Offense count: 93
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment.

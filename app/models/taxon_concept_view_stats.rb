@@ -1,6 +1,6 @@
 class TaxonConceptViewStats
 
-  def initialize(start_date, end_date, taxonomy=Taxonomy::CITES_EU)
+  def initialize(start_date, end_date, taxonomy = Taxonomy::CITES_EU)
     @start_date = start_date
     @end_date = end_date
     @taxonomy = taxonomy
