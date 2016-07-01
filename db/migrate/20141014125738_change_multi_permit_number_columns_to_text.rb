@@ -1,6 +1,6 @@
 class ChangeMultiPermitNumberColumnsToText < ActiveRecord::Migration
   def up
-    sql =<<-SQL
+    sql = <<-SQL
       CREATE OR REPLACE FUNCTION drop_trade_sandbox_views() RETURNS void
         LANGUAGE plpgsql
         AS $$

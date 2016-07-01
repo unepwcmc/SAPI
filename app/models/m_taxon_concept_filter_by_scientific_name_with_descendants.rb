@@ -32,7 +32,7 @@ class MTaxonConceptFilterByScientificNameWithDescendants
 
     conditions = []
 
-    cond =<<-SQL
+    cond = <<-SQL
       EXISTS (
         SELECT * FROM UNNEST(ARRAY[kingdom_name, phylum_name, class_name, order_name, family_name, subfamily_name]) name
         WHERE UPPER(name) LIKE :sci_name_prefix

@@ -91,9 +91,9 @@ class TradeRestriction < ActiveRecord::Base
       to_hash.
       symbolize_keys!.sort.
       to_s
-    )+"_cites_#{self.to_s.downcase}s.csv"
-    if !File.file?(path+file_name)
-      self.to_csv(path+file_name, filters)
+    ) + "_cites_#{self.to_s.downcase}s.csv"
+    if !File.file?(path + file_name)
+      self.to_csv(path + file_name, filters)
     end
     [
       path + file_name,

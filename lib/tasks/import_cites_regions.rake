@@ -31,7 +31,7 @@ namespace :import do
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
     regions_type = GeoEntityType.find_by_name(GeoEntityType::CITES_REGION)
-    sql =<<-SQL
+    sql = <<-SQL
       UPDATE geo_entities
       SET name_fr = t.name_fr, name_es = t.name_es
       FROM #{TMP_TABLE} t, geo_entity_types

@@ -68,8 +68,8 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
       :taxon_concept_id => { :pg_type => 'INT' },
       :taxon => { :pg_type => 'TEXT' },
       :term => { :pg_type => 'TEXT' },
-      :unit  => { :pg_type => 'TEXT' },
-      :country  => { :pg_type => 'TEXT' }
+      :unit => { :pg_type => 'TEXT' },
+      :country => { :pg_type => 'TEXT' }
     }
   end
 

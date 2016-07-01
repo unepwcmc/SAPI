@@ -22,7 +22,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
     ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalRepresentation = NULL WHERE ProposalRepresentation='NULL'" )
 
     # revert any previous CoP document duplication
-    sql =<<-SQL
+    sql = <<-SQL
       WITH new_docs AS (
         SELECT id, original_id FROM documents
         WHERE type = 'Document::Proposal' AND original_id IS NOT NULL
