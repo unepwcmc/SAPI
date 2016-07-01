@@ -240,7 +240,7 @@ class TaxonConcept < ActiveRecord::Base
           WHERE tc.id = ANY (ARRAY#{taxon_ids.map(&:to_i)})
           ORDER BY tc.id
         SQL
-      ).map{ |row| row['full_name']}
+      ).map{ |row| row['full_name'] }
     end
   end
 

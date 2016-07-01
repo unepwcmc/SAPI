@@ -24,7 +24,7 @@ describe Unit do
       let(:unit){ create(:unit) }
       context "when quotas" do
         let(:geo_entity){ create(:geo_entity) }
-        let!(:quota){ create(:quota, :unit => unit, :geo_entity_id => geo_entity.id)}
+        let!(:quota){ create(:quota, :unit => unit, :geo_entity_id => geo_entity.id) }
         specify { unit.destroy.should be_false }
       end
       context "when shipments" do

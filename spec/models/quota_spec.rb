@@ -79,7 +79,7 @@ describe Quota, sidekiq: :inline do
           )
         }
 
-        specify {quota.should be_valid}
+        specify { quota.should be_valid }
       end
 
       context "when quota missing" do
@@ -134,7 +134,7 @@ describe Quota, sidekiq: :inline do
           )
         }
 
-        specify {quota.should_not be_valid}
+        specify { quota.should_not be_valid }
         specify { quota.should have(1).error_on(:unit) }
       end
     end

@@ -26,7 +26,7 @@ describe TaxonConcept do
 
       describe :cites_listed do
         context "for genus Colophon" do
-          specify { @genus.cites_listed.should == true}
+          specify { @genus.cites_listed.should == true }
         end
         context "for species Colophon barnardi" do
           specify { @species.cites_listed.should == false }
@@ -35,7 +35,7 @@ describe TaxonConcept do
 
       describe :eu_listed do
         context "for genus Colophon" do
-          specify { @genus.eu_listed.should == true}
+          specify { @genus.eu_listed.should == true }
         end
         context "for species Colophon barnardi" do
           specify { @species.eu_listed.should == false }

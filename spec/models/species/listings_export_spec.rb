@@ -7,7 +7,7 @@ describe Species::ListingsExport do
         :designation_id => cites.id
       })
     }
-    specify {subject.path.should == "public/downloads/cites_listings/" }
+    specify { subject.path.should == "public/downloads/cites_listings/" }
   end
   describe :export do
     context "when no results" do

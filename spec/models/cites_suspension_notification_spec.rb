@@ -34,7 +34,7 @@ describe CitesSuspensionNotification do
           :designation => eu
         )
       }
-      specify { cites_suspension_notification.should be_invalid}
+      specify { cites_suspension_notification.should be_invalid }
       specify { cites_suspension_notification.should have(1).error_on(:designation_id) }
     end
     context "when effective_at is blank" do
@@ -44,7 +44,7 @@ describe CitesSuspensionNotification do
           :effective_at => nil
         )
       }
-      specify { cites_suspension_notification.should be_invalid}
+      specify { cites_suspension_notification.should be_invalid }
       specify { cites_suspension_notification.should have(1).error_on(:effective_at) }
     end
   end

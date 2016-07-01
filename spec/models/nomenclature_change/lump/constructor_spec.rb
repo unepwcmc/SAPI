@@ -31,7 +31,7 @@ describe NomenclatureChange::Lump::Constructor do
     end
   end
   context :reassignments do
-    let(:lump){lump_with_inputs_and_output }
+    let(:lump){ lump_with_inputs_and_output }
     let(:nc){ lump }
     let(:input){ nc.inputs[0] }
     describe :build_input_and_output_notes do

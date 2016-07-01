@@ -1,13 +1,13 @@
 FactoryGirl.define do
 
   factory :species_listing do
-    sequence(:name) {|n| "Appendix #{n}"}
-    sequence(:abbreviation) {|n| "#{n}"}
+    sequence(:name) { |n| "Appendix #{n}" }
+    sequence(:abbreviation) { |n| "#{n}" }
     designation
   end
 
   factory :change_type do
-    sequence(:name) {|n| "change#{n}"}
+    sequence(:name) { |n| "change#{n}" }
     display_name_en { name }
     designation
   end

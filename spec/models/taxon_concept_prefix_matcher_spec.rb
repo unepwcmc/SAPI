@@ -50,8 +50,8 @@ describe TaxonConceptPrefixMatcher do
       SearchParams.new(:taxonomy => {:id => taxonomy.id}, :scientific_name => 'Ab')
     }
     let(:matcher){ TaxonConceptPrefixMatcher.new matcher_params }
-    specify{ matcher.taxon_concepts.should include(taxon_concept4)}
-    specify{ matcher.taxon_concepts.should_not include(hybrid)}
+    specify{ matcher.taxon_concepts.should include(taxon_concept4) }
+    specify{ matcher.taxon_concepts.should_not include(hybrid) }
   end
 
   context "when name status H" do
@@ -59,8 +59,8 @@ describe TaxonConceptPrefixMatcher do
       SearchParams.new(:taxonomy => {:id => taxonomy.id}, :scientific_name => 'Ab', :name_status => 'H')
     }
     let(:matcher){ TaxonConceptPrefixMatcher.new matcher_params }
-    specify{ matcher.taxon_concepts.should_not include(taxon_concept4)}
-    specify{ matcher.taxon_concepts.should include(hybrid)}
+    specify{ matcher.taxon_concepts.should_not include(taxon_concept4) }
+    specify{ matcher.taxon_concepts.should include(hybrid) }
   end
 
   context "when rank scope applied" do

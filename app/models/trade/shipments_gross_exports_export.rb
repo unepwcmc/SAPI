@@ -107,8 +107,8 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
     categories_sql = ActiveRecord::Base.send(:sanitize_sql_array, [categories_sql, years.map(&:to_i)])
     ct_columns = [
       'row_name TEXT[]',
-      report_crosstab_columns.map.each_with_index{ |c, i| "#{sql_crosstab_columns[i]} #{crosstab_columns[c][:pg_type]}"},
-      years_columns.map{ |y| "#{y} numeric"}
+      report_crosstab_columns.map.each_with_index{ |c, i| "#{sql_crosstab_columns[i]} #{crosstab_columns[c][:pg_type]}" },
+      years_columns.map{ |y| "#{y} numeric" }
     ].flatten.join(', ')
     # a set returning query requires that output columns are specified
     <<-SQL

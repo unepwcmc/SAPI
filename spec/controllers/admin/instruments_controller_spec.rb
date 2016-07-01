@@ -60,7 +60,7 @@ describe Admin::InstrumentsController do
       response.should redirect_to(admin_instruments_url)
     end
     let(:instrument2){ create(:instrument) }
-    let!(:taxon_instrument){ create(:taxon_instrument, :instrument_id => instrument2.id)}
+    let!(:taxon_instrument){ create(:taxon_instrument, :instrument_id => instrument2.id) }
     it "fails to delete instrument because there are dependent objects" do
       delete :destroy, :id => instrument2.id
       flash[:notice].should be_nil

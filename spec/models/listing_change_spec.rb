@@ -54,11 +54,11 @@ describe ListingChange do
             inclusion_taxon_concept_id: inclusion.id
           )
         }
-        specify{listing_change.should have(1).error_on(:inclusion_taxon_concept_id)}
+        specify{ listing_change.should have(1).error_on(:inclusion_taxon_concept_id) }
       end
       context "species listing designation mismatch" do
-        let(:designation1){ create(:designation)}
-        let(:designation2){ create(:designation)}
+        let(:designation1){ create(:designation) }
+        let(:designation2){ create(:designation) }
         let(:listing_change){
           build(
             :listing_change,
@@ -66,11 +66,11 @@ describe ListingChange do
             :change_type => create(:change_type, :designation => designation2)
           )
         }
-        specify{listing_change.should have(1).error_on(:species_listing_id)}
+        specify{ listing_change.should have(1).error_on(:species_listing_id) }
       end
       context "event designation mismatch" do
-        let(:designation1){ create(:designation)}
-        let(:designation2){ create(:designation)}
+        let(:designation1){ create(:designation) }
+        let(:designation2){ create(:designation) }
         let(:listing_change){
           build(
             :listing_change,
@@ -78,13 +78,13 @@ describe ListingChange do
             :change_type => create(:change_type, :designation => designation2)
           )
         }
-        specify{listing_change.should have(1).error_on(:event_id)}
+        specify{ listing_change.should have(1).error_on(:event_id) }
       end
     end
   end
   describe :effective_at_formatted do
     let(:listing_change){ create_cites_I_addition(:effective_at => '2012-05-10') }
-    specify {listing_change.effective_at_formatted.should == '10/05/2012' }
+    specify { listing_change.effective_at_formatted.should == '10/05/2012' }
   end
 
   describe :duplicates do

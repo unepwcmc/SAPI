@@ -342,7 +342,7 @@ module Admin::NomenclatureChangesHelper
   end
 
   def select_taxonomy
-    select("taxonomy", "taxonomy_id", Taxonomy.all.collect {|t| [t.name, t.id]})
+    select("taxonomy", "taxonomy_id", Taxonomy.all.collect { |t| [t.name, t.id] })
   end
 
   def select_rank
@@ -350,11 +350,11 @@ module Admin::NomenclatureChangesHelper
   end
 
   def ranks_collection
-    Rank.all.collect {|r| [r.name, r.id]}
+    Rank.all.collect { |r| [r.name, r.id] }
   end
 
   def taxon_concepts_collection
-    TaxonConcept.where(:taxonomy_id => 1).collect {|t| [t.full_name, t.id]}
+    TaxonConcept.where(:taxonomy_id => 1).collect { |t| [t.full_name, t.id] }
   end
 
   def new_name_scientific_name_hint

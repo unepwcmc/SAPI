@@ -13,7 +13,7 @@ class MTaxonConceptFilterByIdWithDescendants
     ] # TODO: SUBFAMILY is missing here. we don't have it in listings mviews.
     fields_to_check = (
       [:id] +
-      ancestor_ranks.map { |r| "#{r.downcase}_id"}
+      ancestor_ranks.map { |r| "#{r.downcase}_id" }
     ).map{ |c| "#{@table}.#{c}" }
     @relation.where(
       <<-SQL

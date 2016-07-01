@@ -30,7 +30,7 @@ describe User do
   describe :create do
     context "when organisation not given" do
       let(:user){ build(:user, organisation: nil) }
-      specify{ expect(user).to_not be_valid}
+      specify{ expect(user).to_not be_valid }
     end
   end
   describe :destroy do
@@ -58,8 +58,8 @@ describe User do
     context "when is a Data Contributor" do
       let(:user){ create(:user, role: User::CONTRIBUTOR) }
 
-      it{ should be_able_to(:create, TaxonConcept)}
-      it{ should_not be_able_to(:destroy, TaxonConcept)}
+      it{ should be_able_to(:create, TaxonConcept) }
+      it{ should_not be_able_to(:destroy, TaxonConcept) }
     end
 
     context "when is a E-library Viewer" do

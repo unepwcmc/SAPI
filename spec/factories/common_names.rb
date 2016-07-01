@@ -13,7 +13,7 @@ FactoryGirl.define do
 
   factory :common_name do
     language
-    sequence(:name){|n| "Honey badger #{n}"}
+    sequence(:name){ |n| "Honey badger #{n}" }
   end
 
 end

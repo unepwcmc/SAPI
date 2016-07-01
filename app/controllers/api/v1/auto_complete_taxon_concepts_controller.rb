@@ -11,7 +11,7 @@ class Api::V1::AutoCompleteTaxonConceptsController < ApplicationController
         :rank_headers => @taxon_concepts.map(&:rank_display_name).uniq.map do |r|
           {
             :rank_name => r,
-            :taxon_concept_ids => @taxon_concepts.select{|tc| tc.rank_display_name == r}.map(&:id)
+            :taxon_concept_ids => @taxon_concepts.select{ |tc| tc.rank_display_name == r }.map(&:id)
           }
         end
       }

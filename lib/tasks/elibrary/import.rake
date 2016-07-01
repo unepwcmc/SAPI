@@ -34,7 +34,7 @@ namespace :elibrary do
         "PC review and categorization [k]", "PC review and categorization (m)", "PC review (e)",
         "Research of species [j]", "Selection of species (b)", "Selection of species [b]",
         "Species selection (b)", "Species selection [b]"
-      ].each {|tag| DocumentTag::ProcessStage.find_or_create_by_name(name: tag) }
+      ].each { |tag| DocumentTag::ProcessStage.find_or_create_by_name(name: tag) }
 
       [
         "Accepted", "Cancelled", "Deferred",

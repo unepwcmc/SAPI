@@ -49,11 +49,11 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
       ).where(<<-SQL
           (
             UPPER(taxon_concepts.data->'kingdom_name') = 'ANIMALIA'
-              AND source_code IN (#{INVALID_KINGDOM_SOURCE['ANIMALIA'].map{|c| "'#{c}'"}.join(',')})
+              AND source_code IN (#{INVALID_KINGDOM_SOURCE['ANIMALIA'].map{ |c| "'#{c}'" }.join(',')})
           ) OR
           (
             UPPER(taxon_concepts.data->'kingdom_name') = 'PLANTAE'
-              AND source_code IN (#{INVALID_KINGDOM_SOURCE['PLANTAE'].map{|c| "'#{c}'"}.join(',')})
+              AND source_code IN (#{INVALID_KINGDOM_SOURCE['PLANTAE'].map{ |c| "'#{c}'" }.join(',')})
           )
         SQL
      ).
