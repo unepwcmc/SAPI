@@ -16,8 +16,8 @@ class SpeciesListing < ActiveRecord::Base
   belongs_to :designation
   has_many :listing_changes
 
-  validates :name, :presence => true, :uniqueness => {:scope => :designation_id}
-  validates :abbreviation, :presence => true, :uniqueness => {:scope => :designation_id}
+  validates :name, :presence => true, :uniqueness => { :scope => :designation_id }
+  validates :abbreviation, :presence => true, :uniqueness => { :scope => :designation_id }
 
   def self.search(query)
     if query.present?

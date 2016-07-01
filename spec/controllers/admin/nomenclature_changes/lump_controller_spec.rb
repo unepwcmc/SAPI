@@ -79,8 +79,8 @@ describe Admin::NomenclatureChanges::LumpController do
       it 'redirects to next step' do
         put :update, nomenclature_change_lump: {
           inputs_attributes: {
-            0 => {taxon_concept_id: create_cites_eu_species.id},
-            1 => {taxon_concept_id: create_cites_eu_species.id}
+            0 => { taxon_concept_id: create_cites_eu_species.id },
+            1 => { taxon_concept_id: create_cites_eu_species.id }
           }
         }, nomenclature_change_id: @lump.id, id: 'inputs'
         response.should redirect_to(
@@ -95,7 +95,7 @@ describe Admin::NomenclatureChanges::LumpController do
         put :update,
           nomenclature_change_lump: {
             inputs_attributes: {
-              0 => {taxon_concept_id: nil}
+              0 => { taxon_concept_id: nil }
             }
           }, nomenclature_change_id: @lump.id, id: 'inputs'
         response.should render_template('inputs')

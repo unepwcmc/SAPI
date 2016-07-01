@@ -13,7 +13,7 @@
 #
 
 class Unit < TradeCode
-  validates :code, :length => {:is => 3}
+  validates :code, :length => { :is => 3 }
 
   has_many :term_trade_codes_pairs, :as => :trade_code
   has_many :quotas

@@ -262,7 +262,7 @@ module TaxonConceptHelper
 
   def taxon_concept_internal_note_tab_display(comment)
     if comment && comment.note.present?
-      content_tag(:div, {class: 'alert alert-info'}) do
+      content_tag(:div, { class: 'alert alert-info' }) do
         taxon_concept_internal_note_display(comment)
       end
     end

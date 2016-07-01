@@ -63,7 +63,7 @@ class TaxonConcept < ActiveRecord::Base
 
   belongs_to :dependents_updater, foreign_key: :dependents_updated_by_id, class_name: User
   belongs_to :parent, :class_name => 'TaxonConcept'
-  has_many :children, class_name: 'TaxonConcept', foreign_key: :parent_id, conditions: {name_status: ['A', 'N']}
+  has_many :children, class_name: 'TaxonConcept', foreign_key: :parent_id, conditions: { name_status: ['A', 'N'] }
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, :through => :taxonomy
@@ -157,11 +157,11 @@ class TaxonConcept < ActiveRecord::Base
     :foreign_key => :reported_taxon_concept_id
   has_many :comments, as: 'commentable'
   has_one :general_comment, class_name: 'Comment', as: 'commentable',
-    conditions: {comment_type: 'General'}
+    conditions: { comment_type: 'General' }
   has_one :nomenclature_comment, class_name: 'Comment', as: 'commentable',
-    conditions: {comment_type: 'Nomenclature'}
+    conditions: { comment_type: 'Nomenclature' }
   has_one :distribution_comment, class_name: 'Comment', as: 'commentable',
-    conditions: {comment_type: 'Distribution'}
+    conditions: { comment_type: 'Distribution' }
   has_many :parent_reassignments,
     class_name: 'NomenclatureChange::ParentReassignment',
     as: :reassignable,

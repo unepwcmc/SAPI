@@ -54,7 +54,7 @@ RSpec.configure do |config|
   config.include SapiSpec::Helpers
 
   config.before(:all) do
-    DatabaseCleaner.clean_with(:deletion, {:cache_tables => false})
+    DatabaseCleaner.clean_with(:deletion, { :cache_tables => false })
     @user = create(:user)
     @user.make_current
   end
@@ -64,7 +64,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, :drops_tables => true) do
-    DatabaseCleaner.strategy = :deletion, {:cache_tables => false}
+    DatabaseCleaner.strategy = :deletion, { :cache_tables => false }
     ActiveRecord::Base.connection.execute('SELECT * FROM drop_trade_sandboxes()')
   end
 

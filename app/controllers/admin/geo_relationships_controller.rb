@@ -18,14 +18,14 @@ class Admin::GeoRelationshipsController < Admin::StandardAuthorizationController
     )
     @geo_relationship_types = GeoRelationshipType.order(:name)
     @geo_relationship_types_for_dropdown = @geo_relationship_types.map do |t|
-      {:value => t.id, :text => t.name}
+      { :value => t.id, :text => t.name }
     end
   end
 
   def load_geo_entities
     @geo_entities = GeoEntity.order(:geo_entity_type_id, :name_en)
     @geo_entities_for_dropdown = @geo_entities.map do |t|
-      {:value => t.id, :text => t.name}
+      { :value => t.id, :text => t.name }
     end
   end
 

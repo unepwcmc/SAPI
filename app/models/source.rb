@@ -13,7 +13,7 @@
 #
 
 class Source < TradeCode
-  validates :code, :length => {:is => 1}
+  validates :code, :length => { :is => 1 }
 
   has_many :trade_restriction_sources
   has_many :eu_decisions

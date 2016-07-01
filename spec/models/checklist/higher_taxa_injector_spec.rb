@@ -133,7 +133,7 @@ describe Checklist::HigherTaxaInjector do
             [
               @species1_1_1,
               @species2_1_1_1_1
-            ], {:expand_headers => true}
+            ], { :expand_headers => true }
           )
         }
         specify{
@@ -165,7 +165,7 @@ describe Checklist::HigherTaxaInjector do
             [
               @species1_1_1,
               @species2_1_1
-            ], {:skip_ancestor_ids => [@family1.id]}
+            ], { :skip_ancestor_ids => [@family1.id] }
           )
         }
         specify{
@@ -195,7 +195,7 @@ describe Checklist::HigherTaxaInjector do
           Checklist::HigherTaxaInjector.new(
             [
               @species1_1_1
-            ], {:skip_ancestor_ids => [@family1.id]}
+            ], { :skip_ancestor_ids => [@family1.id] }
           )
         }
         specify{
@@ -207,7 +207,7 @@ describe Checklist::HigherTaxaInjector do
           Checklist::HigherTaxaInjector.new(
             [
               @species1_1_1
-            ], {:expand_headers => true}
+            ], { :expand_headers => true }
           )
         }
         specify{
@@ -280,7 +280,7 @@ describe Checklist::HigherTaxaInjector do
             [
               @species1_1_1,
               @species2_1_1
-            ], {:expand_headers => true}
+            ], { :expand_headers => true }
           )
         }
         specify{
@@ -342,7 +342,7 @@ describe Checklist::HigherTaxaInjector do
             [
               @order2,
               @genus2_1
-            ], {:expand_headers => true}
+            ], { :expand_headers => true }
           )
         }
         specify{

@@ -157,7 +157,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       it "assign review phase to Review" do
         put :update, id: document.id, document: {
-          date: Date.today, review_details_attributes: {review_phase_id: review_phase.id}
+          date: Date.today, review_details_attributes: { review_phase_id: review_phase.id }
         }
         response.should redirect_to(admin_documents_url)
 
@@ -166,7 +166,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       it "assign process stage to Review" do
         put :update, id: document.id, document: {
-          date: Date.today, review_details_attributes: {process_stage_id: process_stage.id}
+          date: Date.today, review_details_attributes: { process_stage_id: process_stage.id }
         }
         response.should redirect_to(admin_documents_url)
 
@@ -175,7 +175,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       it "assign recommended category to Review" do
         put :update, id: document.id, document: {
-          date: Date.today, review_details_attributes: {recommended_category: recommended_category}
+          date: Date.today, review_details_attributes: { recommended_category: recommended_category }
         }
         response.should redirect_to(admin_documents_url)
 
@@ -189,7 +189,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       it "assign outcome to Proposal" do
         put :update, id: document.id, document: {
-          date: Date.today, proposal_details_attributes: {proposal_outcome_id: proposal_outcome.id}
+          date: Date.today, proposal_details_attributes: { proposal_outcome_id: proposal_outcome.id }
         }
         response.should redirect_to(admin_documents_url)
 

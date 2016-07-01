@@ -10,8 +10,8 @@ namespace :import do
     TMP_TABLE = 'countries_import'
     country_type = GeoEntityType.find_by_name(GeoEntityType::COUNTRY)
     territory_type = GeoEntityType.find_by_name(GeoEntityType::TERRITORY)
-    puts "There are #{GeoEntity.count(conditions: {geo_entity_type_id: country_type.id})} countries in the database."
-    puts "There are #{GeoEntity.count(conditions: {geo_entity_type_id: territory_type.id})} territories in the database."
+    puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: country_type.id })} countries in the database."
+    puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: territory_type.id })} territories in the database."
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(TMP_TABLE)
@@ -35,8 +35,8 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
       link_countries
     end
-    puts "There are now #{GeoEntity.count(conditions: {geo_entity_type_id: country_type.id})} countries in the database"
-    puts "There are now #{GeoEntity.count(conditions: {geo_entity_type_id: territory_type.id})} territories in the database."
+    puts "There are now #{GeoEntity.count(conditions: { geo_entity_type_id: country_type.id })} countries in the database"
+    puts "There are now #{GeoEntity.count(conditions: { geo_entity_type_id: territory_type.id })} territories in the database."
   end
 
   desc "Add country names in spanish and french"

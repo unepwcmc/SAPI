@@ -113,7 +113,7 @@ class MTaxonConcept < ActiveRecord::Base
   has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MCitesListingChange
   has_many :historic_cites_listing_changes_for_downloads, :foreign_key => :taxon_concept_id,
     :class_name => MCitesListingChange,
-    :conditions => {:show_in_downloads => true},
+    :conditions => { :show_in_downloads => true },
     :order => <<-SQL
       effective_at,
       CASE
@@ -125,11 +125,11 @@ class MTaxonConcept < ActiveRecord::Base
     SQL
   has_many :current_cites_additions, :foreign_key => :taxon_concept_id,
     :class_name => MCitesListingChange,
-    :conditions => {:is_current => true, :change_type_name => ChangeType::ADDITION},
+    :conditions => { :is_current => true, :change_type_name => ChangeType::ADDITION },
     :order => 'effective_at DESC, species_listing_name ASC'
   has_many :current_cms_additions, :foreign_key => :taxon_concept_id,
     :class_name => MCmsListingChange,
-    :conditions => {:is_current => true, :change_type_name => ChangeType::ADDITION},
+    :conditions => { :is_current => true, :change_type_name => ChangeType::ADDITION },
     :order => 'effective_at DESC, species_listing_name ASC'
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
   scope :by_cms_taxonomy, where(:taxonomy_is_cites_eu => false)
@@ -148,7 +148,7 @@ class MTaxonConcept < ActiveRecord::Base
     MTaxonConceptFilterByScientificNameWithDescendants.new(
       self,
       scientific_name,
-      {:synonyms => true, :common_names => true, :subspecies => false}
+      { :synonyms => true, :common_names => true, :subspecies => false }
     ).relation
   }
 

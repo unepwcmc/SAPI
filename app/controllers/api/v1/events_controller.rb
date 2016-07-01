@@ -7,7 +7,7 @@ class Api::V1::EventsController < ApplicationController
       order('type, published_at DESC')
     render :json => @events,
       :each_serializer => Species::EventSerializer,
-      :meta => {:total => @events.count}
+      :meta => { :total => @events.count }
   end
 
 end

@@ -135,7 +135,7 @@ class TradeRestriction < ActiveRecord::Base
       when :semicolon then ';'
       else ','
       end
-    CSV.open(file_path, 'wb', {:col_sep => csv_separator_char}) do |csv|
+    CSV.open(file_path, 'wb', { :col_sep => csv_separator_char }) do |csv|
       csv << Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +
         ['Remarks'] + self.csv_columns_headers
       ids = []

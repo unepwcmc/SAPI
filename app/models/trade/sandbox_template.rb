@@ -79,7 +79,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
             export_permit = UPPER(SQUISH_NULL(export_permit)),
             origin_permit = UPPER(SQUISH_NULL(origin_permit))
             ',
-            id.blank? ? nil : {:id => id}
+            id.blank? ? nil : { :id => id }
           )
           # resolve reported & accepted taxon
           connection.execute(

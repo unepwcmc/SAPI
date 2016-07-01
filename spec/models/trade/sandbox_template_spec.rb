@@ -66,7 +66,7 @@ describe Trade::SandboxTemplate, :drops_tables => true do
     end
     specify {
       sandbox_klass.update_batch(
-        {:taxon_name => 'Canis aureus'},
+        { :taxon_name => 'Canis aureus' },
         [@shipment1.id]
       )
       @shipment1.reload.taxon_concept_id.should == canis_aureus.id

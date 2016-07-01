@@ -56,7 +56,7 @@ describe NomenclatureChange::Split do
       let(:split){
         build(:nomenclature_change_split,
           :status => NomenclatureChange::Split::OUTPUTS,
-          :input_attributes => {:taxon_concept_id => create_cites_eu_species.id},
+          :input_attributes => { :taxon_concept_id => create_cites_eu_species.id },
           :outputs_attributes => {
             0 => {
               :taxon_concept_id => create_cites_eu_subspecies.id,

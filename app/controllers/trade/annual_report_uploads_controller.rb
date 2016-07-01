@@ -21,7 +21,7 @@ class Trade::AnnualReportUploadsController < TradeController
     @annual_report_upload = Trade::AnnualReportUpload.create(
       annual_report_upload_params
     )
-    render :json => {:files => [@annual_report_upload.to_jq_upload]}
+    render :json => { :files => [@annual_report_upload.to_jq_upload] }
   end
 
   def submit

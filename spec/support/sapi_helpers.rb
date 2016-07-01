@@ -248,7 +248,7 @@ shared_context :sapi do
     create_cites_eu_species(
       parent: create_cites_eu_genus(
         parent: create_cites_eu_family(
-          parent: create_cites_eu_order(options.merge({parent: cites_eu_mammalia}))
+          parent: create_cites_eu_order(options.merge({ parent: cites_eu_mammalia }))
         )
       )
     )
@@ -258,7 +258,7 @@ shared_context :sapi do
     create_cites_eu_species(
       parent: create_cites_eu_genus(
         parent: create_cites_eu_family(
-          parent: create_cites_eu_order(options.merge({parent: cites_eu_plantae}))
+          parent: create_cites_eu_order(options.merge({ parent: cites_eu_plantae }))
         )
       )
     )
@@ -268,13 +268,13 @@ shared_context :sapi do
     define_method "create_#{rank.downcase}" do |options = {}|
       create(
         :taxon_concept,
-        options.merge({rank: create(:rank, name: rank)})
+        options.merge({ rank: create(:rank, name: rank) })
       )
     end
     define_method "build_#{rank.downcase}" do |options = {}|
       build(
         :taxon_concept,
-        options.merge({rank: create(:rank, name: rank)})
+        options.merge({ rank: create(:rank, name: rank) })
       )
     end
     define_method "create_cites_eu_#{rank.downcase}" do |options = {}|
@@ -320,13 +320,13 @@ shared_context :sapi do
     define_method "create_#{cites_event_type}" do |options = {}|
       create(
         cites_event_type,
-        options.merge({:designation => cites})
+        options.merge({ :designation => cites })
       )
     end
     define_method "build_#{cites_event_type}" do |options = {}|
       build(
         cites_event_type,
-        options.merge({:designation => cites})
+        options.merge({ :designation => cites })
       )
     end
   end
@@ -335,13 +335,13 @@ shared_context :sapi do
     define_method "create_#{eu_event_type}" do |options = {}|
       create(
         eu_event_type,
-        options.merge({:designation => eu})
+        options.merge({ :designation => eu })
       )
     end
     define_method "build_#{eu_event_type}" do |options = {}|
       build(
         eu_event_type,
-        options.merge({:designation => eu})
+        options.merge({ :designation => eu })
       )
     end
   end

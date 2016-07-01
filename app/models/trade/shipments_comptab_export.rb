@@ -32,7 +32,7 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
       :year => {},
       :appendix => {},
       :taxon => {},
-      :taxon_concept_id => {:internal => true},
+      :taxon_concept_id => { :internal => true },
       :class_name => {},
       :order_name => {},
       :family_name => {},
@@ -42,8 +42,8 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
       :country_of_origin => {},
       :importer_quantity => {},
       :exporter_quantity => {},
-      :term => {:en => :term_name_en, :es => :term_name_es, :fr => :term_name_fr},
-      :unit => {:en => :unit_name_en, :es => :unit_name_es, :fr => :unit_name_fr},
+      :term => { :en => :term_name_en, :es => :term_name_es, :fr => :term_name_fr },
+      :unit => { :en => :unit_name_en, :es => :unit_name_es, :fr => :unit_name_fr },
       :purpose => {},
       :source => {}
     }

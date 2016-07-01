@@ -31,10 +31,10 @@ describe Taxonomy do
   describe :update do
     context "when updating a non-protected name" do
       let(:taxonomy){ create(:taxonomy) }
-      specify{ taxonomy.update_attributes({:name => 'WORLD OF LOLCATS'}).should be_true }
+      specify{ taxonomy.update_attributes({ :name => 'WORLD OF LOLCATS' }).should be_true }
     end
     context "when updating a protected name" do
-      specify{ cites_eu.update_attributes({:name => 'WORLD OF LOLCATS'}).should be_false }
+      specify{ cites_eu.update_attributes({ :name => 'WORLD OF LOLCATS' }).should be_false }
     end
   end
   describe :destroy do

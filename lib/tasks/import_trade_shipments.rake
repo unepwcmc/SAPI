@@ -31,7 +31,7 @@ namespace :import do
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
       SQL
       ActiveRecord::Base.connection.execute(sql)
-      fix_term_codes = {12227624 => "LIV", 12225022 => "DER", 12224783 => "DER"}
+      fix_term_codes = { 12227624 => "LIV", 12225022 => "DER", 12224783 => "DER" }
       fix_term_codes.each do |shipment_number, term_code|
         sql = <<-SQL
           UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
@@ -59,7 +59,7 @@ namespace :import do
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
       SQL
       ActiveRecord::Base.connection.execute(sql)
-      fix_term_codes = {12227624 => "LIV", 12225022 => "DER", 12224783 => "DER"}
+      fix_term_codes = { 12227624 => "LIV", 12225022 => "DER", 12224783 => "DER" }
       fix_term_codes.each do |shipment_number, term_code|
         sql = <<-SQL
           UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};

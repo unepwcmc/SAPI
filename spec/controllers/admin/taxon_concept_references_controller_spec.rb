@@ -14,7 +14,7 @@ describe Admin::TaxonConceptReferencesController do
         :taxon_concept_id => @taxon_concept.id,
         :taxon_concept_reference => {
           :reference_attributes =>
-            {:citation => "My nice literature"}
+            { :citation => "My nice literature" }
         }
       response.should render_template("create")
     end
@@ -62,7 +62,7 @@ describe Admin::TaxonConceptReferencesController do
         :id => @taxon_concept_reference.id,
         :taxon_concept_reference => {
           :reference_attributes =>
-            {:citation => "My nice literature"}
+            { :citation => "My nice literature" }
         }
       response.should render_template("create")
     end
@@ -79,7 +79,7 @@ describe Admin::TaxonConceptReferencesController do
 
   describe "XHR GET 'new'" do
     it "returns http success and renders the new template" do
-      xhr :get, :new, {:taxon_concept_id => @taxon_concept.id, :format => 'js'}
+      xhr :get, :new, { :taxon_concept_id => @taxon_concept.id, :format => 'js' }
       response.should be_success
       response.should render_template('new')
     end

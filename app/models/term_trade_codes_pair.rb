@@ -16,7 +16,7 @@ class TermTradeCodesPair < ActiveRecord::Base
   belongs_to :term, :class_name => "TradeCode"
   belongs_to :trade_code
 
-  validates :term_id, :presence => true, :uniqueness => {:scope => :trade_code_id}
+  validates :term_id, :presence => true, :uniqueness => { :scope => :trade_code_id }
 
   def self.search(query)
     if query.present?

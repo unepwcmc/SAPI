@@ -46,7 +46,7 @@ class Checklist::Checklist
       @taxon_concepts_rel = @taxon_concepts_rel.
         by_name(
           @scientific_name,
-          {:synonyms => true, :common_names => true, :subspecies => false}
+          { :synonyms => true, :common_names => true, :subspecies => false }
         )
     end
 

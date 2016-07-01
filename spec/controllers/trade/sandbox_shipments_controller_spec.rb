@@ -25,14 +25,14 @@ describe Trade::SandboxShipmentsController do
     it "should return success when taxon_name not set" do
       put :update, :annual_report_upload_id => annual_report_upload.id,
         :id => @shipment.id,
-        :sandbox_shipment => {:taxon_name => nil, :accepted_taxon_name => nil},
+        :sandbox_shipment => { :taxon_name => nil, :accepted_taxon_name => nil },
         :format => :json
       response.body.should be_blank
     end
     it "should return success when taxon_name does not exist" do
       put :update, :annual_report_upload_id => annual_report_upload.id,
         :id => @shipment.id,
-        :sandbox_shipment => {:taxon_name => 'Acipenser foobarus'},
+        :sandbox_shipment => { :taxon_name => 'Acipenser foobarus' },
         :format => :json
       response.body.should be_blank
     end
@@ -51,7 +51,7 @@ describe Trade::SandboxShipmentsController do
     it "should return success" do
       post :update_batch, :annual_report_upload_id => annual_report_upload.id,
         :sandbox_shipments_ids => [@shipment.id],
-        :updates => {:taxon_name => @genus.full_name},
+        :updates => { :taxon_name => @genus.full_name },
         :format => :json
       response.body.should be_blank
       sandbox_klass.where(:taxon_name => @species.full_name).count(true).should == 0
