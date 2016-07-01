@@ -4,7 +4,7 @@ require 'json'
 require '../../config/environment.rb'
 
 results = { :cites_eu => [], :cms => [] }
-countries = GeoEntity.where("geo_entity_type_id = 1") #.limit(2)
+countries = GeoEntity.where("geo_entity_type_id = 1")
 
 countries.each do |country|
   [:cites_eu, :cms].each do |taxonomy|
@@ -21,5 +21,4 @@ countries.each do |country|
   end
 end
 
-#puts results.to_json
 puts JSON.pretty_generate(results)

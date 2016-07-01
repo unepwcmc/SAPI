@@ -16,8 +16,6 @@
 #
 
 class Trade::PresenceValidationRule < Trade::ValidationRule
-  #validates :column_names, :uniqueness => true
-
   def error_message
     column_names.join(', ') + ' cannot be blank'
   end

@@ -9,7 +9,6 @@ class SearchParams
 
   def initialize(attributes = {})
     attributes.each do |name, value|
-      #send("#{name}=", (value.is_a?(Hash) ? value.symbolize_keys : value))
       send("#{name}=", value)
     end
   end

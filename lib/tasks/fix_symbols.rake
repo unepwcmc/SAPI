@@ -2,7 +2,6 @@ namespace :import do
 
   desc 'Fix symbols in the data files'
   task :fix_symbols => :environment do
-    #Rake::Task["import:fix_annotations_symbols"].invoke
     Rake::Task["import:fix_references_symbols"].invoke
     Rake::Task["import:fix_taxon_concepts_symbols"].invoke
     Rake::Task["import:fix_geo_entities_symbols"].invoke
