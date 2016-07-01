@@ -33,10 +33,10 @@ class Trade::PermitMatcher
   end
 
   def sanitize_permit_query(query)
-    #negative limit does not suppress trailing nulls
+    # negative limit does not suppress trailing nulls
     query_parts = query.upcase.strip.split('%', -1).map do |qp|
       if qp.blank?
-        '%' #replace the wildcard
+        '%' # replace the wildcard
       else
         ActiveRecord::Base.connection.quote_string(qp)
       end

@@ -1,7 +1,7 @@
 class Checklist::TimelineInterval
   include ActiveModel::SerializerSupport
   attr_accessor :id, :start_pos, :end_pos
-  #options to be passed:
+  # options to be passed:
   #:start_pos - start position (%)
   #:end_pos - end position (%)
   def initialize(options)

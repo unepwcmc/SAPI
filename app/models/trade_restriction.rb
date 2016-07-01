@@ -120,7 +120,7 @@ class TradeRestriction < ActiveRecord::Base
         trade_restrictions.notes ASC')
   end
 
-  #Gets the display text for each CSV_COLUMNS
+  # Gets the display text for each CSV_COLUMNS
   def self.csv_columns_headers
     self::CSV_COLUMNS.map do |b|
       Array(b).first

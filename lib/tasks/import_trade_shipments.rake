@@ -67,7 +67,7 @@ namespace :import do
         ActiveRecord::Base.connection.execute(sql)
       end
       update_country_codes
-      #populate_shipments
+      # populate_shipments
       populate_shipments_for_trade_names
       Sapi::Indexes.create_indexes_on_shipments
     end

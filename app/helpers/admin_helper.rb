@@ -141,7 +141,7 @@ module AdminHelper
         ) { title }
       end +
       content_tag(
-        :div, :id => "admin-#{id}-form", :class => "modal-body" #TODO
+        :div, :id => "admin-#{id}-form", :class => "modal-body" # TODO
       ) do
         if block_given?
           yield

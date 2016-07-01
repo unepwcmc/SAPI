@@ -53,9 +53,9 @@ module Checklist::Pdf::HistoryContent
     rows = []
     listed_taxa_ary.each do |tc|
       listed_taxon_name = listed_taxon_name(tc)
-      is_tc_row = true #it is the first row per taxon concept
+      is_tc_row = true # it is the first row per taxon concept
       tc.historic_cites_listing_changes_for_downloads.each do |lc|
-        is_lc_row = true #it is the first row per listing change
+        is_lc_row = true # it is the first row per listing change
         ann = annotation_for_language(lc, I18n.locale)
         row = []
         # tc fields

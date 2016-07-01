@@ -34,13 +34,13 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
       @rank_scope = @rank_options[:scope] || ''
       rank = Rank.find(@rank_id) if @rank_scope
       if @rank_scope.to_sym == :parent
-        #search at parent ranks. this includes optional ranks, e.g. subfamily
+        # search at parent ranks. this includes optional ranks, e.g. subfamily
         @taxon_concepts = @taxon_concepts.at_parent_ranks(rank)
       elsif @rank_scope.to_sym == :ancestors
-        #search at ancestor ranks
+        # search at ancestor ranks
         @taxon_concepts = @taxon_concepts.at_ancestor_ranks(rank)
       elsif @rank_scope.to_sym == :self_and_ancestors
-        #search at self and ancestor ranks
+        # search at self and ancestor ranks
         @taxon_concepts = @taxon_concepts.at_self_and_ancestor_ranks(rank)
       end
     end

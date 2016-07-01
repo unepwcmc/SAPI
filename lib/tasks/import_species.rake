@@ -12,7 +12,7 @@ namespace :import do
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
-      #import_data_for Rank::KINGDOM
+      # import_data_for Rank::KINGDOM
       import_data_for kingdom, Rank::PHYLUM
       import_data_for kingdom, Rank::CLASS
       import_data_for kingdom, Rank::ORDER

@@ -58,7 +58,7 @@ namespace :import do
 
       ActiveRecord::Base.connection.execute(sql)
 
-      #Add Terms & Sources Relationships
+      # Add Terms & Sources Relationships
       ["terms", "sources"].each do |code|
         sql = <<-SQL
           WITH #{code}_codes_per_quota AS (
