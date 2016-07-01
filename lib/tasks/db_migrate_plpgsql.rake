@@ -40,7 +40,7 @@ namespace :db do
     puts "Deleting permits"
     ActiveRecord::Base.connection.execute('DELETE FROM trade_permits')
     puts "Deleting annual report uploads & dropping sandboxes"
-    Trade::AnnualReportUpload.all.each{ |aru| aru.destroy }
+    Trade::AnnualReportUpload.all.each { |aru| aru.destroy }
   end
 
 end

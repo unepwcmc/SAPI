@@ -33,7 +33,7 @@
 require 'spec_helper'
 
 describe CitesSuspension, sidekiq: :inline do
-  let(:tanzania){
+  let(:tanzania) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -41,7 +41,7 @@ describe CitesSuspension, sidekiq: :inline do
       :iso_code2 => 'TZ'
     )
   }
-  let(:rwanda){
+  let(:rwanda) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -70,19 +70,19 @@ describe CitesSuspension, sidekiq: :inline do
   context "touching taxa" do
     describe :create do
       context "when taxon specific suspension" do
-        subject{
+        subject {
           build(
             :cites_suspension,
             :taxon_concept => @taxon_concept,
             :start_notification => create_cites_suspension_notification
           )
         }
-        specify{
-          expect{ subject.save }.to change{ @taxon_concept.reload.dependents_updated_at }
+        specify {
+          expect { subject.save }.to change { @taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when global suspension" do
-        subject{
+        subject {
           build(
             :cites_suspension,
             :taxon_concept_id => nil,
@@ -90,39 +90,39 @@ describe CitesSuspension, sidekiq: :inline do
             :start_notification => create_cites_suspension_notification
           )
         }
-        specify{
-          expect{ subject.save }.to change{ @taxon_concept.reload.dependents_updated_at }
+        specify {
+          expect { subject.save }.to change { @taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when suspension at higher taxonomic level" do
-        subject{
+        subject {
           create(
             :cites_suspension,
             :taxon_concept => @genus,
             :start_notification => create_cites_suspension_notification
           )
         }
-        specify{
-          expect{ subject.save }.to change{ @taxon_concept.reload.dependents_updated_at }
+        specify {
+          expect { subject.save }.to change { @taxon_concept.reload.dependents_updated_at }
         }
       end
     end
     describe :update do
       context "when taxon specific suspension" do
-        subject{
+        subject {
           create(
             :cites_suspension,
             :taxon_concept => @taxon_concept,
             :start_notification => create_cites_suspension_notification
           )
         }
-        specify{
-          expect{ subject.update_attribute(:taxon_concept_id, @another_taxon_concept.id) }.
-            to change{ @taxon_concept.reload.dependents_updated_at }
+        specify {
+          expect { subject.update_attribute(:taxon_concept_id, @another_taxon_concept.id) }.
+            to change { @taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when global suspension" do
-        subject{
+        subject {
           create(
             :cites_suspension,
             :taxon_concept_id => nil,
@@ -130,44 +130,44 @@ describe CitesSuspension, sidekiq: :inline do
             :start_notification => create_cites_suspension_notification
           )
         }
-        specify{
-          expect{ subject.update_attribute(:geo_entity_id, rwanda.id) }.
-            to change{ @taxon_concept.reload.dependents_updated_at }
+        specify {
+          expect { subject.update_attribute(:geo_entity_id, rwanda.id) }.
+            to change { @taxon_concept.reload.dependents_updated_at }
         }
-        specify{
-          expect{ subject.update_attribute(:geo_entity_id, rwanda.id) }.
-            to change{ @another_taxon_concept.reload.dependents_updated_at }
+        specify {
+          expect { subject.update_attribute(:geo_entity_id, rwanda.id) }.
+            to change { @another_taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when suspension at higher taxonomic level" do
-        subject{
+        subject {
           create(
             :cites_suspension,
             :taxon_concept => @genus,
             :start_notification => create_cites_suspension_notification
           )
         }
-        specify{
-          expect{ subject.update_attribute(:geo_entity_id, rwanda.id) }.
-            to change{ @taxon_concept.reload.dependents_updated_at }
+        specify {
+          expect { subject.update_attribute(:geo_entity_id, rwanda.id) }.
+            to change { @taxon_concept.reload.dependents_updated_at }
         }
       end
     end
     describe :destroy do
       context "when taxon specific suspension" do
-        subject{
+        subject {
           create(
             :cites_suspension,
             :taxon_concept => @taxon_concept,
             :start_notification => create_cites_suspension_notification
           )
         }
-        specify{
-          expect{ subject.destroy }.to change{ @taxon_concept.reload.dependents_updated_at }
+        specify {
+          expect { subject.destroy }.to change { @taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when global suspension" do
-        subject{
+        subject {
           create(
             :cites_suspension,
             :taxon_concept_id => nil,
@@ -175,22 +175,22 @@ describe CitesSuspension, sidekiq: :inline do
             :start_notification => create_cites_suspension_notification
           )
         }
-        specify{
-          expect{ subject.destroy }.
-            to change{ @taxon_concept.reload.dependents_updated_at }
+        specify {
+          expect { subject.destroy }.
+            to change { @taxon_concept.reload.dependents_updated_at }
         }
       end
       context "when suspension at higher taxonomic level" do
-        subject{
+        subject {
           create(
             :cites_suspension,
             :taxon_concept => @genus,
             :start_notification => create_cites_suspension_notification
           )
         }
-        specify{
-          expect{ subject.destroy }.
-            to change{ @taxon_concept.reload.dependents_updated_at }
+        specify {
+          expect { subject.destroy }.
+            to change { @taxon_concept.reload.dependents_updated_at }
         }
       end
     end
@@ -199,7 +199,7 @@ describe CitesSuspension, sidekiq: :inline do
   context "validations" do
     describe :create do
       context "when start notification missing" do
-        let(:cites_suspension){
+        let(:cites_suspension) {
           build(
             :cites_suspension,
             :start_notification => nil,
@@ -212,7 +212,7 @@ describe CitesSuspension, sidekiq: :inline do
       end
 
       context "when start date greater than end date" do
-        let(:cites_suspension){
+        let(:cites_suspension) {
           build(
             :cites_suspension,
             :start_notification => create_cites_suspension_notification(:effective_at => 1.week.from_now),
@@ -226,7 +226,7 @@ describe CitesSuspension, sidekiq: :inline do
       end
 
       context "when valid" do
-        let(:cites_suspension){
+        let(:cites_suspension) {
           build(
             :cites_suspension,
             :taxon_concept => @taxon_concept,

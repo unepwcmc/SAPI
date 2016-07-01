@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe Admin::DocumentsController, sidekiq: :inline do
   login_admin
-  let(:event){ create(:event, published_at: DateTime.new(2014, 12, 25)) }
-  let(:event2){ create(:event, published_at: DateTime.new(2015, 12, 12)) }
-  let(:taxon_concept){ create(:taxon_concept) }
-  let(:geo_entity){ create(:geo_entity) }
-  let(:proposal_outcome){ create(:proposal_outcome) }
-  let(:review_phase){ create(:review_phase) }
+  let(:event) { create(:event, published_at: DateTime.new(2014, 12, 25)) }
+  let(:event2) { create(:event, published_at: DateTime.new(2015, 12, 12)) }
+  let(:taxon_concept) { create(:taxon_concept) }
+  let(:geo_entity) { create(:geo_entity) }
+  let(:proposal_outcome) { create(:proposal_outcome) }
+  let(:review_phase) { create(:review_phase) }
   let(:process_stage) { create(:process_stage) }
 
   describe "index" do
@@ -113,8 +113,8 @@ describe Admin::DocumentsController, sidekiq: :inline do
   end
 
   describe "GET edit" do
-    let(:document_tags){ [create(:document_tag)] }
-    let(:document){ create(:document, tags: document_tags) }
+    let(:document_tags) { [create(:document_tag)] }
+    let(:document) { create(:document, tags: document_tags) }
 
     it "renders the edit template" do
       get :edit, id: document.id
@@ -124,7 +124,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
   describe "PUT update" do
     context "when no event" do
-      let(:document){ create(:document) }
+      let(:document) { create(:document) }
       it "redirects to index when successful" do
         put :update, id: document.id, document: { date: Date.today }
         response.should redirect_to(admin_documents_url)
@@ -137,7 +137,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
     end
 
     context "when event" do
-      let(:document){ create(:document, event_id: event.id) }
+      let(:document) { create(:document, event_id: event.id) }
       it "redirects to index when successful" do
         put :update, id: document.id, event_id: event.id, document: { date: Date.today }
         response.should redirect_to(admin_event_documents_url(event))
@@ -150,8 +150,8 @@ describe Admin::DocumentsController, sidekiq: :inline do
     end
 
     context "with nested review_details attributes" do
-      let(:document){ create(:review_of_significant_trade) }
-      let(:review_phase){ create(:review_phase) }
+      let(:document) { create(:review_of_significant_trade) }
+      let(:review_phase) { create(:review_phase) }
       let(:process_stage) { create(:process_stage) }
       let(:recommended_category) { "A wonderful category" }
 
@@ -184,8 +184,8 @@ describe Admin::DocumentsController, sidekiq: :inline do
     end
 
     context "with nested proposal_details attributes" do
-      let(:document){ create(:proposal) }
-      let(:proposal_outcome){ create(:document_tag, type: 'DocumentTag::ProposalOutcome') }
+      let(:document) { create(:proposal) }
+      let(:proposal_outcome) { create(:document_tag, type: 'DocumentTag::ProposalOutcome') }
 
       it "assign outcome to Proposal" do
         put :update, id: document.id, document: {
@@ -200,13 +200,13 @@ describe Admin::DocumentsController, sidekiq: :inline do
   end
 
   describe "DELETE destroy" do
-    let(:poland){
+    let(:poland) {
       create(:geo_entity,
         :name_en => 'Poland', :iso_code2 => 'PL',
         :geo_entity_type => country_geo_entity_type
       )
     }
-    let(:document){
+    let(:document) {
       document = create(:document)
       document.citations << DocumentCitation.new(geo_entity_ids: [poland.id])
       document
@@ -218,13 +218,13 @@ describe Admin::DocumentsController, sidekiq: :inline do
   end
 
   describe "XHR GET JSON autocomplete" do
-    let!(:document){
+    let!(:document) {
       create(:document,
         :title => 'Title',
         :event_id => event.id
       )
     }
-    let!(:document2){ create(:document, :title => 'Title2') }
+    let!(:document2) { create(:document, :title => 'Title2') }
 
     context "When no event specified" do
       it "returns properly formatted json" do

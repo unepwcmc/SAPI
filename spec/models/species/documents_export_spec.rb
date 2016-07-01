@@ -19,7 +19,7 @@ describe Species::DocumentsExport do
       FileUtils.remove_dir("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}", true)
     end
     context "when no results" do
-      before(:each){
+      before(:each) {
         FileUtils.rm_rf(Dir.glob("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}/*"))
       }
       subject {
@@ -30,7 +30,7 @@ describe Species::DocumentsExport do
       end
     end
     context "when results" do
-      before(:each){
+      before(:each) {
         ActiveRecord::Relation.any_instance.stub(:any?).and_return(true)
       }
       subject {

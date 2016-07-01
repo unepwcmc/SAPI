@@ -18,7 +18,7 @@ module Sapi
         :touch_cites_taxon_concepts,
         :touch_eu_taxon_concepts,
         :touch_cms_taxon_concepts
-      ].each{ |p|
+      ].each { |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
       }
@@ -83,7 +83,7 @@ module Sapi
     end
 
     def self.run_procedures(procedures)
-      procedures.each{ |p|
+      procedures.each { |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
       }

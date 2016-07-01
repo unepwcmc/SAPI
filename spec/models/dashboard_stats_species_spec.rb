@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe DashboardStats do
-  let(:argentina){
+  let(:argentina) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -10,7 +10,7 @@ describe DashboardStats do
       :iso_code2 => 'AR'
     )
   }
-  let(:ghana){
+  let(:ghana) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -18,10 +18,10 @@ describe DashboardStats do
       :iso_code2 => 'GH'
     )
   }
-  let(:ds_ar){
+  let(:ds_ar) {
     DashboardStats.new argentina, { :kingdom => 'Animalia', :trade_limit => 5 }
   }
-  let(:ds_gh){
+  let(:ds_gh) {
     DashboardStats.new ghana, { :kingdom => 'Animalia', :trade_limit => 5 }
   }
 

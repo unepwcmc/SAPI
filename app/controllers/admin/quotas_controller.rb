@@ -3,7 +3,7 @@ class Admin::QuotasController < Admin::StandardAuthorizationController
   def index
     @years = Quota.years_array
     if params[:year] && !@years.include?(params[:year])
-      @years = @years.push(params[:year]).sort{ |a, b| b <=> a }
+      @years = @years.push(params[:year]).sort { |a, b| b <=> a }
     end
     index!
   end

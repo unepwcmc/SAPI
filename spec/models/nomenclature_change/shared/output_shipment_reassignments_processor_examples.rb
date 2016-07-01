@@ -8,6 +8,6 @@ shared_context 'output_shipment_reassignments_processor_examples' do
     output_processor.run
     processor.run
   end
-  specify{ expect(new_output_species.shipments.count).to eq(2) }
-  specify{ expect(old_output_subspecies.shipments).to be_empty }
+  specify { expect(new_output_species.shipments.count).to eq(2) }
+  specify { expect(old_output_subspecies.shipments).to be_empty }
 end

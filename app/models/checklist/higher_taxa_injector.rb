@@ -86,7 +86,7 @@ class Checklist::HigherTaxaInjector
     ranks = [ranks.last].compact unless @expand_headers
 
     res = []
-    @last_ancestor_ids = @header_ranks.map{ |rank| curr_item.send("#{rank.downcase}_id") }
+    @last_ancestor_ids = @header_ranks.map { |rank| curr_item.send("#{rank.downcase}_id") }
     ranks.each_with_index do |rank, idx|
       higher_taxon_id = curr_item.send("#{rank.downcase}_id")
 

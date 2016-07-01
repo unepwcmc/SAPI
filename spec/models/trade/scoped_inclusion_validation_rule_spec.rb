@@ -15,10 +15,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :taxon_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => 'AR'
         )
       end
-      subject{
+      subject {
         create_taxon_concept_country_of_origin_validation
       }
-      specify{
+      specify {
         subject.validation_errors(@aru).size.should == 0
       }
     end
@@ -30,7 +30,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :taxon_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => 'PL'
         )
       end
-      subject{
+      subject {
         create_taxon_concept_country_of_origin_validation
       }
     end
@@ -42,10 +42,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :taxon_name => 'Pecari tajacu', :source_code => 'W', :country_of_origin => nil
         )
       end
-      subject{
+      subject {
         create_taxon_concept_country_of_origin_validation
       }
-      specify{
+      specify {
         subject.validation_errors(@aru).size.should == 0
       }
     end

@@ -4,7 +4,7 @@ describe CitesTrade::ShipmentsController do
   include_context 'Shipments'
 
   describe "GET index" do
-    before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    before(:each) { Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     context "serializer" do
       it "should return comptab export when report_type invalid" do
         get :index, filters: {

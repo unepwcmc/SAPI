@@ -22,7 +22,7 @@ describe Admin::EuRegulationsController do
   end
 
   describe "XHR POST activate" do
-    let(:eu_regulation){ create_eu_regulation }
+    let(:eu_regulation) { create_eu_regulation }
     it "renders create when successful" do
       xhr :post, :activate, :format => 'js', :id => eu_regulation.id
       response.should render_template("create")

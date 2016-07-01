@@ -44,7 +44,7 @@ describe Admin::EventsController do
   end
 
   describe "XHR GET edit" do
-    let(:event){ create(:event) }
+    let(:event) { create(:event) }
     it "renders the edit template" do
       xhr :get, :edit, :id => event.id
       response.should render_template('new')
@@ -56,7 +56,7 @@ describe Admin::EventsController do
   end
 
   describe "XHR PUT update JSON" do
-    let(:event){ create(:event) }
+    let(:event) { create(:event) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => event.id, :event => { :name => 'ZZ' }
       response.should be_success
@@ -68,7 +68,7 @@ describe Admin::EventsController do
   end
 
   describe "DELETE destroy" do
-    let(:event){ create(:event) }
+    let(:event) { create(:event) }
     it "redirects after delete" do
       delete :destroy, :id => event.id
       response.should redirect_to(admin_events_url)

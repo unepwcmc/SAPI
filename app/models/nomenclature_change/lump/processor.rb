@@ -6,7 +6,7 @@ class NomenclatureChange::Lump::Processor < NomenclatureChange::Processor
       "The following taxa will be lumped into #{@nc.output.display_full_name}",
       @nc.inputs.map(&:taxon_concept).map(&:full_name)
     ]]
-    @subprocessors.each{ |processor| result << processor.summary }
+    @subprocessors.each { |processor| result << processor.summary }
     result.flatten(1)
   end
 

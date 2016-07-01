@@ -18,7 +18,7 @@
 require 'spec_helper'
 
 describe ApiRequest do
-  let(:api_user){
+  let(:api_user) {
     create(:user, role: 'api')
   }
 

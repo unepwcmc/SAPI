@@ -17,13 +17,13 @@ require 'spec_helper'
 describe Term do
   describe :destroy do
     context "when no dependent objects attached" do
-      let(:term){ create(:term) }
+      let(:term) { create(:term) }
       specify { term.destroy.should be_true }
     end
     context "when dependent objects attached" do
-      let(:term){ create(:term) }
+      let(:term) { create(:term) }
       context "when CITES suspension" do
-        let!(:cites_suspension){
+        let!(:cites_suspension) {
           create(
             :cites_suspension,
             :terms => [term],
@@ -34,11 +34,11 @@ describe Term do
       end
       context "when CITES quota" do
         let(:geo_entity) { create(:geo_entity) }
-        let!(:quota){ create(:quota, :terms => [term], :geo_entity_id => geo_entity.id) }
+        let!(:quota) { create(:quota, :terms => [term], :geo_entity_id => geo_entity.id) }
         specify { term.destroy.should be_false }
       end
       context "when shipments" do
-        before(:each){ create(:shipment, :term => term) }
+        before(:each) { create(:shipment, :term => term) }
         specify { term.destroy.should be_false }
       end
     end

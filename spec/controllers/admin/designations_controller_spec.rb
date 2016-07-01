@@ -40,7 +40,7 @@ describe Admin::DesignationsController do
   end
 
   describe "XHR PUT update" do
-    let(:designation){ create(:designation) }
+    let(:designation) { create(:designation) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => designation.id, :designation => { :name => 'ZZ' }
       response.should be_success
@@ -52,7 +52,7 @@ describe Admin::DesignationsController do
   end
 
   describe "DELETE destroy" do
-    let(:designation){ create(:designation) }
+    let(:designation) { create(:designation) }
     it "redirects after delete" do
       delete :destroy, :id => designation.id
       response.should redirect_to(admin_designations_url)

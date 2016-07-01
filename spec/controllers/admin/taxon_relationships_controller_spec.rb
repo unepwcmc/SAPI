@@ -3,10 +3,10 @@ require 'spec_helper'
 describe Admin::TaxonRelationshipsController do
   login_admin
 
-  before(:each){ equal_relationship_type }
-  let(:taxon_concept){ create(:taxon_concept) }
+  before(:each) { equal_relationship_type }
+  let(:taxon_concept) { create(:taxon_concept) }
   describe "GET index" do
-    let(:taxon_relationship){
+    let(:taxon_relationship) {
       create(:taxon_relationship, :taxon_concept_id => taxon_concept.id)
     }
     it "assigns @taxon_relationships" do
@@ -25,7 +25,7 @@ describe Admin::TaxonRelationshipsController do
   end
 
   describe "XHR POST create" do
-    let(:taxon_relationship_attributes){ build_attributes(:taxon_relationship) }
+    let(:taxon_relationship_attributes) { build_attributes(:taxon_relationship) }
     before do
       TaxonRelationshipType.stub(:find).and_return(equal_relationship_type)
     end
@@ -44,13 +44,13 @@ describe Admin::TaxonRelationshipsController do
 
   describe 'DELETE destroy' do
     context"when relationship is bidirectional" do
-      let(:taxon_concept){
+      let(:taxon_concept) {
         create_cites_eu_species
       }
-      let(:other_taxon_concept){
+      let(:other_taxon_concept) {
         create_cms_species
       }
-      let!(:rel){
+      let!(:rel) {
         create(:taxon_relationship,
           taxon_relationship_type: equal_relationship_type,
           taxon_concept_id: taxon_concept.id,
@@ -73,13 +73,13 @@ describe Admin::TaxonRelationshipsController do
       end
     end
     context"when relationship is not bidirectional" do
-      let(:taxon_concept){
+      let(:taxon_concept) {
         create_cites_eu_species
       }
-      let(:other_taxon_concept){
+      let(:other_taxon_concept) {
         create_cites_eu_species(name_status: 'S')
       }
-      let!(:rel){
+      let!(:rel) {
         create(:taxon_relationship,
           taxon_relationship_type: synonym_relationship_type,
           taxon_concept_id: taxon_concept.id,

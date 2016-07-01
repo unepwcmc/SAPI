@@ -82,7 +82,7 @@ class Checklist::Checklist
   # @return [Array] an array containing a hash of search results and
   #   related metadata
   def generate
-    @animalia, @plantae = cached_results.partition{ |item| item.kingdom_position == 0 }
+    @animalia, @plantae = cached_results.partition { |item| item.kingdom_position == 0 }
     if @output_layout == :taxonomic
       injector = Checklist::HigherTaxaInjector.new(@animalia)
       @animalia = injector.run

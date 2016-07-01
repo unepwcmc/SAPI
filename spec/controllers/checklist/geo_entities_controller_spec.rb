@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe Checklist::GeoEntitiesController do
-  let!(:europe){
+  let!(:europe) {
     create(
       :geo_entity,
       :geo_entity_type => cites_region_geo_entity_type,
       :name => 'Europe'
     )
   }
-  let!(:france){
+  let!(:france) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -17,7 +17,7 @@ describe Checklist::GeoEntitiesController do
       :designations => [cites]
     )
   }
-  let!(:andorra){
+  let!(:andorra) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -25,7 +25,7 @@ describe Checklist::GeoEntitiesController do
       :iso_code2 => 'AD'
     )
   }
-  let!(:french_guiana){
+  let!(:french_guiana) {
     create(
       :geo_entity,
       :geo_entity_type => territory_geo_entity_type,

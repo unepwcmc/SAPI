@@ -24,7 +24,7 @@ describe Trade::Sandbox, :drops_tables => true do
                        :iso_code2 => 'PT'
                       )
   end
-  let(:annual_report_upload){
+  let(:annual_report_upload) {
     aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
     aru.save(:validate => false)
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)

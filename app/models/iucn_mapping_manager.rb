@@ -75,7 +75,7 @@ class IucnMappingManager
     def strip_authors(author)
       return '' unless author
       author.split(" ").
-        reject{ |p| ["and", "&", "&amp;", ","].include?(p) }.
+        reject { |p| ["and", "&", "&amp;", ","].include?(p) }.
         join(" ")
     end
   end

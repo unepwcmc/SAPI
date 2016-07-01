@@ -131,7 +131,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
   end
 
   def sql_columns
-    report_columns.map{ |column, properties| properties[I18n.locale] || column }
+    report_columns.map { |column, properties| properties[I18n.locale] || column }
   end
 
 end

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Checklist::Timeline do
   context "when deleted" do
-    let(:tc){
+    let(:tc) {
       tc = create_cites_eu_species
       create_cites_I_addition(
         :taxon_concept => tc,
@@ -17,16 +17,16 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
-    let(:subject){ ttc.timelines.first }
+    let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
+    let(:subject) { ttc.timelines.first }
 
-    specify{ subject.timeline_intervals.count.should == 1 }
-    specify{ subject.timeline_intervals.last.end_pos.should < 1 }
-    specify{ subject.timeline_events.count.should == 2 }
+    specify { subject.timeline_intervals.count.should == 1 }
+    specify { subject.timeline_intervals.last.end_pos.should < 1 }
+    specify { subject.timeline_events.count.should == 2 }
   end
 
   context "when deleted from III multiple times" do
-    let(:tc){
+    let(:tc) {
       tc = create_cites_eu_species
       cnt1 = create(:geo_entity)
       cnt2 = create(:geo_entity)
@@ -77,16 +77,16 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
-    let(:subject){ ttc.timelines.last }
+    let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
+    let(:subject) { ttc.timelines.last }
 
-    specify{ subject.timeline_intervals.count.should == 3 }
-    specify{ subject.timeline_intervals.last.end_pos.should < 1 }
-    specify{ subject.timeline_events.count.should == 4 }
+    specify { subject.timeline_intervals.count.should == 3 }
+    specify { subject.timeline_intervals.last.end_pos.should < 1 }
+    specify { subject.timeline_events.count.should == 4 }
   end
 
   context "when deleted and then readded" do
-    let(:tc){
+    let(:tc) {
       tc = create_cites_eu_species
       create_cites_I_addition(
         :taxon_concept => tc,
@@ -106,16 +106,16 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
-    let(:subject){ ttc.timelines.first }
+    let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
+    let(:subject) { ttc.timelines.first }
 
-    specify{ subject.timeline_intervals.count.should == 2 }
-    specify{ subject.timeline_events.count.should == 3 }
-    specify{ subject.timeline_intervals[0].end_pos.should == subject.timeline_intervals[1].start_pos }
+    specify { subject.timeline_intervals.count.should == 2 }
+    specify { subject.timeline_events.count.should == 3 }
+    specify { subject.timeline_intervals[0].end_pos.should == subject.timeline_intervals[1].start_pos }
   end
 
   context "when reservation withdrawn" do
-    let(:tc){
+    let(:tc) {
       tc = create_cites_eu_species
       create_cites_I_addition(
         :taxon_concept => tc,
@@ -148,16 +148,16 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
-    let(:subject){ ttc.timelines.first.timelines.first }
+    let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
+    let(:subject) { ttc.timelines.first.timelines.first }
 
-    specify{ puts subject.timeline_events.inspect; puts subject.timeline_intervals.inspect; subject.timeline_intervals.count.should == 1 }
-    specify{ subject.timeline_events.count.should == 2 }
-    specify{ subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
+    specify { puts subject.timeline_events.inspect; puts subject.timeline_intervals.inspect; subject.timeline_intervals.count.should == 1 }
+    specify { subject.timeline_events.count.should == 2 }
+    specify { subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
   end
 
   context "when reservation withdrawn and then readded" do
-    let(:tc){
+    let(:tc) {
       tc = create_cites_eu_species
       cnt = create(:geo_entity, geo_entity_type: country_geo_entity_type)
       r1 = create_cites_III_reservation(
@@ -196,17 +196,17 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
-    let(:subject){ ttc.timelines.last.timelines.first }
+    let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
+    let(:subject) { ttc.timelines.last.timelines.first }
 
-    specify{ subject.timeline_intervals.count.should == 2 }
-    specify{ subject.timeline_events.count.should == 3 }
-    specify{ subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
-    specify{ subject.timeline_intervals[1].end_pos.should == 1 }
+    specify { subject.timeline_intervals.count.should == 2 }
+    specify { subject.timeline_events.count.should == 3 }
+    specify { subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
+    specify { subject.timeline_intervals[1].end_pos.should == 1 }
   end
 
   context "when added multiple times" do
-    let(:tc){
+    let(:tc) {
       tc = create_cites_eu_species
       create_cites_I_addition(
         :taxon_concept => tc,
@@ -221,19 +221,19 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
-    let(:subject){ ttc.timelines.first }
+    let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
+    let(:subject) { ttc.timelines.first }
 
-    specify{
+    specify {
       subject.timeline_events.map(&:change_type_name).should ==
         ['ADDITION', 'AMENDMENT']
     }
-    specify{ subject.timeline_intervals.count.should == 2 }
-    specify{ subject.timeline_intervals[1].end_pos.should == 1 }
+    specify { subject.timeline_intervals.count.should == 2 }
+    specify { subject.timeline_intervals[1].end_pos.should == 1 }
   end
 
   context "when automatic deletion from ancestor listing" do
-    let(:tc){
+    let(:tc) {
       genus = create_cites_eu_genus
       tc = create_cites_eu_species(parent: genus)
       create_cites_I_addition(
@@ -250,15 +250,15 @@ describe Checklist::Timeline do
       Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     }
-    let(:ttc){ Checklist::TimelinesForTaxonConcept.new(tc) }
-    let(:subject){ ttc.timelines.first }
+    let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
+    let(:subject) { ttc.timelines.first }
 
-    specify{
+    specify {
       subject.timeline_events.map(&:change_type_name).should ==
         ['ADDITION', 'DELETION']
     }
-    specify{ subject.timeline_intervals.count.should == 1 }
-    specify{ subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
+    specify { subject.timeline_intervals.count.should == 1 }
+    specify { subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
   end
 
 end

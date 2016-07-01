@@ -7,19 +7,19 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for genus Notomys" do
-          specify{ @genus.cites_listing.should == 'NC' }
+          specify { @genus.cites_listing.should == 'NC' }
         end
         context "for species Notomys aquilo" do
-          specify{ @species.cites_listing.should == 'NC' }
+          specify { @species.cites_listing.should == 'NC' }
         end
       end
 
       describe :cites_show do
         context "for genus Notomys" do
-          specify{ @genus.cites_show.should be_false }
+          specify { @genus.cites_show.should be_false }
         end
         context "for species Notomys aquilo" do
-          specify{ @species.cites_show.should be_false }
+          specify { @species.cites_show.should be_false }
         end
       end
 

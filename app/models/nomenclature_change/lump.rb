@@ -32,7 +32,7 @@ class NomenclatureChange::Lump < NomenclatureChange
   }
   validate :required_inputs, if: :inputs_or_submitting?
   validate :required_outputs, if: :outputs_or_submitting?
-  before_validation :set_output_name_status, if: Proc.new{ |nc|
+  before_validation :set_output_name_status, if: Proc.new { |nc|
     !nc.inputs.empty? && nc.output && nc.outputs_or_submitting?
   }
   before_save :build_auto_reassignments, if: :notes?
@@ -71,11 +71,11 @@ class NomenclatureChange::Lump < NomenclatureChange
   end
 
   def inputs_except_outputs
-    inputs.reject{ |i| i.taxon_concept == output.try(:taxon_concept) }
+    inputs.reject { |i| i.taxon_concept == output.try(:taxon_concept) }
   end
 
   def inputs_intersect_outputs
-    inputs.select{ |o| o.taxon_concept == output.try(:taxon_concept) }
+    inputs.select { |o| o.taxon_concept == output.try(:taxon_concept) }
   end
 
   def new_output_rank

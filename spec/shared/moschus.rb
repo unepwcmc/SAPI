@@ -1,5 +1,5 @@
 shared_context "Moschus" do
-  let(:bhutan){
+  let(:bhutan) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -7,7 +7,7 @@ shared_context "Moschus" do
       :iso_code2 => 'BT'
     )
   }
-  let(:india){
+  let(:india) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -15,7 +15,7 @@ shared_context "Moschus" do
       :iso_code2 => 'IN'
     )
   }
-  let(:nepal){
+  let(:nepal) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -23,7 +23,7 @@ shared_context "Moschus" do
       :iso_code2 => 'NP'
     )
   }
-  let(:china){
+  let(:china) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,

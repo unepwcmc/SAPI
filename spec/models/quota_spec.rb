@@ -70,7 +70,7 @@ describe Quota, sidekiq: :inline do
       end
 
       context "when valid" do
-        let(:quota){
+        let(:quota) {
           build(
             :quota,
             :unit => @unit,
@@ -83,7 +83,7 @@ describe Quota, sidekiq: :inline do
       end
 
       context "when quota missing" do
-        let(:quota1){
+        let(:quota1) {
           build(
             :quota,
             :quota => nil,
@@ -97,7 +97,7 @@ describe Quota, sidekiq: :inline do
       end
 
       context "when publication date missing" do
-        let(:quota){
+        let(:quota) {
           build(
             :quota,
             :publication_date => nil,
@@ -111,7 +111,7 @@ describe Quota, sidekiq: :inline do
       end
 
       context "when start date greater than end date" do
-        let(:quota){
+        let(:quota) {
           build(
             :quota,
             :start_date => 1.week.from_now,
@@ -126,7 +126,7 @@ describe Quota, sidekiq: :inline do
       end
 
       pending "doesn't save a quota without a unit" do
-        let(:quota){
+        let(:quota) {
           build(
             :quota,
             :unit => nil,

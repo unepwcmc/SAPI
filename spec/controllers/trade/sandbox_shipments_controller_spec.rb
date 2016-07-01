@@ -3,12 +3,12 @@ require 'spec_helper'
 describe Trade::SandboxShipmentsController do
   login_admin
 
-  let(:annual_report_upload){
+  let(:annual_report_upload) {
     aru = build(:annual_report_upload)
     aru.save(:validate => false)
     aru
   }
-  let(:sandbox_klass){
+  let(:sandbox_klass) {
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   }
   before(:each) do

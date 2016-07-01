@@ -4,10 +4,10 @@ module Elibrary
     def run
       drop_table_if_exists(table_name)
       create_table_from_column_array(
-        table_name, columns_with_type.map{ |ct| ct.join(' ') }
+        table_name, columns_with_type.map { |ct| ct.join(' ') }
       )
       copy_from_csv(
-        @file_name, table_name, columns_with_type.map{ |ct| ct.first }
+        @file_name, table_name, columns_with_type.map { |ct| ct.first }
       )
       run_preparatory_queries
       print_pre_import_stats

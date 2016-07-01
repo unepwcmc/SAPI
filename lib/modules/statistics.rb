@@ -3,7 +3,7 @@ module Statistics
   def self.get_total_transactions_per_year
     trade_transactions = {}
     years = Trade::Shipment.where("year is not null").uniq.pluck(:year)
-    years.each{ |y|
+    years.each { |y|
       unless y.nil?
         reported_by_exporter = Trade::Shipment.where(:year => y,
                                                      :reported_by_exporter => true).count

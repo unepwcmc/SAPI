@@ -3,10 +3,10 @@ require 'spec_helper'
 describe Admin::TradeNameRelationshipsController do
   login_admin
 
-  before(:each){ trade_name_relationship_type }
-  let(:taxon_concept){ create(:taxon_concept) }
-  let(:trade_name){ create(:taxon_concept, :name_status => 'T') }
-  let(:trade_name_relationship){
+  before(:each) { trade_name_relationship_type }
+  let(:taxon_concept) { create(:taxon_concept) }
+  let(:trade_name) { create(:taxon_concept, :name_status => 'T') }
+  let(:trade_name_relationship) {
     create(:taxon_relationship,
       :taxon_relationship_type_id => trade_name_relationship_type.id,
       :taxon_concept => taxon_concept,

@@ -3,10 +3,10 @@ require 'spec_helper'
 describe Admin::SynonymRelationshipsController do
   login_admin
 
-  before(:each){ synonym_relationship_type }
-  let(:taxon_concept){ create(:taxon_concept) }
-  let(:synonym){ create(:taxon_concept, :name_status => 'S') }
-  let(:synonym_relationship){
+  before(:each) { synonym_relationship_type }
+  let(:taxon_concept) { create(:taxon_concept) }
+  let(:synonym) { create(:taxon_concept, :name_status => 'S') }
+  let(:synonym_relationship) {
     create(:taxon_relationship,
       :taxon_relationship_type_id => synonym_relationship_type.id,
       :taxon_concept => taxon_concept,

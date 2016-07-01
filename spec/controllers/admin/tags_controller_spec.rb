@@ -24,7 +24,7 @@ describe Admin::TagsController do
   end
 
   describe "XHR PUT update" do
-    let(:preset_tag){ create(:preset_tag) }
+    let(:preset_tag) { create(:preset_tag) }
     context "when JSON" do
       it "responds with 200 when successful" do
         xhr :put, :update, :format => 'json', :id => preset_tag.id,
@@ -40,7 +40,7 @@ describe Admin::TagsController do
   end
 
   describe "DELETE destroy" do
-    let(:preset_tag){ create(:preset_tag) }
+    let(:preset_tag) { create(:preset_tag) }
     it "redirects after delete" do
       delete :destroy, :id => preset_tag.id
       response.should redirect_to(admin_tags_url)

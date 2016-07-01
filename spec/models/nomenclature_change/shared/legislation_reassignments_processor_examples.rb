@@ -1,12 +1,12 @@
 shared_context 'legislation_reassignments_processor_examples' do
-  let(:poland){
+  let(:poland) {
     create(
       :geo_entity,
       geo_entity_type_id: country_geo_entity_type.id,
       iso_code2: 'PL'
     )
   }
-  let(:portugal){
+  let(:portugal) {
     create(
       :geo_entity,
       geo_entity_type_id: country_geo_entity_type.id,
@@ -70,7 +70,7 @@ shared_context 'legislation_reassignments_processor_examples' do
     quota.purposes << create(:purpose)
     quota = create(:quota, taxon_concept: input_species, geo_entity: portugal)
 
-    2.times{ create(:cites_suspension, taxon_concept: input_species) }
+    2.times { create(:cites_suspension, taxon_concept: input_species) }
 
     create(:nomenclature_change_reassignment_target,
       reassignment: create(
@@ -98,81 +98,81 @@ shared_context 'legislation_reassignments_processor_examples' do
     )
     processor.run
   end
-  specify{ expect(output_species1.listing_changes.count).to eq(2) }
-  specify{
+  specify { expect(output_species1.listing_changes.count).to eq(2) }
+  specify {
     expect(
       output_species1.listing_changes.
       find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id)
     ).not_to be_nil
   }
-  specify{
+  specify {
     expect(
       output_species1.listing_changes.
       find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id).
       party_listing_distribution.geo_entity
     ).to eq(poland)
   }
-  specify{
+  specify {
     expect(
       output_species1.listing_changes.
       find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id).
       listing_distributions.count
     ).to eq(2)
   }
-  specify{
+  specify {
     expect(
       output_species1.listing_changes.
       find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id).
       annotation
     ).not_to be_nil
   }
-  specify{
+  specify {
     expect(
       output_species1.listing_changes.
       find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id).
       exclusions
     ).not_to be_empty
   }
-  specify{
+  specify {
     expect(
       output_species1.listing_changes.
       find_by_effective_at_and_change_type_id('2013-01-02', cites_addition.id)
     ).not_to be_nil
   }
-  specify{
+  specify {
     expect(
       output_species1.listing_changes.
       find_by_effective_at_and_change_type_id('2013-01-02', cites_addition.id).
       party_listing_distribution.geo_entity
     ).to eq(portugal)
   }
-  specify{ expect(output_species1.quotas.count).to eq(2) }
-  specify{
+  specify { expect(output_species1.quotas.count).to eq(2) }
+  specify {
     expect(
       output_species1.quotas.
       find_by_geo_entity_id(poland.id)
     ).not_to be_nil
   }
-  specify{
+  specify {
     expect(
       output_species1.quotas.
       find_by_geo_entity_id(poland.id).
       terms
     ).not_to be_empty
   }
-  specify{
+  specify {
     expect(
       output_species1.quotas.
       find_by_geo_entity_id(poland.id).
       sources
     ).not_to be_empty
   }
-  specify{
+  specify {
     expect(
       output_species1.quotas.
       find_by_geo_entity_id(poland.id).
       purposes
     ).not_to be_empty
   }
-  specify{ expect(output_species1.cites_suspensions.count).to eq(2) }
+  specify { expect(output_species1.cites_suspensions.count).to eq(2) }
 end

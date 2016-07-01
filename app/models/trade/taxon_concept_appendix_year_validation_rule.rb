@@ -61,7 +61,7 @@ class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidation
       s[c].not_eq(nil)
     end
     not_null_conds = not_null_nodes.shift
-    not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
+    not_null_nodes.each { |n| not_null_conds = not_null_conds.and(n) }
     s.project('*').where(not_null_conds).except(valid_values)
   end
 

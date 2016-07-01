@@ -1,5 +1,5 @@
 shared_context "Diospyros" do
-  let(:madagascar){
+  let(:madagascar) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -7,7 +7,7 @@ shared_context "Diospyros" do
       :iso_code2 => 'MG'
     )
   }
-  let(:sri_lanka){
+  let(:sri_lanka) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,

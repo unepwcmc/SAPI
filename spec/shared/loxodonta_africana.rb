@@ -1,5 +1,5 @@
 shared_context "Loxodonta africana" do
-  let(:ghana){
+  let(:ghana) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -7,7 +7,7 @@ shared_context "Loxodonta africana" do
       :iso_code2 => 'GH'
     )
   }
-  let(:botswana){
+  let(:botswana) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -15,7 +15,7 @@ shared_context "Loxodonta africana" do
       :iso_code2 => 'BW'
     )
   }
-  let(:namibia){
+  let(:namibia) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -23,7 +23,7 @@ shared_context "Loxodonta africana" do
       :iso_code2 => 'NA'
     )
   }
-  let(:zambia){
+  let(:zambia) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -31,7 +31,7 @@ shared_context "Loxodonta africana" do
       :iso_code2 => 'ZA'
     )
   }
-  let(:zimbabwe){
+  let(:zimbabwe) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,

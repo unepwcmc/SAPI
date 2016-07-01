@@ -605,13 +605,6 @@ Style/SignalException:
 Style/SingleLineMethods:
   Enabled: false
 
-# Offense count: 1018
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: space, no_space
-Style/SpaceBeforeBlockBraces:
-  Enabled: false
-
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: SupportedStyles.

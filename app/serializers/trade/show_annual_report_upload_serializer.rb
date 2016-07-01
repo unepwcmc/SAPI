@@ -14,7 +14,7 @@ class Trade::ShowAnnualReportUploadSerializer < ActiveModel::Serializer
   end
 
   def has_primary_errors
-    !validation_errors.index{ |ve| ve.is_primary }.nil?
+    !validation_errors.index { |ve| ve.is_primary }.nil?
   end
 
   def created_at
