@@ -29,7 +29,7 @@ module Checklist::Pdf::IndexContent
       end
       tex << entries.join("\n\n")
       kingdom = fetcher.next
-    end while not kingdom.empty?
+    end while !kingdom.empty?
     tex << '}\\end{multicols}' #end multicols
   end
 

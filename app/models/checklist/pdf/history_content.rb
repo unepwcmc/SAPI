@@ -45,7 +45,7 @@ module Checklist::Pdf::HistoryContent
         listed_taxa_ary = []
       end
       kingdom = fetcher.next
-    end while not kingdom.empty?
+    end while !kingdom.empty?
   end
 
   def listed_taxa(tex, listed_taxa_ary, kingdom_name = 'FAUNA')
