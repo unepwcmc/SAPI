@@ -74,7 +74,7 @@ class LatexToPdf
       # :startdoc:
     end
 
-    @latex_escaper.latex_esc(text.to_s)#.html_safe
+    @latex_escaper.latex_esc(text.to_s) #.html_safe
   end
 
   def self.html2latex(text)

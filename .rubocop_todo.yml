@@ -633,13 +633,6 @@ Style/SpaceAroundOperators:
 Style/SpaceBeforeBlockBraces:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/SpaceBeforeComment:
-  Exclude:
-    - 'lib/modules/latex_to_pdf.rb'
-    - 'lib/scripts/get_listed_species_per_country.rb'
-
 # Offense count: 317
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
