@@ -47,7 +47,7 @@ namespace :smoke_test do
     response = nil
 
     request = Net::HTTP::Post.new(uri.request_uri)
-    request.set_form_data({ :payload => JSON.generate( payload ) })
+    request.set_form_data({ :payload => JSON.generate(payload) })
 
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true

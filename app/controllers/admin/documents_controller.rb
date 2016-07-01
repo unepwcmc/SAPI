@@ -87,11 +87,11 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     @designations = Designation.where(name: ['CITES', 'EU']).select([:id, :name]).order(:name)
     @event_types =
       if @document && @document.event
-        [{id: @document.event.type}]
+        [{ id: @document.event.type }]
       else
         Event.event_types_with_names
       end
-    @events = Event.where(type: @event_types.map{ |t| t[:id] }).order(:published_at).reverse_order
+    @events = Event.where(type: @event_types.map { |t| t[:id] }).order(:published_at).reverse_order
     @event = Event.find(params[:event_id]) if params[:event_id].present?
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
      order(:name_en)

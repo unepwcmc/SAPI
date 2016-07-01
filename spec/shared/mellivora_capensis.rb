@@ -1,5 +1,5 @@
 shared_context "Mellivora capensis" do
-  let(:ghana){
+  let(:ghana) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -7,7 +7,7 @@ shared_context "Mellivora capensis" do
       :iso_code2 => 'GH'
     )
   }
-  let(:botswana){
+  let(:botswana) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -120,7 +120,7 @@ shared_context "Mellivora capensis" do
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
       end
     end

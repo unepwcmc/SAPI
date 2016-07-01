@@ -12,7 +12,7 @@ gem 'activerecord-postgres-hstore'
 gem 'nested-hstore'
 gem 'pg_search', '~> 0.5.7'
 gem 'foreigner'
-gem 'oj' #optimised JSON (picked by multi_json)
+gem 'oj' # optimised JSON (picked by multi_json)
 gem 'nokogiri', '>= 1.6.7.2'
 gem 'inherited_resources'
 gem 'traco', '~> 2.0.0'
@@ -34,7 +34,7 @@ gem 'whenever', :require => false
 
 gem 'ember-rails'
 gem 'ember-source', '1.1.2'
-gem 'jquery-rails', '2.1.4' #do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
+gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 gem 'jquery-mousewheel-rails'
 gem 'jquery-cookie-rails'
 gem 'bootstrap-sass', '~> 2.3.1.0'
@@ -134,13 +134,12 @@ gem 'slim'
 gem 'sinatra', '>= 1.3.0', :require => nil
 
 gem 'memcache-client'
-#gem 'high_voltage'
 
 gem 'jquery-ui-rails'
 
 gem 'geoip'
 
-#track who created or edited a given object
+# track who created or edited a given object
 gem 'clerk'
 gem 'paper_trail', '~> 4.0.0.beta'
 

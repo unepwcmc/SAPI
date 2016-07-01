@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::NomenclatureChanges::StatusToSynonymController do
   login_admin
   include_context 'status_change_definitions'
-  let(:input_species){ create_cites_eu_species(name_status: 'N') }
+  let(:input_species) { create_cites_eu_species(name_status: 'N') }
 
   describe 'GET show' do
     context :primary_output do

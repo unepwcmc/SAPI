@@ -51,7 +51,7 @@ end
 namespace :config do
   task :setup do
 
-    vhost_config =<<-EOF
+    vhost_config = <<-EOF
 
 server {
   listen 80;

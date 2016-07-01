@@ -113,7 +113,7 @@ class MTaxonConcept < ActiveRecord::Base
   has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MCitesListingChange
   has_many :historic_cites_listing_changes_for_downloads, :foreign_key => :taxon_concept_id,
     :class_name => MCitesListingChange,
-    :conditions => {:show_in_downloads => true},
+    :conditions => { :show_in_downloads => true },
     :order => <<-SQL
       effective_at,
       CASE
@@ -125,11 +125,11 @@ class MTaxonConcept < ActiveRecord::Base
     SQL
   has_many :current_cites_additions, :foreign_key => :taxon_concept_id,
     :class_name => MCitesListingChange,
-    :conditions => {:is_current => true, :change_type_name => ChangeType::ADDITION},
+    :conditions => { :is_current => true, :change_type_name => ChangeType::ADDITION },
     :order => 'effective_at DESC, species_listing_name ASC'
   has_many :current_cms_additions, :foreign_key => :taxon_concept_id,
     :class_name => MCmsListingChange,
-    :conditions => {:is_current => true, :change_type_name => ChangeType::ADDITION},
+    :conditions => { :is_current => true, :change_type_name => ChangeType::ADDITION },
     :order => 'effective_at DESC, species_listing_name ASC'
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
   scope :by_cms_taxonomy, where(:taxonomy_is_cites_eu => false)
@@ -148,7 +148,7 @@ class MTaxonConcept < ActiveRecord::Base
     MTaxonConceptFilterByScientificNameWithDescendants.new(
       self,
       scientific_name,
-      {:synonyms => true, :common_names => true, :subspecies => false}
+      { :synonyms => true, :common_names => true, :subspecies => false }
     ).relation
   }
 
@@ -196,7 +196,7 @@ class MTaxonConcept < ActiveRecord::Base
 
   def db_ary_to_array(ary)
     if respond_to?(ary)
-      parse_pg_array( send(ary)|| '').compact.map do |e|
+      parse_pg_array(send(ary) || '').compact.map do |e|
         e.force_encoding('utf-8')
       end
     else
@@ -214,27 +214,49 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
-  def countries_iso_codes; all_distribution_iso_codes; end
+  def countries_iso_codes
+    all_distribution_iso_codes
+  end
 
-  def countries_full_names; all_distribution; end
+  def countries_full_names
+    all_distribution
+  end
 
-  def all_distribution; parse_pg_array(all_distribution_ary || ''); end
+  def all_distribution
+    parse_pg_array(all_distribution_ary || '')
+  end
 
-  def all_distribution_iso_codes; parse_pg_array(all_distribution_iso_codes_ary || ''); end
+  def all_distribution_iso_codes
+    parse_pg_array(all_distribution_iso_codes_ary || '')
+  end
 
-  def native_distribution; parse_pg_array(native_distribution_ary || ''); end
+  def native_distribution
+    parse_pg_array(native_distribution_ary || '')
+  end
 
-  def introduced_distribution; parse_pg_array(introduced_distribution_ary || ''); end
+  def introduced_distribution
+    parse_pg_array(introduced_distribution_ary || '')
+  end
 
-  def introduced_uncertain_distribution; parse_pg_array(introduced_uncertain_distribution_ary || ''); end
+  def introduced_uncertain_distribution
+    parse_pg_array(introduced_uncertain_distribution_ary || '')
+  end
 
-  def reintroduced_distribution; parse_pg_array(reintroduced_distribution_ary || ''); end
+  def reintroduced_distribution
+    parse_pg_array(reintroduced_distribution_ary || '')
+  end
 
-  def extinct_distribution; parse_pg_array(extinct_distribution_ary || ''); end
+  def extinct_distribution
+    parse_pg_array(extinct_distribution_ary || '')
+  end
 
-  def extinct_uncertain_distribution; parse_pg_array(extinct_uncertain_distribution_ary || ''); end
+  def extinct_uncertain_distribution
+    parse_pg_array(extinct_uncertain_distribution_ary || '')
+  end
 
-  def uncertain_distribution; parse_pg_array(uncertain_distribution_ary || ''); end
+  def uncertain_distribution
+    parse_pg_array(uncertain_distribution_ary || '')
+  end
 
   def recently_changed
     return (cites_listing_updated_at ? cites_listing_updated_at > 8.year.ago : false)

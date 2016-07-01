@@ -136,7 +136,7 @@ describe Admin::NomenclatureChanges::SplitController do
     context 'when successful' do
       it 'redirects to next step' do
         put :update, nomenclature_change_split: {
-          input_attributes: {taxon_concept_id: create_cites_eu_species.id}
+          input_attributes: { taxon_concept_id: create_cites_eu_species.id }
         }, nomenclature_change_id: @split.id, id: 'inputs'
         response.should redirect_to(
           admin_nomenclature_change_split_url(
@@ -149,7 +149,7 @@ describe Admin::NomenclatureChanges::SplitController do
       it 're-renders step' do
         put :update,
           nomenclature_change_split: {
-            input_attributes: {taxon_concept_id: nil}
+            input_attributes: { taxon_concept_id: nil }
           }, nomenclature_change_id: @split.id, id: 'inputs'
         response.should render_template('inputs')
       end

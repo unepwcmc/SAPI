@@ -1,7 +1,7 @@
 class ListingChangeObserver < ActiveRecord::Observer
 
   def before_save(listing_change)
-    #check if annotation should be deleted
+    # check if annotation should be deleted
     if listing_change.annotation &&
        listing_change.annotation.short_note_en.blank? &&
        listing_change.annotation.short_note_fr.blank? &&
@@ -25,7 +25,7 @@ class ListingChangeObserver < ActiveRecord::Observer
       ChangeType::EXCEPTION, original_change_type.designation_id
     )
 
-    #geographic exclusions
+    # geographic exclusions
     excluded_geo_entities_ids = listing_change.excluded_geo_entities_ids &&
       listing_change.excluded_geo_entities_ids.reject(&:blank?)
     excluded_geo_entities =
@@ -38,7 +38,7 @@ class ListingChangeObserver < ActiveRecord::Observer
         )
       end
 
-    #taxonomic exclusions
+    # taxonomic exclusions
     excluded_taxon_concepts_ids = listing_change.excluded_taxon_concepts_ids &&
       listing_change.excluded_taxon_concepts_ids.split(',').reject(&:blank?)
     excluded_taxon_concepts =

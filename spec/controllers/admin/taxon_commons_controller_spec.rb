@@ -10,7 +10,7 @@ describe Admin::TaxonCommonsController do
 
   describe "XHR GET 'new'" do
     it "returns http success and renders the new template" do
-      xhr :get, :new, {:taxon_concept_id => @taxon_concept.id, :format => 'js'}
+      xhr :get, :new, { :taxon_concept_id => @taxon_concept.id, :format => 'js' }
       response.should be_success
       response.should render_template('new')
     end
@@ -118,8 +118,8 @@ describe Admin::TaxonCommonsController do
 
       @taxon_concept.dependents_updated_at.should be_nil
 
-      #it gets updated by the creation of the taxon_common
-      #but object needs to be reloaded
+      # it gets updated by the creation of the taxon_common
+      # but object needs to be reloaded
       @taxon_concept.reload.dependents_updated_at.should_not be_nil
       old_date = @taxon_concept.dependents_updated_at
 
@@ -139,8 +139,8 @@ describe Admin::TaxonCommonsController do
 
       @taxon_concept.dependents_updated_at.should be_nil
 
-      #it gets updated by the creation of the taxon_common
-      #but object needs to be reloaded
+      # it gets updated by the creation of the taxon_common
+      # but object needs to be reloaded
       @taxon_concept.reload.dependents_updated_at.should_not be_nil
       old_date = @taxon_concept.dependents_updated_at
 

@@ -1,23 +1,23 @@
 shared_context 'split_definitions' do
-  let(:genus1){
+  let(:genus1) {
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Genus1')
     )
   }
-  let(:genus2){
+  let(:genus2) {
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Genus2')
     )
   }
-  let(:input_species){ create_cites_eu_species(parent: genus1) }
-  let(:output_species1){ create_cites_eu_species(parent: genus1) }
-  let(:output_species2){ create_cites_eu_species(parent: genus2) }
-  let(:errorus_genus){
+  let(:input_species) { create_cites_eu_species(parent: genus1) }
+  let(:output_species1) { create_cites_eu_species(parent: genus1) }
+  let(:output_species2) { create_cites_eu_species(parent: genus2) }
+  let(:errorus_genus) {
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Errorus')
     )
   }
-  let(:output_subspecies2){
+  let(:output_subspecies2) {
     create_cites_eu_subspecies(
       taxon_name: create(:taxon_name, scientific_name: 'fatalus'),
       parent: create_cites_eu_species(
@@ -26,15 +26,15 @@ shared_context 'split_definitions' do
       )
     )
   }
-  let(:split_with_input){
+  let(:split_with_input) {
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id }
     )
   }
-  let(:split_with_input_and_output){
+  let(:split_with_input_and_output) {
     split_with_input_and_output_existing_taxon
   }
-  let(:split_with_input_and_same_output){
+  let(:split_with_input_and_same_output) {
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
@@ -44,7 +44,7 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   }
-  let(:split_with_input_and_output_existing_taxon){
+  let(:split_with_input_and_output_existing_taxon) {
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
@@ -54,7 +54,7 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   }
-  let(:split_with_input_and_output_new_taxon){
+  let(:split_with_input_and_output_new_taxon) {
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
@@ -69,9 +69,9 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   }
-  let(:split_with_input_and_outputs_status_change){
+  let(:split_with_input_and_outputs_status_change) {
     create(:nomenclature_change_split,
-      input_attributes: {taxon_concept_id: input_species.id},
+      input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
         1 => {
@@ -83,9 +83,9 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   }
-  let(:split_with_input_and_outputs_name_change){
+  let(:split_with_input_and_outputs_name_change) {
     create(:nomenclature_change_split,
-      input_attributes: {taxon_concept_id: input_species.id},
+      input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
         1 => {
@@ -99,7 +99,7 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   }
-  let(:split_with_input_with_reassignments){
+  let(:split_with_input_with_reassignments) {
     3.times { create(:distribution, taxon_concept: input_species) }
     distribution = create(:distribution, taxon_concept: input_species)
 
@@ -121,7 +121,7 @@ shared_context 'split_definitions' do
     )
 
     nc = create(:nomenclature_change_split,
-      input_attributes: {taxon_concept_id: input_species.id},
+      input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
         1 => { taxon_concept_id: input_species.id }

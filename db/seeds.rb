@@ -79,7 +79,7 @@ puts "#{DocumentTag.delete_all} document tags deleted"
   "PC review and categorization [k]", "PC review and categorization (m)", "PC review (e)",
   "Research of species [j]", "Selection of species (b)", "Selection of species [b]",
   "Species selection (b)", "Species selection [b]"
-].each {|tag| DocumentTag::ProcessStage.create(name: tag) }
+].each { |tag| DocumentTag::ProcessStage.create(name: tag) }
 
 [
   "Accepted", "Cancelled", "Deferred",

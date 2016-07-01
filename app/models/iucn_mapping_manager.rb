@@ -7,7 +7,7 @@ class IucnMappingManager
       @subspecies = Rank.where(:name => Rank::SUBSPECIES).first
       taxonomy = Taxonomy.where(:name => Taxonomy::CITES_EU).first
 
-      TaxonConcept.where(:rank_id => [species.id, @subspecies.id], :name_status => ['A','S'],
+      TaxonConcept.where(:rank_id => [species.id, @subspecies.id], :name_status => ['A', 'S'],
                          :taxonomy_id => taxonomy.id).each do |taxon_concept|
         sync_taxon_concept taxon_concept
       end
@@ -75,7 +75,7 @@ class IucnMappingManager
     def strip_authors(author)
       return '' unless author
       author.split(" ").
-        reject{|p| ["and", "&", "&amp;", ","].include?(p)}.
+        reject { |p| ["and", "&", "&amp;", ","].include?(p) }.
         join(" ")
     end
   end

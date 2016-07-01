@@ -17,7 +17,7 @@ class TradeCode < ActiveRecord::Base
     :name_en, :name_es, :name_fr
   translates :name
 
-  validates :code, :presence => true, :uniqueness => {:scope => :type}
+  validates :code, :presence => true, :uniqueness => { :scope => :type }
 
   def self.search(query)
     if query.present?

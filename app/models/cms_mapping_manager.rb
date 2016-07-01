@@ -22,7 +22,7 @@ class CmsMappingManager
     end
 
     def analyse(mapping)
-      url = URI.escape(@show_url+mapping.cms_taxon_name)
+      url = URI.escape(@show_url + mapping.cms_taxon_name)
       species = JSON.parse(RestClient.get(url)).first
       if species
         puts "setting mapping details for #{mapping.cms_taxon_name}"

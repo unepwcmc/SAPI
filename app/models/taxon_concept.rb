@@ -63,7 +63,7 @@ class TaxonConcept < ActiveRecord::Base
 
   belongs_to :dependents_updater, foreign_key: :dependents_updated_by_id, class_name: User
   belongs_to :parent, :class_name => 'TaxonConcept'
-  has_many :children, class_name: 'TaxonConcept', foreign_key: :parent_id, conditions: {name_status: ['A', 'N']}
+  has_many :children, class_name: 'TaxonConcept', foreign_key: :parent_id, conditions: { name_status: ['A', 'N'] }
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, :through => :taxonomy
@@ -157,11 +157,11 @@ class TaxonConcept < ActiveRecord::Base
     :foreign_key => :reported_taxon_concept_id
   has_many :comments, as: 'commentable'
   has_one :general_comment, class_name: 'Comment', as: 'commentable',
-    conditions: {comment_type: 'General'}
+    conditions: { comment_type: 'General' }
   has_one :nomenclature_comment, class_name: 'Comment', as: 'commentable',
-    conditions: {comment_type: 'Nomenclature'}
+    conditions: { comment_type: 'Nomenclature' }
   has_one :distribution_comment, class_name: 'Comment', as: 'commentable',
-    conditions: {comment_type: 'Distribution'}
+    conditions: { comment_type: 'Distribution' }
   has_many :parent_reassignments,
     class_name: 'NomenclatureChange::ParentReassignment',
     as: :reassignable,
@@ -198,7 +198,7 @@ class TaxonConcept < ActiveRecord::Base
 
   translates :nomenclature_note
 
-  scope :at_parent_ranks, lambda{ |rank|
+  scope :at_parent_ranks, lambda { |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position >= ?
@@ -211,7 +211,7 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
-  scope :at_ancestor_ranks, lambda{ |rank|
+  scope :at_ancestor_ranks, lambda { |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position < ?
@@ -221,7 +221,7 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
-  scope :at_self_and_ancestor_ranks, lambda{ |rank|
+  scope :at_self_and_ancestor_ranks, lambda { |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position <= ?
@@ -240,7 +240,7 @@ class TaxonConcept < ActiveRecord::Base
           WHERE tc.id = ANY (ARRAY#{taxon_ids.map(&:to_i)})
           ORDER BY tc.id
         SQL
-      ).map{ |row| row['full_name']}
+      ).map { |row| row['full_name'] }
     end
   end
 
@@ -349,7 +349,7 @@ class TaxonConcept < ActiveRecord::Base
 
   def inherited_standard_taxon_concept_references
     ref_ids = taxon_concept_references.map(&:reference_id)
-    standard_taxon_concept_references.keep_if{ |ref| !ref_ids.include? ref.id }
+    standard_taxon_concept_references.keep_if { |ref| !ref_ids.include? ref.id }
   end
 
   def expected_full_name(parent)
@@ -420,7 +420,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def init_accepted_taxa(new_ids)
-    return [[],[]] unless ['S', 'T', 'H'].include?(name_status)
+    return [[], []] unless ['S', 'T', 'H'].include?(name_status)
     current_ids =
       case name_status
       when 'S' then accepted_names.pluck(:id)
@@ -454,11 +454,11 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def self.sanitize_full_name(some_full_name)
-    #strip ranks
+    # strip ranks
     if some_full_name =~ /\A(.+)\s+(#{Rank.dict.join('|')})\s*\Z/
       some_full_name = $1
     end
-    #strip redundant whitespace between words
+    # strip redundant whitespace between words
     some_full_name = some_full_name.split(/\s/).join(' ').capitalize
   end
 

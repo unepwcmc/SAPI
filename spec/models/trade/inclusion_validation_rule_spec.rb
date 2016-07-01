@@ -18,7 +18,7 @@
 require 'spec_helper'
 
 describe Trade::InclusionValidationRule, :drops_tables => true do
-  let(:annual_report_upload){
+  let(:annual_report_upload) {
     annual_report = build(
       :annual_report_upload,
       :point_of_view => 'E'
@@ -26,7 +26,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
     annual_report.save(:validate => false)
     annual_report
   }
-  let(:sandbox_klass){
+  let(:sandbox_klass) {
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   }
   describe :validation_errors do
@@ -40,7 +40,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :parent => genus
         )
       end
-      subject{
+      subject {
         create(
           :inclusion_validation_rule,
           :column_names => ['taxon_name'],
@@ -48,7 +48,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :is_strict => true
         )
       }
-      specify{
+      specify {
         subject.validation_errors(annual_report_upload).should be_empty
       }
     end
@@ -58,7 +58,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         sandbox_klass.create(:trading_partner => '')
         sandbox_klass.create(:trading_partner => nil)
       end
-      let!(:france){
+      let!(:france) {
         create(
           :geo_entity,
           :geo_entity_type => country_geo_entity_type,
@@ -66,7 +66,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :iso_code2 => 'FR'
         )
       }
-      subject{
+      subject {
         create(
           :inclusion_validation_rule,
           :column_names => ['trading_partner'],
@@ -74,7 +74,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           :is_strict => true
         )
       }
-      specify{
+      specify {
         subject.validation_errors(annual_report_upload).size.should == 1
       }
     end
@@ -97,10 +97,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         before(:each) do
           sandbox_klass.create(:term_code => 'CAP', :unit_code => 'BAG')
         end
-        subject{
+        subject {
           create_term_unit_validation
         }
-        specify{
+        specify {
           subject.validation_errors(annual_report_upload).size.should == 1
         }
       end
@@ -108,10 +108,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         before(:each) do
           sandbox_klass.create(:term_code => 'CAP', :unit_code => '')
         end
-        subject{
+        subject {
           create_term_unit_validation
         }
-        specify{
+        specify {
           subject.validation_errors(annual_report_upload).size.should == 1
         }
       end
@@ -127,10 +127,10 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         sandbox_klass.create(:term_code => 'CAV', :purpose_code => 'P')
         sandbox_klass.create(:term_code => 'CAV', :purpose_code => '')
       end
-      subject{
+      subject {
         create_term_purpose_validation
       }
-      specify{
+      specify {
         subject.validation_errors(annual_report_upload).size.should == 2
       }
     end
@@ -141,7 +141,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create(:term, :code => "BAL")
         @pair = create(:trade_taxon_concept_term_pair, :term_id => cav.id, :taxon_concept_id => @genus.id)
       end
-      subject{
+      subject {
         create_taxon_concept_term_validation
       }
       context "when accepted name" do
@@ -150,7 +150,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           sandbox_klass.create(:term_code => 'CAV', :taxon_name => @species.full_name)
           sandbox_klass.create(:term_code => 'BAL', :taxon_name => @species.full_name)
         end
-        specify{
+        specify {
           subject.validation_errors(annual_report_upload).size.should == 1
         }
       end
@@ -166,7 +166,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           sandbox_klass.create(:term_code => 'CAV', :taxon_name => @hybrid.full_name)
           sandbox_klass.create(:term_code => 'BAL', :taxon_name => @hybrid.full_name)
         end
-        specify{
+        specify {
           subject.validation_errors(annual_report_upload).size.should == 1
         }
       end

@@ -23,26 +23,26 @@
 require 'spec_helper'
 
 describe Trade::SandboxTemplate, :drops_tables => true do
-  let(:annual_report_upload){
+  let(:annual_report_upload) {
     aru = build(:annual_report_upload)
     aru.save(:validate => false)
     aru
   }
-  let(:sandbox_klass){
+  let(:sandbox_klass) {
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   }
-  let(:canis){
+  let(:canis) {
     create_cites_eu_genus(
       :taxon_name => create(:taxon_name, :scientific_name => 'Canis')
     )
   }
-  let(:canis_lupus){
+  let(:canis_lupus) {
     create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'lupus'),
       :parent => canis
     )
   }
-  let(:canis_aureus){
+  let(:canis_aureus) {
     create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'aureus'),
       :parent => canis
@@ -66,7 +66,7 @@ describe Trade::SandboxTemplate, :drops_tables => true do
     end
     specify {
       sandbox_klass.update_batch(
-        {:taxon_name => 'Canis aureus'},
+        { :taxon_name => 'Canis aureus' },
         [@shipment1.id]
       )
       @shipment1.reload.taxon_concept_id.should == canis_aureus.id

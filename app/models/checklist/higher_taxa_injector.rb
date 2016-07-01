@@ -26,7 +26,7 @@ class Checklist::HigherTaxaInjector
   def run
     res = []
     @taxon_concepts.each_with_index do |tc, i|
-      prev_item = (i > 0 ? @taxon_concepts[i-1] : nil)
+      prev_item = (i > 0 ? @taxon_concepts[i - 1] : nil)
       res += higher_taxa_headers(prev_item, tc).map do |ht|
         Checklist::HigherTaxaItem.new(ht)
       end
@@ -36,13 +36,13 @@ class Checklist::HigherTaxaInjector
   end
 
   def run_summary
-    @expand_headers = false #use this only for collapsed headers
+    @expand_headers = false # use this only for collapsed headers
     # such as the Checklist or Species+ website
     res = []
     current_higher_taxon = nil
     current_higher_taxon_children_ids = []
     @taxon_concepts.each_with_index do |tc, i|
-      prev_item = (i > 0 ? @taxon_concepts[i-1] : nil)
+      prev_item = (i > 0 ? @taxon_concepts[i - 1] : nil)
       higher_taxon = higher_taxa_headers(prev_item, tc).first
       if higher_taxon
         res.push({
@@ -62,8 +62,8 @@ class Checklist::HigherTaxaInjector
     res
   end
 
-  #returns array of HigherTaxaItems that need to be inserted
-  #between prev_item and curr_item in the taxonomic layout
+  # returns array of HigherTaxaItems that need to be inserted
+  # between prev_item and curr_item in the taxonomic layout
   def higher_taxa_headers(prev_item, curr_item)
     ranks =
       if prev_item.nil?
@@ -86,7 +86,7 @@ class Checklist::HigherTaxaInjector
     ranks = [ranks.last].compact unless @expand_headers
 
     res = []
-    @last_ancestor_ids = @header_ranks.map{ |rank| curr_item.send("#{rank.downcase}_id") }
+    @last_ancestor_ids = @header_ranks.map { |rank| curr_item.send("#{rank.downcase}_id") }
     ranks.each_with_index do |rank, idx|
       higher_taxon_id = curr_item.send("#{rank.downcase}_id")
 

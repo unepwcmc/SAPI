@@ -91,9 +91,9 @@ class TradeRestriction < ActiveRecord::Base
       to_hash.
       symbolize_keys!.sort.
       to_s
-    )+"_cites_#{self.to_s.downcase}s.csv"
-    if !File.file?(path+file_name)
-      self.to_csv(path+file_name, filters)
+    ) + "_cites_#{self.to_s.downcase}s.csv"
+    if !File.file?(path + file_name)
+      self.to_csv(path + file_name, filters)
     end
     [
       path + file_name,
@@ -120,7 +120,7 @@ class TradeRestriction < ActiveRecord::Base
         trade_restrictions.notes ASC')
   end
 
-  #Gets the display text for each CSV_COLUMNS
+  # Gets the display text for each CSV_COLUMNS
   def self.csv_columns_headers
     self::CSV_COLUMNS.map do |b|
       Array(b).first
@@ -135,7 +135,7 @@ class TradeRestriction < ActiveRecord::Base
       when :semicolon then ';'
       else ','
       end
-    CSV.open(file_path, 'wb', {:col_sep => csv_separator_char}) do |csv|
+    CSV.open(file_path, 'wb', { :col_sep => csv_separator_char }) do |csv|
       csv << Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +
         ['Remarks'] + self.csv_columns_headers
       ids = []

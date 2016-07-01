@@ -11,7 +11,7 @@ namespace :import do
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
-      #import all distinct tags to both PresetTags and Tags table
+      # import all distinct tags to both PresetTags and Tags table
       puts "There are #{PresetTag.where(:model => 'Distribution').count} distribution tags"
       puts "There are #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
       puts "ADDING: preset_tags and tags"
@@ -50,12 +50,11 @@ namespace :import do
             SELECT DISTINCT legacy_id, rank, geo_entity_type, iso_code2, regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
             FROM #{TMP_TABLE}
             WHERE
-               #{ if taxonomy_name == Taxonomy::CITES_EU
-                    "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
-                  else
-                    "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
-                  end
-               }
+              #{if taxonomy_name == Taxonomy::CITES_EU
+                  "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
+                else
+                  "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
+                end}
           )
           INSERT INTO taggings(tag_id, taggable_id, taggable_type, context, created_at)
           SELECT subquery.*, NOW()

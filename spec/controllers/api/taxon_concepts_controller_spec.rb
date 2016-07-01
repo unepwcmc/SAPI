@@ -10,7 +10,7 @@ describe Api::V1::TaxonConceptsController, :type => :controller do
           :geo_entity_scope => 'cites',
           :page => 1
         }
-      }.to change{Ahoy::Event.count}.by(1)
+      }.to change { Ahoy::Event.count }.by(1)
       expect(Ahoy::Event.last.visit_id).to_not be(nil)
 
       expect {
@@ -20,7 +20,7 @@ describe Api::V1::TaxonConceptsController, :type => :controller do
           :geo_entity_scope => 'cites',
           :page => 1
         }
-      }.to change{Ahoy::Event.count}.by(1)
+      }.to change { Ahoy::Event.count }.by(1)
       expect(@ahoy_event1).to eq(@ahoy_event2)
     end
   end

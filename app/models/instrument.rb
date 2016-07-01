@@ -12,7 +12,7 @@
 class Instrument < ActiveRecord::Base
   attr_accessible :designation_id, :name
 
-  validates :name, :presence => true, :uniqueness => { :scope => :designation_id}
+  validates :name, :presence => true, :uniqueness => { :scope => :designation_id }
 
   belongs_to :designation
   has_many :taxon_instruments

@@ -1,13 +1,13 @@
 FactoryGirl.define do
 
   factory :species_listing do
-    sequence(:name) {|n| "Appendix #{n}"}
-    sequence(:abbreviation) {|n| "#{n}"}
+    sequence(:name) { |n| "Appendix #{n}" }
+    sequence(:abbreviation) { |n| "#{n}" }
     designation
   end
 
   factory :change_type do
-    sequence(:name) {|n| "change#{n}"}
+    sequence(:name) { |n| "change#{n}" }
     display_name_en { name }
     designation
   end
@@ -17,8 +17,6 @@ FactoryGirl.define do
     change_type
     taxon_concept
     effective_at '2012-01-01'
-    #is_current false
-    #inclusion_taxon_concept_id nil
     parent_id nil
   end
 

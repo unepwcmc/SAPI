@@ -9,7 +9,9 @@ class Elibrary::DocumentsImporter
     @document_group = $1
   end
 
-  def table_name; :"elibrary_documents_#{@document_group}_import"; end
+  def table_name
+    :"elibrary_documents_#{@document_group}_import"
+  end
 
   def columns_with_type
     [
@@ -43,10 +45,10 @@ class Elibrary::DocumentsImporter
 
   def run_preparatory_queries
     ActiveRecord::Base.connection.execute("DELETE FROM #{table_name} WHERE DocumentTypeName LIKE 'CoP Proceedings%'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentTitle = NULL WHERE DocumentTitle='NULL'" )
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentDate = NULL WHERE DocumentDate='NULL'" )
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET EventDate = NULL WHERE EventDate='NULL'" )
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentFileName = NULL WHERE DocumentFileName='NULL'" )
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentTitle = NULL WHERE DocumentTitle='NULL'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentDate = NULL WHERE DocumentDate='NULL'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET EventDate = NULL WHERE EventDate='NULL'")
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentFileName = NULL WHERE DocumentFileName='NULL'")
   end
 
   def run_queries

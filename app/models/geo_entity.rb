@@ -40,9 +40,9 @@ class GeoEntity < ActiveRecord::Base
   has_many :users
   validates :geo_entity_type_id, :presence => true
   validates :iso_code2, :uniqueness => true, :allow_blank => true
-  validates :iso_code2, :presence => true, :length => {:is => 2},
+  validates :iso_code2, :presence => true, :length => { :is => 2 },
     :if => :is_country?
-  validates :iso_code3, :uniqueness => true, :length => {:is => 3},
+  validates :iso_code3, :uniqueness => true, :length => { :is => 3 },
     :allow_blank => true, :if => :is_country?
 
   # geo entities containing those given by ids
@@ -101,8 +101,8 @@ class GeoEntity < ActiveRecord::Base
     GeoEntity.contained_geo_entities(self.id)
   end
 
-  def as_json(options={})
-    super(:only =>[:id, :iso_code2, :is_current], :methods => [:name])
+  def as_json(options = {})
+    super(:only => [:id, :iso_code2, :is_current], :methods => [:name])
   end
 
   def self.search(query)
@@ -130,7 +130,7 @@ class GeoEntity < ActiveRecord::Base
       'EU opinions' => eu_opinions,
       'shipments (exporter)' => exported_shipments,
       'shipments (importer)' => imported_shipments,
-      'shipments (origin)' =>originated_shipments
+      'shipments (origin)' => originated_shipments
     }
   end
 

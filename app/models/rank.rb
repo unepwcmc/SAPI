@@ -53,7 +53,7 @@ class Rank < ActiveRecord::Base
       Rank::SPECIES
     elsif name != Rank::KINGDOM
       rank_index = self.class.dict.index(name)
-      self.class.dict[rank_index-1]
+      self.class.dict[rank_index - 1]
     else
       nil
     end

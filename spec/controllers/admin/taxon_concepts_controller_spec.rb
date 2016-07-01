@@ -21,13 +21,13 @@ describe Admin::TaxonConceptsController do
     end
     it "redirects if 1 result" do
       get :index, search_params: {
-        taxonomy: {id: cites_eu.id}, scientific_name: 'Foobarus i'
+        taxonomy: { id: cites_eu.id }, scientific_name: 'Foobarus i'
       }
       response.should redirect_to(admin_taxon_concept_names_path(@taxon))
     end
     it "assigns taxa in taxonomic order" do
       get :index, search_params: {
-        taxonomy: {id: cites_eu.id}, scientific_name: 'Foobarus'
+        taxonomy: { id: cites_eu.id }, scientific_name: 'Foobarus'
       }
       assigns(:taxon_concepts).should eq([@taxon.parent, @taxon])
     end
@@ -50,25 +50,25 @@ describe Admin::TaxonConceptsController do
       response.should render_template("new")
     end
     it "renders new_synonym when not successful S" do
-      xhr :post, :create, taxon_concept: {name_status: 'S'}
+      xhr :post, :create, taxon_concept: { name_status: 'S' }
       response.should render_template("new_synonym")
     end
     it "renders new_hybrid when not successful H" do
-      xhr :post, :create, taxon_concept: {name_status: 'H'}
+      xhr :post, :create, taxon_concept: { name_status: 'H' }
       response.should render_template("new_hybrid")
     end
     it "renders new_synonym when not successful N" do
-      xhr :post, :create, taxon_concept: {name_status: 'N'}
+      xhr :post, :create, taxon_concept: { name_status: 'N' }
       response.should render_template("new_n_name")
     end
   end
 
   describe "XHR PUT update" do
-    let(:taxon_concept){ create(:taxon_concept) }
+    let(:taxon_concept) { create(:taxon_concept) }
     context "when JSON" do
       it "responds with 200 when successful" do
         xhr :put, :update, :format => 'json', :id => taxon_concept.id,
-          :taxon_concept => { }
+          :taxon_concept => {}
         response.should be_success
       end
       it "responds with json error when not successful" do
@@ -92,7 +92,7 @@ describe Admin::TaxonConceptsController do
   end
 
   describe "DELETE destroy" do
-    let(:taxon_concept){ create(:taxon_concept) }
+    let(:taxon_concept) { create(:taxon_concept) }
     it "redirects after delete" do
       delete :destroy, :id => taxon_concept.id
       response.should redirect_to(admin_taxon_concepts_url)
@@ -127,14 +127,14 @@ describe Admin::TaxonConceptsController do
   end
 
   describe "XHR GET JSON autocomplete" do
-    let!(:taxon_concept){
+    let!(:taxon_concept) {
       create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'AAA')
       )
     }
     it "returns properly formatted json" do
       xhr :get, :autocomplete, :format => 'json',
-        :search_params => {:scientific_name => 'AAA'}
+        :search_params => { :scientific_name => 'AAA' }
       response.body.should have_json_size(1)
       parse_json(response.body, "0/full_name").should == 'Aaa'
     end

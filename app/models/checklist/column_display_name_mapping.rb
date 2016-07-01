@@ -31,7 +31,7 @@ module Checklist::ColumnDisplayNameMapping
     :all_distribution => 'All_DistributionFullNames',
     :native_distribution => 'NativeDistributionFullNames',
     :introduced_distribution => 'Introduced_Distribution',
-    :introduced_uncertain_distribution =>'Introduced(?)_Distribution',
+    :introduced_uncertain_distribution => 'Introduced(?)_Distribution',
     :reintroduced_distribution => 'Reintroduced_Distribution',
     :extinct_distribution => 'Extinct_Distribution',
     :extinct_uncertain_distribution => 'Extinct(?)_Distribution',

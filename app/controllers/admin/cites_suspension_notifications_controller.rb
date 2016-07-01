@@ -1,5 +1,5 @@
 class Admin::CitesSuspensionNotificationsController < Admin::EventsController
-  #this needs to be specified, because otherwise defaults to 'event'
+  # this needs to be specified, because otherwise defaults to 'event'
   defaults :resource_class => CitesSuspensionNotification,
     :collection_name => 'cites_suspension_notifications', :instance_name => 'cites_suspension_notification'
 

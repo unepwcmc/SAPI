@@ -1,4 +1,3 @@
-#Encoding: utf-8
 require 'spec_helper'
 
 describe DashboardStats do
@@ -38,7 +37,7 @@ describe DashboardStats do
       )
     end
     context "when no time range specified" do
-      subject{
+      subject {
         DashboardStats.new(@argentina, {
           :kingdom => 'Animalia', :trade_limit => 5,
           :time_range_start => 2010, :time_range_end => 2013
@@ -51,7 +50,7 @@ describe DashboardStats do
       end
     end
     context "when time range specified" do
-      subject{
+      subject {
         DashboardStats.new(@argentina, {
           :kingdom => 'Animalia',
           :trade_limit => 5,

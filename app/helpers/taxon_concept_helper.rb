@@ -1,4 +1,3 @@
-#encoding: utf-8
 module TaxonConceptHelper
   def admin_taxon_concept_title
     content_tag(:div, :class => 'admin-header') do
@@ -73,7 +72,7 @@ module TaxonConceptHelper
     admin_new_modal(
       resource: 'taxon_concept_synonym',
       title: options[:title] || nil
-    ){ nested ? '' : render('synonym_form') }
+    ) { nested ? '' : render('synonym_form') }
   end
 
   def admin_new_trade_name_modal(options = {})
@@ -81,7 +80,7 @@ module TaxonConceptHelper
     admin_new_modal(
       resource: 'taxon_concept_trade_name',
       title: options[:title] || nil
-    ){ nested ? '' : render('trade_name_form') }
+    ) { nested ? '' : render('trade_name_form') }
   end
 
   def admin_new_hybrid_modal(options = {})
@@ -89,7 +88,7 @@ module TaxonConceptHelper
     admin_new_modal(
       resource: 'taxon_concept_hybrid',
       title: options[:title] || nil
-    ){ nested ? '' : render('hybrid_form') }
+    ) { nested ? '' : render('hybrid_form') }
   end
 
   def admin_new_n_name_modal(options = {})
@@ -97,7 +96,7 @@ module TaxonConceptHelper
     admin_new_modal(
       resource: 'taxon_concept_n_name',
       title: options[:title] || nil
-    ){ nested ? '' : render('n_name_form') }
+    ) { nested ? '' : render('n_name_form') }
   end
 
   def admin_new_taxon_concept_modal(options = {})
@@ -105,7 +104,7 @@ module TaxonConceptHelper
     admin_new_modal(
       resource: 'taxon_concept',
       title: options[:title] || nil
-    ){ nested ? '' : render('form') }
+    ) { nested ? '' : render('form') }
   end
 
   def admin_add_new_distribution_button
@@ -131,10 +130,10 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_distribution_modal( nested = false)
+  def admin_new_distribution_modal(nested = false)
     admin_new_modal(
       :resource => 'distribution'
-    ){ nested ? '' : render('admin/distributions/form') }
+    ) { nested ? '' : render('admin/distributions/form') }
   end
 
   def admin_edit_distribution_modal(nested = false)
@@ -142,7 +141,7 @@ module TaxonConceptHelper
       :resource => 'distribution',
       :id => 'edit-distribution',
       :title => 'Edit Distribution'
-    ){ nested ? '' : render('admin/distributions/form') }
+    ) { nested ? '' : render('admin/distributions/form') }
   end
 
   def admin_add_new_reference_button
@@ -166,7 +165,7 @@ module TaxonConceptHelper
   def admin_new_cites_suspension_modal
     admin_new_modal(
       :resource => 'cites_suspension'
-    ){ '' }
+    ) { '' }
   end
 
   def admin_add_new_common_name_button
@@ -182,7 +181,7 @@ module TaxonConceptHelper
   def admin_new_common_name_modal
     admin_new_modal(
       :resource => 'common_name', :save_and_reopen => true
-    ){ '' }
+    ) { '' }
   end
 
   def excluded_taxon_concepts_tooltip(obj)
@@ -229,16 +228,16 @@ module TaxonConceptHelper
 
   def taxon_concept_internal_note_form(comment)
     form_for [:admin, @taxon_concept, comment] do |f|
-      content_tag(:table, style:'width:100%') do
+      content_tag(:table, style: 'width:100%') do
         content_tag(:tr) do
-          content_tag(:td, style:'width:30%') do
+          content_tag(:td, style: 'width:30%') do
             taxon_concept_internal_note_label(comment)
           end +
           content_tag(:td) do
             f.text_area(
               :note,
               rows: 4,
-              style:'width:100%'
+              style: 'width:100%'
             ) +
             f.hidden_field(:comment_type) +
             f.submit('Update', class: 'btn btn-primary')
@@ -250,9 +249,9 @@ module TaxonConceptHelper
 
   def taxon_concept_internal_note_display(comment)
     return '' unless comment
-    content_tag(:table, style:'width:100%') do
+    content_tag(:table, style: 'width:100%') do
       content_tag(:tr) do
-        content_tag(:td, style:'width:30%') do
+        content_tag(:td, style: 'width:30%') do
           taxon_concept_internal_note_label(comment)
         end +
         content_tag(:td, comment.note)
@@ -262,7 +261,7 @@ module TaxonConceptHelper
 
   def taxon_concept_internal_note_tab_display(comment)
     if comment && comment.note.present?
-      content_tag(:div, {class: 'alert alert-info'}) do
+      content_tag(:div, { class: 'alert alert-info' }) do
         taxon_concept_internal_note_display(comment)
       end
     end

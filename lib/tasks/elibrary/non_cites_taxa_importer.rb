@@ -7,7 +7,9 @@ class Elibrary::NonCitesTaxaImporter
     @file_name = file_name
   end
 
-  def table_name; :elibrary_non_cites_taxa_import; end
+  def table_name
+    :elibrary_non_cites_taxa_import
+  end
 
   def columns_with_type
     [

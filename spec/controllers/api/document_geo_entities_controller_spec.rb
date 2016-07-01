@@ -3,20 +3,20 @@ require 'spec_helper'
 describe Api::V1::DocumentGeoEntitiesController do
   context "when searching by taxon concept name" do
     include_context "Canis lupus"
-    let!(:document_about_wolf_in_poland){
+    let!(:document_about_wolf_in_poland) {
       d = create(:document)
       c = create(:document_citation, document: d)
       create(:document_citation_taxon_concept, taxon_concept_id: @species.id, document_citation: c)
       create(:document_citation_geo_entity, geo_entity: poland, document_citation: c)
       d
     }
-    let!(:document_not_about_wolf_not_in_poland){
+    let!(:document_not_about_wolf_not_in_poland) {
       d = create(:document)
       c = create(:document_citation, document: d)
       create(:document_citation_geo_entity, geo_entity: nepal, document_citation: c)
       d
     }
-    let!(:document_not_about_wolf_in_poland){
+    let!(:document_not_about_wolf_in_poland) {
       d = create(:document)
       c = create(:document_citation, document: d)
       create(:document_citation_geo_entity, geo_entity: poland, document_citation: c)

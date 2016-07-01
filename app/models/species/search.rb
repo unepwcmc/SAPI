@@ -69,7 +69,7 @@ class Species::Search
 
     unless @scientific_name.blank?
       @query = @query.
-        by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => true}).
+        by_name(@scientific_name, { :synonyms => true, :subspecies => true, :common_names => true }).
         select(
           "taxon_concepts_mview.*, matching_names.matched_names_ary AS synonyms_ary"
         )

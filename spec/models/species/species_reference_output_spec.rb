@@ -14,7 +14,7 @@ describe Species::SpeciesReferenceOutputExport do
       specify { subject.export.should be_false }
     end
     context "when results" do
-      before(:each){
+      before(:each) {
         species = create_cites_eu_species
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/species_reference_output")
@@ -22,7 +22,7 @@ describe Species::SpeciesReferenceOutputExport do
         Species::SpeciesReferenceOutputExport.any_instance.stub(:path).
           and_return("spec/public/downloads/species_reference_output/")
       }
-      after(:each){
+      after(:each) {
         FileUtils.remove_dir("spec/public/downloads/species_reference_output", true)
       }
       subject {

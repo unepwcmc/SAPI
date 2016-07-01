@@ -30,7 +30,7 @@ class Species::ExportsController < ApplicationController
         end
       }
       format.json {
-        render :json => {:total => result.is_a?(Array) ? 1 : 0}
+        render :json => { :total => result.is_a?(Array) ? 1 : 0 }
       }
     end
   end

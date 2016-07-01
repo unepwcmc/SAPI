@@ -3,8 +3,8 @@ require 'spec_helper'
 describe NomenclatureChange::FullReassignment do
 
   describe 'process' do
-    let(:old_tc){ create_cites_eu_species }
-    let(:new_tc){ create_cites_eu_species }
+    let(:old_tc) { create_cites_eu_species }
+    let(:new_tc) { create_cites_eu_species }
     subject { NomenclatureChange::FullReassignment.new(old_tc, new_tc) }
 
     context 'when distributions present' do
@@ -12,7 +12,7 @@ describe NomenclatureChange::FullReassignment do
         create(:distribution, taxon_concept: old_tc)
         subject.process
       end
-      specify{ expect(new_tc.distributions.count).to eq(1) }
+      specify { expect(new_tc.distributions.count).to eq(1) }
     end
 
     context 'when references present' do
@@ -20,7 +20,7 @@ describe NomenclatureChange::FullReassignment do
         create(:taxon_concept_reference, taxon_concept: old_tc)
         subject.process
       end
-      specify{ expect(new_tc.taxon_concept_references.count).to eq(1) }
+      specify { expect(new_tc.taxon_concept_references.count).to eq(1) }
     end
 
     context 'when listing changes present' do
@@ -28,7 +28,7 @@ describe NomenclatureChange::FullReassignment do
         create_cites_I_addition(taxon_concept: old_tc)
         subject.process
       end
-      specify{ expect(new_tc.listing_changes.count).to eq(1) }
+      specify { expect(new_tc.listing_changes.count).to eq(1) }
     end
 
     context 'when EU Opinions present' do
@@ -36,7 +36,7 @@ describe NomenclatureChange::FullReassignment do
         create(:eu_opinion, taxon_concept: old_tc)
         subject.process
       end
-      specify{ expect(new_tc.eu_opinions.count).to eq(1) }
+      specify { expect(new_tc.eu_opinions.count).to eq(1) }
     end
 
     context 'when EU Suspensions present' do
@@ -44,7 +44,7 @@ describe NomenclatureChange::FullReassignment do
         create(:eu_suspension, taxon_concept: old_tc)
         subject.process
       end
-      specify{ expect(new_tc.eu_suspensions.count).to eq(1) }
+      specify { expect(new_tc.eu_suspensions.count).to eq(1) }
     end
 
     context 'when CITES Quotas present' do
@@ -52,7 +52,7 @@ describe NomenclatureChange::FullReassignment do
         create(:quota, taxon_concept: old_tc, geo_entity: create(:geo_entity))
         subject.process
       end
-      specify{ expect(new_tc.quotas.count).to eq(1) }
+      specify { expect(new_tc.quotas.count).to eq(1) }
     end
 
     context 'when CITES Suspensions present' do
@@ -62,7 +62,7 @@ describe NomenclatureChange::FullReassignment do
         )
         subject.process
       end
-      specify{ expect(new_tc.cites_suspensions.count).to eq(1) }
+      specify { expect(new_tc.cites_suspensions.count).to eq(1) }
     end
 
     context 'when common names present' do
@@ -70,7 +70,7 @@ describe NomenclatureChange::FullReassignment do
         create(:taxon_common, taxon_concept: old_tc)
         subject.process
       end
-      specify{ expect(new_tc.taxon_commons.count).to eq(1) }
+      specify { expect(new_tc.taxon_commons.count).to eq(1) }
     end
 
   end

@@ -20,7 +20,7 @@ describe Checklist::Checklist do
             :geo_entity_type_id => region_type.id)
     }
     let(:summary) {
-      Checklist::Checklist.summarise_filters({:cites_region_ids => [region.id]})
+      Checklist::Checklist.summarise_filters({ :cites_region_ids => [region.id] })
     }
     specify {
       summary.should == "Results from 1 region"
@@ -37,7 +37,7 @@ describe Checklist::Checklist do
       [region.id, region2.id]
     }
     let(:summary) {
-      Checklist::Checklist.summarise_filters({:cites_region_ids => regions})
+      Checklist::Checklist.summarise_filters({ :cites_region_ids => regions })
     }
     specify {
       summary.should == "Results from 2 regions"

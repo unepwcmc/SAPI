@@ -3,74 +3,74 @@ require 'spec_helper'
 describe NomenclatureChange::Lump::Processor do
   include_context 'lump_definitions'
 
-  before(:each){
+  before(:each) {
     synonym_relationship_type
     @shipment = create(:shipment,
       taxon_concept: input_species1,
       reported_taxon_concept: input_species1
     )
   }
-  let(:processor){ NomenclatureChange::Lump::Processor.new(lump) }
+  let(:processor) { NomenclatureChange::Lump::Processor.new(lump) }
   describe :run do
     context "when outputs are existing taxa" do
-      let!(:lump){ lump_with_inputs_and_output_existing_taxon }
-      specify { expect{ processor.run }.not_to change(TaxonConcept, :count) }
-      specify { expect{ processor.run }.not_to change(output_species, :full_name) }
+      let!(:lump) { lump_with_inputs_and_output_existing_taxon }
+      specify { expect { processor.run }.not_to change(TaxonConcept, :count) }
+      specify { expect { processor.run }.not_to change(output_species, :full_name) }
       context "relationships and trade" do
-        before(:each){ processor.run }
-        specify{ expect(input_species1.reload).to be_is_synonym }
-        specify{ expect(input_species1.accepted_names).to include(output_species) }
-        specify{ expect(input_species1.shipments).to be_empty }
-        specify{ expect(input_species1.reported_shipments).to include(@shipment) }
-        specify{ expect(output_species.shipments).to include(@shipment) }
+        before(:each) { processor.run }
+        specify { expect(input_species1.reload).to be_is_synonym }
+        specify { expect(input_species1.accepted_names).to include(output_species) }
+        specify { expect(input_species1.shipments).to be_empty }
+        specify { expect(input_species1.reported_shipments).to include(@shipment) }
+        specify { expect(output_species.shipments).to include(@shipment) }
       end
     end
     context "when output is new taxon" do
-      let!(:lump){ lump_with_inputs_and_output_new_taxon }
-      specify { expect{ processor.run }.to change(TaxonConcept, :count).by(1) }
+      let!(:lump) { lump_with_inputs_and_output_new_taxon }
+      specify { expect { processor.run }.to change(TaxonConcept, :count).by(1) }
       context "relationships and trade" do
-        before(:each){ processor.run }
-        specify{ expect(input_species1.reload).to be_is_synonym }
-        specify{ expect(input_species1.accepted_names).to include(lump.output.new_taxon_concept) }
-        specify{ expect(lump.output.new_taxon_concept.shipments).to include(@shipment) }
+        before(:each) { processor.run }
+        specify { expect(input_species1.reload).to be_is_synonym }
+        specify { expect(input_species1.accepted_names).to include(lump.output.new_taxon_concept) }
+        specify { expect(lump.output.new_taxon_concept.shipments).to include(@shipment) }
       end
     end
     context "when output is existing taxon with new status" do
-      let(:output_species2){ create_cites_eu_species(:name_status => 'S') }
-      let!(:lump){ lump_with_inputs_and_output_status_change }
-      specify { expect{ processor.run }.not_to change(TaxonConcept, :count) }
-      specify { expect{ processor.run }.not_to change(output_species, :full_name) }
+      let(:output_species2) { create_cites_eu_species(:name_status => 'S') }
+      let!(:lump) { lump_with_inputs_and_output_status_change }
+      specify { expect { processor.run }.not_to change(TaxonConcept, :count) }
+      specify { expect { processor.run }.not_to change(output_species, :full_name) }
       context "relationships and trade" do
-        before(:each){ processor.run }
-        specify{ expect(input_species1.reload).to be_is_synonym }
-        specify{ expect(input_species1.accepted_names).to include(output_species) }
-        specify{ expect(output_species.shipments).to include(@shipment) }
+        before(:each) { processor.run }
+        specify { expect(input_species1.reload).to be_is_synonym }
+        specify { expect(input_species1.accepted_names).to include(output_species) }
+        specify { expect(output_species.shipments).to include(@shipment) }
       end
     end
     context "when output is existing taxon with new name" do
-      let(:input_genus1){ create_cites_eu_genus }
-      let(:input_species1){ create_cites_eu_species(parent: input_genus1) }
-      let(:output_species2){ create_cites_eu_subspecies }
-      let!(:lump){ lump_with_inputs_and_output_name_change }
-      specify { expect{ processor.run }.to change(TaxonConcept, :count).by(1) }
-      specify { expect{ processor.run }.not_to change(output_species, :full_name) }
+      let(:input_genus1) { create_cites_eu_genus }
+      let(:input_species1) { create_cites_eu_species(parent: input_genus1) }
+      let(:output_species2) { create_cites_eu_subspecies }
+      let!(:lump) { lump_with_inputs_and_output_name_change }
+      specify { expect { processor.run }.to change(TaxonConcept, :count).by(1) }
+      specify { expect { processor.run }.not_to change(output_species, :full_name) }
       context "relationships and trade" do
-        before(:each){ processor.run }
-        specify{ expect(input_species1.reload).to be_is_synonym }
-        specify{ expect(input_species1.reload.parent).to eq(input_genus1) }
-        specify{ expect(input_species1.accepted_names).to include(lump.output.new_taxon_concept) }
-        specify{ expect(lump.output.new_taxon_concept.shipments).to include(@shipment) }
+        before(:each) { processor.run }
+        specify { expect(input_species1.reload).to be_is_synonym }
+        specify { expect(input_species1.reload.parent).to eq(input_genus1) }
+        specify { expect(input_species1.accepted_names).to include(lump.output.new_taxon_concept) }
+        specify { expect(lump.output.new_taxon_concept.shipments).to include(@shipment) }
       end
     end
 
     context "when input with children that don't change name" do
-      let!(:input_species1_child){
+      let!(:input_species1_child) {
         create_cites_eu_subspecies(parent: input_species1)
       }
-      let!(:input_species1_child_listing){
+      let!(:input_species1_child_listing) {
         create_cites_I_addition(taxon_concept: input_species1_child)
       }
-      let(:lump){
+      let(:lump) {
         create(:nomenclature_change_lump,
           inputs_attributes: {
             0 => {
@@ -90,7 +90,7 @@ describe NomenclatureChange::Lump::Processor do
           status: NomenclatureChange::Lump::LEGISLATION
         )
       }
-      before(:each){ processor.run }
+      before(:each) { processor.run }
       specify "input / output species has public nomenclature note set" do
         expect(input_species1.reload.nomenclature_note_en).to eq(' input species 1 was lumped from input species 1 and input species 2')
       end
@@ -115,16 +115,16 @@ describe NomenclatureChange::Lump::Processor do
     end
 
     context "when input with children that change name" do
-      let!(:input_species1_child){
+      let!(:input_species1_child) {
         create_cites_eu_subspecies(parent: input_species1)
       }
-      let!(:input_species1_child_listing){
+      let!(:input_species1_child_listing) {
         create_cites_I_addition(taxon_concept: input_species1_child)
       }
-      let!(:output_species_child){
+      let!(:output_species_child) {
         create_cites_eu_subspecies(parent: output_species)
       }
-      let(:lump){
+      let(:lump) {
         create(:nomenclature_change_lump,
           inputs_attributes: {
             0 => {
@@ -142,25 +142,25 @@ describe NomenclatureChange::Lump::Processor do
           status: NomenclatureChange::Lump::LEGISLATION
         )
       }
-      let(:input){ lump.inputs.first }
-      let(:output){ lump.output }
-      let(:reassignment){
+      let(:input) { lump.inputs.first }
+      let(:output) { lump.output }
+      let(:reassignment) {
         create(:nomenclature_change_parent_reassignment,
           input: input,
           reassignable_id: input_species1_child.id
         )
       }
-      let!(:reassignment_target){
+      let!(:reassignment_target) {
         create(:nomenclature_change_reassignment_target,
           reassignment: reassignment,
           output: output
         )
       }
-      let(:output_species_children){ output_species.children }
-      let(:output_species1_child){
+      let(:output_species_children) { output_species.children }
+      let(:output_species1_child) {
         output_species_children.where('id != ?', output_species_child.id).first
       }
-      before(:each){ processor.run }
+      before(:each) { processor.run }
       specify "input species has public nomenclature note set" do
         expect(input_species1.reload.nomenclature_note_en).to eq(' input species 1 has been lumped into output species')
       end
@@ -201,7 +201,7 @@ describe NomenclatureChange::Lump::Processor do
           output_species1_child.listing_changes.first.nomenclature_note_en
         ).to eq(input_species1.reload.nomenclature_note_en)
       end
-      let(:output_species_genus_name){ output_species.parent.full_name }
+      let(:output_species_genus_name) { output_species.parent.full_name }
       specify "original output species child retains higher taxa intact" do
         expect(output_species_child.data['genus_name']).to eq(output_species_genus_name)
       end
@@ -234,13 +234,13 @@ describe NomenclatureChange::Lump::Processor do
         taxon_name: create(:taxon_name, scientific_name: 'unicolor')
       )
     end
-    let!(:quota){ create(:quota, taxon_concept: input_genus_child, geo_entity: create(:geo_entity)) }
+    let!(:quota) { create(:quota, taxon_concept: input_genus_child, geo_entity: create(:geo_entity)) }
     let(:output_genus) do
       create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Paracrotalus')
       )
     end
-    let(:lump){
+    let(:lump) {
       create(:nomenclature_change_lump,
         inputs_attributes: {
           0 => { taxon_concept_id: input_genus.id },
@@ -250,19 +250,19 @@ describe NomenclatureChange::Lump::Processor do
         status: NomenclatureChange::Lump::LEGISLATION
       )
     }
-    let(:reassignment){
+    let(:reassignment) {
       create(:nomenclature_change_parent_reassignment,
         input: lump.inputs.first,
         reassignable_id: input_genus_child.id
       )
     }
-    let!(:reassignment_target){
+    let!(:reassignment_target) {
       create(:nomenclature_change_reassignment_target,
         reassignment: reassignment,
         output: lump.output
       )
     }
-    before(:each){ processor.run }
+    before(:each) { processor.run }
     specify "input genus child is a synonym" do
       expect(input_genus_child.reload.name_status).to eq('S')
     end
@@ -296,7 +296,7 @@ describe NomenclatureChange::Lump::Processor do
     end
   end
   describe :summary do
-    let(:lump){ lump_with_inputs_and_output_existing_taxon }
+    let(:lump) { lump_with_inputs_and_output_existing_taxon }
     specify { expect(processor.summary).to be_kind_of(Array) }
   end
 end

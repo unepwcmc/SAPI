@@ -1,8 +1,8 @@
 class PermitCleanupWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :admin,:backtrace => 50
+  sidekiq_options :queue => :admin, :backtrace => 50
 
-  def perform(permits_ids=[])
+  def perform(permits_ids = [])
     return if permits_ids.empty?
     sql = <<-SQL
       WITH unused_permits(id) AS (

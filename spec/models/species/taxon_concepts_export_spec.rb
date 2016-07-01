@@ -14,7 +14,7 @@ describe Species::TaxonConceptsNamesExport do
       specify { subject.export.should be_false }
     end
     context "when results" do
-      before(:each){
+      before(:each) {
         create(:taxon_concept)
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/taxon_concepts_names")
@@ -22,7 +22,7 @@ describe Species::TaxonConceptsNamesExport do
         Species::TaxonConceptsNamesExport.any_instance.stub(:path).
           and_return("spec/public/downloads/taxon_concepts_names/")
       }
-      after(:each){
+      after(:each) {
         FileUtils.remove_dir("spec/public/downloads/taxon_concepts_names", true)
       }
       subject {

@@ -55,8 +55,8 @@ class CitesSuspension < TradeRestriction
     true
   end
 
-  #Each element of CSV columns can be either an array [display_text, method]
-  #or a single symbol if the display text and the method are the same
+  # Each element of CSV columns can be either an array [display_text, method]
+  # or a single symbol if the display text and the method are the same
   CSV_COLUMNS = [
     [:start_date, :start_date_formatted], [:start_notification, :start_notification_name],
     [:end_date, :end_date_formatted], [:end_notification, :end_notification_name],

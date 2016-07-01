@@ -45,17 +45,17 @@ module Checklist::Pdf::HistoryContent
         listed_taxa_ary = []
       end
       kingdom = fetcher.next
-    end while not kingdom.empty?
+    end while !kingdom.empty?
   end
 
-  def listed_taxa(tex, listed_taxa_ary, kingdom_name='FAUNA')
+  def listed_taxa(tex, listed_taxa_ary, kingdom_name = 'FAUNA')
     tex << "\\listingtable#{kingdom_name.downcase}{"
     rows = []
     listed_taxa_ary.each do |tc|
       listed_taxon_name = listed_taxon_name(tc)
-      is_tc_row = true #it is the first row per taxon concept
+      is_tc_row = true # it is the first row per taxon concept
       tc.historic_cites_listing_changes_for_downloads.each do |lc|
-        is_lc_row = true #it is the first row per listing change
+        is_lc_row = true # it is the first row per listing change
         ann = annotation_for_language(lc, I18n.locale)
         row = []
         # tc fields
@@ -117,7 +117,7 @@ module Checklist::Pdf::HistoryContent
 
   def listed_taxon_name(taxon_concept)
     res =
-      if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
+      if ['FAMILY', 'SUBFAMILY', 'ORDER', 'CLASS'].include? taxon_concept.rank_name
         taxon_concept.full_name.upcase
       else
         taxon_concept.full_name
@@ -137,7 +137,7 @@ module Checklist::Pdf::HistoryContent
       "\\section*{\\underline{#{taxon_concept.full_name.upcase}} #{common_names}}\n"
     elsif taxon_concept.rank_name == 'ORDER' && taxon_concept.kingdom_name == 'Animalia'
       "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
-    elsif ['FAMILY','SUBFAMILY'].include? taxon_concept.rank_name
+    elsif ['FAMILY', 'SUBFAMILY'].include? taxon_concept.rank_name
       "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
     end
   end

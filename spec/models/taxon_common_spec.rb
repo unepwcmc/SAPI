@@ -15,27 +15,27 @@ require 'spec_helper'
 
 describe TaxonCommon do
   describe :update do
-    let(:language){
+    let(:language) {
       create(:language)
     }
-    let(:parent){
+    let(:parent) {
       create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
       )
     }
-    let!(:tc){
+    let!(:tc) {
       create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
       )
     }
-    let!(:another_tc){
+    let!(:another_tc) {
       create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolcatus')
       )
     }
-    let(:tc_common){
+    let(:tc_common) {
       build(
         :taxon_common,
         :taxon_concept_id => tc.id,
@@ -44,7 +44,7 @@ describe TaxonCommon do
       )
     }
     context "when common name changed" do
-      let(:another_tc_common){
+      let(:another_tc_common) {
         build(
           :taxon_common,
           :taxon_concept_id => another_tc.id,
@@ -52,7 +52,7 @@ describe TaxonCommon do
           :language_id => language.id
         )
       }
-      specify{
+      specify {
         tc_common.save
         another_tc_common.save
         tc_common.name = "Black lolcat"

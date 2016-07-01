@@ -76,7 +76,7 @@ class Trade::Shipment < ActiveRecord::Base
 
   after_validation do
     unless self.errors.empty? && self.ignore_warnings
-      #inject warnings here
+      # inject warnings here
       warnings.each { |w| self.errors[:warnings] << w }
     end
   end

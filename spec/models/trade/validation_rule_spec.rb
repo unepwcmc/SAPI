@@ -18,7 +18,7 @@
 require 'spec_helper'
 
 describe Trade::ValidationRule, :drops_tables => true do
-  let(:annual_report_upload){
+  let(:annual_report_upload) {
     annual_report = build(
       :annual_report_upload,
       :point_of_view => 'E'
@@ -26,7 +26,7 @@ describe Trade::ValidationRule, :drops_tables => true do
     annual_report.save(:validate => false)
     annual_report
   }
-  let(:sandbox_klass){
+  let(:sandbox_klass) {
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   }
 
@@ -36,13 +36,13 @@ describe Trade::ValidationRule, :drops_tables => true do
         sandbox_klass.create(:trading_partner => nil)
       end
       context 'trading_partner should not be blank' do
-        subject{
+        subject {
           create(
             :presence_validation_rule,
             :column_names => ['trading_partner']
           )
         }
-        specify{
+        specify {
           subject.validation_errors(annual_report_upload).size.should == 1
         }
       end
@@ -55,14 +55,14 @@ describe Trade::ValidationRule, :drops_tables => true do
         sandbox_klass.create(:quantity => 'www')
       end
       context 'quantity should be a number' do
-        subject{
+        subject {
           create(
             :numericality_validation_rule,
             :column_names => ['quantity'],
             :is_strict => true
           )
         }
-        specify{
+        specify {
           subject.validation_errors(annual_report_upload).size.should == 1
         }
       end
@@ -75,10 +75,10 @@ describe Trade::ValidationRule, :drops_tables => true do
         sandbox_klass.create(:year => '33333')
       end
       context 'year should be a 4 digit value' do
-        subject{
+        subject {
           create_year_format_validation
         }
-        specify{
+        specify {
           subject.validation_errors(annual_report_upload).size.should == 1
         }
       end

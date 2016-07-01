@@ -7,19 +7,19 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cms_listing do
         context "for family Cheloniidae" do
-          specify{ @family.cms_listing.should == 'I/II' }
+          specify { @family.cms_listing.should == 'I/II' }
         end
         context "for species Caretta caretta" do
-          specify{ @species.cms_listing.should == 'I/II' }
+          specify { @species.cms_listing.should == 'I/II' }
         end
       end
 
       describe :cms_listed do
         context "for family Cheloniidae" do
-          specify{ @family.cms_listed.should be_true }
+          specify { @family.cms_listed.should be_true }
         end
         context "for species Caretta caretta" do
-          specify{ @species.cms_listed.should be_true }
+          specify { @species.cms_listed.should be_true }
         end
       end
     end

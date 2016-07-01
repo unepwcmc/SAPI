@@ -69,7 +69,7 @@ describe Api::V1::DocumentsController, :type => :controller do
   context "show action fails" do
     login_api_user
     it "should return 403 status when permission denied" do
-      controller.should_receive(:render_403){ controller.render nothing: true }
+      controller.should_receive(:render_403) { controller.render nothing: true }
       get :show, id: @document2.id
     end
   end
@@ -85,7 +85,7 @@ describe Api::V1::DocumentsController, :type => :controller do
     context "single document selected" do
       it "should return 404 if file is missing" do
         File.stub!(:exists?).and_return(false)
-        controller.should_receive(:render_404){ controller.render nothing: true }
+        controller.should_receive(:render_404) { controller.render nothing: true }
         get :download_zip, ids: @document2.id
       end
       it "should return zip file if file is found" do
@@ -99,7 +99,7 @@ describe Api::V1::DocumentsController, :type => :controller do
     context "multiple documents selected" do
       it "should return 404 if all files are missing" do
         File.stub!(:exists?).and_return(false)
-        controller.should_receive(:render_404){ controller.render nothing: true }
+        controller.should_receive(:render_404) { controller.render nothing: true }
         get :download_zip, ids: "#{@document.id},#{@document2.id}"
       end
 

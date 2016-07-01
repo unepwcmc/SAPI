@@ -16,7 +16,7 @@ class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
     )
     @geo_entity_types = GeoEntityType.order(:name)
     @geo_entity_types_for_dropdown = @geo_entity_types.map do |t|
-      {:value => t.id, :text => t.name}
+      { :value => t.id, :text => t.name }
     end
   end
 

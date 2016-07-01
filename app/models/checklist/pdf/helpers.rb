@@ -16,7 +16,7 @@ module Checklist::Pdf::Helpers
 
   def taxon_name_at_rank(taxon_concept)
     res =
-      if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
+      if ['FAMILY', 'SUBFAMILY', 'ORDER', 'CLASS'].include? taxon_concept.rank_name
         LatexToPdf.escape_latex(taxon_concept.full_name.upcase)
       else
         if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name

@@ -11,7 +11,7 @@ class CountryDictionary
       where(:"geo_entity_types.name" => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]).
       all
     @dictionary = Hash[
-      @collection.map { |c| [c.id, [c.name, c.iso_code2] ] }
+      @collection.map { |c| [c.id, [c.name, c.iso_code2]] }
     ]
   end
 

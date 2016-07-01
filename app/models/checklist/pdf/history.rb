@@ -1,10 +1,9 @@
-#Encoding: utf-8
 class Checklist::Pdf::History < Checklist::History
   include Checklist::Pdf::Document
   include Checklist::Pdf::Helpers
   include Checklist::Pdf::HistoryContent
 
-  def initialize(options={})
+  def initialize(options = {})
     super(options)
     @input_name = 'history'
   end

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe TaxonConcept do
   context "create" do
-    let(:kingdom_tc){
+    let(:kingdom_tc) {
       create_kingdom(
         :taxonomy_id => cites_eu.id,
         :taxonomic_position => '1',
@@ -10,13 +10,13 @@ describe TaxonConcept do
       )
     }
     context "all fine" do
-      let(:tc){
+      let(:tc) {
         create_phylum(
           :taxonomy_id => cites_eu.id,
           :parent_id => kingdom_tc.id
         )
       }
-      specify{ tc.valid? should be_true}
+      specify { tc.valid? should be_true }
     end
     context "taxonomy does not match parent" do
       let(:tc) {
@@ -28,7 +28,7 @@ describe TaxonConcept do
       specify { tc.should have(1).error_on(:parent_id) }
     end
     context "parent is not an accepted name" do
-      let(:genus_tc){
+      let(:genus_tc) {
         create_genus(
           :taxonomy_id => cites_eu.id,
           :name_status => 'S'
@@ -77,7 +77,7 @@ describe TaxonConcept do
       specify { tc.should have(1).error_on(:taxon_name_id) }
     end
     context "when taxonomic position malformed" do
-      let(:tc){
+      let(:tc) {
         build_phylum(
           :taxonomy_id => cites_eu.id,
           :parent_id => kingdom_tc.id,
@@ -87,7 +87,7 @@ describe TaxonConcept do
       specify { tc.should have(1).error_on(:taxonomic_position) }
     end
     context "when full name is already given" do
-      let(:tc_parent){ create_cites_eu_species }
+      let(:tc_parent) { create_cites_eu_species }
       let!(:tc1) {
         create_cites_eu_subspecies(
           parent: tc_parent,

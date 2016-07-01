@@ -40,7 +40,7 @@ describe Admin::ReferencesController do
   end
 
   describe "XHR PUT update JSON" do
-    let(:reference){ create(:reference) }
+    let(:reference) { create(:reference) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => reference.id, :reference => { :citation => 'ZZ' }
       response.should be_success
@@ -52,7 +52,7 @@ describe Admin::ReferencesController do
   end
 
   describe "DELETE destroy" do
-    let(:reference){ create(:reference) }
+    let(:reference) { create(:reference) }
     it "redirects after delete" do
       delete :destroy, :id => reference.id
       response.should redirect_to(admin_references_url)

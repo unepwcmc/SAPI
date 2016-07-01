@@ -185,7 +185,7 @@ describe Admin::TaxonListingChangesController do
       end
     end
     it "renders edit when not successful" do
-      put :update, :listing_change => {:effective_at => nil},
+      put :update, :listing_change => { :effective_at => nil },
         :id => @listing_change.id,
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
@@ -199,10 +199,10 @@ describe Admin::TaxonListingChangesController do
         :designation_id => @designation.id,
         :listing_change => {
           :annotation_attributes => {
-            "short_note_en"=>"", "short_note_es"=>"",
-            "short_note_fr"=>"", "full_note_en"=>"",
-            "full_note_es"=>"", "full_note_fr"=>"",
-            "id"=> @annotation.id
+            "short_note_en" => "", "short_note_es" => "",
+            "short_note_fr" => "", "full_note_en" => "",
+            "full_note_es" => "", "full_note_fr" => "",
+            "id" => @annotation.id
           }
         }
       response.should redirect_to(
@@ -234,7 +234,7 @@ describe Admin::TaxonListingChangesController do
   end
   describe "Authorization for contributors" do
     login_contributor
-    let!(:listing_change ) {
+    let!(:listing_change) {
       create(
         :listing_change,
         :taxon_concept_id => @taxon_concept.id,

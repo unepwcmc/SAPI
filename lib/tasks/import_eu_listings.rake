@@ -6,9 +6,9 @@ namespace :import do
     designation = Designation.find_by_name(Designation::EU)
     taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
     puts "There are #{ListingChange.joins(:species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count} EU listings in the database"
+      where(:species_listings => { :designation_id => designation.id }).count} EU listings in the database"
     puts "There are #{ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count} EU listing distributions in the database"
+      where(:species_listings => { :designation_id => designation.id }).count} EU listing distributions in the database"
     annex_A = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'A')
     annex_B = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'B')
     annex_C = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'C')
@@ -18,9 +18,9 @@ namespace :import do
     e = ChangeType.find_by_name_and_designation_id(ChangeType::EXCEPTION, designation.id)
     english = Language.find_by_name_en('English')
     listings_count = ListingChange.joins(:species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
     listings_d_count = ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -110,7 +110,7 @@ namespace :import do
       puts "INSERTING listing_changes"
       ActiveRecord::Base.connection.execute(sql)
 
-      #add taxonomic exceptions
+      # add taxonomic exceptions
       sql = <<-SQL
       INSERT INTO listing_changes (parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at)
       SELECT * FROM (
@@ -147,8 +147,8 @@ namespace :import do
       puts "INSERTING taxonomic exceptions"
       ActiveRecord::Base.connection.execute(sql)
 
-      #add population exceptions
-      sql =<<-SQL
+      # add population exceptions
+      sql = <<-SQL
       WITH exceptions AS (
               -- first insert the exception records -- there's just one / listing change
               INSERT INTO listing_changes (parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at)
@@ -215,9 +215,9 @@ namespace :import do
     ActiveRecord::Base.connection.execute("DROP VIEW eu_listings_import_view")
 
     new_listings_count = ListingChange.joins(:species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
     new_listings_d_count = ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
     puts "#{new_listings_count - listings_count} EU listings were added to the database"
     puts "#{new_listings_d_count - listings_d_count} EU listing distributions were added to the database"
 
@@ -241,9 +241,9 @@ namespace :import do
     task :delete_all => :environment do
       designation = Designation.find_by_name("EU")
       Annotation.joins(:event).
-        where(:events => {:designation_id => designation.id}).delete_all
+        where(:events => { :designation_id => designation.id }).delete_all
       ListingDistribution.joins(:listing_change).
-        where(:listing_changes => {:desigantion_id => designation.id}).delete_all
+        where(:listing_changes => { :desigantion_id => designation.id }).delete_all
       ListingChange.where(:designation_id => designation.id).delete_all
     end
   end

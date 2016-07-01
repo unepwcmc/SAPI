@@ -1,5 +1,3 @@
-#Encoding: utf-8
-
 namespace :import do
 
   desc "Import standard reference links from csv file (usage: rake import:standard_references[path/to/file,path/to/another])"
@@ -37,7 +35,7 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
 
       puts "inserting reference links"
-      #add taxon_concept_references where missing
+      # add taxon_concept_references where missing
       sql = <<-SQL
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id, created_at, updated_at)
         SELECT taxon_concepts.id, "references".id, NOW(), NOW()
@@ -62,7 +60,7 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
 
       puts "updating standard reference links"
-      #update usr_std_ref flags
+      # update usr_std_ref flags
       sql = <<-SQL
       WITH standard_references_as_ids AS (
         WITH standard_references_per_exclusion AS (

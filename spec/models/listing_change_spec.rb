@@ -32,68 +32,68 @@ describe ListingChange do
   context "validations" do
     describe :create do
       context "all fine with exception" do
-        let(:designation){ create(:designation) }
-        let!(:exception_type){ cites_exception }
-        let(:taxon_concept){ create(:taxon_concept) }
-        let(:excluded_taxon_concept){ create(:taxon_concept, :parent_id => taxon_concept) }
-        let(:listing_change){
+        let(:designation) { create(:designation) }
+        let!(:exception_type) { cites_exception }
+        let(:taxon_concept) { create(:taxon_concept) }
+        let(:excluded_taxon_concept) { create(:taxon_concept, :parent_id => taxon_concept) }
+        let(:listing_change) {
           create_cites_I_addition(
             :taxon_concept => taxon_concept,
             :excluded_taxon_concepts_ids => "#{excluded_taxon_concept.id}"
           )
         }
-        specify{ listing_change.exclusions.size == 0 }
+        specify { listing_change.exclusions.size == 0 }
       end
       context "inclusion taxon concept is lower rank" do
-        let(:inclusion){ create_cites_eu_subspecies }
-        let(:taxon_concept){ create_cites_eu_species }
-        let(:listing_change){
+        let(:inclusion) { create_cites_eu_subspecies }
+        let(:taxon_concept) { create_cites_eu_species }
+        let(:listing_change) {
           build(
             :listing_change,
             taxon_concept: taxon_concept,
             inclusion_taxon_concept_id: inclusion.id
           )
         }
-        specify{listing_change.should have(1).error_on(:inclusion_taxon_concept_id)}
+        specify { listing_change.should have(1).error_on(:inclusion_taxon_concept_id) }
       end
       context "species listing designation mismatch" do
-        let(:designation1){ create(:designation)}
-        let(:designation2){ create(:designation)}
-        let(:listing_change){
+        let(:designation1) { create(:designation) }
+        let(:designation2) { create(:designation) }
+        let(:listing_change) {
           build(
             :listing_change,
             :species_listing => create(:species_listing, :designation => designation1),
             :change_type => create(:change_type, :designation => designation2)
           )
         }
-        specify{listing_change.should have(1).error_on(:species_listing_id)}
+        specify { listing_change.should have(1).error_on(:species_listing_id) }
       end
       context "event designation mismatch" do
-        let(:designation1){ create(:designation)}
-        let(:designation2){ create(:designation)}
-        let(:listing_change){
+        let(:designation1) { create(:designation) }
+        let(:designation2) { create(:designation) }
+        let(:listing_change) {
           build(
             :listing_change,
             :event_id => create(:event, :designation => designation1).id,
             :change_type => create(:change_type, :designation => designation2)
           )
         }
-        specify{listing_change.should have(1).error_on(:event_id)}
+        specify { listing_change.should have(1).error_on(:event_id) }
       end
     end
   end
   describe :effective_at_formatted do
-    let(:listing_change){ create_cites_I_addition(:effective_at => '2012-05-10') }
-    specify {listing_change.effective_at_formatted.should == '10/05/2012' }
+    let(:listing_change) { create_cites_I_addition(:effective_at => '2012-05-10') }
+    specify { listing_change.effective_at_formatted.should == '10/05/2012' }
   end
 
   describe :duplicates do
-    let(:lc1){
+    let(:lc1) {
       lc = create_cites_I_addition(effective_at: '2014-11-17')
       lc.annotation = create(:annotation, full_note_en: ' ')
       lc
     }
-    let(:lc2){
+    let(:lc2) {
       lc = create_cites_I_addition(effective_at: '2014-11-17')
       lc.annotation = create(:annotation, full_note_en: nil)
       lc

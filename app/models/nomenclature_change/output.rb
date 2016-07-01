@@ -86,7 +86,7 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
 
   def tag_list
-    parse_pg_array(read_attribute(:tag_list)||"").compact
+    parse_pg_array(read_attribute(:tag_list) || "").compact
   end
 
   def tag_list=(ary)
@@ -114,7 +114,9 @@ class NomenclatureChange::Output < ActiveRecord::Base
     end
   end
 
-  def display_full_name; new_full_name || taxon_concept.try(:full_name); end
+  def display_full_name
+    new_full_name || taxon_concept.try(:full_name)
+  end
 
   def display_rank_name
     try(:new_rank).try(:name) || taxon_concept.try(:rank).try(:name)

@@ -3,9 +3,9 @@ namespace :import do
   task :trade_permits, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
 
     TMP_TABLE = "permits_import"
-    permits_import_to_index = {"permits_import" => ["permit_number", "shipment_number", "permit_reporter_type"]}
-    trade_shipments_indexed = {"trade_shipments" => ["export_permits_ids", "import_permits_ids", "origin_permits_ids"]}
-    trade_shipments_to_index = {"trade_shipments" => ["legacy_shipment_number"]}
+    permits_import_to_index = { "permits_import" => ["permit_number", "shipment_number", "permit_reporter_type"] }
+    trade_shipments_indexed = { "trade_shipments" => ["export_permits_ids", "import_permits_ids", "origin_permits_ids"] }
+    trade_shipments_to_index = { "trade_shipments" => ["legacy_shipment_number"] }
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -53,7 +53,7 @@ def drop_indices(index)
 end
 
 def create_indices(table_columns, method)
-  table_columns.each do |table,columns|
+  table_columns.each do |table, columns|
     columns.each do |column|
       sql = <<-SQL
       CREATE INDEX index_#{table}_on_#{column}
@@ -80,8 +80,8 @@ def populate_trade_permits
 end
 
 def insert_into_trade_shipments
-  permits_entity = {"import" => "I", "export" => 'E', "origin" => 'O'}
-  permits_entity.each do |k,v|
+  permits_entity = { "import" => "I", "export" => 'E', "origin" => 'O' }
+  permits_entity.each do |k, v|
     sql = <<-SQL
       WITH grouped_permits AS (
         SELECT array_agg(id) AS ids,

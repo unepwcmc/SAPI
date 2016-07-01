@@ -41,8 +41,8 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
 
   def remove_blank_lines
     cache_stored_file! if !cached?
-    directory = File.dirname( current_path )
-    tmp_path = File.join( directory, "tmpfile" )
+    directory = File.dirname(current_path)
+    tmp_path = File.join(directory, "tmpfile")
     if system("cat #{current_path} | sed 's/\r//g' | grep -v -E '^(\"?[[:blank:]]*\"?,)*$' > #{tmp_path}")
       FileUtils.mv(tmp_path, current_path)
     else
@@ -56,12 +56,12 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
       # Try it as UTF-8 directly
       cleaned = content.dup.force_encoding('UTF-8')
       unless cleaned.valid_encoding?
-        cleaned = content.encode( 'UTF-8', 'iso-8859-1' )
+        cleaned = content.encode('UTF-8', 'iso-8859-1')
       end
       content = cleaned
     rescue EncodingError
       # Force it to UTF-8, throwing out invalid bits
-      content.encode!( 'UTF-8', invalid: :replace, undef: :replace )
+      content.encode!('UTF-8', invalid: :replace, undef: :replace)
     end
     File.open(current_path, 'w') { |file| file.write(content) }
   end

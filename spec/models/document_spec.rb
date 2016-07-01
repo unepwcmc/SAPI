@@ -30,7 +30,7 @@ describe Document, sidekiq: :inline do
 
   describe :create do
     context "when date is blank" do
-      let(:document){
+      let(:document) {
         build(
           :document,
           :date => nil
@@ -40,40 +40,40 @@ describe Document, sidekiq: :inline do
       specify { expect(document).to have(1).error_on(:date) }
     end
     context "setting title from filename" do
-      let(:document){ create(:document) }
-      specify{ expect(document.title).to eq('Annual report upload exporter') }
+      let(:document) { create(:document) }
+      specify { expect(document.title).to eq('Annual report upload exporter') }
     end
     context "when specified designation conflicts with event" do
-      let(:cites_cop){ create_cites_cop }
-      let(:document){
+      let(:cites_cop) { create_cites_cop }
+      let(:document) {
         create(:document, event: cites_cop, designation: eu)
       }
-      specify{ expect(document.designation).to eq(cites) }
+      specify { expect(document.designation).to eq(cites) }
     end
     context "when documents with same language and same primary document" do
-      let(:language){ create(:language) }
-      let(:primary_document){ create(:document) }
-      let!(:document1){ create(:document,
+      let(:language) { create(:language) }
+      let(:primary_document) { create(:document) }
+      let!(:document1) { create(:document,
                               language_id: language.id,
                               primary_language_document_id: primary_document.id)
       }
 
-      let(:document2){ build(:document,
+      let(:document2) { build(:document,
                             language_id: language.id,
                             primary_language_document_id: primary_document.id)
       }
 
-      specify{ expect(document2).to be_invalid }
-      specify{ expect(document2).to have(1).error_on(:primary_language_document_id) }
+      specify { expect(document2).to be_invalid }
+      specify { expect(document2).to have(1).error_on(:primary_language_document_id) }
 
     end
   end
 
   describe :update do
-    let(:primary_document){
+    let(:primary_document) {
       create(:proposal, sort_index: 1)
     }
-    let!(:secondary_document){
+    let!(:secondary_document) {
       create(:proposal,
         sort_index: 2,
         primary_language_document_id: primary_document.id
@@ -94,24 +94,24 @@ describe Document, sidekiq: :inline do
   end
 
   describe :destroy do
-    let(:primary_document){
+    let(:primary_document) {
       create(:proposal)
     }
-    let!(:secondary_document){
+    let!(:secondary_document) {
       create(:proposal, primary_language_document_id: primary_document.id)
     }
     context "when secondary document destroyed" do
       specify "document count decreases by 1" do
         expect {
           secondary_document.destroy
-        }.to change{ Document.count }.by(-1)
+        }.to change { Document.count }.by(-1)
       end
     end
     context "when primary document destroyed" do
       specify "document count decreases by 1" do
-        expect{
+        expect {
           primary_document.destroy
-        }.to change{ Document.count }.by(-1)
+        }.to change { Document.count }.by(-1)
       end
       specify "secondary document becomes primary" do
         primary_document.destroy

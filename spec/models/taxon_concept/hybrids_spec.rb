@@ -1,27 +1,27 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  before(:each){ hybrid_relationship_type }
+  before(:each) { hybrid_relationship_type }
   describe :create do
-    let(:parent){
+    let(:parent) {
       create_cites_eu_genus(
         :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
       )
     }
-    let!(:tc){
+    let!(:tc) {
       create_cites_eu_species(
         :parent_id => parent.id,
         :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
       )
     }
-    let(:hybrid){
+    let(:hybrid) {
       create_cites_eu_species(
         name_status: 'H',
         author_year: 'Taxonomus 2013',
         taxon_name: create(:taxon_name, :scientific_name => 'Lolcatus lolcatus x lolatus')
       )
     }
-    let!(:hybrid_rel){
+    let!(:hybrid_rel) {
       create(:taxon_relationship,
         taxon_relationship_type: hybrid_relationship_type,
         taxon_concept_id: tc.id,
@@ -35,7 +35,7 @@ describe TaxonConcept do
       specify {
         hybrid.is_hybrid?.should be_true
       }
-      specify{
+      specify {
         hybrid.has_hybrid_parents?.should be_true
       }
       specify {
@@ -43,7 +43,7 @@ describe TaxonConcept do
       }
     end
     context "when duplicate" do
-      let(:duplicate){
+      let(:duplicate) {
         hybrid.dup
       }
       specify {
@@ -53,7 +53,7 @@ describe TaxonConcept do
       }
     end
     context "when duplicate but author name different" do
-      let(:duplicate){
+      let(:duplicate) {
         res = hybrid.dup
         res.author_year = 'Hemulen 2013'
         res

@@ -1,4 +1,3 @@
-#Encoding: utf-8
 class Checklist::Checklist
   include ActiveModel::SerializerSupport
   include CacheIterator
@@ -46,7 +45,7 @@ class Checklist::Checklist
       @taxon_concepts_rel = @taxon_concepts_rel.
         by_name(
           @scientific_name,
-          {:synonyms => true, :common_names => true, :subspecies => false}
+          { :synonyms => true, :common_names => true, :subspecies => false }
         )
     end
 
@@ -54,7 +53,7 @@ class Checklist::Checklist
       @taxon_concepts_rel = @taxon_concepts_rel.at_level_of_listing
     end
 
-    #order
+    # order
     @taxon_concepts_rel =
       if @output_layout == :taxonomic
         @taxon_concepts_rel.taxonomic_layout
@@ -82,14 +81,14 @@ class Checklist::Checklist
   # @return [Array] an array containing a hash of search results and
   #   related metadata
   def generate
-    @animalia, @plantae = cached_results.partition{ |item| item.kingdom_position == 0 }
+    @animalia, @plantae = cached_results.partition { |item| item.kingdom_position == 0 }
     if @output_layout == :taxonomic
       injector = Checklist::HigherTaxaInjector.new(@animalia)
       @animalia = injector.run
       injector = Checklist::HigherTaxaInjector.new(@plantae)
       @plantae = injector.run
     end
-    [self] #TODO: just for compatibility with frontend, no sensible reason for this
+    [self] # TODO: just for compatibility with frontend, no sensible reason for this
   end
 
   # Converts a list of search filters into a limited length
@@ -166,7 +165,7 @@ class Checklist::Checklist
       end
     end
 
-    #TODO: common names, authors
+    # TODO: common names, authors
 
     if summary.length > 0
       summary.join(" ")

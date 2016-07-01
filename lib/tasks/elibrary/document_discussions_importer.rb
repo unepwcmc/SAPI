@@ -7,7 +7,9 @@ class Elibrary::DocumentDiscussionsImporter
     @file_name = file_name
   end
 
-  def table_name; :"elibrary_document_discussions_import"; end
+  def table_name
+    :"elibrary_document_discussions_import"
+  end
 
   def columns_with_type
     [
@@ -27,7 +29,7 @@ class Elibrary::DocumentDiscussionsImporter
   end
 
   def run_preparatory_queries
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentOrder = NULL WHERE DocumentOrder='NULL'" )
+    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentOrder = NULL WHERE DocumentOrder='NULL'")
   end
 
   def run_queries

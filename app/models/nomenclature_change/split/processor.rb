@@ -6,7 +6,7 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
       "#{@nc.input.taxon_concept.full_name} will be split into:",
       @nc.outputs.map(&:display_full_name)
     ]]
-    @subprocessors.each{ |processor| result << processor.summary }
+    @subprocessors.each { |processor| result << processor.summary }
     result.flatten(1)
   end
 
@@ -16,7 +16,7 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
   # A subprocessor needs to respond to #run
   def prepare_chain
     chain = []
-    input_is_one_of_outputs = @outputs.reject{ |o| o.will_create_taxon? }.
+    input_is_one_of_outputs = @outputs.reject { |o| o.will_create_taxon? }.
       map(&:taxon_concept_id).include?(@input.taxon_concept_id)
 
     chain << NomenclatureChange::InputTaxonConceptProcessor.new(@input)

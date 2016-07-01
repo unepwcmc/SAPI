@@ -28,7 +28,7 @@ class Trade::FormatValidationRule < Trade::ValidationRule
   # specified in column_names.
   def matching_records(table_name)
     s = Arel::Table.new(table_name)
-    arel_nodes = column_names.map{ |c| "#{c} !~ '#{format_re}'" }
+    arel_nodes = column_names.map { |c| "#{c} !~ '#{format_re}'" }
     Trade::SandboxTemplate.select('*').from(table_name).where(arel_nodes.inject(&:or))
   end
 end

@@ -25,7 +25,9 @@
 #
 
 class Document::ReviewOfSignificantTrade < Document
-  def self.display_name; 'Review of Significant Trade'; end
+  def self.display_name
+    'Review of Significant Trade'
+  end
 
   attr_accessible :review_details_attributes
 

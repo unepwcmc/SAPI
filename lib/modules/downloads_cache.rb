@@ -80,7 +80,7 @@ module DownloadsCache
   end
 
   def self.clear_taxon_concept_references
-    clear_dirs(['species_reference_output','standard_reference_output'])
+    clear_dirs(['species_reference_output', 'standard_reference_output'])
   end
 
   def self.clear_documents
@@ -105,8 +105,6 @@ module DownloadsCache
   class << self
     alias :clear_eu_opinions :clear_eu_decisions
     alias :clear_eu_suspensions :clear_eu_decisions
-
-    #alias :clear_taxon_concepts_distributions :clear_distributions
   end
 
   # cleared after save & destroy

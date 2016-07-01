@@ -4,7 +4,7 @@ describe Checklist::HigherTaxaItem do
 
   describe :ancestors_path do
     context "when animal" do
-      let(:taxon_concept){
+      let(:taxon_concept) {
         obj = double('MTaxonConcept',
           :rank_name => 'FAMILY',
           :kingdom_name => 'Animalia',
@@ -18,7 +18,7 @@ describe Checklist::HigherTaxaItem do
       specify { subject.ancestors_path.should == 'Chordata,Reptilia,Crocodylia,Alligatoridae' }
     end
     context "when plant" do
-      let(:taxon_concept){
+      let(:taxon_concept) {
         obj = double('MTaxonConcept',
           :rank_name => 'FAMILY',
           :kingdom_name => 'Plantae',

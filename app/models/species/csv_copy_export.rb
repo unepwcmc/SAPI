@@ -23,7 +23,7 @@ class Species::CsvCopyExport
     @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}_separated.csv"
     [
       @file_name,
-      {:filename => public_file_name, :type => 'text/csv'}
+      { :filename => public_file_name, :type => 'text/csv' }
     ]
   end
 

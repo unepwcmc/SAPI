@@ -30,7 +30,7 @@ class Checklist::HigherTaxaItem
     end.join(',')
   end
 
-  #use method_missing to delegate taxon concept methods
+  # use method_missing to delegate taxon concept methods
   def method_missing(method_sym, *arguments, &block)
     # the first argument is a Symbol, so you need to_s it if you want to pattern match
     if @taxon_concept.respond_to? method_sym

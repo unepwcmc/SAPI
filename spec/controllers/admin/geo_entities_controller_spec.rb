@@ -50,7 +50,7 @@ describe Admin::GeoEntitiesController do
   end
 
   describe "XHR PUT update JSON" do
-    let(:geo_entity){ create(:geo_entity, geo_entity_type: country_geo_entity_type) }
+    let(:geo_entity) { create(:geo_entity, geo_entity_type: country_geo_entity_type) }
     it "responds with 200 when successful" do
       xhr :put, :update, format: 'json', id: geo_entity.id, geo_entity: { iso_code2: 'ZZ' }
       response.should be_success
@@ -62,7 +62,7 @@ describe Admin::GeoEntitiesController do
   end
 
   describe "DELETE destroy" do
-    let(:geo_entity){ create(:geo_entity) }
+    let(:geo_entity) { create(:geo_entity) }
     it "redirects after delete" do
       delete :destroy, id: geo_entity.id
       response.should redirect_to(admin_geo_entities_url)

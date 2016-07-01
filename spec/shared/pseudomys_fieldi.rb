@@ -54,7 +54,7 @@ shared_context "Pseudomys fieldi" do
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
       end
     end

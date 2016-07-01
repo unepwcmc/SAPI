@@ -16,7 +16,7 @@ require 'spec_helper'
 describe NomenclatureChange::ReassignmentTarget do
   describe :validate do
     context "when reassignment not specified" do
-      let(:reassignment_target){
+      let(:reassignment_target) {
         build(
           :nomenclature_change_reassignment_target,
           :nomenclature_change_reassignment_id => nil
@@ -25,7 +25,7 @@ describe NomenclatureChange::ReassignmentTarget do
       specify { expect(reassignment_target).not_to be_valid }
     end
     context "when output not specified" do
-      let(:reassignment_target){
+      let(:reassignment_target) {
         build(
           :nomenclature_change_reassignment_target,
           :nomenclature_change_output_id => nil

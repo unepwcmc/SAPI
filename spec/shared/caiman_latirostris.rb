@@ -1,12 +1,11 @@
-#Encoding: utf-8
 shared_context "Caiman latirostris" do
 
-  let(:en){
+  let(:en) {
     create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
     create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')
     create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG')
   }
-  let(:argentina){
+  let(:argentina) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -14,7 +13,7 @@ shared_context "Caiman latirostris" do
       :iso_code2 => 'AR'
     )
   }
-  let(:brazil){
+  let(:brazil) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -156,7 +155,7 @@ shared_context "Caiman latirostris" do
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
       end
     end

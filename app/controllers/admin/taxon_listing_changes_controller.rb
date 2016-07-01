@@ -19,7 +19,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
       load_change_types
       @listing_change.change_type_id ||= @change_types.first.id
       @listing_change.is_current = true
-      @listing_change.event = @events && @events.first #ordered most recent first
+      @listing_change.event = @events && @events.first # ordered most recent first
       @listing_change.effective_at =  @listing_change.event && @listing_change.event.effective_at
       build_dependants
     end
@@ -95,7 +95,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
       find_by_name(ChangeType::EXCEPTION)
     @species_listings = @designation.species_listings.order(:abbreviation)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
+      where(:is_current => true, :geo_entity_types => { :name => 'COUNTRY' })
     @hash_annotations =
       if @designation.is_eu?
         Annotation.for_eu

@@ -1,19 +1,19 @@
 shared_context "Pecari tajacu" do
-  let(:north_america){
+  let(:north_america) {
     create(
       :geo_entity,
       :geo_entity_type => cites_region_geo_entity_type,
       :name => "5- North America"
     )
   }
-  let(:south_america){
+  let(:south_america) {
     create(
       :geo_entity,
       :geo_entity_type => cites_region_geo_entity_type,
       :name => "3- Central and South America and the Caribbean"
     )
   }
-  let(:america){
+  let(:america) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -21,7 +21,7 @@ shared_context "Pecari tajacu" do
       :iso_code2 => 'US'
     )
   }
-  let(:mexico){
+  let(:mexico) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -29,7 +29,7 @@ shared_context "Pecari tajacu" do
       :iso_code2 => 'MX'
     )
   }
-  let(:canada){
+  let(:canada) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -37,7 +37,7 @@ shared_context "Pecari tajacu" do
       :iso_code2 => 'CA'
     )
   }
-  let(:argentina){
+  let(:argentina) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -110,7 +110,7 @@ shared_context "Pecari tajacu" do
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
       end
     end

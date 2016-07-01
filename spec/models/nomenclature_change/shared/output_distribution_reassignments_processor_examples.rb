@@ -1,5 +1,5 @@
 shared_context 'output_distribution_reassignments_processor_examples' do
-  let(:poland){
+  let(:poland) {
     create(
       :geo_entity,
       geo_entity_type_id: country_geo_entity_type.id,
@@ -23,9 +23,9 @@ shared_context 'output_distribution_reassignments_processor_examples' do
     output_processor.run
     processor.run
   end
-  specify{ expect(new_output_species.distributions.reload.count).to eq(2) }
-  specify{ expect(new_output_species.distributions.find_by_geo_entity_id(poland.id)).not_to be_nil }
-  specify{ expect(new_output_species.distributions.find_by_geo_entity_id(poland.id).tag_list).to eq(['extinct']) }
-  specify{ expect(new_output_species.distributions.find_by_geo_entity_id(poland.id).distribution_references.count).to eq(1) }
-  specify{ expect(old_output_subspecies.distributions).to be_empty }
+  specify { expect(new_output_species.distributions.reload.count).to eq(2) }
+  specify { expect(new_output_species.distributions.find_by_geo_entity_id(poland.id)).not_to be_nil }
+  specify { expect(new_output_species.distributions.find_by_geo_entity_id(poland.id).tag_list).to eq(['extinct']) }
+  specify { expect(new_output_species.distributions.find_by_geo_entity_id(poland.id).distribution_references.count).to eq(1) }
+  specify { expect(old_output_subspecies.distributions).to be_empty }
 end

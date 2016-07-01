@@ -1,4 +1,3 @@
-#Encoding: UTF-8
 require 'spec_helper'
 
 describe Checklist do
@@ -13,11 +12,11 @@ describe Checklist do
       @taxon_concepts = @checklist.results
     end
     context 'for species Caiman latirostris' do
-      subject { @taxon_concepts.select{ |e| e.full_name == 'Caiman latirostris' }.first }
+      subject { @taxon_concepts.select { |e| e.full_name == 'Caiman latirostris' }.first }
       specify { subject.ann_symbol.should == '1' }
     end
     context 'for species Panax ginseng' do
-      subject { @taxon_concepts.select{ |e| e.full_name == 'Panax ginseng' }.first }
+      subject { @taxon_concepts.select { |e| e.full_name == 'Panax ginseng' }.first }
       specify { subject.ann_symbol.should == '2' }
     end
   end

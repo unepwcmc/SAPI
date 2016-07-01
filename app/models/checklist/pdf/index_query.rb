@@ -6,8 +6,8 @@ class Checklist::Pdf::IndexQuery
     @french_common_names = options[:french_common_names]
     @synonyms = options[:synonyms]
     @authors = options[:authors]
-    #we want common names and synonyms returned as separate records
-    #and sorted alphabetically
+    # we want common names and synonyms returned as separate records
+    # and sorted alphabetically
     shared_columns = [:full_name, :rank_name, :family_name, :class_name,
     :cites_accepted, :cites_listing,
     :ann_symbol, :hash_ann_symbol]

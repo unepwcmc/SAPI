@@ -14,7 +14,7 @@ describe Species::SynonymsAndTradeNamesExport do
       specify { subject.export.should be_false }
     end
     context "when results" do
-      before(:each){
+      before(:each) {
         species = create_cites_eu_species
         synonym = create_cites_eu_species(:name_status => 'S')
         create(:taxon_relationship,
@@ -28,7 +28,7 @@ describe Species::SynonymsAndTradeNamesExport do
         Species::SynonymsAndTradeNamesExport.any_instance.stub(:path).
           and_return("spec/public/downloads/synonyms_and_trade_names/")
       }
-      after(:each){
+      after(:each) {
         FileUtils.remove_dir("spec/public/downloads/synonyms_and_trade_names", true)
       }
       subject {

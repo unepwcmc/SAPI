@@ -7,7 +7,7 @@ class Admin::EventsController < Admin::StandardAuthorizationController
     index! do |format|
       format.json {
         render :text => end_of_association_chain.order(:effective_at, :name).
-          select([:id, :name]).map{ |d| {:value => d.id, :text => d.name} }.to_json
+          select([:id, :name]).map { |d| { :value => d.id, :text => d.name } }.to_json
       }
     end
   end
@@ -27,7 +27,7 @@ class Admin::EventsController < Admin::StandardAuthorizationController
 
   def show
     show! do |format|
-      format.json{ render :json => resource, :serializer => Admin::EventSerializer }
+      format.json { render :json => resource, :serializer => Admin::EventSerializer }
     end
   end
 

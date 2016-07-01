@@ -34,7 +34,7 @@ class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidation
   private
 
   def year_join_node(s, v)
-    sandbox_year = Arel::Nodes::NamedFunction.new "CAST", [ s['year'].as('INT') ]
+    sandbox_year = Arel::Nodes::NamedFunction.new "CAST", [s['year'].as('INT')]
     effective_from = Arel::Nodes::NamedFunction.new "DATE_PART", ["year", v['effective_from']]
     effective_to = Arel::Nodes::NamedFunction.new "DATE_PART", ["year", v['effective_to']]
     effective_from.lteq(sandbox_year).and(effective_to.gteq(sandbox_year).or(effective_to.eq(nil)))
@@ -61,7 +61,7 @@ class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidation
       s[c].not_eq(nil)
     end
     not_null_conds = not_null_nodes.shift
-    not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
+    not_null_nodes.each { |n| not_null_conds = not_null_conds.and(n) }
     s.project('*').where(not_null_conds).except(valid_values)
   end
 

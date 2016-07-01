@@ -17,7 +17,7 @@ describe Admin::NomenclatureChangesController do
   end
 
   describe "DELETE destroy" do
-    let(:nomenclature_change){ create(:nomenclature_change) }
+    let(:nomenclature_change) { create(:nomenclature_change) }
     it "redirects after delete" do
       delete :destroy, :id => nomenclature_change.id
       response.should redirect_to(admin_nomenclature_changes_url)

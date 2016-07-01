@@ -139,7 +139,7 @@ namespace :import do
     count_trade_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_trade_name).count
     count_synonym_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_synonym).count
     taxon_concept_ids = ActiveRecord::Base.connection.execute("SELECT cites_taxon_code, species_plus_id AS id FROM #{TMP_TABLE}").
-      map {|h| [h["cites_taxon_code"], h["id"]]}
+      map { |h| [h["cites_taxon_code"], h["id"]] }
     taxon_concept_ids.each do |cites_code, id|
       tc = TaxonConcept.find id
       next if tc.name_status != "S"
@@ -210,15 +210,15 @@ namespace :import do
 
     puts "############# SUMMARY ###################"
     puts "Pre-Existing trade_names: #{count_trade_names}; Final count trade_names: #{final_count_trade_names};\
-      Diff: #{final_count_trade_names-count_trade_names}"
+      Diff: #{final_count_trade_names - count_trade_names}"
     puts "Pre-Existing synonyms: #{count_synonyms}; Final count synonyms: #{final_count_synonyms};\
-      Diff: #{final_count_synonyms-count_synonyms}"
+      Diff: #{final_count_synonyms - count_synonyms}"
     puts "Pre-Existing taxon_names: #{count_taxon_names}; Final count taxon_names: #{final_count_taxon_names};\
-      Diff: #{final_count_taxon_names-count_taxon_names}"
+      Diff: #{final_count_taxon_names - count_taxon_names}"
     puts "Pre-Existing trade_relationships: #{count_trade_relationships}; Final count trade_relationships: #{final_count_trade_relationships};\
-      Diff: #{final_count_trade_relationships-count_trade_relationships}"
+      Diff: #{final_count_trade_relationships - count_trade_relationships}"
     puts "Pre-Existing synonym_relationships: #{count_synonym_relationships}; Final count synonym_relationships: #{final_count_synonym_relationships};\
-      Diff: #{final_count_synonym_relationships-count_synonym_relationships}"
+      Diff: #{final_count_synonym_relationships - count_synonym_relationships}"
     Sapi::Indexes.create_indexes_on_trade_names
   end
 end

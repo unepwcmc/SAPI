@@ -46,7 +46,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def validation_errors(annual_report_upload)
     matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
-      values_hash = Hash[column_names_for_display.map{ |cn| [cn, mr.send(cn)] }]
+      values_hash = Hash[column_names_for_display.map { |cn| [cn, mr.send(cn)] }]
       Trade::ValidationError.new(
         :error_message => error_message(values_hash),
         :annual_report_upload_id => annual_report_upload.id,
@@ -90,7 +90,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       ['COUNT(*) AS error_count', 'ARRAY_AGG(id) AS matching_records_ids']
     ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
     group(column_names_for_display).having(
-      required_column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND ')
+      required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
     )
   end
 
@@ -102,16 +102,16 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       s[c].not_eq(nil)
     end
     not_null_conds = not_null_nodes.shift
-    not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
+    not_null_nodes.each { |n| not_null_conds = not_null_conds.and(n) }
     result = s.project('*').where(not_null_conds)
     scope_nodes = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
       if scope_def['inclusion']
-        inclusion_nodes = scope_def['inclusion'].map{ |value| s[scope_column].eq(value) }
+        inclusion_nodes = scope_def['inclusion'].map { |value| s[scope_column].eq(value) }
         tmp << inclusion_nodes.inject(&:or)
       end
       if scope_def['exclusion']
-        exclusion_nodes = scope_def['exclusion'].map{ |value| s[scope_column].not_eq(value) }
+        exclusion_nodes = scope_def['exclusion'].map { |value| s[scope_column].not_eq(value) }
         tmp << exclusion_nodes.inject(&:or)
       end
       if scope_def['blank']

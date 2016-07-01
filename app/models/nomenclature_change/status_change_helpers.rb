@@ -11,12 +11,12 @@ module NomenclatureChange::StatusChangeHelpers
       has_one :primary_output, :inverse_of => :nomenclature_change,
         :class_name => NomenclatureChange::Output,
         :foreign_key => :nomenclature_change_id,
-        :conditions => {:is_primary_output => true},
+        :conditions => { :is_primary_output => true },
         :dependent => :destroy, autosave: true
       has_one :secondary_output, :inverse_of => :nomenclature_change,
         :class_name => NomenclatureChange::Output,
         :foreign_key => :nomenclature_change_id,
-        :conditions => {:is_primary_output => false},
+        :conditions => { :is_primary_output => false },
         :dependent => :destroy, autosave: true
 
       accepts_nested_attributes_for :input, :allow_destroy => true

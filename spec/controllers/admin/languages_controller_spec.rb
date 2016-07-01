@@ -28,7 +28,7 @@ describe Admin::LanguagesController do
   end
 
   describe "XHR PUT update" do
-    let(:language){ create(:language) }
+    let(:language) { create(:language) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => language.id, :language => { :iso_code1 => 'ZZ' }
       response.should be_success
@@ -40,7 +40,7 @@ describe Admin::LanguagesController do
   end
 
   describe "DELETE destroy" do
-    let(:language){ create(:language) }
+    let(:language) { create(:language) }
     it "redirects after delete" do
       delete :destroy, :id => language.id
       response.should redirect_to(admin_languages_url)

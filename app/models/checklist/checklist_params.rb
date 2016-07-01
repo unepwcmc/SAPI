@@ -6,16 +6,16 @@ class Checklist::ChecklistParams < Hash
 
   def initialize(params)
     sanitized_params = {
-      #possible output layouts are:
-      #taxonomic (hierarchic, taxonomic order)
-      #alphabetical (flat, alphabetical order)
+      # possible output layouts are:
+      # taxonomic (hierarchic, taxonomic order)
+      # alphabetical (flat, alphabetical order)
       output_layout: whitelist_param(
         sanitise_symbol(params[:output_layout]),
         [:taxonomic, :alphabetical, :appendix],
         :alphabetical
       ),
       level_of_listing: sanitise_boolean(params[:level_of_listing], false),
-      #filtering options
+      # filtering options
       scientific_name: sanitise_upcase_string(params[:scientific_name]),
       countries: sanitise_integer_array(params[:country_ids]),
       cites_regions: sanitise_integer_array(params[:cites_region_ids]),
