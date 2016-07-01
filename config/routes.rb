@@ -145,7 +145,7 @@ SAPI::Application.routes.draw do
       resources :taxon_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
-      resources :taxon_instruments, :only => [ :index, :new, :create, :edit, :update, :destroy ]
+      resources :taxon_instruments, :only => [:index, :new, :create, :edit, :update, :destroy]
     end
     resources :nomenclature_changes do
       resources :split, controller: 'nomenclature_changes/split'
