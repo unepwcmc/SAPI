@@ -618,15 +618,6 @@ Style/SpaceAroundOperators:
 Style/SpaceBeforeBlockBraces:
   Enabled: false
 
-# Offense count: 9
-# Cop supports --auto-correct.
-Style/SpaceInsideBrackets:
-  Exclude:
-    - 'app/models/country_dictionary.rb'
-    - 'app/models/trade/taxon_concept_appendix_year_validation_rule.rb'
-    - 'config/initializers/devise.rb'
-    - 'config/routes.rb'
-
 # Offense count: 697
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SupportedStyles.
