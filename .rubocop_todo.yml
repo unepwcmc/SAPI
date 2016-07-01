@@ -594,12 +594,6 @@ Style/SignalException:
   Exclude:
     - 'lib/tasks/elibrary/import.rake'
 
-# Offense count: 39
-# Cop supports --auto-correct.
-# Configuration parameters: AllowIfMethodIsEmpty.
-Style/SingleLineMethods:
-  Enabled: false
-
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: SupportedStyles.

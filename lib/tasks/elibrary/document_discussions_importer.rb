@@ -7,7 +7,9 @@ class Elibrary::DocumentDiscussionsImporter
     @file_name = file_name
   end
 
-  def table_name; :"elibrary_document_discussions_import"; end
+  def table_name
+    :"elibrary_document_discussions_import"
+  end
 
   def columns_with_type
     [

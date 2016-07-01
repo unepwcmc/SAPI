@@ -25,7 +25,9 @@
 #
 
 class Document::Proposal < Document
-  def self.display_name; 'Proposal'; end
+  def self.display_name
+    'Proposal'
+  end
 
   attr_accessible :proposal_details_attributes
 

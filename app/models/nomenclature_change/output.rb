@@ -114,7 +114,9 @@ class NomenclatureChange::Output < ActiveRecord::Base
     end
   end
 
-  def display_full_name; new_full_name || taxon_concept.try(:full_name); end
+  def display_full_name
+    new_full_name || taxon_concept.try(:full_name)
+  end
 
   def display_rank_name
     try(:new_rank).try(:name) || taxon_concept.try(:rank).try(:name)
