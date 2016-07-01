@@ -79,7 +79,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
   def copy_stmt
     # escape quotes around attributes for psql
     sql = <<-PSQL
-      \\COPY (#{query_sql(:limit => !internal?).gsub(/"/,"\\\"")})
+      \\COPY (#{query_sql(:limit => !internal?).gsub(/"/, "\\\"")})
       TO ?
       WITH DELIMITER '#{@csv_separator_char}'
       ENCODING 'latin1'

@@ -420,7 +420,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def init_accepted_taxa(new_ids)
-    return [[],[]] unless ['S', 'T', 'H'].include?(name_status)
+    return [[], []] unless ['S', 'T', 'H'].include?(name_status)
     current_ids =
       case name_status
       when 'S' then accepted_names.pluck(:id)

@@ -80,7 +80,7 @@ module DownloadsCache
   end
 
   def self.clear_taxon_concept_references
-    clear_dirs(['species_reference_output','standard_reference_output'])
+    clear_dirs(['species_reference_output', 'standard_reference_output'])
   end
 
   def self.clear_documents

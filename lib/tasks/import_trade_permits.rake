@@ -53,7 +53,7 @@ def drop_indices(index)
 end
 
 def create_indices(table_columns, method)
-  table_columns.each do |table,columns|
+  table_columns.each do |table, columns|
     columns.each do |column|
       sql = <<-SQL
       CREATE INDEX index_#{table}_on_#{column}
@@ -81,7 +81,7 @@ end
 
 def insert_into_trade_shipments
   permits_entity = {"import" => "I", "export" => 'E', "origin" => 'O'}
-  permits_entity.each do |k,v|
+  permits_entity.each do |k, v|
     sql = <<-SQL
       WITH grouped_permits AS (
         SELECT array_agg(id) AS ids,

@@ -13,17 +13,17 @@ class LatexToPdf
   # The dir argument is the name of the intermediate files directory.
   #
   # The input argument is the name of the tex file without the '.tex'
-  def self.generate_pdf_from_file(dir,input)
+  def self.generate_pdf_from_file(dir, input)
     Process.waitpid(
       fork do
         begin
           Dir.chdir dir
           original_stdout, original_stderr = $stdout, $stderr
-          $stderr = $stdout = File.open("#{input}.log","a")
+          $stderr = $stdout = File.open("#{input}.log", "a")
           args=config[:arguments] + %w[-shell-escape -interaction batchmode] + ["#{input}.tex"]
-          exec config[:command],*args
+          exec config[:command], *args
         rescue
-          File.open("#{input}.log",'a') {|io|
+          File.open("#{input}.log", 'a') {|io|
             io.write("#{$!.message}:\n#{$!.backtrace.join("\n")}\n")
           }
         ensure

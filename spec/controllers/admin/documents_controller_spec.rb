@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Admin::DocumentsController, sidekiq: :inline do
   login_admin
-  let(:event){ create(:event, published_at: DateTime.new(2014,12,25)) }
-  let(:event2){ create(:event, published_at: DateTime.new(2015,12,12)) }
+  let(:event){ create(:event, published_at: DateTime.new(2014, 12, 25)) }
+  let(:event2){ create(:event, published_at: DateTime.new(2015, 12, 12)) }
   let(:taxon_concept){ create(:taxon_concept) }
   let(:geo_entity){ create(:geo_entity) }
   let(:proposal_outcome){ create(:proposal_outcome) }
@@ -20,7 +20,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
     describe "GET index" do
       before(:each) do
-        @document3 = create(:document, :title => 'CC no event!', date: DateTime.new(2014,01,01))
+        @document3 = create(:document, :title => 'CC no event!', date: DateTime.new(2014, 01, 01))
         DocumentSearch.refresh_citations_and_documents
       end
 
@@ -64,7 +64,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
         end
         context 'by proposal outcome' do
           before(:each) do
-            @document3 = create(:proposal, event: create_cites_cop(published_at: DateTime.new(2014,01,01)))
+            @document3 = create(:proposal, event: create_cites_cop(published_at: DateTime.new(2014, 01, 01)))
             create(:proposal_details, document_id: @document3.id, proposal_outcome_id: proposal_outcome.id)
             DocumentSearch.refresh_citations_and_documents
           end
@@ -75,7 +75,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
         end
         context 'by document tags' do
           before(:each) do
-            @document3 = create(:review_of_significant_trade, event: create_ec_srg(published_at: DateTime.new(2014,01,01)))
+            @document3 = create(:review_of_significant_trade, event: create_ec_srg(published_at: DateTime.new(2014, 01, 01)))
             create(:review_details, document_id: @document3.id, review_phase_id: review_phase.id, process_stage_id: process_stage.id)
             DocumentSearch.refresh_citations_and_documents
           end

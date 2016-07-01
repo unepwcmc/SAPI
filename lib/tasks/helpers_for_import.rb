@@ -357,7 +357,7 @@ end
 def csv_headers(path_to_file)
   res = nil
   CSV.foreach(path_to_file) do |row|
-    res = row.map{ |h| h && h.chomp.sub(/^\W/,'') }.compact
+    res = row.map{ |h| h && h.chomp.sub(/^\W/, '') }.compact
     break
   end
   res
@@ -368,7 +368,7 @@ def db_columns_from_csv_headers(path_to_file, table_name, include_data_type = tr
   #work out the db columns to create
   csv_columns = csv_headers(path_to_file)
   db_columns = csv_columns.map{ |col| m.csv_to_db(table_name, col) }
-  db_columns = db_columns.map{ |col| col.sub(/\s\w+$/,'')} unless include_data_type
+  db_columns = db_columns.map{ |col| col.sub(/\s\w+$/, '')} unless include_data_type
   puts csv_columns.inspect
   puts db_columns.inspect
   db_columns

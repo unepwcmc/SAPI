@@ -91,7 +91,7 @@ FactoryGirl.define do
     eu_decision_type
 
     factory :eu_opinion, class: EuOpinion do
-      start_date Date.new(2013,1,1)
+      start_date Date.new(2013, 1, 1)
     end
 
     factory :eu_suspension, class: EuSuspension

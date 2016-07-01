@@ -219,10 +219,10 @@ module Admin::NomenclatureChangesHelper
       @nc.inputs.each_with_index do |input, idx|
         tc = input.taxon_concept
         if idx == 0
-          concat content_tag(:div, inner_content(input,tc),
+          concat content_tag(:div, inner_content(input, tc),
             {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active"})
         else
-          concat content_tag(:div, inner_content(input,tc),
+          concat content_tag(:div, inner_content(input, tc),
             {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade"})
         end
       end
@@ -289,17 +289,17 @@ module Admin::NomenclatureChangesHelper
       outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
         if idx == 0
-          concat content_tag(:div, inner_content(output,tc),
+          concat content_tag(:div, inner_content(output, tc),
             {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active"})
         else
-          concat content_tag(:div, inner_content(output,tc),
+          concat content_tag(:div, inner_content(output, tc),
             {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade"})
         end
       end
     end
   end
 
-  def inner_content(input_or_output,tc)
+  def inner_content(input_or_output, tc)
     is_output = input_or_output.is_a?(NomenclatureChange::Output)
     content_tag(:p, content_tag(:i, link_to(tc.full_name,
       admin_taxon_concept_names_path(tc)), nil)
@@ -342,7 +342,7 @@ module Admin::NomenclatureChangesHelper
   end
 
   def select_taxonomy
-    select("taxonomy","taxonomy_id", Taxonomy.all.collect {|t| [t.name, t.id]})
+    select("taxonomy", "taxonomy_id", Taxonomy.all.collect {|t| [t.name, t.id]})
   end
 
   def select_rank
@@ -360,7 +360,7 @@ module Admin::NomenclatureChangesHelper
   def new_name_scientific_name_hint
     case @nomenclature_change.output.new_name_status
     when 'A' then "e.g. 'africana' for Loxodonta africana"
-    when 'S','H' then "e.g. Loxodonta africana"
+    when 'S', 'H' then "e.g. Loxodonta africana"
     end
   end
 end

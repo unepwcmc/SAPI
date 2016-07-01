@@ -41,6 +41,6 @@ class Api::V1::TaxonConceptsController < ApplicationController
   end
 
   def track_show
-    ahoy.track "Taxon Concept",{:id => @taxon_concept.id, :full_name => @taxon_concept.full_name, :taxonomy_name => @taxon_concept.taxonomy.name, :rank_name => @taxon_concept.rank_name, :family_name => @taxon_concept.data['family_name']}
+    ahoy.track "Taxon Concept", {:id => @taxon_concept.id, :full_name => @taxon_concept.full_name, :taxonomy_name => @taxon_concept.taxonomy.name, :rank_name => @taxon_concept.rank_name, :family_name => @taxon_concept.data['family_name']}
   end
 end
