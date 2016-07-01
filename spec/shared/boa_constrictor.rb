@@ -86,7 +86,7 @@ shared_context "Boa constrictor" do
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
         self.instance_variable_set(:"#{t}_ac",
           MAutoCompleteTaxonConcept.

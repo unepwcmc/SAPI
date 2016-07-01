@@ -2,7 +2,7 @@ namespace :db do
   namespace :migrate do
     desc "Run custom sql scripts"
     task :sql => :environment do
-      ['helpers','mviews', 'plpgsql'].each do |dir|
+      ['helpers', 'mviews', 'plpgsql'].each do |dir|
         files = Dir.glob(Rails.root.join("db/#{dir}/*.sql"))
         files.sort.each do |file|
           puts file

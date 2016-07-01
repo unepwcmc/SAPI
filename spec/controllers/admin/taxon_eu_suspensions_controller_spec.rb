@@ -40,7 +40,7 @@ describe Admin::TaxonEuSuspensionsController do
         post :create,
           :eu_suspension => {
             :eu_decision_type_id => @eu_decision_type.id,
-            :start_date => Date.new(2013,1,1),
+            :start_date => Date.new(2013, 1, 1),
             :geo_entity_id => create(
               :geo_entity, :geo_entity_type_id => country_geo_entity_type.id
             )
