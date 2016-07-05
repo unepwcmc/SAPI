@@ -18,10 +18,6 @@ Trade.AnnualReportUpload = DS.Model.extend
     @get('fileName') + ')'
   ).property('numberOfRows', 'tradingCountry.name', 'pointOfView')
 
-  hasErrors: (->
-    @get('validationErrors.length') > 0
-  ).property('validationErrors.length')
-
 Trade.Adapter.map('Trade.AnnualReportUpload', {
   sandboxShipments: { embedded: 'always' }
   validationErrors: { embedded: 'load' }
