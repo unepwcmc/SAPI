@@ -6,3 +6,8 @@ Trade.ValidationError = DS.Model.extend
   sandboxShipmentsIds: ( ->
     @get('sandboxShipments').mapBy('id')
   ).property('sandboxShipments.@each')
+  ignoredValidationErrorId: DS.attr('number')
+
+  isIgnored: ( ->
+    @get('ignoredValidationErrorId')?
+  ).property('ignoredValidationErrorId')
