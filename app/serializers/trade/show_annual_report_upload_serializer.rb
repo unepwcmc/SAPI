@@ -3,10 +3,18 @@ class Trade::ShowAnnualReportUploadSerializer < ActiveModel::Serializer
   attributes :id, :trading_country_id, :point_of_view, :number_of_rows,
   :file_name, :is_done, :has_primary_errors, :created_at, :updated_at,
   :created_by, :updated_by
-  has_many :validation_errors
+  has_many :validation_errors, :ignored_validation_errors
 
   def validation_errors
-    object.validation_errors.sort_by(&:error_message)
+    object.validation_errors.reject do |ve|
+      ve.is_ignored
+    end.sort_by(&:error_message)
+  end
+
+  def ignored_validation_errors
+    object.validation_errors.select do |ve|
+      ve.is_ignored
+    end.sort_by(&:error_message)
   end
 
   def file_name
