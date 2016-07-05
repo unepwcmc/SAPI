@@ -38,7 +38,8 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
 
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records
-  def matching_records_grouped(table_name)
+  def matching_records_grouped(annual_report_upload)
+    table_name = annual_report_upload.sandbox.table_name
     sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
     sandbox_klass.from("#{table_name}_view #{table_name}").
       joins(<<-SQL

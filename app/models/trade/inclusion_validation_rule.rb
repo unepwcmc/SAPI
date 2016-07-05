@@ -44,16 +44,22 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     info + ' is invalid'
   end
 
-  def validation_errors(annual_report_upload)
-    matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
-      values_hash = Hash[column_names_for_display.map { |cn| [cn, mr.send(cn)] }]
-      Trade::ValidationError.new(
-        :error_message => error_message(values_hash),
-        :annual_report_upload_id => annual_report_upload.id,
-        :validation_rule_id => self.id,
-        :error_count => mr.error_count,
-        :matching_records_ids => parse_pg_array(mr.matching_records_ids),
-        :is_primary => self.is_primary
+  def refresh_errors_if_needed(annual_report_upload)
+    return true unless refresh_needed?(annual_report_upload)
+    matching_records_grouped(annual_report_upload).map do |mr|
+      values_hash = Hash[column_names.map{ |cn| [cn, mr.send(cn)] }]
+      values_hash_for_display = Hash[column_names_for_display.map{ |cn| [cn, mr.send(cn)] }]
+      matching_criteria_jsonb = jsonb_matching_criteria_for_comparison(
+        values_hash
+      )
+      existing_record = validation_errors_for_aru(annual_report_upload).
+        where("matching_criteria @> (#{matching_criteria_jsonb})::JSONB").first
+      update_or_create_error_record(
+        annual_report_upload,
+        existing_record,
+        mr.error_count.to_i,
+        error_message(values_hash_for_display),
+        jsonb_matching_criteria_for_insert(values_hash)
       )
     end
   end
@@ -81,14 +87,55 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     end
   end
 
+  def jsonb_matching_criteria_for_insert(values_hash)
+    jsonb_keys_and_values = column_names.map do |c|
+      is_numeric = (c =~ /.+_id$/ || c == 'year')
+      value = values_hash[c]
+      value_quoted = if is_numeric
+        value
+      else
+        "\"#{value}\""
+      end
+      "\"#{c}\": #{value_quoted}"
+    end.join(', ')
+    '{' + jsonb_keys_and_values + '}'
+  end
+
+  def jsonb_matching_criteria_for_comparison(values_hash = nil)
+    jsonb_keys_and_values = column_names.map do |c|
+      is_numeric = (c =~ /.+_id$/ || c == 'year')
+      value = values_hash && values_hash[c]
+      column_reference = "matching_records.#{c}"
+      value_or_column_reference_quoted = if value && is_numeric
+        value
+      elsif value && !is_numeric
+        "'\"#{value}\"'"
+      elsif !value && is_numeric
+        column_reference
+      else
+        <<-EOT
+          '"' || #{column_reference} || '"'
+        EOT
+      end
+      <<-EOT
+        '"' || '#{c}' || '": ' || #{value_or_column_reference_quoted}
+      EOT
+    end.join("|| ', ' ||")
+    "'{' || #{jsonb_keys_and_values} || '}'"
+  end
+
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records
-  def matching_records_grouped(table_name)
+  def matching_records_grouped(annual_report_upload)
+    table_name = annual_report_upload.sandbox.table_name
     Trade::SandboxTemplate.
     select(
       column_names_for_display +
-      ['COUNT(*) AS error_count', 'ARRAY_AGG(id) AS matching_records_ids']
-    ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
+      [
+        'COUNT(*) AS error_count',
+        'ARRAY_AGG(matching_records.id) AS matching_records_ids'
+      ]
+    ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) matching_records")).
     group(column_names_for_display).having(
       required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
     )

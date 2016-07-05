@@ -97,7 +97,8 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   def run_validations(validation_rules)
     validation_errors = []
     validation_rules.order(:run_order).each do |vr|
-      validation_errors << vr.validation_errors(self)
+      vr.refresh_errors_if_needed(self)
+      validation_errors << vr.validation_errors_for_aru(self)
     end
     validation_errors.flatten
   end
