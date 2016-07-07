@@ -96,14 +96,34 @@ class Trade::SandboxTemplate < ActiveRecord::Base
           sanitize
         end
 
-        def self.update_batch(updates, sandbox_shipments_ids)
+        def destroy
+          super
+          self.class.update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
+        end
+
+        def self.records_for_batch_operation(validation_error, annual_report_upload)
+          vr = validation_error.validation_rule
+          joins(
+            <<-SQL
+            JOIN (
+              #{vr.matching_records_for_aru_and_error(annual_report_upload, validation_error).to_sql}
+            ) matching_records on #{table_name}.id = matching_records.id
+            SQL
+          )
+        end
+
+        def self.update_batch(updates, validation_error, annual_report_upload)
           return unless updates
-          where(:id => sandbox_shipments_ids).update_all(updates)
+          updates[:updated_at] = Time.now()
+          records_for_batch_operation(validation_error, annual_report_upload).
+            update_all(updates)
           sanitize
         end
 
-        def self.destroy_batch(sandbox_shipments_ids)
-          where(:id => sandbox_shipments_ids).delete_all
+        def self.destroy_batch(validation_error, annual_report_upload)
+          records_for_batch_operation(validation_error, annual_report_upload).
+            each(&:delete)
+          update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
         end
 
       end
