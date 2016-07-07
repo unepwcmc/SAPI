@@ -25,13 +25,15 @@
           </a>
         </div>
         <div class="span1">
-          <button {{action "toggleIgnoreValidationError" this}} class="btn btn-mini btn-primary">
-            {{#if isIgnored}}
-              Un-ignore
-            {{else}}
-              Ignore
-            {{/if}}
-          </button>
+          {{#unless isPrimary}}
+            <button {{action "toggleIgnoreValidationError" this}} class="btn btn-mini btn-primary">
+              {{#if isIgnored}}
+                Un-ignore
+              {{else}}
+                Ignore
+              {{/if}}
+            </button>
+          {{/unless}}
         </div>
       </div>
     {{else}}
