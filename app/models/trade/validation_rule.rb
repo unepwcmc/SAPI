@@ -21,6 +21,12 @@ class Trade::ValidationRule < ActiveRecord::Base
   serialize :scope, ActiveRecord::Coders::NestedHstore
   has_many :validation_errors, class_name: Trade::ValidationError
 
+  def matching_records_for_aru_and_error(annual_report_upload, validation_error)
+    table_name = annual_report_upload.sandbox.table_name
+      matching_records(table_name).
+        from("#{table_name}_view AS #{table_name}")
+  end
+
   # returns column names as in the shipments table, based on the
   # list of column_names in sandbox
   def shipments_columns

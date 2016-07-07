@@ -4,7 +4,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   updatesVisible: false
   currentShipment: null
   sandboxShipmentsSaving: false
-  queryParams: ['page', 'sandboxShipmentsIds:sandbox_shipments_ids']
+  queryParams: ['page', 'validationErrorId:validation_error_id']
 
   columns: [
     'appendix', 'taxon_name', 'accepted_taxon_name',
@@ -78,7 +78,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
           url: "trade/annual_report_uploads/#{annualReportUploadId}/sandbox_shipments/update_batch"
           type: "POST"
           data: {
-            sandbox_shipments_ids: @get("controllers.annualReportUpload.currentError.sandboxShipments").mapBy("id"),
+            validation_error_id: @get("controllers.annualReportUpload.currentError.id"),
             updates: valuesToUpdate
           }
         ).success( (data, textStatus, jqXHR) =>
@@ -97,7 +97,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
           url: "trade/annual_report_uploads/#{annualReportUploadId}/sandbox_shipments/destroy_batch"
           type: "POST"
           data: {
-            sandbox_shipments_ids: @get("controllers.annualReportUpload.currentError.sandboxShipments").mapBy("id")
+            validation_error_id: @get("controllers.annualReportUpload.currentError.id")
           }
         ).success( (data, textStatus, jqXHR) =>
           @flashSuccess(message: 'Successfully destroyed shipments.', persists: true)

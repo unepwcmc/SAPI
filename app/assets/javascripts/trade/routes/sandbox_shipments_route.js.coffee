@@ -1,6 +1,6 @@
 Trade.SandboxShipmentsRoute = Trade.BeforeRoute.extend
   queryParams: {
-    sandbox_shipments_ids: { refreshModel: true },
+    validation_error_id: { refreshModel: true },
     page: { refreshModel: true }
   }
 

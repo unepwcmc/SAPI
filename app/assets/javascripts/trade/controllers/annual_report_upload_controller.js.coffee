@@ -35,16 +35,13 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
         dataType: 'json'
       })).then(onSuccess, onError)
 
-
     resetFilters: () ->
       @resetFilters()
 
-
-    # new for sandbox shipments updateSelection
     transitionToSandboxShipments: (error) ->
       @set('currentError', error)
       params = {
-        sandbox_shipments_ids: @get('currentError.sandboxShipmentsIds')
+        validation_error_id: error.get('id')
         page: 1
       }
       @transitionToRoute('sandbox_shipments', {

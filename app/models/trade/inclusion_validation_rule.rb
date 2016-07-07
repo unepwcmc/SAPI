@@ -18,6 +18,15 @@
 class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
+  def matching_records_for_aru_and_error(annual_report_upload, validation_error)
+    sandbox_klass = Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
+    @query = sandbox_klass.
+      from("#{sandbox_klass.table_name}_view #{sandbox_klass.table_name}").
+      where(
+      "'#{validation_error.matching_criteria}'::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
+    )
+  end
+
   def error_message(values_hash = nil)
     scope_info = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
@@ -105,7 +114,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     jsonb_keys_and_values = column_names.map do |c|
       is_numeric = (c =~ /.+_id$/ || c == 'year')
       value = values_hash && values_hash[c]
-      column_reference = "matching_records.#{c}"
+      column_reference = c
       value_or_column_reference_quoted = if value && is_numeric
         value
       elsif value && !is_numeric
@@ -133,7 +142,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       column_names_for_display +
       [
         'COUNT(*) AS error_count',
-        'ARRAY_AGG(matching_records.id) AS matching_records_ids'
+        'ARRAY_AGG(id) AS matching_records_ids'
       ]
     ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) matching_records")).
     group(column_names_for_display).having(
