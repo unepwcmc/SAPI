@@ -23,8 +23,8 @@ class Trade::ValidationRule < ActiveRecord::Base
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
     table_name = annual_report_upload.sandbox.table_name
-      matching_records(table_name).
-        from("#{table_name}_view AS #{table_name}")
+    matching_records(annual_report_upload).
+      from("#{table_name}_view AS #{table_name}")
   end
 
   # returns column names as in the shipments table, based on the
@@ -59,7 +59,7 @@ class Trade::ValidationRule < ActiveRecord::Base
   def refresh_errors_if_needed(annual_report_upload)
     return true unless refresh_needed?(annual_report_upload)
     existing_record = validation_errors_for_aru(annual_report_upload).first
-    matching_records = matching_records(annual_report_upload.sandbox.table_name)
+    matching_records = matching_records(annual_report_upload)
     update_or_create_error_record(
       annual_report_upload,
       existing_record,
