@@ -55,6 +55,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def refresh_errors_if_needed(annual_report_upload)
     return true unless refresh_needed?(annual_report_upload)
+    errors_to_destroy = validation_errors.where(is_ignored: false)
     matching_records_grouped(annual_report_upload).map do |mr|
       values_hash = Hash[column_names.map{ |cn| [cn, mr.send(cn)] }]
       values_hash_for_display = Hash[column_names_for_display.map{ |cn| [cn, mr.send(cn)] }]
@@ -70,7 +71,11 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         error_message(values_hash_for_display),
         jsonb_matching_criteria_for_insert(values_hash)
       )
+      if existing_record
+        errors_to_destroy.reject!{ |e| e.id == existing_record.id }
+      end
     end
+    errors_to_destroy.each(&:destroy)
   end
 
   def validation_errors_for_shipment(shipment)
