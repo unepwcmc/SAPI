@@ -26,9 +26,11 @@ class Trade::FormatValidationRule < Trade::ValidationRule
 
   # Returns records that do not pass the regex test for all columns
   # specified in column_names.
-  def matching_records(table_name)
+  def matching_records(annual_report_upload)
+    table_name = annual_report_upload.sandbox.table_name
+    sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
     s = Arel::Table.new(table_name)
     arel_nodes = column_names.map { |c| "#{c} !~ '#{format_re}'" }
-    Trade::SandboxTemplate.select('*').from(table_name).where(arel_nodes.inject(&:or))
+    sandbox_klass.select('*').where(arel_nodes.inject(&:or))
   end
 end
