@@ -174,7 +174,7 @@ SAPI::Application.routes.draw do
       end
     end
     resources :validation_rules
-    resources :validation_errors, only: [:update]
+    resources :validation_errors, only: [:update, :show]
     resources :shipments do
       collection do
         post :update_batch
