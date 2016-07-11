@@ -12,6 +12,10 @@ Trade.AnnualReportUploadsController = Ember.ArrayController.extend
       aru.get('transaction').commit()    
 
   actions:
+    transitionToReportUploadFromList: (aru)->
+      aru.reload()
+      @transitionToRoute('annual_report_upload', aru)
+
     transitionToReportUpload: (aru)->
       @transitionToRoute('annual_report_upload', aru)
 
