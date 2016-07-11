@@ -29,6 +29,108 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
   let(:sandbox_klass) {
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   }
+  let(:canis_lupus){
+    create_cites_eu_species(
+      taxon_name: create(:taxon_name, scientific_name: 'lupus'),
+      parent: create_cites_eu_genus(
+        :taxon_name => create(:taxon_name, scientific_name: 'Canis')
+      )
+    )
+  }
+
+  describe :matching_records_for_aru_and_error do
+    let(:validation_rule){
+      create_taxon_concept_validation
+    }
+    before(:each) do
+      @shipment1 = sandbox_klass.create(
+        taxon_name: canis_lupus.full_name
+      )
+      @shipment2 = sandbox_klass.create(
+        taxon_name: 'Caniis lupus'
+      )
+      @validation_error = create(
+        :validation_error,
+        annual_report_upload_id: annual_report_upload.id,
+        validation_rule_id: validation_rule.id,
+        matching_criteria: "{\"taxon_name\": \"Caniis lupus\"}",
+        is_ignored: false,
+        is_primary: true,
+        error_message: "taxon_name Caniis lupus is invalid",
+        error_count: 1
+      )
+      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      validation_rule.refresh_errors_if_needed(annual_report_upload)
+    end
+    specify {
+      expect(
+        validation_rule.matching_records_for_aru_and_error(
+          annual_report_upload,
+          @validation_error
+        )
+      ).to eq([@shipment2])
+    }
+  end
+
+  describe :refresh_errors_if_needed do
+    let(:validation_rule){
+      create_taxon_concept_validation
+    }
+    before(:each) do
+      @shipment1 = sandbox_klass.create(
+        taxon_name: canis_lupus.full_name
+      )
+      @shipment2 = sandbox_klass.create(
+        taxon_name: 'Caniis lupus'
+      )
+      @shipment3 = sandbox_klass.create(
+        taxon_name: 'Caniis lupus'
+      )
+      @validation_error = create(
+        :validation_error,
+        annual_report_upload_id: annual_report_upload.id,
+        validation_rule_id: validation_rule.id,
+        matching_criteria: "{\"taxon_name\": \"Caniis lupus\"}",
+        is_ignored: false,
+        is_primary: true,
+        error_message: "taxon_name Caniis lupus is invalid",
+        error_count: 2
+      )
+      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      validation_rule.refresh_errors_if_needed(annual_report_upload)
+    end
+
+    context "when no updates" do
+      specify do
+        expect {
+          validation_rule.refresh_errors_if_needed(annual_report_upload)
+        }.not_to change { Trade::ValidationError.count }
+      end
+    end
+
+    context "when updates and error fixed for all records" do
+      specify "error record is destroyed" do
+        Timecop.travel(Time.now + 1)
+        @shipment2.update_attributes(taxon_name: 'Canis lupus')
+        @shipment3.update_attributes(taxon_name: 'Canis lupus')
+        expect {
+          validation_rule.refresh_errors_if_needed(annual_report_upload)
+        }.to change { Trade::ValidationError.count }.by(-1)
+      end
+    end
+
+    context "when updates and error fixed for some records" do
+      specify "error record is updated to reflect new error_count" do
+        Timecop.travel(Time.now + 1)
+        @shipment2.update_attributes(taxon_name: 'Canis lupus')
+        expect {
+          validation_rule.refresh_errors_if_needed(annual_report_upload)
+        }.to change { @validation_error.reload.error_count }.by(-1)
+      end
+    end
+
+  end
+
   describe :validation_errors_for_aru do
     context 'species name may have extra whitespace between name segments' do
       before(:each) do
