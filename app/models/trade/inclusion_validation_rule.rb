@@ -55,7 +55,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def refresh_errors_if_needed(annual_report_upload)
     return true unless refresh_needed?(annual_report_upload)
-    errors_to_destroy = validation_errors.where(is_ignored: false)
+    errors_to_destroy = validation_errors.where(is_ignored: false).all
     matching_records_grouped(annual_report_upload).map do |mr|
       values_hash = Hash[column_names.map{ |cn| [cn, mr.send(cn)] }]
       values_hash_for_display = Hash[column_names_for_display.map{ |cn| [cn, mr.send(cn)] }]
@@ -118,13 +118,14 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def jsonb_matching_criteria_for_comparison(values_hash = nil)
     jsonb_keys_and_values = column_names.map do |c|
       is_numeric = (c =~ /.+_id$/ || c == 'year')
-      value = values_hash && values_hash[c]
-      column_reference = c
-      value_or_column_reference_quoted = if value && is_numeric
+      value_present = values_hash && values_hash.key?(c)
+      value = value_present && values_hash[c]
+      column_reference = "#{c}"
+      value_or_column_reference_quoted = if value_present && is_numeric
         value
-      elsif value && !is_numeric
+      elsif value_present && !is_numeric
         "'\"#{value}\"'"
-      elsif !value && is_numeric
+      elsif !value_present && is_numeric
         column_reference
       else
         <<-EOT
