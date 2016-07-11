@@ -31,7 +31,7 @@ describe Trade::ValidationRule, :drops_tables => true do
   }
 
   describe Trade::PresenceValidationRule do
-    describe :validation_errors do
+    describe :validation_errors_for_aru do
       before(:each) do
         sandbox_klass.create(:trading_partner => nil)
       end
@@ -43,14 +43,15 @@ describe Trade::ValidationRule, :drops_tables => true do
           )
         }
         specify {
-          subject.validation_errors(annual_report_upload).size.should == 1
+          subject.refresh_errors_if_needed(annual_report_upload)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
     end
   end
 
   describe Trade::NumericalityValidationRule do
-    describe :validation_errors do
+    describe :validation_errors_for_aru do
       before(:each) do
         sandbox_klass.create(:quantity => 'www')
       end
@@ -63,14 +64,15 @@ describe Trade::ValidationRule, :drops_tables => true do
           )
         }
         specify {
-          subject.validation_errors(annual_report_upload).size.should == 1
+          subject.refresh_errors_if_needed(annual_report_upload)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
     end
   end
 
   describe Trade::FormatValidationRule do
-    describe :validation_errors do
+    describe :validation_errors_for_aru do
       before(:each) do
         sandbox_klass.create(:year => '33333')
       end
@@ -79,7 +81,8 @@ describe Trade::ValidationRule, :drops_tables => true do
           create_year_format_validation
         }
         specify {
-          subject.validation_errors(annual_report_upload).size.should == 1
+          subject.refresh_errors_if_needed(annual_report_upload)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
     end

@@ -29,7 +29,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
   let(:sandbox_klass) {
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   }
-  describe :validation_errors do
+  describe :validation_errors_for_aru do
     context 'species name may have extra whitespace between name segments' do
       before(:each) do
         genus = create_cites_eu_genus(
@@ -41,15 +41,11 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         )
       end
       subject {
-        create(
-          :inclusion_validation_rule,
-          :column_names => ['taxon_name'],
-          :valid_values_view => 'valid_taxon_name_view',
-          :is_strict => true
-        )
+        create_taxon_concept_validation
       }
       specify {
-        subject.validation_errors(annual_report_upload).should be_empty
+        subject.refresh_errors_if_needed(annual_report_upload)
+        subject.validation_errors_for_aru(annual_report_upload).should be_empty
       }
     end
     context 'trading partner should be a valid iso code' do
@@ -75,7 +71,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         )
       }
       specify {
-        subject.validation_errors(annual_report_upload).size.should == 1
+        subject.refresh_errors_if_needed(annual_report_upload)
+        subject.validation_errors_for_aru(annual_report_upload).size.should == 1
       }
     end
     context 'term can only be paired with unit as defined by term_trade_codes_pairs table' do
@@ -101,7 +98,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           create_term_unit_validation
         }
         specify {
-          subject.validation_errors(annual_report_upload).size.should == 1
+          subject.refresh_errors_if_needed(annual_report_upload)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
       context "when required unit blank" do
@@ -112,7 +110,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           create_term_unit_validation
         }
         specify {
-          subject.validation_errors(annual_report_upload).size.should == 1
+          subject.refresh_errors_if_needed(annual_report_upload)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
     end
@@ -131,7 +130,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create_term_purpose_validation
       }
       specify {
-        subject.validation_errors(annual_report_upload).size.should == 2
+        subject.refresh_errors_if_needed(annual_report_upload)
+        subject.validation_errors_for_aru(annual_report_upload).size.should == 2
       }
     end
     context 'taxon_concept_id can only be paired with term as defined by trade_taxon_concept_term_pairs table' do
@@ -151,7 +151,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           sandbox_klass.create(:term_code => 'BAL', :taxon_name => @species.full_name)
         end
         specify {
-          subject.validation_errors(annual_report_upload).size.should == 1
+          subject.refresh_errors_if_needed(annual_report_upload)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
       context "when hybrid" do
@@ -167,7 +168,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
           sandbox_klass.create(:term_code => 'BAL', :taxon_name => @hybrid.full_name)
         end
         specify {
-          subject.validation_errors(annual_report_upload).size.should == 1
+          subject.refresh_errors_if_needed(annual_report_upload)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
     end

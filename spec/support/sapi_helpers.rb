@@ -355,6 +355,15 @@ shared_context :sapi do
     )
   end
 
+  def create_taxon_concept_validation
+    create(
+      :inclusion_validation_rule,
+      column_names: ['taxon_name'],
+      valid_values_view: 'valid_taxon_name_view',
+      is_strict: true
+    )
+  end
+
   def create_taxon_concept_appendix_year_validation
     create(:taxon_concept_appendix_year_validation_rule,
       :is_primary => false,

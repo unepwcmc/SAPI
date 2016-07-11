@@ -109,6 +109,7 @@ describe Trade::Shipment do
           :effective_at => '2013-01-01',
           :is_current => true
         )
+        reg2013 # EU event
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
@@ -169,6 +170,7 @@ describe Trade::Shipment do
           :taxon_name => create(:taxon_name, :scientific_name => 'nonsignificatus'),
           :parent => @genus
         )
+        reg2013 # EU event
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
@@ -428,7 +430,8 @@ describe Trade::Shipment do
         @artificial = create(:trade_code, :type => 'Source', :code => 'A', :name_en => 'Artificially propagated')
         create_taxon_concept_source_validation
         cites
-        eu
+        reg2013 # EU event
+        Designation.all.each{ |d| puts d.inspect }
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         @taxon_concept.reload
       end
