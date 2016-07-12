@@ -29,7 +29,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
   let(:sandbox_klass) {
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   }
-  let(:canis_lupus){
+  let(:canis_lupus) {
     create_cites_eu_species(
       taxon_name: create(:taxon_name, scientific_name: 'lupus'),
       parent: create_cites_eu_genus(
@@ -39,7 +39,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
   }
 
   describe :matching_records_for_aru_and_error do
-    let(:validation_rule){
+    let(:validation_rule) {
       create_taxon_concept_validation
     }
     before(:each) do
@@ -73,7 +73,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
   end
 
   describe :refresh_errors_if_needed do
-    let(:validation_rule){
+    let(:validation_rule) {
       create_taxon_concept_validation
     }
     before(:each) do
