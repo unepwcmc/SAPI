@@ -31,7 +31,7 @@ describe Trade::ValidationRule, :drops_tables => true do
   }
 
   describe :matching_records_for_aru_and_error do
-    let(:validation_rule){
+    let(:validation_rule) {
       create_taxon_name_presence_validation
     }
     before(:each) do
@@ -64,7 +64,7 @@ describe Trade::ValidationRule, :drops_tables => true do
   end
 
   describe :refresh_errors_if_needed do
-    let(:validation_rule){
+    let(:validation_rule) {
       create_taxon_name_presence_validation
     }
     before(:each) do

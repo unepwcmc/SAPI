@@ -1,14 +1,14 @@
 require 'spec_helper'
 describe Trade::SandboxFilter do
-  let(:annual_report_upload){
+  let(:annual_report_upload) {
     aru = build(:annual_report_upload)
     aru.save(:validate => false)
     aru
   }
-  let(:sandbox_klass){
+  let(:sandbox_klass) {
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   }
-  let(:canis_lupus){
+  let(:canis_lupus) {
     create_cites_eu_species(
       taxon_name: create(:taxon_name, scientific_name: 'lupus'),
       parent: create_cites_eu_genus(
@@ -16,7 +16,7 @@ describe Trade::SandboxFilter do
       )
     )
   }
-  let(:validation_rule){
+  let(:validation_rule) {
     create_taxon_concept_appendix_year_validation
   }
   before(:each) do

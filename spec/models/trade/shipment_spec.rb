@@ -431,7 +431,6 @@ describe Trade::Shipment do
         create_taxon_concept_source_validation
         cites
         reg2013 # EU event
-        Designation.all.each{ |d| puts d.inspect }
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         @taxon_concept.reload
       end

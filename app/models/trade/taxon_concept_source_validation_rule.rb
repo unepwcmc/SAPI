@@ -43,7 +43,7 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
 
     upper_kingdom_name = Arel::Nodes::NamedFunction.new(
       "UPPER",
-      [ Arel::SqlLiteral.new("taxon_concepts.data->'kingdom_name'") ]
+      [Arel::SqlLiteral.new("taxon_concepts.data->'kingdom_name'")]
     )
 
     arel = s.project(
@@ -56,11 +56,9 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
     ).join(t).on(
       tc['taxonomy_id'].eq(t['id']).and(t['name'].eq('CITES_EU'))
     ).where(
-      (
-        upper_kingdom_name.eq('ANIMALIA').and(
-          s['source_code'].in(
-            INVALID_KINGDOM_SOURCE['ANIMALIA']
-          )
+      upper_kingdom_name.eq('ANIMALIA').and(
+        s['source_code'].in(
+          INVALID_KINGDOM_SOURCE['ANIMALIA']
         )
       ).or(
         upper_kingdom_name.eq('PLANTAE').and(

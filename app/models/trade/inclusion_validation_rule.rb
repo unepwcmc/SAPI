@@ -23,8 +23,8 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     @query = sandbox_klass.
       from("#{sandbox_klass.table_name}_view #{sandbox_klass.table_name}").
       where(
-      "'#{validation_error.matching_criteria}'::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
-    )
+        "'#{validation_error.matching_criteria}'::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
+      )
   end
 
   def error_message(values_hash = nil)
@@ -57,8 +57,8 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     return true unless refresh_needed?(annual_report_upload)
     errors_to_destroy = validation_errors.where(is_ignored: false).all
     matching_records_grouped(annual_report_upload).map do |mr|
-      values_hash = Hash[column_names.map{ |cn| [cn, mr.send(cn)] }]
-      values_hash_for_display = Hash[column_names_for_display.map{ |cn| [cn, mr.send(cn)] }]
+      values_hash = Hash[column_names.map { |cn| [cn, mr.send(cn)] }]
+      values_hash_for_display = Hash[column_names_for_display.map { |cn| [cn, mr.send(cn)] }]
       matching_criteria_jsonb = jsonb_matching_criteria_for_comparison(
         values_hash
       )
@@ -72,7 +72,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         jsonb_matching_criteria_for_insert(values_hash)
       )
       if existing_record
-        errors_to_destroy.reject!{ |e| e.id == existing_record.id }
+        errors_to_destroy.reject! { |e| e.id == existing_record.id }
       end
     end
     errors_to_destroy.each(&:destroy)
@@ -105,11 +105,12 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     jsonb_keys_and_values = column_names.map do |c|
       is_numeric = (c =~ /.+_id$/ || c == 'year')
       value = values_hash[c]
-      value_quoted = if is_numeric
-        value
-      else
-        "\"#{value}\""
-      end
+      value_quoted =
+        if is_numeric
+          value
+        else
+          "\"#{value}\""
+        end
       "\"#{c}\": #{value_quoted}"
     end.join(', ')
     '{' + jsonb_keys_and_values + '}'
@@ -120,18 +121,19 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       is_numeric = (c =~ /.+_id$/ || c == 'year')
       value_present = values_hash && values_hash.key?(c)
       value = value_present && values_hash[c]
-      column_reference = "#{c}"
-      value_or_column_reference_quoted = if value_present && is_numeric
-        value
-      elsif value_present && !is_numeric
-        "'\"#{value}\"'"
-      elsif !value_present && is_numeric
-        column_reference
-      else
-        <<-EOT
-          '"' || #{column_reference} || '"'
-        EOT
-      end
+      column_reference = c.to_s
+      value_or_column_reference_quoted =
+        if value_present && is_numeric
+          value
+        elsif value_present && !is_numeric
+          "'\"#{value}\"'"
+        elsif !value_present && is_numeric
+          column_reference
+        else
+          <<-EOT
+            '"' || #{column_reference} || '"'
+          EOT
+        end
       <<-EOT
         '"' || '#{c}' || '": ' || #{value_or_column_reference_quoted}
       EOT

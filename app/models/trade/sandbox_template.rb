@@ -114,7 +114,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
 
         def self.update_batch(updates, validation_error, annual_report_upload)
           return unless updates
-          updates[:updated_at] = Time.now()
+          updates[:updated_at] = Time.now
           records_for_batch_operation(validation_error, annual_report_upload).
             update_all(updates)
           sanitize
