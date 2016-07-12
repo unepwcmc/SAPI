@@ -5,8 +5,13 @@ Trade.SandboxShipmentsRoute = Trade.BeforeRoute.extend
   }
 
   model: (params, transition) ->
-    @validationError = Trade.ValidationError.find(params.validation_error_id)
-    Trade.SandboxShipment.find(params)
+    @annualReportUpload = @modelFor('annualReportUpload')
+    Trade.ValidationError.find(params.validation_error_id).then((validationError) =>
+      @validationError = validationError
+      Trade.SandboxShipment.find(params)
+    , (validationError) =>
+      @transitionTo('annual_report_upload', @annualReportUpload)
+    )
 
   setupController: (controller, model) ->
     controller.set('model', model)
