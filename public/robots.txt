@@ -1,3 +1,4 @@
+Sitemap: http://speciesplus.net/sitemap.xml.gz
 User-Agent: *
 Disallow: /
 Allow: /about
@@ -5,4 +6,9 @@ Allow: /terms-of-use
 Allow: /cites_trade
 Allow: /species
 Allow: /eu_legislation
-
+Allow: /#/elibrary
+Allow: /#/taxon_concepts/*/legal
+Allow: /#/taxon_concepts/*/names
+Allow: /#/taxon_concepts/*/distribution
+Allow: /#/taxon_concepts/*/references
+Allow: /#/taxon_concepts/*/documents

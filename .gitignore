@@ -22,6 +22,7 @@
 /public/latex/*.gz
 /public/latex/index.pdf
 /public/latex/history.pdf
+/public/sitemap*
 
 #checklist downloads
 /public/downloads/checklist/*.*

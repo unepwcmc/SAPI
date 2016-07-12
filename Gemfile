@@ -146,6 +146,6 @@ gem 'paper_trail', '~> 4.0.0.beta'
 gem 'rails-secrets'
 gem 'dotenv-rails'
 
-gem 'test-unit', '~> 3.1' # annoyingly, rails console won't start without it in staging / production
+gem 'sitemap_generator'
 
 gem 'appsignal'
