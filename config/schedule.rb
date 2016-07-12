@@ -17,3 +17,7 @@ end
 every 5.minutes do
   rake "elibrary:refresh_document_search"
 end
+
+every 1.day, :at => '5:30 am' do
+  rake "-s sitemap:refresh"
+end
