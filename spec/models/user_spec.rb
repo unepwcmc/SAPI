@@ -40,7 +40,10 @@ describe User do
     end
     context "when dependent objects attached" do
       let(:user) { create(:user) }
-      before(:each) { user.make_current; create(:shipment) }
+      before(:each) do
+        user.make_current
+        create(:shipment)
+      end
       specify { user.destroy.should be_false }
     end
   end

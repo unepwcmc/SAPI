@@ -11,14 +11,20 @@ class Admin::SimpleCrudController < Admin::AdminController
   def create
     create! do |success, failure|
       success.js { render 'create' }
-      failure.js { load_associations; render 'new' }
+      failure.js do
+        load_associations
+        render 'new'
+      end
     end
   end
 
   def update
     update! do |success, failure|
       success.js { render 'create' }
-      failure.js { load_associations; render 'new' }
+      failure.js do
+        load_associations
+        render 'new'
+      end
     end
   end
 

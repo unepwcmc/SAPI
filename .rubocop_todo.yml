@@ -572,20 +572,6 @@ Style/RescueModifier:
     - 'app/models/document_search_params.rb'
     - 'config/deploy.rb'
 
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAsExpressionSeparator.
-Style/Semicolon:
-  Exclude:
-    - 'app/controllers/admin/documents_controller.rb'
-    - 'app/controllers/admin/simple_crud_controller.rb'
-    - 'app/controllers/api/v1/documents_controller.rb'
-    - 'spec/models/checklist/timeline_spec.rb'
-    - 'spec/models/nomenclature_change/lump/constructor_spec.rb'
-    - 'spec/models/nomenclature_change/split/constructor_spec.rb'
-    - 'spec/models/trade/annual_report_upload_spec.rb'
-    - 'spec/models/user_spec.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
