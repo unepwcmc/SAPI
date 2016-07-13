@@ -107,7 +107,7 @@ class Checklist::Checklist
     # country
     @countries_count = 0
     unless @countries.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
 
       countries = GeoEntity.find_all_by_id(@countries)
 
@@ -122,7 +122,7 @@ class Checklist::Checklist
     # region
     @regions_count = 0
     unless @cites_regions.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
 
       regions = GeoEntity.find_all_by_id(params[:cites_region_ids])
 
@@ -135,7 +135,7 @@ class Checklist::Checklist
 
     # appendix
     unless @cites_appendices.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
 
       if (!@cites_regions.empty? ||
           !@countries.empty?) &&
@@ -151,14 +151,14 @@ class Checklist::Checklist
 
     # name
     unless @scientific_name.blank?
-      summary = [I18n.t('filter_summary.when_taxon')] if summary.length == 0
+      summary = [I18n.t('filter_summary.when_taxon')] if summary.empty?
 
       summary << "'#{@scientific_name}'"
     end
 
     # synonyms
     if @synonyms
-      if summary.length == 0
+      if summary.empty?
         summary << I18n.t('filter_summary.all_with_synonyms')
       else
         summary << I18n.t('filter_summary.with_synonyms')
@@ -167,7 +167,7 @@ class Checklist::Checklist
 
     # TODO: common names, authors
 
-    if summary.length > 0
+    if !summary.empty?
       summary.join(" ")
     else
       I18n.t('filter_summary.all')

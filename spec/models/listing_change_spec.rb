@@ -32,17 +32,19 @@ describe ListingChange do
   context "validations" do
     describe :create do
       context "all fine with exception" do
-        let(:designation) { create(:designation) }
         let!(:exception_type) { cites_exception }
-        let(:taxon_concept) { create(:taxon_concept) }
-        let(:excluded_taxon_concept) { create(:taxon_concept, :parent_id => taxon_concept) }
+        let(:taxon_concept) { create_cites_eu_species }
+        let(:excluded_taxon_concept) { create_cites_eu_subspecies(parent: taxon_concept) }
         let(:listing_change) {
-          create_cites_I_addition(
-            :taxon_concept => taxon_concept,
-            :excluded_taxon_concepts_ids => "#{excluded_taxon_concept.id}"
+          build(
+            :listing_change,
+            change_type: cites_addition,
+            species_listing: cites_I,
+            taxon_concept: taxon_concept,
+            excluded_taxon_concepts_ids: "#{excluded_taxon_concept.id}"
           )
         }
-        specify { listing_change.exclusions.size == 0 }
+        specify { listing_change.should be_valid }
       end
       context "inclusion taxon concept is lower rank" do
         let(:inclusion) { create_cites_eu_subspecies }

@@ -11,7 +11,7 @@ class ListingChangeObserver < ActiveRecord::Observer
        listing_change.annotation.full_note_es.blank?
       ann = listing_change.annotation
       listing_change.annotation = nil
-      if ann.reload.listing_changes.size == 0
+      if ann.reload.listing_changes.empty?
         ann.delete
       end
     end
@@ -29,7 +29,7 @@ class ListingChangeObserver < ActiveRecord::Observer
     excluded_geo_entities_ids = listing_change.excluded_geo_entities_ids &&
       listing_change.excluded_geo_entities_ids.reject(&:blank?)
     excluded_geo_entities =
-      if excluded_geo_entities_ids && excluded_geo_entities_ids.size > 0
+      if excluded_geo_entities_ids && !excluded_geo_entities_ids.empty?
         new_exclusions << ListingChange.new(
           :change_type_id => exclusion_change_type.id,
           :species_listing_id => listing_change.species_listing_id,
@@ -42,7 +42,7 @@ class ListingChangeObserver < ActiveRecord::Observer
     excluded_taxon_concepts_ids = listing_change.excluded_taxon_concepts_ids &&
       listing_change.excluded_taxon_concepts_ids.split(',').reject(&:blank?)
     excluded_taxon_concepts =
-      if excluded_taxon_concepts_ids && excluded_taxon_concepts_ids.size > 0
+      if excluded_taxon_concepts_ids && !excluded_taxon_concepts_ids.empty?
         excluded_taxon_concepts_ids.map do |id|
           new_exclusions << ListingChange.new(
             :change_type_id => exclusion_change_type.id,

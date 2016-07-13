@@ -15,7 +15,7 @@ class Checklist::TimelinesForTaxonConcept
     ).map(&:species_listing_name)
     @timeline_events = listing_changes.map(&:to_timeline_event)
     @has_descendant_timelines = taxon_concept.cites_listed_descendants
-    @has_events = (@timeline_events.length > 0)
+    @has_events = !@timeline_events.empty?
     @time_start = Time.new('1975-01-01')
     @time_end = Time.new("#{Time.now.year + 2}-01-01")
     generate_timelines
