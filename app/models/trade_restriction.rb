@@ -140,7 +140,7 @@ class TradeRestriction < ActiveRecord::Base
         ['Remarks'] + self.csv_columns_headers
       ids = []
       until (objs = export_query(filters).limit(limit).
-             offset(offset)).empty? do
+             offset(offset)).empty?
         objs.each do |q|
           row = []
           row += Species::RestrictionsExport.fill_taxon_columns(q)

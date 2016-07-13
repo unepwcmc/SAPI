@@ -269,4 +269,3 @@ describe Admin::TaxonListingChangesController do
     end
   end
 end
-

@@ -116,4 +116,3 @@ shared_context "Pecari tajacu" do
     end
   end
 end
-

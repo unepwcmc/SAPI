@@ -17,4 +17,3 @@ describe Admin::AhoyVisitsController, :type => :controller do
     end
   end
 end
-

@@ -64,4 +64,3 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
   end
 
 end
-

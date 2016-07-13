@@ -31,4 +31,3 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 end
-

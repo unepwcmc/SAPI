@@ -64,4 +64,3 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
   end
 
 end
-

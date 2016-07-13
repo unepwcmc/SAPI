@@ -35,4 +35,3 @@ class CitesAc < Event
   end
 
 end
-

@@ -62,4 +62,3 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
     @languages = Language.order(:name_en)
   end
 end
-

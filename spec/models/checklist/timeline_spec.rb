@@ -151,7 +151,7 @@ describe Checklist::Timeline do
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.first.timelines.first }
 
-    specify { puts subject.timeline_events.inspect; puts subject.timeline_intervals.inspect; subject.timeline_intervals.count.should == 1 }
+    specify { subject.timeline_intervals.count.should == 1 }
     specify { subject.timeline_events.count.should == 2 }
     specify { subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
   end

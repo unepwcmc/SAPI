@@ -572,20 +572,6 @@ Style/RescueModifier:
     - 'app/models/document_search_params.rb'
     - 'config/deploy.rb'
 
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAsExpressionSeparator.
-Style/Semicolon:
-  Exclude:
-    - 'app/controllers/admin/documents_controller.rb'
-    - 'app/controllers/admin/simple_crud_controller.rb'
-    - 'app/controllers/api/v1/documents_controller.rb'
-    - 'spec/models/checklist/timeline_spec.rb'
-    - 'spec/models/nomenclature_change/lump/constructor_spec.rb'
-    - 'spec/models/nomenclature_change/split/constructor_spec.rb'
-    - 'spec/models/trade/annual_report_upload_spec.rb'
-    - 'spec/models/user_spec.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -643,13 +629,6 @@ Style/SymbolProc:
     - 'spec/models/nomenclature_change/lump/constructor_spec.rb'
     - 'spec/models/nomenclature_change/split/constructor_spec.rb'
 
-# Offense count: 121
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: final_newline, final_blank_line
-Style/TrailingBlankLines:
-  Enabled: false
-
 # Offense count: 5
 # Cop supports --auto-correct.
 Style/UnlessElse:
@@ -684,25 +663,9 @@ Style/UnneededInterpolation:
 Style/VariableName:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/WhileUntilDo:
-  Exclude:
-    - 'app/models/trade_restriction.rb'
-
 # Offense count: 295
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, MinSize, WordRegex.
 # SupportedStyles: percent, brackets
 Style/WordArray:
   Enabled: false
-
-# Offense count: 12
-# Cop supports --auto-correct.
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'app/models/checklist/checklist.rb'
-    - 'app/models/checklist/timelines_for_taxon_concept.rb'
-    - 'app/models/listing_change_observer.rb'
-    - 'app/models/trade/batch_update.rb'
-    - 'spec/models/listing_change_spec.rb'

@@ -10,4 +10,3 @@ class Admin::CitesHashAnnotationsController < Admin::HashAnnotationsController
   end
 
 end
-
