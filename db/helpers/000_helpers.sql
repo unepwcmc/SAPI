@@ -144,7 +144,7 @@ CREATE OR REPLACE FUNCTION create_trade_sandbox_views() RETURNS void
       AND table_name != 'trade_sandbox_template'
       AND table_type != 'VIEW'
     LOOP
-      aru_id := SUBSTRING(current_table_name, E'trade_sandbox_(\\\\d+)')::INT;
+      aru_id := SUBSTRING(current_table_name, E'trade_sandbox_(\\d+)')::INT;
       IF aru_id IS NULL THEN
   RAISE WARNING 'Unable to determine annual report upload id from %', current_table_name;
       ELSE
