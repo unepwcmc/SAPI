@@ -643,13 +643,6 @@ Style/SymbolProc:
     - 'spec/models/nomenclature_change/lump/constructor_spec.rb'
     - 'spec/models/nomenclature_change/split/constructor_spec.rb'
 
-# Offense count: 121
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: final_newline, final_blank_line
-Style/TrailingBlankLines:
-  Enabled: false
-
 # Offense count: 5
 # Cop supports --auto-correct.
 Style/UnlessElse:

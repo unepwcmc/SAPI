@@ -11,4 +11,3 @@ class Admin::HashAnnotationsController < Admin::SimpleCrudController
   end
 
 end
-

@@ -35,4 +35,3 @@ class Trade::TaxonConceptTermPair < ActiveRecord::Base
     end
   end
 end
-

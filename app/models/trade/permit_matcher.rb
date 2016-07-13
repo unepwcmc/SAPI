@@ -45,4 +45,3 @@ class Trade::PermitMatcher
   end
 
 end
-

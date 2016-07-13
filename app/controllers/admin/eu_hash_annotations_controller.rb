@@ -10,4 +10,3 @@ class Admin::EuHashAnnotationsController < Admin::HashAnnotationsController
   end
 
 end
-

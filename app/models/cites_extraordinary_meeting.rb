@@ -32,4 +32,3 @@ class CitesExtraordinaryMeeting < Event
     [Document::Proposal]
   end
 end
-

@@ -14,4 +14,3 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
     object['start_notification'] && JSON.parse(object['start_notification'])
   end
 end
-

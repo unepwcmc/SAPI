@@ -71,4 +71,3 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
       page(params[:page])
   end
 end
-
