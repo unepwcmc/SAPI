@@ -696,13 +696,3 @@ Style/WhileUntilDo:
 # SupportedStyles: percent, brackets
 Style/WordArray:
   Enabled: false
-
-# Offense count: 12
-# Cop supports --auto-correct.
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'app/models/checklist/checklist.rb'
-    - 'app/models/checklist/timelines_for_taxon_concept.rb'
-    - 'app/models/listing_change_observer.rb'
-    - 'app/models/trade/batch_update.rb'
-    - 'spec/models/listing_change_spec.rb'
