@@ -120,4 +120,3 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     key
   end
 end
-

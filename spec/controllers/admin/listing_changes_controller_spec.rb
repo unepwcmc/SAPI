@@ -76,4 +76,3 @@ describe Admin::ListingChangesController do
     end
   end
 end
-

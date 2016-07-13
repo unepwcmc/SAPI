@@ -166,4 +166,3 @@ shared_context "Moschus" do
     end
   end
 end
-

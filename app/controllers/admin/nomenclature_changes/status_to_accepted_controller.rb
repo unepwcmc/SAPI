@@ -42,4 +42,3 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
   end
 
 end
-
