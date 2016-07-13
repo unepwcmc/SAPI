@@ -55,7 +55,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       :geo_entity => argentina
     )
   end
-  describe :validation_errors do
+  describe :validation_errors_for_aru do
     context "when W source and country of origin blank and exporter doesn't match distribution (E)" do
       before(:each) do
         @aru = build(:annual_report_upload, :point_of_view => 'E', :trading_country_id => canada.id)
@@ -72,7 +72,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create_taxon_concept_exporter_validation
       }
       specify {
-        subject.validation_errors(@aru).size.should == 1
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
     context "when W source and country of origin blank and exporter doesn't match distribution (I)" do
@@ -94,7 +95,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create_taxon_concept_exporter_validation
       }
       specify {
-        subject.validation_errors(@aru).size.should == 1
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
     context "when W source and country XX" do
@@ -116,7 +118,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create_taxon_concept_exporter_validation
       }
       specify {
-        subject.validation_errors(@aru).should be_empty
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).should be_empty
       }
     end
     context "when W source and country doesn't match distribution of higher taxa" do
@@ -138,7 +141,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create_taxon_concept_exporter_validation
       }
       specify {
-        subject.validation_errors(@aru).should be_empty
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).should be_empty
       }
     end
     context "when invalid scope specified" do
@@ -154,7 +158,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create_taxon_concept_exporter_validation
       }
       specify {
-        expect { subject.validation_errors(@aru) }.to_not raise_error(ActiveRecord::StatementInvalid)
+        expect { subject.validation_errors_for_aru(@aru) }.to_not raise_error(ActiveRecord::StatementInvalid)
       }
     end
   end

@@ -34,7 +34,7 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
       :iso_code2 => 'AR'
     )
   }
-  describe :validation_errors do
+  describe :validation_errors_for_aru do
     before(:each) do
       @aru = build(:annual_report_upload, :point_of_view => 'E',
         :trading_country_id => canada.id)
@@ -50,7 +50,8 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
         create_exporter_importer_validation
       }
       specify {
-        subject.validation_errors(@aru).size.should == 1
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
     context 'exporter should not equal importer (I)' do
@@ -66,7 +67,8 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
         create_exporter_importer_validation
       }
       specify {
-        subject.validation_errors(@aru).size.should == 1
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
     context 'exporter should not equal country of origin' do
@@ -78,7 +80,8 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
         create_exporter_country_of_origin_validation
       }
       specify {
-        subject.validation_errors(@aru).size.should == 1
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
   end

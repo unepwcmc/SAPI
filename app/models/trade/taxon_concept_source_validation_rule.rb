@@ -36,29 +36,37 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
 
   private
 
-  # Returns matching records grouped by column_names to return the count of
-  # specific errors and ids of matching records
-  def matching_records_grouped(table_name)
-    sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
-    sandbox_klass.from("#{table_name}_view #{table_name}").
-      joins(<<-SQL
-            INNER JOIN taxon_concepts ON taxon_concepts.id = taxon_concept_id
-            INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
-            AND taxonomies.name = '#{Taxonomy::CITES_EU}'
-           SQL
-      ).where(<<-SQL
-          (
-            UPPER(taxon_concepts.data->'kingdom_name') = 'ANIMALIA'
-              AND source_code IN (#{INVALID_KINGDOM_SOURCE['ANIMALIA'].map { |c| "'#{c}'" }.join(',')})
-          ) OR
-          (
-            UPPER(taxon_concepts.data->'kingdom_name') = 'PLANTAE'
-              AND source_code IN (#{INVALID_KINGDOM_SOURCE['PLANTAE'].map { |c| "'#{c}'" }.join(',')})
+  def matching_records_arel(table_name)
+    s = Arel::Table.new("#{table_name}_view")
+    tc = Arel::Table.new('taxon_concepts')
+    t = Arel::Table.new('taxonomies')
+
+    upper_kingdom_name = Arel::Nodes::NamedFunction.new(
+      "UPPER",
+      [Arel::SqlLiteral.new("taxon_concepts.data->'kingdom_name'")]
+    )
+
+    arel = s.project(
+      s['id'],
+      s['taxon_concept_id'],
+      s['source_code'],
+      s['accepted_taxon_name']
+    ).join(tc).on(
+      s['taxon_concept_id'].eq(tc['id'])
+    ).join(t).on(
+      tc['taxonomy_id'].eq(t['id']).and(t['name'].eq('CITES_EU'))
+    ).where(
+      upper_kingdom_name.eq('ANIMALIA').and(
+        s['source_code'].in(
+          INVALID_KINGDOM_SOURCE['ANIMALIA']
+        )
+      ).or(
+        upper_kingdom_name.eq('PLANTAE').and(
+          s['source_code'].in(
+            INVALID_KINGDOM_SOURCE['PLANTAE']
           )
-        SQL
-     ).
-     select(['COUNT(*) AS error_count', "ARRAY_AGG(#{table_name}.id) AS matching_records_ids",
-            'taxon_concept_id', 'accepted_taxon_name', 'source_code']).
-     group('taxon_concept_id, accepted_taxon_name, source_code')
+        )
+      )
+    )
   end
 end

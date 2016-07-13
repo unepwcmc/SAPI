@@ -19,6 +19,13 @@ class Trade::ValidationRule < ActiveRecord::Base
   attr_accessible :column_names, :run_order, :is_primary, :scope, :is_strict
   include PgArrayParser
   serialize :scope, ActiveRecord::Coders::NestedHstore
+  has_many :validation_errors, class_name: Trade::ValidationError
+
+  def matching_records_for_aru_and_error(annual_report_upload, validation_error)
+    table_name = annual_report_upload.sandbox.table_name
+    matching_records(annual_report_upload).
+      from("#{table_name}_view AS #{table_name}")
+  end
 
   # returns column names as in the shipments table, based on the
   # list of column_names in sandbox
@@ -49,23 +56,21 @@ class Trade::ValidationRule < ActiveRecord::Base
     write_attribute(:column_names, '{' + ary.join(',') + '}')
   end
 
-  def validation_errors(annual_report_upload)
-    matching_records = matching_records(annual_report_upload.sandbox.table_name)
-    error_count = matching_records.length
-    if error_count > 0
-      [
-        Trade::ValidationError.new(
-          :error_message => error_message,
-          :annual_report_upload_id => annual_report_upload.id,
-          :validation_rule_id => self.id,
-          :error_count => error_count,
-          :matching_records_ids => matching_records.map(&:id),
-          :is_primary => self.is_primary
-        )
-      ]
-    else
-      []
-    end
+  def refresh_errors_if_needed(annual_report_upload)
+    return true unless refresh_needed?(annual_report_upload)
+    existing_record = validation_errors_for_aru(annual_report_upload).first
+    matching_records = matching_records(annual_report_upload)
+    update_or_create_error_record(
+      annual_report_upload,
+      existing_record,
+      matching_records.length,
+      error_message,
+      '{}'
+    )
+  end
+
+  def validation_errors_for_aru(annual_report_upload)
+    validation_errors.where(annual_report_upload_id: annual_report_upload.id)
   end
 
   def validation_errors_for_shipment(shipment)
@@ -95,6 +100,34 @@ class Trade::ValidationRule < ActiveRecord::Base
   end
 
   private
+
+  def update_or_create_error_record(annual_report_upload, existing_record, error_count, error_message, matching_criteria)
+    if existing_record
+      if !existing_record.is_ignored && error_count == 0
+        existing_record.destroy
+      else
+        existing_record.update_attributes(
+          error_count: error_count
+        )
+      end
+    elsif error_count > 0
+      Trade::ValidationError.create(
+        annual_report_upload_id: annual_report_upload.id,
+        validation_rule_id: self.id,
+        matching_criteria: matching_criteria,
+        error_message: error_message,
+        error_count: error_count,
+        is_primary: self.is_primary,
+        is_ignored: false
+      )
+    end
+  end
+
+  def refresh_needed?(annual_report_upload)
+    sandbox_updated_at = Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name).maximum(:updated_at)
+    errors_updated_at = validation_errors_for_aru(annual_report_upload).maximum(:updated_at)
+    sandbox_updated_at.blank? || errors_updated_at.blank? || sandbox_updated_at > errors_updated_at
+  end
 
   # If sandbox scope was :source_code => { :inclusion => ['W'] }, shipments
   # scope needs to be :source_code => { :inclusion => [ID of W] }

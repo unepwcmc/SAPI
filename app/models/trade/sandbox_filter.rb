@@ -10,9 +10,8 @@ class Trade::SandboxFilter < Trade::Filter
 
   def initialize_query
     aru = Trade::AnnualReportUpload.find(@options[:annual_report_upload_id])
-    sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
-    @query = sandbox_klass.scoped
-
-    @query = @query.where(:id => @options[:sandbox_shipments_ids])
+    ve = Trade::ValidationError.find(@options[:validation_error_id])
+    vr = ve.validation_rule
+    @query = vr.matching_records_for_aru_and_error(aru, ve)
   end
 end

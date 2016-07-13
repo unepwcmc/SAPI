@@ -346,12 +346,28 @@ shared_context :sapi do
     end
   end
 
+  def create_taxon_name_presence_validation
+    create(
+      :presence_validation_rule,
+      :column_names => ['taxon_name']
+    )
+  end
+
   def create_year_format_validation
     create(
       :format_validation_rule,
       :column_names => ['year'],
       :format_re => '^\d{4}$',
       :is_strict => true
+    )
+  end
+
+  def create_taxon_concept_validation
+    create(
+      :inclusion_validation_rule,
+      column_names: ['taxon_name'],
+      valid_values_view: 'valid_taxon_name_view',
+      is_strict: true
     )
   end
 

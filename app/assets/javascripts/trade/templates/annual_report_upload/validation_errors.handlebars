@@ -1,0 +1,43 @@
+<div class="accordion-heading">
+  <a class="accordion-toggle"
+    data-toggle="collapse"
+    {{bind-attr href="view.collapsibleElement"}}
+  >
+    Validation errors ({{view.content.length}}) {{view.toggleHint}}
+  </a>
+</div>
+<div {{bind-attr id="view.collapsibleId" class=":accordion-body :collapse view.collapsed::in"}}>
+  <div class="accordion-inner">
+    {{#each view.content}}
+      <div class="row-fluid">
+        <div class="span2">
+        {{#if isPrimary}}
+          <span class="label label-important">PRIMARY</span>
+        {{else}}
+          <span {{bind-attr class=":label isIgnored:label-disabled:label-warning"}}>
+            SECONDARY
+          </span>
+        {{/if}}
+        </div>
+        <div class="span9">
+          <a {{action transitionToSandboxShipments this}}>
+            {{errorMessage}} ({{errorCount}})
+          </a>
+        </div>
+        <div class="span1">
+          {{#unless isPrimary}}
+            <button {{action "toggleIgnoreValidationError" this}} class="btn btn-mini btn-primary">
+              {{#if isIgnored}}
+                Un-ignore
+              {{else}}
+                Ignore
+              {{/if}}
+            </button>
+          {{/unless}}
+        </div>
+      </div>
+    {{else}}
+      <div>No errors detected.</div>
+    {{/each}}
+  </div>
+</div>

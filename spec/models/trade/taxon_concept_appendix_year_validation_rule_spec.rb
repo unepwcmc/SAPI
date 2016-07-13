@@ -18,7 +18,7 @@
 require 'spec_helper'
 
 describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
-  describe :validation_errors do
+  describe :validation_errors_for_aru do
 
     before(:each) do
       @aru = build(:annual_report_upload)
@@ -75,7 +75,8 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           create_taxon_concept_appendix_year_validation
         }
         specify {
-          subject.validation_errors(@aru).size.should == 0
+          subject.refresh_errors_if_needed(@aru)
+          subject.validation_errors_for_aru(@aru).size.should == 0
         }
       end
       context "when old listing" do
@@ -91,10 +92,12 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           create_taxon_concept_appendix_year_validation
         }
         specify {
-          subject.validation_errors(@aru).size.should == 1
+          subject.refresh_errors_if_needed(@aru)
+          subject.validation_errors_for_aru(@aru).size.should == 1
         }
         specify {
-          ve = subject.validation_errors(@aru).first
+          subject.refresh_errors_if_needed(@aru)
+          ve = subject.validation_errors_for_aru(@aru).first
           ve.error_message.should == 'taxon_name Loxodonta africana with appendix II with year 1996 is invalid'
         }
       end
@@ -108,10 +111,12 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           create_taxon_concept_appendix_year_validation
         }
         specify {
-          subject.validation_errors(@aru).size.should == 1
+          subject.refresh_errors_if_needed(@aru)
+          subject.validation_errors_for_aru(@aru).size.should == 1
         }
         specify {
-          ve = subject.validation_errors(@aru).first
+          subject.refresh_errors_if_needed(@aru)
+          ve = subject.validation_errors_for_aru(@aru).first
           ve.error_message.should == 'taxon_name Loxodonta africana with appendix N with year 1996 is invalid'
         }
       end
@@ -125,7 +130,8 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           create_taxon_concept_appendix_year_validation
         }
         specify {
-          subject.validation_errors(@aru).size.should == 0
+          subject.refresh_errors_if_needed(@aru)
+          subject.validation_errors_for_aru(@aru).size.should == 0
         }
       end
       context "when hybrid" do
@@ -161,7 +167,8 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           create_taxon_concept_appendix_year_validation
         }
         specify {
-          subject.validation_errors(@aru).size.should == 0
+          subject.refresh_errors_if_needed(@aru)
+          subject.validation_errors_for_aru(@aru).size.should == 0
         }
       end
     end
@@ -176,7 +183,8 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         create_taxon_concept_appendix_year_validation
       }
       specify {
-        subject.validation_errors(@aru).size.should == 0
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).size.should == 0
       }
     end
     context "when not CITES listed and not EU listed" do
@@ -190,7 +198,8 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
         create_taxon_concept_appendix_year_validation
       }
       specify {
-        subject.validation_errors(@aru).size.should == 1
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
   end

@@ -47,7 +47,13 @@ FactoryGirl.define do
       :class => Trade::DistinctValuesValidationRule
     factory :taxon_concept_source_validation_rule,
       :class => Trade::TaxonConceptSourceValidationRule
+  end
 
+  factory :validation_error, :class => Trade::ValidationError do
+    annual_report_upload
+    validation_rule
+    matching_criteria '{}'
+    is_ignored false
   end
 
   factory :trade_taxon_concept_term_pair, :class => Trade::TaxonConceptTermPair do

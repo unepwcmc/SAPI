@@ -5,6 +5,10 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
   filtersSelected: false
   sandboxShipmentsSubmitting: false
 
+  init: ->
+    transaction = @get('store').transaction()
+    @set('transaction', transaction)
+
   capitaliseFirstLetter: (string) ->
     string.charAt(0).toUpperCase() + string.slice(1)
 
@@ -31,18 +35,32 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
         dataType: 'json'
       })).then(onSuccess, onError)
 
-
     resetFilters: () ->
       @resetFilters()
 
-
-    # new for sandbox shipments updateSelection
     transitionToSandboxShipments: (error) ->
       @set('currentError', error)
       params = {
-        sandbox_shipments_ids: @get('currentError.sandboxShipmentsIds')
+        validation_error_id: error.get('id')
         page: 1
       }
       @transitionToRoute('sandbox_shipments', {
         queryParams: params
       })
+
+    toggleIgnoreValidationError: (validationError) ->
+      oldIsIgnoredValue = validationError.get('isIgnored')
+      validationError.set('isIgnored', !oldIsIgnoredValue)
+      unless validationError.get('isSaving')
+        transaction = @get('transaction')
+        transaction.add(validationError)
+        transaction.commit()
+      validationError.one('didUpdate', this, ->
+        @flashSuccess(message: 'Successfully updated error.')
+        if oldIsIgnoredValue
+          @get('validationErrors').addObject(validationError)
+          @get('ignoredValidationErrors').removeObject(validationError)
+        else
+          @get('ignoredValidationErrors').addObject(validationError)
+          @get('validationErrors').removeObject(validationError)
+      )
