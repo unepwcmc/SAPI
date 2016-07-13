@@ -7,7 +7,10 @@ describe NomenclatureChange::Lump::Constructor do
   context :inputs do
     describe :build_inputs do
       let(:lump) { create(:nomenclature_change_lump) }
-      before(:each) { @old_inputs = lump.inputs; constructor.build_inputs }
+      before(:each) do
+        @old_inputs = lump.inputs
+        constructor.build_inputs
+      end
       context "when previously no inputs in place" do
         specify { expect(lump.inputs.size).not_to eq(0) }
       end
@@ -20,7 +23,10 @@ describe NomenclatureChange::Lump::Constructor do
   context :outputs do
     describe :build_output do
       let(:lump) { lump_with_inputs }
-      before(:each) { @old_output = lump.output; constructor.build_output }
+      before(:each) do
+        @old_output = lump.output
+        constructor.build_output
+      end
       context "when previously no output in place" do
         specify { expect(lump.output).not_to be_nil }
       end

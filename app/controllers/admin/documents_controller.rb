@@ -35,7 +35,10 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def update
     update! do |success, failure|
       success.html { success_redirect }
-      failure.html { load_associations; render 'new' }
+      failure.html do
+        load_associations
+        render 'new'
+      end
     end
   end
 
@@ -48,7 +51,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
 
   def show
     @document = Document.find(params[:id])
-    path_to_file = @document.filename.path;
+    path_to_file = @document.filename.path
     if !File.exists?(path_to_file)
       render :file => "#{Rails.root}/public/404.html", :status => 404
     else

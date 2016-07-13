@@ -7,7 +7,10 @@ describe NomenclatureChange::Split::Constructor do
   context :inputs do
     describe :build_input do
       let(:split) { create(:nomenclature_change_split) }
-      before(:each) { @old_input = split.input; constructor.build_input }
+      before(:each) do
+        @old_input = split.input
+        constructor.build_input
+      end
       context "when previously no input in place" do
         specify { expect(split.input).not_to be_nil }
       end
@@ -20,7 +23,10 @@ describe NomenclatureChange::Split::Constructor do
   context :outputs do
     describe :build_outputs do
       let(:split) { split_with_input }
-      before(:each) { @old_outputs = split.outputs; constructor.build_outputs }
+      before(:each) do
+        @old_outputs = split.outputs
+        constructor.build_outputs
+      end
       context "when previously no outputs in place" do
         specify { expect(split.outputs.size).not_to eq(0) }
       end
