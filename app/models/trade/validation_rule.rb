@@ -103,7 +103,7 @@ class Trade::ValidationRule < ActiveRecord::Base
 
   def update_or_create_error_record(annual_report_upload, existing_record, error_count, error_message, matching_criteria)
     if existing_record
-      if !existing_record.is_ignored && error_count == 0
+      if error_count == 0
         existing_record.destroy
       else
         existing_record.update_attributes(
