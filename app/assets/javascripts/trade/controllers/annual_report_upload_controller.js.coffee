@@ -56,7 +56,6 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
         transaction.add(validationError)
         transaction.commit()
       validationError.one('didUpdate', this, ->
-        @flashSuccess(message: 'Successfully updated error.')
         if oldIsIgnoredValue
           @get('validationErrors').addObject(validationError)
           @get('ignoredValidationErrors').removeObject(validationError)
