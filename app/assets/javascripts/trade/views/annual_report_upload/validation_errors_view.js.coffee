@@ -22,3 +22,10 @@ Trade.ValidationErrorsView = Ember.View.extend
   collapsibleElement: ( ->
     '#' + @get('collapsibleId')
   ).property('collapsibleId')
+
+  noErrorsMessage: ( ->
+    if @get('errorType') == 'ignored'
+      'No ignored errors'
+    else
+      'No errors detected'
+  ).property('errorType')
