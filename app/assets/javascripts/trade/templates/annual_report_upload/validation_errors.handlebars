@@ -3,7 +3,7 @@
     data-toggle="collapse"
     {{bind-attr href="view.collapsibleElement"}}
   >
-    Validation errors ({{view.content.length}}) {{view.toggleHint}}
+    {{view.heading}} ({{view.content.length}}) {{view.toggleHint}}
   </a>
 </div>
 <div {{bind-attr id="view.collapsibleId" class=":accordion-body :collapse view.collapsed::in"}}>
@@ -20,7 +20,7 @@
         {{/if}}
         </div>
         <div class="span9">
-          <a {{action transitionToSandboxShipments this}}>
+          <a {{action openError this target="view"}}>
             {{errorMessage}} ({{errorCount}})
           </a>
         </div>
@@ -37,7 +37,7 @@
         </div>
       </div>
     {{else}}
-      <div>No errors detected.</div>
+      <div>{{view.noErrorsMessage}}</div>
     {{/each}}
   </div>
 </div>

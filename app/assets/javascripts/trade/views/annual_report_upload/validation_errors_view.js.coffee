@@ -3,6 +3,9 @@ Trade.ValidationErrorsView = Ember.View.extend
   classNames: ['accordion-group']
 
   didInsertElement: ->
+    @set('defaultCollapsed', @get('collapsed'))
+    if @get('controller.allErrorsCollapsed')
+      @set('collapsed', true)
     $(@get('collapsibleElement')).on('hidden', =>
       @set('collapsed', true)
     )
@@ -10,15 +13,36 @@ Trade.ValidationErrorsView = Ember.View.extend
       @set('collapsed', false)
     )
 
+  allErrorsCollapsedDidChange: ( ->
+    # reset default collapse setting
+    if @get('controller.allErrorsCollapsed') == null
+      @set('collapsed', @get('defaultCollapsed'))
+  ).observes('controller.allErrorsCollapsed')
+
   toggleHint: ( ->
     if @get('collapsed')
       '>>'
     else
       '<<'
   ).property('collapsed')
+
   collapsibleId: ( ->
     @get('errorType') + '-validation-errors'
   ).property('errorType')
+
   collapsibleElement: ( ->
     '#' + @get('collapsibleId')
   ).property('collapsibleId')
+
+  noErrorsMessage: ( ->
+    if @get('errorType') == 'ignored'
+      'No ignored errors'
+    else
+      'No errors detected'
+  ).property('errorType')
+
+  actions:
+
+    openError: (validationError) ->
+      @set('collapsed', true)
+      @get('controller').send('transitionToSandboxShipments', validationError)

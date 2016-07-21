@@ -55,7 +55,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def refresh_errors_if_needed(annual_report_upload)
     return true unless refresh_needed?(annual_report_upload)
-    errors_to_destroy = validation_errors.where(is_ignored: false).all
+    errors_to_destroy = validation_errors.all
     matching_records_grouped(annual_report_upload).map do |mr|
       values_hash = Hash[column_names.map { |cn| [cn, mr.send(cn)] }]
       values_hash_for_display = Hash[column_names_for_display.map { |cn| [cn, mr.send(cn)] }]
