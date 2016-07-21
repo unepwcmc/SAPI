@@ -1,8 +1,6 @@
   <p>
     Selected error: {{controllers.annualReportUpload.currentError.errorMessage}} ({{controllers.annualReportUpload.currentError.errorCount}})
-    {{#link-to "annual_report_upload" controllers.annualReportUpload}}
-      (close this error)
-    {{/link-to}}
+    <a {{action 'closeError'}}>(close this error)</a>
   </p>
 
 <div class="clearfix">

@@ -46,6 +46,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
       @get('controllers.annualReportUpload.id')
     )
     @set('controllers.annualReportUpload.currentError', null)
+    @set('controllers.annualReportUpload.allErrorsCollapsed', null)
 
   unsavedChanges: (->
     @get('changedRowsCount') > 0
@@ -56,6 +57,8 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   ).property('content.@each._modified', 'currentShipment')
 
   actions:
+    closeError: ->
+      @transitionToParentController()
 
     toggleUpdatesVisible: ->
       @toggleProperty 'updatesVisible'

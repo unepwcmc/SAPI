@@ -16,3 +16,4 @@ Trade.SandboxShipmentsRoute = Trade.BeforeRoute.extend
   setupController: (controller, model) ->
     controller.set('model', model)
     @controllerFor('annualReportUpload').set('currentError', @validationError)
+    @controllerFor('annualReportUpload').set('allErrorsCollapsed', true)
