@@ -17,6 +17,8 @@ Trade.ValidationErrorsView = Ember.View.extend
     # reset default collapse setting
     if @get('controller.allErrorsCollapsed') == null
       @set('collapsed', @get('defaultCollapsed'))
+    else
+      @set('collapsed', true)
   ).observes('controller.allErrorsCollapsed')
 
   toggleHint: ( ->
