@@ -40,6 +40,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
 
     transitionToSandboxShipments: (error) ->
       @set('currentError', error)
+      @notifyPropertyChange('allErrorsCollapsed')
       params = {
         validation_error_id: error.get('id')
         page: 1
