@@ -1,3 +1,13 @@
+### 1.0.0
+
+**Species+ Admin:**
+
+* nomenclature changes management
+
+**Trade Admin:**
+
+* ability to ignore secondary errors
+
 ### 0.10.1 - E-Library bug fix (deleting documents)
 
 ### 0.10.0 - E-Library
