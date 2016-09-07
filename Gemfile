@@ -149,3 +149,4 @@ gem 'dotenv-rails'
 gem 'sitemap_generator'
 
 gem 'appsignal'
+gem 'test-unit', '~> 3.1' # annoyingly, rails console won't start without it in staging / production
