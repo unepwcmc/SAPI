@@ -119,12 +119,10 @@
               <li class="<%= if controller_name == 'eu_hash_annotations' then 'active' end%>">
                 <%= link_to 'EU hash annotations', admin_eu_hash_annotations_path %>
               </li>
-              <% unless Rails.env.production? %>
               <li class="divider"></li>
               <li class="<%= if controller_name == 'nomenclature_changes' then 'active' end%>">
                 <%= link_to 'Nomenclature changes', admin_nomenclature_changes_path %>
               </li>
-              <% end %>
             </ul>
           </li>
         <% end %>
