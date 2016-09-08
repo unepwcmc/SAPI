@@ -18,12 +18,14 @@ class Trade::AppendixReport
     ).uniq
 
     @query = Trade::Shipment.from("(#{@query.to_sql}) s").
-    select(['s.id', :legacy_shipment_number, :taxon_concept_id,
+    select([
+      's.id', :legacy_shipment_number, :taxon_concept_id,
       :full_name, :year, :appendix,
       'ARRAY_TO_STRING(ARRAY_AGG_NOTNULL(auto_appendix ORDER BY auto_appendix), \'/\')'
     ]).
     joins('JOIN taxon_concepts ON s.taxon_concept_id = taxon_concepts.id').
-    group(['s.id', :legacy_shipment_number, :taxon_concept_id,
+    group([
+      's.id', :legacy_shipment_number, :taxon_concept_id,
       'taxon_concepts.full_name', :year, :appendix
     ]).order([:full_name, :year, :appendix, 's.id'])
 
@@ -37,7 +39,7 @@ class Trade::AppendixReport
     export_to_csv(
       :query => (diff ? @diff_query : @query),
       :csv_columns => [
-        'ID', 'Legacy Shipment ID', 'Taxon ID', 'Accepted Taxon', 'Year', 'Appendix', 'Auto Appendix',
+        'ID', 'Legacy Shipment ID', 'Taxon ID', 'Accepted Taxon', 'Year', 'Appendix', 'Auto Appendix'
       ],
       :file_path => file_path,
       :encoding => 'latin1',

@@ -17,34 +17,28 @@ require 'spec_helper'
 describe Term do
   describe :destroy do
     context "when no dependent objects attached" do
-      let(:term){ create(:term) }
+      let(:term) { create(:term) }
       specify { term.destroy.should be_true }
     end
     context "when dependent objects attached" do
-      let(:term){ create(:term) }
-      #context "when EU opinion" do
-      #  let!(:eu_opinion){ create(:eu_opinion, :term => term)}
-      #  specify { term.destroy.should be_false }
-      #end
-      #context "when EU suspension" do
-      #  let!(:eu_suspension){ create(:eu_suspension, :term => term)}
-      #  specify { term.destroy.should be_false }
-      #end
+      let(:term) { create(:term) }
       context "when CITES suspension" do
-        let!(:cites_suspension){ create(
-          :cites_suspension,
-          :terms => [term],
-          :start_notification_id => create_cites_suspension_notification.id
-        ) }
+        let!(:cites_suspension) {
+          create(
+            :cites_suspension,
+            :terms => [term],
+            :start_notification_id => create_cites_suspension_notification.id
+          )
+        }
         specify { term.destroy.should be_false }
       end
       context "when CITES quota" do
         let(:geo_entity) { create(:geo_entity) }
-        let!(:quota){ create(:quota, :terms => [term], :geo_entity_id => geo_entity.id)}
+        let!(:quota) { create(:quota, :terms => [term], :geo_entity_id => geo_entity.id) }
         specify { term.destroy.should be_false }
       end
       context "when shipments" do
-        before(:each){ create(:shipment, :term => term) }
+        before(:each) { create(:shipment, :term => term) }
         specify { term.destroy.should be_false }
       end
     end

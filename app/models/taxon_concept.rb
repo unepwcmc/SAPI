@@ -44,16 +44,15 @@ class TaxonConcept < ActiveRecord::Base
 
   attr_accessible :parent_id, :taxonomy_id, :rank_id,
     :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
-    :legacy_id, :legacy_type, :full_name, :name_status,
-    :accepted_scientific_name, :parent_scientific_name,
-    :hybrid_parent_scientific_name, :other_hybrid_parent_scientific_name,
-    :tag_list, :legacy_trade_code,
+    :legacy_id, :legacy_type, :scientific_name, :name_status,
+    :tag_list, :legacy_trade_code, :hybrid_parents_ids,
+    :accepted_names_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
     :created_by_id, :updated_by_id, :dependents_updated_at
 
-  attr_writer :parent_scientific_name
-  attr_accessor :accepted_scientific_name, :hybrid_parent_scientific_name,
-    :other_hybrid_parent_scientific_name
+  attr_writer :accepted_names_ids,
+    :accepted_names_for_trade_name_ids,
+    :hybrid_parents_ids
 
   acts_as_taggable
 
@@ -64,7 +63,7 @@ class TaxonConcept < ActiveRecord::Base
 
   belongs_to :dependents_updater, foreign_key: :dependents_updated_by_id, class_name: User
   belongs_to :parent, :class_name => 'TaxonConcept'
-  has_many :children, class_name: 'TaxonConcept', foreign_key: :parent_id, conditions: {name_status: ['A', 'N']}
+  has_many :children, class_name: 'TaxonConcept', foreign_key: :parent_id, conditions: { name_status: ['A', 'N'] }
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, :through => :taxonomy
@@ -79,13 +78,15 @@ class TaxonConcept < ActiveRecord::Base
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"]
+        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"
+    ]
   has_many :inverse_synonym_relationships, :class_name => 'TaxonRelationship',
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"]
+        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"
+    ]
   has_many :synonyms, :class_name => 'TaxonConcept',
     :through => :synonym_relationships, :source => :other_taxon_concept
   has_many :accepted_names, :class_name => 'TaxonConcept',
@@ -103,7 +104,8 @@ class TaxonConcept < ActiveRecord::Base
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}')"]
+        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}')"
+    ]
   has_many :hybrids, :class_name => 'TaxonConcept',
     :through => :hybrid_relationships, :source => :other_taxon_concept
   has_many :hybrid_parents, :class_name => 'TaxonConcept',
@@ -113,13 +115,15 @@ class TaxonConcept < ActiveRecord::Base
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"]
+        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"
+    ]
   has_many :inverse_trade_name_relationships, :class_name => 'TaxonRelationship',
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
     :conditions => [
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"]
+        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"
+    ]
   has_many :trade_names, :class_name => 'TaxonConcept',
     :through => :trade_name_relationships, :source => :other_taxon_concept
   has_many :accepted_names_for_trade_name, :class_name => 'TaxonConcept',
@@ -153,12 +157,15 @@ class TaxonConcept < ActiveRecord::Base
     :foreign_key => :reported_taxon_concept_id
   has_many :comments, as: 'commentable'
   has_one :general_comment, class_name: 'Comment', as: 'commentable',
-    conditions: {comment_type: 'General'}
+    conditions: { comment_type: 'General' }
   has_one :nomenclature_comment, class_name: 'Comment', as: 'commentable',
-    conditions: {comment_type: 'Nomenclature'}
+    conditions: { comment_type: 'Nomenclature' }
   has_one :distribution_comment, class_name: 'Comment', as: 'commentable',
-    conditions: {comment_type: 'Distribution'}
-  has_many :nomenclature_change_reassignments, :as => :reassignable
+    conditions: { comment_type: 'Distribution' }
+  has_many :parent_reassignments,
+    class_name: 'NomenclatureChange::ParentReassignment',
+    as: :reassignable,
+    dependent: :destroy
   has_many :nomenclature_change_inputs, class_name: 'NomenclatureChange::Input'
   has_many :nomenclature_change_outputs, class_name: 'NomenclatureChange::Output'
   has_many :nomenclature_change_outputs_as_new, class_name: 'NomenclatureChange::Output',
@@ -167,17 +174,18 @@ class TaxonConcept < ActiveRecord::Base
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
   validates :name_status, :presence => true
+  validates :parent_id, presence: true,
+    if: lambda { |tc| ['A', 'N'].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM' }
   validate :parent_in_same_taxonomy, :if => lambda { |tc| tc.parent }
-  validate :parent_at_immediately_higher_rank, :if => lambda { |tc| tc.parent }
-  validate :parent_name_compatible, :if => lambda { |tc|
-    tc.parent && tc.rank && tc.full_name && (
-      ['A', 'N'].include?(tc.name_status) || tc.name_status.blank?
-    )
-  }
-  validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent }
+  validate :parent_at_immediately_higher_rank,
+    :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
+  validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
+  validate :maximum_2_hybrid_parents,
+    :if => lambda { |tc| tc.name_status == 'H' }
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
   validates :full_name, :uniqueness => { :scope => [:taxonomy_id, :author_year] }
+  validate :full_name_cannot_be_changed, on: :update
   validates :taxonomic_position,
     :presence => true,
     :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },
@@ -186,23 +194,11 @@ class TaxonConcept < ActiveRecord::Base
     tc.taxonomy && tc.taxonomy_id_changed?
   }
 
-  before_validation :check_taxon_name_exists,
-    :if => lambda { |tc| tc.full_name }
-  before_validation :check_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.parent_scientific_name }
-  before_validation :check_hybrid_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_hybrid? && tc.hybrid_parent_scientific_name }
-  before_validation :check_other_hybrid_parent_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_hybrid? && tc.other_hybrid_parent_scientific_name }
-  before_validation :check_accepted_taxon_concept_exists,
-    :if => lambda { |tc| tc.is_synonym? && tc.accepted_scientific_name }
-  before_validation :check_accepted_taxon_concept_for_trade_name_exists,
-    :if => lambda { |tc| tc.is_trade_name? && tc.accepted_scientific_name }
   before_validation :ensure_taxonomic_position
 
   translates :nomenclature_note
 
-  scope :at_parent_ranks, lambda{ |rank|
+  scope :at_parent_ranks, lambda { |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position >= ?
@@ -215,7 +211,7 @@ class TaxonConcept < ActiveRecord::Base
     )
   }
 
-  scope :at_ancestor_ranks, lambda{ |rank|
+  scope :at_ancestor_ranks, lambda { |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position < ?
@@ -224,6 +220,49 @@ class TaxonConcept < ActiveRecord::Base
       sanitize_sql_array([joins_sql, rank.taxonomic_position])
     )
   }
+
+  scope :at_self_and_ancestor_ranks, lambda { |rank|
+    joins_sql = <<-SQL
+      INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
+        AND ranks.taxonomic_position <= ?
+    SQL
+    joins(
+      sanitize_sql_array([joins_sql, rank.taxonomic_position])
+    )
+  }
+
+  def self.fetch_taxons_full_name(taxon_ids)
+    if taxon_ids.present?
+      ActiveRecord::Base.connection.execute(
+        <<-SQL
+          SELECT tc.full_name
+          FROM taxon_concepts tc
+          WHERE tc.id = ANY (ARRAY#{taxon_ids.map(&:to_i)})
+          ORDER BY tc.id
+        SQL
+      ).map { |row| row['full_name'] }
+    end
+  end
+
+  def scientific_name=(str)
+    scientific_name =
+      if ['A', 'N'].include?(name_status)
+        TaxonName.sanitize_scientific_name(str)
+      else
+        str
+      end
+    tn = TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
+    if tn
+      self.taxon_name = tn
+      self.taxon_name_id = tn.id
+    else
+      self.build_taxon_name(scientific_name: scientific_name)
+    end
+  end
+
+  def scientific_name
+    taxon_name.try(:scientific_name)
+  end
 
   def has_comments?
     general_comment.try(:note).try(:present?) ||
@@ -249,6 +288,10 @@ class TaxonConcept < ActiveRecord::Base
 
   def has_accepted_names?
     inverse_synonym_relationships.limit(1).count > 0
+  end
+
+  def is_accepted_name?
+    name_status == 'A'
   end
 
   def is_synonym?
@@ -299,11 +342,6 @@ class TaxonConcept < ActiveRecord::Base
     listing['eu_status'] == 'LISTED' && listing['eu_level_of_listing']
   end
 
-  def parent_scientific_name
-    @parent_scientific_name ||
-    parent && parent.full_name
-  end
-
   def standard_taxon_concept_references
     TaxonConceptReference.from('api_taxon_references_view taxon_concept_references').
       where(taxon_concept_id: self.id, is_standard: true)
@@ -311,23 +349,92 @@ class TaxonConcept < ActiveRecord::Base
 
   def inherited_standard_taxon_concept_references
     ref_ids = taxon_concept_references.map(&:reference_id)
-    standard_taxon_concept_references.keep_if{ |ref| !ref_ids.include? ref.id }
+    standard_taxon_concept_references.keep_if { |ref| !ref_ids.include? ref.id }
   end
 
   def expected_full_name(parent)
     if self.rank &&
       Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(self.rank.name)
-      parent.full_name + if self.rank.name == Rank::VARIETY
-        ' var. '
-      else
-        ' '
-      end + self.taxon_name.try(:scientific_name).try(:downcase)
+      parent.full_name +
+        if self.rank.name == Rank::VARIETY
+          ' var. '
+        else
+          ' '
+        end + (self.taxon_name.try(:scientific_name).try(:downcase) || '')
     else
       self.full_name
     end
   end
 
+  def rebuild_taxonomy?(params)
+    new_full_name = params[:taxon_concept] ? params[:taxon_concept][:full_name] : ''
+    new_full_name && new_full_name != full_name &&
+      Rank.in_range(Rank::VARIETY, Rank::GENUS).include?(rank.name)
+  end
+
+  def accepted_names_ids
+    @accepted_names_ids || accepted_names.pluck(:id)
+  end
+
+  def accepted_names_for_trade_name_ids
+    @accepted_names_for_trade_name_ids ||
+    accepted_names_for_trade_name.pluck(:id)
+  end
+
+  def hybrid_parents_ids
+    @hybrid_parents_ids || hybrid_parents.pluck(:id)
+  end
+
+  def rebuild_relationships(taxa_ids)
+    if ['S', 'T', 'H'].include? name_status
+      new_taxa, removed_taxa = init_accepted_taxa(taxa_ids)
+      rel_type =
+        case name_status
+        when 'S'
+          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+        when 'T'
+          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
+        when 'H'
+          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_HYBRID)
+        end
+      add_remove_relationships(new_taxa, removed_taxa, rel_type)
+    end
+  end
+
   private
+
+  def add_remove_relationships(new_taxa, removed_taxa, rel_type)
+    removed_taxa.each do |taxon_concept|
+      taxon_concept.taxon_relationships.
+        where('other_taxon_concept_id = ? AND
+              taxon_relationship_type_id = ?', id, rel_type.id).
+        destroy_all
+    end
+
+    new_taxa.each do |taxon_concept|
+      taxon_concept.taxon_relationships << TaxonRelationship.new(
+        :taxon_relationship_type_id => rel_type.id,
+        :other_taxon_concept_id => id
+      )
+    end
+  end
+
+  def init_accepted_taxa(new_ids)
+    return [[], []] unless ['S', 'T', 'H'].include?(name_status)
+    current_ids =
+      case name_status
+      when 'S' then accepted_names.pluck(:id)
+      when 'T' then accepted_names_for_trade_name.pluck(:id)
+      when 'H' then hybrid_parents.pluck(:id)
+      end
+    ids_to_add = new_ids - current_ids
+    ids_to_remove = current_ids - new_ids
+
+    [
+      TaxonConcept.where(id: ids_to_add),
+      TaxonConcept.where(id: ids_to_remove)
+    ]
+  end
 
   def dependent_objects_map
     {
@@ -347,26 +454,17 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def self.sanitize_full_name(some_full_name)
-    #strip ranks
+    # strip ranks
     if some_full_name =~ /\A(.+)\s+(#{Rank.dict.join('|')})\s*\Z/
       some_full_name = $1
     end
-    #strip redundant whitespace between words
+    # strip redundant whitespace between words
     some_full_name = some_full_name.split(/\s/).join(' ').capitalize
   end
 
   def taxonomy_can_be_changed
     if !can_be_deleted?
       errors.add(:taxonomy_id, "dependent objects present, unable to change taxonomy")
-      return false
-    end
-  end
-
-  def parent_name_compatible
-    self.full_name = TaxonConcept.sanitize_full_name(full_name)
-    if Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(rank.name) &&
-      full_name != expected_full_name(parent)
-      errors.add(:parent_id, "must have compatible name if rank is species, subspecies or variety")
       return false
     end
   end
@@ -394,114 +492,37 @@ class TaxonConcept < ActiveRecord::Base
     end
   end
 
-  def check_taxon_name_exists
-    self.full_name = TaxonConcept.sanitize_full_name(full_name)
-    scientific_name = if is_synonym? || is_trade_name? || is_hybrid?
-      full_name
-    else
-      TaxonName.sanitize_scientific_name(self.full_name)
-    end
-
-    tn = taxon_name && TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
-    if tn
-      self.taxon_name = tn
-      self.taxon_name_id = tn.id
-    else
-      self.build_taxon_name(:scientific_name => scientific_name)
-    end
-
-    true
-  end
-
-  def check_hybrid_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:hybrid_parent_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-      )
-    end
-  end
-
-  def check_other_hybrid_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:other_hybrid_parent_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_HYBRID).id
-      )
-    end
-  end
-
-  def check_accepted_taxon_concept_exists
-    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_SYNONYM).id
-      )
-    end
-  end
-
-  def check_accepted_taxon_concept_for_trade_name_exists
-    check_associated_taxon_concept_exists(:accepted_scientific_name) do |tc|
-      inverse_taxon_relationships.build(
-        :taxon_concept_id => tc.id,
-        :taxon_relationship_type_id => TaxonRelationshipType.
-          find_by_name(TaxonRelationshipType::HAS_TRADE_NAME).id
-      )
-    end
-  end
-
-  def check_parent_taxon_concept_exists
-    check_associated_taxon_concept_exists(:parent_scientific_name) do |tc|
-      self.parent_id = tc.id
-    end
-  end
-
-  def check_associated_taxon_concept_exists(full_name_attr)
-    full_name_var = self.instance_variable_get("@#{full_name_attr}")
-    return true if full_name_var.blank?
-    tc = TaxonConcept.find_by_full_name_and_name_status(full_name_var, 'A', taxonomy_id)
-    unless tc
-      errors.add(full_name_attr, "does not exist")
-      return true
-    end
-    if block_given?
-      yield(tc)
+  def maximum_2_hybrid_parents
+    if hybrid_parents_ids.size > 2
+      errors.add(:hybrid_parents_ids, "maximum 2 hybrid parents")
+      return false
     end
     true
-  end
-
-  def self.find_by_full_name_and_name_status(full_name, name_status, taxonomy_id=nil)
-    full_name = TaxonConcept.sanitize_full_name(full_name)
-    res = TaxonConcept.
-      where([
-        "UPPER(full_name) = UPPER(BTRIM(?)) AND name_status = ?",
-        full_name,
-        name_status
-      ])
-    if taxonomy_id
-      res = res.where(:taxonomy_id => taxonomy_id)
-    end
-    res.first
   end
 
   def ensure_taxonomic_position
     if new_record? && fixed_order_required? && taxonomic_position.blank?
       prev_taxonomic_position =
-      if parent
-        last_sibling = TaxonConcept.where(:parent_id => parent_id).
-          maximum(:taxonomic_position)
-        last_sibling || (parent.taxonomic_position + '.0')
-      else
-        last_root = TaxonConcept.where(:parent_id => nil).
-          maximum(:taxonomic_position)
-        last_root || '0'
-      end
+        if parent
+          last_sibling = TaxonConcept.where(:parent_id => parent_id).
+            maximum(:taxonomic_position)
+          last_sibling || (parent.taxonomic_position + '.0')
+        else
+          last_root = TaxonConcept.where(:parent_id => nil).
+            maximum(:taxonomic_position)
+          last_root || '0'
+        end
       prev_taxonomic_position_parts = prev_taxonomic_position.split('.')
       prev_taxonomic_position_parts << (prev_taxonomic_position_parts.pop || 0).to_i + 1
       self.taxonomic_position = prev_taxonomic_position_parts.join('.')
+    end
+    true
+  end
+
+  def full_name_cannot_be_changed
+    if full_name != full_name_was
+      errors.add(:full_name, "cannot be changed")
+      return false
     end
     true
   end

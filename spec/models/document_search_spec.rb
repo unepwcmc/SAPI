@@ -1,12 +1,12 @@
 require 'spec_helper'
 describe DocumentSearch, sidekiq: :inline do
   describe :results do
-    let(:meliaceae){
+    let(:meliaceae) {
       create_cites_eu_family(
         taxon_name: create(:taxon_name, scientific_name: 'Meliaceae')
       )
     }
-    let(:swietenia_macrophylla){
+    let(:swietenia_macrophylla) {
       create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: 'Swietenia macrophylla'),
         parent: create_cites_eu_genus(
@@ -15,7 +15,7 @@ describe DocumentSearch, sidekiq: :inline do
         )
       )
     }
-    let(:cedrela_odorata){
+    let(:cedrela_odorata) {
       create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: 'Cedrela odorata'),
         parent: create_cites_eu_genus(
@@ -24,7 +24,7 @@ describe DocumentSearch, sidekiq: :inline do
         )
       )
     }
-    let(:belize){
+    let(:belize) {
       create(
         :geo_entity,
         geo_entity_type: country_geo_entity_type,
@@ -32,7 +32,7 @@ describe DocumentSearch, sidekiq: :inline do
         iso_code2: 'BZ'
       )
     }
-    let(:brazil){
+    let(:brazil) {
       create(
         :geo_entity,
         geo_entity_type: country_geo_entity_type,
@@ -40,7 +40,7 @@ describe DocumentSearch, sidekiq: :inline do
         iso_code2: 'BR'
       )
     }
-    let(:document_on_swietenia){
+    let(:document_on_swietenia) {
       document = create(
         :proposal,
         is_public: true,
@@ -58,7 +58,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     }
-    let(:document_on_swietenia_in_belize){
+    let(:document_on_swietenia_in_belize) {
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
@@ -80,7 +80,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     }
-    let(:document_on_swietenia_in_brazil){
+    let(:document_on_swietenia_in_brazil) {
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
@@ -102,7 +102,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     }
-    let(:document_on_swietenia_in_belize_and_brazil){
+    let(:document_on_swietenia_in_belize_and_brazil) {
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
@@ -129,7 +129,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     }
-    let(:document_on_swietenia_in_belize_and_cedrela_in_brazil){
+    let(:document_on_swietenia_in_belize_and_cedrela_in_brazil) {
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
@@ -164,7 +164,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     }
-    let(:document_on_brazil){
+    let(:document_on_brazil) {
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
@@ -181,7 +181,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     }
-    let(:document_without_citations){
+    let(:document_without_citations) {
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),

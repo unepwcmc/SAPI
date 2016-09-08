@@ -1,4 +1,3 @@
-#encoding: utf-8
 module TaxonConceptHelper
   def admin_taxon_concept_title
     content_tag(:div, :class => 'admin-header') do
@@ -8,7 +7,7 @@ module TaxonConceptHelper
         else
           controller_name.titleize
         end
-      ) + (content_tag(:div, :class => 'action-buttons') do
+      ) + (content_tag(:div, class: 'action-buttons') do
         admin_add_new_taxon_concept_multi
       end)
     end
@@ -27,6 +26,9 @@ module TaxonConceptHelper
         end +
         content_tag(:li) do
           link_to('Hybrid', '#new-taxon_concept_hybrid', :"data-toggle" => 'modal')
+        end +
+        content_tag(:li) do
+          link_to('N name', '#new-taxon_concept_n_name', :"data-toggle" => 'modal')
         end
       end
     end
@@ -65,18 +67,44 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_synonym_modal(nested = false)
+  def admin_new_synonym_modal(options = {})
+    nested = options[:nested] || false
     admin_new_modal(
-      :resource => 'taxon_concept_synonym',
-      :title => 'Add new Synonym'
-    ){ nested ? '' : render('synonym_form') }
+      resource: 'taxon_concept_synonym',
+      title: options[:title] || nil
+    ) { nested ? '' : render('synonym_form') }
   end
 
-  def admin_new_trade_name_modal(nested = false)
+  def admin_new_trade_name_modal(options = {})
+    nested = options[:nested] || false
     admin_new_modal(
-      :resource => 'taxon_concept_trade_name',
-      :title => 'Add new Trade name'
-    ){ nested ? '' : render('trade_name_form') }
+      resource: 'taxon_concept_trade_name',
+      title: options[:title] || nil
+    ) { nested ? '' : render('trade_name_form') }
+  end
+
+  def admin_new_hybrid_modal(options = {})
+    nested = options[:nested] || false
+    admin_new_modal(
+      resource: 'taxon_concept_hybrid',
+      title: options[:title] || nil
+    ) { nested ? '' : render('hybrid_form') }
+  end
+
+  def admin_new_n_name_modal(options = {})
+    nested = options[:nested] || false
+    admin_new_modal(
+      resource: 'taxon_concept_n_name',
+      title: options[:title] || nil
+    ) { nested ? '' : render('n_name_form') }
+  end
+
+  def admin_new_taxon_concept_modal(options = {})
+    nested = options[:nested] || false
+    admin_new_modal(
+      resource: 'taxon_concept',
+      title: options[:title] || nil
+    ) { nested ? '' : render('form') }
   end
 
   def admin_add_new_distribution_button
@@ -102,10 +130,10 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_distribution_modal( nested = false)
+  def admin_new_distribution_modal(nested = false)
     admin_new_modal(
       :resource => 'distribution'
-    ){ nested ? '' : render('admin/distributions/form') }
+    ) { nested ? '' : render('admin/distributions/form') }
   end
 
   def admin_edit_distribution_modal(nested = false)
@@ -113,14 +141,7 @@ module TaxonConceptHelper
       :resource => 'distribution',
       :id => 'edit-distribution',
       :title => 'Edit Distribution'
-    ){ nested ? '' : render('admin/distributions/form') }
-  end
-
-  def admin_new_hybrid_modal(nested = false)
-    admin_new_modal(
-      :resource => 'taxon_concept_hybrid',
-      :title => 'Add new Hybrid'
-    ){ nested ? '' : render('hybrid_form') }
+    ) { nested ? '' : render('admin/distributions/form') }
   end
 
   def admin_add_new_reference_button
@@ -141,17 +162,10 @@ module TaxonConceptHelper
     )
   end
 
-  def admin_new_taxon_concept_modal options= {}
-    admin_new_modal(
-      :resource => 'taxon_concept',
-      :title => options[:title] || nil
-    ){ '' }
-  end
-
   def admin_new_cites_suspension_modal
     admin_new_modal(
       :resource => 'cites_suspension'
-    ){ '' }
+    ) { '' }
   end
 
   def admin_add_new_common_name_button
@@ -167,7 +181,7 @@ module TaxonConceptHelper
   def admin_new_common_name_modal
     admin_new_modal(
       :resource => 'common_name', :save_and_reopen => true
-    ){ '' }
+    ) { '' }
   end
 
   def excluded_taxon_concepts_tooltip(obj)
@@ -214,16 +228,16 @@ module TaxonConceptHelper
 
   def taxon_concept_internal_note_form(comment)
     form_for [:admin, @taxon_concept, comment] do |f|
-      content_tag(:table, style:'width:100%') do
+      content_tag(:table, style: 'width:100%') do
         content_tag(:tr) do
-          content_tag(:td, style:'width:30%') do
+          content_tag(:td, style: 'width:30%') do
             taxon_concept_internal_note_label(comment)
           end +
           content_tag(:td) do
             f.text_area(
               :note,
               rows: 4,
-              style:'width:100%'
+              style: 'width:100%'
             ) +
             f.hidden_field(:comment_type) +
             f.submit('Update', class: 'btn btn-primary')
@@ -235,9 +249,9 @@ module TaxonConceptHelper
 
   def taxon_concept_internal_note_display(comment)
     return '' unless comment
-    content_tag(:table, style:'width:100%') do
+    content_tag(:table, style: 'width:100%') do
       content_tag(:tr) do
-        content_tag(:td, style:'width:30%') do
+        content_tag(:td, style: 'width:30%') do
           taxon_concept_internal_note_label(comment)
         end +
         content_tag(:td, comment.note)
@@ -247,7 +261,7 @@ module TaxonConceptHelper
 
   def taxon_concept_internal_note_tab_display(comment)
     if comment && comment.note.present?
-      content_tag(:div, {class: 'alert alert-info'}) do
+      content_tag(:div, { class: 'alert alert-info' }) do
         taxon_concept_internal_note_display(comment)
       end
     end

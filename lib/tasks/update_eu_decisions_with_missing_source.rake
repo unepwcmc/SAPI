@@ -4,8 +4,8 @@ namespace :update do
     file = "lib/files/eu_decisions_with_missing_source.csv"
     drop_table(TMP_TABLE)
     db_columns = ['full_name', 'rank_name', 'start_date', 'party_name', 'decision_type', 'source_code', 'term_code', 'notes']
-    create_table_from_column_array(TMP_TABLE, db_columns.map{ |c| "#{c} TEXT"})
-    #Full Name Rank  Date of Decision  Party EU Decision Source  Term  Notes
+    create_table_from_column_array(TMP_TABLE, db_columns.map { |c| "#{c} TEXT" })
+    # Full Name Rank  Date of Decision  Party EU Decision Source  Term  Notes
     copy_data_into_table(file, TMP_TABLE, db_columns)
 
     wild_source = Source.find_by_code('W')
@@ -44,6 +44,6 @@ namespace :update do
     SQL
 
     res = ActiveRecord::Base.connection.execute update_query
-    puts "#{res.cmd_tuples()} rows linked to 'W' source"
+    puts "#{res.cmd_tuples} rows linked to 'W' source"
   end
 end

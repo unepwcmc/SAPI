@@ -26,24 +26,24 @@ shared_context "Cervus elaphus CMS" do
     )
 
     create_cms_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '1979-01-01',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '1979-01-01',
+      :is_current => true
     )
     create_cms_I_addition(
-     :taxon_concept => @subspecies2,
-     :effective_at => '1979-01-01',
-     :is_current => true
+      :taxon_concept => @subspecies2,
+      :effective_at => '1979-01-01',
+      :is_current => true
     )
     create_cms_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '2006-02-23',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2006-02-23',
+      :is_current => true
     )
     create_cms_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '2006-02-23',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2006-02-23',
+      :is_current => true
     )
 
     create(
@@ -56,7 +56,7 @@ shared_context "Cervus elaphus CMS" do
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
         self.instance_variable_set(:"#{t}_ac",
           MAutoCompleteTaxonConcept.

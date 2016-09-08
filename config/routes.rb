@@ -45,7 +45,6 @@ SAPI::Application.routes.draw do
     resources :geo_relationship_types, :only => [:index]
   end
   namespace :admin do
-    #resources :api_usage, :only => [:index, :show]
     resources :taxonomies, :only => [:index, :create, :update, :destroy]
     resources :terms, :only => [:index, :create, :update, :destroy]
     resources :sources, :only => [:index, :create, :update, :destroy]
@@ -98,7 +97,6 @@ SAPI::Application.routes.draw do
       get :autocomplete, :on => :collection
     end
     resources :geo_entities, :only => [:index, :create, :update, :destroy] do
-      get :autocomplete, :on => :collection
       resources :geo_relationships, :only => [:index, :create, :update, :destroy]
     end
     resources :cites_hash_annotations, :only => [:index, :create, :update, :destroy]
@@ -146,7 +144,7 @@ SAPI::Application.routes.draw do
       resources :taxon_cites_suspensions,
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
-      resources :taxon_instruments, :only => [ :index, :new, :create, :edit, :update, :destroy ]
+      resources :taxon_instruments, :only => [:index, :new, :create, :edit, :update, :destroy]
     end
     resources :nomenclature_changes do
       resources :split, controller: 'nomenclature_changes/split'
@@ -176,6 +174,7 @@ SAPI::Application.routes.draw do
       end
     end
     resources :validation_rules
+    resources :validation_errors, only: [:update, :show]
     resources :shipments do
       collection do
         post :update_batch
@@ -195,7 +194,6 @@ SAPI::Application.routes.draw do
   end
 
   namespace :species do
-    #match 'about' => 'pages#about'
     match 'exports' => 'exports#index'
     match 'exports/download' => 'exports#download'
     get '*foo' => 'ember#start'
@@ -203,8 +201,7 @@ SAPI::Application.routes.draw do
   end
 
   namespace :checklist do
-    resources :geo_entities, :only => [:index] #TODO move to API
-    resources :species_listings, :only => [:index] #TODO move to API
+    resources :geo_entities, :only => [:index] # TODO: move to API
     resources :downloads do
       member do
         get :download
@@ -226,7 +223,6 @@ SAPI::Application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
-  #match '/:locale' => 'cites_trade#index'
   scope "(:locale)", :locale => /en|es|fr/ do
     namespace :cites_trade do
       resources :shipments, :only => [:index]

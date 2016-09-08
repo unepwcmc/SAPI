@@ -32,7 +32,7 @@ class Trade::ShipmentsController < TradeController
     affected_rows = @batch_update.execute(
       populate_accepted_taxon_concept(batch_update_params)
     )
-    render :json => {rows: affected_rows}, :status => :ok
+    render :json => { rows: affected_rows }, :status => :ok
   end
 
   def destroy
@@ -49,7 +49,7 @@ class Trade::ShipmentsController < TradeController
     end.flatten.uniq
     @search.query.destroy_all
     PermitCleanupWorker.perform_async(disconnected_permits_ids)
-    render :json => {rows: cnt}, :status => :ok
+    render :json => { rows: cnt }, :status => :ok
   end
 
   def accepted_taxa_for_reported_taxon_concept
@@ -58,7 +58,7 @@ class Trade::ShipmentsController < TradeController
       :each_serializer => Trade::TaxonConceptSerializer
   end
 
-private
+  private
 
   def shipment_attributes
     [
@@ -100,13 +100,13 @@ private
     unless reporter_type.blank?
       res[:reported_by_exporter] = Trade::Shipment.reporter_type_to_reported_by_exporter(reporter_type)
     end
-    if res.has_key?(:import_permit_number) && res[:import_permit_number].nil?
+    if res.key?(:import_permit_number) && res[:import_permit_number].nil?
       res[:import_permits_ids] = nil
     end
-    if res.has_key?(:export_permit_number) && res[:export_permit_number].nil?
+    if res.key?(:export_permit_number) && res[:export_permit_number].nil?
       res[:export_permits_ids] = nil
     end
-    if res.has_key?(:origin_permit_number) && res[:origin_permit_number].nil?
+    if res.key?(:origin_permit_number) && res[:origin_permit_number].nil?
       res[:origin_permits_ids] = nil
     end
     res

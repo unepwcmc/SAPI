@@ -32,7 +32,7 @@ class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationControl
 
   def load_term_codes
     @term_codes_obj = Term.select([:id, :code]).
-      map { |c| {"id" => c.id, "code" => c.code} }.to_json
+      map { |c| { "id" => c.id, "code" => c.code } }.to_json
   end
 
   def load_trade_code_types
@@ -41,7 +41,7 @@ class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationControl
       'Unit'
     @trade_code_codes = TradeCode.where(:type => @trade_code_type).
       select([:id, :code]).order('code')
-    @trade_code_codes_obj = @trade_code_codes.map { |c| {"value" => c.id, "text" => c.code} }.to_json
+    @trade_code_codes_obj = @trade_code_codes.map { |c| { "value" => c.id, "text" => c.code } }.to_json
   end
 
   def collection

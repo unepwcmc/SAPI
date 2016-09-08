@@ -17,11 +17,12 @@ class Admin::UsersController < Admin::SimpleCrudController
   end
 
   def update
-    update_result = if params[:user][:password].blank?
-      @user.update_without_password(params[:user])
-    else
-      @user.update_attributes(params[:user])
-    end
+    update_result =
+      if params[:user][:password].blank?
+        @user.update_without_password(params[:user])
+      else
+        @user.update_attributes(params[:user])
+      end
     respond_to do |format|
       format.js {
         if update_result
@@ -35,18 +36,18 @@ class Admin::UsersController < Admin::SimpleCrudController
   end
 
   protected
-    def collection
-      @users ||= end_of_association_chain.
-        order(:name).page(params[:page])
-    end
 
-    def load_associations
-      @countries = GeoEntity.joins(:geo_entity_type).
-        where(
-          'geo_entity_types.name' => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY],
-          is_current: true
-        ).
-        order('name_en')
-    end
+  def collection
+    @users ||= end_of_association_chain.
+      order(:name).page(params[:page])
+  end
+
+  def load_associations
+    @countries = GeoEntity.joins(:geo_entity_type).
+      where(
+        'geo_entity_types.name' => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY],
+        is_current: true
+      ).
+      order('name_en')
+  end
 end
-

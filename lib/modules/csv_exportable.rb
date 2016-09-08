@@ -10,8 +10,8 @@ module CsvExportable
   def copy_stmt(options)
     basic_query = query_sql(options[:query], options[:csv_columns])
     # escape quotes around attributes for psql
-    sql =<<-PSQL
-      \\COPY (#{basic_query.gsub(/"/,"\\\"")})
+    sql = <<-PSQL
+      \\COPY (#{basic_query.gsub(/"/, "\\\"")})
       TO :file_name
       WITH DELIMITER :delimiter
       ENCODING :encoding

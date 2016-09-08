@@ -75,25 +75,25 @@ namespace :import do
 
     task :references => :environment do
       Rake::Task["import:references"].invoke(
-       'lib/files/animals/animalia_references_utf8.csv',
-       'lib/files/plants/plantae_references_utf8.csv'
+        'lib/files/animals/animalia_references_utf8.csv',
+        'lib/files/plants/plantae_references_utf8.csv'
       )
       Rake::Task["import:reference_distribution_links"].invoke(
-       'lib/files/animals/animalia_reference_distribution_links_utf8.csv',
-       'lib/files/plants/plantae_reference_distribution_links_utf8.csv'
+        'lib/files/animals/animalia_reference_distribution_links_utf8.csv',
+        'lib/files/plants/plantae_reference_distribution_links_utf8.csv'
       )
       Rake::Task["import:reference_accepted_links"].invoke(
-       'lib/files/animals/animalia_reference_accepted_links_utf8.csv',
-       'lib/files/plants/plantae_reference_accepted_links_utf8.csv'
+        'lib/files/animals/animalia_reference_accepted_links_utf8.csv',
+        'lib/files/plants/plantae_reference_accepted_links_utf8.csv'
       )
       Rake::Task["import:reference_synonym_links"].invoke(
-       'lib/files/animals/animalia_reference_synonym_links_utf8.csv',
-       'lib/files/plants/plantae_reference_synonym_links_utf8.csv'
+        'lib/files/animals/animalia_reference_synonym_links_utf8.csv',
+        'lib/files/plants/plantae_reference_synonym_links_utf8.csv'
       )
       Rake::Task["import:standard_reference_links"].invoke(
-       'lib/files/animals/animalia_standard_reference_links_utf8.csv',
-       'lib/files/animals/CMS_standard_reference_links_utf8.csv',
-       'lib/files/plants/plantae_standard_reference_links_utf8.csv'
+        'lib/files/animals/animalia_standard_reference_links_utf8.csv',
+        'lib/files/animals/CMS_standard_reference_links_utf8.csv',
+        'lib/files/plants/plantae_standard_reference_links_utf8.csv'
       )
     end
 

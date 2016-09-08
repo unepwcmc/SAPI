@@ -21,8 +21,11 @@
 #  original_id                  :integer
 #  discussion_id                :integer
 #  discussion_sort_index        :integer
+#  designation_id               :integer
 #
 
 class Document::ListOfParticipants < Document
-  def self.display_name; 'List of Participants'; end
+  def self.display_name
+    'List of Participants'
+  end
 end

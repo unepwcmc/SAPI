@@ -24,18 +24,19 @@ class Api::V1::DocumentGeoEntitiesController < ApplicationController
 
     render :json => @geo_entities,
       each_serializer: Species::GeoEntitySerializer,
-      meta: {total: @geo_entities.count}
+      meta: { total: @geo_entities.count }
   end
 
   private
-    def set_locale
-      locale = params[:locale].try(:downcase).try(:strip) ||
-        'en'
-      I18n.locale = if ['en', 'es', 'fr'].include?(locale)
+
+  def set_locale
+    locale = params[:locale].try(:downcase).try(:strip) ||
+      'en'
+    I18n.locale =
+      if ['en', 'es', 'fr'].include?(locale)
         locale
       else
         'en'
       end
-    end
-
+  end
 end

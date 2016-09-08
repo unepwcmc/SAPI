@@ -21,8 +21,11 @@
 #  original_id                  :integer
 #  discussion_id                :integer
 #  discussion_sort_index        :integer
+#  designation_id               :integer
 #
 
 class Document::NonDetrimentFindings < Document
-  def self.display_name; 'Non-detriment findings'; end
+  def self.display_name
+    'Non-detriment findings'
+  end
 end

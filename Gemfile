@@ -12,7 +12,7 @@ gem 'activerecord-postgres-hstore'
 gem 'nested-hstore'
 gem 'pg_search', '~> 0.5.7'
 gem 'foreigner'
-gem 'oj' #optimised JSON (picked by multi_json)
+gem 'oj' # optimised JSON (picked by multi_json)
 gem 'nokogiri', '>= 1.6.7.2'
 gem 'inherited_resources'
 gem 'traco', '~> 2.0.0'
@@ -34,7 +34,7 @@ gem 'whenever', :require => false
 
 gem 'ember-rails'
 gem 'ember-source', '1.1.2'
-gem 'jquery-rails', '2.1.4' #do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
+gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 gem 'jquery-mousewheel-rails'
 gem 'jquery-cookie-rails'
 gem 'bootstrap-sass', '~> 2.3.1.0'
@@ -71,7 +71,6 @@ end
 # Use unicorn as the app server
 # gem 'unicorn'
 
-
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
@@ -96,7 +95,7 @@ group :development do
   gem 'capistrano', '~> 3.4', require: false
   gem 'capistrano-rails',   '~> 1.1', require: false
   gem 'capistrano-bundler', '~> 1.1', require: false
-  gem 'capistrano-rvm',   '~> 0.1', require: false
+  gem 'capistrano-rvm', '~> 0.1', require: false
   gem 'capistrano-sidekiq'
   gem 'capistrano-maintenance', '~> 1.0', require: false
   gem 'capistrano-passenger', '~> 0.2.0', require: false
@@ -107,6 +106,7 @@ group :development do
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
+  gem 'rubocop', '~> 0.40.0', require: false
 end
 
 group :test, :development do
@@ -134,20 +134,19 @@ gem 'slim'
 gem 'sinatra', '>= 1.3.0', :require => nil
 
 gem 'memcache-client'
-#gem 'high_voltage'
 
 gem 'jquery-ui-rails'
 
 gem 'geoip'
 
-#track who created or edited a given object
+# track who created or edited a given object
 gem 'clerk'
 gem 'paper_trail', '~> 4.0.0.beta'
-
 
 gem 'rails-secrets'
 gem 'dotenv-rails'
 
-gem 'test-unit', '~> 3.1' # annoyingly, rails console won't start without it in staging / production
+gem 'sitemap_generator'
 
 gem 'appsignal'
+gem 'test-unit', '~> 3.1' # annoyingly, rails console won't start without it in staging / production

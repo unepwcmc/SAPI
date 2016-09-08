@@ -3,6 +3,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
 
   before_filter :set_nomenclature_change, :only => [:show, :update, :destroy]
   before_filter :redirect_in_production
+  before_filter :unset_back, only: [:update]
 
   def finish_wizard_path
     admin_nomenclature_changes_path
@@ -31,17 +32,27 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
   end
 
+  def set_ranks
+    @ranks = Rank.order(:taxonomic_position)
+  end
+
   def skip_or_previous_step
-    if params[:back]
+    if params[:back] || session[:back]
       jump_to(previous_step)
+      session[:back] = true
     else
       skip_step
     end
   end
 
   private
+
   def klass
     NomenclatureChange
+  end
+
+  def unset_back
+    session[:back] = false
   end
 
 end

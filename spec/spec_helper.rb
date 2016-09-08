@@ -21,9 +21,9 @@ require 'capybara/rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
-Dir[Rails.root.join("spec/shared/*.rb")].each {|f| require f}
-Dir[Rails.root.join("spec/models/nomenclature_change/shared/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/shared/*.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/models/nomenclature_change/shared/*.rb")].each { |f| require f }
 RSpec.configure do |config|
   # ## Mock Framework
   #
@@ -54,7 +54,7 @@ RSpec.configure do |config|
   config.include SapiSpec::Helpers
 
   config.before(:all) do
-    DatabaseCleaner.clean_with(:deletion, {:cache_tables => false})
+    DatabaseCleaner.clean_with(:deletion, { :cache_tables => false })
     @user = create(:user)
     @user.make_current
   end
@@ -64,7 +64,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, :drops_tables => true) do
-    DatabaseCleaner.strategy = :deletion, {:cache_tables => false}
+    DatabaseCleaner.strategy = :deletion, { :cache_tables => false }
     ActiveRecord::Base.connection.execute('SELECT * FROM drop_trade_sandboxes()')
   end
 
@@ -101,12 +101,6 @@ end
 def build_attributes(*args)
   FactoryGirl.build(*args).attributes.delete_if do |k, v|
     ["id", "created_at", "updated_at", "touched_at"].member?(k)
-  end
-end
-
-def build_tc_attributes(*args)
-  build_attributes(*args).delete_if do |k, v|
-    %w(data listing notes dependents_updated_at dependents_updated_by_id).include? k
   end
 end
 

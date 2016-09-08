@@ -1,8 +1,8 @@
 class PermitCleanupWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :admin,:backtrace => 50
+  sidekiq_options :queue => :admin, :backtrace => 50
 
-  def perform(permits_ids=[])
+  def perform(permits_ids = [])
     return if permits_ids.empty?
     sql = <<-SQL
       WITH unused_permits(id) AS (
@@ -19,8 +19,10 @@ class PermitCleanupWorker
       WHERE trade_permits.id = unused_permits.id
       SQL
     ActiveRecord::Base.connection.execute(
-      ActiveRecord::Base.send(:sanitize_sql_array, [sql,
+      ActiveRecord::Base.send(:sanitize_sql_array, [
+        sql,
         permits_ids: permits_ids.map(&:to_i)
-    ]))
+      ])
+    )
   end
 end

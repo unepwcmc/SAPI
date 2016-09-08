@@ -36,11 +36,11 @@ class TaxonConceptReference < ActiveRecord::Base
   end
 
   def excluded_taxon_concepts_ids
-    parse_pg_array(read_attribute(:excluded_taxon_concepts_ids)||"").compact
+    parse_pg_array(read_attribute(:excluded_taxon_concepts_ids) || "").compact
   end
 
   def excluded_taxon_concepts_ids=(ary)
-    write_attribute(:excluded_taxon_concepts_ids, '{' + ary + '}' )
+    write_attribute(:excluded_taxon_concepts_ids, '{' + ary + '}')
   end
 
 end

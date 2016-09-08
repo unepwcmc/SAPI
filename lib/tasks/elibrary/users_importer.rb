@@ -7,7 +7,9 @@ class Elibrary::UsersImporter
     @file_name = file_name
   end
 
-  def table_name; :"elibrary_users_import"; end
+  def table_name
+    :"elibrary_users_import"
+  end
 
   def columns_with_type
     [

@@ -1,0 +1,20 @@
+<h2>New status swap: nomenclature change notes</h2>
+<%= status_change_blurb %>
+<%= nomenclature_change_form do |f| %>
+  <p>
+    <i class="icon-info-sign"></i>
+    Taxon resulting from the swap
+  </p>
+  <%= f.fields_for :secondary_output do |ff| %>
+    <div class="control-group">
+      <label class="control-label">
+        <%= ff.object.display_full_name %>
+      </label>
+      <div class="controls">
+        <%= render partial: 'admin/nomenclature_changes/build/nomenclature_notes',
+          locals: {ff: ff}
+        %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

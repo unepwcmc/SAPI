@@ -37,7 +37,7 @@ namespace :import do
         INSERT INTO trade_restrictions(is_current, start_date, end_date, geo_entity_id, quota, publication_date,
           notes, type, unit_id, taxon_concept_id, public_display, url, created_at, updated_at, import_row_id)
         SELECT DISTINCT #{TMP_TABLE}_view.is_current, start_date, end_date, geo_entities.id, quota, publication_date,
-          #{TMP_TABLE}_view.notes, 'Quota', units.id, taxon_concepts.id, public_display, url, 
+          #{TMP_TABLE}_view.notes, 'Quota', units.id, taxon_concepts.id, public_display, url,
           CASE
             WHEN #{TMP_TABLE}_view.created_at IS NULL THEN current_date
             ELSE #{TMP_TABLE}_view.created_at
@@ -53,12 +53,12 @@ namespace :import do
             UPPER(taxon_concepts.legacy_type) = UPPER(BTRIM(#{TMP_TABLE}_view.kingdom)) AND taxon_concepts.taxonomy_id = #{taxonomy_id} AND
             taxon_concepts.rank_id = ranks.id
           LEFT JOIN trade_codes AS units ON UPPER(units.code) = UPPER(BTRIM(#{TMP_TABLE}_view.unit)) AND units.type = 'Unit'
-          WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL 
+          WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
       SQL
 
       ActiveRecord::Base.connection.execute(sql)
 
-      #Add Terms & Sources Relationships
+      # Add Terms & Sources Relationships
       ["terms", "sources"].each do |code|
         sql = <<-SQL
           WITH #{code}_codes_per_quota AS (
@@ -83,4 +83,3 @@ namespace :import do
   end
 
 end
-

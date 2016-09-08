@@ -18,10 +18,10 @@ class Language < ActiveRecord::Base
 
   has_many :common_names
 
-  validates :iso_code1, :uniqueness => true, :length => {:is => 2}, :allow_blank => true
-  validates :iso_code3, :presence => true, :uniqueness => true, :length => {:is => 3}
+  validates :iso_code1, :uniqueness => true, :length => { :is => 2 }, :allow_blank => true
+  validates :iso_code3, :presence => true, :uniqueness => true, :length => { :is => 3 }
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(name_en) LIKE UPPER(:query) OR
         UPPER(name_fr) LIKE UPPER(:query) OR

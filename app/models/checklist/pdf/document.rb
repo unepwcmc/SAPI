@@ -41,13 +41,13 @@ module Checklist::Pdf::Document
     end
 
     @template_tex = [tmp_dir_path, "/#{@input_name}.tex"].join
-    @tmp_tex    = [tmp_dir_path, "/_#{@input_name}.tex"].join
+    @tmp_tex = [tmp_dir_path, "/_#{@input_name}.tex"].join
     # create the dynamic part
     File.open(@tmp_tex, "wb") do |tex|
       yield tex
     end
     output = LatexToPdf.generate_pdf_from_file(tmp_dir_path, @input_name)
-    #save output at download path
+    # save output at download path
     FileUtils.cp output, @download_path
     FileUtils.rm_rf(tmp_dir_path)
   end

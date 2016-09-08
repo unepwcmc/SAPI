@@ -1,5 +1,5 @@
 shared_context "Mellivora capensis" do
-  let(:ghana){
+  let(:ghana) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -7,7 +7,7 @@ shared_context "Mellivora capensis" do
       :iso_code2 => 'GH'
     )
   }
-  let(:botswana){
+  let(:botswana) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -34,9 +34,9 @@ shared_context "Mellivora capensis" do
     )
 
     cites_lc1 = create_cites_III_addition(
-     :taxon_concept => @species,
-     :effective_at => '1976-02-26',
-     :is_current => false
+      :taxon_concept => @species,
+      :effective_at => '1976-02-26',
+      :is_current => false
     )
     create(
       :listing_distribution,
@@ -44,9 +44,9 @@ shared_context "Mellivora capensis" do
       :listing_change => cites_lc1
     )
     cites_lc2 = create_cites_III_addition(
-     :taxon_concept => @species,
-     :effective_at => '1978-04-24',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '1978-04-24',
+      :is_current => true
     )
     create(
       :listing_distribution,
@@ -54,9 +54,9 @@ shared_context "Mellivora capensis" do
       :listing_change => cites_lc2
     )
     cites_lc3 = create_cites_III_deletion(
-     :taxon_concept => @species,
-     :effective_at => '2007-03-04',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2007-03-04',
+      :is_current => true
     )
     create(
       :listing_distribution,
@@ -65,9 +65,9 @@ shared_context "Mellivora capensis" do
     )
 
     eu_lc1 = create_eu_C_addition(
-     :taxon_concept => @species,
-     :effective_at => '2005-08-22',
-     :event => reg2005
+      :taxon_concept => @species,
+      :effective_at => '2005-08-22',
+      :event => reg2005
     )
     create(
       :listing_distribution,
@@ -75,9 +75,9 @@ shared_context "Mellivora capensis" do
       :listing_change => eu_lc1
     )
     eu_lc2 = create_eu_C_addition(
-     :taxon_concept => @species,
-     :effective_at => '2005-08-22',
-     :event => reg2005
+      :taxon_concept => @species,
+      :effective_at => '2005-08-22',
+      :event => reg2005
     )
     create(
       :listing_distribution,
@@ -85,9 +85,9 @@ shared_context "Mellivora capensis" do
       :listing_change => eu_lc2
     )
     eu_lc3 = create_eu_C_addition(
-     :taxon_concept => @species,
-     :effective_at => '2008-04-11',
-     :event => reg2008
+      :taxon_concept => @species,
+      :effective_at => '2008-04-11',
+      :event => reg2008
     )
     create(
       :listing_distribution,
@@ -95,9 +95,9 @@ shared_context "Mellivora capensis" do
       :listing_change => eu_lc3
     )
     eu_lc4 = create_eu_C_deletion(
-     :taxon_concept => @species,
-     :effective_at => '2008-04-11',
-     :event => reg2008
+      :taxon_concept => @species,
+      :effective_at => '2008-04-11',
+      :event => reg2008
     )
     create(
       :listing_distribution,
@@ -105,10 +105,10 @@ shared_context "Mellivora capensis" do
       :listing_change => eu_lc4
     )
     eu_lc5 = create_eu_C_addition(
-     :taxon_concept => @species,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
     create(
       :listing_distribution,
@@ -120,7 +120,7 @@ shared_context "Mellivora capensis" do
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
       end
     end

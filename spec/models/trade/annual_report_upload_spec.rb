@@ -24,16 +24,19 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')
     )
   end
+
   def importer_file
     Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_importer.csv')
     )
   end
+
   def importer_file_w_blanks
     Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_importer_blanks.csv')
     )
   end
+
   def invalid_file
     Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_invalid.csv')
@@ -41,65 +44,65 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
   end
   describe :valid? do
     context "when uploaded file as exporter with exporter column headers" do
-      subject{
+      subject {
         build(
           :annual_report_upload,
           :point_of_view => 'E',
           :csv_source_file => exporter_file
         )
       }
-      specify {subject.should be_valid}
+      specify { subject.should be_valid }
     end
     context "when uploaded file as importer with exporter column headers" do
-      subject{
+      subject {
         build(
           :annual_report_upload,
           :point_of_view => 'I',
           :csv_source_file => exporter_file
         )
       }
-      specify {subject.should_not be_valid}
+      specify { subject.should_not be_valid }
     end
     context "when uploaded file as importer with importer column headers" do
-      subject{
+      subject {
         build(
           :annual_report_upload,
           :point_of_view => 'I',
           :csv_source_file => importer_file
         )
       }
-      specify {subject.should be_valid}
+      specify { subject.should be_valid }
     end
-     context "when uploaded file as exporter with importer column headers" do
-      subject{
+    context "when uploaded file as exporter with importer column headers" do
+      subject {
         build(
           :annual_report_upload,
           :point_of_view => 'E',
           :csv_source_file => importer_file
         )
       }
-      specify {subject.should_not be_valid}
+      specify { subject.should_not be_valid }
     end
   end
 
   describe :validation_errors do
-    let!(:format_validation_rule){
+    let!(:format_validation_rule) {
       create_year_format_validation
     }
-      subject{
-        create(
-          :annual_report_upload,
-          :point_of_view => 'I',
-          :csv_source_file => importer_file
-        )
-      }
-      specify{ subject.validation_errors.should be_empty}
+    subject {
+      create(
+        :annual_report_upload,
+        :point_of_view => 'I',
+        :csv_source_file => importer_file
+      )
+    }
+    specify { subject.validation_errors.should be_empty }
   end
 
-  describe :create do 
-    before(:each){ Trade::CsvSourceFileUploader.enable_processing = true }
+  describe :create do
+    before(:each) { Trade::CsvSourceFileUploader.enable_processing = true }
     context "when blank lines in import file" do
-      subject{
+      subject {
         create(
           :annual_report_upload,
           :point_of_view => 'I',
@@ -114,17 +117,17 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
   end
 
   describe :destroy do
-      subject{
-        create(
-          :annual_report_upload,
-          :point_of_view => 'I',
-          :csv_source_file => importer_file
-        )
-      }
-      specify{
-          subject.sandbox.should_receive(:destroy)
-          subject.destroy
-      }
+    subject {
+      create(
+        :annual_report_upload,
+        :point_of_view => 'I',
+        :csv_source_file => importer_file
+      )
+    }
+    specify {
+      subject.sandbox.should_receive(:destroy)
+      subject.destroy
+    }
   end
 
   describe :submit do
@@ -152,7 +155,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
                         )
     end
     context "when no primary errors" do
-      subject { #aru no primary errors
+      subject { # aru no primary errors
         aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
@@ -171,23 +174,24 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru
       }
       specify {
-        expect{subject.submit}.to change{Trade::Shipment.count}.by(1)
+        expect { subject.submit }.to change { Trade::Shipment.count }.by(1)
       }
       specify {
-        expect{subject.submit}.to change{Trade::Permit.count}.by(3)
+        expect { subject.submit }.to change { Trade::Permit.count }.by(3)
       }
-      specify { #make sure leading space is stripped
-        subject.submit; Trade::Permit.find_by_number('BBB').should_not be_nil
-      }
+      specify "leading space is stripped" do
+        subject.submit
+        Trade::Permit.find_by_number('BBB').should_not be_nil
+      end
       context "when permit previously reported" do
         before(:each) { create(:permit, :number => 'xxx') }
         specify {
-          expect{subject.submit}.to change{Trade::Permit.count}.by(2)
+          expect { subject.submit }.to change { Trade::Permit.count }.by(2)
         }
       end
     end
     context "when primary errors present" do
-      subject { #aru with primary errors
+      subject { # aru with primary errors
         aru = build(:annual_report_upload)
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
@@ -202,14 +206,14 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru
       }
       specify {
-        expect{subject.submit}.not_to change{Trade::Shipment.count}
+        expect { subject.submit }.not_to change { Trade::Shipment.count }
       }
     end
     context "when reported under a synonym" do
       before(:each) do
         @synonym = create_cites_eu_species(
           :name_status => 'S',
-          :full_name => 'Acipenser stenorrhynchus'
+          scientific_name: 'Acipenser stenorrhynchus'
         )
         create(:taxon_relationship,
           :taxon_relationship_type_id => synonym_relationship_type.id,
@@ -217,7 +221,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :other_taxon_concept => @synonym
         )
       end
-      subject { #aru no primary errors
+      subject { # aru no primary errors
         aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
         aru.save(:validate => false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
@@ -236,7 +240,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru
       }
       specify {
-        expect{subject.submit}.to change{Trade::Shipment.count}.by(1)
+        expect { subject.submit }.to change { Trade::Shipment.count }.by(1)
       }
       specify {
         subject.submit

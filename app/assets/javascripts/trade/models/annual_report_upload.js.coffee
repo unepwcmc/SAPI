@@ -10,6 +10,7 @@ Trade.AnnualReportUpload = DS.Model.extend
   updatedBy: DS.attr('string')
   sandboxShipments: DS.hasMany('Trade.SandboxShipment')
   validationErrors: DS.hasMany('Trade.ValidationError')
+  ignoredValidationErrors: DS.hasMany('Trade.ValidationError', {key: 'ignored_validation_errors'})
 
   summary: (->
     @get('tradingCountry.name') + ' (' + @get('pointOfView') + '), ' +
@@ -18,11 +19,8 @@ Trade.AnnualReportUpload = DS.Model.extend
     @get('fileName') + ')'
   ).property('numberOfRows', 'tradingCountry.name', 'pointOfView')
 
-  hasErrors: (->
-    @get('validationErrors.length') > 0
-  ).property('validationErrors.length')
-
 Trade.Adapter.map('Trade.AnnualReportUpload', {
   sandboxShipments: { embedded: 'always' }
   validationErrors: { embedded: 'load' }
+  ignoredValidationErrors: { embedded: 'load' }
 })

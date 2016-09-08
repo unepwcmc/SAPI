@@ -7,7 +7,7 @@ class Species::SynonymsAndTradeNamesExport < Species::CsvCopyExport
     rel.select(sql_columns)
   end
 
-private
+  private
 
   def resource_name
     'synonyms_and_trade_names'

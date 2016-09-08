@@ -21,10 +21,13 @@
 #  original_id                  :integer
 #  discussion_id                :integer
 #  discussion_sort_index        :integer
+#  designation_id               :integer
 #
 
 class Document::ReviewOfSignificantTrade < Document
-  def self.display_name; 'Review of Significant Trade'; end
+  def self.display_name
+    'Review of Significant Trade'
+  end
 
   attr_accessible :review_details_attributes
 

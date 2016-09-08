@@ -6,7 +6,6 @@ set :domain, "unepwcmc-013.vm.brightbox.net"
 ## List of servers
 server "unepwcmc-013.vm.brightbox.net", :app, :web, :db, :primary => true
 
-
 set :application, "sapi"
 set :server_name, "sapi.unepwcmc-013.vm.brightbox.net"
 set :sudo_user, "rails"
@@ -19,7 +18,7 @@ require 'whenever/capistrano'
 
 desc "Configure VHost"
 task :config_vhost do
-  vhost_config =<<-EOF
+  vhost_config = <<-EOF
     server {
       listen 80;
       client_max_body_size 4G;

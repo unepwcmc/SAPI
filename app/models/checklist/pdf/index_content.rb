@@ -1,4 +1,4 @@
-# TODO replace rank name strings with constants from the Rank model
+# TODO: replace rank name strings with constants from the Rank model
 # or better yet, define methods such as "ranks_below_family"
 # in the rank class to clean up the code here
 module Checklist::Pdf::IndexContent
@@ -16,7 +16,7 @@ module Checklist::Pdf::IndexContent
     kingdom = fetcher.next
     return if kingdom.empty?
     tex << "\\cpart{#{kingdom_name}}\n"
-    tex << "\\begin{multicols}{2}{" #start multicols
+    tex << "\\begin{multicols}{2}{" # start multicols
     begin
       entries = kingdom.map do |tc|
         if tc.read_attribute(:name_type) == 'synonym'
@@ -29,8 +29,8 @@ module Checklist::Pdf::IndexContent
       end
       tex << entries.join("\n\n")
       kingdom = fetcher.next
-    end while not kingdom.empty?
-    tex << '}\\end{multicols}' #end multicols
+    end while !kingdom.empty?
+    tex << '}\\end{multicols}' # end multicols
   end
 
   def synonym_entry(tc)

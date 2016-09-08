@@ -7,9 +7,7 @@ Trade.AnnualReportUploadRoute = Trade.BeforeRoute.extend
     @controllerFor('purposes').set('content', Trade.Purpose.find())
     Trade.AnnualReportUpload.find(params.annual_report_upload_id)
 
-  afterModel: (aru, transition) ->
-    aru.reload()
-
   setupController: (controller, model) ->
     controller.set('model', model)
     controller.set('currentError', null)
+    controller.set('allErrorsCollapsed', null)

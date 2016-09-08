@@ -28,7 +28,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
     @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}_separated.csv"
     [
       @file_name,
-      {:filename => public_file_name, :type => 'text/csv'}
+      { :filename => public_file_name, :type => 'text/csv' }
     ]
   end
 
@@ -50,7 +50,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
     resource_name
   end
 
-private
+  private
 
   def basic_query(options)
     options[:limit] ? @search.query_with_limit : @search.query
@@ -79,7 +79,7 @@ private
   def copy_stmt
     # escape quotes around attributes for psql
     sql = <<-PSQL
-      \\COPY (#{query_sql(:limit => !internal?).gsub(/"/,"\\\"")})
+      \\COPY (#{query_sql(:limit => !internal?).gsub(/"/, "\\\"")})
       TO ?
       WITH DELIMITER '#{@csv_separator_char}'
       ENCODING 'latin1'
@@ -94,32 +94,32 @@ private
 
   def available_columns
     {
-      :id => {:internal => true},
+      :id => { :internal => true },
       :year => {},
       :appendix => {},
       :taxon => {},
-      :taxon_concept_id => {:internal => true},
-      :class_name => {:internal => true},
-      :order_name => {:internal => true},
-      :family_name => {:internal => true},
-      :genus_name => {:internal => true},
-      :reported_taxon => {:internal => true},
-      :reported_taxon_concept_id => {:internal => true},
-      :term => {:en => :term_name_en, :es => :term_name_es, :fr => :term_name_fr},
+      :taxon_concept_id => { :internal => true },
+      :class_name => { :internal => true },
+      :order_name => { :internal => true },
+      :family_name => { :internal => true },
+      :genus_name => { :internal => true },
+      :reported_taxon => { :internal => true },
+      :reported_taxon_concept_id => { :internal => true },
+      :term => { :en => :term_name_en, :es => :term_name_es, :fr => :term_name_fr },
       :quantity => {},
-      :unit => {:en => :unit_name_en, :es => :unit_name_es, :fr => :unit_name_fr},
+      :unit => { :en => :unit_name_en, :es => :unit_name_es, :fr => :unit_name_fr },
       :importer => {},
       :exporter => {},
       :country_of_origin => {},
       :purpose => {},
       :source => {},
-      :reporter_type => {:internal => true},
-      :import_permit_number => {:internal => true},
-      :export_permit_number => {:internal => true},
-      :origin_permit_number => {:internal => true},
-      :legacy_shipment_number => {:internal => true},
-      :created_by => {:internal => true},
-      :updated_by => {:internal => true}
+      :reporter_type => { :internal => true },
+      :import_permit_number => { :internal => true },
+      :export_permit_number => { :internal => true },
+      :origin_permit_number => { :internal => true },
+      :legacy_shipment_number => { :internal => true },
+      :created_by => { :internal => true },
+      :updated_by => { :internal => true }
     }
   end
 
@@ -131,7 +131,7 @@ private
   end
 
   def sql_columns
-    report_columns.map{ |column, properties| properties[I18n.locale] || column }
+    report_columns.map { |column, properties| properties[I18n.locale] || column }
   end
 
 end

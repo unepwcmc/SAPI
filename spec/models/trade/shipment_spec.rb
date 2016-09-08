@@ -70,7 +70,6 @@ describe Trade::Shipment do
 
   describe "secondary validations" do
 
-
     before(:each) do
       # an animal
       @genus = create_cites_eu_genus(
@@ -110,35 +109,36 @@ describe Trade::Shipment do
           :effective_at => '2013-01-01',
           :is_current => true
         )
+        reg2013 # EU event
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
       context "invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept, :appendix => 'II', :year => 2013
           )
         }
-        specify{ subject.warnings.should_not be_empty }
+        specify { subject.warnings.should_not be_empty }
       end
       context "invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
           )
         }
-        specify{ subject.warnings.should_not be_empty }
+        specify { subject.warnings.should_not be_empty }
       end
       context "valid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept, :appendix => 'I', :year => 2013
           )
         }
-        specify{ subject.warnings.should be_empty }
+        specify { subject.warnings.should be_empty }
       end
     end
 
@@ -154,13 +154,13 @@ describe Trade::Shipment do
         create_taxon_concept_appendix_year_validation
       end
       context "valid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
           )
         }
-        specify{ subject.warnings.should be_empty }
+        specify { subject.warnings.should be_empty }
       end
     end
 
@@ -170,17 +170,18 @@ describe Trade::Shipment do
           :taxon_name => create(:taxon_name, :scientific_name => 'nonsignificatus'),
           :parent => @genus
         )
+        reg2013 # EU event
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
       context "not CITES listed and not EU listed" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
           )
         }
-        specify{ subject.warnings.should_not be_empty }
+        specify { subject.warnings.should_not be_empty }
       end
     end
 
@@ -199,7 +200,7 @@ describe Trade::Shipment do
         create_term_unit_validation
       end
       context "invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :term => @cav, :unit => @bag
@@ -208,7 +209,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should_not be_empty }
       end
       context "valid" do
-        subject{
+        subject {
           create(
             :shipment,
             :term => @cav, :unit => @kil
@@ -217,7 +218,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should be_empty }
       end
       context "blank unit is valid" do
-        subject{
+        subject {
           create(
             :shipment,
             :term => @cav, :unit => nil
@@ -226,7 +227,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should be_empty }
       end
       context "blank unit is invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :term => @cap, :unit => nil
@@ -245,7 +246,7 @@ describe Trade::Shipment do
         create_term_purpose_validation
       end
       context "invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :term => @cav, :purpose => @b
@@ -254,7 +255,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should_not be_empty }
       end
       context "valid" do
-        subject{
+        subject {
           create(
             :shipment,
             :term => @cav, :purpose => @p
@@ -273,7 +274,7 @@ describe Trade::Shipment do
         create_taxon_concept_term_validation
       end
       context "invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept, :term => @cav
@@ -282,7 +283,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should_not be_empty }
       end
       context "valid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept, :term => @bal
@@ -296,7 +297,7 @@ describe Trade::Shipment do
         create_taxon_concept_country_of_origin_validation
       end
       context "invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :source => @wild,
@@ -307,7 +308,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should_not be_empty }
       end
       context "valid" do
-        subject{
+        subject {
           create(
             :shipment,
             :source => @wild,
@@ -318,7 +319,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should be_empty }
       end
       context "blank" do
-        subject{
+        subject {
           create(
             :shipment,
             :source => @wild,
@@ -334,7 +335,7 @@ describe Trade::Shipment do
         create_taxon_concept_exporter_validation
       end
       context "invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :source => @wild,
@@ -346,7 +347,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should_not be_empty }
       end
       context "valid" do
-        subject{
+        subject {
           create(
             :shipment,
             :source => @wild,
@@ -358,7 +359,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should be_empty }
       end
       context "valid with XX" do
-        subject{
+        subject {
           create(
             :shipment,
             :source => @wild,
@@ -375,7 +376,7 @@ describe Trade::Shipment do
         create_exporter_country_of_origin_validation
       end
       context "invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept,
@@ -386,7 +387,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should_not be_empty }
       end
       context "valid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept,
@@ -402,7 +403,7 @@ describe Trade::Shipment do
         create_exporter_importer_validation
       end
       context "invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept,
@@ -413,7 +414,7 @@ describe Trade::Shipment do
         specify { subject.warnings.should_not be_empty }
       end
       context "valid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept,
@@ -429,12 +430,12 @@ describe Trade::Shipment do
         @artificial = create(:trade_code, :type => 'Source', :code => 'A', :name_en => 'Artificially propagated')
         create_taxon_concept_source_validation
         cites
-        eu
+        reg2013 # EU event
         Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         @taxon_concept.reload
       end
       context "invalid" do
-        subject{
+        subject {
           create(
             :shipment,
             :taxon_concept => @taxon_concept,
@@ -444,10 +445,9 @@ describe Trade::Shipment do
         specify { subject.warnings.should_not be_empty }
       end
       context "valid" do
-        subject{
+        subject {
           create(
             :shipment,
-            :taxon_concept => @taxon_concept,
             :taxon_concept => @taxon_concept,
             :source => @wild
           )

@@ -8,14 +8,14 @@ class Species::ExportsController < ApplicationController
       :csv_separator => cookies['speciesplus.csv_separator'].try(:to_sym)
     })
     case params[:data_type]
-      when 'Quotas'
-        result = Quota.export @filters
-      when 'CitesSuspensions'
-        result = CitesSuspension.export @filters
-      when 'Listings'
-        result = Species::ListingsExportFactory.new(@filters).export
-      when 'EuDecisions'
-        result = Species::EuDecisionsExport.new(@filters).export
+    when 'Quotas'
+      result = Quota.export @filters
+    when 'CitesSuspensions'
+      result = CitesSuspension.export @filters
+    when 'Listings'
+      result = Species::ListingsExportFactory.new(@filters).export
+    when 'EuDecisions'
+      result = Species::EuDecisionsExport.new(@filters).export
     end
     respond_to do |format|
       format.html {
@@ -30,7 +30,7 @@ class Species::ExportsController < ApplicationController
         end
       }
       format.json {
-        render :json => {:total => result.is_a?(Array) ? 1 : 0}
+        render :json => { :total => result.is_a?(Array) ? 1 : 0 }
       }
     end
   end
@@ -53,7 +53,7 @@ class Species::ExportsController < ApplicationController
 
   def ensure_data_type_and_filters
     unless params[:data_type] && params[:filters]
-      render :nothing => true, :status => :unprocessable_entity and return false
+      render(:nothing => true, :status => :unprocessable_entity) && (return false)
     end
   end
 end

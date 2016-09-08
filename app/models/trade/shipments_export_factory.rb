@@ -1,24 +1,24 @@
 class Trade::ShipmentsExportFactory
   def self.new(filters)
     filters ||= {}
-    filters = filters.merge({:locale => I18n.locale})
+    filters = filters.merge({ :locale => I18n.locale })
     @report_type = filters[:report_type]
     unless report_types.include? @report_type
       @report_type = :comptab
     end
     case @report_type
-      when :comptab
-        Trade::ShipmentsComptabExport.new(filters)
-      when :gross_exports
-        Trade::ShipmentsGrossExportsExport.new(filters)
-      when :gross_imports
-        Trade::ShipmentsGrossImportsExport.new(filters)
-      when :net_exports
-        Trade::ShipmentsNetExportsExport.new(filters)
-      when :net_imports
-        Trade::ShipmentsNetImportsExport.new(filters)
-      else
-        Trade::ShipmentsExport.new(filters)
+    when :comptab
+      Trade::ShipmentsComptabExport.new(filters)
+    when :gross_exports
+      Trade::ShipmentsGrossExportsExport.new(filters)
+    when :gross_imports
+      Trade::ShipmentsGrossImportsExport.new(filters)
+    when :net_exports
+      Trade::ShipmentsNetExportsExport.new(filters)
+    when :net_imports
+      Trade::ShipmentsNetImportsExport.new(filters)
+    else
+      Trade::ShipmentsExport.new(filters)
     end
   end
 

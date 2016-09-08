@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Admin::EventDocumentsController, sidekiq: :inline do
   login_admin
-  let(:event){ create(:event, published_at: DateTime.new(2014,12,25)) }
+  let(:event) { create(:event, published_at: DateTime.new(2014, 12, 25)) }
 
   describe "ordering" do
     before(:each) do

@@ -21,8 +21,11 @@
 #  original_id                  :integer
 #  discussion_id                :integer
 #  discussion_sort_index        :integer
+#  designation_id               :integer
 #
 
 class Document::ShortSummaryOfConclusions < Document
-  def self.display_name; 'Short Summary of Conclusions'; end
+  def self.display_name
+    'Short Summary of Conclusions'
+  end
 end

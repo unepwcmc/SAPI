@@ -40,7 +40,7 @@ describe Admin::TaxonomiesController do
   end
 
   describe "XHR PUT update JSON" do
-    let(:taxonomy){ create(:taxonomy) }
+    let(:taxonomy) { create(:taxonomy) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => taxonomy.id, :taxonomy => { :name => 'ZZ' }
       response.should be_success
@@ -52,7 +52,7 @@ describe Admin::TaxonomiesController do
   end
 
   describe "DELETE destroy" do
-    let(:taxonomy){ create(:taxonomy) }
+    let(:taxonomy) { create(:taxonomy) }
     it "redirects after delete" do
       delete :destroy, :id => taxonomy.id
       response.should redirect_to(admin_taxonomies_url)
@@ -68,7 +68,7 @@ describe Admin::TaxonomiesController do
       end
     end
     describe "DELETE destroy" do
-      let(:taxonomy){ create(:taxonomy) }
+      let(:taxonomy) { create(:taxonomy) }
       it "fails to delete and redirects to admin_root_path" do
         delete :destroy, :id => taxonomy.id
         response.should redirect_to(admin_root_path)

@@ -1,22 +1,24 @@
 en:
   following_taxonomic_changes: ', following taxonomic changes adopted at %{event}'
+  in_year: ' in %{year}'
+  new_name:
+    new_name_note: '%{output_taxon} was added to the database in %{year}'
   split:
-    output_split_from: '%{output_taxon} was split from %{input_taxon} in %{year}'
-    input_split_into: '%{input_taxon} was split into %{output_taxa} in %{year}'
+    output_split_from: '%{output_taxon} was split from %{input_taxon}'
+    input_split_into: '%{input_taxon} was split into %{output_taxa}'
     listing_change: 'Originally listed as %{input_taxon}, from which %{output_taxon} was split'
     suspension: 'Suspension originally formed for %{input_taxon}, from which %{output_taxon} was split'
     opinion: 'Opinion originally formed for %{input_taxon}, from which %{output_taxon} was split'
     quota: 'Quota originally published for %{input_taxon}, from which %{output_taxon} was split'
   lump:
-    input_lumped_into: '%{input_taxon} was lumped into %{output_taxon} in %{year}'
-    output_lumped_from: '%{output_taxon} was lumped from %{input_taxa} in %{year}'
+    input_lumped_into: '%{input_taxon} was lumped into %{output_taxon}'
+    output_lumped_from: '%{output_taxon} was lumped from %{input_taxa}'
     listing_change: 'Originally listed as %{input_taxon}, which was lumped into %{output_taxon}'
     suspension: 'Suspension originally formed for %{input_taxon}, which was lumped into %{output_taxon}'
     opinion: 'Opinion originally formed for %{input_taxon}, which was lumped into %{output_taxon}'
     quota: 'Quota originally formed for %{input_taxon}, which was lumped into %{output_taxon}'
   status_change:
-    status_elevated_to_accepted_name: '%{output_taxon} was elevated to an accepted name in %{year}'
-    status_change_from_to: '%{output_taxon} status change from %{old_status} to %{new_status} in %{year}'
+    status_elevated_to_accepted_name: '%{output_new_taxon} was originally listed as %{output_old_taxon}, which was subject to a nomenclature change'
     listing_change: 'Originally listed as %{input_taxon}, which became a synonym of %{output_taxon}'
     suspension: 'Suspension originally formed for %{input_taxon}, which became a synonym of %{output_taxon}'
     opinion: 'Opinion originally formed for %{input_taxon}, which became a synonym of %{output_taxon}'

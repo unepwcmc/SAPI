@@ -13,11 +13,11 @@
 
 class DistributionReference < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :reference_id, :distribution_id, :created_by_id, 
+  attr_accessible :reference_id, :distribution_id, :created_by_id,
     :updated_by_id
 
   belongs_to :reference
   belongs_to :distribution, :touch => true
 
-  validates :distribution_id, :uniqueness => {:scope => :reference_id}
+  validates :distribution_id, :uniqueness => { :scope => :reference_id }
 end

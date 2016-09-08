@@ -6,10 +6,10 @@ class Trade::SandboxShipmentsController < TradeController
     render :json => @search.results,
       :each_serializer => Trade::SandboxShipmentSerializer,
       :meta => {
-      :total => @search.total_cnt,
-      :page => @search.page,
-      :per_page => @search.per_page
-    }
+        :total => @search.total_cnt,
+        :page => @search.page,
+        :per_page => @search.per_page
+      }
   end
 
   def update
@@ -24,41 +24,44 @@ class Trade::SandboxShipmentsController < TradeController
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     @sandbox_shipment = sandbox_klass.find(params[:id])
-    @sandbox_shipment.delete
+    @sandbox_shipment.destroy
     aru.update_attribute(:number_of_rows, aru.sandbox_shipments.size)
     head :no_content
   end
 
   def update_batch
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
+    ve = Trade::ValidationError.find(params[:validation_error_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     sandbox_klass.update_batch(
-      update_batch_params[:updates], update_batch_params[:sandbox_shipments_ids]
+      update_batch_params[:updates], ve, aru
     )
     head :no_content
   end
 
   def destroy_batch
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
+    ve = Trade::ValidationError.find(params[:validation_error_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
-    sandbox_klass.destroy_batch(destroy_batch_params[:sandbox_shipments_ids])
+    sandbox_klass.destroy_batch(ve, aru)
     aru.update_attribute(:number_of_rows, aru.sandbox_shipments.size)
     head :no_content
   end
 
-private
+  private
 
   def sandbox_shipment_params
     params.require(:sandbox_shipment).permit(*sandbox_shipment_attributes)
   end
 
   def destroy_batch_params
-    params.permit(:sandbox_shipments_ids => [])
+    params.permit(:annual_report_upload_id, :validation_error_id)
   end
 
   def update_batch_params
     params.permit(
-      :sandbox_shipments_ids => [],
+      :annual_report_upload_id,
+      :validation_error_id,
       :updates => sandbox_shipment_attributes
     )
   end

@@ -1,6 +1,6 @@
 class CreateUniqueIndexOnTaxonConceptReferences < ActiveRecord::Migration
   def up
-    sql =<<-SQL
+    sql = <<-SQL
   WITH duplicated_taxon_concept_references AS (
     SELECT primary_id, cnt, UNNEST(ids) AS id FROM (
       SELECT MIN(id) AS primary_id, COUNT(*) AS cnt, ARRAY_AGG_NOTNULL(id) AS ids
@@ -27,7 +27,6 @@ class CreateUniqueIndexOnTaxonConceptReferences < ActiveRecord::Migration
     add_index "taxon_concept_references", ["taxon_concept_id", "reference_id"],
       name: "index_taxon_concept_references_on_taxon_concept_id_and_ref_id",
       unique: true
-
   end
 
   def down

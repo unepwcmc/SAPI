@@ -21,13 +21,14 @@
 #  original_id                  :integer
 #  discussion_id                :integer
 #  discussion_sort_index        :integer
+#  designation_id               :integer
 #
 
 class Document < ActiveRecord::Base
   include PgSearch
   include PgArrayParser
   pg_search_scope :search_by_title, :against => :title,
-    :using => {:tsearch => {:prefix => true}},
+    :using => { :tsearch => { :prefix => true } },
     :order_within_rank => "documents.date, documents.title, documents.id"
   track_who_does_it
   attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
@@ -48,19 +49,21 @@ class Document < ActiveRecord::Base
   validates :title, presence: true
   validates :date, presence: true
   validates_uniqueness_of :primary_language_document_id, scope: :language_id, allow_nil: true
-  # TODO validates inclusion of type in available types
+  # TODO: validates inclusion of type in available types
   accepts_nested_attributes_for :citations, :allow_destroy => true,
     :reject_if => proc { |attributes|
-    attributes['stringy_taxon_concept_ids'].blank? && (
-      attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].reject(&:blank?).empty?
-    )
-  }
+      attributes['stringy_taxon_concept_ids'].blank? && (
+        attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].reject(&:blank?).empty?
+      )
+    }
   mount_uploader :filename, DocumentFileUploader
 
   before_validation :set_title
   before_validation :reset_designation_if_event_set
 
-  def self.display_name; 'Document'; end
+  def self.display_name
+    'Document'
+  end
 
   # Returns document types (class objects) that are relevant to E-Library
   def self.elibrary_document_types
@@ -97,11 +100,11 @@ class Document < ActiveRecord::Base
   end
 
   def taxon_names
-    parse_pg_array(read_attribute(:taxon_names)||"").compact
+    parse_pg_array(read_attribute(:taxon_names) || "").compact
   end
 
   def geo_entity_names
-    parse_pg_array(read_attribute(:geo_entity_names)||"").compact
+    parse_pg_array(read_attribute(:geo_entity_names) || "").compact
   end
 
 end

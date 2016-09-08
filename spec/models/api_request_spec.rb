@@ -1,7 +1,24 @@
+# == Schema Information
+#
+# Table name: api_requests
+#
+#  id              :integer          not null, primary key
+#  user_id         :integer
+#  controller      :string(255)
+#  action          :string(255)
+#  format          :string(255)
+#  params          :text
+#  ip              :string(255)
+#  response_status :integer
+#  error_message   :text
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+
 require 'spec_helper'
 
 describe ApiRequest do
-  let(:api_user){
+  let(:api_user) {
     create(:user, role: 'api')
   }
 
@@ -11,7 +28,7 @@ describe ApiRequest do
       user_id: api_user.id,
       controller: 'taxon_concepts',
       action: 'index',
-      params: {'name' => 'Mammalia'},
+      params: { 'name' => 'Mammalia' },
       format: 'json',
       ip: '127.0.0.1',
       response_status: 200,
@@ -22,7 +39,7 @@ describe ApiRequest do
       user_id: api_user.id,
       controller: 'taxon_concepts',
       action: 'index',
-      params: {'name' => 'Mammalia'},
+      params: { 'name' => 'Mammalia' },
       format: 'json',
       ip: '127.0.0.1',
       response_status: 500,
@@ -57,13 +74,14 @@ describe ApiRequest do
     subject {
       ApiRequest.requests_by_response_status
     }
-    specify { expect(subject).to eq({
-      '200' => 1,
-      '400' => 0,
-      '401' => 0,
-      '404' => 0,
-      '422' => 0,
-      '500' => 1
+    specify {
+      expect(subject).to eq({
+        '200' => 1,
+        '400' => 0,
+        '401' => 0,
+        '404' => 0,
+        '422' => 0,
+        '500' => 1
       })
     }
   end
@@ -72,12 +90,13 @@ describe ApiRequest do
     subject {
       ApiRequest.requests_by_controller
     }
-    specify { expect(subject).to eq({
-      'taxon_concepts' => 2,
-      'distributions' => 0,
-      'cites_legislation' => 0,
-      'eu_legislation' => 0,
-      'references' => 0
+    specify {
+      expect(subject).to eq({
+        'taxon_concepts' => 2,
+        'distributions' => 0,
+        'cites_legislation' => 0,
+        'eu_legislation' => 0,
+        'references' => 0
       })
     }
   end

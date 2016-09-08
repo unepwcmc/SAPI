@@ -9,7 +9,7 @@
 
     <li>
     <%= outputs_selection ff %>
-    <div class="control-group">
+    <div class="control-group existing-taxon-input">
       <label class="control-label">Existing taxon concept:</label>
       <div class="controls">
         <%= ff.text_field :taxon_concept_id, {
@@ -17,24 +17,13 @@
           :'data-name' => ff.object.taxon_concept.try(:full_name),
           :'data-taxonomy-id' => @taxonomy.id,
           :'data-name-status' => ff.object.taxon_concept.try(:name_status),
-          :'data-name-status-filter' => ['A', 'N', 'S', 'T'].to_json
+          :'data-name-status-filter' => ['A', 'S'].to_json
         } %>
       </div>
     </div>
+    <%= render 'admin/nomenclature_changes/build/new_rank', ff: ff, f: f %>
+    <%= render 'admin/nomenclature_changes/build/new_parent', :ff => ff %>
     <div class="upgrade-info">
-      <div class="control-group">
-        <label class="control-label">New taxon parent:</label>
-        <div class="controls">
-          <!-- TODO figure out the restrictions on the auto complete here, none for now -->
-          <%= ff.text_field :new_parent_id, {
-            :class => 'taxon-concept parent-taxon',
-            :'data-name' => ff.object.new_parent.try(:full_name),
-            :'data-name-status' => ff.object.new_parent.try(:name_status),
-            :'data-name-status-filter' => ['A'].to_json,
-            :'data-taxonomy-id' => @taxonomy.id
-          } %>
-        </div>
-      </div>
       <div class="control-group">
         <label class="control-label">New taxon name:</label>
         <div class="controls">
@@ -55,6 +44,7 @@
     </div>
     </li>
   <% end %>
-  <p><%= f.link_to_add 'Add another output', :outputs %></p>
+  <div class='more-split-outputs'></div>
+  <p><%= f.link_to_add 'Add another output', :outputs, data: {target: '.more-split-outputs'} %></p>
   </ol>
 <% end %>

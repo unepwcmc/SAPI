@@ -4,7 +4,7 @@ class Trade::TradeDataDownloadsExport < Species::CsvCopyExport
     Trade::TradeDataDownload.order(:created_at)
   end
 
-private
+  private
 
   def resource_name
     'trade_download_stats'

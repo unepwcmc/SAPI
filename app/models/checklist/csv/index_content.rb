@@ -21,7 +21,7 @@ module Checklist::Csv::IndexContent
         end
         csv << entry
       end
-    end while not kingdom.empty?
+    end while !kingdom.empty?
   end
 
 end

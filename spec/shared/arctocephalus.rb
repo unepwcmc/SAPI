@@ -1,8 +1,7 @@
-#Encoding: UTF-8
 shared_context "Arctocephalus" do
-  let(:en){ create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') }
-  let(:es){ create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA') }
-  let(:fr){ create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA') }
+  let(:en) { create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') }
+  let(:es) { create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA') }
+  let(:fr) { create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA') }
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Carnivora'),
@@ -64,53 +63,53 @@ shared_context "Arctocephalus" do
     )
 
     create_cites_II_addition(
-     :taxon_concept => @species1,
-     :effective_at => '1975-07-01'
+      :taxon_concept => @species1,
+      :effective_at => '1975-07-01'
     )
     create_cites_II_addition(
-     :taxon_concept => @species2,
-     :effective_at => '1975-07-01'
+      :taxon_concept => @species2,
+      :effective_at => '1975-07-01'
     )
     create_cites_II_addition(
-     :taxon_concept => @genus,
-     :effective_at => '1977-02-04',
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '1977-02-04',
+      :is_current => true
     )
     create_cites_II_addition(
-     :taxon_concept => @species1,
-     :effective_at => '1977-02-04',
-     :inclusion_taxon_concept_id => @genus.id,
-     :is_current => true
+      :taxon_concept => @species1,
+      :effective_at => '1977-02-04',
+      :inclusion_taxon_concept_id => @genus.id,
+      :is_current => true
     )
     create_cites_II_addition(
-     :taxon_concept => @species2,
-     :effective_at => '1977-02-04',
-     :inclusion_taxon_concept_id => @genus.id
+      :taxon_concept => @species2,
+      :effective_at => '1977-02-04',
+      :inclusion_taxon_concept_id => @genus.id
     )
     create_cites_I_addition(
-     :taxon_concept => @species2,
-     :effective_at => '1979-06-28',
-     :is_current => true
+      :taxon_concept => @species2,
+      :effective_at => '1979-06-28',
+      :is_current => true
     )
 
     create_eu_A_addition(
-     :taxon_concept => @species2,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @species2,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
     create_eu_B_addition(
-     :taxon_concept => @genus,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @genus,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
       end
     end

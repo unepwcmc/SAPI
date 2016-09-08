@@ -54,7 +54,7 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
   def load_instruments
     @taxon_instrument = TaxonInstrument.new(:taxon_concept_id => @taxon_concept.id)
     @instruments = Instrument.joins(:designation => :taxonomy).
-      where(:taxonomies => {:id => @taxon_concept.taxonomy_id}).
+      where(:taxonomies => { :id => @taxon_concept.taxonomy_id }).
       order(:name)
   end
 

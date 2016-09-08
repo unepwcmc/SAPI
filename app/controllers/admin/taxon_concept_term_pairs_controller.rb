@@ -10,7 +10,7 @@ class Admin::TaxonConceptTermPairsController < Admin::SimpleCrudController
 
   def load_term_codes
     @term_codes_obj = Term.select([:id, :code]).
-      map { |c| {"id" => c.id, "code" => c.code} }.to_json
+      map { |c| { "id" => c.id, "code" => c.code } }.to_json
   end
 
   def collection

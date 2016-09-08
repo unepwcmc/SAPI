@@ -1,6 +1,6 @@
 class TaxonConceptViewStats
 
-  def initialize(start_date, end_date, taxonomy=Taxonomy::CITES_EU)
+  def initialize(start_date, end_date, taxonomy = Taxonomy::CITES_EU)
     @start_date = start_date
     @end_date = end_date
     @taxonomy = taxonomy
@@ -11,6 +11,7 @@ class TaxonConceptViewStats
   end
 
   private
+
   def query
     Ahoy::Event.select(<<-SQL
       properties->>'id' AS tc_id,

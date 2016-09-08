@@ -1,4 +1,3 @@
-#Encoding: utf-8
 class Checklist::Checklist
   include ActiveModel::SerializerSupport
   include CacheIterator
@@ -45,8 +44,8 @@ class Checklist::Checklist
     unless @scientific_name.blank?
       @taxon_concepts_rel = @taxon_concepts_rel.
         by_name(
-          @scientific_name, 
-          {:synonyms => true, :common_names => true, :subspecies => false}
+          @scientific_name,
+          { :synonyms => true, :common_names => true, :subspecies => false }
         )
     end
 
@@ -54,12 +53,13 @@ class Checklist::Checklist
       @taxon_concepts_rel = @taxon_concepts_rel.at_level_of_listing
     end
 
-    #order
-    @taxon_concepts_rel = if @output_layout == :taxonomic
-      @taxon_concepts_rel.taxonomic_layout
-    else
-      @taxon_concepts_rel.alphabetical_layout
-    end
+    # order
+    @taxon_concepts_rel =
+      if @output_layout == :taxonomic
+        @taxon_concepts_rel.taxonomic_layout
+      else
+        @taxon_concepts_rel.alphabetical_layout
+      end
 
     @query = @taxon_concepts_rel.
       includes(:current_cites_additions).
@@ -72,6 +72,7 @@ class Checklist::Checklist
   end
 
   def prepare_main_query; end
+
   def prepare_kindom_queries; end
 
   # Takes the current search query and adds metadata
@@ -80,14 +81,14 @@ class Checklist::Checklist
   # @return [Array] an array containing a hash of search results and
   #   related metadata
   def generate
-    @animalia, @plantae = cached_results.partition{ |item| item.kingdom_position == 0 }
+    @animalia, @plantae = cached_results.partition { |item| item.kingdom_position == 0 }
     if @output_layout == :taxonomic
-       injector = Checklist::HigherTaxaInjector.new(@animalia)
-       @animalia = injector.run
-       injector = Checklist::HigherTaxaInjector.new(@plantae)
-       @plantae = injector.run
+      injector = Checklist::HigherTaxaInjector.new(@animalia)
+      @animalia = injector.run
+      injector = Checklist::HigherTaxaInjector.new(@plantae)
+      @plantae = injector.run
     end
-    [self] #TODO just for compatibility with frontend, no sensible reason for this
+    [self] # TODO: just for compatibility with frontend, no sensible reason for this
   end
 
   # Converts a list of search filters into a limited length
@@ -106,7 +107,7 @@ class Checklist::Checklist
     # country
     @countries_count = 0
     unless @countries.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
 
       countries = GeoEntity.find_all_by_id(@countries)
 
@@ -121,20 +122,20 @@ class Checklist::Checklist
     # region
     @regions_count = 0
     unless @cites_regions.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
 
       regions = GeoEntity.find_all_by_id(params[:cites_region_ids])
 
       @regions_count = regions.count
       if @regions_count > 0
-        summary << I18n.t('filter_summary.within_regions')  if @countries_count > 0
+        summary << I18n.t('filter_summary.within_regions') if @countries_count > 0
         summary << "#{regions.count} #{'region'.pluralize(regions.count)}"
       end
     end
 
     # appendix
     unless @cites_appendices.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
 
       if (!@cites_regions.empty? ||
           !@countries.empty?) &&
@@ -150,23 +151,23 @@ class Checklist::Checklist
 
     # name
     unless @scientific_name.blank?
-      summary = [I18n.t('filter_summary.when_taxon')]  if summary.length == 0
+      summary = [I18n.t('filter_summary.when_taxon')] if summary.empty?
 
       summary << "'#{@scientific_name}'"
     end
 
     # synonyms
     if @synonyms
-      if summary.length == 0
+      if summary.empty?
         summary << I18n.t('filter_summary.all_with_synonyms')
       else
         summary << I18n.t('filter_summary.with_synonyms')
       end
     end
 
-    #TODO common names, authors
+    # TODO: common names, authors
 
-    if summary.length > 0
+    if !summary.empty?
       summary.join(" ")
     else
       I18n.t('filter_summary.all')
@@ -187,13 +188,15 @@ class Checklist::Checklist
     params.delete(:action)
     params.delete(:controller)
 
-    @filename = Digest::SHA1.hexdigest(params
-                                       .merge(type: type)
-                                       .merge(locale: I18n.locale)
-                                       .to_hash
-                                       .symbolize_keys!
-                                       .sort
-                                       .to_s)
+    @filename = Digest::SHA1.hexdigest(
+      params.
+      merge(type: type).
+      merge(locale: I18n.locale).
+      to_hash.
+      symbolize_keys!.
+      sort.
+      to_s
+    )
 
     return [Rails.root, '/public/downloads/checklist/', @filename, '.', format].join
   end

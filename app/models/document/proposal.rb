@@ -21,10 +21,13 @@
 #  original_id                  :integer
 #  discussion_id                :integer
 #  discussion_sort_index        :integer
+#  designation_id               :integer
 #
 
 class Document::Proposal < Document
-  def self.display_name; 'Proposal'; end
+  def self.display_name
+    'Proposal'
+  end
 
   attr_accessible :proposal_details_attributes
 

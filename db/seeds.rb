@@ -69,8 +69,8 @@ puts "#{Taxonomy.delete_all} taxonomies deleted"
 puts "#{DocumentTag.delete_all} document tags deleted"
 
 [
- "I", "II", "III", "IV", "June 1986", "None",
- "Post-CoP11", "Post-CoP12", "Post-CoP13"
+  "I", "II", "III", "IV", "June 1986", "None",
+  "Post-CoP11", "Post-CoP12", "Post-CoP13"
 ].each { |tag| DocumentTag::ReviewPhase.create(name: tag) }
 
 [
@@ -79,13 +79,13 @@ puts "#{DocumentTag.delete_all} document tags deleted"
   "PC review and categorization [k]", "PC review and categorization (m)", "PC review (e)",
   "Research of species [j]", "Selection of species (b)", "Selection of species [b]",
   "Species selection (b)", "Species selection [b]"
-].each {|tag| DocumentTag::ProcessStage.create(name: tag) }
+].each { |tag| DocumentTag::ProcessStage.create(name: tag) }
 
 [
- "Accepted", "Cancelled", "Deferred",
- "Redundant", "Rejected", "Transferred to other proposals",
- "Withdrawn", "Accepted as amended", "Rejected as amended",
- "Adopted"
+  "Accepted", "Cancelled", "Deferred",
+  "Redundant", "Rejected", "Transferred to other proposals",
+  "Withdrawn", "Accepted as amended", "Rejected as amended",
+  "Adopted"
 ].each { |tag| DocumentTag::ProposalOutcome.create(name: tag) }
 
 puts "#{DocumentTag.count} document tags created"
@@ -145,171 +145,170 @@ puts "#{SpeciesListing.count} species listings created"
 
 higher_taxa = [
   {
-  :name => 'Animalia',
-  :taxonomic_position => '1',
-  :legacy_id => 1,
-  :legacy_type => 'Animalia',
-  :sub_taxa => [
-    {
-      :name => 'Annelida',
-      :taxonomic_position => '1.4',
-      :legacy_id => 1,
-      :legacy_type => 'Animalia',
-      :sub_taxa => [
-        {
-          :name => 'Hirudinoidea',
-          :taxonomic_position => '1.4.1',
-          :legacy_id => 14,
-          :legacy_type => 'Animalia'
-        }
-      ]
-  },
-  {
-    :name => 'Arthropoda',
-    :taxonomic_position => '1.3',
-    :legacy_id => 2,
+    :name => 'Animalia',
+    :taxonomic_position => '1',
+    :legacy_id => 1,
     :legacy_type => 'Animalia',
     :sub_taxa => [
-        {
-        :name => 'Arachnida',
-        :taxonomic_position => '1.3.1',
-        :legacy_id => 4,
-        :legacy_type => 'Animalia'
+      {
+        :name => 'Annelida',
+        :taxonomic_position => '1.4',
+        :legacy_id => 1,
+        :legacy_type => 'Animalia',
+        :sub_taxa => [
+          {
+            :name => 'Hirudinoidea',
+            :taxonomic_position => '1.4.1',
+            :legacy_id => 14,
+            :legacy_type => 'Animalia'
+          }
+        ]
       },
       {
-        :name => 'Insecta',
-        :taxonomic_position => '1.3.2',
-        :legacy_id => 16,
-        :legacy_type => 'Animalia'
+        :name => 'Arthropoda',
+        :taxonomic_position => '1.3',
+        :legacy_id => 2,
+        :legacy_type => 'Animalia',
+        :sub_taxa => [
+          {
+            :name => 'Arachnida',
+            :taxonomic_position => '1.3.1',
+            :legacy_id => 4,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Insecta',
+            :taxonomic_position => '1.3.2',
+            :legacy_id => 16,
+            :legacy_type => 'Animalia'
+          }
+        ]
+      },
+      {
+        :name => 'Chordata',
+        :taxonomic_position => '1.1',
+        :legacy_id => 3,
+        :legacy_type => 'Animalia',
+        :sub_taxa => [
+          {
+            :name => 'Actinopterygii',
+            :taxonomic_position => '1.1.6',
+            :legacy_id => 1,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Amphibia',
+            :taxonomic_position => '1.1.4',
+            :legacy_id => 2,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Aves',
+            :taxonomic_position => '1.1.2',
+            :legacy_id => 5,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Elasmobranchii',
+            :taxonomic_position => '1.1.5',
+            :legacy_id => 11,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Mammalia',
+            :taxonomic_position => '1.1.1',
+            :legacy_id => 17,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Reptilia',
+            :taxonomic_position => '1.1.3',
+            :legacy_id => 23,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Sarcopterygii',
+            :taxonomic_position => '1.1.7',
+            :legacy_id => 24,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Cephalaspidomorphi',
+            :taxonomic_position => '1.1.8',
+            :legacy_id => 7,
+            :legacy_type => 'Animalia'
+          }
+        ]
+      },
+      {
+        :name => 'Cnidaria',
+        :taxonomic_position => '1.6',
+        :legacy_id => 5,
+        :legacy_type => 'Animalia',
+        :sub_taxa => [
+          {
+            :name => 'Anthozoa',
+            :taxonomic_position => '1.6.1',
+            :legacy_id => 3,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Hydrozoa',
+            :taxonomic_position => '1.6.2',
+            :legacy_id => 15,
+            :legacy_type => 'Animalia'
+          }
+        ]
+      },
+      {
+        :name => 'Echinodermata',
+        :taxonomic_position => '1.2',
+        :legacy_id => 6,
+        :legacy_type => 'Animalia',
+        :sub_taxa => [
+          {
+            :name => 'Holothuroidea',
+            :taxonomic_position => '1.2.1',
+            :legacy_id => 41,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Stelleroidea',
+            :taxonomic_position => '1.2.2',
+            :legacy_id => 26,
+            :legacy_type => 'Animalia'
+          }
+        ]
+      },
+      {
+        :name => 'Mollusca',
+        :taxonomic_position => '1.5',
+        :legacy_id => 7,
+        :legacy_type => 'Animalia',
+        :sub_taxa => [
+          {
+            :name => 'Bivalvia',
+            :taxonomic_position => '1.5.1',
+            :legacy_id => 6,
+            :legacy_type => 'Animalia'
+          },
+          {
+            :name => 'Gastropoda',
+            :taxonomic_position => '1.5.2',
+            :legacy_id => 13,
+            :legacy_type => 'Animalia'
+          }
+        ]
       }
     ]
   },
   {
-    :name => 'Chordata',
-    :taxonomic_position => '1.1',
-    :legacy_id => 3,
-    :legacy_type => 'Animalia',
-    :sub_taxa => [
-      {
-      :name => 'Actinopterygii',
-      :taxonomic_position => '1.1.6',
-      :legacy_id => 1,
-      :legacy_type => 'Animalia'
-    },
-    {
-      :name => 'Amphibia',
-      :taxonomic_position => '1.1.4',
-      :legacy_id => 2,
-      :legacy_type => 'Animalia'
-    },
-    {
-      :name => 'Aves',
-      :taxonomic_position => '1.1.2',
-      :legacy_id => 5,
-      :legacy_type => 'Animalia'
-    },
-    {
-      :name => 'Elasmobranchii',
-      :taxonomic_position => '1.1.5',
-      :legacy_id => 11,
-      :legacy_type => 'Animalia'
-    },
-    {
-      :name => 'Mammalia',
-      :taxonomic_position => '1.1.1',
-      :legacy_id => 17,
-      :legacy_type => 'Animalia'
-    },
-  {
-  :name => 'Reptilia',
-  :taxonomic_position => '1.1.3',
-  :legacy_id => 23,
-  :legacy_type => 'Animalia'
-  },
-  {
-  :name => 'Sarcopterygii',
-  :taxonomic_position => '1.1.7',
-  :legacy_id => 24,
-  :legacy_type => 'Animalia'
-  },
-  {
-  :name => 'Cephalaspidomorphi',
-  :taxonomic_position => '1.1.8',
-  :legacy_id => 7,
-  :legacy_type => 'Animalia'
+    :name => 'Plantae',
+    :taxonomic_position => '2',
+    :legacy_id => 2,
+    :legacy_type => 'Plantae',
+    :sub_taxa => []
   }
-
-]
-},
-  {
-  :name => 'Cnidaria',
-  :taxonomic_position => '1.6',
-  :legacy_id => 5,
-  :legacy_type => 'Animalia',
-  :sub_taxa => [
-    {
-  :name => 'Anthozoa',
-  :taxonomic_position => '1.6.1',
-  :legacy_id => 3,
-  :legacy_type => 'Animalia'
-},
-  {
-  :name => 'Hydrozoa',
-  :taxonomic_position => '1.6.2',
-  :legacy_id => 15,
-  :legacy_type => 'Animalia'
-}
-]
-},
-  {
-  :name => 'Echinodermata',
-  :taxonomic_position => '1.2',
-  :legacy_id => 6,
-  :legacy_type => 'Animalia',
-  :sub_taxa => [
-    {
-      :name => 'Holothuroidea',
-      :taxonomic_position => '1.2.1',
-      :legacy_id => 41,
-      :legacy_type => 'Animalia'
-    },
-    {
-      :name => 'Stelleroidea',
-      :taxonomic_position => '1.2.2',
-      :legacy_id => 26,
-      :legacy_type => 'Animalia'
-    }
-]
-},
-  {
-  :name => 'Mollusca',
-  :taxonomic_position => '1.5',
-  :legacy_id => 7,
-  :legacy_type => 'Animalia',
-  :sub_taxa => [
-    {
-  :name => 'Bivalvia',
-  :taxonomic_position => '1.5.1',
-  :legacy_id => 6,
-  :legacy_type => 'Animalia'
-},
-  {
-  :name => 'Gastropoda',
-  :taxonomic_position => '1.5.2',
-  :legacy_id => 13,
-  :legacy_type => 'Animalia'
-}
-]
-}
-]
-},
-  {
-  :name => 'Plantae',
-  :taxonomic_position => '2',
-  :legacy_id => 2,
-  :legacy_type => 'Plantae',
-  :sub_taxa => []
-}
 ]
 
 kingdom_rank_id = Rank.find_by_name(Rank::KINGDOM).id

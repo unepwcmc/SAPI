@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe Api::V1::GeoEntitiesController do
-  let!(:europe){
+  let!(:europe) {
     create(
       :geo_entity,
       :geo_entity_type => cites_region_geo_entity_type,
       :name => 'Europe'
     )
   }
-  let!(:france){
+  let!(:france) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -17,15 +17,15 @@ describe Api::V1::GeoEntitiesController do
       :designations => [cites]
     )
   }
-  let!(:andorra){
-        create(
-          :geo_entity,
-          :geo_entity_type => country_geo_entity_type,
-          :name => 'andorra',
-          :iso_code2 => 'AD'
-        )
+  let!(:andorra) {
+    create(
+      :geo_entity,
+      :geo_entity_type => country_geo_entity_type,
+      :name => 'andorra',
+      :iso_code2 => 'AD'
+    )
   }
-  let!(:french_guiana){
+  let!(:french_guiana) {
     create(
       :geo_entity,
       :geo_entity_type => territory_geo_entity_type,

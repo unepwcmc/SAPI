@@ -1,5 +1,5 @@
 shared_context "Loxodonta africana" do
-  let(:ghana){
+  let(:ghana) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -7,7 +7,7 @@ shared_context "Loxodonta africana" do
       :iso_code2 => 'GH'
     )
   }
-  let(:botswana){
+  let(:botswana) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -15,7 +15,7 @@ shared_context "Loxodonta africana" do
       :iso_code2 => 'BW'
     )
   }
-  let(:namibia){
+  let(:namibia) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -23,7 +23,7 @@ shared_context "Loxodonta africana" do
       :iso_code2 => 'NA'
     )
   }
-  let(:zambia){
+  let(:zambia) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -31,7 +31,7 @@ shared_context "Loxodonta africana" do
       :iso_code2 => 'ZA'
     )
   }
-  let(:zimbabwe){
+  let(:zimbabwe) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -60,12 +60,12 @@ shared_context "Loxodonta africana" do
     create(:distribution, :taxon_concept_id => @species.id, :geo_entity_id => botswana.id)
 
     cites_lc1 = create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '1997-09-18'
+      :taxon_concept => @species,
+      :effective_at => '1997-09-18'
     )
     cites_lc2 = create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1997-09-18'
+      :taxon_concept => @species,
+      :effective_at => '1997-09-18'
     )
     [botswana, namibia, zimbabwe].each do |country|
       create(
@@ -76,26 +76,26 @@ shared_context "Loxodonta africana" do
       )
     end
     cites_lc1 = create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '2000-07-19',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2000-07-19',
+      :is_current => true
     )
     cites_lc2 = create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '2000-07-19',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2000-07-19',
+      :is_current => true
     )
     eu_lc1 = create_eu_A_addition(
-     :taxon_concept => @species,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
     eu_lc2 = create_eu_B_addition(
-     :taxon_concept => @species,
-     :effective_at => '2013-08-10',
-     :event => reg2013,
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2013-08-10',
+      :event => reg2013,
+      :is_current => true
     )
     [botswana, namibia, zambia, zimbabwe].each do |country|
       create(
@@ -116,7 +116,7 @@ shared_context "Loxodonta africana" do
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
       end
     end

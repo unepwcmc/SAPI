@@ -5,8 +5,8 @@ describe Admin::RanksController do
 
   describe "GET index" do
     it "assigns @ranks sorted by taxonomic position" do
-      rank2 = create(:rank, :taxonomic_position => '2')
-      rank1 = create(:rank, :taxonomic_position => '1')
+      rank2 = create(:rank, name: Rank::PHYLUM, taxonomic_position: '2')
+      rank1 = create(:rank, name: Rank::KINGDOM, taxonomic_position: '1')
       get :index
       assigns(:ranks).should eq([rank1, rank2])
     end
@@ -28,7 +28,7 @@ describe Admin::RanksController do
   end
 
   describe "XHR PUT update" do
-    let(:rank){ create(:rank) }
+    let(:rank) { create(:rank) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => rank.id, :rank => { :name => 'ZZ' }
       response.should be_success
@@ -40,7 +40,7 @@ describe Admin::RanksController do
   end
 
   describe "DELETE destroy" do
-    let(:rank){ create(:rank) }
+    let(:rank) { create(:rank) }
     it "redirects after delete" do
       delete :destroy, :id => rank.id
       response.should redirect_to(admin_ranks_url)

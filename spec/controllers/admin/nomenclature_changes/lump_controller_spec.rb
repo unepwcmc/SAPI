@@ -46,9 +46,11 @@ describe Admin::NomenclatureChanges::LumpController do
       context "when no legislation" do
         it 'redirects to next step' do
           get :show, id: :legislation, nomenclature_change_id: @lump.id
-          response.should redirect_to(admin_nomenclature_change_lump_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
-          ))
+          response.should redirect_to(
+            admin_nomenclature_change_lump_url(
+              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
+            )
+          )
         end
       end
       it 'renders the summary template' do
@@ -61,9 +63,11 @@ describe Admin::NomenclatureChanges::LumpController do
   describe 'POST create' do
     it 'redirects to lump wizard' do
       post :create, nomenclature_change_id: 'new'
-      response.should redirect_to(admin_nomenclature_change_lump_url(
-        nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'inputs'
-      ))
+      response.should redirect_to(
+        admin_nomenclature_change_lump_url(
+          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'inputs'
+        )
+      )
     end
   end
 
@@ -75,23 +79,60 @@ describe Admin::NomenclatureChanges::LumpController do
       it 'redirects to next step' do
         put :update, nomenclature_change_lump: {
           inputs_attributes: {
-            0 => {taxon_concept_id: create_cites_eu_species.id},
-            1 => {taxon_concept_id: create_cites_eu_species.id}
+            0 => { taxon_concept_id: create_cites_eu_species.id },
+            1 => { taxon_concept_id: create_cites_eu_species.id }
           }
         }, nomenclature_change_id: @lump.id, id: 'inputs'
-        response.should redirect_to(admin_nomenclature_change_lump_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'outputs'
-        ))
+        response.should redirect_to(
+          admin_nomenclature_change_lump_url(
+            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'outputs'
+          )
+        )
       end
     end
     context 'when unsuccessful' do
       it 're-renders step' do
-        put :update, nomenclature_change_lump: {
+        put :update,
+          nomenclature_change_lump: {
             inputs_attributes: {
-              0 => {taxon_concept_id: nil}
+              0 => { taxon_concept_id: nil }
             }
           }, nomenclature_change_id: @lump.id, id: 'inputs'
         response.should render_template('inputs')
+      end
+    end
+  end
+
+  describe 'Previous button' do
+    before(:each) do
+      @input_species = create_cites_eu_species
+      @lump = create(:nomenclature_change_lump)
+      create(:nomenclature_change_input, nomenclature_change: @lump, taxon_concept: @input_species)
+      create(:nomenclature_change_output, nomenclature_change: @lump)
+    end
+    context 'when step is legislation' do
+      it 'renders notes step' do
+        get :show, id: :notes, nomenclature_change_id: @lump.id, back: true
+        response.should render_template('notes')
+      end
+    end
+    context 'when step is summary' do
+      context 'when legislation' do
+        before(:each) do
+          create_cites_I_addition(taxon_concept: @input_species)
+        end
+        it 'renders legislation step' do
+          get :show, id: :legislation, nomenclature_change_id: @lump.id, back: true
+          response.should render_template('legislation')
+        end
+      end
+      context 'when no legislation' do
+        it 'redirects to notes step' do
+          get :show, id: :legislation, nomenclature_change_id: @lump.id, back: true
+          response.should redirect_to action: :show, id: :notes
+          get :show, id: :notes, nomenclature_change_id: @lump.id
+          response.should redirect_to action: :show, id: :notes
+        end
       end
     end
   end

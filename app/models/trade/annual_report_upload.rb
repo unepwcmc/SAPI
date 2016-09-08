@@ -53,12 +53,12 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
   def to_jq_upload
     if valid?
-    {
-      "id" => self.id,
-      "name" => read_attribute(:csv_source_file),
-      "size" => csv_source_file.size,
-      "url" => csv_source_file.url
-    }
+      {
+        "id" => self.id,
+        "name" => read_attribute(:csv_source_file),
+        "size" => csv_source_file.size,
+        "url" => csv_source_file.url
+      }
     else
       {
         "name" => read_attribute(:csv_source_file),
@@ -74,29 +74,31 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
       return false
     end
     return false unless sandbox.copy_from_sandbox_to_shipments
-    #remove uploaded file
+    # remove uploaded file
     store_dir = csv_source_file.store_dir
     remove_csv_source_file!
     puts '### removing uploads dir ###'
     puts Rails.root.join('public', store_dir)
     FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
 
-    #remove sandbox table
+    # remove sandbox table
     sandbox.destroy
 
-    #clear downloads cache
+    # clear downloads cache
     DownloadsCacheCleanupWorker.perform_async(:shipments)
 
-    #flag as submitted
+    # flag as submitted
     update_attribute(:is_done, true)
   end
 
   private
+
   # Expects a relation object
   def run_validations(validation_rules)
     validation_errors = []
     validation_rules.order(:run_order).each do |vr|
-      validation_errors << vr.validation_errors(self)
+      vr.refresh_errors_if_needed(self)
+      validation_errors << vr.validation_errors_for_aru(self)
     end
     validation_errors.flatten
   end

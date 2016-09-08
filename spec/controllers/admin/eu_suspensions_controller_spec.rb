@@ -37,4 +37,3 @@ describe Admin::EuSuspensionsController do
     end
   end
 end
-

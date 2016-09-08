@@ -14,15 +14,16 @@ describe Species::OrphanedTaxonConceptsExport do
       specify { subject.export.should be_false }
     end
     context "when results" do
-      before(:each){
-        create(:taxon_concept)
+      before(:each) {
+        tc = create(:taxon_concept)
+        tc.update_attribute(:parent_id, nil) # skipping validations
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/orphaned_taxon_concepts")
         )
         Species::OrphanedTaxonConceptsExport.any_instance.stub(:path).
           and_return("spec/public/downloads/orphaned_taxon_concepts/")
       }
-      after(:each){
+      after(:each) {
         FileUtils.remove_dir("spec/public/downloads/orphaned_taxon_concepts", true)
       }
       subject {

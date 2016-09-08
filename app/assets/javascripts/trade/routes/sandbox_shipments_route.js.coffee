@@ -1,8 +1,19 @@
 Trade.SandboxShipmentsRoute = Trade.BeforeRoute.extend
   queryParams: {
-    sandbox_shipments_ids: { refreshModel: true },
+    validation_error_id: { refreshModel: true },
     page: { refreshModel: true }
   }
 
   model: (params, transition) ->
-    Trade.SandboxShipment.find(params)
+    @annualReportUpload = @modelFor('annualReportUpload')
+    Trade.ValidationError.find(params.validation_error_id).then((validationError) =>
+      @validationError = validationError
+      Trade.SandboxShipment.find(params)
+    , (validationError) =>
+      @transitionTo('annual_report_upload', @annualReportUpload)
+    )
+
+  setupController: (controller, model) ->
+    controller.set('model', model)
+    @controllerFor('annualReportUpload').set('currentError', @validationError)
+    @controllerFor('annualReportUpload').set('allErrorsCollapsed', true)

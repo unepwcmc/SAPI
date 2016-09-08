@@ -18,6 +18,15 @@
 class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
+  def matching_records_for_aru_and_error(annual_report_upload, validation_error)
+    sandbox_klass = Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
+    @query = sandbox_klass.
+      from("#{sandbox_klass.table_name}_view #{sandbox_klass.table_name}").
+      where(
+        "'#{validation_error.matching_criteria}'::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
+      )
+  end
+
   def error_message(values_hash = nil)
     scope_info = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
@@ -44,18 +53,29 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     info + ' is invalid'
   end
 
-  def validation_errors(annual_report_upload)
-    matching_records_grouped(annual_report_upload.sandbox.table_name).map do |mr|
-      values_hash = Hash[column_names_for_display.map{ |cn| [cn, mr.send(cn)] }]
-      Trade::ValidationError.new(
-          :error_message => error_message(values_hash),
-          :annual_report_upload_id => annual_report_upload.id,
-          :validation_rule_id => self.id,
-          :error_count => mr.error_count,
-          :matching_records_ids => parse_pg_array(mr.matching_records_ids),
-          :is_primary => self.is_primary
+  def refresh_errors_if_needed(annual_report_upload)
+    return true unless refresh_needed?(annual_report_upload)
+    errors_to_destroy = validation_errors.all
+    matching_records_grouped(annual_report_upload).map do |mr|
+      values_hash = Hash[column_names.map { |cn| [cn, mr.send(cn)] }]
+      values_hash_for_display = Hash[column_names_for_display.map { |cn| [cn, mr.send(cn)] }]
+      matching_criteria_jsonb = jsonb_matching_criteria_for_comparison(
+        values_hash
       )
+      existing_record = validation_errors_for_aru(annual_report_upload).
+        where("matching_criteria @> (#{matching_criteria_jsonb})::JSONB").first
+      update_or_create_error_record(
+        annual_report_upload,
+        existing_record,
+        mr.error_count.to_i,
+        error_message(values_hash_for_display),
+        jsonb_matching_criteria_for_insert(values_hash)
+      )
+      if existing_record
+        errors_to_destroy.reject! { |e| e.id == existing_record.id }
+      end
     end
+    errors_to_destroy.each(&:destroy)
   end
 
   def validation_errors_for_shipment(shipment)
@@ -81,16 +101,60 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     end
   end
 
+  def jsonb_matching_criteria_for_insert(values_hash)
+    jsonb_keys_and_values = column_names.map do |c|
+      is_numeric = (c =~ /.+_id$/ || c == 'year')
+      value = values_hash[c]
+      value_quoted =
+        if is_numeric
+          value
+        else
+          "\"#{value}\""
+        end
+      "\"#{c}\": #{value_quoted}"
+    end.join(', ')
+    '{' + jsonb_keys_and_values + '}'
+  end
+
+  def jsonb_matching_criteria_for_comparison(values_hash = nil)
+    jsonb_keys_and_values = column_names.map do |c|
+      is_numeric = (c =~ /.+_id$/ || c == 'year')
+      value_present = values_hash && values_hash.key?(c)
+      value = value_present && values_hash[c]
+      column_reference = c.to_s
+      value_or_column_reference_quoted =
+        if value_present && is_numeric
+          value
+        elsif value_present && !is_numeric
+          "'\"#{value}\"'"
+        elsif !value_present && is_numeric
+          column_reference
+        else
+          <<-EOT
+            '"' || #{column_reference} || '"'
+          EOT
+        end
+      <<-EOT
+        '"' || '#{c}' || '": ' || #{value_or_column_reference_quoted}
+      EOT
+    end.join("|| ', ' ||")
+    "'{' || #{jsonb_keys_and_values} || '}'"
+  end
+
   # Returns matching records grouped by column_names to return the count of
   # specific errors and ids of matching records
-  def matching_records_grouped(table_name)
+  def matching_records_grouped(annual_report_upload)
+    table_name = annual_report_upload.sandbox.table_name
     Trade::SandboxTemplate.
     select(
       column_names_for_display +
-      ['COUNT(*) AS error_count', 'ARRAY_AGG(id) AS matching_records_ids']
-    ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
+      [
+        'COUNT(*) AS error_count',
+        'ARRAY_AGG(id) AS matching_records_ids'
+      ]
+    ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) matching_records")).
     group(column_names_for_display).having(
-      required_column_names.map{ |cn| "#{cn} IS NOT NULL"}.join(' AND ')
+      required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
     )
   end
 
@@ -102,16 +166,16 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       s[c].not_eq(nil)
     end
     not_null_conds = not_null_nodes.shift
-    not_null_nodes.each{ |n| not_null_conds = not_null_conds.and(n) }
+    not_null_nodes.each { |n| not_null_conds = not_null_conds.and(n) }
     result = s.project('*').where(not_null_conds)
     scope_nodes = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
       if scope_def['inclusion']
-        inclusion_nodes = scope_def['inclusion'].map{ |value| s[scope_column].eq(value) }
+        inclusion_nodes = scope_def['inclusion'].map { |value| s[scope_column].eq(value) }
         tmp << inclusion_nodes.inject(&:or)
       end
       if scope_def['exclusion']
-        exclusion_nodes = scope_def['exclusion'].map{ |value| s[scope_column].not_eq(value) }
+        exclusion_nodes = scope_def['exclusion'].map { |value| s[scope_column].not_eq(value) }
         tmp << exclusion_nodes.inject(&:or)
       end
       if scope_def['blank']

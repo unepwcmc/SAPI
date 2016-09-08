@@ -4,23 +4,29 @@
     {{#unless controllers.taxonConcept.distributions}}
       {{#if controllers.taxonConcept.isCms}}
         Information will be displayed once an automated web feed from the CMS species database
-        has been implemented towards the end of 2014.
+        has been implemented.
       {{/if}}
     {{else}}
       <div class="three-columns">
         <ul class="col">
           {{#eachPart controllers.taxonConcept.distributions parts=3 page=0}}
-            <li>{{name}} {{formattedTags tags_list}}</li>
+            <li class="distribution-with-tags">
+              <span class="distribution">{{name}}</span>{{formattedTags tags_list}}
+            </li>
           {{/eachPart}}
         </ul>
         <ul class="col">
           {{#eachPart controllers.taxonConcept.distributions parts=3 page=1}}
-            <li>{{name}} {{formattedTags tags_list}}</li>
+            <li class="distribution-with-tags">
+              <span class="distribution">{{name}}</span>{{formattedTags tags_list}}
+            </li>
           {{/eachPart}}
         </ul>
         <ul class="col last-child">
           {{#eachPart controllers.taxonConcept.distributions parts=3 page=2}}
-            <li>{{name}} {{formattedTags tags_list}}</li>
+            <li class="distribution-with-tags">
+              <span class="distribution">{{name}}</span>{{formattedTags tags_list}}
+            </li>
           {{/eachPart}}
         </ul>
       </div>

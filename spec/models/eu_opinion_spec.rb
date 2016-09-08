@@ -32,7 +32,7 @@ describe EuOpinion do
 
   describe :create do
     context "when taxon concept missing" do
-      let(:eu_opinion){
+      let(:eu_opinion) {
         build(
           :eu_opinion, taxon_concept: nil
         )
@@ -43,7 +43,7 @@ describe EuOpinion do
     end
 
     context "when geo_entity missing" do
-      let(:eu_opinion){
+      let(:eu_opinion) {
         build(
           :eu_opinion, geo_entity: nil
         )
@@ -54,7 +54,7 @@ describe EuOpinion do
     end
 
     context "when start_date missing" do
-      let(:eu_opinion){
+      let(:eu_opinion) {
         build(:eu_opinion, start_date: nil)
       }
 
@@ -63,7 +63,7 @@ describe EuOpinion do
     end
 
     context "when valid" do
-      let(:eu_opinion){ build(:eu_opinion) }
+      let(:eu_opinion) { build(:eu_opinion) }
 
       specify { eu_opinion.should be_valid }
     end

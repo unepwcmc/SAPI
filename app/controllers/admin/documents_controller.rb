@@ -35,7 +35,10 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def update
     update! do |success, failure|
       success.html { success_redirect }
-      failure.html { load_associations; render 'new' }
+      failure.html do
+        load_associations
+        render 'new'
+      end
     end
   end
 
@@ -48,7 +51,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
 
   def show
     @document = Document.find(params[:id])
-    path_to_file = @document.filename.path;
+    path_to_file = @document.filename.path
     if !File.exists?(path_to_file)
       render :file => "#{Rails.root}/public/404.html", :status => 404
     else
@@ -85,12 +88,13 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
 
   def load_associations
     @designations = Designation.where(name: ['CITES', 'EU']).select([:id, :name]).order(:name)
-    @event_types = if @document && @document.event
-      @event_types = [{id: @document.event.type}]
-    else
-      Event.event_types_with_names
-    end
-    @events = Event.where(type: @event_types.map{ |t| t[:id] }).order(:published_at).reverse_order
+    @event_types =
+      if @document && @document.event
+        [{ id: @document.event.type }]
+      else
+        Event.event_types_with_names
+      end
+    @events = Event.where(type: @event_types.map { |t| t[:id] }).order(:published_at).reverse_order
     @event = Event.find(params[:event_id]) if params[:event_id].present?
     @languages = Language.select([:id, :name_en, :name_es, :name_fr]).
      order(:name_en)
@@ -98,8 +102,8 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
     @geo_entities = GeoEntity.select(['geo_entities.id', :name_en]).
       joins(:geo_entity_type).where(
-      :"geo_entity_types.name" => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
-    ).order(:name_en)
+        :"geo_entity_types.name" => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
+      ).order(:name_en)
   end
 
   def success_redirect
@@ -107,20 +111,22 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   end
 
   def failure_redirect
-    alert = if resource.errors.present?
-      "Operation #{resource.errors.messages[:base].join(", ")}"
-    else
-      "Operation failed"
-    end
+    alert =
+      if resource.errors.present?
+        "Operation #{resource.errors.messages[:base].join(", ")}"
+      else
+        "Operation failed"
+      end
     redirect_to redirect_url, :alert => alert
   end
 
   def redirect_url
     event_id = params[:event_id]
-    url = if event_id.present?
-      admin_event_documents_url(Event.find(event_id))
-    else
-      admin_documents_url
-    end
+    url =
+      if event_id.present?
+        admin_event_documents_url(Event.find(event_id))
+      else
+        admin_documents_url
+      end
   end
 end

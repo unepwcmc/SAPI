@@ -7,6 +7,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
   end
 
   protected
+
   def build_rel
     super
     apply_rank_options_to_rel
@@ -33,11 +34,14 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
       @rank_scope = @rank_options[:scope] || ''
       rank = Rank.find(@rank_id) if @rank_scope
       if @rank_scope.to_sym == :parent
-        #search at parent ranks. this includes optional ranks, e.g. subfamily
+        # search at parent ranks. this includes optional ranks, e.g. subfamily
         @taxon_concepts = @taxon_concepts.at_parent_ranks(rank)
       elsif @rank_scope.to_sym == :ancestors
-        #search at ancestor ranks
+        # search at ancestor ranks
         @taxon_concepts = @taxon_concepts.at_ancestor_ranks(rank)
+      elsif @rank_scope.to_sym == :self_and_ancestors
+        # search at self and ancestor ranks
+        @taxon_concepts = @taxon_concepts.at_self_and_ancestor_ranks(rank)
       end
     end
   end
@@ -49,46 +53,46 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
       taxon_concept = TaxonConcept.find(@taxon_concept_id) if @taxon_concept_scope
       if @taxon_concept_scope.to_sym == :ancestors
         @taxon_concepts = @taxon_concepts.joins(
-        <<-SQL
-        INNER JOIN (
-          WITH RECURSIVE node AS (
-            SELECT h.id, h.parent_id
-            FROM taxon_concepts h
-            WHERE id = #{taxon_concept.parent_id}
+          <<-SQL
+          INNER JOIN (
+            WITH RECURSIVE node AS (
+              SELECT h.id, h.parent_id
+              FROM taxon_concepts h
+              WHERE id = #{taxon_concept.parent_id}
 
-            UNION ALL
+              UNION ALL
 
-            SELECT hi.id, hi.parent_id
-            FROM node
-            JOIN taxon_concepts hi
-            ON hi.id = node.parent_id
-          )
-          SELECT id FROM node
-        ) ancestors
-        ON ancestors.id = taxon_concepts.id
-        SQL
+              SELECT hi.id, hi.parent_id
+              FROM node
+              JOIN taxon_concepts hi
+              ON hi.id = node.parent_id
+            )
+            SELECT id FROM node
+          ) ancestors
+          ON ancestors.id = taxon_concepts.id
+          SQL
         )
 
       elsif @taxon_concept_scope.to_sym == :descendants
         @taxon_concepts = @taxon_concepts.joins(
-        <<-SQL
-        INNER JOIN (
-          WITH RECURSIVE node AS (
-            SELECT h.id
-            FROM taxon_concepts h
-            WHERE parent_id = #{taxon_concept.id}
+          <<-SQL
+          INNER JOIN (
+            WITH RECURSIVE node AS (
+              SELECT h.id
+              FROM taxon_concepts h
+              WHERE parent_id = #{taxon_concept.id}
 
-            UNION ALL
+              UNION ALL
 
-            SELECT hi.id
-            FROM node
-            JOIN taxon_concepts hi
-            ON hi.parent_id = node.id
-          )
-          SELECT id FROM node
-        ) descendants
-        ON descendants.id = taxon_concepts.id
-        SQL
+              SELECT hi.id
+              FROM node
+              JOIN taxon_concepts hi
+              ON hi.parent_id = node.id
+            )
+            SELECT id FROM node
+          ) descendants
+          ON descendants.id = taxon_concepts.id
+          SQL
         )
       end
     end

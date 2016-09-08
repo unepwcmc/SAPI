@@ -1,3 +1,8 @@
+  <p>
+    Selected error: {{controllers.annualReportUpload.currentError.errorMessage}} ({{controllers.annualReportUpload.currentError.errorCount}})
+    <a {{action 'closeError'}}>(close this error)</a>
+  </p>
+
 <div class="clearfix">
   <button type="button" class="btn btn-link pull-right" {{action "toggleUpdatesVisible"}}>
   Edit batch >>

@@ -5,12 +5,15 @@ module Sapi
   def self.rebuild
     Sapi::StoredProcedures.rebuild
   end
+
   def self.drop_indexes
     Sapi::Indexes.drop_indexes
   end
+
   def self.create_indexes
     Sapi::Indexes.create_indexes
   end
+
   def self.database_summary
     Sapi::Summary.database_summary
   end

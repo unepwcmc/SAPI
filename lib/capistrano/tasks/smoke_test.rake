@@ -1,3 +1,5 @@
+require 'net/http'
+
 namespace :smoke_test do
   task :test_endpoints do
 
@@ -32,7 +34,7 @@ namespace :smoke_test do
     slack_smoke_notification message
   end
 
-  def slack_smoke_notification message
+  def slack_smoke_notification(message)
     uri = URI.parse("https://hooks.slack.com/services/T028F7AGY/B036GEF7T/#{fetch(:slack_token)}")
 
     payload = {
@@ -45,7 +47,7 @@ namespace :smoke_test do
     response = nil
 
     request = Net::HTTP::Post.new(uri.request_uri)
-    request.set_form_data({ :payload => JSON.generate( payload ) })
+    request.set_form_data({ :payload => JSON.generate(payload) })
 
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true

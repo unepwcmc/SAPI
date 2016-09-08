@@ -3,10 +3,10 @@ require 'spec_helper'
 describe Admin::HybridRelationshipsController do
   login_admin
 
-  before(:each){ hybrid_relationship_type }
-  let(:taxon_concept){ create(:taxon_concept) }
-  let(:hybrid){ create(:taxon_concept, :name_status => 'H') }
-  let(:hybrid_relationship){
+  before(:each) { hybrid_relationship_type }
+  let(:taxon_concept) { create(:taxon_concept) }
+  let(:hybrid) { create(:taxon_concept, :name_status => 'H') }
+  let(:hybrid_relationship) {
     create(:taxon_relationship,
       :taxon_relationship_type_id => hybrid_relationship_type.id,
       :taxon_concept => taxon_concept,
@@ -29,8 +29,7 @@ describe Admin::HybridRelationshipsController do
       xhr :post, :create,
         :taxon_concept_id => taxon_concept.id,
         :taxon_relationship => {
-          :other_taxon_concept_attributes =>
-            build_tc_attributes(:taxon_concept, :name_status => 'H')
+          other_taxon_concept_id: hybrid.id
         }
       response.should render_template("create")
     end
@@ -38,7 +37,7 @@ describe Admin::HybridRelationshipsController do
       xhr :post, :create,
         :taxon_concept_id => taxon_concept.id,
         :taxon_relationship => {
-          :other_taxon_concept_attributes => {}
+          other_taxon_concept_id: nil
         }
       response.should render_template("new")
     end
@@ -59,23 +58,22 @@ describe Admin::HybridRelationshipsController do
 
   describe "XHR PUT update" do
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json',
+      xhr :put, :update, :format => 'js',
         :taxon_concept_id => taxon_concept.id,
         :id => hybrid_relationship.id,
         :taxon_relationship => {
-          :other_taxon_concept_attributes =>
-            build_tc_attributes(:taxon_concept, :name_status => 'H')
+          other_taxon_concept_id: hybrid.id
         }
-      response.should be_success
+      response.should render_template("create")
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json',
+      xhr :put, :update, :format => 'js',
         :taxon_concept_id => taxon_concept.id,
         :id => hybrid_relationship.id,
         :taxon_relationship => {
-          :other_taxon_concept_attributes => { }
+          other_taxon_concept_id: nil
         }
-      JSON.parse(response.body).should include('errors')
+      response.should render_template('new')
     end
   end
 
@@ -85,7 +83,7 @@ describe Admin::HybridRelationshipsController do
         :taxon_concept_id => taxon_concept.id,
         :id => hybrid_relationship.id
       response.should redirect_to(
-        edit_admin_taxon_concept_url(hybrid_relationship.taxon_concept)
+        admin_taxon_concept_names_url(hybrid_relationship.taxon_concept)
       )
     end
   end

@@ -4,23 +4,23 @@ describe CitesTrade::ShipmentsController do
   include_context 'Shipments'
 
   describe "GET index" do
-    before(:each){ Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    before(:each) { Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     context "serializer" do
       it "should return comptab export when report_type invalid" do
         get :index, filters: {
-          report_type: 'raw',
+          report_type: 'raw'
         }, format: :json
         response.body.should have_json_path('shipment_comptab_export')
       end
       it "should return comptab export when report_type = comptab" do
         get :index, filters: {
-          report_type: 'comptab',
+          report_type: 'comptab'
         }, format: :json
         response.body.should have_json_path('shipment_comptab_export')
       end
       it "should return gross net export when report_type = gross_exports" do
         get :index, filters: {
-          report_type: 'gross_exports',
+          report_type: 'gross_exports'
         }, format: :json
         response.body.should have_json_path('shipment_gross_net_export')
       end
@@ -33,7 +33,7 @@ describe CitesTrade::ShipmentsController do
       get :index, filters: {
         report_type: 'gross_exports',
         time_range_start: 2012,
-        time_range_end: 2013,
+        time_range_end: 2013
       }, format: :json
       response.body.should have_json_size(4).at_path('shipment_gross_net_export/rows')
     end

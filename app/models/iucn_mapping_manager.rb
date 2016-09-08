@@ -7,13 +7,13 @@ class IucnMappingManager
       @subspecies = Rank.where(:name => Rank::SUBSPECIES).first
       taxonomy = Taxonomy.where(:name => Taxonomy::CITES_EU).first
 
-      TaxonConcept.where(:rank_id => [species.id, @subspecies.id], :name_status => ['A','S'],
+      TaxonConcept.where(:rank_id => [species.id, @subspecies.id], :name_status => ['A', 'S'],
                          :taxonomy_id => taxonomy.id).each do |taxon_concept|
         sync_taxon_concept taxon_concept
       end
     end
 
-    def sync_taxon_concept taxon_concept
+    def sync_taxon_concept(taxon_concept)
       mapping = IucnMapping.find_or_create_by_taxon_concept_id(taxon_concept.id)
       full_name = if taxon_concept.rank_id == @subspecies.id
                     taxon_concept.full_name.insert(taxon_concept.full_name.rindex(/ /), " ssp.")
@@ -28,17 +28,17 @@ class IucnMappingManager
       end
     end
 
-    def fetch_data_for_name full_name
+    def fetch_data_for_name(full_name)
       @config_location ||= Rails.root.join('config/secrets.yml')
       @config ||= YAML.load_file(@config_location)[Rails.env]
       @token ||= @config['iucn_redlist']['token']
       @url ||= @config['iucn_redlist']['url']
-puts "#{@url}#{full_name.downcase}?token=#{@token}"
+      puts "#{@url}#{full_name.downcase}?token=#{@token}"
       url = URI.escape("#{@url}#{full_name.downcase}?token=#{@token}")
       JSON.parse(RestClient.get(url))
     end
 
-    def map_taxon_concept taxon_concept, map, data
+    def map_taxon_concept(taxon_concept, map, data)
       begin
         match = data["result"].first
         puts "#{taxon_concept.full_name} #{taxon_concept.author_year} <=>  #{match["scientific_name"]} #{match["authority"]}"
@@ -48,7 +48,7 @@ puts "#{@url}#{full_name.downcase}?token=#{@token}"
           :iucn_author => match['authority'],
           :iucn_category => match['category'],
           :details => {
-          :match => type_of_match(taxon_concept, match),
+            :match => type_of_match(taxon_concept, match),
             :no_matches => data["result"].size
           },
           :accepted_name_id => taxon_concept.name_status == 'S' ? taxon_concept.accepted_names.first.try(:id) : nil
@@ -60,7 +60,7 @@ puts "#{@url}#{full_name.downcase}?token=#{@token}"
       end
     end
 
-    def type_of_match tc, match
+    def type_of_match(tc, match)
       if tc.full_name == match["scientific_name"]
         if strip_authors(tc.author_year) == strip_authors(match["authority"])
           puts "FULL_MATCH!"
@@ -72,10 +72,10 @@ puts "#{@url}#{full_name.downcase}?token=#{@token}"
       end
     end
 
-    def strip_authors author
+    def strip_authors(author)
       return '' unless author
       author.split(" ").
-        reject{|p| ["and", "&", "&amp;", ","].include?(p)}.
+        reject { |p| ["and", "&", "&amp;", ","].include?(p) }.
         join(" ")
     end
   end

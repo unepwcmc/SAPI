@@ -12,8 +12,7 @@ class NomenclatureChange::ToSynonymTransformation
     relink_relationships(
       @accepted_taxon_concept.trade_name_relationships, @new_accepted_name
     )
-    # detach from parent and turn into a synonym
-    @accepted_taxon_concept.update_attributes(parent_id: nil, name_status: 'S')
+    @accepted_taxon_concept.update_attribute(:name_status, 'S')
     # turn current name into synonym of new name
     rel_type = TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_SYNONYM)
     @new_accepted_name.taxon_relationships << TaxonRelationship.new(

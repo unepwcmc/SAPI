@@ -162,11 +162,12 @@ class DocumentSearch
   def add_ordering_for_admin
     return if @title_query.present?
 
-    @query = if @events_ids.present?
-      @query.order(['date_raw DESC', :title])
-    else
-      @query.order('created_at DESC')
-    end
+    @query =
+      if @events_ids.present?
+        @query.order(['date_raw DESC', :title])
+      else
+        @query.order('created_at DESC')
+      end
   end
 
   def add_ordering_for_public

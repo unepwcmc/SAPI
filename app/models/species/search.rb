@@ -25,7 +25,7 @@ class Species::Search
     @query.pluck(:id)
   end
 
-private
+  private
 
   def initialize_params(options)
     @options = Species::SearchParams.sanitize(options)
@@ -36,11 +36,12 @@ private
   def initialize_query
     @query = MTaxonConcept.taxonomic_layout
 
-    @query = if @taxonomy == :cms
-      @query.by_cms_taxonomy
-    else
-      @query.by_cites_eu_taxonomy
-    end
+    @query =
+      if @taxonomy == :cms
+        @query.by_cms_taxonomy
+      else
+        @query.by_cites_eu_taxonomy
+      end
 
     if @visibility == :speciesplus
       @query = @query.where(:show_in_species_plus => true)
@@ -68,7 +69,7 @@ private
 
     unless @scientific_name.blank?
       @query = @query.
-        by_name(@scientific_name, {:synonyms => true, :subspecies => true, :common_names => true}).
+        by_name(@scientific_name, { :synonyms => true, :subspecies => true, :common_names => true }).
         select(
           "taxon_concepts_mview.*, matching_names.matched_names_ary AS synonyms_ary"
         )

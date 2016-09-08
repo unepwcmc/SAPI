@@ -1,4 +1,3 @@
-#Encoding: UTF-8
 class LatexToPdf
   def self.config
     @config ||= {
@@ -13,17 +12,17 @@ class LatexToPdf
   # The dir argument is the name of the intermediate files directory.
   #
   # The input argument is the name of the tex file without the '.tex'
-  def self.generate_pdf_from_file(dir,input)
+  def self.generate_pdf_from_file(dir, input)
     Process.waitpid(
       fork do
         begin
           Dir.chdir dir
           original_stdout, original_stderr = $stdout, $stderr
-          $stderr = $stdout = File.open("#{input}.log","a")
-          args=config[:arguments] + %w[-shell-escape -interaction batchmode] + ["#{input}.tex"]
-          exec config[:command],*args
+          $stderr = $stdout = File.open("#{input}.log", "a")
+          args = config[:arguments] + %w[-shell-escape -interaction batchmode] + ["#{input}.tex"]
+          exec config[:command], *args
         rescue
-          File.open("#{input}.log",'a') {|io|
+          File.open("#{input}.log", 'a') {|io|
             io.write("#{$!.message}:\n#{$!.backtrace.join("\n")}\n")
           }
         ensure
@@ -31,7 +30,7 @@ class LatexToPdf
           Process.exit! 1
         end
       end)
-    if File.exist?(pdf_file=[dir, "/#{input}.pdf"].join)
+    if File.exist?(pdf_file = [dir, "/#{input}.pdf"].join)
       pdf_file
     else
       raise "pdflatex failed: See #{[dir, "/#{input}.log"].join} for details"
@@ -45,13 +44,13 @@ class LatexToPdf
     # :stopdoc:
     unless @latex_escaper
       if defined?(RedCloth::Formatters::LATEX)
-        class << (@latex_escaper=RedCloth.new(''))
+        class << (@latex_escaper = RedCloth.new(''))
           include RedCloth::Formatters::LATEX
         end
       else
-        class << (@latex_escaper=Object.new)
-          ESCAPE_RE=/([{}_$&%#\r])|([\\^~|<>])/
-          ESC_MAP={
+        class << (@latex_escaper = Object.new)
+          ESCAPE_RE = /([{}_$&%#\r])|([\\^~|<>])/
+          ESC_MAP = {
             '\\' => 'backslash',
             '^' => 'asciicircum',
             '~' => 'asciitilde',
@@ -60,7 +59,7 @@ class LatexToPdf
             '>' => 'greater'
           }
 
-          def latex_esc(text)   # :nodoc:
+          def latex_esc(text) # :nodoc:
             text.gsub(ESCAPE_RE) {|m|
               if $1
                 "\\#{m}"
@@ -74,7 +73,7 @@ class LatexToPdf
       # :startdoc:
     end
 
-    @latex_escaper.latex_esc(text.to_s)#.html_safe
+    @latex_escaper.latex_esc(text.to_s) # .html_safe
   end
 
   def self.html2latex(text)

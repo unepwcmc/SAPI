@@ -31,7 +31,7 @@ describe Admin::ChangeTypesController do
   end
 
   describe "XHR PUT update" do
-    let(:change_type){ create(:change_type) }
+    let(:change_type) { create(:change_type) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => change_type.id, :change_type => { :name => 'ZZ' }
       response.should be_success
@@ -43,7 +43,7 @@ describe Admin::ChangeTypesController do
   end
 
   describe "DELETE destroy" do
-    let(:change_type){ create(:change_type) }
+    let(:change_type) { create(:change_type) }
     it "redirects after delete" do
       delete :destroy, :id => change_type.id
       response.should redirect_to(admin_change_types_url)

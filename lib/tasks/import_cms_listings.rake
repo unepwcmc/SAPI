@@ -6,9 +6,9 @@ namespace :import do
     designation = Designation.find_by_name(Designation::CMS)
     taxonomy = Taxonomy.find_by_name(Taxonomy::CMS)
     puts "There are #{ListingChange.joins(:species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count} CMS listings in the database"
+      where(:species_listings => { :designation_id => designation.id }).count} CMS listings in the database"
     puts "There are #{ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count} CMS listing distributions in the database"
+      where(:species_listings => { :designation_id => designation.id }).count} CMS listing distributions in the database"
     appendix_1 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'I')
     appendix_2 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'II')
     a = ChangeType.find_by_name_and_designation_id(ChangeType::ADDITION, designation.id)
@@ -16,9 +16,9 @@ namespace :import do
     e = ChangeType.find_by_name_and_designation_id(ChangeType::EXCEPTION, designation.id)
     english = Language.find_by_name_en('English')
     listings_count = ListingChange.joins(:species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
     listings_d_count = ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -110,7 +110,7 @@ namespace :import do
       puts "INSERTING listing_changes"
       ActiveRecord::Base.connection.execute(sql)
 
-      #add taxonomic exceptions
+      # add taxonomic exceptions
       sql = <<-SQL
       INSERT INTO listing_changes (parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at)
       SELECT * FROM (
@@ -145,8 +145,8 @@ namespace :import do
       puts "INSERTING taxonomic exceptions"
       ActiveRecord::Base.connection.execute(sql)
 
-      #add population exceptions
-      sql =<<-SQL
+      # add population exceptions
+      sql = <<-SQL
       WITH exceptions AS (
               -- first insert the exception records -- there's just one / listing change
               INSERT INTO listing_changes (parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at)
@@ -194,7 +194,6 @@ namespace :import do
       puts "INSERTING listed populations (listing distributions)"
       ActiveRecord::Base.connection.execute(sql)
 
-
       sql = <<-SQL
         INSERT INTO instruments(name, designation_id, created_at, updated_at)
         SELECT DISTINCT BTRIM(#{TMP_TABLE}.designation), #{designation.id},
@@ -230,14 +229,14 @@ namespace :import do
     end
 
     puts "DROPPING temporary column and view"
-#    ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
-#    ActiveRecord::Base.connection.execute("ALTER TABLE annotations DROP COLUMN import_row_id")
-#    ActiveRecord::Base.connection.execute("DROP VIEW cms_listings_import_view")
+    #    ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
+    #    ActiveRecord::Base.connection.execute("ALTER TABLE annotations DROP COLUMN import_row_id")
+    #    ActiveRecord::Base.connection.execute("DROP VIEW cms_listings_import_view")
 
     new_listings_count = ListingChange.joins(:species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
     new_listings_d_count = ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => {:designation_id => designation.id}).count
+      where(:species_listings => { :designation_id => designation.id }).count
     puts "#{new_listings_count - listings_count} CMS listings were added to the database"
     puts "#{new_listings_d_count - listings_d_count} CMS listing distributions were added to the database"
 
@@ -261,13 +260,12 @@ namespace :import do
     task :delete_all => :environment do
       designation = Designation.find_by_name("CMS")
       AnnotationTranslation.joins(:annotation => :event).
-        where(:events => {:designation_id => designation.id}).delete_all
+        where(:events => { :designation_id => designation.id }).delete_all
       Annotation.joins(:event).
-        where(:events => {:designation_id => designation.id}).delete_all
+        where(:events => { :designation_id => designation.id }).delete_all
       ListingDistribution.joins(:listing_change).
-        where(:listing_changes => {:desigantion_id => designation.id}).delete_all
+        where(:listing_changes => { :desigantion_id => designation.id }).delete_all
       ListingChange.where(:designation_id => designation.id).delete_all
     end
   end
 end
-

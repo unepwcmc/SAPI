@@ -19,14 +19,14 @@ shared_context "Notomys aquilo" do
     )
 
     create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '1975-07-01'
+      :taxon_concept => @species,
+      :effective_at => '1975-07-01'
     )
     create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1979-06-28',
-     :inclusion_taxon_concept_id => @genus.id,
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '1979-06-28',
+      :inclusion_taxon_concept_id => @genus.id,
+      :is_current => true
     )
     cites_del = create_cites_II_deletion(
       :taxon_concept => @genus,
@@ -38,7 +38,7 @@ shared_context "Notomys aquilo" do
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
       end
     end

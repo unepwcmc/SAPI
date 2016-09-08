@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Trade::AnnualReportUploadsController do
   login_admin
 
-  let(:france){
+  let(:france) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -15,11 +15,11 @@ describe Trade::AnnualReportUploadsController do
     test_document = File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')
     Rack::Test::UploadedFile.new(test_document, "text/csv")
   end
-  let(:annual_report_upload){
+  let(:annual_report_upload) {
     create(
       :annual_report_upload,
       :point_of_view => 'E',
-      :trading_country_id => france.id, 
+      :trading_country_id => france.id,
       :csv_source_file => exporter_csv
     )
   }
@@ -40,7 +40,7 @@ describe Trade::AnnualReportUploadsController do
       get :index, is_done: 0, format: :json
       response.body.should have_json_size(1).at_path('annual_report_uploads')
     end
- end
+  end
 
   describe "GET show" do
     it "should return success" do

@@ -3,7 +3,7 @@ class Admin::CmsMappingsController < Admin::SimpleCrudController
   def index
     @totals = {
       :species_plus => TaxonConcept.joins(:taxonomy).
-        where(:taxonomies => {:name => Taxonomy::CMS}).
+        where(:taxonomies => { :name => Taxonomy::CMS }).
         where(:name_status => 'A').count,
       :cms_mapped => CmsMapping.all.count,
       :matches => CmsMapping.filter('MATCHES').count,

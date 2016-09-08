@@ -1,5 +1,5 @@
 shared_context "Canis lupus" do
-  let(:bhutan){
+  let(:bhutan) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -7,7 +7,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'BT'
     )
   }
-  let(:india){
+  let(:india) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -15,7 +15,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'IN'
     )
   }
-  let(:nepal){
+  let(:nepal) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -23,7 +23,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'NP'
     )
   }
-  let(:pakistan){
+  let(:pakistan) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -31,7 +31,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'PK'
     )
   }
-  let(:poland){
+  let(:poland) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -39,7 +39,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'PL'
     )
   }
-  let(:argentina){
+  let(:argentina) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -47,7 +47,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'AR'
     )
   }
-  let(:spain){
+  let(:spain) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -55,7 +55,7 @@ shared_context "Canis lupus" do
       :iso_code2 => 'ES'
     )
   }
-  let(:greece){
+  let(:greece) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -94,24 +94,24 @@ shared_context "Canis lupus" do
     end
 
     create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1977-02-04'
+      :taxon_concept => @species,
+      :effective_at => '1977-02-04'
     )
     create_cites_II_addition(
-     :taxon_concept => @subspecies,
-     :effective_at => '1977-02-04',
-     :inclusion_taxon_concept_id => @species.id,
-     :is_current => true
+      :taxon_concept => @subspecies,
+      :effective_at => '1977-02-04',
+      :inclusion_taxon_concept_id => @species.id,
+      :is_current => true
     )
     cites_lc_I = create_cites_I_addition(
-     :taxon_concept => @species,
-     :effective_at => '2010-06-23',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2010-06-23',
+      :is_current => true
     )
     cites_lc_II = create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '2010-06-23',
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '2010-06-23',
+      :is_current => true
     )
     cites_lc_II_exc = create_cites_II_exception(
       :taxon_concept => @species,
@@ -171,7 +171,7 @@ shared_context "Canis lupus" do
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
         self.instance_variable_set(:"#{t}_ac",
           MAutoCompleteTaxonConcept.

@@ -10,7 +10,7 @@ class Admin::IucnMappingsController < Admin::SimpleCrudController
       :non_matching => IucnMapping.filter("NON_MATCHING").count,
       :synonyms => IucnMapping.filter('SYNONYMS').count,
       :accepted => IucnMapping.filter('ACCEPTED').count,
-      :all => IucnMapping.count,
+      :all => IucnMapping.count
 
     }
   end
@@ -19,7 +19,7 @@ class Admin::IucnMappingsController < Admin::SimpleCrudController
 
   def collection
     @iucn_mappings ||= end_of_association_chain.order(:taxon_concept_id).
-      page(params[:page]).filter(params[:show]||"ALL").includes(:taxon_concept).
+      page(params[:page]).filter(params[:show] || "ALL").includes(:taxon_concept).
       includes(:accepted_name)
   end
 end

@@ -21,8 +21,11 @@
 #  original_id                  :integer
 #  discussion_id                :integer
 #  discussion_sort_index        :integer
+#  designation_id               :integer
 #
 
 class Document::RangeStateConsultationLetter < Document
-  def self.display_name; 'Range State Consultation Letter'; end
+  def self.display_name
+    'Range State Consultation Letter'
+  end
 end

@@ -37,15 +37,16 @@ describe Admin::TaxonEuSuspensionsController do
         @eu_decision_type = create(:eu_decision_type)
       end
       it "redirects to the EU suspensions index" do
-        post :create, :eu_suspension => {
+        post :create,
+          :eu_suspension => {
             :eu_decision_type_id => @eu_decision_type.id,
-            :start_date => Date.new(2013,1,1),
+            :start_date => Date.new(2013, 1, 1),
             :geo_entity_id => create(
               :geo_entity, :geo_entity_type_id => country_geo_entity_type.id
             )
           },
           :taxon_concept_id => @taxon_concept.id
-          response.should redirect_to(admin_taxon_concept_eu_suspensions_url(@taxon_concept.id))
+        response.should redirect_to(admin_taxon_concept_eu_suspensions_url(@taxon_concept.id))
       end
     end
 
@@ -87,7 +88,8 @@ describe Admin::TaxonEuSuspensionsController do
 
     context "when successful" do
       it "renders taxon_concepts EU suspensions page" do
-        put :update, :eu_suspension => {
+        put :update,
+          :eu_suspension => {
             :eu_decision_type_id => @eu_decision_type.id,
             :geo_entity_id => create(
               :geo_entity, :geo_entity_type_id => country_geo_entity_type.id
@@ -103,7 +105,8 @@ describe Admin::TaxonEuSuspensionsController do
 
     context "when not successful" do
       it "renders new" do
-        put :update, :eu_suspension => {
+        put :update,
+          :eu_suspension => {
             :eu_decision_type_id => nil
           },
           :id => @eu_suspension.id,
@@ -131,7 +134,7 @@ describe Admin::TaxonEuSuspensionsController do
 
   describe "Authorization for contributors" do
     login_contributor
-    let!(:eu_suspension ) {
+    let!(:eu_suspension) {
       create(
         :eu_suspension,
         :taxon_concept_id => @taxon_concept.id

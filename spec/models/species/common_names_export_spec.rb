@@ -14,7 +14,7 @@ describe Species::CommonNamesExport do
       specify { subject.export.should be_false }
     end
     context "when results" do
-      before(:each){
+      before(:each) {
         species = create_cites_eu_species
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/common_names")
@@ -22,7 +22,7 @@ describe Species::CommonNamesExport do
         Species::CommonNamesExport.any_instance.stub(:path).
           and_return("spec/public/downloads/common_names/")
       }
-      after(:each){
+      after(:each) {
         FileUtils.remove_dir("spec/public/downloads/common_names", true)
       }
       subject {

@@ -37,28 +37,28 @@ describe QuotasCopyWorker do
       "from_text" => '',
       "to_text" => '',
       "url" => ''
-   }
+    }
   }
 
   describe "Copy single quota, for a given year" do
     before(:each) do
       QuotasCopyWorker.new.perform(job_defaults)
     end
-    specify { Quota.count(true).should == 2}
-    specify { Quota.where(:is_current => true).count(true).should == 1}
-    specify { Quota.where(:is_current => false).count(true).should == 1}
-    specify { Quota.where(:is_current => false).first.id.should == quota.id}
+    specify { Quota.count(true).should == 2 }
+    specify { Quota.where(:is_current => true).count(true).should == 1 }
+    specify { Quota.where(:is_current => false).count(true).should == 1 }
+    specify { Quota.where(:is_current => false).first.id.should == quota.id }
   end
 
   describe "Try to copy quota from wrong year" do
     before(:each) do
       QuotasCopyWorker.new.perform(job_defaults.merge({
-          "from_year" => quota.start_date.year+1
+        "from_year" => quota.start_date.year + 1
       }))
     end
-    specify { Quota.count(true).should == 1}
-    specify { Quota.where(:is_current => true).count(true).should == 1}
-    specify { Quota.where(:is_current => false).count(true).should == 0}
+    specify { Quota.count(true).should == 1 }
+    specify { Quota.where(:is_current => true).count(true).should == 1 }
+    specify { Quota.where(:is_current => false).count(true).should == 0 }
   end
 
   describe "Copy quota when there are no current quotas" do
@@ -67,9 +67,9 @@ describe QuotasCopyWorker do
       quota.save
       QuotasCopyWorker.new.perform(job_defaults)
     end
-    specify { Quota.count(true).should == 1}
-    specify { Quota.where(:is_current => true).count(true).should == 0}
-    specify { Quota.where(:is_current => false).count(true).should == 1}
+    specify { Quota.count(true).should == 1 }
+    specify { Quota.where(:is_current => true).count(true).should == 0 }
+    specify { Quota.where(:is_current => false).count(true).should == 1 }
   end
 
   describe "When multiple quotas copy quota for given country" do
@@ -87,10 +87,10 @@ describe QuotasCopyWorker do
         "included_geo_entities_ids" => [geo_entity.id]
       }))
     end
-    specify { Quota.count(true).should == 3}
-    specify { Quota.where(:is_current => true).count(true).should == 2}
+    specify { Quota.count(true).should == 3 }
+    specify { Quota.where(:is_current => true).count(true).should == 2 }
     specify { Quota.where(:is_current => true).map(&:id).should include(@quota2.id) }
-    specify { Quota.where(:is_current => false).count(true).should == 1}
+    specify { Quota.where(:is_current => false).count(true).should == 1 }
     specify { Quota.where(:is_current => false).first.id.should == quota.id }
   end
 
@@ -109,9 +109,9 @@ describe QuotasCopyWorker do
         "included_geo_entities_ids" => [geo_entity.id.to_s, geo_entity2.id.to_s]
       }))
     end
-    specify { Quota.count(true).should == 4}
-    specify { Quota.where(:is_current => true).count(true).should == 2}
-    specify { Quota.where(:is_current => false).count(true).should == 2}
+    specify { Quota.count(true).should == 4 }
+    specify { Quota.where(:is_current => true).count(true).should == 2 }
+    specify { Quota.where(:is_current => false).count(true).should == 2 }
     specify { Quota.where(:is_current => false).map(&:id).should include(quota.id) }
     specify { Quota.where(:is_current => false).map(&:id).should include(@quota2.id) }
   end
@@ -131,10 +131,10 @@ describe QuotasCopyWorker do
         "excluded_geo_entities_ids" => [geo_entity2.id.to_s]
       }))
     end
-    specify { Quota.count(true).should == 3}
-    specify { Quota.where(:is_current => true).count(true).should == 2}
+    specify { Quota.count(true).should == 3 }
+    specify { Quota.where(:is_current => true).count(true).should == 2 }
     specify { Quota.where(:is_current => true).map(&:id).should include(@quota2.id) }
-    specify { Quota.where(:is_current => false).count(true).should == 1}
+    specify { Quota.where(:is_current => false).count(true).should == 1 }
     specify { Quota.where(:is_current => false).first.id.should == quota.id }
   end
 
@@ -152,10 +152,10 @@ describe QuotasCopyWorker do
         "included_taxon_concepts_ids" => quota.taxon_concept_id.to_s
       }))
     end
-    specify { Quota.count(true).should == 3}
-    specify { Quota.where(:is_current => true).count(true).should == 2}
+    specify { Quota.count(true).should == 3 }
+    specify { Quota.where(:is_current => true).count(true).should == 2 }
     specify { Quota.where(:is_current => true).map(&:id).should include(@quota2.id) }
-    specify { Quota.where(:is_current => false).count(true).should == 1}
+    specify { Quota.where(:is_current => false).count(true).should == 1 }
     specify { Quota.where(:is_current => false).map(&:id).should include(quota.id) }
   end
 
@@ -174,10 +174,10 @@ describe QuotasCopyWorker do
         "included_taxon_concepts_ids" => "#{taxon_concept.id},#{tc.id}"
       }))
     end
-    specify { Quota.count(true).should == 4}
-    specify { Quota.where(:is_current => true).count(true).should == 2}
+    specify { Quota.count(true).should == 4 }
+    specify { Quota.where(:is_current => true).count(true).should == 2 }
     specify { Quota.where(:is_current => true).map(&:id).should_not include(@quota2.id) }
-    specify { Quota.where(:is_current => false).count(true).should == 2}
+    specify { Quota.where(:is_current => false).count(true).should == 2 }
     specify { Quota.where(:is_current => false).map(&:id).should include(quota.id) }
   end
 
@@ -195,10 +195,10 @@ describe QuotasCopyWorker do
         "excluded_taxon_concepts_ids" => tc.id.to_s
       }))
     end
-    specify { Quota.count(true).should == 3}
-    specify { Quota.where(:is_current => true).count(true).should == 2}
+    specify { Quota.count(true).should == 3 }
+    specify { Quota.where(:is_current => true).count(true).should == 2 }
     specify { Quota.where(:is_current => true).map(&:id).should include(@quota2.id) }
-    specify { Quota.where(:is_current => false).count(true).should == 1}
+    specify { Quota.where(:is_current => false).count(true).should == 1 }
     specify { Quota.where(:is_current => false).first.id.should == quota.id }
   end
 
@@ -219,14 +219,14 @@ describe QuotasCopyWorker do
       }))
 
     end
-    specify { Quota.count(true).should == 4}
-    specify { Quota.where(:is_current => true).count(true).should == 2}
+    specify { Quota.count(true).should == 4 }
+    specify { Quota.where(:is_current => true).count(true).should == 2 }
     specify { Quota.where(:is_current => true).map(&:id).should_not include(@quota2.id) }
     specify { Quota.where(:is_current => true).map(&:id).should_not include(quota.id) }
-    specify { Quota.where(:is_current => false).count(true).should == 2}
-    specify { Quota.where(:is_current => true).map(&:notes).should include(@quota2.notes)}
-    specify { Quota.where(:is_current => true).map(&:notes).should_not include(quota.notes)}
-    specify { Quota.where(:is_current => true).map(&:notes).should include('Le Salmon is my favourite fish')}
+    specify { Quota.where(:is_current => false).count(true).should == 2 }
+    specify { Quota.where(:is_current => true).map(&:notes).should include(@quota2.notes) }
+    specify { Quota.where(:is_current => true).map(&:notes).should_not include(quota.notes) }
+    specify { Quota.where(:is_current => true).map(&:notes).should include('Le Salmon is my favourite fish') }
   end
 
   describe "When url passed, should be replaced" do
@@ -240,13 +240,13 @@ describe QuotasCopyWorker do
              :geo_entity_id => geo_entity2.id,
              :taxon_concept_id => tc.id,
              :notes => "Derp di doo wildlife")
-      QuotasCopyWorker.new.perform(job_defaults.merge({"url" => 'http://myurl.co.uk'}))
+      QuotasCopyWorker.new.perform(job_defaults.merge({ "url" => 'http://myurl.co.uk' }))
     end
-    specify { Quota.count(true).should == 4}
-    specify { Quota.where(:is_current => true).count(true).should == 2}
+    specify { Quota.count(true).should == 4 }
+    specify { Quota.where(:is_current => true).count(true).should == 2 }
     specify { Quota.where(:is_current => true).map(&:id).should_not include(@quota2.id) }
     specify { Quota.where(:is_current => true).map(&:id).should_not include(quota.id) }
-    specify { Quota.where(:is_current => false).count(true).should == 2}
-    specify { Quota.where(:is_current => true).map(&:url).should include('http://myurl.co.uk')}
+    specify { Quota.where(:is_current => false).count(true).should == 2 }
+    specify { Quota.where(:is_current => true).map(&:url).should include('http://myurl.co.uk') }
   end
 end

@@ -10,8 +10,8 @@ namespace :import do
     TMP_TABLE = 'countries_import'
     country_type = GeoEntityType.find_by_name(GeoEntityType::COUNTRY)
     territory_type = GeoEntityType.find_by_name(GeoEntityType::TERRITORY)
-    puts "There are #{GeoEntity.count(conditions: {geo_entity_type_id: country_type.id})} countries in the database."
-    puts "There are #{GeoEntity.count(conditions: {geo_entity_type_id: territory_type.id})} territories in the database."
+    puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: country_type.id })} countries in the database."
+    puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: territory_type.id })} territories in the database."
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(TMP_TABLE)
@@ -33,26 +33,25 @@ namespace :import do
           )
       SQL
       ActiveRecord::Base.connection.execute(sql)
-      link_countries()
+      link_countries
     end
-    puts "There are now #{GeoEntity.count(conditions: {geo_entity_type_id: country_type.id})} countries in the database"
-    puts "There are now #{GeoEntity.count(conditions: {geo_entity_type_id: territory_type.id})} territories in the database."
+    puts "There are now #{GeoEntity.count(conditions: { geo_entity_type_id: country_type.id })} countries in the database"
+    puts "There are now #{GeoEntity.count(conditions: { geo_entity_type_id: territory_type.id })} territories in the database."
   end
-
 
   desc "Add country names in spanish and french"
   task :countries_translations => [:environment] do
     CSV.foreach("lib/files/country_codes_en_es_fr_utf8.csv") do |row|
       country = GeoEntity.find_or_initialize_by_iso_code2(row[0].strip.upcase)
       unless country.id.nil?
-         country.update_attributes(:name_fr => row[1].strip,
-                                :name_es => row[2].strip)
+        country.update_attributes(
+          :name_fr => row[1].strip, :name_es => row[2].strip
+        )
       end
     end
-  puts "Countries updated with french and spanish names"
+    puts "Countries updated with french and spanish names"
   end
 end
-
 
 def link_countries
   puts "Link territories to countries and countries to respective CITES regions"

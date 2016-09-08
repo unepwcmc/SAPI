@@ -32,7 +32,7 @@ describe EuSuspension do
 
   describe :create do
     context "when taxon concept missing" do
-      let(:eu_suspension){
+      let(:eu_suspension) {
         build(
           :eu_suspension, taxon_concept: nil
         )
@@ -43,7 +43,7 @@ describe EuSuspension do
     end
 
     context "when geo_entity missing" do
-      let(:eu_suspension){
+      let(:eu_suspension) {
         build(
           :eu_suspension,
           geo_entity: nil
@@ -55,7 +55,7 @@ describe EuSuspension do
     end
 
     context "when valid" do
-      let(:eu_suspension){ build(:eu_suspension) }
+      let(:eu_suspension) { build(:eu_suspension) }
 
       specify { eu_suspension.should be_valid }
     end

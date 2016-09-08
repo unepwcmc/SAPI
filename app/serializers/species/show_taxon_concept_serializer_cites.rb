@@ -202,7 +202,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           effective_at DESC,
           change_type_order ASC,
           species_listing_name ASC,
-          subspecies_info DESC
+          subspecies_info DESC,
+          party_full_name_en ASC
         SQL
       ).all
   end
@@ -267,11 +268,11 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           effective_at DESC,
           change_type_order ASC,
           species_listing_name ASC,
-          subspecies_info DESC
+          subspecies_info DESC,
+          party_full_name_en ASC
         SQL
       ).all
   end
-
 
   def cites_listing
     object.listing && object.listing['cites_listing']

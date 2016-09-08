@@ -4,7 +4,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   updatesVisible: false
   currentShipment: null
   sandboxShipmentsSaving: false
-  queryParams: ['page', 'sandboxShipmentsIds:sandbox_shipments_ids']
+  queryParams: ['page', 'validationErrorId:validation_error_id']
 
   columns: [
     'appendix', 'taxon_name', 'accepted_taxon_name',
@@ -46,6 +46,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
       @get('controllers.annualReportUpload.id')
     )
     @set('controllers.annualReportUpload.currentError', null)
+    @set('controllers.annualReportUpload.allErrorsCollapsed', null)
 
   unsavedChanges: (->
     @get('changedRowsCount') > 0
@@ -56,6 +57,8 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   ).property('content.@each._modified', 'currentShipment')
 
   actions:
+    closeError: ->
+      @transitionToParentController()
 
     toggleUpdatesVisible: ->
       @toggleProperty 'updatesVisible'
@@ -78,7 +81,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
           url: "trade/annual_report_uploads/#{annualReportUploadId}/sandbox_shipments/update_batch"
           type: "POST"
           data: {
-            sandbox_shipments_ids: @get("controllers.annualReportUpload.currentError.sandboxShipments").mapBy("id"),
+            validation_error_id: @get("controllers.annualReportUpload.currentError.id"),
             updates: valuesToUpdate
           }
         ).success( (data, textStatus, jqXHR) =>
@@ -97,7 +100,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
           url: "trade/annual_report_uploads/#{annualReportUploadId}/sandbox_shipments/destroy_batch"
           type: "POST"
           data: {
-            sandbox_shipments_ids: @get("controllers.annualReportUpload.currentError.sandboxShipments").mapBy("id")
+            validation_error_id: @get("controllers.annualReportUpload.currentError.id")
           }
         ).success( (data, textStatus, jqXHR) =>
           @flashSuccess(message: 'Successfully destroyed shipments.', persists: true)

@@ -1,7 +1,7 @@
-  # 'taxonomy' => {'id' => x}
-  # 'rank' => {'id' => x, 'scope' => [parent|ancestors]}
-  # 'taxon_concept' => {'id' => x, 'scope' => [ancestors]}
-  # 'scientific_name'
+# 'taxonomy' => {'id' => x}
+# 'rank' => {'id' => x, 'scope' => [parent|ancestors]}
+# 'taxon_concept' => {'id' => x, 'scope' => [ancestors]}
+# 'scientific_name'
 class SearchParams
   include ActiveModel::Conversion
   extend ActiveModel::Naming
@@ -9,7 +9,6 @@ class SearchParams
 
   def initialize(attributes = {})
     attributes.each do |name, value|
-      #send("#{name}=", (value.is_a?(Hash) ? value.symbolize_keys : value))
       send("#{name}=", value)
     end
   end

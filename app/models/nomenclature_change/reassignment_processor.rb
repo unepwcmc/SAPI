@@ -35,8 +35,8 @@ class NomenclatureChange::ReassignmentProcessor
     if reassignment.reassignable_type == 'Trade::Shipment'
       new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
       Trade::Shipment.update_all(
-        {taxon_concept_id: new_taxon_concept.id},
-        {taxon_concept_id: @input.taxon_concept_id}
+        { taxon_concept_id: new_taxon_concept.id },
+        { taxon_concept_id: @input.taxon_concept_id }
       )
     else
       @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
@@ -85,13 +85,15 @@ class NomenclatureChange::ReassignmentProcessor
   end
 
   def post_process(reassigned_object, object_before_reassignment)
+    Rails.logger.warn("Reassignment post processing BEGIN")
     if reassigned_object.is_a?(TaxonConcept)
-      resolver = NomenclatureChange::TaxonomicTreeNameResolver.new(reassigned_object)
+      resolver = NomenclatureChange::TaxonomicTreeNameResolver.new(reassigned_object, object_before_reassignment)
       resolver.process
     elsif reassigned_object.is_a?(TaxonRelationship)
       resolver = NomenclatureChange::TradeShipmentsResolver.new(reassigned_object, object_before_reassignment)
       resolver.process
     end
+    Rails.logger.warn("Reassignment post processing END")
   end
 
 end

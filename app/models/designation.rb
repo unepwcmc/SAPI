@@ -16,7 +16,7 @@ class Designation < ActiveRecord::Base
 
   validates :name, :presence => true, :uniqueness => true
   validates :name,
-    :inclusion => {:in => self.dict, :message => 'cannot change protected name'},
+    :inclusion => { :in => self.dict, :message => 'cannot change protected name' },
     :if => lambda { |t| t.name_changed? && t.class.dict.include?(t.name_was) },
     :on => :update
   validate :taxonomy_cannot_be_changed_if_dependent_objects_present
@@ -43,9 +43,9 @@ class Designation < ActiveRecord::Base
     super() && !has_protected_name?
   end
 
-  def self.search query
+  def self.search(query)
     if query.present?
-      where("UPPER(name) LIKE UPPER(:query)", 
+      where("UPPER(name) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
       scoped

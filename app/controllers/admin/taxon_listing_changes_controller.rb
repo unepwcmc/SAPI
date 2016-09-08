@@ -19,7 +19,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
       load_change_types
       @listing_change.change_type_id ||= @change_types.first.id
       @listing_change.is_current = true
-      @listing_change.event = @events && @events.first #ordered most recent first
+      @listing_change.event = @events && @events.first # ordered most recent first
       @listing_change.effective_at =  @listing_change.event && @listing_change.event.effective_at
       build_dependants
     end
@@ -48,7 +48,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   def update
     update! do |success, failure|
       success.html {
-        if  "1" == params[:redirect_to_eu_reg]
+        if "1" == params[:redirect_to_eu_reg]
           redirect_to admin_eu_regulation_listing_changes_path(@listing_change.event)
         else
           redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
@@ -72,6 +72,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   end
 
   protected
+
   def build_dependants
     unless @listing_change.party_listing_distribution
       @listing_change.build_party_listing_distribution(
@@ -94,21 +95,23 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
       find_by_name(ChangeType::EXCEPTION)
     @species_listings = @designation.species_listings.order(:abbreviation)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true, :geo_entity_types => {:name => 'COUNTRY'})
-    @hash_annotations = if @designation.is_eu?
-      Annotation.for_eu
-    elsif @designation.is_cites?
-      Annotation.for_cites
-    else
-      []
-    end
-    @events = if @designation.is_eu?
-      EuRegulation.order('effective_at DESC')
-    elsif @designation.is_cites?
-      CitesCop.order('effective_at DESC')
-    else
-      []
-    end
+      where(:is_current => true, :geo_entity_types => { :name => 'COUNTRY' })
+    @hash_annotations =
+      if @designation.is_eu?
+        Annotation.for_eu
+      elsif @designation.is_cites?
+        Annotation.for_cites
+      else
+        []
+      end
+    @events =
+      if @designation.is_eu?
+        EuRegulation.order('effective_at DESC')
+      elsif @designation.is_cites?
+        CitesCop.order('effective_at DESC')
+      else
+        []
+      end
   end
 
   def load_listing_changes

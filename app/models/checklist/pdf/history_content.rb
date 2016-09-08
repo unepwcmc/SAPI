@@ -45,17 +45,17 @@ module Checklist::Pdf::HistoryContent
         listed_taxa_ary = []
       end
       kingdom = fetcher.next
-    end while not kingdom.empty?
+    end while !kingdom.empty?
   end
 
-  def listed_taxa(tex, listed_taxa_ary, kingdom_name='FAUNA')
+  def listed_taxa(tex, listed_taxa_ary, kingdom_name = 'FAUNA')
     tex << "\\listingtable#{kingdom_name.downcase}{"
     rows = []
     listed_taxa_ary.each do |tc|
       listed_taxon_name = listed_taxon_name(tc)
-      is_tc_row = true #it is the first row per taxon concept
+      is_tc_row = true # it is the first row per taxon concept
       tc.historic_cites_listing_changes_for_downloads.each do |lc|
-        is_lc_row = true #it is the first row per listing change
+        is_lc_row = true # it is the first row per listing change
         ann = annotation_for_language(lc, I18n.locale)
         row = []
         # tc fields
@@ -79,12 +79,14 @@ module Checklist::Pdf::HistoryContent
   end
 
   def listing_with_change_type(listing_change)
-    appendix = if listing_change.change_type_name == ChangeType::DELETION
-      nil
-    else
-      listing_change.species_listing_name
-    end
-    change_type = if listing_change.change_type_name == ChangeType::RESERVATION
+    appendix =
+      if listing_change.change_type_name == ChangeType::DELETION
+        nil
+      else
+        listing_change.species_listing_name
+      end
+    change_type =
+      if listing_change.change_type_name == ChangeType::RESERVATION
         '/r'
       elsif listing_change.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
         '/w'
@@ -97,24 +99,29 @@ module Checklist::Pdf::HistoryContent
   end
 
   def annotation_for_language(listing_change, lng)
-    short_note = listing_change.send("short_note_#{lng}")
-    short_note = LatexToPdf.html2latex(short_note)
+    short_note = LatexToPdf.html2latex(
+      listing_change.send("short_note_#{lng}")
+    )
+    nomenclature_note = LatexToPdf.html2latex(
+      listing_change.send("nomenclature_note_#{lng}")
+    )
     if listing_change.display_in_footnote
       full_note = listing_change.send("full_note_#{lng}")
       full_note && full_note.gsub!(/[\n\r]/, ' ')
       full_note = LatexToPdf.html2latex(full_note)
-      "#{short_note}\\footnote{#{full_note}}"
+      "#{short_note}\n\n#{nomenclature_note}\\footnote{#{full_note}}"
     else
-      short_note
+      "#{short_note}\n\n#{nomenclature_note}"
     end
   end
 
   def listed_taxon_name(taxon_concept)
-    res = if ['FAMILY','SUBFAMILY','ORDER','CLASS'].include? taxon_concept.rank_name
-      taxon_concept.full_name.upcase
-    else
-      taxon_concept.full_name
-    end
+    res =
+      if ['FAMILY', 'SUBFAMILY', 'ORDER', 'CLASS'].include? taxon_concept.rank_name
+        taxon_concept.full_name.upcase
+      else
+        taxon_concept.full_name
+      end
     if ['SPECIES', 'SUBSPECIES', 'GENUS'].include? taxon_concept.rank_name
       res = "\\emph{#{res}}"
     end
@@ -130,7 +137,7 @@ module Checklist::Pdf::HistoryContent
       "\\section*{\\underline{#{taxon_concept.full_name.upcase}} #{common_names}}\n"
     elsif taxon_concept.rank_name == 'ORDER' && taxon_concept.kingdom_name == 'Animalia'
       "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
-    elsif ['FAMILY','SUBFAMILY'].include? taxon_concept.rank_name
+    elsif ['FAMILY', 'SUBFAMILY'].include? taxon_concept.rank_name
       "\\subsection*{#{taxon_concept.full_name.upcase} #{common_names}}\n"
     end
   end

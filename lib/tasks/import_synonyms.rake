@@ -3,13 +3,11 @@ namespace :import do
   desc 'Import synonyms from csv file (usage: rake import:synonyms[path/to/file,path/to/another])'
   task :synonyms, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     TMP_TABLE = 'synonym_import'
-    puts "There are #{
-      TaxonRelationship.
+    puts "There are #{TaxonRelationship.
       joins(:taxon_relationship_type).
       where(
         "taxon_relationship_types.name" => TaxonRelationshipType::HAS_SYNONYM
-      ).count
-    } synonyms in the database."
+      ).count} synonyms in the database."
 
     rel = TaxonRelationshipType.
       find_by_name(TaxonRelationshipType::HAS_SYNONYM)
@@ -22,7 +20,7 @@ namespace :import do
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
-      #[BEGIN]copied over from import:species
+      # [BEGIN]copied over from import:species
       import_data_for kingdom, Rank::PHYLUM, true
       import_data_for kingdom, Rank::CLASS, true
       import_data_for kingdom, Rank::ORDER, true
@@ -34,7 +32,7 @@ namespace :import do
       if kingdom == 'Plantae'
         import_data_for kingdom, Rank::VARIETY
       end
-      #[END]copied over from import:species
+      # [END]copied over from import:species
 
       [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
         puts "Import #{taxonomy_name} taxa"
@@ -56,14 +54,13 @@ namespace :import do
             LEFT JOIN taxonomies ON taxonomies.id = accepted.taxonomy_id AND taxonomies.id = synonym.taxonomy_id
             WHERE taxonomies.id = #{taxonomy.id}
               AND
-                 #{ if taxonomy_name == Taxonomy::CITES_EU
-                      "( UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%EU%')"
-                    else
-                      "UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%CMS%'"
-                    end
-                 }
+                #{if taxonomy_name == Taxonomy::CITES_EU
+                    "( UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%EU%')"
+                  else
+                    "UPPER(BTRIM(#{TMP_TABLE}.taxonomy)) like '%CMS%'"
+                  end}
 
-            EXCEPT 
+            EXCEPT
 
             SELECT taxon_concept_id, other_taxon_concept_id
             FROM taxon_relationships
@@ -86,13 +83,11 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
     end
 
-    puts "There are now #{
-      TaxonRelationship.
+    puts "There are now #{TaxonRelationship.
       joins(:taxon_relationship_type).
       where(
         "taxon_relationship_types.name" => TaxonRelationshipType::HAS_SYNONYM
-      ).count
-    } synonyms in the database."
+      ).count} synonyms in the database."
   end
 
 end

@@ -31,8 +31,8 @@ class Trade::SandboxTemplate < ActiveRecord::Base
   ]
   CSV_IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
   CSV_EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - ['import_permit']
-  IMPORTER_COLUMNS = CSV_IMPORTER_COLUMNS.map{ |c| c == 'species_name' ? 'taxon_name' : c }
-  EXPORTER_COLUMNS = CSV_EXPORTER_COLUMNS.map{ |c| c == 'species_name' ? 'taxon_name' : c }
+  IMPORTER_COLUMNS = CSV_IMPORTER_COLUMNS.map { |c| c == 'species_name' ? 'taxon_name' : c }
+  EXPORTER_COLUMNS = CSV_EXPORTER_COLUMNS.map { |c| c == 'species_name' ? 'taxon_name' : c }
 
   # Dynamically define AR class for table_name
   # (unless one exists already)
@@ -79,7 +79,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
             export_permit = UPPER(SQUISH_NULL(export_permit)),
             origin_permit = UPPER(SQUISH_NULL(origin_permit))
             ',
-            id.blank? ? nil : {:id => id}
+            id.blank? ? nil : { :id => id }
           )
           # resolve reported & accepted taxon
           connection.execute(
@@ -96,14 +96,34 @@ class Trade::SandboxTemplate < ActiveRecord::Base
           sanitize
         end
 
-        def self.update_batch(updates, sandbox_shipments_ids)
+        def destroy
+          super
+          self.class.update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
+        end
+
+        def self.records_for_batch_operation(validation_error, annual_report_upload)
+          vr = validation_error.validation_rule
+          joins(
+            <<-SQL
+            JOIN (
+              #{vr.matching_records_for_aru_and_error(annual_report_upload, validation_error).to_sql}
+            ) matching_records on #{table_name}.id = matching_records.id
+            SQL
+          )
+        end
+
+        def self.update_batch(updates, validation_error, annual_report_upload)
           return unless updates
-          where(:id => sandbox_shipments_ids).update_all(updates)
+          updates[:updated_at] = Time.now
+          records_for_batch_operation(validation_error, annual_report_upload).
+            update_all(updates)
           sanitize
         end
 
-        def self.destroy_batch(sandbox_shipments_ids)
-          where(:id => sandbox_shipments_ids).delete_all
+        def self.destroy_batch(validation_error, annual_report_upload)
+          records_for_batch_operation(validation_error, annual_report_upload).
+            each(&:delete)
+          update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
         end
 
       end
@@ -112,6 +132,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
   end
 
   private
+
   def self.create_table_stmt(target_table_name)
     sql = <<-SQL
       CREATE TABLE #{target_table_name} (PRIMARY KEY(id))

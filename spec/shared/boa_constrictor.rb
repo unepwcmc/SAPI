@@ -1,8 +1,8 @@
 shared_context "Boa constrictor" do
-  let(:en){
-   create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
-   create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')   
-   create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') 
+  let(:en) {
+    create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
+    create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')
+    create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG')
   }
   before(:all) do
     @order = create_cites_eu_order(
@@ -33,7 +33,7 @@ shared_context "Boa constrictor" do
       :parent => @species
     )
     @synonym = create_cites_eu_species(
-      :full_name => 'Constrictor constrictor',
+      scientific_name: 'Constrictor constrictor',
       :name_status => 'S'
     )
     create(
@@ -44,8 +44,8 @@ shared_context "Boa constrictor" do
     )
 
     create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1975-07-01'
+      :taxon_concept => @species,
+      :effective_at => '1975-07-01'
     )
     create_cites_II_addition(
       :taxon_concept => @family,
@@ -53,20 +53,20 @@ shared_context "Boa constrictor" do
       :is_current => true
     )
     create_cites_II_addition(
-     :taxon_concept => @species,
-     :effective_at => '1977-02-04',
-     :inclusion_taxon_concept_id => @family.id,
-     :is_current => true
+      :taxon_concept => @species,
+      :effective_at => '1977-02-04',
+      :inclusion_taxon_concept_id => @family.id,
+      :is_current => true
     )
     create_cites_II_addition(
-     :taxon_concept => @subspecies1,
-     :effective_at => '1977-02-04',
-     :inclusion_taxon_concept_id => @family.id
+      :taxon_concept => @subspecies1,
+      :effective_at => '1977-02-04',
+      :inclusion_taxon_concept_id => @family.id
     )
     create_cites_I_addition(
-     :taxon_concept => @subspecies1,
-     :effective_at => '1987-10-22',
-     :is_current => true
+      :taxon_concept => @subspecies1,
+      :effective_at => '1987-10-22',
+      :is_current => true
     )
 
     create_eu_B_addition(
@@ -76,17 +76,17 @@ shared_context "Boa constrictor" do
       :is_current => true
     )
     create_eu_A_addition(
-     :taxon_concept => @subspecies1,
+      :taxon_concept => @subspecies1,
       :effective_at => '2013-08-10',
       :event => reg2013,
-     :is_current => true
+      :is_current => true
     )
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
-        self.instance_variable_set(t,MTaxonConcept.find(var.id))
+        self.instance_variable_set(t, MTaxonConcept.find(var.id))
         self.instance_variable_get(t).reload
         self.instance_variable_set(:"#{t}_ac",
           MAutoCompleteTaxonConcept.

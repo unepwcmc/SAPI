@@ -4,10 +4,10 @@ module Elibrary
     def run
       drop_table_if_exists(table_name)
       create_table_from_column_array(
-        table_name, columns_with_type.map{ |ct| ct.join(' ') }
+        table_name, columns_with_type.map { |ct| ct.join(' ') }
       )
       copy_from_csv(
-        @file_name, table_name, columns_with_type.map{ |ct| ct.first }
+        @file_name, table_name, columns_with_type.map { |ct| ct.first }
       )
       run_preparatory_queries
       print_pre_import_stats
@@ -42,7 +42,7 @@ module Elibrary
     end
 
     def print_query_counts
-      queries = {'rows_in_import_file' => "SELECT COUNT(*) FROM #{table_name}"}
+      queries = { 'rows_in_import_file' => "SELECT COUNT(*) FROM #{table_name}" }
       queries['rows_to_insert'] = "SELECT COUNT(*) FROM (#{rows_to_insert_sql}) t"
       queries.each do |q_name, q|
         res = ActiveRecord::Base.connection.execute(q)

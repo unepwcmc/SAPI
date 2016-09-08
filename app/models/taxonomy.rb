@@ -18,13 +18,13 @@ class Taxonomy < ActiveRecord::Base
 
   validates :name, :presence => true, :uniqueness => true
   validates :name,
-    :inclusion => {:in => self.dict, :message => 'cannot change protected name'},
+    :inclusion => { :in => self.dict, :message => 'cannot change protected name' },
     :if => lambda { |t| t.name_changed? && t.class.dict.include?(t.name_was) },
     :on => :update
 
-  def self.search query
+  def self.search(query)
     if query.present?
-      where("UPPER(name) LIKE UPPER(:query)", 
+      where("UPPER(name) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
       scoped

@@ -59,8 +59,7 @@ class NomenclatureChange::Lump::Constructor
         'lump.input_lumped_into',
         input_taxon: input_html,
         output_taxon: output_html,
-        year: Date.today.year,
-        default: 'Translation missing'
+        default: ''
       )
     end
   end
@@ -75,8 +74,7 @@ class NomenclatureChange::Lump::Constructor
         'lump.output_lumped_from',
         output_taxon: output_html,
         input_taxa: inputs_html,
-        year: Date.today.year,
-        default: 'Translation missing'
+        default: ''
       )
     end
   end
@@ -86,6 +84,7 @@ class NomenclatureChange::Lump::Constructor
     [:en, :es, :fr].each do |lng|
       note = '<p>'
       note << input_lumped_into(input, output, lng)
+      note << in_year(event, lng)
       note << following_taxonomic_changes(event, lng) if event
       note << '.</p>'
       result[lng] = note
@@ -98,6 +97,7 @@ class NomenclatureChange::Lump::Constructor
     [:en, :es, :fr].each do |lng|
       note = '<p>'
       note << output_lumped_from(output, @nomenclature_change.inputs, lng)
+      note << in_year(event, lng)
       note << following_taxonomic_changes(event, lng) if event
       note << '.</p>'
       result[lng] = note
@@ -109,31 +109,28 @@ class NomenclatureChange::Lump::Constructor
     output = @nomenclature_change.output
     event = @nomenclature_change.event
     @nomenclature_change.inputs_except_outputs.each do |input|
-      if input.note_en.blank?
-        note = multi_lingual_input_note(input, output, event)
-        input.note_en = note[:en]
-        input.note_es = note[:es]
-        input.note_fr = note[:fr]
-      end
+      note = multi_lingual_input_note(input, output, event)
+      input.note_en = note[:en]
+      input.note_es = note[:es]
+      input.note_fr = note[:fr]
     end
-    if output.note_en.blank?
-      note = multi_lingual_output_note(output, @nomenclature_change.inputs, event)
-        output.note_en = note[:en]
-        output.note_es = note[:es]
-        output.note_fr = note[:fr]
-    end
+    note = multi_lingual_output_note(output, @nomenclature_change.inputs, event)
+    output.note_en = note[:en]
+    output.note_es = note[:es]
+    output.note_fr = note[:fr]
   end
 
   def legislation_note(lng)
     output = @nomenclature_change.output
     input_html = taxon_concept_html('[[input]]', output.display_rank_name)
     output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
-    note = '<p>'
+    note = ''
     note << yield(input_html, output_html)
+    note << in_year(@nomenclature_change.event, lng)
     if @nomenclature_change.event
       note << following_taxonomic_changes(@nomenclature_change.event, lng)
     end
-    note + '.</p>'
+    note = "<p>#{note}.</p>" if note.present?
   end
 
   def multi_lingual_listing_change_note

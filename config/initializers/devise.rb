@@ -41,12 +41,12 @@ Devise.setup do |config|
   # Configure which authentication keys should be case-insensitive.
   # These keys will be downcased upon creating or modifying a user and when used
   # to authenticate or find a user. Default is :email.
-  config.case_insensitive_keys = [ :email ]
+  config.case_insensitive_keys = [:email]
 
   # Configure which authentication keys should have whitespace stripped.
   # These keys will have whitespace before and after removed upon creating or
   # modifying a user and when used to authenticate or find a user. Default is :email.
-  config.strip_whitespace_keys = [ :email ]
+  config.strip_whitespace_keys = [:email]
 
   # Tell if authentication through request.params is enabled. True by default.
   # It can be set to an array that will enable params authentication only for the
@@ -254,7 +254,7 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
-  #use custom layouts for devise
+  # use custom layouts for devise
   Rails.application.config.to_prepare do
     Devise::RegistrationsController.layout "pages"
     Devise::PasswordsController.layout "pages"
@@ -262,16 +262,16 @@ Devise.setup do |config|
     Devise::PasswordsController.after_filter :delete_email, only: [:update]
   end
 
-  #custom redirection when login fails
+  # custom redirection when login fails
   config.warden do |manager|
-   manager.failure_app = CustomFailure
+    manager.failure_app = CustomFailure
   end
 
-  Warden::Manager.after_set_user do |user,auth,opts|
+  Warden::Manager.after_set_user do |user, auth, opts|
     auth.cookies[:"speciesplus.signed_in"] = 1
   end
 
-  Warden::Manager.before_logout do |user,auth,opts|
+  Warden::Manager.before_logout do |user, auth, opts|
     auth.cookies.delete :"speciesplus.signed_in"
   end
 

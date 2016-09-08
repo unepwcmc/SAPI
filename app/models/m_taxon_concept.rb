@@ -10,22 +10,22 @@
 #  name_status                              :string(255)
 #  rank_id                                  :integer
 #  rank_name                                :string(255)
-#  rank_display_name_en                     :text
-#  rank_display_name_es                     :text
-#  rank_display_name_fr                     :text
+#  rank_display_name_en                     :string(255)
+#  rank_display_name_es                     :string(255)
+#  rank_display_name_fr                     :string(255)
 #  spp                                      :boolean
 #  cites_accepted                           :boolean
 #  kingdom_position                         :integer
 #  taxonomic_position                       :string(255)
-#  kingdom_name                             :text
-#  phylum_name                              :text
-#  class_name                               :text
-#  order_name                               :text
-#  family_name                              :text
-#  subfamily_name                           :text
-#  genus_name                               :text
-#  species_name                             :text
-#  subspecies_name                          :text
+#  kingdom_name                             :string(255)
+#  phylum_name                              :string(255)
+#  class_name                               :string(255)
+#  order_name                               :string(255)
+#  family_name                              :string(255)
+#  subfamily_name                           :string(255)
+#  genus_name                               :string(255)
+#  species_name                             :string(255)
+#  subspecies_name                          :string(255)
 #  kingdom_id                               :integer
 #  phylum_id                                :integer
 #  class_id                                 :integer
@@ -41,24 +41,24 @@
 #  cites_listed                             :boolean
 #  cites_listed_descendants                 :boolean
 #  cites_show                               :boolean
-#  cites_status                             :text
-#  cites_listing_original                   :text
-#  cites_listing                            :text
+#  cites_status                             :string(255)
+#  cites_listing_original                   :string(255)
+#  cites_listing                            :string(255)
 #  cites_listing_updated_at                 :datetime
-#  ann_symbol                               :text
-#  hash_ann_symbol                          :text
-#  hash_ann_parent_symbol                   :text
+#  ann_symbol                               :string(255)
+#  hash_ann_symbol                          :string(255)
+#  hash_ann_parent_symbol                   :string(255)
 #  eu_listed                                :boolean
 #  eu_show                                  :boolean
-#  eu_status                                :text
-#  eu_listing_original                      :text
-#  eu_listing                               :text
+#  eu_status                                :string(255)
+#  eu_listing_original                      :string(255)
+#  eu_listing                               :string(255)
 #  eu_listing_updated_at                    :datetime
 #  cms_listed                               :boolean
 #  cms_show                                 :boolean
-#  cms_status                               :text
-#  cms_listing_original                     :text
-#  cms_listing                              :text
+#  cms_status                               :string(255)
+#  cms_listing_original                     :string(255)
+#  cms_listing                              :string(255)
 #  cms_listing_updated_at                   :datetime
 #  species_listings_ids                     :string
 #  species_listings_ids_aggregated          :string
@@ -75,14 +75,6 @@
 #  synonyms_author_years_ary                :string
 #  countries_ids_ary                        :string
 #  all_distribution_iso_codes_ary           :string
-#  all_distribution_ary                     :string
-#  native_distribution_ary                  :string
-#  introduced_distribution_ary              :string
-#  introduced_uncertain_distribution_ary    :string
-#  reintroduced_distribution_ary            :string
-#  extinct_distribution_ary                 :string
-#  extinct_uncertain_distribution_ary       :string
-#  uncertain_distribution_ary               :string
 #  all_distribution_ary_en                  :string
 #  native_distribution_ary_en               :string
 #  introduced_distribution_ary_en           :string
@@ -121,7 +113,7 @@ class MTaxonConcept < ActiveRecord::Base
   has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MCitesListingChange
   has_many :historic_cites_listing_changes_for_downloads, :foreign_key => :taxon_concept_id,
     :class_name => MCitesListingChange,
-    :conditions => {:show_in_downloads => true},
+    :conditions => { :show_in_downloads => true },
     :order => <<-SQL
       effective_at,
       CASE
@@ -133,11 +125,11 @@ class MTaxonConcept < ActiveRecord::Base
     SQL
   has_many :current_cites_additions, :foreign_key => :taxon_concept_id,
     :class_name => MCitesListingChange,
-    :conditions => {:is_current => true, :change_type_name => ChangeType::ADDITION},
+    :conditions => { :is_current => true, :change_type_name => ChangeType::ADDITION },
     :order => 'effective_at DESC, species_listing_name ASC'
   has_many :current_cms_additions, :foreign_key => :taxon_concept_id,
     :class_name => MCmsListingChange,
-    :conditions => {:is_current => true, :change_type_name => ChangeType::ADDITION},
+    :conditions => { :is_current => true, :change_type_name => ChangeType::ADDITION },
     :order => 'effective_at DESC, species_listing_name ASC'
   scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
   scope :by_cms_taxonomy, where(:taxonomy_is_cites_eu => false)
@@ -156,7 +148,7 @@ class MTaxonConcept < ActiveRecord::Base
     MTaxonConceptFilterByScientificNameWithDescendants.new(
       self,
       scientific_name,
-      {:synonyms => true, :common_names => true, :subspecies => false}
+      { :synonyms => true, :common_names => true, :subspecies => false }
     ).relation
   }
 
@@ -202,9 +194,9 @@ class MTaxonConcept < ActiveRecord::Base
     synonyms.each_with_index.map { |syn, idx| "#{syn} #{synonyms_author_years[idx]}" }
   end
 
-  def db_ary_to_array ary
+  def db_ary_to_array(ary)
     if respond_to?(ary)
-      parse_pg_array( send(ary)|| '').compact.map do |e|
+      parse_pg_array(send(ary) || '').compact.map do |e|
         e.force_encoding('utf-8')
       end
     else
@@ -222,17 +214,49 @@ class MTaxonConcept < ActiveRecord::Base
     end
   end
 
-  def countries_iso_codes; all_distribution_iso_codes; end
-  def countries_full_names; all_distribution; end
-  def all_distribution; parse_pg_array(all_distribution_ary || ''); end
-  def all_distribution_iso_codes; parse_pg_array(all_distribution_iso_codes_ary || ''); end
-  def native_distribution; parse_pg_array(native_distribution_ary || ''); end
-  def introduced_distribution; parse_pg_array(introduced_distribution_ary || ''); end
-  def introduced_uncertain_distribution; parse_pg_array(introduced_uncertain_distribution_ary || ''); end
-  def reintroduced_distribution; parse_pg_array(reintroduced_distribution_ary || ''); end
-  def extinct_distribution; parse_pg_array(extinct_distribution_ary || ''); end
-  def extinct_uncertain_distribution; parse_pg_array(extinct_uncertain_distribution_ary || ''); end
-  def uncertain_distribution; parse_pg_array(uncertain_distribution_ary || ''); end
+  def countries_iso_codes
+    all_distribution_iso_codes
+  end
+
+  def countries_full_names
+    all_distribution
+  end
+
+  def all_distribution
+    parse_pg_array(all_distribution_ary || '')
+  end
+
+  def all_distribution_iso_codes
+    parse_pg_array(all_distribution_iso_codes_ary || '')
+  end
+
+  def native_distribution
+    parse_pg_array(native_distribution_ary || '')
+  end
+
+  def introduced_distribution
+    parse_pg_array(introduced_distribution_ary || '')
+  end
+
+  def introduced_uncertain_distribution
+    parse_pg_array(introduced_uncertain_distribution_ary || '')
+  end
+
+  def reintroduced_distribution
+    parse_pg_array(reintroduced_distribution_ary || '')
+  end
+
+  def extinct_distribution
+    parse_pg_array(extinct_distribution_ary || '')
+  end
+
+  def extinct_uncertain_distribution
+    parse_pg_array(extinct_uncertain_distribution_ary || '')
+  end
+
+  def uncertain_distribution
+    parse_pg_array(uncertain_distribution_ary || '')
+  end
 
   def recently_changed
     return (cites_listing_updated_at ? cites_listing_updated_at > 8.year.ago : false)
@@ -244,7 +268,7 @@ class MTaxonConcept < ActiveRecord::Base
     ["hash_full_note_#{lng.downcase}", "full_note_#{lng.downcase}", "short_note_#{lng.downcase}"].each do |method_name|
       define_method(method_name) do
         current_cites_additions.map do |lc|
-          note = lc.send(method_name)
+          note = lc.send(method_name) || ''
           note && "Appendix #{lc.species_listing_name}:" + (note || '') + (" #{lc.nomenclature_note}" || '')
         end.join("\n")
       end

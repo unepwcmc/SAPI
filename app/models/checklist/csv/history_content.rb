@@ -15,7 +15,7 @@ module Checklist::Csv::HistoryContent
         csv << taxon_concepts_csv_columns.map { |c| tc.send(c) } +
         listing_changes_csv_columns.map { |c| tc[c] }
       end
-    end while not kingdom.empty?
+    end while !kingdom.empty?
   end
 
 end

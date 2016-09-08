@@ -18,16 +18,16 @@ class Trade::TaxonConceptTermPair < ActiveRecord::Base
   belongs_to :taxon_concept
   belongs_to :term, :class_name => "TradeCode"
 
-  def self.search query
+  def self.search(query)
     if query.present?
-      where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query) 
-            OR UPPER(trade_codes.code) LIKE UPPER(:query)", 
+      where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
+            OR UPPER(trade_codes.code) LIKE UPPER(:query)",
             :query => "%#{query}%").
       joins(<<-SQL
-          LEFT JOIN taxon_concepts 
-            ON taxon_concepts.id = trade_taxon_concept_term_pairs.taxon_concept_id 
-          LEFT JOIN trade_codes 
-            ON trade_codes.id = trade_taxon_concept_term_pairs.term_id 
+          LEFT JOIN taxon_concepts
+            ON taxon_concepts.id = trade_taxon_concept_term_pairs.taxon_concept_id
+          LEFT JOIN trade_codes
+            ON trade_codes.id = trade_taxon_concept_term_pairs.term_id
         SQL
       )
     else
@@ -35,4 +35,3 @@ class Trade::TaxonConceptTermPair < ActiveRecord::Base
     end
   end
 end
-

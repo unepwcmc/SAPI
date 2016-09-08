@@ -11,6 +11,7 @@ module MListingChange
       translates :full_note, fallback: false
       translates :hash_full_note, :inherited_short_note, :inherited_full_note,
         :auto_note, :party_full_name
+      translates :nomenclature_note, fallback: false
     end
   end
 
@@ -38,10 +39,6 @@ module MListingChange
 
   def countries_full_names
     CountryDictionary.instance.get_names_by_ids(countries_ids).compact
-  end
-
-  def nomenclature_note
-    self.nomenclature_note_en
   end
 
   def to_timeline_event

@@ -6,7 +6,7 @@ class NomenclatureChange::Lump::Processor < NomenclatureChange::Processor
       "The following taxa will be lumped into #{@nc.output.display_full_name}",
       @nc.inputs.map(&:taxon_concept).map(&:full_name)
     ]]
-    @subprocessors.each{ |processor| result << processor.summary }
+    @subprocessors.each { |processor| result << processor.summary }
     result.flatten(1)
   end
 
@@ -17,12 +17,19 @@ class NomenclatureChange::Lump::Processor < NomenclatureChange::Processor
   def prepare_chain
     chain = []
     chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@output)
-    @inputs.each do |input|
-      unless input.taxon_concept_id == @output.taxon_concept_id && !@output.will_create_taxon?
-        chain << NomenclatureChange::ReassignmentTransferProcessor.new(input, @output)
-        chain << NomenclatureChange::StatusDowngradeProcessor.new(input, [@output])
-        chain << NomenclatureChange::InputTaxonConceptProcessor.new(input)
-      end
+    inputs_that_are_not_output = @inputs.select do |input|
+      input.taxon_concept_id != @output.taxon_concept_id || @output.will_create_taxon?
+    end
+    inputs_that_are_not_output.each do |input|
+      chain << NomenclatureChange::InputTaxonConceptProcessor.new(input)
+      chain << NomenclatureChange::CascadingNotesProcessor.new(input)
+    end
+    if !@output.will_create_taxon? && @nc.inputs_intersect_outputs.empty?
+      chain << NomenclatureChange::CascadingNotesProcessor.new(@output)
+    end
+    inputs_that_are_not_output.each do |input|
+      chain << NomenclatureChange::ReassignmentTransferProcessor.new(input, @output)
+      chain << NomenclatureChange::StatusDowngradeProcessor.new(input, [@output])
     end
     chain
   end

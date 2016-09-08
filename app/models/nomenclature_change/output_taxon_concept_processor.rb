@@ -17,6 +17,7 @@ class NomenclatureChange::OutputTaxonConceptProcessor
       Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
       return false
     end
+    nomenclature_comment.save
     if new_record
       Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
       @output.update_column(:new_taxon_concept_id, tc.id)
@@ -40,11 +41,12 @@ class NomenclatureChange::OutputTaxonConceptProcessor
         res << "#{@output.taxon_concept.full_name} rank changed from #{@output.taxon_concept.rank.name} to #{@output.new_rank.name}"
       end
       if @output.new_parent
-        res << if @output.taxon_concept.parent
-          "#{@output.taxon_concept.full_name} parent changed from #{@output.taxon_concept.parent.full_name} to #{@output.new_parent.full_name}"
-        else
-          "#{@output.taxon_concept.full_name} parent set to #{@output.new_parent.full_name}"
-        end
+        res <<
+          if @output.taxon_concept.parent
+            "#{@output.taxon_concept.full_name} parent changed from #{@output.taxon_concept.parent.full_name} to #{@output.new_parent.full_name}"
+          else
+            "#{@output.taxon_concept.full_name} parent set to #{@output.new_parent.full_name}"
+          end
       end
       if @output.new_name_status.present?
         res << "#{@output.taxon_concept.full_name} name status changed from #{@output.taxon_concept.name_status} to #{@output.new_name_status}"

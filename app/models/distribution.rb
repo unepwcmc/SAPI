@@ -18,15 +18,21 @@ class Distribution < ActiveRecord::Base
     :references_attributes, :internal_notes, :created_by_id, :updated_by_id
   acts_as_taggable
 
+  normalise_blank_values
+
   belongs_to :geo_entity
   belongs_to :taxon_concept
   has_many :distribution_references, :dependent => :destroy
   has_many :references, :through => :distribution_references
+  has_many :distribution_reassignments,
+    class_name: 'NomenclatureChange::DistributionReassignment',
+    as: :reassignable,
+    dependent: :destroy
   accepts_nested_attributes_for :references, :allow_destroy => true
 
   validates :taxon_concept_id, :uniqueness => { :scope => :geo_entity_id, :message => 'already has this distribution' }
 
-  def add_existing_references ids
+  def add_existing_references(ids)
     reference_ids = ids.split(",")
 
     reference_ids.each do |r|
@@ -34,9 +40,9 @@ class Distribution < ActiveRecord::Base
       unless reference.nil?
         self.distribution_references.
           create({
-          :distribution_id => self.id,
-          :reference_id => reference.id
-        })
+            :distribution_id => self.id,
+            :reference_id => reference.id
+          })
       end
     end
   end

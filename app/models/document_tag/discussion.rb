@@ -11,6 +11,8 @@
 
 class DocumentTag::Discussion < DocumentTag
 
-  def self.display_name; 'Discussion'; end
+  def self.display_name
+    'Discussion'
+  end
 
 end

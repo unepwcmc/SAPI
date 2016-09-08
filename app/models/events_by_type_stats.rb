@@ -6,7 +6,7 @@ class EventsByTypeStats
   end
 
   def data
-    Ahoy::Event.from( <<-SQL
+    Ahoy::Event.from(<<-SQL
       (
         WITH weeks_as_timestamps AS (
           SELECT * FROM generate_series(
@@ -32,5 +32,5 @@ class EventsByTypeStats
       ) q
       SQL
     ).select([:start_date, :taxon_concept_cnt, :search_cnt])
-  end 
+  end
 end

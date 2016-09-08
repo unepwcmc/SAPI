@@ -17,30 +17,24 @@ require 'spec_helper'
 describe Source do
   describe :destroy do
     context "when no dependent objects attached" do
-      let(:source){ create(:source) }
+      let(:source) { create(:source) }
       specify { source.destroy.should be_true }
     end
     context "when dependent objects attached" do
-      let(:source){ create(:source) }
-      #context "when EU opinion" do
-      #  let!(:eu_opinion){ create(:eu_opinion, :source => source)}
-      #  specify { source.destroy.should be_false }
-      #end
-      #context "when EU suspension" do
-      #  let!(:eu_suspension){ create(:eu_suspension, :source => source)}
-      #  specify { source.destroy.should be_false }
-      #end
+      let(:source) { create(:source) }
       context "when CITES suspension" do
-        let!(:cites_suspension){ create(
-          :cites_suspension,
-          :sources => [source],
-          :start_notification_id => create_cites_suspension_notification.id
-        ) }
+        let!(:cites_suspension) {
+          create(
+            :cites_suspension,
+            :sources => [source],
+            :start_notification_id => create_cites_suspension_notification.id
+          )
+        }
         specify { source.destroy.should be_false }
       end
       context "when CITES quota" do
         let(:geo_entity) { create(:geo_entity) }
-        let!(:quota){ create(:quota, :sources => [source], :geo_entity_id => geo_entity.id)}
+        let!(:quota) { create(:quota, :sources => [source], :geo_entity_id => geo_entity.id) }
         specify { source.destroy.should be_false }
       end
       context "when shipments" do

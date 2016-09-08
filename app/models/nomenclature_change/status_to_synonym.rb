@@ -13,8 +13,8 @@
 #
 
 # A status change to S needs to have at least one output and at most two
-# The cases where there are 2 are as follows:
-# 1. accepted taxon t1 (input) downgraded to synonym t1 (output1),
+# The case where there are 2 is as follows:
+# N taxon t1 (input) downgraded to synonym t1 (output1),
 # with any associations transferred to accepted taxon t2 (output2)
 
 # As a rule of thumb, if there are 2 outputs that means there are reassignments
@@ -28,16 +28,26 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
     in: self.status_dict,
     message: "%{value} is not a valid status"
   }
+  validate :required_primary_output_name_status, if: :primary_output_or_submitting?
   validate :required_secondary_output, if: :relay_or_submitting?
   before_save :build_input_for_relay, if: :relay?
+  after_save :build_auto_reassignments, if: :relay?
   before_validation :ensure_new_name_status, if: :primary_output?
 
   def ensure_new_name_status
     primary_output && primary_output.new_name_status = 'S'
   end
 
+  def required_primary_output_name_status
+    if primary_output && !['N', 'T'].include?(primary_output.name_status)
+      errors.add(:primary_output, "Must be N or T taxon")
+      return false
+    end
+    true
+  end
+
   # we only need two outputs if we need a target for reassignments
-  # (which happens when one of the outputs is an A / N name turning S)
+  # (which happens when one of the outputs is an N name turning S)
   def required_secondary_output
     if (needs_to_relay_associations? || requires_accepted_name_assignment?) &&
       secondary_output.nil?
@@ -48,7 +58,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   end
 
   def build_input_for_relay
-    # In case the primary output is an A / N name turning S
+    # In case the primary output is a N name turning S
     # this same name becomes an input of the nomenclature change, so that
     # reassignments can be put in place between this input and
     # the secondary output
@@ -62,7 +72,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   end
 
   def needs_to_relay_associations?
-    ['A', 'N'].include?(primary_output.try(:name_status))
+    primary_output.try(:name_status) == 'N'
   end
 
   def requires_accepted_name_assignment?
@@ -80,7 +90,6 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
       builder.build_legislation_reassignments
       builder.build_common_names_reassignments
       builder.build_references_reassignments
-      builder.build_trade_reassignments
     end
     true
   end

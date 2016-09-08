@@ -16,8 +16,6 @@
 #
 
 class Trade::PresenceValidationRule < Trade::ValidationRule
-  #validates :column_names, :uniqueness => true
-
   def error_message
     column_names.join(', ') + ' cannot be blank'
   end
@@ -25,11 +23,13 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
   # Returns records where the specified columns are NULL.
   # In case more than one column is specified, predicates are combined
   # using AND.
-  def matching_records(table_name)
+  def matching_records(annual_report_upload)
+    table_name = annual_report_upload.sandbox.table_name
+    sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
     s = Arel::Table.new(table_name)
     arel_nodes = column_names.map do |c|
       s[c].eq(nil)
     end
-    Trade::SandboxTemplate.select('*').from(table_name).where(arel_nodes.inject(&:and))
+    sandbox_klass.select('*').where(arel_nodes.inject(&:and))
   end
 end

@@ -2,7 +2,7 @@ module Admin::NomenclatureChangesHelper
 
   def nomenclature_change_form(submit_label = 'Next', &block)
     nested_form_for @nomenclature_change, url: wizard_path, method: :put,
-      html: {class: 'form-horizontal'} do |f|
+      html: { class: 'form-horizontal' } do |f|
       html = error_messages_for(@nomenclature_change)
       html += capture { block.yield(f) } if block_given?
       html += nomenclature_change_form_buttons(f, submit_label)
@@ -31,10 +31,10 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def print_summary summary
+  def print_summary(summary)
     if summary.kind_of?(Array)
       content_tag(:ul) do
-        summary.each{ |line| concat print_summary(line) }
+        summary.each { |line| concat print_summary(line) }
       end
     else
       content_tag(:li, summary)
@@ -133,19 +133,35 @@ module Admin::NomenclatureChangesHelper
       "Select a taxon below to populate all fields with that taxon.")
     @nomenclature_change.outputs.map do |output|
       html += content_tag(:div, class: 'species-checkbox') do
-        tag("input", {type: "checkbox", class: 'select-partial-checkbox', checked: checked}) +
+        tag("input", { type: "checkbox", class: 'select-partial-checkbox', checked: checked }) +
         content_tag(:span, output.display_full_name, class: 'species-name')
       end
     end
     html.html_safe
   end
 
-  def outputs_selection ff
+  def outputs_selection(ff)
+    ff.object.output_type ||=
+      if ff.object.taxon_concept_id.nil?
+        'new_taxon'
+      elsif ff.object.taxon_concept &&
+        !ff.object.new_scientific_name.blank? &&
+        ff.object.taxon_concept.full_name != ff.object.new_scientific_name
+        # this scenario occurrs when an existing taxon will change name
+        'existing_subspecies'
+      else
+        'existing_taxon'
+      end
     content_tag(:div, class: 'outputs_selection') do
-      [ 'New taxon', 'Existing subspecies', 'Existing taxon'].each do |opt|
+      ['New taxon', 'Existing subspecies', 'Existing taxon'].each do |opt|
+        opt_val = opt.downcase.gsub(/\s+/, '_')
         concat content_tag(:span,
-          radio_button_tag(ff.object.taxon_concept.try(:full_name) || 'output'+ff.options[:child_index].to_s,
-          opt, false, class: 'output-radio') + ' ' + opt)
+          ff.radio_button(
+            :output_type,
+            opt_val,
+            { class: 'output-radio' }
+          ) + ' ' + opt
+        )
       end
       concat ff.link_to_remove 'Remove output'
     end
@@ -153,29 +169,29 @@ module Admin::NomenclatureChangesHelper
 
   def nomenclature_change_header
     case
-      when @nc.is_a?(NomenclatureChange::Split)
-        concat content_tag(:h1, "NomenclatureChange #{@nc.id} - SPLIT", nil)
-        content_tag(:div, @nc.input.note_en.html_safe, class: 'well well-small')
-      when @nc.is_a?(NomenclatureChange::Lump)
-        concat content_tag(:h1, "NomenclatureChange #{@nc.id} - LUMP", nil)
-        content_tag(:div, @nc.output.note_en.html_safe, class: 'well well-small')
-      when @nc.is_a?(NomenclatureChange::StatusSwap)
-        content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS SWAP", nil) +
-        content_tag(:div, @nc.primary_output.internal_note.html_safe, class: 'well well-small') +
-        content_tag(:div, @nc.secondary_output.note_en.html_safe, class: 'well well-small')
-      when @nc.is_a?(NomenclatureChange::StatusToSynonym)
-        content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO SYNONYM", nil) +
-        content_tag(:div, @nc.primary_output.internal_note.html_safe, class: 'well well-small')
-      when @nc.is_a?(NomenclatureChange::StatusToAccepted)
-        content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO ACCEPTED", nil) +
-        content_tag(:div, @nc.primary_output.note_en.html_safe, class: 'well well-small')
+    when @nc.is_a?(NomenclatureChange::Split)
+      concat content_tag(:h1, "NomenclatureChange #{@nc.id} - SPLIT", nil)
+      content_tag(:div, @nc.input.note_en.html_safe, class: 'well well-small')
+    when @nc.is_a?(NomenclatureChange::Lump)
+      concat content_tag(:h1, "NomenclatureChange #{@nc.id} - LUMP", nil)
+      content_tag(:div, @nc.output.note_en.html_safe, class: 'well well-small')
+    when @nc.is_a?(NomenclatureChange::StatusSwap)
+      content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS SWAP", nil) +
+      content_tag(:div, @nc.primary_output.internal_note.html_safe, class: 'well well-small') +
+      content_tag(:div, @nc.secondary_output.note_en.html_safe, class: 'well well-small')
+    when @nc.is_a?(NomenclatureChange::StatusToSynonym)
+      content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO SYNONYM", nil) +
+      content_tag(:div, @nc.primary_output.internal_note.html_safe, class: 'well well-small')
+    when @nc.is_a?(NomenclatureChange::StatusToAccepted)
+      content_tag(:h1, "NomenclatureChange #{@nc.id} - STATUS TO ACCEPTED", nil) +
+      content_tag(:div, @nc.primary_output.note_en.html_safe, class: 'well well-small')
     end
   end
 
   def generate_input_content
     if @nc.is_a?(NomenclatureChange::Lump)
       lump_inputs_tags + lump_inputs_content
-    else
+    elsif @nc.input
       split_input_tag + split_input_content
     end
   end
@@ -184,7 +200,7 @@ module Admin::NomenclatureChangesHelper
     if @nc.is_a?(NomenclatureChange::Lump)
       lump_output_tag + lump_output_content
     else
-      split_outputs_tags + split_outputs_content
+      outputs_tags + outputs_content
     end
   end
 
@@ -203,11 +219,11 @@ module Admin::NomenclatureChangesHelper
       @nc.inputs.each_with_index do |input, idx|
         tc = input.taxon_concept
         if idx == 0
-          concat content_tag(:div, inner_content(input,tc),
-            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active"})
+          concat content_tag(:div, inner_content(input, tc),
+            { id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active" })
         else
-          concat content_tag(:div, inner_content(input,tc),
-            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade"})
+          concat content_tag(:div, inner_content(input, tc),
+            { id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade" })
         end
       end
     end
@@ -226,15 +242,16 @@ module Admin::NomenclatureChangesHelper
     tc = @nc.output.new_taxon_concept || @nc.output.taxon_concept
     content_tag(:div, class: 'tab-content') do
       content_tag(:div, inner_content(@nc.output, tc),
-        {id: "output_#{tc.full_name.downcase.tr(" ", "_")}", class: 'tab-pane fade in active'})
+        { id: "output_#{tc.full_name.downcase.tr(" ", "_")}", class: 'tab-pane fade in active' })
     end
   end
 
   def lump_output_tag
+    tc = @nc.output.new_taxon_concept || @nc.output.taxon_concept
     content_tag(:ul, class: 'nav nav-tabs') do
       content_tag(:li, class: 'active') do
-        concat link_to("#{@nc.output.taxon_concept.full_name}",
-          "#output_#{@nc.output.taxon_concept.full_name.downcase.tr(' ', '_')}")
+        concat link_to("#{tc.full_name}",
+          "#output_#{tc.full_name.downcase.tr(' ', '_')}")
       end
     end
   end
@@ -251,13 +268,13 @@ module Admin::NomenclatureChangesHelper
   def split_input_content
     content_tag(:div, class: 'tab-content') do
       content_tag(:div, inner_content(@nc.input, @nc.input.taxon_concept),
-        {id: "input_#{@nc.input.taxon_concept.full_name.downcase.tr(" ", "_")}",
-        class: 'tab-pane fade in active'})
+        { id: "input_#{@nc.input.taxon_concept.full_name.downcase.tr(" ", "_")}",
+        class: 'tab-pane fade in active' })
     end
   end
 
-  def split_outputs_tags
-    outputs = select_outputs
+  def outputs_tags
+    outputs = Array.wrap(select_outputs)
     content_tag(:ul, class: 'nav nav-tabs') do
       outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
@@ -266,27 +283,31 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def split_outputs_content
-    outputs = select_outputs
+  def outputs_content
+    outputs = Array.wrap(select_outputs)
     content_tag(:div, class: 'tab-content') do
       outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
         if idx == 0
-          concat content_tag(:div, inner_content(output,tc),
-            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active"})
+          concat content_tag(:div, inner_content(output, tc),
+            { id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade in active" })
         else
-          concat content_tag(:div, inner_content(output,tc),
-            {id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade"})
+          concat content_tag(:div, inner_content(output, tc),
+            { id: "#{tc.full_name.downcase.tr(" ", "_")}", class: "tab-pane fade" })
         end
       end
     end
   end
 
-  def inner_content(input_or_output,tc)
+  def inner_content(input_or_output, tc)
+    is_output = input_or_output.is_a?(NomenclatureChange::Output)
     content_tag(:p, content_tag(:i, link_to(tc.full_name,
       admin_taxon_concept_names_path(tc)), nil)
     ) +
-    content_tag(:p, "Author: #{tc.author_year || tc.new_author_year}") +
+    if is_output
+      content_tag(:p, "Name status: #{input_or_output.new_name_status || input_or_output.name_status}")
+    end +
+    content_tag(:p, "Author: #{tc.author_year || is_output && input_or_output.new_author_year}") +
     content_tag(:p, "Internal note: #{input_or_output.internal_note}")
   end
 
@@ -298,8 +319,8 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
-  def sorted_parent_reassignments ff
-    ff.object.parent_reassignments.sort_by{ |reassignment| reassignment.reassignable.full_name }
+  def sorted_parent_reassignments(ff)
+    ff.object.parent_reassignments.sort_by { |reassignment| reassignment.reassignable.full_name }
   end
 
   def name_reassignment_label(reassignment)
@@ -320,4 +341,26 @@ module Admin::NomenclatureChangesHelper
     end
   end
 
+  def select_taxonomy
+    select("taxonomy", "taxonomy_id", Taxonomy.all.collect { |t| [t.name, t.id] })
+  end
+
+  def select_rank
+    select("rank", "rank_id", ranks_collection)
+  end
+
+  def ranks_collection
+    Rank.all.collect { |r| [r.name, r.id] }
+  end
+
+  def taxon_concepts_collection
+    TaxonConcept.where(:taxonomy_id => 1).collect { |t| [t.full_name, t.id] }
+  end
+
+  def new_name_scientific_name_hint
+    case @nomenclature_change.output.new_name_status
+    when 'A' then "e.g. 'africana' for Loxodonta africana"
+    when 'S', 'H' then "e.g. Loxodonta africana"
+    end
+  end
 end

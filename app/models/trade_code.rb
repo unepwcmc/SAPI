@@ -17,14 +17,14 @@ class TradeCode < ActiveRecord::Base
     :name_en, :name_es, :name_fr
   translates :name
 
-  validates :code, :presence => true, :uniqueness => {:scope => :type}
+  validates :code, :presence => true, :uniqueness => { :scope => :type }
 
-  def self.search query
+  def self.search(query)
     if query.present?
-      where("UPPER(code) LIKE UPPER(:query) 
+      where("UPPER(code) LIKE UPPER(:query)
             OR UPPER(name_en) LIKE UPPER(:query)
             OR UPPER(name_fr) LIKE UPPER(:query)
-            OR UPPER(name_es) LIKE UPPER(:query)", 
+            OR UPPER(name_es) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
       scoped

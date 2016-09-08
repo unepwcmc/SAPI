@@ -1,5 +1,3 @@
-#Encoding: utf-8
-
 namespace :import do
 
   desc "Import standard reference links from csv file (usage: rake import:standard_references[path/to/file,path/to/another])"
@@ -37,7 +35,7 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
 
       puts "inserting reference links"
-      #add taxon_concept_references where missing
+      # add taxon_concept_references where missing
       sql = <<-SQL
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id, created_at, updated_at)
         SELECT taxon_concepts.id, "references".id, NOW(), NOW()
@@ -62,18 +60,18 @@ namespace :import do
       ActiveRecord::Base.connection.execute(sql)
 
       puts "updating standard reference links"
-      #update usr_std_ref flags
+      # update usr_std_ref flags
       sql = <<-SQL
       WITH standard_references_as_ids AS (
         WITH standard_references_per_exclusion AS (
-          SELECT rank, taxon_legacy_id, ref_legacy_id, '#{kingdom}'::VARCHAR AS legacy_type, is_cascaded, 
+          SELECT rank, taxon_legacy_id, ref_legacy_id, '#{kingdom}'::VARCHAR AS legacy_type, is_cascaded,
           CASE WHEN exclusions IS NULL THEN NULL ELSE split_part(regexp_split_to_table(exclusions,','),':',1) END AS exclusion_rank,
           CASE WHEN exclusions IS NULL THEN NULL ELSE split_part(regexp_split_to_table(exclusions,','),':',2) END AS exclusion_legacy_id
           FROM #{TMP_TABLE}
         )
         SELECT taxon_concepts.id AS taxon_concept_id,
         ARRAY_AGG(exclusion_taxon_concepts.id)::VARCHAR AS exclusions,
-        "references".id AS reference_id, 
+        "references".id AS reference_id,
         is_cascaded
         FROM standard_references_per_exclusion
         INNER JOIN ranks
@@ -96,7 +94,7 @@ namespace :import do
         GROUP BY taxon_concept_id, reference_id, is_cascaded
       )
       UPDATE taxon_concept_references SET is_standard = TRUE,
-        is_cascaded = 
+        is_cascaded =
             CASE
               WHEN standard_references_as_ids.is_cascaded IS NOT NULL
                 THEN standard_references_as_ids.is_cascaded

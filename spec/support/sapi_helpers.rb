@@ -1,14 +1,14 @@
 shared_context :sapi do
 
-  let(:cites_eu){
+  let(:cites_eu) {
     create(:taxonomy, :name => Taxonomy::CITES_EU)
   }
 
-  let(:cms){
+  let(:cms) {
     create(:taxonomy, :name => Taxonomy::CMS)
   }
 
-  let(:cites){
+  let(:cites) {
     d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::CITES)
     unless d
       d = create(:designation, :name => Designation::CITES, :taxonomy => cites_eu)
@@ -27,18 +27,18 @@ shared_context :sapi do
         end
       end
     end
-    d  
+    d
   }
 
-  let(:eu){
+  let(:eu) {
     d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::EU)
     unless d
       d = create(:designation, :name => Designation::EU, :taxonomy => cites_eu)
-      %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch| 
+      %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
         unless ChangeType.find_by_designation_id_and_name(d.id, ch)
           create(:change_type, :name => ch, :designation => d)
         end
-        %w(A B C D).each do |app| 
+        %w(A B C D).each do |app|
           unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
             create(
               :species_listing, :name => "Annex #{app}", :abbreviation => app,
@@ -51,7 +51,7 @@ shared_context :sapi do
     d
   }
 
-  let(:cms_designation){
+  let(:cms_designation) {
     d = Designation.find_by_taxonomy_id_and_name(cms.id, Designation::CMS)
     unless d
       d = create(:designation, :name => Designation::CMS, :taxonomy => cms)
@@ -134,170 +134,110 @@ shared_context :sapi do
     end
   end
 
-  let(:kingdom_rank){
-    create(
-      :rank,
-      :name => Rank::KINGDOM, :taxonomic_position => '1', :fixed_order => true
-    )
-  }
-  let(:phylum_rank){
-    create(
-      :rank,
-      :name => Rank::PHYLUM, :taxonomic_position => '2', :fixed_order => true
-    )
-  }
-  let(:class_rank){
-    create(
-      :rank,
-      :name => Rank::CLASS, :taxonomic_position => '3', :fixed_order => true
-    )
-  }
-  let(:order_rank){
-    create(
-      :rank,
-      :name => Rank::ORDER, :taxonomic_position => '4', :fixed_order => false
-    )
-  }
-  let(:family_rank){
-    create(
-      :rank,
-      :name => Rank::FAMILY, :taxonomic_position => '5', :fixed_order => false
-    )
-  }
-  let(:subfamily_rank){
-    create(
-      :rank,
-      :name => Rank::SUBFAMILY, :taxonomic_position => '5.1', :fixed_order => false
-    )
-  }
-  let(:genus_rank){
-    create(
-      :rank,
-      :name => Rank::GENUS, :taxonomic_position => '6', :fixed_order => false
-    )
-  }
-  let(:species_rank){
-    create(
-      :rank,
-      :name => Rank::SPECIES, :taxonomic_position => '7', :fixed_order => false
-    )
-  }
-  let(:subspecies_rank){
-    create(
-      :rank,
-      :name => Rank::SUBSPECIES, :taxonomic_position => '7.1', :fixed_order => false
-    )
-  }
-  let(:variety){
-    create(
-      :rank,
-      :name => Rank::VARIETY, :taxonomic_position => '7.2', :fixed_order => false
-    )
-  }
-  let(:cites_eu_animalia){
+  let(:cites_eu_animalia) {
     create_cites_eu_kingdom(
       :taxonomic_position => '1',
       :taxon_name => create(:taxon_name, :scientific_name => 'Animalia')
     )
   }
-  let(:cms_animalia){
+  let(:cms_animalia) {
     create_cms_kingdom(
       :taxonomic_position => '1',
       :taxon_name => create(:taxon_name, :scientific_name => 'Animalia')
     )
   }
-  let(:cites_eu_chordata){
+  let(:cites_eu_chordata) {
     create_cites_eu_phylum(
       :taxonomic_position => '1.1',
       :taxon_name => create(:taxon_name, :scientific_name => 'Chordata'),
       :parent => cites_eu_animalia
     )
   }
-  let(:cms_chordata){
+  let(:cms_chordata) {
     create_cms_phylum(
       :taxonomic_position => '1.1',
       :taxon_name => create(:taxon_name, :scientific_name => 'Chordata'),
       :parent => cms_animalia
     )
   }
-  let(:cites_eu_mammalia){
+  let(:cites_eu_mammalia) {
     create_cites_eu_class(
       :taxonomic_position => '1.1.1',
       :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia'),
       :parent => cites_eu_chordata
     )
   }
-  let(:cms_mammalia){
+  let(:cms_mammalia) {
     create_cms_class(
       :taxonomic_position => '1.1.1',
       :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia'),
       :parent => cms_chordata
     )
   }
-  let(:cites_eu_aves){
+  let(:cites_eu_aves) {
     create_cites_eu_class(
       :taxonomic_position => '1.1.2',
       :taxon_name => create(:taxon_name, :scientific_name => 'Aves'),
       :parent => cites_eu_chordata
     )
   }
-  let(:cites_eu_reptilia){
+  let(:cites_eu_reptilia) {
     create_cites_eu_class(
       :taxonomic_position => '1.1.3',
       :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia'),
       :parent => cites_eu_chordata
     )
   }
-  let(:cms_reptilia){
+  let(:cms_reptilia) {
     create_cms_class(
       :taxonomic_position => '1.1.3',
       :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia'),
       :parent => cms_chordata
     )
   }
-  let(:cites_eu_amphibia){
+  let(:cites_eu_amphibia) {
     create_cites_eu_class(
       :taxonomic_position => '1.1.4',
       :taxon_name => create(:taxon_name, :scientific_name => 'Amphibia'),
       :parent => cites_eu_chordata
     )
   }
-  let(:cites_eu_elasmobranchii){
+  let(:cites_eu_elasmobranchii) {
     create_cites_eu_class(
       :taxonomic_position => '1.1.5',
       :taxon_name => create(:taxon_name, :scientific_name => 'Elasmobranchii'),
       :parent => cites_eu_chordata
     )
   }
-  let(:cites_eu_arthropoda){
+  let(:cites_eu_arthropoda) {
     create_cites_eu_phylum(
       :taxonomic_position => '1.3',
       :taxon_name => create(:taxon_name, :scientific_name => 'Arthropoda'),
       :parent => cites_eu_animalia
     )
   }
-  let(:cites_eu_insecta){
+  let(:cites_eu_insecta) {
     create_cites_eu_class(
       :taxonomic_position => '1.3.2',
       :taxon_name => create(:taxon_name, :scientific_name => 'Insecta'),
       :parent => cites_eu_arthropoda
     )
   }
-  let(:cites_eu_annelida){
+  let(:cites_eu_annelida) {
     create_cites_eu_phylum(
       :taxonomic_position => '1.4',
       :taxon_name => create(:taxon_name, :scientific_name => 'Annelida'),
       :parent => cites_eu_animalia
     )
   }
-  let(:cites_eu_hirudinoidea){
+  let(:cites_eu_hirudinoidea) {
     create_cites_eu_class(
       :taxonomic_position => '1.4.1',
       :taxon_name => create(:taxon_name, :scientific_name => 'Hirudinoidea'),
       :parent => cites_eu_annelida
     )
   }
-  let(:cites_eu_plantae){
+  let(:cites_eu_plantae) {
     create_cites_eu_kingdom(
       :taxonomic_position => '2',
       :taxon_name => create(:taxon_name, :scientific_name => 'Plantae')
@@ -308,7 +248,7 @@ shared_context :sapi do
     create_cites_eu_species(
       parent: create_cites_eu_genus(
         parent: create_cites_eu_family(
-          parent: create_cites_eu_order(options.merge({parent: cites_eu_mammalia}))
+          parent: create_cites_eu_order(options.merge({ parent: cites_eu_mammalia }))
         )
       )
     )
@@ -318,58 +258,58 @@ shared_context :sapi do
     create_cites_eu_species(
       parent: create_cites_eu_genus(
         parent: create_cites_eu_family(
-          parent: create_cites_eu_order(options.merge({parent: cites_eu_plantae}))
+          parent: create_cites_eu_order(options.merge({ parent: cites_eu_plantae }))
         )
       )
     )
   end
 
-  %w(kingdom phylum class order family subfamily genus species subspecies variety).each do |rank|
-    define_method "create_#{rank}" do |options = {}|
+  %w(KINGDOM PHYLUM CLASS ORDER FAMILY SUBFAMILY GENUS SPECIES SUBSPECIES VARIETY).each do |rank|
+    define_method "create_#{rank.downcase}" do |options = {}|
       create(
         :taxon_concept,
-        options.merge({:rank => send("#{rank}_rank")})
+        options.merge({ rank: create(:rank, name: rank) })
       )
     end
-    define_method "build_#{rank}" do |options = {}|
+    define_method "build_#{rank.downcase}" do |options = {}|
       build(
         :taxon_concept,
-        options.merge({:rank => send("#{rank}_rank")})
+        options.merge({ rank: create(:rank, name: rank) })
       )
     end
-    define_method "create_cites_eu_#{rank}" do |options = {}|
-      create(
-        :taxon_concept,
-        options.merge({
-          :rank => send("#{rank}_rank"),
-          :taxonomy => cites_eu
-        })
-      )
-    end
-    define_method "build_cites_eu_#{rank}" do |options = {}|
-      build(
-        :taxon_concept,
-        options.merge({
-          :rank => send("#{rank}_rank"),
-          :taxonomy => cites_eu
-        })
-      )
-    end
-    define_method "create_cms_#{rank}" do |options = {}|
+    define_method "create_cites_eu_#{rank.downcase}" do |options = {}|
       create(
         :taxon_concept,
         options.merge({
-          :rank => send("#{rank}_rank"),
-          :taxonomy => cms
+          rank: create(:rank, name: rank),
+          taxonomy: cites_eu
         })
       )
     end
-    define_method "build_cms_#{rank}" do |options = {}|
+    define_method "build_cites_eu_#{rank.downcase}" do |options = {}|
       build(
         :taxon_concept,
         options.merge({
-          :rank => send("#{rank}_rank"),
-          :taxonomy => cms
+          rank: create(:rank, name: rank),
+          taxonomy: cites_eu
+        })
+      )
+    end
+    define_method "create_cms_#{rank.downcase}" do |options = {}|
+      create(
+        :taxon_concept,
+        options.merge({
+          rank: create(:rank, name: rank),
+          taxonomy: cms
+        })
+      )
+    end
+    define_method "build_cms_#{rank.downcase}" do |options = {}|
+      build(
+        :taxon_concept,
+        options.merge({
+          rank: create(:rank, name: rank),
+          taxonomy: cms
         })
       )
     end
@@ -380,13 +320,13 @@ shared_context :sapi do
     define_method "create_#{cites_event_type}" do |options = {}|
       create(
         cites_event_type,
-        options.merge({:designation => cites})
+        options.merge({ :designation => cites })
       )
     end
     define_method "build_#{cites_event_type}" do |options = {}|
       build(
         cites_event_type,
-        options.merge({:designation => cites})
+        options.merge({ :designation => cites })
       )
     end
   end
@@ -395,15 +335,22 @@ shared_context :sapi do
     define_method "create_#{eu_event_type}" do |options = {}|
       create(
         eu_event_type,
-        options.merge({:designation => eu})
+        options.merge({ :designation => eu })
       )
     end
     define_method "build_#{eu_event_type}" do |options = {}|
       build(
         eu_event_type,
-        options.merge({:designation => eu})
+        options.merge({ :designation => eu })
       )
     end
+  end
+
+  def create_taxon_name_presence_validation
+    create(
+      :presence_validation_rule,
+      :column_names => ['taxon_name']
+    )
   end
 
   def create_year_format_validation
@@ -414,12 +361,23 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
+  def create_taxon_concept_validation
+    create(
+      :inclusion_validation_rule,
+      column_names: ['taxon_name'],
+      valid_values_view: 'valid_taxon_name_view',
+      is_strict: true
+    )
+  end
+
   def create_taxon_concept_appendix_year_validation
     create(:taxon_concept_appendix_year_validation_rule,
       :is_primary => false,
       :is_strict => true
     )
   end
+
   def create_term_unit_validation
     create(:inclusion_validation_rule,
       :column_names => ['term_code', 'unit_code'],
@@ -427,6 +385,7 @@ shared_context :sapi do
       :is_primary => false
     )
   end
+
   def create_term_purpose_validation
     create(:inclusion_validation_rule,
       :column_names => ['term_code', 'purpose_code'],
@@ -434,6 +393,7 @@ shared_context :sapi do
       :is_primary => false
     )
   end
+
   def create_taxon_concept_term_validation
     create(:inclusion_validation_rule,
       :column_names => ['taxon_concept_id', 'term_code'],
@@ -442,6 +402,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_country_of_origin_validation
     create(:inclusion_validation_rule,
       :scope => {
@@ -455,6 +416,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_exporter_validation
     create(:inclusion_validation_rule,
       :scope => {
@@ -469,6 +431,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_exporter_country_of_origin_validation
     create(:distinct_values_validation_rule,
       :column_names => ['exporter', 'country_of_origin'],
@@ -476,6 +439,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_exporter_importer_validation
     create(:distinct_values_validation_rule,
       :column_names => ['exporter', 'importer'],
@@ -483,6 +447,7 @@ shared_context :sapi do
       :is_strict => true
     )
   end
+
   def create_taxon_concept_source_validation
     create(:taxon_concept_source_validation_rule,
       :column_names => ['taxon_concept_id', 'source_code'],
@@ -491,43 +456,43 @@ shared_context :sapi do
     )
   end
 
-  let(:reg1997){
+  let(:reg1997) {
     create(:eu_regulation, :name => 'No 938/97', :designation => eu,
       :effective_at => '1997-06-01', :end_date => '2000-12-18')
   }
-  let(:reg2005){
+  let(:reg2005) {
     create(:eu_regulation, :name => 'No 1332/2005', :designation => eu,
       :effective_at => '2005-08-22', :end_date => '2008-04-11')
   }
-  let(:reg2008){
+  let(:reg2008) {
     create(:eu_regulation, :name => 'No 318/2008', :designation => eu,
       :effective_at => '2008-04-11', :end_date => '2009-05-22')
   }
-  let(:reg2012){
+  let(:reg2012) {
     create(:eu_regulation, :name => 'No 1158/2012', :designation => eu,
       :effective_at => '2012-12-15', :end_date => '2013-08-10')
   }
-  let(:reg2013){
+  let(:reg2013) {
     create(:eu_regulation, :name => 'No 750/2013', :designation => eu,
       :effective_at => '2013-08-10', :end_date => nil, :is_current => true)
   }
 
-  let(:contains_geo_relationship_type){
+  let(:contains_geo_relationship_type) {
     create(:geo_relationship_type, :name => GeoRelationshipType::CONTAINS)
   }
-  let(:territory_geo_entity_type){
+  let(:territory_geo_entity_type) {
     create(:geo_entity_type, :name => GeoEntityType::TERRITORY)
   }
-  let(:country_geo_entity_type){
+  let(:country_geo_entity_type) {
     create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
   }
-  let(:cites_region_geo_entity_type){
+  let(:cites_region_geo_entity_type) {
     create(:geo_entity_type, :name => GeoEntityType::CITES_REGION)
   }
-  let(:trade_geo_entity_type){
+  let(:trade_geo_entity_type) {
     create(:geo_entity_type, :name => GeoEntityType::TRADE_ENTITY)
   }
-  let(:synonym_relationship_type){
+  let(:synonym_relationship_type) {
     create(
       :taxon_relationship_type,
       :name => TaxonRelationshipType::HAS_SYNONYM,
@@ -535,7 +500,7 @@ shared_context :sapi do
       :is_bidirectional => false
     )
   }
-  let(:trade_name_relationship_type){
+  let(:trade_name_relationship_type) {
     create(
       :taxon_relationship_type,
       :name => TaxonRelationshipType::HAS_TRADE_NAME,
@@ -543,7 +508,7 @@ shared_context :sapi do
       :is_bidirectional => false
     )
   }
-  let(:hybrid_relationship_type){
+  let(:hybrid_relationship_type) {
     create(
       :taxon_relationship_type,
       :name => TaxonRelationshipType::HAS_HYBRID,
@@ -551,7 +516,7 @@ shared_context :sapi do
       :is_bidirectional => false
     )
   }
-  let(:equal_relationship_type){
+  let(:equal_relationship_type) {
     create(
       :taxon_relationship_type,
       :name => TaxonRelationshipType::EQUAL_TO,

@@ -23,12 +23,12 @@ class ChangeType < ActiveRecord::Base
   belongs_to :designation
   has_many :listing_changes
 
-  validates :name, :presence => true, :uniqueness => {:scope => :designation_id}
-  validates :display_name_en, :presence => true, :uniqueness => {:scope => :designation_id}
+  validates :name, :presence => true, :uniqueness => { :scope => :designation_id }
+  validates :display_name_en, :presence => true, :uniqueness => { :scope => :designation_id }
 
   def abbreviation
     self.name.split('_').
-      map{|a| a[0..2]}.join('-')
+      map { |a| a[0..2] }.join('-')
   end
 
   def print_name

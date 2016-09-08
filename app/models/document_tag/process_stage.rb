@@ -11,7 +11,9 @@
 
 class DocumentTag::ProcessStage < DocumentTag
 
-  def self.display_name; 'Process stage'; end
+  def self.display_name
+    'Process stage'
+  end
 
   def self.elibrary_document_types
     [Document::ReviewOfSignificantTrade]

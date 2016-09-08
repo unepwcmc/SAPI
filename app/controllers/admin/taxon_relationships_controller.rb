@@ -7,7 +7,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
 
   def index
     index! do
-      @form_taxonomies = Taxonomy.order(:name). #for Inter-taxonomic relationships
+      @form_taxonomies = Taxonomy.order(:name). # for Inter-taxonomic relationships
         where('id <> ?', @taxon_concept.taxonomy_id)
       @inverse_taxon_relationships = TaxonRelationship.
         where(:other_taxon_concept_id => @taxon_concept.id,
@@ -29,7 +29,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
     create! do |success, failure|
       success.js { render 'create' }
       failure.js {
-        @taxonomies = Taxonomy.order(:name). #for Inter-taxonomic relationships
+        @taxonomies = Taxonomy.order(:name). # for Inter-taxonomic relationships
           where('id <> ?', TaxonConcept.find(params[:taxon_relationship][:taxon_concept_id]).
           try(:taxonomy_id))
         render 'admin/simple_crud/new'
@@ -54,11 +54,12 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
   protected
 
   def load_taxon_relationship_types
-    @taxon_relationship_type = if params[:taxon_relationship]
-       TaxonRelationshipType.find(params[:taxon_relationship][:taxon_relationship_type_id])
+    @taxon_relationship_type =
+      if params[:taxon_relationship]
+        TaxonRelationshipType.find(params[:taxon_relationship][:taxon_relationship_type_id])
       else
-       TaxonRelationshipType.find_by_name(params[:type] || TaxonRelationshipType::EQUAL_TO)
-    end
+        TaxonRelationshipType.find_by_name(params[:type] || TaxonRelationshipType::EQUAL_TO)
+      end
     @taxon_relationship_types = TaxonRelationshipType.order(:name).
       intertaxonomic
   end
@@ -70,4 +71,3 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
       page(params[:page])
   end
 end
-

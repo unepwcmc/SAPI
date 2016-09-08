@@ -6,55 +6,55 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for species Canis lupus (population split listing)" do
-          specify{ @species.cites_listing.should == 'I/II' }
+          specify { @species.cites_listing.should == 'I/II' }
         end
       end
 
       describe :eu_listing do
         context "for species Canis lupus (population split listing)" do
-          specify{ @species.eu_listing.should == 'A/B' }
+          specify { @species.eu_listing.should == 'A/B' }
         end
       end
 
       describe :cites_listed do
         context "for species Canis lupus" do
-          specify{ @species.cites_listed.should be_true }
+          specify { @species.cites_listed.should be_true }
         end
         context "for subspecies Canis lupus crassodon" do
-          specify{ @subspecies.cites_listed.should be_blank }
+          specify { @subspecies.cites_listed.should be_blank }
         end
       end
 
       describe :eu_listed do
         context "for species Canis lupus" do
-          specify{ @species.eu_listed.should be_true }
+          specify { @species.eu_listed.should be_true }
         end
       end
 
       describe :show_in_species_plus_ac do
         context "for species Canis lupus" do
-          specify{ @species_ac.show_in_species_plus_ac.should be_true }
+          specify { @species_ac.show_in_species_plus_ac.should be_true }
         end
         context "for subspecies Canis lupus crassodon" do
-          specify{ @subspecies_ac.show_in_species_plus_ac.should be_true }
+          specify { @subspecies_ac.show_in_species_plus_ac.should be_true }
         end
       end
 
       describe :show_in_checklist_ac do
         context "for species Canis lupus" do
-          specify{ @species_ac.show_in_checklist_ac.should be_true }
+          specify { @species_ac.show_in_checklist_ac.should be_true }
         end
         context "for subspecies Canis lupus crassodon" do
-          specify{ @subspecies_ac.show_in_checklist_ac.should be_false }
+          specify { @subspecies_ac.show_in_checklist_ac.should be_false }
         end
       end
 
       describe :show_in_species_plus do
         context "for species Canis lupus" do
-          specify{ @species.show_in_species_plus.should be_true }
+          specify { @species.show_in_species_plus.should be_true }
         end
         context "for subspecies Canis lupus crassodon" do
-          specify{ @subspecies.show_in_species_plus.should be_true }
+          specify { @subspecies.show_in_species_plus.should be_true }
         end
       end
 

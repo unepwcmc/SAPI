@@ -19,4 +19,7 @@
 
 # Reassignable is a taxon relationship that is assigned to a new taxon concept
 class NomenclatureChange::NameReassignment < NomenclatureChange::Reassignment
+  belongs_to :input, class_name: NomenclatureChange::Input,
+    inverse_of: :name_reassignments,
+    foreign_key: :nomenclature_change_input_id
 end

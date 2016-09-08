@@ -21,8 +21,11 @@
 #  original_id                  :integer
 #  discussion_id                :integer
 #  discussion_sort_index        :integer
+#  designation_id               :integer
 #
 
 class Document::AgendaItems < Document
-  def self.display_name; 'Agenda Items'; end
+  def self.display_name
+    'Agenda Items'
+  end
 end

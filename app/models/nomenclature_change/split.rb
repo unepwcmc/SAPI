@@ -34,7 +34,6 @@ class NomenclatureChange::Split < NomenclatureChange
   validate :required_inputs, if: :inputs_or_submitting?
   validate :required_outputs, if: :outputs_or_submitting?
   validate :required_ranks, if: :outputs_or_submitting?
-  validate :required_different_name, if: :outputs_or_submitting?
   before_validation :set_outputs_name_status, if: :outputs_or_submitting?
   before_validation :set_outputs_rank_id, if: :outputs_or_submitting?
   before_save :build_auto_reassignments, if: :notes?
@@ -73,15 +72,6 @@ class NomenclatureChange::Split < NomenclatureChange
     end
   end
 
-  def required_different_name
-    if outputs.any? do |output|
-        output.taxon_name_already_existing? && !output.new_full_name.nil?
-      end
-      errors.add(:outputs, "Name already existing")
-      return false
-    end
-  end
-
   def set_outputs_name_status
     outputs.each do |output|
       if output.new_name_status.blank? && (
@@ -105,11 +95,11 @@ class NomenclatureChange::Split < NomenclatureChange
   end
 
   def outputs_except_inputs
-    outputs.reject{ |o| o.taxon_concept == input.try(:taxon_concept) }
+    outputs.reject { |o| o.taxon_concept == input.try(:taxon_concept) }
   end
 
   def outputs_intersect_inputs
-    outputs.select{ |o| o.taxon_concept == input.try(:taxon_concept) }
+    outputs.select { |o| o.taxon_concept == input.try(:taxon_concept) }
   end
 
   def new_output_rank

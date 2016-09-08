@@ -1,8 +1,7 @@
-#Encoding: utf-8
 FactoryGirl.define do
 
   factory :user do
-    sequence(:name) {|n| "user#{n}"}
+    sequence(:name) { |n| "user#{n}" }
     email { "#{name}@test.pl" }
     password 'asdfasdf'
     password_confirmation { password }
@@ -12,16 +11,16 @@ FactoryGirl.define do
   end
 
   factory :taxonomy do
-    sequence(:name) {|n| "WILDLIFE#{n}"}
+    sequence(:name) { |n| "WILDLIFE#{n}" }
   end
 
   factory :designation do
-    sequence(:name) {|n| "CITES#{n}"}
+    sequence(:name) { |n| "CITES#{n}" }
     taxonomy
   end
 
   factory :instrument do
-    sequence(:name) {|n| "ACAP#{n}"}
+    sequence(:name) { |n| "ACAP#{n}" }
     designation
   end
 
@@ -31,7 +30,7 @@ FactoryGirl.define do
   end
 
   factory :event do
-    sequence(:name) {|n| "CoP#{n}"}
+    sequence(:name) { |n| "CoP#{n}" }
     effective_at '2011-01-01'
     published_at '2011-02-01'
     designation
@@ -55,27 +54,7 @@ FactoryGirl.define do
   end
 
   factory :taxon_name do
-    sequence(:scientific_name) {|n| "Lupus#{n}"}
-  end
-
-  factory :rank do
-    sequence(:name) {|n| "rank#{n}"}
-    display_name_en { name }
-    taxonomic_position '1'
-  end
-
-  factory :taxon_concept, :aliases => [:other_taxon_concept] do
-    taxonomy
-    rank
-    taxon_name
-    taxonomic_position '1'
-    name_status 'A'
-    data {}
-    listing {}
-    parent_scientific_name ''
-    accepted_scientific_name ''
-    hybrid_parent_scientific_name ''
-    other_hybrid_parent_scientific_name ''
+    sequence(:scientific_name) { |n| "Lupus#{n}" }
   end
 
   factory :cites_suspension do
@@ -110,14 +89,14 @@ FactoryGirl.define do
     eu_decision_type
 
     factory :eu_opinion, class: EuOpinion do
-      start_date Date.new(2013,1,1)
+      start_date Date.new(2013, 1, 1)
     end
 
     factory :eu_suspension, class: EuSuspension
   end
 
   factory :eu_decision_type do
-    sequence(:name) {|n| "Opinion#{n}"}
+    sequence(:name) { |n| "Opinion#{n}" }
     decision_type "NO_OPINION"
   end
 

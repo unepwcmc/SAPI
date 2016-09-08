@@ -5,12 +5,12 @@ class DashboardStats
   attr_reader :geo_entity, :kingdom, :time_range_start, :time_range_end,
     :trade_limit
 
-  def initialize (geo_entity, options)
+  def initialize(geo_entity, options)
     @geo_entity = geo_entity
     @kingdom = options[:kingdom] || 'Animalia'
     @trade_limit = options[:trade_limit]
-    @time_range_start = options[:time_range_start] || (Time.now.year-7) #2007
-    @time_range_end = options[:time_range_end] || (Time.now.year-2) #2012
+    @time_range_start = options[:time_range_start] || (Time.now.year - 7) # 2007
+    @time_range_end = options[:time_range_end] || (Time.now.year - 2) # 2012
   end
 
   def species
@@ -29,7 +29,7 @@ class DashboardStats
 
   private
 
-  def species_stats_per_taxonomy taxonomy_name
+  def species_stats_per_taxonomy(taxonomy_name)
     taxonomy = Taxonomy.find_by_name(taxonomy_name)
     classes = taxonomy && MTaxonConcept.where(
       :taxonomy_id => taxonomy.id,
@@ -49,7 +49,7 @@ class DashboardStats
     end || []
   end
 
-  def trade_stats_per_reporter_type reporter_type
+  def trade_stats_per_reporter_type(reporter_type)
     source = Source.find_by_code('W')
     term = Term.find_by_code('LIV')
     purpose = Purpose.find_by_code('T')

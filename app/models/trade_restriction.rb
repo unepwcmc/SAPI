@@ -38,7 +38,8 @@ class TradeRestriction < ActiveRecord::Base
     :notes, :publication_date, :purpose_ids, :quota, :type,
     :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id, :url
+    :created_by_id, :updated_by_id, :url,
+    :taxon_concept_id
 
   belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
@@ -79,7 +80,7 @@ class TradeRestriction < ActiveRecord::Base
     unit_id ? unit.name_en : ''
   end
 
-  def self.export filters
+  def self.export(filters)
     return false unless export_query(filters).any?
     path = "public/downloads/#{self.to_s.tableize}/"
     latest = self.order("updated_at DESC").
@@ -88,11 +89,11 @@ class TradeRestriction < ActiveRecord::Base
     file_name = Digest::SHA1.hexdigest(
       filters.merge(:latest_date => latest).
       to_hash.
-      symbolize_keys!.sort
-      .to_s
-    )+"_cites_#{self.to_s.downcase}s.csv"
-    if !File.file?(path+file_name)
-      self.to_csv(path+file_name, filters)
+      symbolize_keys!.sort.
+      to_s
+    ) + "_cites_#{self.to_s.downcase}s.csv"
+    if !File.file?(path + file_name)
+      self.to_csv(path + file_name, filters)
     end
     [
       path + file_name,
@@ -100,7 +101,7 @@ class TradeRestriction < ActiveRecord::Base
     ]
   end
 
-  def self.export_query filters
+  def self.export_query(filters)
     self.joins(:geo_entity).
       joins(<<-SQL
           LEFT JOIN taxon_concepts ON taxon_concepts.id = trade_restrictions.taxon_concept_id
@@ -119,26 +120,27 @@ class TradeRestriction < ActiveRecord::Base
         trade_restrictions.notes ASC')
   end
 
-  #Gets the display text for each CSV_COLUMNS
+  # Gets the display text for each CSV_COLUMNS
   def self.csv_columns_headers
     self::CSV_COLUMNS.map do |b|
       Array(b).first
     end.flatten
   end
 
-  def self.to_csv file_path, filters
+  def self.to_csv(file_path, filters)
     limit = 1000
     offset = 0
-    csv_separator_char = case filters[:csv_separator]
+    csv_separator_char =
+      case filters[:csv_separator]
       when :semicolon then ';'
       else ','
-    end
-    CSV.open(file_path, 'wb', {:col_sep => csv_separator_char}) do |csv|
+      end
+    CSV.open(file_path, 'wb', { :col_sep => csv_separator_char }) do |csv|
       csv << Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +
         ['Remarks'] + self.csv_columns_headers
       ids = []
       until (objs = export_query(filters).limit(limit).
-             offset(offset)).empty? do
+             offset(offset)).empty?
         objs.each do |q|
           row = []
           row += Species::RestrictionsExport.fill_taxon_columns(q)
@@ -154,19 +156,19 @@ class TradeRestriction < ActiveRecord::Base
           csv << row
         end
         offset += limit
-       end
       end
+    end
   end
 
-  def self.filter_is_current set
+  def self.filter_is_current(set)
     if set == "current"
       return where(:is_current => true)
     end
     scoped
   end
 
-  def self.filter_geo_entities filters
-    if filters.has_key?("geo_entities_ids")
+  def self.filter_geo_entities(filters)
+    if filters.key?("geo_entities_ids")
       geo_entities_ids = GeoEntity.nodes_and_descendants(
         filters["geo_entities_ids"]
       ).map(&:id)
@@ -175,8 +177,8 @@ class TradeRestriction < ActiveRecord::Base
     scoped
   end
 
-  def self.filter_taxon_concepts filters
-    if filters.has_key?("taxon_concepts_ids")
+  def self.filter_taxon_concepts(filters)
+    if filters.key?("taxon_concepts_ids")
       conds_str = <<-SQL
         ARRAY[
           taxon_concepts_mview.id, taxon_concepts_mview.family_id,
@@ -190,8 +192,8 @@ class TradeRestriction < ActiveRecord::Base
     scoped
   end
 
-  def self.filter_years filters
-    if filters.has_key?("years")
+  def self.filter_years(filters)
+    if filters.key?("years")
       return where('EXTRACT(YEAR FROM trade_restrictions.start_date) IN (?)',
                    filters["years"])
     end

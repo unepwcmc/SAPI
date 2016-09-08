@@ -6,11 +6,12 @@ class Checklist::HigherTaxaItem
   end
 
   def ancestors_ranks
-    taxa = if kingdom_name == 'Plantae'
-      ['FAMILY', 'SUBFAMILY']
-    else
-      ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY']
-    end
+    taxa =
+      if kingdom_name == 'Plantae'
+        ['FAMILY', 'SUBFAMILY']
+      else
+        ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY']
+      end
     current_idx = taxa.index(rank_name) || 0
     0.upto(current_idx).map do |i|
       taxa[i]
@@ -29,7 +30,7 @@ class Checklist::HigherTaxaItem
     end.join(',')
   end
 
-  #use method_missing to delegate taxon concept methods
+  # use method_missing to delegate taxon concept methods
   def method_missing(method_sym, *arguments, &block)
     # the first argument is a Symbol, so you need to_s it if you want to pattern match
     if @taxon_concept.respond_to? method_sym

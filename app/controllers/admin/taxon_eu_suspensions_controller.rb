@@ -12,7 +12,7 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
   def update
     update! do |success, failure|
       success.html {
-        if  "1" == params[:redirect_to_eu_suspension_reg]
+        if "1" == params[:redirect_to_eu_suspension_reg]
           redirect_to admin_eu_suspension_regulation_eu_suspensions_url(
             @eu_suspension.start_event_id)
         else
@@ -63,7 +63,7 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
     @terms = Term.order(:code)
     @sources = Source.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:geo_entity_types => {:name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]})
+      where(:geo_entity_types => { :name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
     @eu_regulations = EuSuspensionRegulation.order("effective_at DESC")
     @eu_decision_types = EuDecisionType.suspensions
   end

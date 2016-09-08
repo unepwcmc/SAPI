@@ -26,7 +26,7 @@ class Checklist::HigherTaxaInjector
   def run
     res = []
     @taxon_concepts.each_with_index do |tc, i|
-      prev_item = (i > 0 ? @taxon_concepts[i-1] : nil)
+      prev_item = (i > 0 ? @taxon_concepts[i - 1] : nil)
       res += higher_taxa_headers(prev_item, tc).map do |ht|
         Checklist::HigherTaxaItem.new(ht)
       end
@@ -36,13 +36,13 @@ class Checklist::HigherTaxaInjector
   end
 
   def run_summary
-    @expand_headers = false #use this only for collapsed headers
+    @expand_headers = false # use this only for collapsed headers
     # such as the Checklist or Species+ website
     res = []
     current_higher_taxon = nil
     current_higher_taxon_children_ids = []
     @taxon_concepts.each_with_index do |tc, i|
-      prev_item = (i > 0 ? @taxon_concepts[i-1] : nil)
+      prev_item = (i > 0 ? @taxon_concepts[i - 1] : nil)
       higher_taxon = higher_taxa_headers(prev_item, tc).first
       if higher_taxon
         res.push({
@@ -62,34 +62,34 @@ class Checklist::HigherTaxaInjector
     res
   end
 
-
-  #returns array of HigherTaxaItems that need to be inserted
-  #between prev_item and curr_item in the taxonomic layout
+  # returns array of HigherTaxaItems that need to be inserted
+  # between prev_item and curr_item in the taxonomic layout
   def higher_taxa_headers(prev_item, curr_item)
-    ranks = if prev_item.nil?
-      @header_ranks
-    else
-      tmp = []
+    ranks =
+      if prev_item.nil?
+        @header_ranks
+      else
+        tmp = []
 
-      for rank in @header_ranks.reverse
-        rank_id_attr = "#{rank.downcase}_id"
-        curr_item.send(rank_id_attr)
-        if prev_item.send(rank_id_attr) != curr_item.send(rank_id_attr)
-          tmp << rank
-        else
-          break
+        for rank in @header_ranks.reverse
+          rank_id_attr = "#{rank.downcase}_id"
+          curr_item.send(rank_id_attr)
+          if prev_item.send(rank_id_attr) != curr_item.send(rank_id_attr)
+            tmp << rank
+          else
+            break
+          end
         end
+        tmp.reverse
       end
-      tmp.reverse
-    end
 
     ranks = [ranks.last].compact unless @expand_headers
 
     res = []
-    @last_ancestor_ids = @header_ranks.map{ |rank| curr_item.send("#{rank.downcase}_id") }
+    @last_ancestor_ids = @header_ranks.map { |rank| curr_item.send("#{rank.downcase}_id") }
     ranks.each_with_index do |rank, idx|
       higher_taxon_id = curr_item.send("#{rank.downcase}_id")
-      
+
       unless (prev_item && prev_item.send("#{rank.downcase}_id") == higher_taxon_id && !@expand_headers)
         higher_taxon = @higher_taxa[higher_taxon_id]
         if higher_taxon && !(@skip_ancestor_ids && @skip_ancestor_ids.include?(higher_taxon.id))

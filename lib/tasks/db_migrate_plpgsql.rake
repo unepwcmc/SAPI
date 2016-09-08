@@ -2,7 +2,7 @@ namespace :db do
   namespace :migrate do
     desc "Run custom sql scripts"
     task :sql => :environment do
-      ['helpers','mviews', 'plpgsql'].each do |dir|
+      ['helpers', 'mviews', 'plpgsql'].each do |dir|
         files = Dir.glob(Rails.root.join("db/#{dir}/*.sql"))
         files.sort.each do |file|
           puts file
@@ -40,7 +40,7 @@ namespace :db do
     puts "Deleting permits"
     ActiveRecord::Base.connection.execute('DELETE FROM trade_permits')
     puts "Deleting annual report uploads & dropping sandboxes"
-    Trade::AnnualReportUpload.all.each{ |aru| aru.destroy }
+    Trade::AnnualReportUpload.all.each { |aru| aru.destroy }
   end
 
 end

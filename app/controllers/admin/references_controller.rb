@@ -5,7 +5,7 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
     index! do |format|
       format.json {
         render :text => end_of_association_chain.order(:citation).
-          select([:id, :citation]).map{ |d| {:value => d.id, :text => d.citation} }.to_json
+          select([:id, :citation]).map { |d| { :value => d.id, :text => d.citation } }.to_json
       }
     end
   end
@@ -24,10 +24,10 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
   end
 
   protected
-    def collection
-      @references ||= end_of_association_chain.order(:citation).
-        page(params[:page]).
-        search(params[:query])
-    end
-end
 
+  def collection
+    @references ||= end_of_association_chain.order(:citation).
+      page(params[:page]).
+      search(params[:query])
+  end
+end

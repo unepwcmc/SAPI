@@ -18,7 +18,7 @@
 require 'spec_helper'
 
 describe Trade::DistinctValuesValidationRule, :drops_tables => true do
-  let(:canada){
+  let(:canada) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -26,7 +26,7 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
       :iso_code2 => 'CA'
     )
   }
-  let(:argentina){
+  let(:argentina) {
     create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
@@ -34,7 +34,7 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
       :iso_code2 => 'AR'
     )
   }
-  describe :validation_errors do
+  describe :validation_errors_for_aru do
     before(:each) do
       @aru = build(:annual_report_upload, :point_of_view => 'E',
         :trading_country_id => canada.id)
@@ -46,11 +46,12 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
         @sandbox_klass.create(:trading_partner => argentina.iso_code2)
         @sandbox_klass.create(:trading_partner => canada.iso_code2)
       end
-      subject{
+      subject {
         create_exporter_importer_validation
       }
-      specify{
-        subject.validation_errors(@aru).size.should == 1
+      specify {
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
     context 'exporter should not equal importer (I)' do
@@ -62,11 +63,12 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
         @sandbox_klass.create(:trading_partner => argentina.iso_code2)
         @sandbox_klass.create(:trading_partner => canada.iso_code2)
       end
-      subject{
+      subject {
         create_exporter_importer_validation
       }
-      specify{
-        subject.validation_errors(@aru).size.should == 1
+      specify {
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
     context 'exporter should not equal country of origin' do
@@ -74,11 +76,12 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
         @sandbox_klass.create(:country_of_origin => argentina.iso_code2)
         @sandbox_klass.create(:country_of_origin => canada.iso_code2)
       end
-      subject{
+      subject {
         create_exporter_country_of_origin_validation
       }
-      specify{
-        subject.validation_errors(@aru).size.should == 1
+      specify {
+        subject.refresh_errors_if_needed(@aru)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
   end

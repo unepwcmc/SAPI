@@ -38,8 +38,8 @@ class Quota < TradeRestriction
   validates :quota, :numericality => { :greater_than_or_equal_to => -1.0 }
   validates :geo_entity_id, :presence => true
 
-  #Each element of CSV columns can be either an array [display_text, method]
-  #or a single symbol if the display text and the method are the same
+  # Each element of CSV columns can be either an array [display_text, method]
+  # or a single symbol if the display text and the method are the same
   CSV_COLUMNS = [
     :year, :party, :quota,
     [:unit, :unit_name], :publication_date,
@@ -54,7 +54,7 @@ class Quota < TradeRestriction
     end_date ? end_date.strftime('%d/%m/%Y') : Time.now.end_of_year.strftime("%d/%m/%Y")
   end
 
-  def self.search query
+  def self.search(query)
     if query.present?
       where("UPPER(geo_entities.name_en) LIKE UPPER(:query)
             OR UPPER(geo_entities.iso_code2) LIKE UPPER(:query)
@@ -80,8 +80,9 @@ class Quota < TradeRestriction
           group(:years).order('years DESC').map(&:years)
   end
 
-  def self.count_matching params
-    Quota.where([
+  def self.count_matching(params)
+    Quota.where(
+      [
         "EXTRACT(year from start_date) = :year
         AND ((:excluded_geo_entities) IS NULL OR geo_entity_id NOT IN (:excluded_geo_entities))
         AND ((:included_geo_entities) IS NULL OR geo_entity_id IN (:included_geo_entities))
@@ -96,7 +97,8 @@ class Quota < TradeRestriction
         :excluded_taxon_concepts => params[:excluded_taxon_concepts_ids].present? ?
           params[:excluded_taxon_concepts_ids].split(",").map(&:to_i) : nil,
         :included_taxon_concepts => params[:included_taxon_concepts_ids].present? ?
-          params[:included_taxon_concepts_ids].split(",").map(&:to_i) : nil ]).
-      count
+          params[:included_taxon_concepts_ids].split(",").map(&:to_i) : nil
+      ]
+    ).count
   end
 end
