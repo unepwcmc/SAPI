@@ -41,7 +41,8 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
     :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
     :parent_reassignments_attributes, :name_reassignments_attributes,
-    :distribution_reassignments_attributes, :legislation_reassignments_attributes, :tag_list
+    :distribution_reassignments_attributes, :legislation_reassignments_attributes,
+    :output_type, :tag_list
 
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
