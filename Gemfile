@@ -74,11 +74,6 @@ end
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
-group :staging, :production do
-  gem 'exception_notification', :git => 'https://github.com/smartinez87/exception_notification.git'
-  gem 'slack-notifier', '~> 1.0'
-end
-
 gem 'rest-client', require: false
 
 group :development do
