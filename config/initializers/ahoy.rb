@@ -1,7 +1,7 @@
 require 'sapi/geoip'
 class Ahoy::Store < Ahoy::Stores::ActiveRecordStore
-  def report_exception(e)
-    ExceptionNotifier.notify_exception(e) if defined? ExceptionNotifier
+  def report_exception(exception)
+    Appsignal.add_exception(exception) if defined? Appsignal
   end
 
   def visit_model
