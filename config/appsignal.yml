@@ -32,8 +32,3 @@ production:
 staging:
   <<: *defaults
   active: true
-
-elibrary_staging:
-  <<: *defaults
-  active: true
-  name: "E-Library"

@@ -501,7 +501,6 @@ Style/ParenthesesAroundCondition:
 Style/PercentLiteralDelimiters:
   Exclude:
     - 'config/deploy.rb'
-    - 'config/deploy/elibrary_staging.rb'
     - 'config/deploy/production.rb'
     - 'config/deploy/staging.rb'
     - 'config/initializers/exception_notification.rb'
