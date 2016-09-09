@@ -33,11 +33,8 @@ class DownloadWorker
       @download.status = "completed"
 
       @download.save!
-    rescue => msg
-      ExceptionNotifier.notify_exception(msg) if defined? ExceptionNotifier
-      logger.warn "Failed: #{msg}"
-      logger.warn "### Backtrace ###"
-      logger.warn msg.backtrace
+    rescue => exception
+      Appsignal.add_exception(exception) if defined? Appsignal
       @download.status = "failed"
       @download.save!
     end
