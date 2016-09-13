@@ -1,5 +1,4 @@
 class Admin::NomenclatureChangesController < Admin::StandardAuthorizationController
-  before_filter :redirect_in_production
 
   def show
     @nc = NomenclatureChange.find(params[:id])
