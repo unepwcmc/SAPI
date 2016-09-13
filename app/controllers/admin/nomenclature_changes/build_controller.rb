@@ -2,7 +2,6 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   include Wicked::Wizard
 
   before_filter :set_nomenclature_change, :only => [:show, :update, :destroy]
-  before_filter :redirect_in_production
   before_filter :unset_back, only: [:update]
 
   def finish_wizard_path
