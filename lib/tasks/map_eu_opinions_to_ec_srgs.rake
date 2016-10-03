@@ -11,7 +11,7 @@
 #   where eu_opinions.type='EuOpinion'
 # )
 # select
-# 'http://speciesplus.net/admin/taxon_concepts/' || taxon_concept_id || '/eu_opinions/' || eu_opinions.id || '/edit' AS admin_url,
+# 'https://speciesplus.net/admin/taxon_concepts/' || taxon_concept_id || '/eu_opinions/' || eu_opinions.id || '/edit' AS admin_url,
 # taxon_concepts.full_name,
 # geo_entities.name_en,
 # eu_opinions.*

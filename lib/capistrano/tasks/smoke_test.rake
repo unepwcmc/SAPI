@@ -6,8 +6,10 @@ namespace :smoke_test do
     message = ""
 
     urls = [
-      "http://www.speciesplus.net", "http://trade.cites.org",
-      "http://www.speciesplus.net/trade", "http://www.speciesplus.net/admin",
+      "https://www.speciesplus.net",
+      "http://trade.cites.org",
+      "https://www.speciesplus.net/trade",
+      "https://www.speciesplus.net/admin",
       "http://api.speciesplus.net/api/v1/taxon_concepts?name=Canis%20lupus",
       "http://api.speciesplus.net/api/v1/taxon_concepts/9644/references",
       "http://api.speciesplus.net/api/v1/taxon_concepts/9644/eu_legislation",
