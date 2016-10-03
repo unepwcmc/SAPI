@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'sitemap_generator'
 
-SitemapGenerator::Sitemap.default_host = 'http://speciesplus.net'
+SitemapGenerator::Sitemap.default_host = 'https://speciesplus.net'
 SitemapGenerator::Sitemap.create do
   add '/about', changefreq: 'yearly'
   add '/terms-of-use', changefreq: 'yearly'
