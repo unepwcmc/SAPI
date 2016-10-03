@@ -496,7 +496,7 @@ body.inner #footer .holder{
   font-style: italic;
   border-top: 1px solid #e5e5e5;
 }
-.result-block h2 span.match, .result-block h2 span.match.synonyms {
+.result-block h2 span.match, .result-block h2 span.match.synonyms {
   font-weight: bold;
 }
 .result-block h2 span.author-year, .result-block h2 span.synonyms {

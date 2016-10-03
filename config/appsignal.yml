@@ -17,7 +17,7 @@ default: &defaults
   #   - ApplicationController#isup
 
   ignore_errors:
-    - ActiveRecord::NotFound
+    - ActiveRecord::RecordNotFound
 
 # Configuration per environment, leave out an environment or set active
 # to false to not push metrics for that environment.
@@ -34,8 +34,3 @@ production:
 staging:
   <<: *defaults
   active: true
-
-elibrary_staging:
-  <<: *defaults
-  active: true
-  name: "E-Library"
