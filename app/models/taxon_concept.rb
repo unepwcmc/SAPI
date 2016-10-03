@@ -170,6 +170,7 @@ class TaxonConcept < ActiveRecord::Base
   has_many :nomenclature_change_outputs, class_name: 'NomenclatureChange::Output'
   has_many :nomenclature_change_outputs_as_new, class_name: 'NomenclatureChange::Output',
     foreign_key: :new_taxon_concept_id
+  has_many :document_citation_taxon_concepts
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
@@ -449,7 +450,8 @@ class TaxonConcept < ActiveRecord::Base
       'shipments (reported as)' => reported_shipments,
       'nomenclature changes (as input)' => nomenclature_change_inputs,
       'nomenclature changes (as output)' => nomenclature_change_outputs,
-      'nomenclature changes (as new output)' => nomenclature_change_outputs_as_new
+      'nomenclature changes (as new output)' => nomenclature_change_outputs_as_new,
+      'document citations' => document_citation_taxon_concepts
     }
   end
 
