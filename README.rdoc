@@ -4,6 +4,6 @@
 {<img src="https://coveralls.io/repos/unepwcmc/SAPI/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/unepwcmc/SAPI?branch=master]
 {<img src="https://gemnasium.com/unepwcmc/SAPI.png" alt="Dependency Status" />}[https://gemnasium.com/unepwcmc/SAPI]
 
-{Species+}[http://speciesplus.net] is the new species integration platform developed at {WCMC}[http://www.unep-wcmc.org].
+{Species+}[https://speciesplus.net] is the new species integration platform developed at {WCMC}[http://www.unep-wcmc.org].
 
 More information in the {wiki}[https://github.com/unepwcmc/SAPI/wiki].
