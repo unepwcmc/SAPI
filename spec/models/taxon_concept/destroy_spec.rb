@@ -19,6 +19,12 @@ describe TaxonConcept do
         before(:each) { create(:taxon_concept_reference, :taxon_concept => @taxon_concept) }
         specify { @taxon_concept.destroy.should be_true }
       end
+      context "when document citations" do
+        before(:each) do
+          create(:document_citation_taxon_concept, taxon_concept: @taxon_concept)
+        end
+        specify { @taxon_concept.destroy.should be_false }
+      end
     end
     context "CMS" do
       before(:each) { @taxon_concept = create_cms_species }
