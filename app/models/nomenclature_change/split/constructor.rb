@@ -58,6 +58,15 @@ class NomenclatureChange::Split::Constructor
     end
   end
 
+  def build_document_reassignments
+    input = @nomenclature_change.input
+    outputs = @nomenclature_change.outputs
+    _build_document_reassignments(input, outputs)
+    outputs_for_reassignments.each do |output|
+      _build_document_reassignments(output, [output])
+    end
+  end
+
   def build_common_names_reassignments
     input = @nomenclature_change.input
     _build_common_names_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
