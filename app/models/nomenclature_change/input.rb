@@ -57,6 +57,12 @@ class NomenclatureChange::Input < ActiveRecord::Base
     foreign_key: :nomenclature_change_input_id,
     dependent: :destroy,
     autosave: true
+  has_many :document_citation_reassignments,
+    inverse_of: :input,
+    class_name: 'NomenclatureChange::DocumentCitationReassignment',
+    foreign_key: :nomenclature_change_input_id,
+    dependent: :destroy,
+    autosave: true
   validates :nomenclature_change, :presence => true
   validates :taxon_concept, :presence => true
   accepts_nested_attributes_for :parent_reassignments, :allow_destroy => true
@@ -131,5 +137,9 @@ class NomenclatureChange::Input < ActiveRecord::Base
 
   def legislation_reassignment_class
     NomenclatureChange::LegislationReassignment
+  end
+
+  def document_citation_reassignment_class
+    NomenclatureChange::DocumentCitationReassignment
   end
 end

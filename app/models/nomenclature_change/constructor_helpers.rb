@@ -138,6 +138,50 @@ module NomenclatureChange::ConstructorHelpers
       ) || nil
   end
 
+  def _build_document_reassignments(input, outputs)
+    document_citation_taxon_concepts = input.taxon_concept.
+      document_citation_taxon_concepts
+    input.document_citation_reassignments =
+      document_citation_taxon_concepts.map do |dctc|
+        _build_document_reassignment(dctc, input, outputs)
+      end
+  end
+
+  def _build_document_reassignment(document_citation_taxon_concept, input, outputs)
+    reassignment = input.document_citation_reassignment_class.new(
+      reassignable_type: 'DocumentCitation'
+    )
+    if input.is_a?(NomenclatureChange::Input)
+      outputs.map do |output|
+        geo_entities = []
+        original_geo_entity_ids = input.taxon_concept.distributions.map(&:geo_entity_id)
+        input.distribution_reassignments.each do |dr|
+          if dr.reassignment_targets.where(nomenclature_change_output_id: output.id).present?
+            document_citation_geo_entity_ids = document_citation_taxon_concept.document_citation.
+              document_citation_geo_entities.map(&:geo_entity_id)
+            if geo_entities_matching?(document_citation_geo_entity_ids, original_geo_entity_ids, dr.reassignable)
+              geo_entities << DocumentCitationGeoEntity.new(geo_entity_id: dr.reassignable.geo_entity_id)
+            end
+          end
+        end
+        if geo_entities.present?
+          reassignment.reassignable = document_citation_taxon_concept.document_citation.dup
+          reassignment.reassignable.document_citation_geo_entities << geo_entities
+          reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
+        end
+      end
+    end
+    reassignment
+  end
+
+  def geo_entities_matching?(dc_geo_entity_ids, original_geo_entity_ids, distribution)
+    mixed_geo_entities = (dc_geo_entity_ids + original_geo_entity_ids)
+    #if there is a geo entity citation which doesn't appear in the distribution
+    extra_geo_entities = mixed_geo_entities.count == mixed_geo_entities.uniq.count
+    return dc_geo_entity_ids.include?(distribution.geo_entity_id) ||
+      dc_geo_entity_ids.empty? || extra_geo_entities
+  end
+
   def _build_reassignable_type_reassignment(reassignable_collection_name, input)
     reassignable_type = reassignable_collection_name.to_s.singularize.camelize
     input_class = input.reassignment_class
