@@ -10,6 +10,7 @@ class NomenclatureChange::ReassignmentSummarizer
       output_children_summary,
       output_names_summary,
       output_distribution_summary,
+      output_documents_summary,
       output_generic_summary(
         @input.taxon_concept.taxon_commons,
         'TaxonCommon', 'common names'
@@ -89,6 +90,21 @@ class NomenclatureChange::ReassignmentSummarizer
         ).count
       end
     "#{cnt} (of #{distributions_cnt}) distributions"
+  end
+
+  def output_documents_summary
+    document_citations_cnt = @input.taxon_concept.document_citation_taxon_concepts.count
+    return nil unless document_citations_cnt > 0
+    cnt =
+      if @input.is_a?(NomenclatureChange::Output)
+        document_citations_cnt
+      else
+        @input.document_citation_reassignments.includes(:reassignment_targets).
+          where(
+            'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
+        ).count
+      end
+    "#{cnt} (of #{document_citations_cnt}) document citations"
   end
 
   def output_legislation_summary(rel, reassignable_type, title)
