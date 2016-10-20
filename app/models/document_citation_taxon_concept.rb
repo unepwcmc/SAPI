@@ -16,6 +16,10 @@ class DocumentCitationTaxonConcept < ActiveRecord::Base
   attr_accessible :created_by_id, :document_citation_id, :taxon_concept_id, :updated_by_id
   belongs_to :taxon_concept
   belongs_to :document_citation, touch: true
+  validates :taxon_concept_id, uniqueness: {
+    scope: :document_citation_id,
+    message: 'taxon_concept citation already present'
+  }
 
   after_destroy do |dc_tc|
     dc_tc.document_citation.touch
