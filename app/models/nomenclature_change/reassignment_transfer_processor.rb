@@ -21,6 +21,11 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
       reassignable.parent_id = new_taxon_concept.id
       reassignable
     elsif reassignable.is_a?(DocumentCitation)
+      old_taxon_concept = @input.taxon_concept
+      reassignable.
+        document_citation_taxon_concepts.
+        find_by_taxon_concept_id(old_taxon_concept.id).
+        try(:destroy)
       reassignable.document_citation_taxon_concepts <<
         DocumentCitationTaxonConcept.new(taxon_concept_id: new_taxon_concept.id)
       reassignable
