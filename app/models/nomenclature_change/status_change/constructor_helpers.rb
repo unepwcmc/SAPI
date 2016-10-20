@@ -68,6 +68,12 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     end
   end
 
+  def build_documents_reassignments
+    input_output_for_reassignment do |input, output|
+      _build_document_reassignments(input, [output])
+    end
+  end
+
   def status_elevated_to_accepted_name(output_new, output_old, lng)
     output_new_html = taxon_concept_html(
       output_new.display_full_name,

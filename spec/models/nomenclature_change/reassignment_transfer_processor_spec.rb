@@ -35,6 +35,10 @@ describe NomenclatureChange::ReassignmentTransferProcessor do
         include_context 'reference_reassignments_processor_examples'
         specify { expect(input_species.taxon_concept_references).to be_empty }
       end
+      context "when document citations" do
+        include_context 'document_reassignments_processor_examples'
+        specify { expect(input_species.document_citation_taxon_concepts).to be_empty }
+      end
       context "when shipments" do
         include_context 'shipment_reassignments_processor_examples'
       end
@@ -65,6 +69,9 @@ describe NomenclatureChange::ReassignmentTransferProcessor do
       end
       context "when references" do
         include_context 'output_reference_reassignments_processor_examples'
+      end
+      context "when document citations" do
+        include_context 'output_document_reassignments_processor_examples'
       end
       context "when shipments" do
         include_context 'output_shipment_reassignments_processor_examples'
