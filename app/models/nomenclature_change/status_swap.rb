@@ -28,7 +28,9 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
   }
   validate :required_secondary_output, if: :secondary_output_or_submitting?
   validate :required_primary_output_name_status, if: :primary_output_or_submitting?
+  before_validation :set_primary_output_name_status, if: :primary_output_or_submitting?
   validate :required_secondary_output_name_status, if: :secondary_output_or_submitting?
+  before_validation :set_secondary_output_name_status, if: :secondary_output_or_submitting?
   before_save :build_input_for_auto_reassignments, if: :secondary_output?
   before_save :build_auto_reassignments, if: :notes?
 
@@ -54,6 +56,14 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
       return false
     end
     true
+  end
+
+  def set_primary_output_name_status
+    primary_output && primary_output.new_name_status = 'S'
+  end
+
+  def set_secondary_output_name_status
+    secondary_output && secondary_output.new_name_status = 'A'
   end
 
   def needs_to_receive_associations?
