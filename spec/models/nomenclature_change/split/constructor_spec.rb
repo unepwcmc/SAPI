@@ -146,9 +146,34 @@ describe NomenclatureChange::Split::Constructor do
     end
     describe :build_documents_reassignments do
       before(:each) do
+        constructor.build_distribution_reassignments
         constructor.build_document_reassignments
       end
       include_context 'document_reassignments_constructor_examples'
+
+      context "when geo_entity citations mismatch distribution" do
+        let(:input_species) {
+          s = create_cites_eu_species
+          dc = create(:document_citation)
+          create(:document_citation_taxon_concept,
+                 taxon_concept: s,
+                 document_citation: dc
+                )
+          ge1 = create(:document_citation_geo_entity, document_citation: dc)
+          ge2 = create(:document_citation_geo_entity, document_citation: dc)
+          d = create(:distribution, taxon_concept: s, geo_entity: ge1.geo_entity)
+
+          s
+        }
+        let(:default_output) { split.outputs_intersect_input.first }
+        specify {
+          split.input.distribution_reassignments.first.
+            update_attributes(output_ids: [split.outputs.first.id])
+          constructor.build_document_reassignments
+          expect(split.input.document_citation_reassignments.first.
+            output_ids).to match_array([split.outputs.first.id])
+        }
+      end
     end
     describe :build_legislation_reassignments do
       before(:each) do
