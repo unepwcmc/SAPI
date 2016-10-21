@@ -49,10 +49,12 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
       end
       if @input.taxon_concept_id != output.taxon_concept_id
         chain << NomenclatureChange::CascadingNotesProcessor.new(output)
+        chain << NomenclatureChange::CascadingCitationsProcessor.new(@input, [output])
       end
     end
     unless input_is_one_of_outputs
       chain << NomenclatureChange::CascadingNotesProcessor.new(@input)
+      chain << NomenclatureChange::CascadingCitationsProcessor.new(@input, @outputs)
     end
     unless input_is_one_of_outputs
       chain << NomenclatureChange::StatusDowngradeProcessor.new(@input, @outputs)
