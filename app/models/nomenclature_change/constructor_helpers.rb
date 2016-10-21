@@ -153,10 +153,9 @@ module NomenclatureChange::ConstructorHelpers
     )
     if input.is_a?(NomenclatureChange::Input)
       outputs.map do |output|
-        geo_entities = get_matching_geo_entities(taxon_concept_citation, input, output)
-        if geo_entities.present?
-          reassignment.reassignable = taxon_concept_citation.document_citation.dup
-          reassignment.reassignable.document_citation_geo_entities << geo_entities
+        citation = get_matching_citation(taxon_concept_citation, input, output)
+        if citation.present?
+          reassignment.reassignable = citation
           reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
         end
       end
@@ -164,28 +163,33 @@ module NomenclatureChange::ConstructorHelpers
     reassignment
   end
 
-  def get_matching_geo_entities(taxon_concept_citation, input, output)
-    geo_entities = []
+  def get_matching_citation(taxon_concept_citation, input, output)
     distribution_geo_entity_ids = input.taxon_concept.distributions.map(&:geo_entity_id)
-    document_citation_geo_entity_ids = taxon_concept_citation.document_citation.
-      document_citation_geo_entities.map(&:geo_entity_id)
+    document_citation_geo_entities = taxon_concept_citation.document_citation.
+      document_citation_geo_entities
+    citation = nil
     if input.distribution_reassignments.present?
+      geo_entities = []
       input.distribution_reassignments.each do |dr|
         if dr.reassignment_targets.where(nomenclature_change_output_id: output.id).present? &&
-          geo_entities_matching?(document_citation_geo_entity_ids, distribution_geo_entity_ids, dr.reassignable)
+          geo_entities_matching?(document_citation_geo_entities, distribution_geo_entity_ids, dr.reassignable)
           geo_entities << DocumentCitationGeoEntity.new(geo_entity_id: dr.reassignable.geo_entity_id)
         end
       end
-    else
-      document_citation_geo_entity_ids.each do |dcge|
-        geo_entities << DocumentCitationGeoEntity.new(geo_entity_id: dcge)
+      if geo_entities.present?
+        citation = taxon_concept_citation.document_citation.dup
+        citation.document_citation_geo_entities << geo_entities
       end
+    else
+      citation = taxon_concept_citation.document_citation.dup
+      citation.document_citation_geo_entities << document_citation_geo_entities
     end
-    geo_entities
+    citation
   end
 
-  def geo_entities_matching?(dc_geo_entity_ids, distribution_geo_entity_ids, distribution)
-    mixed_geo_entities = (dc_geo_entity_ids + distribution_geo_entity_ids)
+  def geo_entities_matching?(dc_geo_entities, distribution_geo_entities, distribution)
+    dc_geo_entity_ids = dc_geo_entities.map(&:geo_entity_id)
+    mixed_geo_entities = (dc_geo_entity_ids + distribution_geo_entities)
     #if there is a geo entity citation which doesn't appear in the distribution
     extra_geo_entities = mixed_geo_entities.count == mixed_geo_entities.uniq.count
     return dc_geo_entity_ids.include?(distribution.geo_entity_id) ||
