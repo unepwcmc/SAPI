@@ -248,6 +248,9 @@ describe NomenclatureChange::Split::Processor do
       )
     end
     let!(:quota) { create(:quota, taxon_concept: input_genus_child, geo_entity: create(:geo_entity)) }
+    let!(:document_citation_taxon_concept_input_genus_child) {
+      create(:document_citation_taxon_concept, taxon_concept: input_genus_child)
+    }
     let(:output_genus) do
       create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Paracrotalus')
@@ -306,6 +309,9 @@ describe NomenclatureChange::Split::Processor do
     specify "input genus child's accepted name has 1 quota" do
       output_genus_child = output_genus.children.first
       expect(output_genus_child.quotas.size).to eq(1)
+    end
+    specify "input genus child's document citations retained" do
+      expect(input_genus_child.document_citation_taxon_concepts.count).to eq(1)
     end
   end
   describe :summary do
