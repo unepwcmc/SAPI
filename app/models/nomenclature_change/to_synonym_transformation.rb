@@ -12,6 +12,9 @@ class NomenclatureChange::ToSynonymTransformation
     relink_relationships(
       @accepted_taxon_concept.trade_name_relationships, @new_accepted_name
     )
+    relink_document_citations(
+      @new_accepted_name.document_citation_taxon_concepts, @accepted_taxon_concept
+    )
     @accepted_taxon_concept.update_attribute(:name_status, 'S')
     # turn current name into synonym of new name
     rel_type = TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_SYNONYM)
@@ -25,6 +28,14 @@ class NomenclatureChange::ToSynonymTransformation
     relationships.includes(:taxon_concept, :taxon_relationship_type).each do |rel|
       Rails.logger.debug "Relinking #{rel.taxon_relationship_type.name} relationship from #{rel.taxon_concept.full_name} to #{new_taxon_concept.full_name}"
       rel.update_attributes(taxon_concept_id: new_taxon_concept.id)
+    end
+  end
+
+  def relink_document_citations(document_citations, new_taxon_concept)
+    document_citations.each do |dc|
+      Rails.logger.debug "Relinking #{dc.id} document citation taxon concept from #{dc.taxon_concept.full_name} to #{new_taxon_concept.full_name}"
+      new_taxon_concept.document_citation_taxon_concepts <<
+        DocumentCitationTaxonConcept.new(document_citation_id: dc.document_citation_id, taxon_concept_id: new_taxon_concept.id)
     end
   end
 
