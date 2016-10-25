@@ -303,6 +303,10 @@ describe NomenclatureChange::Split::Processor do
       expect(output_genus_child_child).not_to be_nil
       expect(output_genus_child_child.full_name).to eq('Paracrotalus durissus unicolor')
     end
+    specify "output genus child should have input genus citations" do
+      output_genus_child = output_genus.children.first
+      expect(output_genus_child.document_citation_taxon_concepts.count).to eq(1)
+    end
     specify "input genus child has no quotas" do
       expect(input_genus_child.quotas).to be_empty
     end
