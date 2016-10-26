@@ -215,3 +215,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchCon
   hasNomenclatureNote: ( ->
     if @get('nomenclatureNoteEn') == null || @get('nomenclatureNoteEn').length <= 0 then no else yes
   ).property('nomenclatureNoteEn')
+
+  nomenclatureChangesHappened: ( ->
+    @get('nomenclatureNotification')
+  ).property('nomenclatureNotification')
