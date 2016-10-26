@@ -55,8 +55,13 @@ class NomenclatureChange::CascadingCitationsProcessor
   def cascade_document_citations(tc, input)
     document_citations = input.document_citation_reassignments.map(&:reassignable)
     document_citations.each do |dc|
-      dc.document_citation_taxon_concepts <<
-        DocumentCitationTaxonConcept.new(document_citation_id: dc.id, taxon_concept_id: tc.id)
+      duplicate = dc.duplicates({
+        taxon_concept_id: tc.id
+      }).first
+      unless duplicate.present?
+        dc.document_citation_taxon_concepts <<
+          DocumentCitationTaxonConcept.new(document_citation_id: dc.id, taxon_concept_id: tc.id)
+      end
     end
   end
 

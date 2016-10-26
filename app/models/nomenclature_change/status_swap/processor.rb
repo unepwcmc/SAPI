@@ -11,6 +11,9 @@ class NomenclatureChange::StatusSwap::Processor < NomenclatureChange::Processor
     chain << NomenclatureChange::OutputTaxonConceptProcessor.new(@secondary_output)
 
     chain << reassignment_processor(@secondary_output)
+    if @primary_output.new_name_status == 'S'
+      chain << NomenclatureChange::CascadingCitationsProcessor.new(@input, [@secondary_output])
+    end
 
     chain <<
       if @primary_output.new_name_status == 'A'

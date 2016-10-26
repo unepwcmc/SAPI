@@ -39,7 +39,10 @@ class NomenclatureChange::FullReassignment
     @old_taxon_concept.taxon_commons.update_all(update_attrs)
     # document citations
     Rails.logger.debug "FULL REASSIGNMENT Document Citations (#{@old_taxon_concept.document_citation_taxon_concepts.count})"
-    @old_taxon_concept.document_citation_taxon_concepts.update_all(update_attrs)
+    # need validations to be applied to avoid duplicates exception
+    @old_taxon_concept.document_citation_taxon_concepts.each do |dctc|
+      dctc.update_attributes(update_attrs)
+    end
     # shipments
     Rails.logger.debug "FULL REASSIGNMENT Shipments"
     Trade::Shipment.update_all(
