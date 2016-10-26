@@ -24,8 +24,13 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
       reassignable.taxon_concept_id = new_taxon_concept.id
       reassignable
     elsif reassignable.is_a?(DocumentCitation)
-      reassignable.document_citation_taxon_concepts <<
-        DocumentCitationTaxonConcept.new(taxon_concept_id: new_taxon_concept.id)
+      duplicate = reassignable.duplicates({
+        taxon_concept_id: new_taxon_concept.id
+      }).first
+      unless duplicate.present?
+        reassignable.document_citation_taxon_concepts <<
+          DocumentCitationTaxonConcept.new(taxon_concept_id: new_taxon_concept.id)
+      end
       reassignable
     else
       # Each reassignable object implements find_duplicate,
