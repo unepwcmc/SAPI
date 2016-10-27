@@ -1,3 +1,12 @@
+{{#if nomenclatureChangesHappened}}
+  <div id="nomenclature_banner" class="banner">
+    <p>
+      <i class="fa fa-info-circle"></i>
+      New nomenclature changes post COP17
+    </p>
+  </div>
+{{/if}}
+
 <ul class="tabset top-level">
   <li {{bind-attr class="isSearchContextSpecies:active"}}>
     {{#linkTo 'index'}}Search for Species{{/linkTo}}

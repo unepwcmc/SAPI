@@ -29,6 +29,7 @@ Species.TaxonConcept = DS.Model.extend
   nomenclatureNoteEn: DS.attr("string")
   nomenclatureNoteFr: DS.attr("string")
   nomenclatureNoteEs: DS.attr("string")
+  nomenclatureNotification: DS.attr("boolean")
 
   matchingNamesForDisplay: ( ->
     if @get('matchingNames') != undefined && @get('matchingNames').length > 0
