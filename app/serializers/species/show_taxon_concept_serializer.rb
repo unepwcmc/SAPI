@@ -121,10 +121,11 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def nomenclature_notification
-    outputs = NomenclatureChange::Output.where(taxon_concept_id: object.id)
-    return false unless outputs
+    outputs = NomenclatureChange::Output.where(
+      "(taxon_concept_id = ? OR new_taxon_concept_id = ?) AND created_at > ?",
+      object.id, object.id, 6.months.ago
+    )
 
-    outputs.where("created_at < #{6.months.ago}")
-    return outputs.present?
+    outputs.present?
   end
 end
