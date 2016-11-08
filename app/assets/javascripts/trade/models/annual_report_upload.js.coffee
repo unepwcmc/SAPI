@@ -8,6 +8,8 @@ Trade.AnnualReportUpload = DS.Model.extend
   updatedAt: DS.attr('string')
   createdBy: DS.attr('string')
   updatedBy: DS.attr('string')
+  submittedAt: DS.attr('string')
+  submittedById: DS.attr('string')
   sandboxShipments: DS.hasMany('Trade.SandboxShipment')
   validationErrors: DS.hasMany('Trade.ValidationError')
   ignoredValidationErrors: DS.hasMany('Trade.ValidationError', {key: 'ignored_validation_errors'})
