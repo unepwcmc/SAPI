@@ -3,9 +3,13 @@ class Trade::AnnualReportUploadsController < TradeController
 
   def index
     @annual_report_uploads = Trade::AnnualReportUpload.scoped
-    if params[:is_done]
+    if params[:submitted_by_id]
       @annual_report_uploads = @annual_report_uploads.where(
-        :is_done => (params[:is_done] == 1)
+        submitted_by_id: params[:submitted_by_id].presence
+      )
+    elsif params[:submitted_at]
+      @annual_report_uploads = @annual_report_uploads.where(
+        submitted_at: params[:submitted_at].presence
       )
     end
     render :json => @annual_report_uploads,
@@ -37,7 +41,7 @@ class Trade::AnnualReportUploadsController < TradeController
 
   def destroy
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
-    unless @annual_report_upload.is_done
+    unless @annual_report_upload.submitted_at.present?
       @annual_report_upload.destroy
       render :json => nil, :status => :ok
     else
