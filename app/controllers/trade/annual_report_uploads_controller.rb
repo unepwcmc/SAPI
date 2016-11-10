@@ -3,13 +3,14 @@ class Trade::AnnualReportUploadsController < TradeController
 
   def index
     @annual_report_uploads = Trade::AnnualReportUpload.scoped
-    if params[:submitted_by_id]
+    if params[:is_done].present?
+      null_cond = if params[:submitted] == 1
+        'submitted_at IS NOT NULL'
+      else
+        'submitted_at IS NULL'
+      end
       @annual_report_uploads = @annual_report_uploads.where(
-        submitted_by_id: params[:submitted_by_id].presence
-      )
-    elsif params[:submitted_at]
-      @annual_report_uploads = @annual_report_uploads.where(
-        submitted_at: params[:submitted_at].presence
+        null_cond
       )
     end
     render :json => @annual_report_uploads,

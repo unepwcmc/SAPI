@@ -37,7 +37,7 @@ describe Trade::AnnualReportUploadsController do
       response.body.should have_json_size(2).at_path('annual_report_uploads')
     end
     it "should return annual report uploads in progress" do
-      get :index, submitted_at: "", format: :json
+      get :index, is_done: 0, format: :json
       response.body.should have_json_size(1).at_path('annual_report_uploads')
     end
   end
