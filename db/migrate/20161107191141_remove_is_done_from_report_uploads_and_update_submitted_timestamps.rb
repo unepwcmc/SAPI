@@ -19,7 +19,7 @@ class RemoveIsDoneFromReportUploadsAndUpdateSubmittedTimestamps < ActiveRecord::
       <<-SQL
         UPDATE trade_annual_report_uploads
         SET is_done = true
-        WHERE submitted_by_id IS NOT NULL
+        WHERE submitted_at IS NOT NULL
       SQL
     )
   end
