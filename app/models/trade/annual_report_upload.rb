@@ -7,13 +7,14 @@
 #  updated_by         :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  is_done            :boolean          default(FALSE)
 #  number_of_rows     :integer
 #  csv_source_file    :text
 #  trading_country_id :integer          not null
 #  point_of_view      :string(255)      default("E"), not null
 #  created_by_id      :integer
 #  updated_by_id      :integer
+#  submitted_by_id    :integer
+#  submitted_at       :datetime
 #
 
 require 'csv_column_headers_validator'
@@ -33,17 +34,17 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   # object that represents the particular sandbox table linked to this annual
   # report upload
   def sandbox
-    return nil if is_done
+    return nil if submitted_at.present?
     @sandbox ||= Trade::Sandbox.new(self)
   end
 
   def sandbox_shipments
-    return [] if is_done
+    return [] if submitted_at.present?
     sandbox.shipments
   end
 
   def validation_errors
-    return [] if is_done
+    return [] if submitted_at.present?
     run_primary_validations
     if (@validation_errors.count == 0)
       run_secondary_validations
@@ -88,7 +89,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     DownloadsCacheCleanupWorker.perform_async(:shipments)
 
     # flag as submitted
-    update_attribute(:is_done, true)
+    update_attribute(:submitted_at, DateTime.now)
   end
 
   private
