@@ -29,7 +29,6 @@ class NomenclatureChange::Lump::Processor < NomenclatureChange::Processor
     end
     inputs_that_are_not_output.each do |input|
       chain << NomenclatureChange::ReassignmentTransferProcessor.new(input, @output)
-      chain << NomenclatureChange::CascadingCitationsProcessor.new(input, [@output])
       chain << NomenclatureChange::StatusDowngradeProcessor.new(input, [@output])
     end
     chain
