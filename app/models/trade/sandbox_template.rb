@@ -23,6 +23,7 @@
 class Trade::SandboxTemplate < ActiveRecord::Base
 
   self.table_name = :trade_sandbox_template
+  has_paper_trail
 
   COLUMNS_IN_CSV_ORDER = [
     "appendix", "species_name", "term_code", "quantity", "unit_code",
