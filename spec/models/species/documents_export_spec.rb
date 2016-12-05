@@ -31,7 +31,8 @@ describe Species::DocumentsExport do
     end
     context "when results" do
       before(:each) {
-        ActiveRecord::Relation.any_instance.stub(:any?).and_return(true)
+        create(:document)
+        DocumentSearch.refresh_citations_and_documents
       }
       subject {
         Species::DocumentsExport.new({})
