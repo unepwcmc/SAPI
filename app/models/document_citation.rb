@@ -37,7 +37,9 @@ class DocumentCitation < ActiveRecord::Base
   def duplicates(comparison_attributes_override = {})
     taxon_concept_id = comparison_attributes_override.delete(:taxon_concept_id)
 
-    relation = DocumentCitation.where(document_id: self.document_id).
+    relation = DocumentCitation.
+      select('document_citations.*').
+      where(document_id: self.document_id).
       includes(:document_citation_taxon_concepts).
       where('document_citation_taxon_concepts.taxon_concept_id' => taxon_concept_id)
     geo_entities_ids = document_citation_geo_entities.pluck(:geo_entity_id)
