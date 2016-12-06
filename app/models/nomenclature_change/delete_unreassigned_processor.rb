@@ -33,6 +33,10 @@ class NomenclatureChange::DeleteUnreassignedProcessor
       citation = tc_citation.document_citation
       unless citations.map { |c| c.id }.include?(citation.id)
         tc_citation.destroy
+        # if no other taxa were attached to this citation, get rid of it
+        unless citation.document_citation_taxon_concepts.any?
+          citation.destroy
+        end
       end
     end
   end
