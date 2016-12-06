@@ -180,14 +180,13 @@
           :'data-name-status-filter' => ['A', 'N'].to_json,
           :'data-init-selection' => ff.object.taxon_concepts.map{ |tc| {id: tc.id, text: tc.full_name} }.to_json,
         } %>
-
         <%= f.label :geo_entity_ids %>
         <%= ff.select :geo_entity_ids,
           options_from_collection_for_select(
             @geo_entities,
             :id,
             :name_en,
-            ff.object.geo_entities.map(&:id)
+            ff.object.geo_entities.pluck(:id)
           ), { },
           { :multiple => true, :class => 'citation-geo-entity', :style => 'width: 220px' }
         %>
