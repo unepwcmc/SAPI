@@ -154,6 +154,7 @@ describe NomenclatureChange::Lump::Constructor do
     end
     describe :build_document_reassignments do
       before(:each) do
+        constructor.build_distribution_reassignments
         constructor.build_document_reassignments
       end
       include_context 'document_reassignments_constructor_examples'

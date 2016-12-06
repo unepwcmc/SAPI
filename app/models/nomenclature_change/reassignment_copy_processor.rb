@@ -24,14 +24,31 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
       reassignable.taxon_concept_id = new_taxon_concept.id
       reassignable
     elsif reassignable.is_a?(DocumentCitation)
-      duplicate = reassignable.duplicates({
+      copied_object = reassignable.duplicates({
         taxon_concept_id: new_taxon_concept.id
       }).first
-      unless duplicate.present?
-        reassignable.document_citation_taxon_concepts <<
+      unless copied_object
+        copied_object = reassignable.dup
+        copied_object.document_citation_taxon_concepts <<
           DocumentCitationTaxonConcept.new(taxon_concept_id: new_taxon_concept.id)
       end
-      reassignable
+
+      dc_geo_entities = reassignable.document_citation_geo_entities
+      dc_ge_ids = dc_geo_entities.map(&:geo_entity_id)
+      tc_distributions = @input.taxon_concept.distributions
+      input_tc_ge_ids = tc_distributions.map(&:geo_entity_id)
+      # ensure this happens after distribution reassigned
+      reassigned_distributions = new_taxon_concept.distributions
+      output_tc_ge_ids = reassigned_distributions.map(&:geo_entity_id)
+      dc_ge_ids_to_reassign = (dc_ge_ids & output_tc_ge_ids) +
+        (dc_ge_ids - input_tc_ge_ids) -
+        copied_object.document_citation_geo_entities.pluck(:geo_entity_id)
+
+      dc_ge_ids_to_reassign.uniq.each do |ge_id|
+        copied_object.document_citation_geo_entities <<
+          DocumentCitationGeoEntity.new(geo_entity_id: ge_id)
+      end
+      copied_object
     else
       # Each reassignable object implements find_duplicate,
       # which is called from here to make sure we're not adding a duplicate.

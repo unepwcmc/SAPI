@@ -152,26 +152,46 @@ describe NomenclatureChange::Split::Constructor do
       include_context 'document_reassignments_constructor_examples'
 
       context "when geo_entity citations mismatch distribution" do
+        let(:geo_entity){ create(:geo_entity) }
         let(:input_species) {
           s = create_cites_eu_species
           dc = create(:document_citation)
-          create(:document_citation_taxon_concept,
-                 taxon_concept: s,
-                 document_citation: dc
-                )
-          ge1 = create(:document_citation_geo_entity, document_citation: dc)
-          ge2 = create(:document_citation_geo_entity, document_citation: dc)
-          d = create(:distribution, taxon_concept: s, geo_entity: ge1.geo_entity)
-
+          create(
+            :document_citation_taxon_concept,
+            taxon_concept: s,
+            document_citation: dc
+          )
+          create(
+            :document_citation_geo_entity,
+            geo_entity: geo_entity,
+            document_citation: dc
+          )
+          create(
+            :distribution,
+            taxon_concept: s,
+            geo_entity: geo_entity
+          )
           s
         }
-        let(:default_output) { split.outputs_intersect_input.first }
+        let(:default_output) { split.outputs.first }
+        let(:non_default_output){ split.outputs.where('id != ?', default_output.id).first }
+
         specify {
-          split.input.distribution_reassignments.first.
-            update_attributes(output_ids: [split.outputs.first.id])
+
+          distribution_reassignment = split.input.distribution_reassignments.first
+          reassignment_targets = distribution_reassignment.reassignment_targets
+          non_default_target = reassignment_targets.where(
+            nomenclature_change_output_id: non_default_output.id
+          ).first
+          non_default_target.destroy
+          distribution_reassignment.reassignment_targets.reload
+
+
+          # split.input.distribution_reassignments.first.
+          #   update_attributes(output_ids: [split.outputs.first.id])
           constructor.build_document_reassignments
           expect(split.input.document_citation_reassignments.first.
-            output_ids).to match_array([split.outputs.first.id])
+            output_ids).not_to include(non_default_output.id)
         }
       end
     end
