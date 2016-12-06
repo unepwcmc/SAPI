@@ -25,9 +25,6 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
         @document.proposal_details ||= Document::ProposalDetails.new
       end
       @document.citations.build
-      @geo_entities = GeoEntity.joins(:geo_entity_type).where(
-        'geo_entity_types.name' => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
-      )
       format.html { render 'new' }
     end
   end
@@ -100,7 +97,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
      order(:name_en)
     @english = Language.find_by_iso_code1('EN')
     @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
-    @geo_entities = GeoEntity.select(['geo_entities.id', :name_en]).
+    @geo_entities = GeoEntity.select(['geo_entities.id AS id', :name_en]).
       joins(:geo_entity_type).where(
         :"geo_entity_types.name" => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]
       ).order(:name_en)

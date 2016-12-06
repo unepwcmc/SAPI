@@ -100,8 +100,25 @@ shared_context 'split_definitions' do
     )
   }
   let(:split_with_input_with_reassignments) {
-    3.times { create(:distribution, taxon_concept: input_species) }
-    distribution = create(:distribution, taxon_concept: input_species)
+    2.times { create(:distribution, taxon_concept: input_species) }
+    unreassigned_distribution = create(:distribution, taxon_concept: input_species)
+    reassigned_distribution = create(:distribution, taxon_concept: input_species)
+
+    unreassigned_citation = create(:document_citation)
+    unreassigned_citation.document_citation_taxon_concepts << create(
+      :document_citation_taxon_concept, taxon_concept: input_species
+    )
+    unreassigned_citation.document_citation_geo_entities << create(
+      :document_citation_geo_entity, geo_entity: unreassigned_distribution.geo_entity
+    )
+
+    reassigned_citation = create(:document_citation)
+    reassigned_citation.document_citation_taxon_concepts << create(
+      :document_citation_taxon_concept, taxon_concept: input_species
+    )
+    reassigned_citation.document_citation_geo_entities << create(
+      :document_citation_geo_entity, geo_entity: reassigned_distribution.geo_entity
+    )
 
     2.times { create(:taxon_relationship,
       taxon_concept: input_species,
@@ -129,7 +146,11 @@ shared_context 'split_definitions' do
     )
     distribution_reassignment = create(:nomenclature_change_distribution_reassignment,
       input: nc.input,
-      reassignable: distribution
+      reassignable: reassigned_distribution
+    )
+    citation_reassignment = create(:nomenclature_change_document_citation_reassignment,
+      input: nc.input,
+      reassignable: reassigned_citation
     )
     name_reassignment1 = create(:nomenclature_change_name_reassignment,
       input: nc.input,
@@ -142,6 +163,10 @@ shared_context 'split_definitions' do
 
     create(:nomenclature_change_reassignment_target,
       reassignment: distribution_reassignment,
+      output: nc.outputs.last
+    )
+    create(:nomenclature_change_reassignment_target,
+      reassignment: citation_reassignment,
       output: nc.outputs.last
     )
     create(:nomenclature_change_reassignment_target,
