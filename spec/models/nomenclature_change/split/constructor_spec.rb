@@ -144,6 +144,57 @@ describe NomenclatureChange::Split::Constructor do
       end
       include_context 'distribution_reassignments_constructor_examples'
     end
+    describe :build_documents_reassignments do
+      before(:each) do
+        constructor.build_distribution_reassignments
+        constructor.build_document_reassignments
+      end
+      include_context 'document_reassignments_constructor_examples'
+
+      context "when geo_entity citations mismatch distribution" do
+        let(:geo_entity){ create(:geo_entity) }
+        let(:input_species) {
+          s = create_cites_eu_species
+          dc = create(:document_citation)
+          create(
+            :document_citation_taxon_concept,
+            taxon_concept: s,
+            document_citation: dc
+          )
+          create(
+            :document_citation_geo_entity,
+            geo_entity: geo_entity,
+            document_citation: dc
+          )
+          create(
+            :distribution,
+            taxon_concept: s,
+            geo_entity: geo_entity
+          )
+          s
+        }
+        let(:default_output) { split.outputs.first }
+        let(:non_default_output){ split.outputs.where('id != ?', default_output.id).first }
+
+        specify {
+
+          distribution_reassignment = split.input.distribution_reassignments.first
+          reassignment_targets = distribution_reassignment.reassignment_targets
+          non_default_target = reassignment_targets.where(
+            nomenclature_change_output_id: non_default_output.id
+          ).first
+          non_default_target.destroy
+          distribution_reassignment.reassignment_targets.reload
+
+
+          # split.input.distribution_reassignments.first.
+          #   update_attributes(output_ids: [split.outputs.first.id])
+          constructor.build_document_reassignments
+          expect(split.input.document_citation_reassignments.first.
+            output_ids).not_to include(non_default_output.id)
+        }
+      end
+    end
     describe :build_legislation_reassignments do
       before(:each) do
         @old_reassignments = input.legislation_reassignments

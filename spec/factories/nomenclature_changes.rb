@@ -54,6 +54,9 @@ FactoryGirl.define do
     factory :nomenclature_change_legislation_reassignment do
       type 'NomenclatureChange::LegislationReassignment'
     end
+    factory :nomenclature_change_document_citation_reassignment do
+      type 'NomenclatureChange::DocumentCitationReassignment'
+    end
   end
 
   factory :nomenclature_change_output_reassignment, class: NomenclatureChange::OutputReassignment,

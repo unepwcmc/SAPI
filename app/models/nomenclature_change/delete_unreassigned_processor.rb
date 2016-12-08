@@ -6,6 +6,7 @@ class NomenclatureChange::DeleteUnreassignedProcessor
 
   def run
     process_unreassigned_distributions
+    process_unreassigned_taxon_concept_citations
     process_unreassigned_names
   end
 
@@ -17,6 +18,25 @@ class NomenclatureChange::DeleteUnreassignedProcessor
     @input.taxon_concept.distributions.each do |distribution|
       unless distributions.map { |dr| dr.id }.include?(distribution.id)
         distribution.destroy
+      end
+    end
+  end
+
+  # ACHTUNG! the reassigned object is a citation, but the destroyed object
+  # is a taxon concept citation!
+  def process_unreassigned_taxon_concept_citations
+    citations = @input.document_citation_reassignments.map { |c|
+      c.reassignable if _is_input_reassignment(c)
+    }.compact
+
+    @input.taxon_concept.document_citation_taxon_concepts.each do |tc_citation|
+      citation = tc_citation.document_citation
+      unless citations.map { |c| c.id }.include?(citation.id)
+        tc_citation.destroy
+        # if no other taxa were attached to this citation, get rid of it
+        unless citation.document_citation_taxon_concepts.any?
+          citation.destroy
+        end
       end
     end
   end

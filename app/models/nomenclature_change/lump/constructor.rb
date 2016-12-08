@@ -39,6 +39,12 @@ class NomenclatureChange::Lump::Constructor
     end
   end
 
+  def build_document_reassignments
+    @nomenclature_change.inputs.each do |input|
+      _build_document_reassignments(input, [@nomenclature_change.output])
+    end
+  end
+
   def build_common_names_reassignments
     @nomenclature_change.inputs.each do |input|
       _build_common_names_reassignments(input, [@nomenclature_change.output])

@@ -4,7 +4,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   attributes :id, :parent_id, :full_name, :author_year, :standard_references,
     :common_names, :distributions, :subspecies, :distribution_references,
     :taxonomy, :kingdom_name, :phylum_name, :order_name, :class_name, :family_name,
-    :genus_name, :species_name, :rank_name, :name_status, :nomenclature_note_en
+    :genus_name, :species_name, :rank_name, :name_status, :nomenclature_note_en, :nomenclature_notification
 
   has_many :synonyms, :serializer => Species::SynonymSerializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
@@ -118,5 +118,17 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     ]
     Rails.logger.debug "CACHE KEY: #{key.inspect}"
     key
+  end
+
+  def nomenclature_notification
+    outputs = NomenclatureChange::Output.includes("nomenclature_change").where(
+      "
+        (taxon_concept_id = ? OR new_taxon_concept_id = ?) AND
+        nomenclature_changes.created_at > ? AND nomenclature_changes.status = 'submitted'
+      ",
+      object.id, object.id, 6.months.ago
+    )
+
+    outputs.present?
   end
 end

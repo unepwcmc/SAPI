@@ -138,6 +138,50 @@ module NomenclatureChange::ConstructorHelpers
       ) || nil
   end
 
+  def _build_document_reassignments(input, outputs)
+    taxon_concept_citations = input.taxon_concept.
+      document_citation_taxon_concepts
+    input.document_citation_reassignments =
+      taxon_concept_citations.map do |dctc|
+        _build_document_reassignment(dctc.document_citation, input, outputs)
+      end
+  end
+
+  def _build_document_reassignment(document_citation, input, outputs)
+    reassignment = input.document_citation_reassignment_class.new(
+      reassignable_type: 'DocumentCitation',
+      reassignable_id: document_citation.id
+    )
+    if input.is_a?(NomenclatureChange::Input)
+      dc_geo_entities = document_citation.document_citation_geo_entities
+      dc_ge_ids = dc_geo_entities.map(&:geo_entity_id)
+      tc_distributions = input.taxon_concept.distributions
+      input_tc_ge_ids = tc_distributions.map(&:geo_entity_id)
+      distribution_reassignments = input.distribution_reassignments
+      outputs.each do |output|
+        reassigned_distributions = distribution_reassignments.select do |dr|
+          dr.reassignment_targets.
+          where(nomenclature_change_output_id: output.id).
+          any?
+        end.map(&:reassignable)
+        output_tc_ge_ids = reassigned_distributions.map(&:geo_entity_id)
+        dc_ge_ids_to_reassign = (dc_ge_ids & output_tc_ge_ids) + (dc_ge_ids - input_tc_ge_ids)
+        # reassign if:
+        # - input taxon concept has no distribution
+        # - citation has no geo entity tags
+        # - citation has geo entity tags outside of input taxon concept distribution
+        # - distribution reassigned to this output overlaps with geo entity tags
+        # citations not copied or modified here
+        if !dc_ge_ids_to_reassign.empty? ||
+          tc_distributions.empty? ||
+          dc_geo_entities.empty?
+          reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
+        end
+      end
+    end
+    reassignment
+  end
+
   def _build_reassignable_type_reassignment(reassignable_collection_name, input)
     reassignable_type = reassignable_collection_name.to_s.singularize.camelize
     input_class = input.reassignment_class

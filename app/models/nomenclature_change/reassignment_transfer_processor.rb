@@ -20,6 +20,20 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
       reassignment.kind_of?(NomenclatureChange::OutputParentReassignment)
       reassignable.parent_id = new_taxon_concept.id
       reassignable
+    elsif reassignable.is_a?(DocumentCitation)
+      duplicate = reassignable.duplicates({
+        taxon_concept_id: new_taxon_concept.id
+      }).first
+      unless duplicate.present?
+        old_taxon_concept = @input.taxon_concept
+        reassignable.
+          document_citation_taxon_concepts.
+          find_by_taxon_concept_id(old_taxon_concept.id).
+          try(:destroy)
+        reassignable.document_citation_taxon_concepts <<
+          DocumentCitationTaxonConcept.new(taxon_concept_id: new_taxon_concept.id)
+      end
+      reassignable
     else
       # Each reassignable object implements find_duplicate,
       # which is called from here to make sure we're not adding a duplicate.

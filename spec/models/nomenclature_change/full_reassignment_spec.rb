@@ -73,6 +73,21 @@ describe NomenclatureChange::FullReassignment do
       specify { expect(new_tc.taxon_commons.count).to eq(1) }
     end
 
+    context 'when document citations present' do
+      before(:each) do
+        create(
+          :document_citation_taxon_concept,
+          taxon_concept: old_tc,
+          document_citation: create(
+            :document_citation,
+            document: create(:document)
+          )
+        )
+        subject.process
+      end
+      specify { expect(new_tc.document_citation_taxon_concepts.count).to eq(1) }
+    end
+
   end
 
 end

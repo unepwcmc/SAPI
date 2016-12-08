@@ -152,6 +152,13 @@ describe NomenclatureChange::Lump::Constructor do
       end
       include_context 'distribution_reassignments_constructor_examples'
     end
+    describe :build_document_reassignments do
+      before(:each) do
+        constructor.build_distribution_reassignments
+        constructor.build_document_reassignments
+      end
+      include_context 'document_reassignments_constructor_examples'
+    end
     describe :build_legislation_reassignments do
       before(:each) do
         @old_reassignments = input.legislation_reassignments
