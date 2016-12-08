@@ -1,3 +1,9 @@
+### 1.1.0
+
+**Species+ Admin:**
+
+* nomenclature changes process for E-Library documents
+
 ### 1.0.0
 
 **Species+ Admin:**
