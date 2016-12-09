@@ -14,27 +14,7 @@ CREATE OR REPLACE FUNCTION ancestor_node_ids_for_node(node_id integer) RETURNS I
     SELECT ARRAY(SELECT id FROM ancestors);
   $$;
 
-CREATE OR REPLACE FUNCTION full_name(rank_name VARCHAR(255), ancestors HSTORE) RETURNS VARCHAR(255)
-  LANGUAGE sql IMMUTABLE
-  AS $$
-    SELECT CASE
-      WHEN $1 = 'SPECIES' THEN
-        -- now create a binomen for full name
-        CAST($2 -> 'genus_name' AS VARCHAR) || ' ' ||
-        LOWER(CAST($2 -> 'species_name' AS VARCHAR))
-      WHEN $1 = 'SUBSPECIES' THEN
-        -- now create a trinomen for full name
-        CAST($2 -> 'genus_name' AS VARCHAR) || ' ' ||
-        LOWER(CAST($2 -> 'species_name' AS VARCHAR)) || ' ' ||
-        LOWER(CAST($2 -> 'subspecies_name' AS VARCHAR))
-      WHEN $1 = 'VARIETY' THEN
-        -- now create a trinomen for full name
-        CAST($2 -> 'genus_name' AS VARCHAR) || ' ' ||
-        LOWER(CAST($2 -> 'species_name' AS VARCHAR)) || ' var. ' ||
-        LOWER(CAST($2 -> 'variety_name' AS VARCHAR))      
-      ELSE $2 -> LOWER($1 || '_name')
-    END;
-  $$;
+DROP FUNCTION IF EXISTS full_name(rank_name VARCHAR(255), ancestors HSTORE);
 
 CREATE OR REPLACE FUNCTION ancestors_names(node_id INTEGER) RETURNS HSTORE
   LANGUAGE sql
@@ -281,7 +261,6 @@ CREATE OR REPLACE FUNCTION rebuild_taxonomy_for_node(node_id integer) RETURNS vo
     )
     UPDATE taxon_concepts
     SET
-    full_name = full_name(rank_name, ancestors_names),
     data = COALESCE(data, ''::HSTORE) || ancestors_names
     FROM q
     WHERE taxon_concepts.id = q.id;
