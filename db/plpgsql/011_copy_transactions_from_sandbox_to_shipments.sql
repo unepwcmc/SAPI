@@ -187,7 +187,13 @@ BEGIN
         current_timestamp,
         current_timestamp,
         ' || COALESCE(aru.created_by_id, aru.epix_created_by_id) || ',
-        ' || COALESCE(aru.updated_by_id, aru.epix_updated_by_id) || '
+        '
+        ||
+        CASE WHEN COALESCE(aru.updated_at, aru.epix_updated_at) > COALESCE(aru.epix_updated_at, to_timestamp(0))
+             THEN COALESCE(aru.updated_by_id, aru.epix_updated_by_id)
+             ELSE COALESCE(aru.epix_updated_by_id, aru.updated_by_id)
+        END
+        || '
       FROM '|| table_name || ' sandbox_table';
 
     IF reported_by_exporter THEN
