@@ -174,20 +174,20 @@ BEGIN
         purposes.id AS purpose_id,
         terms.id AS term_id,
         sandbox_table.quantity::NUMERIC AS quantity,
-        sandbox_table.appendix,' ||
-        aru.id || 'AS trade_annual_report_upload_id,
+        sandbox_table.appendix,
+        ' || aru.id || ' AS trade_annual_report_upload_id,
         exporters.id AS exporter_id,
         importers.id AS importer_id,
-        origins.id AS country_of_origin_id,' ||
-        reported_by_exporter || ' AS reported_by_exporter,
+        origins.id AS country_of_origin_id,
+        ' || reported_by_exporter || ' AS reported_by_exporter,
         taxon_concept_id,
         reported_taxon_concept_id,
         sandbox_table.year::INTEGER AS year,
         sandbox_table.id AS sandbox_id,
         current_timestamp,
-        current_timestamp, ' ||
-        aru.created_by_id || ', ' ||
-        aru.updated_by_id || '
+        current_timestamp,
+        ' || COALESCE(aru.created_by_id, aru.epix_created_by_id) || ',
+        ' || COALESCE(aru.updated_by_id, aru.epix_updated_by_id) || '
       FROM '|| table_name || ' sandbox_table';
 
     IF reported_by_exporter THEN
