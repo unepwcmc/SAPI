@@ -82,7 +82,9 @@ END;
 $$;
 
 CREATE OR REPLACE FUNCTION copy_transactions_from_sandbox_to_shipments(
-  annual_report_upload_id INTEGER
+  annual_report_upload_id INTEGER,
+  submitter_type VARCHAR,
+  submitter_id INTEGER
   ) RETURNS INTEGER
   LANGUAGE plpgsql
   AS $$
@@ -96,6 +98,11 @@ DECLARE
   total_shipments INTEGER;
   sql TEXT;
   permit_type TEXT;
+  created_at TIMESTAMP;
+  updated_at TIMESTAMP;
+  epix_created_at TIMESTAMP;
+  epix_updated_at TIMESTAMP;
+  sapi_type BOOLEAN;
 BEGIN
   SELECT * INTO aru FROM trade_annual_report_uploads WHERE id = annual_report_upload_id;
   IF NOT FOUND THEN
@@ -144,6 +151,24 @@ BEGIN
   GET DIAGNOSTICS inserted_rows = ROW_COUNT;
   RAISE INFO '[%] Inserted % permits', table_name, inserted_rows;
 
+  sapi_type := CASE WHEN submitter_type = 'Sapi' THEN true ELSE false END;
+  created_at := COALESCE(aru.created_at, to_timestamp(0));
+  created_at := CASE WHEN sapi_type IS TRUE THEN current_timestamp
+                     ELSE created_at
+                     END;
+  updated_at := COALESCE(aru.updated_at, to_timestamp(0));
+  updated_at := CASE WHEN sapi_type IS TRUE THEN current_timestamp
+                     ELSE updated_at
+                     END;
+  epix_created_at := COALESCE(aru.epix_created_at, to_timestamp(0));
+  epix_created_at := CASE WHEN sapi_type IS FALSE THEN current_timestamp
+                          ELSE epix_created_at
+                          END;
+  epix_updated_at := COALESCE(aru.epix_updated_at, to_timestamp(0));
+  epix_updated_at := CASE WHEN sapi_type IS FALSE THEN current_timestamp
+                          ELSE epix_updated_at
+                          END;
+
   sql := '
     CREATE TEMP TABLE ' || table_name || '_for_submit AS
     WITH inserted_shipments AS (
@@ -165,8 +190,12 @@ BEGIN
         sandbox_id,
         created_at,
         updated_at,
+        epix_created_at,
+        epix_updated_at,
         created_by_id,
-        updated_by_id
+        updated_by_id,
+        epix_created_by_id,
+        epix_updated_by_id
       )
       SELECT
         sources.id AS source_id,
@@ -184,16 +213,22 @@ BEGIN
         reported_taxon_concept_id,
         sandbox_table.year::INTEGER AS year,
         sandbox_table.id AS sandbox_id,
-        current_timestamp,
-        current_timestamp,
-        ' || COALESCE(aru.created_by_id, aru.epix_created_by_id) || ',
-        '
-        ||
-        CASE WHEN COALESCE(aru.updated_at, aru.epix_updated_at) > COALESCE(aru.epix_updated_at, to_timestamp(0))
-             THEN COALESCE(aru.updated_by_id, aru.epix_updated_by_id)
-             ELSE COALESCE(aru.epix_updated_by_id, aru.updated_by_id)
+        NULLIF(''' || created_at || '''::timestamp, ''' || to_timestamp(0) || '''::timestamp),
+        NULLIF(''' || updated_at || '''::timestamp, ''' ||  to_timestamp(0) || '''::timestamp),
+        NULLIF(''' || epix_created_at || '''::timestamp, ''' || to_timestamp(0) || '''::timestamp),
+        NULLIF(''' || epix_updated_at || '''::timestamp, ''' || to_timestamp(0) || '''::timestamp),
+        CASE WHEN ' || sapi_type || ' IS TRUE THEN ' || submitter_id || '
+             ELSE NULLIF(' || COALESCE(aru.created_by_id, 0) ||', 0)
+        END,
+        CASE WHEN ' || sapi_type || ' IS TRUE THEN ' || submitter_id || '
+             ELSE NULLIF(' || COALESCE(aru.updated_by_id, 0) ||', 0)
+        END,
+        CASE WHEN ' || sapi_type || ' IS FALSE THEN ' || submitter_id || '
+             ELSE NULLIF(' || COALESCE(aru.epix_created_by_id, 0) ||', 0)
+        END,
+        CASE WHEN ' || sapi_type || ' IS FALSE THEN ' || submitter_id || '
+             ELSE NULLIF(' || COALESCE(aru.epix_updated_by_id, 0) ||', 0)
         END
-        || '
       FROM '|| table_name || ' sandbox_table';
 
     IF reported_by_exporter THEN
