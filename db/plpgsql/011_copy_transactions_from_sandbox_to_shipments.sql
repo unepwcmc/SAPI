@@ -81,6 +81,7 @@ BEGIN
 END;
 $$;
 
+DROP FUNCTION IF EXISTS copy_transactions_from_sandbox_to_shipments(INTEGER);
 CREATE OR REPLACE FUNCTION copy_transactions_from_sandbox_to_shipments(
   annual_report_upload_id INTEGER,
   submitter_type VARCHAR,
