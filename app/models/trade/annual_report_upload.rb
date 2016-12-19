@@ -92,7 +92,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     update_attributes({
       submitted_at: DateTime.now,
       submitted_by_id: submitter.id
-    )
+    })
   end
 
   private
