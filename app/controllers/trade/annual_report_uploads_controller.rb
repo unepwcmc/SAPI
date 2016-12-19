@@ -31,7 +31,7 @@ class Trade::AnnualReportUploadsController < TradeController
 
   def submit
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
-    if @annual_report_upload.submit
+    if @annual_report_upload.submit(current_user)
       render :json => @annual_report_upload, :status => :ok,
         :serializer => Trade::ShowAnnualReportUploadSerializer
     else
