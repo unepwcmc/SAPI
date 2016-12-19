@@ -89,7 +89,10 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     DownloadsCacheCleanupWorker.perform_async(:shipments)
 
     # flag as submitted
-    update_attribute(:submitted_at, DateTime.now)
+    update_attributes({
+      submitted_at: DateTime.now,
+      submitted_by_id: submitter.id
+    )
   end
 
   private
