@@ -312,5 +312,5 @@ BEGIN
 END;
 $$;
 
-COMMENT ON FUNCTION copy_transactions_from_sandbox_to_shipments(annual_report_upload_id INTEGER) IS
+COMMENT ON FUNCTION copy_transactions_from_sandbox_to_shipments(annual_report_upload_id INTEGER, submitter_type VARCHAR, submitter_id INTEGER) IS
   'Procedure to copy transactions from sandbox to shipments. Returns the number of rows copied if success, 0 if failure.'
