@@ -68,13 +68,13 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     end
   end
 
-  def submit
+  def submit(submitter)
     run_primary_validations
     unless @validation_errors.count == 0
       self.errors[:base] << "Submit failed, primary validation errors present."
       return false
     end
-    return false unless sandbox.copy_from_sandbox_to_shipments
+    return false unless sandbox.copy_from_sandbox_to_shipments(submitter)
     # remove uploaded file
     store_dir = csv_source_file.store_dir
     remove_csv_source_file!
