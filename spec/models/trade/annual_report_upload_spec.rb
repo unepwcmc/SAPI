@@ -153,6 +153,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
                          :name => 'Portugal',
                          :iso_code2 => 'PT'
                         )
+      @submitter = FactoryGirl.create(:user, role: User::MANAGER)
     end
     context "when no primary errors" do
       subject { # aru no primary errors
@@ -174,19 +175,19 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru
       }
       specify {
-        expect { subject.submit }.to change { Trade::Shipment.count }.by(1)
+        expect { subject.submit(@submitter) }.to change { Trade::Shipment.count }.by(1)
       }
       specify {
-        expect { subject.submit }.to change { Trade::Permit.count }.by(3)
+        expect { subject.submit(@submitter) }.to change { Trade::Permit.count }.by(3)
       }
       specify "leading space is stripped" do
-        subject.submit
+        subject.submit(@submitter)
         Trade::Permit.find_by_number('BBB').should_not be_nil
       end
       context "when permit previously reported" do
         before(:each) { create(:permit, :number => 'xxx') }
         specify {
-          expect { subject.submit }.to change { Trade::Permit.count }.by(2)
+          expect { subject.submit(@submitter) }.to change { Trade::Permit.count }.by(2)
         }
       end
     end
@@ -206,7 +207,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru
       }
       specify {
-        expect { subject.submit }.not_to change { Trade::Shipment.count }
+        expect { subject.submit(@submitter) }.not_to change { Trade::Shipment.count }
       }
     end
     context "when reported under a synonym" do
@@ -240,14 +241,14 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru
       }
       specify {
-        expect { subject.submit }.to change { Trade::Shipment.count }.by(1)
+        expect { subject.submit(@submitter) }.to change { Trade::Shipment.count }.by(1)
       }
       specify {
-        subject.submit
+        subject.submit(@submitter)
         Trade::Shipment.first.taxon_concept_id.should == @species.id
       }
       specify {
-        subject.submit
+        subject.submit(@submitter)
         Trade::Shipment.first.reported_taxon_concept_id.should == @synonym.id
       }
     end

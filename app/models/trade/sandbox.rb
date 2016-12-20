@@ -13,13 +13,15 @@ class Trade::Sandbox
     @ar_klass.sanitize
   end
 
-  def copy_from_sandbox_to_shipments
+  def copy_from_sandbox_to_shipments(submitter)
     success = true
     Trade::Shipment.transaction do
       pg_result = Trade::SandboxTemplate.connection.execute(
         Trade::SandboxTemplate.send(:sanitize_sql_array, [
-          'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?)',
-          @annual_report_upload.id
+          'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?, ?, ?)',
+          @annual_report_upload.id,
+          'Sapi',
+          submitter.id
         ])
       )
       moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i

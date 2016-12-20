@@ -19,6 +19,6 @@ class Trade::AnnualReportUploadSerializer < ActiveModel::Serializer
   end
 
   def updated_by
-    object.creator && object.updater.name
+    object.updater && object.updater.name
   end
 end

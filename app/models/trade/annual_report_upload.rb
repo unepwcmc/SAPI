@@ -21,7 +21,8 @@ require 'csv_column_headers_validator'
 class Trade::AnnualReportUpload < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
   track_who_does_it
-  attr_accessible :csv_source_file, :trading_country_id, :point_of_view
+  attr_accessible :csv_source_file, :trading_country_id, :point_of_view,
+                  :submitted_at, :submitted_by_id
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
   validates :csv_source_file, :csv_column_headers => true, :on => :create
@@ -68,13 +69,13 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     end
   end
 
-  def submit
+  def submit(submitter)
     run_primary_validations
     unless @validation_errors.count == 0
       self.errors[:base] << "Submit failed, primary validation errors present."
       return false
     end
-    return false unless sandbox.copy_from_sandbox_to_shipments
+    return false unless sandbox.copy_from_sandbox_to_shipments(submitter)
     # remove uploaded file
     store_dir = csv_source_file.store_dir
     remove_csv_source_file!
@@ -89,7 +90,10 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     DownloadsCacheCleanupWorker.perform_async(:shipments)
 
     # flag as submitted
-    update_attribute(:submitted_at, DateTime.now)
+    update_attributes({
+      submitted_at: DateTime.now,
+      submitted_by_id: submitter.id
+    })
   end
 
   private
