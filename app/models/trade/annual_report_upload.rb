@@ -22,7 +22,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
   track_who_does_it
   attr_accessible :csv_source_file, :trading_country_id, :point_of_view,
-                  :submitted_at, :submitted_by_id
+                  :submitted_at, :submitted_by_id, :number_of_records_submitted
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
   validates :csv_source_file, :csv_column_headers => true, :on => :create
@@ -76,12 +76,14 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
       return false
     end
     return false unless sandbox.copy_from_sandbox_to_shipments(submitter)
+    records_submitted = sandbox.moved_rows_cnt
     # remove uploaded file
     store_dir = csv_source_file.store_dir
     remove_csv_source_file!
     puts '### removing uploads dir ###'
     puts Rails.root.join('public', store_dir)
     FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
+
 
     # remove sandbox table
     sandbox.destroy
@@ -92,7 +94,8 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     # flag as submitted
     update_attributes({
       submitted_at: DateTime.now,
-      submitted_by_id: submitter.id
+      submitted_by_id: submitter.id,
+      number_of_records_submitted: records_submitted
     })
   end
 

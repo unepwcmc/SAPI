@@ -1,10 +1,11 @@
 class Trade::Sandbox
-  attr_reader :table_name
+  attr_reader :table_name, :moved_rows_cnt
   def initialize(annual_report_upload)
     @annual_report_upload = annual_report_upload
     @csv_file_path = @annual_report_upload.csv_source_file.current_path
     @table_name = "trade_sandbox_#{@annual_report_upload.id}"
     @ar_klass = Trade::SandboxTemplate.ar_klass(@table_name)
+    @moved_rows_cnt = -1
   end
 
   def copy
@@ -24,8 +25,8 @@ class Trade::Sandbox
           submitter.id
         ])
       )
-      moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
-      if moved_rows_cnt < 0
+      @moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
+      if @moved_rows_cnt < 0
         # if -1 returned, not all rows have been moved
         self.errors[:base] << "Submit failed, could not save all rows."
         success = false
