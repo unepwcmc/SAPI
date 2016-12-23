@@ -7,9 +7,8 @@ class Api::TradeDownloadsCacheCleanupController < ApplicationController
       DownloadsCacheCleanupWorker.perform_async(:shipments)
     rescue
       message = 'Something went wrong'
-      return
     end
-    message = 'Shipments downloads successfully cleared'
+    message = 'Shipments downloads successfully cleared' unless message.present?
     render json: {
       message: message
     }
