@@ -27,6 +27,10 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
   validates :csv_source_file, :csv_column_headers => true, :on => :create
 
+  scope :created_by_sapi, -> {
+    where("epix_created_by_id IS NULL")
+  }
+
   def copy_to_sandbox
     sandbox.copy
     update_attribute(:number_of_rows, sandbox_shipments.size)
