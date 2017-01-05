@@ -4,7 +4,6 @@ class ChangesHistoryGeneratorWorker
   sidekiq_options :queue => :admin
 
   def perform(aru_id, user_id)
-    Rails.logger.info("Perform started!")
     begin
       aru = Trade::AnnualReportUpload.find(aru_id)
     rescue ActiveRecord::RecordNotFound => e
@@ -12,7 +11,7 @@ class ChangesHistoryGeneratorWorker
       message = "CITES Report #{aru_id} not found"
       Rails.logger.warn message
       Appsignal.add_exception(e) if defined? Appsignal
-      #NotificationMailer.changelog_failed(user, aru).deliver
+      NotificationMailer.changelog_failed(user, aru).deliver
     end
 
     user = User.find(user_id)
@@ -23,13 +22,14 @@ class ChangesHistoryGeneratorWorker
     bucket_name = Rails.application.secrets.aws['bucket_name']
     obj = s3.bucket(bucket_name).object(filename)
     obj.upload_file(tempfile.path)
+
+    aru.update_attributes(aws_storage_path: obj.public_url)
+
+    NotificationMailer.changelog(user, aru, tempfile).deliver
+
     tempfile.delete
 
     # remove sandbox table
-    #aru.sandbox.destroy
-
-    Rails.logger.info("Changelog Generated!")
-
-    #NotificationMailer.changelog(user, aru, tempfile).deliver
+    aru.sandbox(true).destroy
   end
 end
