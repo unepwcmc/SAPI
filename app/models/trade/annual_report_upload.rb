@@ -80,6 +80,9 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
       return false
     end
     return false unless sandbox.copy_from_sandbox_to_shipments(submitter)
+
+   ChangesHistoryGeneratorWorker.perform_async(self.id, submitter.id)
+
     records_submitted = sandbox.moved_rows_cnt
     # remove uploaded file
     store_dir = csv_source_file.store_dir
@@ -90,7 +93,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
 
     # remove sandbox table
-    sandbox.destroy
+    #sandbox.destroy
 
     # clear downloads cache
     DownloadsCacheCleanupWorker.perform_async(:shipments)
@@ -101,6 +104,10 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
       submitted_by_id: submitter.id,
       number_of_records_submitted: records_submitted
     })
+  end
+
+  def reported_by_exporter?
+    point_of_view == 'E'
   end
 
   private
