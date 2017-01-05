@@ -1,5 +1,5 @@
 class Trade::Sandbox
-  attr_reader :table_name, :moved_rows_cnt
+  attr_reader :table_name, :ar_klass, :moved_rows_cnt
   def initialize(annual_report_upload)
     @annual_report_upload = annual_report_upload
     @csv_file_path = @annual_report_upload.csv_source_file.current_path
