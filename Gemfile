@@ -47,6 +47,8 @@ gem 'carrierwave'
 gem 'underscore-rails'
 gem "font-awesome-rails"
 
+gem 'aws-sdk', '~> 2'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -102,6 +104,7 @@ group :development do
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
   gem 'rubocop', '~> 0.40.0', require: false
+  gem 'letter_opener'
 end
 
 group :test, :development do
