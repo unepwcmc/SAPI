@@ -26,7 +26,6 @@ class ChangesHistoryGeneratorWorker
       aru.update_attributes(aws_storage_path: obj.public_url)
     rescue Aws::S3::Errors::ServiceError => e
       Rails.logger.warn "Something went wrong while uploading #{aru.id} to S3"
-      Rails.logger.warn e.class
       Appsignal.add_exception(e) if defined? Appsignal
     end
 
