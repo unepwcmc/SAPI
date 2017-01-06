@@ -8,8 +8,7 @@ class ChangesHistoryGeneratorWorker
       aru = Trade::AnnualReportUpload.find(aru_id)
     rescue ActiveRecord::RecordNotFound => e
       # catch this exception so that retry is not scheduled
-      message = "CITES Report #{aru_id} not found"
-      Rails.logger.warn message
+      Rails.logger.warn "CITES Report #{aru_id} not found"
       Appsignal.add_exception(e) if defined? Appsignal
       NotificationMailer.changelog_failed(user, aru).deliver
     end
@@ -25,9 +24,10 @@ class ChangesHistoryGeneratorWorker
       obj.upload_file(tempfile.path)
 
       aru.update_attributes(aws_storage_path: obj.public_url)
-    rescue => e
-      Rails.logger.info("Something went wrong while uploading file to S3")
-      Rails.logger.info(e)
+    rescue Aws::S3::Errors::ServiceError => e
+      Rails.logger.warn "Something went wrong while uploading #{aru.id} to S3"
+      Rails.logger.warn e.class
+      Appsignal.add_exception(e) if defined? Appsignal
     end
 
     NotificationMailer.changelog(user, aru, tempfile).deliver
