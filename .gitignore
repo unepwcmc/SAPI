@@ -78,5 +78,4 @@ db/schema.rb
 #mailer config
 /config/database.yml
 /config/mailer_config.yml
-/config/secrets.yml
 .env
