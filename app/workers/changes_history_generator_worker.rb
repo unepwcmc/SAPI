@@ -18,7 +18,7 @@ class ChangesHistoryGeneratorWorker
 
     begin
       s3 = Aws::S3::Resource.new
-      filename = "trade/annual_report_upload/#{aru.id}/changelog.csv"
+      filename = "#{Rails.env}/trade/annual_report_upload/#{aru.id}/changelog.csv"
       bucket_name = Rails.application.secrets.aws['bucket_name']
       obj = s3.bucket(bucket_name).object(filename)
       obj.upload_file(tempfile.path)
