@@ -57,6 +57,22 @@ SAPI::Application.configure do
   # Enable threaded mode
   # config.threadsafe!
 
+  config.action_mailer.smtp_settings = {
+    domain: Rails.application.secrets.mailer['domain'],
+    address: Rails.application.secrets.mailer['address'],
+    port: 587,
+    authentication: :login,
+    enable_starttls_auto: true,
+    user_name: Rails.application.secrets.mailer['username'],
+    password: Rails.application.secrets.mailer['password']
+  }
+
+  config.action_mailer.default_url_options = {
+    host: Rails.application.secrets.mailer['host']
+  }
+
+  ActionMailer::Base.default from: Rails.application.secrets.mailer['from']
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = false
