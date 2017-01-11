@@ -13,5 +13,12 @@ class NotificationMailer < ApplicationMailer
     mail(to: @user.email, subject: 'Changes history log - generation failed')
   end
 
+  def duplicates(user, aru, csv_file)
+    @user = user
+    @aru = aru
+    attachments["changelog_with_dulpicates_#{@aru.id}.csv"] = File.read(csv_file)
+    mail(to: @user.email, subject: 'Duplicates detected on submission')
+  end
+
 end
 
