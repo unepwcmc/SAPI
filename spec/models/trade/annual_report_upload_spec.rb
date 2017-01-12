@@ -155,7 +155,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
                         )
       @submitter = FactoryGirl.create(:user, role: User::MANAGER)
     end
-    context "when no primary errors" do
+    context "it calls submission worker" do
       subject { # aru no primary errors
         aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
         aru.save(:validate => false)
@@ -175,84 +175,9 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         aru
       }
       specify {
-        expect { subject.submit(@submitter) }.to change { Trade::Shipment.count }.by(1)
-      }
-      specify {
-        expect { subject.submit(@submitter) }.to change { Trade::Permit.count }.by(3)
-      }
-      specify "leading space is stripped" do
-        subject.submit(@submitter)
-        Trade::Permit.find_by_number('BBB').should_not be_nil
-      end
-      context "when permit previously reported" do
-        before(:each) { create(:permit, :number => 'xxx') }
-        specify {
-          expect { subject.submit(@submitter) }.to change { Trade::Permit.count }.by(2)
-        }
-      end
-    end
-    context "when primary errors present" do
-      subject { # aru with primary errors
-        aru = build(:annual_report_upload)
-        aru.save(:validate => false)
-        sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
-        sandbox_klass.create(
-          :taxon_name => 'Acipenser baerii',
-          :appendix => 'II',
-          :term_code => 'CAV',
-          :unit_code => 'KIL',
-          :year => '10'
-        )
-        create_year_format_validation
-        aru
-      }
-      specify {
-        expect { subject.submit(@submitter) }.not_to change { Trade::Shipment.count }
+        expect { subject.submit(@submitter) }.to change(SubmissionWorker.jobs, :size).by(1)
       }
     end
-    context "when reported under a synonym" do
-      before(:each) do
-        @synonym = create_cites_eu_species(
-          :name_status => 'S',
-          scientific_name: 'Acipenser stenorrhynchus'
-        )
-        create(:taxon_relationship,
-          :taxon_relationship_type_id => synonym_relationship_type.id,
-          :taxon_concept => @species,
-          :other_taxon_concept => @synonym
-        )
-      end
-      subject { # aru no primary errors
-        aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
-        aru.save(:validate => false)
-        sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
-        sandbox_klass.create(
-          :taxon_name => 'Acipenser stenorrhynchus',
-          :appendix => 'II',
-          :trading_partner => @portugal.iso_code2,
-          :term_code => 'CAV',
-          :unit_code => 'KIL',
-          :year => '2010',
-          :quantity => 1,
-          :import_permit => 'XXX',
-          :export_permit => 'AAA;BBB'
-        )
-        create_year_format_validation
-        aru
-      }
-      specify {
-        expect { subject.submit(@submitter) }.to change { Trade::Shipment.count }.by(1)
-      }
-      specify {
-        subject.submit(@submitter)
-        Trade::Shipment.first.taxon_concept_id.should == @species.id
-      }
-      specify {
-        subject.submit(@submitter)
-        Trade::Shipment.first.reported_taxon_concept_id.should == @synonym.id
-      }
-    end
-
   end
 
 end

@@ -30,7 +30,7 @@ describe Trade::AnnualReportUploadsController do
       @aru.save(:validate => false)
       @completed_aru = build(:annual_report_upload)
       @completed_aru.save(:validate => false)
-      @completed_aru.submit(@user)
+      @completed_aru.update_attributes(submitted_at: Time.now)
     end
     it "should return all annual report uploads" do
       get :index, format: :json
