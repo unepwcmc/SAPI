@@ -25,6 +25,7 @@ describe SubmissionWorker do
                       )
     @submitter = FactoryGirl.create(:user, role: User::MANAGER)
     Trade::ChangelogCsvGenerator.stub(:call).and_return(Tempfile.new('changelog.csv'))
+    SubmissionWorker.any_instance.stub(:upload_on_S3)
   end
   context "when no primary errors" do
     before(:each) do
