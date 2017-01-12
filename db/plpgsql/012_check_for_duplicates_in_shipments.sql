@@ -20,22 +20,22 @@ CREATE OR REPLACE FUNCTION check_for_duplicates_in_shipments(
         AND sb.appendix = s.appendix AND sb.year::integer = s.year
         WHERE (
           (aru.point_of_view = ''I'' AND NOT s.reported_by_exporter AND aru.trading_country_id = s.importer_id) AND
-          (sb.import_permit = s.import_permit_number OR (sb.import_permit IS NULL AND s.import_permit_number IS NULL))
+          (COALESCE(sb.import_permit,'') = COALESCE(s.import_permit_number,''))
         )
         OR
         (
           (aru.point_of_view = ''I'' AND s.reported_by_exporter AND ge.id = s.importer_id) AND
-          (sb.import_permit = s.import_permit_number OR (sb.import_permit IS NULL AND s.import_permit_number IS NULL))
+          (COALESCE(sb.import_permit,'') = COALESCE(s.import_permit_number,''))
         )
         OR
         (
           (aru.point_of_view = ''E'' AND s.reported_by_exporter AND aru.trading_country_id = s.exporter_id) AND
-          (sb.export_permit = s.export_permit_number OR (sb.export_permit IS NULL AND s.export_permit_number IS NULL))
+          (COALESCE(sb.export_permit,'') = COALESCE(s.export_permit_number,''))
         )
         OR
         (
           (aru.point_of_view = ''E'' AND NOT s.reported_by_exporter AND ge.id = s.exporter_id) AND
-          (sb.export_permit = s.export_permit_number OR (sb.export_permit IS NULL AND s.export_permit_number IS NULL))
+          (COALESCE(sb.export_permit,'') = COALESCE(s.export_permit_number,''))
         )
       )
 
