@@ -37,10 +37,6 @@ class SubmissionWorker
     # clear downloads cache
     DownloadsCache.send(:clear_shipments)
 
-    NotificationMailer.changelog(submitter, aru, tempfile).deliver
-
-    tempfile.delete
-
     aru.sandbox.destroy
 
     # flag as submitted
@@ -49,6 +45,10 @@ class SubmissionWorker
       submitted_by_id: submitter.id,
       number_of_records_submitted: records_submitted
     })
+
+    NotificationMailer.changelog(submitter, aru, tempfile).deliver
+
+    tempfile.delete
   end
 
   private
