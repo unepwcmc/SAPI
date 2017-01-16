@@ -16,8 +16,8 @@ CREATE OR REPLACE FUNCTION check_for_duplicates_in_shipments(
         FROM ' || table_name || ' AS sb
         JOIN geo_entities AS ge ON ge.iso_code2 = sb.trading_partner
         JOIN trade_shipments AS s ON sb.reported_taxon_concept_id = s.reported_taxon_concept_id
-        JOIN trade_annual_report_uploads AS aru ON aru.id = ' || annual_report_upload_id || '
         AND sb.appendix = s.appendix AND sb.year::integer = s.year
+        JOIN trade_annual_report_uploads AS aru ON aru.id = ' || annual_report_upload_id || '
         WHERE (
           (aru.point_of_view = ''I'' AND NOT s.reported_by_exporter AND aru.trading_country_id = s.importer_id) AND
           (COALESCE(sb.import_permit,'''') = COALESCE(s.import_permit_number,''''))
