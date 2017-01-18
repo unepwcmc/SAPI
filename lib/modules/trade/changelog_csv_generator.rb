@@ -51,6 +51,7 @@ class Trade::ChangelogCsvGenerator
                 reified[dc]
               end
             values = values + [''] if duplicates
+            csv << values
           end
 
           offset += limit
