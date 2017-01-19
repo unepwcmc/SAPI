@@ -10,7 +10,10 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      kingdom = file.split('/').last.split('_')[0].titleize
+      csv_headers = csv_headers(file)
+      has_tc_id = csv_headers.include? 'taxon_concept_id'
+      has_reference_id = csv_headers.include? 'Reference IDs'
+      kingdom = has_tc_id ? '' : file.split('/').last.split('_')[0].titleize
 
       [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
         puts "Import #{taxonomy_name} distributions"
@@ -23,8 +26,12 @@ namespace :import do
           FROM #{TMP_TABLE}
           INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}.rank))
           INNER JOIN geo_entities ON geo_entities.iso_code2 = #{TMP_TABLE}.iso2 AND UPPER(geo_entities.legacy_type) = UPPER(BTRIM(geo_entity_type))
-          INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}' AND
-           taxon_concepts.rank_id = ranks.id
+          #{if has_tc_id
+              "INNER JOIN taxon_concepts ON taxon_concepts.id = #{TMP_TABLE}.taxon_concept_id"
+            else
+              "INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}'"
+            end}
+           AND taxon_concepts.rank_id = ranks.id
           INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
           WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
             AND
@@ -44,8 +51,28 @@ namespace :import do
         # TODO: do sth about those unknown distributions!
         ActiveRecord::Base.connection.execute(sql)
       end
+      if has_reference_id
+        puts "There are #{DistributionReference.count} distribution references in the database."
+        sql = <<-SQL
+          INSERT INTO "distribution_references"
+            (distribution_id, reference_id, created_at, updated_at)
+          SELECT d.id, tmp.reference_id, NOW(), NOW()
+          FROM #{TMP_TABLE} tmp
+          INNER JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
+          INNER JOIN distributions d ON d.taxon_concept_id = tmp.taxon_concept_id
+          AND d.geo_entity_id = ge.id
+          AND NOT EXISTS (
+            SELECT id
+            FROM distribution_references
+            WHERE reference_id = tmp.reference_id
+              AND distribution_id = d.id
+          )
+        SQL
+        ActiveRecord::Base.connection.execute(sql)
+      end
     end
     puts "There are now #{Distribution.count} taxon concept distributions in the database"
+    puts "There are now #{DistributionReference.count} distribution references in the database"
   end
 
 end
