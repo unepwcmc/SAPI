@@ -52,11 +52,13 @@ class CsvToDbMap
     },
     'distribution_import' => {
       'Species RecID' => 'legacy_id integer',
+      'taxon_concept_id' => 'taxon_concept_id integer',
       'Rank' => 'rank varchar',
       'GEO_entity' => 'geo_entity_type varchar',
       'ISO Code 2' => 'iso2 varchar',
       'Reference IDs' => 'reference_id integer',
-      'Designation' => 'designation varchar'
+      'Designation' => 'designation varchar',
+      'Reference' => 'citation text'
     },
     'common_name_import' => {
       'ComName' => 'name varchar',
