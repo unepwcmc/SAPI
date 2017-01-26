@@ -10,8 +10,6 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      byebug
-
       kingdom = file.split('/').last.split('_')[0].titleize
 
       # import_data_for Rank::KINGDOM
