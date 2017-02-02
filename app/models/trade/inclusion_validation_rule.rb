@@ -20,8 +20,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
     sandbox_klass = Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
-    @query = sandbox_klass.
-      from("#{sandbox_klass.table_name}_view #{sandbox_klass.table_name}").
+    @query = matching_records(annual_report_upload).
       where(
         "'#{validation_error.matching_criteria}'::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
       )
@@ -156,6 +155,13 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     group(column_names_for_display).having(
       required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
     )
+  end
+
+  def matching_records(annual_report_upload)
+    table_name = annual_report_upload.sandbox.table_name
+    sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
+    sandbox_klass.select('*').
+      from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) matching_records"))
   end
 
   # Returns records from sandbox where values in column_names are not null
