@@ -136,7 +136,8 @@ gem 'geoip'
 
 # track who created or edited a given object
 gem 'clerk'
-gem 'paper_trail', '~> 4.0.0.beta'
+gem 'paper_trail', '~> 4.0'
+gem 'request_store', '~> 1.1'
 
 gem 'rails-secrets'
 gem 'dotenv-rails'
