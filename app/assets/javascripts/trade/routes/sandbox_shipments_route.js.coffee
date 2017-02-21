@@ -4,6 +4,9 @@ Trade.SandboxShipmentsRoute = Trade.BeforeRoute.extend
     page: { refreshModel: true }
   }
 
+  beforeModel: ->
+    @controllerFor('sandboxShipments').set('sandboxShipmentsLoading', true)
+
   model: (params, transition) ->
     @annualReportUpload = @modelFor('annualReportUpload')
     Trade.ValidationError.find(params.validation_error_id).then((validationError) =>

@@ -7,7 +7,7 @@
   <button type="button" class="btn btn-link pull-right" {{action "toggleUpdatesVisible"}}>
   Edit batch >>
   </button>
-</div> 
+</div>
 
   {{#view controllerBinding='controller' isVisibleBinding='controller.updatesVisible'}}
     <div class="sandbox-header well well-small">
@@ -44,6 +44,9 @@
       {{#view tagName='span' class='pull-right' isVisibleBinding='controller.sandboxShipmentsSaving'}}
         <img src="/assets/loading.gif"> Saving...
       {{/view}}
+      {{#view tagName='span' class='pull-right' isVisibleBinding='controller.sandboxShipmentsLoading'}}
+        <img src="/assets/loading.gif"> Loading...
+      {{/view}}
       <button {{action 'saveChanges'}}
         {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}>
         Save changes
@@ -78,7 +81,7 @@
     </thead>
     {{collection Trade.ShipmentsRowsView contentBinding='controller.content' controller=this}}
   </table>
-</div> 
+</div>
 
 <div class="paging">
   <ul class="pager">

@@ -4,6 +4,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   updatesVisible: false
   currentShipment: null
   sandboxShipmentsSaving: false
+  sandboxShipmentsLoading: false
   queryParams: ['page', 'validationErrorId:validation_error_id']
 
   columns: [
@@ -62,7 +63,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
 
     toggleUpdatesVisible: ->
       @toggleProperty 'updatesVisible'
-      # not returning false here would cause the action to bubble 
+      # not returning false here would cause the action to bubble
       # to the parent controller up the nested routing!
       false
 
