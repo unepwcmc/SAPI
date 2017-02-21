@@ -5,7 +5,7 @@ Trade.SandboxShipmentsRoute = Trade.BeforeRoute.extend
   }
 
   beforeModel: ->
-    @controllerFor('sandboxShipments').set('sandboxShipmentsLoading', true)
+    $('.loading-shipments').show()
 
   model: (params, transition) ->
     @annualReportUpload = @modelFor('annualReportUpload')

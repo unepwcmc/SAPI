@@ -4,7 +4,6 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   updatesVisible: false
   currentShipment: null
   sandboxShipmentsSaving: false
-  sandboxShipmentsLoading: false
   queryParams: ['page', 'validationErrorId:validation_error_id']
 
   columns: [

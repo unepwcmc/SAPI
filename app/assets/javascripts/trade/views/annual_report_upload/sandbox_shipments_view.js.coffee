@@ -68,6 +68,9 @@ Trade.SandboxShipmentsView = Ember.View.extend
     prevPage: ->
       @controller.transitionToPage no
 
+  didInsertElement: ->
+    $('.loading-shipments').hide()
+
   contentUpdated: ( ->
-    @controller.set('sandboxShipmentsLoading', false)
+    $('.loading-shipments').hide()
   ).observes('controller.content.[]')

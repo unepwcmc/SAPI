@@ -1,7 +1,8 @@
-  <p>
-    Selected error: {{controllers.annualReportUpload.currentError.errorMessage}} ({{controllers.annualReportUpload.currentError.errorCount}})
-    <a {{action 'closeError'}}>(close this error)</a>
-  </p>
+
+<p>
+  Selected error: {{controllers.annualReportUpload.currentError.errorMessage}} ({{controllers.annualReportUpload.currentError.errorCount}})
+  <a {{action 'closeError'}}>(close this error)</a>
+</p>
 
 <div class="clearfix">
   <button type="button" class="btn btn-link pull-right" {{action "toggleUpdatesVisible"}}>
@@ -43,9 +44,6 @@
     <div class="sandbox-header-buttons span7">
       {{#view tagName='span' class='pull-right' isVisibleBinding='controller.sandboxShipmentsSaving'}}
         <img src="/assets/loading.gif"> Saving...
-      {{/view}}
-      {{#view tagName='span' class='pull-right' isVisibleBinding='controller.sandboxShipmentsLoading'}}
-        <img src="/assets/loading.gif"> Loading...
       {{/view}}
       <button {{action 'saveChanges'}}
         {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}>
