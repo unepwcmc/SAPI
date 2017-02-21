@@ -6,8 +6,14 @@
     {{view.heading}} ({{view.content.length}}) {{view.toggleHint}}
   </a>
 </div>
+
 <div {{bind-attr id="view.collapsibleId" class=":accordion-body :collapse view.collapsed::in"}}>
   <div class="accordion-inner">
+
+    {{#view tagName='span' class='loading-errors' isVisibleBinding='controller.validationErrorsLoading'}}
+      <img src="/assets/loading.gif"> Loading...
+    {{/view}}
+
     {{#each view.content}}
       <div class="row-fluid">
         <div class="span2">

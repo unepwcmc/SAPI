@@ -4,6 +4,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
   currentShipment: null
   filtersSelected: false
   sandboxShipmentsSubmitting: false
+  validationErrorsLoading: true
 
   init: ->
     transaction = @get('store').transaction()
