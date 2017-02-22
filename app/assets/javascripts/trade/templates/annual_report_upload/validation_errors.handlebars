@@ -10,9 +10,9 @@
 <div {{bind-attr id="view.collapsibleId" class=":accordion-body :collapse view.collapsed::in"}}>
   <div class="accordion-inner">
 
-    {{#view tagName='span' class='loading-errors' isVisibleBinding='controller.validationErrorsLoading'}}
+    <div class='validation-errors-loading'>
       <img src="/assets/loading.gif"> Loading...
-    {{/view}}
+    </div>
 
     {{#each view.content}}
       <div class="row-fluid">
