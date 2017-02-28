@@ -30,6 +30,8 @@ set :rvm_ruby_version, '2.2.3'
 set :pty, true
 
 set :ssh_options, {
+  :keepalive => true,
+  :keepalive_interval => 60, #seconds
   forward_agent: true
 }
 

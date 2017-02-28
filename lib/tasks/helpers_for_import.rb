@@ -12,7 +12,18 @@ class CsvToDbMap
       'ParentRecID' => 'parent_legacy_id integer',
       'Status' => 'status varchar',
       'Species Author' => 'author varchar',
-      'notes' => 'notes varchar',
+      'Notes' => 'notes varchar',
+      'Designation' => 'taxonomy varchar'
+    },
+    'species_kew_id_import' => {
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'kew_id integer',
+      'ParentRank' => 'parent_rank varchar',
+      'ParentRecID' => 'parent_kew_id integer',
+      'Status' => 'status varchar',
+      'Species Author' => 'author varchar',
+      'Notes' => 'notes varchar',
       'Designation' => 'taxonomy varchar'
     },
     'synonym_import' => {
@@ -23,10 +34,23 @@ class CsvToDbMap
       'Parent recID' => 'parent_legacy_id integer',
       'Status' => 'status varchar',
       'Species Author' => 'author varchar',
-      'notes' => 'notes varchar',
+      'Notes' => 'notes varchar',
       'Designation' => 'taxonomy varchar',
       'AcceptedRank' => 'accepted_rank varchar',
       'AcceptedRecID' => 'accepted_legacy_id integer'
+    },
+    'synonym_kew_id_import' => {
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'kew_id integer',
+      'ParentRank' => 'parent_rank varchar',
+      'Parent recID' => 'parent_kew_id integer',
+      'Status' => 'status varchar',
+      'Species Author' => 'author varchar',
+      'Notes' => 'notes varchar',
+      'Designation' => 'taxonomy varchar',
+      'AcceptedRank' => 'accepted_rank varchar',
+      'AcceptedRecID' => 'accepted_kew_id integer'
     },
     'cites_listings_import' => {
       'rank_name' => 'rank varchar',
