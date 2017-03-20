@@ -35,13 +35,15 @@ class User < ActiveRecord::Base
   CONTRIBUTOR = 'default' # nonsense
   ELIBRARY_USER = 'elibrary'
   API_USER = 'api'
-  ROLES = [MANAGER, CONTRIBUTOR, ELIBRARY_USER, API_USER]
-  NON_ADMIN_ROLES = [ELIBRARY_USER, API_USER]
+  SECRETARIAT = 'secretariat'
+  ROLES = [MANAGER, CONTRIBUTOR, ELIBRARY_USER, API_USER, SECRETARIAT]
+  NON_ADMIN_ROLES = [ELIBRARY_USER, API_USER, SECRETARIAT]
   ROLES_FOR_DISPLAY = {
     MANAGER => 'Manager',
     CONTRIBUTOR => 'Contributor',
     ELIBRARY_USER => 'E-library User',
-    API_USER => 'API User'
+    API_USER => 'API User',
+    SECRETARIAT => 'Secretariat'
   }
 
   has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
@@ -69,6 +71,10 @@ class User < ActiveRecord::Base
 
   def is_api_user?
     self.role == API_USER
+  end
+
+  def is_secretariat?
+    self.role == SECRETARIAT
   end
 
   def is_manager_or_contributor?
