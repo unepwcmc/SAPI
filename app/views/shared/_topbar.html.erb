@@ -13,8 +13,8 @@
         <% if current_user %>
           <li class="<%= if controller_name == 'taxon_concepts' then 'active' end%>"><a href="/admin">Home</a></li>
         <% end %>
-        
-        <% if current_user && current_user.is_manager? %>
+
+        <% if current_user && current_user.is_manager_or_secretariat? %>
           <% controller_matches = ["taxonomies", "ranks", "designations", "change_types",
               "species_listings", "geo_entities", "languages", "tags", "purposes", "sources",
               "terms", "units"] %>
@@ -131,7 +131,7 @@
           <li class="<%= if controller_name == 'references' then 'active' end%>"><%= link_to 'References', admin_references_path %></li>
         <% end %>
 
-        <% if current_user && current_user.is_manager? %>
+        <% if current_user && current_user.is_manager_or_secretariat? %>
           <% controller_matches = ["cites_suspensions"] %>
           <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -157,8 +157,8 @@
             </ul>
           </li>
         <% end %>
-        
-        <% if current_user && current_user.is_manager_or_contributor? %>
+
+        <% if current_user && current_user.is_manager_or_contributor_or_secretariat? %>
           <% controller_matches = ["exports"] %>
           <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -175,7 +175,7 @@
               <li><%= link_to 'Species+ Visits Tracking', admin_ahoy_visits_path %></li>
               <li><%= link_to 'Species+ Activity Page', activities_path %></li>
 
-              <% if current_user && current_user.is_manager? %>
+              <% if current_user && current_user.is_manager_or_secretariat? %>
                 <li><%= link_to 'API Usage', api_usage_overview_path %></li>
               <% end %>
             </ul>
