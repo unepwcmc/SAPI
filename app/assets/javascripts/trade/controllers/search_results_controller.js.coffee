@@ -71,6 +71,16 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
 
     # saves the new shipment (bound to currentShipment) to the db
     saveShipment: (shipment, ignoreWarnings) ->
+      $.ajax({
+        type: 'GET'
+        url: "/trade/user_can_edit"
+        data: {}
+        dataType: 'json'
+        success: (response) ->
+          console.log(response)
+        error: (error) ->
+          console.log(error)
+      })
       shipment.set('ignoreWarnings', ignoreWarnings)
       # Before trying to save a shipment
       # we need to reset the model to a valid state.
@@ -140,7 +150,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
               @set('currentShipment', null)
               $('.batch-form-modal').modal('hide')
             )
-        )  
+        )
       )
 
     editShipment: (shipment) ->
@@ -156,8 +166,8 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
         (() =>
           @get('batchUpdateParams').reset()
           @set('currentShipment', @get('batchUpdateParams'))
-          $('.batch-form-modal').modal('show')     
-        )  
+          $('.batch-form-modal').modal('show')
+        )
       )
 
     updateBatch: ->

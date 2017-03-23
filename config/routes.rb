@@ -161,6 +161,7 @@ SAPI::Application.routes.draw do
     root :to => 'taxon_concepts#index'
   end
 
+  get 'trade/user_can_edit' => 'trade#user_can_edit'
   namespace :trade do
     resources :annual_report_uploads do
       resources :sandbox_shipments do
