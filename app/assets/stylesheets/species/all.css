@@ -307,11 +307,12 @@ a.learn-more:hover {
 }
 
 .power-by img { display: block; }
-.power-by .title {
-  display: block;
-  margin: 0 0 5px;
-  text-align: right;
+.power-by a:hover { text-decoration: none; }
+.power-by-title {
   color: #648aa2;
+  font-weight: 700;
+  text-align: center;
+  font-family: sans-serif;
 }
 #footer .sponsor {
   float: left;
