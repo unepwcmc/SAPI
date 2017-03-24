@@ -22,7 +22,7 @@ en:
   export_text: "Exporting countries"
   export_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected"
   import_text: "Importing countries"
-  import_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected" 
+  import_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected"
   source_text: "Source"
   source_tip: "Type the source or sources (e.g. 'W - Wild') you wish to include in your final output. To include data for all sources, leave 'All Sources' selected"
   purpose_text: "Purpose"
@@ -77,3 +77,5 @@ en:
     net_imports: "Net Imports Report"
     net_exports: "Net Exports Report"
     comptab: "Comparative Tabulation Report"
+
+  secretariat_alert: "It is not possible to perform this action. If you require further assistance please contact the Species team on species@unep-wcmc.org."
