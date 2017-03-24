@@ -61,6 +61,21 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
     @set('page', page)
     @transitionToRoute('search.results', {queryParams: {page: page}})
 
+  userCanEdit: (callback) ->
+    $.ajax({
+      type: 'GET'
+      url: "/trade/user_can_edit"
+      data: {}
+      dataType: 'json'
+      success: (response) =>
+        if response.can_edit
+          callback()
+        else
+          alert('It is not possible to perform this action. If you require further assistance please contact the Species team on species@unep-wcmc.org')
+      error: (error) ->
+        console.log(error)
+    })
+
   actions:
     newShipment: () ->
       shipment = Trade.Shipment.createRecord()
@@ -71,16 +86,6 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
 
     # saves the new shipment (bound to currentShipment) to the db
     saveShipment: (shipment, ignoreWarnings) ->
-      $.ajax({
-        type: 'GET'
-        url: "/trade/user_can_edit"
-        data: {}
-        dataType: 'json'
-        success: (response) ->
-          console.log(response)
-        error: (error) ->
-          console.log(error)
-      })
       shipment.set('ignoreWarnings', ignoreWarnings)
       # Before trying to save a shipment
       # we need to reset the model to a valid state.
@@ -116,40 +121,44 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
 
     # discards the new shipment (bound to currentShipment)
     deleteShipment: (shipment) ->
-      if confirm("This will delete a shipment. Proceed?")
-        if (!shipment.get('isSaving'))
-          shipment.deleteRecord()
-          shipment.get('transaction').commit()
-          shipment.one('didDelete', this, ->
-            @set('currentShipment', null)
-            @flashSuccess(message: 'Successfully deleted shipment.')
-            @send("dataChanged")
-          )
-
-    deleteBatch: ->
-      @transitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
-      .then(
-        # resolve
-        (() =>
-          if confirm("This will delete " + @get('total') + " shipments. Are you sure?")
-            $.ajax(
-              url: '/trade/shipments/destroy_batch'
-              type: 'POST'
-              data:
-                filters: @get('controllers.search.searchParams')
-            )
-            .done( (data) =>
-              @flashSuccess(message: 'Successfully deleted ' + data.rows + ' shipments.')
+      @userCanEdit( =>
+        if confirm("This will delete a shipment. Proceed?")
+          if (!shipment.get('isSaving'))
+            shipment.deleteRecord()
+            shipment.get('transaction').commit()
+            shipment.one('didDelete', this, ->
+              @set('currentShipment', null)
+              @flashSuccess(message: 'Successfully deleted shipment.')
               @send("dataChanged")
             )
-            .fail( (xhr) =>
-              @flashError(message: 'Error occurred when deleting shipments.')
-              console.log "bad luck: ", xhr.responseText
-            )
-            .always( () =>
-              @set('currentShipment', null)
-              $('.batch-form-modal').modal('hide')
-            )
+      )
+
+    deleteBatch: ->
+      @userCanEdit( =>
+        @transitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
+        .then(
+          # resolve
+          (() =>
+            if confirm("This will delete " + @get('total') + " shipments. Are you sure?")
+              $.ajax(
+                url: '/trade/shipments/destroy_batch'
+                type: 'POST'
+                data:
+                  filters: @get('controllers.search.searchParams')
+              )
+              .done( (data) =>
+                @flashSuccess(message: 'Successfully deleted ' + data.rows + ' shipments.')
+                @send("dataChanged")
+              )
+              .fail( (xhr) =>
+                @flashError(message: 'Error occurred when deleting shipments.')
+                console.log "bad luck: ", xhr.responseText
+              )
+              .always( () =>
+                @set('currentShipment', null)
+                $('.batch-form-modal').modal('hide')
+              )
+          )
         )
       )
 
