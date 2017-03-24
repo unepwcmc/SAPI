@@ -52,7 +52,7 @@ class Ability
         Trade::ValidationRule
       ]
     elsif user.is_secretariat?
-      can [:autocomplete, :read], :all
+      can [:autocomplete, :read, :edit, :new], :all
     elsif !user.is_manager_or_contributor?
       cannot :manage, :all
     end
