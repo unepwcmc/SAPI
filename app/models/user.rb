@@ -81,6 +81,10 @@ class User < ActiveRecord::Base
     is_manager? || is_contributor?
   end
 
+  def is_api_user_or_secretariat?
+    is_api_user? || is_secretariat?
+  end
+
   def role_for_display
     ROLES_FOR_DISPLAY[self.role] || '(empty)'
   end
