@@ -53,7 +53,7 @@ class DocumentSearch
 
   def initialize_query
     @query = Document.from("#{table_name} documents")
-    @query = @query.where(is_public: true) if !admin_interface? && !@show_private
+    @query = @query.where(is_public: true) unless @show_private
     add_conditions_for_event
     add_conditions_for_document
     add_extra_conditions
