@@ -4,7 +4,8 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
 
   def index
     load_associations
-    @search = DocumentSearch.new(params.merge(show_private: true), 'admin')
+    is_secretariat = current_user && current_user.is_secretariat?
+    @search = DocumentSearch.new(params.merge(show_private: !is_secretariat), 'admin')
     index! do
       if @search.events_ids.present? && @search.events_ids.length == 1
         @event = Event.find(@search.events_ids.first)
