@@ -47,7 +47,6 @@ class DocumentSearch
 
   def initialize_params(options)
     @options = DocumentSearchParams.sanitize(options)
-    @options[:show_private] = true if admin_interface?
     @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
     @offset = @per_page * (@page - 1)
   end
