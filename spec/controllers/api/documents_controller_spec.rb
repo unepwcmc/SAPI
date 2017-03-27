@@ -66,6 +66,20 @@ describe Api::V1::DocumentsController, :type => :controller do
     end
   end
 
+  context "GET index returns only public documents for secretariat role" do
+    def get_public_documents
+      get :index, taxon_concept_id: @taxon_concept.id
+      response.body.should have_json_size(3).at_path('documents')
+    end
+    context "GET index api user " do
+      login_secretariat_user
+
+      it "returns only public documents" do
+        get_public_documents
+      end
+    end
+  end
+
   context "show action fails" do
     login_api_user
     it "should return 403 status when permission denied" do
