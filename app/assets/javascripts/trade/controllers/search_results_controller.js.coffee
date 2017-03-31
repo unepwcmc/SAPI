@@ -139,7 +139,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
         .then(
           # resolve
           (() =>
-            if confirm("This will delete " + @get('total') + " shipments. Are you sure?")
+            if confirm("This will delete #{@get('total')} shipments. Are you sure?")
               $.ajax(
                 url: '/trade/shipments/destroy_batch'
                 type: 'POST'
@@ -147,7 +147,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
                   filters: @get('controllers.search.searchParams')
               )
               .done( (data) =>
-                @flashSuccess(message: 'Successfully deleted ' + data.rows + ' shipments.')
+                @flashSuccess(message: "Successfully deleted #{data.rows} shipments.")
                 @send("dataChanged")
               )
               .fail( (xhr) =>
