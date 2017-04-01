@@ -61,6 +61,10 @@ class User < ActiveRecord::Base
     self.role == MANAGER
   end
 
+  def is_manager_or_secretariat?
+    is_manager? || is_secretariat?
+  end
+
   def is_contributor?
     self.role == CONTRIBUTOR
   end
@@ -79,6 +83,10 @@ class User < ActiveRecord::Base
 
   def is_manager_or_contributor?
     is_manager? || is_contributor?
+  end
+
+  def is_manager_or_contributor_or_secretariat?
+    is_manager_or_contributor? || is_secretariat?
   end
 
   def role_for_display

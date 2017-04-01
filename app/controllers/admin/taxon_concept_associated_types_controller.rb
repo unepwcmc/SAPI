@@ -1,4 +1,5 @@
 class Admin::TaxonConceptAssociatedTypesController < Admin::SimpleCrudController
+  authorize_resource class: false
   layout 'taxon_concepts'
   belongs_to :taxon_concept
 

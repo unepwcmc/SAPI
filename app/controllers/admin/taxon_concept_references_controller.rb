@@ -1,4 +1,4 @@
-class Admin::TaxonConceptReferencesController < Admin::SimpleCrudController
+class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationController
   defaults :resource_class => TaxonConceptReference, :collection_name => 'taxon_concept_references', :instance_name => 'taxon_concept_reference'
   belongs_to :taxon_concept
   before_filter :load_search, :only => [:index]
