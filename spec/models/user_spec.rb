@@ -77,7 +77,16 @@ describe User do
 
     context "when is a Secretariat" do
       let(:user) { create(:user, role: User::SECRETARIAT) }
-      it { should_not be_able_to(:manage, TaxonConcept) }
+      it { should_not be_able_to(:create, :all) }
+      it { should_not be_able_to(:update, :all) }
+      it { should_not be_able_to(:destroy, :all) }
+    end
+
+    context "when is not active" do
+      let(:user) { create(:user, role: User::MANAGER, is_active: false) }
+      it { should_not be_able_to(:create, :all) }
+      it { should_not be_able_to(:update, :all) }
+      it { should_not be_able_to(:destroy, :all) }
     end
   end
 end
