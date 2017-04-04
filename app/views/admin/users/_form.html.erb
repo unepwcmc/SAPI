@@ -56,5 +56,11 @@
         <%= f.select :role, User::ROLES_FOR_DISPLAY.to_a.map(&:reverse) %>
       </div>
     </div>
+    <div class="control-group">
+      <label class="control-label">Active</label>
+      <div class="controls">
+        <%= f.check_box :is_active %>
+      </div>
+    </div>
   <% end %>
 <% end %>
