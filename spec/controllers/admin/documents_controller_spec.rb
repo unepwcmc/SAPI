@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Admin::DocumentsController, sidekiq: :inline do
-  login_admin
   let(:event) { create(:event, published_at: DateTime.new(2014, 12, 25)) }
   let(:event2) { create(:event, published_at: DateTime.new(2015, 12, 12)) }
   let(:taxon_concept) { create(:taxon_concept) }
@@ -14,11 +13,14 @@ describe Admin::DocumentsController, sidekiq: :inline do
     before(:each) do
       @document1 = create(:document, :title => 'BB hello world', event: event)
       @document2 = create(:document, :title => 'AA goodbye world', event: event)
+      @public_document = create(:document, :title => 'DD public document', event: event, is_public: true)
       create(:document_citation, :document_id => @document1.id, :taxon_concepts => [taxon_concept])
       create(:document_citation, :document_id => @document2.id, :geo_entities => [geo_entity])
+      create(:document_citation, :document_id => @public_document.id, :taxon_concepts => [taxon_concept])
     end
 
     describe "GET index" do
+      login_admin
       before(:each) do
         @document3 = create(:document, :title => 'CC no event!', date: DateTime.new(2014, 01, 01))
         DocumentSearch.refresh_citations_and_documents
@@ -26,7 +28,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       it "assigns @documents sorted by time of creation" do
         get :index
-        assigns(:documents).should eq([@document3, @document2, @document1])
+        assigns(:documents).should eq([@document3, @public_document, @document2, @document1])
       end
 
       context "search" do
@@ -36,7 +38,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
         end
         it "retrieves documents inclusive of the given start date" do
           get :index, "document_date_start" => '25/12/2014'
-          assigns(:documents).should eq([@document2, @document1])
+          assigns(:documents).should eq([@public_document, @document2, @document1])
         end
         it "retrieves documents inclusive of the given end date" do
           get :index, "document_date_end" => '01/01/2014'
@@ -44,7 +46,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
         end
         it "retrieves documents after the given date" do
           get :index, "document_date_start" => '10/01/2014'
-          assigns(:documents).should eq([@document2, @document1])
+          assigns(:documents).should eq([@public_document, @document2, @document1])
         end
         it "retrieves documents before the given date" do
           get :index, "document_date_end" => '10/01/2014'
@@ -52,11 +54,11 @@ describe Admin::DocumentsController, sidekiq: :inline do
         end
         it "ignores invalid dates" do
           get :index, "document_date_start" => '34/24/12', "document_date_end" => '34/24/12'
-          assigns(:documents).should eq([@document3, @document2, @document1])
+          assigns(:documents).should eq([@document3, @public_document, @document2, @document1])
         end
         it "retrieves documents for taxon concept" do
           get :index, "taxon_concepts_ids" => taxon_concept.id
-          assigns(:documents).should eq([@document1])
+          assigns(:documents).should eq([@public_document, @document1])
         end
         it "retrieves documents for geo entity" do
           get :index, "geo_entities_ids" => [geo_entity.id]
@@ -106,13 +108,21 @@ describe Admin::DocumentsController, sidekiq: :inline do
           @document3 = create(:document, title: 'CC hello world', event: event2)
           DocumentSearch.refresh_citations_and_documents
           get :index, events_ids: [event.id, event2.id]
-          assigns(:documents).should eq([@document3, @document2, @document1])
+          assigns(:documents).should eq([@document3, @document2, @document1, @public_document])
+        end
+      end
+      context "when secretariat is logged in" do
+        login_secretariat_user
+        it "returns only public documents" do
+          get :index
+          assigns(:documents).should eq([@public_document])
         end
       end
     end
   end
 
   describe "GET edit" do
+    login_admin
     let(:document_tags) { [create(:document_tag)] }
     let(:document) { create(:document, tags: document_tags) }
 
@@ -123,6 +133,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
   end
 
   describe "PUT update" do
+    login_admin
     context "when no event" do
       let(:document) { create(:document) }
       it "redirects to index when successful" do
@@ -200,6 +211,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
   end
 
   describe "DELETE destroy" do
+    login_admin
     let(:poland) {
       create(:geo_entity,
         :name_en => 'Poland', :iso_code2 => 'PL',
@@ -218,6 +230,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
   end
 
   describe "XHR GET JSON autocomplete" do
+    login_admin
     let!(:document) {
       create(:document,
         :title => 'Title',

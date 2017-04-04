@@ -85,6 +85,10 @@ class User < ActiveRecord::Base
     is_manager? || is_contributor?
   end
 
+  def is_api_user_or_secretariat?
+    is_api_user? || is_secretariat?
+  end
+
   def is_manager_or_contributor_or_secretariat?
     is_manager_or_contributor? || is_secretariat?
   end
