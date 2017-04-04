@@ -1,10 +1,11 @@
 <thead>
   <th width="20%">Name</th>
   <th width="20%">Email</th>
-  <th width="10%">CITES Auth</th>
+  <th width="5%">CITES Auth</th>
   <th width="20%">Organisation</th>
   <th width="20%">Country</th>
   <th width="10%">Role</th>
+  <th width="5%">Active</th>
   <th>Actions</th>
 </thead>
 <tbody>
@@ -36,6 +37,9 @@
       </td>
       <td>
         <%= user.role_for_display %>
+      </td>
+      <td>
+        <%= true_false_icon(user.is_active) %>
       </td>
       <td>
         <% if can?(:update, user) %>
