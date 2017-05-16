@@ -47,6 +47,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     )
     @set('controllers.annualReportUpload.currentError', null)
     @set('controllers.annualReportUpload.allErrorsCollapsed', null)
+    $('.validation-errors-loading').show()
 
   unsavedChanges: (->
     @get('changedRowsCount') > 0
