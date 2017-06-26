@@ -72,6 +72,7 @@ def import_data_for(kingdom, rank, synonyms = nil)
           #{rank_id} AS rank_id,
           #{taxonomy.id} AS taxonomy_id,
           parent_taxon_concepts.id AS parent_id,
+          parent_taxon_concepts.full_name || ' ' || tmp.name AS full_name,
           CASE
             WHEN UPPER(BTRIM(tmp.author)) = 'NULL' THEN NULL
             ELSE BTRIM(tmp.author)
@@ -86,6 +87,9 @@ def import_data_for(kingdom, rank, synonyms = nil)
         FROM #{TMP_TABLE} tmp
         INNER JOIN taxon_names
           ON UPPER(taxon_names.scientific_name) = UPPER(BTRIM(tmp.name))
+        LEFT JOIN taxon_names AS tn
+          ON UPPER(tn.scientific_name) = UPPER(BTRIM(tmp.name))
+          AND tn.id < taxon_names.id
         LEFT JOIN ranks parent_ranks
           ON UPPER(BTRIM(parent_ranks.name)) = UPPER(BTRIM(tmp.parent_rank))
         LEFT JOIN taxon_concepts parent_taxon_concepts
@@ -102,9 +106,10 @@ def import_data_for(kingdom, rank, synonyms = nil)
           parent_taxon_concepts.id IS NOT NULL AND parent_ranks.id IS NOT NULL
           OR tmp.parent_legacy_id IS NULL
         )
+        AND tn.id IS NULL
       )
       INSERT INTO taxon_concepts(
-        taxon_name_id, rank_id, taxonomy_id, parent_id,
+        taxon_name_id, rank_id, taxonomy_id, parent_id, full_name,
         author_year, legacy_id, legacy_type, notes, name_status, data,
         created_at, updated_at
       )
