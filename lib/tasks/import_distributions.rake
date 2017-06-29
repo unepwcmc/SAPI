@@ -56,17 +56,18 @@ namespace :import do
         sql = <<-SQL
           INSERT INTO "distribution_references"
             (distribution_id, reference_id, created_at, updated_at)
-          SELECT d.id, tmp.reference_id, NOW(), NOW()
-          FROM #{TMP_TABLE} tmp
-          INNER JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
-          INNER JOIN distributions d ON d.taxon_concept_id = tmp.taxon_concept_id
-          AND d.geo_entity_id = ge.id
-          AND NOT EXISTS (
-            SELECT id
-            FROM distribution_references
-            WHERE reference_id = tmp.reference_id
-              AND distribution_id = d.id
-          )
+          SELECT subquery.*, NOW(), NOW()
+          FROM(
+            SELECT d.id, tmp.reference_id
+            FROM #{TMP_TABLE} tmp
+            INNER JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
+            INNER JOIN distributions d ON d.taxon_concept_id = tmp.taxon_concept_id
+            AND d.geo_entity_id = ge.id
+
+            EXCEPT
+
+            SELECT distribution_id, reference_id FROM distribution_references
+          ) AS subquery
         SQL
         ActiveRecord::Base.connection.execute(sql)
       end
