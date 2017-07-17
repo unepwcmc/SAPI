@@ -18,7 +18,7 @@ namespace :export do
   end
 
   def export_by_year(dir)
-    range = (2011..2016)
+    range = (1975..2016)
     begin
       range.each do |year|
         if (2012..2015).include?(year)
