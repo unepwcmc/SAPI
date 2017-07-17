@@ -5,31 +5,100 @@ namespace :export do
     RECORDS_PER_FILE = 500000
     ntuples = RECORDS_PER_FILE
     offset = 0
-    i = 0
     dir = 'tmp/trade_db_files/'
     FileUtils.mkdir_p dir
+    export(ntuples, offset, dir)
+  end
+
+  task :trade_db_by_year => :environment do
+    RECORDS_PER_FILE = 500000
+    dir = 'tmp/trade_db_files/'
+    FileUtils.mkdir_p dir
+    export_by_year(dir)
+  end
+
+  def export_by_year(dir)
+    range = (2011..2016)
+    begin
+      range.each do |year|
+        if (2012..2015).include?(year)
+          kingdom = 'Animalia'
+          query = Trade::ShipmentReportQueries.full_db_query_by_kingdom(year, kingdom)
+          results = ActiveRecord::Base.connection.execute query
+          ntuples = results.ntuples
+          options = {
+            dir: dir,
+            ntuples: ntuples,
+            index: nil,
+            year: year,
+            kingdom: kingdom
+          }
+          process_results(results, options)
+
+          kingdom = 'Plantae'
+          query = Trade::ShipmentReportQueries.full_db_query_by_kingdom(year, kingdom)
+          results = ActiveRecord::Base.connection.execute query
+          ntuples = results.ntuples
+          options = {
+            dir: dir,
+            ntuples: ntuples,
+            index: nil,
+            year: year,
+            kingdom: kingdom
+          }
+          process_results(results, options)
+        else
+          query = Trade::ShipmentReportQueries.full_db_query_by_year(year)
+          results = ActiveRecord::Base.connection.execute query
+          ntuples = results.ntuples
+          options = {
+            dir: dir,
+            ntuples: ntuples,
+            index: nil,
+            year: year,
+            kingdom: nil
+          }
+          process_results(results, options)
+        end
+      end
+      Rails.logger.info("Trade database completely exported!")
+      zipfile = 'tmp/trade_db_files/trade_db.zip'
+      Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
+        range.each do |year|
+          if (2012..2015).include?(year)
+            filename = "trade_db_#{year}_Animalia.csv"
+            zipfile.add(filename, dir + filename)
+            filename = "trade_db_#{year}_Plantae.csv"
+            zipfile.add(filename, dir + filename)
+          else
+            filename = "trade_db_#{year}.csv"
+            zipfile.add(filename, dir + filename)
+          end
+        end
+      end
+    rescue => e
+      Rails.logger.info("Export aborted!")
+      Rails.logger.info("Caught exception #{e}")
+      Rails.logger.info(e.message)
+    end
+  end
+
+  def export(ntuples, offset, dir)
+    i = 0
     begin
       while(ntuples == RECORDS_PER_FILE) do
         i = i + 1
         query = Trade::ShipmentReportQueries.full_db_query(RECORDS_PER_FILE, offset)
         results = ActiveRecord::Base.connection.execute query
         ntuples = results.ntuples
-        columns = results.fields
-        columns.map do |column|
-          column.capitalize!
-          column.gsub! '_', ' '
-        end
-        values = results.values
-        Rails.logger.info("Query executed returning #{ntuples} records!")
-        filename = "trade_db_#{i}.csv"
-        Rails.logger.info("Processing batch number #{i} in #{filename}.")
-        File.open("#{dir}#{filename}", 'w') do |file|
-          file.write columns.join(',')
-          values.each do |record|
-            file.write "\n"
-            file.write record.join(',')
-          end
-        end
+        options = {
+          dir: dir,
+          ntuples: ntuples,
+          index: index,
+          year: nil,
+          kingdom: nil
+        }
+        process_results(results, options)
         offset = offset + RECORDS_PER_FILE
       end
       Rails.logger.info("Trade database completely exported!")
@@ -44,6 +113,31 @@ namespace :export do
       Rails.logger.info("Export aborted!")
       Rails.logger.info("Caught exception #{e}")
       Rails.logger.info(e.message)
+    end
+  end
+
+  def process_results(results, options)
+    columns = results.fields
+    columns.map do |column|
+      column.capitalize!
+      column.gsub! '_', ' '
+    end
+    values = results.values
+    Rails.logger.info("Query executed returning #{options[:ntuples]} records!")
+    filename = ''
+    if options[:index]
+      filename = "trade_db_#{options[:index]}.csv"
+    else
+      filename = "trade_db_#{options[:year]}.csv"
+      filename = "trade_db_#{options[:year]}_#{options[:kingdom]}.csv" if options[:kingdom]
+    end
+    Rails.logger.info("Processing #{filename}.")
+    File.open("#{options[:dir]}#{filename}", 'w') do |file|
+      file.write columns.join(',')
+      values.each do |record|
+        file.write "\n"
+        file.write record.join(',')
+      end
     end
   end
 end
