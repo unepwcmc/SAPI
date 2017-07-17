@@ -101,9 +101,7 @@ module Trade::ShipmentReportQueries
       import_permit_number AS import_permit,
       export_permit_number AS export_permit,
       origin_permit_number AS origin_permit,
-      legacy_shipment_number AS legacy_shipment_no,
-      uc.name AS created_by,
-      uu.name AS updated_by
+      legacy_shipment_number AS legacy_shipment_no
     FROM trade_shipments_with_taxa_view AS shipments
     JOIN ranks
       ON ranks.id = taxon_concept_rank_id
@@ -161,9 +159,7 @@ module Trade::ShipmentReportQueries
       import_permit_number AS import_permit,
       export_permit_number AS export_permit,
       origin_permit_number AS origin_permit,
-      legacy_shipment_number AS legacy_shipment_no,
-      uc.name AS created_by,
-      uu.name AS updated_by
+      legacy_shipment_number AS legacy_shipment_no
     FROM trade_shipments_with_taxa_view AS shipments
     JOIN ranks
       ON ranks.id = taxon_concept_rank_id
