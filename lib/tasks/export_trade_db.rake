@@ -17,6 +17,34 @@ namespace :export do
     export_by_year(dir)
   end
 
+  task :trade_db_single_file => :environment do
+    dir = 'tmp/trade_db_files/'
+    FileUtils.mkdir_p dir
+    export_in_single_file(dir)
+  end
+
+  def export_in_single_file(dir)
+    begin
+      query = Trade::ShipmentReportQueries.full_db_query('ALL', 0)
+      results = ActiveRecord::Base.connection.execute query
+      options = {
+        dir: dir,
+        ntuples: ntuples
+      }
+      process_results(results, options)
+      Rails.logger.info("Trade database completely exported!")
+      zipfile = 'tmp/trade_db_files/trade_db.zip'
+      filename = "trade_db_full_export.csv"
+      Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
+        zipfile.add(filename, dir + filename)
+      end
+    rescue => e
+      Rails.logger.info("Export aborted!")
+      Rails.logger.info("Caught exception #{e}")
+      Rails.logger.info(e.message)
+    end
+  end
+
   def export_by_year(dir)
     range = (1975..2016)
     begin
@@ -127,9 +155,11 @@ namespace :export do
     filename = ''
     if options[:index]
       filename = "trade_db_#{options[:index]}.csv"
-    else
+    elsif options[:year]
       filename = "trade_db_#{options[:year]}.csv"
       filename = "trade_db_#{options[:year]}_#{options[:kingdom]}.csv" if options[:kingdom]
+    else
+      filename = "trade_db_full_export.csv"
     end
     Rails.logger.info("Processing #{filename}.")
     File.open("#{options[:dir]}#{filename}", 'w') do |file|
