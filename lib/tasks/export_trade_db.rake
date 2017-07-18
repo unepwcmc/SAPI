@@ -18,25 +18,49 @@ namespace :export do
   end
 
   task :trade_db_single_file => :environment do
+    RECORDS_PER_FILE = 500000
+    ntuples = RECORDS_PER_FILE
+    offset = 0
     dir = 'tmp/trade_db_files/'
     FileUtils.mkdir_p dir
-    export_in_single_file(dir)
+    export_in_single_file(ntuples, offset, dir)
   end
 
-  def export_in_single_file(dir)
+  def export_in_single_file(ntuples, offset, dir)
+    i = 0
+    filename = 'trade_db_full_export.csv'
     begin
-      query = Trade::ShipmentReportQueries.full_db_query_single_file
-      results = ActiveRecord::Base.connection.execute query
-      options = {
-        dir: dir,
-        ntuples: ntuples
-      }
-      process_results(results, options)
+      while(ntuples == RECORDS_PER_FILE) do
+        i = i + 1
+        query = Trade::ShipmentReportQueries.full_db_query_single_file(RECORDS_PER_FILE, offset)
+        results = ActiveRecord::Base.connection.execute query
+        ntuples = results.ntuples
+        values = results.values
+
+        Rails.logger.info("Query executed returning #{ntuples} records!")
+
+        File.open("#{dir}#{filename}", 'a') do |file|
+          if i == 1
+            columns = results.fields
+            columns.map do |column|
+              column.capitalize!
+              column.gsub! '_', ' '
+            end
+            file.write(columns.join(','))
+          end
+
+          values.each do |record|
+            file.write("\n")
+            file.write(record.join(','))
+          end
+        end
+
+        offset = offset + RECORDS_PER_FILE
+      end
       Rails.logger.info("Trade database completely exported!")
       zipfile = 'tmp/trade_db_files/trade_db.zip'
-      filename = "trade_db_full_export.csv"
       Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
-        zipfile.add(filename, dir + filename)
+          zipfile.add(filename, dir + filename)
       end
     rescue => e
       Rails.logger.info("Export aborted!")

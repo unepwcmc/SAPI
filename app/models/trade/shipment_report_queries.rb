@@ -187,7 +187,7 @@ module Trade::ShipmentReportQueries
     ORDER BY shipments.id"
   end
 
-  def self.full_db_query_single_file
+  def self.full_db_query_single_file(limit, offset)
     "SELECT
       shipments.id AS id,
       year AS year,
@@ -239,7 +239,8 @@ module Trade::ShipmentReportQueries
       ON shipments.created_by_id = uc.id
     LEFT JOIN users as uu
       ON shipments.updated_by_id = uu.id
-    ORDER BY shipments.id"
+    ORDER BY shipments.id
+    LIMIT #{limit} OFFSET #{offset}"
   end
 
   def self.full_db_query(limit, offset)
