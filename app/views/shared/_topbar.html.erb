@@ -176,15 +176,15 @@
               <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <% if current_user && current_user.is_manager_or_contributor? %>
-                <li><%= link_to 'Data Downloads', admin_exports_path %></li>
-                <li><%= link_to 'Species DB Statistics', admin_stats_path %></li>
-                <li><%= link_to 'Trade DB Statistics', trade_stats_path %></li>
+              <li><%= link_to 'Data Downloads', admin_exports_path %></li>
+              <li><%= link_to 'Species DB Statistics', admin_stats_path %></li>
+              <li><%= link_to 'Trade DB Statistics', trade_stats_path %></li>
+              <% if current_user && !current_user.is_secretariat? %>
+                <li><%= link_to 'IUCN Taxon Mapping', admin_iucn_mappings_path %></li>
+                <li><%= link_to 'CMS Taxon Mapping', admin_cms_mappings_path %></li>
+                <li><%= link_to 'Species+ Events Tracking', admin_ahoy_events_path %></li>
+                <li><%= link_to 'Species+ Visits Tracking', admin_ahoy_visits_path %></li>
               <% end %>
-              <li><%= link_to 'IUCN Taxon Mapping', admin_iucn_mappings_path %></li>
-              <li><%= link_to 'CMS Taxon Mapping', admin_cms_mappings_path %></li>
-              <li><%= link_to 'Species+ Events Tracking', admin_ahoy_events_path %></li>
-              <li><%= link_to 'Species+ Visits Tracking', admin_ahoy_visits_path %></li>
               <li><%= link_to 'Species+ Activity Page', activities_path %></li>
 
               <% if current_user && current_user.is_manager_or_secretariat? %>
