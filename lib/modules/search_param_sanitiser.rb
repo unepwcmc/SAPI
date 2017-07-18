@@ -32,8 +32,7 @@ module SearchParamSanitiser
   def sanitise_float(f, default = nil)
     new_f =
       if f.is_a?(String)
-        tmp = f.to_f
-        tmp.to_s == f ? tmp : nil
+        Float(f) rescue nil
       else
         f
       end
