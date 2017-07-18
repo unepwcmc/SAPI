@@ -25,7 +25,7 @@ namespace :export do
 
   def export_in_single_file(dir)
     begin
-      query = Trade::ShipmentReportQueries.full_db_query('ALL', 0)
+      query = Trade::ShipmentReportQueries.full_db_query_single_file
       results = ActiveRecord::Base.connection.execute query
       options = {
         dir: dir,
