@@ -12,9 +12,9 @@ Trade.Flash = Ember.Mixin.create
   flashError: (msg, persists) ->
     @get('application').notify({
       title: "Error"
-      message: options.message,
+      message: msg.message,
       type: "alert-error",
-      persists: options.persists
+      persists: persists
     })
   flashClear: ->
     @get('application').send('closeNotification')
