@@ -1,4 +1,4 @@
-Trade.AnnualReportUploadsController = Ember.ArrayController.extend
+Trade.AnnualReportUploadsController = Ember.ArrayController.extend Trade.AuthoriseUser,
   content: null
   needs: ['geoEntities']
 
@@ -9,7 +9,7 @@ Trade.AnnualReportUploadsController = Ember.ArrayController.extend
         @transitionToRoute('annual_report_uploads')
       )
       aru.deleteRecord()
-      aru.get('transaction').commit()    
+      aru.get('transaction').commit()
 
   actions:
     transitionToReportUploadFromList: (aru)->
@@ -23,11 +23,15 @@ Trade.AnnualReportUploadsController = Ember.ArrayController.extend
       @transitionToRoute('annual_report_uploads')
 
     deleteUpload: (aru) ->
-      if confirm("This will delete the upload. Proceed?")
-        @deleteUpload(aru)
+      @userCanEdit( =>
+        if confirm("This will delete the upload. Proceed?")
+          @deleteUpload(aru)
+      )
 
     deleteAllUploads: ()->
       if confirm("This will delete all uploads. Proceed?")
         @get('content').forEach (aru) =>
           @deleteUpload(aru)
-     
+
+    uploadAnnualReport: ->
+      $('#submitUpload').click()

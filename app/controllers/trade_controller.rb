@@ -1,8 +1,8 @@
 class TradeController < ApplicationController
 
   before_filter :authenticate_user!
-  before_filter :verify_manager_or_secretariat_or_active, except: [:update, :create, :destroy]
-  before_filter :verify_manager, only: [:update, :create, :destroy]
+  before_filter :verify_manager_or_secretariat_or_active, except: [:update, :create, :submit, :destroy]
+  before_filter :verify_manager, only: [:update, :create, :submit, :destroy]
 
   def user_can_edit
     render json: { can_edit: current_user.is_manager? && current_user.is_active? }
