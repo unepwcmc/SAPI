@@ -4,7 +4,11 @@ class ApplicationController < ActionController::Base
   before_filter :set_locale
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
-  rescue_from CanCan::AccessDenied do |exception|
+  rescue_from CanCan::AccessDenied, with: :access_denied_error
+
+  protected
+
+  def access_denied_error
     rescue_path = if request.referrer && request.referrer != request.url
                     request.referer
                   elsif current_user.is_manager_or_contributor_or_secretariat?
@@ -32,8 +36,6 @@ class ApplicationController < ActionController::Base
       format.js { render inline: "location.reload();" }
     end
   end
-
-  protected
 
   def configure_permitted_parameters
     extra_parameters = [:name, :is_cites_authority, :organisation, :geo_entity_id]
