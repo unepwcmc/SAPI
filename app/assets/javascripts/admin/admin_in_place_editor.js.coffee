@@ -392,11 +392,15 @@ class TermPairingsSelect2Editor extends AdminEditor
         newParams[$(@).attr('data-resource')][params.name] = params.value
         return newParams
       error: ->
-        errors = JSON.parse(arguments[0].responseText).errors
+        errors = arguments[0].responseText
         errorsMessages = []
-        for k, v of errors
-          errorsMessages.push v
-        errorsMessages.join ', '
+        if typeof errors is 'string'
+          errorMessages = errors
+        else
+          errors = JSON.parse(errors).errors
+          for k, v of errors
+            errorsMessages.push v
+          errorsMessages.join ', '
       display: (item) ->
         # Hack around: https://github.com/vitalets/x-editable/issues/431
         if $(@).attr('data-type') == 'select'
