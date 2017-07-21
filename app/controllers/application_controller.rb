@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def access_denied_error
+  def access_denied_error(exception)
     rescue_path = if request.referrer && request.referrer != request.url
                     request.referer
                   elsif current_user.is_manager_or_contributor_or_secretariat?
