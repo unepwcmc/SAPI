@@ -101,6 +101,22 @@ describe Admin::NomenclatureChanges::LumpController do
         response.should render_template('inputs')
       end
     end
+    context 'when last step' do
+      context 'when user is secretariat' do
+        login_secretariat_user
+        it 'redirects to admin root path' do
+          put :update, nomenclature_change_id: @lump.id, id: 'summary'
+          response.should redirect_to admin_root_path
+        end
+      end
+      context 'when user is manager' do
+        it 'redirects to nomenclature changes path' do
+          put :update, nomenclature_change_id: @lump.id, id: 'summary'
+          response.should be_successful
+          response.should render_template("nomenclature_changes")
+        end
+      end
+    end
   end
 
   describe 'Previous button' do
