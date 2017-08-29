@@ -13,16 +13,16 @@ namespace :import do
       kingdom = file.split('/').last.split('_')[0].titleize
 
       # import_data_for Rank::KINGDOM
-      import_data_for kingdom, Rank::PHYLUM
-      import_data_for kingdom, Rank::CLASS
-      import_data_for kingdom, Rank::ORDER
-      import_data_for kingdom, Rank::FAMILY
-      import_data_for kingdom, Rank::SUBFAMILY
-      import_data_for kingdom, Rank::GENUS
-      import_data_for kingdom, Rank::SPECIES
-      import_data_for kingdom, Rank::SUBSPECIES
+      import_data_for_kew_id kingdom, Rank::PHYLUM
+      import_data_for_kew_id kingdom, Rank::CLASS
+      import_data_for_kew_id kingdom, Rank::ORDER
+      import_data_for_kew_id kingdom, Rank::FAMILY
+      import_data_for_kew_id kingdom, Rank::SUBFAMILY
+      import_data_for_kew_id kingdom, Rank::GENUS
+      import_data_for_kew_id kingdom, Rank::SPECIES
+      import_data_for_kew_id kingdom, Rank::SUBSPECIES
       if kingdom == 'Plantae'
-        import_data_for kingdom, Rank::VARIETY
+        import_data_for_kew_id kingdom, Rank::VARIETY
       end
     end
   end
@@ -31,7 +31,7 @@ end
 # Copies data from the temporary table to the correct tables in the database
 #
 # @param [String] which the rank to be copied.
-def import_data_for(kingdom, rank, synonyms = nil)
+def import_data_for_kew_id(kingdom, rank, synonyms = nil)
   puts "Importing #{rank}"
   rank_id = Rank.select(:id).where(:name => rank).first.id
   existing = TaxonConcept.where(:rank_id => rank_id).count
