@@ -21,16 +21,16 @@ namespace :import do
       kingdom = file.split('/').last.split('_')[0].titleize
 
       # [BEGIN]copied over from import:species
-      import_data_for kingdom, Rank::PHYLUM, true
-      import_data_for kingdom, Rank::CLASS, true
-      import_data_for kingdom, Rank::ORDER, true
-      import_data_for kingdom, Rank::FAMILY, true
-      import_data_for kingdom, Rank::SUBFAMILY, true
-      import_data_for kingdom, Rank::GENUS, true
-      import_data_for kingdom, Rank::SPECIES, true
-      import_data_for kingdom, Rank::SUBSPECIES, true
+      import_data_for_kew_id kingdom, Rank::PHYLUM, true
+      import_data_for_kew_id kingdom, Rank::CLASS, true
+      import_data_for_kew_id kingdom, Rank::ORDER, true
+      import_data_for_kew_id kingdom, Rank::FAMILY, true
+      import_data_for_kew_id kingdom, Rank::SUBFAMILY, true
+      import_data_for_kew_id kingdom, Rank::GENUS, true
+      import_data_for_kew_id kingdom, Rank::SPECIES, true
+      import_data_for_kew_id kingdom, Rank::SUBSPECIES, true
       if kingdom == 'Plantae'
-        import_data_for kingdom, Rank::VARIETY
+        import_data_for_kew_id kingdom, Rank::VARIETY
       end
       # [END]copied over from import:species
 
