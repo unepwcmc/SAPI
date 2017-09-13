@@ -50,7 +50,7 @@ namespace :import do
               ON accepted.id = #{TMP_TABLE}.accepted_id AND accepted.rank_id = ranks.id and accepted.legacy_type = '#{kingdom}'
             INNER JOIN ranks as synonyms_rank ON UPPER(synonyms_rank.name) = BTRIM(Upper(#{TMP_TABLE}.rank))
             INNER JOIN taxon_concepts AS synonym
-              ON synonym.id = #{TMP_TABLE}.id AND synonym.rank_id = synonyms_rank.id and synonym.legacy_type = '#{kingdom}'
+              ON synonym.rank_id = synonyms_rank.id AND synonym.legacy_type = '#{kingdom}'
             LEFT JOIN taxonomies ON taxonomies.id = accepted.taxonomy_id AND taxonomies.id = synonym.taxonomy_id
             WHERE taxonomies.id = #{taxonomy.id}
               AND
