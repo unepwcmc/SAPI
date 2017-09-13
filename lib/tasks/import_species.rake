@@ -80,6 +80,7 @@ def import_data_for(kingdom, rank, synonyms = nil)
           '#{kingdom}' AS legacy_type,
           tmp.notes,
           UPPER(BTRIM(tmp.status)) AS name_status,
+          hstore('accepted_id', #{synonyms ? 'accepted_id::VARCHAR' : 'NULL'}) ||
           hstore('accepted_rank', #{synonyms ? 'UPPER(BTRIM(accepted_rank))' : 'NULL'}) AS data,
           current_date, current_date
         FROM #{TMP_TABLE} tmp
