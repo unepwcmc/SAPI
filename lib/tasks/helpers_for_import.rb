@@ -48,7 +48,7 @@ class CsvToDbMap
       'Notes' => 'notes varchar',
       'Designation' => 'taxonomy varchar',
       'AcceptedRank' => 'accepted_rank varchar',
-      'AcceptedRecID' => 'accepted_legacy_id integer'
+      'AcceptedID' => 'accepted_id integer'
     },
     'synonym_import_legacy' => {
       'Scientific name' => 'name varchar',
