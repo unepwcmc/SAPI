@@ -2,7 +2,7 @@ namespace :import do
 
   desc 'Import synonyms from csv file (usage: rake import:synonyms[path/to/file,path/to/another])'
   task :synonyms_legacy, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
-    TMP_TABLE = 'synonym_import'
+    TMP_TABLE = 'synonym_import_legacy'
     puts "There are #{TaxonRelationship.
       joins(:taxon_relationship_type).
       where(

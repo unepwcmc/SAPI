@@ -3,7 +3,7 @@ namespace :import do
 
   desc "Import species records from csv files (usage: rake import:species[path/to/file,path/to/another])"
   task :species_legacy, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
-    TMP_TABLE = 'species_import'
+    TMP_TABLE = 'species_import_legacy'
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(TMP_TABLE)
