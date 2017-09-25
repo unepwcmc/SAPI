@@ -111,8 +111,8 @@ group :test, :development do
   gem "database_cleaner", ">=1.2.0"
   gem "timecop"
   gem "launchy"
+  gem 'byebug'
 end
-gem 'byebug'
 
 group :test do
   gem "codeclimate-test-reporter", require: nil
