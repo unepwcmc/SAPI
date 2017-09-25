@@ -1,8 +1,8 @@
 namespace :import do
 
-  desc 'Import synonyms from csv file (usage: rake import:synonyms_kew_id[path/to/file,path/to/another])'
-  task :synonyms_kew_id, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
-    TMP_TABLE = 'synonym_kew_id_import'
+  desc 'Import synonyms from csv file (usage: rake import:synonyms[path/to/file,path/to/another])'
+  task :synonyms_legacy, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+    TMP_TABLE = 'synonym_import_legacy'
     puts "There are #{TaxonRelationship.
       joins(:taxon_relationship_type).
       where(
@@ -20,17 +20,17 @@ namespace :import do
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
-      # [BEGIN]copied over from import:species
-      import_data_for_kew_id kingdom, Rank::PHYLUM, true
-      import_data_for_kew_id kingdom, Rank::CLASS, true
-      import_data_for_kew_id kingdom, Rank::ORDER, true
-      import_data_for_kew_id kingdom, Rank::FAMILY, true
-      import_data_for_kew_id kingdom, Rank::SUBFAMILY, true
-      import_data_for_kew_id kingdom, Rank::GENUS, true
-      import_data_for_kew_id kingdom, Rank::SPECIES, true
-      import_data_for_kew_id kingdom, Rank::SUBSPECIES, true
+      # [BEGIN]copied over from import:species_legacy
+      import_data_with_legacy_for kingdom, Rank::PHYLUM, true
+      import_data_with_legacy_for kingdom, Rank::CLASS, true
+      import_data_with_legacy_for kingdom, Rank::ORDER, true
+      import_data_with_legacy_for kingdom, Rank::FAMILY, true
+      import_data_with_legacy_for kingdom, Rank::SUBFAMILY, true
+      import_data_with_legacy_for kingdom, Rank::GENUS, true
+      import_data_with_legacy_for kingdom, Rank::SPECIES, true
+      import_data_with_legacy_for kingdom, Rank::SUBSPECIES, true
       if kingdom == 'Plantae'
-        import_data_for_kew_id kingdom, Rank::VARIETY
+        import_data_with_legacy_for kingdom, Rank::VARIETY
       end
       # [END]copied over from import:species
 
@@ -47,10 +47,10 @@ namespace :import do
             FROM #{TMP_TABLE}
             INNER JOIN ranks ON UPPER(ranks.name) = BTRIM(UPPER(#{TMP_TABLE}.accepted_rank))
             INNER JOIN taxon_concepts AS accepted
-              ON accepted.kew_id = #{TMP_TABLE}.accepted_kew_id AND accepted.rank_id = ranks.id
+              ON accepted.legacy_id = #{TMP_TABLE}.accepted_legacy_id AND accepted.rank_id = ranks.id and accepted.legacy_type = '#{kingdom}'
             INNER JOIN ranks as synonyms_rank ON UPPER(synonyms_rank.name) = BTRIM(Upper(#{TMP_TABLE}.rank))
             INNER JOIN taxon_concepts AS synonym
-              ON synonym.kew_id = #{TMP_TABLE}.kew_id AND synonym.rank_id = synonyms_rank.id
+              ON synonym.legacy_id = #{TMP_TABLE}.legacy_id AND synonym.rank_id = synonyms_rank.id and synonym.legacy_type = '#{kingdom}'
             LEFT JOIN taxonomies ON taxonomies.id = accepted.taxonomy_id AND taxonomies.id = synonym.taxonomy_id
             WHERE taxonomies.id = #{taxonomy.id}
               AND
