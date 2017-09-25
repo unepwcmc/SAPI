@@ -30,7 +30,7 @@ namespace :import do
       import_data_for kingdom, Rank::SPECIES, true
       import_data_for kingdom, Rank::SUBSPECIES, true
       if kingdom == 'Plantae'
-        import_data_for kingdom, Rank::VARIETY
+        import_data_for kingdom, Rank::VARIETY, true
       end
       # [END]copied over from import:species
 
