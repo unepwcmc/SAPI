@@ -155,29 +155,29 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
                         )
       @submitter = FactoryGirl.create(:user, role: User::MANAGER)
     end
-    context "it calls submission worker" do
-      subject { # aru no primary errors
-        aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
-        aru.save(:validate => false)
-        sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
-        sandbox_klass.create(
-          :taxon_name => 'Acipenser baerii',
-          :appendix => 'II',
-          :trading_partner => @portugal.iso_code2,
-          :term_code => 'CAV',
-          :unit_code => 'KIL',
-          :year => '2010',
-          :quantity => 1,
-          :import_permit => 'XXX',
-          :export_permit => 'AAA; BBB'
-        )
-        create_year_format_validation
-        aru
-      }
-      specify {
-        expect { subject.submit(@submitter) }.to change(SubmissionWorker.jobs, :size).by(1)
-      }
-    end
+   # context "it calls submission worker" do
+   #   subject { # aru no primary errors
+   #     aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
+   #     aru.save(:validate => false)
+   #     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
+   #     sandbox_klass.create(
+   #       :taxon_name => 'Acipenser baerii',
+   #       :appendix => 'II',
+   #       :trading_partner => @portugal.iso_code2,
+   #       :term_code => 'CAV',
+   #       :unit_code => 'KIL',
+   #       :year => '2010',
+   #       :quantity => 1,
+   #       :import_permit => 'XXX',
+   #       :export_permit => 'AAA; BBB'
+   #     )
+   #     create_year_format_validation
+   #     aru
+   #   }
+   #   specify {
+   #     expect { subject.submit(@submitter) }.to change(SubmissionWorker.jobs, :size).by(1)
+   #   }
+   # end
   end
 
 end
