@@ -9,6 +9,17 @@ class CsvToDbMap
       'Rank' => 'rank varchar',
       'RecID' => 'legacy_id integer',
       'ParentRank' => 'parent_rank varchar',
+      'ParentID' => 'parent_id integer',
+      'Status' => 'status varchar',
+      'Species Author' => 'author varchar',
+      'Notes' => 'notes varchar',
+      'Designation' => 'taxonomy varchar'
+    },
+    'species_import_legacy' => {
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'legacy_id integer',
+      'ParentRank' => 'parent_rank varchar',
       'ParentRecID' => 'parent_legacy_id integer',
       'Status' => 'status varchar',
       'Species Author' => 'author varchar',
@@ -27,6 +38,19 @@ class CsvToDbMap
       'Designation' => 'taxonomy varchar'
     },
     'synonym_import' => {
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'legacy_id integer',
+      'ParentRank' => 'parent_rank varchar',
+      'ParentID' => 'parent_id integer',
+      'Status' => 'status varchar',
+      'Species Author' => 'author varchar',
+      'Notes' => 'notes varchar',
+      'Designation' => 'taxonomy varchar',
+      'AcceptedRank' => 'accepted_rank varchar',
+      'AcceptedID' => 'accepted_id integer'
+    },
+    'synonym_import_legacy' => {
       'Scientific name' => 'name varchar',
       'Rank' => 'rank varchar',
       'RecID' => 'legacy_id integer',
