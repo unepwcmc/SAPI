@@ -81,7 +81,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
       return false
     end
 
-    SubmissionWorker.perform_async(self.id, submitter.id)
+    perform_submission(submitter)
   end
 
   def reported_by_exporter?
@@ -114,6 +114,58 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     @validation_errors += run_validations(
       Trade::ValidationRule.where(:is_primary => false)
     )
+  end
+
+  def perform_submission(submitter)
+    duplicates = self.sandbox.check_for_duplicates_in_shipments
+    if duplicates.present?
+      tempfile = Trade::ChangelogCsvGenerator.call(self, submitter, duplicates)
+      self.errors[:base] << "Submit failed, duplicate rows present."
+      return false
+    end
+
+    return false unless self.sandbox.copy_from_sandbox_to_shipments(submitter)
+
+    tempfile = Trade::ChangelogCsvGenerator.call(self, submitter)
+
+    upload_on_S3(tempfile)
+
+    records_submitted = self.sandbox.moved_rows_cnt
+    # remove uploaded file
+    store_dir = self.csv_source_file.store_dir
+    self.remove_csv_source_file!
+    puts '### removing uploads dir ###'
+    puts Rails.root.join('public', store_dir)
+    FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
+
+    # clear downloads cache
+    DownloadsCache.send(:clear_shipments)
+
+    self.sandbox.destroy
+
+    # flag as submitted
+    self.update_attributes({
+      submitted_at: DateTime.now,
+      submitted_by_id: submitter.id,
+      number_of_rows: records_submitted
+    })
+
+    tempfile.delete
+  end
+
+  def upload_on_S3(tempfile)
+    begin
+      s3 = Aws::S3::Resource.new
+      filename = "#{Rails.env}/trade/annual_report_upload/#{self.id}/changelog.csv"
+      bucket_name = Rails.application.secrets.aws['bucket_name']
+      obj = s3.bucket(bucket_name).object(filename)
+      obj.upload_file(tempfile.path)
+
+      self.update_attributes(aws_storage_path: obj.public_url)
+    rescue Aws::S3::Errors::ServiceError => e
+      Rails.logger.warn "Something went wrong while uploading #{self.id} to S3"
+      Appsignal.add_exception(e) if defined? Appsignal
+    end
   end
 
 end
