@@ -117,12 +117,16 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   end
 
   def perform_submission(submitter)
-    duplicates = self.sandbox.check_for_duplicates_in_shipments
-    if duplicates.present?
-      tempfile = Trade::ChangelogCsvGenerator.call(self, submitter, duplicates)
-      self.errors[:base] << "Submit failed, duplicate rows present."
-      return false
-    end
+    #This feature has been disabled as the duplication check is made
+    #looking for duplicate shipment ids and it was meant to fix potential
+    #concurrencies with other parties submitting shipments (EPIX work)
+
+   # duplicates = self.sandbox.check_for_duplicates_in_shipments
+   # if duplicates.present?
+   #   tempfile = Trade::ChangelogCsvGenerator.call(self, submitter, duplicates)
+   #   self.errors[:base] << "Submit failed, duplicate rows present."
+   #   return false
+   # end
 
     return false unless self.sandbox.copy_from_sandbox_to_shipments(submitter)
 
