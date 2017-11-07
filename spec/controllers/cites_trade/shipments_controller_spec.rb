@@ -40,7 +40,7 @@ describe CitesTrade::ShipmentsController do
     it "should return genus & species shipments when searching by genus" do
       get :index, filters: {
         taxon_concepts_ids: [@animal_genus.id],
-        selection_taxon: 'genus'
+        selection_taxon: 'taxonomic_cascade'
       }, format: :json
       response.body.should have_json_size(2).at_path('shipment_comptab_export/rows')
     end
