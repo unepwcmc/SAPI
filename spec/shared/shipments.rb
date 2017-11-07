@@ -211,7 +211,7 @@ shared_context 'Shipments' do
       :importer => @argentina,
       :exporter => @portugal,
       :country_of_origin => @argentina,
-      :year => 2012,
+      :year => 2014,
       :reported_by_exporter => true,
       :import_permit_number => 'AAA',
       :export_permit_number => 'BBB;CCC',
