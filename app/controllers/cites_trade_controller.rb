@@ -22,7 +22,7 @@ class CitesTradeController < ApplicationController
     ).merge({
       # if taxon search comes from the genus selector, search descendants
       :taxon_with_descendants =>
-        (params[:filters] && params[:filters][:selection_taxon] == 'genus'),
+        (params[:filters] && params[:filters][:selection_taxon] == 'taxonomic_cascade'),
       :report_type =>
         if params[:filters] && params[:filters][:report_type] &&
           Trade::ShipmentsExportFactory.public_report_types.include?(

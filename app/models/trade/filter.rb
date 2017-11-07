@@ -30,14 +30,12 @@ class Trade::Filter
 
     unless @taxon_concepts_ids.empty?
       cascading_ranks =
-        if @internal
-          # always cascade if query is coming from the internal interface
-          Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
-        elsif @taxon_with_descendants && !@internal
+        if @internal || @taxon_with_descendants
+          # always cascade if query is coming from the internal and now also public interface
           # the magnificent hack to make sure that queries coming from the public
-          # interface cascade to taxon descendants when searching by genus,
-          # but only through the 'genus' selector, not 'taxon'
-          Rank.in_range(Rank::SPECIES, Rank::GENUS)
+          # interface cascade to taxon descendants when searching across all taxonomic levels,
+          # but only through the 'all_taxa' selector, not 'taxon'
+          Rank.in_range(Rank::SPECIES, Rank::KINGDOM)
         else
           # this has to be public interface + search by taxon
           # only cascade for species
