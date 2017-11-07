@@ -33,7 +33,7 @@ describe CitesTrade::ShipmentsController do
       get :index, filters: {
         report_type: 'gross_exports',
         time_range_start: 2012,
-        time_range_end: 2013
+        time_range_end: 2014
       }, format: :json
       response.body.should have_json_size(5).at_path('shipment_gross_net_export/rows')
     end

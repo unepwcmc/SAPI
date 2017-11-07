@@ -213,8 +213,8 @@ shared_context 'Shipments' do
       :country_of_origin => @argentina,
       :year => 2014,
       :reported_by_exporter => true,
-      :import_permit_number => 'AAA',
-      :export_permit_number => 'BBB;CCC',
+      :import_permit_number => 'FFF',
+      :export_permit_number => 'DDD;KKK',
       :origin_permit_number => 'EEE',
       :quantity => 20
     )
