@@ -14,12 +14,25 @@ shared_context 'Shipments' do
       :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
       :parent => @animal_family
     )
+    @animal_genus2 = create_cites_eu_genus(
+      :taxon_name => create(:taxon_name, :scientific_name => 'Barfoos'),
+      :parent => @animal_family
+    )
     @animal_species = create_cites_eu_species(
       :taxon_name => create(:taxon_name, :scientific_name => 'abstractus'),
       :parent => @animal_genus
     )
+    @animal_species2 = create_cites_eu_species(
+      :taxon_name => create(:taxon_name, :scientific_name => 'abstractus'),
+      :parent => @animal_genus2
+    )
     create_cites_I_addition(
       :taxon_concept => @animal_species,
+      :effective_at => 1.day.ago,
+      :is_current => true
+    )
+    create_cites_I_addition(
+      :taxon_concept => @animal_species2,
       :effective_at => 1.day.ago,
       :is_current => true
     )
@@ -42,6 +55,13 @@ shared_context 'Shipments' do
     )
     @synonym_subspecies = create_cites_eu_subspecies(
       :parent => @animal_species,
+      :name_status => 'S'
+    )
+    @subspecies2 = create_cites_eu_subspecies(
+      :parent => @animal_species2
+    )
+    @synonym_subspecies2 = create_cites_eu_subspecies(
+      :parent => @animal_species2,
       :name_status => 'S'
     )
     create(
@@ -179,6 +199,24 @@ shared_context 'Shipments' do
       :year => 2013,
       :reported_by_exporter => false,
       :quantity => 50
+    )
+    @shipment7 = create(
+      :shipment,
+      :taxon_concept => @animal_species2,
+      :appendix => 'I',
+      :purpose => @purpose,
+      :source => @source,
+      :term => @term_cav,
+      :unit => @unit,
+      :importer => @argentina,
+      :exporter => @portugal,
+      :country_of_origin => @argentina,
+      :year => 2012,
+      :reported_by_exporter => true,
+      :import_permit_number => 'AAA',
+      :export_permit_number => 'BBB;CCC',
+      :origin_permit_number => 'EEE',
+      :quantity => 20
     )
   end
 end

@@ -27,7 +27,7 @@ describe CitesTrade::ShipmentsController do
     end
     it "should return all comptab shipments" do
       get :index, format: :json
-      response.body.should have_json_size(6).at_path('shipment_comptab_export/rows')
+      response.body.should have_json_size(7).at_path('shipment_comptab_export/rows')
     end
     it "should return all gross_exports shipments" do
       get :index, filters: {
@@ -35,7 +35,7 @@ describe CitesTrade::ShipmentsController do
         time_range_start: 2012,
         time_range_end: 2013
       }, format: :json
-      response.body.should have_json_size(4).at_path('shipment_gross_net_export/rows')
+      response.body.should have_json_size(5).at_path('shipment_gross_net_export/rows')
     end
     it "should return genus & species shipments when searching by genus" do
       get :index, filters: {
@@ -43,6 +43,13 @@ describe CitesTrade::ShipmentsController do
         selection_taxon: 'taxonomic_cascade'
       }, format: :json
       response.body.should have_json_size(2).at_path('shipment_comptab_export/rows')
+    end
+    it "should return family, genus & species shipments when searching by family" do
+      get :index, filters: {
+        taxon_concepts_ids: [@animal_family.id],
+        selection_taxon: 'taxonomic_cascade'
+      }, format: :json
+      response.body.should have_json_size(3).at_path('shipment_comptab_export/rows')
     end
     it "should return genus shipments when searching by taxon" do
       get :index, filters: {
