@@ -203,7 +203,7 @@ shared_context 'Shipments' do
     @shipment7 = create(
       :shipment,
       :taxon_concept => @animal_species2,
-      :appendix => 'I',
+      :appendix => 'II',
       :purpose => @purpose,
       :source => @source,
       :term => @term_cav,
@@ -216,7 +216,7 @@ shared_context 'Shipments' do
       :import_permit_number => 'FFF',
       :export_permit_number => 'DDD;KKK',
       :origin_permit_number => 'EEE',
-      :quantity => 20
+      :quantity => 30
     )
   end
 end
