@@ -612,7 +612,7 @@ $(document).ready(function(){
           data: {
             taxonomy: 'CITES',
             taxon_concept_query: request.term,
-            visibility: 'trade'
+            visibility: 'cites_trade'
           },
           success: function(data) {
             response(parseTaxonData(data, term, false));
