@@ -523,9 +523,6 @@ $(document).ready(function(){
     )){
       displayName += ' spp. ';
     }
-    else {
-      displayName = '[' + taxon.rank_name + '] ' + displayName;
-    }
     return displayName + getFormattedSynonyms(taxon);
   }
 
@@ -601,8 +598,38 @@ $(document).ready(function(){
       }
   }
 
-  //Autocomplete for cites_genus
+  function parseTaxonCascadeData(data, term, showSpp) {
+    var d = data.auto_complete_taxon_concepts;
+    var data_by_rank = [];
+    var currentRank = d[0].rank_name;
+    data_by_rank.push({
+      'value': currentRank,
+      'label': currentRank,
+      'drop_label': currentRank
+    });
+    _.map(d, function (element, index) {
+      var rankName = element.rank_name;
+      if(rankName != currentRank) {
+        currentRank = rankName;
+        data_by_rank.push({
+          'value': rankName,
+          'label': rankName,
+          'drop_label': rankName
+        });
+      }
+      var displayName = getTaxonDisplayName(element, showSpp)
+      data_by_rank.push({
+        'value': element.id,
+        'label': displayName,
+        'drop_label': getTaxonLabel(displayName, term)
+      });
+    });
+    return data_by_rank;
+  }
+
+  //Autocomplete for cascade search
   if (is_search_page) {
+    var ranks = [];
     $("#taxonomic_cascade_search").autocomplete({
     	source: function(request, response) {
         var term = request.term;
@@ -615,7 +642,10 @@ $(document).ready(function(){
             visibility: 'cites_trade'
           },
           success: function(data) {
-            response(parseTaxonData(data, term, false));
+            ranks = _.map(data.meta.rank_headers, function (element, index) {
+              return element.rank_name;
+            });
+            response(parseTaxonCascadeData(data, term, false));
           },
     			error : function(xhr, ajaxOptions, thrownError){
     				growlMe(xhr.status + " ====== " + thrownError);
@@ -644,6 +674,9 @@ $(document).ready(function(){
     }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
       if (item.value === ''){
         return $( "<li>" ).append("No results").appendTo( ul );
+      }
+      if (ranks.indexOf(item.label) > -1) {
+        return $( "<li class='rank-name'>" ).append(item.label).appendTo( ul );
       }
       return $( "<li>" )
         .append( "<a>" + item.drop_label + "</a>" )
