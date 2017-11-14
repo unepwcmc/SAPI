@@ -95,7 +95,6 @@ def import_data_for(kingdom, rank, synonyms = nil)
           ON (
             parent_taxon_concepts.id = tmp.parent_id
             AND parent_taxon_concepts.rank_id = parent_ranks.id
-            AND parent_taxon_concepts.legacy_type = '#{kingdom}'
             AND parent_taxon_concepts.taxonomy_id = #{taxonomy.id}
           )
         WHERE
@@ -124,8 +123,8 @@ def import_data_for(kingdom, rank, synonyms = nil)
           AND taxon_concepts.taxonomy_id = to_be_inserted.taxonomy_id
           AND taxon_concepts.parent_id = to_be_inserted.parent_id
           AND UPPER(taxon_concepts.name_status) = UPPER(to_be_inserted.name_status)
-          AND UPPER(taxon_concepts.legacy_type) = UPPER(to_be_inserted.legacy_type)
           AND UPPER(BTRIM(taxon_concepts.data->'accepted_rank')) = to_be_inserted.data->'accepted_rank'
+          AND taxon_concepts.author_year = to_be_inserted.author_year
       RETURNING id;
     SQL
 
