@@ -123,6 +123,7 @@ def import_data_for(kingdom, rank, synonyms = nil)
           AND taxon_concepts.taxonomy_id = to_be_inserted.taxonomy_id
           AND taxon_concepts.parent_id = to_be_inserted.parent_id
           AND UPPER(taxon_concepts.name_status) = UPPER(to_be_inserted.name_status)
+          AND UPPER(taxon_concepts.legacy_type) = UPPER(to_be_inserted.legacy_type)
           AND UPPER(BTRIM(taxon_concepts.data->'accepted_rank')) = to_be_inserted.data->'accepted_rank'
           AND taxon_concepts.author_year = to_be_inserted.author_year
       RETURNING id;
