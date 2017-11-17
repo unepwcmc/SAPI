@@ -570,6 +570,7 @@ $(document).ready(function(){
               return element.rank_name;
             });
             response(parseTaxonCascadeData(data, term, false));
+            $('input#taxonomic_cascade_search').removeClass('ui-autocomplete-loading');
           },
     			error : function(xhr, ajaxOptions, thrownError){
     				growlMe(xhr.status + " ====== " + thrownError);
