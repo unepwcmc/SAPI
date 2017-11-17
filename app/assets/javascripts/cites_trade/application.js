@@ -68,15 +68,9 @@ $(document).ready(function(){
   	$('#species_out').text(my_value);
   });
 
-  $('#taxon_search').width(300);
-
   function initialiseControls() {
-	  $('#selection_taxon_taxon').attr('checked', true);
-	  $('#div_taxonomic_cascade').find('button').addClass('ui-state-disabled')
-      .removeClass('ui-state-enabled');
 	  $('#genus_all_id_chzn').removeClass('chzn-container-active')
       .addClass('chzn-disabled');
-	  $('#div_taxonomic_cascade :input').attr('disabled', true);
 	  //prevent form support on input and select enter
 	  $('input,select').keypress(function(event) { return event.keyCode != 13; });
   };
@@ -104,7 +98,7 @@ $(document).ready(function(){
         }
       }
     });
-    values['selection_taxon'] = $('input[name="selection_taxon"]:checked').val();
+    values['selection_taxon'] = $('#selection_taxon_cascade').val();
     return values;
   }
 
@@ -174,7 +168,6 @@ $(document).ready(function(){
       .trigger('change');
  	  $('#qryTo').find('option:first').attr('selected', 'selected')
       .trigger('change');
- 	  $('#taxon_search').val('');
  	  $('#taxonomic_cascade_search').val('');
  	  $('#species_out').text('');
  	  $('#sources').select2("val","all_sou");
@@ -198,29 +191,10 @@ $(document).ready(function(){
   	return false;
   });
 
-  //Radio selector for genus or taxon search
-  $("input[name='selection_taxon']").on('change',function(){
-	  var myValue = $(this).attr('id');
-	  if (myValue == 'selection_taxon_cascade') {
-	  	$('#div_taxon').find('input').addClass('ui-state-disabled')
-        .removeClass('ui-state-enabled');
-	  	$('#div_taxonomic_cascade').find('button').removeClass('ui-state-disabled')
-        .addClass('ui-state-enabled');
-	  	$('#div_taxon :input').attr('disabled', true);
-	  	$('#div_taxonomic_cascade :input').removeAttr('disabled');
-	  	$('#taxon_search').val('');
-	  	$('#species_out').text('');
-	  } else {
-	  	$('#div_taxonomic_cascade').find('button').addClass('ui-state-disabled')
-        .removeClass('ui-state-enabled');
-	  	$('#div_taxon').find('input').removeClass('ui-state-disabled')
-        .addClass('ui-state-enabled');
-	  	$('#div_taxon :input').removeAttr('disabled');
-	  	$('#div_taxonomic_cascade :input').attr('disabled', true);
-      $('#taxonomic_cascade_search').val('');
-	  	$('#species_out').text('');
-	  }
-  });
+  $('#div_taxonomic_cascade').find('button').removeClass('ui-state-disabled')
+    .addClass('ui-state-enabled');
+  $('#div_taxonomic_cascade :input').removeAttr('disabled');
+  $('#species_out').text('');
 
   $('#table_selection').colorize({
   		altColor: '#E6EDD7',
@@ -546,56 +520,6 @@ $(document).ready(function(){
         'drop_label': getTaxonLabel(displayName, term)
       };
   	});
-  }
-
-  //Autocomplete for cites_names
-  if (is_search_page) {
-    $("#taxon_search").autocomplete({
-    	source: function(request, response) {
-        var term = request.term;
-        $.ajax({
-          url: "/api/v1/auto_complete_taxon_concepts",
-          dataType: "json",
-          data: {
-            taxonomy: 'CITES',
-            taxon_concept_query: term,
-            visibility: 'trade'
-          },
-          success: function(data) {
-            response(parseTaxonData(data, term, true));
-          },
-    			error : function(xhr, ajaxOptions, thrownError){
-    				growlMe(xhr.status + " ====== " + thrownError);
-    			}
-        });
-      },
-    	select: function( event, ui ) {
-    		$(this).attr('value', ui.item.label);
-        selected_taxa = ui.item.value;
-    		$('#species_out').text(ui.item.label);
-    		return false;
-    	},
-      response: function(event, ui) {
-        if (!ui.content.length) {
-          var noResult = { value:"" };
-          ui.content.push(noResult);
-        }
-      },
-      change: function(event, ui){
-        if (ui.item === null || ui.item.label !== $(this).val() ){
-          $(this).val('');
-          $('#species_out').text('');
-          selected_taxa = '';
-        }
-      }
-    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-      if (item.value === ''){
-        return $( "<li>" ).append("No results").appendTo( ul );
-      }
-      return $( "<li>" )
-        .append( "<a>" + item.drop_label + "</a>" )
-        .appendTo( ul );
-      }
   }
 
   function parseTaxonCascadeData(data, term, showSpp) {
