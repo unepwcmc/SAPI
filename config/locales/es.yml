@@ -5,7 +5,7 @@ es:
   errors:
     no_data_1: "Su consulta ha devuelto ningún dato"
     no_data_2: "Por favor selecciona otras variables"
-    csv_limit_exceeded_1: "Su búsqueda ha encontrado un subconjunto demasiado grande"
+    csv_limit_exceeded_1: "Su búsqueda ha resultado en un subconjunto de datos demasiado grande (más de 1 millón de registros). Debe limitar el rango de años y seleccionar al menos un país de importación/exportación o un taxón."
     csv_limit_exceeded_2: "Debe limitar el rango de años y seleccionar al menos un país de importación/exportación o un taxón"
     web_limit_exceeded_1: "Vista en línea no está disponible para grandes subconjuntos"
     web_limit_exceeded_2: "Puede descargar los resultados en formato CSV"
@@ -19,7 +19,7 @@ es:
   export_text: "Países de exportación"
   export_tip: "Introduzca el país/los países que desea incluir en el producto final. Para incluir datos de todos los países, mantenga seleccionado 'Todos los Países'"
   import_text: "Países importadores"
-  import_tip: "Introduzca el país/los países que desea incluir en el producto final. Para incluir datos de todos los países, mantenga seleccionado 'Todos los Países'" 
+  import_tip: "Introduzca el país/los países que desea incluir en el producto final. Para incluir datos de todos los países, mantenga seleccionado 'Todos los Países'"
   source_text: "Origen"
   source_tip: "Introduzca el origen/los origenes (ej. 'W- Recolectados en el medio silvestre') que desea incluir en el producto final.  Para incluir datos de todos los orígenes, mantenga seleccionado  'Todos los Orígenes'"
   purpose_text: "Objetivo"
@@ -27,7 +27,7 @@ es:
   trade_text: "Términos del Comercio"
   trade_tip: "Introduzca el término/los términos (ej. 'vivo' o 'piel') que desea incluir en el producto final.  Para incluir datos de todos los los términos, mantenga seleccionado 'Todos los Términos'"
   taxon_text: "Buscar por taxón :"
-  taxon_tip: "Para recuperar datos de un taxón específico, escriba el nombre del taxón. Los datos sobre especímenes registrados en el comercio a un nivel de taxón superior (por ejemplo, Scleractinia spp.) también pueden ser recuperados a través de esta búsqueda. Para recuperar los datos de todas las especies dentro de un género en particular, seleccione un género desde el menú desplegable debajo. Para seleccionar todos los taxones, dejar estos secciones en blanco."
+  taxon_tip: "Para buscar datos de un taxón específico, escriba el nombre del taxon. Para buscar datos de todas las especies dentro de un grupo taxonómico en particular (por ejemplo género, familia, orden, clase, etc.), seleccione un grupo taxonómico en el menú desplegable de abajo. Para seleccionar todos los taxones, deje esta sección en blanco."
   taxon_title: "Buscar por taxón:"
   genus_title: "Seleccione un género:"
 

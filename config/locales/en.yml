@@ -8,7 +8,7 @@ en:
   errors:
     no_data_1: "Your query has returned no data"
     no_data_2: "Please select other variables"
-    csv_limit_exceeded_1: "Your query has returned too large a subset"
+    csv_limit_exceeded_1: "Your query has returned too large a subset (greater than 1 million records). You must limit the year range and select at least one import/export country or one taxon."
     csv_limit_exceeded_2: "You must limit the year range and select at least one import/export country or one taxon"
     web_limit_exceeded_1: "Web output is not available for large subsets"
     web_limit_exceeded_2: "Please download the results in CSV format"
@@ -30,7 +30,7 @@ en:
   trade_text: "Trade Terms"
   trade_tip: "Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected"
   taxon_text: "Search by taxon"
-  taxon_tip: "To retrieve data for a specific taxon, type in the taxon name. Data on specimens recorded in trade at the higher taxon level (e.g. Scleractinia spp.) can also be retrieved through this search. To retrieve data for all species within a particular genus, select a genus from the drop-down below. To select all taxa, leave these sections blank."
+  taxon_tip: "To retrieve data for a specific taxon, type in the taxon name. To retrieve data for all species within a particular higher taxon (e.g. genus, family, order, class etc.), select a higher taxon from the drop-down below. To select all taxa, leave the selection blank."
   taxon_title: "Search for taxon reported trade:"
   genus_title: "Search for genus:"
 

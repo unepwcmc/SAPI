@@ -58,9 +58,12 @@
         </ul>
 
         <div id="tabs-year">
-          <div id="year" class="label_style"><%= t('year_text') %> :
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('year_tip') %> " />
+          <div id="year" class="label_style">
+            <%= t('year_text') %> :
           </div>
+          <p>
+            <%= t('year_tip') %>
+          </p>
           <%= t('from') %>
           <%= select_tag 'time_range_start', options_for_select(@years, @years.first), id: "qryFrom" %> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           <%= t('to') %>
@@ -132,7 +135,7 @@
 
           <div class="taxon-search-container">
             <div id="div_taxonomic_cascade" class="grid_8">
-              <span style="padding:10px 0px">Select across all taxonomic levels</span><br />
+              <span style="padding:10px 0px">Search for species or higher taxon</span><br />
               <input type="text" size="30" name="taxon_concepts_ids[]" id="taxonomic_cascade_search" value=""><br>
             </div>
           </div>

@@ -5,7 +5,7 @@ fr:
   errors:
     no_data_1: "Votre recherche n'a retourné aucune donnée"
     no_data_2: "S'il vous plaît sélectionner autres variables"
-    csv_limit_exceeded_1: "Votre recherche a retourné un sous-ensemble trop grand"
+    csv_limit_exceeded_1: "Votre recherche a retourné un sous-ensemble trop grand (plus d’1 million d'enregistrements). Vous devez limiter la sélection temporelle (l’intervalle d’années) et sélectionner au moins un pays importateur/exportateur ou un taxon."
     csv_limit_exceeded_2: "Vous devez limiter la gamme des années et selectionner au moins un pays importateur/exportateur ou un taxon"
     web_limit_exceeded_1: "Vue en ligne n'est pas disponible pour les grands sous-ensembles"
     web_limit_exceeded_2: "Vous pouvez télécharger les résultats en format CSV"
@@ -19,7 +19,7 @@ fr:
   export_text: "Pays d'exportation"
   export_tip: "Entrez le nom du/des pays que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les pays, laissez 'Tous les Pays' sélectionné"
   import_text: "Pays importateurs"
-  import_tip: "Entrez le nom du/des pays que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les pays, laissez 'Tous les Pays' sélectionné" 
+  import_tip: "Entrez le nom du/des pays que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les pays, laissez 'Tous les Pays' sélectionné"
   source_text: "Source"
   source_tip: "Entrez le source/les sources (par ex. 'W- Prélevés dans la nature') que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les sources, laissez 'Tous les Sources' sélectionné"
   purpose_text: "But"
@@ -27,7 +27,7 @@ fr:
   trade_text: "Termes du Commerce"
   trade_tip: "Entrez le terme/les termes (par ex. 'vivant' ou 'peau') que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les termes, laissez 'Tous les Termes' sélectionné"
   taxon_text: "Recherche par taxon :"
-  taxon_tip: "Pour récupérer des données pour un taxon spécifique, tapez le nom du taxon. Les données sur les spécimens enregistrés dans le commerce à un niveau taxonomique supérieur (par exemple Scleractinia spp.) peuvent aussi être récupérées par cette recherche. Pour récupérer des données pour toutes les espèces dans un genre particulier, sélectionnez un genre dans le menu déroulant ci-dessous. Pour sélectionner tous les taxons, laissez ces sections vides."
+  taxon_tip: "Pour récupérer des données pour un taxon spécifique, tapez le nom du taxon. Pour récupérer des données pour toutes les espèces dans un niveau taxonomique supérieur particulier (par exemple genre, famille, ordre, classe etc.)  sélectionnez un niveau taxonomique supérieurdans le menu déroulant ci-dessous. Pour sélectionner tous les taxons, laissez ces sections vides."
   taxon_title: "Recherche par taxon:"
   genus_title: "Sélectionnez un genre"
 
@@ -54,11 +54,11 @@ fr:
   comparative_tabulations: "Tabulations Comparatives"
   trade_tabulations: "Tabulations du Commerce Brut/Net"
   get_report: "Obtenir le rapport"
-  new_search: "Nouvelle Recherche" 
+  new_search: "Nouvelle Recherche"
 
   from: "De"
   to: "A"
-  species: "Espèce" 
+  species: "Espèce"
 
   gross_exports: "Exportations Brutes"
   gross_imports: "Importations Brutes"
