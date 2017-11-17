@@ -98,7 +98,7 @@ $(document).ready(function(){
         }
       }
     });
-    values['selection_taxon'] = $('#selection_taxon_cascade').val();
+    values['selection_taxon'] = 'taxonomic_cascade';
     return values;
   }
 
