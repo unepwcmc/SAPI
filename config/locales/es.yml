@@ -26,7 +26,7 @@ es:
   purpose_tip: "Introduzca el objetivo/los objetivos (ej. 'T- Comercial' o 'S- Científico') que desea incluir en el producto final.  Para incluir datos de todos los objetivos, mantenga seleccionado 'Todos los Objetivos'"
   trade_text: "Términos del Comercio"
   trade_tip: "Introduzca el término/los términos (ej. 'vivo' o 'piel') que desea incluir en el producto final.  Para incluir datos de todos los los términos, mantenga seleccionado 'Todos los Términos'"
-  taxon_text: "Buscar por taxón :"
+  taxon_text: "Buscar por taxón"
   taxon_tip: "Para buscar datos de un taxón específico, escriba el nombre del taxon. Para buscar datos de todas las especies dentro de un grupo taxonómico en particular (por ejemplo género, familia, orden, clase, etc.), seleccione un grupo taxonómico en el menú desplegable de abajo. Para seleccionar todos los taxones, deje esta sección en blanco."
   taxon_title: "Buscar por taxón:"
   genus_title: "Seleccione un género:"

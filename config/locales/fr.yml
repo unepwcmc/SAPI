@@ -26,8 +26,8 @@ fr:
   purpose_tip: "Entrez le but/les buts (par ex. 'T- Transaction commerciale' ou 'S- Fins scientifiques') que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous buts, laissez 'Tous les Buts' sélectionné"
   trade_text: "Termes du Commerce"
   trade_tip: "Entrez le terme/les termes (par ex. 'vivant' ou 'peau') que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les termes, laissez 'Tous les Termes' sélectionné"
-  taxon_text: "Recherche par taxon :"
-  taxon_tip: "Pour récupérer des données pour un taxon spécifique, tapez le nom du taxon. Pour récupérer des données pour toutes les espèces dans un niveau taxonomique supérieur particulier (par exemple genre, famille, ordre, classe etc.)  sélectionnez un niveau taxonomique supérieurdans le menu déroulant ci-dessous. Pour sélectionner tous les taxons, laissez ces sections vides."
+  taxon_text: "Recherche par taxon"
+  taxon_tip: "Pour récupérer des données pour un espèce spécifique, tapez le nom du espèce. Pour récupérer des données pour toutes les espèces dans un niveau taxonomique supérieur particulier (par exemple genre, famille, ordre, classe etc.)  tapez le nom et sélectionnez un niveau taxonomique supérieurdans le menu déroulant ci-dessous. Pour sélectionner tous les taxons, laissez ces sections vides. Il est conseillé de limiter votre demande de données a un taxon spécifique en raison du volume de données (il y a une limite de 1 million de lignes pour les téléchargements de données)."
   taxon_title: "Recherche par taxon:"
   genus_title: "Sélectionnez un genre"
 
