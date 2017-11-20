@@ -8,7 +8,7 @@ en:
   errors:
     no_data_1: "Your query has returned no data"
     no_data_2: "Please select other variables"
-    csv_limit_exceeded_1: "Your query has returned too large a subset (greater than 1 million records). You must limit the year range and select at least one import/export country or one taxon."
+    csv_limit_exceeded_1: "Your query has returned too large a subset (greater than 1 million records). You must limit the year range and select at least one import/export country or one taxon"
     csv_limit_exceeded_2: "You must limit the year range and select at least one import/export country or one taxon"
     web_limit_exceeded_1: "Web output is not available for large subsets"
     web_limit_exceeded_2: "Please download the results in CSV format"
