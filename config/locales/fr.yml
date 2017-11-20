@@ -27,7 +27,7 @@ fr:
   trade_text: "Termes du Commerce"
   trade_tip: "Entrez le terme/les termes (par ex. 'vivant' ou 'peau') que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les termes, laissez 'Tous les Termes' sélectionné"
   taxon_text: "Recherche par taxon"
-  taxon_tip: "Pour récupérer des données pour un espèce spécifique, tapez le nom du espèce. Pour récupérer des données pour toutes les espèces dans un niveau taxonomique supérieur particulier (par exemple genre, famille, ordre, classe etc.)  tapez le nom et sélectionnez un niveau taxonomique supérieurdans le menu déroulant ci-dessous. Pour sélectionner tous les taxons, laissez ces sections vides. Il est conseillé de limiter votre demande de données a un taxon spécifique en raison du volume de données (il y a une limite de 1 million de lignes pour les téléchargements de données)."
+  taxon_tip: "Pour récupérer des données pour une espèce spécifique, tapez le nom l’espèce. Pour récupérer des données pour toutes les espèces dans un niveau taxonomique supérieur particulier (par exemple genre, famille, ordre, classe etc.)  tapez le nom et sélectionnez un niveau taxonomique supérieur dans le menu déroulant ci-dessous. Pour sélectionner tous les taxons, laissez ces sections vides. Il est conseillé de limiter votre demande de données à un taxon spécifique en raison du volume important de données (une limite de 1 million de lignes est imposée  pour les téléchargements de données)."
   taxon_title: "Recherche par taxon:"
   genus_title: "Sélectionnez un genre"
 
