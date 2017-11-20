@@ -32,6 +32,7 @@ en:
   taxon_text: "Search by taxon"
   taxon_tip: "To retrieve data for a specific taxon, type in the taxon name. To retrieve data for all species within a particular higher taxon (e.g. genus, family, order, class etc.), select a higher taxon from the drop-down below. To select all taxa, leave the selection blank."
   taxon_title: "Search for taxon reported trade:"
+  taxon_search: "Search for species or higher taxon"
   genus_title: "Search for genus:"
 
   all_countries: "All Countries"
