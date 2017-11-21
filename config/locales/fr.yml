@@ -5,7 +5,7 @@ fr:
   errors:
     no_data_1: "Votre recherche n'a retourné aucune donnée"
     no_data_2: "S'il vous plaît sélectionner autres variables"
-    csv_limit_exceeded_1: "Votre recherche a retourné un sous-ensemble trop grand (plus d’1 million d'enregistrements). Vous devez limiter la sélection temporelle (l’intervalle d’années) et sélectionner au moins un pays importateur/exportateur ou un taxon."
+    csv_limit_exceeded_1: "Votre recherche a retourné un sous-ensemble trop grand (plus d’1 million d'enregistrements). Vous devez limiter la sélection temporelle (l’intervalle d’années) et sélectionner au moins un pays importateur/exportateur ou un taxon"
     csv_limit_exceeded_2: "Vous devez limiter la gamme des années et selectionner au moins un pays importateur/exportateur ou un taxon"
     web_limit_exceeded_1: "Vue en ligne n'est pas disponible pour les grands sous-ensembles"
     web_limit_exceeded_2: "Vous pouvez télécharger les résultats en format CSV"
