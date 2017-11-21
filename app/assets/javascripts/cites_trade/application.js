@@ -561,6 +561,7 @@ $(document).ready(function(){
           url: "/api/v1/auto_complete_taxon_concepts",
           dataType: "json",
           data: {
+            locale: locale,
             taxonomy: 'CITES',
             taxon_concept_query: request.term,
             visibility: 'cites_trade'
