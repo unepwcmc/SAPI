@@ -1,6 +1,6 @@
 
   <form id='form_expert'>
- 
+
     <br>
 
     <div class="grid_16 main_content">
@@ -20,7 +20,7 @@
         <div style="text-align: left; color:#FF0000; font-weight:bold; display:none;"
           id="csv-limit-exceeded-error-message">
           <%= t('errors.csv_limit_exceeded_1') %>.<br>
-          <%= t('errors.csv_limit_exceeded_2') %>.
+          <%#= t('errors.csv_limit_exceeded_2') %>
         </div>
 
       </div>
@@ -58,9 +58,12 @@
         </ul>
 
         <div id="tabs-year">
-          <div id="year" class="label_style"><%= t('year_text') %> :
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('year_tip') %> " />
+          <div id="year" class="label_style">
+            <%= t('year_text') %> :
           </div>
+          <p>
+            <%= t('year_tip') %>
+          </p>
           <%= t('from') %>
           <%= select_tag 'time_range_start', options_for_select(@years, @years.first), id: "qryFrom" %> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           <%= t('to') %>
@@ -129,21 +132,12 @@
           </div>
           <hr />
           <hr class="space" />
-          <div class="grid_2">
-            <input id="selection_taxon_taxon" type="radio" name="selection_taxon" value="taxon">&nbsp;
-          </div>
-          <div  id="div_taxon" class="grid_8">
-            <span style="padding:10px 0px"><%= t('taxon_title') %></span><br />
-            <input type="text" size="30" name="taxon_concepts_ids[]" id="taxon_search" value=""><br>
-          </div>
-          <hr class="space">
 
-          <div class="grid_2">
-            <input id="selection_taxon_genus" type="radio" name="selection_taxon" value="genus">&nbsp;
-          </div>
-          <div id="div_genus" class="grid_8">
-            <span style="padding:10px 0px"><%= t('genus_title') %></span><br />
-            <input type="text" size="30" name="taxon_concepts_ids[]" id="genus_search" value=""><br>
+          <div class="taxon-search-container">
+            <div id="div_taxonomic_cascade" class="grid_8">
+              <span style="padding:10px 0px"><%= t('taxon_search') %></span><br />
+              <input type="text" size="30" name="taxon_concepts_ids[]" id="taxonomic_cascade_search" value=""><br>
+            </div>
           </div>
 
         </div>
