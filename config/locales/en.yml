@@ -30,7 +30,7 @@ en:
   trade_text: "Trade Terms"
   trade_tip: "Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected"
   taxon_text: "Search by taxon"
-  taxon_tip: "To retrieve data for a specific taxon, type in the taxon name. To retrieve data for all species within a particular higher taxon (e.g. genus, family, order, class etc.), select a higher taxon from the drop-down below. To select all taxa, leave the selection blank."
+  taxon_tip: "To retrieve data for a specific species, type in the species name. To retrieve data for all species within a particular higher taxon (e.g. genus, family, order, class etc.), type in the name and select the higher taxon from the drop-down below. To select all taxa in trade, leave the selection blank. It is advisable to limit your data request to a specific taxon due to the volume of data (there is a limit of 1 million rows for data downloads)."
   taxon_title: "Search for taxon reported trade:"
   taxon_search: "Search for species or higher taxon"
   genus_title: "Search for genus:"
