@@ -13,51 +13,7 @@ class Api::V1::ShipmentsController < ApplicationController
   private
 
   def search_params
-    (params[:filters] || params).permit(
-      { :taxon_concepts_ids => [] },
-      { :reported_taxon_concepts_ids => [] },
-      { :appendices => [] },
-      { :terms_ids => [] },
-      { :units_ids => [] },
-      { :purposes_ids => [] },
-      { :sources_ids => [] },
-      { :importers_ids => [] },
-      { :exporters_ids => [] },
-      { :countries_of_origin_ids => [] },
-      { :permits_ids => [] },
-      :reporter_type,
-      :time_range_start,
-      :time_range_end,
-      :quantity,
-      :unit_blank,
-      :purpose_blank,
-      :source_blank,
-      :country_of_origin_blank,
-      :permit_blank,
-      :report_type,
-      :internal,
-      :page,
-      :csv_separator
-    ).merge({
-      :internal => true,
-      # always search descendants
-      :taxon_with_descendants => true,
-      :report_type =>
-        if params[:filters] && params[:filters][:report_type] &&
-          Trade::ShipmentsExportFactory.report_types &
-          [report_type = params[:filters][:report_type].downcase.strip.to_sym]
-          report_type
-        else
-          :raw
-        end,
-      :csv_separator =>
-        if params[:filters] && params[:filters][:csv_separator] &&
-          params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
-          :semicolon
-        else
-          :comma
-        end
-    })
+    params.permit()
   end
 
   def authenticate
