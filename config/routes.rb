@@ -34,6 +34,7 @@ SAPI::Application.routes.draw do
       resources :events, only: [:index]
       resources :document_tags, only: [:index]
       match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
+      resources :shipments, only: [:index]
     end
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
