@@ -13,7 +13,7 @@ class Api::V1::ShipmentsController < ApplicationController
   private
 
   def search_params
-    params.permit()
+    params.permit(:compliance_type)
   end
 
   def authenticate

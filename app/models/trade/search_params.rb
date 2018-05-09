@@ -33,6 +33,7 @@ class Trade::SearchParams < Hash
       internal: sanitise_boolean(params[:internal]),
       report_type: sanitise_symbol(params[:report_type], :raw),
       taxon_with_descendants: sanitise_boolean(params[:taxon_with_descendants]),
+      shipments_view: sanitise_compliance_type(params[:compliance_type]),
       page: sanitise_positive_integer(params[:page], 1),
       per_page: sanitise_positive_integer(params[:per_page], 100)
     }
@@ -43,6 +44,17 @@ class Trade::SearchParams < Hash
 
   def self.sanitize(params)
     new(params)
+  end
+
+  private
+
+  COMPLIANCE_TYPES_VIEWS = {
+    appendix_i: "trade_shipments_appendix_i_view",
+    trade_suspensions: "trade_shipments_suspensions_view",
+    mandatory_quotas: "trade_shipments_mandatory_quotas_view"
+  }
+  def sanitise_compliance_type(compliance_type)
+    compliance_type.present? ? COMPLIANCE_TYPES_VIEWS[compliance_type.to_sym] : "trade_shipments_with_taxa_view"
   end
 
 end
