@@ -1,4 +1,4 @@
-SELECT ts.*
+SELECT DISTINCT ts.*
 FROM trade_shipments_with_taxa_view ts
 INNER JOIN trade_codes s ON ts.source_id = s.id
 INNER JOIN trade_codes p ON ts.purpose_id = p.id
