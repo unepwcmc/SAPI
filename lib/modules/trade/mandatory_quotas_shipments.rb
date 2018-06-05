@@ -56,6 +56,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def parse_iso_code2(iso)
+    return 'TRUE' if iso == 'All' || iso.blank?
     ge = @row['applies_to_import'].present? ? 'importers' : 'exporters'
     "#{ge}.iso_code2 = '#{iso}'"
   end
