@@ -10,7 +10,8 @@ class Trade::MandatoryQuotasShipments
     @query = "#{select} #{from} #{joins} WHERE"
     length = CSV.read(QUOTAS_PATH).length
     CSV.foreach(QUOTAS_PATH, headers: true) do |row|
-      @query << "(#{where(row)})"
+      @row = row
+      @query << "(#{where})"
       #Conjunction if not EOF
       @query << " OR " if $. < length
     end
@@ -20,8 +21,8 @@ class Trade::MandatoryQuotasShipments
 
   def select
     """
-      SELECT ts.*, ge.iso_code2 AS exporter, source.code AS source,
-             purpose.code AS purpose, unit.code AS unit, term.code AS term
+      SELECT ts.*, exporters.iso_code2 AS exporter, importers.iso_code2 AS importer,
+             source.code AS source, purpose.code AS purpose, unit.code AS unit, term.code AS term
     """.gsub("\n", '')
   end
 
@@ -31,7 +32,8 @@ class Trade::MandatoryQuotasShipments
 
   def joins
     """
-      INNER JOIN geo_entities AS ge ON ge.id = ts.exporter_id
+      INNER JOIN geo_entities AS exporters ON exporters.id = ts.exporter_id
+      INNER JOIN geo_entities AS importers ON importers.id = ts.importer_id
       LEFT OUTER JOIN trade_codes source ON ts.source_id = source.id
       LEFT OUTER JOIN trade_codes purpose ON ts.purpose_id = purpose.id
       LEFT OUTER JOIN trade_codes unit ON ts.unit_id = unit.id
@@ -39,8 +41,8 @@ class Trade::MandatoryQuotasShipments
     """.gsub("\n", '')
   end
 
-  def where(row)
-    ATTRIBUTES.map { |a| send("parse_#{a.to_s}", row[a.to_s]) }.join(' AND ')
+  def where
+    ATTRIBUTES.map { |a| send("parse_#{a.to_s}", @row[a.to_s]) }.join(' AND ')
   end
 
   def parse_start_date(date)
@@ -54,7 +56,8 @@ class Trade::MandatoryQuotasShipments
   end
 
   def parse_iso_code2(iso)
-    "ge.iso_code2 = '#{iso}'"
+    ge = @row['applies_to_import'].present? ? 'importers' : 'exporters'
+    "#{ge}.iso_code2 = '#{iso}'"
   end
 
   def parse_taxon_concept_id(tc)
