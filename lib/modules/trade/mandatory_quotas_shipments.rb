@@ -1,29 +1,55 @@
 class Trade::MandatoryQuotasShipments
-  attr_reader :query
+  attr_reader :query, :result
 
   QUOTAS_PATH = 'lib/data/quotas.csv'
 
-  ATTRIBUTES = [:start_date, :end_date, :taxon_concept_id, :iso_code2, :quota,
-                :unit, :term, :source, :purpose]
+  SELECT = ['year', 'purpose_id', 'source_id', 'term_id', 'unit_id', 'taxon_concept_id']
+
+  ATTRIBUTES = [:start_date, :end_date, :taxon_concept_id, :iso_code2,
+                :unit, :term, :source, :purpose, :origin]
 
   def initialize
-    @query = "#{select} #{from} #{joins} WHERE"
-    length = CSV.read(QUOTAS_PATH).length
+    @result = []
     CSV.foreach(QUOTAS_PATH, headers: true) do |row|
       @row = row
-      @query << "(#{where})"
-      #Conjunction if not EOF
-      @query << " OR " if $. < length
+      run
     end
+  end
+
+  def run
+    @result << db.execute(query)
   end
 
   private
 
-  def select
+  def db
+    ActiveRecord::Base.connection
+  end
+
+  def query
     """
-      SELECT ts.*, exporters.iso_code2 AS exporter, importers.iso_code2 AS importer,
-             source.code AS source, purpose.code AS purpose, unit.code AS unit, term.code AS term
+      SELECT *
+      #{from}
+      WHERE id IN (
+        SELECT UNNEST(sub.ids)
+        FROM (#{sub_query}) sub
+      )
     """.gsub("\n", '')
+  end
+
+  def sub_query
+    """
+      #{select}
+      #{from}
+      #{joins}
+      WHERE #{where}
+      #{group_by}
+      #{having}
+    """.gsub("\n", '')
+  end
+
+  def select
+    "SELECT #{SELECT.join(',')}, #{imp_or_exp}s.iso_code2, SUM(quantity) AS quota, ARRAY_AGG(ts.id) AS ids"
   end
 
   def from
@@ -32,8 +58,7 @@ class Trade::MandatoryQuotasShipments
 
   def joins
     """
-      INNER JOIN geo_entities AS exporters ON exporters.id = ts.exporter_id
-      INNER JOIN geo_entities AS importers ON importers.id = ts.importer_id
+      INNER JOIN geo_entities AS #{imp_or_exp}s ON #{imp_or_exp}s.id = ts.#{imp_or_exp}_id
       LEFT OUTER JOIN trade_codes source ON ts.source_id = source.id
       LEFT OUTER JOIN trade_codes purpose ON ts.purpose_id = purpose.id
       LEFT OUTER JOIN trade_codes unit ON ts.unit_id = unit.id
@@ -43,6 +68,14 @@ class Trade::MandatoryQuotasShipments
 
   def where
     ATTRIBUTES.map { |a| send("parse_#{a.to_s}", @row[a.to_s]) }.join(' AND ')
+  end
+
+  def group_by
+    "GROUP BY #{SELECT.join(',')}, #{imp_or_exp}s.iso_code2"
+  end
+
+  def having
+    "HAVING SUM(quantity) > #{@row['quota']}"
   end
 
   def parse_start_date(date)
@@ -57,8 +90,7 @@ class Trade::MandatoryQuotasShipments
 
   def parse_iso_code2(iso)
     return 'TRUE' if iso == 'All' || iso.blank?
-    ge = @row['applies_to_import'].present? ? 'importers' : 'exporters'
-    "#{ge}.iso_code2 = '#{iso}'"
+    "#{imp_or_exp}s.iso_code2 = '#{iso}'"
   end
 
   def parse_taxon_concept_id(tc)
@@ -92,5 +124,13 @@ class Trade::MandatoryQuotasShipments
 
   def parse_quota(quota)
     "ts.quantity >= #{quota}"
+  end
+
+  def parse_origin(origin)
+    "ts.country_of_origin_id IS NULL"
+  end
+
+  def imp_or_exp
+    @row['applies_to_import'].present? ? 'importer' : 'exporter'
   end
 end
