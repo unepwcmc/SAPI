@@ -12,14 +12,15 @@ class Trade::MandatoryQuotasShipments
     order: 'ts.taxon_concept_order_name AS order',
     family: 'ts.taxon_concept_family_name AS family',
     genus: 'ts.taxon_concept_genus_name AS genus',
-    exporter_quantity: 'expq',
-    importer_quantity: 'impq',
+    exporter_quantity: 'CASE WHEN ts.reported_by_exporter THEN ts.quantity ELSE NULL END AS exporter_quantity',
+    importer_quantity: 'CASE WHEN ts.reported_by_exporter THEN NULL ELSE ts.quantity END AS importer_quantity',
     unit: 'unit.name_en AS unit',
     importer: 'importer.iso_code2 AS importer',
     exporter: 'exporter.iso_code2 AS exporter',
     origin: 'NULL AS origin',
     purpose: 'purpose.name_en AS purpose',
     source: 'source.name_en AS source',
+    term: 'term.name_en AS term',
     import_permits: 'ts.import_permits_ids AS import_permits',
     export_permits: 'ts.export_permits_ids AS export_permits',
     origin_permits: 'ts.origin_permits_ids AS origin_permits',
@@ -87,8 +88,6 @@ class Trade::MandatoryQuotasShipments
 
   def sanitised_select
     SELECT.merge({
-      "#{imp_or_exp}_quantity": "ts.quantity AS #{imp_or_exp}_quantity",
-      "#{imp_or_exp_reverse}_quantity": "NULL AS #{imp_or_exp_reverse}_quantity",
       quota_type: "'#{@row['quota_type']}' AS details_of_compliance_issue",
       compliance_start_date: "'#{@row['start_date']}' AS compliance_type_start_date",
       compliance_end_date: "'#{@row['end_date']}' AS compliance_type_end_date",
@@ -100,7 +99,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def inner_select
-    "SELECT #{INNER_SELECT.join(',')}, #{imp_or_exp}.iso_code2, ARRAY_AGG(ts.id) AS ids"
+    "SELECT ARRAY_AGG(ts.id) AS ids"
   end
 
   def from
@@ -117,7 +116,7 @@ class Trade::MandatoryQuotasShipments
 
   def inner_joins
     """
-      INNER JOIN geo_entities AS #{imp_or_exp} ON #{imp_or_exp}.id = ts.#{imp_or_exp}_id
+      INNER JOIN geo_entities AS #{imp_or_exp_country} ON #{imp_or_exp_country}.id = ts.#{imp_or_exp_country}_id
       #{trade_codes_join}
     """.gsub("\n", '')
   end
@@ -136,7 +135,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def group_by
-    "GROUP BY #{INNER_SELECT.join(',')}, #{imp_or_exp}.iso_code2"
+    "GROUP BY year, reported_by_exporter"
   end
 
   def having
@@ -155,7 +154,7 @@ class Trade::MandatoryQuotasShipments
 
   def parse_iso_code2(iso)
     return 'TRUE' if iso == 'All' || iso.blank?
-    "#{imp_or_exp}.iso_code2 = '#{iso}'"
+    "#{imp_or_exp_country}.iso_code2 = '#{iso}'"
   end
 
   def parse_taxon_concept_id(tc)
@@ -190,11 +189,11 @@ class Trade::MandatoryQuotasShipments
     "ts.country_of_origin_id IS NULL"
   end
 
-  def imp_or_exp
+  def imp_or_exp_country
     @row['applies_to_import'].present? ? 'importer' : 'exporter'
   end
 
-  def imp_or_exp_reverse
+  def imp_or_exp_country_reverse
     ['importer', 'exporter'].tap { |arr| arr.delete(imp_or_exp) }.first
   end
 end
