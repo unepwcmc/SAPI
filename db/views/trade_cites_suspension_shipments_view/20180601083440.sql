@@ -10,10 +10,10 @@ FROM(
            ts.taxon_concept_family_name AS family,
            ts.taxon_concept_genus_name AS genus,
            terms.name_en AS term,
-           CASE WHEN tr_tc.applies_to_import IS TRUE THEN ts.quantity
+           CASE WHEN ts.reported_by_exporter IS FALSE THEN ts.quantity
                 ELSE NULL
            END AS importer_reported_quantity,
-           CASE WHEN tr_tc.applies_to_import IS FALSE THEN ts.quantity
+           CASE WHEN ts.reported_by_exporter IS TRUE THEN ts.quantity
                 ELSE NULL
            END AS exporter_reported_quantity,
            units.name_en AS unit, exporters.iso_code2 AS exporter, importers.iso_code2 AS importer, NULL AS origin,
@@ -61,10 +61,10 @@ FROM(
            ts.taxon_concept_family_name AS family,
            ts.taxon_concept_genus_name AS genus,
            terms.name_en AS term,
-           CASE WHEN tr_ge.applies_to_import IS TRUE THEN ts.quantity
+           CASE WHEN ts.reported_by_exporter IS FALSE THEN ts.quantity
                 ELSE NULL
            END AS importer_reported_quantity,
-           CASE WHEN tr_ge.applies_to_import IS FALSE THEN ts.quantity
+           CASE WHEN ts.reported_by_exporter IS TRUE THEN ts.quantity
                 ELSE NULL
            END AS exporter_reported_quantity,
            units.name_en AS unit, exporters.iso_code2 AS exporter, importers.iso_code2 AS importer, NULL AS origin,
