@@ -1,4 +1,4 @@
-SELECT *
+SELECT DISTINCT *
 FROM(
   -- Fetch all shipments where taxon concepts are specified in CITES Suspension.
   -- It considers also the geo_entity if specified in the Suspension as well as sources and purposes if any.
@@ -27,7 +27,8 @@ FROM(
            start_notifications.name AS suspension_start_notification, end_notifications.name AS suspension_end_notification,
            tr_tc.notes AS notes
     FROM trade_shipments_with_taxa_view ts
-    INNER JOIN trade_restrictions tr_tc ON tr_tc.taxon_concept_id = ts.taxon_concept_id
+    INNER JOIN taxon_concepts_and_ancestors_mview tca ON ts.taxon_concept_id = tca.taxon_concept_id
+    INNER JOIN trade_restrictions tr_tc ON tr_tc.taxon_concept_id = tca.ancestor_taxon_concept_id
     INNER JOIN events start_notifications ON tr_tc.start_notification_id  = start_notifications.id
     INNER JOIN geo_entities importers ON ts.importer_id = importers.id
     INNER JOIN geo_entities exporters ON ts.exporter_id = exporters.id
@@ -43,7 +44,12 @@ FROM(
     WHERE tr_tc.type = 'CitesSuspension' AND
     start_notifications.type = 'CitesSuspensionNotification' AND
     end_notifications.type = 'CitesSuspensionNotification' AND
-    ts.year BETWEEN EXTRACT(YEAR FROM tr_tc.start_date) AND EXTRACT(YEAR FROM tr_tc.end_date) AND
+    (
+      ts.year BETWEEN EXTRACT(YEAR FROM tr_tc.start_date) AND
+      CASE WHEN tr_tc.end_date IS NULL THEN EXTRACT(YEAR FROM current_date)
+      ELSE EXTRACT(YEAR FROM tr_tc.end_date)
+      END
+    )AND
     (tr_tc.geo_entity_id IS NULL OR (tr_tc.geo_entity_id = ts.exporter_id OR tr_tc.geo_entity_id = ts.importer_id AND tr_tc.applies_to_import)) AND
     (tr_s.source_id = ts.source_id OR tr_s.id IS NULL) AND (tr_p.purpose_id = ts.purpose_id OR tr_p.id IS NULL) AND country_of_origin_id IS NULL
   )
@@ -92,10 +98,13 @@ FROM(
     LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
     LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
     WHERE tr_ge.type = 'CitesSuspension' AND
-    start_notifications.type = 'CitesSuspensionNotification' AND
-    end_notifications.type = 'CitesSuspensionNotification' AND
     (tr_ge.taxon_concept_id IS NULL OR tr_ge.taxon_concept_id = ts.taxon_concept_id) AND
-    ts.year BETWEEN EXTRACT(YEAR FROM tr_ge.start_date) AND EXTRACT(YEAR FROM tr_ge.end_date) AND
+    (
+      ts.year BETWEEN EXTRACT(YEAR FROM tr_ge.start_date) AND
+      CASE WHEN tr_ge.end_date IS NULL THEN EXTRACT(YEAR FROM current_date)
+      ELSE EXTRACT(YEAR FROM tr_ge.end_date)
+      END
+    )AND
     (tr_s.source_id = ts.source_id OR tr_s.id IS NULL) AND (tr_p.purpose_id = ts.purpose_id OR tr_p.id IS NULL) AND country_of_origin_id IS NULL
   )
 ) AS s
