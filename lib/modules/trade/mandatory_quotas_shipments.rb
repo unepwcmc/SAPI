@@ -1,7 +1,9 @@
 class Trade::MandatoryQuotasShipments
-  attr_reader :query, :result
+  attr_reader :final_query
 
-  QUOTAS_PATH = 'lib/data/quotas.csv'
+  QUOTAS_PATH = 'lib/data/quotas.csv'.freeze
+
+  VIEW_DIR = 'db/views/trade_shipments_mandatory_quotas_view'.freeze
 
   SELECT = {
     shipment_id: 'ts.id AS shipment_id',
@@ -45,17 +47,24 @@ class Trade::MandatoryQuotasShipments
   ]
 
   def initialize
-    @result = []
+    @queries = []
     CSV.foreach(QUOTAS_PATH, headers: true) do |row|
       @row = row
       run
     end
+    @final_query = @queries.join("\n\s\s\s\sUNION\s\s\s\s\n")
+  end
+
+  def generate_view(timestamp)
+    Dir.mkdir(VIEW_DIR) unless Dir.exists?(VIEW_DIR)
+    #timestamp = Time.now.strftime('%Y%m%d%H%M%S')
+    File.open("#{VIEW_DIR}/#{timestamp}.sql", 'w') { |f| f.write(@final_query) }
   end
 
   private
 
   def run
-    @result << db.execute(query)
+    @queries << query
   end
 
   def db
@@ -64,26 +73,30 @@ class Trade::MandatoryQuotasShipments
 
   def query
     """
+    (
       SELECT #{sanitised_select}
       #{from}
       #{joins}
       WHERE ts.id IN (
         SELECT UNNEST(sub.ids)
-        FROM (#{sub_query}) sub
+        FROM (
+          #{sub_query}
+        ) sub
       )
       ORDER BY ts.year, ts.taxon_concept_full_name, ts.exporter_id, ts.importer_id
-    """.gsub("\n", '')
+    )
+    """
   end
 
   def sub_query
     """
-      #{inner_select}
-      #{from}
-      #{inner_joins}
-      WHERE #{where}
-      #{group_by}
-      #{having}
-    """.gsub("\n", '')
+          #{inner_select}
+          #{from}
+          #{inner_joins}
+          WHERE #{where}
+          #{group_by}
+          #{having}
+    """
   end
 
   def sanitised_select
@@ -110,24 +123,21 @@ class Trade::MandatoryQuotasShipments
     """
       INNER JOIN geo_entities AS exporter ON exporter.id = ts.exporter_id
       INNER JOIN geo_entities AS importer ON importer.id = ts.importer_id
-      #{trade_codes_join}
-    """.gsub("\n", '')
-  end
-
-  def inner_joins
-    """
-      INNER JOIN geo_entities AS #{imp_or_exp_country} ON #{imp_or_exp_country}.id = ts.#{imp_or_exp_country}_id
-      #{trade_codes_join}
-    """.gsub("\n", '')
-  end
-
-  def trade_codes_join
-    """
       LEFT OUTER JOIN trade_codes source ON ts.source_id = source.id
       LEFT OUTER JOIN trade_codes purpose ON ts.purpose_id = purpose.id
       LEFT OUTER JOIN trade_codes unit ON ts.unit_id = unit.id
       LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
-    """.gsub("\n", '')
+    """
+  end
+
+  def inner_joins
+    """
+          INNER JOIN geo_entities AS #{imp_or_exp_country} ON #{imp_or_exp_country}.id = ts.#{imp_or_exp_country}_id
+          LEFT OUTER JOIN trade_codes source ON ts.source_id = source.id
+          LEFT OUTER JOIN trade_codes purpose ON ts.purpose_id = purpose.id
+          LEFT OUTER JOIN trade_codes unit ON ts.unit_id = unit.id
+          LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
+    """
   end
 
   def where
