@@ -6,7 +6,7 @@ class Api::V1::ShipmentsController < ApplicationController
   def index
     @search = Trade::Filter.new(search_params)
     render :json => @search.results,
-      :each_serializer => Trade::ShipmentFromViewSerializer,
+      :each_serializer => Trade::ShipmentApiFromViewSerializer,
       :meta => metadata_for_search(@search)
   end
 
