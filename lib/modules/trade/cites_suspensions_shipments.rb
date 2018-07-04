@@ -1,15 +1,9 @@
-class Trade::CitesSuspensionsShipments
-
-  attr_accessor :query
+class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
+  attr_reader :query
 
   EXEMPTIONS_PATH = 'lib/data/exemptions.csv'.freeze
 
   VIEW_DIR = 'db/views/trade_shipments_cites_suspensions_view'.freeze
-
-  ATTRIBUTES = [
-    :start_date, :end_date, :taxon_concept_id, :iso_code2,
-    :unit, :term, :source, :purpose
-  ]
 
   def initialize
     @query = exceptions_query
@@ -162,53 +156,9 @@ class Trade::CitesSuspensionsShipments
     where = []
     CSV.foreach(EXEMPTIONS_PATH, headers: true) do |row|
       @row = row
-      where << "(#{ATTRIBUTES.map { |a| send("parse_#{a.to_s}", row[a.to_s]) }.join(' AND ')})"
+      where << "\n\t\t\t\t(#{ATTRIBUTES.map { |a| send("parse_#{a.to_s}", row[a.to_s]) }.join(' AND ')})\n"
     end
-    where.join('OR')
-  end
-
-  def parse_start_date(date)
-    year = date.split('/').last.to_i
-    "ts.year >= #{year}"
-  end
-
-  def parse_end_date(date)
-    year = date.blank? ? Date.today.year  : date.split('/').last.to_i
-    "ts.year <= #{year}"
-  end
-
-  def parse_iso_code2(iso)
-    return 'TRUE' if iso.upcase == 'All' || iso.blank?
-    "#{imp_or_exp_country}.iso_code2 = '#{iso}'"
-  end
-
-  def parse_taxon_concept_id(tc)
-    return 'TRUE' unless tc.is_a? Numeric
-    "ts.taxon_concept_id = #{tc}"
-  end
-
-  def parse_unit(unit)
-    parse_trade_code(unit, 'units')
-  end
-
-  def parse_term(term)
-    parse_trade_code(term, 'terms')
-  end
-
-  def parse_purpose(purpose)
-    parse_trade_code(purpose, 'purposes')
-  end
-
-  def parse_source(source)
-    parse_trade_code(source, 'sources')
-  end
-
-  def parse_trade_code(code, type)
-    #Return TRUE to prevent empty conditions and a malformed query
-    return 'TRUE' if code.upcase == 'ALL' || code.blank?
-
-    codes = code.split(';').map(&:strip)
-    "#{type}.code IN (#{codes.map{|c| "'#{c}'"}.join(',')})"
+    where.join("\n\t\t\t\tOR\n")
   end
 
   def imp_or_exp_country
