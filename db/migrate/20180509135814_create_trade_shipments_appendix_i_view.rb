@@ -8,7 +8,7 @@ class CreateTradeShipmentsAppendixIView < ActiveRecord::Migration
   end
 
   def down
-    execute "DROP MATERIALIZED VIEW IF EXISTS trade_cites_suspension_shipments_mview CASCADE"
+    execute "DROP MATERIALIZED VIEW IF EXISTS trade_shipments_appendix_i_mview CASCADE"
     execute "DROP VIEW IF EXISTS trade_shipments_appendix_i_view"
   end
 end

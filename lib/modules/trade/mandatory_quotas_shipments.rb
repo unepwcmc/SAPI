@@ -6,7 +6,7 @@ class Trade::MandatoryQuotasShipments
   VIEW_DIR = 'db/views/trade_shipments_mandatory_quotas_view'.freeze
 
   SELECT = {
-    shipment_id: 'ts.id AS shipment_id',
+    shipment_id: 'ts.id AS id',
     year: 'ts.year AS year',
     appendix: 'ts.appendix AS appendix',
     taxon: 'ts.taxon_concept_full_name AS taxon',
@@ -26,6 +26,9 @@ class Trade::MandatoryQuotasShipments
     import_permits: 'ts.import_permits_ids AS import_permits',
     export_permits: 'ts.export_permits_ids AS export_permits',
     origin_permits: 'ts.origin_permits_ids AS origin_permits',
+    import_permit_number: 'ts.import_permit_number AS import_permit',
+    export_permit_number: 'ts.export_permit_number AS export_permit',
+    origin_permit_number: 'ts.origin_permit_number AS origin_permit',
     issue_type: "'Quota' AS issue_type",
     quota_type: 'quota_type',
     compliance_start_date: 'start_date',

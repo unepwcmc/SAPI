@@ -13,17 +13,17 @@ class Trade::ComplianceShipmentsParser
   end
 
   def parse_end_date(date)
-    year = (date.upcase == 'PRESENT' || date.blank?) ? Date.today.year  : date.split('/').last.to_i
+    year = date.blank? || date.upcase == 'PRESENT' ? Date.today.year : date.split('/').last.to_i
     "ts.year <= #{year}"
   end
 
   def parse_iso_code2(iso)
-    return 'TRUE' if iso.upcase == 'ALL' || iso.blank?
+    return 'TRUE' if iso.blank? || iso.upcase == 'ALL'
     "#{imp_or_exp_country}.iso_code2 = '#{iso}'"
   end
 
   def parse_taxon_concept_id(tc)
-    return 'TRUE' if tc.upcase == 'ALL' || tc.blank?
+    return 'TRUE' if tc.blank? || tc.upcase == 'ALL'
     "ts.taxon_concept_id = #{tc}"
   end
 
@@ -45,7 +45,7 @@ class Trade::ComplianceShipmentsParser
 
   def parse_trade_code(code, type)
     #Return TRUE to prevent empty conditions and a malformed query
-    return 'TRUE' if code.upcase == 'ALL' || code.blank?
+    return 'TRUE' if code.blank? || code.upcase == 'ALL'
 
     codes = code.split(';').map(&:strip)
     "#{type}.code IN (#{codes.map{|c| "'#{c}'"}.join(',')})"

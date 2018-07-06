@@ -190,583 +190,583 @@
 
 				OR
 
-				(ts.year >= 2003 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'JO' AND TRUE AND TRUE AND TRUE AND purposes.code IN ('S') AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2003 AND ts.year <= 2018 AND ts.taxon_concept_id = 38 AND exporters.iso_code2 = 'JO' AND TRUE AND TRUE AND TRUE AND purposes.code IN ('S') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2011 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'PY' AND TRUE AND terms.code IN ('OIL','TIM') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2011 AND ts.year <= 2014 AND ts.taxon_concept_id = 23851 AND exporters.iso_code2 = 'PY' AND TRUE AND terms.code IN ('OIL','TIM') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2009 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND sources.code IN ('A') AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12491 AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND sources.code IN ('A') AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2009 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND TRUE AND purposes.code IN ('S') AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12491 AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND TRUE AND purposes.code IN ('S') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2009 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'PE' AND TRUE AND terms.code IN ('FLO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12491 AND exporters.iso_code2 = 'PE' AND TRUE AND terms.code IN ('FLO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2006 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'AR' AND TRUE AND terms.code IN ('TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2006 AND ts.year <= 2018 AND ts.taxon_concept_id = 55214 AND exporters.iso_code2 = 'AR' AND TRUE AND terms.code IN ('TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2006 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'AR' AND TRUE AND TRUE AND sources.code IN ('R') AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2006 AND ts.year <= 2018 AND ts.taxon_concept_id = 5390 AND exporters.iso_code2 = 'AR' AND TRUE AND TRUE AND sources.code IN ('R') AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 5734 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 5734 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 5734 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 5734 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3151 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3151 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3151 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3151 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3411 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3411 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3411 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3411 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 10706 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 10706 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 10706 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 10706 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 6828 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 6828 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 6828 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 6828 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 5858 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 5858 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 5858 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 5858 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 4830 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 4830 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 4830 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 4830 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3078 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3078 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3078 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3078 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 9527 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 9527 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 9527 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 9527 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3359 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3359 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3359 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3359 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3362 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3362 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3362 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3362 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3686 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3686 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3686 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3686 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3604 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3604 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3604 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3604 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 10503 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 10503 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 10503 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 10503 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 11228 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 11228 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 11228 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 11228 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 7304 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 7304 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 7304 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 7304 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2011 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'PY' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2011 AND ts.year <= 2014 AND ts.taxon_concept_id = 6048 AND exporters.iso_code2 = 'PY' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3390 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3390 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3390 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3390 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 5493 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 5493 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 5493 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 5493 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 6377 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 6377 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 6377 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 6377 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 6242 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 6242 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 6242 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 6242 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 5707 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 5707 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 5707 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 5707 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 7542 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 7542 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 7542 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 7542 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3293 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3293 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3293 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3293 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 8011 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 8011 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 8011 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 8011 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 5979 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 5979 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 5979 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 5979 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 9004 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 9004 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 9004 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 9004 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 5547 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 5547 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 5547 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 5547 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2009 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND sources.code IN ('A') AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12509 AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND sources.code IN ('A') AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2009 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND TRUE AND purposes.code IN ('S') AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12509 AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND TRUE AND purposes.code IN ('S') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2009 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'PE' AND TRUE AND terms.code IN ('FLO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12509 AND exporters.iso_code2 = 'PE' AND TRUE AND terms.code IN ('FLO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2006 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'AR' AND TRUE AND terms.code IN ('TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2006 AND ts.year <= 2018 AND ts.taxon_concept_id = 8246 AND exporters.iso_code2 = 'AR' AND TRUE AND terms.code IN ('TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 9590 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 9590 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 9590 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 9590 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3930 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3930 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3930 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3930 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 7052 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 7052 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 7052 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 7052 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 3477 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 3477 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 3477 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 3477 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 8779 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 8779 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 8779 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 8779 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2015 AND ts.year <= 2016 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2015 AND ts.year <= 2016 AND ts.taxon_concept_id = 6940 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2014 AND ts.year <= 2015 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2014 AND ts.year <= 2015 AND ts.taxon_concept_id = 6940 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2013 AND ts.year <= 2014 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2013 AND ts.year <= 2014 AND ts.taxon_concept_id = 6940 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2013 AND TRUE AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2013 AND ts.taxon_concept_id = 6940 AND exporters.iso_code2 = 'MG' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2006 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'AR' AND TRUE AND terms.code IN ('TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2006 AND ts.year <= 2018 AND ts.taxon_concept_id = 6330 AND exporters.iso_code2 = 'AR' AND TRUE AND terms.code IN ('TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
       )
 
