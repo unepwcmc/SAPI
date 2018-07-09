@@ -112,17 +112,11 @@
       WHERE s.id NOT IN (
         SELECT ts.id
         FROM trade_shipments_with_taxa_view ts
-        INNER JOIN trade_restrictions tr_tc ON tr_tc.taxon_concept_id = ts.taxon_concept_id
-        INNER JOIN events start_notifications ON tr_tc.start_notification_id  = start_notifications.id
         INNER JOIN geo_entities importers ON ts.importer_id = importers.id
         INNER JOIN geo_entities exporters ON ts.exporter_id = exporters.id
         INNER JOIN ranks ON ranks.id = ts.taxon_concept_rank_id
-        LEFT OUTER JOIN geo_entities suspension_countries ON tr_tc.geo_entity_id = suspension_countries.id
-        LEFT OUTER JOIN events end_notifications ON tr_tc.end_notification_id = end_notifications.id
-        LEFT OUTER JOIN trade_restriction_sources tr_s ON tr_tc.id = tr_s.trade_restriction_id
-        LEFT OUTER JOIN trade_restriction_purposes tr_p ON tr_tc.id = tr_p.trade_restriction_id
-        LEFT OUTER JOIN trade_codes sources ON sources.id = tr_s.source_id
-        LEFT OUTER JOIN trade_codes purposes ON purposes.id = tr_p.purpose_id
+        LEFT OUTER JOIN trade_codes sources ON sources.id = ts.source_id
+        LEFT OUTER JOIN trade_codes purposes ON purposes.id = ts.purpose_id
         LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
         LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
         WHERE 
