@@ -15,8 +15,9 @@ class Trade::ComplianceGrouping
     class: 'class'
   }
 
+  # Example usage: Trade::ComplianceGrouping.new('importer')
   def initialize(type, attributes=nil, limit=nil)
-    @type = sanitise_params([type]).first
+    @type = sanitise_type(type)
     @attributes = sanitise_params(attributes)
     @limit = sanitise_limit(limit)
     @query = "#{non_compliant_shipments}#{group}"
@@ -25,13 +26,13 @@ class Trade::ComplianceGrouping
   private
 
   def group
-    columns = @attributes.present? ? @attributes.join(',') : ''
+    columns = [@type, @attributes].flatten.compact.uniq.join(',')
     <<-SQL
-      SELECT #{@type}, #{columns}, cnt, 100.0*cnt/(SUM(cnt) OVER ()) AS percent
+      SELECT #{columns}, cnt, 100.0*cnt/(SUM(cnt) OVER ()) AS percent
       FROM (
-        SELECT #{@type}, #{columns}, COUNT(*) AS cnt
+        SELECT #{columns}, COUNT(*) AS cnt
         FROM non_compliant_shipments
-        GROUP BY #{@type}, #{columns}
+        GROUP BY #{columns}
       ) counts
       ORDER BY percent DESC
     SQL
@@ -56,6 +57,10 @@ class Trade::ComplianceGrouping
         )
       )
     SQL
+  end
+
+  def sanitise_type(type)
+    ATTRIBUTES[type.to_sym]
   end
 
   def sanitise_params(params)
