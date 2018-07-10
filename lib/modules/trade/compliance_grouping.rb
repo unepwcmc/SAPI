@@ -22,6 +22,8 @@ class Trade::ComplianceGrouping
   # Trade::ComplianceGrouping.new('year', {all: false})
   # Group by importer across all shipments and limit result to 5 records
   # Trade::ComplianceGrouping.new('importer', {all: true, limit: 5})
+  # Group by importer across all shipments for a given year
+  # Trade::ComplianceGrouping.new('importer', {all: true, attributes: ['year']})
   def initialize(group, opts={})
     @group = sanitise_group(group)
     @attributes = sanitise_params(opts[:attributes])
