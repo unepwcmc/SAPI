@@ -49,9 +49,10 @@ class Trade::SearchParams < Hash
   private
 
   COMPLIANCE_TYPES_VIEWS = {
-    appendix_i: "trade_shipments_appendix_i_view",
-    trade_suspensions: "trade_cites_suspension_shipments_mview",
-    mandatory_quotas: "trade_shipments_mandatory_quotas_mview"
+    appendix_i: "trade_shipments_appendix_i_mview",
+    trade_suspensions: "trade_shipments_cites_suspensions_mview",
+    mandatory_quotas: "trade_shipments_mandatory_quotas_mview",
+    non_compliant_terms: "trade_shipments_non_compliant_terms_view"
   }
   def sanitise_compliance_type(compliance_type)
     compliance_type.present? ? COMPLIANCE_TYPES_VIEWS[compliance_type.to_sym] : "trade_shipments_with_taxa_view"
