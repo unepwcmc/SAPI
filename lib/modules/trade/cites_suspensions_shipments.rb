@@ -57,8 +57,8 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
           LEFT OUTER JOIN events end_notifications ON tr_tc.end_notification_id = end_notifications.id
           LEFT OUTER JOIN trade_restriction_sources tr_s ON tr_tc.id = tr_s.trade_restriction_id
           LEFT OUTER JOIN trade_restriction_purposes tr_p ON tr_tc.id = tr_p.trade_restriction_id
-          LEFT OUTER JOIN trade_codes sources ON sources.id = tr_s.source_id
-          LEFT OUTER JOIN trade_codes purposes ON purposes.id = tr_p.purpose_id
+          LEFT OUTER JOIN trade_codes sources ON sources.id = ts.source_id
+          LEFT OUTER JOIN trade_codes purposes ON purposes.id = ts.purpose_id
           LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
           LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
           WHERE tr_tc.type = 'CitesSuspension' AND
@@ -113,8 +113,8 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
           LEFT OUTER JOIN events end_notifications ON tr_ge.end_notification_id = end_notifications.id
           LEFT OUTER JOIN trade_restriction_sources tr_s ON tr_ge.id = tr_s.trade_restriction_id
           LEFT OUTER JOIN trade_restriction_purposes tr_p ON tr_ge.id = tr_p.trade_restriction_id
-          LEFT OUTER JOIN trade_codes sources ON sources.id = tr_s.source_id
-          LEFT OUTER JOIN trade_codes purposes ON purposes.id = tr_p.purpose_id
+          LEFT OUTER JOIN trade_codes sources ON sources.id = ts.source_id
+          LEFT OUTER JOIN trade_codes purposes ON purposes.id = ts.purpose_id
           LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
           LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
           WHERE tr_ge.type = 'CitesSuspension' AND
