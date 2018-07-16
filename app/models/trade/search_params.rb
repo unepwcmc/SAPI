@@ -49,8 +49,8 @@ class Trade::SearchParams < Hash
   private
 
   COMPLIANCE_TYPES_VIEWS = {
-    appendix_i: "trade_shipments_appendix_i_view",
-    trade_suspensions: "trade_cites_suspension_shipments_mview",
+    appendix_i: "trade_shipments_appendix_i_mview",
+    trade_suspensions: "trade_shipments_cites_suspensions_mview",
     mandatory_quotas: "trade_shipments_mandatory_quotas_mview"
   }
   def sanitise_compliance_type(compliance_type)
