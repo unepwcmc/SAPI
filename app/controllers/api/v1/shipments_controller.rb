@@ -13,7 +13,7 @@ class Api::V1::ShipmentsController < ApplicationController
   private
 
   def search_params
-    params.permit(:compliance_type, :page, :per_page)
+    params.permit(:compliance_type, :time_range_start, :time_range_end, :page, :per_page)
   end
 
   def authenticate
