@@ -16,7 +16,12 @@
                  CASE WHEN ts.reported_by_exporter IS TRUE THEN ts.quantity
                       ELSE NULL
                  END AS exporter_reported_quantity,
-                 units.name_en AS unit, exporters.iso_code2 AS exporter, importers.iso_code2 AS importer, NULL AS origin,
+                 units.name_en AS unit,
+                 exporters.iso_code2 AS exporter_iso,
+                 exporters.name_en AS exporter,
+                 importers.iso_code2 AS importer_iso,
+                 importers.name_en AS importer,
+                 NULL AS origin,
                  purposes.name_en AS purpose, sources.name_en AS source, ts.import_permit_number AS import_permit,
                  ts.export_permit_number AS export_permit, ts.origin_permit_number AS origin_permit, 'Suspension' AS issue_type,
                  start_notifications.subtype AS details_of_compliance_issue,
@@ -73,7 +78,12 @@
                  CASE WHEN ts.reported_by_exporter IS TRUE THEN ts.quantity
                       ELSE NULL
                  END AS exporter_reported_quantity,
-                 units.name_en AS unit, exporters.iso_code2 AS exporter, importers.iso_code2 AS importer, NULL AS origin,
+                 units.name_en AS unit,
+                 exporters.iso_code2 AS exporter_iso,
+                 exporters.name_en AS exporter,
+                 importers.iso_code2 AS importer_iso,
+                 importers.name_en AS importer,
+                 NULL AS origin,
                  purposes.name_en AS purpose, sources.name_en AS source, ts.import_permit_number AS import_permit,
                  ts.export_permit_number AS export_permit, ts.origin_permit_number AS origin_permit, 'Suspension' AS issue_type,
                  start_notifications.subtype AS details_of_compliance_issue,
@@ -119,7 +129,7 @@
         LEFT OUTER JOIN trade_codes purposes ON purposes.id = ts.purpose_id
         LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
         LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
-        WHERE 
+        WHERE
 				(ts.year >= 2018 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'IN' AND TRUE AND TRUE AND sources.code IN ('A','C','D','F','I','O','R','U','X') AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
 				OR
