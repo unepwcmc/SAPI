@@ -16,7 +16,12 @@
                  CASE WHEN ts.reported_by_exporter IS TRUE THEN ts.quantity
                       ELSE NULL
                  END AS exporter_reported_quantity,
-                 units.name_en AS unit, exporters.iso_code2 AS exporter, importers.iso_code2 AS importer, NULL AS origin,
+                 units.name_en AS unit,
+                 exporters.iso_code2 AS exporter_iso,
+                 exporters.name_en AS exporter,
+                 importers.iso_code2 AS importer_iso,
+                 importers.name_en AS importer,
+                 NULL AS origin,
                  purposes.name_en AS purpose, sources.name_en AS source, ts.import_permit_number AS import_permit,
                  ts.export_permit_number AS export_permit, ts.origin_permit_number AS origin_permit, 'Suspension' AS issue_type,
                  start_notifications.subtype AS details_of_compliance_issue,
@@ -73,7 +78,12 @@
                  CASE WHEN ts.reported_by_exporter IS TRUE THEN ts.quantity
                       ELSE NULL
                  END AS exporter_reported_quantity,
-                 units.name_en AS unit, exporters.iso_code2 AS exporter, importers.iso_code2 AS importer, NULL AS origin,
+                 units.name_en AS unit,
+                 exporters.iso_code2 AS exporter_iso,
+                 exporters.name_en AS exporter,
+                 importers.iso_code2 AS importer_iso,
+                 importers.name_en AS importer,
+                 NULL AS origin,
                  purposes.name_en AS purpose, sources.name_en AS source, ts.import_permit_number AS import_permit,
                  ts.export_permit_number AS export_permit, ts.origin_permit_number AS origin_permit, 'Suspension' AS issue_type,
                  start_notifications.subtype AS details_of_compliance_issue,

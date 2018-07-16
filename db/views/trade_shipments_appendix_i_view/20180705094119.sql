@@ -11,10 +11,16 @@ SELECT ts.id, ts.year, ts.appendix, ts.taxon_concept_id,
        CASE WHEN ts.reported_by_exporter IS TRUE THEN ts.quantity
             ELSE NULL
        END AS exporter_reported_quantity,
-       units.name_en AS unit, exporters.iso_code2 AS exporter, importers.iso_code2 AS importer, origins.iso_code2 AS origin,
+       units.name_en AS unit,
+       exporters.iso_code2 AS exporter_iso,
+       exporters.name_en AS exporter,
+       importers.iso_code2 AS importer_iso,
+       importers.name_en AS importer,
+       origins.iso_code2 AS origin,
        purposes.name_en AS purpose, sources.name_en AS source, ts.import_permit_number AS import_permit,
        ts.export_permit_number AS export_permit, ts.origin_permit_number AS origin_permit,
-       ranks.name AS compliance_type_taxonomic_rank
+       ranks.name AS compliance_type_taxonomic_rank,
+       'AppendixI' AS issue_type
 FROM trade_shipments_with_taxa_view ts
 INNER JOIN trade_codes sources ON ts.source_id = sources.id
 INNER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
