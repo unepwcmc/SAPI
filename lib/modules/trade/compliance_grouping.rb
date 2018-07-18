@@ -21,7 +21,7 @@ class Trade::ComplianceGrouping
     issue_type: 'issue_type'
   }
 
-  COUNTRIES = 183.freeze
+  COUNTRIES = 182.freeze
 
   # Example usage
   # Group by year considering compliance types:
@@ -61,6 +61,11 @@ class Trade::ComplianceGrouping
     json
   end
 
+  # TODO
+  # This calculates the number countries who have reported, given a year as input,
+  # for a range that goes from year-1 to year+1.
+  # At the moment it uses the compliance tables, but it should instead consider
+  # all the shipments instead of the non-compliant ones only.
   def countries_reported_range(year)
     years = [year - 1, year, year + 1]
     hash = {}
