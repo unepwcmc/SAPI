@@ -23,6 +23,8 @@ class Trade::ComplianceGrouping
 
   COUNTRIES = 182.freeze
 
+  TAXONOMIC_GROUPING = 'lib/data/group_conversions.csv'.freeze
+
   # Example usage
   # Group by year considering compliance types:
   # Trade::ComplianceGrouping.new('year', {attributes: ['issue_type']})
@@ -38,6 +40,15 @@ class Trade::ComplianceGrouping
 
   def run
     db.execute(@query)
+  end
+
+  def shipments
+    sql = <<-SQL
+      #{non_compliant_shipments}
+      SELECT *
+      FROM non_compliant_shipments
+    SQL
+    db.execute(sql)
   end
 
   def json_by_year(data, opts={})
@@ -75,6 +86,53 @@ class Trade::ComplianceGrouping
       hash[year] << data
     end
     hash
+  end
+
+  def read_taxonomy_conversion
+    conversion = {}
+    taxonomy = CSV.read(TAXONOMIC_GROUPING, {headers: true})
+    taxonomy.each do |csv|
+      conversion[csv['group']] ||= []
+      data = {
+        taxon_name: csv['taxon_name'],
+        rank: csv['taxonomic_level']
+      }
+      conversion[csv['group']] << data
+    end
+    conversion
+  end
+
+  def taxonomic_grouping(year)
+    conversion = read_taxonomy_conversion
+
+    res = {}
+    # Get all the non-compliant shipments in a given year
+    query = "#{non_compliant_shipments} SELECT * FROM non_compliant_shipments WHERE year = #{year}"
+    shipments = db.execute(query)
+    # Loop through all the non-compliant shipments
+    shipments.map do |shipment|
+      # Loop through the conversion hash to consider one group at a time
+      conversion.each do |group, groupings|
+        # Each group might be about several classes/genuses/species
+        groupings.each do |grouping|
+          res[group] ||= 0
+          # If we are looping through plants but the shipment is about a Timber taxon
+          # don't include this in the sum
+          next if group == 'Plants' && is_timber?(shipment, conversion["Timber"])
+          res[group] += 1 if shipment[grouping[:rank].downcase] == grouping[:taxon_name]
+        end
+      end
+    end
+    # Calculate percentages
+    shipments_no = shipments.count
+    conversion.map do |group, values|
+      percent = (res[group].to_f / shipments_no.to_f * 100).round(2)
+      {
+        taxon: group,
+        cnt: res[group],
+        percent: percent
+      }
+    end
   end
 
   private
@@ -148,6 +206,13 @@ class Trade::ComplianceGrouping
       countriesReported: countries_reported,
       countriesYetToReport: COUNTRIES-countries_reported
     }
+  end
+
+  def is_timber?(shipment, groupings)
+    groupings.each do |grouping|
+      return true if shipment[grouping[:rank].downcase] == grouping[:taxon_name]
+    end
+    return false
   end
 
   def limit
