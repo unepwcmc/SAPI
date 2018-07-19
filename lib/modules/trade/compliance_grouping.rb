@@ -25,6 +25,8 @@ class Trade::ComplianceGrouping
 
   TAXONOMIC_GROUPING = 'lib/data/group_conversions.csv'.freeze
 
+  YEARS = (2012..2016).to_a
+
   # Example usage
   # Group by year considering compliance types:
   # Trade::ComplianceGrouping.new('year', {attributes: ['issue_type']})
@@ -102,7 +104,13 @@ class Trade::ComplianceGrouping
     conversion
   end
 
-  def taxonomic_grouping(year)
+  def taxonomic_grouping
+    YEARS.map do |year|
+      { "#{year}": taxonomic_grouping_per_year(year) }
+    end
+  end
+
+  def taxonomic_grouping_per_year(year)
     conversion = read_taxonomy_conversion
 
     res = {}
