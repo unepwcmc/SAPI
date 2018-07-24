@@ -160,19 +160,21 @@ class Trade::ComplianceGrouping
     # We need UNION ALL, which allows duplicated shipments.
     <<-SQL
       (
-        SELECT #{ATTRIBUTES.values.join(',')}
-        FROM trade_shipments_appendix_i_mview
-      )
-      UNION ALL
-      (
-        SELECT #{ATTRIBUTES.values.join(',')}
-        FROM trade_shipments_mandatory_quotas_mview
-      )
-      UNION ALL
-      (
-        SELECT #{ATTRIBUTES.values.join(',')}
-        FROM trade_shipments_cites_suspensions_mview
-      )
+        (
+          SELECT #{ATTRIBUTES.values.join(',')}
+          FROM trade_shipments_appendix_i_mview
+        )
+        UNION ALL
+        (
+          SELECT #{ATTRIBUTES.values.join(',')}
+          FROM trade_shipments_mandatory_quotas_mview
+        )
+        UNION ALL
+        (
+          SELECT #{ATTRIBUTES.values.join(',')}
+          FROM trade_shipments_cites_suspensions_mview
+        )
+      ) AS non_compliant_shipments
     SQL
   end
 
