@@ -47,7 +47,7 @@ class Trade::ComplianceGrouping
   def shipments
     sql = <<-SQL
       SELECT *
-      FROM #{non_compliant_shipments}
+      FROM non_compliant_shipments_view
     SQL
     db.execute(sql)
   end
@@ -114,7 +114,7 @@ class Trade::ComplianceGrouping
 
     res = {}
     # Get all the non-compliant shipments in a given year
-    query = "SELECT * FROM #{non_compliant_shipments} WHERE year = #{year}"
+    query = "SELECT * FROM non_compliant_shipments_view WHERE year = #{year}"
     shipments = db.execute(query)
     # Loop through all the non-compliant shipments
     shipments.map do |shipment|
@@ -148,33 +148,11 @@ class Trade::ComplianceGrouping
     columns = [@group, @attributes].flatten.compact.uniq.join(',')
     <<-SQL
       SELECT #{columns}, COUNT(*) AS cnt, 100.0*COUNT(*)/(SUM(COUNT(*)) OVER (PARTITION BY year)) AS percent
-      FROM #{non_compliant_shipments}
+      FROM non_compliant_shipments_view
       WHERE #{@condition}
       GROUP BY #{columns}
       ORDER BY percent DESC
       #{limit}
-    SQL
-  end
-
-  def non_compliant_shipments
-    # We need UNION ALL, which allows duplicated shipments.
-    <<-SQL
-      (
-        (
-          SELECT #{ATTRIBUTES.values.join(',')}
-          FROM trade_shipments_appendix_i_mview
-        )
-        UNION ALL
-        (
-          SELECT #{ATTRIBUTES.values.join(',')}
-          FROM trade_shipments_mandatory_quotas_mview
-        )
-        UNION ALL
-        (
-          SELECT #{ATTRIBUTES.values.join(',')}
-          FROM trade_shipments_cites_suspensions_mview
-        )
-      ) AS non_compliant_shipments
     SQL
   end
 
@@ -184,13 +162,13 @@ class Trade::ComplianceGrouping
       FROM(
         (
           SELECT DISTINCT importer AS country, importer_iso AS iso
-          FROM #{non_compliant_shipments}
+          FROM non_compliant_shipments_view
           WHERE year = #{year}
         )
         UNION
         (
           SELECT DISTINCT exporter AS country, exporter_iso AS iso
-          FROM #{non_compliant_shipments}
+          FROM non_compliant_shipments_view
           WHERE year = #{year}
         )
       ) AS countries
@@ -199,7 +177,7 @@ class Trade::ComplianceGrouping
 
     sql = <<-SQL
       SELECT COUNT(*) AS cnt
-      FROM #{non_compliant_shipments}
+      FROM non_compliant_shipments_view
       WHERE year = #{year}
     SQL
     issues_reported = db.execute(sql).first['cnt'].to_i
