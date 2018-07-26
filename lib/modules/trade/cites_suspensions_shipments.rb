@@ -24,11 +24,19 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
         -- It considers also the geo_entity if specified in the Suspension as well as sources and purposes if any.
         (
           SELECT ts.id, ts.year, ts.appendix, ts.taxon_concept_id,
-                 ts.taxon_concept_full_name AS taxon,
-                 ts.taxon_concept_class_name AS class,
-                 ts.taxon_concept_order_name AS order,
-                 ts.taxon_concept_family_name AS family,
-                 ts.taxon_concept_genus_name AS genus,
+                 ts.taxon_concept_author_year AS author_year,
+                 ts.taxon_concept_name_status AS name_status,
+                 ts.taxon_concept_full_name AS taxon_name,
+                 ts.taxon_concept_phylum_id AS phylum_id,
+                 ts.taxon_concept_class_id AS class_id,
+                 ts.taxon_concept_class_name AS class_name,
+                 ts.taxon_concept_order_id AS order_id,
+                 ts.taxon_concept_order_name AS order_name,
+                 ts.taxon_concept_family_id AS family_id,
+                 ts.taxon_concept_family_name AS family_name,
+                 ts.taxon_concept_genus_id AS genus_id,
+                 ts.taxon_concept_genus_name AS genus_name,
+                 terms.id AS term_id,
                  terms.name_en AS term,
                  CASE WHEN ts.reported_by_exporter IS FALSE THEN ts.quantity
                       ELSE NULL
@@ -36,18 +44,31 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
                  CASE WHEN ts.reported_by_exporter IS TRUE THEN ts.quantity
                       ELSE NULL
                  END AS exporter_reported_quantity,
+                 units.id AS unit_id,
                  units.name_en AS unit,
+                 exporters.id AS exporter_id,
                  exporters.iso_code2 AS exporter_iso,
                  exporters.name_en AS exporter,
+                 importers.id AS importer_id,
                  importers.iso_code2 AS importer_iso,
                  importers.name_en AS importer,
                  NULL AS origin,
-                 purposes.name_en AS purpose, sources.name_en AS source, ts.import_permit_number AS import_permit,
-                 ts.export_permit_number AS export_permit, ts.origin_permit_number AS origin_permit, 'Suspension' AS issue_type,
+                 purposes.id AS purpose_id,
+                 purposes.name_en AS purpose,
+                 sources.id AS source_id,
+                 sources.name_en AS source,
+                 ts.import_permits_ids AS import_permits,
+                 ts.export_permits_ids AS export_permits,
+                 ts.origin_permits_ids AS origin_permits,
+                 ts.import_permit_number AS import_permit,
+                 ts.export_permit_number AS export_permit,
+                 ts.origin_permit_number AS origin_permit,
+                 'Suspension' AS issue_type,
                  start_notifications.subtype AS details_of_compliance_issue,
                  start_notifications.effective_at AS compliance_type_start_date,
                  ts.taxon_concept_full_name AS compliance_type_taxon,
-                 ranks.name AS compliance_type_taxonomic_rank,
+                 ranks.id AS rank_id,
+                 ranks.name AS rank_name,
                  end_notifications.effective_at AS compliance_type_end_date,
                  start_notifications.name AS suspension_start_notification, end_notifications.name AS suspension_end_notification,
                  tr_tc.notes AS notes
@@ -86,11 +107,19 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
 
         (
           SELECT ts.id, ts.year, ts.appendix, ts.taxon_concept_id,
-                 ts.taxon_concept_full_name AS taxon,
-                 ts.taxon_concept_class_name AS class,
-                 ts.taxon_concept_order_name AS order,
-                 ts.taxon_concept_family_name AS family,
-                 ts.taxon_concept_genus_name AS genus,
+                 ts.taxon_concept_author_year AS author_year,
+                 ts.taxon_concept_name_status AS name_status,
+                 ts.taxon_concept_full_name AS taxon_name,
+                 ts.taxon_concept_phylum_id AS phylum_id,
+                 ts.taxon_concept_class_id AS class_id,
+                 ts.taxon_concept_class_name AS class_name,
+                 ts.taxon_concept_order_id AS order_id,
+                 ts.taxon_concept_order_name AS order_name,
+                 ts.taxon_concept_family_id AS family_id,
+                 ts.taxon_concept_family_name AS family_name,
+                 ts.taxon_concept_genus_id AS genus_id,
+                 ts.taxon_concept_genus_name AS genus_name,
+                 terms.id AS term_id,
                  terms.name_en AS term,
                  CASE WHEN ts.reported_by_exporter IS FALSE THEN ts.quantity
                       ELSE NULL
@@ -98,18 +127,31 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
                  CASE WHEN ts.reported_by_exporter IS TRUE THEN ts.quantity
                       ELSE NULL
                  END AS exporter_reported_quantity,
+                 units.id AS unit_id,
                  units.name_en AS unit,
+                 exporters.id AS exporter_id,
                  exporters.iso_code2 AS exporter_iso,
                  exporters.name_en AS exporter,
+                 importers.id AS importer_id,
                  importers.iso_code2 AS importer_iso,
                  importers.name_en AS importer,
                  NULL AS origin,
-                 purposes.name_en AS purpose, sources.name_en AS source, ts.import_permit_number AS import_permit,
-                 ts.export_permit_number AS export_permit, ts.origin_permit_number AS origin_permit, 'Suspension' AS issue_type,
+                 purposes.id AS purpose_id,
+                 purposes.name_en AS purpose,
+                 sources.id AS source_id,
+                 sources.name_en AS source,
+                 ts.import_permits_ids AS import_permits,
+                 ts.export_permits_ids AS export_permits,
+                 ts.origin_permits_ids AS origin_permits,
+                 ts.import_permit_number AS import_permit,
+                 ts.export_permit_number AS export_permit,
+                 ts.origin_permit_number AS origin_permit,
+                 'Suspension' AS issue_type,
                  start_notifications.subtype AS details_of_compliance_issue,
                  start_notifications.effective_at AS start_date,
                  ts.taxon_concept_full_name AS compliance_type_taxon,
-                 ranks.name AS compliance_type_taxonomic_rank,
+                 ranks.id AS rank_id,
+                 ranks.name AS rank_name,
                  end_notifications.effective_at AS end_date,
                  start_notifications.name AS suspension_start_notification, end_notifications.name AS suspension_end_notification,
                  tr_ge.notes AS notes
@@ -152,7 +194,7 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
         WHERE #{except}
       )
 
-      ORDER BY s.year, s.class, s.order, s.family, s.genus, s.taxon, s.term
+      ORDER BY s.year, s.class_name, s.order_name, s.family_name, s.genus_name, s.taxon_name, s.term
     SQL
   end
 
