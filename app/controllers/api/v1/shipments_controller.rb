@@ -8,7 +8,7 @@ class Api::V1::ShipmentsController < ApplicationController
     commodity: ['term'],
     exporting: ['exporter', 'exporter_iso'],
     importing: ['importer', 'importer_iso'],
-    species: ['taxon', 'appendix'],
+    species: ['taxon_name', 'appendix'],
     taxonomy: [''],
   }
 

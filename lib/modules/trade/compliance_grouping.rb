@@ -14,10 +14,10 @@ class Trade::ComplianceGrouping
     unit: 'unit',
     purpose: 'purpose',
     source: 'source',
-    taxon: 'taxon',
-    genus: 'genus',
-    family: 'family',
-    class: 'class',
+    taxon_name: 'taxon_name',
+    genus_name: 'genus_name',
+    family_name: 'family_name',
+    class_name: 'class_name',
     issue_type: 'issue_type'
   }
 
@@ -126,7 +126,8 @@ class Trade::ComplianceGrouping
           # If we are looping through plants but the shipment is about a Timber taxon
           # don't include this in the sum
           next if group == 'Plants' && is_timber?(shipment, conversion["Timber"])
-          res[group] += 1 if shipment[grouping[:rank].downcase] == grouping[:taxon_name]
+          rank_name = "#{grouping[:rank].downcase}_name"
+          res[group] += 1 if shipment[rank_name] == grouping[:taxon_name]
         end
       end
     end
@@ -192,7 +193,8 @@ class Trade::ComplianceGrouping
 
   def is_timber?(shipment, groupings)
     groupings.each do |grouping|
-      return true if shipment[grouping[:rank].downcase] == grouping[:taxon_name]
+      rank_name = "#{grouping[:rank].downcase}_name"
+      return true if shipment[rank_name] == grouping[:taxon_name]
     end
     return false
   end

@@ -1,9 +1,8 @@
 class Trade::ShipmentApiFromViewSerializer < ActiveModel::Serializer
-   attributes :id , :year, :appendix, :taxon, :klass, :order, :family, :genus,
+   attributes :id , :year, :appendix, :taxon_name, :class_name, :order_name, :family_name, :genus_name,
               :term, :importer_reported_quantity, :exporter_reported_quantity,
               :unit, :importer, :importer_iso, :exporter, :exporter_iso, :origin, :purpose, :source,
-              :import_permit, :export_permit, :origin_permit, :issue_type,
-              :compliance_type_taxonomic_rank
+              :import_permit, :export_permit, :origin_permit, :issue_type, :rank_name
 
 
   def importer
@@ -34,8 +33,8 @@ class Trade::ShipmentApiFromViewSerializer < ActiveModel::Serializer
     object.purpose || object.attributes["purpose"]
   end
 
-  def klass
-    object.attributes["class"]
+  def class_name
+    object.attributes["class_name"]
   end
 
   def importer_reported_quantity
