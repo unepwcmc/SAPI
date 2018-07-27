@@ -6,8 +6,8 @@ class Api::V1::ShipmentsController < ApplicationController
   GROUPING_ATTRIBUTES = {
     category: ['issue_type'],
     commodity: ['term'],
-    exporting: ['exporter', 'exporter_iso'],
-    importing: ['importer', 'importer_iso'],
+    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
+    importing: ['importer', 'importer_iso', 'importer_id'],
     species: ['taxon_name', 'appendix'],
     taxonomy: [''],
   }
@@ -70,28 +70,26 @@ class Api::V1::ShipmentsController < ApplicationController
         values = partial.map { |el| hash.merge({ cnt: el[2].to_i }) }
         json << ({ "#{k}": values[0] })
       end
-      # data.values.each { |el| hash[el[1]] = [el[2].to_i] }
     elsif params[:group_by].include?('exporting')
-      query = Trade::ComplianceGrouping.new('year', {attributes: ['importer', 'importer_iso'], condition: "year = #{params[:year]}"}).run
+      query = Trade::ComplianceGrouping.new('year', {attributes: GROUPING_ATTRIBUTES[:importing], condition: "year = #{params[:year]}"}).run
       all_data = data.values + query.values
       keys = all_data.map { |d| d[1] }.uniq
-      # json = []
       keys.map do |k|
         exp_partial = data.values.select { |d| d[1] == k }
         exp_values = exp_partial.map do |el|
-          id = 35 # el[4]
+          id = el[3]
           tot_exp = total_ships_exp_cnt(id)
           hash.merge({
-            cnt: el[3].to_i,
+            cnt: el[4].to_i,
             total_cnt: tot_exp
           })
         end
         imp_partial = query.values.select { |d| d[1] == k }
         imp_values = imp_partial.map do |el|
-          id = 35 # el[4]
+          id = el[3]
           tot_imp = total_ships_imp_cnt(id)
           hash.merge({
-            cnt: el[3].to_i,
+            cnt: el[4].to_i,
             total_cnt: tot_imp
           })
         end
@@ -112,7 +110,6 @@ class Api::V1::ShipmentsController < ApplicationController
         values = partial.map { |el| hash.merge({ appendix: el[2], cnt: el[3].to_i }) }
         json << ({ "#{k}": values[0] })
       end
-      # data.values.each { |el| hash[el[1]] = [el[2], el[3].to_i] }
     end
     json
   end
