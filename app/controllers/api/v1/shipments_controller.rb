@@ -6,8 +6,8 @@ class Api::V1::ShipmentsController < ApplicationController
   GROUPING_ATTRIBUTES = {
     category: ['issue_type'],
     commodity: ['term'],
-    exporting: ['exporter', 'exporter_iso'],
-    importing: ['importer', 'importer_iso'],
+    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
+    importing: ['importer', 'importer_iso', 'importer_id'],
     species: ['taxon_name', 'appendix'],
     taxonomy: [''],
   }
