@@ -33,7 +33,7 @@ class Api::V1::ShipmentsController < ApplicationController
   def search_query
     query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
     data = query.run
-    @search_data = build_hash(data)
+    @search_data = query.build_hash(data, params)
     render :json => @search_data
   end
 
