@@ -165,57 +165,60 @@ class Trade::ComplianceGrouping
     if params[:group_by].include?('commodity') || params[:group_by].include?('species')
       hash[params[:year]] = data.map {|d| d.except('year', 'percent')}
     elsif params[:group_by].include?('exporting')
-      query = Trade::ComplianceGrouping.new('year', {attributes: GROUPING_ATTRIBUTES[:importing], condition: "year = #{params[:year]}"}).run
-      data, query = data.group_by {|d| d['exporter']}, query.group_by {|d| d['importer']}
-      sum = data.map do |k, v|
-        unless query[k]
-          {
-            "#{k}" => { cnt: v.first['cnt'].to_i,
-            total_cnt: total_ships_exp_cnt(v.first['exporter_id'], params[:year])}
-          }
-        else
-          {
-            "#{k}"=> { cnt: v.first['cnt'].to_i + query[k].first['cnt'].to_i,
-            total_cnt: total_ships_exp_cnt(v.first['exporter_id'], params[:year]) + total_ships_imp_cnt(query[k].first['importer_id'], params[:year])}
-          }
-        end
-      end
+      importers = Trade::ComplianceGrouping.new('year', {attributes: GROUPING_ATTRIBUTES[:importing], condition: "year = #{params[:year]}"}).run
+      data, importers = data.group_by {|d| d['exporter']}, importers.group_by {|d| d['importer']}
+      sum = importer_exporter_countries(data, importers, params[:year])
       keys = sum.map { |s| s.keys }.flatten
-      imp =
-        query.map do |k, v|
-          unless keys.include?(k.to_sym)
-            {
-              "#{k}"=> { cnt: v.first['cnt'].to_i,
-              total_cnt: total_ships_imp_cnt(v.first['importer_id'], params[:year])}
-            }
-          end
-        end.compact
+      imp = only_importer_countries(importers, keys, params[:year])
       imp_hash, exp_hash = {}, {}
-      imp.each { |el| el.each { |key, value| imp_hash[key]=value } }
-      sum.each { |el| el.each { |key, value| exp_hash[key]=value } }
+      imp.each { |el| el.each { |key, value| imp_hash[key] = value } }
+      sum.each { |el| el.each { |key, value| exp_hash[key] = value } }
       merged_hash = imp_hash.merge(exp_hash)
       merged_hash =
         merged_hash.map do |k, v|
-          { "#{k}"=> merged_hash[k].merge(percentage: (v[:cnt]*100.0/v[:total_cnt]).round(2)) }
+          { "#{k}": merged_hash[k].merge(percentage: (v[:cnt]*100.0/v[:total_cnt]).round(2)) }
         end
       all_hash = {}
-      merged_hash.each { |el| el.each { |k, v| all_hash[k]=v } }
+      merged_hash.each { |el| el.each { |k, v| all_hash[k] = v } }
       hash[params[:year]] = all_hash
     end
     hash
   end
 
-  def total_ships_exp_cnt(id, year)
-    query_exp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE exporter_id = #{id} AND year = #{year} GROUP BY exporter_id"
-    db.execute(query_exp).values.flatten.first.to_i
-  end
-
-  def total_ships_imp_cnt(id, year)
-    query_imp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE importer_id = #{id} AND year = #{year} GROUP BY importer_id"
-    db.execute(query_imp).values.flatten.first.to_i
-  end
-
   private
+
+  def importer_exporter_countries(data, importers, year)
+    data.map do |k, v|
+      unless importers[k]
+        {
+          "#{k}": {
+            cnt: v.first['cnt'].to_i,
+            total_cnt: total_ships_exp_cnt(v.first['exporter_id'], year)
+          }
+        }
+      else
+        {
+          "#{k}": {
+            cnt: v.first['cnt'].to_i + importers[k].first['cnt'].to_i,
+            total_cnt: total_ships_exp_cnt(v.first['exporter_id'], year) + total_ships_imp_cnt(importers[k].first['importer_id'], year)
+          }
+        }
+      end
+    end
+  end
+
+  def only_importer_countries(importers, keys, year)
+    importers.map do |k, v|
+      unless keys.include?(k.to_sym)
+        {
+          "#{k}": {
+            cnt: v.first['cnt'].to_i,
+            total_cnt: total_ships_imp_cnt(v.first['importer_id'], year)
+          }
+        }
+      end
+    end.compact
+  end
 
   def group_query
     columns = [@group, @attributes].flatten.compact.uniq.join(',')
@@ -302,5 +305,15 @@ class Trade::ComplianceGrouping
 
   def db
     ActiveRecord::Base.connection
+  end
+
+  def total_ships_exp_cnt(id, year)
+    query_exp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE exporter_id = #{id} AND year = #{year}"
+    db.execute(query_exp).values.flatten.first.to_i
+  end
+
+  def total_ships_imp_cnt(id, year)
+    query_imp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE importer_id = #{id} AND year = #{year}"
+    db.execute(query_imp).values.flatten.first.to_i
   end
 end
