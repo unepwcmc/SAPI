@@ -13,6 +13,7 @@ class Trade::ComplianceGrouping
     exporter_iso: 'exporter_iso',
     exporter_id: 'exporter_id',
     term: 'term',
+    term_id: 'term_id',
     unit: 'unit',
     purpose: 'purpose',
     source: 'source',
@@ -20,15 +21,16 @@ class Trade::ComplianceGrouping
     genus_name: 'genus_name',
     family_name: 'family_name',
     class_name: 'class_name',
-    issue_type: 'issue_type'
+    issue_type: 'issue_type',
+    taxon_concept_id: 'taxon_concept_id'
   }
 
   GROUPING_ATTRIBUTES = {
     category: ['issue_type'],
-    commodity: ['term'],
+    commodity: ['term', 'term_id'],
     exporting: ['exporter', 'exporter_iso', 'exporter_id'],
     importing: ['importer', 'importer_iso', 'importer_id'],
-    species: ['taxon_name', 'appendix'],
+    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
     taxonomy: [''],
   }
 
@@ -172,11 +174,35 @@ class Trade::ComplianceGrouping
         merged_hash.map do |k, v|
           { "#{k}": merged_hash[k].merge(percentage: (v[:cnt]*100.0/v[:total_cnt]).round(2)) }
         end
-      all_hash = {}
-      merged_hash.each { |el| el.each { |k, v| all_hash[k] = v } }
-      hash[params[:year]] = all_hash
+      hash[params[:year]] = merged_hash
     end
     hash
+  end
+
+  def filter(data, params)
+    if params[:filter].present?
+
+      if params[:group_by].include?('commodity')
+        data = data[params[:year]].delete_if { |d| d['term'].index(/#{params[:filter]}/i).nil? }
+      elsif params[:group_by].include?('species')
+        data = data[params[:year]].delete_if { |d| d['taxon_name'].index(/#{params[:filter]}/i).nil? }
+      elsif params[:group_by].include?('exporting')
+        data = data[params[:year]].select { |k, v| !k.to_s.index(/#{params[:filter]}/i).nil? }
+      end
+
+    elsif params[:id].present?
+
+      if params[:group_by].include?('commodity')
+        data = data[params[:year]].delete_if { |d| d['term_id'] != params[:id] }
+      elsif params[:group_by].include?('species')
+        data = data[params[:year]].delete_if { |d| d['taxon_concept_id'] != params[:id] }
+      else
+        data = data[params[:year]].delete_if { |country| country.values.first[:id] != params[:id]  }
+      end
+
+    else
+      data[params[:year]]
+    end
   end
 
   private
@@ -186,6 +212,7 @@ class Trade::ComplianceGrouping
       unless importers[k]
         {
           "#{k}": {
+            id: v.first['exporter_id'],
             cnt: v.first['cnt'].to_i,
             total_cnt: total_ships_exp_cnt(v.first['exporter_id'], year)
           }
@@ -193,6 +220,7 @@ class Trade::ComplianceGrouping
       else
         {
           "#{k}": {
+            id: v.first['exporter_id'],
             cnt: v.first['cnt'].to_i + importers[k].first['cnt'].to_i,
             total_cnt: total_ships_exp_cnt(v.first['exporter_id'], year) + total_ships_imp_cnt(importers[k].first['importer_id'], year)
           }
@@ -206,6 +234,7 @@ class Trade::ComplianceGrouping
       unless keys.include?(k.to_sym)
         {
           "#{k}": {
+            id: v.first['importer_id'],
             cnt: v.first['cnt'].to_i,
             total_cnt: total_ships_imp_cnt(v.first['importer_id'], year)
           }
@@ -302,11 +331,13 @@ class Trade::ComplianceGrouping
   end
 
   def total_ships_exp_cnt(id, year)
+    # TODO retrieve from trade_shipments instead ??
     query_exp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE exporter_id = #{id} AND year = #{year}"
     db.execute(query_exp).values.flatten.first.to_i
   end
 
   def total_ships_imp_cnt(id, year)
+    # TODO retrieve from trade_shipments instead ??
     query_imp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE importer_id = #{id} AND year = #{year}"
     db.execute(query_imp).values.flatten.first.to_i
   end
