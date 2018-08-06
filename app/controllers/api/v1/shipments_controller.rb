@@ -5,10 +5,10 @@ class Api::V1::ShipmentsController < ApplicationController
 
   GROUPING_ATTRIBUTES = {
     category: ['issue_type'],
-    commodity: ['term'],
+    commodity: ['term', 'term_id'],
     exporting: ['exporter', 'exporter_iso', 'exporter_id'],
     importing: ['importer', 'importer_iso', 'importer_id'],
-    species: ['taxon_name', 'appendix'],
+    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
     taxonomy: [''],
   }
 
@@ -34,7 +34,7 @@ class Api::V1::ShipmentsController < ApplicationController
     query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
     data = query.run
     @search_data = query.build_hash(data, params)
-    render :json => @search_data
+    render :json => Kaminari.paginate_array(query.filter(@search_data, params)).page(params[:page]).per(8)
   end
 
   private
