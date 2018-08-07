@@ -41,17 +41,12 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def sanitized_data(data)
-    if params[:group_by].include?('category') || params[:group_by].include?('taxonomy')
-      @grouped_data = data
-    else
-      record = {}
-      data.each do |d|
-        key = d.keys.first
-        record[key] = d[key][0..4]
-      end
-      @grouped_data = record
+    record = {}
+    data.each do |d|
+      key = d.keys.first
+      record[key] = params[:group_by].include?('category') || params[:group_by].include?('taxonomy') ? d[key][0..-1] : d[key][0..4]
     end
-    @grouped_data
+    @grouped_data = record
   end
 
   def authenticate
