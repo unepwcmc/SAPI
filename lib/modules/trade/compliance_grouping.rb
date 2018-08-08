@@ -73,7 +73,8 @@ class Trade::ComplianceGrouping
     record = {}
     json.each do |d|
       key = d.keys.first
-      record[key] = params[:group_by].include?('category') ? d[key] : d[key][0..4]
+      # Fetch top 5
+      record[key] = d[key][0..4]
     end
     record
   end
@@ -109,16 +110,9 @@ class Trade::ComplianceGrouping
   end
 
   def taxonomic_grouping
-    data =
-      YEARS.map do |year|
-        { "#{year}": taxonomic_grouping_per_year(year) }
-      end
-    record = {}
-    data.each do |d|
-      key = d.keys.first
-      record[key] = d[key]
-    end
-    record
+    YEARS.map do |year|
+      { "#{year}": taxonomic_grouping_per_year(year) }
+    end.inject(:merge)
   end
 
   def taxonomic_grouping_per_year(year)
