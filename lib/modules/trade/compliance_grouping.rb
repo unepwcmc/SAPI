@@ -52,7 +52,7 @@ class Trade::ComplianceGrouping
     db.execute(sql)
   end
 
-  def json_by_year(data, opts={})
+  def json_by_year(data, params, opts={})
     return data unless data.first["year"]
 
     # Custom group_by
@@ -70,7 +70,13 @@ class Trade::ComplianceGrouping
       end
       json << ({ "#{year}": values })
     end
-    json
+    record = {}
+    json.each do |d|
+      key = d.keys.first
+      # Fetch top 5
+      record[key] = d[key][0..4]
+    end
+    record
   end
 
   # TODO
@@ -106,7 +112,7 @@ class Trade::ComplianceGrouping
   def taxonomic_grouping
     YEARS.map do |year|
       { "#{year}": taxonomic_grouping_per_year(year) }
-    end
+    end.inject(:merge)
   end
 
   def taxonomic_grouping_per_year(year)
