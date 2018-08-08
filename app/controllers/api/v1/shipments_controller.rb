@@ -25,9 +25,9 @@ class Api::V1::ShipmentsController < ApplicationController
     data = query.run
     params_hash = {}
     sanitized_attributes.map { |p| params_hash[p] = p }
-    temp_data = sanitized_attributes.first.empty? ? query.taxonomic_grouping :
-                                                    query.json_by_year(data, params_hash)
-    render :json => sanitized_data(temp_data)
+    @grouped_data = sanitized_attributes.first.empty? ? query.taxonomic_grouping :
+                                                        query.json_by_year(data, params, params_hash)
+    render :json =>  @grouped_data
   end
 
   private
@@ -38,15 +38,6 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def sanitized_attributes
     GROUPING_ATTRIBUTES[params[:group_by].to_sym]
-  end
-
-  def sanitized_data(data)
-    record = {}
-    data.each do |d|
-      key = d.keys.first
-      record[key] = params[:group_by].include?('category') || params[:group_by].include?('taxonomy') ? d[key][0..-1] : d[key][0..4]
-    end
-    @grouped_data = record
   end
 
   def authenticate
