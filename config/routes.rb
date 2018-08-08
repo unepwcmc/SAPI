@@ -36,6 +36,7 @@ SAPI::Application.routes.draw do
       match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
       resources :shipments, only: [:index]
       get '/shipments/grouped' => 'shipments#grouped_query'
+      get '/shipments/search' => 'shipments#search_query'
     end
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
