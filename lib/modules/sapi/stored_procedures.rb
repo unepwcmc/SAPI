@@ -20,7 +20,8 @@ module Sapi
         :touch_cms_taxon_concepts,
         :trade_shipments_appendix_i_mview,
         :trade_shipments_mandatory_quotas_mview,
-        :trade_shipments_cites_suspensions_mview
+        :trade_shipments_cites_suspensions_mview,
+        :non_compliant_shipments_view
       ].each { |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
@@ -109,7 +110,8 @@ module Sapi
       [
         :trade_shipments_appendix_i_mview,
         :trade_shipments_mandatory_quotas_mview,
-        :trade_shipments_cites_suspensions_mview
+        :trade_shipments_cites_suspensions_mview,
+        :non_compliant_shipments_view
       ].each { |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
