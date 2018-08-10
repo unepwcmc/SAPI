@@ -37,10 +37,24 @@ class Api::V1::ShipmentsController < ApplicationController
     render :json => Kaminari.paginate_array(query.filter(@search_data, params)).page(params[:page]).per(8)
   end
 
+  def download_data
+    @download_data = Trade::DownloadDataRetriever.dashboard_download(download_params)
+    render :json => @download_data
+  end
+
+  def search_download_data
+    @download_data = Trade::DownloadDataRetriever.search_download(download_params)
+    render :json => @download_data
+  end
+
   private
 
   def search_params
     params.permit(:compliance_type, :time_range_start, :time_range_end, :page, :per_page)
+  end
+
+  def download_params
+    params.permit(:year, :type, :ids, :compliance_type)
   end
 
   def sanitized_attributes

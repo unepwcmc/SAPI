@@ -37,6 +37,8 @@ SAPI::Application.routes.draw do
       resources :shipments, only: [:index]
       get '/shipments/grouped' => 'shipments#grouped_query'
       get '/shipments/search' => 'shipments#search_query'
+      get '/shipments/download' => 'shipments#download_data'
+      get '/shipments/search_download' => 'shipments#search_download_data'
     end
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
