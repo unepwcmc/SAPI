@@ -5,10 +5,10 @@ class Api::V1::ShipmentsController < ApplicationController
 
   GROUPING_ATTRIBUTES = {
     category: ['issue_type'],
-    commodity: ['term'],
-    exporting: ['exporter', 'exporter_iso'],
-    importing: ['importer', 'importer_iso'],
-    species: ['taxon_name', 'appendix'],
+    commodity: ['term', 'term_id'],
+    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
+    importing: ['importer', 'importer_iso', 'importer_id'],
+    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
     taxonomy: [''],
   }
 
@@ -30,10 +30,31 @@ class Api::V1::ShipmentsController < ApplicationController
     render :json =>  @grouped_data
   end
 
+  def search_query
+    query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
+    data = query.run
+    @search_data = query.build_hash(data, params)
+    render :json => Kaminari.paginate_array(query.filter(@search_data, params)).page(params[:page]).per(8)
+  end
+
+  def download_data
+    @download_data = Trade::DownloadDataRetriever.dashboard_download(download_params)
+    render :json => @download_data
+  end
+
+  def search_download_data
+    @download_data = Trade::DownloadDataRetriever.search_download(download_params)
+    render :json => @download_data
+  end
+
   private
 
   def search_params
     params.permit(:compliance_type, :time_range_start, :time_range_end, :page, :per_page)
+  end
+
+  def download_params
+    params.permit(:year, :type, :ids, :compliance_type)
   end
 
   def sanitized_attributes
