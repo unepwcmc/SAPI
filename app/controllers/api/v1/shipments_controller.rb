@@ -54,8 +54,8 @@ class Api::V1::ShipmentsController < ApplicationController
   def metadata(data, params)
     {
       :total => data.count,
-      :page => params[:page],
-      :per_page => params[:per_page]
+      :page => params[:page] || 1,
+      :per_page => params[:per_page] || 25
     }
   end
 
