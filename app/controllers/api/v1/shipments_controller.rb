@@ -34,7 +34,9 @@ class Api::V1::ShipmentsController < ApplicationController
     query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
     data = query.run
     @search_data = query.build_hash(data, params)
-    render :json => Kaminari.paginate_array(query.filter(@search_data, params)).page(params[:page]).per(8)
+    @filtered_data = query.filter(@search_data, params)
+    render :json => Kaminari.paginate_array(@filtered_data).page(params[:page]).per(params[:per_page]),
+           :meta => metadata(@filtered_data, params)
   end
 
   def download_data
@@ -48,6 +50,14 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   private
+
+  def metadata(data, params)
+    {
+      :total => data.count,
+      :page => params[:page] || 1,
+      :per_page => params[:per_page] || 25
+    }
+  end
 
   def search_params
     params.permit(:compliance_type, :time_range_start, :time_range_end, :page, :per_page)

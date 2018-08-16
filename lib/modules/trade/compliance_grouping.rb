@@ -163,7 +163,7 @@ class Trade::ComplianceGrouping
   end
 
   def build_hash(data, params)
-    hash = {}
+    hash, array = {}, []
     if params[:group_by].include?('commodity') || params[:group_by].include?('species')
       hash[params[:year]] = data.map {|d| d.except('year', 'percent')}
     elsif params[:group_by].include?('exporting')
@@ -180,7 +180,11 @@ class Trade::ComplianceGrouping
         merged_hash.map do |k, v|
           { "#{k}": merged_hash[k].merge(percentage: (v[:cnt]*100.0/v[:total_cnt]).round(2)) }
         end
-      hash[params[:year]] = merged_hash
+      merged_hash.each do |country|
+        country.values.first.merge!(country: country.keys.first.to_s)
+        array << country.values.first
+      end
+      hash[params[:year]] = array
     end
     hash
   end
@@ -193,7 +197,7 @@ class Trade::ComplianceGrouping
       elsif params[:group_by].include?('species')
         data = data[params[:year]].delete_if { |d| d['taxon_name'].index(/#{params[:filter]}/i).nil? }
       elsif params[:group_by].include?('exporting')
-        data = data[params[:year]].select { |k, v| !k.to_s.index(/#{params[:filter]}/i).nil? }
+        data = data[params[:year]].delete_if { |d| d[:country].index(/#{params[:filter]}/i).nil? }
       end
 
     elsif params[:id].present?
@@ -203,7 +207,7 @@ class Trade::ComplianceGrouping
       elsif params[:group_by].include?('species')
         data = data[params[:year]].delete_if { |d| d['taxon_concept_id'] != params[:id] }
       else
-        data = data[params[:year]].delete_if { |country| country.values.first[:id] != params[:id]  }
+        data = data[params[:year]].delete_if { |d| d[:id] != params[:id]  }
       end
 
     else
