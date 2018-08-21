@@ -30,8 +30,8 @@ module Trade::DownloadDataRetriever
     query_runner(query)
   end
 
-  def self.search_download(params, ids = nil)
-    id = params[:ids] || ids.join(',')
+  def self.search_download(params)
+    id = params[:ids]
     year = params[:year]
     return [] if id.empty?
     query =

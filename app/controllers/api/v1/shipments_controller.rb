@@ -55,11 +55,19 @@ class Api::V1::ShipmentsController < ApplicationController
     search_data = query.build_hash(data, params)
     filtered_data = query.filter(search_data, params)
     data_ids = query.filter_download_data(filtered_data, params)
-    @search_download_all_data = Trade::DownloadDataRetriever.search_download(download_params, data_ids)
+    hash_params = params_hash_builder(data_ids, download_params)
+    @search_download_all_data = Trade::DownloadDataRetriever.search_download(hash_params)
     render :json => @search_download_all_data
   end
 
   private
+
+  def params_hash_builder(ids, params)
+    hash_params = {}
+    hash_params[:ids] = ids.join(',')
+    hash_params.merge!(params)
+    hash_params.symbolize_keys
+  end
 
   def metadata(data, params)
     {
