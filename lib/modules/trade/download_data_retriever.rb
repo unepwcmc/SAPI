@@ -30,12 +30,13 @@ module Trade::DownloadDataRetriever
     query_runner(query)
   end
 
-  def self.search_download(params)
-    id = params[:ids]
+  def self.search_download(params, ids = nil)
+    id = params[:ids] || ids.join(',')
     year = params[:year]
+    return [] if id.empty?
     query =
-      case params[:type]
-      when 'countries'
+      case params[:group_by]
+      when 'exporting'
         <<-SQL
                SELECT #{ATTRIBUTES.join(',')}
                FROM non_compliant_shipments_view
@@ -61,7 +62,7 @@ module Trade::DownloadDataRetriever
   end
 
   def self.sanitize_compliance_param(param)
-    if param.include?('trade')
+    if param.include?('suspension')
       'Suspension'
     elsif param.include?('quota')
       'Quota'

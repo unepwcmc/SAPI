@@ -39,6 +39,7 @@ SAPI::Application.routes.draw do
       get '/shipments/search' => 'shipments#search_query'
       get '/shipments/download' => 'shipments#download_data'
       get '/shipments/search_download' => 'shipments#search_download_data'
+      get '/shipments/search_download_all' => 'shipments#search_download_all_data'
     end
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
