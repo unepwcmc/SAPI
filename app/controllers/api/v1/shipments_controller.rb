@@ -49,7 +49,25 @@ class Api::V1::ShipmentsController < ApplicationController
     render :json => @download_data
   end
 
+  def search_download_all_data
+    query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
+    data = query.run
+    search_data = query.build_hash(data, params)
+    filtered_data = query.filter(search_data, params)
+    data_ids = query.filter_download_data(filtered_data, params)
+    hash_params = params_hash_builder(data_ids, download_params)
+    @search_download_all_data = Trade::DownloadDataRetriever.search_download(hash_params)
+    render :json => @search_download_all_data
+  end
+
   private
+
+  def params_hash_builder(ids, params)
+    hash_params = {}
+    hash_params[:ids] = ids.join(',')
+    hash_params.merge!(params)
+    hash_params.symbolize_keys
+  end
 
   def metadata(data, params)
     {
@@ -64,7 +82,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def download_params
-    params.permit(:year, :type, :ids, :compliance_type)
+    params.permit(:year, :ids, :compliance_type, :type, :group_by)
   end
 
   def sanitized_attributes

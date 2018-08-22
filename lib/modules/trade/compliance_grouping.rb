@@ -215,6 +215,16 @@ class Trade::ComplianceGrouping
     end
   end
 
+  def filter_download_data(data, params)
+    if params[:group_by].include?('commodity')
+      data.map { |d| d['term_id'] }
+    elsif params[:group_by].include?('species')
+      data.map { |d| d['taxon_concept_id'] }
+    elsif params[:group_by].include?('exporting')
+      data.map { |d| d[:id] }
+    end
+  end
+
   private
 
   def importer_exporter_countries(data, importers, year)
