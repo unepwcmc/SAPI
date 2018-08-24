@@ -15,6 +15,7 @@ module Trade::DownloadDataRetriever
   }
 
   def self.dashboard_download(params)
+    return taxonomic_download(params) if params[:type] == 'taxonomy'
     query =
       if params[:year].present?
         if params[:type].present?
@@ -59,6 +60,49 @@ module Trade::DownloadDataRetriever
         SQL
       end
     query_runner(query)
+  end
+
+  def self.taxonomic_download(params)
+    mapping = Trade::ComplianceGrouping.new('').read_taxonomy_conversion
+    array_ids = []
+    mapping[params[:ids]].each do |m|
+      rank_name = params[:ids].include?('Timber') ? 'genus_name' : "#{m[:rank].downcase}_name"
+      taxon_name = params[:ids].include?('Timber') ? m[:taxon_name].split(' ').first : m[:taxon_name]
+
+      ids_query = ids_query(params[:year], params[:ids], rank_name, taxon_name)
+      ids = query_runner(ids_query)
+
+      ids.each { |ob| array_ids << ob['id'] }
+      array_ids = plant_timber_distinction(params[:year], mapping, array_ids) if params[:ids].include?('Plants')
+    end
+    return if array_ids.empty?
+    query = "SELECT #{ATTRIBUTES.join(',')}
+             FROM non_compliant_shipments_view
+             WHERE year = #{params[:year]}
+             AND id IN (#{array_ids.join(',')})"
+    query_runner(query)
+  end
+
+  def self.ids_query(year, id, rank, taxon)
+    "SELECT id FROM non_compliant_shipments_view
+     WHERE year = #{year}
+     AND #{ids_query_condition(id, rank, taxon)}"
+  end
+
+  def self.ids_query_condition(id, rank, taxon)
+    id.include?('Plants') ? 'class_id IS NULL' : "#{rank} = '#{taxon}'"
+  end
+
+  def self.plant_timber_distinction(year, mapping, array)
+    timber_ids = []
+    mapping['Timber'].each do |mapp|
+      rank_name = 'genus_name'
+      taxon_name = mapp[:taxon_name].split(' ').first
+      ids_query = ids_query(year, 'Timber', rank_name, taxon_name)
+      ids = query_runner(ids_query)
+      ids.each { |ob| timber_ids << ob['id'] }
+    end
+    array.reject { |el| timber_ids.include? el }
   end
 
   def self.sanitize_compliance_param(param)
