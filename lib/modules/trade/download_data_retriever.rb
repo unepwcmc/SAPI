@@ -11,7 +11,6 @@ module Trade::DownloadDataRetriever
     exporting: 'exporter_id',
     importing: 'importer_id',
     species: 'taxon_concept_id'
-    # TODO taxonomy_id missing
   }
 
   def self.dashboard_download(params)
@@ -26,7 +25,7 @@ module Trade::DownloadDataRetriever
           "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]}"
         end
       else
-        "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year >= '2012' AND year <= '2016'"
+        "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year >= '2012' AND year <= '2017'"
       end
     query_runner(query)
   end
