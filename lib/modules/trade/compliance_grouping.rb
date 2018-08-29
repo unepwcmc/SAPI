@@ -135,6 +135,7 @@ class Trade::ComplianceGrouping
     # Get all the non-compliant shipments in a given year
     query = "SELECT * FROM non_compliant_shipments_view WHERE year = #{year}"
     shipments = db.execute(query)
+    return [] unless shipments.first
     # Loop through all the non-compliant shipments
     shipments.map do |shipment|
       # Loop through the conversion hash to consider one group at a time
