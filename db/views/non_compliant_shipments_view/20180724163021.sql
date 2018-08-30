@@ -1,4 +1,4 @@
-SELECT id, year, appendix, taxon_concept_id,
+SELECT DISTINCT id, year, appendix, taxon_concept_id,
        author_year,
        name_status,
        taxon_name,
@@ -41,7 +41,7 @@ FROM trade_shipments_appendix_i_mview
 
 UNION ALL
 
-SELECT id, year, appendix, taxon_concept_id,
+SELECT DISTINCT id, year, appendix, taxon_concept_id,
        author_year,
        name_status,
        taxon_name,
@@ -84,7 +84,7 @@ FROM trade_shipments_mandatory_quotas_mview
 
 UNION ALL
 
-SELECT id, year, appendix, taxon_concept_id,
+SELECT DISTINCT id, year, appendix, taxon_concept_id,
        author_year,
        name_status,
        taxon_name,
