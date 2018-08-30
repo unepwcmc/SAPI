@@ -186,7 +186,7 @@ class Trade::ComplianceGrouping
         country.values.first.merge!(country: country.keys.first.to_s)
         array << country.values.first
       end
-      hash[params[:year]] = array
+      hash[params[:year]] = array.sort_by { |x| x[:cnt]}.reverse!
     end
     hash
   end
