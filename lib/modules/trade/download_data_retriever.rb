@@ -65,10 +65,9 @@ module Trade::DownloadDataRetriever
     mapping = Trade::ComplianceGrouping.new('').read_taxonomy_conversion
     array_ids = []
     mapping[params[:ids]].each do |m|
-      rank_name = params[:ids].include?('Timber') ? 'genus_name' : "#{m[:rank].downcase}_name"
-      taxon_name = params[:ids].include?('Timber') ? m[:taxon_name].split(' ').first : m[:taxon_name]
+      rank_name = m[:rank] == 'Species' ? 'taxon' : m[:rank].downcase
 
-      ids_query = ids_query(params[:year], params[:ids], rank_name, taxon_name)
+      ids_query = ids_query(params[:year], params[:ids], rank_name, m[:taxon_name])
       ids = query_runner(ids_query)
 
       ids.each { |ob| array_ids << ob['id'] }
@@ -89,15 +88,14 @@ module Trade::DownloadDataRetriever
   end
 
   def self.ids_query_condition(id, rank, taxon)
-    id.include?('Plants') ? 'class_id IS NULL' : "#{rank} = '#{taxon}'"
+    id.include?('Plants') ? 'class_id IS NULL' : "#{rank}_name = '#{taxon}'"
   end
 
   def self.plant_timber_distinction(year, mapping, array)
     timber_ids = []
     mapping['Timber'].each do |mapp|
-      rank_name = 'genus_name'
-      taxon_name = mapp[:taxon_name].split(' ').first
-      ids_query = ids_query(year, 'Timber', rank_name, taxon_name)
+      rank_name = mapp[:rank] == 'Species' ? 'taxon' : mapp[:rank].downcase
+      ids_query = ids_query(year, 'Timber', rank_name, mapp[:taxon_name])
       ids = query_runner(ids_query)
       ids.each { |ob| timber_ids << ob['id'] }
     end
