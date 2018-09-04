@@ -30,6 +30,8 @@ gem 'sidekiq', '< 5'
 gem 'sidekiq-status'
 gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
 
+gem 'redis-rails'
+
 gem 'whenever', :require => false
 
 gem 'ember-rails'
