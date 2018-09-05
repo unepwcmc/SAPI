@@ -69,7 +69,11 @@
           LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
           WHERE tr_tc.type = 'CitesSuspension' AND
           start_notifications.type = 'CitesSuspensionNotification' AND
+          start_notifications.subtype = 'National trade ban (communicated by MA)' OR
+          start_notifications.subtype = 'Information notice' AND
           end_notifications.type = 'CitesSuspensionNotification' AND
+          end_notifications.subtype = 'National trade ban (communicated by MA)' OR
+          end_notifications.subtype = 'Information notice' AND
           (
             ts.year BETWEEN EXTRACT(YEAR FROM tr_tc.start_date) AND
             CASE WHEN tr_tc.end_date IS NULL THEN EXTRACT(YEAR FROM current_date)
@@ -150,6 +154,10 @@
           LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
           LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
           WHERE tr_ge.type = 'CitesSuspension' AND
+          start_notifications.subtype = 'National trade ban (communicated by MA)' OR
+          start_notifications.subtype = 'Information notice' AND
+          end_notifications.subtype = 'National trade ban (communicated by MA)' OR
+          end_notifications.subtype = 'Information notice' AND
           (tr_ge.taxon_concept_id IS NULL OR tr_ge.taxon_concept_id = ts.taxon_concept_id) AND
           (
             ts.year BETWEEN EXTRACT(YEAR FROM tr_ge.start_date) AND
@@ -171,7 +179,7 @@
         LEFT OUTER JOIN trade_codes purposes ON purposes.id = ts.purpose_id
         LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
         LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
-        WHERE 
+        WHERE
 				(ts.year >= 2018 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'IN' AND TRUE AND TRUE AND sources.code IN ('A','C','D','F','I','O','R','U','X') AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
 				OR
