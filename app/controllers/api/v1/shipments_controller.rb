@@ -60,13 +60,13 @@ class Api::V1::ShipmentsController < ApplicationController
   def search_download_all_data
     query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
     data = query.run
-    Rails.cache.fetch(['search_download_all_data', params], expires_in: 1.week) do
-      search_data = query.build_hash(data, params)
-      filtered_data = query.filter(search_data, params)
-      data_ids = query.filter_download_data(filtered_data, params)
-      hash_params = params_hash_builder(data_ids, download_params)
-      @search_download_all_data = Trade::DownloadDataRetriever.search_download(hash_params).to_a
-    end
+    search_data = query.build_hash(data, params)
+    filtered_data = query.filter(search_data, params)
+    data_ids = query.filter_download_data(filtered_data, params)
+    hash_params = params_hash_builder(data_ids, download_params)
+    @search_download_all_data = Rails.cache.fetch(['search_download_all_data', params], expires_in: 1.week) do
+                                  Trade::DownloadDataRetriever.search_download(hash_params).to_a
+                                end
     render :json => @search_download_all_data
   end
 
