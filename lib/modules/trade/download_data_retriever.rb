@@ -25,7 +25,7 @@ module Trade::DownloadDataRetriever
           "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]}"
         end
       else
-        "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year >= '2012' AND year <= '2017'"
+        "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year >= '2012' AND year <= '2017' ORDER BY year DESC"
       end
     query_runner(query)
   end
