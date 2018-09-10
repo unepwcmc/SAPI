@@ -35,6 +35,7 @@ SAPI::Application.routes.draw do
       resources :document_tags, only: [:index]
       match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
       resources :shipments, only: [:index]
+      get '/shipments/chart' => 'shipments#chart_query'
       get '/shipments/grouped' => 'shipments#grouped_query'
       get '/shipments/search' => 'shipments#search_query'
       get '/shipments/download' => 'shipments#download_data'

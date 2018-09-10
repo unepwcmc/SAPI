@@ -34,7 +34,16 @@ class Trade::ComplianceGrouping
     taxonomy: [''],
   }
 
-  COUNTRIES = 182.freeze
+  COUNTRIES = {
+    2018 => 182,
+    2017 => 182,
+    2016 => 182,
+    2015 => 180,
+    2014 => 180,
+    2013 => 179,
+    2012 => 176,
+    2011 => 175
+  }
 
   TAXONOMIC_GROUPING = 'lib/data/group_conversions.csv'.freeze
 
@@ -98,6 +107,7 @@ class Trade::ComplianceGrouping
   # At the moment it uses the compliance tables, but it should instead consider
   # all the shipments instead of the non-compliant ones only.
   def countries_reported_range(year)
+    year = year.to_i
     years = [year - 1, year, year + 1]
     hash = {}
     years.map do |y|
@@ -302,12 +312,11 @@ class Trade::ComplianceGrouping
       WHERE year = #{year}
     SQL
     issues_reported = db.execute(sql).first['cnt'].to_i
-
     {
       year: year,
       issuesReported: issues_reported,
       countriesReported: countries_reported,
-      countriesYetToReport: COUNTRIES-countries_reported
+      countriesYetToReport: COUNTRIES[year]-countries_reported
     }
   end
 

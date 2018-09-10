@@ -19,6 +19,14 @@ class Api::V1::ShipmentsController < ApplicationController
       :meta => metadata_for_search(@search)
   end
 
+  def chart_query
+    @chart_data = Rails.cache.fetch(['chart_data', params], expires_in: 1.week) do
+                    Trade::ComplianceGrouping.new('year', {attributes: ['issue_type']})
+                                             .countries_reported_range(params[:year])
+                  end
+    render :json => @chart_data
+  end
+
   def grouped_query
     limit = params[:limit].present? ? params[:limit].to_i : ''
     query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: 'year >= 2012 AND year <= 2017', limit: limit })
