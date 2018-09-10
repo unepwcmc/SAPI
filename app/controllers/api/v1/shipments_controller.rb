@@ -20,7 +20,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def chart_query
-    @chart_data = Rails.cache.fetch(['grouped_data', params], expires_in: 1.week) do
+    @chart_data = Rails.cache.fetch(['chart_data', params], expires_in: 1.week) do
                     Trade::ComplianceGrouping.new('year', {attributes: ['issue_type']})
                                              .countries_reported_range(params[:year])
                   end

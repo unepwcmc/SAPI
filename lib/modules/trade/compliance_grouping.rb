@@ -35,12 +35,14 @@ class Trade::ComplianceGrouping
   }
 
   COUNTRIES = {
+    2018 => 182,
     2017 => 182,
     2016 => 182,
     2015 => 180,
     2014 => 180,
     2013 => 179,
-    2012 => 176
+    2012 => 176,
+    2011 => 175
   }
 
   TAXONOMIC_GROUPING = 'lib/data/group_conversions.csv'.freeze
