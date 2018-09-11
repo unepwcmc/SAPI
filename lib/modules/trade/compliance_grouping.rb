@@ -108,7 +108,14 @@ class Trade::ComplianceGrouping
   # all the shipments instead of the non-compliant ones only.
   def countries_reported_range(year)
     year = year.to_i
-    years = [year - 1, year, year + 1]
+    years = case year
+      when 2012
+        [year, year + 1]
+      when 2017
+        [year - 1, year]
+      else
+        [year - 1, year, year + 1]
+      end
     hash = {}
     years.map do |y|
       data = countries_reported(y)
