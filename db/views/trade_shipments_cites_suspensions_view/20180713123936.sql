@@ -69,7 +69,9 @@
           LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
           WHERE tr_tc.type = 'CitesSuspension' AND
           start_notifications.type = 'CitesSuspensionNotification' AND
+          start_notifications.subtype NOT IN ('National trade ban (communicated by MA)', 'Information notice') AND
           end_notifications.type = 'CitesSuspensionNotification' AND
+          end_notifications.subtype NOT IN ('National trade ban (communicated by MA)', 'Information notice') AND
           (
             ts.year BETWEEN EXTRACT(YEAR FROM tr_tc.start_date) AND
             CASE WHEN tr_tc.end_date IS NULL THEN EXTRACT(YEAR FROM current_date)
@@ -150,6 +152,10 @@
           LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
           LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
           WHERE tr_ge.type = 'CitesSuspension' AND
+          start_notifications.type = 'CitesSuspensionNotification' AND
+          start_notifications.subtype NOT IN ('National trade ban (communicated by MA)', 'Information notice') AND
+          end_notifications.type = 'CitesSuspensionNotification' AND
+          end_notifications.subtype NOT IN ('National trade ban (communicated by MA)', 'Information notice') AND
           (tr_ge.taxon_concept_id IS NULL OR tr_ge.taxon_concept_id = ts.taxon_concept_id) AND
           (
             ts.year BETWEEN EXTRACT(YEAR FROM tr_ge.start_date) AND

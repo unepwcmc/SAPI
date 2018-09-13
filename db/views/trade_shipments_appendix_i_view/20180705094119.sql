@@ -54,4 +54,4 @@ WHERE ts.appendix = 'I'
   AND purposes.type = 'Purpose'
   AND purposes.code = 'T'
   AND sources.type = 'Source'
-  AND sources.code = 'W'
+  AND sources.code IN ('W', 'X', 'F', 'R')
