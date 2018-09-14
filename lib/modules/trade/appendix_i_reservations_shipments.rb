@@ -1,4 +1,4 @@
-class Trade::AppendixIReservationsShipments < Trade::ReservationShipmentsParser
+class Trade::AppendixIReservationsShipments < Trade::ReservationsShipmentsParser
   attr_reader :query
 
   RESERVATIONS_PATH = 'lib/data/reservations.csv'.freeze
@@ -7,11 +7,6 @@ class Trade::AppendixIReservationsShipments < Trade::ReservationShipmentsParser
 
   def initialize
     @query = exceptions_query
-  end
-
-  # only for testing purpose
-  def query
-    exceptions_query
   end
 
   def generate_view(timestamp)

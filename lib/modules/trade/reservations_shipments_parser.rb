@@ -1,7 +1,6 @@
-class Trade::ReservationShipmentsParser
+class Trade::ReservationsShipmentsParser
 
-  ATTRIBUTES = [
-    :start_date, :end_date, :taxon_concept_id, :iso_code2 ]
+  ATTRIBUTES = [:start_date, :end_date, :taxon_concept_id, :iso_code2]
 
   protected
 
