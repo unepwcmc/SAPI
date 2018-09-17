@@ -62,7 +62,7 @@ class Trade::AppendixIReservationsShipments < Trade::ReservationsShipmentsParser
              ts.origin_permit_number AS origin_permit,
              ranks.id AS rank_id,
              ranks.name AS rank_name,
-             'AppendixI' AS issue_type
+             'AppendixI'::text AS issue_type
       FROM trade_shipments_with_taxa_view ts
       INNER JOIN trade_codes sources ON ts.source_id = sources.id
       INNER JOIN trade_codes purposes ON ts.purpose_id = purposes.id

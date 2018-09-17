@@ -201,6 +201,11 @@
 
 				OR
 
+				(ts.year > 1981 AND ts.year < 2018 AND ts.taxon_concept_id = 9445 AND ((ts.reported_by_exporter IS TRUE AND exporters.iso_code2 = 'JP')
+    OR (ts.reported_by_exporter IS FALSE AND importers.iso_code2 = 'JP')))
+
+				OR
+
 				(ts.year > 1981 AND ts.year < 2018 AND ts.taxon_concept_id = 9445 AND ((ts.reported_by_exporter IS TRUE AND exporters.iso_code2 = 'NO')
     OR (ts.reported_by_exporter IS FALSE AND importers.iso_code2 = 'NO')))
 

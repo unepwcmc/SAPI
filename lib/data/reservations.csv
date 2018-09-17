@@ -1,4 +1,4 @@
-start_date,end_date,taxon_name,taxon_concept_id,rank,iso_code2,notes,Internal Notes 
+start_date,end_date,taxon_name,taxon_concept_id,rank,iso_code2,notes,Internal Notes
 18/03/1991,,Acinonyx jubatus,8935,SPECIES,NA, ,
 18/03/1991,,Acinonyx,1929,GENUS,NA, ,
 13/02/2003,12/06/2014,Amazona auropalliata,3721,SPECIES,CH, ,
@@ -26,6 +26,7 @@ start_date,end_date,taxon_name,taxon_concept_id,rank,iso_code2,notes,Internal No
 02/04/2000,,Balaenoptera musculus,10905,SPECIES,IS, ,
 29/07/1983,,Balaenoptera omurai,4329,SPECIES,JP, ,
 02/04/2000,,Balaenoptera physalus,9445,SPECIES,IS, ,
+06/06/1981,,Balaenoptera physalus,9445,SPECIES,JP, ,
 06/06/1981,,Balaenoptera physalus,9445,SPECIES,NO,"Stocks in (A) N. Atlantic off Iceland and (B) off Newfoundland; (C) stock in area from 40°S to the Antarctic continent, from 120°W to 60°W. ",
 29/07/1983,,Berardius bairdii,9048,SPECIES,JP, ,
 28/06/1979,12/06/2014,Caloenas nicobarica,7286,SPECIES,CH, ,
