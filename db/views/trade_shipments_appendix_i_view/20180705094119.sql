@@ -42,7 +42,7 @@
              ts.origin_permit_number AS origin_permit,
              ranks.id AS rank_id,
              ranks.name AS rank_name,
-             'AppendixI' AS issue_type
+             'AppendixI'::text AS issue_type
       FROM trade_shipments_with_taxa_view ts
       INNER JOIN trade_codes sources ON ts.source_id = sources.id
       INNER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
@@ -65,7 +65,7 @@
         FROM trade_shipments_with_taxa_view ts
         INNER JOIN geo_entities importers ON ts.importer_id = importers.id
         INNER JOIN geo_entities exporters ON ts.exporter_id = exporters.id
-        WHERE 
+        WHERE
 				(ts.year > 1991 AND ts.year < 2018 AND ts.taxon_concept_id = 8935 AND ((ts.reported_by_exporter IS TRUE AND exporters.iso_code2 = 'NA')
     OR (ts.reported_by_exporter IS FALSE AND importers.iso_code2 = 'NA')))
 
