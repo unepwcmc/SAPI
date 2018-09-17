@@ -820,6 +820,42 @@
 
 				(ts.year >= 2006 AND ts.year <= 2018 AND ts.taxon_concept_id = 6330 AND exporters.iso_code2 = 'AR' AND TRUE AND terms.code IN ('TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 464 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 479 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 549 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 362 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 392 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 378 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 181 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 184 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 136 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
       )
 
       ORDER BY s.year, s.class_name, s.order_name, s.family_name, s.genus_name, s.taxon_name, s.term
