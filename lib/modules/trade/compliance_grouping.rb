@@ -370,13 +370,11 @@ class Trade::ComplianceGrouping
   end
 
   def total_ships_exp_cnt(id, year)
-    # TODO retrieve from trade_shipments instead ??
     query_exp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE exporter_id = #{id} AND year = #{year}"
     db.execute(query_exp).values.flatten.first.to_i
   end
 
   def total_ships_imp_cnt(id, year)
-    # TODO retrieve from trade_shipments instead ??
     query_imp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE importer_id = #{id} AND year = #{year}"
     db.execute(query_imp).values.flatten.first.to_i
   end

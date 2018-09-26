@@ -100,7 +100,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def download_params
-    params.permit(:year, :ids, :compliance_type, :type, :group_by)
+    params.permit(:year, :ids, :compliance_type, :type, :group_by, :appendix)
   end
 
   def sanitized_attributes

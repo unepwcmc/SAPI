@@ -17,7 +17,11 @@ module Trade::DownloadDataRetriever
     query =
       if params[:year].present?
         if params[:type].present?
-          "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]} AND #{ID_MAPPING[params[:type].to_sym]} IN (#{params[:ids]})"
+          if params[:type] == 'species'
+            "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]} AND #{ID_MAPPING[params[:type].to_sym]} IN (#{params[:ids]}) AND appendix = '#{params[:appendix]}'"
+          else
+            "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]} AND #{ID_MAPPING[params[:type].to_sym]} IN (#{params[:ids]})"
+          end
         elsif params[:compliance_type].present?
           "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]} AND issue_type = '#{sanitize_compliance_param(params[:compliance_type])}'"
         else
@@ -43,11 +47,13 @@ module Trade::DownloadDataRetriever
                AND (exporter_id IN (#{id}) OR importer_id IN (#{id}))
         SQL
       when 'species'
+        appendix = params[:appendix]
         <<-SQL
                SELECT #{ATTRIBUTES.join(',')}
                FROM non_compliant_shipments_view
                WHERE year = #{year}
                AND taxon_concept_id IN (#{id})
+               AND appendix = '#{appendix}'
         SQL
       when 'commodity'
         <<-SQL
