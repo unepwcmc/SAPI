@@ -242,23 +242,7 @@
 
 				OR
 
-				(ts.year >= 2003 AND ts.year <= 2018 AND ts.taxon_concept_id = 38 AND exporters.iso_code2 = 'JO' AND TRUE AND TRUE AND TRUE AND purposes.code IN ('S') AND ts.country_of_origin_id IS NULL)
-
-				OR
-
 				(ts.year >= 2011 AND ts.year <= 2014 AND ts.taxon_concept_id = 23851 AND exporters.iso_code2 = 'PY' AND TRUE AND terms.code IN ('OIL','TIM') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
-
-				OR
-
-				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12491 AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND sources.code IN ('A') AND TRUE AND ts.country_of_origin_id IS NULL)
-
-				OR
-
-				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12491 AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND TRUE AND purposes.code IN ('S') AND ts.country_of_origin_id IS NULL)
-
-				OR
-
-				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12491 AND exporters.iso_code2 = 'PE' AND TRUE AND terms.code IN ('FLO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
 
@@ -706,18 +690,6 @@
 
 				OR
 
-				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12509 AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND sources.code IN ('A') AND TRUE AND ts.country_of_origin_id IS NULL)
-
-				OR
-
-				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12509 AND exporters.iso_code2 = 'PE' AND TRUE AND TRUE AND TRUE AND purposes.code IN ('S') AND ts.country_of_origin_id IS NULL)
-
-				OR
-
-				(ts.year >= 2009 AND ts.year <= 2018 AND ts.taxon_concept_id = 12509 AND exporters.iso_code2 = 'PE' AND TRUE AND terms.code IN ('FLO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
-
-				OR
-
 				(ts.year >= 2006 AND ts.year <= 2018 AND ts.taxon_concept_id = 8246 AND exporters.iso_code2 = 'AR' AND TRUE AND terms.code IN ('TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
 				OR
@@ -822,39 +794,679 @@
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 464 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7903 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 479 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6659 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 549 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 11020 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 362 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4989 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 392 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8288 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 378 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6477 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 181 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 3975 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 184 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6352 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
 				OR
 
-				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 136 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10905 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4329 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9445 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 3052 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7265 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10200 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4438 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5314 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5623 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5924 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 3327 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8462 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7046 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9702 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7197 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9180 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 3918 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6793 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7504 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8540 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10842 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8788 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10448 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9382 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 11005 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6391 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7820 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6795 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4962 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10624 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8824 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 34009 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 67921 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5245 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8989 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 11236 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10064 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8215 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10191 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6629 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4770 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 67922 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7086 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5138 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 67923 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4021 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4061 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8842 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4206 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8084 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8608 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 68342 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9803 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 11079 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 11185 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5652 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5385 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4956 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6515 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6532 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10761 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7010 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7840 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9048 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4979 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 3957 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9126 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6238 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7528 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10363 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10436 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8883 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10466 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6913 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 3188 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 68344 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5644 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8066 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8865 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8605 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6746 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4039 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8310 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5326 AND TRUE AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7265 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10200 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4438 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5314 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5623 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5924 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 3327 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8462 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7046 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9702 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7197 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9180 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 3918 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6793 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7504 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8540 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10842 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8788 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10448 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9382 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 11005 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6391 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7820 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6795 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4962 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10624 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8824 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 34009 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 67921 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5245 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8989 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 11236 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10064 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8215 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10191 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6629 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4770 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 67922 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7086 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5138 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 67923 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4021 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4061 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8842 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4206 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8084 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8608 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 68342 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9803 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 11079 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 11185 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5652 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5385 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4956 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7010 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7840 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9048 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4979 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 3957 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 9126 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6238 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 7528 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10363 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10436 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8883 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 10466 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6913 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 3188 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 68344 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5644 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8066 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8865 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8605 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 6746 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 4039 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 8310 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
+
+				OR
+
+				(ts.year >= 2012 AND ts.year <= 2015 AND ts.taxon_concept_id = 5326 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL)
 
       )
 
