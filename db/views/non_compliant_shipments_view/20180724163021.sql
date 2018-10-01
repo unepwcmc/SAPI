@@ -81,9 +81,6 @@ SELECT DISTINCT id, year, appendix, taxon_concept_id,
        rank_name,
        issue_type::text
 FROM trade_shipments_mandatory_quotas_mview
-WHERE appendix != 'N'
-AND source != 'Confiscations/seizures'
-
 
 UNION ALL
 
@@ -127,5 +124,3 @@ SELECT DISTINCT id, year, appendix, taxon_concept_id,
        rank_name,
        issue_type::text
 FROM trade_shipments_cites_suspensions_mview
-WHERE appendix != 'N'
-AND source != 'Confiscations/seizures'

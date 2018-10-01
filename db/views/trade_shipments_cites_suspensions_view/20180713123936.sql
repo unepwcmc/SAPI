@@ -68,6 +68,7 @@
           LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
           LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
           WHERE tr_tc.type = 'CitesSuspension' AND
+          ts.appendix != 'N' AND
           start_notifications.type = 'CitesSuspensionNotification' AND
           start_notifications.subtype NOT IN ('National trade ban (communicated by MA)', 'Information notice') AND
           end_notifications.type = 'CitesSuspensionNotification' AND
@@ -79,7 +80,8 @@
             END
           )AND
           (tr_tc.geo_entity_id IS NULL OR (tr_tc.geo_entity_id = ts.exporter_id OR tr_tc.geo_entity_id = ts.importer_id AND tr_tc.applies_to_import)) AND
-          (tr_s.source_id = ts.source_id OR tr_s.id IS NULL) AND (tr_p.purpose_id = ts.purpose_id OR tr_p.id IS NULL) AND country_of_origin_id IS NULL
+          (tr_s.source_id = ts.source_id OR tr_s.id IS NULL) AND (tr_p.purpose_id = ts.purpose_id OR tr_p.id IS NULL) AND country_of_origin_id IS NULL AND
+          (sources.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
         )
 
         UNION
@@ -152,6 +154,7 @@
           LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
           LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
           WHERE tr_ge.type = 'CitesSuspension' AND
+          ts.appendix != 'N' AND
           start_notifications.type = 'CitesSuspensionNotification' AND
           start_notifications.subtype NOT IN ('National trade ban (communicated by MA)', 'Information notice') AND
           end_notifications.type = 'CitesSuspensionNotification' AND
@@ -163,7 +166,8 @@
             ELSE EXTRACT(YEAR FROM tr_ge.end_date)
             END
           )AND
-          (tr_s.source_id = ts.source_id OR tr_s.id IS NULL) AND (tr_p.purpose_id = ts.purpose_id OR tr_p.id IS NULL) AND country_of_origin_id IS NULL
+          (tr_s.source_id = ts.source_id OR tr_s.id IS NULL) AND (tr_p.purpose_id = ts.purpose_id OR tr_p.id IS NULL) AND country_of_origin_id IS NULL AND
+          (sources.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
         )
       ) AS s
 

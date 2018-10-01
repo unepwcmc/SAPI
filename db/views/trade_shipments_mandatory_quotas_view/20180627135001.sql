@@ -24,6 +24,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 3780 AND exporter.iso_code2 = 'PK' AND TRUE AND term.code IN ('TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 12
     
@@ -59,6 +60,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'ET' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 500
     
@@ -94,6 +96,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'NA' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 250
     
@@ -129,6 +132,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'TZ' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 500
     
@@ -164,6 +168,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'ZM' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 300
     
@@ -199,6 +204,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'ZW' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 500
     
@@ -234,6 +240,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'BW' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 130
     
@@ -269,6 +276,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'CF' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 40
     
@@ -304,6 +312,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'KE' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 80
     
@@ -339,6 +348,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'MW' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 50
     
@@ -374,6 +384,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'MZ' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 120
     
@@ -409,6 +420,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'ZA' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 150
     
@@ -444,6 +456,7 @@
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 8619 AND exporter.iso_code2 = 'UG' AND TRUE AND term.code IN ('SKI','TRO') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 28
     
@@ -480,6 +493,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2004 AND ts.year <= 2018 AND ts.taxon_concept_id = 6656 AND exporter.iso_code2 = 'NA' AND TRUE AND term.code IN ('TRO','SKI','SKU','HOR','BOD','FOO','GEN') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 5
     
@@ -515,6 +529,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2004 AND ts.year <= 2018 AND ts.taxon_concept_id = 6656 AND exporter.iso_code2 = 'ZA' AND TRUE AND term.code IN ('TRO','SKI','SKU','HOR','BOD','FOO','GEN') AND TRUE AND purpose.code IN ('H','P') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 5
     
@@ -550,6 +565,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1975 AND ts.year <= 2018 AND ts.taxon_concept_id = 8935 AND exporter.iso_code2 = 'BW' AND TRUE AND term.code IN ('LIV','TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 5
     
@@ -585,6 +601,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1975 AND ts.year <= 2018 AND ts.taxon_concept_id = 8935 AND exporter.iso_code2 = 'NA' AND TRUE AND term.code IN ('SKI','LIV','TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 150
     
@@ -620,6 +637,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1975 AND ts.year <= 2018 AND ts.taxon_concept_id = 8935 AND exporter.iso_code2 = 'ZW' AND TRUE AND term.code IN ('LIV','TRO') AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 50
     
@@ -655,6 +673,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2017 AND ts.year <= 2018 AND ts.taxon_concept_id = 6353 AND TRUE AND TRUE AND term.code IN ('BON','BOP','BPR','CLA','SKE','SKU','TEE') AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -690,6 +709,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2003 AND ts.year <= 2018 AND ts.taxon_concept_id = 7086 AND exporter.iso_code2 = 'BG' AND TRUE AND term.code IN ('LIV') AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -725,6 +745,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2003 AND ts.year <= 2018 AND ts.taxon_concept_id = 7086 AND exporter.iso_code2 = 'GE' AND TRUE AND term.code IN ('LIV') AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -760,6 +781,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2003 AND ts.year <= 2018 AND ts.taxon_concept_id = 7086 AND exporter.iso_code2 = 'RO' AND TRUE AND term.code IN ('LIV') AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -795,6 +817,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2003 AND ts.year <= 2018 AND ts.taxon_concept_id = 7086 AND exporter.iso_code2 = 'RU' AND TRUE AND term.code IN ('LIV') AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -830,6 +853,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2003 AND ts.year <= 2018 AND ts.taxon_concept_id = 7086 AND exporter.iso_code2 = 'TR' AND TRUE AND term.code IN ('LIV') AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -865,6 +889,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2003 AND ts.year <= 2018 AND ts.taxon_concept_id = 7086 AND exporter.iso_code2 = 'UA' AND TRUE AND term.code IN ('LIV') AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -900,6 +925,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1997 AND ts.year <= 2018 AND ts.taxon_concept_id = 5522 AND TRUE AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -936,6 +962,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 1995 AND ts.year <= 2018 AND ts.taxon_concept_id = 10978 AND exporter.iso_code2 = 'EC' AND TRUE AND TRUE AND TRUE AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -971,6 +998,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2010 AND ts.year <= 2017 AND ts.taxon_concept_id = 7747 AND exporter.iso_code2 = 'MX' AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1007,6 +1035,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2010 AND ts.year <= 2018 AND ts.taxon_concept_id = 7747 AND exporter.iso_code2 = 'BZ' AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1043,6 +1072,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2010 AND ts.year <= 2018 AND ts.taxon_concept_id = 10745 AND exporter.iso_code2 = 'EG' AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1079,6 +1109,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2010 AND ts.year <= 2018 AND ts.taxon_concept_id = 10745 AND exporter.iso_code2 = 'TZ' AND TRUE AND TRUE AND source.code IN ('W') AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 1600
     
@@ -1115,6 +1146,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2017 AND ts.year <= 2018 AND ts.taxon_concept_id = 8560 AND exporter.iso_code2 = 'MY' AND TRUE AND TRUE AND source.code IN ('W') AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1150,6 +1182,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2017 AND ts.year <= 2018 AND ts.taxon_concept_id = 68179 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1185,6 +1218,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2017 AND ts.year <= 2018 AND ts.taxon_concept_id = 68245 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1220,6 +1254,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2017 AND ts.year <= 2018 AND ts.taxon_concept_id = 68148 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1255,6 +1290,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2017 AND ts.year <= 2018 AND ts.taxon_concept_id = 68213 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1290,6 +1326,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2017 AND ts.year <= 2018 AND ts.taxon_concept_id = 68195 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1325,6 +1362,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2017 AND ts.year <= 2018 AND ts.taxon_concept_id = 67618 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1360,6 +1398,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 7441 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND TRUE AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1395,6 +1434,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 4927 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1430,6 +1470,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 4397 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1465,6 +1506,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 8231 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1500,6 +1542,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 65766 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1535,6 +1578,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 7271 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1570,6 +1614,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 10210 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1605,6 +1650,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 3678 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1640,6 +1686,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 10699 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1675,6 +1722,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 6783 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1710,6 +1758,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 65767 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1745,6 +1794,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 6023 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1780,6 +1830,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 5712 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1815,6 +1866,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 5930 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1850,6 +1902,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 7457 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1885,6 +1938,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 4484 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1920,6 +1974,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 3838 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1955,6 +2010,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2013 AND ts.year <= 2018 AND ts.taxon_concept_id = 3413 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
@@ -1990,6 +2046,7 @@ Res. Conf. 13.5(Rev.CoP14): "AGREES that hunting trophies of the black rhinocero
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     
           WHERE ts.year >= 2000 AND ts.year <= 2018 AND ts.taxon_concept_id = 31025 AND TRUE AND TRUE AND TRUE AND source.code IN ('W') AND purpose.code IN ('T') AND ts.country_of_origin_id IS NULL
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           GROUP BY year, reported_by_exporter
           HAVING SUM(quantity) > 0
     
