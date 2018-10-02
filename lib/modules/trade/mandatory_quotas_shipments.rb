@@ -108,12 +108,14 @@ class Trade::MandatoryQuotasShipments
     """
   end
 
+# We add the AND after the WHERE clause to exclude specific sources while still mantain the shipments with source blank
   def sub_query
     """
           #{inner_select}
           #{from}
           #{inner_joins}
           WHERE #{where}
+          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           #{group_by}
           #{having}
     """
