@@ -15,13 +15,15 @@ namespace :import do
   end
 
   desc "Import terms and purpose codes acceptable pairing"
-  task :trade_codes_t_p_pairs => [:environment] do
+  task :trade_codes_t_p_pairs, [:clear] => [:environment] do |t, args|
     TMP_TABLE = "terms_and_purpose_pairs_import"
     file = "lib/files/term_purpose_pairs_utf8.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    puts "#{TermTradeCodesPair.where(:trade_code_type => 'Purpose').delete_all} TermPurposePairs deleted"
+    if args[:clear]
+      puts "#{TermTradeCodesPair.where(:trade_code_type => 'Purpose').delete_all} TermPurposePairs deleted"
+    end
     sql = <<-SQL
       INSERT INTO term_trade_codes_pairs(term_id,
         trade_code_id, trade_code_type, created_at, updated_at)
@@ -46,13 +48,15 @@ namespace :import do
   end
 
   desc "Import terms and unit codes acceptable pairing"
-  task :trade_codes_t_u_pairs => [:environment] do
+  task :trade_codes_t_u_pairs, [:clear] => [:environment] do |t, args|
     TMP_TABLE = "terms_and_unit_pairs_import"
     file = "lib/files/term_unit_pairs_utf8.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    puts "#{TermTradeCodesPair.where(:trade_code_type => 'Unit').delete_all} TermUnitPairs deleted"
+    if args[:clear]
+      puts "#{TermTradeCodesPair.where(:trade_code_type => 'Unit').delete_all} TermUnitPairs deleted"
+    end
     sql = <<-SQL
       INSERT INTO term_trade_codes_pairs(term_id,
         trade_code_id, trade_code_type, created_at, updated_at)
@@ -77,13 +81,15 @@ namespace :import do
   end
 
   desc "Import taxon concepts terms acceptable pairing. (i.e.: which terms can go with each taxon concept)"
-  task :taxon_concept_terms_pairs => [:environment] do
+  task :taxon_concept_terms_pairs, [:clear] => [:environment] do |t, args|
     TMP_TABLE = "taxon_concepts_and_terms_pairs_import"
     file = "lib/files/taxon_concept_term_pairs_utf8.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    puts "#{Trade::TaxonConceptTermPair.delete_all} taxon_concept_term_pairs deleted"
+    if args[:clear]
+      puts "#{Trade::TaxonConceptTermPair.delete_all} taxon_concept_term_pairs deleted"
+    end
     sql = <<-SQL
       INSERT INTO trade_taxon_concept_term_pairs(taxon_concept_id, term_id,
         created_at, updated_at)
