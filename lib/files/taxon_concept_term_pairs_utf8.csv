@@ -815,3 +815,46 @@ PHYLUM,CHORDATA,SKI
 PHYLUM,CHORDATA,SKP
 PHYLUM,CHORDATA,SKS
 PHYLUM,CHORDATA,SKU
+PHYLUM,Chordata,BOC
+FAMILY,Cervidae,HOC
+FAMILY,Antilocapridae,HOC
+FAMILY,Bovidae,HOC
+FAMILY,Rhinocerotidae,HOC
+FAMILY,Elephantidae,IVC
+FAMILY,Hippopotamidae,IVC
+FAMILY,Odobenidae,IVC
+SPECIES,Monodon monoceros,IVC
+FAMILY,Bucerotidae,IVC
+CLASS,Mammalia,FPL
+CLASS,Mammalia,FPS
+CLASS,Dipneusti,GIL 
+CLASS,Coelacanthi,GIL 
+CLASS,Actinopteri,GIL 
+CLASS,Elasmobranchii,GIL 
+CLASS,Mammalia,HAP
+KINGDOM,Animalia,JWL
+KINGDOM,Plantae,JWL
+FAMILY,Elephantidae,IJW
+FAMILY,Hippopotamidae,IJW
+FAMILY,Odobenidae,IJW
+SPECIES,Monodon monoceros,IJW
+FAMILY,Bucerotidae,IJW
+CLASS,Gastropoda,PRL
+FAMILY,Elephantidae,KEY
+FAMILY,Hippopotamidae,KEY
+FAMILY,Odobenidae,KEY
+SPECIES,Monodon monoceros,KEY
+CLASS,Insecta,PUP
+CLASS,Mammalia,RUG
+CLASS,Reptilia,RUG
+FAMILY,Pristidae,ROS
+ORDER,Fabales,WPR
+ORDER,Ebenales,WPR
+ORDER,Ranunculales,WPR
+ORDER,Caryophyllales,WPR
+ORDER,Laurales,WPR
+ORDER,Sapindales,WPR
+ORDER,Pinales,WPR
+ORDER,Myrtales,WPR
+ORDER,Fagales,WPR
+ORDER,Lamiales,WPR
