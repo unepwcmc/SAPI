@@ -827,10 +827,10 @@ SPECIES,Monodon monoceros,IVC
 FAMILY,Bucerotidae,IVC
 CLASS,Mammalia,FPL
 CLASS,Mammalia,FPS
-CLASS,Dipneusti,GIL 
-CLASS,Coelacanthi,GIL 
-CLASS,Actinopteri,GIL 
-CLASS,Elasmobranchii,GIL 
+CLASS,Dipneusti,GIL
+CLASS,Coelacanthi,GIL
+CLASS,Actinopteri,GIL
+CLASS,Elasmobranchii,GIL
 CLASS,Mammalia,HAP
 KINGDOM,Animalia,JWL
 KINGDOM,Plantae,JWL
