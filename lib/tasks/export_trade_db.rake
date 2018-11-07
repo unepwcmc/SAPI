@@ -146,7 +146,7 @@ namespace :export do
         options = {
           dir: dir,
           ntuples: ntuples,
-          index: index,
+          index: i,
           year: nil,
           kingdom: nil
         }
