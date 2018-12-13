@@ -12,6 +12,7 @@ namespace :import do
 
       csv_headers = csv_headers(file)
       has_tc_id = csv_headers.include? 'taxon_concept_id'
+      has_reference = csv_headers.include? 'Reference'
       has_reference_id = csv_headers.include? 'Reference IDs'
       kingdom = has_tc_id ? '' : file.split('/').last.split('_')[0].titleize
 
@@ -56,19 +57,61 @@ namespace :import do
         sql = <<-SQL
           INSERT INTO "distribution_references"
             (distribution_id, reference_id, created_at, updated_at)
-          SELECT d.id, tmp.reference_id, NOW(), NOW()
-          FROM #{TMP_TABLE} tmp
-          INNER JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
-          INNER JOIN distributions d ON d.taxon_concept_id = tmp.taxon_concept_id
-          AND d.geo_entity_id = ge.id
-          AND NOT EXISTS (
-            SELECT id
-            FROM distribution_references
-            WHERE reference_id = tmp.reference_id
-              AND distribution_id = d.id
-          )
+          SELECT subquery.*, NOW(), NOW()
+          FROM(
+            SELECT d.id, tmp.reference_id
+            FROM #{TMP_TABLE} tmp
+            INNER JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
+            INNER JOIN distributions d ON d.taxon_concept_id = tmp.taxon_concept_id
+            AND d.geo_entity_id = ge.id
+            AND tmp.reference_id IS NOT NULL
+
+            EXCEPT
+
+            SELECT distribution_id, reference_id FROM distribution_references
+          ) AS subquery
         SQL
         ActiveRecord::Base.connection.execute(sql)
+      end
+      if has_reference
+        puts "There are #{Reference.count} references in the database."
+        sql = <<-SQL
+          INSERT INTO "references"
+            (citation, created_at, updated_at)
+          SELECT subquery.*, NOW(), NOW()
+          FROM(
+            SELECT tmp.citation
+            FROM #{TMP_TABLE} tmp
+
+            EXCEPT
+
+            SELECT r.citation
+            FROM "references" r
+          ) AS subquery
+        SQL
+        ActiveRecord::Base.connection.execute(sql)
+        puts "There are now #{Reference.count} references in the database"
+
+        distribution_references = DistributionReference.count
+        sql = <<-SQL
+          INSERT INTO "distribution_references"
+            (distribution_id, reference_id, created_at, updated_at)
+          SELECT subquery.*, NOW(), NOW()
+          FROM(
+            SELECT d.id, r.id
+            FROM #{TMP_TABLE} tmp
+            INNER JOIN "references" r ON r.citation = tmp.citation
+            INNER JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
+            INNER JOIN distributions d ON d.taxon_concept_id = tmp.taxon_concept_id
+            AND d.geo_entity_id = ge.id
+
+            EXCEPT
+
+            SELECT distribution_id, reference_id FROM distribution_references
+          ) AS subquery
+        SQL
+        ActiveRecord::Base.connection.execute(sql)
+        puts "Extra #{DistributionReference.count - distribution_references} distribution references have been added to the database"
       end
     end
     puts "There are now #{Distribution.count} taxon concept distributions in the database"

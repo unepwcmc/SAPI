@@ -4,29 +4,38 @@ class ApplicationController < ActionController::Base
   before_filter :set_locale
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
-  rescue_from CanCan::AccessDenied do |exception|
+  rescue_from CanCan::AccessDenied, with: :access_denied_error
+
+  protected
+
+  def access_denied_error(exception)
     rescue_path = if request.referrer && request.referrer != request.url
                     request.referer
-                  elsif current_user.is_manager_or_contributor?
+                  elsif current_user.is_manager_or_contributor_or_secretariat?
                     admin_root_path
                   else
                     root_path
                   end
 
-    redirect_to rescue_path,
-      alert:  if current_user.is_manager_or_contributor?
+    message = if current_user.is_manager_or_contributor?
                 case exception.action
                 when :destroy
                   "You are not authorised to destroy that record"
                 else
                   exception.message
                 end
+              elsif current_user.is_secretariat?
+                t('secretariat_alert')
               else
                 "You are not authorised to access this page"
               end
-  end
 
-  protected
+    flash[:error] = message
+    respond_to do |format|
+      format.html { redirect_to rescue_path }
+      format.js { render inline: "location.reload();" }
+    end
+  end
 
   def configure_permitted_parameters
     extra_parameters = [:name, :is_cites_authority, :organisation, :geo_entity_id]

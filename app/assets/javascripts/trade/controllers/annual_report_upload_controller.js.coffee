@@ -1,4 +1,4 @@
-Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
+Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash, Trade.AuthoriseUser,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes', 'sandboxShipments']
   content: null
   currentShipment: null
@@ -15,28 +15,27 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash,
   actions:
 
     submitShipments: ->
-      onSuccess = =>
-        @set('sandboxShipmentsSubmitting', false)
-        @transitionToRoute('search')
-        @flashSuccess(
-          message: "Submission scheduled. Email notification will be sent when it is processed.",
-          persists: true
-        )
-      onError = (xhr, msg, error) =>
-        @set('sandboxShipmentsSubmitting', false)
-        @flashError(message: xhr.responseText)
-      if @get('content.isDirty')
-        alert "You have unsaved changes, please save those before submitting your shipments"
-      else if @get('content.hasPrimaryErrors')
-        alert "Primary errors detected, cannot submit shipments"
-      else
-        @set('sandboxShipmentsSubmitting', true)
-      $.when($.ajax({
-        type: "POST"
-        url: "/trade/annual_report_uploads/#{@get('id')}/submit"
-        data: {}
-        dataType: 'json'
-      })).then(onSuccess, onError)
+      @userCanEdit( =>
+        onSuccess = =>
+          @set('sandboxShipmentsSubmitting', false)
+          @transitionToRoute('search')
+          @flashSuccess(message: "#{@get('numberOfRows')} shipments submitted.", persists: true)
+        onError = (xhr, msg, error) =>
+          @set('sandboxShipmentsSubmitting', false)
+          @flashError(message: xhr.responseText)
+        if @get('content.isDirty')
+          alert "You have unsaved changes, please save those before submitting your shipments"
+        else if @get('content.hasPrimaryErrors')
+          alert "Primary errors detected, cannot submit shipments"
+        else
+          @set('sandboxShipmentsSubmitting', true)
+        $.when($.ajax({
+          type: "POST"
+          url: "/trade/annual_report_uploads/#{@get('id')}/submit"
+          data: {}
+          dataType: 'json'
+        })).then(onSuccess, onError)
+      )
 
     resetFilters: () ->
       @resetFilters()

@@ -30,7 +30,7 @@ namespace :import do
       import_data_for kingdom, Rank::SPECIES, true
       import_data_for kingdom, Rank::SUBSPECIES, true
       if kingdom == 'Plantae'
-        import_data_for kingdom, Rank::VARIETY
+        import_data_for kingdom, Rank::VARIETY, true
       end
       # [END]copied over from import:species
 
@@ -47,10 +47,10 @@ namespace :import do
             FROM #{TMP_TABLE}
             INNER JOIN ranks ON UPPER(ranks.name) = BTRIM(UPPER(#{TMP_TABLE}.accepted_rank))
             INNER JOIN taxon_concepts AS accepted
-              ON accepted.legacy_id = #{TMP_TABLE}.accepted_legacy_id AND accepted.rank_id = ranks.id and accepted.legacy_type = '#{kingdom}'
+              ON accepted.id = #{TMP_TABLE}.accepted_id AND accepted.rank_id = ranks.id AND (accepted.legacy_type = '#{kingdom}' OR accepted.legacy_type IS NULL)
             INNER JOIN ranks as synonyms_rank ON UPPER(synonyms_rank.name) = BTRIM(Upper(#{TMP_TABLE}.rank))
             INNER JOIN taxon_concepts AS synonym
-              ON synonym.legacy_id = #{TMP_TABLE}.legacy_id AND synonym.rank_id = synonyms_rank.id and synonym.legacy_type = '#{kingdom}'
+              ON synonym.author_year = BTRIM(#{TMP_TABLE}.author) AND synonym.parent_id = #{TMP_TABLE}.parent_id AND synonym.data->'accepted_id' = #{TMP_TABLE}.accepted_id::VARCHAR AND synonym.rank_id = synonyms_rank.id AND synonym.legacy_type = '#{kingdom}'
             LEFT JOIN taxonomies ON taxonomies.id = accepted.taxonomy_id AND taxonomies.id = synonym.taxonomy_id
             WHERE taxonomies.id = #{taxonomy.id}
               AND

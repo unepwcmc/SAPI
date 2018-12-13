@@ -1406,8 +1406,9 @@ html.lt-ie9 #main .tabset > li > ul >li.first {
 
 div#banner {
   background: #376382;
-  width: 860px;
+  width: 820px;
   opacity: 0.8;
+  padding: 10px 20px;
 }
 
 div#banner p {
@@ -1415,7 +1416,9 @@ div#banner p {
   opacity: 1;
   text-align: left;
   margin: 0;
-  padding: 10px 40px 10px 25px;
+  padding: 0;
+  display: inline-block;
+  width: 780px;
 }
 
 div#banner p strong {
@@ -1424,7 +1427,7 @@ div#banner p strong {
   letter-spacing: 0.0075em;
 }
 
-div#banner p button#remove {
+div#banner button#remove {
   float: right;
   padding: 0;
   border: none;

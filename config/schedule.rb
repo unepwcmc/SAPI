@@ -1,6 +1,6 @@
 set :output, 'log/cron.log'
 
-every :day, :at => '2:42am' do
+every :day, :at => '1:42am' do
   rake "db:migrate:rebuild"
 end
 

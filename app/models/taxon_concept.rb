@@ -48,7 +48,7 @@ class TaxonConcept < ActiveRecord::Base
     :tag_list, :legacy_trade_code, :hybrid_parents_ids,
     :accepted_names_ids, :accepted_names_for_trade_name_ids,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id, :dependents_updated_at
+    :created_by_id, :updated_by_id, :dependents_updated_at, :kew_id
 
   attr_writer :accepted_names_ids,
     :accepted_names_for_trade_name_ids,

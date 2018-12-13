@@ -1,14 +1,23 @@
 class TradeController < ApplicationController
 
   before_filter :authenticate_user!
-  before_filter :verify_manager
+  before_filter :verify_manager_or_secretariat_or_active, except: [:update, :create, :submit, :destroy]
+  before_filter :verify_manager, only: [:update, :create, :submit, :destroy, :update_batch, :destroy_batch]
+
+  def user_can_edit
+    render json: { can_edit: current_user.is_manager? && current_user.is_active? }
+  end
 
   private
 
-  def verify_manager
-    unless current_user.is_manager?
+  def verify_manager_or_secretariat_or_active
+    unless current_user.is_manager_or_secretariat? || current_user.is_active
       redirect_to signed_in_root_path(current_user)
     end
+  end
+
+  def verify_manager
+    raise CanCan::AccessDenied unless current_user.is_manager?
   end
 
   def search_params

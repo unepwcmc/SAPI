@@ -23,6 +23,7 @@
 <span>{{view.fileName}}</span>
 <div id="upload-message"></div>
 
-<input type="submit" value="Upload" disabled="disabled">
+{{confirm-button title="Upload" action="uploadAnnualReport" left=true}}
+<input id='submitUpload' type="submit" value="Upload" disabled="disabled" style="display: none">
 
 </form>

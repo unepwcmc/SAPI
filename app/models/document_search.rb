@@ -47,14 +47,13 @@ class DocumentSearch
 
   def initialize_params(options)
     @options = DocumentSearchParams.sanitize(options)
-    @options[:show_private] = true if admin_interface?
     @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
     @offset = @per_page * (@page - 1)
   end
 
   def initialize_query
     @query = Document.from("#{table_name} documents")
-    @query = @query.where(is_public: true) if !admin_interface? && !@show_private
+    @query = @query.where(is_public: true) unless @show_private
     add_conditions_for_event
     add_conditions_for_document
     add_extra_conditions

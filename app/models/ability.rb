@@ -31,7 +31,9 @@ class Ability
 
     user ||= User.new
 
-    if user.is_manager?
+    if user.is_secretariat? || !user.is_active
+      can [:autocomplete, :read, :edit, :new], :all
+    elsif user.is_manager?
       can :manage, :all
     elsif user.is_contributor?
       can [:autocomplete, :read], :all

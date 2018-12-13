@@ -3,6 +3,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
 
   before_filter :set_nomenclature_change, :only => [:show, :update, :destroy]
   before_filter :unset_back, only: [:update]
+  before_filter :authorise_finish, only: [:update]
 
   def finish_wizard_path
     admin_nomenclature_changes_path
@@ -41,6 +42,12 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
       session[:back] = true
     else
       skip_step
+    end
+  end
+
+  def authorise_finish
+    if step == steps.last && (current_user.is_secretariat? || !current_user.is_active?)
+      raise CanCan::AccessDenied
     end
   end
 

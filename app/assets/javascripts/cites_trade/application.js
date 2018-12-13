@@ -18,15 +18,15 @@ $(document).ready(function(){
   function growlMe(text){
   	$.jGrowl(text);
   };
-  
+
   function growlMeSticky(text){
   	$.jGrowl(text, {sticky: true});
   };
-  
+
   function notyNormal(message){
   	noty({layout: 'topRight', text: message, timeout: 4000});
   };
-  
+
   function notySticky(message){
   	noty({ layout: 'top',
    			   type: 'information',
@@ -41,24 +41,24 @@ $(document).ready(function(){
 		{
 			event : 'mouseover',
 			autoHeight: false
-		}								  
+		}
 	);
-   
+
   //setting the tabs for the search
   $("#tabs").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
   //enabling the tabs to be visible again
   $("#tabs").css("display", "block");
 	$("#tabs li").removeClass('ui-corner-top').addClass('ui-corner-left');
- 
+
   $(".someClass").tipTip({maxWidth: "300px"});
   //using the qtip2 plugin
   $(".qtipify").qtip(
-	{				
+	{
 		style: {
       classes: 'ui-tooltip-green ui-tooltip-cluetip'
-   	}				
+   	}
 	});
- 
+
   $("#genus_all_id").val('').trigger("liszt:updated");
   $("#genus_all_id").chosen({
   	allow_single_deselect:true,
@@ -68,15 +68,9 @@ $(document).ready(function(){
   	$('#species_out').text(my_value);
   });
 
-  $('#taxon_search').width(300);
- 
   function initialiseControls() {
-	  $('#selection_taxon_taxon').attr('checked', true);
-	  $('#div_genus').find('button').addClass('ui-state-disabled')
-      .removeClass('ui-state-enabled');
 	  $('#genus_all_id_chzn').removeClass('chzn-container-active')
       .addClass('chzn-disabled');
-	  $('#div_genus :input').attr('disabled', true);
 	  //prevent form support on input and select enter
 	  $('input,select').keypress(function(event) { return event.keyCode != 13; });
   };
@@ -90,7 +84,7 @@ $(document).ready(function(){
       }
     });
   }
-  
+
 
   function parseInputs ($inputs) {
     var values = {};
@@ -104,7 +98,7 @@ $(document).ready(function(){
         }
       }
     });
-    values['selection_taxon'] = $('input[name="selection_taxon"]:checked').val();
+    values['selection_taxon'] = 'taxonomic_cascade';
     return values;
   }
 
@@ -174,14 +168,13 @@ $(document).ready(function(){
       .trigger('change');
  	  $('#qryTo').find('option:first').attr('selected', 'selected')
       .trigger('change');
- 	  $('#taxon_search').val('');
- 	  $('#genus_search').val('');
+ 	  $('#taxonomic_cascade_search').val('');
  	  $('#species_out').text('');
  	  $('#sources').select2("val","all_sou");
  	  $('#purposes').select2("val","all_pur");
  	  $('#terms').select2("val","all_ter");
  	  $('#expcty').select2("val","all_exp");
- 	  $('#impcty').select2("val","all_imp");	
+ 	  $('#impcty').select2("val","all_imp");
     notySticky('Values are being reset...');
     $('#search-error-message').hide();
     $("#cites-trade-loading").hide();
@@ -197,47 +190,28 @@ $(document).ready(function(){
     selected_taxa = '';
   	return false;
   });
- 
-  //Radio selector for genus or taxon search
-  $("input[name='selection_taxon']").on('change',function(){
-	  var myValue = $(this).attr('id');
-	  if (myValue == 'selection_taxon_genus') {
-	  	$('#div_taxon').find('input').addClass('ui-state-disabled')
-        .removeClass('ui-state-enabled');
-	  	$('#div_genus').find('button').removeClass('ui-state-disabled')
-        .addClass('ui-state-enabled');
-	  	$('#div_taxon :input').attr('disabled', true);
-	  	$('#div_genus :input').removeAttr('disabled');
-	  	$('#taxon_search').val('');
-	  	$('#species_out').text('');
-	  } else {
-	  	$('#div_genus').find('button').addClass('ui-state-disabled')
-        .removeClass('ui-state-enabled');
-	  	$('#div_taxon').find('input').removeClass('ui-state-disabled')
-        .addClass('ui-state-enabled');
-	  	$('#div_taxon :input').removeAttr('disabled');
-	  	$('#div_genus :input').attr('disabled', true);
-      $('#genus_search').val('');
-	  	$('#species_out').text('');
-	  }
-  });
+
+  $('#div_taxonomic_cascade').find('button').removeClass('ui-state-disabled')
+    .addClass('ui-state-enabled');
+  $('#div_taxonomic_cascade :input').removeAttr('disabled');
+  $('#species_out').text('');
 
   $('#table_selection').colorize({
   		altColor: '#E6EDD7',
   		bgColor: '#E6EDD7',
   		hoverColor: '#D2EF9A'
   });
-   
-  
+
+
   function getSelectionTextNew(source) {
   	var values = [];
-  
+
   	$('#ms-' + source).find('div.ms-selection ul.ms-list  li').each(function() {
       values.push($(this).text());
     });
-  
+
   	return values.join(',')
-  } 
+  }
 
   function getSelectionText(source) {
   	myValues = new Array();
@@ -246,28 +220,28 @@ $(document).ready(function(){
     });
   	return myValues.toString();
   }
-  
+
   initUnitsObj = function (data) {
     _.each(data.units, function (unit) {
       units[unit.id] = unit;
     });
     unLock('initUnitsObj');
   }
-  
+
   initCountriesObj = function (data) {
     _.each(data.geo_entities, function (country) {
       countries[country.id] = country;
     });
     unLock('initCountriesObj');
   }
-  
+
   initTermsObj = function (data) {
     _.each(data.terms, function (term) {
       terms[term.id] = term;
     });
     unLock('initTermsObj');
   }
-  
+
   initPurposesObj = function (data) {
     _.each(data.purposes, function (purpose) {
       purposes[purpose.id] = purpose;
@@ -288,7 +262,7 @@ $(document).ready(function(){
   	  	condition: function (item) {return item.iso_code2},
   	  	text: function (item) {return item.name}
   	  };
-  
+
     initCountriesObj(data);
   	populateSelect(_.extend(args, {
   		selection: $('#expcty'),
@@ -315,7 +289,7 @@ $(document).ready(function(){
     	}
     	$('#expcty_out').text(selection);
     });
-  
+
     populateSelect(_.extend(args, {
   		selection: $('#impcty'),
   		value: function (item) {return item.id}
@@ -343,7 +317,7 @@ $(document).ready(function(){
     	$('#impcty_out').text(selection);
     });
   };
-  
+
   initTerms = function (data) {
   	var selection = $('#terms'),
   	  args = {
@@ -418,7 +392,7 @@ $(document).ready(function(){
     	$('#sources_out').text(selection);
     });
   };
-  
+
   initPurposes = function (data) {
   	var selection = $('#purposes'),
   	  args = {
@@ -431,7 +405,7 @@ $(document).ready(function(){
       alloption = 'all_pur';
   	allOptionsDictionary[alloption] = true;
     initPurposesObj(data);
-  	populateSelect(args); 
+  	populateSelect(args);
     selection.select2({
     	width: '75%',
     	allowClear: false,
@@ -483,24 +457,24 @@ $(document).ready(function(){
   	}
   	return myValues.toString();
   }
-  
+
   function show_values_selection() {
   	var year_from = $('#qryFrom').val();
   	var year_to = $('#qryTo').val();
   	var exp_cty = $('#expctyms2side__dx').text();
   	var imp_cty = $('#impctyms2side__dx').text();
-  	var sources = $('#sourcesms2side__dx').text(); 
+  	var sources = $('#sourcesms2side__dx').text();
   	var purposes = $('#purposesms2side__dx').text();
   	var terms = $('#termsms2side__dx').text();
-  	
+
   	$('#year_from > span').text(year_from);
     $('#year_to > span').text(year_to);
   	$('#expcty_out').text(getSelectionText('expcty'));
   	$('#impcty_out').text(getSelectionText('impcty'));
   	$('#sources_out').text(getSelectionText('sources'));
   	$('#purposes_out').text(getSelectionText('purposes'));
-  	$('#terms_out').text(getSelectionText('terms'));		
-  	$('#genus_all_id').val();				  
+  	$('#terms_out').text(getSelectionText('terms'));
+  	$('#genus_all_id').val();
   };
 
   $('#side .ui-button, #form .ui-button').hover(function() {
@@ -535,7 +509,7 @@ $(document).ready(function(){
     // 'red collared' should highlight 'red-collared'
     return taxonDisplayName.replace(new RegExp("(" + term + '|' + termWithHyphens+ ")", "gi"), transform);
   }
-  
+
   function parseTaxonData (data, term, showSpp) {
     var d = data.auto_complete_taxon_concepts;
   	return _.map(d, function (element, index) {
@@ -547,73 +521,57 @@ $(document).ready(function(){
       };
   	});
   }
-   
-  //Autocomplete for cites_names
-  if (is_search_page) {
-    $("#taxon_search").autocomplete({
-    	source: function(request, response) {
-        var term = request.term;
-        $.ajax({
-          url: "/api/v1/auto_complete_taxon_concepts",
-          dataType: "json",
-          data: {
-            taxonomy: 'CITES',
-            taxon_concept_query: term,
-            visibility: 'trade'
-          },
-          success: function(data) {
-            response(parseTaxonData(data, term, true));
-          },
-    			error : function(xhr, ajaxOptions, thrownError){
-    				growlMe(xhr.status + " ====== " + thrownError);
-    			}
+
+  function parseTaxonCascadeData(data, term, showSpp) {
+    var d = data.auto_complete_taxon_concepts;
+    var data_by_rank = [];
+    var currentRank = d[0].rank_name;
+    data_by_rank.push({
+      'value': currentRank,
+      'label': currentRank,
+      'drop_label': currentRank
+    });
+    _.map(d, function (element, index) {
+      var rankName = element.rank_name;
+      if(rankName != currentRank) {
+        currentRank = rankName;
+        data_by_rank.push({
+          'value': rankName,
+          'label': rankName,
+          'drop_label': rankName
         });
-      },
-    	select: function( event, ui ) {
-    		$(this).attr('value', ui.item.label);
-        selected_taxa = ui.item.value;
-    		$('#species_out').text(ui.item.label);
-    		return false;
-    	},
-      response: function(event, ui) {
-        if (!ui.content.length) {
-          var noResult = { value:"" };
-          ui.content.push(noResult);
-        }
-      },
-      change: function(event, ui){
-        if (ui.item === null || ui.item.label !== $(this).val() ){
-          $(this).val('');
-          $('#species_out').text('');
-          selected_taxa = '';
-        }
       }
-    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-      if (item.value === ''){
-        return $( "<li>" ).append("No results").appendTo( ul );
-      }
-      return $( "<li>" )
-        .append( "<a>" + item.drop_label + "</a>" )
-        .appendTo( ul );
-      }
+      var displayName = getTaxonDisplayName(element, showSpp)
+      data_by_rank.push({
+        'value': element.id,
+        'label': displayName,
+        'drop_label': getTaxonLabel(displayName, term)
+      });
+    });
+    return data_by_rank;
   }
 
-  //Autocomplete for cites_genus
+  //Autocomplete for cascade search
   if (is_search_page) {
-    $("#genus_search").autocomplete({
+    var ranks = [];
+    $("#taxonomic_cascade_search").autocomplete({
     	source: function(request, response) {
         var term = request.term;
         $.ajax({
           url: "/api/v1/auto_complete_taxon_concepts",
           dataType: "json",
           data: {
+            locale: locale,
             taxonomy: 'CITES',
             taxon_concept_query: request.term,
-            'ranks[]': 'GENUS',
-            visibility: 'trade'
+            visibility: 'cites_trade'
           },
           success: function(data) {
-            response(parseTaxonData(data, term, false));
+            ranks = _.map(data.meta.rank_headers, function (element, index) {
+              return element.rank_name;
+            });
+            response(parseTaxonCascadeData(data, term, false));
+            $('input#taxonomic_cascade_search').removeClass('ui-autocomplete-loading');
           },
     			error : function(xhr, ajaxOptions, thrownError){
     				growlMe(xhr.status + " ====== " + thrownError);
@@ -643,6 +601,9 @@ $(document).ready(function(){
       if (item.value === ''){
         return $( "<li>" ).append("No results").appendTo( ul );
       }
+      if (ranks.indexOf(item.label) > -1) {
+        return $( "<li class='rank-name'>" ).append(item.label).appendTo( ul );
+      }
       return $( "<li>" )
         .append( "<a>" + item.drop_label + "</a>" )
         .appendTo( ul );
@@ -660,7 +621,7 @@ $(document).ready(function(){
 
   //Put functions to be executed here
   initialiseControls();
-  
+
   function populateSelect(args) {
   	var data = args.data,
   	  selection = args.selection,
@@ -671,7 +632,7 @@ $(document).ready(function(){
 	  	if (condition(item)) {
 	      selection.append('<option title="' + text(item)
 	      	+ '" value="' + value(item) + '">' + text(item) + '</option>');
-	    } 
+	    }
     });
   }
 
@@ -689,7 +650,7 @@ $(document).ready(function(){
   }
 
   function buildHeader (data) {
-    var header = 
+    var header =
       "<thead><tr><% _.each(d, function(h) { %> <td><%=h%></td> <% }); %></tr></thead>";
     return _.template(header, {d: data});
   }
@@ -722,8 +683,8 @@ $(document).ready(function(){
 
   function displayResults (q) {
     var table_view_title, formURL = '/cites_trade/shipments',
-      data_headers, data_rows, table_tmpl, 
-      comptab_regex = /comptab/, 
+      data_headers, data_rows, table_tmpl,
+      comptab_regex = /comptab/,
       gross_net_regex = /(gross_exports|gross_imports|net_exports|net_imports)/;
     $.ajax(
       {
@@ -776,7 +737,7 @@ $(document).ready(function(){
       report_type = $( "select[name='reportType']" ).val();
     }
     query += "&filters[report_type]=" + report_type;
-    if (!ignoreWarning &&
+    if (!ignoreWarning &
       (report_type == 'net_imports' || report_type == 'net_exports')
     ) {
       $('#this_should_not_be_a_table').hide();
@@ -807,13 +768,13 @@ $(document).ready(function(){
   // View results page specific:
 
   // This locks-unLock rubbish is used to guarantee that, when populating the
-  // results tables, all the ajax calls for the drop-down menus (that also 
+  // results tables, all the ajax calls for the drop-down menus (that also
   // populate our data objects) are terminated!
   var locks = {
-    'initUnitsObj': true, 
-    'initCountriesObj': true, 
-    'initTermsObj': true, 
-    'initPurposesObj': true, 
+    'initUnitsObj': true,
+    'initCountriesObj': true,
+    'initTermsObj': true,
+    'initPurposesObj': true,
     'initSourcesObj': true
   };
   function unLock (function_name) {
@@ -827,7 +788,7 @@ $(document).ready(function(){
     if (!l && is_view_results_page) {
       // It is time to show these tables!
       displayResults(getParamsFromURI());
-    }
+   }
   }
 
 });

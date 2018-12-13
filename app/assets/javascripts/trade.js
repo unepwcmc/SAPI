@@ -27,6 +27,7 @@
 //= require date
 //= require select2
 //= require bootstrap-tooltip
+//= require bootstrap-dropdown
 
 //= require_self
 

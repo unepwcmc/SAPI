@@ -3,8 +3,8 @@ body {
 	/*background: white;*/
 	font-face: Verdana, Arial, Helvetica, sans-serif;
 	/*bgcolor: #FFFFFF;*/
-	
-	
+
+
 }
 #tot {
 	margin-left:50px;
@@ -40,16 +40,16 @@ body {
 .heading_label{
 	/*width: 400px;*/
 	font-size: 20px;
-	font-weight:400; 
-	font-face: Verdana, Arial, Helvetica, sans-serif; 
+	font-weight:400;
+	font-face: Verdana, Arial, Helvetica, sans-serif;
 	color: green;
 	/*align: center;*/
 	padding-top:10px;
 }
 .text_label{
-	border: 1px; 
-	font-size: 1em; 
-	font-face: Verdana, Arial, Helvetica, sans-serif; 
+	border: 1px;
+	font-size: 1em;
+	font-face: Verdana, Arial, Helvetica, sans-serif;
 	color: #000;
 }
 
@@ -70,4 +70,11 @@ div#loading {
     cursor: wait;
     }
 
+li.rank-name {
+  font-weight: bold;
+}
 
+div.taxon-search-container {
+  display: flex;
+  justify-content: center;
+}

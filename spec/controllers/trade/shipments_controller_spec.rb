@@ -9,7 +9,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
     before(:each) { Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should return all shipments" do
       get :index, format: :json
-      response.body.should have_json_size(6).at_path('shipments')
+      response.body.should have_json_size(7).at_path('shipments')
     end
     it "should return genus & species shipments when searching by genus" do
       get :index, taxon_concepts_ids: [@animal_genus.id], format: :json
@@ -167,9 +167,9 @@ describe Trade::ShipmentsController, sidekiq: :inline do
         importers_ids: [@portugal.id.to_s, @argentina.id.to_s],
         taxon_concepts_ids: [@animal_species.id]
       }
-      Trade::Shipment.count.should == 5
+      Trade::Shipment.count.should == 6
     end
-    it "should delete 4 shipment" do
+    it "should delete 5 shipment" do
       post :destroy_batch, {
         time_range_start: @shipment1.year,
         time_range_end: @shipment2.year,
@@ -177,10 +177,10 @@ describe Trade::ShipmentsController, sidekiq: :inline do
         exporters_ids: [@portugal.id.to_s, @argentina.id.to_s],
         importers_ids: [@portugal.id.to_s, @argentina.id.to_s]
       }
-      Trade::Shipment.count.should == 1
+      Trade::Shipment.count.should == 2
     end
 
-    it "should delete 1 shipments" do
+    it "should delete 2 shipments" do
       post :destroy_batch, importers_ids: [@argentina.id.to_s]
       Trade::Shipment.count.should == 5
     end
@@ -197,7 +197,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
 
     it "shouldn't delete any shipments" do
       post :destroy_batch, purpose_blank: "true"
-      Trade::Shipment.count.should == 6
+      Trade::Shipment.count.should == 7
     end
 
     it "should delete 1 shipment" do
@@ -207,19 +207,19 @@ describe Trade::ShipmentsController, sidekiq: :inline do
 
     it "should delete 3 shipment" do
       post :destroy_batch, sources_ids: [@source_wild.id.to_s]
-      Trade::Shipment.count.should == 3
+      Trade::Shipment.count.should == 4
     end
 
     it "should delete 0 shipments" do
       post :destroy_batch, sources_ids: [@source_wild.id.to_s],
         reporter_type: 'E'
-      Trade::Shipment.count.should == 6
+      Trade::Shipment.count.should == 7
     end
 
     it "should delete 4 shipments" do
       post :destroy_batch, sources_ids: [@source_wild.id.to_s],
         reporter_type: 'I', source_blank: "true"
-      Trade::Shipment.count.should == 2
+      Trade::Shipment.count.should == 3
     end
 
     it "should delete orphaned permits" do

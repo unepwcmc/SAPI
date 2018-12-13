@@ -125,8 +125,9 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       "
         (taxon_concept_id = ? OR new_taxon_concept_id = ?) AND
         nomenclature_changes.created_at > ? AND nomenclature_changes.status = 'submitted'
+        AND nomenclature_changes.created_at < ?
       ",
-      object.id, object.id, 6.months.ago
+      object.id, object.id, 6.months.ago, Date.new(2017, 8, 1)
     )
 
     outputs.present?

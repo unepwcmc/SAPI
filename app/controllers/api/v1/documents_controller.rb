@@ -87,7 +87,7 @@ class Api::V1::DocumentsController < ApplicationController
   private
 
   def access_denied?
-    !current_user || current_user.role == User::API_USER
+    !current_user || current_user.is_api_user_or_secretariat?
   end
 
   def render_404

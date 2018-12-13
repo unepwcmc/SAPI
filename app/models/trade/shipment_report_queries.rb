@@ -73,6 +73,176 @@ module Trade::ShipmentReportQueries
       ON shipments.updated_by_id = uu.id"
   end
 
+  def self.full_db_query_by_kingdom(year, kingdom)
+    "SELECT
+      shipments.id AS id,
+      year AS year,
+      appendix AS appendix,
+      full_name_with_spp(ranks.name, taxon_concept_full_name) AS taxon,
+      taxon_concept_id AS taxon_id,
+      taxon_concept_class_name AS class,
+      taxon_concept_order_name AS order,
+      taxon_concept_family_name AS family,
+      taxon_concept_genus_name AS genus,
+      full_name_with_spp(reported_taxon_ranks.name, reported_taxon_concept_full_name) AS reported_taxon,
+      reported_taxon_concept_id AS reported_taxon_id,
+      terms.name_en AS term,
+      CASE WHEN quantity = 0 THEN NULL ELSE quantity END,
+      units.name_en AS unit,
+      importers.iso_code2 AS importer,
+      exporters.iso_code2 AS exporter,
+      countries_of_origin.iso_code2 AS origin,
+      purposes.code AS purpose,
+      sources.code AS source,
+      CASE
+        WHEN reported_by_exporter THEN 'E'
+        ELSE 'I'
+      END AS reporter_type,
+      import_permit_number AS import_permit,
+      export_permit_number AS export_permit,
+      origin_permit_number AS origin_permit,
+      legacy_shipment_number AS legacy_shipment_no
+    FROM trade_shipments_with_taxa_view AS shipments
+    JOIN ranks
+      ON ranks.id = taxon_concept_rank_id
+    LEFT JOIN ranks AS reported_taxon_ranks
+      ON reported_taxon_ranks.id = reported_taxon_concept_rank_id
+    JOIN geo_entities importers
+      ON importers.id = importer_id
+    JOIN geo_entities exporters
+      ON exporters.id = exporter_id
+    LEFT JOIN geo_entities countries_of_origin
+      ON countries_of_origin.id = country_of_origin_id
+    LEFT JOIN trade_codes units
+      ON units.id = unit_id
+    JOIN trade_codes terms
+      ON terms.id = term_id
+    LEFT JOIN trade_codes purposes
+      ON purposes.id = purpose_id
+    LEFT JOIN trade_codes sources
+      ON sources.id = source_id
+    LEFT JOIN users as uc
+      ON shipments.created_by_id = uc.id
+    LEFT JOIN users as uu
+      ON shipments.updated_by_id = uu.id
+    LEFT JOIN taxon_concepts as tc_kingdom
+      ON reported_taxon_concept_kingdom_id = tc_kingdom.id
+    WHERE year = #{year} AND tc_kingdom.full_name = '#{kingdom}'
+    ORDER BY shipments.id"
+  end
+
+  def self.full_db_query_by_year(year)
+    "SELECT
+      shipments.id AS id,
+      year AS year,
+      appendix AS appendix,
+      full_name_with_spp(ranks.name, taxon_concept_full_name) AS taxon,
+      taxon_concept_id AS taxon_id,
+      taxon_concept_class_name AS class,
+      taxon_concept_order_name AS order,
+      taxon_concept_family_name AS family,
+      taxon_concept_genus_name AS genus,
+      full_name_with_spp(reported_taxon_ranks.name, reported_taxon_concept_full_name) AS reported_taxon,
+      reported_taxon_concept_id AS reported_taxon_id,
+      terms.name_en AS term,
+      CASE WHEN quantity = 0 THEN NULL ELSE quantity END,
+      units.name_en AS unit,
+      importers.iso_code2 AS importer,
+      exporters.iso_code2 AS exporter,
+      countries_of_origin.iso_code2 AS origin,
+      purposes.code AS purpose,
+      sources.code AS source,
+      CASE
+        WHEN reported_by_exporter THEN 'E'
+        ELSE 'I'
+      END AS reporter_type,
+      import_permit_number AS import_permit,
+      export_permit_number AS export_permit,
+      origin_permit_number AS origin_permit,
+      legacy_shipment_number AS legacy_shipment_no
+    FROM trade_shipments_with_taxa_view AS shipments
+    JOIN ranks
+      ON ranks.id = taxon_concept_rank_id
+    LEFT JOIN ranks AS reported_taxon_ranks
+      ON reported_taxon_ranks.id = reported_taxon_concept_rank_id
+    JOIN geo_entities importers
+      ON importers.id = importer_id
+    JOIN geo_entities exporters
+      ON exporters.id = exporter_id
+    LEFT JOIN geo_entities countries_of_origin
+      ON countries_of_origin.id = country_of_origin_id
+    LEFT JOIN trade_codes units
+      ON units.id = unit_id
+    JOIN trade_codes terms
+      ON terms.id = term_id
+    LEFT JOIN trade_codes purposes
+      ON purposes.id = purpose_id
+    LEFT JOIN trade_codes sources
+      ON sources.id = source_id
+    LEFT JOIN users as uc
+      ON shipments.created_by_id = uc.id
+    LEFT JOIN users as uu
+      ON shipments.updated_by_id = uu.id
+    WHERE year = #{year}
+    ORDER BY shipments.id"
+  end
+
+  def self.full_db_query_single_file(limit, offset)
+    "SELECT
+      shipments.id AS id,
+      year AS year,
+      appendix AS appendix,
+      full_name_with_spp(ranks.name, taxon_concept_full_name) AS taxon,
+      taxon_concept_id AS taxon_id,
+      taxon_concept_class_name AS class,
+      taxon_concept_order_name AS order,
+      taxon_concept_family_name AS family,
+      taxon_concept_genus_name AS genus,
+      full_name_with_spp(reported_taxon_ranks.name, reported_taxon_concept_full_name) AS reported_taxon,
+      reported_taxon_concept_id AS reported_taxon_id,
+      terms.name_en AS term,
+      CASE WHEN quantity = 0 THEN NULL ELSE quantity END,
+      units.name_en AS unit,
+      importers.iso_code2 AS importer,
+      exporters.iso_code2 AS exporter,
+      countries_of_origin.iso_code2 AS origin,
+      purposes.code AS purpose,
+      sources.code AS source,
+      CASE
+        WHEN reported_by_exporter THEN 'E'
+        ELSE 'I'
+      END AS reporter_type,
+      import_permit_number AS import_permit,
+      export_permit_number AS export_permit,
+      origin_permit_number AS origin_permit,
+      legacy_shipment_number AS legacy_shipment_no
+    FROM trade_shipments_with_taxa_view AS shipments
+    JOIN ranks
+      ON ranks.id = taxon_concept_rank_id
+    LEFT JOIN ranks AS reported_taxon_ranks
+      ON reported_taxon_ranks.id = reported_taxon_concept_rank_id
+    JOIN geo_entities importers
+      ON importers.id = importer_id
+    JOIN geo_entities exporters
+      ON exporters.id = exporter_id
+    LEFT JOIN geo_entities countries_of_origin
+      ON countries_of_origin.id = country_of_origin_id
+    LEFT JOIN trade_codes units
+      ON units.id = unit_id
+    JOIN trade_codes terms
+      ON terms.id = term_id
+    LEFT JOIN trade_codes purposes
+      ON purposes.id = purpose_id
+    LEFT JOIN trade_codes sources
+      ON sources.id = source_id
+    LEFT JOIN users as uc
+      ON shipments.created_by_id = uc.id
+    LEFT JOIN users as uu
+      ON shipments.updated_by_id = uu.id
+    ORDER BY shipments.id
+    LIMIT #{limit} OFFSET #{offset}"
+  end
+
   def self.full_db_query(limit, offset)
     "SELECT
       shipments.id AS id,

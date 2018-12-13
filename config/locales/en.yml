@@ -8,7 +8,7 @@ en:
   errors:
     no_data_1: "Your query has returned no data"
     no_data_2: "Please select other variables"
-    csv_limit_exceeded_1: "Your query has returned too large a subset"
+    csv_limit_exceeded_1: "Your query has returned too large a subset (greater than 1 million records). You must limit the year range and select at least one import/export country or one taxon"
     csv_limit_exceeded_2: "You must limit the year range and select at least one import/export country or one taxon"
     web_limit_exceeded_1: "Web output is not available for large subsets"
     web_limit_exceeded_2: "Please download the results in CSV format"
@@ -22,7 +22,7 @@ en:
   export_text: "Exporting countries"
   export_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected"
   import_text: "Importing countries"
-  import_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected" 
+  import_tip: "Type the country or countries you wish to include in your final output. To include data for all countries, leave 'All Countries' selected"
   source_text: "Source"
   source_tip: "Type the source or sources (e.g. 'W - Wild') you wish to include in your final output. To include data for all sources, leave 'All Sources' selected"
   purpose_text: "Purpose"
@@ -30,8 +30,9 @@ en:
   trade_text: "Trade Terms"
   trade_tip: "Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All Terms' selected"
   taxon_text: "Search by taxon"
-  taxon_tip: "To retrieve data for a specific taxon, type in the taxon name. Data on specimens recorded in trade at the higher taxon level (e.g. Scleractinia spp.) can also be retrieved through this search. To retrieve data for all species within a particular genus, select a genus from the drop-down below. To select all taxa, leave these sections blank."
+  taxon_tip: "To retrieve data for a specific species, type in the species name. To retrieve data for all species within a particular higher taxon (e.g. genus, family, order, class etc.), type in the name and select the higher taxon from the drop-down below. To select all taxa in trade, leave the selection blank. It is advisable to limit your data request to a specific taxon due to the volume of data (there is a limit of 1 million rows for data downloads)."
   taxon_title: "Search for taxon reported trade:"
+  taxon_search: "Search for species or higher taxon"
   genus_title: "Search for genus:"
 
   all_countries: "All Countries"
@@ -77,3 +78,5 @@ en:
     net_imports: "Net Imports Report"
     net_exports: "Net Exports Report"
     comptab: "Comparative Tabulation Report"
+
+  secretariat_alert: "It is not possible to perform this action. If you require further assistance please contact the Species team on species@unep-wcmc.org."

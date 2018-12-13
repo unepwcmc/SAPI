@@ -2,22 +2,22 @@
   <div class="block">
     <h2>EU Wildlife Trade Legislation</h2>
   </div>
-  <%= render partial: 'eu_legislation_type', 
+  <%= render partial: 'eu_legislation_type',
     locals: {
       legislation_title: 'Council Regulations', legislation_collection: @eu_council_regulations
     }
   %>
-  <%= render partial: 'eu_legislation_type', 
+  <%= render partial: 'eu_legislation_type',
+    locals: {
+      legislation_title: 'Regulations revising the Annexes to Council Regulation (EC) No 338/97', legislation_collection: @eu_annex_regulations
+    }
+  %>
+  <%= render partial: 'eu_legislation_type',
     locals: {
       legislation_title: 'Implementing Regulations', legislation_collection: @eu_implementing_regulations
     }
   %>
-  <%= render partial: 'eu_legislation_type', 
-    locals: {
-      legislation_title: 'Regulations listing species controlled', legislation_collection: @eu_annex_regulations
-    }
-  %>
-  <%= render partial: 'eu_legislation_type', 
+  <%= render partial: 'eu_legislation_type',
     locals: {
       legislation_title: 'Suspension Regulations', legislation_collection: @eu_suspension_regulations
     }

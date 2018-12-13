@@ -17,7 +17,11 @@ module Sapi
         :valid_taxon_concept_appendix_year_mview,
         :touch_cites_taxon_concepts,
         :touch_eu_taxon_concepts,
-        :touch_cms_taxon_concepts
+        :touch_cms_taxon_concepts,
+        :trade_shipments_appendix_i_mview,
+        :trade_shipments_mandatory_quotas_mview,
+        :trade_shipments_cites_suspensions_mview,
+        :non_compliant_shipments_view
       ].each { |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
@@ -100,6 +104,18 @@ module Sapi
         (permits_ids);
       SQL
       ActiveRecord::Base.connection.execute(sql)
+    end
+
+    def self.rebuild_compliance_mviews
+      [
+        :trade_shipments_appendix_i_mview,
+        :trade_shipments_mandatory_quotas_mview,
+        :trade_shipments_cites_suspensions_mview,
+        :non_compliant_shipments_view
+      ].each { |p|
+        puts "Procedure: #{p}"
+        ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
+      }
     end
   end
 end

@@ -29,19 +29,21 @@ class User < ActiveRecord::Base
     :trackable, :validatable
   attr_accessible :email, :name, :password, :password_confirmation,
     :remember_me, :role, :terms_and_conditions, :is_cites_authority,
-    :organisation, :geo_entity_id
+    :organisation, :geo_entity_id, :is_active
 
   MANAGER = 'admin'
   CONTRIBUTOR = 'default' # nonsense
   ELIBRARY_USER = 'elibrary'
   API_USER = 'api'
-  ROLES = [MANAGER, CONTRIBUTOR, ELIBRARY_USER, API_USER]
-  NON_ADMIN_ROLES = [ELIBRARY_USER, API_USER]
+  SECRETARIAT = 'secretariat'
+  ROLES = [MANAGER, CONTRIBUTOR, ELIBRARY_USER, API_USER, SECRETARIAT]
+  NON_ADMIN_ROLES = [ELIBRARY_USER, API_USER, SECRETARIAT]
   ROLES_FOR_DISPLAY = {
     MANAGER => 'Manager',
     CONTRIBUTOR => 'Contributor',
     ELIBRARY_USER => 'E-library User',
-    API_USER => 'API User'
+    API_USER => 'API User',
+    SECRETARIAT => 'Secretariat'
   }
 
   has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
@@ -59,6 +61,10 @@ class User < ActiveRecord::Base
     self.role == MANAGER
   end
 
+  def is_manager_or_secretariat?
+    is_manager? || is_secretariat?
+  end
+
   def is_contributor?
     self.role == CONTRIBUTOR
   end
@@ -71,8 +77,20 @@ class User < ActiveRecord::Base
     self.role == API_USER
   end
 
+  def is_secretariat?
+    self.role == SECRETARIAT
+  end
+
   def is_manager_or_contributor?
     is_manager? || is_contributor?
+  end
+
+  def is_manager_or_contributor_or_secretariat?
+    is_manager_or_contributor? || is_secretariat?
+  end
+
+  def is_api_user_or_secretariat?
+    is_api_user? || is_secretariat?
   end
 
   def role_for_display
