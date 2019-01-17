@@ -47,7 +47,7 @@ class Trade::ComplianceGrouping
 
   TAXONOMIC_GROUPING = 'lib/data/group_conversions.csv'.freeze
 
-  YEARS = (2012..2017).to_a
+  YEARS = (2012..Date.today.year - 1).to_a
 
   # Example usage
   # Group by year considering compliance types:
@@ -111,7 +111,7 @@ class Trade::ComplianceGrouping
     years = case year
       when 2012
         [year, year + 1]
-      when 2017
+      when Date.today.year - 1
         [year - 1, year]
       else
         [year - 1, year, year + 1]
