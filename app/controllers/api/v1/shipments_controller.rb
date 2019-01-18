@@ -29,7 +29,8 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def grouped_query
     limit = params[:limit].present? ? params[:limit].to_i : ''
-    query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: 'year >= 2012 AND year <= 2017', limit: limit })
+    years_range = "year >= 2012 AND year <= #{Date.today.year - 1}"
+    query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: years_range, limit: limit })
     data = query.run
     params_hash = {}
     sanitized_attributes.map { |p| params_hash[p] = p }
