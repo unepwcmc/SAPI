@@ -21,3 +21,43 @@ font-weight:700;
 padding: 3px 3px;
 }
 
+.banner {
+  background-color: #ac9e89;
+  height: 80px;
+  width: 95%;
+  margin: 0 auto;
+}
+
+.banner .banner-content {
+  line-height: 80px;
+  width: 65%;
+  margin: 0 auto;
+}
+
+.banner .banner-content .bold {
+  font-weight: bold;
+}
+
+.banner .banner-content .font-18 {
+  font-size: 18px;
+}
+
+.banner .banner-content .download-button {
+  position: absolute;
+  width: 150px;
+  margin-left: 35px;
+  margin-top: 6px;
+  background-color: #668738;
+  padding: 15px;
+  color: white;
+  text-decoration: none;
+}
+
+p.no-margin {
+  margin: 0;
+  padding: 0;
+}
+
+.download-button p {
+  text-align: center;
+}
