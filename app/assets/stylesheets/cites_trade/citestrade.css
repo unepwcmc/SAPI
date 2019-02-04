@@ -29,9 +29,11 @@ padding: 3px 3px;
 }
 
 .banner .banner-content {
+  position: absolute;
   line-height: 80px;
-  width: 65%;
+  width: 50%;
   margin: 0 auto;
+  text-align: center;
 }
 
 .banner .banner-content .bold {
