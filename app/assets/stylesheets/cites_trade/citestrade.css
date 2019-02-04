@@ -53,7 +53,7 @@ padding: 3px 3px;
   text-decoration: none;
 }
 
-p.no-margin {
+.no-margin {
   margin: 0;
   padding: 0;
 }
