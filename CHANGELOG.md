@@ -1,3 +1,14 @@
+### 1.1.0
+
+**Compliance Tool:**
+
+* Internal shipments API useful for the Compliance Tool
+* Logic and mviews for non-compliant shipments
+
+### 1.0.1
+
+* Hotfix that enables nomenclature changes in production and removes exception notifier.
+
 ### 1.0.0
 
 **Species+ Admin:**
@@ -212,7 +223,7 @@ Bug-fix release (trade bulk update issue)
 * adding functionality in the S+ admin panel to manage ranks & change types translations
 * adding functionality in the S+ admin panel to set is_current on CitesCop events
 * adding import scripts to populate translations of: ranks, change_types, Cites regions, hash annotations
-* adding import script to populate CoP start dates 
+* adding import script to populate CoP start dates
 
 ### 0.7.8 (2014-07-17)
 Upgrade to ruby 2.0
@@ -319,7 +330,7 @@ table
 * adds search by common names to Species+
 * adds search by territories to Species+
 * adds a number of features and bugfixes for species management tool
- 
+
 ### 0.3.6 (2013-11-22)
 * fixes some IE issues
 * upgrades newrelic agent

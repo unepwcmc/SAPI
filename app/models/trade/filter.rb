@@ -26,7 +26,7 @@ class Trade::Filter
   end
 
   def initialize_query
-    @query = Trade::Shipment.from('trade_shipments_with_taxa_view trade_shipments')
+    @query = Trade::Shipment.from("#{@shipments_view} trade_shipments")
 
     unless @taxon_concepts_ids.empty?
       cascading_ranks =
