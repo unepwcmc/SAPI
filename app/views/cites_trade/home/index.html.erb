@@ -5,6 +5,7 @@
 
     <div class="grid_16 main_content">
 
+      <!--
       <div class='banner'>
         <div class='banner-content'>
           <span class='bold font-18'><%= t('full_db_download_available') %></span>
@@ -16,6 +17,7 @@
           </a>
         </div>
       </div>
+      -->
 
       <div class='heading_label' style="text-align: center;"> &nbsp; <%= t('cites_title') %> </div>
       <div style="font-size:16px;font-weight:150;text-align: left;"> &nbsp; <%= t('cites_sub_title') %>: </div>
@@ -184,10 +186,12 @@
 </form>
 
 <div class="grid_16 other_info">
+  <!--
   <p align="center" class='no-margin'>
-  <strong><%= t('download') %>:</strong>
-  <a href=<%= @full_download_link %>><%= t('full_db_download') %> (237MB)</a>
+  <strong><#%= t('download') %>:</strong>
+  <a href=<#%= @full_download_link %>><#%= t('full_db_download') %> (237MB)</a>
   </p>
+  -->
   <p align="center">
   <strong><%= t('download') %>:</strong>
     <a href="/cites_trade_guidelines/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
