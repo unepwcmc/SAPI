@@ -12,6 +12,7 @@ module Trade::RebuildComplianceMviews
       puts "Rebuild #{p} mview..."
       self.rebuild_compliance_mview(p)
     end
+    recreate_non_compliant_view
   end
 
   def self.rebuild_sql_views(type, timestamp)
@@ -50,6 +51,10 @@ module Trade::RebuildComplianceMviews
       puts command
       db.execute(command)
     end
+  end
+
+  def recreate_non_compliant_view
+    db.execute("SELECT rebuild_non_compliant_shipments_view()")
   end
 
   def self.db
