@@ -221,6 +221,7 @@ class CsvToDbMap
       'ExcludedTaxa' => 'exclusions text'
     },
     'distribution_tags_import' => {
+      'taxon_concept_id' => 'taxon_concept_id integer',
       'Species RecID' => 'legacy_id integer',
       'Rank' => 'rank varchar',
       'GEO_entity_type' => 'geo_entity_type varchar',
