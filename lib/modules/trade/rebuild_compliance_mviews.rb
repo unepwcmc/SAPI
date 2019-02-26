@@ -5,9 +5,23 @@ module Trade::RebuildComplianceMviews
       :mandatory_quotas,
       :cites_suspensions
     ].each do |p|
+      time = "#{Time.now.hour}#{Time.now.min}#{Time.now.sec}"
+      timestamp = Date.today.to_s.gsub('-', '') + time
+      puts "Rebuild #{p} SQL script..."
+      self.rebuild_sql_views(p, timestamp)
       puts "Rebuild #{p} mview..."
       self.rebuild_compliance_mview(p)
     end
+  end
+
+  def self.rebuild_sql_views(type, timestamp)
+    compliance_type =
+      case type
+      when :appendix_i then Trade::AppendixIReservationsShipments
+      when :mandatory_quotas then Trade::MandatoryQuotasShipments
+      when :cites_suspensions then Trade::CitesSuspensionsShipments
+      end
+    compliance_type.new.generate_view(timestamp)
   end
 
   def self.rebuild_compliance_mview(type)
