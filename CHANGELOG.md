@@ -1,3 +1,7 @@
+### 1.1.1
+
+* Fix and improve distributions import scripts
+
 ### 1.1.0
 
 **Compliance Tool:**
