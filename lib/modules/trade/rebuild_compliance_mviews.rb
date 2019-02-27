@@ -53,7 +53,7 @@ module Trade::RebuildComplianceMviews
     end
   end
 
-  def recreate_non_compliant_view
+  def self.recreate_non_compliant_view
     db.execute("SELECT rebuild_non_compliant_shipments_view()")
   end
 
