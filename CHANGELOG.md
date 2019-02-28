@@ -1,3 +1,8 @@
+### 1.1.2
+
+* Update exemptions file for CITES suspension in Compliance Tool
+* Add script to rebuild Compliance Tool related mviews
+
 ### 1.1.1
 
 * Fix and improve distributions import scripts
