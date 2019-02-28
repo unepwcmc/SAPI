@@ -82,6 +82,7 @@ namespace :import do
           FROM(
             SELECT tmp.citation
             FROM #{TMP_TABLE} tmp
+            WHERE tmp.citation IS NOT NULL
 
             EXCEPT
 
