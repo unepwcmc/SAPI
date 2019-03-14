@@ -18,7 +18,7 @@ class CitesTrade::HomeController < CitesTradeController
     full_download_path = Rails.application.secrets['cites_trade_full_download']
     send_file(
       "#{Rails.root}/#{full_download_path}",
-      filename: full_download_path,
+      filename: full_download_path.split("/").last,
       type: "application/pdf"
     )
   end
