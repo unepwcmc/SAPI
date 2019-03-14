@@ -237,6 +237,7 @@ SAPI::Application.routes.draw do
       match 'download' => 'home#download'
       match 'download/view_results' => 'home#view_results'
       match 'exports/download' => 'exports#download'
+      match 'download_db' => 'home#download_db'
       root :to => 'home#index'
     end
   end

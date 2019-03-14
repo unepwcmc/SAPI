@@ -4,7 +4,6 @@ class CitesTrade::HomeController < CitesTradeController
     respond_to do |format|
       format.html {
         @years = (1975..Trade::Shipment.maximum('year')).to_a.reverse
-        @full_download_link = Rails.application.secrets['cites_trade_full_download']
       }
     end
   end
@@ -13,6 +12,15 @@ class CitesTrade::HomeController < CitesTradeController
   end
 
   def view_results
+  end
+
+  def download_db
+    full_download_path = Rails.application.secrets['cites_trade_full_download']
+    send_file(
+      "#{Rails.root}/#{full_download_path}",
+      filename: full_download_path,
+      type: "application/pdf"
+    )
   end
 
 end
