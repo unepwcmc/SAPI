@@ -31,13 +31,19 @@ padding: 3px 3px;
   display: flex;
 }
 
+.banner p {
+  display: inline-flex;
+  flex: 60%;
+  margin: 0;
+}
+
 .banner .bold {
   font-weight: bold;
   font-size: 18px;
 }
 
 .banner .download-button {
-  position: absolute;
+  display: inline-block;
   width: 150px;
   margin-left: 35px;
   margin-top: 6px;
