@@ -23,32 +23,30 @@ padding: 3px 3px;
 
 .banner {
   background-color: #ac9e89;
-  height: 80px;
   width: 95%;
   margin: 0 auto;
-}
-
-.banner .banner-content {
-  position: absolute;
-  line-height: 80px;
-  width: 50%;
-  margin: 0 auto;
+  padding: 10px 200px;
   text-align: center;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 
-.banner .banner-content .bold {
+.banner p {
+  display: inline-flex;
+  flex: 60%;
+  margin: 0;
+}
+
+.banner .bold {
   font-weight: bold;
-}
-
-.banner .banner-content .font-18 {
   font-size: 18px;
 }
 
-.banner .banner-content .download-button {
-  position: absolute;
+.banner .download-button {
+  display: inline-block;
   width: 150px;
   margin-left: 35px;
-  margin-top: 6px;
   background-color: #668738;
   padding: 15px;
   color: white;
