@@ -23,28 +23,20 @@ padding: 3px 3px;
 
 .banner {
   background-color: #ac9e89;
-  height: 80px;
   width: 95%;
   margin: 0 auto;
-}
-
-.banner .banner-content {
-  position: absolute;
   line-height: 80px;
-  width: 50%;
   margin: 0 auto;
-  text-align: center;
+  padding: 20px 200px;
+  display: flex;
 }
 
-.banner .banner-content .bold {
+.banner .bold {
   font-weight: bold;
-}
-
-.banner .banner-content .font-18 {
   font-size: 18px;
 }
 
-.banner .banner-content .download-button {
+.banner .download-button {
   position: absolute;
   width: 150px;
   margin-left: 35px;
