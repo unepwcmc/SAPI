@@ -25,10 +25,11 @@ padding: 3px 3px;
   background-color: #ac9e89;
   width: 95%;
   margin: 0 auto;
-  line-height: 80px;
-  margin: 0 auto;
-  padding: 20px 200px;
+  padding: 10px 200px;
+  text-align: center;
+  box-sizing: border-box;
   display: flex;
+  align-items: center;
 }
 
 .banner p {
@@ -46,7 +47,6 @@ padding: 3px 3px;
   display: inline-block;
   width: 150px;
   margin-left: 35px;
-  margin-top: 6px;
   background-color: #668738;
   padding: 15px;
   color: white;
