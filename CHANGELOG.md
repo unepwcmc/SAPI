@@ -1,3 +1,9 @@
+### 1.2.0
+
+**Species+ Admin:**
+
+* nomenclature changes process for E-Library documents
+
 ### 1.1.2
 
 * Update exemptions file for CITES suspension in Compliance Tool

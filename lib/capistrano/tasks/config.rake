@@ -22,34 +22,6 @@ end
 
 namespace :config do
   task :setup do
-    ask(:smtp_user, 'smtp_user')
-    ask(:smtp_password, 'smtp_password')
-    setup_config = <<-EOF
-"#{fetch(:rails_env)}" => {
-        :default_url_options => {
-          :host => "#{fetch(:domain)}"
-        },
-        :smtp_settings => {
-          :enable_starttls_auto => true,
-          :address => 'pod51017.outlook.com',
-          :port => 587,
-          :domain => 'unep-wcmc.org',
-          :authentication => 'login',
-          :user_name => smtp_user,
-          :password => smtp_password
-        }
-      }
-    }
-EOF
-    on roles(:app) do
-      execute "mkdir -p #{shared_path}/config"
-      upload! StringIO.new(setup_config), "#{shared_path}/config/mailer_config.yml"
-    end
-  end
-end
-
-namespace :config do
-  task :setup do
 
     vhost_config = <<-EOF
 

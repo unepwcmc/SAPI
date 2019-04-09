@@ -14,7 +14,7 @@ Trade.SandboxShipmentsView = Ember.View.extend
     {
       header: 'Accepted Taxon Name'
       displayProperty: 'acceptedTaxonName'
-    },   
+    },
     {
       header: 'Term'
       displayProperty: 'termCode'
@@ -67,3 +67,10 @@ Trade.SandboxShipmentsView = Ember.View.extend
 
     prevPage: ->
       @controller.transitionToPage no
+
+  didInsertElement: ->
+    $('.loading-shipments').hide()
+
+  contentUpdated: ( ->
+    $('.loading-shipments').hide()
+  ).observes('controller.content.[]')

@@ -1,10 +1,11 @@
 class Trade::Sandbox
-  attr_reader :table_name
+  attr_reader :table_name, :ar_klass, :moved_rows_cnt
   def initialize(annual_report_upload)
     @annual_report_upload = annual_report_upload
     @csv_file_path = @annual_report_upload.csv_source_file.current_path
     @table_name = "trade_sandbox_#{@annual_report_upload.id}"
     @ar_klass = Trade::SandboxTemplate.ar_klass(@table_name)
+    @moved_rows_cnt = -1
   end
 
   def copy
@@ -13,24 +14,39 @@ class Trade::Sandbox
     @ar_klass.sanitize
   end
 
-  def copy_from_sandbox_to_shipments
+  def copy_from_sandbox_to_shipments(submitter)
     success = true
     Trade::Shipment.transaction do
       pg_result = Trade::SandboxTemplate.connection.execute(
         Trade::SandboxTemplate.send(:sanitize_sql_array, [
-          'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?)',
-          @annual_report_upload.id
+          'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?, ?, ?)',
+          @annual_report_upload.id,
+          'Sapi',
+          submitter.id
         ])
       )
-      moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
-      if moved_rows_cnt < 0
+      @moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
+      if @moved_rows_cnt < 0
         # if -1 returned, not all rows have been moved
-        self.errors[:base] << "Submit failed, could not save all rows."
+        @annual_report_upload.errors[:base] << "Submit failed, could not save all rows."
         success = false
         raise ActiveRecord::Rollback
       end
     end
     success
+  end
+
+  def check_for_duplicates_in_shipments
+    Trade::Shipment.transaction do
+      pg_result = Trade::SandboxTemplate.connection.execute(
+        Trade::SandboxTemplate.send(:sanitize_sql_array, [
+          'SELECT * FROM check_for_duplicates_in_shipments(?)',
+          @annual_report_upload.id,
+        ])
+      )
+      duplicates = pg_result.values.first.first.delete('{}')
+      return duplicates
+    end
   end
 
   def destroy

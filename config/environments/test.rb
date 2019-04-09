@@ -29,6 +29,12 @@ SAPI::Application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  config.action_mailer.default_url_options = {
+    host: Rails.application.secrets.mailer['host']
+  }
+
+  ActionMailer::Base.default from: Rails.application.secrets.mailer['from']
+
   # Raise exception on mass assignment protection for Active Record models
   config.active_record.mass_assignment_sanitizer = :strict
 

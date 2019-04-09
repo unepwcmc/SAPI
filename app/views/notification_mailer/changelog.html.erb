@@ -1,0 +1,15 @@
+<p>Dear <%= @user.name %>,</p>
+<p>
+  The generation of your CITES Report submission <%= @aru.id %> changelog has completed.<br>
+</p>
+
+<p>
+  This report has been submitted on <%= @aru.submitted_at.strftime("%d/%m/%y") %> with <%= @aru.number_of_records_submitted %> records.
+</p>
+
+</p>
+<p>
+  Best regards,
+  the Trade Reporting Tool team
+<p>
+

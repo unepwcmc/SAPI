@@ -2,7 +2,7 @@ class Trade::AnnualReportUploadsController < TradeController
   respond_to :json
 
   def index
-    @annual_report_uploads = Trade::AnnualReportUpload.scoped
+    @annual_report_uploads = Trade::AnnualReportUpload.created_by_sapi
     if params[:is_done].present?
       null_cond = if params[:submitted] == 1
         'submitted_at IS NOT NULL'
@@ -31,7 +31,7 @@ class Trade::AnnualReportUploadsController < TradeController
 
   def submit
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
-    if @annual_report_upload.submit
+    if @annual_report_upload.submit(current_user)
       render :json => @annual_report_upload, :status => :ok,
         :serializer => Trade::ShowAnnualReportUploadSerializer
     else

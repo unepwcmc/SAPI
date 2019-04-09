@@ -50,6 +50,7 @@ SAPI::Application.routes.draw do
     resources :ranks, :only => [:index]
     resources :geo_entities, :only => [:index]
     resources :geo_relationship_types, :only => [:index]
+    resources :trade_downloads_cache_cleanup, only: [:index]
   end
   namespace :admin do
     resources :taxonomies, :only => [:index, :create, :update, :destroy]

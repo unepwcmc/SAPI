@@ -44,6 +44,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     rescue NameError
       klass = Class.new(ActiveRecord::Base) do
         self.table_name = table_name
+        has_paper_trail
         include ActiveModel::ForbiddenAttributesProtection
         attr_accessible :appendix,
           :taxon_name,

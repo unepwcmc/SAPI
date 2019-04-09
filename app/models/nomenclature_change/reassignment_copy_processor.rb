@@ -134,6 +134,9 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
         exclusion.comparison_attributes, :without_protection => true
       )
     end
+    # annotation
+    reassignable.annotation && copied_object.new_record? &&
+      copied_object.annotation = reassignable.annotation.dup
   end
 
   def build_trade_restriction_associations(reassignable, copied_object)
