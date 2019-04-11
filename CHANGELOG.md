@@ -2,8 +2,15 @@
 
 **Species+ Admin:**
 
-* nomenclature changes process for E-Library documents
-* TODO
+* Nomenclature Changes process for E-Library documents
+* Nomenclature Changes bug fixes
+* Trade interface logic amendments for EPIX integration
+* Trade interface bug fixes
+
+**Configuration**
+
+* Update secrets configs
+* Remove old and obsolete configs
 
 ### 1.1.2
 
