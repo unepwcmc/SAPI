@@ -11,6 +11,7 @@ class SubmissionWorker
       Rails.logger.warn "CITES Report #{aru_id} not found"
       Appsignal.add_exception(e) if defined? Appsignal
       NotificationMailer.changelog_failed(submitter, aru).deliver
+      return false
     end
 
     duplicates = aru.sandbox.check_for_duplicates_in_shipments
