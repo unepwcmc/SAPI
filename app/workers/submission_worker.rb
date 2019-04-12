@@ -3,15 +3,15 @@ class SubmissionWorker
   sidekiq_options :queue => :admin
 
   def perform(aru_id, submitter_id)
+    submitter = User.find(submitter_id)
     begin
       aru = Trade::AnnualReportUpload.find(aru_id)
     rescue ActiveRecord::RecordNotFound => e
       # catch this exception so that retry is not scheduled
       Rails.logger.warn "CITES Report #{aru_id} not found"
       Appsignal.add_exception(e) if defined? Appsignal
-      NotificationMailer.changelog_failed(user, aru).deliver
+      NotificationMailer.changelog_failed(submitter, aru).deliver
     end
-    submitter = User.find(submitter_id)
 
     duplicates = aru.sandbox.check_for_duplicates_in_shipments
     if duplicates.present?
