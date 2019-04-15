@@ -34,6 +34,9 @@ set :ssh_options, {
   forward_agent: true
 }
 
+set :sidekiq_service_name, "sidekiq.*#{fetch(:application)}"
+
+
 before "deploy:symlink:shared", "rsync:sync"
 
 # Default value for :linked_files is []
