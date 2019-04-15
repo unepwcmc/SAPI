@@ -70,6 +70,8 @@ module SAPI
     # Enable the asset pipeline
     config.assets.enabled = true
 
+    config.assets.initialize_on_precompile = false
+
     # Change Ember's template root. Doesn't seem to be working though :(
     # config.handlebars.templates_root = "trade/templates"
   end

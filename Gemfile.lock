@@ -32,6 +32,8 @@ GEM
       activesupport (= 3.2.22.2)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
+    activerecord-nulldb-adapter (0.3.9)
+      activerecord (>= 2.0.0)
     activerecord-postgres-hstore (0.7.6)
       activerecord (>= 3.1)
       pg-hstore (>= 1.1.5)
@@ -112,9 +114,9 @@ GEM
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
-    capistrano-sidekiq (0.4.0)
-      capistrano
-      sidekiq
+    capistrano-sidekiq (1.0.2)
+      capistrano (>= 3.9.0)
+      sidekiq (>= 3.4)
     capybara (2.4.4)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -487,6 +489,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-nulldb-adapter
   activerecord-postgres-hstore
   activeuuid (>= 0.5.0)
   acts-as-taggable-on (~> 2.3.1)
@@ -507,7 +510,7 @@ DEPENDENCIES
   capistrano-passenger (~> 0.2.0)
   capistrano-rails (~> 1.4.0)
   capistrano-rvm (~> 0.1.2)
-  capistrano-sidekiq
+  capistrano-sidekiq (~> 1.0.2)
   capybara
   carrierwave
   chartkick

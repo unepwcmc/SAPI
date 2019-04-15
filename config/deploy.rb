@@ -75,4 +75,7 @@ set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the messa
 
 after "deploy", "smoke_test:test_endpoints"
 
+
 require 'appsignal/capistrano'
+
+
