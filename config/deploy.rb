@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.6.1'
+lock '3.11.0'
 
 set :application, 'sapi'
 set :repo_url, 'git@github.com:unepwcmc/SAPI.git'
@@ -14,7 +14,6 @@ set :deploy_to, "/home/#{fetch(:deploy_user)}/#{fetch(:application)}"
 set :backup_path, "/home/#{fetch(:deploy_user)}/Backup"
 
 # Default value for :scm is :git
-set :scm, :git
 set :scm_username, "unepwcmc-read"
 
 # Default value for :format is :pretty

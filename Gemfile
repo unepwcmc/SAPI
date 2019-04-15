@@ -91,10 +91,10 @@ group :development do
   gem 'annotate', ">=2.5.0"
   gem 'sextant'
   # Deploy with Capistrano
-  gem 'capistrano', '~> 3.4', require: false
-  gem 'capistrano-rails',   '~> 1.1', require: false
-  gem 'capistrano-bundler', '~> 1.1', require: false
-  gem 'capistrano-rvm', '~> 0.1', require: false
+  gem 'capistrano', '~> 3.11.0', require: false
+  gem 'capistrano-rails',   '~> 1.4.0', require: false
+  gem 'capistrano-bundler', '~> 1.5.0', require: false
+  gem 'capistrano-rvm', '~> 0.1.2', require: false
   gem 'capistrano-sidekiq'
   gem 'capistrano-maintenance', '~> 1.0', require: false
   gem 'capistrano-passenger', '~> 0.2.0', require: false
