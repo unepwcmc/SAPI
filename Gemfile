@@ -95,11 +95,9 @@ group :development do
   gem 'capistrano-rails',   '~> 1.4.0', require: false
   gem 'capistrano-bundler', '~> 1.5.0', require: false
   gem 'capistrano-rvm', '~> 0.1.2', require: false
-  gem 'capistrano-sidekiq', '~> 1.0.2', require: false
   gem 'capistrano-maintenance', '~> 1.0', require: false
   gem 'capistrano-passenger', '~> 0.2.0', require: false
   gem 'capistrano-local-precompile', '~> 1.2.0', require: false
-  gem 'activerecord-nulldb-adapter'
   gem 'slackistrano', require: false
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
