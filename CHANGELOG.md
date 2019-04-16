@@ -11,6 +11,7 @@
 
 * Update secrets configs
 * Remove old and obsolete configs
+* Update deploy scripts to speed up deploy using local assets precompilation
 
 ### 1.1.2
 
