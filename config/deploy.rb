@@ -83,7 +83,7 @@ namespace :sidekiq do
   end
   task :restart do
     on roles(:app) do
-      execute :sudo, :systemctl, :restart, :'sidekiq-sapi-staging'
+      execute :sudo, :systemctl, :restart, :'sidekiq-sapi'
     end
   end
 end
