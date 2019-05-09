@@ -49,6 +49,8 @@ gem 'carrierwave'
 gem 'underscore-rails'
 gem "font-awesome-rails"
 
+gem 'aws-sdk', '~> 2'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -89,13 +91,13 @@ group :development do
   gem 'annotate', ">=2.5.0"
   gem 'sextant'
   # Deploy with Capistrano
-  gem 'capistrano', '~> 3.4', require: false
-  gem 'capistrano-rails',   '~> 1.1', require: false
-  gem 'capistrano-bundler', '~> 1.1', require: false
-  gem 'capistrano-rvm', '~> 0.1', require: false
-  gem 'capistrano-sidekiq'
+  gem 'capistrano', '~> 3.11.0', require: false
+  gem 'capistrano-rails',   '~> 1.4.0', require: false
+  gem 'capistrano-bundler', '~> 1.5.0', require: false
+  gem 'capistrano-rvm', '~> 0.1.2', require: false
   gem 'capistrano-maintenance', '~> 1.0', require: false
   gem 'capistrano-passenger', '~> 0.2.0', require: false
+  gem 'capistrano-local-precompile', '~> 1.2.0', require: false
   gem 'slackistrano', require: false
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
@@ -104,6 +106,7 @@ group :development do
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
   gem 'rubocop', '~> 0.40.0', require: false
+  gem 'letter_opener'
 end
 
 group :test, :development do

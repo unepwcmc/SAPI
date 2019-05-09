@@ -21,10 +21,16 @@ require 'csv_column_headers_validator'
 class Trade::AnnualReportUpload < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
   track_who_does_it
-  attr_accessible :csv_source_file, :trading_country_id, :point_of_view
+  attr_accessible :csv_source_file, :trading_country_id, :point_of_view,
+                  :submitted_at, :submitted_by_id, :number_of_records_submitted,
+                  :aws_storage_path
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
   validates :csv_source_file, :csv_column_headers => true, :on => :create
+
+  scope :created_by_sapi, -> {
+    where("epix_created_by_id IS NULL")
+  }
 
   def copy_to_sandbox
     sandbox.copy
@@ -68,28 +74,22 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     end
   end
 
-  def submit
+  def submit(submitter)
     run_primary_validations
     unless @validation_errors.count == 0
       self.errors[:base] << "Submit failed, primary validation errors present."
       return false
     end
-    return false unless sandbox.copy_from_sandbox_to_shipments
-    # remove uploaded file
-    store_dir = csv_source_file.store_dir
-    remove_csv_source_file!
-    puts '### removing uploads dir ###'
-    puts Rails.root.join('public', store_dir)
-    FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
 
-    # remove sandbox table
-    sandbox.destroy
+    SubmissionWorker.perform_async(self.id, submitter.id)
+  end
 
-    # clear downloads cache
-    DownloadsCacheCleanupWorker.perform_async(:shipments)
+  def reported_by_exporter?
+    point_of_view == 'E'
+  end
 
-    # flag as submitted
-    update_attribute(:submitted_at, DateTime.now)
+  def is_submitted?
+    submitted_at.present?
   end
 
   private

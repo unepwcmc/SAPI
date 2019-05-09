@@ -10,8 +10,9 @@ namespace :import do
       copy_data(file, TMP_TABLE)
 
       csv_headers = csv_headers(file)
-      has_tc_id = csv_headers.include? 'taxon_concept_id'
-      id_type = has_tc_id ? 'taxon_concept_id' : 'legacy_id'
+      has_legacy = csv_headers.include? 'Species RecID'
+      id_type = has_legacy ? 'legacy_id' : 'taxon_concept_id'
+      tc_id = has_legacy ? 'legacy_id' : 'id'
       kingdom = file.split('/').last.split('_')[0].titleize
 
       # import all distinct tags to both PresetTags and Tags table
@@ -66,12 +67,8 @@ namespace :import do
             FROM tmp
             INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(tmp.rank))
             INNER JOIN geo_entity_types ON UPPER(geo_entity_types.name) = UPPER(BTRIM(tmp.geo_entity_type))
-          #{if has_tc_id
-              "INNER JOIN taxon_concepts ON taxon_concepts.id = tmp.taxon_concept_id"
-            else
-              "INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = tmp.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}'"
-            end}
-            AND taxon_concepts.rank_id = ranks.id
+            INNER JOIN taxon_concepts ON taxon_concepts.#{tc_id} = tmp.#{id_type} AND
+              #{has_legacy ? "taxon_concepts.legacy_type = '#{kingdom}' AND" : ''} taxon_concepts.rank_id = ranks.id
             INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(tmp.iso_code2)) AND
               geo_entities.geo_entity_type_id = geo_entity_types.id
             INNER JOIN distributions ON distributions.geo_entity_id = geo_entities.id AND

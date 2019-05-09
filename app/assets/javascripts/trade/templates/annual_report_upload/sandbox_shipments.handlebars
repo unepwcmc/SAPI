@@ -1,13 +1,14 @@
-  <p>
-    Selected error: {{controllers.annualReportUpload.currentError.errorMessage}} ({{controllers.annualReportUpload.currentError.errorCount}})
-    <a {{action 'closeError'}}>(close this error)</a>
-  </p>
+
+<p>
+  Selected error: {{controllers.annualReportUpload.currentError.errorMessage}} ({{controllers.annualReportUpload.currentError.errorCount}})
+  <a {{action 'closeError'}}>(close this error)</a>
+</p>
 
 <div class="clearfix">
   <button type="button" class="btn btn-link pull-right" {{action "toggleUpdatesVisible"}}>
   Edit batch >>
   </button>
-</div> 
+</div>
 
   {{#view controllerBinding='controller' isVisibleBinding='controller.updatesVisible'}}
     <div class="sandbox-header well well-small">
@@ -78,7 +79,7 @@
     </thead>
     {{collection Trade.ShipmentsRowsView contentBinding='controller.content' controller=this}}
   </table>
-</div> 
+</div>
 
 <div class="paging">
   <ul class="pager">

@@ -1,3 +1,18 @@
+### 1.2.0
+
+**Species+ Admin:**
+
+* Nomenclature Changes process for E-Library documents
+* Nomenclature Changes bug fixes
+* Trade interface logic amendments for EPIX integration
+* Trade interface bug fixes
+
+**Configuration**
+
+* Update secrets configs
+* Remove old and obsolete configs
+* Update deploy scripts to speed up deploy using local assets precompilation
+
 ### 1.1.2
 
 * Update exemptions file for CITES suspension in Compliance Tool

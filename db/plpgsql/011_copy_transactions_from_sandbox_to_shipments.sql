@@ -81,8 +81,11 @@ BEGIN
 END;
 $$;
 
+DROP FUNCTION IF EXISTS copy_transactions_from_sandbox_to_shipments(INTEGER);
 CREATE OR REPLACE FUNCTION copy_transactions_from_sandbox_to_shipments(
-  annual_report_upload_id INTEGER
+  annual_report_upload_id INTEGER,
+  submitter_type VARCHAR,
+  submitter_id INTEGER
   ) RETURNS INTEGER
   LANGUAGE plpgsql
   AS $$
@@ -96,6 +99,7 @@ DECLARE
   total_shipments INTEGER;
   sql TEXT;
   permit_type TEXT;
+  sapi_type BOOLEAN;
 BEGIN
   SELECT * INTO aru FROM trade_annual_report_uploads WHERE id = annual_report_upload_id;
   IF NOT FOUND THEN
@@ -144,6 +148,8 @@ BEGIN
   GET DIAGNOSTICS inserted_rows = ROW_COUNT;
   RAISE INFO '[%] Inserted % permits', table_name, inserted_rows;
 
+  sapi_type := CASE WHEN submitter_type = 'Sapi' THEN true ELSE false END;
+
   sql := '
     CREATE TEMP TABLE ' || table_name || '_for_submit AS
     WITH inserted_shipments AS (
@@ -165,8 +171,12 @@ BEGIN
         sandbox_id,
         created_at,
         updated_at,
+        epix_created_at,
+        epix_updated_at,
         created_by_id,
-        updated_by_id
+        updated_by_id,
+        epix_created_by_id,
+        epix_updated_by_id
       )
       SELECT
         sources.id AS source_id,
@@ -174,20 +184,24 @@ BEGIN
         purposes.id AS purpose_id,
         terms.id AS term_id,
         sandbox_table.quantity::NUMERIC AS quantity,
-        sandbox_table.appendix,' ||
-        aru.id || 'AS trade_annual_report_upload_id,
+        sandbox_table.appendix,
+        ' || aru.id || ' AS trade_annual_report_upload_id,
         exporters.id AS exporter_id,
         importers.id AS importer_id,
-        origins.id AS country_of_origin_id,' ||
-        reported_by_exporter || ' AS reported_by_exporter,
+        origins.id AS country_of_origin_id,
+        ' || reported_by_exporter || ' AS reported_by_exporter,
         taxon_concept_id,
         reported_taxon_concept_id,
         sandbox_table.year::INTEGER AS year,
         sandbox_table.id AS sandbox_id,
-        current_timestamp,
-        current_timestamp, ' ||
-        aru.created_by_id || ', ' ||
-        aru.updated_by_id || '
+        CASE WHEN ' || sapi_type || ' IS TRUE THEN current_timestamp ELSE NULL END,
+        CASE WHEN ' || sapi_type || ' IS TRUE THEN current_timestamp ELSE NULL END,
+        CASE WHEN ' || sapi_type || ' IS FALSE THEN current_timestamp ELSE NULL END,
+        CASE WHEN ' || sapi_type || ' IS FALSE THEN current_timestamp ELSE NULL END,
+        CASE WHEN ' || sapi_type || ' IS TRUE THEN ' || submitter_id || ' ELSE NULL END,
+        CASE WHEN ' || sapi_type || ' IS TRUE THEN ' || submitter_id || ' ELSE NULL END,
+        CASE WHEN ' || sapi_type || ' IS FALSE THEN ' || submitter_id || ' ELSE NULL END,
+        CASE WHEN ' || sapi_type || ' IS FALSE THEN ' || submitter_id || ' ELSE NULL END
       FROM '|| table_name || ' sandbox_table';
 
     IF reported_by_exporter THEN
@@ -271,5 +285,5 @@ BEGIN
 END;
 $$;
 
-COMMENT ON FUNCTION copy_transactions_from_sandbox_to_shipments(annual_report_upload_id INTEGER) IS
+COMMENT ON FUNCTION copy_transactions_from_sandbox_to_shipments(annual_report_upload_id INTEGER, submitter_type VARCHAR, submitter_id INTEGER) IS
   'Procedure to copy transactions from sandbox to shipments. Returns the number of rows copied if success, 0 if failure.'

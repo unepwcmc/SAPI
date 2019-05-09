@@ -12,6 +12,10 @@ Trade.ValidationErrorsView = Ember.View.extend
     $(@get('collapsibleElement')).on('shown', =>
       @set('collapsed', false)
     )
+    # Hide spinner when finished loading model
+    $('#' + @get('collapsibleId')).ajaxStop( =>
+      $('.validation-errors-loading').hide()
+    )
 
   allErrorsCollapsedDidChange: ( ->
     # reset default collapse setting
