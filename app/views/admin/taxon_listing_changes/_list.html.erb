@@ -69,7 +69,7 @@
         %>
         <%= link_to delete_icon,
           admin_taxon_concept_designation_listing_change_path(@taxon_concept, @designation, listing_change),
-          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+          data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete
         %>
       </td>
       <td>

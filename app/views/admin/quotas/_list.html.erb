@@ -45,7 +45,7 @@
         %>
         <%= link_to delete_icon,
           admin_quota_path(quota),
-          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+          data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete
         %>
       </td>
       <td>

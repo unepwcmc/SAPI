@@ -61,7 +61,7 @@
             <% if can? :destroy, tc_ref %>
               <%= link_to delete_icon,
                 admin_taxon_concept_taxon_concept_reference_url(@taxon_concept, tc_ref),
-                :confirm => "Warning: you are about to delete data. are you sure?",
+                data: { confirm: "Warning: you are about to delete data. Are you sure?" },
                 :method => :delete %>
             <% end %>
           </td>
