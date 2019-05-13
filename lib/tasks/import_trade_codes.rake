@@ -5,7 +5,7 @@ namespace :import do
     [Purpose, Source, Term, Unit].each do |klass|
       current_count = klass.count
       CSV.foreach("lib/files/#{klass.to_s.downcase}_codes_utf8.csv") do |row|
-        code = klass.find_or_initialize_by_code(row[0].strip.upcase)
+        code = klass.find_or_initialize_by(code: row[0].strip.upcase)
         code.update_attributes(:name_en => row[1].strip,
                                :name_fr => row[2].strip,
                                :name_es => row[3].strip)

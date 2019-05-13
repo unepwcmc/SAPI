@@ -33,10 +33,10 @@ module Trade::TradeDataDownloadLogger
     if param == "" then return 'All' end
     if param == nil then return '' end
     if model.to_s == 'GeoEntity'
-      return model.find_all_by_id(param.map(&:to_i)).
+      return model.where(id: param.map(&:to_i)).to_a.
         map { |r| r.iso_code2 }.join ' '
     else
-      return model.find_all_by_id(param.map(&:to_i)).
+      return model.where(id: param.map(&:to_i)).to_a.
         map { |r| r.code }.join ' '
     end
   end

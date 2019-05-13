@@ -2,9 +2,9 @@ namespace :import do
 
   desc "Import unusual geo_entities"
   task :unusual_geo_entities => [:environment] do
-    GeoEntityType.find_or_create_by_name('TRADE_ENTITY')
+    GeoEntityType.find_or_create_by(name: 'TRADE_ENTITY')
     CSV.foreach("lib/files/former_and_adapted_geo_entities.csv", :headers => true) do |row|
-      GeoEntity.find_or_create_by_iso_code2(
+      GeoEntity.find_or_create_by(
         iso_code2: row[1],
         geo_entity_type_id: GeoEntityType.where(name: row[5]).first.id,
         name_en: row[0],

@@ -14,7 +14,7 @@ class IucnMappingManager
     end
 
     def sync_taxon_concept(taxon_concept)
-      mapping = IucnMapping.find_or_create_by_taxon_concept_id(taxon_concept.id)
+      mapping = IucnMapping.find_or_create_by(taxon_concept_id: taxon_concept.id)
       full_name = if taxon_concept.rank_id == @subspecies.id
                     taxon_concept.full_name.insert(taxon_concept.full_name.rindex(/ /), " ssp.")
                   else

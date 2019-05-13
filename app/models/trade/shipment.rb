@@ -149,7 +149,7 @@ class Trade::Shipment < ActiveRecord::Base
   # (import_permit_number=, export_permit_number=, origin_permit_number=)
   def set_permit_number(permit_type, str)
     permits = str && str.split(';').compact.map do |number|
-      Trade::Permit.find_or_create_by_number(number.strip.upcase)
+      Trade::Permit.find_or_create_by(number: number.strip.upcase)
     end
     # save the concatenated permit numbers in the precomputed field
     write_attribute("#{permit_type}_permit_number", permits && permits.map(&:number).join(';'))
