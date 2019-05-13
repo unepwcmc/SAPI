@@ -63,7 +63,7 @@ class TaxonConcept < ActiveRecord::Base
 
   belongs_to :dependents_updater, foreign_key: :dependents_updated_by_id, class_name: User
   belongs_to :parent, :class_name => 'TaxonConcept'
-  has_many :children, class_name: 'TaxonConcept', foreign_key: :parent_id, conditions: { name_status: ['A', 'N'] }
+  has_many :children, -> { where(name_status: ['A', 'N']) }, class_name: 'TaxonConcept', foreign_key: :parent_id # conditions: { name_status: ['A', 'N'] }
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, :through => :taxonomy
