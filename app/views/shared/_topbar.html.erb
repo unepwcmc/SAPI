@@ -200,7 +200,7 @@
             </a>
             <ul class="dropdown-menu">
               <li><%= link_to "Log out #{current_user.name}", destroy_user_session_path, :method => :delete %></li>
-              <li><%= link_to "Account", edit_user_registration_path(current_user) %></li>
+              <li><%= link_to "Account", edit_user_registratione_path(current_user) %></li>
               <% if current_user.is_manager? %>
                 <li><%= link_to 'Manage Users', admin_users_path %></li>
               <% end %>
@@ -211,4 +211,3 @@
     </div>
   </div>
 </div>
-
