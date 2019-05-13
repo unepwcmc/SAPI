@@ -131,12 +131,12 @@ class MTaxonConcept < ActiveRecord::Base
     :class_name => MCmsListingChange,
     :conditions => { :is_current => true, :change_type_name => ChangeType::ADDITION },
     :order => 'effective_at DESC, species_listing_name ASC'
-  scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
-  scope :by_cms_taxonomy, where(:taxonomy_is_cites_eu => false)
+  scope :by_cites_eu_taxonomy, -> { where(:taxonomy_is_cites_eu => true) }
+  scope :by_cms_taxonomy, -> { where(:taxonomy_is_cites_eu => false) }
 
-  scope :without_non_accepted, where(:name_status => ['A', 'H'])
+  scope :without_non_accepted, -> { where(:name_status => ['A', 'H']) }
 
-  scope :without_hidden, where("#{table_name}.cites_show = 't'")
+  scope :without_hidden, -> { where("#{table_name}.cites_show = 't'") }
 
   scope :by_name, lambda { |name, match_options|
     MTaxonConceptFilterByScientificNameWithDescendants.new(
@@ -152,10 +152,10 @@ class MTaxonConcept < ActiveRecord::Base
     ).relation
   }
 
-  scope :at_level_of_listing, where(:cites_listed => 't')
+  scope :at_level_of_listing, -> { where(:cites_listed => 't') }
 
-  scope :taxonomic_layout, order('taxonomic_position')
-  scope :alphabetical_layout, order(['kingdom_position', 'full_name'])
+  scope :taxonomic_layout, -> { order('taxonomic_position') }
+  scope :alphabetical_layout, -> { order(['kingdom_position', 'full_name']) }
   translates :rank_display_name,
     :all_distribution_ary, :native_distribution_ary,
     :introduced_distribution_ary, :introduced_uncertain_distribution_ary,

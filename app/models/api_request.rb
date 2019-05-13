@@ -22,9 +22,9 @@ class ApiRequest < ActiveRecord::Base
 
   RECENT_DAYS = 90
 
-  scope :recent, where('created_at > ?', RECENT_DAYS.days.ago)
-  scope :by_response_status, group(:response_status)
-  scope :by_controller, group(:controller)
+  scope :recent, -> { where('created_at > ?', RECENT_DAYS.days.ago) }
+  scope :by_response_status, -> { group(:response_status) }
+  scope :by_controller, -> { group(:controller) }
 
   RESPONSE_STATUSES = [200, 400, 401, 404, 422, 500]
   CONTROLLERS = ['taxon_concepts', 'distributions', 'cites_legislation', 'eu_legislation', 'references']

@@ -72,7 +72,7 @@ class ListingChange < ActiveRecord::Base
     joins(:change_type).where(:"change_types.designation_id" => designation_id)
   }
 
-  scope :none, where("1 = 0")
+  scope :none, -> { where("1 = 0") }
 
   def effective_at_formatted
     effective_at ? effective_at.strftime('%d/%m/%Y') : ''

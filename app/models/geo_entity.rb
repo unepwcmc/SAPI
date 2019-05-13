@@ -61,7 +61,7 @@ class GeoEntity < ActiveRecord::Base
     where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'")
   }
 
-  scope :current, where(:is_current => true)
+  scope :current, -> { where(:is_current => true) }
 
   def self.nodes_and_descendants(nodes_ids = [])
     joins_sql = <<-SQL
