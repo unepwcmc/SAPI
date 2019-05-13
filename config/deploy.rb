@@ -35,7 +35,7 @@ set :ssh_options, {
 }
 
 set :init_system, :systemd
-
+set :service_unit_name, "sidekiq_#{fetch(:application)}.service"
 
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml .env}
