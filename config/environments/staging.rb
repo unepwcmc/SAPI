@@ -13,7 +13,7 @@ SAPI::Application.configure do
   config.serve_static_assets = false
 
   # Compress JavaScripts and CSS
-  config.assets.compress = true
+  config.assets.js_compressor = true
 
   # Don't fallback to assets pipeline if a precompiled asset is missed
   config.assets.compile = false
@@ -47,7 +47,7 @@ SAPI::Application.configure do
   # config.action_controller.asset_host = "http://assets.example.com"
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  config.assets.precompile += %w( admin.js admin.css trade.js trade.css species.js species.css
+  config.assets.precompile += %w( vendor/* admin.js admin.css trade.js trade.css species.js species.css
                                 pages.css pages.js cites_trade.js cites_trade.css
                                 activities.css activities.js)
 
