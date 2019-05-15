@@ -18,7 +18,7 @@ class IucnMapping < ActiveRecord::Base
   attr_accessible :iucn_author, :iucn_category, :iucn_taxon_id,
     :iucn_taxon_name, :taxon_concept_id, :details, :accepted_name_id
 
-  serialize :details, ActiveRecord::Coders::Hstore
+  # serialize :details, ActiveRecord::Coders::Hstore
   belongs_to :taxon_concept
   belongs_to :accepted_name, :class_name => 'TaxonConcept'
 

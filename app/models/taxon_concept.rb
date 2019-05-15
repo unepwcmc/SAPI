@@ -56,8 +56,8 @@ class TaxonConcept < ActiveRecord::Base
 
   acts_as_taggable
 
-  serialize :data, ActiveRecord::Coders::Hstore
-  serialize :listing, ActiveRecord::Coders::Hstore
+  # serialize :data, ActiveRecord::Coders::Hstore
+  # serialize :listing, ActiveRecord::Coders::Hstore
 
   has_one :m_taxon_concept, :foreign_key => :id
 
@@ -73,57 +73,60 @@ class TaxonConcept < ActiveRecord::Base
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy
   has_many :related_taxon_concepts, :class_name => 'TaxonConcept',
     :through => :taxon_relationships
-  has_many :synonym_relationships,
-    :class_name => 'TaxonRelationship', :dependent => :destroy,
-    :conditions => [
-      "taxon_relationship_type_id IN
-      (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"
-    ]
-  has_many :inverse_synonym_relationships, :class_name => 'TaxonRelationship',
-    :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
-    :conditions => [
-      "taxon_relationship_type_id IN
-      (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"
-    ]
+  has_many :synonym_relationships, -> { where
+    "taxon_relationship_type_id IN
+    (SELECT id FROM taxon_relationship_types
+      WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"
+  },
+    :class_name => 'TaxonRelationship', :dependent => :destroy
+
+  has_many :inverse_synonym_relationships, -> { where
+    "taxon_relationship_type_id IN
+    (SELECT id FROM taxon_relationship_types
+      WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}')"
+  },
+    :class_name => 'TaxonRelationship',
+    :foreign_key => :other_taxon_concept_id, :dependent => :destroy
+
   has_many :synonyms, :class_name => 'TaxonConcept',
     :through => :synonym_relationships, :source => :other_taxon_concept
   has_many :accepted_names, :class_name => 'TaxonConcept',
     :through => :inverse_synonym_relationships, :source => :taxon_concept
-  has_many :hybrid_relationships,
-    :class_name => 'TaxonRelationship', :dependent => :destroy,
-    :conditions => [
+  has_many :hybrid_relationships, -> { where
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
         WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}'
       )"
-    ]
-  has_many :inverse_hybrid_relationships, :class_name => 'TaxonRelationship',
-    :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
-    :conditions => [
-      "taxon_relationship_type_id IN
-      (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}')"
-    ]
+    },
+    :class_name => 'TaxonRelationship', :dependent => :destroy
+
+  has_many :inverse_hybrid_relationships, -> { where
+    "taxon_relationship_type_id IN
+    (SELECT id FROM taxon_relationship_types
+      WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}')"
+  },
+    :class_name => 'TaxonRelationship',
+    :foreign_key => :other_taxon_concept_id, :dependent => :destroy
+
   has_many :hybrids, :class_name => 'TaxonConcept',
     :through => :hybrid_relationships, :source => :other_taxon_concept
   has_many :hybrid_parents, :class_name => 'TaxonConcept',
     :through => :inverse_hybrid_relationships, :source => :taxon_concept
-  has_many :trade_name_relationships,
-    :class_name => 'TaxonRelationship', :dependent => :destroy,
-    :conditions => [
-      "taxon_relationship_type_id IN
-      (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"
-    ]
-  has_many :inverse_trade_name_relationships, :class_name => 'TaxonRelationship',
-    :foreign_key => :other_taxon_concept_id, :dependent => :destroy,
-    :conditions => [
-      "taxon_relationship_type_id IN
-      (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"
-    ]
+  has_many :trade_name_relationships, -> { where
+    "taxon_relationship_type_id IN
+    (SELECT id FROM taxon_relationship_types
+      WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"
+  },
+    :class_name => 'TaxonRelationship', :dependent => :destroy
+
+  has_many :inverse_trade_name_relationships, -> { where
+    "taxon_relationship_type_id IN
+    (SELECT id FROM taxon_relationship_types
+      WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}')"
+  },
+    :class_name => 'TaxonRelationship',
+    :foreign_key => :other_taxon_concept_id, :dependent => :destroy
+
   has_many :trade_names, :class_name => 'TaxonConcept',
     :through => :trade_name_relationships, :source => :other_taxon_concept
   has_many :accepted_names_for_trade_name, :class_name => 'TaxonConcept',
@@ -131,24 +134,24 @@ class TaxonConcept < ActiveRecord::Base
   has_many :distributions, :dependent => :destroy
   has_many :geo_entities, :through => :distributions
   has_many :listing_changes
-  has_many :current_listing_changes, :class_name => 'ListingChange', :conditions => 'is_current = true'
+  has_many :current_listing_changes,  -> { where 'is_current = true' }, :class_name => 'ListingChange'
   has_many :species_listings, :through => :listing_changes
-  has_many :taxon_commons, :dependent => :destroy, :include => :common_name
+  has_many :taxon_commons, -> { includes :common_name }, :dependent => :destroy
   has_many :common_names, :through => :taxon_commons
 
-  has_many :taxon_concept_references, :dependent => :destroy, :include => :reference
+  has_many :taxon_concept_references, -> { includes :reference }, :dependent => :destroy
   has_many :references, :through => :taxon_concept_references
 
-  has_many :quotas, :order => 'start_date DESC'
-  has_many :current_quotas, :class_name => 'Quota', :conditions => "is_current = true"
+  has_many :quotas, -> { order 'start_date DESC' }
+  has_many :current_quotas, -> { where "is_current = true" }, :class_name => 'Quota'
 
   has_many :cites_suspensions
-  has_many :current_cites_suspensions, :class_name => 'CitesSuspension', :conditions => "is_current = true"
+  has_many :current_cites_suspensions, -> { where "is_current = true" }, :class_name => 'CitesSuspension'
 
   has_many :eu_opinions
-  has_many :current_eu_opinions, :class_name => 'EuOpinion', :conditions => "is_current = true"
+  has_many :current_eu_opinions, -> { where "is_current = true" }, :class_name => 'EuOpinion'
   has_many :eu_suspensions
-  has_many :current_eu_suspensions, :class_name => 'EuSuspension', :conditions => "is_current = true"
+  has_many :current_eu_suspensions, -> { where "is_current = true" }, :class_name => 'EuSuspension'
 
   has_many :taxon_instruments
   has_many :instruments, :through => :taxon_instruments
@@ -156,12 +159,9 @@ class TaxonConcept < ActiveRecord::Base
   has_many :reported_shipments, :class_name => 'Trade::Shipment',
     :foreign_key => :reported_taxon_concept_id
   has_many :comments, as: 'commentable'
-  has_one :general_comment, class_name: 'Comment', as: 'commentable',
-    conditions: { comment_type: 'General' }
-  has_one :nomenclature_comment, class_name: 'Comment', as: 'commentable',
-    conditions: { comment_type: 'Nomenclature' }
-  has_one :distribution_comment, class_name: 'Comment', as: 'commentable',
-    conditions: { comment_type: 'Distribution' }
+  has_one :general_comment, -> { where comment_type: 'General' }, class_name: 'Comment', as: 'commentable'
+  has_one :nomenclature_comment, -> { where comment_type: 'Nomenclature' }, class_name: 'Comment', as: 'commentable'
+  has_one :distribution_comment, -> { where comment_type: 'Distribution' }, class_name: 'Comment', as: 'commentable'
   has_many :parent_reassignments,
     class_name: 'NomenclatureChange::ParentReassignment',
     as: :reassignable,

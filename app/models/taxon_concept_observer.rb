@@ -72,7 +72,7 @@ class TaxonConceptObserver < ActiveRecord::Observer
     if ['A', 'N'].include? taxon_concept.name_status
       tcd = TaxonConceptData.new(taxon_concept)
       data = tcd.to_h
-      taxon_concept.update_column(:data, ActiveRecord::Coders::Hstore.dump(data))
+      taxon_concept.update_column(:data, dump(data))
       taxon_concept.data = data
     end
     if taxon_concept.name_status == 'S'

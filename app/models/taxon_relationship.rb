@@ -42,7 +42,7 @@ class TaxonRelationship < ActiveRecord::Base
       taxon_relationship_type.name == TaxonRelationshipType::HAS_HYBRID
       tcd = TaxonConceptData.new(other_taxon_concept)
       data = tcd.to_h
-      other_taxon_concept.update_column(:data, ActiveRecord::Coders::Hstore.dump(data))
+      other_taxon_concept.update_column(:data, dump(data))
       other_taxon_concept.data = data
     end
   end
