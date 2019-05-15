@@ -1,13 +1,14 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.0.0'
+gem 'rails', '4.0.6'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'pg', '~> 0.21'
+gem 'pg', '~> 0.20.0'
 gem 'actionpack-action_caching'
 gem 'activerecord-postgres-hstore'
+gem 'active_model_serializers', '~> 0.8.4'
 gem 'activeresource'
 gem 'activeuuid', '>= 0.5.0'
 gem 'dalli'
