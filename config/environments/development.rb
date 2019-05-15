@@ -52,4 +52,6 @@ SAPI::Application.configure do
   end
 
   config.ember.variant = :development
+
+  config.eager_load = false
 end
