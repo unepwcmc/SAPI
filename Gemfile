@@ -113,9 +113,9 @@ group :development do
 end
 
 group :test, :development do
-  gem "rspec-rails"
-  gem "rspec-mocks"
-  gem "json_spec"
+  gem "rspec-rails", '~> 2.14.0'
+  gem "rspec-mocks", '~> 2.14.0'
+  gem "json_spec", '~> 1.1.1'
   gem "database_cleaner", ">=1.2.0"
   gem "timecop"
   gem "launchy"
