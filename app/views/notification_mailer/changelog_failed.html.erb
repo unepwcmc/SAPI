@@ -1,9 +1,9 @@
 <p>Dear <%= @user.name %>,</p>
 <p>
-  The generation of your CITES Report submission <%= @aru.id %> changelog has failed.<br>
+  The generation of your CITES Report submission <%= @aru_id %> changelog has failed.<br>
 </p>
 
-<% unless @aru.is_submitted? %>
+<% if @aru && !@aru.is_submitted? %>
   To view your submission online, please follow this link: <%= link_to trade_annual_report_upload_url(@aru), trade_annual_report_upload_url(@aru) %>.
 <% end %>
 </p>

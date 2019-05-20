@@ -7,9 +7,10 @@ class NotificationMailer < ApplicationMailer
     mail(to: @user.email, subject: 'Changes history log')
   end
 
-  def changelog_failed(user, aru)
+  def changelog_failed(user, aru_id)
     @user = user
-    @aru = aru
+    @aru = Trade::AnnualReportUpload.find_by(id: aru_id)
+    @aru_id = aru_id
     mail(to: @user.email, subject: 'Changes history log - generation failed')
   end
 

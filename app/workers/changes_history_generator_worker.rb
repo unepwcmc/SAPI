@@ -10,7 +10,7 @@ class ChangesHistoryGeneratorWorker
       # catch this exception so that retry is not scheduled
       Rails.logger.warn "CITES Report #{aru_id} not found"
       Appsignal.add_exception(e) if defined? Appsignal
-      NotificationMailer.changelog_failed(user, aru).deliver
+      NotificationMailer.changelog_failed(user, aru_id).deliver
     end
 
     user = User.find(user_id)

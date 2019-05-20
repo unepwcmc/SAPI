@@ -10,7 +10,7 @@ class SubmissionWorker
       # catch this exception so that retry is not scheduled
       Rails.logger.warn "CITES Report #{aru_id} not found"
       Appsignal.add_exception(e) if defined? Appsignal
-      NotificationMailer.changelog_failed(submitter, aru).deliver
+      NotificationMailer.changelog_failed(submitter, aru_id).deliver
       return false
     end
 
