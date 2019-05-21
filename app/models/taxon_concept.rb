@@ -174,13 +174,6 @@ class TaxonConcept < ActiveRecord::Base
 
   translates :nomenclature_note
 
-  scope :hybrid_types, -> { where
-      "taxon_relationship_type_id IN
-      (SELECT id FROM taxon_relationship_types
-        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}'
-      )"
-    }
-
   scope :at_parent_ranks, lambda { |rank|
     joins_sql = <<-SQL
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id

@@ -37,6 +37,14 @@ class TaxonRelationship < ActiveRecord::Base
   validates :other_taxon_concept_id, presence: true
   validate :intertaxonomic_relationship_uniqueness, :if => "taxon_relationship_type.is_intertaxonomic?"
 
+  scope :hybrid_types, -> { where
+      "taxon_relationship_type_id IN
+      (SELECT id FROM taxon_relationship_types
+        WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}'
+      )"
+    }
+
+
   def update_higher_taxa_for_hybrid_child
     if other_taxon_concept && taxon_relationship_type &&
       taxon_relationship_type.name == TaxonRelationshipType::HAS_HYBRID
