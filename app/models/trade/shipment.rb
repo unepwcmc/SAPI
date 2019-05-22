@@ -113,7 +113,10 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def import_permits_ids
-    parse_pg_array(read_attribute(:import_permits_ids) || '')
+    # parse_pg_array(read_attribute(:import_permits_ids) || '')
+    attr = read_attribute(:import_permits_ids)
+    return [] unless attr.present?
+    attr.map(&:to_s)
   end
 
   def import_permits_ids=(ary)
@@ -121,7 +124,10 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def export_permits_ids
-    parse_pg_array(read_attribute(:export_permits_ids) || '')
+    # parse_pg_array(read_attribute(:export_permits_ids) || '')
+    attr = read_attribute(:import_permits_ids)
+    return [] unless attr.present?
+    attr.map(&:to_s)
   end
 
   def export_permits_ids=(ary)
@@ -129,7 +135,10 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def origin_permits_ids
-    parse_pg_array(read_attribute(:origin_permits_ids) || '')
+    # parse_pg_array(read_attribute(:origin_permits_ids) || '')
+    attr = read_attribute(:import_permits_ids)
+    return [] unless attr.present?
+    attr.map(&:to_s)
   end
 
   def origin_permits_ids=(ary)
