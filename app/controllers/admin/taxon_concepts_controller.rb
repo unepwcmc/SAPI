@@ -70,6 +70,8 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     @taxon_concepts = TaxonConceptPrefixMatcher.new(@search_params).
      taxon_concepts
     render :json => @taxon_concepts.to_json(
+      # TODO This is giving some issues with the taxonomy_name method
+      # A workaround seems to be to move the :taxonomy_name symbol from the :only key to the :methods key
       :only => [:id, :taxonomy_name],
       :methods => [:rank_name, :full_name, :name_status]
     )
