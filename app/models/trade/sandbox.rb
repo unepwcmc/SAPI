@@ -72,16 +72,28 @@ class Trade::Sandbox
   def create_target_table
     unless Trade::SandboxTemplate.connection.table_exists? @table_name
       Thread.new do
-        Trade::SandboxTemplate.connection.execute(
-          Trade::SandboxTemplate.create_table_stmt(@table_name)
-        )
-        Trade::SandboxTemplate.connection.execute(
-          Trade::SandboxTemplate.create_indexes_stmt(@table_name)
-        )
-        Trade::SandboxTemplate.connection.execute(
-          Trade::SandboxTemplate.create_view_stmt(@table_name, @annual_report_upload.id)
-        )
-      end.join
+        begin
+          Trade::SandboxTemplate.connection.execute(
+            Trade::SandboxTemplate.create_table_stmt(@table_name)
+          )
+        ensure
+          ActiveRecord::Base.clear_active_connections!
+        end
+        begin
+          Trade::SandboxTemplate.connection.execute(
+            Trade::SandboxTemplate.create_indexes_stmt(@table_name)
+          )
+        ensure
+          ActiveRecord::Base.clear_active_connections!
+        end
+        begin
+          Trade::SandboxTemplate.connection.execute(
+            Trade::SandboxTemplate.create_view_stmt(@table_name, @annual_report_upload.id)
+          )
+        ensure
+          ActiveRecord::Base.clear_active_connections!
+        end
+      end
     end
   end
 
