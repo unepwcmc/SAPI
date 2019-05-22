@@ -125,7 +125,7 @@ class Trade::Shipment < ActiveRecord::Base
 
   def export_permits_ids
     # parse_pg_array(read_attribute(:export_permits_ids) || '')
-    attr = read_attribute(:import_permits_ids)
+    attr = read_attribute(:export_permits_ids)
     return [] unless attr.present?
     attr.map(&:to_s)
   end
@@ -136,7 +136,7 @@ class Trade::Shipment < ActiveRecord::Base
 
   def origin_permits_ids
     # parse_pg_array(read_attribute(:origin_permits_ids) || '')
-    attr = read_attribute(:import_permits_ids)
+    attr = read_attribute(:origin_permits_ids)
     return [] unless attr.present?
     attr.map(&:to_s)
   end

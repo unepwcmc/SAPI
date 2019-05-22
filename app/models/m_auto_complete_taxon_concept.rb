@@ -30,6 +30,9 @@ class MAutoCompleteTaxonConcept < ActiveRecord::Base
   scope :by_cms_taxonomy, -> { where(:taxonomy_is_cites_eu => false) }
   translates :rank_display_name
   def matching_names
-    parse_pg_array(read_attribute(:matching_names_ary))
+    # parse_pg_array(read_attribute(:matching_names_ary))
+    attr = read_attribute(:matching_names_ary)
+    return [] unless attr.present?
+    attr.map(&:to_s)
   end
 end
