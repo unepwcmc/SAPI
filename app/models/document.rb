@@ -96,15 +96,21 @@ class Document < ActiveRecord::Base
   end
 
   def date_formatted
-    date && date.strftime("%d/%m/%Y")
+    date && Date.parse(date).strftime("%d/%m/%Y")
   end
 
   def taxon_names
-    parse_pg_array(read_attribute(:taxon_names) || "").compact
+    # parse_pg_array(read_attribute(:taxon_names) || "").compact
+    attr = read_attribute(:taxon_names)
+    return [] unless attr.present?
+    attr.map(&:to_s)
   end
 
   def geo_entity_names
-    parse_pg_array(read_attribute(:geo_entity_names) || "").compact
+    # parse_pg_array(read_attribute(:geo_entity_names) || "").compact
+    attr = read_attribute(:geo_entity_names)
+    return [] unless attr.present?
+    attr.map(&:to_s)
   end
 
 end

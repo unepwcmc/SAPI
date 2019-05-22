@@ -12,7 +12,7 @@ class Species::DocumentSerializer < ActiveModel::Serializer
   end
 
   def document_language_versions
-    JSON.parse(object.document_language_versions)
+    object.document_language_versions
   end
 
 end
