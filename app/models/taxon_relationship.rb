@@ -37,11 +37,25 @@ class TaxonRelationship < ActiveRecord::Base
   validates :other_taxon_concept_id, presence: true
   validate :intertaxonomic_relationship_uniqueness, :if => "taxon_relationship_type.is_intertaxonomic?"
 
-  scope :hybrid_types, -> { where
+  scope :hybrids, -> { where(
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
         WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}'
-      )"
+      )")
+    }
+
+  scope :trades, -> { where(
+      "taxon_relationship_type_id IN
+      (SELECT id FROM taxon_relationship_types
+        WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}'
+      )")
+    }
+
+  scope :synonyms, -> { where(
+      "taxon_relationship_type_id IN
+      (SELECT id FROM taxon_relationship_types
+        WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}'
+      )")
     }
 
 

@@ -73,10 +73,10 @@ class TaxonConcept < ActiveRecord::Base
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy
   has_many :related_taxon_concepts, :class_name => 'TaxonConcept',
     :through => :taxon_relationships
-  has_many :synonym_relationships, -> { TaxonRelationship.hybrid_types },
+  has_many :synonym_relationships, -> { TaxonRelationship.synonyms },
     :class_name => 'TaxonRelationship', :dependent => :destroy
 
-  has_many :inverse_synonym_relationships, -> { TaxonRelationship.hybrid_types },
+  has_many :inverse_synonym_relationships, -> { TaxonRelationship.synonyms },
     :class_name => 'TaxonRelationship',
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy
 
@@ -84,10 +84,10 @@ class TaxonConcept < ActiveRecord::Base
     :through => :synonym_relationships, :source => :other_taxon_concept
   has_many :accepted_names, :class_name => 'TaxonConcept',
     :through => :inverse_synonym_relationships, :source => :taxon_concept
-  has_many :hybrid_relationships, -> { TaxonRelationship.hybrid_types },
+  has_many :hybrid_relationships, -> { TaxonRelationship.hybrids },
     :class_name => 'TaxonRelationship', :dependent => :destroy
 
-  has_many :inverse_hybrid_relationships, -> { TaxonRelationship.hybrid_types },
+  has_many :inverse_hybrid_relationships, -> { TaxonRelationship.hybrids },
     :class_name => 'TaxonRelationship',
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy
 
@@ -95,10 +95,10 @@ class TaxonConcept < ActiveRecord::Base
     :through => :hybrid_relationships, :source => :other_taxon_concept
   has_many :hybrid_parents, :class_name => 'TaxonConcept',
     :through => :inverse_hybrid_relationships, :source => :taxon_concept
-  has_many :trade_name_relationships, -> { TaxonRelationship.hybrid_types },
+  has_many :trade_name_relationships, -> { TaxonRelationship.trades },
     :class_name => 'TaxonRelationship', :dependent => :destroy
 
-  has_many :inverse_trade_name_relationships, -> { TaxonRelationship.hybrid_types },
+  has_many :inverse_trade_name_relationships, -> { TaxonRelationship.trades },
     :class_name => 'TaxonRelationship',
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy
 
