@@ -20,6 +20,8 @@ GEM
       rack-test (~> 0.6.2)
     actionpack-action_caching (1.2.0)
       actionpack (>= 4.0.0, < 6)
+    actionpack-page_caching (1.1.1)
+      actionpack (>= 4.0.0, < 6)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
     activemodel (4.0.6)
@@ -157,6 +159,7 @@ GEM
       simplecov (>= 0.7)
       term-ansicolor
       thor
+    dalli (2.7.10)
     database_cleaner (1.2.0)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
@@ -485,6 +488,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-action_caching
+  actionpack-page_caching
   active_model_serializers (~> 0.8.4)
   activeresource
   activeuuid (~> 0.6.0)
@@ -515,6 +519,7 @@ DEPENDENCIES
   compass (>= 0.12.2)
   compass-rails (>= 1.0.3)
   coveralls
+  dalli
   database_cleaner (>= 1.2.0)
   devise (~> 3.5.10)
   dotenv-rails
