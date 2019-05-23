@@ -64,7 +64,7 @@
           {{#eachPart controllers.taxonConcept.subspecies parts=2 page=0}}
             <li>
               {{#if show_in_species_plus}}
-                {{#linkTo 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/linkTo}}
+                {{#link-to 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/link-to}}
               {{/if}}
               {{#unless show_in_species_plus}}
                 {{full_name}} {{author_year}}
@@ -76,7 +76,7 @@
           {{#eachPart controllers.taxonConcept.subspecies parts=2 page=1}}
             <li>
               {{#if show_in_species_plus}}
-                {{#linkTo 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/linkTo}}
+                {{#link-to 'taxonConcept.legal' id}}{{full_name}} {{author_year}}{{/link-to}}
               {{/if}}
               {{#unless show_in_species_plus}}
                 {{full_name}} {{author_year}}
