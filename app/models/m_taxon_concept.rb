@@ -106,6 +106,7 @@
 
 class MTaxonConcept < ActiveRecord::Base
   include PgArrayParser
+  include ParsePgArray
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 
@@ -194,9 +195,9 @@ class MTaxonConcept < ActiveRecord::Base
 
   def db_ary_to_array(ary)
     if respond_to?(ary)
-      parse_pg_array(send(ary) || '').compact.map do |e|
-        e.force_encoding('utf-8')
-      end
+      attr = send(ary)
+      return [] unless attr.present?
+      attr.map(&:to_s)
     else
       []
     end
@@ -204,9 +205,9 @@ class MTaxonConcept < ActiveRecord::Base
 
   def countries_ids
     if respond_to?(:countries_ids_ary) && countries_ids_ary?
-      parse_pg_array(countries_ids_ary || '').compact
+      parse_array(:countries_ids_ary)
     elsif respond_to? :tc_countries_ids_ary
-      parse_pg_array(tc_countries_ids_ary || '').compact
+      parse_array(:tc_countries_ids_ary)
     else
       []
     end
