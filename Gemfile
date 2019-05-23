@@ -35,13 +35,15 @@ gem 'rubyzip', '>= 1.0.0'
 gem 'sidekiq', '< 5'
 gem 'sidekiq-status'
 gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
-
 gem 'redis-rails', '~> 4.0.0'
 
 gem 'whenever', :require => false
 
-gem 'ember-rails', '~> 0.18'
-gem 'ember-source', '1.1.2'
+gem 'sprockets', '~> 2.8.0'
+gem 'ember-rails', '~> 0.14.1'
+gem 'ember-source', '~> 1.6.0'
+gem 'ember-data-source', '0.14'
+gem 'handlebars-source', '1.0.12'
 gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 gem 'jquery-mousewheel-rails'
 gem 'jquery-cookie-rails'

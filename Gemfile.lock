@@ -180,20 +180,19 @@ GEM
     em-websocket (0.4.0)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.5.3)
-    ember-data-source (1.0.0.beta.14)
+    ember-data-source (0.14)
       ember-source
-    ember-handlebars-template (0.8.0)
-      barber (>= 0.11.0)
-      sprockets (>= 3.3, < 4.1)
-    ember-rails (0.18.5)
+    ember-rails (0.14.1)
       active_model_serializers
-      ember-data-source (>= 1.0.0.beta.5)
-      ember-handlebars-template (>= 0.1.1, < 1.0)
-      ember-source (>= 1.1.0)
+      barber (>= 0.4.1)
+      ember-data-source
+      ember-source
+      execjs (>= 1.2)
+      handlebars-source
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
-    ember-source (1.1.2)
-      handlebars-source (= 1.0.12)
+    ember-source (1.6.1)
+      handlebars-source (~> 1.0)
     erubis (2.7.0)
     eventmachine (1.0.7)
     execjs (2.6.0)
@@ -237,6 +236,7 @@ GEM
     has_scope (0.6.0)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
+    hike (1.2.3)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     http_parser.rb (0.5.3)
@@ -432,9 +432,11 @@ GEM
       temple (~> 0.5.5)
       tilt (~> 1.3.3)
     slop (3.4.3)
-    sprockets (3.7.2)
-      concurrent-ruby (~> 1.0)
-      rack (> 1, < 3)
+    sprockets (2.8.3)
+      hike (~> 1.2)
+      multi_json (~> 1.0)
+      rack (~> 1.0)
+      tilt (~> 1.1, != 1.3.0)
     sprockets-rails (2.3.3)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
@@ -523,8 +525,9 @@ DEPENDENCIES
   database_cleaner (>= 1.2.0)
   devise (~> 3.5.10)
   dotenv-rails
-  ember-rails (~> 0.18)
-  ember-source (= 1.1.2)
+  ember-data-source (= 0.14)
+  ember-rails (~> 0.14.1)
+  ember-source (~> 1.6.0)
   factory_girl_rails (~> 4.0)
   font-awesome-rails
   foreigner
@@ -534,6 +537,7 @@ DEPENDENCIES
   groupdate
   guard-bundler
   guard-livereload
+  handlebars-source (= 1.0.12)
   immigrant
   inherited_resources (~> 1.7.0)
   jquery-cookie-rails
@@ -579,6 +583,7 @@ DEPENDENCIES
   sitemap_generator
   slackistrano
   slim
+  sprockets (~> 2.8.0)
   susy
   test-unit (~> 3.1)
   timecop
@@ -591,4 +596,4 @@ DEPENDENCIES
   yajl-ruby
 
 BUNDLED WITH
-   1.16.6
+   1.17.0
