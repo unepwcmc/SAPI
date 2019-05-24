@@ -3,7 +3,7 @@ class MTaxonConceptFilterByIdWithDescendants
   def initialize(relation, ids)
     @relation = relation || MTaxonConcept.scoped
     @ids = ids
-    @table = @relation.from_value || 'taxon_concepts_mview'
+    @table = @relation.from_value.first || 'taxon_concepts_mview'
   end
 
   def relation(ancestor_ranks = nil)
