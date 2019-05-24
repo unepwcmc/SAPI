@@ -76,7 +76,7 @@ class ApiRequest < ActiveRecord::Base
       key_name: key_name
     ])
     res = ApiRequest.find_by_sql(sql).first
-    JSON.parse res['json_object_agg']
+    res['json_object_agg']
   end
 
 end
