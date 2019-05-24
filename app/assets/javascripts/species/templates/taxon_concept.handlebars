@@ -27,15 +27,15 @@
       </li>
       {{#if isSubspecies}}
         <li>
-          {{#linkTo 'taxonConcept.legal' parentId queryParams=false}}
+          {{#link-to 'taxonConcept.legal' parentId queryParams=false}}
             <span class="species-name">{{speciesFullName}}</span>
-          {{/linkTo}}
+          {{/link-to}}
         </li>
       {{/if}}
     </ul>
   </div>
   <ul class="tabset">
-    <li>{{#linkTo 'taxonConcept.legal'}}LEGAL{{/linkTo}}
+    <li>{{#link-to 'taxonConcept.legal'}}LEGAL{{/link-to}}
       <ul>
         {{#unless isCms }}
           <li class="first"><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
@@ -46,21 +46,21 @@
         {{/unless}}
       </ul>
     </li>
-    <li>{{#linkTo 'taxonConcept.names'}}NAMES{{/linkTo}}
+    <li>{{#link-to 'taxonConcept.names'}}NAMES{{/link-to}}
       <ul>
       </ul>
     </li>
-    <li class="add">{{#linkTo 'taxonConcept.distribution'}}DISTRIBUTION{{/linkTo}}
+    <li class="add">{{#link-to 'taxonConcept.distribution'}}DISTRIBUTION{{/link-to}}
       <ul>
       </ul>
     </li>
-    <li {{bindAttr class="isCms:last-child"}}>{{#linkTo 'taxonConcept.references'}}REFERENCES{{/linkTo}}
+    <li {{bindAttr class="isCms:last-child"}}>{{#link-to 'taxonConcept.references'}}REFERENCES{{/link-to}}
       <ul>
       </ul>
     </li>
     {{#unless isCms }}
-    <li class="last-child documents-tab">{{#linkTo 'taxonConcept.documents'}}DOCUMENTS
-      {{/linkTo}}
+    <li class="last-child documents-tab">{{#link-to 'taxonConcept.documents'}}DOCUMENTS
+      {{/link-to}}
       <ul>
       {{#if controllers.taxonConceptDocuments.citesCopProposalsDocsPresent}}
         <li class="first"><a href="#cites_cop" class="scroll-to">CITES CoP Proposals</a></li>
