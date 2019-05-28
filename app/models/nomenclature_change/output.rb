@@ -34,6 +34,7 @@
 # change.
 class NomenclatureChange::Output < ActiveRecord::Base
   include PgArrayParser
+  include ParsePgArray
   track_who_does_it
   attr_accessor :output_type # New taxon, Existing subspecies, Existing taxon
   attr_accessible :nomenclature_change_id, :taxon_concept_id,
@@ -86,7 +87,8 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
 
   def tag_list
-    parse_pg_array(read_attribute(:tag_list) || "").compact
+    # parse_pg_array(read_attribute(:tag_list) || "").compact
+    parse_array(:tag_list)
   end
 
   def tag_list=(ary)
