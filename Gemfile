@@ -70,7 +70,7 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
-  gem 'compass-rails', '~> 2.0.0'
+  gem 'compass', '1.1.0.alpha.3'
   gem 'susy', '~>2.2.14'
 end
 
