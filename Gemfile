@@ -10,7 +10,7 @@ gem 'actionpack-page_caching'
 gem 'active_model_serializers', '~> 0.8.4'
 gem 'activeresource'
 gem 'dalli'
-gem 'pg', '~> 0.21'
+gem 'pg', '~> 0.17.1'
 gem 'activeuuid', '~> 0.6.0'
 gem 'pg_array_parser'
 # gem 'activerecord-postgres-hstore'
@@ -70,7 +70,8 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
-  gem 'compass', '1.1.0.alpha.3'
+  # gem 'compass', '0.12.7'
+  # gem 'compass-rails', '2.0.0'
   gem 'susy', '~>2.2.14'
 end
 
