@@ -10,7 +10,7 @@ gem 'actionpack-page_caching'
 gem 'active_model_serializers', '~> 0.8.4'
 gem 'activeresource'
 gem 'dalli'
-gem 'pg'
+gem 'pg', '~> 0.21'
 gem 'activeuuid', '~> 0.6.0'
 gem 'pg_array_parser'
 # gem 'activerecord-postgres-hstore'
@@ -34,7 +34,7 @@ gem 'rubyzip', '>= 1.0.0'
 
 gem 'sidekiq', '< 5'
 gem 'sidekiq-status'
-gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
+# gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
 gem 'redis-rails', '~> 4.0.0'
 
 gem 'whenever', :require => false
@@ -70,9 +70,8 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
-  gem "susy"
-  gem 'compass', '>= 0.12.2'
-  gem 'compass-rails', '>= 1.0.3'
+  gem 'compass-rails', '~> 2.0.0'
+  gem 'susy', '~>2.2.14'
 end
 
 # To use ActiveModel has_secure_password
