@@ -25,6 +25,7 @@ Trade.SearchResultsRoute = Trade.BeforeRoute.extend Trade.LoadingModal,
   }
 
   model: (params) ->
+    #TODO: check this 
     @showLoadingModal()
     Trade.Shipment.find(params)
 
