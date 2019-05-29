@@ -1,6 +1,6 @@
 class MTaxonConceptFilterByAppendixQuery
 
-  def initialize(relation = MTaxonConcept.scoped, appendix_abbreviations = [])
+  def initialize(relation = MTaxonConcept.all, appendix_abbreviations = [])
     @relation = relation
     @appendix_abbreviations = appendix_abbreviations
     @table = @relation.from_value.first || 'taxon_concepts_mview'

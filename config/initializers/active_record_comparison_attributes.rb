@@ -20,7 +20,7 @@ module ComparisonAttributes
 
   def comparison_conditions(comparison_attributes = nil)
     comparison_attributes ||= self.comparison_attributes
-    a = self.class.scoped
+    a = self.class.all
     arel_nodes = []
     comparison_attributes.each do |attr_name, attr_val|
       arel_nodes <<

@@ -53,7 +53,7 @@ class Annotation < ActiveRecord::Base
             OR UPPER(description) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 
