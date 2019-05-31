@@ -10,7 +10,7 @@ gem 'actionpack-page_caching'
 gem 'active_model_serializers', '~> 0.8.4'
 gem 'activeresource'
 gem 'dalli'
-gem 'pg'
+gem 'pg', '~> 0.17.1'
 gem 'activeuuid', '~> 0.6.0'
 gem 'pg_array_parser'
 # gem 'activerecord-postgres-hstore'
@@ -34,7 +34,7 @@ gem 'rubyzip', '>= 1.0.0'
 
 gem 'sidekiq', '< 5'
 gem 'sidekiq-status'
-gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
+gem 'sidekiq-unique-jobs', '~> 4.0.17'
 gem 'redis-rails', '~> 4.0.0'
 
 gem 'whenever', :require => false
@@ -47,9 +47,9 @@ gem 'handlebars-source', '1.0.12'
 gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 gem 'jquery-mousewheel-rails', '~> 0.0.9'
 gem 'jquery-cookie-rails', '~> 1.3.1.1'
-gem 'bootstrap-sass', '~> 2.3.1.0'
+gem 'bootstrap-sass', '~> 2.3.2.2'
 gem 'kaminari'
-gem 'select2-rails', '~> 4.0.0'
+gem 'select2-rails', '~> 3.5.4' #initSelection deprecated on upgrade to version 4
 gem 'nested_form', '~> 0.3.2'
 gem 'acts-as-taggable-on', '~> 4.0.0'
 gem 'carrierwave'
@@ -60,20 +60,16 @@ gem "font-awesome-rails"
 gem 'aws-sdk', '~> 2'
 gem 'rails-observers'
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 5.0.0'
-  gem 'coffee-rails', '~> 4.0.0'
+# Gems used for assets
+gem 'sass-rails',   '~> 5.0.0'
+gem 'coffee-rails', '~> 4.0.0'
 
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+# gem 'therubyracer', :platforms => :ruby
 
-  gem 'uglifier', '>= 1.0.3'
-  gem "susy"
-  gem 'compass', '>= 0.12.2'
-  gem 'compass-rails', '>= 1.0.3'
-end
+gem 'uglifier', '>= 1.0.3'
+gem 'susy', '~>2.2.14'
+
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
