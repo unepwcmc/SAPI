@@ -352,9 +352,9 @@ span.error {
     }
 
     tbody:hover > tr:hover td {
-      @include text-shadow(none);
+      text-shadow: none;
       color: darken($dark-grey, 10%);
-      @include opacity(1.0);
+      opacity: 1;
     }
   }
 }
