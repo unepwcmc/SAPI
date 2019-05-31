@@ -49,7 +49,7 @@ gem 'jquery-mousewheel-rails', '~> 0.0.9'
 gem 'jquery-cookie-rails', '~> 1.3.1.1'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'kaminari'
-gem 'select2-rails', '~> 4.0.0'
+gem 'select2-rails', '~> 3.5.4' #initSelection deprecated on upgrade to version 4
 gem 'nested_form', '~> 0.3.2'
 gem 'acts-as-taggable-on', '~> 4.0.0'
 gem 'carrierwave'
