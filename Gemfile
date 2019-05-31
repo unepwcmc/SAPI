@@ -34,7 +34,8 @@ gem 'rubyzip', '>= 1.0.0'
 
 gem 'sidekiq', '< 5'
 gem 'sidekiq-status'
-gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs' #FIXME: doesn't bundle install from scratch
+gem "sidekiq-unique-jobs", "~> 4.0.17"
+#gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
 gem 'redis-rails', '~> 4.0.0'
 
 gem 'whenever', :require => false
