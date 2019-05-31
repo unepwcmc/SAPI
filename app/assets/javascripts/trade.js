@@ -18,7 +18,7 @@
 //= require jquery.iframe-transport
 //= require jquery.fileupload
 //= require handlebars
-//= require ember_1.6.0-beta.1+canary.280ae733
+//= require ember
 //= require ember-data
 //= require bootstrap-modal
 //= require bootstrap-collapse
