@@ -16,6 +16,6 @@ module Ahoy
 
     belongs_to :visit, class_name: 'Ahoy::Visit'
     belongs_to :user
-    serialize :properties, JSON
+    serialize :properties
   end
 end
