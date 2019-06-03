@@ -179,7 +179,7 @@ module AdminHelper
       if block_given?
         yield
       else
-        render :partial => 'list', :locals => { :collection => collection }
+        render partial: 'list', collection: collection
       end
     end
   end
