@@ -3,7 +3,7 @@ class MTaxonConceptFilterByAppendixQuery
   def initialize(relation = MTaxonConcept.scoped, appendix_abbreviations = [])
     @relation = relation
     @appendix_abbreviations = appendix_abbreviations
-    @table = @relation.from_value.first || 'taxon_concepts_mview'
+    @table = @relation.from_value ? @relation.from_value.first : 'taxon_concepts_mview'
   end
 
   def initialize_species_listings_conditions(designation_name = 'CITES')
