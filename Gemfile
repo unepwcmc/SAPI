@@ -34,8 +34,7 @@ gem 'rubyzip', '>= 1.0.0'
 
 gem 'sidekiq', '< 5'
 gem 'sidekiq-status'
-gem "sidekiq-unique-jobs", "~> 4.0.17"
-#gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
+gem 'sidekiq-unique-jobs', '~> 4.0.17'
 gem 'redis-rails', '~> 4.0.0'
 
 gem 'whenever', :require => false
@@ -46,11 +45,11 @@ gem 'ember-source', '~> 1.6.0'
 gem 'ember-data-source', '0.14'
 gem 'handlebars-source', '1.0.12'
 gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
-gem 'jquery-mousewheel-rails'
-gem 'jquery-cookie-rails'
-gem 'bootstrap-sass', '~> 2.3.2.2' # upgrade to 3?
+gem 'jquery-mousewheel-rails', '~> 0.0.9'
+gem 'jquery-cookie-rails', '~> 1.3.1.1'
+gem 'bootstrap-sass', '~> 2.3.2.2'
 gem 'kaminari'
-gem 'select2-rails', '~> 3.5.7'
+gem 'select2-rails', '~> 3.5.4' #initSelection deprecated on upgrade to version 4
 gem 'nested_form', '~> 0.3.2'
 gem 'acts-as-taggable-on', '~> 4.0.0'
 gem 'carrierwave'
@@ -141,7 +140,7 @@ gem 'sinatra', '>= 1.3.0', :require => nil
 
 gem 'memcache-client'
 
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails', '~> 4.1.0'
 
 gem 'geoip'
 
