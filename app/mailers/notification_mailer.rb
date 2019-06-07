@@ -21,5 +21,11 @@ class NotificationMailer < ApplicationMailer
     mail(to: @user.email, subject: 'Duplicates detected on submission')
   end
 
+  def report_already_submitted(user, aru_id)
+    @user = user
+    @aru_id = aru_id
+    mail(to: @user.email, subject: 'Changes history log - already submitted')
+  end
+
 end
 

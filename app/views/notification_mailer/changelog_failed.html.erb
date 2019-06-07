@@ -3,6 +3,7 @@
   The generation of your CITES Report submission <%= @aru_id %> changelog has failed.<br>
 </p>
 
+<p>
 <% if @aru && !@aru.is_submitted? %>
   To view your submission online, please follow this link: <%= link_to trade_annual_report_upload_url(@aru), trade_annual_report_upload_url(@aru) %>.
 <% end %>

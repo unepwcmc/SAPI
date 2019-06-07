@@ -14,6 +14,12 @@ class SubmissionWorker
       return false
     end
 
+    # Do not proceed if aru has already been submitted by a previous worker
+    if aru.is_submitted?
+      NotificationMailer.report_already_submitted(submitter, aru_id)
+      return false
+    end
+
     duplicates = aru.sandbox.check_for_duplicates_in_shipments
     if duplicates.present?
       tempfile = Trade::ChangelogCsvGenerator.call(aru, submitter, duplicates)
@@ -21,7 +27,10 @@ class SubmissionWorker
       return false
     end
 
-    return false unless aru.sandbox.copy_from_sandbox_to_shipments(submitter)
+    unless aru.sandbox.copy_from_sandbox_to_shipments(submitter)
+      NotificationMailer.changelog_failed(submitter, aru_id).deliver
+      return false
+    end
 
     tempfile = Trade::ChangelogCsvGenerator.call(aru, submitter)
 
