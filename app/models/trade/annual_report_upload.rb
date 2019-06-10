@@ -100,7 +100,8 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
       number_of_records_submitted: records_submitted
     })
 
-    ChangesHistoryGeneratorWorker.perform_async(self.id, submitter.id)
+    # This has been temporarily disabled as originally part of EPIX
+    #ChangesHistoryGeneratorWorker.perform_async(self.id, submitter.id)
   end
 
   def reported_by_exporter?
