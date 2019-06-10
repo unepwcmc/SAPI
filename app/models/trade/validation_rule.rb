@@ -17,7 +17,6 @@
 
 class Trade::ValidationRule < ActiveRecord::Base
   attr_accessible :column_names, :run_order, :is_primary, :scope, :is_strict
-  include ParsePgArray
   serialize :scope, ActiveRecord::Coders::NestedHstore
   has_many :validation_errors, class_name: Trade::ValidationError
 
@@ -49,7 +48,7 @@ class Trade::ValidationRule < ActiveRecord::Base
   end
 
   def column_names
-    parse_array(:column_names)
+    read_attribute(:column_names).dup
   end
 
   def column_names=(ary)
