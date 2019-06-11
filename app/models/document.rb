@@ -26,7 +26,6 @@
 
 class Document < ActiveRecord::Base
   include PgSearch
-  include PgArrayParser
   pg_search_scope :search_by_title, :against => :title,
     :using => { :tsearch => { :prefix => true } },
     :order_within_rank => "documents.date, documents.title, documents.id"
@@ -100,17 +99,11 @@ class Document < ActiveRecord::Base
   end
 
   def taxon_names
-    # parse_pg_array(read_attribute(:taxon_names) || "").compact
-    attr = read_attribute(:taxon_names)
-    return [] unless attr.present?
-    attr.map(&:to_s)
+    (read_attribute(:taxon_names) || []).compact
   end
 
   def geo_entity_names
-    # parse_pg_array(read_attribute(:geo_entity_names) || "").compact
-    attr = read_attribute(:geo_entity_names)
-    return [] unless attr.present?
-    attr.map(&:to_s)
+    (read_attribute(:geo_entity_names) || []).compact
   end
 
 end

@@ -1,5 +1,4 @@
 module MListingChange
-  include PgArrayParser
 
   def self.included(base)
     base.class_eval do
@@ -25,9 +24,9 @@ module MListingChange
 
   def countries_ids
     if respond_to?(:countries_ids_ary) && countries_ids_ary?
-      parse_pg_array(countries_ids_ary || '').compact
+      (countries_ids_ary || []).compact
     elsif respond_to? :lc_countries_ids_ary
-      parse_pg_array(lc_countries_ids_ary || '').compact
+      (lc_countries_ids_ary || []).compact
     else
       []
     end

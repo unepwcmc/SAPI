@@ -50,16 +50,16 @@
       <td>
         <%= link_to edit_icon, edit_resource_url(eu_suspension_regulation), :remote => true %>
         <%= link_to delete_icon, resource_url(eu_suspension_regulation),
-          data: { confirm: "Warning: you are about to delete data. This might take a long time, depending on the number of associated objects. Are you sure?", :method => :delete
+          data: { confirm: "Warning: you are about to delete data. This might take a long time, depending on the number of associated objects. Are you sure?" }, :method => :delete
         %>
         <% if eu_suspension_regulation.is_current? %>
           <%= link_to '<i class="icon-ban-circle" title="Set not current"></i>'.html_safe,
             deactivate_admin_eu_suspension_regulation_url(eu_suspension_regulation),
-            data: { confirm: 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true %>
+            data: { confirm: 'Warning: you are about to modify a batch of data. Are you sure?' }, :method => :post, :remote => true %>
         <% else %>
           <%= link_to '<i class="icon-cog" title="Set current"></i>'.html_safe,
             activate_admin_eu_suspension_regulation_url(eu_suspension_regulation),
-            data: { confirm: 'Warning: you are about to modify a batch of data. Are you sure?', :method => :post, :remote => true %>
+            data: { confirm: 'Warning: you are about to modify a batch of data. Are you sure?' }, :method => :post, :remote => true %>
       <% end %>
       </td>
       <td><%= tracking_info(eu_suspension_regulation) %></td>
