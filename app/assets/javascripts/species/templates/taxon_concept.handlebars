@@ -38,11 +38,31 @@
     <li>{{#link-to 'taxonConcept.legal'}}LEGAL{{/link-to}}
       <ul>
         {{#unless isCms }}
-          <li class="first"><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
-          <li><a href="#cites_quotas" class="scroll-to">CITES Quotas</a></li>
-          <li><a href="#cites_suspensions" class="scroll-to">CITES Suspensions</a></li>
-          <li><a href="#eu_listings" class="scroll-to">EU Listing</a></li>
-          <li class="last"><a href="#eu_decisions" class="scroll-to">EU Decisions</a></li>
+          <li class="first">
+            {{#view Species.ScrollTo anchor="cites_listings" label="CITES Listings"}}
+              {{view.label}}
+            {{/view}}
+          </li>
+          <li>
+            {{#view Species.ScrollTo anchor="cites_quotas" label="CITES Quotas"}}
+              {{view.label}}
+            {{/view}}
+          </li>
+          <li>
+            {{#view Species.ScrollTo anchor="cites_suspensions" label="CITES Suspensions"}}
+              {{view.label}}
+            {{/view}}
+          </li>
+          <li>
+            {{#view Species.ScrollTo anchor="eu_listings" label="EU Listing"}}
+              {{view.label}}
+            {{/view}}
+          </li>
+          <li class="last">
+            {{#view Species.ScrollTo anchor="eu_decisions" label="EU Decisions"}}
+              {{view.label}}
+            {{/view}}
+          </li>
         {{/unless}}
       </ul>
     </li>

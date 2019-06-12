@@ -36,6 +36,5 @@
 //= require_tree ./shared
 
 var Species = Ember.Application.create({
-  LOG_TRANSITIONS: true,
   rootElement: '#ember_app'
 });
