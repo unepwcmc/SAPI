@@ -10,7 +10,7 @@
         <th class="col6">NOTES</th>
       </tr>
     </thead>
-    <tbody {{bindAttr class="controller.cmsListingsExpanded:historic_expanded"}}>
+    <tbody {{bind-attr class="controller.cmsListingsExpanded:historic_expanded"}}>
       {{#each listing in currentCmsListings}}
         <tr class="current">
           <td>
@@ -39,7 +39,7 @@
     </tbody>
   </table>
   {{#if historicCmsListings}}
-    <div {{bindAttr class=":historic controller.cmsListingsExpanded::hidden"}}>
+    <div {{bind-attr class=":historic controller.cmsListingsExpanded::hidden"}}>
       <table>
         <thead>
           <tr>
@@ -74,7 +74,7 @@
         </tbody>
       </table>
     </div>
-    <div {{bindAttr class=":btn-hloder cmsListingsExpanded:expanded"}}>
+    <div {{bind-attr class=":btn-hloder cmsListingsExpanded:expanded"}}>
       {{#if controller.cmsListingsExpanded}}
         <a class="link active" {{action 'contractList' 'cms_listings' 'cmsListingsExpanded'}}>HIDE HISTORY</a>
       {{else}}
