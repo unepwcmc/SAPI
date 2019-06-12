@@ -1,4 +1,4 @@
-Species.TaxonConceptLegalController = Ember.ArrayController.extend
+Species.TaxonConceptLegalController = Ember.Controller.extend
   needs: 'taxonConcept'
 
   citesListingsExpanded: false
