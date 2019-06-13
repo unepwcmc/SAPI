@@ -1,7 +1,7 @@
 Species.ScrollTo = Ember.View.extend
   tagName: 'a'
   attributeBindings: [ "anchor", "label", "title" ]
-  classNames: ['scroll-to']
+  classNames: ['hover-pointer']
 
   title: (->
     'Scroll to ' + @get('label')
