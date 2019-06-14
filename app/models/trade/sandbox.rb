@@ -93,7 +93,7 @@ class Trade::Sandbox
         ensure
           ActiveRecord::Base.clear_active_connections!
         end
-      end
+      end.join
     end
   end
 
