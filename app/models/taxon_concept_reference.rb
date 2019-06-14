@@ -35,7 +35,7 @@ class TaxonConceptReference < ActiveRecord::Base
   end
 
   def excluded_taxon_concepts_ids
-    read_attribute(:excluded_taxon_concepts_ids).compact
+    (read_attribute(:excluded_taxon_concepts_ids) || []).compact
   end
 
   def excluded_taxon_concepts_ids=(ary)
