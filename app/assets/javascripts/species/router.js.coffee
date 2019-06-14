@@ -1,8 +1,5 @@
 Species.Router.map (match) ->
-  @resource 'taxonConcepts', {
-    path: "/taxon_concepts"
-    queryParams: ['taxonomy', 'taxon_concept_query', 'geo_entities_ids', 'geo_entity_scope', 'page']
-    }, () ->
+  @resource 'taxonConcepts', { path: "/taxon_concepts" }
   @resource 'taxonConcept', { path: "/taxon_concepts/:taxon_concept_id" }, () ->
     @route 'legal'
     @route 'names'
@@ -10,13 +7,7 @@ Species.Router.map (match) ->
     @route 'references'
     @route 'documents'
   @route 'elibrary'
-  @resource 'documents', {
-    queryParams: [
-      'taxon_concept_query', 'geo_entities_ids', 'title_query',
-      'event_type', 'events_ids', 'document_type',
-      'proposal_outcome_id', 'review_phase_id'
-    ]
-  }
+  @resource 'documents'
   @route 'about'
 
 Species.Router.reopen

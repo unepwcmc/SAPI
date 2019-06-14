@@ -22,6 +22,9 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.TaxonConc
   actions:
     openTaxonPage: (taxonConceptId, redirected) ->
       @openTaxonPage(taxonConceptId, redirected)
+    
+    openSearchPage: (taxonFullName) ->
+      @get("controllers.search").openSearchPage taxonFullName
 
     nextPage: ->
       @get("controllers.search").openSearchPage undefined, @get('page') + 1, @get('perPage')
