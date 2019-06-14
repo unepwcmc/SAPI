@@ -65,4 +65,4 @@ Species.TaxonConceptsRoute = Ember.Route.extend Species.Spinner, Species.GeoEnti
       @controllerFor('higherTaxaCitesEu').load()
       @controllerFor('higherTaxaCms').load()
     queryParamsDidChange: (changed, totalPresent, removed) ->
-      this.refresh()
+      @refresh()
