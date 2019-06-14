@@ -20,3 +20,7 @@ Trade.SandboxShipmentsRoute = Trade.BeforeRoute.extend
     controller.set('model', model)
     @controllerFor('annualReportUpload').set('currentError', @validationError)
     @controllerFor('annualReportUpload').set('allErrorsCollapsed', true)
+
+  actions:
+    queryParamsDidChange: (changed, totalPresent, removed) ->
+      @refresh()
