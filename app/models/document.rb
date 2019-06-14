@@ -95,7 +95,7 @@ class Document < ActiveRecord::Base
   end
 
   def date_formatted
-    date && Date.parse(date).strftime("%d/%m/%Y")
+    date && Date.parse(date.to_s).strftime("%d/%m/%Y")
   end
 
   def taxon_names
