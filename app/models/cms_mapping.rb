@@ -27,7 +27,7 @@ class CmsMapping < ActiveRecord::Base
     when "MISSING_SPECIES_PLUS"
       where(:taxon_concept_id => nil)
     else
-      scoped
+      all
     end
   }
 end

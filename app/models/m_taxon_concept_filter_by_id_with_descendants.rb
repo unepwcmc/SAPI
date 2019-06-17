@@ -1,7 +1,7 @@
 class MTaxonConceptFilterByIdWithDescendants
 
   def initialize(relation, ids)
-    @relation = relation || MTaxonConcept.scoped
+    @relation = relation || MTaxonConcept.all
     @ids = ids
     @table = @relation.from_value ? @relation.from_value.first : 'taxon_concepts_mview'
   end

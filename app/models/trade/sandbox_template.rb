@@ -67,7 +67,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
         end
 
         def self.sanitize(id = nil)
-          update_all(
+          where(id: id).update_all(
             'appendix = UPPER(SQUISH_NULL(appendix)),
             year = SQUISH_NULL(year),
             term_code = UPPER(SQUISH_NULL(term_code)),
@@ -80,9 +80,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
             import_permit = UPPER(SQUISH_NULL(import_permit)),
             export_permit = UPPER(SQUISH_NULL(export_permit)),
             origin_permit = UPPER(SQUISH_NULL(origin_permit))
-            ',
-            id.blank? ? nil : { :id => id }
-          )
+            ')
           # resolve reported & accepted taxon
           connection.execute(
             sanitize_sql_array([

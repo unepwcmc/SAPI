@@ -31,7 +31,7 @@ class Trade::TaxonConceptTermPair < ActiveRecord::Base
         SQL
       )
     else
-      scoped
+      all
     end
   end
 end

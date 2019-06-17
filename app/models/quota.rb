@@ -71,7 +71,7 @@ class Quota < TradeRestriction
         SQL
       )
     else
-      scoped
+      all
     end
   end
 

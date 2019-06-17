@@ -25,7 +25,7 @@ class IucnMapping < ActiveRecord::Base
   scope :filter, lambda { |option|
     case option
     when "ALL"
-      scoped
+      all
     when "MATCHING"
       where('iucn_taxon_id IS NOT NULL')
     when "NON_MATCHING"

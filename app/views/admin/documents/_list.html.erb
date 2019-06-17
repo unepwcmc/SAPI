@@ -55,7 +55,7 @@
         %>
         <%= link_to delete_icon,
           (@event ? admin_event_document_path(@event, document) : admin_document_path(document)),
-          confirm: 'Warning: you are about to delete data. Are you sure?', method: :delete
+          data: {confirm: 'Warning: you are about to delete data. Are you sure?'}, method: :delete
         %>
       </td>
       <td><%= tracking_info(document) %></td>

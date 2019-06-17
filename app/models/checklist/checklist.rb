@@ -15,7 +15,7 @@ class Checklist::Checklist
   end
 
   def results
-    @query.limit(@per_page).offset(@per_page * (@page - 1)).all
+    @query.limit(@per_page).offset(@per_page * (@page - 1)).to_a
   end
 
   def total_cnt
@@ -28,7 +28,7 @@ class Checklist::Checklist
   end
 
   def initialize_query
-    @taxon_concepts_rel = MTaxonConcept.scoped.
+    @taxon_concepts_rel = MTaxonConcept.all.
       by_cites_eu_taxonomy
 
     if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?

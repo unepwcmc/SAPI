@@ -12,7 +12,7 @@ namespace :trade do
     #   report.export("#{dir}/#{year}.csv")
     # end
     report = Trade::AppendixReport.new(
-      Trade::Shipment.scoped
+      Trade::Shipment.all
     )
     report.export("#{dir}/diff.csv", true)
   end

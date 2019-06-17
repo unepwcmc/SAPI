@@ -27,7 +27,7 @@ class TradeCode < ActiveRecord::Base
             OR UPPER(name_es) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 

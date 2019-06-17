@@ -30,7 +30,7 @@ class Language < ActiveRecord::Base
         UPPER(iso_code3) LIKE UPPER(:query)",
         :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 

@@ -118,7 +118,7 @@ class ListingChange < ActiveRecord::Base
              OR UPPER(change_types.name) LIKE UPPER(:query)
             ", :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 
