@@ -42,7 +42,6 @@
 //= require_tree ./trade/routes
 
 var Trade = Ember.Application.create({
-  LOG_TRANSITIONS: true,
   customEvents: {
     blur: 'blur'
   }

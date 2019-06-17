@@ -48,7 +48,7 @@ class Trade::ValidationRule < ActiveRecord::Base
   end
 
   def column_names
-    read_attribute(:column_names).dup
+    (read_attribute(:column_names) || []).dup
   end
 
   def column_names=(ary)

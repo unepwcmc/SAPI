@@ -15,7 +15,7 @@
         <th class="col6">NOTES</th>
       </tr>
     </thead>
-    <tbody {{bindAttr class="controller.citesSuspensionsExpanded:historic_expanded"}}>
+    <tbody {{bind-attr class="controller.citesSuspensionsExpanded:historic_expanded"}}>
       {{#each suspension in currentCitesSuspensions}}
         <tr class="current">
           <td>
@@ -49,7 +49,7 @@
     </tbody>
   </table>
   {{#if historicCitesSuspensions}}
-    <div {{bindAttr class=":historic controller.citesSuspensionsExpanded::hidden"}}>
+    <div {{bind-attr class=":historic controller.citesSuspensionsExpanded::hidden"}}>
       <table summary="data table">
         <thead>
           <tr>
@@ -89,7 +89,7 @@
         </tbody>
       </table>
     </div>
-    <div {{bindAttr class=":btn-hloder citesSuspensionsExpanded:expanded"}}>
+    <div {{bind-attr class=":btn-hloder citesSuspensionsExpanded:expanded"}}>
       {{#if controller.citesSuspensionsExpanded}}
         <a class="link active" {{action 'contractList' 'cites_suspensions' 'citesSuspensionsExpanded'}}>HIDE HISTORY</a>
       {{else}}

@@ -1,3 +1,3 @@
-Species.TaxonConceptReferencesController = Ember.ArrayController.extend
+Species.TaxonConceptReferencesController = Ember.Controller.extend
   needs: 'taxonConcept'
 

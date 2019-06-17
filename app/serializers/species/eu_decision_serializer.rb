@@ -10,22 +10,22 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     { :original_start_date_formatted => :original_start_date }
 
   def eu_decision_type
-    object['eu_decision_type'] && JSON.parse(object['eu_decision_type'])
+    object['eu_decision_type']
   end
 
   def geo_entity
-    object['geo_entity_en'] && JSON.parse(object['geo_entity_en'])
+    object['geo_entity_en']
   end
 
   def start_event
-    object['start_event'] && JSON.parse(object['start_event'])
+    object['start_event']
   end
 
   def source
-    object['source_en'] && JSON.parse(object['source_en'])
+    object['source_en']
   end
 
   def term
-    object['term_en'] && JSON.parse(object['term_en'])
+    object['term_en']
   end
 end

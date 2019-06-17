@@ -1,2 +1,2 @@
-Species.TaxonConceptDistributionController = Ember.ArrayController.extend
+Species.TaxonConceptDistributionController = Ember.Controller.extend
   needs: 'taxonConcept'

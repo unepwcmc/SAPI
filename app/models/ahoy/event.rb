@@ -16,6 +16,11 @@ module Ahoy
 
     belongs_to :visit, class_name: 'Ahoy::Visit'
     belongs_to :user
-    serialize :properties
+    #should have been working with serialize :properties, JSON
+    #like it works for other objects.
+    #Won't probably work in this case because, in the database,
+    #this field is of json type while it should have probably been text/string type.
+    #Should be safe to comment this as json type is supported in Rails 4
+    # serialize :properties, JSON
   end
 end

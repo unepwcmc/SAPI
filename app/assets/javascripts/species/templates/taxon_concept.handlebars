@@ -11,19 +11,29 @@
     <h2>{{authorYear}}</h2>
     <ul class="list">
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=phylumName taxonomy=taxonomy}}{{phylumName}}{{/link-to}}
+        <a {{action 'openSearchPage' phylumName}} class="hover-pointer">
+          {{phylumName}}
+        </a>
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=className taxonomy=taxonomy}}{{className}}{{/link-to}}
+        <a {{action 'openSearchPage' className}} class="hover-pointer">
+          {{className}}
+        </a>
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=orderName taxonomy=taxonomy}}{{orderName}}{{/link-to}}
+        <a {{action 'openSearchPage' orderName}} class="hover-pointer">
+          {{orderName}}
+        </a>
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=familyName taxonomy=taxonomy}}{{familyName}}{{/link-to}}
+        <a {{action 'openSearchPage' familyName}} class="hover-pointer">
+          {{familyName}}
+        </a>
       </li>
       <li>
-        {{#link-to 'taxonConcepts' taxon_concept_query=genusName taxonomy=taxonomy}}{{genusName}}{{/link-to}}
+        <a {{action 'openSearchPage' genusName}} class="hover-pointer">
+          {{genusName}}
+        </a>
       </li>
       {{#if isSubspecies}}
         <li>
@@ -38,11 +48,31 @@
     <li>{{#link-to 'taxonConcept.legal'}}LEGAL{{/link-to}}
       <ul>
         {{#unless isCms }}
-          <li class="first"><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
-          <li><a href="#cites_quotas" class="scroll-to">CITES Quotas</a></li>
-          <li><a href="#cites_suspensions" class="scroll-to">CITES Suspensions</a></li>
-          <li><a href="#eu_listings" class="scroll-to">EU Listing</a></li>
-          <li class="last"><a href="#eu_decisions" class="scroll-to">EU Decisions</a></li>
+          <li class="first">
+            {{#view Species.ScrollTo anchor="cites_listings" label="CITES Listings"}}
+              {{view.label}}
+            {{/view}}
+          </li>
+          <li>
+            {{#view Species.ScrollTo anchor="cites_quotas" label="CITES Quotas"}}
+              {{view.label}}
+            {{/view}}
+          </li>
+          <li>
+            {{#view Species.ScrollTo anchor="cites_suspensions" label="CITES Suspensions"}}
+              {{view.label}}
+            {{/view}}
+          </li>
+          <li>
+            {{#view Species.ScrollTo anchor="eu_listings" label="EU Listing"}}
+              {{view.label}}
+            {{/view}}
+          </li>
+          <li class="last">
+            {{#view Species.ScrollTo anchor="eu_decisions" label="EU Decisions"}}
+              {{view.label}}
+            {{/view}}
+          </li>
         {{/unless}}
       </ul>
     </li>
@@ -54,7 +84,7 @@
       <ul>
       </ul>
     </li>
-    <li {{bindAttr class="isCms:last-child"}}>{{#link-to 'taxonConcept.references'}}REFERENCES{{/link-to}}
+    <li {{bind-attr class="isCms:last-child"}}>{{#link-to 'taxonConcept.references'}}REFERENCES{{/link-to}}
       <ul>
       </ul>
     </li>
