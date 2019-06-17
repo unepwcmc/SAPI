@@ -5,7 +5,6 @@ class Species::DocumentSerializer < ActiveModel::Serializer
     :taxon_names, :geo_entity_names,
     :document_language_versions,
     :proposal_outcome
-  include PgArrayParser
 
   def document_type
     object.document_type.split(":").last

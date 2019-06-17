@@ -25,8 +25,10 @@ Trade.SearchResultsRoute = Trade.BeforeRoute.extend Trade.LoadingModal,
   }
 
   model: (params) ->
+    queryParams = params.queryParams
+
     @showLoadingModal()
-    Trade.Shipment.find(params)
+    Trade.Shipment.find(queryParams)
 
   afterModel: () ->
     @hideLoadingModal()

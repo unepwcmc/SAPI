@@ -32,7 +32,6 @@
 #
 
 class Trade::Shipment < ActiveRecord::Base
-  include PgArrayParser
   track_who_does_it
   attr_accessible :annual_report_upload_id, :appendix,
     :country_of_origin_id, :origin_permit_id,
@@ -113,10 +112,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def import_permits_ids
-    # parse_pg_array(read_attribute(:import_permits_ids) || '')
-    attr = read_attribute(:import_permits_ids)
-    return [] unless attr.present?
-    attr.map(&:to_s)
+    read_attribute(:import_permits_ids) || []
   end
 
   def import_permits_ids=(ary)
@@ -124,10 +120,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def export_permits_ids
-    # parse_pg_array(read_attribute(:export_permits_ids) || '')
-    attr = read_attribute(:export_permits_ids)
-    return [] unless attr.present?
-    attr.map(&:to_s)
+    read_attribute(:export_permits_ids) || []
   end
 
   def export_permits_ids=(ary)
@@ -135,10 +128,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def origin_permits_ids
-    # parse_pg_array(read_attribute(:origin_permits_ids) || '')
-    attr = read_attribute(:origin_permits_ids)
-    return [] unless attr.present?
-    attr.map(&:to_s)
+    read_attribute(:origin_permits_ids) || []
   end
 
   def origin_permits_ids=(ary)
@@ -148,7 +138,7 @@ class Trade::Shipment < ActiveRecord::Base
   def permits_ids
     (
       import_permits_ids + export_permits_ids + origin_permits_ids
-    ).uniq.compact
+    ).uniq.compact || []
   end
 
   private

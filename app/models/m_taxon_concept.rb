@@ -105,8 +105,6 @@
 #
 
 class MTaxonConcept < ActiveRecord::Base
-  include PgArrayParser
-  include ParsePgArray
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 
@@ -205,9 +203,9 @@ class MTaxonConcept < ActiveRecord::Base
 
   def countries_ids
     if respond_to?(:countries_ids_ary) && countries_ids_ary?
-      parse_array(:countries_ids_ary)
+      countries_ids_ary || []
     elsif respond_to? :tc_countries_ids_ary
-      parse_array(:tc_countries_ids_ary)
+      tc_countries_ids_ary || []
     else
       []
     end
@@ -222,39 +220,39 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   def all_distribution
-    parse_pg_array(all_distribution_ary || '')
+    all_distribution_ary || []
   end
 
   def all_distribution_iso_codes
-    parse_pg_array(all_distribution_iso_codes_ary || '')
+    all_distribution_iso_codes_ary || []
   end
 
   def native_distribution
-    parse_pg_array(native_distribution_ary || '')
+    native_distribution_ary || []
   end
 
   def introduced_distribution
-    parse_pg_array(introduced_distribution_ary || '')
+    introduced_distribution_ary || []
   end
 
   def introduced_uncertain_distribution
-    parse_pg_array(introduced_uncertain_distribution_ary || '')
+    introduced_uncertain_distribution_ary || []
   end
 
   def reintroduced_distribution
-    parse_pg_array(reintroduced_distribution_ary || '')
+    reintroduced_distribution_ary || []
   end
 
   def extinct_distribution
-    parse_pg_array(extinct_distribution_ary || '')
+    extinct_distribution_ary || []
   end
 
   def extinct_uncertain_distribution
-    parse_pg_array(extinct_uncertain_distribution_ary || '')
+    extinct_uncertain_distribution_ary || []
   end
 
   def uncertain_distribution
-    parse_pg_array(uncertain_distribution_ary || '')
+    uncertain_distribution_ary || []
   end
 
   def recently_changed

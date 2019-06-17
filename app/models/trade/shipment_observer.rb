@@ -1,5 +1,4 @@
 class Trade::ShipmentObserver < ActiveRecord::Observer
-  include PgArrayParser
 
   def before_save(shipment)
     @old_permits_ids = []
@@ -8,13 +7,7 @@ class Trade::ShipmentObserver < ActiveRecord::Observer
       shipment.export_permits_ids_was,
       shipment.origin_permits_ids_was
     ].each do |permits_ids|
-      # no idea why this is sometimes a string and sometimes an Array
-      @old_permits_ids +=
-        if permits_ids.is_a?(Array)
-          permits_ids.dup
-        else
-          parse_pg_array(permits_ids || '')
-        end
+      @old_permits_ids += permits_ids ? permits_ids.dup : []
     end
     unless shipment.reported_taxon_concept_id
       shipment.reported_taxon_concept_id = shipment.taxon_concept_id
