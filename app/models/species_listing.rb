@@ -27,7 +27,7 @@ class SpeciesListing < ActiveRecord::Base
             :query => "%#{query}%").
         joins(:designation)
     else
-      scoped
+      all
     end
   end
 

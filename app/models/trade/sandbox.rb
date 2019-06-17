@@ -56,7 +56,7 @@ class Trade::Sandbox
   end
 
   def shipments
-    @ar_klass.order(:id).all
+    @ar_klass.order(:id).to_a
   end
 
   def shipments=(new_shipments)

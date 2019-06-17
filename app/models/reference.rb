@@ -29,7 +29,7 @@ class Reference < ActiveRecord::Base
       where("UPPER(citation) LIKE UPPER(:query)",
         :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 

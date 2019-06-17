@@ -115,7 +115,7 @@ class GeoEntity < ActiveRecord::Base
             OR UPPER(iso_code2) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 

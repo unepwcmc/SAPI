@@ -96,7 +96,7 @@ class Event < ActiveRecord::Base
             OR UPPER(events.description) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 
