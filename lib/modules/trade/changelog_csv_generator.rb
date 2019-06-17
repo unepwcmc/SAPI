@@ -15,7 +15,7 @@ class Trade::ChangelogCsvGenerator
 
     tempfile = Tempfile.new(["changelog_sapi_#{aru.id}-", ".csv"], Rails.root.join('tmp'))
 
-    ar_klass = aru.sandbox.ar_klass
+    ar_klass = aru.sandbox(true).ar_klass
 
     all_columns = DEFAULT_COLUMNS + data_columns.map(&:camelize)
     all_columns = all_columns + ['Duplicate'] if duplicates
