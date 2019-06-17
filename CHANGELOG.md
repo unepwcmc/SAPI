@@ -1,3 +1,13 @@
+### 1.2.1
+
+**Trade Admin**
+
+* Make annual reports submission synchronous again
+
+**Configuration**
+
+* Pull correct email address for automatic emails
+
 ### 1.2.0
 
 **Species+ Admin:**

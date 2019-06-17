@@ -27,7 +27,8 @@ describe SubmissionWorker do
     Trade::ChangelogCsvGenerator.stub(:call).and_return(Tempfile.new('changelog.csv'))
     SubmissionWorker.any_instance.stub(:upload_on_S3)
   end
-  context "when no primary errors" do
+  # Test temporarily disabled because SubmissionWorker has been disabled
+  pending "when no primary errors" do
     before(:each) do
       @aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
       @aru.save(:validate => false)
@@ -55,14 +56,14 @@ describe SubmissionWorker do
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
       Trade::Permit.find_by_number('BBB').should_not be_nil
     end
-    context "when permit previously reported" do
+   pending "when permit previously reported" do
       before(:each) { create(:permit, :number => 'xxx') }
       specify {
         expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Permit.count }.by(2)
       }
     end
   end
-  context "when primary errors present" do
+  pending "when primary errors present" do
     before(:each) do
       @aru = build(:annual_report_upload)
       @aru.save(:validate => false)
@@ -80,7 +81,7 @@ describe SubmissionWorker do
       expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.not_to change { Trade::Shipment.count }
     }
   end
-  context "when reported under a synonym" do
+  pending "when reported under a synonym" do
     before(:each) do
       @synonym = create_cites_eu_species(
         :name_status => 'S',
