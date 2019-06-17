@@ -83,7 +83,7 @@
         <%= select_tag 'document_tags_ids',
           option_groups_from_collection_for_select(
             Document.elibrary_document_tag_types,
-            :scoped,
+            :all,
             :display_name,
             :id,
             :name,
