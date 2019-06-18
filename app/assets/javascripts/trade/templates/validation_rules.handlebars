@@ -29,9 +29,9 @@
     </td>
     <td>
       <ul>
-      {{#each scopePart in scope}}
-        <li>{{scopePart}}</li>
-      {{/each}}
+        {{#each scopePart in controller.scopeArray}}
+          <li>{{scopePart}}</li>
+        {{/each}}
       </ul>
     </td>
     <td>{{validValuesView}}</td>
