@@ -52,12 +52,12 @@ describe CitesCop do
   describe :destroy do
     let(:cites_cop) { create_cites_cop }
     context "when no dependent objects attached" do
-      specify { cites_cop.destroy.should be_true }
+      specify { cites_cop.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       context "when listing changes" do
         let!(:listing_change) { create_cites_I_addition(:event => cites_cop) }
-        specify { cites_cop.destroy.should be_false }
+        specify { cites_cop.destroy.should be_falsey }
       end
     end
   end

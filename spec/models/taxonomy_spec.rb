@@ -31,24 +31,24 @@ describe Taxonomy do
   describe :update do
     context "when updating a non-protected name" do
       let(:taxonomy) { create(:taxonomy) }
-      specify { taxonomy.update_attributes({ :name => 'WORLD OF LOLCATS' }).should be_true }
+      specify { taxonomy.update_attributes({ :name => 'WORLD OF LOLCATS' }).should be_truthy }
     end
     context "when updating a protected name" do
-      specify { cites_eu.update_attributes({ :name => 'WORLD OF LOLCATS' }).should be_false }
+      specify { cites_eu.update_attributes({ :name => 'WORLD OF LOLCATS' }).should be_falsey }
     end
   end
   describe :destroy do
     context "when no dependent objects attached" do
       let(:taxonomy) { create(:taxonomy, :name => 'WILDLIFE') }
-      specify { taxonomy.destroy.should be_true }
+      specify { taxonomy.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       let(:taxonomy) { create(:taxonomy, :name => 'WILDLIFE') }
       let!(:designation) { create(:designation, :taxonomy => taxonomy) }
-      specify { taxonomy.destroy.should be_false }
+      specify { taxonomy.destroy.should be_falsey }
     end
     context "when protected name" do
-      specify { cites_eu.destroy.should be_false }
+      specify { cites_eu.destroy.should be_falsey }
     end
   end
 end
