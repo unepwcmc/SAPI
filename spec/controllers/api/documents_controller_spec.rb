@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Api::V1::DocumentsController, :type => :controller do
+describe Api::V1::DocumentsController, type: :controller do
 
   before(:each) do
     @taxon_concept = create_cites_eu_species
@@ -98,13 +98,13 @@ describe Api::V1::DocumentsController, :type => :controller do
   context "download documents" do
     context "single document selected" do
       it "should return 404 if file is missing" do
-        File.stub!(:exists?).and_return(false)
+        expect(File).to receive(:exists?).and_return(false)
         controller.should_receive(:render_404) { controller.render nothing: true }
         get :download_zip, ids: @document2.id
       end
       it "should return zip file if file is found" do
-        controller.stub!(:render)
-        File.stub!(:exists?).and_return(true)
+        allow(controller).to receive(:render)
+        expect(File).to receive(:exists?).and_return(true)
         get :download_zip, ids: @document2.id
         response.headers['Content-Type'].should eq 'application/zip'
       end
@@ -112,13 +112,13 @@ describe Api::V1::DocumentsController, :type => :controller do
 
     context "multiple documents selected" do
       it "should return 404 if all files are missing" do
-        File.stub!(:exists?).and_return(false)
+        expect(File).to receive(:exists?).and_return(false, false)
         controller.should_receive(:render_404) { controller.render nothing: true }
         get :download_zip, ids: "#{@document.id},#{@document2.id}"
       end
 
       it "should return zip file if at least a file is found" do
-        File.stub!(:exists?).and_return(false, true)
+        expect(File).to receive(:exists?).and_return(false, true)
         get :download_zip, ids: "#{@document.id},#{@document2.id}"
         response.headers['Content-Type'].should eq 'application/zip'
       end
