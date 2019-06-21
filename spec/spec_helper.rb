@@ -79,11 +79,10 @@ RSpec.configure do |config|
     @user.make_current
   end
 
-  config.before(:each) do |example_method|
+  config.before(:each) do |example|
     # Clears out the jobs for tests using the fake testing
     Sidekiq::Worker.clear_all
     # Get the current example from the example_method object
-    example = example_method.example
 
     if example.metadata[:sidekiq] == :fake
       Sidekiq::Testing.fake!
