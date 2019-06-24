@@ -116,6 +116,7 @@ end
 
 group :test, :development do
   gem "rspec-rails", '~> 3.0.1'
+  gem 'rspec-collection_matchers'
   gem "rspec-mocks"
   gem "json_spec", '1.1.5'
   gem "database_cleaner", ">=1.2.0"
