@@ -16,10 +16,10 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for genus Notomys" do
-          specify { @genus.cites_show.should be_false }
+          specify { @genus.cites_show.should be_falsey }
         end
         context "for species Notomys aquilo" do
-          specify { @species.cites_show.should be_false }
+          specify { @species.cites_show.should be_falsey }
         end
       end
 

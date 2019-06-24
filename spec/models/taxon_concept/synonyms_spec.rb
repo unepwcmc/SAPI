@@ -30,13 +30,13 @@ describe TaxonConcept do
     }
     context "when new" do
       specify {
-        tc.has_synonyms?.should be_true
+        tc.has_synonyms?.should be_truthy
       }
       specify {
-        synonym.is_synonym?.should be_true
+        synonym.is_synonym?.should be_truthy
       }
       specify {
-        synonym.has_accepted_names?.should be_true
+        synonym.has_accepted_names?.should be_truthy
       }
       specify {
         synonym.full_name.should == 'Lolcatus lolus'

@@ -22,7 +22,7 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for species Platysternon megacephalum" do
-          specify { @species.cites_show.should be_true }
+          specify { @species.cites_show.should be_truthy }
         end
       end
 
@@ -43,7 +43,7 @@ describe TaxonConcept do
 
       describe :eu_show do
         context "for species Platysternon megacephalum" do
-          specify { @species.eu_show.should be_true }
+          specify { @species.eu_show.should be_truthy }
         end
       end
 
