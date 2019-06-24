@@ -95,7 +95,6 @@ RSpec.configure do |config|
       Sidekiq::Testing.fake!
     end
   end
-
 end
 
 def build_attributes(*args)
