@@ -32,6 +32,7 @@ gem 'groupdate'
 gem "chartkick"
 gem 'rubyzip', '>= 1.0.0'
 
+
 gem 'sidekiq', '< 5'
 gem 'sidekiq-status'
 gem 'sidekiq-unique-jobs', '~> 4.0.17'
@@ -102,7 +103,7 @@ group :development do
   gem 'capistrano-rvm', '~> 0.1.2', require: false
   gem 'capistrano-maintenance', '~> 1.0', require: false
   gem 'capistrano-passenger', '~> 0.2.0', require: false
-#  gem 'capistrano-local-precompile', '~> 1.2.0', require: false
+  gem 'capistrano-local-precompile', '~> 1.2.0', require: false
   gem 'slackistrano', require: false
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
