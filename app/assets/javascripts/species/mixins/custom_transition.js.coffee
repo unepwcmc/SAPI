@@ -14,11 +14,11 @@ getQueryString = (queryParams) ->
 
 getQueryStringItem = (key, param) ->    
   if Array.isArray(param)
-    getArrayQueryString(key, param)
+    getArrayQueryStringItem(key, param)
   else if isNotUndefinedOrNull(param)
     key + '=' + param
 
-getArrayQueryString = (queryKey, queryArray) ->
+getArrayQueryStringItem = (queryKey, queryArray) ->
   queryKey + '=' + queryArray.map((param) => 
     param
   ).join('%2C')
