@@ -13,14 +13,14 @@ describe Trade::ExportsController do
       it "does not log download information from the admin interface" do
         create(:shipment)
         Trade::ShipmentsExport.any_instance.stub(:public_file_name).and_return('shipments.csv')
-        lambda do
+        expect {
           get :download, :filters => {
             :report_type => :raw,
             :exporters_ids => ['40'],
             :time_range_start => '1975',
             :time_range_end => '2000'
           }
-        end.should_not change(Trade::TradeDataDownload, :count).by(1)
+        }.not_to change(Trade::TradeDataDownload, :count)
       end
     end
     context 'when shipments cannot be retrieved' do

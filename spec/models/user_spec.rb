@@ -36,7 +36,7 @@ describe User do
   describe :destroy do
     context "when no dependent objects attached" do
       let(:user) { create(:user) }
-      specify { user.destroy.should be_true }
+      specify { user.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       let(:user) { create(:user) }
@@ -44,7 +44,7 @@ describe User do
         user.make_current
         create(:shipment)
       end
-      specify { user.destroy.should be_false }
+      specify { user.destroy.should be_falsey }
     end
   end
 

@@ -35,40 +35,40 @@ describe Designation do
       specify {
         designation.update_attributes(
           { :name => 'RULES OF INTERGALACTIC TRADE' }
-        ).should be_true
+        ).should be_truthy
       }
     end
     context "when updating a protected name" do
       specify {
         cites.update_attributes(
           { :name => 'RULES OF INTERGALACTIC TRADE' }
-        ).should be_false
+        ).should be_falsey
       }
     end
     context "when updating taxonomy with no dependent objects attached" do
       let(:designation) { create(:designation) }
       let(:taxonomy) { create(:taxonomy) }
-      specify { designation.update_attributes(:taxonomy_id => taxonomy.id).should be_true }
+      specify { designation.update_attributes(:taxonomy_id => taxonomy.id).should be_truthy }
     end
     context "when updating taxonomy with dependent objects attached" do
       let(:designation) { create(:designation) }
       let!(:change_type) { create(:change_type, :designation => designation) }
       let(:taxonomy) { create(:taxonomy) }
-      specify { designation.update_attributes(:taxonomy_id => taxonomy.id).should be_false }
+      specify { designation.update_attributes(:taxonomy_id => taxonomy.id).should be_falsey }
     end
   end
   describe :destroy do
     context "when no dependent objects attached" do
       let(:designation) { create(:designation, :name => 'GALACTIC REGULATIONS') }
-      specify { designation.destroy.should be_true }
+      specify { designation.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       let(:designation) { create(:designation, :name => 'GALACTIC REGULATIONS') }
       let!(:change_type) { create(:change_type, :designation => designation) }
-      specify { designation.destroy.should be_false }
+      specify { designation.destroy.should be_falsey }
     end
     context "when protected name" do
-      specify { cites.destroy.should be_false }
+      specify { cites.destroy.should be_falsey }
     end
   end
 end

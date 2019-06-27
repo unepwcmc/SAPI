@@ -25,19 +25,19 @@ describe TaxonConcept do
 
       describe :cites_listed do
         context "for genus Ailuropoda" do
-          specify { @genus.cites_listed.should be_false }
+          specify { @genus.cites_listed.should be_falsey }
         end
         context "for species Ailuropoda melanoleuca" do
-          specify { @species.cites_listed.should be_true }
+          specify { @species.cites_listed.should be_truthy }
         end
       end
 
       describe :eu_listed do
         context "for genus Ailuropoda" do
-          specify { @genus.eu_listed.should be_false }
+          specify { @genus.eu_listed.should be_falsey }
         end
         context "for species Ailuropoda melanoleuca" do
-          specify { @species.eu_listed.should be_true }
+          specify { @species.eu_listed.should be_truthy }
         end
       end
 

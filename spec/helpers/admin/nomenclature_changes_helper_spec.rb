@@ -10,8 +10,8 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe Admin::NomenclatureChangesHelper do
-  describe :split_blurb do
+describe Admin::NomenclatureChangesHelper, type: :helper do
+  describe 'split_blurb' do
     include_context 'split_definitions'
     context "split with input" do
       before(:each) { @nomenclature_change = split_with_input }
@@ -26,7 +26,7 @@ describe Admin::NomenclatureChangesHelper do
       specify { expect(helper.split_blurb).to match(@nomenclature_change.outputs.first.display_full_name) }
     end
   end
-  describe :lump_blurb do
+  describe 'lump_blurb' do
     include_context 'lump_definitions'
     context "lump with inputs" do
       before(:each) { @nomenclature_change = lump_with_inputs }
@@ -41,7 +41,7 @@ describe Admin::NomenclatureChangesHelper do
       specify { expect(helper.lump_blurb).to match(@nomenclature_change.output.display_full_name) }
     end
   end
-  describe :status_change_blurb do
+  describe 'status_change_blurb' do
     include_context 'status_change_definitions'
     context "status upgrade with primary output" do
       before(:each) { @nomenclature_change = t_to_a_with_primary_output }
