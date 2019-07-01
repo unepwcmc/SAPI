@@ -40,7 +40,7 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
   openTaxonPage: (taxonConceptId) ->
     @set('redirected', false)
     m = Species.TaxonConcept.find(taxonConceptId)
-    @customTransitionToRoute('taxonConcept.legal', taxonConceptId, {queryParams: false})
+    @customTransitionToRoute('taxonConcept.legal', m, {queryParams: false})
 
   actions:
     openSearchPage: (taxonFullName, page, perPage) ->

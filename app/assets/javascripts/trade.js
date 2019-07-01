@@ -33,6 +33,7 @@
 //= require ./trade/store
 //= require_tree ./trade/models
 //= require ./trade/query_params
+//= require_tree ./shared-mixins
 //= require_tree ./trade/mixins
 //= require_tree ./trade/controllers
 //= require_tree ./trade/helpers
