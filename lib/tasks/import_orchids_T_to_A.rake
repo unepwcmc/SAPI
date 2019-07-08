@@ -1,19 +1,23 @@
+require Rails.root.join('lib/tasks/helpers_for_import.rb')
 namespace :import do
 
-  desc 'Change orchids into accepted name'
-  task :orchids_T_to_A => [:environment] do
+  desc 'Change orchids into accepted name (usage: rake import:orchids_T_to_A[path/to/file])'
+  task :orchids_T_to_A , 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
     user_id = User.where('name ILIKE ?', '%luca%').first.id
-    CSV.foreach("lib/files/Orchids_T_to_A.csv", headers: true) do |row|
-      @nomenclature_change = klass.create(status: NomenclatureChange::NEW, created_by_id: user_id, updated_by_id: user_id)
-      primary_output(row, user_id)
-      if !@nomenclature_change.valid?
-        puts "There was a problem with this Taxon Concept #{row['ID'].strip}"
-        next
+    files = files_from_args(t, args)
+    files.each do |file|
+      CSV.foreach(file, headers: true) do |row|
+        @nomenclature_change = klass.create(status: NomenclatureChange::NEW, created_by_id: user_id, updated_by_id: user_id)
+        primary_output(row, user_id)
+        if !@nomenclature_change.valid?
+          puts "There was a problem with this Taxon Concept #{row['ID'].strip}"
+          next
+        end
+        processor = klass::Processor.new(@nomenclature_change)
+        @summary = processor.summary
+        @nomenclature_change.update_attributes(:status => NomenclatureChange::SUBMITTED)
+        @nomenclature_change.save
       end
-      processor = klass::Processor.new(@nomenclature_change)
-      @summary = processor.summary
-      @nomenclature_change.update_attributes(:status => NomenclatureChange::SUBMITTED)
-      @nomenclature_change.save
     end
   end
 end
