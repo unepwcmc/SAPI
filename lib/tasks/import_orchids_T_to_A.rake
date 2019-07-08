@@ -9,14 +9,11 @@ namespace :import do
       CSV.foreach(file, headers: true) do |row|
         @nomenclature_change = klass.create(status: NomenclatureChange::NEW, created_by_id: user_id, updated_by_id: user_id)
         primary_output(row, user_id)
-        if !@nomenclature_change.valid?
+        unless @nomenclature_change.valid?
           puts "There was a problem with this Taxon Concept #{row['ID'].strip}"
           next
         end
-        processor = klass::Processor.new(@nomenclature_change)
-        @summary = processor.summary
         @nomenclature_change.update_attributes(:status => NomenclatureChange::SUBMITTED)
-        @nomenclature_change.save
       end
     end
   end
