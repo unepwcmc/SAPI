@@ -383,6 +383,16 @@ class CsvToDbMap
       'name' => 'name varchar',
       'display_name_es' => 'display_name_es varchar',
       'display_name_fr' => 'display_name_fr varchar'
+    },
+    'author_year_import' => {
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'legacy_id integer',
+      'ParentRank' => 'parent_rank varchar',
+      'ParentRecID' => 'parent_id integer',
+      'Status' => 'status varchar',
+      'Species author' => 'author varchar',
+      'notes' => 'notes varchar'
     }
   }
 
