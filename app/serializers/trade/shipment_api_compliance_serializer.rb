@@ -1,4 +1,4 @@
-class Trade::ShipmentApiFromViewSerializer < ActiveModel::Serializer
+class Trade::ShipmentApiComplianceSerializer < ActiveModel::Serializer
    attributes :id , :year, :appendix, :taxon_name, :class_name, :order_name, :family_name, :genus_name,
               :term, :importer_reported_quantity, :exporter_reported_quantity,
               :unit, :importer, :importer_iso, :exporter, :exporter_iso, :origin, :purpose, :source,
@@ -44,5 +44,4 @@ class Trade::ShipmentApiFromViewSerializer < ActiveModel::Serializer
   def exporter_reported_quantity
     object.attributes['exporter_reported_quantity'] || object.attributes['exporter_quantity']
   end
-
 end
