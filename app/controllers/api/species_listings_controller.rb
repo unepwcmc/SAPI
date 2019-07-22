@@ -2,16 +2,10 @@ class Api::SpeciesListingsController < ApplicationController
   respond_to :json
   inherit_resources
 
-  DESIGNATION = %w[CITES CMS EU].freeze
-
   def index
-    appendix = unless (trade_plus_params.present? && sanitize_params)
-                  SpeciesListing.all
-                else
-                  desig_id = Designation.find_by_name(trade_plus_params[:designation].upcase).id
-                  SpeciesListing.where(designation_id: desig_id)
-                end
-    render :json => appendix
+    designations = Designation.where(sanitized_params)
+    listings = SpeciesListing.where(designation_id: designations)
+    render :json => listings
   end
 
   private
@@ -20,9 +14,12 @@ class Api::SpeciesListingsController < ApplicationController
     params.permit(:designation)
   end
 
-  def sanitize_params
-    return true if trade_plus_params.empty?
-    DESIGNATION.include?(trade_plus_params[:designation].upcase)
+  def sanitized_params
+    return nil if trade_plus_params.empty? || !trade_plus_params[:designation].present?
+
+    user_designations = trade_plus_params[:designation].split(',').map(&:upcase)
+    designations = Designation.pluck(:name).map(&:upcase)
+    {name: user_designations & designations }
   end
 
 end
