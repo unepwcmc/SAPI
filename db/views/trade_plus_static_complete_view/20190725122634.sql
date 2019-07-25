@@ -18,7 +18,7 @@ FROM (
          ts.importer_reported_quantity AS importer_reported_quantity,
          ts.exporter_reported_quantity AS exporter_reported_quantity,
          units.id AS unit_id,
-         units.name_en AS unit,
+         ts.unit_converted AS unit,
          exporters.id AS exporter_id,
          exporters.iso_code2 AS exporter_iso,
          exporters.name_en AS exporter,
