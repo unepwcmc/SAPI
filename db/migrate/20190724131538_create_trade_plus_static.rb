@@ -16,7 +16,9 @@ class CreateTradePlusStatic < ActiveRecord::Migration
       t.string :importer_reported_quantity
       t.string :exporter_reported_quantity
       t.string :term
+      t.string :term_converted
       t.string :unit
+      t.string :unit_converted
       t.string :purpose
       t.string :source
     end
