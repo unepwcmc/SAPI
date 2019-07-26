@@ -1,7 +1,7 @@
 class CreateTradePlusStatic < ActiveRecord::Migration
   def change
     create_table :trade_plus_static do |t|
-      t.string :year
+      t.integer :year
       t.string :appendix
       t.string :taxon_name
       t.integer :taxon_id
