@@ -3,15 +3,6 @@ class Api::V1::ShipmentsController < ApplicationController
 
   before_filter :authenticate
 
-  GROUPING_ATTRIBUTES = {
-    category: ['issue_type'],
-    commodity: ['term', 'term_id'],
-    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
-    importing: ['importer', 'importer_iso', 'importer_id'],
-    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
-    taxonomy: [''],
-  }
-
   def index
     @search = Trade::Filter.new(search_params)
     render :json => @search.results,
@@ -21,7 +12,7 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def chart_query
     @chart_data = Rails.cache.fetch(['chart_data', params], expires_in: 1.week) do
-                    Trade::ComplianceGrouping.new('year', {attributes: ['issue_type']})
+                    Trade::Grouping::Compliance.new('year', {attributes: ['issue_type']})
                                              .countries_reported_range(params[:year])
                   end
     render :json => @chart_data
@@ -30,19 +21,19 @@ class Api::V1::ShipmentsController < ApplicationController
   def grouped_query
     limit = params[:limit].present? ? params[:limit].to_i : ''
     years_range = "year >= 2012 AND year <= #{Date.today.year - 1}"
-    query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: years_range, limit: limit })
+    query = Trade::Grouping::Compliance.new('year', {attributes: sanitized_attributes, condition: years_range, limit: limit })
     data = query.run
-    params_hash = {}
+    params_hash = { attribute: 'year' }
     sanitized_attributes.map { |p| params_hash[p] = p }
     @grouped_data = Rails.cache.fetch(['grouped_data', params], expires_in: 1.week) do
                       sanitized_attributes.first.empty? ? query.taxonomic_grouping :
-                                                          query.json_by_year(data, params, params_hash)
+                                                          query.json_by_attribute(data, params_hash)
                     end
     render :json =>  @grouped_data
   end
 
   def search_query
-    query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
+    query = Trade::Grouping::Compliance.new('year', {attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
     data = query.run
     @search_data =  Rails.cache.fetch(['search_data', params], expires_in: 1.week) do
                       query.build_hash(data, params)
@@ -67,7 +58,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def search_download_all_data
-    query = Trade::ComplianceGrouping.new('year', {attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
+    query = Trade::Grouping::Compliance.new('year', {attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
     data = query.run
     @search_download_all_data = Rails.cache.fetch(['search_download_all_data', params], expires_in: 1.week) do
                                   search_data = query.build_hash(data, params)
@@ -105,7 +96,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def sanitized_attributes
-    GROUPING_ATTRIBUTES[params[:group_by].to_sym]
+    Trade::Grouping::Compliance::GROUPING_ATTRIBUTES[params[:group_by].to_sym]
   end
 
   def authenticate
