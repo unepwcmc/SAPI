@@ -25,6 +25,7 @@ SAPI::Application.routes.draw do
       resources :units, :only => [:index]
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
+      resources :trade_plus_filters, only: :index
       resources :documents do
         collection do
           get 'download_zip'
