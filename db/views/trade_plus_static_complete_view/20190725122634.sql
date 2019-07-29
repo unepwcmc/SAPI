@@ -46,5 +46,6 @@ FROM (
   LEFT OUTER JOIN geo_entities importers ON ts.importer_iso = importers.iso_code2
   LEFT OUTER JOIN geo_entities origins ON ts.origin_iso = origins.iso_code2
   WHERE ts.appendix != 'N'
+  AND listings.designation_id = 1
   )
   AS s
