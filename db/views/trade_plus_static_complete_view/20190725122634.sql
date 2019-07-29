@@ -42,9 +42,9 @@ FROM (
   LEFT OUTER JOIN trade_codes purposes ON ts.purpose = purposes.code
   LEFT OUTER JOIN trade_codes terms ON ts.term = terms.name_en
   LEFT OUTER JOIN trade_codes units ON ts.unit = units.name_en
-  LEFT OUTER JOIN geo_entities exporters ON ts.exporter = exporters.name_en
-  LEFT OUTER JOIN geo_entities importers ON ts.importer = importers.name_en
-  LEFT OUTER JOIN geo_entities origins ON ts.origin = origins.name_en
+  LEFT OUTER JOIN geo_entities exporters ON ts.exporter_iso = exporters.iso_code2
+  LEFT OUTER JOIN geo_entities importers ON ts.importer_iso = importers.iso_code2
+  LEFT OUTER JOIN geo_entities origins ON ts.origin_iso = origins.iso_code2
   WHERE ts.appendix != 'N'
   )
   AS s

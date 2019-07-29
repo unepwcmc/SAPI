@@ -11,8 +11,11 @@ class CreateTradePlusStatic < ActiveRecord::Migration
       t.string :family_name
       t.string :genus_name
       t.string :importer
+      t.string :importer_iso
       t.string :exporter
+      t.string :exporter_iso
       t.string :origin
+      t.string :origin_iso
       t.string :importer_reported_quantity
       t.string :exporter_reported_quantity
       t.string :term
