@@ -3,7 +3,7 @@ FROM (
   SELECT ts.id, ts.year, ts.appendix, listings.id AS appendix_id,
          ts.taxon_id, ts.taxon_concept_author_year AS author_year,
          ts.taxon_concept_name_status AS name_status,
-         ts.taxon_name AS taxon,
+         ts.taxon_name AS taxon_name,
          ts.taxon_concept_phylum_id AS phylum_id,
          ts.group_name AS group_name,
          ts.taxon_concept_class_id AS class_id,
