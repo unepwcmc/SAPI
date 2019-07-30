@@ -9,6 +9,17 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     taxonomy: [''],
   }
 
+  COUNTRIES = {
+    2018 => 182,
+    2017 => 182,
+    2016 => 182,
+    2015 => 180,
+    2014 => 180,
+    2013 => 179,
+    2012 => 176,
+    2011 => 175
+  }.freeze
+
   def initialize(group, opts={})
     super(group, opts)
   end
@@ -35,20 +46,6 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
       hash[year] << data
     end
     hash
-  end
-
-  def read_taxonomy_conversion
-    conversion = {}
-    taxonomy = CSV.read(TAXONOMIC_GROUPING, {headers: true})
-    taxonomy.each do |csv|
-      conversion[csv['group']] ||= []
-      data = {
-        taxon_name: csv['taxon_name'],
-        rank: csv['taxonomic_level']
-      }
-      conversion[csv['group']] << data
-    end
-    conversion
   end
 
   def taxonomic_grouping
@@ -160,6 +157,34 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
 
   def shipments_table
     'non_compliant_shipments_view'
+  end
+
+  # Allowed attributes
+  ATTRIBUTES = {
+    id: 'id',
+    year: 'year',
+    appendix: 'appendix',
+    importer: 'importer',
+    importer_iso: 'importer_iso',
+    importer_id: 'importer_id',
+    exporter: 'exporter',
+    exporter_iso: 'exporter_iso',
+    exporter_id: 'exporter_id',
+    term: 'term',
+    term_id: 'term_id',
+    unit: 'unit',
+    purpose: 'purpose',
+    source: 'source',
+    taxon_name: 'taxon_name',
+    genus_name: 'genus_name',
+    family_name: 'family_name',
+    class_name: 'class_name',
+    issue_type: 'issue_type',
+    taxon_concept_id: 'taxon_concept_id'
+  }.freeze
+
+  def attributes
+    ATTRIBUTES
   end
 
   def importer_exporter_countries(data, importers, year)

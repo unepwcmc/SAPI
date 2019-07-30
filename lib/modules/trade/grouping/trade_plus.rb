@@ -21,4 +21,8 @@ class Trade::Grouping::TradePlus
   def shipments_table
     'trade_plus_shipments_view'
   end
+
+  def attributes
+    #TODO
+  end
 end

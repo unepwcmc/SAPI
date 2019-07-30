@@ -1,41 +1,6 @@
 class Trade::Grouping::Base
   attr_reader :query
 
-  # Allowed attributes
-  ATTRIBUTES = {
-    id: 'id',
-    year: 'year',
-    appendix: 'appendix',
-    importer: 'importer',
-    importer_iso: 'importer_iso',
-    importer_id: 'importer_id',
-    exporter: 'exporter',
-    exporter_iso: 'exporter_iso',
-    exporter_id: 'exporter_id',
-    term: 'term',
-    term_id: 'term_id',
-    unit: 'unit',
-    purpose: 'purpose',
-    source: 'source',
-    taxon_name: 'taxon_name',
-    genus_name: 'genus_name',
-    family_name: 'family_name',
-    class_name: 'class_name',
-    issue_type: 'issue_type',
-    taxon_concept_id: 'taxon_concept_id'
-  }
-
-  COUNTRIES = {
-    2018 => 182,
-    2017 => 182,
-    2016 => 182,
-    2015 => 180,
-    2014 => 180,
-    2013 => 179,
-    2012 => 176,
-    2011 => 175
-  }
-
   TAXONOMIC_GROUPING = 'lib/data/group_conversions.csv'.freeze
 
   YEARS = (2012..Date.today.year - 1).to_a
@@ -65,18 +30,6 @@ class Trade::Grouping::Base
     db.execute(sql)
   end
 
-  def group_query
-    columns = [@group, @attributes].flatten.compact.uniq.join(',')
-    <<-SQL
-      SELECT #{columns}, COUNT(*) AS cnt
-      FROM #{shipments_table}
-      WHERE #{@condition}
-      GROUP BY #{columns}
-      ORDER BY cnt DESC
-      #{limit}
-    SQL
-  end
-
   def json_by_attribute(data, opts={})
     attribute = sanitise_group(opts[:attribute])
 
@@ -100,7 +53,37 @@ class Trade::Grouping::Base
     raise NotImplementedError
   end
 
+  def attributes
+    raise NotImplementedError
+  end
+
+  def group_query
+    columns = [@group, @attributes].flatten.compact.uniq.join(',')
+    <<-SQL
+      SELECT #{columns}, COUNT(*) AS cnt
+      FROM #{shipments_table}
+      WHERE #{@condition}
+      GROUP BY #{columns}
+      ORDER BY cnt DESC
+      #{limit}
+    SQL
+  end
+
   private
+
+  def read_taxonomy_conversion
+    conversion = {}
+    taxonomy = CSV.read(TAXONOMIC_GROUPING, {headers: true})
+    taxonomy.each do |csv|
+      conversion[csv['group']] ||= []
+      data = {
+        taxon_name: csv['taxon_name'],
+        rank: csv['taxonomic_level']
+      }
+      conversion[csv['group']] << data
+    end
+    conversion
+  end
 
   def limit
     @limit ? "LIMIT #{@limit}" : ''
@@ -108,12 +91,12 @@ class Trade::Grouping::Base
 
   def sanitise_group(group)
     return nil unless group
-    ATTRIBUTES[group.to_sym]
+    attributes[group.to_sym]
   end
 
   def sanitise_params(params)
     return nil if params.blank?
-    params.map { |p| ATTRIBUTES[p.to_sym] }
+    params.map { |p| attributes[p.to_sym] }
   end
 
   def sanitise_limit(limit)

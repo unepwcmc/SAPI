@@ -1,15 +1,26 @@
 class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
+  def initialize(group, opts={})
+    # exporter or importer
+    @reported_by = opts[:reported_by] || 'importer'
+    super(group, opts)
+  end
+
+  private
+
+  def shipments_table
+    'trade_plus_static_complete_view'
+  end
+
   # Allowed attributes
-  # TODO needs to be updated
   ATTRIBUTES = {
     id: 'id',
     year: 'year',
     appendix: 'appendix',
     importer: 'importer',
-    #importer_iso: 'importer_iso',
+    importer_iso: 'importer_iso',
     exporter: 'exporter',
-    #exporter_iso: 'exporter_iso',
+    exporter_iso: 'exporter_iso',
     term: 'term',
     unit: 'unit',
     purpose: 'purpose',
@@ -18,38 +29,27 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     genus_name: 'genus_name',
     family_name: 'family_name',
     class_name: 'class_name',
+    group_name: 'group_name',
     taxon_id: 'taxon_concept_id'
-  }
+  }.freeze
 
-  GROUPING_ATTRIBUTES = {
-    category: ['year'],
-    commodity: ['term', 'term_id'],
-    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
-    importing: ['importer', 'importer_iso', 'importer_id'],
-    species: ['taxon_name', 'appendix', 'taxon_id'],
-    taxonomy: [''],
-  }
-
-  def initialize(group, opts={})
-    super(group, opts)
+  def attributes
+    ATTRIBUTES
   end
 
   def group_query
     columns = [@group, @attributes].flatten.compact.uniq.join(',')
+    quantity_field = "#{@reported_by}_reported_quantity"
     <<-SQL
-      SELECT #{columns}, COUNT(*) AS cnt
+      SELECT
+        #{columns},
+        SUM(#{quantity_field}::FLOAT) AS #{quantity_field}
       FROM #{shipments_table}
-      WHERE #{@condition}
+      WHERE #{@condition} AND #{quantity_field} <> 'NA'
       GROUP BY #{columns}
-      ORDER BY cnt DESC
+      ORDER BY #{quantity_field} DESC
       #{limit}
     SQL
-  end
-
-  private
-
-  def shipments_table
-    'trade_plus_static_complete_view'
   end
 
 end
