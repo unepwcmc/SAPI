@@ -1,7 +1,7 @@
 class Api::V1::TradePlusFiltersController < ApplicationController
   respond_to :json
 
-  ATTRIBUTES = %w[taxon importer exporter origin term
+  ATTRIBUTES = %w[importer exporter origin term
                   source purpose appendix unit].freeze
   def index
     res = ActiveRecord::Base.connection.execute(query)
@@ -30,13 +30,13 @@ class Api::V1::TradePlusFiltersController < ApplicationController
       query << "#{attr}_id" << "#{attr}"
       query << "#{attr}_iso" if ['exporter', 'importer', 'origin'].include? attr
     end
-    query << 'group_name' << 'year'
+    query << 'group_name' << 'year' << 'taxon_name' << 'taxon_id'
     query.join(',')
   end
 
   def inner_query
     query = ''
-    ATTRIBUTES.reject { |i| i == 'taxon' }.each do |attr|
+    ATTRIBUTES.each do |attr|
       if %w[group_name term unit year].include? attr
         query << "json_agg(DISTINCT(json_build_object('#{attr}', #{attr})::jsonb)) AS #{attr.pluralize},"
       elsif %w[importer exporter origin].include? attr
@@ -58,7 +58,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
       end
 
     end
-    query << "json_agg(DISTINCT(json_build_object('taxon', taxon, 'taxon_id', taxon_id)::jsonb)) AS taxa"
+    query << "json_agg(DISTINCT(json_build_object('taxon', taxon_name, 'taxon_id', taxon_id)::jsonb)) AS taxa"
     query
   end
 end
