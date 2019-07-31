@@ -38,11 +38,11 @@ class Api::V1::TradePlusFiltersController < ApplicationController
     query = ''
     ATTRIBUTES.each do |attr|
       if %w[group_name term unit year].include? attr
-        query << "json_agg(DISTINCT(json_build_object('#{attr}', #{attr})::jsonb)) AS #{attr.pluralize},"
+        query << "json_agg(DISTINCT(json_build_object('name', #{attr}, 'id', #{attr})::jsonb)) AS #{attr.pluralize},"
       elsif %w[importer exporter origin].include? attr
         query << "json_agg(
                        DISTINCT(
-                         json_build_object('#{attr}', #{attr}, '#{attr}_id', #{attr}_id, '#{attr}_iso2', #{attr}_iso)::jsonb
+                         json_build_object('name', #{attr}, 'id', #{attr}_id, 'iso2', #{attr}_iso)::jsonb
                        )
                      )
                     AS #{attr.pluralize},
@@ -50,7 +50,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
       else
         query << "json_agg(
                        DISTINCT(
-                         json_build_object('#{attr}', #{attr}, '#{attr}_id', #{attr}_id)::jsonb
+                         json_build_object('name', #{attr}, 'id', #{attr}_id)::jsonb
                        )
                      )
                     AS #{attr.pluralize},
@@ -58,7 +58,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
       end
 
     end
-    query << "json_agg(DISTINCT(json_build_object('taxon', taxon_name, 'taxon_id', taxon_id)::jsonb)) AS taxa"
+    query << "json_agg(DISTINCT(json_build_object('name', taxon_name, 'id', taxon_id)::jsonb)) AS taxa"
     query
   end
 end
