@@ -6,6 +6,24 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     super(group, opts)
   end
 
+  def sources_over_time
+    quantity_field = "#{@reported_by}_reported_quantity"
+    query =
+      <<-SQL
+        SELECT source_id, source, JSON_AGG(JSON_BUILD_OBJECT('year', year, 'quantity', value)) AS values
+        FROM (
+          SELECT year, source_id, source, SUM(#{quantity_field}::FLOAT) AS value
+          FROM #{shipments_table}
+          WHERE #{@condition} AND #{quantity_field} <> 'NA'
+          GROUP BY year, source_id, source
+          ORDER BY value DESC
+          #{limit}
+        ) t
+        GROUP BY source_id, source
+      SQL
+    db.execute(query)
+  end
+
   private
 
   def shipments_table
@@ -51,5 +69,4 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       #{limit}
     SQL
   end
-
 end
