@@ -30,20 +30,7 @@ class Trade::Grouping::Base
   end
 
   def json_by_attribute(data, opts={})
-    attribute = sanitise_group(opts[:attribute])
-
-    begin
-      raise NoGroupingAttributeError unless attribute
-    rescue => e
-      attribute = 'year'
-      Rails.logger.info(e)
-    end
-
-    grouped_data = data.group_by { |d| d[attribute] }
-    grouped_data.each do |key, values|
-      # Fetch top 5 and rename 'cnt' to 'value'
-      grouped_data[key] = values[0..4].each { |v| v['value'] = v.delete('cnt') }
-    end
+    raise NotImplementedError
   end
 
   protected

@@ -24,6 +24,16 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     db.execute(query)
   end
 
+  # TODO better define hash key
+  def json_by_attribute(data, opts={})
+    key = data.fields.first
+    hash = { "#{key}" => [] }
+    data.each do |d|
+      hash[key] << d
+    end
+    hash[key][0..4]
+  end
+
   private
 
   def shipments_table

@@ -20,13 +20,16 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def grouped_query
-    limit = params[:limit].present? ? params[:limit].to_i : ''
-    years_range = "year >= 2012 AND year <= #{Date.today.year - 1}"
+    limit = grouped_params[:limit].present? ? grouped_params[:limit].to_i : ''
+    year_start = grouped_params[:time_range_start] || 2012
+    year_end = grouped_params[:time_range_end] || Date.today.year - 1
+    years_range = "year >= #{year_start} AND year <= #{year_end}"
+
     query = @grouping_class.new(sanitized_attributes, {condition: years_range, limit: limit})
     data = query.run
     params_hash = { attribute: 'year' }
     sanitized_attributes.map { |p| params_hash[p] = p }
-    @grouped_data = Rails.cache.fetch(['grouped_data', params], expires_in: 1.week) do
+    @grouped_data = Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
                       sanitized_attributes.first.empty? ? query.taxonomic_grouping :
                                                           query.json_by_attribute(data, params_hash)
                     end
@@ -97,7 +100,10 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def grouped_params
-    params.permit(:compliance_type, :time_range_start, :time_range_end, :page, :per_page)
+    params.permit(
+      :compliance_type, :time_range_start, :time_range_end, :page, :per_page, :limit,
+      :group_by, :grouping_type
+    )
   end
 
   def sanitized_attributes
@@ -115,7 +121,7 @@ class Api::V1::ShipmentsController < ApplicationController
   def load_grouping_type
     grouping_type = params[:grouping_type] || 'Compliance'
     begin
-      @grouping_class = "Trade::Grouping::#{grouping_type}".constantize
+      @grouping_class = "Trade::Grouping::#{grouping_type.camelize}".constantize
     rescue NameError
       raise ArgumentError, 'Grouping type is not defined.'
     end
