@@ -1,9 +1,9 @@
 class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
-  def initialize(opts={})
+  def initialize(attributes, opts={})
     # exporter or importer
     @reported_by = opts[:reported_by] || 'importer'
-    super(opts)
+    super(attributes, opts)
   end
 
   def sources_over_time

@@ -11,8 +11,8 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     2011 => 175
   }.freeze
 
-  def initialize(opts={})
-    super(opts)
+  def initialize(attributes, opts={})
+    super(attributes, opts)
   end
 
   # TODO

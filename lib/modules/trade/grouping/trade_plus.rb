@@ -1,11 +1,11 @@
 class Trade::Grouping::TradePlus
 
-  def initialize(opts={})
-    super(opts)
+  def initialize(attributes, opts={})
+    super(attributes, opts)
   end
 
   def group_query
-    columns = [@group, @attributes].flatten.compact.uniq.join(',')
+    columns = @attributes.compact.uniq.join(',')
     <<-SQL
       SELECT #{columns}, COUNT(*) AS cnt
       FROM #{shipments_table}

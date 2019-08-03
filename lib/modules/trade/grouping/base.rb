@@ -10,8 +10,8 @@ class Trade::Grouping::Base
   # Trade::Grouping::Compliance.new('year', {attributes: ['issue_type']})
   # Group by importer and limit result to 5 records
   # Trade::Grouping::Compliance.new('importer', {limit: 5})
-  def initialize(opts={})
-    @attributes = sanitise_params(opts[:attributes])
+  def initialize(attributes, opts={})
+    @attributes = sanitise_params(attributes)
     @condition = opts[:condition] || 'TRUE'
     @limit = sanitise_limit(opts[:limit])
     @query = group_query

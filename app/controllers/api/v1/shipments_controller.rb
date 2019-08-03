@@ -13,7 +13,7 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def chart_query
     @chart_data = Rails.cache.fetch(['chart_data', params], expires_in: 1.week) do
-                    @grouping_class.new({attributes: ['issue_type', 'year']})
+                    @grouping_class.new(['issue_type', 'year'])
                                              .countries_reported_range(params[:year])
                   end
     render :json => @chart_data
@@ -22,7 +22,7 @@ class Api::V1::ShipmentsController < ApplicationController
   def grouped_query
     limit = params[:limit].present? ? params[:limit].to_i : ''
     years_range = "year >= 2012 AND year <= #{Date.today.year - 1}"
-    query = @grouping_class.new({attributes: sanitized_attributes, condition: years_range, limit: limit })
+    query = @grouping_class.new(sanitized_attributes, {condition: years_range, limit: limit})
     data = query.run
     params_hash = { attribute: 'year' }
     sanitized_attributes.map { |p| params_hash[p] = p }
@@ -34,7 +34,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def search_query
-    query = @grouping_class.new({attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
+    query = @grouping_class.new(sanitized_attributes, {condition: "year = #{params[:year]}"})
     data = query.run
     @search_data =  Rails.cache.fetch(['search_data', params], expires_in: 1.week) do
                       query.build_hash(data, params)
@@ -59,7 +59,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def search_download_all_data
-    query = @grouping_class.new({attributes: sanitized_attributes, condition: "year = #{params[:year]}"})
+    query = @grouping_class.new(sanitized_attributes, {condition: "year = #{params[:year]}"})
     data = query.run
     @search_download_all_data = Rails.cache.fetch(['search_download_all_data', params], expires_in: 1.week) do
                                   search_data = query.build_hash(data, params)
