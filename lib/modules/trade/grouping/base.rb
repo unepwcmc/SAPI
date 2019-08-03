@@ -10,8 +10,7 @@ class Trade::Grouping::Base
   # Trade::Grouping::Compliance.new('year', {attributes: ['issue_type']})
   # Group by importer and limit result to 5 records
   # Trade::Grouping::Compliance.new('importer', {limit: 5})
-  def initialize(group, opts={})
-    @group = sanitise_group(group)
+  def initialize(opts={})
     @attributes = sanitise_params(opts[:attributes])
     @condition = opts[:condition] || 'TRUE'
     @limit = sanitise_limit(opts[:limit])
@@ -57,8 +56,16 @@ class Trade::Grouping::Base
     raise NotImplementedError
   end
 
+  def self.grouping_attributes
+    raise NotImplementedError
+  end
+
+  def self.get_grouping_attributes(group)
+    Array.new(grouping_attributes[group.to_sym])
+  end
+
   def group_query
-    columns = [@group, @attributes].flatten.compact.uniq.join(',')
+    columns = @attributes.compact.uniq.join(',')
     <<-SQL
       SELECT #{columns}, COUNT(*) AS cnt
       FROM #{shipments_table}

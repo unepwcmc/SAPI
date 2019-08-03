@@ -1,9 +1,9 @@
 class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
-  def initialize(group, opts={})
+  def initialize(opts={})
     # exporter or importer
     @reported_by = opts[:reported_by] || 'importer'
-    super(group, opts)
+    super(opts)
   end
 
   def sources_over_time
@@ -55,8 +55,23 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     ATTRIBUTES
   end
 
+  GROUPING_ATTRIBUTES = {
+    terms: ['term', 'term_id'],
+    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
+    importing: ['importer', 'importer_iso', 'importer_id'],
+    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
+    taxonomy: ['']
+  }.freeze
+  def self.grouping_attributes
+    GROUPING_ATTRIBUTES
+  end
+
+  def self.get_grouping_attributes(group)
+    super(group)
+  end
+
   def group_query
-    columns = [@group, @attributes].flatten.compact.uniq.join(',')
+    columns = @attributes.compact.uniq.join(',')
     quantity_field = "#{@reported_by}_reported_quantity"
     <<-SQL
       SELECT

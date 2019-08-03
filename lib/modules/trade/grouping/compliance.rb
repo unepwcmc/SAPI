@@ -1,14 +1,5 @@
 class Trade::Grouping::Compliance < Trade::Grouping::Base
 
-  GROUPING_ATTRIBUTES = {
-    category: ['issue_type'],
-    commodity: ['term', 'term_id'],
-    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
-    importing: ['importer', 'importer_iso', 'importer_id'],
-    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
-    taxonomy: [''],
-  }
-
   COUNTRIES = {
     2018 => 182,
     2017 => 182,
@@ -20,8 +11,8 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     2011 => 175
   }.freeze
 
-  def initialize(group, opts={})
-    super(group, opts)
+  def initialize(opts={})
+    super(opts)
   end
 
   # TODO
@@ -34,7 +25,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     years = case year
       when 2012
         [year, year + 1]
-      when Date.today.year - 1
+     when Date.today.year - 1
         [year - 1, year]
       else
         [year - 1, year, year + 1]
@@ -153,6 +144,22 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     end
   end
 
+  GROUPING_ATTRIBUTES = {
+    category: ['issue_type'],
+    commodity: ['term', 'term_id'],
+    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
+    importing: ['importer', 'importer_iso', 'importer_id'],
+    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
+    taxonomy: ['']
+  }.freeze
+  def self.grouping_attributes
+    GROUPING_ATTRIBUTES
+  end
+
+  def self.get_grouping_attributes(group)
+    super(group) << 'year'
+  end
+
   private
 
   def shipments_table
@@ -224,7 +231,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   end
 
   def group_query
-    columns = [@group, @attributes].flatten.compact.uniq.join(',')
+    columns = @attributes.compact.uniq.join(',')
     <<-SQL
       SELECT #{columns}, COUNT(*) AS cnt, 100.0*COUNT(*)/(SUM(COUNT(*)) OVER (PARTITION BY year)) AS percent
       FROM non_compliant_shipments_view

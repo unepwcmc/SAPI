@@ -1,7 +1,7 @@
 class Trade::Grouping::TradePlus
 
-  def initialize(group, opts={})
-    super(group, opts)
+  def initialize(opts={})
+    super(opts)
   end
 
   def group_query
