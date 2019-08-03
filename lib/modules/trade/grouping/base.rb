@@ -7,7 +7,7 @@ class Trade::Grouping::Base
 
   # Example usage
   # Group by year considering compliance types:
-  # Trade::Grouping::Compliance.new('year', {attributes: ['issue_type']})
+  # Trade::Grouping::Compliance.new(['year, 'issue_type']})
   # Group by importer and limit result to 5 records
   # Trade::Grouping::Compliance.new('importer', {limit: 5})
   def initialize(attributes, opts={})
@@ -103,7 +103,7 @@ class Trade::Grouping::Base
 
   def sanitise_params(params)
     return nil if params.blank?
-    params.map { |p| attributes[p.to_sym] }
+    Array.wrap(params).map { |p| attributes[p.to_sym] }
   end
 
   def sanitise_limit(limit)
