@@ -45,6 +45,16 @@ class Api::V1::ShipmentsController < ApplicationController
            :meta => metadata(@filtered_data, params)
   end
 
+  def over_time_query
+    query = @grouping_class.new(params[:term], params)
+    data = query.over_time_query
+    @over_time_data = Rails.cache.fetch(['over_time_data', params], expires_in: 1.week) do
+      data.map { |d| d }
+    end
+
+    render json: @over_time_data
+  end
+
   def download_data
     @download_data = Rails.cache.fetch(['download_data', params], expires_in: 1.week) do
                        Trade::DownloadDataRetriever.dashboard_download(download_params).to_a

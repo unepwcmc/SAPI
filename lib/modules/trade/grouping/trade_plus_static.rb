@@ -3,25 +3,27 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def initialize(attributes, opts={})
     # exporter or importer
     @reported_by = opts[:reported_by] || 'importer'
+    @sanitised_column_names = []
     super(attributes, opts)
   end
 
   def over_time_query
     quantity_field = "#{@reported_by}_reported_quantity"
     columns = @attributes.compact.uniq.join(',')
+    sanitised_column_names = @sanitised_column_names.compact.uniq.join(',')
 
     query =
       <<-SQL
-        SELECT #{columns}, JSON_AGG(JSON_BUILD_OBJECT('year', year, 'quantity', value)) AS values
+        SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value)) AS datapoints
         FROM (
-          SELECT year, #{columns}, SUM(#{quantity_field}::FLOAT) AS value
+          SELECT year, #{sanitise_column_names}, SUM(#{quantity_field}::FLOAT) AS value
           FROM #{shipments_table}
           WHERE #{@condition} AND #{quantity_field} <> 'NA'
           GROUP BY year, #{columns}
           ORDER BY value DESC
           #{limit}
         ) t
-        GROUP BY #{columns}
+        GROUP BY #{sanitised_column_names}
       SQL
     db.execute(query)
   end
@@ -128,7 +130,9 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def sanitise_column_names
     @attributes.map do |attribute|
+      next if attribute == 'year'
       name = attribute.include?('id') ? 'id' : attribute.include?('iso') ? 'iso2' : 'name'
+      @sanitised_column_names << name
       "#{attribute} AS #{name}"
     end.compact.uniq.join(',')
   end
