@@ -86,7 +86,8 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     if params[:group_by].include?('commodity') || params[:group_by].include?('species')
       hash[params[:year]] = data.map {|d| d.except('year', 'percent')}
     elsif params[:group_by].include?('exporting')
-      importers = Trade::Grouping::Compliance.new('year', {attributes: GROUPING_ATTRIBUTES[:importing], condition: "year = #{params[:year]}"}).run
+      _grouping_attributes = Array.new(GROUPING_ATTRIBUTES[:importing]) << 'year'
+      importers = Trade::Grouping::Compliance.new(_grouping_attributes, params).run
       data, importers = data.group_by {|d| d['exporter']}, importers.group_by {|d| d['importer']}
       sum = importer_exporter_countries(data, importers, params[:year])
       keys = sum.map { |s| s.keys }.flatten
@@ -159,6 +160,23 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
       # Fetch top 5 and rename 'cnt' to 'value'
       grouped_data[key] = values[0..4].each { |v| v['value'] = v.delete('cnt') }
     end
+  end
+
+  FILTERING_ATTRIBUTES = {
+    time_range_start: 'year',
+    time_range_end: 'year',
+    year: 'year'
+  }.freeze
+  def self.filtering_attributes
+    FILTERING_ATTRIBUTES
+  end
+
+  DEFAULT_FILTERING_ATTRIBUTES = {
+    time_range_start: 2012,
+    time_range_end: 1.year.ago.year
+  }.freeze
+  def self.default_filtering_attributes
+    DEFAULT_FILTERING_ATTRIBUTES
   end
 
   GROUPING_ATTRIBUTES = {
@@ -301,17 +319,17 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     return false
   end
 
-  def sanitise_condition(condition)
-    # TODO
-    return nil if condition.blank?
-    condition.map do |key, value|
-      if value.is_a?(Array)
-        "#{ATTRIBUTES[key]} IN (#{value.join(',')})"
-      else
-        "#{ATTRIBUTES[key]} = #{value}"
-      end
-    end.join(' AND ')
-  end
+  #def sanitise_condition(condition)
+  #  # TODO
+  #  return nil if condition.blank?
+  #  condition.map do |key, value|
+  #    if value.is_a?(Array)
+  #      "#{ATTRIBUTES[key]} IN (#{value.join(',')})"
+  #    else
+  #      "#{ATTRIBUTES[key]} = #{value}"
+  #    end
+  #  end.join(' AND ')
+  #end
 
   def total_ships_exp_cnt(id, year)
     query_exp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE exporter_id = #{id} AND year = #{year}"

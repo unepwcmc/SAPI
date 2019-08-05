@@ -21,11 +21,9 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def grouped_query
     limit = grouped_params[:limit].present? ? grouped_params[:limit].to_i : ''
-    year_start = grouped_params[:time_range_start] || 2012
-    year_end = grouped_params[:time_range_end] || Date.today.year - 1
-    years_range = "year >= #{year_start} AND year <= #{year_end}"
+    _grouped_params = grouped_params.merge(limit: limit, with_defaults: true)
 
-    query = @grouping_class.new(sanitized_attributes, {condition: years_range, limit: limit})
+    query = @grouping_class.new(sanitized_attributes, _grouped_params)
     data = query.run
     params_hash = { attribute: 'year' }
     sanitized_attributes.map { |p| params_hash[p] = p }
@@ -37,7 +35,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def search_query
-    query = @grouping_class.new(sanitized_attributes, {condition: "year = #{params[:year]}"})
+    query = @grouping_class.new(sanitized_attributes, params)
     data = query.run
     @search_data =  Rails.cache.fetch(['search_data', params], expires_in: 1.week) do
                       query.build_hash(data, params)
@@ -62,7 +60,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def search_download_all_data
-    query = @grouping_class.new(sanitized_attributes, {condition: "year = #{params[:year]}"})
+    query = @grouping_class.new(sanitized_attributes, params)
     data = query.run
     @search_download_all_data = Rails.cache.fetch(['search_download_all_data', params], expires_in: 1.week) do
                                   search_data = query.build_hash(data, params)
@@ -102,7 +100,8 @@ class Api::V1::ShipmentsController < ApplicationController
   def grouped_params
     params.permit(
       :compliance_type, :time_range_start, :time_range_end, :page, :per_page, :limit,
-      :group_by, :grouping_type
+      :group_by, :grouping_type, :term_names, :term_ids, :purpose_names, :purpose_ids,
+      :source_names, :source_ids, :unit_name, :unit_id, :appendices
     )
   end
 

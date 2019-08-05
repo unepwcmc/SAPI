@@ -12,7 +12,8 @@ class Trade::Grouping::Base
   # Trade::Grouping::Compliance.new('importer', {limit: 5})
   def initialize(attributes, opts={})
     @attributes = sanitise_params(attributes)
-    @condition = opts[:condition] || 'TRUE'
+    @opts = opts.clone
+    @condition = sanitise_condition
     @limit = sanitise_limit(opts[:limit])
     @query = group_query
   end
@@ -40,6 +41,14 @@ class Trade::Grouping::Base
   end
 
   def attributes
+    raise NotImplementedError
+  end
+
+  def self.filtering_attributes
+    raise NotImplementedError
+  end
+
+  def self.default_filtering_attributes
     raise NotImplementedError
   end
 
@@ -95,6 +104,39 @@ class Trade::Grouping::Base
 
   def sanitise_limit(limit)
     limit.is_a?(Integer) ? limit : nil
+  end
+
+  def sanitise_condition
+    filtering_attributes = self.class.filtering_attributes
+    condition_attributes = @opts.keep_if do |k, v|
+      filtering_attributes.key?(k.to_sym) && v.present?
+    end
+    # Get default attributes if missing from params
+    if @opts[:with_defaults]
+      condition_attributes.reverse_merge!(self.class.default_filtering_attributes)
+    end
+
+    return 'TRUE' if condition_attributes.blank?
+
+    condition_attributes.map do |key, value|
+      val = get_condition_value(key.to_sym, value)
+      "#{filtering_attributes[key.to_sym]} #{val}"
+    end.join(' AND ')
+  end
+
+  def get_condition_value(key, value)
+    return "IN (#{value})" if value.is_a?(String) && value.include?(',')
+    return "IS NULL" if value == 'NULL'
+
+    operator = case key
+      when :time_range_start
+        '>='
+      when :time_range_end
+        '<='
+      else
+        '='
+      end
+    "#{operator} #{value}"
   end
 
   def db

@@ -52,9 +52,13 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     exporter: 'exporter',
     exporter_iso: 'exporter_iso',
     term: 'term',
+    term_id: 'term_id',
     unit: 'unit',
+    unit_id: 'unit_id',
     purpose: 'purpose',
+    purpose_id: 'purpose_id',
     source: 'source',
+    source_id: 'source_id',
     taxon_name: 'taxon_name',
     genus_name: 'genus_name',
     family_name: 'family_name',
@@ -67,10 +71,35 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     ATTRIBUTES
   end
 
+  FILTERING_ATTRIBUTES = {
+    time_range_start: 'year',
+    time_range_end: 'year',
+    term_names: 'term',
+    term_ids: 'term_id',
+    source_names: 'source',
+    source_ids: 'source_id',
+    purpose_names: 'purpose',
+    purpose_ids: 'purpose_id',
+    unit_name: 'unit',
+    unit_id: 'unit_id'
+  }.freeze
+  def self.filtering_attributes
+    FILTERING_ATTRIBUTES
+  end
+
+  DEFAULT_FILTERING_ATTRIBUTES = {
+    time_range_start: 2.years.ago.year,
+    time_range_end: 1.year.ago.year
+  }.freeze
+  def self.default_filtering_attributes
+    DEFAULT_FILTERING_ATTRIBUTES
+  end
+
   GROUPING_ATTRIBUTES = {
     terms: ['term', 'term_id'],
-    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
-    importing: ['importer', 'importer_iso', 'importer_id'],
+    sources: ['source', 'source_id'],
+    exporting: ['exporter', 'exporter_iso'],
+    importing: ['importer', 'importer_iso'],
     species: ['taxon_name', 'appendix', 'taxon_concept_id'],
     taxonomy: ['']
   }.freeze
@@ -87,13 +116,20 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     quantity_field = "#{@reported_by}_reported_quantity"
     <<-SQL
       SELECT
-        #{columns},
-        SUM(#{quantity_field}::FLOAT) AS #{quantity_field}
+        #{sanitise_column_names},
+        SUM(#{quantity_field}::FLOAT) AS value
       FROM #{shipments_table}
       WHERE #{@condition} AND #{quantity_field} <> 'NA'
       GROUP BY #{columns}
-      ORDER BY #{quantity_field} DESC
+      ORDER BY value DESC
       #{limit}
     SQL
+  end
+
+  def sanitise_column_names
+    @attributes.map do |attribute|
+      name = attribute.include?('id') ? 'id' : attribute.include?('iso') ? 'iso2' : 'name'
+      "#{attribute} AS #{name}"
+    end.compact.uniq.join(',')
   end
 end
