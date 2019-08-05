@@ -46,7 +46,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def over_time_query
-    query = @grouping_class.new(params[:term], params)
+    query = @grouping_class.new(sanitized_attributes, params)
     @over_time_data = Rails.cache.fetch(['over_time_data', params], expires_in: 1.week) do
       query.over_time_data
     end
@@ -110,7 +110,7 @@ class Api::V1::ShipmentsController < ApplicationController
     params.permit(
       :compliance_type, :time_range_start, :time_range_end, :page, :per_page, :limit,
       :group_by, :grouping_type, :term_names, :term_ids, :purpose_names, :purpose_ids,
-      :source_names, :source_ids, :unit_name, :unit_id, :appendices
+      :source_names, :source_ids, :unit_name, :unit_id, :appendices, :reported_by
     )
   end
 
