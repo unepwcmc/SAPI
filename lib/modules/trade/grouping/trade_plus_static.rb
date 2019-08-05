@@ -7,25 +7,9 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     super(attributes, opts)
   end
 
-  def over_time_query
-    quantity_field = "#{@reported_by}_reported_quantity"
-    columns = @attributes.compact.uniq.join(',')
-    sanitised_column_names = @sanitised_column_names.compact.uniq.join(',')
-
-    query =
-      <<-SQL
-        SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value)) AS datapoints
-        FROM (
-          SELECT year, #{sanitise_column_names}, SUM(#{quantity_field}::FLOAT) AS value
-          FROM #{shipments_table}
-          WHERE #{@condition} AND #{quantity_field} <> 'NA'
-          GROUP BY year, #{columns}
-          ORDER BY value DESC
-          #{limit}
-        ) t
-        GROUP BY #{sanitised_column_names}
-      SQL
-    db.execute(query)
+  def over_time_data
+    data = db.execute(over_time_query)
+    data.map { |s| JSON.parse(s['row_to_json']) }
   end
 
   # TODO better define hash key
@@ -125,6 +109,28 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       GROUP BY #{columns}
       ORDER BY value DESC
       #{limit}
+    SQL
+  end
+
+  def over_time_query
+    quantity_field = "#{@reported_by}_reported_quantity"
+    columns = @attributes.compact.uniq.join(',')
+    sanitised_column_names = @sanitised_column_names.compact.uniq.join(',')
+
+    <<-SQL
+      SELECT ROW_TO_JSON(row)
+      FROM (
+        SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value)) AS datapoints
+        FROM (
+          SELECT year, #{sanitise_column_names}, SUM(#{quantity_field}::FLOAT) AS value
+          FROM #{shipments_table}
+          WHERE #{@condition} AND #{quantity_field} <> 'NA'
+          GROUP BY year, #{columns}
+          ORDER BY value DESC
+          #{limit}
+        ) t
+        GROUP BY #{sanitised_column_names}
+      ) row
     SQL
   end
 

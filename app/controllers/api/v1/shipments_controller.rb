@@ -47,9 +47,8 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def over_time_query
     query = @grouping_class.new(params[:term], params)
-    data = query.over_time_query
     @over_time_data = Rails.cache.fetch(['over_time_data', params], expires_in: 1.week) do
-      data.map { |d| d }
+      query.over_time_data
     end
 
     render json: @over_time_data
