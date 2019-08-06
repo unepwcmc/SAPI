@@ -12,7 +12,7 @@ namespace :import do
       id origin_iso importer_iso exporter_iso year appendix taxon_name group_name taxon_id
       class_name order_name family_name genus_name term term_converted unit unit_converted
       purpose source importer_reported_quantity exporter_reported_quantity
-      exporter importer origin
+      exporter importer origin kingdom_name phylum_name
     ).freeze
 
     sql = <<-SQL

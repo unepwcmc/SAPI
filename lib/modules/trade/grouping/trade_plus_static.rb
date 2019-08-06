@@ -149,7 +149,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
     check_for_plants = <<-SQL
       CASE
-        WHEN #{taxonomic_level_name} IS NULL THEN 'Plants'
+        WHEN COALESCE(#{taxonomic_level_name}, '') = '' THEN 'Plants'
         ELSE #{taxonomic_level_name}
       END AS name,
     SQL
@@ -159,7 +159,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       FROM(
         SELECT
           NULL AS id,
-          #{ taxonomic_level == 'class' ? check_for_plants : "#{taxonomic_level_name} AS name," }
+          #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
           SUM(#{quantity_field}::FLOAT) AS value
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} <> 'NA' #{group_name_condition}

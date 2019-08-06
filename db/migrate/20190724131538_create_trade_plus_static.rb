@@ -7,6 +7,8 @@ class CreateTradePlusStatic < ActiveRecord::Migration
       t.string :taxon_name
       t.integer :taxon_id
       t.string :group_name
+      t.string :kingdom_name
+      t.string :phylum_name
       t.string :class_name
       t.string :order_name
       t.string :family_name
