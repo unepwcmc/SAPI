@@ -125,7 +125,8 @@ class Trade::Grouping::Base
   end
 
   def get_condition_value(key, value)
-    if value.is_a?(String)
+    # It's not a number (positive number to be precise
+    if !/\A\d+\z/.match(value)
       value = value.split(',').map { |v| "'#{v}'" }.join(',')
       return "IN (#{value})"
     end
@@ -140,7 +141,7 @@ class Trade::Grouping::Base
       else
         '='
       end
-    "#{operator} #{value}"
+    "#{operator} #{value.to_i}"
   end
 
   def db
