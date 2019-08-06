@@ -125,7 +125,11 @@ class Trade::Grouping::Base
   end
 
   def get_condition_value(key, value)
-    return "IN (#{value})" if value.is_a?(String) && value.include?(',')
+    if value.is_a?(String)
+      value = value.split(',').map { |v| "'#{v}'" }.join(',')
+      return "IN (#{value})"
+    end
+
     return "IS NULL" if value == 'NULL'
 
     operator = case key
