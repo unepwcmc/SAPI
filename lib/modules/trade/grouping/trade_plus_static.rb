@@ -73,7 +73,10 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     purpose_ids: 'purpose_id',
     unit_name: 'unit',
     unit_id: 'unit_id',
-    taxon_id: 'taxon_id'
+    taxon_id: 'taxon_id',
+    importer: 'importer_iso',
+    exporter: 'exporter_iso',
+    origin: 'origin_iso'
   }.freeze
   def self.filtering_attributes
     FILTERING_ATTRIBUTES
