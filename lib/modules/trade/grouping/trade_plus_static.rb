@@ -143,19 +143,27 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def taxonomic_query(opts)
     quantity_field = "#{@reported_by}_reported_quantity"
     taxonomic_level = opts[:taxonomic_level] || 'class'
+    taxonomic_level_name = "#{taxonomic_level}_name"
     group_name = opts[:group_name]
     group_name_condition = " AND LOWER(group_name) = '#{group_name.downcase}'" if group_name
+
+    check_for_plants = <<-SQL
+      CASE
+        WHEN #{taxonomic_level_name} IS NULL THEN 'Plants'
+        ELSE #{taxonomic_level_name}
+      END AS name,
+    SQL
 
     <<-SQL
       SELECT ROW_TO_JSON(row)
       FROM(
         SELECT
           NULL AS id,
-          #{taxonomic_level}_name AS name,
+          #{ taxonomic_level == 'class' ? check_for_plants : "#{taxonomic_level_name} AS name," }
           SUM(#{quantity_field}::FLOAT) AS value
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} <> 'NA' #{group_name_condition}
-        GROUP BY #{taxonomic_level}_name
+        GROUP BY #{taxonomic_level_name}
         ORDER BY value DESC
         #{limit}
       ) row
