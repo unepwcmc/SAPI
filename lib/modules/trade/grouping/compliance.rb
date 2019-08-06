@@ -39,7 +39,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     hash
   end
 
-  def taxonomic_grouping
+  def taxonomic_grouping(opts={})
     YEARS.map do |year|
       { "#{year}": taxonomic_grouping_per_year(year) }
     end.inject(:merge)

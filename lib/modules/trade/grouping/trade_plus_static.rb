@@ -9,7 +9,12 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def over_time_data
     data = db.execute(over_time_query)
-    data.map { |s| JSON.parse(s['row_to_json']) }
+    data.map { |d| JSON.parse(d['row_to_json']) }
+  end
+
+  def taxonomic_grouping(opts={})
+    data = db.execute(taxonomic_query(opts))
+    data.map { |d| JSON.parse(d['row_to_json']) }
   end
 
   # TODO better define hash key
@@ -135,9 +140,32 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     SQL
   end
 
+  def taxonomic_query(opts)
+    quantity_field = "#{@reported_by}_reported_quantity"
+    taxonomic_level = opts[:taxonomic_level] || 'class'
+    group_name = opts[:group_name]
+    group_name_condition = " AND LOWER(group_name) = '#{group_name.downcase}'" if group_name
+
+    <<-SQL
+      SELECT ROW_TO_JSON(row)
+      FROM(
+        SELECT
+          NULL AS id,
+          #{taxonomic_level}_name AS name,
+          SUM(#{quantity_field}::FLOAT) AS value
+        FROM #{shipments_table}
+        WHERE #{@condition} AND #{quantity_field} <> 'NA' #{group_name_condition}
+        GROUP BY #{taxonomic_level}_name
+        ORDER BY value DESC
+        #{limit}
+      ) row
+    SQL
+  end
+
   def sanitise_column_names
+    return '' if @attributes.blank?
     @attributes.map do |attribute|
-      next if attribute == 'year'
+      next if attribute == 'year' || attribute.nil?
       name = attribute.include?('id') ? 'id' : attribute.include?('iso') ? 'iso2' : 'name'
       @sanitised_column_names << name
       "#{attribute} AS #{name}"
