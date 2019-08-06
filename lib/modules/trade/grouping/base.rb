@@ -120,14 +120,16 @@ class Trade::Grouping::Base
 
     condition_attributes.map do |key, value|
       val = get_condition_value(key.to_sym, value)
-      "#{filtering_attributes[key.to_sym]} #{val}"
+      column = filtering_attributes[key.to_sym]
+      column = column == 'year' ? column : "LOWER(#{column})"
+      "#{column} #{val}"
     end.join(' AND ')
   end
 
   def get_condition_value(key, value)
     # It's not a number (positive number to be precise
     if !/\A\d+\z/.match(value)
-      value = value.split(',').map { |v| "'#{v}'" }.join(',')
+      value = value.split(',').map { |v| "'#{v.downcase}'" }.join(',')
       return "IN (#{value})"
     end
 
