@@ -1,20 +1,17 @@
 SELECT DISTINCT *
 FROM (
-  SELECT ts.id, ts.year, ts.appendix, listings.id AS appendix_id,
-         ts.taxon_id, ts.taxon_concept_author_year AS author_year,
-         ts.taxon_concept_name_status AS name_status,
+  SELECT ts.id,
+         ts.year,
+         ts.appendix,
+         listings.id AS appendix_id,
+         ts.taxon_id,
          ts.taxon_name AS taxon_name,
          ts.kingdom_name AS kingdom_name,
-         ts.taxon_concept_phylum_id AS phylum_id,
          ts.phylum_name AS phylum_name,
          ts.group_name AS group_name,
-         ts.taxon_concept_class_id AS class_id,
          ts.class_name AS class_name,
-         ts.taxon_concept_order_id AS order_id,
          ts.order_name AS order_name,
-         ts.taxon_concept_family_id AS family_id,
          ts.family_name AS family_name,
-         ts.taxon_concept_genus_id AS genus_id,
          ts.genus_name AS genus_name,
          terms.id AS term_id,
          ts.term_converted AS term,
@@ -34,11 +31,8 @@ FROM (
          purposes.id AS purpose_id,
          purposes.name_en AS purpose,
          sources.id AS source_id,
-         sources.name_en AS source,
-         ranks.id AS rank_id,
-         ranks.name AS rank_name
-  FROM trade_plus_static_with_taxa_view ts
-  INNER JOIN ranks ON ranks.id = ts.taxon_concept_rank_id
+         sources.name_en AS source
+  FROM trade_plus_static ts
   INNER JOIN species_listings listings ON listings.abbreviation = ts.appendix
   LEFT OUTER JOIN trade_codes sources ON ts.source = sources.code AND sources.type = 'Source'
   LEFT OUTER JOIN trade_codes purposes ON ts.purpose = purposes.code AND purposes.type = 'Purpose'
