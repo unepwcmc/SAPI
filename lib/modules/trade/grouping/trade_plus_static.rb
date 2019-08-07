@@ -130,7 +130,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     <<-SQL
       SELECT ROW_TO_JSON(row)
       FROM (
-        SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value)) AS datapoints
+        SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
           SELECT year, #{sanitise_column_names}, SUM(#{quantity_field}::FLOAT) AS value
           FROM #{shipments_table}
