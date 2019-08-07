@@ -117,11 +117,10 @@ class Trade::Grouping::Base
     end
 
     return 'TRUE' if condition_attributes.blank?
-
     condition_attributes.map do |key, value|
       val = get_condition_value(key.to_sym, value)
       column = filtering_attributes[key.to_sym]
-      column = ['taxon_id', 'year'].include?(column) ? column : "LOWER(#{column})"
+      column = ['taxon_id', 'year', 'appendix'].include?(column) ? column : "LOWER(#{column})"
       "#{column} #{val}"
     end.join(' AND ')
   end
@@ -129,7 +128,7 @@ class Trade::Grouping::Base
   def get_condition_value(key, value)
     # It's not a number (positive number to be precise
     if !/\A\d+\z/.match(value)
-      value = value.split(',').map { |v| "'#{v.downcase}'" }.join(',')
+      value = value.split(',').map { |v| [:appendices].exclude?(key) ? "'#{v.downcase}'" : "'#{v}'"}.join(',')
       return "IN (#{value})"
     end
 

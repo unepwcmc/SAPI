@@ -76,7 +76,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     taxon_id: 'taxon_id',
     importer: 'importer_iso',
     exporter: 'exporter_iso',
-    origin: 'origin_iso'
+    origin: 'origin_iso',
+    appendices: 'appendix'
   }.freeze
   def self.filtering_attributes
     FILTERING_ATTRIBUTES
