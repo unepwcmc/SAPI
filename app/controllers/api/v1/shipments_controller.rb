@@ -115,7 +115,7 @@ class Api::V1::ShipmentsController < ApplicationController
       :compliance_type, :time_range_start, :time_range_end, :page, :per_page, :limit,
       :group_by, :grouping_type, :term_names, :term_ids, :purpose_names, :purpose_ids,
       :source_names, :source_ids, :unit_name, :unit_id, :appendices, :reported_by,
-      :taxonomic_level, :taxonomic_group_name, :importer, :exporter, :origin
+      :taxonomic_level, :taxonomic_group_name, :importer, :exporter, :origin, :taxon_id
     )
   end
 
