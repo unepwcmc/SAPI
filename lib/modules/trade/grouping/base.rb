@@ -121,15 +121,44 @@ class Trade::Grouping::Base
       val = get_condition_value(key.to_sym, value)
       column = filtering_attributes[key.to_sym]
       column = ['taxon_id', 'year', 'appendix'].include?(column) ? column : "LOWER(#{column})"
-      "#{column} #{val}"
+      if ['source_names', 'purpose_names', 'origin'].include?(key)
+        val.split('/').count > 1 ? "(#{column} #{val.split('/').first} OR #{column} #{val.split('/').second})" : "(#{column} #{val})"
+      else
+        "(#{column} #{val})"
+      end
     end.join(' AND ')
   end
 
   def get_condition_value(key, value)
+
     # It's not a number (positive number to be precise
     if !/\A\d+\z/.match(value)
-      value = value.split(',').map { |v| [:appendices].exclude?(key) ? "'#{v.downcase}'" : "'#{v}'"}.join(',')
-      return "IN (#{value})"
+      case key
+      when :appendices
+        value = value.split(',').map { |v| "'#{v}'" }.join(',')
+        return "IN (#{value})"
+      when :unit_name
+        if value == 'Number of items'
+          return "= ''"
+        else
+          value = "'#{value.downcase}'"
+          return "IN (#{value})"
+        end
+      when :source_names, :purpose_names, :origin
+        null = []
+        values = value.split(',')
+        values.delete_if { |v| null << v if ['Unreported', 'direct'].include? v }
+        value = value.split(',').map { |v| "'#{v.downcase}'" }.join(',')
+        if null.present?
+          return "IN (#{value})/ IS NULL"
+        else
+          return "IN (#{value})"
+        end
+      else
+        value = value.split(',').map { |v| "'#{v.downcase}'" }.join(',')
+        return "IN (#{value})"
+      end
+
     end
 
     return "IS NULL" if value == 'NULL'
