@@ -85,14 +85,15 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   DEFAULT_FILTERING_ATTRIBUTES = {
     time_range_start: 2.years.ago.year,
-    time_range_end: 1.year.ago.year
+    time_range_end: 1.year.ago.year,
+    unit_name: 'Number of Items',
   }.freeze
   def self.default_filtering_attributes
     DEFAULT_FILTERING_ATTRIBUTES
   end
 
   GROUPING_ATTRIBUTES = {
-    terms: ['term', 'term_id'],
+    terms: ['term', 'term_id'],  # TODO check this
     sources: ['source', 'source_id'],
     exporting: ['exporter', 'exporter_iso'],
     importing: ['importer', 'importer_iso'],
@@ -113,7 +114,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     <<-SQL
       SELECT
         #{sanitise_column_names},
-        SUM(#{quantity_field}::FLOAT) AS value
+        SUM(#{quantity_field}::NUMERIC::INTEGER) AS value
       FROM #{shipments_table}
       WHERE #{@condition} AND #{quantity_field} <> 'NA'
       GROUP BY #{columns}
@@ -132,7 +133,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       FROM (
         SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
-          SELECT year, #{sanitise_column_names}, SUM(#{quantity_field}::FLOAT) AS value
+          SELECT year, #{sanitise_column_names}, SUM(#{quantity_field}::NUMERIC::INTEGER) AS value
           FROM #{shipments_table}
           WHERE #{@condition} AND #{quantity_field} <> 'NA'
           GROUP BY year, #{columns}
@@ -164,7 +165,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         SELECT
           NULL AS id,
           #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
-          SUM(#{quantity_field}::FLOAT) AS value
+          SUM(#{quantity_field}::NUMERIC::INTEGER) AS value
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} <> 'NA' #{group_name_condition}
         GROUP BY #{taxonomic_level_name}
