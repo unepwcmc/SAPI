@@ -19,12 +19,17 @@ class Api::V1::TradePlusFiltersController < ApplicationController
       case k
       when 'sources', 'purposes'
         v.map do |value|
-          value['id'], value['name'] = 'null', 'Unreported' if value['id'].nil?
+          value['id'], value['name'] = 'unreported', 'Unreported' if value['id'].nil?
         end
         v
       when 'units'
         v.map do |value|
-          value['id'], value['name'] = 'null', 'Number of items' if value['id'].empty?
+          value['id'], value['name'] = 'items', 'Number of items' if value['id'].empty?
+        end
+        v
+      when 'origins'
+        v.map do |value|
+          value['id'], value['iso2'], value['name'] = 'direct', 'direct', 'Direct' if value['id'].nil?
         end
         v
       end
