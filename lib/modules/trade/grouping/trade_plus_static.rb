@@ -114,7 +114,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     <<-SQL
       SELECT
         #{sanitise_column_names},
-        SUM(#{quantity_field}::NUMERIC::INTEGER) AS value
+        ROUND(SUM(#{quantity_field}::FLOAT)) AS value
       FROM #{shipments_table}
       WHERE #{@condition} AND #{quantity_field} <> 'NA'
       GROUP BY #{columns}
@@ -133,7 +133,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       FROM (
         SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
-          SELECT year, #{sanitise_column_names}, SUM(#{quantity_field}::NUMERIC::INTEGER) AS value
+          SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
           WHERE #{@condition} AND #{quantity_field} <> 'NA'
           GROUP BY year, #{columns}
@@ -165,7 +165,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         SELECT
           NULL AS id,
           #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
-          SUM(#{quantity_field}::NUMERIC::INTEGER) AS value
+          ROUND(SUM(#{quantity_field}::FLOAT)) AS value
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} <> 'NA' #{group_name_condition}
         GROUP BY #{taxonomic_level_name}
