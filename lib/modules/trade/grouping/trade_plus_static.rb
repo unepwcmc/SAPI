@@ -126,6 +126,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def over_time_query
     quantity_field = "#{@reported_by}_reported_quantity"
     columns = @attributes.compact.uniq.join(',')
+    # @sanitised_column_names value is assigned in the super class
+    # while the @query variable is assigned as well because of the grouped_query
     sanitised_column_names = @sanitised_column_names.compact.uniq.join(',')
 
     <<-SQL
