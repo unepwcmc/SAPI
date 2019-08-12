@@ -52,8 +52,7 @@ class Api::V1::ShipmentsController < ApplicationController
     # TODO Remember to implement permitted parameters here
     query = @grouping_class.new(sanitized_attributes, params)
     @over_time_data = Rails.cache.fetch(['over_time_data', params], expires_in: 1.week) do
-      res = query.over_time_data
-      sanitise_response_over_time_query(res)
+      query.over_time_data
     end
 
     render json: @over_time_data
@@ -87,14 +86,6 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   private
-
-  def sanitise_response_over_time_query(response)
-    response.map do |value|
-      value['id'], value['name'] = 'unreported', 'Unreported' if value['id'].nil?
-    end
-    response.sort_by { |i| i['name'] }
-  end
-
 
   def params_hash_builder(ids, params)
     hash_params = {}

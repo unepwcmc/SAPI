@@ -9,8 +9,18 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def over_time_data
     data = db.execute(over_time_query)
-    data.map { |d| JSON.parse(d['row_to_json']) }
+    response = data.map { |d| JSON.parse(d['row_to_json']) }
+    sanitise_response_over_time_query(response)
   end
+
+  def sanitise_response_over_time_query(response)
+    response.map do |value|
+      value['id'], value['name'] = 'unreported', 'Unreported' if value['id'].nil?
+    end
+    response.sort_by { |i| i['name'] }
+  end
+
+
 
   def taxonomic_grouping(opts={})
     data = db.execute(taxonomic_query(opts))
