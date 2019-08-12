@@ -6,6 +6,8 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def index
     @search = Trade::Filter.new(search_params)
+    # TODO Remember to change Serializer based on
+    # the app calling this service
     render :json => @search.results,
       :each_serializer => Trade::ShipmentApiComplianceSerializer,
       :meta => metadata_for_search(@search)
