@@ -93,7 +93,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   end
 
   GROUPING_ATTRIBUTES = {
-    terms: ['term', 'term_id'],  # TODO check this
+    terms: ['term', 'term_id'],
     sources: ['source', 'source_id'],
     exporting: ['exporter', 'exporter_iso'],
     importing: ['importer', 'importer_iso'],
