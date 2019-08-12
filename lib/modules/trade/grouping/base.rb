@@ -121,6 +121,8 @@ class Trade::Grouping::Base
       val = get_condition_value(key.to_sym, value)
       column = filtering_attributes[key.to_sym]
       column = ['taxon_id', 'year', 'appendix'].include?(column) ? column : "LOWER(#{column})"
+      # create correct query in case null is present in any of the following multivalues filter
+      # so something like "origin IN ('CA', 'IT') OR origin IS NULL"
       if ['source_names', 'purpose_names', 'origin'].include?(key)
         val.split('/').count > 1 ? "(#{column} #{val.split('/').first} OR #{column} #{val.split('/').second})" : "(#{column} #{val})"
       else
