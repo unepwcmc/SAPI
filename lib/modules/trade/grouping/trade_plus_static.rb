@@ -9,8 +9,18 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def over_time_data
     data = db.execute(over_time_query)
-    data.map { |d| JSON.parse(d['row_to_json']) }
+    response = data.map { |d| JSON.parse(d['row_to_json']) }
+    sanitise_response_over_time_query(response)
   end
+
+  def sanitise_response_over_time_query(response)
+    response.map do |value|
+      value['id'], value['name'] = 'unreported', 'Unreported' if value['id'].nil?
+    end
+    response.sort_by { |i| i['name'] }
+  end
+
+
 
   def taxonomic_grouping(opts={})
     data = db.execute(taxonomic_query(opts))
@@ -85,7 +95,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   DEFAULT_FILTERING_ATTRIBUTES = {
     time_range_start: 2.years.ago.year,
-    time_range_end: 1.year.ago.year
+    time_range_end: 1.year.ago.year,
+    unit_name: 'Number of Items',
   }.freeze
   def self.default_filtering_attributes
     DEFAULT_FILTERING_ATTRIBUTES
@@ -113,7 +124,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     <<-SQL
       SELECT
         #{sanitise_column_names},
-        SUM(#{quantity_field}::FLOAT) AS value
+        ROUND(SUM(#{quantity_field}::FLOAT)) AS value
       FROM #{shipments_table}
       WHERE #{@condition} AND #{quantity_field} <> 'NA'
       GROUP BY #{columns}
@@ -125,6 +136,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def over_time_query
     quantity_field = "#{@reported_by}_reported_quantity"
     columns = @attributes.compact.uniq.join(',')
+    # @sanitised_column_names value is assigned in the super class
+    # while the @query variable is assigned as well because of the grouped_query
     sanitised_column_names = @sanitised_column_names.compact.uniq.join(',')
 
     <<-SQL
@@ -132,7 +145,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       FROM (
         SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
-          SELECT year, #{sanitise_column_names}, SUM(#{quantity_field}::FLOAT) AS value
+          SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
           WHERE #{@condition} AND #{quantity_field} <> 'NA'
           GROUP BY year, #{columns}
@@ -164,7 +177,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         SELECT
           NULL AS id,
           #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
-          SUM(#{quantity_field}::FLOAT) AS value
+          ROUND(SUM(#{quantity_field}::FLOAT)) AS value
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} <> 'NA' #{group_name_condition}
         GROUP BY #{taxonomic_level_name}

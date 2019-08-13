@@ -36,8 +36,8 @@ FROM (
   INNER JOIN species_listings listings ON listings.abbreviation = ts.appendix
   LEFT OUTER JOIN trade_codes sources ON ts.source = sources.code AND sources.type = 'Source'
   LEFT OUTER JOIN trade_codes purposes ON ts.purpose = purposes.code AND purposes.type = 'Purpose'
-  LEFT OUTER JOIN trade_codes terms ON ts.term = terms.name_en AND terms.type = 'Term'
-  LEFT OUTER JOIN trade_codes units ON ts.unit = units.name_en AND units.type = 'Unit'
+  LEFT OUTER JOIN trade_codes terms ON ts.term_converted = terms.name_en AND terms.type = 'Term'
+  LEFT OUTER JOIN trade_codes units ON ts.unit_converted = units.name_en AND units.type = 'Unit'
   LEFT OUTER JOIN geo_entities exporters ON ts.exporter_iso = exporters.iso_code2
   LEFT OUTER JOIN geo_entities importers ON ts.importer_iso = importers.iso_code2
   LEFT OUTER JOIN geo_entities origins ON ts.origin_iso = origins.iso_code2

@@ -16,7 +16,24 @@ class Api::V1::TradePlusFiltersController < ApplicationController
   def response_ordering(response)
     result = {}
     JSON.parse(response.first['filters']).each do |k, v|
-      result[k] = v.sort_by { |i| i['name'].to_s }
+      case k
+      when 'sources', 'purposes'
+        v.map do |value|
+          value['id'], value['name'] = 'unreported', 'Unreported' if value['id'].nil?
+        end
+        v
+      when 'units'
+        v.map do |value|
+          value['id'], value['name'] = 'items', 'Number of items' if value['id'].empty?
+        end
+        v
+      when 'origins'
+        v.map do |value|
+          value['id'], value['iso2'], value['name'] = 'direct', 'direct', 'Direct' if value['id'].nil?
+        end
+        v
+      end
+      result[k] = v.sort_by { |i| i['name'].to_s.downcase }
     end
     result
   end
