@@ -32,6 +32,11 @@ class Api::V1::TradePlusFiltersController < ApplicationController
           value['id'], value['iso2'], value['name'] = 'direct', 'direct', 'Direct' if value['id'].nil?
         end
         v
+      when 'terms'
+        v.map do |value|
+          value['id'], value['name'] = value['id'].capitalize, value['name'].capitalize
+        end
+        v
       end
       result[k] = v.sort_by { |i| i['name'].to_s.downcase }
     end
