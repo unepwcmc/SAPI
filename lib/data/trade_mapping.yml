@@ -1,0 +1,138 @@
+rules:
+  exclusions:
+    appendices: ['N']
+    terms: ['COS', 'OTH', 'PIE']
+    units: [] # seems unnecessary
+  add_group:
+    # rule_no can be omitted if rules are listed already in order
+    - rule_no: 1
+      rule_name: 'rulename'
+      input:
+        class: ['Mammalia']
+      output:
+        group: 'Mammals'
+    - rule_no: 2
+      rule_name: 'rulename'
+      input:
+        class: ['Elasmobranchii','Actinopteri','Coelacanthi','Dipneusti','Actinopterygii']
+      output:
+        group: 'Fish'
+    # Rule number is important on this one as this needs to be the last
+    # rule processed to make mapping work correctly
+    - rule_no: 3
+      rule_name: 'rulename'
+      input:
+        class: []
+      output:
+        group: 'Plants'
+  standardise_terms:
+    - rule_no: 4
+      rule_name: 'rulename'
+      input:
+        terms: ['ROO']
+        taxa_fields:
+          group: ''
+          genus: ['Galanthus', 'Cyclamen', 'Sternbergia']
+        units_fields:
+          units: []
+      output:
+        term: 'LIV'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 5
+      rule_name: 'rulename'
+      input:
+        terms: ['LEG']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: ['KIL']
+      output:
+        term: 'MEA'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 6
+      rule_name: 'rulename'
+      input:
+        terms: ['DER', 'POW']
+        taxa_fields:
+          group: ''
+          genus: ['Aloe', 'Euphorbia']
+        units_fields:
+          units: []
+      output:
+        term: 'EXT'
+        quantity_modifier: ''
+        modifier_value: 0
+    # Rules 7 and 8 together are mapping the overall rule:
+    # If term 'FRN' and group 'Timber' then term 'WPR' else term 'CAR'
+    - rule_no: 7
+      rule_name: 'rulename'
+      input:
+        terms: ['FRN']
+        taxa_fields:
+          group: 'Timber'
+        units_fields:
+          units: []
+      output:
+        term: 'WPR'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 8
+      rule_name: 'rulename'
+      input:
+        terms: ['FRN']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'CAR'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 9
+      rule_name: 'rulename'
+      input:
+        terms: ['PKY']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'KEY'
+        quantity_modifier: '*'
+        modifier_value: 52
+  standardise_units:
+    - rule_no: 10
+      rule_name: 'rulename'
+      # Please note that attributes not used in specific rules can be omitted,
+      # like taxa related fields for the input.
+      input:
+        units: ['PAI']
+      output:
+        # It would be better to use NULL for blank values related to units
+        unit: 'NULL' #blank
+        quantity_modifier: '*'
+        modifier_value: 2
+    - rule_no: 11
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        taxa_fields:
+          group: 'Coral'
+        terms_fields:
+          terms: ['LIV']
+      output:
+        unit: 'NULL'
+        quantity_modifier: '/'
+        modifier_value: 0.206
+  standardise_terms_and_units:
+    - rule_no: 12
+      rule_name: 'rulename'
+      input:
+        units: ['BSK', 'HRN']
+      output:
+        term: 'SID'
+        unit: 'NULL'
+        quantity_modifier: ''
+        modifier_value: 0
