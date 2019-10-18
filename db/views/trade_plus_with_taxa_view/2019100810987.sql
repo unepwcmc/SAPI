@@ -13,25 +13,20 @@ FROM (
          ts.taxon_concept_family_name AS family_name,
          ts.taxon_concept_genus_id AS genus_id,
          ts.taxon_concept_genus_name AS genus_name,
-         CASE WHEN ts.reported_by_exporter IS FALSE THEN ts.quantity
-         ELSE NULL
-         END AS importer_reported_quantity,
-         CASE WHEN ts.reported_by_exporter IS TRUE THEN ts.quantity
-         ELSE NULL
-         END AS exporter_reported_quantity,
-         terms.id AS term_id,
-         terms.name_en AS term,
-         CASE WHEN terms.code = 'ROO' AND ts.taxon_concept_genus_name IN ('Galanthus', 'Cyclamen', 'Sternbergia') THEN
-             CASE WHEN ts.reported_by_exporter IS FALSE THEN Array['LIV', ts.quantity::text, NULL, 'CM']
-             ELSE Array['LIV', NULL, ts.quantity::text, units.code]
-             END
-              WHEN terms.code = 'PKY' THEN
-             CASE WHEN ts.reported_by_exporter IS FALSE THEN Array['KEY', (ts.quantity*52)::text, NULL, units.code]
-             ELSE Array['KEY', NULL, (ts.quantity*52)::text, units.code]
-             END
-         END AS termcode_imp_exp_qty_unit,
-         units.id AS unit_id,
-         units.name_en AS unit,
+         ts.group AS group_name,
+         -- terms.id AS term_id,
+         -- terms.name_en AS term,
+         -- CASE WHEN terms.code = 'ROO' AND ts.taxon_concept_genus_name IN ('Galanthus', 'Cyclamen', 'Sternbergia') THEN
+         --     CASE WHEN ts.reported_by_exporter IS FALSE THEN Array['LIV', ts.quantity::text, NULL, 'CM']
+         --     ELSE Array['LIV', NULL, ts.quantity::text, units.code]
+         --     END
+         --      WHEN terms.code = 'PKY' THEN
+         --     CASE WHEN ts.reported_by_exporter IS FALSE THEN Array['KEY', (ts.quantity*52)::text, NULL, units.code]
+         --     ELSE Array['KEY', NULL, (ts.quantity*52)::text, units.code]
+         --     END
+         -- END AS termcode_imp_exp_qty_unit,
+         -- units.id AS unit_id,
+         -- units.name_en AS unit,
          exporters.id AS exporter_id,
          exporters.iso_code2 AS exporter_iso,
          exporters.name_en AS exporter,
@@ -45,7 +40,7 @@ FROM (
          sources.name_en AS source,
          ranks.id AS rank_id,
          ranks.name AS rank_name
-  FROM trade_shipments_with_taxa_view ts
+  FROM trade_plus_group_view ts
   INNER JOIN species_listings listings ON listings.abbreviation = ts.appendix
   INNER JOIN trade_codes sources ON ts.source_id = sources.id
   INNER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
