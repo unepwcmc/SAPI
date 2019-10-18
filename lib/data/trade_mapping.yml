@@ -2,7 +2,6 @@ rules:
   exclusions:
     appendices: ['N']
     terms: ['COS', 'OTH', 'PIE']
-    units: [] # seems unnecessary
   add_group:
     # rule_no can be omitted if rules are listed already in order
     - rule_no: 1
@@ -126,8 +125,26 @@ rules:
         unit: 'NULL'
         quantity_modifier: '/'
         modifier_value: 0.206
-  standardise_terms_and_units:
     - rule_no: 12
+      rule_name: 'rulename'
+      input:
+        units: ["BAG", "BOT", "BOX", "CAN", "CAS", "CRT", "FLA", "ITE", "PCS", "SET", "SHP", "SKI"]
+      output:
+        unit: 'NULL'
+    - rule_no: 13
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Pericopsis elata']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: '725'
+  standardise_terms_and_units:
+    - rule_no: 14
       rule_name: 'rulename'
       input:
         units: ['BSK', 'HRN']
