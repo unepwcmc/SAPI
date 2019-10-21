@@ -1,4 +1,8 @@
-Species.SearchController = Ember.Controller.extend Species.Spinner, Species.SearchContext, Species.TaxonConceptAutoCompleteLookup, Species.GeoEntityAutoCompleteLookup,
+Species.SearchController = Ember.Controller.extend Species.Spinner,
+  Species.SearchContext,
+  Species.TaxonConceptAutoCompleteLookup,
+  Species.GeoEntityAutoCompleteLookup,
+  Species.CustomTransition,
   needs: ['geoEntities', 'taxonConcepts']
   geoEntities: Ember.computed.alias("controllers.geoEntities")
   searchContext: 'species'
@@ -19,8 +23,8 @@ Species.SearchController = Ember.Controller.extend Species.Spinner, Species.Sear
       query = @get('taxonConceptQueryForDisplay')
     else
       query = taxonFullName
-    # Resetting the page property if no page value has been passed.
-    @transitionToRoute('taxonConcepts', {queryParams: {
+
+    queryParams = {
       taxonomy: @get('taxonomy')
       taxon_concept_query: query
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id')
@@ -29,12 +33,14 @@ Species.SearchController = Ember.Controller.extend Species.Spinner, Species.Sear
       else
         'cites'
       page: page or 1
-    }})
+    }
+
+    @customTransitionToRoute('taxonConcepts', { queryParams: queryParams })
 
   openTaxonPage: (taxonConceptId) ->
     @set('redirected', false)
     m = Species.TaxonConcept.find(taxonConceptId)
-    @transitionToRoute('taxonConcept.legal', m, {queryParams: false})
+    @customTransitionToRoute('taxonConcept.legal', m, {queryParams: false})
 
   actions:
     openSearchPage: (taxonFullName, page, perPage) ->

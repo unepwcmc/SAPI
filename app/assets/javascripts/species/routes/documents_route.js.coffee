@@ -70,3 +70,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     controller.set('citesAcDocuments', {})
     controller.set('citesPcDocuments', {})
     controller.set('otherDocuments', {})
+
+  actions:
+    queryParamsDidChange: (changed, totalPresent, removed) ->
+      @refresh()
