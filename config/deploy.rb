@@ -20,7 +20,7 @@ set :scm_username, "unepwcmc-read"
 # set :format, :pretty
 
 set :rvm_type, :user
-set :rvm_ruby_version, '2.2.3'
+set :rvm_ruby_version, '2.3.1'
 
 # Default value for :log_level is :debug
 # set :log_level, :debug
@@ -78,7 +78,7 @@ set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the messa
 namespace :sidekiq do
   task :quiet do
     on roles(:app) do
-      puts capture("pgrep -f 'sidekiq.*sapi' | xargs kill -TSTP") 
+      puts capture("pgrep -f 'sidekiq.*sapi' | xargs kill -TSTP")
     end
   end
   task :restart do
