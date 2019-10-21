@@ -2,6 +2,8 @@
 # The helpers below simply take the query parameters that are passed to the customTransition function and form a query string that matches the Ember generated one.
 # customTransitionToRoute has the same method signature as transitionToRoute, so should be easy to switch back to Ember's built in functionality in the future.
 
+# @refresh has been used in queryParamsDidChange in ..._route.js files to make sure that the new model is loaded when the parameters change. This might be able to be removed when updating Ember.
+
 ROUTES = {
   'documents': 'documents',
   'taxonConcept': 'taxon_concepts',
