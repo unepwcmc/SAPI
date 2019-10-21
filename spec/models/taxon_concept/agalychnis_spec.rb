@@ -7,10 +7,10 @@ describe TaxonConcept do
     context "REFERENCES" do
       describe :cites_accepted do
         context "for class Amphibia" do
-          specify { @klass.cites_accepted.should be_true }
+          specify { @klass.cites_accepted.should be_truthy }
         end
         context "for family Hylidae" do
-          specify { @family.cites_accepted.should be_true }
+          specify { @family.cites_accepted.should be_truthy }
         end
         context "for genus Agalychnis" do
           specify { @genus.cites_accepted.should == false }
@@ -46,7 +46,7 @@ describe TaxonConcept do
           specify { @family.cites_listed.should == false }
         end
         context "for genus Agalychnis" do
-          specify { @genus.cites_listed.should be_true }
+          specify { @genus.cites_listed.should be_truthy }
         end
       end
 
@@ -55,7 +55,7 @@ describe TaxonConcept do
           specify { @family.eu_listed.should == false }
         end
         context "for genus Agalychnis" do
-          specify { @genus.eu_listed.should be_true }
+          specify { @genus.eu_listed.should be_truthy }
         end
       end
 

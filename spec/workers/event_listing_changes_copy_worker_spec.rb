@@ -40,13 +40,13 @@ describe EventListingChangesCopyWorker do
     }
     before { EventListingChangesCopyWorker.new.perform(prev_eu_regulation.id, eu_regulation.id) }
     specify { eu_regulation.listing_changes.reload.count.should == 1 }
-    specify { eu_regulation.listing_changes.first.is_current.should be_false }
+    specify { eu_regulation.listing_changes.first.is_current.should be_falsey }
   end
 
   context "when copy into current regulation" do
     before { EventListingChangesCopyWorker.new.perform(prev_eu_regulation.id, eu_regulation.id) }
     specify { eu_regulation.listing_changes.reload.count.should == 1 }
-    specify { eu_regulation.listing_changes.first.is_current.should be_true }
+    specify { eu_regulation.listing_changes.first.is_current.should be_truthy }
   end
 
   context "when exclusion" do

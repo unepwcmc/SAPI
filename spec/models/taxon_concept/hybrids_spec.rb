@@ -30,13 +30,13 @@ describe TaxonConcept do
     }
     context "when new" do
       specify {
-        tc.has_hybrids?.should be_true
+        tc.has_hybrids?.should be_truthy
       }
       specify {
-        hybrid.is_hybrid?.should be_true
+        hybrid.is_hybrid?.should be_truthy
       }
       specify {
-        hybrid.has_hybrid_parents?.should be_true
+        hybrid.has_hybrid_parents?.should be_truthy
       }
       specify {
         hybrid.full_name.should == 'Lolcatus lolcatus x lolatus'

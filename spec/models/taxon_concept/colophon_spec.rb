@@ -43,10 +43,10 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for order Coleoptera" do
-          specify { @order.cites_show.should be_false }
+          specify { @order.cites_show.should be_falsey }
         end
         context "for family Lucanidae" do
-          specify { @family.cites_show.should be_false }
+          specify { @family.cites_show.should be_falsey }
         end
       end
 

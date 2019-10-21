@@ -30,13 +30,13 @@ describe TaxonConcept do
     }
     context "when new" do
       specify {
-        tc.has_trade_names?.should be_true
+        tc.has_trade_names?.should be_truthy
       }
       specify {
-        trade_name.is_trade_name?.should be_true
+        trade_name.is_trade_name?.should be_truthy
       }
       specify {
-        trade_name.has_accepted_names_for_trade_name?.should be_true
+        trade_name.has_accepted_names_for_trade_name?.should be_truthy
       }
       specify {
         trade_name.full_name.should == 'Lolcatus lolus'

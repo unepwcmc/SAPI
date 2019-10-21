@@ -24,7 +24,7 @@ describe TaxonConcept do
           specify { @genus.cites_listed.should == false }
         end
         context "for species Mellivora capensis" do
-          specify { @species.cites_listed.should be_true }
+          specify { @species.cites_listed.should be_truthy }
         end
       end
 
@@ -36,7 +36,7 @@ describe TaxonConcept do
           specify { @genus.eu_listed.should == false }
         end
         context "for species Mellivora capensis" do
-          specify { @species.eu_listed.should be_true }
+          specify { @species.eu_listed.should be_truthy }
         end
       end
 

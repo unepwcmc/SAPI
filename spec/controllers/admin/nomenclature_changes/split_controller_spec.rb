@@ -5,7 +5,7 @@ describe Admin::NomenclatureChanges::SplitController do
   include_context 'split_definitions'
 
   describe 'GET show' do
-    context :inputs do
+    context 'inputs' do
       before(:each) do
         @split = create(:nomenclature_change_split)
       end
@@ -14,7 +14,7 @@ describe Admin::NomenclatureChanges::SplitController do
         response.should render_template('inputs')
       end
     end
-    context :outputs do
+    context 'outputs' do
       before(:each) do
         @split = split_with_input
       end
@@ -23,7 +23,7 @@ describe Admin::NomenclatureChanges::SplitController do
         response.should render_template('outputs')
       end
     end
-    context :reassignments do
+    context 'reassignments' do
       before(:each) do
         @split = split_with_input_and_output
       end

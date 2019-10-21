@@ -18,7 +18,7 @@ gem 'nested-hstore'
 gem 'pg_search', '~> 0.6.0' # 0.5.7
 gem 'foreigner'
 gem 'oj' # optimised JSON (picked by multi_json)
-gem 'nokogiri', '>= 1.6.7.2'
+gem 'nokogiri', '>= 1.8.5'
 gem 'inherited_resources', '~> 1.7.0'
 gem 'traco', '~> 2.0.0'
 # gem 'strong_parameters'
@@ -115,9 +115,10 @@ group :development do
 end
 
 group :test, :development do
-  gem "rspec-rails"
+  gem "rspec-rails", '~> 3.0.1'
+  gem 'rspec-collection_matchers'
   gem "rspec-mocks"
-  gem "json_spec"
+  gem "json_spec", '1.1.5'
   gem "database_cleaner", ">=1.2.0"
   gem "timecop"
   gem "launchy"
@@ -129,7 +130,7 @@ group :test do
   gem "factory_girl_rails", "~> 4.0"
   gem 'simplecov', :require => false
   gem 'coveralls', :require => false
-  gem 'capybara'
+  gem 'capybara', '~> 2.2.0'
 end
 
 gem 'rake', '~> 10.0.3'

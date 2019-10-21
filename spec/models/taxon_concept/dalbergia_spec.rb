@@ -25,10 +25,10 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for species Dalbergia abbreviata" do
-          specify { @species1.cites_show.should be_false }
+          specify { @species1.cites_show.should be_falsey }
         end
         context "for species Dalbergia abrahamii" do
-          specify { @species2.cites_show.should be_true }
+          specify { @species2.cites_show.should be_truthy }
         end
       end
     end

@@ -1,50 +1,50 @@
 shared_context "Pecari tajacu" do
-  let(:north_america) {
-    create(
-      :geo_entity,
-      :geo_entity_type => cites_region_geo_entity_type,
-      :name => "5- North America"
-    )
-  }
-  let(:south_america) {
-    create(
-      :geo_entity,
-      :geo_entity_type => cites_region_geo_entity_type,
-      :name => "3- Central and South America and the Caribbean"
-    )
-  }
-  let(:america) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'United States of America',
-      :iso_code2 => 'US'
-    )
-  }
-  let(:mexico) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Mexico',
-      :iso_code2 => 'MX'
-    )
-  }
-  let(:canada) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Canada',
-      :iso_code2 => 'CA'
-    )
-  }
-  let(:argentina) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Argentina',
-      :iso_code2 => 'AR'
-    )
-  }
+  {
+    argentina: 'AR',
+    canada: 'CA',
+    mexico: 'MX'
+  }.each do |name, iso_code|
+    define_method(name) do
+      name = name.to_s
+      var = instance_variable_get("@#{name}")
+      return var if var
+      country =  create(
+        :geo_entity,
+        :geo_entity_type => country_geo_entity_type,
+        :name => name.capitalize,
+        :iso_code2 => iso_code
+      )
+      instance_variable_set("@#{name}", country)
+    end
+  end
+
+  def north_america
+    @north_america ||=
+      create(
+        :geo_entity,
+        :geo_entity_type => cites_region_geo_entity_type,
+        :name => "5- North America"
+      )
+  end
+
+  def south_america
+    @south_america ||=
+      create(
+        :geo_entity,
+        :geo_entity_type => cites_region_geo_entity_type,
+        :name => "3- Central and South America and the Caribbean"
+      )
+  end
+
+  def america
+    @america ||=
+      create(
+        :geo_entity,
+        :geo_entity_type => country_geo_entity_type,
+        :name => 'United States of America',
+        :iso_code2 => 'US'
+      )
+  end
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Artiodactyla'),
@@ -108,6 +108,9 @@ shared_context "Pecari tajacu" do
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
+      #Skip old sapi context let statements,
+      #which are now instance variables starting with _
+      next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

@@ -66,7 +66,7 @@ describe TaxonConcept do
 
       describe :cites_listed do
         context "for order Falconiformes" do
-          specify { @order.cites_listed.should be_true }
+          specify { @order.cites_listed.should be_truthy }
         end
         context "for family Falconidae (inclusion in higher taxa listing)" do
           specify { @family2.cites_listed.should == false }
@@ -75,7 +75,7 @@ describe TaxonConcept do
           specify { @genus2_1.cites_listed.should == false }
         end
         context "for species Falco araea" do
-          specify { @species2_1.cites_listed.should be_true }
+          specify { @species2_1.cites_listed.should be_truthy }
         end
         context "for species Falco alopex" do
           specify { @species2_2.cites_listed.should == false }
@@ -90,7 +90,7 @@ describe TaxonConcept do
 
       describe :eu_listed do
         context "for order Falconiformes" do
-          specify { @order.eu_listed.should be_true }
+          specify { @order.eu_listed.should be_truthy }
         end
         context "for family Falconidae (inclusion in higher taxa listing)" do
           specify { @family2.eu_listed.should == false }
@@ -99,7 +99,7 @@ describe TaxonConcept do
           specify { @genus2_1.eu_listed.should == false }
         end
         context "for species Falco araea" do
-          specify { @species2_1.eu_listed.should be_true }
+          specify { @species2_1.eu_listed.should be_truthy }
         end
         context "for species Falco alopex" do
           specify { @species2_2.eu_listed.should == false }
@@ -114,25 +114,25 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for order Falconiformes" do
-          specify { @order.cites_show.should be_true }
+          specify { @order.cites_show.should be_truthy }
         end
         context "for family Falconidae" do
-          specify { @family2.cites_show.should be_true }
+          specify { @family2.cites_show.should be_truthy }
         end
         context "for Falco hybrid" do
-          specify { @hybrid.cites_show.should be_false }
+          specify { @hybrid.cites_show.should be_falsey }
         end
       end
 
       describe :show_in_checklist_ac do
         context "for subspecies Falco peregrinus peregrinus" do
-          specify { @subspecies2_3_1_ac.show_in_checklist_ac.should be_false }
+          specify { @subspecies2_3_1_ac.show_in_checklist_ac.should be_falsey }
         end
       end
 
       describe :show_in_species_plus_ac do
         context "for subspecies Falco peregrinus peregrinus" do
-          specify { @subspecies2_3_1_ac.show_in_species_plus_ac.should be_true }
+          specify { @subspecies2_3_1_ac.show_in_species_plus_ac.should be_truthy }
         end
       end
 

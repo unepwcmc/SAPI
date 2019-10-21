@@ -26,20 +26,21 @@ describe Species::DocumentsExport do
         Species::DocumentsExport.new({})
       }
       specify "when file not cached it should not be generated" do
-        subject.export.should be_false
+        subject.export.should be_falsey
       end
     end
     context "when results" do
-      before(:each) {
-        create(:document)
-        DocumentSearch.refresh_citations_and_documents
-      }
-      subject {
-        Species::DocumentsExport.new({})
-      }
+      #Commented as was causing issues and tests are pending anyway
+      #before(:each) {
+      #  create(:document)
+      #  DocumentSearch.refresh_citations_and_documents
+      #}
+      #subject {
+      #  Species::DocumentsExport.new({})
+      #}
       pending "when file not cached it should be generated" do
         subject.export
-        File.file?(subject.file_name).should be_true
+        File.file?(subject.file_name).should be_truthy
         File.size(subject.file_name).should be > 0
       end
       pending "when file cached it should not be generated" do

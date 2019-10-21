@@ -14,7 +14,7 @@ describe DocumentBatch, sidekiq: :inline do
           ]
         )
       }
-      specify { expect(subject.save).to be_false }
+      specify { expect(subject.save).to be_falsey }
       specify { expect { subject.save }.not_to change { Document.count } }
     end
     context "when valid" do
@@ -29,7 +29,7 @@ describe DocumentBatch, sidekiq: :inline do
           ]
         )
       }
-      specify { expect(subject.save).to be_true }
+      specify { expect(subject.save).to be_truthy }
       specify { expect { subject.save }.to change { Document.count }.by(1) }
     end
   end
