@@ -1,4 +1,4 @@
-class Trade::TradePlusShipments
+class Trade::TradePlusFormattedCodes
 
   VIEW_DIR = 'db/views/trade_plus_with_taxa_view'.freeze
 
@@ -49,7 +49,7 @@ class Trade::TradePlusShipments
                  sources.id AS source_id,
                  sources.name_en AS source,
                  ranks.id AS rank_id,
-                 ranks.name AS rank_name,
+                 ranks.name AS rank_name
           FROM trade_plus_group_view ts
           INNER JOIN species_listings listings ON listings.abbreviation = ts.appendix
           INNER JOIN trade_codes sources ON ts.source_id = sources.id
@@ -103,14 +103,19 @@ class Trade::TradePlusShipments
       query += subquery.join(' AND ')
       query += "\n\t\t\t\t\t\t\t\t\tTHEN "
       output = output_formatting(rule)
+      term = output['term'].blank? ? 'terms.code' : "'#{output['term']}'"
+      unit = output['unit'].blank? ? 'units.code' : "'#{output['unit']}'"
       modifier = output['quantity_modifier'] || '+'
       value = output['modifier_value'] || 0
-      output_query = "\n\t\t\t\t\t\t\t\t\t\tCASE WHEN ts.reported_by_exporter IS FALSE THEN Array['#{output['term'] || 'terms.code'}', ts.quantity#{modifier}#{value}::text, NULL, '#{output['unit'] || 'units.code'}']
-                      ELSE Array['#{output['term'] || 'terms.code'}', NULL, ts.quantity#{modifier}#{value}::text, '#{output['unit'] || 'units.code'}']
+      output_query = "\n\t\t\t\t\t\t\t\t\t\tCASE WHEN ts.reported_by_exporter IS FALSE THEN Array[#{term}, (ts.quantity#{modifier}#{value})::text, NULL, #{unit}]
+                      ELSE Array[#{term}, NULL, (ts.quantity#{modifier}#{value})::text, #{unit}]
                       END\n"
       query += output_query
     end
-    query += "\n\t\t\t\t\t\t\t\t\t AS term_imp_exp_unit," #formatted_codes_array
+    query += "\t\t\t\t\t\t\t\t\tELSE\n\t\t\t\t\t\t\t\t\t\tCASE WHEN ts.reported_by_exporter IS FALSE THEN Array[terms.code, ts.quantity::text, NULL, units.code]
+                    ELSE Array[terms.code, NULL, ts.quantity::text, units.code]
+                    END\n"
+    query += "\n\t\t\t\t\t\t\t\t\tEND AS term_imp_exp_unit," #formatted_codes_array
   end
 
   def input_flatting(rule)
@@ -125,5 +130,4 @@ class Trade::TradePlusShipments
     output = output.select { |k, v| ['term', 'unit'].include? k } if output['quantity_modifier'].blank?
     output
   end
-
 end

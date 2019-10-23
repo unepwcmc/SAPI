@@ -24,9 +24,9 @@ class Trade::TradePlusGroupView
   end
 
   GROUP_MAPPING = {
-    'class'=> 'taxon_concept_class_name',
-    'genus'=> 'taxon_concept_genus_name',
-    'taxon'=> 'taxon_concept_full_name'
+    'class'=> 'ts.taxon_concept_class_name',
+    'genus'=> 'ts.taxon_concept_genus_name',
+    'taxon'=> 'ts.taxon_concept_full_name'
   }.freeze
 
   def add_group_mapping
@@ -38,8 +38,7 @@ class Trade::TradePlusGroupView
       values  = input.second.map { |a| "'#{a}'" }.join(',')
       next if values.blank?
       group = rule['output']['group']
-      byebug
-      query += "\t\t\tWHEN #{rank} IN (#{values}) THEN #{group}\n"
+      query += "\t\t\tWHEN #{rank} IN (#{values}) THEN '#{group}'\n"
     end
     query += "\t\t\tWHEN ts.taxon_concept_class_name IS NULL AND (ts.taxon_concept_genus_name NOT IN ('Aquilaria','Pericopsis','Cedrela','Guaiacum','Swietenia','Dalbergia','Prunus','Gonystylus','Diospyros','Abies','Guarea','Guibourtia','Gyrinops','Platymiscium','Pterocarpus','Taxus')
       OR ts.taxon_concept_full_name NOT IN ('Araucaria araucana','Fitzroya cupressoides','Abies guatemalensis','Pterocarpus santalinus','Pilgerodendron uviferum','Aniba rosaeodora','Caesalpinia echinata','Bulnesia sarmientoi','Dipteryx panamensis','Pinus koraiensis','Caryocar costaricense','Celtis aetnensis','Cynometra hemitomophylla','Magnolia liliifera','Oreomunnea pterocarpa','Osyris lanceolata','Pterygota excelsa','Tachigali versicolor'))
