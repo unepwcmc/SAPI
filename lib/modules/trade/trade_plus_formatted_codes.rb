@@ -75,7 +75,8 @@ class Trade::TradePlusFormattedCodes
     'units'=> 'units.code',
     'taxa'=> 'ts.taxon_concept_full_name',
     'group'=> 'ts.group',
-    'appendices' => 'ts.appendix'
+    'appendices' => 'ts.appendix',
+    'order' => 'ts.taxon_concept_order_name'
   }.freeze
 
   def exemptions
