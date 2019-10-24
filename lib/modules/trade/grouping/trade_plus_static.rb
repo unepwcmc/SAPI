@@ -41,7 +41,6 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def shipments_table
     'trade_plus_static_complete_view'
-    # 'trade_plus_with_taxa_view'
   end
 
   # Allowed attributes
@@ -87,8 +86,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     taxon_id: 'taxon_id',
     importer: 'importer_iso',
     exporter: 'exporter_iso',
-    #origin: 'origin_iso',
-    origin: 'origin',
+    origin: 'origin_iso',
     appendices: 'appendix',
     taxonomic_group: 'group_name'
   }.freeze
@@ -122,7 +120,6 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   end
 
   def group_query
-    # byebug
     columns = @attributes.compact.uniq.join(',')
     quantity_field = "#{@reported_by}_reported_quantity"
     <<-SQL
@@ -192,7 +189,6 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   end
 
   def sanitise_column_names
-    # byebug
     return '' if @attributes.blank?
     @attributes.map do |attribute|
       next if attribute == 'year' || attribute.nil?

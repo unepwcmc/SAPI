@@ -19,7 +19,7 @@ class Trade::Grouping::TradePlus
   private
 
   def shipments_table
-    'trade_plus_with_taxa_view'
+    'trade_plus_shipments_view'
   end
 
   def attributes
