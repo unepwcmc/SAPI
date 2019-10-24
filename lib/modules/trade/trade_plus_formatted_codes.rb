@@ -43,7 +43,9 @@ class Trade::TradePlusFormattedCodes
                  importers.id AS importer_id,
                  importers.iso_code2 AS importer_iso,
                  importers.name_en AS importer,
-                 origins.iso_code2 AS origin,
+                 origins.id AS origin_id,
+                 origins.iso_code2 AS origin_iso,
+                 origins.name_en AS origin,
                  purposes.id AS purpose_id,
                  purposes.name_en AS purpose,
                  sources.id AS source_id,
@@ -61,6 +63,7 @@ class Trade::TradePlusFormattedCodes
           LEFT OUTER JOIN geo_entities importers ON ts.importer_id = importers.id
           LEFT OUTER JOIN geo_entities origins ON ts.country_of_origin_id = origins.id
           WHERE listings.designation_id = 1
+          AND ts.year >= #{Date.today.year - 9} AND ts.year < #{Date.today.year}
           AND #{exemptions}
         ) AS s
     SQL
