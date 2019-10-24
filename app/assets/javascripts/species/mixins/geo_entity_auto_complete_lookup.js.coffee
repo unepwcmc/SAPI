@@ -22,7 +22,7 @@ Species.GeoEntityAutoCompleteLookup = Ember.Mixin.create
 
   initForm: ->
     @set 'selectedGeoEntities', @get('geoEntities.content').filter (geoEntity) =>
-      return geoEntity.get('id') of @get('selectedGeoEntitiesIds')
+      return @get('selectedGeoEntitiesIds').indexOf(geoEntity.get('id')) >= 0
     @set('autoCompleteRegions', @get('geoEntities.regions'))
     @set('autoCompleteCountries', @get('geoEntities.countries'))
 
