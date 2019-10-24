@@ -1,5 +1,5 @@
 set :stage, :staging
-set :branch, :deploy_test
+set :branch, :develop
 
 server "sapi-staging.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
 
