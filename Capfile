@@ -35,6 +35,6 @@ require 'capistrano/passenger'
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 require 'capistrano/maintenance'
 require 'whenever/capistrano'
-require 'capistrano/local_precompile'
+
 
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
