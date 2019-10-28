@@ -18,7 +18,7 @@ class Trade::TradePlusFormattedCodes
     <<-SQL
       SELECT DISTINCT *
       FROM(
-          SELECT ts.id, ts.year, ts.appendix, ts.taxon_concept_id,
+          SELECT Ts.id, ts.year, ts.appendix, ts.taxon_concept_id, ts.reported_by_exporter,
                  ts.taxon_concept_author_year AS author_year,
                  ts.taxon_concept_name_status AS name_status,
                  ts.taxon_concept_full_name AS taxon_name,
@@ -96,7 +96,7 @@ class Trade::TradePlusFormattedCodes
           @mapping['rules']['standardise_terms_and_units']
     query = ''
     map.each do |rule|
-      query += "\t\t\t\t\t\t\t\t\tWHEN "
+      query += "#{indent(9)}WHEN "
       formatted_input = input_flatting(rule)
       formatted_input.delete_if { |_, v| v.empty? }
       subquery = []
@@ -105,21 +105,18 @@ class Trade::TradePlusFormattedCodes
         subquery << "#{TERM_MAPPING[input.first]} IN (#{values})"
       end
       query += subquery.join(' AND ')
-      query += "\n\t\t\t\t\t\t\t\t\tTHEN "
+      query += "\n#{indent(9)}THEN "
       output = output_formatting(rule)
       term = output['term'].blank? ? 'terms.code' : "'#{output['term']}'"
       unit = output['unit'].blank? ? 'units.code' : "'#{output['unit']}'"
       modifier = output['quantity_modifier'] || '+'
-      value = output['modifier_value'] || 0
-      output_query = "\n\t\t\t\t\t\t\t\t\t\tCASE WHEN ts.reported_by_exporter IS FALSE THEN Array[#{term}, (ts.quantity#{modifier}#{value})::text, NULL, #{unit}]
-                      ELSE Array[#{term}, NULL, (ts.quantity#{modifier}#{value})::text, #{unit}]
-                      END\n"
+      value = output['modifier_value'] || ''
+      added_quantity = value.present? ? "#{modifier}#{value}" : ''
+      output_query = "\n#{indent(10)}Array[#{term}, (ts.quantity#{added_quantity})::text, #{unit}]\n"
       query += output_query
     end
-    query += "\t\t\t\t\t\t\t\t\tELSE\n\t\t\t\t\t\t\t\t\t\tCASE WHEN ts.reported_by_exporter IS FALSE THEN Array[terms.code, ts.quantity::text, NULL, units.code]
-                    ELSE Array[terms.code, NULL, ts.quantity::text, units.code]
-                    END\n"
-    query += "\n\t\t\t\t\t\t\t\t\tEND AS term_imp_exp_unit," #formatted_codes_array
+    query += "#{indent(9)}ELSE#{indent(10)}Array[terms.code, ts.quantity::text, units.code]\n"
+    query += "\n#{indent(9)}END AS term_quantity_unit," #formatted_codes_array
   end
 
   def input_flatting(rule)
@@ -133,5 +130,10 @@ class Trade::TradePlusFormattedCodes
     output = rule['output']
     output = output.select { |k, v| ['term', 'unit'].include? k } if output['quantity_modifier'].blank?
     output
+  end
+
+  def indent(tabs_num = 0)
+    tabs = ''
+    tabs.tap { tabs_num.times { tabs << "\t" } }
   end
 end
