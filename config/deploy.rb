@@ -1,7 +1,10 @@
+require "bundler/capistrano"
+
+
 # config valid only for current version of Capistrano
 lock '3.11.0'
 
-set :application, 'sapi'
+set :application, 'sapi-rails4'
 set :repo_url, 'git@github.com:unepwcmc/SAPI.git'
 
 # Default branch is :master

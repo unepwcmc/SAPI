@@ -1,11 +1,11 @@
 set :stage, :staging
-set :branch, :develop
+set :branch, :rails_4_deploy 
 
 server "sapi-staging.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
 
 set :domain, "sapi-staging.linode.unep-wcmc.org"
 
-set :application, "sapi"
+set :application, "sapi-rails4"
 
 set :server_name, "#{fetch(:application)}.#{fetch(:domain)}"
 
