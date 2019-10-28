@@ -39,6 +39,7 @@ gem 'redis-rails', '~> 4.0.0'
 
 gem 'whenever', :require => false
 
+gem 'concurrent-ruby', '~> 1.1.5'
 gem 'sprockets', '~> 2.8.0'
 gem 'ember-rails', '~> 0.14.1'
 gem 'ember-source', '~> 1.6.0'

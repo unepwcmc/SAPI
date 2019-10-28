@@ -511,6 +511,7 @@ DEPENDENCIES
   clerk
   codeclimate-test-reporter
   coffee-rails (~> 4.0.0)
+  concurrent-ruby (~> 1.1.5)
   coveralls
   dalli
   database_cleaner (>= 1.2.0)
