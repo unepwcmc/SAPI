@@ -370,8 +370,8 @@ rules:
         units: ['MYG']
       output:
         unit: 'KIL'
-        quantity_modifier: '*'
-        modifier_value: 10
+        quantity_modifier: '/'
+        modifier_value: 10e+9
     - rule_no: 4
       rule_name: 'rulename'
       input:
