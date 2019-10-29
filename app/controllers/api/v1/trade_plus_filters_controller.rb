@@ -2,7 +2,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
   respond_to :json
 
   ATTRIBUTES = %w[importer exporter origin term
-                  source purpose appendix unit].freeze
+                  source purpose unit].freeze
   def index
     filters = Rails.cache.fetch('trade_plus_filters', expires_in: 1.week) do
                 res = ActiveRecord::Base.connection.execute(query)
@@ -24,7 +24,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
         v
       when 'units'
         v.map do |value|
-          value['id'], value['name'] = 'items', 'Number of items' if value['id'].empty?
+          value['id'], value['name'] = 'items', 'Number of items' if value['id'].nil?
         end
         v
       when 'origins'
@@ -47,7 +47,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
     <<-SQL
      WITH data AS (
        SELECT #{select_query}
-       FROM trade_plus_static_complete_view
+       FROM trade_plus_formatted_data_view
      )
      SELECT ROW_TO_JSON(t) AS filters
      FROM (
@@ -63,7 +63,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
       query << "#{attr}" << "#{attr}_id"
       query << "#{attr}_iso" if ['exporter', 'importer', 'origin'].include? attr
     end
-    query << 'group_name' << 'year' << 'taxon_name' << 'taxon_id'
+    query << 'group_name' << 'year' << 'taxon_name' << 'taxon_concept_id' << 'appendix'
     query.join(',')
   end
 
@@ -91,9 +91,10 @@ class Api::V1::TradePlusFiltersController < ApplicationController
       end
 
     end
-    query << "json_agg(DISTINCT(json_build_object('name', taxon_name, 'id', taxon_id)::jsonb)) AS taxa,"
+    query << "json_agg(DISTINCT(json_build_object('name', taxon_name, 'id', taxon_concept_id)::jsonb)) AS taxa,"
     query << "json_agg(DISTINCT(json_build_object('name', group_name, 'id', group_name)::jsonb)) AS taxonomic_groups,"
-    query << "json_agg(DISTINCT(json_build_object('name', year, 'id', year)::jsonb)) AS years"
+    query << "json_agg(DISTINCT(json_build_object('name', year, 'id', year)::jsonb)) AS years,"
+    query << "json_agg(DISTINCT(json_build_object('name', appendix, 'id', appendix)::jsonb)) AS appendix"
     query
   end
 end
