@@ -19,7 +19,7 @@ class Trade::TradePlusGroupView
     SELECT
       ts.*,
       CASE #{add_group_mapping}
-    FROM trade_shipments_with_taxa_view ts
+    FROM trade_plus_shipments_view ts
     SQL
   end
 

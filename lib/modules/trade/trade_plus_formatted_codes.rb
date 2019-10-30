@@ -18,10 +18,14 @@ class Trade::TradePlusFormattedCodes
     <<-SQL
       SELECT DISTINCT *
       FROM(
-          SELECT Ts.id, ts.year, ts.appendix, ts.taxon_concept_id, ts.reported_by_exporter,
+        SELECT ts.id, ts.year, ts.appendix, ts.reported_by_exporter,
+                 ts.taxon_concept_id AS taxon_id, 
                  ts.taxon_concept_author_year AS author_year,
                  ts.taxon_concept_name_status AS name_status,
                  ts.taxon_concept_full_name AS taxon_name,
+                 ts.taxon_concept_kingdom_name AS kingdom_name,
+                 ts.taxon_concept_kingdom_id AS kingdom_id,
+                 ts.taxon_concept_phylum_name AS phylum_name,
                  ts.taxon_concept_phylum_id AS phylum_id,
                  ts.taxon_concept_class_id AS class_id,
                  ts.taxon_concept_class_name AS class_name,
@@ -33,10 +37,6 @@ class Trade::TradePlusFormattedCodes
                  ts.taxon_concept_genus_name AS genus_name,
                  ts.group AS group_name,
                  CASE #{standard_trade_codes}
-                 -- terms.id AS term_id,
-                 -- terms.name_en AS term,
-                 -- units.id AS unit_id,
-                 -- units.name_en AS unit,
                  exporters.id AS exporter_id,
                  exporters.iso_code2 AS exporter_iso,
                  exporters.name_en AS exporter,
@@ -53,7 +53,6 @@ class Trade::TradePlusFormattedCodes
                  ranks.id AS rank_id,
                  ranks.name AS rank_name
           FROM trade_plus_group_view ts
-          INNER JOIN species_listings listings ON listings.abbreviation = ts.appendix
           INNER JOIN trade_codes sources ON ts.source_id = sources.id
           INNER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
           INNER JOIN ranks ON ranks.id = ts.taxon_concept_rank_id
@@ -62,8 +61,7 @@ class Trade::TradePlusFormattedCodes
           LEFT OUTER JOIN geo_entities exporters ON ts.exporter_id = exporters.id
           LEFT OUTER JOIN geo_entities importers ON ts.importer_id = importers.id
           LEFT OUTER JOIN geo_entities origins ON ts.country_of_origin_id = origins.id
-          WHERE listings.designation_id = 1
-          AND ts.year >= #{Date.today.year - 9} AND ts.year < #{Date.today.year}
+          WHERE ts.year >= #{Date.today.year - 9} AND ts.year < #{Date.today.year}
           AND #{exemptions}
         ) AS s
     SQL
