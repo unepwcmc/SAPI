@@ -40,7 +40,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   private
 
   def shipments_table
-    'trade_plus_static_complete_view'
+    #'trade_plus_static_complete_view'
+    'trade_plus_formatted_data_view'
   end
 
   # Allowed attributes
@@ -65,7 +66,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     family_name: 'family_name',
     class_name: 'class_name',
     group_name: 'group_name',
-    taxon_id: 'taxon_concept_id'
+    taxon_id: 'taxon_id'
   }.freeze
 
   def attributes
@@ -108,7 +109,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     sources: ['source', 'source_id'],
     exporting: ['exporter', 'exporter_iso'],
     importing: ['importer', 'importer_iso'],
-    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
+    species: ['taxon_name', 'appendix', 'taxon_id'],
     taxonomy: ['']
   }.freeze
   def self.grouping_attributes

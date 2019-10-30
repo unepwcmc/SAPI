@@ -63,7 +63,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
       query << "#{attr}" << "#{attr}_id"
       query << "#{attr}_iso" if ['exporter', 'importer', 'origin'].include? attr
     end
-    query << 'group_name' << 'year' << 'taxon_name' << 'taxon_concept_id' << 'appendix'
+    query << 'group_name' << 'year' << 'taxon_name' << 'taxon_id' << 'appendix'
     query.join(',')
   end
 
@@ -91,7 +91,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
       end
 
     end
-    query << "json_agg(DISTINCT(json_build_object('name', taxon_name, 'id', taxon_concept_id)::jsonb)) AS taxa,"
+    query << "json_agg(DISTINCT(json_build_object('name', taxon_name, 'id', taxon_id)::jsonb)) AS taxa,"
     query << "json_agg(DISTINCT(json_build_object('name', group_name, 'id', group_name)::jsonb)) AS taxonomic_groups,"
     query << "json_agg(DISTINCT(json_build_object('name', year, 'id', year)::jsonb)) AS years,"
     query << "json_agg(DISTINCT(json_build_object('name', appendix, 'id', appendix)::jsonb)) AS appendix"
