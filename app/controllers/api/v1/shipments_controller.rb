@@ -32,13 +32,17 @@ class Api::V1::ShipmentsController < ApplicationController
     query = @grouping_class.new(sanitized_attributes, _grouped_params)
     params_hash = { attribute: 'year' }
     sanitized_attributes.map { |p| params_hash[p] = p }
-    @grouped_data = Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
+    data = Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
                       sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
                                                           query.json_by_attribute(query.run, params_hash)
-                    end
-    render :json =>  @grouped_data
+           end
+    @grouped_data = limit.blank? ? Kaminari.paginate_array(data).page(grouped_params[:page]).per(grouped_params[:per_page]) :
+                                   data[0..4]
+    render :json => @grouped_data,
+           :meta => metadata(data, grouped_params)
   end
 
+  # Compliance tool search & full list action
   def search_query
     query = @grouping_class.new(sanitized_attributes, params)
     data = query.run

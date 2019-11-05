@@ -34,7 +34,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     data.each do |d|
       hash[key] << d
     end
-    hash[key][0..4]
+    hash[key]
   end
 
   private
