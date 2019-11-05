@@ -47,7 +47,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
     <<-SQL
      WITH data AS (
        SELECT #{select_query}
-       FROM trade_plus_formatted_data_view
+       FROM trade_plus_complete_mview
      )
      SELECT ROW_TO_JSON(t) AS filters
      FROM (
