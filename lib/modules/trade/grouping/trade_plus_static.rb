@@ -123,6 +123,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def group_query
     columns = @attributes.compact.uniq.join(',')
     quantity_field = "#{@reported_by}_reported_quantity"
+    # TODO Double check IS NOT NULL is the correct replacement for <> 'NA'
     <<-SQL
       SELECT
         #{sanitise_column_names},
@@ -143,6 +144,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     # while the @query variable is assigned as well because of the grouped_query
     sanitised_column_names = @sanitised_column_names.compact.uniq.join(',')
 
+    # TODO Double check IS NOT NULL is the correct replacement for <> 'NA'
     <<-SQL
       SELECT ROW_TO_JSON(row)
       FROM (
@@ -174,6 +176,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       END AS name,
     SQL
 
+    # TODO Double check IS NOT NULL is the correct replacement for <> 'NA'
     <<-SQL
       SELECT ROW_TO_JSON(row)
       FROM(
