@@ -54,6 +54,17 @@ module Trade::TradePlusFilters
     SQL
   end
 
+  def country_query
+    <<-SQL
+      (WITH country_data AS (
+        SELECT id,name_en,iso_code2
+        FROM geo_entities
+        WHERE geo_entity_type_id = 1
+      )
+      SELECT 'countries' AS attribute_name, json_build_object('id', id, 'name', name_en, 'iso2', iso_code2)::jsonb AS data FROM country_data GROUP BY id,name_en,iso_code2)
+    SQL
+  end
+
   def inner_query
     query = []
     ATTRIBUTES.each do |attr|
@@ -67,6 +78,12 @@ module Trade::TradePlusFilters
     end
     query << sub_query(['taxon_name', 'taxon_id'], 'taxa')
     query << sub_query(['group_name', 'group_name'], 'taxonomic_groups')
+<<<<<<< HEAD
+=======
+    query << sub_query(['year', 'year'], 'years')
+    query << sub_query(['appendix', 'appendix'], 'appendix')
+    query << country_query
+>>>>>>> add full country list to filters endpoint
 
     <<-SQL
       #{query.join(' UNION ') }
