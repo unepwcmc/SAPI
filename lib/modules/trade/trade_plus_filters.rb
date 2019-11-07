@@ -1,4 +1,6 @@
-class Trade::TradePlusFilters
+module Trade::TradePlusFilters
+  extend self
+
   ATTRIBUTES = %w[importer exporter origin term
                   source purpose unit].freeze
 
@@ -48,66 +50,11 @@ class Trade::TradePlusFilters
   def query
     <<-SQL
       SELECT *
-      FROM (#{new_inner_query}) AS s
+      FROM (#{inner_query}) AS s
     SQL
   end
 
-  def old_query
-    <<-SQL
-     WITH data AS (
-       SELECT #{select_query}
-       FROM trade_plus_complete_mview
-     )
-     SELECT ROW_TO_JSON(t) AS filters
-     FROM (
-       SELECT #{inner_query}
-       FROM data
-     ) t
-   SQL
-  end
-
-  def select_query
-    query= []
-    ATTRIBUTES.each do |attr|
-      query << "#{attr}" << "#{attr}_id"
-      query << "#{attr}_iso" if ['exporter', 'importer', 'origin'].include? attr
-    end
-    query << 'group_name' << 'year' << 'taxon_name' << 'taxon_id' << 'appendix'
-    query.join(',')
-  end
-
   def inner_query
-    query = ''
-    ATTRIBUTES.each do |attr|
-      if %w[term unit].include? attr
-        query << "json_agg(DISTINCT(json_build_object('name', #{attr}, 'id', #{attr})::jsonb)) AS #{attr.pluralize},"
-      elsif %w[importer exporter origin].include? attr
-        query << "json_agg(
-                       DISTINCT(
-                         json_build_object('name', #{attr}, 'id', #{attr}_id, 'iso2', #{attr}_iso)::jsonb
-                       )
-                     )
-                    AS #{attr.pluralize},
-                   "
-      else
-        query << "json_agg(
-                       DISTINCT(
-                         json_build_object('name', #{attr}, 'id', #{attr}_id)::jsonb
-                       )
-                     )
-                    AS #{attr.pluralize},
-                   "
-      end
-
-    end
-    query << "json_agg(DISTINCT(json_build_object('name', taxon_name, 'id', taxon_id)::jsonb)) AS taxa,"
-    query << "json_agg(DISTINCT(json_build_object('name', group_name, 'id', group_name)::jsonb)) AS taxonomic_groups,"
-    query << "json_agg(DISTINCT(json_build_object('name', year, 'id', year)::jsonb)) AS years,"
-    query << "json_agg(DISTINCT(json_build_object('name', appendix, 'id', appendix)::jsonb)) AS appendix"
-    query
-  end
-
-  def new_inner_query
     query = []
     ATTRIBUTES.each do |attr|
       if %w[term unit].include? attr
@@ -141,17 +88,5 @@ class Trade::TradePlusFilters
 
   def group_by(column_names)
     "GROUP BY #{column_names}"
-  end
-
-  def example_query
-    <<-SQL
-      SELECT json_build_object('name', taxon_name, 'id', taxon_id)::jsonb AS taxa FROM trade_plus_complete_mview GROUP BY taxon_name, taxon_id
-      UNION
-      SELECT json_build_object('name', group_name, 'id', group_name)::jsonb AS taxonomic_groups FROM trade_plus_complete_mview GROUP BY group_name
-      UNION
-      SELECT json_build_object('name', year, 'id', year)::jsonb AS years FROM trade_plus_complete_mview GROUP BY year
-      UNION
-      SELECT json_build_object('name', appendix, 'id', appendix)::jsonb AS appendix FROM trade_plus_complete_mview GROUP BY appendix
-    SQL
   end
 end
