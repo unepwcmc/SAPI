@@ -4,10 +4,12 @@ class Api::V1::TradePlusFiltersController < ApplicationController
   ATTRIBUTES = %w[importer exporter origin term
                   source purpose unit].freeze
   def index
+    filters_service = Trade::TradePlusFilters
     filters = Rails.cache.fetch('trade_plus_filters', expires_in: 1.week) do
-                res = ActiveRecord::Base.connection.execute(query)
-                response_ordering(res)
-              end
+      res = ActiveRecord::Base.connection.execute(filters_service.query)
+      filters_service.response_ordering(res)
+    end
+
     render :json => filters
   end
 
