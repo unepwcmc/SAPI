@@ -7,7 +7,7 @@ module Trade::RebuildTradePlusViews
     self.rebuild_trade_plus_view(:group)
     puts "Rebuild trade codes SQL view..."
     self.rebuild_sql_views(:trade_codes, timestamp)
-    self.rebuild_trade_plus_view(:with_taxa)
+    self.rebuild_trade_plus_view(:formatted_data)
   end
 
   def self.rebuild_sql_views(type, timestamp)
