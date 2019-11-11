@@ -2,7 +2,7 @@ module Trade::TradePlusFilters
   extend self
 
   ATTRIBUTES = %w[importer exporter origin term
-                  source purpose unit].freeze
+                  source purpose unit year appendix].freeze
 
 
   def response_ordering(response)
@@ -57,7 +57,7 @@ module Trade::TradePlusFilters
   def inner_query
     query = []
     ATTRIBUTES.each do |attr|
-      if %w[term unit].include? attr
+      if %w[term unit year appendix].include? attr
         query << sub_query([attr, attr], attr.pluralize)
       elsif %w[importer exporter origin].include? attr
         query << sub_query([attr, "#{attr}_id", "#{attr}_iso"], attr.pluralize)
@@ -67,8 +67,6 @@ module Trade::TradePlusFilters
     end
     query << sub_query(['taxon_name', 'taxon_id'], 'taxa')
     query << sub_query(['group_name', 'group_name'], 'taxonomic_groups')
-    query << sub_query(['year', 'year'], 'years')
-    query << sub_query(['appendix', 'appendix'], 'appendix')
 
     <<-SQL
       #{query.join(' UNION ') }
