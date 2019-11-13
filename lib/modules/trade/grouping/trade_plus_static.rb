@@ -20,8 +20,6 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     response.sort_by { |i| i['name'] }
   end
 
-
-
   def taxonomic_grouping(opts={})
     data = db.execute(taxonomic_query(opts))
     data.map { |d| JSON.parse(d['row_to_json']) }
@@ -66,7 +64,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     family_name: 'family_name',
     class_name: 'class_name',
     group_name: 'group_name',
-    taxon_id: 'taxon_id'
+    taxon_id: 'taxon_id',
+    country_id: 'country_id'
   }.freeze
 
   def attributes
@@ -85,6 +84,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     unit_name: 'unit',
     unit_id: 'unit_id',
     taxon_id: 'taxon_id',
+    country_id: 'country_id',
     importer: 'importer_iso',
     exporter: 'exporter_iso',
     origin: 'origin_iso',
@@ -132,6 +132,27 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       FROM #{shipments_table}
       WHERE #{@condition} AND #{quantity_field} IS NOT NULL
       GROUP BY #{columns}
+      ORDER BY value DESC
+      #{limit}
+    SQL
+  end
+
+  def country_query
+    # This should be true for reported_by_party tab, false for the reported_by_partners
+    reported_by_party = @reported_by_party
+    # TODO The @reported_by is intended for import from and export to charts rather than the tabs, maybe renamed for this query
+    quantity_field = "#{@reported_by}_reported_quantity"
+    columns = @attributes.compact.uniq.join(',')
+    <<-SQL
+      SELECT
+        #{sanitise_column_names},
+        ROUND(SUM(#{quantity_field}::FLOAT)) AS value
+      FROM #{shipments_table}
+      WHERE (exporter_id = 41 OR importer_id = 41)
+      AND ((reported_by_exporter = #{!reported_by_party} AND importer_id = 41) OR (reported_by_exporter = #{reported_by_party} AND exporter_id = 41))
+      AND #{@reported_by}_id = 41
+      AND #{@condition}
+      GROUP BY #{columns} -- !@reported_by (negation of that value, if importer then exporter and other way round)
       ORDER BY value DESC
       #{limit}
     SQL

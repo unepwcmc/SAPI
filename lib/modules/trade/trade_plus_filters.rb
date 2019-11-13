@@ -81,7 +81,7 @@ module Trade::TradePlusFilters
 <<<<<<< HEAD
 =======
     query << sub_query(['year', 'year'], 'years')
-    query << sub_query(['appendix', 'appendix'], 'appendix')
+    query << sub_query(['appendix', 'appendix'], 'appendixes')
     query << country_query
 >>>>>>> add full country list to filters endpoint
 
