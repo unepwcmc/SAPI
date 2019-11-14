@@ -41,7 +41,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def shipments_table
     #'trade_plus_static_complete_view'
-    'trade_plus_formatted_data_view'
+    'trade_plus_complete_mview'
   end
 
   # Allowed attributes
@@ -128,7 +128,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         #{sanitise_column_names},
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value
       FROM #{shipments_table}
-      WHERE #{@condition} AND #{quantity_field} <> 'NA'
+      WHERE #{@condition} AND #{quantity_field} IS NOT NULL
       GROUP BY #{columns}
       ORDER BY value DESC
       #{limit}
@@ -149,7 +149,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         FROM (
           SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
-          WHERE #{@condition} AND #{quantity_field} <> 'NA'
+          WHERE #{@condition} AND #{quantity_field} IS NOT NULL
           GROUP BY year, #{columns}
           ORDER BY value DESC
           #{limit}
@@ -181,7 +181,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
           #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
           ROUND(SUM(#{quantity_field}::FLOAT)) AS value
         FROM #{shipments_table}
-        WHERE #{@condition} AND #{quantity_field} <> 'NA' #{group_name_condition}
+        WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{group_name_condition}
         GROUP BY #{taxonomic_level_name}
         ORDER BY value DESC
         #{limit}

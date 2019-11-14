@@ -37,7 +37,7 @@ rules:
     - rule_no: 6
       rule_name: 'rulename'
       input:
-        class: ["Holothuroidea","Arachnida","Insecta","Hirudinoidea","Bivalvia","Gastropoda"]
+        class: ["Holothuroidea","Arachnida","Insecta","Hirudinoidea","Bivalvia","Gastropoda","Cephalopoda"]
       output:
         group: 'Non-coral invertebrates'
     - rule_no: 7

@@ -18,6 +18,10 @@ SELECT
   (taxon_concepts.data->'order_name') AS taxon_concept_order_name,
   (taxon_concepts.data->'family_name') AS taxon_concept_family_name,
   (taxon_concepts.data->'genus_name') AS taxon_concept_genus_name
-FROM trade_shipments shipments
+FROM (
+  SELECT *
+  FROM trade_shipments ts
+  WHERE ts.year >= 2010 AND ts.year < 2019 AND ts.appendix NOT IN ('N')
+) AS shipments
 JOIN taxon_concepts
   ON taxon_concept_id = taxon_concepts.id

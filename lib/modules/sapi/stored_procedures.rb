@@ -21,7 +21,8 @@ module Sapi
         :trade_shipments_appendix_i_mview,
         :trade_shipments_mandatory_quotas_mview,
         :trade_shipments_cites_suspensions_mview,
-        :non_compliant_shipments_view
+        :non_compliant_shipments_view,
+        :trade_plus_complete_mview
       ].each { |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
@@ -116,6 +117,12 @@ module Sapi
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
       }
+    end
+
+    def self.rebuild_trade_plus_mviews
+      view = 'trade_plus_complete_mview'
+      puts "Procedure: #{view}"
+      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{view}()")
     end
   end
 end
