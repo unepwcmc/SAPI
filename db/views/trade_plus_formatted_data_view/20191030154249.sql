@@ -209,11 +209,10 @@ SELECT ts.id, ts.year, ts.appendix, ts.reported_by_exporter,
        ranks.id AS rank_id,
        ranks.name AS rank_name
 FROM trade_plus_group_view ts
-INNER JOIN trade_codes sources ON ts.source_id = sources.id
-INNER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
+LEFT OUTER JOIN trade_codes sources ON ts.source_id = sources.id
+LEFT OUTER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
 INNER JOIN ranks ON ranks.id = ts.taxon_concept_rank_id
 LEFT OUTER JOIN geo_entities exporters ON ts.exporter_id = exporters.id
 LEFT OUTER JOIN geo_entities importers ON ts.importer_id = importers.id
 LEFT OUTER JOIN geo_entities origins ON ts.country_of_origin_id = origins.id
 WHERE  term_id NOT IN (17,63,67)
-
