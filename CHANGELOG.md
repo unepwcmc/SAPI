@@ -1,3 +1,9 @@
+### 1.2.2
+
+**Species+ Admin:**
+
+* Hotfix for copying EU suspensions across events
+
 ### 1.2.1
 
 **Trade Admin**
