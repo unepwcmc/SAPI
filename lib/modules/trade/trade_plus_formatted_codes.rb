@@ -106,7 +106,7 @@ class Trade::TradePlusFormattedCodes
       key = exemp.first
       values = ''
       if ['terms', 'units'].include?(key)
-        model = key.chop.capitalize.constantize
+        model = key.classify.constantize
         obj_ids = model.where(code: exemp.second).map(&:id)
         values = obj_ids.join(',')
       else
@@ -130,7 +130,7 @@ class Trade::TradePlusFormattedCodes
       formatted_input.each do |input|
         values = ''
         if ['terms', 'units'].include?(input.first)
-          model = input.first.chop.capitalize.constantize
+          model = input.first.classify.constantize
           obj_ids = model.where(code: input.second).map(&:id)
           values = obj_ids.join(',')
         else
@@ -145,8 +145,6 @@ class Trade::TradePlusFormattedCodes
       query += subquery.join(' AND ')
       query += "\n#{indent(9)}THEN "
       output = output_formatting(rule)
-      #byebug if output['term'].present? && !Term.find_by_code(output['term'])
-      #byebug if output['unit'].present? && !Unit.find_by_code(output['unit'])
 
       term = output['term'].blank? ? 'term_id' : "#{Term.find_by_code(output['term']).id}"
       unit = output['unit'].blank? ? 'unit_id' : output['unit'] == 'NULL' ? 'NULL' : "#{Unit.find_by_code(output['unit']).id}"
