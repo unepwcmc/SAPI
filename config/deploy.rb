@@ -35,7 +35,7 @@ set :ssh_options, {
 }
 
 set :init_system, :systemd
-# set :service_unit_name, "sidekiq_#{fetch(:application)}.service"
+set :service_unit_name, "sidekiq_#{fetch(:application)}.service"
 
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml .env}
@@ -79,7 +79,7 @@ set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the messa
 namespace :sidekiq do
   task :quiet do
     on roles(:app) do
-      puts capture("pgrep -f 'sidekiq.*sapi' | xargs kill -TSTP") 
+      puts capture("pgrep -f 'sidekiq.*sapi' | xargs kill -TSTP")
     end
   end
   task :restart do
