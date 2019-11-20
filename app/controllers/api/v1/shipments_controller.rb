@@ -3,6 +3,9 @@ class Api::V1::ShipmentsController < ApplicationController
 
   before_filter :authenticate
   before_filter :load_grouping_type
+  after_filter only: [:grouped_query] do
+    set_pagination_headers(:grouped_data, :grouped_params)
+  end
 
   def index
     @search = Trade::Filter.new(search_params)
@@ -37,9 +40,8 @@ class Api::V1::ShipmentsController < ApplicationController
                                                           query.json_by_attribute(query.run, params_hash)
            end
     @grouped_data = limit.blank? ? Kaminari.paginate_array(data).page(grouped_params[:page]).per(grouped_params[:per_page]) :
-                                   data[0..4]
-    render :json => @grouped_data,
-           :meta => metadata(data, grouped_params)
+                                   data[0..limit.to_i]
+    render :json => @grouped_data
   end
 
   # Compliance tool search & full list action
@@ -92,6 +94,14 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   private
+
+  def set_pagination_headers(data, params)
+    data = instance_variable_get("@#{data}")
+    params = send(params)
+    response.headers['X-Total-Count'] = data.count.to_s
+    response.headers['X-Page'] = params[:page].to_s.presence || '1'
+    response.headers['X-Per-Page'] = params[:per_page].to_s.presence || '25'
+  end
 
   def params_hash_builder(ids, params)
     hash_params = {}
