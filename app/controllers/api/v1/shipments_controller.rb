@@ -4,7 +4,7 @@ class Api::V1::ShipmentsController < ApplicationController
   before_filter :authenticate
   before_filter :load_grouping_type
   after_filter only: [:grouped_query] do
-    set_pagination_headers(:grouped_data, :grouped_params)
+    set_pagination_headers(:data, :grouped_params)
   end
 
   def index
@@ -35,12 +35,12 @@ class Api::V1::ShipmentsController < ApplicationController
     query = @grouping_class.new(sanitized_attributes, _grouped_params)
     params_hash = { attribute: 'year' }
     sanitized_attributes.map { |p| params_hash[p] = p }
-    data = Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
+    @data = Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
                       sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
                                                           query.json_by_attribute(query.run, params_hash)
            end
-    @grouped_data = limit.blank? ? Kaminari.paginate_array(data).page(grouped_params[:page]).per(grouped_params[:per_page]) :
-                                   data[0..limit.to_i]
+    @grouped_data = limit.blank? ? Kaminari.paginate_array(@data).page(grouped_params[:page]).per(grouped_params[:per_page]) :
+                                   @data[0..limit.to_i]
     render :json => @grouped_data
   end
 
