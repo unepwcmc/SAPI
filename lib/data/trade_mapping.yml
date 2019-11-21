@@ -1,0 +1,690 @@
+rules:
+  exclusions:
+    appendices: ['N']
+    terms: ['COS', 'OTH', 'PIE']
+  add_group:
+    # rule_no can be omitted if rules are listed already in order
+    - rule_no: 1
+      rule_name: 'rulename'
+      input:
+        class: ['Mammalia']
+      output:
+        group: 'Mammals'
+    - rule_no: 2
+      rule_name: 'rulename'
+      input:
+        class: ['Aves']
+      output:
+        group: 'Birds'
+    - rule_no: 3
+      rule_name: 'rulename'
+      input:
+        class: ['Reptilia']
+      output:
+        group: 'Reptiles'
+    - rule_no: 4
+      rule_name: 'rulename'
+      input:
+        class: ['Amphibia']
+      output:
+        group: 'Amphibians'
+    - rule_no: 5
+      rule_name: 'rulename'
+      input:
+        class: ['Elasmobranchii','Actinopteri','Coelacanthi','Dipneusti','Actinopterygii']
+      output:
+        group: 'Fish'
+    - rule_no: 6
+      rule_name: 'rulename'
+      input:
+        class: ["Holothuroidea","Arachnida","Insecta","Hirudinoidea","Bivalvia","Gastropoda","Cephalopoda"]
+      output:
+        group: 'Non-coral invertebrates'
+    - rule_no: 7
+      rule_name: 'rulename'
+      input:
+        class: ["Anthozoa","Hydrozoa"]
+      output:
+        group: 'Coral'
+    - rule_no: 8
+      rule_name: 'rulename'
+      input:
+        genus: ["Aquilaria","Pericopsis","Cedrela","Guaiacum","Swietenia","Dalbergia","Prunus","Gonystylus","Diospyros","Abies","Guarea","Guibourtia","Gyrinops","Platymiscium","Pterocarpus","Taxus"]
+      output:
+        group: 'Timber'
+    - rule_no: 9
+      rule_name: 'rulename'
+      input:
+        taxon: ["Araucaria araucana","Fitzroya cupressoides","Abies guatemalensis","Pterocarpus santalinus","Pilgerodendron uviferum","Aniba rosaeodora","Caesalpinia echinata","Bulnesia sarmientoi","Dipteryx panamensis","Pinus koraiensis","Caryocar costaricense","Celtis aetnensis","Cynometra hemitomophylla","Magnolia liliifera","Oreomunnea pterocarpa","Osyris lanceolata","Pterygota excelsa","Tachigali versicolor"]
+      output:
+        group: 'Timber'
+    # Rule number is important on this one as this needs to be the last
+    # rule processed to make mapping work correctly
+    - rule_no: 10
+      rule_name: 'rulename'
+      input:
+        class: []
+      output:
+        group: 'Plants'
+  standardise_terms:
+    - rule_no: 1
+      rule_name: 'rulename'
+      input:
+        terms: ['ROO']
+        taxa_fields:
+          group: ''
+          genus: ['Galanthus', 'Cyclamen', 'Sternbergia']
+        units_fields:
+          units: []
+      output:
+        term: 'LIV'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 2
+      rule_name: 'rulename'
+      input:
+        terms: ['LEG']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: ['KIL']
+      output:
+        term: 'MEA'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 3
+      rule_name: 'rulename'
+      input:
+        terms: ['SHE']
+        taxa_fields:
+          order: ['Testudines']
+        units_fields:
+          units: []
+      output:
+        term: 'CAP'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 4
+      rule_name: 'rulename'
+      input:
+        terms: ['DER','POW']
+        taxa_fields:
+          genus: ['Aloe','Euphorbia']
+        units_fields:
+          units: []
+      output:
+        term: 'EXT'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 5
+      rule_name: 'rulename'
+      input:
+        terms: ['EGG']
+        taxa_fields:
+          order: ['Acipenseriformes']
+        units_fields:
+          units: []
+      output:
+        term: 'CAV'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 6
+      rule_name: 'rulename'
+      input:
+        terms: ['DER']
+        taxa_fields:
+          order: ['Acipenseriformes']
+        units_fields:
+          units: []
+      output:
+        term: 'EXT'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 6
+      rule_name: 'rulename'
+      input:
+        terms: ["BEL", "HAN", "LEA", "SHO", "SKO", "WAL", "WAT"]
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'LPS'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 7
+      rule_name: 'rulename'
+      input:
+        terms: ["CST", "FRA"]
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'CAR'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 8
+      rule_name: 'rulename'
+      input:
+        terms: ['BPR']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'BOC'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 9
+      rule_name: 'rulename'
+      input:
+        terms: ['HOS']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'HOP'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 10
+      rule_name: 'rulename'
+      input:
+        terms: ['IVS']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'IVP'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 11
+      rule_name: 'rulename'
+      input:
+        terms: ['QUI']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'FEA'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 12
+      rule_name: 'rulename'
+      input:
+        terms: ['SCR']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'DER'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 13
+      rule_name: 'rulename'
+      input:
+        terms: ['SKS']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'SKP'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 14
+      rule_name: 'rulename'
+      input:
+        terms: ['TIC']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'WPR'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 15
+      rule_name: 'rulename'
+      input:
+        terms: ['TIP']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'TIM'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 16
+      rule_name: 'rulename'
+      input:
+        terms: ['TIS']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'CUL'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 17
+      rule_name: 'rulename'
+      input:
+        terms: ['VNM']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'EXT'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 18
+      rule_name: 'rulename'
+      input:
+        terms: ['HEA']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'SKU'
+        quantity_modifier: ''
+        modifier_value: 0
+    # Rules 19 and 20 together are mapping the overall rule:
+    # If term 'FRN' and group 'Timber' then term 'WPR' else term 'CAR'
+    - rule_no: 19
+      rule_name: 'rulename'
+      input:
+        terms: ['FRN']
+        taxa_fields:
+          group: 'Timber'
+        units_fields:
+          units: []
+      output:
+        term: 'WPR'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 20
+      rule_name: 'rulename'
+      input:
+        terms: ['FRN']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'CAR'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 21
+      rule_name: 'rulename'
+      input:
+        terms: ['PKY']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'KEY'
+        quantity_modifier: '*'
+        modifier_value: 52
+    - rule_no: 21
+      rule_name: 'rulename'
+      input:
+        terms: ['SID','SKD']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'SKI'
+        quantity_modifier: '/'
+        modifier_value: 2
+  standardise_units:
+    - rule_no: 1
+      rule_name: 'rulename'
+      # Please note that attributes not used in specific rules can be omitted,
+      # like taxa related fields for the input.
+      input:
+        units: ['PAI']
+      output:
+        # It would be better to use NULL for blank values related to units
+        unit: 'NULL' #blank
+        quantity_modifier: '*'
+        modifier_value: 2
+    - rule_no: 2
+      rule_name: 'rulename'
+      input:
+        units: ["BAG", "BOT", "BOX", "CAN", "CAS", "CRT", "FLA", "ITE", "PCS", "SET", "SHP", "SKI"]
+      output:
+        unit: 'NULL'
+    - rule_no: 3
+      rule_name: 'rulename'
+      input:
+        units: ['MYG']
+      output:
+        unit: 'KIL'
+        quantity_modifier: '/'
+        modifier_value: 10e+9
+    - rule_no: 4
+      rule_name: 'rulename'
+      input:
+        units: ['MGM']
+      output:
+        unit: 'KIL'
+        quantity_modifier: '/'
+        modifier_value: 10e+6
+    - rule_no: 5
+      rule_name: 'rulename'
+      input:
+        units: ['GRM']
+      output:
+        unit: 'KIL'
+        quantity_modifier: '/'
+        modifier_value: 1000
+    - rule_no: 6
+      rule_name: 'rulename'
+      input:
+        units: ['TON']
+      output:
+        unit: 'KIL'
+        quantity_modifier: '*'
+        modifier_value: 1000
+    - rule_no: 7
+      rule_name: 'rulename'
+      input:
+        units: ['MLT']
+      output:
+        unit: 'LTR'
+        quantity_modifier: '/'
+        modifier_value: 1000
+    - rule_no: 8
+      rule_name: 'rulename'
+      input:
+        units: ['CTM']
+      output:
+        unit: 'MTR'
+        quantity_modifier: '/'
+        modifier_value: 100
+    - rule_no: 9
+      rule_name: 'rulename'
+      input:
+        units: ['SQC']
+      output:
+        unit: 'SQM'
+        quantity_modifier: '/'
+        modifier_value: 10e+4
+    - rule_no: 10
+      rule_name: 'rulename'
+      input:
+        units: ['SQD']
+      output:
+        unit: 'SQM'
+        quantity_modifier: '/'
+        modifier_value: 100
+    - rule_no: 11
+      rule_name: 'rulename'
+      input:
+        units: ['CCM']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 10e+6
+    - rule_no: 12
+      rule_name: 'rulename'
+      input:
+        units: ['OUN']
+      output:
+        unit: 'KIL'
+        quantity_modifier: '/'
+        modifier_value: 35.274
+    - rule_no: 13
+      rule_name: 'rulename'
+      input:
+        units: ['PND']
+      output:
+        unit: 'KIL'
+        quantity_modifier: '/'
+        modifier_value: 2.205
+    - rule_no: 14
+      rule_name: 'rulename'
+      input:
+        units: ['INC']
+      output:
+        unit: 'MTR'
+        quantity_modifier: '/'
+        modifier_value: 39.37
+    - rule_no: 15
+      rule_name: 'rulename'
+      input:
+        units: ['FEE']
+      output:
+        unit: 'MTR'
+        quantity_modifier: '/'
+        modifier_value: 3.281
+    - rule_no: 16
+      rule_name: 'rulename'
+      input:
+        units: ['YAR']
+      output:
+        unit: 'KIL'
+        quantity_modifier: '/'
+        modifier_value: 1.094
+    - rule_no: 17
+      rule_name: 'rulename'
+      input:
+        units: ['SQF']
+      output:
+        unit: 'SQM'
+        quantity_modifier: '/'
+        modifier_value: 10.764
+    - rule_no: 18
+      rule_name: 'rulename'
+      input:
+        units: ['CUF']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 35.315
+    - rule_no: 19
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        taxa_fields:
+          group: 'Coral'
+        terms_fields:
+          terms: ['LIV']
+      output:
+        unit: 'NULL'
+        quantity_modifier: '/'
+        modifier_value: 0.206
+    - rule_no: 20
+      rule_name: 'rulename'
+      input:
+        units: ['NULL']
+        taxa_fields:
+          group: 'Coral'
+        terms_fields:
+          terms: ['COR']
+      output:
+        unit: 'KIL'
+        quantity_modifier: '*'
+        modifier_value: 0.58
+    - rule_no: 21
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Pericopsis elata']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 725
+    - rule_no: 22
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Cedrela odorata']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 440
+    - rule_no: 23
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ["Guaiacum sanctum","Guaiacum officinale"]
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 1230
+    - rule_no: 24
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Swietenia macrophylla']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 730
+    - rule_no: 25
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Swietenia humilis']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 610
+    - rule_no: 26
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Swietenia mahagoni']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 750
+    - rule_no: 27
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Araucaria araucana']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 570
+    - rule_no: 28
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Fitzroya cupressoides']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 480
+    - rule_no: 29
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Dalbergia nigra']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 970
+    - rule_no: 30
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Abies guatemalensis']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 350
+    - rule_no: 31
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          taxa: ['Prunus africana']
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 740
+    - rule_no: 32
+      rule_name: 'rulename'
+      input:
+        units: ['KIL']
+        terms_fields:
+          terms: ['LOG', 'SAW', 'TIM']
+        taxa_fields:
+          genus: ["Gonystylus spp.","Gonystylus"]
+      output:
+        unit: 'CUM'
+        quantity_modifier: '/'
+        modifier_value: 660
+  standardise_terms_and_units:
+    - rule_no: 1
+      rule_name: 'rulename'
+      input:
+        units: ['BSK', 'HRN']
+      output:
+        term: 'SID'
+        unit: 'NULL'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 2
+      rule_name: 'rulename'
+      input:
+        units: ['BAK']
+      output:
+        term: 'SKP'
+        unit: 'NULL'
+        quantity_modifier: ''
+        modifier_value: 0
+    - rule_no: 3
+      rule_name: 'rulename'
+      input:
+        units: ['SID']
+      output:
+        term: 'SKI'
+        unit: 'NULL'
+        quantity_modifier: '/'
+        modifier_value: 2

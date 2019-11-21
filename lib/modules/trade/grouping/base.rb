@@ -137,7 +137,7 @@ class Trade::Grouping::Base
         return "IN (#{value})"
       when :unit_name
         if value == 'Number of items'
-          return "= ''"
+          return 'IS NULL'
         else
           value = "'#{value.downcase}'"
           return "IN (#{value})"
