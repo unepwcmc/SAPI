@@ -126,7 +126,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     <<-SQL
       SELECT
         #{sanitise_column_names},
-        ROUND(SUM(#{quantity_field}::FLOAT)) AS value
+        ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
+        COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
       WHERE #{@condition} AND #{quantity_field} IS NOT NULL
       GROUP BY #{columns}
@@ -197,5 +198,13 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       @sanitised_column_names << name
       "#{attribute} AS #{name}"
     end.compact.uniq.join(',')
+  end
+
+  def limit
+    pagination = @pagination.presence || { page: 1, per_page: @limit || 0 }
+    per_page = pagination[:per_page]
+    offset = (pagination[:page] - 1) * per_page
+
+    per_page > 0 ? "LIMIT #{pagination[:per_page]} OFFSET #{offset}" : ''
   end
 end

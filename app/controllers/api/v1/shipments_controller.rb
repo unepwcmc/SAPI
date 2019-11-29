@@ -39,9 +39,8 @@ class Api::V1::ShipmentsController < ApplicationController
                       sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
                                                           query.json_by_attribute(query.run, params_hash)
            end
-    @grouped_data = limit.blank? ? Kaminari.paginate_array(@data).page(grouped_params[:page]).per(grouped_params[:per_page]) :
-                                   @data[0..limit.to_i]
-    render :json => @grouped_data
+
+    render :json => @data
   end
 
   # Compliance tool search & full list action
@@ -98,7 +97,7 @@ class Api::V1::ShipmentsController < ApplicationController
   def set_pagination_headers(data, params)
     data = instance_variable_get("@#{data}")
     params = send(params)
-    response.headers['X-Total-Count'] = data.count.to_s
+    response.headers['X-Total-Count'] = data.first['total_count'].to_s
     response.headers['X-Page'] = params[:page].to_s.presence || '1'
     response.headers['X-Per-Page'] = params[:per_page].to_s.presence || '25'
   end
