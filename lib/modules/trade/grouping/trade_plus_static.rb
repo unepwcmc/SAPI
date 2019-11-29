@@ -180,7 +180,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         SELECT
           NULL AS id,
           #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
-          ROUND(SUM(#{quantity_field}::FLOAT)) AS value
+          ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
+          COUNT(*) OVER () AS total_count
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{group_name_condition}
         GROUP BY #{taxonomic_level_name}
