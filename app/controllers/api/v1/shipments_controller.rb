@@ -97,7 +97,7 @@ class Api::V1::ShipmentsController < ApplicationController
   def set_pagination_headers(data, params)
     data = instance_variable_get("@#{data}").presence
     params = send(params)
-    response.headers['X-Total-Count'] = data ? data.first['total_count'].to_s : 0
+    response.headers['X-Total-Count'] = data ? data.first['total_count'].to_s : '0'
     response.headers['X-Page'] = params[:page].to_s.presence || '1'
     response.headers['X-Per-Page'] = params[:per_page].to_s.presence || '25'
   end
