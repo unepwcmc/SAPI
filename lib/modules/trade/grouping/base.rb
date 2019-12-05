@@ -15,6 +15,7 @@ class Trade::Grouping::Base
     @opts = opts.clone
     @condition = sanitise_condition
     @limit = sanitise_limit(opts[:limit])
+    @pagination = sanitise_pagination(opts)
     @query = group_query
   end
 
@@ -72,6 +73,10 @@ class Trade::Grouping::Base
     SQL
   end
 
+  def limit
+    @limit ? "LIMIT #{@limit}" : ''
+  end
+
   private
 
   def read_taxonomy_conversion
@@ -88,10 +93,6 @@ class Trade::Grouping::Base
     conversion
   end
 
-  def limit
-    @limit ? "LIMIT #{@limit}" : ''
-  end
-
   def sanitise_group(group)
     return nil unless group
     attributes[group.to_sym]
@@ -104,6 +105,15 @@ class Trade::Grouping::Base
 
   def sanitise_limit(limit)
     limit.is_a?(Integer) ? limit : nil
+  end
+
+  def sanitise_pagination(opts)
+    page, per_page = [opts[:page].to_i, opts[:per_page].to_i]
+    return {} unless page > 0 || per_page > 0
+    {
+      page: page,
+      per_page: per_page
+    }
   end
 
   def sanitise_condition

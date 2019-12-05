@@ -34,7 +34,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     data.each do |d|
       hash[key] << d
     end
-    hash[key][0..4]
+    hash[key]
   end
 
   private
@@ -126,7 +126,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     <<-SQL
       SELECT
         #{sanitise_column_names},
-        ROUND(SUM(#{quantity_field}::FLOAT)) AS value
+        ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
+        COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
       WHERE #{@condition} AND #{quantity_field} IS NOT NULL
       GROUP BY #{columns}
@@ -179,7 +180,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         SELECT
           NULL AS id,
           #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
-          ROUND(SUM(#{quantity_field}::FLOAT)) AS value
+          ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
+          COUNT(*) OVER () AS total_count
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{group_name_condition}
         GROUP BY #{taxonomic_level_name}
@@ -197,5 +199,13 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       @sanitised_column_names << name
       "#{attribute} AS #{name}"
     end.compact.uniq.join(',')
+  end
+
+  def limit
+    pagination = @pagination.presence || { page: 1, per_page: @limit || 0 }
+    per_page = pagination[:per_page]
+    offset = (pagination[:page] - 1) * per_page
+
+    per_page > 0 ? "LIMIT #{pagination[:per_page]} OFFSET #{offset}" : ''
   end
 end

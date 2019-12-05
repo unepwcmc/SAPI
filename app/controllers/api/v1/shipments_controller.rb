@@ -3,6 +3,9 @@ class Api::V1::ShipmentsController < ApplicationController
 
   before_filter :authenticate
   before_filter :load_grouping_type
+  after_filter only: [:grouped_query] do
+    set_pagination_headers(:data, :grouped_params)
+  end
 
   def index
     @search = Trade::Filter.new(search_params)
@@ -32,13 +35,15 @@ class Api::V1::ShipmentsController < ApplicationController
     query = @grouping_class.new(sanitized_attributes, _grouped_params)
     params_hash = { attribute: 'year' }
     sanitized_attributes.map { |p| params_hash[p] = p }
-    @grouped_data = Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
+    @data = Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
                       sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
                                                           query.json_by_attribute(query.run, params_hash)
-                    end
-    render :json =>  @grouped_data
+           end
+
+    render :json => @data
   end
 
+  # Compliance tool search & full list action
   def search_query
     query = @grouping_class.new(sanitized_attributes, params)
     data = query.run
@@ -88,6 +93,14 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   private
+
+  def set_pagination_headers(data, params)
+    data = instance_variable_get("@#{data}").presence
+    params = send(params)
+    response.headers['X-Total-Count'] = data ? data.first['total_count'].to_s : '0'
+    response.headers['X-Page'] = params[:page].to_s.presence || '1'
+    response.headers['X-Per-Page'] = params[:per_page].to_s.presence || '25'
+  end
 
   def params_hash_builder(ids, params)
     hash_params = {}
