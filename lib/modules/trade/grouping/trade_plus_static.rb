@@ -3,6 +3,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def initialize(attributes, opts={})
     # exporter or importer
     @reported_by = opts[:reported_by] || 'importer'
+    @reported_by_party = opts[:reported_by_party] || true
     @sanitised_column_names = []
     super(attributes, opts)
   end
@@ -140,19 +141,30 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def country_query
     # This should be true for reported_by_party tab, false for the reported_by_partners
     reported_by_party = @reported_by_party
-    # TODO The @reported_by is intended for import from and export to charts rather than the tabs, maybe renamed for this query
-    quantity_field = "#{@reported_by}_reported_quantity"
+    country_id = 41 # UK example
+    # TODO Rename @reported_by as this is related to import-from and export-to charts here rather than importer/exporter tabs in other pages
+    # As the quantity field is strictly related to the reported_by_exporter value this should change accordingly with the tabs/chart combination:
+    # party + importing = importer_reported_quantity
+    # party + exporting = exporter_reported_quantity
+    # partners + importing = exporter_reported_quantity
+    # partners + exporting = importer_reported_quantity
+    entity = if (@reported_by_party && (@reported_by == 'importer')) || (!@reported_by_party && (@reported_by == 'exporter'))
+                 'importer'
+               elsif (@reported_by_party && (@reported_by == 'exporter')) || (!@reported_by_party && (@reported_by == 'importer'))
+                 'exporter'
+               end
+    quantity_field = "#{entity}_reported_quantity"
     columns = @attributes.compact.uniq.join(',')
     <<-SQL
       SELECT
         #{sanitise_column_names},
-        ROUND(SUM(#{quantity_field}::FLOAT)) AS value
+        ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
+        COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
-      WHERE (exporter_id = 41 OR importer_id = 41)
-      AND ((reported_by_exporter = #{!reported_by_party} AND importer_id = 41) OR (reported_by_exporter = #{reported_by_party} AND exporter_id = 41))
-      AND #{@reported_by}_id = 41
-      AND #{@condition}
-      GROUP BY #{columns} -- !@reported_by (negation of that value, if importer then exporter and other way round)
+      WHERE #{@reported_by}_id = #{country_id} -- @reported_by = importer if importing-from chart, exporter if exporting-to chart
+      AND ((reported_by_exporter = #{!reported_by_party} AND importer_id = #{country_id}) OR (reported_by_exporter = #{reported_by_party} AND exporter_id = #{country_id}))
+      AND #{@condition} AND #{quantity_field} IS NOT NULL
+      GROUP BY #{columns} -- exporter if @reported_by = importer and otherway round
       ORDER BY value DESC
       #{limit}
     SQL
