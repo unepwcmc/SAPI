@@ -4,6 +4,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     # exporter or importer
     @reported_by = opts[:reported_by] || 'importer'
     @reported_by_party = opts[:reported_by_party] || true
+    @country_id = opts[:country_id]
     @sanitised_column_names = []
     super(attributes, opts)
   end
@@ -12,6 +13,11 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     data = db.execute(over_time_query)
     response = data.map { |d| JSON.parse(d['row_to_json']) }
     sanitise_response_over_time_query(response)
+  end
+
+  def country_data
+    data = db.execute(country_query)
+    data
   end
 
   def sanitise_response_over_time_query(response)
@@ -85,7 +91,6 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     unit_name: 'unit',
     unit_id: 'unit_id',
     taxon_id: 'taxon_id',
-    country_id: 'country_id',
     importer: 'importer_iso',
     exporter: 'exporter_iso',
     origin: 'origin_iso',
@@ -139,17 +144,17 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def country_query
     # This should be true for reported_by_party tab, false for the reported_by_partners
-    reported_by_party = @reported_by_party
-    country_id = 41 # UK example
+    reported_by_party = sanitise_boolean
+    country_id = @country_id
     # TODO Rename @reported_by as this is related to import-from and export-to charts here rather than importer/exporter tabs in other pages
     # As the quantity field is strictly related to the reported_by_exporter value this should change accordingly with the tabs/chart combination:
     # party + importing = importer_reported_quantity
     # party + exporting = exporter_reported_quantity
     # partners + importing = exporter_reported_quantity
     # partners + exporting = importer_reported_quantity
-    entity = if (@reported_by_party && (@reported_by == 'importer')) || (!@reported_by_party && (@reported_by == 'exporter'))
+    entity = if (reported_by_party && (@reported_by == 'importer')) || (!reported_by_party && (@reported_by == 'exporter'))
                  'importer'
-               elsif (@reported_by_party && (@reported_by == 'exporter')) || (!@reported_by_party && (@reported_by == 'importer'))
+               elsif (reported_by_party && (@reported_by == 'exporter')) || (!reported_by_party && (@reported_by == 'importer'))
                  'exporter'
                end
     quantity_field = "#{entity}_reported_quantity"
@@ -232,6 +237,11 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       @sanitised_column_names << name
       "#{attribute} AS #{name}"
     end.compact.uniq.join(',')
+  end
+
+  def sanitise_boolean
+    return true if !['true', 'false'].include? @reported_by_party
+    @reported_by_party == 'true'
   end
 
   def limit

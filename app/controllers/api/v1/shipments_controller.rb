@@ -43,6 +43,25 @@ class Api::V1::ShipmentsController < ApplicationController
     render :json => @data
   end
 
+  def country_query
+    limit = grouped_params[:limit].present? ? grouped_params[:limit].to_i : ''
+    _grouped_params = grouped_params.merge(limit: limit, with_defaults: true)
+    # taxonomic_params = {
+    #   taxonomic_level: grouped_params[:taxonomic_level],
+    #   group_name: grouped_params[:group_name]
+    # }
+
+    query = @grouping_class.new(sanitized_attributes, _grouped_params)
+    params_hash = { attribute: 'year' }
+    sanitized_attributes.map { |p| params_hash[p] = p }
+    @data = # Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
+                      # sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
+                query.json_by_attribute(query.country_data, params_hash)
+           # end
+
+    render :json => @data
+  end
+
   # Compliance tool search & full list action
   def search_query
     query = @grouping_class.new(sanitized_attributes, params)
@@ -131,7 +150,7 @@ class Api::V1::ShipmentsController < ApplicationController
       :group_by, :grouping_type, :term_names, :term_ids, :purpose_names, :purpose_ids,
       :source_names, :source_ids, :unit_name, :unit_id, :appendices, :reported_by,
       :taxonomic_level, :taxonomic_group_name, :importer, :exporter, :origin, :taxon_id,
-      :taxonomic_group
+      :taxonomic_group, :country_id, :reported_by_party
     )
   end
 
