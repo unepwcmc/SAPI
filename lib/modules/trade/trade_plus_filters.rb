@@ -78,12 +78,7 @@ module Trade::TradePlusFilters
     end
     query << sub_query(['taxon_name', 'taxon_id'], 'taxa')
     query << sub_query(['group_name', 'group_name'], 'taxonomic_groups')
-<<<<<<< HEAD
-=======
-    query << sub_query(['year', 'year'], 'years')
-    query << sub_query(['appendix', 'appendix'], 'appendixes')
     query << country_query
->>>>>>> add full country list to filters endpoint
 
     <<-SQL
       #{query.join(' UNION ') }
