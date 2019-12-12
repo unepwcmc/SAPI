@@ -46,17 +46,17 @@ class Api::V1::ShipmentsController < ApplicationController
   def country_query
     limit = grouped_params[:limit].present? ? grouped_params[:limit].to_i : ''
     _grouped_params = grouped_params.merge(limit: limit, with_defaults: true)
-    # taxonomic_params = {
-    #   taxonomic_level: grouped_params[:taxonomic_level],
-    #   group_name: grouped_params[:group_name]
-    # }
+    taxonomic_params = {
+      taxonomic_level: grouped_params[:taxonomic_level],
+      group_name: grouped_params[:group_name]
+    }
 
     query = @grouping_class.new(sanitized_attributes, _grouped_params)
     params_hash = { attribute: 'year' }
     sanitized_attributes.map { |p| params_hash[p] = p }
     @data = # Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
-                      # sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
-                query.json_by_attribute(query.country_data, params_hash)
+                      sanitized_attributes.first.empty? ? query.country_taxonomic_grouping(taxonomic_params) :
+                                                          query.json_by_attribute(query.country_data, params_hash)
            # end
 
     render :json => @data

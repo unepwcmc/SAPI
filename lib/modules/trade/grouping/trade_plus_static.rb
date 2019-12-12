@@ -32,6 +32,12 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     data.map { |d| JSON.parse(d['row_to_json']) }
   end
 
+  #TODO remove and generalize the one already in place
+  def country_taxonomic_grouping(opts={})
+    data = db.execute(country_taxonomic_query(opts))
+    data.map { |d| JSON.parse(d['row_to_json']) }
+  end
+
   # TODO better define hash key
   def json_by_attribute(data, opts={})
     key = data.fields.first
@@ -174,12 +180,17 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     SQL
   end
 
+  #TODO refactor avoiding variable repetition
   def over_time_query
-    quantity_field = "#{@reported_by}_reported_quantity"
+    quantity_field = @country_id.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
     columns = @attributes.compact.uniq.join(',')
     # @sanitised_column_names value is assigned in the super class
     # while the @query variable is assigned as well because of the grouped_query
     sanitised_column_names = @sanitised_column_names.compact.uniq.join(',')
+
+    country_id = @country_id
+    reported_by_party = sanitise_boolean
+    country_over_time = "AND #{@reported_by}_id = #{country_id} AND ((reported_by_exporter = #{!reported_by_party} AND importer_id = #{country_id}) OR (reported_by_exporter = #{reported_by_party} AND exporter_id = #{country_id}))" if @country_id
 
     <<-SQL
       SELECT ROW_TO_JSON(row)
@@ -188,7 +199,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         FROM (
           SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
-          WHERE #{@condition} AND #{quantity_field} IS NOT NULL
+          WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{country_over_time}
           GROUP BY year, #{columns}
           ORDER BY value DESC
           #{limit}
@@ -229,6 +240,47 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     SQL
   end
 
+  #TODO remove and generalize the one already in place
+  def country_taxonomic_query(opts)
+    reported_by_party = sanitise_boolean
+    country_id = @country_id
+    entity = if (reported_by_party && (@reported_by == 'importer')) || (!reported_by_party && (@reported_by == 'exporter'))
+                 'importer'
+               elsif (reported_by_party && (@reported_by == 'exporter')) || (!reported_by_party && (@reported_by == 'importer'))
+                 'exporter'
+               end
+    quantity_field = "#{entity}_reported_quantity"
+    taxonomic_level = opts[:taxonomic_level] || 'class'
+    taxonomic_level_name = "#{taxonomic_level}_name"
+    group_name = opts[:group_name]
+    group_name_condition = " AND LOWER(group_name) = '#{group_name.downcase}'" if group_name
+
+    check_for_plants = <<-SQL
+      CASE
+        WHEN COALESCE(#{taxonomic_level_name}, '') = '' THEN 'Plants'
+        ELSE #{taxonomic_level_name}
+      END AS name,
+    SQL
+
+    <<-SQL
+      SELECT ROW_TO_JSON(row)
+      FROM(
+        SELECT
+          NULL AS id,
+          #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
+          ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
+          COUNT(*) OVER () AS total_count
+        FROM #{shipments_table}
+        WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{group_name_condition}
+        AND #{@reported_by}_id = #{country_id} -- @reported_by = importer if importing-from chart, exporter if exporting-to chart
+        AND ((reported_by_exporter = #{!reported_by_party} AND importer_id = #{country_id}) OR (reported_by_exporter = #{reported_by_party} AND exporter_id = #{country_id}))
+        GROUP BY #{taxonomic_level_name}
+        ORDER BY value DESC
+        #{limit}
+      ) row
+    SQL
+  end
+
   def sanitise_column_names
     return '' if @attributes.blank?
     @attributes.map do |attribute|
@@ -242,6 +294,15 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def sanitise_boolean
     return true if !['true', 'false'].include? @reported_by_party
     @reported_by_party == 'true'
+  end
+
+  def entity_quantity
+    reported_by_party = sanitise_boolean
+    if (reported_by_party && (@reported_by == 'importer')) || (!reported_by_party && (@reported_by == 'exporter'))
+      'importer'
+    elsif (reported_by_party && (@reported_by == 'exporter')) || (!reported_by_party && (@reported_by == 'importer'))
+      'exporter'
+    end
   end
 
   def limit
