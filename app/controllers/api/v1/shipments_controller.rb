@@ -3,7 +3,7 @@ class Api::V1::ShipmentsController < ApplicationController
 
   before_filter :authenticate
   before_filter :load_grouping_type
-  after_filter only: [:grouped_query] do
+  after_filter only: [:grouped_query, :country_query] do
     set_pagination_headers(:data, :grouped_params)
   end
 
@@ -54,10 +54,10 @@ class Api::V1::ShipmentsController < ApplicationController
     query = @grouping_class.new(sanitized_attributes, _grouped_params)
     params_hash = { attribute: 'year' }
     sanitized_attributes.map { |p| params_hash[p] = p }
-    @data = # Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
-                      sanitized_attributes.first.empty? ? query.country_taxonomic_grouping(taxonomic_params) :
+    @data = Rails.cache.fetch(['country_data', grouped_params], expires_in: 1.week) do
+                      sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
                                                           query.json_by_attribute(query.country_data, params_hash)
-           # end
+            end
 
     render :json => @data
   end
