@@ -12,6 +12,39 @@ class Trade::TradePlusFormattedCodes
     File.open("#{VIEW_DIR}/#{timestamp}.sql", 'w') { |f| f.write(@query) }
   end
 
+  def test_query
+    attributes = ATTRIBUTES.map { |k, v| "#{v} AS #{k}" }.join(',')
+    group_by_attributes = [ATTRIBUTES.values, GROUP_EXTRA_ATTRIBUTES].flatten.join(',')
+    <<-SQL
+      #{codes_mapping_table}
+      SELECT #{attributes},
+             -- MAX functions are supposed to to merge rows together based on the join
+             -- conditions and replacing NULLs with values from related rows when possible
+             COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id) AS term_id,
+             COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code)  AS term_code,
+             COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en) AS term,
+             COALESCE(MAX(COALESCE(output_unit_id, codes_map.unit_id)), ts.unit_id) AS unit_id,
+             COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code) AS unit_code,
+             COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en) AS unit,
+             MAX(term_quantity_modifier) AS term_quantity_modifier,
+             MAX(term_modifier_value)::FLOAT AS term_modifier_value,
+             MAX(unit_quantity_modifier) AS unit_quantity_modifier,
+             MAX(unit_modifier_value)::FLOAT AS unit_modifier_value
+        FROM trade_plus_test ts
+        #{mapping_join}
+        LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
+        LEFT OUTER JOIN trade_codes units ON ts.unit_id = units.id
+        LEFT OUTER JOIN trade_codes sources ON ts.source_id = sources.id
+        LEFT OUTER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
+        INNER JOIN ranks ON ranks.id = ts.taxon_concept_rank_id
+        LEFT OUTER JOIN geo_entities exporters ON ts.exporter_id = exporters.id
+        LEFT OUTER JOIN geo_entities importers ON ts.importer_id = importers.id
+        LEFT OUTER JOIN geo_entities origins ON ts.country_of_origin_id = origins.id
+        WHERE #{exemptions}
+        GROUP BY #{group_by_attributes}
+    SQL
+  end
+
   private
 
   # Generate WITH AS table containing all possible mappings.
@@ -88,6 +121,8 @@ class Trade::TradePlusFormattedCodes
     <<-SQL
       #{codes_mapping_table}
       SELECT #{attributes},
+             -- MAX functions are supposed to to merge rows together based on the join
+             -- conditions and replacing NULLs with values from related rows when possible
              COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id) AS term_id,
              COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code)  AS term_code,
              COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en) AS term,
@@ -95,9 +130,9 @@ class Trade::TradePlusFormattedCodes
              COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code) AS unit_code,
              COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en) AS unit,
              MAX(term_quantity_modifier) AS term_quantity_modifier,
-             MAX(term_modifier_value)::INT AS term_modifier_value,
+             MAX(term_modifier_value)::FLOAT AS term_modifier_value,
              MAX(unit_quantity_modifier) AS unit_quantity_modifier,
-             MAX(unit_modifier_value)::INT AS unit_modifier_value
+             MAX(unit_modifier_value)::FLOAT AS unit_modifier_value
         FROM trade_plus_group_view ts
         #{mapping_join}
         LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
@@ -113,6 +148,7 @@ class Trade::TradePlusFormattedCodes
     SQL
   end
 
+  # Joins with bespoke mapping table listing all possible join conditions
   def mapping_join
     <<-SQL
       LEFT OUTER JOIN codes_map ON (
@@ -204,24 +240,27 @@ class Trade::TradePlusFormattedCodes
     end
   end
 
-  def output_formatting(rule)
-    output = rule['output']
-    output = output.select { |k, v| ['term', 'unit'].include? k } if output['quantity_modifier'].blank?
-    output
+  def format_taxa_fields(taxa_fields)
+    return 'NULL' unless taxa_fields.present?
+
+    taxa_fields.keys.map do |key|
+      next unless taxa_fields[key].is_a?(Array)
+      taxa_fields[key] = taxa_fields[key].join(',')
+    end
+    "'#{taxa_fields.to_s.gsub(/=>/,':')}'::JSON"
   end
 
   TAXONOMY_FIELDS = %w(kingdom phylum order class family genus group taxa).freeze
   def generate_mapping_table_rows(rule)
     formatted_input = input_flattening(rule)
     formatted_input.delete_if { |_, v| v.empty? }
-    output = output_formatting(rule)
+    output = rule['output']
     modifier = output['quantity_modifier'] ? "'#{output['quantity_modifier']}'" : 'NULL'
-    value = output['modifier_value'].to_i || 'NULL'
+    value = output['modifier_value'] ? output['modifier_value'].to_f : 'NULL'
 
     input_terms = formatted_input['terms'] || [nil]
     input_units = formatted_input['units'] || [nil]
-    input_taxa_fields = formatted_input.slice(*TAXONOMY_FIELDS)
-    input_taxa_fields = input_taxa_fields.present? ? "'#{input_taxa_fields.to_s.gsub(/=>/,':')}'::JSON" : 'NULL'
+    input_taxa_fields = format_taxa_fields(formatted_input.slice(*TAXONOMY_FIELDS))
 
     output_term_values = slice_values(output['term'], 'term')
     output_unit_values = slice_values(output['unit'], 'unit')
@@ -238,6 +277,7 @@ class Trade::TradePlusFormattedCodes
     end
     input_units.each do |input_unit|
       input_units_values << slice_values(input_unit, 'unit')
+      next unless input_unit
       modifier_values = ['NULL', 'NULL', modifier, value].join(',')
     end
     input_values = input_terms_values.product(input_units_values)
@@ -257,7 +297,7 @@ class Trade::TradePlusFormattedCodes
     # This is why the id is -1 instead of NULL.
     # Normal NULL values are used to described that there has been
     # no indication for any condition with regard that code/item.
-    return [-1, 'NULL', 'NULL'].join(',') if trade_code == 'NULL'
+    return [-1, "'NULL'", "'NULL'"].join(',') if trade_code == 'NULL'
 
     code_obj = code_type.capitalize.constantize.find_by_code(trade_code)
     code_obj.attributes.slice(*TRADE_CODE_FIELDS).values.map { |v| v.is_a?(String) ? "'#{v}'" : v }.join(',')

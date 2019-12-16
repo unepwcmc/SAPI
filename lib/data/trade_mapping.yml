@@ -79,7 +79,7 @@ rules:
       output:
         term: 'LIV'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 2
       rule_name: 'rulename'
       input:
@@ -91,7 +91,7 @@ rules:
       output:
         term: 'MEA'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 3
       rule_name: 'rulename'
       input:
@@ -103,7 +103,7 @@ rules:
       output:
         term: 'CAP'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 4
       rule_name: 'rulename'
       input:
@@ -115,7 +115,7 @@ rules:
       output:
         term: 'EXT'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 5
       rule_name: 'rulename'
       input:
@@ -127,7 +127,7 @@ rules:
       output:
         term: 'CAV'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 6
       rule_name: 'rulename'
       input:
@@ -139,7 +139,7 @@ rules:
       output:
         term: 'EXT'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 6
       rule_name: 'rulename'
       input:
@@ -151,7 +151,7 @@ rules:
       output:
         term: 'LPS'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 7
       rule_name: 'rulename'
       input:
@@ -163,7 +163,7 @@ rules:
       output:
         term: 'CAR'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 8
       rule_name: 'rulename'
       input:
@@ -175,7 +175,7 @@ rules:
       output:
         term: 'BOC'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 9
       rule_name: 'rulename'
       input:
@@ -187,7 +187,7 @@ rules:
       output:
         term: 'HOP'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 10
       rule_name: 'rulename'
       input:
@@ -199,7 +199,7 @@ rules:
       output:
         term: 'IVP'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 11
       rule_name: 'rulename'
       input:
@@ -211,7 +211,7 @@ rules:
       output:
         term: 'FEA'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 12
       rule_name: 'rulename'
       input:
@@ -223,7 +223,7 @@ rules:
       output:
         term: 'DER'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 13
       rule_name: 'rulename'
       input:
@@ -235,7 +235,7 @@ rules:
       output:
         term: 'SKP'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 14
       rule_name: 'rulename'
       input:
@@ -247,7 +247,7 @@ rules:
       output:
         term: 'WPR'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 15
       rule_name: 'rulename'
       input:
@@ -259,7 +259,7 @@ rules:
       output:
         term: 'TIM'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 16
       rule_name: 'rulename'
       input:
@@ -271,7 +271,7 @@ rules:
       output:
         term: 'CUL'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 17
       rule_name: 'rulename'
       input:
@@ -283,7 +283,7 @@ rules:
       output:
         term: 'EXT'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 18
       rule_name: 'rulename'
       input:
@@ -295,7 +295,7 @@ rules:
       output:
         term: 'SKU'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     # Rules 19 and 20 together are mapping the overall rule:
     # If term 'FRN' and group 'Timber' then term 'WPR' else term 'CAR'
     - rule_no: 19
@@ -309,7 +309,7 @@ rules:
       output:
         term: 'WPR'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 20
       rule_name: 'rulename'
       input:
@@ -321,7 +321,7 @@ rules:
       output:
         term: 'CAR'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 21
       rule_name: 'rulename'
       input:
@@ -669,7 +669,7 @@ rules:
         term: 'SID'
         unit: 'NULL'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 2
       rule_name: 'rulename'
       input:
@@ -678,7 +678,7 @@ rules:
         term: 'SKP'
         unit: 'NULL'
         quantity_modifier: ''
-        modifier_value: 0
+        modifier_value: 1
     - rule_no: 3
       rule_name: 'rulename'
       input:
