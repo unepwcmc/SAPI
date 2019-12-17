@@ -5,12 +5,12 @@
       SELECT ts.id AS id,ts.year AS year,ts.appendix AS appendix,ts.reported_by_exporter AS reported_by_exporter,ts.taxon_concept_id AS taxon_id,ts.taxon_concept_author_year AS author_year,ts.taxon_concept_name_status AS name_status,ts.taxon_concept_full_name AS taxon_name,ts.taxon_concept_kingdom_name AS kingdom_name,ts.taxon_concept_kingdom_id AS kingdom_id,ts.taxon_concept_phylum_name AS phylum_name,ts.taxon_concept_phylum_id AS phylum_id,ts.taxon_concept_class_name AS class_name,ts.taxon_concept_class_id AS class_id,ts.taxon_concept_order_name AS order_name,ts.taxon_concept_order_id AS order_id,ts.taxon_concept_family_name AS family_name,ts.taxon_concept_family_id AS family_id,ts.taxon_concept_genus_name AS genus_name,ts.taxon_concept_genus_id AS genus_id,ts.group AS group_name,ts.quantity AS quantity,exporters.id AS exporter_id,exporters.iso_code2 AS exporter_iso,exporters.name_en AS exporter,importers.id AS importer_id,importers.iso_code2 AS importer_iso,importers.name_en AS importer,origins.id AS origin_id,origins.iso_code2 AS origin_iso,origins.name_en AS origin,purposes.id AS purpose_id,purposes.name_en AS purpose,sources.id AS source_id,sources.name_en AS source,ranks.id AS rank_id,ranks.name AS rank_name,
              -- MAX functions are supposed to to merge rows together based on the join
              -- conditions and replacing NULLs with values from related rows when possible
-             COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id) AS term_id,
-             COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code)  AS term_code,
-             COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en) AS term,
-             COALESCE(MAX(COALESCE(output_unit_id, codes_map.unit_id)), ts.unit_id) AS unit_id,
-             COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code) AS unit_code,
-             COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en) AS unit,
+             NULLIF(COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id), -1) AS term_id,
+             NULLIF(COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code), 'NULL') AS term_code,
+             NULLIF(COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en), 'NULL') AS term,
+             NULLIF(COALESCE(MAX(COALESCE(output_unit_id, codes_map.unit_id)), ts.unit_id), -1) AS unit_id,
+             NULLIF(COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code), 'NULL') AS unit_code,
+             NULLIF(COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en), 'NULL') AS unit,
              MAX(term_quantity_modifier) AS term_quantity_modifier,
              MAX(term_modifier_value)::FLOAT AS term_modifier_value,
              MAX(unit_quantity_modifier) AS unit_quantity_modifier,

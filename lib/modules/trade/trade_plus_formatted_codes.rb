@@ -123,12 +123,12 @@ class Trade::TradePlusFormattedCodes
       SELECT #{attributes},
              -- MAX functions are supposed to to merge rows together based on the join
              -- conditions and replacing NULLs with values from related rows when possible
-             COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id) AS term_id,
-             COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code)  AS term_code,
-             COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en) AS term,
-             COALESCE(MAX(COALESCE(output_unit_id, codes_map.unit_id)), ts.unit_id) AS unit_id,
-             COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code) AS unit_code,
-             COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en) AS unit,
+             NULLIF(COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id), -1) AS term_id,
+             NULLIF(COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code), 'NULL') AS term_code,
+             NULLIF(COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en), 'NULL') AS term,
+             NULLIF(COALESCE(MAX(COALESCE(output_unit_id, codes_map.unit_id)), ts.unit_id), -1) AS unit_id,
+             NULLIF(COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code), 'NULL') AS unit_code,
+             NULLIF(COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en), 'NULL') AS unit,
              MAX(term_quantity_modifier) AS term_quantity_modifier,
              MAX(term_modifier_value)::FLOAT AS term_modifier_value,
              MAX(unit_quantity_modifier) AS unit_quantity_modifier,
