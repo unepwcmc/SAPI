@@ -160,8 +160,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
-      WHERE #{@reported_by}_id = #{country_id} -- @reported_by = importer if importing-from chart, exporter if exporting-to chart
-      AND ((reported_by_exporter = #{!reported_by_party} AND importer_id = #{country_id}) OR (reported_by_exporter = #{reported_by_party} AND exporter_id = #{country_id}))
+      WHERE #{@reported_by}_id IN (#{country_id}) -- @reported_by = importer if importing-from chart, exporter if exporting-to chart
+      AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_id})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_id})))
       AND #{@condition} AND #{quantity_field} IS NOT NULL
       GROUP BY #{columns} -- exporter if @reported_by = importer and otherway round
       ORDER BY value DESC
@@ -253,7 +253,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     return unless @country_id
     country_id = @country_id
     reported_by_party = sanitise_boolean
-    "AND #{@reported_by}_id = #{country_id} AND ((reported_by_exporter = #{!reported_by_party} AND importer_id = #{country_id}) OR (reported_by_exporter = #{reported_by_party} AND exporter_id = #{country_id}))"
+    "AND #{@reported_by}_id IN (#{country_id}) AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_id})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_id})))"
   end
 
   def limit
