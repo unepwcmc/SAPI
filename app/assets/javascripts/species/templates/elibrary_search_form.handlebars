@@ -82,6 +82,18 @@
 
       <div class="documents-control-group">
         {{single-dropdown
+          isVisible=controller.identificationDocTypeDropdownVisible
+          action="handleDocumentTypeSelection"
+          clearAction="handleDocumentTypeDeSelection"
+          title="Identification documents"
+          placeholder="ID Document types"
+          values=controller.identificationDocumentTypes
+          selection=controller.selectedDocumentType
+        }}
+      </div>
+
+      <div class="documents-control-group">
+        {{single-dropdown
           isVisible=controller.proposalOutcomeDropdownVisible
           action="handleProposalOutcomeSelection"
           clearAction="handleProposalOutcomeDeselection"

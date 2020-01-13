@@ -81,6 +81,17 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     }
   ]
 
+  identificationDocumentTypes: [
+    {
+      id: 'Document::IdManual',
+      name: 'CITES Identification Manual'
+    },
+    {
+      id: 'Document::VirtualCollege',
+      name: 'CITES Virtual College'
+    }
+  ]
+
   load: ->
     unless @get('loaded')
       @set('content', Species.Event.find())

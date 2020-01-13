@@ -60,6 +60,10 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       publicTypes
   ).property('isSignedIn')
 
+  identificationDocumentTypes: ( ->
+    @get('controllers.events.identificationDocumentTypes')
+    ).property()
+
   documentTypeDropdownVisible: ( ->
     @get('selectedEventType.id') == 'EcSrg'
   ).property('selectedEventType')
