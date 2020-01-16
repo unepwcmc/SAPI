@@ -103,7 +103,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               AND eu_decisions.geo_entity_id IN
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
-      ", object_and_children, ancestors, object.id).
+            OR 38 IN (?) AND eu_decisions.taxon_concept_id = 38 AND eu_decisions.geo_entity_id = 146 AND eu_decision_type_id = 2
+      ", object_and_children, ancestors, object.id, ancestors).
       select(<<-SQL
               eu_decisions.notes,
               eu_decisions.start_date,
