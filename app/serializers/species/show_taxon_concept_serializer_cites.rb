@@ -95,6 +95,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def eu_decisions
+    # The following variables are used to temporarily force the Anthozoa negative opinion
+    # for Cambodia to cascade down and show regardless of the children distributions.
+    taxonomy_id = Taxonomy.find_by_name('CITES_EU').id
+    anthozoa_id = TaxonConcept.find_by_full_name_and_taxonomy_id('Anthozoa', taxonomy_id).id
+    cambodia_id = GeoEntity.find_by_name_en('Cambodia').id
+    eu_decision_type_id = EuDecisionType.find_by_name('Negative').id
+
     EuDecision.from('api_eu_decisions_view eu_decisions').
       where("
             eu_decisions.taxon_concept_id IN (?)
@@ -103,7 +110,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               AND eu_decisions.geo_entity_id IN
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
-            OR 38 IN (?) AND eu_decisions.taxon_concept_id = 38 AND eu_decisions.geo_entity_id = 146 AND eu_decision_type_id = 2
+            OR (
+              #{anthozoa_id} IN (?) AND eu_decisions.taxon_concept_id = #{anthozoa_id} AND
+              eu_decisions.geo_entity_id = #{cambodia_id} AND eu_decision_type_id = #{eu_decision_type_id}
+            )
       ", object_and_children, ancestors, object.id, ancestors).
       select(<<-SQL
               eu_decisions.notes,
