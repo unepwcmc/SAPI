@@ -97,11 +97,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def eu_decisions
     # The following variables are used to temporarily force the Anthozoa negative opinion
     # for Cambodia to cascade down and show regardless of the children distributions.
-    taxonomy_id = Taxonomy.find_by_name('CITES_EU').id
-    anthozoa_id = TaxonConcept.find_by_full_name_and_taxonomy_id('Anthozoa', taxonomy_id).id
-    cambodia_id = GeoEntity.find_by_name_en('Cambodia').id
-    eu_decision_type_id = EuDecisionType.find_by_name('Negative').id
-
+    anthozoa_statement, ancestors_field = force_anthozoa_statement.values_at(*%i(statement ancestors_field))
     EuDecision.from('api_eu_decisions_view eu_decisions').
       where("
             eu_decisions.taxon_concept_id IN (?)
@@ -110,11 +106,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               AND eu_decisions.geo_entity_id IN
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
-            OR (
-              #{anthozoa_id} IN (?) AND eu_decisions.taxon_concept_id = #{anthozoa_id} AND
-              eu_decisions.geo_entity_id = #{cambodia_id} AND eu_decision_type_id = #{eu_decision_type_id}
-            )
-      ", object_and_children, ancestors, object.id, ancestors).
+            #{anthozoa_statement}
+      ", object_and_children, ancestors, object.id, ancestors_field).
       select(<<-SQL
               eu_decisions.notes,
               eu_decisions.start_date,
@@ -293,4 +286,36 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
     object.listing && object.listing['eu_listing']
   end
 
+  private
+
+  # The following variables are used to temporarily force the Anthozoa negative opinion
+  # for Cambodia to cascade down and show regardless of the children distributions.
+  def force_anthozoa_statement
+    taxonomy = Taxonomy.find_by_name('CITES_EU')
+    taxonomy_id = taxonomy && taxonomy.id
+    anthozoa = TaxonConcept.find_by_full_name_and_taxonomy_id('Anthozoa', taxonomy_id)
+    anthozoa_id = anthozoa && anthozoa.id
+    cambodia = GeoEntity.find_by_name_en('Cambodia')
+    cambodia_id = cambodia && cambodia.id
+    eu_decision_type = EuDecisionType.find_by_name('Negative')
+    eu_decision_type_id = eu_decision_type && eu_decision_type.id
+
+    res = {}
+
+    if taxonomy_id && anthozoa_id && cambodia_id && eu_decision_type_id
+      res[:statement] =
+        <<-SQL
+          OR (
+            #{anthozoa_id} IN (?) AND eu_decisions.taxon_concept_id = #{anthozoa_id} AND
+            eu_decisions.geo_entity_id = #{cambodia_id} AND eu_decision_type_id = #{eu_decision_type_id}
+          )
+        SQL
+      res[:ancestors_field] = ancestors
+    else
+      res[:statement] = 'AND (?)'
+      res[:ancestors_field] = 'TRUE'
+    end
+
+    res
+  end
 end
