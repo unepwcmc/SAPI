@@ -10,6 +10,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
   searchContext: 'documents'
   autoCompleteTaxonConcept: null
   selectedEventType: null
+  locationsDropdownVisible: true
 
   setFilters: (filtersHash) ->
     if filtersHash.taxon_concept_query == ''
@@ -68,9 +69,39 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     @get('selectedEventType.id') == 'EcSrg'
   ).property('selectedEventType')
 
+  meetingDocTypeDropdownVisible: ( ->
+    @containsDocTypeOrDocTypeUnselected(@get('filteredDocumentTypes'))
+  ).property('selectedDocumentType', 'filteredDocumentTypes')
+
   interSessionalDocTypeDropdownVisible: ( ->
-    !@get('selectedEventType.id')?
-  ).property('selectedEventType')
+    !@get('selectedEventType.id')? && @get('isDocTypeUnselectedOrInterSessional')
+  ).property('selectedEventType', 'isDocTypeUnselectedOrInterSessional')
+
+  identificationDocTypeDropdownVisible: ( ->
+    !@get('selectedEventType.id')? && @get('isDocTypeUnselectedOrIdentification')
+  ).property('selectedEventType', 'isDocTypeUnselectedOrIdentification')
+
+  isDocTypeUnselectedOrIdentification: ( ->
+    @containsDocTypeOrDocTypeUnselected(@get('identificationDocumentTypes'))
+  ).property('selectedDocumentType', 'identificationDocumentTypes')
+
+  isDocTypeUnselectedOrInterSessional: ( ->
+    @containsDocTypeOrDocTypeUnselected(@get('interSessionalDocumentTypes'))
+  ).property('selectedDocumentType', 'interSessionalDocumentTypes')
+
+  containsDocTypeOrDocTypeUnselected: ((docTypes) ->
+    selectedDocTypeId = @get('selectedDocumentType.id')
+
+    if !selectedDocTypeId?
+      return true
+
+    contains = false
+    docTypes.forEach((docType) -> 
+      if (docType.id == selectedDocTypeId)
+        contains = true
+    )
+    return contains
+  )
 
   actions:
     openSearchPage:->
@@ -78,9 +109,14 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
 
     handleDocumentTypeSelection: (documentType) ->
       @set('selectedDocumentType', documentType)
+      if @containsDocTypeOrDocTypeUnselected(@get('identificationDocumentTypes'))
+        @set('locationsDropdownVisible', false)
+        @set('selectedGeoEntities', [])
+        @set('selectedGeoEntitiesIds', [])
 
-    handleDocumentTypeDeselection:  ->
+    handleDocumentTypeDeselection: ->
       @set('selectedDocumentType', null)
+      @set('locationsDropdownVisible', true)
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)

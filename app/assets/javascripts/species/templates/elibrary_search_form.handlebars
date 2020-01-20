@@ -20,20 +20,8 @@
     </fieldset>
     <fieldset>
       <div class="documents-control-group">
-        <div class="location-area popup-area">
-          <label>Countries and territories <i class="fa fa-info-circle" title="Including historic names"></i></label>
-          {{view Species.GeoEntitiesSearchButton
-            selectedGeoEntitiesBinding="controller.selectedGeoEntities"
-            loadedBinding="geoEntities.loaded"
-            shortPlaceholder=false
-            taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
-          }}
-          {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
-        </div>
-      </div>
-
-      <div class="documents-control-group">
         {{single-dropdown
+          isVisible=controller.meetingDocTypeDropdownVisible
           action="handleEventTypeSelection"
           clearAction="handleEventTypeDeselection"
           title="Meeting documents"
@@ -72,7 +60,7 @@
         {{single-dropdown
           isVisible=controller.interSessionalDocTypeDropdownVisible
           action="handleDocumentTypeSelection"
-          clearAction="handleDocumentTypeDeSelection"
+          clearAction="handleDocumentTypeDeselection"
           title="Inter-sessional documents"
           placeholder="Document types"
           values=controller.interSessionalDocumentTypes
@@ -84,9 +72,9 @@
         {{single-dropdown
           isVisible=controller.identificationDocTypeDropdownVisible
           action="handleDocumentTypeSelection"
-          clearAction="handleDocumentTypeDeSelection"
+          clearAction="handleDocumentTypeDeselection"
           title="Identification documents"
-          placeholder="ID Document types"
+          placeholder="All identification types"
           values=controller.identificationDocumentTypes
           selection=controller.selectedDocumentType
         }}
@@ -102,6 +90,21 @@
           values=controllers.documentTags.proposalOutcomes
           selection=controller.selectedProposalOutcome
         }}
+      </div>
+
+      <div class="documents-control-group">
+        {{#if locationsDropdownVisible}}
+          <div class="location-area popup-area">
+            <label>Countries and territories <i class="fa fa-info-circle" title="Including historic names"></i></label>
+            {{view Species.GeoEntitiesSearchButton
+              selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+              loadedBinding="geoEntities.loaded"
+              shortPlaceholder=false
+              taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
+            }}
+            {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+          </div>
+        {{/if}}
       </div>
 
       <div class="documents-control-group">
