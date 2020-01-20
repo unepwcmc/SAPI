@@ -61,6 +61,18 @@ class Document < ActiveRecord::Base
   before_validation :set_title
   before_validation :reset_designation_if_event_set
 
+  def filename=(arg)
+    is_link? ? write_attribute(:filename, arg) : super
+  end
+
+  def filename
+    is_link? ? read_attribute(:filename) : super
+  end
+
+  def is_link?
+    self.type == 'Document::VirtualCollege'
+  end
+
   def self.display_name
     'Document'
   end
