@@ -66,7 +66,11 @@ class Document < ActiveRecord::Base
   end
 
   def filename
-    is_link? ? read_attribute(:filename) : super
+    if self.has_attribute? :type
+      is_link? ? read_attribute(:filename) : super
+    else
+      super
+    end
   end
 
   def is_link?
@@ -96,7 +100,7 @@ class Document < ActiveRecord::Base
   end
 
   def set_title
-    if title.blank? && filename_changed? && filename.file
+    if title.blank? && self.changed? && filename.file
       self.title = filename.file.filename.sub(/.\w+$/, '').humanize
     end
   end
