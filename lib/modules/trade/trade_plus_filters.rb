@@ -56,12 +56,14 @@ module Trade::TradePlusFilters
 
   def country_query
     <<-SQL
-      (WITH country_data AS (
+      WITH country_data AS (
         SELECT id,name_en,iso_code2
         FROM geo_entities
         WHERE geo_entity_type_id = 1
       )
-      SELECT 'countries' AS attribute_name, json_build_object('id', id, 'name', name_en, 'iso2', iso_code2)::jsonb AS data FROM country_data GROUP BY id,name_en,iso_code2)
+      SELECT 'countries' AS attribute_name, json_build_object('id', id, 'name', name_en, 'iso2', iso_code2)::jsonb AS data
+      FROM country_data
+      GROUP BY id,name_en,iso_code2
     SQL
   end
 

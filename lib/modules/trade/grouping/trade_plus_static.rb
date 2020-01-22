@@ -1,4 +1,5 @@
 class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
+  attr_reader :country_id
 
   def initialize(attributes, opts={})
     # exporter or importer
@@ -16,8 +17,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   end
 
   def country_data
-    data = db.execute(country_query)
-    data
+    db.execute(country_query)
   end
 
   def sanitise_response_over_time_query(response)
@@ -144,8 +144,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def country_query
     # This should be true for reported_by_party tab, false for the reported_by_partners
-    reported_by_party = sanitise_boolean
-    country_id = @country_id
+    reported_by_party = sanitise_boolean(@reported_by_party)
     # TODO Rename @reported_by as this is related to import-from and export-to charts here rather than importer/exporter tabs in other pages
     # As the quantity field is strictly related to the reported_by_exporter value this should change accordingly with the tabs/chart combination:
     # party + importing = importer_reported_quantity
@@ -183,7 +182,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         FROM (
           SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
-          WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{country_condition}
+          WHERE #{@condition} AND #{quantity_field} IS NOT NULL AND #{country_condition}
           GROUP BY year, #{columns}
           ORDER BY value DESC
           #{limit}
@@ -217,7 +216,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
           COUNT(*) OVER () AS total_count
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{group_name_condition}
-        #{country_condition}
+        AND #{country_condition}
         GROUP BY #{taxonomic_level_name}
         ORDER BY value DESC
         #{limit}
@@ -235,13 +234,13 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     end.compact.uniq.join(',')
   end
 
-  def sanitise_boolean
-    return true if !['true', 'false'].include? @reported_by_party
-    @reported_by_party == 'true'
+  def sanitise_boolean(bool)
+    return true unless ['true', 'false'].include? bool
+    bool == 'true'
   end
 
   def entity_quantity
-    reported_by_party = sanitise_boolean
+    reported_by_party = sanitise_boolean(@reported_by_party)
     if (reported_by_party && (@reported_by == 'importer')) || (!reported_by_party && (@reported_by == 'exporter'))
       'importer'
     elsif (reported_by_party && (@reported_by == 'exporter')) || (!reported_by_party && (@reported_by == 'importer'))
@@ -250,10 +249,9 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   end
 
   def country_condition
-    return unless @country_id
-    country_id = @country_id
-    reported_by_party = sanitise_boolean
-    "AND #{@reported_by}_id IN (#{country_id}) AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_id})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_id})))"
+    return 'TRUE' unless @country_id
+    reported_by_party = sanitise_boolean(@reported_by_party)
+    "#{@reported_by}_id IN (#{country_id}) AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_id})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_id})))"
   end
 
   def limit
