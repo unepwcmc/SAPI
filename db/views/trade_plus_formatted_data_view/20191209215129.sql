@@ -104,6 +104,5 @@
         LEFT OUTER JOIN geo_entities importers ON ts.importer_id = importers.id
         LEFT OUTER JOIN geo_entities origins ON ts.country_of_origin_id = origins.id
         WHERE  ts.appendix NOT IN ('N')
-					AND  ts.term_id NOT IN (17,63,67)
 
         GROUP BY ts.id,ts.year,ts.appendix,ts.reported_by_exporter,ts.taxon_concept_id,ts.taxon_concept_author_year,ts.taxon_concept_name_status,ts.taxon_concept_full_name,ts.taxon_concept_kingdom_name,ts.taxon_concept_kingdom_id,ts.taxon_concept_phylum_name,ts.taxon_concept_phylum_id,ts.taxon_concept_class_name,ts.taxon_concept_class_id,ts.taxon_concept_order_name,ts.taxon_concept_order_id,ts.taxon_concept_family_name,ts.taxon_concept_family_id,ts.taxon_concept_genus_name,ts.taxon_concept_genus_id,ts.group,ts.quantity,exporters.id,exporters.iso_code2,exporters.name_en,importers.id,importers.iso_code2,importers.name_en,origins.id,origins.iso_code2,origins.name_en,purposes.id,purposes.name_en,sources.id,sources.name_en,ranks.id,ranks.name,quantity,ts.term_id,terms.code,terms.name_en,ts.unit_id,units.code,units.name_en

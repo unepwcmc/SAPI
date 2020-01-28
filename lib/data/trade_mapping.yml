@@ -1,7 +1,6 @@
 rules:
   exclusions:
     appendices: ['N']
-    terms: ['COS', 'OTH', 'PIE']
   add_group:
     # rule_no can be omitted if rules are listed already in order
     - rule_no: 1
