@@ -20,8 +20,6 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     response.sort_by { |i| i['name'] }
   end
 
-
-
   def taxonomic_grouping(opts={})
     data = db.execute(taxonomic_query(opts))
     data.map { |d| JSON.parse(d['row_to_json']) }
