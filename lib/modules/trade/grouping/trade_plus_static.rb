@@ -1,8 +1,11 @@
 class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
+  attr_reader :country_id
 
   def initialize(attributes, opts={})
     # exporter or importer
     @reported_by = opts[:reported_by] || 'importer'
+    @reported_by_party = opts[:reported_by_party] || true
+    @country_id = opts[:country_id]
     @sanitised_column_names = []
     super(attributes, opts)
   end
@@ -13,14 +16,16 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     sanitise_response_over_time_query(response)
   end
 
+  def country_data
+    db.execute(country_query)
+  end
+
   def sanitise_response_over_time_query(response)
     response.map do |value|
       value['id'], value['name'] = 'unreported', 'Unreported' if value['id'].nil?
     end
     response.sort_by { |i| i['name'] }
   end
-
-
 
   def taxonomic_grouping(opts={})
     data = db.execute(taxonomic_query(opts))
@@ -66,7 +71,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     family_name: 'family_name',
     class_name: 'class_name',
     group_name: 'group_name',
-    taxon_id: 'taxon_id'
+    taxon_id: 'taxon_id',
+    country_id: 'country_id'
   }.freeze
 
   def attributes
@@ -136,8 +142,34 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     SQL
   end
 
+  def country_query
+    # This should be true for reported_by_party tab, false for the reported_by_partners
+    reported_by_party = sanitise_boolean(@reported_by_party)
+    # TODO Rename @reported_by as this is related to import-from and export-to charts here rather than importer/exporter tabs in other pages
+    # As the quantity field is strictly related to the reported_by_exporter value this should change accordingly with the tabs/chart combination:
+    # party + importing = importer_reported_quantity
+    # party + exporting = exporter_reported_quantity
+    # partners + importing = exporter_reported_quantity
+    # partners + exporting = importer_reported_quantity
+    quantity_field = "#{entity_quantity}_reported_quantity"
+    columns = @attributes.compact.uniq.join(',')
+    <<-SQL
+      SELECT
+        #{sanitise_column_names},
+        ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
+        COUNT(*) OVER () AS total_count
+      FROM #{shipments_table}
+      WHERE #{@reported_by}_id IN (#{country_id}) -- @reported_by = importer if importing-from chart, exporter if exporting-to chart
+      AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_id})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_id})))
+      AND #{@condition} AND #{quantity_field} IS NOT NULL
+      GROUP BY #{columns} -- exporter if @reported_by = importer and otherway round
+      ORDER BY value DESC
+      #{limit}
+    SQL
+  end
+
   def over_time_query
-    quantity_field = "#{@reported_by}_reported_quantity"
+    quantity_field = @country_id.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
     columns = @attributes.compact.uniq.join(',')
     # @sanitised_column_names value is assigned in the super class
     # while the @query variable is assigned as well because of the grouped_query
@@ -150,7 +182,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         FROM (
           SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
-          WHERE #{@condition} AND #{quantity_field} IS NOT NULL
+          WHERE #{@condition} AND #{quantity_field} IS NOT NULL AND #{country_condition}
           GROUP BY year, #{columns}
           ORDER BY value DESC
           #{limit}
@@ -161,7 +193,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   end
 
   def taxonomic_query(opts)
-    quantity_field = "#{@reported_by}_reported_quantity"
+    quantity_field = @country_id.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
     taxonomic_level = opts[:taxonomic_level] || 'class'
     taxonomic_level_name = "#{taxonomic_level}_name"
     group_name = opts[:group_name]
@@ -184,6 +216,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
           COUNT(*) OVER () AS total_count
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{group_name_condition}
+        AND #{country_condition}
         GROUP BY #{taxonomic_level_name}
         ORDER BY value DESC
         #{limit}
@@ -199,6 +232,26 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       @sanitised_column_names << name
       "#{attribute} AS #{name}"
     end.compact.uniq.join(',')
+  end
+
+  def sanitise_boolean(bool)
+    return true unless ['true', 'false'].include? bool
+    bool == 'true'
+  end
+
+  def entity_quantity
+    reported_by_party = sanitise_boolean(@reported_by_party)
+    if (reported_by_party && (@reported_by == 'importer')) || (!reported_by_party && (@reported_by == 'exporter'))
+      'importer'
+    elsif (reported_by_party && (@reported_by == 'exporter')) || (!reported_by_party && (@reported_by == 'importer'))
+      'exporter'
+    end
+  end
+
+  def country_condition
+    return 'TRUE' unless @country_id
+    reported_by_party = sanitise_boolean(@reported_by_party)
+    "#{@reported_by}_id IN (#{country_id}) AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_id})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_id})))"
   end
 
   def limit
