@@ -4,7 +4,6 @@ module Trade::TradePlusFilters
   ATTRIBUTES = %w[importer exporter origin term
                   source purpose unit year appendix].freeze
 
-
   def response_ordering(response)
     result = {}
     grouped = response.group_by { |r| r['attribute_name'] }
