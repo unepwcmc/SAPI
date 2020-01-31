@@ -10,7 +10,6 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
   searchContext: 'documents'
   autoCompleteTaxonConcept: null
   selectedEventType: null
-  locationsDropdownVisible: true
 
   setFilters: (filtersHash) ->
     if filtersHash.taxon_concept_query == ''
@@ -109,14 +108,9 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
 
     handleDocumentTypeSelection: (documentType) ->
       @set('selectedDocumentType', documentType)
-      if @containsDocTypeOrDocTypeUnselected(@get('identificationDocumentTypes'))
-        @set('locationsDropdownVisible', false)
-        @set('selectedGeoEntities', [])
-        @set('selectedGeoEntitiesIds', [])
 
     handleDocumentTypeDeselection: ->
       @set('selectedDocumentType', null)
-      @set('locationsDropdownVisible', true)
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)

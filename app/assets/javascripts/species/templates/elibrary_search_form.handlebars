@@ -18,7 +18,21 @@
         {{view Species.TaxonConceptSearchView controllerBinding="controller" showSearchButton=false}}
       </div>
     </fieldset>
+
     <fieldset>
+      <div class="documents-control-group">
+        <div class="location-area popup-area">
+          <label>Countries and territories <i class="fa fa-info-circle" title="Including historic names"></i></label>
+          {{view Species.GeoEntitiesSearchButton
+            selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+            loadedBinding="geoEntities.loaded"
+            shortPlaceholder=false
+            taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
+          }}
+          {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+        </div>
+      </div>
+
       <div class="documents-control-group">
         {{single-dropdown
           isVisible=controller.meetingDocTypeDropdownVisible
@@ -90,21 +104,6 @@
           values=controllers.documentTags.proposalOutcomes
           selection=controller.selectedProposalOutcome
         }}
-      </div>
-
-      <div class="documents-control-group">
-        {{#if locationsDropdownVisible}}
-          <div class="location-area popup-area">
-            <label>Countries and territories <i class="fa fa-info-circle" title="Including historic names"></i></label>
-            {{view Species.GeoEntitiesSearchButton
-              selectedGeoEntitiesBinding="controller.selectedGeoEntities"
-              loadedBinding="geoEntities.loaded"
-              shortPlaceholder=false
-              taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
-            }}
-            {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
-          </div>
-        {{/if}}
       </div>
 
       <div class="documents-control-group">
