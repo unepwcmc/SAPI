@@ -20,19 +20,13 @@ class Elibrary::DocumentsIdentificationImporter
       ['DocumentTitle', 'TEXT'],
       ['LanguageName', 'TEXT'],
       ['Master_Document_ID', 'TEXT'],
+      ['Volume', 'INT'],
       ['Type', 'TEXT'],
-      ['DocumentFileName', 'TEXT'],
-      ['Volume', 'TEXT']
+      ['DocumentFileName', 'TEXT']
     ]
   end
 
-  def run_preparatory_queries
-  #   ActiveRecord::Base.connection.execute("DELETE FROM #{table_name} WHERE Type LIKE 'CITES%'")
-  #   ActiveRecord::Base.connection.execute("DELETE FROM #{table_name} WHERE Type LIKE 'Virtual%'")
-  #   ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentTitle = NULL WHERE DocumentTitle='NULL'")
-  #   ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentDate = NULL WHERE DocumentDate='NULL'")
-  #   ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentFileName = NULL WHERE DocumentFileName='NULL'")
-  end
+  def run_preparatory_queries; end
 
   def run_queries
     # insert master documents
