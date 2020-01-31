@@ -888,10 +888,11 @@ body.inner #footer .holder{
   top: 40px;
   background: #f5f5f7;
   border-top: none;
-  width: 938px;
+  width: 838px;
   border-left: solid 1px #adc7de;
   border-right: solid 1px #adc7de;
   border-bottom: solid 1px #D5E0E8;
+  padding: 0 40px 0 60px;
 }
 
 #main .tabset > li > ul >li {
@@ -904,26 +905,13 @@ body.inner #footer .holder{
   padding: 5px 81px 0 0;
 }
 
-#main .tabset > li > ul >li.first {
-  padding-left: 59px;
+#main .tabset > li > ul >li.last {
+  padding-right: 0;
 }
 
 #main .tabset > li.documents-tab > ul > li {
-  padding: 5px 45px 0 0
+  padding: 5px 25px 0 0
 }
-
-#main .tabset > li.documents-tab > ul > li.first {
-  padding-left: 59px;
-}
-
-html.lt-ie9 #main .tabset > li > ul >li.first {
-  padding-left: 30px;
-}
-
-#main .tabset > li > ul >li.last {
-  padding-right: 39px;
-}
-
 
 #main .tabset > li > ul >li > a {
   color: #7CA8C6;
