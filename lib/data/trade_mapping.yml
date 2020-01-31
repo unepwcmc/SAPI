@@ -472,7 +472,7 @@ rules:
       input:
         units: ['YAR']
       output:
-        unit: 'KIL'
+        unit: 'MTR'
         quantity_modifier: '/'
         modifier_value: 1.094
     - rule_no: 17
