@@ -1,6 +1,6 @@
 require Rails.root.join('lib/tasks/elibrary/importable.rb')
 
-class Elibrary::CitationsImporter
+class Elibrary::CitationsManualImporter
   include Elibrary::Importable
 
   def initialize(file_name)
