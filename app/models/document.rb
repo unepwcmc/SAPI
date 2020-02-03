@@ -74,7 +74,7 @@ class Document < ActiveRecord::Base
   end
 
   def is_link?
-    self.type == 'Document::VirtualCollege'
+    (self.elib_legacy_file_name =~ /\.pdf/).nil?
   end
 
   def self.display_name
