@@ -130,12 +130,19 @@ class Trade::Grouping::Base
     condition_attributes.map do |key, value|
       val = get_condition_value(key.to_sym, value)
       column = filtering_attributes[key.to_sym]
-      column = ['taxon_id', 'year', 'appendix'].include?(column) ? column : "LOWER(#{column})"
+      column = (['year', 'appendix'].include?(column) || is_id_column?(column)) ? column : "LOWER(#{column})"
 
       "(#{column} #{val})"
     end.join(' AND ')
   end
 
+  def is_id_column?(column)
+    column.match(/_id(s)?/).present?
+  end
+
+  #TODO This is shared between the ComplianceTool and TradePlus,
+  # so make sure the other tool won't break after making changes for one of them,
+  # or override this function in each related module.
   def get_condition_value(key, value)
     column_name = self.class.filtering_attributes[key.to_sym]
 
@@ -145,22 +152,19 @@ class Trade::Grouping::Base
       when :appendices
         value = value.split(',').map { |v| "'#{v}'" }.join(',')
         return "IN (#{value})"
-      when :unit_name
-        if value == 'Number of items'
-          return 'IS NULL'
-        else
-          value = "'#{value.downcase}'"
-          return "IN (#{value})"
-        end
-      when :source_names, :purpose_names, :origin
+      when /_id(s)?/
         null = []
         values = value.split(',')
-        values.delete_if { |v| null << v if ['Unreported', 'direct'].include? v }
-        value = value.split(',').map { |v| "'#{v.downcase}'" }.join(',')
-        if null.present?
+        values.delete_if { |v| null << v if ['unreported', 'direct', 'items'].include? v.downcase }
+        value = values.join(',')
+        if value.present? && null.present?
           return "IN (#{value}) OR #{column_name} IS NULL"
-        else
+        elsif value.present?
           return "IN (#{value})"
+        elsif null.present?
+          return "IS NULL"
+        else
+          return ''
         end
       else
         value = value.split(',').map { |v| "'#{v.downcase}'" }.join(',')

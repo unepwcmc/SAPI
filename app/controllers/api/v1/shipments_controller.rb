@@ -150,7 +150,8 @@ class Api::V1::ShipmentsController < ApplicationController
       :group_by, :grouping_type, :term_names, :term_ids, :purpose_names, :purpose_ids,
       :source_names, :source_ids, :unit_name, :unit_id, :appendices, :reported_by,
       :taxonomic_level, :taxonomic_group_name, :importer, :exporter, :origin, :taxon_id,
-      :taxonomic_group, :country_id, :reported_by_party
+      :taxonomic_group, :country_ids, :reported_by_party, :unit_ids,
+      :origin_ids, :importer_ids, :exporter_ids
     )
   end
 
