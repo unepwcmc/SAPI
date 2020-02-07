@@ -34,7 +34,7 @@ module Trade::TradePlusFilters
       when 'terms'
         v.map do |value|
           value = JSON.parse(value['data'])
-          value['id'], value['name'] = value['id'].capitalize, value['name'].capitalize
+          value['id'], value['name'] = value['id'], value['name'].capitalize
           _v << value
         end
         _v
@@ -69,7 +69,7 @@ module Trade::TradePlusFilters
   def inner_query
     query = []
     ATTRIBUTES.each do |attr|
-      if %w[term unit year appendix].include? attr
+      if %w[year appendix].include? attr
         query << sub_query([attr, attr], attr.pluralize)
       elsif %w[importer exporter origin].include? attr
         query << sub_query([attr, "#{attr}_id", "#{attr}_iso"], attr.pluralize)

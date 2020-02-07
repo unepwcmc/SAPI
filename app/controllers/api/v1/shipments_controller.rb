@@ -115,8 +115,10 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def set_pagination_headers(data, params)
     data = instance_variable_get("@#{data}").presence
+    # Make sure the count works for both TradeView and ComplianceTool
+    _count = data ? (data.first.is_a?(Array) ? data.count : data.first['total_count']) : 0
     params = send(params)
-    response.headers['X-Total-Count'] = data ? data.first['total_count'].to_s : '0'
+    response.headers['X-Total-Count'] = _count.to_s
     response.headers['X-Page'] = params[:page].to_s.presence || '1'
     response.headers['X-Per-Page'] = params[:per_page].to_s.presence || '25'
   end
@@ -150,7 +152,8 @@ class Api::V1::ShipmentsController < ApplicationController
       :group_by, :grouping_type, :term_names, :term_ids, :purpose_names, :purpose_ids,
       :source_names, :source_ids, :unit_name, :unit_id, :appendices, :reported_by,
       :taxonomic_level, :taxonomic_group_name, :importer, :exporter, :origin, :taxon_id,
-      :taxonomic_group, :country_id, :reported_by_party
+      :taxonomic_group, :country_ids, :reported_by_party, :unit_ids,
+      :origin_ids, :importer_ids, :exporter_ids
     )
   end
 

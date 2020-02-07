@@ -124,5 +124,11 @@ module Sapi
       puts "Procedure: #{view}"
       ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{view}()")
     end
+
+    def self.create_trade_plus_mview_indexes
+      _function = 'create_trade_plus_complete_mview_indexes'
+      puts "Procedure: #{_function}"
+      ActiveRecord::Base.connection.execute("SELECT * FROM #{_function}()")
+    end
   end
 end
