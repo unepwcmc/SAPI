@@ -9,6 +9,14 @@ CREATE OR REPLACE FUNCTION rebuild_trade_plus_complete_mview() RETURNS void
     SELECT *
     FROM trade_plus_complete_view;
 
+    SELECT rebuild_trade_plus_complete_mview_indexes();
+  END
+  $$;
+
+CREATE OR REPLACE FUNCTION create_trade_plus_complete_mview_indexes() RETURNS void
+  LANGUAGE plpgsql
+  AS $$
+  BEGIN
     CREATE UNIQUE INDEX "index_trade_plus_complete_mview_on_id" ON trade_plus_complete_mview (id);
     CREATE INDEX "index_trade_plus_complete_mview_on_appendix" ON trade_plus_complete_mview USING btree (appendix);
     CREATE INDEX "index_trade_plus_complete_mview_on_origin_id" ON trade_plus_complete_mview USING btree (origin_id);
