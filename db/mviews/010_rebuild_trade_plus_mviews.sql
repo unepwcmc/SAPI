@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION rebuild_trade_plus_complete_mview() RETURNS void
     SELECT *
     FROM trade_plus_complete_view;
 
-    SELECT rebuild_trade_plus_complete_mview_indexes();
+    SELECT * FROM create_trade_plus_complete_mview_indexes();
   END
   $$;
 
