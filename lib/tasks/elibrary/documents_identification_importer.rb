@@ -118,7 +118,6 @@ class Elibrary::DocumentsIdentificationImporter
   end
 
   def all_rows_sql
-    byebug
     sql = <<-SQL
       SELECT
         CASE WHEN BTRIM(t.Type) LIKE '%Manual%' THEN 'Document::IdManual'
@@ -137,7 +136,6 @@ class Elibrary::DocumentsIdentificationImporter
   end
 
   def rows_to_insert_sql
-    byebug
     sql = <<-SQL
       SELECT * FROM (
         #{all_rows_sql}

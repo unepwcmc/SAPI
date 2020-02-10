@@ -20,7 +20,20 @@ class Elibrary::CitationsManualImporter
     ]
   end
 
-  def run_preparatory_queries; end
+  def run_preparatory_queries
+    ActiveRecord::Base.connection.execute(
+      <<-SQL
+      BEGIN;
+      CREATE TABLE temp_table (LIKE #{table_name});
+      INSERT INTO temp_table
+        SELECT unnest(string_to_array(splus_taxon_concept_id, ', ')) AS splus_taxon_concept_id, manual_id
+        FROM #{table_name};
+      DROP TABLE #{table_name};
+      ALTER TABLE temp_table RENAME TO #{table_name};
+      COMMIT;
+      SQL
+    )
+  end
 
   def run_queries
 
@@ -48,7 +61,7 @@ class Elibrary::CitationsManualImporter
           created_at,
           updated_at
         )
-        SELECT
+        SELECT DISTINCT
           document_id,
           NOW(),
           NOW()
