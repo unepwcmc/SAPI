@@ -74,7 +74,7 @@ class Document < ActiveRecord::Base
   end
 
   def is_link?
-    self.type == 'Document::VirtualCollege' && (self.elib_legacy_file_name =~ /\.pdf/).nil?
+    self.type == 'Document::VirtualCollege' && !is_pdf?
   end
 
   def self.display_name
@@ -121,6 +121,12 @@ class Document < ActiveRecord::Base
 
   def geo_entity_names
     parse_pg_array(read_attribute(:geo_entity_names) || "").compact
+  end
+
+  private
+
+  def is_pdf?
+    (self.elib_legacy_file_name =~ /\.pdf/).present?
   end
 
 end
