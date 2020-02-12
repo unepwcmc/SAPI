@@ -145,7 +145,9 @@ class Elibrary::DocumentsIdentificationImporter
         AND DocumentFileName IS NOT NULL
         AND DocumentTitle IS NOT NULL
         AND Master_Document_ID IS NULL
+
       EXCEPT
+      
       SELECT
         d.type,
         d.manual_id,

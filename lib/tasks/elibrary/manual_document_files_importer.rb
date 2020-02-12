@@ -19,10 +19,7 @@ class Elibrary::ManualDocumentFilesImporter
 
   def run
     total = Document.count
-    Document.where("type IN ('Document::IdManual', 'Document::VirtualCollege')")
-            .order(:type, :date)
-            .select([:id, :elib_legacy_file_name, :type])
-            .each_with_index do |doc, idx|
+    identification_docs.each_with_index do |doc, idx|
       info_txt = "#{doc.elib_legacy_file_name} (#{idx} of #{total})"
       target_location = @target_dir + "/documents/#{doc.id}/#{doc.elib_legacy_file_name}"
       # check if file exists at target location
@@ -51,5 +48,11 @@ class Elibrary::ManualDocumentFilesImporter
       copy_with_path(source_location, target_location)
       puts "COPIED " + info_txt
     end
+  end
+
+  def identification_docs
+    Document.where("type IN ('Document::IdManual', 'Document::VirtualCollege')")
+            .order(:type, :date)
+            .select([:id, :elib_legacy_file_name, :type])
   end
 end
