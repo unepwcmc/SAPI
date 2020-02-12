@@ -84,6 +84,7 @@ class Elibrary::CitationsManualImporter
       WHERE taxon_concept_id IS NOT NULL
     SQL
     ActiveRecord::Base.connection.execute(sql)
+    ActiveRecord::Base.connection.execute('DROP TABLE IF EXISTS elibrary_citations_resolved_tmp')
   end
 
   def rows_to_insert_sql
@@ -102,7 +103,9 @@ class Elibrary::CitationsManualImporter
       FROM rows_to_insert
       JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
       WHERE taxon_concept_id IS NOT NULL
+
       EXCEPT
+      
       SELECT DISTINCT
         d.id,
         c_tc.taxon_concept_id
