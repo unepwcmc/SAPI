@@ -137,6 +137,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       FROM #{shipments_table}
       WHERE #{@condition} AND #{quantity_field} IS NOT NULL
       GROUP BY #{columns}
+      HAVING ROUND(SUM(#{quantity_field}::FLOAT)) > 0.49
       ORDER BY value DESC
       #{limit}
     SQL
@@ -163,6 +164,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_ids})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_ids})))
       AND #{@condition} AND #{quantity_field} IS NOT NULL
       GROUP BY #{columns} -- exporter if @reported_by = importer and otherway round
+      HAVING ROUND(SUM(#{quantity_field}::FLOAT)) > 0.49
       ORDER BY value DESC
       #{limit}
     SQL
@@ -184,6 +186,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
           FROM #{shipments_table}
           WHERE #{@condition} AND #{quantity_field} IS NOT NULL AND #{country_condition}
           GROUP BY year, #{columns}
+          HAVING ROUND(SUM(#{quantity_field}::FLOAT)) > 0.49
           ORDER BY value DESC
           #{limit}
         ) t
@@ -218,6 +221,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{group_name_condition}
         AND #{country_condition}
         GROUP BY #{taxonomic_level_name}
+        HAVING ROUND(SUM(#{quantity_field}::FLOAT)) > 0.49
         ORDER BY value DESC
         #{limit}
       ) row
