@@ -126,16 +126,40 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     super(group)
   end
 
+  def child_taxa_query(tc_id=nil)
+    return '' if @opts['taxon_id'].blank? && !tc_id
+    tc_id = @opts['taxon_id'] || tc_id
+    <<-SQL
+      WITH RECURSIVE child_taxa AS (
+        SELECT #{tc_id} AS id, 'rank'::varchar AS rank_name
+
+        UNION ALL
+
+        SELECT tc.id, ranks.name
+        FROM taxon_concepts tc
+        JOIN child_taxa ON child_taxa.id = tc.parent_id
+        JOIN ranks ON ranks.id = tc.rank_id
+      )
+    SQL
+  end
+
+  def child_taxa_condition
+    return 'TRUE' unless @opts['taxon_id']
+    "taxon_id IN ( SELECT id FROM child_taxa WHERE LOWER(rank_name) IN ('genus', 'species','subspecies'))"
+  end
+
   def group_query
     columns = @attributes.compact.uniq.join(',')
     quantity_field = "#{@reported_by}_reported_quantity"
     <<-SQL
+      #{child_taxa_query}
       SELECT
         #{sanitise_column_names},
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
       WHERE #{@condition} AND #{quantity_field} IS NOT NULL
+        AND #{child_taxa_condition}
       GROUP BY #{columns}
       ORDER BY value DESC
       #{limit}
@@ -154,6 +178,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     quantity_field = "#{entity_quantity}_reported_quantity"
     columns = @attributes.compact.uniq.join(',')
     <<-SQL
+      #{child_taxa_query}
       SELECT
         #{sanitise_column_names},
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
@@ -162,6 +187,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       WHERE #{@reported_by}_id IN (#{country_ids}) -- @reported_by = importer if importing-from chart, exporter if exporting-to chart
       AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_ids})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_ids})))
       AND #{@condition} AND #{quantity_field} IS NOT NULL
+      AND #{child_taxa_condition}
       GROUP BY #{columns} -- exporter if @reported_by = importer and otherway round
       ORDER BY value DESC
       #{limit}
@@ -180,9 +206,11 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       FROM (
         SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
+          #{child_taxa_query}
           SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
           WHERE #{@condition} AND #{quantity_field} IS NOT NULL AND #{country_condition}
+            AND #{child_taxa_condition}
           GROUP BY year, #{columns}
           ORDER BY value DESC
           #{limit}
@@ -209,6 +237,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     <<-SQL
       SELECT ROW_TO_JSON(row)
       FROM(
+        #{child_taxa_query}
         SELECT
           NULL AS id,
           #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
@@ -217,6 +246,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{group_name_condition}
         AND #{country_condition}
+        AND #{child_taxa_condition}
         GROUP BY #{taxonomic_level_name}
         ORDER BY value DESC
         #{limit}

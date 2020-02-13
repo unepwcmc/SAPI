@@ -130,10 +130,11 @@ class Trade::Grouping::Base
     condition_attributes.map do |key, value|
       val = get_condition_value(key.to_sym, value)
       column = filtering_attributes[key.to_sym]
+      next if column == 'taxon_id' && @opts['taxon_id'].present?
       column = (['year', 'appendix'].include?(column) || is_id_column?(column)) ? column : "LOWER(#{column})"
 
       "(#{column} #{val})"
-    end.join(' AND ')
+    end.compact.join(' AND ')
   end
 
   def is_id_column?(column)
