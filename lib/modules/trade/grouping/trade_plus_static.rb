@@ -130,22 +130,25 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     return '' if @opts['taxon_id'].blank? && !tc_id
     tc_id = @opts['taxon_id'] || tc_id
     <<-SQL
-      WITH RECURSIVE child_taxa AS (
-        SELECT #{tc_id} AS id, 'rank'::varchar AS rank_name
+      WITH RECURSIVE selected_taxa AS (
+        SELECT UNNEST(ARRAY[#{tc_id}]) AS id
+      ),
+      child_taxa AS (
+        SELECT id
+        FROM selected_taxa
 
         UNION ALL
 
-        SELECT tc.id, ranks.name
+        SELECT tc.id
         FROM taxon_concepts tc
         JOIN child_taxa ON child_taxa.id = tc.parent_id
-        JOIN ranks ON ranks.id = tc.rank_id
       )
     SQL
   end
 
   def child_taxa_condition
-    return 'TRUE' unless @opts['taxon_id']
-    "taxon_id IN ( SELECT id FROM child_taxa WHERE LOWER(rank_name) IN ('genus', 'species','subspecies'))"
+    return 'TRUE' if @opts['taxon_id'].blank?
+    "taxon_id IN ( SELECT DISTINCT(id) FROM child_taxa )"
   end
 
   def group_query
