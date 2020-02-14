@@ -294,4 +294,10 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
     per_page > 0 ? "LIMIT #{pagination[:per_page]} OFFSET #{offset}" : ''
   end
+
+  # Used in the base class to skip taxon_id equality check
+  # as it will be managed by the child_taxa recursive query
+  def skip_taxon_id?
+    @opts['taxon_id'].present?
+  end
 end
