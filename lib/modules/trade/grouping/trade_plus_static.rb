@@ -215,7 +215,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
           NULL AS id,
           #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
           ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
-          #{ancestors_list(taxonomic_level)}
+          #{ancestors_list(taxonomic_level)},
           COUNT(*) OVER () AS total_count
         FROM #{shipments_table}
         WHERE #{@condition} AND #{quantity_field} IS NOT NULL #{group_name_condition}
@@ -231,16 +231,16 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def ancestors_ranks(taxonomic_level)
     taxa = ['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'taxon']
     current_idx = taxa.index(taxonomic_level) || 0
-    0.upto(current_idx - 1).map do |i|
+    0.upto(current_idx).map do |i|
       taxa[i]
     end
   end
 
   def ancestors_list(taxonomic_level)
-    return 'TRUE,' if taxonomic_level == 'kingdom'
+    return 'kingdom_name' if taxonomic_level == 'kingdom'
     ancestors_ranks(taxonomic_level).map do |rank|
       "#{rank}_name"
-    end.join(',') + ","
+    end.join(',')
   end
 
   def sanitise_column_names
