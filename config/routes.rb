@@ -227,6 +227,7 @@ SAPI::Application.routes.draw do
       end
     end
     resources :timelines, :only => [:index]
+    resources :documents, :only => [:index, :show]
   end
 
   # The priority is based upon order of creation:
