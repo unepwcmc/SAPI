@@ -88,7 +88,7 @@ class DocumentSearch
     @query = @query.search_by_title(@title_query) if @title_query.present?
 
     if @document_type.present?
-      @query = @query.where('document_type' => @document_type)
+      @query = @query.where('document_type IN (?)', @document_type.split(','))
     end
 
     if admin_interface?
@@ -184,7 +184,8 @@ class DocumentSearch
           ROW(
             documents.id,
             documents.title,
-            documents.language
+            documents.language,
+            #{locale_document}
           )::document_language_version
         )
       ) AS document_language_versions
@@ -193,6 +194,25 @@ class DocumentSearch
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
     @query = @query.order('date_raw DESC, MAX(sort_index), MAX(title)')
+  end
+
+  def locale_document
+    <<-SQL
+      CASE
+      WHEN documents.language = '#{@language.upcase}' AND '#{@language}' = 'en'
+      THEN 'true'
+      WHEN documents.language != '#{@language.upcase}' AND '#{@language}' = 'en'
+      THEN 'false'
+      WHEN '#{@language}' != 'en' THEN
+        CASE
+        WHEN documents.language = '#{@language.upcase}'
+        THEN 'true'
+        WHEN documents.language = 'EN'
+        THEN 'default'
+        ELSE 'false'
+        END
+      END
+    SQL
   end
 
   REFRESH_INTERVAL = 5
