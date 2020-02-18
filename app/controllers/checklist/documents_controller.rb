@@ -1,7 +1,6 @@
 class Checklist::DocumentsController < ApplicationController
 
   def index
-    byebug
     return render :json => []  if params[:taxon_concepts_ids].nil?
     return render :json => []  unless params[:taxon_concepts_ids].kind_of?(Array)
     params[:taxon_concepts_ids].map do |tc_id|
