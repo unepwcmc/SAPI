@@ -197,6 +197,7 @@ class DocumentSearch
   end
 
   def locale_document
+    return 'TRUE' unless @language.present?
     <<-SQL
       CASE
       WHEN documents.language = '#{@language.upcase}' AND '#{@language}' = 'en'
