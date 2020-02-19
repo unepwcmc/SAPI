@@ -1,8 +1,8 @@
 class Checklist::DocumentSerializer < ActiveModel::Serializer
-  attributes :document_type, { date_formatted: :date }, :is_public,
-    :primary_document_id, :taxon_names,
+  attributes :document_type, { date_formatted: :date },
+    :primary_document_id, :taxon_concept_ids, :taxon_names,
     :geo_entity_names, :locale_document,
-    :document_language_versions
+    :document_language_versions, :is_public
   include PgArrayParser
 
   def document_type
@@ -19,4 +19,7 @@ class Checklist::DocumentSerializer < ActiveModel::Serializer
     doc
   end
 
+  def taxon_concept_ids
+    object.taxon_names.map { |tn| MTaxonConcept.find_by_full_name(tn).id }
+  end
 end
