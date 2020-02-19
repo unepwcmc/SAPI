@@ -69,7 +69,7 @@ class Checklist::DocumentsController < ApplicationController
 
     send_file t.path,
       :type => "application/zip",
-      :filename => "elibrary-documents.zip"
+      :filename => "identifications-documents.zip"
 
     t.close
   end
