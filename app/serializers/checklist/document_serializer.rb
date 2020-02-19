@@ -16,6 +16,7 @@ class Checklist::DocumentSerializer < ActiveModel::Serializer
   def locale_document
     doc = document_language_versions.select { |h| h['locale_document'] == 'true' }
     doc = document_language_versions.select { |h| h['locale_document'] == 'default' } if doc.empty?
+    doc
   end
 
 end

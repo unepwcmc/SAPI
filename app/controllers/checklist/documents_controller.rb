@@ -3,11 +3,9 @@ class Checklist::DocumentsController < ApplicationController
   def index
     return render :json => []  if params[:taxon_concepts_ids].nil?
     return render :json => []  unless params[:taxon_concepts_ids].kind_of?(Array)
-    params[:taxon_concepts_ids].map do |tc_id|
-      @search = DocumentSearch.new(
-        params.merge(show_private: !access_denied?, per_page: 100), 'public'
-      )
-    end
+    @search = DocumentSearch.new(
+      params.merge(show_private: !access_denied?, per_page: 100), 'public'
+    )
 
     render :json => @search.cached_results,
       each_serializer: Checklist::DocumentSerializer,
