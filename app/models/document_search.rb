@@ -76,7 +76,7 @@ class DocumentSearch
       @query = @query.where(
         <<-SQL
           event_type IS NULL
-          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'CitesTc', 'CitesExtraordinaryMeeting')
+          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'CitesTc', 'CitesExtraordinaryMeeting', 'IdManual')
         SQL
       )
     else
