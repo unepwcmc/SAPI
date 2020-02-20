@@ -4,7 +4,7 @@ class Checklist::DocumentsController < ApplicationController
     return render :json => []  if params[:taxon_concepts_ids].nil?
     return render :json => []  unless params[:taxon_concepts_ids].kind_of?(Array)
     @search = DocumentSearch.new(
-      params.merge(show_private: !access_denied?, per_page: 100), 'public'
+      params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
     )
 
     render :json => @search.cached_results,
@@ -42,7 +42,27 @@ class Checklist::DocumentsController < ApplicationController
   def download_zip
     require 'zip'
 
-    @documents = Document.find(params[:ids].split(','))
+    # retrieve the same taxa as shown in the page
+    params[:taxon_concepts_ids] =
+      MTaxonConcept.by_cites_eu_taxonomy
+                   .without_non_accepted
+                   .without_hidden
+                   .by_name(
+                      params[:taxon_name],
+                      { :synonyms => true, :common_names => true, :subspecies => false }
+                     )
+                   .pluck(:id)
+
+    #retrieve all the children taxa given a taxon(included)
+    params[:taxon_concepts_ids] = descendants_ids(params[:taxon_concept_id])
+
+    docs = DocumentSearch.new(
+      params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
+    )
+
+    doc_ids = docs.cached_results.map { |doc| locale_document(doc).first['id'] }
+
+    @documents = Document.find(doc_ids.split(','))
 
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
@@ -88,6 +108,36 @@ class Checklist::DocumentsController < ApplicationController
   def render_403
     render file: "#{Rails.root}/public/403", layout: false, formats: [:html],
     status: 403
+  end
+
+  def document_language_versions(doc)
+    JSON.parse(doc.document_language_versions)
+  end
+
+  def locale_document(doc)
+    document = document_language_versions(doc).select { |h| h['locale_document'] == 'true' }
+    document = document_language_versions(doc).select { |h| h['locale_document'] == 'default' } if document.empty?
+    document
+  end
+
+  def descendants_ids(taxon_concept)
+    subquery = <<-SQL
+      WITH RECURSIVE descendents AS (
+        SELECT id
+        FROM taxon_concepts_mview
+        WHERE parent_id = #{taxon_concept.id}
+        AND taxonomy_is_cites_eu = 't'
+        AND name_status IN ('A', 'H')
+        AND cites_show = 't'
+        UNION ALL
+        SELECT taxon_concepts.id
+        FROM taxon_concepts_mview taxon_concepts
+        JOIN descendents h ON h.id = taxon_concepts.parent_id
+      )
+      SELECT * FROM descendents
+    SQL
+    res = ActiveRecord::Base.connect.execute(subquery)
+    res.ntuples.zero? ? [taxon_concept.id] : res.map(&:values).flatten << taxon_concept.id
   end
 
 end
