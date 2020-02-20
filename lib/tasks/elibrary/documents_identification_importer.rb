@@ -42,6 +42,7 @@ class Elibrary::DocumentsIdentificationImporter
         DocumentFileName AS filename,
         DocumentFileName,
         DocumentIsPubliclyAccessible,
+        EventId,
         lng.id AS language_id,
         Volume
         FROM rows_to_insert
@@ -56,6 +57,7 @@ class Elibrary::DocumentsIdentificationImporter
         filename,
         elib_legacy_file_name,
         is_public,
+        event_id,
         language_id,
         volume,
         created_at,
@@ -80,6 +82,7 @@ class Elibrary::DocumentsIdentificationImporter
         DocumentFileName AS filename,
         DocumentFileName,
         DocumentIsPubliclyAccessible,
+        EventId,
         lng.id AS language_id,
         rows_to_insert.Volume,
         master_documents.id AS primary_language_document_id
@@ -102,6 +105,7 @@ class Elibrary::DocumentsIdentificationImporter
         filename,
         elib_legacy_file_name,
         is_public,
+        event_id,
         language_id,
         volume,
         primary_language_document_id,
@@ -118,6 +122,7 @@ class Elibrary::DocumentsIdentificationImporter
   end
 
   def all_rows_sql
+    event = Event.where(name: 'Identification Manual').first_or_create { |e| e.type = 'IdManual' }
     sql = <<-SQL
       SELECT
         CASE WHEN BTRIM(t.Type) LIKE '%Manual%' THEN 'Document::IdManual'
@@ -128,6 +133,7 @@ class Elibrary::DocumentsIdentificationImporter
         TO_DATE(DocumentDate::TEXT, 'YYYY-MM-DD') AS DocumentDate,
         BTRIM(DocumentFileName) AS DocumentFileName,
         TRUE AS DocumentIsPubliclyAccessible,
+        #{event.id} AS EventId,
         LanguageName,
         Master_Document_ID,
         Volume
@@ -147,7 +153,7 @@ class Elibrary::DocumentsIdentificationImporter
         AND Master_Document_ID IS NULL
 
       EXCEPT
-      
+
       SELECT
         d.type,
         d.manual_id,
@@ -155,6 +161,7 @@ class Elibrary::DocumentsIdentificationImporter
         d.date,
         d.elib_legacy_file_name,
         d.is_public,
+        e.id,
         lng.iso_code1,
         NULL,
         d.volume
@@ -163,6 +170,7 @@ class Elibrary::DocumentsIdentificationImporter
       ) nd
       JOIN documents d ON d.manual_id = nd.Manual_ID
       LEFT JOIN languages lng ON lng.id = d.language_id
+      LEFT JOIN events e ON e.id = d.event_id
     SQL
   end
 
