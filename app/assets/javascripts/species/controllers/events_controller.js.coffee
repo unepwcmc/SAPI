@@ -17,6 +17,10 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     {
       id: 'EcSrg',
       name: 'EU Scientific Review Group'
+    },
+    {
+      id: 'IdManual',
+      name: 'Identification Manual'
     }
   ]
 
