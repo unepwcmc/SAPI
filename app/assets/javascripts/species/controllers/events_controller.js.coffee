@@ -17,10 +17,6 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     {
       id: 'EcSrg',
       name: 'EU Scientific Review Group'
-    },
-    {
-      id: 'IdManual',
-      name: 'Identification Manual'
     }
   ]
 
@@ -88,7 +84,7 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
   identificationDocumentTypes: [
     {
       id: 'Document::IdManual',
-      name: 'CITES Identification Manual'
+      name: 'CITES ID Manual'
     },
     {
       id: 'Document::VirtualCollege',
