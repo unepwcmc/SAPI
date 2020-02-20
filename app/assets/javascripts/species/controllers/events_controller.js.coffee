@@ -88,7 +88,7 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     },
     {
       id: 'Document::VirtualCollege',
-      name: 'CITES Virtual College'
+      name: 'Other identification materials'
     }
   ]
 
