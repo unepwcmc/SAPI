@@ -130,10 +130,17 @@ class Trade::Grouping::Base
     condition_attributes.map do |key, value|
       val = get_condition_value(key.to_sym, value)
       column = filtering_attributes[key.to_sym]
+      # taxon_id equality check can be skipped as this is also managed through the recursive child_taxa query
+      # in TradeVis
+      next if column == 'taxon_id' && skip_taxon_id?
       column = (['year', 'appendix'].include?(column) || is_id_column?(column)) ? column : "LOWER(#{column})"
 
       "(#{column} #{val})"
-    end.join(' AND ')
+    end.compact.join(' AND ')
+  end
+
+  def skip_taxon_id?
+    raise NotImplementedError
   end
 
   def is_id_column?(column)

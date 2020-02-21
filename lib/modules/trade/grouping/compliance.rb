@@ -341,4 +341,10 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     query_imp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE importer_id = #{id} AND year = #{year}"
     db.execute(query_imp).values.flatten.first.to_i
   end
+
+  # Used in the base class to not skip taxon_id equality check.
+  # It can be skipped by other groupings
+  def skip_taxon_id?
+    false
+  end
 end
