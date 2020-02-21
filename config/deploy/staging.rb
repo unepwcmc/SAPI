@@ -5,7 +5,7 @@ server "sapi-staging.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
 
 set :domain, "sapi-staging.linode.unep-wcmc.org"
 
-set :application, "sapi"
+set :application, "sapi_id_manual"
 
 set :server_name, "#{fetch(:application)}.#{fetch(:domain)}"
 
