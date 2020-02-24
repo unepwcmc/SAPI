@@ -32,9 +32,11 @@ class Api::V1::DocumentsController < ApplicationController
 
   def show
     @document = Document.find(params[:id])
-    path_to_file = @document.filename.path
+    path_to_file = @document.filename.path unless @document.is_link?
     if access_denied? && !@document.is_public
       render_403
+    elsif @document.is_link?
+      redirect_to @document.filename
     elsif !File.exists?(path_to_file)
       render_404
     else
