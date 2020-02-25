@@ -68,6 +68,23 @@
           species=controllers.elibrarySearch.taxonConceptQuery
           isSignedIn=controllers.elibrarySearch.isSignedIn
           }}
+   
+        {{documents-results-header
+          isVisible=controller.idManualDocsPresent
+          meetingType="Identification materials"
+          documents=controller.idManualDocuments
+          }}
+        {{documents-results
+          isVisible=controller.idManualDocsPresent
+          eventType="IdManual"
+          dataController=controller
+          documents=controller.idManualDocuments.docs
+          loadMore=controller.idManualDocsLoadMore
+          block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
+          isSignedIn=controllers.elibrarySearch.isSignedIn
+          }}
 
         {{documents-results-header
           isVisible=controller.euSrgDocsPresent
@@ -88,12 +105,12 @@
 
         {{documents-results-header
           isVisible=controller.otherDocsPresent
-          meetingType="Intersessional documents"
+          meetingType="Other documents"
           documents=controller.otherDocuments
           }}
         {{documents-results
           isVisible=controller.otherDocsPresent
-          eventType="other"
+          eventType="Other"
           dataController=controller
           documents=controller.otherDocuments.docs
           loadMore=controller.otherDocsLoadMore

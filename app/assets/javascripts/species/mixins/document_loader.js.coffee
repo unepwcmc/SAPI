@@ -1,15 +1,21 @@
+EVENT_TYPES = ['EcSrg', 'CitesCop', 'CitesAc,CitesTc', 'CitesPc', 'IdManual', 'Other']
+
 Species.DocumentLoader = Ember.Mixin.create
+  eventTypes: EVENT_TYPES
+
   euSrgDocuments: {}
   citesCopProposalsDocuments: {}
   citesAcDocuments: {}
   citesPcDocuments: {}
   otherDocuments: {}
+  idManualDocuments: {}
 
   euSrgDocsIsLoading: true
   citesCopProposalsDocsIsLoading: true
   citesAcDocsIsLoading: true
   citesPcDocsIsLoading: true
   otherDocsIsLoading: true
+  idManualDocsIsLoading: true
 
   euSrgDocsTotal: ( ->
     @get('euSrgDocuments.meta.total')
@@ -61,17 +67,29 @@ Species.DocumentLoader = Ember.Mixin.create
     @get('otherDocuments.docs.length') < @get('otherDocsTotal')
   ).property('otherDocuments.docs.length', 'otherDocsTotal')
 
+  idManualDocsTotal: ( ->
+    @get('idManualDocuments.meta.total')
+  ).property('idManualDocuments.meta.total')
+  idManualDocsPresent: ( ->
+    @get('idManualDocsTotal') > 0
+  ).property('idManualDocsTotal')
+  idManualDocsLoadMore: ( ->
+    @get('idManualDocuments.docs.length') < @get('idManualDocsTotal')
+  ).property('idManualDocuments.docs.length', 'idManualDocsTotal')
+
   anyDocumentsPresent: ( ->
     @get('euSrgDocsPresent') ||
     @get('citesCopProposalsDocsPresent') ||
     @get('citesAcDocsPresent') ||
     @get('citesPcDocsPresent') ||
+    @get('idManualDocsPresent') ||
     @get('otherDocsPresent')
   ).property(
     'euSrgDocsPresent',
     'citesCopProposalsDocsPresent',
     'citesAcDocsPresent',
     'citesPcDocsPresent',
+    'idManualDocsPresent',
     'otherDocsPresent'
   )
 
@@ -80,12 +98,14 @@ Species.DocumentLoader = Ember.Mixin.create
     @get('citesCopProposalsDocsIsLoading') ||
     @get('citesAcDocsIsLoading') ||
     @get('citesPcDocsIsLoading') ||
+    @get('idManualDocsIsLoading') ||
     @get('otherDocsIsLoading')
   ).property(
     'euSrgDocsIsLoading',
     'citesCopProposalsDocsIsLoading',
     'citesAcDocsIsLoading',
     'citesPcDocsIsLoading',
+    'idManualDocsIsLoading',
     'otherDocsIsLoading'
   )
 
@@ -108,6 +128,10 @@ Species.DocumentLoader = Ember.Mixin.create
   citesOtherDocsObserver: ( ->
     @set('otherDocsIsLoading', false)
   ).observes('otherDocuments.docs.@each.didLoad')
+
+  citesIdentificationDocsObserver: ( ->
+    @set('idManualDocsIsLoading', false)
+  ).observes('idManualDocuments.docs.@each.didLoad')
 
   loadDocuments: (params, onSuccess) =>
     $.ajax(
@@ -139,6 +163,7 @@ Species.DocumentLoader = Ember.Mixin.create
       when 'CitesAc', 'CitesTc', 'CitesAc,CitesTc' then 'CitesAc'
       when 'CitesPc' then 'CitesPc'
       when 'EcSrg' then 'EuSrg'
+      when 'IdManual' then 'IdManual'
       else 'Other'
 
   actions:
