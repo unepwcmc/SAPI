@@ -18,11 +18,11 @@ class DocumentSearchParams < Hash
         sanitise_positive_integer(params['proposal_outcome_id']),
         sanitise_positive_integer(params['review_phase_id'])
       ].compact,
+      general_subtype: params['general_subtype'],
       show_private: sanitise_boolean(params[:show_private], false),
       page: sanitise_positive_integer(params[:page], 1),
       per_page: sanitise_positive_integer(params[:per_page], 25)
     }
-
     super(sanitized_params)
     self.merge!(sanitized_params)
   end

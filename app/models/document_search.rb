@@ -99,6 +99,10 @@ class DocumentSearch
         @query = @query.where("documents.date <= ?", @document_date_end)
       end
     end
+
+    if @general_subtype.present?
+      @query = @query.where('general_subtype IN (?)', @general_subtype.split(',').flatten)
+    end
   end
 
   def add_extra_conditions
