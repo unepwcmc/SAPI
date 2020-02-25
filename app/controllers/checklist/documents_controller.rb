@@ -38,29 +38,31 @@ class Checklist::DocumentsController < ApplicationController
     end
   end
 
- #TODO  refactor to retrieve parents documents as well
   def download_zip
     require 'zip'
 
-    # retrieve the same taxa as shown in the page
     params[:taxon_concepts_ids] =
-      MTaxonConcept.by_cites_eu_taxonomy
-                   .without_non_accepted
-                   .without_hidden
-                   .by_name(
-                      params[:taxon_name],
-                      { :synonyms => true, :common_names => true, :subspecies => false }
-                     )
-                   .pluck(:id)
-
-    #retrieve all the children taxa given a taxon(included)
-    params[:taxon_concepts_ids] = descendants_ids(params[:taxon_concept_id])
+      if params[:taxon_name].present?
+        # retrieve the same taxa as shown in the page
+        MTaxonConcept.by_cites_eu_taxonomy
+                     .without_non_accepted
+                     .without_hidden
+                     .by_name(
+                        params[:taxon_name],
+                        { :synonyms => true, :common_names => true, :subspecies => false }
+                       )
+                     .pluck(:id)
+      elsif params[:taxon_concept_id].present?
+        #retrieve all the children taxa given a taxon(included)
+        descendants_ids(params[:taxon_concept_id])
+      end
 
     docs = DocumentSearch.new(
       params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
     )
 
-    doc_ids = docs.cached_results.map { |doc| locale_document(doc).first['id'] }
+    doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
+    doc_ids = doc_ids.map{ |d| d['id'] }
 
     @documents = Document.find(doc_ids.split(','))
 
@@ -125,7 +127,7 @@ class Checklist::DocumentsController < ApplicationController
       WITH RECURSIVE descendents AS (
         SELECT id
         FROM taxon_concepts_mview
-        WHERE parent_id = #{taxon_concept.id}
+        WHERE parent_id = #{taxon_concept.to_i}
         AND taxonomy_is_cites_eu = 't'
         AND name_status IN ('A', 'H')
         AND cites_show = 't'
@@ -136,8 +138,8 @@ class Checklist::DocumentsController < ApplicationController
       )
       SELECT * FROM descendents
     SQL
-    res = ActiveRecord::Base.connect.execute(subquery)
-    res.ntuples.zero? ? [taxon_concept.id] : res.map(&:values).flatten << taxon_concept.id
+    res = ActiveRecord::Base.connection.execute(subquery)
+    res.ntuples.zero? ? [taxon_concept.to_i] : res.map(&:values).flatten << taxon_concept.to_i
   end
 
 end
