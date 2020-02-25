@@ -22,6 +22,7 @@ class Elibrary::DocumentsIdentificationImporter
       ['Master_Document_ID', 'TEXT'],
       ['Volume', 'INT'],
       ['Type', 'TEXT'],
+      ['GeneralSubType', 'TEXT'],
       ['DocumentFileName', 'TEXT']
     ]
   end
@@ -36,6 +37,7 @@ class Elibrary::DocumentsIdentificationImporter
       ), rows_to_insert_resolved AS (
         SELECT
         Type,
+        GeneralSubType,
         Manual_ID,
         DocumentTitle,
         DocumentDate,
@@ -51,6 +53,7 @@ class Elibrary::DocumentsIdentificationImporter
 
       INSERT INTO "documents" (
         type,
+        general_subtype,
         manual_id,
         title,
         date,
@@ -76,6 +79,7 @@ class Elibrary::DocumentsIdentificationImporter
       WITH rows_with_master_document_id AS (
         SELECT
         rows_to_insert.Type,
+        rows_to_insert.GeneralSubType,
         rows_to_insert.Manual_ID,
         DocumentTitle,
         DocumentDate,
@@ -99,6 +103,7 @@ class Elibrary::DocumentsIdentificationImporter
 
       INSERT INTO "documents" (
         type,
+        general_subtype,
         manual_id,
         title,
         date,
@@ -128,6 +133,9 @@ class Elibrary::DocumentsIdentificationImporter
         CASE WHEN BTRIM(t.Type) LIKE '%Manual%' THEN 'Document::IdManual'
              WHEN BTRIM(t.Type) LIKE '%Virtual%' THEN 'Document::VirtualCollege'
         END AS Type,
+        CASE WHEN BTRIM(t.GeneralSubType) LIKE '%General%' THEN TRUE
+             WHEN BTRIM(t.GeneralSubType) LIKE '%Part%' THEN FALSE
+        END AS GeneralSubType,
         Manual_ID,
         BTRIM(DocumentTitle) AS DocumentTitle,
         TO_DATE(DocumentDate::TEXT, 'YYYY-MM-DD') AS DocumentDate,
@@ -156,6 +164,7 @@ class Elibrary::DocumentsIdentificationImporter
 
       SELECT
         d.type,
+        d.general_subtype,
         d.manual_id,
         d.title,
         d.date,
