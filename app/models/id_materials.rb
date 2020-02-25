@@ -25,7 +25,7 @@
 
 # Cites Animal Committee
 
-class IdManual < Event
+class IdMaterials < Event
 
   def self.elibrary_document_types
     [

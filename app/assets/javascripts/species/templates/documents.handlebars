@@ -68,18 +68,18 @@
           species=controllers.elibrarySearch.taxonConceptQuery
           isSignedIn=controllers.elibrarySearch.isSignedIn
           }}
-   
+
         {{documents-results-header
-          isVisible=controller.idManualDocsPresent
+          isVisible=controller.idMaterialsDocsPresent
           meetingType="Identification materials"
-          documents=controller.idManualDocuments
+          documents=controller.idMaterialsDocuments
           }}
         {{documents-results
-          isVisible=controller.idManualDocsPresent
-          eventType="IdManual"
+          isVisible=controller.idMaterialsDocsPresent
+          eventType="IdMaterials"
           dataController=controller
-          documents=controller.idManualDocuments.docs
-          loadMore=controller.idManualDocsLoadMore
+          documents=controller.idMaterialsDocuments.docs
+          loadMore=controller.idMaterialsDocsLoadMore
           block=true
           searchContext="documents"
           species=controllers.elibrarySearch.taxonConceptQuery

@@ -68,5 +68,5 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     controller.set('citesCopProposalsDocuments', {})
     controller.set('citesAcDocuments', {})
     controller.set('citesPcDocuments', {})
-    controller.set('idManualDocuments', {})
+    controller.set('idMaterialsDocuments', {})
     controller.set('otherDocuments', {})

@@ -127,7 +127,7 @@ class Elibrary::DocumentsIdentificationImporter
   end
 
   def all_rows_sql
-    event = Event.where(name: 'Identification Manual').first_or_create { |e| e.type = 'IdManual' }
+    event = Event.where(name: 'Identification Materials').first_or_create { |e| e.type = 'IdMaterials' }
     sql = <<-SQL
       SELECT
         CASE WHEN BTRIM(t.Type) LIKE '%Manual%' THEN 'Document::IdManual'
