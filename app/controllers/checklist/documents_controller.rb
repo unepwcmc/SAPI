@@ -66,32 +66,32 @@ class Checklist::DocumentsController < ApplicationController
 
     @documents = Document.find(doc_ids.split(','))
 
-    t = Tempfile.new('tmp-zip-' + request.remote_ip)
-    missing_files = []
-    Zip::OutputStream.open(t.path) do |zos|
-      @documents.each do |document|
-        path_to_file = document.filename.path
-        filename = path_to_file.split('/').last
-        unless File.exists?(path_to_file)
-          missing_files <<
-            "{\n  title: #{document.title},\n  filename: #{filename}\n}"
-        else
-          zos.put_next_entry(filename)
-          zos.print IO.read(path_to_file)
-        end
-      end
-      if missing_files.present?
-        if missing_files.length == @documents.count
-          render_404 && return
-        end
-        zos.put_next_entry('missing_files.txt')
-        zos.print missing_files.join("\n\n")
-      end
-    end
+    t = zip_file_generator
 
     send_file t.path,
       :type => "application/zip",
       :filename => "identifications-documents.zip"
+
+    t.close
+  end
+
+  def volume_download
+    require 'zip'
+
+    docs = DocumentSearch.new(
+      params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
+    )
+
+    doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
+    doc_ids = doc_ids.map{ |d| d['id'] }
+
+    @documents = Document.find(doc_ids.split(','))
+
+    t = zip_file_generator #TODO move this to a background job
+
+    send_file t.path,
+      :type => "application/zip",
+      :filename => "identifications-documents-volume.zip"
 
     t.close
   end
@@ -142,4 +142,29 @@ class Checklist::DocumentsController < ApplicationController
     res.ntuples.zero? ? [taxon_concept.to_i] : res.map(&:values).flatten << taxon_concept.to_i
   end
 
+  def zip_file_generator
+    t = Tempfile.new('tmp-zip-' + request.remote_ip)
+    missing_files = []
+    Zip::OutputStream.open(t.path) do |zos|
+      @documents.each do |document|
+        path_to_file = document.filename.path
+        filename = path_to_file.split('/').last
+        unless File.exists?(path_to_file)
+          missing_files <<
+            "{\n  title: #{document.title},\n  filename: #{filename}\n}"
+        else
+          zos.put_next_entry(filename)
+          zos.print IO.read(path_to_file)
+        end
+      end
+      if missing_files.present?
+        if missing_files.length == @documents.count
+          render_404 && return
+        end
+        zos.put_next_entry('missing_files.txt')
+        zos.print missing_files.join("\n\n")
+      end
+    end
+    t
+  end
 end
