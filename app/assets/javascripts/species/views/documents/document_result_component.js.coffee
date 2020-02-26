@@ -57,4 +57,4 @@ Species.DocumentResultComponent = Ember.Component.extend
         eventValue: 1
       }
       ga('send', trackingInfo)
-      window.location = url
+      window.open(url, '_blank')
