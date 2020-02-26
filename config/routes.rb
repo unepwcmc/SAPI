@@ -230,6 +230,7 @@ SAPI::Application.routes.draw do
     resources :documents do
       collection do
         get 'download_zip'
+        get 'volume_download'
       end
     end
   end

@@ -91,6 +91,10 @@ class DocumentSearch
       @query = @query.where('document_type IN (?)', @document_type.split(','))
     end
 
+    if @volume.present?
+      @query = @query.where('volume IN (?)', @volume)
+    end
+
     if admin_interface?
       if !@document_date_start.blank?
         @query = @query.where("documents.date >= ?", @document_date_start)
