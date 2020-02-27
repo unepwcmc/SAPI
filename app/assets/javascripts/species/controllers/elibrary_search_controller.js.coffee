@@ -22,11 +22,24 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     if filtersHash.title_query == ''
       filtersHash.title_query = null
     @set('titleQuery', filtersHash.title_query)
-    @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
+
+    allEventTypes = @get('controllers.events.eventTypes')
+    allEventTypes.push(@get('controllers.events.idMaterialsEvent')) 
+
+    @set('selectedEventType', allEventTypes.findBy('id', filtersHash.event_type))
     @set('selectedEventsIds', filtersHash.events_ids || [])
-    allDocumentTypes = @get('controllers.events.documentTypes').concat @get('controllers.events.interSessionalDocumentTypes')
+
+    allDocumentTypes = @get('controllers.events.documentTypes')
+      .concat @get('controllers.events.interSessionalDocumentTypes')
+      .concat @get('controllers.events.identificationDocumentTypes')
+    
     @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
-    @set('selectedProposalOutcomeId', filtersHash.proposal_outcome_id)
+    @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
+
+    @set('selectedGeneralSubType', 
+      @get('controllers.events.generalSubTypes')
+        .findBy('id', if filtersHash.general_subtype == 'true' then 'general' else 'parts'))
+
     @set('selectedReviewPhaseId', filtersHash.review_phase_id)
 
   getFilters: ->
@@ -35,8 +48,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     if @get('titleQuery') && @get('titleQuery').length > 0
       titleQuery = @get('titleQuery')
     if @get('selectedGeneralSubType')
-      isGeneralSubType = @get('selectedGeneralSubType.id') == 'general'
-    
+      isGeneralSubType = (@get('selectedGeneralSubType.id') == 'general').toString()
     {
       taxon_concept_query: taxonConceptQuery,
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id'),
