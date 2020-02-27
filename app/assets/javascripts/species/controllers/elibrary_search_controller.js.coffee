@@ -11,6 +11,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
   autoCompleteTaxonConcept: null
   selectedEventType: null
   locationsDropdownVisible: true
+  keywordSearchVisible: true
 
   setFilters: (filtersHash) ->
     if filtersHash.taxon_concept_query == ''
@@ -103,12 +104,19 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     return contains
   )
 
+  toggleKeywordSearch: ((isVisible) ->
+    @set('keywordSearchVisible', isVisible)
+    if !isVisible
+      @set('titleQuery', '')
+  )
+
   actions:
     openSearchPage:->
       @transitionToRoute('documents', {queryParams: @getFilters()})
 
     handleDocumentTypeSelection: (documentType) ->
       @set('selectedDocumentType', documentType)
+      @toggleKeywordSearch(documentType.id != 'Document::VirtualCollege')
       if @containsDocTypeOrDocTypeUnselected(@get('identificationDocumentTypes'))
         @set('locationsDropdownVisible', false)
         @set('selectedGeoEntities', [])
@@ -117,6 +125,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     handleDocumentTypeDeselection: ->
       @set('selectedDocumentType', null)
       @set('locationsDropdownVisible', true)
+      @toggleKeywordSearch(true)
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)
@@ -134,3 +143,4 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       @set('selectedDocumentType', null)
       @set('selectedInterSessionalDocType', null)
       @set('selectedProposalOutcome', null)
+      @toggleKeywordSearch(true)
