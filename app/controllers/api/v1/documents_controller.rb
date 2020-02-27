@@ -45,7 +45,7 @@ class Api::V1::DocumentsController < ApplicationController
         path_to_file,
           :filename => File.basename(path_to_file),
           :type => @document.filename.content_type,
-          :disposition => 'attachment',
+          :disposition => 'inline',
           :url_based_filename => true
       )
     end

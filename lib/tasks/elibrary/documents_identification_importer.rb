@@ -22,6 +22,7 @@ class Elibrary::DocumentsIdentificationImporter
       ['Master_Document_ID', 'TEXT'],
       ['Volume', 'INT'],
       ['Type', 'TEXT'],
+      ['GeneralSubType', 'TEXT'],
       ['DocumentFileName', 'TEXT']
     ]
   end
@@ -36,12 +37,14 @@ class Elibrary::DocumentsIdentificationImporter
       ), rows_to_insert_resolved AS (
         SELECT
         Type,
+        GeneralSubType,
         Manual_ID,
         DocumentTitle,
         DocumentDate,
         DocumentFileName AS filename,
         DocumentFileName,
         DocumentIsPubliclyAccessible,
+        EventId,
         lng.id AS language_id,
         Volume
         FROM rows_to_insert
@@ -50,12 +53,14 @@ class Elibrary::DocumentsIdentificationImporter
 
       INSERT INTO "documents" (
         type,
+        general_subtype,
         manual_id,
         title,
         date,
         filename,
         elib_legacy_file_name,
         is_public,
+        event_id,
         language_id,
         volume,
         created_at,
@@ -74,12 +79,14 @@ class Elibrary::DocumentsIdentificationImporter
       WITH rows_with_master_document_id AS (
         SELECT
         rows_to_insert.Type,
+        rows_to_insert.GeneralSubType,
         rows_to_insert.Manual_ID,
         DocumentTitle,
         DocumentDate,
         DocumentFileName AS filename,
         DocumentFileName,
         DocumentIsPubliclyAccessible,
+        EventId,
         lng.id AS language_id,
         rows_to_insert.Volume,
         master_documents.id AS primary_language_document_id
@@ -96,12 +103,14 @@ class Elibrary::DocumentsIdentificationImporter
 
       INSERT INTO "documents" (
         type,
+        general_subtype,
         manual_id,
         title,
         date,
         filename,
         elib_legacy_file_name,
         is_public,
+        event_id,
         language_id,
         volume,
         primary_language_document_id,
@@ -118,16 +127,21 @@ class Elibrary::DocumentsIdentificationImporter
   end
 
   def all_rows_sql
+    event = Event.where(name: 'Identification Materials').first_or_create { |e| e.type = 'IdMaterials' }
     sql = <<-SQL
       SELECT
         CASE WHEN BTRIM(t.Type) LIKE '%Manual%' THEN 'Document::IdManual'
              WHEN BTRIM(t.Type) LIKE '%Virtual%' THEN 'Document::VirtualCollege'
         END AS Type,
+        CASE WHEN BTRIM(t.GeneralSubType) LIKE '%General%' THEN TRUE
+             WHEN BTRIM(t.GeneralSubType) LIKE '%Part%' THEN FALSE
+        END AS GeneralSubType,
         Manual_ID,
         BTRIM(DocumentTitle) AS DocumentTitle,
         TO_DATE(DocumentDate::TEXT, 'YYYY-MM-DD') AS DocumentDate,
         BTRIM(DocumentFileName) AS DocumentFileName,
         TRUE AS DocumentIsPubliclyAccessible,
+        #{event.id} AS EventId,
         LanguageName,
         Master_Document_ID,
         Volume
@@ -147,14 +161,16 @@ class Elibrary::DocumentsIdentificationImporter
         AND Master_Document_ID IS NULL
 
       EXCEPT
-      
+
       SELECT
         d.type,
+        d.general_subtype,
         d.manual_id,
         d.title,
         d.date,
         d.elib_legacy_file_name,
         d.is_public,
+        e.id,
         lng.iso_code1,
         NULL,
         d.volume
@@ -163,6 +179,7 @@ class Elibrary::DocumentsIdentificationImporter
       ) nd
       JOIN documents d ON d.manual_id = nd.Manual_ID
       LEFT JOIN languages lng ON lng.id = d.language_id
+      LEFT JOIN events e ON e.id = d.event_id
     SQL
   end
 
