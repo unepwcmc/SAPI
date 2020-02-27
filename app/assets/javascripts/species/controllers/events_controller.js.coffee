@@ -20,6 +20,11 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     }
   ]
 
+  idMaterialsEvent: {
+    id: 'IdMaterials'
+    name: 'Identification Materials'
+  }
+
   documentTypes: [
     {
       id: 'Document::Proposal',
@@ -89,6 +94,17 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     {
       id: 'Document::VirtualCollege',
       name: 'Other identification materials'
+    }
+  ]
+
+  generalSubTypes: [
+    {
+      id: 'general',
+      name: 'General identification'
+    },
+    {
+      id: 'parts',
+      name: 'Parts and derivatives'
     }
   ]
 

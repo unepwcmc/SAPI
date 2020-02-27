@@ -32,16 +32,18 @@
       </div>
 
       <div class="documents-control-group">
-        <div {{bind-attr class=":popup-area :events-area selectedEventType:events-visible"}}>
-          <label>Meeting</label>
-          {{view Species.EventsSearchButton
-            selectedEventsBinding="controller.selectedEvents"
-            loadedBinding="events.loaded"
-            shortPlaceholder=false
-            taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
-          }}
-          {{view Species.EventsSearchDropdown controllerBinding="controller"}}
-        </div>
+        {{#if controller.eventsDropdownVisible}}
+          <div class="popup-area">
+            <label>Meeting</label>
+            {{view Species.EventsSearchButton
+              selectedEventsBinding="controller.selectedEvents"
+              loadedBinding="events.loaded"
+              shortPlaceholder=false
+              taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
+            }}
+            {{view Species.EventsSearchDropdown controllerBinding="controller"}}
+          </div>
+        {{/if}}
       </div>
 
       <div class="documents-control-group">
@@ -77,6 +79,18 @@
           placeholder="All identification types"
           values=controller.identificationDocumentTypes
           selection=controller.selectedDocumentType
+        }}
+      </div>
+
+      <div class="documents-control-group">
+        {{single-dropdown
+          isVisible=controller.isEventTypeIdMaterials
+          action="handleGeneralSubTypeSelection"
+          clearAction="handleGeneralSubTypeDeselection"
+          title="Identification type"
+          placeholder="All identification types"
+          values=controller.generalSubTypes
+          selection=controller.selectedGeneralSubType
         }}
       </div>
 
