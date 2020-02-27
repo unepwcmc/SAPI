@@ -10,6 +10,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
   searchContext: 'documents'
   autoCompleteTaxonConcept: null
   selectedEventType: null
+  selectedGeneralSubType: null
   locationsDropdownVisible: true
   keywordSearchVisible: true
 
@@ -22,11 +23,24 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     if filtersHash.title_query == ''
       filtersHash.title_query = null
     @set('titleQuery', filtersHash.title_query)
-    @set('selectedEventType', @get('controllers.events.eventTypes').findBy('id', filtersHash.event_type))
+
+    allEventTypes = @get('controllers.events.eventTypes')
+    allEventTypes.push(@get('controllers.events.idMaterialsEvent')) 
+
+    @set('selectedEventType', allEventTypes.findBy('id', filtersHash.event_type))
     @set('selectedEventsIds', filtersHash.events_ids || [])
-    allDocumentTypes = @get('controllers.events.documentTypes').concat @get('controllers.events.interSessionalDocumentTypes')
+
+    allDocumentTypes = @get('controllers.events.documentTypes')
+      .concat @get('controllers.events.interSessionalDocumentTypes')
+      .concat @get('controllers.events.identificationDocumentTypes')
+    
     @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
-    @set('selectedProposalOutcomeId', filtersHash.proposal_outcome_id)
+    @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
+
+    @set('selectedGeneralSubType', 
+      @get('controllers.events.generalSubTypes')
+        .findBy('id', if filtersHash.general_subtype == 'true' then 'general' else 'parts'))
+
     @set('selectedReviewPhaseId', filtersHash.review_phase_id)
 
   getFilters: ->
@@ -34,6 +48,8 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       taxonConceptQuery = @get('taxonConceptQueryForDisplay')
     if @get('titleQuery') && @get('titleQuery').length > 0
       titleQuery = @get('titleQuery')
+    if @get('selectedGeneralSubType')
+      isGeneralSubType = (@get('selectedGeneralSubType.id') == 'general').toString()
     {
       taxon_concept_query: taxonConceptQuery,
       geo_entities_ids: @get('selectedGeoEntities').mapProperty('id'),
@@ -42,6 +58,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       events_ids: @get('selectedEvents').mapProperty('id'),
       document_type: @get('selectedDocumentType.id'),
       proposal_outcome_id: @get('selectedProposalOutcome.id'),
+      general_subtype: isGeneralSubType
     }
 
   filteredDocumentTypes: ( ->
@@ -66,6 +83,10 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     @get('controllers.events.identificationDocumentTypes')
     ).property()
 
+  generalSubTypes: ( ->
+    @get('controllers.events.generalSubTypes')
+  ).property()
+
   documentTypeDropdownVisible: ( ->
     @get('selectedEventType.id') == 'EcSrg'
   ).property('selectedEventType')
@@ -75,18 +96,18 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
   ).property('selectedDocumentType', 'filteredDocumentTypes')
 
   interSessionalDocTypeDropdownVisible: ( ->
-    !@get('selectedEventType.id')? && @get('isDocTypeUnselectedOrInterSessional')
-  ).property('selectedEventType', 'isDocTypeUnselectedOrInterSessional')
+    !@get('selectedEventType.id')? && @get('isDocTypeUnselectedOrIntersessional')
+  ).property('selectedEventType', 'isDocTypeUnselectedOrIntersessional')
 
   identificationDocTypeDropdownVisible: ( ->
-    !@get('selectedEventType.id')? && @get('isDocTypeUnselectedOrIdentification')
-  ).property('selectedEventType', 'isDocTypeUnselectedOrIdentification')
+    @get('isEventTypeIdMaterials') || (!@get('selectedEventType')? && @get('isDocTypeUnselectedOrIdentification'))
+  ).property('selectedEventType', 'isDocTypeUnselectedOrIdentification', 'isEventTypeIdMaterials')
 
   isDocTypeUnselectedOrIdentification: ( ->
     @containsDocTypeOrDocTypeUnselected(@get('identificationDocumentTypes'))
   ).property('selectedDocumentType', 'identificationDocumentTypes')
 
-  isDocTypeUnselectedOrInterSessional: ( ->
+  isDocTypeUnselectedOrIntersessional: ( ->
     @containsDocTypeOrDocTypeUnselected(@get('interSessionalDocumentTypes'))
   ).property('selectedDocumentType', 'interSessionalDocumentTypes')
 
@@ -118,14 +139,21 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       @set('selectedDocumentType', documentType)
       @toggleKeywordSearch(documentType.id != 'Document::VirtualCollege')
       if @containsDocTypeOrDocTypeUnselected(@get('identificationDocumentTypes'))
+        @handleEventTypeSelection(@get('controllers.events.idMaterialsEvent'))
         @set('locationsDropdownVisible', false)
         @set('selectedGeoEntities', [])
         @set('selectedGeoEntitiesIds', [])
 
     handleDocumentTypeDeselection: ->
+      if @get('isEventTypeIdMaterials')
+        @handleEventTypeDeselection(@get('controllers.events.idMaterialsEvent'))
+      @set('selectedGeneralSubType', null)
       @set('selectedDocumentType', null)
       @set('locationsDropdownVisible', true)
       @toggleKeywordSearch(true)
+
+    handleGeneralSubTypeSelection: (type) ->
+      @set('selectedGeneralSubType', type)
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)
@@ -143,4 +171,5 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       @set('selectedDocumentType', null)
       @set('selectedInterSessionalDocType', null)
       @set('selectedProposalOutcome', null)
+      @set('selectedGeneralSubType', null)
       @toggleKeywordSearch(true)

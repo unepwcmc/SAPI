@@ -76,7 +76,7 @@ class DocumentSearch
       @query = @query.where(
         <<-SQL
           event_type IS NULL
-          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'CitesTc', 'CitesExtraordinaryMeeting')
+          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'CitesTc', 'CitesExtraordinaryMeeting', 'IdMaterials')
         SQL
       )
     else
@@ -98,6 +98,10 @@ class DocumentSearch
       if !@document_date_end.blank?
         @query = @query.where("documents.date <= ?", @document_date_end)
       end
+    end
+
+    if @general_subtype.present?
+      @query = @query.where('general_subtype IN (?)', @general_subtype.split(',').flatten)
     end
   end
 
