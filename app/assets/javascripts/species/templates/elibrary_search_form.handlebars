@@ -122,14 +122,16 @@
       </div>
 
       <div class="documents-control-group">
-        <label>Search by title keyword(s)
-          <i class="fa fa-info-circle"
-            title="This search will only return results if there is an exact match with the word or phrase in the title of the document.">
-          </i>
-        </label>
-        <div class="text-input-wrapper keyword-search">
-          {{input type="text" value=titleQuery placeholder='e.g. NDF'}}
-        </div>
+        {{#if keywordSearchVisible}}
+          <label>Search by title keyword(s)
+            <i class="fa fa-info-circle"
+              title="This search will only return results if there is an exact match with the word or phrase in the title of the document.">
+            </i>
+          </label>
+          <div class="text-input-wrapper keyword-search">
+            {{input type="text" value=titleQuery placeholder='e.g. NDF'}}
+          </div>
+        {{/if}}
       </div>
     </fieldset>
     <div class="search-buttons-container">
