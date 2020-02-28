@@ -128,7 +128,7 @@ group :test do
   gem 'capybara'
 end
 
-gem 'rake', '~> 10.0.3'
+gem 'rake', '~> 13.0.1'
 
 gem 'slim'
 # if you require 'sinatra' you get the DSL extended to Object
