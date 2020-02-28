@@ -24,12 +24,15 @@ class Elibrary::CitationsManualImporter
     ActiveRecord::Base.connection.execute(
       <<-SQL
       BEGIN;
-      CREATE TABLE temp_table (LIKE #{table_name});
-      INSERT INTO temp_table
-        SELECT unnest(string_to_array(splus_taxon_concept_id, ',')) AS splus_taxon_concept_id, manual_id
-        FROM #{table_name};
-      DROP TABLE #{table_name};
-      ALTER TABLE temp_table RENAME TO #{table_name};
+        CREATE TABLE temp_table (LIKE #{table_name});
+
+        INSERT INTO temp_table
+          SELECT unnest(string_to_array(splus_taxon_concept_id, ',')) AS splus_taxon_concept_id, manual_id
+          FROM #{table_name};
+
+        DROP TABLE #{table_name};
+        
+        ALTER TABLE temp_table RENAME TO #{table_name};
       COMMIT;
       SQL
     )
@@ -43,8 +46,8 @@ class Elibrary::CitationsManualImporter
       <<-SQL
       INSERT INTO elibrary_citations_resolved_tmp (document_id, taxon_concept_id)
         SELECT
-        t.doc_id,
-        t.taxon_concept_id
+          t.doc_id,
+          t.taxon_concept_id
         FROM (
           #{rows_to_insert_sql}
         ) t
