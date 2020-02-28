@@ -20,6 +20,6 @@ class Checklist::DocumentSerializer < ActiveModel::Serializer
   end
 
   def taxon_concept_ids
-    object.taxon_names.map { |tn| MTaxonConcept.find_by_full_name(tn).id }
+    object.taxon_concept_ids.gsub(/[{}]/, '').split(',')
   end
 end
