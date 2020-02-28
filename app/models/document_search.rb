@@ -88,7 +88,11 @@ class DocumentSearch
     @query = @query.search_by_title(@title_query) if @title_query.present?
 
     if @document_type.present?
-      @query = @query.where('document_type' => @document_type)
+      @query = @query.where('document_type IN (?)', @document_type.split(','))
+    end
+
+    if @volume.present?
+      @query = @query.where('volume IN (?)', @volume)
     end
 
     if admin_interface?
@@ -180,7 +184,7 @@ class DocumentSearch
   def select_and_group_query
     columns = "event_name, event_type, date, date_raw, is_public, document_type,
       proposal_number, primary_document_id,
-      geo_entity_names, taxon_names,
+      geo_entity_names, taxon_names, taxon_concept_ids,
       proposal_outcome, review_phase"
     aggregators = <<-SQL
       ARRAY_TO_JSON(
@@ -188,7 +192,8 @@ class DocumentSearch
           ROW(
             documents.id,
             documents.title,
-            documents.language
+            documents.language,
+            #{locale_document}
           )::document_language_version
         )
       ) AS document_language_versions
@@ -197,6 +202,26 @@ class DocumentSearch
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
     @query = @query.order('date_raw DESC, MAX(sort_index), MAX(title)')
+  end
+
+  def locale_document
+    return 'TRUE' unless @language.present?
+    <<-SQL
+      CASE
+      WHEN documents.language = '#{@language.upcase}' AND '#{@language}' = 'en'
+      THEN 'true'
+      WHEN documents.language != '#{@language.upcase}' AND '#{@language}' = 'en'
+      THEN 'false'
+      WHEN '#{@language}' != 'en' THEN
+        CASE
+        WHEN documents.language = '#{@language.upcase}'
+        THEN 'true'
+        WHEN documents.language = 'EN'
+        THEN 'default'
+        ELSE 'false'
+        END
+      END
+    SQL
   end
 
   REFRESH_INTERVAL = 5
