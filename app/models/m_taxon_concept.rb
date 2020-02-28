@@ -152,6 +152,7 @@ class MTaxonConcept < ActiveRecord::Base
     ).relation
   }
 
+
   scope :at_level_of_listing, where(:cites_listed => 't')
 
   scope :taxonomic_layout, order('taxonomic_position')
@@ -165,6 +166,26 @@ class MTaxonConcept < ActiveRecord::Base
   # leftover from old Checklist code, this field is used in returned json
   def current_listing
     cites_listing
+  end
+
+  def self.descendants_ids(taxon_concept)
+    query = <<-SQL
+    WITH RECURSIVE descendents AS (
+      SELECT id
+      FROM taxon_concepts_mview
+      WHERE parent_id = #{taxon_concept.to_i}
+      AND taxonomy_is_cites_eu = 't'
+      AND name_status IN ('A', 'H')
+      AND cites_show = 't'
+      UNION ALL
+      SELECT taxon_concepts.id
+      FROM taxon_concepts_mview taxon_concepts
+      JOIN descendents h ON h.id = taxon_concepts.parent_id
+    )
+    SELECT * FROM descendents
+    SQL
+    res = ActiveRecord::Base.connection.execute(query)
+    res.ntuples.zero? ? [taxon_concept.to_i] : res.map(&:values).flatten << taxon_concept.to_i
   end
 
   def spp

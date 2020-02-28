@@ -54,7 +54,7 @@ class Checklist::DocumentsController < ApplicationController
                      .pluck(:id)
       elsif params[:taxon_concept_id].present?
         #retrieve all the children taxa given a taxon(included)
-        descendants_ids(params[:taxon_concept_id])
+        MTaxonConcept.descendants_ids(params[:taxon_concept_id])
       end
 
     docs = DocumentSearch.new(
@@ -120,26 +120,6 @@ class Checklist::DocumentsController < ApplicationController
     document = document_language_versions(doc).select { |h| h['locale_document'] == 'true' }
     document = document_language_versions(doc).select { |h| h['locale_document'] == 'default' } if document.empty?
     document
-  end
-
-  def descendants_ids(taxon_concept)
-    subquery = <<-SQL
-      WITH RECURSIVE descendents AS (
-        SELECT id
-        FROM taxon_concepts_mview
-        WHERE parent_id = #{taxon_concept.to_i}
-        AND taxonomy_is_cites_eu = 't'
-        AND name_status IN ('A', 'H')
-        AND cites_show = 't'
-        UNION ALL
-        SELECT taxon_concepts.id
-        FROM taxon_concepts_mview taxon_concepts
-        JOIN descendents h ON h.id = taxon_concepts.parent_id
-      )
-      SELECT * FROM descendents
-    SQL
-    res = ActiveRecord::Base.connection.execute(subquery)
-    res.ntuples.zero? ? [taxon_concept.to_i] : res.map(&:values).flatten << taxon_concept.to_i
   end
 
   def zip_file_generator
