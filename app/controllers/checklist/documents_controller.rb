@@ -83,10 +83,13 @@ class Checklist::DocumentsController < ApplicationController
       :filename => "identifications-documents.zip"
 
     t.close
+    # begin
+    #   File.delete(@merged_pdf_path)
+    # rescue Errno::ENOENT
+    # end
   end
 
   def volume_download
-    require 'zip'
 
     docs = DocumentSearch.new(
       params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
@@ -99,11 +102,17 @@ class Checklist::DocumentsController < ApplicationController
 
     t = zip_file_generator #TODO move this to a background job
 
+    volumes = params[:volume]
+
     send_file t.path,
       :type => "application/zip",
-      :filename => "identifications-documents-volume.zip"
+      :filename => "Identifications-documents-volume#{volumes}.zip"
 
     t.close
+    # begin
+    #   File.delete(@merged_pdf_path)
+    # rescue Errno::ENOENT
+    # end
   end
 
   private
@@ -133,8 +142,12 @@ class Checklist::DocumentsController < ApplicationController
   end
 
   def zip_file_generator
+    require 'zip'
+
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
+    pdf_file_paths = []
+    @merged_pdf_path = Rails.root.join('lib/files/merged_file.pdf')
     Zip::OutputStream.open(t.path) do |zos|
       @documents.each do |document|
         path_to_file = document.filename.path
@@ -143,10 +156,12 @@ class Checklist::DocumentsController < ApplicationController
           missing_files <<
             "{\n  title: #{document.title},\n  filename: #{filename}\n}"
         else
-          zos.put_next_entry(filename)
-          zos.print IO.read(path_to_file)
+          pdf_file_paths << path_to_file
         end
       end
+      PdfMerger.new(pdf_file_paths, @merged_pdf_path).merge
+      zos.put_next_entry('Identification-materials.pdf')
+      zos.print IO.read(@merged_pdf_path)
       if missing_files.present?
         if missing_files.length == @documents.count
           render_404 && return
