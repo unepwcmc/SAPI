@@ -172,14 +172,14 @@ class MTaxonConcept < ActiveRecord::Base
     query = <<-SQL
     WITH RECURSIVE descendents AS (
       SELECT id
-      FROM taxon_concepts_mview
+      FROM #{self.table_name}
       WHERE parent_id = #{taxon_concept.to_i}
       AND taxonomy_is_cites_eu = 't'
       AND name_status IN ('A', 'H')
       AND cites_show = 't'
       UNION ALL
       SELECT taxon_concepts.id
-      FROM taxon_concepts_mview taxon_concepts
+      FROM #{self.table_name} taxon_concepts
       JOIN descendents h ON h.id = taxon_concepts.parent_id
     )
     SELECT * FROM descendents
