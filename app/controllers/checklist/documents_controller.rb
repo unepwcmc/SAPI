@@ -74,7 +74,7 @@ class Checklist::DocumentsController < ApplicationController
     doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
     doc_ids = doc_ids.map{ |d| d['id'] }
 
-    @documents = Document.find(doc_ids.split(','))
+    @documents = Document.find(doc_ids.split(',')).sort_by { |d| [d.volume, d.manual_id.downcase] }
 
     t = zip_file_generator
 
@@ -83,14 +83,13 @@ class Checklist::DocumentsController < ApplicationController
       :filename => "identifications-documents.zip"
 
     t.close
-    # begin
-    #   File.delete(@merged_pdf_path)
-    # rescue Errno::ENOENT
-    # end
+
+    File.delete(@merged_pdf_path)
+  rescue SystemCallError => e
+    puts e.message
   end
 
   def volume_download
-
     docs = DocumentSearch.new(
       params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
     )
@@ -98,21 +97,21 @@ class Checklist::DocumentsController < ApplicationController
     doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
     doc_ids = doc_ids.map{ |d| d['id'] }
 
-    @documents = Document.find(doc_ids.split(','))
+    @documents = Document.find(doc_ids.split(',')).sort_by { |d| [d.volume, d.manual_id.downcase] }
 
     t = zip_file_generator #TODO move this to a background job
 
-    volumes = params[:volume]
+    volumes = params[:volume].sort.join(',')
 
     send_file t.path,
       :type => "application/zip",
-      :filename => "Identifications-documents-volume#{volumes}.zip"
+      :filename => "Identifications-documents-volume-#{volumes}.zip"
 
     t.close
-    # begin
-    #   File.delete(@merged_pdf_path)
-    # rescue Errno::ENOENT
-    # end
+
+    File.delete(@merged_pdf_path)
+  rescue SystemCallError => e
+    puts e.message
   end
 
   private
@@ -147,7 +146,7 @@ class Checklist::DocumentsController < ApplicationController
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
     pdf_file_paths = []
-    @merged_pdf_path = Rails.root.join('lib/files/merged_file.pdf')
+    @merged_pdf_path = Rails.root.join("lib/files/merged_file_#{Time.now}.pdf")
     Zip::OutputStream.open(t.path) do |zos|
       @documents.each do |document|
         path_to_file = document.filename.path
