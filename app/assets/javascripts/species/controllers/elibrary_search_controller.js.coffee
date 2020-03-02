@@ -24,7 +24,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       filtersHash.title_query = null
     @set('titleQuery', filtersHash.title_query)
 
-    allEventTypes = @get('controllers.events.eventTypes')
+    allEventTypes = @get('controllers.events.eventTypes').slice()
     allEventTypes.push(@get('controllers.events.idMaterialsEvent')) 
 
     @set('selectedEventType', allEventTypes.findBy('id', filtersHash.event_type))
