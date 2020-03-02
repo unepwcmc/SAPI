@@ -154,6 +154,9 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
 
     handleGeneralSubTypeSelection: (type) ->
       @set('selectedGeneralSubType', type)
+    
+    handleGeneralSubTypeDeselection: ->
+      @set('selectedGeneralSubType', null)
 
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @set('autoCompleteTaxonConcept', autoCompleteTaxonConcept)

@@ -20,7 +20,7 @@ class Elibrary::ManualDocumentFilesImporter
   def run
     total = Document.count
     identification_docs.each_with_index do |doc, idx|
-      info_txt = "#{doc.elib_legacy_file_name} (#{idx} of #{total})"
+      info_txt = "#{doc.elib_legacy_file_name} (#{idx + 1} of #{total})"
       target_location = @target_dir + "/documents/#{doc.id}/#{doc.elib_legacy_file_name}"
       # check if file exists at target location
       if File.exists?(target_location)
