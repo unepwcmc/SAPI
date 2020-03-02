@@ -1,7 +1,7 @@
 Date,Manual ID,Title,Language,Master document,Volume,Type,General/Parts,PDF filename
-1999,A-guatemalensis-E.pdf,CITES ID Manual - Abies guatemalensis - Timber,EN,A-guatemalensis-E.pdf,6,CITES ID Manual,Parts and Derivatives,A-guatemalensis-E.pdf
-1999,Abies guatemalensis_F.pdf,Manuel d'identification de la CITES - Abies guatemalensis - Bois,FR,,6,CITES ID Manual,General,Abies guatemalensis_F.pdf
-1999,Abies guatemalensis_S.pdf,Manual de identificación de la CITES - Abies guatemalensis - Madera,ES,,6,CITES ID Manual,General,Abies guatemalensis_S.pdf
+1999,A-guatemalensis-E.pdf,CITES ID Manual - Abies guatemalensis - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,A-guatemalensis-E.pdf
+1999,Abies guatemalensis_F.pdf,Manuel d'identification de la CITES - Abies guatemalensis - Bois,FR,A-guatemalensis-E.pdf,6,CITES ID Manual,Parts and Derivatives,Abies guatemalensis_F.pdf
+1999,Abies guatemalensis_S.pdf,Manual de identificación de la CITES - Abies guatemalensis - Madera,ES,A-guatemalensis-E.pdf,6,CITES ID Manual,Parts and Derivatives,Abies guatemalensis_S.pdf
 2001,Adonis vernalis_E.pdf,CITES ID Manual - Adonis vernalis - Medicinal plants,EN,,6,CITES ID Manual,Parts and Derivatives,Adonis vernalis_E.pdf
 2001,Adonis vernalis_S.pdf,Manual de identificación de la CITES - Adonis vernalis - Plantas medicinales,ES,Adonis vernalis_E.pdf,6,CITES ID Manual,Parts and Derivatives,Adonis vernalis_S.pdf
 2003,Agave arizonica_E.pdf,CITES ID Manual - Agave arizonica,EN,,6,CITES ID Manual,General,Agave arizonica_E.pdf
@@ -14,9 +14,9 @@ Date,Manual ID,Title,Language,Master document,Volume,Type,General/Parts,PDF file
 2001,Aloe ferox_S.pdf,Manual de identificación de la CITES - Aloe ferox - Plantas medicinales,ES,Aloe ferox_E.pdf,6,CITES ID Manual,Parts and Derivatives,Aloe ferox_S.pdf
 2001,Aquilaria malaccensi_E.pdf,CITES ID Manual - Aquilaria malaccensis - Medicinal plants,EN,,6,CITES ID Manual,Parts and Derivatives,Aquilaria malaccensi_E.pdf
 2001,Aquilaria malaccensi_S.pdf,Manual de identificación de la CITES - Aquilaria malaccensis - Plantas medicinales,ES,Aquilaria malaccensi_E.pdf,6,CITES ID Manual,Parts and Derivatives,Aquilaria malaccensi_S.pdf
-1999,Aquilaria malaccensi_Timber_S.pdf,Manual de identificación de la CITES - Aquilaria malaccensis - Madera,ES,,6,CITES ID Manual,General,Aquilaria malaccensi_Timber_S.pdf
+1999,Aquilaria malaccensi_Timber_S.pdf,Manual de identificación de la CITES - Aquilaria malaccensis - Madera,ES,,6,CITES ID Manual,Parts and Derivatives,Aquilaria malaccensi_Timber_S.pdf
 1999,A-araucana-E.pdf,CITES ID Manual - Araucaria araucana - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,A-araucana-E.pdf
-1999,Araucaria araucana_S.pdf,Manual de identificación de la CITES - Araucaria araucana - Madera,ES,A-araucana-E.pdf,6,CITES ID Manual,General,Araucaria araucana_S.pdf
+1999,Araucaria araucana_S.pdf,Manual de identificación de la CITES - Araucaria araucana - Madera,ES,A-araucana-E.pdf,6,CITES ID Manual,Parts and Derivatives,Araucaria araucana_S.pdf
 2001,Ario-agavoides-jl-text.pdf,Manual de identificación de la CITES - Ariocarpus agavoides,ES,Ariocarpus agavoides_E.pdf,6,CITES ID Manual,General,Ario-agavoides-jl-text.pdf
 2001,Ariocarpus agavoides_E.pdf,CITES ID Manual - Ariocarpus agavoides,EN,,6,CITES ID Manual,General,Ariocarpus agavoides_E.pdf
 2001,Ario-fissuratus-bravoanus-jl-text.pdf,Manual de identificación de la CITES - Ariocarpus fissuratus - ssp. bravoanus,ES,Ariocarpus fissuratus ssp bravoanus_E.pdf,6,CITES ID Manual,General,Ario-fissuratus-bravoanus-jl-text.pdf
@@ -56,7 +56,7 @@ Date,Manual ID,Title,Language,Master document,Volume,Type,General/Parts,PDF file
 2001,Glossary cactaceae_E.pdf,CITES ID Manual - Cactaceae - Glossary,EN,,6,CITES ID Manual,General,Glossary cactaceae_E.pdf
 2001,Identification keys cactaceae_E.pdf,CITES ID Manual - Cactaceae - Identification key,EN,,6,CITES ID Manual,General,Identification keys cactaceae_E.pdf
 2001,Notas generales Cactaceae_S.pdf,Manual de identificación de la CITES - Cactaceae - Notas generales familia,ES,General notes cactaceae_E.pdf,6,CITES ID Manual,General,Notas generales Cactaceae_S.pdf
-1999,Caryocar costaricensis _S.pdf,Manual de identificación de la CITES - Caryocar costaricense - Madera,ES,,6,CITES ID Manual,General,Caryocar costaricensis _S.pdf
+1999,Caryocar costaricensis _S.pdf,Manual de identificación de la CITES - Caryocar costaricense - Madera,ES,,6,CITES ID Manual,Parts and Derivatives,Caryocar costaricensis _S.pdf
 2002,Cedrela odorata_E.pdf,CITES ID Manual - Cedrela odorata - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,Cedrela odorata_E.pdf
 1997,Cephalotus follicularis_E.pdf,CITES ID Manual - Cephalotus follicularis,EN,,6,CITES ID Manual,General,Cephalotus follicularis_E.pdf
 1997,Cephalotus follicularis_F.pdf,Manuel d'identification de la CITES - Cephalotus follicularis,FR,Cephalotus follicularis_E.pdf,6,CITES ID Manual,General,Cephalotus follicularis_F.pdf
@@ -69,10 +69,10 @@ Date,Manual ID,Title,Language,Master document,Volume,Type,General/Parts,PDF file
 2001,Coryphantha werdermannii_E.pdf,CITES ID Manual - Coryphantha werdermannii,EN,,6,CITES ID Manual,General,Coryphantha werdermannii_E.pdf
 2001,The genera of cycads_E.pdf,CITES ID Manual - Cycadales,EN,,6,CITES ID Manual,General,The genera of cycads_E.pdf
 2001,The genera of Cycads_S.pdf,Manual de identificación de la CITES - Cycadales,ES,The genera of cycads_E.pdf,6,CITES ID Manual,General,The genera of Cycads_S.pdf
-1999,Dalbergia melanoxylum _S.pdf,Manual de identificación de la CITES - Dalbergia melanoxylon - Madera,ES,,6,CITES ID Manual,General,Dalbergia melanoxylum _S.pdf
+1999,Dalbergia melanoxylum _S.pdf,Manual de identificación de la CITES - Dalbergia melanoxylon - Madera,ES,,6,CITES ID Manual,Parts and Derivatives,Dalbergia melanoxylum _S.pdf
 1999,D-nigra-E.pdf,CITES ID Manual - Dalbergia nigra - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,D-nigra-E.pdf
-1999,D-nigra-F.pdf,Manuel d'identification de la CITES - Dalbergia nigra - Bois,FR,D-nigra-E.pdf,6,CITES ID Manual,General,D-nigra-F.pdf
-1999,Dalbergia nigra_S.pdf,Manual de identificación de la CITES - Dalbergia nigra - Madera,ES,D-nigra-E.pdf,6,CITES ID Manual,General,Dalbergia nigra_S.pdf
+1999,D-nigra-F.pdf,Manuel d'identification de la CITES - Dalbergia nigra - Bois,FR,D-nigra-E.pdf,6,CITES ID Manual,Parts and Derivatives,D-nigra-F.pdf
+1999,Dalbergia nigra_S.pdf,Manual de identificación de la CITES - Dalbergia nigra - Madera,ES,D-nigra-E.pdf,6,CITES ID Manual,Parts and Derivatives,Dalbergia nigra_S.pdf
 1997,Darlingtonia californica_E.pdf,CITES ID Manual - Darlingtonia californica,EN,,6,CITES ID Manual,General,Darlingtonia californica_E.pdf
 1997,Darlingtonia californica_F.pdf,Manuel d'identification de la CITES - Darlingtonia californica,FR,Darlingtonia californica_E.pdf,6,CITES ID Manual,General,Darlingtonia californica_F.pdf
 1997,Darlingtonia californica_S.pdf,Manual de identificación de la CITES - Darlingtonia californica,ES,Darlingtonia californica_E.pdf,6,CITES ID Manual,General,Darlingtonia californica_S.pdf
@@ -130,7 +130,7 @@ Date,Manual ID,Title,Language,Master document,Volume,Type,General/Parts,PDF file
 2001,Escobaria-sneedii-leei-jl-text.pdf,Manual de identificación de la CITES - Escobaria sneedii leei,ES,Escobaria sneedii ssp leei_E.pdf,6,CITES ID Manual,General,Escobaria-sneedii-leei-jl-text.pdf
 2001,Escobaria sneedii ssp leei_E.pdf,CITES ID Manual - Escobaria sneedii leei,EN,,6,CITES ID Manual,General,Escobaria sneedii ssp leei_E.pdf
 1999,F-cuppressoides-E.pdf,CITES ID Manual - Fitzroya cupressoides - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,F-cuppressoides-E.pdf
-1999,Fitzroya cupresoides_S.pdf,Manual de identificación de la CITES - Fitzroya cupressoides - Madera,ES,F-cuppressoides-E.pdf,6,CITES ID Manual,General,Fitzroya cupresoides_S.pdf
+1999,Fitzroya cupresoides_S.pdf,Manual de identificación de la CITES - Fitzroya cupressoides - Madera,ES,F-cuppressoides-E.pdf,6,CITES ID Manual,Parts and Derivatives,Fitzroya cupresoides_S.pdf
 2003,Fouquieria columnaris_E.pdf,CITES ID Manual - Fouquieria columnaris,EN,,6,CITES ID Manual,General,Fouquieria columnaris_E.pdf
 2003,Fouquieria columnaris_S.pdf,Manual de identificación de la CITES - Fouquieria columnaris,ES,Fouquieria columnaris_E.pdf,6,CITES ID Manual,General,Fouquieria columnaris_S.pdf
 2003,Fouquieria fasciculata_E.pdf,CITES ID Manual - Fouquieria fasciculata,EN,,6,CITES ID Manual,General,Fouquieria fasciculata_E.pdf
@@ -143,11 +143,11 @@ Date,Manual ID,Title,Language,Master document,Volume,Type,General/Parts,PDF file
 2001,Guaiacum officinale_E.pdf,CITES ID Manual - Guaiacum - Medicinal plants,EN,,6,CITES ID Manual,Parts and Derivatives,Guaiacum officinale_E.pdf
 2001,Guaiacum officinale_S.pdf,Manual de identificación de la CITES - Guaiacum - Plantas medicinales,ES,Guaiacum officinale_E.pdf,6,CITES ID Manual,Parts and Derivatives,Guaiacum officinale_S.pdf
 1999,G-officinale-E.pdf,CITES ID Manual - Guaiacum officinale - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,G-officinale-E.pdf
-1999,Guaiacum officinale_F.pdf,Manuel d'identification de la CITES - Guaiacum officinale - Bois,FR,G-officinale-E.pdf,6,CITES ID Manual,General,Guaiacum officinale_F.pdf
-1999,Guaiacum officinale_Timber_S.pdf,Manual de identificación de la CITES - Guaiacum officinale - Madera,ES,G-officinale-E.pdf,6,CITES ID Manual,General,Guaiacum officinale_Timber_S.pdf
+1999,Guaiacum officinale_F.pdf,Manuel d'identification de la CITES - Guaiacum officinale - Bois,FR,G-officinale-E.pdf,6,CITES ID Manual,Parts and Derivatives,Guaiacum officinale_F.pdf
+1999,Guaiacum officinale_Timber_S.pdf,Manual de identificación de la CITES - Guaiacum officinale - Madera,ES,G-officinale-E.pdf,6,CITES ID Manual,Parts and Derivatives,Guaiacum officinale_Timber_S.pdf
 1999,Guaiacum sanctum_E.pdf,CITES ID Manual - Guaiacum sanctum - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,Guaiacum sanctum_E.pdf
-1999,Guaiacum sanctum_F.pdf,Manuel d'identification de la CITES - Guaiacum sanctum - Bois,FR,Guaiacum sanctum_E.pdf,6,CITES ID Manual,General,Guaiacum sanctum_F.pdf
-1999,Guaiacum sanctum_S.pdf,Manual de identificación de la CITES - Guaiacum sanctum - Madera,ES,Guaiacum sanctum_E.pdf,6,CITES ID Manual,General,Guaiacum sanctum_S.pdf
+1999,Guaiacum sanctum_F.pdf,Manuel d'identification de la CITES - Guaiacum sanctum - Bois,FR,Guaiacum sanctum_E.pdf,6,CITES ID Manual,Parts and Derivatives,Guaiacum sanctum_F.pdf
+1999,Guaiacum sanctum_S.pdf,Manual de identificación de la CITES - Guaiacum sanctum - Madera,ES,Guaiacum sanctum_E.pdf,6,CITES ID Manual,Parts and Derivatives,Guaiacum sanctum_S.pdf
 2001,Hydrastis canadensis_E.pdf,CITES ID Manual - Hydrastis canadensis - Medicinal plants,EN,,6,CITES ID Manual,Parts and Derivatives,Hydrastis canadensis_E.pdf
 2001,Hydrastis canadensis_S.pdf,Manual de identificación de la CITES - Hydrastis canadensis - Plantas medicinales,ES,Hydrastis canadensis_E.pdf,6,CITES ID Manual,Parts and Derivatives,Hydrastis canadensis_S.pdf
 2003,Lewisia maguirei_E.pdf,CITES ID Manual - Lewisia maguirei,EN,,6,CITES ID Manual,General,Lewisia maguirei_E.pdf
@@ -188,7 +188,7 @@ Date,Manual ID,Title,Language,Master document,Volume,Type,General/Parts,PDF file
 1998,Orchids_E.pdf,CITES ID Manual - Orchidaceae - Propagated vs wild sourced,EN,,6,CITES ID Manual,General,Orchids_E.pdf
 1998,Orchids_F.pdf,Manuel d'identification de la CITES - Orchidaceae - Propagé ou sauvage,FR,Orchids_E.pdf,6,CITES ID Manual,General,Orchids_F.pdf
 1998,Orchids_S.pdf,Manual de identificación de la CITES - Orchidaceae - Propagado o de origen salvaje,ES,Orchids_E.pdf,6,CITES ID Manual,General,Orchids_S.pdf
-1999,Oreomunnea pterocarpa_S.pdf,Manual de identificación de la CITES - Oreomunnea pterocarpa - Madera,ES,,6,CITES ID Manual,General,Oreomunnea pterocarpa_S.pdf
+1999,Oreomunnea pterocarpa_S.pdf,Manual de identificación de la CITES - Oreomunnea pterocarpa - Madera,ES,,6,CITES ID Manual,Parts and Derivatives,Oreomunnea pterocarpa_S.pdf
 2001,Pachycereus-militaris-jl-text.pdf,Manual de identificación de la CITES - Pachycereus militaris,ES,Pachycereus militaris_E.pdf,6,CITES ID Manual,General,Pachycereus-militaris-jl-text.pdf
 2001,Pachycereus militaris_E.pdf,CITES ID Manual - Pachycereus militaris,EN,,6,CITES ID Manual,General,Pachycereus militaris_E.pdf
 2001,Panax quinquefolius_E.pdf,CITES ID Manual - Panax quinquefolius - Medicinal plants,EN,,6,CITES ID Manual,Parts and Derivatives,Panax quinquefolius_E.pdf
@@ -214,10 +214,10 @@ Date,Manual ID,Title,Language,Master document,Volume,Type,General/Parts,PDF file
 2001,Pelecy- strobiliformis-jl-text.pdf,Manual de identificación de la CITES - Pelecyphora strobiliformis,ES,Pelecyphora strobiliformis_E.pdf,6,CITES ID Manual,General,Pelecy- strobiliformis-jl-text.pdf
 2001,Pelecyphora strobiliformis_E.pdf,CITES ID Manual - Pelecyphora strobiliformis,EN,,6,CITES ID Manual,General,Pelecyphora strobiliformis_E.pdf
 1999,P-elata-E.pdf,CITES ID Manual - Pericopsis elata - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,P-elata-E.pdf
-1999,Pericopsis elata_S.pdf,Manual de identificación de la CITES - Pericopsis elata - Madera,ES,P-elata-E.pdf,6,CITES ID Manual,General,Pericopsis elata_S.pdf
+1999,Pericopsis elata_S.pdf,Manual de identificación de la CITES - Pericopsis elata - Madera,ES,P-elata-E.pdf,6,CITES ID Manual,Parts and Derivatives,Pericopsis elata_S.pdf
 2001,Picrorhiza kurrooa_E.pdf,CITES ID Manual - Picrorhiza kurrooa - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,Picrorhiza kurrooa_E.pdf
 2001,Picrorhiza kurrooa_S.pdf,Manual de identificación de la CITES - Picrorhiza kurrooa - Plantas medicinales,ES,Picrorhiza kurrooa_E.pdf,6,CITES ID Manual,Parts and Derivatives,Picrorhiza kurrooa_S.pdf
-1999,Pilgerodendron uviferum_S.pdf,Manual de identificación de la CITES - Pilgerodendron uviferum - Madera,ES,,6,CITES ID Manual,General,Pilgerodendron uviferum_S.pdf
+1999,Pilgerodendron uviferum_S.pdf,Manual de identificación de la CITES - Pilgerodendron uviferum - Madera,ES,,6,CITES ID Manual,Parts and Derivatives,Pilgerodendron uviferum_S.pdf
 1997,Carnivorous plants introduction_S.doc.pdf,Manual de identificación de la CITES - Plantas carnívoras - Introducción,ES,Carnivorous plants_E.pdf,6,CITES ID Manual,General,Carnivorous plants introduction_S.doc.pdf
 1997,Carnivorous plants_E.pdf,CITES ID Manual - Carnivorous plants - Introduction ,EN,,6,CITES ID Manual,General,Carnivorous plants_E.pdf
 1997,Carnivorous plants_F.pdf,Manuel d'identification de la CITES - Plantes carnivores - Introduction,FR,Carnivorous plants_E.pdf,6,CITES ID Manual,General,Carnivorous plants_F.pdf
@@ -227,20 +227,20 @@ Date,Manual ID,Title,Language,Master document,Volume,Type,General/Parts,PDF file
 2001,Succulents identification key_E.pdf,CITES ID Manual - Plantae - Succulents - Identification key,EN,,6,CITES ID Manual,General,Succulents identification key_E.pdf
 1996,Succulents_E.pdf,CITES ID Manual - Plantae - Succulents - Propagated vs wild sourced,EN,,6,CITES ID Manual,General,Succulents_E.pdf
 1999,Timber Bois Maderas 1_E.pdf,CITES ID Manual - Timber - Identification key,EN,,6,CITES ID Manual,Parts and Derivatives,Timber Bois Maderas 1_E.pdf
-1999,Timber Bois Maderas 1_S.pdf,Manual de identificación de la CITES - Madera - Clave de identificación,ES,Timber Bois Maderas 1_E.pdf,6,CITES ID Manual,General,Timber Bois Maderas 1_S.pdf
+1999,Timber Bois Maderas 1_S.pdf,Manual de identificación de la CITES - Madera - Clave de identificación,ES,Timber Bois Maderas 1_E.pdf,6,CITES ID Manual,Parts and Derivatives,Timber Bois Maderas 1_S.pdf
 1999,Timber Bois Maderas 2_E.pdf,CITES ID Manual - Plantae - Timber glossary,EN,,6,CITES ID Manual,Parts and Derivatives,Timber Bois Maderas 2_E.pdf
-1999,Platymiscium pleiostachyum_S.pdf,Manual de identificación de la CITES - Platymiscium parviflorum - Madera,ES,,6,CITES ID Manual,General,Platymiscium pleiostachyum_S.pdf
-1999,Podocarpus neerifolius_S.pdf,Manual de identificación de la CITES - Podocarpus neriifolius - Madera,ES,,6,CITES ID Manual,General,Podocarpus neerifolius_S.pdf
-1999,Podocarpus parlatorei_S.pdf,Manual de identificación de la CITES - Podocarpus parlatorei - Madera,ES,,6,CITES ID Manual,General,Podocarpus parlatorei_S.pdf
+1999,Platymiscium pleiostachyum_S.pdf,Manual de identificación de la CITES - Platymiscium parviflorum - Madera,ES,,6,CITES ID Manual,Parts and Derivatives,Platymiscium pleiostachyum_S.pdf
+1999,Podocarpus neerifolius_S.pdf,Manual de identificación de la CITES - Podocarpus neriifolius - Madera,ES,,6,CITES ID Manual,Parts and Derivatives,Podocarpus neerifolius_S.pdf
+1999,Podocarpus parlatorei_S.pdf,Manual de identificación de la CITES - Podocarpus parlatorei - Madera,ES,,6,CITES ID Manual,Parts and Derivatives,Podocarpus parlatorei_S.pdf
 1999,P-africana-E.pdf,CITES ID Manual - Prunus africana - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,P-africana-E.pdf
 2001,Prunus africana_E.pdf,CITES ID Manual - Prunus africana - Medicinal plants,EN,,6,CITES ID Manual,Parts and Derivatives,Prunus africana_E.pdf
-1999,Prunus africana_F.pdf,Manuel d'identification de la CITES - Prunus africana - Bois,FR,P-africana-E.pdf,6,CITES ID Manual,General,Prunus africana_F.pdf
+1999,Prunus africana_F.pdf,Manuel d'identification de la CITES - Prunus africana - Bois,FR,P-africana-E.pdf,6,CITES ID Manual,Parts and Derivatives,Prunus africana_F.pdf
 2001,Prunus africana_S.pdf,Manual de identificación de la CITES - Prunus africana - Plantas medicinales,ES,Prunus africana_E.pdf,6,CITES ID Manual,Parts and Derivatives,Prunus africana_S.pdf
-1999,Prunus africana_Timber_S.pdf,Manual de identificación de la CITES - Prunus africana - Madera,ES,P-africana-E.pdf,6,CITES ID Manual,General,Prunus africana_Timber_S.pdf
+1999,Prunus africana_Timber_S.pdf,Manual de identificación de la CITES - Prunus africana - Madera,ES,P-africana-E.pdf,6,CITES ID Manual,Parts and Derivatives,Prunus africana_Timber_S.pdf
 1999,P-santalinus-E.pdf,CITES ID Manual - Pterocarpus santalinus - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,P-santalinus-E.pdf
 2001,Pterocarpus santalinus_E.pdf,CITES ID Manual - Pterocarpus santalinus - Medicinal plants,EN,,6,CITES ID Manual,Parts and Derivatives,Pterocarpus santalinus_E.pdf
 2001,Pterocarpus santalinus_S.pdf,Manual de identificación de la CITES - Pterocarpus santalinus - Plantas medicinales,ES,Pterocarpus santalinus_E.pdf,6,CITES ID Manual,Parts and Derivatives,Pterocarpus santalinus_S.pdf
-1999,Pterocarpus santalinus_Timber_S.pdf,Manual de identificación de la CITES - Pterocarpus santalinus - Madera,ES,P-santalinus-E.pdf,6,CITES ID Manual,General,Pterocarpus santalinus_Timber_S.pdf
+1999,Pterocarpus santalinus_Timber_S.pdf,Manual de identificación de la CITES - Pterocarpus santalinus - Madera,ES,P-santalinus-E.pdf,6,CITES ID Manual,Parts and Derivatives,Pterocarpus santalinus_Timber_S.pdf
 2001,Rauvolfia serpentina_E.pdf,CITES ID Manual - Rauvolfia serpentina - Medicinal plants,EN,,6,CITES ID Manual,Parts and Derivatives,Rauvolfia serpentina_E.pdf
 2001,Rauvolfia serpentina_S.pdf,Manual de identificación de la CITES - Rauvolfia serpentina - Plantas medicinales,ES,Rauvolfia serpentina_E.pdf,6,CITES ID Manual,Parts and Derivatives,Rauvolfia serpentina_S.pdf
 1997,Comparaison groupe Sarracenia.pdf,Manuel d'identification de la CITES - Sarracenia,FR,,6,CITES ID Manual,General,Comparaison groupe Sarracenia.pdf
@@ -269,16 +269,16 @@ Date,Manual ID,Title,Language,Master document,Volume,Type,General/Parts,PDF file
 2001,Stromboc-disciformis-jl-text.pdf,Manual de identificación de la CITES - Strombocactus disciformis,ES,Strombocactus disciformis_E.pdf,6,CITES ID Manual,General,Stromboc-disciformis-jl-text.pdf
 2001,Strombocactus disciformis_E.pdf,CITES ID Manual - Strombocactus disciformis,EN,,6,CITES ID Manual,General,Strombocactus disciformis_E.pdf
 1999,S-humilis-E.pdf,CITES ID Manual - Swietenia humilis - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,S-humilis-E.pdf
-1999,Swietenia humilis_S.pdf,Manual de identificación de la CITES - Swietenia humilis - Madera,ES,S-humilis-E.pdf,6,CITES ID Manual,General,Swietenia humilis_S.pdf
+1999,Swietenia humilis_S.pdf,Manual de identificación de la CITES - Swietenia humilis - Madera,ES,S-humilis-E.pdf,6,CITES ID Manual,Parts and Derivatives,Swietenia humilis_S.pdf
 1999,S-macrophylla-E.pdf,CITES ID Manual - Swietenia macrophylla - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,S-macrophylla-E.pdf
-1999,Swietenia macrophylla_S.pdf,Manual de identificación de la CITES - Swietenia macrophylla - Madera,ES,S-macrophylla-E.pdf,6,CITES ID Manual,General,Swietenia macrophylla_S.pdf
+1999,Swietenia macrophylla_S.pdf,Manual de identificación de la CITES - Swietenia macrophylla - Madera,ES,S-macrophylla-E.pdf,6,CITES ID Manual,Parts and Derivatives,Swietenia macrophylla_S.pdf
 1999,S-mahagoni-E.pdf,CITES ID Manual - Swietenia mahagoni - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,S-mahagoni-E.pdf
-1999,Swietenia mahagoni_S.pdf,Manual de identificación de la CITES - Swietenia mahagoni - Madera,ES,S-mahagoni-E.pdf,6,CITES ID Manual,General,Swietenia mahagoni_S.pdf
+1999,Swietenia mahagoni_S.pdf,Manual de identificación de la CITES - Swietenia mahagoni - Madera,ES,S-mahagoni-E.pdf,6,CITES ID Manual,Parts and Derivatives,Swietenia mahagoni_S.pdf
 1999,T-wallichiana-E.pdf,CITES ID Manual - Taxus wallichiana - Timber,EN,,6,CITES ID Manual,Parts and Derivatives,T-wallichiana-E.pdf
 2001,Taxus wallichiana_E.pdf,CITES ID Manual - Taxus wallichiana - Medicinal plants,EN,,6,CITES ID Manual,Parts and Derivatives,Taxus wallichiana_E.pdf
-1999,Taxus wallichiana_F.pdf,Manuel d'identification de la CITES - Taxus wallichiana - Bois,FR,T-wallichiana-E.pdf,6,CITES ID Manual,General,Taxus wallichiana_F.pdf
+1999,Taxus wallichiana_F.pdf,Manuel d'identification de la CITES - Taxus wallichiana - Bois,FR,T-wallichiana-E.pdf,6,CITES ID Manual,Parts and Derivatives,Taxus wallichiana_F.pdf
 2001,Taxus wallichiana_S.pdf,Manual de identificación de la CITES - Taxus wallichiana - Plantas medicinales,ES,Taxus wallichiana_E.pdf,6,CITES ID Manual,Parts and Derivatives,Taxus wallichiana_S.pdf
-1999,Taxus wallichiana_Timber_S.pdf,Manual de identificación de la CITES - Taxus wallichiana - Madera,ES,T-wallichiana-E.pdf,6,CITES ID Manual,General,Taxus wallichiana_Timber_S.pdf
+1999,Taxus wallichiana_Timber_S.pdf,Manual de identificación de la CITES - Taxus wallichiana - Madera,ES,T-wallichiana-E.pdf,6,CITES ID Manual,Parts and Derivatives,Taxus wallichiana_Timber_S.pdf
 1993,Commonly traded but unlisted species_E.pdf,CITES ID Manual - Tillandsia - Commonly traded species,EN,,6,CITES ID Manual,General,Commonly traded but unlisted species_E.pdf
 1993,Commonly traded but unlisted species_F.pdf,Manuel d'identification de la CITES - Tillandsia - Espèces couramment commercialisées,FR,Commonly traded but unlisted species_E.pdf,6,CITES ID Manual,General,Commonly traded but unlisted species_F.pdf
 1993,Determination Key Tillandsia_E.pdf,CITES ID Manual - Tillandsia - Identification key,EN,,6,CITES ID Manual,General,Determination Key Tillandsia_E.pdf
