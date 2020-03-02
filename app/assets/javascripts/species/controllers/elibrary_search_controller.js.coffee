@@ -36,12 +36,23 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     
     @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
     @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
-
-    @set('selectedGeneralSubType', 
-      @get('controllers.events.generalSubTypes')
-        .findBy('id', if filtersHash.general_subtype == 'true' then 'general' else 'parts'))
+   
+    general_subtype_type = @get_general_subtype_type(filtersHash)
+    @set('selectedGeneralSubType', general_subtype_type)
 
     @set('selectedReviewPhaseId', filtersHash.review_phase_id)
+
+  get_general_subtype_type: (filtersHash) ->
+    if filtersHash.general_subtype == 'true' 
+      general_subtype_id = 'general'
+    else if filtersHash.general_subtype == 'false'
+      general_subtype_id = 'parts'
+
+    if general_subtype_id
+      return @get('controllers.events.generalSubTypes')
+        .findBy('id', general_subtype_id)
+    
+    return null
 
   getFilters: ->
     if @get('taxonConceptQueryForDisplay') && @get('taxonConceptQueryForDisplay').length > 0
