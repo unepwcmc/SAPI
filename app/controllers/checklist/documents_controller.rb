@@ -38,6 +38,16 @@ class Checklist::DocumentsController < ApplicationController
     end
   end
 
+  def check_doc_presence
+    params[:taxon_concepts_ids] = MTaxonConcept.descendants_ids(params[:taxon_concept_id])
+    docs = DocumentSearch.new(
+      params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
+    )
+
+    doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
+    render :json => doc_ids.present?
+  end
+
   def download_zip
     require 'zip'
 
