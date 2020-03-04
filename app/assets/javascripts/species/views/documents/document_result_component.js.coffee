@@ -19,6 +19,24 @@ Species.DocumentResultComponent = Ember.Component.extend
     )
   ).on("init")
 
+  meetingTitle: ( -> 
+    eventName = @get('doc.event_type')
+
+    if eventName == 'IdMaterials'
+      return ''
+    
+    return eventName
+  ).property('doc.event_type')
+
+  date: ( -> 
+    date = @get('doc.date')
+
+    if @get('doc.event_type') == 'IdMaterials'
+      return date.split('/')[2]
+    
+    return date
+  ).property('doc.date', 'doc.event_type')
+
   documentVersion: ( ->
     @get('doc.document_language_versions').findBy('language', @get('language'))
   ).property('language')
