@@ -1,20 +1,20 @@
 module MaterialDocIdsRetriever
 
   def self.run(params)
-    params[:taxon_concepts_ids] =
-      if params[:taxon_name].present?
+    params['taxon_concepts_ids'] =
+      if params['taxon_name'].present?
         # retrieve the same taxa as shown in the page
         MTaxonConcept.by_cites_eu_taxonomy
                      .without_non_accepted
                      .without_hidden
                      .by_name(
-                        params[:taxon_name],
+                        params['taxon_name'],
                         { :synonyms => true, :common_names => true, :subspecies => false }
                        )
                      .pluck(:id)
-      elsif params[:taxon_concept_id].present?
+      elsif params['taxon_concept_id'].present?
         #retrieve all the children taxa given a taxon(included)
-        MTaxonConcept.descendants_ids(params[:taxon_concept_id])
+        MTaxonConcept.descendants_ids(params['taxon_concept_id'])
       end
 
     docs = DocumentSearch.new(
