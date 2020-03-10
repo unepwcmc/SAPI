@@ -39,7 +39,7 @@ class Checklist::DocumentsController < ApplicationController
 
   def check_doc_presence
     doc_ids = MaterialDocIdsRetriever.run(params)
-    
+
     render :json => doc_ids.present?
   end
 
@@ -71,7 +71,6 @@ class Checklist::DocumentsController < ApplicationController
     doc_ids = doc_ids.map{ |d| d['id'] }
 
     @download = Download.create(params[:download])
-    # byebug
     ManualDownloadWorker.perform_async(@download.id, doc_ids, params)
 
     @download = @download.attributes.except("filename", "path")
