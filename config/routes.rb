@@ -231,6 +231,7 @@ SAPI::Application.routes.draw do
       collection do
         get 'download_zip'
         get 'volume_download'
+        get 'check_doc_presence'
       end
     end
   end
