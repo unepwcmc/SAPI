@@ -38,6 +38,32 @@ class Checklist::DocumentsController < ApplicationController
     end
   end
 
+  def check_doc_presence
+    params[:taxon_concepts_ids] =
+      if params[:taxon_name].present?
+        # retrieve the same taxa as shown in the page (TO BE MOVED to check_doc_presence)
+        MTaxonConcept.by_cites_eu_taxonomy
+                     .without_non_accepted
+                     .without_hidden
+                     .by_name(
+                        params[:taxon_name],
+                        { :synonyms => true, :common_names => true, :subspecies => false }
+                       )
+                     .pluck(:id)
+      elsif params[:taxon_concept_id].present?
+        #retrieve all the children taxa given a taxon(included)
+        MTaxonConcept.descendants_ids(params[:taxon_concept_id])
+      end
+
+    docs = DocumentSearch.new(
+      params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
+    )
+
+    doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
+
+    render :json => doc_ids.present?
+  end
+
   def download_zip
     require 'zip'
 
@@ -64,7 +90,7 @@ class Checklist::DocumentsController < ApplicationController
     doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
     doc_ids = doc_ids.map{ |d| d['id'] }
 
-    @documents = Document.find(doc_ids.split(','))
+    @documents = Document.find(doc_ids.split(',')).sort_by { |d| [d.volume, d.manual_id.downcase] }
 
     t = zip_file_generator
 
@@ -85,7 +111,7 @@ class Checklist::DocumentsController < ApplicationController
     doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
     doc_ids = doc_ids.map{ |d| d['id'] }
 
-    @documents = Document.find(doc_ids.split(','))
+    @documents = Document.find(doc_ids.split(',')).sort_by { |d| [d.volume, d.manual_id.downcase] }
 
     t = zip_file_generator #TODO move this to a background job
 
