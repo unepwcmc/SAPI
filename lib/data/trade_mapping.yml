@@ -142,7 +142,7 @@ rules:
     - rule_no: 6
       rule_name: 'rulename'
       input:
-        terms: ["BEL", "HAN", "LEA", "SHO", "SKO", "WAL", "WAT"]
+        terms: ["BEL", "HAN", "SHO", "SKO", "WAL", "WAT"]
         taxa_fields:
           group: ''
         units_fields:
@@ -204,7 +204,7 @@ rules:
       input:
         terms: ['QUI']
         taxa_fields:
-          group: ''
+          group: 'Birds'
         units_fields:
           units: []
       output:
@@ -319,6 +319,30 @@ rules:
           units: []
       output:
         term: 'CAR'
+        quantity_modifier: ''
+        modifier_value: 1
+    - rule_no: 19
+      rule_name: 'rulename'
+      input:
+        terms: ['LEA']
+        taxa_fields:
+          group: 'Plants'
+        units_fields:
+          units: []
+      output:
+        term: 'LVS'
+        quantity_modifier: ''
+        modifier_value: 1
+    - rule_no: 20
+      rule_name: 'rulename'
+      input:
+        terms: ['LEA']
+        taxa_fields:
+          group: ''
+        units_fields:
+          units: []
+      output:
+        term: 'LPS'
         quantity_modifier: ''
         modifier_value: 1
     - rule_no: 21
