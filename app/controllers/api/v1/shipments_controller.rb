@@ -7,15 +7,6 @@ class Api::V1::ShipmentsController < ApplicationController
     set_pagination_headers(:data, :grouped_params)
   end
 
-  def index
-    @search = Trade::Filter.new(search_params)
-    # TODO Remember to change Serializer based on
-    # the app calling this service
-    render :json => @search.results,
-      :each_serializer => Trade::ShipmentApiComplianceSerializer,
-      :meta => metadata_for_search(@search)
-  end
-
   def chart_query
     @chart_data = Rails.cache.fetch(['chart_data', params], expires_in: 1.week) do
                     @grouping_class.new(['issue_type', 'year'])
