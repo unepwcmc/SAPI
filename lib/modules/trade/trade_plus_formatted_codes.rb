@@ -74,8 +74,10 @@ class Trade::TradePlusFormattedCodes
     origin: 'origins.name_en',
     purpose_id: 'purposes.id',
     purpose: 'purposes.name_en',
+    purpose_code: 'purposes.code',
     source_id: 'sources.id',
     source: 'sources.name_en',
+    source_code: 'sources.code',
     rank_id: 'ranks.id',
     rank_name: 'ranks.name'
   }.freeze
