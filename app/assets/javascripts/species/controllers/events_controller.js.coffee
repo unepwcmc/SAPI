@@ -88,6 +88,10 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
 
   identificationDocumentTypes: [
     {
+      id: '__all__',
+      name: 'All'
+    },
+    {
       id: 'Document::IdManual',
       name: 'CITES ID Manual'
     },

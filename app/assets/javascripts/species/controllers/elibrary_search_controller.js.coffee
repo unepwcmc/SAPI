@@ -35,7 +35,6 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       .concat @get('controllers.events.identificationDocumentTypes')
     
     @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
-    @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
    
     general_subtype_type = @get_general_subtype_type(filtersHash)
     @set('selectedGeneralSubType', general_subtype_type)
@@ -67,10 +66,15 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       title_query: titleQuery,
       event_type: @get('selectedEventType.id'),
       events_ids: @get('selectedEvents').mapProperty('id'),
-      document_type: @get('selectedDocumentType.id'),
+      document_type: @getDocTypeParam(),
       proposal_outcome_id: @get('selectedProposalOutcome.id'),
       general_subtype: isGeneralSubType
     }
+
+  getDocTypeParam: -> 
+    id = @get('selectedDocumentType.id')
+
+    if id != '__all__' then id else null 
 
   filteredDocumentTypes: ( ->
     if @get('selectedEventType')
@@ -92,7 +96,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
 
   identificationDocumentTypes: ( ->
     @get('controllers.events.identificationDocumentTypes')
-    ).property()
+  ).property()
 
   generalSubTypes: ( ->
     @get('controllers.events.generalSubTypes')
@@ -103,8 +107,8 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
   ).property('selectedEventType')
 
   meetingDocTypeDropdownVisible: ( ->
-    @containsDocTypeOrDocTypeUnselected(@get('filteredDocumentTypes'))
-  ).property('selectedDocumentType', 'filteredDocumentTypes')
+    !@get('isEventTypeIdMaterials') && @containsDocTypeOrDocTypeUnselected(@get('filteredDocumentTypes'))
+  ).property('selectedDocumentType', 'filteredDocumentTypes', 'isEventTypeIdMaterials')
 
   interSessionalDocTypeDropdownVisible: ( ->
     !@get('selectedEventType.id')? && @get('isDocTypeUnselectedOrIntersessional')
@@ -148,7 +152,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
 
     handleDocumentTypeSelection: (documentType) ->
       @set('selectedDocumentType', documentType)
-      @toggleKeywordSearch(documentType.id != 'Document::VirtualCollege')
+      @toggleKeywordSearch(documentType.id != 'Document::VirtualCollege' && documentType.id != '__all__' )
       if @containsDocTypeOrDocTypeUnselected(@get('identificationDocumentTypes'))
         @handleEventTypeSelection(@get('controllers.events.idMaterialsEvent'))
         @set('locationsDropdownVisible', false)
