@@ -43,7 +43,9 @@ class Species::Search
         @query.by_cites_eu_taxonomy
       end
 
-    if @visibility == :speciesplus
+    if @document_type || @event_type # workaround to show documents attached to hidden taxa
+      @query
+    elsif @visibility == :speciesplus
       @query = @query.where(:show_in_species_plus => true)
     elsif @visibility == :elibrary
       @query = @query.where("show_in_species_plus OR name_status = 'N'")
