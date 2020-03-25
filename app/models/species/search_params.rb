@@ -22,6 +22,8 @@ class Species::SearchParams < Hash
       taxon_concept_query: sanitise_upcase_string(params[:taxon_concept_query]),
       geo_entities: sanitise_integer_array(params[:geo_entities_ids]),
       higher_taxa_ids: sanitise_integer_array(params[:higher_taxa_ids]),
+      document_type: sanitise_string(params[:document_type]),
+      event_type: sanitise_string(params[:event_type]),
       ranks: whitelist_param_array(
         sanitise_upcase_string_array(params[:ranks]),
         Rank.dict,

@@ -4,7 +4,9 @@ class Api::V1::DocumentsController < ApplicationController
     if params[:taxon_concept_query].present?
       @species_search = Species::Search.new({
         visibility: :elibrary,
-        taxon_concept_query: params[:taxon_concept_query]
+        taxon_concept_query: params[:taxon_concept_query],
+        document_type: params[:document_type],
+        event_type: params[:event_type]
       })
       params[:taxon_concepts_ids] = @species_search.ids.join(',')
     else
