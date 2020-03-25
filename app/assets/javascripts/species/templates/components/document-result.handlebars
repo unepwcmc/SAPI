@@ -25,5 +25,7 @@
   <td class='outcome-col'>{{unbound doc.proposal_outcome}}</td>
 {{/if}}
 <td class='download-col'>
-  <input type="checkbox">
+  {{#unless doc.is_link}}
+    <input type="checkbox">
+  {{/unless}}
 </td>
