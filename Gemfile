@@ -26,6 +26,7 @@ gem 'groupdate'
 gem "chartkick"
 gem 'rubyzip', '>= 1.0.0'
 
+
 gem 'sidekiq', '< 5'
 gem 'sidekiq-status'
 gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
