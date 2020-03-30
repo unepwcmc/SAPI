@@ -61,6 +61,14 @@ class Document < ActiveRecord::Base
   before_validation :set_title
   before_validation :reset_designation_if_event_set
 
+# order docs based on a custom list of ids
+  scope :for_ids_with_order, ->(ids) {
+    order = sanitize_sql_array(
+      ["position((',' || id::text || ',') in ?)", ids.join(',') + ',']
+    )
+    where(id: ids).order(order)
+  }
+
   def filename=(arg)
     is_link? ? write_attribute(:filename, arg) : super
   end
