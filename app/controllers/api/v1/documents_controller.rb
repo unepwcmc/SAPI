@@ -2,28 +2,42 @@ class Api::V1::DocumentsController < ApplicationController
 
   def index
     if params[:taxon_concept_query].present?
+      exact_match = MTaxonConcept.where("LOWER(full_name) = ?", params[:taxon_concept_query].downcase)
+                                 .where(taxonomy_id: 1)
+                                 .first
       @species_search = Species::Search.new({
         visibility: :elibrary,
         taxon_concept_query: params[:taxon_concept_query],
         document_type: params[:document_type],
         event_type: params[:event_type]
       })
-      params[:taxon_concepts_ids] = @species_search.ids.join(',')
+      ids = @species_search.ids.join(',')
+      params[:taxon_concepts_ids] = MaterialDocIdsRetriever.ancestors_ids(ids, params[:taxon_concept_query], exact_match).uniq # @species_search.ids.join(',')
     else
       if params[:taxon_concepts_ids].present?
         taxa = TaxonConcept.find(params[:taxon_concepts_ids])
         children_ids = taxa.map(&:children).map do
           |children| children.pluck(:id) if children.present?
         end.flatten.uniq.compact
-        taxa_ids = taxa.map(&:id) + children_ids
-        params[:taxon_concepts_ids] = taxa_ids
+        taxa_ids = taxa.map(&:id)
+        ancestor_ids = MaterialDocIdsRetriever.ancestors_ids(taxa_ids.first)
+        params[:taxon_concepts_ids] = taxa_ids | ancestor_ids | children_ids
       end
     end
+
     @search = DocumentSearch.new(
       params.merge(show_private: !access_denied?, per_page: 100), 'public'
     )
 
-    render :json => @search.cached_results,
+    ordered_docs = @search.cached_results.sort_by do |doc|
+      doc_tc_ids = doc.taxon_concept_ids
+                      .gsub(/[{}]/, '')
+                      .split(',')
+                      .map(&:to_i)
+      params[:taxon_concepts_ids].index{ |id| doc_tc_ids.include?(id) } || 1000
+    end
+
+    render :json => ordered_docs,
       each_serializer: Species::DocumentSerializer,
       meta: {
         total: @search.cached_total_cnt,

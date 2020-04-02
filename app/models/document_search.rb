@@ -60,7 +60,6 @@ class DocumentSearch
     if admin_interface?
       add_ordering_for_admin
     else
-      add_ordering_for_public
       select_and_group_query
     end
   end
@@ -201,7 +200,6 @@ class DocumentSearch
     @query = Document.from(
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
-    @query = @query.order('date_raw DESC, MAX(sort_index), MAX(title)')
   end
 
   def locale_document
