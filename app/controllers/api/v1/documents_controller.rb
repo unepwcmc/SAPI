@@ -7,9 +7,7 @@ class Api::V1::DocumentsController < ApplicationController
                                  .first
       @species_search = Species::Search.new({
         visibility: :elibrary,
-        taxon_concept_query: params[:taxon_concept_query],
-        document_type: params[:document_type],
-        event_type: params[:event_type]
+        taxon_concept_query: params[:taxon_concept_query]
       })
       ids = @species_search.ids.join(',')
       params[:taxon_concepts_ids] = MaterialDocIdsRetriever.ancestors_ids(ids, params[:taxon_concept_query], exact_match).uniq # @species_search.ids.join(',')
@@ -29,12 +27,17 @@ class Api::V1::DocumentsController < ApplicationController
       params.merge(show_private: !access_denied?, per_page: 100), 'public'
     )
 
-    ordered_docs = @search.cached_results.sort_by do |doc|
-      doc_tc_ids = doc.taxon_concept_ids
-                      .gsub(/[{}]/, '')
-                      .split(',')
-                      .map(&:to_i)
-      params[:taxon_concepts_ids].index{ |id| doc_tc_ids.include?(id) } || 1000
+    ordered_docs =
+    if params[:taxon_concepts_ids].present?
+      @search.cached_results.sort_by do |doc|
+        doc_tc_ids = doc.taxon_concept_ids
+                        .gsub(/[{}]/, '')
+                        .split(',')
+                        .map(&:to_i)
+        params[:taxon_concepts_ids].index{ |id| doc_tc_ids.include?(id) } || 1000
+      end
+    else
+      @search.cached_results
     end
 
     render :json => ordered_docs,
