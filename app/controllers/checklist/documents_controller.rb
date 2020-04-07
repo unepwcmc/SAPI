@@ -48,18 +48,12 @@ class Checklist::DocumentsController < ApplicationController
     t = full_volume_downloader
 
     volumes = params[:volume].sort.join(',')
-
-    volumes = params[:volume].sort.join(',')
-
+    
     send_file t.path,
       :type => "application/zip",
       :filename => "Identifications-documents-volume-#{volumes}.zip"
 
     t.close
-
-    File.delete(@merged_pdf_path)
-  rescue SystemCallError => e
-    puts e.message
   end
 
   private
@@ -80,10 +74,10 @@ class Checklist::DocumentsController < ApplicationController
 
   def full_volume_downloader
     require 'zip'
-# byebug
+
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
-    vol_path = [Rails.root, '/public/downloads/checklist/ID_manual_volumes/', params['locale'], '/'].join
+    vol_path = [Rails.root, '/public/ID_manual_volumes/', params['locale'], '/'].join
     @pdf_file_paths = params['volume'].map { |vol| vol_path + "Volume#{vol}" + "_#{params['locale'].upcase}" + '.pdf' }
     Zip::OutputStream.open(t.path) do |zos|
       @pdf_file_paths.each do |doc_path|
