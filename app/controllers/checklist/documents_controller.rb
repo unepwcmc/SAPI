@@ -44,8 +44,6 @@ class Checklist::DocumentsController < ApplicationController
   end
 
   def download_zip
-    require 'zip'
-
     doc_ids = MaterialDocIdsRetriever.run(params)
 
     @documents = Document.for_ids_with_order(doc_ids)
@@ -53,25 +51,19 @@ class Checklist::DocumentsController < ApplicationController
     @filename = params['taxon_name'] || MTaxonConcept.find(params['taxon_concept_id']).full_name
 
     t = merge_file_generator
-    # t = zip_file_generator
 
     send_file t.path,
       :type => "application/zip",
       :filename => "Identifications-documents-#{@filename}.zip"
     t.close
+
+    File.delete(@merged_pdf_path)
+  rescue SystemCallError => e
+    puts e.message
   end
 
   def volume_download
-    docs = DocumentSearch.new(
-      params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
-    )
-
-    doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
-    doc_ids = doc_ids.map{ |d| d['id'] }
-
-    @documents = Document.find(doc_ids.split(',')).sort_by { |d| [d.volume, d.manual_id.downcase] }
-
-    t = zip_file_generator #TODO move this to a background job
+    t = full_volume_downloader
 
     volumes = params[:volume].sort.join(',')
 
@@ -80,10 +72,6 @@ class Checklist::DocumentsController < ApplicationController
       :filename => "Identifications-documents-volume-#{volumes}.zip"
 
     t.close
-
-    File.delete(@merged_pdf_path)
-  rescue SystemCallError => e
-    puts e.message
   end
 
   private
@@ -102,35 +90,9 @@ class Checklist::DocumentsController < ApplicationController
     status: 403
   end
 
-  def zip_file_generator
-    t = Tempfile.new('tmp-zip-' + request.remote_ip)
-    missing_files = []
-    Zip::OutputStream.open(t.path) do |zos|
-      @documents.each do |document|
-        path_to_file = document.filename.path
-        filename = path_to_file.split('/').last
-        unless File.exists?(path_to_file)
-          missing_files <<
-            "{\n  title: #{document.title},\n  filename: #{filename}\n}"
-        else
-          zos.put_next_entry(filename)
-          zos.print IO.read(path_to_file)
-        end
-      end
-      if missing_files.present?
-        if missing_files.length == @documents.count
-          render_404 && return
-        end
-        zos.put_next_entry('missing_files.txt')
-        zos.print missing_files.join("\n\n")
-      end
-    end
-    t
-  end
-
   def merge_file_generator
     require 'zip'
-# byebug
+
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
     pdf_file_paths = []
@@ -155,6 +117,36 @@ class Checklist::DocumentsController < ApplicationController
         end
         zos.put_next_entry('missing_files.txt')
         zos.print missing_files.join("\n\n")
+      end
+    end
+    t
+  end
+
+  def full_volume_downloader
+    require 'zip'
+
+    t = Tempfile.new('tmp-zip-' + request.remote_ip)
+    missing_files = []
+    vol_path = [Rails.root, '/public/ID_manual_volumes/', params['locale'], '/'].join
+    @pdf_file_paths = params['volume'].map { |vol| vol_path + "Volume#{vol}" + "_#{params['locale'].upcase}" + '.pdf' }
+    Zip::OutputStream.open(t.path) do |zos|
+      @pdf_file_paths.each do |doc_path|
+        path_to_file = doc_path.rpartition('/').first
+        filename = doc_path.rpartition('/').last
+        unless File.exists?(doc_path)
+          missing_files <<
+            "{\n  path: #{path_to_file},\n  filename: #{filename}\n}"
+        else
+          zos.put_next_entry("Identification-materials-#{filename}")
+          zos.print IO.read(doc_path)
+        end
+        if missing_files.present?
+          if missing_files.length == @pdf_file_paths.count
+            render_404 && return
+          end
+          zos.put_next_entry('missing_files.txt')
+          zos.print missing_files.join("\n\n")
+        end
       end
     end
     t
