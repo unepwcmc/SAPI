@@ -10,8 +10,9 @@ class DocumentSearch
     initialize_query
   end
 
+  #TODO temporarly removing pagination here because of the new cascading feature. Add it back after the refactor of the SQL mviews  
   def results
-    @query.limit(@per_page).offset(@offset)
+    @query #.limit(@per_page).offset(@offset)
   end
 
   def total_cnt

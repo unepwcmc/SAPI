@@ -27,18 +27,23 @@ class Api::V1::DocumentsController < ApplicationController
       params.merge(show_private: !access_denied?, per_page: 100), 'public'
     )
 
+    #TODO move pagination and ordering to the document_search module after refactoring of SQL mviews
+    page = params[:page] || 1
+    per_page = params[:per_page] || 100
+    offset = per_page * (page.to_i - 1)
+
     ordered_docs =
-    if params[:taxon_concepts_ids].present?
-      @search.cached_results.sort_by do |doc|
-        doc_tc_ids = doc.taxon_concept_ids
-                        .gsub(/[{}]/, '')
-                        .split(',')
-                        .map(&:to_i)
-        params[:taxon_concepts_ids].index{ |id| doc_tc_ids.include?(id) } || 1000
+      if params[:taxon_concepts_ids].present?
+        @search.cached_results.sort_by do |doc|
+          doc_tc_ids = doc.taxon_concept_ids.gsub(/[{}]/, '').split(',').map(&:to_i)
+          params[:taxon_concepts_ids].index{ |id| doc_tc_ids.include?(id) } || 1_000_000
+        end
+      else
+        @search.cached_results.limit(per_page).offset(offset)
       end
-    else
-      @search.cached_results
-    end
+
+    ordered_docs =
+      Kaminari.paginate_array(ordered_docs).page(page).per(per_page) if ordered_docs.kind_of?(Array)
 
     render :json => ordered_docs,
       each_serializer: Species::DocumentSerializer,
