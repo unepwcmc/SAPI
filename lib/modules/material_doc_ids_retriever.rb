@@ -18,7 +18,10 @@ module MaterialDocIdsRetriever
                            .order('rank_id ASC')
                            .pluck(:id)
 
-        anc_ids = ancestors_ids(ids.join(','), params['taxon_name'], exact_match).uniq
+        # anc_ids = ancestors_ids(ids.join(','), params['taxon_name'], exact_match).uniq
+        anc_ids = []
+        anc_ids = ancestors_ids(exact_match.try(:id), params['taxon_name'], exact_match).uniq  if exact_match
+        anc_ids | ids
       elsif params['taxon_concept_id'].present?
         # retrieve all the ancestors taxa given a taxon(included)
         anc_ids = ancestors_ids(params['taxon_concept_id'])
