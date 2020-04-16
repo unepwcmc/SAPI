@@ -15,7 +15,7 @@ module MaterialDocIdsRetriever
                               params['taxon_name'],
                               { :synonyms => true, :common_names => true, :subspecies => false }
                              )
-                           .order('rank_id ASC')
+                           .order('rank_id ASC, full_name')
                            .pluck(:id)
 
         # anc_ids = ancestors_ids(ids.join(','), params['taxon_name'], exact_match).uniq

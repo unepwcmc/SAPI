@@ -10,11 +10,12 @@ class Api::V1::DocumentsController < ApplicationController
         taxon_concept_query: params[:taxon_concept_query]
       })
 
-      ids = @species_search.ids # .join(',')
-      # params[:taxon_concepts_ids] = MaterialDocIdsRetriever.ancestors_ids(ids, params[:taxon_concept_query], exact_match).uniq # @species_search.ids.join(',')
+      ids = @species_search.ids
       anc_ids = []
+      children_ids = []
       anc_ids = MaterialDocIdsRetriever.ancestors_ids(exact_match.try(:id), params[:taxon_concept_query], exact_match) if exact_match
-      params[:taxon_concepts_ids] = anc_ids | ids
+      children_ids = MTaxonConcept.descendants_ids(exact_match.try(:id)).map(&:to_i) if exact_match
+      params[:taxon_concepts_ids] = anc_ids | children_ids | ids
     else
       if params[:taxon_concepts_ids].present?
         taxa = TaxonConcept.find(params[:taxon_concepts_ids])
@@ -47,7 +48,7 @@ class Api::V1::DocumentsController < ApplicationController
           end
         end
       else
-        @search.cached_results.limit(per_page).offset(offset)
+        @search.cached_results.sort_by{ |doc| [doc.taxon_names.first || '', doc.date_raw] }
       end
 
     ordered_docs =
