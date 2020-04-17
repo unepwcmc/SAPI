@@ -61,6 +61,8 @@ class ManualDownloadWorker
     FileUtils.mkdir tmp_dir_path
     input_name = 'merged_file.pdf'
     file_path = tmp_dir_path + '/' + input_name
+    cover_path_generator
+    pdf_file_paths << @cover_path
     @documents.each do |document|
       path_to_file = document.filename.path
       filename = path_to_file.split('/').last
@@ -75,6 +77,7 @@ class ManualDownloadWorker
 
     FileUtils.cp file_path, @download_path
     FileUtils.rm_rf(tmp_dir_path)
+    FileUtils.rm_rf(@cover_path)
 
     Zip::File.open([Rails.root, '/public/downloads/checklist/', @filename , '.zip'].join, Zip::File::CREATE) do |zip|
       zip.add("Identification-materials-#{@display_name}.pdf", @download_path)
@@ -87,5 +90,12 @@ class ManualDownloadWorker
     Appsignal.add_exception(exception) if defined? Appsignal
     @download.status = "failed"
     @download.save!
+  end
+
+  def cover_path_generator
+    kit = PDFKit.new(ActionController::Base.new().render_to_string(template: '/checklist/_custom_id_manual_cover.html.erb', locals: { taxon_name: @display_name }))
+    kit.stylesheets << '/home/luca/Projects/SAPI/app/assets/stylesheets/checklist/custom_id_manual_cover.css'
+    @cover_path = "public/ID_manual_cover/#{@display_name}-cover.pdf"
+    kit.to_file(@cover_path)
   end
 end
