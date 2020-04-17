@@ -7,9 +7,10 @@ class ManualDownloadWorker
   def perform(download_id, params)
     @download = Download.find(download_id)
     @download_path = download_location('zip', params)
+    @display_name = params['taxon_name'] || MTaxonConcept.find(params['taxon_concept_id']).full_name
     unless File.exist?(@download_path.gsub('.pdf', '.zip'))
       doc_ids = MaterialDocIdsRetriever.run(params)
-      @documents = Document.find(doc_ids.split(',')).sort_by { |d| [d.volume, d.manual_id.downcase] }
+      @documents = Document.for_ids_with_order(doc_ids)
 
       zip_file_generator
     end
@@ -17,7 +18,7 @@ class ManualDownloadWorker
     @download.path     = [Rails.root, '/public/downloads/checklist/', @filename , '.zip'].join
     @download.filename = download_filename
 
-    @download.display_name = 'Id Manual resources'
+    @download.display_name = @display_name # 'Id Manual resources'
 
     @download.status = "completed"
 
@@ -32,7 +33,7 @@ class ManualDownloadWorker
 
   def download_filename
     ctime = File.ctime(@download.path).strftime('%Y-%m-%d %H:%M')
-    @download_name = "ID_Materials_#{ctime}.zip"
+    @download_name = "ID_Materials-#{@display_name}-#{ctime}.zip"
   end
 
   def download_location(ext, params)
@@ -76,7 +77,7 @@ class ManualDownloadWorker
     FileUtils.rm_rf(tmp_dir_path)
 
     Zip::File.open([Rails.root, '/public/downloads/checklist/', @filename , '.zip'].join, Zip::File::CREATE) do |zip|
-      zip.add('Identification-materials.pdf', @download_path)
+      zip.add("Identification-materials-#{@display_name}.pdf", @download_path)
       if missing_files.present?
         zip.add('missing_files.txt', missing_files.join("\n\n"))
       end
