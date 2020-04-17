@@ -42,7 +42,7 @@ set :linked_files, %w{config/database.yml .env}
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle','public/.well-known')
-set :linked_dirs, fetch(:linked_dirs) + %w{public/uploads public/downloads private}
+set :linked_dirs, fetch(:linked_dirs) + %w{public/uploads public/downloads private public/ID_manual_volumes}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -97,7 +97,3 @@ after "deploy", "smoke_test:test_endpoints"
 
 
 require 'appsignal/capistrano'
-
-
-
-
