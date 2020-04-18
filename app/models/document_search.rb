@@ -10,8 +10,9 @@ class DocumentSearch
     initialize_query
   end
 
+  #TODO temporarly removing pagination here because of the new cascading feature. Add it back after the refactor of the SQL mviews  
   def results
-    @query.limit(@per_page).offset(@offset)
+    @query #.limit(@per_page).offset(@offset)
   end
 
   def total_cnt
@@ -60,7 +61,6 @@ class DocumentSearch
     if admin_interface?
       add_ordering_for_admin
     else
-      add_ordering_for_public
       select_and_group_query
     end
   end
@@ -201,7 +201,6 @@ class DocumentSearch
     @query = Document.from(
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
-    @query = @query.order('date_raw DESC, MAX(sort_index), MAX(title)')
   end
 
   def locale_document
