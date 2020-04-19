@@ -43,55 +43,12 @@ class Checklist::DocumentsController < ApplicationController
     render :json => doc_ids.present?
   end
 
-#TODO cleanup code
-  def download_zip
-    require 'zip'
-
-    params[:taxon_concepts_ids] =
-      if params[:taxon_name].present?
-        # retrieve the same taxa as shown in the page (TO BE MOVED to check_doc_presence)
-        MTaxonConcept.by_cites_eu_taxonomy
-                     .without_non_accepted
-                     .without_hidden
-                     .by_name(
-                        params[:taxon_name],
-                        { :synonyms => true, :common_names => true, :subspecies => false }
-                       )
-                     .pluck(:id)
-      elsif params[:taxon_concept_id].present?
-        #retrieve all the children taxa given a taxon(included)
-        MTaxonConcept.descendants_ids(params[:taxon_concept_id])
-      end
-
-    docs = DocumentSearch.new(
-      params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
-    )
-
-    doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
-    doc_ids = doc_ids.map{ |d| d['id'] }
-
-    @download = Download.create(params[:download])
-    ManualDownloadWorker.perform_async(@download.id, doc_ids, params)
-
-    @download = @download.attributes.except("filename", "path")
-    @download["updated_at"] = @download["updated_at"].strftime("%A, %e %b %Y %H:%M")
-
-    render :text => @download.to_json
-  end
-
   def volume_download
-    docs = DocumentSearch.new(
-      params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
-    )
 
-    doc_ids = docs.cached_results.map { |doc| locale_document(doc) }.flatten
-    doc_ids = doc_ids.map{ |d| d['id'] }
-
-    @documents = Document.find(doc_ids.split(',')).sort_by { |d| [d.volume, d.manual_id.downcase] }
-
-    t = zip_file_generator #TODO move this to a background job
+    t = full_volume_downloader
 
     volumes = params[:volume].sort.join(',')
+    
 
     send_file t.path,
       :type => "application/zip",
@@ -120,44 +77,31 @@ class Checklist::DocumentsController < ApplicationController
     status: 403
   end
 
-  #TODO cleanup code
-  def document_language_versions(doc)
-    JSON.parse(doc.document_language_versions)
-  end
-
-  def locale_document(doc)
-    document = document_language_versions(doc).select { |h| h['locale_document'] == 'true' }
-    document = document_language_versions(doc).select { |h| h['locale_document'] == 'default' } if document.empty?
-    document
-  end
-
-  def zip_file_generator
+  def full_volume_downloader
     require 'zip'
 
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
-    pdf_file_paths = []
-    @merged_pdf_path = Rails.root.join("lib/files/merged_file_#{Time.now}.pdf")
+    vol_path = [Rails.root, '/public/ID_manual_volumes/', params['locale'], '/'].join
+    @pdf_file_paths = params['volume'].map { |vol| vol_path + "Volume#{vol}" + "_#{params['locale'].upcase}" + '.pdf' }
     Zip::OutputStream.open(t.path) do |zos|
-      @documents.each do |document|
-        path_to_file = document.filename.path
-        filename = path_to_file.split('/').last
-        unless File.exists?(path_to_file)
+      @pdf_file_paths.each do |doc_path|
+        path_to_file = doc_path.rpartition('/').first
+        filename = doc_path.rpartition('/').last
+        unless File.exists?(doc_path)
           missing_files <<
-            "{\n  title: #{document.title},\n  filename: #{filename}\n}"
+            "{\n  path: #{path_to_file},\n  filename: #{filename}\n}"
         else
-          pdf_file_paths << path_to_file
+          zos.put_next_entry("Identification-materials-#{filename}")
+          zos.print IO.read(doc_path)
         end
-      end
-      PdfMerger.new(pdf_file_paths, @merged_pdf_path).merge
-      zos.put_next_entry('Identification-materials.pdf')
-      zos.print IO.read(@merged_pdf_path)
-      if missing_files.present?
-        if missing_files.length == @documents.count
-          render_404 && return
+        if missing_files.present?
+          if missing_files.length == @pdf_file_paths.count
+            render_404 && return
+          end
+          zos.put_next_entry('missing_files.txt')
+          zos.print missing_files.join("\n\n")
         end
-        zos.put_next_entry('missing_files.txt')
-        zos.print missing_files.join("\n\n")
       end
     end
     t

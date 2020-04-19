@@ -104,7 +104,7 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
   generalSubTypes: [
     {
       id: 'general',
-      name: 'General identification'
+      name: 'Whole animals/plants'
     },
     {
       id: 'parts',

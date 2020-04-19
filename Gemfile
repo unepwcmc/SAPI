@@ -26,6 +26,7 @@ gem 'groupdate'
 gem "chartkick"
 gem 'rubyzip', '>= 1.0.0'
 
+
 gem 'sidekiq', '< 5'
 gem 'sidekiq-status'
 gem 'sidekiq-unique-jobs', git: 'git://github.com/mhenrixon/sidekiq-unique-jobs'
@@ -45,6 +46,9 @@ gem 'select2-rails', '~> 3.5.7'
 gem 'nested_form', '~> 0.3.2'
 gem 'acts-as-taggable-on', '~> 2.3.1'
 gem 'carrierwave'
+gem 'prawn', '~> 0.13.2'
+gem 'pdfkit'
+gem 'wkhtmltopdf-binary', '~> 0.9.9'
 
 gem 'underscore-rails'
 gem "font-awesome-rails"

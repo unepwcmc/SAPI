@@ -60,24 +60,24 @@
 
       <div class="documents-control-group">
         {{single-dropdown
-          isVisible=controller.interSessionalDocTypeDropdownVisible
-          action="handleDocumentTypeSelection"
-          clearAction="handleDocumentTypeDeselection"
-          title="Other documents"
-          placeholder="Document types"
-          values=controller.interSessionalDocumentTypes
-          selection=controller.selectedDocumentType
-        }}
-      </div>
-
-      <div class="documents-control-group">
-        {{single-dropdown
           isVisible=controller.identificationDocTypeDropdownVisible
           action="handleDocumentTypeSelection"
           clearAction="handleDocumentTypeDeselection"
           title="Identification materials"
           placeholder="All identification materials"
           values=controller.identificationDocumentTypes
+          selection=controller.selectedDocumentType
+        }}
+      </div>
+
+      <div class="documents-control-group">
+        {{single-dropdown
+          isVisible=controller.interSessionalDocTypeDropdownVisible
+          action="handleDocumentTypeSelection"
+          clearAction="handleDocumentTypeDeselection"
+          title="Other documents"
+          placeholder="Document types"
+          values=controller.interSessionalDocumentTypes
           selection=controller.selectedDocumentType
         }}
       </div>

@@ -20,13 +20,11 @@ Species.DocumentResultComponent = Ember.Component.extend
   ).on("init")
 
   meetingTitle: ( -> 
-    eventName = @get('doc.event_type')
-
-    if eventName == 'IdMaterials'
+    if @get('doc.event_type') == 'IdMaterials'
       return ''
     
-    return eventName
-  ).property('doc.event_type')
+    return @get('doc.event_name')
+  ).property('doc.event_type', 'doc.event_name')
 
   date: ( -> 
     date = @get('doc.date')

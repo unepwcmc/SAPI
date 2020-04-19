@@ -14,7 +14,7 @@ class DocumentSearchParams < Hash
       volume: sanitise_integer_array(params['volume']),
       document_date_start: (Date.parse(params['document_date_start']) rescue nil),
       document_date_end: (Date.parse(params['document_date_end']) rescue nil),
-      taxon_concepts_ids: sanitise_integer_array(params['taxon_concepts_ids']),
+      taxon_concepts_ids: sanitise_doc_ids_array(params['taxon_concepts_ids']),
       geo_entities_ids: sanitise_integer_array(params['geo_entities_ids']),
       document_tags_ids: sanitise_integer_array(params['document_tags_ids']) + [
         sanitise_positive_integer(params['proposal_outcome_id']),
