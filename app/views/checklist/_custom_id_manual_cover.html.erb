@@ -1,5 +1,5 @@
 <aside class="id-manual-cover__banner">
-  <%= image_tag "species/logo-CITES-blue.svg", class: 'id-manual-cover__banner-logo' %>
+  <img alt="logo-cites" src="<%="#{Rails.root.to_s}"%>/app/assets/images/checklist/logo-CITES-blue.svg" class='id-manual-cover__banner-logo' >
   <%= t('id_manual_cover.header') %>
 </aside>
 <main class="id-manual-cover__margins">
@@ -50,9 +50,9 @@
     </div>
 
     <footer class="id-manual-cover__footer">
-      <%= image_tag  "species/logo-CITES-black.svg", class: "id-manual-cover__footer-logo id-manual-cover__footer-logo--cites" %>
-      <%= image_tag  "species/eu-black.svg", class: "id-manual-cover__footer-logo id-manual-cover__footer-logo--eu" %>
-      <%= image_tag "https://s3.amazonaws.com/wcmc.logo/UNEP_WCMC_logo_black.svg", class: "id-manual-cover__footer-logo id-manual-cover__footer-logo--unepwcmc" %>
+      <img alt="logo-cites-black" src="<%="#{Rails.root.to_s}"%>/app/assets/images/checklist/logo-CITES-black.svg" class='id-manual-cover__footer-logo id-manual-cover__footer-logo--cites' >
+      <img alt="logo-eu" src="<%="#{Rails.root.to_s}"%>/app/assets/images/checklist/eu-black.svg" class='id-manual-cover__footer-logo id-manual-cover__footer-logo--eu' >
+      <img alt='logo-unep' src="http://s3.amazonaws.com/wcmc.logo/UNEP_WCMC_logo_black.svg", class="id-manual-cover__footer-logo id-manual-cover__footer-logo--unepwcmc" %>
     </footer>
   </div>
 </main>
