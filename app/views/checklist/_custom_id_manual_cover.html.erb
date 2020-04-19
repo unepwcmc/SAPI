@@ -1,51 +1,58 @@
-<aside>
-  <%= image_tag  "rails.png" %>
+<aside class="id-manual-cover__banner">
+  <%= image_tag "species/logo-CITES-blue.svg", class: 'id-manual-cover__banner-logo' %>
   <%= t('id_manual_cover.header') %>
 </aside>
-<div>
-  <main>
-    <header>
-      <h1><%= t('id_manual_cover.title') %></h1>
+<main class="id-manual-cover__margins">
+  <header>
+    <h1 class="id-manual-cover__title">
+      <%= t('id_manual_cover.title') %>
+    </h1>
 
-      <div class="id-manual-cover__metadata">
-        <div class="id-manual-cover__metadata-row">
-          <span><%= t('id_manual_cover.taxon_label') %>:</span>
-          <em class="bold italic"><%= @taxon_name %></em>
-        </div>
-
-        <div class="id-manual-cover__metadata-row">
-          <span><%= t('id_manual_cover.date_label') %>:</span>
-          <em class="bold"><%= Time.now.strftime('%d/%m/%Y') %></em>
-        </div>
-
-        <div class="id-manual-cover__metadata-row">
-          <span><%= t('id_manual_cover.website_label') %>:</span>
-          <em class="bold"><%= t('id_manual_cover.checklist_url') %></em>
-        </div>
+    <div class="id-manual-cover__metadata">
+      <div class="id-manual-cover__metadata-row">
+        <span><%= t('id_manual_cover.taxon_label') %>:</span>
+        <em class="id-manual-cover__bold id-manual-cover__italic">
+          <%= @taxon_name %>
+        </em>
       </div>
-    </header>
 
-    <div class="id-manual-cover__disclaimer">
-      <%= t('id_manual_cover.disclaimer') %>
+      <div class="id-manual-cover__metadata-row">
+        <span><%= t('id_manual_cover.date_label') %>:</span>
+        <em class="id-manual-cover__bold">
+          <%= Time.now.strftime('%d/%m/%Y') %>
+        </em>
+      </div>
 
-      <label class="id-manual-cover__disclaimer-label"><%= t('id_manual_cover.citation_label') %></label>
-      <div><%= t('id_manual_cover.citation_text') %></div>
-
-      <label class="id-manual-cover__disclaimer-label"><%= t('id_manual_cover.copyright_label') %></label>
-      <div><%= t('id_manual_cover.copyright_text') %></div>
+      <div class="id-manual-cover__metadata-row">
+        <span><%= t('id_manual_cover.website_label') %>:</span>
+        <em class="id-manual-cover__bold">
+          <%= t('id_manual_cover.checklist_url') %>
+        </em>
+      </div>
     </div>
-  </main>
-  <footer>
-    <%= link_to  "" do %>
-      <%= image_tag  "rails.png" %>
-    <% end %>
+  </header>
 
-    <%= link_to  "" do %>
-      <%= image_tag  "rails.png" %>
-    <% end %>
+  <div class="id-manual-cover__bottom">
+    <div class="id-manual-cover__disclaimer">
+      <%= t('id_manual_cover.disclaimer').html_safe %>
 
-    <%= link_to  "" do %>
-      <%= image_tag  "rails.png" %>
-    <% end %>
-  </footer>
-</div>
+      <label class="id-manual-cover__disclaimer-label">
+        <%= t('id_manual_cover.citation_label') %>:
+      </label>
+      <p>
+        <%= t('id_manual_cover.citation_text', date: Time.now.strftime('%d/%m/%Y')) %>
+      </p>
+
+      <label class="id-manual-cover__disclaimer-label">
+        <%= t('id_manual_cover.copyright_label') %>:
+      </label>
+      <p><%= t('id_manual_cover.copyright_text') %></p>
+    </div>
+
+    <footer class="id-manual-cover__footer">
+      <%= image_tag  "species/logo-CITES-black.svg", class: "id-manual-cover__footer-logo id-manual-cover__footer-logo--cites" %>
+      <%= image_tag  "species/eu-black.svg", class: "id-manual-cover__footer-logo id-manual-cover__footer-logo--eu" %>
+      <%= image_tag "https://s3.amazonaws.com/wcmc.logo/UNEP_WCMC_logo_black.svg", class: "id-manual-cover__footer-logo id-manual-cover__footer-logo--unepwcmc" %>
+    </footer>
+  </div>
+</main>

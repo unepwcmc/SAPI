@@ -107,8 +107,14 @@ en:
       <p>
         Applications for permission, with a statement of purpose and extent of reproduction, should be sent to info@cites.org, or addressed to the CITES Secretariat, Palais de Nations, Avenue de la Paix 8-14, 1211, Geneva 10, Switzerland.
       </p>
+      <p>
+        The geographical designations employed in this publication do not imply the expression of any opinion whatsoever on the part of the compilers, the CITES Secretariat or the United Nations Environment Programme concerning the legal status of any country, territory or area, or concerning the delimitation of its frontiers or boundaries.
+      </p>
+      <p>
+        This project was funded by the European Union under the EC-UNEP GPGC Programme Cooperation Agreement project awarded to the CITES Secretariat.
+      </p>
     "
-  citation_label: Citation
-  citation_text: "UNEP-WCMC (Comps.) 2020. Checklist of CITES species – CITES Identification Manual. CITES Secretariat, Geneva, Switzerland, and UNEPWCMC, Cambridge, United Kingdom. Accessed on %{date}."
-  copyright_label: Copyright
-  copyright_text: 2020 Secretariat of the Convention on International Trade in Endangered Species of Wild Fauna and Flora
+    citation_label: Citation
+    citation_text: "UNEP-WCMC (Comps.) 2020. Checklist of CITES species – CITES Identification Manual. CITES Secretariat, Geneva, Switzerland, and UNEPWCMC, Cambridge, United Kingdom. Accessed on %{date}"
+    copyright_label: Copyright
+    copyright_text: 2020 Secretariat of the Convention on International Trade in Endangered Species of Wild Fauna and Flora
