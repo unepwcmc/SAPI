@@ -70,12 +70,26 @@ body {
 }
 
 .id-manual-cover__disclaimer {
-  column-count: 2;
   font-size: 10px;
   font-weight: 100;
   line-height: 1.6;
   margin-top: auto;
   margin-bottom: 40px;
+}
+
+.id-manual-cover__disclaimer--left {
+  margin-right: 3%;
+  vertical-align: top;
+  width: 48%;
+
+  display: inline-block;
+}
+
+.id-manual-cover__disclaimer--right {
+  vertical-align: top;
+  width: 48%;
+  
+  display: inline-block;
 }
 
 .id-manual-cover__disclaimer p {

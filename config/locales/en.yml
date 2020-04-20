@@ -92,7 +92,7 @@ en:
     date_label: Date of download
     website_label: CITES Checklist website
     checklist_url: http://checklist.cites.org
-    disclaimer: "
+    disclaimer_left: "
       <p>
         The CITES Identification Manual is a collection of data sheets designed to help identify various species of fauna and flora with drawings, photographs, maps and concise descriptions. The manual’s sheets were published over a 29 year period, from 1980–2009. All sheets are provided as originally published, and, as such, no warranty of any kind is given as to the completeness or accuracy of their content. Identification materials are not available for every species, and may be absent  particularly for species listed in the CITES Appendices after 2009.
       </p>
@@ -104,6 +104,8 @@ en:
       <p>
         This publication may be reproduced for educational or non-profit purposes without special permission, provided that the source is acknowledged with the correct citation. Reproduction of the publication (or any figures therein) for commercial purposes is only allowed with explicit permission in writing from the CITES Secretariat.
       </p>
+    "
+    disclaimer_right: "
       <p>
         Applications for permission, with a statement of purpose and extent of reproduction, should be sent to info@cites.org, or addressed to the CITES Secretariat, Palais de Nations, Avenue de la Paix 8-14, 1211, Geneva 10, Switzerland.
       </p>
