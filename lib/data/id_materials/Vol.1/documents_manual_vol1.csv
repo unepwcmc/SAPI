@@ -137,12 +137,12 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1992,A-112.007.001.001,Manual de identificación de la CITES - Caracal aurata,ES,A-112.007.001.001,1,CITES ID Manual,General,A-112.007.001.001 Profelis aurata_S.pdf
 1992,A-112.007.001.005,CITES ID Manual - Caracal caracal,EN,,1,CITES ID Manual,General,A-112.007.001.005 Caracal caracal_E.pdf
 1992,A-112.007.001.005,Manual de identificación de la CITES - Caracal caracal,ES,A-112.007.001.005,1,CITES ID Manual,General,A-112.007.001.005 Caracal caracal_S.pdf
-1985,A-112.000.000.001,CITES ID Manual - Carnivora,EN,,1,CITES ID Manual,General,A-112.000.000.001 Carnivora general notes_E.pdf
+1985,A-112.000.000.001,CITES ID Manual - Carnivora,EN,,1,CITES ID Manual,General,A-112.000.000.001 Carnivora General Notes_E.pdf
 1985,A-112.000.000.001,Manual de identificación de la CITES - Carnivora,ES,A-112.000.000.001,1,CITES ID Manual,General,A-112.000.000.001 Carnivora general notes_S.pdf
 1992,A-119.002.002.001,CITES ID Manual - Catagonus wagneri,EN,,1,CITES ID Manual,General,A-119.002.002.001 Catagonus wagneri_E.pdf
 1992,A-119.002.002.001,Manual de identificación de la CITES - Catagonus wagneri,ES,A-119.002.002.001,1,CITES ID Manual,General,A-119.002.002.001 Catagonus wagneri_S.pdf
 1992,A-112.007.001.027,CITES ID Manual - Catopuma temminckii,EN,,1,CITES ID Manual,General,A-112.007.001.027 Catopuma temmincki_E.pdf
-1982,A-112.007.001.027,Manual de identificación de la CITES - Catopuma temminckii,ES,A-112.007.001.027,1,CITES ID Manual,General,A-112.007.001.027 Felis temmincki_S.pdf
+1992,A-112.007.001.027,Manual de identificación de la CITES - Catopuma temminckii,ES,A-112.007.001.027,1,CITES ID Manual,General,A-112.007.001.027 Felis temmincki_S.pdf
 1984,A-119.009.009.000,CITES ID Manual - Cephalophus - Identification key,EN,,1,CITES ID Manual,General,A-119.009.009.000 Duiker identification aid_E.pdf
 1984,A-119.009.009.000,Manual de identificación de la CITES - Cephalophus - Guía de identificación,ES,A-119.009.009.000,1,CITES ID Manual,General,A-119.009.009.000 Duiker identification aid_S.pdf
 1984,A-119.009.009.003,CITES ID Manual - Cephalophus dorsalis,EN,,1,CITES ID Manual,General,A-119.009.009.003 Cephalophus dorsalis_E.pdf
@@ -173,10 +173,10 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1987,A-106.008.001.004,Manual de identificación de la CITES - Cercocebus torquatus,ES,A-106.008.001.004,1,CITES ID Manual,General,A-106.008.001.004 Cercocebus torquatus_S.pdf
 1987,A-106.008.000.001,CITES ID Manual - Cercopithecidae,EN,,1,CITES ID Manual,General,A-106.008.000.001 Cercopithecidae General Notes_E.pdf
 1987,A-106.008.000.001,Manual de identificación de la CITES - Cercopithecidae,ES,A-106.008.000.001,1,CITES ID Manual,General,A-106.008.000.001 Cercopithecidae general notes_S.pdf
-1987,A-106.008.006.000,CITES ID Manual - Cercopithecidae,EN,,1,CITES ID Manual,General,A-106.008.006.000 Colobinae General Notes_E.pdf
+1987,A-106.008.006.000,CITES ID Manual - Cercopithecidae,EN,,1,CITES ID Manual,General,A-106.008.006.000 Colobinae general notes_E.pdf
 1987,A-106.008.006.000,Manual de identificación de la CITES - Cercopithecidae,ES,A-106.008.006.000,1,CITES ID Manual,General,A-106.008.006.000 Colobinae general notes_S.pdf
-1987,A-106.008.006.000b,Manual de identificación de la CITES - Cercopithecidae - Guía de identificación,ES,A-106.008.006.000b,1,CITES ID Manual,General,A-106.008.006.000b Colobinae identification aid_S.pdf
 1987,A-106.008.006.000b,CITES ID Manual - Cercopithecidae - Identification key,EN,,1,CITES ID Manual,General,A-106.008.006.000b Cercopithecidae Langur Aid_E.pdf
+1987,A-106.008.006.000b,Manual de identificación de la CITES - Cercopithecidae - Guía de identificación,ES,A-106.008.006.000b,1,CITES ID Manual,General,A-106.008.006.000b Colobinae identification aid_S.pdf
 1986,A-119.006.000.001,CITES ID Manual - Cervidae,EN,,1,CITES ID Manual,General,A-119.006.000.001 Cervidae general notes_E.pdf
 1986,A-119.006.000.001,Manual de identificación de la CITES - Cervidae,ES,A-119.006.000.001,1,CITES ID Manual,General,A-119.006.000.001 Cervidae general notes_S.pdf
 1988,A-119.006.000.002,CITES ID Manual - Cervidae - Parts and derivatives (antlers),EN,,1,CITES ID Manual,Parts and derivatives,A-119.006.000.002 Cervidae deer antlers_E.pdf
@@ -229,8 +229,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1984,A-110.002.004.004,Manual de identificación de la CITES - Cynomys mexicanus,ES,A-110.002.004.004,1,CITES ID Manual,General,A-110.002.004.004 Cynomys mexicanus_S.pdf
 1988,A-119.006.004.003,CITES ID Manual - Dama dama mesopotamica,EN,,1,CITES ID Manual,General,A-119.006.004.003 Dama mesopotamica_E.pdf
 1988,A-119.006.004.003,Manual de identificación de la CITES - Dama dama mesopotamica,ES,A-119.006.004.003,1,CITES ID Manual,General,A-119.006.004.003 Dama mesopotamicus_S.pdf
-1987,A-119.009.014.003,Manual de identificación de la CITES - Damaliscus lunatus,ES,A-119.009.014.003,1,CITES ID Manual,General,A-119.009.014.003 Damaliscus lunatus korrigum_S.pdf
 1987,A-119.009.014.003,CITES ID Manual - Damaliscus lunatus,EN,,1,CITES ID Manual,General,A-119.009.014.003 Damaliscus lunatus_E.pdf
+1987,A-119.009.014.003,Manual de identificación de la CITES - Damaliscus lunatus,ES,A-119.009.014.003,1,CITES ID Manual,General,A-119.009.014.003 Damaliscus lunatus korrigum_S.pdf
 1985,A-119.009.014.001,CITES ID Manual - Damaliscus pygargus,EN,,1,CITES ID Manual,General,A-119.009.014.001 Damaliscus dorcas dorcas_E.pdf
 1985,A-119.009.014.001,Manual de identificación de la CITES - Damaliscus pygargus,ES,A-119.009.014.001,1,CITES ID Manual,General,A-119.009.014.001 Damaliscus dorcas dorcas_S.pdf
 1987,A-107.003.000.001,CITES ID Manual - Dasypodidae,EN,,1,CITES ID Manual,General,A-107.003.000.001 Dasypodiae General Notes_E.pdf
@@ -288,8 +288,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1985,A-118.001.001.007,Manual de identificación de la CITES - Equus zebra,ES,A-118.001.001.007,1,CITES ID Manual,General,A-118.001.001.007 Equus zebra_S.pdf
 1987,A-111.006.001.001,CITES ID Manual - Eschrichtius robustus,EN,,1,CITES ID Manual,General,A-111.006.001.001 Eschrichtius robustus_E.pdf
 1987,A-111.006.001.001,Manual de identificación de la CITES - Eschrichtius robustus,ES,A-111.006.001.001,1,CITES ID Manual,General,A-111.006.001.001 Eschrichtius robustus_S.pdf
-1987,A-111.008.001.001,Manual de identificación de la CITES - Eubalaena glacialis,ES,A-111.008.001.001,1,CITES ID Manual,General,A-111.008.001.001 Balaena glacialis_S.pdf
 1987,A-111.008.001.001,CITES ID Manual - Eubalaena glacialis,EN,,1,CITES ID Manual,General,A-111.008.001.001 Eubalaena glacialis_E.pdf
+1987,A-111.008.001.001,Manual de identificación de la CITES - Eubalaena glacialis,ES,A-111.008.001.001,1,CITES ID Manual,General,A-111.008.001.001 Balaena glacialis_S.pdf
 1984,A-106.001.002.003b,CITES ID Manual - Eulemur coronatus,EN,,1,CITES ID Manual,General,A-106.001.002.003b Lemur coronatus_E.pdf
 1984,A-106.001.002.003b,Manual de identificación de la CITES - Eulemur coronatus,ES,A-106.001.002.003b,1,CITES ID Manual,General,A-106.001.002.003b Lemur coronatus_S.pdf
 1984,A-106.001.002.002a,CITES ID Manual - Eulemur fulvus,EN,,1,CITES ID Manual,General,A-106.001.002.002a Lemur fulvus_EN.pdf
@@ -320,8 +320,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1992,A-112.007.001.026,Manual de identificación de la CITES - Felis silvestris,ES,A-112.007.001.026,1,CITES ID Manual,General,A-112.007.001.026 Felis silvestris_S.pdf
 1987,A-111.002.001.001,CITES ID Manual - Feresa attenuata,EN,,1,CITES ID Manual,General,A-111.002.001.001 Feresa attenuata_E.pdf
 1987,A-111.002.001.001,Manual de identificación de la CITES - Feresa attenuata,ES,A-111.002.001.001,1,CITES ID Manual,General,A-111.002.001.001 Feresa attenuata_S.pdf
-1985,A-112.005.016.001,Manual de identificación de la CITES - Fossa fossana,ES,A-112.005.016.001,1,CITES ID Manual,General,A-112.005.016.001 Fossa fossa_S.pdf
 1985,A-112.005.016.001,CITES ID Manual - Fossa fossana,EN,,1,CITES ID Manual,General,A-112.005.016.001 Fossa fossana_E.pdf
+1985,A-112.005.016.001,Manual de identificación de la CITES - Fossa fossana,ES,A-112.005.016.001,1,CITES ID Manual,General,A-112.005.016.001 Fossa fossa_S.pdf
 1984,A-106.004.006.001,CITES ID Manual - Galago alleni,EN,,1,CITES ID Manual,General,A-106.004.006.001 Galago alleni_E.pdf
 1984,A-106.004.006.001,Manual de identificación de la CITES - Galago alleni,ES,A-106.004.006.001,1,CITES ID Manual,General,A-106.004.006.001 Galago alleni_S.pdf
 1984,A-106.004.006.003,CITES ID Manual - Galago demidoff,EN,,1,CITES ID Manual,General,A-106.004.006.003 Galago demidovii_E.pdf
@@ -331,8 +331,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1985,A-112.004.002.002,CITES ID Manual - Galictis vittata,EN,,1,CITES ID Manual,General,A-112.004.002.002 Galictis vittata_E.pdf
 1985,A-112.004.002.002,Manual de identificación de la CITES - Galictis vittata,ES,A-112.004.002.002,1,CITES ID Manual,General,A-112.004.002.002 Galictis vittata_S.pdf
 1987,A-111.002.002.001,CITES ID Manual - Globicephala macrorhynchus,EN,,1,CITES ID Manual,General,A-111.002.002.001 Globicephala macrorhynchus_E.pdf
-1987,A-111.002.002.002,Manual de identificación de la CITES - Globicephala melas,ES,A-111.002.002.002,1,CITES ID Manual,General,A-111.002.002.002 Globicephala melaena_S.pdf
 1987,A-111.002.002.002,CITES ID Manual - Globicephala melas,EN,,1,CITES ID Manual,General,A-111.002.002.002 Globicephala melas_E.pdf
+1987,A-111.002.002.002,Manual de identificación de la CITES - Globicephala melas,ES,A-111.002.002.002,1,CITES ID Manual,General,A-111.002.002.002 Globicephala melaena_S.pdf
 1985,A-106.009.002.001,CITES ID Manual - Gorilla gorilla,EN,,1,CITES ID Manual,General,A-106.009.002.001 Gorilla gorilla_E.pdf
 1985,A-106.009.002.001,Manual de identificación de la CITES - Gorilla gorilla,ES,A-106.009.002.001,1,CITES ID Manual,General,A-106.009.002.001 Gorilla gorilla_S.pdf
 1987,A-111.002.010.001,CITES ID Manual - Grampus griseus,EN,,1,CITES ID Manual,General,A-111.002.010.001 Grampus griseus_E.pdf
@@ -341,8 +341,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1984,A-106.001.001.001,Manual de identificación de la CITES - Hapalemur griseus,ES,A-106.001.001.001,1,CITES ID Manual,General,A-106.001.001.001 Hapalemur griseus_S.pdf
 1982,A-112.002.002.001,CITES ID Manual - Helarctos malayanus,EN,,1,CITES ID Manual,General,A-112.002.002.001 Helarctos malayanus_E.pdf
 1982,A-112.002.002.001,Manual de identificación de la CITES - Helarctos malayanus,ES,A-112.002.002.001,1,CITES ID Manual,General,A-112.002.002.001 Helarctos malayanus_S.pdf
-1985,A-112.005.017.001,Manual de identificación de la CITES - Hemigalus derbyanus,ES,A-112.005.017.001,1,CITES ID Manual,General,A-112.005.017.001 Hemigalus derbyanus_S.pdf
 1985,A-112.005.017.001,CITES ID Manual - Hemigalus derbyanus,EN,,1,CITES ID Manual,General,A-112.005.017.001 Hemygalus derbianus_E.pdf
+1985,A-112.005.017.001,Manual de identificación de la CITES - Hemigalus derbyanus,ES,A-112.005.017.001,1,CITES ID Manual,General,A-112.005.017.001 Hemigalus derbyanus_S.pdf
 1992,A-112.007.001.031,CITES ID Manual - Herpailurus yagouaroundi,EN,,1,CITES ID Manual,General,A-112.007.001.031 Herpailurus yaguarondi_E.pdf
 1992,A-112.007.001.031,Manual de identificación de la CITES - Herpailurus yagouaroundi,ES,A-112.007.001.031,1,CITES ID Manual,General,A-112.007.001.031 Herpailurus yaguarondi_S.pdf
 1986,A-119.003.001.001,CITES ID Manual - Hexaprotodon liberiensis,EN,,1,CITES ID Manual,General,A-119.003.001.001 Hexaprotodon liberiensis_E.pdf
@@ -421,8 +421,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1981,A-102.011.001.002,Manual de identificación de la CITES - Lasiorhinus krefftii,ES,A-102.011.001.002,1,CITES ID Manual,General,A-102.011.001.002 Lasiorhinus krefftii_S.pdf
 1984,A-106.001.002.001,CITES ID Manual - Lemur catta,EN,,1,CITES ID Manual,General,A-106.001.002.001 Lemur catta_E.pdf
 1984,A-106.001.002.001,Manual de identificación de la CITES - Lemur catta,ES,A-106.001.002.001,1,CITES ID Manual,General,A-106.001.002.001 Lemur catta_S.pdf
-1992,A-112.007.001.008,Manual de identificación de la CITES - Leopardus colocola,ES,A-112.007.001.008,1,CITES ID Manual,General,A-112.007.001.008 Felis colocolo_S.pdf
 1992,A-112.007.001.008,CITES ID Manual - Leopardus colocola,EN,,1,CITES ID Manual,General,A-112.007.001.008 Oncifelis colocolo_E.pdf
+1992,A-112.007.001.008,Manual de identificación de la CITES - Leopardus colocola,ES,A-112.007.001.008,1,CITES ID Manual,General,A-112.007.001.008 Felis colocolo_S.pdf
 1992,A-112.007.001.010,CITES ID Manual - Leopardus geoffroyi,EN,,1,CITES ID Manual,General,A-112.007.001.010 Oncifelis geoffroyi_E.pdf
 1992,A-112.007.001.010,Manual de identificación de la CITES - Leopardus geoffroyi,ES,A-112.007.001.010,1,CITES ID Manual,General,A-112.007.001.010 Oncifelis geoffroyi_S.pdf
 1992,A-112.007.001.011,CITES ID Manual - Leopardus guigna,EN,,1,CITES ID Manual,General,A-112.007.001.011 Felis guigna_E.pdf
@@ -431,22 +431,22 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1992,A-112.007.001.013,Manual de identificación de la CITES - Leopardus jacobita,ES,A-112.007.001.013,1,CITES ID Manual,General,A-112.007.001.013 Oreailurus jacobita_S.pdf
 1992,A-112.007.001.020,CITES ID Manual - Leopardus pardalis,EN,,1,CITES ID Manual,General,A-112.007.001.020 Leopardus pardalis_E.pdf
 1992,A-112.007.001.020,Manual de identificación de la CITES - Leopardus pardalis,ES,A-112.007.001.020,1,CITES ID Manual,General,A-112.007.001.020 Leopardus pardalis_S.pdf
-1992,A-112.007.001.028,Manual de identificación de la CITES - Leopardus tigrinus,ES,A-112.007.001.028,1,CITES ID Manual,General,A-112.007.001.028 Felis tigrina_S.pdf
 1992,A-112.007.001.028,CITES ID Manual - Leopardus tigrinus,EN,,1,CITES ID Manual,General,A-112.007.001.028 Leopardus tigrinus_E.pdf
-1992,A-112.007.001.030,Manual de identificación de la CITES - Leopardus wiedii,ES,A-112.007.001.030,1,CITES ID Manual,General,A-112.007.001.030 Felis wiedii_S.pdf
+1992,A-112.007.001.028,Manual de identificación de la CITES - Leopardus tigrinus,ES,A-112.007.001.028,1,CITES ID Manual,General,A-112.007.001.028 Felis tigrina_S.pdf
 1992,A-112.007.001.030,CITES ID Manual - Leopardus wiedii,EN,,1,CITES ID Manual,General,A-112.007.001.030 Leopardus wiedii_E.pdf
+1992,A-112.007.001.030,Manual de identificación de la CITES - Leopardus wiedii,ES,A-112.007.001.030,1,CITES ID Manual,General,A-112.007.001.030 Felis wiedii_S.pdf
 1984,A-106.001.003.000,CITES ID Manual - Lepilemur,EN,,1,CITES ID Manual,General,A-106.001.003.000 Lepilemur_E.pdf
 1984,A-106.001.003.000,Manual de identificación de la CITES - Lepilemur,ES,A-106.001.003.000,1,CITES ID Manual,General,A-106.001.003.000 Lepilemur_S.pdf
 1985,A-109.002.000.001,CITES ID Manual - Leporidae,EN,,1,CITES ID Manual,General,A-109.002.000.001 Leporidae General Notes_E.pdf
 1985,A-109.002.000.001,Manual de identificación de la CITES - Leporidae,ES,A-109.002.000.001,1,CITES ID Manual,General,A-109.002.000.001 Leporidae general notes_S.pdf
-1992,A-112.007.001.025,Manual de identificación de la CITES - Leptailurus serval,ES,A-112.007.001.025,1,CITES ID Manual,General,A-112.007.001.025 Felis serval_S.pdf
 1992,A-112.007.001.025,CITES ID Manual - Leptailurus serval,EN,,1,CITES ID Manual,General,A-112.007.001.025 Leptailurus serval_E.pdf
+1992,A-112.007.001.025,Manual de identificación de la CITES - Leptailurus serval,ES,A-112.007.001.025,1,CITES ID Manual,General,A-112.007.001.025 Felis serval_S.pdf
 1988,A-111.001.002.001,CITES ID Manual - Lipotes vexillifer,EN,,1,CITES ID Manual,General,A-111.001.002.001 Lipotes vexillifer_E.pdf
 1988,A-111.001.002.001,Manual de identificación de la CITES - Lipotes vexillifer,ES,A-111.001.002.001,1,CITES ID Manual,General,A-111.001.002.001 Lipotes vexillifer_S.pdf
 1987,A-111.002.007.001,CITES ID Manual - Lissodelphis borealis,EN,,1,CITES ID Manual,General,A-111.002.007.001 Lissodelphis borealis_E.pdf
 1987,A-111.002.007.001,Manual de identificación de la CITES - Lissodelphis borealis,ES,A-111.002.007.001,1,CITES ID Manual,General,A-111.002.007.001 Lissodelphis borealis_S.pdf
-1987,A-111.002.007.002,Manual de identificación de la CITES - Lissodelphis peronii,ES,A-111.002.007.002,1,CITES ID Manual,General,A-111.002.007.002 Lissodelphis peronii_S.pdf
 1987,A-111.002.007.002,CITES ID Manual - Lissodelphis peronii,EN,,1,CITES ID Manual,General,A-111.002.007.002 Lissodolphis peronii_E.pdf
+1987,A-111.002.007.002,Manual de identificación de la CITES - Lissodelphis peronii,ES,A-111.002.007.002,1,CITES ID Manual,General,A-111.002.007.002 Lissodelphis peronii_S.pdf
 1983,A-112.004.023.001,CITES ID Manual - Lontra canadensis,EN,,1,CITES ID Manual,General,A-112.004.023.001 Lutra canadensis_E.pdf
 1983,A-112.004.023.001,Manual de identificación de la CITES - Lontra canadensis,ES,A-112.004.023.001,1,CITES ID Manual,General,A-112.004.023.001 Lutra canadensis_S.pdf
 1983,A-112.004.023.002,CITES ID Manual - Lontra felina,EN,,1,CITES ID Manual,General,A-112.004.023.002 Lutra felina_E.pdf
@@ -476,9 +476,9 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1984,A-112.001.007.002,Manual de identificación de la CITES - Lycalopex griseus,ES,A-112.001.007.002,1,CITES ID Manual,General,A-112.001.007.002 Pseudalopex griseus_S.pdf
 2004,A-112.001.007.003,Manual de identificación de la CITES - Lycalopex gymnocercus,ES,,1,CITES ID Manual,General,A-112.001.007.003 Pseudalopex gymnocercus_S.pdf
 1992,A-112.007.001.015,CITES ID Manual - Lynx lynx,EN,,1,CITES ID Manual,General,A-112.007.001.015 Lynx lynx_E.pdf
-1982,A-112.007.001.015,Manual de identificación de la CITES - Lynx lynx,ES,A-112.007.001.015,1,CITES ID Manual,General,A-112.007.001.015 Lynx lynx_S.pdf
-1992,A-112.007.001.024,Manual de identificación de la CITES - Lynx rufus,ES,A-112.007.001.024,1,CITES ID Manual,General,A-112.007.001.024 Felis rufa_S.pdf
+1992,A-112.007.001.015,Manual de identificación de la CITES - Lynx lynx,ES,A-112.007.001.015,1,CITES ID Manual,General,A-112.007.001.015 Lynx lynx_S.pdf
 1992,A-112.007.001.024,CITES ID Manual - Lynx rufus,EN,,1,CITES ID Manual,General,A-112.007.001.024 Lynx rufus_E.pdf
+1992,A-112.007.001.024,Manual de identificación de la CITES - Lynx rufus,ES,A-112.007.001.024,1,CITES ID Manual,General,A-112.007.001.024 Felis rufa_S.pdf
 1987,A-106.008.003.000,CITES ID Manual - Macaca,EN,,1,CITES ID Manual,General,A-106.008.003.000 Macaca general notes_E.pdf
 1987,A-106.008.003.000,Manual de identificación de la CITES - Macaca,ES,A-106.008.003.000,1,CITES ID Manual,General,A-106.008.003.000 Macaca general notes_S.pdf
 1987,A-106.008.003.001,CITES ID Manual - Macaca arctoides,EN,,1,CITES ID Manual,General,A-106.008.003.001 Macaca arctoides_E.pdf
@@ -519,8 +519,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1981,A-102.004.004.002,Manual de identificación de la CITES - Macrotis leucura,ES,A-102.004.004.002,1,CITES ID Manual,General,A-102.004.004.002 Macrotis leucura_S.pdf
 1986,A-108.001.000.001,CITES ID Manual - Manidae,EN,,1,CITES ID Manual,General,A-108.001.000.001 Manidae General Notes_E.pdf
 1986,A-108.001.000.001,Manual de identificación de la CITES - Manidae,ES,A-108.001.000.001,1,CITES ID Manual,General,A-108.001.000.001 Manidae general notes_S.pdf
-1986,A-108.001.000.002,Manual de identificación de la CITES - Manidae - Guía de identificación,ES,A-108.001.000.002,1,CITES ID Manual,General,A-108.001.000.002 Manidae identification aid_S.pdf
 1986,A-108.001.000.002,CITES ID Manual - Manidae - Identification key,EN,,1,CITES ID Manual,General,A-108.001.000.002 Manidae identification key_E.pdf
+1986,A-108.001.000.002,Manual de identificación de la CITES - Manidae - Guía de identificación,ES,A-108.001.000.002,1,CITES ID Manual,General,A-108.001.000.002 Manidae identification aid_S.pdf
 1986,A-108.001.001.001,CITES ID Manual - Manis crassicaudata,EN,,1,CITES ID Manual,General,A-108.001.001.001 Manis crassicaudata_E.pdf
 1986,A-108.001.001.001,Manual de identificación de la CITES - Manis crassicaudata,ES,A-108.001.001.001,1,CITES ID Manual,General,A-108.001.001.001 Manis crassicaudata_S.pdf
 1986,A-108.001.001.002,CITES ID Manual - Manis gigantea,EN,,1,CITES ID Manual,General,A-108.001.001.002 Manis gigantea_E.pdf
@@ -535,8 +535,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1986,A-108.001.001.004,Manual de identificación de la CITES - Manis tetradactyla,ES,A-108.001.001.004,1,CITES ID Manual,General,A-108.001.001.004 Manis tetradactyla_S.pdf
 1986,A-108.001.001.007,CITES ID Manual - Manis tricuspis,EN,,1,CITES ID Manual,General,A-108.001.001.007 Manis tricuspis_E.pdf
 1986,A-108.001.001.007,Manual de identificación de la CITES - Manis tricuspis,ES,A-108.001.001.007,1,CITES ID Manual,General,A-108.001.001.007 Manis tricuspis_S.pdf
-1987,A-107.002.002.000,Manual de identificación de la CITES - Megalonychidae,ES,A-107.002.002.000,1,CITES ID Manual,General,A-107.002.002.000 Choloepidae general notes_S.pdf
 1987,A-107.002.002.000,CITES ID Manual - Megalonychidae,EN,,1,CITES ID Manual,General,A-107.002.002.000 Megalonychidae general notes_E.pdf
+1987,A-107.002.002.000,Manual de identificación de la CITES - Megalonychidae,ES,A-107.002.002.000,1,CITES ID Manual,General,A-107.002.002.000 Choloepidae general notes_S.pdf
 1987,A-111.007.002.001,CITES ID Manual - Megaptera novaeangliae,EN,,1,CITES ID Manual,General,A-111.007.002.001 Megaptera novaeangliae_E.pdf
 1987,A-111.007.002.001,Manual de identificación de la CITES - Megaptera novaeangliae,ES,A-111.007.002.001,1,CITES ID Manual,General,A-111.007.002.001 Megaptera novaeangliae_S.pdf
 1985,A-112.004.011.001,CITES ID Manual - Mellivora capensis,EN,,1,CITES ID Manual,General,A-112.004.011.001 Mellivora capensis_E.pdf
@@ -657,7 +657,7 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1995,A-119.009.042.001,CITES ID Manual - Pantholops hodgsonii,EN,,1,CITES ID Manual,General,A-119.009.042.001 Pantholops hodgsonii_E.pdf
 1995,A-119.009.042.001,Manual de identificación de la CITES - Pantholops hodgsonii,ES,A-119.009.042.001,1,CITES ID Manual,General,A-119.009.042.001 Pantholops hodgsonii_S.pdf
 1992,A-112.007.001.018,CITES ID Manual - Pardofelis marmorata,EN,,1,CITES ID Manual,General,A-112.007.001.018 Pardofelis marmorata_E.pdf
-1982,A-112.007.001.018,Manual de identificación de la CITES - Pardofelis marmorata,ES,A-112.007.001.018,1,CITES ID Manual,General,A-112.007.001.018 Pardofelis marmorata_S.pdf
+1992,A-112.007.001.018,Manual de identificación de la CITES - Pardofelis marmorata,ES,A-112.007.001.018,1,CITES ID Manual,General,A-112.007.001.018 Pardofelis marmorata_S.pdf
 1986,A-119.002.001.002,CITES ID Manual - Pecari tajacu,EN,,1,CITES ID Manual,General,A-119.002.001.002 Pecari tajacu_E.pdf
 1986,A-119.002.001.002,Manual de identificación de la CITES - Pecari tajacu,ES,A-119.002.001.002,1,CITES ID Manual,General,A-119.002.001.002 Pecari tajacu_S.pdf
 1987,A-111.002.005.001,CITES ID Manual - Peponocephala electra,EN,,1,CITES ID Manual,General,A-111.002.005.001 Peponocephala electra_E.pdf
@@ -699,8 +699,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1988,A-111.001.003.002,Manual de identificación de la CITES - Platanista gangetica,ES,A-111.001.003.002,1,CITES ID Manual,General,A-111.001.003.002 Platanista minor_S.pdf
 1986,A-105.008.046.005,CITES ID Manual - Platyrrhinus lineatus,EN,,1,CITES ID Manual,General,A-105.008.046.005 Platyrhinus lineatus_E.pdf
 1986,A-105.008.046.005,Manual de identificación de la CITES - Platyrrhinus lineatus,ES,A-105.008.046.005,1,CITES ID Manual,General,A-105.008.046.005 Vampyrops lineatus_S.pdf
-1985,A-106.009.004.001,Manual de identificación de la CITES - Pongo pygmaeus,ES,A-106.009.004.001,1,CITES ID Manual,General,A-106.009.004.001 Pan pygmaeus_S.pdf
 1985,A-106.009.004.001,CITES ID Manual - Pongo pygmaeus,EN,,1,CITES ID Manual,General,A-106.009.004.001 Pongo pygmaeus_E.pdf
+1985,A-106.009.004.001,Manual de identificación de la CITES - Pongo pygmaeus,ES,A-106.009.004.001,1,CITES ID Manual,General,A-106.009.004.001 Pan pygmaeus_S.pdf
 1988,A-111.001.004.001,CITES ID Manual - Pontoporia blainvillei,EN,,1,CITES ID Manual,General,A-111.001.004.001 Pontoporia blainvillei_E.pdf
 1988,A-111.001.004.001,Manual de identificación de la CITES - Pontoporia blainvillei,ES,A-111.001.004.001,1,CITES ID Manual,General,A-111.001.004.001 Pontoporia blainvillei_S.pdf
 1988,A-112.003.006.001,CITES ID Manual - Potos flavus,EN,,1,CITES ID Manual,General,A-112.003.006.001 Potos flavus_E.pdf
@@ -725,18 +725,18 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1987,A-107.003.007.001,Manual de identificación de la CITES - Priodontes maximus,ES,A-107.003.007.001,1,CITES ID Manual,General,A-107.003.007.001 Priodontes maximus_S.pdf
 1992,A-112.007.001.003,CITES ID Manual - Prionailurus bengalensis,EN,,1,CITES ID Manual,General,A-112.007.001.003 Prionailurus bengalensis_E.pdf
 1992,A-112.007.001.003,Manual de identificación de la CITES - Prionailurus bengalensis,ES,A-112.007.001.003,1,CITES ID Manual,General,A-112.007.001.003 Prionailurus bengalensis_S.pdf
-1992,A-112.007.001.022,Manual de identificación de la CITES - Prionailurus planiceps,ES,A-112.007.001.022,1,CITES ID Manual,General,A-112.007.001.022 Felis planiceps_S.pdf
 1992,A-112.007.001.022,CITES ID Manual - Prionailurus planiceps,EN,,1,CITES ID Manual,General,A-112.007.001.022 Prionailurus planiceps_E.pdf
+1992,A-112.007.001.022,Manual de identificación de la CITES - Prionailurus planiceps,ES,A-112.007.001.022,1,CITES ID Manual,General,A-112.007.001.022 Felis planiceps_S.pdf
 1992,A-112.007.001.023,CITES ID Manual - Prionailurus rubiginosus,EN,,1,CITES ID Manual,General,A-112.007.001.023 Prionailurus rubiginosus_E.pdf
 1992,A-112.007.001.023,Manual de identificación de la CITES - Prionailurus rubiginosus,ES,A-112.007.001.023,1,CITES ID Manual,General,A-112.007.001.023 Prionailurus rubiginosus_S.pdf
-1992,A-112.007.001.029,Manual de identificación de la CITES - Prionailurus viverrinus,ES,A-112.007.001.029,1,CITES ID Manual,General,A-112.007.001.029 Felis viverrina_S.pdf
 1992,A-112.007.001.029,CITES ID Manual - Prionailurus viverrinus,EN,,1,CITES ID Manual,General,A-112.007.001.029 Prionailurus viverrinus_E.pdf
+1992,A-112.007.001.029,Manual de identificación de la CITES - Prionailurus viverrinus,ES,A-112.007.001.029,1,CITES ID Manual,General,A-112.007.001.029 Felis viverrina_S.pdf
 1985,A-112.005.004.001,CITES ID Manual - Prionodon linsang,EN,,1,CITES ID Manual,General,A-112.005.004.001 Prionodon linsang_E.pdf
 1985,A-112.005.004.001,Manual de identificación de la CITES - Prionodon linsang,ES,A-112.005.004.001,1,CITES ID Manual,General,A-112.005.004.001 Prionodon linsang_S.pdf
 1985,A-112.005.004.002,CITES ID Manual - Prionodon pardicolor,EN,,1,CITES ID Manual,General,A-112.005.004.002 Prionodon pardicolor_E.pdf
 1985,A-112.005.004.002,Manual de identificación de la CITES - Prionodon pardicolor,ES,A-112.005.004.002,1,CITES ID Manual,General,A-112.005.004.002 Prionodon pardicolor_S.pdf
-1987,A-106.008.006.007,Manual de identificación de la CITES - Procolobus verus,ES,A-106.008.006.007,1,CITES ID Manual,General,A-106.008.006.007 Colobus verus_S.pdf
 1987,A-106.008.006.007,CITES ID Manual - Procolobus verus,EN,,1,CITES ID Manual,General,A-106.008.006.007 Procolobus verus_E.pdf
+1987,A-106.008.006.007,Manual de identificación de la CITES - Procolobus verus,ES,A-106.008.006.007,1,CITES ID Manual,General,A-106.008.006.007 Colobus verus_S.pdf
 1986,A-112.003.000.001,CITES ID Manual - Procyonidae,EN,,1,CITES ID Manual,General,A-112.003.000.001 Procyonidae general notes_E.pdf
 1986,A-112.003.000.001,Manual de identificación de la CITES - Procyonidae,ES,A-112.003.000.001,1,CITES ID Manual,General,A-112.003.000.001 Procyonidae general notes_S.pdf
 1988,A-112.003.000.002,CITES ID Manual - Procyonidae - Identification key,EN,,1,CITES ID Manual,General,A-112.003.000.002 Procyonidae identification aid_E.pdf
@@ -759,8 +759,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1986,A-119.006.014.001,Manual de identificación de la CITES - Pudu mephistophiles,ES,A-119.006.014.001,1,CITES ID Manual,General,A-119.006.014.001 Pudu mephistophiles_S.pdf
 1986,A-119.006.014.002,CITES ID Manual - Pudu puda,EN,,1,CITES ID Manual,General,A-119.006.014.002 Pudu pudu_E.pdf
 1986,A-119.006.014.002,Manual de identificación de la CITES - Pudu puda,ES,A-119.006.014.002,1,CITES ID Manual,General,A-119.006.014.002 Pudu pudu_S.pdf
-1982,A-112.007.001.009,Manual de identificación de la CITES - Puma concolor,ES,A-112.007.001.009,1,CITES ID Manual,General,A-112.007.001.009 Felis concolor_S.pdf
 1992,A-112.007.001.009,CITES ID Manual - Puma concolor,EN,,1,CITES ID Manual,General,A-112.007.001.009 Puma concolor_E.pdf
+1992,A-112.007.001.009,Manual de identificación de la CITES - Puma concolor,ES,A-112.007.001.009,1,CITES ID Manual,General,A-112.007.001.009 Felis concolor_S.pdf
 1987,A-106.008.010.001,CITES ID Manual - Pygathrix nemaeus,EN,,1,CITES ID Manual,General,A-106.008.010.001 Pygathrix nemaeus_E.pdf
 1987,A-106.008.010.001,Manual de identificación de la CITES - Pygathrix nemaeus,ES,A-106.008.010.001,1,CITES ID Manual,General,A-106.008.010.001 Pygathrix nemaeus_S.pdf
 1984,A-110.002.024.000,CITES ID Manual - Ratufa - Identification key,EN,,1,CITES ID Manual,General,A-110.002.024.000 Ratufa Identification Key_E.pdf
@@ -818,7 +818,6 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1984,A-112.001.013.001,CITES ID Manual - Speothos venaticus,EN,,1,CITES ID Manual,General,A-112.001.013.001 Speothos venaticus_E.pdf
 1984,A-112.001.013.001,Manual de identificación de la CITES - Speothos venaticus,ES,A-112.001.013.001,1,CITES ID Manual,General,A-112.001.013.001 Speothos venaticus_S.pdf
 2003,A-102.006.001.004,CITES ID Manual - Spilocuscus maculatus,EN,,1,CITES ID Manual,General,A-102.006.001.004 Phalanger maculatus_E.pdf
-2003,A-102.006.001.004,CITES ID Manual - Spilocuscus maculatus,EN,,1,CITES ID Manual,General,A-102.006.001.004 Spilocuscus maculatus_E.pdf
 1987,A-111.002.013.002,CITES ID Manual - Stenella attenuata,EN,,1,CITES ID Manual,General,A-111.002.013.002 Stenella attenuata_E.pdf
 1987,A-111.002.013.002,Manual de identificación de la CITES - Stenella attenuata,ES,A-111.002.013.002,1,CITES ID Manual,General,A-111.002.013.002 Stenella attenuata_S.pdf
 1987,A-111.002.013.004,CITES ID Manual - Stenella clymene,EN,,1,CITES ID Manual,General,A-111.002.013.004 Stenella clymene_E.pdf
@@ -873,10 +872,10 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1987,A-106.008.008.015,Manual de identificación de la CITES - Trachypithecus vetulus,ES,A-106.008.008.015,1,CITES ID Manual,General,A-106.008.008.015 Presbytis senex_S.pdf
 1987,A-106.008.008.002,CITES ID Manual - Trachypithecus villosus,EN,,1,CITES ID Manual,General,A-106.008.008.002 Presbytis cristata_E.pdf
 1987,A-106.008.008.002,Manual de identificación de la CITES - Trachypithecus villosus,ES,A-106.008.008.002,1,CITES ID Manual,General,A-106.008.008.002 Presbytis cristata_S.pdf
-1985,A-119.009.008.003,Manual de identificación de la CITES - Tragelaphus eurycerus,ES,A-119.009.008.003,1,CITES ID Manual,General,A-119.009.008.003 Boocercus eurycerus_S.pdf
 1985,A-119.009.008.003,CITES ID Manual - Tragelaphus eurycerus,EN,,1,CITES ID Manual,General,A-119.009.008.003 Tragelaphus eurycerus_E.pdf
-1985,A-119.009.008.006,Manual de identificación de la CITES - Tragelaphus spekii,ES,A-119.009.008.006,1,CITES ID Manual,General,A-119.009.008.006 Tragelaphus spekei_S.pdf
+1985,A-119.009.008.003,Manual de identificación de la CITES - Tragelaphus eurycerus,ES,A-119.009.008.003,1,CITES ID Manual,General,A-119.009.008.003 Boocercus eurycerus_S.pdf
 1985,A-119.009.008.006,CITES ID Manual - Tragelaphus spekii,EN,,1,CITES ID Manual,General,A-119.009.008.006 Tragelaphus spekii_E.pdf
+1985,A-119.009.008.006,Manual de identificación de la CITES - Tragelaphus spekii,ES,A-119.009.008.006,1,CITES ID Manual,General,A-119.009.008.006 Tragelaphus spekei_S.pdf
 1987,A-119.005.000.001,CITES ID Manual - Tragulidae,EN,,1,CITES ID Manual,General,A-119.005.000.001 Tragulidae general notes_E.pdf
 1987,A-119.005.000.001,Manual de identificación de la CITES - Tragulidae,ES,A-119.005.000.001,1,CITES ID Manual,General,A-119.005.000.001 Tragulidae general notes_S.pdf
 1982,A-112.002.005.001,CITES ID Manual - Tremarctos ornatus,EN,,1,CITES ID Manual,General,A-112.002.005.001 Tremarctos ornatus_E.pdf
@@ -894,8 +893,8 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1985,A-106.000.900.002,Manual de identificación de la CITES - Tupaiidae guía de identificación,ES,A-106.000.900.002,1,CITES ID Manual,General,A-106.000.900.002 Tupaiidae identification aid_S.pdf
 1984,A-106.001.000.001,"CITES ID Manual - Tupaiidae, Lemuridae, Cheirogaleidae, Indriidae, Daubentoniidae, Lorisidae, Galagidae, Tarsiidae",EN,,1,CITES ID Manual,General,A-106.001.000.001 Prosimiae general notes_E.pdf
 1984,A-106.001.000.001,"Manual de identificación de la CITES - Tupaiidae, Lemuridae, Cheirogaleidae, Indriidae, Daubentoniidae, Lorisidae, Galagidae, Tarsiidae",ES,A-106.001.000.001,1,CITES ID Manual,General,A-106.001.000.001 Prosimiae general notes_S.pdf
-1984,A-106.001.000.003,"Manual de identificación de la CITES - Tupaiidae, Lemuridae, Cheirogaleidae, Indriidae, Daubentoniidae, Lorisidae, Galagidae, Tarsiidae - guía de identificacion",ES,A-106.001.000.003,1,CITES ID Manual,General,A-106.001.000.003 Prosimiae identification aid_S.pdf
 1984,A-106.001.000.003,"CITES ID Manual - Tupaiidae, Lemuridae, Cheirogaleidae, Indriidae, Daubentoniidae, Lorisidae, Galagidae, Tarsiidae - identification key",EN,,1,CITES ID Manual,General,A-106.001.000.003 Prosimiae identification key_E.pdf
+1984,A-106.001.000.003,"Manual de identificación de la CITES - Tupaiidae, Lemuridae, Cheirogaleidae, Indriidae, Daubentoniidae, Lorisidae, Galagidae, Tarsiidae - guía de identificacion",ES,A-106.001.000.003,1,CITES ID Manual,General,A-106.001.000.003 Prosimiae identification aid_S.pdf
 1987,A-111.002.014.002,CITES ID Manual - Tursiops truncatus,EN,,1,CITES ID Manual,General,A-111.002.014.002 Tursiops truncatus_E.pdf
 1987,A-111.002.014.002,Manual de identificación de la CITES - Tursiops truncatus,ES,A-111.002.014.002,1,CITES ID Manual,General,A-111.002.014.002 Tursiops truncatus_S.pdf
 1982,A-112.002.000.001,CITES ID Manual - Ursidae,EN,,1,CITES ID Manual,General,A-112.002.000.001 Ursidae general notes_E.pdf
@@ -909,14 +908,14 @@ Date,Manual ID,Title,Lang,Master Document,Volume,Type,General/ Part,PDF Filename
 1982,A-112.002.000.005,CITES ID Manual - Ursidae - Parts and derivatives - Identification key (pelts),EN,,1,CITES ID Manual,Parts and derivatives,A-112.002.000.005 Ursidae identification aid bear pelts_E.pdf
 1982,A-112.002.000.005,Manual de identificación de la CITES - Ursidae - Partes y derivados - Guía de identificación (pieles),ES,A-112.002.000.005,1,CITES ID Manual,Parts and derivatives,A-112.002.000.005 Ursidae identification aid bear pelts_S.pdf
 1997,A-112.002.000.006,CITES ID Manual - Ursidae - Parts and derivatives - Identificatino key (skulls),EN,,1,CITES ID Manual,Parts and derivatives,A-112.002.000.006 Ursidae identification aid bear skulls_E.pdf
-1982,A-112.002.000.006,Manual de identificación de la CITES - Ursidae -  Partes y derivados - Guía de identificación (cráneos),ES,A-112.002.000.006,1,CITES ID Manual,Parts and derivatives,A-112.002.000.006 Ursidae identification aid bear skulls_S.pdf
+1997,A-112.002.000.006,Manual de identificación de la CITES - Ursidae -  Partes y derivados - Guía de identificación (cráneos),ES,A-112.002.000.006,1,CITES ID Manual,Parts and derivatives,A-112.002.000.006 Ursidae identification aid bear skulls_S.pdf
 1982,A-112.002.006.002,CITES ID Manual - Ursus americanus,EN,,1,CITES ID Manual,General,A-112.002.006.002 Ursus americanus_E.pdf
 1982,A-112.002.006.002,Manual de identificación de la CITES - Ursus americanus,ES,A-112.002.006.002,1,CITES ID Manual,General,A-112.002.006.002 Ursus americanus_S.pdf
 1982,A-112.002.006.001,CITES ID Manual - Ursus arctos,EN,,1,CITES ID Manual,General,A-112.002.006.001 Ursus arctos_E.pdf
 1982,A-112.002.006.003,CITES ID Manual - Ursus maritimus,EN,,1,CITES ID Manual,General,A-112.002.006.003 Ursus maritimus_E.pdf
 1982,A-112.002.006.003,Manual de identificación de la CITES - Ursus maritimus,ES,A-112.002.006.003,1,CITES ID Manual,General,A-112.002.006.003 Ursus maritimus_S.pdf
-1982,A-112.002.004.001,Manual de identificación de la CITES - Ursus thibetanus,ES,A-112.002.004.001,1,CITES ID Manual,General,A-112.002.004.001 Selenarctos thibetanus_S.pdf
 1982,A-112.002.004.001,CITES ID Manual - Ursus thibetanus,EN,,1,CITES ID Manual,General,A-112.002.004.001 Ursus thibetanus_E.pdf
+1982,A-112.002.004.001,Manual de identificación de la CITES - Ursus thibetanus,ES,A-112.002.004.001,1,CITES ID Manual,General,A-112.002.004.001 Selenarctos thibetanus_S.pdf
 1984,A-106.001.002.005,CITES ID Manual - Varecia variegata,EN,,1,CITES ID Manual,General,A-106.001.002.005 Varecia variegata_E.pdf
 1984,A-106.001.002.005,Manual de identificación de la CITES - Varecia variegata,ES,A-106.001.002.005,1,CITES ID Manual,General,A-106.001.002.005 Varecia variegata_S.pdf
 1984,A-119.004.002.002,CITES ID Manual - Vicugna vicugna,EN,,1,CITES ID Manual,General,A-119.004.002.002 Vicugna vicugna_E.pdf

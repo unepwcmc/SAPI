@@ -686,8 +686,8 @@ Date,Manual ID,Title,Language,Master Document ID,Volume,Type,General/ Part,PDF f
 1982,A-213.005.003.001,CITES ID Manual - Herpetotheres cachinnans,EN,,2,CITES ID Manual,General,A-213.005.003.001 Herpetotheres cachinnans_E.pdf
 1982,A-213.005.003.001,Manual de identificación de la CITES - Herpetotheres cachinnans,ES,A-213.005.003.001,2,CITES ID Manual,General,A-213.005.003.001 Herpetotheres cachinnans_S.pdf
 1981,A-220.002.003.002,CITES ID Manual - Heteroglaux blewitti,EN,,2,CITES ID Manual,General,A-220.002.003.002 Athene blewitti_E.pdf
-1997,A-213.003.033.001,Manuel d'identification de la CITES - Hieraaetus ayresii,FR,A-213.003.033.002,2,CITES ID Manual,General,A-213.003.033.001 Hieraaetus ayresii_F.pdf
 1994,A-213.003.033.002,CITES ID Manual - Hieraaetus ayresii,EN,,2,CITES ID Manual,General,A-213.003.033.002 Hieraaetus dubius_E.pdf
+1994,A-213.003.033.002,Manuel d'identification de la CITES - Hieraaetus ayresii,FR,A-213.003.033.002,2,CITES ID Manual,General,A-213.003.033.002 Hieraaetus ayresii_F.pdf
 1994,A-213.003.033.002,Manual de identificación de la CITES - Hieraaetus ayresii,ES,A-213.003.033.002,2,CITES ID Manual,General,A-213.003.033.002 Hieraaetus dubius_S.pdf
 1997,A-213.003.033.003,CITES ID Manual - Hieraaetus fasciatus,EN,,2,CITES ID Manual,General,A-213.003.033.003 Hieraaetus fasciatus_E.pdf
 1997,A-213.003.033.003,Manuel d'identification de la CITES - Hieraaetus fasciatus,FR,A-213.003.033.003,2,CITES ID Manual,General,A-213.003.033.003 Hieraaetus fasciatus_F.pdf
@@ -1054,11 +1054,11 @@ Date,Manual ID,Title,Language,Master Document ID,Volume,Type,General/ Part,PDF f
 1986,A-206.001.000.001,Manual de identificación de la CITES - Spheniscidae,ES,A-206.001.000.001,2,CITES ID Manual,General,A-206.001.000.001 Spheniscidae general notes_S.pdf
 1986,A-206.001.000.002,CITES ID Manual - Spheniscidae - Identification key,EN,,2,CITES ID Manual,General,A-206.001.000.002 Spheniscidae identification aid_E.pdf
 1986,A-206.001.000.002,Manual de identificación de la CITES - Spheniscidae - Guía de identificación,ES,A-206.001.000.002,2,CITES ID Manual,General,A-206.001.000.002 Spheniscidae identification aid_S.pdf
-1986,A-202.001.006.002,Manual de identificación de la CITES - Spheniscus demersus,ES,,2,CITES ID Manual,General,A-202.001.006.002 Spheniscus demersus_S.pdf
 1986,A-206.001.006.002,CITES ID Manual - Spheniscus demersus,EN,,2,CITES ID Manual,General,A-206.001.006.002 Spheniscus demersus_E.pdf
-1986,A-202.001.006.003,Manual de identificación de la CITES - Spheniscus humboldti,ES,,2,CITES ID Manual,General,A-202.001.006.003 Spheniscus humboldti_S.pdf
-1986,A-206.001.006.002,CITES ID Manual - Spheniscus humboldti,EN,,2,CITES ID Manual,General,A-206.001.006.002 Spheniscus humboldti_E.pdf
-1986,A-206.001.006.003,Manuel d'identification de la CITES - Spheniscus humboldti,FR,,2,CITES ID Manual,General,A-206.001.006.003 Spheniscus humboldti_F.pdf
+1986,A-202.001.006.002,Manual de identificación de la CITES - Spheniscus demersus,ES,A-206.001.006.002,2,CITES ID Manual,General,A-202.001.006.002 Spheniscus demersus_S.pdf
+1986,A-206.001.006.003,CITES ID Manual - Spheniscus humboldti,EN,,2,CITES ID Manual,General,A-206.001.006.003 Spheniscus humboldti_E.pdf
+1986,A-202.001.006.003,Manual de identificación de la CITES - Spheniscus humboldti,ES,A-206.001.006.003,2,CITES ID Manual,General,A-202.001.006.003 Spheniscus humboldti_S.pdf
+1986,A-206.001.006.003,Manuel d'identification de la CITES - Spheniscus humboldti,FR,A-206.001.006.003,2,CITES ID Manual,General,A-206.001.006.003 Spheniscus humboldti_F.pdf
 1997,A-213.003.057.002,CITES ID Manual - Spilornis cheela,EN,,2,CITES ID Manual,General,A-213.003.057.002 Spilornis cheela_EN.pdf
 1997,A-213.003.057.004,CITES ID Manual - Spilornis cheela - holospilus,EN,,2,CITES ID Manual,General,A-213.003.057.004 Spilornis holospilus_EN.pdf
 1997,A-213.003.057.003,CITES ID Manual - Spilornis elgini,EN,,2,CITES ID Manual,General,A-213.003.057.003 Spilornis elgini_EN.pdf
@@ -1116,8 +1116,8 @@ Date,Manual ID,Title,Language,Master Document ID,Volume,Type,General/ Part,PDF f
 1992,A-214.003.054.003,CITES ID Manual - Tetraogallus caspius,EN,,2,CITES ID Manual,General,A-214.003.054.003 Tetraogallus caspius_E.pdf
 1992,A-214.003.054.006,CITES ID Manual - Tetraogallus tibetanus,EN,,2,CITES ID Manual,General,A-214.003.054.006 Tetraogallus tibetanus_E.pdf
 1991,A-215.012.011.001,CITES ID Manual - Tetrax tetrax,EN,,2,CITES ID Manual,General,A-215.012.011.001 Tetrax tetrax_E.pdf
-1982,A-211.004.000.001,Manual de identificación de la CITES - Threskiornithidae,ES,A-211.004.000.001,2,CITES ID Manual,General,A-211.004.000.001 Threskiornithidae general notes_S.pdf
 1982,A-211.005.000.001,CITES ID Manual - Threskiornithidae,EN,,2,CITES ID Manual,General,A-211.005.000.001 Threskiornithidae general notes_E.pdf
+1982,A-211.005.000.001,Manual de identificación de la CITES - Threskiornithidae,ES,A-211.005.000.001,2,CITES ID Manual,General,A-211.005.000.001 Threskiornithidae general notes_S.pdf
 1994,A-213.003.062.001,CITES ID Manual - Torgos tracheliotus,EN,,2,CITES ID Manual,General,A-213.003.062.001 Torgos tracheliotus_E.pdf
 1994,A-213.003.062.001,Manual de identificación de la CITES - Torgos tracheliotus,ES,A-213.003.062.001,2,CITES ID Manual,General,A-213.003.062.001 Torgos tracheliotus_S.pdf
 1992,A-214.003.056.000,CITES ID Manual - Tragopan,EN,,2,CITES ID Manual,General,A-214.003.056.000 Phasianidae detemination key tragopan_E.pdf

@@ -103,8 +103,8 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1985,A-301.007.031.002,Manual de identificación de la CITES - Terrapene coahuila,ES,A-301.007.031.002,3,CITES ID Manual,General,A-301.007.031.002 Terrapene coahuila_S.pdf
 1985,A-301.009.000.001,CITES ID Manual - Pelomedusidae,EN,,3,CITES ID Manual,General,A-301.009.000.001 Pelomedusidae general notes_E.pdf
 1985,A-301.009.000.001,Manual de identificación de la CITES - Pelomedusidae,ES,A-301.009.000.001,3,CITES ID Manual,General,A-301.009.000.001 Pelomedusidae general notes_S.pdf
-1985,A-301.009.000.002,Manual de identificación de la CITES - Pelomedusidae - Clave para juveniles,ES,A-301.009.000.002,3,CITES ID Manual,General,"A-301.009.000.002 Key to juvenile Erymnochelys, Peltocephalus, Podocnemis_S.pdf"
 1985,A-301.009.000.002,CITES ID Manual - Pelomedusidae - Key to juveniles,EN,,3,CITES ID Manual,General,"A-301.009.000 Key to juvenile Erymnochelys, Peltocephalus, Podocnemis_E.pdf"
+1985,A-301.009.000.002,Manual de identificación de la CITES - Pelomedusidae - Clave para juveniles,ES,A-301.009.000.002,3,CITES ID Manual,General,"A-301.009.000.002 Key to juvenile Erymnochelys, Peltocephalus, Podocnemis_S.pdf"
 1985,A-301.009.001.001,CITES ID Manual - Erymnochelys madagascariensis,EN,,3,CITES ID Manual,General,A-301.009.001.001 Erymnochelys madagascariensis_E.pdf
 1985,A-301.009.002.001,CITES ID Manual - Pelomedusa subrufa,EN,,3,CITES ID Manual,General,A-301.009.002.001 Pelomedusa subrufa_E.pdf
 1985,A-301.009.002.001,Manual de identificación de la CITES - Pelomedusa subrufa,ES,A-301.009.002.001,3,CITES ID Manual,General,A-301.009.002.001 Pelomedusa subrufa_S.pdf
@@ -259,9 +259,9 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1984,A-303.005.000.004,CITES ID Manual - Chamaeleonidae,EN,,3,CITES ID Manual,General,A-303.005.000.004 Chamaeleonidae identification of species_EN.pdf
 1984,A-303.005.000.004,Manual de identificación de la CITES - Chamaeleonidae - Especies,ES,A-303.005.000.004,3,CITES ID Manual,General,A-303.005.000.004 Chamaeleonidae identification of species_S.pdf
 1984,A-303.005.000.004,Manuel d'identification de la CITES - Chamaeleonidae - Espèces,FR,A-303.005.000.004,3,CITES ID Manual,General,A-303.005.000.004 Chamaeleonidae identification of species_F.pdf
+1984,A-303.005.000.005,CITES ID Manual - Chamaeleonidae - Trade,EN,,3,CITES ID Manual,General,A-303.005.000.005 Chamaeleonidae Trade_EN.pdf
 1984,A-303.005.000.005,Manual de identificación de la CITES - Chamaeleonidae - Comercio,ES,A-303.005.000.005,3,CITES ID Manual,General,A-303.005.000.005 Chamaeleonidae Trade_S.pdf
-1984,A-303.005.000.005,CITES ID Manual - Chamaeleonidae - Trade,EN,A-303.005.000.005,3,CITES ID Manual,General,A-303.005.000.005 Chamaeleonidae Trade_EN.pdf
-2004,A-303.005.000.005a,Manuel d'identification de la CITES - Chamaeleonidae,FR,A-303.005.000.005a,3,CITES ID Manual,General,A-303.005.000.005a Characterization of the genera_F.pdf
+2004,A-303.005.000.005a,Manuel d'identification de la CITES - Chamaeleonidae,FR,,3,CITES ID Manual,General,A-303.005.000.005a Characterization of the genera_F.pdf
 2004,A-303.005.000.006,Manuel d'identification de la CITES - Chamaeleonidae - Clé des genres,FR,A-303.005.000.006,3,CITES ID Manual,General,A-303.005.000.006 Chamaeleonidae identification key genus_F.pdf
 2004,A-303.005.000.008,Manuel d'identification de la CITES - Chamaeleonidae - Clé des noms,FR,A-303.005.000.008,3,CITES ID Manual,General,A-303.005.000.008 Chamaeleonidae identificaiton key names_F.pdf
 1999,A-303.005.000.009,Manuel d'identification de la CITES - Chamaeleonidae - Clé des espèces,FR,A-303.005.000.009,3,CITES ID Manual,General,A-303.005.000.009 Chamaeleonidae identification key species_F.pdf
@@ -477,7 +477,7 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 2005,A-303.005.005.001,CITES ID Manual - Calumma glawi,EN,,3,CITES ID Manual,General,A-303.005.005.001 Calumma glawi_E.pdf
 2005,A-303.005.005.001,Manuel d'identification de la CITES - Calumma glawi,FR,A-303.005.005.001,3,CITES ID Manual,General,A-303.005.005.001 Calumma glawi_F.pdf
 2005,A-303.006.000.001,CITES ID Manual - Cordylidae - General notes,EN,,3,CITES ID Manual,General,A-303.006.000.001 Cordylidae general notes_E.pdf
-1996,A-303.006.000.001,Manuel d'identification de la CITES - Cordylidae - Notes générales,FR,A-303.006.000.001,3,CITES ID Manual,General,A-303.006.000.001 Cordylidae general notes_F.pdf
+2005,A-303.006.000.001,Manuel d'identification de la CITES - Cordylidae - Notes générales,FR,A-303.006.000.001,3,CITES ID Manual,General,A-303.006.000.001 Cordylidae general notes_F.pdf
 1996,A-303.006.000.003,CITES ID Manual - Cordylidae - Idenification aid,EN,,3,CITES ID Manual,General,A-303.006.000.003 Cordylidae identification Aid_E.pdf
 1996,A-303.006.000.003,Manuel d'identification de la CITES - Cordylidae,FR,A-303.006.000.003,3,CITES ID Manual,General,A-303.006.000.003 Cordylidae identification aid_F.pdf
 1996,A-303.006.000.004,CITES ID Manual - Cordylidae - Idenification key,EN,,3,CITES ID Manual,General,A-303.006.000.004 Cordylidae identification key_E.pdf
@@ -541,9 +541,9 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1993,A-303.008.063.002,CITES ID Manual - Phelsuma andamanense,EN,,3,CITES ID Manual,General,A-303.008.063.002 Phelsuma andamanensis_E.pdf
 1993,A-303.008.063.003,CITES ID Manual - Phelsuma antanosy,EN,,3,CITES ID Manual,General,A-303.008.063.003 Phelsuma antanosy_EN.pdf
 1992,A-303.008.063.004,CITES ID Manual - Phelsuma astriata,EN,,3,CITES ID Manual,General,A-303.008.063.004 Phelsuma astriata_EN.pdf
-1993,A-303.008.063.004,Manuel d'identification de la CITES - Phelsuma astriata,FR,A-303.008.063.004,3,CITES ID Manual,General,A-303.008.063.004 Phelsuma astriata_F.pdf
+1992,A-303.008.063.004,Manuel d'identification de la CITES - Phelsuma astriata,FR,A-303.008.063.004,3,CITES ID Manual,General,A-303.008.063.004 Phelsuma astriata_F.pdf
 1992,A-303.008.063.005,CITES ID Manual - Phelsuma barbouri,EN,,3,CITES ID Manual,General,A-303.008.063.005 Phelsuma barbouri_EN.pdf
-1993,A-303.008.063.005,Manuel d'identification de la CITES - Phelsuma barbouri,FR,A-303.008.063.005,3,CITES ID Manual,General,A-303.008.063.005 Phelsuma barbouri_F.pdf
+1992,A-303.008.063.005,Manuel d'identification de la CITES - Phelsuma barbouri,FR,A-303.008.063.005,3,CITES ID Manual,General,A-303.008.063.005 Phelsuma barbouri_F.pdf
 1993,A-303.008.063.006,CITES ID Manual - Phelsuma borbonica,EN,,3,CITES ID Manual,General,A-303.008.063.006 Phelsuma borbonica_E.pdf
 1993,A-303.008.063.006,Manuel d'identification de la CITES - Phelsuma borbonica,FR,A-303.008.063.006,3,CITES ID Manual,General,A-303.008.063.006 Phelsuma borbonica_F.pdf
 1993,A-303.008.063.007,CITES ID Manual - Phelsuma breviceps,EN,,3,CITES ID Manual,General,A-303.008.063.007 Phelsuma breviceps_E.pdf
@@ -620,7 +620,7 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1984,A-303.010.007.001,Manual de identificación de la CITES - Brachylophus fasciatus,ES,A-303.010.007.001,3,CITES ID Manual,General,A-303.010.007.001 Brachylophus fasciatus_S.pdf
 1984,A-303.010.007.002,CITES ID Manual - Brachylophus vitiensis,EN,,3,CITES ID Manual,General,A-303.010.007.002 Brachylophus vitiensis_E.pdf
 1984,A-303.010.007.002,Manual de identificación de la CITES - Brachylophus vitiensis,ES,A-303.010.007.002,3,CITES ID Manual,General,A-303.010.007.002 Brachylophus vitiensis_S.pdf
-1987,A-303.010.019.000,CITES ID Manual - Cyclura,EN,,3,CITES ID Manual,General,A-303.010.019.009 Cyclura spp._E.pdf
+1987,A-303.010.019.000,CITES ID Manual - Cyclura,EN,,3,CITES ID Manual,General,A-303.010.019.000 Cyclura spp_E.pdf
 1987,A-303.010.019.000,Manual de identificación de la CITES - Cyclura,ES,A-303.010.019.000,3,CITES ID Manual,General,A-303.010.019.000 Cyclura_S.pdf
 1989,A-303.010.028.001,CITES ID Manual - Iguana delicatissima,EN,,3,CITES ID Manual,General,A-303.010.028.001 Iguana delicatissima_E.pdf
 1989,A-303.010.028.001,Manual de identificación de la CITES - Iguana delicatissima,ES,A-303.010.028.001,3,CITES ID Manual,General,A-303.010.028.001 Iguana delicatissima_S.pdf
@@ -634,7 +634,7 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 2006,A-303.013.010.001,CITES ID Manual - Hoplodactylus,EN,,3,CITES ID Manual,General,A-303.013.010.001 Hoplodactylus_E.pdf
 2006,A-303.013.010.002,CITES ID Manual - Naultinus,EN,,3,CITES ID Manual,General,A-303.013.010.002 Naultinus_E.pdf
 1993,A-303.014.016.001,CITES ID Manual - Corucia zebrata,EN,,3,CITES ID Manual,General,A-303.014.016.001 Corucia zebrata_E.pdf
-1986,A-303.016.000.001,Manual de identificación de la CITES - Varanidae - Notas generales,ES,A-303.016.000.001,3,CITES ID Manual,General,A-303.016.000.001 Varanidae general notes_S.pdf
+1986,A-303.016.000.001,Manual de identificación de la CITES - Varanidae - Notas generales,ES,,3,CITES ID Manual,General,A-303.016.000.001 Varanidae general notes_S.pdf
 1985,A-303.016.001.001,CITES ID Manual - Varanus acanthurus,EN,,3,CITES ID Manual,General,A-303.016.001.001 Varanus acanthurus_EN.pdf
 1985,A-303.016.001.001,Manual de identificación de la CITES - Varanus acanthurus,ES,A-303.016.001.001,3,CITES ID Manual,General,A-303.016.001.001 Varanus acanthurus_S.pdf
 1986,A-303.016.001.002,CITES ID Manual - Varanus bengalensis,EN,,3,CITES ID Manual,General,A-303.016.001.002 Varanus bengalensis_EN.pdf
@@ -646,9 +646,9 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1985,A-303.016.001.004,Manual de identificación de la CITES - Varanus caudolineatus,ES,A-303.016.001.004,3,CITES ID Manual,General,A-303.016.001.004 Varanus caudolineatus_S.pdf
 1986,A-303.016.001.005,CITES ID Manual - Varanus dumerilii,EN,,3,CITES ID Manual,General,A-303.016.001.005 Varanus dumerilii_EN.pdf
 1986,A-303.016.001.005,Manual de identificación de la CITES - Varanus dumerilii,ES,A-303.016.001.005,3,CITES ID Manual,General,A-303.016.001.005 Varanus dumerilii_S.pdf
-1985,A-303.016.001.005,Manuel d'identification de la CITES - Varanus dumerilii,FR,A-303.016.001.005,3,CITES ID Manual,General,A-303.016.001.005 Varanus dumerilii_F.pdf
+1986,A-303.016.001.005,Manuel d'identification de la CITES - Varanus dumerilii,FR,A-303.016.001.005,3,CITES ID Manual,General,A-303.016.001.005 Varanus dumerilii_F.pdf
 1984,A-303.016.001.006,CITES ID Manual - Varanus eremius,EN,,3,CITES ID Manual,General,A-303.016.001.006 Varanus eremius_EN.pdf
-1985,A-303.016.001.006,Manual de identificación de la CITES - Varanus eremius,ES,A-303.016.001.006,3,CITES ID Manual,General,A-303.016.001.006 Varanus eremius_S.pdf
+1984,A-303.016.001.006,Manual de identificación de la CITES - Varanus eremius,ES,A-303.016.001.006,3,CITES ID Manual,General,A-303.016.001.006 Varanus eremius_S.pdf
 1986,A-303.016.001.007,CITES ID Manual - Varanus exanthematicus,EN,,3,CITES ID Manual,General,A-303.016.001.007 Varanus exanthematicus_EN.pdf
 1986,A-303.016.001.007,Manual de identificación de la CITES - Varanus exanthematicus,ES,A-303.016.001.007,3,CITES ID Manual,General,A-303.016.001.007 Varanus exanthematicus_S.pdf
 1986,A-303.016.001.008,CITES ID Manual - Varanus flavescens,EN,,3,CITES ID Manual,General,A-303.016.001.008 Varanus flavescens_EN.pdf
@@ -673,7 +673,7 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1986,A-303.016.001.016,Manual de identificación de la CITES - Varanus indicus,ES,A-303.016.001.016,3,CITES ID Manual,General,A-303.016.001.016 Varanus indicus_S.pdf
 1985,A-303.016.001.017,CITES ID Manual - Varanus jobiensis,EN,,3,CITES ID Manual,General,A-303.016.001.017 Varanus jobiensis_EN.pdf
 1985,A-303.016.001.017,Manual de identificación de la CITES - Varanus jobiensis,ES,A-303.016.001.017,3,CITES ID Manual,General,A-303.016.001.017 Varanus jobiensis_S.pdf
-1986,A-303.016.001.017,Manuel d'identification de la CITES - Varanus jobiensis,FR,A-303.016.001.017,3,CITES ID Manual,General,A-303.016.001.017 Varanus jobiensis_F.pdf
+1985,A-303.016.001.017,Manuel d'identification de la CITES - Varanus jobiensis,FR,A-303.016.001.017,3,CITES ID Manual,General,A-303.016.001.017 Varanus jobiensis_F.pdf
 1985,A-303.016.001.018,CITES ID Manual - Varanus kingorum,EN,,3,CITES ID Manual,General,A-303.016.001.018 Varanus kingorum_EN.pdf
 1985,A-303.016.001.018,Manual de identificación de la CITES - Varanus kingorum,ES,A-303.016.001.018,3,CITES ID Manual,General,A-303.016.001.018 Varanus kingorum_S.pdf
 1986,A-303.016.001.019,CITES ID Manual - Varanus komodoensis,EN,,3,CITES ID Manual,General,A-303.016.001.019 Varanus komodoensis_EN.pdf
@@ -825,7 +825,7 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1996,A-305.005.300.002,CITES ID Manual - Xenochrophis piscator,EN,,3,CITES ID Manual,General,A-305.005.300.002 Xenochrophis piscator_EN.pdf
 1996,A-305.005.300.002,Manuel d'identification de la CITES - Xenochrophis piscator,FR,A-305.005.300.002,3,CITES ID Manual,General,A-305.005.300.002 Xenochrophis piscator_F.pdf
 2003,A-305.006.022.003,CITES ID Manual - Hoplocephalus bungaroides,EN,,3,CITES ID Manual,General,A-305.006.022.003 Hoplocephalus bungaroides_E.pdf
-1999,A-305.006.022.003,Manual de identificación de la CITES - Hoplocephalus bungaroides,ES,A-305.006.022.003,3,CITES ID Manual,General,A-305.006.022.003 Hoplocephalus bungaroides_S.pdf
+2003,A-305.006.022.003,Manual de identificación de la CITES - Hoplocephalus bungaroides,ES,A-305.006.022.003,3,CITES ID Manual,General,A-305.006.022.003 Hoplocephalus bungaroides_S.pdf
 2003,A-305.006.022.003,Manuel d'identification de la CITES - Hoplocephalus bungaroides,FR,A-305.006.022.003,3,CITES ID Manual,General,A-305.006.022.003 Hoplocephalus bungaroides_F.pdf
 1996,A-305.006.029.014,CITES ID Manual - Micrurus diastema,EN,,3,CITES ID Manual,General,A-305.006.029.014 Micrurus diastema_EN.pdf
 1996,A-305.006.029.014,Manuel d'identification de la CITES - Micrurus diastema,FR,A-305.006.029.014,3,CITES ID Manual,General,A-305.006.029.014 Micrurus diastema_F.pdf
@@ -857,7 +857,7 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1994,A-305.011.017.012,Manuel d'identification de la CITES - Vipera wagneri,FR,A-305.011.017.012,3,CITES ID Manual,General,A-305.011.017.012 Vipera wagneri_F.pdf
 1983,A-306.000.000.001,CITES ID Manual - Crocodylia - General notes,EN,,3,CITES ID Manual,General,A-306.000.000.001 Crocodylia general notes_E.pdf
 1983,A-306.000.000.001,Manual de identificación de la CITES - Crocodylia - Notas generales,ES,A-306.000.000.001,3,CITES ID Manual,General,A-306.000.000.001 Crocodylia general notes_S.pdf
-1983,A-306.000.000.003,Manual de identificación de la CITES - Crocodylia - Familia,ES,A-306.000.000.003,3,CITES ID Manual,General,A-306.000.000.003 Crocodylia identification key family_S.pdf
+1983,A-306.000.000.003,Manual de identificación de la CITES - Crocodylia - Familia,ES,,3,CITES ID Manual,General,A-306.000.000.003 Crocodylia identification key family_S.pdf
 1983,A-306.000.000.004,CITES ID Manual - Crocodylia,EN,,3,CITES ID Manual,General,A-306.000.000.004 Crocodylia identification key by geog_E.pdf
 1983,A-306.000.000.004,Manual de identificación de la CITES - Crocodylia - Especies,ES,A-306.000.000.004,3,CITES ID Manual,General,A-306.000.000.004 Crocodylia identification key species_S.pdf
 1983,A-306.001.000.001,CITES ID Manual - Alligatoridae - Identification key,EN,,3,CITES ID Manual,General,A-306.001.000.001 Alligatoridae identification key_E.pdf
@@ -868,7 +868,7 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1983,A-306.001.001.001,Manual de identificación de la CITES - Alligator mississippiensis,ES,A-306.001.001.001,3,CITES ID Manual,General,A-306.001.001.001 Alligator mississippiensis_S.pdf
 1983,A-306.001.001.002,CITES ID Manual - Alligator sinensis,EN,,3,CITES ID Manual,General,A-306.001.001.002 Alligator sinensis_E.pdf
 1983,A-306.001.001.002,Manual de identificación de la CITES - Alligator sinensis,ES,A-306.001.001.002,3,CITES ID Manual,General,A-306.001.001.002 Alligator sinensis_S.pdf
-1983,A-306.001.002.001,Manual de identificación de la CITES - Caiman crocodilus,ES,A-306.001.002.001,3,CITES ID Manual,General,A-306.001.002.001 Caiman crocodilus_S.pdf
+1983,A-306.001.002.001,Manual de identificación de la CITES - Caiman crocodilus,ES,,3,CITES ID Manual,General,A-306.001.002.001 Caiman crocodilus_S.pdf
 1983,A-306.001.002.002,CITES ID Manual - Caiman latirostris,EN,,3,CITES ID Manual,General,A-306.001.002.002 Caiman latirostris_E.pdf
 1983,A-306.001.002.002,Manual de identificación de la CITES - Caiman latirostris,ES,A-306.001.002.002,3,CITES ID Manual,General,A-306.001.002.002 Caiman latirostris_S.pdf
 1983,A-306.001.003.001,CITES ID Manual - Melanosuchus niger,EN,,3,CITES ID Manual,General,A-306.001.003.001 Melanosuchus niger_E.pdf
@@ -895,7 +895,7 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1983,A-306.002.001.006,Manual de identificación de la CITES - Crocodylus niloticus,ES,A-306.002.001.006,3,CITES ID Manual,General,A-306.002.001.006 Crocodylus niloticus_S.pdf
 1983,A-306.002.001.007,CITES ID Manual - Crocodylus novaeguineae,EN,,3,CITES ID Manual,General,A-306.002.001.007 Crocodylus novaeguineae_E.pdf
 1983,A-306.002.001.007,Manual de identificación de la CITES - Crocodylus novaeguineae,ES,A-306.002.001.007,3,CITES ID Manual,General,A-306.002.001.007 Crocodylus novaeguineae_S.pdf
-1983,A-306.002.001.008,Manual de identificación de la CITES - Crocodylus palustris,ES,A-306.002.001.008,3,CITES ID Manual,General,A-306.002.001.008 Crocodylus palustris_S.pdf
+1983,A-306.002.001.008,Manual de identificación de la CITES - Crocodylus palustris,ES,,3,CITES ID Manual,General,A-306.002.001.008 Crocodylus palustris_S.pdf
 1983,A-306.002.001.009,CITES ID Manual - Crocodylus porosus,EN,,3,CITES ID Manual,General,A-306.002.001.009 Crocodylus porosus_E.pdf
 1983,A-306.002.001.009,Manual de identificación de la CITES - Crocodylus porosus,ES,A-306.002.001.009,3,CITES ID Manual,General,A-306.002.001.009 Crocodylus porosus_S.pdf
 1983,A-306.002.001.010,CITES ID Manual - Crocodylus rhombifer,EN,,3,CITES ID Manual,General,A-306.002.001.010 Crocodylus rhombifer_E.pdf
@@ -960,10 +960,10 @@ Date,Manual ID,Title,Lang,Master Document ID,Volume,Type,General/ Part,PDF Filen
 1986,A-403.016.040.229,Manuel d'identification de la CITES - Hoplobatrachus tigerinus,FR,A-403.016.040.229,3,CITES ID Manual,General,A-403.016.040.229 Hoplobatrachus tigerinus_F.pdf
 2003,A-500.707.001.001,CITES ID Manual - Rhincodon typus,EN,,3,CITES ID Manual,General,A-500.707.001.001 Rhincodon typus_E.pdf
 2003,A-500.707.001.001,Manual de identificación de la CITES - Rhincodon typus,ES,A-500.707.001.001,3,CITES ID Manual,General,A-500.707.001.001 Rhincodon typus_S.pdf
-2000,A-500.805.001.001,CITES ID Manual - Cetorhinus maximus,EN,,3,CITES ID Manual,General,A-500.805.001.001 Cetorhinus maximus_E.pdf
+2003,A-500.805.001.001,CITES ID Manual - Cetorhinus maximus,EN,,3,CITES ID Manual,General,A-500.805.001.001 Cetorhinus maximus_E.pdf
 2003,A-500.805.001.001,Manual de identificación de la CITES - Cetorhinus maximus,ES,A-500.805.001.001,3,CITES ID Manual,General,A-500.805.001.001 Cetorhinus maximus_S.pdf
 2003,A-500.805.001.001,Manuel d'identification de la CITES - Cetorhinus maximus,FR,A-500.805.001.001,3,CITES ID Manual,General,A-500.805.001.001 Cetorhinus maximus_F.pdf
-2003,A-501.001.001.001,Manual de identificación de la CITES - Neoceratodus forsteri,ES,A-501.001.001.001,3,CITES ID Manual,General,A-501.001.001.001 Neoceratodus forsteri_S.pdf
+2003,A-501.001.001.001,Manual de identificación de la CITES - Neoceratodus forsteri,ES,,3,CITES ID Manual,General,A-501.001.001.001 Neoceratodus forsteri_S.pdf
 2004,A-503.001.000.001,CITES ID Manual - Latimeriidae,EN,,3,CITES ID Manual,General,A-503.001.000.001 Latimeriidae general notes_E.pdf
 2004,A-503.001.000.001,Manual de identificación de la CITES - Latimeriidae - Notas generales,ES,A-503.001.000.001,3,CITES ID Manual,General,A-503.001.000.001 Latimeriidae notas generales_S.pdf
 2004,A-503.001.000.002,CITES ID Manual - Latimeriidae - List,EN,,3,CITES ID Manual,General,A-503.001.000.002 Latimeriidae species list_E.pdf
