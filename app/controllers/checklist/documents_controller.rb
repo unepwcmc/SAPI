@@ -48,17 +48,13 @@ class Checklist::DocumentsController < ApplicationController
     t = full_volume_downloader
 
     volumes = params[:volume].sort.join(',')
-    
+
 
     send_file t.path,
       :type => "application/zip",
       :filename => "Identifications-documents-volume-#{volumes}.zip"
 
     t.close
-
-    File.delete(@merged_pdf_path)
-  rescue SystemCallError => e
-    puts e.message
   end
 
   private
