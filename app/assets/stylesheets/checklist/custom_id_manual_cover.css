@@ -23,7 +23,9 @@ body {
 
 .id-manual-cover__banner-logo {
   margin-right: 20px;
-  width: calc(77/44 * 60px); height: 60px;
+  width: 105px; height: 60px;
+
+  display: inline-block;
 }
 
 .id-manual-cover__margins {
@@ -73,7 +75,6 @@ body {
   font-size: 10px;
   font-weight: 100;
   line-height: 1.6;
-  margin-top: auto;
   margin-bottom: 40px;
 }
 
@@ -88,7 +89,7 @@ body {
 .id-manual-cover__disclaimer--right {
   vertical-align: top;
   width: 48%;
-  
+
   display: inline-block;
 }
 
@@ -104,18 +105,19 @@ body {
 .id-manual-cover__footer {
   border-top: solid 1px black;
   padding: 25px 0;
-
-  display: flex;
-  align-items: center;
 }
 
 .id-manual-cover__footer-logo {
   margin-right: 20px;
+  vertical-align: middle;
   height: 45px;
+
+  display: inline-block;
 }
 
 .id-manual-cover__footer-logo--cites {
-  width: 79px; height: 45px;
+  padding: 5px 0;
+  width: 79px; height: 55px;
 }
 
 .id-manual-cover__footer-logo--eu {
@@ -123,5 +125,6 @@ body {
 }
 
 .id-manual-cover__footer-logo--unepwcmc {
-  width: 130px; height: 38px;
+  padding: 8px 0;
+  width: 130px; height: 55px;
 }

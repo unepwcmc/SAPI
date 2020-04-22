@@ -10,7 +10,7 @@
   
   <body>
     <aside class="id-manual-cover__banner">
-      <img alt="logo-cites" src="<%="#{Rails.root.to_s}"%>/app/assets/images/checklist/logo-CITES-blue.svg" class='id-manual-cover__banner-logo'>
+      <img alt="logo-cites" src="<%= Rails.root.to_s %>/app/assets/images/checklist/logo-CITES-blue.svg" class='id-manual-cover__banner-logo'>
       <%= t('id_manual_cover.header') %>
     </aside>
     <main class="id-manual-cover__margins">
@@ -23,7 +23,7 @@
           <div class="id-manual-cover__metadata-row">
             <span><%= t('id_manual_cover.taxon_label') %>:</span>
             <em class="id-manual-cover__bold id-manual-cover__italic">
-              <%= "taxon_name" %>
+              <%= taxon_name %>
             </em>
           </div>
 
@@ -67,8 +67,8 @@
         </div>
 
         <footer class="id-manual-cover__footer">
-          <img alt="logo-cites-black" src="<%="#{Rails.root.to_s}"%>/app/assets/images/checklist/logo-CITES-black.svg" class='id-manual-cover__footer-logo id-manual-cover__footer-logo--cites'>
-          <img alt="logo-eu" src="<%="#{Rails.root.to_s}"%>/app/assets/images/checklist/eu-black.svg" class='id-manual-cover__footer-logo id-manual-cover__footer-logo--eu'>
+          <img alt="logo-cites-black" src="<%= Rails.root.to_s %>/app/assets/images/checklist/logo-CITES-black.svg" class='id-manual-cover__footer-logo id-manual-cover__footer-logo--cites'>
+          <img alt="logo-eu" src="<%= Rails.root.to_s %>/app/assets/images/checklist/eu-black.svg" class='id-manual-cover__footer-logo id-manual-cover__footer-logo--eu'>
           <img alt='logo-unep' src="http://s3.amazonaws.com/wcmc.logo/UNEP_WCMC_logo_black.svg", class="id-manual-cover__footer-logo id-manual-cover__footer-logo--unepwcmc">
         </footer>
       </div>
