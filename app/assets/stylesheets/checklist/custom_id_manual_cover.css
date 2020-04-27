@@ -1,7 +1,3 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   width: 800px; height: 1132px;
@@ -13,29 +9,34 @@ body {
 .id-manual-cover__banner {
   background-color: #F3F6F9;
   color: #33536a;
-  line-height: 60px;
-  padding: 25px 40px;
+  line-height: 110px;
+  padding-left: 165px;
+  padding-right: 40px;
   font-weight: 400;
   font-size: 20px;
+  width: 595px; height: 110px;
 
-  display: flex;
+  position: relative;
+
 }
 
 .id-manual-cover__banner-logo {
-  margin-right: 20px;
   width: 105px; height: 60px;
+  top: 25px; left: 40px;
+  line-height: normal;
 
-  display: inline-block;
+  display: block;
+  position: absolute;
 }
 
 .id-manual-cover__margins {
-  padding: 70px 40px 0;
+  padding: 0 40px;
 }
 
 .id-manual-cover__title {
   font-size: 32px;
   font-weight: bold;
-  margin-top: 0;
+  margin-top: 70px;
   margin-bottom: 50px;
 }
 
@@ -64,7 +65,7 @@ body {
 
 .id-manual-cover__bottom {
   padding: 0 40px;
-  width: 100%;
+  width: 720px;
 
   position: absolute;
   bottom: 0;
@@ -72,10 +73,11 @@ body {
 }
 
 .id-manual-cover__disclaimer {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 100;
   line-height: 1.6;
   margin-bottom: 40px;
+  width: 720px;
 }
 
 .id-manual-cover__disclaimer--left {
@@ -105,26 +107,27 @@ body {
 .id-manual-cover__footer {
   border-top: solid 1px black;
   padding: 25px 0;
+  width: 720px;
 }
 
 .id-manual-cover__footer-logo {
   margin-right: 20px;
   vertical-align: middle;
-  height: 45px;
+  /* height: 45px; */
 
   display: inline-block;
 }
 
 .id-manual-cover__footer-logo--cites {
-  padding: 5px 0;
-  width: 79px; height: 55px;
+  /* padding: 5px 0; */
+  width: 79px; height: 115px;
 }
 
 .id-manual-cover__footer-logo--eu {
-  width: 83px; height: 55px;
+  width: 83px; height: 105px;
 }
 
 .id-manual-cover__footer-logo--unepwcmc {
-  padding: 8px 0;
-  width: 130px; height: 55px;
+  /* padding: 8px 0; */
+  width: 139px; height: 169px;
 }
