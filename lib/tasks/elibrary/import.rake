@@ -178,4 +178,11 @@ namespace :elibrary do
       importer.run
     end
   end
+  namespace :identification_distribution do
+    require Rails.root.join('lib/tasks/elibrary/identification_docs_distributions_importer.rb')
+    desc 'Import taxon distributions on Identification documents'
+    task :import => :environment do |task_name|
+      Elibrary::IdentificationDocsDistributionsImporter.run
+    end
+  end
 end
