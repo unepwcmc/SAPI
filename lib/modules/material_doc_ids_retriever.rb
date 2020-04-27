@@ -8,19 +8,25 @@ module MaterialDocIdsRetriever
                                    .first
 
         # retrieve the same taxa as shown in the page
-        ids = MTaxonConcept.by_cites_eu_taxonomy
-                           .without_non_accepted
-                           .without_hidden
-                           .by_name(
-                              params['taxon_name'],
-                              { :synonyms => true, :common_names => true, :subspecies => false }
-                             )
-                           .order('rank_id ASC, full_name')
-                           .pluck(:id)
+        check_params = params.symbolize_keys
+        ids =
+          if params['scientific_name'].present? ||  params['country_ids'].present? ||  params['cites_appendices'].present?
+            Checklist::Checklist.new(check_params).results.map(&:id)
 
-        # anc_ids = ancestors_ids(ids.join(','), params['taxon_name'], exact_match).uniq
+          else
+            MTaxonConcept.by_cites_eu_taxonomy
+                             .without_non_accepted
+                             .without_hidden
+                             .by_name(
+                                params['taxon_name'],
+                                { :synonyms => true, :common_names => true, :subspecies => false }
+                               )
+                             .order('rank_id ASC, full_name')
+                             .pluck(:id)
+          end
+
         anc_ids = []
-        anc_ids = ancestors_ids(exact_match.try(:id), params['taxon_name'], exact_match).uniq  if exact_match
+        anc_ids = ancestors_ids(exact_match.try(:id), params['taxon_name'], exact_match).uniq  if ids.include?(exact_match.id)
         anc_ids | ids
       elsif params['taxon_concept_id'].present?
         # retrieve all the ancestors taxa given a taxon(included)
@@ -28,6 +34,9 @@ module MaterialDocIdsRetriever
         #retrieve all the children taxa given a taxon(included)
         chi_ids = MTaxonConcept.descendants_ids(params['taxon_concept_id']).map(&:to_i)
         anc_ids | chi_ids
+      else
+        check_params = params.symbolize_keys
+        Checklist::Checklist.new(check_params).results.map(&:id)
       end
 
     docs = DocumentSearch.new(
