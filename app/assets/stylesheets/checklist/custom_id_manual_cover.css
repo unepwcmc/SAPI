@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  width: 800px; height: 1132px;
+  width: 800px; height: 1131px;
 
   position: relative;
   font-family: Helvetica, Arial, sans-serif;
@@ -14,16 +14,16 @@ body {
   padding-right: 40px;
   font-weight: 400;
   font-size: 20px;
-  width: 595px; height: 110px;
+  /* width: 595px; height: 110px; */
 
-  position: relative;
+  /* position: relative; */
 
 }
 
 .id-manual-cover__banner-logo {
   width: 105px; height: 60px;
   top: 25px; left: 40px;
-  line-height: normal;
+  /* line-height: normal; */
 
   display: block;
   position: absolute;
@@ -119,15 +119,15 @@ body {
 }
 
 .id-manual-cover__footer-logo--cites {
-  /* padding: 5px 0; */
-  width: 79px; height: 115px;
+  padding: 5px 0;
+  width: 79px; height: 45px;
 }
 
 .id-manual-cover__footer-logo--eu {
-  width: 83px; height: 105px;
+  width: 83px; height: 55px;
 }
 
 .id-manual-cover__footer-logo--unepwcmc {
-  /* padding: 8px 0; */
-  width: 139px; height: 169px;
+  padding: 8px 0;
+  width: 133px; height: 39px;
 }

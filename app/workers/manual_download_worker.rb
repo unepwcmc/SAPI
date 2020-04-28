@@ -93,7 +93,7 @@ class ManualDownloadWorker
   end
 
   def cover_path_generator
-    kit = PDFKit.new(ActionController::Base.new().render_to_string(template: '/checklist/_custom_id_manual_cover.html.erb', locals: { taxon_name: @display_name }))
+    kit = PDFKit.new(ActionController::Base.new().render_to_string(template: '/checklist/_custom_id_manual_cover.html.erb', locals: { taxon_name: @display_name }), page_size: 'A4')
     kit.stylesheets << "#{Rails.root.to_s}/app/assets/stylesheets/checklist/custom_id_manual_cover.css"
     @cover_path = "public/downloads/checklist/#{@display_name}-cover.pdf"
     kit.to_file(@cover_path)
