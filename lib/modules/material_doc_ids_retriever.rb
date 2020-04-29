@@ -11,6 +11,7 @@ module MaterialDocIdsRetriever
         check_params = params.symbolize_keys
         ids =
           if params['scientific_name'].present? ||  params['country_ids'].present? ||  params['cites_appendices'].present?
+            check_params[:scientific_name] = params['taxon_name']
             Checklist::Checklist.new(check_params).results.map(&:id)
 
           else
