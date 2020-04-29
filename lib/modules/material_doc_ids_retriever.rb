@@ -12,7 +12,7 @@ module MaterialDocIdsRetriever
         ids =
           if params['scientific_name'].present? ||  params['country_ids'].present? ||  params['cites_appendices'].present?
             check_params[:scientific_name] = params['taxon_name']
-            Checklist::Checklist.new(check_params).results.map(&:id)
+            Checklist::Checklist.new(check_params).query.pluck(:id)
 
           else
             MTaxonConcept.by_cites_eu_taxonomy
