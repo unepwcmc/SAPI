@@ -160,7 +160,6 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
         @handleEventTypeDeselection(@get('controllers.events.idMaterialsEvent'))
       @set('selectedGeneralSubType', null)
       @set('selectedDocumentType', null)
-      @set('locationsDropdownVisible', true)
       @toggleKeywordSearch(true)
 
     handleGeneralSubTypeSelection: (type) ->
