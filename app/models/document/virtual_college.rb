@@ -26,6 +26,6 @@
 
 class Document::VirtualCollege < Document
   def self.display_name
-    'CITES Virtual College'
+    'Other identification materials'
   end
 end
