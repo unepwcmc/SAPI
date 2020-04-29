@@ -11,7 +11,6 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
   autoCompleteTaxonConcept: null
   selectedEventType: null
   selectedGeneralSubType: null
-  locationsDropdownVisible: true
   keywordSearchVisible: true
 
   setFilters: (filtersHash) ->
@@ -155,16 +154,12 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       @toggleKeywordSearch(documentType.id != 'Document::VirtualCollege' && documentType.id != '__all__' )
       if @containsDocTypeOrDocTypeUnselected(@get('identificationDocumentTypes'))
         @handleEventTypeSelection(@get('controllers.events.idMaterialsEvent'))
-        @set('locationsDropdownVisible', false)
-        @set('selectedGeoEntities', [])
-        @set('selectedGeoEntitiesIds', [])
 
     handleDocumentTypeDeselection: ->
       if @get('isEventTypeIdMaterials')
         @handleEventTypeDeselection(@get('controllers.events.idMaterialsEvent'))
       @set('selectedGeneralSubType', null)
       @set('selectedDocumentType', null)
-      @set('locationsDropdownVisible', true)
       @toggleKeywordSearch(true)
 
     handleGeneralSubTypeSelection: (type) ->
