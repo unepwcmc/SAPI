@@ -80,3 +80,39 @@ es:
   full_db_download_available: "Descarga completa de la Base de Datos sobre el Comercio CITES disponible"
   download_here: "Descargar aquí"
   file_size: "Tamaño"
+
+  id_manual_cover:
+    header: Lista de especies CITES
+    title: Entradas del Manual de Identificación CITES
+    taxon_label: Mostrando resultados de búsqueda para
+    date_label: Fecha de descarga
+    website_label: Lista de especies CITES
+    checklist_url: http://checklist.cites.org/#/es
+    disclaimer_left: "
+      <p>
+        El Manual de Identificación de la CITES es una colección de hojas de datos diseñadas para ayudar a identificar varias especies de fauna y flora con dibujos, fotografías, mapas y descripciones concisas. Las hojas del manual se publicaron durante 29 años, desde 1980 a 2009. Su contenido se proporciona tal como se publicó originalmente y, como tal, no hay garantía de la integridad o precisión del contenido. Materiales de identificación no están disponibles para todas las especies, y pueden estar ausentes particularmente para las especies incluidas en los Apéndices de la CITES después del 2009.
+      </p>
+      <p>
+        Los usuarios deben tener en cuenta que información sobre la inclusión de los taxones en los Apéndices de la CITES y la taxonomía de las especies descritas en los materiales disponibles pueden haber cambiado desde que los materiales se publicaron por primera vez. Para obtener la nomenclatura actual de la CITES e información sobre la inclusión de taxones en los Apéndices, por favor consulte la lista principal de especies CITES (y las descargas dedicadas a las listas/nombres) y Species+.
+      </p>
+      <p>
+        El manual contiene materiales en los tres idiomas de trabajo de la Convención (inglés, francés y español), sin embargo, los materiales en francés y español están disponibles para una menor cantidad de taxones. Los materiales se proporcionan en el idioma especificado cuando sea posible, y cuando los materiales no están disponibles en francés y español, se proporcionan en inglés.
+      <p>
+        Esta publicación puede ser reproducida con fines educativos o no lucrativos sin permiso especial, siempre que se cite la fuente con la cita correcta. La reproducción de la publicación (o de cualquiera de sus figuras) con fines comerciales sólo se permite con permiso por escrito de la Secretaría de la CITES.
+      </p>
+    "
+    disclaimer_right: "
+      <p>
+        Las solicitudes de autorización, con una declaración de la intención y el alcance de la reproducción, deben enviarse a info@cites.org, o dirigirse a la Secretaría de la CITES, Palais de Nations, Avenue de la Paix 8-14, 1211, Ginebra 10, Suiza.
+      </p>
+      <p>
+        Las designaciones geográficas empleadas en esta publicación no implican la expresión de ninguna opinión por parte de los compiladores, la Secretaría de la CITES o el Programa de las Naciones Unidas para el Medio Ambiente con respecto a la situación legal de ningún país, territorio o área, o con respecto a la delimitación de fronteras o límites.
+      </p>
+      <p>
+        Este proyecto fue financiado por la Unión Europea en el marco del proyecto de Acuerdo de Cooperación del Programa GPGC CE-ONU Medio Ambiente, otorgado a la Secretaría de la CITES.
+      </p>
+    "
+    citation_label: Cita
+    citation_text: "ONU Medio Ambiente - Centro Mundial para el Seguimiento de la Conservación (UNEP-WCMC) (Comps.) 2020. Lista de especies CITES - Manual de identificación CITES. Secretaría CITES, Ginebra, Suiza, y UNEP-WCMC, Cambridge, Reino Unido. Accedido el %{date}"
+    copyright_label: Copyright
+    copyright_text: 2020 Secretaría de la Convención sobre el Comercio Internacional de Especies Amenazadas de Fauna y Flora Silvestres
