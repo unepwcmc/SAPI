@@ -1,32 +1,33 @@
+/* 
+This styling is very hacky - pdfkit is being used to turn an html and css file into a pdf.
+It seems to only support a very narrow range of styling options.
+Also note the images need to be pngs - svgs will not resize properly
+*/
+
 body {
+  font-family: Helvetica, Arial, sans-serif;
   margin: 0;
   width: 800px; height: 1131px;
 
   position: relative;
-  font-family: Helvetica, Arial, sans-serif;
 }
 
 .id-manual-cover__banner {
   background-color: #F3F6F9;
   color: #33536a;
+  font-weight: 400;
+  font-size: 20px;
   line-height: 110px;
   padding-left: 165px;
   padding-right: 40px;
-  font-weight: 400;
-  font-size: 20px;
-  /* width: 595px; height: 110px; */
-
-  /* position: relative; */
-
 }
 
 .id-manual-cover__banner-logo {
   width: 105px; height: 60px;
-  top: 25px; left: 40px;
-  /* line-height: normal; */
-
+  
   display: block;
   position: absolute;
+  top: 25px; left: 40px;
 }
 
 .id-manual-cover__margins {
@@ -113,7 +114,6 @@ body {
 .id-manual-cover__footer-logo {
   margin-right: 20px;
   vertical-align: middle;
-  /* height: 45px; */
 
   display: inline-block;
 }
