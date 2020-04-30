@@ -5,6 +5,7 @@ class ManualDownloadWorker
   sidekiq_options :retry => false, :backtrace => 50
 
   def perform(download_id, params)
+    @locale = params['locale']
     @download = Download.find(download_id)
     @download_path = download_location('zip', params)
     @display_name = params['taxon_name'] || MTaxonConcept.find(params['taxon_concept_id']).full_name
@@ -61,6 +62,8 @@ class ManualDownloadWorker
     FileUtils.mkdir tmp_dir_path
     input_name = 'merged_file.pdf'
     file_path = tmp_dir_path + '/' + input_name
+    cover_path_generator
+    pdf_file_paths << @cover_path
     @documents.each do |document|
       path_to_file = document.filename.path
       filename = path_to_file.split('/').last
@@ -75,6 +78,7 @@ class ManualDownloadWorker
 
     FileUtils.cp file_path, @download_path
     FileUtils.rm_rf(tmp_dir_path)
+    FileUtils.rm_rf(@cover_path)
 
     Zip::File.open([Rails.root, '/public/downloads/checklist/', @filename , '.zip'].join, Zip::File::CREATE) do |zip|
       zip.add("Identification-materials-#{@display_name}.pdf", @download_path)
@@ -87,5 +91,13 @@ class ManualDownloadWorker
     Appsignal.add_exception(exception) if defined? Appsignal
     @download.status = "failed"
     @download.save!
+  end
+
+  def cover_path_generator
+    I18n.locale = @locale
+    kit = PDFKit.new(ActionController::Base.new().render_to_string(template: '/checklist/_custom_id_manual_cover.html.erb', locals: { taxon_name: @display_name }), page_size: 'A4')
+    kit.stylesheets << "#{Rails.root.to_s}/app/assets/stylesheets/checklist/custom_id_manual_cover.css"
+    @cover_path = "public/downloads/checklist/#{@display_name}-cover.pdf"
+    kit.to_file(@cover_path)
   end
 end
