@@ -5,6 +5,7 @@ class ManualDownloadWorker
   sidekiq_options :retry => false, :backtrace => 50
 
   def perform(download_id, params)
+    @locale = params['locale']
     @download = Download.find(download_id)
     @download_path = download_location('zip', params)
     @display_name = params['taxon_name'] || MTaxonConcept.find(params['taxon_concept_id']).full_name
@@ -93,6 +94,7 @@ class ManualDownloadWorker
   end
 
   def cover_path_generator
+    I18n.locale = @locale
     kit = PDFKit.new(ActionController::Base.new().render_to_string(template: '/checklist/_custom_id_manual_cover.html.erb', locals: { taxon_name: @display_name }), page_size: 'A4')
     kit.stylesheets << "#{Rails.root.to_s}/app/assets/stylesheets/checklist/custom_id_manual_cover.css"
     @cover_path = "public/downloads/checklist/#{@display_name}-cover.pdf"
