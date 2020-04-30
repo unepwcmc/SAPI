@@ -40,6 +40,8 @@ module MaterialDocIdsRetriever
         Checklist::Checklist.new(check_params).results.map(&:id)
       end
 
+    return [] if params['taxon_concepts_ids'].empty?
+
     docs = DocumentSearch.new(
       params.merge(show_private: false, per_page: 10_000), 'public'
     )
