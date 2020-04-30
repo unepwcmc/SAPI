@@ -1,4 +1,14 @@
 class Elibrary::IdentificationDocsDistributionsImporter
+
+  def self.run
+    import_species_distributions
+    import_higher_taxa_distributions
+    exceptions
+    DocumentSearch.refresh_citations_and_documents
+  end
+
+  private
+
   # import distribution on material documents tagged at species level
   def self.import_species_distributions
     sql = <<-SQL
@@ -28,14 +38,16 @@ class Elibrary::IdentificationDocsDistributionsImporter
   	     LEFT OUTER JOIN taxon_concepts_mview tc ON tc_id=tc.id
          ) AS t(doc_cit_id,country_id)
       GROUP BY doc_cit_id
-      ORDER BY doc_cit_id DESC;
+
+      ON CONFLICT (geo_entity_id, document_citation_id) DO NOTHING
+
     SQL
 
     ActiveRecord::Base.connection.execute(sql)
   end
 
   # import distribution on material documents tagged at level higher than species
-  def self.import_higer_taxa_distributions
+  def self.import_higher_taxa_distributions
 
     sql = <<-SQL
     WITH doc_taxon_tmp AS (
@@ -93,6 +105,26 @@ class Elibrary::IdentificationDocsDistributionsImporter
 
       SQL
       ActiveRecord::Base.connection.execute(query)
+    end
+  end
+
+  EXCEPTIONS = [
+    { manual_id: "Commercial species of freshwater stingrays in Brazil_EN.pdf", geo_entity: 'Brazil' },
+    { manual_id: "Guide d'identification Des espèces du Tchad CITES_FR.pdf", geo_entity: 'Chad' },
+    { manual_id: "Identification Manual for the Conservation of Turtles in China_EN.pdf", geo_entity: 'China' },
+    { manual_id: "Guía para la identificación de especies de tiburones, rayas y quimeras de Colombia_ES.pdf", geo_entity: 'Colombia' },
+    { manual_id: "Guide d'identification Des espèces du Gabon CITES_FR.pdf", geo_entity: 'Gabon' },
+    { manual_id: "Guía de identificación para aves silvestres de mayor comercio en México_ES.pdf", geo_entity: 'Mexico' },
+    { manual_id: "Guía de identificación para mamíferos silvestres de mayor comercio en México_ES.pdf", geo_entity: 'Mexico' },
+    { manual_id: "http://biodiversityadvisor.sanbi.org/species-id-tool/", geo_entity: 'South Africa' }
+  ].freeze
+  def self.exceptions
+    EXCEPTIONS.each do |exception|
+      doc = Document.where(manual_id: exception[:manual_id]).first
+      doc_cit_id = DocumentCitation.where(document_id: doc.id).first.id
+      DocumentCitationGeoEntity.where(document_citation_id: doc_cit_id).destroy_all
+      geo_id = GeoEntity.find_by_name_en(exception[:geo_entity]).id
+      DocumentCitationGeoEntity.create!(document_citation_id: doc_cit_id, geo_entity_id: geo_id)
     end
   end
 end
