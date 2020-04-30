@@ -1,9 +1,13 @@
 class Elibrary::IdentificationDocsDistributionsImporter
 
   def self.run
+    puts "Importing distributions at species level..."
     import_species_distributions
+    puts "Importing distributions at higher taxa level..."
     import_higher_taxa_distributions
+    puts "Managing exceptions"
     exceptions
+    puts "Refresh materialized views"
     DocumentSearch.refresh_citations_and_documents
   end
 
