@@ -63,6 +63,43 @@ class Checklist::Timeline
     end
   end
 
+  def resolve_simultaneous_events
+    # Go through each timeline and iterate over each event in a timeline
+    # Where at least two events have the same effective_at date
+      # Check to see if deletions are present
+        # if deletion, set is_current to false for all of them / splice them out of the array
+    # map these changes to new timeline event arrays
+
+    # modified = (@timelines + [self]).flatten.each do |timeline|
+    #   prev_event = nil
+
+    #   timeline.timeline_events.each_with_index do |event, idx|
+    #     next_event = timeline.timeline_events[idx + 1]
+    #     if prev_event &&
+    #       (event.party_id.nil? || event.party_id == prev_event.party_id) &&
+    #       (event.effective_at_formatted == (prev_event.effective_at_formatted || next_event.effective_at_formatted))
+    #       # event.is_current = false
+    #       if !prev_event.is_deletion? && event.is_deletion?
+    #         timeline.timeline_events.slice!(idx)
+    #       end
+    #     end
+    #     prev_event = event
+    #   end
+    # end
+    # p modified
+    # modified
+    original = (@timelines + [self]).flatten.each { |timeline|
+      filtered = timeline.timeline_events.group_by(&:effective_at_formatted).each { |_, values|
+        values.reject!(&:is_deletion?) if values.length > 1
+        # timeline.timeline_events = filtered.values.flatten
+      }
+      # timeline.timeline_events = filtered.values.flatten
+      # p timeline.timeline_events
+    }
+    p original
+    original
+  end
+
   def add_intervals
     (@timelines + [self]).flatten.each do |timeline|
       timeline.timeline_events.each_with_index do |event, idx|
