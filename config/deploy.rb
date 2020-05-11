@@ -1,7 +1,7 @@
 # config valid only for current version of Capistrano
 lock '3.11.0'
 
-set :application, 'sapi_id_manual'
+set :application, 'sapi'
 set :repo_url, 'git@github.com:unepwcmc/SAPI.git'
 
 # Default branch is :master
@@ -34,8 +34,8 @@ set :ssh_options, {
   forward_agent: true
 }
 
-#set :init_system, :systemd
-#set :service_unit_name, "sidekiq_#{fetch(:application)}.service"
+set :init_system, :systemd
+set :service_unit_name, "sidekiq_#{fetch(:application)}.service"
 
 # Default value for :linked_files is []
 set :linked_files, %w{config/database.yml .env}
@@ -76,22 +76,22 @@ shuffle_deployer = deployment_animals.shuffle.first
 set :slack_username, shuffle_deployer[0] # displayed as name of message sender
 set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the message
 
-#namespace :sidekiq do
-#  task :quiet do
-#    on roles(:app) do
-#      puts capture("pgrep -f 'sidekiq.*sapi' | xargs kill -TSTP")
-#    end
-#  end
-#  task :restart do
-#    on roles(:app) do
-#      execute :sudo, :systemctl, :restart, :'sidekiq_sapi'
-#    end
-#  end
-#end
+namespace :sidekiq do
+ task :quiet do
+   on roles(:app) do
+     puts capture("pgrep -f 'sidekiq.*sapi' | xargs kill -TSTP")
+   end
+ end
+ task :restart do
+   on roles(:app) do
+     execute :sudo, :systemctl, :restart, :'sidekiq_sapi'
+   end
+ end
+end
 
-#after 'deploy:starting', 'sidekiq:quiet'
-#after 'deploy:reverted', 'sidekiq:restart'
-#after 'deploy:published', 'sidekiq:restart'
+after 'deploy:starting', 'sidekiq:quiet'
+after 'deploy:reverted', 'sidekiq:restart'
+after 'deploy:published', 'sidekiq:restart'
 
 after "deploy", "smoke_test:test_endpoints"
 
