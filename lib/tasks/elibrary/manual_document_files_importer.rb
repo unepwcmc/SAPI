@@ -37,11 +37,12 @@ class Elibrary::ManualDocumentFilesImporter
         when 'Document::VirtualCollege'
           unless doc.elib_legacy_file_name =~ /\.pdf/
             puts "THIS IS A LINK TO EXTERNAL RESOURCES, NOT A PDF #{source_location}" + info_txt
-          else
-            remote_doc = Document.find(doc.id)
-            remote_doc.remote_filename_url = doc.elib_legacy_file_name
-            remote_doc.save!
+          # else
+            # remote_doc = Document.find(doc.id)
+            # remote_doc.remote_filename_url = doc.elib_legacy_file_name
+            # remote_doc.save!
           end
+          puts "SOURCE MISSING #{source_location}" + info_txt
           next
         end
       end
