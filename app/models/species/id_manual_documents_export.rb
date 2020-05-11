@@ -28,6 +28,7 @@ class Species::IdManualDocumentsExport < Species::CsvCopyExport
       :language,
       :primary_document_id,
       :taxon_names,
+      :geo_entity_names,
       "to_char(created_at, 'DD/MM/YYYY')",
       "to_char(updated_at, 'DD/MM/YYYY')"
     ]
@@ -44,6 +45,7 @@ class Species::IdManualDocumentsExport < Species::CsvCopyExport
       'Language',
       'Primary ID',
       'Taxon names',
+      'Country names',
       'Created at',
       'Updated at'
     ]
