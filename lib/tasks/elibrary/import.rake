@@ -75,7 +75,16 @@ namespace :elibrary do
       importer.run
     end
   end
-  namespace :document_discussions do
+  namespace :identification_documents do
+    require Rails.root.join('lib/tasks/elibrary/documents_identification_importer.rb')
+    desc 'Import manual id documents and VC resources from csv file'
+    task :import => :environment do |task_name|
+      check_file_provided(task_name)
+      importer = Elibrary::DocumentsIdentificationImporter.new(ENV['FILE'])
+      importer.run
+    end
+  end
+    namespace :document_discussions do
     require Rails.root.join('lib/tasks/elibrary/document_discussions_importer.rb')
     desc 'Import document discussions'
     task :import => :environment do |task_name|
@@ -92,6 +101,17 @@ namespace :elibrary do
         fail "Usage: SOURCE_DIR=/abs/path/to/dir TARGET_DIR=/abs/path/to/dir rake elibrary:import:#{task_name}"
       end
       importer = Elibrary::DocumentFilesImporter.new(ENV['SOURCE_DIR'], ENV['TARGET_DIR'])
+      importer.run
+    end
+  end
+  namespace :manual_document_files do
+    require Rails.root.join('lib/tasks/elibrary/manual_document_files_importer.rb')
+    desc 'Import Manual ID and Virtual College files'
+    task :import => :environment do |task_name|
+      if ENV['SOURCE_DIR'].blank? || ENV['TARGET_DIR'].blank?
+        fail "Usage: SOURCE_DIR=/abs/path/to/dir TARGET_DIR=/abs/path/to/dir rake elibrary:import:#{task_name}"
+      end
+      importer = Elibrary::ManualDocumentFilesImporter.new(ENV['SOURCE_DIR'], ENV['TARGET_DIR'])
       importer.run
     end
   end
@@ -147,6 +167,22 @@ namespace :elibrary do
       check_file_provided(task_name)
       importer = Elibrary::CitationsImporter.new(ENV['FILE'])
       importer.run
+    end
+  end
+  namespace :citations_manual do
+    require Rails.root.join('lib/tasks/elibrary/citations_manual_importer.rb')
+    desc 'Import Manual ID and VC citations from csv file'
+    task :import => :environment do |task_name|
+      check_file_provided(task_name)
+      importer = Elibrary::CitationsManualImporter.new(ENV['FILE'])
+      importer.run
+    end
+  end
+  namespace :identification_distribution do
+    require Rails.root.join('lib/tasks/elibrary/identification_docs_distributions_importer.rb')
+    desc 'Import taxon distributions on Identification documents'
+    task :import => :environment do |task_name|
+      Elibrary::IdentificationDocsDistributionsImporter.run
     end
   end
 end

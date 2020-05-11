@@ -71,11 +71,14 @@
       {{#if controllers.taxonConceptDocuments.citesPcDocsPresent}}
         <li><a href="#cites_rst_plants" class="scroll-to">CITES Review of Significant Trade</a></li>
       {{/if}}
+      {{#if controllers.taxonConceptDocuments.idMaterialsDocsPresent}}
+        <li><a href="#id_manual" class="scroll-to">Identification materials</a></li>
+      {{/if}}
       {{#if controllers.taxonConceptDocuments.euSrgDocsPresent}}
         <li><a href="#eu_srg" class="scroll-to">EU SRG</a></li>
       {{/if}}
       {{#if controllers.taxonConceptDocuments.otherDocsPresent}}
-        <li><a href="#other" class="scroll-to">Inter-sessional docs</a></li>
+        <li><a href="#other" class="scroll-to">Other docs</a></li>
       {{/if}}
       </ul>
     </li>

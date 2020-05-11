@@ -14,23 +14,31 @@ Species.EventLookup = Ember.Mixin.create
   ).property('selectedEventType.id')
 
   eventsDropdownVisible: ( ->
-    @get('selectedEventType')?
-  ).property('selectedEventType.id')
+    @get('selectedEventType')? && !@get('isEventTypeIdMaterials')
+  ).property('selectedEventType.id', 'isEventTypeIdMaterials')
 
-  actions:
-    handleEventTypeSelection: (eventType) ->
-      @set('selectedEventType', eventType)
-      if @get('selectedEventType.id') != @get('selectedEvent.type')
-        @set('selectedEvents', [])
-        @set('selectedEventsIds', [])
-      if (@get('selectedDocumentType.eventTypes') && @get('selectedDocumentType.eventTypes').indexOf(@get('selectedEvent.type')) < 0) || eventType.id == 'EcSrg'
-        @set('selectedDocumentType', null)
+  isEventTypeIdMaterials: ( ->
+    @get('selectedEventType')? && @get('selectedEventType.id') == @get('controllers.events.idMaterialsEvent.id')
+  ).property('selectedEventType')
 
-    handleEventTypeDeselection: (eventType) ->
+  handleEventTypeSelection: (eventType) ->
+    @set('selectedEventType', eventType)
+    if @get('selectedEventType.id') != @get('selectedEvent.type')
+      @set('selectedEvents', [])
+      @set('selectedEventsIds', [])
+    if (@get('selectedDocumentType.eventTypes') && @get('selectedDocumentType.eventTypes').indexOf(@get('selectedEvent.type')) < 0) || eventType.id == 'EcSrg'
+      @set('selectedDocumentType', null)
+
+  handleEventTypeDeselection: (eventType) ->
       @set('selectedEventType', null)
       @set('selectedEvents', [])
       @set('selectedEventsIds', [])
       @set('selectedDocumentType', null)
+
+  actions:
+    handleEventTypeSelection: @handleEventTypeSelection
+
+    handleEventTypeDeselection: @handleEventTypeDeselection
 
     deleteEventSelection: (context) ->
       @get('selectedEvents').removeObject(context)
