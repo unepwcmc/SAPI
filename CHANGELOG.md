@@ -1,3 +1,17 @@
+### 1.3.0
+
+**CITES ID Manual**
+
+* Change to the documents retrieving, now including ancestor and descendant relative documents
+* Change to documents order retrieving (exact match first, than from the highest rank(kingdom) to the lowest)
+* Add new event(CITES ID materials) and two types of docs (IDManual and Virtual College)
+
+**Checklist**
+
+* Update api_documents_mview to include the new doc types
+* Add relative CITES checklist api to retrieve the new docs
+* Add a new worker to dynamically merge Id materials documents based on user filter/search
+
 ### 1.2.1
 
 **Trade Admin**
