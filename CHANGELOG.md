@@ -12,6 +12,12 @@
 * Add relative CITES checklist api to retrieve the new docs
 * Add a new worker to dynamically merge Id materials documents based on user filter/search
 
+### 1.2.2
+
+**Species+ Admin:**
+
+* Hotfix for copying EU suspensions across events
+
 ### 1.2.1
 
 **Trade Admin**
