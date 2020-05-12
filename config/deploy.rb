@@ -42,7 +42,7 @@ set :linked_files, %w{config/database.yml .env}
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle','public/.well-known')
-set :linked_dirs, fetch(:linked_dirs) + %w{public/uploads public/downloads private}
+set :linked_dirs, fetch(:linked_dirs) + %w{public/uploads public/downloads private public/ID_manual_volumes}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -77,16 +77,16 @@ set :slack_username, shuffle_deployer[0] # displayed as name of message sender
 set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the message
 
 namespace :sidekiq do
-  task :quiet do
-    on roles(:app) do
-      puts capture("pgrep -f 'sidekiq.*sapi' | xargs kill -TSTP")
-    end
-  end
-  task :restart do
-    on roles(:app) do
-      execute :sudo, :systemctl, :restart, :'sidekiq_sapi'
-    end
-  end
+ task :quiet do
+   on roles(:app) do
+     puts capture("pgrep -f 'sidekiq.*sapi' | xargs kill -TSTP")
+   end
+ end
+ task :restart do
+   on roles(:app) do
+     execute :sudo, :systemctl, :restart, :'sidekiq_sapi'
+   end
+ end
 end
 
 after 'deploy:starting', 'sidekiq:quiet'
@@ -97,7 +97,3 @@ after "deploy", "smoke_test:test_endpoints"
 
 
 require 'appsignal/capistrano'
-
-
-
-
