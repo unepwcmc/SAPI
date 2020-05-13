@@ -111,6 +111,7 @@ describe Admin::TaxonEuSuspensionsController do
           },
           :id => @eu_suspension.id,
           :taxon_concept_id => @taxon_concept.id
+        get :new, :taxon_concept_id => @taxon_concept.id
         response.should render_template('new')
       end
     end
