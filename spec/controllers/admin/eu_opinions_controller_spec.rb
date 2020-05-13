@@ -108,6 +108,7 @@ describe Admin::EuOpinionsController do
           },
           :id => @eu_opinion.id,
           :taxon_concept_id => @taxon_concept.id
+        get :new, :taxon_concept_id => @taxon_concept.id
         response.should render_template('new')
       end
     end
