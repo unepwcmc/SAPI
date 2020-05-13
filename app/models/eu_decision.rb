@@ -34,12 +34,13 @@ class EuDecision < ActiveRecord::Base
     :is_current, :notes, :start_date, :start_event_id, :eu_decision_type_id,
     :taxon_concept_id, :type, :conditions_apply, :term_id, :source_id,
     :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id
+    :created_by_id, :updated_by_id, :srg_history_id
 
   belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
   belongs_to :geo_entity
   belongs_to :eu_decision_type
+  belongs_to :srg_history
   belongs_to :source, :class_name => 'TradeCode'
   belongs_to :term, :class_name => 'TradeCode'
   belongs_to :start_event, :class_name => 'Event'
