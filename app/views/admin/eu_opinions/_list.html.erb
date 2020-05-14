@@ -23,9 +23,11 @@
           eu_decision_type.tooltip.present? %>
       </td>
       <td>
-        <%= opinion.srg_history.try(:name) %>
-        <%= '(' + opinion.srg_history.tooltip + ')' if opinion.
-          srg_history.try(:tooltip).present? %>
+        <% if opinion.srg_history %>
+          <%= opinion.srg_history.name %>
+          <%= '(' + opinion.srg_history.tooltip + ')' if opinion.
+            srg_history.tooltip.present? %>
+        <% end %>
       </td>
       <td><%= opinion.term && opinion.term.code %></td>
       <td><%= opinion.source && opinion.source.code %></td>
