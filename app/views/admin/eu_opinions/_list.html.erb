@@ -3,6 +3,7 @@
   <th>Regulation</th>
   <th>Country or Territory</th>
   <th>Type</th>
+  <th>SRG history</th>
   <th>Term</th>
   <th>Source</th>
   <th>Notes</th>
@@ -20,6 +21,11 @@
         <%= opinion.eu_decision_type.name %>
         <%= '(' + opinion.eu_decision_type.tooltip + ')' if opinion.
           eu_decision_type.tooltip.present? %>
+      </td>
+      <td>
+        <%= opinion.srg_history.try(:name) %>
+        <%= '(' + opinion.srg_history.tooltip + ')' if opinion.
+          srg_history.try(:tooltip).present? %>
       </td>
       <td><%= opinion.term && opinion.term.code %></td>
       <td><%= opinion.source && opinion.source.code %></td>
