@@ -67,37 +67,36 @@ class Checklist::Timeline
     # Go through each timeline and iterate over each event in a timeline
     # Where at least two events have the same effective_at date
       # Check to see if deletions are present
-        # if deletion, set is_current to false for all of them / splice them out of the array
+        # if deletion, slice them out of array (only look-behind)
     # map these changes to new timeline event arrays
 
-    # modified = (@timelines + [self]).flatten.each do |timeline|
-    #   prev_event = nil
+    modified = (@timelines + [self]).flatten.each do |timeline|
+      prev_event = nil
 
-    #   timeline.timeline_events.each_with_index do |event, idx|
-    #     next_event = timeline.timeline_events[idx + 1]
-    #     if prev_event &&
-    #       (event.party_id.nil? || event.party_id == prev_event.party_id) &&
-    #       (event.effective_at_formatted == (prev_event.effective_at_formatted || next_event.effective_at_formatted))
-    #       # event.is_current = false
-    #       if !prev_event.is_deletion? && event.is_deletion?
-    #         timeline.timeline_events.slice!(idx)
-    #       end
-    #     end
-    #     prev_event = event
-    #   end
-    # end
-    # p modified
-    # modified
-    original = (@timelines + [self]).flatten.each { |timeline|
-      filtered = timeline.timeline_events.group_by(&:effective_at_formatted).each { |_, values|
-        values.reject!(&:is_deletion?) if values.length > 1
-        # timeline.timeline_events = filtered.values.flatten
-      }
-      # timeline.timeline_events = filtered.values.flatten
-      # p timeline.timeline_events
-    }
-    p original
-    original
+      timeline.timeline_events.each_with_index do |event, idx|
+        next_event = timeline.timeline_events[idx + 1]
+        p next_event
+        if prev_event &&
+          (event.party_id.nil? || event.party_id == prev_event.party_id) &&
+          (event.effective_at_formatted == prev_event.effective_at_formatted)
+          if !event.is_deletion? && prev_event.is_deletion?
+            timeline.timeline_events.slice!(idx - 1)
+          end
+          if event.is_deletion? && !prev_event.is_deletion?
+            timeline.timeline_events.slice!(idx)
+          end
+        end
+        prev_event = event
+      end
+
+      # Bodged solution - could be more elegant but I couldn't work out another way to refine it
+      if timeline.timeline_events != []
+        if timeline.timeline_events[-1].is_deletion? && !timeline.timeline_events[-2].is_deletion? &&
+          (timeline.timeline_events[-1].effective_at_formatted == timeline.timeline_events[-2].effective_at_formatted)
+          timeline.timeline_events.pop
+        end
+      end
+    end
   end
 
   def add_intervals
