@@ -124,6 +124,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               eu_decisions.nomenclature_note_fr,
               eu_decisions.nomenclature_note_es,
               eu_decision_type,
+              srg_history,
               start_event,
               end_event,
               geo_entity_en,
