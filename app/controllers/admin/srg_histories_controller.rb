@@ -1,19 +1,4 @@
 class Admin::SrgHistoriesController < Admin::StandardAuthorizationController
-
-  def index
-    index! do |format|
-      format.json {
-        render :json => SrgHistory.all.to_json
-      }
-    end
-  end
-
-  def create
-    create! do |failure|
-      failure.js { render 'new' }
-    end
-  end
-
   protected
 
   def collection
