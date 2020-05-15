@@ -81,8 +81,7 @@ class Checklist::Timeline
           (event.effective_at_formatted == prev_event.effective_at_formatted)
           if !event.is_deletion? && prev_event.is_deletion?
             timeline.timeline_events.slice!(idx - 1)
-          end
-          if event.is_deletion? && !prev_event.is_deletion?
+          elsif event.is_deletion? && !prev_event.is_deletion?
             timeline.timeline_events.slice!(idx)
           end
         end
