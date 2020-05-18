@@ -70,31 +70,31 @@ class Checklist::Timeline
         # if deletion, slice them out of array (only look-behind)
     # map these changes to new timeline event arrays
 
-    modified = (@timelines + [self]).flatten.each do |timeline|
+    (@timelines + [self]).flatten.each do |timeline|
       prev_event = nil
-
-      timeline.timeline_events.each_with_index do |event, idx|
-        next_event = timeline.timeline_events[idx + 1]
-        p next_event
+      events = timeline.timeline_events
+      events.each_with_index do |event, idx|
         if prev_event &&
           (event.party_id.nil? || event.party_id == prev_event.party_id) &&
           (event.effective_at_formatted == prev_event.effective_at_formatted)
           if !event.is_deletion? && prev_event.is_deletion?
-            timeline.timeline_events.slice!(idx - 1)
+            events.slice!(idx - 1)
           elsif event.is_deletion? && !prev_event.is_deletion?
-            timeline.timeline_events.slice!(idx)
+            events.slice!(idx)
           end
         end
         prev_event = event
       end
 
       # Bodged solution - could be more elegant but I couldn't work out another way to refine it
-      if timeline.timeline_events != []
-        if timeline.timeline_events[-1].is_deletion? && !timeline.timeline_events[-2].is_deletion? &&
-          (timeline.timeline_events[-1].effective_at_formatted == timeline.timeline_events[-2].effective_at_formatted)
-          timeline.timeline_events.pop
+      if events != []
+        if events[-1].is_deletion? && !events[-2].is_deletion? &&
+          (events[-1].effective_at_formatted == events[-2].effective_at_formatted) &&
+          (events[-1].party_id.nil? || events[-1].party_id == events[-2].party_id)
+          events.pop
         end
       end
+
     end
   end
 
