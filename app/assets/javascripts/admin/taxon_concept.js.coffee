@@ -5,7 +5,10 @@ $(document).ready ->
     .focus(-> $(@).animate(height: "15em", 500))
     .blur(-> $(@).animate(height: "4em", 500))
 
-  $('.select2').select2()
+  $('.select2').select2({
+    placeholder: "Choose an option",
+    allowClear: true
+    })
 
   $(".datepicker").datepicker(
     format: "dd/mm/yyyy",
