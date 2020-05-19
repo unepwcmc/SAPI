@@ -74,27 +74,21 @@ class Checklist::Timeline
       prev_event = nil
       events = timeline.timeline_events
       events.each_with_index do |event, idx|
+        next_event = events[idx + 1]
         if prev_event &&
           (event.party_id.nil? || event.party_id == prev_event.party_id) &&
           (event.effective_at_formatted == prev_event.effective_at_formatted)
           if !event.is_deletion? && prev_event.is_deletion?
             events.slice!(idx - 1)
+            if next_event && next_event.is_deletion? && !event.is_deletion?
+              events.slice!(idx)
+            end
           elsif event.is_deletion? && !prev_event.is_deletion?
             events.slice!(idx)
           end
         end
         prev_event = event
       end
-
-      # Bodged solution - could be more elegant but I couldn't work out another way to refine it
-      if events != []
-        if events[-1].is_deletion? && !events[-2].is_deletion? &&
-          (events[-1].effective_at_formatted == events[-2].effective_at_formatted) &&
-          (events[-1].party_id.nil? || events[-1].party_id == events[-2].party_id)
-          events.pop
-        end
-      end
-
     end
   end
 
