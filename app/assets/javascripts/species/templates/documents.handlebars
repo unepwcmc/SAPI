@@ -70,6 +70,23 @@
           }}
 
         {{documents-results-header
+          isVisible=controller.idMaterialsDocsPresent
+          meetingType="Identification materials"
+          documents=controller.idMaterialsDocuments
+          }}
+        {{documents-results
+          isVisible=controller.idMaterialsDocsPresent
+          eventType="IdMaterials"
+          dataController=controller
+          documents=controller.idMaterialsDocuments.docs
+          loadMore=controller.idMaterialsDocsLoadMore
+          block=true
+          searchContext="documents"
+          species=controllers.elibrarySearch.taxonConceptQuery
+          isSignedIn=controllers.elibrarySearch.isSignedIn
+          }}
+
+        {{documents-results-header
           isVisible=controller.euSrgDocsPresent
           meetingType="EU Scientific Review Group"
           documents=controller.euSrgDocuments
@@ -88,12 +105,12 @@
 
         {{documents-results-header
           isVisible=controller.otherDocsPresent
-          meetingType="Intersessional documents"
+          meetingType="Other documents"
           documents=controller.otherDocuments
           }}
         {{documents-results
           isVisible=controller.otherDocsPresent
-          eventType="other"
+          eventType="Other"
           dataController=controller
           documents=controller.otherDocuments.docs
           loadMore=controller.otherDocsLoadMore

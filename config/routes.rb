@@ -227,6 +227,13 @@ SAPI::Application.routes.draw do
       end
     end
     resources :timelines, :only => [:index]
+    resources :documents do
+      collection do
+        get 'download_zip'
+        get 'volume_download'
+        get 'check_doc_presence'
+      end
+    end
   end
 
   # The priority is based upon order of creation:

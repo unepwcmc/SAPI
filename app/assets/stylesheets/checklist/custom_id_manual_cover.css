@@ -1,0 +1,133 @@
+/* 
+This styling is very hacky - pdfkit is being used to turn an html and css file into a pdf.
+It seems to only support a very narrow range of styling options.
+Also note the images need to be pngs - svgs will not resize properly
+*/
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 0;
+  width: 800px; height: 1131px;
+
+  position: relative;
+}
+
+.id-manual-cover__banner {
+  background-color: #F3F6F9;
+  color: #33536a;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 110px;
+  padding-left: 165px;
+  padding-right: 40px;
+}
+
+.id-manual-cover__banner-logo {
+  width: 105px; height: 60px;
+  
+  display: block;
+  position: absolute;
+  top: 25px; left: 40px;
+}
+
+.id-manual-cover__margins {
+  padding: 0 40px;
+}
+
+.id-manual-cover__title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 70px;
+  margin-bottom: 50px;
+}
+
+.id-manual-cover__metadata {
+  font-size: 14px;
+  width: 80%;
+}
+
+.id-manual-cover__metadata-row {
+  border-bottom: 1px solid #d6d7d7;
+  line-height: 2em;
+}
+
+.id-manual-cover__metadata-row em {
+  font-style: normal;
+}
+
+.id-manual-cover__bold {
+  font-weight: bold;
+}
+
+.id-manual-cover__italic {
+  font-style: italic;
+}
+
+
+.id-manual-cover__bottom {
+  padding: 0 40px;
+  width: 720px;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.id-manual-cover__disclaimer {
+  font-size: 9px;
+  font-weight: 100;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  width: 720px;
+}
+
+.id-manual-cover__disclaimer--left {
+  margin-right: 3%;
+  vertical-align: top;
+  width: 48%;
+
+  display: inline-block;
+}
+
+.id-manual-cover__disclaimer--right {
+  vertical-align: top;
+  width: 48%;
+
+  display: inline-block;
+}
+
+.id-manual-cover__disclaimer p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.id-manual-cover__disclaimer-label {
+  font-weight: bold;
+}
+
+.id-manual-cover__footer {
+  border-top: solid 1px black;
+  padding: 25px 0;
+  width: 720px;
+}
+
+.id-manual-cover__footer-logo {
+  margin-right: 20px;
+  vertical-align: middle;
+
+  display: inline-block;
+}
+
+.id-manual-cover__footer-logo--cites {
+  padding: 5px 0;
+  width: 79px; height: 45px;
+}
+
+.id-manual-cover__footer-logo--eu {
+  width: 83px; height: 55px;
+}
+
+.id-manual-cover__footer-logo--unepwcmc {
+  padding: 8px 0;
+  width: 133px; height: 39px;
+}
