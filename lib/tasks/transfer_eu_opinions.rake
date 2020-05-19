@@ -1,48 +1,44 @@
 namespace :eu_opinions do
+  # Usage:
+  # bundle exec rake eu_opinions:transfer_current_eu_opinions_decision_type['eu_decision_type','SRG Referral','iii)']
+  # bundle exec rake eu_opinions:transfer_current_eu_opinions_decision_type['srg_history','In consultation','ii)']
+  desc "transfer current eu opinions to new decision type/Srg History"
+  task :transfer_current_eu_opinions_decision_type, [:model, :new_type, :old_type] => [:environment] do |t, args|
 
-  desc "transfer the current eu_opinions with iii) and iii)removed eu_decision type to the new SRG referral decision type"
-  task :tranfer_to_srg_referral_type => :environment do
-    old_decision_type_ids = EuDecisionType.where(name: ["iii)", "iii) removed"]).pluck(:id)
+    old_decision_type_ids = EuDecisionType.where('name ILIKE ?', "#{args[:old_type]}%").pluck(:id)
+    fail "Decision type #{args[:old_type]} not found" if old_decision_type_ids.empty?
     eu_opinions = EuOpinion.where(eu_decision_type_id: old_decision_type_ids, is_current: true)
-    new_decision_type_id = EuDecisionType.find_by_name("SRG Referral").id
+    fail "No eu opinions to transfer" if eu_opinions.count.zero?
+    new_decision_type_id = args[:model].camelize.constantize.find_by_name(args[:new_type]).try(:id)
+    fail "Decision type #{args[:new_type]} not found" if new_decision_type_id.nil?
+
     puts "There are #{eu_opinions.count} eu_opinions to be transferred"
-    update_query = <<-SQL
-      WITH current_eu_opinions_with_iii_type AS (
-        SELECT *
-        FROM eu_decisions
-        WHERE type = 'EuOpinion'
-        AND eu_decision_type_id IN (#{old_decision_type_ids.join(',')})
-        AND is_current = true
-      )
-      UPDATE eu_decisions
-      SET eu_decision_type_id = #{new_decision_type_id}
-      FROM current_eu_opinions_with_iii_type
-      WHERE current_eu_opinions_with_iii_type.id = eu_decisions.id
-    SQL
-    res = ActiveRecord::Base.connection.execute update_query
-    puts "#{res.cmd_tuples} rows transferred to SRG Referral decision type"
+
+    query = query_builder(new_decision_type_id, args[:model], old_decision_type_ids)
+    res = ActiveRecord::Base.connection.execute query
+
+    puts "#{res.cmd_tuples} rows transferred to new decision type"
   end
 
-  desc "transfer the current eu_opinions with ii) and ii)removed eu_decision type to the new SRG History 'In consultation'"
-  task :transfer_to_srg_history => :environment do
-    old_decision_type_ids = EuDecisionType.where(name: ["ii)", "ii) removed"]).pluck(:id)
-    eu_opinions = EuOpinion.where(eu_decision_type_id: old_decision_type_ids, is_current: true)
-    srg_history_id = SrgHistory.find_by_name("In consultation").id
-    puts "There are #{eu_opinions.count} eu_opinions to be transferred"
-    update_query = <<-SQL
-      WITH current_eu_opinions_with_ii_type AS (
+  def query_builder(new_type, model, old_types)
+    set_query =
+      if model =~ /history/i
+        "SET eu_decision_type_id = NULL, srg_history_id = #{new_type}"
+      else
+        "SET eu_decision_type_id = #{new_type}"
+      end
+    <<-SQL
+      WITH current_eu_opinions_with_old_type AS (
         SELECT *
         FROM eu_decisions
         WHERE type = 'EuOpinion'
-        AND eu_decision_type_id IN (#{old_decision_type_ids.join(',')})
+        AND eu_decision_type_id IN (#{old_types.join(',')})
         AND is_current = true
       )
       UPDATE eu_decisions
-      SET eu_decision_type_id = NULL, srg_history_id = #{srg_history_id}
-      FROM current_eu_opinions_with_ii_type
-      WHERE current_eu_opinions_with_ii_type.id = eu_decisions.id
+      #{set_query}
+      FROM current_eu_opinions_with_old_type
+      WHERE current_eu_opinions_with_old_type.id = eu_decisions.id
     SQL
-    res = ActiveRecord::Base.connection.execute update_query
-    puts "#{res.cmd_tuples} rows transferred to SRG History"
   end
 end
