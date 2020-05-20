@@ -9,6 +9,12 @@ class CreateSrgHistories < ActiveRecord::Migration
 
     add_column :eu_decisions, :srg_history_id, :integer
     add_foreign_key :eu_decisions, :srg_histories, name: 'eu_decisions_srg_history_id_fk'
+
+    execute(<<-SQL
+      INSERT INTO srg_histories(name, tooltip, created_at, updated_at)
+      VALUES ('In consultation', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), ('Discussed at SRG (no decision taken)', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    SQL
+    )
   end
 
   def down
