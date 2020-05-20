@@ -16,7 +16,7 @@ task :set_eu_opinions_to_not_current => :environment do
         sources.id AS source_id
       FROM #{TMP_TABLE} t
       JOIN events ON events.name = t.start_regulation_name
-      JOIN eu_decision_types ON t.opinion_name = eu_decision_types.name
+      JOIN eu_decision_types ON t.opinion_name = eu_decision_types.name -- Eu Decision Type can be empty now. Consider LEFT JOIN if importing other files
       JOIN geo_entities ON SQUISH_NULL(t.country_name) = geo_entities.name_en
       LEFT JOIN trade_codes terms on t.term_code = terms.code
       LEFT JOIN trade_codes sources on t.source_code = sources.code
