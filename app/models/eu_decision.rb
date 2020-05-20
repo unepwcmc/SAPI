@@ -50,7 +50,6 @@ class EuDecision < ActiveRecord::Base
 
   validates :taxon_concept, presence: true
   validates :geo_entity, presence: true
-  validates :eu_decision_type, presence: true
 
   translates :nomenclature_note
 
