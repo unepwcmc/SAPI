@@ -89,28 +89,60 @@ describe Admin::EuOpinionsController do
     end
 
     context "when successful" do
-      it "renders taxon_concepts EU Opinions page" do
-        put :update,
-          eu_opinion: {
-            eu_decision_type_id: @eu_decision_type.id
-          },
-          id: @eu_opinion.id,
-          taxon_concept_id: @taxon_concept.id
-        response.should redirect_to(
-          admin_taxon_concept_eu_opinions_url(@taxon_concept)
-        )
+      context "when eu decision type is present" do
+        it "renders taxon_concepts EU Opinions page" do
+          put :update,
+            :eu_opinion => {
+              :eu_decision_type_id => @eu_decision_type.id
+            },
+            :id => @eu_opinion.id,
+            :taxon_concept_id => @taxon_concept.id
+          response.should redirect_to(
+            admin_taxon_concept_eu_opinions_url(@taxon_concept)
+          )
+        end
+      end
+
+      context "when eu decision type is not present" do
+        it "renders taxon_concepts EU Opinions page" do
+          put :update,
+            :eu_opinion => {
+              :eu_decision_type_id => nil
+            },
+            :id => @eu_opinion.id,
+            :taxon_concept_id => @taxon_concept.id
+          response.should redirect_to(
+            admin_taxon_concept_eu_opinions_url(@taxon_concept)
+          )
+        end
       end
     end
 
     context "when not successful" do
-      it "renders new" do
-        put :update,
-          eu_opinion: {
-            eu_decision_type_id: nil
-          },
-          id: @eu_opinion.id,
-          taxon_concept_id: @taxon_concept.id
-        response.should render_template('new')
+      context "when eu decision type is present" do
+        it "renders new" do
+          put :update,
+            :eu_opinion => {
+              :eu_decision_type_id => @eu_decision_type.id,
+              :start_date => nil
+            },
+            :id => @eu_opinion.id,
+            :taxon_concept_id => @taxon_concept.id
+          response.should render_template('new')
+        end
+      end
+
+      context "when eu decision type is not present" do
+        it "renders new" do
+          put :update,
+            :eu_opinion => {
+              :eu_decision_type_id => nil,
+              :start_date => nil
+            },
+            :id => @eu_opinion.id,
+            :taxon_concept_id => @taxon_concept.id
+          response.should render_template('new')
+        end
       end
     end
   end
