@@ -22,6 +22,7 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   positiveOpinions: true
   negativeOpinions: true
   noOpinions: true
+  srgReferral: true
   suspensions: true
 
   autoCompleteTaxonConcepts: ( ->
@@ -37,7 +38,7 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
         }
       ).filter((e) ->
         e.taxonConcepts.length > 0
-      )      
+      )
     else
       @get('higherTaxaController.contentByRank')
   ).property('higherTaxaController.contentByRank.@each', 'taxonConceptQuery')
@@ -73,7 +74,7 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   toParams: ( ->
     {
       data_type: 'EuDecisions'
-      filters: 
+      filters:
         designation: @get('designation')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
         taxon_concepts_ids: @get('selectedTaxonConceptsIds')
@@ -84,14 +85,15 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
             positiveOpinions: @get('positiveOpinions')
             negativeOpinions: @get('negativeOpinions')
             noOpinions: @get('noOpinions')
+            srgReferral: @get('srgReferral')
             suspensions: @get('suspensions')
           }
         csv_separator: @get('controllers.downloads.csvSeparator')
     }
   ).property(
-    'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 
+    'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each',
     'timeScope', 'selectedYears.@each', 'positiveOpinions', 'negativeOpinions',
-    'noOpinions', 'suspensions', 'controllers.downloads.csvSeparator'
+    'noOpinions', 'srgReferral', 'suspensions', 'controllers.downloads.csvSeparator'
   )
 
   downloadUrl: ( ->

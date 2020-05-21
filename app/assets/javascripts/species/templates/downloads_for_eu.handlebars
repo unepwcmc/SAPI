@@ -90,7 +90,13 @@
         <div class="row">
           <label>
             {{view Ember.Checkbox checkedBinding="noOpinions"}}
-            SRG No Opinions
+            SRG Historic No Opinions
+          </label>
+        </div>
+        <div class="row">
+          <label>
+            {{view Ember.Checkbox checkedBinding="suspensions"}}
+            Suspensions
           </label>
         </div>
       </div>
@@ -103,8 +109,8 @@
         </div>
         <div class="row">
           <label>
-            {{view Ember.Checkbox checkedBinding="suspensions"}}
-            Suspensions
+            {{view Ember.Checkbox checkedBinding="srgReferral"}}
+            SRG Referral
           </label>
         </div>
       </div>
