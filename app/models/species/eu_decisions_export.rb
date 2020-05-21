@@ -39,19 +39,8 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
         'EXTRACT(YEAR FROM start_date) IN (?)', @years
       )
     end
-    if @decision_types['negativeOpinions'] == 'false'
-      rel = rel.where('decision_type <> ?', EuDecisionType::NEGATIVE_OPINION)
-    end
-    if @decision_types['positiveOpinions'] == 'false'
-      rel = rel.where('decision_type <> ?', EuDecisionType::POSITIVE_OPINION)
-    end
-    if @decision_types['noOpinions'] == 'false'
-      rel = rel.where('decision_type <> ?', EuDecisionType::NO_OPINION)
-    end
-    if @decision_types['suspensions'] == 'false'
-      rel = rel.where('decision_type <> ?', EuDecisionType::SUSPENSION)
-    end
-    rel
+
+    rel.where('decision_type NOT IN(?)', excluded_decision_types)
   end
 
   private
@@ -84,4 +73,11 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     ]
   end
 
+  # Produces list of excluded decision types.
+  # e.g. SUSPENSIONS,SRG_REFERRAL
+  def excluded_decision_types
+    @decision_types.map do |key, value|
+      value == 'false' ? key.singularize.underscore.upcase : nil
+    end.compact
+  end
 end
