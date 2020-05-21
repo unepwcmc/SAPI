@@ -1,8 +1,8 @@
 namespace :eu_opinions do
 
-  desc "transfer the current eu_opinions with iii) and iii)removed eu_decision type to the new SRG referral decision type"
+  desc "transfer the current eu_opinions with iii) eu_decision type to the new SRG referral decision type"
   task :transfer_to_srg_referral_type => :environment do
-    old_decision_type_ids = EuDecisionType.where(name: ["iii)", "iii) removed"]).pluck(:id)
+    old_decision_type_ids = EuDecisionType.where(name: "iii)").pluck(:id)
     fail "Old decision type not found" if old_decision_type_ids.empty?
     eu_opinions = EuOpinion.where(eu_decision_type_id: old_decision_type_ids, is_current: true)
     fail "No eu opinions to transfer" if eu_opinions.count.zero?
@@ -17,9 +17,9 @@ namespace :eu_opinions do
     puts "#{res.cmd_tuples} rows transferred to new decision type"
   end
 
-  desc "transfer the current eu_opinions with ii) and ii)removed eu_decision type to the new SRG History 'In consultation'"
+  desc "transfer the current eu_opinions with ii) eu_decision type to the new SRG History 'In consultation'"
   task :transfer_to_srg_history => :environment do
-    old_decision_type_ids = EuDecisionType.where(name: ["ii)", "ii) removed"]).pluck(:id)
+    old_decision_type_ids = EuDecisionType.where(name: "ii)").pluck(:id)
     fail "Old decision type not found" if old_decision_type_ids.empty?
     eu_opinions = EuOpinion.where(eu_decision_type_id: old_decision_type_ids, is_current: true)
     fail "No eu opinions to transfer" if eu_opinions.count.zero?
