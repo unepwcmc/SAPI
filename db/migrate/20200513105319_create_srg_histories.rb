@@ -12,7 +12,7 @@ class CreateSrgHistories < ActiveRecord::Migration
 
     execute(<<-SQL
       INSERT INTO srg_histories(name, tooltip, created_at, updated_at)
-      VALUES ('In consultation', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), ('Discussed at SRG (no decision taken)', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      VALUES ('In consultation', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), ('Discussed at SRG', 'no decision taken', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     SQL
     )
   end
