@@ -43,7 +43,11 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     # decision_type can now be NULL.
     # With the following condition, Postgresql does not take into account NULL values.
     # To also get decisions with NULL type add 'OR decision_type IS NOT NULL'
-    rel.where('decision_type NOT IN(?)', excluded_decision_types)
+    if @decision_types.present?
+      rel.where('decision_type NOT IN(?)', excluded_decision_types)
+    else
+      rel
+    end
   end
 
   private
