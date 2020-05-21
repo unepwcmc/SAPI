@@ -69,6 +69,7 @@ SAPI::Application.routes.draw do
     resources :ranks, :only => [:index, :create, :update, :destroy]
     resources :tags, :only => [:index, :create, :update, :destroy]
     resources :eu_decision_types, :only => [:index, :create, :update, :destroy]
+    resources :srg_histories, only: [:index, :create, :update, :destroy]
     resources :events do
       resource :document_batch, :only => [:new, :create]
       resources :documents, :only => [:index, :edit, :update, :destroy] do
