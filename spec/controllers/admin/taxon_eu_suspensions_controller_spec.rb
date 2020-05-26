@@ -81,22 +81,23 @@ describe Admin::TaxonEuSuspensionsController do
     before(:each) do
       @eu_suspension = create(
         :eu_suspension,
-        :taxon_concept_id => @taxon_concept.id
+        taxon_concept_id: @taxon_concept.id
       )
+      @srg_history = create(:srg_history)
     end
 
     context "when successful" do
       context "when eu_decision_type is present" do
         it "renders taxon_concepts EU suspensions page" do
           put :update,
-            :eu_suspension => {
-              :eu_decision_type_id => create(:eu_decision_type),
-              :geo_entity_id => create(
+            eu_suspension: {
+              eu_decision_type_id: create(:eu_decision_type),
+              geo_entity_id: create(
                 :geo_entity, :geo_entity_type_id => country_geo_entity_type.id
               )
             },
-            :id => @eu_suspension.id,
-            :taxon_concept_id => @taxon_concept.id
+            id: @eu_suspension.id,
+            taxon_concept_id: @taxon_concept.id
           response.should redirect_to(
             admin_taxon_concept_eu_suspensions_url(@taxon_concept)
           )
@@ -105,14 +106,15 @@ describe Admin::TaxonEuSuspensionsController do
       context "when eu_decision_type is not present" do
         it "renders taxon_concepts EU suspensions page" do
           put :update,
-            :eu_suspension => {
-              :eu_decision_type_id => nil,
-              :geo_entity_id => create(
+            eu_suspension: {
+              eu_decision_type_id: nil,
+              srg_history_id: @srg_history.id,
+              geo_entity_id: create(
                 :geo_entity, :geo_entity_type_id => country_geo_entity_type.id
               )
             },
-            :id => @eu_suspension.id,
-            :taxon_concept_id => @taxon_concept.id
+            id: @eu_suspension.id,
+            taxon_concept_id: @taxon_concept.id
           response.should redirect_to(
             admin_taxon_concept_eu_suspensions_url(@taxon_concept)
           )
@@ -124,26 +126,41 @@ describe Admin::TaxonEuSuspensionsController do
       context "when eu_decision_type is present" do
         it "renders new" do
           put :update,
-            :eu_suspension => {
-              :eu_decision_type_id => create(:eu_decision_type),
-              :geo_entity_id => nil
+            eu_suspension: {
+              eu_decision_type_id: create(:eu_decision_type),
+              geo_entity_id: nil
             },
-            :id => @eu_suspension.id,
-            :taxon_concept_id => @taxon_concept.id
+            id: @eu_suspension.id,
+            taxon_concept_id: @taxon_concept.id
           response.should render_template('new')
         end
       end
       context "when eu_decision_type is not present" do
         it "renders new" do
           put :update,
-            :eu_suspension => {
-              :eu_decision_type_id => nil,
-              :geo_entity_id => nil
+            eu_suspension: {
+              eu_decision_type_id: nil,
+              srg_history_id: @srg_history.id,
+              geo_entity_id: nil
             },
-            :id => @eu_suspension.id,
-            :taxon_concept_id => @taxon_concept.id
+            id: @eu_suspension.id,
+            taxon_concept_id: @taxon_concept.id
           response.should render_template('new')
         end
+      end
+    end
+
+    context "when both eu_decision_type and srg_history are empty" do
+      it "renders new" do
+        put :update,
+          eu_suspension: {
+            eu_decision_type_id: nil,
+            srg_history_id: nil,
+            start_date: nil
+          },
+          id: @eu_suspension.id,
+          taxon_concept_id: @taxon_concept.id
+        response.should render_template('new')
       end
     end
   end
