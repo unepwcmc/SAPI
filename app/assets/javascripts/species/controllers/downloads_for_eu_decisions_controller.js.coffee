@@ -15,7 +15,10 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   selectedTaxonConcepts: []
   timeScope: 'current'
   timeScopeIsCurrent: ( ->
-    @get('timeScope') == 'current'
+    current = @get('timeScope') == 'current'
+    if current
+      @set('selectedYears', [])
+    current
   ).property('timeScope')
   years: [1975..new Date().getFullYear()]
   selectedYears: []
@@ -24,6 +27,10 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   noOpinions: true
   srgReferral: true
   suspensions: true
+  euDecisionFilter: 'default'
+  euDecisionFilterIsDefault: ( ->
+    @get('euDecisionFilter') == 'default'
+  ).property('euDecisionFilter')
 
   autoCompleteTaxonConcepts: ( ->
     if @get('taxonConceptQuery') && @get('taxonConceptQuery').length > 0
@@ -74,26 +81,35 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   toParams: ( ->
     {
       data_type: 'EuDecisions'
-      filters:
+      filters: {
         designation: @get('designation')
-        geo_entities_ids: @get('selectedGeoEntitiesIds')
-        taxon_concepts_ids: @get('selectedTaxonConceptsIds')
-        set: @get('timeScope')
-        years: @get('selectedYears')
-        decision_types:
-          {
-            positiveOpinions: @get('positiveOpinions')
-            negativeOpinions: @get('negativeOpinions')
-            noOpinions: @get('noOpinions')
-            srgReferral: @get('srgReferral')
-            suspensions: @get('suspensions')
-          }
         csv_separator: @get('controllers.downloads.csvSeparator')
+        eu_decision_filter: @get('euDecisionFilter')
+        geo_entities_ids: @get('selectedGeoEntitiesIds')
+        set: @get('timeScope')
+        taxon_concepts_ids: @get('selectedTaxonConceptsIds')
+        years: @get('selectedYears')
+        decision_types: {
+          negativeOpinions: @get('negativeOpinions')
+          noOpinions: @get('noOpinions')
+          positiveOpinions: @get('positiveOpinions')
+          srgReferral: @get('srgReferral')
+          suspensions: @get('suspensions')
+        }
+      }
     }
   ).property(
-    'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each',
-    'timeScope', 'selectedYears.@each', 'positiveOpinions', 'negativeOpinions',
-    'noOpinions', 'srgReferral', 'suspensions', 'controllers.downloads.csvSeparator'
+    'controllers.downloads.csvSeparator',
+    'euDecisionFilter',
+    'negativeOpinions',
+    'noOpinions',
+    'positiveOpinions',
+    'selectedGeoEntitiesIds.@each',
+    'selectedTaxonConceptsIds.@each',
+    'selectedYears.@each',
+    'srgReferral',
+    'suspensions',
+    'timeScope'
   )
 
   downloadUrl: ( ->
