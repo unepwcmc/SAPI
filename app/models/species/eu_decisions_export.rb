@@ -6,15 +6,18 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     @geo_entities_ids = filters[:geo_entities_ids]
     @years = filters[:years]
     @decision_types = filters[:decision_types]
+    @in_consultation = filters[:srg_history]
     @set = filters[:set]
     initialize_csv_separator(filters[:csv_separator])
     initialize_file_name
   end
 
+  HISTORIC_III_OPINIONS = ['(No opinion) iii)','(No opinion) iii) removed'].freeze
   def query
     rel = EuDecision.from("#{table_name} AS eu_decisions").
       select(sql_columns).
       order(:taxonomic_position, :party, :ordering_date)
+    return rel.where('srg_history IN (?)', @in_consultation) if @in_consultation
     if @set == 'current'
       rel = rel.where(is_valid: true)
     end
@@ -42,14 +45,21 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
 
     # decision_type can now be NULL.
     # With the following condition, Postgresql does not take into account NULL values.
+    # Furthemore, the SRG_REFERRAL filter should also include the historic iii) when All
+    # filter value is selected
     # To also get decisions with NULL type add 'OR decision_type IS NOT NULL'
     if excluded_decision_types.present?
-      rel.where('decision_type NOT IN(?)', excluded_decision_types)
+      rel =
+        if @set == 'all' && !excluded_decision_types.include?('SRG_REFERRAL')
+          rel.where("decision_type NOT IN(?) OR decision_type_for_display IN(?)", excluded_decision_types, HISTORIC_III_OPINIONS)
+        else
+          rel.where('decision_type NOT IN(?)', excluded_decision_types)
+        end
     end
 
     # exclude EU decisions 'Discussed at SRG' by default
     # IS DISTINCT FROM allows to return records with NULL as well
-    rel.where('srg_history IS DISTINCT FROM ?', 'Discussed at SRG')
+    rel = rel.where('srg_history IS DISTINCT FROM ?', 'Discussed at SRG')
   end
 
   private
