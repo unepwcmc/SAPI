@@ -50,6 +50,7 @@ class EuDecision < ActiveRecord::Base
 
   validates :taxon_concept, presence: true
   validates :geo_entity, presence: true
+  validate :eu_decision_type_and_or_srg_history
 
   translates :nomenclature_note
 
@@ -85,4 +86,8 @@ class EuDecision < ActiveRecord::Base
     term.try(:name_en)
   end
 
+  def eu_decision_type_and_or_srg_history
+    return if eu_decision_type_id || srg_history_id
+    errors.add(:base, "Eu decision type and SRG history can't be blank at the same time")
+  end
 end
