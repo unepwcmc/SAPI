@@ -45,9 +45,11 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     # To also get decisions with NULL type add 'OR decision_type IS NOT NULL'
     if excluded_decision_types.present?
       rel.where('decision_type NOT IN(?)', excluded_decision_types)
-    else
-      rel
     end
+
+    # exclude EU decisions 'Discussed at SRG' by default
+    # IS DISTINCT FROM allows to return records with NULL as well
+    rel.where('srg_history IS DISTINCT FROM ?', 'Discussed at SRG')
   end
 
   private
