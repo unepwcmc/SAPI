@@ -27,9 +27,9 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   noOpinions: true
   srgReferral: true
   suspensions: true
-  euDecisionFilter: 'default'
+  euDecisionFilter: 'Default'
   euDecisionFilterIsDefault: ( ->
-    @get('euDecisionFilter') == 'default'
+    @get('euDecisionFilter') == 'Default'
   ).property('euDecisionFilter')
 
   autoCompleteTaxonConcepts: ( ->
@@ -79,25 +79,44 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   ).property('selectedTaxonConcepts.@each')
 
   toParams: ( ->
-    {
-      data_type: 'EuDecisions'
-      filters: {
-        designation: @get('designation')
-        csv_separator: @get('controllers.downloads.csvSeparator')
-        eu_decision_filter: @get('euDecisionFilter')
-        geo_entities_ids: @get('selectedGeoEntitiesIds')
-        set: @get('timeScope')
-        taxon_concepts_ids: @get('selectedTaxonConceptsIds')
-        years: @get('selectedYears')
-        decision_types: {
-          negativeOpinions: @get('negativeOpinions')
-          noOpinions: @get('noOpinions')
-          positiveOpinions: @get('positiveOpinions')
-          srgReferral: @get('srgReferral')
-          suspensions: @get('suspensions')
+    # IF EU DECISION FILTER IS "IN CONSULTATION" - DON'T APPLY ALL FILTERS
+    if @get('euDecisionFilter').toUpperCase() == 'IN CONSULTATION'
+      {
+        data_type: 'EuDecisions'
+        filters: {
+          designation: @get('designation')
+          csv_separator: @get('controllers.downloads.csvSeparator')
+          eu_decision_filter: @get('euDecisionFilter')
         }
       }
-    }
+    else
+      {
+        data_type: 'EuDecisions'
+        filters: {
+          ####################################################
+          ########## DEFAULT EU DECISION FILTERS #############
+          ####################################################
+          designation: @get('designation')
+          csv_separator: @get('controllers.downloads.csvSeparator')
+          eu_decision_filter: @get('euDecisionFilter')
+          ####################################################
+          geo_entities_ids: @get('selectedGeoEntitiesIds')
+          set: @get('timeScope')
+          taxon_concepts_ids: @get('selectedTaxonConceptsIds')
+          years: @get('selectedYears')
+          decision_types: {
+            negativeOpinions: @get('negativeOpinions')
+            noOpinions: @get('noOpinions')
+            positiveOpinions: @get('positiveOpinions')
+            srgReferral: @get('srgReferral')
+            suspensions: @get('suspensions')
+          }
+          ####################################################
+          ####################################################
+          ####################################################
+        }
+      }
+    
   ).property(
     'controllers.downloads.csvSeparator',
     'euDecisionFilter',
