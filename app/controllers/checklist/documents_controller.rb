@@ -3,6 +3,9 @@ class Checklist::DocumentsController < ApplicationController
   def index
     return render :json => []  if params[:taxon_concepts_ids].nil?
     return render :json => []  unless params[:taxon_concepts_ids].kind_of?(Array)
+    anc_ids = MaterialDocIdsRetriever.ancestors_ids(params[:taxon_concepts_ids].first)
+    chi_ids = MTaxonConcept.descendants_ids(params[:taxon_concepts_ids].first).map(&:to_i)
+    params[:taxon_concepts_ids] = anc_ids | chi_ids
     @search = DocumentSearch.new(
       params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
     )
