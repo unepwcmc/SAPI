@@ -6,7 +6,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     @geo_entities_ids = filters[:geo_entities_ids]
     @years = filters[:years]
     @decision_types = filters[:decision_types]
-    @in_consultation = filters[:eu_decision_filter]
+    @eu_decision_filter = filters[:eu_decision_filter]
     @set = filters[:set]
     initialize_csv_separator(filters[:csv_separator])
     initialize_file_name
@@ -17,7 +17,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     rel = EuDecision.from("#{table_name} AS eu_decisions").
       select(sql_columns).
       order(:taxonomic_position, :party, :ordering_date)
-    return rel.where('srg_history =?', @in_consultation) if @in_consultation == 'In consultation'
+    return rel.where('srg_history = ?', @eu_decision_filter) if @eu_decision_filter == 'In consultation'
     if @set == 'current'
       rel = rel.where(is_valid: true)
     end
