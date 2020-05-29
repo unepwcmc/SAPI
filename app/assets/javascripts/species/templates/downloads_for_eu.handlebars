@@ -77,82 +77,110 @@
   isVisibleBinding="controller.legislationIsEuDecisions"
   controllerBinding="controllers.downloadsForEuDecisions"
 }}
-  <div class="doc-type">
-    <strong class="heading">DOCUMENT TYPE</strong>
-    <div class="typy-columns">
-      <div class="col">
-        <div class="row">
+
+
+
+  <div class="bs-container p-3">
+    <div class="bs-row mb-3">
+      <div class="bs-col-auto p-3">
+        <div class="sub-heading">
+          <label>
+            {{view Ember.RadioButton name="in_consultation" selectionBinding="euDecisionFilter" value="Default"}}
+            EU Decision Types
+          </label>
+        </div>
+      </div>
+      <div class="bs-col-auto p-3 bs-border-left">
+        <div class="sub-heading">
+          <label>
+            {{view Ember.RadioButton name="in_consultation" selectionBinding="euDecisionFilter" value="In consultation"}}
+            In Consultation
+          </label>
+        </div>
+      </div>
+    </div>
+    {{#if euDecisionFilterIsDefault }}
+      <div class="mb-4">
+        <div>
           <label>
             {{view Ember.Checkbox checkedBinding="negativeOpinions"}}
             SRG Negative Opinions
           </label>
         </div>
-        <div class="row">
-          <label>
-            {{view Ember.Checkbox checkedBinding="noOpinions"}}
-            SRG No Opinions
-          </label>
-        </div>
-      </div>
-      <div class="col">
-        <div class="row">
+        <div>
           <label>
             {{view Ember.Checkbox checkedBinding="positiveOpinions"}}
             SRG Positive Opinions
           </label>
         </div>
-        <div class="row">
+        <div>
+          <label>
+            {{view Ember.Checkbox checkedBinding="srgReferral"}}
+            SRG Referral
+          </label>
+        </div>
+        <div>
+          <label>
+            {{view Ember.Checkbox checkedBinding="noOpinions"}}
+            SRG Historic No Opinions
+          </label>
+        </div>
+        <div>
           <label>
             {{view Ember.Checkbox checkedBinding="suspensions"}}
             Suspensions
           </label>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="info-columns">
-    <div class="col">
-      <ul class="tab-link">
-        <li>
-          {{#view Species.ToggleButton option="current" valueBinding="controller.timeScope"}}
-            CURRENT
-          {{/view}}
-        </li>
-        <li class="last-child">
-          {{#view Species.ToggleButton option="all" valueBinding="controller.timeScope"}}
-            ALL
-          {{/view}}
-        </li>
-      </ul>
-    </div>
-    <div class="col">
-      {{#if timeScopeIsCurrent}}
-        Only current data has<br />been selected.
-      {{else}}
-        <div class="popup-area">
-          {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
-          {{view Species.YearSearchDropdown controllerBinding="controller"}}
+
+      <div class="info-columns">
+        <div class="col">
+          <ul class="tab-link">
+            <li>
+              {{#view Species.ToggleButton option="current" valueBinding="controller.timeScope"}}
+                CURRENT
+              {{/view}}
+            </li>
+            <li class="last-child">
+              {{#view Species.ToggleButton option="all" valueBinding="controller.timeScope"}}
+                ALL
+              {{/view}}
+            </li>
+          </ul>
         </div>
-      {{/if}}
-    </div>
-  </div>
-  <div class="bottom-columns">
-    <div class="col">
-      <div class="popup-area">
-        {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
-        {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
+        <div class="col">
+          {{#if timeScopeIsCurrent}}
+            Only current data has<br />been selected.
+          {{else}}
+            <div class="popup-area">
+              {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
+              {{view Species.YearSearchDropdown controllerBinding="controller"}}
+            </div>
+          {{/if}}
+        </div>
       </div>
-    </div>
-    <div class="col">
-      <div class="popup-area">
-        {{view Species.GeoEntitiesSearchButton
-          selectedGeoEntitiesBinding="controller.selectedGeoEntities"
-          loadedBinding="controller.loaded"
-        }}
-        {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+      <div class="bottom-columns">
+        <div class="col">
+          <div class="popup-area">
+            {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
+            {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
+          </div>
+        </div>
+        <div class="col">
+          <div class="popup-area">
+            {{view Species.GeoEntitiesSearchButton
+              selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+              loadedBinding="controller.loaded"
+            }}
+            {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+          </div>
+        </div>
       </div>
-    </div>
+    {{/if}}
   </div>
+
+
+
   <div class="btn-holder">
     {{view Species.StartDownloadButton controllerBinding="controller"}}
     <div class="message-area">
