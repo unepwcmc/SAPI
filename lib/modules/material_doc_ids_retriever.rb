@@ -27,7 +27,7 @@ module MaterialDocIdsRetriever
           end
 
         anc_ids = []
-        anc_ids = ancestors_ids(exact_match.try(:id), params['taxon_name'], exact_match).uniq  if ids.include?(exact_match.id)
+        anc_ids = ancestors_ids(exact_match.try(:id), params['taxon_name'], exact_match).uniq  if ids.include?(exact_match.try(:id))
         anc_ids | ids
       elsif params['taxon_concept_id'].present?
         # retrieve all the ancestors taxa given a taxon(included)
