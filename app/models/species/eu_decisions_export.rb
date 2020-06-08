@@ -47,7 +47,6 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     # With the following condition, Postgresql does not take into account NULL values.
     # Furthemore, the SRG_REFERRAL filter should also include the historic iii) when All
     # filter value is selected
-    # To also get decisions with NULL type add 'OR decision_type IS NOT NULL'
     if excluded_decision_types.present?
       rel =
         if @set == 'all' && !excluded_decision_types.include?('SRG_REFERRAL')
@@ -56,6 +55,9 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
           rel.where('decision_type NOT IN(?)', excluded_decision_types)
         end
     end
+
+    # remove decisions with NULL type 'decision_type IS NOT NULL'
+     rel = rel.where('decision_type IS NOT NULL')
 
     # exclude EU decisions 'Discussed at SRG' by default
     # IS DISTINCT FROM allows to return records with NULL as well
