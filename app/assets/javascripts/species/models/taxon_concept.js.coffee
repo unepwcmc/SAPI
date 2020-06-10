@@ -24,6 +24,7 @@ Species.TaxonConcept = DS.Model.extend
   cmsInstruments: DS.attr("array")
   euListings: DS.attr("array")
   euDecisions: DS.attr("array")
+  srgHistory: DS.attr("array")
   distributionReferences: DS.attr("array")
   taxonomy: DS.attr("string")
   nomenclatureNoteEn: DS.attr("string")
