@@ -1,3 +1,19 @@
+### 1.4.0
+
+**EU Opinions**
+
+* Add new EU decision type (called SRG Referral)
+* Change the name of current no opinion iii) to SRG Referral;
+* Add new entity SRG History
+* Change the name of current no opinion ii) to In consultation and changing it from an official EU decision to a non-opinion/notification for information only (SRG History)
+* Add a second new SRG History, called Discussed at SRG (no decision taken)
+* Add the new column SRG History to the EU decisions table in the Species+ public site
+* Include validation on the BE so that if the decision_type is blank then the srg_history field should be populated
+* On the download checkbox, new radio button to switch between EU decision type filters and "In consultation", and when the latter will be selected all the other filters disappear
+* Exclude from the download the EU opinions with EU decision type = blank
+or srg history = "Discussed at SRG referral"
+
+
 ### 1.3.0
 
 **CITES ID Manual**
