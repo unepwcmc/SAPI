@@ -3,6 +3,7 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     :is_current, :subspecies_info, :nomenclature_note_en, :nomenclature_note_fr,
     :nomenclature_note_es,
     :eu_decision_type,
+    :srg_history,
     :geo_entity,
     :start_event,
     :source,
@@ -11,6 +12,10 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
 
   def eu_decision_type
     object['eu_decision_type'] && JSON.parse(object['eu_decision_type'])
+  end
+
+  def srg_history
+    object['srg_history'] && JSON.parse(object['srg_history'])
   end
 
   def geo_entity
