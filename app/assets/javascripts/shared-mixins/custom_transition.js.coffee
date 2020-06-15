@@ -4,6 +4,8 @@
 
 # @refresh has been used in queryParamsDidChange in ..._route.js files to make sure that the new model is loaded when the parameters change. This might be able to be removed when updating Ember.
 
+# Note the trade and species apps both pass array parameters differently.
+
 ROUTES = {
   species: {
     'taxonConcept': {
@@ -29,11 +31,12 @@ isNotUndefinedOrNull = (x) ->
   App.CustomTransition = Ember.Mixin.create
     customTransitionToRoute: (emberRoute, arg2, arg3) ->
       @routes = ROUTES[appName]
+      @appName = appName
       @paramsMapping = @get('propertyMapping')
 
       @assignArguments(arguments)
       path = @getPath()
-      base_url = window.location.origin + '/' + appName + '#/' + path
+      base_url = window.location.origin + '/' + @appName + '#/' + path
       queryString = if @queryParams then @getQueryString(@queryParams) else ''
       
       window.location.href = base_url + queryString
@@ -72,9 +75,12 @@ isNotUndefinedOrNull = (x) ->
     getQueryString: (queryParams) -> 
       queryString = '?'
 
-      queryString += Object.keys(queryParams).map((key) =>
-        @getQueryStringItem(key, queryParams[key])
-      ).filter(isNotUndefinedOrNull).join('&')
+      if @appName == 'trade'
+        queryString += $.param(queryParams)
+      else
+        queryString += Object.keys(queryParams).map((key) =>
+          @getQueryStringItem(key, queryParams[key])
+        ).filter(isNotUndefinedOrNull).join('&')
 
     getQueryStringItem: (key, param) ->    
       if Array.isArray(param)
