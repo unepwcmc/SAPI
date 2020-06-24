@@ -10,6 +10,28 @@ namespace :export do
     export(ntuples, offset, dir)
   end
 
+  task :trade_db_from_created_at, [:created_at] => :environment do |_, args|
+    RECORDS_PER_FILE = 500000
+    ntuples = RECORDS_PER_FILE
+    offset = 0
+    dir = 'tmp/trade_db_files/'
+    FileUtils.mkdir_p dir
+    opts = { created_at: args[:created_at] }
+    export(ntuples, offset, dir, opts)
+  end
+
+  # The main request here was to export records which have been updated after a given date
+  # so excluding the ones created before that date
+  task :trade_db_from_updated_at, [:updated_at, :created_at] => :environment do |_, args|
+    RECORDS_PER_FILE = 500000
+    ntuples = RECORDS_PER_FILE
+    offset = 0
+    dir = 'tmp/trade_db_files/'
+    FileUtils.mkdir_p dir
+    opts = { updated_at: args[:updated_at], created_at: args[:created_at] }
+    export(ntuples, offset, dir, opts)
+  end
+
   task :trade_db_by_year => :environment do
     RECORDS_PER_FILE = 500000
     dir = 'tmp/trade_db_files/'
@@ -135,12 +157,16 @@ namespace :export do
     end
   end
 
-  def export(ntuples, offset, dir)
+  def export(ntuples, offset, dir, opts=nil)
     i = 0
     begin
       while(ntuples == RECORDS_PER_FILE) do
         i = i + 1
-        query = Trade::ShipmentReportQueries.full_db_query(RECORDS_PER_FILE, offset)
+        # If options are passed, it means a partial query has been requested.
+        query = Trade::ShipmentReportQueries.partial_db_query(RECORDS_PER_FILE, offset, opts) if opts
+        # Default to a full export query otherwise
+        query = query ? query : Trade::ShipmentReportQueries.full_db_query(RECORDS_PER_FILE, offset)
+
         results = ActiveRecord::Base.connection.execute query
         ntuples = results.ntuples
         options = {
