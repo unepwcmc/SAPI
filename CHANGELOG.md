@@ -1,3 +1,10 @@
+### 1.4.1
+
+**ID Materials updates**
+
+* Amend document ordering, so that non ID Materials are ordered by date
+* Add ID materials export to admin interface
+
 ### 1.4.0
 
 **EU Opinions**
