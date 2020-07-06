@@ -3,6 +3,7 @@
   <th>Regulation</th>
   <th>Country or Territory</th>
   <th>Type</th>
+  <th>SRG history</th>
   <th>Term</th>
   <th>Source</th>
   <th>Notes</th>
@@ -17,9 +18,18 @@
       <td><%= opinion.start_event.try(:name) %></td>
       <td><%= opinion.geo_entity && opinion.geo_entity.name_en %></td>
       <td>
-        <%= opinion.eu_decision_type.name %>
-        <%= '(' + opinion.eu_decision_type.tooltip + ')' if opinion.
-          eu_decision_type.tooltip.present? %>
+        <% if opinion.eu_decision_type %>
+          <%= opinion.eu_decision_type.try(:name) %>
+          <%= '(' + opinion.eu_decision_type.tooltip + ')' if opinion.
+            eu_decision_type.tooltip.present? %>
+        <% end %>
+      </td>
+      <td>
+        <% if opinion.srg_history %>
+          <%= opinion.srg_history.name %>
+          <%= '(' + opinion.srg_history.tooltip + ')' if opinion.
+            srg_history.tooltip.present? %>
+        <% end %>
       </td>
       <td><%= opinion.term && opinion.term.code %></td>
       <td><%= opinion.source && opinion.source.code %></td>
@@ -41,4 +51,3 @@
     </tr>
   <% end -%>
 </tbody>
-

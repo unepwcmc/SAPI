@@ -38,11 +38,13 @@
     <li>{{#linkTo 'taxonConcept.legal'}}LEGAL{{/linkTo}}
       <ul>
         {{#unless isCms }}
-          <li class="first"><a href="#cites_listings" class="scroll-to">CITES Listing</a></li>
-          <li><a href="#cites_quotas" class="scroll-to">CITES Quotas</a></li>
-          <li><a href="#cites_suspensions" class="scroll-to">CITES Suspensions</a></li>
-          <li><a href="#eu_listings" class="scroll-to">EU Listing</a></li>
-          <li class="last"><a href="#eu_decisions" class="scroll-to">EU Decisions</a></li>
+          {{#each heading in this.legalHeadings }}
+            <li {{bind-attr class="heading.class"}}>
+              <a href=#{{unbound heading.id}} class="scroll-to" {{action 'scrollIntoView' heading.id}}>
+                {{ heading.name }}
+              </a>
+            </li>
+          {{/each}}
         {{/unless}}
       </ul>
     </li>
@@ -71,11 +73,14 @@
       {{#if controllers.taxonConceptDocuments.citesPcDocsPresent}}
         <li><a href="#cites_rst_plants" class="scroll-to">CITES Review of Significant Trade</a></li>
       {{/if}}
+      {{#if controllers.taxonConceptDocuments.idMaterialsDocsPresent}}
+        <li><a href="#id_manual" class="scroll-to">Identification materials</a></li>
+      {{/if}}
       {{#if controllers.taxonConceptDocuments.euSrgDocsPresent}}
         <li><a href="#eu_srg" class="scroll-to">EU SRG</a></li>
       {{/if}}
       {{#if controllers.taxonConceptDocuments.otherDocsPresent}}
-        <li><a href="#other" class="scroll-to">Inter-sessional docs</a></li>
+        <li><a href="#other" class="scroll-to">Other docs</a></li>
       {{/if}}
       </ul>
     </li>
