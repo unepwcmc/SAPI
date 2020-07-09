@@ -51,6 +51,7 @@ namespace :export do
   def export_in_single_file(ntuples, offset, dir)
     i = 0
     filename = 'trade_db_full_export.csv'
+    path_to_file = dir + filename
     begin
       while(ntuples == RECORDS_PER_FILE) do
         i = i + 1
@@ -61,7 +62,7 @@ namespace :export do
 
         Rails.logger.info("Query executed returning #{ntuples} records!")
 
-        File.open("#{dir}#{filename}", 'a') do |file|
+        File.open(path_to_file, 'a') do |file|
           if i == 1
             columns = results.fields
             columns.map do |column|
@@ -82,8 +83,9 @@ namespace :export do
       Rails.logger.info("Trade database completely exported!")
       zipfile = 'tmp/trade_db_files/trade_db.zip'
       Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
-          zipfile.add(filename, dir + filename)
+          zipfile.add(filename, path_to_file)
       end
+      delete_csv_files(dir)
     rescue => e
       Rails.logger.info("Export aborted!")
       Rails.logger.info("Caught exception #{e}")
@@ -150,6 +152,7 @@ namespace :export do
           end
         end
       end
+      delete_csv_files(dir)
     rescue => e
       Rails.logger.info("Export aborted!")
       Rails.logger.info("Caught exception #{e}")
@@ -184,14 +187,20 @@ namespace :export do
       Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
         (1..i).each do |index|
           filename = "trade_db_#{index}.csv"
-          zipfile.add(filename, dir + filename)
+          path_to_file = dir + filename
+          zipfile.add(filename, path_to_file)
         end
       end
+      delete_csv_files(dir)
     rescue => e
       Rails.logger.info("Export aborted!")
       Rails.logger.info("Caught exception #{e}")
       Rails.logger.info(e.message)
     end
+  end
+
+  def delete_csv_files(dir)
+    Dir.glob("#{dir}/trade_db*.csv").each { |file| File.delete(file) }
   end
 
   def process_results(results, options)
