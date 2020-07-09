@@ -1,6 +1,6 @@
-class Trade::TradePlusFormattedCodes
+class Trade::TradePlusFormattedFinalCodes
 
-  VIEW_DIR = 'db/views/trade_plus_formatted_data_view'.freeze
+  VIEW_DIR = 'db/views/trade_plus_formatted_data_final_view'.freeze
 
   def initialize
     @mapping = YAML.load_file("#{Rails.root}/lib/data/trade_mapping.yml")
@@ -24,8 +24,7 @@ class Trade::TradePlusFormattedCodes
     unit_quantity_modifier unit_modifier_value
   ).freeze
   def codes_mapping_table
-    codes_map = @mapping['rules']['standardise_terms'] +
-          @mapping['rules']['standardise_units']
+    codes_map = @mapping['rules']['standardise_terms_and_units']
 
     rows = []
     codes_map.each do |rule|
@@ -84,8 +83,8 @@ class Trade::TradePlusFormattedCodes
     quantity ts.term_id terms.code terms.name_en ts.unit_id units.code units.name_en
   ).freeze
   def formatted_query
-    attributes = ATTRIBUTES.map { |k, v| "#{v} AS #{k}" }.join(',')
-    group_by_attributes = [ATTRIBUTES.values, GROUP_EXTRA_ATTRIBUTES].flatten.join(',')
+    attributes = ATTRIBUTES.map { |k, _v| "ts.#{k} AS #{k}" }.join(',')
+    group_by_attributes = [ATTRIBUTES.map { |k, _v| "ts.#{k}" }, GROUP_EXTRA_ATTRIBUTES].flatten.join(',')
     <<-SQL
       #{codes_mapping_table}
       SELECT #{attributes},
@@ -93,27 +92,20 @@ class Trade::TradePlusFormattedCodes
              -- conditions and replacing NULLs with values from related rows when possible.
              -- Moreover, if ids are -1 or codes/names are 'NULL' strings, replace those with NULL
              -- after the processing is done. This is to get back to just a unique NULL representation.
-             NULLIF(COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id), -1) AS term_id,
+             NULLIF(COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id::text), '-1')::INTEGER AS term_id,
              NULLIF(COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code), 'NULL') AS term_code,
              NULLIF(COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en), 'NULL') AS term,
              NULLIF(COALESCE(MAX(COALESCE(output_unit_id, codes_map.unit_id)), ts.unit_id), -1) AS unit_id,
              NULLIF(COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code), 'NULL') AS unit_code,
              NULLIF(COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en), 'NULL') AS unit,
-             MAX(term_quantity_modifier) AS term_quantity_modifier,
-             MAX(term_modifier_value)::FLOAT AS term_modifier_value,
-             MAX(unit_quantity_modifier) AS unit_quantity_modifier,
-             MAX(unit_modifier_value)::FLOAT AS unit_modifier_value
-        FROM trade_plus_group_view ts
+             MAX(COALESCE(codes_map.term_quantity_modifier, ts.term_quantity_modifier)) AS term_quantity_modifier,
+             MAX(COALESCE(codes_map.term_modifier_value, ts.term_modifier_value::text))::FLOAT AS term_modifier_value,
+             MAX(COALESCE(codes_map.unit_quantity_modifier, ts.unit_quantity_modifier)) AS unit_quantity_modifier,
+             MAX(COALESCE(codes_map.unit_modifier_value, ts.unit_modifier_value))::FLOAT AS unit_modifier_value
+        FROM trade_plus_formatted_data_view ts
         #{mapping_join}
         LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
         LEFT OUTER JOIN trade_codes units ON ts.unit_id = units.id
-        LEFT OUTER JOIN trade_codes sources ON ts.source_id = sources.id
-        LEFT OUTER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
-        INNER JOIN ranks ON ranks.id = ts.taxon_concept_rank_id
-        LEFT OUTER JOIN geo_entities exporters ON ts.exporter_id = exporters.id
-        LEFT OUTER JOIN geo_entities importers ON ts.importer_id = importers.id
-        LEFT OUTER JOIN geo_entities origins ON ts.country_of_origin_id = origins.id
-        WHERE #{exemptions}
         GROUP BY #{group_by_attributes}
     SQL
   end
@@ -123,54 +115,10 @@ class Trade::TradePlusFormattedCodes
     <<-SQL
       LEFT OUTER JOIN codes_map ON (
         (
-          codes_map.term_id = ts.term_id AND
-          (codes_map.unit_id = ts.unit_id OR codes_map.unit_id = -1 AND ts.unit_id IS NULL) AND
-          #{taxa_join_condition}
-        ) OR
-        (
-          codes_map.term_id = ts.term_id AND
-          (codes_map.unit_id = ts.unit_id OR codes_map.unit_id = -1 AND ts.unit_id IS NULL) AND
-          codes_map.taxa_field IS NULL
-        ) OR
-        (
-          codes_map.term_id = ts.term_id AND codes_map.unit_id IS NULL AND
-          #{taxa_join_condition}
-        ) OR
-        (
-          (codes_map.unit_id = ts.unit_id OR codes_map.unit_id = -1 AND ts.unit_id IS NULL) AND
-           codes_map.term_id IS NULL AND
-           #{taxa_join_condition}
-        ) OR
-        (
-          codes_map.term_id = ts.term_id AND
-          codes_map.unit_id IS NULL AND
-          codes_map.taxa_field IS NULL
-        ) OR
-        (
-          (codes_map.unit_id = ts.unit_id OR codes_map.unit_id = -1 AND ts.unit_id IS NULL) AND
           codes_map.term_id IS NULL AND
+          (codes_map.unit_id = ts.unit_id OR codes_map.unit_id = -1 AND ts.unit_id IS NULL) AND
           codes_map.taxa_field IS NULL
-        ) OR
-        (
-          codes_map.term_id IS NULL AND
-          codes_map.unit_id IS NULL AND
-          #{taxa_join_condition}
         )
-      )
-    SQL
-  end
-
-  def taxa_join_condition
-    <<-SQL
-      (
-        ts.taxon_concept_kingdom_name = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'kingdom', ',')) OR
-        ts.taxon_concept_phylum_name = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'phylum', ',')) OR
-        ts.taxon_concept_class_name = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'class', ',')) OR
-        ts.taxon_concept_order_name = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'order', ',')) OR
-        ts.taxon_concept_family_name = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'family', ',')) OR
-        ts.taxon_concept_genus_name = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'genus', ',')) OR
-        ts.taxon_concept_full_name = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'taxa', ',')) OR
-        ts.group = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'group', ','))
       )
     SQL
   end
@@ -184,24 +132,6 @@ class Trade::TradePlusFormattedCodes
     'appendices' => 'ts.appendix',
     'order' => 'ts.taxon_concept_order_name'
   }.freeze
-
-  def exemptions
-    query = []
-    map = @mapping['rules']['exclusions']
-    map.each do |exemp|
-      key = exemp.first
-      values = ''
-      if ['terms', 'units'].include?(key)
-        model = key.classify.constantize
-        obj_ids = model.where(code: exemp.second).map(&:id)
-        values = obj_ids.join(',')
-      else
-        values = exemp.second.map { |a| "'#{a}'" }.join(',')
-      end
-      query << " #{TERM_MAPPING[key]} NOT IN (#{values})\n"
-    end
-    query.join("\t\t\t\t\tAND ")
-  end
 
   def input_flattening(rule)
     input = rule['input']
@@ -232,7 +162,7 @@ class Trade::TradePlusFormattedCodes
     input_units = formatted_input['units'] || [nil]
     input_taxa_fields = format_taxa_fields(formatted_input.slice(*TAXONOMY_FIELDS))
 
-    output_term_values = slice_values(output['term'], 'term')
+    output_term_values = slice_out_term_values(output['term'], 'term')
     output_unit_values = slice_values(output['unit'], 'unit')
     output_codes = "#{output_term_values},#{output_unit_values}"
 
@@ -271,5 +201,12 @@ class Trade::TradePlusFormattedCodes
 
     code_obj = code_type.capitalize.constantize.find_by_code(trade_code)
     code_obj.attributes.slice(*TRADE_CODE_FIELDS).values.map { |v| v.is_a?(String) ? "'#{v}'" : v }.join(',')
+  end
+
+  def slice_out_term_values(trade_code, code_type)
+    return ("NULL," * 3).chop unless trade_code
+    return [-1, "'NULL'", "'NULL'"].join(',') if trade_code == 'NULL'
+    code_obj = code_type.capitalize.constantize.find_by_code(trade_code)
+    code_obj.attributes.slice(*TRADE_CODE_FIELDS).values.map { |v| "'#{v}'" }.join(',')
   end
 end
