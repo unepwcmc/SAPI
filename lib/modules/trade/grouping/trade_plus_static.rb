@@ -268,6 +268,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       next if attribute == 'year' || attribute.nil?
       name = attribute.include?('id') ? 'id' : attribute.include?('iso') ? 'iso2' : attribute.include?('code') ? 'code' : 'name'
       @sanitised_column_names << name
+      attribute = "INITCAP(#{attribute})" if attribute == 'term'
       "#{attribute} AS #{name}"
     end.compact.uniq.join(',')
   end
