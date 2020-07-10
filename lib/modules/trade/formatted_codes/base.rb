@@ -1,6 +1,4 @@
-class Trade::TradePlusFormattedFinalCodes
-
-  VIEW_DIR = 'db/views/trade_plus_formatted_data_final_view'.freeze
+class Trade::FormattedCodes::Base
 
   def initialize
     @mapping = YAML.load_file("#{Rails.root}/lib/data/trade_mapping.yml")
@@ -8,11 +6,15 @@ class Trade::TradePlusFormattedFinalCodes
   end
 
   def generate_view(timestamp)
-    Dir.mkdir(VIEW_DIR) unless Dir.exists?(VIEW_DIR)
-    File.open("#{VIEW_DIR}/#{timestamp}.sql", 'w') { |f| f.write(@query) }
+    Dir.mkdir(view_dir) unless Dir.exists?(view_dir)
+    File.open("#{view_dir}/#{timestamp}.sql", 'w') { |f| f.write(@query) }
   end
 
   private
+
+  def view_dir
+    raise NotImplementedError
+  end
 
   # Generate WITH AS table containing all possible mappings.
   MAPPING_COLUMNS = %w(
@@ -24,8 +26,6 @@ class Trade::TradePlusFormattedFinalCodes
     unit_quantity_modifier unit_modifier_value
   ).freeze
   def codes_mapping_table
-    codes_map = @mapping['rules']['standardise_terms_and_units']
-
     rows = []
     codes_map.each do |rule|
       rows.concat generate_mapping_table_rows(rule)
@@ -36,6 +36,10 @@ class Trade::TradePlusFormattedFinalCodes
         VALUES #{rows.join(',')}
       )
     SQL
+  end
+
+  def codes_map
+    raise NotImplementedError
   end
 
   ATTRIBUTES = {
@@ -82,56 +86,14 @@ class Trade::TradePlusFormattedFinalCodes
   GROUP_EXTRA_ATTRIBUTES = %w(
     quantity ts.term_id terms.code terms.name_en ts.unit_id units.code units.name_en
   ).freeze
+
   def formatted_query
-    attributes = ATTRIBUTES.map { |k, _v| "ts.#{k} AS #{k}" }.join(',')
-    group_by_attributes = [ATTRIBUTES.map { |k, _v| "ts.#{k}" }, GROUP_EXTRA_ATTRIBUTES].flatten.join(',')
-    <<-SQL
-      #{codes_mapping_table}
-      SELECT #{attributes},
-             -- MAX functions are supposed to to merge rows together based on the join
-             -- conditions and replacing NULLs with values from related rows when possible.
-             -- Moreover, if ids are -1 or codes/names are 'NULL' strings, replace those with NULL
-             -- after the processing is done. This is to get back to just a unique NULL representation.
-             NULLIF(COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id::text), '-1')::INTEGER AS term_id,
-             NULLIF(COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code), 'NULL') AS term_code,
-             NULLIF(COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en), 'NULL') AS term,
-             NULLIF(COALESCE(MAX(COALESCE(output_unit_id, codes_map.unit_id)), ts.unit_id), -1) AS unit_id,
-             NULLIF(COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code), 'NULL') AS unit_code,
-             NULLIF(COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en), 'NULL') AS unit,
-             MAX(COALESCE(codes_map.term_quantity_modifier, ts.term_quantity_modifier)) AS term_quantity_modifier,
-             MAX(COALESCE(codes_map.term_modifier_value, ts.term_modifier_value::text))::FLOAT AS term_modifier_value,
-             MAX(COALESCE(codes_map.unit_quantity_modifier, ts.unit_quantity_modifier)) AS unit_quantity_modifier,
-             MAX(COALESCE(codes_map.unit_modifier_value, ts.unit_modifier_value))::FLOAT AS unit_modifier_value
-        FROM trade_plus_formatted_data_view ts
-        #{mapping_join}
-        LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
-        LEFT OUTER JOIN trade_codes units ON ts.unit_id = units.id
-        GROUP BY #{group_by_attributes}
-    SQL
+    raise NotImplementedError
   end
 
-  # Joins with bespoke mapping table listing all possible join conditions
   def mapping_join
-    <<-SQL
-      LEFT OUTER JOIN codes_map ON (
-        (
-          codes_map.term_id IS NULL AND
-          (codes_map.unit_id = ts.unit_id OR codes_map.unit_id = -1 AND ts.unit_id IS NULL) AND
-          codes_map.taxa_field IS NULL
-        )
-      )
-    SQL
+    raise NotImplementedError
   end
-
-  TERM_MAPPING = {
-    'terms'=> 'ts.term_id',
-    'genus'=> 'ts.taxon_concept_genus_name',
-    'units'=> 'ts.unit_id',
-    'taxa'=> 'ts.taxon_concept_full_name',
-    'group'=> 'ts.group',
-    'appendices' => 'ts.appendix',
-    'order' => 'ts.taxon_concept_order_name'
-  }.freeze
 
   def input_flattening(rule)
     input = rule['input']
@@ -151,7 +113,28 @@ class Trade::TradePlusFormattedFinalCodes
   end
 
   TAXONOMY_FIELDS = %w(kingdom phylum order class family genus group taxa).freeze
-  def generate_mapping_table_rows(rule)
+
+  def generate_mapping_table_rows
+    raise NotImplementedError
+  end
+
+  TRADE_CODE_FIELDS = %w(id code name_en).freeze
+  def slice_values(trade_code, code_type, slice_final=nil)
+    return ("NULL," * 3).chop unless trade_code
+    # When code value is 'NULL' it means that this is
+    # an actual condition to be met for the mapping.
+    # This is why the id is -1 instead of NULL.
+    # Normal NULL values are used to described that there has been
+    # no indication for any condition with regard that code/item.
+    return [-1, "'NULL'", "'NULL'"].join(',') if trade_code == 'NULL'
+
+    code_obj = code_type.capitalize.constantize.find_by_code(trade_code)
+    code_obj.attributes.slice(*TRADE_CODE_FIELDS).values.map do |v|
+      slice_final.present? ? "'#{v}'" : v.is_a?(String) ? "'#{v}'" : v
+    end.join(',')
+  end
+
+  def generate_mapping_table_rows(rule, slice_final=nil)
     formatted_input = input_flattening(rule)
     formatted_input.delete_if { |_, v| v.empty? }
     output = rule['output']
@@ -162,7 +145,7 @@ class Trade::TradePlusFormattedFinalCodes
     input_units = formatted_input['units'] || [nil]
     input_taxa_fields = format_taxa_fields(formatted_input.slice(*TAXONOMY_FIELDS))
 
-    output_term_values = slice_out_term_values(output['term'], 'term')
+    output_term_values = slice_values(output['term'], 'term', slice_final)
     output_unit_values = slice_values(output['unit'], 'unit')
     output_codes = "#{output_term_values},#{output_unit_values}"
 
@@ -187,26 +170,5 @@ class Trade::TradePlusFormattedFinalCodes
       rows << "(#{input_codes},#{output_codes},#{input_taxa_fields},#{modifier_values})"
     end
     rows
-  end
-
-  TRADE_CODE_FIELDS = %w(id code name_en).freeze
-  def slice_values(trade_code, code_type)
-    return ("NULL," * 3).chop unless trade_code
-    # When code value is 'NULL' it means that this is
-    # an actual condition to be met for the mapping.
-    # This is why the id is -1 instead of NULL.
-    # Normal NULL values are used to described that there has been
-    # no indication for any condition with regard that code/item.
-    return [-1, "'NULL'", "'NULL'"].join(',') if trade_code == 'NULL'
-
-    code_obj = code_type.capitalize.constantize.find_by_code(trade_code)
-    code_obj.attributes.slice(*TRADE_CODE_FIELDS).values.map { |v| v.is_a?(String) ? "'#{v}'" : v }.join(',')
-  end
-
-  def slice_out_term_values(trade_code, code_type)
-    return ("NULL," * 3).chop unless trade_code
-    return [-1, "'NULL'", "'NULL'"].join(',') if trade_code == 'NULL'
-    code_obj = code_type.capitalize.constantize.find_by_code(trade_code)
-    code_obj.attributes.slice(*TRADE_CODE_FIELDS).values.map { |v| "'#{v}'" }.join(',')
   end
 end
