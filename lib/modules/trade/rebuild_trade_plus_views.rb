@@ -5,16 +5,19 @@ module Trade::RebuildTradePlusViews
     puts "Rebuild group SQL view..."
     self.rebuild_sql_views(:group, timestamp)
     self.rebuild_trade_plus_view(:group)
-    puts "Rebuild trade codes SQL view..."
+    puts "Rebuild trade codes SQL views..."
     self.rebuild_sql_views(:trade_codes, timestamp)
+    self.rebuild_sql_views(:final_trade_codes, timestamp)
     self.rebuild_trade_plus_view(:formatted_data)
+    self.rebuild_trade_plus_view(:formatted_data_final)
   end
 
   def self.rebuild_sql_views(type, timestamp)
     view_type =
       case type
       when :group then Trade::TradePlusGroupView
-      when :trade_codes then Trade::TradePlusFormattedCodes
+      when :trade_codes then Trade::FormattedCodes::TradePlusFormattedCodes
+      when :final_trade_codes then Trade::FormattedCodes::TradePlusFormattedFinalCodes
       end
     view_type.new.generate_view(timestamp)
   end
