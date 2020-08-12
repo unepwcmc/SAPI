@@ -4,6 +4,8 @@ module Trade::TradePlusFilters
   ATTRIBUTES = %w[importer exporter origin term
                   source purpose unit year appendix].freeze
 
+  MAPPING =  ['Mammals', 'Birds', 'Reptiles', 'Amphibians', 'Fish', 'Coral', 'Non-coral invertebrates', 'Plants', 'Timber']
+
   def response_ordering(response)
     result = {}
     grouped = response.group_by { |r| r['attribute_name'] }
@@ -41,7 +43,11 @@ module Trade::TradePlusFilters
       else
         _v = v.map { |value| JSON.parse(value['data']) }
       end
-      result[k] = _v.sort_by { |i| i['name'].to_s.downcase }
+      result[k] = if k == 'taxonomic_groups'
+                    _v.sort_by { |i| MAPPING.index(i['name']) }
+                  else
+                    _v.sort_by { |i| i['name'].to_s.downcase }
+                  end
     end
     result
   end
