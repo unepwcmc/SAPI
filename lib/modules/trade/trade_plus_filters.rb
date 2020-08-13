@@ -13,7 +13,7 @@ module Trade::TradePlusFilters
       when 'sources', 'purposes'
         v.map do |value|
           value = JSON.parse(value['data'])
-          value['id'], value['name'] = 'unreported', 'Unreported' if value['id'].nil?
+          value['id'], value['name'], value['code'] = 'unreported', 'Unreported', 'UNR' if value['id'].nil?
           _v << value
         end
         _v
@@ -34,7 +34,7 @@ module Trade::TradePlusFilters
       when 'terms'
         v.map do |value|
           value = JSON.parse(value['data'])
-          value['id'], value['name'] = value['id'], value['name'].capitalize
+          value['id'], value['name'], value['code'] = value['id'], value['name'].capitalize, value['code']
           _v << value
         end
         _v
@@ -73,6 +73,8 @@ module Trade::TradePlusFilters
         query << sub_query([attr, attr], attr.pluralize)
       elsif %w[importer exporter origin].include? attr
         query << sub_query([attr, "#{attr}_id", "#{attr}_iso"], attr.pluralize)
+      elsif %w[term source purpose].include? attr
+        query << sub_query([attr, "#{attr}_id", "#{attr}_code"], attr.pluralize)
       else
         query << sub_query([attr, "#{attr}_id"], attr.pluralize)
       end
@@ -88,7 +90,8 @@ module Trade::TradePlusFilters
 
   def sub_query(attributes, as)
     json_values = "'name',#{attributes[0]},'id',#{attributes[1]}"
-    json_values << ",'iso2',#{attributes[2]}" if attributes.length == 3
+    json_values << ",'iso2',#{attributes[2]}" if attributes.grep(/iso/).present?
+    json_values << ",'code',#{attributes[2]}" if attributes.grep(/code/).present?
     group_by_attrs = attributes.uniq.join(',')
     "SELECT '#{as}' AS attribute_name, json_build_object(#{json_values})::jsonb AS data FROM #{table_name} #{group_by(group_by_attrs)}"
   end

@@ -65,6 +65,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     purpose_id: 'purpose_id',
     source: 'source',
     source_id: 'source_id',
+    source_code: 'source_code',
     taxon_name: 'taxon_name',
     genus_name: 'genus_name',
     family_name: 'family_name',
@@ -111,7 +112,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   GROUPING_ATTRIBUTES = {
     terms: ['term', 'term_id'],
-    sources: ['source', 'source_id'],
+    sources: ['source', 'source_id', 'source_code'],
     exporting: ['exporter', 'exporter_iso'],
     importing: ['importer', 'importer_iso'],
     species: ['taxon_name', 'appendix', 'taxon_id'],
@@ -280,8 +281,9 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     return '' if @attributes.blank?
     @attributes.map do |attribute|
       next if attribute == 'year' || attribute.nil?
-      name = attribute.include?('id') ? 'id' : attribute.include?('iso') ? 'iso2' : 'name'
+      name = attribute.include?('id') ? 'id' : attribute.include?('iso') ? 'iso2' : attribute.include?('code') ? 'code' : 'name'
       @sanitised_column_names << name
+      attribute = "INITCAP(#{attribute})" if attribute == 'term'
       "#{attribute} AS #{name}"
     end.compact.uniq.join(',')
   end
