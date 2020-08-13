@@ -1,4 +1,4 @@
-Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPagination, Trade.Flash, Trade.AuthoriseUser,
+Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPagination, Trade.Flash, Trade.AuthoriseUser, Trade.CustomTransition,
   needs: ['annualReportUpload', 'geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   updatesVisible: false
@@ -41,7 +41,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
 
   transitionToParentController: ->
     @get('controllers.annualReportUpload.content').reload()
-    @transitionToRoute(
+    @customTransitionToRoute(
       'annual_report_upload',
       @get('controllers.annualReportUpload.id')
     )
