@@ -1,3 +1,9 @@
+### 1.4.2
+
+**Database download event tracking**
+
+* Add event tracking to full database download from CITES Trade
+
 ### 1.4.1
 
 **ID Materials updates**
