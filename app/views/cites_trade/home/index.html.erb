@@ -6,11 +6,11 @@
     <div class="grid_16 main_content">
 
       <div class='banner'>
-        <p class='bold font-18'><%= t('full_db_download_available') %></p>
+        <p class='bold font-18'><%= t('full_db_download_available').html_safe %></p>
         <a href=<%= cites_trade_download_db_path %> class='download-button' data-full-trade-db-download>
           <div>
             <p class='bold font-18 no-margin'><%= t('download_here') %> </p>
-            <p class='no-margin'><%= t('file_size') %>: 237MB</p>
+            <p class='no-margin'><%= t('file_size') %>: 349MB</p>
             </div>
           </a>
       </div>
@@ -184,7 +184,7 @@
 <div class="grid_16 other_info">
   <p align="center" class='no-margin'>
     <strong><%= t('download') %>:</strong>
-    <a href=<%= cites_trade_download_db_path %> data-full-trade-db-download><%= t('full_db_download') %> (237MB)</a>
+    <a href=<%= cites_trade_download_db_path %> data-full-trade-db-download><%= t('full_db_download') %> (349MB)</a>
   </p>
   <p align="center">
     <strong><%= t('download') %>:</strong>

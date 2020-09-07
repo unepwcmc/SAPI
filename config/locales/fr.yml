@@ -76,8 +76,8 @@ fr:
     net_exports: "Rapport de la Exportations Nettes"
     comptab: "Rapport de la Tabulation Comparative"
 
-  full_db_download: "Téléchargement de la Base de Données sur le Commerce CITES entière"
-  full_db_download_available: "Intégralité de la Base de Données sur le Commerce CITES disponible à télécharger"
+  full_db_download: "Téléchargement de la Base de Données sur le Commerce CITES entière (version 2020.1)"
+  full_db_download_available: "Intégralité de la Base de Données sur le Commerce CITES disponible à télécharger (version 2020.1)"
   download_here: "Télécharger ici"
   file_size: "Taille du fichier"
 
