@@ -88,7 +88,6 @@ module Trade::TradePlusFilters
         query << sub_query([attr, "#{attr}_id"], attr.pluralize)
       end
     end
-    query << sub_query(['taxon_name', 'taxon_id'], 'taxa')
     query << sub_query(['group_name', 'group_name'], 'taxonomic_groups')
     query << country_query
 
