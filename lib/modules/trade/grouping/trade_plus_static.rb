@@ -129,20 +129,13 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def child_taxa_query(tc_id=nil)
     return '' if @opts['taxon_id'].blank? && !tc_id
     tc_id = @opts['taxon_id'] || tc_id
+
     <<-SQL
-      WITH RECURSIVE selected_taxa AS (
-        SELECT UNNEST(ARRAY[#{tc_id}]) AS id
-      ),
-      child_taxa AS (
-        SELECT id
-        FROM selected_taxa
-
-        UNION ALL
-
-        SELECT tc.id
-        FROM taxon_concepts tc
-        JOIN child_taxa ON child_taxa.id = tc.parent_id
-      )
+    WITH child_taxa AS (
+      SELECT taxon_concept_id AS id
+      FROM all_taxon_concepts_and_ancestors_mview
+      WHERE ancestor_taxon_concept_id = #{tc_id}
+    )
     SQL
   end
 
