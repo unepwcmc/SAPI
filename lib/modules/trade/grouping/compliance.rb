@@ -1,40 +1,7 @@
-class Trade::ComplianceGrouping
-  attr_reader :query
-
-  # Allowed attributes
-  ATTRIBUTES = {
-    id: 'id',
-    year: 'year',
-    appendix: 'appendix',
-    importer: 'importer',
-    importer_iso: 'importer_iso',
-    importer_id: 'importer_id',
-    exporter: 'exporter',
-    exporter_iso: 'exporter_iso',
-    exporter_id: 'exporter_id',
-    term: 'term',
-    term_id: 'term_id',
-    unit: 'unit',
-    purpose: 'purpose',
-    source: 'source',
-    taxon_name: 'taxon_name',
-    genus_name: 'genus_name',
-    family_name: 'family_name',
-    class_name: 'class_name',
-    issue_type: 'issue_type',
-    taxon_concept_id: 'taxon_concept_id'
-  }
-
-  GROUPING_ATTRIBUTES = {
-    category: ['issue_type'],
-    commodity: ['term', 'term_id'],
-    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
-    importing: ['importer', 'importer_iso', 'importer_id'],
-    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
-    taxonomy: [''],
-  }
+class Trade::Grouping::Compliance < Trade::Grouping::Base
 
   COUNTRIES = {
+    2019 => 182, #TODO Number to be double checked
     2018 => 182,
     2017 => 182,
     2016 => 182,
@@ -43,62 +10,10 @@ class Trade::ComplianceGrouping
     2013 => 179,
     2012 => 176,
     2011 => 175
-  }
+  }.freeze
 
-  TAXONOMIC_GROUPING = 'lib/data/group_conversions.csv'.freeze
-
-  YEARS = (2012..Date.today.year - 1).to_a
-
-  # Example usage
-  # Group by year considering compliance types:
-  # Trade::ComplianceGrouping.new('year', {attributes: ['issue_type']})
-  # Group by importer and limit result to 5 records
-  # Trade::ComplianceGrouping.new('importer', {limit: 5})
-  def initialize(group, opts={})
-    @group = sanitise_group(group)
-    @attributes = sanitise_params(opts[:attributes])
-    @condition = opts[:condition] || 'TRUE'
-    @limit = sanitise_limit(opts[:limit])
-    @query = group_query
-  end
-
-  def run
-    db.execute(@query)
-  end
-
-  def shipments
-    sql = <<-SQL
-      SELECT *
-      FROM non_compliant_shipments_view
-    SQL
-    db.execute(sql)
-  end
-
-  def json_by_year(data, params, opts={})
-    return data unless data.first["year"]
-
-    # Custom group_by
-    years = data.map { |d| d["year"] }.uniq
-    json = []
-    years.map do |year|
-      partials = data.select { |d| d["year"] == year }
-      values = partials.map do |partial|
-        hash = {}
-        opts.each { |key, value| hash.merge!({"#{key}": partial[value]}) }
-        hash.merge({
-          value: partial['cnt'],
-          percent: partial['percent']
-        })
-      end
-      json << ({ "#{year}": values })
-    end
-    record = {}
-    json.each do |d|
-      key = d.keys.first
-      # Fetch top 5
-      record[key] = d[key][0..4]
-    end
-    record
+  def initialize(attributes, opts={})
+    super(attributes, opts)
   end
 
   # TODO
@@ -111,7 +26,7 @@ class Trade::ComplianceGrouping
     years = case year
       when 2012
         [year, year + 1]
-      when Date.today.year - 1
+     when Date.today.year - 1
         [year - 1, year]
       else
         [year - 1, year, year + 1]
@@ -125,21 +40,7 @@ class Trade::ComplianceGrouping
     hash
   end
 
-  def read_taxonomy_conversion
-    conversion = {}
-    taxonomy = CSV.read(TAXONOMIC_GROUPING, {headers: true})
-    taxonomy.each do |csv|
-      conversion[csv['group']] ||= []
-      data = {
-        taxon_name: csv['taxon_name'],
-        rank: csv['taxonomic_level']
-      }
-      conversion[csv['group']] << data
-    end
-    conversion
-  end
-
-  def taxonomic_grouping
+  def taxonomic_grouping(opts={})
     YEARS.map do |year|
       { "#{year}": taxonomic_grouping_per_year(year) }
     end.inject(:merge)
@@ -150,7 +51,7 @@ class Trade::ComplianceGrouping
 
     res = {}
     # Get all the non-compliant shipments in a given year
-    query = "SELECT * FROM non_compliant_shipments_view WHERE year = #{year}"
+    query = "SELECT * FROM #{shipments_table} WHERE year = #{year}"
     shipments = db.execute(query)
     return [] unless shipments.first
     # Loop through all the non-compliant shipments
@@ -186,7 +87,8 @@ class Trade::ComplianceGrouping
     if params[:group_by].include?('commodity') || params[:group_by].include?('species')
       hash[params[:year]] = data.map {|d| d.except('year', 'percent')}
     elsif params[:group_by].include?('exporting')
-      importers = Trade::ComplianceGrouping.new('year', {attributes: GROUPING_ATTRIBUTES[:importing], condition: "year = #{params[:year]}"}).run
+      _grouping_attributes = Array.new(GROUPING_ATTRIBUTES[:importing]) << 'year'
+      importers = Trade::Grouping::Compliance.new(_grouping_attributes, params).run
       data, importers = data.group_by {|d| d['exporter']}, importers.group_by {|d| d['importer']}
       sum = importer_exporter_countries(data, importers, params[:year])
       keys = sum.map { |s| s.keys }.flatten
@@ -244,7 +146,89 @@ class Trade::ComplianceGrouping
     end
   end
 
+  def json_by_attribute(data, opts={})
+    attribute = sanitise_group(opts[:attribute])
+
+    begin
+      raise NoGroupingAttributeError unless attribute
+    rescue => e
+      attribute = 'year'
+      Rails.logger.info(e)
+    end
+
+    grouped_data = data.group_by { |d| d[attribute] }
+    grouped_data.each do |key, values|
+      # Fetch top 5 and rename 'cnt' to 'value'
+      grouped_data[key] = values[0..4].each { |v| v['value'] = v.delete('cnt') }
+    end
+  end
+
+  FILTERING_ATTRIBUTES = {
+    time_range_start: 'year',
+    time_range_end: 'year',
+    year: 'year'
+  }.freeze
+  def self.filtering_attributes
+    FILTERING_ATTRIBUTES
+  end
+
+  DEFAULT_FILTERING_ATTRIBUTES = {
+    time_range_start: 2012,
+    time_range_end: 1.year.ago.year
+  }.freeze
+  def self.default_filtering_attributes
+    DEFAULT_FILTERING_ATTRIBUTES
+  end
+
+  GROUPING_ATTRIBUTES = {
+    category: ['issue_type'],
+    commodity: ['term', 'term_id'],
+    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
+    importing: ['importer', 'importer_iso', 'importer_id'],
+    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
+    taxonomy: ['']
+  }.freeze
+  def self.grouping_attributes
+    GROUPING_ATTRIBUTES
+  end
+
+  def self.get_grouping_attributes(group)
+    super(group) << 'year'
+  end
+
   private
+
+  def shipments_table
+    'non_compliant_shipments_view'
+  end
+
+  # Allowed attributes
+  ATTRIBUTES = {
+    id: 'id',
+    year: 'year',
+    appendix: 'appendix',
+    importer: 'importer',
+    importer_iso: 'importer_iso',
+    importer_id: 'importer_id',
+    exporter: 'exporter',
+    exporter_iso: 'exporter_iso',
+    exporter_id: 'exporter_id',
+    term: 'term',
+    term_id: 'term_id',
+    unit: 'unit',
+    purpose: 'purpose',
+    source: 'source',
+    taxon_name: 'taxon_name',
+    genus_name: 'genus_name',
+    family_name: 'family_name',
+    class_name: 'class_name',
+    issue_type: 'issue_type',
+    taxon_concept_id: 'taxon_concept_id'
+  }.freeze
+
+  def attributes
+    ATTRIBUTES
+  end
 
   def importer_exporter_countries(data, importers, year)
     data.map do |k, v|
@@ -283,7 +267,7 @@ class Trade::ComplianceGrouping
   end
 
   def group_query
-    columns = [@group, @attributes].flatten.compact.uniq.join(',')
+    columns = @attributes.compact.uniq.join(',')
     <<-SQL
       SELECT #{columns}, COUNT(*) AS cnt, 100.0*COUNT(*)/(SUM(COUNT(*)) OVER (PARTITION BY year)) AS percent
       FROM non_compliant_shipments_view
@@ -300,13 +284,13 @@ class Trade::ComplianceGrouping
       FROM(
         (
           SELECT DISTINCT importer AS country, importer_iso AS iso
-          FROM non_compliant_shipments_view
+          FROM #{shipments_table}
           WHERE year = #{year}
         )
         UNION
         (
           SELECT DISTINCT exporter AS country, exporter_iso AS iso
-          FROM non_compliant_shipments_view
+          FROM #{shipments_table}
           WHERE year = #{year}
         )
       ) AS countries
@@ -315,7 +299,7 @@ class Trade::ComplianceGrouping
 
     sql = <<-SQL
       SELECT COUNT(*) AS cnt
-      FROM non_compliant_shipments_view
+      FROM #{shipments_table}
       WHERE year = #{year}
     SQL
     issues_reported = db.execute(sql).first['cnt'].to_i
@@ -336,38 +320,17 @@ class Trade::ComplianceGrouping
     return false
   end
 
-  def limit
-    @limit ? "LIMIT #{@limit}" : ''
-  end
-
-  def sanitise_group(group)
-    ATTRIBUTES[group.to_sym]
-  end
-
-  def sanitise_params(params)
-    return nil if params.blank?
-    params.map { |p| ATTRIBUTES[p.to_sym] }
-  end
-
-  def sanitise_limit(limit)
-    limit.is_a?(Integer) ? limit : nil
-  end
-
-  def sanitise_condition(condition)
-    # TODO
-    return nil if condition.blank?
-    condition.map do |key, value|
-      if value.is_a?(Array)
-        "#{ATTRIBUTES[key]} IN (#{value.join(',')})"
-      else
-        "#{ATTRIBUTES[key]} = #{value}"
-      end
-    end.join(' AND ')
-  end
-
-  def db
-    ActiveRecord::Base.connection
-  end
+  #def sanitise_condition(condition)
+  #  # TODO
+  #  return nil if condition.blank?
+  #  condition.map do |key, value|
+  #    if value.is_a?(Array)
+  #      "#{ATTRIBUTES[key]} IN (#{value.join(',')})"
+  #    else
+  #      "#{ATTRIBUTES[key]} = #{value}"
+  #    end
+  #  end.join(' AND ')
+  #end
 
   def total_ships_exp_cnt(id, year)
     query_exp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE exporter_id = #{id} AND year = #{year}"
@@ -377,5 +340,11 @@ class Trade::ComplianceGrouping
   def total_ships_imp_cnt(id, year)
     query_imp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE importer_id = #{id} AND year = #{year}"
     db.execute(query_imp).values.flatten.first.to_i
+  end
+
+  # Used in the base class to not skip taxon_id equality check.
+  # It can be skipped by other groupings
+  def skip_taxon_id?
+    false
   end
 end
