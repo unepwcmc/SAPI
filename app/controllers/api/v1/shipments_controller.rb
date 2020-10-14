@@ -154,7 +154,7 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def authenticate
     token = request.headers['X-Authentication-Token']
-    unless token == Rails.application.secrets["compliance_tool_token"]
+    unless token == Rails.application.secrets["shipments_api_token"]
       head status: :unauthorized
       return false
     end
