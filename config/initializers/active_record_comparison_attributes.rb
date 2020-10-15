@@ -26,7 +26,10 @@ module ComparisonAttributes
       arel_nodes <<
         if self.class.text_attributes.include? attr_name
           Arel::Nodes::NamedFunction.new('SQUISH_NULL', [a.table[attr_name]]).
-          eq(attr_val.presence)
+            eq(attr_val.presence)
+        elsif attr_val == []
+          Arel::Nodes::NamedFunction.new('ARRAY_LENGTH', [a.table[attr_name], 1]).
+            eq(0)
         else
           a.table[attr_name].eq(attr_val)
         end
