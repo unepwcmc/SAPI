@@ -67,7 +67,7 @@ isNotUndefinedOrNull = (x) ->
       urlPath = if @routes[name] then @routes[name].urlPath else name
 
     getPath: () ->
-      @pathArray.map(@replaceWithModelId).join('/')
+      @pathArray.map(@replaceWithModelId.bind(this)).join('/')
 
     replaceWithModelId: (el) ->
       if el == '_ID_' then @model.get('id') else el

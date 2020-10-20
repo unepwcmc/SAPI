@@ -15,7 +15,7 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
   end
 
   def srg_history
-    object['srg_history'] && JSON.parse(object['srg_history'])
+    object['srg_history']
   end
 
   def geo_entity
