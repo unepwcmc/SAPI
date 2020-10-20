@@ -36,7 +36,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     end
     unless @years.nil? || @years.empty?
       rel = rel.where(
-        'EXTRACT(YEAR FROM start_date) IN (?)', @years
+        'EXTRACT(YEAR FROM start_date)::VARCHAR IN (?)', @years
       )
     end
     if @decision_types['negativeOpinions'] == 'false'
