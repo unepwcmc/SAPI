@@ -65,9 +65,21 @@
           </td>
           <td class="last">
             {{#if decision.start_event.url}}
-              <a class="legal-links" href="{{unbound decision.start_event.url}}">
-                {{decision.start_event.name}}
-              </a>
+              {{#if isSignedIn }}
+                {{#if decision.start_event.private_url}}
+                  <a class="legal-links" href="{{unbound decision.start_event.private_url}}">
+                    {{decision.start_event.name}}
+                  </a>
+                {{else}}
+                      <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                      {{decision.start_event.name}}
+                      </a>
+                {{/if}}
+              {{else}}
+                <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                  {{decision.start_event.name}}
+                </a>
+              {{/if}}
             {{/if}}
           </td>
         </tr>
@@ -139,9 +151,21 @@
               </td>
               <td class="last">
                 {{#if decision.start_event.url}}
-                  <a class="legal-links" href="{{unbound decision.start_event.url}}">
-                    {{decision.start_event.name}}
-                  </a>
+                  {{#if isSignedIn }}
+                    {{#if decision.start_event.private_url}}
+                      <a class="legal-links" href="{{unbound decision.start_event.private_url}}">
+                        {{decision.start_event.name}}
+                      </a>
+                    {{else}}
+                      <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                        {{decision.start_event.name}}
+                      </a>
+                    {{/if}}
+                  {{else}}
+                    <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                      {{decision.start_event.name}}
+                    </a>
+                  {{/if}}
                 {{/if}}
               </td>
             </tr>
