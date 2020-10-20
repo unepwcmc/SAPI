@@ -610,6 +610,3 @@ DEPENDENCIES
   wicked (~> 1.3.3)
   wkhtmltopdf-binary (~> 0.9.9)
   yajl-ruby
-
-BUNDLED WITH
-   1.17.3
