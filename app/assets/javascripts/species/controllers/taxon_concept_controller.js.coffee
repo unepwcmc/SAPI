@@ -16,9 +16,6 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchCon
       document.getElementById(id).scrollIntoView({ behavior: 'smooth' })
   }
 
-  isSignedIn: (->
-    @get('isSignedIn')
-  ).property('euDecisions')
   isCms: ( ->
     if @get('taxonomy') != undefined
       @get('taxonomy') == 'cms'

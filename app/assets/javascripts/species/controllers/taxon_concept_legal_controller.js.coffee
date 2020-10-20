@@ -1,4 +1,4 @@
-Species.TaxonConceptLegalController = Ember.ArrayController.extend
+Species.TaxonConceptLegalController = Ember.ArrayController.extend Species.SignedInStatus,
   needs: 'taxonConcept'
 
   citesListingsExpanded: false
