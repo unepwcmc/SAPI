@@ -67,7 +67,7 @@ module Trade::DownloadDataRetriever
   end
 
   def self.taxonomic_download(params)
-    mapping = Trade::ComplianceGrouping.new('').read_taxonomy_conversion
+    mapping = Trade::Grouping::Compliance.new('').read_taxonomy_conversion
     array_ids = []
     mapping[params[:ids]].each do |m|
       rank_name = m[:rank] == 'Species' ? 'taxon' : m[:rank].downcase

@@ -221,7 +221,6 @@ class CsvToDbMap
       'ExcludedTaxa' => 'exclusions text'
     },
     'distribution_tags_import' => {
-      'taxon_concept_id' => 'taxon_concept_id integer',
       'Species RecID' => 'legacy_id integer',
       'Rank' => 'rank varchar',
       'GEO_entity_type' => 'geo_entity_type varchar',
@@ -291,6 +290,21 @@ class CsvToDbMap
       'Term' => 'term varchar',
       'DecNotes' => 'notes varchar',
       'Internal_Notes' => 'internal_notes varchar'
+    },
+    'eu_opinions_import' => {
+      'taxon_concept_id' => 'taxon_concept_id integer',
+      'start_regulation_name' => 'start_event_name varchar',
+      'country_name' => 'country_name varchar',
+      'start_date' => 'start_date date',
+      'opinion_name' => 'opinion_name varchar',
+      'term_code' => 'term_code varchar',
+      'source_code' => 'source_code varchar',
+      'is_current' => 'is_current boolean',
+      'notes' => 'notes varchar',
+      'internal_notes' => 'internal_notes varchar',
+      'nomenclature_note_en' => 'nomenclature_note_en varchar',
+      'nomenclature_note_es' => 'nomenclature_note_es varchar',
+      'nomenclature_note_fr' => 'nomenclature_note_fr varchar'
     },
     'terms_and_purpose_pairs_import' => {
       'TERM_CODE' => 'TERM_CODE varchar',
@@ -382,6 +396,16 @@ class CsvToDbMap
       'name' => 'name varchar',
       'display_name_es' => 'display_name_es varchar',
       'display_name_fr' => 'display_name_fr varchar'
+    },
+    'author_year_import' => {
+      'Scientific name' => 'name varchar',
+      'Rank' => 'rank varchar',
+      'RecID' => 'legacy_id integer',
+      'ParentRank' => 'parent_rank varchar',
+      'ParentRecID' => 'parent_id integer',
+      'Status' => 'status varchar',
+      'Species author' => 'author varchar',
+      'notes' => 'notes varchar'
     }
   }
 
@@ -448,7 +472,7 @@ def drop_table(table_name)
   begin
     ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS #{table_name};"
     puts "Table removed"
-  rescue Exception => e
+  rescue Exception
     puts "Could not drop table #{table_name}. It might not exist if this is the first time you are running this rake task."
   end
 end

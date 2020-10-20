@@ -14,7 +14,7 @@ class EuDecisionType < ActiveRecord::Base
   attr_accessible :name, :tooltip, :decision_type
   include Dictionary
   build_dictionary :negative_opinion, :positive_opinion, :no_opinion,
-    :suspension
+    :suspension, :srg_referral
 
   scope :opinions, -> { where('decision_type <> ?', EuDecisionType::SUSPENSION).
     order('UPPER(name) ASC') }

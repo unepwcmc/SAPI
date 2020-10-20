@@ -10,6 +10,28 @@ namespace :export do
     export(ntuples, offset, dir)
   end
 
+  task :trade_db_from_created_at, [:created_at] => :environment do |_, args|
+    RECORDS_PER_FILE = 500000
+    ntuples = RECORDS_PER_FILE
+    offset = 0
+    dir = 'tmp/trade_db_files/'
+    FileUtils.mkdir_p dir
+    opts = { created_at: args[:created_at] }
+    export(ntuples, offset, dir, opts)
+  end
+
+  # The main request here was to export records which have been updated after a given date
+  # so excluding the ones created before that date
+  task :trade_db_from_updated_at, [:updated_at, :created_at] => :environment do |_, args|
+    RECORDS_PER_FILE = 500000
+    ntuples = RECORDS_PER_FILE
+    offset = 0
+    dir = 'tmp/trade_db_files/'
+    FileUtils.mkdir_p dir
+    opts = { updated_at: args[:updated_at], created_at: args[:created_at] }
+    export(ntuples, offset, dir, opts)
+  end
+
   task :trade_db_by_year => :environment do
     RECORDS_PER_FILE = 500000
     dir = 'tmp/trade_db_files/'
@@ -29,6 +51,7 @@ namespace :export do
   def export_in_single_file(ntuples, offset, dir)
     i = 0
     filename = 'trade_db_full_export.csv'
+    path_to_file = dir + filename
     begin
       while(ntuples == RECORDS_PER_FILE) do
         i = i + 1
@@ -39,7 +62,7 @@ namespace :export do
 
         Rails.logger.info("Query executed returning #{ntuples} records!")
 
-        File.open("#{dir}#{filename}", 'a') do |file|
+        File.open(path_to_file, 'a') do |file|
           if i == 1
             columns = results.fields
             columns.map do |column|
@@ -60,8 +83,9 @@ namespace :export do
       Rails.logger.info("Trade database completely exported!")
       zipfile = 'tmp/trade_db_files/trade_db.zip'
       Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
-          zipfile.add(filename, dir + filename)
+          zipfile.add(filename, path_to_file)
       end
+      delete_csv_files(dir)
     rescue => e
       Rails.logger.info("Export aborted!")
       Rails.logger.info("Caught exception #{e}")
@@ -128,6 +152,7 @@ namespace :export do
           end
         end
       end
+      delete_csv_files(dir)
     rescue => e
       Rails.logger.info("Export aborted!")
       Rails.logger.info("Caught exception #{e}")
@@ -135,12 +160,16 @@ namespace :export do
     end
   end
 
-  def export(ntuples, offset, dir)
+  def export(ntuples, offset, dir, opts=nil)
     i = 0
     begin
       while(ntuples == RECORDS_PER_FILE) do
         i = i + 1
-        query = Trade::ShipmentReportQueries.full_db_query(RECORDS_PER_FILE, offset)
+        # If options are passed, it means a partial query has been requested.
+        query = Trade::ShipmentReportQueries.partial_db_query(RECORDS_PER_FILE, offset, opts) if opts
+        # Default to a full export query otherwise
+        query = query ? query : Trade::ShipmentReportQueries.full_db_query(RECORDS_PER_FILE, offset)
+
         results = ActiveRecord::Base.connection.execute query
         ntuples = results.ntuples
         options = {
@@ -158,14 +187,20 @@ namespace :export do
       Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
         (1..i).each do |index|
           filename = "trade_db_#{index}.csv"
-          zipfile.add(filename, dir + filename)
+          path_to_file = dir + filename
+          zipfile.add(filename, path_to_file)
         end
       end
+      delete_csv_files(dir)
     rescue => e
       Rails.logger.info("Export aborted!")
       Rails.logger.info("Caught exception #{e}")
       Rails.logger.info(e.message)
     end
+  end
+
+  def delete_csv_files(dir)
+    Dir.glob("#{dir}/trade_db*.csv").each { |file| File.delete(file) }
   end
 
   def process_results(results, options)
