@@ -7,6 +7,7 @@ Species.TaxonConceptLegalController = Ember.Controller.extend
   citesQuotasExpanded: false
   euDecisionsExpanded: false
 
+
   actions:
     expandList: (id, flag) ->
       this.set(flag, true)

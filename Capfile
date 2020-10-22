@@ -36,5 +36,8 @@ require 'capistrano/passenger'
 require 'capistrano/maintenance'
 require 'whenever/capistrano'
 require 'capistrano/local_precompile'
+require 'capistrano/sidekiq'
+
+
 
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }

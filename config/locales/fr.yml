@@ -76,7 +76,43 @@ fr:
     net_exports: "Rapport de la Exportations Nettes"
     comptab: "Rapport de la Tabulation Comparative"
 
-  full_db_download: "Téléchargement de la Base de Données sur le Commerce CITES entière"
-  full_db_download_available: "Intégralité de la Base de Données sur le Commerce CITES disponible à télécharger"
+  full_db_download: "Téléchargement de la Base de Données sur le Commerce CITES entière (version 2020.1)"
+  full_db_download_available: "Intégralité de la Base de Données sur le Commerce CITES disponible à télécharger (version 2020.1)"
   download_here: "Télécharger ici"
   file_size: "Taille du fichier"
+
+  id_manual_cover:
+    header: Liste des espèces CITES
+    title: Entrées du Manuel d’Identification CITES
+    taxon_label: Résultats pour
+    date_label: Date de téléchargement
+    website_label: Site web de la Liste des espèces CITES
+    checklist_url: http://checklist.cites.org/#/fr
+    disclaimer_left: "
+      <p>
+        Le Manuel d’Identification CITES est un recueil de fiches techniques conçues pour aider à identifier les différentes espèces de faune et de flore à l’aide de dessins, de photographies, de cartes et de descriptions concises. Les fiches du manuel ont été publiées sur une période de 29 ans, de 1980 à 2009. Leur contenu est fourni tel que publié à l’origine, et à ce titre, aucune garantie n’est donnée quant à l’exhaustivité ou à l’exactitude du contenu. Des matériaux d’identification ne sont pas disponibles pour toutes les espèces, et peuvent particulièrement manquer pour celles inscrites aux Annexes de la CITES après 2009.
+      </p>
+      <p>
+        Il est à noter que l’inscription aux Annexes et la taxonomie des taxons décrits dans les matériaux disponibles peuvent avoir changé depuis leur publication d’origine. Pour obtenir des informations sur la taxonomie et les listes CITES actuelles, veuillez consulter le site principal de la Liste des espèces CITES (et les téléchargements dédiés aux listes/noms taxonomiques) et Species+. 
+      </p>
+      <p>
+        Le manuel contient des matériaux disponibles dans les trois langues de travail de la Convention (anglais, français et espagnol), mais ceux en français et espagnol ne sont disponibles que pour un nombre réduit de taxons. Dans la mesure du possible, les matériaux sont fournis dans la langue choisie, mais s’ils ne sont pas disponibles en français ou espagnol, ils sont fournis en anglais.
+      <p>
+        Cette publication peut être reproduite à des fins éducatives ou non lucratives sans autorisation spéciale, à condition que sa source soit indiquée avec la citation correcte. Toute reproduction de la publication (ou de toute image ou illustration y figurant) à des fins commerciales est uniquement permise avec l'autorisation expresse et écrite du Secrétariat CITES.
+      </p>
+    "
+    disclaimer_right: "
+      <p>
+        Les demandes d’autorisation, comprenant une déclaration d’intention et de l’étendue de la reproduction, doivent être envoyées à info@cites.org, o adressées au Secrétariat CITES, Palais des Nations, Avenue de la Paix 8-14, CH-1211 Genève 10, Suisse.
+      </p>
+      <p>
+        Les appellations géographiques utilisées dans ces publications n’impliquent aucune opinion de la part des compilateurs, du Secrétariat CITES ou du Programme des Nations Unies pour l’environnement (PNUE) quant au statut juridique d’un pays, territoire ou région, ou au tracé de leurs frontières ou limites.
+      </p>
+      <p>
+        Ce projet a été financé par l'Union européenne dans le cadre d'un projet de l’accord de coopération du programme GPGC CE-PNUE, attribué au Secrétariat CITES. 
+      </p>
+    "
+    citation_label: Citation
+    citation_text: "Programme des Nations Unies pour l'environnement - Centre mondial pour le suivi de la conservation (Comps.) 2020. Liste des espèces CITES – Manuel d’Identification CITES. Secrétariat CITES, Genève, Suisse, et UNEPWCMC, Cambridge, Royaume Uni. Consulté le %{date}."
+    copyright_label: Copyright
+    copyright_text: 2020 Secrétariat de la Convention sur le commerce international des espèces de faune et de flore sauvages menacées d'extinction
