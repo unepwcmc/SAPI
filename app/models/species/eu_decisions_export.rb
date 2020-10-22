@@ -39,7 +39,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     end
     unless @years.nil? || @years.empty?
       rel = rel.where(
-        'EXTRACT(YEAR FROM start_date) IN (?)', @years
+        'EXTRACT(YEAR FROM start_date)::INTEGER IN (?)', @years.map(&:to_i)
       )
     end
 

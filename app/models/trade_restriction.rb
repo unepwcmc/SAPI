@@ -194,8 +194,8 @@ class TradeRestriction < ActiveRecord::Base
 
   def self.filter_years(filters)
     if filters.key?("years")
-      return where('EXTRACT(YEAR FROM trade_restrictions.start_date) IN (?)',
-                   filters["years"])
+      return where('EXTRACT(YEAR FROM trade_restrictions.start_date)::INTEGER IN (?)',
+                   filters["years"].map(&:to_i))
     end
     all
   end
