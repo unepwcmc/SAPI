@@ -26,10 +26,10 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     if queryParams['event_type']
       @loadDocumentsForEventType(queryParams['event_type'], queryParams)
     else
-      ['EcSrg', 'CitesCop', 'CitesAc,CitesTc', 'CitesPc', 'Other'].forEach((eventType) =>
-        eventTypeQueryParams = {}
-        $.extend(eventTypeQueryParams, queryParams, {event_type: eventType})
-        @loadDocumentsForEventType(eventType, eventTypeQueryParams)
+      @get('eventTypes').forEach((eventType) =>
+        eventQueryParams = $.extend({}, queryParams, {event_type: eventType})
+
+        @loadDocumentsForEventType(eventType, eventQueryParams)
       )
 
   afterModel: (model, transition) ->
@@ -53,14 +53,15 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
       controller: @controllerFor('elibrarySearch')
     })
 
-  loadDocumentsForEventType: (eventType, eventTypeQueryParams) ->
-    controller = @controllerFor('documents')
+  loadDocumentsForEventType: (eventType, eventQueryParams) ->
     eventType = @getEventTypeKey(eventType).camelize()
-    eventTypeKey = eventType + 'Documents'
+    controller = @controllerFor('documents')
+    eventKey = eventType + 'Documents'
     isLoadingProperty = eventType + 'DocsIsLoading'
+
     controller.set(isLoadingProperty, true)
-    @loadDocuments(eventTypeQueryParams, (documents) =>
-      controller.set(eventTypeKey, documents)
+    @loadDocuments(eventQueryParams, (documents) =>      
+      controller.set(eventKey, documents)
     )
 
   resetDocumentsResults: () ->
@@ -69,6 +70,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     controller.set('citesCopProposalsDocuments', {})
     controller.set('citesAcDocuments', {})
     controller.set('citesPcDocuments', {})
+    controller.set('idMaterialsDocuments', {})
     controller.set('otherDocuments', {})
 
   actions:

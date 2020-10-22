@@ -53,6 +53,9 @@ gem 'select2-rails', '~> 3.5.4' #initSelection deprecated on upgrade to version 
 gem 'nested_form', '~> 0.3.2'
 gem 'acts-as-taggable-on', '~> 4.0.0'
 gem 'carrierwave'
+gem 'prawn', '~> 0.13.2'
+gem 'pdfkit'
+gem 'wkhtmltopdf-binary', '~> 0.9.9'
 
 gem 'underscore-rails'
 gem "font-awesome-rails"
@@ -103,6 +106,7 @@ group :development do
   gem 'capistrano-maintenance', '~> 1.0', require: false
   gem 'capistrano-passenger', '~> 0.2.0', require: false
   gem 'capistrano-local-precompile', '~> 1.2.0', require: false
+  gem 'capistrano-sidekiq'
   gem 'slackistrano', require: false
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'

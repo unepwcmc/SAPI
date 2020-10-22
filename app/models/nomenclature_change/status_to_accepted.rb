@@ -15,6 +15,7 @@
 # A status change to A needs to have one output.
 class NomenclatureChange::StatusToAccepted < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
+  attr_accessible :created_by_id, :updated_by_id
   build_steps(
     :primary_output, :summary
   )

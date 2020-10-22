@@ -1,4 +1,4 @@
-Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash, Trade.AuthoriseUser,
+Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash, Trade.AuthoriseUser, Trade.CustomTransition,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes', 'sandboxShipments']
   content: null
   currentShipment: null
@@ -18,7 +18,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash, 
       @userCanEdit( =>
         onSuccess = =>
           @set('sandboxShipmentsSubmitting', false)
-          @transitionToRoute('search')
+          @customTransitionToRoute('search')
           @flashSuccess(message: "#{@get('numberOfRows')} shipments submitted.", persists: true)
         onError = (xhr, msg, error) =>
           @set('sandboxShipmentsSubmitting', false)
@@ -47,7 +47,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash, 
         validation_error_id: error.get('id')
         page: 1
       }
-      @transitionToRoute('sandbox_shipments', {
+      @customTransitionToRoute('sandbox_shipments', {
         queryParams: params
       })
 
