@@ -20,6 +20,11 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     }
   ]
 
+  idMaterialsEvent: {
+    id: 'IdMaterials'
+    name: 'Identification Materials'
+  }
+
   documentTypes: [
     {
       id: 'Document::Proposal',
@@ -78,6 +83,32 @@ Species.EventsController = Ember.ArrayController.extend Species.ArrayLoadObserve
     {
       id: 'Document::UnepWcmcReport',
       name: 'UNEP-WCMC Report'
+    }
+  ]
+
+  identificationDocumentTypes: [
+    {
+      id: '__all__',
+      name: 'All'
+    },
+    {
+      id: 'Document::IdManual',
+      name: 'CITES ID Manual'
+    },
+    {
+      id: 'Document::VirtualCollege',
+      name: 'Other identification materials'
+    }
+  ]
+
+  generalSubTypes: [
+    {
+      id: 'general',
+      name: 'Whole animals/plants'
+    },
+    {
+      id: 'parts',
+      name: 'Parts and derivatives'
     }
   ]
 

@@ -1,1 +1,1 @@
-Species.CustomTransition = @CustomTransition
+@CustomTransitionMixinCreate(Species, 'species')
