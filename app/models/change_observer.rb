@@ -34,7 +34,7 @@ class ChangeObserver < ActiveRecord::Observer
 
   def before_destroy(model)
     clear_cache model
-    if model.taxon_concept && model.can_be_deleted?
+    if model.respond_to?(:taxon_concept) && model.taxon_concept && model.can_be_deleted?
       # currently no easy means to tell who deleted the dependent object
       bump_dependents_timestamp(model.taxon_concept, nil)
     end
