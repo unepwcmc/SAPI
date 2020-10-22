@@ -48,6 +48,14 @@ module SearchParamSanitiser
     new_ary
   end
 
+  def sanitise_doc_ids_array(ary)
+    new_ary = ary.is_a?(String) ? ary.split(',') : ary
+    return [] if new_ary.blank? || !new_ary.is_a?(Array)
+    new_ary.map! { |e| sanitise_positive_integer(e) }
+    new_ary.compact!
+    new_ary
+  end
+
   def sanitise_string_array(ary)
     new_ary = ary.is_a?(String) ? ary.split(',') : ary
     return [] if new_ary.blank? || !new_ary.is_a?(Array)

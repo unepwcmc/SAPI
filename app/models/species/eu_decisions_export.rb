@@ -6,15 +6,18 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     @geo_entities_ids = filters[:geo_entities_ids]
     @years = filters[:years]
     @decision_types = filters[:decision_types]
+    @eu_decision_filter = filters[:eu_decision_filter]
     @set = filters[:set]
     initialize_csv_separator(filters[:csv_separator])
     initialize_file_name
   end
 
+  HISTORIC_III_OPINIONS = ['(No opinion) iii)','(No opinion) iii) removed'].freeze
   def query
     rel = EuDecision.from("#{table_name} AS eu_decisions").
       select(sql_columns).
       order(:taxonomic_position, :party, :ordering_date)
+    return rel.where('srg_history = ?', @eu_decision_filter) if @eu_decision_filter == 'In consultation'
     if @set == 'current'
       rel = rel.where(is_valid: true)
     end
@@ -39,19 +42,26 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
         'EXTRACT(YEAR FROM start_date) IN (?)', @years
       )
     end
-    if @decision_types['negativeOpinions'] == 'false'
-      rel = rel.where('decision_type <> ?', EuDecisionType::NEGATIVE_OPINION)
+
+    # decision_type can now be NULL.
+    # With the following condition, Postgresql does not take into account NULL values.
+    # Furthemore, the SRG_REFERRAL filter should also include the historic iii) when All
+    # filter value is selected
+    if excluded_decision_types.present?
+      rel =
+        if @set == 'all' && !excluded_decision_types.include?('SRG_REFERRAL')
+          rel.where("decision_type NOT IN(?) OR decision_type_for_display IN(?)", excluded_decision_types, HISTORIC_III_OPINIONS)
+        else
+          rel.where('decision_type NOT IN(?)', excluded_decision_types)
+        end
     end
-    if @decision_types['positiveOpinions'] == 'false'
-      rel = rel.where('decision_type <> ?', EuDecisionType::POSITIVE_OPINION)
-    end
-    if @decision_types['noOpinions'] == 'false'
-      rel = rel.where('decision_type <> ?', EuDecisionType::NO_OPINION)
-    end
-    if @decision_types['suspensions'] == 'false'
-      rel = rel.where('decision_type <> ?', EuDecisionType::SUSPENSION)
-    end
-    rel
+
+    # remove decisions with NULL type 'decision_type IS NOT NULL'
+     rel = rel.where('decision_type IS NOT NULL')
+
+    # exclude EU decisions 'Discussed at SRG' by default
+    # IS DISTINCT FROM allows to return records with NULL as well
+    rel = rel.where('srg_history IS DISTINCT FROM ?', 'Discussed at SRG')
   end
 
   private
@@ -69,7 +79,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
       'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
       'Genus', 'Species', 'Subspecies',
       'Full Name', 'Rank', 'Date of Decision', 'Valid since', 'Party',
-      'EU Decision', 'Source', 'Term',
+      'EU Decision', 'SRG History', 'Source', 'Term',
       'Notes', 'Document', "Valid on Date: #{DateTime.now.strftime('%d/%m/%Y')}"
     ]
   end
@@ -79,9 +89,16 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
       :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
       :full_name, :rank_name, :start_date_formatted, :original_start_date_formatted, :party,
-      :decision_type_for_display, :source_code_and_name, :term_name,
+      :decision_type_for_display, :srg_history, :source_code_and_name, :term_name,
       :full_note_en, :start_event_name, :is_valid_for_display
     ]
   end
 
+  # Produces list of excluded decision types.
+  # e.g. SUSPENSIONS,SRG_REFERRAL
+  def excluded_decision_types
+    @excluded_decision_types ||= @decision_types.map do |key, value|
+      value == 'false' ? key.singularize.underscore.upcase : nil
+    end.compact
+  end
 end

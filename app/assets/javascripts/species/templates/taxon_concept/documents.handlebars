@@ -69,6 +69,27 @@
     </table>
 
     {{documents-header
+      isVisible=controller.idMaterialsDocsPresent
+      meetingType="Identification materials"
+      meetingTypeId="id_manual"
+    }}
+
+    <table class="grouped-results-table">
+      <tbody>
+        {{documents-results
+          isVisible=controller.idMaterialsDocsPresent
+          eventType="IdMaterials"
+          dataController=controller
+          loadMore=controller.idMaterialsDocsLoadMore
+          documents=controller.idMaterialsDocuments.docs
+          searchContext="species"
+          species=controllers.taxonConcept.fullName
+          isSignedIn=controllers.taxonConcept.isSignedIn
+        }}
+      </tbody>
+    </table>
+
+    {{documents-header
       isVisible=controller.euSrgDocsPresent
       meetingType="EU Scientific Review Group"
       meetingTypeId="eu_srg"
@@ -91,7 +112,7 @@
 
     {{documents-header
       isVisible=controller.otherDocsPresent
-      meetingType="Inter-sessional documents"
+      meetingType="Other documents"
       meetingTypeId="other"
     }}
 

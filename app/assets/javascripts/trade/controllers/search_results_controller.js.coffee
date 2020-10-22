@@ -1,4 +1,4 @@
-Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, Trade.ShipmentPagination, Trade.Flash,
+Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, Trade.ShipmentPagination, Trade.Flash, Trade.CustomTransition,
   needs: ['search', 'geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
@@ -59,7 +59,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
     else
       parseInt(@get('page')) - 1
     @set('page', page)
-    @transitionToRoute('search.results', {queryParams: {page: page}})
+    @customTransitionToRoute('search.results', {queryParams: {page: page}})
 
   userCanEdit: (callback) ->
     $.ajax({
@@ -135,7 +135,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
 
     deleteBatch: ->
       @userCanEdit( =>
-        @transitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
+        @customTransitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
         .then(
           # resolve
           (() =>
@@ -169,7 +169,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
       $('.shipment-form-modal').modal('show')
 
     editBatch: ->
-      @transitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
+      @customTransitionToRoute('search.results', {queryParams: @get('controllers.search.searchParams')})
       .then(
         # resolve
         (() =>

@@ -4,6 +4,7 @@ class Checklist::Checklist
   include SearchCache # this provides #cached_results and #cached_total_cnt
   attr_accessor :animalia, :plantae, :authors, :synonyms, :synonyms_with_authors,
   :english_common_names, :spanish_common_names, :french_common_names, :total_cnt
+  attr_reader :query
 
   # Constructs a query to retrieve CITES listed taxon concepts based on user
   # defined parameters

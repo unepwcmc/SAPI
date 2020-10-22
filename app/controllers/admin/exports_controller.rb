@@ -29,6 +29,8 @@ class Admin::ExportsController < Admin::AdminController
       result = Species::TaxonConceptsDistributionsExport.new(filters).export
     when 'Documents'
       result = Species::DocumentsExport.new(filters).export
+    when 'IdMaterials'
+      result = Species::IdManualDocumentsExport.new.export
     when 'IucnMappings'
       result = Species::IucnMappingsExport.new.export
     when 'CmsMappings'

@@ -25,6 +25,7 @@ SAPI::Application.routes.draw do
       resources :units, :only => [:index]
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
+      resources :trade_plus_filters, only: :index
       resources :documents do
         collection do
           get 'download_zip'
@@ -37,6 +38,8 @@ SAPI::Application.routes.draw do
       resources :shipments, only: [:index]
       get '/shipments/chart' => 'shipments#chart_query'
       get '/shipments/grouped' => 'shipments#grouped_query'
+      get '/shipments/over_time' => 'shipments#over_time_query'
+      get '/shipments/country' => 'shipments#country_query'
       get '/shipments/search' => 'shipments#search_query'
       get '/shipments/download' => 'shipments#download_data'
       get '/shipments/search_download' => 'shipments#search_download_data'
@@ -69,6 +72,7 @@ SAPI::Application.routes.draw do
     resources :ranks, :only => [:index, :create, :update, :destroy]
     resources :tags, :only => [:index, :create, :update, :destroy]
     resources :eu_decision_types, :only => [:index, :create, :update, :destroy]
+    resources :srg_histories, only: [:index, :create, :update, :destroy]
     resources :events do
       resource :document_batch, :only => [:new, :create]
       resources :documents, :only => [:index, :edit, :update, :destroy] do
@@ -227,6 +231,13 @@ SAPI::Application.routes.draw do
       end
     end
     resources :timelines, :only => [:index]
+    resources :documents do
+      collection do
+        get 'download_zip'
+        get 'volume_download'
+        get 'check_doc_presence'
+      end
+    end
   end
 
   # The priority is based upon order of creation:
