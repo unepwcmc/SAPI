@@ -10,7 +10,7 @@ class Admin::QuotasController < Admin::StandardAuthorizationController
 
   def duplication
     @years = Quota.years_array
-    @count = Quota.where('EXTRACT(year from start_date) = ?', @years.first).
+    @count = Quota.where('EXTRACT(year from start_date)::VARCHAR = ? AND is_current = true', @years.first).
       count
     @geo_entities = GeoEntity.joins(:quotas).order(:name_en).uniq
   end
@@ -34,6 +34,6 @@ class Admin::QuotasController < Admin::StandardAuthorizationController
     @quotas ||= end_of_association_chain.order('start_date DESC').
       page(params[:page]).search(params[:query])
     return @quotas if !params[:year]
-    @quotas = @quotas.where('EXTRACT(year from start_date) = ?', params[:year])
+    @quotas = @quotas.where('EXTRACT(year from start_date)::INTEGER = ?', params[:year].to_i)
   end
 end
