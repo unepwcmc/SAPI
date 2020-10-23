@@ -14,10 +14,10 @@ Trade.AnnualReportUploadsController = Ember.ArrayController.extend Trade.Authori
   actions:
     transitionToReportUploadFromList: (aru)->
       aru.reload()
-      @customTransitionToRoute('annual_report_upload', aru)
+      @customTransitionToRoute('annual_report_upload', aru, false)
 
     transitionToReportUpload: (aru)->
-      @customTransitionToRoute('annual_report_upload', aru)
+      @customTransitionToRoute('annual_report_upload', aru, false)
 
     transitionToReportUploads: ()->
       @customTransitionToRoute('annual_report_uploads')
