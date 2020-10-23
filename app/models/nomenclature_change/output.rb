@@ -141,6 +141,8 @@ class NomenclatureChange::Output < ActiveRecord::Base
 
   def tmp_taxon_concept
     name_status_to_save = (new_name_status.present? ? new_name_status : name_status)
+    return nil unless display_full_name
+
     scientific_name =
       if ['A', 'N'].include?(name_status_to_save)
         display_full_name.split.last
@@ -178,6 +180,8 @@ class NomenclatureChange::Output < ActiveRecord::Base
 
   def validate_tmp_taxon_concept
     @tmp_taxon_concept = tmp_taxon_concept
+    return false unless tmp_taxon_concept
+
     return true if @tmp_taxon_concept.valid?
     @tmp_taxon_concept.errors.each do |attribute, message|
       if [:parent_id, :rank_id, :name_status, :author_year, :full_name].
