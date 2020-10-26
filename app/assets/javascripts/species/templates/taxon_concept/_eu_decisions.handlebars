@@ -65,8 +65,8 @@
           </td>
           <td class="last">
             {{#if isSignedIn }}
-              {{#if decision.start_event.private_url}}
-                <a class="legal-links" href="{{unbound decision.start_event.private_url}}">
+              {{#if decision.private_url}}
+                <a class="legal-links" href="{{unbound decision.private_url}}">
                   {{decision.start_event.name}}
                 </a>
               {{else}}
@@ -151,8 +151,8 @@
               </td>
               <td class="last">
                 {{#if isSignedIn }}
-                  {{#if decision.start_event.private_url}}
-                    <a class="legal-links" href="{{unbound decision.start_event.private_url}}">
+                  {{#if decision.private_url}}
+                    <a class="legal-links" href="{{unbound decision.private_url}}">
                       {{decision.start_event.name}}
                     </a>
                   {{else}}

@@ -57,18 +57,17 @@ ROW_TO_JSON(
   ROW(
     start_event.name || CASE WHEN start_event.type = 'EcSrg' THEN ' Soc' ELSE '' END,
     start_event.effective_at::DATE,
-    start_event.url,
-    start_event.private_url
-  )::api_eu_srg_event
+    start_event.url
+  )::api_event
 ) AS start_event,
+start_event.private_url AS private_url,
 eu_decisions.end_event_id,
 ROW_TO_JSON(
   ROW(
     end_event.name,
     end_event.effective_at::DATE,
-    end_event.url,
-    end_event.private_url
-  )::api_eu_srg_event
+    end_event.url
+  )::api_event
 ) AS end_event,
 eu_decisions.term_id,
 ROW_TO_JSON(
