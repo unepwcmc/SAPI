@@ -1,3 +1,10 @@
+### 1.5.0
+
+**Add TradePlus support**
+
+* Add SQL views to support TradePlus queries
+* Add/Refactor internal API endpoints to work with TradePlus
+
 ### 1.4.2
 
 **Database download event tracking**
