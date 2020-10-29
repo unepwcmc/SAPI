@@ -30,6 +30,7 @@
 #
 
 require 'spec_helper'
+require 'byebug'
 
 describe NomenclatureChange::Output do
   before(:each) { cites_eu }
@@ -52,8 +53,8 @@ describe NomenclatureChange::Output do
       }
       specify { expect(output).to have(1).errors_on(:new_scientific_name) }
       specify { expect(output).to have(1).errors_on(:new_parent_id) }
-      specify { expect(output).to have(1).errors_on(:new_rank_id) }
-      specify { expect(output).to have(1).errors_on(:new_name_status) }
+      specify { expect(output).to have(1).errors_on(:new_taxon_concept) }
+
     end
     context "when new taxon concept invalid" do
       let(:output) {

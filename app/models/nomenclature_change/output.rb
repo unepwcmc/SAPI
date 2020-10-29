@@ -180,7 +180,10 @@ class NomenclatureChange::Output < ActiveRecord::Base
 
   def validate_tmp_taxon_concept
     @tmp_taxon_concept = tmp_taxon_concept
-    return false unless tmp_taxon_concept
+    unless tmp_taxon_concept
+      errors.add(:new_taxon_concept, "can\'t be blank")
+      return false
+    end
 
     return true if @tmp_taxon_concept.valid?
     @tmp_taxon_concept.errors.each do |attribute, message|
