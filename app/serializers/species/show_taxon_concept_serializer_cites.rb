@@ -149,7 +149,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               '[' || (taxon_concept->>'rank')::TEXT || ' decision <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
             END AS subspecies_info
           }
-          string = scope.current_user ? "#{string},\n private_url" : string
+    scope.current_user ? "#{string},\n private_url" : string
   end
 
   def cites_listing_changes
