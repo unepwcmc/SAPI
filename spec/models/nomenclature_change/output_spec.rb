@@ -30,7 +30,6 @@
 #
 
 require 'spec_helper'
-require 'byebug'
 
 describe NomenclatureChange::Output do
   before(:each) { cites_eu }
