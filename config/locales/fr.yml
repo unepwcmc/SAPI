@@ -11,7 +11,7 @@ fr:
     web_limit_exceeded_2: "Vous pouvez télécharger les résultats en format CSV"
   warnings:
     net_trade_1: "S'il vous plaît lire attentivement:"
-    net_trade_2: "Le commerce net est le résultat de la soustraction des réexportations d'un pays de ses importations. Par conséquent, si votre sélection de données concerne des importations ou des exportations des pays spécifiés, vous ne pouvez pas calculer les importations ou les exportations nettes."
+    net_trade_2: "Le commerce net est le résultat de la soustraction des réexportations d'un pays de ses importations. Par conséquent, si votre sélection de données concerne seulement des importations ou des exportations des pays spécifiés, vous ne pouvez pas calculer les importations ou les exportations nettes. Vous pouvez uniquement obtenir des importations ou exportations brutes."
     net_trade_3: "Le résultat sera l'importation ou exportation brute."
 
   year_text: "Gamme des Années"

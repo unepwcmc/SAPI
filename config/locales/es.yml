@@ -11,7 +11,7 @@ es:
     web_limit_exceeded_2: "Puede descargar los resultados en formato CSV"
   warnings:
     net_trade_1: "Por favor, lea cuidadosamente:"
-    net_trade_2: "El comercio neto es el resultado de sustraer los re-exportaciones de un país de sus importaciones. Por lo tanto, si su selección de datos involucrada las importaciones o las exportaciones procedentes de países determinados, no se puede calcular las importaciones o exportaciones netas."
+    net_trade_2: "El comercio neto es el resultado de la sustracción de las reexportaciones de un país de sus importaciones. Por lo tanto, si su selección de datos sólo ha implicado importaciones o exportaciones de países especificados, no se podrán calcular las importaciones o exportaciones netas - sólo se pueden obtener importaciones o exportaciones brutas."
     net_trade_3: "El resultado será la importación o la exportación bruta."
 
   year_text: "Rango de Años"
