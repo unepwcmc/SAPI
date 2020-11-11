@@ -40,10 +40,13 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     @endPropertyChanges()
 
   transitionToParentController: ->
-    @get('controllers.annualReportUpload.content').reload()
+    model = @get('controllers.annualReportUpload.content')
+    model.reload()
+    console.log(model)
     @customTransitionToRoute(
       'annual_report_upload',
-      @get('controllers.annualReportUpload.id')
+      model,
+      false
     )
     @set('controllers.annualReportUpload.currentError', null)
     @set('controllers.annualReportUpload.allErrorsCollapsed', null)
