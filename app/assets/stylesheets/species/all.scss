@@ -32,7 +32,7 @@ body {
   background: #f3f1f1;
   height: 100%;
   min-width: 980px;
-  background-image: image-url('/species/background_1.jpg');
+  background-image: image-url('/assets/species/background_1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top center;
@@ -109,7 +109,7 @@ p.browsehappy a {
   float: left;
   text-indent: -9999px;
   overflow: hidden;
-  background: image-url('/species/species+_logo_header.png') no-repeat;
+  background: image-url('/assets/species/species+_logo_header.png') no-repeat;
   background-size:100%;
 }
 
@@ -197,7 +197,7 @@ span.beta{
   width: 22px;
   height: 10px;
   z-index: 1001;
-  background: image-url('/species/arrow.png') no-repeat;
+  background: image-url('/assets/species/arrow.png') no-repeat;
   background-size: 100%;
 }
 #nav > li > ul > li {
@@ -254,7 +254,7 @@ span.beta{
   display: inline-block;
   overflow: hidden;
   text-indent: -9999px;
-  background: image-url('/species/species+_logo_text.png') no-repeat;
+  background: image-url('/assets/species/species+_logo_text.png') no-repeat;
   background-size: 100%;
 }
 html.lt-ie9 .text-species{
@@ -420,7 +420,7 @@ body.inner #footer .holder{
   z-index: 1;
   right: 10px;
   top: 9px;
-  background: image-url('/species/arrow01.png') no-repeat;
+  background: image-url('/assets/species/arrow01.png') no-repeat;
 }
 .container .heading .link-holder:hover .popup-holder { display: block; }
 .container .heading .link-holder .popup-holder {
@@ -449,7 +449,7 @@ body.inner #footer .holder{
   width: 7px;
   height: 7px;
   z-index: 1;
-  background: image-url('/species/arrow03.png') no-repeat;
+  background: image-url('/assets/species/arrow03.png') no-repeat;
 }
 .check .row {
   overflow: hidden;
@@ -480,7 +480,7 @@ body.inner #footer .holder{
   font-size: 13px;
   line-height: 20px;
   font-weight: bold;
-  background: image-url('/species/arrow04.png') no-repeat 0 50%;
+  background: image-url('/assets/species/arrow04.png') no-repeat 0 50%;
   padding: 0 11px;
   text-transform: uppercase;
 }
@@ -535,7 +535,7 @@ body.inner #footer .holder{
   right: -9px;
   top: -6px;
   text-indent: -9999px;
-  background: image-url('/species/btn-close.png') no-repeat;
+  background: image-url('/assets/species/btn-close.png') no-repeat;
 }
 .download-block .title {
   display: block;
@@ -712,7 +712,7 @@ body.inner #footer .holder{
   z-index: 1;
   right: 10px;
   top: 14px;
-  background: image-url('/species/arrow01.png') no-repeat;
+  background: image-url('/assets/species/arrow01.png') no-repeat;
 }
 .three-columns {
   padding: 20px 25px;
@@ -755,7 +755,7 @@ body.inner #footer .holder{
   z-index: 1;
   right: 13px;
   top: 14px;
-  background: image-url('/species/arrow01.png') no-repeat;
+  background: image-url('/assets/species/arrow01.png') no-repeat;
 }
 .tab-link01 {
   padding: 20px 0 13px 49px;
@@ -823,7 +823,7 @@ body.inner #footer .holder{
   float: left;
   font-size: 17px;
   line-height: 20px;
-  background: image-url('/species/arrow06.png') no-repeat 0 50%;
+  background: image-url('/assets/species/arrow06.png') no-repeat 0 50%;
   padding: 0 6px 0 13px;
 }
 #main .heading-holder .list li:first-child {
@@ -929,7 +929,7 @@ body.inner #footer .holder{
 #main .tabset > li > ul > li.has-dropdown:hover > a {
   padding: 0 0 1px;
   margin: 0 0 -1px;
-  background: image-url('/species/arrow07.png') no-repeat 50% 100%;
+  background: image-url('/assets/species/arrow07.png') no-repeat 50% 100%;
 }
 #main .tabset > li > ul > li.has-dropdown:hover ul, #main .tabset > li > ul > li.has-dropdown ul:hover {
   display: block;
@@ -1176,17 +1176,17 @@ body.inner #footer .holder{
   z-index: 1;
   right: 8px;
   top: 9px;
-  background: image-url('/species/arrow01_grey.png') no-repeat;
+  background: image-url('/assets/species/arrow01_grey.png') no-repeat;
 }
 
 .block .btn-hloder .link.languages:before {
   margin-top: -2px;
   right: 10px;
-  background: image-url('/species/arrow01_grey.png') no-repeat;
+  background: image-url('/assets/species/arrow01_grey.png') no-repeat;
 }
 
 .block .btn-hloder .link:hover:before {
-  background: image-url('/species/arrow01.png') no-repeat;
+  background: image-url('/assets/species/arrow01.png') no-repeat;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -ms-transition: all 0.5s ease;
@@ -1204,14 +1204,14 @@ body.inner #footer .holder{
   top: 8px;
   width: 6px;
   height: 6px;
-  background: image-url('/species/ico.png') no-repeat;
+  background: image-url('/assets/species/ico.png') no-repeat;
 }
 
 .block .btn-hloder .link.languages.active:before {
   top: 8px;
   width: 6px;
   height: 6px;
-  background: image-url('/species/ico.png') no-repeat;
+  background: image-url('/assets/species/ico.png') no-repeat;
 }
 
 #main .block h2 {
@@ -1251,7 +1251,7 @@ body.inner #footer .holder{
 #main .block02 .btn-hloder .link:before {
   right: 7px;
   top: 10px;
-  background: image-url('/species/arrow01.png') no-repeat;
+  background: image-url('/assets/species/arrow01.png') no-repeat;
 }
 #main .block02 .btn-hloder .link { padding: 0 16px 0 9px; }
 #main .block04 {
@@ -1366,7 +1366,7 @@ body.inner #footer .holder{
   color: #253848;
   display: inline-block;
   vertical-align: top;
-  background: image-url('/species/sep01.png') repeat-x 0 100%;
+  background: image-url('/assets/species/sep01.png') repeat-x 0 100%;
 }
 #main .block06 .three-columns .col li .link-holder:hover .popup a { font-weight: normal; }
 .skip {
