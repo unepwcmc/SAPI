@@ -42,7 +42,6 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
   transitionToParentController: ->
     model = @get('controllers.annualReportUpload.content')
     model.reload()
-    console.log(model)
     @customTransitionToRoute(
       'annual_report_upload',
       model,
