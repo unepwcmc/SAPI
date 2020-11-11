@@ -19,7 +19,6 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
-    sandbox_klass = Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
     @query = matching_records(annual_report_upload).
       where(
         "'#{validation_error.matching_criteria}'::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
