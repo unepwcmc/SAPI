@@ -130,7 +130,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
           column_reference
         else
           <<-EOT
-            '"' || #{column_reference} || '"'
+            '"' || COALESCE(#{column_reference}, '') || '"'
           EOT
         end
       <<-EOT
