@@ -14,7 +14,7 @@ en:
     web_limit_exceeded_2: "Please download the results in CSV format"
   warnings:
     net_trade_1: "Please read carefully:"
-    net_trade_2: "Net trade is the result of subtracting a country's re-exports from its imports. Therefore if your data selection involved imports to or exports from specified countries then you cannot calculate net imports or exports."
+    net_trade_2: "Net trade is the result of subtracting a country's re-exports from its imports. Therefore if your data selection only involved imports to or exports from specified countries then you cannot calculate net imports or exports. You will only be able to obtain gross imports or exports."
     net_trade_3: "The result will be gross import or export."
 
   year_text: "Year Range"
