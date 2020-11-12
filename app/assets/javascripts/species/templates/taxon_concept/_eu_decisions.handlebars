@@ -64,7 +64,19 @@
             {{{decision.nomenclature_note_en}}}
           </td>
           <td class="last">
-            {{#if decision.start_event.url}}
+            {{#if isSignedIn }}
+              {{#if decision.private_url}}
+                <a class="legal-links" href="{{unbound decision.private_url}}">
+                  {{decision.start_event.name}}
+                </a>
+              {{else}}
+                {{#if decision.start_event.url}}
+                    <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                    {{decision.start_event.name}}
+                    </a>
+                {{/if}}
+              {{/if}}
+            {{else}}
               <a class="legal-links" href="{{unbound decision.start_event.url}}">
                 {{decision.start_event.name}}
               </a>
@@ -138,7 +150,19 @@
                 {{{decision.nomenclature_note_en}}}
               </td>
               <td class="last">
-                {{#if decision.start_event.url}}
+                {{#if isSignedIn }}
+                  {{#if decision.private_url}}
+                    <a class="legal-links" href="{{unbound decision.private_url}}">
+                      {{decision.start_event.name}}
+                    </a>
+                  {{else}}
+                    {{#if decision.start_event.url}}
+                        <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                        {{decision.start_event.name}}
+                        </a>
+                    {{/if}}
+                  {{/if}}
+                {{else}}
                   <a class="legal-links" href="{{unbound decision.start_event.url}}">
                     {{decision.start_event.name}}
                   </a>
