@@ -1,3 +1,9 @@
+### 1.5.1
+
+**Eu opinions**
+
+* Add private_url attribute to event and show only if user logged in
+
 ### 1.5.0
 
 **Add TradePlus support**
