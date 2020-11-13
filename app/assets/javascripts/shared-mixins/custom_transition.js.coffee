@@ -9,8 +9,7 @@
 ROUTES = {
   species: {
     'taxonConcept': {
-      urlPath: 'taxon_concepts',
-      followedById: true
+      urlPath: 'taxon_concepts/_ID_',
     },
     'taxonConcepts': {
       urlPath: 'taxon_concepts',
@@ -18,8 +17,10 @@ ROUTES = {
   },
   trade : {
     'annual_report_upload': {
-      urlPath: 'annual_report_uploads',
-      followedById: true
+      urlPath: 'annual_report_uploads/_ID_',
+    },
+    'sandbox_shipments': {
+      urlPath:'annual_report_uploads/_ID_/sandbox_shipments'
     }
   }
 }
@@ -43,7 +44,7 @@ isNotUndefinedOrNull = (x) ->
 
     assignArguments: (args) ->
       emberRoute = args[0]
-      @pathArray = @getPathArray(emberRoute)
+      @pathWithIDPlaceholder = @getPathWithIDPlaceholder(emberRoute)
 
       if args.length <= 2
         params = args[1]
@@ -53,24 +54,19 @@ isNotUndefinedOrNull = (x) ->
         @queryParams = if params then params.queryParams else null
         @model = args[1]
     
-    getPathArray: (emberRoute) ->
+    getPathWithIDPlaceholder: (emberRoute) ->
       pathArray = []
 
       emberRoute.split('.').forEach (pathElement) => 
         pathArray.push(@getUrlPathItem(pathElement))
-        if @routes[pathElement] && @routes[pathElement].followedById
-          pathArray.push('_ID_')
       
-      return pathArray
+      return pathArray.join('/')
 
     getUrlPathItem: (name) ->
       urlPath = if @routes[name] then @routes[name].urlPath else name
 
     getPath: () ->
-      @pathArray.map(@replaceWithModelId.bind(this)).join('/')
-
-    replaceWithModelId: (el) ->
-      if el == '_ID_' then @model.get('id') else el
+      return @pathWithIDPlaceholder.replace('_ID_', @model.get('id'))
 
     getQueryString: (queryParams) -> 
       queryString = '?'

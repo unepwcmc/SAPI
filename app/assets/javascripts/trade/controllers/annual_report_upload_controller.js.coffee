@@ -47,7 +47,7 @@ Trade.AnnualReportUploadController = Ember.ObjectController.extend Trade.Flash, 
         validation_error_id: error.get('id')
         page: 1
       }
-      @customTransitionToRoute('sandbox_shipments', {
+      @customTransitionToRoute('sandbox_shipments', @get('model'), {
         queryParams: params
       })
 
