@@ -29,6 +29,11 @@
           '<i class="icon-share" title="Go to multilingual URL"></i>'.html_safe,
           ec_srg.multilingual_url
         ) { '' } %>
+        <%= link_to_unless(
+          ec_srg.private_url.blank?,
+          '<i class="icon-share" title="Go to private URL"></i>'.html_safe,
+          ec_srg.private_url
+        ) { '' } %>
       </td>
       <td>
         <%= ec_srg.eu_opinions.count %>
