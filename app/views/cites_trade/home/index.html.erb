@@ -82,7 +82,7 @@
         </div>
         <div id="tabs-exp">
           <div class="label_style"> <%= t('export_text') %>:
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('export_tip') %>" />
+            <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('export_tip') %>
           </div>
           <div>
             <select id="expcty" class="multi_countries" multiple="multiple" name="exporters_ids[]">
@@ -92,7 +92,7 @@
         </div>
         <div id="tabs-imp">
           <div class="label_style"> <%= t('import_text') %>:
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('import_tip') %>" />
+            <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('import_tip') %>
           </div>
           <div>
             <select id="impcty" class="multi_countries" multiple="multiple"  name="importers_ids[]">
@@ -102,7 +102,7 @@
         </div>
         <div id="tabs-source">
           <div class="label_style"> <%= t('source_text') %>:
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('source_tip') %>" />
+            <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('source_tip') %>
           </div>
           <div>
             <select name="sources_ids[]" id="sources"  multiple="multiple" class="multisel">
@@ -113,7 +113,7 @@
         <div id="tabs-purpose">
           <div class="label_style"> <%= t('purpose_text') %>:
 
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('purpose_tip') %>" />
+            <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('purpose_tip') %>
           </div>
           <div>
             <select name="purposes_ids[]" id="purposes"  multiple="multiple" class="multisel">
@@ -124,7 +124,7 @@
 
         <div id="tabs-terms">
           <div class="label_style"> <%= t('trade_text') %>:
-            <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('trade_tip') %>" />
+            <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('trade_tip') %>
           </div>
           <div>
             <select name="terms_ids[]" id="terms" class="multisel" multiple="multiple">
@@ -173,7 +173,7 @@
         <a id='submit_expert' href="#"><%= t('search') %></a>
         <span id="cites-trade-loading" style="display:none"><%= image_tag('loading.gif') %></span>
         <button type="reset" name="reset" style="float:right" id="reset_search">
-        <img src="/assets/cites_trade/refresh1.png" alt=""/>
+        <%= image_tag "cites_trade/refresh1.png", alt: "" %>
         <%= t('reset') %>
         </button>
       </div>
