@@ -47,7 +47,7 @@ module MaterialDocIdsRetriever
     )
 
     ordered_docs = docs.cached_results.sort_by do |doc|
-      doc_tc_ids = doc.taxon_concept_ids.gsub(/[{}]/, '').split(',').map(&:to_i)
+      doc_tc_ids = doc.taxon_concept_ids.split(',').map(&:to_i)
       params['taxon_concepts_ids'].index{ |id| doc_tc_ids.include? id }
     end
 
