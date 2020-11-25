@@ -77,8 +77,7 @@ class Elibrary::IdentificationDocsDistributionsImporter
         children = MTaxonConcept.descendants_ids(res['tc_ids'])
 
         countries_ids = MTaxonConcept.where(id: children).pluck(:countries_ids_ary)
-                                     .compact.map{ |country| country.gsub(/[{}]/, '').split(',').map(&:to_i)}
-                                     .flatten.uniq.sort
+          .compact.flatten.uniq.sort
 
         if countries_ids.empty?
           no_distr << [doc_cit_id, children]
