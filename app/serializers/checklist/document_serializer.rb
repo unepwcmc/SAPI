@@ -9,10 +9,6 @@ class Checklist::DocumentSerializer < ActiveModel::Serializer
     object.document_type.split(":").last
   end
 
-  def document_language_versions
-    JSON.parse(object.document_language_versions)
-  end
-
   def locale_document
     doc = document_language_versions.select { |h| h['locale_document'] == 'true' }
     doc = document_language_versions.select { |h| h['locale_document'] == 'default' } if doc.empty?
@@ -20,7 +16,7 @@ class Checklist::DocumentSerializer < ActiveModel::Serializer
   end
 
   def taxon_concept_ids
-    object.taxon_concept_ids.gsub(/[{}]/, '').split(',')
+    object.taxon_concept_ids
   end
 
   def is_link

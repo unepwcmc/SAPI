@@ -47,7 +47,7 @@ module MaterialDocIdsRetriever
     )
 
     ordered_docs = docs.cached_results.sort_by do |doc|
-      doc_tc_ids = doc.taxon_concept_ids.split(',').map(&:to_i)
+      doc_tc_ids = doc.taxon_concept_ids
       params['taxon_concepts_ids'].index{ |id| doc_tc_ids.include? id }
     end
 
@@ -57,13 +57,9 @@ module MaterialDocIdsRetriever
 
   private
 
-  def self.document_language_versions(doc)
-    JSON.parse(doc.document_language_versions)
-  end
-
   def self.locale_document(doc)
-    document = document_language_versions(doc).select { |h| h['locale_document'] == 'true' }
-    document = document_language_versions(doc).select { |h| h['locale_document'] == 'default' } if document.empty?
+    document = doc.document_language_versions.select { |h| h['locale_document'] == 'true' }
+    document = doc.document_language_versions.select { |h| h['locale_document'] == 'default' } if document.empty?
     document
   end
 
