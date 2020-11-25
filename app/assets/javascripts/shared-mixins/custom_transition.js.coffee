@@ -66,7 +66,10 @@ isNotUndefinedOrNull = (x) ->
       urlPath = if @routes[name] then @routes[name].urlPath else name
 
     getPath: () ->
-      return @pathWithIDPlaceholder.replace('_ID_', @model.get('id'))
+      if @pathWithIDPlaceholder.match(/_ID_/)
+        return @pathWithIDPlaceholder.replace('_ID_', @model.get('id'))
+
+      return @pathWithIDPlaceholder
 
     getQueryString: (queryParams) -> 
       queryString = '?'
