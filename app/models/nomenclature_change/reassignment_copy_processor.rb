@@ -99,7 +99,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     if reassignable.taggings.count == 0
       copied_object.taggings.destroy_all if copied_object.taggings.count > 0
       return
-    elsif copied_object.taggings.count == 0
+    elsif copied_object.id && copied_object.taggings.count == 0
       return
     end
 
