@@ -1,9 +1,9 @@
 set :stage, :staging
-set :branch, :rails_4_deploy 
+set :branch, :rails_4_deploy_clone 
 
-server "sapi-staging.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
+server "sapi-staging-copy.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
 
-set :domain, "sapi-staging.linode.unep-wcmc.org"
+set :domain, "sapi-staging-copy.linode.unep-wcmc.org"
 
 set :application, "sapi-rails4"
 
