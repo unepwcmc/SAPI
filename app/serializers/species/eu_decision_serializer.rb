@@ -3,14 +3,20 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     :is_current, :subspecies_info, :nomenclature_note_en, :nomenclature_note_fr,
     :nomenclature_note_es,
     :eu_decision_type,
+    :srg_history,
     :geo_entity,
     :start_event,
     :source,
     :term,
-    { :original_start_date_formatted => :original_start_date }
+    { :original_start_date_formatted => :original_start_date },
+    :private_url
 
   def eu_decision_type
     object['eu_decision_type']
+  end
+
+  def srg_history
+    object['srg_history']
   end
 
   def geo_entity
@@ -27,5 +33,9 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
 
   def term
     object['term_en']
+  end
+
+  def private_url
+    scope.current_user ? object['private_url'] : nil
   end
 end

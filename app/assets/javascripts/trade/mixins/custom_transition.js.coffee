@@ -1,1 +1,1 @@
-Trade.CustomTransition = @CustomTransition
+@CustomTransitionMixinCreate(Trade, 'trade')

@@ -8,12 +8,6 @@ class Admin::EuDecisionTypesController < Admin::StandardAuthorizationController
     end
   end
 
-  def create
-    create! do |failure|
-      failure.js { render 'new' }
-    end
-  end
-
   protected
 
   def collection

@@ -164,6 +164,24 @@ class MTaxonConcept < ActiveRecord::Base
     cites_listing
   end
 
+  def self.descendants_ids(taxon_concept)
+    query = <<-SQL
+    WITH RECURSIVE descendents AS (
+      SELECT id, rank_id, full_name
+      FROM #{self.table_name}
+      WHERE parent_id = #{taxon_concept.to_i}
+      UNION ALL
+      SELECT taxon_concepts.id, taxon_concepts.rank_id, taxon_concepts.full_name
+      FROM #{self.table_name} taxon_concepts
+      JOIN descendents h ON h.id = taxon_concepts.parent_id
+    )
+    SELECT id FROM descendents
+    ORDER BY rank_id ASC, full_name
+    SQL
+    res = ActiveRecord::Base.connection.execute(query)
+    res.ntuples.zero? ? [taxon_concept.to_i] : res.map(&:values).flatten << taxon_concept.to_i
+  end
+
   def spp
     if ['GENUS', 'FAMILY', 'SUBFAMILY', 'ORDER'].include?(rank_name)
       'spp.'

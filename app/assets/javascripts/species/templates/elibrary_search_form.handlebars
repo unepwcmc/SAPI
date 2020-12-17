@@ -18,6 +18,7 @@
         {{view Species.TaxonConceptSearchView controllerBinding="controller" showSearchButton=false}}
       </div>
     </fieldset>
+
     <fieldset>
       <div class="documents-control-group">
         <div class="location-area popup-area">
@@ -34,6 +35,7 @@
 
       <div class="documents-control-group">
         {{single-dropdown
+          isVisible=controller.meetingDocTypeDropdownVisible
           action="handleEventTypeSelection"
           clearAction="handleEventTypeDeselection"
           title="Meeting documents"
@@ -44,16 +46,18 @@
       </div>
 
       <div class="documents-control-group">
-        <div {{bind-attr class=":popup-area :events-area selectedEventType:events-visible"}}>
-          <label>Meeting</label>
-          {{view Species.EventsSearchButton
-            selectedEventsBinding="controller.selectedEvents"
-            loadedBinding="events.loaded"
-            shortPlaceholder=false
-            taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
-          }}
-          {{view Species.EventsSearchDropdown controllerBinding="controller"}}
-        </div>
+        {{#if controller.eventsDropdownVisible}}
+          <div class="popup-area">
+            <label>Meeting</label>
+            {{view Species.EventsSearchButton
+              selectedEventsBinding="controller.selectedEvents"
+              loadedBinding="events.loaded"
+              shortPlaceholder=false
+              taxonConceptQueryBinding="controller.taxonConceptQueryForDisplay"
+            }}
+            {{view Species.EventsSearchDropdown controllerBinding="controller"}}
+          </div>
+        {{/if}}
       </div>
 
       <div class="documents-control-group">
@@ -70,13 +74,37 @@
 
       <div class="documents-control-group">
         {{single-dropdown
+          isVisible=controller.identificationDocTypeDropdownVisible
+          action="handleDocumentTypeSelection"
+          clearAction="handleDocumentTypeDeselection"
+          title="Identification materials"
+          placeholder="All identification materials"
+          values=controller.identificationDocumentTypes
+          selection=controller.selectedDocumentType
+        }}
+      </div>
+
+      <div class="documents-control-group">
+        {{single-dropdown
           isVisible=controller.interSessionalDocTypeDropdownVisible
           action="handleDocumentTypeSelection"
-          clearAction="handleDocumentTypeDeSelection"
-          title="Inter-sessional documents"
+          clearAction="handleDocumentTypeDeselection"
+          title="Other documents"
           placeholder="Document types"
           values=controller.interSessionalDocumentTypes
           selection=controller.selectedDocumentType
+        }}
+      </div>
+
+      <div class="documents-control-group">
+        {{single-dropdown
+          isVisible=controller.isEventTypeIdMaterials
+          action="handleGeneralSubTypeSelection"
+          clearAction="handleGeneralSubTypeDeselection"
+          title="Identification type"
+          placeholder="All identification types"
+          values=controller.generalSubTypes
+          selection=controller.selectedGeneralSubType
         }}
       </div>
 
@@ -93,14 +121,16 @@
       </div>
 
       <div class="documents-control-group">
-        <label>Search by title keyword(s)
-          <i class="fa fa-info-circle"
-            title="This search will only return results if there is an exact match with the word or phrase in the title of the document.">
-          </i>
-        </label>
-        <div class="text-input-wrapper keyword-search">
-          {{input type="text" value=titleQuery placeholder='e.g. NDF'}}
-        </div>
+        {{#if keywordSearchVisible}}
+          <label>Search by title keyword(s)
+            <i class="fa fa-info-circle"
+              title="This search will only return results if there is an exact match with the word or phrase in the title of the document.">
+            </i>
+          </label>
+          <div class="text-input-wrapper keyword-search">
+            {{input type="text" value=titleQuery placeholder='e.g. NDF'}}
+          </div>
+        {{/if}}
       </div>
     </fieldset>
     <div class="search-buttons-container">

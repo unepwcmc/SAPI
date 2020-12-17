@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="pdfkit-margin_top" content="0"/>
+    <meta name="pdfkit-margin_right" content="0"/>
+    <meta name="pdfkit-margin_bottom" content="0"/>
+    <meta name="pdfkit-margin_left" content="0"/>
+  </head>
+
+  <body>
+    <div class="id-manual-cover__banner">
+      <%= t('id_manual_cover.header')  %>
+    </div>
+    <img alt="logo-cites" src="<%= Rails.root.to_s %>/app/assets/images/checklist/logo-CITES-blue.png" class='id-manual-cover__banner-logo'>
+    <div class="id-manual-cover__margins">
+      <h1 class="id-manual-cover__title">
+        <%= t('id_manual_cover.title') %>
+      </h1>
+
+      <div class="id-manual-cover__metadata">
+        <div class="id-manual-cover__metadata-row">
+          <span><%= t('id_manual_cover.taxon_label') %>:</span>
+          <em class="id-manual-cover__bold id-manual-cover__italic">
+            <%= taxon_name %>
+          </em>
+        </div>
+
+        <div class="id-manual-cover__metadata-row">
+          <span><%= t('id_manual_cover.date_label') %>:</span>
+          <em class="id-manual-cover__bold">
+            <%= Time.now.strftime('%d/%m/%Y') %>
+          </em>
+        </div>
+
+        <div class="id-manual-cover__metadata-row">
+          <span><%= t('id_manual_cover.website_label') %>:</span>
+          <em class="id-manual-cover__bold">
+            <%= t('id_manual_cover.checklist_url') %>
+          </em>
+        </div>
+      </div>
+
+      <div class="id-manual-cover__bottom">
+        <div class="id-manual-cover__disclaimer">
+          <span class="id-manual-cover__disclaimer--left">
+            <%= t('id_manual_cover.disclaimer_left').html_safe %>
+          </span>
+
+          <span class="id-manual-cover__disclaimer--right">
+            <%= t('id_manual_cover.disclaimer_right').html_safe %>
+
+            <label class="id-manual-cover__disclaimer-label">
+              <%= t('id_manual_cover.citation_label') %>:
+            </label>
+            <p>
+              <%= t('id_manual_cover.citation_text', date: Time.now.strftime('%d/%m/%Y')) %>
+            </p>
+
+            <label class="id-manual-cover__disclaimer-label">
+              <%= t('id_manual_cover.copyright_label') %>:
+            </label>
+            <p><%= t('id_manual_cover.copyright_text') %></p>
+          </span>
+        </div>
+
+        <div class="id-manual-cover__footer">
+          <img alt="logo-cites-black" src="<%= Rails.root.to_s %>/app/assets/images/checklist/logo-CITES-black.png" class='id-manual-cover__footer-logo id-manual-cover__footer-logo--cites'>
+          <img  alt="logo-eu" src="<%= Rails.root.to_s %>/app/assets/images/checklist/eu-black.png" class='id-manual-cover__footer-logo id-manual-cover__footer-logo--eu'>
+          <img  alt='logo-unep' src="http://s3.amazonaws.com/wcmc.logo/UNEP_WCMC_logo_black.png", class="id-manual-cover__footer-logo id-manual-cover__footer-logo--unepwcmc">
+        </div>
+      </div>
+    </div>
+  <body>
+</html>

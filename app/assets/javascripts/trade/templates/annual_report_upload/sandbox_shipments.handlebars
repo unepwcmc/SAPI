@@ -43,7 +43,7 @@
     </div>
     <div class="sandbox-header-buttons span7">
       {{#view tagName='span' class='pull-right' isVisibleBinding='controller.sandboxShipmentsSaving'}}
-        <img src="/assets/loading.gif"> Saving...
+        <img src="/loading.gif"> Saving...
       {{/view}}
       <button {{action 'saveChanges'}}
         {{bind-attr class="unsavedChanges::disabled :pull-right :btn :btn-primary"}}>

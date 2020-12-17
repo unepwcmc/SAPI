@@ -24,7 +24,7 @@
             <option value="comma"> <%= t('comma_separated') %> </option>
             <option value="semicolon"> <%= t('semicolon_separated') %> </option>
           </select>
-          <img src="/assets/cites_trade/information3.gif" class="qtipify" title="<%= t('csv_separator_tip') %>" />
+          <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('csv_separator_tip') %>
         </div>
       </td>
     </tr>
@@ -49,7 +49,7 @@
       <td>
         <div align="right">
           <button style="float:left; margin-top:12px" id='button_report' value=" Get report ">
-          <img src="/assets/cites_trade/page.gif" alt=""/>
+          <%= image_tag "cites_trade/page.gif", alt: "" %>
           <%= t('get_report') %>
           </button>
           <a id='view_genie' href="" style="display:none"></a>
@@ -67,7 +67,7 @@
 
         <a id="new_search" style="float:left" href="/<%= I18n.locale %>/cites_trade/">
           <button id="new_search" style="float:left" value=" New Search ">
-            <img src="/assets/cites_trade/refresh1.png" alt=""/> <%= t('new_search') %>
+            <%= image_tag "cites_trade/refresh1.png", alt: "" %> <%= t('new_search') %>
           </button>
         </a>
 

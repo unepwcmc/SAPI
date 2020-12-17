@@ -11,7 +11,6 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
       ActiveRecord::Base.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
-      kingdom = file.split('/').last.split('_')[0].titleize
 
       sql = <<-SQL
         INSERT INTO common_names(name, language_id, created_at, updated_at)
@@ -43,8 +42,8 @@ namespace :import do
             INNER JOIN common_names ON UPPER(BTRIM(#{TMP_TABLE}.name)) = UPPER(common_names.name)
             INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3)
             LEFT JOIN ranks ON UPPER(BTRIM(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
-            LEFT JOIN taxon_concepts ON taxon_concepts.legacy_id = #{TMP_TABLE}.legacy_id
-              AND taxon_concepts.legacy_type = '#{kingdom}' AND taxon_concepts.rank_id = ranks.id
+            LEFT JOIN taxon_concepts ON taxon_concepts.id = #{TMP_TABLE}.legacy_id
+              AND taxon_concepts.rank_id = ranks.id
             LEFT JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
             WHERE taxon_concepts.id IS NOT NULL AND taxonomies.id = #{taxonomy.id}
 

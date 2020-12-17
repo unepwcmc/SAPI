@@ -19,6 +19,22 @@ Species.DocumentResultComponent = Ember.Component.extend
     )
   ).on("init")
 
+  meetingTitle: ( -> 
+    if @get('doc.event_type') == 'IdMaterials'
+      return ''
+    
+    return @get('doc.event_name')
+  ).property('doc.event_type', 'doc.event_name')
+
+  date: ( -> 
+    date = @get('doc.date')
+
+    if @get('doc.event_type') == 'IdMaterials'
+      return date.split('/')[2]
+    
+    return date
+  ).property('doc.date', 'doc.event_type')
+
   documentVersion: ( ->
     @get('doc.document_language_versions').findBy('language', @get('language'))
   ).property('language')
@@ -57,4 +73,4 @@ Species.DocumentResultComponent = Ember.Component.extend
         eventValue: 1
       }
       ga('send', trackingInfo)
-      window.location = url
+      window.open(url, '_blank')

@@ -2,6 +2,19 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchCon
   Species.SignedInStatus,
   needs: ['search', 'taxonConceptDocuments']
   searchContext: 'species'
+  legalHeadings: [
+    { id: 'cites_listings', name: 'CITES Listing', class: 'first' },
+    { id: 'cites_quotas', name: 'CITES Quotas' },
+    { id: 'cites_suspensions', name: 'CITES Suspensions' },
+    { id: 'eu_listings', name: 'EU Listing' },
+    { id: 'eu_decisions', name: 'EU Decisions', class: 'last' }
+  ]
+
+  actions: {
+    scrollIntoView: (id) ->
+      event.preventDefault()
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' })
+  }
 
   isCms: ( ->
     if @get('taxonomy') != undefined

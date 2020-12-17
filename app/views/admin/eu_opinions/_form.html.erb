@@ -32,7 +32,7 @@
           :name_en,
           @eu_opinion.geo_entity_id
       ),
-        { :include_blank => true },
+        { },
         {:class => 'eu_opinion select2', :style => 'width: 220px' }
       %>
     </div>
@@ -52,6 +52,18 @@
       <%= f.select :eu_decision_type_id,
         options_from_collection_for_select(@eu_decision_types,
           :id, :name, @eu_opinion.eu_decision_type_id),
+        { :include_blank => true },
+        {:class => 'eu_opinion select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :srg_history_id, "SRG History", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :srg_history_id,
+        options_from_collection_for_select(@srg_histories,
+          :id, :name, @eu_opinion.srg_history_id),
         { :include_blank => true },
         {:class => 'eu_opinion select2', :style => 'width: 220px' }
       %>

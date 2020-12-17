@@ -6,12 +6,14 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
   def activate
     @eu_suspension_regulation = EuSuspensionRegulation.find(params[:id])
     @eu_suspension_regulation.activate!
+    @errors = @eu_suspension_regulation.errors.messages.values.flatten.join(' - ')
     render 'create'
   end
 
   def deactivate
     @eu_suspension_regulation = EuSuspensionRegulation.find(params[:id])
     @eu_suspension_regulation.deactivate!
+    @errors = @eu_suspension_regulation.errors.messages.values.flatten.join(' - ')
     render 'create'
   end
 

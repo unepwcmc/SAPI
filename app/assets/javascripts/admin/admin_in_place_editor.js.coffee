@@ -51,7 +51,16 @@ class AdminEditor
     alert.append('<a class="close" href="#" data-dismiss="alert">x</a>')
     alert.append(txt)
 
-    $(alert).insertBefore($('h1'))
+    $(alert).insertBefore($('.admin-header'))
+
+  alertError: (txt) ->
+    $('.alert').remove()
+
+    alert = $('<div class="alert alert-error">')
+    alert.append('<a class="close" href="#" data-dismiss="alert">x</a>')
+    alert.append(txt)
+
+    $(alert).insertBefore($('.admin-header'))
 
   initSearchTypeahead: () ->
     $('.search-typeahead').typeahead

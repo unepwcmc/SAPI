@@ -20,7 +20,6 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.TaxonConc
       @get('controllers.search').set('redirected', false)
     m = Species.TaxonConcept.find(taxonConceptId)
     
-    # @transitionToRoute('taxonConcept.legal', m, queryParams: false)
     @customTransitionToRoute('taxonConcept.legal', m, queryParams: false)
 
   actions:

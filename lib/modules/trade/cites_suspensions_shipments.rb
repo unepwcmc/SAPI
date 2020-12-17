@@ -94,9 +94,9 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
           end_notifications.type = 'CitesSuspensionNotification' AND
           end_notifications.subtype NOT IN ('National trade ban (communicated by MA)', 'Information notice') AND
           (
-            ts.year BETWEEN EXTRACT(YEAR FROM tr_tc.start_date) AND
-            CASE WHEN tr_tc.end_date IS NULL THEN EXTRACT(YEAR FROM current_date)
-            ELSE EXTRACT(YEAR FROM tr_tc.end_date)
+            ts.year BETWEEN EXTRACT(YEAR FROM tr_tc.start_date)::INTEGER AND
+            CASE WHEN tr_tc.end_date IS NULL THEN EXTRACT(YEAR FROM current_date)::INTEGER
+            ELSE EXTRACT(YEAR FROM tr_tc.end_date)::INTEGER
             END
           )AND
           (tr_tc.geo_entity_id IS NULL OR (tr_tc.geo_entity_id = ts.exporter_id OR tr_tc.geo_entity_id = ts.importer_id AND tr_tc.applies_to_import)) AND
@@ -181,9 +181,9 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
           end_notifications.subtype NOT IN ('National trade ban (communicated by MA)', 'Information notice') AND
           (tr_ge.taxon_concept_id IS NULL OR tr_ge.taxon_concept_id = ts.taxon_concept_id) AND
           (
-            ts.year BETWEEN EXTRACT(YEAR FROM tr_ge.start_date) AND
-            CASE WHEN tr_ge.end_date IS NULL THEN EXTRACT(YEAR FROM current_date)
-            ELSE EXTRACT(YEAR FROM tr_ge.end_date)
+            ts.year BETWEEN EXTRACT(YEAR FROM tr_ge.start_date)::INTEGER AND
+            CASE WHEN tr_ge.end_date IS NULL THEN EXTRACT(YEAR FROM current_date)::INTEGER
+            ELSE EXTRACT(YEAR FROM tr_ge.end_date)::INTEGER
             END
           )AND
           (tr_s.source_id = ts.source_id OR tr_s.id IS NULL) AND (tr_p.purpose_id = ts.purpose_id OR tr_p.id IS NULL) AND country_of_origin_id IS NULL AND

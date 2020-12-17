@@ -22,17 +22,6 @@ class TradeController < ApplicationController
 
   def search_params
     (params[:filters] || params).permit(
-      { :taxon_concepts_ids => [] },
-      { :reported_taxon_concepts_ids => [] },
-      { :appendices => [] },
-      { :terms_ids => [] },
-      { :units_ids => [] },
-      { :purposes_ids => [] },
-      { :sources_ids => [] },
-      { :importers_ids => [] },
-      { :exporters_ids => [] },
-      { :countries_of_origin_ids => [] },
-      { :permits_ids => [] },
       :reporter_type,
       :time_range_start,
       :time_range_end,
@@ -45,12 +34,27 @@ class TradeController < ApplicationController
       :report_type,
       :internal,
       :page,
-      :csv_separator
-    ).merge({
-      :internal => true,
+      :csv_separator,
+      taxon_concepts_ids: [], #For downloads needs to be array, but not for search... make array in custom transition?Or is this mapped away from array in ruby!?!!!?!?!?!?!?!
+      reported_taxon_concepts_ids: [],
+      appendices: [],
+      terms_ids: [],
+      units_ids: [],
+      purposes_ids: [],
+      sources_ids: [],
+      importers_ids: [],
+      exporters_ids: [],
+      countries_of_origin_ids: [],
+      permits_ids: [],
+    ).merge(params_overrides)
+  end
+
+  def params_overrides
+    {
+      internal: true,
       # always search descendants
-      :taxon_with_descendants => true,
-      :report_type =>
+      taxon_with_descendants: true,
+      report_type:
         if params[:filters] && params[:filters][:report_type] &&
           Trade::ShipmentsExportFactory.report_types &
           [report_type = params[:filters][:report_type].downcase.strip.to_sym]
@@ -58,14 +62,13 @@ class TradeController < ApplicationController
         else
           :raw
         end,
-      :csv_separator =>
+      csv_separator:
         if params[:filters] && params[:filters][:csv_separator] &&
           params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
           :semicolon
         else
           :comma
         end
-    })
+    }
   end
-
 end

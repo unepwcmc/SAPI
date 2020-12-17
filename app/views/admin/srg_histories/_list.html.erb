@@ -1,0 +1,30 @@
+<thead>
+  <th>Name</th>
+  <th>Tooltip</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+
+  <% collection.each do |srg_history| -%>
+    <tr>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="srg_history" data-name="name"
+          data-placeholder="Required" data-original-title="Enter the decision type name"
+          data-url="<%= resource_url(srg_history) %>" data-pk="<%= srg_history.id %>">
+          <%= srg_history.name %>
+        </a>
+      </td>
+      <td>
+        <a href="#" class="editable editable-click editable-required" data-type="text" data-resource="srg_history" data-name="tooltip"
+          data-placeholder="Required" data-original-title="Enter the decision type tooltip"
+          data-url="<%= resource_url(srg_history) %>" data-pk="<%= srg_history.id %>">
+          <%= srg_history.tooltip %>
+        </a>
+      </td>
+      <td>
+        <%= link_to delete_icon, resource_url(srg_history), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+      </td>
+    </tr>
+  <% end -%>
+
+</tbody>

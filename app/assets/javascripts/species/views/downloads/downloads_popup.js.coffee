@@ -1,6 +1,6 @@
 Species.DownloadsPopup = Ember.View.extend
   templateName: 'species/downloads_popup'
-  classNames: ['dwonload-block']
+  classNames: ['download-block']
 
   didInsertElement: () ->
     $('input[name=csv_separator]').click( (e) ->

@@ -1,3 +1,69 @@
+### 1.5.0
+
+**Add TradePlus support**
+
+* Add SQL views to support TradePlus queries
+* Add/Refactor internal API endpoints to work with TradePlus
+
+### 1.4.2
+
+**Database download event tracking**
+
+* Add event tracking to full database download from CITES Trade
+
+### 1.4.1
+
+**ID Materials updates**
+
+* Amend document ordering, so that non ID Materials are ordered by date
+* Add ID materials export to admin interface
+
+### 1.4.0
+
+**EU Opinions**
+
+* Add new EU decision type (called SRG Referral)
+* Change the name of current no opinion iii) to SRG Referral;
+* Add new entity SRG History
+* Change the name of current no opinion ii) to In consultation and changing it from an official EU decision to a non-opinion/notification for information only (SRG History)
+* Add a second new SRG History, called Discussed at SRG (no decision taken)
+* Add the new column SRG History to the EU decisions table in the Species+ public site
+* Include validation on the BE so that if the decision_type is blank then the srg_history field should be populated
+* On the download checkbox, new radio button to switch between EU decision type filters and "In consultation", and when the latter will be selected all the other filters disappear
+* Exclude from the download the EU opinions with EU decision type = blank
+or srg history = "Discussed at SRG referral"
+
+
+### 1.3.0
+
+**CITES ID Manual**
+
+* Change to the documents retrieving, now including ancestor and descendant relative documents
+* Change to documents order retrieving (exact match first, than from the highest rank(kingdom) to the lowest)
+* Add new event(CITES ID materials) and two types of docs (IDManual and Virtual College)
+
+**Checklist**
+
+* Update api_documents_mview to include the new doc types
+* Add relative CITES checklist api to retrieve the new docs
+* Add a new worker to dynamically merge Id materials documents based on user filter/search
+
+### 1.2.2
+
+**Species+ Admin:**
+
+* Hotfix for copying EU suspensions across events
+
+### 1.2.1
+
+**Trade Admin**
+
+* Make annual reports submission synchronous again
+
+**Configuration**
+
+* Pull correct email address for automatic emails
+
 ### 1.2.0
 
 **Species+ Admin:**

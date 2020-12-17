@@ -6,7 +6,10 @@ Species.DocumentsTooltipComponent = Ember.Component.extend
   ).property('person')
 
   formattedData: ( ->
-    this.get('data').join(', ')
+    data = this.get('data')
+    dataStr = data.slice(0,40).join(', ')
+
+    if data.length <= 40 then dataStr else dataStr + '...'
   ).property()
 
   isTaxa: ( ->

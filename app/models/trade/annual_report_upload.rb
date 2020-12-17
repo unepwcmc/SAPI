@@ -22,8 +22,8 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
   track_who_does_it
   attr_accessible :csv_source_file, :trading_country_id, :point_of_view,
-                  :submitted_at, :submitted_by_id, :number_of_records_submitted,
-                  :aws_storage_path
+                  :submitted_at, :submitted_by_id, :number_of_rows,
+                  :number_of_records_submitted, :aws_storage_path
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
   validates :csv_source_file, :csv_column_headers => true, :on => :create
@@ -39,8 +39,8 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
 
   # object that represents the particular sandbox table linked to this annual
   # report upload
-  def sandbox
-    return nil if submitted_at.present?
+  def sandbox(tmp=false)
+    return nil if submitted_at.present? && !tmp
     @sandbox ||= Trade::Sandbox.new(self)
   end
 
@@ -80,8 +80,28 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
       self.errors[:base] << "Submit failed, primary validation errors present."
       return false
     end
+    return false unless sandbox.copy_from_sandbox_to_shipments(submitter)
 
-    SubmissionWorker.perform_async(self.id, submitter.id)
+    records_submitted = sandbox.moved_rows_cnt
+    # remove uploaded file
+    store_dir = csv_source_file.store_dir
+    remove_csv_source_file!
+    puts '### removing uploads dir ###'
+    puts Rails.root.join('public', store_dir)
+    FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
+
+    # clear downloads cache
+    DownloadsCacheCleanupWorker.perform_async(:shipments)
+
+    # flag as submitted
+    update_attributes({
+      submitted_at: DateTime.now,
+      submitted_by_id: submitter.id,
+      number_of_records_submitted: records_submitted
+    })
+
+    # This has been temporarily disabled as originally part of EPIX
+    #ChangesHistoryGeneratorWorker.perform_async(self.id, submitter.id)
   end
 
   def reported_by_exporter?

@@ -10,8 +10,9 @@ class DocumentSearch
     initialize_query
   end
 
+  #TODO temporarly removing pagination here because of the new cascading feature. Add it back after the refactor of the SQL mviews  
   def results
-    @query.limit(@per_page).offset(@offset)
+    @query #.limit(@per_page).offset(@offset)
   end
 
   def total_cnt
@@ -60,7 +61,6 @@ class DocumentSearch
     if admin_interface?
       add_ordering_for_admin
     else
-      add_ordering_for_public
       select_and_group_query
     end
   end
@@ -76,7 +76,7 @@ class DocumentSearch
       @query = @query.where(
         <<-SQL
           event_type IS NULL
-          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'CitesTc', 'CitesExtraordinaryMeeting')
+          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'CitesTc', 'CitesExtraordinaryMeeting', 'IdMaterials')
         SQL
       )
     else
@@ -88,7 +88,11 @@ class DocumentSearch
     @query = @query.search_by_title(@title_query) if @title_query.present?
 
     if @document_type.present?
-      @query = @query.where('document_type' => @document_type)
+      @query = @query.where('document_type IN (?)', @document_type.split(','))
+    end
+
+    if @volume.present?
+      @query = @query.where('volume IN (?)', @volume)
     end
 
     if admin_interface?
@@ -98,6 +102,10 @@ class DocumentSearch
       if !@document_date_end.blank?
         @query = @query.where("documents.date <= ?", @document_date_end)
       end
+    end
+
+    if @general_subtype.present?
+      @query = @query.where('general_subtype IN (?)', @general_subtype.split(',').flatten)
     end
   end
 
@@ -176,7 +184,7 @@ class DocumentSearch
   def select_and_group_query
     columns = "event_name, event_type, date, date_raw, is_public, document_type,
       proposal_number, primary_document_id,
-      geo_entity_names, taxon_names,
+      geo_entity_names, taxon_names, taxon_concept_ids,
       proposal_outcome, review_phase"
     aggregators = <<-SQL
       ARRAY_TO_JSON(
@@ -184,7 +192,8 @@ class DocumentSearch
           ROW(
             documents.id,
             documents.title,
-            documents.language
+            documents.language,
+            #{locale_document}
           )::document_language_version
         )
       ) AS document_language_versions
@@ -192,7 +201,26 @@ class DocumentSearch
     @query = Document.from(
       '(' + @query.to_sql + ') documents'
     ).select(columns + "," + aggregators).group(columns)
-    @query = @query.order('date_raw DESC, MAX(sort_index), MAX(title)')
+  end
+
+  def locale_document
+    return 'TRUE' unless @language.present?
+    <<-SQL
+      CASE
+      WHEN documents.language = '#{@language.upcase}' AND '#{@language}' = 'en'
+      THEN 'true'
+      WHEN documents.language != '#{@language.upcase}' AND '#{@language}' = 'en'
+      THEN 'false'
+      WHEN '#{@language}' != 'en' THEN
+        CASE
+        WHEN documents.language = '#{@language.upcase}'
+        THEN 'true'
+        WHEN documents.language = 'EN'
+        THEN 'default'
+        ELSE 'false'
+        END
+      END
+    SQL
   end
 
   REFRESH_INTERVAL = 5

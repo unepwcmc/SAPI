@@ -8,7 +8,7 @@
 <div class="sandbox-header">
   <div class="row-fluid">
     {{#view tagName='span' class='pull-right' isVisibleBinding='sandboxShipmentsSubmitting'}}
-      <img src="/assets/loading.gif"> Submitting...
+      <img src="/loading.gif"> Submitting...
     {{/view}}
     <button {{action submitShipments}}
       {{bind-attr class="hasPrimaryErrors:disabled :pull-right :btn :btn-danger"}}
@@ -35,7 +35,7 @@
 </div>
 
 <div class='loading-shipments'>
-  <img src="/assets/loading.gif"> Loading...
+  <img src="/loading.gif"> Loading...
 </div>
 
 {{ outlet }}

@@ -18,7 +18,11 @@ class Checklist::DownloadsController < ApplicationController
   # POST downloads/
   def create
     @download = Download.create(params[:download])
-    DownloadWorker.perform_async(@download.id, params)
+    if params[:download][:doc_type] == 'citesidmanual'
+      ManualDownloadWorker.perform_async(@download.id, params)
+    else
+      DownloadWorker.perform_async(@download.id, params)
+    end
 
     @download = @download.attributes.except("filename", "path")
     @download["updated_at"] = @download["updated_at"].strftime("%A, %e %b %Y %H:%M")
@@ -35,6 +39,7 @@ class Checklist::DownloadsController < ApplicationController
 
   # GET downloads/:id/download
   def download
+
     @download = Download.find(params[:id])
 
     if @download.status == Download::COMPLETED

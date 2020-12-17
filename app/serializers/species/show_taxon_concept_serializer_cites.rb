@@ -95,6 +95,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def eu_decisions
+    # The following variables are used to temporarily force the Anthozoa negative opinion
+    # for Cambodia to cascade down and show regardless of the children distributions.
+    anthozoa_statement, ancestors_field = force_anthozoa_statement.values_at(*%i(statement ancestors_field))
     EuDecision.from('api_eu_decisions_view eu_decisions').
       where("
             eu_decisions.taxon_concept_id IN (?)
@@ -103,37 +106,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               AND eu_decisions.geo_entity_id IN
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
-      ", object_and_children, ancestors, object.id).
-      select(<<-SQL
-              eu_decisions.notes,
-              eu_decisions.start_date,
-              v.original_start_date_formatted,
-              eu_decisions.is_current,
-              eu_decisions.geo_entity_id,
-              eu_decisions.start_event_id,
-              eu_decisions.term_id,
-              eu_decisions.source_id,
-              eu_decisions.eu_decision_type_id,
-              eu_decisions.term_id,
-              eu_decisions.source_id,
-              eu_decisions.nomenclature_note_en,
-              eu_decisions.nomenclature_note_fr,
-              eu_decisions.nomenclature_note_es,
-              eu_decision_type,
-              start_event,
-              end_event,
-              geo_entity_en,
-              taxon_concept,
-              term_en,
-              source_en,
-              CASE
-                WHEN (taxon_concept->>'rank')::TEXT = '#{object.rank_name}'
-                THEN NULL
-                ELSE
-                '[' || (taxon_concept->>'rank')::TEXT || ' decision <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
-              END AS subspecies_info
-             SQL
-      ).
+            #{anthozoa_statement}
+      ", object_and_children, ancestors, object.id, ancestors_field).
+      select(eu_decision_select_attrs).
       joins('LEFT JOIN eu_suspensions_applicability_view v ON eu_decisions.id = v.id').
       order(<<-SQL
             geo_entity_en->>'name' ASC,
@@ -141,6 +116,40 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
             subspecies_info DESC
         SQL
       ).all
+  end
+
+  def eu_decision_select_attrs
+    string = %{
+            eu_decisions.notes,
+            eu_decisions.start_date,
+            v.original_start_date_formatted,
+            eu_decisions.is_current,
+            eu_decisions.geo_entity_id,
+            eu_decisions.start_event_id,
+            eu_decisions.term_id,
+            eu_decisions.source_id,
+            eu_decisions.eu_decision_type_id,
+            eu_decisions.term_id,
+            eu_decisions.source_id,
+            eu_decisions.nomenclature_note_en,
+            eu_decisions.nomenclature_note_fr,
+            eu_decisions.nomenclature_note_es,
+            eu_decision_type,
+            srg_history,
+            start_event,
+            end_event,
+            geo_entity_en,
+            taxon_concept,
+            term_en,
+            source_en,
+            CASE
+              WHEN (taxon_concept->>'rank')::TEXT = '#{object.rank_name}'
+              THEN NULL
+              ELSE
+              '[' || (taxon_concept->>'rank')::TEXT || ' decision <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
+            END AS subspecies_info
+          }
+    scope.current_user ? "#{string},\n private_url" : string
   end
 
   def cites_listing_changes
@@ -282,4 +291,36 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
     object.listing && object.listing['eu_listing']
   end
 
+  private
+
+  # The following variables are used to temporarily force the Anthozoa negative opinion
+  # for Cambodia to cascade down and show regardless of the children distributions.
+  def force_anthozoa_statement
+    taxonomy = Taxonomy.find_by_name('CITES_EU')
+    taxonomy_id = taxonomy && taxonomy.id
+    anthozoa = TaxonConcept.find_by_full_name_and_taxonomy_id('Anthozoa', taxonomy_id)
+    anthozoa_id = anthozoa && anthozoa.id
+    cambodia = GeoEntity.find_by_name_en('Cambodia')
+    cambodia_id = cambodia && cambodia.id
+    eu_decision_type = EuDecisionType.find_by_name('Negative')
+    eu_decision_type_id = eu_decision_type && eu_decision_type.id
+
+    res = {}
+
+    if taxonomy_id && anthozoa_id && cambodia_id && eu_decision_type_id
+      res[:statement] =
+        <<-SQL
+          OR (
+            #{anthozoa_id} IN (?) AND eu_decisions.taxon_concept_id = #{anthozoa_id} AND
+            eu_decisions.geo_entity_id = #{cambodia_id} AND eu_decision_type_id = #{eu_decision_type_id}
+          )
+        SQL
+      res[:ancestors_field] = ancestors
+    else
+      res[:statement] = 'AND (?)'
+      res[:ancestors_field] = 'TRUE'
+    end
+
+    res
+  end
 end

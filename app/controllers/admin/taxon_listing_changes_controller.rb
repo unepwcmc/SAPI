@@ -115,7 +115,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   end
 
   def load_listing_changes
-    @listing_changes = @taxon_concept.listing_changes.
+    @listing_changes = end_of_association_chain.
       includes([
         :species_listing,
         :change_type,
@@ -125,6 +125,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
       ]).
       where("change_types.name <> '#{ChangeType::EXCEPTION}'").
       where("change_types.designation_id" => @designation.id).
+      where("taxon_concept_id" => @taxon_concept.id).
       order('listing_changes.effective_at DESC').
       page(params[:page]).where(:parent_id => nil)
   end

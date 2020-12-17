@@ -73,7 +73,7 @@ namespace :import do
           AND UPPER(taxon_concepts.legacy_type) = BTRIM(UPPER(q.kingdom))
           AND taxon_concepts.rank_id = ranks.id
         INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = BTRIM(UPPER(q.country_iso2))
-        INNER JOIN eu_decision_types ON UPPER(eu_decision_types.name) = BTRIM(UPPER(q.opinion))
+        INNER JOIN eu_decision_types ON UPPER(eu_decision_types.name) = BTRIM(UPPER(q.opinion)) -- Eu Decision Type can be empty now. Consider LEFT JOIN if importing other files
         INNER JOIN events ON events.legacy_id = q.event_legacy_id
           AND events.designation_id = #{designation_id}
         LEFT JOIN trade_codes AS sources ON UPPER(sources.code) = BTRIM(UPPER(q.source))

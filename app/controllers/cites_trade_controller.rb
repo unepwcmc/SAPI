@@ -4,21 +4,21 @@ class CitesTradeController < ApplicationController
 
   def search_params
     (params[:filters] || params).permit(
-      { :taxon_concepts_ids => [] },
-      { :appendices => [] },
-      { :terms_ids => [] },
-      { :units_ids => [] },
-      { :purposes_ids => [] },
-      { :sources_ids => [] },
-      { :importers_ids => [] },
-      { :exporters_ids => [] },
-      { :countries_of_origin_ids => [] },
       :time_range_start,
       :time_range_end,
       :report_type,
       :selection_taxon,
       :page,
-      :csv_separator
+      :csv_separator,
+      taxon_concepts_ids: [],
+      appendices: [],
+      terms_ids: [],
+      units_ids: [],
+      purposes_ids: [],
+      sources_ids: [],
+      importers_ids: [],
+      exporters_ids: [],
+      countries_of_origin_ids: []
     ).merge({
       # if taxon search comes from the genus selector, search descendants
       :taxon_with_descendants =>

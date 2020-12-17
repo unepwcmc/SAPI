@@ -4,7 +4,7 @@ class Species::DocumentSerializer < ActiveModel::Serializer
     :primary_document_id, :taxon_names, :geo_entity_names,
     :taxon_names, :geo_entity_names,
     :document_language_versions,
-    :proposal_outcome
+    :proposal_outcome, :is_link
 
   def document_type
     object.document_type.split(":").last
@@ -14,4 +14,11 @@ class Species::DocumentSerializer < ActiveModel::Serializer
     object.document_language_versions
   end
 
+  def is_link
+    object.document_type == 'Document::VirtualCollege' && !is_pdf?
+  end
+
+  def is_pdf?
+    (Document.find(object.primary_document_id).elib_legacy_file_name =~ /\.pdf/).present?
+  end
 end
