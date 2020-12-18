@@ -4,7 +4,7 @@ Species.ElibrarySearchFormView = Ember.View.extend
 
   keyDown: (event) ->
     if event.keyCode == 13
-      $('.elibrary-search-button').click()
+      $('.elibrary-search-button').focus().trigger('click')
 
   actions:
     toggleSearchOptions: () ->
