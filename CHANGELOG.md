@@ -6,6 +6,10 @@
 * Fix aru validation rule bug
 * Fix distribution not copied across when splitting bug
 
+**Eu opinions**
+
+* Add private_url attribute to event and show only if user logged in
+
 ### 1.5.0
 
 **Add TradePlus support**
