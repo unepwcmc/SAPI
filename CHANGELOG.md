@@ -1,5 +1,11 @@
 ### 1.5.1
 
+**Bug fixes and eu opinions bulk upload**
+
+* Add new eu opinions bulk upload file for Conolophus
+* Fix aru validation rule bug
+* Fix distribution not copied across when splitting bug
+
 **Eu opinions**
 
 * Add private_url attribute to event and show only if user logged in
