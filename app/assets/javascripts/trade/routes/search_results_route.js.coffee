@@ -1,4 +1,5 @@
 Trade.SearchResultsRoute = Trade.BeforeRoute.extend Trade.LoadingModal,
+  Trade.CustomTransition
 
   queryParams: {
     taxon_concepts_ids: { refreshModel: true },
@@ -32,6 +33,18 @@ Trade.SearchResultsRoute = Trade.BeforeRoute.extend Trade.LoadingModal,
 
   afterModel: () ->
     @hideLoadingModal()
+    searchResultsController = @controllerFor('search_results')
+    mode = @getParameterByName('mode')
+
+    if mode == 'edit'
+      searchResultsController.send('editBatch')
+    else if mode == 'delete'
+      searchResultsController.send('deleteBatch')
+
+    # So you can open the edit/delete modal again
+    if mode
+      window.history.replaceState({}, 'Search', @removeParam('mode', window.location.href))
+    
 
   actions:
     dataChanged: () ->
