@@ -130,7 +130,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
           shipment.get('_destroyed') == true
           ).forEach (shipment) ->
           shipment.deleteRecord()
-        @get('store').commit()
+        @get('store').commit() #FIXME: IE doesn't call buildURL in rest adapter
         @clearModifiedFlags()
         @transitionToParentController()
         location.reload()
