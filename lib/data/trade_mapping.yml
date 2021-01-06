@@ -364,7 +364,7 @@ rules:
         taxa_fields:
           group: ''
         units_fields:
-          units: []
+          units: ['NULL']
       output:
         term: 'SKI'
         quantity_modifier: '/'
@@ -706,6 +706,16 @@ rules:
       rule_name: 'rulename'
       input:
         units: ['SID']
+      output:
+        term: 'SKI'
+        unit: 'NULL'
+        quantity_modifier: '/'
+        modifier_value: 2
+    - rule_no: 4
+      rule_name: 'rulename'
+      input:
+        terms: ['SKI', 'SKP']
+        units: ['BSK', 'BAK', 'HRN']
       output:
         term: 'SKI'
         unit: 'NULL'
