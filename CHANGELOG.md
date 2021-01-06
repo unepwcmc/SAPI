@@ -1,3 +1,11 @@
+### 1.5.1
+
+**Bug fixes and eu opinions bulk upload**
+
+* Add new eu opinions bulk upload file for Conolophus
+* Fix aru validation rule bug
+* Fix distribution not copied across when splitting bug
+
 ### 1.5.0
 
 **Add TradePlus support**
