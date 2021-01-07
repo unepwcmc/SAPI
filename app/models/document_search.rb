@@ -97,10 +97,10 @@ class DocumentSearch
 
     if admin_interface?
       if !@document_date_start.blank?
-        @query = @query.where("documents.date >= ?", @document_date_start)
+        @query = @query.where("documents.date_raw >= ?", @document_date_start)
       end
       if !@document_date_end.blank?
-        @query = @query.where("documents.date <= ?", @document_date_end)
+        @query = @query.where("documents.date_raw <= ?", @document_date_end)
       end
     end
 
