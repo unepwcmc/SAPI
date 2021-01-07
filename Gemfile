@@ -39,7 +39,7 @@ gem 'redis-rails', '~> 4.0.0'
 
 gem 'whenever', :require => false
 
-gem 'sprockets', '~> 2.12.5'
+gem 'sprockets', '~> 2.12.5' # upgrading to 3 breaks handlebars/tilt
 gem 'ember-rails', '~> 0.14.1'
 gem 'ember-source', '~> 1.6.0'
 gem 'ember-data-source', '0.14'
