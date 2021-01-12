@@ -99,3 +99,29 @@ isNotUndefinedOrNull = (x) ->
             urlParam = paramConfig.urlParam
       
       return urlParam
+
+    getParameterByName: (name, url = window.location.href) ->
+      name = name.replace(/[\[\]]/g, '\\$&')
+      regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)')
+      results = regex.exec(url)
+      if !results
+        return null
+      if !results[2]
+        return ''
+      decodeURIComponent results[2].replace(/\+/g, ' ')
+
+    removeParam: (key, sourceURL) ->
+      rtn = sourceURL.split('?')[0]
+      param = undefined
+      params_arr = []
+      queryString = if sourceURL.indexOf('?') != -1 then sourceURL.split('?')[1] else ''
+      if queryString != ''
+        params_arr = queryString.split('&')
+        i = params_arr.length - 1
+        while i >= 0
+          param = params_arr[i].split('=')[0]
+          if param == key
+            params_arr.splice i, 1
+          i -= 1
+        rtn = rtn + '?' + params_arr.join('&')
+      rtn
