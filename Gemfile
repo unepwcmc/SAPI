@@ -5,6 +5,7 @@ gem 'rails', '4.0.6'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
+gem 'concurrent-ruby'
 gem 'actionpack-action_caching'
 gem 'actionpack-page_caching'
 gem 'active_model_serializers', '~> 0.8.4'
