@@ -48,6 +48,6 @@ Trade.SearchResultsRoute = Trade.BeforeRoute.extend Trade.LoadingModal,
 
   actions:
     dataChanged: () ->
-      @refresh()
+      @customTransitionToRoute('search')
     queryParamsDidChange: (changed, totalPresent, removed) ->
       @refresh()
