@@ -5,10 +5,6 @@ Species.TaxonConceptSearchFieldComponent = Em.TextField.extend
 
   targetObject: Em.computed.alias('parentView')
 
-  focusOut: (event) ->
-    @.$().attr('placeholder', @get('placeholder'))
-    @get('targetObject').hideDropdown() if !@get('targetObject.mousedOver')
-
   keyUp: (event) ->
     Ember.run.cancel(@currentTimeout)
     if event.keyCode == 13
