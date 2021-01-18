@@ -1,9 +1,5 @@
             WITH codes_map(term_id,term_code,term_name,unit_id,unit_code,unit_name,output_term_id,output_term_code,output_term_name,output_unit_id,output_unit_code,output_unit_name,taxa_field,term_quantity_modifier,term_modifier_value,unit_quantity_modifier,unit_modifier_value) AS (
-        VALUES (NULL,NULL,NULL,129,'BSK','bellyskins',80,'SID','sides',-1,'NULL','NULL',NULL,NULL,NULL,'',1.0),
-(NULL,NULL,NULL,140,'HRN','hornback skins',80,'SID','sides',-1,'NULL','NULL',NULL,NULL,NULL,'',1.0),
-(NULL,NULL,NULL,126,'BAK','backskins',82,'SKP','skin pieces',-1,'NULL','NULL',NULL,NULL,NULL,'',1.0),
-(NULL,NULL,NULL,155,'SID','sides',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
-(84,'SKI','skins',129,'BSK','bellyskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
+        VALUES (84,'SKI','skins',129,'BSK','bellyskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
 (84,'SKI','skins',126,'BAK','backskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
 (84,'SKI','skins',140,'HRN','hornback skins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
 (82,'SKP','skin pieces',129,'BSK','bellyskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),

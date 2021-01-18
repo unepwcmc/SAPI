@@ -687,33 +687,6 @@ rules:
     - rule_no: 1
       rule_name: 'rulename'
       input:
-        units: ['BSK', 'HRN']
-      output:
-        term: 'SID'
-        unit: 'NULL'
-        quantity_modifier: ''
-        modifier_value: 1
-    - rule_no: 2
-      rule_name: 'rulename'
-      input:
-        units: ['BAK']
-      output:
-        term: 'SKP'
-        unit: 'NULL'
-        quantity_modifier: ''
-        modifier_value: 1
-    - rule_no: 3
-      rule_name: 'rulename'
-      input:
-        units: ['SID']
-      output:
-        term: 'SKI'
-        unit: 'NULL'
-        quantity_modifier: '/'
-        modifier_value: 2
-    - rule_no: 4
-      rule_name: 'rulename'
-      input:
         terms: ['SKI', 'SKP']
         units: ['BSK', 'BAK', 'HRN']
       output:
