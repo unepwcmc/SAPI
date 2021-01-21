@@ -64,7 +64,15 @@ module Trade::TradePlusFilters
     json_values << ",'iso2',#{attributes[2]}" if attributes.grep(/iso/).present?
     json_values << ",'code',#{attributes[2]}" if attributes.grep(/code/).present?
     group_by_attrs = attributes.uniq.join(',')
-    "SELECT '#{as}' AS attribute_name, json_build_object(#{json_values})::jsonb AS data FROM #{table_name} #{group_by(group_by_attrs)}"
+
+    # Exclude possible null values for taxonomic groups
+    condition = "WHERE #{attributes[0]} IS NOT NULL" if attributes[0] == 'group_name'
+    <<-SQL
+      SELECT '#{as}' AS attribute_name, json_build_object(#{json_values})::jsonb AS data
+      FROM #{table_name}
+      #{condition}
+      #{group_by(group_by_attrs)}
+    SQL
   end
 
   private
