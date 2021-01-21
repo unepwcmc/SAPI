@@ -134,7 +134,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     WITH child_taxa AS (
       SELECT taxon_concept_id AS id
       FROM all_taxon_concepts_and_ancestors_mview
-      WHERE ancestor_taxon_concept_id = #{tc_id}
+      WHERE ancestor_taxon_concept_id IN (#{tc_id}) -- Multiple taxa can be selected
     )
     SQL
   end
