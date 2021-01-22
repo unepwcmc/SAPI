@@ -130,8 +130,4 @@ class Trade::FormattedCodes::TradePlusFormattedCodes < Trade::FormattedCodes::Ba
     end
     query.join("\t\t\t\t\tAND ")
   end
-
-  def generate_mapping_table_rows(rule, slice_final=nil)
-    super(rule)
-  end
 end

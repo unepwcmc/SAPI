@@ -33,7 +33,7 @@ class Trade::FormattedCodes::Base
 
     <<-SQL
       WITH codes_map(#{MAPPING_COLUMNS.join(',')}) AS (
-        VALUES #{rows.join(',')}
+        VALUES #{rows.join(",\n")}
       )
     SQL
   end
@@ -113,13 +113,8 @@ class Trade::FormattedCodes::Base
   end
 
   TAXONOMY_FIELDS = %w(kingdom phylum order class family genus group taxa).freeze
-
-  def generate_mapping_table_rows
-    raise NotImplementedError
-  end
-
   TRADE_CODE_FIELDS = %w(id code name_en).freeze
-  def slice_values(trade_code, code_type, slice_final=nil)
+  def slice_values(trade_code, code_type)
     return ("NULL," * 3).chop unless trade_code
     # When code value is 'NULL' it means that this is
     # an actual condition to be met for the mapping.
@@ -130,11 +125,11 @@ class Trade::FormattedCodes::Base
 
     code_obj = code_type.capitalize.constantize.find_by_code(trade_code)
     code_obj.attributes.slice(*TRADE_CODE_FIELDS).values.map do |v|
-      slice_final.present? ? "'#{v}'" : v.is_a?(String) ? "'#{v}'" : v
+      v.is_a?(String) ? "'#{v}'" : v
     end.join(',')
   end
 
-  def generate_mapping_table_rows(rule, slice_final=nil)
+  def generate_mapping_table_rows(rule)
     formatted_input = input_flattening(rule)
     formatted_input.delete_if { |_, v| v.empty? }
     output = rule['output']
@@ -145,7 +140,7 @@ class Trade::FormattedCodes::Base
     input_units = formatted_input['units'] || [nil]
     input_taxa_fields = format_taxa_fields(formatted_input.slice(*TAXONOMY_FIELDS))
 
-    output_term_values = slice_values(output['term'], 'term', slice_final)
+    output_term_values = slice_values(output['term'], 'term')
     output_unit_values = slice_values(output['unit'], 'unit')
     output_codes = "#{output_term_values},#{output_unit_values}"
 

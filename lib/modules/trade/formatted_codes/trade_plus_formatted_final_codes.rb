@@ -21,16 +21,16 @@ class Trade::FormattedCodes::TradePlusFormattedFinalCodes < Trade::FormattedCode
              -- conditions and replacing NULLs with values from related rows when possible.
              -- Moreover, if ids are -1 or codes/names are 'NULL' strings, replace those with NULL
              -- after the processing is done. This is to get back to just a unique NULL representation.
-             NULLIF(COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id::text), '-1')::INTEGER AS term_id,
+             NULLIF(COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id), '-1')::INTEGER AS term_id,
              NULLIF(COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code), 'NULL') AS term_code,
              NULLIF(COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en), 'NULL') AS term,
              NULLIF(COALESCE(MAX(COALESCE(output_unit_id, codes_map.unit_id)), ts.unit_id), -1) AS unit_id,
              NULLIF(COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code), 'NULL') AS unit_code,
              NULLIF(COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en), 'NULL') AS unit,
              MAX(COALESCE(codes_map.term_quantity_modifier, ts.term_quantity_modifier)) AS term_quantity_modifier,
-             MAX(COALESCE(codes_map.term_modifier_value, ts.term_modifier_value::text))::FLOAT AS term_modifier_value,
+             MAX(COALESCE(codes_map.term_modifier_value::FLOAT, ts.term_modifier_value))::FLOAT AS term_modifier_value,
              MAX(COALESCE(codes_map.unit_quantity_modifier, ts.unit_quantity_modifier)) AS unit_quantity_modifier,
-             MAX(COALESCE(codes_map.unit_modifier_value, ts.unit_modifier_value))::FLOAT AS unit_modifier_value
+             MAX(COALESCE(codes_map.unit_modifier_value::FLOAT, ts.unit_modifier_value))::FLOAT AS unit_modifier_value
         FROM trade_plus_formatted_data_view ts
         #{mapping_join}
         LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
@@ -50,9 +50,5 @@ class Trade::FormattedCodes::TradePlusFormattedFinalCodes < Trade::FormattedCode
         )
       )
     SQL
-  end
-
-  def generate_mapping_table_rows(rule, slice_final=nil)
-    super(rule, 'final')
   end
 end
