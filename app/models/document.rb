@@ -69,17 +69,19 @@ class Document < ActiveRecord::Base
     where(id: ids).order(order)
   }
 
-  def filename=(arg)
-    is_link? ? write_attribute(:filename, arg) : super
-  end
-
-  def filename
-    if self.has_attribute? :type
-      is_link? ? read_attribute(:filename) : super
-    else
-      super
-    end
-  end
+  # This hot fix was needed to import document objects without attachment(external link)
+  # Kepping this code just as reference for future
+  # def filename=(arg)
+  #   is_link? ? write_attribute(:filename, arg) : super
+  # end
+  #
+  # def filename
+  #   if self.has_attribute? :type
+  #     is_link? ? read_attribute(:filename) : super
+  #   else
+  #     super
+  #   end
+  # end
 
   def is_link?
     self.type == 'Document::VirtualCollege' && !is_pdf?
@@ -134,7 +136,8 @@ class Document < ActiveRecord::Base
   private
 
   def is_pdf?
-    (self.elib_legacy_file_name =~ /\.pdf/).present?
+    attr = elib_legacy_file_name || filename.file.filename
+    (attr =~ /\.pdf/).present?
   end
 
 end

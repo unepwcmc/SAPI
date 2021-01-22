@@ -67,6 +67,10 @@ class Event < ActiveRecord::Base
       {
         id: 'CitesTc',
         name: 'CITES Technical Committee'
+      },
+      {
+        id: 'IdMaterials',
+        name: 'IdentificationMaterials'
       }
     ]
   end
