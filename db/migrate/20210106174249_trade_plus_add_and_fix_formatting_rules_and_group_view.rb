@@ -1,4 +1,4 @@
-class TradePlusAddAndFixFormattingRules < ActiveRecord::Migration
+class TradePlusAddAndFixFormattingRulesAndGroupView < ActiveRecord::Migration
   def up
     execute "DROP MATERIALIZED VIEW IF EXISTS trade_plus_complete_mview"
     execute "DROP VIEW IF EXISTS trade_plus_complete_view"
@@ -7,7 +7,7 @@ class TradePlusAddAndFixFormattingRules < ActiveRecord::Migration
     execute "DROP VIEW IF EXISTS trade_plus_group_view"
     execute "DROP VIEW IF EXISTS trade_plus_shipments_view"
     execute "CREATE VIEW trade_plus_shipments_view AS #{view_sql('20200206150700', 'trade_plus_shipments_view')}"
-    execute "CREATE VIEW trade_plus_group_view AS #{view_sql('20191030154249', 'trade_plus_group_view')}"
+    execute "CREATE VIEW trade_plus_group_view AS #{view_sql('20210115103657', 'trade_plus_group_view')}"
     execute "CREATE VIEW trade_plus_formatted_data_view AS #{view_sql('20210106174249', 'trade_plus_formatted_data_view')}"
     execute "CREATE VIEW trade_plus_formatted_data_final_view AS #{view_sql('20210106174249', 'trade_plus_formatted_data_final_view')}"
     execute "CREATE VIEW trade_plus_complete_view AS #{view_sql('20200707183829', 'trade_plus_complete_view')}"
