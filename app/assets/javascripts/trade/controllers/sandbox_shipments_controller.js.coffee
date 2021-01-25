@@ -61,6 +61,8 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
 
   actions:
     closeError: ->
+      @get('store').get('defaultTransaction').rollback()
+      @clearModifiedFlags()
       @transitionToParentController()
 
     toggleUpdatesVisible: ->
@@ -155,7 +157,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
       shipment.setProperties({'_destroyed': true, '_modified': true})
 
     cancelShipmentEdit: (shipment) ->
-      @get('store').get('defaultTransaction').rollback()
       shipment.setProperties(shipment.get('data'))
+      shipment.set('_modified', false)
       @set('currentShipment', null)
       $('.shipment-form-modal').modal('hide')
