@@ -139,7 +139,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
       )
 
     cancelChanges: () ->
-      @get('store').get('currentTransaction').rollback()
+      @get('store').get('defaultTransaction').rollback()
       @clearModifiedFlags()
 
     #### Single shipment related ####
