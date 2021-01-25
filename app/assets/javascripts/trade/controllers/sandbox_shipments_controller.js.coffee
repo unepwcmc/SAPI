@@ -155,6 +155,7 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
       shipment.setProperties({'_destroyed': true, '_modified': true})
 
     cancelShipmentEdit: (shipment) ->
+      @get('store').get('defaultTransaction').rollback()
       shipment.setProperties(shipment.get('data'))
       @set('currentShipment', null)
       $('.shipment-form-modal').modal('hide')
