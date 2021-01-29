@@ -7,72 +7,68 @@ class Api::V1::ShipmentsController < ApplicationController
     set_pagination_headers(:data, :grouped_params)
   end
 
+  #TODO
+  def check_results
+    query_data = Rails.cache.fetch([params[:query_type], params[:query_params]])
+
+    if params[:query_type] == 'search' && query_data.present?
+      query = @grouping_class.new(sanitized_attributes, params)
+      @filtered_data = query.filter(query_data, params)
+      render :json => Kaminari.paginate_array(@filtered_data).page(params[:page]).per(params[:per_page]),
+            :meta => metadata(@filtered_data, params)
+    else
+      data = query_data.presence || { status: 'pending' }
+      render :json => data
+    end
+  end
+
   def chart_query
-    @chart_data = Rails.cache.fetch(['chart_data', params], expires_in: 1.week) do
-                    @grouping_class.new(['issue_type', 'year'])
-                                             .countries_reported_range(params[:year])
-                  end
-    render :json => @chart_data
+    _attributes = ['issue_type', 'year']
+    TradePlusWorker.perform_async('chart', @grouping_class, _attributes, params)
+
+    #TODO
+    render :json => { status: 'started' }
+  
+    # other possibility that makes use of the same request
+    #if data.present?
+    #  render json: data
+    #elsif $redis.get_key([_attributes, params]).blank? # this is pseudocode
+    #  TradePlusWorker.perform_async('chart', @grouping_class, _attributes, params)
+    #  #TODO
+    # render json: { status: 'started' }
+    #else
+    # render json: { status: 'pending' }
+    #end
   end
 
   def grouped_query
-    limit = grouped_params[:limit].present? ? grouped_params[:limit].to_i : ''
-    _grouped_params = grouped_params.merge(limit: limit, with_defaults: true)
-    taxonomic_params = {
-      taxonomic_level: grouped_params[:taxonomic_level],
-      group_name: grouped_params[:group_name]
-    }
+    TradePlusWorker.perform_async('grouped', @grouping_class, sanitized_attributes, grouped_params)
 
-    query = @grouping_class.new(sanitized_attributes, _grouped_params)
-    params_hash = { attribute: 'year' }
-    sanitized_attributes.map { |p| params_hash[p] = p }
-    @data = Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
-                      sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
-                                                          query.json_by_attribute(query.run, params_hash)
-           end
-
-    render :json => @data
+    # TODO
+    render :json => { status: 'started' }
   end
 
   def country_query
-    limit = grouped_params[:limit].present? ? grouped_params[:limit].to_i : ''
-    _grouped_params = grouped_params.merge(limit: limit, with_defaults: true)
-    taxonomic_params = {
-      taxonomic_level: grouped_params[:taxonomic_level],
-      group_name: grouped_params[:group_name]
-    }
+    TradePlusWorker.perform_async('country', @grouping_class, sanitized_attributes, grouped_params)
 
-    query = @grouping_class.new(sanitized_attributes, _grouped_params)
-    params_hash = { attribute: 'year' }
-    sanitized_attributes.map { |p| params_hash[p] = p }
-    @data = Rails.cache.fetch(['country_data', grouped_params], expires_in: 1.week) do
-                      sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
-                                                          query.json_by_attribute(query.country_data, params_hash)
-            end
-
-    render :json => @data
+    # TODO
+    render :json => { status: 'started' }
   end
 
   # Compliance tool search & full list action
   def search_query
-    query = @grouping_class.new(sanitized_attributes, params)
-    data = query.run
-    @search_data =  Rails.cache.fetch(['search_data', params], expires_in: 1.week) do
-                      query.build_hash(data, params)
-                    end
-    @filtered_data = query.filter(@search_data, params)
-    render :json => Kaminari.paginate_array(@filtered_data).page(params[:page]).per(params[:per_page]),
-           :meta => metadata(@filtered_data, params)
+    TradePlusWorker.perform_async('search', @grouping_class, sanitized_attributes, params)
+
+    #TODO
+    render json: { status: 'started' }
   end
 
   def over_time_query
     # TODO Remember to implement permitted parameters here
-    query = @grouping_class.new(sanitized_attributes, params)
-    @over_time_data = Rails.cache.fetch(['over_time_data', params], expires_in: 1.week) do
-      query.over_time_data
-    end
+    TradePlusWorker.perform_async('over_time', @grouping_class, sanitized_attributes, params)
 
-    render json: @over_time_data
+    # TODO
+    render json: { status: 'started' }
   end
 
   def download_data

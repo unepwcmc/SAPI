@@ -25,7 +25,7 @@ SAPI::Application.routes.draw do
       resources :units, :only => [:index]
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
-      resources :trade_plus_filters, only: :index
+      resources :trade_plus_filters, only: [:index, :show]
       resources :documents do
         collection do
           get 'download_zip'
@@ -43,6 +43,7 @@ SAPI::Application.routes.draw do
       get '/shipments/download' => 'shipments#download_data'
       get '/shipments/search_download' => 'shipments#search_download_data'
       get '/shipments/search_download_all' => 'shipments#search_download_all_data'
+      get '/shipments/check_results' => 'shipments#check_results'
     end
     resources :languages, :only => [:index]
     resources :users, :only => [:index]
