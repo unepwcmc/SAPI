@@ -17,10 +17,11 @@ class SessionsController < Devise::SessionsController
   protected
 
   def invalid_login_attempt
-    set_flash_message(:alert, :invalid)
+    @user = User.new
+    set_flash_message(:error, :invalid)
     respond_to do |format|
       format.html { render :new, status: 401 }
-      format.json { render json: flash[:alert], status: 401 }
+      format.json { render json: flash[:error], status: 401 }
     end
   end
 end

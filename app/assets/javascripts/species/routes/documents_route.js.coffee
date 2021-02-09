@@ -2,7 +2,9 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
   Species.GeoEntityLoader, Species.EventLoader,
   Species.DocumentTagLoader, Species.DocumentLoader,
 
-  beforeModel: (queryParams, transition) ->
+  beforeModel: (transition) ->
+    queryParams = transition.queryParams
+
     @ensureGeoEntitiesLoaded(@controllerFor('search'))
     @ensureEventsLoaded(@controllerFor('elibrarySearch'))
     @ensureDocumentTagsLoaded(@controllerFor('elibrarySearch'))
@@ -17,7 +19,9 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     $(@spinnerSelector).css("visibility", "visible")
     $('tr.group i.fa-minus-circle').click()
 
-  model: (params, queryParams, transition) ->
+  model: (params, transition) ->
+    queryParams = params.queryParams
+
     @resetDocumentsResults()
     if queryParams['event_type']
       @loadDocumentsForEventType(queryParams['event_type'], queryParams)
@@ -28,7 +32,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
         @loadDocumentsForEventType(eventType, eventQueryParams)
       )
 
-  afterModel: (queryParams, transition) ->
+  afterModel: (model, transition) ->
     $(@spinnerSelector).css("visibility", "hidden")
 
   renderTemplate: ->
@@ -68,3 +72,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     controller.set('citesPcDocuments', {})
     controller.set('idMaterialsDocuments', {})
     controller.set('otherDocuments', {})
+
+  actions:
+    queryParamsDidChange: (changed, totalPresent, removed) ->
+      @refresh()

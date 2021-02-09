@@ -1,8 +1,5 @@
 Species.Router.map (match) ->
-  @resource 'taxonConcepts', {
-    path: "/taxon_concepts"
-    queryParams: ['taxonomy', 'taxon_concept_query', 'geo_entities_ids', 'geo_entity_scope', 'page']
-    }, () ->
+  @resource 'taxonConcepts', { path: "/taxon_concepts" }
   @resource 'taxonConcept', { path: "/taxon_concepts/:taxon_concept_id" }, () ->
     @route 'legal'
     @route 'names'

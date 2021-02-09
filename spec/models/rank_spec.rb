@@ -39,16 +39,16 @@ describe Rank do
         r.update_attribute(:name, 'SUPER PHYLUM')
         r
       }
-      specify { rank.destroy.should be_true }
+      specify { rank.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       let(:rank) { create(:rank, name: Rank::PHYLUM, taxonomic_position: '1.1') }
       let!(:taxon_concept) { create(:taxon_concept, :rank => rank) }
-      specify { rank.destroy.should be_false }
+      specify { rank.destroy.should be_falsey }
     end
     context "when protected name" do
       let(:rank) { create(:rank, name: Rank::PHYLUM, taxonomic_position: '1.1') }
-      specify { rank.destroy.should be_false }
+      specify { rank.destroy.should be_falsey }
     end
   end
   describe :in_range do

@@ -39,7 +39,7 @@ describe TaxonConcept do
 
       describe :cms_listed do
         context "for species Loxodonta africana" do
-          specify { @species.cms_listed.should be_true }
+          specify { @species.cms_listed.should be_truthy }
         end
       end
     end

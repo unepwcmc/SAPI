@@ -15,7 +15,7 @@
         <th class="col6">NOTES</th>
       </tr>
     </thead>
-    <tbody {{bindAttr class="controller.citesQuotasExpanded:historic_expanded"}}>
+    <tbody {{bind-attr class="controller.citesQuotasExpanded:historic_expanded"}}>
       {{#each quota in currentCitesQuotas}}
         {{#if quota.public_display}}
           <tr class="current">
@@ -47,7 +47,7 @@
     </tbody>
   </table>
   {{#if historicCitesQuotas}}
-    <div {{bindAttr class=":historic controller.citesQuotasExpanded::hidden"}}>
+    <div {{bind-attr class=":historic controller.citesQuotasExpanded::hidden"}}>
       <table summary="data table">
         <thead>
           <tr>
@@ -85,7 +85,7 @@
         </tbody>
       </table>
     </div>
-    <div {{bindAttr class=":btn-hloder citesQuotasExpanded:expanded"}}>
+    <div {{bind-attr class=":btn-hloder citesQuotasExpanded:expanded"}}>
       {{#if controller.citesQuotasExpanded}}
         <a class="link active" {{action 'contractList' 'cites_quotas' 'citesQuotasExpanded'}}>HIDE HISTORY</a>
       {{else}}

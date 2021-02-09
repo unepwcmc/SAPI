@@ -11,7 +11,7 @@
       <td>
         <%= link_to delete_icon,
           admin_taxon_concept_taxon_instrument_path(@taxon_concept, ti),
-          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+          data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete
         %>
       </td>
     </tr>

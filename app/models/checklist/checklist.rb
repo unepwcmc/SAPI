@@ -16,7 +16,7 @@ class Checklist::Checklist
   end
 
   def results
-    @query.limit(@per_page).offset(@per_page * (@page - 1)).all
+    @query.limit(@per_page).offset(@per_page * (@page - 1)).to_a
   end
 
   def total_cnt
@@ -29,7 +29,7 @@ class Checklist::Checklist
   end
 
   def initialize_query
-    @taxon_concepts_rel = MTaxonConcept.scoped.
+    @taxon_concepts_rel = MTaxonConcept.all.
       by_cites_eu_taxonomy
 
     if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
@@ -110,7 +110,7 @@ class Checklist::Checklist
     unless @countries.empty?
       summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
 
-      countries = GeoEntity.find_all_by_id(@countries)
+      countries = GeoEntity.where(id: @countries).to_a
 
       @countries_count = countries.count
       if (1..3).include?(@countries_count)
@@ -125,7 +125,7 @@ class Checklist::Checklist
     unless @cites_regions.empty?
       summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
 
-      regions = GeoEntity.find_all_by_id(params[:cites_region_ids])
+      regions = GeoEntity.where(id: params[:cites_region_ids]).to_a
 
       @regions_count = regions.count
       if @regions_count > 0

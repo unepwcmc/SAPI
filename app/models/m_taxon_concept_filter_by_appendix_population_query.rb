@@ -1,12 +1,12 @@
 class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppendixQuery
 
   def initialize(relation, appendix_abbreviations, geo_entities_ids = [])
-    @relation = relation || MTaxonConcept.scoped
+    @relation = relation || MTaxonConcept.all
     @appendix_abbreviations = appendix_abbreviations || []
     @original_geo_entities_ids = geo_entities_ids
     @geo_entities_ids = GeoEntity.nodes_and_descendants(geo_entities_ids).map(&:id)
     @geo_entities_in_clause = @geo_entities_ids.compact.join(',')
-    @table = @relation.from_value || 'taxon_concepts_mview'
+    @table = @relation.from_value ? @relation.from_value.first : 'taxon_concepts_mview'
   end
 
   def relation(designation_name = 'CITES')

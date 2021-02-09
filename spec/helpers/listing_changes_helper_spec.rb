@@ -10,7 +10,7 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe ListingChangesHelper do
+describe ListingChangesHelper, type: :helper do
   let(:poland) {
     GeoEntity.find_by_iso_code2('PL') || create(:geo_entity, :iso_code2 => 'PL', :name => 'Poland')
   }
@@ -42,7 +42,7 @@ describe ListingChangesHelper do
     )
   }
 
-  describe :geo_entities_tooltip do
+  describe 'geo_entities_tooltip' do
     let!(:listing_distribution) {
       create(
         :listing_distribution,
@@ -55,19 +55,19 @@ describe ListingChangesHelper do
       helper.geo_entities_tooltip(listing_change).should == 'Poland'
     end
   end
-  describe :annotation_tooltip do
+  describe 'annotation_tooltip' do
     it "outputs the regular annotation in both short and long English form" do
       helper.annotation_tooltip(listing_change).should ==
         "Only population of PL (Only population of Poland)"
     end
   end
-  describe :hash_annotation_tooltip do
+  describe 'hash_annotation_tooltip' do
     it "outputs the hash annotation in long English form" do
       helper.hash_annotation_tooltip(listing_change).should ==
         "Only seeds and roots."
     end
   end
-  describe :excluded_geo_entities_tooltip do
+  describe 'excluded_geo_entities_tooltip' do
     context "no exclusions" do
       it "should output blank exception" do
         helper.excluded_geo_entities_tooltip(listing_change).should be_blank
@@ -94,7 +94,7 @@ describe ListingChangesHelper do
       end
     end
   end
-  describe :excluded_taxon_concepts_tooltip do
+  describe 'excluded_taxon_concepts_tooltip' do
     let(:child_taxon_concept) {
       create_cites_eu_species(
         :parent_id => taxon_concept.id,

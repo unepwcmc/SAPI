@@ -42,7 +42,7 @@ class Api::V1::DocumentsController < ApplicationController
           @search.cached_results.sort_by{ |doc| [doc.taxon_names.first, doc.date_raw] }
         else
           @search.cached_results.sort_by do |doc|
-            doc_tc_ids = doc.taxon_concept_ids.gsub(/[{}]/, '').split(',').map(&:to_i)
+            doc_tc_ids = doc.taxon_concept_ids
             params[:taxon_concepts_ids].index{ |id| doc_tc_ids.include?(id) } || 1_000_000
           end
         end

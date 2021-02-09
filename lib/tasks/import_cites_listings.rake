@@ -260,11 +260,11 @@ namespace :import do
       puts 'Going to create CITES default species listings, if they do not exist'
       designation = Designation.find_by_name("CITES")
       ["I", "II", "III"].each do |appendix|
-        SpeciesListing.find_or_create_by_name_and_abbreviation_and_designation_id("Appendix #{appendix}", appendix, designation.id)
+        SpeciesListing.find_or_create_by(name: "Appendix #{appendix}", abbreviation: appendix, designation_id: designation.id)
       end
       puts 'Going to create change types defaults, if they dont already exist'
       ChangeType.dict.each do |c_type|
-        ChangeType.find_or_create_by_name_and_designation_id(c_type, designation.id)
+        ChangeType.find_or_create_by(name: c_type, designation_id: designation.id)
       end
       puts 'Created appendices and change type defaults'
     end

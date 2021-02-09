@@ -62,7 +62,7 @@ describe EuRegulation do
       EuRegulationActivationWorker.jobs.clear
       eu_regulation.activate!
     end
-    specify { eu_regulation.is_current.should be_true }
+    specify { eu_regulation.is_current.should be_truthy }
     specify { EuRegulationActivationWorker.jobs.size.should == 1 }
   end
 
@@ -72,19 +72,19 @@ describe EuRegulation do
       EuRegulationActivationWorker.jobs.clear
       eu_regulation.deactivate!
     end
-    specify { eu_regulation.is_current.should be_false }
+    specify { eu_regulation.is_current.should be_falsey }
     specify { EuRegulationActivationWorker.jobs.size.should == 1 }
   end
 
   describe :destroy do
     let(:eu_regulation) { create_eu_regulation }
     context "when no dependent objects attached" do
-      specify { eu_regulation.destroy.should be_true }
+      specify { eu_regulation.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       context "when listing changes" do
         let!(:listing_change) { create_eu_A_addition(:event => eu_regulation) }
-        specify { eu_regulation.destroy.should be_true }
+        specify { eu_regulation.destroy.should be_truthy }
       end
     end
   end

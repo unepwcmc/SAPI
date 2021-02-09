@@ -45,10 +45,7 @@ class NomenclatureChange::FullReassignment
     end
     # shipments
     Rails.logger.debug "FULL REASSIGNMENT Shipments"
-    Trade::Shipment.update_all(
-      update_attrs,
-      { taxon_concept_id: @old_taxon_concept.id }
-    )
+    Trade::Shipment.where(taxon_concept_id: @old_taxon_concept.id).update_all(update_attrs)
     @old_taxon_concept.update_attributes(dependents_updated_at: update_timestamp)
     @old_taxon_concept.reload
     @new_taxon_concept.update_attributes(dependents_updated_at: update_timestamp)

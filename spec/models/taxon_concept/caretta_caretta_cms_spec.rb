@@ -16,10 +16,10 @@ describe TaxonConcept do
 
       describe :cms_listed do
         context "for family Cheloniidae" do
-          specify { @family.cms_listed.should be_true }
+          specify { @family.cms_listed.should be_truthy }
         end
         context "for species Caretta caretta" do
-          specify { @species.cms_listed.should be_true }
+          specify { @species.cms_listed.should be_truthy }
         end
       end
     end

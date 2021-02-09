@@ -44,9 +44,9 @@ class ListingChange < ActiveRecord::Base
   belongs_to :species_listing
   belongs_to :taxon_concept
   belongs_to :change_type
-  has_many :listing_distributions, :conditions => { :is_party => false }, :dependent => :destroy
-  has_one :party_listing_distribution, :class_name => 'ListingDistribution',
-    :conditions => { :is_party => true }, :dependent => :destroy
+  has_many :listing_distributions, -> { where is_party: false }, :dependent => :destroy
+  has_one :party_listing_distribution, -> { where is_party: true }, :class_name => 'ListingDistribution',
+     :dependent => :destroy
   has_many :geo_entities, :through => :listing_distributions
   has_one :party_geo_entity, :class_name => 'GeoEntity',
     :through => :party_listing_distribution, :source => :geo_entity
@@ -72,7 +72,7 @@ class ListingChange < ActiveRecord::Base
     joins(:change_type).where(:"change_types.designation_id" => designation_id)
   }
 
-  scope :none, where("1 = 0")
+  scope :none, -> { where("1 = 0") }
 
   def effective_at_formatted
     effective_at ? effective_at.strftime('%d/%m/%Y') : ''
@@ -118,7 +118,7 @@ class ListingChange < ActiveRecord::Base
              OR UPPER(change_types.name) LIKE UPPER(:query)
             ", :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 

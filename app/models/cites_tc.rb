@@ -30,8 +30,19 @@ class CitesTc < Event
 
   validates :effective_at, :presence => true
 
+  before_destroy :check_for_documents
+
   def self.elibrary_document_types
     [Document::ReviewOfSignificantTrade]
+  end
+
+  private
+
+  def check_for_documents
+    if documents.present?
+      errors.add(:base, "failed. Please delete the associated documents before destroying this event.")
+      return false
+    end
   end
 
 end

@@ -45,7 +45,7 @@ describe TaxonConcept do
 
       describe :cites_listed do
         context "for species Loxodonta africana" do
-          specify { @species.cites_listed.should be_true }
+          specify { @species.cites_listed.should be_truthy }
         end
         context "for family Elephantidae" do
           specify { @family.cites_listed.should == false }
@@ -54,7 +54,7 @@ describe TaxonConcept do
 
       describe :eu_listed do
         context "for species Loxodonta africana" do
-          specify { @species.eu_listed.should be_true }
+          specify { @species.eu_listed.should be_truthy }
         end
         context "for family Elephantidae" do
           specify { @family.eu_listed.should == false }

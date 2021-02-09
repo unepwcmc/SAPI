@@ -19,10 +19,10 @@ describe TaxonConcept do
 
       describe :cites_listed do
         it "should be true for genus Arctocephalus" do
-          @genus.cites_listed.should be_true
+          @genus.cites_listed.should be_truthy
         end
         it "should be true for species Arctocephalus townsendi" do
-          @species2.cites_listed.should be_true
+          @species2.cites_listed.should be_truthy
         end
         it "should be false for species Arctocephalus australis (inclusion in higher taxa listing)" do
           @species1.cites_listed.should == false
@@ -31,10 +31,10 @@ describe TaxonConcept do
 
       describe :eu_listed do
         it "should be true for genus Arctocephalus" do
-          @genus.eu_listed.should be_true
+          @genus.eu_listed.should be_truthy
         end
         it "should be true for species Arctocephalus townsendi" do
-          @species2.eu_listed.should be_true
+          @species2.eu_listed.should be_truthy
         end
         it "should be false for species Arctocephalus australis (inclusion in higher taxa listing)" do
           @species1.eu_listed.should == false

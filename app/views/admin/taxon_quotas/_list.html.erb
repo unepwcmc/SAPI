@@ -35,7 +35,7 @@
         %>
         <%= link_to delete_icon,
           admin_taxon_concept_quota_path(@taxon_concept, quota),
-          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+          data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete
         %>
       </td>
       <td>

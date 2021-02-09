@@ -65,8 +65,8 @@ describe Trade::ShipmentsController, sidekiq: :inline do
           reporter_type: 'E'
         }
       }
-      @shipment1.reported_by_exporter.should be_true
-      @shipment2.reload.reported_by_exporter.should be_true
+      expect(@shipment1.reported_by_exporter).to be_truthy
+      expect(@shipment2.reload.reported_by_exporter).to be_truthy
     end
     it "should change reporter type from E to I" do
       post :update_batch, {
@@ -82,8 +82,8 @@ describe Trade::ShipmentsController, sidekiq: :inline do
         }
       }
 
-      @shipment1.reload.reported_by_exporter.should be_false
-      @shipment2.reported_by_exporter.should be_false
+      expect(@shipment1.reload.reported_by_exporter).to be_falsey
+      expect(@shipment2.reported_by_exporter).to be_falsey
     end
 
     it "should update year" do

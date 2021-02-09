@@ -29,16 +29,16 @@ describe EuRegulationActivationWorker do
       EuRegulationActivationWorker.new.perform(eu_regulation.id, true)
     end
 
-    specify { eu_regulation.listing_changes.reload.first.is_current.should be_true }
-    specify { prev_eu_regulation.listing_changes.reload.first.is_current.should be_true }
+    specify { eu_regulation.listing_changes.reload.first.is_current.should be_truthy }
+    specify { prev_eu_regulation.listing_changes.reload.first.is_current.should be_truthy }
 
     describe "Set old EU regulation to false" do
       before do
         EuRegulationActivationWorker.new.perform(prev_eu_regulation.id, false)
       end
 
-      specify { eu_regulation.listing_changes.reload.first.is_current.should be_true }
-      specify { prev_eu_regulation.listing_changes.reload.first.is_current.should be_false }
+      specify { eu_regulation.listing_changes.reload.first.is_current.should be_truthy }
+      specify { prev_eu_regulation.listing_changes.reload.first.is_current.should be_falsey }
     end
   end
 

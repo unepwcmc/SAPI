@@ -19,7 +19,7 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for species Cedrela montana" do
-          specify { @species.cites_show.should be_false }
+          specify { @species.cites_show.should be_falsey }
         end
       end
 
@@ -31,13 +31,13 @@ describe TaxonConcept do
 
       describe :eu_listed do
         context "for species Cedrela montana" do
-          specify { @species.eu_listed.should be_true }
+          specify { @species.eu_listed.should be_truthy }
         end
       end
 
       describe :eu_show do
         context "for species Cedrela montana" do
-          specify { @species.eu_show.should be_true }
+          specify { @species.eu_show.should be_truthy }
         end
       end
 

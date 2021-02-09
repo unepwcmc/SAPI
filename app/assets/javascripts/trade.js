@@ -18,8 +18,7 @@
 //= require jquery.iframe-transport
 //= require jquery.fileupload
 //= require handlebars
-//= require ./trade/ember-features
-//= require ember_1.6.0-beta.1+canary.280ae733
+//= require ember
 //= require ember-data
 //= require bootstrap-modal
 //= require bootstrap-collapse
@@ -34,6 +33,7 @@
 //= require ./trade/store
 //= require_tree ./trade/models
 //= require ./trade/query_params
+//= require_tree ./shared-mixins
 //= require_tree ./trade/mixins
 //= require_tree ./trade/controllers
 //= require_tree ./trade/helpers
@@ -43,7 +43,6 @@
 //= require_tree ./trade/routes
 
 var Trade = Ember.Application.create({
-  LOG_TRANSITIONS: true,
   customEvents: {
     blur: 'blur'
   }

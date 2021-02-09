@@ -164,7 +164,7 @@ class TradeRestriction < ActiveRecord::Base
     if set == "current"
       return where(:is_current => true)
     end
-    scoped
+    all
   end
 
   def self.filter_geo_entities(filters)
@@ -174,7 +174,7 @@ class TradeRestriction < ActiveRecord::Base
       ).map(&:id)
       return where(:geo_entity_id => geo_entities_ids)
     end
-    scoped
+    all
   end
 
   def self.filter_taxon_concepts(filters)
@@ -189,14 +189,14 @@ class TradeRestriction < ActiveRecord::Base
       SQL
       return where(conds_str, filters["taxon_concepts_ids"].map(&:to_i))
     end
-    scoped
+    all
   end
 
   def self.filter_years(filters)
     if filters.key?("years")
-      return where('EXTRACT(YEAR FROM trade_restrictions.start_date) IN (?)',
-                   filters["years"])
+      return where('EXTRACT(YEAR FROM trade_restrictions.start_date)::INTEGER IN (?)',
+                   filters["years"].map(&:to_i))
     end
-    scoped
+    all
   end
 end

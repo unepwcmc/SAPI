@@ -10,18 +10,18 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe AdminHelper do
-  describe :edit_icon do
+describe AdminHelper, type: :helper do
+  describe 'edit_icon' do
     it "ouputs pencil icon for edit" do
       helper.edit_icon.should == '<i class="icon-pencil" title="Edit"></i>'
     end
   end
-  describe :delete_icon do
+  describe 'delete_icon' do
     it "ouputs bin icon for delete" do
       helper.delete_icon.should == '<i class="icon-trash" title="Delete"></i>'
     end
   end
-  describe :true_false_icon do
+  describe 'true_false_icon' do
     it "outputs tick icon for true" do
       helper.true_false_icon(true).should == '<i class="icon-ok"></i>'
     end

@@ -26,7 +26,7 @@ namespace :elibrary do
       [
         "I", "II", "III", "IV", "June 1986", "None",
         "Post-CoP11", "Post-CoP12", "Post-CoP13"
-      ].each { |tag| DocumentTag::ReviewPhase.find_or_create_by_name(name: tag) }
+      ].each { |tag| DocumentTag::ReviewPhase.find_or_create_by(name: tag) }
 
       [
         "AC review and categorization (k)", "AC review and categorization [k]",
@@ -34,14 +34,14 @@ namespace :elibrary do
         "PC review and categorization [k]", "PC review and categorization (m)", "PC review (e)",
         "Research of species [j]", "Selection of species (b)", "Selection of species [b]",
         "Species selection (b)", "Species selection [b]"
-      ].each { |tag| DocumentTag::ProcessStage.find_or_create_by_name(name: tag) }
+      ].each { |tag| DocumentTag::ProcessStage.find_or_create_by(name: tag) }
 
       [
         "Accepted", "Cancelled", "Deferred",
         "Redundant", "Rejected", "Transferred to other proposals",
         "Withdrawn", "Accepted as amended", "Rejected as amended",
         "Adopted"
-      ].each { |tag| DocumentTag::ProposalOutcome.find_or_create_by_name(name: tag) }
+      ].each { |tag| DocumentTag::ProposalOutcome.find_or_create_by(name: tag) }
 
       puts "#{DocumentTag.count} document tags"
     end

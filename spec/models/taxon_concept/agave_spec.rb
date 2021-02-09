@@ -16,7 +16,7 @@ describe TaxonConcept do
 
       describe :cites_listed do
         context "for species Agave parviflora" do
-          specify { @species2.cites_listed.should be_true }
+          specify { @species2.cites_listed.should be_truthy }
         end
         context "for species Agave arizonica" do
           specify { @species1.cites_listed.should be_nil }
@@ -25,10 +25,10 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for species Agave parviflora" do
-          specify { @species2.cites_show.should be_true }
+          specify { @species2.cites_show.should be_truthy }
         end
         context "for species Agave arizonica" do
-          specify { @species1.cites_show.should be_false }
+          specify { @species1.cites_show.should be_falsey }
         end
       end
 
@@ -43,7 +43,7 @@ describe TaxonConcept do
 
       describe :eu_listed do
         context "for species Agave parviflora" do
-          specify { @species2.eu_listed.should be_true }
+          specify { @species2.eu_listed.should be_truthy }
         end
         context "for species Agave arizonica" do
           specify { @species1.eu_listed.should be_nil }
@@ -52,10 +52,10 @@ describe TaxonConcept do
 
       describe :eu_show do
         context "for species Agave parviflora" do
-          specify { @species2.eu_show.should be_true }
+          specify { @species2.eu_show.should be_truthy }
         end
         context "for species Agave arizonica" do
-          specify { @species1.eu_show.should be_false }
+          specify { @species1.eu_show.should be_falsey }
         end
       end
 

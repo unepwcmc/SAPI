@@ -1,4 +1,4 @@
-Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPagination, Trade.Flash, Trade.AuthoriseUser,
+Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPagination, Trade.Flash, Trade.AuthoriseUser, Trade.CustomTransition,
   needs: ['annualReportUpload', 'geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   updatesVisible: false
@@ -40,10 +40,12 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
     @endPropertyChanges()
 
   transitionToParentController: ->
-    @get('controllers.annualReportUpload.content').reload()
-    @transitionToRoute(
+    model = @get('controllers.annualReportUpload.content')
+    model.reload()
+    @customTransitionToRoute(
       'annual_report_upload',
-      @get('controllers.annualReportUpload.id')
+      model,
+      false
     )
     @set('controllers.annualReportUpload.currentError', null)
     @set('controllers.annualReportUpload.allErrorsCollapsed', null)
@@ -59,6 +61,8 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
 
   actions:
     closeError: ->
+      @get('store').get('defaultTransaction').rollback()
+      @clearModifiedFlags()
       @transitionToParentController()
 
     toggleUpdatesVisible: ->
@@ -128,14 +132,14 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
           shipment.get('_destroyed') == true
           ).forEach (shipment) ->
           shipment.deleteRecord()
-        @get('store').commit()
+        @get('store').commit() #FIXME: IE doesn't call buildURL in rest adapter
         @clearModifiedFlags()
         @transitionToParentController()
         location.reload()
       )
 
     cancelChanges: () ->
-      @get('store').get('currentTransaction').rollback()
+      @get('store').get('defaultTransaction').rollback()
       @clearModifiedFlags()
 
     #### Single shipment related ####
@@ -154,5 +158,6 @@ Trade.SandboxShipmentsController = Ember.ArrayController.extend Trade.ShipmentPa
 
     cancelShipmentEdit: (shipment) ->
       shipment.setProperties(shipment.get('data'))
+      shipment.set('_modified', false)
       @set('currentShipment', null)
       $('.shipment-form-modal').modal('hide')

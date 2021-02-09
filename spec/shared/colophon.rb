@@ -1,12 +1,12 @@
 shared_context 'Colophon' do
-  let(:south_africa) {
-    create(
+  def south_africa
+    @south_africa ||= create(
       :geo_entity,
       :geo_entity_type => country_geo_entity_type,
       :name => 'South Africa',
       :iso_code2 => 'ZA'
     )
-  }
+  end
 
   before(:all) do
     @order = create_cites_eu_order(
@@ -53,6 +53,9 @@ shared_context 'Colophon' do
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
+      #Skip old sapi context let statements,
+      #which are now instance variables starting with _
+      next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

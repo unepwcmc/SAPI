@@ -11,7 +11,7 @@ describe Species::OrphanedTaxonConceptsExport do
       subject {
         Species::OrphanedTaxonConceptsExport.new({})
       }
-      specify { subject.export.should be_false }
+      specify { subject.export.should be_falsey }
     end
     context "when results" do
       before(:each) {
@@ -32,7 +32,7 @@ describe Species::OrphanedTaxonConceptsExport do
       context "when file not cached" do
         specify {
           subject.export
-          File.file?(subject.file_name).should be_true
+          File.file?(subject.file_name).should be_truthy
         }
       end
       context "when file cached" do
