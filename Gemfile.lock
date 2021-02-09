@@ -484,7 +484,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.2)
     unicode-display_width (1.0.5)
-    user_agent_parser (2.1.5)
+    user_agent_parser (2.7.0)
     uuidtools (2.1.4)
     warden (1.2.7)
       rack (>= 1.0)
