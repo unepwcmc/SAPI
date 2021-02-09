@@ -67,7 +67,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: nil, end_event: nil)
       }
 
-      specify { eu_suspension.is_current.should be_false }
+      specify { eu_suspension.is_current.should be_falsey }
     end
 
     context "when start_event is set but date is in the future" do
@@ -78,7 +78,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event, end_event: nil)
       }
 
-      specify { eu_suspension.is_current.should be_false }
+      specify { eu_suspension.is_current.should be_falsey }
     end
 
     context "when start_event is set but is not current" do
@@ -89,7 +89,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event, end_event: nil)
       }
 
-      specify { eu_suspension.is_current.should be_false }
+      specify { eu_suspension.is_current.should be_falsey }
     end
 
     context "when start_event is set but date is in past or present" do
@@ -107,8 +107,8 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event2, end_event: nil)
       }
 
-      specify { eu_suspension.is_current.should be_true }
-      specify { eu_suspension2.is_current.should be_true }
+      specify { eu_suspension.is_current.should be_truthy }
+      specify { eu_suspension2.is_current.should be_truthy }
     end
 
     context "when end_event is set, but no start_event is set" do
@@ -119,7 +119,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: nil, end_event: end_event)
       }
 
-      specify { eu_suspension.is_current.should be_false }
+      specify { eu_suspension.is_current.should be_falsey }
     end
 
     context "when end_event is set, and start_event is set with date in future" do
@@ -133,7 +133,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event, end_event: end_event)
       }
 
-      specify { eu_suspension.is_current.should be_false }
+      specify { eu_suspension.is_current.should be_falsey }
     end
 
     context "when  start_event is set, and end_event is set with date in the future" do
@@ -147,7 +147,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event, end_event: end_event)
       }
 
-      specify { eu_suspension.is_current.should be_true }
+      specify { eu_suspension.is_current.should be_truthy }
     end
 
     context "when  start_event is set, and end_event is set with date in the past" do
@@ -161,7 +161,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event, end_event: end_event)
       }
 
-      specify { eu_suspension.is_current.should be_false }
+      specify { eu_suspension.is_current.should be_falsey }
     end
   end
 

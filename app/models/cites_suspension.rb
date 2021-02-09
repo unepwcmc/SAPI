@@ -98,7 +98,7 @@ class CitesSuspension < TradeRestriction
         SQL
       )
     else
-      scoped
+      all
     end
   end
 end

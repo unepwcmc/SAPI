@@ -32,7 +32,6 @@
 #
 
 class Trade::Shipment < ActiveRecord::Base
-  include PgArrayParser
   track_who_does_it
   attr_accessible :annual_report_upload_id, :appendix,
     :country_of_origin_id, :origin_permit_id,
@@ -113,7 +112,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def import_permits_ids
-    parse_pg_array(read_attribute(:import_permits_ids) || '')
+    read_attribute(:import_permits_ids) || []
   end
 
   def import_permits_ids=(ary)
@@ -121,7 +120,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def export_permits_ids
-    parse_pg_array(read_attribute(:export_permits_ids) || '')
+    read_attribute(:export_permits_ids) || []
   end
 
   def export_permits_ids=(ary)
@@ -129,7 +128,7 @@ class Trade::Shipment < ActiveRecord::Base
   end
 
   def origin_permits_ids
-    parse_pg_array(read_attribute(:origin_permits_ids) || '')
+    read_attribute(:origin_permits_ids) || []
   end
 
   def origin_permits_ids=(ary)
@@ -139,7 +138,7 @@ class Trade::Shipment < ActiveRecord::Base
   def permits_ids
     (
       import_permits_ids + export_permits_ids + origin_permits_ids
-    ).uniq.compact
+    ).uniq.compact || []
   end
 
   private
@@ -149,7 +148,7 @@ class Trade::Shipment < ActiveRecord::Base
   # (import_permit_number=, export_permit_number=, origin_permit_number=)
   def set_permit_number(permit_type, str)
     permits = str && str.split(';').compact.map do |number|
-      Trade::Permit.find_or_create_by_number(number.strip.upcase)
+      Trade::Permit.find_or_create_by(number: number.strip.upcase)
     end
     # save the concatenated permit numbers in the precomputed field
     write_attribute("#{permit_type}_permit_number", permits && permits.map(&:number).join(';'))

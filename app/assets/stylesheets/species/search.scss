@@ -104,7 +104,7 @@
         height: 20px;
         padding: 10px 0;
       }
-      .popup-area: {
+      .popup-area {
         margin: 10px 0;
       }
     }
@@ -220,7 +220,7 @@
         width: 15px;
         height: 14px;
         z-index: 1;
-        background: url(/assets/species/arrow02.png) no-repeat;
+        background: image-url('species/arrow02.png') no-repeat;
       }
 
       .popup > ul {
@@ -299,7 +299,7 @@
       z-index: 1;
       right: 12px;
       top: 14px;
-      background: url(/assets/species/arrow01.png) no-repeat;
+      background: image-url('species/arrow01.png') no-repeat;
     }
     span.delete{
       color: #FB585E !important;
@@ -393,7 +393,7 @@
   z-index: 1;
   right: 10px;
   top: 14px;
-  background: url(../images/arrow01.png) no-repeat;
+  background: image-url('species/arrow01.png') no-repeat;
 }
 
 .inner .location-area { padding: 13px 15px 0; }

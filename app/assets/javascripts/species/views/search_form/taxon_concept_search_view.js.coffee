@@ -16,6 +16,11 @@ Species.TaxonConceptSearchView = Em.View.extend
   showDropdown: () ->
     $('.search fieldset').addClass('parent-focus parent-active')
 
+  didInsertElement: () ->
+    window.addEventListener('click', () =>
+      @hideDropdown() unless @get('mousedOver')
+    )
+
   actions:
     handleTaxonConceptSearchSelection: (autoCompleteTaxonConcept) ->
       @hideDropdown()

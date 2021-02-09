@@ -7,7 +7,7 @@ describe TaxonConcept do
     context "REFERENCES" do
       describe :cites_accepted do
         context "for species Varanus bengalensis" do
-          specify { @species1.cites_accepted.should be_true }
+          specify { @species1.cites_accepted.should be_truthy }
         end
       end
       describe :standard_taxon_concept_references do
@@ -50,10 +50,10 @@ describe TaxonConcept do
           specify { @family.cites_listed.should == false }
         end
         context "for genus Varanus" do
-          specify { @genus.cites_listed.should be_true }
+          specify { @genus.cites_listed.should be_truthy }
         end
         context "for species Varanus bengalensis" do
-          specify { @species1.cites_listed.should be_true }
+          specify { @species1.cites_listed.should be_truthy }
         end
       end
 
@@ -62,10 +62,10 @@ describe TaxonConcept do
           specify { @family.eu_listed.should == false }
         end
         context "for genus Varanus" do
-          specify { @genus.eu_listed.should be_true }
+          specify { @genus.eu_listed.should be_truthy }
         end
         context "for species Varanus bengalensis" do
-          specify { @species1.eu_listed.should be_true }
+          specify { @species1.eu_listed.should be_truthy }
         end
       end
 

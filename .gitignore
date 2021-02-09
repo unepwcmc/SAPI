@@ -57,6 +57,7 @@
 
 # Ruby
 /vendor/ruby
+/vendor/cache
 
 # VIM
 *.swp

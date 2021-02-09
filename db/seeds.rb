@@ -315,7 +315,7 @@ kingdom_rank_id = Rank.find_by_name(Rank::KINGDOM).id
 higher_taxa.each do |kingdom_props|
   kingdom_name = kingdom_props[:name]
   [cms_taxonomy, taxonomy].each do |taksonomy|
-    name = TaxonName.find_or_create_by_scientific_name(kingdom_name)
+    name = TaxonName.find_or_create_by(scientific_name: kingdom_name)
     next if taksonomy.name == Taxonomy::CMS && kingdom_name == 'Plantae'
     kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
                                   :taxon_name_id => name.id,
@@ -327,7 +327,7 @@ higher_taxa.each do |kingdom_props|
     phylum_rank_id = Rank.find_by_name(Rank::PHYLUM).id
     phyla.each do |phylum_props|
       phylum_name = phylum_props[:name]
-      name = TaxonName.find_or_create_by_scientific_name(phylum_name)
+      name = TaxonName.find_or_create_by(scientific_name: phylum_name)
       phylum = TaxonConcept.create(:rank_id => phylum_rank_id,
          :taxon_name_id => name.id,
          :taxonomy_id => taksonomy.id,
@@ -339,7 +339,7 @@ higher_taxa.each do |kingdom_props|
       klass_rank_id = Rank.find_by_name(Rank::CLASS).id
       klasses.each do |klass_props|
         klass_name = klass_props[:name]
-        name = TaxonName.find_or_create_by_scientific_name(klass_name)
+        name = TaxonName.find_or_create_by(scientific_name: klass_name)
         klass = TaxonConcept.create(:rank_id => klass_rank_id,
           :taxon_name_id => name.id,
           :taxonomy_id => taksonomy.id,

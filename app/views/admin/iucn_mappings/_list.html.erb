@@ -13,7 +13,7 @@
 <tbody>
   <% collection.each do |map| -%>
     <% tc = map.taxon_concept %>
-    <tr class="<%= map.details["match"].try(:downcase) %>">
+    <tr class="<%= map.details["match"].try(:downcase) if map.details.present? %>">
       <td><%= tc && tc.id %></td>
       <td><%= tc && tc.data["class_name"] %></td>
       <td><%= tc && link_to("#{tc.full_name} (#{tc.name_status})",
@@ -24,14 +24,14 @@
       <td><%= map.iucn_author %></td>
       <td><%= map.iucn_category %></td>
       <td>
-        <%= map.details["match"] %>
+        <%= map.details["match"] if map.details.present? %>
         <% accepted = map.accepted_name %>
         <% if accepted %>
           (<%= link_to accepted.full_name,
             admin_taxon_concept_names_path(accepted) %>)
         <% end %>
       </td>
-      <td><%= map.details["no_matches"] %></td>
+      <td><%= map.details["no_matches"] if map.details.present? %></td>
     </tr>
   <% end -%>
 </tbody>

@@ -31,7 +31,7 @@ describe TaxonConcept do
 
       describe :cites_listed do
         context "for family Cactaceae" do
-          specify { @family.cites_listed.should be_true }
+          specify { @family.cites_listed.should be_truthy }
         end
         context "for genus Pereskia" do
           specify { @genus1.cites_listed.should be_nil }
@@ -40,7 +40,7 @@ describe TaxonConcept do
 
       describe :eu_listed do
         context "for family Cactaceae" do
-          specify { @family.eu_listed.should be_true }
+          specify { @family.eu_listed.should be_truthy }
         end
         context "for genus Pereskia" do
           specify { @genus1.eu_listed.should be_nil }

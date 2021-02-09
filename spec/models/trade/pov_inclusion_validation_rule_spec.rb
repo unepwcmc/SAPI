@@ -158,7 +158,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create_taxon_concept_exporter_validation
       }
       specify {
-        expect { subject.validation_errors_for_aru(@aru) }.to_not raise_error(ActiveRecord::StatementInvalid)
+        expect { subject.validation_errors_for_aru(@aru) }.to_not raise_error
       }
     end
   end

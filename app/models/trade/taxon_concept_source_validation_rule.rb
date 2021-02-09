@@ -47,10 +47,7 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
     )
 
     arel = s.project(
-      s['id'],
-      s['taxon_concept_id'],
-      s['source_code'],
-      s['accepted_taxon_name']
+      s['*']
     ).join(tc).on(
       s['taxon_concept_id'].eq(tc['id'])
     ).join(t).on(

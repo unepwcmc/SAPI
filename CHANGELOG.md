@@ -1,3 +1,10 @@
+### 1.6.0
+
+**Rails and Ruby upgrade**
+
+* Upgrade Ruby version to 2.3.1
+* Upgrade Rails version to 4.0.6 (please check official documentation for details https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#upgrading-from-rails-3-2-to-rails-4-0)
+
 ### 1.5.1
 
 **Bug fixes and eu opinions bulk upload**

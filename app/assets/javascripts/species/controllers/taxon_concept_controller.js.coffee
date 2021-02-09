@@ -232,3 +232,7 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchCon
   nomenclatureChangesHappened: ( ->
     @get('nomenclatureNotification')
   ).property('nomenclatureNotification')
+
+  actions:
+    openSearchPage: (taxonFullName) ->
+      @get("controllers.search").openSearchPage taxonFullName

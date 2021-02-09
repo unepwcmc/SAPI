@@ -8,7 +8,7 @@
   <% if can? :destroy, rel %>
     <%= link_to delete_icon,
       admin_taxon_concept_synonym_relationship_url(@taxon_concept, rel),
-      :confirm => "Warning: you are about to delete data. Are you sure?",
+      data: { confirm: "Warning: you are about to delete data. Are you sure?" },
       :method => :delete %>
   <% end %>
   <br>

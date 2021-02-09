@@ -46,7 +46,7 @@
           <%= link_to edit_icon, edit_resource_url(user), :remote => true %>
         <% end %>
         <% if can?(:destroy, user) %>
-          <%= link_to delete_icon, resource_url(user), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+          <%= link_to delete_icon, resource_url(user), data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete %>
         <% end %>
       </td>
     </tr>

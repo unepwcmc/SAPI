@@ -25,10 +25,10 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for species Diospyros aculeata" do
-          specify { @species1.cites_show.should be_true }
+          specify { @species1.cites_show.should be_truthy }
         end
         context "for species Diospyros acuta" do
-          specify { @species2.cites_show.should be_false }
+          specify { @species2.cites_show.should be_falsey }
         end
       end
 
@@ -52,10 +52,10 @@ describe TaxonConcept do
 
       describe :eu_show do
         context "for species Diospyros aculeata" do
-          specify { @species1.eu_show.should be_true }
+          specify { @species1.eu_show.should be_truthy }
         end
         context "for species Diospyros acuta" do
-          specify { @species2.eu_show.should be_false }
+          specify { @species2.eu_show.should be_falsey }
         end
       end
 

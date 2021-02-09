@@ -16,9 +16,14 @@ class TermSweeper < ActionController::Caching::Sweeper
   private
 
   def expire_cache(tc)
+    @controller ||= ActionController::Base.new
     ["en", "fr", "es"].each do |lang|
-      expire_action(:controller => "api/v1/terms", :action => "index",
-                    :locale => lang)
+      expire_action(
+        controller: 'api/v1/terms',
+        format: 'json',
+        action: 'index',
+        locale: lang
+      )
     end
   end
 end

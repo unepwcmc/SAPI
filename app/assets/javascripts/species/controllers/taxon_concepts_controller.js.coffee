@@ -1,4 +1,6 @@
-Species.TaxonConceptsController = Ember.ArrayController.extend Species.TaxonConceptPagination, Species.SearchContext,
+Species.TaxonConceptsController = Ember.ArrayController.extend Species.TaxonConceptPagination,
+  Species.SearchContext,
+  Species.CustomTransition,
   needs: ['search', 'taxonConceptLink']
   searchContext: 'species'
 
@@ -17,11 +19,15 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.TaxonConc
     else
       @get('controllers.search').set('redirected', false)
     m = Species.TaxonConcept.find(taxonConceptId)
-    @transitionToRoute('taxonConcept.legal', m, queryParams: false)
+    
+    @customTransitionToRoute('taxonConcept.legal', m, queryParams: false)
 
   actions:
     openTaxonPage: (taxonConceptId, redirected) ->
       @openTaxonPage(taxonConceptId, redirected)
+    
+    openSearchPage: (taxonFullName) ->
+      @get("controllers.search").openSearchPage taxonFullName
 
     nextPage: ->
       @get("controllers.search").openSearchPage undefined, @get('page') + 1, @get('perPage')

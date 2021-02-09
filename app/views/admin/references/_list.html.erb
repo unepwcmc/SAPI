@@ -14,7 +14,7 @@
         </a>
       </td>
       <td>
-        <%= link_to delete_icon, resource_url(reference), :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+        <%= link_to delete_icon, resource_url(reference), data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete %>
       </td>
     </tr>
   <% end -%>

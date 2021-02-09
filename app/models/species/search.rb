@@ -14,7 +14,7 @@ class Species::Search
 
   def results
     @query.limit(@per_page).
-      offset(@per_page * (@page - 1)).all
+      offset(@per_page * (@page - 1)).to_a
   end
 
   def total_cnt

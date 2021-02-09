@@ -7,10 +7,10 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
     :start_notification
 
   def geo_entity
-    object['geo_entity_en'] && JSON.parse(object['geo_entity_en'])
+    object['geo_entity_en']
   end
 
   def start_notification
-    object['start_notification'] && JSON.parse(object['start_notification'])
+    object['start_notification']
   end
 end

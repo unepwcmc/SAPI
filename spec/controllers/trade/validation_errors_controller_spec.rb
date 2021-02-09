@@ -37,7 +37,7 @@ describe Trade::ValidationErrorsController do
         validation_error: {
           is_ignored: true
         }
-      expect(validation_error.reload.is_ignored).to be_true
+      expect(validation_error.reload.is_ignored).to be_truthy
     end
   end
 

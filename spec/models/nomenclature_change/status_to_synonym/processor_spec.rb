@@ -40,7 +40,7 @@ describe NomenclatureChange::StatusToSynonym::Processor do
       }
       specify { expect(primary_output_taxon_concept).to be_is_synonym }
       specify { expect(primary_output_taxon_concept.accepted_names).to include(secondary_output_taxon_concept) }
-      specify { expect(primary_output_taxon_concept.accepted_names_for_trade_name).to be_empty }
+      specify { expect(primary_output_taxon_concept.reload.accepted_names_for_trade_name).to be_empty }
       specify { expect(primary_output_taxon_concept.shipments).to be_empty }
       specify { expect(primary_output_taxon_concept.reported_shipments).to include(@shipment) }
       specify { expect(secondary_output_taxon_concept.shipments).to include(@shipment) }

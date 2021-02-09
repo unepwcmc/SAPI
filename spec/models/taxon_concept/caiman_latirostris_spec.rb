@@ -20,7 +20,7 @@ describe TaxonConcept do
     context "REFERENCES" do
       describe :cites_accepted do
         context 'for species Caiman latirostris' do
-          specify { @species.cites_accepted.should be_true }
+          specify { @species.cites_accepted.should be_truthy }
         end
         context "for synonym species Alligator cynocephalus" do
           specify { @species1.cites_accepted.should == false }
@@ -47,7 +47,7 @@ describe TaxonConcept do
 
       describe :cites_listed do
         context 'for order Crocodylia' do
-          specify { @order.cites_listed.should be_true }
+          specify { @order.cites_listed.should be_truthy }
         end
         context "for family Alligatoridae" do
           specify { @family.cites_listed.should == false }
@@ -56,13 +56,13 @@ describe TaxonConcept do
           specify { @genus.cites_listed.should == false }
         end
         context "for species Caiman latoristris" do
-          specify { @species.cites_listed.should be_true }
+          specify { @species.cites_listed.should be_truthy }
         end
       end
 
       describe :eu_listed do
         context 'for order Crocodylia' do
-          specify { @order.eu_listed.should be_true }
+          specify { @order.eu_listed.should be_truthy }
         end
         context "for family Alligatoridae" do
           specify { @family.eu_listed.should == false }
@@ -71,25 +71,25 @@ describe TaxonConcept do
           specify { @genus.eu_listed.should == false }
         end
         context "for species Caiman latoristris" do
-          specify { @species.eu_listed.should be_true }
+          specify { @species.eu_listed.should be_truthy }
         end
       end
 
       describe :cites_show do
         context "for order Crocodylia" do
-          specify { @order.cites_show.should be_true }
+          specify { @order.cites_show.should be_truthy }
         end
         context "for family Alligatoridae" do
-          specify { @family.cites_show.should be_true }
+          specify { @family.cites_show.should be_truthy }
         end
         context "for genus Caiman" do
-          specify { @genus.cites_show.should be_true }
+          specify { @genus.cites_show.should be_truthy }
         end
         context "for species Caiman latoristris" do
-          specify { @species.cites_show.should be_true }
+          specify { @species.cites_show.should be_truthy }
         end
         context "for synonym species Alligator cynocephalus" do
-          specify { @species1.cites_show.should be_false }
+          specify { @species1.cites_show.should be_falsey }
         end
       end
 

@@ -134,7 +134,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     WITH child_taxa AS (
       SELECT taxon_concept_id AS id
       FROM all_taxon_concepts_and_ancestors_mview
-      WHERE ancestor_taxon_concept_id = #{tc_id}
+      WHERE ancestor_taxon_concept_id IN (#{tc_id}) -- Multiple taxa can be selected
     )
     SQL
   end
@@ -228,11 +228,13 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     # Exclude blanks in taxonomic level (empty strings at the selected taxonomic level)
     taxonomic_level_not_null = "#{taxonomic_level_name} IS NOT NULL"
 
-    check_for_plants = <<-SQL
+    fill_missing_taxonomy = <<-SQL
       CASE
-        WHEN COALESCE(#{taxonomic_level_name}, '') = '' THEN 'Plants'
-        ELSE #{taxonomic_level_name}
-      END AS name,
+        -- There are still taxa with empty kingdom, so adding this condition
+        -- until this is resolved at the database level.
+        WHEN COALESCE(#{taxonomic_level_name}, kingdom_name, '') = '' THEN 'Unknown'
+        ELSE COALESCE(#{taxonomic_level_name}, kingdom_name)
+      END AS name
     SQL
 
     <<-SQL
@@ -241,7 +243,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         #{child_taxa_query}
         SELECT
           NULL AS id,
-          #{['phylum', 'class'].include?(taxonomic_level) ? check_for_plants : "#{taxonomic_level_name} AS name," }
+          #{fill_missing_taxonomy},
           ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
           #{ancestors_list(taxonomic_level)},
           COUNT(*) OVER () AS total_count
@@ -249,7 +251,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         WHERE #{@condition} AND
         #{quantity_field} IS NOT NULL
         #{group_name_condition}
-        AND #{taxonomic_level_not_null}
+        --AND #{taxonomic_level_not_null}
         AND #{country_condition}
         AND #{child_taxa_condition}
         GROUP BY #{ancestors_list(taxonomic_level)}

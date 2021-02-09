@@ -222,7 +222,6 @@ class CsvToDbMap
     },
     'distribution_tags_import' => {
       'Species RecID' => 'legacy_id integer',
-      'taxon_concept_id' => 'taxon_concept_id integer',
       'Rank' => 'rank varchar',
       'GEO_entity_type' => 'geo_entity_type varchar',
       'ISO Code 2' => 'iso_code2 varchar',

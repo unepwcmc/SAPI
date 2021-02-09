@@ -1,6 +1,7 @@
 class CustomFailure < Devise::FailureApp
   def redirect_url
-    if request.original_url == request.base_url + "/admin"
+    # Ensure both /admin and /admin/ redirect to sign in page
+    if request.original_url.match(admin_root_path)
       new_user_session_path
     else
       root_path

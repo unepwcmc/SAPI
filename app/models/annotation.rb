@@ -35,10 +35,10 @@ class Annotation < ActiveRecord::Base
   belongs_to :event
   translates :short_note, :full_note
 
-  scope :for_cites, joins(:event).where("events.type = 'CitesCop'").
-    order([:parent_symbol, :symbol])
-  scope :for_eu, joins(:event).where("events.type = 'EuRegulation'").
-    order([:parent_symbol, :symbol])
+  scope :for_cites, -> { joins(:event).where("events.type = 'CitesCop'").
+    order([:parent_symbol, :symbol]) }
+  scope :for_eu, -> { joins(:event).where("events.type = 'EuRegulation'").
+    order([:parent_symbol, :symbol]) }
 
   def self.search(query)
     if query.present?
@@ -53,7 +53,7 @@ class Annotation < ActiveRecord::Base
             OR UPPER(description) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 

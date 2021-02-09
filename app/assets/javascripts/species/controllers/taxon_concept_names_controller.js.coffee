@@ -1,4 +1,4 @@
-Species.TaxonConceptNamesController = Ember.ArrayController.extend
+Species.TaxonConceptNamesController = Ember.Controller.extend
   needs: 'taxonConcept'
 
   commonNamesExpanded: false

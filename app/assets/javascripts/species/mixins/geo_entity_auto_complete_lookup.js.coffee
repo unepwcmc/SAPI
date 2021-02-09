@@ -7,15 +7,12 @@ Species.GeoEntityAutoCompleteLookup = Ember.Mixin.create
 
   geoEntityQueryObserver: ( ->
     re = new RegExp("(^|\\(| )"+@get('geoEntityQuery'),"i")
-
-    @set 'autoCompleteCountries', @get('geoEntities.countries')
-    .filter (item, index, enumerable) =>
+    @set 'autoCompleteCountries', @get('geoEntities.countries').filter (item, index, enumerable) =>
       re.test item.get('name')
 
     re = new RegExp("^[0-9]- "+@get('geoEntityQuery'),"i")
 
-    @set 'autoCompleteRegions', @get('geoEntities.regions')
-    .filter (item, index, enumerable) =>
+    @set 'autoCompleteRegions', @get('geoEntities.regions').filter (item, index, enumerable) =>
       re.test item.get('name')
   ).observes('geoEntityQuery')
 
@@ -24,9 +21,8 @@ Species.GeoEntityAutoCompleteLookup = Ember.Mixin.create
   ).observes('geoEntities.@each.didLoad')
 
   initForm: ->
-    @set('selectedGeoEntities', @get('geoEntities.content').filter((geoEntity) =>
-      return geoEntity.get('id') in @get('selectedGeoEntitiesIds')
-    ))
+    @set 'selectedGeoEntities', @get('geoEntities.content').filter (geoEntity) =>
+      return @get('selectedGeoEntitiesIds').indexOf(geoEntity.get('id')) >= 0
     @set('autoCompleteRegions', @get('geoEntities.regions'))
     @set('autoCompleteCountries', @get('geoEntities.countries'))
 

@@ -19,7 +19,6 @@ class TaxonConceptReference < ActiveRecord::Base
   attr_accessible :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
     :excluded_taxon_concepts_ids, :reference_attributes,
     :created_by_id, :updated_by_id
-  include PgArrayParser
 
   belongs_to :reference
   belongs_to :taxon_concept
@@ -31,16 +30,17 @@ class TaxonConceptReference < ActiveRecord::Base
   validates :reference_id, :uniqueness => { :scope => [:taxon_concept_id] }
 
   def excluded_taxon_concepts
-    TaxonConcept.where(:id => self.excluded_taxon_concepts_ids.try(:split, ",")).
-      order(:full_name)
+    ids = excluded_taxon_concepts_ids.try(:split, ",")
+    ids.flatten.present? ? TaxonConcept.where(id: ids).order(:full_name) : []
   end
 
   def excluded_taxon_concepts_ids
-    parse_pg_array(read_attribute(:excluded_taxon_concepts_ids) || "").compact
+    (read_attribute(:excluded_taxon_concepts_ids) || []).compact
   end
 
   def excluded_taxon_concepts_ids=(ary)
-    write_attribute(:excluded_taxon_concepts_ids, '{' + ary + '}')
+    # Make sure ary won't be between double curly braces
+    write_attribute(:excluded_taxon_concepts_ids, "{#{ary.delete('{}')}}")
   end
 
 end

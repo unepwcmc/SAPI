@@ -4,53 +4,16 @@ module Trade::TradePlusFilters
   ATTRIBUTES = %w[importer exporter origin term
                   source purpose unit year appendix].freeze
 
-  TAXONOMY_ORDERING =  ['Mammals', 'Birds', 'Reptiles', 'Amphibians', 'Fish', 'Coral', 'Non-coral invertebrates', 'Plants', 'Timber']
-  UNIT_ORDERING = ['m3', 'kg', 'l', 'm', 'Number of items', 'm2']
+  TAXONOMY_ORDERING =  ['Mammals', 'Birds', 'Reptiles', 'Amphibians', 'Fish', 'Coral', 'Non-coral invertebrates', 'Plants', 'Timber'].freeze
+  UNIT_ORDERING = ['m3', 'kg', 'l', 'm', 'Number of items', 'm2'].freeze
 
   def response_ordering(response)
     result = {}
     grouped = response.group_by { |r| r['attribute_name'] }
     grouped.each do |k, v|
-      _v = []
-      case k
-      when 'sources', 'purposes'
-        v.map do |value|
-          value = JSON.parse(value['data'])
-          value['id'], value['name'], value['code'] = 'unreported', 'Unreported', 'UNR' if value['id'].nil?
-          _v << value
-        end
-        _v
-      when 'units'
-        v.map do |value|
-          value = JSON.parse(value['data'])
-          value['id'], value['name'] = 'items', 'Number of items' if value['id'].nil?
-          _v << value
-        end
-        _v
-      when 'origins'
-        v.map do |value|
-          value = JSON.parse(value['data'])
-          value['id'], value['iso2'], value['name'] = 'direct', 'direct', 'Direct' if value['id'].nil?
-          _v << value
-        end
-        _v
-      when 'terms'
-        v.map do |value|
-          value = JSON.parse(value['data'])
-          value['id'], value['name'], value['code'] = value['id'], value['name'].capitalize, value['code']
-          _v << value
-        end
-        _v
-      else
-        _v = v.map { |value| JSON.parse(value['data']) }
-      end
-      result[k] = if k == 'taxonomic_groups'
-                    _v.sort_by { |i| TAXONOMY_ORDERING.index(i['name']) }
-                  elsif k == 'units'
-                    _v.sort_by { |i| UNIT_ORDERING.index(i['name']) }
-                  else
-                    _v.sort_by { |i| i['name'].to_s.downcase }
-                  end
+      values = format_values(k, v)
+      
+      result[k] = values.sort_by { |i| ordering(k, i['name']) }
     end
     result
   end
@@ -101,8 +64,18 @@ module Trade::TradePlusFilters
     json_values << ",'iso2',#{attributes[2]}" if attributes.grep(/iso/).present?
     json_values << ",'code',#{attributes[2]}" if attributes.grep(/code/).present?
     group_by_attrs = attributes.uniq.join(',')
-    "SELECT '#{as}' AS attribute_name, json_build_object(#{json_values})::jsonb AS data FROM #{table_name} #{group_by(group_by_attrs)}"
+
+    # Exclude possible null values for taxonomic groups
+    condition = "WHERE #{attributes[0]} IS NOT NULL" if attributes[0] == 'group_name'
+    <<-SQL
+      SELECT '#{as}' AS attribute_name, json_build_object(#{json_values})::jsonb AS data
+      FROM #{table_name}
+      #{condition}
+      #{group_by(group_by_attrs)}
+    SQL
   end
+
+  private
 
   def table_name
     'trade_plus_complete_mview'
@@ -110,5 +83,51 @@ module Trade::TradePlusFilters
 
   def group_by(column_names)
     "GROUP BY #{column_names}"
+  end
+
+  def format_values(key, values)
+    case key
+    when 'sources', 'purposes'
+      values.map do |value|
+        value = JSON.parse(value['data'])
+        value['id'], value['name'], value['code'] = 'unreported', 'Unreported', 'UNR' if value['id'].nil?
+
+        value
+      end
+    when 'units'
+      values.map do |value|
+        value = JSON.parse(value['data'])
+        value['id'], value['name'] = 'items', 'Number of items' if value['id'].nil?
+
+        value
+      end
+    when 'origins'
+      values.map do |value|
+        value = JSON.parse(value['data'])
+        value['id'], value['iso2'], value['name'] = 'direct', 'direct', 'Direct' if value['id'].nil?
+
+        value
+      end
+    when 'terms'
+      values.map do |value|
+        value = JSON.parse(value['data'])
+        value['id'], value['name'], value['code'] = value['id'], value['name'].capitalize, value['code']
+
+        value
+      end
+    else
+      values.map { |value| JSON.parse(value['data']) }
+    end
+  end
+
+  def ordering(attribute, attribute_value)
+    if attribute == 'taxonomic_groups'
+      # If there are unexpected attribute values put them at the end
+      TAXONOMY_ORDERING.index(attribute_value) || TAXONOMY_ORDERING.length
+    elsif attribute == 'units'
+      UNIT_ORDERING.index(attribute_value) || UNIT_ORDERING.length
+    else
+      attribute_value.to_s.downcase
+    end
   end
 end

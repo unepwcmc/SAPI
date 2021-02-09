@@ -45,25 +45,25 @@ describe TaxonConcept do
 
       describe :cites_listed do
         context "for family Tapiridae" do
-          specify { @family.cites_listed.should be_true }
+          specify { @family.cites_listed.should be_truthy }
         end
         context "for genus Tapirus" do
           specify { @genus.cites_listed.should == false }
         end
         context "for species Tapirus terrestris" do
-          specify { @species.cites_listed.should be_true }
+          specify { @species.cites_listed.should be_truthy }
         end
       end
 
       describe :eu_listed do
         context "for family Tapiridae" do
-          specify { @family.eu_listed.should be_true }
+          specify { @family.eu_listed.should be_truthy }
         end
         context "for genus Tapirus" do
           specify { @genus.eu_listed.should == false }
         end
         context "for species Tapirus terrestris" do
-          specify { @species.eu_listed.should be_true }
+          specify { @species.eu_listed.should be_truthy }
         end
       end
     end

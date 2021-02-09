@@ -21,7 +21,7 @@ class TradeRestrictionObserver < ActiveRecord::Observer
   def touch_taxa_with_applicable_distribution(trade_restriction)
     update_stmt = TaxonConcept.send(:sanitize_sql_array, [
       "UPDATE taxon_concepts
-      SET dependents_updated_at = NOW(), dependents_updated_by_id = :updated_by_id
+      SET dependents_updated_at = CURRENT_TIMESTAMP, dependents_updated_by_id = :updated_by_id
       FROM distributions
       WHERE distributions.taxon_concept_id = taxon_concepts.id
       AND distributions.geo_entity_id IN (:geo_entity_id)",
@@ -36,7 +36,7 @@ class TradeRestrictionObserver < ActiveRecord::Observer
   def touch_descendants(trade_restriction)
     update_stmt = TaxonConcept.send(:sanitize_sql_array, [
       "UPDATE taxon_concepts
-      SET dependents_updated_at = NOW(), dependents_updated_by_id = :updated_by_id
+      SET dependents_updated_at = CURRENT_TIMESTAMP, dependents_updated_by_id = :updated_by_id
       WHERE data IS NOT NULL
       AND ARRAY[
         (data->'species_id')::INT,

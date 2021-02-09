@@ -33,7 +33,7 @@
         %>
         <%= link_to delete_icon,
           admin_taxon_concept_eu_suspension_path(@taxon_concept, suspension),
-          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+          data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete
         %>
       </td>
       <td>

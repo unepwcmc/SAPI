@@ -33,7 +33,7 @@ class EuSuspension < EuDecision
       where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
             ", :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 

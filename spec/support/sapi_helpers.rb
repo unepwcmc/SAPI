@@ -1,14 +1,15 @@
 shared_context :sapi do
 
-  let(:cites_eu) {
-    create(:taxonomy, :name => Taxonomy::CITES_EU)
-  }
+  def cites_eu
+    @_cites_eu ||= create(:taxonomy, :name => Taxonomy::CITES_EU)
+  end
 
-  let(:cms) {
-    create(:taxonomy, :name => Taxonomy::CMS)
-  }
+  def cms
+    @_cms ||= create(:taxonomy, :name => Taxonomy::CMS)
+  end
 
-  let(:cites) {
+  def cites
+    return @_cites if @_cites
     d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::CITES)
     unless d
       d = create(:designation, :name => Designation::CITES, :taxonomy => cites_eu)
@@ -27,10 +28,11 @@ shared_context :sapi do
         end
       end
     end
-    d
-  }
+    @_cites = d
+  end
 
-  let(:eu) {
+  def eu
+    return @_eu if @_eu
     d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::EU)
     unless d
       d = create(:designation, :name => Designation::EU, :taxonomy => cites_eu)
@@ -48,10 +50,11 @@ shared_context :sapi do
         end
       end
     end
-    d
-  }
+    @_eu ||= d
+  end
 
-  let(:cms_designation) {
+  def cms_designation
+    return @_cms_designation if @_cms_designation
     d = Designation.find_by_taxonomy_id_and_name(cms.id, Designation::CMS)
     unless d
       d = create(:designation, :name => Designation::CMS, :taxonomy => cms)
@@ -69,8 +72,8 @@ shared_context :sapi do
         end
       end
     end
-    d
-  }
+    @_cms_designation = d
+  end
 
   %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
 
@@ -134,115 +137,130 @@ shared_context :sapi do
     end
   end
 
-  let(:cites_eu_animalia) {
-    create_cites_eu_kingdom(
-      :taxonomic_position => '1',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Animalia')
-    )
-  }
-  let(:cms_animalia) {
-    create_cms_kingdom(
-      :taxonomic_position => '1',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Animalia')
-    )
-  }
-  let(:cites_eu_chordata) {
-    create_cites_eu_phylum(
-      :taxonomic_position => '1.1',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Chordata'),
-      :parent => cites_eu_animalia
-    )
-  }
-  let(:cms_chordata) {
-    create_cms_phylum(
-      :taxonomic_position => '1.1',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Chordata'),
-      :parent => cms_animalia
-    )
-  }
-  let(:cites_eu_mammalia) {
-    create_cites_eu_class(
+  def cms_animalia
+    @_cms_animalia ||=
+      create_cms_kingdom(
+        :taxonomic_position => '1',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Animalia')
+      )
+  end
+  def cms_chordata
+    @_cms_chordata ||=
+      create_cms_phylum(
+        :taxonomic_position => '1.1',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Chordata'),
+        :parent => cms_animalia
+      )
+  end
+  def cites_eu_mammalia
+    @_cites_eu_mammalia ||= create_cites_eu_class(
       :taxonomic_position => '1.1.1',
       :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia'),
       :parent => cites_eu_chordata
     )
-  }
-  let(:cms_mammalia) {
-    create_cms_class(
-      :taxonomic_position => '1.1.1',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia'),
-      :parent => cms_chordata
+  end
+  def cms_mammalia
+    @_cms_mammalia ||=
+      create_cms_class(
+        :taxonomic_position => '1.1.1',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Mammalia'),
+        :parent => cms_chordata
+      )
+  end
+  def cites_eu_aves
+    @_cites_eu_aves ||=
+      create_cites_eu_class(
+        :taxonomic_position => '1.1.2',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Aves'),
+        :parent => cites_eu_chordata
+      )
+  end
+  def cms_reptilia
+    @_cms_reptilia ||=
+      create_cms_class(
+        :taxonomic_position => '1.1.3',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia'),
+        :parent => cms_chordata
+      )
+  end
+  def cites_eu_amphibia
+    @_cites_eu_amphibia ||=
+      create_cites_eu_class(
+        :taxonomic_position => '1.1.4',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Amphibia'),
+        :parent => cites_eu_chordata
+      )
+  end
+  def cites_eu_elasmobranchii
+    @_cites_eu_elasmobranchii ||=
+      create_cites_eu_class(
+        :taxonomic_position => '1.1.5',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Elasmobranchii'),
+        :parent => cites_eu_chordata
+      )
+  end
+  def cites_eu_arthropoda
+    @_cites_eu_arthropoda ||=
+      create_cites_eu_phylum(
+        :taxonomic_position => '1.3',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Arthropoda'),
+        :parent => cites_eu_animalia
+      )
+  end
+  def cites_eu_insecta
+    @_cites_eu_insecta ||=
+      create_cites_eu_class(
+        :taxonomic_position => '1.3.2',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Insecta'),
+        :parent => cites_eu_arthropoda
+      )
+  end
+  def cites_eu_annelida
+    @_cites_eu_annelida ||=
+      create_cites_eu_phylum(
+        :taxonomic_position => '1.4',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Annelida'),
+        :parent => cites_eu_animalia
+      )
+  end
+  def cites_eu_hirudinoidea
+    @_cites_eu_hirudinoidea ||=
+      create_cites_eu_class(
+        :taxonomic_position => '1.4.1',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Hirudinoidea'),
+        :parent => cites_eu_annelida
+      )
+  end
+  def cites_eu_plantae
+    @_cites_eu_plantae ||=
+      create_cites_eu_kingdom(
+        :taxonomic_position => '2',
+        :taxon_name => create(:taxon_name, :scientific_name => 'Plantae')
+      )
+  end
+
+  def cites_eu_animalia
+    @_cites_eu_animalia ||= create_cites_eu_kingdom(
+      :taxonomic_position => '1',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Animalia')
     )
-  }
-  let(:cites_eu_aves) {
-    create_cites_eu_class(
-      :taxonomic_position => '1.1.2',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Aves'),
-      :parent => cites_eu_chordata
+  end
+
+  def cites_eu_chordata
+    @_cites_eu_chordata ||= create_cites_eu_phylum(
+      :taxonomic_position => '1.1',
+      :taxon_name => create(:taxon_name, :scientific_name => 'Chordata'),
+      :parent => cites_eu_animalia
     )
-  }
-  let(:cites_eu_reptilia) {
-    create_cites_eu_class(
+  end
+
+  def cites_eu_reptilia
+    @_cites_eu_reptilia ||= create_cites_eu_class(
       :taxonomic_position => '1.1.3',
       :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia'),
       :parent => cites_eu_chordata
     )
-  }
-  let(:cms_reptilia) {
-    create_cms_class(
-      :taxonomic_position => '1.1.3',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Reptilia'),
-      :parent => cms_chordata
-    )
-  }
-  let(:cites_eu_amphibia) {
-    create_cites_eu_class(
-      :taxonomic_position => '1.1.4',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Amphibia'),
-      :parent => cites_eu_chordata
-    )
-  }
-  let(:cites_eu_elasmobranchii) {
-    create_cites_eu_class(
-      :taxonomic_position => '1.1.5',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Elasmobranchii'),
-      :parent => cites_eu_chordata
-    )
-  }
-  let(:cites_eu_arthropoda) {
-    create_cites_eu_phylum(
-      :taxonomic_position => '1.3',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Arthropoda'),
-      :parent => cites_eu_animalia
-    )
-  }
-  let(:cites_eu_insecta) {
-    create_cites_eu_class(
-      :taxonomic_position => '1.3.2',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Insecta'),
-      :parent => cites_eu_arthropoda
-    )
-  }
-  let(:cites_eu_annelida) {
-    create_cites_eu_phylum(
-      :taxonomic_position => '1.4',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Annelida'),
-      :parent => cites_eu_animalia
-    )
-  }
-  let(:cites_eu_hirudinoidea) {
-    create_cites_eu_class(
-      :taxonomic_position => '1.4.1',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Hirudinoidea'),
-      :parent => cites_eu_annelida
-    )
-  }
-  let(:cites_eu_plantae) {
-    create_cites_eu_kingdom(
-      :taxonomic_position => '2',
-      :taxon_name => create(:taxon_name, :scientific_name => 'Plantae')
-    )
-  }
+  end
 
   def create_cites_eu_animal_species(options = {})
     create_cites_eu_species(
@@ -456,74 +474,81 @@ shared_context :sapi do
     )
   end
 
-  let(:reg1997) {
-    create(:eu_regulation, :name => 'No 938/97', :designation => eu,
-      :effective_at => '1997-06-01', :end_date => '2000-12-18')
-  }
-  let(:reg2005) {
-    create(:eu_regulation, :name => 'No 1332/2005', :designation => eu,
-      :effective_at => '2005-08-22', :end_date => '2008-04-11')
-  }
-  let(:reg2008) {
-    create(:eu_regulation, :name => 'No 318/2008', :designation => eu,
-      :effective_at => '2008-04-11', :end_date => '2009-05-22')
-  }
-  let(:reg2012) {
-    create(:eu_regulation, :name => 'No 1158/2012', :designation => eu,
-      :effective_at => '2012-12-15', :end_date => '2013-08-10')
-  }
-  let(:reg2013) {
-    create(:eu_regulation, :name => 'No 750/2013', :designation => eu,
+  def reg1997
+    @_reg1997 ||=
+      create(:eu_regulation, :name => 'No 938/97', :designation => eu,
+        :effective_at => '1997-06-01', :end_date => '2000-12-18')
+  end
+  def reg2005
+    @_reg2005 ||=
+      create(:eu_regulation, :name => 'No 1332/2005', :designation => eu,
+        :effective_at => '2005-08-22', :end_date => '2008-04-11')
+  end
+  def reg2008
+    @_reg2008 ||=
+      create(:eu_regulation, :name => 'No 318/2008', :designation => eu,
+        :effective_at => '2008-04-11', :end_date => '2009-05-22')
+  end
+  def reg2012
+    @_reg2012 ||=
+      create(:eu_regulation, :name => 'No 1158/2012', :designation => eu,
+        :effective_at => '2012-12-15', :end_date => '2013-08-10')
+  end
+  def reg2013
+    @_reg2013 ||=
+      create(:eu_regulation, :name => 'No 750/2013', :designation => eu,
       :effective_at => '2013-08-10', :end_date => nil, :is_current => true)
-  }
+  end
 
-  let(:contains_geo_relationship_type) {
-    create(:geo_relationship_type, :name => GeoRelationshipType::CONTAINS)
-  }
-  let(:territory_geo_entity_type) {
-    create(:geo_entity_type, :name => GeoEntityType::TERRITORY)
-  }
-  let(:country_geo_entity_type) {
-    create(:geo_entity_type, :name => GeoEntityType::COUNTRY)
-  }
-  let(:cites_region_geo_entity_type) {
-    create(:geo_entity_type, :name => GeoEntityType::CITES_REGION)
-  }
-  let(:trade_geo_entity_type) {
-    create(:geo_entity_type, :name => GeoEntityType::TRADE_ENTITY)
-  }
-  let(:synonym_relationship_type) {
-    create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::HAS_SYNONYM,
-      :is_intertaxonomic => false,
-      :is_bidirectional => false
-    )
-  }
-  let(:trade_name_relationship_type) {
-    create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::HAS_TRADE_NAME,
-      :is_intertaxonomic => false,
-      :is_bidirectional => false
-    )
-  }
-  let(:hybrid_relationship_type) {
-    create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::HAS_HYBRID,
-      :is_intertaxonomic => false,
-      :is_bidirectional => false
-    )
-  }
-  let(:equal_relationship_type) {
-    create(
-      :taxon_relationship_type,
-      :name => TaxonRelationshipType::EQUAL_TO,
-      :is_intertaxonomic => true,
-      :is_bidirectional => true
-    )
-  }
+  {
+    territory: GeoEntityType::TERRITORY,
+    country: GeoEntityType::COUNTRY,
+    cites_region: GeoEntityType::CITES_REGION,
+    trade: GeoEntityType::TRADE_ENTITY
+  }.each do |name, geo_type|
+    met_name = "#{name}_geo_entity_type"
+    define_method(met_name) do
+      met_name = met_name.to_s
+      var = instance_variable_get("@_#{met_name}")
+      return var if var
+      geo_rel_type = create(:geo_entity_type, name: geo_type)
+      instance_variable_set("@_#{met_name}", geo_rel_type)
+    end
+  end
+
+  def contains_geo_relationship_type
+    @_contains_geo_relationship_type ||=
+      create(:geo_relationship_type, :name => GeoRelationshipType::CONTAINS)
+  end
+
+  {
+    synonym: TaxonRelationshipType::HAS_SYNONYM,
+    trade_name: TaxonRelationshipType::HAS_TRADE_NAME,
+    hybrid: TaxonRelationshipType::HAS_HYBRID
+  }.each do |name, rel_type|
+    met_name = "#{name}_relationship_type"
+    define_method(met_name) do
+      met_name = met_name.to_s
+      var = instance_variable_get("@_#{met_name}")
+      return var if var
+      relationship = create(
+        :taxon_relationship_type,
+        :name => rel_type,
+        :is_intertaxonomic => false,
+        :is_bidirectional => false
+      )
+      instance_variable_set("@_#{met_name}", relationship)
+    end
+  end
+  def equal_relationship_type
+    @_equal_relationship_type ||=
+      create(
+        :taxon_relationship_type,
+        :name => TaxonRelationshipType::EQUAL_TO,
+        :is_intertaxonomic => true,
+        :is_bidirectional => true
+      )
+  end
 end
 
 module SapiSpec

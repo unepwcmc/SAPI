@@ -6,11 +6,11 @@ class Species::QuotaSerializer < ActiveModel::Serializer
     :unit
 
   def geo_entity
-    object['geo_entity_en'] && JSON.parse(object['geo_entity_en'])
+    object['geo_entity_en']
   end
 
   def unit
-    object['unit_en'] && JSON.parse(object['unit_en'])
+    object['unit_en']
   end
 
   def quota

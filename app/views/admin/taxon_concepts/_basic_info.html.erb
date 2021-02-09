@@ -16,7 +16,7 @@
   <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
   <% if can? :destroy, @taxon_concept %>
     <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), 
-      :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete %>
+      data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete %>
   <% end %>
   <%= @taxon_concept.author_year %>
   <% if @taxon_concept.tag_list %>
@@ -35,7 +35,7 @@
             <% if can? :destroy, rel %>
               <%= link_to delete_icon,
                 admin_taxon_concept_synonym_relationship_url(rel.taxon_concept, rel),
-                :confirm => "Warning: you are about to delete data. Are you sure?",
+                data: { confirm: "Warning: you are about to delete data. Are you sure?" },
                 :method => :delete %>
             <% end %>
           </li>
@@ -54,7 +54,7 @@
             <% if can? :destroy, rel %>
               <%= link_to delete_icon,
                 admin_taxon_concept_hybrid_relationship_url(rel.taxon_concept, rel),
-                :confirm => "Warning: you are about to delete data. Are you sure?",
+                data: { confirm: "Warning: you are about to delete data. Are you sure?" },
                 :method => :delete %>
             <% end %>
           </li>
@@ -73,7 +73,7 @@
             <% if can? :destroy, rel %>
               <%= link_to delete_icon,
                 admin_taxon_concept_trade_name_relationship_url(rel.taxon_concept, rel),
-                :confirm => "Warning: you are about to delete data. Are you sure?",
+                data: { confirm: "Warning: you are about to delete data. Are you sure?" },
                 :method => :delete %>
             <% end %>
           </li>

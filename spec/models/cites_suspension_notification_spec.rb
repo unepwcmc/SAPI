@@ -52,7 +52,7 @@ describe CitesSuspensionNotification do
   describe :destroy do
     let(:cites_suspension_notification) { create_cites_suspension_notification }
     context "when no dependent objects attached" do
-      specify { cites_suspension_notification.destroy.should be_true }
+      specify { cites_suspension_notification.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       context "when start notification" do
@@ -61,7 +61,7 @@ describe CitesSuspensionNotification do
             :cites_suspension, :start_notification => cites_suspension_notification
           )
         }
-        specify { cites_suspension_notification.destroy.should be_false }
+        specify { cites_suspension_notification.destroy.should be_falsey }
       end
       context "when end notification" do
         let!(:cites_suspension) {
@@ -71,7 +71,7 @@ describe CitesSuspensionNotification do
             :end_notification => cites_suspension_notification
           )
         }
-        specify { cites_suspension_notification.destroy.should be_false }
+        specify { cites_suspension_notification.destroy.should be_falsey }
       end
       context "when confirmation notification, make sure it gets destroyed" do
         let!(:cites_suspension) {

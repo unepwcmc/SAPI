@@ -1,5 +1,3 @@
-@import "compass/css3";
-
 // Colours
 
 $dark-grey: #666666;
@@ -88,7 +86,7 @@ div.filters {
   }
 
   .popup-holder01 .popup:after {
-    background: url(/assets/species/arrow05-dark.png) no-repeat;
+    background: image-url('species/arrow05-dark.png') no-repeat;
     background-size: 100%;
   }
 }
@@ -352,9 +350,9 @@ span.error {
     }
 
     tbody:hover > tr:hover td {
-      @include text-shadow(none);
+      text-shadow: none;
       color: darken($dark-grey, 10%);
-      @include opacity(1.0);
+      opacity: 1;
     }
   }
 }

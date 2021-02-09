@@ -53,7 +53,7 @@ body {
 	color: #000;
 }
 
-.ui-autocomplete-loading { background: url(/assets/cites_trade/ui-anim_basic_16x16.gif) no-repeat right center }
+.ui-autocomplete-loading { background: image-url('cites_trade/ui-anim_basic_16x16.gif') no-repeat right center }
 
 div#content {
     display: none;
@@ -66,7 +66,7 @@ div#loading {
     z-index: 1000;
     width: 160px;
     height: 100px;
-    background: url(assets/cites_trade/ajax-loader.gif) no-repeat;
+    background: image-url('cites_trade/ajax-loader.gif') no-repeat;
     cursor: wait;
     }
 
