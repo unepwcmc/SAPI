@@ -1,0 +1,1 @@
+@CustomTransitionMixinCreate(Trade, 'trade')

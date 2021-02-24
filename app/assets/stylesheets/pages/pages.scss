@@ -7,9 +7,16 @@ $font-blue: #253848;
 $total-columns: 12;
 $column-width: 4em;
 $gutter-width: 1em;
-$grid-padding: 1em;
 
 $container-style: static;
+
+$susy: (
+  columns: $total-columns,
+  gutters: $gutter-width / $column-width,
+  column-width: $column-width,
+
+  math: if($container-style == magic, fluid, $container-style)
+);
 
 
 h2 {
@@ -105,13 +112,13 @@ h4 {
   }
 
   .column-one {
-    @include span-columns(6, 12);
+    @include span(6 of 12);
     width: 47.5%;
 
   }
 
   .column-two {
-    @include span-columns(6 omega, 12);
+    @include span(last 6 of 12);
     img {
       display: block;
       margin-left: auto;
@@ -140,5 +147,5 @@ h4 {
 }
 
 .column-full-width {
-  @include span-columns(12, 12);
+  @include span(12 of 12);
 }

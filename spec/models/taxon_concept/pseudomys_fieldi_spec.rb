@@ -25,19 +25,19 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for subspecies Pseudomys fieldi preaconis" do
-          specify { @subspecies.cites_show.should be_true }
+          specify { @subspecies.cites_show.should be_truthy }
         end
         context "for species Pseudomys fieldi" do
-          specify { @species.cites_show.should be_true }
+          specify { @species.cites_show.should be_truthy }
         end
       end
 
       # describe :eu_show do
       #   context "for subspecies Pseudomys fieldi preaconis" do
-      #     specify{ @subspecies.eu_show.should be_true }
+      #     specify{ @subspecies.eu_show.should be_truthy }
       #   end
       #   context "for species Pseudomys fieldi" do
-      #     specify{ @species.eu_show.should be_true }
+      #     specify{ @species.eu_show.should be_truthy }
       #   end
       # end
 

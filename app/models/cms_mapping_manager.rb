@@ -14,8 +14,8 @@ class CmsMappingManager
       species.each do |sp|
         taxon_concept = TaxonConcept.where(:full_name => sp["scientific_name"],
                                            :taxonomy_id => cms.id).first
-        mapping = CmsMapping.find_or_create_by_taxon_concept_id_and_cms_taxon_name_and_cms_uuid(
-          taxon_concept.try(:id), sp["scientific_name"], sp["node_uuid"])
+        mapping = CmsMapping.find_or_create_by(
+          taxon_concept_id: taxon_concept.try(:id), cms_taxon_name: sp["scientific_name"], cms_uuid: sp["node_uuid"])
 
         analyse mapping
       end
@@ -68,13 +68,13 @@ class CmsMappingManager
         next unless matching_cites_taxon
         puts "found a match for #{taxon.full_name} #{taxon.id} matches #{matching_cites_taxon.id}"
         matching_cites_taxon.distributions.each do |dist|
-          distribution = Distribution.find_or_initialize_by_taxon_concept_id_and_geo_entity_id(
-            taxon.id, dist.geo_entity_id)
+          distribution = Distribution.find_or_initialize_by(
+            taxon_concept_id: taxon.id, geo_entity_id: ist.geo_entity_id)
           distribution.tag_list = dist.tag_list
           distribution.save
           dist.distribution_references.each do |reference|
-            DistributionReference.find_or_create_by_distribution_id_and_reference_id(
-              distribution.id, reference.reference_id)
+            DistributionReference.find_or_create_by(
+              distribution_id: distribution.id, reference_id: reference.reference_id)
           end
         end
         puts "creating taxon relationship"

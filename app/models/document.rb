@@ -26,7 +26,6 @@
 
 class Document < ActiveRecord::Base
   include PgSearch
-  include PgArrayParser
   pg_search_scope :search_by_title, :against => :title,
     :using => { :tsearch => { :prefix => true } },
     :order_within_rank => "documents.date, documents.title, documents.id"
@@ -122,15 +121,15 @@ class Document < ActiveRecord::Base
   end
 
   def date_formatted
-    date && date.strftime("%d/%m/%Y")
+    date && Date.parse(date.to_s).strftime("%d/%m/%Y")
   end
 
   def taxon_names
-    parse_pg_array(read_attribute(:taxon_names) || "").compact
+    (read_attribute(:taxon_names) || []).compact
   end
 
   def geo_entity_names
-    parse_pg_array(read_attribute(:geo_entity_names) || "").compact
+    (read_attribute(:geo_entity_names) || []).compact
   end
 
   private

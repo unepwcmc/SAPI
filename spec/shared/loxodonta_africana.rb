@@ -1,44 +1,24 @@
 shared_context "Loxodonta africana" do
-  let(:ghana) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Ghana',
-      :iso_code2 => 'GH'
-    )
-  }
-  let(:botswana) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Botswana',
-      :iso_code2 => 'BW'
-    )
-  }
-  let(:namibia) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Namibia',
-      :iso_code2 => 'NA'
-    )
-  }
-  let(:zambia) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Zambia',
-      :iso_code2 => 'ZA'
-    )
-  }
-  let(:zimbabwe) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Zimbabwe',
-      :iso_code2 => 'ZW'
-    )
-  }
+  {
+    ghana: 'GH',
+    botswana: 'BW',
+    namibia: 'NA',
+    zambia: 'ZA',
+    zimbabwe: 'ZW'
+  }.each do |name, iso_code|
+    define_method(name) do
+      name = name.to_s
+      var = instance_variable_get("@#{name}")
+      return var if var
+      country =  create(
+        :geo_entity,
+        :geo_entity_type => country_geo_entity_type,
+        :name => name.capitalize,
+        :iso_code2 => iso_code
+      )
+      instance_variable_set("@#{name}", country)
+    end
+  end
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Proboscidea'),
@@ -114,6 +94,9 @@ shared_context "Loxodonta africana" do
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
+      #Skip old sapi context let statements,
+      #which are now instance variables starting with _
+      next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

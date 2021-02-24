@@ -1,36 +1,23 @@
 shared_context "Moschus" do
-  let(:bhutan) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Bhutan',
-      :iso_code2 => 'BT'
-    )
-  }
-  let(:india) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'India',
-      :iso_code2 => 'IN'
-    )
-  }
-  let(:nepal) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Nepal',
-      :iso_code2 => 'NP'
-    )
-  }
-  let(:china) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'China',
-      :iso_code2 => 'CN'
-    )
-  }
+  {
+    bhutan: 'BT',
+    india: 'IN',
+    nepal: 'NP',
+    china: 'CH',
+  }.each do |name, iso_code|
+    define_method(name) do
+      name = name.to_s
+      var = instance_variable_get("@#{name}")
+      return var if var
+      country =  create(
+        :geo_entity,
+        :geo_entity_type => country_geo_entity_type,
+        :name => name.capitalize,
+        :iso_code2 => iso_code
+      )
+      instance_variable_set("@#{name}", country)
+    end
+  end
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Artiodactyla'),
@@ -158,6 +145,9 @@ shared_context "Moschus" do
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
+      #Skip old sapi context let statements,
+      #which are now instance variables starting with _
+      next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

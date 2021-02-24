@@ -43,7 +43,13 @@ class NomenclatureChange::CascadingNotesProcessor
       WITH RECURSIVE descendents AS (
         SELECT id,
           full_name,
+          rank_id,
+          parent_id,
+          taxon_name_id,
+          taxonomy_id,
           name_status,
+          created_at,
+          updated_at,
           nomenclature_note_en,
           nomenclature_note_es,
           nomenclature_note_fr
@@ -52,7 +58,13 @@ class NomenclatureChange::CascadingNotesProcessor
         UNION ALL
         SELECT taxon_concepts.id,
           taxon_concepts.full_name,
+          taxon_concepts.rank_id,
+          taxon_concepts.parent_id,
+          taxon_concepts.taxon_name_id,
+          taxon_concepts.taxonomy_id,
           taxon_concepts.name_status,
+          taxon_concepts.created_at,
+          taxon_concepts.updated_at,
           taxon_concepts.nomenclature_note_en,
           taxon_concepts.nomenclature_note_es,
           taxon_concepts.nomenclature_note_fr

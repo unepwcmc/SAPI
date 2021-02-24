@@ -18,7 +18,7 @@ describe Purpose do
   describe :destroy do
     context "when no dependent objects attached" do
       let(:purpose) { create(:purpose) }
-      specify { purpose.destroy.should be_true }
+      specify { purpose.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       let(:purpose) { create(:purpose) }
@@ -30,11 +30,11 @@ describe Purpose do
             :start_notification_id => create_cites_suspension_notification.id
           )
         }
-        specify { purpose.destroy.should be_false }
+        specify { purpose.destroy.should be_falsey }
       end
       context "when shipments" do
         before(:each) { create(:shipment, :purpose => purpose) }
-        specify { purpose.destroy.should be_false }
+        specify { purpose.destroy.should be_falsey }
       end
     end
   end

@@ -19,6 +19,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
     select(
       <<-SQL
         data,
+        taxonomy_id,
         #{Taxonomy.table_name}.name AS taxonomy_name,
         #{TaxonConcept.table_name}.id,
         full_name,

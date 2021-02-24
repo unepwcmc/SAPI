@@ -48,7 +48,7 @@ class Designation < ActiveRecord::Base
       where("UPPER(name) LIKE UPPER(:query)",
             :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 

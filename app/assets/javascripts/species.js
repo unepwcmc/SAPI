@@ -27,6 +27,7 @@
 //
 //= require_tree ./species/helpers
 //= require_tree ./species/models
+//= require_tree ./shared-mixins
 //= require_tree ./species/mixins
 //= require_tree ./species/controllers
 //= require_tree ./species/views
@@ -36,6 +37,5 @@
 //= require_tree ./shared
 
 var Species = Ember.Application.create({
-  LOG_TRANSITIONS: true,
   rootElement: '#ember_app'
 });

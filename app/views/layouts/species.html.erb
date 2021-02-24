@@ -15,7 +15,7 @@
     <![endif]-->
     <%= stylesheet_link_tag    "species" %>
     <script type="text/javascript">
-      ENV = {FEATURES: {'query-params' : true}};
+      EmberENV = {FEATURES: {'query-params-new' : true}};
     </script>
     <%= javascript_include_tag "species" %>
     <%= csrf_meta_tags %>
@@ -36,7 +36,7 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="spinner"><img src="/assets/species/loader.gif"></div>
+    <div class="spinner"><%= image_tag "species/loader.gif" %></div>
 
     <noscript>
       Javascript must be enabled for the correct page display

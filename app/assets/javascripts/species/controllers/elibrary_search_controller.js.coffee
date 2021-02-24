@@ -5,6 +5,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
   Species.EventLookup,
   Species.DocumentTagLookup,
   Species.SignedInStatus,
+  Species.CustomTransition,
   needs: ['documentGeoEntities', 'taxonConcepts', 'events', 'documentTags']
   geoEntities: Ember.computed.alias("controllers.documentGeoEntities")
   searchContext: 'documents'
@@ -147,7 +148,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
 
   actions:
     openSearchPage:->
-      @transitionToRoute('documents', {queryParams: @getFilters()})
+      @customTransitionToRoute('documents', {queryParams: @getFilters()})
 
     handleDocumentTypeSelection: (documentType) ->
       @set('selectedDocumentType', documentType)

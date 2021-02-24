@@ -1,26 +1,27 @@
 shared_context "Caiman latirostris" do
+  def en
+    @es ||= create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
+    @fr ||= create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')
+    @en ||= create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG')
+  end
 
-  let(:en) {
-    create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
-    create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')
-    create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG')
-  }
-  let(:argentina) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Argentina',
-      :iso_code2 => 'AR'
-    )
-  }
-  let(:brazil) {
-    create(
-      :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Brazil',
-      :iso_code2 => 'BR'
-    )
-  }
+  {
+    argentina: 'AR',
+    brazil: 'BR'
+  }.each do |name, iso_code|
+    define_method(name) do
+      name = name.to_s
+      var = instance_variable_get("@#{name}")
+      return var if var
+      country =  create(
+        :geo_entity,
+        :geo_entity_type => country_geo_entity_type,
+        :name => name.capitalize,
+        :iso_code2 => iso_code
+      )
+      instance_variable_set("@#{name}", country)
+    end
+  end
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Crocodylia'),
@@ -153,6 +154,9 @@ shared_context "Caiman latirostris" do
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
+      #Skip old sapi context let statements,
+      #which are now instance variables starting with _
+      next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

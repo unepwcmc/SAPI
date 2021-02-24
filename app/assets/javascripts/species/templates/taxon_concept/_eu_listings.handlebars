@@ -16,7 +16,7 @@
         <th class="col3">LEGAL NOTICE</th>
       </tr>
     </thead>
-    <tbody {{bindAttr class="controller.euListingsExpanded:historic_expanded"}}>
+    <tbody {{bind-attr class="controller.euListingsExpanded:historic_expanded"}}>
       {{#each listing in currentEuListings}}
         <tr class="current">
           <td>
@@ -57,7 +57,7 @@
     </tbody>
   </table>
   {{#if historicEuListings}}
-    <div {{bindAttr class=":historic controller.euListingsExpanded::hidden"}}>
+    <div {{bind-attr class=":historic controller.euListingsExpanded::hidden"}}>
       <table summary="data table">
         <thead>
           <tr>
@@ -105,7 +105,7 @@
         </tbody>
       </table>
     </div>
-    <div {{bindAttr class=":btn-hloder euListingsExpanded:expanded"}}>
+    <div {{bind-attr class=":btn-hloder euListingsExpanded:expanded"}}>
       {{#if controller.euListingsExpanded}}
         <a class="link active" {{action 'contractList' 'eu_listings' 'euListingsExpanded'}}>HIDE HISTORY</a>
       {{else}}

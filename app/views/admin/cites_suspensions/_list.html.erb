@@ -38,7 +38,7 @@
         %>
         <%= link_to delete_icon,
           admin_cites_suspension_path(suspension),
-          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+          data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete
         %>
       </td>
       <td>
@@ -48,4 +48,3 @@
     </tr>
   <% end -%>
 </tbody>
-

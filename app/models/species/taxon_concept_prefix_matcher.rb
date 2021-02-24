@@ -10,7 +10,7 @@ class Species::TaxonConceptPrefixMatcher
   def results
     (@taxon_concept_query || !@ranks.empty?) &&
     @query.limit(@options[:per_page]).
-      offset(@options[:per_page] * (@options[:page] - 1)).all || []
+      offset(@options[:per_page] * (@options[:page] - 1)).to_a || []
   end
 
   def total_cnt
@@ -25,7 +25,7 @@ class Species::TaxonConceptPrefixMatcher
   end
 
   def initialize_query
-    @query = MAutoCompleteTaxonConcept.scoped
+    @query = MAutoCompleteTaxonConcept.all
 
     @query =
       if @visibility == :trade

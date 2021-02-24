@@ -13,7 +13,7 @@
         <th class="col8">DOCUMENT</th>
       </tr>
     </thead>
-    <tbody {{bindAttr class="controller.euDecisionsExpanded:historic_expanded"}}>
+    <tbody {{bind-attr class="controller.euDecisionsExpanded:historic_expanded"}}>
       {{#each decision in currentEuDecisions}}
         <tr class="current">
           <td>{{decision.start_date}}
@@ -91,7 +91,7 @@
     </tbody>
   </table>
   {{#if historicEuDecisions}}
-    <div {{bindAttr class=":historic controller.euDecisionsExpanded::hidden"}}>
+    <div {{bind-attr class=":historic controller.euDecisionsExpanded::hidden"}}>
       <table summary="data table">
         <thead>
           <tr>
@@ -173,7 +173,7 @@
         </tbody>
       </table>
     </div>
-    <div {{bindAttr class=":btn-hloder euDecisionsExpanded:expanded"}}>
+    <div {{bind-attr class=":btn-hloder euDecisionsExpanded:expanded"}}>
       {{#if controller.euDecisionsExpanded}}
         <a class="link active" {{action 'contractList' 'eu_decisions' 'euDecisionsExpanded'}}>HIDE HISTORY</a>
       {{else}}

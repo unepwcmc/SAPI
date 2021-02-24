@@ -22,9 +22,9 @@ class ApiRequest < ActiveRecord::Base
 
   RECENT_DAYS = 90
 
-  scope :recent, where('created_at > ?', RECENT_DAYS.days.ago)
-  scope :by_response_status, group(:response_status)
-  scope :by_controller, group(:controller)
+  scope :recent, -> { where('created_at > ?', RECENT_DAYS.days.ago) }
+  scope :by_response_status, -> { group(:response_status) }
+  scope :by_controller, -> { group(:controller) }
 
   RESPONSE_STATUSES = [200, 400, 401, 404, 422, 500]
   CONTROLLERS = ['taxon_concepts', 'distributions', 'cites_legislation', 'eu_legislation', 'references']
@@ -76,7 +76,7 @@ class ApiRequest < ActiveRecord::Base
       key_name: key_name
     ])
     res = ApiRequest.find_by_sql(sql).first
-    JSON.parse res['json_object_agg']
+    res['json_object_agg']
   end
 
 end

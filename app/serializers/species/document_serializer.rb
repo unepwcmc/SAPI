@@ -5,14 +5,13 @@ class Species::DocumentSerializer < ActiveModel::Serializer
     :taxon_names, :geo_entity_names,
     :document_language_versions,
     :proposal_outcome, :is_link
-  include PgArrayParser
 
   def document_type
     object.document_type.split(":").last
   end
 
   def document_language_versions
-    JSON.parse(object.document_language_versions)
+    object.document_language_versions
   end
 
   def is_link

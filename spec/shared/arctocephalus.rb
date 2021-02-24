@@ -1,7 +1,13 @@
 shared_context "Arctocephalus" do
-  let(:en) { create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG') }
-  let(:es) { create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA') }
-  let(:fr) { create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA') }
+  def en
+    @en ||= create(:language, :name => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG')
+  end
+  def es
+    @es ||= create(:language, :name => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
+  end
+  def fr
+    @fr ||= create(:language, :name => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')
+  end
   before(:all) do
     @order = create_cites_eu_order(
       :taxon_name => create(:taxon_name, :scientific_name => 'Carnivora'),
@@ -107,6 +113,9 @@ shared_context "Arctocephalus" do
 
     Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
+      #Skip old sapi context let statements,
+      #which are now instance variables starting with _
+      next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

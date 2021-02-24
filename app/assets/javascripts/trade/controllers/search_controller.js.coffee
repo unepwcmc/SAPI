@@ -1,4 +1,4 @@
-Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
+Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash, Trade.CustomTransition,
   needs: ['geoEntities', 'terms', 'units', 'sources', 'purposes']
   content: null
   currentShipment: null
@@ -240,9 +240,9 @@ Trade.SearchController = Ember.Controller.extend Trade.QueryParams, Trade.Flash,
   actions:
     search: ->
       @flashClear()
-      @transitionToRoute('search.results', {queryParams: @get('searchParams')})
+      @customTransitionToRoute('search.results', {queryParams: @get('searchParams')})
 
     resetFilters: ->
       @flashClear()
       @resetFilters()
-      @transitionToRoute('search.results', {queryParams: @get('searchParams')})
+      @customTransitionToRoute('search.results', {queryParams: @get('searchParams')})

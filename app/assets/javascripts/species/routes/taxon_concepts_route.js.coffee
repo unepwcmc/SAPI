@@ -1,6 +1,8 @@
 Species.TaxonConceptsRoute = Ember.Route.extend Species.Spinner, Species.GeoEntityLoader,
 
-  beforeModel: (queryParams, transition) ->
+  beforeModel: (transition) ->
+    queryParams = transition.queryParams
+
     @ensureGeoEntitiesLoaded(@controllerFor('search'))
     #dirty hack to check if we have an array or comma separated string here
     if queryParams.geo_entities_ids && queryParams.geo_entities_ids.substring
@@ -9,11 +11,13 @@ Species.TaxonConceptsRoute = Ember.Route.extend Species.Spinner, Species.GeoEnti
     # Setting a spinner until content is loaded.
     $(@spinnerSelector).css("visibility", "visible")
 
-  model: (params, queryParams, transition) ->
+  model: (params, transition) ->
+    queryParams = params.queryParams
+
     queryParams.geo_entities_ids = [] if queryParams.geo_entities_ids == true
     Species.TaxonConcept.find(queryParams)
 
-  afterModel: (taxonConcepts, queryParams, transition) ->
+  afterModel: (taxonConcepts, transition) ->
     if taxonConcepts.meta.total == 1
       @transitionTo('taxonConcept.legal', taxonConcepts.objectAt(0), queryParams: false)
     # Removing spinner once content is loaded.
@@ -60,3 +64,5 @@ Species.TaxonConceptsRoute = Ember.Route.extend Species.Spinner, Species.GeoEnti
     ensureHigherTaxaLoaded: ->
       @controllerFor('higherTaxaCitesEu').load()
       @controllerFor('higherTaxaCms').load()
+    queryParamsDidChange: (changed, totalPresent, removed) ->
+      @refresh()

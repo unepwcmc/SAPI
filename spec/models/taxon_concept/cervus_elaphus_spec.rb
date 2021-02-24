@@ -69,13 +69,13 @@ describe TaxonConcept do
           specify { @species.cites_listed.should == false }
         end
         context "for subspecies Cervus elaphus bactrianus" do
-          specify { @subspecies1.cites_listed.should be_true }
+          specify { @subspecies1.cites_listed.should be_truthy }
         end
         context "for subspecies Cervus elaphus barbarus" do
-          specify { @subspecies2.cites_listed.should be_true }
+          specify { @subspecies2.cites_listed.should be_truthy }
         end
         context "for subspecies Cervus elaphus hanglu" do
-          specify { @subspecies3.cites_listed.should be_true }
+          specify { @subspecies3.cites_listed.should be_truthy }
         end
         context "for subspecies Cervus elaphus canadensis" do
           specify { @subspecies4.cites_listed.should be_blank }
@@ -96,13 +96,13 @@ describe TaxonConcept do
           specify { @species.eu_listed.should == false }
         end
         context "for subspecies Cervus elaphus bactrianus" do
-          specify { @subspecies1.eu_listed.should be_true }
+          specify { @subspecies1.eu_listed.should be_truthy }
         end
         context "for subspecies Cervus elaphus barbarus" do
-          specify { @subspecies2.eu_listed.should be_true }
+          specify { @subspecies2.eu_listed.should be_truthy }
         end
         context "for subspecies Cervus elaphus hanglu" do
-          specify { @subspecies3.eu_listed.should be_true }
+          specify { @subspecies3.eu_listed.should be_truthy }
         end
         context "for subspecies Cervus elaphus canadensis" do
           specify { @subspecies4.eu_listed.should be_blank }
@@ -111,10 +111,10 @@ describe TaxonConcept do
 
       describe :cites_show do
         context "for subspecies Cervus elaphus hanglu" do
-          specify { @subspecies3.cites_show.should be_true }
+          specify { @subspecies3.cites_show.should be_truthy }
         end
         context "for subspecies Cervus elaphus canadensis" do
-          specify { @subspecies4.cites_show.should be_false }
+          specify { @subspecies4.cites_show.should be_falsey }
         end
       end
 

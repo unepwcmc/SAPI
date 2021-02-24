@@ -1,15 +1,15 @@
 SAPI::Application.routes.draw do
   devise_for :users, :controllers => { :passwords => "passwords", :registrations => "registrations", :sessions => "sessions" }
   as :user do
-    get 'users/edit' => 'registrations#edit', :as => 'edit_user_registration'
-    put 'users' => 'registrations#update', :as => 'user_registration'
-    post 'users' => 'registrations#create', :as => 'user_registration'
+    get 'users/edit' => 'registrations#edit', :as => 'edit_user_registratione'
+    put 'users' => 'registrations#update', :as => 'user_registration_update'
+    post 'users' => 'registrations#create', :as => 'user_registration_create'
   end
 
-  match 'about' => 'pages#about'
-  match 'terms-of-use' => 'pages#terms_of_use'
-  match 'eu_legislation' => 'pages#eu_legislation'
-  match 'activities(/:start_week)' => 'activities#activities', as: :activities
+  get 'about' => 'pages#about'
+  get 'terms-of-use' => 'pages#terms_of_use'
+  get 'eu_legislation' => 'pages#eu_legislation'
+  get 'activities(/:start_week)' => 'activities#activities', as: :activities
 
   get 'admin/api_usage/overview' => 'admin/api_usage#index', :as => 'api_usage_overview'
   get 'admin/api_usage/user_overview/:id' => 'admin/api_usage#show', :as => 'api_user_usage'
@@ -34,7 +34,8 @@ SAPI::Application.routes.draw do
       resources :document_geo_entities, only: [:index]
       resources :events, only: [:index]
       resources :document_tags, only: [:index]
-      match '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
+      get '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
+      resources :shipments, only: [:index]
       get '/shipments/chart' => 'shipments#chart_query'
       get '/shipments/grouped' => 'shipments#grouped_query'
       get '/shipments/over_time' => 'shipments#over_time_query'
@@ -167,9 +168,9 @@ SAPI::Application.routes.draw do
         controller: 'nomenclature_changes/status_to_synonym'
       resources :status_swap, controller: 'nomenclature_changes/status_swap'
     end
-    match 'exports' => 'exports#index'
-    match 'exports/download' => 'exports#download'
-    match 'stats' => 'statistics#index'
+    get 'exports' => 'exports#index'
+    get 'exports/download' => 'exports#download' # not sure about this, post??
+    get 'stats' => 'statistics#index'
     root :to => 'taxon_concepts#index'
   end
 
@@ -197,18 +198,18 @@ SAPI::Application.routes.draw do
     end
     resources :geo_entities, :only => [:index]
     resources :permits, :only => [:index]
-    match 'exports/download' => 'exports#download'
-    match 'exports/download_stats' => 'exports#download_stats', :as => :trade_download_stats
-    match 'stats' => 'statistics#index'
-    match 'summary_year' => 'statistics#summary_year'
-    match 'summary_creation' => 'statistics#summary_creation'
-    match 'trade_transactions' => 'statistics#trade_transactions'
+    get 'exports/download' => 'exports#download'      # not sure about this, post??
+    get 'exports/download_stats' => 'exports#download_stats', :as => :trade_download_stats
+    get 'stats' => 'statistics#index'
+    get 'summary_year' => 'statistics#summary_year'
+    get 'summary_creation' => 'statistics#summary_creation'
+    get 'trade_transactions' => 'statistics#trade_transactions'
     root :to => 'ember#start'
   end
 
   namespace :species do
-    match 'exports' => 'exports#index'
-    match 'exports/download' => 'exports#download'
+    get 'exports' => 'exports#index'
+    get 'exports/download' => 'exports#download' # not sure about this, post??
     get '*foo' => 'ember#start'
     root :to => 'ember#start'
   end
@@ -246,10 +247,10 @@ SAPI::Application.routes.draw do
   scope "(:locale)", :locale => /en|es|fr/ do
     namespace :cites_trade do
       resources :shipments, :only => [:index]
-      match 'download' => 'home#download'
-      match 'download/view_results' => 'home#view_results'
-      match 'exports/download' => 'exports#download'
-      match 'download_db' => 'home#download_db'
+      get 'download' => 'home#download'
+      get 'download/view_results' => 'home#view_results'
+      get 'exports/download' => 'exports#download'  # not sure about this, post??
+      get 'download_db' => 'home#download_db'
       root :to => 'home#index'
     end
   end
@@ -295,10 +296,10 @@ SAPI::Application.routes.draw do
   #     resources :products
   #   end
 
-  root :to => 'cites_trade/home#index',
-    :constraints => lambda { |request|
-      request.domain(3) == 'trade.cites.org'
-    }
+  # root :to => 'cites_trade/home#index',
+  #   :constraints => lambda { |request|
+  #     request.domain(3) == 'trade.cites.org'
+  #   }
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.

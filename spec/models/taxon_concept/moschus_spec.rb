@@ -22,7 +22,7 @@ describe TaxonConcept do
 
       describe :cites_listed do
         context "for genus Moschus" do
-          specify { @genus.cites_listed.should be_true }
+          specify { @genus.cites_listed.should be_truthy }
         end
         context "for species Moschus leucogaster" do
           specify { @species1.cites_listed.should == false }

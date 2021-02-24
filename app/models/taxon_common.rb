@@ -22,8 +22,8 @@ class TaxonCommon < ActiveRecord::Base
   validates :common_name_id, :presence => true
 
   before_validation do
-    cname = CommonName.find_or_create_by_name_and_language_id(
-      self.name, self.language_id)
+    cname = CommonName.find_or_create_by(
+      name: self.name, language_id: self.language_id)
     if cname.id && self.common_name_id != cname.id
       self.common_name_id = cname.id
     end

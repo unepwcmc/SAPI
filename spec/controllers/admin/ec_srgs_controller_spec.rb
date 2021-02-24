@@ -12,7 +12,7 @@ describe Admin::EcSrgsController do
     describe "GET index" do
       it "assigns @ec_srgs sorted by name" do
         get :index
-        assigns(:ec_srgs).should eq([@cites_srg1, @cites_srg2])
+        assigns(:ec_srgs).sort.should eq([@cites_srg1, @cites_srg2].sort)
       end
       it "renders the index template" do
         get :index

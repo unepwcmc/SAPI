@@ -46,7 +46,7 @@ a.legal-links:hover {
   width: 9px;
   height: 10px;
   z-index: 1;
-  background: url(/assets/species/arrow08.png) no-repeat;
+  background: image-url('species/arrow08.png') no-repeat;
 }
 #eu_decisions .popup .title {
   text-transform: none;
@@ -82,7 +82,7 @@ a.legal-links:hover {
     right: -9px;
     top: -6px;
     text-indent: -9999px;
-    background: url(/assets/species/btn-close.png) no-repeat;
+    background: image-url('species/btn-close.png') no-repeat;
   }
   .title {
     display: block;

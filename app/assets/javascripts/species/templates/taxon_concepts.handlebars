@@ -11,7 +11,9 @@
       <ul class="result-list">
         {{#each ancestors_path}}
           <li>
-            {{#link-to 'taxonConcepts' taxon_concept_query=this}}{{this}}{{/link-to}}
+            <a {{action 'openSearchPage' this}} class="hover-pointer" title="Go to {{this}}">
+              {{this}}
+            </a>
           </li>
         {{/each}}
       </ul>

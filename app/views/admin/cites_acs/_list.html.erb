@@ -24,7 +24,7 @@
       <td>
         <%= link_to edit_icon, edit_resource_url(cites_ac), :remote => true %>
         <%= link_to delete_icon, resource_url(cites_ac),
-          :confirm => "Warning: you are about to delete data. Are you sure?", :method => :delete
+          data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete
         %>
       </td>
     </tr>

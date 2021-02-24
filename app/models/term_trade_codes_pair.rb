@@ -31,7 +31,7 @@ class TermTradeCodesPair < ActiveRecord::Base
         SQL
       )
     else
-      scoped
+      all
     end
   end
 end

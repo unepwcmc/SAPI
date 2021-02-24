@@ -11,7 +11,7 @@ class Trade::Filter
   end
 
   def results
-    query_with_limit.order('year DESC').all
+    query_with_limit.order('year DESC').to_a
   end
 
   def total_cnt

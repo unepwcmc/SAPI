@@ -16,7 +16,7 @@ describe TaxonConcept do
           :parent_id => kingdom_tc.id
         )
       }
-      specify { tc.valid? should be_true }
+      specify { tc.valid? should be_truthy }
     end
     context "taxonomy does not match parent" do
       let(:tc) {

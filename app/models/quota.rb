@@ -71,25 +71,25 @@ class Quota < TradeRestriction
         SQL
       )
     else
-      scoped
+      all
     end
   end
 
   def self.years_array
-    self.select('EXTRACT(year from start_date) years').
+    self.select('EXTRACT(year from start_date)::VARCHAR years').
           group(:years).order('years DESC').map(&:years)
   end
 
   def self.count_matching(params)
     Quota.where(
       [
-        "EXTRACT(year from start_date) = :year
+        "EXTRACT(year from start_date)::INTEGER = :year
         AND ((:excluded_geo_entities) IS NULL OR geo_entity_id NOT IN (:excluded_geo_entities))
         AND ((:included_geo_entities) IS NULL OR geo_entity_id IN (:included_geo_entities))
         AND ((:excluded_taxon_concepts) IS NULL OR taxon_concept_id NOT IN (:excluded_taxon_concepts))
         AND ((:included_taxon_concepts) IS NULL OR taxon_concept_id IN (:included_taxon_concepts))
         AND is_current = true",
-        :year => params[:year],
+        :year => params[:year].to_i,
         :excluded_geo_entities => params[:excluded_geo_entities_ids].present? ?
           params[:excluded_geo_entities_ids].map(&:to_i) : nil,
         :included_geo_entities => params[:included_geo_entities_ids].present? ?

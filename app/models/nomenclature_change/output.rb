@@ -33,7 +33,6 @@
 # Outputs may be new taxon concepts, created as a result of the nomenclature
 # change.
 class NomenclatureChange::Output < ActiveRecord::Base
-  include PgArrayParser
   track_who_does_it
   attr_accessor :output_type # New taxon, Existing subspecies, Existing taxon
   attr_accessible :nomenclature_change_id, :taxon_concept_id,
@@ -86,7 +85,9 @@ class NomenclatureChange::Output < ActiveRecord::Base
     :if => Proc.new { |c| (c.new_record? || c.taxon_concept_id_changed?) && c.taxon_concept }
 
   def tag_list
-    parse_pg_array(read_attribute(:tag_list) || "").compact
+    attr = read_attribute(:tag_list)
+    return [] if attr.is_a?(String) && attr.match(/--- \[\]\n/).present?
+    (attr || []).compact
   end
 
   def tag_list=(ary)

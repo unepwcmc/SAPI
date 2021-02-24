@@ -68,24 +68,24 @@ describe GeoEntity do
   describe :destroy do
     let(:geo_entity) { create(:geo_entity) }
     context "when no dependent objects attached" do
-      specify { geo_entity.destroy.should be_true }
+      specify { geo_entity.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       context "when distributions" do
         before(:each) { create(:distribution, :geo_entity => geo_entity) }
-        specify { geo_entity.destroy.should be_false }
+        specify { geo_entity.destroy.should be_falsey }
       end
       context "when exported shipments" do
         before(:each) { create(:shipment, :exporter => geo_entity) }
-        specify { geo_entity.destroy.should be_false }
+        specify { geo_entity.destroy.should be_falsey }
       end
       context "when imported shipments" do
         before(:each) { create(:shipment, :importer => geo_entity) }
-        specify { geo_entity.destroy.should be_false }
+        specify { geo_entity.destroy.should be_falsey }
       end
       context "when originated shipments" do
         before(:each) { create(:shipment, :country_of_origin => geo_entity) }
-        specify { geo_entity.destroy.should be_false }
+        specify { geo_entity.destroy.should be_falsey }
       end
       context "when connected geo entities" do
         let(:child_geo_entity) { create(:geo_entity) }
@@ -97,7 +97,7 @@ describe GeoEntity do
             :related_geo_entity => child_geo_entity
           )
         end
-        specify { geo_entity.destroy.should be_false }
+        specify { geo_entity.destroy.should be_falsey }
       end
     end
   end

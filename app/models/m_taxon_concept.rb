@@ -105,16 +105,13 @@
 #
 
 class MTaxonConcept < ActiveRecord::Base
-  include PgArrayParser
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 
   belongs_to :taxon_concept, :foreign_key => :id
   has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MCitesListingChange
-  has_many :historic_cites_listing_changes_for_downloads, :foreign_key => :taxon_concept_id,
-    :class_name => MCitesListingChange,
-    :conditions => { :show_in_downloads => true },
-    :order => <<-SQL
+  has_many :historic_cites_listing_changes_for_downloads, -> { where(show_in_downloads: true).order(
+    <<-SQL
       effective_at,
       CASE
       WHEN change_type_name = 'ADDITION' THEN 0
@@ -123,20 +120,20 @@ class MTaxonConcept < ActiveRecord::Base
       WHEN change_type_name = 'DELETION' THEN 3
       END
     SQL
-  has_many :current_cites_additions, :foreign_key => :taxon_concept_id,
-    :class_name => MCitesListingChange,
-    :conditions => { :is_current => true, :change_type_name => ChangeType::ADDITION },
-    :order => 'effective_at DESC, species_listing_name ASC'
-  has_many :current_cms_additions, :foreign_key => :taxon_concept_id,
-    :class_name => MCmsListingChange,
-    :conditions => { :is_current => true, :change_type_name => ChangeType::ADDITION },
-    :order => 'effective_at DESC, species_listing_name ASC'
-  scope :by_cites_eu_taxonomy, where(:taxonomy_is_cites_eu => true)
-  scope :by_cms_taxonomy, where(:taxonomy_is_cites_eu => false)
+    ) }, :foreign_key => :taxon_concept_id,
+    :class_name => MCitesListingChange
+  has_many :current_cites_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
+    :foreign_key => :taxon_concept_id,
+    :class_name => MCitesListingChange
+  has_many :current_cms_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
+    :foreign_key => :taxon_concept_id,
+    :class_name => MCmsListingChange
+  scope :by_cites_eu_taxonomy, -> { where(:taxonomy_is_cites_eu => true) }
+  scope :by_cms_taxonomy, -> { where(:taxonomy_is_cites_eu => false) }
 
-  scope :without_non_accepted, where(:name_status => ['A', 'H'])
+  scope :without_non_accepted, -> { where(:name_status => ['A', 'H']) }
 
-  scope :without_hidden, where("#{table_name}.cites_show = 't'")
+  scope :without_hidden, -> { where("#{table_name}.cites_show = 't'") }
 
   scope :by_name, lambda { |name, match_options|
     MTaxonConceptFilterByScientificNameWithDescendants.new(
@@ -152,11 +149,10 @@ class MTaxonConcept < ActiveRecord::Base
     ).relation
   }
 
+  scope :at_level_of_listing, -> { where(:cites_listed => 't') }
 
-  scope :at_level_of_listing, where(:cites_listed => 't')
-
-  scope :taxonomic_layout, order('taxonomic_position')
-  scope :alphabetical_layout, order(['kingdom_position', 'full_name'])
+  scope :taxonomic_layout, -> { order('taxonomic_position') }
+  scope :alphabetical_layout, -> { order(['kingdom_position', 'full_name']) }
   translates :rank_display_name,
     :all_distribution_ary, :native_distribution_ary,
     :introduced_distribution_ary, :introduced_uncertain_distribution_ary,
@@ -215,9 +211,9 @@ class MTaxonConcept < ActiveRecord::Base
 
   def db_ary_to_array(ary)
     if respond_to?(ary)
-      parse_pg_array(send(ary) || '').compact.map do |e|
-        e.force_encoding('utf-8')
-      end
+      attr = send(ary)
+      return [] unless attr.present?
+      attr.map(&:to_s)
     else
       []
     end
@@ -225,9 +221,9 @@ class MTaxonConcept < ActiveRecord::Base
 
   def countries_ids
     if respond_to?(:countries_ids_ary) && countries_ids_ary?
-      parse_pg_array(countries_ids_ary || '').compact
+      countries_ids_ary || []
     elsif respond_to? :tc_countries_ids_ary
-      parse_pg_array(tc_countries_ids_ary || '').compact
+      tc_countries_ids_ary || []
     else
       []
     end
@@ -242,39 +238,39 @@ class MTaxonConcept < ActiveRecord::Base
   end
 
   def all_distribution
-    parse_pg_array(all_distribution_ary || '')
+    all_distribution_ary || []
   end
 
   def all_distribution_iso_codes
-    parse_pg_array(all_distribution_iso_codes_ary || '')
+    all_distribution_iso_codes_ary || []
   end
 
   def native_distribution
-    parse_pg_array(native_distribution_ary || '')
+    native_distribution_ary || []
   end
 
   def introduced_distribution
-    parse_pg_array(introduced_distribution_ary || '')
+    introduced_distribution_ary || []
   end
 
   def introduced_uncertain_distribution
-    parse_pg_array(introduced_uncertain_distribution_ary || '')
+    introduced_uncertain_distribution_ary || []
   end
 
   def reintroduced_distribution
-    parse_pg_array(reintroduced_distribution_ary || '')
+    reintroduced_distribution_ary || []
   end
 
   def extinct_distribution
-    parse_pg_array(extinct_distribution_ary || '')
+    extinct_distribution_ary || []
   end
 
   def extinct_uncertain_distribution
-    parse_pg_array(extinct_uncertain_distribution_ary || '')
+    extinct_uncertain_distribution_ary || []
   end
 
   def uncertain_distribution
-    parse_pg_array(uncertain_distribution_ary || '')
+    uncertain_distribution_ary || []
   end
 
   def recently_changed

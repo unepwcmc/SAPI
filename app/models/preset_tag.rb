@@ -28,7 +28,7 @@ class PresetTag < ActiveRecord::Base
         UPPER(model) LIKE UPPER(:query)",
         :query => "%#{query}%")
     else
-      scoped
+      all
     end
   end
 

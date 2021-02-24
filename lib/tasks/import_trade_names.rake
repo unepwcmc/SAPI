@@ -15,7 +15,7 @@ namespace :import do
 
     taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
     taxon_relationship_type_id = TaxonRelationshipType.
-      find_or_create_by_name(:name => TaxonRelationshipType::HAS_TRADE_NAME).id
+      find_or_create_by(:name => TaxonRelationshipType::HAS_TRADE_NAME).id
 
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
@@ -130,9 +130,9 @@ namespace :import do
     Sapi::Indexes.drop_indexes_on_trade_names
     copy_data(file, TMP_TABLE)
     has_trade_name = TaxonRelationshipType.
-      find_or_create_by_name(:name => TaxonRelationshipType::HAS_TRADE_NAME).id
+      find_or_create_by(:name => TaxonRelationshipType::HAS_TRADE_NAME).id
     has_synonym = TaxonRelationshipType.
-      find_or_create_by_name(:name => TaxonRelationshipType::HAS_SYNONYM).id
+      find_or_create_by(:name => TaxonRelationshipType::HAS_SYNONYM).id
     count_trade_names = TaxonConcept.where(:name_status => 'T').count
     count_synonyms = TaxonConcept.where(:name_status => 'S').count
     count_taxon_names = TaxonName.count
@@ -153,7 +153,7 @@ namespace :import do
       tc.children.each do |child|
         if child.accepted_names.any?
           puts "looking at #{child.full_name} scientific_name"
-          taxon_name = TaxonName.find_or_create_by_scientific_name(child.full_name)
+          taxon_name = TaxonName.find_or_create_by(scientific_name: child.full_name)
           child.update_attributes(:parent_id => nil, :taxon_name_id => taxon_name.id)
         end
       end
