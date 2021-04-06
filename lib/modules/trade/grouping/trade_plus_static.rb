@@ -126,34 +126,32 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     super(group)
   end
 
-  def child_taxa_query(tc_id=nil)
+
+  def child_taxa_join(tc_id=nil)
     return '' if @opts['taxon_id'].blank? && !tc_id
-    tc_id = @opts['taxon_id'] || tc_id
 
     <<-SQL
-    WITH child_taxa AS (
-      SELECT taxon_concept_id AS id
-      FROM all_taxon_concepts_and_ancestors_mview
-      WHERE ancestor_taxon_concept_id IN (#{tc_id}) -- Multiple taxa can be selected
-    )
+    JOIN all_taxon_concepts_and_ancestors_mview ON taxon_concept_id=taxon_id
     SQL
   end
 
+  
   def child_taxa_condition
     return 'TRUE' if @opts['taxon_id'].blank?
-    "taxon_id IN ( SELECT DISTINCT(id) FROM child_taxa )"
+    tc_id = @opts['taxon_id'] || tc_id
+    "ancestor_taxon_concept_id IN ( #{tc_id} )"
   end
 
   def group_query
     columns = @attributes.compact.uniq.join(',')
     quantity_field = "#{@reported_by}_reported_quantity"
     <<-SQL
-      #{child_taxa_query}
       SELECT
         #{sanitise_column_names},
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
+      #{child_taxa_join}
       WHERE #{@condition} AND #{quantity_field} IS NOT NULL
         AND #{child_taxa_condition}
       GROUP BY #{columns}
@@ -175,12 +173,12 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     quantity_field = "#{entity_quantity}_reported_quantity"
     columns = @attributes.compact.uniq.join(',')
     <<-SQL
-      #{child_taxa_query}
       SELECT
         #{sanitise_column_names},
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
+      #{child_taxa_join} 
       WHERE #{@reported_by}_id IN (#{country_ids}) -- @reported_by = importer if importing-from chart, exporter if exporting-to chart
       AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_ids})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_ids})))
       AND #{@condition} AND #{quantity_field} IS NOT NULL
@@ -204,9 +202,10 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       FROM (
         SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
-          #{child_taxa_query}
+      
           SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
+          #{child_taxa_join}
           WHERE #{@condition} AND #{quantity_field} IS NOT NULL AND #{country_condition}
             AND #{child_taxa_condition}
           GROUP BY year, #{columns}
@@ -240,7 +239,6 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     <<-SQL
       SELECT ROW_TO_JSON(row)
       FROM(
-        #{child_taxa_query}
         SELECT
           NULL AS id,
           #{fill_missing_taxonomy},
@@ -248,6 +246,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
           #{ancestors_list(taxonomic_level)},
           COUNT(*) OVER () AS total_count
         FROM #{shipments_table}
+        #{child_taxa_join}
         WHERE #{@condition} AND
         #{quantity_field} IS NOT NULL
         #{group_name_condition}
