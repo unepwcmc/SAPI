@@ -688,7 +688,7 @@ rules:
       rule_name: 'rulename'
       input:
         terms: ['SID', 'SKI', 'SKP']
-        units: ['BSK', 'BAK', 'HRN']
+        units: ['BSK', 'BAK', 'HRN', 'SID']
       output:
         term: 'SKI'
         unit: 'NULL'
