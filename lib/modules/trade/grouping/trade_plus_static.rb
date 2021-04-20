@@ -126,8 +126,20 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     super(group)
   end
 
+  def child_taxa_uniquify
+    return if @opts['taxon_id'].blank?
+    unique_taxa = []
+    taxa = @opts['taxon_id'].split(',')
+    return if taxa.count < 2
+    taxa.each do |taxon|
+      unique_taxa.push(taxon) unless db.execute("SELECT COUNT(*) FROM all_taxon_concepts_and_ancestors_mview WHERE ancestor_taxon_concept_id IN ( #{(taxa - [taxon]).join(',')\
+} ) AND taxon_concept_id = #{taxon}").values.first[0].to_i > 0
+    end
+    @opts['taxon_id'] = unique_taxa.join(',')
+  end
 
   def child_taxa_join(tc_id=nil)
+    child_taxa_uniquify
     return '' if @opts['taxon_id'].blank? && !tc_id
 
     <<-SQL

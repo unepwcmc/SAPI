@@ -360,11 +360,11 @@ rules:
     - rule_no: 21
       rule_name: 'rulename'
       input:
-        terms: ['SID','SKD']
+        terms: ['SID', 'SKD', 'SKP']
         taxa_fields:
           group: ''
         units_fields:
-          units: ['NULL']
+          units: ['NULL', 'BAK', 'HRN', 'BSK']
       output:
         term: 'SKI'
         quantity_modifier: '/'
