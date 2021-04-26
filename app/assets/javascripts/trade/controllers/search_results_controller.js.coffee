@@ -59,7 +59,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
     else
       parseInt(@get('page')) - 1
     @set('page', page)
-    @customTransitionToRoute('search.results', {queryParams: {page: page}})
+    @customTransitionToRoute('search.results', { queryParams: $.extend({}, @get('controllers.search.searchParams'), { page: page }) })
 
   userCanEdit: (callback) ->
     $.ajax({
