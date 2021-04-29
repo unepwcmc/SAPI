@@ -1,3 +1,8 @@
+### 1.6.1
+
+**CITES Checklist pdf updates**
+
+* Update CITES Checklist pdf covers
 ### 1.6.0
 
 **Rails and Ruby upgrade**
