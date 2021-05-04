@@ -1,8 +1,10 @@
 ### 1.6.1
 
-**CITES Checklist pdf updates**
+**CITES Checklist pdf updates and surveys **
 
 * Update CITES Checklist pdf covers
+* Add tracking for Hotjar survey
+
 ### 1.6.0
 
 **Rails and Ruby upgrade**
