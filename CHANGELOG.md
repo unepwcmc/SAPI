@@ -2,7 +2,7 @@
 
 **Trade shipments pagination fix**
 
-* Retain query paramters when moving to next page on trade shipments search functionality
+* Retain query parameters when moving to next page on trade shipments search functionality
 ### 1.6.1
 
 **CITES Checklist pdf updates and surveys**
