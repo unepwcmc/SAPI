@@ -1,6 +1,11 @@
+### 1.6.2
+
+**Trade shipments pagination fix**
+
+* Retain query paramters when moving to next page on trade shipments search functionality
 ### 1.6.1
 
-**CITES Checklist pdf updates and surveys **
+**CITES Checklist pdf updates and surveys**
 
 * Update CITES Checklist pdf covers
 * Add tracking for Hotjar survey
