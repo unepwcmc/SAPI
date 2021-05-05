@@ -15,7 +15,7 @@ class Species::CsvCopyExport
   end
 
   def export
-    unless File.file?(@file_name) # file is cached
+    unless csv_cached?
       return false unless query.any?
       to_csv
     end
@@ -32,6 +32,10 @@ class Species::CsvCopyExport
   end
 
   private
+
+  def csv_cached?
+    File.file?(@file_name)
+  end
 
   def initialize_csv_separator(csv_separator)
     @csv_separator, @csv_separator_char =
