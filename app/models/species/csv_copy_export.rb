@@ -15,10 +15,8 @@ class Species::CsvCopyExport
   end
 
   def export
-    unless File.file?(@file_name)
-      return false unless query.any?
-      to_csv
-    end
+    return false unless query.any?
+    to_csv
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
     @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}_separated.csv"
     [

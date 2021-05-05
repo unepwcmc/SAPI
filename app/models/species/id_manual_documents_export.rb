@@ -19,15 +19,11 @@ class Species::IdManualDocumentsExport < Species::CsvCopyExport
 
   def sql_columns
     general_subtype_column = <<-SQL
-    (
       case
-        when general_subtype is 'general'
+        when general_subtype is TRUE
           then 'Whole animals/plants'
-        when general_subtype is 'parts'
-          then 'Parts and derivatives'
-        else 'N/A'
-    )
-    as general_subtype
+        else 'Parts and derivatives'
+      end
     SQL
 
     [

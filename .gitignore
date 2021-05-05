@@ -28,6 +28,7 @@
 /public/downloads/checklist/*.*
 
 #exports csvs
+/public/downloads/documents/*.csv
 /public/downloads/quotas/*.csv
 /public/downloads/cites_listings/*.csv
 /public/downloads/cites_suspensions/*.csv
