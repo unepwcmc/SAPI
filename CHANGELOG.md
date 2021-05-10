@@ -1,8 +1,15 @@
+### 1.6.3
+
+**Add Identification type column to ID Documents download**
+
+* Add Identification type column to ID Documents download
+
 ### 1.6.2
 
 **Trade shipments pagination fix**
 
 * Retain query parameters when moving to next page on trade shipments search functionality
+
 ### 1.6.1
 
 **CITES Checklist pdf updates and surveys**

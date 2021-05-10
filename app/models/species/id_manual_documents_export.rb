@@ -18,6 +18,14 @@ class Species::IdManualDocumentsExport < Species::CsvCopyExport
   end
 
   def sql_columns
+    general_subtype_column = <<-SQL
+      case
+        when general_subtype is TRUE
+          then 'Whole animals/plants'
+        else 'Parts and derivatives'
+      end
+    SQL
+
     [
       :id,
       :manual_id,
@@ -25,6 +33,7 @@ class Species::IdManualDocumentsExport < Species::CsvCopyExport
       :volume,
       :date,
       :document_type,
+      general_subtype_column,
       :language,
       :primary_document_id,
       :taxon_names,
@@ -46,6 +55,7 @@ class Species::IdManualDocumentsExport < Species::CsvCopyExport
       'Volume num.',
       'Date',
       'Document type',
+      'Identification type',
       'Language',
       'Primary ID',
       'Taxon names',
