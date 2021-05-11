@@ -1,7 +1,7 @@
 class Trade::Grouping::Compliance < Trade::Grouping::Base
 
+  # Complete up to current year - 1
   COUNTRIES = {
-    2021 => 182,
     2020 => 182,
     2019 => 182,
     2018 => 182,
