@@ -1,4 +1,4 @@
-class UpdateTradeShipmentsMandatoryQuotasView2 < ActiveRecord::Migration
+class UpdateTradeShipmentsMandatoryQuotas2View < ActiveRecord::Migration
   def up
     execute "DROP MATERIALIZED VIEW IF EXISTS trade_shipments_mandatory_quotas_mview CASCADE"
     execute "DROP VIEW IF EXISTS trade_shipments_mandatory_quotas_view"
