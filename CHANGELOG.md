@@ -1,8 +1,8 @@
 ### 1.6.4
 
-**Trade expemption, quotas and reservations data updates**
+**Trade exemption, quotas and reservations data updates**
 
-* Update trade expemption, quotas and reservations
+* Update trade exemption, quotas and reservations
 
 ### 1.6.3
 
