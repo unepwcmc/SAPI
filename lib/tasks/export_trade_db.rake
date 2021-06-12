@@ -181,6 +181,7 @@ namespace :export do
         }
         process_results(results, options)
         offset = offset + RECORDS_PER_FILE
+        query = nil
       end
       Rails.logger.info("Trade database completely exported!")
       zipfile = 'tmp/trade_db_files/trade_db.zip'
@@ -222,10 +223,10 @@ namespace :export do
     end
     Rails.logger.info("Processing #{filename}.")
     File.open("#{options[:dir]}#{filename}", 'w') do |file|
-      file.write columns.join(',')
+      file.write columns.join('|')
       values.each do |record|
         file.write "\n"
-        file.write record.join(',')
+        file.write record.join('|')
       end
     end
   end
