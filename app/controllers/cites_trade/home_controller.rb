@@ -21,6 +21,8 @@ class CitesTrade::HomeController < CitesTradeController
       filename: full_download_path.split("/").last,
       type: "application/pdf"
     )
+
+    AnalyticsEvent.create(event_name: 'full_database_download', event_type: 'download')
   end
 
 end
