@@ -19,7 +19,7 @@ class CitesTrade::HomeController < CitesTradeController
     send_file(
       "#{Rails.root}/#{full_download_path}",
       filename: full_download_path.split("/").last,
-      type: "application/pdf"
+      type: "application/zip"
     )
 
     AnalyticsEvent.create(event_name: 'full_database_download', event_type: 'download')
