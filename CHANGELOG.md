@@ -1,3 +1,14 @@
+### 1.6.5
+
+**CITES Trade DB**
+
+* Update to version 2021.1(replace zip file on the server, update ENV var, text updates)
+
+**Species +**
+
+* Add new distributions and distributions tags files
+* Small fix to helpers_import distribution tags header
+
 ### 1.6.4
 
 **Trade exemption, quotas and reservations data updates**
