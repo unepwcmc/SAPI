@@ -108,6 +108,15 @@ class CsvToDbMap
       'Designation' => 'designation varchar',
       'Reference' => 'citation text'
     },
+    'distribution_tags_import' => {
+      'Species RecID' => 'legacy_id integer',
+      'taxon_concept_id' => 'taxon_concept_id integer',
+      'Rank' => 'rank varchar',
+      'GEO_entity_type' => 'geo_entity_type varchar',
+      'ISO Code 2' => 'iso_code2 varchar',
+      'Tags' => 'tags varchar',
+      'Designation' => 'designation varchar'
+    },
     'common_name_import' => {
       'ComName' => 'name varchar',
       'LangShort' => 'language varchar',
@@ -219,14 +228,6 @@ class CsvToDbMap
       'EndNotificationID' => 'end_notification_legacy_id integer',
       'Notes' => 'notes varchar',
       'ExcludedTaxa' => 'exclusions text'
-    },
-    'distribution_tags_import' => {
-      'Species RecID' => 'legacy_id integer',
-      'Rank' => 'rank varchar',
-      'GEO_entity_type' => 'geo_entity_type varchar',
-      'ISO Code 2' => 'iso_code2 varchar',
-      'Tags' => 'tags varchar',
-      'Designation' => 'designation varchar'
     },
     'hash_annotations_import' => {
       'Hash No' => 'symbol varchar',
