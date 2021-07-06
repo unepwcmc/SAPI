@@ -46,6 +46,7 @@ class Checklist::TimelinesForTaxonConcept
       @raw_timelines[species_listing_name].add_event(timeline_event)
     end
     @raw_timelines.values.each do |t|
+      t.resolve_simultaneous_events
       t.change_consecutive_additions_to_amendments
       t.add_intervals
       @has_reservations = true if t.has_nested_timelines
