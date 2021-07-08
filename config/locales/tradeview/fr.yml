@@ -1,0 +1,9 @@
+fr:
+  tradeplus:
+    units:
+      items: 'FR: Number of specimens'
+      kg: 'FR: Kilograms (kg)'
+      l: 'FR: Litres (l)'
+      m: 'FR: Metres (m)'
+      m2: 'FR: Square metres (m²)'
+      m3: 'FR: Cubic metres (m³)'
