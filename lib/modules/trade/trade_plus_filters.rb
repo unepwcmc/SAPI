@@ -5,7 +5,7 @@ module Trade::TradePlusFilters
                   source purpose unit year appendix].freeze
 
   TAXONOMY_ORDERING =  ['Mammals', 'Birds', 'Reptiles', 'Amphibians', 'Fish', 'Coral', 'Non-coral invertebrates', 'Plants', 'Timber'].freeze
-  UNIT_ORDERING = ['m3', 'kg', 'l', 'm', 'Number of items', 'm2'].freeze
+  UNIT_ORDERING = ['m3', 'kg', 'l', 'm', 'items', 'm2'].freeze
 
   def response_ordering(response)
     result = {}
@@ -13,7 +13,7 @@ module Trade::TradePlusFilters
     grouped.each do |k, v|
       values = format_values(k, v)
       
-      result[k] = values.sort_by { |i| ordering(k, i['name']) }
+      result[k] = values.sort_by { |i| ordering(k, i['id']) }
     end
     result
   end
@@ -97,10 +97,11 @@ module Trade::TradePlusFilters
     when 'units'
       values.map do |value|
         value = JSON.parse(value['data'])
-        value['id'], value['name'] = 'items', 'Number of items' if value['id'].nil?
+        value['id'] = value['name'] = 'items' if value['id'].nil?
+        value['name'] = I18n.t("tradeplus.units.#{value['name']}", default: nil) 
 
-        value
-      end
+        value['name'].nil? ? nil : value
+      end.compact
     when 'origins'
       values.map do |value|
         value = JSON.parse(value['data'])
