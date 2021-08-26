@@ -44,8 +44,18 @@ class Trade::FormattedCodes::TradePlusFormattedFinalCodes < Trade::FormattedCode
     <<-SQL
       LEFT OUTER JOIN codes_map ON (
         (
-          codes_map.term_id IS NULL AND
+          codes_map.term_id = ts.term_id AND
           (codes_map.unit_id = ts.unit_id OR codes_map.unit_id = -1 AND ts.unit_id IS NULL) AND
+          codes_map.taxa_field IS NULL
+        ) OR
+        (
+          codes_map.term_id = ts.term_id AND
+          codes_map.unit_id IS NULL AND
+          codes_map.taxa_field IS NULL
+        ) OR
+        (
+          (codes_map.unit_id = ts.unit_id OR codes_map.unit_id = -1 AND ts.unit_id IS NULL) AND
+          codes_map.term_id IS NULL AND
           codes_map.taxa_field IS NULL
         )
       )
