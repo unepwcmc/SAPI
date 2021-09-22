@@ -48,7 +48,7 @@ rules:
     - rule_no: 8
       rule_name: 'rulename'
       input:
-        genus: ["Aquilaria","Pericopsis","Cedrela","GuaiaMTQ","Swietenia","Dalbergia","Prunus","Gonystylus","Diospyros","Abies","Guarea","Guibourtia","Gyrinops","Platymiscium","Pterocarpus","Taxus"]
+        genus: ["Aquilaria","Pericopsis","Cedrela","Guaiacum","Swietenia","Dalbergia","Prunus","Gonystylus","Diospyros","Abies","Guarea","Guibourtia","Gyrinops","Platymiscium","Pterocarpus","Taxus"]
       output:
         group: 'Plants (timber)'
     - rule_no: 9
@@ -582,7 +582,7 @@ rules:
         terms_fields:
           terms: ['LOG', 'SAW', 'TIM']
         taxa_fields:
-          taxa: ["GuaiaMTQ sanctum","GuaiaMTQ officinale"]
+          taxa: ["Guaiacum sanctum","Guaiacum officinale"]
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
