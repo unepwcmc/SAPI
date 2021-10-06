@@ -14,6 +14,7 @@ class Trade::TradePlusGroupView
 
   private
 
+  # WARNING: localisation manually added to the view, so if you want to recreate the group view using this script, localisation will be lost
   def formatted_query
     <<-SQL
     SELECT
