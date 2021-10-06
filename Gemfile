@@ -32,7 +32,7 @@ gem 'groupdate'
 gem "chartkick"
 gem 'rubyzip', '>= 1.0.0'
 
-gem 'sidekiq', '< 5'
+gem 'sidekiq', '< 6'
 gem 'sidekiq-status'
 gem 'sidekiq-unique-jobs', '~> 4.0.17'
 gem 'redis-rails', '~> 4.0.0'
