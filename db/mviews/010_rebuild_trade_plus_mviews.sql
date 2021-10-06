@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION rebuild_trade_plus_complete_mview() RETURNS void
     DROP MATERIALIZED VIEW IF EXISTS trade_plus_complete_mview CASCADE;
     -- Below is used for child taxa queries
     RAISE INFO 'Refreshing all taxon concepts and ancestors materialized view';
-    -- REFRESH MATERIALIZED VIEW all_taxon_concepts_and_ancestors_mview;
+    REFRESH MATERIALIZED VIEW all_taxon_concepts_and_ancestors_mview;
 
     RAISE INFO 'Creating Trade Plus complete materialized view';
     CREATE MATERIALIZED VIEW trade_plus_complete_mview AS
