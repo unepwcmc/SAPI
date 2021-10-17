@@ -23,7 +23,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def sanitise_response_over_time_query(response)
     response.map do |value|
-      value['id'], value['name'] = 'unreported', 'Unreported' if value['id'].nil?
+      value['id'], value['name'] = 'unreported', I18n.t('tradeplus.unreported') if value['id'].nil?
     end
     response.sort_by { |i| i['name'] }
   end
