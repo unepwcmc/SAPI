@@ -33,8 +33,8 @@ class Trade::TradePlusFilters
       (WITH country_data AS (
         SELECT id,name_#{locale},iso_code2
         FROM geo_entities
-        WHERE geo_entity_type_id IN (1,4,7) --this is to include both countries, territories and trade entities
-        AND id NOT IN (218) --this is to exclude TW(included into CH)
+        WHERE geo_entity_type_id IN (1,4,7) --(1,4,7) this is to include both countries, territories and trade entities
+        AND id NOT IN (218,277,278) --this is to exclude TW(included into CH) and North and South Atlantic stock
 
       )
       SELECT 'countries' AS attribute_name, json_build_object('id', id, 'name', name_#{locale}, 'iso2', iso_code2)::jsonb AS data
@@ -128,6 +128,7 @@ class Trade::TradePlusFilters
   end
 
   def ordering(attribute, attribute_value)
+    # TODO order source so that unreported is at the end
     if attribute == 'taxonomic_groups'
       # If there are unexpected attribute values put them at the end
       taxonomy_ordering.index(attribute_value) || taxonomy_ordering.length
