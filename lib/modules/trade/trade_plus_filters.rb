@@ -15,8 +15,10 @@ class Trade::TradePlusFilters
     grouped = response.group_by { |r| r['attribute_name'] }
     grouped.each do |k, v|
       values = format_values(k, v)
-
       result[k] = values.sort_by { |i| ordering(k, i['name']) }
+
+      # this is to push the "unreported" value at the bottom of the list
+      result[k] = values.partition { |value| value['id'] != 'unreported' }.reduce(:+) if ['sources', 'purposes'].include?(k)
     end
     result
   end
@@ -128,7 +130,6 @@ class Trade::TradePlusFilters
   end
 
   def ordering(attribute, attribute_value)
-    # TODO order source so that unreported is at the end
     if attribute == 'taxonomic_groups'
       # If there are unexpected attribute values put them at the end
       taxonomy_ordering.index(attribute_value) || taxonomy_ordering.length
