@@ -15,8 +15,10 @@ class Trade::TradePlusFilters
     grouped = response.group_by { |r| r['attribute_name'] }
     grouped.each do |k, v|
       values = format_values(k, v)
-
       result[k] = values.sort_by { |i| ordering(k, i['name']) }
+
+      # this is to push the "unreported" value at the bottom of the list
+      result[k] = values.partition { |value| value['id'] != 'unreported' }.reduce(:+) if ['sources', 'purposes'].include?(k)
     end
     result
   end
@@ -33,8 +35,8 @@ class Trade::TradePlusFilters
       (WITH country_data AS (
         SELECT id,name_#{locale},iso_code2
         FROM geo_entities
-        WHERE geo_entity_type_id IN (1,4,7) --this is to include both countries, territories and trade entities
-        AND id NOT IN (218) --this is to exclude TW(included into CH)
+        WHERE geo_entity_type_id IN (1,4,7) --(1,4,7) this is to include both countries, territories and trade entities
+        AND id NOT IN (218,277,278) --this is to exclude TW(included into CH) and North and South Atlantic stock
 
       )
       SELECT 'countries' AS attribute_name, json_build_object('id', id, 'name', name_#{locale}, 'iso2', iso_code2)::jsonb AS data
