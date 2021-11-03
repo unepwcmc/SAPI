@@ -1,5 +1,5 @@
 class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
-  attr_reader :country_ids
+  attr_reader :country_ids, :locale
 
   def initialize(attributes, opts={})
     # exporter or importer
@@ -7,6 +7,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     @reported_by_party = opts[:reported_by_party] || true
     @country_ids = opts[:country_ids]
     @sanitised_column_names = []
+    @locale = opts[:locale] || 'en'
     super(attributes, opts)
   end
 
@@ -22,9 +23,10 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def sanitise_response_over_time_query(response)
     response.map do |value|
-      value['id'], value['name'] = 'unreported', 'Unreported' if value['id'].nil?
+      value['id'], value['name'] = 'unreported', I18n.t('tradeplus.unreported') if value['id'].nil?
     end
     response.sort_by { |i| i['name'] }
+    response.partition { |value| value['id'] != 'unreported' }.reduce(:+)
   end
 
   def taxonomic_grouping(opts={})
@@ -53,77 +55,87 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     id: 'id',
     year: 'year',
     appendix: 'appendix',
-    importer: 'importer',
     importer_iso: 'importer_iso',
-    exporter: 'exporter',
     exporter_iso: 'exporter_iso',
-    term: 'term',
     term_id: 'term_id',
-    unit: 'unit',
     unit_id: 'unit_id',
-    purpose: 'purpose',
     purpose_id: 'purpose_id',
-    source: 'source',
     source_id: 'source_id',
     source_code: 'source_code',
     taxon_name: 'taxon_name',
     genus_name: 'genus_name',
     family_name: 'family_name',
     class_name: 'class_name',
-    group_name: 'group_name',
     taxon_id: 'taxon_id',
     country_ids: 'country_ids'
   }.freeze
 
   def attributes
-    ATTRIBUTES
+    ATTRIBUTES.merge(localize_attributes)
+  end
+
+  def localize_attributes
+    hash = {}
+    attrs = %w[importer exporter term unit purpose source group_name]
+    attrs.each { |h| hash["#{h}_#{locale}"] = "#{h}_#{locale}" }
+    hash.symbolize_keys
   end
 
   FILTERING_ATTRIBUTES = {
     time_range_start: 'year',
     time_range_end: 'year',
-    term_names: 'term',
     term_ids: 'term_id',
-    source_names: 'source',
     source_ids: 'source_id',
-    purpose_names: 'purpose',
     purpose_ids: 'purpose_id',
-    unit_name: 'unit',
     unit_id: 'unit_id',
     taxon_id: 'taxon_id',
     importer_ids: 'importer_id',
     exporter_ids: 'exporter_id',
     origin_ids: 'origin_id',
-    appendices: 'appendix',
-    taxonomic_group: 'group_name'
+    appendices: 'appendix'
   }.freeze
   def self.filtering_attributes
-    FILTERING_ATTRIBUTES
+    FILTERING_ATTRIBUTES.merge(localize_filtering_attributes)
+  end
+
+  def self.localize_filtering_attributes
+    {
+      term_names: "term_#{@locale}",
+      source_names: "source_#{@locale}",
+      purpose_names: "purpose_#{@locale}",
+      unit_name: "unit_#{@locale}",
+      taxonomic_group: "group_name_#{@locale}"
+    }
   end
 
   DEFAULT_FILTERING_ATTRIBUTES = {
     time_range_start: 2.years.ago.year,
     time_range_end: 1.year.ago.year,
-    unit_name: 'Number of Items',
+    unit_name: 'Number of specimens',
   }.freeze
   def self.default_filtering_attributes
     DEFAULT_FILTERING_ATTRIBUTES
   end
 
   GROUPING_ATTRIBUTES = {
-    terms: ['term', 'term_id'],
-    sources: ['source', 'source_id', 'source_code'],
-    exporting: ['exporter', 'exporter_iso'],
-    importing: ['importer', 'importer_iso'],
     species: ['taxon_name', 'appendix', 'taxon_id'],
     taxonomy: ['']
   }.freeze
   def self.grouping_attributes
-    GROUPING_ATTRIBUTES
+    GROUPING_ATTRIBUTES.merge(localize_grouping_attributes)
   end
 
-  def self.get_grouping_attributes(group)
-    super(group)
+  def self.localize_grouping_attributes
+    {
+      terms: ["term_#{@locale}", 'term_id'],
+      sources: ["source_#{@locale}", 'source_id', 'source_code'],
+      exporting: ["exporter_#{@locale}", 'exporter_iso'],
+      importing: ["importer_#{@locale}", 'importer_iso'],
+    }
+  end
+
+  def self.get_grouping_attributes(group, locale=nil)
+    super(group, locale)
   end
 
   def child_taxa_uniquify
@@ -147,7 +159,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     SQL
   end
 
-  
+
   def child_taxa_condition
     return 'TRUE' if @opts['taxon_id'].blank?
     tc_id = @opts['taxon_id'] || tc_id
@@ -190,7 +202,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
-      #{child_taxa_join} 
+      #{child_taxa_join}
       WHERE #{@reported_by}_id IN (#{country_ids}) -- @reported_by = importer if importing-from chart, exporter if exporting-to chart
       AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_ids})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_ids})))
       AND #{@condition} AND #{quantity_field} IS NOT NULL
@@ -214,7 +226,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       FROM (
         SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
-      
+
           SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
           #{child_taxa_join}
