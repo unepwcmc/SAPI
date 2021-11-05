@@ -113,7 +113,7 @@ class Trade::TradePlusFilters
     when 'origins'
       values.map do |value|
         value = JSON.parse(value['data'])
-        value['id'], value['iso2'], value['name'] = 'direct', 'direct', I18n.t('tradeplus.direct') if value['id'].nil?
+        value['id'], value['iso2'], value['name'] = 'direct', I18n.t('tradeplus.direct'), I18n.t('tradeplus.direct') if value['id'].nil?
 
         value
       end
