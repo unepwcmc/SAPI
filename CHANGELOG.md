@@ -1,3 +1,10 @@
+### 1.7.0
+
+**Multilingual extension of Tradeplus**
+
+* localise SQL views
+* fix formatting rules
+
 ### 1.6.4
 
 **Trade exemption, quotas and reservations data updates**
