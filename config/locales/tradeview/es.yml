@@ -1,0 +1,12 @@
+es:
+  tradeplus:
+    units:
+      m3: 'Metros cúbicos (m³)'
+      kg: 'Kilogramos (kg)'
+      litros: 'Litros (l)'
+      m: 'Metros (m)'
+      items: 'Número de ejemplares'
+      m2: 'Metros cuadrados (m²)'
+    taxon_groups: 'Mamiferos,Aves,Reptiles,Anfibios,Pez,Coral,Invertebrados no coralinos,Plantas (otro que madera),Plantas (madera)'
+    unreported: 'No denunciado'
+    direct: 'Directo'

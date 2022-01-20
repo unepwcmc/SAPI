@@ -1,4 +1,4 @@
-SELECT ts.*,
+SELECT ts.*,terms.name_es AS term_es,terms.name_fr AS term_fr,units.name_es AS unit_es,units.name_fr AS unit_fr,
        CASE WHEN ts.reported_by_exporter IS FALSE THEN
          CASE
            WHEN ts.term_quantity_modifier = '*' THEN
@@ -46,3 +46,5 @@ SELECT ts.*,
          ELSE NULL
        END AS exporter_reported_quantity
 FROM trade_plus_formatted_data_final_view ts
+LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
+LEFT OUTER JOIN trade_codes units ON ts.unit_id = units.id
