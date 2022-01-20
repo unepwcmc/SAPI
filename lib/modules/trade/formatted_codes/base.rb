@@ -63,28 +63,42 @@ class Trade::FormattedCodes::Base
     family_id: 'ts.taxon_concept_family_id',
     genus_name: 'ts.taxon_concept_genus_name',
     genus_id: 'ts.taxon_concept_genus_id',
-    group_name: 'ts.group',
+    group_name_en: 'ts.group_en',
+    group_name_es: 'ts.group_es',
+    group_name_fr: 'ts.group_fr',
     quantity: 'ts.quantity',
     exporter_id: 'exporters.id',
     exporter_iso: 'exporters.iso_code2',
-    exporter: 'exporters.name_en',
+    exporter_en: 'exporters.name_en',
+    exporter_es: 'exporters.name_es',
+    exporter_fr: 'exporters.name_fr',
     importer_id: 'importers.id',
     importer_iso: 'importers.iso_code2',
-    importer: 'importers.name_en',
+    importer_en: 'importers.name_en',
+    importer_es: 'importers.name_es',
+    importer_fr: 'importers.name_fr',
     origin_id: 'origins.id',
     origin_iso: 'origins.iso_code2',
-    origin: 'origins.name_en',
+    origin_en: 'origins.name_en',
+    origin_es: 'origins.name_es',
+    origin_fr: 'origins.name_fr',
     purpose_id: 'purposes.id',
-    purpose: 'purposes.name_en',
+    purpose_en: 'purposes.name_en',
+    purpose_es: 'purposes.name_es',
+    purpose_fr: 'purposes.name_fr',
     purpose_code: 'purposes.code',
     source_id: 'sources.id',
-    source: 'sources.name_en',
+    source_en: 'sources.name_en',
+    source_es: 'sources.name_es',
+    source_fr: 'sources.name_fr',
     source_code: 'sources.code',
     rank_id: 'ranks.id',
-    rank_name: 'ranks.name'
+    rank_name_en: 'ranks.display_name_en',
+    rank_name_es: 'ranks.display_name_es',
+    rank_name_fr: 'ranks.display_name_fr'
   }.freeze
   GROUP_EXTRA_ATTRIBUTES = %w(
-    quantity ts.term_id terms.code terms.name_en ts.unit_id units.code units.name_en
+    quantity ts.term_id terms.code terms.name_en terms.name_es terms.name_fr ts.unit_id units.code units.name_en units.name_es units.name_fr
   ).freeze
 
   def formatted_query

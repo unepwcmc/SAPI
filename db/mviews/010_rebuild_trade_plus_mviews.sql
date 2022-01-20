@@ -4,6 +4,7 @@ CREATE OR REPLACE FUNCTION rebuild_trade_plus_complete_mview() RETURNS void
   BEGIN
     DROP MATERIALIZED VIEW IF EXISTS trade_plus_complete_mview CASCADE;
     -- Below is used for child taxa queries
+    RAISE INFO 'Refreshing all taxon concepts and ancestors materialized view';
     REFRESH MATERIALIZED VIEW all_taxon_concepts_and_ancestors_mview;
 
     RAISE INFO 'Creating Trade Plus complete materialized view';
@@ -33,10 +34,10 @@ CREATE OR REPLACE FUNCTION create_trade_plus_complete_mview_indexes() RETURNS vo
     CREATE INDEX "index_trade_plus_complete_mview_on_source_id" ON trade_plus_complete_mview USING btree (source_id);
     CREATE INDEX "index_trade_plus_complete_mview_on_term_id" ON trade_plus_complete_mview USING btree (term_id);
     CREATE INDEX "index_trade_plus_complete_mview_on_term_code" ON trade_plus_complete_mview USING btree (term_code);
-    CREATE INDEX "index_trade_plus_complete_mview_on_term" ON trade_plus_complete_mview USING btree (term);
+    CREATE INDEX "index_trade_plus_complete_mview_on_term_en" ON trade_plus_complete_mview USING btree (term_en);
     CREATE INDEX "index_trade_plus_complete_mview_on_unit_id" ON trade_plus_complete_mview USING btree (unit_id);
     CREATE INDEX "index_trade_plus_complete_mview_on_unit_code" ON trade_plus_complete_mview USING btree (unit_code);
-    CREATE INDEX "index_trade_plus_complete_mview_on_unit" ON trade_plus_complete_mview USING btree (unit);
+    CREATE INDEX "index_trade_plus_complete_mview_on_unit_en" ON trade_plus_complete_mview USING btree (unit_en);
     CREATE INDEX "index_trade_plus_complete_mview_on_year" ON trade_plus_complete_mview USING brin (year);
     CREATE INDEX "index_trade_plus_complete_mview_on_year_exporter_id" ON trade_plus_complete_mview USING brin (year, exporter_id);
     CREATE INDEX "index_trade_plus_complete_mview_on_year_importer_id" ON trade_plus_complete_mview USING brin (year, importer_id);

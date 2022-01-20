@@ -23,10 +23,10 @@ class Trade::FormattedCodes::TradePlusFormattedCodes < Trade::FormattedCodes::Ba
              -- after the processing is done. This is to get back to just a unique NULL representation.
              NULLIF(COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id), -1) AS term_id,
              NULLIF(COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code), 'NULL') AS term_code,
-             NULLIF(COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en), 'NULL') AS term,
+             NULLIF(COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en), 'NULL') AS term_en,
              NULLIF(COALESCE(MAX(COALESCE(output_unit_id, codes_map.unit_id)), ts.unit_id), -1) AS unit_id,
              NULLIF(COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code), 'NULL') AS unit_code,
-             NULLIF(COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en), 'NULL') AS unit,
+             NULLIF(COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en), 'NULL') AS unit_en,
              MAX(term_quantity_modifier) AS term_quantity_modifier,
              MAX(term_modifier_value)::FLOAT AS term_modifier_value,
              MAX(unit_quantity_modifier) AS unit_quantity_modifier,
@@ -38,9 +38,9 @@ class Trade::FormattedCodes::TradePlusFormattedCodes < Trade::FormattedCodes::Ba
         LEFT OUTER JOIN trade_codes sources ON ts.source_id = sources.id
         LEFT OUTER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
         INNER JOIN ranks ON ranks.id = ts.taxon_concept_rank_id
-        LEFT OUTER JOIN geo_entities exporters ON ts.exporter_id = exporters.id
-        LEFT OUTER JOIN geo_entities importers ON ts.importer_id = importers.id
-        LEFT OUTER JOIN geo_entities origins ON ts.country_of_origin_id = origins.id
+        LEFT OUTER JOIN geo_entities exporters ON ts.china_exporter_id = exporters.id
+        LEFT OUTER JOIN geo_entities importers ON ts.china_importer_id = importers.id
+        LEFT OUTER JOIN geo_entities origins ON ts.china_origin_id = origins.id
         WHERE #{exemptions}
         GROUP BY #{group_by_attributes}
     SQL
@@ -98,7 +98,7 @@ class Trade::FormattedCodes::TradePlusFormattedCodes < Trade::FormattedCodes::Ba
         ts.taxon_concept_family_name = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'family', ',')) OR
         ts.taxon_concept_genus_name = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'genus', ',')) OR
         ts.taxon_concept_full_name = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'taxa', ',')) OR
-        ts.group = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'group', ','))
+        ts.group_en = ANY (STRING_TO_ARRAY(codes_map.taxa_field ->> 'group', ','))
       )
     SQL
   end
@@ -108,7 +108,7 @@ class Trade::FormattedCodes::TradePlusFormattedCodes < Trade::FormattedCodes::Ba
     'genus'=> 'ts.taxon_concept_genus_name',
     'units'=> 'ts.unit_id',
     'taxa'=> 'ts.taxon_concept_full_name',
-    'group'=> 'ts.group',
+    'group'=> 'ts.group_en',
     'appendices' => 'ts.appendix',
     'order' => 'ts.taxon_concept_order_name'
   }.freeze

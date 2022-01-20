@@ -2,9 +2,10 @@ module Trade::RebuildTradePlusViews
   def self.run
     time = "#{Time.now.hour}#{Time.now.min}#{Time.now.sec}"
     timestamp = Date.today.to_s.gsub('-', '') + time
-    puts "Rebuild group SQL view..."
-    self.rebuild_sql_views(:group, timestamp)
-    self.rebuild_trade_plus_view(:group)
+    # WARNING: localisation manually added to the group view, so if you want to recreate the group view using this script, localisation will be lost
+    # puts "Rebuild group SQL view..."
+    # self.rebuild_sql_views(:group, timestamp)
+    # self.rebuild_trade_plus_view(:group)
     puts "Rebuild trade codes SQL views..."
     self.rebuild_sql_views(:trade_codes, timestamp)
     self.rebuild_sql_views(:final_trade_codes, timestamp)

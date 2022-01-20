@@ -29,7 +29,7 @@ class Api::V1::ShipmentsController < ApplicationController
     @data = Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
                       sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
                                                           query.json_by_attribute(query.run, params_hash)
-           end
+            end
 
     render :json => @data
   end
@@ -144,12 +144,12 @@ class Api::V1::ShipmentsController < ApplicationController
       :source_names, :source_ids, :unit_name, :unit_id, :appendices, :reported_by,
       :taxonomic_level, :taxonomic_group_name, :importer, :exporter, :origin, :taxon_id,
       :taxonomic_group, :country_ids, :reported_by_party, :unit_ids,
-      :origin_ids, :importer_ids, :exporter_ids
+      :origin_ids, :importer_ids, :exporter_ids, :locale
     )
   end
 
   def sanitized_attributes
-    @grouping_class.get_grouping_attributes(params[:group_by])
+    @grouping_class.get_grouping_attributes(params[:group_by], params[:locale])
   end
 
   def authenticate
