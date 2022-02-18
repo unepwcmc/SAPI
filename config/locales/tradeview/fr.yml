@@ -7,6 +7,6 @@ fr:
       m: 'Mètres (m)'
       items: 'Nombre de spécimens'
       mètres carrés: 'Mètres carrés (m²)'
-    taxon_groups: 'Mammiferes,Oiseaux,Reptiles,Amphibiens,Poisson,Coraux,Invertebres autres que les coraux,Plantes (atre que bois),Plantes (bois)'
+    taxon_groups: 'Mammifères,Oiseaux,Reptiles,Amphibiens,Poissons,Coraux,Invertébrés autres que les coraux,Plantes (autres que bois),Plantes (bois)'
     unreported: 'Non signalé'
     direct: 'Direct'
