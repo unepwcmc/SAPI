@@ -4,9 +4,8 @@ class Species::TaxonConceptsFullListExport < Species::CsvCopyExport
     rel = MTaxonConcept.from(table_name).order('taxonomic_position')
     rel = rel.where(:show_in_species_plus => true)
              .by_cites_eu_taxonomy
-             .includes(:cites_listing_changes)
-             .merge(MCitesListingChange.where(is_current: true))
-             .limit(100)
+             # .includes(:cites_listing_changes)
+             # .merge(MCitesListingChange.where(is_current: true))
     rel.select(sql_columns)
   end
 
@@ -29,8 +28,10 @@ class Species::TaxonConceptsFullListExport < Species::CsvCopyExport
        "species_name", "subspecies_name", "cites_status", "cites_listing",
        "eu_status", "eu_listing", "author_year", "created_at", "updated_at",
        "english_names_ary", "spanish_names_ary", "french_names_ary", "synonyms_ary",
-       "synonyms_author_years_ary", "all_distribution_iso_codes_ary"
+       "synonyms_author_years_ary", "all_distribution_iso_codes_ary", "all_distribution_ary_en"
     ]
+    # 'cites_listing_changes_mview.change_type_name', 'cites_listing_changes_mview.full_note_en',
+    # 'cites_listing_changes_mview.full_note_es', 'cites_listing_changes_mview.full_note_fr',
   end
 
   def csv_column_headers
@@ -42,5 +43,7 @@ class Species::TaxonConceptsFullListExport < Species::CsvCopyExport
       'Date added', 'Date updated', 'English Names', 'Spanish Names', 'French Names',
       'Synonyms', 'Synonyms Author', 'Distribution ISO Code 2', 'Distribution'
     ]
+    #, 'Listing Change Type',
+    # 'Listing Changes Note EN', 'Listing Changes Note ES', 'Listing Changes Note FR'
   end
 end
