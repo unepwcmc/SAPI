@@ -242,6 +242,28 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     SQL
   end
 
+  def aggregated_over_time_query
+    quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
+
+    <<-SQL
+      SELECT ROW_TO_JSON(row)
+      FROM (
+        SELECT JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
+        FROM (
+          SELECT year, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
+          FROM #{shipments_table}
+          #{child_taxa_join}
+          WHERE #{@condition} AND #{quantity_field} IS NOT NULL AND #{country_condition}
+            AND #{child_taxa_condition}
+          GROUP BY year
+          #{quantity_condition(quantity_field)}
+          ORDER BY value DESC
+          #{limit}
+        ) t
+      ) row
+    SQL
+  end
+
   def taxonomic_query(opts)
     quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
     taxonomic_level = opts[:taxonomic_level] || 'class'
