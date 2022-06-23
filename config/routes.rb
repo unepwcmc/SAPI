@@ -39,6 +39,7 @@ SAPI::Application.routes.draw do
       get '/shipments/chart' => 'shipments#chart_query'
       get '/shipments/grouped' => 'shipments#grouped_query'
       get '/shipments/over_time' => 'shipments#over_time_query'
+      get '/shipments/aggregated_over_time' => 'shipments#aggregated_over_time_query'
       get '/shipments/country' => 'shipments#country_query'
       get '/shipments/search' => 'shipments#search_query'
       get '/shipments/download' => 'shipments#download_data'

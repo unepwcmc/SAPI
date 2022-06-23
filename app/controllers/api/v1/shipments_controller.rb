@@ -75,6 +75,17 @@ class Api::V1::ShipmentsController < ApplicationController
     render json: @over_time_data
   end
 
+  # TODO refactor to merge this method and the over_time one above together
+  def aggregated_over_time_query
+    # TODO Remember to implement permitted parameters here
+    query = @grouping_class.new(sanitized_attributes, params)
+    @aggregated_over_time_data = Rails.cache.fetch(['aggregated_over_time_data', params], expires_in: 1.week) do
+      query.aggregated_over_time_data
+    end
+
+    render json: @aggregated_over_time_data
+  end
+
   def download_data
     @download_data = Rails.cache.fetch(['download_data', params], expires_in: 1.week) do
                        Trade::DownloadDataRetriever.dashboard_download(download_params).to_a
