@@ -17,6 +17,12 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     sanitise_response_over_time_query(response)
   end
 
+  def aggregated_over_time_data
+    data = db.execute(aggregated_over_time_query)
+    response = data.map { |d| JSON.parse(d['row_to_json']) }
+    sanitise_response_aggregated_over_time_query(response)
+  end
+
   def country_data
     db.execute(country_query)
   end
@@ -26,6 +32,13 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       value['id'], value['name'] = 'unreported', I18n.t('tradeplus.unreported') if value['id'].nil?
     end
     response.sort_by { |i| i['name'] }
+    response.partition { |value| value['id'] != 'unreported' }.reduce(:+)
+  end
+
+  def sanitise_response_aggregated_over_time_query(response)
+    response.map do |value|
+      value['id'], value['name'] = "reported_by_#{@reported_by}", "reported_by_#{@reported_by}" if value['id'].nil?
+    end
     response.partition { |value| value['id'] != 'unreported' }.reduce(:+)
   end
 
@@ -242,6 +255,8 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     SQL
   end
 
+
+  # TODO refactor to merge this method and the over_time one above together
   def aggregated_over_time_query
     quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
 
