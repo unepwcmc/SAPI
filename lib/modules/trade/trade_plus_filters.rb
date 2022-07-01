@@ -36,7 +36,7 @@ class Trade::TradePlusFilters
         SELECT id,name_#{locale},iso_code2
         FROM geo_entities
         WHERE geo_entity_type_id IN (1,4,7) --(1,4,7) this is to include both countries, territories and trade entities
-        AND id NOT IN (218,277,278) --this is to exclude TW(included into CH) and North and South Atlantic stock
+        AND id NOT IN (218,221,277,278) --this is to exclude TW(included into CH), Sudan prior secession and North and South Atlantic stock
 
       )
       SELECT 'countries' AS attribute_name, json_build_object('id', id, 'name', name_#{locale}, 'iso2', iso_code2)::jsonb AS data
