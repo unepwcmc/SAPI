@@ -89,7 +89,7 @@ gem 'susy', '~>2.2.14'
 gem 'rest-client', require: false
 
 group :development do
-  gem "better_errors", '~>1.1.0'
+  gem "better_errors", '~>2.8.0'
   gem "binding_of_caller", '>=0.7.2'
   gem 'immigrant'
   gem "guard-livereload"
