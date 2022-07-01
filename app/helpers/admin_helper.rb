@@ -4,6 +4,7 @@ module AdminHelper
     Rank.where(
       ["taxonomic_position < ?", taxon_concept.rank.taxonomic_position]
       ).order(:taxonomic_position).map do |r|
+      return nil unless taxon_concept.data
       name = taxon_concept.data["#{r.name.downcase}_name"]
       id = taxon_concept.data["#{r.name.downcase}_id"]
       if name && id
