@@ -1,3 +1,9 @@
+### 1.7.1
+
+**CITES Trade DB**
+
+* Update to version 2021.1(replace zip file on the server, update ENV var, text updates)
+
 ### 1.7.0
 
 **Multilingual extension of Tradeplus**
