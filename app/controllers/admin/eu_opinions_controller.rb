@@ -44,6 +44,8 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
     @ec_srgs = Event.where("type = 'EcSrg' OR
       type = 'EuRegulation' AND name IN ('No 338/97', 'No 938/97', 'No 750/2013')"
     ).order("effective_at DESC")
+    # this will only return docs not attached to any event (intersessional docs)
+    @documents = Document.where(event_id: nil)
   end
 
   def collection
