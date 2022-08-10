@@ -26,12 +26,12 @@ class Api::V1::TaxonConceptsController < ApplicationController
                :cites_suspensions => :geo_entity).
       includes(:taxonomy).find(params[:id])
     if @taxon_concept.taxonomy.name == Taxonomy::CMS
-      s = params[:mobile].present? ? Species::Mobile::ShowMobileTaxonConceptSerializerCms : Species::ShowTaxonConceptSerializerCms
+      s = Species::ShowTaxonConceptSerializerCms
     else
-      s = params[:mobile].present? ? Species::Mobile::ShowMobileTaxonConceptSerializerCites : Species::ShowTaxonConceptSerializerCites
+      s = Species::ShowTaxonConceptSerializerCites
     end
     render :json => @taxon_concept,
-      :serializer => s
+      :serializer => s, :mobile => params[:mobile]
   end
 
   protected

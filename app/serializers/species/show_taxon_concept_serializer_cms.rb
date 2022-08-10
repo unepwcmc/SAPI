@@ -5,6 +5,14 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
     :key => :cms_listings
   has_many :cms_instruments, :serializer => Species::CmsInstrumentsSerializer
 
+  def include_standard_references?
+    !@options[:mobile].present?
+  end
+
+  def include_taxon_concept_references?
+    !@options[:mobile].present?
+  end
+
   def cms_listing_changes
     MCmsListingChange.from('cms_listing_changes_mview listing_changes_mview').
       where(
