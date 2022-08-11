@@ -30,7 +30,7 @@ class ApiRequest < ActiveRecord::Base
   RESPONSE_STATUSES = [200, 400, 401, 404, 422, 500]
   CONTROLLERS = ['taxon_concepts', 'distributions', 'cites_legislation', 'eu_legislation', 'references']
 
-  def self.top_5_most_active_users
+  def self.top_50_most_active_users
     subquery = self.recent.select(
       [
         :user_id,
