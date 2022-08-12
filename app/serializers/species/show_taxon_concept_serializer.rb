@@ -96,7 +96,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   def distributions_with_tags_and_references_mobile
     Distribution.from('api_distributions_view distributions').
       where(taxon_concept_id: object.id).
-      select("name_en AS name, name_en AS country, ARRAY_TO_STRING(tags,  ',') AS tags_list").
+      select("name_en AS name, name_en AS country, iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list").
       order('name_en').all
   end
 
