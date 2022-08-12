@@ -90,7 +90,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distributions
-    @options[:mobile].present? && taxonomy == 'cites_eu' ? distributions_with_tags_and_references_mobile : distributions_with_tags_and_references
+    @options[:mobile].blank? ? distributions_with_tags_and_references : distributions_with_tags_and_references_mobile
   end
 
   def distributions_with_tags_and_references_mobile
@@ -112,7 +112,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distribution_references
-    @options[:mobile].present? ? distributions_with_tags_and_references_mobile : distributions_with_tags_and_references
+    @options[:mobile].blank? ? distributions_with_tags_and_references : distributions_with_tags_and_references_mobile
   end
 
   def cache_key

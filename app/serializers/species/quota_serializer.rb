@@ -16,4 +16,12 @@ class Species::QuotaSerializer < ActiveModel::Serializer
   def quota
     object['quota_for_display']
   end
+
+  def include_nomenclature_note_fr?
+    @options[:mobile].blank?
+  end
+
+  def include_nomenclature_note_es?
+    @options[:mobile].blank?
+  end
 end

@@ -6,11 +6,19 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
   has_many :cms_instruments, :serializer => Species::CmsInstrumentsSerializer
 
   def include_standard_references?
-    !@options[:mobile].present?
+    @options[:mobile].blank?
   end
 
   def include_taxon_concept_references?
-    !@options[:mobile].present?
+    @options[:mobile].blank?
+  end
+
+  def include_distribution_references?
+    @options[:mobile].blank?
+  end
+
+  def include_cms_instruments?
+    @options[:mobile].blank?
   end
 
   def cms_listing_changes
