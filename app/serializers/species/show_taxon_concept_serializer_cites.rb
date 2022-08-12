@@ -10,23 +10,15 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
 
   def include_distribution_references?
-    @options[:mobile].blank?
+    @options[:trimmed].blank?
   end
 
   def include_standard_references?
-    @options[:mobile].blank?
-  end
-
-  def include_eu_listing_changes?
-    @options[:mobile].blank?
+    @options[:trimmed].blank?
   end
 
   def include_taxon_concept_references?
-    @options[:mobile].blank?
-  end
-
-  def include_cites_listing_changes?
-    @options[:mobile].blank?
+    @options[:trimmed].blank?
   end
 
   def quotas

@@ -2,23 +2,23 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
 
   attributes :cms_listing
   has_many :cms_listing_changes, :serializer => Species::ListingChangeSerializer,
-    :key => :cms_listings
+    :key => :cms_listings, trimmed: @options[:trimmed]
   has_many :cms_instruments, :serializer => Species::CmsInstrumentsSerializer
 
   def include_standard_references?
-    @options[:mobile].blank?
+    @options[:trimmed].blank?
   end
 
   def include_taxon_concept_references?
-    @options[:mobile].blank?
+    @options[:trimmed].blank?
   end
 
   def include_distribution_references?
-    @options[:mobile].blank?
+    @options[:trimmed].blank?
   end
 
   def include_cms_instruments?
-    @options[:mobile].blank?
+    @options[:trimmed].blank?
   end
 
   def cms_listing_changes

@@ -10,6 +10,14 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
 
+  def include_parent_id?
+    @options[:trimmed].blank?
+  end
+
+  def include_nomenclature_notification?
+    @options[:trimmed].blank?
+  end
+
   def rank_name
     object.data['rank_name']
   end
@@ -90,13 +98,13 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distributions
-    @options[:mobile].blank? ? distributions_with_tags_and_references : distributions_with_tags_and_references_mobile
+    @options[:trimmed].blank? ? distributions_with_tags_and_references : distributions_with_tags_and_references_trimmed
   end
 
-  def distributions_with_tags_and_references_mobile
+  def distributions_with_tags_and_references_trimmed
     Distribution.from('api_distributions_view distributions').
       where(taxon_concept_id: object.id).
-      select("name_en AS name, name_en AS country, iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list").
+      select("name_en AS country, iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list").
       order('name_en').all
   end
 
@@ -112,7 +120,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distribution_references
-    @options[:mobile].blank? ? distributions_with_tags_and_references : distributions_with_tags_and_references_mobile
+    @options[:trimmed].blank? ? distributions_with_tags_and_references : distributions_with_tags_and_references_trimmed
   end
 
   def cache_key
@@ -122,7 +130,8 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       object.updated_at,
       object.dependents_updated_at,
       object.m_taxon_concept.try(:updated_at) || "",
-      scope.current_user ? true : false
+      scope.current_user ? true : false,
+      @options[:trimmed] == 'true' ? true : false
     ]
     Rails.logger.debug "CACHE KEY: #{key.inspect}"
     key

@@ -40,10 +40,10 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
   end
 
   def include_nomenclature_note_fr?
-    @options[:mobile].blank?
+    @options[:trimmed].blank?
   end
 
   def include_nomenclature_note_es?
-    @options[:mobile].blank?
+    @options[:trimmed].blank?
   end
 end

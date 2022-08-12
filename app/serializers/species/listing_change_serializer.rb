@@ -3,6 +3,16 @@ class Species::ListingChangeSerializer < ActiveModel::Serializer
    :effective_at_formatted, :short_note_en, :full_note_en, :auto_note,
    :is_inclusion, :subspecies_info, :inherited_full_note_en, :inherited_short_note_en
 
+   def include_is_inclusion?
+     return true unless @options[:trimmed]
+     @options[:trimmed] == 'false'
+   end
+
+   def include_subspecies_info?
+     return true unless @options[:trimmed]
+     @options[:trimmed] == 'false'
+   end
+
   def is_inclusion
     object.inclusion_taxon_concept_id
   end
