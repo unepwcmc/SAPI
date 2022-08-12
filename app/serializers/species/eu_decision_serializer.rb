@@ -38,4 +38,12 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
   def private_url
     scope.current_user ? object['private_url'] : nil
   end
+
+  def include_nomenclature_note_fr?
+    @options[:mobile].blank?
+  end
+
+  def include_nomenclature_note_es?
+    @options[:mobile].blank?
+  end
 end

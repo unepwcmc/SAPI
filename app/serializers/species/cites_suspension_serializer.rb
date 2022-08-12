@@ -13,4 +13,16 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
   def start_notification
     object['start_notification']
   end
+
+  def include_nomenclature_note_fr?
+    @options[:mobile].blank?
+  end
+
+  def include_nomenclature_note_es?
+    @options[:mobile].blank?
+  end
+  
+  def include_applies_to_import?
+    @options[:mobile].blank?
+  end
 end
