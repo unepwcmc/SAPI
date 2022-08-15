@@ -11,11 +11,18 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     :key => :references
 
   def include_parent_id?
-    @options[:trimmed].blank?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_notification?
-    @options[:trimmed].blank?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_subspecies?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
   end
 
   def rank_name
@@ -98,7 +105,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distributions
-    @options[:trimmed].blank? ? distributions_with_tags_and_references : distributions_with_tags_and_references_trimmed
+    @options[:trimmed] == 'true' ? distributions_with_tags_and_references_trimmed : distributions_with_tags_and_references
   end
 
   def distributions_with_tags_and_references_trimmed
@@ -120,7 +127,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distribution_references
-    @options[:trimmed].blank? ? distributions_with_tags_and_references : distributions_with_tags_and_references_trimmed
+    @options[:trimmed] == 'true' ? distributions_with_tags_and_references_trimmed : distributions_with_tags_and_references
   end
 
   def cache_key

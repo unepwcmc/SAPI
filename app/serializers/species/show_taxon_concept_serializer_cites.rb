@@ -10,15 +10,18 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
 
   def include_distribution_references?
-    @options[:trimmed].blank?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
   end
 
   def include_standard_references?
-    @options[:trimmed].blank?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
   end
 
   def include_taxon_concept_references?
-    @options[:trimmed].blank?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
   end
 
   def quotas

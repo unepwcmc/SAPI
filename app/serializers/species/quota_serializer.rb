@@ -5,8 +5,33 @@ class Species::QuotaSerializer < ActiveModel::Serializer
     :geo_entity,
     :unit
 
+  def include_nomenclature_note_fr?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_nomenclature_note_es?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_public_display?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_subspecies_info?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_publication_date_formatted?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
   def geo_entity
-    object['geo_entity_en']
+    @options[:trimmed] == 'true' ? object['geo_entity_en'].except('type') : object['geo_entity_en']
   end
 
   def unit
@@ -15,13 +40,5 @@ class Species::QuotaSerializer < ActiveModel::Serializer
 
   def quota
     object['quota_for_display']
-  end
-
-  def include_nomenclature_note_fr?
-    @options[:trimmed].blank?
-  end
-
-  def include_nomenclature_note_es?
-    @options[:trimmed].blank?
   end
 end

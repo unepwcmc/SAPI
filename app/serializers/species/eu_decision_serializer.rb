@@ -11,20 +11,35 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     { :original_start_date_formatted => :original_start_date },
     :private_url
 
+  def include_subspecies_info?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_nomenclature_note_fr?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_nomenclature_note_es?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
   def eu_decision_type
-    object['eu_decision_type']
+    @options[:trimmed] == 'true' ? object['eu_decision_type'].slice('name') : object['eu_decision_type']
   end
 
   def srg_history
-    object['srg_history']
+    @options[:trimmed] == 'true' ? object['srg_history'].except('description') : object['srg_history']
   end
 
   def geo_entity
-    object['geo_entity_en']
+    @options[:trimmed] == 'true' ? object['geo_entity_en'].except('type') : object['geo_entity_en']
   end
 
   def start_event
-    object['start_event']
+    @options[:trimmed] == 'true' ? object['start_event'].except('date') : object['start_event']
   end
 
   def source
@@ -37,13 +52,5 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
 
   def private_url
     scope.current_user ? object['private_url'] : nil
-  end
-
-  def include_nomenclature_note_fr?
-    @options[:trimmed].blank?
-  end
-
-  def include_nomenclature_note_es?
-    @options[:trimmed].blank?
   end
 end
