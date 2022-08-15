@@ -21,8 +21,9 @@ class ApiRequest < ActiveRecord::Base
   belongs_to :user
 
   RECENT_DAYS = 90
+  RECENT_MONTHS = 6
 
-  scope :recent, -> { where('created_at > ?', RECENT_DAYS.days.ago) }
+  scope :recent, -> { where('created_at > ?', RECENT_MONTHS.months.ago) }
   scope :by_response_status, -> { group(:response_status) }
   scope :by_controller, -> { group(:controller) }
 
@@ -40,7 +41,7 @@ class ApiRequest < ActiveRecord::Base
     ).group(:user_id).
       where('user_id IS NOT NULL')
     self.from("(#{subquery.to_sql}) api_requests").
-      order('cnt DESC').limit(5)
+      order('cnt DESC').limit(50)
   end
 
   def self.recent_requests(user = nil)
