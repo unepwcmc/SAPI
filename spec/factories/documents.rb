@@ -14,6 +14,9 @@ FactoryGirl.define do
     factory :proposal, class: Document::Proposal do
       type 'Document::Proposal'
     end
+    factory :commission_note, class: Document::CommissionNotes do
+      type 'Document::CommissionNotes'
+    end
   end
 
   factory :document_citation do

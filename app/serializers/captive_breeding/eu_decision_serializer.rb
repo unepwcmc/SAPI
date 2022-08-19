@@ -1,6 +1,6 @@
-class Species::EuDecisionSerializer < ActiveModel::Serializer
-  attributes :notes, { :start_date_formatted => :start_date },
-    :is_current, :subspecies_info, :nomenclature_note_en, :nomenclature_note_fr,
+class CaptiveBreeding::EuDecisionSerializer < ActiveModel::Serializer
+  attributes :taxon_concept, :notes, { :start_date_formatted => :start_date },
+    :is_current, :nomenclature_note_en, :nomenclature_note_fr,
     :nomenclature_note_es,
     :eu_decision_type,
     :srg_history,
@@ -9,8 +9,11 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     :source,
     :term,
     { :original_start_date_formatted => :original_start_date },
-    :private_url,
-    :intersessional_decision_id
+    :private_url
+
+  def taxon_concept
+    object['taxon_concept']
+  end
 
   def eu_decision_type
     object['eu_decision_type']
@@ -21,7 +24,7 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
   end
 
   def geo_entity
-    object['geo_entity_en']
+    { 'id'=> object['geo_entity_id'] }.merge(object['geo_entity_en'])
   end
 
   def start_event
@@ -38,9 +41,5 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
 
   def private_url
     scope.current_user ? object['private_url'] : nil
-  end
-
-  def intersessional_decision_id
-    scope.current_user ? object['intersessional_decision_id'] : nil
   end
 end

@@ -1,8 +1,17 @@
+### 1.8.0
+
+**Intersessional decisions**
+
+* Make direct association between Eu Decisions and Documents
+* Add validation on Eu Opinions (Event or Intersessional doc, not both at least one of the two)
+* Update Eu Decisions SQL views
+* Update FE to display link to Intersessional doc or static text based on user session
+
 ### 1.7.1
 
 **CITES Trade DB**
 
-* Update to version 2021.1(replace zip file on the server, update ENV var, text updates)
+* Update to version 2022.1(replace zip file on the server, update ENV var, text updates)
 
 ### 1.7.0
 
