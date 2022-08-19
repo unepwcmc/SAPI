@@ -23,7 +23,7 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :document_id, "Intersessional Decision", :class => 'control-label' %>
+    <%= f.label :document_id, "Intersessional decision", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :document_id,
         options_from_collection_for_select(@documents, :id, :title, @eu_opinion.document_id),
