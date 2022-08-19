@@ -63,7 +63,10 @@ describe EuOpinion do
     end
 
     context "when valid" do
-      let(:eu_opinion) { build(:eu_opinion) }
+      before do
+        @eu_regulation = create(:ec_srg)
+      end
+      let(:eu_opinion) { build(:eu_opinion, start_event: @eu_regulation) }
 
       specify { eu_opinion.should be_valid }
     end

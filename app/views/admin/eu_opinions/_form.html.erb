@@ -17,7 +17,17 @@
     <div class="controls">
       <%= f.select :start_event_id,
         options_from_collection_for_select(@ec_srgs, :id, :name, @eu_opinion.start_event_id),
-        { }, :class => "select2"
+        { :include_blank => true }, :class => "select2"
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :document_id, "Intersessional decision", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :document_id,
+        options_from_collection_for_select(@documents, :id, :title, @eu_opinion.document_id),
+        { :include_blank => true }, { :class => "select2", :style => 'width: 440px' }
       %>
     </div>
   </div>
