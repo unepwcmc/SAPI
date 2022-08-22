@@ -1,5 +1,5 @@
 set :stage, :staging
-set :branch, :develop
+set :branch, 'origin/feat/db_migrate_rebuild_daily_unless_production'
 
 server "sapi-staging.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
 
@@ -12,6 +12,9 @@ set :server_name, "#{fetch(:application)}.#{fetch(:domain)}"
 set :sudo_user, "wcmc"
 
 set :app_port, "80"
+
+set :whenever_environment, proc { fetch :stage }
+require 'whenever/capistrano'
 
 # server-based syntax
 # ======================
