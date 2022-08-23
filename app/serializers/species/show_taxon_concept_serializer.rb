@@ -25,6 +25,21 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     @options[:trimmed] == 'false'
   end
 
+  def include_kingdom_name?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_species_name?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_rank_name?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
   def rank_name
     object.data['rank_name']
   end
@@ -111,8 +126,8 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   def distributions_with_tags_and_references_trimmed
     Distribution.from('api_distributions_view distributions').
       where(taxon_concept_id: object.id).
-      select("name_en AS country, iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list").
-      order('name_en').all
+      select("iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list").
+      order('iso_code2').all
   end
 
   def subspecies

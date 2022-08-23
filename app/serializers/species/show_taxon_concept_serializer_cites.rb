@@ -24,6 +24,16 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
     @options[:trimmed] == 'false'
   end
 
+  def include_cites_listing?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_eu_listing?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
   def quotas
     Quota.from('api_cites_quotas_view trade_restrictions').
       where("

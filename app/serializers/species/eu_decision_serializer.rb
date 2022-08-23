@@ -27,6 +27,16 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     @options[:trimmed] == 'false'
   end
 
+  def include_private_url?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_intersessional_decision_id?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
   def eu_decision_type
     @options[:trimmed] == 'true' ? object['eu_decision_type'].slice('name') : object['eu_decision_type']
   end
@@ -36,7 +46,7 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
   end
 
   def geo_entity
-    @options[:trimmed] == 'true' ? object['geo_entity_en'].except('type') : object['geo_entity_en']
+    @options[:trimmed] == 'true' ? object['geo_entity_en'].slice('iso_code2') : object['geo_entity_en']
   end
 
   def start_event
@@ -48,7 +58,7 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
   end
 
   def term
-    object['term_en']
+    @options[:trimmed] == 'true' ? object['term_en'].slice('name') : object['term_en'] 
   end
 
   def private_url

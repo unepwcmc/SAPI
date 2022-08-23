@@ -9,12 +9,12 @@ class Species::EuListingChangeSerializer < Species::ListingChangeSerializer
     @options[:trimmed] == 'false'
   end
 
-  def include_hash_full_note_en?
+  def include_nomenclature_note_fr?
     return true unless @options[:trimmed]
     @options[:trimmed] == 'false'
   end
 
-  def include_hash_display?
+  def include_nomenclature_note_es?
     return true unless @options[:trimmed]
     @options[:trimmed] == 'false'
   end
