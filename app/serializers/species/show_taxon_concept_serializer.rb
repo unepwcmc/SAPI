@@ -40,6 +40,11 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     @options[:trimmed] == 'false'
   end
 
+  def include_name_status?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
   def rank_name
     object.data['rank_name']
   end
