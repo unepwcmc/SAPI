@@ -92,10 +92,15 @@ class Species::TaxonConceptPrefixMatcher
     if @taxon_concept_query
       @query = @query.where(
         ActiveRecord::Base.send(:sanitize_sql_array, [
-          "name_for_matching LIKE :sci_name_prefix",
+          # "name_for_matching LIKE :sci_name_prefix", # Original
+          # "SIMILARITY(name_for_matching, :sci_name_prefix) > 0.3", # flexible search only
+          # "(name_for_matching LIKE :sci_name_prefix OR SIMILARITY(name_for_matching, :sci_name_prefix) > 0.4)", # Exact match at start of word OR 
+          "(name_for_matching LIKE :sci_name_prefix OR SIMILARITY(LEFT(name_for_matching, #{@taxon_concept_query.length}), :sci_name_prefix) > 0.4)", # returns same results as above?
           :sci_name_prefix => "#{@taxon_concept_query}%"
         ])
       )
+      # @query.order('SIMILARITY(name_for_matching, :sci_name_prefix)') # ordering takes place om front end, so sorting here doesn't matter
+      # @query.order(name_for_matching: :desc)
     end
     @query
   end
