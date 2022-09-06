@@ -49,6 +49,7 @@ en:
   db_guide: "A Guide to Using the CITES Trade Database"
   tabulation_guide: "A Guide to Interpreting Comparative Tabulation Outputs ."
   trade_guide: "A Guide to Interpreting Gross/Net Trade Outputs."
+  new: "New"
 
   reports: "REPORTS"
   report: "report"

@@ -186,10 +186,18 @@
     <strong><%= t('download') %>:</strong>
     <a href=<%= cites_trade_download_db_path %> data-full-trade-db-download><%= t('full_db_download') %> (427MB)</a>
   </p>
-  <p align="center">
+  <p align="center" class='no-margin'>
     <strong><%= t('download') %>:</strong>
     <a href="/cites_trade_guidelines/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
+    <% if I18n.locale == :en %>
+      <i class="new"><%= t('new') %></i>
+    <% end %>
   </p>
+  <% unless I18n.locale == :en %>
+    <p align="center">
+      <%= t('translation_in_progress_html') %>
+    </p>
+  <% end %>
 </div>
 </div>
 
