@@ -27,5 +27,15 @@
 #
 
 class EuOpinion < EuDecision
+  attr_accessible :document_id
+
+  belongs_to :document
+
   validates :start_date, presence: true
+  validate :event_or_document_presence
+
+  def event_or_document_presence
+    return if start_event_id.nil? ^ document_id.nil?
+    errors.add(:base, "Select at least an Event or a Document, but not both")
+  end
 end

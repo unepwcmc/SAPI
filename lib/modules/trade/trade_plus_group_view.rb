@@ -14,6 +14,7 @@ class Trade::TradePlusGroupView
 
   private
 
+  # WARNING: localisation manually added to the view, so if you want to recreate the group view using this script, localisation will be lost
   def formatted_query
     <<-SQL
     SELECT
@@ -42,7 +43,7 @@ class Trade::TradePlusGroupView
     end
     query += "\t\t\tWHEN ts.taxon_concept_class_name IS NULL AND (ts.taxon_concept_genus_name NOT IN ('Aquilaria','Pericopsis','Cedrela','Guaiacum','Swietenia','Dalbergia','Prunus','Gonystylus','Diospyros','Abies','Guarea','Guibourtia','Gyrinops','Platymiscium','Pterocarpus','Taxus')
       OR ts.taxon_concept_full_name NOT IN ('Araucaria araucana','Fitzroya cupressoides','Abies guatemalensis','Pterocarpus santalinus','Pilgerodendron uviferum','Aniba rosaeodora','Caesalpinia echinata','Bulnesia sarmientoi','Dipteryx panamensis','Pinus koraiensis','Caryocar costaricense','Celtis aetnensis','Cynometra hemitomophylla','Magnolia liliifera','Oreomunnea pterocarpa','Osyris lanceolata','Pterygota excelsa','Tachigali versicolor'))
-      THEN 'Plants'\n"
+      THEN 'Plants (other than timber)'\n"
     query += "\t\t\tEND AS group"
   end
 end

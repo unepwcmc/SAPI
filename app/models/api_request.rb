@@ -21,15 +21,16 @@ class ApiRequest < ActiveRecord::Base
   belongs_to :user
 
   RECENT_DAYS = 90
+  RECENT_MONTHS = 6
 
-  scope :recent, -> { where('created_at > ?', RECENT_DAYS.days.ago) }
+  scope :recent, -> { where('created_at > ?', RECENT_MONTHS.months.ago) }
   scope :by_response_status, -> { group(:response_status) }
   scope :by_controller, -> { group(:controller) }
 
   RESPONSE_STATUSES = [200, 400, 401, 404, 422, 500]
   CONTROLLERS = ['taxon_concepts', 'distributions', 'cites_legislation', 'eu_legislation', 'references']
 
-  def self.top_5_most_active_users
+  def self.top_50_most_active_users
     subquery = self.recent.select(
       [
         :user_id,
@@ -40,7 +41,7 @@ class ApiRequest < ActiveRecord::Base
     ).group(:user_id).
       where('user_id IS NOT NULL')
     self.from("(#{subquery.to_sql}) api_requests").
-      order('cnt DESC').limit(5)
+      order('cnt DESC').limit(50)
   end
 
   def self.recent_requests(user = nil)

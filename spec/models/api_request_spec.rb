@@ -47,9 +47,9 @@ describe ApiRequest do
     )
   end
 
-  describe :top_5_most_active_users do
+  describe :top_50_most_active_users do
     subject {
-      ApiRequest.top_5_most_active_users
+      ApiRequest.top_50_most_active_users
     }
     specify {
       expect(subject.first.user_id).to eq(api_user.id)

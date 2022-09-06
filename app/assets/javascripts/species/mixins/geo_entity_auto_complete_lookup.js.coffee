@@ -6,14 +6,17 @@ Species.GeoEntityAutoCompleteLookup = Ember.Mixin.create
   selectedGeoEntitiesIds: []
 
   geoEntityQueryObserver: ( ->
-    re = new RegExp("(^|\\(| )"+@get('geoEntityQuery'),"i")
+    removeDiactritics = (string) -> string.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    query = removeDiactritics(@get('geoEntityQuery'));
+
+    re = new RegExp("(^|\\(| )"+query,"i")
     @set 'autoCompleteCountries', @get('geoEntities.countries').filter (item, index, enumerable) =>
-      re.test item.get('name')
+      re.test removeDiactritics(item.get('name'));
 
-    re = new RegExp("^[0-9]- "+@get('geoEntityQuery'),"i")
-
+    re = new RegExp("^[0-9]- "+query,"i")
     @set 'autoCompleteRegions', @get('geoEntities.regions').filter (item, index, enumerable) =>
-      re.test item.get('name')
+      re.test removeDiactritics(item.get('name'));
   ).observes('geoEntityQuery')
 
   geoEntitiesObserver: ( ->

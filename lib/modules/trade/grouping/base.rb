@@ -57,7 +57,8 @@ class Trade::Grouping::Base
     raise NotImplementedError
   end
 
-  def self.get_grouping_attributes(group)
+  def self.get_grouping_attributes(group, locale=nil)
+    @locale = locale
     Array.new(grouping_attributes[group.to_sym])
   end
 

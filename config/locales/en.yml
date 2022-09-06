@@ -49,6 +49,7 @@ en:
   db_guide: "A Guide to Using the CITES Trade Database"
   tabulation_guide: "A Guide to Interpreting Comparative Tabulation Outputs ."
   trade_guide: "A Guide to Interpreting Gross/Net Trade Outputs."
+  new: "New"
 
   reports: "REPORTS"
   report: "report"
@@ -79,8 +80,8 @@ en:
     comptab: "Comparative Tabulation Report"
 
   secretariat_alert: "It is not possible to perform this action. If you require further assistance please contact the Species team on species@unep-wcmc.org."
-  full_db_download: "Full CITES Trade Database download  (version 2021.1)"
-  full_db_download_available: "Full CITES Trade Database download available<br>(version 2021.1)"
+  full_db_download: "Full CITES Trade Database download  (version 2022.1)"
+  full_db_download_available: "Full CITES Trade Database download available<br>(version 2022.1)"
   download_here: "Download here"
   file_size: "File size"
 

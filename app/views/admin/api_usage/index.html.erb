@@ -5,7 +5,7 @@
     </div>
 
     <div class="page-header">
-      <h4>Last <%= ApiRequest::RECENT_DAYS %> Days Requests by Response Status</h4>
+      <h4>Last <%= ApiRequest::RECENT_MONTHS %> Months Requests by Response Status</h4>
     </div>
 
     <%= line_chart sanitise_hash_for_line_graph(@recent_requests),
@@ -37,7 +37,7 @@
 <div class="row">
   <div class="span12">
     <div class="page-header">
-      <h4>Top 5 Most Active Users in the last <%= ApiRequest::RECENT_DAYS %> days</h4>
+      <h4>Top 50 Most Active Users in the last <%= ApiRequest::RECENT_MONTHS %> months</h4>
     </div>
     <table class="table">
       <thead>
