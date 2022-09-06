@@ -1,4 +1,6 @@
 SAPI::Application.routes.draw do
+  get "mobile/terms_and_conditions"
+  get "mobile/privacy_policy"
   devise_for :users, :controllers => { :passwords => "passwords", :registrations => "registrations", :sessions => "sessions" }
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registratione'
