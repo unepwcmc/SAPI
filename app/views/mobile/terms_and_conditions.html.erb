@@ -1,4 +1,12 @@
-<div class="page-header">
-  <h1>Mobile#terms_and_conditions</h1>
-</div>
-<p>Find me in app/views/mobile/terms_and_conditions.html.erb</p>
+<section class="mobile-header">
+  <div class="mobile-header__title">
+    <h2><%= t('mobile.terms.title') %></h2>
+  </div>
+  <div class="mobile-header__hero">
+    <h2>Species+</h2>
+    <h1><%= t('mobile.terms.hero') %></h1>
+  </div>
+</section>
+<section class="mobile-body">
+  <%= t('mobile.terms.body').html_safe %>
+</section>

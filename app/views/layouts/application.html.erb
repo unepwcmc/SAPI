@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Species+ Admin Panel</title>
+  <title>Species+ website</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
@@ -17,22 +17,26 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+<% if controller.controller_name != 'mobile' %>
   <div class="navbar navbar-fixed-top">
     <%= render 'shared/topbar' %>
   </div>
 
-    <div class="container">
-      <div class="row-fluid">
-        <div class="span12">
-          <%= render 'shared/alerts' %>
-          <%= yield %>
-        </div><!--/span-->
-      </div><!--/row-->
+  <div class="container">
+    <div class="row-fluid">
+      <div class="span12">
+        <%= render 'shared/alerts' %>
+        <%= yield %>
+      </div><!--/span-->
+    </div><!--/row-->
     <hr>
     <footer>
       <p>&copy; UNEP-WCMC <%= Date.today.year %></p>
     </footer>
-    </div><!--/.fluid-container-->
-
+  </div><!--/.fluid-container-->
+<% else %>
+  <%= render 'shared/alerts' %>
+  <%= yield %>
+<% end %>
 </body>
 </html>
