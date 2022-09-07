@@ -60,9 +60,10 @@ $screen-xl: 1600px;
 
     &__button {
       all: unset;
+      height: 40px;
       position: absolute;
       right: 0;
-      top: 2rem;
+      top: 1rem;
       padding-right: 2rem;
       cursor: pointer;
     }

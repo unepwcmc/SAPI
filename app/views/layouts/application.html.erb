@@ -13,16 +13,13 @@
   <![endif]-->
 
   <%= stylesheet_link_tag "admin" %>
-  <%= stylesheet_link_tag "mobile" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-<% if controller.controller_name != 'mobile' %>
   <div class="navbar navbar-fixed-top">
     <%= render 'shared/topbar' %>
   </div>
-
   <div class="container">
     <div class="row-fluid">
       <div class="span12">
@@ -35,11 +32,5 @@
       <p>&copy; UNEP-WCMC <%= Date.today.year %></p>
     </footer>
   </div><!--/.fluid-container-->
-<% else %>
-  <div class="mobile">
-    <%= render 'shared/alerts' %>
-    <%= yield %>
-  </div>
-<% end %>
 </body>
 </html>

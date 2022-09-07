@@ -1,4 +1,6 @@
 class MobileController < ApplicationController
+  layout 'mobile'
+  
   def terms_and_conditions
   end
 
