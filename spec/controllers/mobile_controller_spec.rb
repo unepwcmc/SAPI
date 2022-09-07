@@ -9,11 +9,11 @@ RSpec.describe MobileController, :type => :controller do
     end
   end
 
-  describe "GET privacy_policy" do
-    it "returns http success" do
-      get :privacy_policy
-      expect(response).to be_success
-    end
-  end
+  # describe "GET privacy_policy" do
+  #   it "returns http success" do
+  #     get :privacy_policy
+  #     expect(response).to be_success
+  #   end
+  # end
 
 end
