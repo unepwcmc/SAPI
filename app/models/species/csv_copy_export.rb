@@ -38,8 +38,8 @@ class Species::CsvCopyExport
   end
 
   def csv_cached?
-    # Only cache on production to make debugging on development and staging easier.
-    Rails.env.production? ? csv_created? : false
+    # Don't cache in development to allow easier debugging.
+    Rails.env.development? ? false : csv_created?
   end
 
   def initialize_csv_separator(csv_separator)
