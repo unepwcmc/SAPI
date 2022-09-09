@@ -51,9 +51,12 @@ class Species::CsvCopyExport
   end
 
   def initialize_file_name
-    @file_name = path + Digest::SHA1.hexdigest(
+    digest = Digest::SHA1.hexdigest(
       @filters.to_hash.symbolize_keys!.sort.to_s
-    ) + ".csv"
+    )
+    # Include locale string to differentiate cached files.
+    locale_string = I18n.locale&.to_s
+    @file_name = "#{path}#{digest}#{locale_string}.csv"
   end
 
   def to_csv
