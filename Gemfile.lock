@@ -76,7 +76,7 @@ GEM
       ember-source (>= 1.0, < 3.1)
       execjs (>= 1.2, < 3)
     bcrypt (3.1.12)
-    bcrypt_pbkdf (1.1.0)
+    bcrypt_pbkdf (1.0.1)
     better_errors (1.1.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -193,6 +193,7 @@ GEM
     factory_girl_rails (4.2.1)
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
+    ffi (1.15.5)
     font-awesome-rails (4.5.0.1)
       railties (>= 3.2, < 5.1)
     foreigner (1.5.0)
@@ -352,6 +353,10 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
     rake (10.0.4)
+    rbnacl (3.4.0)
+      ffi
+    rbnacl-libsodium (1.0.16)
+      rbnacl (>= 3.0.1)
     redis (3.3.0)
     redis-actionpack (4.0.1)
       actionpack (~> 4)
@@ -514,7 +519,7 @@ DEPENDENCIES
   annotate (>= 2.5.0)
   appsignal
   aws-sdk (~> 2)
-  bcrypt_pbkdf
+  bcrypt_pbkdf (~> 1.0.0)
   better_errors (~> 1.1.0)
   binding_of_caller (>= 0.7.2)
   bootstrap-sass (~> 2.3.2.2)
@@ -584,6 +589,8 @@ DEPENDENCIES
   rails-observers
   rails-secrets (~> 1.0.2)
   rake (~> 10.0.3)
+  rbnacl (~> 3.2)
+  rbnacl-libsodium
   redis-rails (~> 4.0.0)
   request_store (~> 1.1)
   rest-client
