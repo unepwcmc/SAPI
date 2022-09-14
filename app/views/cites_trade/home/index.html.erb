@@ -190,7 +190,7 @@
     <strong><%= t('download') %>:</strong>
     <a href="/cites_trade_guidelines/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
     <% if I18n.locale == :en %>
-      <i class="new"><%= t('new') %></i>
+      <strong class="new">*<%= t('new') %>*</strong>
     <% end %>
   </p>
   <% unless I18n.locale == :en %>
