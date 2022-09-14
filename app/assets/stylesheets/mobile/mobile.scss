@@ -2,9 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
 
 $navy: #253848;
+$black: #2D2D2D;
 $medium-grey: #dddddd;
-$light-grey: #f7f7f7;
 $dark-grey: #747474;
+$link-navy: #376382;
 $link-blue: #0088cc;
 
 $screen-sm: 768px;
@@ -16,31 +17,32 @@ $screen-xl: 1600px;
   font-family: 'Open Sans', sans-serif;
   color: $dark-grey;
   font-weight: 400;
-  font-size: 15px;
+  font-size: 12px;
   line-height: 1.75;
   // get rid of the default margin on the body
   margin-top: -40px;
 
   h2 {
     font-weight: 600;
-    font-size: 1.5rem;
+    font-size: 20px;
   }
 
   h3 {
     font-weight: 400;
-    font-size: 1.3rem;
+    font-size: 18px;
   }
 
   h4 {
-    color: $navy;
+    color: $black;
     font-weight: 700;
-    font-size: 1.25rem;
-    margin: 2rem 0;
+    font-size: 15px;
+    margin: 1rem 0;
+    padding-top: 1rem;
     line-height: 1.5;
   }
 
   a {
-    color: $navy;
+    color: $link-navy;
     text-decoration: underline;
   }
 
@@ -51,28 +53,11 @@ $screen-xl: 1600px;
   &-header {
     text-align: center;
     
-    &__title {
-      font-weight: 600;
-      color: $navy;
-      position: relative;
-      padding: 0.5rem 0;
-    }
-
-    &__button {
-      all: unset;
-      height: 40px;
-      position: absolute;
-      right: 0;
-      top: 1rem;
-      padding-right: 2rem;
-      cursor: pointer;
-    }
-    
     &__hero {
       background-color: $navy;
       color: white;
       padding: 6% 2%;
-      margin-bottom: 4rem;
+      margin-bottom: 1rem;
     }
   }
 
@@ -81,31 +66,29 @@ $screen-xl: 1600px;
   } 
 
 // breakpoints
-  @media screen and (min-width:$screen-sm){
-    font-size:16px;
-  }
+  // @media screen and (min-width:$screen-sm){
+  // }
 
   @media screen and (min-width:$screen-lg){
-    font-size:18px;
+    font-size: 15px;
 
     &-body {
       padding: 0 6rem 6rem;
     } 
 
     h2 {
-      font-size: 2.5rem;
+      font-size: 1.75rem;
     }
 
     h3 {
-      font-size: 2rem;
+      font-size: 1.5rem;
     }
 
     h4 {
-      font-size: 1.75rem;
+      font-size: 1.25rem;
     }
   }
 
-  @media screen and (min-width:$screen-xl){
-      font-size:20px;
-  }
+  // @media screen and (min-width:$screen-xl){
+  // }
 }
