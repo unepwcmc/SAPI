@@ -33,8 +33,13 @@ class Species::CsvCopyExport
 
   private
 
-  def csv_cached?
+  def csv_created?
     File.file?(@file_name)
+  end
+
+  def csv_cached?
+    # Don't cache in development to allow easier debugging.
+    Rails.env.development? ? false : csv_created?
   end
 
   def initialize_csv_separator(csv_separator)
@@ -46,9 +51,12 @@ class Species::CsvCopyExport
   end
 
   def initialize_file_name
-    @file_name = path + Digest::SHA1.hexdigest(
+    digest = Digest::SHA1.hexdigest(
       @filters.to_hash.symbolize_keys!.sort.to_s
-    ) + ".csv"
+    )
+    # Include locale string to differentiate cached files.
+    locale_string = I18n.locale&.to_s
+    @file_name = "#{path}#{digest}#{locale_string}.csv"
   end
 
   def to_csv
