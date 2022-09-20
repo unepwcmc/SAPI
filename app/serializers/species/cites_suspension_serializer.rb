@@ -24,8 +24,4 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
     @options[:trimmed] == 'false'
   end
 
-  def include_subspecies_info?
-    return true unless @options[:trimmed]
-    @options[:trimmed] == 'false'
-  end
 end

@@ -12,11 +12,6 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     :private_url,
     :intersessional_decision_id
 
-  def include_subspecies_info?
-    return true unless @options[:trimmed]
-    @options[:trimmed] == 'false'
-  end
-
   def include_nomenclature_note_fr?
     return true unless @options[:trimmed]
     @options[:trimmed] == 'false'

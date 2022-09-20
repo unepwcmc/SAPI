@@ -15,16 +15,6 @@ class Species::QuotaSerializer < ActiveModel::Serializer
     @options[:trimmed] == 'false'
   end
 
-  def include_public_display?
-    return true unless @options[:trimmed]
-    @options[:trimmed] == 'false'
-  end
-
-  def include_subspecies_info?
-    return true unless @options[:trimmed]
-    @options[:trimmed] == 'false'
-  end
-
   def include_publication_date_formatted?
     return true unless @options[:trimmed]
     @options[:trimmed] == 'false'
