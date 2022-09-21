@@ -194,7 +194,7 @@ en:
       body: '
           <div class="mobile-body__section">
             <h4>Privacy Policy</h4>
-            <p>At UNEP-WCMC, we are committed to being transparent about the use of the User&apos;s personal data. Species+ and the Species+ app (hereafter also referred to as the Service) are provided by UNEP-WCMC at no cost and is intended for use as is. This page is used to inform visitors of our policies for the collection, use, and disclosure of Users&apos; personal data. If you choose to use Species+ or the Species+ app, you agree to the collection and use of information in relation to this policy. Further information on the terms and conditions of use of Species+ data can be found in our <a href="">Terms of Use</a>.</p>
+            <p>At UNEP-WCMC, we are committed to being transparent about the use of the User&apos;s personal data. Species+ and the Species+ app (hereafter also referred to as the Service) are provided by UNEP-WCMC at no cost and is intended for use as is. This page is used to inform visitors of our policies for the collection, use, and disclosure of Users&apos; personal data. If you choose to use Species+ or the Species+ app, you agree to the collection and use of information in relation to this policy. Further information on the terms and conditions of use of Species+ data can be found in our <a href="www.speciesplus.net">Terms of Use</a>.</p>
           </div>
           <div class="mobile-body__section">
             <h4>Information Collection and Use</h4>
@@ -241,6 +241,6 @@ en:
           </div>
           <div class="mobile-body__section">
             <h4>Contact Us</h4>
-            <p>‍If you have any questions about our Privacy Policy, please contact us at species@unep-wcmc.org.</p>
+            <p>‍If you have any questions about our Privacy Policy, please contact us at <a href="mailto:species@unep-wcmc.org">species@unep-wcmc.org</a>.</p>
           </div>
         '
