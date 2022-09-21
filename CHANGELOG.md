@@ -1,3 +1,14 @@
+### 1.8.1
+
+* Updated CITES Trade Database user guidance
+* CITES Wildlife TradeView links added to CITES Trade Database layout
+* CITES Wildlife TradeView link added to Species+ 'Related Resources' drop down
+* EU Analysis link updated in Species+ 'Related Resources' drop down
+* Common names bulk upload:
+  * new data csv added
+  * import task modified to remove duplicates with different cases, e.g. Shark and shark
+* Diactritics ignored during country filtering
+
 ### 1.8.0
 
 **Intersessional decisions**
