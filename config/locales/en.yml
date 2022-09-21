@@ -94,7 +94,7 @@ en:
     checklist_url: http://checklist.cites.org
     disclaimer_left: "
         <p>
-          The CITES Identification Manual is a collection of data sheets designed to help identify various species of fauna and flora with drawings, photographs, maps and concise descriptions. The manual’s sheets were published over a 29 year period, from 1980–2009. All sheets are provided as originally published, and, as such, no warranty of any kind is given as to the completeness or accuracy of their content. Identification materials are not available for every species, and may be absent  particularly for species listed in the CITES Appendices after 2009.
+          The CITES Identification Manual is a collection of data sheets designed to help identify various species of fauna and flora with drawings, photographs, maps and concise descriptions. The manual&apos;s sheets were published over a 29 year period, from 1980–2009. All sheets are provided as originally published, and, as such, no warranty of any kind is given as to the completeness or accuracy of their content. Identification materials are not available for every species, and may be absent  particularly for species listed in the CITES Appendices after 2009.
         </p>
         <p>
           Users should note that the CITES listing and taxonomy of taxa described in the materials may have changed since the materials were first published. For current CITES nomenclature and listing information, please refer to the main Checklist of CITES Species site (and dedicated downloads for listings/names) and Species+.
@@ -122,8 +122,7 @@ en:
     copyright_text: 2020 Secretariat of the Convention on International Trade in Endangered Species of Wild Fauna and Flora
 
   mobile:
-    terms: 
-      title: "Terms of Use"
+    terms:
       hero: "Terms & Conditions"
       body: '
           <div class="mobile-body__section">
@@ -167,7 +166,7 @@ en:
           </div>
           <div class="mobile-body__section">
             <h4>8. No warranty and waiver of liability</h4>
-            <p>While UNEP strives to ensure accuracy and keep the Materials up-to-date, the Materials are provided to the User ‘as is’ and no warranty of any kind is given as to its completeness or accuracy . All warranties, representations and conditions, express or implied, are hereby excluded to the fullest extent permitted. The User agrees to download and make use of the Materials entirely at his or her own risk. The User waives and releases UNEP from any liability whatsoever, wherever and howsoever arising in connection with any use of the Materials or Derivative Works. UNEP will not be liable on any grounds (including without limitation negligence, strict liability or under any other legal theory) for any loss or damage (direct or indirect) incurred by the User or any third party as a result of the use of the Materials or any Derivative Works. The User also indemnifies and holds harmless UNEP in respect of any loss or damage (direct or indirect) suffered by any third party as a result of any use by that third party of any Materials or Derivative Works published by the User. Without limitation to the above, any damage occurring to computer systems or loss of data as a result of the use of the Species+/CITES Checklist API or attempts to download Materials is entirely the User’s responsibility.</p>
+            <p>While UNEP strives to ensure accuracy and keep the Materials up-to-date, the Materials are provided to the User ‘as is&apos; and no warranty of any kind is given as to its completeness or accuracy . All warranties, representations and conditions, express or implied, are hereby excluded to the fullest extent permitted. The User agrees to download and make use of the Materials entirely at his or her own risk. The User waives and releases UNEP from any liability whatsoever, wherever and howsoever arising in connection with any use of the Materials or Derivative Works. UNEP will not be liable on any grounds (including without limitation negligence, strict liability or under any other legal theory) for any loss or damage (direct or indirect) incurred by the User or any third party as a result of the use of the Materials or any Derivative Works. The User also indemnifies and holds harmless UNEP in respect of any loss or damage (direct or indirect) suffered by any third party as a result of any use by that third party of any Materials or Derivative Works published by the User. Without limitation to the above, any damage occurring to computer systems or loss of data as a result of the use of the Species+/CITES Checklist API or attempts to download Materials is entirely the User&apos;s responsibility.</p>
           </div>
           <div class="mobile-body__section">
             <h4>9. Disclaimer</h4>
@@ -188,5 +187,60 @@ en:
           <div class="mobile-body__section">
             <h4>13. Communication</h4>
             <p>Any communication with respect to these Terms and Conditions and any issue arising from them shall be in writing in English and sent by email. The address for communication with the Species+/CITES Checklist API supplier is <a href="mailto:species@unep-wcmc.org">species@unep-wcmc.org</a>.</p>
+          </div>
+        '
+    privacy:
+      hero: "Privacy Policy"
+      body: '
+          <div class="mobile-body__section">
+            <h4>Privacy Policy</h4>
+            <p>At UNEP-WCMC, we are committed to being transparent about the use of the User&apos;s personal data. Species+ and the Species+ app (hereafter also referred to as the Service) are provided by UNEP-WCMC at no cost and is intended for use as is. This page is used to inform visitors of our policies for the collection, use, and disclosure of Users&apos; personal data. If you choose to use Species+ or the Species+ app, you agree to the collection and use of information in relation to this policy. Further information on the terms and conditions of use of Species+ data can be found in our <a href="">Terms of Use</a>.</p>
+          </div>
+          <div class="mobile-body__section">
+            <h4>Information Collection and Use</h4>
+            <p>We take the User&apos;s privacy very seriously and only store data where necessary to improve usability of Species+ and the Species+ app, to keep the site/app secure and problem free, and to track impact for ourselves and our partners. The User&apos;s data will be stored securely and will not be sold to third parties; data will be deleted after one year.</p>
+            <p>Our web hosting provider keeps logs of connections to the Species+ API so that we can detect and prevent malicious activity. The logs contain your IP address (which can reveal your geographical location), the date and time of your connection, the data you have requested, and the browser you&apos;re using (which can reveal the device you&apos;re using as well). We make no use of this data on an individual level unless the traffic looks like an attack on the web service, in which case we will block the connection. </p>
+            <p>It&apos;s in our interest – and yours – that our site and app is secure and working properly, so this processing of personal data is done based on legitimate interests.</p>
+            <p>‍‍To request that your data is deleted from our servers, please contact us on <a href="mailto:species@unep-wcmc.org">species@unep-wcmc.org</a>.</p>
+          </div>
+          <div class="mobile-body__section">
+            <h4>Cookies‍</h4>
+            <p>We use cookies to help identify your computer so that we can optimise the user experience.</p>
+            <p>This Species+ app does not use these cookies explicitly. The Species+ site uses the following cookies:</p>
+            <ul>
+              <li>
+                <p>Third-party Cookies, which include but are not limited to:</p>
+                <p>Google Analytics - we use Google Analytics to collect data about the website&apos;s usage. This data will track the pages the User visits and record other User data such as how long you spend on each page. It does not include personal information. You can view the Google Privacy Policy here: https://policies.google.com/privacy.</p>
+              </li>
+            </ul>
+            <p></p>
+          </div>
+          <div class="mobile-body__section">
+            <h4>‍‍Service Providers</h4>
+            <p>‍We may employ third-party companies and individuals due to the following reasons:</p>
+            <ul>
+              <li>To facilitate our Service;</li>
+              <li>To provide the Service on our behalf;</li>
+              <li>To perform Service-related services; or</li>
+              <li>To assist us in analyzing how our Service is used.</li>
+            </ul>
+            <p>These third parties will have access to the User&apos;s data to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.</p>
+          </div>
+            <div class="mobile-body__section">
+            <h4>‍‍Security</h4>
+            <p>‍While we strive to protect your personal data, please note that no method of transmission over the internet, or method of electronic storage is 100% secure and reliable, and we cannot guarantee its absolute security.</p>
+          </div>
+          <div class="mobile-body__section">
+            <h4>‍‍Links to Other Sites</h4>
+            <p>‍This Site may contain links and references to third-party web sites. The linked sites are not under the control of UNEP or WCMC, and UNEP or WCMC are not responsible for, nor do they endorse, any of their content, privacy policies or practices.</p>
+          </div>
+          <div class="mobile-body__section">
+            <h4>Changes to this Privacy Policy</h4>
+            <p>‍We reserve the right to update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+            <p>This current policy is effective as of 2022-XX-XX.</p>
+          </div>
+          <div class="mobile-body__section">
+            <h4>Contact Us</h4>
+            <p>‍If you have any questions about our Privacy Policy, please contact us at species@unep-wcmc.org.</p>
           </div>
         '
