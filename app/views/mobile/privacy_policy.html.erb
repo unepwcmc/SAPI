@@ -5,5 +5,8 @@
   </div>
 </section>
 <section class="mobile-body">
-  <%= t('mobile.privacy.body').html_safe %>
+  <% t('mobile.privacy.body').each do |section| %>
+    <h4><%= section[:title]&.html_safe %></h4>
+    <%= section[:description]&.html_safe %>
+  <% end %>
 </section>
