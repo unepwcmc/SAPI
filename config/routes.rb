@@ -6,8 +6,8 @@ SAPI::Application.routes.draw do
     post 'users' => 'registrations#create', :as => 'user_registration_create'
   end
 
-  get "mobile/terms_and_conditions"
-  get "mobile/privacy_policy"
+  get 'mobile/terms_and_conditions' => 'mobile#terms_and_conditions'
+  get 'mobile/privacy_policy' => 'mobile#privacy_policy'
 
   get 'about' => 'pages#about'
   get 'terms-of-use' => 'pages#terms_of_use'

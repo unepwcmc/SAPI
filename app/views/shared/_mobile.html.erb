@@ -1,11 +1,11 @@
 <section class="mobile-header">
   <div class="mobile-header__hero">
     <h3>Species+</h3>
-    <h2><%= t('mobile.terms.hero') %></h2>
+    <h2><%= @hero %></h2>
   </div>
 </section>
 <section class="mobile-body">
-  <% t('mobile.terms.body').each do |section| %>
+  <% @body.each do |section| %>
     <h4><%= section[:title]&.html_safe %></h4>
     <%= section[:description]&.html_safe %>
   <% end %>
