@@ -1,3 +1,7 @@
+### 1.8.2
+
+* Mobile terms and conditions, and privacy policy
+
 ### 1.8.1
 
 * Updated CITES Trade Database user guidance
