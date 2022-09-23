@@ -1,13 +1,13 @@
 SAPI::Application.routes.draw do
-  get "mobile/terms_and_conditions"
-  # TODO: uncomment when privacy policy content is updated
-  # get "mobile/privacy_policy"
   devise_for :users, :controllers => { :passwords => "passwords", :registrations => "registrations", :sessions => "sessions" }
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registratione'
     put 'users' => 'registrations#update', :as => 'user_registration_update'
     post 'users' => 'registrations#create', :as => 'user_registration_create'
   end
+
+  get 'mobile/terms_and_conditions' => 'mobile#terms_and_conditions'
+  get 'mobile/privacy_policy' => 'mobile#privacy_policy'
 
   get 'about' => 'pages#about'
   get 'terms-of-use' => 'pages#terms_of_use'
