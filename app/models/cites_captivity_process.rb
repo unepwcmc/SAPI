@@ -10,6 +10,6 @@ class CitesCaptivityProcess < ActiveRecord::Base
   validates :resolution, presence: true
   validates :start_date, presence: true
   # Change status field to Enum type after upgrading to rails 4.1
-  validates :status, presence: true, inclusion: {in: ['Ongoing' 'Trade Suspension' 'Closed']}
+  validates :status, presence: true, inclusion: {in: ['Ongoing', 'Trade Suspension', 'Closed']}
 
 end
