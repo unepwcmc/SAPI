@@ -33,6 +33,7 @@ class Event < ActiveRecord::Base
   belongs_to :designation
   has_many :annotations, :dependent => :destroy
   has_many :documents
+  has_many :cites_captivity_processes
 
   validates :name, :presence => true, :uniqueness => true
   validates :url, :format => URI::regexp(%w(http https)), :allow_blank => true

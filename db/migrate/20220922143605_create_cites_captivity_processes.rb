@@ -1,12 +1,12 @@
-class CreateCaptivityProcesses < ActiveRecord::Migration
+class CreateCitesCaptivityProcesses < ActiveRecord::Migration
   def change
-    create_table :captivity_processes do |t|
+    create_table :cites_captivity_processes do |t|
       t.string :resolution
       t.references :taxon_concept, index: true
       t.references :geo_entity
       t.references :start_event
       t.datetime :start_date
-      t.integer :status
+      t.string :status # change to Enum type after migrating to rails 4.1
       t.text :notes
 
       t.timestamps
