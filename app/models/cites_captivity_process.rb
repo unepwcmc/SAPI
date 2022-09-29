@@ -17,4 +17,14 @@ class CitesCaptivityProcess < ActiveRecord::Base
   validates :status, presence: true, inclusion: {in: STATUS}
 
 
+  validate :start_event_value
+
+  private
+  
+  def start_event_value
+    event = Event.where("id = ? and type IN (?)", start_event_id, ['CitesAc','CitesPc'])
+    if event.blank?
+      errors.add(:start_event, "is Invalid")
+    end
+  end
 end
