@@ -1,3 +1,8 @@
+### 1.8.3
+
+* Replace Trade database guidance pdf and locales
+* Add locale to Trade database download links to allow downloading csvs in different languages
+
 ### 1.8.2
 
 * Mobile terms and conditions, and privacy policy
