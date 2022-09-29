@@ -1,0 +1,50 @@
+<thead>
+  <th>Resolution</th>
+  <th>Country or Territory</th>
+  <th>Type</th>
+  <th>Start date</th>
+  <th>Status</th>
+  <th>Notes</th>
+  <th>Actions</th>
+  <th>Info</th>
+</thead>
+<tbody>
+  <% collection.each do |opinion| -%>
+    <tr class="<%= if opinion.is_current? then "current_listing" end %>">
+      <td><%= opinion.year %></td>
+      <td><%= opinion.start_event.try(:name) %></td>
+      <td><%= opinion.geo_entity && opinion.geo_entity.name_en %></td>
+      <td>
+        <% if opinion.eu_decision_type %>
+          <%= opinion.eu_decision_type.try(:name) %>
+          <%= '(' + opinion.eu_decision_type.tooltip + ')' if opinion.
+            eu_decision_type.tooltip.present? %>
+        <% end %>
+      </td>
+      <td>
+        <% if opinion.srg_history %>
+          <%= opinion.srg_history.name %>
+          <%= '(' + opinion.srg_history.tooltip + ')' if opinion.
+            srg_history.tooltip.present? %>
+        <% end %>
+      </td>
+      <td><%= opinion.term && opinion.term.code %></td>
+      <td><%= opinion.source && opinion.source.code %></td>
+      <td><%= opinion.notes %></td>
+      <td><%= true_false_icon(opinion.is_current) %></td>
+      <td>
+        <%= link_to edit_icon,
+          edit_admin_taxon_concept_eu_opinion_path(@taxon_concept, opinion)
+        %>
+        <%= link_to delete_icon,
+          admin_taxon_concept_eu_opinion_path(@taxon_concept, opinion),
+          data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete
+        %>
+      </td>
+      <td>
+        <%= tracking_info(opinion) %>
+        <%= internal_notes(opinion) %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

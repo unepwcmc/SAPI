@@ -1,0 +1,54 @@
+<% if @taxon_concept.current_eu_opinions.count > 0 %>
+  <table class="eu_opinion table table-bordered table-striped">
+    <thead>
+      <th>Year</th>
+      <th>Regulation</th>
+      <th>Country or Territory</th>
+      <th>Type</th>
+      <th>SRG history</th>
+      <th>Term</th>
+      <th>Source</th>
+      <th>Notes</th>
+      <th>Internal notes</th>
+      <th></th>
+    </thead>
+
+    <tbody>
+    <% @taxon_concept.current_eu_opinions.
+        order("start_date DESC").each do |opinion| %>
+
+      <tr>
+        <td><%= opinion.year %></td>
+        <td><%= opinion.start_event && opinion.start_event.name %></td>
+        <td><%= opinion.geo_entity && opinion.geo_entity.name_en %></td>
+        <td>
+          <% if opinion.eu_decision_type %>
+            <%= opinion.eu_decision_type.name %>
+            <%= '(' + opinion.eu_decision_type.tooltip + ')' if opinion.
+              eu_decision_type.tooltip.present? %>
+          <% end %>
+        </td>
+        <td>
+          <% if opinion.srg_history %>
+            <%= opinion.srg_history.name %>
+            <%= '(' + opinion.srg_history.tooltip + ')' if opinion.
+              srg_history.tooltip.present? %>
+          <% end %>
+        </td>
+        <td><%= opinion.term && opinion.term.code %></td>
+        <td><%= opinion.source && opinion.source.code %></td>
+        <td><%= opinion.notes %></td>
+        <td><%= opinion.internal_notes %></td>
+        <td>
+          <%= form_for [:admin, @taxon_concept, opinion], :remote => true do |f| %>
+            <%= f.check_box :is_current %>
+          <% end %>
+        </td>
+      </tr>
+
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  There are no current EU opinions for this Taxon Concept.
+<% end %>
