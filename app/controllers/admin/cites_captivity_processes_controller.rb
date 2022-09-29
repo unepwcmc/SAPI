@@ -4,10 +4,31 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
   before_filter :load_search, :only => [:new, :index, :edit]
   layout 'taxon_concepts'
 
-  def create
-  end
-		
   def update
+    update! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_cites_captivity_processes_url(params[:taxon_concept_id]),
+        :notice => 'Operation successful'
+      }
+      failure.html {
+        load_lib_objects
+        load_search
+        render 'new'
+      }
+    end
+  end
+
+  def create
+    create! do |success, failure|
+      success.html {
+        redirect_to admin_taxon_concept_cites_captivity_processes_url(params[:taxon_concept_id]),
+        :notice => 'Operation successful'
+      }
+      failure.html {
+        load_search
+        render 'new'
+      }
+    end
   end
 
   protected

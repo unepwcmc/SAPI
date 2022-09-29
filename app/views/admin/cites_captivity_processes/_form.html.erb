@@ -13,9 +13,9 @@
   <%= error_messages_for(@cites_captivity_process) %>
 
   <div class="control-group">
-    <%= f.label :start_event_id, "Resolution", :class => 'control-label' %>
+    <%= f.label :resolution, "Resolution", :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :start_event_id,
+      <%= f.select :resolution,
         options_for_select(@resolution),
         { :include_blank => true }, :class => "select2"
       %>
@@ -45,7 +45,7 @@
         options_from_collection_for_select(@meetings, :id, :name, @cites_captivity_process.start_event_id),
         { :include_blank => true }, :class => "select2"
       %>
-      <%= f.text_field :start_date, :class => "eu_opinion datepicker", :value =>  @cites_captivity_process.start_date && @eu_opinion.start_date.strftime('%d/%m/%Y'), :placeholder => 'Effective from' %>
+      <%= f.text_field :start_date, :class => "eu_opinion datepicker", :value =>  @cites_captivity_process.start_date && @cites_captivity_process.start_date.strftime('%d/%m/%Y'), :placeholder => 'Effective from' %>
     </div>
   </div>
 
