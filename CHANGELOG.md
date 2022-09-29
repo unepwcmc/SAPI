@@ -1,3 +1,7 @@
+### 1.8.4
+
+* Change link text from Tradview to CITES Wildlife TradeView
+
 ### 1.8.3
 
 * Replace Trade database guidance pdf and locales
