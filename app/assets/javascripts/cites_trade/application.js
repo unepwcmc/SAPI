@@ -112,7 +112,7 @@ $(document).ready(function(){
   }
 
   function getResultsCount(params){
-    var href = '/cites_trade/exports/download.json';
+    var href = '/' + locale + '/cites_trade/exports/download.json';
     return $.ajax({
       url: href,
       dataType: 'json',
@@ -682,7 +682,7 @@ $(document).ready(function(){
   }
 
   function displayResults (q) {
-    var table_view_title, formURL = '/cites_trade/shipments',
+    var table_view_title, formURL = '/' + locale + '/cites_trade/shipments',
       data_headers, data_rows, table_tmpl,
       comptab_regex = /comptab/,
       gross_net_regex = /(gross_exports|gross_imports|net_exports|net_imports)/;
@@ -721,7 +721,7 @@ $(document).ready(function(){
 
   function downloadResults (q) {
     var $link = $('#download_genie'),
-      href = '/cites_trade/exports/download?' + q;
+      href = '/' + locale + '/cites_trade/exports/download?' + q;
     $link.attr('href', href).click();
     window.location.href = $link.attr("href");
   }
@@ -750,12 +750,16 @@ $(document).ready(function(){
     } else {
       $.cookie('cites_trade.csv_separator', csv_separator)
       query += '&filters[csv_separator]=' + csv_separator;
-      ga('send', {
-        hitType: 'event',
-        eventCategory: 'Downloads: ' + report_type,
-        eventAction: 'Format: CSV',
-        eventLabel: csv_separator
-      });
+      
+      // google analytics function only defined on production
+      if (typeof(ga) === 'function') {
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'Downloads: ' + report_type,
+          eventAction: 'Format: CSV',
+          eventLabel: csv_separator
+        });
+      }
       downloadResults( decodeURIComponent( query ) );
       return
     }
