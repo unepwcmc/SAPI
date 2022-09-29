@@ -1,6 +1,6 @@
 class CitesCaptivityProcess < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :start_event_id, :geo_entity_id, :resolution, :start_date, :taxon_concept_id, :notes, :status, :created_by_id, :updated_by_id,
+  attr_accessible :start_event_id, :geo_entity_id, :resolution, :start_date, :taxon_concept_id, :notes, :status, :created_by_id, :updated_by_id
   belongs_to :taxon_concept
   belongs_to :geo_entity
   belongs_to :start_event, :class_name => 'Event'
@@ -17,6 +17,18 @@ class CitesCaptivityProcess < ActiveRecord::Base
   # Change status field to Enum type after upgrading to rails 4.1
   validates :status, presence: true, inclusion: {in: STATUS}
   validate :start_event_value
+
+  def is_current?
+    status == 'Ongoing'
+  end
+
+  def year
+    start_date ? start_date.strftime('%Y') : ''
+  end
+
+  def start_date_formatted
+    start_date ? start_date.strftime("%d/%m/%Y") : ""
+  end
 
   private
   
