@@ -33,9 +33,8 @@ class CitesCaptivityProcess < ActiveRecord::Base
   private
   
   def start_event_value
-    event = Event.where("id = ? and type IN (?)", start_event_id, ['CitesAc','CitesPc'])
-    if event.blank?
-      errors.add(:start_event, "is Invalid")
+    unless  ['CitesAc','CitesPc'].include? self.start_event.type
+      errors.add(:start_event, "is not valid")
     end
   end
 end
