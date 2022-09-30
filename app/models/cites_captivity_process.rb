@@ -11,8 +11,8 @@ class CitesCaptivityProcess < ActiveRecord::Base
   validates :start_date, presence: true
   # Change status field to Enum type after upgrading to rails 4.1
   validates :status, presence: true, inclusion: {in: ['Ongoing', 'Trade Suspension', 'Closed']}
-
-  validate :start_event_value
+  validates :start_event, presence: true
+  validate :start_event_value, if: :is_start_event_present?
 
   private
   
@@ -20,5 +20,9 @@ class CitesCaptivityProcess < ActiveRecord::Base
     unless  ['CitesAc','CitesPc'].include? self.start_event.type
       errors.add(:start_event, "is not valid")
     end
+  end
+
+  def is_start_event_present?
+    start_event.present?
   end
 end
