@@ -16,7 +16,6 @@ class CitesCaptivityProcess < ActiveRecord::Base
   
   # Change status field to Enum type after upgrading to rails 4.1
   validates :status, presence: true, inclusion: {in: STATUS}
-  validates :start_event, presence: true
   validate :start_event_value, if: :is_start_event_present?
   before_validation :set_resolution_value
 

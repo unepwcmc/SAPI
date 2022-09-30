@@ -6,7 +6,7 @@
 
   <div class="control-group">
     <%= f.label :resolution, "Review", :class => 'control-label' %>
-    <div class="controls">
+    <div class="controls" style=" padding-top: .25rem;">
       <%= "Captive Breeding" %>
     </div>
   </div>
@@ -26,7 +26,6 @@
       %>
     </div>
   </div>
-<div class="control-group-subheading"><span class="controls"><strong>Meeting</strong></span><span style="padding-left: 10em;">Effective from</span></div>
   <div class="control-group">
     <%= f.label :start_event_id, "Date Entry", :class => 'control-label' %>
     <div class="controls">
@@ -34,10 +33,10 @@
         options_from_collection_for_select(@meetings, :id, :name, @cites_captivity_process.start_event_id),
         { :include_blank => true }, :class => "select2"
       %>
-
-      <%= f.text_field :start_date, :class => "eu_opinion datepicker", :value =>  @cites_captivity_process.start_date && @cites_captivity_process.start_date.strftime('%d/%m/%Y'), :style => 'margin-left: 3em' %>
+      <%= f.text_field :start_date, :class => "eu_opinion datepicker", :value =>  @cites_captivity_process.start_date && @cites_captivity_process.start_date.strftime('%d/%m/%Y'), placeholder: 'Effective from'%>
     </div>
   </div>
+
 
     <div class="control-group">
     <%= f.label :status, "Status", :class => 'control-label' %>
