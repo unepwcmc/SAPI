@@ -1,3 +1,7 @@
+### 1.8.6
+
+* Schedule rebuild job to run daily on staging
+
 ### 1.8.5
 
 * Disable clear_show_tc_serializer_cache method on production
