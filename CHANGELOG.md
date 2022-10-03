@@ -1,3 +1,64 @@
+### 1.8.5
+
+* Disable clear_show_tc_serializer_cache method on production
+
+### 1.8.4
+
+* Change link text from Tradview to CITES Wildlife TradeView
+
+### 1.8.3
+
+* Replace Trade database guidance pdf and locales
+* Add locale to Trade database download links to allow downloading csvs in different languages
+
+### 1.8.2
+
+* Mobile terms and conditions, and privacy policy
+
+### 1.8.1
+
+* Updated CITES Trade Database user guidance
+* CITES Wildlife TradeView links added to CITES Trade Database layout
+* CITES Wildlife TradeView link added to Species+ 'Related Resources' drop down
+* EU Analysis link updated in Species+ 'Related Resources' drop down
+* Common names bulk upload:
+  * new data csv added
+  * import task modified to remove duplicates with different cases, e.g. Shark and shark
+* Diactritics ignored during country filtering
+
+### 1.8.0
+
+**Intersessional decisions**
+
+* Make direct association between Eu Decisions and Documents
+* Add validation on Eu Opinions (Event or Intersessional doc, not both at least one of the two)
+* Update Eu Decisions SQL views
+* Update FE to display link to Intersessional doc or static text based on user session
+
+### 1.7.1
+
+**CITES Trade DB**
+
+* Update to version 2022.1(replace zip file on the server, update ENV var, text updates)
+
+### 1.7.0
+
+**Multilingual extension of Tradeplus**
+
+* localise SQL views
+* fix formatting rules
+
+### 1.6.5
+
+**CITES Trade DB**
+
+* Update to version 2021.1(replace zip file on the server, update ENV var, text updates)
+
+**Species +**
+
+* Add new distributions and distributions tags files
+* Small fix to helpers_import distribution tags header
+
 ### 1.6.4
 
 **Trade exemption, quotas and reservations data updates**

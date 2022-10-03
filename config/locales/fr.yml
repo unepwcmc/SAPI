@@ -1,7 +1,7 @@
 fr:
   cites_title: "Base de Données sur le Commerce CITES"
   cites_description: "La base de données sur le commerce CITES, gérée par le Centre mondial de surveillance continue de la conservation de la nature du PNUE (PNUE-WCMC) au nom du Secrétariat CITES"
-  cites_sub_title: "S'il vous plaît entrer votre recherche ci-dessous"
+  cites_sub_title: "Veuillez saisir votre recherche ci-dessous"
   errors:
     no_data_1: "Votre recherche n'a retourné aucune donnée"
     no_data_2: "S'il vous plaît sélectionner autres variables"
@@ -13,8 +13,8 @@ fr:
     net_trade_1: "S'il vous plaît lire attentivement:"
     net_trade_2: "Le commerce net est le résultat de la soustraction des réexportations d'un pays de ses importations. Par conséquent, si votre sélection de données concerne seulement des importations ou des exportations des pays spécifiés, vous ne pouvez pas calculer les importations ou les exportations nettes. Vous pouvez uniquement obtenir des importations ou exportations brutes."
 
-  year_text: "Gamme des Années"
-  year_tip: "Sélectionnez les années de début (De) et de fin (A) pour votre recherche. Il est conseillé de limiter votre demande de données avec une gamme des années de 5 ans ou moins"
+  year_text: "Période"
+  year_tip: "Sélectionnez les années de début (De) et de fin (A) pour votre recherche. Il est conseillé de limiter votre demande de données à une période de 5 années maximum"
   export_text: "Pays d'exportation"
   export_tip: "Entrez le nom du/des pays que vous souhaitez inclure dans votre rapport de sortie final. Pour incluire les données de tous les pays, laissez 'Tous les Pays' sélectionné"
   import_text: "Pays importateurs"
@@ -46,6 +46,7 @@ fr:
   db_guide: "Un Guide d'Utilisation de la Base de Données sur le Commerce CITES"
   tabulation_guide: "Un Guide pour Interpréter les Sorties de Tabulations Comparatives"
   trade_guide: "Un Guide pour Interpréter les Sorties du Commerce Brut/Net"
+  translation_in_progress_html: Une version mise à jour du ‘Guide d’utilisation de la base de données sur le commerce CITES’ a été publiée en <a href="/cites_trade_guidelines/en-CITES_Trade_Database_Guide.pdf">anglais</a> (traduction en cours).
 
   reports: "RAPPORTS"
   report: "rapport"
@@ -75,8 +76,8 @@ fr:
     net_exports: "Rapport de la Exportations Nettes"
     comptab: "Rapport de la Tabulation Comparative"
 
-  full_db_download: "Téléchargement de la Base de Données sur le Commerce CITES entière (version 2020.1)"
-  full_db_download_available: "Intégralité de la Base de Données sur le Commerce CITES disponible à télécharger (version 2020.1)"
+  full_db_download: "Téléchargement de la Base de Données sur le Commerce CITES entière (version 2022.1)"
+  full_db_download_available: "Intégralité de la Base de Données sur le Commerce CITES disponible à télécharger (version 2022.1)"
   download_here: "Télécharger ici"
   file_size: "Taille du fichier"
 
@@ -92,7 +93,7 @@ fr:
         Le Manuel d’Identification CITES est un recueil de fiches techniques conçues pour aider à identifier les différentes espèces de faune et de flore à l’aide de dessins, de photographies, de cartes et de descriptions concises. Les fiches du manuel ont été publiées sur une période de 29 ans, de 1980 à 2009. Leur contenu est fourni tel que publié à l’origine, et à ce titre, aucune garantie n’est donnée quant à l’exhaustivité ou à l’exactitude du contenu. Des matériaux d’identification ne sont pas disponibles pour toutes les espèces, et peuvent particulièrement manquer pour celles inscrites aux Annexes de la CITES après 2009.
       </p>
       <p>
-        Il est à noter que l’inscription aux Annexes et la taxonomie des taxons décrits dans les matériaux disponibles peuvent avoir changé depuis leur publication d’origine. Pour obtenir des informations sur la taxonomie et les listes CITES actuelles, veuillez consulter le site principal de la Liste des espèces CITES (et les téléchargements dédiés aux listes/noms taxonomiques) et Species+. 
+        Il est à noter que l’inscription aux Annexes et la taxonomie des taxons décrits dans les matériaux disponibles peuvent avoir changé depuis leur publication d’origine. Pour obtenir des informations sur la taxonomie et les listes CITES actuelles, veuillez consulter le site principal de la Liste des espèces CITES (et les téléchargements dédiés aux listes/noms taxonomiques) et Species+.
       </p>
       <p>
         Le manuel contient des matériaux disponibles dans les trois langues de travail de la Convention (anglais, français et espagnol), mais ceux en français et espagnol ne sont disponibles que pour un nombre réduit de taxons. Dans la mesure du possible, les matériaux sont fournis dans la langue choisie, mais s’ils ne sont pas disponibles en français ou espagnol, ils sont fournis en anglais.
@@ -108,7 +109,7 @@ fr:
         Les appellations géographiques utilisées dans ces publications n’impliquent aucune opinion de la part des compilateurs, du Secrétariat CITES ou du Programme des Nations Unies pour l’environnement (PNUE) quant au statut juridique d’un pays, territoire ou région, ou au tracé de leurs frontières ou limites.
       </p>
       <p>
-        Ce projet a été financé par l'Union européenne dans le cadre d'un projet de l’accord de coopération du programme GPGC CE-PNUE, attribué au Secrétariat CITES. 
+        Ce projet a été financé par l'Union européenne dans le cadre d'un projet de l’accord de coopération du programme GPGC CE-PNUE, attribué au Secrétariat CITES.
       </p>
     "
     citation_label: Citation

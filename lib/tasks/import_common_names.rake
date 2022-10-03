@@ -55,6 +55,20 @@ namespace :import do
         SQL
         ActiveRecord::Base.connection.execute(sql)
       end
+
+      # The import process allows duplicates to enter the db, as well as case-insensitive duplicates.
+      # We can delete these here, by grouping by common name converted to lowercase, language,
+      # taxon_concept and taxonomy, and only keeping the first example.
+      sql = <<-SQL
+        SELECT min(taxon_commons.id)
+        FROM taxon_commons
+        LEFT JOIN common_names ON common_names.id = taxon_commons.common_name_id
+        LEFT JOIN taxon_concepts ON taxon_concepts.id = taxon_commons.taxon_concept_id
+        GROUP BY LOWER(common_names.name), common_names.language_id, taxon_commons.taxon_concept_id, taxon_concepts.taxonomy_id
+      SQL
+      taxon_commons_ids_unique = ActiveRecord::Base.connection.execute(sql).values.flatten
+      taxon_commons_duplicates = TaxonCommon.where.not(id: taxon_commons_ids_unique)
+      taxon_commons_duplicates.destroy_all
     end
     puts "There are now #{CommonName.count} common names in the database"
     puts "There are now #{TaxonCommon.count} taxon commons in the database."

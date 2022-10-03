@@ -75,5 +75,7 @@ module SAPI
 
     # Change Ember's template root. Doesn't seem to be working though :(
     # config.handlebars.templates_root = "trade/templates"
+
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
   end
 end

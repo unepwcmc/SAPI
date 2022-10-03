@@ -1,0 +1,94 @@
+// Settings (mobile-first)
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
+$navy: #253848;
+$black: #2D2D2D;
+$medium-grey: #dddddd;
+$dark-grey: #747474;
+$link-navy: #376382;
+$link-blue: #0088cc;
+
+$screen-sm: 768px;
+$screen-md: 1024px;
+$screen-lg: 1200px;
+$screen-xl: 1600px;
+
+.mobile {
+  font-family: 'Open Sans', sans-serif;
+  color: $dark-grey;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.75;
+  // get rid of the default margin on the body
+  margin-top: -40px;
+
+  h2 {
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  h3 {
+    font-weight: 400;
+    font-size: 18px;
+  }
+
+  h4 {
+    color: $black;
+    font-weight: 700;
+    font-size: 15px;
+    margin: 1rem 0;
+    padding-top: 1rem;
+    line-height: 1.5;
+  }
+
+  a {
+    color: $link-navy;
+    text-decoration: underline;
+  }
+
+  a:hover {
+    color: $link-blue;
+  }
+
+  &-header {
+    text-align: center;
+    
+    &__hero {
+      background-color: $navy;
+      color: white;
+      padding: 6% 2%;
+      margin-bottom: 1rem;
+    }
+  }
+
+  &-body {
+    padding: 0 2rem 2rem;
+  } 
+
+// breakpoints
+  // @media screen and (min-width:$screen-sm){
+  // }
+
+  @media screen and (min-width:$screen-lg){
+    font-size: 15px;
+
+    &-body {
+      padding: 0 6rem 6rem;
+    } 
+
+    h2 {
+      font-size: 1.75rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+    h4 {
+      font-size: 1.25rem;
+    }
+  }
+
+  // @media screen and (min-width:$screen-xl){
+  // }
+}

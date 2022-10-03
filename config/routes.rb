@@ -6,6 +6,9 @@ SAPI::Application.routes.draw do
     post 'users' => 'registrations#create', :as => 'user_registration_create'
   end
 
+  get 'mobile/terms_and_conditions' => 'mobile#terms_and_conditions'
+  get 'mobile/privacy_policy' => 'mobile#privacy_policy'
+
   get 'about' => 'pages#about'
   get 'terms-of-use' => 'pages#terms_of_use'
   get 'eu_legislation' => 'pages#eu_legislation'
@@ -26,6 +29,7 @@ SAPI::Application.routes.draw do
       resources :sources, :only => [:index]
       resources :purposes, :only => [:index]
       resources :trade_plus_filters, only: :index
+      resources :eu_decisions, only: :index
       resources :documents do
         collection do
           get 'download_zip'
@@ -39,6 +43,7 @@ SAPI::Application.routes.draw do
       get '/shipments/chart' => 'shipments#chart_query'
       get '/shipments/grouped' => 'shipments#grouped_query'
       get '/shipments/over_time' => 'shipments#over_time_query'
+      get '/shipments/aggregated_over_time' => 'shipments#aggregated_over_time_query'
       get '/shipments/country' => 'shipments#country_query'
       get '/shipments/search' => 'shipments#search_query'
       get '/shipments/download' => 'shipments#download_data'

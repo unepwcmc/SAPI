@@ -11,23 +11,23 @@
 
     <table class="table table-striped">
       <tr>
-        <td><span class="text-info">Email:</span></td> 
+        <td><span class="text-info">Email:</span></td>
         <td><%= @user.email %></td>
       </tr>
       <tr>
-        <td><span class="text-info">Organisation:</span></td> 
+        <td><span class="text-info">Organisation:</span></td>
         <td><%= @user.try(:organisation) %></td>
       </tr>
       <tr>
-        <td><span class="text-info">Country:</span></td> 
+        <td><span class="text-info">Country:</span></td>
         <td><%= @user.try(:geo_entity).try(:name_en) %></td>
       </tr>
       <tr>
-        <td><span class="text-info">Role:</span></td> 
+        <td><span class="text-info">Role:</span></td>
         <td><%= @user.role %></td>
       </tr>
       <tr>
-        <td><span class="text-info">Total Successful Requests:</span></td> 
+        <td><span class="text-info">Total Successful Requests:</span></td>
         <td><%= number_with_delimiter @user.api_requests.where(response_status: 200).count, delimiter: ',' %></td>
       </tr>
       <tr>
@@ -35,7 +35,7 @@
         <td><%= number_with_delimiter @user.api_requests.where(response_status: 500).count, delimiter: ',' %></td>
       </tr>
       <tr>
-        <td><span class="text-info">Date Joined:</span></td> 
+        <td><span class="text-info">Date Joined:</span></td>
         <td><%= @user.created_at.to_s(:long) %></td>
       </tr>
     </table>
@@ -45,7 +45,7 @@
 <div class="row">
   <div class="span12">
     <div class="page-header">
-      <h4>Last <%= ApiRequest::RECENT_DAYS %> Days Requests by Response Status</h4>
+      <h4>Last <%= ApiRequest::RECENT_MONTHS %> Months Requests by Response Status</h4>
     </div>
 
     <%= line_chart sanitise_hash_for_line_graph(@recent_requests),

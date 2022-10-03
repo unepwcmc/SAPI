@@ -1,0 +1,12 @@
+en:
+  tradeplus:
+    units:
+      m3: 'Cubic metres (m³)'
+      kg: 'Kilograms (kg)'
+      l: 'Litres (l)'
+      m: 'Metres (m)'
+      items: 'Number of specimens'
+      m2: 'Square metres (m²)'
+    taxon_groups: 'Mammals,Birds,Reptiles,Amphibians,Fish,Coral,Non-coral invertebrates,Plants (other than timber),Plants (timber)'
+    unreported: 'Unreported'
+    direct: 'Direct'

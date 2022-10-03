@@ -9,7 +9,8 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     :source,
     :term,
     { :original_start_date_formatted => :original_start_date },
-    :private_url
+    :private_url,
+    :intersessional_decision_id
 
   def eu_decision_type
     object['eu_decision_type']
@@ -37,5 +38,9 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
 
   def private_url
     scope.current_user ? object['private_url'] : nil
+  end
+
+  def intersessional_decision_id
+    scope.current_user ? object['intersessional_decision_id'] : nil
   end
 end

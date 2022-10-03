@@ -65,21 +65,30 @@
           </td>
           <td class="last">
             {{#if isSignedIn }}
+              {{#if decision.intersessional_decision_id}}
+                <a class="legal-links" href="https://speciesplus.net/api/v1/documents/{{unbound decision.intersessional_decision_id}}">
+                  Intersessional decision
+                </a>
+              {{/if}}
               {{#if decision.private_url}}
                 <a class="legal-links" href="{{unbound decision.private_url}}">
                   {{decision.start_event.name}}
                 </a>
               {{else}}
                 {{#if decision.start_event.url}}
-                    <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                  <a class="legal-links" href="{{unbound decision.start_event.url}}">
                     {{decision.start_event.name}}
-                    </a>
+                  </a>
                 {{/if}}
               {{/if}}
             {{else}}
-              <a class="legal-links" href="{{unbound decision.start_event.url}}">
-                {{decision.start_event.name}}
-              </a>
+              {{#if decision.start_event.name }}
+                <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                  {{decision.start_event.name}}
+                </a>
+              {{else}}
+                Intersessional decision
+              {{/if}}
             {{/if}}
           </td>
         </tr>
@@ -151,21 +160,30 @@
               </td>
               <td class="last">
                 {{#if isSignedIn }}
+                  {{#if decision.intersessional_decision_id}}
+                    <a class="legal-links" href="https://speciesplus.net/api/v1/documents/{{unbound decision.intersessional_decision_id}}">
+                      Intersessional decision
+                    </a>
+                  {{/if}}
                   {{#if decision.private_url}}
                     <a class="legal-links" href="{{unbound decision.private_url}}">
                       {{decision.start_event.name}}
                     </a>
                   {{else}}
                     {{#if decision.start_event.url}}
-                        <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                      <a class="legal-links" href="{{unbound decision.start_event.url}}">
                         {{decision.start_event.name}}
-                        </a>
+                      </a>
                     {{/if}}
                   {{/if}}
                 {{else}}
-                  <a class="legal-links" href="{{unbound decision.start_event.url}}">
-                    {{decision.start_event.name}}
-                  </a>
+                  {{#if decision.start_event.name }}
+                    <a class="legal-links" href="{{unbound decision.start_event.url}}">
+                      {{decision.start_event.name}}
+                    </a>
+                  {{else}}
+                    Intersessional decision
+                  {{/if}}
                 {{/if}}
               </td>
             </tr>

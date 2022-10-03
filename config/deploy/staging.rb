@@ -1,5 +1,5 @@
 set :stage, :staging
-set :branch, 'origin/feat/db_migrate_rebuild_daily_unless_production'
+set :branch, :develop
 
 server "sapi-staging.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
 

@@ -33,7 +33,8 @@ describe NomenclatureChange::FullReassignment do
 
     context 'when EU Opinions present' do
       before(:each) do
-        create(:eu_opinion, taxon_concept: old_tc)
+        @eu_regulation = create(:ec_srg)
+        create(:eu_opinion, taxon_concept: old_tc, start_event: @eu_regulation)
         subject.process
       end
       specify { expect(new_tc.eu_opinions.count).to eq(1) }

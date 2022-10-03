@@ -48,7 +48,7 @@ describe TaxonConcept do
         specify { @taxon_concept.destroy.should be_falsey }
       end
       context "when EU opinions" do
-        before(:each) { create(:eu_opinion, :taxon_concept => @taxon_concept) }
+        before(:each) { create(:eu_opinion, :taxon_concept => @taxon_concept, start_event: create(:ec_srg)) }
         specify { @taxon_concept.destroy.should be_falsey }
       end
       context "when EU suspensions" do
