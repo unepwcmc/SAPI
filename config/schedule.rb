@@ -1,6 +1,8 @@
 set :output, 'log/cron.log'
 
-every :saturday, :at => '1:42am' do
+db_migrate_rebuild_period = @environment == 'production' ? :saturday : :day
+
+every db_migrate_rebuild_period, :at => '1:42am' do
   rake "db:migrate:rebuild"
 end
 
