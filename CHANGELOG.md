@@ -1,3 +1,7 @@
+### 1.8.5
+
+* Disable clear_show_tc_serializer_cache method on production
+
 ### 1.8.4
 
 * Change link text from Tradview to CITES Wildlife TradeView
