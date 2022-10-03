@@ -13,6 +13,9 @@ set :sudo_user, "wcmc"
 
 set :app_port, "80"
 
+set :whenever_environment, proc { fetch :stage }
+require 'whenever/capistrano'
+
 # server-based syntax
 # ======================
 # Defines a single server with a list of roles and multiple properties.
