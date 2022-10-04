@@ -9,26 +9,26 @@
   <th>Info</th>
 </thead>
 <tbody>
-  <% collection.each do |opinion| -%>
-    <tr class="<%= if opinion.is_current? then "current_listing" end %>">
-      <td><%= opinion.resolution %></td>
-      <td><%= opinion.geo_entity && opinion.geo_entity.name_en %></td>
-      <td><%= opinion.start_event.try(:name) %></td>
+  <% collection.each do |process| -%>
+    <tr class="<%= if process.is_current? then "current_listing" end %>">
+      <td><%= process.resolution %></td>
+      <td><%= process.geo_entity && process.geo_entity.name_en %></td>
+      <td><%= process.start_event.try(:name) %></td>
 
-      <td><%= opinion.start_date_formatted %></td>
-      <td><%= opinion.status %></td>
-      <td><%= opinion.notes %></td>      
+      <td><%= process.start_date_formatted %></td>
+      <td><%= process.status %></td>
+      <td><%= process.notes %></td>      
       <td>
         <%= link_to edit_icon,
-          edit_admin_taxon_concept_cites_captivity_process_path(@taxon_concept, opinion)
+          edit_admin_taxon_concept_cites_captivity_process_path(@taxon_concept, process)
         %>
         <%= link_to delete_icon,
-          admin_taxon_concept_cites_captivity_process_path(@taxon_concept, opinion),
+          admin_taxon_concept_cites_captivity_process_path(@taxon_concept, process),
           data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete
         %>
       </td>
       <td>
-        <%= tracking_info(opinion) %>        
+        <%= tracking_info(process) %>        
       </td>
     </tr>
   <% end -%>

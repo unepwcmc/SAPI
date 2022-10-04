@@ -28,7 +28,7 @@ class CitesCaptivityProcess < ActiveRecord::Base
   end
 
   def start_date_formatted
-    start_date ? start_date.strftime("%d/%m/%Y") : ""
+    start_date ? start_date.strftime('%d/%m/%Y') : ''
   end
 
   private
