@@ -31,7 +31,7 @@ class Api::V1::TaxonConceptsController < ApplicationController
       s = Species::ShowTaxonConceptSerializerCites
     end
     render :json => @taxon_concept,
-      :serializer => s
+      :serializer => s, :trimmed => params[:trimmed]
   end
 
   protected
