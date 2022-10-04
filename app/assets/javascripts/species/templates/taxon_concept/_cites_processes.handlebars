@@ -1,0 +1,51 @@
+<strong class="title">CITES PROCESSES</strong>
+{{#unless citesProcesses}}
+  {{#if citesProcessesIsLoading}}
+    {{ partial 'species/spinner'}}
+  {{else}}
+  <p class="empty">This {{#tolower rankName}}{{/tolower}} is not currently listed in the CITES Appendices.</p>
+  {{/if}}
+{{else}}
+  <table summary="data table">
+    <thead>
+      <tr>
+        <th class="col2">RESOLUTION</th>
+        <th class="col2">COUNTRY</th>
+        <th class="col2">DATE ENTRY</th>
+        <th class="col2">DOCUMENT</th>
+        <th class="col2">CASE STATUS</th>
+        <th class="col6">NOTES</th>
+      </tr>
+    </thead>
+    <tbody {{bind-attr class="controller.citesProcessExpanded:historic_expanded"}}>
+      {{#each process in currentCitesProcesses}}
+        <tr class="current">
+          <td>
+            {{process.resolution}}
+          </td>
+          <td>
+            {{process.geo_entity_id}}
+          </td>
+          <td>
+            {{process.start_event_id}}
+            {{process.start_date}}
+          </td>
+          <td>
+          </td>
+          <td>
+            {{process.status}}
+          </td>
+          <td>
+            {{process.notes}}
+          </td>
+        </tr>
+      {{else}}
+        <tr class="current">
+          <td colspan=4>There are no current suspensions in place for this {{#tolower controllers.taxonConcept.rankName}}{{/tolower}}.</td>
+        </tr>
+      {{/each}}
+    </tbody>
+    
+  </table>
+
+{{/unless}}
