@@ -9,6 +9,31 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
     :key => :eu_listings
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
 
+  def include_distribution_references?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_standard_references?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_taxon_concept_references?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_cites_listing?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_eu_listing?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
   def quotas
     Quota.from('api_cites_quotas_view trade_restrictions').
       where("
