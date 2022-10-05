@@ -8,10 +8,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
     :key => :eu_listings
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
-  has_many :processes, :key => :cites_processes
+  has_many :processes, :serializer => Species::CitesProcessSerializer, :key => :cites_processes
 
   def processes
-     CitesCaptivityProcess.all
+     CitesCaptivityProcess.includes(:geo_entity,:start_event).where(taxon_concept_id: object.id)
   end
 
   def quotas
