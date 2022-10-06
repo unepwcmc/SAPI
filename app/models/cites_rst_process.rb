@@ -1,6 +1,8 @@
-class CitesCaptivityProcess < CitesProcess
+class CitesRstProcess < CitesProcess
 
-  STATUS = ['Ongoing', 'Trade Suspension', 'Closed']
+  attr_accessible :case_id
+
+  STATUS = ['Initiated', 'Ongoing', 'Retained', 'Trade Suspension', 'Closed']
 
   # Change status field to Enum type after upgrading to rails 4.1
   validates :status, presence: true, inclusion: {in: STATUS}
@@ -9,6 +11,6 @@ class CitesCaptivityProcess < CitesProcess
   private
 
   def set_resolution_value
-    self.resolution = 'Captive Breeding'
+    self.resolution = 'Significant Trade'
   end
 end
