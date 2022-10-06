@@ -35,6 +35,8 @@ class Admin::ExportsController < Admin::AdminController
       result = Species::IucnMappingsExport.new.export
     when 'CmsMappings'
       result = Species::CmsMappingsExport.new.export
+    when 'CitesProcesses'
+      result = Species::CitesProcessesExport.new.export
     end
     if result.is_a?(Array)
       # this was added in order to prevent download managers from
