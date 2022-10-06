@@ -3,17 +3,17 @@
   {{#if citesProcessesIsLoading}}
     {{ partial 'species/spinner'}}
   {{else}}
-  <p class="empty">There are no current cases for this species.</p>
+  <p class="empty">This species is not currently included in the CITES Reviews of Significant Trade or Captive Breeding</p>
   {{/if}}
 {{else}}
   <table summary="data table">
     <thead>
       <tr>
-        <th class="col2">RESOLUTION</th>
+        <th class="col2">REVIEW</th>
         <th class="col14">COUNTRY</th>
         <th class="col2">DATE ENTRY</th>
-        <th class="col14">DOCUMENT</th>
-        <th class="col14">CASE STATUS</th>
+        <th class="col14">DETAILS</th>
+        <th class="col14">STATUS</th>
         <th class="col2">NOTES</th>
       </tr>
     </thead>
@@ -40,7 +40,7 @@
         </tr>
       {{else}}
         <tr class="current">
-          <td colspan=4>There are no current cases for this species.</td>
+          <td colspan=4>This species is not currently included in the CITES Reviews of Significant Trade or Captive Breeding</td>
         </tr>
       {{/each}}
     </tbody>
