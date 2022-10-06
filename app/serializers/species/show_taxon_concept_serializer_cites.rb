@@ -11,7 +11,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :processes, :serializer => Species::CitesProcessSerializer, :key => :cites_processes
 
   def processes
-     CitesCaptivityProcess.includes(:geo_entity,:start_event).where(taxon_concept_id: object.id)
+     CitesCaptivityProcess.includes(:geo_entity,:start_event).where(taxon_concept_id: object.id).order(:start_date)
   end
 
   def quotas
