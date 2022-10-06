@@ -36,7 +36,6 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
   def load_lib_objects
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(:geo_entity_types => { :name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
-    @resolution = CitesCaptivityProcess::RESOLUTION
     @status = CitesCaptivityProcess::STATUS
     @events = Event.where("type IN ('CitesAc','CitesPc')"
     ).order("effective_at DESC")
