@@ -35,6 +35,12 @@
     {{/with}}
   </div>
 
+  <div {{bind-attr class=":block :add controllers.taxonConcept.anyHistoricCitesProcesses citesProcessesExpanded:active"}} id="cites_processes">
+    {{#with controllers.taxonConcept}}
+      {{ partial 'species/taxon_concept/cites_processes' }}
+    {{/with}}
+  </div>
+
   <hr />
 
   <div {{bind-attr class=":block :add controllers.taxonConcept.anyHistoricEuListings euListingsExpanded:active"}} id="eu_listings">
