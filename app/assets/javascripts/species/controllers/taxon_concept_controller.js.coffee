@@ -73,6 +73,13 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchCon
     else
       ""
   ).property('citesSuspensions')
+  anyHistoricCitesProcesses: ( ->
+    if @get('citesProcesses') != undefined && @get('citesProcesses')
+     .findProperty('status', 'Closed') != undefined
+      "show_more"
+    else
+      ""
+  ).property('citesProcesses')
   anyHistoricEuDecisions: ( ->
     if @get('euDecisions') != undefined && @get('euDecisions')
      .findProperty('is_current', false) != undefined
@@ -135,6 +142,18 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchCon
     else
       null
   ).property('citesSuspensions')
+  currentCitesProcesses: (->
+    if @get('citesProcesses') != undefined
+      @get('citesProcesses').filterProperty('status', 'Ongoing').concat(@get('citesProcesses').filterProperty('status', 'Trade Suspension'))
+    else
+      null
+  ).property('citesProcesses')
+  historicCitesProcesses: (->
+    if @get('citesProcesses') != undefined
+      @get('citesProcesses').filterProperty('status', 'Closed')
+    else
+      null
+  ).property('citesProcesses')
   currentEuListings: (->
     if @get('euListings') != undefined
       @get('euListings').filterProperty('is_current', true)
@@ -185,6 +204,12 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchCon
     else
       return yes
   ).property('citesSuspensions')
+  citesProcessesIsLoading: ( ->
+    if @get('citesProcesses') != undefined
+      return no
+    else
+      return yes
+  ).property('citesProcesses')
 
   contentObserver: ( ->
     matchedOnSelf = true
