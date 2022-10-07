@@ -30,11 +30,16 @@
             {{process.start_event_name}} ({{process.start_date}})
           </td>
           <td>
+            {{#if process.document}}
+              <a class="legal-links" href="{{unbound process.document}}">
+                Link
+              </a>
+            {{/if}}
           </td>
           <td>
             {{process.status}}
           </td>
-          <td>
+          <td class="last">
             {{process.notes}}
           </td>
         </tr>
@@ -71,11 +76,16 @@
                {{process.start_event_name}} ({{process.start_date}})
               </td>
               <td>
+                {{#if process.document}}
+                  <a class="legal-links" href="{{unbound process.document}}">
+                    {{process.document}}
+                  </a>
+                {{/if}}
               </td>
              <td>
               {{process.status}}
              </td>
-            <td>
+            <td class="last">
               {{process.notes}}
             </td>
             </tr>
