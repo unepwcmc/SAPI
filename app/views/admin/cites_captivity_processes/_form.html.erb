@@ -35,13 +35,20 @@
   </div>
 
 
-    <div class="control-group">
+  <div class="control-group">
     <%= f.label :status, "Status", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :status,
         options_for_select(@status, @cites_captivity_process.status),
         :class => "select2"
       %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Details</label>
+    <div class="controls">
+      <%= f.text_area :document, :class => 'cites_captivity_process', :value => @cites_captivity_process.document %>
     </div>
   </div>
 

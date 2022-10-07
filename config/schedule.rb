@@ -21,3 +21,7 @@ end
 every 1.day, :at => '5:30 am' do
   rake "-s sitemap:refresh"
 end
+
+every :sunday, :at => '1:30am' do
+  rake "rst_processes:import"
+end

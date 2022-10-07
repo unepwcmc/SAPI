@@ -128,7 +128,7 @@ class MTaxonConcept < ActiveRecord::Base
   has_many :current_cms_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
     :foreign_key => :taxon_concept_id,
     :class_name => MCmsListingChange
-  has_many :captivity_processes
+  has_many :cites_processes
   scope :by_cites_eu_taxonomy, -> { where(:taxonomy_is_cites_eu => true) }
   scope :by_cms_taxonomy, -> { where(:taxonomy_is_cites_eu => false) }
 
