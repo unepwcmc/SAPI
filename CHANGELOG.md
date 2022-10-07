@@ -1,3 +1,7 @@
+### 1.9.0
+
+* Add parameter to taxon concept show API internal endpoint to trimmed response for the mobile app
+
 ### 1.8.6
 
 * Schedule rebuild job to run daily on staging
