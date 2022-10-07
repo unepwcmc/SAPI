@@ -4,7 +4,7 @@ module Import::Rst::CountryDataHandler
     def merge_country_data(data)
       data.map do |item|
         country = ApiClients::RstApi.get_country(item['countryId'])
-        item.merge(country_iso2: country['data']['iso'])
+        item.merge('country_iso2' => country['data']['iso'])
       end
     end
   end
