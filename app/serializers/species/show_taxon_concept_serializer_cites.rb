@@ -8,6 +8,11 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
     :key => :eu_listings
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
+  has_many :processes, :serializer => Species::CitesProcessSerializer, :key => :cites_processes
+
+  def processes
+     CitesProcess.includes(:geo_entity, :start_event).where(taxon_concept_id: object.id).order(:start_date)
+  end
 
   def include_distribution_references?
     return true unless @options[:trimmed]

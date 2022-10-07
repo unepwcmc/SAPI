@@ -146,6 +146,8 @@ class TaxonConcept < ActiveRecord::Base
   has_many :nomenclature_change_outputs_as_new, class_name: 'NomenclatureChange::Output',
     foreign_key: :new_taxon_concept_id
   has_many :document_citation_taxon_concepts
+  has_many :cites_processes
+  has_many :cites_captivity_processes
 
   validates :taxonomy_id, :presence => true
   validates :rank_id, :presence => true
