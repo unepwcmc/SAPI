@@ -24,7 +24,7 @@ class Api::V1::TaxonConceptsController < ApplicationController
                :distributions => :geo_entity,
                :quotas => :geo_entity,
                :cites_suspensions => :geo_entity,
-               :cites_captivity_processes => :geo_entity).
+               :cites_processes => :geo_entity).
       includes(:taxonomy).find(params[:id])
     if @taxon_concept.taxonomy.name == Taxonomy::CMS
       s = Species::ShowTaxonConceptSerializerCms
