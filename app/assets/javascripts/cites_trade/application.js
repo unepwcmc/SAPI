@@ -115,7 +115,7 @@ $(document).ready(function(){
 
     // TODO: add required logic here
     ['exporters_ids', 'importers_ids'].forEach(function (key) {
-      if (values[key].indexOf(EU_OPTION.id.toString()) > 0) {
+      if (isEuInArray(values[key])) {
         console.log('Getting params: ' + key + ' contains EU.')
       }
     })
@@ -199,6 +199,7 @@ $(document).ready(function(){
   $('#reset_search').click(function() {
   	resetSelects();
   	show_values_selection();
+    setEuDisclaimerVisibility();
     // Removing the table results on reset
     $("#query_results_table").find('thead,tbody').remove();
     $('#query_results').find('p.info').text('');
@@ -306,6 +307,7 @@ $(document).ready(function(){
     		selection = getText(new_array);
     	}
     	$('#expcty_out').text(selection);
+      setEuDisclaimerVisibility();
     });
 
     populateSelect(_.extend(args, {
@@ -333,6 +335,7 @@ $(document).ready(function(){
     		selection = getText(new_array);
     	}
     	$('#impcty_out').text(selection);
+      setEuDisclaimerVisibility();
     });
   };
 
@@ -495,6 +498,24 @@ $(document).ready(function(){
   	$('#genus_all_id').val();
   };
 
+  function setEuDisclaimerVisibility () {
+    ['imp', 'exp'].forEach(function (type) {
+      const disclaimerEl = $('#eu_disclaimer_' + type)
+
+      hasEuDisclaimer(type) ? disclaimerEl.show() : disclaimerEl.hide()
+    })
+  }
+
+  function hasEuDisclaimer (type) {
+    const selections = $('#'+ type + 'cty').val()
+
+    return isEuInArray(selections)
+  }
+
+  function isEuInArray (array) {
+    return array.indexOf(EU_OPTION.id.toString()) >= 0
+  }
+
   $('#side .ui-button, #form .ui-button').hover(function() {
   	$(this).toggleClass('ui-state-hover');
   });
@@ -629,6 +650,7 @@ $(document).ready(function(){
   }
 
   show_values_selection();
+  setEuDisclaimerVisibility();
 
   $('#qryFrom, #qryTo').on('change',function() {
   	var y_from = $('#qryFrom').val();

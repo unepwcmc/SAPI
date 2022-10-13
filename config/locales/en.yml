@@ -34,6 +34,8 @@ en:
   taxon_search: "Search for species or higher taxon"
   genus_title: "Search for genus:"
 
+  eu_disclaimer: 'This is the EU disclaimer text explaining how the EU selection works.'
+
   all_countries: "All Countries"
   all_sources: "All Sources"
   all_purposes: "All Purposes"
