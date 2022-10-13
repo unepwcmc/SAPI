@@ -1,3 +1,11 @@
+//TODO: align with backend
+const EU_OPTION = {
+  geo_entity_type: 'REGION',
+  id: 1001,
+  iso_code2: 'EU',
+  name: 'European Union'
+}
+
 $(document).ready(function(){
 
   var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes,
@@ -104,6 +112,14 @@ $(document).ready(function(){
 
   function getParamsFromInputs(){
     var values = parseInputs($('#form_expert :input'));
+
+    // TODO: add required logic here
+    ['exporters_ids', 'importers_ids'].forEach(function (key) {
+      if (values[key].indexOf(EU_OPTION.id.toString()) > 0) {
+        console.log('Getting params: ' + key + ' contains EU.')
+      }
+    })
+
     return $.param({'filters': values});
   }
 
@@ -257,6 +273,8 @@ $(document).ready(function(){
   }
 
   initExpctyImpcty = function (data) {
+    data.geo_entities.push(EU_OPTION)
+    // TODO: Sort if required
   	var args = {
   	  	data: data.geo_entities,
   	  	condition: function (item) {return item.iso_code2},
