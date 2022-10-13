@@ -39,7 +39,7 @@ class GeoEntity < ActiveRecord::Base
   has_many :document_citation_geo_entities, dependent: :destroy
   has_many :users
   has_many :cites_processes
-  has_many :eu_country_statuses
+  has_many :eu_country_dates
   validates :geo_entity_type_id, :presence => true
   validates :iso_code2, :uniqueness => true, :allow_blank => true
   validates :iso_code2, :presence => true, :length => { :is => 2 },
