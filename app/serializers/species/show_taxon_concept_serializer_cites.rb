@@ -34,6 +34,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.nomenclature_note_es,
               geo_entity_en,
               unit_en,
+              source_ids,
               CASE
                 WHEN taxon_concept->>'rank' = '#{object.rank_name}'
                 THEN NULL

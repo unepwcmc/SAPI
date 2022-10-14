@@ -22,7 +22,7 @@ class Api::V1::TaxonConceptsController < ApplicationController
     @taxon_concept = TaxonConcept.
       includes(:common_names => :language,
                :distributions => :geo_entity,
-               :quotas => :geo_entity,
+               :quotas => [:geo_entity, :sources],
                :cites_suspensions => :geo_entity).
       includes(:taxonomy).find(params[:id])
     if @taxon_concept.taxonomy.name == Taxonomy::CMS
