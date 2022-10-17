@@ -4,7 +4,7 @@ class Species::CitesProcessSerializer < ActiveModel::Serializer
 
 
   def start_event_name
-    object.start_event.name
+    object.start_event.try(:name)
   end
 
 end

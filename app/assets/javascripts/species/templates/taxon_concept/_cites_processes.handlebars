@@ -27,7 +27,11 @@
             {{process.geo_entity.name}}
           </td>
           <td>
-            {{process.start_event_name}} ({{process.start_date}})
+            {{#if process.start_event_name}}
+              {{process.start_event_name}} ({{process.start_date}})
+            {{else}}
+              {{process.start_date}}
+            {{/if}}
           </td>
           <td>
             {{#if process.document}}
@@ -73,7 +77,11 @@
                {{process.geo_entity.name}}
               </td>
               <td>
-               {{process.start_event_name}} ({{process.start_date}})
+                {{#if process.start_event_name}}
+                  {{process.start_event_name}} ({{process.start_date}})
+                {{else}}
+                  {{process.start_date}}
+                {{/if}}
               </td>
               <td>
                 {{#if process.document}}
