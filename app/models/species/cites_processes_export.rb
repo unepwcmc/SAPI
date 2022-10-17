@@ -1,10 +1,11 @@
 class Species::CitesProcessesExport < Species::CsvCopyExport
 
   def query
-    rel = CitesProcess.joins("LEFT JOIN taxon_concepts ON
-            taxon_concept_id = taxon_concepts.id LEFT JOIN geo_entities ON
-            geo_entity_id = geo_entities.id LEFT JOIN events ON
-            start_event_id = events.id").order('taxon_concepts.id','cites_processes.id')
+    rel = CitesProcess
+          .joins("LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
+                  LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id 
+                  LEFT JOIN events ON start_event_id = events.id")
+          .order('taxon_concepts.full_name','cites_processes.type','geo_entities.name_en')
     rel.select(sql_columns)
   end
 

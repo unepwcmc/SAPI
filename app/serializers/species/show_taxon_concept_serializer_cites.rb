@@ -11,7 +11,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :processes, :serializer => Species::CitesProcessSerializer, :key => :cites_processes
 
   def processes
-     CitesProcess.includes(:geo_entity, :start_event).where(taxon_concept_id: object.id).order(:start_date)
+     CitesProcess.includes(:start_event)
+                 .joins("LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id")
+                 .where(taxon_concept_id: object.id)
+                 .order('cites_processes.type', 'geo_entities.name_en')
   end
 
   def include_distribution_references?
