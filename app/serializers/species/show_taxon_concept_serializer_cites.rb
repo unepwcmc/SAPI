@@ -14,7 +14,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
      CitesProcess.includes(:start_event)
                  .joins("LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id")
                  .where(taxon_concept_id: object.id)
-                 .order('cites_processes.type', 'geo_entities.name_en')
+                 .order('resolution', 'geo_entities.name_en')
   end
 
   def include_distribution_references?
