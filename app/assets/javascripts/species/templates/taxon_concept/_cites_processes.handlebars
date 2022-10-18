@@ -44,10 +44,12 @@
               {{/if}}
             {{else}}
               {{process.notes}}
-              <br /><br />
-              <a class="legal-links" href="{{unbound process.document}}">
-                {{process.document_title}}
-              </a>
+              {{#if process.document}}
+                <br /><br />
+                <a class="legal-links" href="{{unbound process.document}}">
+                  {{process.document_title}}
+                </a>
+              {{/if}}
             {{/ifEquals}}
           </td>
         </tr>
