@@ -4,7 +4,8 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
     :nomenclature_note_es,
     :geo_entity,
     :applies_to_import,
-    :start_notification
+    :start_notification,
+    :source_ids
 
   def geo_entity
     object['geo_entity_en']

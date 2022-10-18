@@ -67,6 +67,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               AND trade_restrictions.taxon_concept_id IN (:ancestors))
       ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id).
       select(<<-SQL
+              trade_restrictions.id,
               trade_restrictions.notes,
               trade_restrictions.start_date,
               trade_restrictions.end_date,
@@ -80,6 +81,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.geo_entity_en,
               trade_restrictions.applies_to_import,
               trade_restrictions.start_notification,
+              trade_restrictions.source_ids,
               CASE
                 WHEN taxon_concept->>'rank' = '#{object.rank_name}'
                 THEN NULL
