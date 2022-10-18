@@ -1,15 +1,8 @@
-//TODO: align with backend
-const EU_OPTION = {
-  geo_entity_type: 'REGION',
-  id: 1001,
-  iso_code2: 'EU',
-  name: 'European Union'
-}
-
 $(document).ready(function(){
 
   var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes,
     countries = {}, units = {}, terms = {}, purposes = {}, sources = {},
+    euId = '',
     selected_taxa = '',
     is_search_page = $('#form_expert').length > 0,
     is_download_page = $('#net_gross_options').length > 0,
@@ -112,13 +105,6 @@ $(document).ready(function(){
 
   function getParamsFromInputs(){
     var values = parseInputs($('#form_expert :input'));
-
-    // TODO: add required logic here
-    ['exporters_ids', 'importers_ids'].forEach(function (key) {
-      if (isEuInArray(values[key])) {
-        console.log('Getting params: ' + key + ' contains EU.')
-      }
-    })
 
     return $.param({'filters': values});
   }
@@ -248,6 +234,10 @@ $(document).ready(function(){
   initCountriesObj = function (data) {
     _.each(data.geo_entities, function (country) {
       countries[country.id] = country;
+
+      if (country.iso_code2 == 'EU') {
+        euId = country.id.toString()
+      }
     });
     unLock('initCountriesObj');
   }
@@ -274,8 +264,6 @@ $(document).ready(function(){
   }
 
   initExpctyImpcty = function (data) {
-    data.geo_entities.push(EU_OPTION)
-    // TODO: Sort if required
   	var args = {
   	  	data: data.geo_entities,
   	  	condition: function (item) {return item.iso_code2},
@@ -513,7 +501,7 @@ $(document).ready(function(){
   }
 
   function isEuInArray (array) {
-    return array.indexOf(EU_OPTION.id.toString()) >= 0
+    return array.indexOf(euId) >= 0
   }
 
   $('#side .ui-button, #form .ui-button').hover(function() {
