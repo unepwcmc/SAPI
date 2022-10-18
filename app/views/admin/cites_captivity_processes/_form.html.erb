@@ -46,9 +46,16 @@
   </div>
 
   <div class="control-group">
-    <label class="control-label">Details</label>
+    <label class="control-label">Document link</label>
     <div class="controls">
       <%= f.text_area :document, :class => 'cites_captivity_process', :value => @cites_captivity_process.document %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Document title</label>
+    <div class="controls">
+      <%= f.text_area :document_title, :class => 'cites_captivity_process', :value => @cites_captivity_process.document_title %>
     </div>
   </div>
 
