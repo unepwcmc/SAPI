@@ -144,10 +144,8 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchCon
   ).property('citesSuspensions')
   currentCitesProcesses: (->
     if @get('citesProcesses') != undefined
-      @get('citesProcesses').filterProperty('status', 'Ongoing')
-      .concat(@get('citesProcesses').filterProperty('status', 'Trade Suspension'))
-      .concat(@get('citesProcesses').filterProperty('status', 'Initiated'))
-      .concat(@get('citesProcesses').filterProperty('status', 'Retained'))
+      @get('citesProcesses').filter (item) ->
+        return item.status != 'Closed'
     else
       null
   ).property('citesProcesses')
