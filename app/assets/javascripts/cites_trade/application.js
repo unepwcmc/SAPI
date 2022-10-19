@@ -2,6 +2,7 @@ $(document).ready(function(){
 
   var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes,
     countries = {}, units = {}, terms = {}, purposes = {}, sources = {},
+    euId = '',
     selected_taxa = '',
     is_search_page = $('#form_expert').length > 0,
     is_download_page = $('#net_gross_options').length > 0,
@@ -104,6 +105,7 @@ $(document).ready(function(){
 
   function getParamsFromInputs(){
     var values = parseInputs($('#form_expert :input'));
+
     return $.param({'filters': values});
   }
 
@@ -183,6 +185,7 @@ $(document).ready(function(){
   $('#reset_search').click(function() {
   	resetSelects();
   	show_values_selection();
+    setEuDisclaimerVisibility();
     // Removing the table results on reset
     $("#query_results_table").find('thead,tbody').remove();
     $('#query_results').find('p.info').text('');
@@ -231,6 +234,10 @@ $(document).ready(function(){
   initCountriesObj = function (data) {
     _.each(data.geo_entities, function (country) {
       countries[country.id] = country;
+
+      if (country.iso_code2 == 'EU') {
+        euId = country.id.toString()
+      }
     });
     unLock('initCountriesObj');
   }
@@ -288,6 +295,7 @@ $(document).ready(function(){
     		selection = getText(new_array);
     	}
     	$('#expcty_out').text(selection);
+      setEuDisclaimerVisibility();
     });
 
     populateSelect(_.extend(args, {
@@ -315,6 +323,7 @@ $(document).ready(function(){
     		selection = getText(new_array);
     	}
     	$('#impcty_out').text(selection);
+      setEuDisclaimerVisibility();
     });
   };
 
@@ -477,6 +486,24 @@ $(document).ready(function(){
   	$('#genus_all_id').val();
   };
 
+  function setEuDisclaimerVisibility () {
+    ['imp', 'exp'].forEach(function (type) {
+      const disclaimerEl = $('#eu_disclaimer_' + type)
+
+      hasEuDisclaimer(type) ? disclaimerEl.show() : disclaimerEl.hide()
+    })
+  }
+
+  function hasEuDisclaimer (type) {
+    const selections = $('#'+ type + 'cty').val()
+
+    return isEuInArray(selections)
+  }
+
+  function isEuInArray (array) {
+    return array.indexOf(euId) >= 0
+  }
+
   $('#side .ui-button, #form .ui-button').hover(function() {
   	$(this).toggleClass('ui-state-hover');
   });
@@ -611,6 +638,7 @@ $(document).ready(function(){
   }
 
   show_values_selection();
+  setEuDisclaimerVisibility();
 
   $('#qryFrom, #qryTo').on('change',function() {
   	var y_from = $('#qryFrom').val();
