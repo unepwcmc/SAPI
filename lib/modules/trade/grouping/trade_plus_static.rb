@@ -71,6 +71,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     importer_iso: 'importer_iso',
     exporter_iso: 'exporter_iso',
     term_id: 'term_id',
+    term_code: 'term_code',
     unit_id: 'unit_id',
     purpose_id: 'purpose_id',
     source_id: 'source_id',
@@ -140,7 +141,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def self.localize_grouping_attributes
     {
-      terms: ["term_#{@locale}", 'term_id'],
+      terms: ["term_#{@locale}", 'term_id', 'term_code'],
       sources: ["source_#{@locale}", 'source_id', 'source_code'],
       exporting: ["exporter_#{@locale}", 'exporter_iso'],
       importing: ["importer_#{@locale}", 'importer_iso'],
@@ -343,7 +344,11 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       next if attribute == 'year' || attribute.nil?
       name = attribute.include?('id') ? 'id' : attribute.include?('iso') ? 'iso2' : attribute.include?('code') ? 'code' : 'name'
       @sanitised_column_names << name
-      attribute = "INITCAP(#{attribute})" if attribute == 'term'
+
+      if attribute == "term_#{@locale}"
+        attribute = "UPPER(SUBSTRING(#{attribute} from 1 for 1)) || LOWER(SUBSTRING(#{attribute} from 2))"
+      end
+
       "#{attribute} AS #{name}"
     end.compact.uniq.join(',')
   end
