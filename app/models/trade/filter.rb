@@ -85,7 +85,7 @@ class Trade::Filter
         @query = @query.where(query)
       else
         @query = @query.where(:importer_id => exporter_importer_ids(@importers_ids))
-        @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_start])
+        @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_end])
       end      
     end
 
@@ -95,7 +95,7 @@ class Trade::Filter
        @query = @query.where(query)
      else
        @query = @query.where(:exporter_id => exporter_importer_ids(@exporters_ids))
-       @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_start])
+       @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_end])
     end
       
     end
