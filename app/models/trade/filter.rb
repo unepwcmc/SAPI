@@ -183,7 +183,7 @@ class Trade::Filter
       year1 = m.keys[i].first
       year2 = m.keys[i].last
       eu_ids = m.values[i].join(',')
-      arr << "trade_shipments.#{type} IN (#{eu_ids}) AND (year >= #{year1} AND year <= #{year2})"
+      arr << "(trade_shipments.#{type} IN (#{eu_ids}) AND (year >= #{year1} AND year <= #{year2}))"
     end
 
     return arr.join(' OR ')
