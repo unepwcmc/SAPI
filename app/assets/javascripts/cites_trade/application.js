@@ -490,12 +490,18 @@ $(document).ready(function(){
     ['imp', 'exp'].forEach(function (type) {
       const disclaimerEl = $('#eu_disclaimer_' + type)
 
-      hasEuDisclaimer(type) ? disclaimerEl.show() : disclaimerEl.hide()
+      if (disclaimerEl.length) {
+        hasEuDisclaimer(type) ? disclaimerEl.show() : disclaimerEl.hide()
+      }
     })
   }
 
   function hasEuDisclaimer (type) {
     const selections = $('#'+ type + 'cty').val()
+
+    if (!selections) {
+      return false
+    }
 
     return isEuInArray(selections)
   }
