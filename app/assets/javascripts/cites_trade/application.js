@@ -20,14 +20,6 @@ $(document).ready(function(){
   	$.jGrowl(text);
   };
 
-  function growlMeSticky(text){
-  	$.jGrowl(text, {sticky: true});
-  };
-
-  function notyNormal(message){
-  	noty({layout: 'topRight', text: message, timeout: 4000});
-  };
-
   function notySticky(message){
   	noty({ layout: 'top',
    			   type: 'information',
@@ -75,17 +67,6 @@ $(document).ready(function(){
 	  //prevent form support on input and select enter
 	  $('input,select').keypress(function(event) { return event.keyCode != 13; });
   };
-
-  function fixTaxonId (arr) {
-    return _.map(arr, function (obj) {
-      if (obj.name === 'taxon_concepts_ids[]') {
-        return {name: 'taxon_concepts_ids[]', value: selected_taxa};
-      } else {
-        return obj;
-      }
-    });
-  }
-
 
   function parseInputs ($inputs) {
     var values = {};
@@ -204,17 +185,6 @@ $(document).ready(function(){
   		bgColor: '#E6EDD7',
   		hoverColor: '#D2EF9A'
   });
-
-
-  function getSelectionTextNew(source) {
-  	var values = [];
-
-  	$('#ms-' + source).find('div.ms-selection ul.ms-list  li').each(function() {
-      values.push($(this).text());
-    });
-
-  	return values.join(',')
-  }
 
   function getSelectionText(source) {
   	myValues = new Array();
@@ -470,11 +440,6 @@ $(document).ready(function(){
   function show_values_selection() {
   	var year_from = $('#qryFrom').val();
   	var year_to = $('#qryTo').val();
-  	var exp_cty = $('#expctyms2side__dx').text();
-  	var imp_cty = $('#impctyms2side__dx').text();
-  	var sources = $('#sourcesms2side__dx').text();
-  	var purposes = $('#purposesms2side__dx').text();
-  	var terms = $('#termsms2side__dx').text();
 
   	$('#year_from > span').text(year_from);
     $('#year_to > span').text(year_to);
@@ -541,18 +506,6 @@ $(document).ready(function(){
       };
     // 'red collared' should highlight 'red-collared'
     return taxonDisplayName.replace(new RegExp("(" + term + '|' + termWithHyphens+ ")", "gi"), transform);
-  }
-
-  function parseTaxonData (data, term, showSpp) {
-    var d = data.auto_complete_taxon_concepts;
-  	return _.map(d, function (element, index) {
-      var displayName = getTaxonDisplayName(element, showSpp)
-  	  return {
-        'value': element.id,
-        'label': displayName,
-        'drop_label': getTaxonLabel(displayName, term)
-      };
-  	});
   }
 
   function parseTaxonCascadeData(data, term, showSpp) {
