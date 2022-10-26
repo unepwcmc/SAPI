@@ -599,12 +599,29 @@ $(document).ready(function(){
   show_values_selection();
   setEuDisclaimerVisibility();
 
-  $('#qryFrom, #qryTo').on('change',function() {
-  	var y_from = $('#qryFrom').val();
-  	var y_to = $('#qryTo').val();
-    $('#year_from > span').text(y_from);
-    $('#year_to > span').text(y_to);
+  $('#qryFrom, #qryTo').on('change', function(e) {
+    year_range = handleYearRangeChange(e.target.id)
+
+    $('#year_from > span').text(year_range[0])
+    $('#year_to > span').text(year_range[1])
   });
+
+  function handleYearRangeChange (id) {
+    var y_from = $('#qryFrom').val()
+  	var y_to = $('#qryTo').val()
+
+    if (y_from > y_to) {
+      if (id === 'qryFrom') {
+        y_to = y_from
+        $('#qryTo').val(y_to)
+      } else {
+        y_from = y_to
+        $('#qryFrom').val(y_from)
+      }
+    }
+
+    return [y_from, y_to]
+  }
 
   //Put functions to be executed here
   initialiseControls();
