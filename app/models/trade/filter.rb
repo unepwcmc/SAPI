@@ -79,17 +79,6 @@ class Trade::Filter
       @query = @query.where(:term_id => @terms_ids)
     end
 
-    # unless @importers_ids.empty?
-    #   if @importers_ids.include?(eu_id)
-    #     query = eu_country_date_range_query(@time_range_start, @time_range_end, 'importer_id')
-    #     @query = @query.where(query)
-    #   else
-    #     @query = @query.where(:importer_id => @importers_ids)
-    #     @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_end]) if @exporters_ids.empty?
-    #   end
-    # else
-    #   @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_end]) if @exporters_ids.empty?
-    # end
     unless @importers_ids.empty?
       importers_ids = sanitize_importer_ids(@importers_ids)
       @query = @query.where(:importer_id => importers_ids)
@@ -99,18 +88,6 @@ class Trade::Filter
       exporters_ids = sanitize_exporter_ids(@exporters_ids)
       @query = @query.where(:exporter_id => exporters_ids)
     end
-    #
-    # unless @exporters_ids.empty?
-    #   if @exporters_ids.include?(eu_id)
-    #     query = eu_country_date_range_query(@time_range_start, @time_range_end, 'exporter_id')
-    #     @query = @query.where(query)
-    #   else
-    #     @query = @query.where(:exporter_id => @exporters_ids)
-    #     @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_end]) if @importers_ids.empty?
-    #   end
-    # else
-    #   @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_end]) if @importers_ids.empty?
-    # end
 
     if !@units_ids.empty?
       local_field = "unit_id"
@@ -187,7 +164,7 @@ class Trade::Filter
     return ids unless ids.include?(eu_id)
 
     ids.delete(eu_id)
-    @importer_eu_country_ids = eu_country_ids - ids 
+    @importer_eu_country_ids = eu_country_ids - ids
     (eu_country_ids + ids).uniq
   end
 
@@ -199,17 +176,7 @@ class Trade::Filter
       eu_entry_exit_dates(eu_country).each do |entry_date, exit_date|
 
         # exclude countries for which we will need to retreive all the shipments
-        # within the user selected year range anyway and this will happen if:
-
-        # entry date 3 scenarios:
-        # entry_date < time_range -> keep all ships <===
-        # time_range.include entry_date -> keep only ships with year < entry_date
-        # entry_date > time_range -> remove all ships / keep ships with year >= entry_date > time_range
-
-        # exit date 3 scenarios:
-        # exit_date < time_range -> remove all ships
-        # time_range.include exit_date -> remove only ships with year >= exit_date
-        # exit_date > time_range -> kee all ships <====
+        # within the user selected year range anyway
         exit_date_check = exit_date.nil? ? true : (exit_date > end_year) # workaround to avoid nil > integer
         next if (entry_date < start_year && exit_date_check)
 
