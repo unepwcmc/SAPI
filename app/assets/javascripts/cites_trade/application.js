@@ -20,14 +20,6 @@ $(document).ready(function(){
   	$.jGrowl(text);
   };
 
-  function growlMeSticky(text){
-  	$.jGrowl(text, {sticky: true});
-  };
-
-  function notyNormal(message){
-  	noty({layout: 'topRight', text: message, timeout: 4000});
-  };
-
   function notySticky(message){
   	noty({ layout: 'top',
    			   type: 'information',
@@ -75,17 +67,6 @@ $(document).ready(function(){
 	  //prevent form support on input and select enter
 	  $('input,select').keypress(function(event) { return event.keyCode != 13; });
   };
-
-  function fixTaxonId (arr) {
-    return _.map(arr, function (obj) {
-      if (obj.name === 'taxon_concepts_ids[]') {
-        return {name: 'taxon_concepts_ids[]', value: selected_taxa};
-      } else {
-        return obj;
-      }
-    });
-  }
-
 
   function parseInputs ($inputs) {
     var values = {};
@@ -204,17 +185,6 @@ $(document).ready(function(){
   		bgColor: '#E6EDD7',
   		hoverColor: '#D2EF9A'
   });
-
-
-  function getSelectionTextNew(source) {
-  	var values = [];
-
-  	$('#ms-' + source).find('div.ms-selection ul.ms-list  li').each(function() {
-      values.push($(this).text());
-    });
-
-  	return values.join(',')
-  }
 
   function getSelectionText(source) {
   	myValues = new Array();
@@ -470,11 +440,6 @@ $(document).ready(function(){
   function show_values_selection() {
   	var year_from = $('#qryFrom').val();
   	var year_to = $('#qryTo').val();
-  	var exp_cty = $('#expctyms2side__dx').text();
-  	var imp_cty = $('#impctyms2side__dx').text();
-  	var sources = $('#sourcesms2side__dx').text();
-  	var purposes = $('#purposesms2side__dx').text();
-  	var terms = $('#termsms2side__dx').text();
 
   	$('#year_from > span').text(year_from);
     $('#year_to > span').text(year_to);
@@ -490,12 +455,18 @@ $(document).ready(function(){
     ['imp', 'exp'].forEach(function (type) {
       const disclaimerEl = $('#eu_disclaimer_' + type)
 
-      hasEuDisclaimer(type) ? disclaimerEl.show() : disclaimerEl.hide()
+      if (disclaimerEl.length) {
+        hasEuDisclaimer(type) ? disclaimerEl.show() : disclaimerEl.hide()
+      }
     })
   }
 
   function hasEuDisclaimer (type) {
     const selections = $('#'+ type + 'cty').val()
+
+    if (!selections) {
+      return false
+    }
 
     return isEuInArray(selections)
   }
@@ -535,18 +506,6 @@ $(document).ready(function(){
       };
     // 'red collared' should highlight 'red-collared'
     return taxonDisplayName.replace(new RegExp("(" + term + '|' + termWithHyphens+ ")", "gi"), transform);
-  }
-
-  function parseTaxonData (data, term, showSpp) {
-    var d = data.auto_complete_taxon_concepts;
-  	return _.map(d, function (element, index) {
-      var displayName = getTaxonDisplayName(element, showSpp)
-  	  return {
-        'value': element.id,
-        'label': displayName,
-        'drop_label': getTaxonLabel(displayName, term)
-      };
-  	});
   }
 
   function parseTaxonCascadeData(data, term, showSpp) {
@@ -640,12 +599,29 @@ $(document).ready(function(){
   show_values_selection();
   setEuDisclaimerVisibility();
 
-  $('#qryFrom, #qryTo').on('change',function() {
-  	var y_from = $('#qryFrom').val();
-  	var y_to = $('#qryTo').val();
-    $('#year_from > span').text(y_from);
-    $('#year_to > span').text(y_to);
+  $('#qryFrom, #qryTo').on('change', function(e) {
+    year_range = handleYearRangeChange(e.target.id)
+
+    $('#year_from > span').text(year_range[0])
+    $('#year_to > span').text(year_range[1])
   });
+
+  function handleYearRangeChange (id) {
+    var y_from = $('#qryFrom').val()
+  	var y_to = $('#qryTo').val()
+
+    if (y_from > y_to) {
+      if (id === 'qryFrom') {
+        y_to = y_from
+        $('#qryTo').val(y_to)
+      } else {
+        y_from = y_to
+        $('#qryFrom').val(y_from)
+      }
+    }
+
+    return [y_from, y_to]
+  }
 
   //Put functions to be executed here
   initialiseControls();

@@ -31,6 +31,8 @@ fr:
   taxon_search: "Recherche par espèce ou taxon supérieur"
   genus_title: "Sélectionnez un genre"
 
+  eu_disclaimer: "Selection of 'European Union' will include trade data involving countries that were EU Member States at the time of trade (i.e. the year range of the query). Where the year range includes a country’s year of accession to/exit from the European Union, all trade relevant to the search query reported for that country and year will be included within the search results even if the accession/exit date was partway through that year."
+
   all_countries: "Tous les Pays"
   all_sources: "Toutes les Sources"
   all_purposes: "Tous les Buts"
