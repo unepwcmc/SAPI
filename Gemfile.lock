@@ -302,7 +302,7 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
-    pdfkit (0.8.4.2)
+    pdfkit (0.8.7.2)
     pg (0.17.1)
     pg-hstore (1.2.0)
     pg_array_parser (0.0.9)
