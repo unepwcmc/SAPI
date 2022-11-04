@@ -132,7 +132,6 @@ span.beta{
 }
 #nav {
   float: right;
-  margin: 0 -25px 0 0;
   padding: 13px 0 0;
 }
 #nav > li {
@@ -143,6 +142,7 @@ span.beta{
   position: relative;
 }
 #nav > li:first-child { background: none; }
+#nav > li:last-child { padding-right: 0; }
 #nav > li > a {
   color: #2d3237;
   text-decoration: none;
