@@ -4,6 +4,7 @@
 */
 
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,600,700);
+@import './variables';
 
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
@@ -29,7 +30,7 @@ body {
   margin: 0;
   color: #868686;
   font: 14px/18px 'Open Sans', Helvetica, Arial, sans-serif;
-  background: #f3f1f1;
+  background: $color-gray-light;
   height: 100%;
   min-width: 980px;
   background-image: image-url('species/background_1.jpg');
@@ -144,12 +145,12 @@ span.beta{
 #nav > li:first-child { background: none; }
 #nav > li:last-child { padding-right: 0; }
 #nav > li > a {
-  color: #2d3237;
+  color: $color-navy-dark;
   text-decoration: none;
   }
 
 #nav > li > a:hover {
-  border-bottom: 1px dotted #2D3237;
+  border-bottom: 1px dotted $color-navy-dark;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -ms-transition: all 0.5s ease;
@@ -158,8 +159,8 @@ span.beta{
   }
 
 #nav > li.add {
-  border-left: 1px solid #2d3237;
-  border-right: 1px solid #2d3237;
+  border-left: 1px solid $color-navy-dark;
+  border-right: 1px solid $color-navy-dark;
   padding-bottom: 0;
 }
 
@@ -209,8 +210,8 @@ span.beta{
 #nav > li > ul > li > a {
   float: left;
   text-decoration: none;
-  border-bottom: 1px dotted #2D3237;
-  color: #2D3237;
+  border-bottom: 1px dotted $color-navy-dark;
+  color: $color-navy-dark;
 }
 
 #nav > li > ul > li > a:hover {
@@ -226,7 +227,7 @@ span.beta{
 }
 
 #main {
-  width: 860px;
+  width: $main-container-width;
   margin: 0 auto;
   font-size: 13px;
   text-align: center;
@@ -236,17 +237,18 @@ span.beta{
 #main p {
   margin: 20px 0 28px 0;
   font-size: 15px;
-  color: #2D3237;
+  color: $color-navy-dark;
 }
 
 #main h1 {
   font-size: 50px;
   font-weight: lighter;
   margin: 0 0 3px;
-  color: #2d3237;
+  color: $color-navy-dark;
   line-height: 60px;
 }
-.text-species {
+
+@mixin text-species {
   margin-top: 10px;
   width: 210px;
   vertical-align: top;
@@ -257,6 +259,15 @@ span.beta{
   background: image-url('species/species+_logo_text.png') no-repeat;
   background-size: 100%;
 }
+.text-species {
+  @include text-species;
+
+  &--sm {
+    @include text-species;
+    width: 100px; height: 29px;
+  }
+}
+
 html.lt-ie9 .text-species{
   background: none;
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
@@ -264,8 +275,8 @@ html.lt-ie9 .text-species{
   sizingMethod='scale');
 }
 a.learn-more {
-  color: #2D3237;
-  border-bottom: 1px dotted #2D3237;
+  color: $color-navy-dark;
+  border-bottom: 1px dotted $color-navy-dark;
 }
 a.learn-more:hover {
   text-decoration: none;
@@ -623,7 +634,7 @@ body.inner #footer .holder{
   padding: 16px 0 13px 20px;
 }
 .doc-type .heading {
-  color: #2d3237;
+  color: $color-navy-dark;
   font-weight: bold;
   display: block;
   margin: 0 0 4px;
@@ -809,7 +820,7 @@ body.inner #footer .holder{
   line-height: 60px;
 }
 #main .heading-holder h2 {
-  color: #2d3237;
+  color: $color-navy-dark;
   font-size: 24px;
   padding: 5px 0 15px 0;
   font-weight: normal;
@@ -981,7 +992,7 @@ body.inner #footer .holder{
 #main .block .title {
   display: block;
   font-size: 15px;
-  color: #2d3237;
+  color: $color-navy-dark;
   font-weight: bold;
   padding: 0;
   margin: 0 0 12px;
@@ -1264,7 +1275,7 @@ body.inner #footer .holder{
   margin: 0 0 51px;
 }
 #main .block04 .title {
-  color: #2D3237;
+  color: $color-navy-dark;
   display: block;
   font-size: 15px;
   margin: 0 0 8px;
@@ -1302,7 +1313,7 @@ body.inner #footer .holder{
   margin: 0 0 18px;
 }
 #main .block06 .title {
-  color: #2D3237;
+  color: $color-navy-dark;
   display: block;
   font-size: 15px;
   font-weight: bold;
