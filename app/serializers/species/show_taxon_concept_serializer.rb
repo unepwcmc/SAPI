@@ -20,22 +20,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     @options[:trimmed] == 'false'
   end
 
-  def include_subspecies?
-    return true unless @options[:trimmed]
-    @options[:trimmed] == 'false'
-  end
-
   def include_kingdom_name?
-    return true unless @options[:trimmed]
-    @options[:trimmed] == 'false'
-  end
-
-  def include_species_name?
-    return true unless @options[:trimmed]
-    @options[:trimmed] == 'false'
-  end
-
-  def include_rank_name?
     return true unless @options[:trimmed]
     @options[:trimmed] == 'false'
   end
