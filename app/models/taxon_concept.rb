@@ -161,7 +161,7 @@ class TaxonConcept < ActiveRecord::Base
   validates :taxon_name_id, :presence => true,
     :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
   validates :full_name, :uniqueness => { :scope => [:taxonomy_id, :author_year] }
-  validate :full_name_cannot_be_changed, on: :update
+  # validate :full_name_cannot_be_changed, on: :update
   validates :taxonomic_position,
     :presence => true,
     :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },
