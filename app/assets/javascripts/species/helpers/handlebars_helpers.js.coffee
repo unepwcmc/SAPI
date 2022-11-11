@@ -62,3 +62,7 @@ Ember.Handlebars.helper 'truncate', (text, options) ->
   if text.length > limit
     text = text.substr(0, limit - 3) + "..."
   return text
+
+Ember.Handlebars.registerHelper 'ifEquals', (arg1, arg2, options) ->
+  arg1 = Ember.Handlebars.get(this, arg1, options)
+  if (arg1 == arg2) then options.fn(this) else options.inverse(this)

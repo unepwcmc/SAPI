@@ -1,3 +1,24 @@
+### 1.9.0
+
+* Add parameter to taxon concept show API internal endpoint to trimmed response for the mobile app
+
+### 1.8.6
+
+* Schedule rebuild job to run daily on staging
+
+### 1.8.5
+
+* Disable clear_show_tc_serializer_cache method on production
+
+### 1.8.4
+
+* Change link text from Tradview to CITES Wildlife TradeView
+
+### 1.8.3
+
+* Replace Trade database guidance pdf and locales
+* Add locale to Trade database download links to allow downloading csvs in different languages
+
 ### 1.8.2
 
 * Mobile terms and conditions, and privacy policy

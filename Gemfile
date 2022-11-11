@@ -38,6 +38,7 @@ gem 'sidekiq-unique-jobs', '~> 4.0.17'
 gem 'redis-rails', '~> 4.0.0'
 
 gem 'whenever', :require => false
+gem 'httparty'
 
 gem 'sprockets', '~> 2.12.5' # upgrading to 3 breaks handlebars/tilt
 gem 'ember-rails', '~> 0.14.1'

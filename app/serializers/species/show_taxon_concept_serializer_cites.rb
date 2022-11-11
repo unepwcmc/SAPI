@@ -8,6 +8,39 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
     :key => :eu_listings
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
+  has_many :processes, :serializer => Species::CitesProcessSerializer, :key => :cites_processes
+
+  def processes
+     CitesProcess.includes(:start_event)
+                 .joins("LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id")
+                 .where(taxon_concept_id: object.id)
+                 .order('resolution', 'geo_entities.name_en')
+  end
+
+  def include_distribution_references?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_standard_references?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_taxon_concept_references?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_cites_listing?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_eu_listing?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
 
   def quotas
     Quota.from('api_cites_quotas_view trade_restrictions').

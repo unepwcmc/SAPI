@@ -114,6 +114,9 @@
           <li class="<%= if controller_name == 'taxon_concept_cites_suspensions' then 'active' end%>">
             <%= link_to "CITES Suspensions", admin_taxon_concept_cites_suspensions_path(@taxon_concept) %>
           </li>
+          <li class="<%= if controller_name == 'cites_captivity_processes' then 'active' end%>">
+            <%= link_to "CITES Captivity processes", admin_taxon_concept_cites_captivity_processes_path(@taxon_concept) %>
+          </li>
         </ul>
       </li>
     <% elsif d.is_eu? %>

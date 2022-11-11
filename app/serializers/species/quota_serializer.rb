@@ -6,8 +6,23 @@ class Species::QuotaSerializer < ActiveModel::Serializer
     :unit,
     :source_ids
 
+  def include_nomenclature_note_fr?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_nomenclature_note_es?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_publication_date_formatted?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
   def geo_entity
-    object['geo_entity_en']
+    @options[:trimmed] == 'true' ? object['geo_entity_en'].slice('iso_code2') : object['geo_entity_en']
   end
 
   def unit

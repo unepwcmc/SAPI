@@ -1,0 +1,76 @@
+<%= form_for [:admin, @taxon_concept, @cites_captivity_process], :html => {:class => 'form-horizontal'} do |f| %>
+
+  <%= error_messages_for(@cites_captivity_process) %>
+
+  <div class="control-group">
+    <%= f.label :resolution, "Review", :class => 'control-label' %>
+    <div class="controls" style=" padding-top: .25rem;">
+      <%= "Captive Breeding" %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :geo_entity_id, "Country or Territory", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :geo_entity_id,
+        options_from_collection_for_select(
+          @geo_entities,
+          :id,
+          :name_en,
+          @cites_captivity_process.geo_entity_id
+      ),
+        {:class => 'eu_opinion select2', :style => 'width: 220px' }
+      %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :start_event_id, "Date Entry", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :start_event_id,
+        options_from_collection_for_select(@events, :id, :name, @cites_captivity_process.start_event_id),
+        :class => "select2"
+      %>
+      <%= f.text_field :start_date, :class => "eu_opinion datepicker", :value =>  @cites_captivity_process.start_date && @cites_captivity_process.start_date.strftime('%d/%m/%Y'), placeholder: 'Effective from'%>
+    </div>
+  </div>
+
+
+  <div class="control-group">
+    <%= f.label :status, "Status", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :status,
+        options_for_select(@status, @cites_captivity_process.status),
+        :class => "select2"
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Document link</label>
+    <div class="controls">
+      <%= f.text_area :document, :class => 'cites_captivity_process', :value => @cites_captivity_process.document %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Document title</label>
+    <div class="controls">
+      <%= f.text_area :document_title, :class => 'cites_captivity_process', :value => @cites_captivity_process.document_title %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Notes</label>
+    <div class="controls">
+      <%= f.text_area :notes, :class => 'cites_captivity_process', :value => @cites_captivity_process.notes %>
+    </div>
+  </div>
+
+
+  <p class="pull-right">
+    <%= link_to 'Cancel', admin_taxon_concept_cites_captivity_processes_path(@taxon_concept),
+      :class => "btn" %>
+    <%= f.submit "Save", :class => "btn btn-primary save-button" %>
+  </p>
+
+<% end %>
