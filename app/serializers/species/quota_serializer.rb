@@ -3,7 +3,8 @@ class Species::QuotaSerializer < ActiveModel::Serializer
     :notes, :url, :public_display, :is_current, :subspecies_info,
     :nomenclature_note_en, :nomenclature_note_fr, :nomenclature_note_es,
     :geo_entity,
-    :unit
+    :unit,
+    :source_ids
 
   def include_nomenclature_note_fr?
     return true unless @options[:trimmed]
