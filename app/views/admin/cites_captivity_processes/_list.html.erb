@@ -1,10 +1,12 @@
 <thead>
   <th>Resolution</th>
   <th>Country or Territory</th>
-  <th>Type</th>
+  <th>Meeting</th>
   <th>Start date</th>
   <th>Status</th>
   <th>Notes</th>
+  <th>Document link</th>
+  <th>Document title</th>
   <th>Actions</th>
   <th>Info</th>
 </thead>
@@ -17,7 +19,9 @@
 
       <td><%= process.start_date_formatted %></td>
       <td><%= process.status %></td>
-      <td><%= process.notes %></td>      
+      <td><%= process.notes %></td>
+      <td><%= process.document %></td>
+      <td><%= process.document_title %></td>
       <td>
         <%= link_to edit_icon,
           edit_admin_taxon_concept_cites_captivity_process_path(@taxon_concept, process)
@@ -28,7 +32,7 @@
         %>
       </td>
       <td>
-        <%= tracking_info(process) %>        
+        <%= tracking_info(process) %>
       </td>
     </tr>
   <% end -%>

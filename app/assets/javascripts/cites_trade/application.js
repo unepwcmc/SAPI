@@ -233,6 +233,35 @@ $(document).ready(function(){
     unLock('initSourcesObj');
   }
 
+  removeCasingAndDiacritics = function (value) {
+    return value.toString()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036F]/g, '')
+      .toLowerCase()
+  }
+
+  matchWithDiacritics = function (term, text) {
+    // If there are no search terms, return all of the data
+    if ($.trim(term) === '') {
+      return text;
+    }
+
+    // Do not display the item if there is no 'text' property
+    if (typeof text === 'undefined') {
+      return null;
+    }
+
+    var searchTerm = removeCasingAndDiacritics(term)
+    var optionText = removeCasingAndDiacritics(text)
+
+    if (optionText.indexOf(searchTerm) > -1) {
+      return text;
+    }
+
+    // Return `null` if the term should not be displayed
+    return null;
+  }
+
   initExpctyImpcty = function (data) {
   	var args = {
   	  	data: data.geo_entities,
@@ -249,7 +278,8 @@ $(document).ready(function(){
     $('#expcty').select2({
     	width: '75%',
     	allowClear: false,
-    	closeOnSelect: false
+    	closeOnSelect: false,
+      matcher: matchWithDiacritics
     }).on('change', function(e){
     	var selection = "";
     	if (e.val.length == 0) {
@@ -276,7 +306,8 @@ $(document).ready(function(){
     $('#impcty').select2({
     	width: '75%',
     	allowClear: false,
-    	closeOnSelect: false
+    	closeOnSelect: false,
+      matcher: matchWithDiacritics
     }).on('change', function(e){
     	selection = "";
     	if (e.val.length == 0) {
