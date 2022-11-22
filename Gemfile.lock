@@ -150,7 +150,7 @@ GEM
       simplecov (>= 0.7)
       term-ansicolor
       thor
-    dalli (2.7.10)
+    dalli (3.2.3)
     database_cleaner (1.2.0)
     debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
