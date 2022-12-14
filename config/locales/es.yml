@@ -31,8 +31,7 @@ es:
   taxon_search: "Buscar por especie o grupo taxonómico"
   genus_title: "Seleccione un género:"
 
-  eu_disclaimer: "Selection of 'European Union' will include trade data involving countries that were EU Member States at the time of trade (i.e. the year range of the query). Where the year range includes a country’s year of accession to/exit from the European Union, all trade relevant to the search query reported for that country and year will be included within the search results even if the accession/exit date was partway through that year."
-
+  eu_disclaimer: "La selección de 'Unión Europea' incluirá datos de comercio que involucren a países que eran Estados miembros de la UE en el momento del comercio (es decir, el rango de años de la búsqueda). Cuando el rango de años incluya el año de ingreso/salida de un país de la Unión Europea, todo el comercio relevante para la búsqueda reportado para ese país y año será incluido en los resultados de la búsqueda incluso cuando la fecha de ingreso/salida haya sido a mitad de ese año."
   all_countries: "Todos los Países"
   all_sources: "Todos los Orígenes"
   all_purposes: "Todos los Objetivos"
