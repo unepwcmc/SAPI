@@ -2,6 +2,7 @@ $(document).ready(function(){
 
   var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes,
     countries = {}, units = {}, terms = {}, purposes = {}, sources = {},
+    euId = '',
     selected_taxa = '',
     is_search_page = $('#form_expert').length > 0,
     is_download_page = $('#net_gross_options').length > 0,
@@ -17,14 +18,6 @@ $(document).ready(function(){
 
   function growlMe(text){
   	$.jGrowl(text);
-  };
-
-  function growlMeSticky(text){
-  	$.jGrowl(text, {sticky: true});
-  };
-
-  function notyNormal(message){
-  	noty({layout: 'topRight', text: message, timeout: 4000});
   };
 
   function notySticky(message){
@@ -75,17 +68,6 @@ $(document).ready(function(){
 	  $('input,select').keypress(function(event) { return event.keyCode != 13; });
   };
 
-  function fixTaxonId (arr) {
-    return _.map(arr, function (obj) {
-      if (obj.name === 'taxon_concepts_ids[]') {
-        return {name: 'taxon_concepts_ids[]', value: selected_taxa};
-      } else {
-        return obj;
-      }
-    });
-  }
-
-
   function parseInputs ($inputs) {
     var values = {};
     $inputs.each(function() {
@@ -104,6 +86,7 @@ $(document).ready(function(){
 
   function getParamsFromInputs(){
     var values = parseInputs($('#form_expert :input'));
+
     return $.param({'filters': values});
   }
 
@@ -183,6 +166,7 @@ $(document).ready(function(){
   $('#reset_search').click(function() {
   	resetSelects();
   	show_values_selection();
+    setEuDisclaimerVisibility();
     // Removing the table results on reset
     $("#query_results_table").find('thead,tbody').remove();
     $('#query_results').find('p.info').text('');
@@ -202,17 +186,6 @@ $(document).ready(function(){
   		hoverColor: '#D2EF9A'
   });
 
-
-  function getSelectionTextNew(source) {
-  	var values = [];
-
-  	$('#ms-' + source).find('div.ms-selection ul.ms-list  li').each(function() {
-      values.push($(this).text());
-    });
-
-  	return values.join(',')
-  }
-
   function getSelectionText(source) {
   	myValues = new Array();
   	$('#' + source + ' option:selected').each(function(index, value) {
@@ -231,6 +204,10 @@ $(document).ready(function(){
   initCountriesObj = function (data) {
     _.each(data.geo_entities, function (country) {
       countries[country.id] = country;
+
+      if (country.iso_code2 == 'EU') {
+        euId = country.id.toString()
+      }
     });
     unLock('initCountriesObj');
   }
@@ -318,6 +295,7 @@ $(document).ready(function(){
     		selection = getText(new_array);
     	}
     	$('#expcty_out').text(selection);
+      setEuDisclaimerVisibility();
     });
 
     populateSelect(_.extend(args, {
@@ -346,6 +324,7 @@ $(document).ready(function(){
     		selection = getText(new_array);
     	}
     	$('#impcty_out').text(selection);
+      setEuDisclaimerVisibility();
     });
   };
 
@@ -492,11 +471,6 @@ $(document).ready(function(){
   function show_values_selection() {
   	var year_from = $('#qryFrom').val();
   	var year_to = $('#qryTo').val();
-  	var exp_cty = $('#expctyms2side__dx').text();
-  	var imp_cty = $('#impctyms2side__dx').text();
-  	var sources = $('#sourcesms2side__dx').text();
-  	var purposes = $('#purposesms2side__dx').text();
-  	var terms = $('#termsms2side__dx').text();
 
   	$('#year_from > span').text(year_from);
     $('#year_to > span').text(year_to);
@@ -507,6 +481,30 @@ $(document).ready(function(){
   	$('#terms_out').text(getSelectionText('terms'));
   	$('#genus_all_id').val();
   };
+
+  function setEuDisclaimerVisibility () {
+    ['imp', 'exp'].forEach(function (type) {
+      const disclaimerEl = $('#eu_disclaimer_' + type)
+
+      if (disclaimerEl.length) {
+        hasEuDisclaimer(type) ? disclaimerEl.show() : disclaimerEl.hide()
+      }
+    })
+  }
+
+  function hasEuDisclaimer (type) {
+    const selections = $('#'+ type + 'cty').val()
+
+    if (!selections) {
+      return false
+    }
+
+    return isEuInArray(selections)
+  }
+
+  function isEuInArray (array) {
+    return array.indexOf(euId) >= 0
+  }
 
   $('#side .ui-button, #form .ui-button').hover(function() {
   	$(this).toggleClass('ui-state-hover');
@@ -539,18 +537,6 @@ $(document).ready(function(){
       };
     // 'red collared' should highlight 'red-collared'
     return taxonDisplayName.replace(new RegExp("(" + term + '|' + termWithHyphens+ ")", "gi"), transform);
-  }
-
-  function parseTaxonData (data, term, showSpp) {
-    var d = data.auto_complete_taxon_concepts;
-  	return _.map(d, function (element, index) {
-      var displayName = getTaxonDisplayName(element, showSpp)
-  	  return {
-        'value': element.id,
-        'label': displayName,
-        'drop_label': getTaxonLabel(displayName, term)
-      };
-  	});
   }
 
   function parseTaxonCascadeData(data, term, showSpp) {
@@ -642,13 +628,31 @@ $(document).ready(function(){
   }
 
   show_values_selection();
+  setEuDisclaimerVisibility();
 
-  $('#qryFrom, #qryTo').on('change',function() {
-  	var y_from = $('#qryFrom').val();
-  	var y_to = $('#qryTo').val();
-    $('#year_from > span').text(y_from);
-    $('#year_to > span').text(y_to);
+  $('#qryFrom, #qryTo').on('change', function(e) {
+    year_range = handleYearRangeChange(e.target.id)
+
+    $('#year_from > span').text(year_range[0])
+    $('#year_to > span').text(year_range[1])
   });
+
+  function handleYearRangeChange (id) {
+    var y_from = $('#qryFrom').val()
+  	var y_to = $('#qryTo').val()
+
+    if (y_from > y_to) {
+      if (id === 'qryFrom') {
+        y_to = y_from
+        $('#qryTo').val(y_to)
+      } else {
+        y_from = y_to
+        $('#qryFrom').val(y_from)
+      }
+    }
+
+    return [y_from, y_to]
+  }
 
   //Put functions to be executed here
   initialiseControls();
