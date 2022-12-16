@@ -80,11 +80,13 @@ class Trade::Filter
     end
 
     unless @importers_ids.empty?
-      @query = @query.where(:importer_id => @importers_ids)
+      importers_ids = sanitize_importer_ids(@importers_ids)
+      @query = @query.where(:importer_id => importers_ids)
     end
 
     unless @exporters_ids.empty?
-      @query = @query.where(:exporter_id => @exporters_ids)
+      exporters_ids = sanitize_exporter_ids(@exporters_ids)
+      @query = @query.where(:exporter_id => exporters_ids)
     end
 
     if !@units_ids.empty?
@@ -125,6 +127,71 @@ class Trade::Filter
     end
 
     # Other cases
+    time_range_query
+
+    unless @importer_eu_country_ids.blank?
+      query = eu_country_date_query(@time_range_start, @time_range_end, 'importer')
+      @query = @query.where.not(query) unless query.blank?
+    end
+
+    unless @exporter_eu_country_ids.blank?
+      query = eu_country_date_query(@time_range_start, @time_range_end, 'exporter')
+      @query = @query.where.not(query) unless query.blank?
+    end
+
+    initialize_internal_query if @internal
+  end
+
+  def eu_id
+    GeoEntity.where(iso_code2: 'EU').pluck(:id).first
+  end
+
+  def eu_country_ids
+    EuCountryDate.all.pluck(:geo_entity_id)
+  end
+
+  def sanitize_exporter_ids(ids)
+    return ids unless ids.include?(eu_id)
+
+    ids.delete(eu_id)
+    # this is to collect only eu country IDs to apply EU rules query to
+    # e.g. EU + Austria we don't have to apply EU rules to Austria
+    @exporter_eu_country_ids = eu_country_ids - ids
+    (eu_country_ids + ids).uniq
+  end
+
+  def sanitize_importer_ids(ids)
+    return ids unless ids.include?(eu_id)
+
+    ids.delete(eu_id)
+    @importer_eu_country_ids = eu_country_ids - ids
+    (eu_country_ids + ids).uniq
+  end
+
+  def eu_country_date_query(start_year, end_year, type)
+    eu_country_ids = instance_variable_get("@#{type}_eu_country_ids")
+    country_query_arr = []
+    eu_country_ids.each do |eu_country|
+      # check for multiple entries for the same countries(UK might rejoin at some point)
+      eu_entry_exit_dates(eu_country).each do |entry_date, exit_date|
+
+        # exclude countries for which we will need to retreive all the shipments
+        # within the user selected year range anyway
+        exit_date_check = exit_date.nil? ? true : (exit_date > end_year) # workaround to avoid nil > integer
+        next if (entry_date < start_year && exit_date_check)
+
+        exit_year_check = exit_date.nil? ? 'AND TRUE' : "OR year >= #{exit_date}"
+        country_query_arr << "(trade_shipments.#{type}_id = #{eu_country} AND (year < #{entry_date} #{exit_year_check}))"
+      end
+    end
+    country_query_arr.join(' OR ')
+  end
+
+  def eu_entry_exit_dates(country_id)
+    EuCountryDate.where(geo_entity_id: country_id).pluck(:eu_accession_year, :eu_exit_year)
+  end
+
+  def time_range_query
     unless @time_range_start.blank? && @time_range_end.blank?
       if @time_range_start.blank?
         @query = @query.where(["year <= ?", @time_range_end])
@@ -134,8 +201,6 @@ class Trade::Filter
         @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_end])
       end
     end
-
-    initialize_internal_query if @internal
   end
 
   def initialize_internal_query

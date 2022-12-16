@@ -1,3 +1,19 @@
+### 1.10.0
+
+**CITES Trade DB**
+
+* Add EU importer/exporter grouping
+* Add disclaimer text beneath the search when EU is selected
+
+**Species +**
+
+* Add CITES Processes(RST, Captive Breeding) to the legal section (temporarily hidden)
+* Expand admin interface with CRUD for Captive breeding processes
+* Add RST API client and scheduled task (temporarily disabled) to retrieve RST processes
+* Add CITES Processes export via the admin interface
+* Fix search with diacritics (searching for Turkiye will also return Türkiye)
+* Add source_ids to quota and suspension internal API (used in SAT)
+
 ### 1.9.0
 
 * Add parameter to taxon concept show API internal endpoint to trimmed response for the mobile app
