@@ -255,7 +255,7 @@ GEM
     jquery-ui-rails (4.1.2)
       railties (>= 3.1.0)
     jslint_on_rails (1.1.1)
-    json (2.2.0)
+    json (2.6.3)
     json_spec (1.1.5)
       multi_json (~> 1.0)
       rspec (>= 2.0, < 4.0)
