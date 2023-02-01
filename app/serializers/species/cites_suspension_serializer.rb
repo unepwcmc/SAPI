@@ -8,7 +8,7 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
     :source_ids
 
   def geo_entity
-    @options[:trimmed] == 'true' ? object['geo_entity_en'].slice('iso_code2') : object['geo_entity_en']
+    object['geo_entity_en']
   end
 
   def start_notification
