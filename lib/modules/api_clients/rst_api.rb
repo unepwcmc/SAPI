@@ -4,7 +4,7 @@ module ApiClients::RstApi
 
     BASE_URI = Rails.application.secrets[:rst_api_base_url]
     PUBLIC_CASES_ENDPOINT = 'case/publicData/getCases'
-    COUNTRY_ENDPOINT = '/countries/countryId'
+    COUNTRY_ENDPOINT = 'countries/countryId'
     RETRIES = 3
 
     # @see https://api-cites-rst.leman.un-icc.cloud/api/#/case/CaseController_readCases
