@@ -1,4 +1,12 @@
-<strong class="title">CITES PROCESSES</strong>
+<div id="cites-processes-tooltip">
+  <strong class="title" style="display: inline-block">CITES PROCESSES</strong>
+    <a class="tooltip">
+      <i class='fa fa-info-circle'></i>
+      <span>
+        {{{citesProcessesTooltipText}}}
+      </span>
+    </a>
+</div>
 {{#unless citesProcesses}}
   {{#if citesProcessesIsLoading}}
     {{ partial 'species/spinner'}}

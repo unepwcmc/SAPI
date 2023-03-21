@@ -51,6 +51,10 @@ Species.TaxonConcept = DS.Model.extend
     ". Where there are no subspecies listed, this indicates that that the legal information that applies to the species applies to all subspecies equally."
   ).property('taxonomy', 'subspecies')
 
+  citesProcessesTooltipText: ( ->
+    "Contains cases included in the following two CITES Processes, where relevant: Significant Trade: <i>Review of Significant Trade</i>; Captive Breeding: <i>Review of trade in animal specimens reported as produced in captivity</i>."
+  ).property('processes')
+
   speciesFullName: ( ->
     if @get('genusName') != null
       @get('genusName') + ' ' + @get('speciesName').toLowerCase()
