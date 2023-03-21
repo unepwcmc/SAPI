@@ -3,7 +3,7 @@
   {{#if citesProcessesIsLoading}}
     {{ partial 'species/spinner'}}
   {{else}}
-  <p class="empty">This species is not currently included in the CITES Reviews of Significant Trade or Captive Breeding</p>
+  <p class="empty">This species is not currently included in the CITES Review of Significant Trade or Review of trade in animal specimens reported as produced in captivity</p>
   {{/if}}
 {{else}}
   <table summary="data table">
@@ -55,7 +55,7 @@
         </tr>
       {{else}}
         <tr class="current">
-          <td colspan=4>This species is not currently included in the CITES Reviews of Significant Trade or Captive Breeding</td>
+          <td colspan=4>This species is not currently included in the CITES Review of Significant Trade or Review of trade in animal specimens reported as produced in captivity</td>
         </tr>
       {{/each}}
     </tbody>
