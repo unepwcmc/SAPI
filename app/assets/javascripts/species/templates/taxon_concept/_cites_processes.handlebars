@@ -46,7 +46,7 @@
           <td class="last">
             {{#ifEquals process.resolution 'Significant Trade'}}
               {{#if process.document}}
-                <a class="legal-links" href="{{unbound process.document}}">
+                <a class="legal-links" href="{{unbound process.document}}" target="_blank">
                   CITES RST Management System
                 </a>
               {{/if}}
@@ -101,7 +101,7 @@
              </td>
              <td class="last">
                {{#ifEquals process.resolution 'Significant trade'}}
-                 <a class="legal-links" href="{{unbound process.document}}">
+                 <a class="legal-links" href="{{unbound process.document}}" target="_blank">
                    CITES RST Management System
                  </a>
                {{else}}

@@ -26,7 +26,8 @@ module Import::Rst::Importer
           geo_entity_id: geo_entity.id,
           start_event_id: event.try(:id),
           status: item['status'],
-          start_date: item['startDate']
+          start_date: item['startDate'],
+          document: "https://rst.cites.org/public/case-details/#{item['id']}"
         )
       end
     end
