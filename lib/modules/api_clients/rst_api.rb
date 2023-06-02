@@ -8,7 +8,9 @@ module ApiClients::RstApi
     RETRIES = 3
 
     # @see https://api-cites-rst.leman.un-icc.cloud/api/#/case/CaseController_readCases
-    def get_cases(page = 1, per_page = 25)
+    # Pagination on the CITES API is buggy, and when requesting a smaller amount of records
+    # not all records are returned across the pages
+    def get_cases(page = 1, per_page = 250)
       RETRIES.times do |i|
         res = HTTParty.post("#{BASE_URI}/#{PUBLIC_CASES_ENDPOINT}?page=#{page}&limit=#{per_page}&sortBy=id&sortOrder=ASC&relationalData=yes", {})
         break res if res.created? # a POST returns 201 CREATED as successful status
