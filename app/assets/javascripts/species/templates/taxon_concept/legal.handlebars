@@ -35,15 +35,13 @@
     {{/with}}
   </div>
 
-
-  <!-- TODO uncomment this section when RST can go live -->
   <!-- see this stackoverflow https://stackoverflow.com/questions/17495659/ember-js-cannot-perform-operations-on-a-metamorph-that-is-not-in-the-dom-cau
        for the correct HTML comment syntax when this includes Handlebars expressions -->
-  {{!-- <div {{bind-attr class=":block :add controllers.taxonConcept.anyHistoricCitesProcesses citesProcessesExpanded:active"}} id="cites_processes">
+  <div {{bind-attr class=":block :add controllers.taxonConcept.anyHistoricCitesProcesses citesProcessesExpanded:active"}} id="cites_processes">
     {{#with controllers.taxonConcept}}
       {{ partial 'species/taxon_concept/cites_processes' }}
     {{/with}}
-  </div> --}}
+  </div>
 
   <hr />
 
