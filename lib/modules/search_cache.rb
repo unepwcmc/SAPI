@@ -11,9 +11,9 @@ require 'digest/md5'
 module SearchCache
 
   def cached_results
-    Rails.cache.fetch(results_cache_key, :expires_in => 24.hours) do
+    # Rails.cache.fetch(results_cache_key, :expires_in => 1.second) do
       results
-    end
+    # end
   end
 
   def cached_total_cnt

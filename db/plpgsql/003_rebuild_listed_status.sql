@@ -1,8 +1,46 @@
+-- https://github.com/unepwcmc/SAPI-wiki/wiki/CITES-listing-calculation#introduction
+
+-- CITES lists taxon concepts in appendices on various taxonomic levels.
+-- Practically, the highest rank at which taxa seem to be listed is order.
+
+-- In the following description, when a taxon concept is listed explicitly, that means there is a listing change record linking to that taxon concept directly.
+-- If a taxon concept is listed implicitly, that means it inherited the listing from its explicitly listed ancestors and / or descendants.
+
+-- The rules of inheriting the listing are quite complex.
+
+-- Implicit listings are propogated down a phylogenetic tree, so:
+--    An explicit listing on Family is applied to Genus, Species and Subspecies
+--    Unless, there is an explicit listing on e.g. Genus, which takes precedent and is applied implicitly downwards
+
+
+-- The visibility rules of taxa within the checklist are directly linked to the explicit / implicit listing differentiation:
+
+-- it does not include subspecies unless they're listed explicitly
+-- it does not include taxa higher than species unless they're listed explicitly
+
+
+-- Calculating the current listing is carried out by a set of stored procedures which need to be run in the correct order,
+-- as they use their intermediate results to come up with the final listing. 
+-- The data structure used for updating the current state of calculations is the "listing" hstore field.
+
+
+-- Steps of the calculation
+
+-- Calculating the current listing is carried out by a set of stored procedures which need to be run in the correct order,
+-- as they use their intermediate results to come up with the final listing.
+-- The data structure used for updating the current state of calculations is the "listing" hstore field.
+
+
+-- function that takes an argument of name designation and type designations? and a taxon_concept_id
+-- designation is either CITES, EU, or CMS (Convention on Migratory Species)
+-- designations are linked to taxonomies and species_listings (e.g. 'Appendix I' and ''Appendix II')
 CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
   designation designations, node_id integer
   ) RETURNS void
   LANGUAGE plpgsql
+  -- $$ puts it into a string, but don't need to escape single quotes.
   AS $$
+    -- All variables used in a block must be declared in the declarations section of the block
     DECLARE
       deletion_id int;
       addition_id int;
@@ -19,26 +57,35 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
       flags_to_reset text[];
       sql TEXT;
       tmp_current_listing_changes_mview TEXT;
+      -- BEGIN initiates a transaction block, that is, all statements after a BEGIN command will be executed in a single transaction
+      --  until an explicit COMMIT or ROLLBACK is given. By default (without BEGIN), PostgreSQL executes transactions in “autocommit” mode
     BEGIN
+    -- SELECT INTO creates a new table and fills it with data computed by a query. The data is not returned to the client, as it is with a normal SELECT.
+    -- The new table's columns have the names and data types associated with the output columns of the SELECT
+    
+    -- Adds id from of 'DELETION' from change_types table into new table deletion_id etc.
     SELECT id INTO deletion_id FROM change_types
       WHERE designation_id = designation.id AND name = 'DELETION';
+
     SELECT id INTO addition_id FROM change_types
       WHERE designation_id = designation.id AND name = 'ADDITION';
+
     SELECT id INTO exception_id FROM change_types
       WHERE designation_id = designation.id AND name = 'EXCEPTION';
-    designation_name = LOWER(designation.name);
-    status_flag = designation_name || '_status';
-    status_original_flag = designation_name || '_status_original';
-    listing_original_flag := designation_name || '_listing_original';
-    listing_flag := designation_name || '_listing';
-    listing_updated_at_flag = designation_name || '_updated_at';
-    level_of_listing_flag := designation_name || '_level_of_listing';
-    not_listed_flag := designation_name || '_not_listed';
-    show_flag := designation_name || '_show';
+
+    designation_name = LOWER(designation.name);                         --  'cites'
+    status_flag = designation_name || '_status';                        --  'cites_status'
+    status_original_flag = designation_name || '_status_original';      --  'cites_status_original'
+    listing_original_flag := designation_name || '_listing_original';   --  'cites_listing_original'
+    listing_flag := designation_name || '_listing';                     --  'cites_listing'
+    listing_updated_at_flag = designation_name || '_updated_at';        --  'cites_updated_at
+    level_of_listing_flag := designation_name || '_level_of_listing';   --  'cites_level_of_listing'
+    not_listed_flag := designation_name || '_not_listed';               --  'cites_not_listed'
+    show_flag := designation_name || '_show';                           --  'cites_show'
     
     
     flags_to_reset := ARRAY[
-      status_flag, status_original_flag, listing_flag, listing_original_flag, 
+      status_flag, status_original_flag, listing_flag, listing_original_flag,
       not_listed_flag, listing_updated_at_flag, level_of_listing_flag,
       show_flag
     ];
@@ -55,6 +102,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
 
     -- reset the listing status (so we start clear)
     UPDATE taxon_concepts
+    -- takes either the listing or an empty HSTORE? and subtracts the keys that are being recalculated
     SET listing = (COALESCE(listing, ''::HSTORE) - flags_to_reset)
     WHERE taxonomy_id = designation.taxonomy_id AND
       CASE WHEN node_id IS NOT NULL THEN id = node_id ELSE TRUE END;

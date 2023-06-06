@@ -31,7 +31,8 @@ class Checklist::Checklist
   def initialize_query
     @taxon_concepts_rel = MTaxonConcept.all.
       by_cites_eu_taxonomy
-
+    
+      # doesn't hit these because of filters
     if @cites_regions.empty? && @countries.empty? && !@cites_appendices.empty?
       @taxon_concepts_rel = MTaxonConceptFilterByAppendixQuery.new(
         @taxon_concepts_rel, @cites_appendices
