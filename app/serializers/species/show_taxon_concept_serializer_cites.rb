@@ -14,7 +14,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
      CitesProcess.includes(:start_event)
                  .joins("LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id")
                  .where(taxon_concept_id: object.id)
-                 .order('resolution', 'geo_entities.name_en')
+                 .order('resolution DESC', 'geo_entities.name_en')
   end
 
   def include_distribution_references?
@@ -228,6 +228,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,
               listing_changes_mview.inclusion_taxon_concept_id,
+              listing_changes_mview.excluded_geo_entities_ids,
+              listing_changes_mview.listed_geo_entities_ids,
               listing_changes_mview.inherited_full_note_en,
               listing_changes_mview.inherited_short_note_en,
               listing_changes_mview.nomenclature_note_en,

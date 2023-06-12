@@ -1,3 +1,10 @@
+### 1.10.1
+
+**Species+**
+
+* Make CITES Processes(RST, Captive Breeding) section visible
+* Re-enable RST API client and scheduled task
+
 ### 1.10.0
 
 **CITES Trade DB**
