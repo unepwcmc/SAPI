@@ -1,3 +1,7 @@
+### 1.11.0
+
+* Add CSV files for distribution bulk uploads
+
 ### 1.10.0
 
 **CITES Trade DB**
