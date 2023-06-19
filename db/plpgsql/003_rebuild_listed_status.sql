@@ -207,6 +207,14 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     WHERE taxon_concepts.id = deleted_taxa.id AND
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
 
+
+
+    -- Next steps add status to descendents and ancestors
+    -- can first try removing the above steps and see if a deletion or similar is causing the issue
+
+
+    -- cites tmp tables built with select rebuild_cites_listing_changes_mview()
+
     -- propagate cites_status to descendants
     SELECT listing_changes_mview_name('tmp_current', designation.name, NULL)
     INTO tmp_current_listing_changes_mview;

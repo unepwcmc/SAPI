@@ -3,19 +3,19 @@ module Sapi
 
     def self.rebuild
       [
-        # :taxonomy,
-        # :cites_accepted_flags,
-        # :listing_changes_mview,
-        # :cites_listing,
+        :taxonomy,
+        :cites_accepted_flags,
+        :listing_changes_mview,
+        :cites_listing,
         # :eu_listing,
         # :cms_listing,
-        # :taxon_concepts_mview,
-        # :cites_species_listing_mview,
+        :taxon_concepts_mview,
+        :cites_species_listing_mview,
         # :eu_species_listing_mview,
         # :cms_species_listing_mview,
-        # :valid_taxon_concept_annex_year_mview,
-        # :valid_taxon_concept_appendix_year_mview,
-        # :touch_cites_taxon_concepts,
+        :valid_taxon_concept_annex_year_mview,
+        :valid_taxon_concept_appendix_year_mview,
+        :touch_cites_taxon_concepts,
         # :touch_eu_taxon_concepts,
         # :touch_cms_taxon_concepts,
         # :trade_shipments_appendix_i_mview,
@@ -23,7 +23,6 @@ module Sapi
         # :trade_shipments_cites_suspensions_mview,
         # :non_compliant_shipments_view,
         # :trade_plus_complete_mview
-        :cites_species_listing_mview
       ].each { |p|
         puts "Procedure: #{p}"
         ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
