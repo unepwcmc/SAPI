@@ -6,6 +6,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     :taxonomy, :kingdom_name, :phylum_name, :order_name, :class_name, :family_name,
     :genus_name, :species_name, :rank_name, :name_status, :nomenclature_note_en, :nomenclature_notification
 
+  has_many :accepted_names, :serializer => Species::AcceptedNameSerializer
   has_many :synonyms, :serializer => Species::SynonymSerializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
@@ -64,6 +65,11 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
 
   def taxonomy
     object.taxonomy.name.downcase
+  end
+
+  def accepted_names
+    object.accepted_names.
+      order("full_name")
   end
 
   def synonyms
