@@ -1,9 +1,14 @@
+### 1.10.2
+
+* Add CSV files for distribution bulk uploads
+
 ### 1.10.1
 
 **Species+**
 
 * Make CITES Processes(RST, Captive Breeding) section visible
 * Re-enable RST API client and scheduled task
+
 
 ### 1.10.0
 
