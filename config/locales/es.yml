@@ -48,6 +48,7 @@ es:
   tabulation_guide: "Una Guía para Interpretar las Salidas de Tabulaciones Comparativas"
   trade_guide: "Una Guía para Interpretar las Salidas de Comercio Bruto/Neto"
   translation_in_progress_html: Una versión actualizada de la "Guía de utilización de la base de datos sobre el comercio CITES" ha sido publicada en <a href="/cites_trade_guidelines/en-CITES_Trade_Database_Guide.pdf">inglés</a> (traducción en curso).
+  new: "Nuevo"
 
   reports: "INFORMES"
   report: "informe"
@@ -77,8 +78,8 @@ es:
     net_exports: "Informe de la Exportaciones Netas"
     comptab: "Informe de la Tabulaciónes Comparativas"
 
-  full_db_download: "Descarga completa de la Base de Datos sobre el Comercio CITES (versión 2022.1)"
-  full_db_download_available: "Descarga completa de la Base de Datos sobre el Comercio CITES disponible (versión 2022.1)"
+  full_db_download: "Descarga completa de la Base de Datos sobre el Comercio CITES (versión 2023.1)"
+  full_db_download_available: "Descarga completa de la Base de Datos sobre el Comercio CITES disponible (versión 2023.1)"
   download_here: "Descargar aquí"
   file_size: "Tamaño"
 
