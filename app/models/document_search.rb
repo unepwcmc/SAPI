@@ -1,4 +1,7 @@
 class DocumentSearch
+  # NOTE!!! This class returns an unpaginated result. Not sure if pagination can be restored
+  # and it is currently being done on the unpaginated query results in the API and web
+  # documents #index endpoints.
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
   attr_reader :page, :per_page, :offset, :event_type, :events_ids,

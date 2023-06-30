@@ -78,8 +78,17 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   protected
 
   def collection
+    # Super hacky. Pagination has been disabled in the DocumentSearch class
+    # for some reason related to the API documents endpoint and a 'new cascading feature'.
+    # As a result ~8000 records are returned in the results part of the Kaminari::PaginatableArray,
+    # triggering > 15000 database calls in the view.
+    # Here I am using the pagination initialized on the search class to paginate the results,
+    # so for both the web and API actions, pagination is broken in the search class and
+    # retrofitted in the controllers.
+    # TO DO: figure out if the cascading feature has been completed, and if so move the
+    # pagination back into the search class and out of the controllers.
     @documents = Kaminari::PaginatableArray.new(
-      @search.cached_results,
+      @search.cached_results.limit(@search.per_page).offset(@search.offset),
       limit: @search.per_page,
       offset: @search.offset,
       total_count: @search.cached_total_cnt
