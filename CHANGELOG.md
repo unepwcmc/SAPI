@@ -1,3 +1,6 @@
+### 1.10.3
+* Add pagination for documents in documents web controller
+
 ### 1.10.2
 
 * Add CSV files for distribution bulk uploads
