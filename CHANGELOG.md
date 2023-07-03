@@ -1,6 +1,10 @@
 ### 1.10.3
 * Add pagination for documents in documents web controller
 
+**CITES Trade DB**
+
+* Update to version 2023.1(replace zip file on the server, update ENV var, text updates)
+
 ### 1.10.2
 
 * Add CSV files for distribution bulk uploads
