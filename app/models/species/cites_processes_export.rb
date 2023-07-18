@@ -5,11 +5,23 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
           .joins("LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
                   LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id
                   LEFT JOIN events ON start_event_id = events.id")
+          .where(resolution: resolution)
           .order('taxon_concepts.full_name','cites_processes.type DESC','geo_entities.name_en')
     rel.select(sql_columns)
   end
 
   private
+
+  def resolution
+    case @filters['process_type']
+    when 'Rst'
+      ['Significant Trade']
+    when 'CaptiveBreeding'
+      ['Captive Breeding']
+    else
+      ['Significant Trade', 'Captive Breeding']
+    end
+  end
 
   def resource_name
     'cites_processes'

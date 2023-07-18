@@ -4,9 +4,14 @@
       LISTINGS
     {{/view}}
   </li>
-  <li class="last-child">
+  <li>
     {{#view Species.ToggleButton option="restrictions" valueBinding="controller.citesLegislation"}}
       QUOTAS/SUSPENSIONS
+    {{/view}}
+  </li>
+  <li class="last-child">
+    {{#view Species.ToggleButton option="processes" valueBinding="controller.citesLegislation"}}
+      Processes
     {{/view}}
   </li>
 </ul>
@@ -123,6 +128,42 @@
           loadedBinding="controller.loaded"
         }}
         {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+      </div>
+    </div>
+  </div>
+  <div class="btn-holder">
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
+    <div class="message-area">
+      {{#if controller.downloadInProgress}}
+        <img src="/loading.gif">
+      {{/if}}
+      {{controller.downloadMessage}}
+    </div>
+  </div>
+{{/view}}
+{{#view Species.DownloadsForLegislation
+  isVisibleBinding="controller.legislationIsCitesProcesses"
+  controllerBinding="controllers.downloadsForCitesProcesses"
+}}
+  <div class="process-type">
+    <div class="typy-columns">
+      <div class="col">
+        <label>
+          {{view Ember.RadioButton name="process_type" selectionBinding="processType" value="Rst"}}
+          RST
+        </label>
+      </div>
+      <div class="col-wide">
+        <label>
+          {{view Ember.RadioButton name="process_type" selectionBinding="processType" value="CaptiveBreeding"}}
+          Captive Breeding
+        </label>
+      </div>
+      <div class="col">
+        <label>
+          {{view Ember.RadioButton name="process_type" selectionBinding="processType" value="Both"}}
+          Both
+        </label>
       </div>
     </div>
   </div>
