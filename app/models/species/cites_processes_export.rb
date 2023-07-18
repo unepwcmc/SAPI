@@ -5,12 +5,34 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
           .joins("LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
                   LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id
                   LEFT JOIN events ON start_event_id = events.id")
-          .where(resolution: resolution)
-          .order('taxon_concepts.full_name','cites_processes.type DESC','geo_entities.name_en')
+    rel = apply_filters(rel)
+    rel = rel.order('taxon_concepts.full_name','cites_processes.type DESC','geo_entities.name_en')
+
     rel.select(sql_columns)
   end
 
   private
+
+  def apply_filters(rel)
+    rel = rel.where(resolution: resolution) unless @filters['process_type'] == 'Both'
+    rel = rel.where("DATE_PART('YEAR', start_date) IN (?)", @filters['years']) if @filters['years']&.any?
+    rel = rel.where("status != 'Closed'") if @filters['set'] == 'current'
+    rel = rel.where('geo_entities.id IN (?)', geo_entities_ids) if @filters['geo_entities_ids']&.any?
+
+    # Query 'data' json field for taxon concepts that have the submitted taxon_concept_id in their ancestry,
+    # or are the taxon_concept indicated by the txon_concept_id.
+    if @filters['taxon_concepts_ids']&.any?
+      taxon_concept = TaxonConcept.find(@filters['taxon_concepts_ids'].first)
+      rel = rel.where("taxon_concepts.data -> :rank_id_key = :taxon_concept_id OR taxon_concept_id = :taxon_concept_id",
+                      rank_id_key: "#{taxon_concept.rank.name.downcase}_id", taxon_concept_id: taxon_concept.id.to_s)
+    end
+
+    rel
+  end
+
+  def geo_entities_ids
+    GeoEntity.nodes_and_descendants(@filters['geo_entities_ids']).pluck(:id)
+  end
 
   def resolution
     case @filters['process_type']

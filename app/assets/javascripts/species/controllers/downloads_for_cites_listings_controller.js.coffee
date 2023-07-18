@@ -25,7 +25,7 @@ Species.DownloadsForCitesListingsController = Ember.Controller.extend
         }
       ).filter((e) ->
         e.taxonConcepts.length > 0
-      )      
+      )
     else
       @get('higherTaxaController.contentByRank')
   ).property('higherTaxaController.contentByRank.@each', 'taxonConceptQuery')
