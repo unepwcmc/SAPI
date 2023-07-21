@@ -117,8 +117,10 @@ group :development do
   gem 'git_pretty_accept'
   gem 'rubocop', '~> 0.40.0', require: false
   gem 'letter_opener'
-  gem 'bcrypt_pbkdf'
-  gem 'ed25519'
+  gem 'rbnacl', '>= 3.2', '< 5.0'
+  gem 'rbnacl-libsodium'
+  gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
+  gem 'ed25519', '>= 1.2', '< 2.0'
   # @TODO: bring back when ruby updated to > 2.6 # gem 'net-ssh', '7.0.0.beta1' # openssl 3.0 compatibility @see https://stackoverflow.com/q/72068406/1090438
 end
 
