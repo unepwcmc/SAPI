@@ -2,6 +2,9 @@ module Import::Rst::Importer
   class << self
 
     def import(data)
+      # Array of CitesRstProcesses in current import we can use to
+      # destroy records no longer being returned from the RST API.
+      active_ids = []
       data.map do |item|
         taxon_concept = map_taxon_concept(item)
         unless taxon_concept
@@ -29,7 +32,10 @@ module Import::Rst::Importer
           start_date: item['startDate'],
           document: "https://rst.cites.org/public/case-details/#{item['id']}"
         )
+        active_ids << rst_process.id
       end
+
+      destroy_invalid_rst_processes(active_ids)
     end
 
     private
@@ -48,6 +54,17 @@ module Import::Rst::Importer
 
       Rails.logger.info "Event #{item['meeting']['name']} for case #{item['id']} not found" unless event
       event
+    end
+
+    def destroy_invalid_rst_processes(active_ids)
+      CitesRstProcess.where.not(id: active_ids).find_each do |rst_process|
+        case_id = rst_process.case_id
+        if rst_process.destroy
+          Rails.logger.info "RST process with case_id #{case_id} destroyed"
+        else
+          Rails.logger.info "RST process with case_id #{case_id} could not be destroyed"
+        end
+      end
     end
   end
 end
