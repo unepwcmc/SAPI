@@ -1,3 +1,8 @@
+### 1.11.0
+* Adds accepted names to serializer to match documented end point
+* Adds diactric insensitive seraching to geo_entity_search
+* Adds csvs for new id materials upload
+
 ### 1.10.3
 * Add pagination for documents in documents web controller
 
