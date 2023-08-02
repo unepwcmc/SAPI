@@ -94,10 +94,8 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
     @exception_change_type = @designation.change_types.
       find_by_name(ChangeType::EXCEPTION)
     @species_listings = @designation.species_listings.order(:abbreviation)
-    @geo_entities = GeoEntity.joins(:geo_entity_type).
-      where(:is_current => true, :geo_entity_types => { :name => 'COUNTRY' }).to_a
-    @geo_entities << GeoEntity.where(name_en: 'European Union').first
-    @geo_entities = @geo_entities.sort! {|a,b| a[:name_en] <=> b[:name_en] }
+    @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
+      where(:is_current => true, :geo_entity_types => { :name => ['COUNTRY', 'REGION'] })
     @hash_annotations =
       if @designation.is_eu?
         Annotation.for_eu
