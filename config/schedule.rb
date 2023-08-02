@@ -1,6 +1,8 @@
 set :output, 'log/cron.log'
 
-every :saturday, :at => '1:42am' do
+db_migrate_rebuild_period = @environment == 'production' ? :saturday : :day
+
+every db_migrate_rebuild_period, :at => '1:42am' do
   rake "db:migrate:rebuild"
 end
 
@@ -20,4 +22,8 @@ end
 
 every 1.day, :at => '5:30 am' do
   rake "-s sitemap:refresh"
+end
+
+every :sunday, :at => '1:30am' do
+  rake "rst_processes:import"
 end

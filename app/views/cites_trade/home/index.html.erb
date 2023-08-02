@@ -6,11 +6,13 @@
     <div class="grid_16 main_content">
 
       <div class='banner'>
-        <p class='bold font-18'><%= t('full_db_download_available').html_safe %></p>
+        <p class='bold font-18'>
+          <%= t('full_db_download_available').html_safe %>
+        </p>
         <a href=<%= cites_trade_download_db_path %> class='download-button' data-full-trade-db-download>
           <div>
             <p class='bold font-18 no-margin'><%= t('download_here') %> </p>
-            <p class='no-margin'><%= t('file_size') %>: 427MB</p>
+            <p class='no-margin'><%= t('file_size') %>: 449MB</p>
             </div>
           </a>
       </div>
@@ -89,6 +91,9 @@
               <option selected value="all_exp"> <%= t('all_countries') %> </option>
             </select>
           </div>
+          <div id="eu_disclaimer_exp" class="select_notes">
+            <%= t('eu_disclaimer') %>
+          </div>
         </div>
         <div id="tabs-imp">
           <div class="label_style"> <%= t('import_text') %>:
@@ -98,6 +103,9 @@
             <select id="impcty" class="multi_countries" multiple="multiple"  name="importers_ids[]">
               <option selected value="all_imp"> <%= t('all_countries') %> </option>
             </select>
+          </div>
+          <div id="eu_disclaimer_imp" class="select_notes">
+            <%= t('eu_disclaimer') %>
           </div>
         </div>
         <div id="tabs-source">
@@ -185,11 +193,20 @@
   <p align="center" class='no-margin'>
     <strong><%= t('download') %>:</strong>
     <a href=<%= cites_trade_download_db_path %> data-full-trade-db-download><%= t('full_db_download') %> (427MB)</a>
+    <strong class="new">*<%= t('new') %>*</strong>
   </p>
-  <p align="center">
+  <p align="center" class='no-margin'>
     <strong><%= t('download') %>:</strong>
     <a href="/cites_trade_guidelines/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
+    <% if I18n.locale == :en %>
+      <strong class="new">*<%= t('new') %>*</strong>
+    <% end %>
   </p>
+  <% unless I18n.locale == :en %>
+    <p align="center">
+      <%= t('translation_in_progress_html') %>
+    </p>
+  <% end %>
 </div>
 </div>
 

@@ -8,6 +8,39 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
     :key => :eu_listings
   has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
+  has_many :processes, :serializer => Species::CitesProcessSerializer, :key => :cites_processes
+
+  def processes
+     CitesProcess.includes(:start_event)
+                 .joins("LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id")
+                 .where(taxon_concept_id: object.id)
+                 .order('resolution DESC', 'geo_entities.name_en')
+  end
+
+  def include_distribution_references?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_standard_references?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_taxon_concept_references?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_cites_listing?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_eu_listing?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
 
   def quotas
     Quota.from('api_cites_quotas_view trade_restrictions').
@@ -20,6 +53,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
             )
       ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id).
       select(<<-SQL
+              trade_restrictions.id,
               trade_restrictions.notes,
               trade_restrictions.url,
               trade_restrictions.start_date,
@@ -32,6 +66,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.nomenclature_note_en,
               trade_restrictions.nomenclature_note_fr,
               trade_restrictions.nomenclature_note_es,
+              trade_restrictions.source_ids,
               geo_entity_en,
               unit_en,
               CASE
@@ -65,6 +100,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               AND trade_restrictions.taxon_concept_id IN (:ancestors))
       ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id).
       select(<<-SQL
+              trade_restrictions.id,
               trade_restrictions.notes,
               trade_restrictions.start_date,
               trade_restrictions.end_date,
@@ -78,6 +114,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.geo_entity_en,
               trade_restrictions.applies_to_import,
               trade_restrictions.start_notification,
+              trade_restrictions.source_ids,
               CASE
                 WHEN taxon_concept->>'rank' = '#{object.rank_name}'
                 THEN NULL
@@ -191,6 +228,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               listing_changes_mview.hash_ann_parent_symbol,
               listing_changes_mview.hash_ann_symbol,
               listing_changes_mview.inclusion_taxon_concept_id,
+              listing_changes_mview.excluded_geo_entities_ids,
+              listing_changes_mview.listed_geo_entities_ids,
               listing_changes_mview.inherited_full_note_en,
               listing_changes_mview.inherited_short_note_en,
               listing_changes_mview.nomenclature_note_en,

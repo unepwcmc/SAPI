@@ -1,0 +1,87 @@
+@import './variables';
+
+$promo-banner-padding-left: 418px;
+$promo-banner-image-scale: 1.45;
+$promo-banner-image-radius: $promo-banner-image-scale * $promo-banner-padding-left;
+$promo-banner-image-padding-right: 76px;
+$promo-banner-image-translate-x: ($promo-banner-image-scale - 1) * $promo-banner-padding-left + $promo-banner-image-padding-right;
+$promo-banner-width: $main-container-width;
+
+$promo-banner-badge-height: 42px;
+$promo-banner-badge-ratio--google: 120/36;
+$promo-banner-badge-ratio--apple: 120/40;
+
+@mixin promo-banner-link {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+  margin-right: 18px;
+  height: $promo-banner-badge-height;
+
+  &:not(:last-child) {
+    margin-right: 18px;
+  }
+}
+
+.promo-banner {
+  background-color: $color-gray-light;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 34px 71px 41px $promo-banner-padding-left;
+  text-align: left;
+  width: $promo-banner-width;
+
+  position: absolute;
+  bottom: 44px;
+
+  &__image {
+    background: image_url('species/promo_banner_image.png') no-repeat right 241px;
+    background-size: 346px 197px;
+    border-radius: 100%;
+    width: $promo-banner-image-radius; height: $promo-banner-image-radius;
+
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-$promo-banner-image-translate-x, -56%);
+  }
+
+  &__title {
+    color: $color-navy;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.2em;
+    margin-bottom: 8px;
+
+    .text-species--sm {
+      margin-top: 0;
+    }
+  }
+
+  &__text {
+    #main & {
+      color: $color-navy-dark;
+      font-size: 16px;
+      margin: 0 0 24px;
+    }
+  }
+
+  &__links {
+    display: flex;
+  }
+
+  &__link {
+    &--google {
+      @include promo-banner-link;
+      background-image: image_url('species/google_play_badge.png');
+      width: $promo-banner-badge-height * $promo-banner-badge-ratio--google;
+    }
+
+    &--apple {
+      @include promo-banner-link;
+      background-image: image-url('species/apple_store_badge.svg');
+      width: $promo-banner-badge-height * $promo-banner-badge-ratio--apple;
+    }
+  }
+}

@@ -1,0 +1,133 @@
+<div id="cites-processes-tooltip">
+  <strong class="title" style="display: inline-block">CITES PROCESSES</strong>
+    <a class="tooltip">
+      <i class='fa fa-info-circle'></i>
+      <span>
+        {{{citesProcessesTooltipText}}}
+      </span>
+    </a>
+</div>
+{{#unless citesProcesses}}
+  {{#if citesProcessesIsLoading}}
+    {{ partial 'species/spinner'}}
+  {{else}}
+  <p class="empty">This species is not currently included in the CITES Review of Significant Trade or Review of trade in animal specimens reported as produced in captivity</p>
+  {{/if}}
+{{else}}
+  <table summary="data table">
+    <thead>
+      <tr>
+        <th class="col2">REVIEW</th>
+        <th class="col14">COUNTRY</th>
+        <th class="col2">DATE ENTRY</th>
+        <th class="col14">STATUS</th>
+        <th class="col2">DETAILS</th>
+      </tr>
+    </thead>
+    <tbody {{bind-attr class="controller.citesProcessExpanded:historic_expanded"}}>
+      {{#each process in currentCitesProcesses}}
+        <tr class="current">
+          <td>
+            {{process.resolution}}
+          </td>
+          <td>
+            {{process.geo_entity.name}}
+          </td>
+          <td>
+            {{#if process.start_event_name}}
+              {{process.start_event_name}} ({{process.start_date}})
+            {{else}}
+              {{process.start_date}}
+            {{/if}}
+          </td>
+          <td>
+            {{process.status}}
+          </td>
+          <td class="last">
+            {{#ifEquals process.resolution 'Significant Trade'}}
+              {{#if process.document}}
+                <a class="legal-links" href="{{unbound process.document}}" target="_blank">
+                  CITES RST Management System
+                </a>
+              {{/if}}
+            {{else}}
+              {{process.notes}}
+              {{#if process.document}}
+                <br /><br />
+                <a class="legal-links" href="{{unbound process.document}}">
+                  {{process.document_title}}
+                </a>
+              {{/if}}
+            {{/ifEquals}}
+          </td>
+        </tr>
+      {{else}}
+        <tr class="current">
+          <td colspan=4>This species is not currently included in the CITES Review of Significant Trade or Review of trade in animal specimens reported as produced in captivity</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  {{#if historicCitesProcesses}}
+    <div {{bind-attr class=":historic controller.citesProcessesExpanded::hidden"}}>
+      <table summary="data table">
+        <thead>
+          <tr>
+            <th class="col2">&nbsp;</th>
+            <th class="col14">&nbsp;</th>
+            <th class="col2">&nbsp;</th>
+            <th class="col14">&nbsp;</th>
+            <th class="col2">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody {{bind-attr class="controller.citesProcessExpanded:historic_expanded"}}>
+          {{#each process in historicCitesProcesses}}
+            <tr>
+              <td>
+                {{process.resolution}}
+              </td>
+              <td>
+                {{process.geo_entity.name}}
+              </td>
+              <td>
+                {{#if process.start_event_name}}
+                  {{process.start_event_name}} ({{process.start_date}})
+                {{else}}
+                  {{process.start_date}}
+                {{/if}}
+              </td>
+              <td>
+                {{process.status}}
+              </td>
+              <td class="last">
+                {{#ifEquals process.resolution 'Significant Trade'}}
+                  {{#if process.document}}
+                    <a class="legal-links" href="{{unbound process.document}}" target="_blank">
+                      CITES RST Management System
+                    </a>
+                  {{/if}}
+                {{else}}
+                  {{process.notes}}
+                  {{#if process.document}}
+                    <br /><br />
+                    <a class="legal-links" href="{{unbound process.document}}">
+                      {{process.document_title}}
+                    </a>
+                  {{/if}}
+                {{/ifEquals}}
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div {{bind-attr class=":btn-hloder citesProcessesExpanded:expanded"}}>
+      {{#if controller.citesProcessesExpanded}}
+        <a class="link active" {{action 'contractList' 'cites_processes' 'citesProcessesExpanded'}}>HIDE HISTORY</a>
+      {{else}}
+        <a class="link" {{action 'expandList' 'cites_processes' 'citesProcessesExpanded'}}>SHOW HISTORY</a>
+      {{/if}}
+    </div>
+  {{/if}}
+
+{{/unless}}

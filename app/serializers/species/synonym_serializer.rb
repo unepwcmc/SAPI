@@ -1,3 +1,7 @@
 class Species::SynonymSerializer < ActiveModel::Serializer
-  attributes :full_name, :author_year
+  attributes :id, :full_name, :author_year, :rank
+
+  def rank
+    object.rank.try(:name)
+  end
 end

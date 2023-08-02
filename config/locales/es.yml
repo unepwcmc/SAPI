@@ -31,6 +31,7 @@ es:
   taxon_search: "Buscar por especie o grupo taxonómico"
   genus_title: "Seleccione un género:"
 
+  eu_disclaimer: "La selección de 'Unión Europea' incluirá datos de comercio que involucren a países que eran Estados miembros de la UE en el momento del comercio (es decir, el rango de años de la búsqueda). Cuando el rango de años incluya el año de ingreso/salida de un país de la Unión Europea, todo el comercio relevante para la búsqueda reportado para ese país y año será incluido en los resultados de la búsqueda incluso cuando la fecha de ingreso/salida haya sido a mitad de ese año."
   all_countries: "Todos los Países"
   all_sources: "Todos los Orígenes"
   all_purposes: "Todos los Objetivos"
@@ -46,6 +47,8 @@ es:
   db_guide: "Una Guía para Utilizar la Base de Datos sobre el Comercio CITES"
   tabulation_guide: "Una Guía para Interpretar las Salidas de Tabulaciones Comparativas"
   trade_guide: "Una Guía para Interpretar las Salidas de Comercio Bruto/Neto"
+  translation_in_progress_html: Una versión actualizada de la "Guía de utilización de la base de datos sobre el comercio CITES" ha sido publicada en <a href="/cites_trade_guidelines/en-CITES_Trade_Database_Guide.pdf">inglés</a> (traducción en curso).
+  new: "Nueva versión"
 
   reports: "INFORMES"
   report: "informe"
@@ -75,8 +78,8 @@ es:
     net_exports: "Informe de la Exportaciones Netas"
     comptab: "Informe de la Tabulaciónes Comparativas"
 
-  full_db_download: "Descarga completa de la Base de Datos sobre el Comercio CITES (versión 2022.1)"
-  full_db_download_available: "Descarga completa de la Base de Datos sobre el Comercio CITES disponible (versión 2022.1)"
+  full_db_download: "Descarga completa de la Base de Datos sobre el Comercio CITES (versión 2023.1)"
+  full_db_download_available: "Descarga completa de la Base de Datos sobre el Comercio CITES disponible (versión 2023.1)"
   download_here: "Descargar aquí"
   file_size: "Tamaño"
 

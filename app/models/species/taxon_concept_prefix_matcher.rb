@@ -73,7 +73,7 @@ class Species::TaxonConceptPrefixMatcher
       end
 
     @query = @query.
-      select('id, full_name, rank_name, name_status,
+      select('id, full_name, rank_name, name_status, author_year,
         ARRAY_AGG_NOTNULL(
           DISTINCT CASE
             WHEN matched_name != full_name THEN matched_name ELSE NULL
@@ -85,7 +85,7 @@ class Species::TaxonConceptPrefixMatcher
         rank_display_name_en, rank_display_name_es, rank_display_name_fr').
       where(type_of_match: types_of_match).
       group([
-        :id, :full_name, :rank_name, :name_status, :rank_order,
+        :id, :full_name, :rank_name, :name_status, :author_year, :rank_order,
         :rank_display_name_en, :rank_display_name_es, :rank_display_name_fr
       ])
 

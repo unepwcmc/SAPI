@@ -48,7 +48,7 @@ SAPI::Application.configure do
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
   config.assets.precompile += %w( vendor/* admin.js admin.css trade.js trade.css species.js species.css
                                 pages.css pages.js cites_trade.js cites_trade.css
-                                activities.css activities.js)
+                                activities.css activities.js mobile.css)
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false

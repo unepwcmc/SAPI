@@ -6,9 +6,30 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     :taxonomy, :kingdom_name, :phylum_name, :order_name, :class_name, :family_name,
     :genus_name, :species_name, :rank_name, :name_status, :nomenclature_note_en, :nomenclature_notification
 
+  has_many :accepted_names, :serializer => Species::AcceptedNameSerializer
   has_many :synonyms, :serializer => Species::SynonymSerializer
   has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
     :key => :references
+
+  def include_parent_id?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_nomenclature_notification?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_kingdom_name?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_name_status?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
 
   def rank_name
     object.data['rank_name']
@@ -44,6 +65,11 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
 
   def taxonomy
     object.taxonomy.name.downcase
+  end
+
+  def accepted_names
+    object.accepted_names.
+      order("full_name")
   end
 
   def synonyms
@@ -90,7 +116,14 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distributions
-    distributions_with_tags_and_references
+    @options[:trimmed] == 'true' ? distributions_with_tags_and_references_trimmed : distributions_with_tags_and_references
+  end
+
+  def distributions_with_tags_and_references_trimmed
+    Distribution.from('api_distributions_view distributions').
+      where(taxon_concept_id: object.id).
+      select("iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list").
+      order('iso_code2').all
   end
 
   def subspecies
@@ -105,7 +138,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distribution_references
-    distributions_with_tags_and_references
+    @options[:trimmed] == 'true' ? distributions_with_tags_and_references_trimmed : distributions_with_tags_and_references
   end
 
   def cache_key
@@ -115,7 +148,8 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       object.updated_at,
       object.dependents_updated_at,
       object.m_taxon_concept.try(:updated_at) || "",
-      scope.current_user ? true : false
+      scope.current_user ? true : false,
+      @options[:trimmed] == 'true' ? true : false
     ]
     Rails.logger.debug "CACHE KEY: #{key.inspect}"
     key

@@ -6,6 +6,9 @@ SAPI::Application.routes.draw do
     post 'users' => 'registrations#create', :as => 'user_registration_create'
   end
 
+  get 'mobile/terms_and_conditions' => 'mobile#terms_and_conditions'
+  get 'mobile/privacy_policy' => 'mobile#privacy_policy'
+
   get 'about' => 'pages#about'
   get 'terms-of-use' => 'pages#terms_of_use'
   get 'eu_legislation' => 'pages#eu_legislation'
@@ -159,6 +162,8 @@ SAPI::Application.routes.draw do
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
       resources :taxon_instruments, :only => [:index, :new, :create, :edit, :update, :destroy]
+      resources :cites_captivity_processes, 
+        :only => [:index, :new, :create, :edit, :update, :destroy]
     end
     resources :nomenclature_changes do
       resources :split, controller: 'nomenclature_changes/split'

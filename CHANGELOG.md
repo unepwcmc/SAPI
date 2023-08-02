@@ -1,3 +1,80 @@
+### 1.11.0
+* Adds accepted names to serializer to match documented end point
+* Adds diactric insensitive seraching to geo_entity_search
+* Adds csvs for new id materials upload
+* Add updates csvs for comliance tool views
+
+### 1.10.3
+* Add pagination for documents in documents web controller
+
+**CITES Trade DB**
+
+* Update to version 2023.1(replace zip file on the server, update ENV var, text updates)
+
+### 1.10.2
+
+* Add CSV files for distribution bulk uploads
+
+### 1.10.1
+
+**Species+**
+
+* Make CITES Processes(RST, Captive Breeding) section visible
+* Re-enable RST API client and scheduled task
+
+
+### 1.10.0
+
+**CITES Trade DB**
+
+* Add EU importer/exporter grouping
+* Add disclaimer text beneath the search when EU is selected
+
+**Species +**
+
+* Add CITES Processes(RST, Captive Breeding) to the legal section (temporarily hidden)
+* Expand admin interface with CRUD for Captive breeding processes
+* Add RST API client and scheduled task (temporarily disabled) to retrieve RST processes
+* Add CITES Processes export via the admin interface
+* Fix search with diacritics (searching for Turkiye will also return Türkiye)
+* Add source_ids to quota and suspension internal API (used in SAT)
+
+### 1.9.0
+
+* Add parameter to taxon concept show API internal endpoint to trimmed response for the mobile app
+
+### 1.8.6
+
+* Schedule rebuild job to run daily on staging
+
+### 1.8.5
+
+* Disable clear_show_tc_serializer_cache method on production
+
+### 1.8.4
+
+* Change link text from Tradview to CITES Wildlife TradeView
+
+### 1.8.3
+
+* Replace Trade database guidance pdf and locales
+* Add locale to Trade database download links to allow downloading csvs in different languages
+
+### 1.8.2
+
+* Mobile terms and conditions, and privacy policy
+
+### 1.8.1
+
+* Updated CITES Trade Database user guidance
+* CITES Wildlife TradeView links added to CITES Trade Database layout
+* CITES Wildlife TradeView link added to Species+ 'Related Resources' drop down
+* EU Analysis link updated in Species+ 'Related Resources' drop down
+* Common names bulk upload:
+  * new data csv added
+  * import task modified to remove duplicates with different cases, e.g. Shark and shark
+* Diactritics ignored during country filtering
+
 ### 1.8.0
 
 **Intersessional decisions**

@@ -30,6 +30,8 @@ class GeoEntitySearch
       geo_entity_types_set: @geo_entity_types_set,
       locale: @locale
     }
+    @query_string = options[:query_string]
+    @options.merge!(query_string: @query_string) if @query_string.present?
   end
 
   def initialize_query
@@ -44,6 +46,9 @@ class GeoEntitySearch
     unless geo_entity_types.empty?
       @query = @query.
         where('geo_entity_types.name' => geo_entity_types)
+    end
+    if @query_string.present?
+      @query = @query.where("unaccent(name_#{@locale}) ILIKE unaccent(:q)", q: "%#{@query_string}%")
     end
   end
 end

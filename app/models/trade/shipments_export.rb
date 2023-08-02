@@ -17,10 +17,10 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
   end
 
   def export
-    unless File.file?(@file_name)
+    unless csv_cached?
       to_csv
     end
-    unless File.file?(@file_name)
+    unless csv_created?
       Rails.logger.error("Unable to generate output")
       return false
     end
@@ -78,17 +78,19 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
 
   def copy_stmt
     # escape quotes around attributes for psql
+    # Requires UTF8 encoding for diacritics. 
     sql = <<-PSQL
       \\COPY (#{query_sql(:limit => !internal?).gsub(/"/, "\\\"")})
       TO ?
       WITH DELIMITER '#{@csv_separator_char}'
-      ENCODING 'latin1'
+      ENCODING 'UTF8'
       CSV HEADER;
     PSQL
     ActiveRecord::Base.send(:sanitize_sql_array, [sql, @file_name])
   end
 
   def to_csv
+    # User psql to export table to csv.
     PsqlCommand.new(copy_stmt).execute
   end
 

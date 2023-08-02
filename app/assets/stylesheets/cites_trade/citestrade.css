@@ -21,6 +21,10 @@ font-weight:700;
 padding: 3px 3px;
 }
 
+.select_notes {
+  margin-top: 10px;
+}
+
 .banner {
   background-color: #ac9e89;
   width: 95%;
@@ -60,4 +64,8 @@ padding: 3px 3px;
 
 .download-button p {
   text-align: center;
+}
+
+.new {
+  color: #9C1452;
 }

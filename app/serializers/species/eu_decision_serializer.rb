@@ -12,12 +12,32 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     :private_url,
     :intersessional_decision_id
 
+  def include_nomenclature_note_fr?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_nomenclature_note_es?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_private_url?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
+  def include_intersessional_decision_id?
+    return true unless @options[:trimmed]
+    @options[:trimmed] == 'false'
+  end
+
   def eu_decision_type
-    object['eu_decision_type']
+    @options[:trimmed] == 'true' ? object['eu_decision_type'].slice('name') : object['eu_decision_type']
   end
 
   def srg_history
-    object['srg_history']
+    @options[:trimmed] == 'true' ? object['srg_history'].except('description') : object['srg_history']
   end
 
   def geo_entity
@@ -25,7 +45,7 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
   end
 
   def start_event
-    object['start_event']
+    @options[:trimmed] == 'true' ? object['start_event'].except('date') : object['start_event']
   end
 
   def source
@@ -33,7 +53,7 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
   end
 
   def term
-    object['term_en']
+    @options[:trimmed] == 'true' ? object['term_en'].slice('name') : object['term_en'] 
   end
 
   def private_url
