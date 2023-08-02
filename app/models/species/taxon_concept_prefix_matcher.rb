@@ -95,8 +95,9 @@ class Species::TaxonConceptPrefixMatcher
           # "name_for_matching LIKE :sci_name_prefix", # Original
           # "SIMILARITY(name_for_matching, :sci_name_prefix) > 0.3", # flexible search only
           # "(name_for_matching LIKE :sci_name_prefix OR SIMILARITY(name_for_matching, :sci_name_prefix) > 0.4)", # Exact match at start of word OR 
-          "(name_for_matching LIKE :sci_name_prefix OR SIMILARITY(LEFT(name_for_matching, #{@taxon_concept_query.length}), :sci_name_prefix) > 0.4)", # returns same results as above?
-          :sci_name_prefix => "#{@taxon_concept_query}%"
+          # 'DIFFERENCE(:sci_name_prefix, LEFT(name_for_matching, :length)) >= 4',
+          # "(name_for_matching LIKE :sci_name_prefix OR SIMILARITY(LEFT(name_for_matching, #{@taxon_concept_query.length}), :sci_name_prefix) > 0.3)", # returns same results as above?
+          :sci_name_prefix => "#{@taxon_concept_query}", :length => @taxon_concept_query.length
         ])
       )
       # @query.order('SIMILARITY(name_for_matching, :sci_name_prefix)') # ordering takes place om front end, so sorting here doesn't matter
