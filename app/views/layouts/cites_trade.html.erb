@@ -26,6 +26,12 @@
     </script>
 
     <%= render "cites_trade/hotjar" %>
+  <% else %>
+    <script>
+      function ga() {
+        console.log('google analytics not enabled for this environment')
+      }
+    </script>
   <% end %>
 </head>
 
