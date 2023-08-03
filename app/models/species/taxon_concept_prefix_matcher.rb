@@ -92,7 +92,7 @@ class Species::TaxonConceptPrefixMatcher
     if @taxon_concept_query
       @query = @query.where(
         ActiveRecord::Base.send(:sanitize_sql_array, [
-          "name_for_matching LIKE :sci_name_prefix",
+          "name_for_matching ILIKE :sci_name_prefix",
           :sci_name_prefix => "#{@taxon_concept_query}%"
         ])
       )
