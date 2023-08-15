@@ -36,6 +36,8 @@ class Species::Search
   def initialize_query
     @query = MTaxonConcept.taxonomic_layout
 
+    @query = @query.where(rank_name: @ranks) if @ranks # use the ranks param if submitted
+
     @query =
       if @taxonomy == :cms
         @query.by_cms_taxonomy
@@ -43,7 +45,9 @@ class Species::Search
         @query.by_cites_eu_taxonomy
       end
 
-    if @visibility == :speciesplus
+    # this is wrong, but allows additional ranks to be returned
+    # currently we only return species and subspecies from this search
+    if @visibility == :speciesplus && @ranks.empty?
       @query = @query.where(:show_in_species_plus => true)
     elsif @visibility == :elibrary
       @query = @query.where("show_in_species_plus OR name_status = 'N'")

@@ -25,7 +25,15 @@ class Species::SearchParams < Hash
       ranks: whitelist_param_array(
         sanitise_upcase_string_array(params[:ranks]),
         Rank.dict,
-        [Rank::SPECIES, Rank::SUBSPECIES]
+        [
+          Rank::ORDER,
+          Rank::FAMILY,
+          Rank::SUBFAMILY,
+          Rank::GENUS,
+          Rank::SPECIES,
+          Rank::SUBSPECIES,
+          Rank::VARIETY
+        ] # adding additional permitted searches here allows filtering by additional ranks
       ),
       visibility: whitelist_param(
         sanitise_symbol(params[:visibility]),
