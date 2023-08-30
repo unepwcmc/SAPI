@@ -40,7 +40,8 @@ class DocumentBatch
       for idx in 0..(files.length - 1) do
         document_params = {
           type: documents_attributes[idx.to_s][:type],
-          filename: files[idx]
+          filename: files[idx],
+          title: files[idx].original_filename.sub(/.\w+$/, '')
         }
         @documents.push(Document.new(common_attributes.merge(document_params)))
       end
