@@ -1,3 +1,6 @@
+### 1.12.0
+* Allow intersessional decisions to be created without start events or documents
+
 ### 1.11.0
 * Adds accepted names to serializer to match documented end point
 * Adds diactric insensitive seraching to geo_entity_search
