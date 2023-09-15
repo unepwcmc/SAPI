@@ -29,4 +29,4 @@ RUN bundle install
 EXPOSE 3100
 
 # docker build -t sapi:latest .
-# docker run --rm -it --mount type=bind,src=${PWD},dst=/usr/src/app sapi bundler exec rake db:migrate
+# docker run --rm -it --network host --mount type=bind,src=${PWD},dst=/usr/src/app sapi bundler exec rake db:migrate
