@@ -27,7 +27,7 @@ SELECT
   taxon_concepts_mview.cms_listed,
   taxon_concepts_mview.cms_listing_original AS cms_listing_original,
   ARRAY_TO_STRING(
-    ARRAY_AGG(DISTINCT full_name_with_spp(original_taxon_concepts_mview.rank_name, original_taxon_concepts_mview.full_name)),
+    ARRAY_AGG(DISTINCT full_name_with_spp(original_taxon_concepts_mview.rank_name, original_taxon_concepts_mview.full_name, original_taxon_concepts_mview.name_status)),
     ','
   ) AS original_taxon_concept_full_name_with_spp,
   ARRAY_TO_STRING(

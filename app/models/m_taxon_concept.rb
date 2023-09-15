@@ -185,7 +185,7 @@ class MTaxonConcept < ActiveRecord::Base
 
   def spp
     if ['GENUS', 'FAMILY', 'SUBFAMILY', 'ORDER'].include?(rank_name)
-      'spp.'
+      'spp.' unless name_status == 'H' # Hybrids are not species groups
     else
       nil
     end
