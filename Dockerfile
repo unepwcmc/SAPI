@@ -18,15 +18,9 @@ RUN apt-get install -y --force-yes nodejs
 # postgresql-9.5 postgresql-contrib-9.5
 # cannot find postgresql-contrib-9.5 - maybe postgres archive? Do we need it?
 
-
 ADD . /usr/src/app
 WORKDIR /usr/src/app
 
 RUN gem install bundler -v 1.17.3
 RUN bundle config without test production
 RUN bundle install
-
-EXPOSE 3100
-
-# docker build -t sapi:latest .
-# docker run --rm -it --network host --mount type=bind,src=${PWD},dst=/usr/src/app sapi bundler exec rake db:migrate
