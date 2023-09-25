@@ -1,5 +1,5 @@
 set :stage, :staging
-set :branch, :develop
+set :branch, 'feat/113/do-not-add-spp-suffix-to-hybrids'
 
 server "sapi-staging.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
 
