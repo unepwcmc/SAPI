@@ -1,3 +1,16 @@
+### 1.11.0
+* Adds accepted names to serializer to match documented end point
+* Adds diactric insensitive seraching to geo_entity_search
+* Adds csvs for new id materials upload
+* Add updates csvs for comliance tool views
+
+### 1.10.3
+* Add pagination for documents in documents web controller
+
+**CITES Trade DB**
+
+* Update to version 2023.1(replace zip file on the server, update ENV var, text updates)
+
 ### 1.10.2
 
 * Add CSV files for distribution bulk uploads
