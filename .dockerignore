@@ -8,3 +8,4 @@ Dockerfile
 Readme
 docker-compose.yml
 config/master.key
+.env*
