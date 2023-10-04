@@ -69,6 +69,10 @@
                 <a class="legal-links" href="https://speciesplus.net/api/v1/documents/{{unbound decision.intersessional_decision_id}}">
                   Intersessional decision
                 </a>
+              {{else}}
+               {{#unless decision.start_event.name }}
+                Intersessional decision
+               {{/unless}}
               {{/if}}
               {{#if decision.private_url}}
                 <a class="legal-links" href="{{unbound decision.private_url}}">
@@ -164,6 +168,10 @@
                     <a class="legal-links" href="https://speciesplus.net/api/v1/documents/{{unbound decision.intersessional_decision_id}}">
                       Intersessional decision
                     </a>
+                  {{else}}
+                   {{#unless decision.start_event.name }}
+                    Intersessional decision
+                   {{/unless}}
                   {{/if}}
                   {{#if decision.private_url}}
                     <a class="legal-links" href="{{unbound decision.private_url}}">
