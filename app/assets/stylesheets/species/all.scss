@@ -651,6 +651,30 @@ body.inner #footer .holder{
   width: 140px;
 }
 .doc-type .typy-columns .col .row { margin: 0 0 5px }
+
+//
+.process-type {
+  overflow: hidden;
+  padding: 16px 0 13px 20px;
+}
+.process-type .heading {
+  color: $color-navy-dark;
+  font-weight: bold;
+  display: block;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+}
+.process-type .heading.more { margin: 0 0 4px 11px; }
+.process-type .typy-columns { overflow: hidden; }
+.process-type .typy-columns .col {
+  float: left;
+  width: 25%;
+}
+.process-type .typy-columns .col-wide {
+  float: left;
+  width: 50%;
+}
+
 .info-columns {
   width: 100%;
   padding: 20px 0 16px;

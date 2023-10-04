@@ -48,13 +48,22 @@ module Trade::DownloadDataRetriever
         SQL
       when 'species'
         appendix = params[:appendix]
-        <<-SQL
-               SELECT #{ATTRIBUTES.join(',')}
-               FROM non_compliant_shipments_view
-               WHERE year = #{year}
-               AND taxon_concept_id IN (#{id})
-               AND appendix = '#{appendix}'
-        SQL
+        if appendix.present?
+          <<-SQL
+                SELECT #{ATTRIBUTES.join(',')}
+                FROM non_compliant_shipments_view
+                WHERE year = #{year}
+                AND taxon_concept_id IN (#{id})
+                AND appendix = '#{appendix}'
+          SQL
+        else
+          <<-SQL
+                SELECT #{ATTRIBUTES.join(',')}
+                FROM non_compliant_shipments_view
+                WHERE year = #{year}
+                AND taxon_concept_id IN (#{id})
+          SQL
+        end
       when 'commodity'
         <<-SQL
                SELECT #{ATTRIBUTES.join(',')}

@@ -1,7 +1,7 @@
 Species.DownloadsController = Ember.Controller.extend Species.Spinner,
   needs: [
     'downloadsForCmsListings', 
-    'downloadsForCitesListings', 'downloadsForCitesRestrictions',
+    'downloadsForCitesListings', 'downloadsForCitesRestrictions', 'downloadsForCitesProcesses',
     'downloadsForEuListings', 'downloadsForEuDecisions'
   ]
   downloadsPopupVisible: false
@@ -22,6 +22,9 @@ Species.DownloadsController = Ember.Controller.extend Species.Spinner,
   ).property('citesLegislation')
   legislationIsCitesRestrictions: ( ->
     @get('citesLegislation') == 'restrictions'
+  ).property('citesLegislation')
+  legislationIsCitesProcesses: ( ->
+    @get('citesLegislation') == 'processes'
   ).property('citesLegislation')
   legislationIsEuListings: ( ->
     @get('euLegislation') == 'listings'
