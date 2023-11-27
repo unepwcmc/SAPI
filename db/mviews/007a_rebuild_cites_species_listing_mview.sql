@@ -48,7 +48,8 @@ SELECT
     ARRAY_AGG(
       DISTINCT full_name_with_spp(
         COALESCE(inclusion_taxon_concepts_mview.rank_name, original_taxon_concepts_mview.rank_name),
-        COALESCE(inclusion_taxon_concepts_mview.full_name, original_taxon_concepts_mview.full_name)
+        COALESCE(inclusion_taxon_concepts_mview.full_name, original_taxon_concepts_mview.full_name),
+        COALESCE(inclusion_taxon_concepts_mview.name_status, original_taxon_concepts_mview.name_status)
       )
     ),
     ','
