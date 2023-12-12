@@ -17,7 +17,7 @@ services:
     volumes:
       - 'pgdata:/var/lib/postgresql/data'
     ports:
-      - "5432:5432"
+      - "${SAPI_DATABASE_PORT:-5432}:5432"
     networks:
       - species-plus
     environment:
@@ -29,15 +29,16 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    command: /bin/bash -l -c "rm -f ./tmp/pids/server.pid && bundle exec rails s -p 3100 -b '0.0.0.0'"
+    command: /bin/bash -l -c "rm -f ./tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     ports:
-      - '3100:3100'
+      - '${SAPI_PORT:-3000}:3000'
     networks:
       - species-plus
     stdin_open: true
     tty: true
     environment:
       SAPI_DATABASE_HOST: species-plus-db
+      SAPI_DATABASE_PORT: "${SAPI_DATABASE_PORT:-5432}"
     depends_on:
       - species-plus-db
 
