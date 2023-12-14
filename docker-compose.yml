@@ -1,0 +1,47 @@
+# docker-compose.yml
+version: '3.8'
+
+networks:
+  species-plus:
+    driver: bridge
+
+services:
+  species-plus-db:
+    container_name: species-plus-db
+    image: postgres:10
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    volumes:
+      - 'pgdata:/var/lib/postgresql/data'
+    ports:
+      - "${SAPI_DATABASE_PORT:-5432}:5432"
+    networks:
+      - species-plus
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      POSTGRES_DB: "sapi_development"
+
+  sapi-rails:
+    container_name: sapi-rails
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: /bin/bash -l -c "rm -f ./tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    ports:
+      - '${SAPI_PORT:-3000}:3000'
+    networks:
+      - species-plus
+    stdin_open: true
+    tty: true
+    environment:
+      SAPI_DATABASE_HOST: species-plus-db
+      SAPI_DATABASE_PORT: "${SAPI_DATABASE_PORT:-5432}"
+    depends_on:
+      - species-plus-db
+
+volumes:
+  pgdata:
+    driver: local
