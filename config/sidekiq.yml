@@ -3,7 +3,7 @@
 #   sidekiq -C config.yml
 ---
 :verbose: false
-:pidfile: tmp/pids/sidekiq.pid
+:pidfile: tmp/pids/sidekiq.pid # Comment out this line for docker local development, but don't commit to git. Server need this line.
 staging:
   :concurrency: 2
 production:

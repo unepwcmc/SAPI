@@ -23,9 +23,15 @@ RUN apt-get update && apt-get install -y --force-yes \
 # postgresql-9.5 postgresql-contrib-9.5
 # cannot find postgresql-contrib-9.5 - maybe postgres archive? Do we need it?
 
-ADD . /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir /SAPI
+WORKDIR /SAPI
 
+COPY Gemfile /SAPI/Gemfile
+COPY Gemfile.lock /SAPI/Gemfile.lock
 RUN gem install bundler -v 1.17.3
-RUN bundle config without test production
 RUN bundle install
+
+COPY . /SAPI
+
+EXPOSE 3000
+CMD ["rails", "server", "-b", "0.0.0.0"]
