@@ -53,7 +53,7 @@ services:
     container_name: sapi-redis
     image: redis:7.2.0
     ports:
-      - "6379:6379"
+      - "${SAPI_REDIS_PORT:-6379}:6379"
     networks:
       - sapi
     command: redis-server --save 20 1 --loglevel warning
@@ -85,8 +85,8 @@ services:
     container_name: sapi-mailcatcher
     image: sj26/mailcatcher
     ports:
-      - '1080:1080'
-      - '1025:1025'
+      - "${SAPI_MAILCATCHER_PORT:-1080}:1080"
+      - "${SAPI_SMTP_PORT:-1025}:1025"
     networks:
       - sapi
 
