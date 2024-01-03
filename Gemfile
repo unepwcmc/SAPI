@@ -116,7 +116,6 @@ group :development do
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
   gem 'rubocop', '~> 0.40.0', require: false
-  gem 'letter_opener'
   gem 'rbnacl', '>= 3.2', '< 5.0'
   gem 'rbnacl-libsodium'
   gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
