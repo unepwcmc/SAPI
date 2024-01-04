@@ -9,7 +9,7 @@ class Checklist::Pdf::IndexQuery
     # we want common names and synonyms returned as separate records
     # and sorted alphabetically
     shared_columns = [:full_name, :rank_name, :family_name, :class_name,
-    :cites_accepted, :cites_listing,
+    :cites_accepted, :cites_listing, :name_status,
     :ann_symbol, :hash_ann_symbol]
     shared_columns << :english_names_ary if @english_common_names
     shared_columns << :spanish_names_ary if @spanish_common_names
