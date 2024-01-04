@@ -17,7 +17,7 @@ services:
     volumes:
       - 'pgdata:/var/lib/postgresql/data'
     ports:
-      - "${SAPI_DATABASE_PORT:-5432}:5432"
+      - "${SAPI_CONTAINER_DB_PORT:-5432}:5432"
     networks:
       - sapi
     environment:
@@ -34,7 +34,7 @@ services:
       - '.:/SAPI'
       - bundler_gems:/usr/local/bundle
     ports:
-      - '${SAPI_PORT:-3000}:3000'
+      - '${SAPI_CONTAINER_RAILS_PORT:-3000}:3000'
     networks:
       - sapi
     stdin_open: true
@@ -42,7 +42,6 @@ services:
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
       SAPI_DATABASE_HOST: sapi-db
-      SAPI_DATABASE_PORT: "${SAPI_DATABASE_PORT:-5432}"
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
     depends_on:
       - redis
@@ -53,7 +52,7 @@ services:
     container_name: sapi-redis
     image: redis:7.2.0
     ports:
-      - "${SAPI_REDIS_PORT:-6379}:6379"
+      - "${SAPI_CONTAINER_REDIS_PORT:-6379}:6379"
     networks:
       - sapi
     command: redis-server --save 20 1 --loglevel warning
@@ -78,15 +77,13 @@ services:
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
       SAPI_DATABASE_HOST: sapi-db
-      SAPI_DATABASE_PORT: "${SAPI_DATABASE_PORT:-5432}"
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
 
   mailcatcher:
     container_name: sapi-mailcatcher
     image: sj26/mailcatcher
     ports:
-      - "${SAPI_MAILCATCHER_PORT:-1080}:1080"
-      - "${SAPI_SMTP_PORT:-1025}:1025"
+      - "${SAPI_CONTAINER_MAILCATCHER_PORT:-1080}:1080"
     networks:
       - sapi
 

@@ -18,7 +18,7 @@ SAPI::Application.configure do
   config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.mailer['host']
+    host: Rails.application.secrets.mailer['host'] || 'http://localhost:3000'
   }
 
   ActionMailer::Base.default from: Rails.application.secrets.mailer['from']
