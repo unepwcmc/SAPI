@@ -4,7 +4,7 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
   def index
     index! do |format|
       format.json {
-        render :text => end_of_association_chain.order(:citation).
+        render :json => end_of_association_chain.order(:citation).
           select([:id, :citation]).map { |d| { :value => d.id, :text => d.citation } }.to_json
       }
     end

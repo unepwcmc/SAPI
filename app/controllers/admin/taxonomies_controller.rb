@@ -4,7 +4,7 @@ class Admin::TaxonomiesController < Admin::StandardAuthorizationController
   def index
     index! do |format|
       format.json {
-        render :text => end_of_association_chain.order(:name).
+        render :json => end_of_association_chain.order(:name).
           select([:id, :name]).map { |d| { :value => d.id, :text => d.name } }.to_json
       }
     end
