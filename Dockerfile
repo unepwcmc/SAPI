@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --force-yes \
   libsodium-dev libgmp3-dev libssl-dev \
   libpq-dev postgresql-client \
   nodejs \
+  texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra \
 ;
 # NB: Postgres client from Debian is 9.4 - not sure if this is acceptable
 
