@@ -4,12 +4,14 @@ class RegistrationsController < Devise::RegistrationsController
 
     successfully_updated =
       if needs_password?(@user, params)
-        @user.update_with_password(devise_parameter_sanitizer.permit(:account_update))
+        # TODO: deprecations https://github.com/heartcombo/devise/blob/main/CHANGELOG.md#400rc1---2016-02-01
+        @user.update_with_password(devise_parameter_sanitizer.sanitize(:account_update))
       else
         # remove the virtual current_password attribute
         # update_without_password doesn't know how to ignore it
         params[:user].delete(:current_password)
-        @user.update_without_password(devise_parameter_sanitizer.permit(:account_update))
+        # TODO: deprecations https://github.com/heartcombo/devise/blob/main/CHANGELOG.md#400rc1---2016-02-01
+        @user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
       end
 
     if successfully_updated
