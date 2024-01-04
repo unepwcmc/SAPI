@@ -120,6 +120,7 @@ Devise.setup do |config|
   # db field (see migrations). Until confirmed, new email is stored in
   # unconfirmed_email column, and copied to email column on successful confirmation.
   # config.reconfirmable = true
+  config.reconfirmable = false # Keep Devise 4.0 default value 'false'. Devise 4.1 default value changed to true.
 
   # Defines which key will be used when confirming an account
   # config.confirmation_keys = [ :email ]
@@ -142,7 +143,7 @@ Devise.setup do |config|
   # Email regex used to validate email formats. It simply asserts that
   # one (and only one) @ exists in the given string. This is mainly
   # to give user feedback and not to assert the e-mail validity.
-  # config.email_regexp = /\A[^@]+@[^@]+\z/
+  config.email_regexp = /\A[^@\s]+@([^@\s]+\.)+[^@\W]+\z/ # Keep Devise 4.0 default value. 4.1 has new default value.
 
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
