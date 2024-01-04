@@ -13,7 +13,7 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
   def autocomplete
     @references = Reference.search(params[:query]).
       order(:citation)
-    @references.map! do |r|
+    @references = @references.map do |r|
       {
         :id => r.id,
         :value => r.citation
