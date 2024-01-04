@@ -40,7 +40,7 @@ SAPI::Application.configure do
   config.active_record.mass_assignment_sanitizer = :strict
 
   # Custom cache settings
-  config.cache_store = :redis_store
+  config.cache_store = :memory_store, { size: 64.megabytes }
 
   # Custom ember settings
   config.ember.variant = :development
