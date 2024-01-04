@@ -15,13 +15,10 @@ RUN rm /etc/apt/sources.list && \
 # runtime, so attempt to get these from apt, where possible
 RUN apt-get update && apt-get install -y --force-yes \
   libsodium-dev libgmp3-dev libssl-dev \
-  libpq-dev \
+  libpq-dev postgresql-client \
   nodejs \
 ;
-
-# Woudl be nice to have:
-# postgresql-9.5 postgresql-contrib-9.5
-# cannot find postgresql-contrib-9.5 - maybe postgres archive? Do we need it?
+# NB: Postgres client from Debian is 9.4 - not sure if this is acceptable
 
 RUN mkdir /SAPI
 WORKDIR /SAPI
