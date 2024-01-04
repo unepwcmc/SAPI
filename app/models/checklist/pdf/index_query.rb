@@ -85,7 +85,7 @@ class Checklist::Pdf::IndexQuery
       #{inner_query}
     )
     SELECT * FROM name_matches WHERE sort_name IS NOT NULL
-    ORDER BY UPPER(sort_name) COLLATE "en_GB"
+    ORDER BY UPPER(sort_name) COLLATE "en_US"
     LIMIT #{limit} OFFSET #{offset}
     SQL
   end
