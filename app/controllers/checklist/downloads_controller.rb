@@ -12,7 +12,7 @@ class Checklist::DownloadsController < ApplicationController
       v["updated_at"] = v["updated_at"].strftime("%A, %e %b %Y %H:%M")
     end
 
-    render :text => @downloads.to_json
+    render :json => @downloads.to_json
   end
 
   # POST downloads/
@@ -27,14 +27,14 @@ class Checklist::DownloadsController < ApplicationController
     @download = @download.attributes.except("filename", "path")
     @download["updated_at"] = @download["updated_at"].strftime("%A, %e %b %Y %H:%M")
 
-    render :text => @download.to_json
+    render :json => @download.to_json
   end
 
   # GET downloads/:id/
   def show
     @download = Download.find(params[:id])
 
-    render :text => { status: @download.status }.to_json
+    render :json => { status: @download.status }
   end
 
   # GET downloads/:id/download
@@ -53,7 +53,7 @@ class Checklist::DownloadsController < ApplicationController
         :filename => @download.filename,
         :type => @download.format)
     else
-      render :text => { error: "Download not processed" }.to_json
+      render :json => { error: "Download not processed" }
     end
   end
 
@@ -90,7 +90,7 @@ class Checklist::DownloadsController < ApplicationController
   end
 
   def not_found
-    render :text => { error: "No downloads available" }.to_json
+    render :json => { error: "No downloads available" }
   end
 
 end

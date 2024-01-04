@@ -23,7 +23,7 @@ class Checklist::TaxonConceptsController < ApplicationController
   end
 
   def summarise_filters
-    render :text => Checklist::Checklist.new(params).summarise_filters
+    render :plain => Checklist::Checklist.summarise_filters(params)
   end
 
   private
