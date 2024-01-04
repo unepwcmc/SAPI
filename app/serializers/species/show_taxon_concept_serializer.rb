@@ -156,7 +156,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def nomenclature_notification
-    outputs = NomenclatureChange::Output.includes("nomenclature_change").where(
+    outputs = NomenclatureChange::Output.includes(:nomenclature_change).references(:nomenclature_change).where(
       "
         (taxon_concept_id = ? OR new_taxon_concept_id = ?) AND
         nomenclature_changes.created_at > ? AND nomenclature_changes.status = 'submitted'
