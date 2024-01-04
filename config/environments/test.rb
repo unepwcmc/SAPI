@@ -7,21 +7,24 @@ SAPI::Application.configure do
   # and recreated between test runs. Don't rely on the data there!
   config.cache_classes = true
 
-  # Configure static asset server for tests with Cache-Control for performance
-  config.serve_static_assets = true
-  config.static_cache_control = "public, max-age=3600"
+  # Do not eager load code on boot. This avoids loading your whole application
+  # just for the purpose of running a single test. If you are using a tool that
+  # preloads Rails for running tests, you may have to set it to true.
+  # config.eager_load = false
+  config.eager_load = true
 
-  # Log error messages when you accidentally call methods on nil
-  # config.whiny_nils = true
+  # Configure static asset server for tests with Cache-Control for performance.
+  config.serve_static_assets  = true
+  config.static_cache_control = 'public, max-age=3600'
 
-  # Show full error reports and disable caching
+  # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
-  # Raise exceptions instead of rendering exception templates
+  # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
 
-  # Disable request forgery protection in test environment
+  # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
   # Tell Action Mailer not to deliver emails to the real world.
@@ -29,19 +32,25 @@ SAPI::Application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
-  config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.mailer['host']
-  }
-
-  ActionMailer::Base.default from: Rails.application.secrets.mailer['from']
-
-  # Raise exception on mass assignment protection for Active Record models
-  config.active_record.mass_assignment_sanitizer = :strict
-
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
-  config.ember.variant = :development
+  # Raises error for missing translations
+  # config.action_view.raise_on_missing_translations = true
+
+  # TODO: Only support Rails version < 5
+  # GEM `protected_attributes` settings (https://github.com/rails/protected_attributes#errors)
+  config.active_record.mass_assignment_sanitizer = :strict
+
+  # Custom cache settings
   config.cache_store = :null_store
-  config.eager_load = true
+
+  # Custom ember settings
+  config.ember.variant = :development
+
+  # Custom email settings
+  config.action_mailer.default_url_options = {
+    host: Rails.application.secrets.mailer['host']
+  }
+  ActionMailer::Base.default from: Rails.application.secrets.mailer['from']
 end
