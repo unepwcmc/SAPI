@@ -19,8 +19,7 @@ describe Species::CommonNamesExport do
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/common_names")
         )
-        Species::CommonNamesExport.any_instance.stub(:path).
-          and_return("spec/public/downloads/common_names/")
+        expect_any_instance_of(Species::CommonNamesExport).to receive(:path).and_return("spec/public/downloads/common_names/")
       }
       after(:each) {
         FileUtils.remove_dir("spec/public/downloads/common_names", true)

@@ -19,8 +19,7 @@ describe Species::TaxonConceptsNamesExport do
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/taxon_concepts_names")
         )
-        Species::TaxonConceptsNamesExport.any_instance.stub(:path).
-          and_return("spec/public/downloads/taxon_concepts_names/")
+        expect_any_instance_of(Species::TaxonConceptsNamesExport).to receive(:path).and_return("spec/public/downloads/taxon_concepts_names/")
       }
       after(:each) {
         FileUtils.remove_dir("spec/public/downloads/taxon_concepts_names", true)

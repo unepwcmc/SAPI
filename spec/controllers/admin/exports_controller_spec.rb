@@ -17,7 +17,7 @@ describe Admin::ExportsController do
     context "all" do
       it "returns taxon concepts names file" do
         create(:taxon_concept)
-        Species::TaxonConceptsNamesExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_names.csv')
+        expect_any_instance_of(Species::TaxonConceptsNamesExport).to receive(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, :data_type => "Names"
         response.content_type.should eq("text/csv")
         response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_names.csv\"")
@@ -30,7 +30,7 @@ describe Admin::ExportsController do
     context "CITES_EU" do
       it "returns CITES_EU taxon concepts names file" do
         create_cites_eu_species
-        Species::TaxonConceptsNamesExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_names.csv')
+        expect_any_instance_of(Species::TaxonConceptsNamesExport).to receive(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, :data_type => "Names", :filters => { :taxonomy => 'CITES_EU' }
         response.content_type.should eq("text/csv")
         response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_names.csv\"")
@@ -43,7 +43,7 @@ describe Admin::ExportsController do
     context "CMS" do
       it "returns CMS taxon concepts names file" do
         create_cms_species
-        Species::TaxonConceptsNamesExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_names.csv')
+        expect_any_instance_of(Species::TaxonConceptsNamesExport).to receive(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, :data_type => "Names", :filters => { :taxonomy => 'CMS' }
         response.content_type.should eq("text/csv")
         response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_names.csv\"")
@@ -62,7 +62,7 @@ describe Admin::ExportsController do
       it "returns taxon concepts distributions file" do
         tc = create(:taxon_concept)
         create(:distribution, :taxon_concept_id => tc.id)
-        Species::TaxonConceptsDistributionsExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_distributions.csv')
+        expect_any_instance_of(Species::TaxonConceptsDistributionsExport).to receive(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, :data_type => "Distributions"
         response.content_type.should eq("text/csv")
         response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
@@ -76,7 +76,7 @@ describe Admin::ExportsController do
       it "returns CITES_EU taxon concepts distributions file" do
         tc = create_cites_eu_species
         create(:distribution, :taxon_concept_id => tc.id)
-        Species::TaxonConceptsDistributionsExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_distributions.csv')
+        expect_any_instance_of(Species::TaxonConceptsDistributionsExport).to receive(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, :data_type => "Distributions", :filters => { :taxonomy => 'CITES_EU' }
         response.content_type.should eq("text/csv")
         response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
@@ -90,7 +90,7 @@ describe Admin::ExportsController do
       it "returns CMS taxon concepts distributions file" do
         tc = create_cms_species
         create(:distribution, :taxon_concept_id => tc.id)
-        Species::TaxonConceptsDistributionsExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_distributions.csv')
+        expect_any_instance_of(Species::TaxonConceptsDistributionsExport).to receive(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, :data_type => "Distributions", :filters => { :taxonomy => 'CMS' }
         response.content_type.should eq("text/csv")
         response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_distributions.csv\"")

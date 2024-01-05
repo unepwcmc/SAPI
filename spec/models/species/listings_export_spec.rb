@@ -25,8 +25,7 @@ describe Species::ListingsExport do
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/cites_listings")
         )
-        Species::ListingsExport.any_instance.stub(:path).
-          and_return("spec/public/downloads/cites_listings/")
+        expect_any_instance_of(Species::ListingsExport).to receive(:path).and_return("spec/public/downloads/cites_listings/")
       }
       after(:each) {
         FileUtils.remove_dir("spec/public/downloads/cites_listings", true)

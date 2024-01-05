@@ -33,8 +33,8 @@ describe SubmissionWorker do
                       )
     @submitter = FactoryGirl.create(:user, role: User::MANAGER)
     Trade::ChangelogCsvGenerator.stub(:call).and_return(Tempfile.new('changelog.csv'))
-    SubmissionWorker.any_instance.stub(:upload_on_S3)
-    NotificationMailer.any_instance.stub(:mail).and_return(EmailMessageStub.new())
+    expect_any_instance_of(SubmissionWorker).to receive(:upload_on_S3)
+    expect_any_instance_of(NotificationMailer).to receive(:mail).and_return(EmailMessageStub.new())
   end
   context "when no primary errors" do
     pending(PENDING_REASON) if PENDING_REASON
