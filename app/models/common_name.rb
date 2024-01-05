@@ -30,6 +30,8 @@ class CommonName < ActiveRecord::Base
   # for distinguishing between official CITES languages an non official languages
   # might need to be reviewed: TODO
   def convention_language
-    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(self[:convention_language])
+    value = self[:convention_language]
+    ActiveRecord::Type::Boolean.new.type_cast_from_database(value) # Rails 4
+    # ActiveRecord::Type::Boolean.new.cast(value) # TODO Rails 5
   end
 end

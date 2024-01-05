@@ -49,11 +49,14 @@ class DocumentBatch
   end
 
   def common_attributes
+    is_public = ActiveRecord::Type::Boolean.new.type_cast_from_database(@is_public) # Rails 4
+    # is_public = ActiveRecord::Type::Boolean.new.cast(@is_public) # TODO Rails 5
+
     {
       'event_id' => @event_id,
       'date' => @date,
       'language_id' => @language_id,
-      'is_public' => ActiveRecord::ConnectionAdapters::Column.value_to_boolean(@is_public)
+      'is_public' => is_public
     }
   end
 
