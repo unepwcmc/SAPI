@@ -478,6 +478,7 @@ module Trade::ShipmentReportQueries
       appendix,
       taxon_concept_id,
       full_name_with_spp(ranks.name, taxon_concept_full_name, taxon_concept_name_status) AS taxon,
+      taxon_concept_name_status,
       importer_id,
       importers.iso_code2 AS importer,
       exporter_id,
