@@ -47,6 +47,7 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
   config.infer_spec_type_from_file_location!
 
+  config.include ActiveSupport::Testing::TimeHelpers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, :type => :controller
 
