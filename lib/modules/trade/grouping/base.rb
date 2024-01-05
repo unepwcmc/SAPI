@@ -7,7 +7,7 @@ class Trade::Grouping::Base
 
   # Example usage
   # Group by year considering compliance types:
-  # Trade::Grouping::Compliance.new(['year, 'issue_type']})
+  # Trade::Grouping::Compliance.new(['year', 'issue_type'])
   # Group by importer and limit result to 5 records
   # Trade::Grouping::Compliance.new('importer', {limit: 5})
   def initialize(attributes, opts={})
