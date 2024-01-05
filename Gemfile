@@ -126,9 +126,8 @@ group :development do
 end
 
 group :test, :development do
-  gem "rspec-rails", '3.0.2'
+  gem "rspec-rails", '3.9.1'
   gem 'rspec-collection_matchers', '1.1.3'
-  gem "rspec-mocks", '3.0.4'
   gem "json_spec", '1.1.5'
   gem "database_cleaner", "1.2.0" # TODO, should remove after upgrade Rails.
   gem "launchy", '2.4.3'
