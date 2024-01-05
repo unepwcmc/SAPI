@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-ruby '2.3.1'
+ruby '2.5.9'
 
-gem 'rails', '4.1.16'
+gem 'rails', '4.2.11.3'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -10,17 +10,16 @@ gem 'rails', '4.1.16'
 gem 'actionpack-action_caching', '1.2.0'
 gem 'actionpack-page_caching', '1.1.1'
 gem 'active_model_serializers', '0.8.4'
-gem 'activeresource', '4.1.0'
+gem 'activeresource', '4.1.0' # TODO: can be removed? Seems no place using this.
 gem 'dalli', '2.7.10'
-gem 'pg', '0.17.1'
+gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
 gem 'activeuuid', '0.6.1' # TODO: should remove when upgrade to Rails 6.
-gem 'pg_array_parser', '0.0.9'
-# gem 'activerecord-postgres-hstore'
-gem 'nested-hstore', '0.0.5'
+gem 'pg_array_parser', '0.0.9' # TODO: latest 0.0.9
+gem 'nested-hstore', '0.1.2' # TODO: latest 0.1.2 @ 2015
 gem 'pg_search', '0.6.4'
 gem 'foreigner', '1.5.0'
-gem 'oj', '2.15.0' # optimised JSON (picked by multi_json)
-gem 'nokogiri', '1.10.3'
+gem 'oj', '3.14.2' # optimised JSON (picked by multi_json)
+gem 'nokogiri', '1.12.5'
 gem 'inherited_resources', '1.7.2' # TODO: need upgrade when upgrade to Rails 5
 gem 'traco', '2.0.0'
 # gem 'strong_parameters'
@@ -28,6 +27,7 @@ gem 'protected_attributes', '1.1.4' # TODO: Only support Rails version < 5 (http
 gem 'devise', '4.0.0'
 gem 'cancan', '1.6.10'
 gem 'ahoy_matey', '1.0.1'
+gem 'browser', '0.6.0' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
 gem 'gon', '5.2.0'
 gem 'wicked', '1.3.3'
 gem 'groupdate', '2.4.0'
@@ -68,7 +68,7 @@ gem 'rails-observers', '0.1.5' # TODO: a feature that removed since Rails 4...
 
 # Gems used for assets
 gem 'sass-rails',   '5.0.7'
-gem 'coffee-rails', '4.0.1'
+gem 'coffee-rails', '4.1.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
@@ -92,15 +92,15 @@ gem 'susy', '2.2.14'
 gem 'rest-client', '1.8.0', require: false
 
 group :development do
-  gem "better_errors", '1.1.0'
+  # Access an IRB console on exception pages or by using <%= console %> in views
+  gem 'web-console', '~> 2.0'
   gem 'immigrant', '0.1.4'
   gem "guard-livereload", '1.1.3'
-  gem "yajl-ruby", '1.1.0'
   gem "rack-livereload", '0.3.11'
   gem "guard-bundler", '1.0.0'
   gem 'annotate', "2.5.0"
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-	gem 'spring' # TODO: upgrade when upgrade Ruby/Rails.
+	gem 'spring'
   # gem 'sextant'
   # Deploy with Capistrano
   gem 'capistrano', '3.11.0', require: false
@@ -133,7 +133,8 @@ group :test, :development do
   gem "database_cleaner", "1.2.0" # TODO, should remove after upgrade Rails.
   gem "timecop", '0.6.3'
   gem "launchy", '2.4.3'
-  gem 'byebug', '3.2.0'
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug'
 end
 
 group :test do
