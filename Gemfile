@@ -140,7 +140,7 @@ end
 group :test do
   gem "codeclimate-test-reporter", '0.1.1', require: nil # TODO, should be removed
   gem "factory_girl_rails", '4.2.1'
-  gem 'simplecov', '0.9.1', :require => false
+  gem 'simplecov', '0.22.0', :require => false # TODO: latest
   gem 'coveralls', '0.7.1', :require => false
   gem 'capybara', '2.2.1'
 end
