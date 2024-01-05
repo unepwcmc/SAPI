@@ -13,7 +13,6 @@ gem 'active_model_serializers', '0.8.4'
 gem 'activeresource', '4.1.0' # TODO: can be removed? Seems no place using this.
 gem 'dalli', '2.7.10'
 gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
-gem 'activeuuid', '0.6.1' # TODO: should remove when upgrade to Rails 6.
 gem 'pg_array_parser', '0.0.9' # TODO: latest 0.0.9
 gem 'nested-hstore', '0.1.2' # TODO: latest 0.1.2 @ 2015
 gem 'pg_search', '0.6.4'
@@ -26,8 +25,8 @@ gem 'traco', '2.0.0'
 gem 'protected_attributes', '1.1.4' # TODO: Only support Rails version < 5 (https://github.com/rails/protected_attributes)
 gem 'devise', '4.0.0'
 gem 'cancan', '1.6.10'
-gem 'ahoy_matey', '1.0.1'
-gem 'browser', '0.6.0' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
+gem 'ahoy_matey', '1.6.1' # TODO: latest 5.0.2. Can't upgrade to 2.0 until upgrade to Rails 5
+gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
 gem 'gon', '5.2.0'
 gem 'wicked', '1.3.3'
 gem 'groupdate', '2.4.0'
