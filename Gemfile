@@ -33,8 +33,8 @@ gem 'groupdate', '2.4.0'
 gem "chartkick", '1.3.2'
 gem 'rubyzip', '1.1.7'
 
-gem 'sidekiq', '4.1.1'
-gem 'sidekiq-status', '0.6.0'
+gem 'sidekiq', '4.2.10'
+gem 'sidekiq-status', '1.1.4' # TODO: latest is 3.0.3 @ 2023
 gem 'sidekiq-unique-jobs', '4.0.18'
 gem 'redis-rails', '4.0.0'
 
@@ -147,8 +147,6 @@ end
 gem 'rake', '10.0.4'
 
 gem 'slim', '1.3.6'
-# if you require 'sinatra' you get the DSL extended to Object
-gem 'sinatra', '1.3.5', :require => nil
 
 gem 'memcache-client', '1.8.5'
 
