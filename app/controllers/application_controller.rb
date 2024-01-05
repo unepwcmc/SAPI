@@ -38,10 +38,9 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    # TODO: deprecations https://github.com/heartcombo/devise/blob/main/CHANGELOG.md#400rc1---2016-02-01
     extra_parameters = [:name, :is_cites_authority, :organisation, :geo_entity_id]
-    devise_parameter_sanitizer.for(:sign_up).push(*extra_parameters)
-    devise_parameter_sanitizer.for(:account_update).push(*extra_parameters)
+    devise_parameter_sanitizer.permit(:sign_up, keys: extra_parameters)
+    devise_parameter_sanitizer.permit(:account_update, keys: extra_parameters)
   end
 
   private
