@@ -40,7 +40,7 @@ class DocumentCitation < ActiveRecord::Base
     relation = DocumentCitation.
       select('document_citations.*').
       where(document_id: self.document_id).
-      includes(:document_citation_taxon_concepts).
+      includes(:document_citation_taxon_concepts).references(:document_citation_taxon_concepts)
       where('document_citation_taxon_concepts.taxon_concept_id' => taxon_concept_id)
     geo_entities_ids = document_citation_geo_entities.pluck(:geo_entity_id)
     if !geo_entities_ids.empty?
