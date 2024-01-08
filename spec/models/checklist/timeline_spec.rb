@@ -20,9 +20,9 @@ describe Checklist::Timeline do
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.first }
 
-    specify { subject.timeline_intervals.count.should == 1 }
-    specify { subject.timeline_intervals.last.end_pos.should < 1 }
-    specify { subject.timeline_events.count.should == 2 }
+    specify { expect(subject.timeline_intervals.count).to eq(1) }
+    specify { expect(subject.timeline_intervals.last.end_pos).to be < 1 }
+    specify { expect(subject.timeline_events.count).to eq(2) }
   end
 
   context "when deleted from III multiple times" do
@@ -80,9 +80,9 @@ describe Checklist::Timeline do
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.last }
 
-    specify { subject.timeline_intervals.count.should == 3 }
-    specify { subject.timeline_intervals.last.end_pos.should < 1 }
-    specify { subject.timeline_events.count.should == 4 }
+    specify { expect(subject.timeline_intervals.count).to eq(3) }
+    specify { expect(subject.timeline_intervals.last.end_pos).to be < 1 }
+    specify { expect(subject.timeline_events.count).to eq(4) }
   end
 
   context "when deleted and then readded" do
@@ -109,9 +109,9 @@ describe Checklist::Timeline do
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.first }
 
-    specify { subject.timeline_intervals.count.should == 2 }
-    specify { subject.timeline_events.count.should == 3 }
-    specify { subject.timeline_intervals[0].end_pos.should == subject.timeline_intervals[1].start_pos }
+    specify { expect(subject.timeline_intervals.count).to eq(2) }
+    specify { expect(subject.timeline_events.count).to eq(3) }
+    specify { expect(subject.timeline_intervals[0].end_pos).to eq(subject.timeline_intervals[1].start_pos) }
   end
 
   context "when reservation withdrawn" do
@@ -151,9 +151,9 @@ describe Checklist::Timeline do
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.first.timelines.first }
 
-    specify { subject.timeline_intervals.count.should == 1 }
-    specify { subject.timeline_events.count.should == 2 }
-    specify { subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
+    specify { expect(subject.timeline_intervals.count).to eq(1) }
+    specify { expect(subject.timeline_events.count).to eq(2) }
+    specify { expect(subject.timeline_intervals[0].end_pos).to eq(subject.timeline_events[1].pos) }
   end
 
   context "when reservation withdrawn and then readded" do
@@ -199,10 +199,10 @@ describe Checklist::Timeline do
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.last.timelines.first }
 
-    specify { subject.timeline_intervals.count.should == 2 }
-    specify { subject.timeline_events.count.should == 3 }
-    specify { subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
-    specify { subject.timeline_intervals[1].end_pos.should == 1 }
+    specify { expect(subject.timeline_intervals.count).to eq(2) }
+    specify { expect(subject.timeline_events.count).to eq(3) }
+    specify { expect(subject.timeline_intervals[0].end_pos).to eq(subject.timeline_events[1].pos) }
+    specify { expect(subject.timeline_intervals[1].end_pos).to eq(1) }
   end
 
   context "when added multiple times" do
@@ -225,11 +225,12 @@ describe Checklist::Timeline do
     let(:subject) { ttc.timelines.first }
 
     specify {
-      subject.timeline_events.map(&:change_type_name).should ==
+      expect(subject.timeline_events.map(&:change_type_name)).to eq(
         ['ADDITION', 'AMENDMENT']
+      )
     }
-    specify { subject.timeline_intervals.count.should == 2 }
-    specify { subject.timeline_intervals[1].end_pos.should == 1 }
+    specify { expect(subject.timeline_intervals.count).to eq(2) }
+    specify { expect(subject.timeline_intervals[1].end_pos).to eq(1) }
   end
 
   context "when automatic deletion from ancestor listing" do
@@ -254,11 +255,12 @@ describe Checklist::Timeline do
     let(:subject) { ttc.timelines.first }
 
     specify {
-      subject.timeline_events.map(&:change_type_name).should ==
+      expect(subject.timeline_events.map(&:change_type_name)).to eq(
         ['ADDITION', 'DELETION']
+      )
     }
-    specify { subject.timeline_intervals.count.should == 1 }
-    specify { subject.timeline_intervals[0].end_pos.should == subject.timeline_events[1].pos }
+    specify { expect(subject.timeline_intervals.count).to eq(1) }
+    specify { expect(subject.timeline_intervals[0].end_pos).to eq(subject.timeline_events[1].pos) }
   end
 
 end

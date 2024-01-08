@@ -8,7 +8,7 @@ describe Checklist::Pdf::IndexAnnotationsKey do
     specify {
       allow(subject).to receive(:non_hash_annotations_key).and_return('x')
       allow(subject).to receive(:hash_annotations_key).and_return('x')
-      subject.annotations_key.should == "\\newpage\n\\parindent 0in\\cpart{\\annotationsKey}\nxx\\parindent -0.1in"
+      expect(subject.annotations_key).to eq("\\newpage\n\\parindent 0in\\cpart{\\annotationsKey}\nxx\\parindent -0.1in")
     }
   end
 
@@ -44,7 +44,7 @@ describe Checklist::Pdf::IndexAnnotationsKey do
     end
     subject { Checklist::Pdf::IndexAnnotationsKey.new }
     specify {
-      subject.hash_annotations_key.should == "\\newpage\n\\section*{\\hashAnnotations}\n\\hashAnnotationsIndexInfo\n\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP2 & \\validFrom \\hspace{2 pt} 01/07/2013\\\\\n\\#1 & Only bark \\\\\n\n}\n"
+      expect(subject.hash_annotations_key).to eq("\\newpage\n\\section*{\\hashAnnotations}\n\\hashAnnotationsIndexInfo\n\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP2 & \\validFrom \\hspace{2 pt} 01/07/2013\\\\\n\\#1 & Only bark \\\\\n\n}\n")
     }
   end
 
@@ -101,7 +101,7 @@ describe Checklist::Pdf::IndexAnnotationsKey do
     subject { Checklist::Pdf::IndexAnnotationsKey.new }
     specify {
       allow(LatexToPdf).to receive(:html2latex).and_return('x')
-      subject.non_hash_annotations_key.should == "\\section*{\\nonHashAnnotations}\n\\cfbox{orange}{\\superscript{1} \\textbf{\\textit{Foobarus bizarrus}}}\n\nx\n\n\\cfbox{green}{\\superscript{2} \\textbf{\\textit{Foobaria curiosa}}}\n\nx\n\n"
+      expect(subject.non_hash_annotations_key).to eq("\\section*{\\nonHashAnnotations}\n\\cfbox{orange}{\\superscript{1} \\textbf{\\textit{Foobarus bizarrus}}}\n\nx\n\n\\cfbox{green}{\\superscript{2} \\textbf{\\textit{Foobaria curiosa}}}\n\nx\n\n")
     }
   end
 

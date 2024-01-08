@@ -57,7 +57,7 @@ describe TaxonCommon do
         another_tc_common.save
         tc_common.name = "Black lolcat"
         tc_common.save
-        another_tc.common_names.map(&:name).should include('Lolcat')
+        expect(another_tc.common_names.map(&:name)).to include('Lolcat')
       }
     end
   end

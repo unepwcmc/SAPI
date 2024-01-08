@@ -11,16 +11,16 @@ describe Admin::TaxonRelationshipsController do
     }
     it "assigns @taxon_relationships" do
       get :index, :taxon_concept_id => taxon_concept.id, :type => taxon_relationship.taxon_relationship_type.name
-      assigns(:taxon_relationships).should eq([taxon_relationship])
+      expect(assigns(:taxon_relationships)).to eq([taxon_relationship])
       assigns(:taxon_concept)
     end
     it "renders the index template" do
       get :index, :taxon_concept_id => taxon_concept.id
-      response.should render_template("index")
+      expect(response).to render_template("index")
     end
     it "renders the taxon_concepts_layout" do
       get :index, :taxon_concept_id => taxon_concept.id
-      response.should render_template('layouts/taxon_concepts')
+      expect(response).to render_template('layouts/taxon_concepts')
     end
   end
 
@@ -32,13 +32,13 @@ describe Admin::TaxonRelationshipsController do
     it "renders create when successful" do
       xhr :post, :create, :taxon_relationship => taxon_relationship_attributes,
         :taxon_concept_id => taxon_concept.id
-      response.should render_template("create")
+      expect(response).to render_template("create")
     end
     it "renders new when not successful" do
       taxon_relationship = create(:taxon_relationship, taxon_relationship_attributes)
       xhr :post, :create, taxon_relationship: taxon_relationship_attributes,
         :taxon_concept_id => taxon_relationship.taxon_concept_id
-      response.should render_template("new")
+      expect(response).to render_template("new")
     end
   end
 
@@ -59,16 +59,16 @@ describe Admin::TaxonRelationshipsController do
       }
       context "destroys relationship for taxon concept" do
         specify {
-          lambda do
+          expect do
             delete :destroy, taxon_concept_id: taxon_concept.id, id: rel.id
-          end.should change(TaxonRelationship, :count).by(-2)
+          end.to change(TaxonRelationship, :count).by(-2)
         }
       end
       context "destroys relationship for other taxon concept" do
         specify {
-          lambda do
+          expect do
             delete :destroy, taxon_concept_id: other_taxon_concept.id, id: rel.id
-          end.should change(TaxonRelationship, :count).by(-2)
+          end.to change(TaxonRelationship, :count).by(-2)
         }
       end
     end
@@ -88,16 +88,16 @@ describe Admin::TaxonRelationshipsController do
       }
       context "destroys relationship for taxon concept" do
         specify {
-          lambda do
+          expect do
             delete :destroy, taxon_concept_id: taxon_concept.id, id: rel.id
-          end.should change(TaxonRelationship, :count).by(-1)
+          end.to change(TaxonRelationship, :count).by(-1)
         }
       end
       context "destroys relationship for other taxon concept" do
         specify {
-          lambda do
+          expect do
             delete :destroy, taxon_concept_id: other_taxon_concept.id, id: rel.id
-          end.should change(TaxonRelationship, :count).by(-1)
+          end.to change(TaxonRelationship, :count).by(-1)
         }
       end
     end

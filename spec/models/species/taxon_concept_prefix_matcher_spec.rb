@@ -11,7 +11,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@species_ac) }
+        specify { expect(subject.results).to include(@species_ac) }
       end
       context "when searching by hyphenated common name without hyphens" do
         subject {
@@ -20,7 +20,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@species_ac) }
+        specify { expect(subject.results).to include(@species_ac) }
       end
       context "when searching by part of hyphenated common name" do
         subject {
@@ -29,7 +29,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@species_ac) }
+        specify { expect(subject.results).to include(@species_ac) }
       end
     end
     context "when searching by scientific name" do
@@ -40,7 +40,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@species_ac) }
+        specify { expect(subject.results).to include(@species_ac) }
       end
       context "when malicious query" do
         subject {
@@ -49,7 +49,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should be_empty }
+        specify { expect(subject.results).to be_empty }
       end
       context "when leading whitespace" do
         subject {
@@ -58,7 +58,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@species_ac) }
+        specify { expect(subject.results).to include(@species_ac) }
       end
       context "when trailing whitespace" do
         subject {
@@ -67,7 +67,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@species_ac) }
+        specify { expect(subject.results).to include(@species_ac) }
       end
       context "when implicitly listed subspecies" do
         subject {
@@ -76,7 +76,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should_not include(@subspecies2_ac) }
+        specify { expect(subject.results).not_to include(@subspecies2_ac) }
       end
       context "when explicitly listed subspecies" do
         subject {
@@ -85,7 +85,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@subspecies1_ac) }
+        specify { expect(subject.results).to include(@subspecies1_ac) }
       end
       context "when implicitly listed higher taxon (without an explicitly listed ancestor)" do
         subject {
@@ -94,7 +94,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@order_ac) }
+        specify { expect(subject.results).to include(@order_ac) }
       end
       context "when explicitly listed higher taxon" do
         subject {
@@ -103,7 +103,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { subject.results.should include(@family_ac) }
+        specify { expect(subject.results).to include(@family_ac) }
       end
       # check ranks filtering
       context "when explicitly listed higher taxon but ranks expected FAMILY" do
@@ -114,7 +114,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade
           })
         }
-        specify { subject.results.should include(@family_ac) }
+        specify { expect(subject.results).to include(@family_ac) }
       end
       context "when explicitly listed higher taxon but ranks expected SPECIES" do
         subject {
@@ -124,7 +124,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade
           })
         }
-        specify { subject.results.should be_empty }
+        specify { expect(subject.results).to be_empty }
       end
       context "when searching for name that matches Species and Subspecies but  ranks expected SUBSPECIES" do
         subject {
@@ -135,8 +135,8 @@ describe Species::TaxonConceptPrefixMatcher do
           })
         }
         specify {
-          subject.results.should_not include(@species_ac)
-          subject.results.should include(@subspecies1_ac)
+          expect(subject.results).not_to include(@species_ac)
+          expect(subject.results).to include(@subspecies1_ac)
         }
       end
     end

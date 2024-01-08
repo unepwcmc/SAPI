@@ -8,13 +8,13 @@ describe Api::V1::AutoCompleteTaxonConceptsController do
       get :index, :taxonomy => "CITES",
         :taxon_concept_query => "Boa", :ranks => ["SPECIES"],
         :visibility => "trade"
-      response.body.should have_json_size(1).
+      expect(response.body).to have_json_size(1).
         at_path("auto_complete_taxon_concepts")
     end
     it "returns 3 results when searching for species name and not filtering by rank" do
       get :index, :taxonomy => "CITES",
         :taxon_concept_query => "Boa"
-      response.body.should have_json_size(3).
+      expect(response.body).to have_json_size(3).
         at_path("auto_complete_taxon_concepts")
     end
   end

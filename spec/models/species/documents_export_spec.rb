@@ -4,7 +4,7 @@ describe Species::DocumentsExport do
     subject {
       Species::DocumentsExport.new({})
     }
-    specify { subject.path.should == "public/downloads/documents/" }
+    specify { expect(subject.path).to eq("public/downloads/documents/") }
   end
   SPEC_DOCUMENTS_DOWNLOAD_PATH = "spec/public/downloads/documents"
   describe :export do
@@ -25,7 +25,7 @@ describe Species::DocumentsExport do
         Species::DocumentsExport.new({})
       }
       specify "when file not cached it should not be generated" do
-        subject.export.should be_falsey
+        expect(subject.export).to be_falsey
       end
     end
     context "when results" do
@@ -39,12 +39,12 @@ describe Species::DocumentsExport do
       #}
       pending "when file not cached it should be generated" do
         subject.export
-        File.file?(subject.file_name).should be_truthy
-        File.size(subject.file_name).should be > 0
+        expect(File.file?(subject.file_name)).to be_truthy
+        expect(File.size(subject.file_name)).to be > 0
       end
       pending "when file cached it should not be generated" do
         FileUtils.touch(subject.file_name)
-        subject.should_not_receive(:to_csv)
+        expect(subject).not_to receive(:to_csv)
         subject.export
       end
     end

@@ -13,7 +13,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        subject.should include(@species)
+        expect(subject).to include(@species)
       end
     end
     context "when Poland" do
@@ -24,7 +24,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        subject.should include(@species)
+        expect(subject).to include(@species)
       end
     end
   end
@@ -38,7 +38,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        subject.should include(@species)
+        expect(subject).to include(@species)
       end
     end
     context "when App II" do
@@ -49,7 +49,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        subject.should include(@species)
+        expect(subject).to include(@species)
       end
     end
     context "when App III" do
@@ -60,7 +60,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        subject.should_not include(@species)
+        expect(subject).not_to include(@species)
       end
     end
   end
@@ -76,7 +76,7 @@ describe Checklist do
           checklist.results
         }
         specify do
-          subject.should include(@species)
+          expect(subject).to include(@species)
         end
       end
       context "when App II" do
@@ -88,7 +88,7 @@ describe Checklist do
           checklist.results
         }
         specify do
-          subject.should_not include(@species)
+          expect(subject).not_to include(@species)
         end
       end
     end
@@ -102,7 +102,7 @@ describe Checklist do
           checklist.results
         }
         specify do
-          subject.should_not include(@species)
+          expect(subject).not_to include(@species)
         end
       end
       context "when App II" do
@@ -114,7 +114,7 @@ describe Checklist do
           checklist.results
         }
         specify do
-          subject.should include(@species)
+          expect(subject).to include(@species)
         end
       end
     end
@@ -128,7 +128,7 @@ describe Checklist do
           checklist.results
         }
         specify do
-          subject.should include(@species)
+          expect(subject).to include(@species)
         end
       end
       context "when App II" do
@@ -140,7 +140,7 @@ describe Checklist do
           checklist.results
         }
         specify do
-          subject.should include(@species)
+          expect(subject).to include(@species)
         end
       end
     end
@@ -154,7 +154,7 @@ describe Checklist do
           checklist.results
         }
         specify do
-          subject.should include(@species)
+          expect(subject).to include(@species)
         end
       end
       context "when Nepal" do
@@ -166,7 +166,7 @@ describe Checklist do
           checklist.results
         }
         specify do
-          subject.should include(@species)
+          expect(subject).to include(@species)
         end
       end
     end

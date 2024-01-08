@@ -13,8 +13,8 @@ describe Checklist do
         checklist.results
       }
       specify {
-        subject.first.full_name.should == @species2.full_name
-        subject.size.should == 1
+        expect(subject.first.full_name).to eq(@species2.full_name)
+        expect(subject.size).to eq(1)
       }
     end
     context "by common name" do
@@ -26,8 +26,8 @@ describe Checklist do
         checklist.results
       }
       specify {
-        subject.first.full_name.should == @species2.full_name
-        subject.size.should == 1
+        expect(subject.first.full_name).to eq(@species2.full_name)
+        expect(subject.size).to eq(1)
       }
     end
   end

@@ -50,8 +50,8 @@ describe TaxonConceptPrefixMatcher do
       SearchParams.new(:taxonomy => { :id => taxonomy.id }, :scientific_name => 'Ab')
     }
     let(:matcher) { TaxonConceptPrefixMatcher.new matcher_params }
-    specify { matcher.taxon_concepts.should include(taxon_concept4) }
-    specify { matcher.taxon_concepts.should_not include(hybrid) }
+    specify { expect(matcher.taxon_concepts).to include(taxon_concept4) }
+    specify { expect(matcher.taxon_concepts).not_to include(hybrid) }
   end
 
   context "when name status H" do
@@ -59,8 +59,8 @@ describe TaxonConceptPrefixMatcher do
       SearchParams.new(:taxonomy => { :id => taxonomy.id }, :scientific_name => 'Ab', :name_status => 'H')
     }
     let(:matcher) { TaxonConceptPrefixMatcher.new matcher_params }
-    specify { matcher.taxon_concepts.should_not include(taxon_concept4) }
-    specify { matcher.taxon_concepts.should include(hybrid) }
+    specify { expect(matcher.taxon_concepts).not_to include(taxon_concept4) }
+    specify { expect(matcher.taxon_concepts).to include(hybrid) }
   end
 
   context "when rank scope applied" do
@@ -76,8 +76,9 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify {
-      parent_matcher.taxon_concepts.map(&:full_name).should ==
+      expect(parent_matcher.taxon_concepts.map(&:full_name)).to eq(
       ['Aab', 'Aac']
+      )
     }
 
     let(:ancestor_matcher_params) {
@@ -92,8 +93,9 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify {
-      ancestor_matcher.taxon_concepts.map(&:full_name).should ==
+      expect(ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
       ['Aaa']
+      )
     }
 
     let(:self_and_ancestor_matcher_params) {
@@ -108,8 +110,9 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify {
-      self_and_ancestor_matcher.taxon_concepts.map(&:full_name).should ==
+      expect(self_and_ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
       ['Aaa', 'Aaab']
+      )
     }
 
   end
@@ -126,8 +129,9 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify {
-      ancestor_matcher.taxon_concepts.map(&:full_name).should ==
+      expect(ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
       ['Aaa', 'Aab', 'Aac']
+      )
     }
 
     let(:descendant_matcher_params) {
@@ -142,8 +146,9 @@ describe TaxonConceptPrefixMatcher do
     }
 
     specify {
-      descendant_matcher.taxon_concepts.map(&:full_name).should ==
+      expect(descendant_matcher.taxon_concepts.map(&:full_name)).to eq(
       ['Aaab', 'Aab', 'Abb']
+      )
     }
   end
 

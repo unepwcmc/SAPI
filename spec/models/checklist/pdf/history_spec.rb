@@ -36,7 +36,7 @@ describe Checklist::Pdf::History do
       }
       subject { Checklist::Pdf::History.new(:scientific_name => tc.full_name, :show_english => true) }
       specify {
-        subject.higher_taxon_name(tc.reload).should == "\\subsection*{FOOBARIDAE  (E) Foobars }\n"
+        expect(subject.higher_taxon_name(tc.reload)).to eq("\\subsection*{FOOBARIDAE  (E) Foobars }\n")
       }
     end
   end
@@ -54,7 +54,7 @@ describe Checklist::Pdf::History do
       }
       subject { Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
       specify {
-        subject.listed_taxon_name(tc).should == 'FOOBARIDAE spp.'
+        expect(subject.listed_taxon_name(tc)).to eq('FOOBARIDAE spp.')
       }
     end
     context "when genus" do
@@ -69,7 +69,7 @@ describe Checklist::Pdf::History do
       }
       subject { Checklist::Pdf::History.new(:scientific_name => tc.full_name) }
       specify {
-        subject.listed_taxon_name(tc).should == '\emph{Foobarus} spp.'
+        expect(subject.listed_taxon_name(tc)).to eq('\emph{Foobarus} spp.')
       }
     end
   end
@@ -97,7 +97,7 @@ describe Checklist::Pdf::History do
       }
       subject { Checklist::Pdf::History.new({}) }
       specify {
-        subject.annotation_for_language(lc, 'en').should == "Except \\textit{Foobarus cracoviensis}\n\nPreviously listed as \\textit{Foobarus polonicus}.\\footnote{...}"
+        expect(subject.annotation_for_language(lc, 'en')).to eq("Except \\textit{Foobarus cracoviensis}\n\nPreviously listed as \\textit{Foobarus polonicus}.\\footnote{...}")
       }
     end
   end
