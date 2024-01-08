@@ -23,9 +23,7 @@ class Species::ListingsExport < Species::CsvCopyExport
   end
 
   def query
-    rel = MTaxonConcept.from(table_name).
-      select(sql_columns).
-      order('taxonomic_position')
+    rel = MTaxonConcept.from(table_name).select(sql_columns_with_table_name).order('taxonomic_position')
     rel =
       if @geo_entities_ids
         MTaxonConceptFilterByAppendixPopulationQuery.new(
@@ -54,4 +52,14 @@ class Species::ListingsExport < Species::CsvCopyExport
     "#{designation_name}_species_listing_mview"
   end
 
+  # IMPORTANT NOTE:
+  # After upgrading to Rails 4.1 (Arel 5.0.1), Rails injects the table name in front of column names.
+  # For example: From `SELECT taxon_concept_id FROM...` to `SELECT trade_sandbox_template.taxon_concept_id FROM...`.
+  # There is nothing inherently wrong with Rails, but it doesn't work well with this project, which involves many
+  # highly customized low-level SQL queries.
+  # In this case the FROM clause aliases a name which does not have a model.
+  # A quick and temporary solution for now is to manually inject the correct table name ourselves.
+  def sql_columns_with_table_name
+    sql_columns.map{ |sql_column| "#{table_name}.#{sql_column}" }
+  end
 end
