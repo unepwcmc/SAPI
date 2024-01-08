@@ -57,7 +57,6 @@ class Species::ListingsExport < Species::CsvCopyExport
   # For example: From `SELECT taxon_concept_id FROM...` to `SELECT trade_sandbox_template.taxon_concept_id FROM...`.
   # There is nothing inherently wrong with Rails, but it doesn't work well with this project, which involves many
   # highly customized low-level SQL queries.
-  # In this case the FROM clause aliases a name which does not have a model.
   # A quick and temporary solution for now is to manually inject the correct table name ourselves.
   def sql_columns_with_table_name
     sql_columns.map{ |sql_column| "#{table_name}.#{sql_column}" }
