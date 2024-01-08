@@ -14,7 +14,7 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \"#{headers[i]}\""
     end + years_columns
-    "SELECT #{select_columns.join(', ')} FROM (#{ct_subquery_sql(options)}) ct_subquery"
+    "SELECT #{select_columns.join(', ')} FROM (#{ct_subquery_sql(options)}) AS ct_subquery"
   end
 
   def resource_name

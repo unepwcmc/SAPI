@@ -43,7 +43,7 @@ module Elibrary
 
     def print_query_counts
       queries = { 'rows_in_import_file' => "SELECT COUNT(*) FROM #{table_name}" }
-      queries['rows_to_insert'] = "SELECT COUNT(*) FROM (#{rows_to_insert_sql}) t"
+      queries['rows_to_insert'] = "SELECT COUNT(*) FROM (#{rows_to_insert_sql}) AS t"
       queries.each do |q_name, q|
         res = ActiveRecord::Base.connection.execute(q)
         puts "#{res[0]['count']} #{q_name.humanize}"

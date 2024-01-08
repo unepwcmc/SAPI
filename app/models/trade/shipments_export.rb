@@ -61,7 +61,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \"#{headers[i]}\""
     end
-    "SELECT #{select_columns.join(', ')} FROM (#{raw_query(options)}) subquery"
+    "SELECT #{select_columns.join(', ')} FROM (#{raw_query(options)}) AS subquery"
   end
 
   def internal?
@@ -78,7 +78,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
 
   def copy_stmt
     # escape quotes around attributes for psql
-    # Requires UTF8 encoding for diacritics. 
+    # Requires UTF8 encoding for diacritics.
     sql = <<-PSQL
       \\COPY (#{query_sql(:limit => !internal?).gsub(/"/, "\\\"")})
       TO ?
