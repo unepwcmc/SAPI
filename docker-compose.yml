@@ -2,12 +2,12 @@
 version: '3.8'
 
 networks:
-  species-plus:
+  sapi:
     driver: bridge
 
 services:
-  species-plus-db:
-    container_name: species-plus-db
+  db:
+    container_name: sapi-db
     image: postgres:10
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
@@ -17,31 +17,77 @@ services:
     volumes:
       - 'pgdata:/var/lib/postgresql/data'
     ports:
-      - "${SAPI_DATABASE_PORT:-5432}:5432"
+      - "${SAPI_CONTAINER_DB_PORT:-5432}:5432"
     networks:
-      - species-plus
+      - sapi
     environment:
       POSTGRES_HOST_AUTH_METHOD: "trust"
       POSTGRES_DB: "sapi_development"
 
-  sapi-rails:
+  rails:
     container_name: sapi-rails
     build:
       context: ./
       dockerfile: Dockerfile
-    command: /bin/bash -l -c "rm -f ./tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: /bin/bash -l -c "rm -f ./tmp/pids/server.pid && bundle install && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - '.:/SAPI'
+      - bundler_gems:/usr/local/bundle
     ports:
-      - '${SAPI_PORT:-3000}:3000'
+      - '${SAPI_CONTAINER_RAILS_PORT:-3000}:3000'
     networks:
-      - species-plus
+      - sapi
     stdin_open: true
     tty: true
     environment:
-      SAPI_DATABASE_HOST: species-plus-db
-      SAPI_DATABASE_PORT: "${SAPI_DATABASE_PORT:-5432}"
+      MAILER_ADDRESS: sapi-mailcatcher
+      SAPI_DATABASE_HOST: sapi-db
+      SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
     depends_on:
-      - species-plus-db
+      - redis
+      - db
+      - mailcatcher
+
+  redis:
+    container_name: sapi-redis
+    image: redis:7.2.0
+    ports:
+      - "${SAPI_CONTAINER_REDIS_PORT:-6379}:6379"
+    networks:
+      - sapi
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+
+  sidekiq:
+    container_name: sapi-sidekiq
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - sapi
+    depends_on:
+      - db
+      - redis
+      - mailcatcher
+    command: /bin/bash -l -c "bundle install && bundle exec sidekiq -C config/sidekiq.yml"
+    volumes:
+      - '.:/SAPI'
+      - bundler_gems:/usr/local/bundle
+    environment:
+      MAILER_ADDRESS: sapi-mailcatcher
+      SAPI_DATABASE_HOST: sapi-db
+      SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+
+  mailcatcher:
+    container_name: sapi-mailcatcher
+    image: sj26/mailcatcher
+    ports:
+      - "${SAPI_CONTAINER_MAILCATCHER_PORT:-1080}:1080"
+    networks:
+      - sapi
 
 volumes:
   pgdata:
-    driver: local
+  bundler_gems:
+  redis_data:
