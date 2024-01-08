@@ -29,7 +29,7 @@ class EventsByTypeStats
           AND w.end_date > ahoy_events.time
         GROUP BY start_date
         ORDER BY start_date
-      ) q
+      ) AS q
       SQL
     ).select([:start_date, :taxon_concept_cnt, :search_cnt])
   end

@@ -40,7 +40,7 @@ class ApiRequest < ActiveRecord::Base
       ]
     ).group(:user_id).
       where('user_id IS NOT NULL')
-    self.from("(#{subquery.to_sql}) api_requests").
+    self.from("(#{subquery.to_sql}) AS api_requests").
       order('cnt DESC').limit(50)
   end
 

@@ -56,7 +56,7 @@ class DocumentSearch
   end
 
   def initialize_query
-    @query = Document.from("#{table_name} documents")
+    @query = Document.from("#{table_name} AS documents")
     @query = @query.where(is_public: true) unless @show_private
     add_conditions_for_event
     add_conditions_for_document
@@ -202,7 +202,7 @@ class DocumentSearch
       ) AS document_language_versions
     SQL
     @query = Document.from(
-      '(' + @query.to_sql + ') documents'
+      '(' + @query.to_sql + ') AS documents'
     ).select(columns + "," + aggregators).group(columns)
   end
 
@@ -230,13 +230,13 @@ class DocumentSearch
 
   def self.documents_need_refreshing?
     Document.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).limit(1).count > 0 ||
-    Document.count < Document.from('api_documents_mview documents').count
+    Document.count < Document.from('api_documents_mview AS documents').count
   end
 
   def self.citations_need_refreshing?
     DocumentCitation.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).limit(1).count > 0 ||
     DocumentCitation.count < DocumentCitation.select('DISTINCT id').
-      from('document_citations_mview citations').count
+      from('document_citations_mview AS citations').count
   end
 
   def self.refresh_documents

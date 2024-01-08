@@ -150,7 +150,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         'COUNT(*) AS error_count',
         'ARRAY_AGG(id) AS matching_records_ids'
       ]
-    ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) matching_records")).
+    ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
     group(column_names_for_display).having(
       required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
     )
@@ -160,7 +160,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     table_name = annual_report_upload.sandbox.table_name
     sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
     sandbox_klass.select('*').
-      from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) matching_records"))
+      from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records"))
   end
 
   # Returns records from sandbox where values in column_names are not null
