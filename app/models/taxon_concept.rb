@@ -321,7 +321,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def standard_taxon_concept_references
-    TaxonConceptReference.from('api_taxon_references_view taxon_concept_references').
+    TaxonConceptReference.from('api_taxon_references_view AS taxon_concept_references').
       where(taxon_concept_id: self.id, is_standard: true)
   end
 

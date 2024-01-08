@@ -68,7 +68,7 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
         kingdom_name, phylum_name, class_name, order_name, family_name, genus_name,
         species_name, full_name, author_year, name_status,
         cites_listed_descendants, eu_listed_descendants, taxonomic_position
-      ) taxon_concepts
+      ) AS taxon_concepts
     SQL
     )
     @report_query = @query.select([

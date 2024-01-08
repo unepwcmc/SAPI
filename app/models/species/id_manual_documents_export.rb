@@ -1,7 +1,7 @@
 class Species::IdManualDocumentsExport < Species::CsvCopyExport
 
   def query
-    rel = Document.from("#{table_name} documents")
+    rel = Document.from("#{table_name} AS documents")
                   .where(document_type: ['Document::IdManual', 'Document::VirtualCollege'])
                   .order('volume, manual_id')
     rel.select(sql_columns)

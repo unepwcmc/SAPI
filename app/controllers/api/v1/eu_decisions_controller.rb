@@ -16,7 +16,7 @@ class Api::V1::EuDecisionsController < ApplicationController
   end
 
   def eu_decision_search(params)
-    list = EuDecision.from('api_eu_decisions_view eu_decisions').
+    list = EuDecision.from('api_eu_decisions_view AS eu_decisions').
       select(eu_decision_select_attrs).
       joins('LEFT JOIN eu_suspensions_applicability_view v ON eu_decisions.id = v.id').
       order(<<-SQL

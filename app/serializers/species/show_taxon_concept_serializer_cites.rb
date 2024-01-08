@@ -43,7 +43,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def quotas
-    Quota.from('api_cites_quotas_view trade_restrictions').
+    Quota.from('api_cites_quotas_view AS trade_restrictions').
       where("
             trade_restrictions.taxon_concept_id IN (:object_and_children)
             OR (
@@ -86,7 +86,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def cites_suspensions
-    CitesSuspension.from('api_cites_suspensions_view trade_restrictions').
+    CitesSuspension.from('api_cites_suspensions_view AS trade_restrictions').
       where("
             trade_restrictions.taxon_concept_id IN (:object_and_children)
             OR (
@@ -135,7 +135,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
     # The following variables are used to temporarily force the Anthozoa negative opinion
     # for Cambodia to cascade down and show regardless of the children distributions.
     anthozoa_statement, ancestors_field = force_anthozoa_statement.values_at(*%i(statement ancestors_field))
-    EuDecision.from('api_eu_decisions_view eu_decisions').
+    EuDecision.from('api_eu_decisions_view AS eu_decisions').
       where("
             eu_decisions.taxon_concept_id IN (?)
             OR (
@@ -190,7 +190,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def cites_listing_changes
-    rel = MCitesListingChange.from('api_cites_listing_changes_view listing_changes_mview').
+    rel = MCitesListingChange.from('api_cites_listing_changes_view AS listing_changes_mview').
       where(
         'listing_changes_mview.taxon_concept_id' => object_and_children
       )
@@ -257,7 +257,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   end
 
   def eu_listing_changes
-    rel = MEuListingChange.from('api_eu_listing_changes_view listing_changes_mview').
+    rel = MEuListingChange.from('api_eu_listing_changes_view AS listing_changes_mview').
       where(
         'listing_changes_mview.taxon_concept_id' => object_and_children
       )

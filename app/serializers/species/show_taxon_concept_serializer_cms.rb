@@ -26,7 +26,7 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
   end
 
   def cms_listing_changes
-    MCmsListingChange.from('cms_listing_changes_mview listing_changes_mview').
+    MCmsListingChange.from('cms_listing_changes_mview AS listing_changes_mview').
       where(
         'listing_changes_mview.taxon_concept_id' => object_and_children,
         'listing_changes_mview.show_in_history' => true

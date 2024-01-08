@@ -77,7 +77,7 @@ class NomenclatureChange::CascadingNotesProcessor
       :sanitize_sql_array, [subquery, taxon_concept_id: taxon_concept.id]
     )
     TaxonConcept.from(
-      "(#{sanitized_subquery}) taxon_concepts"
+      "(#{sanitized_subquery}) AS taxon_concepts"
     )
   end
 
