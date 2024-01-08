@@ -16,7 +16,7 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \"#{headers[i]}\""
     end
-    "SELECT #{select_columns.join(', ')} FROM (#{subquery_sql(options)}) subquery"
+    "SELECT #{select_columns.join(', ')} FROM (#{subquery_sql(options)}) AS subquery"
   end
 
   def subquery_sql(options)
