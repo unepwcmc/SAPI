@@ -14,8 +14,8 @@ describe CitesTrade::ExportsController do
       it "returns comptab shipments file" do
         create(:shipment)
         expect_any_instance_of(Trade::ShipmentsExport).to receive(:public_file_name).and_return('shipments.csv')
-        Trade::TradeDataDownloadLogger.stub(:city_country_from).and_return(["Cambridge", "United Kingdom"])
-        Trade::TradeDataDownloadLogger.stub(:organization_from).and_return("UNEP-WCMC")
+        allow(Trade::TradeDataDownloadLogger).to receive(:city_country_from).and_return(["Cambridge", "United Kingdom"])
+        allow(Trade::TradeDataDownloadLogger).to receive(:organization_from).and_return("UNEP-WCMC")
         get :download, :filters => { :report_type => :comptab }
         response.content_type.should eq("text/csv")
         response.headers["Content-Disposition"].should eq("attachment; filename=\"shipments.csv\"")
@@ -23,8 +23,8 @@ describe CitesTrade::ExportsController do
       it "logs download information from public interface to the TradeDataDownload model" do
         create(:shipment)
         expect_any_instance_of(Trade::ShipmentsExport).to receive(:public_file_name).and_return('shipments.csv')
-        Trade::TradeDataDownloadLogger.stub(:city_country_from).and_return(["Cambridge", "United Kingdom"])
-        Trade::TradeDataDownloadLogger.stub(:organization_from).and_return("UNEP-WCMC")
+        allow(Trade::TradeDataDownloadLogger).to receive(:city_country_from).and_return(["Cambridge", "United Kingdom"])
+        allow(Trade::TradeDataDownloadLogger).to receive(:organization_from).and_return("UNEP-WCMC")
         lambda do
           get :download, :filters => {
             :report_type => 'comptab',

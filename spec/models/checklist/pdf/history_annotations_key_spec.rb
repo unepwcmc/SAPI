@@ -6,8 +6,8 @@ describe Checklist::Pdf::HistoryAnnotationsKey do
   describe :annotations_key do
     subject { Checklist::Pdf::HistoryAnnotationsKey.new }
     specify {
-      subject.stub(:non_hash_annotations_key).and_return('x')
-      subject.stub(:hash_annotations_key).and_return('x')
+      allow(subject).to receive(:non_hash_annotations_key).and_return('x')
+      allow(subject).to receive(:hash_annotations_key).and_return('x')
       subject.annotations_key.should == "\\newpage\n\\parindent 0in\\cpart{\\historicalSummaryOfAnnotations}\nx\\parindent -0.1in"
     }
   end

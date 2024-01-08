@@ -27,7 +27,7 @@ describe Admin::TaxonRelationshipsController do
   describe "XHR POST create" do
     let(:taxon_relationship_attributes) { build_attributes(:taxon_relationship) }
     before do
-      TaxonRelationshipType.stub(:find).and_return(equal_relationship_type)
+      allow(TaxonRelationshipType).to receive(:find).and_return(equal_relationship_type)
     end
     it "renders create when successful" do
       xhr :post, :create, :taxon_relationship => taxon_relationship_attributes,

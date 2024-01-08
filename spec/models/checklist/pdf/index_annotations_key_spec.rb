@@ -6,8 +6,8 @@ describe Checklist::Pdf::IndexAnnotationsKey do
   describe :annotations_key do
     subject { Checklist::Pdf::IndexAnnotationsKey.new }
     specify {
-      subject.stub(:non_hash_annotations_key).and_return('x')
-      subject.stub(:hash_annotations_key).and_return('x')
+      allow(subject).to receive(:non_hash_annotations_key).and_return('x')
+      allow(subject).to receive(:hash_annotations_key).and_return('x')
       subject.annotations_key.should == "\\newpage\n\\parindent 0in\\cpart{\\annotationsKey}\nxx\\parindent -0.1in"
     }
   end
@@ -100,7 +100,7 @@ describe Checklist::Pdf::IndexAnnotationsKey do
     end
     subject { Checklist::Pdf::IndexAnnotationsKey.new }
     specify {
-      LatexToPdf.stub(:html2latex).and_return('x')
+      allow(LatexToPdf).to receive(:html2latex).and_return('x')
       subject.non_hash_annotations_key.should == "\\section*{\\nonHashAnnotations}\n\\cfbox{orange}{\\superscript{1} \\textbf{\\textit{Foobarus bizarrus}}}\n\nx\n\n\\cfbox{green}{\\superscript{2} \\textbf{\\textit{Foobaria curiosa}}}\n\nx\n\n"
     }
   end

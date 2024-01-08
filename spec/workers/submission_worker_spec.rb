@@ -32,7 +32,7 @@ describe SubmissionWorker do
                        :iso_code2 => 'PT'
                       )
     @submitter = FactoryGirl.create(:user, role: User::MANAGER)
-    Trade::ChangelogCsvGenerator.stub(:call).and_return(Tempfile.new('changelog.csv'))
+    allow(Trade::ChangelogCsvGenerator).to receive(:call).and_return(Tempfile.new('changelog.csv'))
     expect_any_instance_of(SubmissionWorker).to receive(:upload_on_S3)
     expect_any_instance_of(NotificationMailer).to receive(:mail).and_return(EmailMessageStub.new())
   end
