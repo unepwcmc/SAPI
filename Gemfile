@@ -22,7 +22,7 @@ gem 'inherited_resources', '1.7.2' # TODO: need upgrade when upgrade to Rails 5
 gem 'traco', '2.0.0'
 # gem 'strong_parameters'
 gem 'protected_attributes', '1.1.4' # TODO: Only support Rails version < 5 (https://github.com/rails/protected_attributes)
-gem 'devise', '4.4.0'
+gem 'devise', '4.4.3'
 gem 'cancancan', '1.17.0' # TODO, need upgrade to 2.0 for Rails 5
 gem 'ahoy_matey', '1.6.1' # TODO: latest 5.0.2. Can't upgrade to 2.0 until upgrade to Rails 5
 gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
