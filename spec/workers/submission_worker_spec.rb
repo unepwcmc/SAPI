@@ -1,5 +1,13 @@
 require 'spec_helper'
 
+PENDING_REASON = "Test disabled because SubmissionWorker was disabled in 2019 (c1da775763)"
+
+class EmailMessageStub
+  def deliver
+    # noop
+  end
+end
+
 describe SubmissionWorker do
   before(:each) do
     genus = create_cites_eu_genus(
@@ -26,9 +34,11 @@ describe SubmissionWorker do
     @submitter = FactoryGirl.create(:user, role: User::MANAGER)
     Trade::ChangelogCsvGenerator.stub(:call).and_return(Tempfile.new('changelog.csv'))
     SubmissionWorker.any_instance.stub(:upload_on_S3)
+    NotificationMailer.any_instance.stub(:mail).and_return(EmailMessageStub.new())
   end
-  # Test temporarily disabled because SubmissionWorker has been disabled
-  pending "when no primary errors" do
+  context "when no primary errors" do
+    pending(PENDING_REASON) if PENDING_REASON
+
     before(:each) do
       @aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
       @aru.save(:validate => false)
@@ -56,14 +66,16 @@ describe SubmissionWorker do
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
       Trade::Permit.find_by_number('BBB').should_not be_nil
     end
-   pending "when permit previously reported" do
+    context "when permit previously reported" do
       before(:each) { create(:permit, :number => 'xxx') }
       specify {
         expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Permit.count }.by(2)
       }
     end
   end
-  pending "when primary errors present" do
+  context "when primary errors present" do
+    pending(PENDING_REASON) if PENDING_REASON
+
     before(:each) do
       @aru = build(:annual_report_upload)
       @aru.save(:validate => false)
@@ -81,7 +93,9 @@ describe SubmissionWorker do
       expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.not_to change { Trade::Shipment.count }
     }
   end
-  pending "when reported under a synonym" do
+  context "when reported under a synonym" do
+    pending(PENDING_REASON) if PENDING_REASON
+
     before(:each) do
       @synonym = create_cites_eu_species(
         :name_status => 'S',
@@ -120,5 +134,4 @@ describe SubmissionWorker do
       Trade::Shipment.first.reported_taxon_concept_id.should == @synonym.id
     }
   end
-
 end
