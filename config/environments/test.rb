@@ -1,5 +1,5 @@
-SAPI::Application.configure do
-  # Settings specified here will take precedence over those in config/application.rb
+Rails.application.configure do
+  # Settings specified here will take precedence over those in config/application.rb.
 
   # The test environment is used exclusively to run your application's
   # test suite. You never need to work with it otherwise. Remember that
@@ -35,7 +35,7 @@ SAPI::Application.configure do
   # Randomize the order test cases are executed.
   config.active_support.test_order = :random
 
-  # Print deprecation notices to the stderr
+  # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
   # Raises error for missing translations
