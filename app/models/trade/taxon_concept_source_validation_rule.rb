@@ -47,7 +47,7 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
     )
 
     arel = s.project(
-      s['*']
+      s[Arel.star]
     ).join(tc).on(
       s['taxon_concept_id'].eq(tc['id'])
     ).join(t).on(

@@ -27,7 +27,7 @@ class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidation
     year_node = effective_from.lteq(shipment.year).and(effective_to.gteq(shipment.year).or(effective_to.eq(nil)))
     taxon_concept_node = v['taxon_concept_id'].eq(shipment.taxon_concept_id)
     conditions = appendix_node.and(year_node).and(taxon_concept_node)
-    return nil if Trade::Shipment.find_by_sql(v.project('*').where(conditions)).any?
+    return nil if Trade::Shipment.find_by_sql(v.project(Arel.star).where(conditions)).any?
     error_message
   end
 
@@ -56,13 +56,13 @@ class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidation
 
     join_conditions = appendix_join_node(s, v).and(year_join_node(s, v)).
       and(taxon_concept_join_node(s, v))
-    valid_values = s.project(s['*']).join(v).on(join_conditions)
+    valid_values = s.project(s[Arel.star]).join(v).on(join_conditions)
     not_null_nodes = column_names.map do |c|
       s[c].not_eq(nil)
     end
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each { |n| not_null_conds = not_null_conds.and(n) }
-    s.project('*').where(not_null_conds).except(valid_values)
+    s.project(Arel.star).where(not_null_conds).except(valid_values)
   end
 
 end
