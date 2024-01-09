@@ -16,7 +16,6 @@ gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
 gem 'pg_array_parser', '0.0.9' # TODO: latest 0.0.9
 gem 'nested-hstore', '0.1.2' # TODO: latest 0.1.2 @ 2015
 gem 'pg_search', '0.6.4'
-gem 'foreigner', '1.5.0'
 gem 'oj', '3.14.2' # optimised JSON (picked by multi_json)
 gem 'nokogiri', '1.12.5'
 gem 'inherited_resources', '1.7.2' # TODO: need upgrade when upgrade to Rails 5
@@ -94,7 +93,6 @@ gem 'rest-client', '1.8.0', require: false
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
-  gem 'immigrant', '0.1.4'
   gem "guard-livereload", '1.1.3'
   gem "rack-livereload", '0.3.11'
   gem "guard-bundler", '1.0.0'
