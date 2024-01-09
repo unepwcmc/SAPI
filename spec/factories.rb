@@ -62,6 +62,11 @@ FactoryGirl.define do
     start_notification
   end
 
+  factory :cites_suspension_confirmation do
+    factory :confirmation_notification, :class => 'CitesSuspensionNotification'
+    factory :confirmed_suspension, :class => 'CitesSuspension'
+  end
+
   factory :quota do
     taxon_concept
     unit

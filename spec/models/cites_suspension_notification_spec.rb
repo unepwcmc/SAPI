@@ -75,11 +75,22 @@ describe CitesSuspensionNotification do
       end
       context "when confirmation notification, make sure it gets destroyed" do
         let!(:cites_suspension) {
-          create(
+          # Ideally we would create this in a single statement but on upgrading
+          # from rails 4.0 to 4.1 this started failing - the joining table
+          # was not being passed the correct id in the factory.
+          # This seems to be the only test which fails for this reason.
+          suspension = create(
             :cites_suspension,
             :start_notification => create_cites_suspension_notification,
-            :confirmation_notifications => [cites_suspension_notification]
           )
+
+          create(
+            :cites_suspension_confirmation,
+            :confirmation_notification => cites_suspension_notification,
+            :confirmed_suspension => suspension,
+          )
+
+          suspension
         }
         subject { cites_suspension_notification.cites_suspension_confirmations }
         specify {
