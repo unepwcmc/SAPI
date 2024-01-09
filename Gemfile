@@ -32,7 +32,7 @@ gem 'wicked', '1.3.3'
 gem 'groupdate', '2.4.0'
 gem "chartkick", '1.3.2'
 gem 'rubyzip', '1.1.7'
-gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#responders
+gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
 gem 'sidekiq', '4.2.10'
 gem 'sidekiq-status', '1.1.4' # TODO: latest is 3.0.3 @ 2023

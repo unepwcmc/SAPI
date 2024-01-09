@@ -10,14 +10,14 @@ class SubmissionWorker
       # catch this exception so that retry is not scheduled
       Rails.logger.warn "CITES Report #{aru_id} not found"
       Appsignal.add_exception(e) if defined? Appsignal
-      NotificationMailer.changelog_failed(submitter, aru).deliver
+      NotificationMailer.changelog_failed(submitter, aru).deliver_now
       return false
     end
 
     duplicates = aru.sandbox.check_for_duplicates_in_shipments
     if duplicates.present?
       tempfile = Trade::ChangelogCsvGenerator.call(aru, submitter, duplicates)
-      NotificationMailer.duplicates(submitter, aru, tempfile).deliver
+      NotificationMailer.duplicates(submitter, aru, tempfile).deliver_now
       return false
     end
 
@@ -47,7 +47,7 @@ class SubmissionWorker
       number_of_records_submitted: records_submitted
     })
 
-    NotificationMailer.changelog(submitter, aru, tempfile).deliver
+    NotificationMailer.changelog(submitter, aru, tempfile).deliver_now
 
     tempfile.delete
   end
