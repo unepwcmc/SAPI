@@ -6,6 +6,6 @@ class Api::V1::SourcesController < ApplicationController
     @sources = Source.all(:order => "code")
     render :json => @sources,
       :each_serializer => Species::SourceSerializer,
-      :meta => { :total => @sources.count }
+      :meta => { :total => @sources.count(:all) }
   end
 end

@@ -88,7 +88,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     # TO DO: figure out if the cascading feature has been completed, and if so move the
     # pagination back into the search class and out of the controllers.
     @documents = Kaminari::PaginatableArray.new(
-      @search.cached_results.limit(@search.per_page).offset(@search.offset),
+      @search.cached_results.limit(@search.per_page).offset(@search.offset).to_a,
       limit: @search.per_page,
       offset: @search.offset,
       total_count: @search.cached_total_cnt
