@@ -13,14 +13,14 @@ class DocumentSearch
     initialize_query
   end
 
-  #TODO temporarly removing pagination here because of the new cascading feature. Add it back after the refactor of the SQL mviews  
+  #TODO temporarly removing pagination here because of the new cascading feature. Add it back after the refactor of the SQL mviews
   def results
     @query #.limit(@per_page).offset(@offset)
   end
 
   def total_cnt
     if admin_interface?
-      @query.count
+      @query.count(:all)
     else
       query = "SELECT count(*) AS count_all FROM (#{@query.to_sql}) x"
       count = ActiveRecord::Base.connection.execute(query).first.try(:[], "count_all").to_i
