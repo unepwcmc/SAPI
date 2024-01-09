@@ -14,7 +14,7 @@ class Species::TaxonConceptPrefixMatcher
   end
 
   def total_cnt
-    (@taxon_concept_query || !@ranks.empty?) && @query.count || 0
+    (@taxon_concept_query || !@ranks.empty?) && @query.count(:all) || 0
   end
 
   private
