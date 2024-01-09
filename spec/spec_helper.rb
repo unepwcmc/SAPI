@@ -102,18 +102,3 @@ def build_attributes(*args)
     ["id", "created_at", "updated_at", "touched_at"].member?(k)
   end
 end
-
-def sign_up(user, opts = {})
-  options = {
-    terms_and_conditions: true
-  }.merge(opts)
-  visit api_path
-  within('#registration-form') do
-    fill_in 'user_name', :with => user.name
-    fill_in 'user_email', :with => user.email
-    fill_in 'Password', :with => user.password
-    fill_in 'Password confirmation', :with => user.password
-    find(:css, "#user_terms_and_conditions").set(options[:terms_and_conditions])
-  end
-  click_button 'Sign up'
-end
