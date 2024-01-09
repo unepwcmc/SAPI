@@ -18,7 +18,7 @@ class Species::Search
   end
 
   def total_cnt
-    @query.count
+    @query.count(:all)
   end
 
   def ids
