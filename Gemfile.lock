@@ -339,7 +339,7 @@ GEM
     pdfkit (0.8.4.2)
     pg (0.21.0)
     pg_array_parser (0.0.9)
-    pg_search (0.6.4)
+    pg_search (1.0.6)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
       arel
@@ -631,7 +631,7 @@ DEPENDENCIES
   pdfkit (= 0.8.4.2)
   pg (= 0.21.0)
   pg_array_parser (= 0.0.9)
-  pg_search (= 0.6.4)
+  pg_search (= 1.0.6)
   prawn (= 0.13.2)
   protected_attributes (= 1.1.4)
   quiet_assets (= 1.1.0)
