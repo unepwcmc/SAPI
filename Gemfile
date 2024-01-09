@@ -141,8 +141,6 @@ group :test do
   gem 'capybara', '2.2.1'
 end
 
-gem 'rake', '10.0.4'
-
 gem 'slim', '1.3.6'
 
 gem 'memcache-client', '1.8.5'
