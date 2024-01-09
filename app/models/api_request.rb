@@ -47,7 +47,7 @@ class ApiRequest < ActiveRecord::Base
   def self.recent_requests(user = nil)
     query = self.select([:response_status, :created_at]).recent.order(:response_status)
     query = query.where(user_id: user.id) if user
-    query.group(:response_status).group_by_day(:created_at, format: "%Y-%m-%d").count
+    query.group(:response_status).group_by_day(:created_at, format: "%Y-%m-%d").count(:all)
   end
 
   def self.requests_by_response_status(user = nil)
