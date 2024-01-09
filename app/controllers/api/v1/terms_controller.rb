@@ -3,7 +3,7 @@ class Api::V1::TermsController < ApplicationController
     { :locale => "en" }.merge(c.params.select { |k, v| !v.blank? && "locale" == k })
   }
   def index
-    @terms = Term.all(:order => "code")
+    @terms = Term.all.order(:code)
     render :json => @terms,
       :each_serializer => Species::TermSerializer,
       :meta => { :total => @terms.count }

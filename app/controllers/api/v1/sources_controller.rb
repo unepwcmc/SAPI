@@ -3,9 +3,9 @@ class Api::V1::SourcesController < ApplicationController
     { :locale => "en" }.merge(c.params.select { |k, v| !v.blank? && "locale" == k })
   }
   def index
-    @sources = Source.all(:order => "code")
+    @sources = Source.all.order(:code)
     render :json => @sources,
       :each_serializer => Species::SourceSerializer,
-      :meta => { :total => @sources.count(:all) }
+      :meta => { :total => @sources.count }
   end
 end
