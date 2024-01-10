@@ -7,70 +7,70 @@ describe TaxonConcept do
     context "REFERENCES" do
       describe :cites_accepted do
         context "for genus Uroplatus" do
-          specify { expect(@genus.cites_accepted).to eq(false) }
+          specify { @genus.cites_accepted.should == false }
         end
         context "for species Uroplatus alluaudi" do
-          specify { expect(@species1.cites_accepted).to eq(false) }
+          specify { @species1.cites_accepted.should == false }
         end
         context "for species Uroplatus giganteus" do
-          specify { expect(@species2.cites_accepted).to be_truthy }
+          specify { @species2.cites_accepted.should be_truthy }
         end
       end
       describe :standard_taxon_concept_references do
         context "for family Gekkonidae" do
-          specify { expect(@family.taxon_concept.standard_taxon_concept_references).to be_empty }
+          specify { @family.taxon_concept.standard_taxon_concept_references.should be_empty }
         end
         context "for genus Uroplatus" do
-          specify { expect(@genus.taxon_concept.standard_taxon_concept_references.map(&:reference_id)).to be_empty }
+          specify { @genus.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should be_empty }
         end
         context "for species Uroplatus alluaudi" do
-          specify { expect(@species1.taxon_concept.standard_taxon_concept_references.map(&:reference_id)).to be_empty }
+          specify { @species1.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should be_empty }
         end
         context "for species Uroplatus giganteus" do
-          specify { expect(@species2.taxon_concept.standard_taxon_concept_references.map(&:reference_id)).to include @ref.id }
+          specify { @species2.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should include @ref.id }
         end
       end
     end
     context "LISTING" do
       describe :cites_listing do
         context "for genus Uroplatus" do
-          specify { expect(@genus.cites_listing).to eq('II') }
+          specify { @genus.cites_listing.should == 'II' }
         end
         context "for species Uroplatus giganteus" do
-          specify { expect(@species2.cites_listing).to eq('II') }
+          specify { @species2.cites_listing.should == 'II' }
         end
       end
 
       describe :eu_listing do
         context "for genus Uroplatus" do
-          specify { expect(@genus.eu_listing).to eq('B') }
+          specify { @genus.eu_listing.should == 'B' }
         end
         context "for species Uroplatus giganteus" do
-          specify { expect(@species2.eu_listing).to eq('B') }
+          specify { @species2.eu_listing.should == 'B' }
         end
       end
 
       describe :cites_listed do
         context "for family Gekkonidae" do
-          specify { expect(@family.cites_listed).to eq(false) }
+          specify { @family.cites_listed.should == false }
         end
         context "for genus Uroplatus" do
-          specify { expect(@genus.cites_listed).to be_truthy }
+          specify { @genus.cites_listed.should be_truthy }
         end
         context "for species Uroplatus giganteus" do
-          specify { expect(@species2.cites_listed).to eq(false) }
+          specify { @species2.cites_listed.should == false }
         end
       end
 
       describe :eu_listed do
         context "for family Gekkonidae" do
-          specify { expect(@family.eu_listed).to eq(false) }
+          specify { @family.eu_listed.should == false }
         end
         context "for genus Uroplatus" do
-          specify { expect(@genus.eu_listed).to be_truthy }
+          specify { @genus.eu_listed.should be_truthy }
         end
         context "for species Uroplatus giganteus" do
-          specify { expect(@species2.eu_listed).to eq(false) }
+          specify { @species2.eu_listed.should == false }
         end
       end
 

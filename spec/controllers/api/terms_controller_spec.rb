@@ -7,7 +7,7 @@ describe Api::V1::TermsController do
     end
     it "returns terms" do
       get :index
-      expect(response.body).to have_json_size(1).at_path('terms')
+      response.body.should have_json_size(1).at_path('terms')
     end
   end
 end

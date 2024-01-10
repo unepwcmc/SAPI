@@ -65,7 +65,7 @@ describe EuDecision, sidekiq: :inline do
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
       end
       subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
-      specify { expect(subject).not_to be_empty }
+      specify { subject.should_not be_empty }
     end
   end
 
@@ -74,7 +74,7 @@ describe EuDecision, sidekiq: :inline do
       let(:eu_decision) { build(:eu_decision, srg_history_id: nil, eu_decision_type_id: nil) }
       subject { eu_decision.save }
 
-      specify { expect(subject).to be_falsey }
+      specify { subject.should be_falsey }
 
       it 'should have an error message' do
         subject
@@ -85,19 +85,19 @@ describe EuDecision, sidekiq: :inline do
     context 'Eu decision creates correctly if only Eu decision type is populated' do
       let(:eu_decision) { build(:eu_decision) }
 
-      specify { expect(subject).to be_truthy }
+      specify { subject.should be_truthy }
     end
 
     context 'Eu decision creates correctly if only SRG history is populated' do
       let(:eu_decision) { build(:eu_decision, eu_decision_type: nil, srg_history: create(:srg_history)) }
 
-      specify { expect(subject).to be_truthy }
+      specify { subject.should be_truthy }
     end
 
     context 'Eu decision creates correctly if both Eu decision type and SRG history are populated' do
       let(:eu_decision) { build(:eu_decision, srg_history: create(:srg_history)) }
 
-      specify { expect(subject).to be_truthy }
+      specify { subject.should be_truthy }
     end
   end
 
@@ -111,7 +111,7 @@ describe EuDecision, sidekiq: :inline do
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
       end
       subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
-      specify { expect(subject).to be_empty }
+      specify { subject.should be_empty }
     end
   end
 

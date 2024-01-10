@@ -37,14 +37,14 @@ describe Trade::SandboxShipmentsController do
         :id => @shipment.id,
         :sandbox_shipment => { :taxon_name => nil, :accepted_taxon_name => nil },
         :format => :json
-      expect(response.body).to be_blank
+      response.body.should be_blank
     end
     it "should return success when taxon_name does not exist" do
       put :update, :annual_report_upload_id => annual_report_upload.id,
         :id => @shipment.id,
         :sandbox_shipment => { :taxon_name => 'Acipenser foobarus' },
         :format => :json
-      expect(response.body).to be_blank
+      response.body.should be_blank
     end
   end
 
@@ -53,7 +53,7 @@ describe Trade::SandboxShipmentsController do
       delete :destroy, :annual_report_upload_id => annual_report_upload.id,
         :id => @shipment.id,
         :format => :json
-      expect(response.body).to be_blank
+      response.body.should be_blank
     end
   end
 
@@ -64,9 +64,9 @@ describe Trade::SandboxShipmentsController do
         validation_error_id: @validation_error.id,
         updates: { appendix: 'II' },
         format: :json
-      expect(response.body).to be_blank
-      expect(sandbox_klass.where(taxon_name: @species.full_name, appendix: 'I').count(true)).to eq(0)
-      expect(sandbox_klass.where(taxon_name: @species.full_name, appendix: 'II').count(true)).to eq(1)
+      response.body.should be_blank
+      sandbox_klass.where(taxon_name: @species.full_name, appendix: 'I').count(true).should == 0
+      sandbox_klass.where(taxon_name: @species.full_name, appendix: 'II').count(true).should == 1
     end
   end
 
@@ -76,8 +76,8 @@ describe Trade::SandboxShipmentsController do
         annual_report_upload_id: annual_report_upload.id,
         validation_error_id: @validation_error.id,
         format: :json
-      expect(response.body).to be_blank
-      expect(sandbox_klass.where(taxon_concept_id: @species.id).count(true)).to eq(0)
+      response.body.should be_blank
+      sandbox_klass.where(taxon_concept_id: @species.id).count(true).should == 0
     end
   end
 

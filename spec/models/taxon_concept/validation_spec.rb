@@ -16,7 +16,7 @@ describe TaxonConcept do
           :parent_id => kingdom_tc.id
         )
       }
-      specify { tc.valid? is_expected.to be_truthy }
+      specify { tc.valid? should be_truthy }
     end
     context "taxonomy does not match parent" do
       let(:tc) {
@@ -25,7 +25,7 @@ describe TaxonConcept do
           :parent_id => kingdom_tc.id
         )
       }
-      specify { expect(tc.error_on(:parent_id).size).to eq(1) }
+      specify { tc.should have(1).error_on(:parent_id) }
     end
     context "parent is not an accepted name" do
       let(:genus_tc) {
@@ -40,7 +40,7 @@ describe TaxonConcept do
           :parent_id => genus_tc.id
         )
       }
-      specify { expect(tc.error_on(:parent_id).size).to eq(1) }
+      specify { tc.should have(1).error_on(:parent_id) }
     end
     context "parent rank is too high above child rank" do
       let(:tc) {
@@ -49,7 +49,7 @@ describe TaxonConcept do
           :parent_id => kingdom_tc.id
         )
       }
-      specify { expect(tc.error_on(:parent_id).size).to eq(1) }
+      specify { tc.should have(1).error_on(:parent_id) }
     end
     context "parent rank is below child rank" do
       let(:parent) {
@@ -64,7 +64,7 @@ describe TaxonConcept do
           :parent_id => parent.id
         )
       }
-      specify { expect(tc.error_on(:parent_id).size).to eq(1) }
+      specify { tc.should have(1).error_on(:parent_id) }
     end
     context "scientific name is not given" do
       let(:tc) {
@@ -74,7 +74,7 @@ describe TaxonConcept do
           :taxon_name => build(:taxon_name, :scientific_name => nil)
         )
       }
-      specify { expect(tc.error_on(:taxon_name_id).size).to eq(1) }
+      specify { tc.should have(1).error_on(:taxon_name_id) }
     end
     context "when taxonomic position malformed" do
       let(:tc) {
@@ -84,7 +84,7 @@ describe TaxonConcept do
           :taxonomic_position => '1.a.b'
         )
       }
-      specify { expect(tc.error_on(:taxonomic_position).size).to eq(1) }
+      specify { tc.should have(1).error_on(:taxonomic_position) }
     end
     context "when full name is already given" do
       let(:tc_parent) { create_cites_eu_species }
@@ -100,7 +100,7 @@ describe TaxonConcept do
           taxon_name: build(:taxon_name, scientific_name: 'duplicatus')
         )
       }
-      specify { expect(tc2.error_on(:full_name).size).to eq(1) }
+      specify { tc2.should have(1).error_on(:full_name) }
     end
   end
   context "update" do
@@ -132,17 +132,17 @@ describe TaxonConcept do
       let!(:species_child) { create_cites_eu_subspecies(parent_id: species.id) }
       specify "cannot change taxonomy when dependents present" do
         species.taxonomy = cms
-        expect(species.error_on(:taxonomy_id).size).to eq(1)
+        expect(species).to have(1).error_on(:taxonomy_id)
       end
     end
     context "scientific name" do
       specify "cannot change species scientific name" do
         species.scientific_name = 'Vulgaris'
-        expect(species.error_on(:full_name).size).to eq(1)
+        expect(species).to have(1).error_on(:full_name)
       end
       specify "cannot change genus scientific name" do
         genus.scientific_name = 'Felis'
-        expect(genus.error_on(:full_name).size).to eq(1)
+        expect(genus).to have(1).error_on(:full_name)
       end
     end
     context "parent" do
@@ -159,25 +159,25 @@ describe TaxonConcept do
       end
       specify "cannot change A species parent" do
         species.parent = new_genus
-        expect(species.error_on(:full_name).size).to eq(1)
+        expect(species).to have(1).error_on(:full_name)
       end
       specify "can change S species parent" do
         s_species.parent = new_genus
-        expect(s_species.error_on(:full_name).size).to eq(0)
+        expect(s_species).to have(0).error_on(:full_name)
       end
       specify "can change A genus parent" do
         genus.parent = new_family
-        expect(genus.error_on(:full_name).size).to eq(0)
+        expect(genus).to have(0).error_on(:full_name)
       end
     end
     context "rank" do
       specify "cannot change A species rank" do
         species.rank = create(:rank, name: 'GENUS')
-        expect(species.error_on(:full_name).size).to eq(1)
+        expect(species).to have(1).error_on(:full_name)
       end
       specify "can change S species rank" do
         s_species.rank = create(:rank, name: 'GENUS')
-        expect(s_species.error_on(:full_name).size).to eq(0)
+        expect(s_species).to have(0).error_on(:full_name)
       end
     end
   end

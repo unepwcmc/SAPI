@@ -12,11 +12,11 @@ describe Admin::CitesExtraordinaryMeetingsController do
     describe "GET index" do
       it "assigns @cites_extraordinary_meetings sorted by name" do
         get :index
-        expect(assigns(:cites_extraordinary_meetings)).to eq([@cites_ex1, @cites_ex2])
+        assigns(:cites_extraordinary_meetings).should eq([@cites_ex1, @cites_ex2])
       end
       it "renders the index template" do
         get :index
-        expect(response).to render_template("index")
+        response.should render_template("index")
       end
     end
   end

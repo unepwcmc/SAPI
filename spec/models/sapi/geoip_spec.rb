@@ -12,6 +12,6 @@ describe Sapi::GeoIP do
         }
       )
     end
-    specify { expect(subject.resolve('1.1.1.1')[:city]).to eq('Bogotá') }
+    specify { subject.resolve('1.1.1.1')[:city].should == 'Bogotá' }
   end
 end

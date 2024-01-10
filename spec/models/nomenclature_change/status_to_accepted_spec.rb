@@ -47,7 +47,7 @@ describe NomenclatureChange::StatusToAccepted do
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
           )
         }
-        specify { expect(status_change.error_on(:primary_output).size).to eq(1) }
+        specify { expect(status_change).to have(1).error_on(:primary_output) }
       end
     end
     context "when primary output has valid name status" do
@@ -61,7 +61,7 @@ describe NomenclatureChange::StatusToAccepted do
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
           )
         }
-        specify { expect(status_change.errors_on(:primary_output).size).to eq(0) }
+        specify { expect(status_change).to have(0).errors_on(:primary_output) }
       end
     end
   end

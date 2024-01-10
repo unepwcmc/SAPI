@@ -8,7 +8,7 @@ describe Checklist::Checklist do
         Checklist::Checklist.summarise_filters({})
       }
       specify {
-        expect(summary).to eq("All results")
+        summary.should == "All results"
       }
     end
   end
@@ -23,7 +23,7 @@ describe Checklist::Checklist do
       Checklist::Checklist.summarise_filters({ :cites_region_ids => [region.id] })
     }
     specify {
-      expect(summary).to eq("Results from 1 region")
+      summary.should == "Results from 1 region"
     }
   end
   context "when > 1 region" do
@@ -40,7 +40,7 @@ describe Checklist::Checklist do
       Checklist::Checklist.summarise_filters({ :cites_region_ids => regions })
     }
     specify {
-      expect(summary).to eq("Results from 2 regions")
+      summary.should == "Results from 2 regions"
     }
   end
 end

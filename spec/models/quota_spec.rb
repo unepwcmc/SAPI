@@ -45,7 +45,7 @@ describe Quota, sidekiq: :inline do
         Quota.export('set' => 'current')
       end
       subject { Dir["#{DownloadsCache.quotas_path}/*"] }
-      specify { expect(subject).not_to be_empty }
+      specify { subject.should_not be_empty }
     end
   end
 
@@ -59,7 +59,7 @@ describe Quota, sidekiq: :inline do
         Quota.export('set' => 'current')
       end
       subject { Dir["#{DownloadsCache.quotas_path}/*"] }
-      specify { expect(subject).to be_empty }
+      specify { subject.should be_empty }
     end
   end
 
@@ -79,7 +79,7 @@ describe Quota, sidekiq: :inline do
           )
         }
 
-        specify { expect(quota).to be_valid }
+        specify { quota.should be_valid }
       end
 
       context "when quota missing" do
@@ -92,8 +92,8 @@ describe Quota, sidekiq: :inline do
           )
         }
 
-        specify { expect(quota1).to be_invalid }
-        specify { expect(quota1.error_on(:quota).size).to eq(2) }
+        specify { quota1.should be_invalid }
+        specify { quota1.should have(2).error_on(:quota) }
       end
 
       context "when publication date missing" do
@@ -106,8 +106,8 @@ describe Quota, sidekiq: :inline do
           )
         }
 
-        specify { expect(quota).to be_invalid }
-        specify { expect(quota.error_on(:publication_date).size).to eq(1) }
+        specify { quota.should be_invalid }
+        specify { quota.should have(1).error_on(:publication_date) }
       end
 
       context "when start date greater than end date" do
@@ -121,8 +121,8 @@ describe Quota, sidekiq: :inline do
           )
         }
 
-        specify { expect(quota).to be_invalid }
-        specify { expect(quota.error_on(:start_date).size).to eq(1) }
+        specify { quota.should be_invalid }
+        specify { quota.should have(1).error_on(:start_date) }
       end
 
       pending "doesn't save a quota without a unit" do

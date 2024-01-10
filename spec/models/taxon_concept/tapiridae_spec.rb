@@ -6,12 +6,12 @@ describe TaxonConcept do
     context "TAXONOMY" do
       describe :full_name do
         context "for family Tapiridae" do
-          specify { expect(@family.full_name).to eq('Tapiridae') }
+          specify { @family.full_name.should == 'Tapiridae' }
         end
       end
       describe :rank do
         context "for family Tapiridae" do
-          specify { expect(@family.rank_name).to eq('FAMILY') }
+          specify { @family.rank_name.should == 'FAMILY' }
         end
       end
       describe :ancestors do
@@ -27,43 +27,43 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for family Tapiridae" do
-          specify { expect(@family.cites_listing).to eq('I/II') }
+          specify { @family.cites_listing.should == 'I/II' }
         end
         context "for species Tapirus terrestris" do
-          specify { expect(@species.cites_listing).to eq('II') }
+          specify { @species.cites_listing.should == 'II' }
         end
       end
 
       describe :eu_listing do
         context "for family Tapiridae" do
-          specify { expect(@family.eu_listing).to eq('A/B') }
+          specify { @family.eu_listing.should == 'A/B' }
         end
         context "for species Tapirus terrestris" do
-          specify { expect(@species.eu_listing).to eq('B') }
+          specify { @species.eu_listing.should == 'B' }
         end
       end
 
       describe :cites_listed do
         context "for family Tapiridae" do
-          specify { expect(@family.cites_listed).to be_truthy }
+          specify { @family.cites_listed.should be_truthy }
         end
         context "for genus Tapirus" do
-          specify { expect(@genus.cites_listed).to eq(false) }
+          specify { @genus.cites_listed.should == false }
         end
         context "for species Tapirus terrestris" do
-          specify { expect(@species.cites_listed).to be_truthy }
+          specify { @species.cites_listed.should be_truthy }
         end
       end
 
       describe :eu_listed do
         context "for family Tapiridae" do
-          specify { expect(@family.eu_listed).to be_truthy }
+          specify { @family.eu_listed.should be_truthy }
         end
         context "for genus Tapirus" do
-          specify { expect(@genus.eu_listed).to eq(false) }
+          specify { @genus.eu_listed.should == false }
         end
         context "for species Tapirus terrestris" do
-          specify { expect(@species.eu_listed).to be_truthy }
+          specify { @species.eu_listed.should be_truthy }
         end
       end
     end

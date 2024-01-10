@@ -6,15 +6,15 @@ describe TaxonConcept do
     context "TAXONOMY" do
       describe :full_name do
         context "for species Loxodonta africana" do
-          specify { expect(@species.full_name).to eq('Loxodonta africana') }
+          specify { @species.full_name.should == 'Loxodonta africana' }
         end
         context "for genus Loxodonta" do
-          specify { expect(@genus.full_name).to eq('Loxodonta') }
+          specify { @genus.full_name.should == 'Loxodonta' }
         end
       end
       describe :rank do
         context "for species Loxodonta africana" do
-          specify { expect(@species.rank_name).to eq('SPECIES') }
+          specify { @species.rank_name.should == 'SPECIES' }
         end
       end
       describe :ancestors do
@@ -33,31 +33,31 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for species Loxodonta africana (population split listing)" do
-          specify { expect(@species.cites_listing).to eq('I/II') }
+          specify { @species.cites_listing.should == 'I/II' }
         end
       end
 
       describe :eu_listing do
         context "for species Loxodonta africana (population split listing)" do
-          specify { expect(@species.eu_listing).to eq('A/B') }
+          specify { @species.eu_listing.should == 'A/B' }
         end
       end
 
       describe :cites_listed do
         context "for species Loxodonta africana" do
-          specify { expect(@species.cites_listed).to be_truthy }
+          specify { @species.cites_listed.should be_truthy }
         end
         context "for family Elephantidae" do
-          specify { expect(@family.cites_listed).to eq(false) }
+          specify { @family.cites_listed.should == false }
         end
       end
 
       describe :eu_listed do
         context "for species Loxodonta africana" do
-          specify { expect(@species.eu_listed).to be_truthy }
+          specify { @species.eu_listed.should be_truthy }
         end
         context "for family Elephantidae" do
-          specify { expect(@family.eu_listed).to eq(false) }
+          specify { @family.eu_listed.should == false }
         end
       end
 

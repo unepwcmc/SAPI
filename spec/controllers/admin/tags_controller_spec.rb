@@ -6,8 +6,8 @@ describe Admin::TagsController do
   describe "GET index" do
     it "renders the index template" do
       get :index
-      expect(response).to render_template("index")
-      expect(response).to render_template("layouts/admin")
+      response.should render_template("index")
+      response.should render_template("layouts/admin")
     end
   end
 
@@ -15,11 +15,11 @@ describe Admin::TagsController do
     it "renders create when successful" do
       xhr :post, :create,
         preset_tag: { name: "Test Tag", model: "TaxonConcept" }
-      expect(response).to render_template("create")
+      response.should render_template("create")
     end
     it "renders new when not successful" do
       xhr :post, :create, preset_tag: {}
-      expect(response).to render_template("new")
+      response.should render_template("new")
     end
   end
 
@@ -29,12 +29,12 @@ describe Admin::TagsController do
       it "responds with 200 when successful" do
         xhr :put, :update, :format => 'json', :id => preset_tag.id,
           :preset_tag => {}
-        expect(response).to be_success
+        response.should be_success
       end
       it "responds with json error when not successful" do
         xhr :put, :update, :format => 'json', :id => preset_tag.id,
           :preset_tag => { :model => 'FakeCategory' }
-        expect(JSON.parse(response.body)).to include('errors')
+        JSON.parse(response.body).should include('errors')
       end
     end
   end
@@ -43,7 +43,7 @@ describe Admin::TagsController do
     let(:preset_tag) { create(:preset_tag) }
     it "redirects after delete" do
       delete :destroy, :id => preset_tag.id
-      expect(response).to redirect_to(admin_tags_url)
+      response.should redirect_to(admin_tags_url)
     end
   end
 end

@@ -44,9 +44,9 @@ describe DashboardStats do
         }).trade
       }
       it "argentina should have 40 exported animals and no imports" do
-        expect(subject[:exports][:top_traded].length).to eq(1)
-        expect(subject[:exports][:top_traded][0][:count]).to eq 40
-        expect(subject[:imports][:top_traded].length).to eq 0
+        subject[:exports][:top_traded].length.should == 1
+        subject[:exports][:top_traded][0][:count].should eq 40
+        subject[:imports][:top_traded].length.should eq 0
       end
     end
     context "when time range specified" do
@@ -58,7 +58,7 @@ describe DashboardStats do
         }).trade
       }
       it "argentina should have no exports in 2012-2012" do
-        expect(subject[:exports][:top_traded].length).to eq(0)
+        subject[:exports][:top_traded].length.should == 0
       end
     end
   end

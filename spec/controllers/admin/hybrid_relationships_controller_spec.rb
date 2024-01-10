@@ -16,11 +16,11 @@ describe Admin::HybridRelationshipsController do
   describe "XHR GET new" do
     it "renders the new template" do
       xhr :get, :new, :taxon_concept_id => taxon_concept.id
-      expect(response).to render_template('new')
+      response.should render_template('new')
     end
     it "assigns the hybrid_relationship variable" do
       xhr :get, :new, :taxon_concept_id => taxon_concept.id
-      expect(assigns(:hybrid_relationship)).not_to be_nil
+      assigns(:hybrid_relationship).should_not be_nil
     end
   end
 
@@ -31,7 +31,7 @@ describe Admin::HybridRelationshipsController do
         :taxon_relationship => {
           other_taxon_concept_id: hybrid.id
         }
-      expect(response).to render_template("create")
+      response.should render_template("create")
     end
     it "renders new when not successful" do
       xhr :post, :create,
@@ -39,7 +39,7 @@ describe Admin::HybridRelationshipsController do
         :taxon_relationship => {
           other_taxon_concept_id: nil
         }
-      expect(response).to render_template("new")
+      response.should render_template("new")
     end
   end
 
@@ -47,12 +47,12 @@ describe Admin::HybridRelationshipsController do
     it "renders the edit template" do
       xhr :get, :edit, :taxon_concept_id => taxon_concept.id,
         :id => hybrid_relationship.id
-      expect(response).to render_template('new')
+      response.should render_template('new')
     end
     it "assigns the hybrid_relationship variable" do
       xhr :get, :edit, :taxon_concept_id => taxon_concept.id,
         :id => hybrid_relationship.id
-      expect(assigns(:hybrid_relationship)).not_to be_nil
+      assigns(:hybrid_relationship).should_not be_nil
     end
   end
 
@@ -64,7 +64,7 @@ describe Admin::HybridRelationshipsController do
         :taxon_relationship => {
           other_taxon_concept_id: hybrid.id
         }
-      expect(response).to render_template("create")
+      response.should render_template("create")
     end
     it "responds with json when not successful" do
       xhr :put, :update, :format => 'js',
@@ -73,7 +73,7 @@ describe Admin::HybridRelationshipsController do
         :taxon_relationship => {
           other_taxon_concept_id: nil
         }
-      expect(response).to render_template('new')
+      response.should render_template('new')
     end
   end
 
@@ -82,7 +82,7 @@ describe Admin::HybridRelationshipsController do
       delete :destroy,
         :taxon_concept_id => taxon_concept.id,
         :id => hybrid_relationship.id
-      expect(response).to redirect_to(
+      response.should redirect_to(
         admin_taxon_concept_names_url(hybrid_relationship.taxon_concept)
       )
     end

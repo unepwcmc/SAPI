@@ -36,7 +36,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade
           })
         }
-        specify { expect(subject.results).to include(@status_N_species_ac) }
+        specify { subject.results.should include(@status_N_species_ac) }
       end
       context "when trade internal visibility" do
         subject {
@@ -46,7 +46,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade_internal
           })
         }
-        specify { expect(subject.results).to include(@status_N_species_ac) }
+        specify { subject.results.should include(@status_N_species_ac) }
       end
       context "when speciesplus visibility" do
         subject {
@@ -55,7 +55,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { expect(subject.results).not_to include(@status_N_species_ac) }
+        specify { subject.results.should_not include(@status_N_species_ac) }
       end
     end
     context "when searching for trade name" do
@@ -67,8 +67,8 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade
           })
         }
-        specify { expect(subject.results).not_to include(@trade_name_ac) }
-        specify { expect(subject.results).to include(@accepted_name_ac) }
+        specify { subject.results.should_not include(@trade_name_ac) }
+        specify { subject.results.should include(@accepted_name_ac) }
       end
       context "when trade internal visibility" do
         subject {
@@ -78,8 +78,8 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade_internal
           })
         }
-        specify { expect(subject.results).to include(@trade_name_ac) }
-        specify { expect(subject.results).to include(@accepted_name_ac) }
+        specify { subject.results.should include(@trade_name_ac) }
+        specify { subject.results.should include(@accepted_name_ac) }
       end
       context "when speciesplus visibility" do
         subject {
@@ -88,8 +88,8 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { expect(subject.results).not_to include(@trade_name_ac) }
-        specify { expect(subject.results).to include(@accepted_name_ac) }
+        specify { subject.results.should_not include(@trade_name_ac) }
+        specify { subject.results.should include(@accepted_name_ac) }
       end
     end
   end

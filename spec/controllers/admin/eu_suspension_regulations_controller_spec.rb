@@ -12,11 +12,11 @@ describe Admin::EuSuspensionRegulationsController do
     describe "GET index" do
       it "assigns @eu_suspension_regulations sorted by effective_at" do
         get :index
-        expect(assigns(:eu_suspension_regulations)).to eq([@eu_suspension_regulation2, @eu_suspension_regulation1])
+        assigns(:eu_suspension_regulations).should eq([@eu_suspension_regulation2, @eu_suspension_regulation1])
       end
       it "renders the index template" do
         get :index
-        expect(response).to render_template("index")
+        response.should render_template("index")
       end
     end
   end
@@ -25,7 +25,7 @@ describe Admin::EuSuspensionRegulationsController do
     let(:eu_suspension_regulation) { create_eu_suspension_regulation(:is_current => true) }
     it "renders create when successful" do
       xhr :post, :activate, :format => 'js', :id => eu_suspension_regulation.id
-      expect(response).to render_template("create")
+      response.should render_template("create")
     end
   end
 

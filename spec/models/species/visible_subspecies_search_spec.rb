@@ -5,7 +5,7 @@ describe Species::Search do
     context "when searching by scientific name" do
       context "when subspecies previously listed " do
         subject { Species::Search.new({ :taxon_concept_query => 'canis lupus' }).results }
-        specify { expect(subject).to include(@subspecies) }
+        specify { subject.should include(@subspecies) }
       end
     end
   end

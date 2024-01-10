@@ -7,55 +7,55 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for genus Pereskia (not listed, shown)" do
-          specify { expect(@genus1.cites_listing).to eq('NC') }
+          specify { @genus1.cites_listing.should == 'NC' }
         end
         context "for genus Ariocarpus" do
-          specify { expect(@genus2.cites_listing).to eq('I') }
+          specify { @genus2.cites_listing.should == 'I' }
         end
         context "for family Cactaceae" do
-          specify { expect(@family.cites_listing).to eq('I/II/NC') }
+          specify { @family.cites_listing.should == 'I/II/NC' }
         end
       end
 
       describe :eu_listing do
         context "for genus Pereskia (not listed, shown)" do
-          specify { expect(@genus1.eu_listing).to eq('NC') }
+          specify { @genus1.eu_listing.should == 'NC' }
         end
         context "for genus Ariocarpus" do
-          specify { expect(@genus2.eu_listing).to eq('A') }
+          specify { @genus2.eu_listing.should == 'A' }
         end
         context "for family Cactaceae" do
-          specify { expect(@family.eu_listing).to eq('A/B/NC') }
+          specify { @family.eu_listing.should == 'A/B/NC' }
         end
       end
 
       describe :cites_listed do
         context "for family Cactaceae" do
-          specify { expect(@family.cites_listed).to be_truthy }
+          specify { @family.cites_listed.should be_truthy }
         end
         context "for genus Pereskia" do
-          specify { expect(@genus1.cites_listed).to be_nil }
+          specify { @genus1.cites_listed.should be_nil }
         end
       end
 
       describe :eu_listed do
         context "for family Cactaceae" do
-          specify { expect(@family.eu_listed).to be_truthy }
+          specify { @family.eu_listed.should be_truthy }
         end
         context "for genus Pereskia" do
-          specify { expect(@genus1.eu_listed).to be_nil }
+          specify { @genus1.eu_listed.should be_nil }
         end
       end
 
       describe :cites_status do
         context "for genus Pereskia" do
-          specify { expect(@genus1.cites_status).to eq('EXCLUDED') }
+          specify { @genus1.cites_status.should == 'EXCLUDED' }
         end
       end
 
       describe :cites_show do
         context "for genus Pereskia" do
-          specify { expect(@genus1.cites_show).to eq(true) }
+          specify { @genus1.cites_show.should == true }
         end
       end
 

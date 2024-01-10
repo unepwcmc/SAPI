@@ -11,22 +11,22 @@ describe Admin::ChangeTypesController do
       change_type2_2 = create(:change_type, :designation => designation2, :name => 'DEL')
       change_type1 = create(:change_type, :designation => designation1, :name => 'ADD')
       get :index
-      expect(assigns(:change_types)).to eq([change_type1, change_type2_1, change_type2_2])
+      assigns(:change_types).should eq([change_type1, change_type2_1, change_type2_2])
     end
     it "renders the index template" do
       get :index
-      expect(response).to render_template("index")
+      response.should render_template("index")
     end
   end
 
   describe "XHR POST create" do
     it "renders create when successful" do
       xhr :post, :create, change_type: build_attributes(:change_type)
-      expect(response).to render_template("create")
+      response.should render_template("create")
     end
     it "renders new when not successful" do
       xhr :post, :create, change_type: {}
-      expect(response).to render_template("new")
+      response.should render_template("new")
     end
   end
 
@@ -34,11 +34,11 @@ describe Admin::ChangeTypesController do
     let(:change_type) { create(:change_type) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => change_type.id, :change_type => { :name => 'ZZ' }
-      expect(response).to be_success
+      response.should be_success
     end
     it "responds with json when not successful" do
       xhr :put, :update, :format => 'json', :id => change_type.id, :change_type => { :name => nil }
-      expect(JSON.parse(response.body)).to include('errors')
+      JSON.parse(response.body).should include('errors')
     end
   end
 
@@ -46,7 +46,7 @@ describe Admin::ChangeTypesController do
     let(:change_type) { create(:change_type) }
     it "redirects after delete" do
       delete :destroy, :id => change_type.id
-      expect(response).to redirect_to(admin_change_types_url)
+      response.should redirect_to(admin_change_types_url)
     end
   end
 

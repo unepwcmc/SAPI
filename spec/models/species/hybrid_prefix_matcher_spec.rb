@@ -11,7 +11,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade
           })
         }
-        specify { expect(subject.results).to include(@hybrid_ac) }
+        specify { subject.results.should include(@hybrid_ac) }
       end
       context "when trade internal visibility" do
         subject {
@@ -21,7 +21,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :visibility => :trade_internal
           })
         }
-        specify { expect(subject.results).to include(@hybrid_ac) }
+        specify { subject.results.should include(@hybrid_ac) }
       end
       context "when speciesplus visibility" do
         subject {
@@ -30,7 +30,7 @@ describe Species::TaxonConceptPrefixMatcher do
             :ranks => []
           })
         }
-        specify { expect(subject.results).to be_empty }
+        specify { subject.results.should be_empty }
       end
     end
   end

@@ -30,16 +30,16 @@ describe TaxonConcept do
     }
     context "when new" do
       specify {
-        expect(tc.has_synonyms?).to be_truthy
+        tc.has_synonyms?.should be_truthy
       }
       specify {
-        expect(synonym.is_synonym?).to be_truthy
+        synonym.is_synonym?.should be_truthy
       }
       specify {
-        expect(synonym.has_accepted_names?).to be_truthy
+        synonym.has_accepted_names?.should be_truthy
       }
       specify {
-        expect(synonym.full_name).to eq('Lolcatus lolus')
+        synonym.full_name.should == 'Lolcatus lolus'
       }
     end
     context "when duplicate" do
@@ -47,9 +47,9 @@ describe TaxonConcept do
         synonym.dup
       }
       specify {
-        expect do
+        lambda do
           duplicate.save
-        end.to change(TaxonConcept, :count).by(0)
+        end.should change(TaxonConcept, :count).by(0)
       }
     end
     context "when duplicate but author name different" do
@@ -59,9 +59,9 @@ describe TaxonConcept do
         res
       }
       specify {
-        expect do
+        lambda do
           duplicate.save
-        end.to change(TaxonConcept, :count).by(1)
+        end.should change(TaxonConcept, :count).by(1)
       }
     end
     context "when has accepted parent" do
@@ -84,13 +84,13 @@ describe TaxonConcept do
         )
       end
       # should not modify a synonym's full name when saving
-      specify { expect(@synonym.full_name).to eq('Lolcatus lolus furiatus') }
+      specify { @synonym.full_name.should == 'Lolcatus lolus furiatus' }
       context "overnight calculations" do
         before(:each) do
           Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
         # should not modify a synonym's full name overnight
-        specify { expect(@synonym.reload.full_name).to eq('Lolcatus lolus furiatus') }
+        specify { @synonym.reload.full_name.should == 'Lolcatus lolus furiatus' }
       end
     end
   end

@@ -41,18 +41,18 @@ describe Admin::TaxonListingChangesController do
       )
       get :index, :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      expect(assigns(:listing_changes)).to eq([listing_change2, listing_change1])
-      expect(assigns(:taxon_concept)).to eq @taxon_concept
+      assigns(:listing_changes).should eq([listing_change2, listing_change1])
+      assigns(:taxon_concept).should eq @taxon_concept
     end
     it "renders the index template" do
       get :index, :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      expect(response).to render_template("index")
+      response.should render_template("index")
     end
     it "renders the taxon_concepts_layout" do
       get :index, :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      expect(response).to render_template('layouts/taxon_concepts')
+      response.should render_template('layouts/taxon_concepts')
     end
   end
 
@@ -60,12 +60,12 @@ describe Admin::TaxonListingChangesController do
     it "renders the new template" do
       get :new, :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      expect(response).to render_template('new')
+      response.should render_template('new')
     end
     it "assigns @listing_change" do
       get :new, :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      expect(assigns(:listing_change)).not_to be_nil
+      assigns(:listing_change).should_not be_nil
     end
   end
 
@@ -80,7 +80,7 @@ describe Admin::TaxonListingChangesController do
           },
           :taxon_concept_id => @taxon_concept.id,
           :designation_id => @designation.id
-        expect(response).to redirect_to(
+        response.should redirect_to(
           admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
         )
       end
@@ -90,7 +90,7 @@ describe Admin::TaxonListingChangesController do
       post :create, :listing_change => {},
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      expect(response).to render_template("new")
+      response.should render_template("new")
     end
   end
 
@@ -108,13 +108,13 @@ describe Admin::TaxonListingChangesController do
       get :edit, :id => @listing_change.id,
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      expect(response).to render_template('edit')
+      response.should render_template('edit')
     end
     it "assigns the listing_change variable" do
       get :edit, :id => @listing_change.id,
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      expect(assigns(:listing_change)).not_to be_nil
+      assigns(:listing_change).should_not be_nil
     end
   end
 
@@ -141,7 +141,7 @@ describe Admin::TaxonListingChangesController do
           :id => @listing_change.id,
           :taxon_concept_id => @taxon_concept.id,
           :designation_id => @designation.id
-        expect(response).to redirect_to(
+        response.should redirect_to(
           admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
         )
       end
@@ -179,7 +179,7 @@ describe Admin::TaxonListingChangesController do
          :taxon_concept_id => taxon_concept.id,
           :designation_id => eu_designation.id,
           :redirect_to_eu_reg => "1"
-        expect(response).to redirect_to(
+        response.should redirect_to(
           admin_eu_regulation_listing_changes_url(eu_regulation)
         )
       end
@@ -189,7 +189,7 @@ describe Admin::TaxonListingChangesController do
         :id => @listing_change.id,
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      expect(response).to render_template('edit')
+      response.should render_template('edit')
     end
 
     it "redirects to index page and removes annotation when fields cleared" do
@@ -205,11 +205,11 @@ describe Admin::TaxonListingChangesController do
             "id" => @annotation.id
           }
         }
-      expect(response).to redirect_to(
+      response.should redirect_to(
         admin_taxon_concept_designation_listing_changes_url(
           @taxon_concept, @designation)
       )
-      expect(@listing_change.reload.annotation).to be_nil
+      @listing_change.reload.annotation.should be_nil
     end
   end
 
@@ -227,7 +227,7 @@ describe Admin::TaxonListingChangesController do
       delete :destroy, :id => @listing_change.id,
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
-      expect(response).to redirect_to(
+      response.should redirect_to(
         admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
       )
     end
@@ -247,12 +247,12 @@ describe Admin::TaxonListingChangesController do
       it "renders the index template" do
         get :index, :taxon_concept_id => @taxon_concept.id,
           :designation_id => @designation.id
-        expect(response).to render_template("index")
+        response.should render_template("index")
       end
       it "renders the taxon_concepts_layout" do
         get :index, :taxon_concept_id => @taxon_concept.id,
           :designation_id => @designation.id
-        expect(response).to render_template('layouts/taxon_concepts')
+        response.should render_template('layouts/taxon_concepts')
       end
     end
     describe "DELETE destroy" do
@@ -261,10 +261,10 @@ describe Admin::TaxonListingChangesController do
         delete :destroy, :id => listing_change.id,
           :taxon_concept_id => @taxon_concept.id,
           :designation_id => @designation.id
-        expect(response).to redirect_to(
+        response.should redirect_to(
           admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
         )
-        expect(ListingChange.find(listing_change.id)).not_to be_nil
+        ListingChange.find(listing_change.id).should_not be_nil
       end
     end
   end

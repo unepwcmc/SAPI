@@ -69,7 +69,7 @@ describe NomenclatureChange::Split do
           }
         )
       }
-      specify { expect(split.errors_on(:outputs).size).to eq(1) }
+      specify { expect(split).to have(1).errors_on(:outputs) }
     end
   end
 end

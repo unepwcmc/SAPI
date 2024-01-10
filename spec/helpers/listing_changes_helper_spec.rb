@@ -52,27 +52,25 @@ describe ListingChangesHelper, type: :helper do
       )
     }
     it "outputs all geo entities comma separated" do
-      expect(helper.geo_entities_tooltip(listing_change)).to eq('Poland')
+      helper.geo_entities_tooltip(listing_change).should == 'Poland'
     end
   end
   describe 'annotation_tooltip' do
     it "outputs the regular annotation in both short and long English form" do
-      expect(helper.annotation_tooltip(listing_change)).to eq(
+      helper.annotation_tooltip(listing_change).should ==
         "Only population of PL (Only population of Poland)"
-      )
     end
   end
   describe 'hash_annotation_tooltip' do
     it "outputs the hash annotation in long English form" do
-      expect(helper.hash_annotation_tooltip(listing_change)).to eq(
+      helper.hash_annotation_tooltip(listing_change).should ==
         "Only seeds and roots."
-      )
     end
   end
   describe 'excluded_geo_entities_tooltip' do
     context "no exclusions" do
       it "should output blank exception" do
-        expect(helper.excluded_geo_entities_tooltip(listing_change)).to be_blank
+        helper.excluded_geo_entities_tooltip(listing_change).should be_blank
       end
     end
 
@@ -92,7 +90,7 @@ describe ListingChangesHelper, type: :helper do
         )
       }
       it "should list geographic exception" do
-        expect(helper.excluded_geo_entities_tooltip(listing_change)).to eq('Poland')
+        helper.excluded_geo_entities_tooltip(listing_change).should == 'Poland'
       end
     end
   end
@@ -105,7 +103,7 @@ describe ListingChangesHelper, type: :helper do
     }
     context "no exclusions" do
       it "should output blank exception" do
-        expect(helper.excluded_taxon_concepts_tooltip(listing_change)).to be_blank
+        helper.excluded_taxon_concepts_tooltip(listing_change).should be_blank
       end
     end
 
@@ -117,7 +115,7 @@ describe ListingChangesHelper, type: :helper do
         )
       }
       it "should list taxonomic exception" do
-        expect(helper.excluded_taxon_concepts_tooltip(listing_change)).to eq('Foobarus cracovianus')
+        helper.excluded_taxon_concepts_tooltip(listing_change).should == 'Foobarus cracovianus'
       end
     end
 

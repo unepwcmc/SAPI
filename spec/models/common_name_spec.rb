@@ -17,13 +17,13 @@ describe CommonName do
   context "Generating PDF" do
     describe :english_to_pdf do
       it "should print last word before the first word, separated by comma" do
-        expect(CommonName.english_to_pdf("Grey Wolf")).to eq("Wolf, Grey")
+        CommonName.english_to_pdf("Grey Wolf").should == "Wolf, Grey"
       end
       it "should print the last word before the other words, separated by comma" do
-        expect(CommonName.english_to_pdf("Northern Rock Mountain Wolf")).to eq("Wolf, Northern Rock Mountain")
+        CommonName.english_to_pdf("Northern Rock Mountain Wolf").should == "Wolf, Northern Rock Mountain"
       end
       it "should print the single word, if the common name is composed of only one word" do
-        expect(CommonName.english_to_pdf("Wolf")).to eq("Wolf")
+        CommonName.english_to_pdf("Wolf").should == "Wolf"
       end
     end
   end

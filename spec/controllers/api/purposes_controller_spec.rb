@@ -7,7 +7,7 @@ describe Api::V1::PurposesController do
     end
     it "returns purposes" do
       get :index
-      expect(response.body).to have_json_size(1).at_path('purposes')
+      response.body.should have_json_size(1).at_path('purposes')
     end
   end
 end

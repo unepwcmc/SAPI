@@ -47,7 +47,7 @@ describe NomenclatureChange::StatusToSynonym do
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
           )
         }
-        specify { expect(status_change.error_on(:primary_output).size).to eq(1) }
+        specify { expect(status_change).to have(1).error_on(:primary_output) }
       end
     end
     context "when primary output has valid name status" do
@@ -61,7 +61,7 @@ describe NomenclatureChange::StatusToSynonym do
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
           )
         }
-        specify { expect(status_change.errors_on(:primary_output).size).to eq(0) }
+        specify { expect(status_change).to have(0).errors_on(:primary_output) }
       end
     end
     context "when required secondary output missing" do
@@ -73,7 +73,7 @@ describe NomenclatureChange::StatusToSynonym do
             status: NomenclatureChange::StatusToSynonym::RELAY
           )
         }
-        specify { expect(status_change.error_on(:secondary_output).size).to eq(1) }
+        specify { expect(status_change).to have(1).error_on(:secondary_output) }
       end
       context "when submitting" do
         let(:status_change) {
@@ -83,7 +83,7 @@ describe NomenclatureChange::StatusToSynonym do
             status: NomenclatureChange::StatusToSynonym::SUBMITTED
           )
         }
-        specify { expect(status_change.error_on(:secondary_output).size).to eq(1) }
+        specify { expect(status_change).to have(1).error_on(:secondary_output) }
       end
     end
   end

@@ -9,21 +9,21 @@ describe Admin::DistributionsController do
   describe "XHR GET 'new'" do
     it "returns http success and renders the new template" do
       xhr :get, :new, :taxon_concept_id => @taxon_concept.id
-      expect(response).to be_success
-      expect(response).to render_template('new')
+      response.should be_success
+      response.should render_template('new')
     end
     it "assigns @geo_entities (country and territory) with two objects" do
       geo_entity_type_t = create(:geo_entity_type, :name => "TERRITORY")
       territory = create(:geo_entity, :geo_entity_type_id => geo_entity_type_t.id)
       country = create(:geo_entity)
       xhr :get, :new, :taxon_concept_id => @taxon_concept.id
-      expect(assigns(:geo_entities).size).to eq(2)
+      assigns(:geo_entities).size.should == 2
     end
     it "assigns the distribution variable" do
       xhr :get, :new, :taxon_concept_id => @taxon_concept.id
-      expect(assigns(:distribution)).not_to be_nil
-      expect(assigns(:tags)).not_to be_nil
-      expect(assigns(:geo_entities)).not_to be_nil
+      assigns(:distribution).should_not be_nil
+      assigns(:tags).should_not be_nil
+      assigns(:geo_entities).should_not be_nil
     end
   end
 
@@ -39,7 +39,7 @@ describe Admin::DistributionsController do
         :reference => {
           :reference_id => reference.id
         }
-      expect(response).to render_template("create")
+      response.should render_template("create")
     end
     it "renders create when successful and is creating a reference" do
       xhr :post, :create,
@@ -52,7 +52,7 @@ describe Admin::DistributionsController do
           :author => reference.author,
           :year => reference.year
         }
-      expect(response).to render_template("create")
+      response.should render_template("create")
     end
   end
 
@@ -61,19 +61,19 @@ describe Admin::DistributionsController do
     it "renders the new template" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => distribution.id
-      expect(response).to render_template('new')
+      response.should render_template('new')
     end
     it "assigns the distribution variable" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => distribution.id
-      expect(assigns(:distribution)).not_to be_nil
+      assigns(:distribution).should_not be_nil
     end
     it "assigns @geo_entities (country and territory) with two objects" do
       geo_entity_type_t = create(:geo_entity_type, :name => "TERRITORY")
       territory = create(:geo_entity, :geo_entity_type_id => geo_entity_type_t.id)
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => distribution.id
-      expect(assigns(:geo_entities).size).to eq(2)
+      assigns(:geo_entities).size.should == 2
     end
   end
 
@@ -87,7 +87,7 @@ describe Admin::DistributionsController do
         :distribution => {
           :geo_entity_id => geo_entity.id
         }
-      expect(response).to be_success
+      response.should be_success
     end
   end
 
@@ -97,7 +97,7 @@ describe Admin::DistributionsController do
       delete :destroy,
         :taxon_concept_id => @taxon_concept.id,
         :id => distribution.id
-      expect(response).to redirect_to(
+      response.should redirect_to(
         admin_taxon_concept_distributions_url(distribution.taxon_concept)
       )
     end

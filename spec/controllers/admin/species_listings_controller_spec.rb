@@ -11,22 +11,22 @@ describe Admin::SpeciesListingsController do
       species_listing2_2 = create(:species_listing, :designation => designation2, :name => 'II')
       species_listing1 = create(:species_listing, :designation => designation1, :name => 'I')
       get :index
-      expect(assigns(:species_listings)).to eq([species_listing1, species_listing2_1, species_listing2_2])
+      assigns(:species_listings).should eq([species_listing1, species_listing2_1, species_listing2_2])
     end
     it "renders the index template" do
       get :index
-      expect(response).to render_template("index")
+      response.should render_template("index")
     end
   end
 
   describe "XHR POST create" do
     it "renders create when successful" do
       xhr :post, :create, species_listing: build_attributes(:species_listing)
-      expect(response).to render_template("create")
+      response.should render_template("create")
     end
     it "renders new when not successful" do
       xhr :post, :create, species_listing: {}
-      expect(response).to render_template("new")
+      response.should render_template("new")
     end
   end
 
@@ -34,11 +34,11 @@ describe Admin::SpeciesListingsController do
     let(:species_listing) { create(:species_listing) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => species_listing.id, :species_listing => { :name => 'ZZ' }
-      expect(response).to be_success
+      response.should be_success
     end
     it "responds with json when not successful" do
       xhr :put, :update, :format => 'json', :id => species_listing.id, :species_listing => { :name => nil }
-      expect(JSON.parse(response.body)).to include('errors')
+      JSON.parse(response.body).should include('errors')
     end
   end
 
@@ -46,7 +46,7 @@ describe Admin::SpeciesListingsController do
     let(:species_listing) { create(:species_listing) }
     it "redirects after delete" do
       delete :destroy, :id => species_listing.id
-      expect(response).to redirect_to(admin_species_listings_url)
+      response.should redirect_to(admin_species_listings_url)
     end
   end
 

@@ -17,32 +17,32 @@ describe Checklist do
     end
 
     it "should return all English names for Arctocephalus australis: 'South American Fur Seal, Southern Fur Seal'" do
-      expect(@australis.english_names).to eq(['South American Fur Seal', 'Southern Fur Seal'])
+      @australis.english_names.should == ['South American Fur Seal', 'Southern Fur Seal']
     end
 
     it "should return all Spanish names for Arctocephalus australis: 'Lobo fino sudamericano, Oso marino austral'" do
-      expect(@australis.spanish_names).to eq(['Lobo fino sudamericano', 'Oso marino austral'])
+      @australis.spanish_names.should == ['Lobo fino sudamericano', 'Oso marino austral']
     end
 
     it "should return all French names for Arctocephalus australis: 'Otarie à fourrure australe'" do
-      expect(@australis.french_names).to eq(['Otarie à fourrure australe'])
+      @australis.french_names.should == ['Otarie à fourrure australe']
     end
 
     it "should return all English names for Arctocephalus spp.: 'Fur seals, Southern fur seals'" do
-      expect(@arctocephalus.english_names).to eq(['Fur seals 1', 'Southern fur seals'])
+      @arctocephalus.english_names.should == ['Fur seals 1', 'Southern fur seals']
     end
 
     it "should return all Spanish names for Arctocephalus spp.: 'Osos marinos'" do
-      expect(@arctocephalus.spanish_names).to eq(['Osos marinos'])
+      @arctocephalus.spanish_names.should == ['Osos marinos']
     end
 
     it "should return all French names for Arctocephalus spp.: 'Arctocéphales du sud, Otaries à fourrure, Otaries à fourrure du sud'" do
-      expect(@arctocephalus.french_names).to eq(['Arctocéphales du sud', 'Otaries à fourrure', 'Otaries à fourrure du sud'])
+      @arctocephalus.french_names.should == ['Arctocéphales du sud', 'Otaries à fourrure', 'Otaries à fourrure du sud']
     end
 
     it "should include a species without any common names defined" do
       @pusillus = @taxon_concepts.select { |e| e.full_name == @species3.full_name }.first
-      expect(@pusillus).not_to be_nil
+      @pusillus.should_not be_nil
     end
 
   end

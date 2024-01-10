@@ -11,7 +11,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
       end
       it 'renders the primary_output template' do
         get :show, id: :primary_output, nomenclature_change_id: @status_change.id
-        expect(response).to render_template('primary_output')
+        response.should render_template('primary_output')
       end
     end
     context 'swap' do
@@ -20,7 +20,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
       end
       it 'renders the swap template' do
         get :show, id: :secondary_output, nomenclature_change_id: @status_change.id
-        expect(response).to render_template('secondary_output')
+        response.should render_template('secondary_output')
       end
     end
     context 'reassignments' do
@@ -33,13 +33,13 @@ describe Admin::NomenclatureChanges::StatusSwapController do
         end
         it 'renders the legislation template' do
           get :show, id: :legislation, nomenclature_change_id: @status_change.id
-          expect(response).to render_template('legislation')
+          response.should render_template('legislation')
         end
       end
       context "when no legislation" do
         it 'redirects to next step' do
           get :show, id: :legislation, nomenclature_change_id: @status_change.id
-          expect(response).to redirect_to(
+          response.should redirect_to(
             admin_nomenclature_change_status_swap_url(
               nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
             )
@@ -53,7 +53,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
       end
       it 'renders the summary template' do
         get :show, id: :summary, nomenclature_change_id: @status_change.id
-        expect(response).to render_template('summary')
+        response.should render_template('summary')
       end
     end
   end
@@ -61,7 +61,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
   describe 'POST create' do
     it 'redirects to status_change wizard' do
       post :create, nomenclature_change_id: 'new'
-      expect(response).to redirect_to(
+      response.should redirect_to(
         admin_nomenclature_change_status_swap_url(
           nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'primary_output'
         )
@@ -81,7 +81,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
             new_name_status: 'S'
           }
         }, nomenclature_change_id: @status_change.id, id: 'primary_output'
-        expect(response).to redirect_to(
+        response.should redirect_to(
           admin_nomenclature_change_status_swap_url(
             nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'secondary_output'
           )
@@ -92,7 +92,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
       it 're-renders step' do
         put :update, nomenclature_change_status_swap: {},
           nomenclature_change_id: @status_change.id, id: 'primary_output'
-        expect(response).to render_template('primary_output')
+        response.should render_template('primary_output')
       end
     end
     context 'when last step' do
@@ -100,15 +100,15 @@ describe Admin::NomenclatureChanges::StatusSwapController do
         login_secretariat_user
         it 'redirects to admin root path' do
           put :update, nomenclature_change_id: @status_change.id, id: 'summary'
-          expect(response).to redirect_to admin_root_path
+          response.should redirect_to admin_root_path
         end
       end
       context 'when user is manager' do
         it 'redirects to nomenclature changes path' do
           pending("Strange render mismatch after upgrading to Rails 4")
           put :update, nomenclature_change_id: @status_change.id, id: 'summary'
-          expect(response).to be_successful
-          expect(response).to render_template("nomenclature_changes")
+          response.should be_successful
+          response.should render_template("nomenclature_changes")
         end
       end
     end

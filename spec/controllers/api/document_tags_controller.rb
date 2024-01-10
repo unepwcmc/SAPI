@@ -7,7 +7,7 @@ describe Api::V1::DocumentTagsController do
     end
     it "returns document tags" do
       get :index
-      expect(response.body).to have_json_size(1).at_path('document_tags')
+      response.body.should have_json_size(1).at_path('document_tags')
     end
   end
 end

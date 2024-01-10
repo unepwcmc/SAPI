@@ -19,17 +19,17 @@ describe Rank do
   describe :parent_rank_lower_bound do
     context "obligatory rank" do
       let(:rank) { create(:rank, name: Rank::KINGDOM) }
-      specify { expect(rank.parent_rank_lower_bound).to eq('0') }
+      specify { rank.parent_rank_lower_bound.should == '0' }
     end
     context "optional rank" do
       let(:rank) { create(:rank, name: Rank::SUBFAMILY) }
-      specify { expect(rank.parent_rank_lower_bound).to eq('5') }
+      specify { rank.parent_rank_lower_bound.should == '5' }
     end
   end
   describe :create do
     context "when taxonomic position malformed" do
       let(:rank) { build(:rank, name: Rank::PHYLUM, taxonomic_position: '1.a.b') }
-      specify { expect(rank).to have(1).error_on(:taxonomic_position) }
+      specify { rank.should have(1).error_on(:taxonomic_position) }
     end
   end
   describe :destroy do
@@ -39,30 +39,30 @@ describe Rank do
         r.update_attribute(:name, 'SUPER PHYLUM')
         r
       }
-      specify { expect(rank.destroy).to be_truthy }
+      specify { rank.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       let(:rank) { create(:rank, name: Rank::PHYLUM, taxonomic_position: '1.1') }
       let!(:taxon_concept) { create(:taxon_concept, :rank => rank) }
-      specify { expect(rank.destroy).to be_falsey }
+      specify { rank.destroy.should be_falsey }
     end
     context "when protected name" do
       let(:rank) { create(:rank, name: Rank::PHYLUM, taxonomic_position: '1.1') }
-      specify { expect(rank.destroy).to be_falsey }
+      specify { rank.destroy.should be_falsey }
     end
   end
   describe :in_range do
     context "when no bounds specified" do
       subject { Rank.in_range(nil, nil) }
-      specify { expect(subject).to eq(Rank.dict) }
+      specify { subject.should == Rank.dict }
     end
     context "when lower bound specified" do
       subject { Rank.in_range(Rank::CLASS, nil) }
-      specify { expect(subject).to eq([Rank::KINGDOM, Rank::PHYLUM, Rank::CLASS]) }
+      specify { subject.should == [Rank::KINGDOM, Rank::PHYLUM, Rank::CLASS] }
     end
     context "when lower and upper bound specified" do
       subject { Rank.in_range(Rank::GENUS, Rank::FAMILY) }
-      specify { expect(subject).to eq([Rank::FAMILY, Rank::SUBFAMILY, Rank::GENUS]) }
+      specify { subject.should == [Rank::FAMILY, Rank::SUBFAMILY, Rank::GENUS] }
     end
   end
 end

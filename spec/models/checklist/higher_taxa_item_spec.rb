@@ -15,7 +15,7 @@ describe Checklist::HigherTaxaItem do
         )
       }
       subject { Checklist::HigherTaxaItem.new(taxon_concept) }
-      specify { expect(subject.ancestors_path).to eq('Chordata,Reptilia,Crocodylia,Alligatoridae') }
+      specify { subject.ancestors_path.should == 'Chordata,Reptilia,Crocodylia,Alligatoridae' }
     end
     context "when plant" do
       let(:taxon_concept) {
@@ -29,7 +29,7 @@ describe Checklist::HigherTaxaItem do
         )
       }
       subject { Checklist::HigherTaxaItem.new(taxon_concept) }
-      specify { expect(subject.ancestors_path).to eq('Agavaceae') }
+      specify { subject.ancestors_path.should == 'Agavaceae' }
     end
   end
 

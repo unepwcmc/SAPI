@@ -34,8 +34,8 @@ describe CitesCop do
           :designation => eu
         )
       }
-      specify { expect(cites_cop).to be_invalid }
-      specify { expect(cites_cop).to have(1).error_on(:designation_id) }
+      specify { cites_cop.should be_invalid }
+      specify { cites_cop.should have(1).error_on(:designation_id) }
     end
     context "when effective_at is blank" do
       let(:cites_cop) {
@@ -44,20 +44,20 @@ describe CitesCop do
           :effective_at => nil
         )
       }
-      specify { expect(cites_cop).to be_invalid }
-      specify { expect(cites_cop).to have(1).error_on(:effective_at) }
+      specify { cites_cop.should be_invalid }
+      specify { cites_cop.should have(1).error_on(:effective_at) }
     end
   end
 
   describe :destroy do
     let(:cites_cop) { create_cites_cop }
     context "when no dependent objects attached" do
-      specify { expect(cites_cop.destroy).to be_truthy }
+      specify { cites_cop.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       context "when listing changes" do
         let!(:listing_change) { create_cites_I_addition(:event => cites_cop) }
-        specify { expect(cites_cop.destroy).to be_falsey }
+        specify { cites_cop.destroy.should be_falsey }
       end
     end
   end

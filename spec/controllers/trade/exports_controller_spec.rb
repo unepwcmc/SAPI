@@ -8,7 +8,7 @@ describe Trade::ExportsController do
       it "returns count of shipments" do
         create(:shipment)
         get :download, :filters => { :report_type => 'raw' }, :format => :json
-        expect(parse_json(response.body)['total']).to eq(1)
+        parse_json(response.body)['total'].should == 1
       end
       it "does not log download information from the admin interface" do
         create(:shipment)

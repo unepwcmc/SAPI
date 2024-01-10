@@ -7,7 +7,7 @@ describe Api::V1::SourcesController do
     end
     it "returns sources" do
       get :index
-      expect(response.body).to have_json_size(1).at_path('sources')
+      response.body.should have_json_size(1).at_path('sources')
     end
   end
 end

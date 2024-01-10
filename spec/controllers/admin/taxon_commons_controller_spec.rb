@@ -11,8 +11,8 @@ describe Admin::TaxonCommonsController do
   describe "XHR GET 'new'" do
     it "returns http success and renders the new template" do
       xhr :get, :new, { :taxon_concept_id => @taxon_concept.id, :format => 'js' }
-      expect(response).to be_success
-      expect(response).to render_template('new')
+      response.should be_success
+      response.should render_template('new')
     end
   end
 
@@ -24,14 +24,14 @@ describe Admin::TaxonCommonsController do
           :name => @common_name.name,
           :language_id => @common_name.language_id
         }
-      expect(response).to render_template("create")
+      response.should render_template("create")
     end
     it "renders new when not successful" do
       xhr :post, :create,
         :taxon_concept_id => @taxon_concept.id,
         :taxon_common => {
         }
-      expect(response).to render_template("new")
+      response.should render_template("new")
     end
   end
 
@@ -46,12 +46,12 @@ describe Admin::TaxonCommonsController do
     it "renders the edit template" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => @taxon_common.id
-      expect(response).to render_template('new')
+      response.should render_template('new')
     end
     it "assigns the  taxon common variable" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => @taxon_common.id
-      expect(assigns(:taxon_common)).not_to be_nil
+      assigns(:taxon_common).should_not be_nil
     end
   end
 
@@ -71,7 +71,7 @@ describe Admin::TaxonCommonsController do
           :name => @common_name.name,
           :language_id => @common_name.language_id
         }
-      expect(response).to render_template("create")
+      response.should render_template("create")
     end
     it "renders new when not successful" do
       xhr :put, :update, :format => 'js',
@@ -80,7 +80,7 @@ describe Admin::TaxonCommonsController do
         :taxon_common => {
           :common_name_id => nil
         }
-      expect(response).to render_template('new')
+      response.should render_template('new')
     end
   end
 
@@ -96,7 +96,7 @@ describe Admin::TaxonCommonsController do
       delete :destroy,
         :taxon_concept_id => @taxon_concept.id,
         :id => taxon_common.id
-      expect(response).to redirect_to(
+      response.should redirect_to(
         admin_taxon_concept_names_url(@taxon_concept)
       )
     end
@@ -116,11 +116,11 @@ describe Admin::TaxonCommonsController do
     it "updates associated @taxon_concept's
       dependents_updated_at when taxon common is updated" do
 
-      expect(@taxon_concept.dependents_updated_at).to be_nil
+      @taxon_concept.dependents_updated_at.should be_nil
 
       # it gets updated by the creation of the taxon_common
       # but object needs to be reloaded
-      expect(@taxon_concept.reload.dependents_updated_at).not_to be_nil
+      @taxon_concept.reload.dependents_updated_at.should_not be_nil
       old_date = @taxon_concept.dependents_updated_at
 
       xhr :put, :update, :format => 'js',
@@ -131,25 +131,25 @@ describe Admin::TaxonCommonsController do
           :language_id => @common_name.language_id
         }
 
-      expect(@taxon_concept.reload.dependents_updated_at).not_to eq(old_date)
+      @taxon_concept.reload.dependents_updated_at.should_not == old_date
     end
 
     it "updates associated @taxon_concept's
       dependents_updated_at when taxon common is deleted" do
 
-      expect(@taxon_concept.dependents_updated_at).to be_nil
+      @taxon_concept.dependents_updated_at.should be_nil
 
       # it gets updated by the creation of the taxon_common
       # but object needs to be reloaded
-      expect(@taxon_concept.reload.dependents_updated_at).not_to be_nil
+      @taxon_concept.reload.dependents_updated_at.should_not be_nil
       old_date = @taxon_concept.dependents_updated_at
 
       delete :destroy,
         :taxon_concept_id => @taxon_concept.id,
         :id => @taxon_common.id
 
-      expect(@taxon_concept.reload.dependents_updated_at).not_to eq(old_date)
-      expect(TaxonCommon.where(:id => @taxon_common.id).size).to eq(0)
+      @taxon_concept.reload.dependents_updated_at.should_not == old_date
+      TaxonCommon.where(:id => @taxon_common.id).size.should == 0
     end
   end
 
@@ -167,10 +167,10 @@ describe Admin::TaxonCommonsController do
         @request.env['HTTP_REFERER'] = admin_taxon_concept_names_url(@taxon_concept)
         delete :destroy, :id => taxon_common.id,
           :taxon_concept_id => @taxon_concept.id
-        expect(response).to redirect_to(
+        response.should redirect_to(
           admin_taxon_concept_names_url(@taxon_concept)
         )
-        expect(TaxonCommon.find(taxon_common.id)).not_to be_nil
+        TaxonCommon.find(taxon_common.id).should_not be_nil
       end
     end
   end

@@ -8,43 +8,43 @@ describe TaxonConcept do
 
       describe :cites_listed do
         context "for species Panax ginseng" do
-          specify { expect(@species.cites_listed).to be_truthy }
+          specify { @species.cites_listed.should be_truthy }
         end
         context "for genus Panax" do
-          specify { expect(@genus.cites_listed).to eq(false) }
+          specify { @genus.cites_listed.should == false }
         end
       end
 
       describe :eu_listed do
         context "for species Panax ginseng" do
-          specify { expect(@species.eu_listed).to be_truthy }
+          specify { @species.eu_listed.should be_truthy }
         end
         context "for genus Panax" do
-          specify { expect(@genus.eu_listed).to eq(false) }
+          specify { @genus.eu_listed.should == false }
         end
       end
 
       describe :cites_listing do
         context "for species Panax ginseng" do
-          specify { expect(@species.cites_listing).to eq('II/NC') }
+          specify { @species.cites_listing.should == 'II/NC' }
         end
       end
 
       describe :eu_listing do
         context "for species Panax ginseng" do
-          specify { expect(@species.eu_listing).to eq('B/NC') }
+          specify { @species.eu_listing.should == 'B/NC' }
         end
       end
 
       describe :ann_symbol do
         context "for species Panax ginseng" do
-          specify { expect(@species.ann_symbol).not_to be_blank }
+          specify { @species.ann_symbol.should_not be_blank }
         end
       end
 
       describe :hash_ann_symbol do
         context "for species Panax ginseng" do
-          specify { expect(@species.hash_ann_symbol).to eq('#3') }
+          specify { @species.hash_ann_symbol.should == '#3' }
         end
       end
     end

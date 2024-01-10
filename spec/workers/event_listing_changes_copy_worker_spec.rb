@@ -39,14 +39,14 @@ describe EventListingChangesCopyWorker do
       )
     }
     before { EventListingChangesCopyWorker.new.perform(prev_eu_regulation.id, eu_regulation.id) }
-    specify { expect(eu_regulation.listing_changes.reload.count).to eq(1) }
-    specify { expect(eu_regulation.listing_changes.first.is_current).to be_falsey }
+    specify { eu_regulation.listing_changes.reload.count.should == 1 }
+    specify { eu_regulation.listing_changes.first.is_current.should be_falsey }
   end
 
   context "when copy into current regulation" do
     before { EventListingChangesCopyWorker.new.perform(prev_eu_regulation.id, eu_regulation.id) }
-    specify { expect(eu_regulation.listing_changes.reload.count).to eq(1) }
-    specify { expect(eu_regulation.listing_changes.first.is_current).to be_truthy }
+    specify { eu_regulation.listing_changes.reload.count.should == 1 }
+    specify { eu_regulation.listing_changes.first.is_current.should be_truthy }
   end
 
   context "when exclusion" do
@@ -67,10 +67,10 @@ describe EventListingChangesCopyWorker do
     }
 
     before { EventListingChangesCopyWorker.new.perform(prev_eu_regulation.id, eu_regulation.id) }
-    specify { expect(eu_regulation.listing_changes.reload.count).to eq(1) }
-    specify { expect(eu_regulation.listing_changes.first.exclusions.count).to eq(2) }
-    specify { expect(eu_regulation.listing_changes.first.taxonomic_exclusions.count).to eq(1) }
-    specify { expect(eu_regulation.listing_changes.first.geographic_exclusions.count).to eq(1) }
+    specify { eu_regulation.listing_changes.reload.count.should == 1 }
+    specify { eu_regulation.listing_changes.first.exclusions.count.should == 2 }
+    specify { eu_regulation.listing_changes.first.taxonomic_exclusions.count.should == 1 }
+    specify { eu_regulation.listing_changes.first.geographic_exclusions.count.should == 1 }
   end
 
 end

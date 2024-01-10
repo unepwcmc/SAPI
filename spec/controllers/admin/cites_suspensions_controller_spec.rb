@@ -10,7 +10,7 @@ describe Admin::CitesSuspensionsController do
   describe "GET index" do
     it "renders the index template" do
       get :index
-      expect(response).to render_template("index")
+      response.should render_template("index")
     end
     it "assigns @cites_suspensions" do
       get :index
@@ -21,14 +21,14 @@ describe Admin::CitesSuspensionsController do
   describe "GET new" do
     it "renders the new template" do
       get :new
-      expect(response).to render_template('new')
+      response.should render_template('new')
     end
     it "assigns @geo_entities (country and territory) with two objects" do
       geo_entity_type_t = create(:geo_entity_type, :name => "TERRITORY")
       territory = create(:geo_entity, :geo_entity_type_id => geo_entity_type_t.id)
       country = create(:geo_entity)
       get :new
-      expect(assigns(:geo_entities).size).to eq(2)
+      assigns(:geo_entities).size.should == 2
     end
   end
 
@@ -39,14 +39,14 @@ describe Admin::CitesSuspensionsController do
           :cites_suspension => {
             :start_notification_id => create_cites_suspension_notification.id
           }
-        expect(response).to redirect_to(
+        response.should redirect_to(
           admin_cites_suspensions_url
         )
       end
     end
     it "renders new when not successful" do
       post :create, :cites_suspension => {}
-      expect(response).to render_template("new")
+      response.should render_template("new")
     end
   end
 
@@ -59,14 +59,14 @@ describe Admin::CitesSuspensionsController do
     end
     it "renders the edit template" do
       get :edit, :id => @cites_suspension.id
-      expect(response).to render_template('edit')
+      response.should render_template('edit')
     end
     it "assigns @geo_entities (country and territory) with two objects" do
       geo_entity_type_t = create(:geo_entity_type, :name => "TERRITORY")
       territory = create(:geo_entity, :geo_entity_type_id => geo_entity_type_t.id)
       country = create(:geo_entity)
       get :new, :id => @cites_suspension.id
-      expect(assigns(:geo_entities).size).to eq(2)
+      assigns(:geo_entities).size.should == 2
     end
   end
 
@@ -85,7 +85,7 @@ describe Admin::CitesSuspensionsController do
             :publication_date => 1.week.ago
           },
           :id => @cites_suspension.id
-        expect(response).to redirect_to(
+        response.should redirect_to(
           admin_cites_suspensions_url
         )
       end
@@ -97,7 +97,7 @@ describe Admin::CitesSuspensionsController do
           :start_notification_id => nil
         },
         :id => @cites_suspension.id
-      expect(response).to render_template('edit')
+      response.should render_template('edit')
     end
   end
 
@@ -110,7 +110,7 @@ describe Admin::CitesSuspensionsController do
     end
     it "redirects after delete" do
       delete :destroy, :id => @cites_suspension.id
-      expect(response).to redirect_to(
+      response.should redirect_to(
         admin_cites_suspensions_url
       )
     end

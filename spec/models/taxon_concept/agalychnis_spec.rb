@@ -7,55 +7,55 @@ describe TaxonConcept do
     context "REFERENCES" do
       describe :cites_accepted do
         context "for class Amphibia" do
-          specify { expect(@klass.cites_accepted).to be_truthy }
+          specify { @klass.cites_accepted.should be_truthy }
         end
         context "for family Hylidae" do
-          specify { expect(@family.cites_accepted).to be_truthy }
+          specify { @family.cites_accepted.should be_truthy }
         end
         context "for genus Agalychnis" do
-          specify { expect(@genus.cites_accepted).to eq(false) }
+          specify { @genus.cites_accepted.should == false }
         end
       end
       describe :standard_taxon_concept_references do
         context "for class Amphibia" do
-          specify { expect(@klass.taxon_concept.standard_taxon_concept_references.map(&:reference_id)).to include @ref.id }
+          specify { @klass.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should include @ref.id }
         end
         context "for family Hylidae" do
-          specify { expect(@family.taxon_concept.standard_taxon_concept_references.map(&:reference_id)).to include @ref.id }
+          specify { @family.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should include @ref.id }
         end
         context "for genus Agalychnis" do
-          specify { expect(@genus.taxon_concept.standard_taxon_concept_references).to be_empty }
+          specify { @genus.taxon_concept.standard_taxon_concept_references.should be_empty }
         end
       end
     end
     context "LISTING" do
       describe :cites_listing do
         context "for genus Agalychnis" do
-          specify { expect(@genus.cites_listing).to eq('II') }
+          specify { @genus.cites_listing.should == 'II' }
         end
       end
 
       describe :eu_listing do
         context "for genus Agalychnis" do
-          specify { expect(@genus.eu_listing).to eq('B') }
+          specify { @genus.eu_listing.should == 'B' }
         end
       end
 
       describe :cites_listed do
         context "for family Hylidae" do
-          specify { expect(@family.cites_listed).to eq(false) }
+          specify { @family.cites_listed.should == false }
         end
         context "for genus Agalychnis" do
-          specify { expect(@genus.cites_listed).to be_truthy }
+          specify { @genus.cites_listed.should be_truthy }
         end
       end
 
       describe :eu_listed do
         context "for family Hylidae" do
-          specify { expect(@family.eu_listed).to eq(false) }
+          specify { @family.eu_listed.should == false }
         end
         context "for genus Agalychnis" do
-          specify { expect(@genus.eu_listed).to be_truthy }
+          specify { @genus.eu_listed.should be_truthy }
         end
       end
 

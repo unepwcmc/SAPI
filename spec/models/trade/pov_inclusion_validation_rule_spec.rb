@@ -73,7 +73,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(@aru)
-        expect(subject.validation_errors_for_aru(@aru).size).to eq(1)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
     context "when W source and country of origin blank and exporter doesn't match distribution (I)" do
@@ -96,7 +96,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(@aru)
-        expect(subject.validation_errors_for_aru(@aru).size).to eq(1)
+        subject.validation_errors_for_aru(@aru).size.should == 1
       }
     end
     context "when W source and country XX" do
@@ -119,7 +119,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(@aru)
-        expect(subject.validation_errors_for_aru(@aru)).to be_empty
+        subject.validation_errors_for_aru(@aru).should be_empty
       }
     end
     context "when W source and country doesn't match distribution of higher taxa" do
@@ -142,7 +142,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(@aru)
-        expect(subject.validation_errors_for_aru(@aru)).to be_empty
+        subject.validation_errors_for_aru(@aru).should be_empty
       }
     end
     context "when invalid scope specified" do

@@ -38,8 +38,8 @@ describe EuOpinion do
         )
       }
 
-      specify { expect(eu_opinion).to be_invalid }
-      specify { expect(eu_opinion).to have(1).error_on(:taxon_concept) }
+      specify { eu_opinion.should be_invalid }
+      specify { eu_opinion.should have(1).error_on(:taxon_concept) }
     end
 
     context "when geo_entity missing" do
@@ -49,8 +49,8 @@ describe EuOpinion do
         )
       }
 
-      specify { expect(eu_opinion).to be_invalid }
-      specify { expect(eu_opinion.error_on(:geo_entity).size).to eq(1) }
+      specify { eu_opinion.should be_invalid }
+      specify { eu_opinion.should have(1).error_on(:geo_entity) }
     end
 
     context "when start_date missing" do
@@ -58,8 +58,8 @@ describe EuOpinion do
         build(:eu_opinion, start_date: nil)
       }
 
-      specify { expect(eu_opinion).to be_invalid }
-      specify { expect(eu_opinion.error_on(:start_date).size).to eq(1) }
+      specify { eu_opinion.should be_invalid }
+      specify { eu_opinion.should have(1).error_on(:start_date) }
     end
 
     context "when valid" do
@@ -68,7 +68,7 @@ describe EuOpinion do
       end
       let(:eu_opinion) { build(:eu_opinion, start_event: @eu_regulation) }
 
-      specify { expect(eu_opinion).to be_valid }
+      specify { eu_opinion.should be_valid }
     end
   end
 

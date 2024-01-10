@@ -207,8 +207,8 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
 
-        specify { expect(cites_suspension).to be_invalid }
-        specify { expect(cites_suspension.error_on(:start_notification_id).size).to eq(1) }
+        specify { cites_suspension.should be_invalid }
+        specify { cites_suspension.should have(1).error_on(:start_notification_id) }
       end
 
       context "when start date greater than end date" do
@@ -221,8 +221,8 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
 
-        specify { expect(cites_suspension).to be_invalid }
-        specify { expect(cites_suspension.error_on(:start_date).size).to eq(1) }
+        specify { cites_suspension.should be_invalid }
+        specify { cites_suspension.should have(1).error_on(:start_date) }
       end
 
       context "when valid" do
@@ -234,7 +234,7 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
 
-        specify { expect(cites_suspension).to be_valid }
+        specify { cites_suspension.should be_valid }
       end
     end
   end
@@ -252,7 +252,7 @@ describe CitesSuspension, sidekiq: :inline do
         CitesSuspension.export('set' => 'current')
       end
       subject { Dir["#{DownloadsCache.cites_suspensions_path}/*"] }
-      specify { expect(subject).not_to be_empty }
+      specify { subject.should_not be_empty }
     end
   end
 
@@ -271,7 +271,7 @@ describe CitesSuspension, sidekiq: :inline do
         CitesSuspension.export('set' => 'current')
       end
       subject { Dir["#{DownloadsCache.cites_suspensions_path}/*"] }
-      specify { expect(subject).to be_empty }
+      specify { subject.should be_empty }
     end
   end
 

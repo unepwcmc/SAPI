@@ -10,7 +10,7 @@ describe Admin::TaxonConceptCommentsController do
   describe 'GET index' do
     it 'renders the index template' do
       get :index, taxon_concept_id: @taxon_concept.id
-      expect(response).to render_template('index')
+      response.should render_template('index')
     end
   end
 
@@ -19,10 +19,10 @@ describe Admin::TaxonConceptCommentsController do
       post :create,
         taxon_concept_id: @taxon_concept.id,
         comment: { note: 'blah' }
-      expect(response).to redirect_to(
+      response.should redirect_to(
         admin_taxon_concept_comments_url(@taxon_concept)
       )
-      expect(flash[:notice]).not_to be_nil
+      flash[:notice].should_not be_nil
     end
   end
 
@@ -33,10 +33,10 @@ describe Admin::TaxonConceptCommentsController do
         id: comment.id,
         taxon_concept_id: @taxon_concept.id,
         comment: { note: 'blah' }
-      expect(response).to redirect_to(
+      response.should redirect_to(
         admin_taxon_concept_comments_url(@taxon_concept)
       )
-      expect(flash[:notice]).not_to be_nil
+      flash[:notice].should_not be_nil
     end
   end
 

@@ -7,10 +7,10 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for family Cheloniidae" do
-          specify { expect(@family.cites_listing).to eq('I') }
+          specify { @family.cites_listing.should == 'I' }
         end
         context "for species Natator depressus" do
-          specify { expect(@species.cites_listing).to eq('I') }
+          specify { @species.cites_listing.should == 'I' }
         end
       end
 

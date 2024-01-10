@@ -10,7 +10,7 @@ describe Admin::NomenclatureChanges::LumpController do
       end
       it 'renders the inputs template' do
         get :show, id: :inputs, nomenclature_change_id: @lump.id
-        expect(response).to render_template('inputs')
+        response.should render_template('inputs')
       end
     end
     context 'outputs' do
@@ -20,7 +20,7 @@ describe Admin::NomenclatureChanges::LumpController do
       end
       it 'renders the outputs template' do
         get :show, id: :outputs, nomenclature_change_id: @lump.id
-        expect(response).to render_template('outputs')
+        response.should render_template('outputs')
       end
     end
     context 'reassignments' do
@@ -32,7 +32,7 @@ describe Admin::NomenclatureChanges::LumpController do
       end
       it 'renders the notes template' do
         get :show, id: :notes, nomenclature_change_id: @lump.id
-        expect(response).to render_template('notes')
+        response.should render_template('notes')
       end
       context "when legislation present" do
         before(:each) do
@@ -40,13 +40,13 @@ describe Admin::NomenclatureChanges::LumpController do
         end
         it 'renders the legislation template' do
           get :show, id: :legislation, nomenclature_change_id: @lump.id
-          expect(response).to render_template('legislation')
+          response.should render_template('legislation')
         end
       end
       context "when no legislation" do
         it 'redirects to next step' do
           get :show, id: :legislation, nomenclature_change_id: @lump.id
-          expect(response).to redirect_to(
+          response.should redirect_to(
             admin_nomenclature_change_lump_url(
               nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
             )
@@ -55,7 +55,7 @@ describe Admin::NomenclatureChanges::LumpController do
       end
       it 'renders the summary template' do
         get :show, id: :summary, nomenclature_change_id: @lump.id
-        expect(response).to render_template('summary')
+        response.should render_template('summary')
       end
     end
   end
@@ -63,7 +63,7 @@ describe Admin::NomenclatureChanges::LumpController do
   describe 'POST create' do
     it 'redirects to lump wizard' do
       post :create, nomenclature_change_id: 'new'
-      expect(response).to redirect_to(
+      response.should redirect_to(
         admin_nomenclature_change_lump_url(
           nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'inputs'
         )
@@ -83,7 +83,7 @@ describe Admin::NomenclatureChanges::LumpController do
             1 => { taxon_concept_id: create_cites_eu_species.id }
           }
         }, nomenclature_change_id: @lump.id, id: 'inputs'
-        expect(response).to redirect_to(
+        response.should redirect_to(
           admin_nomenclature_change_lump_url(
             nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'outputs'
           )
@@ -98,7 +98,7 @@ describe Admin::NomenclatureChanges::LumpController do
               0 => { taxon_concept_id: nil }
             }
           }, nomenclature_change_id: @lump.id, id: 'inputs'
-        expect(response).to render_template('inputs')
+        response.should render_template('inputs')
       end
     end
     context 'when last step' do
@@ -106,15 +106,15 @@ describe Admin::NomenclatureChanges::LumpController do
         login_secretariat_user
         it 'redirects to admin root path' do
           put :update, nomenclature_change_id: @lump.id, id: 'summary'
-          expect(response).to redirect_to admin_root_path
+          response.should redirect_to admin_root_path
         end
       end
       context 'when user is manager' do
         it 'redirects to nomenclature changes path' do
           pending("Strange render mismatch after upgrading to Rails 4")
           put :update, nomenclature_change_id: @lump.id, id: 'summary'
-          expect(response).to be_successful
-          expect(response).to render_template("nomenclature_changes")
+          response.should be_successful
+          response.should render_template("nomenclature_changes")
         end
       end
     end
@@ -130,7 +130,7 @@ describe Admin::NomenclatureChanges::LumpController do
     context 'when step is legislation' do
       it 'renders notes step' do
         get :show, id: :notes, nomenclature_change_id: @lump.id, back: true
-        expect(response).to render_template('notes')
+        response.should render_template('notes')
       end
     end
     context 'when step is summary' do
@@ -140,15 +140,15 @@ describe Admin::NomenclatureChanges::LumpController do
         end
         it 'renders legislation step' do
           get :show, id: :legislation, nomenclature_change_id: @lump.id, back: true
-          expect(response).to render_template('legislation')
+          response.should render_template('legislation')
         end
       end
       context 'when no legislation' do
         it 'redirects to notes step' do
           get :show, id: :legislation, nomenclature_change_id: @lump.id, back: true
-          expect(response).to redirect_to action: :show, id: :notes
+          response.should redirect_to action: :show, id: :notes
           get :show, id: :notes, nomenclature_change_id: @lump.id
-          expect(response).to redirect_to action: :show, id: :notes
+          response.should redirect_to action: :show, id: :notes
         end
       end
     end

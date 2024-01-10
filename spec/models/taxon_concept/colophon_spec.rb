@@ -7,55 +7,55 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for genus Colophon" do
-          specify { expect(@genus.cites_listing).to eq('III') }
+          specify { @genus.cites_listing.should == 'III' }
         end
         context "for species Colophon barnardi" do
-          specify { expect(@species.cites_listing).to eq('III') }
+          specify { @species.cites_listing.should == 'III' }
         end
       end
 
       describe :eu_listing do
         context "for genus Colophon" do
-          specify { expect(@genus.eu_listing).to eq('C') }
+          specify { @genus.eu_listing.should == 'C' }
         end
         context "for species Colophon barnardi" do
-          specify { expect(@species.eu_listing).to eq('C') }
+          specify { @species.eu_listing.should == 'C' }
         end
       end
 
       describe :cites_listed do
         context "for genus Colophon" do
-          specify { expect(@genus.cites_listed).to eq(true) }
+          specify { @genus.cites_listed.should == true }
         end
         context "for species Colophon barnardi" do
-          specify { expect(@species.cites_listed).to eq(false) }
+          specify { @species.cites_listed.should == false }
         end
       end
 
       describe :eu_listed do
         context "for genus Colophon" do
-          specify { expect(@genus.eu_listed).to eq(true) }
+          specify { @genus.eu_listed.should == true }
         end
         context "for species Colophon barnardi" do
-          specify { expect(@species.eu_listed).to eq(false) }
+          specify { @species.eu_listed.should == false }
         end
       end
 
       describe :cites_show do
         context "for order Coleoptera" do
-          specify { expect(@order.cites_show).to be_falsey }
+          specify { @order.cites_show.should be_falsey }
         end
         context "for family Lucanidae" do
-          specify { expect(@family.cites_show).to be_falsey }
+          specify { @family.cites_show.should be_falsey }
         end
       end
 
       describe :current_party_ids do
         context "for genus Colophon" do
-          specify { expect(@genus.current_parties_ids).to eq([GeoEntity.find_by_iso_code2('ZA').id]) }
+          specify { @genus.current_parties_ids.should == [GeoEntity.find_by_iso_code2('ZA').id] }
         end
         context "for species Colophon barnardi" do
-          specify { expect(@species.current_parties_ids).to eq([GeoEntity.find_by_iso_code2('ZA').id]) }
+          specify { @species.current_parties_ids.should == [GeoEntity.find_by_iso_code2('ZA').id] }
         end
       end
 

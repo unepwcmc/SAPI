@@ -137,7 +137,7 @@ describe Trade::ValidationRule, :drops_tables => true do
         }
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
     end
@@ -158,7 +158,7 @@ describe Trade::ValidationRule, :drops_tables => true do
         }
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
     end
@@ -175,7 +175,7 @@ describe Trade::ValidationRule, :drops_tables => true do
         }
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
     end

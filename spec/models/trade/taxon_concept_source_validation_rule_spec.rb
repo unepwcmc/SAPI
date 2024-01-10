@@ -41,12 +41,12 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(annual_report_upload)
-        expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
+        subject.validation_errors_for_aru(annual_report_upload).size.should == 1
       }
       specify {
         subject.refresh_errors_if_needed(annual_report_upload)
         ve = subject.validation_errors_for_aru(annual_report_upload).first
-        expect(ve.error_message).to eq("taxon_name #{@animal.full_name} with source_code A is invalid")
+        ve.error_message.should == "taxon_name #{@animal.full_name} with source_code A is invalid"
       }
     end
     context "when species name is from Kingdom Plantae, source_code can't be C or R" do
@@ -62,7 +62,7 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(annual_report_upload)
-        expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(2)
+        subject.validation_errors_for_aru(annual_report_upload).size.should == 2
       }
     end
   end

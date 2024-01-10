@@ -4,14 +4,14 @@ describe Species::SpeciesReferenceOutputExport do
     subject {
       Species::SpeciesReferenceOutputExport.new({})
     }
-    specify { expect(subject.path).to eq("public/downloads/species_reference_output/") }
+    specify { subject.path.should == "public/downloads/species_reference_output/" }
   end
   describe :export do
     context "when no results" do
       subject {
         Species::SpeciesReferenceOutputExport.new({})
       }
-      specify { expect(subject.export).to be_falsey }
+      specify { subject.export.should be_falsey }
     end
     context "when results" do
       before(:each) {
@@ -31,13 +31,13 @@ describe Species::SpeciesReferenceOutputExport do
       context "when file not cached" do
         specify {
           subject.export
-          expect(File.file?(subject.file_name)).to be_truthy
+          File.file?(subject.file_name).should be_truthy
         }
       end
       context "when file cached" do
         specify {
           FileUtils.touch(subject.file_name)
-          expect(subject).not_to receive(:to_csv)
+          subject.should_not_receive(:to_csv)
           subject.export
         }
       end

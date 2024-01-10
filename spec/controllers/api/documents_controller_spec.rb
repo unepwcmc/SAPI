@@ -28,7 +28,7 @@ describe Api::V1::DocumentsController, type: :controller do
   context "GET index returns all documents" do
     def get_all_documents
       get :index, taxon_concept_id: @taxon_concept.id
-      expect(response.body).to have_json_size(4).at_path('documents')
+      response.body.should have_json_size(4).at_path('documents')
     end
     context "GET index contributor" do
       login_contributor
@@ -50,7 +50,7 @@ describe Api::V1::DocumentsController, type: :controller do
   context "GET index returns only public documents" do
     def get_public_documents
       get :index, taxon_concept_id: @taxon_concept.id
-      expect(response.body).to have_json_size(3).at_path('documents')
+      response.body.should have_json_size(3).at_path('documents')
     end
     context "GET index api user " do
       login_api_user
@@ -69,7 +69,7 @@ describe Api::V1::DocumentsController, type: :controller do
   context "GET index returns only public documents for secretariat role" do
     def get_public_documents
       get :index, taxon_concept_id: @taxon_concept.id
-      expect(response.body).to have_json_size(3).at_path('documents')
+      response.body.should have_json_size(3).at_path('documents')
     end
     context "GET index api user " do
       login_secretariat_user
@@ -83,7 +83,7 @@ describe Api::V1::DocumentsController, type: :controller do
   context "show action fails" do
     login_api_user
     it "should return 403 status when permission denied" do
-      expect(controller).to receive(:render_403) { controller.render nothing: true }
+      controller.should_receive(:render_403) { controller.render nothing: true }
       get :show, id: @document2.id
     end
   end
@@ -91,7 +91,7 @@ describe Api::V1::DocumentsController, type: :controller do
   context "GET should retrieve documents with no event_type" do
     it "returns documents with no event_type" do
       get :index, event_type: "Other"
-      expect(response.body).to have_json_size(1).at_path('documents')
+      response.body.should have_json_size(1).at_path('documents')
     end
   end
 
@@ -99,35 +99,35 @@ describe Api::V1::DocumentsController, type: :controller do
     context "single document selected" do
       it "should return 404 if file is missing" do
         expect(File).to receive(:exists?).and_return(false)
-        expect(controller).to receive(:render_404) { controller.render nothing: true }
+        controller.should_receive(:render_404) { controller.render nothing: true }
         get :download_zip, ids: @document2.id
       end
       it "should return zip file if file is found" do
         allow(controller).to receive(:render)
         expect(File).to receive(:exists?).and_return(true)
         get :download_zip, ids: @document2.id
-        expect(response.headers['Content-Type']).to eq 'application/zip'
+        response.headers['Content-Type'].should eq 'application/zip'
       end
     end
 
     context "multiple documents selected" do
       it "should return 404 if all files are missing" do
         expect(File).to receive(:exists?).and_return(false, false)
-        expect(controller).to receive(:render_404) { controller.render nothing: true }
+        controller.should_receive(:render_404) { controller.render nothing: true }
         get :download_zip, ids: "#{@document.id},#{@document2.id}"
       end
 
       it "should return zip file if at least a file is found" do
         expect(File).to receive(:exists?).and_return(false, true)
         get :download_zip, ids: "#{@document.id},#{@document2.id}"
-        expect(response.headers['Content-Type']).to eq 'application/zip'
+        response.headers['Content-Type'].should eq 'application/zip'
       end
     end
 
     context "cascading documents logic" do
       it "should get subspecies documents" do
         get :index, taxon_concepts_ids: [@taxon_concept.id]
-        expect(response.body).to have_json_size(3).at_path('documents')
+        response.body.should have_json_size(3).at_path('documents')
       end
     end
   end

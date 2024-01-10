@@ -33,7 +33,7 @@ describe EuRegulation do
         EventListingChangesCopyWorker.jobs.clear
         create_eu_regulation(:listing_changes_event_id => eu_regulation1.id)
       end
-      specify { expect(EventListingChangesCopyWorker.jobs.size).to eq(1) }
+      specify { EventListingChangesCopyWorker.jobs.size.should == 1 }
     end
     context "when designation invalid" do
       let(:eu_regulation) {
@@ -42,8 +42,8 @@ describe EuRegulation do
           :designation => cites
         )
       }
-      specify { expect(eu_regulation).to be_invalid }
-      specify { expect(eu_regulation).to have(1).error_on(:designation_id) }
+      specify { eu_regulation.should be_invalid }
+      specify { eu_regulation.should have(1).error_on(:designation_id) }
     end
     context "when effective_at is blank" do
       let(:eu_regulation) {
@@ -52,8 +52,8 @@ describe EuRegulation do
           :effective_at => nil
         )
       }
-      specify { expect(eu_regulation).to be_invalid }
-      specify { expect(eu_regulation).to have(1).error_on(:effective_at) }
+      specify { eu_regulation.should be_invalid }
+      specify { eu_regulation.should have(1).error_on(:effective_at) }
     end
   end
   describe :activate do
@@ -62,8 +62,8 @@ describe EuRegulation do
       EuRegulationActivationWorker.jobs.clear
       eu_regulation.activate!
     end
-    specify { expect(eu_regulation.is_current).to be_truthy }
-    specify { expect(EuRegulationActivationWorker.jobs.size).to eq(1) }
+    specify { eu_regulation.is_current.should be_truthy }
+    specify { EuRegulationActivationWorker.jobs.size.should == 1 }
   end
 
   describe :deactivate do
@@ -72,19 +72,19 @@ describe EuRegulation do
       EuRegulationActivationWorker.jobs.clear
       eu_regulation.deactivate!
     end
-    specify { expect(eu_regulation.is_current).to be_falsey }
-    specify { expect(EuRegulationActivationWorker.jobs.size).to eq(1) }
+    specify { eu_regulation.is_current.should be_falsey }
+    specify { EuRegulationActivationWorker.jobs.size.should == 1 }
   end
 
   describe :destroy do
     let(:eu_regulation) { create_eu_regulation }
     context "when no dependent objects attached" do
-      specify { expect(eu_regulation.destroy).to be_truthy }
+      specify { eu_regulation.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       context "when listing changes" do
         let!(:listing_change) { create_eu_A_addition(:event => eu_regulation) }
-        specify { expect(eu_regulation.destroy).to be_truthy }
+        specify { eu_regulation.destroy.should be_truthy }
       end
     end
   end

@@ -30,16 +30,16 @@ describe TaxonConcept do
     }
     context "when new" do
       specify {
-        expect(tc.has_trade_names?).to be_truthy
+        tc.has_trade_names?.should be_truthy
       }
       specify {
-        expect(trade_name.is_trade_name?).to be_truthy
+        trade_name.is_trade_name?.should be_truthy
       }
       specify {
-        expect(trade_name.has_accepted_names_for_trade_name?).to be_truthy
+        trade_name.has_accepted_names_for_trade_name?.should be_truthy
       }
       specify {
-        expect(trade_name.full_name).to eq('Lolcatus lolus')
+        trade_name.full_name.should == 'Lolcatus lolus'
       }
     end
     context "when duplicate" do
@@ -47,9 +47,9 @@ describe TaxonConcept do
         trade_name.dup
       }
       specify {
-        expect do
+        lambda do
           duplicate.save
-        end.to change(TaxonConcept, :count).by(0)
+        end.should change(TaxonConcept, :count).by(0)
       }
     end
     context "when duplicate but author name different" do
@@ -59,9 +59,9 @@ describe TaxonConcept do
         res
       }
       specify {
-        expect do
+        lambda do
           duplicate.save
-        end.to change(TaxonConcept, :count).by(1)
+        end.should change(TaxonConcept, :count).by(1)
       }
     end
     context "when has accepted parent" do
@@ -84,13 +84,13 @@ describe TaxonConcept do
         )
       end
       # should not modify a trade_name's full name when saving
-      specify { expect(@trade_name.full_name).to eq('Lolcatus lolus furiatus') }
+      specify { @trade_name.full_name.should == 'Lolcatus lolus furiatus' }
       context "overnight calculations" do
         before(:each) do
           Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
         # should not modify a trade_name's full name overnight
-        specify { expect(@trade_name.reload.full_name).to eq('Lolcatus lolus furiatus') }
+        specify { @trade_name.reload.full_name.should == 'Lolcatus lolus furiatus' }
       end
     end
   end

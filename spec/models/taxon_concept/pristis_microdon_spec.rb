@@ -7,43 +7,43 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context 'for family Pristidae' do
-          specify { expect(@family.cites_listing).to eq('I') }
+          specify { @family.cites_listing.should == 'I' }
         end
         context 'for species Pristis microdon' do
-          specify { expect(@species.cites_listing).to eq('I') }
+          specify { @species.cites_listing.should == 'I' }
         end
       end
 
       describe :cites_listed do
         context "for species Pristis microdon" do
-          specify { expect(@species.cites_listed).to eq(false) }
+          specify { @species.cites_listed.should == false }
         end
       end
 
       describe :cites_show do
         context "for species Pristis microdon" do
-          specify { expect(@species.cites_show).to be_truthy }
+          specify { @species.cites_show.should be_truthy }
         end
       end
 
       describe :eu_listing do
         context 'for family Pristidae' do
-          specify { expect(@family.eu_listing).to eq('A') }
+          specify { @family.eu_listing.should == 'A' }
         end
         context 'for species Pristis microdon' do
-          specify { expect(@species.eu_listing).to eq('A') }
+          specify { @species.eu_listing.should == 'A' }
         end
       end
 
       describe :eu_listed do
         context "for species Pristis microdon" do
-          specify { expect(@species.eu_listed).to eq(false) }
+          specify { @species.eu_listed.should == false }
         end
       end
 
       describe :eu_show do
         context "for species Pristis microdon" do
-          specify { expect(@species.eu_show).to be_truthy }
+          specify { @species.eu_show.should be_truthy }
         end
       end
 

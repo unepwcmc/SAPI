@@ -5,19 +5,19 @@ describe Species::Search do
     context "when searching by scientific name" do
       context "when regular query" do
         subject { Species::Search.new({ :taxon_concept_query => 'canis' }).results }
-        specify { expect(subject).to include(@species) }
+        specify { subject.should include(@species) }
       end
       context "when malicious query" do
         subject { Species::Search.new({ :taxon_concept_query => 'canis\'' }).results }
-        specify { expect(subject).to be_empty }
+        specify { subject.should be_empty }
       end
       context "when leading whitespace" do
         subject { Species::Search.new({ :taxon_concept_query => ' canis' }).results }
-        specify { expect(subject).to include(@species) }
+        specify { subject.should include(@species) }
       end
       context "when trailing whitespace" do
         subject { Species::Search.new({ :taxon_concept_query => 'canis ' }).results }
-        specify { expect(subject).to include(@species) }
+        specify { subject.should include(@species) }
       end
     end
   end

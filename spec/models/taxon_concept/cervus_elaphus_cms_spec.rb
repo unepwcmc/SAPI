@@ -7,31 +7,31 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cms_listing do
         context "for species Cervus elaphus" do
-          specify { expect(@species.cms_listing).to eq('I/II') }
+          specify { @species.cms_listing.should == 'I/II' }
         end
         context "for subspecies Cervus elaphus bactrianus" do
-          specify { expect(@subspecies1.cms_listing).to eq('I/II') }
+          specify { @subspecies1.cms_listing.should == 'I/II' }
         end
         context "for subspecies Cervus elaphus barbarus" do
-          specify { expect(@subspecies2.cms_listing).to eq('I/II') }
+          specify { @subspecies2.cms_listing.should == 'I/II' }
         end
       end
 
       describe :show_in_species_plus_ac do
         context "for subspecies Cervus elaphus bactrianus (instrument)" do
-          specify { expect(@subspecies1_ac.show_in_species_plus_ac).to be_truthy }
+          specify { @subspecies1_ac.show_in_species_plus_ac.should be_truthy }
         end
         context "for subspecies Cervus elaphus barbarus (listing)" do
-          specify { expect(@subspecies2_ac.show_in_species_plus_ac).to be_truthy }
+          specify { @subspecies2_ac.show_in_species_plus_ac.should be_truthy }
         end
       end
 
       describe :show_in_species_plus do
         context "for subspecies Cervus elaphus bactrianus (instrument)" do
-          specify { expect(@subspecies1.show_in_species_plus).to be_truthy }
+          specify { @subspecies1.show_in_species_plus.should be_truthy }
         end
         context "for subspecies Cervus elaphus barbarus (listing)" do
-          specify { expect(@subspecies2.show_in_species_plus).to be_truthy }
+          specify { @subspecies2.show_in_species_plus.should be_truthy }
         end
       end
 

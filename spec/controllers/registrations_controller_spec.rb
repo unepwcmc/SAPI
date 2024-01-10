@@ -15,7 +15,7 @@ describe RegistrationsController do
       put :update, :id => @u1.id, :user => {
         :email => @u1.email, :name => 'ZZ'
       }
-      expect(response).to redirect_to(admin_root_url)
+      response.should redirect_to(admin_root_url)
     end
     it "should update password" do
       sign_in(@u1)
@@ -24,14 +24,14 @@ describe RegistrationsController do
         :password => '22222222', :password_confirmation => '22222222',
         :current_password => '11111111'
       }
-      expect(response).to redirect_to(admin_root_url)
+      response.should redirect_to(admin_root_url)
     end
     it "should not update that account if not valid" do
       sign_in(@u1)
       put :update, :id => @u1.id, :user => {
         :email => @u1.email, :name => nil
       }
-      expect(response).to render_template("edit")
+      response.should render_template("edit")
     end
   end
 
@@ -41,7 +41,7 @@ describe RegistrationsController do
       put :update, :id => @u2.id, :user => {
         :email => @u1.email, :name => 'ZZ'
       }
-      expect(@u2.reload.name).not_to eq('ZZ')
+      @u2.reload.name.should_not == 'ZZ'
     end
   end
 

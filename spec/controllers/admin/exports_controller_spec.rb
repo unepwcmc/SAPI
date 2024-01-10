@@ -19,8 +19,8 @@ describe Admin::ExportsController do
         create(:taxon_concept)
         Species::TaxonConceptsNamesExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, :data_type => "Names"
-        expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"")
+        response.content_type.should eq("text/csv")
+        response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_names.csv\"")
       end
       it "redirects when no results" do
         get :download, :data_type => "Names"
@@ -32,8 +32,8 @@ describe Admin::ExportsController do
         create_cites_eu_species
         Species::TaxonConceptsNamesExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, :data_type => "Names", :filters => { :taxonomy => 'CITES_EU' }
-        expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"")
+        response.content_type.should eq("text/csv")
+        response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_names.csv\"")
       end
       it "redirects when no results" do
         get :download, :data_type => "Names", :filters => { :taxonomy => 'CITES_EU' }
@@ -45,8 +45,8 @@ describe Admin::ExportsController do
         create_cms_species
         Species::TaxonConceptsNamesExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, :data_type => "Names", :filters => { :taxonomy => 'CMS' }
-        expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"")
+        response.content_type.should eq("text/csv")
+        response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_names.csv\"")
       end
       it "redirects when no results" do
         get :download, :data_type => "Names", :filters => { :taxonomy => 'CMS' }
@@ -64,8 +64,8 @@ describe Admin::ExportsController do
         create(:distribution, :taxon_concept_id => tc.id)
         Species::TaxonConceptsDistributionsExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, :data_type => "Distributions"
-        expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
+        response.content_type.should eq("text/csv")
+        response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
       end
       it "redirects when no results" do
         get :download, :data_type => "Distributions"
@@ -78,8 +78,8 @@ describe Admin::ExportsController do
         create(:distribution, :taxon_concept_id => tc.id)
         Species::TaxonConceptsDistributionsExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, :data_type => "Distributions", :filters => { :taxonomy => 'CITES_EU' }
-        expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
+        response.content_type.should eq("text/csv")
+        response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
       end
       it "redirects when no results" do
         get :download, :data_type => "Distributions", :filters => { :taxonomy => 'CITES_EU' }
@@ -92,8 +92,8 @@ describe Admin::ExportsController do
         create(:distribution, :taxon_concept_id => tc.id)
         Species::TaxonConceptsDistributionsExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, :data_type => "Distributions", :filters => { :taxonomy => 'CMS' }
-        expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
+        response.content_type.should eq("text/csv")
+        response.headers["Content-Disposition"].should eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
       end
       it "redirects when no results" do
         get :download, :data_type => "Distributions", :filters => { :taxonomy => 'CMS' }

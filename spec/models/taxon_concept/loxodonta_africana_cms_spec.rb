@@ -6,26 +6,26 @@ describe TaxonConcept do
     context "TAXONOMY" do
       describe :full_name do
         context "for species Loxodonta africana" do
-          specify { expect(@species.full_name).to eq('Loxodonta africana') }
+          specify { @species.full_name.should == 'Loxodonta africana' }
         end
         context "for genus Loxodonta" do
-          specify { expect(@genus.full_name).to eq('Loxodonta') }
+          specify { @genus.full_name.should == 'Loxodonta' }
         end
       end
       describe :rank do
         context "for species Loxodonta africana" do
-          specify { expect(@species.rank_name).to eq('SPECIES') }
+          specify { @species.rank_name.should == 'SPECIES' }
         end
       end
       describe :ancestors do
         context "family" do
-          specify { expect(@species.family_name).to eq('Elephantidae') }
+          specify { @species.family_name.should == 'Elephantidae' }
         end
         context "order" do
-          specify { expect(@species.order_name).to eq('Proboscidea') }
+          specify { @species.order_name.should == 'Proboscidea' }
         end
         context "class" do
-          specify { expect(@species.class_name).to eq('Mammalia') }
+          specify { @species.class_name.should == 'Mammalia' }
         end
       end
     end
@@ -33,13 +33,13 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cms_listing do
         context "for species Loxodonta africana" do
-          specify { expect(@species.cms_listing).to eq('II') }
+          specify { @species.cms_listing.should == 'II' }
         end
       end
 
       describe :cms_listed do
         context "for species Loxodonta africana" do
-          specify { expect(@species.cms_listed).to be_truthy }
+          specify { @species.cms_listed.should be_truthy }
         end
       end
     end

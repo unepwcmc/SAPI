@@ -6,7 +6,7 @@ describe Trade::ValidationRulesController do
   describe "GET index" do
     it "should return success" do
       get :index, format: :json
-      expect(response).to be_success
+      response.should be_success
     end
   end
 end

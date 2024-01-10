@@ -43,16 +43,16 @@ describe Annotation do
   describe :destroy do
     let(:annotation) { create(:annotation) }
     context "when no dependent objects attached" do
-      specify { expect(annotation.destroy).to be_truthy }
+      specify { annotation.destroy.should be_truthy }
     end
     context "when dependent objects attached" do
       context "when listing changes" do
         let!(:listing_change) { create_cites_I_addition(:annotation_id => annotation.id) }
-        specify { expect(annotation.destroy).to be_falsey }
+        specify { annotation.destroy.should be_falsey }
       end
       context "when hashed listing changes" do
         let!(:listing_change) { create_cites_I_addition(:hash_annotation_id => annotation.id) }
-        specify { expect(annotation.destroy).to be_falsey }
+        specify { annotation.destroy.should be_falsey }
       end
     end
   end

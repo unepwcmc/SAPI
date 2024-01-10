@@ -7,19 +7,19 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cms_listing do
         context "for family Cheloniidae" do
-          specify { expect(@family.cms_listing).to eq('I/II') }
+          specify { @family.cms_listing.should == 'I/II' }
         end
         context "for species Caretta caretta" do
-          specify { expect(@species.cms_listing).to eq('I/II') }
+          specify { @species.cms_listing.should == 'I/II' }
         end
       end
 
       describe :cms_listed do
         context "for family Cheloniidae" do
-          specify { expect(@family.cms_listed).to be_truthy }
+          specify { @family.cms_listed.should be_truthy }
         end
         context "for species Caretta caretta" do
-          specify { expect(@species.cms_listed).to be_truthy }
+          specify { @species.cms_listed.should be_truthy }
         end
       end
     end
@@ -28,12 +28,12 @@ describe TaxonConcept do
       describe :current_cms_additions do
         context "for family Cheloniidae" do
           specify {
-            expect(@family.current_cms_additions.size).to eq(1)
+            @family.current_cms_additions.size.should == 1
           }
         end
         context "for species Caretta caretta" do
           specify {
-            expect(@species.current_cms_additions.size).to eq(2)
+            @species.current_cms_additions.size.should == 2
           }
         end
       end

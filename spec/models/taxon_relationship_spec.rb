@@ -19,12 +19,12 @@ describe TaxonRelationship do
     context 'a relationship with no opposite' do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_bidirectional => false) }
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
-      specify { expect(taxon_relationship.has_opposite?).to eq(false) }
+      specify { taxon_relationship.has_opposite?.should == false }
     end
     context 'with an opposite' do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_bidirectional => true) }
       let(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
-      specify { expect(taxon_relationship.has_opposite?).to eq(true) }
+      specify { taxon_relationship.has_opposite?.should == true }
     end
   end
 
@@ -32,13 +32,13 @@ describe TaxonRelationship do
     context 'when creating a bidirectional relationship' do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_bidirectional => true) }
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
-      specify { expect(taxon_relationship.has_opposite?).to eq(true) }
+      specify { taxon_relationship.has_opposite?.should == true }
     end
 
     context 'when creating a non bidirectional relationship' do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, :is_bidirectional => false) }
       let!(:taxon_relationship) { create(:taxon_relationship, :taxon_relationship_type_id => taxon_relationship_type.id) }
-      specify { expect(taxon_relationship.has_opposite?).to eq(false) }
+      specify { taxon_relationship.has_opposite?.should == false }
     end
   end
 
@@ -90,7 +90,7 @@ describe TaxonRelationship do
         )
       }
       specify {
-        expect(taxon_relationship2.valid?).to eq(false)
+        taxon_relationship2.valid?.should == false
       }
     end
     context "adding an intertaxonomic relationship between taxon concepts that are already related in the opposite direction (B -> A)" do
@@ -116,7 +116,7 @@ describe TaxonRelationship do
         )
       }
       specify {
-        expect(taxon_relationship2.valid?).to eq(false)
+        taxon_relationship2.valid?.should == false
       }
     end
     context "adding an intertaxonomic relationship between taxon concepts that are not already related" do
@@ -144,7 +144,7 @@ describe TaxonRelationship do
       }
 
       specify {
-        expect(taxon_relationship2.valid?).to eq(true)
+        taxon_relationship2.valid?.should == true
       }
     end
   end

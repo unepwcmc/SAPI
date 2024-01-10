@@ -12,7 +12,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        expect(subject).not_to include(@species)
+        subject.should_not include(@species)
       end
     end
     context "when Mexico" do
@@ -23,7 +23,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        expect(subject).not_to include(@species)
+        subject.should_not include(@species)
       end
     end
     context "when Canada" do
@@ -34,7 +34,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        expect(subject).not_to include(@species)
+        subject.should_not include(@species)
       end
     end
     context "when Argentina" do
@@ -45,7 +45,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        expect(subject).to include(@species)
+        subject.should include(@species)
       end
     end
     context "when South America" do
@@ -56,7 +56,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        expect(subject).to include(@species)
+        subject.should include(@species)
       end
     end
     context "when North America" do
@@ -67,7 +67,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        expect(subject).not_to include(@species)
+        subject.should_not include(@species)
       end
     end
     context "when North America and Argentina" do
@@ -79,7 +79,7 @@ describe Checklist do
         checklist.results
       }
       specify do
-        expect(subject).to include(@species)
+        subject.should include(@species)
       end
     end
   end

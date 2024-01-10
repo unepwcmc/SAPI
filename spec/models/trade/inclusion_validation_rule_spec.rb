@@ -149,7 +149,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(annual_report_upload)
-        expect(subject.validation_errors_for_aru(annual_report_upload)).to be_empty
+        subject.validation_errors_for_aru(annual_report_upload).should be_empty
       }
     end
     context 'trading partner should be a valid iso code' do
@@ -176,7 +176,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(annual_report_upload)
-        expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
+        subject.validation_errors_for_aru(annual_report_upload).size.should == 1
       }
     end
     context 'term can only be paired with unit as defined by term_trade_codes_pairs table' do
@@ -203,7 +203,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         }
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
       context "when required unit blank" do
@@ -215,7 +215,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         }
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
     end
@@ -235,7 +235,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(annual_report_upload)
-        expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(2)
+        subject.validation_errors_for_aru(annual_report_upload).size.should == 2
       }
     end
     context 'taxon_concept_id can only be paired with term as defined by trade_taxon_concept_term_pairs table' do
@@ -256,7 +256,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         end
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
       context "when hybrid" do
@@ -273,7 +273,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         end
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
+          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
         }
       end
     end

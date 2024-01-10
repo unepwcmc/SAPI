@@ -6,7 +6,7 @@ describe Admin::SrgHistoriesController do
   describe "GET index" do
     it "renders the index template" do
       get :index
-      expect(response).to render_template("index")
+      response.should render_template("index")
     end
   end
 
@@ -19,7 +19,7 @@ describe Admin::SrgHistoriesController do
       it "renders the create js template" do
         post :create, srg_history: { name: 'test' }, format: :js
 
-        expect(response).to render_template("create")
+        response.should render_template("create")
       end
     end
 
@@ -27,7 +27,7 @@ describe Admin::SrgHistoriesController do
       it "renders new" do
         post :create, srg_history: {}, format: :js
 
-        expect(response).to render_template("new")
+        response.should render_template("new")
       end
     end
   end
@@ -41,7 +41,7 @@ describe Admin::SrgHistoriesController do
       it "renders the create js template" do
         put :update, id: @srg_history.id, format: :js
 
-        expect(response).to render_template("create")
+        response.should render_template("create")
       end
     end
 
@@ -52,7 +52,7 @@ describe Admin::SrgHistoriesController do
           id: @srg_history.id,
           format: :js
 
-        expect(response).to render_template('new')
+        response.should render_template('new')
       end
     end
   end
@@ -65,7 +65,7 @@ describe Admin::SrgHistoriesController do
     it "redirects after delete" do
       delete :destroy, id: @srg_history.id
 
-      expect(response).to redirect_to(admin_srg_histories_url)
+      response.should redirect_to(admin_srg_histories_url)
     end
   end
 end
