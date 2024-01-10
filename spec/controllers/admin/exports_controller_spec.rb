@@ -6,8 +6,8 @@ describe Admin::ExportsController do
   describe "GET index" do
     it "renders the index template" do
       get :index
-      expect(response).to render_template("index")
-      expect(response).to render_template("layouts/admin")
+      response.should render_template("index")
+      response.should render_template("layouts/admin")
     end
   end
   describe "GET download with data_type=Names" do
@@ -24,7 +24,7 @@ describe Admin::ExportsController do
       end
       it "redirects when no results" do
         get :download, :data_type => "Names"
-        expect(response).to redirect_to(admin_exports_path)
+        response.should redirect_to(admin_exports_path)
       end
     end
     context "CITES_EU" do
@@ -37,7 +37,7 @@ describe Admin::ExportsController do
       end
       it "redirects when no results" do
         get :download, :data_type => "Names", :filters => { :taxonomy => 'CITES_EU' }
-        expect(response).to redirect_to(admin_exports_path)
+        response.should redirect_to(admin_exports_path)
       end
     end
     context "CMS" do
@@ -50,7 +50,7 @@ describe Admin::ExportsController do
       end
       it "redirects when no results" do
         get :download, :data_type => "Names", :filters => { :taxonomy => 'CMS' }
-        expect(response).to redirect_to(admin_exports_path)
+        response.should redirect_to(admin_exports_path)
       end
     end
   end
@@ -69,7 +69,7 @@ describe Admin::ExportsController do
       end
       it "redirects when no results" do
         get :download, :data_type => "Distributions"
-        expect(response).to redirect_to(admin_exports_path)
+        response.should redirect_to(admin_exports_path)
       end
     end
     context "CITES_EU" do
@@ -83,7 +83,7 @@ describe Admin::ExportsController do
       end
       it "redirects when no results" do
         get :download, :data_type => "Distributions", :filters => { :taxonomy => 'CITES_EU' }
-        expect(response).to redirect_to(admin_exports_path)
+        response.should redirect_to(admin_exports_path)
       end
     end
     context "CMS" do
@@ -97,7 +97,7 @@ describe Admin::ExportsController do
       end
       it "redirects when no results" do
         get :download, :data_type => "Distributions", :filters => { :taxonomy => 'CMS' }
-        expect(response).to redirect_to(admin_exports_path)
+        response.should redirect_to(admin_exports_path)
       end
     end
   end
