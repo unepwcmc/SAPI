@@ -42,32 +42,22 @@ gem 'whenever', '0.11.0', :require => false # TODO: latest version 1.0 @ 2019. S
 gem 'httparty', '~> 0.21.0' # TODO: latest.
 
 gem 'sprockets', '2.12.5' # upgrading to 3 breaks handlebars/tilt
-gem 'ember-rails', '0.14.1'
-gem 'ember-source', '1.6.1'
-gem 'ember-data-source', '0.14'
-gem 'handlebars-source', '1.0.12'
-gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
-gem 'jquery-mousewheel-rails', '0.0.9'
-gem 'jquery-cookie-rails', '1.3.1.1'
-gem 'bootstrap-sass', '2.3.2.2'
 gem 'kaminari', '1.2.2' # TODO: latest @ 2021. Suggest migrate to pagy gem.
-
 
 gem 'acts-as-taggable-on', '5.0.0' # TODO: latest v10 @ 2023. Need upgrade when upgrade to Rails 5.
 gem 'carrierwave', '1.3.1' # TODO: latest is 3.0.5 @ 2023. v2 support Rails 5
-gem 'prawn', '0.13.2'
-gem 'pdfkit', '0.8.4.2'
-gem 'wkhtmltopdf-binary', '0.9.9.3'
 
-gem 'underscore-rails', '1.4.3'
-gem "font-awesome-rails", '4.5.0.1'
+# PDF
+gem 'prawn', '0.13.2'
+gem 'pdfkit', '~> 0.8.7.3'
+gem 'wkhtmltopdf-binary', '~> 0.12.6.6'
 
 gem 'aws-sdk', '~> 2' # TODO: v2 Deprecated, need to upgrade to v3
-gem 'rails-observers', '0.1.5' # TODO: a feature that removed since Rails 4...
+gem 'rails-observers', '~> 0.1.5' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
 
 # Gems used for assets
-gem 'sass-rails',   '5.0.7'
-gem 'coffee-rails', '4.1.0'
+gem 'sass-rails',   '5.0.7' # TODO: may need to upgrade when upgrade to Rails 5 or 6 (https://github.com/rails/sass-rails/releases)
+gem 'coffee-rails', '4.1.0' # TODO: v5 support Rails 6; 4.1.1 for Rails 5
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
@@ -88,7 +78,7 @@ gem 'uglifier', '2.7.2' # TODO: Only works with ES5. Latest version 4.2.0 @ 2019
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
-gem 'rest-client', '1.8.0', require: false
+gem 'rest-client', '1.8.0', require: false # TODO, should upgrade for better compatibility with newer Ruby but breaking change. Seems not many place using it, worth a try.
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
@@ -162,3 +152,13 @@ gem 'gon', '~> 6.4' # TODO: latest
 gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
 gem 'nested_form', '0.3.2' # TODO: latest @ 2013. Project is public archived on github. No longer maintained.
 gem 'select2-rails', '3.5.10' # initSelection deprecated on upgrade to version 4 (https://github.com/select2/select2/blob/develop/CHANGELOG.md)
+gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
+gem 'jquery-mousewheel-rails', '~> 0.0.9' # TODO: latest @ 2014
+gem 'jquery-cookie-rails', '~> 1.3', '>= 1.3.1.1' # TODO: latest @ 2013. No longer maintained. jquery-cookie is now superseded by js-cookie which can be added to your Rails pipeline with js_cookie_rails.
+gem 'bootstrap-sass', '2.3.2.2' # TODO: latest 3.4.1 @ 2019. Can't upgrade unless we sure bootstrap v3 backward compatible with boostrap v2
+gem 'ember-rails', '0.14.1' # Not support Sprockets 3+ unless upgrade. Latest version support Rails 5.1
+gem 'ember-source', '1.6.1' # TODO: just a wrapwrapper. Any update will change the ember.js version.
+gem 'ember-data-source', '0.14' # TODO: just a wrapwrapper. Any update will change the JS ember-data version.
+gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will change the handlebars.js version.
+gem 'underscore-rails', '1.4.3' # TODO, another wrapper
+gem "font-awesome-rails", '4.5.0.1' # TODO, another wrapper
