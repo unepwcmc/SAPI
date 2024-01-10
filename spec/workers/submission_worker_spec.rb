@@ -64,7 +64,7 @@ describe SubmissionWorker do
     }
     specify "leading space is stripped" do
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
-      Trade::Permit.find_by_number('BBB').should_not be_nil
+      expect(Trade::Permit.find_by_number('BBB')).not_to be_nil
     end
     context "when permit previously reported" do
       before(:each) { create(:permit, :number => 'xxx') }
@@ -127,11 +127,11 @@ describe SubmissionWorker do
     }
     specify {
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
-      Trade::Shipment.first.taxon_concept_id.should == @species.id
+      expect(Trade::Shipment.first.taxon_concept_id).to eq(@species.id)
     }
     specify {
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
-      Trade::Shipment.first.reported_taxon_concept_id.should == @synonym.id
+      expect(Trade::Shipment.first.reported_taxon_concept_id).to eq(@synonym.id)
     }
   end
 end
