@@ -19,7 +19,8 @@ describe Species::StandardReferenceOutputExport do
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/standard_reference_output")
         )
-        expect_any_instance_of(Species::StandardReferenceOutputExport).to receive(:path).and_return("spec/public/downloads/standard_reference_output/")
+        Species::StandardReferenceOutputExport.any_instance.stub(:path).
+          and_return("spec/public/downloads/standard_reference_output/")
       }
       after(:each) {
         FileUtils.remove_dir("spec/public/downloads/standard_reference_output", true)

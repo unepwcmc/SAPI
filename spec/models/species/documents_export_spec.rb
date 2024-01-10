@@ -12,7 +12,8 @@ describe Species::DocumentsExport do
       FileUtils.mkpath(
         File.expand_path("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}")
       )
-      expect_any_instance_of(Species::DocumentsExport).to receive(:path).and_return("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}/")
+      Species::DocumentsExport.any_instance.stub(:path).
+        and_return("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}/")
     end
     after(:each) do
       FileUtils.remove_dir("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}", true)

@@ -20,7 +20,8 @@ describe Species::OrphanedTaxonConceptsExport do
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/orphaned_taxon_concepts")
         )
-        expect_any_instance_of(Species::OrphanedTaxonConceptsExport).to receive(:path).and_return("spec/public/downloads/orphaned_taxon_concepts/")
+        Species::OrphanedTaxonConceptsExport.any_instance.stub(:path).
+          and_return("spec/public/downloads/orphaned_taxon_concepts/")
       }
       after(:each) {
         FileUtils.remove_dir("spec/public/downloads/orphaned_taxon_concepts", true)

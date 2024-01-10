@@ -12,7 +12,7 @@ describe Trade::ExportsController do
       end
       it "does not log download information from the admin interface" do
         create(:shipment)
-        expect_any_instance_of(Trade::ShipmentsExport).to receive(:public_file_name).and_return('shipments.csv')
+        Trade::ShipmentsExport.any_instance.stub(:public_file_name).and_return('shipments.csv')
         expect {
           get :download, :filters => {
             :report_type => :raw,
@@ -25,7 +25,7 @@ describe Trade::ExportsController do
     end
     context 'when shipments cannot be retrieved' do
       before(:each) do
-        expect_any_instance_of(Trade::ShipmentsExport).to receive(:export).and_return(false)
+        Trade::ShipmentsExport.any_instance.stub(:export).and_return(false)
       end
       it "redirects to home page" do
         get :download, :filters => { :report_type => :comptab }

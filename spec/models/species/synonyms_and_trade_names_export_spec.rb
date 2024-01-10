@@ -25,7 +25,8 @@ describe Species::SynonymsAndTradeNamesExport do
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/synonyms_and_trade_names")
         )
-        expect_any_instance_of(Species::SynonymsAndTradeNamesExport).to receive(:path).and_return("spec/public/downloads/synonyms_and_trade_names/")
+        Species::SynonymsAndTradeNamesExport.any_instance.stub(:path).
+          and_return("spec/public/downloads/synonyms_and_trade_names/")
       }
       after(:each) {
         FileUtils.remove_dir("spec/public/downloads/synonyms_and_trade_names", true)

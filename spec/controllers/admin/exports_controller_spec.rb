@@ -17,7 +17,7 @@ describe Admin::ExportsController do
     context "all" do
       it "returns taxon concepts names file" do
         create(:taxon_concept)
-        expect_any_instance_of(Species::TaxonConceptsNamesExport).to receive(:public_file_name).and_return('taxon_concepts_names.csv')
+        Species::TaxonConceptsNamesExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, :data_type => "Names"
         expect(response.content_type).to eq("text/csv")
         expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"")
@@ -30,7 +30,7 @@ describe Admin::ExportsController do
     context "CITES_EU" do
       it "returns CITES_EU taxon concepts names file" do
         create_cites_eu_species
-        expect_any_instance_of(Species::TaxonConceptsNamesExport).to receive(:public_file_name).and_return('taxon_concepts_names.csv')
+        Species::TaxonConceptsNamesExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, :data_type => "Names", :filters => { :taxonomy => 'CITES_EU' }
         expect(response.content_type).to eq("text/csv")
         expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"")
@@ -43,7 +43,7 @@ describe Admin::ExportsController do
     context "CMS" do
       it "returns CMS taxon concepts names file" do
         create_cms_species
-        expect_any_instance_of(Species::TaxonConceptsNamesExport).to receive(:public_file_name).and_return('taxon_concepts_names.csv')
+        Species::TaxonConceptsNamesExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, :data_type => "Names", :filters => { :taxonomy => 'CMS' }
         expect(response.content_type).to eq("text/csv")
         expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"")
@@ -62,7 +62,7 @@ describe Admin::ExportsController do
       it "returns taxon concepts distributions file" do
         tc = create(:taxon_concept)
         create(:distribution, :taxon_concept_id => tc.id)
-        expect_any_instance_of(Species::TaxonConceptsDistributionsExport).to receive(:public_file_name).and_return('taxon_concepts_distributions.csv')
+        Species::TaxonConceptsDistributionsExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, :data_type => "Distributions"
         expect(response.content_type).to eq("text/csv")
         expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
@@ -76,7 +76,7 @@ describe Admin::ExportsController do
       it "returns CITES_EU taxon concepts distributions file" do
         tc = create_cites_eu_species
         create(:distribution, :taxon_concept_id => tc.id)
-        expect_any_instance_of(Species::TaxonConceptsDistributionsExport).to receive(:public_file_name).and_return('taxon_concepts_distributions.csv')
+        Species::TaxonConceptsDistributionsExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, :data_type => "Distributions", :filters => { :taxonomy => 'CITES_EU' }
         expect(response.content_type).to eq("text/csv")
         expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
@@ -90,7 +90,7 @@ describe Admin::ExportsController do
       it "returns CMS taxon concepts distributions file" do
         tc = create_cms_species
         create(:distribution, :taxon_concept_id => tc.id)
-        expect_any_instance_of(Species::TaxonConceptsDistributionsExport).to receive(:public_file_name).and_return('taxon_concepts_distributions.csv')
+        Species::TaxonConceptsDistributionsExport.any_instance.stub(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, :data_type => "Distributions", :filters => { :taxonomy => 'CMS' }
         expect(response.content_type).to eq("text/csv")
         expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
