@@ -11,18 +11,18 @@ gem 'actionpack-action_caching', '1.2.0'
 gem 'actionpack-page_caching', '1.1.1'
 gem 'active_model_serializers', '0.8.4'
 gem 'activeresource', '4.1.0' # TODO: can be removed? Seems no place using this.
-gem 'dalli', '2.7.10'
+gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
 gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
 gem 'pg_array_parser', '0.0.9' # TODO: latest 0.0.9
 gem 'nested-hstore', '0.1.2' # TODO: latest 0.1.2 @ 2015
 gem 'pg_search', '1.0.6' # TODO: update to newer version when upgrade to Rails 5
-gem 'oj', '3.14.2' # optimised JSON (picked by multi_json)
-gem 'nokogiri', '1.12.5'
+gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
+gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
 gem 'inherited_resources', '1.7.2' # TODO: need upgrade when upgrade to Rails 5
 gem 'traco', '2.0.0'
 # gem 'strong_parameters'
 gem 'protected_attributes', '1.1.4' # TODO: Only support Rails version < 5 (https://github.com/rails/protected_attributes)
-gem 'devise', '4.4.3'
+gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
 gem 'cancancan', '1.17.0' # TODO, need upgrade to 2.0 for Rails 5
 gem 'ahoy_matey', '1.6.1' # TODO: latest 5.0.2. Can't upgrade to 2.0 until upgrade to Rails 5
 gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
@@ -33,13 +33,13 @@ gem "chartkick", '1.3.2'
 gem 'rubyzip', '1.1.7'
 gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
-gem 'sidekiq', '4.2.10'
+gem 'sidekiq', '4.2.10' # TODO, Ruby 2.7 need version 6.0.5 sidekiq
 gem 'sidekiq-status', '1.1.4' # TODO: latest is 3.0.3 @ 2023
 gem 'sidekiq-unique-jobs', '4.0.18'
 gem 'redis-rails', '4.0.0'
 
-gem 'whenever', '0.9.4', :require => false
-gem 'httparty', '0.16.2'
+gem 'whenever', '0.11.0', :require => false # TODO: latest version 1.0 @ 2019. Should migrate to sidekiq-cron.
+gem 'httparty', '~> 0.21.0' # TODO: latest.
 
 gem 'sprockets', '2.12.5' # upgrading to 3 breaks handlebars/tilt
 gem 'ember-rails', '0.14.1'
@@ -72,8 +72,8 @@ gem 'coffee-rails', '4.1.0'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
 
-gem 'uglifier', '2.7.2'
-gem 'susy', '2.2.14'
+gem 'uglifier', '2.7.2' # TODO: Only works with ES5. Latest version 4.2.0 @ 2019
+
 
 
 # To use ActiveModel has_secure_password
@@ -141,22 +141,20 @@ group :test do
   gem 'capybara', '2.2.1'
 end
 
-gem 'slim', '1.3.6'
-
-gem 'memcache-client', '1.8.5'
-
-gem 'jquery-ui-rails', '4.1.2'
-
-gem 'geoip', '1.3.5'
+gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
 
 # track who created or edited a given object
-gem 'clerk', '0.2.2'
-gem 'paper_trail', '4.2.0'
-gem 'request_store', '1.3.2'
+gem 'clerk', '0.2.3' # TODO: Need update to 1.0.0 when upgrade to Rails 5. I would say should update our code and just use paper_trail. This gem last update at 2018.
+gem 'paper_trail', '4.2.0' # TODO: latest is 15.1.0. Need upgrade to v5 for Rails 5.
 
 gem 'dotenv-rails', '2.0.1'
 
-gem 'sitemap_generator', '5.1.0'
+gem 'sitemap_generator', '~> 6.3' # TODO: latest
 
 gem 'appsignal', '1.3.3'
 gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in staging / production
+
+# GEM for frontend.
+gem 'jquery-ui-rails', '4.2.1' # TODO: some breaking change form v5. Latest version 6.0.1 @ 2016
+# gem 'slim', '1.3.6' # I believe not in-use as we do not have .slim file.
+gem 'susy', '2.2.14' # TODO: Deprecated. 2.2.14 is the latest version @ 2018
