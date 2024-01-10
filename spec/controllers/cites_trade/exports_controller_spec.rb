@@ -22,9 +22,9 @@ describe CitesTrade::ExportsController do
       end
       it "logs download information from public interface to the TradeDataDownload model" do
         create(:shipment)
-        expect_any_instance_of(Trade::ShipmentsExport).to receive(:public_file_name).and_return('shipments.csv')
-        allow(Trade::TradeDataDownloadLogger).to receive(:city_country_from).and_return(["Cambridge", "United Kingdom"])
-        allow(Trade::TradeDataDownloadLogger).to receive(:organization_from).and_return("UNEP-WCMC")
+        Trade::ShipmentsExport.any_instance.stub(:public_file_name).and_return('shipments.csv')
+        Trade::TradeDataDownloadLogger.stub(:city_country_from).and_return(["Cambridge", "United Kingdom"])
+        Trade::TradeDataDownloadLogger.stub(:organization_from).and_return("UNEP-WCMC")
         lambda do
           get :download, :filters => {
             :report_type => 'comptab',
