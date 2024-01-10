@@ -7,9 +7,9 @@ gem 'rails', '4.2.11.3'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'actionpack-action_caching', '1.2.0'
-gem 'actionpack-page_caching', '1.1.1'
-gem 'active_model_serializers', '0.8.4'
+gem 'actionpack-action_caching', '~> 1.2', '>= 1.2.2' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
+gem 'actionpack-page_caching', '1.1.1' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this. # TODO, need update when upgrade to rails 5
+gem 'active_model_serializers', '0.8.4' # Deprecated
 gem 'activeresource', '4.1.0' # TODO: can be removed? Seems no place using this.
 gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
 gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
@@ -27,16 +27,16 @@ gem 'cancancan', '1.17.0' # TODO, need upgrade to 2.0 for Rails 5
 gem 'ahoy_matey', '1.6.1' # TODO: latest 5.0.2. Can't upgrade to 2.0 until upgrade to Rails 5
 gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
 
-gem 'wicked', '1.3.3'
-gem 'groupdate', '2.4.0'
+gem 'wicked', '~> 2.0' # TODO: latest
+gem 'groupdate', '2.4.0' # TODO: seems only ApiRequest#recent_requests using this. Suggest rewrite and remove dependencies.
 
 gem 'rubyzip', '~> 2.3', '>= 2.3.2' # TODO: latest
 gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
 gem 'sidekiq', '4.2.10' # TODO, Ruby 2.7 need version 6.0.5 sidekiq
 gem 'sidekiq-status', '1.1.4' # TODO: latest is 3.0.3 @ 2023
-gem 'sidekiq-unique-jobs', '4.0.18'
-gem 'redis-rails', '4.0.0'
+gem 'sidekiq-unique-jobs', '4.0.18' # TODO: latest is 8.0.5 @ 2023
+gem 'redis-rails', '5.0.2' # TODO: latest, may remove this Gem when upgrade to Rails 5.2. (https://github.com/redis-store/redis-rails/tree/master#a-quick-note-about-rails-52)
 
 gem 'whenever', '0.11.0', :require => false # TODO: latest version 1.0 @ 2019. Should migrate to sidekiq-cron.
 gem 'httparty', '~> 0.21.0' # TODO: latest.
@@ -51,9 +51,9 @@ gem 'jquery-mousewheel-rails', '0.0.9'
 gem 'jquery-cookie-rails', '1.3.1.1'
 gem 'bootstrap-sass', '2.3.2.2'
 gem 'kaminari', '1.2.2' # TODO: latest @ 2021. Suggest migrate to pagy gem.
-gem 'select2-rails', '3.5.10' #initSelection deprecated on upgrade to version 4
 
-gem 'acts-as-taggable-on', '4.0.0'
+
+gem 'acts-as-taggable-on', '5.0.0' # TODO: latest v10 @ 2023. Need upgrade when upgrade to Rails 5.
 gem 'carrierwave', '1.3.1' # TODO: latest is 3.0.5 @ 2023. v2 support Rails 5
 gem 'prawn', '0.13.2'
 gem 'pdfkit', '0.8.4.2'
@@ -161,3 +161,4 @@ gem 'susy', '2.2.14' # TODO: Deprecated. 2.2.14 is the latest version @ 2018
 gem 'gon', '~> 6.4' # TODO: latest
 gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
 gem 'nested_form', '0.3.2' # TODO: latest @ 2013. Project is public archived on github. No longer maintained.
+gem 'select2-rails', '3.5.10' # initSelection deprecated on upgrade to version 4 (https://github.com/select2/select2/blob/develop/CHANGELOG.md)
