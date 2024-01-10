@@ -1,4 +1,4 @@
-SAPI::Application.routes.draw do
+Rails.application.routes.draw do
   devise_for :users, :controllers => { :passwords => "passwords", :registrations => "registrations", :sessions => "sessions" }
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registratione'
