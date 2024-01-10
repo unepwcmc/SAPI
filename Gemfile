@@ -19,18 +19,18 @@ gem 'pg_search', '1.0.6' # TODO: update to newer version when upgrade to Rails 5
 gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
 gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
 gem 'inherited_resources', '1.7.2' # TODO: need upgrade when upgrade to Rails 5
-gem 'traco', '2.0.0'
+gem 'traco', '~> 5.3', '>= 5.3.3' # TODO: latest version @ 2021. Suggest migrate to Mobility gem.
 # gem 'strong_parameters'
 gem 'protected_attributes', '1.1.4' # TODO: Only support Rails version < 5 (https://github.com/rails/protected_attributes)
 gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
 gem 'cancancan', '1.17.0' # TODO, need upgrade to 2.0 for Rails 5
 gem 'ahoy_matey', '1.6.1' # TODO: latest 5.0.2. Can't upgrade to 2.0 until upgrade to Rails 5
 gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
-gem 'gon', '5.2.0'
+
 gem 'wicked', '1.3.3'
 gem 'groupdate', '2.4.0'
-gem "chartkick", '1.3.2'
-gem 'rubyzip', '1.1.7'
+
+gem 'rubyzip', '~> 2.3', '>= 2.3.2' # TODO: latest
 gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
 gem 'sidekiq', '4.2.10' # TODO, Ruby 2.7 need version 6.0.5 sidekiq
@@ -50,9 +50,9 @@ gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jqu
 gem 'jquery-mousewheel-rails', '0.0.9'
 gem 'jquery-cookie-rails', '1.3.1.1'
 gem 'bootstrap-sass', '2.3.2.2'
-gem 'kaminari', '1.2.2'
+gem 'kaminari', '1.2.2' # TODO: latest @ 2021. Suggest migrate to pagy gem.
 gem 'select2-rails', '3.5.10' #initSelection deprecated on upgrade to version 4
-gem 'nested_form', '0.3.2'
+
 gem 'acts-as-taggable-on', '4.0.0'
 gem 'carrierwave', '0.10.0'
 gem 'prawn', '0.13.2'
@@ -62,7 +62,7 @@ gem 'wkhtmltopdf-binary', '0.9.9.3'
 gem 'underscore-rails', '1.4.3'
 gem "font-awesome-rails", '4.5.0.1'
 
-gem 'aws-sdk', '~> 2'
+gem 'aws-sdk', '~> 2' # TODO: v2 Deprecated, need to upgrade to v3
 gem 'rails-observers', '0.1.5' # TODO: a feature that removed since Rails 4...
 
 # Gems used for assets
@@ -158,3 +158,6 @@ gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in s
 gem 'jquery-ui-rails', '4.2.1' # TODO: some breaking change form v5. Latest version 6.0.1 @ 2016
 # gem 'slim', '1.3.6' # I believe not in-use as we do not have .slim file.
 gem 'susy', '2.2.14' # TODO: Deprecated. 2.2.14 is the latest version @ 2018
+gem 'gon', '~> 6.4' # TODO: latest
+gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
+gem 'nested_form', '0.3.2' # TODO: latest @ 2013. Project is public archived on github. No longer maintained.
