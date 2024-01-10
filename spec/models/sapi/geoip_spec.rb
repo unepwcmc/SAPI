@@ -5,7 +5,7 @@ describe Sapi::GeoIP do
     subject { Sapi::GeoIP.instance }
     before(:each) do
       bogota_latin1 = "Bogotá".encode('ISO-8859-1', 'UTF-8')
-      allow(subject).to receive(:country_and_city).and_return(
+      subject.stub(:country_and_city).and_return(
         {
           country: 'Colombia',
           city: bogota_latin1
