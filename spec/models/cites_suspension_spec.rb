@@ -50,7 +50,7 @@ describe CitesSuspension, sidekiq: :inline do
     )
   }
   before do
-    travel -10.minutes
+    Timecop.freeze(10.minutes.ago)
     @genus = create_cites_eu_genus
     @taxon_concept = create_cites_eu_species(parent: @genus)
     @another_taxon_concept = create_cites_eu_species
@@ -64,7 +64,7 @@ describe CitesSuspension, sidekiq: :inline do
       :taxon_concept_id => @another_taxon_concept.id,
       :geo_entity_id => rwanda.id
     )
-    travel_back
+    Timecop.return
   end
 
   context "touching taxa" do

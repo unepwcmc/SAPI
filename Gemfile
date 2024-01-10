@@ -118,6 +118,7 @@ group :test, :development do
   gem 'rspec-collection_matchers', '1.1.3'
   gem "json_spec", '1.1.5'
   gem "database_cleaner", "1.2.0" # TODO, should remove after upgrade Rails.
+  gem "timecop", '0.6.3'
   gem "launchy", '2.4.3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
