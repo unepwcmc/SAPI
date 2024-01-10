@@ -54,7 +54,7 @@ gem 'kaminari', '1.2.2' # TODO: latest @ 2021. Suggest migrate to pagy gem.
 gem 'select2-rails', '3.5.10' #initSelection deprecated on upgrade to version 4
 
 gem 'acts-as-taggable-on', '4.0.0'
-gem 'carrierwave', '0.10.0'
+gem 'carrierwave', '1.3.1' # TODO: latest is 3.0.5 @ 2023. v2 support Rails 5
 gem 'prawn', '0.13.2'
 gem 'pdfkit', '0.8.4.2'
 gem 'wkhtmltopdf-binary', '0.9.9.3'
