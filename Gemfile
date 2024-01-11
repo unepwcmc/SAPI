@@ -10,7 +10,6 @@ gem 'rails', '4.2.11.3'
 gem 'actionpack-action_caching', '~> 1.2', '>= 1.2.2' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
 gem 'actionpack-page_caching', '1.1.1' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this. # TODO, need update when upgrade to rails 5
 gem 'active_model_serializers', '0.8.4' # Deprecated
-gem 'activeresource', '4.1.0' # TODO: can be removed? Seems no place using this.
 gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
 gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
 gem 'pg_array_parser', '0.0.9' # TODO: latest 0.0.9
