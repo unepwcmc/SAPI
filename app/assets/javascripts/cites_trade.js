@@ -3,7 +3,7 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require jquery-deparam
-//= require jquery.cookie
+//= require js.cookie
 //= require cites_trade/jquery.jgrowl_minimized
 //= require cites_trade/jquery.multi-select
 //= require cites_trade/select2
