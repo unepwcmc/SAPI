@@ -27,7 +27,11 @@ gem 'cancancan', '1.17.0' # TODO, need upgrade to 2.0 for Rails 5
 gem 'ahoy_matey', '1.6.1' # TODO: latest 5.0.2. Can't upgrade to 2.0 until upgrade to Rails 5
 gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
 
-gem 'wicked', '~> 2.0' # TODO: latest
+# TODO: starting from v1.4, it break our test due to redirection changes:
+#   rspec ./spec/controllers/admin/nomenclature_changes/lump_controller_spec.rb:147
+#   rspec ./spec/controllers/admin/nomenclature_changes/split_controller_spec.rb:191
+gem 'wicked', '~> 1.3', '>= 1.3.4'
+
 gem 'groupdate', '2.4.0' # TODO: seems only ApiRequest#recent_requests using this. Suggest rewrite and remove dependencies.
 
 gem 'rubyzip', '~> 2.3', '>= 2.3.2' # TODO: latest
