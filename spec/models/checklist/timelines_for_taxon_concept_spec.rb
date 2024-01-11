@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Checklist::TimelinesForTaxonConcept do
   before do
-    Timecop.freeze(Time.local(1990))
+    travel_to Time.local(1990)
   end
 
   after do
-    Timecop.return
+    travel_back
   end
 
   describe :timelines do

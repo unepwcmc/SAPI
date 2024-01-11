@@ -291,7 +291,7 @@ describe DocumentSearch, sidekiq: :inline do
   describe :documents_need_refreshing? do
     before(:each) do
       @d = nil
-      Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
+      travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
         @d = create(:proposal)
         DocumentSearch.refresh_citations_and_documents
       end
@@ -301,7 +301,7 @@ describe DocumentSearch, sidekiq: :inline do
     end
     context "when document created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
-        Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           create(:proposal)
         end
         expect(DocumentSearch.documents_need_refreshing?).to be_truthy
@@ -309,7 +309,7 @@ describe DocumentSearch, sidekiq: :inline do
     end
     context "when document destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
-        Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           @d.destroy
         end
         expect(DocumentSearch.documents_need_refreshing?).to be_truthy
@@ -317,7 +317,7 @@ describe DocumentSearch, sidekiq: :inline do
     end
     context "when document updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
-        Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           @d.update_attributes(is_public: true)
         end
         expect(DocumentSearch.documents_need_refreshing?).to be_truthy
@@ -328,7 +328,7 @@ describe DocumentSearch, sidekiq: :inline do
   describe :citations_need_refreshing? do
     before(:each) do
       @d = nil
-      Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
+      travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
         @d = create(:proposal)
         @c = create(:document_citation, document: @d)
         @c_tc = create(:document_citation_taxon_concept, document_citation: @c)
@@ -340,7 +340,7 @@ describe DocumentSearch, sidekiq: :inline do
     end
     context "when citation created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
-        Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           create(:document_citation_taxon_concept, document_citation: @c)
         end
         expect(DocumentSearch.citations_need_refreshing?).to be_truthy
@@ -348,7 +348,7 @@ describe DocumentSearch, sidekiq: :inline do
     end
     context "when citation destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
-        Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           @c_tc.destroy
         end
         expect(DocumentSearch.citations_need_refreshing?).to be_truthy
@@ -356,7 +356,7 @@ describe DocumentSearch, sidekiq: :inline do
     end
     context "when citation updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
-        Timecop.travel(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           @c_tc.update_attributes(taxon_concept_id: create_cites_eu_species.id)
         end
         expect(DocumentSearch.citations_need_refreshing?).to be_truthy
