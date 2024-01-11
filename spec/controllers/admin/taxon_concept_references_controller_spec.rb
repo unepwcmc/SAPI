@@ -16,7 +16,7 @@ describe Admin::TaxonConceptReferencesController do
           :reference_attributes =>
             { :citation => "My nice literature" }
         }
-      response.should render_template("create")
+      expect(response).to render_template("create")
     end
     it "renders new when not successful" do
       xhr :post, :create,
@@ -24,7 +24,7 @@ describe Admin::TaxonConceptReferencesController do
         :taxon_concept_reference => {
           :reference_attributes => {}
         }
-      response.should render_template("new")
+      expect(response).to render_template("new")
     end
   end
 
@@ -39,12 +39,12 @@ describe Admin::TaxonConceptReferencesController do
     it "renders the edit template" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => @taxon_concept_reference.id
-      response.should render_template('new')
+      expect(response).to render_template('new')
     end
     it "assigns the  taxon concept reference variable" do
       xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
         :id => @taxon_concept_reference.id
-      assigns(:taxon_concept_reference).should_not be_nil
+      expect(assigns(:taxon_concept_reference)).not_to be_nil
     end
   end
 
@@ -64,7 +64,7 @@ describe Admin::TaxonConceptReferencesController do
           :reference_attributes =>
             { :citation => "My nice literature" }
         }
-      response.should render_template("create")
+      expect(response).to render_template("create")
     end
     it "renders new when not successful" do
       xhr :put, :update, :format => 'js',
@@ -73,15 +73,15 @@ describe Admin::TaxonConceptReferencesController do
         :taxon_concept_reference => {
           :reference_attributes => {}
         }
-      response.should render_template('new')
+      expect(response).to render_template('new')
     end
   end
 
   describe "XHR GET 'new'" do
     it "returns http success and renders the new template" do
       xhr :get, :new, { :taxon_concept_id => @taxon_concept.id, :format => 'js' }
-      response.should be_success
-      response.should render_template('new')
+      expect(response).to be_success
+      expect(response).to render_template('new')
     end
   end
 
@@ -91,7 +91,7 @@ describe Admin::TaxonConceptReferencesController do
       delete :destroy,
         :taxon_concept_id => @taxon_concept.id,
         :id => taxon_concept_reference.id
-      response.should redirect_to(
+      expect(response).to redirect_to(
         admin_taxon_concept_taxon_concept_references_url(taxon_concept_reference.taxon_concept)
       )
     end

@@ -10,7 +10,7 @@ describe Species::TaxonConceptPrefixMatcher do
           :ranks => []
         })
       }
-      specify { subject.results.size.should == 3 }
+      specify { expect(subject.results.size).to eq(3) }
     end
     context "when match on accepted name" do
       subject {
@@ -19,7 +19,7 @@ describe Species::TaxonConceptPrefixMatcher do
           :ranks => []
         })
       }
-      specify { subject.results.size.should == 3 }
+      specify { expect(subject.results.size).to eq(3) }
     end
     context "when match on synonym" do
       subject {
@@ -28,7 +28,7 @@ describe Species::TaxonConceptPrefixMatcher do
           :ranks => []
         })
       }
-      specify { subject.results.size.should == 2 }
+      specify { expect(subject.results.size).to eq(2) }
     end
     context "when match on common name" do
       subject {
@@ -37,7 +37,7 @@ describe Species::TaxonConceptPrefixMatcher do
           :ranks => []
         })
       }
-      specify { subject.results.size.should == 1 }
+      specify { expect(subject.results.size).to eq(1) }
     end
   end
 end

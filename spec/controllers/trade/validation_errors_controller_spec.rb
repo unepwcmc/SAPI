@@ -44,7 +44,7 @@ describe Trade::ValidationErrorsController do
   describe "GET show" do
     it "should return success" do
       get :show, id: validation_error.id, format: :json
-      response.body.should have_json_path('validation_error')
+      expect(response.body).to have_json_path('validation_error')
     end
   end
 

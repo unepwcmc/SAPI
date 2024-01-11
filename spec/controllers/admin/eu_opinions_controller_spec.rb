@@ -11,24 +11,24 @@ describe Admin::EuOpinionsController do
   describe "GET index" do
     it "renders the index template" do
       get :index, taxon_concept_id: @taxon_concept.id
-      response.should render_template("index")
+      expect(response).to render_template("index")
     end
     it "renders the taxon_concepts_layout" do
       get :index, taxon_concept_id: @taxon_concept.id
-      response.should render_template('layouts/taxon_concepts')
+      expect(response).to render_template('layouts/taxon_concepts')
     end
   end
 
   describe "GET new" do
     it "renders the new template" do
       get :new, taxon_concept_id: @taxon_concept.id
-      response.should render_template('new')
+      expect(response).to render_template('new')
     end
     it "assigns @geo_entities (country and territory) with two objects" do
       create(:geo_entity, :geo_entity_type_id => territory_geo_entity_type.id)
       create(:geo_entity)
       get :new, taxon_concept_id: @taxon_concept.id
-      assigns(:geo_entities).size.should == 2
+      expect(assigns(:geo_entities).size).to eq(2)
     end
   end
 
@@ -54,7 +54,7 @@ describe Admin::EuOpinionsController do
               )
             },
             taxon_concept_id: @taxon_concept.id
-          response.should redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept))
+          expect(response).to redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept))
         end
       end
       context "when event is present" do
@@ -70,7 +70,7 @@ describe Admin::EuOpinionsController do
               )
             },
             taxon_concept_id: @taxon_concept.id
-          response.should redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept))
+          expect(response).to redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept))
         end
       end
     end
@@ -79,7 +79,7 @@ describe Admin::EuOpinionsController do
       it "renders new" do
         post :create, eu_opinion: {},
           taxon_concept_id: @taxon_concept.id
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -94,12 +94,12 @@ describe Admin::EuOpinionsController do
     end
     it "renders the edit template" do
       get :edit, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id, start_event_id: @eu_regulation.id
-      response.should render_template('edit')
+      expect(response).to render_template('edit')
     end
     it "assigns @geo_entities" do
       territory = create(:geo_entity, geo_entity_type_id: territory_geo_entity_type.id)
       get :edit, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id, start_event_id: @eu_regulation.id
-      assigns(:geo_entities).should include(territory)
+      expect(assigns(:geo_entities)).to include(territory)
     end
   end
 
@@ -125,7 +125,7 @@ describe Admin::EuOpinionsController do
             },
             id: @eu_opinion.id,
             taxon_concept_id: @taxon_concept.id
-          response.should redirect_to(
+          expect(response).to redirect_to(
             admin_taxon_concept_eu_opinions_url(@taxon_concept)
           )
         end
@@ -141,7 +141,7 @@ describe Admin::EuOpinionsController do
           },
           id: @eu_opinion.id,
           taxon_concept_id: @taxon_concept.id
-          response.should redirect_to(
+          expect(response).to redirect_to(
             admin_taxon_concept_eu_opinions_url(@taxon_concept)
           )
         end
@@ -156,7 +156,7 @@ describe Admin::EuOpinionsController do
             },
             id: @eu_opinion.id,
             taxon_concept_id: @taxon_concept.id
-          response.should redirect_to(
+          expect(response).to redirect_to(
             admin_taxon_concept_eu_opinions_url(@taxon_concept)
           )
         end
@@ -172,7 +172,7 @@ describe Admin::EuOpinionsController do
             },
             id: @eu_opinion.id,
             taxon_concept_id: @taxon_concept.id
-          response.should redirect_to(
+          expect(response).to redirect_to(
             admin_taxon_concept_eu_opinions_url(@taxon_concept)
           )
         end
@@ -190,7 +190,7 @@ describe Admin::EuOpinionsController do
             },
             id: @eu_opinion.id,
             taxon_concept_id: @taxon_concept.id
-          response.should render_template('new')
+          expect(response).to render_template('new')
         end
       end
 
@@ -205,7 +205,7 @@ describe Admin::EuOpinionsController do
             },
             id: @eu_opinion.id,
             taxon_concept_id: @taxon_concept.id
-          response.should render_template('new')
+          expect(response).to render_template('new')
         end
       end
     end
@@ -220,7 +220,7 @@ describe Admin::EuOpinionsController do
           },
           id: @eu_opinion.id,
           taxon_concept_id: @taxon_concept.id
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
     end
 
@@ -234,7 +234,7 @@ describe Admin::EuOpinionsController do
           },
           id: @eu_opinion.id,
           taxon_concept_id: @taxon_concept.id
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
     end
 
@@ -249,7 +249,7 @@ describe Admin::EuOpinionsController do
           },
           id: @eu_opinion.id,
           taxon_concept_id: @taxon_concept.id
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
     end
 
@@ -264,7 +264,7 @@ describe Admin::EuOpinionsController do
           },
           id: @eu_opinion.id,
           taxon_concept_id: @taxon_concept.id
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
     end
 
@@ -279,7 +279,7 @@ describe Admin::EuOpinionsController do
           },
           id: @eu_opinion.id,
           taxon_concept_id: @taxon_concept.id
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
     end
   end
@@ -295,7 +295,7 @@ describe Admin::EuOpinionsController do
     it "redirects after delete" do
       delete :destroy, id: @eu_opinion.id,
         taxon_concept_id: @taxon_concept.id, start_event_id: @eu_regulation.id
-      response.should redirect_to(
+      expect(response).to redirect_to(
         admin_taxon_concept_eu_opinions_url(@taxon_concept)
       )
     end

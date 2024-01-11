@@ -38,8 +38,8 @@ describe EuSuspension do
         )
       }
 
-      specify { eu_suspension.should be_invalid }
-      specify { eu_suspension.should have(1).error_on(:taxon_concept) }
+      specify { expect(eu_suspension).to be_invalid }
+      specify { expect(eu_suspension).to have(1).error_on(:taxon_concept) }
     end
 
     context "when geo_entity missing" do
@@ -50,14 +50,14 @@ describe EuSuspension do
         )
       }
 
-      specify { eu_suspension.should be_invalid }
-      specify { eu_suspension.should have(1).error_on(:geo_entity) }
+      specify { expect(eu_suspension).to be_invalid }
+      specify { expect(eu_suspension.error_on(:geo_entity).size).to eq(1) }
     end
 
     context "when valid" do
       let(:eu_suspension) { build(:eu_suspension) }
 
-      specify { eu_suspension.should be_valid }
+      specify { expect(eu_suspension).to be_valid }
     end
   end
 
@@ -67,7 +67,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: nil, end_event: nil)
       }
 
-      specify { eu_suspension.is_current.should be_falsey }
+      specify { expect(eu_suspension.is_current).to be_falsey }
     end
 
     context "when start_event is set but date is in the future" do
@@ -78,7 +78,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event, end_event: nil)
       }
 
-      specify { eu_suspension.is_current.should be_falsey }
+      specify { expect(eu_suspension.is_current).to be_falsey }
     end
 
     context "when start_event is set but is not current" do
@@ -89,7 +89,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event, end_event: nil)
       }
 
-      specify { eu_suspension.is_current.should be_falsey }
+      specify { expect(eu_suspension.is_current).to be_falsey }
     end
 
     context "when start_event is set but date is in past or present" do
@@ -107,8 +107,8 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event2, end_event: nil)
       }
 
-      specify { eu_suspension.is_current.should be_truthy }
-      specify { eu_suspension2.is_current.should be_truthy }
+      specify { expect(eu_suspension.is_current).to be_truthy }
+      specify { expect(eu_suspension2.is_current).to be_truthy }
     end
 
     context "when end_event is set, but no start_event is set" do
@@ -119,7 +119,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: nil, end_event: end_event)
       }
 
-      specify { eu_suspension.is_current.should be_falsey }
+      specify { expect(eu_suspension.is_current).to be_falsey }
     end
 
     context "when end_event is set, and start_event is set with date in future" do
@@ -133,7 +133,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event, end_event: end_event)
       }
 
-      specify { eu_suspension.is_current.should be_falsey }
+      specify { expect(eu_suspension.is_current).to be_falsey }
     end
 
     context "when  start_event is set, and end_event is set with date in the future" do
@@ -147,7 +147,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event, end_event: end_event)
       }
 
-      specify { eu_suspension.is_current.should be_truthy }
+      specify { expect(eu_suspension.is_current).to be_truthy }
     end
 
     context "when  start_event is set, and end_event is set with date in the past" do
@@ -161,7 +161,7 @@ describe EuSuspension do
         create(:eu_suspension, start_event: start_event, end_event: end_event)
       }
 
-      specify { eu_suspension.is_current.should be_falsey }
+      specify { expect(eu_suspension.is_current).to be_falsey }
     end
   end
 
@@ -170,7 +170,7 @@ describe EuSuspension do
       let(:eu_suspension) {
         create(:eu_suspension, start_event: nil)
       }
-      specify { eu_suspension.start_date_formatted.should be_empty }
+      specify { expect(eu_suspension.start_date_formatted).to be_empty }
     end
 
     context "when there's start_event" do
@@ -180,7 +180,7 @@ describe EuSuspension do
       let(:start_event) {
         create(:event, effective_at: 2.day.ago)
       }
-      specify { eu_suspension.start_date_formatted.should == 2.day.ago.strftime("%d/%m/%Y") }
+      specify { expect(eu_suspension.start_date_formatted).to eq(2.day.ago.strftime("%d/%m/%Y")) }
     end
   end
 
@@ -189,7 +189,7 @@ describe EuSuspension do
       let(:eu_suspension) {
         create(:eu_suspension, end_event: nil)
       }
-      specify { eu_suspension.end_date_formatted.should be_empty }
+      specify { expect(eu_suspension.end_date_formatted).to be_empty }
     end
 
     context "when there's end_event" do
@@ -199,7 +199,7 @@ describe EuSuspension do
       let(:end_event) {
         create(:event, effective_at: 2.day.ago)
       }
-      specify { eu_suspension.end_date_formatted.should == 2.day.ago.strftime("%d/%m/%Y") }
+      specify { expect(eu_suspension.end_date_formatted).to eq(2.day.ago.strftime("%d/%m/%Y")) }
     end
   end
 end

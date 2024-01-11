@@ -12,7 +12,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
       end
       it 'renders the primary_output template' do
         get :show, id: :primary_output, nomenclature_change_id: @status_change.id
-        response.should render_template('primary_output')
+        expect(response).to render_template('primary_output')
       end
     end
     context 'relay' do
@@ -21,7 +21,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
       end
       it 'renders the relay template' do
         get :show, id: :relay, nomenclature_change_id: @status_change.id
-        response.should render_template('relay')
+        expect(response).to render_template('relay')
       end
     end
 
@@ -31,7 +31,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
       end
       it 'renders the summary template' do
         get :show, id: :summary, nomenclature_change_id: @status_change.id
-        response.should render_template('summary')
+        expect(response).to render_template('summary')
       end
     end
   end
@@ -39,7 +39,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
   describe 'POST create' do
     it 'redirects to status_change wizard' do
       post :create, nomenclature_change_id: 'new'
-      response.should redirect_to(
+      expect(response).to redirect_to(
         admin_nomenclature_change_status_to_synonym_url(
           nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'primary_output'
         )
@@ -59,7 +59,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
             new_name_status: 'S'
           }
         }, nomenclature_change_id: @status_change.id, id: 'primary_output'
-        response.should redirect_to(
+        expect(response).to redirect_to(
           admin_nomenclature_change_status_to_synonym_url(
             nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'relay'
           )
@@ -70,7 +70,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
       it 're-renders step' do
         put :update, nomenclature_change_status_to_synonym: {},
           nomenclature_change_id: @status_change.id, id: 'primary_output'
-        response.should render_template('primary_output')
+        expect(response).to render_template('primary_output')
       end
     end
     context 'when last step' do
@@ -78,15 +78,15 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
         login_secretariat_user
         it 'redirects to admin root path' do
           put :update, nomenclature_change_id: @status_change.id, id: 'summary'
-          response.should redirect_to admin_root_path
+          expect(response).to redirect_to admin_root_path
         end
       end
       context 'when user is manager' do
         it 'redirects to nomenclature changes path' do
           pending("Strange render mismatch after upgrading to Rails 4")
           put :update, nomenclature_change_id: @status_change.id, id: 'summary'
-          response.should be_successful
-          response.should render_template("nomenclature_changes")
+          expect(response).to be_successful
+          expect(response).to render_template("nomenclature_changes")
         end
       end
     end

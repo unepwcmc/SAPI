@@ -12,18 +12,18 @@ describe Admin::ReferencesController do
     describe "GET index" do
       it "assigns @references sorted by citation" do
         get :index
-        assigns(:references).should eq([@reference2, @reference1])
+        expect(assigns(:references)).to eq([@reference2, @reference1])
       end
       it "renders the index template" do
         get :index
-        response.should render_template("index")
+        expect(response).to render_template("index")
       end
     end
     describe "XHR GET index JSON" do
       it "renders json for dropdown" do
         xhr :get, :index, :format => 'json'
-        response.body.should have_json_size(2)
-        parse_json(response.body, "0/text").should == 'AA'
+        expect(response.body).to have_json_size(2)
+        expect(parse_json(response.body, "0/text")).to eq('AA')
       end
     end
   end
@@ -31,11 +31,11 @@ describe Admin::ReferencesController do
   describe "XHR POST create" do
     it "renders create when successful" do
       xhr :post, :create, reference: FactoryGirl.attributes_for(:reference)
-      response.should render_template("create")
+      expect(response).to render_template("create")
     end
     it "renders new when not successful" do
       xhr :post, :create, reference: { :citation => nil }
-      response.should render_template("new")
+      expect(response).to render_template("new")
     end
   end
 
@@ -43,11 +43,11 @@ describe Admin::ReferencesController do
     let(:reference) { create(:reference) }
     it "responds with 200 when successful" do
       xhr :put, :update, :format => 'json', :id => reference.id, :reference => { :citation => 'ZZ' }
-      response.should be_success
+      expect(response).to be_success
     end
     it "responds with json when not successful" do
       xhr :put, :update, :format => 'json', :id => reference.id, :reference => { :citation => nil }
-      JSON.parse(response.body).should include('errors')
+      expect(JSON.parse(response.body)).to include('errors')
     end
   end
 
@@ -55,7 +55,7 @@ describe Admin::ReferencesController do
     let(:reference) { create(:reference) }
     it "redirects after delete" do
       delete :destroy, :id => reference.id
-      response.should redirect_to(admin_references_url)
+      expect(response).to redirect_to(admin_references_url)
     end
   end
 

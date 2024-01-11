@@ -16,20 +16,20 @@ describe Admin::TaxonConceptsController do
     end
     it "renders the index template" do
       get :index
-      response.should render_template("index")
-      response.should render_template("layouts/admin")
+      expect(response).to render_template("index")
+      expect(response).to render_template("layouts/admin")
     end
     it "redirects if 1 result" do
       get :index, search_params: {
         taxonomy: { id: cites_eu.id }, scientific_name: 'Foobarus i'
       }
-      response.should redirect_to(admin_taxon_concept_names_path(@taxon))
+      expect(response).to redirect_to(admin_taxon_concept_names_path(@taxon))
     end
     it "assigns taxa in taxonomic order" do
       get :index, search_params: {
         taxonomy: { id: cites_eu.id }, scientific_name: 'Foobarus'
       }
-      assigns(:taxon_concepts).should eq([@taxon.parent, @taxon])
+      expect(assigns(:taxon_concepts)).to eq([@taxon.parent, @taxon])
     end
   end
 
@@ -43,23 +43,23 @@ describe Admin::TaxonConceptsController do
           scientific_name: 'Canis',
           parent_id: create_cites_eu_family
         }
-      response.should render_template("create")
+      expect(response).to render_template("create")
     end
     it "renders new when not successful" do
       xhr :post, :create, taxon_concept: {}
-      response.should render_template("new")
+      expect(response).to render_template("new")
     end
     it "renders new_synonym when not successful S" do
       xhr :post, :create, taxon_concept: { name_status: 'S' }
-      response.should render_template("new_synonym")
+      expect(response).to render_template("new_synonym")
     end
     it "renders new_hybrid when not successful H" do
       xhr :post, :create, taxon_concept: { name_status: 'H' }
-      response.should render_template("new_hybrid")
+      expect(response).to render_template("new_hybrid")
     end
     it "renders new_synonym when not successful N" do
       xhr :post, :create, taxon_concept: { name_status: 'N' }
-      response.should render_template("new_n_name")
+      expect(response).to render_template("new_n_name")
     end
   end
 
@@ -69,24 +69,24 @@ describe Admin::TaxonConceptsController do
       it "responds with 200 when successful" do
         xhr :put, :update, :format => 'json', :id => taxon_concept.id,
           :taxon_concept => {}
-        response.should be_success
+        expect(response).to be_success
       end
       it "responds with json error when not successful" do
         xhr :put, :update, :format => 'json', :id => taxon_concept.id,
           :taxon_concept => { :taxonomy_id => nil }
-        JSON.parse(response.body).should include('errors')
+        expect(JSON.parse(response.body)).to include('errors')
       end
     end
     context "when HTML" do
       it "redirects to edit when successful" do
         put :update, :id => taxon_concept.id,
           :taxon_commons_attributes => FactoryGirl.attributes_for(:common_name)
-        response.should redirect_to(edit_admin_taxon_concept_url(taxon_concept))
+        expect(response).to redirect_to(edit_admin_taxon_concept_url(taxon_concept))
       end
       it "renders edit when not successful" do
         put :update, :id => taxon_concept.id,
           :taxon_concept => { :taxonomy_id => nil }
-        response.should render_template("edit")
+        expect(response).to render_template("edit")
       end
     end
   end
@@ -95,7 +95,7 @@ describe Admin::TaxonConceptsController do
     let(:taxon_concept) { create(:taxon_concept) }
     it "redirects after delete" do
       delete :destroy, :id => taxon_concept.id
-      response.should redirect_to(admin_taxon_concepts_url)
+      expect(response).to redirect_to(admin_taxon_concepts_url)
     end
   end
 
@@ -105,8 +105,8 @@ describe Admin::TaxonConceptsController do
 
     it "redirects to admin root path and doesn't delete" do
       delete :destroy, :id => taxon_concept.id
-      response.should redirect_to(admin_root_path)
-      TaxonConcept.where(:id => taxon_concept.id).size.should == 1
+      expect(response).to redirect_to(admin_root_path)
+      expect(TaxonConcept.where(:id => taxon_concept.id).size).to eq(1)
     end
   end
 
@@ -116,13 +116,13 @@ describe Admin::TaxonConceptsController do
 
     it "redirects to root path" do
       get :index
-      response.should redirect_to(root_path)
+      expect(response).to redirect_to(root_path)
     end
 
     it "redirects to root path and doesn't delete" do
       delete :destroy, :id => taxon_concept.id
-      response.should redirect_to(root_path)
-      TaxonConcept.where(:id => taxon_concept.id).size.should == 1
+      expect(response).to redirect_to(root_path)
+      expect(TaxonConcept.where(:id => taxon_concept.id).size).to eq(1)
     end
   end
 
@@ -135,8 +135,8 @@ describe Admin::TaxonConceptsController do
     it "returns properly formatted json" do
       xhr :get, :autocomplete, :format => 'json',
         :search_params => { :scientific_name => 'AAA' }
-      response.body.should have_json_size(1)
-      parse_json(response.body, "0/full_name").should == 'Aaa'
+      expect(response.body).to have_json_size(1)
+      expect(parse_json(response.body, "0/full_name")).to eq('Aaa')
     end
   end
 

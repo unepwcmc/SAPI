@@ -46,7 +46,7 @@ describe Checklist::Pdf::IndexFetcher do
       )
     }
     subject { Checklist::Pdf::IndexFetcher.new(query) }
-    specify { subject.next.first.sort_name.should == 'lolcat, Domestic' }
+    specify { expect(subject.next.first.sort_name).to eq('lolcat, Domestic') }
   end
   context "with synonyms and authors" do
     let!(:synonym) {
@@ -74,6 +74,6 @@ describe Checklist::Pdf::IndexFetcher do
       )
     }
     subject { Checklist::Pdf::IndexFetcher.new(query) }
-    specify { subject.next.first.sort_name.should == 'Catus fluffianus' }
+    specify { expect(subject.next.first.sort_name).to eq('Catus fluffianus') }
   end
 end

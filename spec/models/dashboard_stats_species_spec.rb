@@ -26,17 +26,17 @@ describe DashboardStats do
 
   describe "#new" do
     it "takes three parameters and returns a DashboardStats object" do
-      ds_ar.should be_an_instance_of DashboardStats
+      expect(ds_ar).to be_an_instance_of DashboardStats
     end
   end
 
   describe "#species" do
     include_context "Caiman latirostris"
     it "has one results for argentina" do
-      ds_ar.species[:cites_eu][0][:count].should eq 1
+      expect(ds_ar.species[:cites_eu][0][:count]).to eq 1
     end
     it "has no results for ghana" do
-      ds_gh.species[:cites_eu][0][:count].should eq 0
+      expect(ds_gh.species[:cites_eu][0][:count]).to eq 0
     end
   end
 

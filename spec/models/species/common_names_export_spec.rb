@@ -4,14 +4,14 @@ describe Species::CommonNamesExport do
     subject {
       Species::CommonNamesExport.new({})
     }
-    specify { subject.path.should == "public/downloads/common_names/" }
+    specify { expect(subject.path).to eq("public/downloads/common_names/") }
   end
   describe :export do
     context "when no results" do
       subject {
         Species::CommonNamesExport.new({})
       }
-      specify { subject.export.should be_falsey }
+      specify { expect(subject.export).to be_falsey }
     end
     context "when results" do
       before(:each) {
@@ -19,7 +19,7 @@ describe Species::CommonNamesExport do
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/common_names")
         )
-        Species::CommonNamesExport.any_instance.stub(:path).
+        allow_any_instance_of(Species::CommonNamesExport).to receive(:path).
           and_return("spec/public/downloads/common_names/")
       }
       after(:each) {
@@ -31,13 +31,13 @@ describe Species::CommonNamesExport do
       context "when file not cached" do
         specify {
           subject.export
-          File.file?(subject.file_name).should be_truthy
+          expect(File.file?(subject.file_name)).to be_truthy
         }
       end
       context "when file cached" do
         specify {
           FileUtils.touch(subject.file_name)
-          subject.should_not_receive(:to_csv)
+          expect(subject).not_to receive(:to_csv)
           subject.export
         }
       end

@@ -51,7 +51,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :csv_source_file => exporter_file
         )
       }
-      specify { subject.should be_valid }
+      specify { expect(subject).to be_valid }
     end
     context "when uploaded file as importer with exporter column headers" do
       subject {
@@ -61,7 +61,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :csv_source_file => exporter_file
         )
       }
-      specify { subject.should_not be_valid }
+      specify { expect(subject).not_to be_valid }
     end
     context "when uploaded file as importer with importer column headers" do
       subject {
@@ -71,7 +71,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :csv_source_file => importer_file
         )
       }
-      specify { subject.should be_valid }
+      specify { expect(subject).to be_valid }
     end
     context "when uploaded file as exporter with importer column headers" do
       subject {
@@ -81,7 +81,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
           :csv_source_file => importer_file
         )
       }
-      specify { subject.should_not be_valid }
+      specify { expect(subject).not_to be_valid }
     end
   end
 
@@ -96,7 +96,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
         :csv_source_file => importer_file
       )
     }
-    specify { subject.validation_errors.should be_empty }
+    specify { expect(subject.validation_errors).to be_empty }
   end
 
   describe :create do
@@ -111,7 +111,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       }
       specify {
         sandbox_klass = Trade::SandboxTemplate.ar_klass(subject.sandbox.table_name)
-        sandbox_klass.count.should == 10
+        expect(sandbox_klass.count).to eq(10)
       }
     end
   end
@@ -125,7 +125,7 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       )
     }
     specify {
-      subject.sandbox.should_receive(:destroy)
+      expect(subject.sandbox).to receive(:destroy)
       subject.destroy
     }
   end
