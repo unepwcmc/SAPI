@@ -148,7 +148,6 @@ gem 'appsignal', '1.3.3'
 gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in staging / production
 
 # GEM for frontend.
-gem 'jquery-ui-rails', '4.2.1' # TODO: some breaking change form v5. Latest version 6.0.1 @ 2016
 gem 'susy', '2.2.14' # TODO: Deprecated. 2.2.14 is the latest version @ 2018
 gem 'gon', '~> 6.4' # TODO: latest
 gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
