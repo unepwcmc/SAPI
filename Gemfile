@@ -163,7 +163,6 @@ gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once 
 gem 'nested_form', '0.3.2' # TODO: latest @ 2013. Project is public archived on github. No longer maintained.
 gem 'select2-rails', '3.5.10' # initSelection deprecated on upgrade to version 4 (https://github.com/select2/select2/blob/develop/CHANGELOG.md)
 gem 'jquery-mousewheel-rails', '~> 0.0.9' # TODO: latest @ 2014
-gem 'js_cookie_rails', '~> 2.2'
 gem 'bootstrap-sass', '2.3.2.2' # TODO: latest 3.4.1 @ 2019. Can't upgrade unless we sure bootstrap v3 backward compatible with boostrap v2
 gem 'ember-rails', '0.14.1' # Not support Sprockets 3+ unless upgrade. Latest version support Rails 5.1
 gem 'ember-source', '1.6.1' # TODO: just a wrapwrapper. Any update will change the ember.js version.
