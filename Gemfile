@@ -157,17 +157,15 @@ gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in s
 # `vendor/assets/stylesheets/cites_trade/jquery-ui-1.8.24.custom.scss` CSS is in use. No need to copy any CSS files from the gem to this project.
 # gem 'jquery-ui-rails', '4.2.1'
 
-# Remove the `select2-rails` gem to eliminate any dependency issues that may block the upgrade process.
+# Remove the following gems to eliminate any dependency issues that may block the upgrade process.
 # File being copied to vendor directory.
 # gem 'select2-rails', '3.5.10' # initSelection deprecated on upgrade to version 4
-
+# gem 'jquery-mousewheel-rails', '~> 0.0.9'
 
 gem 'susy', '2.2.14' # TODO: Deprecated. 2.2.14 is the latest version @ 2018
 gem 'gon', '~> 6.4' # TODO: latest
 gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
 gem 'nested_form', '0.3.2' # TODO: latest @ 2013. Project is public archived on github. No longer maintained.
-
-gem 'jquery-mousewheel-rails', '~> 0.0.9' # TODO: latest @ 2014
 gem 'bootstrap-sass', '2.3.2.2' # TODO: latest 3.4.1 @ 2019. Can't upgrade unless we sure bootstrap v3 backward compatible with boostrap v2
 gem 'ember-rails', '0.14.1' # Not support Sprockets 3+ unless upgrade. Latest version support Rails 5.1
 gem 'ember-source', '1.6.1' # TODO: just a wrapwrapper. Any update will change the ember.js version.
