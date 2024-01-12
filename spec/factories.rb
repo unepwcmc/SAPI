@@ -57,6 +57,13 @@ FactoryGirl.define do
     sequence(:scientific_name) { |n| "Lupus#{n}" }
   end
 
+  factory :cites_rst_process do
+    taxon_concept
+    geo_entity
+    start_date '2011-01-01'
+    status 'Trade Suspension'
+  end
+
   factory :cites_suspension do
     taxon_concept
     start_notification
