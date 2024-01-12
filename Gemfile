@@ -147,13 +147,21 @@ gem 'sitemap_generator', '~> 6.3' # TODO: latest
 gem 'appsignal', '1.3.3'
 gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in staging / production
 
-# GEM for frontend.
+### GEM for frontend ###
+# Remove the `jquery-ui-rails` gem to eliminate any dependency issues that may block the upgrade process.
+# Copy `jquery.js` and `jquery_ujs.js` to the `vendor/assets/javascripts` directory.
+# gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
+
+# Remove the `jquery-ui-rails` gem to eliminate any dependency issues that may block the upgrade process.
+# Download `jquery-ui-1.10.4.custom.js` from offical website and copy it to the `vendor/assets/javascripts/cites_trade` directory.
+# `vendor/assets/stylesheets/cites_trade/jquery-ui-1.8.24.custom.scss` CSS is in use. No need to copy any CSS files from the gem to this project.
+# gem 'jquery-ui-rails', '4.2.1'
+
 gem 'susy', '2.2.14' # TODO: Deprecated. 2.2.14 is the latest version @ 2018
 gem 'gon', '~> 6.4' # TODO: latest
 gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
 gem 'nested_form', '0.3.2' # TODO: latest @ 2013. Project is public archived on github. No longer maintained.
 gem 'select2-rails', '3.5.10' # initSelection deprecated on upgrade to version 4 (https://github.com/select2/select2/blob/develop/CHANGELOG.md)
-gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 gem 'jquery-mousewheel-rails', '~> 0.0.9' # TODO: latest @ 2014
 gem 'js_cookie_rails', '~> 2.2'
 gem 'bootstrap-sass', '2.3.2.2' # TODO: latest 3.4.1 @ 2019. Can't upgrade unless we sure bootstrap v3 backward compatible with boostrap v2
