@@ -29,7 +29,7 @@ gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, ma
 # TODO: starting from v1.4, it break our test due to redirection changes:
 #   rspec ./spec/controllers/admin/nomenclature_changes/lump_controller_spec.rb:147
 #   rspec ./spec/controllers/admin/nomenclature_changes/split_controller_spec.rb:191
-gem 'wicked', '~> 1.3', '>= 1.3.4'
+gem 'wicked', '1.3.4'
 
 gem 'groupdate', '2.4.0' # TODO: seems only ApiRequest#recent_requests using this. Suggest rewrite and remove dependencies.
 
@@ -60,7 +60,7 @@ gem 'rails-observers', '~> 0.1.5' # A feature that removed from core in Rails 4.
 
 # Gems used for assets
 gem 'sass-rails',   '5.0.7' # TODO: may need to upgrade when upgrade to Rails 5 or 6 (https://github.com/rails/sass-rails/releases)
-gem 'coffee-rails', '4.1.0' # TODO: v5 support Rails 6; 4.1.1 for Rails 5
+gem 'coffee-rails', '4.2.2' # TODO: v5 support Rails 6
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
@@ -149,7 +149,6 @@ gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in s
 
 # GEM for frontend.
 gem 'jquery-ui-rails', '4.2.1' # TODO: some breaking change form v5. Latest version 6.0.1 @ 2016
-# gem 'slim', '1.3.6' # I believe not in-use as we do not have .slim file.
 gem 'susy', '2.2.14' # TODO: Deprecated. 2.2.14 is the latest version @ 2018
 gem 'gon', '~> 6.4' # TODO: latest
 gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
