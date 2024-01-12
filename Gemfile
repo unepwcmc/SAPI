@@ -148,8 +148,8 @@ gem 'appsignal', '1.3.3'
 gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in staging / production
 
 ### GEM for frontend ###
-# Remove the `jquery-ui-rails` gem to eliminate any dependency issues that may block the upgrade process.
-# Copy `jquery.js` and `jquery_ujs.js` to the `vendor/assets/javascripts` directory.
+# Remove the `jquery-rails` gem to eliminate any dependency issues that may block the upgrade process.
+# Copy `jquery.js`, `jquery_ujs.js` and `jquery-ui.js` to the `vendor/assets/javascripts` directory.
 # gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 
 # Remove the `jquery-ui-rails` gem to eliminate any dependency issues that may block the upgrade process.
