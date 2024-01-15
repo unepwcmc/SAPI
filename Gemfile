@@ -17,7 +17,7 @@ gem 'nested-hstore', '0.1.2' # TODO: latest 0.1.2 @ 2015
 gem 'pg_search', '1.0.6' # TODO: update to newer version when upgrade to Rails 5
 gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
 gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
-gem 'inherited_resources', '1.7.2' # TODO: need upgrade when upgrade to Rails 5
+gem 'inherited_resources', '1.9.0' # TODO: need upgrade when upgrade to Rails 6
 gem 'traco', '~> 5.3', '>= 5.3.3' # TODO: latest version @ 2021. Suggest migrate to Mobility gem.
 # gem 'strong_parameters'
 gem 'protected_attributes_continued', '1.2.4' # TODO: upgrade to latest after we successfully upgrade Rails to 5.
