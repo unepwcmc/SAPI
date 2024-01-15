@@ -1,56 +1,44 @@
 require 'sapi/geoip'
-class Ahoy::Store < Ahoy::Stores::ActiveRecordStore
-  def report_exception(exception)
-    Appsignal.add_exception(exception) if defined? Appsignal
-  end
+class Ahoy::Store < Ahoy::DatabaseStore
+  UUID_NAMESPACE = UUIDTools::UUID.parse("dcd74c26-8fc9-453a-a9c2-afc445c3258d")
 
   def visit_model
     Ahoy::Visit
   end
 
-  def track_visit(options)
-    visit = visit_model.new(
-      {
-        id: ahoy.visit_id,
-        visitor_id: ahoy.visitor_id,
-        user: user,
-        started_at: options[:started_at]
-      },
-      :without_protection => true
-    )
-    visit_properties.keys.each do |key|
-      visit.send(:"#{key}=", visit_properties[key]) if visit.respond_to?(:"#{key}=")
-    end
-    geo_ip_data = Sapi::GeoIP.instance.resolve(request.ip)
-    visit.country = geo_ip_data[:country]
-    visit.city = geo_ip_data[:city]
-    visit.organization = geo_ip_data[:organization]
-
-    begin
-      visit.save!
-    rescue ActiveRecord::RecordNotUnique
-      # do nothing
-    end
+  def visit
+    @visit ||= visit_model.find_by(id: ensure_uuid(ahoy.visit_token)) if ahoy.visit_token
   end
 
-  def track_event(name, properties, options)
-    event = event_model.new(
-      {
-        id: options[:id],
-        visit_id: ahoy.visit_id,
-        user: user,
-        name: name,
-        properties: properties,
-        time: options[:time]
-      },
-      :without_protection => true
-    )
+  def track_visit(data)
+    data[:id] = ensure_uuid(data.delete(:visit_token))
+    data[:visitor_id] = ensure_uuid(data.delete(:visitor_token))
 
-    begin
-      event.save!
-    rescue ActiveRecord::RecordNotUnique
-      # do nothing
-    end
+    geo_ip_data = Sapi::GeoIP.instance.resolve(request.ip)
+    data[:country] = geo_ip_data[:country]
+    data[:city] = geo_ip_data[:city]
+    data[:organization] = geo_ip_data[:organization]
+
+    super(data)
+  end
+
+  def track_event(data)
+    data[:id] = ensure_uuid(data.delete(:event_id))
+    super(data)
+  end
+
+  def ensure_uuid(id)
+    UUIDTools::UUID.parse(id).to_s
+  rescue
+    UUIDTools::UUID.sha1_create(UUID_NAMESPACE, id).to_s
   end
 end
 Ahoy.quiet = false
+Ahoy.api = true
+Ahoy.server_side_visits = :when_needed
+Ahoy.user_agent_parser = :device_detector
+Ahoy.bot_detection_version = 2
+Ahoy.track_bots = Rails.env.test?
+
+# https://github.com/ankane/ahoy/tree/v2.2.1#exceptions
+Safely.report_exception_method = ->(e) { Appsignal.add_exception(exception) if defined? Appsignal }

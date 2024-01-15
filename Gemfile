@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 ruby '2.5.9'
 
 gem 'rails', '4.2.11.3'
+# gem 'rails', '5.0.7.2'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -22,8 +23,9 @@ gem 'traco', '~> 5.3', '>= 5.3.3' # TODO: latest version @ 2021. Suggest migrate
 # gem 'strong_parameters'
 gem 'protected_attributes_continued', '1.2.4' # TODO: upgrade to latest after we successfully upgrade Rails to 5.
 gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
-gem 'cancancan', '1.17.0' # TODO, need upgrade to 2.0 for Rails 5
-gem 'ahoy_matey', '1.6.1' # TODO: latest 5.0.2. Can't upgrade to 2.0 until upgrade to Rails 5
+gem 'cancancan', '1.17.0' # TODO, can upgrade to 2.0 after Rails 5
+gem 'ahoy_matey', '2.2.1' # TODO: latest 5.0.2. Can't upgrade to 3.0 until upgrade to Rails 5
+gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
 gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
 
 # TODO: starting from v1.4, it break our test due to redirection changes:
