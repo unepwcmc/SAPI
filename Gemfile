@@ -20,7 +20,6 @@ gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to
 gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
 gem 'inherited_resources', '1.9.0' # TODO: need upgrade when upgrade to Rails 6
 gem 'traco', '~> 5.3', '>= 5.3.3' # TODO: latest version @ 2021. Suggest migrate to Mobility gem.
-# gem 'strong_parameters'
 gem 'protected_attributes_continued', '1.2.4' # TODO: upgrade to latest after we successfully upgrade Rails to 5.
 gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
 gem 'cancancan', '1.17.0' # TODO, can upgrade to 2.0 after Rails 5
@@ -46,11 +45,11 @@ gem 'redis-rails', '5.0.2' # TODO: latest, may remove this Gem when upgrade to R
 gem 'whenever', '0.11.0', :require => false # TODO: latest version 1.0 @ 2019. Should migrate to sidekiq-cron.
 gem 'httparty', '~> 0.21.0' # TODO: latest.
 
-gem 'sprockets', '2.12.5' # upgrading to 3 breaks handlebars/tilt
+# gem 'sprockets', '2.12.5' # upgrading to 3 breaks handlebars/tilt
 gem 'kaminari', '1.2.2' # TODO: latest @ 2021. Suggest migrate to pagy gem.
 
-gem 'acts-as-taggable-on', '5.0.0' # TODO: latest v10 @ 2023. Need upgrade when upgrade to Rails 5.
-gem 'carrierwave', '1.3.1' # TODO: latest is 3.0.5 @ 2023. v2 support Rails 5
+gem 'acts-as-taggable-on', '5.0.0' # TODO: latest v10 @ 2023. Need upgrade after upgrade to Rails 5.
+gem 'carrierwave', '1.3.1' # TODO: latest is 3.0.5 @ 2023. can upgrade to v2 after Rails 5
 
 # PDF
 gem 'prawn', '0.13.2'
