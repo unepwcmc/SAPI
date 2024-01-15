@@ -25,7 +25,7 @@
 #
 
 class Document < ActiveRecord::Base
-  include PgSearch
+  include PgSearch::Model
   pg_search_scope :search_by_title, :against => :title,
     :using => { :tsearch => { :prefix => true } },
     :order_within_rank => "documents.date, documents.title, documents.id"
