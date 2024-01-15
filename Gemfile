@@ -168,8 +168,16 @@ gem 'gon', '~> 6.4' # TODO: latest
 gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
 gem 'nested_form', '0.3.2' # TODO: latest @ 2013. Project is public archived on github. No longer maintained.
 gem 'bootstrap-sass', '2.3.2.2' # TODO: latest 3.4.1 @ 2019. Can't upgrade unless we sure bootstrap v3 backward compatible with boostrap v2
+
 # Ember
-gem 'ember-rails', '0.14.1' # Not support Sprockets 3+ unless upgrade. Latest version support Rails 5.1
-gem 'ember-source', '1.6.1' # TODO: just a wrapwrapper. Any update will change the ember.js version.
-gem 'ember-data-source', '0.14' # TODO: just a wrapwrapper. Any update will change the JS ember-data version.
+gem 'ember-rails', '~> 0.21.0' # Latest @ 2017
+# gem 'ember-rails', '0.14.1' # TODO: upgrade to latest after Rails 5
+
+gem 'ember-source', '1.8.0' # TODO: just a wrapwrapper. Any update will change the ember.js version.
+# gem 'ember-source', '1.6.1' # TODO: just a wrapwrapper. Any update will change the ember.js version.
+
+gem 'ember-data-source', '1.13.0' # TODO: just a wrapwrapper. Any update will change the JS ember-data version.
+# gem 'ember-data-source', '0.14' # TODO: just a wrapwrapper. Any update will change the JS ember-data version.
+
 gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will change the handlebars.js version.
+# gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will change the handlebars.js version.
