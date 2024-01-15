@@ -509,6 +509,8 @@ GEM
       mutex_m
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    strong_migrations (0.3.1)
+      activerecord (>= 3.2.0)
     strscan (3.0.7)
     susy (2.2.14)
       sass (>= 3.3.0, < 3.5)
@@ -648,6 +650,7 @@ DEPENDENCIES
   slackistrano (= 0.1.9)
   spring
   sprockets (= 2.12.5)
+  strong_migrations (~> 0.3.1)
   susy (= 2.2.14)
   test-unit (= 3.1.5)
   traco (~> 5.3, >= 5.3.3)

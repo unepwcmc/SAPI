@@ -66,7 +66,7 @@ gem 'coffee-rails', '4.1.0' # TODO: v5 support Rails 6; 4.1.1 for Rails 5
 # gem 'therubyracer', :platforms => :ruby
 
 gem 'uglifier', '2.7.2' # TODO: Only works with ES5. Latest version 4.2.0 @ 2019
-
+gem 'strong_migrations', '~> 0.3.1' # TODO: should upgrade when we upgrade to rails 5
 
 
 # To use ActiveModel has_secure_password
