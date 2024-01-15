@@ -13,8 +13,8 @@ gem 'actionpack-page_caching', '1.1.1' # A feature that removed from core in Rai
 gem 'active_model_serializers', '0.8.4' # Deprecated
 gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
 gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
-gem 'pg_array_parser', '0.0.9' # TODO: latest 0.0.9
-gem 'nested-hstore', '0.1.2' # TODO: latest 0.1.2 @ 2015
+gem 'pg_array_parser', '~> 0.0.9'
+gem 'nested-hstore', '~> 0.1.2'
 gem 'pg_search', '2.3.0' # TODO: can upgrade to newer version after Rails 5
 gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
 gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
@@ -34,7 +34,7 @@ gem 'wicked', '1.3.4'
 
 gem 'groupdate', '4.1.2' # TODO: can upgrade after rails 5 and newer ruby
 
-gem 'rubyzip', '~> 2.3', '>= 2.3.2' # TODO: latest
+gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
 gem 'sidekiq', '4.2.10' # TODO, Ruby 2.7 need version 6.0.5 sidekiq
@@ -43,10 +43,10 @@ gem 'sidekiq-unique-jobs', '4.0.18' # TODO: latest is 8.0.5 @ 2023
 gem 'redis-rails', '5.0.2' # TODO: latest, may remove this Gem when upgrade to Rails 5.2. (https://github.com/redis-store/redis-rails/tree/master#a-quick-note-about-rails-52)
 
 gem 'whenever', '0.11.0', :require => false # TODO: latest version 1.0 @ 2019. Should migrate to sidekiq-cron.
-gem 'httparty', '~> 0.21.0' # TODO: latest.
+gem 'httparty', '~> 0.21.0'
 
 # gem 'sprockets', '2.12.5' # upgrading to 3 breaks handlebars/tilt
-gem 'kaminari', '1.2.2' # TODO: latest @ 2021. Suggest migrate to pagy gem.
+gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
 gem 'acts-as-taggable-on', '5.0.0' # TODO: latest v10 @ 2023. Need upgrade after upgrade to Rails 5.
 gem 'carrierwave', '1.3.1' # TODO: latest is 3.0.5 @ 2023. can upgrade to v2 after Rails 5
@@ -59,14 +59,16 @@ gem 'wkhtmltopdf-binary', '~> 0.12.6.6'
 gem 'aws-sdk', '~> 2' # TODO: v2 Deprecated, need to upgrade to v3
 gem 'rails-observers', '~> 0.1.5' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
 
-# Gems used for assets
-gem 'sass-rails',   '5.0.7' # TODO: may need to upgrade when upgrade to Rails 5 or 6 (https://github.com/rails/sass-rails/releases)
-gem 'coffee-rails', '4.2.2' # TODO: v5 support Rails 6
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 5.0'
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 1.3.0'
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 4.2'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
 
-gem 'uglifier', '2.7.2' # TODO: Only works with ES5. Latest version 4.2.0 @ 2019
 gem 'strong_migrations', '~> 0.3.1' # TODO: should upgrade when we upgrade to rails 5
 
 
@@ -138,13 +140,13 @@ gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest v
 
 # track who created or edited a given object
 gem 'clerk', '0.2.3' # TODO: Need update to 1.0.0 when upgrade to Rails 5. I would say should update our code and just use paper_trail. This gem last update at 2018.
-gem 'paper_trail', '4.2.0' # TODO: latest is 15.1.0. Need upgrade to v5 for Rails 5.
+gem 'paper_trail', '4.2.0' # TODO: latest is 15.1.0. Need upgrade to v6 for Rails 5.1; v9 for Rails 5.2
 
 gem 'dotenv-rails', '2.0.1'
 
-gem 'sitemap_generator', '~> 6.3' # TODO: latest
+gem 'sitemap_generator', '~> 6.3'
 
-gem 'appsignal', '1.3.3'
+gem 'appsignal', '1.3.3' # TODO: should upgrade to latest after all upgrade.
 gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in staging / production
 
 ### GEM for frontend ###
@@ -163,10 +165,10 @@ gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in s
 # gem 'jquery-mousewheel-rails', '~> 0.0.9'
 # gem "font-awesome-rails", '4.5.0.1'
 
-gem 'susy', '2.2.14' # TODO: Deprecated. 2.2.14 is the latest version @ 2018
-gem 'gon', '~> 6.4' # TODO: latest
+gem 'susy', '~> 2.2', '>= 2.2.14' # TODO: Deprecated. (https://github.com/oddbird/susy#power-tools-for-the-web-deprecated)
+gem 'gon', '~> 6.4'
 gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
-gem 'nested_form', '0.3.2' # TODO: latest @ 2013. Project is public archived on github. No longer maintained.
+gem 'nested_form', '~> 0.3.2' # TODO: Deprecated. (https://github.com/ryanb/nested_form#unmaintained)
 gem 'bootstrap-sass', '2.3.2.2' # TODO: latest 3.4.1 @ 2019. Can't upgrade unless we sure bootstrap v3 backward compatible with boostrap v2
 
 # Ember
