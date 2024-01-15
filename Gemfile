@@ -171,4 +171,3 @@ gem 'ember-rails', '0.14.1' # Not support Sprockets 3+ unless upgrade. Latest ve
 gem 'ember-source', '1.6.1' # TODO: just a wrapwrapper. Any update will change the ember.js version.
 gem 'ember-data-source', '0.14' # TODO: just a wrapwrapper. Any update will change the JS ember-data version.
 gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will change the handlebars.js version.
-gem "font-awesome-rails", '4.5.0.1' # TODO, another wrapper
