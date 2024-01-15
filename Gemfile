@@ -9,13 +9,13 @@ gem 'rails', '4.2.11.3'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'actionpack-action_caching', '~> 1.2', '>= 1.2.2' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
-gem 'actionpack-page_caching', '1.1.1' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this. # TODO, need update when upgrade to rails 5
+gem 'actionpack-page_caching', '1.1.1' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this. # TODO, can update after upgrade to rails 5
 gem 'active_model_serializers', '0.8.4' # Deprecated
 gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
 gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
 gem 'pg_array_parser', '0.0.9' # TODO: latest 0.0.9
 gem 'nested-hstore', '0.1.2' # TODO: latest 0.1.2 @ 2015
-gem 'pg_search', '1.0.6' # TODO: update to newer version when upgrade to Rails 5
+gem 'pg_search', '2.3.0' # TODO: can upgrade to newer version after Rails 5
 gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
 gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
 gem 'inherited_resources', '1.9.0' # TODO: need upgrade when upgrade to Rails 6
