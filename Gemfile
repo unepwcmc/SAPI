@@ -20,7 +20,7 @@ gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New ver
 gem 'inherited_resources', '1.7.2' # TODO: need upgrade when upgrade to Rails 5
 gem 'traco', '~> 5.3', '>= 5.3.3' # TODO: latest version @ 2021. Suggest migrate to Mobility gem.
 # gem 'strong_parameters'
-gem 'protected_attributes', '1.1.4' # TODO: Only support Rails version < 5 (https://github.com/rails/protected_attributes)
+gem 'protected_attributes_continued', '1.2.4' # TODO: upgrade to latest after we successfully upgrade Rails to 5.
 gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
 gem 'cancancan', '1.17.0' # TODO, need upgrade to 2.0 for Rails 5
 gem 'ahoy_matey', '1.6.1' # TODO: latest 5.0.2. Can't upgrade to 2.0 until upgrade to Rails 5
