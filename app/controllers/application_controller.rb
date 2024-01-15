@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include SentientController
   before_filter :set_locale
   before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_filter :set_paper_trail_whodunnit
 
   rescue_from CanCan::AccessDenied, with: :access_denied_error
 
