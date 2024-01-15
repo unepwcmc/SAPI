@@ -32,7 +32,7 @@ gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, ma
 #   rspec ./spec/controllers/admin/nomenclature_changes/split_controller_spec.rb:191
 gem 'wicked', '1.3.4'
 
-gem 'groupdate', '2.4.0' # TODO: seems only ApiRequest#recent_requests using this. Suggest rewrite and remove dependencies.
+gem 'groupdate', '4.1.2' # TODO: can upgrade after rails 5 and newer ruby
 
 gem 'rubyzip', '~> 2.3', '>= 2.3.2' # TODO: latest
 gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
