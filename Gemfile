@@ -105,7 +105,6 @@ group :development do
   gem 'slackistrano', '0.1.9', require: false
   gem 'brightbox', '2.3.9'
   gem 'rack-cors', '0.3.0' ,:require => 'rack/cors' # TODO: remove when upgrade Rails.
-  gem 'quiet_assets', '1.1.0'
   gem 'webrick', '1.3.1'
   gem 'jslint_on_rails', '1.1.1'
   gem 'rubocop', '0.40.0', require: false
