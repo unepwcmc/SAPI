@@ -51,7 +51,6 @@ SAPI::Application.routes.draw do
       get '/shipments/search_download_all' => 'shipments#search_download_all_data'
     end
     resources :languages, :only => [:index]
-    resources :users, :only => [:index]
     resources :designations, :only => [:index]
     resources :species_listings, :only => [:index]
     resources :change_types, :only => [:index]
