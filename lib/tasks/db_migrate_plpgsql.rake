@@ -8,6 +8,14 @@ namespace :db do
         ['helpers', 'mviews', 'plpgsql'].each do |dir|
           files = Dir.glob(Rails.root.join("db/#{dir}/*.sql"))
 
+          # Within the current transaction, set work_mem to a higher-than-usual
+          # value, so that matviews can be built more efficiently.
+          #
+          # The default low value of work_mem (default 4MB) is suitable for
+          # small queries with high concurrency (for instance, those performed
+          # by a web server), but the restriction just hampers jobs like this.
+          connection.execute("SET work_mem TO '64MB';")
+
           files.sort.each do |file|
             puts "Executing #{file}"
             connection.execute(File.read(file))
