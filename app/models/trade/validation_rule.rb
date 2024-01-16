@@ -105,7 +105,7 @@ class Trade::ValidationRule < ActiveRecord::Base
       if error_count == 0
         existing_record.destroy
       else
-        existing_record.update_attributes(
+        existing_record.update_attributes( # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
           error_count: error_count
         )
       end

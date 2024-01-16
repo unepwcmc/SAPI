@@ -94,7 +94,7 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     DownloadsCacheCleanupWorker.perform_async(:shipments)
 
     # flag as submitted
-    update_attributes({
+    update_attributes({ # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
       submitted_at: DateTime.now,
       submitted_by_id: submitter.id,
       number_of_records_submitted: records_submitted

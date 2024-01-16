@@ -101,8 +101,8 @@ describe Trade::ValidationRule, :drops_tables => true do
     context "when updates and error fixed for all records" do
       specify "error record is destroyed" do
         travel_to(Time.now + 1) do
-          @shipment2.update_attributes(taxon_name: 'Canis lupus')
-          @shipment3.update_attributes(taxon_name: 'Canis lupus')
+          @shipment2.update_attributes(taxon_name: 'Canis lupus') # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+          @shipment3.update_attributes(taxon_name: 'Canis lupus') # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
           expect {
             validation_rule.refresh_errors_if_needed(annual_report_upload)
           }.to change { Trade::ValidationError.count }.by(-1)
@@ -113,7 +113,7 @@ describe Trade::ValidationRule, :drops_tables => true do
     context "when updates and error fixed for some records" do
       specify "error record is updated to reflect new error_count" do
         travel_to(Time.now + 1) do
-          @shipment2.update_attributes(taxon_name: 'Canis lupus')
+          @shipment2.update_attributes(taxon_name: 'Canis lupus') # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
           expect {
             validation_rule.refresh_errors_if_needed(annual_report_upload)
           }.to change { @validation_error.reload.error_count }.by(-1)

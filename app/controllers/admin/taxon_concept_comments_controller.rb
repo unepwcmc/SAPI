@@ -23,7 +23,7 @@ class Admin::TaxonConceptCommentsController < Admin::SimpleCrudController
   def update
     @taxon_concept = TaxonConcept.find(params[:taxon_concept_id])
     @comment = @taxon_concept.comments.find(params[:id])
-    @comment.update_attributes(params[:comment])
+    @comment.update_attributes(params[:comment]) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
     redirect_to admin_taxon_concept_comments_url(@taxon_concept),
       notice: 'Operation succeeded'
   end

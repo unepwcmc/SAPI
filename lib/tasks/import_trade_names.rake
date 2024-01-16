@@ -146,7 +146,7 @@ namespace :import do
       puts "Updating #{tc.full_name}"
       unless tc.accepted_names.any?
         puts "from synonym to trade_name"
-        tc.update_attributes(:name_status => "T", :parent_id => nil,
+        tc.update_attributes(:name_status => "T", :parent_id => nil, # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
                             :legacy_trade_code => cites_code)
       end
       puts "Update its children's taxon_name_id"
@@ -154,7 +154,7 @@ namespace :import do
         if child.accepted_names.any?
           puts "looking at #{child.full_name} scientific_name"
           taxon_name = TaxonName.find_or_create_by(scientific_name: child.full_name)
-          child.update_attributes(:parent_id => nil, :taxon_name_id => taxon_name.id)
+          child.update_attributes(:parent_id => nil, :taxon_name_id => taxon_name.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
         end
       end
     end

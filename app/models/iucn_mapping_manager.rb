@@ -42,7 +42,7 @@ class IucnMappingManager
       begin
         match = data["result"].first
         puts "#{taxon_concept.full_name} #{taxon_concept.author_year} <=>  #{match["scientific_name"]} #{match["authority"]}"
-        map.update_attributes(
+        map.update_attributes( # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
           :iucn_taxon_name => match['scientific_name'],
           :iucn_taxon_id => match['taxonid'],
           :iucn_author => match['authority'],

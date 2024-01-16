@@ -27,7 +27,7 @@ class NomenclatureChange::ToSynonymTransformation
   def relink_relationships(relationships, new_taxon_concept)
     relationships.includes(:taxon_concept, :taxon_relationship_type).each do |rel|
       Rails.logger.debug "Relinking #{rel.taxon_relationship_type.name} relationship from #{rel.taxon_concept.full_name} to #{new_taxon_concept.full_name}"
-      rel.update_attributes(taxon_concept_id: new_taxon_concept.id)
+      rel.update_attributes(taxon_concept_id: new_taxon_concept.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
     end
   end
 

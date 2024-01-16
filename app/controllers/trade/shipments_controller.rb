@@ -20,7 +20,7 @@ class Trade::ShipmentsController < TradeController
   def update
     @shipment = Trade::Shipment.find(params[:id])
     update_params = populate_accepted_taxon_concept(shipment_params)
-    if @shipment.update_attributes(update_params)
+    if @shipment.update_attributes(update_params) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
       render :json => @shipment, :status => :ok
     else
       render :json => { "errors" => @shipment.errors }, :status => :unprocessable_entity

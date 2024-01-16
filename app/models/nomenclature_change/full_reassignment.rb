@@ -41,14 +41,14 @@ class NomenclatureChange::FullReassignment
     Rails.logger.debug "FULL REASSIGNMENT Document Citations (#{@old_taxon_concept.document_citation_taxon_concepts.count})"
     # need validations to be applied to avoid duplicates exception
     @old_taxon_concept.document_citation_taxon_concepts.each do |dctc|
-      dctc.update_attributes(update_attrs)
+      dctc.update_attributes(update_attrs) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
     end
     # shipments
     Rails.logger.debug "FULL REASSIGNMENT Shipments"
     Trade::Shipment.where(taxon_concept_id: @old_taxon_concept.id).update_all(update_attrs)
-    @old_taxon_concept.update_attributes(dependents_updated_at: update_timestamp)
+    @old_taxon_concept.update_attributes(dependents_updated_at: update_timestamp) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
     @old_taxon_concept.reload
-    @new_taxon_concept.update_attributes(dependents_updated_at: update_timestamp)
+    @new_taxon_concept.update_attributes(dependents_updated_at: update_timestamp) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
   end
 
 end

@@ -54,7 +54,7 @@ describe Trade::SandboxTemplate, :drops_tables => true do
       @shipment1 = sandbox_klass.create(:taxon_name => canis_lupus.full_name)
     end
     specify {
-      @shipment1.update_attributes(:taxon_name => canis_aureus.full_name)
+      @shipment1.update_attributes(:taxon_name => canis_aureus.full_name) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
       expect(@shipment1.reload.taxon_concept_id).to eq(canis_aureus.id)
     }
   end

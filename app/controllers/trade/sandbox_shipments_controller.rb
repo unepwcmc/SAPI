@@ -16,7 +16,7 @@ class Trade::SandboxShipmentsController < TradeController
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     @sandbox_shipment = sandbox_klass.find(params[:id])
-    @sandbox_shipment.update_attributes(sandbox_shipment_params)
+    @sandbox_shipment.update_attributes(sandbox_shipment_params) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
     head :no_content
   end
 

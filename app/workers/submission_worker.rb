@@ -41,7 +41,7 @@ class SubmissionWorker
     aru.sandbox.destroy
 
     # flag as submitted
-    aru.update_attributes({
+    aru.update_attributes({ # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
       submitted_at: DateTime.now,
       submitted_by_id: submitter.id,
       number_of_records_submitted: records_submitted
@@ -62,7 +62,7 @@ class SubmissionWorker
       obj = s3.bucket(bucket_name).object(filename)
       obj.upload_file(tempfile.path)
 
-      aru.update_attributes(aws_storage_path: obj.public_url)
+      aru.update_attributes(aws_storage_path: obj.public_url) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
     rescue Aws::S3::Errors::ServiceError => e
       Rails.logger.warn "Something went wrong while uploading #{aru.id} to S3"
       Appsignal.add_exception(e) if defined? Appsignal

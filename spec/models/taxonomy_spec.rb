@@ -31,10 +31,10 @@ describe Taxonomy do
   describe :update do
     context "when updating a non-protected name" do
       let(:taxonomy) { create(:taxonomy) }
-      specify { expect(taxonomy.update_attributes({ :name => 'WORLD OF LOLCATS' })).to be_truthy }
+      specify { expect(taxonomy.update_attributes({ :name => 'WORLD OF LOLCATS' })).to be_truthy } # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
     end
     context "when updating a protected name" do
-      specify { expect(cites_eu.update_attributes({ :name => 'WORLD OF LOLCATS' })).to be_falsey }
+      specify { expect(cites_eu.update_attributes({ :name => 'WORLD OF LOLCATS' })).to be_falsey } # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
     end
   end
   describe :destroy do
