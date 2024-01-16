@@ -18,7 +18,7 @@ gem 'nested-hstore', '~> 0.1.2'
 gem 'pg_search', '2.3.0' # TODO: can upgrade to newer version after Rails 5
 gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
 gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
-gem 'inherited_resources', '1.9.0' # TODO: need upgrade when upgrade to Rails 6
+gem 'inherited_resources', '1.9.0' # Deprecated (https://github.com/activeadmin/inherited_resources#notice) # TODO: need upgrade when upgrade to Rails 6
 gem 'traco', '~> 5.3', '>= 5.3.3' # TODO: latest version @ 2021. Suggest migrate to Mobility gem.
 gem 'protected_attributes_continued', '1.2.4' # TODO: upgrade to latest after we successfully upgrade Rails to 5.
 gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
@@ -140,6 +140,7 @@ gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest v
 
 # track who created or edited a given object
 gem 'clerk', '0.2.3' # TODO: Need update to 1.0.0 when upgrade to Rails 5. I would say should update our code and just use paper_trail. This gem last update at 2018.
+gem 'sentient_user', '0.4.0'
 gem 'paper_trail', '5.2.3' # TODO: latest is 15.1.0. Need upgrade to v6 for Rails 5.1; v9 for Rails 5.2
 
 gem 'dotenv-rails', '2.0.1'
