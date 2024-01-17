@@ -4,9 +4,14 @@
       LISTINGS
     {{/view}}
   </li>
-  <li class="last-child">
+  <li>
     {{#view Species.ToggleButton option="restrictions" valueBinding="controller.citesLegislation"}}
       QUOTAS/SUSPENSIONS
+    {{/view}}
+  </li>
+  <li class="last-child">
+    {{#view Species.ToggleButton option="processes" valueBinding="controller.citesLegislation"}}
+      Processes
     {{/view}}
   </li>
 </ul>
@@ -77,6 +82,87 @@
         <label>
           {{view Ember.RadioButton name="document_type" selectionBinding="documentType" value="CitesSuspensions"}}
           CITES Suspensions
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="info-columns more">
+    <div class="col">
+      <ul class="tab-link">
+        <li>
+          {{#view Species.ToggleButton option="current" valueBinding="controller.timeScope"}}
+            CURRENT
+          {{/view}}
+        </li>
+        <li class="last-child">
+          {{#view Species.ToggleButton option="all" valueBinding="controller.timeScope"}}
+            ALL
+          {{/view}}
+        </li>
+      </ul>
+    </div>
+    <div class="col">
+      {{#if timeScopeIsCurrent}}
+        Only current data has<br />been selected.
+      {{else}}
+        {{#unless documentTypeIsCitesSuspensions}}
+            <div class="popup-area">
+              {{view Species.YearSearchButton selectedYearsBinding="controller.selectedYears"}}
+              {{view Species.YearSearchDropdown controllerBinding="controller"}}
+            </div>
+        {{/unless}}
+      {{/if}}
+    </div>
+  </div>
+  <div class="bottom-columns">
+    <div class="col">
+      <div class="popup-area">
+        {{view Species.HigherTaxaSearchButton controllerBinding="controller"}}
+        {{view Species.HigherTaxaSearchDropdown controllerBinding="controller"}}
+      </div>
+    </div>
+    <div class="col">
+      <div class="popup-area">
+        {{view Species.GeoEntitiesSearchButton
+          selectedGeoEntitiesBinding="controller.selectedGeoEntities"
+          loadedBinding="controller.loaded"
+        }}
+        {{view Species.GeoEntitiesSearchDropdown controllerBinding="controller"}}
+      </div>
+    </div>
+  </div>
+  <div class="btn-holder">
+    {{view Species.StartDownloadButton controllerBinding="controller"}}
+    <div class="message-area">
+      {{#if controller.downloadInProgress}}
+        <img src="/loading.gif">
+      {{/if}}
+      {{controller.downloadMessage}}
+    </div>
+  </div>
+{{/view}}
+{{#view Species.DownloadsForLegislation
+  isVisibleBinding="controller.legislationIsCitesProcesses"
+  controllerBinding="controllers.downloadsForCitesProcesses"
+}}
+  <div class="process-type">
+    <div class="typy-columns">
+      <div class="col">
+        <label>
+          {{view Ember.RadioButton name="process_type" selectionBinding="processType" value="Rst"}}
+          RST
+        </label>
+      </div>
+      <div class="col-wide">
+        <label>
+          {{view Ember.RadioButton name="process_type" selectionBinding="processType" value="CaptiveBreeding"}}
+          Captive Breeding
+        </label>
+      </div>
+      <div class="col">
+        <label>
+          {{view Ember.RadioButton name="process_type" selectionBinding="processType" value="Both"}}
+          Both
         </label>
       </div>
     </div>

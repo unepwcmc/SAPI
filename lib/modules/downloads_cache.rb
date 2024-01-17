@@ -5,7 +5,7 @@ module DownloadsCache
     'taxon_concepts_names', 'synonyms_and_trade_names',
     'orphaned_taxon_concepts', 'taxon_concepts_distributions', 'common_names',
     'species_reference_output', 'standard_reference_output',
-    'documents'
+    'documents', 'cites_processes'
   ]
   DOWNLOAD_DIRS = LISTINGS_DOWNLOAD_DIRS + [
     'quotas', 'cites_suspensions', 'eu_decisions', 'shipments', 'comptab',
@@ -85,6 +85,10 @@ module DownloadsCache
 
   def self.clear_documents
     clear_dirs(['documents'])
+  end
+
+  def self.clear_cites_processes
+    clear_dirs(['cites_processes'])
   end
 
   # cleared after destroy

@@ -33,7 +33,8 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     allDocumentTypes = @get('controllers.events.documentTypes')
       .concat @get('controllers.events.interSessionalDocumentTypes')
       .concat @get('controllers.events.identificationDocumentTypes')
-    
+    if @get('isSignedIn')
+      allDocumentTypes = allDocumentTypes.concat(@get('controllers.events.interSessionalNonPublicDocumentTypes'))
     @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
    
     general_subtype_type = @get_general_subtype_type(filtersHash)
@@ -71,10 +72,10 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       general_subtype: isGeneralSubType
     }
 
-  getDocTypeParam: -> 
+  getDocTypeParam: ->
     id = @get('selectedDocumentType.id')
 
-    if id != '__all__' then id else null 
+    if id != '__all__' then id else null
 
   filteredDocumentTypes: ( ->
     if @get('selectedEventType')

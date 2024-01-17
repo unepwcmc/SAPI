@@ -18,12 +18,15 @@ SAPI::Application.configure do
   config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.mailer['host']
+    host: Rails.application.secrets.mailer['host'] || 'http://localhost:3000'
   }
 
   ActionMailer::Base.default from: Rails.application.secrets.mailer['from']
 
-  config.action_mailer.delivery_method = :letter_opener
+  # config.action_mailer.delivery_method = :letter_opener
+  # Mail server configuration. Development use mailcatcher.
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { address: Rails.application.secrets.mailer['address'], port: 1025 }
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log

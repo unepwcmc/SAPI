@@ -35,6 +35,20 @@ class Trade::Grouping::Base
     raise NotImplementedError
   end
 
+  def read_taxonomy_conversion
+    conversion = {}
+    taxonomy = CSV.read(TAXONOMIC_GROUPING, {headers: true})
+    taxonomy.each do |csv|
+      conversion[csv['group']] ||= []
+      data = {
+        taxon_name: csv['taxon_name'],
+        rank: csv['taxonomic_level']
+      }
+      conversion[csv['group']] << data
+    end
+    conversion
+  end
+
   protected
 
   def shipments_table
@@ -79,20 +93,6 @@ class Trade::Grouping::Base
   end
 
   private
-
-  def read_taxonomy_conversion
-    conversion = {}
-    taxonomy = CSV.read(TAXONOMIC_GROUPING, {headers: true})
-    taxonomy.each do |csv|
-      conversion[csv['group']] ||= []
-      data = {
-        taxon_name: csv['taxon_name'],
-        rank: csv['taxonomic_level']
-      }
-      conversion[csv['group']] << data
-    end
-    conversion
-  end
 
   def sanitise_group(group)
     return nil unless group

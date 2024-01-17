@@ -18,18 +18,21 @@ CREATE OR REPLACE FUNCTION squish_null(TEXT) RETURNS TEXT
 COMMENT ON FUNCTION squish_null(TEXT) IS
   'Squishes whitespace characters in a string and returns null for empty string';
 
-CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) RETURNS VARCHAR(255)
+-- This function previously had a different signature - ensure that the old version is gone
+DROP FUNCTION IF EXISTS full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255));
+
+CREATE OR REPLACE FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255), name_status CHAR(1)) RETURNS VARCHAR(255)
   LANGUAGE sql IMMUTABLE
   AS $$
     SELECT CASE
-      WHEN $1 IN ('ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS')
+      WHEN $1 IN ('ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS') AND $3 != 'H'
       THEN $2 || ' spp.'
       ELSE $2
     END;
   $$;
 
-COMMENT ON FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255)) IS
-  'Returns full name with ssp where applicable depending on rank.';
+COMMENT ON FUNCTION full_name_with_spp(rank_name VARCHAR(255), full_name VARCHAR(255), name_status CHAR(1)) IS
+  'Returns full name with ssp where applicable depending on rank. This is not applied for higher than species level hybrids';
 
 DROP FUNCTION IF EXISTS ancestor_listing_auto_note(rank_name VARCHAR(255), full_name VARCHAR(255), change_type_name VARCHAR(255));
 
@@ -54,7 +57,7 @@ RETURNS TEXT
         change_types.display_name_en,
         change_types.name
       ) || '' '' ||
-      full_name_with_spp(ranks.name, ''' || taxon_concept.full_name || ''')
+      full_name_with_spp(ranks.name, ''' || taxon_concept.full_name || ''', ''' || taxon_concept.name_status || ''')
       FROM ranks, change_types
       WHERE ranks.id = ' || taxon_concept.rank_id || '
       AND change_types.id = ' || listing_change.change_type_id
@@ -186,7 +189,7 @@ CREATE OR REPLACE FUNCTION create_trade_sandbox_view(
       CASE
         WHEN aru.point_of_view = ''E''
         THEN trading_partner
-        ELSE geo_entities.iso_code2 
+        ELSE geo_entities.iso_code2
       END AS importer,
       taxon_concepts.full_name AS accepted_taxon_name,
       taxon_concepts.data->''rank_name'' AS rank,
