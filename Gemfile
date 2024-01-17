@@ -150,7 +150,7 @@ gem 'sinatra', '>= 1.3.0', :require => nil
 
 gem 'memcache-client'
 
-gem 'jquery-ui-rails', '~> 4.1.0'
+gem 'jquery-ui-rails', '~> 6.0.1'
 
 gem 'geoip'
 
