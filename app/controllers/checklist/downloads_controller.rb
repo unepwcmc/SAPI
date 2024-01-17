@@ -17,8 +17,8 @@ class Checklist::DownloadsController < ApplicationController
 
   # POST downloads/
   def create
-    @download = Download.create(params[:download])
-    if params[:download][:doc_type] == 'citesidmanual'
+    @download = Download.create(download_params)
+    if download_params[:doc_type] == 'citesidmanual'
       ManualDownloadWorker.perform_async(@download.id, params)
     else
       DownloadWorker.perform_async(@download.id, params)
@@ -93,4 +93,12 @@ class Checklist::DownloadsController < ApplicationController
     render :json => { error: "No downloads available" }
   end
 
+  def download_params
+    params.require(:download).permit(
+      # attributes used in this controller.
+      :doc_typ,
+      # other attributes were in model `attr_accessible`.
+      :format
+    )
+  end
 end

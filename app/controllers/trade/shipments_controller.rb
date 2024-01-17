@@ -37,7 +37,7 @@ class Trade::ShipmentsController < TradeController
 
   def destroy
     @shipment = Trade::Shipment.find(params[:id])
-    @shipment.destroy
+    @shipment.destroy # TODO: didn't check if the destory is successful.
     render :json => nil, :status => :ok
   end
 

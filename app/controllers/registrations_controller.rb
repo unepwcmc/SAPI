@@ -3,17 +3,10 @@ class RegistrationsController < Devise::RegistrationsController
     @user = User.find(current_user.id)
 
     successfully_updated =
-      if needs_password?(@user, params)
-        # TODO: not sure if this still work, need test.
-        # TODO: deprecations https://github.com/heartcombo/devise/blob/main/CHANGELOG.md#400rc1---2016-02-01
-        @user.update_with_password(devise_parameter_sanitizer.sanitize(:account_update))
+      if needs_password?
+        @user.update_with_password(user_params)
       else
-        # remove the virtual current_password attribute
-        # update_without_password doesn't know how to ignore it
-        params[:user].delete(:current_password)
-        # TODO: not sure if this still work, need test.
-        # TODO: deprecations https://github.com/heartcombo/devise/blob/main/CHANGELOG.md#400rc1---2016-02-01
-        @user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
+        @user.update_without_password(user_params)
       end
 
     if successfully_updated
@@ -39,8 +32,17 @@ class RegistrationsController < Devise::RegistrationsController
   # check if we need password to update user data
   # ie if password or email was changed
   # extend this as needed
-  def needs_password?(user, params)
-    user.email != params[:user][:email] ||
-      params[:user][:password].present?
+  def needs_password?
+    @user.email != user_params[:email] || user_params[:password].present?
+  end
+
+  def user_params
+    params.require(:user).permit(
+      # attributes needed by Devise and/or used in this controller.
+      :name, :email, :password, :password_confirmation, :current_password,
+      # other attributes were in model `attr_accessible`.
+      :remember_me, :role, :terms_and_conditions, :is_cites_authority,
+      :organisation, :geo_entity_id, :is_active
+    )
   end
 end

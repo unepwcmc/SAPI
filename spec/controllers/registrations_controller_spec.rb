@@ -16,6 +16,7 @@ describe RegistrationsController do
         :email => @u1.email, :name => 'ZZ'
       }
       expect(response).to redirect_to(admin_root_url)
+      expect(@u1.reload.name).to eq('ZZ')
     end
     it "should update password" do
       sign_in(@u1)
@@ -25,13 +26,15 @@ describe RegistrationsController do
         :current_password => '11111111'
       }
       expect(response).to redirect_to(admin_root_url)
+      expect(@u1.reload.valid_password?('22222222')).to eq(true)
     end
     it "should not update that account if not valid" do
       sign_in(@u1)
       put :update, :id => @u1.id, :user => {
-        :email => @u1.email, :name => nil
+        :email => 'another_email@example.com', :name => nil
       }
       expect(response).to render_template("edit")
+      expect(@u1.reload.email).not_to eq('another_email@example.com')
     end
   end
 
