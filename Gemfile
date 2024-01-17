@@ -112,7 +112,7 @@ group :development do
   gem 'brightbox', '>=2.3.9'
   gem 'rack-cors', :require => 'rack/cors'
   gem 'quiet_assets', '~> 1.1.0'
-  gem 'webrick', '1.3.1'
+  gem 'webrick', '1.6.1'
   gem 'jslint_on_rails'
   gem 'git_pretty_accept'
   gem 'rubocop', '~> 0.40.0', require: false
