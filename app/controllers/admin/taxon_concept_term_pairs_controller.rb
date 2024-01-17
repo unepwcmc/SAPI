@@ -18,4 +18,13 @@ class Admin::TaxonConceptTermPairsController < Admin::SimpleCrudController
       page(params[:page]).
       search(params[:query])
   end
+
+  private
+
+  def taxon_concept_term_pair_params
+    params.require(:taxon_concept_term_pair).permit(
+      # attributes were in model `attr_accessible`.
+      :taxon_concept_id, :term_id
+    )
+  end
 end

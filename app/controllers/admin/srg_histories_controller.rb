@@ -5,4 +5,13 @@ class Admin::SrgHistoriesController < Admin::StandardAuthorizationController
     @srg_histories ||= end_of_association_chain.page(params[:page]).
       order('UPPER(name) ASC')
   end
+
+  private
+
+  def srg_history_params
+    params.require(:srg_history).permit(
+      # attributes were in model `attr_accessible`.
+      :name, :tooltip
+    )
+  end
 end

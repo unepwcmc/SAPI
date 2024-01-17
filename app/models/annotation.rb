@@ -24,9 +24,9 @@
 
 class Annotation < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :listing_change_id, :symbol, :parent_symbol, :short_note_en,
-    :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
-    :display_in_index, :display_in_footnote, :event_id
+  # attr_accessible :listing_change_id, :symbol, :parent_symbol, :short_note_en,
+  #   :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
+  #   :display_in_index, :display_in_footnote, :event_id
 
   has_many :listing_changes
   has_many :hashed_listing_changes,

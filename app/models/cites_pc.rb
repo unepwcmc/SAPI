@@ -26,7 +26,7 @@
 # Cites Plant Committee
 
 class CitesPc < Event
-  attr_accessible :is_current
+  # attr_accessible :is_current
 
   validates :effective_at, :presence => true
 

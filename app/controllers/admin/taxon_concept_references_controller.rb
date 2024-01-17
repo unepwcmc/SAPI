@@ -70,4 +70,15 @@ class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationCont
       }
     end
   end
+
+  private
+
+  def taxon_concept_reference_params
+    params.require(:taxon_concept_reference).permit(
+      # attributes were in model `attr_accessible`.
+      :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
+      :excluded_taxon_concepts_ids, :created_by_id, :updated_by_id,
+      reference_attributes: [:citation, :created_by_id, :updated_by_id, :id, :_destroy]
+    )
+  end
 end

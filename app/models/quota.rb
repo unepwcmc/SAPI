@@ -32,7 +32,7 @@
 
 class Quota < TradeRestriction
 
-  attr_accessible :public_display
+  # attr_accessible :public_display
 
   validates :quota, :presence => true
   validates :quota, :numericality => { :greater_than_or_equal_to => -1.0 }

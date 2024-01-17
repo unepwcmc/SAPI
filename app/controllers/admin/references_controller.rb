@@ -30,4 +30,13 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
       page(params[:page]).
       search(params[:query])
   end
+
+  private
+
+  def reference_params
+    params.require(:reference).permit(
+      # attributes were in model `attr_accessible`.
+      :citation, :created_by_id, :updated_by_id
+    )
+  end
 end

@@ -24,7 +24,7 @@
 #
 
 class CitesSuspensionNotification < Event
-  attr_accessible :subtype, :new_subtype, :end_date
+  # attr_accessible :subtype, :new_subtype, :end_date
   attr_accessor :new_subtype
   has_many :started_suspensions, :foreign_key => :start_notification_id, :class_name => 'CitesSuspension'
   has_many :ended_suspensions, :foreign_key => :end_notification_id, :class_name => 'CitesSuspension'

@@ -22,4 +22,10 @@ class Admin::TermsController < Admin::StandardAuthorizationController
       page(params[:page]).
       search(params[:query])
   end
+
+  private
+
+  def term_params
+    params.require(:term).permit(:code, :type, :name_en, :name_es, :name_fr)
+  end
 end

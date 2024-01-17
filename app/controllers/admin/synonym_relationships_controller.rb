@@ -63,4 +63,13 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
       find_by_name(TaxonRelationshipType::HAS_SYNONYM)
   end
 
+  private
+
+  def synonym_relationship_params
+    params.require(:taxon_relationship).permit(
+      # attributes were in model `attr_accessible`.
+      :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
+      :created_by_id, :updated_by_id
+    )
+  end
 end

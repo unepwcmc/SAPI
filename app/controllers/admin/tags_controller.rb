@@ -10,4 +10,13 @@ class Admin::TagsController < Admin::SimpleCrudController
       order('UPPER(name) ASC, model ASC').
       search(params[:query])
   end
+
+  private
+
+  def tag_params
+    params.require(:tag).permit(
+      # attributes were in model `attr_accessible`.
+      :model, :name
+    )
+  end
 end

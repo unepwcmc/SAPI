@@ -18,7 +18,7 @@
 
 class Reference < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :citation, :created_by_id, :updated_by_id
+  # attr_accessible :citation, :created_by_id, :updated_by_id
 
   validates :citation, :presence => true
   has_many :taxon_concept_references

@@ -162,7 +162,7 @@ Rails.application.routes.draw do
       resources :cites_captivity_processes, 
         :only => [:index, :new, :create, :edit, :update, :destroy]
     end
-    resources :nomenclature_changes do
+    resources :nomenclature_changes do # TODO: look like only support :index, :show, :destroy
       resources :split, controller: 'nomenclature_changes/split'
       resources :lump, controller: 'nomenclature_changes/lump'
       resources :status_to_accepted,

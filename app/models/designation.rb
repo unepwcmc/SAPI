@@ -10,7 +10,7 @@
 #
 
 class Designation < ActiveRecord::Base
-  attr_accessible :name, :taxonomy_id
+  # attr_accessible :name, :taxonomy_id
   include Dictionary
   build_dictionary :cites, :eu, :cms
 

@@ -28,4 +28,15 @@ class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
       page(params[:page]).
       search(params[:query])
   end
+
+  private
+
+  def geo_entity_params
+    params.require(:geo_entity).permit(
+      # attributes were in model `attr_accessible`.
+      :geo_entity_type_id, :iso_code2, :iso_code3,
+      :legacy_id, :legacy_type, :long_name, :name_en, :name_es, :name_fr,
+      :is_current
+    )
+  end
 end

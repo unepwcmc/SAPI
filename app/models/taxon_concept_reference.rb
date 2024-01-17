@@ -16,9 +16,9 @@
 
 class TaxonConceptReference < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
-    :excluded_taxon_concepts_ids, :reference_attributes,
-    :created_by_id, :updated_by_id
+  # attr_accessible :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
+  #   :excluded_taxon_concepts_ids, :reference_attributes,
+  #   :created_by_id, :updated_by_id
 
   belongs_to :reference
   belongs_to :taxon_concept
@@ -30,7 +30,7 @@ class TaxonConceptReference < ActiveRecord::Base
   validates :reference_id, :uniqueness => { :scope => [:taxon_concept_id] }
 
   def excluded_taxon_concepts
-    ids = excluded_taxon_concepts_ids.try(:split, ",")
+    ids = excluded_taxon_concepts_ids.try(:split, ",")&.flatten
     ids.flatten.present? ? TaxonConcept.where(id: ids).order(:full_name) : []
   end
 

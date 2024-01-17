@@ -26,7 +26,7 @@
 # European Commission Scientific Review Group
 
 class EcSrg < Event
-  attr_accessible :is_current
+  # attr_accessible :is_current
 
   has_many :eu_opinions, :foreign_key => :start_event_id,
     :dependent => :nullify

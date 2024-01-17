@@ -10,7 +10,7 @@
 #
 
 class PresetTag < ActiveRecord::Base
-  attr_accessible :model, :name
+  # attr_accessible :model, :name
 
   TYPES = {
     :Distribution => 'Distribution',

@@ -26,7 +26,7 @@
 # Cites Animal Committee
 
 class CitesAc < Event
-  attr_accessible :is_current
+  # attr_accessible :is_current
 
   validates :effective_at, :presence => true
 

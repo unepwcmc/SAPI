@@ -27,7 +27,7 @@
 #
 
 class EuOpinion < EuDecision
-  attr_accessible :document_id
+  # attr_accessible :document_id
 
   belongs_to :document
 

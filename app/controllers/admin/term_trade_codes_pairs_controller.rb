@@ -51,4 +51,12 @@ class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationControl
       page(params[:page]).
       search(params[:query])
   end
+
+  private
+
+  def term_trade_codes_pair_params
+    params.require(:term_trade_codes_pair).permit(
+      :trade_code_id, :trade_code_type, :term_id
+    )
+  end
 end

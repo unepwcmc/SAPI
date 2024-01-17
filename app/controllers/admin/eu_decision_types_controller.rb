@@ -14,4 +14,13 @@ class Admin::EuDecisionTypesController < Admin::StandardAuthorizationController
     @eu_decision_types ||= end_of_association_chain.page(params[:page]).
       order('UPPER(name) ASC')
   end
+
+  private
+
+  def eu_decision_type_params
+    params.require(:eu_decision_type).permit(
+      # attributes were in model `attr_accessible`.
+      :name, :tooltip, :decision_type
+    )
+  end
 end

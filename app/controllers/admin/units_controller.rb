@@ -22,4 +22,12 @@ class Admin::UnitsController < Admin::StandardAuthorizationController
       page(params[:page]).
       search(params[:query])
   end
+
+  private
+
+  def unit_params
+    params.require(:unit).permit(
+      :code, :type, :name_en, :name_es, :name_fr
+    )
+  end
 end

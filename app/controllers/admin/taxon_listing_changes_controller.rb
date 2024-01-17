@@ -28,7 +28,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   def create
     @taxon_concept = TaxonConcept.find(params[:taxon_concept_id])
     @designation = Designation.find(params[:designation_id])
-    @listing_change = ListingChange.new(params[:listing_change])
+    @listing_change = ListingChange.new(listing_change_params)
     if @taxon_concept.listing_changes << @listing_change
       redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
     else
@@ -128,5 +128,26 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
       where("taxon_concept_id" => @taxon_concept.id).
       order('listing_changes.effective_at DESC').
       page(params[:page]).where(:parent_id => nil)
+  end
+
+  private
+
+  def listing_change_params
+    params.require(:listing_change).permit(
+      :taxon_concept_id, :species_listing_id, :change_type_id,
+      :effective_at, :is_current, :parent_id, :geo_entity_ids,
+      :inclusion_taxon_concept_id, :hash_annotation_id, :event_id,
+      :excluded_geo_entities_ids, :excluded_taxon_concepts_ids, :internal_notes,
+      :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+      :created_by_id, :updated_by_id,
+      annotation_attributes: [
+        :listing_change_id, :symbol, :parent_symbol, :short_note_en,
+        :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
+        :display_in_index, :display_in_footnote, :event_id, :id, :_destroy
+      ],
+      party_listing_distribution_attributes: [
+        :id, :_destroy, :geo_entity_id, :listing_change_id, :is_party
+      ]
+    )
   end
 end

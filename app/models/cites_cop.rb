@@ -24,7 +24,7 @@
 #
 
 class CitesCop < Event
-  attr_accessible :is_current
+  # attr_accessible :is_current
   has_many :listing_changes, :foreign_key => :event_id
   has_many :hash_annotations, :class_name => 'Annotation', :foreign_key => :event_id
 

@@ -13,8 +13,8 @@
 #
 
 class ChangeType < ActiveRecord::Base
-  attr_accessible :name, :display_name_en, :display_name_es, :display_name_fr,
-    :designation_id
+  # attr_accessible :name, :display_name_en, :display_name_es, :display_name_fr,
+  #   :designation_id
   include Dictionary
   build_dictionary :addition, :deletion, :reservation, :reservation_withdrawal, :exception
 

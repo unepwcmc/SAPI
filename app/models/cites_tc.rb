@@ -26,7 +26,7 @@
 # Cites Tech Committee
 
 class CitesTc < Event
-  attr_accessible :is_current
+  # attr_accessible :is_current
 
   validates :effective_at, :presence => true
 

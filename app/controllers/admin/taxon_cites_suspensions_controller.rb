@@ -60,4 +60,22 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
   def collection
     @cites_suspensions ||= end_of_association_chain.page(params[:page])
   end
+
+  private
+
+  def cites_suspension_params
+    params.require(:cites_suspension).permit(
+      # attributes were in model `attr_accessible`.
+      :start_notification_id, :end_notification_id,
+      :applies_to_import, :end_date, :geo_entity_id, :is_current,
+      :notes, :publication_date, :purpose_ids, :quota, :type,
+      :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
+      :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+      :created_by_id, :updated_by_id, :url,
+      :taxon_concept_id,
+      cites_suspension_confirmations_attributes: [
+        :cites_suspension_notification_id, :id, :_destroy
+      ]
+    )
+  end
 end

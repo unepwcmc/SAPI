@@ -72,4 +72,14 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
     @distributions = @taxon_concept.distributions.
       joins(:geo_entity).order('geo_entities.name_en ASC')
   end
+
+  private
+
+  def distribution_params
+    params.require(:distribution).permit(
+      # attributes were in model `attr_accessible`.
+      :geo_entity_id, :taxon_concept_id, :tag_list, :internal_notes, :created_by_id, :updated_by_id,
+      references_attributes: [:citation, :created_by_id, :updated_by_id, :id, :_destroy]
+    )
+  end
 end

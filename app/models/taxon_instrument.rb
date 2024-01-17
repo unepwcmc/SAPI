@@ -14,7 +14,7 @@
 
 class TaxonInstrument < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :effective_from, :instrument_id, :taxon_concept_id
+  # attr_accessible :effective_from, :instrument_id, :taxon_concept_id
 
   belongs_to :instrument
   belongs_to :taxon_concept

@@ -12,7 +12,7 @@ class Taxonomy < ActiveRecord::Base
   include Dictionary
   build_dictionary :cites_eu, :cms
 
-  attr_accessible :name
+  # attr_accessible :name
   has_many :designations
   has_many :taxon_concepts
 

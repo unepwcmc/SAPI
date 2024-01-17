@@ -17,4 +17,10 @@ class Admin::TaxonomiesController < Admin::StandardAuthorizationController
       page(params[:page]).
       search(params[:query])
   end
+
+  private
+
+  def taxonomy_params
+    params.require(:taxonomy).permit(:name)
+  end
 end

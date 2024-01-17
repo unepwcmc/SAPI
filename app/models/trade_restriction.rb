@@ -34,12 +34,12 @@ require 'digest/sha1'
 require 'csv'
 class TradeRestriction < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :end_date, :geo_entity_id, :is_current,
-    :notes, :publication_date, :purpose_ids, :quota, :type,
-    :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
-    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id, :url,
-    :taxon_concept_id
+  # attr_accessible :end_date, :geo_entity_id, :is_current,
+  #   :notes, :publication_date, :purpose_ids, :quota, :type,
+  #   :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
+  #   :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+  #   :created_by_id, :updated_by_id, :url,
+  #   :taxon_concept_id
 
   belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id

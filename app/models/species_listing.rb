@@ -11,7 +11,7 @@
 #
 
 class SpeciesListing < ActiveRecord::Base
-  attr_accessible :designation_id, :name, :abbreviation
+  # attr_accessible :designation_id, :name, :abbreviation
 
   belongs_to :designation
   has_many :listing_changes

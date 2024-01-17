@@ -31,4 +31,15 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
     @eu_suspension_regulations_for_dropdown = EuSuspensionRegulation.
       order('effective_at DESC, name ASC')
   end
+
+  private
+
+  def eu_suspension_regulation_params
+    params.require(:eu_suspension_regulation).permit(
+      # attributes were in model `attr_accessible`.
+      :eu_suspensions_event_id, :name, :designation_id, :description, :extended_description,
+      :url, :private_url, :multilingual_url, :published_at, :effective_at, :is_current, :end_date,
+      :created_by_id, :updated_by_id
+    )
+  end
 end

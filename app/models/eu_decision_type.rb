@@ -11,7 +11,7 @@
 #
 
 class EuDecisionType < ActiveRecord::Base
-  attr_accessible :name, :tooltip, :decision_type
+  # attr_accessible :name, :tooltip, :decision_type
   include Dictionary
   build_dictionary :negative_opinion, :positive_opinion, :no_opinion,
     :suspension, :srg_referral

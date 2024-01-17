@@ -75,4 +75,17 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
         geo_entities.name_en ASC').
       page(params[:page])
   end
+
+  private
+
+  def eu_suspension_params
+    params.require(:eu_suspension).permit(
+      # attributes were in model `attr_accessible`.
+      :end_date, :end_event_id, :geo_entity_id, :internal_notes,
+      :is_current, :notes, :start_date, :start_event_id, :eu_decision_type_id,
+      :taxon_concept_id, :type, :conditions_apply, :term_id, :source_id,
+      :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+      :created_by_id, :updated_by_id, :srg_history_id
+    )
+  end
 end

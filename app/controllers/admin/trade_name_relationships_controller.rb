@@ -63,4 +63,13 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
       find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
   end
 
+  private
+
+  def trade_name_relationship_params
+    params.require(:taxon_relationship).permit(
+      :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
+      :created_by_id, :updated_by_id
+    )
+  end
+
 end

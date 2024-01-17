@@ -1,8 +1,8 @@
 class CitesProcess < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :start_event_id, :geo_entity_id, :resolution, :start_date,
-                  :taxon_concept_id, :notes, :status, :document, :document_title,
-                  :created_by_id, :updated_by_id
+  # attr_accessible :start_event_id, :geo_entity_id, :resolution, :start_date,
+  #                 :taxon_concept_id, :notes, :status, :document, :document_title,
+  #                 :created_by_id, :updated_by_id
   belongs_to :taxon_concept
   belongs_to :geo_entity
   belongs_to :start_event, :class_name => 'Event'

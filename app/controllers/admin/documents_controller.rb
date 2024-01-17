@@ -138,4 +138,20 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
         admin_documents_url
       end
   end
+
+  private
+
+  def document_params
+    params.require(:document).permit(
+      # attributes were in model `attr_accessible`.
+      :event_id, :filename, :date, :type, :title, :is_public,
+      :language_id,
+      :sort_index, :discussion_id, :discussion_sort_index,
+      :primary_language_document_id,
+      :designation_id,
+      citations_attributes: [
+        :id, :_destroy, :document_id, :stringy_taxon_concept_ids, :geo_entity_ids
+      ]
+    )
+  end
 end

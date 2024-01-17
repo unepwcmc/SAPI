@@ -66,4 +66,17 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
         notes ASC').
       page(params[:page])
   end
+
+  private
+
+  def quota_params
+    params.require(:quota).permit(
+      :public_display, :end_date, :geo_entity_id, :is_current,
+      :notes, :publication_date, :purpose_ids, :quota, :type,
+      :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
+      :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+      :created_by_id, :updated_by_id, :url,
+      :taxon_concept_id
+    )
+  end
 end

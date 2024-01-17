@@ -14,8 +14,8 @@
 
 class TaxonRelationship < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
-    :created_by_id, :updated_by_id
+  # attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
+  #   :created_by_id, :updated_by_id
   belongs_to :taxon_relationship_type
   belongs_to :taxon_concept
   belongs_to :other_taxon_concept, :class_name => 'TaxonConcept',

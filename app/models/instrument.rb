@@ -10,7 +10,7 @@
 #
 
 class Instrument < ActiveRecord::Base
-  attr_accessible :designation_id, :name
+  # attr_accessible :designation_id, :name
 
   validates :name, :presence => true, :uniqueness => { :scope => :designation_id }
 

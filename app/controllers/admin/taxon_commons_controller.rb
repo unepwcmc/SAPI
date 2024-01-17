@@ -61,4 +61,14 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
   def load_associations
     @languages = Language.order(:name_en)
   end
+
+  private
+
+  def taxon_common_params
+    params.require(:taxon_common).permit(
+      # attributes were in model `attr_accessible`.
+      :common_name_id, :taxon_concept_id, :created_by_id,
+      :updated_by_id, :name, :language_id
+    )
+  end
 end
