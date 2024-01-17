@@ -198,7 +198,7 @@ GEM
       railties (>= 3.2, < 5.1)
     foreigner (1.5.0)
       activerecord (>= 3.0.0)
-    geocoder (1.2.2)
+    geocoder (1.6.4)
     geoip (1.3.5)
     git (1.2.6)
     git_pretty_accept (0.3.1)
