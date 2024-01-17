@@ -45,7 +45,7 @@ gem 'ember-rails', '~> 0.14.1'
 gem 'ember-source', '~> 1.6.0'
 gem 'ember-data-source', '0.14'
 gem 'handlebars-source', '1.0.12'
-gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
+gem 'jquery-rails', '3.1.5' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
 gem 'jquery-mousewheel-rails', '~> 0.0.9'
 gem 'jquery-cookie-rails', '~> 1.3.1.1'
 gem 'bootstrap-sass', '~> 2.3.2.2'
