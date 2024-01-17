@@ -55,8 +55,6 @@ Rails.application.routes.draw do
     resources :species_listings, :only => [:index]
     resources :change_types, :only => [:index]
     resources :ranks, :only => [:index]
-    resources :geo_entities, :only => [:index]
-    resources :geo_relationship_types, :only => [:index]
     resources :trade_downloads_cache_cleanup, only: [:index]
   end
   namespace :admin do
