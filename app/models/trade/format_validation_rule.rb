@@ -31,6 +31,6 @@ class Trade::FormatValidationRule < Trade::ValidationRule
     sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
     s = Arel::Table.new(table_name)
     arel_nodes = column_names.map { |c| "#{c} !~ '#{format_re}'" }
-    sandbox_klass.select('*').where(arel_nodes.inject(&:or))
+    sandbox_klass.select(Arel.star).where(arel_nodes.inject(&:or))
   end
 end

@@ -50,7 +50,7 @@ describe CitesSuspension, sidekiq: :inline do
     )
   }
   before do
-    Timecop.freeze(10.minutes.ago)
+    travel -10.minutes
     @genus = create_cites_eu_genus
     @taxon_concept = create_cites_eu_species(parent: @genus)
     @another_taxon_concept = create_cites_eu_species
@@ -64,7 +64,7 @@ describe CitesSuspension, sidekiq: :inline do
       :taxon_concept_id => @another_taxon_concept.id,
       :geo_entity_id => rwanda.id
     )
-    Timecop.return
+    travel_back
   end
 
   context "touching taxa" do
@@ -207,8 +207,8 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
 
-        specify { cites_suspension.should be_invalid }
-        specify { cites_suspension.should have(1).error_on(:start_notification_id) }
+        specify { expect(cites_suspension).to be_invalid }
+        specify { expect(cites_suspension.error_on(:start_notification_id).size).to eq(1) }
       end
 
       context "when start date greater than end date" do
@@ -221,8 +221,8 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
 
-        specify { cites_suspension.should be_invalid }
-        specify { cites_suspension.should have(1).error_on(:start_date) }
+        specify { expect(cites_suspension).to be_invalid }
+        specify { expect(cites_suspension.error_on(:start_date).size).to eq(1) }
       end
 
       context "when valid" do
@@ -234,7 +234,7 @@ describe CitesSuspension, sidekiq: :inline do
           )
         }
 
-        specify { cites_suspension.should be_valid }
+        specify { expect(cites_suspension).to be_valid }
       end
     end
   end
@@ -252,7 +252,7 @@ describe CitesSuspension, sidekiq: :inline do
         CitesSuspension.export('set' => 'current')
       end
       subject { Dir["#{DownloadsCache.cites_suspensions_path}/*"] }
-      specify { subject.should_not be_empty }
+      specify { expect(subject).not_to be_empty }
     end
   end
 
@@ -271,7 +271,7 @@ describe CitesSuspension, sidekiq: :inline do
         CitesSuspension.export('set' => 'current')
       end
       subject { Dir["#{DownloadsCache.cites_suspensions_path}/*"] }
-      specify { subject.should be_empty }
+      specify { expect(subject).to be_empty }
     end
   end
 

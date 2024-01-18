@@ -10,24 +10,24 @@ describe Admin::TaxonEuSuspensionsController do
   describe "GET index" do
     it "renders the index template" do
       get :index, :taxon_concept_id => @taxon_concept.id
-      response.should render_template("index")
+      expect(response).to render_template("index")
     end
     it "renders the taxon_concepts_layout" do
       get :index, :taxon_concept_id => @taxon_concept.id
-      response.should render_template('layouts/taxon_concepts')
+      expect(response).to render_template('layouts/taxon_concepts')
     end
   end
 
   describe "GET new" do
     it "renders the new template" do
       get :new, :taxon_concept_id => @taxon_concept.id
-      response.should render_template('new')
+      expect(response).to render_template('new')
     end
     it "assigns @geo_entities (country and territory) with two objects" do
       territory = create(:geo_entity, :geo_entity_type_id => territory_geo_entity_type.id)
       country = create(:geo_entity)
       get :new, :taxon_concept_id => @taxon_concept.id
-      assigns(:geo_entities).size.should == 2
+      expect(assigns(:geo_entities).size).to eq(2)
     end
   end
 
@@ -46,7 +46,7 @@ describe Admin::TaxonEuSuspensionsController do
             )
           },
           :taxon_concept_id => @taxon_concept.id
-        response.should redirect_to(admin_taxon_concept_eu_suspensions_url(@taxon_concept.id))
+        expect(response).to redirect_to(admin_taxon_concept_eu_suspensions_url(@taxon_concept.id))
       end
     end
 
@@ -54,7 +54,7 @@ describe Admin::TaxonEuSuspensionsController do
       it "renders new" do
         post :create, :eu_suspension => {},
           :taxon_concept_id => @taxon_concept.id
-        response.should render_template("new")
+        expect(response).to render_template("new")
       end
     end
   end
@@ -68,12 +68,12 @@ describe Admin::TaxonEuSuspensionsController do
     end
     it "renders the edit template" do
       get :edit, :id => @eu_suspension.id, :taxon_concept_id => @taxon_concept.id
-      response.should render_template('edit')
+      expect(response).to render_template('edit')
     end
     it "assigns @geo_entities" do
       territory = create(:geo_entity, :geo_entity_type_id => territory_geo_entity_type.id)
       get :edit, :id => @eu_suspension.id, :taxon_concept_id => @taxon_concept.id
-      assigns(:geo_entities).should include(territory)
+      expect(assigns(:geo_entities)).to include(territory)
     end
   end
 
@@ -98,7 +98,7 @@ describe Admin::TaxonEuSuspensionsController do
             },
             id: @eu_suspension.id,
             taxon_concept_id: @taxon_concept.id
-          response.should redirect_to(
+          expect(response).to redirect_to(
             admin_taxon_concept_eu_suspensions_url(@taxon_concept)
           )
         end
@@ -115,7 +115,7 @@ describe Admin::TaxonEuSuspensionsController do
             },
             id: @eu_suspension.id,
             taxon_concept_id: @taxon_concept.id
-          response.should redirect_to(
+          expect(response).to redirect_to(
             admin_taxon_concept_eu_suspensions_url(@taxon_concept)
           )
         end
@@ -132,7 +132,7 @@ describe Admin::TaxonEuSuspensionsController do
             },
             id: @eu_suspension.id,
             taxon_concept_id: @taxon_concept.id
-          response.should render_template('new')
+          expect(response).to render_template('new')
         end
       end
       context "when eu_decision_type is not present" do
@@ -145,7 +145,7 @@ describe Admin::TaxonEuSuspensionsController do
             },
             id: @eu_suspension.id,
             taxon_concept_id: @taxon_concept.id
-          response.should render_template('new')
+          expect(response).to render_template('new')
         end
       end
     end
@@ -160,7 +160,7 @@ describe Admin::TaxonEuSuspensionsController do
           },
           id: @eu_suspension.id,
           taxon_concept_id: @taxon_concept.id
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
     end
   end
@@ -175,7 +175,7 @@ describe Admin::TaxonEuSuspensionsController do
     it "redirects after delete" do
       delete :destroy, :id => @eu_suspension.id,
         :taxon_concept_id => @taxon_concept.id
-      response.should redirect_to(
+      expect(response).to redirect_to(
         admin_taxon_concept_eu_suspensions_url(@taxon_concept)
       )
     end
@@ -192,11 +192,11 @@ describe Admin::TaxonEuSuspensionsController do
     describe "GET index" do
       it "renders the index template" do
         get :index, :taxon_concept_id => @taxon_concept.id
-        response.should render_template("index")
+        expect(response).to render_template("index")
       end
       it "renders the taxon_concepts_layout" do
         get :index, :taxon_concept_id => @taxon_concept.id
-        response.should render_template('layouts/taxon_concepts')
+        expect(response).to render_template('layouts/taxon_concepts')
       end
     end
     describe "DELETE destroy" do
@@ -204,10 +204,10 @@ describe Admin::TaxonEuSuspensionsController do
         @request.env['HTTP_REFERER'] = admin_taxon_concept_eu_suspensions_url(@taxon_concept)
         delete :destroy, :id => eu_suspension.id,
           :taxon_concept_id => @taxon_concept.id
-        response.should redirect_to(
+        expect(response).to redirect_to(
           admin_taxon_concept_eu_suspensions_url(@taxon_concept)
         )
-        EuSuspension.find(eu_suspension.id).should_not be_nil
+        expect(EuSuspension.find(eu_suspension.id)).not_to be_nil
       end
     end
   end

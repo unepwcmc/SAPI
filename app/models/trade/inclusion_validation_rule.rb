@@ -19,10 +19,9 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   attr_accessible :valid_values_view
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
-    @query = matching_records(annual_report_upload).
-      where(
-        "'#{validation_error.matching_criteria}'::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
-      )
+    @query = matching_records(annual_report_upload).where(
+      "#{Arel::Nodes.build_quoted(validation_error.matching_criteria.to_json).to_sql}::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
+    )
   end
 
   def error_message(values_hash = nil)
@@ -81,7 +80,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     # if it is, check if it has a match in valid values view
     v = Arel::Table.new(valid_values_view)
     arel_nodes = shipments_columns.map { |c| v[c].eq(shipment.send(c)) }
-    return nil if Trade::Shipment.find_by_sql(v.project('*').where(arel_nodes.inject(&:and))).any?
+    return nil if Trade::Shipment.find_by_sql(v.project(Arel.star).where(arel_nodes.inject(&:and))).any?
     error_message
   end
 
@@ -92,7 +91,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   end
 
   def column_names_for_display_with_custom_table_name(table_name:)
-    column_names_for_display.map{ |column_name| "#{table_name}.#{column_name}" }
+    column_names_for_display.map{ |column_name| Arel::Nodes::SqlLiteral.new("#{table_name}.#{column_name}") }
   end
 
   def column_names_for_display
@@ -170,8 +169,11 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def matching_records(annual_report_upload)
     table_name = annual_report_upload.sandbox.table_name
     sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
-    sandbox_klass.select('*').
-      from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records"))
+    sandbox_klass.select(
+      Arel.star
+    ).from(
+      Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")
+    )
   end
 
   # Returns records from sandbox where values in column_names are not null
@@ -183,7 +185,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     end
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each { |n| not_null_conds = not_null_conds.and(n) }
-    result = s.project('*').where(not_null_conds)
+    result = s.project(Arel.star).where(not_null_conds)
     scope_nodes = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
       if scope_def['inclusion']
@@ -220,7 +222,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         v[c].eq(s[c]).or(v[c].eq(nil).and(s[c].eq(nil)))
       end
     end
-    valid_values = s.project(s['*']).join(v).on(arel_nodes.inject(&:and))
+    valid_values = s.project(s[Arel.star]).join(v).on(arel_nodes.inject(&:and))
     scoped_records_arel(s).except(valid_values)
   end
 

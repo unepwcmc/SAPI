@@ -110,22 +110,24 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
 
     context "when updates and error fixed for all records" do
       specify "error record is destroyed" do
-        Timecop.travel(Time.now + 1)
-        @shipment2.update_attributes(taxon_name: 'Canis lupus')
-        @shipment3.update_attributes(taxon_name: 'Canis lupus')
-        expect {
-          validation_rule.refresh_errors_if_needed(annual_report_upload)
-        }.to change { Trade::ValidationError.count }.by(-1)
+        travel_to(Time.now + 1) do
+          @shipment2.update_attributes(taxon_name: 'Canis lupus')
+          @shipment3.update_attributes(taxon_name: 'Canis lupus')
+          expect {
+            validation_rule.refresh_errors_if_needed(annual_report_upload)
+          }.to change { Trade::ValidationError.count }.by(-1)
+        end
       end
     end
 
     context "when updates and error fixed for some records" do
       specify "error record is updated to reflect new error_count" do
-        Timecop.travel(Time.now + 1)
-        @shipment2.update_attributes(taxon_name: 'Canis lupus')
-        expect {
-          validation_rule.refresh_errors_if_needed(annual_report_upload)
-        }.to change { @validation_error.reload.error_count }.by(-1)
+        travel_to(Time.now + 1) do
+          @shipment2.update_attributes(taxon_name: 'Canis lupus')
+          expect {
+            validation_rule.refresh_errors_if_needed(annual_report_upload)
+          }.to change { @validation_error.reload.error_count }.by(-1)
+        end
       end
     end
 
@@ -147,7 +149,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(annual_report_upload)
-        subject.validation_errors_for_aru(annual_report_upload).should be_empty
+        expect(subject.validation_errors_for_aru(annual_report_upload)).to be_empty
       }
     end
     context 'trading partner should be a valid iso code' do
@@ -174,7 +176,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(annual_report_upload)
-        subject.validation_errors_for_aru(annual_report_upload).size.should == 1
+        expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
       }
     end
     context 'term can only be paired with unit as defined by term_trade_codes_pairs table' do
@@ -201,7 +203,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         }
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
+          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
         }
       end
       context "when required unit blank" do
@@ -213,7 +215,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         }
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
+          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
         }
       end
     end
@@ -233,7 +235,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
       }
       specify {
         subject.refresh_errors_if_needed(annual_report_upload)
-        subject.validation_errors_for_aru(annual_report_upload).size.should == 2
+        expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(2)
       }
     end
     context 'taxon_concept_id can only be paired with term as defined by trade_taxon_concept_term_pairs table' do
@@ -254,7 +256,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         end
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
+          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
         }
       end
       context "when hybrid" do
@@ -271,7 +273,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         end
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
+          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
         }
       end
     end

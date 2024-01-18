@@ -4,12 +4,14 @@ class RegistrationsController < Devise::RegistrationsController
 
     successfully_updated =
       if needs_password?(@user, params)
+        # TODO: not sure if this still work, need test.
         # TODO: deprecations https://github.com/heartcombo/devise/blob/main/CHANGELOG.md#400rc1---2016-02-01
         @user.update_with_password(devise_parameter_sanitizer.sanitize(:account_update))
       else
         # remove the virtual current_password attribute
         # update_without_password doesn't know how to ignore it
         params[:user].delete(:current_password)
+        # TODO: not sure if this still work, need test.
         # TODO: deprecations https://github.com/heartcombo/devise/blob/main/CHANGELOG.md#400rc1---2016-02-01
         @user.update_without_password(devise_parameter_sanitizer.sanitize(:account_update))
       end
@@ -17,7 +19,7 @@ class RegistrationsController < Devise::RegistrationsController
     if successfully_updated
       set_flash_message :notice, :updated
       # Sign in the user bypassing validation in case his password changed
-      sign_in @user, :bypass => true
+      bypass_sign_in @user
       redirect_to after_update_path_for(@user)
     else
       render "edit"

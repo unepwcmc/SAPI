@@ -18,7 +18,7 @@ describe Term do
   describe :destroy do
     context "when no dependent objects attached" do
       let(:term) { create(:term) }
-      specify { term.destroy.should be_truthy }
+      specify { expect(term.destroy).to be_truthy }
     end
     context "when dependent objects attached" do
       let(:term) { create(:term) }
@@ -30,16 +30,16 @@ describe Term do
             :start_notification_id => create_cites_suspension_notification.id
           )
         }
-        specify { term.destroy.should be_falsey }
+        specify { expect(term.destroy).to be_falsey }
       end
       context "when CITES quota" do
         let(:geo_entity) { create(:geo_entity) }
         let!(:quota) { create(:quota, :terms => [term], :geo_entity_id => geo_entity.id) }
-        specify { term.destroy.should be_falsey }
+        specify { expect(term.destroy).to be_falsey }
       end
       context "when shipments" do
         before(:each) { create(:shipment, :term => term) }
-        specify { term.destroy.should be_falsey }
+        specify { expect(term.destroy).to be_falsey }
       end
     end
   end

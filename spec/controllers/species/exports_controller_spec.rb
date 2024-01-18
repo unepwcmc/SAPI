@@ -9,7 +9,7 @@ describe Species::ExportsController do
   end
   context 'with ip address to csv separator conversion' do
     it 'sets separator to comma with local ip address' do
-      ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("127.0.0.1")
+      allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return("127.0.0.1")
       get :download, data_type: 'EuDecisions', :filters => {
         'set' => 'current', 'decision_types' => {}, :csv_separator => ''
       }
@@ -20,8 +20,8 @@ describe Species::ExportsController do
     end
 
     it 'sets separator to comma with UK ip address' do
-      ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("194.59.188.126")
-      Sapi::GeoIP.any_instance.stub(:country_and_city).and_return({ :country => "GB", :city => "Cambridge" })
+      allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return("194.59.188.126")
+      allow_any_instance_of(Sapi::GeoIP).to receive(:country_and_city).and_return({ :country => "GB", :city => "Cambridge" })
       get :download, data_type: 'EuDecisions', :filters => {
         'set' => 'current', 'decision_types' => {}, :csv_separator => ''
       }
@@ -31,8 +31,8 @@ describe Species::ExportsController do
     end
 
     it 'sets separator to semicolon with AF ip address' do
-      ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("175.106.59.78")
-      Sapi::GeoIP.any_instance.stub(:country_and_city).and_return({ :country => "AF", :city => "Kabul" })
+      allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return("175.106.59.78")
+      allow_any_instance_of(Sapi::GeoIP).to receive(:country_and_city).and_return({ :country => "AF", :city => "Kabul" })
       get :download, data_type: 'EuDecisions', :filters => {
         'set' => 'current', 'decision_types' => {}, :csv_separator => ''
       }
@@ -42,7 +42,7 @@ describe Species::ExportsController do
     end
 
     it 'sets separator back to comma when a user overrides the encoded default' do
-      ActionDispatch::Request.any_instance.stub(:remote_ip).and_return("175.106.59.78")
+      allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return("175.106.59.78")
       get :download, data_type: 'EuDecisions', :filters => {
         'set' => 'current', 'decision_types' => {}, :csv_separator => 'comma'
       }
@@ -52,7 +52,7 @@ describe Species::ExportsController do
     end
 
     it 'sets separator to comma when IP address is nil' do
-      ActionDispatch::Request.any_instance.stub(:remote_ip).and_return(nil)
+      allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return(nil)
       get :download, data_type: 'EuDecisions', :filters => {
         'set' => 'current', 'decision_types' => {}, :csv_separator => ''
       }
@@ -62,7 +62,7 @@ describe Species::ExportsController do
     end
 
     it 'sets separator to comma when IP address is unknown' do
-      ActionDispatch::Request.any_instance.stub(:remote_ip).and_return('unknown')
+      allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return('unknown')
       get :download, data_type: 'EuDecisions', :filters => {
         'set' => 'current', 'decision_types' => {}, :csv_separator => ''
       }

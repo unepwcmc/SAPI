@@ -14,7 +14,6 @@ SimpleCov.start 'rails'
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
 require 'sidekiq/testing'
 require 'capybara/rspec'
 require 'capybara/rails'
@@ -47,7 +46,8 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
   config.infer_spec_type_from_file_location!
 
-  config.include Devise::TestHelpers, type: :controller
+  config.include ActiveSupport::Testing::TimeHelpers
+  config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, :type => :controller
 
   config.include FactoryGirl::Syntax::Methods

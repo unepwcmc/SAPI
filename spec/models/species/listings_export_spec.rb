@@ -7,7 +7,7 @@ describe Species::ListingsExport do
         :designation_id => cites.id
       })
     }
-    specify { subject.path.should == "public/downloads/cites_listings/" }
+    specify { expect(subject.path).to eq("public/downloads/cites_listings/") }
   end
   describe :export do
     context "when no results" do
@@ -18,14 +18,14 @@ describe Species::ListingsExport do
           :geo_entities_ids => [poland.id]
         })
       }
-      specify { subject.export.should be_falsey }
+      specify { expect(subject.export).to be_falsey }
     end
     context "when results" do
       before(:each) {
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/cites_listings")
         )
-        Species::ListingsExport.any_instance.stub(:path).
+        allow_any_instance_of(Species::ListingsExport).to receive(:path).
           and_return("spec/public/downloads/cites_listings/")
       }
       after(:each) {
@@ -41,13 +41,13 @@ describe Species::ListingsExport do
       context "when file not cached" do
         specify {
           subject.export
-          File.file?(subject.file_name).should be_truthy
+          expect(File.file?(subject.file_name)).to be_truthy
         }
       end
       context "when file cached" do
         specify {
           FileUtils.touch(subject.file_name)
-          subject.should_not_receive(:to_csv)
+          expect(subject).not_to receive(:to_csv)
           subject.export
         }
       end
@@ -62,7 +62,7 @@ describe Species::ListingsExport do
             :species_listings_ids => [cites_I.id]
           })
         }
-        specify { subject.query.to_a.size.should == 1 }
+        specify { expect(subject.query.to_a.size).to eq(1) }
 
         context "when Poland" do
           subject {
@@ -72,7 +72,7 @@ describe Species::ListingsExport do
               :geo_entities_ids => [poland.id]
             })
           }
-          specify { subject.query.to_a.size.should == 0 }
+          specify { expect(subject.query.to_a.size).to eq(0) }
         end
 
         context "when Nepal" do
@@ -83,7 +83,7 @@ describe Species::ListingsExport do
               :geo_entities_ids => [nepal.id]
             })
           }
-          specify { subject.query.to_a.size.should == 1 }
+          specify { expect(subject.query.to_a.size).to eq(1) }
         end
       end
       context "when higher taxon ids" do
@@ -93,7 +93,7 @@ describe Species::ListingsExport do
             :taxon_concepts_ids => [@family.id]
           })
         }
-        specify { subject.query.to_a.size.should == 1 }
+        specify { expect(subject.query.to_a.size).to eq(1) }
       end
       context "when implicitly listed subspecies present" do
         before(:each) do
@@ -108,7 +108,7 @@ describe Species::ListingsExport do
             :taxon_concepts_ids => [@family.id]
           })
         }
-        specify { subject.query.to_a.size.should == 1 }
+        specify { expect(subject.query.to_a.size).to eq(1) }
       end
     end
     context "when EU" do
@@ -119,7 +119,7 @@ describe Species::ListingsExport do
             :species_listings_ids => [eu_A.id]
           })
         }
-        specify { subject.query.to_a.size.should == 1 }
+        specify { expect(subject.query.to_a.size).to eq(1) }
 
         context "when Spain" do
           subject {
@@ -129,7 +129,7 @@ describe Species::ListingsExport do
               :geo_entities_ids => [spain.id]
             })
           }
-          specify { subject.query.to_a.size.should == 0 }
+          specify { expect(subject.query.to_a.size).to eq(0) }
         end
 
         context "when Nepal" do
@@ -140,7 +140,7 @@ describe Species::ListingsExport do
               :geo_entities_ids => [nepal.id]
             })
           }
-          specify { subject.query.to_a.size.should == 1 }
+          specify { expect(subject.query.to_a.size).to eq(1) }
         end
       end
       context "when higher taxon ids" do
@@ -150,7 +150,7 @@ describe Species::ListingsExport do
             :taxon_concepts_ids => [@family.id]
           })
         }
-        specify { subject.query.to_a.size.should == 1 }
+        specify { expect(subject.query.to_a.size).to eq(1) }
       end
     end
   end

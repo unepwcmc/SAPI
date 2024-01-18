@@ -7,23 +7,23 @@ describe Trade::PermitMatcher do
       end
       context "when regular query" do
         subject { Trade::PermitMatcher.new({ :permit_query => '006' }).results }
-        specify { subject.should include(@permit) }
+        specify { expect(subject).to include(@permit) }
       end
       context "when wildcard query" do
         subject { Trade::PermitMatcher.new({ :permit_query => '%AA' }).results }
-        specify { subject.should include(@permit) }
+        specify { expect(subject).to include(@permit) }
       end
       context "when malicious query" do
         subject { Trade::PermitMatcher.new({ :permit_query => '006\'' }).results }
-        specify { subject.should be_empty }
+        specify { expect(subject).to be_empty }
       end
       context "when leading whitespace" do
         subject { Trade::PermitMatcher.new({ :permit_query => ' 006' }).results }
-        specify { subject.should include(@permit) }
+        specify { expect(subject).to include(@permit) }
       end
       context "when trailing whitespace" do
         subject { Trade::PermitMatcher.new({ :permit_query => '006AAA ' }).results }
-        specify { subject.should include(@permit) }
+        specify { expect(subject).to include(@permit) }
       end
     end
   end

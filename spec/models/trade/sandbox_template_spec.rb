@@ -55,7 +55,7 @@ describe Trade::SandboxTemplate, :drops_tables => true do
     end
     specify {
       @shipment1.update_attributes(:taxon_name => canis_aureus.full_name)
-      @shipment1.reload.taxon_concept_id.should == canis_aureus.id
+      expect(@shipment1.reload.taxon_concept_id).to eq(canis_aureus.id)
     }
   end
 
@@ -76,13 +76,13 @@ describe Trade::SandboxTemplate, :drops_tables => true do
       )
     end
     specify {
-      @shipment.reload.taxon_concept_id.should be_nil
+      expect(@shipment.reload.taxon_concept_id).to be_nil
       sandbox_klass.update_batch(
         { taxon_name: 'Canis lupus' },
         @validation_error,
         annual_report_upload
       )
-      @shipment.reload.taxon_concept_id.should == canis_lupus.id
+      expect(@shipment.reload.taxon_concept_id).to eq(canis_lupus.id)
     }
   end
 

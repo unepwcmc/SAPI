@@ -32,9 +32,9 @@ describe SubmissionWorker do
                        :iso_code2 => 'PT'
                       )
     @submitter = FactoryGirl.create(:user, role: User::MANAGER)
-    Trade::ChangelogCsvGenerator.stub(:call).and_return(Tempfile.new('changelog.csv'))
-    SubmissionWorker.any_instance.stub(:upload_on_S3)
-    NotificationMailer.any_instance.stub(:mail).and_return(EmailMessageStub.new())
+    allow(Trade::ChangelogCsvGenerator).to receive(:call).and_return(Tempfile.new('changelog.csv'))
+    allow_any_instance_of(SubmissionWorker).to receive(:upload_on_S3)
+    allow_any_instance_of(NotificationMailer).to receive(:mail).and_return(EmailMessageStub.new())
   end
   context "when no primary errors" do
     pending(PENDING_REASON) if PENDING_REASON
@@ -64,7 +64,7 @@ describe SubmissionWorker do
     }
     specify "leading space is stripped" do
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
-      Trade::Permit.find_by_number('BBB').should_not be_nil
+      expect(Trade::Permit.find_by_number('BBB')).not_to be_nil
     end
     context "when permit previously reported" do
       before(:each) { create(:permit, :number => 'xxx') }
@@ -127,11 +127,11 @@ describe SubmissionWorker do
     }
     specify {
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
-      Trade::Shipment.first.taxon_concept_id.should == @species.id
+      expect(Trade::Shipment.first.taxon_concept_id).to eq(@species.id)
     }
     specify {
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
-      Trade::Shipment.first.reported_taxon_concept_id.should == @synonym.id
+      expect(Trade::Shipment.first.reported_taxon_concept_id).to eq(@synonym.id)
     }
   end
 end

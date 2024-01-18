@@ -1,15 +1,5 @@
 # Dockerfile
-FROM ruby:2.3.1
-
-# The ruby:2.3.1 image is ancient, based of debian jessie which no longer
-# receives active security updates. Therefore we must declare the debian
-# archive as a source instead.
-RUN rm /etc/apt/sources.list && \
-  echo "deb http://archive.debian.org/debian-security jessie/updates main" \
-    >> /etc/apt/sources.list.d/jessie.list && \
-  echo "deb http://archive.debian.org/debian jessie main" \
-    >> /etc/apt/sources.list.d/jessie.list \
-;
+FROM ruby:2.5.9
 
 # Rails and SAPI has some additional dependencies, e.g. rake requires a JS
 # runtime, so attempt to get these from apt, where possible

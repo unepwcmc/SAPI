@@ -9,11 +9,11 @@ describe PagesController do
     end
     it "assigns annex regulations sorted by effective_at" do
       get :eu_legislation
-      assigns(:eu_annex_regulations).should eq([@ar2, @ar1])
+      expect(assigns(:eu_annex_regulations)).to eq([@ar2, @ar1])
     end
     it "assigns suspension regulations" do
       get :eu_legislation
-      assigns(:eu_suspension_regulations).should_not be_nil
+      expect(assigns(:eu_suspension_regulations)).not_to be_nil
     end
   end
 end

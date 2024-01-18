@@ -6,4 +6,4 @@ require File.expand_path('../config/application', __FILE__)
 require 'jslint/tasks' if Rails.env.development?
 require 'sitemap_generator/tasks'
 
-SAPI::Application.load_tasks
+Rails.application.load_tasks

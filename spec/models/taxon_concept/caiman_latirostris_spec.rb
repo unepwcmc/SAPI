@@ -7,12 +7,12 @@ describe TaxonConcept do
     context "TAXONOMY" do
       describe :full_name do
         context "for species synonym Alligator cynocephalus" do
-          specify { @species1.full_name.should == 'Alligator cynocephalus' }
+          specify { expect(@species1.full_name).to eq('Alligator cynocephalus') }
         end
       end
       describe :rank_name do
         context "for species synonym Alligator cynocephalus" do
-          specify { @species1.rank_name.should == Rank::SPECIES }
+          specify { expect(@species1.rank_name).to eq(Rank::SPECIES) }
         end
       end
     end
@@ -20,88 +20,88 @@ describe TaxonConcept do
     context "REFERENCES" do
       describe :cites_accepted do
         context 'for species Caiman latirostris' do
-          specify { @species.cites_accepted.should be_truthy }
+          specify { expect(@species.cites_accepted).to be_truthy }
         end
         context "for synonym species Alligator cynocephalus" do
-          specify { @species1.cites_accepted.should == false }
+          specify { expect(@species1.cites_accepted).to eq(false) }
         end
       end
       describe :standard_taxon_concept_references do
         context 'for species Caiman latirostris' do
-          specify { @species.taxon_concept.standard_taxon_concept_references.map(&:reference_id).should include @ref.id }
+          specify { expect(@species.taxon_concept.standard_taxon_concept_references.map(&:reference_id)).to include @ref.id }
         end
       end
     end
     context "LISTING" do
       describe :cites_listing do
         context 'for species Caiman latirostris' do
-          specify { @species.cites_listing.should == 'I/II' }
+          specify { expect(@species.cites_listing).to eq('I/II') }
         end
       end
 
       describe :eu_listing do
         context 'for species Caiman latirostris' do
-          specify { @species.eu_listing.should == 'A/B' }
+          specify { expect(@species.eu_listing).to eq('A/B') }
         end
       end
 
       describe :cites_listed do
         context 'for order Crocodylia' do
-          specify { @order.cites_listed.should be_truthy }
+          specify { expect(@order.cites_listed).to be_truthy }
         end
         context "for family Alligatoridae" do
-          specify { @family.cites_listed.should == false }
+          specify { expect(@family.cites_listed).to eq(false) }
         end
         context "for genus Caiman" do
-          specify { @genus.cites_listed.should == false }
+          specify { expect(@genus.cites_listed).to eq(false) }
         end
         context "for species Caiman latoristris" do
-          specify { @species.cites_listed.should be_truthy }
+          specify { expect(@species.cites_listed).to be_truthy }
         end
       end
 
       describe :eu_listed do
         context 'for order Crocodylia' do
-          specify { @order.eu_listed.should be_truthy }
+          specify { expect(@order.eu_listed).to be_truthy }
         end
         context "for family Alligatoridae" do
-          specify { @family.eu_listed.should == false }
+          specify { expect(@family.eu_listed).to eq(false) }
         end
         context "for genus Caiman" do
-          specify { @genus.eu_listed.should == false }
+          specify { expect(@genus.eu_listed).to eq(false) }
         end
         context "for species Caiman latoristris" do
-          specify { @species.eu_listed.should be_truthy }
+          specify { expect(@species.eu_listed).to be_truthy }
         end
       end
 
       describe :cites_show do
         context "for order Crocodylia" do
-          specify { @order.cites_show.should be_truthy }
+          specify { expect(@order.cites_show).to be_truthy }
         end
         context "for family Alligatoridae" do
-          specify { @family.cites_show.should be_truthy }
+          specify { expect(@family.cites_show).to be_truthy }
         end
         context "for genus Caiman" do
-          specify { @genus.cites_show.should be_truthy }
+          specify { expect(@genus.cites_show).to be_truthy }
         end
         context "for species Caiman latoristris" do
-          specify { @species.cites_show.should be_truthy }
+          specify { expect(@species.cites_show).to be_truthy }
         end
         context "for synonym species Alligator cynocephalus" do
-          specify { @species1.cites_show.should be_falsey }
+          specify { expect(@species1.cites_show).to be_falsey }
         end
       end
 
       describe :ann_symbol do
         context "for species Caiman latirostris" do
-          specify { @species.ann_symbol.should_not be_blank }
+          specify { expect(@species.ann_symbol).not_to be_blank }
         end
       end
 
       describe :hash_ann_symbol do
         context "for species Caiman latirostris" do
-          specify { @species.hash_ann_symbol.should be_blank }
+          specify { expect(@species.hash_ann_symbol).to be_blank }
         end
       end
 

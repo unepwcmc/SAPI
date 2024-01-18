@@ -7,19 +7,19 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for genus Notomys" do
-          specify { @genus.cites_listing.should == 'NC' }
+          specify { expect(@genus.cites_listing).to eq('NC') }
         end
         context "for species Notomys aquilo" do
-          specify { @species.cites_listing.should == 'NC' }
+          specify { expect(@species.cites_listing).to eq('NC') }
         end
       end
 
       describe :cites_show do
         context "for genus Notomys" do
-          specify { @genus.cites_show.should be_falsey }
+          specify { expect(@genus.cites_show).to be_falsey }
         end
         context "for species Notomys aquilo" do
-          specify { @species.cites_show.should be_falsey }
+          specify { expect(@species.cites_show).to be_falsey }
         end
       end
 

@@ -10,7 +10,8 @@
 # Ignore all logfiles and tempfiles.
 /coverage
 /rdoc
-/log/*.log
+/log/*
+!/log/.keep
 /tmp
 /private
 /public/system

@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Checklist::TimelinesForTaxonConcept do
   before do
-    Timecop.freeze(Time.local(1990))
+    travel_to Time.local(1990)
   end
 
   after do
-    Timecop.return
+    travel_back
   end
 
   describe :timelines do
@@ -22,8 +22,8 @@ describe Checklist::TimelinesForTaxonConcept do
         MTaxonConcept.find(tc.id)
       }
       subject { Checklist::TimelinesForTaxonConcept.new(tc) }
-      specify { subject.raw_timelines['I'].timeline_events.should_not be_empty }
-      specify { subject.raw_timelines['II'].timeline_events.should be_empty }
+      specify { expect(subject.raw_timelines['I'].timeline_events).not_to be_empty }
+      specify { expect(subject.raw_timelines['II'].timeline_events).to be_empty }
     end
     context "when Appendix III" do
       let(:tc) {
@@ -43,8 +43,8 @@ describe Checklist::TimelinesForTaxonConcept do
         MTaxonConcept.find(tc.id)
       }
       subject { Checklist::TimelinesForTaxonConcept.new(tc) }
-      specify { subject.raw_timelines['III'].timeline_events.should_not be_empty }
-      specify { subject.raw_timelines['I'].timeline_events.should be_empty }
+      specify { expect(subject.raw_timelines['III'].timeline_events).not_to be_empty }
+      specify { expect(subject.raw_timelines['I'].timeline_events).to be_empty }
     end
     context "when Appendix III reservation" do
       let(:tc) {
@@ -64,9 +64,9 @@ describe Checklist::TimelinesForTaxonConcept do
         MTaxonConcept.find(tc.id)
       }
       subject { Checklist::TimelinesForTaxonConcept.new(tc) }
-      specify { subject.raw_timelines['III'].timeline_events.should be_empty }
-      specify { subject.raw_timelines['III'].timelines.first.timeline_events.should_not be_empty }
-      specify { subject.raw_timelines['I'].timeline_events.should be_empty }
+      specify { expect(subject.raw_timelines['III'].timeline_events).to be_empty }
+      specify { expect(subject.raw_timelines['III'].timelines.first.timeline_events).not_to be_empty }
+      specify { expect(subject.raw_timelines['I'].timeline_events).to be_empty }
     end
   end
 
@@ -78,9 +78,9 @@ describe Checklist::TimelinesForTaxonConcept do
         MTaxonConcept.find(tc.id)
       }
       subject { Checklist::TimelinesForTaxonConcept.new(tc).timeline_years }
-      specify { subject.size.should == 5 }
-      specify { subject.first.year.should == 1975 }
-      specify { subject.last.year.should == 1995 }
+      specify { expect(subject.size).to eq(5) }
+      specify { expect(subject.first.year).to eq(1975) }
+      specify { expect(subject.last.year).to eq(1995) }
     end
   end
 
