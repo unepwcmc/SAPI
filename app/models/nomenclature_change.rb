@@ -17,7 +17,8 @@ class NomenclatureChange < ActiveRecord::Base
   include StatusDictionary
   build_steps
   track_who_does_it
-  attr_accessible :event_id, :status
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :event_id, :status
 
   belongs_to :event
 
