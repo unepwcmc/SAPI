@@ -2,7 +2,7 @@ class Admin::TaxonConceptCommentsController < Admin::SimpleCrudController
   defaults :resource_class => Comment, :collection_name => 'comments',
     :instance_name => 'comment'
   belongs_to :taxon_concept
-  before_filter :load_search
+  before_action :load_search
   layout 'taxon_concepts'
   authorize_resource :class => false
 

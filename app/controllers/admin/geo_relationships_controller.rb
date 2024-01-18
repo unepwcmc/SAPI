@@ -1,8 +1,8 @@
 class Admin::GeoRelationshipsController < Admin::StandardAuthorizationController
 
   belongs_to :geo_entity
-  before_filter :load_geo_relationship_types, :only => [:index, :create]
-  before_filter :load_geo_entities, :only => [:index, :create]
+  before_action :load_geo_relationship_types, :only => [:index, :create]
+  before_action :load_geo_entities, :only => [:index, :create]
 
   def index
     index! do

@@ -2,7 +2,7 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
   defaults :resource_class => TaxonRelationship, :collection_name => 'hybrid_relationships', :instance_name => 'hybrid_relationship'
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_filter :load_hybrid_relationship_type, :only => [:new, :create, :update]
+  before_action :load_hybrid_relationship_type, :only => [:new, :create, :update]
 
   authorize_resource :class => false
 

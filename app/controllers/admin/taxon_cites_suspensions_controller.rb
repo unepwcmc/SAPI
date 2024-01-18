@@ -3,8 +3,8 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
     :collection_name => 'cites_suspensions', :instance_name => 'cites_suspension'
   belongs_to :taxon_concept
 
-  before_filter :load_lib_objects, :only => [:new, :edit]
-  before_filter :load_search, :except => [:create, :destroy]
+  before_action :load_lib_objects, :only => [:new, :edit]
+  before_action :load_search, :except => [:create, :destroy]
   layout 'taxon_concepts'
 
   authorize_resource :class => false
