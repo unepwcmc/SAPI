@@ -12,7 +12,8 @@
 #
 
 class Document::ReviewDetails < ActiveRecord::Base
-  attr_accessible :document_id, :review_phase_id, :process_stage_id, :recommended_category
+  # Used by DocumentController.
+  # attr_accessible :document_id, :review_phase_id, :process_stage_id, :recommended_category
   self.table_name = 'review_details'
   belongs_to :document, touch: true
 

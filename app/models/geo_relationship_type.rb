@@ -9,7 +9,8 @@
 #
 
 class GeoRelationshipType < ActiveRecord::Base
-  attr_accessible :name
+  # Used by seed only.
+  # attr_accessible :name
 
   include Dictionary
   build_dictionary :contains, :intersects

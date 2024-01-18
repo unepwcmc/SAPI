@@ -29,7 +29,8 @@ class Document::ReviewOfSignificantTrade < Document
     'Review of Significant Trade'
   end
 
-  attr_accessible :review_details_attributes
+  # Used by DocumentsController.
+  # attr_accessible :review_details_attributes
 
   has_one :review_details,
     :class_name => 'Document::ReviewDetails',

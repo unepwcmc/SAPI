@@ -9,7 +9,8 @@
 #
 
 class GeoEntityType < ActiveRecord::Base
-  attr_accessible :name
+  # Look like the only place create GeoEntityType is lib/tasks/import_trade_shipments.rake
+  # attr_accessible :name
 
   include Dictionary
   build_dictionary :country, :cites_region, :region, :territory,

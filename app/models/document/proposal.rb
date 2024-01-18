@@ -29,7 +29,8 @@ class Document::Proposal < Document
     'Proposal'
   end
 
-  attr_accessible :proposal_details_attributes
+  # Used in Document Controller
+  # attr_accessible :proposal_details_attributes
 
   has_one :proposal_details,
     :class_name => 'Document::ProposalDetails',

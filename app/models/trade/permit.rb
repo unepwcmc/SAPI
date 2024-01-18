@@ -9,5 +9,6 @@
 #
 
 class Trade::Permit < ActiveRecord::Base
-  attr_accessible :number
+  # app/models/trade/shipment.rb is the only place create this record.
+  # attr_accessible :number
 end

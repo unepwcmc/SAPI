@@ -10,7 +10,9 @@
 #
 
 class EuDecisionConfirmation < ActiveRecord::Base
-  attr_accessible :eu_decision_id, :event_id
+  # Relationship table between Event and EuDecision
+  # attr_accessible :eu_decision_id, :event_id
 
   belongs_to :eu_decision
+  # TODO: missing `belongs_to :event`
 end

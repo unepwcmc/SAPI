@@ -96,7 +96,7 @@ class Checklist::DownloadsController < ApplicationController
   def download_params
     params.require(:download).permit(
       # attributes used in this controller.
-      :doc_typ,
+      :doc_type,
       # other attributes were in model `attr_accessible`.
       :format
     )

@@ -33,14 +33,15 @@
 
 class Trade::Shipment < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :annual_report_upload_id, :appendix,
-    :country_of_origin_id, :origin_permit_id,
-    :exporter_id, :import_permit_id, :importer_id, :purpose_id,
-    :quantity, :reporter_type, :reported_by_exporter,
-    :source_id, :taxon_concept_id, :reported_taxon_concept_id,
-    :term_id, :unit_id, :year,
-    :import_permit_number, :export_permit_number, :origin_permit_number,
-    :ignore_warnings, :created_by_id, :updated_by_id
+  # Not sure where using this.
+  # attr_accessible :annual_report_upload_id, :appendix,
+  #   :country_of_origin_id, :origin_permit_id,
+  #   :exporter_id, :import_permit_id, :importer_id, :purpose_id,
+  #   :quantity, :reporter_type, :reported_by_exporter,
+  #   :source_id, :taxon_concept_id, :reported_taxon_concept_id,
+  #   :term_id, :unit_id, :year,
+  #   :import_permit_number, :export_permit_number, :origin_permit_number,
+  #   :ignore_warnings, :created_by_id, :updated_by_id
   attr_accessor :reporter_type, :warnings, :ignore_warnings
 
   validates :quantity, :presence => true, :numericality => {

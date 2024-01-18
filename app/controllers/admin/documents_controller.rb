@@ -151,6 +151,13 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
       :designation_id,
       citations_attributes: [
         :id, :_destroy, :document_id, :stringy_taxon_concept_ids, :geo_entity_ids
+      ],
+      proposal_details_attributes: [
+        :id, :_destroy, :document_id, :proposal_nature, :proposal_outcome_id,
+        :representation, :proposal_number
+      ],
+      review_details_attributes: [
+        :id, :_destroy, :document_id, :review_phase_id, :process_stage_id, :recommended_category
       ]
     )
   end

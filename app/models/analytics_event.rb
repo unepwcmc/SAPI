@@ -6,5 +6,6 @@ class AnalyticsEvent < ActiveRecord::Base
   validates :event_name, inclusion: { in: EVENT_NAMES }, presence: true
   validates :event_type, inclusion: { in: EVENT_TYPES }, presence: true
 
-  attr_accessible :event_name, :event_type
+  # Used by `download_db` in app/controllers/cites_trade/home_controller.rb
+  # attr_accessible :event_name, :event_type
 end

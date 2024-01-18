@@ -46,19 +46,20 @@ class Trade::SandboxTemplate < ActiveRecord::Base
         self.table_name = table_name
         has_paper_trail
         include ActiveModel::ForbiddenAttributesProtection
-        attr_accessible :appendix,
-          :taxon_name,
-          :term_code,
-          :quantity,
-          :unit_code,
-          :trading_partner,
-          :country_of_origin,
-          :import_permit,
-          :export_permit,
-          :origin_permit,
-          :purpose_code,
-          :source_code,
-          :year
+        # Too dynamic, hard to trace where using it.
+        # attr_accessible :appendix,
+        #   :taxon_name,
+        #   :term_code,
+        #   :quantity,
+        #   :unit_code,
+        #   :trading_partner,
+        #   :country_of_origin,
+        #   :import_permit,
+        #   :export_permit,
+        #   :origin_permit,
+        #   :purpose_code,
+        #   :source_code,
+        #   :year
         belongs_to :taxon_concept
         belongs_to :reported_taxon_concept, :class_name => TaxonConcept
 

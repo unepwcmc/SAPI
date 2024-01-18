@@ -1,5 +1,6 @@
 class EuCountryDate < ActiveRecord::Base
-  attr_accessible :eu_accession_year, :eu_exit_year, :geo_entity
+  # Used by rake task.
+  # attr_accessible :eu_accession_year, :eu_exit_year, :geo_entity
 
   belongs_to :geo_entity
   validates :geo_entity, :eu_accession_year, :presence => true

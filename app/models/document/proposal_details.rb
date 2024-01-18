@@ -13,8 +13,9 @@
 #
 
 class Document::ProposalDetails < ActiveRecord::Base
-  attr_accessible :document_id, :proposal_nature, :proposal_outcome_id,
-    :representation, :proposal_number
+  # Used in DocumentsController
+  # attr_accessible :document_id, :proposal_nature, :proposal_outcome_id,
+  #   :representation, :proposal_number
   self.table_name = 'proposal_details'
   belongs_to :document, touch: true
 end
