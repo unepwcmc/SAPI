@@ -29,7 +29,7 @@ gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, ma
 # TODO: starting from v1.4, it break our test due to redirection changes:
 #   rspec ./spec/controllers/admin/nomenclature_changes/lump_controller_spec.rb:147
 #   rspec ./spec/controllers/admin/nomenclature_changes/split_controller_spec.rb:191
-gem 'wicked', '~> 1.3', '>= 1.3.4'
+gem 'wicked', '1.3.4'
 
 gem 'groupdate', '2.4.0' # TODO: seems only ApiRequest#recent_requests using this. Suggest rewrite and remove dependencies.
 
@@ -60,7 +60,7 @@ gem 'rails-observers', '~> 0.1.5' # A feature that removed from core in Rails 4.
 
 # Gems used for assets
 gem 'sass-rails',   '5.0.7' # TODO: may need to upgrade when upgrade to Rails 5 or 6 (https://github.com/rails/sass-rails/releases)
-gem 'coffee-rails', '4.1.0' # TODO: v5 support Rails 6; 4.1.1 for Rails 5
+gem 'coffee-rails', '4.2.2' # TODO: v5 support Rails 6
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
@@ -147,21 +147,29 @@ gem 'sitemap_generator', '~> 6.3' # TODO: latest
 gem 'appsignal', '1.3.3'
 gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in staging / production
 
-# GEM for frontend.
-gem 'jquery-ui-rails', '4.2.1' # TODO: some breaking change form v5. Latest version 6.0.1 @ 2016
-# gem 'slim', '1.3.6' # I believe not in-use as we do not have .slim file.
+### GEM for frontend ###
+# Remove the `jquery-rails` gem to eliminate any dependency issues that may block the upgrade process.
+# Copy `jquery.js`, `jquery_ujs.js` and `jquery-ui.js` to the `vendor/assets/javascripts` directory.
+# gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
+
+# Remove the `jquery-ui-rails` gem to eliminate any dependency issues that may block the upgrade process.
+# Download `jquery-ui-1.10.4.custom.js` from offical website and copy it to the `vendor/assets/javascripts/cites_trade` directory.
+# `vendor/assets/stylesheets/cites_trade/jquery-ui-1.8.24.custom.scss` CSS is in use. No need to copy any CSS files from the gem to this project.
+# gem 'jquery-ui-rails', '4.2.1'
+
+# Remove the following gems to eliminate any dependency issues that may block the upgrade process.
+# File being copied to app/assets or vendor directory.
+# gem 'select2-rails', '3.5.10' # initSelection deprecated on upgrade to version 4
+# gem 'jquery-mousewheel-rails', '~> 0.0.9'
+# gem "font-awesome-rails", '4.5.0.1'
+
 gem 'susy', '2.2.14' # TODO: Deprecated. 2.2.14 is the latest version @ 2018
 gem 'gon', '~> 6.4' # TODO: latest
 gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
 gem 'nested_form', '0.3.2' # TODO: latest @ 2013. Project is public archived on github. No longer maintained.
-gem 'select2-rails', '3.5.10' # initSelection deprecated on upgrade to version 4 (https://github.com/select2/select2/blob/develop/CHANGELOG.md)
-gem 'jquery-rails', '2.1.4' # do not upgrade until https://github.com/jquery/jquery/pull/1142 isd pulled into jquery-rails
-gem 'jquery-mousewheel-rails', '~> 0.0.9' # TODO: latest @ 2014
-gem 'jquery-cookie-rails', '~> 1.3', '>= 1.3.1.1' # TODO: latest @ 2013. No longer maintained. jquery-cookie is now superseded by js-cookie which can be added to your Rails pipeline with js_cookie_rails.
 gem 'bootstrap-sass', '2.3.2.2' # TODO: latest 3.4.1 @ 2019. Can't upgrade unless we sure bootstrap v3 backward compatible with boostrap v2
+# Ember
 gem 'ember-rails', '0.14.1' # Not support Sprockets 3+ unless upgrade. Latest version support Rails 5.1
 gem 'ember-source', '1.6.1' # TODO: just a wrapwrapper. Any update will change the ember.js version.
 gem 'ember-data-source', '0.14' # TODO: just a wrapwrapper. Any update will change the JS ember-data version.
 gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will change the handlebars.js version.
-gem 'underscore-rails', '1.4.3' # TODO, another wrapper
-gem "font-awesome-rails", '4.5.0.1' # TODO, another wrapper

@@ -11,3 +11,6 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w( vendor/* admin.js admin.css trade.js trade.css species.js species.css
                                 pages.css pages.js cites_trade.js cites_trade.css
                                 activities.css activities.js mobile.css)
+
+#  select2-rails 3.5.10 https://rubygems.org/gems/select2-rails/versions/3.5.10
+Rails.application.config.assets.precompile += %w(select2.png select2-spinner.gif select2x2.png)
