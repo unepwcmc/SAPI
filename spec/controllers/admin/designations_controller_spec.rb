@@ -34,7 +34,7 @@ describe Admin::DesignationsController do
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, designation: {}
+      xhr :post, :create, designation: { dummy: 'test'}
       expect(response).to render_template("new")
     end
   end

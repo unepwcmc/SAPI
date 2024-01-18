@@ -350,8 +350,6 @@ GEM
       pdf-reader (~> 1.2)
       ruby-rc4
       ttfunk (~> 1.0.3)
-    protected_attributes_continued (1.2.4)
-      activemodel (>= 4.0.1, < 6.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -618,7 +616,6 @@ DEPENDENCIES
   pg_array_parser (~> 0.0.9)
   pg_search (= 2.3.0)
   prawn (= 0.13.2)
-  protected_attributes_continued (= 1.2.4)
   rack-cors (= 0.3.0)
   rack-livereload (= 0.3.11)
   rails (= 4.2.11.3)

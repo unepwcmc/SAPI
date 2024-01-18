@@ -14,11 +14,11 @@ describe Admin::TagsController do
   describe "XHR POST create" do
     it "renders create when successful" do
       xhr :post, :create,
-        preset_tag: { name: "Test Tag", model: "TaxonConcept" }
+        tag: { name: "Test Tag", model: "TaxonConcept" }
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, preset_tag: {}
+      xhr :post, :create, tag: { dummy: 'test' }
       expect(response).to render_template("new")
     end
   end
@@ -28,12 +28,12 @@ describe Admin::TagsController do
     context "when JSON" do
       it "responds with 200 when successful" do
         xhr :put, :update, :format => 'json', :id => preset_tag.id,
-          :preset_tag => {}
+          :tag => { dummy: 'test' }
         expect(response).to be_success
       end
       it "responds with json error when not successful" do
         xhr :put, :update, :format => 'json', :id => preset_tag.id,
-          :preset_tag => { :model => 'FakeCategory' }
+          :tag => { :model => 'FakeCategory' }
         expect(JSON.parse(response.body)).to include('errors')
       end
     end

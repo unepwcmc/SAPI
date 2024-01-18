@@ -62,14 +62,19 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
     params.require(:nomenclature_change_lump).permit(
       :event_id, :status,
       inputs_attributes: [
+        :id, :_destroy,
         :nomenclature_change_id, :taxon_concept_id,
         :note_en, :note_es, :note_fr, :internal_note,
         parent_reassignments_attributes: [
           :id, :_destroy,
-          :reassignment_target_attributes,
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
-          :note_en, :note_es, :note_fr, :internal_note, :output_ids
+          :note_en, :note_es, :note_fr, :internal_note, :output_ids,
+          reassignment_target_attributes: [
+            :id, :_destroy,
+            :nomenclature_change_output_id,
+            :nomenclature_change_reassignment_id, :note
+          ]
         ],
         name_reassignments_attributes: [
           :id, :_destroy,
@@ -91,6 +96,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
         ]
       ],
       output_attributes: [
+        :id, :_destroy,
         :nomenclature_change_id, :taxon_concept_id,
         :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
         :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,

@@ -42,10 +42,6 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # TODO: Only support Rails version < 5
-  # GEM `protected_attributes` settings (https://github.com/rails/protected_attributes#errors)
-  config.active_record.mass_assignment_sanitizer = :strict
-
   # Custom cache settings
   config.cache_store = :memory_store, { size: 64.megabytes }
 

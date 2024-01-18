@@ -46,7 +46,7 @@ describe Admin::TaxonConceptsController do
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, taxon_concept: {}
+      xhr :post, :create, taxon_concept: { dummy: 'test'}
       expect(response).to render_template("new")
     end
     it "renders new_synonym when not successful S" do
@@ -68,7 +68,7 @@ describe Admin::TaxonConceptsController do
     context "when JSON" do
       it "responds with 200 when successful" do
         xhr :put, :update, :format => 'json', :id => taxon_concept.id,
-          :taxon_concept => {}
+          :taxon_concept => { dummy: 'test' }
         expect(response).to be_success
       end
       it "responds with json error when not successful" do
@@ -80,7 +80,7 @@ describe Admin::TaxonConceptsController do
     context "when HTML" do
       it "redirects to edit when successful" do
         put :update, :id => taxon_concept.id,
-          :taxon_commons_attributes => FactoryGirl.attributes_for(:common_name)
+          :taxon_concept => { dummy: 'test' }
         expect(response).to redirect_to(edit_admin_taxon_concept_url(taxon_concept))
       end
       it "renders edit when not successful" do

@@ -29,8 +29,7 @@ describe Admin::TaxonCommonsController do
     it "renders new when not successful" do
       xhr :post, :create,
         :taxon_concept_id => @taxon_concept.id,
-        :taxon_common => {
-        }
+        :taxon_common => { dummy: 'test' }
       expect(response).to render_template("new")
     end
   end

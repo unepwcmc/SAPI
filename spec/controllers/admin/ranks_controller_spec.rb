@@ -22,7 +22,7 @@ describe Admin::RanksController do
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, rank: {}
+      xhr :post, :create, rank: { dummy: 'test'}
       expect(response).to render_template("new")
     end
   end

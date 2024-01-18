@@ -25,7 +25,7 @@ describe Admin::SrgHistoriesController do
 
     context "when not successful" do
       it "renders new" do
-        post :create, srg_history: {}, format: :js
+        post :create, srg_history: { dummy: 'test' }, format: :js
 
         expect(response).to render_template("new")
       end
@@ -39,7 +39,7 @@ describe Admin::SrgHistoriesController do
 
     context "when successful" do
       it "renders the create js template" do
-        put :update, id: @srg_history.id, format: :js
+        put :update, id: @srg_history.id, srg_history: { dummy: 'test' }, format: :js
 
         expect(response).to render_template("create")
       end

@@ -68,7 +68,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
     end
     context 'when unsuccessful' do
       it 're-renders step' do
-        put :update, nomenclature_change_status_to_synonym: {},
+        put :update, nomenclature_change_status_to_synonym: { dummy: 'test'},
           nomenclature_change_id: @status_change.id, id: 'primary_output'
         expect(response).to render_template('primary_output')
       end

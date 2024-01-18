@@ -25,7 +25,7 @@ describe Admin::ChangeTypesController do
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, change_type: {}
+      xhr :post, :create, change_type: { dummy: 'test' }
       expect(response).to render_template("new")
     end
   end

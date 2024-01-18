@@ -20,7 +20,6 @@ gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to
 gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
 gem 'inherited_resources', '1.9.0' # Deprecated (https://github.com/activeadmin/inherited_resources#notice) # TODO: need upgrade when upgrade to Rails 6
 gem 'traco', '~> 5.3', '>= 5.3.3' # TODO: latest version @ 2021. Suggest migrate to Mobility gem.
-gem 'protected_attributes_continued', '1.2.4' # TODO: upgrade to latest after we successfully upgrade Rails to 5.
 gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
 gem 'cancancan', '1.17.0' # TODO, can upgrade to 2.0 after Rails 5
 gem 'ahoy_matey', '2.2.1' # TODO: latest 5.0.2. Can't upgrade to 3.0 until upgrade to Rails 5

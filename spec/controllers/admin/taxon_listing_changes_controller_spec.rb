@@ -87,7 +87,7 @@ describe Admin::TaxonListingChangesController do
     end
     it "renders new when not successful" do
       taxon_concept = create(:taxon_concept)
-      post :create, :listing_change => {},
+      post :create, :listing_change => { dummy: 'test' },
         :taxon_concept_id => @taxon_concept.id,
         :designation_id => @designation.id
       expect(response).to render_template("new")

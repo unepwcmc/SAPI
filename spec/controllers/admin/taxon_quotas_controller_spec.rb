@@ -50,7 +50,7 @@ describe Admin::TaxonQuotasController do
       end
     end
     it "renders new when not successful" do
-      post :create, :quota => {},
+      post :create, :quota => { dummy: 'test' },
         :taxon_concept_id => @taxon_concept.id
       expect(response).to render_template("new")
     end

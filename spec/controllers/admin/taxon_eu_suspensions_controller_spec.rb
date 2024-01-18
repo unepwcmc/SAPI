@@ -52,7 +52,7 @@ describe Admin::TaxonEuSuspensionsController do
 
     context "when not successful" do
       it "renders new" do
-        post :create, :eu_suspension => {},
+        post :create, :eu_suspension => { dummy: 'test' },
           :taxon_concept_id => @taxon_concept.id
         expect(response).to render_template("new")
       end

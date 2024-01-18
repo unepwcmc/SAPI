@@ -22,7 +22,7 @@ describe Admin::LanguagesController do
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, language: {}
+      xhr :post, :create, language: { dummy: 'test' }
       expect(response).to render_template("new")
     end
   end

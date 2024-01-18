@@ -44,7 +44,7 @@ describe Admin::TaxonCitesSuspensionsController do
       end
     end
     it "renders new when not successful" do
-      post :create, :cites_suspension => {},
+      post :create, :cites_suspension => { dummy: 'test'},
         :taxon_concept_id => @taxon_concept.id
       expect(response).to render_template('new')
     end

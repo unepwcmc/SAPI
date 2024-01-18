@@ -131,7 +131,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
       !copied_object.new_record? && exclusion.duplicates({
         parent_id: copied_object.id
       }).first || copied_object.exclusions.build(
-        exclusion.comparison_attributes, :without_protection => true
+        exclusion.comparison_attributes
       )
     end
     # annotation
@@ -150,7 +150,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
         !copied_object.new_record? && trade_restr_code.duplicates({
           trade_restriction_id: copied_object.id
         }).first || copied_object.send(trade_restriction_codes).build(
-          trade_restr_code.comparison_attributes, :without_protection => true
+          trade_restr_code.comparison_attributes
         )
       end
     end

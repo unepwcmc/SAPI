@@ -34,7 +34,7 @@ describe Admin::InstrumentsController do
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, instrument: {}
+      xhr :post, :create, instrument: { dummy: 'test' }
       expect(response).to render_template("new")
     end
   end
