@@ -1,9 +1,9 @@
 class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   include Wicked::Wizard
 
-  before_filter :set_nomenclature_change, :only => [:show, :update, :destroy]
-  before_filter :unset_back, only: [:update]
-  before_filter :authorise_finish, only: [:update]
+  before_action :set_nomenclature_change, :only => [:show, :update, :destroy]
+  before_action :unset_back, only: [:update]
+  before_action :authorise_finish, only: [:update]
 
   def finish_wizard_path
     admin_nomenclature_changes_path

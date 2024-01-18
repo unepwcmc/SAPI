@@ -1,7 +1,7 @@
 class Admin::NamesController < Admin::SimpleCrudController
   belongs_to :taxon_concept
 
-  before_filter :load_search
+  before_action :load_search
   layout 'taxon_concepts'
 
   authorize_resource :class => false

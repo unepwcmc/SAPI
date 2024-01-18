@@ -1,7 +1,7 @@
 class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
   belongs_to :taxon_concept
-  before_filter :load_lib_objects
-  before_filter :load_search, :only => [:new, :index, :edit]
+  before_action :load_lib_objects
+  before_action :load_search, :only => [:new, :index, :edit]
   layout 'taxon_concepts'
 
   def update

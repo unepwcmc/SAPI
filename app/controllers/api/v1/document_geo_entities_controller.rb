@@ -1,5 +1,5 @@
 class Api::V1::DocumentGeoEntitiesController < ApplicationController
-  before_filter :set_locale
+  before_action :set_locale
 
   def index
     @geo_entities = GeoEntity.current.includes(:geo_entity_type).

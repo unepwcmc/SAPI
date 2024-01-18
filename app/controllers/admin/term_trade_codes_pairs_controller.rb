@@ -1,7 +1,7 @@
 class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationController
 
-  before_filter :load_term_codes, :only => [:index, :create]
-  before_filter :load_trade_code_types, :only => [:index, :create]
+  before_action :load_term_codes, :only => [:index, :create]
+  before_action :load_trade_code_types, :only => [:index, :create]
 
   def index
     load_associations

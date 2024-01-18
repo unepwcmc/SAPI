@@ -1,7 +1,7 @@
 class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesController
   respond_to :js, :only => [:create, :update]
   belongs_to :taxon_concept
-  before_filter :load_search, :only => [:new, :index, :edit, :create]
+  before_action :load_search, :only => [:new, :index, :edit, :create]
   layout 'taxon_concepts'
 
   def index

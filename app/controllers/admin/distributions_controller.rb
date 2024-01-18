@@ -1,8 +1,8 @@
 class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesController
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_filter :load_tags_and_geo_entities, :only => [:new, :edit]
-  before_filter :load_search, :only => [:index]
+  before_action :load_tags_and_geo_entities, :only => [:new, :edit]
+  before_action :load_search, :only => [:index]
 
   def index
     @distributions = @taxon_concept.distributions.

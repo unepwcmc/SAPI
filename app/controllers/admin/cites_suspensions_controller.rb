@@ -1,5 +1,5 @@
 class Admin::CitesSuspensionsController < Admin::StandardAuthorizationController
-  before_filter :load_lib_objects, :only => [:new, :edit]
+  before_action :load_lib_objects, :only => [:new, :edit]
 
   def create
     create! do |success, failure|

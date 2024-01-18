@@ -1,8 +1,8 @@
 class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationController
 
   belongs_to :taxon_concept
-  before_filter :load_taxon_relationship_types, :only => [:index, :create]
-  before_filter :load_search, :except => [:create, :update, :destroy]
+  before_action :load_taxon_relationship_types, :only => [:index, :create]
+  before_action :load_search, :except => [:create, :update, :destroy]
   layout 'taxon_concepts'
 
   def index
