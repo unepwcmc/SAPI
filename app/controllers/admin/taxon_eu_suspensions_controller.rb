@@ -2,8 +2,8 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
   belongs_to :taxon_concept
   defaults :resource_class => EuSuspension,
     :collection_name => 'eu_suspensions', :instance_name => 'eu_suspension'
-  before_filter :load_lib_objects
-  before_filter :load_search, :only => [:new, :index, :edit]
+  before_action :load_lib_objects
+  before_action :load_search, :only => [:new, :index, :edit]
 
   layout 'taxon_concepts'
 

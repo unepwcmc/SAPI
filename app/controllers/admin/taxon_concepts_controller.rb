@@ -1,11 +1,11 @@
 class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   respond_to :json
   layout :determine_layout
-  before_filter :sanitize_search_params, :only => [:index, :autocomplete]
-  before_filter :load_taxonomies, only: [:index, :edit]
-  before_filter :load_ranks, only: [:index, :edit]
-  before_filter :load_tags, :only => [:index, :edit]
-  before_filter :split_stringified_ids_lists, only: [:create, :update]
+  before_action :sanitize_search_params, :only => [:index, :autocomplete]
+  before_action :load_taxonomies, only: [:index, :edit]
+  before_action :load_ranks, only: [:index, :edit]
+  before_action :load_tags, :only => [:index, :edit]
+  before_action :split_stringified_ids_lists, only: [:create, :update]
 
   def index
     @taxon_concept = TaxonConcept.new

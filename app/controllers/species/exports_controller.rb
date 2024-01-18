@@ -1,5 +1,5 @@
 class Species::ExportsController < ApplicationController
-  before_filter :ensure_data_type_and_filters, :only => [:download]
+  before_action :ensure_data_type_and_filters, :only => [:download]
 
   def download
     set_csv_separator

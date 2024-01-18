@@ -2,7 +2,7 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
   defaults :resource_class => TaxonRelationship, :collection_name => 'synonym_relationships', :instance_name => 'synonym_relationship'
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_filter :load_synonym_relationship_type, :only => [:new, :create, :update]
+  before_action :load_synonym_relationship_type, :only => [:new, :create, :update]
 
   def new
     new! do |format|

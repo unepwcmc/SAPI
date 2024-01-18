@@ -1,6 +1,6 @@
 class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
 
-  before_filter :load_geo_entity_types, :only => [:index, :create]
+  before_action :load_geo_entity_types, :only => [:index, :create]
 
   def index
     index! do |format|

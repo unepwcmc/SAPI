@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   include SentientController
-  before_filter :set_locale
-  before_filter :configure_permitted_parameters, if: :devise_controller?
-  before_filter :set_paper_trail_whodunnit
+  before_action :set_locale
+  before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_paper_trail_whodunnit
 
   rescue_from CanCan::AccessDenied, with: :access_denied_error
 

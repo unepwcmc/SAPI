@@ -1,8 +1,8 @@
 class Api::V1::ShipmentsController < ApplicationController
   respond_to :json
 
-  before_filter :authenticate
-  before_filter :load_grouping_type
+  before_action :authenticate
+  before_action :load_grouping_type
   after_filter only: [:grouped_query, :country_query] do
     set_pagination_headers(:data, :grouped_params)
   end
