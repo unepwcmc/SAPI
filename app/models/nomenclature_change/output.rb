@@ -35,13 +35,14 @@
 class NomenclatureChange::Output < ActiveRecord::Base
   track_who_does_it
   attr_accessor :output_type # New taxon, Existing subspecies, Existing taxon
-  attr_accessible :nomenclature_change_id, :taxon_concept_id,
-    :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
-    :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
-    :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
-    :parent_reassignments_attributes, :name_reassignments_attributes,
-    :distribution_reassignments_attributes, :legislation_reassignments_attributes,
-    :output_type, :tag_list, :created_by_id, :updated_by_id
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :nomenclature_change_id, :taxon_concept_id,
+  #   :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
+  #   :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
+  #   :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
+  #   :parent_reassignments_attributes, :name_reassignments_attributes,
+  #   :distribution_reassignments_attributes, :legislation_reassignments_attributes,
+  #   :output_type, :tag_list, :created_by_id, :updated_by_id
 
   belongs_to :nomenclature_change
   belongs_to :taxon_concept

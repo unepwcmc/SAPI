@@ -2,8 +2,9 @@ module NomenclatureChange::StatusChangeHelpers
 
   def self.included(base)
     base.class_eval do
-      attr_accessible :primary_output_attributes, :secondary_output_attributes,
-        :input_attributes
+      # Migrated to controller (Strong Parameters)
+      # attr_accessible :primary_output_attributes, :secondary_output_attributes,
+      #   :input_attributes
       has_one :input, :inverse_of => :nomenclature_change,
         :class_name => NomenclatureChange::Input,
         :foreign_key => :nomenclature_change_id,

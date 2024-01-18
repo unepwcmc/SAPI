@@ -19,7 +19,7 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
 
   def update
     @nomenclature_change.assign_attributes(
-      (params[:nomenclature_change_status_to_accepted] || {}).merge({
+      (nomenclature_change_status_to_accepted_params || {}).merge({
         :status => (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
       })
     )
@@ -41,4 +41,67 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
     NomenclatureChange::StatusToAccepted
   end
 
+  def nomenclature_change_status_to_accepted_params
+    params.require(:nomenclature_change_status_to_accepted).permit(
+      :created_by_id, :updated_by_id, :event_id, :status,
+      primary_output_attributes: [
+        :id, :_destroy,
+        :nomenclature_change_id, :taxon_concept_id,
+        :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
+        :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
+        :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
+        :output_type, :tag_list, :created_by_id, :updated_by_id
+        # app/models/nomenclature_change/output.rb does not have `accepts_nested_attributes_for`, so
+        # xxx_attributes suppose not in-use.
+        # :parent_reassignments_attributes,
+        # :name_reassignments_attributes,
+        # :distribution_reassignments_attributes,
+        # :legislation_reassignments_attributes,
+      ],
+      secondary_output_attributes: [
+        :id, :_destroy,
+        :nomenclature_change_id, :taxon_concept_id,
+        :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
+        :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
+        :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
+        :output_type, :tag_list, :created_by_id, :updated_by_id
+        # app/models/nomenclature_change/output.rb does not have `accepts_nested_attributes_for`, so
+        # xxx_attributes suppose not in-use.
+        # :parent_reassignments_attributes,
+        # :name_reassignments_attributes,
+        # :distribution_reassignments_attributes,
+        # :legislation_reassignments_attributes,
+      ],
+      input_attributes: [
+        :id, :_destroy,
+        :nomenclature_change_id, :taxon_concept_id,
+        :note_en, :note_es, :note_fr, :internal_note,
+        parent_reassignments_attributes: [
+          :id, :_destroy,
+          :reassignment_target_attributes,
+          :type, :reassignable_id, :reassignable_type,
+          :nomenclature_change_input_id, :nomenclature_change_output_id,
+          :note_en, :note_es, :note_fr, :internal_note, :output_ids
+        ],
+        name_reassignments_attributes: [
+          :id, :_destroy,
+          :type, :reassignable_id, :reassignable_type,
+          :nomenclature_change_input_id, :nomenclature_change_output_id,
+          :note_en, :note_es, :note_fr, :internal_note, :output_ids
+        ],
+        distribution_reassignments_attributes: [
+          :id, :_destroy,
+          :type, :reassignable_id, :reassignable_type,
+          :nomenclature_change_input_id, :nomenclature_change_output_id,
+          :note_en, :note_es, :note_fr, :internal_note, :output_ids
+        ],
+        legislation_reassignments_attributes: [
+          :id, :_destroy,
+          :type, :reassignable_id, :reassignable_type,
+          :nomenclature_change_input_id, :nomenclature_change_output_id,
+          :note_en, :note_es, :note_fr, :internal_note, :output_ids
+        ]
+      ]
+    )
+  end
 end

@@ -10,7 +10,8 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   end
 
   def create
-    @nomenclature_change = klass.new(:status => NomenclatureChange::NEW)
+    @nomenclature_change = klass.new()
+    @nomenclature_change.status = NomenclatureChange::NEW
     if @nomenclature_change.save
       redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
     else

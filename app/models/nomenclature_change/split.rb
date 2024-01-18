@@ -15,7 +15,8 @@
 class NomenclatureChange::Split < NomenclatureChange
   build_steps(:inputs, :outputs, :notes, :children, :names, :distribution,
     :legislation, :summary)
-  attr_accessible :input_attributes, :outputs_attributes
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :input_attributes, :outputs_attributes
   has_one :input, :inverse_of => :nomenclature_change,
     :class_name => NomenclatureChange::Input,
     :foreign_key => :nomenclature_change_id,

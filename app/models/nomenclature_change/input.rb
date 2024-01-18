@@ -19,12 +19,13 @@
 # Inputs are required to be existing taxon concepts.
 class NomenclatureChange::Input < ActiveRecord::Base
   track_who_does_it
-  attr_accessible :nomenclature_change_id, :taxon_concept_id,
-    :note_en, :note_es, :note_fr, :internal_note,
-    :parent_reassignments_attributes,
-    :name_reassignments_attributes,
-    :distribution_reassignments_attributes,
-    :legislation_reassignments_attributes
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :nomenclature_change_id, :taxon_concept_id,
+  #   :note_en, :note_es, :note_fr, :internal_note,
+  #   :parent_reassignments_attributes,
+  #   :name_reassignments_attributes,
+  #   :distribution_reassignments_attributes,
+  #   :legislation_reassignments_attributes
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
   has_many :reassignments,
