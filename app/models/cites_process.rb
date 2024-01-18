@@ -1,5 +1,6 @@
 class CitesProcess < ActiveRecord::Base
   track_who_does_it
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :start_event_id, :geo_entity_id, :resolution, :start_date,
   #                 :taxon_concept_id, :notes, :status, :document, :document_title,
   #                 :created_by_id, :updated_by_id

@@ -10,6 +10,7 @@
 #
 
 class Designation < ActiveRecord::Base
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :name, :taxonomy_id
   include Dictionary
   build_dictionary :cites, :eu, :cms

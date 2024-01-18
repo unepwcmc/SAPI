@@ -12,6 +12,7 @@ class Taxonomy < ActiveRecord::Base
   include Dictionary
   build_dictionary :cites_eu, :cms
 
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :name
   has_many :designations
   has_many :taxon_concepts

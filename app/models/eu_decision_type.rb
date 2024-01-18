@@ -11,6 +11,7 @@
 #
 
 class EuDecisionType < ActiveRecord::Base
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :name, :tooltip, :decision_type
   include Dictionary
   build_dictionary :negative_opinion, :positive_opinion, :no_opinion,

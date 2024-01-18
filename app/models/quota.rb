@@ -31,7 +31,7 @@
 #
 
 class Quota < TradeRestriction
-
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :public_display
 
   validates :quota, :presence => true

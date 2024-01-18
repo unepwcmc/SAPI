@@ -11,6 +11,7 @@
 #
 
 class TermTradeCodesPair < ActiveRecord::Base
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :trade_code_id, :trade_code_type, :term_id
 
   belongs_to :term, :class_name => "TradeCode"

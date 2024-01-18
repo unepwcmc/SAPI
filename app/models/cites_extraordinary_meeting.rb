@@ -24,6 +24,7 @@
 #
 
 class CitesExtraordinaryMeeting < Event
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :is_current
 
   validates :effective_at, :presence => true

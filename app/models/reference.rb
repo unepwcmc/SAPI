@@ -18,6 +18,7 @@
 
 class Reference < ActiveRecord::Base
   track_who_does_it
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :citation, :created_by_id, :updated_by_id
 
   validates :citation, :presence => true

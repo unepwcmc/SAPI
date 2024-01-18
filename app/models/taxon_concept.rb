@@ -42,6 +42,7 @@ class TaxonConcept < ActiveRecord::Base
       rank_name: :rank_name
     }
 
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :parent_id, :taxonomy_id, :rank_id,
   #   :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
   #   :legacy_id, :legacy_type, :scientific_name, :name_status,

@@ -26,6 +26,7 @@
 # European Commission Scientific Review Group
 
 class EcSrg < Event
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :is_current
 
   has_many :eu_opinions, :foreign_key => :start_event_id,

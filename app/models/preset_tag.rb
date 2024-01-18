@@ -10,6 +10,7 @@
 #
 
 class PresetTag < ActiveRecord::Base
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :model, :name
 
   TYPES = {

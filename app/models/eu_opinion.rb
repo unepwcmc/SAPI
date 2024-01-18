@@ -27,6 +27,7 @@
 #
 
 class EuOpinion < EuDecision
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :document_id
 
   belongs_to :document

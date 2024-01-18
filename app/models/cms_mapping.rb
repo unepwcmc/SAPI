@@ -14,6 +14,7 @@
 #
 
 class CmsMapping < ActiveRecord::Base
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :accepted_name_id, :cms_author, :cms_taxon_name, :cms_uuid, :details, :taxon_concept_id
 
   # serialize :details, ActiveRecord::Coders::Hstore

@@ -24,6 +24,7 @@
 #
 
 class EuRegulation < Event
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :listing_changes_event_id, :end_date
   attr_accessor :listing_changes_event_id
 

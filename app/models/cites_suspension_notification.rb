@@ -24,6 +24,7 @@
 #
 
 class CitesSuspensionNotification < Event
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :subtype, :new_subtype, :end_date
   attr_accessor :new_subtype
   has_many :started_suspensions, :foreign_key => :start_notification_id, :class_name => 'CitesSuspension'

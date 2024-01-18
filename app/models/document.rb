@@ -30,6 +30,7 @@ class Document < ActiveRecord::Base
     :using => { :tsearch => { :prefix => true } },
     :order_within_rank => "documents.date, documents.title, documents.id"
   track_who_does_it
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
   #   :language_id, :citations_attributes,
   #   :sort_index, :discussion_id, :discussion_sort_index,

@@ -11,6 +11,7 @@
 #
 
 class SpeciesListing < ActiveRecord::Base
+  # Migrated to controller (Strong Parameters)
   # attr_accessible :designation_id, :name, :abbreviation
 
   belongs_to :designation
