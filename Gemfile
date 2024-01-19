@@ -128,6 +128,7 @@ group :test, :development do
 end
 
 group :test do
+  gem 'rails-controller-testing'
   gem "codeclimate-test-reporter", '0.1.1', require: nil # TODO, should be removed
   gem "factory_girl_rails", '4.2.1'
   gem 'simplecov', '0.22.0', :require => false # TODO: latest
