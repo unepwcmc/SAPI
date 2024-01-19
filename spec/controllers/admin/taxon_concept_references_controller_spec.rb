@@ -22,7 +22,9 @@ describe Admin::TaxonConceptReferencesController do
       xhr :post, :create,
         :taxon_concept_id => @taxon_concept.id,
         :taxon_concept_reference => {
-          :reference_attributes => {}
+          :reference_attributes => {
+            dummy: 'test'
+          }
         }
       expect(response).to render_template("new")
     end
@@ -71,7 +73,9 @@ describe Admin::TaxonConceptReferencesController do
         :taxon_concept_id => @taxon_concept.id,
         :id => @taxon_concept_reference.id,
         :taxon_concept_reference => {
-          :reference_attributes => {}
+          :reference_attributes => {
+            dummy: 'test'
+          }
         }
       expect(response).to render_template('new')
     end
