@@ -51,8 +51,7 @@ class DocumentBatch
   def common_attributes
     # Coalesce nil to false, because there is a NOT NULL constraint on this field,
     # with a DEFAULT of FALSE. (This was not required prior to Rails 4.2).
-    is_public = ActiveRecord::Type::Boolean.new.type_cast_from_database(@is_public) || false # Rails 4
-    # is_public = ActiveRecord::Type::Boolean.new.cast(@is_public) || false # TODO Rails 5
+    is_public = ActiveRecord::Type::Boolean.new.cast(@is_public) || false
 
     {
       'event_id' => @event_id,

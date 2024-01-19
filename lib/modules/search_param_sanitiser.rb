@@ -15,8 +15,7 @@ module SearchParamSanitiser
   end
 
   def sanitise_boolean(b, default = nil)
-    b && ActiveRecord::Type::Boolean.new.type_cast_from_database(b) || default # Rails 4
-    # b && ActiveRecord::Type::Boolean.new.cast(b) || default # TODO Rails 5
+    b && ActiveRecord::Type::Boolean.new.cast(b) || default
   end
 
   def sanitise_positive_integer(i, default = nil)
