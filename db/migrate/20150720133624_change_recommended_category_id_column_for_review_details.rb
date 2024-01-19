@@ -1,4 +1,4 @@
-class ChangeRecommendedCategoryIdColumnForReviewDetails < ActiveRecord::Migration
+class ChangeRecommendedCategoryIdColumnForReviewDetails < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key :review_details, name: "review_details_recommended_category_id_fk"
     rename_column :review_details, :recommended_category_id, :recommended_category

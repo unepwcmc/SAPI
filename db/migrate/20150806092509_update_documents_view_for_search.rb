@@ -1,4 +1,4 @@
-class UpdateDocumentsViewForSearch < ActiveRecord::Migration
+class UpdateDocumentsViewForSearch < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS api_documents_view"
     execute <<-SQL

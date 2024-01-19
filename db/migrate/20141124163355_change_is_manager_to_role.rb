@@ -1,4 +1,4 @@
-class ChangeIsManagerToRole < ActiveRecord::Migration
+class ChangeIsManagerToRole < ActiveRecord::Migration[4.2]
   def up
     add_column :users, :role, :string, default: 'default', null: false
     execute "UPDATE users SET role='admin' WHERE is_manager"

@@ -1,4 +1,4 @@
-class AddMaterialisedViewForValidTaxonConceptTermView < ActiveRecord::Migration
+class AddMaterialisedViewForValidTaxonConceptTermView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP MATERIALIZED VIEW IF EXISTS valid_taxon_concept_term_mview"
     execute "CREATE MATERIALIZED VIEW valid_taxon_concept_term_mview AS SELECT * FROM valid_taxon_concept_term_view"

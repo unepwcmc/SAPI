@@ -1,4 +1,4 @@
-class AddTimestampsToApiDocumentsView < ActiveRecord::Migration
+class AddTimestampsToApiDocumentsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS documents_view"
     execute "DROP MATERIALIZED VIEW IF EXISTS api_documents_mview"

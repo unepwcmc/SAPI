@@ -1,4 +1,4 @@
-class CreateUniqueIndexOnTaxonConceptReferences < ActiveRecord::Migration
+class CreateUniqueIndexOnTaxonConceptReferences < ActiveRecord::Migration[4.2]
   def up
     sql = <<-SQL
   WITH duplicated_taxon_concept_references AS (

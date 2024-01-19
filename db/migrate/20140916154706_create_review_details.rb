@@ -1,4 +1,4 @@
-class CreateReviewDetails < ActiveRecord::Migration
+class CreateReviewDetails < ActiveRecord::Migration[4.2]
   def change
     create_table :review_details do |t|
       t.integer :document_id

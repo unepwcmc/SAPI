@@ -1,4 +1,4 @@
-class CreateUniqueIndexOnUpperPermitNumber < ActiveRecord::Migration
+class CreateUniqueIndexOnUpperPermitNumber < ActiveRecord::Migration[4.2]
   def up
     # before creating a unique index on UPPER(number) need to deal with duplicates
     # all detected duplicates will need to be removed, but first the shipments

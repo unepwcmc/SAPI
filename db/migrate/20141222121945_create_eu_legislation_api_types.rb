@@ -1,4 +1,4 @@
-class CreateEuLegislationApiTypes < ActiveRecord::Migration
+class CreateEuLegislationApiTypes < ActiveRecord::Migration[4.2]
   def change
     execute <<-SQL
     CREATE TYPE api_trade_code AS (

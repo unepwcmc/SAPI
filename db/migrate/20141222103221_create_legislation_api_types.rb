@@ -1,4 +1,4 @@
-class CreateLegislationApiTypes < ActiveRecord::Migration
+class CreateLegislationApiTypes < ActiveRecord::Migration[4.2]
   def change
     execute <<-SQL
     DROP TYPE IF EXISTS api_taxon_concept CASCADE;

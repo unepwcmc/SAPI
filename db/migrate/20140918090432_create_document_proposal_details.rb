@@ -1,4 +1,4 @@
-class CreateDocumentProposalDetails < ActiveRecord::Migration
+class CreateDocumentProposalDetails < ActiveRecord::Migration[4.2]
   def change
     create_table :proposal_details do |t|
       t.integer :document_id

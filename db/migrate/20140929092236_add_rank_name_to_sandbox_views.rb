@@ -1,4 +1,4 @@
-class AddRankNameToSandboxViews < ActiveRecord::Migration
+class AddRankNameToSandboxViews < ActiveRecord::Migration[4.2]
   def change
     execute <<-SQL
 

@@ -1,4 +1,4 @@
-class ChangePrimaryDocumentForeignKeyToNullify < ActiveRecord::Migration
+class ChangePrimaryDocumentForeignKeyToNullify < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key :documents,
       name: 'documents_primary_language_document_id_fk'
