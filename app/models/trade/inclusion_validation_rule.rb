@@ -80,7 +80,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     return nil unless shipment_in_scope?(shipment)
     # if it is, check if it has a match in valid values view
     v = Arel::Table.new(valid_values_view)
-    arel_nodes = shipments_columns.map { |c| v[c].eq(Arel::Nodes::Quoted.new(shipment.send(c))) }
+    arel_nodes = shipments_columns.map { |c| v[c].eq(shipment.send(c)) }
     return nil if Trade::Shipment.find_by_sql(v.project(Arel.star).where(arel_nodes.inject(&:and))).any?
     error_message
   end
@@ -190,11 +190,11 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     scope_nodes = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
       if scope_def['inclusion']
-        inclusion_nodes = scope_def['inclusion'].map { |value| s[scope_column].eq(Arel::Nodes::Quoted.new(value)) }
+        inclusion_nodes = scope_def['inclusion'].map { |value| s[scope_column].eq(value) }
         tmp << inclusion_nodes.inject(&:or)
       end
       if scope_def['exclusion']
-        exclusion_nodes = scope_def['exclusion'].map { |value| s[scope_column].not_eq(Arel::Nodes::Quoted.new(value)) }
+        exclusion_nodes = scope_def['exclusion'].map { |value| s[scope_column].not_eq(value) }
         tmp << exclusion_nodes.inject(&:or)
       end
       if scope_def['blank']
