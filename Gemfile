@@ -119,10 +119,10 @@ group :development do
 end
 
 group :test, :development do
-  gem "rspec-rails", '3.9.1'
-  gem 'rspec-collection_matchers', '1.1.3'
+  gem "rspec-rails", '4.1.1' # TODO: should upgrade once to rails 5.2
+  gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
   gem "json_spec", '1.1.5'
-  gem "database_cleaner", "1.2.0" # TODO, should remove after upgrade Rails.
+  gem "database_cleaner", "1.2.0" # TODO, should remove after upgrade to Rails 5.1. (https://stackoverflow.com/questions/49246124/is-databasecleaner-still-necessary-with-rails-system-specs)
   gem "launchy", '2.4.3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
