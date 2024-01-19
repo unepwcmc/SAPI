@@ -44,7 +44,7 @@ class CitesSuspensionNotification < Event
   end
 
   def self.bases_for_suspension
-    select(:subtype).uniq
+    select(:subtype).distinct
   end
 
   private

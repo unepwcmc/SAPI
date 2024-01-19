@@ -20,7 +20,7 @@ class DocumentObserver < ActiveRecord::Observer
           document.sort_index
         )
       else
-        document.secondary_language_documents(true).each do |d|
+        document.secondary_language_documents.reload.each do |d|
           d.update_attribute(
             :sort_index,
             document.sort_index
