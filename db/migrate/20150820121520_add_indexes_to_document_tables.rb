@@ -1,4 +1,4 @@
-class AddIndexesToDocumentTables < ActiveRecord::Migration
+class AddIndexesToDocumentTables < ActiveRecord::Migration[4.2]
   def change
     sql = <<-SQL
   WITH duplicated_document_citation_taxon_concepts AS (

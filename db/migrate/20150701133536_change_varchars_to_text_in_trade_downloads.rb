@@ -1,4 +1,4 @@
-class ChangeVarcharsToTextInTradeDownloads < ActiveRecord::Migration
+class ChangeVarcharsToTextInTradeDownloads < ActiveRecord::Migration[4.2]
   def up
     change_column :trade_trade_data_downloads, :importer, :text
     change_column :trade_trade_data_downloads, :exporter, :text

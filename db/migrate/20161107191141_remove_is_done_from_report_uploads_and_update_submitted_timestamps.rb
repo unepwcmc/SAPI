@@ -1,4 +1,4 @@
-class RemoveIsDoneFromReportUploadsAndUpdateSubmittedTimestamps < ActiveRecord::Migration
+class RemoveIsDoneFromReportUploadsAndUpdateSubmittedTimestamps < ActiveRecord::Migration[4.2]
   def up
     ApplicationRecord.connection.execute(
       <<-SQL

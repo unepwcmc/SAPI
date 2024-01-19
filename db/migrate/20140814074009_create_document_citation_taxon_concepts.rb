@@ -1,4 +1,4 @@
-class CreateDocumentCitationTaxonConcepts < ActiveRecord::Migration
+class CreateDocumentCitationTaxonConcepts < ActiveRecord::Migration[4.2]
   def change
     create_table :document_citation_taxon_concepts do |t|
       t.integer :document_citation_id

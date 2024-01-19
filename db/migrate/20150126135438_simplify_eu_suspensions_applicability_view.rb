@@ -1,4 +1,4 @@
-class SimplifyEuSuspensionsApplicabilityView < ActiveRecord::Migration
+class SimplifyEuSuspensionsApplicabilityView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS eu_suspensions_applicability_view CASCADE"
     execute "CREATE VIEW eu_suspensions_applicability_view AS #{view_sql('20150126135438', 'eu_suspensions_applicability_view')}"

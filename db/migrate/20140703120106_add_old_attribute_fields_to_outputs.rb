@@ -1,4 +1,4 @@
-class AddOldAttributeFieldsToOutputs < ActiveRecord::Migration
+class AddOldAttributeFieldsToOutputs < ActiveRecord::Migration[4.2]
   def change
     add_column :nomenclature_change_outputs, :parent_id, :integer
     add_column :nomenclature_change_outputs, :rank_id, :integer

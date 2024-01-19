@@ -1,4 +1,4 @@
-class RemoveUnnecessaryNewNameRelatedFieldsFromOutput < ActiveRecord::Migration
+class RemoveUnnecessaryNewNameRelatedFieldsFromOutput < ActiveRecord::Migration[4.2]
   def up
     remove_column :nomenclature_change_outputs, :accepted_taxon_ids
     remove_column :nomenclature_change_outputs, :hybrid_parent_id

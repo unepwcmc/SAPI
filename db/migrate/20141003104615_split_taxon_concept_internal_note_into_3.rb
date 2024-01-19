@@ -1,4 +1,4 @@
-class SplitTaxonConceptInternalNoteInto3 < ActiveRecord::Migration
+class SplitTaxonConceptInternalNoteInto3 < ActiveRecord::Migration[4.2]
   def change
     add_column :taxon_concepts, :internal_distribution_note, :text
     rename_column :taxon_concepts, :internal_notes, :internal_general_note

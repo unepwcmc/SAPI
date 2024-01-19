@@ -1,4 +1,4 @@
-class AddInternalNotesToAllThings < ActiveRecord::Migration
+class AddInternalNotesToAllThings < ActiveRecord::Migration[4.2]
   def change
     add_column :taxon_concepts, :internal_notes, :text
     add_column :listing_changes, :internal_notes, :text

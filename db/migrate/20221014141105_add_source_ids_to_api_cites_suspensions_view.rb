@@ -1,4 +1,4 @@
-class AddSourceIdsToApiCitesSuspensionsView < ActiveRecord::Migration
+class AddSourceIdsToApiCitesSuspensionsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS api_cites_suspensions_view"
     execute "CREATE VIEW api_cites_suspensions_view AS #{view_sql('20221014151355', 'api_cites_suspensions_view')}"

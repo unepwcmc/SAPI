@@ -1,4 +1,4 @@
-class CreateTradePlusStatic < ActiveRecord::Migration
+class CreateTradePlusStatic < ActiveRecord::Migration[4.2]
   def change
     create_table :trade_plus_static do |t|
       t.integer :year

@@ -1,4 +1,4 @@
-class AddSrgHistoryToEuDecisionsView < ActiveRecord::Migration
+class AddSrgHistoryToEuDecisionsView < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       CREATE TYPE api_srg_history AS (

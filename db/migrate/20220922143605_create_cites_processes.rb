@@ -1,4 +1,4 @@
-class CreateCitesProcesses < ActiveRecord::Migration
+class CreateCitesProcesses < ActiveRecord::Migration[4.2]
   def change
     create_table :cites_processes do |t|
       t.string :resolution

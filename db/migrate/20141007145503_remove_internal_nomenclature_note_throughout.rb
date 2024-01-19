@@ -1,4 +1,4 @@
-class RemoveInternalNomenclatureNoteThroughout < ActiveRecord::Migration
+class RemoveInternalNomenclatureNoteThroughout < ActiveRecord::Migration[4.2]
   def up
     remove_column :listing_changes, :internal_nomenclature_note
     remove_column :trade_restrictions, :internal_nomenclature_note
