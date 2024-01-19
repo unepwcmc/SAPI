@@ -165,7 +165,7 @@ describe Admin::NomenclatureChanges::SplitController do
       context 'when user is manager' do
         it 'redirects to nomenclature changes path' do
           pending("Strange render mismatch after upgrading to Rails 4")
-          put :update, nomenclature_change_id: @split.id, id: 'summary'
+          put :update, nomenclature_change_id: @split.id, id: 'summary', nomenclature_change_split: { dummy: 'test' }
           expect(response).to be_successful
           expect(response).to render_template("nomenclature_changes")
         end
