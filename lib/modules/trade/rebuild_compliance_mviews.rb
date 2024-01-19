@@ -34,7 +34,7 @@ module Trade::RebuildComplianceMviews
   def self.recreate_mview(type, sql_view)
     view_name = "trade_shipments_#{type}_view"
     mview_name = "trade_shipments_#{type}_mview"
-    ActiveRecord::Base.transaction do
+    ApplicationRecord.transaction do
       command = "DROP MATERIALIZED VIEW IF EXISTS #{mview_name} CASCADE"
       puts command
       puts db.execute(command)
@@ -58,6 +58,6 @@ module Trade::RebuildComplianceMviews
   end
 
   def self.db
-    ActiveRecord::Base.connection
+    ApplicationRecord.connection
   end
 end

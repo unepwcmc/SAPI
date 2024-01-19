@@ -68,7 +68,7 @@ namespace :import do
 
           ) q
         SQL
-        ActiveRecord::Base.connection.execute(sql)
+        ApplicationRecord.connection.execute(sql)
       end
 
       sql = <<-SQL
@@ -80,7 +80,7 @@ namespace :import do
           AND taxon_concepts.full_name IS NULL
           AND q.id = taxon_concepts.id
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
 
     puts "There are now #{TaxonRelationship.

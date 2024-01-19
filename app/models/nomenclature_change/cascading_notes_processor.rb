@@ -73,7 +73,7 @@ class NomenclatureChange::CascadingNotesProcessor
       )
       SELECT * FROM descendents
     SQL
-    sanitized_subquery = ActiveRecord::Base.send(
+    sanitized_subquery = ApplicationRecord.send(
       :sanitize_sql_array, [subquery, taxon_concept_id: taxon_concept.id]
     )
     TaxonConcept.from(

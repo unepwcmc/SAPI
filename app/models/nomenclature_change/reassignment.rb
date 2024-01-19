@@ -27,7 +27,7 @@
 # A polymorphic association is in place that links this object to the entitity
 # that gets reassigned.
 # For example the reassignable_type might be 'ListingChange'
-class NomenclatureChange::Reassignment < ActiveRecord::Base
+class NomenclatureChange::Reassignment < ApplicationRecord
   include NomenclatureChange::ReassignmentHelpers
 
   belongs_to :input, :class_name => NomenclatureChange::Input,

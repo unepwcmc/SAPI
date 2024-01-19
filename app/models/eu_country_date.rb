@@ -1,4 +1,4 @@
-class EuCountryDate < ActiveRecord::Base
+class EuCountryDate < ApplicationRecord
   # Used by rake task.
   # attr_accessible :eu_accession_year, :eu_exit_year, :geo_entity
 

@@ -38,7 +38,7 @@ class Trade::PermitMatcher
       if qp.blank?
         '%' # replace the wildcard
       else
-        ActiveRecord::Base.connection.quote_string(qp)
+        ApplicationRecord.connection.quote_string(qp)
       end
     end
     query_parts.join

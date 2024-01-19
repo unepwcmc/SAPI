@@ -72,7 +72,7 @@ class Elibrary::DocumentsIdentificationImporter
         NOW()
       FROM rows_to_insert_resolved
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     # now insert the documents to be linked with the master document
     sql = <<-SQL
@@ -123,7 +123,7 @@ class Elibrary::DocumentsIdentificationImporter
         NOW()
       FROM rows_with_master_document_id
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   def all_rows_sql

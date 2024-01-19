@@ -28,11 +28,9 @@
 
 require 'digest/sha1'
 require 'csv'
-class EuDecision < ActiveRecord::Base
+class EuDecision < ApplicationRecord
   extend Mobility
   include TrackWhoDoesIt
-
-
   # Migrated to controller (Strong Parameters)
   # attr_accessible :end_date, :end_event_id, :geo_entity_id, :internal_notes,
   #   :is_current, :notes, :start_date, :start_event_id, :eu_decision_type_id,

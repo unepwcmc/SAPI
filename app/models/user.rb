@@ -23,7 +23,7 @@
 #  is_cites_authority     :boolean          default(FALSE), not null
 #
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   # Migrated to controller (Strong Parameters)

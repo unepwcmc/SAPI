@@ -10,7 +10,7 @@
 #  updated_at        :datetime         not null
 #
 
-class TaxonRelationshipType < ActiveRecord::Base
+class TaxonRelationshipType < ApplicationRecord
   # Used by seed and rake task.
   # attr_accessible :name, :is_intertaxonomic, :is_bidirectional
 

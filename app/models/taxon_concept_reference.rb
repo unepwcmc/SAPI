@@ -14,9 +14,8 @@
 #  updated_by_id               :integer
 #
 
-class TaxonConceptReference < ActiveRecord::Base
+class TaxonConceptReference < ApplicationRecord
   include TrackWhoDoesIt
-
   # Migrated to controller (Strong Parameters)
   # attr_accessible :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
   #   :excluded_taxon_concepts_ids, :reference_attributes,

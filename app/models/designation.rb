@@ -9,7 +9,7 @@
 #  taxonomy_id :integer          default(1), not null
 #
 
-class Designation < ActiveRecord::Base
+class Designation < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :name, :taxonomy_id
   include Dictionary

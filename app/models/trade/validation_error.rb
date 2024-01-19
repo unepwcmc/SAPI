@@ -1,4 +1,4 @@
-class Trade::ValidationError < ActiveRecord::Base
+class Trade::ValidationError < ApplicationRecord
   belongs_to :annual_report_upload, class_name: Trade::AnnualReportUpload
   belongs_to :validation_rule, class_name: Trade::ValidationRule
 

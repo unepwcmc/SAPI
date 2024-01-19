@@ -17,7 +17,7 @@
 #  name_es            :string(255)
 #
 
-class GeoEntity < ActiveRecord::Base
+class GeoEntity < ApplicationRecord
   extend Mobility
   # Migrated to controller (Strong Parameters)
   # attr_accessible :geo_entity_type_id, :iso_code2, :iso_code3,

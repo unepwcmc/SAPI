@@ -32,10 +32,9 @@
 
 require 'digest/sha1'
 require 'csv'
-class TradeRestriction < ActiveRecord::Base
+class TradeRestriction < ApplicationRecord
   extend Mobility
   include TrackWhoDoesIt
-
   # Migrated to controller (Strong Parameters)
   # attr_accessible :end_date, :geo_entity_id, :is_current,
   #   :notes, :publication_date, :purpose_ids, :quota, :type,

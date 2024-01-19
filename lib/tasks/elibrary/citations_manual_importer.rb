@@ -21,7 +21,7 @@ class Elibrary::CitationsManualImporter
   end
 
   def run_preparatory_queries
-    ActiveRecord::Base.connection.execute(
+    ApplicationRecord.connection.execute(
       <<-SQL
       BEGIN;
         CREATE TABLE temp_table (LIKE #{table_name});
@@ -31,7 +31,7 @@ class Elibrary::CitationsManualImporter
           FROM #{table_name};
 
         DROP TABLE #{table_name};
-        
+
         ALTER TABLE temp_table RENAME TO #{table_name};
       COMMIT;
       SQL
@@ -40,9 +40,9 @@ class Elibrary::CitationsManualImporter
 
   def run_queries
 
-    ActiveRecord::Base.connection.execute('DROP TABLE IF EXISTS elibrary_citations_resolved_tmp')
-    ActiveRecord::Base.connection.execute('CREATE TABLE elibrary_citations_resolved_tmp (document_id INT, taxon_concept_id INT)')
-    ActiveRecord::Base.connection.execute(
+    ApplicationRecord.connection.execute('DROP TABLE IF EXISTS elibrary_citations_resolved_tmp')
+    ApplicationRecord.connection.execute('CREATE TABLE elibrary_citations_resolved_tmp (document_id INT, taxon_concept_id INT)')
+    ApplicationRecord.connection.execute(
       <<-SQL
       INSERT INTO elibrary_citations_resolved_tmp (document_id, taxon_concept_id)
         SELECT
@@ -54,8 +54,8 @@ class Elibrary::CitationsManualImporter
       SQL
     )
 
-    ActiveRecord::Base.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (document_id)')
-    ActiveRecord::Base.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (taxon_concept_id)')
+    ApplicationRecord.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (document_id)')
+    ApplicationRecord.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (taxon_concept_id)')
 
     sql = <<-SQL
       WITH inserted_citations AS (
@@ -86,8 +86,8 @@ class Elibrary::CitationsManualImporter
       JOIN inserted_citations ON inserted_citations.document_id = rows_to_insert_resolved.document_id
       WHERE taxon_concept_id IS NOT NULL
     SQL
-    ActiveRecord::Base.connection.execute(sql)
-    ActiveRecord::Base.connection.execute('DROP TABLE IF EXISTS elibrary_citations_resolved_tmp')
+    ApplicationRecord.connection.execute(sql)
+    ApplicationRecord.connection.execute('DROP TABLE IF EXISTS elibrary_citations_resolved_tmp')
   end
 
   def rows_to_insert_sql

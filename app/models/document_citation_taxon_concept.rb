@@ -11,9 +11,8 @@
 #  updated_at           :datetime         not null
 #
 
-class DocumentCitationTaxonConcept < ActiveRecord::Base
+class DocumentCitationTaxonConcept < ApplicationRecord
   include TrackWhoDoesIt
-
   # Used by other models, not controllers.
   # attr_accessible :created_by_id, :document_citation_id, :taxon_concept_id, :updated_by_id,
   #   :updated_at

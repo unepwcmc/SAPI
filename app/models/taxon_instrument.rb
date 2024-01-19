@@ -12,9 +12,8 @@
 #  updated_by_id    :integer
 #
 
-class TaxonInstrument < ActiveRecord::Base
+class TaxonInstrument < ApplicationRecord
   include TrackWhoDoesIt
-
   # Migrated to controller (Strong Parameters)
   # attr_accessible :effective_from, :instrument_id, :taxon_concept_id
 

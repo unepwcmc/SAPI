@@ -11,9 +11,8 @@
 #  updated_by_id        :integer
 #
 
-class TradeRestrictionSource < ActiveRecord::Base
+class TradeRestrictionSource < ApplicationRecord
   include TrackWhoDoesIt
-
   # Relationship model between TradeCode(source) and TradeRestriction
   # attr_accessible :source_id, :trade_restriction_id
 

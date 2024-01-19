@@ -8,7 +8,7 @@
 #  updated_at :datetime         not null
 #
 
-class GeoRelationshipType < ActiveRecord::Base
+class GeoRelationshipType < ApplicationRecord
   # Used by seed only.
   # attr_accessible :name
 

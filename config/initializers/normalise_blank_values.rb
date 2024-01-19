@@ -18,4 +18,4 @@ module NormaliseBlankValues extend ActiveSupport::Concern
 
 end
 
-ActiveRecord::Base.send(:include, NormaliseBlankValues)
+ApplicationRecord.send(:include, NormaliseBlankValues)

@@ -39,6 +39,6 @@ task :set_eu_opinions_to_not_current => :environment do
     WHERE matched_eu_opinions.id = eu_decisions.id;
   SQL
 
-  res = ActiveRecord::Base.connection.execute(query)
+  res = ApplicationRecord.connection.execute(query)
   puts "#{res.cmd_tuples} rows updated with is_current to false"
 end

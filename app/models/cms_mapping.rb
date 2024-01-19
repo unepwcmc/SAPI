@@ -13,7 +13,7 @@
 #  updated_at       :datetime         not null
 #
 
-class CmsMapping < ActiveRecord::Base
+class CmsMapping < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :accepted_name_id, :cms_author, :cms_taxon_name, :cms_uuid, :details, :taxon_concept_id
 

@@ -31,9 +31,8 @@
 #  created_by_id                 :integer
 #
 
-class Trade::Shipment < ActiveRecord::Base
+class Trade::Shipment < ApplicationRecord
   include TrackWhoDoesIt
-
   # Not sure where using this.
   # attr_accessible :annual_report_upload_id, :appendix,
   #   :country_of_origin_id, :origin_permit_id,

@@ -12,7 +12,7 @@
 #  updated_at    :datetime         not null
 #
 
-class NomenclatureChange < ActiveRecord::Base
+class NomenclatureChange < ApplicationRecord
   include Dictionary
   include StatusDictionary
 

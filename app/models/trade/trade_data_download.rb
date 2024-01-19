@@ -24,7 +24,7 @@
 #  organization   :string
 #
 
-class Trade::TradeDataDownload < ActiveRecord::Base
+class Trade::TradeDataDownload < ApplicationRecord
   # Used by app/models/trade/trade_data_download_logger.rb
   # attr_accessible :user_ip, :report_type, :year_from, :year_to, :taxon,
   #  :appendix, :importer, :exporter, :origin, :term, :unit, :source, :purpose,

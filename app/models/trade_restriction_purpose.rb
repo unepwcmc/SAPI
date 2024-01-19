@@ -11,9 +11,8 @@
 #  updated_by_id        :integer
 #
 
-class TradeRestrictionPurpose < ActiveRecord::Base
+class TradeRestrictionPurpose < ApplicationRecord
   include TrackWhoDoesIt
-
   # Relationship model between TradeCode(purpose) and TradeRestriction
   # attr_accessible :purpose_id, :trade_restriction_id
 

@@ -66,7 +66,7 @@ RSpec.configure do |config|
 
   config.before(:each, :drops_tables => true) do
     DatabaseCleaner.strategy = :deletion, { :cache_tables => false }
-    ActiveRecord::Base.connection.execute('SELECT * FROM drop_trade_sandboxes()')
+    ApplicationRecord.connection.execute('SELECT * FROM drop_trade_sandboxes()')
   end
 
   config.before(:each) do

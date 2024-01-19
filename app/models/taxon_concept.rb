@@ -30,7 +30,7 @@
 #  dependents_updated_by_id   :integer
 #
 
-class TaxonConcept < ActiveRecord::Base
+class TaxonConcept < ApplicationRecord
   extend Mobility
   include TrackWhoDoesIt
   has_paper_trail class_name: 'TaxonConceptVersion', on: :destroy,
@@ -213,7 +213,7 @@ class TaxonConcept < ActiveRecord::Base
 
   def self.fetch_taxons_full_name(taxon_ids)
     if taxon_ids.present?
-      ActiveRecord::Base.connection.execute(
+      ApplicationRecord.connection.execute(
         <<-SQL
           SELECT tc.full_name
           FROM taxon_concepts tc

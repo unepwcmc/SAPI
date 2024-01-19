@@ -49,13 +49,13 @@ module Sapi
 
     def self.drop_indexes
       INDEXES.each do |i|
-        ActiveRecord::Base.connection.execute("DROP INDEX IF EXISTS #{i[:name]}")
+        ApplicationRecord.connection.execute("DROP INDEX IF EXISTS #{i[:name]}")
       end
     end
 
     def self.create_indexes
       INDEXES.each do |i|
-        ActiveRecord::Base.connection.execute("CREATE INDEX #{i[:name]} ON #{i[:on]}")
+        ApplicationRecord.connection.execute("CREATE INDEX #{i[:name]} ON #{i[:on]}")
       end
     end
 
@@ -79,7 +79,7 @@ module Sapi
       DROP INDEX IF EXISTS index_trade_shipments_on_origin_permits_ids;
       DROP INDEX IF EXISTS index_trade_shipments_on_legacy_shipment_number;
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
 
     def self.drop_indexes_on_trade_names
@@ -88,7 +88,7 @@ module Sapi
         DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_trade_code;
         DROP INDEX IF EXISTS index_trade_species_mapping_import_cites_taxon_code;
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
 
     def self.create_indexes_on_trade_names
@@ -103,7 +103,7 @@ module Sapi
           USING btree
           (cites_taxon_code);
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
 
     def self.create_indexes_on_shipments
@@ -177,7 +177,7 @@ module Sapi
         USING btree
         (legacy_shipment_number);
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
 
   end

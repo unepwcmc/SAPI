@@ -17,7 +17,7 @@ namespace :import do
 
       # import all distinct tags to both PresetTags and Tags table
       puts "There are #{PresetTag.where(:model => 'Distribution').count} distribution tags"
-      puts "There are #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
+      puts "There are #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
       puts "ADDING: preset_tags and tags"
       sql = <<-SQL
         INSERT INTO preset_tags(model, name, created_at, updated_at)
@@ -41,11 +41,11 @@ namespace :import do
 
         SELECT name FROM tags;
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
       puts "There are now #{PresetTag.where(:model => 'Distribution').count} distribution tags"
-      puts "There are now #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
+      puts "There are now #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
 
-      puts "There are #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
+      puts "There are #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
       [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
         puts "Import #{taxonomy_name} distribution tags"
         taxonomy = Taxonomy.find_by_name(taxonomy_name)
@@ -86,9 +86,9 @@ namespace :import do
           ) AS subquery;
         SQL
         puts "ADDING: distribution taggings"
-        ActiveRecord::Base.connection.execute(sql)
+        ApplicationRecord.connection.execute(sql)
       end
-      puts "There are now #{ActiveRecord::Base.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
+      puts "There are now #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
     end
   end
 

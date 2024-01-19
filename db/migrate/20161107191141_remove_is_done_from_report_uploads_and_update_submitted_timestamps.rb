@@ -1,6 +1,6 @@
 class RemoveIsDoneFromReportUploadsAndUpdateSubmittedTimestamps < ActiveRecord::Migration
   def up
-    ActiveRecord::Base.connection.execute(
+    ApplicationRecord.connection.execute(
       <<-SQL
         UPDATE trade_annual_report_uploads
         SET submitted_at = updated_at, submitted_by_id = updated_by_id
@@ -15,7 +15,7 @@ class RemoveIsDoneFromReportUploadsAndUpdateSubmittedTimestamps < ActiveRecord::
   def down
     add_column :trade_annual_report_uploads, :is_done, :boolean, default: false
 
-    ActiveRecord::Base.connection.execute(
+    ApplicationRecord.connection.execute(
       <<-SQL
         UPDATE trade_annual_report_uploads
         SET is_done = true

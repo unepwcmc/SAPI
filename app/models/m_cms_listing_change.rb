@@ -60,7 +60,7 @@
 #  geo_entity_type            :string(255)
 #
 
-class MCmsListingChange < ActiveRecord::Base
+class MCmsListingChange < ApplicationRecord
   self.table_name = :cms_listing_changes_mview
   self.primary_key = :id
   include MListingChange

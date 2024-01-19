@@ -100,7 +100,7 @@ namespace :import do
         WHERE taxon_relationship_type_id = #{taxon_relationship_type_id}
       ) AS subquery;
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
       puts "There are #{TaxonConcept.where(:name_status => "H",
         :taxonomy_id => taxonomy_id).count} Hybrids in the database"
 

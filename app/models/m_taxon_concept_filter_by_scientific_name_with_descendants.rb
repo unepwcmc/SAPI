@@ -17,7 +17,7 @@ class MTaxonConceptFilterByScientificNameWithDescendants
       'id, ARRAY_AGG_NOTNULL(matched_name) AS matched_names_ary'
     ).
     where(
-      ActiveRecord::Base.send(:sanitize_sql_array, [
+      ApplicationRecord.send(:sanitize_sql_array, [
         "name_for_matching LIKE :sci_name_prefix AND type_of_match IN (:types_of_match)",
         sci_name_prefix: "#{@scientific_name}%",
         types_of_match: types_of_match

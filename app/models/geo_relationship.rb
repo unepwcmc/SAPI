@@ -10,7 +10,7 @@
 #  updated_at               :datetime         not null
 #
 
-class GeoRelationship < ActiveRecord::Base
+class GeoRelationship < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :geo_entity_id, :geo_relationship_type_id, :other_geo_entity_id
   belongs_to :geo_relationship_type
