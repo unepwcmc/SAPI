@@ -22,7 +22,7 @@
 #  type_of_match             :text
 #
 
-class MAutoCompleteTaxonConcept < ActiveRecord::Base
+class MAutoCompleteTaxonConcept < ApplicationRecord
   extend Mobility
   self.table_name = :auto_complete_taxon_concepts_mview
   self.primary_key = :id

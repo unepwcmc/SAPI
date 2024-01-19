@@ -12,7 +12,7 @@ namespace :eu_opinions do
     puts "There are #{eu_opinions.count} eu_opinions to be transferred"
 
     query = query_builder(new_decision_type_id, 'eu_decision_type', old_decision_type_ids)
-    res = ActiveRecord::Base.connection.execute query
+    res = ApplicationRecord.connection.execute query
 
     puts "#{res.cmd_tuples} rows transferred to new decision type"
   end
@@ -29,7 +29,7 @@ namespace :eu_opinions do
     puts "There are #{eu_opinions.count} eu_opinions to be transferred"
 
     query = query_builder(srg_history_id, 'srg_history', old_decision_type_ids)
-    res = ActiveRecord::Base.connection.execute query
+    res = ApplicationRecord.connection.execute query
 
     puts "#{res.cmd_tuples} rows transferred to new decision type"
   end

@@ -32,7 +32,7 @@ namespace :import do
             WHERE UPPER(geo_entities.iso_code2) = UPPER(BTRIM(TMP.iso2)) AND geo_entities.legacy_type = UPPER(BTRIM(geo_entity_type))
           )
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
       link_countries
     end
     puts "There are now #{GeoEntity.count(conditions: { geo_entity_type_id: country_type.id })} countries in the database"
@@ -85,7 +85,7 @@ def link_countries
         geo_relationship_type_id = geo_relationship_types.id
       );
   SQL
-  ActiveRecord::Base.connection.execute(sql)
+  ApplicationRecord.connection.execute(sql)
 
   sql = <<-SQL
     INSERT INTO geo_relationships(geo_entity_id, other_geo_entity_id, geo_relationship_type_id, created_at, updated_at)
@@ -116,7 +116,7 @@ def link_countries
         geo_relationship_type_id = geo_relationship_types.id
       );
   SQL
-  ActiveRecord::Base.connection.execute(sql)
+  ApplicationRecord.connection.execute(sql)
 
   puts "There are now #{GeoRelationship.count} geo_relationships in the database."
 end

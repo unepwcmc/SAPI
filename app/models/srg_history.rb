@@ -1,4 +1,4 @@
-class SrgHistory < ActiveRecord::Base
+class SrgHistory < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :name, :tooltip
 

@@ -12,7 +12,7 @@
 #  proposal_number     :text
 #
 
-class Document::ProposalDetails < ActiveRecord::Base
+class Document::ProposalDetails < ApplicationRecord
   # Used in DocumentsController
   # attr_accessible :document_id, :proposal_nature, :proposal_outcome_id,
   #   :representation, :proposal_number

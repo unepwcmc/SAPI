@@ -56,7 +56,7 @@ namespace :export do
       while(ntuples == RECORDS_PER_FILE) do
         i = i + 1
         query = Trade::ShipmentReportQueries.full_db_query_single_file(RECORDS_PER_FILE, offset)
-        results = ActiveRecord::Base.connection.execute query
+        results = ApplicationRecord.connection.execute query
         ntuples = results.ntuples
         values = results.values
 
@@ -100,7 +100,7 @@ namespace :export do
         if (2012..2015).include?(year)
           kingdom = 'Animalia'
           query = Trade::ShipmentReportQueries.full_db_query_by_kingdom(year, kingdom)
-          results = ActiveRecord::Base.connection.execute query
+          results = ApplicationRecord.connection.execute query
           ntuples = results.ntuples
           options = {
             dir: dir,
@@ -113,7 +113,7 @@ namespace :export do
 
           kingdom = 'Plantae'
           query = Trade::ShipmentReportQueries.full_db_query_by_kingdom(year, kingdom)
-          results = ActiveRecord::Base.connection.execute query
+          results = ApplicationRecord.connection.execute query
           ntuples = results.ntuples
           options = {
             dir: dir,
@@ -125,7 +125,7 @@ namespace :export do
           process_results(results, options)
         else
           query = Trade::ShipmentReportQueries.full_db_query_by_year(year)
-          results = ActiveRecord::Base.connection.execute query
+          results = ApplicationRecord.connection.execute query
           ntuples = results.ntuples
           options = {
             dir: dir,
@@ -170,7 +170,7 @@ namespace :export do
         # Default to a full export query otherwise
         query = query ? query : Trade::ShipmentReportQueries.full_db_query(RECORDS_PER_FILE, offset)
 
-        results = ActiveRecord::Base.connection.execute query
+        results = ApplicationRecord.connection.execute query
         ntuples = results.ntuples
         options = {
           dir: dir,

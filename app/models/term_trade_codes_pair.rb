@@ -10,7 +10,7 @@
 #  updated_at      :datetime         not null
 #
 
-class TermTradeCodesPair < ActiveRecord::Base
+class TermTradeCodesPair < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :trade_code_id, :trade_code_type, :term_id
 

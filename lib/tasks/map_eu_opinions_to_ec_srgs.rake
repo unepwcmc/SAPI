@@ -37,6 +37,6 @@ task :map_eu_opinions_to_ec_srgs => :environment do
     WHERE eu_opinions_matching_with_ec_srgs.id = eu_decisions.id
     RETURNING *;
   SQL
-  res = ActiveRecord::Base.connection.execute update_query
+  res = ApplicationRecord.connection.execute update_query
   puts "#{res.cmd_tuples} rows linked to EC SRG meetings"
 end

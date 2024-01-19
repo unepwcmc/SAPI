@@ -10,7 +10,7 @@
 #  decision_type :string(255)
 #
 
-class EuDecisionType < ActiveRecord::Base
+class EuDecisionType < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :name, :tooltip, :decision_type
   include Dictionary

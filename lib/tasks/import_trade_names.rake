@@ -45,7 +45,7 @@ namespace :import do
       ) AS subquery;
     SQL
     puts "Inserting taxon names"
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     sql = <<-SQL
       INSERT INTO taxon_concepts (full_name,
@@ -83,7 +83,7 @@ namespace :import do
       ) AS subquery;
     SQL
     puts "Inserting the trade names into taxon_concepts table"
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     sql = <<-SQL
       INSERT INTO taxon_relationships
@@ -116,7 +116,7 @@ namespace :import do
       ) AS subquery;
     SQL
     puts "Inserting the taxon Relationships between taxon concepts and trade_names"
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
     puts "There are #{TaxonConcept.where(:name_status => "T",
       :taxonomy_id => taxonomy_id).count} Trade Names in the database"
   end
@@ -138,7 +138,7 @@ namespace :import do
     count_taxon_names = TaxonName.count
     count_trade_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_trade_name).count
     count_synonym_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_synonym).count
-    taxon_concept_ids = ActiveRecord::Base.connection.execute("SELECT cites_taxon_code, species_plus_id AS id FROM #{TMP_TABLE}").
+    taxon_concept_ids = ApplicationRecord.connection.execute("SELECT cites_taxon_code, species_plus_id AS id FROM #{TMP_TABLE}").
       map { |h| [h["cites_taxon_code"], h["id"]] }
     taxon_concept_ids.each do |cites_code, id|
       tc = TaxonConcept.find id
@@ -183,7 +183,7 @@ namespace :import do
       ) as subquery;
 
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     puts "Update trade_species_mapping_import table"
     sql = <<-SQL
@@ -200,7 +200,7 @@ namespace :import do
       FROM new_mapping
       WHERE trade_species_mapping_import.cites_taxon_code = new_mapping.cites_taxon_code;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     final_count_trade_names = TaxonConcept.where(:name_status => 'T').count
     final_count_synonyms = TaxonConcept.where(:name_status => 'S').count

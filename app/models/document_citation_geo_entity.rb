@@ -11,9 +11,8 @@
 #  updated_at           :datetime         not null
 #
 
-class DocumentCitationGeoEntity < ActiveRecord::Base
+class DocumentCitationGeoEntity < ApplicationRecord
   include TrackWhoDoesIt
-
   # Used by app/models/nomenclature_change/reassignment_copy_processor.rb and lib/tasks/elibrary/identification_docs_distributions_importer.rb
   # attr_accessible :created_by_id, :document_citation_id, :geo_entity_id, :updated_by_id
 

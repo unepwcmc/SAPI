@@ -9,7 +9,7 @@
 #  updated_at :datetime         not null
 #
 
-class PresetTag < ActiveRecord::Base
+class PresetTag < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :model, :name
 

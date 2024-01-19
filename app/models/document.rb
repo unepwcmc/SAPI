@@ -24,7 +24,7 @@
 #  designation_id               :integer
 #
 
-class Document < ActiveRecord::Base
+class Document < ApplicationRecord
   include PgSearch::Model
 
   pg_search_scope :search_by_title, :against => :title,

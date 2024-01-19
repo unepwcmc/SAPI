@@ -22,7 +22,7 @@
 #  updated_by_id       :integer
 #
 
-class Annotation < ActiveRecord::Base
+class Annotation < ApplicationRecord
   extend Mobility
   include TrackWhoDoesIt
 

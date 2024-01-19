@@ -2,11 +2,11 @@
 class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
 
   def total_cnt
-    ActiveRecord::Base.connection.execute(query_sql(:limit => false)).ntuples
+    ApplicationRecord.connection.execute(query_sql(:limit => false)).ntuples
   end
 
   def query
-    ActiveRecord::Base.connection.execute(query_sql(:limit => true))
+    ApplicationRecord.connection.execute(query_sql(:limit => true))
   end
 
   private

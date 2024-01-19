@@ -58,4 +58,4 @@ module ComparisonAttributes
 
 end
 
-ActiveRecord::Base.send :include, ComparisonAttributes
+ApplicationRecord.send :include, ComparisonAttributes

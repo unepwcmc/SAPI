@@ -25,7 +25,7 @@ module Sapi
         :trade_plus_complete_mview
       ].each { |p|
         puts "Procedure: #{p}"
-        ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
+        ApplicationRecord.connection.execute("SELECT * FROM rebuild_#{p}()")
       }
 
       changed_cnt = TaxonConcept.where('touched_at IS NOT NULL AND touched_at > updated_at').count
@@ -91,21 +91,21 @@ module Sapi
     def self.run_procedures(procedures)
       procedures.each { |p|
         puts "Procedure: #{p}"
-        ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
+        ApplicationRecord.connection.execute("SELECT * FROM rebuild_#{p}()")
       }
     end
 
     def self.rebuild_permit_numbers
       puts "Procedure: #{p}"
-      ActiveRecord::Base.connection.execute("DROP INDEX IF EXISTS index_trade_shipments_on_permits_ids")
-      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_permit_numbers()")
+      ApplicationRecord.connection.execute("DROP INDEX IF EXISTS index_trade_shipments_on_permits_ids")
+      ApplicationRecord.connection.execute("SELECT * FROM rebuild_permit_numbers()")
       sql = <<-SQL
       CREATE INDEX index_trade_shipments_on_permits_ids
         ON trade_shipments
         USING GIN
         (permits_ids);
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
 
     def self.rebuild_compliance_mviews
@@ -116,20 +116,20 @@ module Sapi
         :non_compliant_shipments_view
       ].each { |p|
         puts "Procedure: #{p}"
-        ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
+        ApplicationRecord.connection.execute("SELECT * FROM rebuild_#{p}()")
       }
     end
 
     def self.rebuild_trade_plus_mviews
       view = 'trade_plus_complete_mview'
       puts "Procedure: #{view}"
-      ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{view}()")
+      ApplicationRecord.connection.execute("SELECT * FROM rebuild_#{view}()")
     end
 
     def self.create_trade_plus_mview_indexes
       _function = 'create_trade_plus_complete_mview_indexes'
       puts "Procedure: #{_function}"
-      ActiveRecord::Base.connection.execute("SELECT * FROM #{_function}()")
+      ApplicationRecord.connection.execute("SELECT * FROM #{_function}()")
     end
   end
 end

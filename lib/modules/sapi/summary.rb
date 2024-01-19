@@ -96,7 +96,7 @@ module Sapi
         where(:taxon_concepts => { :taxonomy_id => t.id }).
         where(["(data->'kingdom_id')::INT = ?", k.id])
       stats[:distributions] = distributions.count
-      stats[:distribution_tags] = ActiveRecord::Base.connection.execute(<<-SQL
+      stats[:distribution_tags] = ApplicationRecord.connection.execute(<<-SQL
             SELECT COUNT(*) FROM taggings
               INNER JOIN distributions ON
                 taggings.taggable_id = distributions.id AND

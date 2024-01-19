@@ -15,7 +15,7 @@ namespace :import do
         FROM #{TMP_TABLE} t
         WHERE t.legacy_id = tc.id
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
     count = TaxonConcept.where('updated_at > ?', Date.today).count
     puts "#{count} TaxonConcepts updated"

@@ -11,9 +11,8 @@
 #  created_by_id   :integer
 #
 
-class DistributionReference < ActiveRecord::Base
+class DistributionReference < ApplicationRecord
   include TrackWhoDoesIt
-
   # Used by app/models/cms_mapping_manager.rb
   # attr_accessible :reference_id, :distribution_id, :created_by_id,
   #   :updated_by_id

@@ -125,7 +125,7 @@ namespace :import do
         FROM suspensions_with_ids
       SQL
 
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
 
     puts "There are now #{CitesSuspension.count} CITES suspensions in the database"

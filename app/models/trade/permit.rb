@@ -8,7 +8,7 @@
 #  updated_at :datetime         not null
 #
 
-class Trade::Permit < ActiveRecord::Base
+class Trade::Permit < ApplicationRecord
   # app/models/trade/shipment.rb is the only place create this record.
   # attr_accessible :number
 end

@@ -20,7 +20,7 @@
 #  taxon_concept_id          :integer
 #
 
-class Trade::SandboxTemplate < ActiveRecord::Base
+class Trade::SandboxTemplate < ApplicationRecord
 
   self.table_name = :trade_sandbox_template
   has_paper_trail
@@ -42,7 +42,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     begin
       "Trade::#{klass_name}".constantize
     rescue NameError
-      klass = Class.new(ActiveRecord::Base) do
+      klass = Class.new(ApplicationRecord) do
         self.table_name = table_name
         has_paper_trail
         include ActiveModel::ForbiddenAttributesProtection

@@ -53,13 +53,13 @@ def import_data_for(kingdom, rank, synonyms = nil)
         OR BTRIM(#{TMP_TABLE}.Taxonomy) iLIKE '%CMS%'
       )
   SQL
-  ActiveRecord::Base.connection.execute(sql)
+  ApplicationRecord.connection.execute(sql)
   if synonyms
-    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS synonym_import_name')
-    ActiveRecord::Base.connection.execute('CREATE INDEX synonym_import_name ON synonym_import (name)')
+    ApplicationRecord.connection.execute('DROP INDEX IF EXISTS synonym_import_name')
+    ApplicationRecord.connection.execute('CREATE INDEX synonym_import_name ON synonym_import (name)')
   else
-    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS species_import_name')
-    ActiveRecord::Base.connection.execute('CREATE INDEX species_import_name ON species_import (name)')
+    ApplicationRecord.connection.execute('DROP INDEX IF EXISTS species_import_name')
+    ApplicationRecord.connection.execute('CREATE INDEX species_import_name ON species_import (name)')
   end
 
   [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
@@ -130,7 +130,7 @@ def import_data_for(kingdom, rank, synonyms = nil)
     SQL
 
     # puts "#{taxonomy.name} #{rank} #{kingdom}"
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
   puts "#{TaxonConcept.where(:rank_id => rank_id).count - existing} #{rank} added"
 end

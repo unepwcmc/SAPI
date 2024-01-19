@@ -43,7 +43,7 @@ namespace :update do
     WHERE matched_eu_decisions.id = eu_decisions.id;
     SQL
 
-    res = ActiveRecord::Base.connection.execute update_query
+    res = ApplicationRecord.connection.execute update_query
     puts "#{res.cmd_tuples} rows linked to 'W' source"
   end
 end

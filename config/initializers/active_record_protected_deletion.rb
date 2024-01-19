@@ -23,4 +23,4 @@ module ProtectedDeletion
   end
 
 end
-ActiveRecord::Base.send :include, ProtectedDeletion
+ApplicationRecord.send :include, ProtectedDeletion

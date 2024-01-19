@@ -26,10 +26,9 @@
 #  internal_notes             :text
 #
 
-class ListingChange < ActiveRecord::Base
+class ListingChange < ApplicationRecord
   extend Mobility
   include TrackWhoDoesIt
-
   # Migrated to controller (Strong Parameters)
   # attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
   #   :effective_at, :is_current, :parent_id, :geo_entity_ids,

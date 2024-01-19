@@ -13,7 +13,7 @@
 #  display_name_fr    :text
 #
 
-class Rank < ActiveRecord::Base
+class Rank < ApplicationRecord
   extend Mobility
   # Migrated to controller (Strong Parameters)
   # attr_accessible :name, :display_name_en, :display_name_es, :display_name_fr,

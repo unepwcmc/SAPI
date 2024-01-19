@@ -36,9 +36,9 @@ class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
 
   def run_preparatory_queries
     super()
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET SigTradePhase = NULL WHERE SigTradePhase='NULL'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET SigTradeProcessStage = NULL WHERE SigTradeProcessStage='NULL'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET SigTradeRecommendedCategory = NULL WHERE SigTradeRecommendedCategory='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET SigTradePhase = NULL WHERE SigTradePhase='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET SigTradeProcessStage = NULL WHERE SigTradeProcessStage='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET SigTradeRecommendedCategory = NULL WHERE SigTradeRecommendedCategory='NULL'")
   end
 
   def run_queries
@@ -57,7 +57,7 @@ class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
       SELECT document_id, review_phase_id, process_stage_id, SigTradeRecommendedCategory, NOW(), NOW()
       FROM rows_to_insert_resolved
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   # this performs grouping, the review meta data used to be citation-level

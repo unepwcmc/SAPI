@@ -64,7 +64,7 @@ module MaterialDocIdsRetriever
   end
 
   def self.ancestors_ids(tc_ids, taxon_name = nil, exact_match = nil)
-    res = ActiveRecord::Base.connection.execute(
+    res = ApplicationRecord.connection.execute(
       <<-SQL
       SELECT ancestor_taxon_concept_id
       FROM taxon_concepts_and_ancestors_mview

@@ -88,7 +88,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def db
-    ActiveRecord::Base.connection
+    ApplicationRecord.connection
   end
 
   def query

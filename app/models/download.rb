@@ -13,7 +13,7 @@
 #  display_name :string(255)
 #
 
-class Download < ActiveRecord::Base
+class Download < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :format, :doc_type
 

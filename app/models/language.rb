@@ -12,7 +12,7 @@
 #  updated_at :datetime         not null
 #
 
-class Language < ActiveRecord::Base
+class Language < ApplicationRecord
   extend Mobility
   # Migrated to controller (Strong Parameters)
   # attr_accessible :iso_code1, :iso_code3, :name_en, :name_fr, :name_es

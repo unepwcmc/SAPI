@@ -195,7 +195,7 @@ class Trade::Grouping::Base
   end
 
   def db
-    ActiveRecord::Base.connection
+    ApplicationRecord.connection
   end
 
 end
