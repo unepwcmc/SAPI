@@ -117,7 +117,7 @@ class Trade::SandboxTemplate < ApplicationRecord
           return unless updates
           updates[:updated_at] = Time.now
           records_for_batch_operation(validation_error, annual_report_upload).
-            update_all(updates)
+            update_all(updates.to_h)
           sanitize
         end
 

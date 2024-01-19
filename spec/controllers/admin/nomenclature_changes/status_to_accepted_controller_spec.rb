@@ -79,7 +79,7 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
       context 'when user is manager' do
         it 'redirects to nomenclature changes path' do
           pending("Strange render mismatch after upgrading to Rails 4")
-          put :update, nomenclature_change_id: @status_change.id, id: 'summary'
+          put :update, nomenclature_change_id: @status_change.id, id: 'summary', nomenclature_change_status_to_accepted: { dummy: 'test' }
           expect(response).to be_successful
           expect(response).to render_template("nomenclature_changes")
         end
