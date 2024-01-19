@@ -17,7 +17,7 @@
 
 # Represents an input of a nomenclature change.
 # Inputs are required to be existing taxon concepts.
-class NomenclatureChange::Input < ActiveRecord::Base
+class NomenclatureChange::Input < ApplicationRecord
   track_who_does_it
   # Migrated to controller (Strong Parameters)
   # attr_accessible :nomenclature_change_id, :taxon_concept_id,

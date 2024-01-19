@@ -9,7 +9,7 @@
 #  updated_at :datetime         not null
 #
 
-class DocumentTag < ActiveRecord::Base
+class DocumentTag < ApplicationRecord
   # Only created by seed and rake task.
   # attr_accessible :name
 

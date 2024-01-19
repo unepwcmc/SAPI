@@ -19,6 +19,6 @@ namespace :import do
       COPY trade_plus_static(#{COLUMNS.join(',')})
       FROM '#{path_to_file}' DELIMITER ',' CSV HEADER
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 end

@@ -9,7 +9,7 @@
 #  updated_at     :datetime         not null
 #
 
-class DesignationGeoEntity < ActiveRecord::Base
+class DesignationGeoEntity < ApplicationRecord
   # Relationship table between Designation and GeoEntity.
   # attr_accessible :designation_id, :geo_entity_id
   belongs_to :designation

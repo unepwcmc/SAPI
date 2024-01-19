@@ -13,7 +13,7 @@
 #  updated_at       :datetime         not null
 #
 
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
   track_who_does_it
   # Migrated to controller (Strong Parameters)
   # attr_accessible :comment_type, :commentable_id, :commentable_type, :note,

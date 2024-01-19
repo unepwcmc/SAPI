@@ -12,7 +12,7 @@
 #  name_fr    :string(255)
 #
 
-class TradeCode < ActiveRecord::Base
+class TradeCode < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :code, :type, :name_en, :name_es, :name_fr
   translates :name

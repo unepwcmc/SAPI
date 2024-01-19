@@ -22,7 +22,7 @@
 #  type_of_match             :text
 #
 
-class MAutoCompleteTaxonConcept < ActiveRecord::Base
+class MAutoCompleteTaxonConcept < ApplicationRecord
   self.table_name = :auto_complete_taxon_concepts_mview
   self.primary_key = :id
   scope :by_cites_eu_taxonomy, -> { where(:taxonomy_is_cites_eu => true) }

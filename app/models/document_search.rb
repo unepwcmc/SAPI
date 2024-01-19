@@ -23,7 +23,7 @@ class DocumentSearch
       @query.count(:all)
     else
       query = "SELECT count(*) AS count_all FROM (#{@query.to_sql}) x"
-      count = ActiveRecord::Base.connection.execute(query).first.try(:[], "count_all").to_i
+      count = ApplicationRecord.connection.execute(query).first.try(:[], "count_all").to_i
     end
   end
 
@@ -151,7 +151,7 @@ class DocumentSearch
   end
 
   def filter_by_citations(condition_string, condition_values)
-    join_sql = ActiveRecord::Base.send(
+    join_sql = ApplicationRecord.send(
       :sanitize_sql_array,
       [
         "JOIN (
@@ -240,12 +240,12 @@ class DocumentSearch
   end
 
   def self.refresh_documents
-    ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
+    ApplicationRecord.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
     DocumentSearch.increment_cache_iterator
   end
 
   def self.refresh_citations_and_documents
-    ActiveRecord::Base.connection.execute('REFRESH MATERIALIZED VIEW document_citations_mview')
+    ApplicationRecord.connection.execute('REFRESH MATERIALIZED VIEW document_citations_mview')
     refresh_documents
   end
 

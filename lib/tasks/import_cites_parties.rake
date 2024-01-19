@@ -18,6 +18,6 @@ namespace :import do
             WHERE designations.name = '#{Designation::CITES}'
       ) AS subquery
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 end

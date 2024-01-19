@@ -32,7 +32,7 @@
 
 require 'digest/sha1'
 require 'csv'
-class TradeRestriction < ActiveRecord::Base
+class TradeRestriction < ApplicationRecord
   track_who_does_it
   # Migrated to controller (Strong Parameters)
   # attr_accessible :end_date, :geo_entity_id, :is_current,

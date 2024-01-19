@@ -22,7 +22,7 @@
 #  updated_by_id       :integer
 #
 
-class Annotation < ActiveRecord::Base
+class Annotation < ApplicationRecord
   track_who_does_it
 
   # Migrated to controller (Strong Parameters)

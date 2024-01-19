@@ -23,7 +23,7 @@
 #  elib_legacy_id       :integer
 #
 
-class Event < ActiveRecord::Base
+class Event < ApplicationRecord
   track_who_does_it
 
   # Migrated to controller (Strong Parameters)

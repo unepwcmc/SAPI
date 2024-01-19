@@ -9,7 +9,7 @@
 #  updated_at     :datetime         not null
 #
 
-class Instrument < ActiveRecord::Base
+class Instrument < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :designation_id, :name
 

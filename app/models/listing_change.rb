@@ -26,7 +26,7 @@
 #  internal_notes             :text
 #
 
-class ListingChange < ActiveRecord::Base
+class ListingChange < ApplicationRecord
   track_who_does_it
   # Migrated to controller (Strong Parameters)
   # attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,

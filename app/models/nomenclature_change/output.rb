@@ -32,7 +32,7 @@
 # Represents an output of a nomenclature change.
 # Outputs may be new taxon concepts, created as a result of the nomenclature
 # change.
-class NomenclatureChange::Output < ActiveRecord::Base
+class NomenclatureChange::Output < ApplicationRecord
   track_who_does_it
   attr_accessor :output_type # New taxon, Existing subspecies, Existing taxon
   # Migrated to controller (Strong Parameters)

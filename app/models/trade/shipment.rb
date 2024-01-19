@@ -31,7 +31,7 @@
 #  created_by_id                 :integer
 #
 
-class Trade::Shipment < ActiveRecord::Base
+class Trade::Shipment < ApplicationRecord
   track_who_does_it
   # Not sure where using this.
   # attr_accessible :annual_report_upload_id, :appendix,

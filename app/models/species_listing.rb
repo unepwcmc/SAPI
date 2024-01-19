@@ -10,7 +10,7 @@
 #  updated_at     :datetime         not null
 #
 
-class SpeciesListing < ActiveRecord::Base
+class SpeciesListing < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :designation_id, :name, :abbreviation
 

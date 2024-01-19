@@ -15,7 +15,7 @@
 #  is_strict         :boolean          default(FALSE), not null
 #
 
-class Trade::ValidationRule < ActiveRecord::Base
+class Trade::ValidationRule < ApplicationRecord
   # Used by seed.
   # attr_accessible :column_names, :run_order, :is_primary, :scope, :is_strict
   serialize :scope, ActiveRecord::Coders::NestedHstore

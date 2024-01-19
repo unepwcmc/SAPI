@@ -14,7 +14,7 @@
 #  accepted_name_id :integer
 #
 
-class IucnMapping < ActiveRecord::Base
+class IucnMapping < ApplicationRecord
   # Used by IucnMappingManager
   # attr_accessible :iucn_author, :iucn_category, :iucn_taxon_id,
   #   :iucn_taxon_name, :taxon_concept_id, :details, :accepted_name_id

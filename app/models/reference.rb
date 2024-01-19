@@ -16,7 +16,7 @@
 #  created_by_id :integer
 #
 
-class Reference < ActiveRecord::Base
+class Reference < ApplicationRecord
   track_who_does_it
   # Migrated to controller (Strong Parameters)
   # attr_accessible :citation, :created_by_id, :updated_by_id

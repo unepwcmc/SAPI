@@ -8,7 +8,7 @@
 #  updated_at :datetime         not null
 #
 
-class Taxonomy < ActiveRecord::Base
+class Taxonomy < ApplicationRecord
   include Dictionary
   build_dictionary :cites_eu, :cms
 

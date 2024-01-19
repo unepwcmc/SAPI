@@ -13,7 +13,7 @@
 #  updated_by_id     :integer
 #
 
-class ListingDistribution < ActiveRecord::Base
+class ListingDistribution < ApplicationRecord
   track_who_does_it
   # Migrated to controller (Strong Parameters)
   # attr_accessible :geo_entity_id, :listing_change_id, :is_party

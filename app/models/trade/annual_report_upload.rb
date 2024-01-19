@@ -18,7 +18,7 @@
 #
 
 require 'csv_column_headers_validator'
-class Trade::AnnualReportUpload < ActiveRecord::Base
+class Trade::AnnualReportUpload < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
   track_who_does_it
   # Suppose use in controller, but controller using strong parameters...

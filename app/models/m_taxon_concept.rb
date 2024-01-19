@@ -104,7 +104,7 @@
 #  expiry                                   :datetime
 #
 
-class MTaxonConcept < ActiveRecord::Base
+class MTaxonConcept < ApplicationRecord
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 
@@ -179,7 +179,7 @@ class MTaxonConcept < ActiveRecord::Base
     SELECT id FROM descendents
     ORDER BY rank_id ASC, full_name
     SQL
-    res = ActiveRecord::Base.connection.execute(query)
+    res = ApplicationRecord.connection.execute(query)
     res.ntuples.zero? ? [taxon_concept.to_i] : res.map(&:values).flatten << taxon_concept.to_i
   end
 

@@ -43,7 +43,7 @@ namespace :import do
 
       ) as subquery;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
     puts "#{TermTradeCodesPair.where(:trade_code_type => 'Purpose').count} terms and purpose codes pairs created"
   end
 
@@ -76,7 +76,7 @@ namespace :import do
 
       ) AS subquery;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
     puts "#{TermTradeCodesPair.where(:trade_code_type => 'Unit').count} terms and unit codes pairs created"
   end
 
@@ -110,7 +110,7 @@ namespace :import do
 
       ) AS subquery;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
     puts "#{Trade::TaxonConceptTermPair.count} terms and unit codes pairs created"
   end
 

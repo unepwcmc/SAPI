@@ -8,7 +8,7 @@
 #  updated_at :datetime         not null
 #
 
-class GeoEntityType < ActiveRecord::Base
+class GeoEntityType < ApplicationRecord
   # Look like the only place create GeoEntityType is lib/tasks/import_trade_shipments.rake
   # attr_accessible :name
 

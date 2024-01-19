@@ -23,7 +23,7 @@
 #  is_cites_authority     :boolean          default(FALSE), not null
 #
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include SentientUser
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable

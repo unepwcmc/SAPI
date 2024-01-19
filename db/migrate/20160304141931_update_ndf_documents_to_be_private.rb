@@ -1,6 +1,6 @@
 class UpdateNdfDocumentsToBePrivate < ActiveRecord::Migration
   def change
-    ActiveRecord::Base.connection.execute(
+    ApplicationRecord.connection.execute(
       <<-SQL
         UPDATE documents
         SET is_public = false

@@ -37,7 +37,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
   end
 
   def query
-    ActiveRecord::Base.connection.execute(query_sql(:limit => true))
+    ApplicationRecord.connection.execute(query_sql(:limit => true))
   end
 
   def csv_column_headers
@@ -86,7 +86,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
       ENCODING 'UTF8'
       CSV HEADER;
     PSQL
-    ActiveRecord::Base.send(:sanitize_sql_array, [sql, @file_name])
+    ApplicationRecord.send(:sanitize_sql_array, [sql, @file_name])
   end
 
   def to_csv

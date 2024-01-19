@@ -19,8 +19,8 @@ class QuotasCopyWorker
           :url
         )
       SQL
-    ActiveRecord::Base.connection.execute(
-      ActiveRecord::Base.send(:sanitize_sql_array, [
+    ApplicationRecord.connection.execute(
+      ApplicationRecord.send(:sanitize_sql_array, [
         sql,
         :from_year => options["from_year"],
         :start_date => Date.parse(options["start_date"]),

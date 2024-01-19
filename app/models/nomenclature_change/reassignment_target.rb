@@ -11,7 +11,7 @@
 #  updated_at                          :datetime         not null
 #
 
-class NomenclatureChange::ReassignmentTarget < ActiveRecord::Base
+class NomenclatureChange::ReassignmentTarget < ApplicationRecord
   track_who_does_it
   # Relationship table
   # attr_accessible :nomenclature_change_output_id,

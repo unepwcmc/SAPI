@@ -8,7 +8,7 @@
 #  updated_at      :datetime         not null
 #
 
-class TaxonName < ActiveRecord::Base
+class TaxonName < ApplicationRecord
   # Used by seed and rake task.
   # attr_accessible :basionym_id, :scientific_name
 

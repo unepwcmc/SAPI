@@ -3,7 +3,7 @@ class UpdateTaxonomyWorker
 
   def perform
     puts "Procedure: taxonomy"
-    ActiveRecord::Base.connection.execute(
+    ApplicationRecord.connection.execute(
       "SELECT * FROM rebuild_taxonomy()"
     )
 

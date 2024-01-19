@@ -11,7 +11,7 @@
 #  updated_by_id        :integer
 #
 
-class TradeRestrictionTerm < ActiveRecord::Base
+class TradeRestrictionTerm < ApplicationRecord
   track_who_does_it
   # Relationship model between TradeCode(term) and TradeRestriction
   # attr_accessible :term_id, :trade_restriction_id

@@ -11,7 +11,7 @@
 #  updated_by_id :integer
 #
 
-class CommonName < ActiveRecord::Base
+class CommonName < ApplicationRecord
   track_who_does_it
   # Used by app/models/taxon_common.rb
   # attr_accessible :language_id, :name,

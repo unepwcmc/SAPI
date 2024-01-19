@@ -27,7 +27,7 @@ class Elibrary::NonCitesTaxaImporter
   end
 
   def run_preparatory_queries
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET parent_id = NULL WHERE parent_id = '#N/A'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET parent_id = NULL WHERE parent_id = '#N/A'")
   end
 
   def run_queries
@@ -47,7 +47,7 @@ class Elibrary::NonCitesTaxaImporter
         NOW()
       FROM taxon_names_to_insert
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     sql = <<-SQL
       WITH rows_to_insert AS (
@@ -67,7 +67,7 @@ class Elibrary::NonCitesTaxaImporter
       JOIN taxon_names
       ON normalised_name = taxon_names.scientific_name
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   def all_rows_sql
