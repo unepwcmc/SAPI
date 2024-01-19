@@ -32,7 +32,7 @@
 
 class TaxonConcept < ApplicationRecord
   track_who_does_it
-  has_paper_trail class_name: 'TaxonConceptVersion', on: :destroy,
+  has_paper_trail versions: { class_name: "TaxonConceptVersion" }, on: :destroy,
     meta: {
       taxon_concept_id: :id,
       taxonomy_name: :taxonomy_name,

@@ -47,7 +47,7 @@ describe Trade::Sandbox, :drops_tables => true do
     specify {
       sandbox_klass = Trade::SandboxTemplate.ar_klass(subject.table_name)
       subject.destroy
-      expect(ApplicationRecord.connection.table_exists?('trade_sandbox_1')).to be_falsey
+      expect(ApplicationRecord.connection.data_source_exists?('trade_sandbox_1')).to be_falsey
     }
   end
 
