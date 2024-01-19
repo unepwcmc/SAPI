@@ -31,7 +31,6 @@ Style/IndentationConsistency:
   EnforcedStyle: normal
   Exclude:
     - 'db/migrate/*'
-    - 'config/initializers/normalise_blank_values.rb'
 
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: symmetrical, new_line, same_line

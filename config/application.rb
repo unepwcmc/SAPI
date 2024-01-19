@@ -13,9 +13,12 @@ module SAPI
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # @see https://gist.github.com/maxivak/381f1e964923f1d469c8d39da8e2522f
+    # TODO: Rails 7.1 https://stackoverflow.com/a/77198784/556780
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
-    config.autoload_paths += %W(#{config.root}/lib/modules)
+    config.autoload_paths << Rails.root.join("lib", "modules")
+    config.eager_load_paths << Rails.root.join("lib", "modules")
 
     # Activate observers that should always be running.
     config.active_record.observers = :destroy_observer, :annotation_observer,
