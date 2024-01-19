@@ -70,7 +70,7 @@ class Trade::Sandbox
   private
 
   def create_target_table
-    unless Trade::SandboxTemplate.connection.table_exists? @table_name
+    unless Trade::SandboxTemplate.connection.data_source_exists? @table_name
       Thread.new do
         begin
           Trade::SandboxTemplate.connection.execute(
