@@ -49,6 +49,7 @@ gem 'groupdate', '5.2.4' # TODO: can upgrade after rails 5.2 and newer ruby 2.6
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
+# TODO: need Sidekiq 6 and Rails 6, before we can migrate worker to job, due to sidekiq_options (https://github.com/sidekiq/sidekiq/issues/4281)
 gem 'sidekiq', '5.2.10' # TODO, Ruby 2.7 need version 6.0.5 sidekiq
 gem 'sidekiq-status', '2.1.3' # TODO: upgrade to v3 when Sidekiq upgrade to 6
 gem 'sidekiq-unique-jobs', '7.1.31' # TODO: can upgrade to latest when sidekiq upgrade to 7
