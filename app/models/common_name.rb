@@ -32,7 +32,6 @@ class CommonName < ApplicationRecord
   # might need to be reviewed: TODO
   def convention_language
     value = self[:convention_language]
-    ActiveRecord::Type::Boolean.new.type_cast_from_database(value) # Rails 4
-    # ActiveRecord::Type::Boolean.new.cast(value) # TODO Rails 5
+    ActiveRecord::Type::Boolean.new.cast(value)
   end
 end
