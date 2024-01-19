@@ -49,9 +49,9 @@ gem 'groupdate', '5.2.4' # TODO: can upgrade after rails 5.2 and newer ruby 2.6
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
-gem 'sidekiq', '4.2.10' # TODO, Ruby 2.7 need version 6.0.5 sidekiq
-gem 'sidekiq-status', '1.1.4' # TODO: latest is 3.0.3 @ 2023
-gem 'sidekiq-unique-jobs', '4.0.18' # TODO: latest is 8.0.5 @ 2023
+gem 'sidekiq', '5.2.10' # TODO, Ruby 2.7 need version 6.0.5 sidekiq
+gem 'sidekiq-status', '2.1.3' # TODO: upgrade to v3 when Sidekiq upgrade to 6
+gem 'sidekiq-unique-jobs', '7.1.31' # TODO: can upgrade to latest when sidekiq upgrade to 7
 gem 'redis-rails', '5.0.2' # TODO: latest, may remove this Gem when upgrade to Rails 5.2. (https://github.com/redis-store/redis-rails/tree/master#a-quick-note-about-rails-52)
 
 gem 'whenever', '0.11.0', :require => false # TODO: latest version 1.0 @ 2019. Should migrate to sidekiq-cron.
@@ -81,9 +81,6 @@ gem 'strong_migrations', '0.7.9' # TODO: should upgrade when we upgrade to rails
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder', '~> 2.5'
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
 
 gem 'rest-client', '1.8.0', require: false # TODO, should upgrade for better compatibility with newer Ruby but breaking change. Seems not many place using it, worth a try.
 
