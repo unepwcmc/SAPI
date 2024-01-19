@@ -1,12 +1,26 @@
 source 'https://rubygems.org'
 
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
 ruby '2.5.9'
 
-# gem 'rails', '4.2.11.3'
-gem 'rails', '5.0.7.2'
-
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 5.0.7', '>= 5.0.7.2'
+# Use sqlite3 as the database for Active Record
+# gem 'sqlite3'
+# Use Puma as the app server
+gem 'puma', '~> 3.0'
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 5.0'
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 1.3.0'
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 4.2'
+# See https://github.com/rails/execjs#readme for more supported runtimes
+# gem 'therubyracer', platforms: :ruby
 
 gem 'actionpack-action_caching', '~> 1.2', '>= 1.2.2' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
 gem 'actionpack-page_caching', '1.1.1' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this. # TODO, can update after upgrade to rails 5
@@ -58,27 +72,17 @@ gem 'wkhtmltopdf-binary', '~> 0.12.6.6'
 gem 'aws-sdk', '~> 2' # TODO: v2 Deprecated, need to upgrade to v3
 gem 'rails-observers', '~> 0.1.5' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
 
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
-
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
 
 gem 'strong_migrations', '~> 0.3.1' # TODO: should upgrade when we upgrade to rails 5
 
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
+# Use ActiveModel has_secure_password
+# gem 'bcrypt', '~> 3.1.7'
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
+# gem 'jbuilder', '~> 2.5'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
@@ -86,14 +90,14 @@ gem 'strong_migrations', '~> 0.3.1' # TODO: should upgrade when we upgrade to ra
 gem 'rest-client', '1.8.0', require: false # TODO, should upgrade for better compatibility with newer Ruby but breaking change. Seems not many place using it, worth a try.
 
 group :development do
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
-  gem "guard-livereload", '1.1.3'
-  gem "rack-livereload", '0.3.11'
-  gem "guard-bundler", '1.0.0'
-  gem 'annotate', "2.5.0"
+  # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
+  gem 'web-console', '>= 3.3.0'
+  gem 'listen', '~> 3.0.5'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 	gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
+
+  gem 'annotate', "2.5.0"
   # gem 'sextant'
   # Deploy with Capistrano
   gem 'capistrano', '3.11.0', require: false
@@ -107,7 +111,6 @@ group :development do
   gem 'slackistrano', '0.1.9', require: false
   gem 'brightbox', '2.3.9'
   gem 'rack-cors', '0.3.0' ,:require => 'rack/cors' # TODO: remove when upgrade Rails.
-  gem 'webrick', '1.3.1'
   gem 'jslint_on_rails', '1.1.1'
   gem 'rubocop', '0.40.0', require: false
   gem 'rbnacl', '4.0.2'
