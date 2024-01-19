@@ -1,4 +1,4 @@
-class GetIsPublicFromApiDocumentsView < ActiveRecord::Migration
+class GetIsPublicFromApiDocumentsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS api_documents_view"
     execute "CREATE VIEW api_documents_view AS #{view_sql('20150730153305', 'api_documents_view')}"

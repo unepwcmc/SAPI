@@ -1,4 +1,4 @@
-class FilterTaxonConceptsByNameStatusInDocumentsView < ActiveRecord::Migration
+class FilterTaxonConceptsByNameStatusInDocumentsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP MATERIALIZED VIEW IF EXISTS document_citations_mview CASCADE"
     execute "DROP VIEW IF EXISTS document_citations_view"

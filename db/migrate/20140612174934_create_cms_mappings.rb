@@ -1,4 +1,4 @@
-class CreateCmsMappings < ActiveRecord::Migration
+class CreateCmsMappings < ActiveRecord::Migration[4.2]
   def change
     create_table :cms_mappings do |t|
       t.integer :taxon_concept_id

@@ -1,4 +1,4 @@
-class AddAncestorsNameToTradeShipmentsView < ActiveRecord::Migration
+class AddAncestorsNameToTradeShipmentsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS trade_shipments_with_taxa_view"
     execute "CREATE VIEW trade_shipments_with_taxa_view AS #{view_sql('20150121111134', 'trade_shipments_with_taxa_view')}"

@@ -1,4 +1,4 @@
-class TimestampViewDefinitions < ActiveRecord::Migration
+class TimestampViewDefinitions < ActiveRecord::Migration[4.2]
 
   def change
     execute function_sql('20141223141125', 'array_agg_not_null')

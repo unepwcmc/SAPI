@@ -1,4 +1,4 @@
-class CreateDocumentTags < ActiveRecord::Migration
+class CreateDocumentTags < ActiveRecord::Migration[4.2]
   def change
     create_table :document_tags do |t|
       t.string :name

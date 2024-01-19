@@ -1,4 +1,4 @@
-class AddTrigramIndexToTradePermitNumbers < ActiveRecord::Migration
+class AddTrigramIndexToTradePermitNumbers < ActiveRecord::Migration[4.2]
   def up
     # Index to optimise LIKE queries
     if Rails.env.staging? or Rails.env.production?

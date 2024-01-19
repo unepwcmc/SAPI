@@ -1,4 +1,4 @@
-class ChangeOfPlanRemoveInternalNotesFromTaxonConcepts < ActiveRecord::Migration
+class ChangeOfPlanRemoveInternalNotesFromTaxonConcepts < ActiveRecord::Migration[4.2]
   def up
     execute 'DROP VIEW IF EXISTS orphaned_taxon_concepts_view'
     execute 'DROP VIEW IF EXISTS synonyms_and_trade_names_view'

@@ -1,4 +1,4 @@
-class CreateTradeValidationErrors < ActiveRecord::Migration
+class CreateTradeValidationErrors < ActiveRecord::Migration[4.2]
   def up
     create_table :trade_validation_errors do |t|
       t.references :annual_report_upload, null: false

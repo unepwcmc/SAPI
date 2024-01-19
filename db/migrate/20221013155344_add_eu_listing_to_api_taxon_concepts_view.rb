@@ -1,4 +1,4 @@
-class AddEuListingToApiTaxonConceptsView < ActiveRecord::Migration
+class AddEuListingToApiTaxonConceptsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS api_taxon_concepts_view CASCADE"
     execute "CREATE VIEW api_taxon_concepts_view AS #{view_sql('20221013155232', 'api_taxon_concepts_view')}"

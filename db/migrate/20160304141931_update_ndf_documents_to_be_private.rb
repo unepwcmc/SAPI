@@ -1,4 +1,4 @@
-class UpdateNdfDocumentsToBePrivate < ActiveRecord::Migration
+class UpdateNdfDocumentsToBePrivate < ActiveRecord::Migration[4.2]
   def change
     ApplicationRecord.connection.execute(
       <<-SQL

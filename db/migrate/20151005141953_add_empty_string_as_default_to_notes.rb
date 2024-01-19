@@ -1,4 +1,4 @@
-class AddEmptyStringAsDefaultToNotes < ActiveRecord::Migration
+class AddEmptyStringAsDefaultToNotes < ActiveRecord::Migration[4.2]
   def change
     [:en, :es, :fr].each do |lng|
       change_column :nomenclature_change_outputs, :"note_#{lng}", :text, default: ''

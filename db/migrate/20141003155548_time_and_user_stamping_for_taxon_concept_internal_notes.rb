@@ -1,4 +1,4 @@
-class TimeAndUserStampingForTaxonConceptInternalNotes < ActiveRecord::Migration
+class TimeAndUserStampingForTaxonConceptInternalNotes < ActiveRecord::Migration[4.2]
   def change
     add_column :taxon_concepts, :internal_general_note_updated_at, :datetime
     add_column :taxon_concepts, :internal_nomenclature_note_updated_at, :datetime

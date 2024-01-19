@@ -1,4 +1,4 @@
-class AddOutputFieldsForNewNameWizard < ActiveRecord::Migration
+class AddOutputFieldsForNewNameWizard < ActiveRecord::Migration[4.2]
   def change
     add_column :nomenclature_change_outputs, :accepted_taxon_ids, "INTEGER[]"
     add_column :nomenclature_change_outputs, :hybrid_parent_id, :integer

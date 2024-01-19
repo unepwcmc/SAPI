@@ -1,4 +1,4 @@
-class CreateNomenclatureChangeReassignments < ActiveRecord::Migration
+class CreateNomenclatureChangeReassignments < ActiveRecord::Migration[4.2]
   def change
     create_table :nomenclature_change_reassignments do |t|
       t.integer :nomenclature_change_input_id, :null => false
