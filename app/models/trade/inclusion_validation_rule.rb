@@ -212,19 +212,18 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # The valid_values_view should have the same column names and data types as
   # the sandbox columns specified in column_names.
   def matching_records_arel(table_name)
-    s = Arel::Table.new("#{table_name}_view")
-    v = Arel::Table.new(valid_values_view)
-    arel_nodes = column_names_for_matching.map do |c|
-      if required_column_names.include? c
-        v[c].eq(Arel::Nodes::Quoted.new(s[c]))
+    table_s = Arel::Table.new("#{table_name}_view")
+    table_v = Arel::Table.new(valid_values_view)
+    arel_nodes = column_names_for_matching.map do |column_name|
+      if required_column_names.include?(column_name)
+        table_v[column_name].eq(table_s[column_name])
       else
         # if optional, check if NULL is allowed for this particular combination
         # e.g. unit code can be blank only if paired with certain terms
-        v[c].eq(Arel::Nodes::Quoted.new(s[c])).or(v[c].eq(nil).and(s[c].eq(nil)))
+        table_v[column_name].eq(table_s[column_name]).or(table_v[column_name].eq(nil).and(table_s[column_name].eq(nil)))
       end
     end
-    valid_values = s.project(s[Arel.star]).join(v).on(arel_nodes.inject(&:and))
-    scoped_records_arel(s).except(valid_values)
+    valid_values = table_s.project(table_s[Arel.star]).join(table_v).on(arel_nodes.inject(&:and))
+    scoped_records_arel(table_s).except(valid_values)
   end
-
 end
