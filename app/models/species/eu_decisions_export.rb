@@ -97,8 +97,8 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
   # Produces list of excluded decision types.
   # e.g. SUSPENSIONS,SRG_REFERRAL
   def excluded_decision_types
-    @excluded_decision_types ||= @decision_types.map do |key, value|
+    @excluded_decision_types ||= @decision_types&.map do |key, value|
       value == 'false' ? key.singularize.underscore.upcase : nil
-    end.compact
+    end&.compact || []
   end
 end
