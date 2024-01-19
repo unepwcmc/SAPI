@@ -19,8 +19,6 @@ class Distribution < ApplicationRecord
   #   :references_attributes, :internal_notes, :created_by_id, :updated_by_id
   acts_as_taggable
 
-  normalise_blank_values
-
   belongs_to :geo_entity
   belongs_to :taxon_concept
   has_many :distribution_references, :dependent => :destroy
@@ -32,6 +30,7 @@ class Distribution < ApplicationRecord
   accepts_nested_attributes_for :references, :allow_destroy => true
 
   validates :taxon_concept_id, :uniqueness => { :scope => :geo_entity_id, :message => 'already has this distribution' }
+  before_save :normalise_blank_values
 
   def add_existing_references(ids)
     reference_ids = ids.split(",")
@@ -45,6 +44,14 @@ class Distribution < ApplicationRecord
             :reference_id => reference.id
           })
       end
+    end
+  end
+
+  private
+
+  def normalise_blank_values
+    attributes.each do |column, value|
+      self[column].present? || self[column] = nil
     end
   end
 end
