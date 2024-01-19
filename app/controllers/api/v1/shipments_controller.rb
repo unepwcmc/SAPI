@@ -3,7 +3,7 @@ class Api::V1::ShipmentsController < ApplicationController
 
   before_action :authenticate
   before_action :load_grouping_type
-  after_filter only: [:grouped_query, :country_query] do
+  after_action only: [:grouped_query, :country_query] do
     set_pagination_headers(:data, :grouped_params)
   end
 
