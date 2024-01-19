@@ -23,7 +23,7 @@ gem 'coffee-rails', '~> 4.2'
 # gem 'therubyracer', platforms: :ruby
 
 gem 'actionpack-action_caching', '~> 1.2', '>= 1.2.2' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
-gem 'actionpack-page_caching', '1.1.1' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this. # TODO, can update after upgrade to rails 5
+gem 'actionpack-page_caching', '~> 1.2', '>= 1.2.4' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
 gem 'active_model_serializers', '0.8.4' # Deprecated
 gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
 gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
@@ -35,17 +35,16 @@ gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New ver
 gem 'inherited_resources', '1.9.0' # Deprecated (https://github.com/activeadmin/inherited_resources#notice) # TODO: need upgrade when upgrade to Rails 6
 gem 'mobility', '~> 1.2', '>= 1.2.9'
 gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
-gem 'cancancan', '1.17.0' # TODO, can upgrade to 2.0 after Rails 5
-gem 'ahoy_matey', '2.2.1' # TODO: latest 5.0.2. Can't upgrade to 3.0 until upgrade to Rails 5
+gem 'cancancan', '2.3.0' # TODO, can upgrade to 3.0 after Rails 6
+gem 'ahoy_matey', '3.3.0' # TODO: latest 5.0.2. Can't upgrade to 4.0 until upgrade to Rails 5.2
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
-gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
 
 # TODO: starting from v1.4, it break our test due to redirection changes:
 #   rspec ./spec/controllers/admin/nomenclature_changes/lump_controller_spec.rb:147
 #   rspec ./spec/controllers/admin/nomenclature_changes/split_controller_spec.rb:191
 gem 'wicked', '1.3.4'
 
-gem 'groupdate', '4.1.2' # TODO: can upgrade after rails 5 and newer ruby
+gem 'groupdate', '5.2.4' # TODO: can upgrade after rails 5.2 and newer ruby 2.6
 
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
@@ -61,8 +60,8 @@ gem 'httparty', '~> 0.21.0'
 # gem 'sprockets', '2.12.5' # upgrading to 3 breaks handlebars/tilt
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
-gem 'acts-as-taggable-on', '5.0.0' # TODO: latest v10 @ 2023. Need upgrade after upgrade to Rails 5.
-gem 'carrierwave', '1.3.1' # TODO: latest is 3.0.5 @ 2023. can upgrade to v2 after Rails 5
+gem 'acts-as-taggable-on', '8.1.0' # TODO: latest v10 @ 2023. Can upgrade after upgrade to Rails 6.
+gem 'carrierwave', '2.2.5' # TODO: latest is 3.0.5 @ 2023. can upgrade to v3 after Rails 6
 
 # PDF
 gem 'prawn', '0.13.2'
@@ -75,8 +74,7 @@ gem 'rails-observers', '~> 0.1.5' # A feature that removed from core in Rails 4.
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
 
-gem 'strong_migrations', '~> 0.3.1' # TODO: should upgrade when we upgrade to rails 5
-
+gem 'strong_migrations', '0.7.9' # TODO: should upgrade when we upgrade to rails 5.2
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
