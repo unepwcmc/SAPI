@@ -30,7 +30,7 @@ describe Admin::ReferencesController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      post :create, params: { reference: FactoryGirl.attributes_for(:reference) }, xhr: true
+      post :create, params: { reference: FactoryBot.attributes_for(:reference) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do

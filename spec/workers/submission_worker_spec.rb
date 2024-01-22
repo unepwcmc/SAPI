@@ -31,7 +31,7 @@ describe SubmissionWorker do
                        :name => 'Portugal',
                        :iso_code2 => 'PT'
                       )
-    @submitter = FactoryGirl.create(:user, role: User::MANAGER)
+    @submitter = FactoryBot.create(:user, role: User::MANAGER)
     allow(Trade::ChangelogCsvGenerator).to receive(:call).and_return(Tempfile.new('changelog.csv'))
     allow_any_instance_of(SubmissionWorker).to receive(:upload_on_S3)
     allow_any_instance_of(NotificationMailer).to receive(:mail).and_return(EmailMessageStub.new())

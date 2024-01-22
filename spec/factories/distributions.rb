@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :geo_relationship_type do
     sequence(:name) { |n| "CONTAINS#{n}" }

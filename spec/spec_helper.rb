@@ -50,7 +50,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, :type => :controller
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include JsonSpec::Helpers
   config.include SapiSpec::Helpers
 
@@ -98,7 +98,7 @@ RSpec.configure do |config|
 end
 
 def build_attributes(*args)
-  FactoryGirl.build(*args).attributes.delete_if do |k, v|
+  FactoryBot.build(*args).attributes.delete_if do |k, v|
     ["id", "created_at", "updated_at", "touched_at"].member?(k)
   end
 end

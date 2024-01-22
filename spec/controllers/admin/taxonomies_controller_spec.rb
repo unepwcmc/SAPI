@@ -30,7 +30,7 @@ describe Admin::TaxonomiesController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      post :create, params: { taxonomy: FactoryGirl.attributes_for(:taxonomy) }, xhr: true
+      post :create, params: { taxonomy: FactoryBot.attributes_for(:taxonomy) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
