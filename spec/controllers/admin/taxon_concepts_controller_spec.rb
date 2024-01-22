@@ -35,30 +35,32 @@ describe Admin::TaxonConceptsController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create,
-        taxon_concept: {
-          name_status: 'A',
-          taxonomy_id: cites_eu.id,
-          rank_id: create(:rank, name: Rank::GENUS),
-          scientific_name: 'Canis',
-          parent_id: create_cites_eu_family
+      post :create, xhr: true,
+        params: {
+          taxon_concept: {
+            name_status: 'A',
+            taxonomy_id: cites_eu.id,
+            rank_id: create(:rank, name: Rank::GENUS),
+            scientific_name: 'Canis',
+            parent_id: create_cites_eu_family
+          }
         }
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, taxon_concept: { dummy: 'test'}
+      post :create, params: { taxon_concept: { dummy: 'test'} }, xhr: true
       expect(response).to render_template("new")
     end
     it "renders new_synonym when not successful S" do
-      xhr :post, :create, taxon_concept: { name_status: 'S' }
+      post :create, params: { taxon_concept: { name_status: 'S' } }, xhr: true
       expect(response).to render_template("new_synonym")
     end
     it "renders new_hybrid when not successful H" do
-      xhr :post, :create, taxon_concept: { name_status: 'H' }
+      post :create, params: { taxon_concept: { name_status: 'H' } }, xhr: true
       expect(response).to render_template("new_hybrid")
     end
     it "renders new_synonym when not successful N" do
-      xhr :post, :create, taxon_concept: { name_status: 'N' }
+      post :create, params: { taxon_concept: { name_status: 'N' } }, xhr: true
       expect(response).to render_template("new_n_name")
     end
   end
@@ -67,13 +69,13 @@ describe Admin::TaxonConceptsController do
     let(:taxon_concept) { create(:taxon_concept) }
     context "when JSON" do
       it "responds with 200 when successful" do
-        xhr :put, :update, :format => 'json', :id => taxon_concept.id,
-          :taxon_concept => { dummy: 'test' }
+        put :update, :format => 'json', params: { :id => taxon_concept.id,
+          :taxon_concept => { dummy: 'test' } }, xhr: true
         expect(response).to be_success
       end
       it "responds with json error when not successful" do
-        xhr :put, :update, :format => 'json', :id => taxon_concept.id,
-          :taxon_concept => { :taxonomy_id => nil }
+        put :update, :format => 'json', params: { :id => taxon_concept.id,
+          :taxon_concept => { :taxonomy_id => nil } }, xhr: true
         expect(JSON.parse(response.body)).to include('errors')
       end
     end
@@ -131,8 +133,8 @@ describe Admin::TaxonConceptsController do
       )
     }
     it "returns properly formatted json" do
-      xhr :get, :autocomplete, :format => 'json',
-        :search_params => { :scientific_name => 'AAA' }
+      get :autocomplete, :format => 'json',
+        params: { :search_params => { :scientific_name => 'AAA' } }, xhr: true
       expect(response.body).to have_json_size(1)
       expect(parse_json(response.body, "0/full_name")).to eq('Aaa')
     end

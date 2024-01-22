@@ -51,19 +51,21 @@ describe Trade::AnnualReportUploadsController do
 
   describe "POST create" do
     it "should return success in jQuery File Upload way" do
-      xhr :post, :create,
+      post :create, params: {
         :annual_report_upload => {
           :point_of_view => 'E', :trading_country_id => france.id,
           :csv_source_file => exporter_csv
-        }, :format => 'json'
+        }
+      }, xhr: true, :format => 'json'
       expect(parse_json(response.body, "files/0")['id']).not_to be_blank
     end
     it "should return error in jQuery File Upload way" do
-      xhr :post, :create,
+      post :create, params: {
         :annual_report_upload => {
           :point_of_view => 'I', :trading_country_id => france.id,
           :csv_source_file => exporter_csv
-        }, :format => 'json'
+        }
+      }, :format => 'json', xhr: true
       expect(parse_json(response.body, "files/0")['id']).to be_blank
     end
   end

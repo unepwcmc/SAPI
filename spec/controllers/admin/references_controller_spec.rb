@@ -21,7 +21,7 @@ describe Admin::ReferencesController do
     end
     describe "XHR GET index JSON" do
       it "renders json for dropdown" do
-        xhr :get, :index, :format => 'json'
+        get :index, :format => 'json', xhr: true
         expect(response.body).to have_json_size(2)
         expect(parse_json(response.body, "0/text")).to eq('AA')
       end
@@ -30,11 +30,11 @@ describe Admin::ReferencesController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, reference: FactoryGirl.attributes_for(:reference)
+      post :create, params: { reference: FactoryGirl.attributes_for(:reference) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, reference: { :citation => nil }
+      post :create, params: { reference: { :citation => nil } }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -42,11 +42,11 @@ describe Admin::ReferencesController do
   describe "XHR PUT update JSON" do
     let(:reference) { create(:reference) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => reference.id, :reference => { :citation => 'ZZ' }
+      put :update, :format => 'json', params: { :id => reference.id, :reference => { :citation => 'ZZ' } }, xhr: true
       expect(response).to be_success
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => reference.id, :reference => { :citation => nil }
+      put :update, :format => 'json', params: { :id => reference.id, :reference => { :citation => nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end

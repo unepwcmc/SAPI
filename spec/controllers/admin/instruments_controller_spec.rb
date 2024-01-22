@@ -20,7 +20,7 @@ describe Admin::InstrumentsController do
     end
     describe "XHR GET index JSON" do
       it "renders json for dropdown" do
-        xhr :get, :index, :format => 'json'
+        get :index, :format => 'json', xhr: true
         expect(response.body).to have_json_size(2)
         expect(parse_json(response.body, "0/text")).to eq('AA')
       end
@@ -30,11 +30,11 @@ describe Admin::InstrumentsController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, instrument: build_attributes(:instrument)
+      post :create, params: { instrument: build_attributes(:instrument) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, instrument: { dummy: 'test' }
+      post :create, params: { instrument: { dummy: 'test' } }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -42,11 +42,11 @@ describe Admin::InstrumentsController do
   describe "XHR PUT update" do
     let(:instrument) { create(:instrument) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => instrument.id, :instrument => { :name => 'ZZ' }
+      put :update, :format => 'json', params: { :id => instrument.id, :instrument => { :name => 'ZZ' } }, xhr: true
       expect(response).to be_success
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => instrument.id, :instrument => { :name => nil }
+      put :update, :format => 'json', params: { :id => instrument.id, :instrument => { :name => nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
