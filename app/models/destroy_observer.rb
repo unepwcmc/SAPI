@@ -12,7 +12,7 @@ class DestroyObserver < ActiveRecord::Observer
         msg << " (dependent objects present: #{model.dependent_objects.join(', ')})"
       end
       model.errors.add(:base, msg)
-      return false
+      throw :abort
     end
   end
 end
