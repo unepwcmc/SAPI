@@ -68,7 +68,7 @@ describe Trade::SandboxTemplate, :drops_tables => true do
         :validation_error,
         annual_report_upload_id: annual_report_upload.id,
         validation_rule_id: validation_rule.id,
-        matching_criteria: "{\"taxon_name\": \"Caniis lupus\"}",
+        matching_criteria: { "taxon_name": "Caniis lupus" },
         is_ignored: false,
         is_primary: true,
         error_message: "taxon_name Caniis lupus is invalid",
