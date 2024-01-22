@@ -54,11 +54,4 @@ class Distribution < ApplicationRecord
       self[column].present? || self[column] = nil
     end
   end
-
-  # `ignored_attributes` is used by ComparisonAttributes when identifying
-  # duplicate records. Attributes in this list won't be considered when
-  # determining if the record is a duplicate.
-  def self.ignored_attributes
-    super() + [:tag_list]
-  end
 end
