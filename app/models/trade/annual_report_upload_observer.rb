@@ -5,6 +5,7 @@ class Trade::AnnualReportUploadObserver < ActiveRecord::Observer
   end
 
   def before_destroy(annual_report_upload)
-    annual_report_upload.sandbox && annual_report_upload.sandbox.destroy
+    success = annual_report_upload.sandbox && annual_report_upload.sandbox.destroy
+    throw(:abort) unless success
   end
 end

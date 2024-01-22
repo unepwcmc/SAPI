@@ -42,7 +42,7 @@ class CitesTc < Event
   def check_for_documents
     if documents.present?
       errors.add(:base, "failed. Please delete the associated documents before destroying this event.")
-      return false
+      throw :abort
     end
   end
 
