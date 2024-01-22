@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :taxon_concept, :aliases => [:other_taxon_concept] do
     taxonomy
     rank

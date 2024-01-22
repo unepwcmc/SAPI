@@ -34,7 +34,7 @@ describe Admin::EventsController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      post :create, params: { event: FactoryGirl.attributes_for(:event) }, xhr: true
+      post :create, params: { event: FactoryBot.attributes_for(:event) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do

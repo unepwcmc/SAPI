@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :species_listing do
     sequence(:name) { |n| "Appendix #{n}" }

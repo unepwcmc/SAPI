@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :taxon_relationship_type do
     sequence(:name) { |n| "INCLUDES#{n}" }
