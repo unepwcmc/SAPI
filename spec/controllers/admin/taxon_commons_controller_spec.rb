@@ -92,9 +92,7 @@ describe Admin::TaxonCommonsController do
       )
     }
     it "redirects after delete" do
-      delete :destroy,
-        :taxon_concept_id => @taxon_concept.id,
-        :id => taxon_common.id
+      delete :destroy, params: { :taxon_concept_id => @taxon_concept.id, :id => taxon_common.id }
       expect(response).to redirect_to(
         admin_taxon_concept_names_url(@taxon_concept)
       )
@@ -143,9 +141,7 @@ describe Admin::TaxonCommonsController do
       expect(@taxon_concept.reload.dependents_updated_at).not_to be_nil
       old_date = @taxon_concept.dependents_updated_at
 
-      delete :destroy,
-        :taxon_concept_id => @taxon_concept.id,
-        :id => @taxon_common.id
+      delete :destroy, params: { :taxon_concept_id => @taxon_concept.id, :id => @taxon_common.id }
 
       expect(@taxon_concept.reload.dependents_updated_at).not_to eq(old_date)
       expect(TaxonCommon.where(:id => @taxon_common.id).size).to eq(0)
@@ -164,8 +160,7 @@ describe Admin::TaxonCommonsController do
     describe "DELETE destroy" do
       it "fails to delete and redirects" do
         @request.env['HTTP_REFERER'] = admin_taxon_concept_names_url(@taxon_concept)
-        delete :destroy, :id => taxon_common.id,
-          :taxon_concept_id => @taxon_concept.id
+        delete :destroy, params: { :id => taxon_common.id, :taxon_concept_id => @taxon_concept.id }
         expect(response).to redirect_to(
           admin_taxon_concept_names_url(@taxon_concept)
         )

@@ -42,7 +42,7 @@ describe Admin::LanguagesController do
   describe "DELETE destroy" do
     let(:language) { create(:language) }
     it "redirects after delete" do
-      delete :destroy, :id => language.id
+      delete :destroy, params: { :id => language.id }
       expect(response).to redirect_to(admin_languages_url)
     end
   end

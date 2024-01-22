@@ -36,11 +36,11 @@ describe Checklist::GeoEntitiesController do
   }
   describe "GET index" do
     it "returns regions" do
-      get :index, :geo_entity_types_set => "1"
+      get :index, params: { :geo_entity_types_set => "1" }
       expect(response.body).to have_json_size(1)
     end
     it "returns countries & territories" do
-      get :index, :geo_entity_types_set => "2"
+      get :index, params: { :geo_entity_types_set => "2" }
       expect(response.body).to have_json_size(3)
     end
   end

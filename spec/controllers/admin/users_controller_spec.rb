@@ -51,7 +51,7 @@ describe Admin::UsersController do
   describe "DELETE destroy" do
     let(:user) { create(:user) }
     it "redirects after delete" do
-      delete :destroy, :id => user.id
+      delete :destroy, params: { :id => user.id }
       expect(response).to redirect_to(admin_users_url)
     end
   end

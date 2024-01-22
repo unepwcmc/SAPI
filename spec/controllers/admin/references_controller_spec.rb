@@ -54,7 +54,7 @@ describe Admin::ReferencesController do
   describe "DELETE destroy" do
     let(:reference) { create(:reference) }
     it "redirects after delete" do
-      delete :destroy, :id => reference.id
+      delete :destroy, params: { :id => reference.id }
       expect(response).to redirect_to(admin_references_url)
     end
   end

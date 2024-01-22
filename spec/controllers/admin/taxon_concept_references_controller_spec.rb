@@ -92,9 +92,7 @@ describe Admin::TaxonConceptReferencesController do
   describe "DELETE destroy" do
     let(:taxon_concept_reference) { create(:taxon_concept_reference, :taxon_concept_id => @taxon_concept.id, :reference_id => @reference.id) }
     it "redirects after delete" do
-      delete :destroy,
-        :taxon_concept_id => @taxon_concept.id,
-        :id => taxon_concept_reference.id
+      delete :destroy, params: { :taxon_concept_id => @taxon_concept.id, :id => taxon_concept_reference.id }
       expect(response).to redirect_to(
         admin_taxon_concept_taxon_concept_references_url(taxon_concept_reference.taxon_concept)
       )

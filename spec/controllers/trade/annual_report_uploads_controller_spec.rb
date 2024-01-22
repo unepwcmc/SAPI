@@ -37,14 +37,14 @@ describe Trade::AnnualReportUploadsController do
       expect(response.body).to have_json_size(2).at_path('annual_report_uploads')
     end
     it "should return annual report uploads in progress" do
-      get :index, is_done: 0, format: :json
+      get :index, params: { is_done: 0, format: :json }
       expect(response.body).to have_json_size(1).at_path('annual_report_uploads')
     end
   end
 
   describe "GET show" do
     it "should return success" do
-      get :show, id: annual_report_upload.id, format: :json
+      get :show, params: { id: annual_report_upload.id, format: :json }
       expect(response.body).to have_json_path('annual_report_upload')
     end
   end

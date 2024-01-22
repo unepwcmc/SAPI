@@ -42,7 +42,7 @@ describe Admin::TagsController do
   describe "DELETE destroy" do
     let(:preset_tag) { create(:preset_tag) }
     it "redirects after delete" do
-      delete :destroy, :id => preset_tag.id
+      delete :destroy, params: { :id => preset_tag.id }
       expect(response).to redirect_to(admin_tags_url)
     end
   end

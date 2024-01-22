@@ -45,7 +45,7 @@ describe Admin::ChangeTypesController do
   describe "DELETE destroy" do
     let(:change_type) { create(:change_type) }
     it "redirects after delete" do
-      delete :destroy, :id => change_type.id
+      delete :destroy, params: { :id => change_type.id }
       expect(response).to redirect_to(admin_change_types_url)
     end
   end

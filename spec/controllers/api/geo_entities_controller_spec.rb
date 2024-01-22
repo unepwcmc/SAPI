@@ -36,11 +36,11 @@ describe Api::V1::GeoEntitiesController do
   }
   describe "GET index" do
     it "returns regions" do
-      get :index, :geo_entity_types_set => "1"
+      get :index, params: { :geo_entity_types_set => "1" }
       expect(response.body).to have_json_size(1).at_path('geo_entities')
     end
     it "returns countries & territories" do
-      get :index, :geo_entity_types_set => "2"
+      get :index, params: { :geo_entity_types_set => "2" }
       expect(response.body).to have_json_size(3).at_path('geo_entities')
     end
   end

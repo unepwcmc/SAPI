@@ -70,7 +70,7 @@ describe Admin::EventsController do
   describe "DELETE destroy" do
     let(:event) { create(:event) }
     it "redirects after delete" do
-      delete :destroy, :id => event.id
+      delete :destroy, params: { :id => event.id }
       expect(response).to redirect_to(admin_events_url)
     end
   end

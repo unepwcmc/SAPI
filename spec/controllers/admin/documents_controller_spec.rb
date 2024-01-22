@@ -33,35 +33,35 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       context "search" do
         it "runs a full text search on title" do
-          get :index, 'title_query' => 'good'
+          get :index, params: { 'title_query' => 'good' }
           expect(assigns(:documents)).to eq([@document2])
         end
         it "retrieves documents inclusive of the given start date" do
-          get :index, "document_date_start" => '25/12/2014'
+          get :index, params: { "document_date_start" => '25/12/2014' }
           expect(assigns(:documents)).to eq([@public_document, @document2, @document1])
         end
         it "retrieves documents inclusive of the given end date" do
-          get :index, "document_date_end" => '01/01/2014'
+          get :index, params: { "document_date_end" => '01/01/2014' }
           expect(assigns(:documents)).to eq([@document3])
         end
         it "retrieves documents after the given date" do
-          get :index, "document_date_start" => '10/01/2014'
+          get :index, params: { "document_date_start" => '10/01/2014' }
           expect(assigns(:documents)).to eq([@public_document, @document2, @document1])
         end
         it "retrieves documents before the given date" do
-          get :index, "document_date_end" => '10/01/2014'
+          get :index, params: { "document_date_end" => '10/01/2014' }
           expect(assigns(:documents)).to eq([@document3])
         end
         it "ignores invalid dates" do
-          get :index, "document_date_start" => '34/24/12', "document_date_end" => '34/24/12'
+          get :index, params: { "document_date_start" => '34/24/12', "document_date_end" => '34/24/12' }
           expect(assigns(:documents)).to eq([@document3, @public_document, @document2, @document1])
         end
         it "retrieves documents for taxon concept" do
-          get :index, "taxon_concepts_ids" => taxon_concept.id
+          get :index, params: { "taxon_concepts_ids" => taxon_concept.id }
           expect(assigns(:documents)).to eq([@public_document, @document1])
         end
         it "retrieves documents for geo entity" do
-          get :index, "geo_entities_ids" => [geo_entity.id]
+          get :index, params: { "geo_entities_ids" => [geo_entity.id] }
           expect(assigns(:documents)).to eq([@document2])
         end
         context 'by proposal outcome' do
@@ -71,7 +71,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
             DocumentSearch.refresh_citations_and_documents
           end
           it "retrieves documents for tag" do
-            get :index, "document_tags_ids" => [proposal_outcome.id]
+            get :index, params: { "document_tags_ids" => [proposal_outcome.id] }
             expect(assigns(:documents).map(&:id)).to eq([@document3].map(&:id))
           end
         end
@@ -82,11 +82,11 @@ describe Admin::DocumentsController, sidekiq: :inline do
             DocumentSearch.refresh_citations_and_documents
           end
           it "retrieves documents for review_phase tag" do
-            get :index, "document_tags_ids" => [review_phase.id]
+            get :index, params: { "document_tags_ids" => [review_phase.id] }
             expect(assigns(:documents).map(&:id)).to eq([@document3].map(&:id))
           end
           it "retrieves documents for process_stage tag" do
-            get :index, "document_tags_ids" => [process_stage.id]
+            get :index, params: { "document_tags_ids" => [process_stage.id] }
             expect(assigns(:documents).map(&:id)).to eq([@document3].map(&:id))
           end
         end
@@ -101,13 +101,13 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       context "when event" do
         it "renders the event/documents/index template" do
-          get :index, events_ids: [event.id]
+          get :index, params: { events_ids: [event.id] }
           expect(response).to render_template('admin/event_documents/index')
         end
         it "assigns @documents for event, sorted by title" do
           @document3 = create(:document, title: 'CC hello world', event: event2)
           DocumentSearch.refresh_citations_and_documents
-          get :index, events_ids: [event.id, event2.id]
+          get :index, params: { events_ids: [event.id, event2.id] }
           expect(assigns(:documents)).to eq([@document3, @document2, @document1, @public_document])
         end
       end
@@ -127,7 +127,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
     let(:document) { create(:document, tags: document_tags) }
 
     it "renders the edit template" do
-      get :edit, id: document.id
+      get :edit, params: { id: document.id }
       expect(response).to render_template('new')
     end
   end
@@ -137,12 +137,12 @@ describe Admin::DocumentsController, sidekiq: :inline do
     context "when no event" do
       let(:document) { create(:document) }
       it "redirects to index when successful" do
-        put :update, id: document.id, document: { date: Date.today }
+        put :update, params: { id: document.id, document: { date: Date.today } }
         expect(response).to redirect_to(admin_documents_url)
         expect(flash[:notice]).not_to be_nil
       end
       it "renders new when not successful" do
-        put :update, id: document.id, document: { date: nil }
+        put :update, params: { id: document.id, document: { date: nil } }
         expect(response).to render_template('new')
       end
     end
@@ -150,12 +150,12 @@ describe Admin::DocumentsController, sidekiq: :inline do
     context "when event" do
       let(:document) { create(:document, event_id: event.id) }
       it "redirects to index when successful" do
-        put :update, id: document.id, event_id: event.id, document: { date: Date.today }
+        put :update, params: { id: document.id, event_id: event.id, document: { date: Date.today } }
         expect(response).to redirect_to(admin_event_documents_url(event))
         expect(flash[:notice]).not_to be_nil
       end
       it "renders new when not successful" do
-        put :update, id: document.id, event_id: event.id, document: { date: nil }
+        put :update, params: { id: document.id, event_id: event.id, document: { date: nil } }
         expect(response).to render_template('new')
       end
     end
@@ -167,27 +167,27 @@ describe Admin::DocumentsController, sidekiq: :inline do
       let(:recommended_category) { "A wonderful category" }
 
       it "assign review phase to Review" do
-        put :update, id: document.id, document: {
+        put :update, params: { id: document.id, document: {
           date: Date.today, review_details_attributes: { review_phase_id: review_phase.id }
-        }
+        } }
         expect(response).to redirect_to(admin_documents_url)
 
         expect(document.reload.review_details.review_phase_id).to eq(review_phase.id)
       end
 
       it "assign process stage to Review" do
-        put :update, id: document.id, document: {
+        put :update, params: { id: document.id, document: {
           date: Date.today, review_details_attributes: { process_stage_id: process_stage.id }
-        }
+        } }
         expect(response).to redirect_to(admin_documents_url)
 
         expect(document.reload.review_details.process_stage_id).to eq(process_stage.id)
       end
 
       it "assign recommended category to Review" do
-        put :update, id: document.id, document: {
+        put :update, params: { id: document.id, document: {
           date: Date.today, review_details_attributes: { recommended_category: recommended_category }
-        }
+        } }
         expect(response).to redirect_to(admin_documents_url)
 
         expect(document.reload.review_details.recommended_category).to eq(recommended_category)
@@ -199,9 +199,9 @@ describe Admin::DocumentsController, sidekiq: :inline do
       let(:proposal_outcome) { create(:document_tag, type: 'DocumentTag::ProposalOutcome') }
 
       it "assign outcome to Proposal" do
-        put :update, id: document.id, document: {
+        put :update, params: { id: document.id, document: {
           date: Date.today, proposal_details_attributes: { proposal_outcome_id: proposal_outcome.id }
-        }
+        } }
         expect(response).to redirect_to(admin_documents_url)
 
         expect(document.reload.proposal_details.proposal_outcome_id).to eq(proposal_outcome.id)
@@ -224,7 +224,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
       document
     }
     it "redirects after delete" do
-      delete :destroy, id: document.id
+      delete :destroy, params: { id: document.id }
       expect(response).to redirect_to(admin_documents_url)
     end
   end

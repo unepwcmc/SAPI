@@ -79,9 +79,7 @@ describe Admin::HybridRelationshipsController do
 
   describe "DELETE destroy" do
     it "redirects after delete" do
-      delete :destroy,
-        :taxon_concept_id => taxon_concept.id,
-        :id => hybrid_relationship.id
+      delete :destroy, params: { :taxon_concept_id => taxon_concept.id, :id => hybrid_relationship.id }
       expect(response).to redirect_to(
         admin_taxon_concept_names_url(hybrid_relationship.taxon_concept)
       )

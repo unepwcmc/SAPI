@@ -54,7 +54,7 @@ describe Admin::InstrumentsController do
   describe "DELETE destroy" do
     let(:instrument) { create(:instrument) }
     it "redirects after delete" do
-      delete :destroy, :id => instrument.id
+      delete :destroy, params: { :id => instrument.id }
       expect(flash[:notice]).not_to be_nil
       expect(flash[:alert]).to be_nil
       expect(response).to redirect_to(admin_instruments_url)
@@ -62,7 +62,7 @@ describe Admin::InstrumentsController do
     let(:instrument2) { create(:instrument) }
     let!(:taxon_instrument) { create(:taxon_instrument, :instrument_id => instrument2.id) }
     it "fails to delete instrument because there are dependent objects" do
-      delete :destroy, :id => instrument2.id
+      delete :destroy, params: { :id => instrument2.id }
       expect(flash[:notice]).to be_nil
       expect(flash[:alert]).not_to be_nil
       expect(instrument2.reload).not_to be_nil

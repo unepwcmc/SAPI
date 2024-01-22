@@ -54,7 +54,7 @@ describe Admin::DesignationsController do
   describe "DELETE destroy" do
     let(:designation) { create(:designation) }
     it "redirects after delete" do
-      delete :destroy, :id => designation.id
+      delete :destroy, params: { :id => designation.id }
       expect(response).to redirect_to(admin_designations_url)
     end
   end
