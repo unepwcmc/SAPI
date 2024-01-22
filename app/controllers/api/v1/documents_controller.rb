@@ -125,13 +125,11 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def render_404
-    render file: "#{Rails.root}/public/404", layout: false, formats: [:html],
-    status: 404
+    head 404
   end
 
   def render_403
-    render file: "#{Rails.root}/public/403", layout: false, formats: [:html],
-    status: 403
+    head 403
   end
 
 end
