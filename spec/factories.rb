@@ -3,11 +3,11 @@ FactoryBot.define do
   factory :user do
     sequence(:name) { |n| "user#{n}" }
     email { "#{name}@test.pl" }
-    password 'asdfasdf'
+    password { 'asdfasdf' }
     password_confirmation { password }
-    role User::MANAGER
-    is_cites_authority false
-    organisation 'WCMC'
+    role { User::MANAGER }
+    is_cites_authority { false }
+    organisation { 'WCMC' }
   end
 
   factory :taxonomy do
@@ -31,12 +31,12 @@ FactoryBot.define do
 
   factory :event do
     sequence(:name) { |n| "CoP#{n}" }
-    effective_at '2011-01-01'
-    published_at '2011-02-01'
+    effective_at { '2011-01-01' }
+    published_at { '2011-02-01' }
     designation
 
     factory :eu_regulation, :class => EuRegulation do
-      end_date '2012-01-01'
+      end_date { '2012-01-01' }
     end
     factory :eu_suspension_regulation, :class => EuSuspensionRegulation
     factory :eu_implementing_regulation, :class => EuImplementingRegulation
@@ -49,7 +49,7 @@ FactoryBot.define do
     factory :ec_srg, :class => EcSrg
     factory :cites_suspension_notification, :class => CitesSuspensionNotification,
       :aliases => [:start_notification] do
-      end_date '2012-01-01'
+      end_date { '2012-01-01' }
     end
   end
 
@@ -70,12 +70,12 @@ FactoryBot.define do
   factory :quota do
     taxon_concept
     unit
-    publication_date Date.new(2012, 12, 3)
-    quota '10'
+    publication_date { Date.new(2012, 12, 3) }
+    quota { '10' }
   end
 
   factory :reference do
-    citation 'Przygód kilka wróbla ćwirka'
+    citation { 'Przygód kilka wróbla ćwirka' }
   end
 
   factory :taxon_concept_reference do
@@ -84,8 +84,8 @@ FactoryBot.define do
   end
 
   factory :preset_tag do
-    name 'Extinct'
-    model 'TaxonConcept'
+    name { 'Extinct' }
+    model { 'TaxonConcept' }
   end
 
   factory :eu_decision do
@@ -94,7 +94,7 @@ FactoryBot.define do
     eu_decision_type
 
     factory :eu_opinion, class: EuOpinion do
-      start_date Date.new(2013, 1, 1)
+      start_date { Date.new(2013, 1, 1) }
     end
 
     factory :eu_suspension, class: EuSuspension
@@ -102,7 +102,7 @@ FactoryBot.define do
 
   factory :eu_decision_type do
     sequence(:name) { |n| "Opinion#{n}" }
-    decision_type "NO_OPINION"
+    decision_type { "NO_OPINION" }
   end
 
   factory :ahoy_event, :class => Ahoy::Event do

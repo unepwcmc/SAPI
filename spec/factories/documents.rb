@@ -5,17 +5,17 @@ FactoryBot.define do
     filename { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')) }
     designation
     event
-    type 'Document'
-    is_public false
+    type { 'Document' }
+    is_public { false }
 
     factory :review_of_significant_trade, class: Document::ReviewOfSignificantTrade do
-      type 'Document::ReviewOfSignificantTrade'
+      type { 'Document::ReviewOfSignificantTrade' }
     end
     factory :proposal, class: Document::Proposal do
-      type 'Document::Proposal'
+      type { 'Document::Proposal' }
     end
     factory :commission_note, class: Document::CommissionNotes do
-      type 'Document::CommissionNotes'
+      type { 'Document::CommissionNotes' }
     end
 
     # After upgrade to Rails 5 and Carrierwave 2, using factory syntax `filename { Rack::Test::UploadedFile.new(...) }`

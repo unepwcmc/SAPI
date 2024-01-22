@@ -3,8 +3,8 @@ FactoryBot.define do
     taxonomy
     rank
     taxon_name
-    taxonomic_position '1'
-    name_status 'A'
+    taxonomic_position { '1' }
+    name_status { 'A' }
     data {}
     listing {}
     before(:create) { |tc|

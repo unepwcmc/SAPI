@@ -11,14 +11,14 @@ FactoryBot.define do
   end
 
   factory :geo_entity_type do
-    name 'COUNTRY'
+    name { 'COUNTRY' }
   end
 
   factory :geo_entity, :aliases => [:related_geo_entity, :trading_country, :importer, :exporter] do
     geo_entity_type
-    name_en 'Wonderland'
+    name_en { 'Wonderland' }
     sequence(:iso_code2) { |n| [n, n + 1].map { |i| (65 + i % 26).chr }.join }
-    is_current true
+    is_current { true }
   end
 
   factory :distribution do
