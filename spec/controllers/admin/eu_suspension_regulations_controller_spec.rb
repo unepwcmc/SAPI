@@ -24,7 +24,7 @@ describe Admin::EuSuspensionRegulationsController do
   describe "XHR POST activate" do
     let(:eu_suspension_regulation) { create_eu_suspension_regulation(:is_current => true) }
     it "renders create when successful" do
-      xhr :post, :activate, :format => 'js', :id => eu_suspension_regulation.id
+      post :activate, :format => 'js', params: { :id => eu_suspension_regulation.id }, xhr: true
       expect(response).to render_template("create")
     end
   end

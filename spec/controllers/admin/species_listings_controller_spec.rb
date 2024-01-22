@@ -21,11 +21,11 @@ describe Admin::SpeciesListingsController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, species_listing: build_attributes(:species_listing)
+      post :create, params: { species_listing: build_attributes(:species_listing) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, species_listing: { dummy: 'test' }
+      post :create, params: { species_listing: { dummy: 'test' } }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -33,11 +33,11 @@ describe Admin::SpeciesListingsController do
   describe "XHR PUT update" do
     let(:species_listing) { create(:species_listing) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => species_listing.id, :species_listing => { :name => 'ZZ' }
+      put :update, :format => 'json', params: { :id => species_listing.id, :species_listing => { :name => 'ZZ' } }, xhr: true
       expect(response).to be_success
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => species_listing.id, :species_listing => { :name => nil }
+      put :update, :format => 'json', params: { :id => species_listing.id, :species_listing => { :name => nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end

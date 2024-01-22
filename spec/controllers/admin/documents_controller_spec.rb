@@ -241,8 +241,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
     context "When no event specified" do
       it "returns properly formatted json" do
-        xhr :get, :autocomplete, :format => 'json',
-          :title => 'tit'
+        get :autocomplete, :format => 'json', params: { :title => 'tit' }, xhr: true
         expect(response.body).to have_json_size(2)
         expect(parse_json(response.body, "0/title")).to eq('Title')
         expect(parse_json(response.body, "1/title")).to eq('Title2')
@@ -251,8 +250,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
     context "When an event is specified" do
       it "returns properly formatted json" do
-        xhr :get, :autocomplete, :format => 'json',
-          :title => 'tit', :event_id => event.id
+        get :autocomplete, :format => 'json', params: { :title => 'tit', :event_id => event.id }, xhr: true
         expect(response.body).to have_json_size(1)
         expect(parse_json(response.body, "0/title")).to eq('Title')
       end

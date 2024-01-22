@@ -14,11 +14,11 @@ describe Admin::UsersController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, user: FactoryGirl.attributes_for(:user)
+      post :create, params: { user: FactoryGirl.attributes_for(:user) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, user: { :name => nil }
+      post :create, params: { user: { :name => nil } }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -26,11 +26,11 @@ describe Admin::UsersController do
   describe "XHR GET edit" do
     let(:user) { create(:user) }
     it "renders the edit template" do
-      xhr :get, :edit, :id => user.id
+      get :edit, params: { :id => user.id }, xhr: true
       expect(response).to render_template('new')
     end
     it "assigns the hybrid_relationship variable" do
-      xhr :get, :edit, :id => user.id
+      get :edit, params: { :id => user.id }, xhr: true
       expect(assigns(:user)).not_to be_nil
     end
   end
@@ -38,12 +38,12 @@ describe Admin::UsersController do
   describe "XHR PUT update JS" do
     let(:user) { create(:user) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'js', :id => user.id, :user => { :name => 'ZZ' }
+      put :update, :format => 'js', params: { :id => user.id, :user => { :name => 'ZZ' } }, xhr: true
       expect(response).to be_success
       expect(response).to render_template('create')
     end
     it "responds with template new when not successful" do
-      xhr :put, :update, :format => 'js', :id => user.id, :user => { :name => nil }
+      put :update, :format => 'js', params: { :id => user.id, :user => { :name => nil } }, xhr: true
       expect(response).to render_template('new')
     end
   end

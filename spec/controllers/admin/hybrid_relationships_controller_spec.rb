@@ -15,29 +15,32 @@ describe Admin::HybridRelationshipsController do
   }
   describe "XHR GET new" do
     it "renders the new template" do
-      xhr :get, :new, :taxon_concept_id => taxon_concept.id
+      get :new, params: { :taxon_concept_id => taxon_concept.id }, xhr: true
       expect(response).to render_template('new')
     end
     it "assigns the hybrid_relationship variable" do
-      xhr :get, :new, :taxon_concept_id => taxon_concept.id
+      get :new, params: { :taxon_concept_id => taxon_concept.id }, xhr: true
       expect(assigns(:hybrid_relationship)).not_to be_nil
     end
   end
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create,
-        :taxon_concept_id => taxon_concept.id,
-        :taxon_relationship => {
-          other_taxon_concept_id: hybrid.id
+      post :create, xhr: true,
+        params: {
+          :taxon_concept_id => taxon_concept.id,
+          :taxon_relationship => {
+            other_taxon_concept_id: hybrid.id
+          }
         }
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create,
-        :taxon_concept_id => taxon_concept.id,
-        :taxon_relationship => {
-          other_taxon_concept_id: nil
+      post :create, xhr: true, params: {
+          :taxon_concept_id => taxon_concept.id,
+          :taxon_relationship => {
+            other_taxon_concept_id: nil
+          }
         }
       expect(response).to render_template("new")
     end
@@ -45,33 +48,33 @@ describe Admin::HybridRelationshipsController do
 
   describe "XHR GET edit" do
     it "renders the edit template" do
-      xhr :get, :edit, :taxon_concept_id => taxon_concept.id,
-        :id => hybrid_relationship.id
+      get :edit, params: { :taxon_concept_id => taxon_concept.id, :id => hybrid_relationship.id }, xhr: true
       expect(response).to render_template('new')
     end
     it "assigns the hybrid_relationship variable" do
-      xhr :get, :edit, :taxon_concept_id => taxon_concept.id,
-        :id => hybrid_relationship.id
+      get :edit, params: { :taxon_concept_id => taxon_concept.id, :id => hybrid_relationship.id }, xhr: true
       expect(assigns(:hybrid_relationship)).not_to be_nil
     end
   end
 
   describe "XHR PUT update" do
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'js',
-        :taxon_concept_id => taxon_concept.id,
-        :id => hybrid_relationship.id,
-        :taxon_relationship => {
-          other_taxon_concept_id: hybrid.id
+      put :update, :format => 'js', xhr: true, params: {
+          :taxon_concept_id => taxon_concept.id,
+          :id => hybrid_relationship.id,
+          :taxon_relationship => {
+            other_taxon_concept_id: hybrid.id
+          }
         }
       expect(response).to render_template("create")
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'js',
-        :taxon_concept_id => taxon_concept.id,
-        :id => hybrid_relationship.id,
-        :taxon_relationship => {
-          other_taxon_concept_id: nil
+      put :update, :format => 'js', xhr: true, params: {
+          :taxon_concept_id => taxon_concept.id,
+          :id => hybrid_relationship.id,
+          :taxon_relationship => {
+            other_taxon_concept_id: nil
+          }
         }
       expect(response).to render_template('new')
     end

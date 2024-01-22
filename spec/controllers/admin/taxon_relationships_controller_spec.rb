@@ -30,14 +30,14 @@ describe Admin::TaxonRelationshipsController do
       allow(TaxonRelationshipType).to receive(:find).and_return(equal_relationship_type)
     end
     it "renders create when successful" do
-      xhr :post, :create, :taxon_relationship => taxon_relationship_attributes,
-        :taxon_concept_id => taxon_concept.id
+      post :create, params: { :taxon_relationship => taxon_relationship_attributes,
+        :taxon_concept_id => taxon_concept.id }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
       taxon_relationship = create(:taxon_relationship, taxon_relationship_attributes)
-      xhr :post, :create, taxon_relationship: taxon_relationship_attributes,
-        :taxon_concept_id => taxon_relationship.taxon_concept_id
+      post :create, params: { taxon_relationship: taxon_relationship_attributes,
+        :taxon_concept_id => taxon_relationship.taxon_concept_id }, xhr: true
       expect(response).to render_template("new")
     end
   end

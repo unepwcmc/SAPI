@@ -24,7 +24,7 @@ describe Admin::EuRegulationsController do
   describe "XHR POST activate" do
     let(:eu_regulation) { create_eu_regulation }
     it "renders create when successful" do
-      xhr :post, :activate, :format => 'js', :id => eu_regulation.id
+      post :activate, :format => 'js', params: { :id => eu_regulation.id }, xhr: true
       expect(response).to render_template("create")
     end
   end

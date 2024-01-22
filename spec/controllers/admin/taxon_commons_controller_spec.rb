@@ -10,7 +10,7 @@ describe Admin::TaxonCommonsController do
 
   describe "XHR GET 'new'" do
     it "returns http success and renders the new template" do
-      xhr :get, :new, { :taxon_concept_id => @taxon_concept.id, :format => 'js' }
+      get :new, params: { :taxon_concept_id => @taxon_concept.id, :format => 'js' }, xhr: true
       expect(response).to be_success
       expect(response).to render_template('new')
     end
@@ -18,18 +18,22 @@ describe Admin::TaxonCommonsController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create,
-        :taxon_concept_id => @taxon_concept.id,
-        :taxon_common => {
-          :name => @common_name.name,
-          :language_id => @common_name.language_id
+      post :create, xhr: true,
+        params: {
+          :taxon_concept_id => @taxon_concept.id,
+          :taxon_common => {
+            :name => @common_name.name,
+            :language_id => @common_name.language_id
+          }
         }
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create,
-        :taxon_concept_id => @taxon_concept.id,
-        :taxon_common => { dummy: 'test' }
+      post :create, xhr: true,
+        params: {
+          :taxon_concept_id => @taxon_concept.id,
+          :taxon_common => { dummy: 'test' }
+        }
       expect(response).to render_template("new")
     end
   end
@@ -43,13 +47,11 @@ describe Admin::TaxonCommonsController do
       )
     end
     it "renders the edit template" do
-      xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
-        :id => @taxon_common.id
+      get :edit, params: { :taxon_concept_id => @taxon_concept.id, :id => @taxon_common.id }, xhr: true
       expect(response).to render_template('new')
     end
     it "assigns the  taxon common variable" do
-      xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
-        :id => @taxon_common.id
+      get :edit, params: { :taxon_concept_id => @taxon_concept.id, :id => @taxon_common.id }, xhr: true
       expect(assigns(:taxon_common)).not_to be_nil
     end
   end
@@ -63,21 +65,25 @@ describe Admin::TaxonCommonsController do
       )
     end
     it "renders create when successful" do
-      xhr :put, :update, :format => 'js',
-        :taxon_concept_id => @taxon_concept.id,
-        :id => @taxon_common.id,
-        :taxon_common => {
-          :name => @common_name.name,
-          :language_id => @common_name.language_id
+      put :update, :format => 'js', xhr: true,
+        params: {
+          :taxon_concept_id => @taxon_concept.id,
+          :id => @taxon_common.id,
+          :taxon_common => {
+            :name => @common_name.name,
+            :language_id => @common_name.language_id
+          }
         }
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :put, :update, :format => 'js',
-        :taxon_concept_id => @taxon_concept.id,
-        :id => @taxon_common.id,
-        :taxon_common => {
-          :common_name_id => nil
+      put :update, :format => 'js', xhr: true,
+        params: {
+          :taxon_concept_id => @taxon_concept.id,
+          :id => @taxon_common.id,
+          :taxon_common => {
+            :common_name_id => nil
+          }
         }
       expect(response).to render_template('new')
     end
@@ -120,12 +126,14 @@ describe Admin::TaxonCommonsController do
       expect(@taxon_concept.reload.dependents_updated_at).not_to be_nil
       old_date = @taxon_concept.dependents_updated_at
 
-      xhr :put, :update, :format => 'js',
-        :taxon_concept_id => @taxon_concept.id,
-        :id => @taxon_common.id,
-        :taxon_common => {
-          :name => @common_name.name,
-          :language_id => @common_name.language_id
+      put :update, :format => 'js', xhr: true,
+        params: {
+          :taxon_concept_id => @taxon_concept.id,
+          :id => @taxon_common.id,
+          :taxon_common => {
+            :name => @common_name.name,
+            :language_id => @common_name.language_id
+          }
         }
 
       expect(@taxon_concept.reload.dependents_updated_at).not_to eq(old_date)

@@ -33,17 +33,21 @@ describe Admin::GeoEntitiesController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, geo_entity: {
-        geo_entity_type_id: country_geo_entity_type.id,
-        name_en: 'CC',
-        iso_code2: 'CC'
+      post :create, xhr: true, params: {
+        geo_entity: {
+          geo_entity_type_id: country_geo_entity_type.id,
+          name_en: 'CC',
+          iso_code2: 'CC'
+        }
       }
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, geo_entity: {
-        geo_entity_type_id: country_geo_entity_type.id,
-        iso_code2: nil
+      post :create, xhr: true, params: {
+        geo_entity: {
+          geo_entity_type_id: country_geo_entity_type.id,
+          iso_code2: nil
+        }
       }
       expect(response).to render_template("new")
     end
@@ -52,11 +56,11 @@ describe Admin::GeoEntitiesController do
   describe "XHR PUT update JSON" do
     let(:geo_entity) { create(:geo_entity, geo_entity_type: country_geo_entity_type) }
     it "responds with 200 when successful" do
-      xhr :put, :update, format: 'json', id: geo_entity.id, geo_entity: { iso_code2: 'ZZ' }
+      put :update, format: 'json', params: { id: geo_entity.id, geo_entity: { iso_code2: 'ZZ' } }, xhr: true
       expect(response).to be_success
     end
     it "responds with json when not successful" do
-      xhr :put, :update, format: 'json', id: geo_entity.id, geo_entity: { iso_code2: nil }
+      put :update, format: 'json', params: { id: geo_entity.id, geo_entity: { iso_code2: nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
