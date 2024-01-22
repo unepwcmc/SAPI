@@ -21,7 +21,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
     @query = matching_records(annual_report_upload).where(
-      "#{Arel::Nodes.build_quoted(validation_error.matching_criteria.to_json).to_sql}::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
+      "#{Arel::Nodes.build_quoted(validation_error.matching_criteria).to_sql}::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
     )
   end
 
