@@ -52,7 +52,7 @@ FactoryGirl.define do
   factory :validation_error, :class => Trade::ValidationError do
     annual_report_upload
     validation_rule
-    matching_criteria '{}'
+    matching_criteria {}
     is_ignored false
   end
 
