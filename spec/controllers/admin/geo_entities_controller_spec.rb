@@ -64,7 +64,7 @@ describe Admin::GeoEntitiesController do
   describe "DELETE destroy" do
     let(:geo_entity) { create(:geo_entity) }
     it "redirects after delete" do
-      delete :destroy, id: geo_entity.id
+      delete :destroy, params: { id: geo_entity.id }
       expect(response).to redirect_to(admin_geo_entities_url)
     end
   end

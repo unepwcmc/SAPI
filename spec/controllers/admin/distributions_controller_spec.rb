@@ -94,9 +94,7 @@ describe Admin::DistributionsController do
   describe "DELETE destroy" do
     let(:distribution) { create(:distribution, :taxon_concept_id => @taxon_concept.id) }
     it "redirects after delete" do
-      delete :destroy,
-        :taxon_concept_id => @taxon_concept.id,
-        :id => distribution.id
+      delete :destroy, params: { :taxon_concept_id => @taxon_concept.id, :id => distribution.id }
       expect(response).to redirect_to(
         admin_taxon_concept_distributions_url(distribution.taxon_concept)
       )

@@ -79,9 +79,7 @@ describe Admin::SynonymRelationshipsController do
 
   describe "DELETE destroy" do
     it "redirects after delete" do
-      delete :destroy,
-        :taxon_concept_id => taxon_concept.id,
-        :id => synonym_relationship.id
+      delete :destroy, params: { :taxon_concept_id => taxon_concept.id, :id => synonym_relationship.id }
       expect(response).to redirect_to(
         admin_taxon_concept_names_url(synonym_relationship.taxon_concept)
       )

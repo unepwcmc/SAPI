@@ -45,7 +45,7 @@ describe Admin::SpeciesListingsController do
   describe "DELETE destroy" do
     let(:species_listing) { create(:species_listing) }
     it "redirects after delete" do
-      delete :destroy, :id => species_listing.id
+      delete :destroy, params: { :id => species_listing.id }
       expect(response).to redirect_to(admin_species_listings_url)
     end
   end

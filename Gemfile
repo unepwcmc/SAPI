@@ -108,7 +108,9 @@ group :development do
   gem 'brightbox', '2.3.9'
   gem 'rack-cors', '0.3.0' ,:require => 'rack/cors' # TODO: remove when upgrade Rails.
   gem 'jslint_on_rails', '1.1.1'
-  gem 'rubocop', '0.40.0', require: false
+  # gem 'rubocop', '0.40.0', require: false
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
   gem 'rbnacl', '4.0.2'
   gem 'rbnacl-libsodium', '1.0.16'
   gem 'bcrypt_pbkdf', '1.1.0'

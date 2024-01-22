@@ -42,7 +42,7 @@ describe Admin::RanksController do
   describe "DELETE destroy" do
     let(:rank) { create(:rank) }
     it "redirects after delete" do
-      delete :destroy, :id => rank.id
+      delete :destroy, params: { :id => rank.id }
       expect(response).to redirect_to(admin_ranks_url)
     end
   end

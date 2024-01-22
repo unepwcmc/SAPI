@@ -1,7 +1,13 @@
-inherit_from: .rubocop_todo.yml
+# inherit_from: .rubocop_todo.yml
+require:
+  - rubocop-rails
+  - rubocop-rspec
 
+Rails:
+  Enabled: true
 AllCops:
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.5
+  TargetRailsVersion: 5.0
   Exclude:
     - 'lib/tasks/bbgem.rake'
     - 'db/schema.rb'
@@ -12,34 +18,24 @@ Style/StringLiterals:
 
 # Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
 # SupportedStyles: outdent, indent
-Style/AccessModifierIndentation:
+Layout/AccessModifierIndentation:
   EnforcedStyle: indent
-
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: special_inside_parentheses, consistent, align_brackets
-Style/IndentArray:
-  EnforcedStyle: consistent
-
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: special_inside_parentheses, consistent, align_braces
-Style/IndentHash:
-  EnforcedStyle: consistent
 
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: normal, rails
-Style/IndentationConsistency:
+Layout/IndentationConsistency:
   EnforcedStyle: normal
   Exclude:
     - 'db/migrate/*'
 
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: symmetrical, new_line, same_line
-Style/MultilineArrayBraceLayout:
+Layout/MultilineArrayBraceLayout:
   EnforcedStyle: symmetrical
 
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: symmetrical, new_line, same_line
-Style/MultilineHashBraceLayout:
+Layout/MultilineHashBraceLayout:
   EnforcedStyle: symmetrical
 
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -52,33 +48,33 @@ Style/AndOr:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: leading, trailing
-Style/DotPosition:
+Layout/DotPosition:
   EnforcedStyle: trailing
 
 # Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
-Style/ExtraSpacing:
+Layout/ExtraSpacing:
   AllowForAlignment: true
   Exclude:
     - 'db/migrate/*'
 
 # Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
 # SupportedStyles: consistent, special_for_inner_method_call, special_for_inner_method_call_in_parentheses
-Style/FirstParameterIndentation:
+Layout/FirstParameterIndentation:
   Enabled: true
 
 # Configuration parameters: Width.
-Style/IndentationWidth:
+Layout/IndentationWidth:
   Exclude:
     - 'db/migrate/*'
 
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SupportedStyles.
 # SupportedStyles: space, no_space
-Style/SpaceInsideHashLiteralBraces:
+Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyle: space
   EnforcedStyleForEmptyBraces: no_space
 
 # Configuration parameters: AllowForAlignment.
-Style/SpaceAroundOperators:
+Layout/SpaceAroundOperators:
   AllowForAlignment: true
 
 # Configuration parameters: AllowIfMethodIsEmpty.

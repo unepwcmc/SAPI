@@ -17,7 +17,7 @@ describe Admin::SrgHistoriesController do
       end
 
       it "renders the create js template" do
-        post :create, srg_history: { name: 'test' }, format: :js
+        post :create, params: { srg_history: { name: 'test' }, format: :js }
 
         expect(response).to render_template("create")
       end
@@ -25,7 +25,7 @@ describe Admin::SrgHistoriesController do
 
     context "when not successful" do
       it "renders new" do
-        post :create, srg_history: { dummy: 'test' }, format: :js
+        post :create, params: { srg_history: { dummy: 'test' }, format: :js }
 
         expect(response).to render_template("new")
       end
@@ -39,7 +39,7 @@ describe Admin::SrgHistoriesController do
 
     context "when successful" do
       it "renders the create js template" do
-        put :update, id: @srg_history.id, srg_history: { dummy: 'test' }, format: :js
+        put :update, params: { id: @srg_history.id, srg_history: { dummy: 'test' }, format: :js }
 
         expect(response).to render_template("create")
       end
@@ -47,10 +47,7 @@ describe Admin::SrgHistoriesController do
 
     context "when not successful" do
       it "renders new" do
-        put :update,
-          srg_history: { name: nil },
-          id: @srg_history.id,
-          format: :js
+        put :update, params: { srg_history: { name: nil }, id: @srg_history.id, format: :js }
 
         expect(response).to render_template('new')
       end
@@ -63,7 +60,7 @@ describe Admin::SrgHistoriesController do
     end
 
     it "redirects after delete" do
-      delete :destroy, id: @srg_history.id
+      delete :destroy, params: { id: @srg_history.id }
 
       expect(response).to redirect_to(admin_srg_histories_url)
     end

@@ -54,7 +54,7 @@ describe Admin::TaxonomiesController do
   describe "DELETE destroy" do
     let(:taxonomy) { create(:taxonomy) }
     it "redirects after delete" do
-      delete :destroy, :id => taxonomy.id
+      delete :destroy, params: { :id => taxonomy.id }
       expect(response).to redirect_to(admin_taxonomies_url)
     end
   end
@@ -70,7 +70,7 @@ describe Admin::TaxonomiesController do
     describe "DELETE destroy" do
       let(:taxonomy) { create(:taxonomy) }
       it "fails to delete and redirects to admin_root_path" do
-        delete :destroy, :id => taxonomy.id
+        delete :destroy, params: { :id => taxonomy.id }
         expect(response).to redirect_to(admin_root_path)
         expect(Taxonomy.find(taxonomy.id)).not_to be_nil
       end
