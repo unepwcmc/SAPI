@@ -19,7 +19,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create_taxon_concept_country_of_origin_validation
       }
       specify {
-        expect(subject.validation_errors(@aru).size).to eq(0)
+        expect(subject.validation_errors.reload.size).to eq(0)
       }
     end
 
@@ -46,7 +46,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         create_taxon_concept_country_of_origin_validation
       }
       specify {
-        expect(subject.validation_errors(@aru).size).to eq(0)
+        expect(subject.validation_errors.reload.size).to eq(0)
       }
     end
 
