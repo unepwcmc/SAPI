@@ -110,7 +110,7 @@ class MTaxonConcept < ApplicationRecord
   self.primary_key = :id
 
   belongs_to :taxon_concept, :foreign_key => :id, optional: true
-  has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MCitesListingChange
+  has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => 'MCitesListingChange'
   has_many :historic_cites_listing_changes_for_downloads, -> { where(show_in_downloads: true).order(
     <<-SQL
       effective_at,
@@ -122,13 +122,13 @@ class MTaxonConcept < ApplicationRecord
       END
     SQL
     ) }, :foreign_key => :taxon_concept_id,
-    :class_name => MCitesListingChange
+    :class_name => 'MCitesListingChange'
   has_many :current_cites_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
     :foreign_key => :taxon_concept_id,
-    :class_name => MCitesListingChange
+    :class_name => 'MCitesListingChange'
   has_many :current_cms_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
     :foreign_key => :taxon_concept_id,
-    :class_name => MCmsListingChange
+    :class_name => 'MCmsListingChange'
   has_many :cites_processes
   scope :by_cites_eu_taxonomy, -> { where(:taxonomy_is_cites_eu => true) }
   scope :by_cms_taxonomy, -> { where(:taxonomy_is_cites_eu => false) }

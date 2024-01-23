@@ -18,7 +18,7 @@
 #
 
 class NomenclatureChange::DocumentCitationReassignment < NomenclatureChange::Reassignment
-  belongs_to :input, class_name: NomenclatureChange::Input,
+  belongs_to :input, class_name: 'NomenclatureChange::Input',
     inverse_of: :document_citation_reassignments,
     foreign_key: :nomenclature_change_input_id
 end

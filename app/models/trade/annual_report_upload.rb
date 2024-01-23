@@ -28,7 +28,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
   #                 :number_of_records_submitted, :aws_storage_path
 
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
-  belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
+  belongs_to :trading_country, :class_name => 'GeoEntity', :foreign_key => :trading_country_id
   validates :csv_source_file, :csv_column_headers => true, :on => :create
 
   scope :created_by_sapi, -> {

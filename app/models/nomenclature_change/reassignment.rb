@@ -30,6 +30,6 @@
 class NomenclatureChange::Reassignment < ApplicationRecord
   include NomenclatureChange::ReassignmentHelpers
 
-  belongs_to :input, :class_name => NomenclatureChange::Input,
+  belongs_to :input, :class_name => 'NomenclatureChange::Input',
     :foreign_key => :nomenclature_change_input_id
 end
