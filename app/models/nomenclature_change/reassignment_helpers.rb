@@ -8,8 +8,7 @@ module NomenclatureChange::ReassignmentHelpers
       # attr_accessible :type, :reassignable_id, :reassignable_type,
       #   :nomenclature_change_input_id, :nomenclature_change_output_id,
       #   :note_en, :note_es, :note_fr, :internal_note, :output_ids
-
-      belongs_to :reassignable, :polymorphic => true
+      belongs_to :reassignable, :polymorphic => true, optional: true
       has_many :reassignment_targets,
         inverse_of: :reassignment,
         class_name: 'NomenclatureChange::ReassignmentTarget',

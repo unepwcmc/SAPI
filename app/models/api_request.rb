@@ -18,7 +18,7 @@
 class ApiRequest < ApplicationRecord
   serialize :params, JSON
 
-  belongs_to :user
+  belongs_to :user, optional: true
 
   RECENT_DAYS = 90
   RECENT_MONTHS = 6

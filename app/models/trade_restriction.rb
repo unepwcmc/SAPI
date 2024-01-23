@@ -43,9 +43,9 @@ class TradeRestriction < ApplicationRecord
   #   :created_by_id, :updated_by_id, :url,
   #   :taxon_concept_id
 
-  belongs_to :taxon_concept
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
-  belongs_to :unit, :class_name => 'TradeCode'
+  belongs_to :taxon_concept, optional: true
+  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
+  belongs_to :unit, :class_name => 'TradeCode', optional: true
   has_many :trade_restriction_terms, :dependent => :destroy
   has_many :terms, :through => :trade_restriction_terms
   has_many :trade_restriction_sources, :dependent => :destroy
@@ -53,7 +53,7 @@ class TradeRestriction < ApplicationRecord
   has_many :trade_restriction_purposes, :dependent => :destroy
   has_many :purposes, :through => :trade_restriction_purposes
 
-  belongs_to :geo_entity
+  belongs_to :geo_entity, optional: true
 
   validates :publication_date, :presence => true
   validate :valid_dates

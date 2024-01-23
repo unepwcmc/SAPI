@@ -45,10 +45,10 @@ class NomenclatureChange::Output < ApplicationRecord
   #   :output_type, :tag_list, :created_by_id, :updated_by_id
 
   belongs_to :nomenclature_change
-  belongs_to :taxon_concept
-  belongs_to :parent, :class_name => TaxonConcept, :foreign_key => :parent_id
-  belongs_to :rank
-  belongs_to :new_taxon_concept, :class_name => TaxonConcept, :foreign_key => :new_taxon_concept_id
+  belongs_to :taxon_concept, optional: true
+  belongs_to :parent, :class_name => TaxonConcept, :foreign_key => :parent_id, optional: true
+  belongs_to :rank, optional: true
+  belongs_to :new_taxon_concept, :class_name => TaxonConcept, :foreign_key => :new_taxon_concept_id, optional: true
   has_many :reassignments, :inverse_of => :output,
     :class_name => NomenclatureChange::OutputReassignment,
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
@@ -72,8 +72,8 @@ class NomenclatureChange::Output < ApplicationRecord
   has_many :reassignment_targets, :inverse_of => :output,
     :class_name => NomenclatureChange::ReassignmentTarget,
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy
-  belongs_to :new_parent, :class_name => TaxonConcept, :foreign_key => :new_parent_id
-  belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id
+  belongs_to :new_parent, :class_name => TaxonConcept, :foreign_key => :new_parent_id, optional: true
+  belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id, optional: true
 
   validates :nomenclature_change, :presence => true
   validates :new_scientific_name, :presence => true,

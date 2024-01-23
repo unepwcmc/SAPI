@@ -65,13 +65,13 @@ class Trade::Shipment < ApplicationRecord
   validates_with Trade::ShipmentSecondaryErrorsValidator
 
   belongs_to :taxon_concept
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
+  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
   belongs_to :reported_taxon_concept, :class_name => 'TaxonConcept'
-  belongs_to :purpose, :class_name => "TradeCode"
-  belongs_to :source, :class_name => "TradeCode"
+  belongs_to :purpose, :class_name => "TradeCode", optional: true
+  belongs_to :source, :class_name => "TradeCode", optional: true
   belongs_to :term, :class_name => "TradeCode"
-  belongs_to :unit, :class_name => "TradeCode"
-  belongs_to :country_of_origin, :class_name => "GeoEntity"
+  belongs_to :unit, :class_name => "TradeCode", optional: true
+  belongs_to :country_of_origin, :class_name => "GeoEntity", optional: true
   belongs_to :exporter, :class_name => "GeoEntity"
   belongs_to :importer, :class_name => "GeoEntity"
 
