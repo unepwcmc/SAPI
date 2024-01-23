@@ -1,6 +1,6 @@
 //= require underscore
 //= require jquery
-//= require jquery_ujs
+//= require rails-ujs
 //= require cites_trade/jquery-ui-1.10.4.custom
 //= require jquery-deparam
 //= require js.cookie

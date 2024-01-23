@@ -12,7 +12,7 @@
 //
 //= require underscore
 //= require jquery
-//= require jquery_ujs
+//= require rails-ujs
 //= require jquery-deparam
 //= require js.cookie
 //= require bootstrap-scrollspy

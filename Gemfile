@@ -12,7 +12,7 @@ gem 'rails', '5.1.7'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
-gem 'puma', '~> 3.0'
+gem 'puma', '~> 3.7'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -58,7 +58,6 @@ gem 'redis-rails', '5.0.2' # TODO: latest, may remove this Gem when upgrade to R
 gem 'whenever', '0.11.0', :require => false # TODO: latest version 1.0 @ 2019. Should migrate to sidekiq-cron.
 gem 'httparty', '~> 0.21.0'
 
-# gem 'sprockets', '2.12.5' # upgrading to 3 breaks handlebars/tilt
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
 gem 'acts-as-taggable-on', '8.1.0' # TODO: latest v10 @ 2023. Can upgrade after upgrade to Rails 6.
@@ -88,7 +87,7 @@ gem 'rest-client', '1.8.0', require: false # TODO, should upgrade for better com
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console', '>= 3.3.0'
-  gem 'listen', '~> 3.0.5'
+  gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 	gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
@@ -126,6 +125,9 @@ group :test, :development do
   gem "launchy", '2.4.3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  # Adds support for Capybara system testing and selenium driver
+  gem 'capybara', '>= 2.15'
+  gem 'selenium-webdriver'
 end
 
 group :test do
@@ -134,7 +136,6 @@ group :test do
   gem 'factory_bot_rails', '4.11.1'
   gem 'simplecov', '0.22.0', :require => false # TODO: latest
   gem 'coveralls', '0.7.1', :require => false
-  gem 'capybara', '2.2.1'
 end
 
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
