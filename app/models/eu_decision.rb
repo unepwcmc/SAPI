@@ -39,14 +39,14 @@ class EuDecision < ApplicationRecord
   #   :created_by_id, :updated_by_id, :srg_history_id
 
   belongs_to :taxon_concept
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
+  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
   belongs_to :geo_entity
-  belongs_to :eu_decision_type
-  belongs_to :srg_history
-  belongs_to :source, :class_name => 'TradeCode'
-  belongs_to :term, :class_name => 'TradeCode'
-  belongs_to :start_event, :class_name => 'Event'
-  belongs_to :end_event, :class_name => 'Event'
+  belongs_to :eu_decision_type, optional: true
+  belongs_to :srg_history, optional: true
+  belongs_to :source, :class_name => 'TradeCode', optional: true
+  belongs_to :term, :class_name => 'TradeCode', optional: true
+  belongs_to :start_event, :class_name => 'Event', optional: true
+  belongs_to :end_event, :class_name => 'Event', optional: true
   has_many :eu_decision_confirmations,
     :dependent => :destroy
 

@@ -35,7 +35,7 @@ class Annotation < ApplicationRecord
   has_many :hashed_listing_changes,
     :foreign_key => :hash_annotation_id, :class_name => "ListingChange"
 
-  belongs_to :event
+  belongs_to :event, optional: true
   translates :short_note, :full_note
 
   scope :for_cites, -> { joins(:event).where("events.type = 'CitesCop'").

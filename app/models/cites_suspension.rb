@@ -35,9 +35,9 @@ class CitesSuspension < TradeRestriction
   # attr_accessible :start_notification_id, :end_notification_id,
   #   :cites_suspension_confirmations_attributes,
   #   :applies_to_import
-  belongs_to :taxon_concept
+  belongs_to :taxon_concept, optional: true
   belongs_to :start_notification, :class_name => 'CitesSuspensionNotification'
-  belongs_to :end_notification, :class_name => 'CitesSuspensionNotification'
+  belongs_to :end_notification, :class_name => 'CitesSuspensionNotification', optional: true
   has_many :cites_suspension_confirmations, :dependent => :destroy
   has_many :confirmation_notifications, :through => :cites_suspension_confirmations
   before_validation :handle_dates

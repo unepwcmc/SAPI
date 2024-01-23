@@ -109,7 +109,7 @@ class MTaxonConcept < ApplicationRecord
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 
-  belongs_to :taxon_concept, :foreign_key => :id
+  belongs_to :taxon_concept, :foreign_key => :id, optional: true
   has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MCitesListingChange
   has_many :historic_cites_listing_changes_for_downloads, -> { where(show_in_downloads: true).order(
     <<-SQL

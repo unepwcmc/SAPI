@@ -60,8 +60,8 @@ class Trade::SandboxTemplate < ApplicationRecord
         #   :purpose_code,
         #   :source_code,
         #   :year
-        belongs_to :taxon_concept
-        belongs_to :reported_taxon_concept, :class_name => TaxonConcept
+        belongs_to :taxon_concept, optional: true
+        belongs_to :reported_taxon_concept, :class_name => TaxonConcept, optional: true
 
         def sanitize
           self.class.sanitize(self.id)

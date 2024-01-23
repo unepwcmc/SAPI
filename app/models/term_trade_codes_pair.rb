@@ -15,7 +15,7 @@ class TermTradeCodesPair < ApplicationRecord
   # attr_accessible :trade_code_id, :trade_code_type, :term_id
 
   belongs_to :term, :class_name => "TradeCode"
-  belongs_to :trade_code
+  belongs_to :trade_code, optional: true
 
   validates :term_id, :presence => true, :uniqueness => { :scope => :trade_code_id }
 

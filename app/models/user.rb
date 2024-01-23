@@ -49,7 +49,7 @@ class User < ApplicationRecord
   has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
   has_many :ahoy_events, dependent: :nullify, class_name: 'Ahoy::Event'
   has_many :api_requests
-  belongs_to :geo_entity
+  belongs_to :geo_entity, optional: true
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true

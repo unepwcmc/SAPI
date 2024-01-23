@@ -30,7 +30,7 @@ class EuOpinion < EuDecision
   # Migrated to controller (Strong Parameters)
   # attr_accessible :document_id
 
-  belongs_to :document
+  belongs_to :document, optional: true
 
   validates :start_date, presence: true
   validate :event_or_document_presence

@@ -40,7 +40,7 @@ class ListingChange < ApplicationRecord
 
   attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
 
-  belongs_to :event
+  belongs_to :event, optional: true
   has_many :listing_change_copies, :foreign_key => :original_id,
     :class_name => "ListingChange", :dependent => :nullify
   belongs_to :species_listing
@@ -52,10 +52,10 @@ class ListingChange < ApplicationRecord
   has_many :geo_entities, :through => :listing_distributions
   has_one :party_geo_entity, :class_name => 'GeoEntity',
     :through => :party_listing_distribution, :source => :geo_entity
-  belongs_to :annotation
-  belongs_to :hash_annotation, :class_name => 'Annotation'
-  belongs_to :parent, :class_name => 'ListingChange'
-  belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id'
+  belongs_to :annotation, optional: true
+  belongs_to :hash_annotation, :class_name => 'Annotation', optional: true
+  belongs_to :parent, :class_name => 'ListingChange', optional: true
+  belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id', optional: true
   has_many :exclusions, :class_name => 'ListingChange', :foreign_key => 'parent_id', :dependent => :destroy
   validates :change_type_id, :presence => true
   validates :effective_at, :presence => true

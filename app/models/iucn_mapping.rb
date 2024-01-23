@@ -21,7 +21,7 @@ class IucnMapping < ApplicationRecord
 
   # serialize :details, ActiveRecord::Coders::Hstore
   belongs_to :taxon_concept
-  belongs_to :accepted_name, :class_name => 'TaxonConcept'
+  belongs_to :accepted_name, :class_name => 'TaxonConcept', optional: true
 
   scope :filter, lambda { |option|
     case option

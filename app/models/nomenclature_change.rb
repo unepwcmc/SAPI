@@ -23,7 +23,7 @@ class NomenclatureChange < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :event_id, :status
 
-  belongs_to :event
+  belongs_to :event, optional: true
 
   validates :status, presence: true
   validate :cannot_update_when_locked

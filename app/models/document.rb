@@ -39,12 +39,11 @@ class Document < ApplicationRecord
   #   :sort_index, :discussion_id, :discussion_sort_index,
   #   :primary_language_document_id,
   #   :designation_id
-
-  belongs_to :designation
-  belongs_to :event
-  belongs_to :language
+  belongs_to :designation, optional: true
+  belongs_to :event, optional: true
+  belongs_to :language, optional: true
   belongs_to :primary_language_document, class_name: 'Document',
-    foreign_key: 'primary_language_document_id'
+    foreign_key: 'primary_language_document_id', optional: true
   has_many :secondary_language_documents, class_name: 'Document',
     foreign_key: 'primary_language_document_id',
     dependent: :nullify
