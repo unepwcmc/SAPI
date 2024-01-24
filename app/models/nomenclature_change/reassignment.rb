@@ -32,6 +32,4 @@ class NomenclatureChange::Reassignment < ApplicationRecord
 
   belongs_to :input, :class_name => NomenclatureChange::Input,
     :foreign_key => :nomenclature_change_input_id
-
-  validates :input, :presence => true
 end

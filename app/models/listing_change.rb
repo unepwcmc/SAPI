@@ -57,7 +57,6 @@ class ListingChange < ApplicationRecord
   belongs_to :parent, :class_name => 'ListingChange', optional: true
   belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id', optional: true
   has_many :exclusions, :class_name => 'ListingChange', :foreign_key => 'parent_id', :dependent => :destroy
-  validates :change_type_id, :presence => true
   validates :effective_at, :presence => true
   validate :inclusion_at_higher_rank
   validate :species_listing_designation_mismatch

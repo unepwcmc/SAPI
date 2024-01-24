@@ -42,7 +42,6 @@ class CitesSuspension < TradeRestriction
   has_many :confirmation_notifications, :through => :cites_suspension_confirmations
   before_validation :handle_dates
   before_save :handle_current_flag
-  validates :start_notification_id, :presence => true
   accepts_nested_attributes_for :cites_suspension_confirmations
 
   def handle_dates

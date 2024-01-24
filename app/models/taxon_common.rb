@@ -21,8 +21,6 @@ class TaxonCommon < ApplicationRecord
   belongs_to :common_name
   belongs_to :taxon_concept
 
-  validates :common_name_id, :presence => true
-
   before_validation do
     cname = CommonName.find_or_create_by(
       name: self.name, language_id: self.language_id)

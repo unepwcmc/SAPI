@@ -4,8 +4,8 @@ module TrackWhoDoesIt
   included do
     before_create :track_who_does_it_create_callback
     before_update :track_who_does_it_update_callback
-    belongs_to :creator, class_name: 'User', foreign_key: 'created_by_id'#, optional: true # TODO, enable that for Rails 5
-    belongs_to :updater, class_name: 'User', foreign_key: 'updated_by_id'#, optional: true # TODO, enable that for Rails 5
+    belongs_to :creator, class_name: 'User', foreign_key: 'created_by_id', optional: true
+    belongs_to :updater, class_name: 'User', foreign_key: 'updated_by_id', optional: true
   end
 
   private
