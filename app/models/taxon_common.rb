@@ -18,8 +18,8 @@ class TaxonCommon < ApplicationRecord
   #   :updated_by_id, :name, :language_id
 
   attr_accessor :name, :language_id
-  belongs_to :common_name
-  belongs_to :taxon_concept
+  belongs_to :common_name, optional: true
+  belongs_to :taxon_concept, optional: true
 
   before_validation do
     cname = CommonName.find_or_create_by(
