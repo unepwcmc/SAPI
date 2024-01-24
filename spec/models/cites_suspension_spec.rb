@@ -208,7 +208,7 @@ describe CitesSuspension, sidekiq: :inline do
         }
 
         specify { expect(cites_suspension).to be_invalid }
-        specify { expect(cites_suspension.error_on(:start_notification_id).size).to eq(1) }
+        specify { expect(cites_suspension.error_on(:start_notification).size).to eq(1) }
       end
 
       context "when start date greater than end date" do
