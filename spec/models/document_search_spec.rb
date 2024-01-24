@@ -356,10 +356,15 @@ describe DocumentSearch, sidekiq: :inline do
     #
     # In these tests we will check that making changes 4 minutes ago to any of
     # the models which depend directly or indirectly on the Document model will
-    # cause documents_need_refreshing to become true.
+    # cause documents_need_refreshing to become true, by amending the attribute
+    # updated_at on @c and @d
 
     before(:each) do
+      @refresh_threshold = Time.now - (DocumentSearch::REFRESH_INTERVAL).minutes
+      @recent_time = Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes
+
       @d = nil
+
       @ge2 = create(
         :geo_entity,
         geo_entity_type: country_geo_entity_type,
@@ -384,7 +389,7 @@ describe DocumentSearch, sidekiq: :inline do
     context 'when DocumentCitation' do
       context "created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
-          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          travel_to(@recent_time) do
             create(:document_citation, document: @d)
           end
 
@@ -394,7 +399,7 @@ describe DocumentSearch, sidekiq: :inline do
 
       context "updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
-          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          travel_to(@recent_time) do
             @c.update_attributes!(elib_legacy_id: 1) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
           end
 
@@ -404,7 +409,7 @@ describe DocumentSearch, sidekiq: :inline do
 
       context "destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
-          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          travel_to(@recent_time) do
             @c.destroy
           end
 
@@ -416,7 +421,7 @@ describe DocumentSearch, sidekiq: :inline do
     context 'when DocumentCitationTaxonConcept' do
       context "created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
-          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          travel_to(@recent_time) do
             create(:document_citation_taxon_concept, document_citation: @c)
           end
 
@@ -426,7 +431,7 @@ describe DocumentSearch, sidekiq: :inline do
 
       context "destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
-          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          travel_to(@recent_time) do
             @c_tc.destroy
           end
 
@@ -436,7 +441,7 @@ describe DocumentSearch, sidekiq: :inline do
 
       context "updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
-          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          travel_to(@recent_time) do
             @c_tc.update_attributes!(taxon_concept_id: create_cites_eu_species.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
           end
 
@@ -448,7 +453,7 @@ describe DocumentSearch, sidekiq: :inline do
     context 'when DocumentCitationGeoEntity' do
       context "created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
-          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          travel_to(@recent_time) do
             create(:document_citation_taxon_concept, document_citation: @c)
           end
 
@@ -458,7 +463,7 @@ describe DocumentSearch, sidekiq: :inline do
 
       context "destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
-          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          travel_to(@recent_time) do
             @c_ge.destroy
           end
 
@@ -468,7 +473,7 @@ describe DocumentSearch, sidekiq: :inline do
 
       context "updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
-          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+          travel_to(@recent_time) do
             @c_ge.update_attributes!(geo_entity_id: @ge2.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
           end
 
