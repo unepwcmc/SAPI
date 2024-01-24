@@ -383,7 +383,12 @@ describe DocumentSearch, sidekiq: :inline do
     end
 
     context "when no changes in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
-      specify { expect(DocumentSearch.citations_need_refreshing?).to be_falsey }
+      specify do
+        expect(@c.reload.updated_at).to be < @refresh_threshold
+        expect(@d.reload.updated_at).to be < @refresh_threshold
+
+        expect(DocumentSearch.citations_need_refreshing?).to be_falsey
+      end
     end
 
     context 'when DocumentCitation' do
@@ -393,6 +398,7 @@ describe DocumentSearch, sidekiq: :inline do
             create(:document_citation, document: @d)
           end
 
+          expect(@d.reload.updated_at).to be > @refresh_threshold
           expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
       end
@@ -403,6 +409,8 @@ describe DocumentSearch, sidekiq: :inline do
             @c.update_attributes!(elib_legacy_id: 1) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
           end
 
+          expect(@c.reload.updated_at).to be > @refresh_threshold
+          expect(@d.reload.updated_at).to be > @refresh_threshold
           expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
       end
@@ -413,6 +421,7 @@ describe DocumentSearch, sidekiq: :inline do
             @c.destroy
           end
 
+          expect(@d.reload.updated_at).to be > @refresh_threshold
           expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
       end
@@ -425,6 +434,8 @@ describe DocumentSearch, sidekiq: :inline do
             create(:document_citation_taxon_concept, document_citation: @c)
           end
 
+          expect(@c.reload.updated_at).to be > @refresh_threshold
+          expect(@d.reload.updated_at).to be > @refresh_threshold
           expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
       end
@@ -435,6 +446,8 @@ describe DocumentSearch, sidekiq: :inline do
             @c_tc.destroy
           end
 
+          expect(@c.reload.updated_at).to be > @refresh_threshold
+          expect(@d.reload.updated_at).to be > @refresh_threshold
           expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
       end
@@ -445,6 +458,8 @@ describe DocumentSearch, sidekiq: :inline do
             @c_tc.update_attributes!(taxon_concept_id: create_cites_eu_species.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
           end
 
+          expect(@c.reload.updated_at).to be > @refresh_threshold
+          expect(@d.reload.updated_at).to be > @refresh_threshold
           expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
       end
@@ -457,6 +472,8 @@ describe DocumentSearch, sidekiq: :inline do
             create(:document_citation_taxon_concept, document_citation: @c)
           end
 
+          expect(@c.reload.updated_at).to be > @refresh_threshold
+          expect(@d.reload.updated_at).to be > @refresh_threshold
           expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
       end
@@ -467,6 +484,8 @@ describe DocumentSearch, sidekiq: :inline do
             @c_ge.destroy
           end
 
+          expect(@c.reload.updated_at).to be > @refresh_threshold
+          expect(@d.reload.updated_at).to be > @refresh_threshold
           expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
       end
@@ -477,6 +496,8 @@ describe DocumentSearch, sidekiq: :inline do
             @c_ge.update_attributes!(geo_entity_id: @ge2.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
           end
 
+          expect(@c.reload.updated_at).to be > @refresh_threshold
+          expect(@d.reload.updated_at).to be > @refresh_threshold
           expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
       end
