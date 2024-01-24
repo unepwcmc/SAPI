@@ -22,7 +22,4 @@ class NomenclatureChange::ReassignmentTarget < ApplicationRecord
   belongs_to :reassignment,
     class_name: 'NomenclatureChange::Reassignment',
     foreign_key: :nomenclature_change_reassignment_id
-
-  validates :reassignment, :presence => true
-  validates :output, :presence => true
 end

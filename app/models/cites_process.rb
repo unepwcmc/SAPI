@@ -10,8 +10,6 @@ class CitesProcess < ApplicationRecord
   belongs_to :start_event, :class_name => 'Event', optional: true
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
 
-  validates :taxon_concept, presence: true
-  validates :geo_entity, presence: true
   validates :resolution, presence: true
   validates :start_date, presence: true
 

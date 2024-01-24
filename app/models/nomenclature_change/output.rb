@@ -75,7 +75,6 @@ class NomenclatureChange::Output < ApplicationRecord
   belongs_to :new_parent, :class_name => TaxonConcept, :foreign_key => :new_parent_id, optional: true
   belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id, optional: true
 
-  validates :nomenclature_change, :presence => true
   validates :new_scientific_name, :presence => true,
     :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validates :new_parent_id, :presence => true,

@@ -50,8 +50,6 @@ class EuDecision < ApplicationRecord
   has_many :eu_decision_confirmations,
     :dependent => :destroy
 
-  validates :taxon_concept, presence: true
-  validates :geo_entity, presence: true
   validate :eu_decision_type_and_or_srg_history
 
   translates :nomenclature_note

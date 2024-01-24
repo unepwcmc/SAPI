@@ -151,8 +151,6 @@ class TaxonConcept < ApplicationRecord
   has_many :cites_processes
   has_many :cites_captivity_processes
 
-  validates :taxonomy_id, :presence => true
-  validates :rank_id, :presence => true
   validates :name_status, :presence => true
   validates :parent_id, presence: true,
     if: lambda { |tc| ['A', 'N'].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM' }

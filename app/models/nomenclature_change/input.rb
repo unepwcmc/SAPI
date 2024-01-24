@@ -65,8 +65,6 @@ class NomenclatureChange::Input < ApplicationRecord
     foreign_key: :nomenclature_change_input_id,
     dependent: :destroy,
     autosave: true
-  validates :nomenclature_change, :presence => true
-  validates :taxon_concept, :presence => true
   accepts_nested_attributes_for :parent_reassignments, :allow_destroy => true
   accepts_nested_attributes_for :name_reassignments, :allow_destroy => true
   accepts_nested_attributes_for :distribution_reassignments, :allow_destroy => true

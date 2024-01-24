@@ -55,10 +55,6 @@ class Trade::Shipment < ApplicationRecord
     :only_integer => true, :greater_than_or_equal_to => 1975, :less_than => 3000,
     :message => 'should be a 4 digit year'
   }
-  validates :taxon_concept_id, :presence => true
-  validates :term_id, :presence => true
-  validates :exporter_id, :presence => true
-  validates :importer_id, :presence => true
   validates :reporter_type, :presence => true, :inclusion => {
     :in => ['E', 'I'], :message => 'should be one of E, I'
   }
