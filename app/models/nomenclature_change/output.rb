@@ -186,7 +186,7 @@ class NomenclatureChange::Output < ApplicationRecord
 
     return true if @tmp_taxon_concept.valid?
     @tmp_taxon_concept.errors.each do |attribute, message|
-      if [:parent_id, :rank_id, :name_status, :author_year, :full_name].
+      if [:parent_id, :rank, :name_status, :author_year, :full_name].
         include?(attribute)
         errors.add(:"new_#{attribute}", message)
       else
