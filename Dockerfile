@@ -1,5 +1,5 @@
 # Dockerfile
-FROM ruby:2.5.9
+FROM ruby:2.6.10
 
 # Rails and SAPI has some additional dependencies, e.g. rake requires a JS
 # runtime, so attempt to get these from apt, where possible
