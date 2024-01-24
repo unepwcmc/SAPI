@@ -12,10 +12,12 @@
 #
 
 class CommonName < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
+
   # Used by app/models/taxon_common.rb
   # attr_accessible :language_id, :name,
   #   :created_by_id, :updated_by_id
+
   belongs_to :language
   validates :name, :presence => true,
     :uniqueness => { :scope => :language_id }

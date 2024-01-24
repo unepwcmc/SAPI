@@ -15,7 +15,8 @@
 #
 
 class TaxonConceptReference < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
+
   # Migrated to controller (Strong Parameters)
   # attr_accessible :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
   #   :excluded_taxon_concepts_ids, :reference_attributes,

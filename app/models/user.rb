@@ -24,7 +24,6 @@
 #
 
 class User < ActiveRecord::Base
-  include SentientUser
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   # Migrated to controller (Strong Parameters)

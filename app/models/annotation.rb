@@ -23,7 +23,7 @@
 #
 
 class Annotation < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
 
   # Migrated to controller (Strong Parameters)
   # attr_accessible :listing_change_id, :symbol, :parent_symbol, :short_note_en,

@@ -12,9 +12,11 @@
 #
 
 class TradeRestrictionPurpose < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
+
   # Relationship model between TradeCode(purpose) and TradeRestriction
   # attr_accessible :purpose_id, :trade_restriction_id
+
   belongs_to :trade_restriction
   belongs_to :purpose, :class_name => 'TradeCode'
 end

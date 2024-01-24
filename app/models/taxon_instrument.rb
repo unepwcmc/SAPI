@@ -13,7 +13,8 @@
 #
 
 class TaxonInstrument < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
+
   # Migrated to controller (Strong Parameters)
   # attr_accessible :effective_from, :instrument_id, :taxon_concept_id
 

@@ -41,7 +41,7 @@ describe User do
     context "when dependent objects attached" do
       let(:user) { create(:user) }
       before(:each) do
-        user.make_current
+        RequestStore.store[:track_who_does_it_current_user] = user
         create(:shipment)
       end
       specify { expect(user.destroy).to be_falsey }

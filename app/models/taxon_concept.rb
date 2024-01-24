@@ -31,7 +31,7 @@
 #
 
 class TaxonConcept < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
   has_paper_trail class_name: 'TaxonConceptVersion', on: :destroy,
     meta: {
       taxon_concept_id: :id,

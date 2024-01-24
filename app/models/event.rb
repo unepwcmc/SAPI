@@ -24,7 +24,7 @@
 #
 
 class Event < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
 
   # Migrated to controller (Strong Parameters)
   # attr_accessible :name, :designation_id, :description, :extended_description,

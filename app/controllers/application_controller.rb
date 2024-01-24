@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  include SentientController
+  before_filter :track_who_does_it_current_user
   before_filter :set_locale
   before_filter :configure_permitted_parameters, if: :devise_controller?
   before_filter :set_paper_trail_whodunnit
@@ -45,6 +45,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def track_who_does_it_current_user
+    RequestStore.store[:track_who_does_it_current_user] = current_user
+  end
 
   def set_locale
     I18n.locale = params[:locale] || I18n.default_locale

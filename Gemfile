@@ -137,8 +137,7 @@ end
 
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
 
-# track who created or edited a given object
-gem 'clerk', '0.2.3' # TODO: Need update to 1.0.0 when upgrade to Rails 5. I would say should update our code and just use paper_trail. This gem last update at 2018.
+gem 'request_store', '~> 1.5', '>= 1.5.1'
 gem 'paper_trail', '10.3.1' # TODO: latest is 15.1.0. Can upgrade to newer version when we at Rails 5.2
 
 gem 'dotenv-rails', '2.0.1'

@@ -57,7 +57,7 @@ RSpec.configure do |config|
   config.before(:all) do
     DatabaseCleaner.clean_with(:deletion, { :cache_tables => false })
     @user = create(:user)
-    @user.make_current
+    RequestStore.store[:track_who_does_it_current_user] = @user
   end
 
   config.before(:each) do
@@ -77,7 +77,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
     # this is duplicated here because of the :drops_tables specs
     @user = create(:user)
-    @user.make_current
+    RequestStore.store[:track_who_does_it_current_user] = @user
   end
 
   config.before(:each) do |example|

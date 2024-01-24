@@ -12,10 +12,12 @@
 #
 
 class TaxonCommon < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
+
   # Migrated to controller (Strong Parameters)
   # attr_accessible :common_name_id, :taxon_concept_id, :created_by_id,
   #   :updated_by_id, :name, :language_id
+
   attr_accessor :name, :language_id
   belongs_to :common_name
   belongs_to :taxon_concept
