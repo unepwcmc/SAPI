@@ -1,4 +1,5 @@
 module ComparisonAttributes
+  extend ActiveSupport::Concern
 
   def self.included(base)
     base.extend ClassMethods
@@ -65,10 +66,10 @@ module ComparisonAttributes
 
 end
 
-ApplicationRecord.send :include, ComparisonAttributes
+# ApplicationRecord.send :include, ComparisonAttributes
 
 # Since Rails 5, our base class has changed and is no longer ActiveRecord::Base,
 # but is now ApplicationRecord. However ActsAsTaggableOn still has
 # ActiveRecord::Base as a base class, therefore it needs to be done separately.
 # It's possible that more ActsAsTaggableOn:: classes need this treatment.
-ActsAsTaggableOn::Tagging.send :include, ComparisonAttributes
+# ActsAsTaggableOn::Tagging.send :include, ComparisonAttributes
