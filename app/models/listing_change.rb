@@ -27,6 +27,7 @@
 #
 
 class ListingChange < ActiveRecord::Base
+  extend Mobility
   include TrackWhoDoesIt
 
   # Migrated to controller (Strong Parameters)

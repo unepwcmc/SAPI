@@ -31,6 +31,7 @@
 #
 
 class TaxonConcept < ActiveRecord::Base
+  extend Mobility
   include TrackWhoDoesIt
   has_paper_trail class_name: 'TaxonConceptVersion', on: :destroy,
     meta: {

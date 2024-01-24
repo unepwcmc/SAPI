@@ -23,6 +23,7 @@
 #
 
 class Annotation < ActiveRecord::Base
+  extend Mobility
   include TrackWhoDoesIt
 
   # Migrated to controller (Strong Parameters)

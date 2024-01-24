@@ -29,6 +29,7 @@
 require 'digest/sha1'
 require 'csv'
 class EuDecision < ActiveRecord::Base
+  extend Mobility
   include TrackWhoDoesIt
 
 

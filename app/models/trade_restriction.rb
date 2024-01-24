@@ -33,6 +33,7 @@
 require 'digest/sha1'
 require 'csv'
 class TradeRestriction < ActiveRecord::Base
+  extend Mobility
   include TrackWhoDoesIt
 
   # Migrated to controller (Strong Parameters)

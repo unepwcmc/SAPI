@@ -13,6 +13,7 @@
 #
 
 class TradeCode < ActiveRecord::Base
+  extend Mobility
   # Migrated to controller (Strong Parameters)
   # attr_accessible :code, :type, :name_en, :name_es, :name_fr
   translates :name

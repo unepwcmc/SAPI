@@ -2,15 +2,17 @@ module MListingChange
 
   def self.included(base)
     base.class_eval do
+      extend Mobility
+
       belongs_to :designation
       belongs_to :taxon_concept, :class_name => 'MTaxonConcept'
       belongs_to :listing_change, :foreign_key => :id
       belongs_to :event
-      translates :short_note, fallback: false
-      translates :full_note, fallback: false
+      translates :short_note, fallbacks: false
+      translates :full_note, fallbacks: false
       translates :hash_full_note, :inherited_short_note, :inherited_full_note,
         :auto_note, :party_full_name
-      translates :nomenclature_note, fallback: false
+      translates :nomenclature_note, fallbacks: false
     end
   end
 
