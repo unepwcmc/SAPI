@@ -1,4 +1,5 @@
 module ProtectedDeletion
+  extend ActiveSupport::Concern
 
   # ideally override this
   def can_be_deleted?
@@ -21,6 +22,4 @@ module ProtectedDeletion
   def dependent_objects_map
     {}
   end
-
 end
-ApplicationRecord.send :include, ProtectedDeletion
