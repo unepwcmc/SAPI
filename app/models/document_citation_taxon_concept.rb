@@ -12,7 +12,7 @@
 #
 
 class DocumentCitationTaxonConcept < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
   attr_accessible :created_by_id, :document_citation_id, :taxon_concept_id, :updated_by_id,
     :updated_at
   belongs_to :taxon_concept

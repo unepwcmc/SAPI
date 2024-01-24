@@ -32,7 +32,7 @@
 #
 
 class Trade::Shipment < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
   attr_accessible :annual_report_upload_id, :appendix,
     :country_of_origin_id, :origin_permit_id,
     :exporter_id, :import_permit_id, :importer_id, :purpose_id,

@@ -14,7 +14,7 @@
 #
 
 class ListingDistribution < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
   attr_accessible :geo_entity_id, :listing_change_id, :is_party
   belongs_to :geo_entity
   belongs_to :listing_change

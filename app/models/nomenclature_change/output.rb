@@ -33,7 +33,7 @@
 # Outputs may be new taxon concepts, created as a result of the nomenclature
 # change.
 class NomenclatureChange::Output < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
   attr_accessor :output_type # New taxon, Existing subspecies, Existing taxon
   attr_accessible :nomenclature_change_id, :taxon_concept_id,
     :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,

@@ -20,7 +20,7 @@
 require 'csv_column_headers_validator'
 class Trade::AnnualReportUpload < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
-  track_who_does_it
+  include TrackWhoDoesIt
   attr_accessible :csv_source_file, :trading_country_id, :point_of_view,
                   :submitted_at, :submitted_by_id, :number_of_rows,
                   :number_of_records_submitted, :aws_storage_path

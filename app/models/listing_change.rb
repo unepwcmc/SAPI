@@ -27,7 +27,7 @@
 #
 
 class ListingChange < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
   attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
     :effective_at, :is_current, :parent_id, :geo_entity_ids,
     :party_listing_distribution_attributes, :inclusion_taxon_concept_id,

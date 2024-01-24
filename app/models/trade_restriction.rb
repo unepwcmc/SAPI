@@ -33,7 +33,7 @@
 require 'digest/sha1'
 require 'csv'
 class TradeRestriction < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
   attr_accessible :end_date, :geo_entity_id, :is_current,
     :notes, :publication_date, :purpose_ids, :quota, :type,
     :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,

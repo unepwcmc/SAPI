@@ -2,7 +2,7 @@ module NomenclatureChange::ReassignmentHelpers
 
   def self.included(base)
     base.class_eval do
-      track_who_does_it
+      include TrackWhoDoesIt
       attr_accessible :type, :reassignable_id, :reassignable_type,
         :nomenclature_change_input_id, :nomenclature_change_output_id,
         :note_en, :note_es, :note_fr, :internal_note, :output_ids

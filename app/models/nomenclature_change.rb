@@ -16,7 +16,7 @@ class NomenclatureChange < ActiveRecord::Base
   include Dictionary
   include StatusDictionary
   build_steps
-  track_who_does_it
+  include TrackWhoDoesIt
   attr_accessible :event_id, :status
 
   belongs_to :event

@@ -29,7 +29,7 @@ class Document < ActiveRecord::Base
   pg_search_scope :search_by_title, :against => :title,
     :using => { :tsearch => { :prefix => true } },
     :order_within_rank => "documents.date, documents.title, documents.id"
-  track_who_does_it
+  include TrackWhoDoesIt
   attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
     :language_id, :citations_attributes,
     :sort_index, :discussion_id, :discussion_sort_index,

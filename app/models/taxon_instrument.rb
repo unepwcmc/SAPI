@@ -13,7 +13,7 @@
 #
 
 class TaxonInstrument < ActiveRecord::Base
-  track_who_does_it
+  include TrackWhoDoesIt
   attr_accessible :effective_from, :instrument_id, :taxon_concept_id
 
   belongs_to :instrument
