@@ -62,7 +62,7 @@ class Trade::Shipment < ApplicationRecord
 
   belongs_to :taxon_concept
   belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
-  belongs_to :reported_taxon_concept, :class_name => 'TaxonConcept'
+  belongs_to :reported_taxon_concept, :class_name => 'TaxonConcept', optional: true
   belongs_to :purpose, :class_name => "TradeCode", optional: true
   belongs_to :source, :class_name => "TradeCode", optional: true
   belongs_to :term, :class_name => "TradeCode"
