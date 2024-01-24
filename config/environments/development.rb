@@ -57,11 +57,10 @@ Rails.application.configure do
 
   # Custom email settings
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { address: Rails.application.secrets.mailer['address'], port: 1025 }
+  config.action_mailer.smtp_settings = { address: Rails.application.secrets.mailer[:address], port: 1025 }
   config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.mailer['host'] || 'http://localhost:3000'
+    host: Rails.application.secrets.mailer[:host] || 'http://localhost:3000'
   }
-  ActionMailer::Base.default from: Rails.application.secrets.mailer['from']
 
   # CORS settings
   # TODO: Rails 5 should build-in, need change this part when upgrade.

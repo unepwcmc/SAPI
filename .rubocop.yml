@@ -7,7 +7,7 @@ Rails:
   Enabled: true
 AllCops:
   TargetRubyVersion: 2.6
-  TargetRailsVersion: 5.0
+  TargetRailsVersion: 5.1
   Exclude:
     - 'lib/tasks/bbgem.rake'
     - 'db/schema.rb'

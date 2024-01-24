@@ -49,7 +49,6 @@ Rails.application.configure do
 
   # Custom email settings
   config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.mailer['host']
+    host: Rails.application.secrets.mailer[:host]
   }
-  ActionMailer::Base.default from: Rails.application.secrets.mailer['from']
 end

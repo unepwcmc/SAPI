@@ -8,7 +8,7 @@ Sidekiq.configure_client do |config|
     chain.add SidekiqUniqueJobs::Middleware::Client
   end
   config.redis = {
-    url: Rails.application.secrets.redis['url']
+    url: Rails.application.secrets.redis[:url]
   }
 end
 
@@ -22,7 +22,7 @@ Sidekiq.configure_server do |config|
     chain.add SidekiqUniqueJobs::Middleware::Client
   end
   config.redis = {
-    url: Rails.application.secrets.redis['url']
+    url: Rails.application.secrets.redis[:url]
   }
 
   SidekiqUniqueJobs::Server.configure(config)

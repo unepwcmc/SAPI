@@ -83,16 +83,15 @@ Rails.application.configure do
 
   # Custom email settings
   config.action_mailer.smtp_settings = {
-    domain: Rails.application.secrets.mailer['domain'],
-    address: Rails.application.secrets.mailer['address'],
+    domain: Rails.application.secrets.mailer[:domain],
+    address: Rails.application.secrets.mailer[:address],
     port: 587,
     authentication: :login,
     enable_starttls_auto: true,
-    user_name: Rails.application.secrets.mailer['username'],
-    password: Rails.application.secrets.mailer['password']
+    user_name: Rails.application.secrets.mailer[:username],
+    password: Rails.application.secrets.mailer[:password]
   }
   config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.mailer['host']
+    host: Rails.application.secrets.mailer[:host]
   }
-  ActionMailer::Base.default from: Rails.application.secrets.mailer['from']
 end
