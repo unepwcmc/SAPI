@@ -289,77 +289,191 @@ describe DocumentSearch, sidekiq: :inline do
   end
 
   describe :documents_need_refreshing? do
+    # Where DocumentSearch::REFRESH_INTERVAL is 5,
+    #
+    # - @d is a Document::Proposal created 6 minutes ago
+    # - refresh_citations_and_documents has been run, so api_documents_mview
+    #   should be up-to-date.
+    #
+    # In these tests we will check that making changes to @d 4 minutes ago
+    # causes documents_need_refreshing to become true.
+
     before(:each) do
       @d = nil
+
       travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
         @d = create(:proposal)
         DocumentSearch.refresh_citations_and_documents
       end
     end
+
     context "when no changes in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify { expect(DocumentSearch.documents_need_refreshing?).to be_falsey }
     end
+
     context "when document created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
         travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           create(:proposal)
         end
+
         expect(DocumentSearch.documents_need_refreshing?).to be_truthy
       end
     end
+
     context "when document destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
         travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           @d.destroy
         end
+
         expect(DocumentSearch.documents_need_refreshing?).to be_truthy
       end
     end
+
     context "when document updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
         travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
-          @d.update_attributes(is_public: true) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+          @d.update_attributes!(is_public: true) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
         end
+
         expect(DocumentSearch.documents_need_refreshing?).to be_truthy
       end
     end
   end
 
   describe :citations_need_refreshing? do
+    # Where DocumentSearch::REFRESH_INTERVAL is 5,
+    #
+    # - @refresh_threshold is 5 minutes ago
+    # - @recent_time is 4 minutes ago
+    # - @d is a Document::Proposal created 6 minutes ago, as are the following:
+    # - @c is a DocumentCitation, belonging to @d
+    # - @c_tc is a DocumentCitationTaxonConcept belonging to @c
+    # - @c_ge is a DocumentCitationGeoEntity belonging to @c
+    # - refresh_citations_and_documents has been run, so api_documents_mview
+    #   should be up-to-date.
+    #
+    # In these tests we will check that making changes 4 minutes ago to any of
+    # the models which depend directly or indirectly on the Document model will
+    # cause documents_need_refreshing to become true.
+
     before(:each) do
       @d = nil
+      @ge2 = create(
+        :geo_entity,
+        geo_entity_type: country_geo_entity_type,
+        name: 'Brazil',
+        iso_code2: 'BR'
+      )
+
       travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
         @d = create(:proposal)
         @c = create(:document_citation, document: @d)
         @c_tc = create(:document_citation_taxon_concept, document_citation: @c)
+        @c_ge = create(:document_citation_geo_entity, document_citation: @c)
+
         DocumentSearch.refresh_citations_and_documents
       end
     end
+
     context "when no changes in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify { expect(DocumentSearch.citations_need_refreshing?).to be_falsey }
     end
-    context "when citation created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
-      specify do
-        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
-          create(:document_citation_taxon_concept, document_citation: @c)
+
+    context 'when DocumentCitation' do
+      context "created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+        specify do
+          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+            create(:document_citation, document: @d)
+          end
+
+          expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
-        expect(DocumentSearch.citations_need_refreshing?).to be_truthy
+      end
+
+      context "updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+        specify do
+          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+            @c.update_attributes!(elib_legacy_id: 1) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+          end
+
+          expect(DocumentSearch.citations_need_refreshing?).to be_truthy
+        end
+      end
+
+      context "destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+        specify do
+          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+            @c.destroy
+          end
+
+          expect(DocumentSearch.citations_need_refreshing?).to be_truthy
+        end
       end
     end
-    context "when citation destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
-      specify do
-        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
-          @c_tc.destroy
+
+    context 'when DocumentCitationTaxonConcept' do
+      context "created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+        specify do
+          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+            create(:document_citation_taxon_concept, document_citation: @c)
+          end
+
+          expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
-        expect(DocumentSearch.citations_need_refreshing?).to be_truthy
+      end
+
+      context "destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+        specify do
+          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+            @c_tc.destroy
+          end
+
+          expect(DocumentSearch.citations_need_refreshing?).to be_truthy
+        end
+      end
+
+      context "updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+        specify do
+          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+            @c_tc.update_attributes!(taxon_concept_id: create_cites_eu_species.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+          end
+
+          expect(DocumentSearch.citations_need_refreshing?).to be_truthy
+        end
       end
     end
-    context "when citation updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
-      specify do
-        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
-          @c_tc.update_attributes(taxon_concept_id: create_cites_eu_species.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+
+    context 'when DocumentCitationGeoEntity' do
+      context "created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+        specify do
+          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+            create(:document_citation_taxon_concept, document_citation: @c)
+          end
+
+          expect(DocumentSearch.citations_need_refreshing?).to be_truthy
         end
-        expect(DocumentSearch.citations_need_refreshing?).to be_truthy
+      end
+
+      context "destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+        specify do
+          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+            @c_ge.destroy
+          end
+
+          expect(DocumentSearch.citations_need_refreshing?).to be_truthy
+        end
+      end
+
+      context "updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
+        specify do
+          travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+            @c_ge.update_attributes!(geo_entity_id: @ge2.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+          end
+
+          expect(DocumentSearch.citations_need_refreshing?).to be_truthy
+        end
       end
     end
   end

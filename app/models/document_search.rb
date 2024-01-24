@@ -234,6 +234,7 @@ class DocumentSearch
   end
 
   def self.citations_need_refreshing?
+    puts DocumentCitation.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).to_sql
     DocumentCitation.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).limit(1).count > 0 ||
     DocumentCitation.count < DocumentCitation.select('DISTINCT id').
       from('document_citations_mview AS citations').count
