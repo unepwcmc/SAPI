@@ -36,7 +36,7 @@ class TaxonRelationship < ApplicationRecord
     scope: [:taxon_relationship_type_id, :other_taxon_concept_id],
     message: 'This relationship already exists, choose another taxon.'
   }
-  validate :intertaxonomic_relationship_uniqueness, :if => "taxon_relationship_type.is_intertaxonomic?"
+  validate :intertaxonomic_relationship_uniqueness, if: -> { taxon_relationship_type.is_intertaxonomic? }
 
   scope :hybrids, -> { where(
       "taxon_relationship_type_id IN
