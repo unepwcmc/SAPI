@@ -38,7 +38,7 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -55,21 +55,26 @@ RSpec.configure do |config|
   config.include SapiSpec::Helpers
 
   config.before(:all) do
+    DatabaseCleaner.clean_with(:deletion, { :cache_tables => false })
     @user = create(:user)
     RequestStore.store[:track_who_does_it_current_user] = @user
   end
 
   config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
   end
 
   config.before(:each, :drops_tables => true) do
+    DatabaseCleaner.strategy = :deletion, { :cache_tables => false }
     ApplicationRecord.connection.execute('SELECT * FROM drop_trade_sandboxes()')
   end
 
   config.before(:each) do
+    DatabaseCleaner.start
   end
 
   config.after(:each) do
+    DatabaseCleaner.clean
     # this is duplicated here because of the :drops_tables specs
     @user = create(:user)
     RequestStore.store[:track_who_does_it_current_user] = @user
