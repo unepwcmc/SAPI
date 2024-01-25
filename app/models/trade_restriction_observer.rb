@@ -27,7 +27,23 @@ class TradeRestrictionObserver < ActiveRecord::Observer
       AND distributions.geo_entity_id IN (:geo_entity_id)",
       :updated_by_id => trade_restriction.updated_by_id,
       :geo_entity_id => [
-        trade_restriction.geo_entity_id, trade_restriction.geo_entity_id_was
+        # Rails 5.1 to 5.2
+        # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `attribute_before_last_save` instead.
+        #
+        # DEPRECATION WARNING: The behavior of `attribute_changed?` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `saved_change_to_attribute?` instead.
+        #
+        # DEPRECATION WARNING: The behavior of `changed_attributes` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `saved_changes.transform_values(&:first)` instead.
+        #
+        # == Original code ==
+        # trade_restriction.geo_entity_id, trade_restriction.geo_entity_id_was
+        # == Changed to fix deprecation warnings ==
+        trade_restriction.geo_entity_id, trade_restriction.geo_entity_id_before_last_save
       ].compact.uniq
     ])
     TaxonConcept.connection.execute update_stmt
@@ -47,7 +63,23 @@ class TradeRestrictionObserver < ActiveRecord::Observer
       ] && ARRAY[:taxon_concept_id] ",
       :updated_by_id => trade_restriction.updated_by_id,
       :taxon_concept_id => [
-        trade_restriction.taxon_concept_id, trade_restriction.taxon_concept_id_was
+        # Rails 5.1 to 5.2
+        # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `attribute_before_last_save` instead.
+        #
+        # DEPRECATION WARNING: The behavior of `attribute_changed?` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `saved_change_to_attribute?` instead.
+        #
+        # DEPRECATION WARNING: The behavior of `changed_attributes` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `saved_changes.transform_values(&:first)` instead.
+        #
+        # == Original code ==
+        # trade_restriction.taxon_concept_id, trade_restriction.taxon_concept_id_was
+        # == Changed to fix deprecation warnings ==
+        trade_restriction.taxon_concept_id, trade_restriction.taxon_concept_id_before_last_save
       ].compact.uniq
     ])
     TaxonConcept.connection.execute update_stmt

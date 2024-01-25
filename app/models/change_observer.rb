@@ -23,9 +23,31 @@ class ChangeObserver < ActiveRecord::Observer
     if model.taxon_concept
       bump_dependents_timestamp(model.taxon_concept, model.updated_by_id)
     end
-    if model.taxon_concept.nil? && model.taxon_concept_id_was ||
-      model.taxon_concept && model.taxon_concept_id_was && model.taxon_concept_id != model.taxon_concept_id_was
-      previous_taxon_concept = TaxonConcept.find_by_id(model.taxon_concept_id_was)
+    # Rails 5.1 to 5.2
+    # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
+    # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+    # To maintain the current behavior, use `attribute_before_last_save` instead.
+    #
+    # DEPRECATION WARNING: The behavior of `attribute_changed?` inside of after callbacks will be changing in the next version of Rails.
+    # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+    # To maintain the current behavior, use `saved_change_to_attribute?` instead.
+    #
+    # DEPRECATION WARNING: The behavior of `changed_attributes` inside of after callbacks will be changing in the next version of Rails.
+    # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+    # To maintain the current behavior, use `saved_changes.transform_values(&:first)` instead.
+    #
+    # == Original code ==
+    # if model.taxon_concept.nil? && model.taxon_concept_id_was ||
+    #   model.taxon_concept && model.taxon_concept_id_was && model.taxon_concept_id != model.taxon_concept_id_was
+    #   previous_taxon_concept = TaxonConcept.find_by_id(model.taxon_concept_id_was)
+    #   if previous_taxon_concept
+    #     bump_dependents_timestamp(previous_taxon_concept, model.updated_by_id)
+    #   end
+    # end
+    # == Changed to fix deprecation warnings ==
+    if model.taxon_concept.nil? && model.taxon_concept_id_before_last_save ||
+      model.taxon_concept && model.taxon_concept_id_before_last_save && model.taxon_concept_id != model.taxon_concept_id_before_last_save
+      previous_taxon_concept = TaxonConcept.find_by_id(model.taxon_concept_id_before_last_save)
       if previous_taxon_concept
         bump_dependents_timestamp(previous_taxon_concept, model.updated_by_id)
       end

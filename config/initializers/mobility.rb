@@ -53,7 +53,7 @@ Mobility.configure do
     # Dirty
     #
     # Uncomment this line to include and enable globally:
-    # dirty # Doesn't work in Rails 4.2
+    dirty
     #
     # Or uncomment this line to include but disable by default, and only enable
     # per model by passing +dirty: true+ to +translates+.

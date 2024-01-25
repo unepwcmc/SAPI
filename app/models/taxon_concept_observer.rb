@@ -45,10 +45,29 @@ class TaxonConceptObserver < ActiveRecord::Observer
 
   def after_update(taxon_concept)
     ensure_species_touched(taxon_concept)
-    if taxon_concept.rank_id_changed? ||
-      taxon_concept.taxon_name_id_changed? ||
-      taxon_concept.parent_id_changed? ||
-      taxon_concept.name_status_changed?
+    # Rails 5.1 to 5.2
+    # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
+    # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+    # To maintain the current behavior, use `attribute_before_last_save` instead.
+    #
+    # DEPRECATION WARNING: The behavior of `attribute_changed?` inside of after callbacks will be changing in the next version of Rails.
+    # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+    # To maintain the current behavior, use `saved_change_to_attribute?` instead.
+    #
+    # DEPRECATION WARNING: The behavior of `changed_attributes` inside of after callbacks will be changing in the next version of Rails.
+    # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+    # To maintain the current behavior, use `saved_changes.transform_values(&:first)` instead.
+    #
+    # == Original code ==
+    # if taxon_concept.rank_id_changed? ||
+    #   taxon_concept.taxon_name_id_changed? ||
+    #   taxon_concept.parent_id_changed? ||
+    #   taxon_concept.name_status_changed?
+    # == Changed to fix deprecation warnings ==
+    if taxon_concept.saved_change_to_rank_id? ||
+       taxon_concept.saved_change_to_taxon_name_id? ||
+       taxon_concept.saved_change_to_parent_id? ||
+       taxon_concept.saved_change_to_name_status?
       Species::Search.increment_cache_iterator
       Species::TaxonConceptPrefixMatcher.increment_cache_iterator
       Checklist::Checklist.increment_cache_iterator
