@@ -29,7 +29,7 @@ gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgra
 gem 'pg', '~> 1.5', '>= 1.5.4'
 gem 'pg_array_parser', '~> 0.0.9'
 gem 'nested-hstore', '~> 0.1.2'
-gem 'pg_search', '2.3.0' # TODO: can upgrade to newer version after Rails 5
+gem 'pg_search', '2.3.0' # TODO: can upgrade to newer version after Rails 5.2
 gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
 gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
 gem 'inherited_resources', '1.9.0' # Deprecated (https://github.com/activeadmin/inherited_resources#notice) # TODO: need upgrade when upgrade to Rails 6
@@ -121,7 +121,7 @@ group :test, :development do
   gem "rspec-rails", '4.1.1' # TODO: should upgrade once to rails 5.2
   gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
   gem "json_spec", '1.1.5'
-  gem 'database_cleaner', '~> 2.0', '>= 2.0.2' # TODO, should remove after upgrade to Rails 5.1. (https://stackoverflow.com/questions/49246124/is-databasecleaner-still-necessary-with-rails-system-specs)
+  gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
   gem "launchy", '2.4.3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
