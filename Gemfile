@@ -26,7 +26,7 @@ gem 'actionpack-action_caching', '~> 1.2', '>= 1.2.2' # A feature that removed f
 gem 'actionpack-page_caching', '~> 1.2', '>= 1.2.4' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
 gem 'active_model_serializers', '0.8.4' # Deprecated
 gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
-gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
+gem 'pg', '~> 1.5', '>= 1.5.4'
 gem 'pg_array_parser', '~> 0.0.9'
 gem 'nested-hstore', '~> 0.1.2'
 gem 'pg_search', '2.3.0' # TODO: can upgrade to newer version after Rails 5
