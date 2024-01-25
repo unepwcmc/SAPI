@@ -120,7 +120,7 @@ group :development do
 end
 
 group :test, :development do
-  gem "rspec-rails", '4.1.1' # TODO: should upgrade once to rails 5.2
+  gem "rspec-rails", '5.1.2' # TODO: should upgrade once to rails 6.1
   gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
   gem "json_spec", '1.1.5'
   gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
