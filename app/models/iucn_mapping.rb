@@ -23,7 +23,7 @@ class IucnMapping < ApplicationRecord
   belongs_to :taxon_concept
   belongs_to :accepted_name, :class_name => 'TaxonConcept', optional: true
 
-  scope :filter, lambda { |option|
+  scope :index_filter, lambda { |option|
     case option
     when "ALL"
       all

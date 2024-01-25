@@ -6,8 +6,8 @@ class Admin::CmsMappingsController < Admin::SimpleCrudController
         where(:taxonomies => { :name => Taxonomy::CMS }).
         where(:name_status => 'A').count,
       :cms_mapped => CmsMapping.all.count,
-      :matches => CmsMapping.filter('MATCHES').count,
-      :missing_species_plus => CmsMapping.filter('MISSING_SPECIES_PLUS').count
+      :matches => CmsMapping.index_filter('MATCHES').count,
+      :missing_species_plus => CmsMapping.index_filter('MISSING_SPECIES_PLUS').count
     }
   end
 
@@ -17,6 +17,6 @@ class Admin::CmsMappingsController < Admin::SimpleCrudController
     @cms_mappings ||= end_of_association_chain.
       order("taxon_concepts.data->'class_name'").
       page(params[:page]).includes(:taxon_concept).
-      includes(:accepted_name).filter(params[:show])
+      includes(:accepted_name).index_filter(params[:show])
   end
 end

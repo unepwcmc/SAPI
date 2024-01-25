@@ -21,7 +21,7 @@ class CmsMapping < ApplicationRecord
   belongs_to :taxon_concept, optional: true
   belongs_to :accepted_name, :class_name => 'TaxonConcept', optional: true
 
-  scope :filter, lambda { |option|
+  scope :index_filter, lambda { |option|
     case option
     when "MATCHES"
       where('taxon_concept_id IS NOT NULL')
