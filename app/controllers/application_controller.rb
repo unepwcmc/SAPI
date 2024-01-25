@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery
   before_action :track_who_does_it_current_user
   before_action :set_locale
   before_action :configure_permitted_parameters, if: :devise_controller?
