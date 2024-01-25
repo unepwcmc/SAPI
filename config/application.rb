@@ -13,8 +13,9 @@ module SAPI
     config.load_defaults 5.1
 
     # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
+    # Application configuration can go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded after loading
+    # the framework and any gems in your application.
 
     # @see https://gist.github.com/maxivak/381f1e964923f1d469c8d39da8e2522f
     # TODO: Rails 7.1 https://stackoverflow.com/a/77198784/556780
