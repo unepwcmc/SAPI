@@ -1,10 +1,5 @@
 # config/initializers/paper_trail.rb
 
-PaperTrail.config.track_associations = false
-
-# the following line is required for PaperTrail >= 4.0.0 and < 12.0.0 with Rails
-PaperTrail::Rails::Engine.eager_load!
-
 class TaxonConceptVersion < PaperTrail::Version
   # Migrated to Strong Parameters
   # attr_accessible :taxon_concept_id,

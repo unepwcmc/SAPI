@@ -27,8 +27,8 @@ gem 'pg_array_parser', '~> 0.0.9'
 gem 'nested-hstore', '~> 0.1.2'
 gem 'pg_search', '~> 2.3', '>= 2.3.6'
 gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
-gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
-gem 'inherited_resources', '1.9.0' # Deprecated (https://github.com/activeadmin/inherited_resources#notice) # TODO: need upgrade when upgrade to Rails 6
+gem 'nokogiri', '1.13.10' # TODO: 1.13.10 is the last version support 2.6. New version need Ruby 2.7+
+gem 'inherited_resources', '1.13.1' # Deprecated (https://github.com/activeadmin/inherited_resources#notice) # TODO: need upgrade when upgrade to Rails 6
 gem 'mobility', '~> 1.2', '>= 1.2.9'
 gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
 gem 'cancancan', '2.3.0' # TODO, can upgrade to 3.0 after Rails 6
@@ -40,7 +40,7 @@ gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.
 #   rspec ./spec/controllers/admin/nomenclature_changes/split_controller_spec.rb:191
 gem 'wicked', '1.3.4'
 
-gem 'groupdate', '5.2.4' # TODO: can upgrade after rails 5.2 and newer ruby 2.6
+gem 'groupdate', '6.2.1' # TODO: can upgrade after rails 6.1 and newer ruby 3
 
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
@@ -146,7 +146,7 @@ end
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
 
 gem 'request_store', '~> 1.5', '>= 1.5.1'
-gem 'paper_trail', '10.3.1' # TODO: latest is 15.1.0. Can upgrade to newer version when we at Rails 5.2
+gem 'paper_trail', '13.0.0' # TODO: latest is 15.1.0. Can upgrade to newer version when we at Rails 6
 
 gem 'dotenv-rails', '2.0.1'
 
