@@ -17,7 +17,7 @@ Rails.application.configure do
   # Attempt to read encrypted secrets from `config/secrets.yml.enc`.
   # Requires an encryption key in `ENV["RAILS_MASTER_KEY"]` or
   # `config/secrets.yml.key`.
-  config.read_encrypted_secrets = false # TODO upgrade Rails 5.1
+  config.read_encrypted_secrets = false # Rails 5.1 introduce feature, but going to deprecate in Rails 5.2 and replaced by credentials.
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
