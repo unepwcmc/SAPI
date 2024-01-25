@@ -25,7 +25,7 @@ gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgra
 gem 'pg', '~> 1.5', '>= 1.5.4'
 gem 'pg_array_parser', '~> 0.0.9'
 gem 'nested-hstore', '~> 0.1.2'
-gem 'pg_search', '2.3.0' # TODO: can upgrade to newer version after Rails 5.2
+gem 'pg_search', '~> 2.3', '>= 2.3.6'
 gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
 gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
 gem 'inherited_resources', '1.9.0' # Deprecated (https://github.com/activeadmin/inherited_resources#notice) # TODO: need upgrade when upgrade to Rails 6
@@ -70,7 +70,7 @@ gem 'rails-observers', '~> 0.1.5' # A feature that removed from core in Rails 4.
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
 
-gem 'strong_migrations', '0.7.9' # TODO: should upgrade when we upgrade to rails 5.2
+gem 'strong_migrations', '~> 1.7'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
