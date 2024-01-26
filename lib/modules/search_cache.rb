@@ -12,7 +12,7 @@ module SearchCache
 
   def cached_results
     Rails.cache.fetch(results_cache_key, :expires_in => 24.hours) do
-      results
+      results.to_a
     end
   end
 
