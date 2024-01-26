@@ -55,6 +55,10 @@ RSpec.configure do |config|
   config.include SapiSpec::Helpers
 
   config.before(:all) do
+    # https://github.com/thoughtbot/factory_bot/issues/1255
+    # https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md#build-strategies-1
+    FactoryBot.use_parent_strategy = false
+
     DatabaseCleaner.clean_with(:deletion, { :cache_tables => false })
     @user = create(:user)
     RequestStore.store[:track_who_does_it_current_user] = @user

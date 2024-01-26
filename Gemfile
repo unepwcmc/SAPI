@@ -138,7 +138,7 @@ group :test do
 
   gem 'rails-controller-testing'
   gem "codeclimate-test-reporter", '0.1.1', require: nil # TODO, should be removed
-  gem 'factory_bot_rails', '4.11.1'
+  gem 'factory_bot_rails', '5.2.0'
   gem 'simplecov', '0.22.0', :require => false # TODO: latest
   gem 'coveralls', '0.7.1', :require => false
 end
