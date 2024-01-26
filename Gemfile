@@ -32,7 +32,7 @@ gem 'inherited_resources', '1.13.1' # Deprecated (https://github.com/activeadmin
 gem 'mobility', '~> 1.2', '>= 1.2.9'
 gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
 gem 'cancancan', '2.3.0' # TODO, can upgrade to 3.0 after Rails 6
-gem 'ahoy_matey', '3.3.0' # TODO: latest 5.0.2. Can't upgrade to 4.0 until upgrade to Rails 5.2
+gem 'ahoy_matey', '4.2.1' # TODO: latest 5.0.2. Can't upgrade to 5.0 until upgrade to Rails 6
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
 
 # TODO: starting from v1.4, it break our test due to redirection changes:

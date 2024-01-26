@@ -1,9 +1,18 @@
 require 'sapi/geoip'
+
 class Ahoy::Store < Ahoy::DatabaseStore
   UUID_NAMESPACE = UUIDTools::UUID.parse("dcd74c26-8fc9-453a-a9c2-afc445c3258d")
 
+  def authenticate(data)
+    # disables automatic linking of visits and users
+  end
+
   def visit_model
     Ahoy::Visit
+  end
+
+  def event_model
+    Ahoy::Event
   end
 
   def visit
@@ -33,12 +42,16 @@ class Ahoy::Store < Ahoy::DatabaseStore
     UUIDTools::UUID.sha1_create(UUID_NAMESPACE, id).to_s
   end
 end
+
 Ahoy.quiet = false
 Ahoy.api = true
 Ahoy.server_side_visits = :when_needed
 Ahoy.user_agent_parser = :device_detector
 Ahoy.bot_detection_version = 2
 Ahoy.track_bots = Rails.env.test?
+Ahoy.geocode = false # we use our own geocoder (Sapi::GeoIP)
+Ahoy.mask_ips = true
+Ahoy.cookies = false # TODO: when upgrade to Ahoy v5, change value to :none
 
 # https://github.com/ankane/ahoy/tree/v2.2.1#exceptions
 Safely.report_exception_method = ->(e) { Appsignal.add_exception(exception) if defined? Appsignal }
