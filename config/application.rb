@@ -34,10 +34,5 @@ module SAPI
       :"trade/shipment_observer", :"trade/trade_data_download_observer",
       :change_observer, :document_observer, :nomenclature_change_observer,
       :geo_entity_observer
-
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
-
-    config.i18n.available_locales = %i[en es fr]
-    config.i18n.default_locale = :en
   end
 end
