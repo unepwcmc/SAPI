@@ -34,5 +34,9 @@ module SAPI
       :"trade/shipment_observer", :"trade/trade_data_download_observer",
       :change_observer, :document_observer, :nomenclature_change_observer,
       :geo_entity_observer
+
+    # Active Job
+    config.active_job.queue_adapter = :sidekiq
+    config.action_mailer.deliver_later_queue_name = 'default'
   end
 end
