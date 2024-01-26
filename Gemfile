@@ -46,10 +46,9 @@ gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
 # TODO: need Sidekiq 6 and Rails 6, before we can migrate worker to job, due to sidekiq_options (https://github.com/sidekiq/sidekiq/issues/4281)
-gem 'sidekiq', '5.2.10' # TODO, Ruby 2.7 need version 6.0.5 sidekiq
+gem 'sidekiq', '5.2.10' # TODO, when upgrade to Ruby 2.7, need to upgrade Sidekiq to v6.0.5
 gem 'sidekiq-status', '2.1.3' # TODO: upgrade to v3 when Sidekiq upgrade to 6
 gem 'sidekiq-unique-jobs', '7.1.31' # TODO: can upgrade to latest when sidekiq upgrade to 7
-gem 'redis-rails', '5.0.2' # TODO: latest, may remove this Gem when upgrade to Rails 5.2. (https://github.com/redis-store/redis-rails/tree/master#a-quick-note-about-rails-52)
 
 gem 'whenever', '0.11.0', :require => false # TODO: latest version 1.0 @ 2019. Should migrate to sidekiq-cron.
 gem 'httparty', '~> 0.21.0'
