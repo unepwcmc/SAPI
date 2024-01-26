@@ -173,7 +173,7 @@ gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in s
 
 gem 'susy', '~> 2.2', '>= 2.2.14' # TODO: Deprecated. (https://github.com/oddbird/susy#power-tools-for-the-web-deprecated)
 gem 'gon', '~> 6.4'
-gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
+gem "chartkick", '4.2.1' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 6 and Ruby 2.7
 gem 'nested_form', '~> 0.3.2' # TODO: Deprecated. (https://github.com/ryanb/nested_form#unmaintained)
 gem 'bootstrap-sass', '2.3.2.2' # TODO: latest 3.4.1 @ 2019. Can't upgrade unless we sure bootstrap v3 backward compatible with boostrap v2
 
