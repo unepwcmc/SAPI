@@ -26,7 +26,7 @@ class Checklist::Pdf::IndexAnnotationsKey
     tex << "\\section*{\\hashAnnotations}\n"
     tex << "\\hashAnnotationsIndexInfo" + "\n\n"
     cop = CitesCop.find_by_is_current(true)
-    annotations = cop && cop.hash_annotations.order('SUBSTRING(symbol FROM 2)::INT')
+    annotations = cop && cop.hash_annotations.order(Arel.sql('SUBSTRING(symbol FROM 2)::INT'))
     unless annotations && !annotations.empty?
       tex << "No current hash annotations found.\n\n"
       return tex
@@ -53,7 +53,7 @@ class Checklist::Pdf::IndexAnnotationsKey
       ).
       where('taxon_concept_id = original_taxon_concept_id').
       where('cites_listing_changes_mview.ann_symbol IS NOT NULL').
-      order("cites_listing_changes_mview.ann_symbol::INT").map do |lc|
+      order(Arel.sql('cites_listing_changes_mview.ann_symbol::INT')).map do |lc|
         {
           :taxon_concept => lc.taxon_concept,
           :symbol => lc.ann_symbol,

@@ -14,7 +14,7 @@ class Checklist::Pdf::HistoryAnnotationsKey
     tex = "\\hashAnnotationsHistoryInfo" + "\n\n"
     cops = CitesCop.order('effective_at')
     cops.each do |cop|
-      annotations = cop.hash_annotations.order('SUBSTRING(symbol FROM 2)::INT')
+      annotations = cop.hash_annotations.order(Arel.sql('SUBSTRING(symbol FROM 2)::INT'))
       if annotations.empty?
         tex << "No hash annotations found.\n\n"
       end

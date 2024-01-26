@@ -114,12 +114,14 @@ class TradeRestriction < ApplicationRecord
       filter_geo_entities(filters).
       filter_years(filters).
       filter_taxon_concepts(filters).
-      where(:public_display => true).
-      order('
-        taxon_concepts.name_status ASC,
-        taxon_concepts_mview.taxonomic_position ASC,
-        trade_restrictions.start_date DESC, geo_entities.name_en ASC,
-        trade_restrictions.notes ASC')
+      where(public_display: true).
+      order(
+        'taxon_concepts.name_status': :asc,
+        'taxon_concepts_mview.taxonomic_position': :asc,
+        start_date: :desc,
+        'geo_entities.name_en': :asc,
+        notes: :asc
+      )
   end
 
   # Gets the display text for each CSV_COLUMNS
