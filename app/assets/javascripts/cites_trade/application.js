@@ -484,7 +484,7 @@ $(document).ready(function(){
 
   function setEuDisclaimerVisibility () {
     ['imp', 'exp'].forEach(function (type) {
-      const disclaimerEl = $('#eu_disclaimer_' + type)
+      var disclaimerEl = $('#eu_disclaimer_' + type)
 
       if (disclaimerEl.length) {
         hasEuDisclaimer(type) ? disclaimerEl.show() : disclaimerEl.hide()
@@ -493,7 +493,7 @@ $(document).ready(function(){
   }
 
   function hasEuDisclaimer (type) {
-    const selections = $('#'+ type + 'cty').val()
+    var selections = $('#'+ type + 'cty').val()
 
     if (!selections) {
       return false
