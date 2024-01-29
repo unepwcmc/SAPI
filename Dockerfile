@@ -14,12 +14,12 @@ RUN apt-get update && apt-get install -y --force-yes \
 RUN mkdir /SAPI
 WORKDIR /SAPI
 
-COPY Gemfile /SAPI/Gemfile
-COPY Gemfile.lock /SAPI/Gemfile.lock
+# COPY Gemfile /SAPI/Gemfile
+# COPY Gemfile.lock /SAPI/Gemfile.lock
 RUN gem install bundler -v 1.17.3
-RUN bundle install
+# RUN bundle install
 
-COPY . /SAPI
+# COPY . /SAPI
 
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0"]

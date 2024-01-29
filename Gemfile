@@ -103,7 +103,7 @@ group :development do
   gem 'capistrano-maintenance', '1.0.0', require: false
   gem 'capistrano-passenger', '0.2.0', require: false
   gem 'capistrano-local-precompile', '1.2.0', require: false
-  gem 'capistrano-sidekiq', '1.0.2'
+  gem 'capistrano-sidekiq', '~> 2.3', '>= 2.3.1'
   gem 'slackistrano', '0.1.9', require: false
   gem 'brightbox', '2.3.9'
   gem 'rack-cors', '0.3.0' ,:require => 'rack/cors' # TODO: remove when upgrade Rails.

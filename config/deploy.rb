@@ -22,6 +22,10 @@ set :scm_username, "unepwcmc-read"
 set :rvm_type, :user
 set :rvm_ruby_version, '2.6.10'
 
+# Sidekiq config
+set :sidekiq_service_unit_user, :system
+set :sidekiq_service_unit_name, 'sidekiq_sapi'
+
 # Default value for :log_level is :debug
 # set :log_level, :debug
 

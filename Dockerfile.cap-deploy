@@ -1,0 +1,40 @@
+# Dockerfile
+# FROM --platform=linux/amd64 debian
+FROM ruby:2.6.10
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Rails and SAPI has some additional dependencies, e.g. rake requires a JS
+# runtime, so attempt to get these from apt, where possible
+RUN apt-get update && apt-get install -y --force-yes \
+  # For RVM
+  gnupg procps curl libssl-dev \
+  # For assets local_precompile (cap deploy)
+  rsync nodejs \
+  # gems
+  libpq-dev postgresql-client
+
+RUN mkdir /SAPI
+WORKDIR /SAPI
+
+# https://stackoverflow.com/questions/43612927/how-to-correctly-install-rvm-in-docker
+RUN gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+RUN curl -sSL https://get.rvm.io | bash -s
+RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 2.6.10"
+# RVM installed in multi-user mode. However cap assume rvm is installed in single user mode.
+# Create a soft link to fake it.
+RUN mkdir -p ~/.rvm/bin && ln -s /usr/local/rvm/bin/rvm ~/.rvm/bin/rvm
+
+# Host SSH key/config
+RUN mkdir -p ~/.ssh && ln -s /run/secrets/host_ssh_key ~/.ssh/id_ed25519 && ln -s /run/secrets/host_ssh_config ~/.ssh/config
+
+ENTRYPOINT ["/bin/bash", "-l"]
+
+##########################################
+## Run the following in container
+##########################################
+# /bin/bash
+# source /etc/profile.d/rvm.sh
+# bundle
+# eval "$(ssh-agent -s)"
+# ssh-add
+# cap staging deploy

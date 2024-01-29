@@ -37,7 +37,7 @@ require 'capistrano/maintenance'
 require 'whenever/capistrano'
 require 'capistrano/local_precompile'
 require 'capistrano/sidekiq'
-
-
+install_plugin Capistrano::Sidekiq
+install_plugin Capistrano::Sidekiq::Systemd
 
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
