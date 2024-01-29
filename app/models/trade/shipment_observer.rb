@@ -19,13 +19,13 @@ class Trade::ShipmentObserver < ActiveRecord::Observer
   end
 
   def after_save(shipment)
-    DownloadsCacheCleanupWorker.perform_async(:shipments)
+    DownloadsCacheCleanupWorker.perform_async('shipments')
     disconnected_permits_ids = @old_permits_ids - shipment.permits_ids
     PermitCleanupWorker.perform_async(disconnected_permits_ids)
   end
 
   def after_destroy(shipment)
-    DownloadsCacheCleanupWorker.perform_async(:shipments)
+    DownloadsCacheCleanupWorker.perform_async('shipments')
     disconnected_permits_ids = @old_permits_ids
     PermitCleanupWorker.perform_async(disconnected_permits_ids)
   end

@@ -252,7 +252,7 @@ class DocumentSearch
 
   def self.clear_cache
     RefreshDocumentsWorker.perform_async
-    DownloadsCacheCleanupWorker.perform_async(:documents)
+    DownloadsCacheCleanupWorker.perform_async('documents')
   end
 
 end

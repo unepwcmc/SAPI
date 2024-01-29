@@ -21,7 +21,7 @@ class Trade::BatchUpdate
     Trade::Shipment.transaction do
       affected_shipments = @shipments.count
       @shipments.update_all(update_params.to_h)
-      DownloadsCacheCleanupWorker.perform_async(:shipments)
+      DownloadsCacheCleanupWorker.perform_async('shipments')
     end
     PermitCleanupWorker.perform_async(disconnected_permits_ids)
     affected_shipments

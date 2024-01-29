@@ -66,7 +66,7 @@ class ChangeObserver < ActiveRecord::Observer
 
   def clear_cache(model)
     return unless model.respond_to?(:taxon_concept)
-    DownloadsCacheCleanupWorker.perform_async(model.class.to_s.tableize.to_sym)
+    DownloadsCacheCleanupWorker.perform_async(model.class.to_s.tableize)
   end
 
   def clear_show_tc_serializer_cache
@@ -85,6 +85,6 @@ class ChangeObserver < ActiveRecord::Observer
       dependents_updated_at: Time.now,
       dependents_updated_by_id: updated_by_id
     )
-    DownloadsCacheCleanupWorker.perform_async(:taxon_concepts)
+    DownloadsCacheCleanupWorker.perform_async('taxon_concepts')
   end
 end

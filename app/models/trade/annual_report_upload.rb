@@ -94,7 +94,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
     FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
 
     # clear downloads cache
-    DownloadsCacheCleanupWorker.perform_async(:shipments)
+    DownloadsCacheCleanupWorker.perform_async('shipments')
 
     # flag as submitted
     update_attributes({ # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.

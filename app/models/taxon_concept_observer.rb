@@ -40,7 +40,7 @@ class TaxonConceptObserver < ActiveRecord::Observer
     Species::Search.increment_cache_iterator
     Species::TaxonConceptPrefixMatcher.increment_cache_iterator
     Checklist::Checklist.increment_cache_iterator
-    DownloadsCacheCleanupWorker.perform_async(:taxon_concepts)
+    DownloadsCacheCleanupWorker.perform_async('taxon_concepts')
   end
 
   def after_update(taxon_concept)
@@ -103,7 +103,7 @@ class TaxonConceptObserver < ActiveRecord::Observer
     if taxon_concept.name_status == 'H'
       taxon_concept.rebuild_relationships(taxon_concept.hybrid_parents_ids)
     end
-    DownloadsCacheCleanupWorker.perform_async(:taxon_concepts)
+    DownloadsCacheCleanupWorker.perform_async('taxon_concepts')
   end
 
 end

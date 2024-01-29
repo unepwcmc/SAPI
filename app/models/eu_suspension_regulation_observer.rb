@@ -6,12 +6,12 @@ class EuSuspensionRegulationObserver < ActiveRecord::Observer
         eu_suspension_regulation.eu_suspensions_event_id,
         eu_suspension_regulation.id
       )
-      DownloadsCacheCleanupWorker.perform_async(:eu_decisions)
+      DownloadsCacheCleanupWorker.perform_async('eu_decisions')
     end
   end
 
   def after_update(eu_suspension_regulation)
     eu_suspension_regulation.touch_suspensions_and_taxa
-    DownloadsCacheCleanupWorker.perform_async(:eu_decisions)
+    DownloadsCacheCleanupWorker.perform_async('eu_decisions')
   end
 end
