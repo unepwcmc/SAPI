@@ -3,7 +3,7 @@ class Admin::SrgHistoriesController < Admin::StandardAuthorizationController
 
   def collection
     @srg_histories ||= end_of_association_chain.page(params[:page]).
-      order('UPPER(name) ASC')
+      order(Arel.sql('UPPER(name) ASC'))
   end
 
   private
