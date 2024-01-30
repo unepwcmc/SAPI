@@ -49,8 +49,8 @@ gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_
 gem 'sidekiq', '< 7' # TODO, latest is 7
 gem 'sidekiq-status', '~> 3.0', '>= 3.0.3'
 gem 'sidekiq-unique-jobs', '7.1.31' # TODO: can upgrade to latest when sidekiq upgrade to 7
+gem 'sidekiq-cron', '~> 1.12'
 
-gem 'whenever', '0.11.0', :require => false # TODO: latest version 1.0 @ 2019. Should migrate to sidekiq-cron.
 gem 'httparty', '~> 0.21.0'
 
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.

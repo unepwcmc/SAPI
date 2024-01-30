@@ -1,3 +1,6 @@
+require 'sidekiq/web'
+require 'sidekiq/cron/web'
+
 Rails.application.routes.draw do
   devise_for :users, :controllers => { :passwords => "passwords", :registrations => "registrations", :sessions => "sessions" }
   as :user do
@@ -17,7 +20,6 @@ Rails.application.routes.draw do
   get 'admin/api_usage/overview' => 'admin/api_usage#index', :as => 'api_usage_overview'
   get 'admin/api_usage/user_overview/:id' => 'admin/api_usage#show', :as => 'api_user_usage'
 
-  require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
   namespace :api do
     namespace :v1 do
