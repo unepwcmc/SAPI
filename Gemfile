@@ -4,17 +4,20 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.7.8'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.2.8.1'
+gem 'rails', '6.0.6.1'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '>= 6'
+# https://stackoverflow.com/questions/55213868/rails-6-how-to-disable-webpack-and-use-sprockets-instead
+gem 'sprockets', '3.7.2'
+gem 'sprockets-rails', :require => 'sprockets/railtie'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
+gem 'coffee-rails', '~> 5.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
 
@@ -27,10 +30,10 @@ gem 'pg_array_parser', '~> 0.0.9'
 gem 'nested-hstore', '~> 0.1.2'
 gem 'pg_search', '~> 2.3', '>= 2.3.6'
 gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
-gem 'nokogiri', '~> 1.15', '>= 1.15.5' # TODO: New version need Ruby 3
-gem 'inherited_resources', '1.13.1' # Deprecated (https://github.com/activeadmin/inherited_resources#notice) # TODO: need upgrade when upgrade to Rails 6
+gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmin/inherited_resources#notice)
+gem 'nokogiri', '1.15.5' # TODO: New version need Ruby 3
 gem 'mobility', '~> 1.2', '>= 1.2.9'
-gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
+gem 'devise', '4.7.3' # TODO: need upgrade to 4.8+ when upgrade to rails 6.1
 gem 'cancancan', '2.3.0' # TODO, can upgrade to 3.0 after Rails 6
 gem 'ahoy_matey', '4.2.1' # TODO: latest 5.0.2. Can't upgrade to 5.0 until upgrade to Rails 6
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
@@ -43,9 +46,8 @@ gem 'wicked', '1.3.4'
 gem 'groupdate', '6.2.1' # TODO: can upgrade after rails 6.1 and newer ruby 3
 
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
-gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
+gem 'responders', '~> 3.1', '>= 3.1.1' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
-# TODO: need Sidekiq 6 and Rails 6, before we can migrate worker to job, due to sidekiq_options (https://github.com/sidekiq/sidekiq/issues/4281)
 gem 'sidekiq', '< 7' # TODO, latest is 7
 gem 'sidekiq-status', '~> 3.0', '>= 3.0.3'
 gem 'sidekiq-unique-jobs', '7.1.31' # TODO: can upgrade to latest when sidekiq upgrade to 7
@@ -71,24 +73,24 @@ gem 'rails-observers', '~> 0.1.5' # A feature that removed from core in Rails 4.
 
 gem 'strong_migrations', '~> 1.7'
 
-# Use ActiveModel has_secure_password
+# Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+gem 'bootsnap', '>= 1.4.2', require: false
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder', '~> 2.5'
+# gem 'jbuilder', '~> 2.7'
 
 gem 'rest-client', '1.8.0', require: false # TODO, should upgrade for better compatibility with newer Ruby but breaking change. Seems not many place using it, worth a try.
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
-  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'listen', '~> 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 	gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
@@ -132,8 +134,8 @@ group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
-  # Easy installation and use of chromedriver to run system tests with Chrome
-  gem 'chromedriver-helper'
+  # Easy installation and use of web drivers to run system tests with browsers
+  gem 'webdrivers'
 
   gem 'rails-controller-testing'
   gem "codeclimate-test-reporter", '0.1.1', require: nil # TODO, should be removed

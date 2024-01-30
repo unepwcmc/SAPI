@@ -6,6 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Rails and SAPI has some additional dependencies, e.g. rake requires a JS
 # runtime, so attempt to get these from apt, where possible
 RUN apt-get update && apt-get install -y --force-yes \
+  # For ruby?
+  libsodium-dev libgmp3-dev \
   # For RVM
   gnupg procps curl libssl-dev \
   # For assets local_precompile (cap deploy)
