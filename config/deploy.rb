@@ -20,7 +20,7 @@ set :scm_username, "unepwcmc-read"
 # set :format, :pretty
 
 set :rvm_type, :user
-set :rvm_ruby_version, '2.6.10'
+set :rvm_ruby_version, '2.7.8'
 
 # Sidekiq config
 set :sidekiq_service_unit_user, :system
