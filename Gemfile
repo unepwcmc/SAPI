@@ -26,8 +26,8 @@ gem 'pg', '~> 1.5', '>= 1.5.4'
 gem 'pg_array_parser', '~> 0.0.9'
 gem 'nested-hstore', '~> 0.1.2'
 gem 'pg_search', '~> 2.3', '>= 2.3.6'
-gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
-gem 'nokogiri', '1.13.10' # TODO: 1.13.10 is the last version support 2.6. New version need Ruby 2.7+
+gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
+gem 'nokogiri', '~> 1.15', '>= 1.15.5' # TODO: New version need Ruby 3
 gem 'inherited_resources', '1.13.1' # Deprecated (https://github.com/activeadmin/inherited_resources#notice) # TODO: need upgrade when upgrade to Rails 6
 gem 'mobility', '~> 1.2', '>= 1.2.9'
 gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
