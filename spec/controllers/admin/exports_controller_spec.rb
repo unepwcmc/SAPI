@@ -20,7 +20,7 @@ describe Admin::ExportsController do
         allow_any_instance_of(Species::TaxonConceptsNamesExport).to receive(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, params: { :data_type => "Names" }
         expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"")
+        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"; filename*=UTF-8''taxon_concepts_names.csv")
       end
       it "redirects when no results" do
         get :download, params: { :data_type => "Names" }
@@ -33,7 +33,7 @@ describe Admin::ExportsController do
         allow_any_instance_of(Species::TaxonConceptsNamesExport).to receive(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, params: { :data_type => "Names", :filters => { :taxonomy => 'CITES_EU' } }
         expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"")
+        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"; filename*=UTF-8''taxon_concepts_names.csv")
       end
       it "redirects when no results" do
         get :download, params: { :data_type => "Names", :filters => { :taxonomy => 'CITES_EU' } }
@@ -46,7 +46,7 @@ describe Admin::ExportsController do
         allow_any_instance_of(Species::TaxonConceptsNamesExport).to receive(:public_file_name).and_return('taxon_concepts_names.csv')
         get :download, params: { :data_type => "Names", :filters => { :taxonomy => 'CMS' } }
         expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"")
+        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_names.csv\"; filename*=UTF-8''taxon_concepts_names.csv")
       end
       it "redirects when no results" do
         get :download, params: { :data_type => "Names", :filters => { :taxonomy => 'CMS' } }
@@ -65,7 +65,7 @@ describe Admin::ExportsController do
         allow_any_instance_of(Species::TaxonConceptsDistributionsExport).to receive(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, params: { :data_type => "Distributions" }
         expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
+        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"; filename*=UTF-8''taxon_concepts_distributions.csv")
       end
       it "redirects when no results" do
         get :download, params: { :data_type => "Distributions" }
@@ -79,7 +79,7 @@ describe Admin::ExportsController do
         allow_any_instance_of(Species::TaxonConceptsDistributionsExport).to receive(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, params: { :data_type => "Distributions", :filters => { :taxonomy => 'CITES_EU' } }
         expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
+        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"; filename*=UTF-8''taxon_concepts_distributions.csv")
       end
       it "redirects when no results" do
         get :download, params: { :data_type => "Distributions", :filters => { :taxonomy => 'CITES_EU' } }
@@ -93,7 +93,7 @@ describe Admin::ExportsController do
         allow_any_instance_of(Species::TaxonConceptsDistributionsExport).to receive(:public_file_name).and_return('taxon_concepts_distributions.csv')
         get :download, params: { :data_type => "Distributions", :filters => { :taxonomy => 'CMS' } }
         expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"")
+        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"taxon_concepts_distributions.csv\"; filename*=UTF-8''taxon_concepts_distributions.csv")
       end
       it "redirects when no results" do
         get :download, params: { :data_type => "Distributions", :filters => { :taxonomy => 'CMS' } }

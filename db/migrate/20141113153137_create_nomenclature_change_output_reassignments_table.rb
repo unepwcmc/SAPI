@@ -8,8 +8,6 @@ class CreateNomenclatureChangeOutputReassignmentsTable < ActiveRecord::Migration
       t.text     :note_en
       t.integer  :created_by_id, :null => false
       t.integer  :updated_by_id, :null => false
-      t.datetime :created_at, :null => false
-      t.datetime :updated_at, :null => false
       t.text     :note_es
       t.text     :note_fr
       t.text     :internal_note
