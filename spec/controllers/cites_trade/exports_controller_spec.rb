@@ -18,7 +18,7 @@ describe CitesTrade::ExportsController do
         allow(Trade::TradeDataDownloadLogger).to receive(:organization_from).and_return("UNEP-WCMC")
         get :download, params: { :filters => { :report_type => :comptab } }
         expect(response.content_type).to eq("text/csv")
-        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"shipments.csv\"")
+        expect(response.headers["Content-Disposition"]).to eq("attachment; filename=\"shipments.csv\"; filename*=UTF-8''shipments.csv")
       end
       it "logs download information from public interface to the TradeDataDownload model" do
         create(:shipment)
