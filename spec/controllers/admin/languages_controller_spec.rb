@@ -31,7 +31,7 @@ describe Admin::LanguagesController do
     let(:language) { create(:language) }
     it "responds with 200 when successful" do
       put :update, :format => 'json', params: { :id => language.id, :language => { :iso_code1 => 'ZZ' } }, xhr: true
-      expect(response).to be_success
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
       put :update, :format => 'json', params: { :id => language.id, :language => { :iso_code1 => 'zzz' } }, xhr: true

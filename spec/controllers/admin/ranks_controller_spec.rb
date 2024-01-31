@@ -31,7 +31,7 @@ describe Admin::RanksController do
     let(:rank) { create(:rank) }
     it "responds with 200 when successful" do
       put :update, :format => 'json', params: { :id => rank.id, :rank => { :name => 'ZZ' } }, xhr: true
-      expect(response).to be_success
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
       put :update, :format => 'json', params: { :id => rank.id, :rank => { :name => nil } }, xhr: true

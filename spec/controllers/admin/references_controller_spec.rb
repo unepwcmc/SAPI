@@ -43,7 +43,7 @@ describe Admin::ReferencesController do
     let(:reference) { create(:reference) }
     it "responds with 200 when successful" do
       put :update, :format => 'json', params: { :id => reference.id, :reference => { :citation => 'ZZ' } }, xhr: true
-      expect(response).to be_success
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
       put :update, :format => 'json', params: { :id => reference.id, :reference => { :citation => nil } }, xhr: true

@@ -88,7 +88,7 @@ describe Admin::TaxonConceptReferencesController do
   describe "XHR GET 'new'" do
     it "returns http success and renders the new template" do
       get :new, params: { :taxon_concept_id => @taxon_concept.id }, xhr: true, :format => 'js'
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template('new')
     end
   end

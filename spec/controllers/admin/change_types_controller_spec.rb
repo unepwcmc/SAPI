@@ -34,7 +34,7 @@ describe Admin::ChangeTypesController do
     let(:change_type) { create(:change_type) }
     it "responds with 200 when successful" do
       put :update, :format => 'json', params: { :id => change_type.id, :change_type => { :name => 'ZZ' } }, xhr: true
-      expect(response).to be_success
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
       put :update, :format => 'json', params: { :id => change_type.id, :change_type => { :name => nil } }, xhr: true

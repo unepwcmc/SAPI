@@ -11,7 +11,7 @@ describe Admin::TaxonCommonsController do
   describe "XHR GET 'new'" do
     it "returns http success and renders the new template" do
       get :new, params: { :taxon_concept_id => @taxon_concept.id, :format => 'js' }, xhr: true
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template('new')
     end
   end

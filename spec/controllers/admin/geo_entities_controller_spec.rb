@@ -57,7 +57,7 @@ describe Admin::GeoEntitiesController do
     let(:geo_entity) { create(:geo_entity, geo_entity_type: country_geo_entity_type) }
     it "responds with 200 when successful" do
       put :update, format: 'json', params: { id: geo_entity.id, geo_entity: { iso_code2: 'ZZ' } }, xhr: true
-      expect(response).to be_success
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
       put :update, format: 'json', params: { id: geo_entity.id, geo_entity: { iso_code2: nil } }, xhr: true

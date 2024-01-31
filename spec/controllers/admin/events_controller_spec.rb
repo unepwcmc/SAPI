@@ -59,7 +59,7 @@ describe Admin::EventsController do
     let(:event) { create(:event) }
     it "responds with 200 when successful" do
       put :update, :format => 'json', params: { :id => event.id, :event => { :name => 'ZZ' } }, xhr: true
-      expect(response).to be_success
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
       put :update, :format => 'json', params: { :id => event.id, :event => { :name => nil } }, xhr: true

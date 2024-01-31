@@ -43,7 +43,7 @@ describe Admin::TaxonomiesController do
     let(:taxonomy) { create(:taxonomy) }
     it "responds with 200 when successful" do
       put :update, :format => 'json', params: { :id => taxonomy.id, :taxonomy => { :name => 'ZZ' } }, xhr: true
-      expect(response).to be_success
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
       put :update, :format => 'json', params: { :id => taxonomy.id, :taxonomy => { :name => nil } }, xhr: true

@@ -39,7 +39,7 @@ describe Admin::UsersController do
     let(:user) { create(:user) }
     it "responds with 200 when successful" do
       put :update, :format => 'js', params: { :id => user.id, :user => { :name => 'ZZ' } }, xhr: true
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template('create')
     end
     it "responds with template new when not successful" do

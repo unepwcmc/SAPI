@@ -34,7 +34,7 @@ describe Admin::SpeciesListingsController do
     let(:species_listing) { create(:species_listing) }
     it "responds with 200 when successful" do
       put :update, :format => 'json', params: { :id => species_listing.id, :species_listing => { :name => 'ZZ' } }, xhr: true
-      expect(response).to be_success
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
       put :update, :format => 'json', params: { :id => species_listing.id, :species_listing => { :name => nil } }, xhr: true
