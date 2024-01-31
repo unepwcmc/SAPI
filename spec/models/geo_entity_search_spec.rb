@@ -108,7 +108,7 @@ describe GeoEntitySearch do
     subject { GeoEntitySearch.new({ geo_entity_types_set: '3' }) }
     specify do
       subject.cached_results
-      @burma.update_attributes({ is_current: false }) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+      @burma.update({ is_current: false })
       expect(subject.cached_results).not_to include(@burma)
     end
   end

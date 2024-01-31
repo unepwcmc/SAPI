@@ -109,11 +109,11 @@ class Event < ApplicationRecord
   end
 
   def activate!
-    update_attributes(:is_current => true) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+    update(:is_current => true)
   end
 
   def deactivate!
-    update_attributes(:is_current => false) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+    update(:is_current => false)
   end
 
   protected

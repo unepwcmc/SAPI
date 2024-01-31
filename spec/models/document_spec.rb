@@ -81,13 +81,13 @@ describe Document, sidekiq: :inline do
     }
     context "when primary document sort_index_updated" do
       specify "secondary document sort_index is in sync" do
-        primary_document.update_attributes(sort_index: 3) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+        primary_document.update(sort_index: 3)
         expect(secondary_document.reload.sort_index).to eq(3)
       end
     end
     context "when secondary document sort_index_updated" do
       specify "primary document sort_index is in sync" do
-        secondary_document.update_attributes(sort_index: 3) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+        secondary_document.update(sort_index: 3)
         expect(primary_document.reload.sort_index).to eq(3)
       end
     end

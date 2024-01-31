@@ -8,7 +8,7 @@ class NomenclatureChange::InputTaxonConceptProcessor
     return false unless @input.taxon_concept
     Rails.logger.debug("Processing input #{@input.taxon_concept.full_name}")
     tc = @input.taxon_concept
-    tc.update_attributes( # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+    tc.update(
       nomenclature_note_en: "#{tc.nomenclature_note_en} #{@input.note_en}",
       nomenclature_note_es: "#{tc.nomenclature_note_es} #{@input.note_es}",
       nomenclature_note_fr: "#{tc.nomenclature_note_fr} #{@input.note_fr}"

@@ -13,7 +13,7 @@ class NomenclatureChange::ToAcceptedNameTransformation
       @non_accepted_taxon_concept.inverse_trade_name_relationships
     )
 
-    @non_accepted_taxon_concept.update_attributes( # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+    @non_accepted_taxon_concept.update(
       parent_id: @new_parent.id,
       name_status: 'A'
     )

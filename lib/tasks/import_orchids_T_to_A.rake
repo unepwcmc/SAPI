@@ -12,7 +12,7 @@ namespace :import do
         puts "There was a problem with this Taxon Concept #{row['ID'].strip}"
         next
       end
-      @nomenclature_change.update_attributes(:status => NomenclatureChange::SUBMITTED) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+      @nomenclature_change.update(:status => NomenclatureChange::SUBMITTED)
     end
   end
 end

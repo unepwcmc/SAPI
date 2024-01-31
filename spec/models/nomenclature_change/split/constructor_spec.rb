@@ -188,7 +188,7 @@ describe NomenclatureChange::Split::Constructor do
 
 
           # split.input.distribution_reassignments.first.
-          #   update_attributes(output_ids: [split.outputs.first.id])
+          #   update(output_ids: [split.outputs.first.id])
           constructor.build_document_reassignments
           expect(split.input.document_citation_reassignments.first.
             output_ids).not_to include(non_default_output.id)

@@ -23,7 +23,7 @@ class ChangesHistoryGeneratorWorker
       obj = s3.bucket(bucket_name).object(filename)
       obj.upload_file(tempfile.path)
 
-      aru.update_attributes(aws_storage_path: obj.public_url) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+      aru.update(aws_storage_path: obj.public_url)
     rescue Aws::S3::Errors::ServiceError => e
       Rails.logger.warn "Something went wrong while uploading #{aru.id} to S3"
       Appsignal.add_exception(e) if defined? Appsignal

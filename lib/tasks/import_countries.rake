@@ -44,7 +44,7 @@ namespace :import do
     CSV.foreach("lib/files/country_codes_en_es_fr_utf8.csv") do |row|
       country = GeoEntity.find_or_initialize_by(iso_code2: row[0].strip.upcase)
       unless country.id.nil?
-        country.update_attributes( # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+        country.update(
           :name_fr => row[1].strip, :name_es => row[2].strip
         )
       end

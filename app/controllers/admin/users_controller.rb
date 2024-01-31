@@ -21,7 +21,7 @@ class Admin::UsersController < Admin::SimpleCrudController
       if user_params[:password].blank?
         @user.update_without_password(user_params)
       else
-        @user.update_attributes(user_params) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+        @user.update(user_params)
       end
     respond_to do |format|
       format.js {

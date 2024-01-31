@@ -33,14 +33,14 @@ describe Designation do
     context "when updating a non-protected name" do
       let(:designation) { create(:designation) }
       specify {
-        expect(designation.update_attributes( # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+        expect(designation.update(
           { :name => 'RULES OF INTERGALACTIC TRADE' }
         )).to be_truthy
       }
     end
     context "when updating a protected name" do
       specify {
-        expect(cites.update_attributes( # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+        expect(cites.update(
           { :name => 'RULES OF INTERGALACTIC TRADE' }
         )).to be_falsey
       }
@@ -48,13 +48,13 @@ describe Designation do
     context "when updating taxonomy with no dependent objects attached" do
       let(:designation) { create(:designation) }
       let(:taxonomy) { create(:taxonomy) }
-      specify { expect(designation.update_attributes(:taxonomy_id => taxonomy.id)).to be_truthy } # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+      specify { expect(designation.update(:taxonomy_id => taxonomy.id)).to be_truthy }
     end
     context "when updating taxonomy with dependent objects attached" do
       let(:designation) { create(:designation) }
       let!(:change_type) { create(:change_type, :designation => designation) }
       let(:taxonomy) { create(:taxonomy) }
-      specify { expect(designation.update_attributes(:taxonomy_id => taxonomy.id)).to be_falsey } # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+      specify { expect(designation.update(:taxonomy_id => taxonomy.id)).to be_falsey }
     end
   end
   describe :destroy do

@@ -334,7 +334,7 @@ describe DocumentSearch, sidekiq: :inline do
     context "when document updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
         travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
-          @d.update_attributes!(is_public: true) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+          @d.update!(is_public: true)
         end
 
         expect(DocumentSearch.documents_need_refreshing?).to be_truthy
@@ -406,7 +406,7 @@ describe DocumentSearch, sidekiq: :inline do
       context "updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
           travel_to(@recent_time) do
-            @c.update_attributes!(elib_legacy_id: 1) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+            @c.update!(elib_legacy_id: 1)
           end
 
           expect(@c.reload.updated_at).to be > @refresh_threshold
@@ -455,7 +455,7 @@ describe DocumentSearch, sidekiq: :inline do
       context "updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
           travel_to(@recent_time) do
-            @c_tc.update_attributes!(taxon_concept_id: create_cites_eu_species.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+            @c_tc.update!(taxon_concept_id: create_cites_eu_species.id)
           end
 
           expect(@c.reload.updated_at).to be > @refresh_threshold
@@ -493,7 +493,7 @@ describe DocumentSearch, sidekiq: :inline do
       context "updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
         specify do
           travel_to(@recent_time) do
-            @c_ge.update_attributes!(geo_entity_id: @ge2.id) # TODO: `update_attributes` is deprecated in Rails 6, and removed from Rails 7.
+            @c_ge.update!(geo_entity_id: @ge2.id)
           end
 
           expect(@c.reload.updated_at).to be > @refresh_threshold
