@@ -8,7 +8,7 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def chart_query
-    @chart_data = Rails.cache.fetch(['chart_data', params], expires_in: 1.week) do
+    @chart_data = Rails.cache.fetch(['chart_data', permit_params], expires_in: 1.week) do
                     @grouping_class.new(['issue_type', 'year'])
                                              .countries_reported_range(params[:year])
                   end
@@ -55,20 +55,20 @@ class Api::V1::ShipmentsController < ApplicationController
 
   # Compliance tool search & full list action
   def search_query
-    query = @grouping_class.new(sanitized_attributes, params)
+    query = @grouping_class.new(sanitized_attributes, permit_params)
     data = query.run
-    @search_data =  Rails.cache.fetch(['search_data', params], expires_in: 1.week) do
-                      query.build_hash(data, params)
+    @search_data =  Rails.cache.fetch(['search_data', permit_params], expires_in: 1.week) do
+                      query.build_hash(data, permit_params)
                     end
-    @filtered_data = query.filter(@search_data, params)
+    @filtered_data = query.filter(@search_data, permit_params)
     render :json => Kaminari.paginate_array(@filtered_data).page(params[:page]).per(params[:per_page]),
-           :meta => metadata(@filtered_data, params)
+           :meta => metadata(@filtered_data, permit_params)
   end
 
   def over_time_query
     # TODO Remember to implement permitted parameters here
-    query = @grouping_class.new(sanitized_attributes, params)
-    @over_time_data = Rails.cache.fetch(['over_time_data', params], expires_in: 1.week) do
+    query = @grouping_class.new(sanitized_attributes, permit_params)
+    @over_time_data = Rails.cache.fetch(['over_time_data', permit_params], expires_in: 1.week) do
       query.over_time_data
     end
 
@@ -78,8 +78,8 @@ class Api::V1::ShipmentsController < ApplicationController
   # TODO refactor to merge this method and the over_time one above together
   def aggregated_over_time_query
     # TODO Remember to implement permitted parameters here
-    query = @grouping_class.new(sanitized_attributes, params)
-    @aggregated_over_time_data = Rails.cache.fetch(['aggregated_over_time_data', params], expires_in: 1.week) do
+    query = @grouping_class.new(sanitized_attributes, permit_params)
+    @aggregated_over_time_data = Rails.cache.fetch(['aggregated_over_time_data', permit_params], expires_in: 1.week) do
       query.aggregated_over_time_data
     end
 
@@ -87,26 +87,26 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def download_data
-    @download_data = Rails.cache.fetch(['download_data', params], expires_in: 1.week) do
+    @download_data = Rails.cache.fetch(['download_data', permit_params], expires_in: 1.week) do
                        Trade::DownloadDataRetriever.dashboard_download(download_params).to_a
                      end
     render :json => @download_data
   end
 
   def search_download_data
-    @download_data = Rails.cache.fetch(['search_download_data', params], expires_in: 1.week) do
+    @download_data = Rails.cache.fetch(['search_download_data', permit_params], expires_in: 1.week) do
                        Trade::DownloadDataRetriever.search_download(download_params).to_a
                      end
     render :json => @download_data
   end
 
   def search_download_all_data
-    query = @grouping_class.new(sanitized_attributes, params)
+    query = @grouping_class.new(sanitized_attributes, permit_params)
     data = query.run
-    @search_download_all_data = Rails.cache.fetch(['search_download_all_data', params], expires_in: 1.week) do
-                                  search_data = query.build_hash(data, params)
-                                  filtered_data = query.filter(search_data, params)
-                                  data_ids = query.filter_download_data(filtered_data, params)
+    @search_download_all_data = Rails.cache.fetch(['search_download_all_data', permit_params], expires_in: 1.week) do
+                                  search_data = query.build_hash(data, permit_params)
+                                  filtered_data = query.filter(search_data, permit_params)
+                                  data_ids = query.filter_download_data(filtered_data, permit_params)
                                   hash_params = params_hash_builder(data_ids, download_params)
                                   Trade::DownloadDataRetriever.search_download(hash_params).to_a
                                 end
@@ -114,6 +114,10 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   private
+
+  def permit_params
+    params.permit!
+  end
 
   def set_pagination_headers(data, params)
     data = instance_variable_get("@#{data}").presence

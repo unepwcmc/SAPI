@@ -122,6 +122,10 @@ class Trade::Grouping::Base
     condition_attributes = @opts.keep_if do |k, v|
       filtering_attributes.key?(k.to_sym) && v.present?
     end
+    unless condition_attributes.is_a?(Hash)
+      condition_attributes.permit!
+      condition_attributes = condition_attributes.to_h
+    end
     # Get default attributes if missing from params
     if @opts[:with_defaults]
       condition_attributes.reverse_merge!(self.class.default_filtering_attributes)

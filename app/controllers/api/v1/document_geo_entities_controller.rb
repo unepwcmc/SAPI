@@ -1,6 +1,4 @@
 class Api::V1::DocumentGeoEntitiesController < ApplicationController
-  before_action :set_locale
-
   def index
     @geo_entities = GeoEntity.current.includes(:geo_entity_type).
       order("name_#{I18n.locale}")
@@ -25,18 +23,5 @@ class Api::V1::DocumentGeoEntitiesController < ApplicationController
     render :json => @geo_entities,
       each_serializer: Species::GeoEntitySerializer,
       meta: { total: @geo_entities.count }
-  end
-
-  private
-
-  def set_locale
-    locale = params[:locale].try(:downcase).try(:strip) ||
-      'en'
-    I18n.locale =
-      if ['en', 'es', 'fr'].include?(locale)
-        locale
-      else
-        'en'
-      end
   end
 end

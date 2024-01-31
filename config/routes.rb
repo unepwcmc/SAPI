@@ -32,7 +32,7 @@ Rails.application.routes.draw do
       resources :purposes, :only => [:index]
       resources :trade_plus_filters, only: :index
       resources :eu_decisions, only: :index
-      resources :documents do
+      resources :documents, :only => [:index, :show] do
         collection do
           get 'download_zip'
         end
@@ -41,7 +41,6 @@ Rails.application.routes.draw do
       resources :events, only: [:index]
       resources :document_tags, only: [:index]
       get '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
-      resources :shipments, only: [:index]
       get '/shipments/chart' => 'shipments#chart_query'
       get '/shipments/grouped' => 'shipments#grouped_query'
       get '/shipments/over_time' => 'shipments#over_time_query'
@@ -161,7 +160,7 @@ Rails.application.routes.draw do
         :only => [:index, :new, :create, :edit, :update, :destroy],
         :as => :cites_suspensions
       resources :taxon_instruments, :only => [:index, :new, :create, :edit, :update, :destroy]
-      resources :cites_captivity_processes, 
+      resources :cites_captivity_processes,
         :only => [:index, :new, :create, :edit, :update, :destroy]
     end
     resources :nomenclature_changes do # TODO: look like only support :index, :show, :destroy

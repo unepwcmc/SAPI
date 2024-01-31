@@ -34,7 +34,7 @@ class Api::V1::DocumentsController < ApplicationController
 
     #TODO move pagination and ordering to the document_search module after refactoring of SQL mviews
     page = params[:page] || 1
-    per_page = params[:per_page] || 100
+    per_page = (params[:per_page] || 100).to_i
 
     ordered_docs =
       if params[:taxon_concepts_ids].present? && params[:event_type] == 'IdMaterials'
@@ -58,7 +58,7 @@ class Api::V1::DocumentsController < ApplicationController
       meta: {
         total: @search.cached_total_cnt,
         page: @search.page,
-        per_page: @search.per_page
+        per_page: per_page
       }
   end
 

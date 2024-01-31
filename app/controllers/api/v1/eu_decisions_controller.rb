@@ -60,7 +60,7 @@ class Api::V1::EuDecisionsController < ApplicationController
   end
 
   def sanitized_params
-    filters = permitted_params.inject({}) do |h, (k,v)|
+    filters = permitted_params.to_h.inject({}) do |h, (k,v)|
       h[k] = v.reject(&:empty?).map!(&:to_i)
       h
     end
