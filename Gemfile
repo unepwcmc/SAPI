@@ -34,7 +34,7 @@ gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmi
 gem 'nokogiri', '1.15.5' # TODO: New version need Ruby 3
 gem 'mobility', '~> 1.2', '>= 1.2.9'
 gem 'devise', '4.7.3' # TODO: need upgrade to 4.8+ when upgrade to rails 6.1
-gem 'cancancan', '2.3.0' # TODO, can upgrade to 3.0 after Rails 6
+gem 'cancancan', '~> 3.5'
 gem 'ahoy_matey', '4.2.1' # TODO: latest 5.0.2. Can't upgrade to 5.0 until upgrade to Rails 6
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
 
@@ -123,7 +123,7 @@ end
 group :test, :development do
   gem "rspec-rails", '5.1.2' # TODO: should upgrade once to rails 6.1
   gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
-  gem "json_spec", '1.1.5'
+  gem 'json_spec', '~> 1.1', '>= 1.1.5'
   gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
   gem "launchy", '2.4.3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -174,7 +174,7 @@ gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in s
 
 gem 'susy', '~> 2.2', '>= 2.2.14' # TODO: Deprecated. (https://github.com/oddbird/susy#power-tools-for-the-web-deprecated)
 gem 'gon', '~> 6.4'
-gem "chartkick", '4.2.1' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 6 and Ruby 2.7
+gem 'chartkick', '~> 5.0', '>= 5.0.5'
 gem 'nested_form', '~> 0.3.2' # TODO: Deprecated. (https://github.com/ryanb/nested_form#unmaintained)
 gem 'bootstrap-sass', '2.3.2.2' # TODO: latest 3.4.1 @ 2019. Can't upgrade unless we sure bootstrap v3 backward compatible with boostrap v2
 
