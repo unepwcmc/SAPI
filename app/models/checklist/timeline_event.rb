@@ -15,6 +15,8 @@ class Checklist::TimelineEvent
   #:hash_ann_parent_symbol e.g. CoP15
   #:pos - position (%)
   def initialize(options)
+    options[:effective_at] = Time.zone.parse(options[:effective_at]) if options[:effective_at].is_a?(String)
+
     # if it is an auto-inserted deletion it won't have an id
     id = options[:id] || (
       (options[:species_listing_id] << 16) +
