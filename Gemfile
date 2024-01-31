@@ -35,7 +35,7 @@ gem 'nokogiri', '1.15.5' # TODO: New version need Ruby 3
 gem 'mobility', '~> 1.2', '>= 1.2.9'
 gem 'devise', '4.7.3' # TODO: need upgrade to 4.8+ when upgrade to rails 6.1
 gem 'cancancan', '~> 3.5'
-gem 'ahoy_matey', '4.2.1' # TODO: latest 5.0.2. Can't upgrade to 5.0 until upgrade to Rails 6
+gem 'ahoy_matey', '4.2.1' # TODO: latest 5.0.2. Can't upgrade to 5.0 until upgrade to Rails 6.1
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
 
 # TODO: starting from v1.4, it break our test due to redirection changes:
@@ -57,7 +57,7 @@ gem 'httparty', '~> 0.21.0'
 
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
-gem 'acts-as-taggable-on', '8.1.0' # TODO: latest v10 @ 2023. Can upgrade after upgrade to Rails 6.
+gem 'acts-as-taggable-on', '9.0.1' # TODO: latest v10 @ 2023. Can upgrade after upgrade to Rails 6.1
 gem 'carrierwave', '2.2.5' # TODO: latest is 3.0.5 @ 2023. can upgrade to v3 after Rails 6
 
 # PDF
