@@ -153,7 +153,7 @@ gem 'dotenv-rails', '2.0.1'
 
 gem 'sitemap_generator', '~> 6.3'
 
-gem 'appsignal', '1.3.3' # TODO: should upgrade to latest after all upgrade.
+gem 'appsignal', '~> 3.5', '>= 3.5.5'
 gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in staging / production
 
 ### GEM for frontend ###
