@@ -8,7 +8,10 @@ formatters = [Coveralls::SimpleCov::Formatter, SimpleCov::Formatter::HTMLFormatt
 formatters.push CodeClimate::TestReporter::Formatter if ENV['CI']
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
-SimpleCov.start 'rails'
+SimpleCov.start 'rails' do
+  add_group "Services", "app/services"
+  add_group "Serializers", "app/serializers"
+end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
