@@ -92,8 +92,8 @@ class Trade::SandboxTemplate < ApplicationRecord
           )
         end
 
-        def save(attributes = {})
-          super(attributes)
+        def save(*args, **options, &block)
+          super(*args, **options, &block)
           sanitize
         end
 

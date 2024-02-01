@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.8'
+ruby '3.0.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '6.0.6.1'
@@ -85,8 +85,6 @@ gem 'bootsnap', '>= 1.4.2', require: false
 # To use Jbuilder templates for JSON
 # gem 'jbuilder', '~> 2.7'
 
-gem 'rest-client', '1.8.0', require: false # TODO, should upgrade for better compatibility with newer Ruby but breaking change. Seems not many place using it, worth a try.
-
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
@@ -140,8 +138,8 @@ group :test do
   gem 'rails-controller-testing'
   gem "codeclimate-test-reporter", '0.1.1', require: nil # TODO, should be removed
   gem 'factory_bot_rails', '5.2.0'
-  gem 'simplecov', '0.22.0', :require => false # TODO: latest
-  gem 'coveralls', '0.7.1', :require => false
+  gem 'simplecov', '~> 0.22.0', :require => false
+  gem 'coveralls_reborn', '~> 0.28.0', require: false
 end
 
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018

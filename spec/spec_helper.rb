@@ -7,7 +7,7 @@ Coveralls::Output.no_color = true
 formatters = [Coveralls::SimpleCov::Formatter, SimpleCov::Formatter::HTMLFormatter]
 formatters.push CodeClimate::TestReporter::Formatter if ENV['CI']
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
+SimpleCov.formatters = formatters
 SimpleCov.start 'rails' do
   add_group "Services", "app/services"
   add_group "Serializers", "app/serializers"
