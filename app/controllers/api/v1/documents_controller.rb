@@ -84,8 +84,6 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def download_zip
-    require 'zip'
-
     @documents = Document.find(params[:ids].split(','))
 
     t = Tempfile.new('tmp-zip-' + request.remote_ip)

@@ -1,5 +1,3 @@
-require 'zip'
-require 'fileutils'
 namespace :export do
   task :trade_db => :environment do
     RECORDS_PER_FILE = 500000

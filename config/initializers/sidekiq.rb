@@ -1,6 +1,6 @@
 require 'sidekiq'
 require 'sidekiq-status'
-require "sidekiq-unique-jobs"
+require 'sidekiq-unique-jobs'
 
 Sidekiq.configure_client do |config|
   config.client_middleware do |chain|

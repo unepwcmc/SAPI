@@ -77,8 +77,6 @@ class Checklist::DocumentsController < ApplicationController
   end
 
   def full_volume_downloader
-    require 'zip'
-
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
     vol_path = [Rails.root, '/public/ID_manual_volumes/', params['locale'], '/'].join

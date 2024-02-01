@@ -1,4 +1,4 @@
-require 'sapi/geoip'
+require 'sapi/geo_i_p'
 
 class Ahoy::Store < Ahoy::DatabaseStore
   UUID_NAMESPACE = UUIDTools::UUID.parse("dcd74c26-8fc9-453a-a9c2-afc445c3258d")

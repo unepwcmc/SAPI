@@ -1,6 +1,4 @@
 require 'spec_helper'
-# https://stackoverflow.com/a/46904732/556780
-require_dependency Rails.root.join('lib', 'modules', 'html_to_latex')
 
 describe HtmlToLatex do
   describe :convert do

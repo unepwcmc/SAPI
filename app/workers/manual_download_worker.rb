@@ -54,8 +54,6 @@ class ManualDownloadWorker
   end
 
   def zip_file_generator
-    require 'zip'
-
     missing_files = []
     pdf_file_paths = []
     tmp_dir_path = [Rails.root, "/tmp/", SecureRandom.hex(8)].join

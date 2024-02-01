@@ -11,7 +11,7 @@
 #  updated_at           :datetime         not null
 #
 
-class Document::ReviewDetails < ApplicationRecord
+class ReviewDetails < ApplicationRecord
   # Used by DocumentController.
   # attr_accessible :document_id, :review_phase_id, :process_stage_id, :recommended_category
   self.table_name = 'review_details'

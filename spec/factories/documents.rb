@@ -42,12 +42,12 @@ FactoryBot.define do
     geo_entity
   end
 
-  factory :proposal_details, class: Document::ProposalDetails do
+  factory :proposal_details, class: ProposalDetails do
     document
     proposal_outcome
   end
 
-  factory :review_details, class: Document::ReviewDetails do
+  factory :review_details, class: ReviewDetails do
     document
     review_phase
   end

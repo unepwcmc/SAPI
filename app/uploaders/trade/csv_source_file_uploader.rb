@@ -1,6 +1,4 @@
 # encoding: utf-8
-require 'fileutils'
-
 class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:

@@ -21,9 +21,9 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     edit! do |format|
       load_associations
       if @document.is_a?(Document::ReviewOfSignificantTrade)
-        @document.review_details ||= Document::ReviewDetails.new
+        @document.review_details ||= ReviewDetails.new
       elsif @document.is_a?(Document::Proposal)
-        @document.proposal_details ||= Document::ProposalDetails.new
+        @document.proposal_details ||= ProposalDetails.new
       end
       @document.citations.build
       format.html { render 'new' }
