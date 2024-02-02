@@ -8,7 +8,7 @@ module AdminHelper
       name = taxon_concept.data["#{r.name.downcase}_name"]
       id = taxon_concept.data["#{r.name.downcase}_id"]
       if name && id
-        link_to(name, params.merge(:taxon_concept_id => id), :title => r.name)
+        link_to(name, params.permit!.merge(:taxon_concept_id => id), :title => r.name)
       else
         nil
       end
