@@ -183,9 +183,11 @@ class NomenclatureChange::Output < ApplicationRecord
     unless @tmp_taxon_concept
       errors.add(:new_taxon_concept, "can\'t be blank")
     end
-
     return true if @tmp_taxon_concept.valid?
-    @tmp_taxon_concept.errors.each do |attribute, message|
+
+    @tmp_taxon_concept.errors.each do |error|
+      attribute = error.attribute
+      message = error.message
       if [:parent_id, :rank, :name_status, :author_year, :full_name].
         include?(attribute)
         errors.add(:"new_#{attribute}", message)
