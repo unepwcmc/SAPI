@@ -31,9 +31,9 @@ gem 'nested-hstore', '~> 0.1.2'
 gem 'pg_search', '~> 2.3', '>= 2.3.6'
 gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
 gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmin/inherited_resources#notice)
-gem 'nokogiri', '1.15.5' # TODO: New version need Ruby 3
+gem 'nokogiri', '~> 1.16'
 gem 'mobility', '~> 1.2', '>= 1.2.9'
-gem 'devise', '4.7.3' # TODO: need upgrade to 4.8+ when upgrade to rails 6.1
+gem 'devise', '~> 4.9', '>= 4.9.3'
 gem 'cancancan', '~> 3.5'
 gem 'ahoy_matey', '4.2.1' # TODO: latest 5.0.2. Can't upgrade to 5.0 until upgrade to Rails 6.1
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
@@ -43,7 +43,7 @@ gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.
 #   rspec ./spec/controllers/admin/nomenclature_changes/split_controller_spec.rb:191
 gem 'wicked', '1.3.4'
 
-gem 'groupdate', '6.2.1' # TODO: can upgrade after rails 6.1 and newer ruby 3
+gem 'groupdate', '~> 6.4'
 
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'responders', '~> 3.1', '>= 3.1.1' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
@@ -121,7 +121,7 @@ group :development do
 end
 
 group :test, :development do
-  gem "rspec-rails", '5.1.2' # TODO: should upgrade once to rails 6.1
+  gem 'rspec-rails', '~> 6.1', '>= 6.1.1'
   gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
   gem 'json_spec', '~> 1.1', '>= 1.1.5'
   gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
