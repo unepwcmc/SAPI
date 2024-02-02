@@ -28,7 +28,7 @@ class CsvColumnHeadersValidator < ActiveModel::EachValidator
       end
     rescue => e
       Rails.logger.error e.inspect
-      record.errors.add(attribute, "file cannot be processed", {})
+      record.errors.add(attribute, "file cannot be processed")
     end
   end
 end
