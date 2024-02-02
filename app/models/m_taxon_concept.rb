@@ -111,17 +111,23 @@ class MTaxonConcept < ApplicationRecord
 
   belongs_to :taxon_concept, :foreign_key => :id, optional: true
   has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => 'MCitesListingChange'
-  has_many :historic_cites_listing_changes_for_downloads, -> { where(show_in_downloads: true).order(
-    <<-SQL
-      effective_at,
-      CASE
-      WHEN change_type_name = 'ADDITION' THEN 0
-      WHEN change_type_name = 'RESERVATION' THEN 1
-      WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
-      WHEN change_type_name = 'DELETION' THEN 3
-      END
-    SQL
-    ) }, :foreign_key => :taxon_concept_id,
+  has_many :historic_cites_listing_changes_for_downloads, -> {
+    where(
+      show_in_downloads: true
+    ).order(
+      Arel.sql(
+        <<-SQL
+          effective_at,
+          CASE
+          WHEN change_type_name = 'ADDITION' THEN 0
+          WHEN change_type_name = 'RESERVATION' THEN 1
+          WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+          WHEN change_type_name = 'DELETION' THEN 3
+          END
+        SQL
+      )
+    )
+  }, :foreign_key => :taxon_concept_id,
     :class_name => 'MCitesListingChange'
   has_many :current_cites_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
     :foreign_key => :taxon_concept_id,

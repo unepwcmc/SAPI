@@ -5,8 +5,11 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
   before_action :load_search, :only => [:index]
 
   def index
-    @distributions = @taxon_concept.distributions.
-      joins(:geo_entity).order('UPPER(geo_entities.name_en) ASC')
+    @distributions = @taxon_concept.distributions.joins(
+      :geo_entity
+    ).order(
+      Arel.sql('UPPER(geo_entities.name_en) ASC')
+    )
   end
 
   def edit
