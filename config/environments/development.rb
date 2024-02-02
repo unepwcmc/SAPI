@@ -83,13 +83,4 @@ Rails.application.configure do
   config.action_mailer.default_url_options = {
     host: Rails.application.secrets.mailer[:host] || 'http://localhost:3000'
   }
-
-  # CORS settings
-  # TODO: Rails 5 should build-in, need change this part when upgrade.
-  config.middleware.use Rack::Cors do
-    allow do
-      origins '*'
-      resource '*', :headers => :any, :methods => [:get, :post, :delete, :put, :options, :head]
-    end
-  end
 end

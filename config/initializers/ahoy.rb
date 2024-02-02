@@ -51,7 +51,7 @@ Ahoy.bot_detection_version = 2
 Ahoy.track_bots = Rails.env.test?
 Ahoy.geocode = false # we use our own geocoder (Sapi::GeoIP)
 Ahoy.mask_ips = true
-Ahoy.cookies = false # TODO: when upgrade to Ahoy v5, change value to :none
+Ahoy.cookies = :none
 
 # https://github.com/ankane/ahoy/tree/v2.2.1#exceptions
 Safely.report_exception_method = ->(e) { Appsignal.add_exception(exception) if defined? Appsignal }

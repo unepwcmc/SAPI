@@ -35,7 +35,7 @@ gem 'nokogiri', '~> 1.16'
 gem 'mobility', '~> 1.2', '>= 1.2.9'
 gem 'devise', '~> 4.9', '>= 4.9.3'
 gem 'cancancan', '~> 3.5'
-gem 'ahoy_matey', '4.2.1' # TODO: latest 5.0.2. Can't upgrade to 5.0 until upgrade to Rails 6.1
+gem 'ahoy_matey', '~> 5.0', '>= 5.0.2'
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
 
 # TODO: starting from v1.4, it break our test due to redirection changes:
@@ -48,7 +48,7 @@ gem 'groupdate', '~> 6.4'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'responders', '~> 3.1', '>= 3.1.1' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
-gem 'sidekiq', '< 7' # TODO, latest is 7
+gem 'sidekiq', '< 7' # TODO, latest is 7, which required Redis 6.2+, but our servers running Redis 4.0.9.
 gem 'sidekiq-status', '~> 3.0', '>= 3.0.3'
 gem 'sidekiq-unique-jobs', '7.1.31' # TODO: can upgrade to latest when sidekiq upgrade to 7
 gem 'sidekiq-cron', '~> 1.12'
@@ -57,8 +57,8 @@ gem 'httparty', '~> 0.21.0'
 
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
-gem 'acts-as-taggable-on', '9.0.1' # TODO: latest v10 @ 2023. Can upgrade after upgrade to Rails 6.1
-gem 'carrierwave', '2.2.5' # TODO: latest is 3.0.5 @ 2023. can upgrade to v3 after Rails 6
+gem 'acts-as-taggable-on', '~> 10.0'
+gem 'carrierwave', '~> 3.0', '>= 3.0.5'
 
 # PDF
 gem 'prawn', '0.13.2'
@@ -108,9 +108,7 @@ group :development do
   gem 'capistrano-sidekiq', '~> 2.3', '>= 2.3.1'
   gem 'slackistrano', '0.1.9', require: false
   gem 'brightbox', '2.3.9'
-  gem 'rack-cors', '0.3.0' ,:require => 'rack/cors' # TODO: remove when upgrade Rails.
   gem 'jslint_on_rails', '1.1.1'
-  # gem 'rubocop', '0.40.0', require: false
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
   gem 'rbnacl', '4.0.2'
