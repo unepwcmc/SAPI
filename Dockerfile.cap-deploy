@@ -1,12 +1,10 @@
 # Dockerfile
-FROM ubuntu:jammy
+FROM ruby:3.0.6
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Rails and SAPI has some additional dependencies, e.g. rake requires a JS
 # runtime, so attempt to get these from apt, where possible
 RUN apt-get update && apt-get install -y --force-yes \
-  # SSH
-  openssh-client \
   # For ruby?
   libsodium-dev libgmp3-dev \
   # For RVM
@@ -47,4 +45,4 @@ ENTRYPOINT ["/bin/bash", "-l"]
 # source /etc/profile.d/rvm.sh
 # eval "$(ssh-agent -s)"
 # ssh-add
-# cap staging deploy
+# CAP_BRANCH=<branch> cap staging deploy
