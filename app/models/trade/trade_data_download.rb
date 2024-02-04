@@ -30,4 +30,11 @@ class Trade::TradeDataDownload < ApplicationRecord
   #  :appendix, :importer, :exporter, :origin, :term, :unit, :source, :purpose,
   #  :number_of_rows, :city, :country, :organization
 
+  after_commit :async_downloads_cache_cleanup, on: [:create, :update]
+
+  private
+
+  def async_downloads_cache_cleanup
+    DownloadsCacheCleanupWorker.perform_async('trade_download_stats')
+  end
 end

@@ -66,7 +66,6 @@ gem 'pdfkit', '~> 0.8.7.3'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.6'
 
 gem 'aws-sdk', '~> 2' # TODO: v2 Deprecated, need to upgrade to v3
-gem 'rails-observers', '~> 0.1.5' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby

@@ -1,6 +1,5 @@
 class Admin::TermsController < Admin::StandardAuthorizationController
   respond_to :json, :only => [:update]
-  cache_sweeper :term_sweeper
 
   def index
     index! do |format|

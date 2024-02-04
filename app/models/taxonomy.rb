@@ -9,6 +9,7 @@
 #
 
 class Taxonomy < ApplicationRecord
+  include Deletable
   include Dictionary
   build_dictionary :cites_eu, :cms
 

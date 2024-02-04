@@ -24,6 +24,7 @@
 #
 
 class CitesCop < Event
+  include Deletable
   # Migrated to controller (Strong Parameters)
   # attr_accessible :is_current
   has_many :listing_changes, :foreign_key => :event_id
@@ -31,6 +32,11 @@ class CitesCop < Event
 
   validate :designation_is_cites
   validates :effective_at, :presence => true
+
+  before_validation do
+    cites = Designation.find_by_name('CITES')
+    self.designation_id = cites && cites.id
+  end
 
   def self.elibrary_document_types
     [Document::Proposal]

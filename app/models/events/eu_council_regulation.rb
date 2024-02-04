@@ -23,7 +23,7 @@
 #  elib_legacy_id       :integer
 #
 
-class EuCouncilRegulation < Event
+class EuCouncilRegulation < EuEvent
   validate :designation_is_eu
   validates :effective_at, :presence => true
 end

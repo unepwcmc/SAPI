@@ -1,6 +1,5 @@
 class Admin::SourcesController < Admin::StandardAuthorizationController
   respond_to :json, :only => [:update]
-  cache_sweeper :source_sweeper
 
   def index
     index! do |format|

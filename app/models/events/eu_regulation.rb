@@ -23,7 +23,9 @@
 #  elib_legacy_id       :integer
 #
 
-class EuRegulation < Event
+class EuRegulation < EuEvent
+  include Deletable
+
   # Migrated to controller (Strong Parameters)
   # attr_accessible :listing_changes_event_id, :end_date
   attr_accessor :listing_changes_event_id
@@ -34,14 +36,25 @@ class EuRegulation < Event
   validate :designation_is_eu
   validates :effective_at, :presence => true
 
+  after_commit :async_event_listing_changes_copy_worker, on: :create
+
   def activate!
     super
-    notify_observers(:after_activate)
+    EuRegulationActivationWorker.perform_async(id, true)
   end
 
   def deactivate!
     super
-    notify_observers(:after_deactivate)
+    EuRegulationActivationWorker.perform_async(id, false)
   end
 
+  private
+
+  def async_event_listing_changes_copy_worker
+    unless listing_changes_event_id.blank?
+      EventListingChangesCopyWorker.perform_async(
+        listing_changes_event_id.to_i, id
+      )
+    end
+  end
 end

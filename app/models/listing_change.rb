@@ -27,6 +27,7 @@
 #
 
 class ListingChange < ApplicationRecord
+  include Changable
   extend Mobility
   include TrackWhoDoesIt
   # Migrated to controller (Strong Parameters)
@@ -61,6 +62,8 @@ class ListingChange < ApplicationRecord
   validate :inclusion_at_higher_rank
   validate :species_listing_designation_mismatch
   validate :event_designation_mismatch
+
+  before_save :listing_change_before_save_callback
 
   accepts_nested_attributes_for :party_listing_distribution,
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
@@ -182,5 +185,60 @@ class ListingChange < ApplicationRecord
       errors.add(:event_id, "designation mismatch between change type and event")
       return false
     end
+  end
+
+  def listing_change_before_save_callback
+    # check if annotation should be deleted
+    if annotation &&
+       annotation.short_note_en.blank? &&
+       annotation.short_note_fr.blank? &&
+       annotation.short_note_es.blank? &&
+       annotation.full_note_en.blank? &&
+       annotation.full_note_fr.blank? &&
+       annotation.full_note_es.blank?
+      ann = annotation
+      self.annotation = nil
+      if ann.reload.listing_changes.empty?
+        ann.delete
+      end
+    end
+
+    original_change_type = ChangeType.find(change_type_id)
+    return self if original_change_type.name == ChangeType::EXCEPTION
+    return self if excluded_geo_entities_ids.nil? &&
+      excluded_taxon_concepts_ids.nil?
+    new_exclusions = []
+    exclusion_change_type = ChangeType.find_by_name_and_designation_id(
+      ChangeType::EXCEPTION, original_change_type.designation_id
+    )
+
+    # geographic exclusions
+    excluded_geo_entities_ids = excluded_geo_entities_ids &&
+      excluded_geo_entities_ids.reject(&:blank?)
+    excluded_geo_entities =
+      if excluded_geo_entities_ids && !excluded_geo_entities_ids.empty?
+        new_exclusions << ListingChange.new(
+          :change_type_id => exclusion_change_type.id,
+          :species_listing_id => species_listing_id,
+          :taxon_concept_id => taxon_concept_id,
+          :geo_entity_ids => excluded_geo_entities_ids
+        )
+      end
+
+    # taxonomic exclusions
+    excluded_taxon_concepts_ids = excluded_taxon_concepts_ids &&
+      excluded_taxon_concepts_ids.split(',').reject(&:blank?)
+    excluded_taxon_concepts =
+      if excluded_taxon_concepts_ids && !excluded_taxon_concepts_ids.empty?
+        excluded_taxon_concepts_ids.map do |id|
+          new_exclusions << ListingChange.new(
+            :change_type_id => exclusion_change_type.id,
+            :species_listing_id => species_listing_id,
+            :taxon_concept_id => id
+          )
+        end
+      end
+
+    self.exclusions = new_exclusions
   end
 end

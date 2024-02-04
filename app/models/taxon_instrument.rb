@@ -13,6 +13,7 @@
 #
 
 class TaxonInstrument < ApplicationRecord
+  include Changable
   include TrackWhoDoesIt
   # Migrated to controller (Strong Parameters)
   # attr_accessible :effective_from, :instrument_id, :taxon_concept_id

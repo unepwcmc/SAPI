@@ -13,11 +13,15 @@
 #
 
 class Term < TradeCode
+  include Deletable
+
   validates :code, :length => { :is => 3 }
 
   has_many :trade_restriction_terms
   has_many :eu_decisions
   has_many :shipments, :class_name => 'Trade::Shipment'
+
+  after_commit :expire_controller_action_cache
 
   protected
 
@@ -27,5 +31,21 @@ class Term < TradeCode
       'trade restrictions' => trade_restriction_terms,
       'shipments' => shipments
     }
+  end
+
+  private
+
+  def expire_controller_action_cache
+    I18n.available_locales.each do |lang|
+      ActionController::Base.new.send(
+        :expire_action,
+        {
+          controller: 'api/v1/terms',
+          format: 'json',
+          action: 'index',
+          locale: lang
+        }
+      )
+    end
   end
 end

@@ -13,6 +13,7 @@
 #
 
 class ChangeType < ApplicationRecord
+  include Deletable
   extend Mobility
   # Migrated to controller (Strong Parameters)
   # attr_accessible :name, :display_name_en, :display_name_es, :display_name_fr,

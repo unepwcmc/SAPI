@@ -31,12 +31,15 @@
 #
 
 class Quota < TradeRestriction
+  include Changable
   # Migrated to controller (Strong Parameters)
   # attr_accessible :public_display
 
   validates :quota, :presence => true
   validates :quota, :numericality => { :greater_than_or_equal_to => -1.0 }
   validates :geo_entity_id, :presence => true
+
+  after_commit :async_downloads_cache_cleanup, on: :destroy
 
   # Each element of CSV columns can be either an array [display_text, method]
   # or a single symbol if the display text and the method are the same
@@ -100,5 +103,11 @@ class Quota < TradeRestriction
           params[:included_taxon_concepts_ids].split(",").map(&:to_i) : nil
       ]
     ).count
+  end
+
+  private
+
+  def async_downloads_cache_cleanup
+    DownloadsCacheCleanupWorker.perform_async('quotas')
   end
 end

@@ -1,6 +1,5 @@
 class Admin::UnitsController < Admin::StandardAuthorizationController
   respond_to :json, :only => [:update]
-  cache_sweeper :unit_sweeper
 
   def index
     index! do |format|

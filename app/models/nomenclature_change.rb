@@ -28,6 +28,19 @@ class NomenclatureChange < ApplicationRecord
   validates :status, presence: true
   validate :cannot_update_when_locked
 
+  after_save do
+    if status == self.class::SUBMITTED
+      Rails.logger.warn "SUBMIT #{type}"
+      begin
+        processor_klass = "#{type}::Processor".constantize
+      rescue NameError
+        Rails.logger.warn "No processor found for #{type}"
+      else
+        processor_klass.new(self).run
+      end
+    end
+  end
+
   def in_progress?
     ![NomenclatureChange::SUBMITTED, NomenclatureChange::CLOSED].
       include?(status)

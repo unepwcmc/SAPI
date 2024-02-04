@@ -31,6 +31,7 @@
 #
 
 class CitesSuspension < TradeRestriction
+  include Changable
   # Migrated to controller (Strong Parameters)
   # attr_accessible :start_notification_id, :end_notification_id,
   #   :cites_suspension_confirmations_attributes,
@@ -43,6 +44,7 @@ class CitesSuspension < TradeRestriction
   before_validation :handle_dates
   before_save :handle_current_flag
   accepts_nested_attributes_for :cites_suspension_confirmations
+  after_commit :async_downloads_cache_cleanup, on: :destroy
 
   def handle_dates
     self.publication_date = start_notification && start_notification.effective_at
@@ -100,5 +102,11 @@ class CitesSuspension < TradeRestriction
     else
       all
     end
+  end
+
+  private
+
+  def async_downloads_cache_cleanup
+    DownloadsCacheCleanupWorker.perform_async('cites_suspensions')
   end
 end

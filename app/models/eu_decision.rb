@@ -29,6 +29,7 @@
 require 'digest/sha1'
 require 'csv'
 class EuDecision < ApplicationRecord
+  include Changable
   extend Mobility
   include TrackWhoDoesIt
   # Migrated to controller (Strong Parameters)
@@ -53,6 +54,8 @@ class EuDecision < ApplicationRecord
   validate :eu_decision_type_and_or_srg_history
 
   translates :nomenclature_note
+
+  after_commit :cache_cleanup, on: :destroy
 
   def year
     start_date ? start_date.strftime('%Y') : ''
@@ -89,5 +92,11 @@ class EuDecision < ApplicationRecord
   def eu_decision_type_and_or_srg_history
     return if eu_decision_type_id || srg_history_id
     errors.add(:base, "Eu decision type and SRG history can't be blank at the same time")
+  end
+
+  private
+
+  def cache_cleanup
+    DownloadsCacheCleanupWorker.perform_async('eu_decisions')
   end
 end

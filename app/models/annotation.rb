@@ -23,6 +23,7 @@
 #
 
 class Annotation < ApplicationRecord
+  include Deletable
   extend Mobility
   include TrackWhoDoesIt
 
@@ -42,6 +43,12 @@ class Annotation < ApplicationRecord
     order([:parent_symbol, :symbol]) }
   scope :for_eu, -> { joins(:event).where("events.type = 'EuRegulation'").
     order([:parent_symbol, :symbol]) }
+
+  before_save do
+    if event
+      self.parent_symbol = event.name
+    end
+  end
 
   def self.search(query)
     if query.present?

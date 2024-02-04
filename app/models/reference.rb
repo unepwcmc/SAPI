@@ -17,6 +17,7 @@
 #
 
 class Reference < ApplicationRecord
+  include Deletable
   include TrackWhoDoesIt
   # Migrated to controller (Strong Parameters)
   # attr_accessible :citation, :created_by_id, :updated_by_id

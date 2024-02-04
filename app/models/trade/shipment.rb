@@ -71,6 +71,25 @@ class Trade::Shipment < ApplicationRecord
   belongs_to :exporter, :class_name => "GeoEntity"
   belongs_to :importer, :class_name => "GeoEntity"
 
+  before_save do
+    @old_permits_ids = []
+    [
+      import_permits_ids_was,
+      export_permits_ids_was,
+      origin_permits_ids_was
+    ].each do |permits_ids|
+      @old_permits_ids += permits_ids ? permits_ids.dup : []
+    end
+    unless reported_taxon_concept_id
+      self.reported_taxon_concept_id = taxon_concept_id
+    end
+  end
+  before_destroy do
+    @old_permits_ids = permits_ids.dup
+  end
+  after_commit :async_tasks_after_save, on: [:create, :update]
+  after_commit :async_tasks_for_destroy, on: :destroy
+
   after_validation do
     unless self.errors.empty? && self.ignore_warnings
       # inject warnings here
@@ -154,4 +173,14 @@ class Trade::Shipment < ApplicationRecord
     send("#{permit_type}_permits_ids=", permits && permits.map(&:id))
   end
 
+  def async_tasks_after_save
+    DownloadsCacheCleanupWorker.perform_async('shipments')
+    disconnected_permits_ids = @old_permits_ids - permits_ids
+    PermitCleanupWorker.perform_async(disconnected_permits_ids)
+  end
+
+  def async_tasks_for_destroy
+    DownloadsCacheCleanupWorker.perform_async('shipments')
+    PermitCleanupWorker.perform_async(@old_permits_ids)
+  end
 end

@@ -11,6 +11,7 @@
 #
 
 class SpeciesListing < ApplicationRecord
+  include Deletable
   # Migrated to controller (Strong Parameters)
   # attr_accessible :designation_id, :name, :abbreviation
 

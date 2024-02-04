@@ -35,6 +35,12 @@ class Trade::AnnualReportUpload < ApplicationRecord
     where("epix_created_by_id IS NULL")
   }
 
+  after_create :copy_to_sandbox
+  before_destroy do
+    success = sandbox && sandbox.destroy
+    throw(:abort) unless success
+  end
+
   def copy_to_sandbox
     sandbox.copy
     update_attribute(:number_of_rows, sandbox_shipments.size)

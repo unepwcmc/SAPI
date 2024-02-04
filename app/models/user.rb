@@ -24,6 +24,8 @@
 #
 
 class User < ApplicationRecord
+  include Deletable
+
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
   # Migrated to controller (Strong Parameters)

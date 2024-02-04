@@ -15,6 +15,7 @@
 #
 
 class TaxonConceptReference < ApplicationRecord
+  include Changable
   include TrackWhoDoesIt
   # Migrated to controller (Strong Parameters)
   # attr_accessible :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,

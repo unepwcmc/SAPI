@@ -18,6 +18,8 @@
 #
 
 class GeoEntity < ApplicationRecord
+  include Changable
+  include Deletable
   extend Mobility
   # Migrated to controller (Strong Parameters)
   # attr_accessible :geo_entity_type_id, :iso_code2, :iso_code3,
@@ -65,6 +67,8 @@ class GeoEntity < ApplicationRecord
   }
 
   scope :current, -> { where(:is_current => true) }
+
+  after_commit :geo_entity_search_increment_cache_iterator
 
   def self.nodes_and_descendants(nodes_ids = [])
     joins_sql = <<-SQL
@@ -137,4 +141,7 @@ class GeoEntity < ApplicationRecord
     }
   end
 
+  def geo_entity_search_increment_cache_iterator
+    GeoEntitySearch.increment_cache_iterator
+  end
 end

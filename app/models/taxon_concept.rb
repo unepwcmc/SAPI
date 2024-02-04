@@ -31,6 +31,7 @@
 #
 
 class TaxonConcept < ApplicationRecord
+  include Deletable
   extend Mobility
   include TrackWhoDoesIt
   has_paper_trail versions: { class_name: "TaxonConceptVersion" }, on: :destroy,
@@ -173,6 +174,73 @@ class TaxonConcept < ApplicationRecord
   }
 
   before_validation :ensure_taxonomic_position
+  before_validation do
+    self.full_name =
+      if rank && parent && ['A', 'N'].include?(name_status)
+        rank_name = rank.name
+        parent_full_name = parent.full_name
+        name = scientific_name
+        # if name is present, just in case it is a multipart name
+        # e.g. when changing status from S, T, H
+        # make sure to only use last part
+        if name.present?
+          name = TaxonName.sanitize_scientific_name(name)
+        end
+        if name.blank?
+          nil
+        elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
+          "#{parent_full_name} #{name.downcase}"
+        elsif rank_name == Rank::VARIETY
+          "#{parent_full_name} var. #{name.downcase}"
+        else
+          name
+        end
+      else
+        scientific_name
+      end
+  end
+  after_create do
+    ensure_species_touched
+    Species::Search.increment_cache_iterator
+    Species::TaxonConceptPrefixMatcher.increment_cache_iterator
+    Checklist::Checklist.increment_cache_iterator
+  end
+  after_update do
+    ensure_species_touched
+    if saved_change_to_rank_id? ||
+       saved_change_to_taxon_name_id? ||
+       saved_change_to_parent_id? ||
+       saved_change_to_name_status?
+      Species::Search.increment_cache_iterator
+      Species::TaxonConceptPrefixMatcher.increment_cache_iterator
+      Checklist::Checklist.increment_cache_iterator
+    end
+  end
+  after_save do
+    if ['A', 'N'].include? name_status
+      tcd = TaxonConceptData.new(self)
+      data = tcd.to_h
+      update_column(:data, data)
+      self.data = data
+    end
+    if name_status == 'S'
+      rebuild_relationships(accepted_names_ids)
+    end
+    if name_status == 'T'
+      rebuild_relationships(accepted_names_for_trade_name_ids)
+    end
+    if name_status == 'H'
+      rebuild_relationships(hybrid_parents_ids)
+    end
+  end
+  after_destroy do
+    ensure_species_touched
+    Species::Search.increment_cache_iterator
+    Species::TaxonConceptPrefixMatcher.increment_cache_iterator
+    Checklist::Checklist.increment_cache_iterator
+  end
+  after_touch :ensure_species_touched
+  after_commit :cache_cleanup
 
   translates :nomenclature_note
 
@@ -504,6 +572,18 @@ class TaxonConcept < ApplicationRecord
       return false
     end
     true
+  end
+
+  def cache_cleanup
+    DownloadsCacheCleanupWorker.perform_async('taxon_concepts')
+  end
+
+  def ensure_species_touched
+    if rank && parent && [Rank::SUBSPECIES, Rank::VARIETY].include?(rank.name)
+      # touch parent if we're a variety or subspecies
+      Rails.logger.info "Touch species"
+      parent.touch
+    end
   end
 
 end

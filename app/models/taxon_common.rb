@@ -12,6 +12,7 @@
 #
 
 class TaxonCommon < ApplicationRecord
+  include Changable
   include TrackWhoDoesIt
   # Migrated to controller (Strong Parameters)
   # attr_accessible :common_name_id, :taxon_concept_id, :created_by_id,

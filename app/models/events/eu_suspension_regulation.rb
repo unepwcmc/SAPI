@@ -23,7 +23,9 @@
 #  elib_legacy_id       :integer
 #
 
-class EuSuspensionRegulation < Event
+class EuSuspensionRegulation < EuEvent
+  include Deletable
+
   # Migrated to controller (Strong Parameters)
   # attr_accessible :eu_suspensions_event_id
   attr_accessor :eu_suspensions_event_id
@@ -36,6 +38,10 @@ class EuSuspensionRegulation < Event
   validate :designation_is_eu
   validates :effective_at, :presence => true
   validate :end_date_presence
+
+  after_update :touch_suspensions_and_taxa
+  after_commit :after_create_async_tasks, on: :create
+  after_commit :async_downloads_cache_cleanup, on: :update
 
   def name_and_date
     "#{self.name} (Effective from: #{self.effective_at.strftime("%d/%m/%Y")})"
@@ -67,6 +73,17 @@ class EuSuspensionRegulation < Event
     unless is_current? ^ end_date.present?
       errors.add(:base, "Is current and End date are mutually exclusive")
     end
+  end
+
+  def after_create_async_tasks
+    unless eu_suspensions_event_id.blank?
+      EventEuSuspensionCopyWorker.perform_async(eu_suspensions_event_id, id)
+      DownloadsCacheCleanupWorker.perform_async('eu_decisions')
+    end
+  end
+
+  def async_downloads_cache_cleanup
+    DownloadsCacheCleanupWorker.perform_async('eu_decisions')
   end
 
 end

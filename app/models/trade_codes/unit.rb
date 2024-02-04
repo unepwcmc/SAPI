@@ -13,11 +13,15 @@
 #
 
 class Unit < TradeCode
+  include Deletable
+
   validates :code, :length => { :is => 3 }
 
   has_many :term_trade_codes_pairs, :as => :trade_code
   has_many :quotas
   has_many :shipments, :class_name => 'Trade::Shipment'
+
+  after_commit :expire_controller_action_cache
 
   protected
 
@@ -26,5 +30,21 @@ class Unit < TradeCode
       'quotas' => quotas,
       'shipments' => shipments
     }
+  end
+
+  private
+
+  def expire_controller_action_cache
+    I18n.available_locales.each do |lang|
+      ActionController::Base.new.send(
+        :expire_action,
+        {
+          controller: 'api/v1/units',
+          format: 'json',
+          action: 'index',
+          locale: lang
+        }
+      )
+    end
   end
 end

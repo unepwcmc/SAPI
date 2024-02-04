@@ -11,6 +11,8 @@
 #
 
 class EuDecisionType < ApplicationRecord
+  include Deletable
+
   # Migrated to controller (Strong Parameters)
   # attr_accessible :name, :tooltip, :decision_type
   include Dictionary

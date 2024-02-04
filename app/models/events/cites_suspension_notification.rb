@@ -24,6 +24,7 @@
 #
 
 class CitesSuspensionNotification < Event
+  include Deletable
   # Migrated to controller (Strong Parameters)
   # attr_accessible :subtype, :new_subtype, :end_date
   attr_accessor :new_subtype
@@ -36,6 +37,10 @@ class CitesSuspensionNotification < Event
   validates :effective_at, :presence => true
 
   before_save :handle_new_subtype
+  before_validation do
+    cites = Designation.find_by_name('CITES')
+    self.designation_id = cites && cites.id
+  end
 
   def handle_new_subtype
     unless new_subtype.blank?
