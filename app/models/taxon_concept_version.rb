@@ -1,5 +1,3 @@
-# config/initializers/paper_trail.rb
-
 class TaxonConceptVersion < PaperTrail::Version
   # Migrated to Strong Parameters
   # attr_accessible :taxon_concept_id,
