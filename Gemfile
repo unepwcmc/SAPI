@@ -9,8 +9,15 @@ gem 'rails', '6.1.7.6'
 # gem 'sqlite3'
 # Use Puma as the app server
 gem 'puma', '~> 5.0'
+
 # Use SCSS for stylesheets
-gem 'sass-rails', '>= 6'
+# TODO: Can't upgrade sass-rails to 6.0, it raise the following error when running `RAILS_ENV=staging rake assets:precompile`.
+# SassC::SyntaxError: Error: Invalid CSS after "...in-bottom:-3px;": expected "}", was ".margin-bottom:-3px"
+#         on line 3712:5063 of stdin
+# >> ction=135,Strength=3)";_margin-bottom:-3px;.margin-bottom:-3px;}/*!Add round
+# gem 'sass-rails', '>= 6'
+gem 'sass-rails', '~> 5.0'
+
 # https://stackoverflow.com/questions/55213868/rails-6-how-to-disable-webpack-and-use-sprockets-instead
 gem 'sprockets', '3.7.2'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
