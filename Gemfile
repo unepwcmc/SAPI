@@ -158,7 +158,6 @@ gem 'dotenv-rails', '2.0.1'
 gem 'sitemap_generator', '~> 6.3'
 
 gem 'appsignal', '~> 3.5', '>= 3.5.5'
-gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in staging / production
 
 ### GEM for frontend ###
 # Remove the `jquery-rails` gem to eliminate any dependency issues that may block the upgrade process.
