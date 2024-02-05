@@ -40,7 +40,7 @@ describe Checklist::Pdf::IndexAnnotationsKey do
         ),
         :is_current => true
       )
-      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
     subject { Checklist::Pdf::IndexAnnotationsKey.new }
     specify {
@@ -96,7 +96,7 @@ describe Checklist::Pdf::IndexAnnotationsKey do
         ),
         :is_current => true
       )
-      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
     subject { Checklist::Pdf::IndexAnnotationsKey.new }
     specify {

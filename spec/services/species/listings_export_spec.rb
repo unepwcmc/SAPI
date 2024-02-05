@@ -100,7 +100,7 @@ describe Species::ListingsExport do
           create_cites_eu_subspecies(
             :parent_id => @species.id
           )
-          Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+          SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
         subject {
           Species::ListingsExportFactory.new({

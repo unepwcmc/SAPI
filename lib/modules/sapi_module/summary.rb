@@ -1,4 +1,4 @@
-module Sapi
+module SapiModule
   module Summary
 
     def self.database_stats

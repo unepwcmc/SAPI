@@ -18,15 +18,15 @@ namespace :db do
 
     desc "Rebuild all computed values"
     task :rebuild => :migrate do
-      Sapi::rebuild
+      SapiModule::rebuild
     end
 
     task :drop_indexes => :migrate do
-      Sapi::drop_indexes
+      SapiModule::drop_indexes
     end
 
     task :create_indexes => :migrate do
-      Sapi::create_indexes
+      SapiModule::create_indexes
     end
   end
 

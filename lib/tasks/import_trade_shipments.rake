@@ -25,7 +25,7 @@ namespace :import do
 
     files = files_from_args(t, args)
     files.each do |file|
-      Sapi::Indexes.drop_indexes_on_shipments
+      SapiModule::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
       sql = <<-SQL
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
@@ -41,7 +41,7 @@ namespace :import do
       update_country_codes
       populate_shipments
       populate_shipments_for_trade_names
-      Sapi::Indexes.create_indexes_on_shipments
+      SapiModule::Indexes.create_indexes_on_shipments
     end
   end
 
@@ -53,7 +53,7 @@ namespace :import do
 
     files = files_from_args(t, args)
     files.each do |file|
-      Sapi::Indexes.drop_indexes_on_shipments
+      SapiModule::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
       sql = <<-SQL
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
@@ -69,7 +69,7 @@ namespace :import do
       update_country_codes
       # populate_shipments
       populate_shipments_for_trade_names
-      Sapi::Indexes.create_indexes_on_shipments
+      SapiModule::Indexes.create_indexes_on_shipments
     end
   end
 end

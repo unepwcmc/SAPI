@@ -59,7 +59,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
           :taxon_concept => @species,
           :other_taxon_concept => synonym
         )
-        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       end
 
       context "when split listing" do
@@ -158,7 +158,7 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables => true do
             :effective_at => '1979-06-28',
             :is_current => true
           )
-          Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+          SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
           @sandbox_klass.create(
             :taxon_name => 'Falco hybrid', :appendix => 'II', :year => '2012'
           )

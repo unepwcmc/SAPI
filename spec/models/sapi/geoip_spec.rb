@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Sapi::GeoIP do
+describe SapiModule::GeoIP do
   describe :resolve do
-    subject { Sapi::GeoIP.instance }
+    subject { SapiModule::GeoIP.instance }
     before(:each) do
       bogota_latin1 = "Bogotá".encode('ISO-8859-1', 'UTF-8')
       allow(subject).to receive(:country_and_city).and_return(

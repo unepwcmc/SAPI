@@ -31,7 +31,7 @@ describe Checklist::Pdf::IndexFetcher do
     )
     tc.common_names << english_common_name
     tc.common_names << spanish_common_name
-    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     tc
   }
   let(:rel) { MTaxonConcept.by_scientific_name('Lolcatus') }
@@ -63,7 +63,7 @@ describe Checklist::Pdf::IndexFetcher do
         :taxon_concept_id => tc.id,
         :other_taxon_concept_id => synonym.id
       )
-      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     }
     let(:query) {
       Checklist::Pdf::IndexQuery.new(

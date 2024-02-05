@@ -127,7 +127,7 @@ namespace :import do
     file = "lib/files/synonyms_to_trade_names.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
-    Sapi::Indexes.drop_indexes_on_trade_names
+    SapiModule::Indexes.drop_indexes_on_trade_names
     copy_data(file, TMP_TABLE)
     has_trade_name = TaxonRelationshipType.
       find_or_create_by(:name => TaxonRelationshipType::HAS_TRADE_NAME).id
@@ -218,6 +218,6 @@ namespace :import do
       Diff: #{final_count_trade_relationships - count_trade_relationships}"
     puts "Pre-Existing synonym_relationships: #{count_synonym_relationships}; Final count synonym_relationships: #{final_count_synonym_relationships};\
       Diff: #{final_count_synonym_relationships - count_synonym_relationships}"
-    Sapi::Indexes.create_indexes_on_trade_names
+    SapiModule::Indexes.create_indexes_on_trade_names
   end
 end

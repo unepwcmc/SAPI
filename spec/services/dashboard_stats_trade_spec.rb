@@ -4,7 +4,7 @@ describe DashboardStats do
   include_context "Shipments"
   describe "#trade" do
     before(:each) do
-      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       @shipment4_by_partner = create(
         :shipment,
         :taxon_concept => @animal_species,

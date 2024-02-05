@@ -1,4 +1,4 @@
-require 'sapi/geo_i_p'
+require 'sapi_module/geo_i_p'
 module Trade::TradeDataDownloadLogger
 
   module_function
@@ -19,7 +19,7 @@ module Trade::TradeDataDownloadLogger
     data["source"] = self.get_field_values(search_params[:sources_ids], Source)
     data["importer"] = self.get_field_values(search_params[:importers_ids], GeoEntity)
     data["exporter"] = self.get_field_values(search_params[:exporters_ids], GeoEntity)
-    geo_ip_data = Sapi::GeoIP.instance.resolve(request.ip)
+    geo_ip_data = SapiModule::GeoIP.instance.resolve(request.ip)
     [:country, :city, :organization].each do |col|
       data[col] = geo_ip_data[col]
     end

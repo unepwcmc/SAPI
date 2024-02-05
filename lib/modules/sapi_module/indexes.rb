@@ -1,4 +1,4 @@
-module Sapi
+module SapiModule
   module Indexes
 
     # rewrite the code below to just use add_index and add UNIQUE to the mview ids

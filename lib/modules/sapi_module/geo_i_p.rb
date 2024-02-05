@@ -1,5 +1,5 @@
 # Returns UTF8
-module Sapi
+module SapiModule
   class GeoIP
     include Singleton
 

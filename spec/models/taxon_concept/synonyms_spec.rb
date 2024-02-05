@@ -87,7 +87,7 @@ describe TaxonConcept do
       specify { expect(@synonym.full_name).to eq('Lolcatus lolus furiatus') }
       context "overnight calculations" do
         before(:each) do
-          Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+          SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
         # should not modify a synonym's full name overnight
         specify { expect(@synonym.reload.full_name).to eq('Lolcatus lolus furiatus') }

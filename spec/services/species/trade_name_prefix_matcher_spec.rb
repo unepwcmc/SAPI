@@ -21,7 +21,7 @@ describe Species::TaxonConceptPrefixMatcher do
       :taxon_relationship_type => trade_name_relationship_type
     )
     create_cites_I_addition(:taxon_concept => @accepted_name)
-    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     @accepted_name_ac = MAutoCompleteTaxonConcept.find(@accepted_name.id)
     @trade_name_ac = MAutoCompleteTaxonConcept.find(@trade_name.id)
     @status_N_species_ac = MAutoCompleteTaxonConcept.find(@status_N_species.id)

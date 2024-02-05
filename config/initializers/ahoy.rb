@@ -1,4 +1,4 @@
-require 'sapi/geo_i_p'
+require 'sapi_module/geo_i_p'
 
 class Ahoy::Store < Ahoy::DatabaseStore
   def authenticate(data)
@@ -11,7 +11,7 @@ class Ahoy::Store < Ahoy::DatabaseStore
     data[:id] = ensure_uuid(data.delete(:visit_token))
     data[:visitor_id] = ensure_uuid(data.delete(:visitor_token))
 
-    geo_ip_data = Sapi::GeoIP.instance.resolve(request.ip)
+    geo_ip_data = SapiModule::GeoIP.instance.resolve(request.ip)
     data[:country] = geo_ip_data[:country]
     data[:city] = geo_ip_data[:city]
     data[:organization] = geo_ip_data[:organization]
@@ -38,7 +38,7 @@ Ahoy.server_side_visits = :when_needed
 Ahoy.user_agent_parser = :device_detector
 Ahoy.bot_detection_version = 2
 Ahoy.track_bots = Rails.env.test?
-Ahoy.geocode = false # we use our own geocoder (Sapi::GeoIP)
+Ahoy.geocode = false # we use our own geocoder (SapiModule::GeoIP)
 Ahoy.mask_ips = true
 Ahoy.cookies = :none
 

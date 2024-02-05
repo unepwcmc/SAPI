@@ -6,7 +6,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
   include_context 'Shipments'
 
   describe "GET index" do
-    before(:each) { Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should return all shipments" do
       get :index, format: :json
       expect(response.body).to have_json_size(7).at_path('shipments')
@@ -23,7 +23,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
   end
 
   describe "PUT update" do
-    before(:each) { Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should auto resolve accepted taxon when blank" do
       put :update, params: { id: @shipment1.id, shipment: {
           reported_taxon_concept_id: @synonym_subspecies.id
@@ -46,7 +46,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
   end
 
   describe "POST update_batch" do
-    before(:each) { Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should change reporter type from I to E" do
       post :update_batch, params: { filters: { # shipment2
           time_range_start: @shipment1.year,
@@ -135,7 +135,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
   end
 
   describe "POST destroy_batch" do
-    before(:each) { Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should delete 1 shipment" do
       post :destroy_batch, params: { time_range_start: @shipment1.year, time_range_end: @shipment2.year, reporter_type: 'E', exporters_ids: [@portugal.id.to_s, @argentina.id.to_s], importers_ids: [@portugal.id.to_s, @argentina.id.to_s], taxon_concepts_ids: [@animal_species.id] }
       expect(Trade::Shipment.count).to eq(6)
@@ -193,7 +193,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
   end
 
   describe "DELETE destroy" do
-    before(:each) { Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it "should delete 1 shipment" do
       delete :destroy, params: { id: @shipment1.id }
       expect(Trade::Shipment.where(id: @shipment1.id)).to be_empty

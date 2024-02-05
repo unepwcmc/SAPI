@@ -55,7 +55,7 @@ shared_context "Pereskia" do
       :is_current => true
     )
 
-    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
       #Skip old sapi context let statements,
       #which are now instance variables starting with _

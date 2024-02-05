@@ -118,7 +118,7 @@ namespace :import do
 
   desc 'Shows database summary stats'
   task :stats => :environment do
-    Sapi::database_summary
+    SapiModule::database_summary
   end
 
   desc 'Runs import tasks for cleaned files'

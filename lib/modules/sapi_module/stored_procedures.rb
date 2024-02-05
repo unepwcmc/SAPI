@@ -1,4 +1,4 @@
-module Sapi
+module SapiModule
   module StoredProcedures
 
     def self.rebuild

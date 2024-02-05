@@ -59,7 +59,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         error_message: "taxon_name Caniis lupus is invalid",
         error_count: 1
       )
-      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       validation_rule.refresh_errors_if_needed(annual_report_upload)
     end
     specify {
@@ -96,7 +96,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         error_message: "taxon_name Caniis lupus is invalid",
         error_count: 2
       )
-      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       validation_rule.refresh_errors_if_needed(annual_report_upload)
     end
 

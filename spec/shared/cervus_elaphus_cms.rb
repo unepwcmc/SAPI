@@ -52,7 +52,7 @@ shared_context "Cervus elaphus CMS" do
       :instrument => create(:instrument, :name => 'Bukhara Deer')
     )
 
-    Sapi::StoredProcedures.rebuild_cms_taxonomy_and_listings
+    SapiModule::StoredProcedures.rebuild_cms_taxonomy_and_listings
     self.instance_variables.each do |t|
       #Skip old sapi context let statements,
       #which are now instance variables starting with _

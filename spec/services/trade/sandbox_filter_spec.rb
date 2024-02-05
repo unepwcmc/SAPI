@@ -41,7 +41,7 @@ describe Trade::SandboxFilter do
       is_current: true,
       event: reg2013
     )
-    Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     @validation_error = create(
       :validation_error,
       annual_report_upload_id: annual_report_upload.id,

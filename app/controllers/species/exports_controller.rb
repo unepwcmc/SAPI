@@ -48,7 +48,7 @@ class Species::ExportsController < ApplicationController
       return
     else
       ip = request.remote_ip
-      separator = Sapi::GeoIP.instance.default_separator(ip)
+      separator = SapiModule::GeoIP.instance.default_separator(ip)
       cookies.permanent['speciesplus.csv_separator'] = separator
     end
   end
