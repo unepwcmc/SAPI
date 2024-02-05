@@ -16,14 +16,20 @@ class Api::V1::EuDecisionsController < ApplicationController
   end
 
   def eu_decision_search(params)
-    list = EuDecision.from('api_eu_decisions_view AS eu_decisions').
-      select(eu_decision_select_attrs).
-      joins('LEFT JOIN eu_suspensions_applicability_view v ON eu_decisions.id = v.id').
-      order(<<-SQL
-            geo_entity_en->>'name' ASC,
-            start_date DESC
+    list = EuDecision.from(
+      'api_eu_decisions_view AS eu_decisions'
+    ).select(
+      eu_decision_select_attrs
+    ).joins(
+      'LEFT JOIN eu_suspensions_applicability_view v ON eu_decisions.id = v.id'
+    ).order(
+      Arel.sql(
+        <<-SQL
+          geo_entity_en->>'name' ASC,
+          start_date DESC
         SQL
       )
+    )
 
     list = list.where("eu_decisions.taxon_concept_id IN (?)", params['taxon_concept_ids']) if params['taxon_concept_ids'].present?
     list = list.where("eu_decisions.geo_entity_id IN (?)", params['geo_entity_ids']) if params['geo_entity_ids'].present?
