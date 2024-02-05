@@ -13,7 +13,7 @@
 #
 
 class Language < ApplicationRecord
-  include Changable
+  include Changeable
   include Deletable
   extend Mobility
   # Migrated to controller (Strong Parameters)

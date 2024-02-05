@@ -31,7 +31,7 @@
 #
 
 class CitesSuspension < TradeRestriction
-  include Changable
+  include Changeable
   # Migrated to controller (Strong Parameters)
   # attr_accessible :start_notification_id, :end_notification_id,
   #   :cites_suspension_confirmations_attributes,

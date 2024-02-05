@@ -31,7 +31,7 @@
 #
 
 class Quota < TradeRestriction
-  include Changable
+  include Changeable
   # Migrated to controller (Strong Parameters)
   # attr_accessible :public_display
 

@@ -29,7 +29,7 @@
 require 'digest/sha1'
 require 'csv'
 class EuDecision < ApplicationRecord
-  include Changable
+  include Changeable
   extend Mobility
   include TrackWhoDoesIt
   # Migrated to controller (Strong Parameters)

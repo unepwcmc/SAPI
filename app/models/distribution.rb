@@ -13,7 +13,7 @@
 #
 
 class Distribution < ApplicationRecord
-  include Changable
+  include Changeable
   include TrackWhoDoesIt
   # Migrated to controller (Strong Parameters)
   # attr_accessible :geo_entity_id, :taxon_concept_id, :tag_list,

@@ -13,7 +13,7 @@
 #
 
 class TaxonRelationship < ApplicationRecord
-  include Changable
+  include Changeable
   include TrackWhoDoesIt
   # Migrated to controller (Strong Parameters)
   # attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,

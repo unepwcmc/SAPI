@@ -1,41 +1,41 @@
-module Changable
+module Changeable
   extend ActiveSupport::Concern
 
   included do
     #########################################################
     ### after save
-    after_save :changable_after_save_callback
-    after_commit :changable_after_save_callback_on_commit, on: [:create, :update]
+    after_save :changeable_after_save_callback
+    after_commit :changeable_after_save_callback_on_commit, on: [:create, :update]
     #########################################################
     ### before destroy
-    before_destroy :changable_before_destroy_callback
-    after_commit :changable_before_destroy_callback_on_commit, on: :destroy
+    before_destroy :changeable_before_destroy_callback
+    after_commit :changeable_before_destroy_callback_on_commit, on: :destroy
   end
 
   private
 
-  def changable_before_destroy_callback
+  def changeable_before_destroy_callback
     if respond_to?(:taxon_concept) && taxon_concept && can_be_deleted?
       # currently no easy means to tell who deleted the dependent object
-      changable_bump_dependents_timestamp_part_one(taxon_concept, nil)
+      changeable_bump_dependents_timestamp_part_one(taxon_concept, nil)
     end
   end
 
-  def changable_before_destroy_callback_on_commit
-    changable_clear_cache
+  def changeable_before_destroy_callback_on_commit
+    changeable_clear_cache
     if respond_to?(:taxon_concept) && taxon_concept && can_be_deleted?
       # currently no easy means to tell who deleted the dependent object
-      changable_bump_dependents_timestamp_part_two
+      changeable_bump_dependents_timestamp_part_two
     end
   end
 
-  def changable_after_save_callback
+  def changeable_after_save_callback
     unless respond_to?(:taxon_concept)
       return
     end
 
     if taxon_concept
-      changable_bump_dependents_timestamp_part_one(taxon_concept, updated_by_id)
+      changeable_bump_dependents_timestamp_part_one(taxon_concept, updated_by_id)
     end
     # Rails 5.1 to 5.2
     # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
@@ -63,13 +63,13 @@ module Changable
       taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save
       previous_taxon_concept = TaxonConcept.find_by_id(taxon_concept_id_before_last_save)
       if previous_taxon_concept
-        changable_bump_dependents_timestamp_part_one(previous_taxon_concept, updated_by_id)
+        changeable_bump_dependents_timestamp_part_one(previous_taxon_concept, updated_by_id)
       end
     end
   end
 
-  def changable_after_save_callback_on_commit
-    changable_clear_cache
+  def changeable_after_save_callback_on_commit
+    changeable_clear_cache
 
     # For models that are not directly related to taxon concepts
     # but for which is anyway preferable for the changes to be reflacted
@@ -80,12 +80,12 @@ module Changable
     # It's quite rare that updates to those objects will occur,
     # so there shouldn't be no harm in clearning the entire serializer cache.
     unless respond_to?(:taxon_concept)
-      changable_clear_show_tc_serializer_cache
+      changeable_clear_show_tc_serializer_cache
       return
     end
 
     if taxon_concept
-      changable_bump_dependents_timestamp_part_two
+      changeable_bump_dependents_timestamp_part_two
     end
     # Rails 5.1 to 5.2
     # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
@@ -113,18 +113,18 @@ module Changable
       taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save
       previous_taxon_concept = TaxonConcept.find_by_id(taxon_concept_id_before_last_save)
       if previous_taxon_concept
-        changable_bump_dependents_timestamp_part_two
+        changeable_bump_dependents_timestamp_part_two
       end
     end
   end
 
-  def changable_clear_cache
+  def changeable_clear_cache
     return unless respond_to?(:taxon_concept)
 
     DownloadsCacheCleanupWorker.perform_async(self.class.to_s.tableize)
   end
 
-  def changable_bump_dependents_timestamp_part_one(taxon_concept, updated_by_id)
+  def changeable_bump_dependents_timestamp_part_one(taxon_concept, updated_by_id)
     return unless taxon_concept
 
     TaxonConcept.where(id: taxon_concept.id).update_all(
@@ -133,13 +133,13 @@ module Changable
     )
   end
 
-  def changable_bump_dependents_timestamp_part_two
+  def changeable_bump_dependents_timestamp_part_two
     return unless taxon_concept
 
     DownloadsCacheCleanupWorker.perform_async('taxon_concepts')
   end
 
-  def changable_clear_show_tc_serializer_cache
+  def changeable_clear_show_tc_serializer_cache
     ##
     # Disabling because we use memcache on production, but memcache doesn't implement this method.
     # For now, changes to records that appear in serializers will not change until the caches are expired,
