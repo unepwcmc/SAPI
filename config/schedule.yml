@@ -1,7 +1,14 @@
-rebuild_job:
-  cron: "42 1 * * *"
+rebuild_job_weekly:
+  cron: "42 1 * * 6"
   class: "RebuildJob"
   queue: admin
+
+# disable the following job on production
+rebuild_job_daily:
+  cron: "42 1 * * 0-5"
+  class: "RebuildJob"
+  queue: admin
+
 downloads_cache_update_job:
   cron: "5 4 * * *"
   class: "DownloadsCacheUpdateJob"
