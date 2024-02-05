@@ -72,11 +72,11 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
               END AS subspecies_info
            SQL
       ).
-      order(<<-SQL
+      order(Arel.sql(<<-SQL
           effective_at DESC,
           subspecies_info DESC
         SQL
-      ).all
+      )).all
   end
 
   def cms_instruments
