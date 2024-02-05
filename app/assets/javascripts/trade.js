@@ -11,7 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
-//= require rails-ujs
+//= require jquery_ujs
 //= require jquery-deparam
 //= require jquery-ui
 //= require jquery.mousewheel

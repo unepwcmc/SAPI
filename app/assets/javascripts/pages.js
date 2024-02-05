@@ -12,7 +12,7 @@
 //
 //= require underscore
 //= require jquery
-//= require rails-ujs
+//= require jquery_ujs
 //= require_self
 //= require_tree ./pages
 //= require ./shared/login

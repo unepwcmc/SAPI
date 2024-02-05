@@ -11,7 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
-//= require rails-ujs
+//= require jquery_ujs
 //= require bootstrap
 //= require bootstrap-editable
 //= require bootstrap-datepicker
