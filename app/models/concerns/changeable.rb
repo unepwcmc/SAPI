@@ -1,3 +1,10 @@
+##
+# This module is used by models which are referenced by or depend on the
+# taxon_concepts table. It is responsible for two main areas:
+#
+# - altering the updated timestamp on affected taxon concepts on change
+# - emptying the cache of taxon_concepts
+
 module Changeable
   extend ActiveSupport::Concern
 
