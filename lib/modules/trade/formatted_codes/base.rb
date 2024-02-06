@@ -128,6 +128,10 @@ class Trade::FormattedCodes::Base
 
   TAXONOMY_FIELDS = %w(kingdom phylum order class family genus group taxa).freeze
   TRADE_CODE_FIELDS = %w(id code name_en).freeze
+
+  # Given `slice_values('BAL', 'term')`, returns a string of the form
+  # `"1,'BAL','Baleen'"`, for later interpolation as raw SQL, representing
+  # id, code, name_en of the Term.
   def slice_values(trade_code, code_type)
     return ("NULL," * 3).chop unless trade_code
     # When code value is 'NULL' it means that this is
@@ -137,7 +141,15 @@ class Trade::FormattedCodes::Base
     # no indication for any condition with regard that code/item.
     return [-1, "'NULL'", "'NULL'"].join(',') if trade_code == 'NULL'
 
-    code_obj = code_type.capitalize.constantize.find_by_code(trade_code)
+    # Term or Unit
+    model_class = code_type.capitalize.constantize
+
+    code_obj = model_class.find_by_code(trade_code)
+
+    if code_obj.nil?
+      raise "#{code_type} '#{trade_code}' does not exist"
+    end
+
     code_obj.attributes.slice(*TRADE_CODE_FIELDS).values.map do |v|
       v.is_a?(String) ? "'#{v}'" : v
     end.join(',')
