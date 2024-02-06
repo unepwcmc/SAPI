@@ -142,7 +142,8 @@ rules:
     - rule_no: 7
       rule_name: 'rulename'
       input:
-        terms: ["BEL", "HAN", "SHO", "SKO", "WAL", "WAT"]
+        # BEL, HAN, WAL, WAT no longer exist but used to be covered by this rule
+        terms: ["SHO", "SKO"]
         taxa_fields:
           group: ''
         units_fields:
@@ -154,7 +155,8 @@ rules:
     - rule_no: 8
       rule_name: 'rulename'
       input:
-        terms: ["CST", "FRA"]
+        # CST no longer exists but used to be covered by this rule
+        terms: ["FRA"]
         taxa_fields:
           group: ''
         units_fields:
@@ -259,18 +261,19 @@ rules:
         term: 'TIM'
         quantity_modifier: ''
         modifier_value: 1
-    - rule_no: 17
-      rule_name: 'rulename'
-      input:
-        terms: ['TIS']
-        taxa_fields:
-          group: ''
-        units_fields:
-          units: []
-      output:
-        term: 'CUL'
-        quantity_modifier: ''
-        modifier_value: 1
+    # TIS no longer exists
+    # - rule_no: 17
+    #   rule_name: 'rulename'
+    #   input:
+    #     terms: ['TIS']
+    #     taxa_fields:
+    #       group: ''
+    #     units_fields:
+    #       units: []
+    #   output:
+    #     term: 'CUL'
+    #     quantity_modifier: ''
+    #     modifier_value: 1
     - rule_no: 18
       rule_name: 'rulename'
       input:
@@ -360,7 +363,8 @@ rules:
     - rule_no: 25
       rule_name: 'rulename'
       input:
-        terms: ['SID','SKD']
+        # SKD no longer exists, but used to be covered by this rule
+        terms: ['SID']
         taxa_fields:
           group: ''
         units_fields:
