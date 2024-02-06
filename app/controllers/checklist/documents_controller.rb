@@ -41,7 +41,7 @@ class Checklist::DocumentsController < ApplicationController
   end
 
   def check_doc_presence
-    doc_ids = MaterialDocIdsRetriever.run(params)
+    doc_ids = MaterialDocIdsRetriever.run(params.dup.permit!.to_h)
 
     render :json => doc_ids.present?
   end

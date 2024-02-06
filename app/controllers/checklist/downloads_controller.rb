@@ -19,9 +19,9 @@ class Checklist::DownloadsController < ApplicationController
   def create
     @download = Download.create(download_params)
     if download_params[:doc_type] == 'citesidmanual'
-      ManualDownloadWorker.perform_async(@download.id, params)
+      ManualDownloadWorker.perform_async(@download.id, params.dup.permit!.to_h)
     else
-      DownloadWorker.perform_async(@download.id, params)
+      DownloadWorker.perform_async(@download.id, params.dup.permit!.to_h)
     end
 
     @download = @download.attributes.except("filename", "path")
