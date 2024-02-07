@@ -1,3 +1,28 @@
+##
+#
+# This module can be invoked via either:
+#
+# ```
+# $ bundle exec rake db:trade_plus:rebuild
+# irb> Trade::RebuildTradePlusViews.run
+# ```
+#
+# The module uses the data in `lib/data/trade_mapping.yml` to rebuild the views
+#
+# - trade_plus_formatted_data_view and
+# - trade_plus_formatted_data_final_view
+#
+# In the long term it would surely be better if the yml file were simply
+# read into the db, and referenced from the view, which then would not need to
+# change, rather than hard-coding the values into the view.
+#
+# Once completed, two new files will be added, with datestamps in `db/views/`.
+# You will then need to:
+#
+# - Check the two files into git
+# - Create a migration to apply them. See the migration named
+#   `UpdateConversionRulesForTradePlusFormattedDataView` for an example.
+
 module Trade::RebuildTradePlusViews
   def self.run
     time = "#{Time.now.hour}#{Time.now.min}#{Time.now.sec}"
