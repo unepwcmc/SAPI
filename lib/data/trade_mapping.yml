@@ -368,7 +368,7 @@ rules:
         taxa_fields:
           group: ''
         units_fields:
-          units: ['NULL']
+          units: ['NULL', 'NAR']
       output:
         term: 'SKI'
         quantity_modifier: '/'
@@ -546,7 +546,7 @@ rules:
     - rule_no: 20
       rule_name: 'rulename'
       input:
-        units: ['NULL']
+        units: ['NULL', 'NAR']
         taxa_fields:
           group: 'Coral'
         terms_fields:
