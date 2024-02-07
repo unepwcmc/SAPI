@@ -153,6 +153,6 @@ module Changeable
     # which is 24 hours. Possible solution:
     # https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/114
 
-    Rails.cache.delete_matched('*ShowTaxonConceptSerializer*') unless Rails.env.production?
+    Rails.cache.delete_matched(/.*ShowTaxonConceptSerializer.*/) unless Rails.env.production?
   end
 end
