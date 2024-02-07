@@ -13,36 +13,39 @@ class Trade::FormattedCodes::TradePlusFormattedCodes < Trade::FormattedCodes::Ba
 
   def formatted_query
     attributes = ATTRIBUTES.map { |k, v| "#{v} AS #{k}" }.join(',')
-    group_by_attributes = [ATTRIBUTES.values, GROUP_EXTRA_ATTRIBUTES].flatten.join(',')
+
     <<-SQL
       #{codes_mapping_table}
-      SELECT #{attributes},
-             -- MAX functions are supposed to to merge rows together based on the join
-             -- conditions and replacing NULLs with values from related rows when possible.
-             -- Moreover, if ids are -1 or codes/names are 'NULL' strings, replace those with NULL
-             -- after the processing is done. This is to get back to just a unique NULL representation.
-             NULLIF(COALESCE(MAX(COALESCE(output_term_id, codes_map.term_id)), ts.term_id), -1) AS term_id,
-             NULLIF(COALESCE(MAX(COALESCE(output_term_code, codes_map.term_code)), terms.code), 'NULL') AS term_code,
-             NULLIF(COALESCE(MAX(COALESCE(output_term_name, codes_map.term_name)), terms.name_en), 'NULL') AS term_en,
-             NULLIF(COALESCE(MAX(COALESCE(output_unit_id, codes_map.unit_id)), ts.unit_id), -1) AS unit_id,
-             NULLIF(COALESCE(MAX(COALESCE(output_unit_code, codes_map.unit_code)), units.code), 'NULL') AS unit_code,
-             NULLIF(COALESCE(MAX(COALESCE(output_unit_name, codes_map.unit_name)), units.name_en), 'NULL') AS unit_en,
-             MAX(term_quantity_modifier) AS term_quantity_modifier,
-             MAX(term_modifier_value)::FLOAT AS term_modifier_value,
-             MAX(unit_quantity_modifier) AS unit_quantity_modifier,
-             MAX(unit_modifier_value)::FLOAT AS unit_modifier_value
-        FROM trade_plus_group_view ts
-        #{mapping_join}
-        LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
-        LEFT OUTER JOIN trade_codes units ON ts.unit_id = units.id
-        LEFT OUTER JOIN trade_codes sources ON ts.source_id = sources.id
-        LEFT OUTER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
-        INNER JOIN ranks ON ranks.id = ts.taxon_concept_rank_id
-        LEFT OUTER JOIN geo_entities exporters ON ts.china_exporter_id = exporters.id
-        LEFT OUTER JOIN geo_entities importers ON ts.china_importer_id = importers.id
-        LEFT OUTER JOIN geo_entities origins ON ts.china_origin_id = origins.id
-        WHERE #{exemptions}
-        GROUP BY #{group_by_attributes}
+
+      -- Use DISTINCT ON, as it is possible for multiple rules to match,
+      -- e.g. term=COR, unit=NAR (* 0.58, kg); unit=NAR (* 1). In this case,
+      -- we expect the first matching rule to apply.
+      SELECT DISTINCT ON (ts.id)
+        #{attributes},
+        -- Replacing NULLs with values from related rows when possible.
+        -- Moreover, if ids are -1 or codes/names are 'NULL' strings, replace those with NULL
+        -- after the processing is done. This is to get back to just a unique NULL representation.
+        NULLIF(COALESCE(COALESCE(output_term_id,   codes_map.term_id),   ts.term_id),        -1) AS term_id,
+        NULLIF(COALESCE(COALESCE(output_term_code, codes_map.term_code), terms.code),    'NULL') AS term_code,
+        NULLIF(COALESCE(COALESCE(output_term_name, codes_map.term_name), terms.name_en), 'NULL') AS term_en,
+        NULLIF(COALESCE(COALESCE(output_unit_id,   codes_map.unit_id),   ts.unit_id),        -1) AS unit_id,
+        NULLIF(COALESCE(COALESCE(output_unit_code, codes_map.unit_code), units.code),    'NULL') AS unit_code,
+        NULLIF(COALESCE(COALESCE(output_unit_name, codes_map.unit_name), units.name_en), 'NULL') AS unit_en,
+        term_quantity_modifier     AS term_quantity_modifier,
+        term_modifier_value::FLOAT AS term_modifier_value,
+        unit_quantity_modifier     AS unit_quantity_modifier,
+        unit_modifier_value::FLOAT AS unit_modifier_value
+      FROM trade_plus_group_view ts
+      #{mapping_join}
+      LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
+      LEFT OUTER JOIN trade_codes units ON ts.unit_id = units.id
+      LEFT OUTER JOIN trade_codes sources ON ts.source_id = sources.id
+      LEFT OUTER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
+      INNER JOIN ranks ON ranks.id = ts.taxon_concept_rank_id
+      LEFT OUTER JOIN geo_entities exporters ON ts.china_exporter_id = exporters.id
+      LEFT OUTER JOIN geo_entities importers ON ts.china_importer_id = importers.id
+      LEFT OUTER JOIN geo_entities origins ON ts.china_origin_id = origins.id
+      WHERE #{exemptions}
     SQL
   end
 
