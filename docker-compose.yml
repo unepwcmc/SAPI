@@ -41,12 +41,14 @@ services:
     tty: true
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
+      MEMCACHE_SERVERS: sapi-memcached:11211
       SAPI_DATABASE_HOST: sapi-db
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
     depends_on:
       - redis
       - db
       - mailcatcher
+      - memcached
 
   redis:
     container_name: sapi-redis
@@ -70,12 +72,14 @@ services:
       - db
       - redis
       - mailcatcher
+      - memcached
     command: /bin/bash -l -c "bundle install && bundle exec sidekiq -C config/sidekiq.yml"
     volumes:
       - '.:/SAPI'
       - bundler_gems:/usr/local/bundle
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
+      MEMCACHE_SERVERS: sapi-memcached:11211
       SAPI_DATABASE_HOST: sapi-db
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
 
@@ -86,6 +90,15 @@ services:
       - "${SAPI_CONTAINER_MAILCATCHER_PORT:-1080}:1080"
     networks:
       - sapi
+
+  memcached:
+    container_name: sapi-memcached
+    image: memcached:1.6
+    ports:
+      - "${SAPI_CONTAINER_MEMCACHE_PORT:-11211}:11211"
+    networks:
+      - sapi
+
 
 volumes:
   pgdata:
