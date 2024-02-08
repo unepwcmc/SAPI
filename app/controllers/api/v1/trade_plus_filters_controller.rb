@@ -5,9 +5,10 @@ class Api::V1::TradePlusFiltersController < ApplicationController
 
   def index
     cache_key = "#{CACHE_KEY_PREFIX}#{I18n.locale}"
+
     filters = Rails.cache.read(cache_key)
     if filters.nil?
-      TradePlusFiltersWorker.perform_async(I18n.locale)
+      TradePlusFiltersWorker.perform_async(I18n.locale.to_s)
       head 500 # Cache not ready yet.
     else
       render :json => filters
