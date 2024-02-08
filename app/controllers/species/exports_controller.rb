@@ -4,7 +4,7 @@ class Species::ExportsController < ApplicationController
   def download
     set_csv_separator
 
-    @filters = params[:filters].merge({
+    @filters = filter_params.merge({
       :csv_separator => cookies['speciesplus.csv_separator'].try(:to_sym)
     })
     case params[:data_type]
@@ -38,6 +38,10 @@ class Species::ExportsController < ApplicationController
   end
 
   private
+
+  def filter_params
+    params[:filters].permit!
+  end
 
   def set_csv_separator
     separator_params = params[:filters][:csv_separator]
