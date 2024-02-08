@@ -148,11 +148,11 @@ module Changeable
 
   def changeable_clear_show_tc_serializer_cache
     ##
-    # Disabling because we use memcache on production, but memcache doesn't implement this method.
+    # Disabling because we use memcache, but memcache doesn't implement this method.
     # For now, changes to records that appear in serializers will not change until the caches are expired,
     # which is 24 hours. Possible solution:
     # https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/114
 
-    Rails.cache.delete_matched(/.*ShowTaxonConceptSerializer.*/) unless Rails.env.production?
+    # Rails.cache.delete_matched(/.*ShowTaxonConceptSerializer.*/) unless Rails.env.production?
   end
 end
