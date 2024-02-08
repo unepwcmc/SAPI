@@ -107,5 +107,7 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
         ]
       ]
     )
+  rescue ActionController::ParameterMissing
+    nil
   end
 end

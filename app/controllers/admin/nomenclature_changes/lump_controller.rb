@@ -110,5 +110,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
         # :legislation_reassignments_attributes,
       ]
     )
+  rescue ActionController::ParameterMissing
+    nil
   end
 end

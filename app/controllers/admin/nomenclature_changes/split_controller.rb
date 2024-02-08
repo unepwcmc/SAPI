@@ -111,5 +111,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         # :legislation_reassignments_attributes,
       ]
     )
+  rescue ActionController::ParameterMissing
+    nil
   end
 end

@@ -119,5 +119,7 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
         ]
       ]
     )
+  rescue ActionController::ParameterMissing
+    nil
   end
 end

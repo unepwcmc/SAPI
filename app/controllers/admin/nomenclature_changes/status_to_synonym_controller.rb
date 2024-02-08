@@ -118,5 +118,7 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
         ]
       ]
     )
+  rescue ActionController::ParameterMissing
+    nil
   end
 end
