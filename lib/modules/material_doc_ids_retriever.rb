@@ -36,7 +36,12 @@ module MaterialDocIdsRetriever
         chi_ids = MTaxonConcept.descendants_ids(params['taxon_concept_id']).map(&:to_i)
         anc_ids | chi_ids
       else
-        check_params = params.dup.permit!.to_h.symbolize_keys
+        check_params =
+          if params.respond_to?(:permit!)
+            params.dup.permit!.to_h.symbolize_keys
+          else
+            params.symbolize_keys
+          end
         Checklist::Checklist.new(check_params).results.map(&:id)
       end
 

@@ -25,7 +25,7 @@ class Checklist::DocumentsController < ApplicationController
     if access_denied? && !@document.is_public
       render_403
     elsif @document.is_link?
-      redirect_to @document.filename
+      redirect_to @document.filename.model[:filename]
     elsif !File.exists?(path_to_file)
       render_404
     else
