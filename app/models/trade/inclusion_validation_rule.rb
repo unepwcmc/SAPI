@@ -20,8 +20,18 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # attr_accessible :valid_values_view
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
+    # The format of validation_error.matching_criteria seems to vary - sometimes
+    # it's a string, whereas under rspec it's an object.
+    matching_criteria_json = if
+      validation_error.matching_criteria.is_a? String
+    then
+      validation_error.matching_criteria
+    else
+      validation_error.matching_criteria.to_json
+    end
+
     @query = matching_records(annual_report_upload).where(
-      "#{Arel::Nodes.build_quoted(validation_error.matching_criteria.to_json).to_sql}::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
+      "#{Arel::Nodes.build_quoted(matching_criteria_json).to_sql}::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
     )
   end
 
