@@ -153,7 +153,8 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
       :primary_language_document_id,
       :designation_id,
       citations_attributes: [
-        :id, :_destroy, :document_id, :stringy_taxon_concept_ids, :geo_entity_ids
+        :id, :_destroy, :document_id, :stringy_taxon_concept_ids,
+        geo_entity_ids: []
       ],
       proposal_details_attributes: [
         :id, :_destroy, :document_id, :proposal_nature, :proposal_outcome_id,

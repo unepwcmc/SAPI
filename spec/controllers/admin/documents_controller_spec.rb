@@ -4,6 +4,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
   let(:event) { create(:event, published_at: DateTime.new(2014, 12, 25)) }
   let(:event2) { create(:event, published_at: DateTime.new(2015, 12, 12)) }
   let(:taxon_concept) { create(:taxon_concept) }
+  let(:taxon_concept2) { create(:taxon_concept) }
   let(:geo_entity) { create(:geo_entity) }
   let(:proposal_outcome) { create(:proposal_outcome) }
   let(:review_phase) { create(:review_phase) }
@@ -208,6 +209,70 @@ describe Admin::DocumentsController, sidekiq: :inline do
       end
     end
 
+    context "with nested citations_attributes" do
+      let(:document) { create(:proposal) }
+      let(:proposal_outcome) { create(:document_tag, type: 'DocumentTag::ProposalOutcome') }
+
+      it "assigns a taxon" do
+        put :update, params: {
+          id: document.id,
+          document: {
+            date: Date.today,
+            citations_attributes: [
+              {
+                stringy_taxon_concept_ids: taxon_concept.id
+              }
+            ]
+          }
+        }
+
+        expect(document.reload.citations.length).to eq(1)
+        expect(document.reload.citations[0].taxon_concepts.length).to eq(1)
+        expect(document.reload.citations[0].taxon_concepts[0].id).to eq(taxon_concept.id)
+      end
+
+      it "assigns multiple taxa" do
+        put :update, params: {
+          id: document.id,
+          document: {
+            date: Date.today,
+            citations_attributes: [
+              {
+                stringy_taxon_concept_ids: "#{taxon_concept.id},#{taxon_concept2.id}"
+              }
+            ]
+          }
+        }
+
+        expect(document.reload.citations.length).to eq(1)
+        expect(document.reload.citations[0].taxon_concepts.length).to eq(2)
+        expect([
+          document.reload.citations[0].taxon_concepts[0].id,
+          document.reload.citations[0].taxon_concepts[1].id
+        ].sort!).to eq([
+          taxon_concept.id,
+          taxon_concept2.id
+        ])
+      end
+
+      it "assigns a geo_entity_id" do
+        put :update, params: {
+          id: document.id,
+          document: {
+            date: Date.today,
+            citations_attributes: [
+              {
+                geo_entity_ids: [geo_entity.id]
+              }
+            ]
+          }
+        }
+
+        expect(document.reload.citations.length).to eq(1)
+        expect(document.reload.citations[0].geo_entities.length).to eq(1)
+        expect(document.reload.citations[0].geo_entities[0].id).to eq(geo_entity.id)
+      end
+    end
   end
 
   describe "DELETE destroy" do
