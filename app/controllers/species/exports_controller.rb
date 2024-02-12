@@ -40,7 +40,9 @@ class Species::ExportsController < ApplicationController
   private
 
   def filter_params
-    params[:filters].permit!
+    params[:filters].permit!.to_h
+  rescue NoMethodError
+    {}
   end
 
   def set_csv_separator
