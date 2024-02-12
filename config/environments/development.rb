@@ -20,7 +20,7 @@ SAPI::Application.configure do
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
     # Use a memcached instance as a cache store in local development.
     config.action_controller.perform_caching = true
-    config.cache_store                       = :mem_cache_store
+    config.cache_store                       = :mem_cache_store, ENV["MEMCACHE_SERVERS"]
   else
     # Otherwise, don't do caching
     config.action_controller.perform_caching = false
