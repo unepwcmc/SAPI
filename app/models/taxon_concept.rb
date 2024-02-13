@@ -373,7 +373,8 @@ class TaxonConcept < ApplicationRecord
   end
 
   def rank_name
-    data['rank_name'] || self.rank.try(:name)
+    # Database column missing default value, so it is possible to return nil for `data`.
+    data.try(:[], 'rank_name') || self.rank.try(:name)
   end
 
   def cites_accepted
