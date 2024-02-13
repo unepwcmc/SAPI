@@ -61,7 +61,8 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
         :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
         :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
         :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
-        :output_type, :tag_list, :created_by_id, :updated_by_id
+        :output_type, :created_by_id, :updated_by_id,
+        tag_list: []
         # app/models/nomenclature_change/output.rb does not have `accepts_nested_attributes_for`, so
         # xxx_attributes suppose not in-use.
         # :parent_reassignments_attributes,
@@ -75,7 +76,8 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
         :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
         :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
         :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
-        :output_type, :tag_list, :created_by_id, :updated_by_id
+        :output_type, :created_by_id, :updated_by_id,
+        tag_list: []
         # app/models/nomenclature_change/output.rb does not have `accepts_nested_attributes_for`, so
         # xxx_attributes suppose not in-use.
         # :parent_reassignments_attributes,
