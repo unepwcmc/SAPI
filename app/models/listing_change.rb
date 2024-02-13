@@ -39,7 +39,8 @@ class ListingChange < ApplicationRecord
   #   :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
   #   :created_by_id, :updated_by_id
 
-  attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
+  attr_accessor :excluded_geo_entities_ids, # Array
+                :excluded_taxon_concepts_ids # String
 
   belongs_to :event, optional: true
   has_many :listing_change_copies, :foreign_key => :original_id,
