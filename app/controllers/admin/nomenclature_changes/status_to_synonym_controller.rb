@@ -93,7 +93,8 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
           :id, :_destroy,
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
-          :note_en, :note_es, :note_fr, :internal_note, :output_ids,
+          :note_en, :note_es, :note_fr, :internal_note,
+          output_ids: [],
           reassignment_target_attributes: [
             :id, :_destroy,
             :nomenclature_change_output_id,
@@ -104,19 +105,22 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
           :id, :_destroy,
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
-          :note_en, :note_es, :note_fr, :internal_note, :output_ids
+          :note_en, :note_es, :note_fr, :internal_note,
+          output_ids: []
         ],
         distribution_reassignments_attributes: [
           :id, :_destroy,
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
-          :note_en, :note_es, :note_fr, :internal_note, :output_ids
+          :note_en, :note_es, :note_fr, :internal_note,
+          output_ids: []
         ],
         legislation_reassignments_attributes: [
           :id, :_destroy,
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
-          :note_en, :note_es, :note_fr, :internal_note, :output_ids
+          :note_en, :note_es, :note_fr, :internal_note,
+          output_ids: []
         ]
       ]
     )
