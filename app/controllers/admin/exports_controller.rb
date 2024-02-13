@@ -53,5 +53,7 @@ class Admin::ExportsController < Admin::AdminController
 
   def filter_params
     params[:filters].permit!
+  rescue NoMethodError
+    {}
   end
 end
