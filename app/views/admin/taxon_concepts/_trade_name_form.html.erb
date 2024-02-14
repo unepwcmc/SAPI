@@ -26,7 +26,6 @@
     <label class="control-label">Accepted names</label>
     <div class="controls">
       <%= f.text_field :accepted_names_for_trade_name_ids, {
-        multiple: true,
         class: 'taxon-concept-multiple',
         :'data-name-status-filter' => ['A'].to_json,
         :'data-name-status' => 'A',
