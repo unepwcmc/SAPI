@@ -61,9 +61,11 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
       return object.countries_ids
     end
 
-    non_extinct_distributions = object.taxon_concept.distributions.reject do |distribution|
-      distribution.tags.length == 1 && distribution.tags[0].name == 'extinct'
-    end
+    non_extinct_distributions = Distribution.where(
+      taxon_concept_id: object.id
+    ).tagged_with(
+      ["extinct"], :exclude => true
+    )
 
     non_extinct_distributions.map do |distribution|
       distribution.geo_entity_id
