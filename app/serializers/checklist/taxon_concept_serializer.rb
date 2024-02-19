@@ -55,4 +55,18 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
     object.is_a? Checklist::HigherTaxaItem
   end
 
+  # Override the matview here to instead query the db for non-extinct distributions
+  def countries_ids
+    if object.countries_ids.length == 0
+      return object.countries_ids
+    end
+
+    non_extinct_distributions = object.taxon_concept.distributions.reject do |distribution|
+      distribution.tags.length == 1 && distribution.tags[0].name == 'extinct'
+    end
+
+    non_extinct_distributions.map do |distribution|
+      distribution.geo_entity_id
+    end
+  end
 end
