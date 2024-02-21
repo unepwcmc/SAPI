@@ -16,7 +16,8 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
   def apply_filters(rel)
     rel = rel.where(resolution: resolution) unless @filters['process_type'] == 'Both'
     rel = rel.where("DATE_PART('YEAR', start_date) IN (?)", @filters['years']) if @filters['years']&.any?
-    rel = rel.where("status != 'Closed'") if @filters['set'] == 'current'
+    # commenting this out as there are no historic cases yet, but there will be in the future
+    # rel = rel.where("status != 'Closed'") if @filters['set'] == 'current'
     rel = rel.where('geo_entities.id IN (?)', geo_entities_ids) if @filters['geo_entities_ids']&.any?
 
     # Query 'data' json field for taxon concepts that have the submitted taxon_concept_id in their ancestry,
@@ -55,7 +56,7 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
 
   def sql_columns
     [
-      :'cites_processes.id', :taxon_concept_id, :'taxon_concepts.full_name',
+      :taxon_concept_id, :'taxon_concepts.full_name',
       :resolution, :'geo_entities.name_en', :'events.name', "to_char(start_date, 'DD/MM/YYYY')",
       :status, :'cites_processes.document', :'cites_processes.notes'
     ]
@@ -63,7 +64,7 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
 
   def csv_column_headers
     [
-      'Id', 'TaxonConcept id', 'TaxonConcept name', 'Resolution', 'Country', 'Event',
+      'TaxonConcept id', 'TaxonConcept name', 'Resolution', 'Country', 'Event',
       'Event date', 'Status', 'Document', 'Notes'
     ]
   end

@@ -1,3 +1,23 @@
+### 1.13.0
+**Species+**
+* Fix security issue
+* Remove .spp suffix from Hybrids
+* Add CITES RST download from the public interface
+* Add new Identification materials documents (csv and pdf)
+* Fix GA missing functions on develop and staging envs
+* Include non standard (EN, ES, FR) languages to autocomplete mview
+* Fix commission notes documents loading
+* Allow matches anywhere in trade permit number string, instead of just the start
+* Add Chinese common names
+* Add first draft of dockerizing the app
+
+**Trade Monitoring Tool**
+* Update csvs
+* Fix downloads when no appendix is submitted
+
+**Checklist**
+* Include EU(Regions) to the geo entity types
+
 ### 1.12.0
 * Allow intersessional decisions to be created without start events or documents
 
