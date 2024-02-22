@@ -67,8 +67,16 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
       ["extinct"], :exclude => true
     )
 
-    non_extinct_distributions.map do |distribution|
-      distribution.geo_entity_id
+    # We can't just return the ids, we need to retain the order of the original
+    # array, which is sorted on English name.
+    country_id_not_extinct = (
+      non_extinct_distributions.map do |distribution|
+        [ distribution.geo_entity_id, true ]
+      end
+    ).to_h
+
+    object.countries_ids.select do |country_id|
+      country_id_not_extinct[country_id]
     end
   end
 end
