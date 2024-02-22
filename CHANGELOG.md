@@ -1,3 +1,13 @@
+### 1.13.1
+**Trade shipments API**
+* Fix an issue where queries to the trade filters route could pile up and cause
+  service downtime. These queries are now hived off to workers, which populate
+  a cache.
+
+**Species+**
+* Rails.cache on staging production now uses the same provider (memcache).
+* Increase work_mem for migrate, rebuild tasks in the hope of making them faster
+
 ### 1.13.0
 **Species+**
 * Fix security issue

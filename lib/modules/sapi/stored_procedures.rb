@@ -2,44 +2,56 @@ module Sapi
   module StoredProcedures
 
     def self.rebuild
-      [
-        :taxonomy,
-        :cites_accepted_flags,
-        :listing_changes_mview,
-        :cites_listing,
-        :eu_listing,
-        :cms_listing,
-        :taxon_concepts_mview,
-        :cites_species_listing_mview,
-        :eu_species_listing_mview,
-        :cms_species_listing_mview,
-        :valid_taxon_concept_annex_year_mview,
-        :valid_taxon_concept_appendix_year_mview,
-        :touch_cites_taxon_concepts,
-        :touch_eu_taxon_concepts,
-        :touch_cms_taxon_concepts,
-        :trade_shipments_appendix_i_mview,
-        :trade_shipments_mandatory_quotas_mview,
-        :trade_shipments_cites_suspensions_mview,
-        :non_compliant_shipments_view,
-        :trade_plus_complete_mview
-      ].each { |p|
-        puts "Procedure: #{p}"
-        ActiveRecord::Base.connection.execute("SELECT * FROM rebuild_#{p}()")
-      }
+      ActiveRecord::Base.transaction do
+        [
+          :taxonomy,
+          :cites_accepted_flags,
+          :listing_changes_mview,
+          :cites_listing,
+          :eu_listing,
+          :cms_listing,
+          :taxon_concepts_mview,
+          :cites_species_listing_mview,
+          :eu_species_listing_mview,
+          :cms_species_listing_mview,
+          :valid_taxon_concept_annex_year_mview,
+          :valid_taxon_concept_appendix_year_mview,
+          :touch_cites_taxon_concepts,
+          :touch_eu_taxon_concepts,
+          :touch_cms_taxon_concepts,
+          :trade_shipments_appendix_i_mview,
+          :trade_shipments_mandatory_quotas_mview,
+          :trade_shipments_cites_suspensions_mview,
+          :non_compliant_shipments_view,
+          :trade_plus_complete_mview
+        ].each { |p|
+          puts "Procedure: #{p}"
+          connection = ActiveRecord::Base.connection
 
-      changed_cnt = TaxonConcept.where('touched_at IS NOT NULL AND touched_at > updated_at').count
+          # Within the current transaction, set work_mem to a higher-than-usual
+          # value, so that matviews can be built more efficiently.
+          #
+          # The default low value of work_mem (default 4MB) is suitable for
+          # small queries with high concurrency (for instance, those performed
+          # by a web server), but the restriction just hampers jobs like this.
+          connection.execute("SET work_mem TO '64MB';")
 
-      if changed_cnt > 0
-        # increment cache iterators if anything changed
-        Species::Search.increment_cache_iterator
-        Species::TaxonConceptPrefixMatcher.increment_cache_iterator
-        Checklist::Checklist.increment_cache_iterator
+          connection.execute("SELECT * FROM rebuild_#{p}()")
+        }
 
-        TaxonConcept.update_all(
-          'updated_at = touched_at',
-          'touched_at IS NOT NULL AND touched_at > updated_at'
-        )
+        changed_cnt = TaxonConcept.where('touched_at IS NOT NULL AND touched_at > updated_at').count
+
+        if changed_cnt > 0
+          # increment cache iterators if anything changed
+          Species::Search.increment_cache_iterator
+          Species::TaxonConceptPrefixMatcher.increment_cache_iterator
+          Checklist::Checklist.increment_cache_iterator
+
+          TaxonConcept.update_all(
+            'updated_at = touched_at',
+            'touched_at IS NOT NULL AND touched_at > updated_at'
+          )
+        end
       end
     end
 
