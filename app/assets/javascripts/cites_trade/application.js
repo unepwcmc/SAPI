@@ -801,14 +801,11 @@ $(document).ready(function(){
   $('#button_report').click( function (e) {handleDownloadRequest(false) });
   $('#ignore_warning_button_report').click( function (e) {handleDownloadRequest(true) });
   $('[data-full-trade-db-download]').click( function (e) {
-    // google analytics function only defined on production
-    if (typeof(ga) === 'function') {
-      ga('send', {
-        hitType: 'event',
-        eventCategory: 'Downloads: Full trade database',
-        eventAction: 'Format: CSV',
-      });
-    }
+    ga('send', {
+      hitType: 'event',
+      eventCategory: 'Downloads: Full trade database',
+      eventAction: 'Format: CSV',
+    });
   })
 
   //////////////////////////////
