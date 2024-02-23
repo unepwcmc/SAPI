@@ -56,16 +56,42 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
   end
 
   # Override the matview here to instead query the db for non-extinct distributions
+  #
+  # These are defined as:
+  # - Distributions which are untagged
+  # - Distributions which have any tags other than extinct
+  #
+  # i.e. not distributions which have only a single tag, "extinct"
+  #
+  # A good example is Hippopus hippopus, which has:
+  #
+  # - American Samoa (145): extinct, reintroduced
+  # - Australia (113): (not tagged)
+  # - Cook Islands (242): introduced
+  # - Fiji (158): reintroduced, extinct
+  # - Guam (254): extinct
+  # - ...others
+  #
+  # Of those listed above, Guam and only Guam should be excluded.
   def countries_ids
     if object.countries_ids.length == 0
       return object.countries_ids
     end
 
-    non_extinct_distributions = Distribution.where(
-      taxon_concept_id: object.id
-    ).tagged_with(
-      ["extinct"], :exclude => true
-    )
+    non_extinct_distributions = Distribution.joins("
+      LEFT JOIN (
+        SELECT taggings.taggable_id, array_agg(tags.name) AS tag_names
+        FROM taggings
+        JOIN tags ON taggings.tag_id = tags.id
+        WHERE taggings.taggable_type = 'Distribution'
+        GROUP BY taggings.taggable_id
+      ) d_t ON
+        d_t.taggable_id = distributions.id AND
+        d_t.tag_names = '{extinct}'::VARCHAR[]
+    ").where({
+      taxon_concept_id: object.id,
+      'd_t.taggable_id': nil
+    })
 
     # We can't just return the ids, we need to retain the order of the original
     # array, which is sorted on English name.
