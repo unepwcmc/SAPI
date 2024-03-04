@@ -28,8 +28,6 @@ gem 'coffee-rails', '~> 5.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
 
-gem 'actionpack-action_caching', '~> 1.2', '>= 1.2.2' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
-gem 'actionpack-page_caching', '~> 1.2', '>= 1.2.4' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
 gem 'active_model_serializers', '0.8.4' # Deprecated
 gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
 gem 'pg', '~> 1.5', '>= 1.5.4'
