@@ -20,7 +20,7 @@ class Purpose < TradeCode
   has_many :trade_restriction_purposes
   has_many :shipments, :class_name => 'Trade::Shipment'
 
-  after_commit :expire_controller_action_cache
+  after_commit :invalidate_controller_action_cache
 
   protected
 
@@ -33,17 +33,7 @@ class Purpose < TradeCode
 
   private
 
-  def expire_controller_action_cache
-    I18n.available_locales.each do |lang|
-      ActionController::Base.new.send(
-        :expire_action,
-        {
-          controller: 'api/v1/purposes',
-          format: 'json',
-          action: 'index',
-          locale: lang
-        }
-      )
-    end
+  def invalidate_controller_action_cache
+    Api::V1::PurposesController.invalidate_cache
   end
 end
