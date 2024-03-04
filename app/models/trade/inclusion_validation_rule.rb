@@ -77,7 +77,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         existing_record,
         mr.error_count.to_i,
         error_message(values_hash_for_display),
-        jsonb_matching_criteria_for_insert(values_hash)
+        values_hash
       )
       if existing_record
         errors_to_destroy.reject! { |e| e.id == existing_record.id }
@@ -111,21 +111,6 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     else
       column_names
     end
-  end
-
-  def jsonb_matching_criteria_for_insert(values_hash)
-    jsonb_keys_and_values = column_names.map do |c|
-      is_numeric = (c =~ /.+_id$/ || c == 'year')
-      value = values_hash[c]
-      value_quoted =
-        if is_numeric
-          value
-        else
-          "\"#{value}\""
-        end
-      "\"#{c}\": #{value_quoted}"
-    end.join(', ')
-    '{' + jsonb_keys_and_values + '}'
   end
 
   def jsonb_matching_criteria_for_comparison(values_hash = nil)
