@@ -15,6 +15,11 @@ class Checklist::DownloadsController < ApplicationController
     render :json => @downloads.to_json
   end
 
+  # Permissions are not checked here, therefore CSRF is redundant.
+  # Requests are triggered from the CITES checklist which has no means of
+  # generating adequate CSRF protection.
+  skip_before_action :verify_authenticity_token, only:[:create]
+
   # POST downloads/
   def create
     @download = Download.create(download_params)
