@@ -33,16 +33,10 @@ RUN /bin/bash -c "source /etc/profile.d/rvm.sh \
     && gem install bundler:1.17.3 \
     && bundle"
 
-# Host SSH key/config
-RUN mkdir -p ~/.ssh && ln -s /run/secrets/host_ssh_key ~/.ssh/id_ed25519 && ln -s /run/secrets/host_ssh_config ~/.ssh/config
-
 ENTRYPOINT ["/bin/bash", "-l"]
 
 ##########################################
 ## Run the following in container
 ##########################################
-# /bin/bash
-# source /etc/profile.d/rvm.sh
-# eval "$(ssh-agent -s)"
-# ssh-add
-# CAP_BRANCH=<branch> cap staging deploy
+# /bin/bash --rcfile cap-deploy-shell.sh
+# (bash) $ CAP_BRANCH=<branch> cap staging deploy
