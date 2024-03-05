@@ -39,4 +39,12 @@ ENTRYPOINT ["/bin/bash", "-l"]
 ## Run the following in container
 ##########################################
 # /bin/bash --rcfile cap-deploy-shell.sh
-# (bash) $ CAP_BRANCH=<branch> cap staging deploy
+# [Enter your passphrase]
+# root@commit:/SAPI$ CAP_BRANCH=<branch> cap staging deploy
+#
+##########################################
+# Alternatively, from outside docker
+##########################################
+# docker exec -it sapi-cap-deploy /bin/bash --rcfile cap-deploy-shell.sh
+# [Enter your passphrase]
+# root@commit:/SAPI# CAP_BRANCH=<branch> cap staging deploy
