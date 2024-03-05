@@ -34,6 +34,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
     else
       load_change_types
       build_dependants
+      load_search
       render 'new'
     end
   end
