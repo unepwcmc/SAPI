@@ -29,6 +29,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
     @taxon_concept = TaxonConcept.find(params[:taxon_concept_id])
     @designation = Designation.find(params[:designation_id])
     @listing_change = ListingChange.new(listing_change_params)
+
     if @taxon_concept.listing_changes << @listing_change
       redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
     else
@@ -78,13 +79,13 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
     unless @listing_change.party_listing_distribution
       @listing_change.build_party_listing_distribution(
         params[:listing_change] &&
-        params[:listing_change][:party_listing_distribution_attributes]
+        listing_change_params[:party_listing_distribution_attributes]
       )
     end
     unless @listing_change.annotation
       @listing_change.build_annotation(
         params[:listing_change] &&
-        params[:listing_change][:annotation_attributes]
+        listing_change_params[:annotation_attributes]
       )
     end
   end
