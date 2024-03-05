@@ -1,21 +1,17 @@
 class Api::V1::SourcesController < ApplicationController
-  CACHE_KEY_PREFIX = 'sources_with_locale_'
+  CACHE_KEY_ALL = 'all_sources'
 
   def index
-    cache_key = "#{CACHE_KEY_PREFIX}#{I18n.locale}"
-
-    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
-      @sources = Source.all.order(:code)
-
-      render :json => @sources,
-        :each_serializer => Species::SourceSerializer,
-        :meta => { :total => @sources.count }
+    @all_rows = Rails.cache.fetch(CACHE_KEY_ALL, expires_in: 1.hour) do
+      Source.all.order(:code).as_json
     end
+
+    render :json => @all_rows.map { |row_data| Source.new(row_data) },
+      :each_serializer => Species::SourceSerializer,
+      :meta => { :total => @all_rows.count }
   end
 
   def self.invalidate_cache
-    I18n.available_locales.each do |lang|
-      Rails.cache.delete("#{CACHE_KEY_PREFIX}#{lang}")
-    end
+    Rails.cache.delete(CACHE_KEY_ALL)
   end
 end

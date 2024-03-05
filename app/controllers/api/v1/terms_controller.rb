@@ -1,21 +1,17 @@
 class Api::V1::TermsController < ApplicationController
-  CACHE_KEY_PREFIX = 'terms_with_locale_'
+  CACHE_KEY_ALL = 'all_terms'
 
   def index
-    cache_key = "#{CACHE_KEY_PREFIX}#{I18n.locale}"
-
-    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
-      @terms = Term.all.order(:code)
-
-      render :json => @terms,
-        :each_serializer => Species::TermSerializer,
-        :meta => { :total => @terms.count }
+    @all_rows = Rails.cache.fetch(CACHE_KEY_ALL, expires_in: 1.hour) do
+      Term.all.order(:code).as_json
     end
+
+    render :json => @all_rows.map { |row_data| Term.new(row_data) },
+      :each_serializer => Species::TermSerializer,
+      :meta => { :total => @all_rows.count }
   end
 
   def self.invalidate_cache
-    I18n.available_locales.each do |lang|
-      Rails.cache.delete("#{CACHE_KEY_PREFIX}#{lang}")
-    end
+    Rails.cache.delete(CACHE_KEY_ALL)
   end
 end
