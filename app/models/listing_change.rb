@@ -205,33 +205,37 @@ class ListingChange < ApplicationRecord
     end
 
     original_change_type = ChangeType.find(change_type_id)
+
+    @excluded_geo_entities_ids = @excluded_geo_entities_ids &&
+      @excluded_geo_entities_ids.reject(&:blank?).map(&:to_i)
+
+    @excluded_taxon_concepts_ids = @excluded_taxon_concepts_ids &&
+      @excluded_taxon_concepts_ids.split(',').reject(&:blank?).map(&:to_i)
+
     return self if original_change_type.name == ChangeType::EXCEPTION
-    return self if excluded_geo_entities_ids.nil? &&
-      excluded_taxon_concepts_ids.nil?
+    return self if @excluded_geo_entities_ids.nil? &&
+      @excluded_taxon_concepts_ids.nil?
+
     new_exclusions = []
     exclusion_change_type = ChangeType.find_by_name_and_designation_id(
       ChangeType::EXCEPTION, original_change_type.designation_id
     )
 
     # geographic exclusions
-    excluded_geo_entities_ids = excluded_geo_entities_ids &&
-      excluded_geo_entities_ids.reject(&:blank?)
     excluded_geo_entities =
-      if excluded_geo_entities_ids && !excluded_geo_entities_ids.empty?
+      if @excluded_geo_entities_ids && !@excluded_geo_entities_ids.empty?
         new_exclusions << ListingChange.new(
           :change_type_id => exclusion_change_type.id,
           :species_listing_id => species_listing_id,
           :taxon_concept_id => taxon_concept_id,
-          :geo_entity_ids => excluded_geo_entities_ids
+          :geo_entity_ids => @excluded_geo_entities_ids
         )
       end
 
     # taxonomic exclusions
-    excluded_taxon_concepts_ids = excluded_taxon_concepts_ids &&
-      excluded_taxon_concepts_ids.split(',').reject(&:blank?)
     excluded_taxon_concepts =
-      if excluded_taxon_concepts_ids && !excluded_taxon_concepts_ids.empty?
-        excluded_taxon_concepts_ids.map do |id|
+      if @excluded_taxon_concepts_ids && !@excluded_taxon_concepts_ids.empty?
+        @excluded_taxon_concepts_ids.map do |id|
           new_exclusions << ListingChange.new(
             :change_type_id => exclusion_change_type.id,
             :species_listing_id => species_listing_id,
