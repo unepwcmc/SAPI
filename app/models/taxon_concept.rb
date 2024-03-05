@@ -421,7 +421,7 @@ class TaxonConcept < ApplicationRecord
 
   def accepted_names_ids
     if @accepted_names_ids.present?
-      @accepted_names_ids.to_s.split(',').compact.map(&:to_i)
+      @accepted_names_ids
     else
       accepted_names.pluck(:id)
     end
@@ -429,7 +429,7 @@ class TaxonConcept < ApplicationRecord
 
   def accepted_names_for_trade_name_ids
     if @accepted_names_for_trade_name_ids.present?
-      @accepted_names_for_trade_name_ids.to_s.split(',').compact.map(&:to_i)
+      @accepted_names_for_trade_name_ids
     else
       accepted_names_for_trade_name.pluck(:id)
     end
@@ -437,7 +437,7 @@ class TaxonConcept < ApplicationRecord
 
   def hybrid_parents_ids
     if @hybrid_parents_ids.present?
-      @hybrid_parents_ids.to_s.split(',').compact.map(&:to_i)
+      @hybrid_parents_ids
     else
       hybrid_parents.pluck(:id)
     end
