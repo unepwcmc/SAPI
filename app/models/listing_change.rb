@@ -48,9 +48,9 @@ class ListingChange < ApplicationRecord
   belongs_to :species_listing
   belongs_to :taxon_concept
   belongs_to :change_type
-  has_many :listing_distributions, -> { where is_party: false }, :dependent => :destroy
+  has_many :listing_distributions, -> { where is_party: false }, :inverse_of => :listing_change, :dependent => :destroy
   has_one :party_listing_distribution, -> { where is_party: true }, :class_name => 'ListingDistribution',
-     :dependent => :destroy
+     :dependent => :destroy, :inverse_of => :listing_change
   has_many :geo_entities, :through => :listing_distributions
   has_one :party_geo_entity, :class_name => 'GeoEntity',
     :through => :party_listing_distribution, :source => :geo_entity
