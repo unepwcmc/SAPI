@@ -65,7 +65,7 @@ class Trade::ValidationRule < ApplicationRecord
       existing_record,
       matching_records.length,
       error_message,
-      '{}'
+      {}
     )
   end
 
