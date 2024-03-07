@@ -44,6 +44,16 @@ class Annotation < ApplicationRecord
   scope :for_eu, -> { joins(:event).where("events.type = 'EuRegulation'").
     order([:parent_symbol, :symbol]) }
 
+  # If this pattern is not respected, a query which parses (most of) the
+  # symbol as an integer
+  #
+  # OK: '^1', '#33'; not ok '#18edit'
+  validates :symbol, presence: false, format: {
+    allow_blank: true,
+    message: "should be a symbol followed by one or more digits",
+    with: /\A[^0-9a-z\s]\d+\z/i
+  }
+
   before_save do
     if event
       self.parent_symbol = event.name
