@@ -37,7 +37,7 @@ class Trade::Grouping::Base
 
   def read_taxonomy_conversion
     conversion = {}
-    taxonomy = CSV.read(TAXONOMIC_GROUPING, {headers: true})
+    taxonomy = CSV.read(TAXONOMIC_GROUPING, headers: true)
     taxonomy.each do |csv|
       conversion[csv['group']] ||= []
       data = {
