@@ -175,30 +175,10 @@ class TaxonConcept < ApplicationRecord
 
   before_validation :ensure_taxonomic_position
   before_validation do
-    self.full_name =
-      if rank && parent && ['A', 'N'].include?(name_status)
-        rank_name = rank.name
-        parent_full_name = parent.full_name
-        name = scientific_name
-        # if name is present, just in case it is a multipart name
-        # e.g. when changing status from S, T, H
-        # make sure to only use last part
-        if name.present?
-          name = TaxonName.sanitize_scientific_name(name)
-        end
-        if name.blank?
-          nil
-        elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
-          "#{parent_full_name} #{name.downcase}"
-        elsif rank_name == Rank::VARIETY
-          "#{parent_full_name} var. #{name.downcase}"
-        else
-          name
-        end
-      else
-        scientific_name
-      end
+    before_validate_scientific_name
+    before_validate_full_name
   end
+
   after_create do
     ensure_species_touched
     Species::Search.increment_cache_iterator
@@ -291,19 +271,7 @@ class TaxonConcept < ApplicationRecord
   end
 
   def scientific_name=(str)
-    scientific_name =
-      if ['A', 'N'].include?(name_status)
-        TaxonName.sanitize_scientific_name(str)
-      else
-        str
-      end
-    tn = TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
-    if tn
-      self.taxon_name = tn
-      self.taxon_name_id = tn.id
-    else
-      self.build_taxon_name(scientific_name: scientific_name)
-    end
+    @scientific_name = str
   end
 
   def scientific_name
@@ -457,6 +425,50 @@ class TaxonConcept < ApplicationRecord
         end
       add_remove_relationships(new_taxa, removed_taxa, rel_type)
     end
+  end
+
+  protected
+
+  def before_validate_scientific_name
+    sanitized_scientific_name =
+      if ['A', 'N'].include?(name_status)
+        TaxonName.sanitize_scientific_name(@scientific_name || scientific_name)
+      else
+        @scientific_name || scientific_name
+      end
+    tn = TaxonName.where(["UPPER(scientific_name) = UPPER(?)", sanitized_scientific_name]).first
+    if tn
+      self.taxon_name = tn
+      self.taxon_name_id = tn.id
+    else
+      self.build_taxon_name(scientific_name: sanitized_scientific_name)
+    end
+  end
+
+  def before_validate_full_name
+    self.full_name =
+      if rank && parent && ['A', 'N'].include?(name_status)
+        rank_name = rank.name
+        parent_full_name = parent.full_name
+        name = @scientific_name || scientific_name
+        # if name is present, just in case it is a multipart name
+        # e.g. when changing status from S, T, H
+        # make sure to only use last part
+        if name.present?
+          name = TaxonName.sanitize_scientific_name(name)
+        end
+        if name.blank?
+          nil
+        elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
+          "#{parent_full_name} #{name.downcase}"
+        elsif rank_name == Rank::VARIETY
+          "#{parent_full_name} var. #{name.downcase}"
+        else
+          name
+        end
+      else
+        @scientific_name || scientific_name
+      end
   end
 
   private
