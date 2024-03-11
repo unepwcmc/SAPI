@@ -1,9 +1,27 @@
 DROP FUNCTION IF EXISTS rebuild_designation_listing_changes_mview(
   taxonomy taxonomies, designation designations
 );
+
+-- This function dynamically produces tables of the form
+--
+-- * cites_listing_changes_mview, cms_listing_changes_mview, eu_listing_changes_mview
+-- * child_cites_listing_changes_mview, child_cms_listing_changes_mview, child_eu_listing_changes_mview
+-- * child_eu_55_49_66_41_48_listing_changes_mview (where event_ids is specified)
+--
+-- Note that this function has special-cased behaviour for the following:
+--
+-- * change_type where name is one of:
+--   * ADDITION
+--   * DELETION
+--   * EXCEPTION
+--   * RESERVATION
+--   * RESERVATION_WITHDRAWAL
+-- * designation where name is one of:
+--   * CMS
+--   * EU
 CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
   taxonomy taxonomies, designation designations, events_ids INT[]
-  ) RETURNS void
+) RETURNS void
   LANGUAGE plpgsql
   AS $$
   DECLARE
@@ -27,9 +45,18 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     SELECT listing_changes_mview_name(NULL, designation.name, events_ids)
     INTO master_lc_table_name;
 
-
     RAISE INFO 'Creating %', tmp_lc_table_name;
-    EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
+
+    SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION' AND designation_id = designation.id;
+    SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION' AND designation_id = designation.id;
+
+    IF deletion_id IS NULL THEN
+      RAISE EXCEPTION 'Could not find change_type of type DELETION';
+    END IF;
+
+    IF addition_id IS NULL THEN
+      RAISE EXCEPTION 'Could not find change_type of type ADDITION';
+    END IF;
 
     sql := 'CREATE TABLE ' || tmp_lc_table_name || ' AS
     WITH applicable_listing_changes AS (
@@ -171,6 +198,8 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     WHEN change_types.name = ''DELETION'' THEN 3
     END';
 
+    EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
+
     EXECUTE sql;
 
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (id, taxon_concept_id)';
@@ -192,8 +221,6 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
 
     EXECUTE sql;
 
-    SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION' AND designation_id = designation.id;
-    SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION' AND designation_id = designation.id;
     -- find inherited listing changes superceded by own listing changes
     -- mark them as not current in context of the child and add fake deletion records
     -- so that those inherited events are terminated properly on the timelines
