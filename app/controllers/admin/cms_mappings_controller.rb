@@ -14,9 +14,12 @@ class Admin::CmsMappingsController < Admin::SimpleCrudController
   protected
 
   def collection
-    @cms_mappings ||= end_of_association_chain.
-      order("taxon_concepts.data->'class_name'").
-      page(params[:page]).includes(:taxon_concept).
-      includes(:accepted_name).index_filter(params[:show])
+    @cms_mappings ||= end_of_association_chain.order(
+      Arel.sql("taxon_concepts.data->'class_name'")
+    ).page(
+      params[:page]
+    ).includes(:taxon_concept).includes(:accepted_name).index_filter(
+      params[:show]
+    )
   end
 end
