@@ -1,5 +1,7 @@
 module Trade::RebuildComplianceMviews
   def self.run
+    puts 'Trade::RebuildComplianceMviews.run starting'
+
     [
       :appendix_i,
       :mandatory_quotas,
@@ -12,7 +14,10 @@ module Trade::RebuildComplianceMviews
       puts "Rebuild #{p} mview..."
       self.rebuild_compliance_mview(p)
     end
+
     recreate_non_compliant_view
+
+    puts 'Trade::RebuildComplianceMviews.run complete'
   end
 
   def self.rebuild_sql_views(type, timestamp)
@@ -54,7 +59,9 @@ module Trade::RebuildComplianceMviews
   end
 
   def self.recreate_non_compliant_view
-    db.execute("SELECT rebuild_non_compliant_shipments_view()")
+    command = "SELECT rebuild_non_compliant_shipments_view()"
+    puts command
+    db.execute(command)
   end
 
   def self.db
