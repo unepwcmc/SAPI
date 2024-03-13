@@ -9,7 +9,7 @@ $(document).ready(function(){
     is_view_results_page = $('#query_results_table').length > 0;
 
   ajaxFail = function (xhr, ajaxOptions, thrownError) {
-  	//console.log(xhr, ajaxOptions, thrownError);
+    //console.log(xhr, ajaxOptions, thrownError);
     growlMe("The request failed.");
   };
 
@@ -17,55 +17,55 @@ $(document).ready(function(){
   $(".tipify").tipTip();
 
   function growlMe(text){
-  	$.jGrowl(text);
+    $.jGrowl(text);
   };
 
   function notySticky(message){
-  	noty({ layout: 'top',
-   			   type: 'information',
-   			   closeWith: ['button'],
-    			 text: message,
+    noty({ layout: 'top',
+            type: 'information',
+            closeWith: ['button'],
+           text: message,
            timeout: 1000
     });
   };
 
   //Accordion
   $( "#accordion_expert" ).accordion(
-		{
-			event : 'mouseover',
-			autoHeight: false
-		}
-	);
+    {
+      event : 'mouseover',
+      autoHeight: false
+    }
+  );
 
   //setting the tabs for the search
   $("#tabs").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
   //enabling the tabs to be visible again
   $("#tabs").css("display", "block");
-	$("#tabs li").removeClass('ui-corner-top').addClass('ui-corner-left');
+  $("#tabs li").removeClass('ui-corner-top').addClass('ui-corner-left');
 
   $(".someClass").tipTip({maxWidth: "300px"});
   //using the qtip2 plugin
   $(".qtipify").qtip(
-	{
-		style: {
+  {
+    style: {
       classes: 'ui-tooltip-green ui-tooltip-cluetip'
-   	}
-	});
+     }
+  });
 
   $("#genus_all_id").val('').trigger("liszt:updated");
   $("#genus_all_id").chosen({
-  	allow_single_deselect:true,
-  	no_results_text: "No results matched"
+    allow_single_deselect:true,
+    no_results_text: "No results matched"
   }).change(function(){
-  	var my_value = $(this).val();
-  	$('#species_out').text(my_value);
+    var my_value = $(this).val();
+    $('#species_out').text(my_value);
   });
 
   function initialiseControls() {
-	  $('#genus_all_id_chzn').removeClass('chzn-container-active')
+    $('#genus_all_id_chzn').removeClass('chzn-container-active')
       .addClass('chzn-disabled');
-	  //prevent form support on input and select enter
-	  $('input,select').keypress(function(event) { return event.keyCode != 13; });
+    //prevent form support on input and select enter
+    $('input,select').keypress(function(event) { return event.keyCode != 13; });
   };
 
   function parseInputs ($inputs) {
@@ -147,32 +147,32 @@ $(document).ready(function(){
 
   //function to reset all the countrols on the expert_accord page
   function resetSelects() {
- 	  $('#qryFrom').find('option:first').attr('selected', 'selected')
+     $('#qryFrom').find('option:first').attr('selected', 'selected')
       .trigger('change');
- 	  $('#qryTo').find('option:first').attr('selected', 'selected')
+     $('#qryTo').find('option:first').attr('selected', 'selected')
       .trigger('change');
- 	  $('#taxonomic_cascade_search').val('');
- 	  $('#species_out').text('');
- 	  $('#sources').select2("val","all_sou");
- 	  $('#purposes').select2("val","all_pur");
- 	  $('#terms').select2("val","all_ter");
- 	  $('#expcty').select2("val","all_exp");
- 	  $('#impcty').select2("val","all_imp");
+     $('#taxonomic_cascade_search').val('');
+     $('#species_out').text('');
+     $('#sources').select2("val","all_sou");
+     $('#purposes').select2("val","all_pur");
+     $('#terms').select2("val","all_ter");
+     $('#expcty').select2("val","all_exp");
+     $('#impcty').select2("val","all_imp");
     notySticky('Values are being reset...');
     $('#search-error-message').hide();
     $("#cites-trade-loading").hide();
   };
 
   $('#reset_search').click(function() {
-  	resetSelects();
-  	show_values_selection();
+    resetSelects();
+    show_values_selection();
     setEuDisclaimerVisibility();
     // Removing the table results on reset
     $("#query_results_table").find('thead,tbody').remove();
     $('#query_results').find('p.info').text('');
     // and resetting globals...
     selected_taxa = '';
-  	return false;
+    return false;
   });
 
   $('#div_taxonomic_cascade').find('button').removeClass('ui-state-disabled')
@@ -181,17 +181,17 @@ $(document).ready(function(){
   $('#species_out').text('');
 
   $('#table_selection').colorize({
-  		altColor: '#E6EDD7',
-  		bgColor: '#E6EDD7',
-  		hoverColor: '#D2EF9A'
+      altColor: '#E6EDD7',
+      bgColor: '#E6EDD7',
+      hoverColor: '#D2EF9A'
   });
 
   function getSelectionText(source) {
-  	myValues = new Array();
-  	$('#' + source + ' option:selected').each(function(index, value) {
-  		myValues.push($(value).text());
+    myValues = new Array();
+    $('#' + source + ' option:selected').each(function(index, value) {
+      myValues.push($(value).text());
     });
-  	return myValues.toString();
+    return myValues.toString();
   }
 
   initUnitsObj = function (data) {
@@ -263,223 +263,223 @@ $(document).ready(function(){
   }
 
   initExpctyImpcty = function (data) {
-  	var args = {
-  	  	data: data.geo_entities,
-  	  	condition: function (item) {return item.iso_code2},
-  	  	text: function (item) {return item.name}
-  	  };
+    var args = {
+        data: data.geo_entities,
+        condition: function (item) {return item.iso_code2},
+        text: function (item) {return item.name}
+      };
 
     initCountriesObj(data);
-  	populateSelect(_.extend(args, {
-  		selection: $('#expcty'),
-  		value: function (item) {return item.id}
-  	}));
+    populateSelect(_.extend(args, {
+      selection: $('#expcty'),
+      value: function (item) {return item.id}
+    }));
     allOptionsDictionary["all_exp"] = true;
     $('#expcty').select2({
-    	width: '75%',
-    	allowClear: false,
-    	closeOnSelect: false,
+      width: '75%',
+      allowClear: false,
+      closeOnSelect: false,
       matcher: matchWithDiacritics
     }).on('change', function(e){
-    	var selection = "";
-    	if (e.val.length == 0) {
-    		$(this).select2("val","all_exp");
+      var selection = "";
+      if (e.val.length == 0) {
+        $(this).select2("val","all_exp");
         allOptionsDictionary["all_exp"] = true;
       }
-    	var prop = $(this).select2('data');
-    	selection = getText(prop);
-    	if (e.val.length > 1) {
-    		var new_array = [];
-    		new_array = checkforAllOptions(prop,'all_exp');
-    		$(this).select2('data', new_array);
-    		selection = getText(new_array);
-    	}
-    	$('#expcty_out').text(selection);
+      var prop = $(this).select2('data');
+      selection = getText(prop);
+      if (e.val.length > 1) {
+        var new_array = [];
+        new_array = checkforAllOptions(prop,'all_exp');
+        $(this).select2('data', new_array);
+        selection = getText(new_array);
+      }
+      $('#expcty_out').text(selection);
       setEuDisclaimerVisibility();
     });
 
     populateSelect(_.extend(args, {
-  		selection: $('#impcty'),
-  		value: function (item) {return item.id}
-  	}));
+      selection: $('#impcty'),
+      value: function (item) {return item.id}
+    }));
     allOptionsDictionary["all_imp"] = true;
     $('#impcty').select2({
-    	width: '75%',
-    	allowClear: false,
-    	closeOnSelect: false,
+      width: '75%',
+      allowClear: false,
+      closeOnSelect: false,
       matcher: matchWithDiacritics
     }).on('change', function(e){
-    	selection = "";
-    	if (e.val.length == 0) {
-    		$(this).select2("val","all_imp");
+      selection = "";
+      if (e.val.length == 0) {
+        $(this).select2("val","all_imp");
         allOptionsDictionary["all_imp"] = true;
-    	}
-    	prop = $(this).select2('data');
-    	selection = getText(prop);
-    	if (e.val.length > 1)
-    	{
-    		new_array = new Array();
-    		new_array = checkforAllOptions(prop,'all_imp');
-    		$(this).select2('data', new_array);
-    		selection = getText(new_array);
-    	}
-    	$('#impcty_out').text(selection);
+      }
+      prop = $(this).select2('data');
+      selection = getText(prop);
+      if (e.val.length > 1)
+      {
+        new_array = new Array();
+        new_array = checkforAllOptions(prop,'all_imp');
+        $(this).select2('data', new_array);
+        selection = getText(new_array);
+      }
+      $('#impcty_out').text(selection);
       setEuDisclaimerVisibility();
     });
   };
 
   initTerms = function (data) {
-  	var selection = $('#terms'),
-  	  args = {
-  	  	selection: selection,
-  	  	data: data.terms,
-  	  	condition: function (item) {return item.code},
-  	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.code + ' - ' + item.name}
-  	  },
+    var selection = $('#terms'),
+      args = {
+        selection: selection,
+        data: data.terms,
+        condition: function (item) {return item.code},
+        value: function (item) {return item.id},
+        text: function (item) {return item.code + ' - ' + item.name}
+      },
       alloption = 'all_ter';
     allOptionsDictionary[alloption] = true;
     initTermsObj(data);
-  	populateSelect(args);
+    populateSelect(args);
     selection.select2({
-    	width: '75%',
-    	allowClear: false,
-    	closeOnSelect: false
+      width: '75%',
+      allowClear: false,
+      closeOnSelect: false
     }).on('change', function(e){
-    	// growlMe($(this).attr('id'));
-    	selection = "";
-    	if (e.val.length == 0) {
-    		// growlMe('You need to make at least one selection! - ' + e.val);
-    		$(this).select2("val", alloption);
+      // growlMe($(this).attr('id'));
+      selection = "";
+      if (e.val.length == 0) {
+        // growlMe('You need to make at least one selection! - ' + e.val);
+        $(this).select2("val", alloption);
         allOptionsDictionary[alloption] = true;
-    	}
-    	prop = $(this).select2('data');
-    	selection = getText(prop);
-    	if (e.val.length > 1)
-    	{
-    		new_array = new Array();
-    		new_array = checkforAllOptions(prop, alloption);
-    		$(this).select2('data', new_array);
-    		selection = getText(new_array);
-    	}
-    	$('#terms_out').text(selection);
+      }
+      prop = $(this).select2('data');
+      selection = getText(prop);
+      if (e.val.length > 1)
+      {
+        new_array = new Array();
+        new_array = checkforAllOptions(prop, alloption);
+        $(this).select2('data', new_array);
+        selection = getText(new_array);
+      }
+      $('#terms_out').text(selection);
     });
   }
 
   initSources = function (data) {
-  	var selection = $('#sources'),
-  	  args = {
-  	  	selection: selection,
-  	  	data: data.sources,
-  	  	condition: function (item) {return item.code},
-  	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.code + ' - ' + item.name}
-  	  },
+    var selection = $('#sources'),
+      args = {
+        selection: selection,
+        data: data.sources,
+        condition: function (item) {return item.code},
+        value: function (item) {return item.id},
+        text: function (item) {return item.code + ' - ' + item.name}
+      },
       alloption = 'all_sou';
-  	allOptionsDictionary[alloption] = true;
+    allOptionsDictionary[alloption] = true;
     initSourcesObj(data);
-  	populateSelect(args);
+    populateSelect(args);
     selection.select2({
-    	width: '75%',
-    	allowClear: false,
-    	closeOnSelect: false
+      width: '75%',
+      allowClear: false,
+      closeOnSelect: false
     }).on('change', function(e){
-    	// growlMe($(this).attr('id'));
-    	selection = "";
-    	if (e.val.length == 0) {
-    		$(this).select2("val", alloption);
+      // growlMe($(this).attr('id'));
+      selection = "";
+      if (e.val.length == 0) {
+        $(this).select2("val", alloption);
         allOptionsDictionary[alloption] = true;
-    	}
-    	prop = $(this).select2('data');
-    	selection = getText(prop);
-    	if (e.val.length > 1)
-    	{
-    		new_array = new Array();
-    		new_array = checkforAllOptions(prop, alloption);
-    		$(this).select2('data', new_array);
-    		selection = getText(new_array);
-    	}
-    	$('#sources_out').text(selection);
+      }
+      prop = $(this).select2('data');
+      selection = getText(prop);
+      if (e.val.length > 1)
+      {
+        new_array = new Array();
+        new_array = checkforAllOptions(prop, alloption);
+        $(this).select2('data', new_array);
+        selection = getText(new_array);
+      }
+      $('#sources_out').text(selection);
     });
   };
 
   initPurposes = function (data) {
-  	var selection = $('#purposes'),
-  	  args = {
-  	  	selection: selection,
-  	  	data: data.purposes,
-  	  	condition: function (item) {return item.code},
-  	  	value: function (item) {return item.id},
-  	  	text: function (item) {return item.code + ' - ' + item.name}
-  	  },
+    var selection = $('#purposes'),
+      args = {
+        selection: selection,
+        data: data.purposes,
+        condition: function (item) {return item.code},
+        value: function (item) {return item.id},
+        text: function (item) {return item.code + ' - ' + item.name}
+      },
       alloption = 'all_pur';
-  	allOptionsDictionary[alloption] = true;
+    allOptionsDictionary[alloption] = true;
     initPurposesObj(data);
-  	populateSelect(args);
+    populateSelect(args);
     selection.select2({
-    	width: '75%',
-    	allowClear: false,
-    	closeOnSelect: false
+      width: '75%',
+      allowClear: false,
+      closeOnSelect: false
     }).on('change', function(e){
-    	selection = "";
-    	if (e.val.length == 0) {
-    		$(this).select2("val", alloption);
+      selection = "";
+      if (e.val.length == 0) {
+        $(this).select2("val", alloption);
         allOptionsDictionary[alloption] = true;
-    	}
-    	prop = $(this).select2('data');
-    	selection = getText(prop);
-    	if (e.val.length > 1) {
-    		new_array = new Array();
-    		new_array = checkforAllOptions(prop, alloption);
-    		$(this).select2('data', new_array);
-    		selection = getText(new_array);
-    	}
-    	$('#purposes_out').text(selection);
+      }
+      prop = $(this).select2('data');
+      selection = getText(prop);
+      if (e.val.length > 1) {
+        new_array = new Array();
+        new_array = checkforAllOptions(prop, alloption);
+        $(this).select2('data', new_array);
+        selection = getText(new_array);
+      }
+      $('#purposes_out').text(selection);
     });
   };
 
   var allOptionsDictionary = {};
   //function to check if all countries is in the list
   function checkforAllOptions(source, alloption) {
-  	var myValues = [];
-  	for (var i=0; i < source.length; i++) {
-  		if (source[i].id == alloption && allOptionsDictionary[alloption]) {
+    var myValues = [];
+    for (var i=0; i < source.length; i++) {
+      if (source[i].id == alloption && allOptionsDictionary[alloption]) {
         // Removing alloption
-  			source.splice(i,1);
+        source.splice(i,1);
         allOptionsDictionary[alloption] = true;
-  			break;
-  		} else if (source[i].id == alloption && !allOptionsDictionary[alloption]) {
+        break;
+      } else if (source[i].id == alloption && !allOptionsDictionary[alloption]) {
         source = source.splice(i,1);
         allOptionsDictionary[alloption] = false;
         break;
       }
-  	}
-  	return source;
+    }
+    return source;
   }
 
   //retrieve the text for display
   function getText(source)
   {
-  	myValues = new Array();
-  	for(var i=0;i < source.length;i++)
-  	{
-  		myValues.push(source[i].text);
-  	}
-  	return myValues.toString();
+    myValues = new Array();
+    for(var i=0;i < source.length;i++)
+    {
+      myValues.push(source[i].text);
+    }
+    return myValues.toString();
   }
 
   function show_values_selection() {
-  	var year_from = $('#qryFrom').val();
-  	var year_to = $('#qryTo').val();
+    var year_from = $('#qryFrom').val();
+    var year_to = $('#qryTo').val();
 
-  	$('#year_from > span').text(year_from);
+    $('#year_from > span').text(year_from);
     $('#year_to > span').text(year_to);
-  	$('#expcty_out').text(getSelectionText('expcty'));
-  	$('#impcty_out').text(getSelectionText('impcty'));
-  	$('#sources_out').text(getSelectionText('sources'));
-  	$('#purposes_out').text(getSelectionText('purposes'));
-  	$('#terms_out').text(getSelectionText('terms'));
-  	$('#genus_all_id').val();
+    $('#expcty_out').text(getSelectionText('expcty'));
+    $('#impcty_out').text(getSelectionText('impcty'));
+    $('#sources_out').text(getSelectionText('sources'));
+    $('#purposes_out').text(getSelectionText('purposes'));
+    $('#terms_out').text(getSelectionText('terms'));
+    $('#genus_all_id').val();
   };
 
   function setEuDisclaimerVisibility () {
@@ -507,7 +507,7 @@ $(document).ready(function(){
   }
 
   $('#side .ui-button, #form .ui-button').hover(function() {
-  	$(this).toggleClass('ui-state-hover');
+    $(this).toggleClass('ui-state-hover');
   });
 
   function getFormattedSynonyms (d) {
@@ -572,7 +572,7 @@ $(document).ready(function(){
   if (is_search_page) {
     var ranks = [];
     $("#taxonomic_cascade_search").autocomplete({
-    	source: function(request, response) {
+      source: function(request, response) {
         var term = request.term;
         $.ajax({
           url: "/api/v1/auto_complete_taxon_concepts",
@@ -590,17 +590,17 @@ $(document).ready(function(){
             response(parseTaxonCascadeData(data, term, false));
             $('input#taxonomic_cascade_search').removeClass('ui-autocomplete-loading');
           },
-    			error : function(xhr, ajaxOptions, thrownError){
-    				growlMe(xhr.status + " ====== " + thrownError);
-    			}
+          error : function(xhr, ajaxOptions, thrownError){
+            growlMe(xhr.status + " ====== " + thrownError);
+          }
         });
       },
-    	select: function( event, ui ) {
-    		$(this).val(ui.item.label);
+      select: function( event, ui ) {
+        $(this).val(ui.item.label);
         selected_taxa = ui.item.value;
-    		$('#species_out').text(ui.item.label);
-    		return false;
-    	},
+        $('#species_out').text(ui.item.label);
+        return false;
+      },
       response: function(event, ui) {
         if (!ui.content.length) {
           var noResult = { value:"" };
@@ -639,7 +639,7 @@ $(document).ready(function(){
 
   function handleYearRangeChange (id) {
     var y_from = $('#qryFrom').val()
-  	var y_to = $('#qryTo').val()
+    var y_to = $('#qryTo').val()
 
     if (y_from > y_to) {
       if (id === 'qryFrom') {
@@ -658,16 +658,16 @@ $(document).ready(function(){
   initialiseControls();
 
   function populateSelect(args) {
-  	var data = args.data,
-  	  selection = args.selection,
-  	  condition = args.condition,
-  	  value = args.value,
-  	  text = args.text;
-  	_.each(data, function (item) {
-	  	if (condition(item)) {
-	      selection.append('<option title="' + text(item)
-	      	+ '" value="' + value(item) + '">' + text(item) + '</option>');
-	    }
+    var data = args.data,
+      selection = args.selection,
+      condition = args.condition,
+      value = args.value,
+      text = args.text;
+    _.each(data, function (item) {
+      if (condition(item)) {
+        selection.append('<option title="' + text(item)
+          + '" value="' + value(item) + '">' + text(item) + '</option>');
+      }
     });
   }
 
