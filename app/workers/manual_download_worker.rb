@@ -28,6 +28,7 @@ class ManualDownloadWorker
     Appsignal.add_exception(exception) if defined? Appsignal
     @download.status = "failed"
     @download.save!
+    raise exception
   end
 
   private
@@ -89,6 +90,7 @@ class ManualDownloadWorker
     Appsignal.add_exception(exception) if defined? Appsignal
     @download.status = "failed"
     @download.save!
+    raise exception
   end
 
   def cover_path_generator
