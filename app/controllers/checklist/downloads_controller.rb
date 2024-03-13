@@ -63,7 +63,7 @@ class Checklist::DownloadsController < ApplicationController
   end
 
   def download_index
-    @doc = download_module::Index.new(download_index_params)
+    @doc = download_module::Index.new(checklist_params)
     send_download
   end
 
@@ -107,16 +107,9 @@ class Checklist::DownloadsController < ApplicationController
     )
   end
 
-  def download_index_params
-    params.permit(
-      :show_synonyms,
-      :show_author,
-      :show_english,
-      :show_spanish,
-      :show_french,
-      :intro,
-      :locale,
-      :format
+  def checklist_params
+    Checklist::ChecklistParams.sanitize(
+      params
     )
   end
 end
