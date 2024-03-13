@@ -71,7 +71,7 @@ class Document < ApplicationRecord
   # order docs based on a custom list of ids
   scope :for_ids_with_order, ->(ids) {
     order = sanitize_sql_array(
-      ["position((',' || id::text || ',') in ?)", [].join(',') + ',']
+      ["position((',' || id::text || ',') in ?)", ids.join(',') + ',']
     )
     where(id: ids).order(Arel.sql(order))
   }
