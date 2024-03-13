@@ -68,12 +68,12 @@ class Document < ApplicationRecord
   after_save :sync_sort_index
   after_commit :clear_cache
 
-# order docs based on a custom list of ids
+  # order docs based on a custom list of ids
   scope :for_ids_with_order, ->(ids) {
     order = sanitize_sql_array(
-      ["position((',' || id::text || ',') in ?)", ids.join(',') + ',']
+      ["position((',' || id::text || ',') in ?)", [].join(',') + ',']
     )
-    where(id: ids).order(order)
+    where(id: ids).order(Arel.sql(order))
   }
 
   # This hot fix was needed to import document objects without attachment(external link)
