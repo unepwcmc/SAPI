@@ -63,7 +63,7 @@ class Checklist::DownloadsController < ApplicationController
   end
 
   def download_index
-    @doc = download_module::Index.new(params)
+    @doc = download_module::Index.new(download_index_params)
     send_download
   end
 
@@ -103,6 +103,19 @@ class Checklist::DownloadsController < ApplicationController
       # attributes used in this controller.
       :doc_type,
       # other attributes were in model `attr_accessible`.
+      :format
+    )
+  end
+
+  def download_index_params
+    params.permit(
+      :show_synonyms,
+      :show_author,
+      :show_english,
+      :show_spanish,
+      :show_french,
+      :intro,
+      :locale,
       :format
     )
   end
