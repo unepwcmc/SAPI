@@ -56,6 +56,7 @@ class User < ActiveRecord::Base
   validates :role, inclusion: { in: ROLES }, presence: true
   validates :organisation, presence: true
   before_create :set_default_role
+  after_commit :manage_captive_breeding_user, on: [:create, :update]
 
   def is_manager?
     self.role == MANAGER
@@ -118,6 +119,42 @@ class User < ActiveRecord::Base
 
   def set_default_role
     self.role ||= 'api'
+  end
+
+  # Create or update corresponding user in captive breeding database when a new user is created or existing user's password is changed
+  def manage_captive_breeding_user
+    begin
+      h = ActiveRecord::Base.connection_config
+      database = Rails.env.production? ? "captive_breeding_database_production" : "captivebreeding_staging"
+
+      # Establish database connection to captive breeding database
+      ActiveRecord::Base.establish_connection(
+        :adapter => h[:adapter],
+        :database => database,
+        :username => h[:username],
+        :password => h[:password],
+        :host => h[:host]
+      )
+
+      captive_breeding_user = User.find_by_email(email)
+
+      # SQL query is used instead of activerecord to avoid validation failure due to directly updating encrypted password instead of password and password confirmation
+      if captive_breeding_user
+        sql = "UPDATE users SET encrypted_password = '#{encrypted_password}', updated_at = now() WHERE id = #{captive_breeding_user.id}"
+        ActiveRecord::Base.connection.execute(sql) unless captive_breeding_user.encrypted_password == encrypted_password
+        Rails.logger.info 'Update user record in captive breeding database'
+      else
+        sql = "INSERT INTO users (name, email, encrypted_password, created_at, updated_at) VALUES ('#{name}', '#{email}' ,'#{encrypted_password}' , now(), now())"
+        ActiveRecord::Base.connection.execute(sql)
+        Rails.logger.info 'Insert user record in captive breeding database'
+      end
+    rescue Exception => e
+      Rails.logger.warn "Something went wrong while updating user record in captive breeding database"
+    ensure
+      # Ensure that db connection with Species+ database is reestablished irrespective of any error occurs or not
+      config = ActiveRecord::Base.configurations[Rails.env]
+      ActiveRecord::Base.establish_connection(config)
+    end
   end
 
 end
