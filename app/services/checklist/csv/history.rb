@@ -24,7 +24,7 @@ class Checklist::Csv::History < Checklist::History
 
   def select_columns
     [
-      "taxon_concepts_mview.id AS taxon_id",
+      "taxon_concepts_mview.id AS id",
       "taxon_concepts_mview.kingdom_name",
       "taxon_concepts_mview.phylum_name",
       "taxon_concepts_mview.class_name",
