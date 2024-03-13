@@ -16,7 +16,7 @@ WORKDIR /SAPI
 
 # COPY Gemfile /SAPI/Gemfile
 # COPY Gemfile.lock /SAPI/Gemfile.lock
-RUN gem install bundler -v 1.17.3
+RUN gem install bundler -v 2.2.33
 # RUN bundle install
 
 # COPY . /SAPI
