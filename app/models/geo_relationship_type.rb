@@ -8,8 +8,9 @@
 #  updated_at :datetime         not null
 #
 
-class GeoRelationshipType < ActiveRecord::Base
-  attr_accessible :name
+class GeoRelationshipType < ApplicationRecord
+  # Used by seed only.
+  # attr_accessible :name
 
   include Dictionary
   build_dictionary :contains, :intersects

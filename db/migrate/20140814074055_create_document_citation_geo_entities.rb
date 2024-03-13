@@ -1,4 +1,4 @@
-class CreateDocumentCitationGeoEntities < ActiveRecord::Migration
+class CreateDocumentCitationGeoEntities < ActiveRecord::Migration[4.2]
   def change
     create_table :document_citation_geo_entities do |t|
       t.integer :document_citation_id

@@ -9,8 +9,10 @@
 #  taxonomy_id :integer          default(1), not null
 #
 
-class Designation < ActiveRecord::Base
-  attr_accessible :name, :taxonomy_id
+class Designation < ApplicationRecord
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :name, :taxonomy_id
+  include Deletable
   include Dictionary
   build_dictionary :cites, :eu, :cms
 

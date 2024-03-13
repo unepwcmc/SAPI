@@ -53,13 +53,13 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         :validation_error,
         annual_report_upload_id: annual_report_upload.id,
         validation_rule_id: validation_rule.id,
-        matching_criteria: "{\"taxon_name\": \"Caniis lupus\"}",
+        matching_criteria: { "taxon_name": "Caniis lupus" },
         is_ignored: false,
         is_primary: true,
         error_message: "taxon_name Caniis lupus is invalid",
         error_count: 1
       )
-      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       validation_rule.refresh_errors_if_needed(annual_report_upload)
     end
     specify {
@@ -90,13 +90,13 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
         :validation_error,
         annual_report_upload_id: annual_report_upload.id,
         validation_rule_id: validation_rule.id,
-        matching_criteria: "{\"taxon_name\": \"Caniis lupus\"}",
+        matching_criteria: { "taxon_name": "Caniis lupus" },
         is_ignored: false,
         is_primary: true,
         error_message: "taxon_name Caniis lupus is invalid",
         error_count: 2
       )
-      Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+      SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       validation_rule.refresh_errors_if_needed(annual_report_upload)
     end
 
@@ -111,8 +111,8 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
     context "when updates and error fixed for all records" do
       specify "error record is destroyed" do
         travel_to(Time.now + 1) do
-          @shipment2.update_attributes(taxon_name: 'Canis lupus')
-          @shipment3.update_attributes(taxon_name: 'Canis lupus')
+          @shipment2.update(taxon_name: 'Canis lupus')
+          @shipment3.update(taxon_name: 'Canis lupus')
           expect {
             validation_rule.refresh_errors_if_needed(annual_report_upload)
           }.to change { Trade::ValidationError.count }.by(-1)
@@ -123,7 +123,7 @@ describe Trade::InclusionValidationRule, :drops_tables => true do
     context "when updates and error fixed for some records" do
       specify "error record is updated to reflect new error_count" do
         travel_to(Time.now + 1) do
-          @shipment2.update_attributes(taxon_name: 'Canis lupus')
+          @shipment2.update(taxon_name: 'Canis lupus')
           expect {
             validation_rule.refresh_errors_if_needed(annual_report_upload)
           }.to change { @validation_error.reload.error_count }.by(-1)

@@ -1,4 +1,4 @@
-class AddTimestampsToSandboxTemplate < ActiveRecord::Migration
+class AddTimestampsToSandboxTemplate < ActiveRecord::Migration[4.2]
   def up
     add_column :trade_sandbox_template, :created_at, :datetime
     add_column :trade_sandbox_template, :updated_at, :datetime

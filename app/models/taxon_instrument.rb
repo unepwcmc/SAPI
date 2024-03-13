@@ -12,9 +12,11 @@
 #  updated_by_id    :integer
 #
 
-class TaxonInstrument < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :effective_from, :instrument_id, :taxon_concept_id
+class TaxonInstrument < ApplicationRecord
+  include Changeable
+  include TrackWhoDoesIt
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :effective_from, :instrument_id, :taxon_concept_id
 
   belongs_to :instrument
   belongs_to :taxon_concept

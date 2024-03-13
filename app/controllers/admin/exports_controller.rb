@@ -3,10 +3,10 @@ class Admin::ExportsController < Admin::AdminController
   def index; end
 
   def download
-    filters = (params[:filters] || {}).merge({
+    filters = (filter_params || {}).merge({
       :csv_separator =>
-        if params[:filters] && params[:filters][:csv_separator] &&
-          params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
+        if filter_params && filter_params[:csv_separator] &&
+          filter_params[:csv_separator].downcase.strip.to_sym == :semicolon
           :semicolon
         else
           :comma
@@ -49,4 +49,11 @@ class Admin::ExportsController < Admin::AdminController
     end
   end
 
+  private
+
+  def filter_params
+    params[:filters].permit!
+  rescue NoMethodError
+    {}
+  end
 end

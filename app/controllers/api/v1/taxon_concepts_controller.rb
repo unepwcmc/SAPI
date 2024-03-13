@@ -2,8 +2,8 @@ class Api::V1::TaxonConceptsController < ApplicationController
 
   # makes params available to the ActiveModel::Serializers
   serialization_scope :view_context
-  after_filter :track_index, :only => :index
-  after_filter :track_show, :only => :show
+  after_action :track_index, :only => :index
+  after_action :track_show, :only => :show
 
   def index
     @search = Species::Search.new(params)

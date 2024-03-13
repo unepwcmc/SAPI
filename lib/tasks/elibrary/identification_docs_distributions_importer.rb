@@ -47,7 +47,7 @@ class Elibrary::IdentificationDocsDistributionsImporter
 
     SQL
 
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   # import distribution on material documents tagged at level higher than species
@@ -67,7 +67,7 @@ class Elibrary::IdentificationDocsDistributionsImporter
     WHERE tc.countries_ids_ary IS NULL
     SQL
 
-    results = ActiveRecord::Base.connection.execute(sql)
+    results = ApplicationRecord.connection.execute(sql)
 
     results.to_a.each_slice(50) do |result|
       sql, no_distr = [], []
@@ -107,7 +107,7 @@ class Elibrary::IdentificationDocsDistributionsImporter
        ON CONFLICT (geo_entity_id, document_citation_id) DO NOTHING
 
       SQL
-      ActiveRecord::Base.connection.execute(query)
+      ApplicationRecord.connection.execute(query)
     end
   end
 

@@ -25,7 +25,7 @@ class Checklist::DocumentsController < ApplicationController
     if access_denied? && !@document.is_public
       render_403
     elsif @document.is_link?
-      redirect_to @document.filename
+      redirect_to @document.filename.model[:filename]
     elsif !File.exists?(path_to_file)
       render_404
     else
@@ -41,7 +41,7 @@ class Checklist::DocumentsController < ApplicationController
   end
 
   def check_doc_presence
-    doc_ids = MaterialDocIdsRetriever.run(params)
+    doc_ids = MaterialDocIdsRetriever.run(params.dup.permit!.to_h)
 
     render :json => doc_ids.present?
   end
@@ -77,8 +77,6 @@ class Checklist::DocumentsController < ApplicationController
   end
 
   def full_volume_downloader
-    require 'zip'
-
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
     vol_path = [Rails.root, '/public/ID_manual_volumes/', params['locale'], '/'].join

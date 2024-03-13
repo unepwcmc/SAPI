@@ -5,10 +5,10 @@ namespace :import do
     TMP_TABLE = 'standard_reference_links_import'
     puts "There are #{TaxonConceptReference.where(:is_standard => true).count} standard references in the database."
 
-    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
-    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_legacy_id_and_legacy_type ON taxon_concepts (legacy_id, legacy_type)')
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_references_on_legacy_id_and_legacy_type ON "references" (legacy_id, legacy_type)')
+    ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
+    ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
+    ApplicationRecord.connection.execute('CREATE INDEX index_taxon_concepts_on_legacy_id_and_legacy_type ON taxon_concepts (legacy_id, legacy_type)')
+    ApplicationRecord.connection.execute('CREATE INDEX index_references_on_legacy_id_and_legacy_type ON "references" (legacy_id, legacy_type)')
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(TMP_TABLE)
@@ -32,7 +32,7 @@ namespace :import do
         FROM references_legacy_id_mapping map
         WHERE map.alias_legacy_id = #{TMP_TABLE}.ref_legacy_id
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
       puts "inserting reference links"
       # add taxon_concept_references where missing
@@ -57,7 +57,7 @@ namespace :import do
               AND reference_id = "references".id
           )
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
       puts "updating standard reference links"
       # update usr_std_ref flags
@@ -106,12 +106,12 @@ namespace :import do
       taxon_concept_references.reference_id = standard_references_as_ids.reference_id
 
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
     end
     puts "There are now #{TaxonConceptReference.where(:is_standard => true).count} standard references in the database"
-    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
-    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
+    ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
+    ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
   end
 
 end

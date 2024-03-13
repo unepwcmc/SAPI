@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.11.0'
+lock '3.18.0'
 
 set :application, 'sapi'
 set :repo_url, 'git@github.com:unepwcmc/SAPI.git'
@@ -20,7 +20,11 @@ set :scm_username, "unepwcmc-read"
 # set :format, :pretty
 
 set :rvm_type, :user
-set :rvm_ruby_version, '2.5.9'
+set :rvm_ruby_version, '3.0.6'
+
+# Sidekiq config
+set :sidekiq_service_unit_user, :system
+set :sidekiq_service_unit_name, 'sidekiq_sapi'
 
 # Default value for :log_level is :debug
 # set :log_level, :debug

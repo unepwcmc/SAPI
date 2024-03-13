@@ -18,11 +18,11 @@ describe Admin::RanksController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, rank: build_attributes(:rank)
+      post :create, params: { rank: build_attributes(:rank) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, rank: {}
+      post :create, params: { rank: { dummy: 'test'} }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -30,11 +30,11 @@ describe Admin::RanksController do
   describe "XHR PUT update" do
     let(:rank) { create(:rank) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => rank.id, :rank => { :name => 'ZZ' }
-      expect(response).to be_success
+      put :update, :format => 'json', params: { :id => rank.id, :rank => { :name => 'ZZ' } }, xhr: true
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => rank.id, :rank => { :name => nil }
+      put :update, :format => 'json', params: { :id => rank.id, :rank => { :name => nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -42,7 +42,7 @@ describe Admin::RanksController do
   describe "DELETE destroy" do
     let(:rank) { create(:rank) }
     it "redirects after delete" do
-      delete :destroy, :id => rank.id
+      delete :destroy, params: { :id => rank.id }
       expect(response).to redirect_to(admin_ranks_url)
     end
   end

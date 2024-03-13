@@ -20,7 +20,7 @@ namespace :import do
             WHERE UPPER("languages".iso_code3) = UPPER(#{TMP_TABLE}.iso_code3)
           )
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
     puts "There are now #{Language.count} languages in the database"
   end

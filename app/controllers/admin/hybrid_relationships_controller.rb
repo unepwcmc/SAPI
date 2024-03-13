@@ -2,7 +2,7 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
   defaults :resource_class => TaxonRelationship, :collection_name => 'hybrid_relationships', :instance_name => 'hybrid_relationship'
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_filter :load_hybrid_relationship_type, :only => [:new, :create, :update]
+  before_action :load_hybrid_relationship_type, :only => [:new, :create, :update]
 
   authorize_resource :class => false
 
@@ -63,4 +63,13 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
       find_by_name(TaxonRelationshipType::HAS_HYBRID)
   end
 
+  private
+
+  def hybrid_relationship_params
+    params.require(:taxon_relationship).permit(
+      # attributes were in model `attr_accessible`.
+      :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
+      :created_by_id, :updated_by_id
+    )
+  end
 end

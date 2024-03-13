@@ -1,4 +1,4 @@
-class RemoveStatusChangeFromNomenclatureChanges < ActiveRecord::Migration
+class RemoveStatusChangeFromNomenclatureChanges < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       WITH status_changes AS (

@@ -1,6 +1,6 @@
-class SetDistributionsEmptyInternalNotesToNil < ActiveRecord::Migration
+class SetDistributionsEmptyInternalNotesToNil < ActiveRecord::Migration[4.2]
   def change
-    ActiveRecord::Base.connection.execute(
+    ApplicationRecord.connection.execute(
       <<-SQL
         UPDATE distributions
         SET internal_notes=NULL

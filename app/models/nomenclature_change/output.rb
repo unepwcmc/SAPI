@@ -32,49 +32,49 @@
 # Represents an output of a nomenclature change.
 # Outputs may be new taxon concepts, created as a result of the nomenclature
 # change.
-class NomenclatureChange::Output < ActiveRecord::Base
-  track_who_does_it
+class NomenclatureChange::Output < ApplicationRecord
+  include TrackWhoDoesIt
   attr_accessor :output_type # New taxon, Existing subspecies, Existing taxon
-  attr_accessible :nomenclature_change_id, :taxon_concept_id,
-    :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
-    :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
-    :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
-    :parent_reassignments_attributes, :name_reassignments_attributes,
-    :distribution_reassignments_attributes, :legislation_reassignments_attributes,
-    :output_type, :tag_list, :created_by_id, :updated_by_id
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :nomenclature_change_id, :taxon_concept_id,
+  #   :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
+  #   :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
+  #   :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
+  #   :parent_reassignments_attributes, :name_reassignments_attributes,
+  #   :distribution_reassignments_attributes, :legislation_reassignments_attributes,
+  #   :output_type, :tag_list, :created_by_id, :updated_by_id
 
   belongs_to :nomenclature_change
-  belongs_to :taxon_concept
-  belongs_to :parent, :class_name => TaxonConcept, :foreign_key => :parent_id
-  belongs_to :rank
-  belongs_to :new_taxon_concept, :class_name => TaxonConcept, :foreign_key => :new_taxon_concept_id
+  belongs_to :taxon_concept, optional: true
+  belongs_to :parent, :class_name => 'TaxonConcept', :foreign_key => :parent_id, optional: true
+  belongs_to :rank, optional: true
+  belongs_to :new_taxon_concept, :class_name => 'TaxonConcept', :foreign_key => :new_taxon_concept_id, optional: true
   has_many :reassignments, :inverse_of => :output,
-    :class_name => NomenclatureChange::OutputReassignment,
+    :class_name => 'NomenclatureChange::OutputReassignment',
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
     :autosave => true
   has_many :parent_reassignments, :inverse_of => :output,
-    :class_name => NomenclatureChange::OutputParentReassignment,
+    :class_name => 'NomenclatureChange::OutputParentReassignment',
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
     :autosave => true
   has_many :name_reassignments, :inverse_of => :output,
-    :class_name => NomenclatureChange::OutputNameReassignment,
+    :class_name => 'NomenclatureChange::OutputNameReassignment',
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
     :autosave => true
   has_many :distribution_reassignments, :inverse_of => :output,
-    :class_name => NomenclatureChange::OutputDistributionReassignment,
+    :class_name => 'NomenclatureChange::OutputDistributionReassignment',
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
     :autosave => true
   has_many :legislation_reassignments, :inverse_of => :output,
-    :class_name => NomenclatureChange::OutputLegislationReassignment,
+    :class_name => 'NomenclatureChange::OutputLegislationReassignment',
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy,
     :autosave => true
   has_many :reassignment_targets, :inverse_of => :output,
-    :class_name => NomenclatureChange::ReassignmentTarget,
+    :class_name => 'NomenclatureChange::ReassignmentTarget',
     :foreign_key => :nomenclature_change_output_id, :dependent => :destroy
-  belongs_to :new_parent, :class_name => TaxonConcept, :foreign_key => :new_parent_id
-  belongs_to :new_rank, :class_name => Rank, :foreign_key => :new_rank_id
+  belongs_to :new_parent, :class_name => 'TaxonConcept', :foreign_key => :new_parent_id, optional: true
+  belongs_to :new_rank, :class_name => 'Rank', :foreign_key => :new_rank_id, optional: true
 
-  validates :nomenclature_change, :presence => true
   validates :new_scientific_name, :presence => true,
     :if => Proc.new { |c| c.taxon_concept_id.blank? }
   validates :new_parent_id, :presence => true,
@@ -183,10 +183,12 @@ class NomenclatureChange::Output < ActiveRecord::Base
     unless @tmp_taxon_concept
       errors.add(:new_taxon_concept, "can\'t be blank")
     end
-
     return true if @tmp_taxon_concept.valid?
-    @tmp_taxon_concept.errors.each do |attribute, message|
-      if [:parent_id, :rank_id, :name_status, :author_year, :full_name].
+
+    @tmp_taxon_concept.errors.each do |error|
+      attribute = error.attribute
+      message = error.message
+      if [:parent_id, :rank, :name_status, :author_year, :full_name].
         include?(attribute)
         errors.add(:"new_#{attribute}", message)
       else

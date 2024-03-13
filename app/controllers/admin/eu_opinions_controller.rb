@@ -1,7 +1,7 @@
 class Admin::EuOpinionsController < Admin::StandardAuthorizationController
   belongs_to :taxon_concept
-  before_filter :load_lib_objects
-  before_filter :load_search, :only => [:new, :index, :edit]
+  before_action :load_lib_objects
+  before_action :load_search, :only => [:new, :index, :edit]
 
   layout 'taxon_concepts'
 
@@ -55,5 +55,18 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
       order('is_current DESC, start_date DESC,
         geo_entities.name_en ASC').
       page(params[:page])
+  end
+
+  private
+
+  def eu_opinion_params
+    params.require(:eu_opinion).permit(
+      # attributes were in model `attr_accessible`.
+      :document_id, :end_date, :end_event_id, :geo_entity_id, :internal_notes,
+      :is_current, :notes, :start_date, :start_event_id, :eu_decision_type_id,
+      :taxon_concept_id, :type, :conditions_apply, :term_id, :source_id,
+      :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+      :created_by_id, :updated_by_id, :srg_history_id
+    )
   end
 end

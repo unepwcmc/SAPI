@@ -31,7 +31,7 @@ module Trade::RebuildTradePlusViews
 
   def self.recreate_view(type, sql_view)
     view_name = "trade_plus_#{type}_view"
-    ActiveRecord::Base.transaction do
+    ApplicationRecord.transaction do
       command = "DROP VIEW IF EXISTS #{view_name} CASCADE"
       puts command
       db.execute(command)
@@ -43,6 +43,6 @@ module Trade::RebuildTradePlusViews
   end
 
   def self.db
-    ActiveRecord::Base.connection
+    ApplicationRecord.connection
   end
 end

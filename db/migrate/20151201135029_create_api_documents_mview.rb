@@ -1,4 +1,4 @@
-class CreateApiDocumentsMview < ActiveRecord::Migration
+class CreateApiDocumentsMview < ActiveRecord::Migration[4.2]
   def up
     execute "DROP MATERIALIZED VIEW IF EXISTS api_documents_mview"
     execute "CREATE MATERIALIZED VIEW api_documents_mview AS SELECT * FROM api_documents_view"

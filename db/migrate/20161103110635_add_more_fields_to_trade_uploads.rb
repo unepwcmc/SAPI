@@ -1,4 +1,4 @@
-class AddMoreFieldsToTradeUploads < ActiveRecord::Migration
+class AddMoreFieldsToTradeUploads < ActiveRecord::Migration[4.2]
   def change
     add_column :trade_annual_report_uploads, :is_from_epix, :boolean, default: false
     add_column :trade_annual_report_uploads, :is_from_web_service, :boolean, default: false

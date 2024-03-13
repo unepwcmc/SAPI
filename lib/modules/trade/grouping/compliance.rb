@@ -126,13 +126,14 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
       end
 
     elsif params[:id].present?
+      id_int = params[:id].to_i
 
       if params[:group_by].include?('commodity')
-        data = data[params[:year]].delete_if { |d| d['term_id'] != params[:id] }
+        data = data[params[:year]].delete_if { |d| d['term_id'] != id_int }
       elsif params[:group_by].include?('species')
-        data = data[params[:year]].delete_if { |d| d['taxon_concept_id'] != params[:id] }
+        data = data[params[:year]].delete_if { |d| d['taxon_concept_id'] != id_int }
       else
-        data = data[params[:year]].delete_if { |d| d[:id] != params[:id]  }
+        data = data[params[:year]].delete_if { |d| d[:id] != id_int }
       end
 
     else

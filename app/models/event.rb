@@ -23,14 +23,17 @@
 #  elib_legacy_id       :integer
 #
 
-class Event < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :name, :designation_id, :description, :extended_description,
-    :url, :private_url, :multilingual_url, :published_at, :effective_at, :is_current, :end_date,
-    :created_by_id, :updated_by_id
+class Event < ApplicationRecord
+  include TrackWhoDoesIt
+
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :name, :designation_id, :description, :extended_description,
+  #   :url, :private_url, :multilingual_url, :published_at, :effective_at, :is_current, :end_date,
+  #   :created_by_id, :updated_by_id
+
   attr_reader :effective_at_formatted
 
-  belongs_to :designation
+  belongs_to :designation, optional: true
   has_many :annotations, :dependent => :destroy
   has_many :documents
   has_many :cites_processes
@@ -106,11 +109,11 @@ class Event < ActiveRecord::Base
   end
 
   def activate!
-    update_attributes(:is_current => true)
+    update(:is_current => true)
   end
 
   def deactivate!
-    update_attributes(:is_current => false)
+    update(:is_current => false)
   end
 
   protected

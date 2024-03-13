@@ -1,4 +1,4 @@
-class AddNumberToProposalDetails < ActiveRecord::Migration
+class AddNumberToProposalDetails < ActiveRecord::Migration[4.2]
   def up
     add_column(:proposal_details, :proposal_number, :text)
     execute "DROP VIEW IF EXISTS documents_view"

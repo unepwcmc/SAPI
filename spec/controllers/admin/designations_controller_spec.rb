@@ -20,7 +20,7 @@ describe Admin::DesignationsController do
     end
     describe "XHR GET index JSON" do
       it "renders json for dropdown" do
-        xhr :get, :index, :format => 'json'
+        get :index, :format => 'json', xhr: true
         expect(response.body).to have_json_size(2)
         expect(parse_json(response.body, "0/text")).to eq('AA')
       end
@@ -30,11 +30,11 @@ describe Admin::DesignationsController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, designation: build_attributes(:designation)
+      post :create, params: { designation: build_attributes(:designation) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, designation: {}
+      post :create, params: { designation: { dummy: 'test'} }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -42,11 +42,11 @@ describe Admin::DesignationsController do
   describe "XHR PUT update" do
     let(:designation) { create(:designation) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => designation.id, :designation => { :name => 'ZZ' }
-      expect(response).to be_success
+      put :update, :format => 'json', params: { :id => designation.id, :designation => { :name => 'ZZ' } }, xhr: true
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => designation.id, :designation => { :name => nil }
+      put :update, :format => 'json', params: { :id => designation.id, :designation => { :name => nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -54,7 +54,7 @@ describe Admin::DesignationsController do
   describe "DELETE destroy" do
     let(:designation) { create(:designation) }
     it "redirects after delete" do
-      delete :destroy, :id => designation.id
+      delete :destroy, params: { :id => designation.id }
       expect(response).to redirect_to(admin_designations_url)
     end
   end

@@ -4,7 +4,7 @@ class Api::TradeDownloadsCacheCleanupController < ApplicationController
   def index
     message = ''
     begin
-      DownloadsCacheCleanupWorker.perform_async(:shipments)
+      DownloadsCacheCleanupWorker.perform_async('shipments')
     rescue
       message = 'Something went wrong'
     end

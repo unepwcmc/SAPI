@@ -30,9 +30,11 @@
 #  dependents_updated_by_id   :integer
 #
 
-class TaxonConcept < ActiveRecord::Base
-  track_who_does_it
-  has_paper_trail class_name: 'TaxonConceptVersion', on: :destroy,
+class TaxonConcept < ApplicationRecord
+  include Deletable
+  extend Mobility
+  include TrackWhoDoesIt
+  has_paper_trail versions: { class_name: "TaxonConceptVersion" }, on: :destroy,
     meta: {
       taxon_concept_id: :id,
       taxonomy_name: :taxonomy_name,
@@ -42,13 +44,14 @@ class TaxonConcept < ActiveRecord::Base
       rank_name: :rank_name
     }
 
-  attr_accessible :parent_id, :taxonomy_id, :rank_id,
-    :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
-    :legacy_id, :legacy_type, :scientific_name, :name_status,
-    :tag_list, :legacy_trade_code, :hybrid_parents_ids,
-    :accepted_names_ids, :accepted_names_for_trade_name_ids,
-    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id, :dependents_updated_at, :kew_id
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :parent_id, :taxonomy_id, :rank_id,
+  #   :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
+  #   :legacy_id, :legacy_type, :scientific_name, :name_status,
+  #   :tag_list, :legacy_trade_code, :hybrid_parents_ids,
+  #   :accepted_names_ids, :accepted_names_for_trade_name_ids,
+  #   :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+  #   :created_by_id, :updated_by_id, :dependents_updated_at, :kew_id
 
   attr_writer :accepted_names_ids,
     :accepted_names_for_trade_name_ids,
@@ -61,13 +64,13 @@ class TaxonConcept < ActiveRecord::Base
 
   has_one :m_taxon_concept, :foreign_key => :id
 
-  belongs_to :dependents_updater, foreign_key: :dependents_updated_by_id, class_name: User
-  belongs_to :parent, :class_name => 'TaxonConcept'
+  belongs_to :dependents_updater, foreign_key: :dependents_updated_by_id, class_name: 'User', optional: true
+  belongs_to :parent, :class_name => 'TaxonConcept', optional: true
   has_many :children, -> { where(name_status: ['A', 'N']) }, class_name: 'TaxonConcept', foreign_key: :parent_id # conditions: { name_status: ['A', 'N'] }
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, :through => :taxonomy
-  belongs_to :taxon_name
+  belongs_to :taxon_name, optional: true
   has_many :taxon_relationships, :dependent => :destroy
   has_many :inverse_taxon_relationships, :class_name => 'TaxonRelationship',
     :foreign_key => :other_taxon_concept_id, :dependent => :destroy
@@ -149,8 +152,6 @@ class TaxonConcept < ActiveRecord::Base
   has_many :cites_processes
   has_many :cites_captivity_processes
 
-  validates :taxonomy_id, :presence => true
-  validates :rank_id, :presence => true
   validates :name_status, :presence => true
   validates :parent_id, presence: true,
     if: lambda { |tc| ['A', 'N'].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM' }
@@ -173,6 +174,53 @@ class TaxonConcept < ActiveRecord::Base
   }
 
   before_validation :ensure_taxonomic_position
+  before_validation do
+    before_validate_scientific_name
+    before_validate_full_name
+  end
+
+  after_create do
+    ensure_species_touched
+    Species::Search.increment_cache_iterator
+    Species::TaxonConceptPrefixMatcher.increment_cache_iterator
+    Checklist::Checklist.increment_cache_iterator
+  end
+  after_update do
+    ensure_species_touched
+    if saved_change_to_rank_id? ||
+       saved_change_to_taxon_name_id? ||
+       saved_change_to_parent_id? ||
+       saved_change_to_name_status?
+      Species::Search.increment_cache_iterator
+      Species::TaxonConceptPrefixMatcher.increment_cache_iterator
+      Checklist::Checklist.increment_cache_iterator
+    end
+  end
+  after_save do
+    if ['A', 'N'].include? name_status
+      tcd = TaxonConceptData.new(self)
+      data = tcd.to_h
+      update_column(:data, data)
+      self.data = data
+    end
+    if name_status == 'S'
+      rebuild_relationships(accepted_names_ids)
+    end
+    if name_status == 'T'
+      rebuild_relationships(accepted_names_for_trade_name_ids)
+    end
+    if name_status == 'H'
+      rebuild_relationships(hybrid_parents_ids)
+    end
+  end
+  after_destroy do
+    ensure_species_touched
+    Species::Search.increment_cache_iterator
+    Species::TaxonConceptPrefixMatcher.increment_cache_iterator
+    Checklist::Checklist.increment_cache_iterator
+  end
+  after_touch :ensure_species_touched
+  after_commit :cache_cleanup
 
   translates :nomenclature_note
 
@@ -211,7 +259,7 @@ class TaxonConcept < ActiveRecord::Base
 
   def self.fetch_taxons_full_name(taxon_ids)
     if taxon_ids.present?
-      ActiveRecord::Base.connection.execute(
+      ApplicationRecord.connection.execute(
         <<-SQL
           SELECT tc.full_name
           FROM taxon_concepts tc
@@ -223,19 +271,7 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def scientific_name=(str)
-    scientific_name =
-      if ['A', 'N'].include?(name_status)
-        TaxonName.sanitize_scientific_name(str)
-      else
-        str
-      end
-    tn = TaxonName.where(["UPPER(scientific_name) = UPPER(?)", scientific_name]).first
-    if tn
-      self.taxon_name = tn
-      self.taxon_name_id = tn.id
-    else
-      self.build_taxon_name(scientific_name: scientific_name)
-    end
+    @scientific_name = str
   end
 
   def scientific_name
@@ -305,7 +341,8 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def rank_name
-    data['rank_name'] || self.rank.try(:name)
+    # Database column missing default value, so it is possible to return nil for `data`.
+    data.try(:[], 'rank_name') || self.rank.try(:name)
   end
 
   def cites_accepted
@@ -351,16 +388,27 @@ class TaxonConcept < ActiveRecord::Base
   end
 
   def accepted_names_ids
-    @accepted_names_ids || accepted_names.pluck(:id)
+    if @accepted_names_ids.present?
+      @accepted_names_ids
+    else
+      accepted_names.pluck(:id)
+    end
   end
 
   def accepted_names_for_trade_name_ids
-    @accepted_names_for_trade_name_ids ||
-    accepted_names_for_trade_name.pluck(:id)
+    if @accepted_names_for_trade_name_ids.present?
+      @accepted_names_for_trade_name_ids
+    else
+      accepted_names_for_trade_name.pluck(:id)
+    end
   end
 
   def hybrid_parents_ids
-    @hybrid_parents_ids || hybrid_parents.pluck(:id)
+    if @hybrid_parents_ids.present?
+      @hybrid_parents_ids
+    else
+      hybrid_parents.pluck(:id)
+    end
   end
 
   def rebuild_relationships(taxa_ids)
@@ -377,6 +425,50 @@ class TaxonConcept < ActiveRecord::Base
         end
       add_remove_relationships(new_taxa, removed_taxa, rel_type)
     end
+  end
+
+  protected
+
+  def before_validate_scientific_name
+    sanitized_scientific_name =
+      if ['A', 'N'].include?(name_status)
+        TaxonName.sanitize_scientific_name(@scientific_name || scientific_name)
+      else
+        @scientific_name || scientific_name
+      end
+    tn = TaxonName.where(["UPPER(scientific_name) = UPPER(?)", sanitized_scientific_name]).first
+    if tn
+      self.taxon_name = tn
+      self.taxon_name_id = tn.id
+    else
+      self.build_taxon_name(scientific_name: sanitized_scientific_name)
+    end
+  end
+
+  def before_validate_full_name
+    self.full_name =
+      if rank && parent && ['A', 'N'].include?(name_status)
+        rank_name = rank.name
+        parent_full_name = parent.full_name
+        name = @scientific_name || scientific_name
+        # if name is present, just in case it is a multipart name
+        # e.g. when changing status from S, T, H
+        # make sure to only use last part
+        if name.present?
+          name = TaxonName.sanitize_scientific_name(name)
+        end
+        if name.blank?
+          nil
+        elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
+          "#{parent_full_name} #{name.downcase}"
+        elsif rank_name == Rank::VARIETY
+          "#{parent_full_name} var. #{name.downcase}"
+        else
+          name
+        end
+      else
+        @scientific_name || scientific_name
+      end
   end
 
   private
@@ -504,6 +596,18 @@ class TaxonConcept < ActiveRecord::Base
       return false
     end
     true
+  end
+
+  def cache_cleanup
+    DownloadsCacheCleanupWorker.perform_async('taxon_concepts')
+  end
+
+  def ensure_species_touched
+    if rank && parent && [Rank::SUBSPECIES, Rank::VARIETY].include?(rank.name)
+      # touch parent if we're a variety or subspecies
+      Rails.logger.info "Touch species"
+      parent.touch
+    end
   end
 
 end

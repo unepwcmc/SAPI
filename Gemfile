@@ -1,54 +1,69 @@
 source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.5.9'
+ruby '3.0.6' # Can't upgrade to 3.1 until Rails 7.0.4 (https://stackoverflow.com/a/75007303/556780)
 
-gem 'rails', '4.2.11.3'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '6.1.7.6'
+# Use sqlite3 as the database for Active Record
+# gem 'sqlite3'
+# Use Puma as the app server
+gem 'puma', '~> 5.0'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+# Use SCSS for stylesheets
+# TODO: Can't upgrade sass-rails to 6.0, it raise the following error when running `RAILS_ENV=staging rake assets:precompile`.
+# SassC::SyntaxError: Error: Invalid CSS after "...in-bottom:-3px;": expected "}", was ".margin-bottom:-3px"
+#         on line 3712:5063 of stdin
+# >> ction=135,Strength=3)";_margin-bottom:-3px;.margin-bottom:-3px;}/*!Add round
+# gem 'sass-rails', '>= 6'
+gem 'sass-rails', '~> 5.0'
 
-gem 'actionpack-action_caching', '~> 1.2', '>= 1.2.2' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
-gem 'actionpack-page_caching', '1.1.1' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this. # TODO, need update when upgrade to rails 5
+# https://stackoverflow.com/questions/55213868/rails-6-how-to-disable-webpack-and-use-sprockets-instead
+gem 'sprockets', '3.7.2'
+gem 'sprockets-rails', :require => 'sprockets/railtie'
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 1.3.0'
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 5.0'
+# See https://github.com/rails/execjs#readme for more supported runtimes
+# gem 'mini_racer', platforms: :ruby
+
 gem 'active_model_serializers', '0.8.4' # Deprecated
 gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
-gem 'pg', '0.21.0' # TODO: latest 1.5.4, need Rails 5 to upgrade to 1.0.0
-gem 'pg_array_parser', '0.0.9' # TODO: latest 0.0.9
-gem 'nested-hstore', '0.1.2' # TODO: latest 0.1.2 @ 2015
-gem 'pg_search', '1.0.6' # TODO: update to newer version when upgrade to Rails 5
-gem 'oj', '3.14.2' # optimised JSON (picked by multi_json) # TODO: to upgrade to newer version, need >=Ruby 2.7
-gem 'nokogiri', '1.12.5' # TODO: 1.12.5 is the last version support 2.5. New version need Ruby 2.6+
-gem 'inherited_resources', '1.7.2' # TODO: need upgrade when upgrade to Rails 5
-gem 'traco', '~> 5.3', '>= 5.3.3' # TODO: latest version @ 2021. Suggest migrate to Mobility gem.
-# gem 'strong_parameters'
-gem 'protected_attributes', '1.1.4' # TODO: Only support Rails version < 5 (https://github.com/rails/protected_attributes)
-gem 'devise', '4.4.3' # TODO: version 4.4.3 work under <=Rails 5.3 and <=Ruby 2.6
-gem 'cancancan', '1.17.0' # TODO, need upgrade to 2.0 for Rails 5
-gem 'ahoy_matey', '1.6.1' # TODO: latest 5.0.2. Can't upgrade to 2.0 until upgrade to Rails 5
-gem 'browser', '2.5.3' # Latest 5.3.1 @ 2021, doesn't work with this project, maybe try again after upgrade ruby > 2.5 and rails >= 5
+gem 'pg', '~> 1.5', '>= 1.5.4'
+gem 'pg_array_parser', '~> 0.0.9'
+gem 'nested-hstore', '~> 0.1.2'
+gem 'pg_search', '~> 2.3', '>= 2.3.6'
+gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
+gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmin/inherited_resources#notice)
+gem 'nokogiri', '~> 1.16'
+gem 'mobility', '~> 1.2', '>= 1.2.9'
+gem 'devise', '~> 4.9', '>= 4.9.3'
+gem 'cancancan', '~> 3.5'
+gem 'ahoy_matey', '~> 5.0', '>= 5.0.2'
+gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
 
 # TODO: starting from v1.4, it break our test due to redirection changes:
 #   rspec ./spec/controllers/admin/nomenclature_changes/lump_controller_spec.rb:147
 #   rspec ./spec/controllers/admin/nomenclature_changes/split_controller_spec.rb:191
 gem 'wicked', '1.3.4'
 
-gem 'groupdate', '2.4.0' # TODO: seems only ApiRequest#recent_requests using this. Suggest rewrite and remove dependencies.
+gem 'groupdate', '~> 6.4'
 
-gem 'rubyzip', '~> 2.3', '>= 2.3.2' # TODO: latest
-gem 'responders', '~> 2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
+gem 'rubyzip', '~> 2.3', '>= 2.3.2'
+gem 'responders', '~> 3.1', '>= 3.1.1' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
-gem 'sidekiq', '4.2.10' # TODO, Ruby 2.7 need version 6.0.5 sidekiq
-gem 'sidekiq-status', '1.1.4' # TODO: latest is 3.0.3 @ 2023
-gem 'sidekiq-unique-jobs', '4.0.18' # TODO: latest is 8.0.5 @ 2023
-gem 'redis-rails', '5.0.2' # TODO: latest, may remove this Gem when upgrade to Rails 5.2. (https://github.com/redis-store/redis-rails/tree/master#a-quick-note-about-rails-52)
+gem 'sidekiq', '< 7' # TODO, latest is 7, which required Redis 6.2+, but our servers running Redis 4.0.9.
+gem 'sidekiq-status', '~> 3.0', '>= 3.0.3'
+gem 'sidekiq-unique-jobs', '7.1.31' # TODO: can upgrade to latest when sidekiq upgrade to 7
+gem 'sidekiq-cron', '~> 1.12'
 
-gem 'whenever', '0.11.0', :require => false # TODO: latest version 1.0 @ 2019. Should migrate to sidekiq-cron.
-gem 'httparty', '~> 0.21.0' # TODO: latest.
+gem 'httparty', '~> 0.21.0'
 
-gem 'sprockets', '2.12.5' # upgrading to 3 breaks handlebars/tilt
-gem 'kaminari', '1.2.2' # TODO: latest @ 2021. Suggest migrate to pagy gem.
+gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
-gem 'acts-as-taggable-on', '5.0.0' # TODO: latest v10 @ 2023. Need upgrade when upgrade to Rails 5.
-gem 'carrierwave', '1.3.1' # TODO: latest is 3.0.5 @ 2023. v2 support Rails 5
+gem 'acts-as-taggable-on', '~> 10.0'
+gem 'carrierwave', '~> 3.0', '>= 3.0.5'
 
 # PDF
 gem 'prawn', '0.13.2'
@@ -56,59 +71,50 @@ gem 'pdfkit', '~> 0.8.7.3'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.6'
 
 gem 'aws-sdk', '~> 2' # TODO: v2 Deprecated, need to upgrade to v3
-gem 'rails-observers', '~> 0.1.5' # A feature that removed from core in Rails 4.0, maybe be better migrate away from this.
-
-# Gems used for assets
-gem 'sass-rails',   '5.0.7' # TODO: may need to upgrade when upgrade to Rails 5 or 6 (https://github.com/rails/sass-rails/releases)
-gem 'coffee-rails', '4.2.2' # TODO: v5 support Rails 6
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
 
-gem 'uglifier', '2.7.2' # TODO: Only works with ES5. Latest version 4.2.0 @ 2019
-gem 'strong_migrations', '~> 0.3.1' # TODO: should upgrade when we upgrade to rails 5
+gem 'strong_migrations', '~> 1.7'
 
+# Use Active Model has_secure_password
+# gem 'bcrypt', '~> 3.1.7'
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
+# Use ActiveStorage variant
+# gem 'mini_magick', '~> 4.8'
+
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.4.4', require: false
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
-
-gem 'rest-client', '1.8.0', require: false # TODO, should upgrade for better compatibility with newer Ruby but breaking change. Seems not many place using it, worth a try.
+# gem 'jbuilder', '~> 2.7'
 
 group :development do
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
-  gem "guard-livereload", '1.1.3'
-  gem "rack-livereload", '0.3.11'
-  gem "guard-bundler", '1.0.0'
-  gem 'annotate', "2.5.0"
+  # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
+  gem 'web-console', '>= 4.1.0'
+  # Display performance information such as SQL time and flame graphs for each request in your browser.
+  # Can be configured to work on production as well see: https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md
+  gem 'rack-mini-profiler', '~> 2.0'
+  gem 'listen', '~> 3.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 	gem 'spring'
+
+  gem 'annotate', "2.5.0"
   # gem 'sextant'
   # Deploy with Capistrano
-  gem 'capistrano', '3.11.0', require: false
-  gem 'capistrano-rails',   '1.4.0', require: false
-  gem 'capistrano-bundler', '1.5.0', require: false
+  gem 'capistrano', '3.18.0', require: false
+  gem 'capistrano-rails',   '1.6.3', require: false
+  gem 'capistrano-bundler', '1.6.0', require: false
   gem 'capistrano-rvm', '0.1.2', require: false
   gem 'capistrano-maintenance', '1.0.0', require: false
   gem 'capistrano-passenger', '0.2.0', require: false
   gem 'capistrano-local-precompile', '1.2.0', require: false
-  gem 'capistrano-sidekiq', '1.0.2'
+  gem 'capistrano-sidekiq', '~> 2.3', '>= 2.3.1'
   gem 'slackistrano', '0.1.9', require: false
   gem 'brightbox', '2.3.9'
-  gem 'rack-cors', '0.3.0' ,:require => 'rack/cors' # TODO: remove when upgrade Rails.
-  gem 'quiet_assets', '1.1.0'
-  gem 'webrick', '1.3.1'
   gem 'jslint_on_rails', '1.1.1'
-  gem 'rubocop', '0.40.0', require: false
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
   gem 'rbnacl', '4.0.2'
   gem 'rbnacl-libsodium', '1.0.16'
   gem 'bcrypt_pbkdf', '1.1.0'
@@ -117,35 +123,39 @@ group :development do
 end
 
 group :test, :development do
-  gem "rspec-rails", '3.9.1'
-  gem 'rspec-collection_matchers', '1.1.3'
-  gem "json_spec", '1.1.5'
-  gem "database_cleaner", "1.2.0" # TODO, should remove after upgrade Rails.
+  gem 'rspec-rails', '~> 6.1', '>= 6.1.1'
+  gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
+  gem 'json_spec', '~> 1.1', '>= 1.1.5'
+  gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
   gem "launchy", '2.4.3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 end
 
 group :test do
+  # Adds support for Capybara system testing and selenium driver
+  gem 'capybara', '>= 3.26'
+  gem 'selenium-webdriver', '>= 4.0.0.rc1'
+  # Easy installation and use of web drivers to run system tests with browsers
+  gem 'webdrivers'
+
+  gem 'rails-controller-testing'
   gem "codeclimate-test-reporter", '0.1.1', require: nil # TODO, should be removed
-  gem "factory_girl_rails", '4.2.1'
-  gem 'simplecov', '0.22.0', :require => false # TODO: latest
-  gem 'coveralls', '0.7.1', :require => false
-  gem 'capybara', '2.2.1'
+  gem 'factory_bot_rails', '5.2.0'
+  gem 'simplecov', '~> 0.22.0', :require => false
+  gem 'coveralls_reborn', '~> 0.28.0', require: false
 end
 
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
 
-# track who created or edited a given object
-gem 'clerk', '0.2.3' # TODO: Need update to 1.0.0 when upgrade to Rails 5. I would say should update our code and just use paper_trail. This gem last update at 2018.
-gem 'paper_trail', '4.2.0' # TODO: latest is 15.1.0. Need upgrade to v5 for Rails 5.
+gem 'request_store', '~> 1.5', '>= 1.5.1'
+gem 'paper_trail', '12.3.0' # TODO: latest is 15.1.0. Can't upgrade until we fix https://github.com/paper-trail-gem/paper_trail/blob/master/doc/pt_13_yaml_safe_load.md
 
 gem 'dotenv-rails', '2.0.1'
 
-gem 'sitemap_generator', '~> 6.3' # TODO: latest
+gem 'sitemap_generator', '~> 6.3'
 
-gem 'appsignal', '1.3.3'
-gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in staging / production
+gem 'appsignal', '~> 3.5', '>= 3.5.5'
 
 ### GEM for frontend ###
 # Remove the `jquery-rails` gem to eliminate any dependency issues that may block the upgrade process.
@@ -163,13 +173,23 @@ gem 'test-unit', '3.1.5' # annoyingly, rails console won't start without it in s
 # gem 'jquery-mousewheel-rails', '~> 0.0.9'
 # gem "font-awesome-rails", '4.5.0.1'
 
-gem 'susy', '2.2.14' # TODO: Deprecated. 2.2.14 is the latest version @ 2018
-gem 'gon', '~> 6.4' # TODO: latest
-gem "chartkick", '2.3.5' # TODO: latest 5.0.5 @ 2023. Should upgrade to v4 once we upgrade to Rails 5.2+ and Ruby 2.6+
-gem 'nested_form', '0.3.2' # TODO: latest @ 2013. Project is public archived on github. No longer maintained.
+gem 'susy', '~> 2.2', '>= 2.2.14' # TODO: Deprecated. (https://github.com/oddbird/susy#power-tools-for-the-web-deprecated)
+gem 'gon', '~> 6.4'
+gem 'chartkick', '~> 5.0', '>= 5.0.5'
+gem 'nested_form', '~> 0.3.2' # TODO: Deprecated. (https://github.com/ryanb/nested_form#unmaintained)
 gem 'bootstrap-sass', '2.3.2.2' # TODO: latest 3.4.1 @ 2019. Can't upgrade unless we sure bootstrap v3 backward compatible with boostrap v2
+
 # Ember
-gem 'ember-rails', '0.14.1' # Not support Sprockets 3+ unless upgrade. Latest version support Rails 5.1
-gem 'ember-source', '1.6.1' # TODO: just a wrapwrapper. Any update will change the ember.js version.
-gem 'ember-data-source', '0.14' # TODO: just a wrapwrapper. Any update will change the JS ember-data version.
+gem 'ember-rails', '~> 0.21.0' # Latest @ 2017
+
+# NOTE: These old versions are necessary to avoid bundler fetcing newer versions
+# of ember-source and ember-data-source, but actually we use even older versions
+# added to version control generated by:
+#
+#     $ rails generate ember:install --tag=v1.6.1 --ember
+#     $ rails generate ember:install --tag=v0.14 --ember-data
+
+gem 'ember-source', '1.8.0' # NOTE: not what we actually use
+gem 'ember-data-source', '1.13.0' # NOTE: not what we actually use
+
 gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will change the handlebars.js version.

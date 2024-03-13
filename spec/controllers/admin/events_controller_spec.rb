@@ -23,22 +23,22 @@ describe Admin::EventsController do
 
   describe "XHR GET new" do
     it "renders the new template" do
-      xhr :get, :new
+      get :new, xhr: true
       expect(response).to render_template('new')
     end
     it "assigns the event variable" do
-      xhr :get, :new
+      get :new, xhr: true
       expect(assigns(:event)).not_to be_nil
     end
   end
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, event: FactoryGirl.attributes_for(:event)
+      post :create, params: { event: FactoryBot.attributes_for(:event) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, event: { :name => nil }
+      post :create, params: { event: { :name => nil } }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -46,11 +46,11 @@ describe Admin::EventsController do
   describe "XHR GET edit" do
     let(:event) { create(:event) }
     it "renders the edit template" do
-      xhr :get, :edit, :id => event.id
+      get :edit, params: { :id => event.id }, xhr: true
       expect(response).to render_template('new')
     end
     it "assigns the hybrid_relationship variable" do
-      xhr :get, :edit, :id => event.id
+      get :edit, params: { :id => event.id }, xhr: true
       expect(assigns(:event)).not_to be_nil
     end
   end
@@ -58,11 +58,11 @@ describe Admin::EventsController do
   describe "XHR PUT update JSON" do
     let(:event) { create(:event) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => event.id, :event => { :name => 'ZZ' }
-      expect(response).to be_success
+      put :update, :format => 'json', params: { :id => event.id, :event => { :name => 'ZZ' } }, xhr: true
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => event.id, :event => { :name => nil }
+      put :update, :format => 'json', params: { :id => event.id, :event => { :name => nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -70,7 +70,7 @@ describe Admin::EventsController do
   describe "DELETE destroy" do
     let(:event) { create(:event) }
     it "redirects after delete" do
-      delete :destroy, :id => event.id
+      delete :destroy, params: { :id => event.id }
       expect(response).to redirect_to(admin_events_url)
     end
   end

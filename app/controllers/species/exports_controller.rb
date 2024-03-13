@@ -1,10 +1,10 @@
 class Species::ExportsController < ApplicationController
-  before_filter :ensure_data_type_and_filters, :only => [:download]
+  before_action :ensure_data_type_and_filters, :only => [:download]
 
   def download
     set_csv_separator
 
-    @filters = params[:filters].merge({
+    @filters = filter_params.merge({
       :csv_separator => cookies['speciesplus.csv_separator'].try(:to_sym)
     })
     case params[:data_type]
@@ -39,6 +39,12 @@ class Species::ExportsController < ApplicationController
 
   private
 
+  def filter_params
+    params[:filters].permit!.to_h
+  rescue NoMethodError
+    {}
+  end
+
   def set_csv_separator
     separator_params = params[:filters][:csv_separator]
     separator_cookie = cookies['speciesplus.csv_separator']
@@ -48,14 +54,15 @@ class Species::ExportsController < ApplicationController
       return
     else
       ip = request.remote_ip
-      separator = Sapi::GeoIP.instance.default_separator(ip)
+      separator = SapiModule::GeoIP.instance.default_separator(ip)
       cookies.permanent['speciesplus.csv_separator'] = separator
     end
   end
 
   def ensure_data_type_and_filters
     unless params[:data_type] && params[:filters]
-      render(:nothing => true, :status => :unprocessable_entity) && (return false)
+      head :unprocessable_entity
+      false
     end
   end
 end

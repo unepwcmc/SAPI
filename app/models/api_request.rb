@@ -15,10 +15,10 @@
 #  updated_at      :datetime         not null
 #
 
-class ApiRequest < ActiveRecord::Base
+class ApiRequest < ApplicationRecord
   serialize :params, JSON
 
-  belongs_to :user
+  belongs_to :user, optional: true
 
   RECENT_DAYS = 90
   RECENT_MONTHS = 6
@@ -67,7 +67,7 @@ class ApiRequest < ActiveRecord::Base
   private
 
   def self.hash_aggregate_by_keys(key_name, key_ary, subquery)
-    sql = ActiveRecord::Base.send(:sanitize_sql_array, [
+    sql = ApplicationRecord.send(:sanitize_sql_array, [
       "SELECT JSON_OBJECT_AGG(#{key_name}_1, COALESCE(cnt, 0))
       FROM UNNEST(ARRAY[:key_ary]) #{key_name}_1
       LEFT JOIN (

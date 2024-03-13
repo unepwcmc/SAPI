@@ -24,12 +24,12 @@ describe Api::V1::DocumentGeoEntitiesController do
     }
 
     it "returns Poland when searching by wolf" do
-      get :index, taxon_concept_query: 'Canis lu'
+      get :index, params: { taxon_concept_query: 'Canis lu' }
       expect(response.body).to have_json_size(1).at_path('document_geo_entities')
     end
 
     it "returns 0 geo entities when no match for taxon name" do
-      get :index, taxon_concept_query: 'Lynx'
+      get :index, params: { taxon_concept_query: 'Lynx' }
       expect(response.body).to have_json_size(0).at_path('document_geo_entities')
     end
 

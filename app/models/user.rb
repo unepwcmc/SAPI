@@ -23,13 +23,15 @@
 #  is_cites_authority     :boolean          default(FALSE), not null
 #
 
-class User < ActiveRecord::Base
-  include SentientUser
+class User < ApplicationRecord
+  include Deletable
+
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
-  attr_accessible :email, :name, :password, :password_confirmation,
-    :remember_me, :role, :terms_and_conditions, :is_cites_authority,
-    :organisation, :geo_entity_id, :is_active
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :email, :name, :password, :password_confirmation,
+  #   :remember_me, :role, :terms_and_conditions, :is_cites_authority,
+  #   :organisation, :geo_entity_id, :is_active
 
   MANAGER = 'admin'
   CONTRIBUTOR = 'default' # nonsense
@@ -49,7 +51,7 @@ class User < ActiveRecord::Base
   has_many :ahoy_visits, dependent: :nullify, class_name: 'Ahoy::Visit'
   has_many :ahoy_events, dependent: :nullify, class_name: 'Ahoy::Event'
   has_many :api_requests
-  belongs_to :geo_entity
+  belongs_to :geo_entity, optional: true
 
   validates :email, :uniqueness => true, :presence => true
   validates :name, :presence => true
@@ -120,4 +122,8 @@ class User < ActiveRecord::Base
     self.role ||= 'api'
   end
 
+  # https://github.com/heartcombo/devise/tree/v4.4.3#active-job-integration
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
+  end
 end

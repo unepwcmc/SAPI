@@ -104,30 +104,37 @@
 #  expiry                                   :datetime
 #
 
-class MTaxonConcept < ActiveRecord::Base
+class MTaxonConcept < ApplicationRecord
+  extend Mobility
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 
-  belongs_to :taxon_concept, :foreign_key => :id
-  has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => MCitesListingChange
-  has_many :historic_cites_listing_changes_for_downloads, -> { where(show_in_downloads: true).order(
-    <<-SQL
-      effective_at,
-      CASE
-      WHEN change_type_name = 'ADDITION' THEN 0
-      WHEN change_type_name = 'RESERVATION' THEN 1
-      WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
-      WHEN change_type_name = 'DELETION' THEN 3
-      END
-    SQL
-    ) }, :foreign_key => :taxon_concept_id,
-    :class_name => MCitesListingChange
+  belongs_to :taxon_concept, :foreign_key => :id, optional: true
+  has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => 'MCitesListingChange'
+  has_many :historic_cites_listing_changes_for_downloads, -> {
+    where(
+      show_in_downloads: true
+    ).order(
+      Arel.sql(
+        <<-SQL
+          effective_at,
+          CASE
+          WHEN change_type_name = 'ADDITION' THEN 0
+          WHEN change_type_name = 'RESERVATION' THEN 1
+          WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+          WHEN change_type_name = 'DELETION' THEN 3
+          END
+        SQL
+      )
+    )
+  }, :foreign_key => :taxon_concept_id,
+    :class_name => 'MCitesListingChange'
   has_many :current_cites_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
     :foreign_key => :taxon_concept_id,
-    :class_name => MCitesListingChange
+    :class_name => 'MCitesListingChange'
   has_many :current_cms_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
     :foreign_key => :taxon_concept_id,
-    :class_name => MCmsListingChange
+    :class_name => 'MCmsListingChange'
   has_many :cites_processes
   scope :by_cites_eu_taxonomy, -> { where(:taxonomy_is_cites_eu => true) }
   scope :by_cms_taxonomy, -> { where(:taxonomy_is_cites_eu => false) }
@@ -179,7 +186,7 @@ class MTaxonConcept < ActiveRecord::Base
     SELECT id FROM descendents
     ORDER BY rank_id ASC, full_name
     SQL
-    res = ActiveRecord::Base.connection.execute(query)
+    res = ApplicationRecord.connection.execute(query)
     res.ntuples.zero? ? [taxon_concept.to_i] : res.map(&:values).flatten << taxon_concept.to_i
   end
 

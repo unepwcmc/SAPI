@@ -12,10 +12,13 @@
 #  updated_by_id              :integer
 #
 
-class TaxonRelationship < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
-    :created_by_id, :updated_by_id
+class TaxonRelationship < ApplicationRecord
+  include Changeable
+  include TrackWhoDoesIt
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
+  #   :created_by_id, :updated_by_id
+
   belongs_to :taxon_relationship_type
   belongs_to :taxon_concept
   belongs_to :other_taxon_concept, :class_name => 'TaxonConcept',
@@ -34,8 +37,7 @@ class TaxonRelationship < ActiveRecord::Base
     scope: [:taxon_relationship_type_id, :other_taxon_concept_id],
     message: 'This relationship already exists, choose another taxon.'
   }
-  validates :other_taxon_concept_id, presence: true
-  validate :intertaxonomic_relationship_uniqueness, :if => "taxon_relationship_type.is_intertaxonomic?"
+  validate :intertaxonomic_relationship_uniqueness, if: -> { taxon_relationship_type.is_intertaxonomic? }
 
   scope :hybrids, -> { where(
       "taxon_relationship_type_id IN

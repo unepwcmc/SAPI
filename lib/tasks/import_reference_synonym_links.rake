@@ -5,10 +5,10 @@ namespace :import do
     TMP_TABLE = 'reference_synonym_links_import'
     puts "There are #{TaxonConceptReference.count} taxon concept references in the database."
 
-    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
-    ActiveRecord::Base.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_taxon_concepts_on_legacy_id_and_legacy_type ON taxon_concepts (legacy_id, legacy_type)')
-    ActiveRecord::Base.connection.execute('CREATE INDEX index_references_on_legacy_id_and_legacy_type ON "references" (legacy_id, legacy_type)')
+    ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
+    ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
+    ApplicationRecord.connection.execute('CREATE INDEX index_taxon_concepts_on_legacy_id_and_legacy_type ON taxon_concepts (legacy_id, legacy_type)')
+    ApplicationRecord.connection.execute('CREATE INDEX index_references_on_legacy_id_and_legacy_type ON "references" (legacy_id, legacy_type)')
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -52,12 +52,12 @@ namespace :import do
               AND reference_id = "references".id
           )
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
     end
     puts "There are now #{TaxonConceptReference.count} taxon concept references in the database"
-    ActiveRecord::Base.connection.execute('DROP INDEX index_taxon_concepts_on_legacy_id_and_legacy_type')
-    ActiveRecord::Base.connection.execute('DROP INDEX index_references_on_legacy_id_and_legacy_type')
+    ApplicationRecord.connection.execute('DROP INDEX index_taxon_concepts_on_legacy_id_and_legacy_type')
+    ApplicationRecord.connection.execute('DROP INDEX index_references_on_legacy_id_and_legacy_type')
   end
 
 end

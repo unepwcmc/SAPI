@@ -20,7 +20,7 @@ class Trade::ShipmentsController < TradeController
   def update
     @shipment = Trade::Shipment.find(params[:id])
     update_params = populate_accepted_taxon_concept(shipment_params)
-    if @shipment.update_attributes(update_params)
+    if @shipment.update(update_params)
       render :json => @shipment, :status => :ok
     else
       render :json => { "errors" => @shipment.errors }, :status => :unprocessable_entity
@@ -37,7 +37,7 @@ class Trade::ShipmentsController < TradeController
 
   def destroy
     @shipment = Trade::Shipment.find(params[:id])
-    @shipment.destroy
+    @shipment.destroy # TODO: didn't check if the destory is successful.
     render :json => nil, :status => :ok
   end
 

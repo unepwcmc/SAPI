@@ -1,5 +1,6 @@
-class SrgHistory < ActiveRecord::Base
-  attr_accessible :name, :tooltip
+class SrgHistory < ApplicationRecord
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :name, :tooltip
 
   has_many :eu_decisions
 

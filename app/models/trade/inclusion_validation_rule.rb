@@ -16,11 +16,22 @@
 #
 
 class Trade::InclusionValidationRule < Trade::ValidationRule
-  attr_accessible :valid_values_view
+  # Only created by seed.
+  # attr_accessible :valid_values_view
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
+    # The format of validation_error.matching_criteria seems to vary - sometimes
+    # it's a string, whereas under rspec it's an object.
+    matching_criteria_json = if
+      validation_error.matching_criteria.is_a? String
+    then
+      validation_error.matching_criteria
+    else
+      validation_error.matching_criteria.to_json
+    end
+
     @query = matching_records(annual_report_upload).where(
-      "#{Arel::Nodes.build_quoted(validation_error.matching_criteria.to_json).to_sql}::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
+      "#{Arel::Nodes.build_quoted(matching_criteria_json).to_sql}::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
     )
   end
 
@@ -66,7 +77,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         existing_record,
         mr.error_count.to_i,
         error_message(values_hash_for_display),
-        jsonb_matching_criteria_for_insert(values_hash)
+        values_hash
       )
       if existing_record
         errors_to_destroy.reject! { |e| e.id == existing_record.id }
@@ -100,21 +111,6 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     else
       column_names
     end
-  end
-
-  def jsonb_matching_criteria_for_insert(values_hash)
-    jsonb_keys_and_values = column_names.map do |c|
-      is_numeric = (c =~ /.+_id$/ || c == 'year')
-      value = values_hash[c]
-      value_quoted =
-        if is_numeric
-          value
-        else
-          "\"#{value}\""
-        end
-      "\"#{c}\": #{value_quoted}"
-    end.join(', ')
-    '{' + jsonb_keys_and_values + '}'
   end
 
   def jsonb_matching_criteria_for_comparison(values_hash = nil)
@@ -211,19 +207,18 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # The valid_values_view should have the same column names and data types as
   # the sandbox columns specified in column_names.
   def matching_records_arel(table_name)
-    s = Arel::Table.new("#{table_name}_view")
-    v = Arel::Table.new(valid_values_view)
-    arel_nodes = column_names_for_matching.map do |c|
-      if required_column_names.include? c
-        v[c].eq(s[c])
+    table_s = Arel::Table.new("#{table_name}_view")
+    table_v = Arel::Table.new(valid_values_view)
+    arel_nodes = column_names_for_matching.map do |column_name|
+      if required_column_names.include?(column_name)
+        table_v[column_name].eq(table_s[column_name])
       else
         # if optional, check if NULL is allowed for this particular combination
         # e.g. unit code can be blank only if paired with certain terms
-        v[c].eq(s[c]).or(v[c].eq(nil).and(s[c].eq(nil)))
+        table_v[column_name].eq(table_s[column_name]).or(table_v[column_name].eq(nil).and(table_s[column_name].eq(nil)))
       end
     end
-    valid_values = s.project(s[Arel.star]).join(v).on(arel_nodes.inject(&:and))
-    scoped_records_arel(s).except(valid_values)
+    valid_values = table_s.project(table_s[Arel.star]).join(table_v).on(arel_nodes.inject(&:and))
+    scoped_records_arel(table_s).except(valid_values)
   end
-
 end

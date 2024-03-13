@@ -9,8 +9,10 @@
 #  updated_at :datetime         not null
 #
 
-class PresetTag < ActiveRecord::Base
-  attr_accessible :model, :name
+class PresetTag < ApplicationRecord
+  include Deletable
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :model, :name
 
   TYPES = {
     :Distribution => 'Distribution',

@@ -76,12 +76,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 '[Quota for ' || (taxon_concept->>'rank')::TEXT || ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
               END AS subspecies_info
             SQL
-      ).
-      order(<<-SQL
-              trade_restrictions.start_date DESC,
-              geo_entity_en->>'name' ASC, trade_restrictions.notes ASC,
-              subspecies_info DESC
-            SQL
+      ).order(
+        Arel.sql(
+          <<-SQL
+            trade_restrictions.start_date DESC,
+            geo_entity_en->>'name' ASC, trade_restrictions.notes ASC,
+            subspecies_info DESC
+          SQL
+        )
       ).all
   end
 
@@ -122,12 +124,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 '[Suspension for ' || (taxon_concept->>'rank')::TEXT || ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
               END AS subspecies_info
             SQL
-      ).
-      order(<<-SQL
-              trade_restrictions.is_current DESC,
-              trade_restrictions.start_date DESC, geo_entity_en->>'name' ASC,
-              subspecies_info DESC
-            SQL
+      ).order(
+        Arel.sql(
+          <<-SQL
+            trade_restrictions.is_current DESC,
+            trade_restrictions.start_date DESC, geo_entity_en->>'name' ASC,
+            subspecies_info DESC
+          SQL
+        )
       ).all
   end
 
@@ -147,11 +151,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       ", object_and_children, ancestors, object.id, ancestors_field).
       select(eu_decision_select_attrs).
       joins('LEFT JOIN eu_suspensions_applicability_view v ON eu_decisions.id = v.id').
-      order(<<-SQL
+      order(
+        Arel.sql(
+          <<-SQL
             geo_entity_en->>'name' ASC,
             start_date DESC,
             subspecies_info DESC
-        SQL
+          SQL
+        )
       ).all
   end
 
@@ -245,14 +252,16 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 ELSE NULL
               END AS subspecies_info
            SQL
-      ).
-      order(<<-SQL
-          effective_at DESC,
-          change_type_order ASC,
-          species_listing_name ASC,
-          subspecies_info DESC,
-          party_full_name_en ASC
-        SQL
+      ).order(
+        Arel.sql(
+          <<-SQL
+            effective_at DESC,
+            change_type_order ASC,
+            species_listing_name ASC,
+            subspecies_info DESC,
+            party_full_name_en ASC
+          SQL
+        )
       ).all
   end
 
@@ -311,14 +320,16 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 ELSE NULL
               END AS subspecies_info
            SQL
-      ).
-      order(<<-SQL
-          effective_at DESC,
-          change_type_order ASC,
-          species_listing_name ASC,
-          subspecies_info DESC,
-          party_full_name_en ASC
-        SQL
+      ).order(
+        Arel.sql(
+          <<-SQL
+            effective_at DESC,
+            change_type_order ASC,
+            species_listing_name ASC,
+            subspecies_info DESC,
+            party_full_name_en ASC
+          SQL
+        )
       ).all
   end
 

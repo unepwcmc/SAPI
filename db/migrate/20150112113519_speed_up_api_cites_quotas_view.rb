@@ -1,4 +1,4 @@
-class SpeedUpApiCitesQuotasView < ActiveRecord::Migration
+class SpeedUpApiCitesQuotasView < ActiveRecord::Migration[4.2]
   def change
     execute "DROP VIEW IF EXISTS api_cites_quotas_view"
     execute "CREATE VIEW api_cites_quotas_view AS #{view_sql('20150112113519', 'api_cites_quotas_view')}"

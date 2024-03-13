@@ -11,9 +11,11 @@
 #  elib_legacy_id :integer
 #
 
-class DocumentCitation < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :document_id, :stringy_taxon_concept_ids, :geo_entity_ids
+class DocumentCitation < ApplicationRecord
+  include TrackWhoDoesIt
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :document_id, :stringy_taxon_concept_ids, :geo_entity_ids
+
   has_many :document_citation_taxon_concepts, dependent: :destroy, autosave: true
   has_many :taxon_concepts, through: :document_citation_taxon_concepts
   has_many :document_citation_geo_entities, dependent: :destroy, autosave: true
@@ -46,7 +48,7 @@ class DocumentCitation < ActiveRecord::Base
     geo_entities_ids = document_citation_geo_entities.pluck(:geo_entity_id)
     if !geo_entities_ids.empty?
       relation = relation.joins(
-        ActiveRecord::Base.send(:sanitize_sql_array, [
+        ApplicationRecord.send(:sanitize_sql_array, [
           "JOIN (
             SELECT document_citation_id, CASE
               WHEN ARRAY_AGG(geo_entity_id) @> ARRAY[:geo_entities_ids]::INT[] THEN TRUE

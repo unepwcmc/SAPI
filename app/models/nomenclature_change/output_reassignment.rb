@@ -27,12 +27,10 @@
 # A polymorphic association is in place that links this object to the entitity
 # that gets reassigned.
 # For example the reassignable_type might be 'ListingChange'
-class NomenclatureChange::OutputReassignment < ActiveRecord::Base
+class NomenclatureChange::OutputReassignment < ApplicationRecord
   include NomenclatureChange::ReassignmentHelpers
 
-  belongs_to :output, :class_name => NomenclatureChange::Output,
+  belongs_to :output, :class_name => 'NomenclatureChange::Output',
     :foreign_key => :nomenclature_change_output_id
-
-  validates :output, :presence => true
 
 end

@@ -8,8 +8,9 @@
 #  updated_at      :datetime         not null
 #
 
-class TaxonName < ActiveRecord::Base
-  attr_accessible :basionym_id, :scientific_name
+class TaxonName < ApplicationRecord
+  # Used by seed and rake task.
+  # attr_accessible :basionym_id, :scientific_name
 
   validates :scientific_name, :presence => true
 

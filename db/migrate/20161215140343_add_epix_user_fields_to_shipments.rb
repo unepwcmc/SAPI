@@ -1,4 +1,4 @@
-class AddEpixUserFieldsToShipments < ActiveRecord::Migration
+class AddEpixUserFieldsToShipments < ActiveRecord::Migration[4.2]
   def up
     change_column_null :trade_shipments, :created_at, true
     change_column_null :trade_shipments, :updated_at, true

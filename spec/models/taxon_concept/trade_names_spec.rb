@@ -87,7 +87,7 @@ describe TaxonConcept do
       specify { expect(@trade_name.full_name).to eq('Lolcatus lolus furiatus') }
       context "overnight calculations" do
         before(:each) do
-          Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+          SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
         # should not modify a trade_name's full name overnight
         specify { expect(@trade_name.reload.full_name).to eq('Lolcatus lolus furiatus') }

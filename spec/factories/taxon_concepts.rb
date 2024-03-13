@@ -1,10 +1,10 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :taxon_concept, :aliases => [:other_taxon_concept] do
     taxonomy
     rank
     taxon_name
-    taxonomic_position '1'
-    name_status 'A'
+    taxonomic_position { '1' }
+    name_status { 'A' }
     data {}
     listing {}
     before(:create) { |tc|

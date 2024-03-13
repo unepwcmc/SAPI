@@ -1,4 +1,4 @@
-class AddOriginalStartDateToEuDecisionsView < ActiveRecord::Migration
+class AddOriginalStartDateToEuDecisionsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS eu_decisions_view"
     execute "CREATE VIEW eu_decisions_view AS #{view_sql('20150122132408', 'eu_decisions_view')}"

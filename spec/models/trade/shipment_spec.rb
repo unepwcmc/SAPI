@@ -110,7 +110,7 @@ describe Trade::Shipment do
           :is_current => true
         )
         reg2013 # EU event
-        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
       context "invalid" do
@@ -150,7 +150,7 @@ describe Trade::Shipment do
           :event => reg2013,
           :is_current => true
         )
-        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
       context "valid" do
@@ -171,7 +171,7 @@ describe Trade::Shipment do
           :parent => @genus
         )
         reg2013 # EU event
-        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
       context "not CITES listed and not EU listed" do
@@ -431,7 +431,7 @@ describe Trade::Shipment do
         create_taxon_concept_source_validation
         cites
         reg2013 # EU event
-        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         @taxon_concept.reload
       end
       context "invalid" do

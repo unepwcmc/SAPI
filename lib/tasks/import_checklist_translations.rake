@@ -17,7 +17,7 @@ namespace :import do
       FROM #{TMP_TABLE} t
       WHERE UPPER(BTRIM(t.name)) = UPPER(BTRIM(ranks.name))
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   task :change_types_translations => :environment do
@@ -32,7 +32,7 @@ namespace :import do
       FROM #{TMP_TABLE} t
       WHERE UPPER(BTRIM(t.name)) = UPPER(BTRIM(change_types.name))
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
 end

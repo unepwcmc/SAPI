@@ -52,16 +52,16 @@ class Elibrary::CitationsImporter
   end
 
   def run_preparatory_queries
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET splus_taxon_concept_id = NULL WHERE splus_taxon_concept_id LIKE '%N/A%'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET CtyISO2 = NULL WHERE CtyISO2='NULL'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET EventID = NULL WHERE EventID='NULL'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentID = NULL WHERE DocumentID='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET splus_taxon_concept_id = NULL WHERE splus_taxon_concept_id LIKE '%N/A%'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET CtyISO2 = NULL WHERE CtyISO2='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET EventID = NULL WHERE EventID='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET DocumentID = NULL WHERE DocumentID='NULL'")
   end
 
   def run_queries
-    ActiveRecord::Base.connection.execute('DROP TABLE IF EXISTS elibrary_citations_resolved_tmp')
-    ActiveRecord::Base.connection.execute('CREATE TABLE elibrary_citations_resolved_tmp (document_id INT, CitationId INT, CtyISO2 TEXT, splus_taxon_concept_id INT)')
-    ActiveRecord::Base.connection.execute(
+    ApplicationRecord.connection.execute('DROP TABLE IF EXISTS elibrary_citations_resolved_tmp')
+    ApplicationRecord.connection.execute('CREATE TABLE elibrary_citations_resolved_tmp (document_id INT, CitationId INT, CtyISO2 TEXT, splus_taxon_concept_id INT)')
+    ApplicationRecord.connection.execute(
       <<-SQL
       INSERT INTO elibrary_citations_resolved_tmp (document_id, CitationId, CtyISO2, splus_taxon_concept_id)
         SELECT
@@ -76,9 +76,9 @@ class Elibrary::CitationsImporter
       SQL
     )
 
-    ActiveRecord::Base.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (CitationID, document_id)')
-    ActiveRecord::Base.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (CtyISO2)')
-    ActiveRecord::Base.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (splus_taxon_concept_id)')
+    ApplicationRecord.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (CitationID, document_id)')
+    ApplicationRecord.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (CtyISO2)')
+    ApplicationRecord.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (splus_taxon_concept_id)')
 
     sql = <<-SQL
       WITH inserted_citations AS (
@@ -126,7 +126,7 @@ class Elibrary::CitationsImporter
       JOIN inserted_citations ON inserted_citations.elib_legacy_id = rows_to_insert_resolved.CitationID
       WHERE splus_taxon_concept_id IS NOT NULL
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   def all_rows_sql

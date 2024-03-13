@@ -1,4 +1,4 @@
-class MviewRebuildProcedures < ActiveRecord::Migration
+class MviewRebuildProcedures < ActiveRecord::Migration[4.2]
   def change
     execute <<-SQL
     --

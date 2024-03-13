@@ -8,7 +8,7 @@ module AdminHelper
       name = taxon_concept.data["#{r.name.downcase}_name"]
       id = taxon_concept.data["#{r.name.downcase}_id"]
       if name && id
-        link_to(name, params.merge(:taxon_concept_id => id), :title => r.name)
+        link_to(name, params.permit!.merge(:taxon_concept_id => id), :title => r.name)
       else
         nil
       end
@@ -195,4 +195,21 @@ module AdminHelper
     end
   end
 
+  # Re-implement Traco's locale_columns method. (https://github.com/barsoom/traco#usage)
+  # Returns an array like [:title_sv, :title_en] sorted with current locale first, then default locale, and then
+  # alphabetically.
+  def traco_locale_columns(column_name)
+    all_locales = I18n.available_locales
+    current_locale = I18n.locale
+    result = ["#{column_name}_#{current_locale}"] # current locale 1st.
+    remaining_locales = all_locales - [current_locale]
+    unless I18n.locale == I18n.default_locale
+      result << "#{column_name}_#{I18n.default_locale}" # default locale 2nd.
+      remaining_locales -= I18n.default_locale
+    end
+    remaining_locales.sort.each do |locale| # alphabetically all remaining locales.
+      result << "#{column_name}_#{locale}"
+    end
+    result.map(&:to_sym)
+  end
 end

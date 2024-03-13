@@ -17,10 +17,14 @@
 #  name_es            :string(255)
 #
 
-class GeoEntity < ActiveRecord::Base
-  attr_accessible :geo_entity_type_id, :iso_code2, :iso_code3,
-    :legacy_id, :legacy_type, :long_name, :name_en, :name_es, :name_fr,
-    :is_current
+class GeoEntity < ApplicationRecord
+  include Changeable
+  include Deletable
+  extend Mobility
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :geo_entity_type_id, :iso_code2, :iso_code3,
+  #   :legacy_id, :legacy_type, :long_name, :name_en, :name_es, :name_fr,
+  #   :is_current
   translates :name
   belongs_to :geo_entity_type
   has_many :geo_relationships
@@ -40,7 +44,6 @@ class GeoEntity < ActiveRecord::Base
   has_many :users
   has_many :cites_processes
   has_many :eu_country_dates
-  validates :geo_entity_type_id, :presence => true
   validates :iso_code2, :uniqueness => true, :allow_blank => true
   validates :iso_code2, :presence => true, :length => { :is => 2 },
     :if => :is_country?
@@ -64,6 +67,8 @@ class GeoEntity < ActiveRecord::Base
   }
 
   scope :current, -> { where(:is_current => true) }
+
+  after_commit :geo_entity_search_increment_cache_iterator
 
   def self.nodes_and_descendants(nodes_ids = [])
     joins_sql = <<-SQL
@@ -136,4 +141,7 @@ class GeoEntity < ActiveRecord::Base
     }
   end
 
+  def geo_entity_search_increment_cache_iterator
+    GeoEntitySearch.increment_cache_iterator
+  end
 end

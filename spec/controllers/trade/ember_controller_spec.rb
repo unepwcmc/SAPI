@@ -6,7 +6,7 @@ describe Trade::EmberController do
   describe "GET 'start'" do
     it "returns http success" do
       get 'start'
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

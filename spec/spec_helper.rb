@@ -7,8 +7,11 @@ Coveralls::Output.no_color = true
 formatters = [Coveralls::SimpleCov::Formatter, SimpleCov::Formatter::HTMLFormatter]
 formatters.push CodeClimate::TestReporter::Formatter if ENV['CI']
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
-SimpleCov.start 'rails'
+SimpleCov.formatters = formatters
+SimpleCov.start 'rails' do
+  add_group "Services", "app/services"
+  add_group "Serializers", "app/serializers"
+end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
@@ -50,14 +53,18 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, :type => :controller
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include JsonSpec::Helpers
   config.include SapiSpec::Helpers
 
   config.before(:all) do
+    # https://github.com/thoughtbot/factory_bot/issues/1255
+    # https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md#build-strategies-1
+    FactoryBot.use_parent_strategy = false
+
     DatabaseCleaner.clean_with(:deletion, { :cache_tables => false })
     @user = create(:user)
-    @user.make_current
+    RequestStore.store[:track_who_does_it_current_user] = @user
   end
 
   config.before(:each) do
@@ -66,7 +73,7 @@ RSpec.configure do |config|
 
   config.before(:each, :drops_tables => true) do
     DatabaseCleaner.strategy = :deletion, { :cache_tables => false }
-    ActiveRecord::Base.connection.execute('SELECT * FROM drop_trade_sandboxes()')
+    ApplicationRecord.connection.execute('SELECT * FROM drop_trade_sandboxes()')
   end
 
   config.before(:each) do
@@ -77,7 +84,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
     # this is duplicated here because of the :drops_tables specs
     @user = create(:user)
-    @user.make_current
+    RequestStore.store[:track_who_does_it_current_user] = @user
   end
 
   config.before(:each) do |example|
@@ -98,7 +105,7 @@ RSpec.configure do |config|
 end
 
 def build_attributes(*args)
-  FactoryGirl.build(*args).attributes.delete_if do |k, v|
+  FactoryBot.build(*args).attributes.delete_if do |k, v|
     ["id", "created_at", "updated_at", "touched_at"].member?(k)
   end
 end

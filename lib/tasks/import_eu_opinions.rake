@@ -42,7 +42,7 @@ namespace :import do
       SQL
 
       puts "Importing eu opinions"
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
     puts "There are now #{EuOpinion.count} EU opinions in the database"
   end

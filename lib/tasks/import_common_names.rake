@@ -10,7 +10,7 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
-      ActiveRecord::Base.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
+      ApplicationRecord.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
 
       sql = <<-SQL
         INSERT INTO common_names(name, language_id, created_at, updated_at)
@@ -27,7 +27,7 @@ namespace :import do
           FROM common_names
         ) AS subquery;
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
       [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
         puts "Import #{taxonomy_name} common names"
@@ -53,7 +53,7 @@ namespace :import do
             FROM taxon_commons
           ) AS subquery
         SQL
-        ActiveRecord::Base.connection.execute(sql)
+        ApplicationRecord.connection.execute(sql)
       end
 
       # The import process allows duplicates to enter the db, as well as case-insensitive duplicates.
@@ -66,7 +66,7 @@ namespace :import do
         LEFT JOIN taxon_concepts ON taxon_concepts.id = taxon_commons.taxon_concept_id
         GROUP BY LOWER(common_names.name), common_names.language_id, taxon_commons.taxon_concept_id, taxon_concepts.taxonomy_id
       SQL
-      taxon_commons_ids_unique = ActiveRecord::Base.connection.execute(sql).values.flatten
+      taxon_commons_ids_unique = ApplicationRecord.connection.execute(sql).values.flatten
       taxon_commons_duplicates = TaxonCommon.where.not(id: taxon_commons_ids_unique)
       taxon_commons_duplicates.destroy_all
     end

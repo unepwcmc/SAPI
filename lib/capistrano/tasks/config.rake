@@ -288,15 +288,6 @@ namespace :config do
 end
 
 namespace :config do
-  desc "Update crontab with whenever"
-  task :setup do
-    on roles(:app, :db) do
-      execute "cd '#{fetch(:backup_path)}' && /bin/bash -l -c '/home/#{fetch(:deploy_user)}/.rvm/gems/ruby-2.1.3/bin/whenever -f config/#{fetch(:application)}-schedule.rb --update-crontab'"
-    end
-  end
-end
-
-namespace :config do
   desc "Configure app specific nagios monitoring"
   task :setup do
     on roles(:app) do

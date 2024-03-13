@@ -25,6 +25,19 @@
 require 'spec_helper'
 
 describe Annotation do
+  describe :validate do
+    context "symbol" do
+      context "should not be alphanumeric" do
+        let(:annotation) {
+          build(
+            :annotation, :parent_symbol => 'CoP1', :symbol => '#1a'
+          )
+        }
+        specify { expect(annotation).to have(1).errors_on(:symbol) }
+      end
+    end
+  end
+
   describe :full_name do
     context "when parent_symbol given" do
       let(:annotation) {

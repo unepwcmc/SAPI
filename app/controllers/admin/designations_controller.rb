@@ -23,4 +23,13 @@ class Admin::DesignationsController < Admin::StandardAuthorizationController
   def load_associations
     @taxonomies = Taxonomy.order(:name)
   end
+
+  private
+
+  def designation_params
+    params.require(:designation).permit(
+      # attributes were in model `attr_accessible`.
+      :name, :taxonomy_id
+    )
+  end
 end

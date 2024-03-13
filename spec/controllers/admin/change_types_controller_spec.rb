@@ -21,11 +21,11 @@ describe Admin::ChangeTypesController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, change_type: build_attributes(:change_type)
+      post :create, params: { change_type: build_attributes(:change_type) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, change_type: {}
+      post :create, params: { change_type: { dummy: 'test' } }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -33,11 +33,11 @@ describe Admin::ChangeTypesController do
   describe "XHR PUT update" do
     let(:change_type) { create(:change_type) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => change_type.id, :change_type => { :name => 'ZZ' }
-      expect(response).to be_success
+      put :update, :format => 'json', params: { :id => change_type.id, :change_type => { :name => 'ZZ' } }, xhr: true
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => change_type.id, :change_type => { :name => nil }
+      put :update, :format => 'json', params: { :id => change_type.id, :change_type => { :name => nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -45,7 +45,7 @@ describe Admin::ChangeTypesController do
   describe "DELETE destroy" do
     let(:change_type) { create(:change_type) }
     it "redirects after delete" do
-      delete :destroy, :id => change_type.id
+      delete :destroy, params: { :id => change_type.id }
       expect(response).to redirect_to(admin_change_types_url)
     end
   end

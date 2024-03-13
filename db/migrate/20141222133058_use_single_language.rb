@@ -1,4 +1,4 @@
-class UseSingleLanguage < ActiveRecord::Migration
+class UseSingleLanguage < ActiveRecord::Migration[4.2]
   def change
     execute <<-SQL
     DROP TYPE api_trade_code CASCADE;

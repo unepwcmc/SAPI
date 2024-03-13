@@ -31,16 +31,18 @@
 #  created_by_id                 :integer
 #
 
-class Trade::Shipment < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :annual_report_upload_id, :appendix,
-    :country_of_origin_id, :origin_permit_id,
-    :exporter_id, :import_permit_id, :importer_id, :purpose_id,
-    :quantity, :reporter_type, :reported_by_exporter,
-    :source_id, :taxon_concept_id, :reported_taxon_concept_id,
-    :term_id, :unit_id, :year,
-    :import_permit_number, :export_permit_number, :origin_permit_number,
-    :ignore_warnings, :created_by_id, :updated_by_id
+class Trade::Shipment < ApplicationRecord
+  include TrackWhoDoesIt
+  # Not sure where using this.
+  # attr_accessible :annual_report_upload_id, :appendix,
+  #   :country_of_origin_id, :origin_permit_id,
+  #   :exporter_id, :import_permit_id, :importer_id, :purpose_id,
+  #   :quantity, :reporter_type, :reported_by_exporter,
+  #   :source_id, :taxon_concept_id, :reported_taxon_concept_id,
+  #   :term_id, :unit_id, :year,
+  #   :import_permit_number, :export_permit_number, :origin_permit_number,
+  #   :ignore_warnings, :created_by_id, :updated_by_id
+
   attr_accessor :reporter_type, :warnings, :ignore_warnings
 
   validates :quantity, :presence => true, :numericality => {
@@ -53,25 +55,40 @@ class Trade::Shipment < ActiveRecord::Base
     :only_integer => true, :greater_than_or_equal_to => 1975, :less_than => 3000,
     :message => 'should be a 4 digit year'
   }
-  validates :taxon_concept_id, :presence => true
-  validates :term_id, :presence => true
-  validates :exporter_id, :presence => true
-  validates :importer_id, :presence => true
   validates :reporter_type, :presence => true, :inclusion => {
     :in => ['E', 'I'], :message => 'should be one of E, I'
   }
   validates_with Trade::ShipmentSecondaryErrorsValidator
 
   belongs_to :taxon_concept
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
-  belongs_to :reported_taxon_concept, :class_name => 'TaxonConcept'
-  belongs_to :purpose, :class_name => "TradeCode"
-  belongs_to :source, :class_name => "TradeCode"
+  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
+  belongs_to :reported_taxon_concept, :class_name => 'TaxonConcept', optional: true
+  belongs_to :purpose, :class_name => "TradeCode", optional: true
+  belongs_to :source, :class_name => "TradeCode", optional: true
   belongs_to :term, :class_name => "TradeCode"
-  belongs_to :unit, :class_name => "TradeCode"
-  belongs_to :country_of_origin, :class_name => "GeoEntity"
+  belongs_to :unit, :class_name => "TradeCode", optional: true
+  belongs_to :country_of_origin, :class_name => "GeoEntity", optional: true
   belongs_to :exporter, :class_name => "GeoEntity"
   belongs_to :importer, :class_name => "GeoEntity"
+
+  before_save do
+    @old_permits_ids = []
+    [
+      import_permits_ids_was,
+      export_permits_ids_was,
+      origin_permits_ids_was
+    ].each do |permits_ids|
+      @old_permits_ids += permits_ids ? permits_ids.dup : []
+    end
+    unless reported_taxon_concept_id
+      self.reported_taxon_concept_id = taxon_concept_id
+    end
+  end
+  before_destroy do
+    @old_permits_ids = permits_ids.dup
+  end
+  after_commit :async_tasks_after_save, on: [:create, :update]
+  after_commit :async_tasks_for_destroy, on: :destroy
 
   after_validation do
     unless self.errors.empty? && self.ignore_warnings
@@ -156,4 +173,14 @@ class Trade::Shipment < ActiveRecord::Base
     send("#{permit_type}_permits_ids=", permits && permits.map(&:id))
   end
 
+  def async_tasks_after_save
+    DownloadsCacheCleanupWorker.perform_async('shipments')
+    disconnected_permits_ids = @old_permits_ids - permits_ids
+    PermitCleanupWorker.perform_async(disconnected_permits_ids)
+  end
+
+  def async_tasks_for_destroy
+    DownloadsCacheCleanupWorker.perform_async('shipments')
+    PermitCleanupWorker.perform_async(@old_permits_ids)
+  end
 end

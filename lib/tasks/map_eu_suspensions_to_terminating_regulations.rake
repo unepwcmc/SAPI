@@ -17,6 +17,6 @@ task :map_eu_suspensions_to_terminating_regulations => :environment do
   WHERE suspension_regulations.id = eu_decisions.start_event_id
   RETURNING *;
   SQL
-  res = ActiveRecord::Base.connection.execute update_query
+  res = ApplicationRecord.connection.execute update_query
   puts "#{res.cmd_tuples} rows linked to terminating EU Suspension Regulations"
 end

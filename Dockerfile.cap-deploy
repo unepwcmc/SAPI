@@ -1,0 +1,50 @@
+# Dockerfile
+FROM ruby:3.0.6
+
+ENV DEBIAN_FRONTEND=noninteractive
+# Rails and SAPI has some additional dependencies, e.g. rake requires a JS
+# runtime, so attempt to get these from apt, where possible
+RUN apt-get update && apt-get install -y --force-yes \
+  # For ruby?
+  libsodium-dev libgmp3-dev \
+  # For RVM
+  gnupg procps curl libssl-dev \
+  # For assets local_precompile (cap deploy)
+  rsync nodejs \
+  # gems
+  libpq-dev postgresql-client
+
+RUN mkdir /SAPI
+WORKDIR /SAPI
+
+# https://stackoverflow.com/questions/43612927/how-to-correctly-install-rvm-in-docker
+RUN gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+RUN curl -sSL https://get.rvm.io | bash -s
+RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 3.0.6"
+# RVM installed in multi-user mode. However cap assume rvm is installed in single user mode.
+# Create a soft link to fake it.
+RUN mkdir -p ~/.rvm/bin && ln -s /usr/local/rvm/bin/rvm ~/.rvm/bin/rvm
+
+COPY Gemfile /SAPI/Gemfile
+COPY Gemfile.lock /SAPI/Gemfile.lock
+
+ENV BUNDLE_SILENCE_ROOT_WARNING=1
+RUN /bin/bash -c "source /etc/profile.d/rvm.sh \
+    && gem install bundler:1.17.3 \
+    && bundle"
+
+ENTRYPOINT ["/bin/bash", "-l"]
+
+##########################################
+## Run the following in container
+##########################################
+# /bin/bash --rcfile cap-deploy-shell.sh
+# [Enter your passphrase]
+# root@commit:/SAPI$ CAP_BRANCH=<branch> cap staging deploy
+#
+##########################################
+# Alternatively, from outside docker
+##########################################
+# docker exec -it sapi-cap-deploy /bin/bash --rcfile cap-deploy-shell.sh
+# [Enter your passphrase]
+# root@commit:/SAPI# CAP_BRANCH=<branch> cap staging deploy

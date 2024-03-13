@@ -31,16 +31,16 @@ namespace :import do
       kingdom = file.split('/').last.split('_')[0].titleize
 
       puts "CREATING temporary column and view"
-      ActiveRecord::Base.connection.execute(<<-SQL
+      ApplicationRecord.connection.execute(<<-SQL
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
         ORDER BY legacy_id, listing_date, appendix, country_iso2
       SQL
       )
-      ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN IF EXISTS import_row_id")
-      ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes ADD COLUMN import_row_id integer")
-      ActiveRecord::Base.connection.execute("ALTER TABLE annotations DROP COLUMN IF EXISTS import_row_id")
-      ActiveRecord::Base.connection.execute("ALTER TABLE annotations ADD COLUMN import_row_id integer")
+      ApplicationRecord.connection.execute("ALTER TABLE listing_changes DROP COLUMN IF EXISTS import_row_id")
+      ApplicationRecord.connection.execute("ALTER TABLE listing_changes ADD COLUMN import_row_id integer")
+      ApplicationRecord.connection.execute("ALTER TABLE annotations DROP COLUMN IF EXISTS import_row_id")
+      ApplicationRecord.connection.execute("ALTER TABLE annotations ADD COLUMN import_row_id integer")
 
       copy_data(file, TMP_TABLE)
 
@@ -118,7 +118,7 @@ namespace :import do
       SQL
 
       puts "INSERTING listing_changes"
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
       # add taxonomic exceptions
       sql = <<-SQL
@@ -155,7 +155,7 @@ namespace :import do
       SQL
 
       puts "INSERTING taxonomic exceptions"
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
       # add population exceptions
       sql = <<-SQL
@@ -189,7 +189,7 @@ namespace :import do
       SQL
 
       puts "INSERTING population exceptions (listing distributions)"
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
       sql = <<-SQL
       WITH listed_populations AS (
@@ -204,7 +204,7 @@ namespace :import do
       SQL
 
       puts "INSERTING listed populations (listing distributions)"
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
       sql = <<-SQL
           INSERT INTO listing_distributions(listing_change_id, geo_entity_id, is_party, created_at, updated_at)
@@ -215,14 +215,14 @@ namespace :import do
           WHERE TMP.country_iso2 <> 'Null' AND TMP.country_iso2 IS NOT NULL AND geo_entities.is_current = 't'
       SQL
       puts "INSERTING parties (listing distributions)"
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
     end
 
     puts "DROPPING temporary column and view"
-    ActiveRecord::Base.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
-    ActiveRecord::Base.connection.execute("ALTER TABLE annotations DROP COLUMN import_row_id")
-    ActiveRecord::Base.connection.execute("DROP VIEW cites_listings_import_view")
+    ApplicationRecord.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
+    ApplicationRecord.connection.execute("ALTER TABLE annotations DROP COLUMN import_row_id")
+    ApplicationRecord.connection.execute("DROP VIEW cites_listings_import_view")
 
     new_listings_count = ListingChange.joins(:species_listing).
       where(:species_listings => { :designation_id => designation.id }).count

@@ -1,4 +1,4 @@
-class AddNomenclatureNotesToListingChangesMview < ActiveRecord::Migration
+class AddNomenclatureNotesToListingChangesMview < ActiveRecord::Migration[4.2]
   def change
     if table_exists? :listing_changes_mview
       add_column :listing_changes_mview, :nomenclature_note_en, :text

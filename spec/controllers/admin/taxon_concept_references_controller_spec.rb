@@ -10,20 +10,24 @@ describe Admin::TaxonConceptReferencesController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create,
+      post :create, xhr: true, params: {
         :taxon_concept_id => @taxon_concept.id,
         :taxon_concept_reference => {
           :reference_attributes =>
             { :citation => "My nice literature" }
         }
+      }
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create,
+      post :create, xhr: true, params: {
         :taxon_concept_id => @taxon_concept.id,
         :taxon_concept_reference => {
-          :reference_attributes => {}
+          :reference_attributes => {
+            dummy: 'test'
+          }
         }
+      }
       expect(response).to render_template("new")
     end
   end
@@ -37,13 +41,11 @@ describe Admin::TaxonConceptReferencesController do
       )
     end
     it "renders the edit template" do
-      xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
-        :id => @taxon_concept_reference.id
+      get :edit, params: { :taxon_concept_id => @taxon_concept.id, :id => @taxon_concept_reference.id }, xhr: true
       expect(response).to render_template('new')
     end
     it "assigns the  taxon concept reference variable" do
-      xhr :get, :edit, :taxon_concept_id => @taxon_concept.id,
-        :id => @taxon_concept_reference.id
+      get :edit, params: { :taxon_concept_id => @taxon_concept.id, :id => @taxon_concept_reference.id }, xhr: true
       expect(assigns(:taxon_concept_reference)).not_to be_nil
     end
   end
@@ -57,21 +59,27 @@ describe Admin::TaxonConceptReferencesController do
       )
     end
     it "renders create when successful" do
-      xhr :put, :update, :format => 'js',
-        :taxon_concept_id => @taxon_concept.id,
-        :id => @taxon_concept_reference.id,
-        :taxon_concept_reference => {
-          :reference_attributes =>
-            { :citation => "My nice literature" }
+      put :update, :format => 'js', xhr: true,
+        params: {
+          :taxon_concept_id => @taxon_concept.id,
+          :id => @taxon_concept_reference.id,
+          :taxon_concept_reference => {
+            :reference_attributes =>
+              { :citation => "My nice literature" }
+          }
         }
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :put, :update, :format => 'js',
-        :taxon_concept_id => @taxon_concept.id,
-        :id => @taxon_concept_reference.id,
-        :taxon_concept_reference => {
-          :reference_attributes => {}
+      put :update, :format => 'js', xhr: true,
+        params: {
+          :taxon_concept_id => @taxon_concept.id,
+          :id => @taxon_concept_reference.id,
+          :taxon_concept_reference => {
+            :reference_attributes => {
+              dummy: 'test'
+            }
+          }
         }
       expect(response).to render_template('new')
     end
@@ -79,8 +87,8 @@ describe Admin::TaxonConceptReferencesController do
 
   describe "XHR GET 'new'" do
     it "returns http success and renders the new template" do
-      xhr :get, :new, { :taxon_concept_id => @taxon_concept.id, :format => 'js' }
-      expect(response).to be_success
+      get :new, params: { :taxon_concept_id => @taxon_concept.id }, xhr: true, :format => 'js'
+      expect(response).to be_successful
       expect(response).to render_template('new')
     end
   end
@@ -88,9 +96,7 @@ describe Admin::TaxonConceptReferencesController do
   describe "DELETE destroy" do
     let(:taxon_concept_reference) { create(:taxon_concept_reference, :taxon_concept_id => @taxon_concept.id, :reference_id => @reference.id) }
     it "redirects after delete" do
-      delete :destroy,
-        :taxon_concept_id => @taxon_concept.id,
-        :id => taxon_concept_reference.id
+      delete :destroy, params: { :taxon_concept_id => @taxon_concept.id, :id => taxon_concept_reference.id }
       expect(response).to redirect_to(
         admin_taxon_concept_taxon_concept_references_url(taxon_concept_reference.taxon_concept)
       )

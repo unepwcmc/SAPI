@@ -1,6 +1,5 @@
 class Admin::TermsController < Admin::StandardAuthorizationController
   respond_to :json, :only => [:update]
-  cache_sweeper :term_sweeper
 
   def index
     index! do |format|
@@ -21,5 +20,11 @@ class Admin::TermsController < Admin::StandardAuthorizationController
     @terms ||= end_of_association_chain.order('code').
       page(params[:page]).
       search(params[:query])
+  end
+
+  private
+
+  def term_params
+    params.require(:term).permit(:code, :type, :name_en, :name_es, :name_fr)
   end
 end

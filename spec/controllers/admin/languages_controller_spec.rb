@@ -18,11 +18,11 @@ describe Admin::LanguagesController do
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, language: FactoryGirl.attributes_for(:language)
+      post :create, params: { language: FactoryBot.attributes_for(:language) }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, language: {}
+      post :create, params: { language: { dummy: 'test' } }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -30,11 +30,11 @@ describe Admin::LanguagesController do
   describe "XHR PUT update" do
     let(:language) { create(:language) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => language.id, :language => { :iso_code1 => 'ZZ' }
-      expect(response).to be_success
+      put :update, :format => 'json', params: { :id => language.id, :language => { :iso_code1 => 'ZZ' } }, xhr: true
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => language.id, :language => { :iso_code1 => 'zzz' }
+      put :update, :format => 'json', params: { :id => language.id, :language => { :iso_code1 => 'zzz' } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -42,7 +42,7 @@ describe Admin::LanguagesController do
   describe "DELETE destroy" do
     let(:language) { create(:language) }
     it "redirects after delete" do
-      delete :destroy, :id => language.id
+      delete :destroy, params: { :id => language.id }
       expect(response).to redirect_to(admin_languages_url)
     end
   end
