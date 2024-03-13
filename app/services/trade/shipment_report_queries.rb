@@ -388,10 +388,10 @@ module Trade::ShipmentReportQueries
       countries_of_origin.iso_code2 AS country_of_origin,
       TRIM_DECIMAL_ZERO(
         SUM(CASE WHEN reported_by_exporter THEN NULL ELSE quantity END)
-      ) AS importer_quantity,
+      )::TEXT AS importer_quantity,
       TRIM_DECIMAL_ZERO(
         SUM(CASE WHEN reported_by_exporter THEN quantity ELSE NULL END)
-      ) AS exporter_quantity,
+      )::TEXT AS exporter_quantity,
       term_id,
       terms.code AS term,
       terms.name_en AS term_name_en,
@@ -488,7 +488,7 @@ module Trade::ShipmentReportQueries
           SUM(CASE WHEN reported_by_exporter THEN NULL ELSE quantity END),
           SUM(CASE WHEN reported_by_exporter THEN quantity ELSE NULL END)
         )
-      ) AS gross_quantity,
+      )::TEXT AS gross_quantity,
       term_id,
       terms.code AS term,
       terms.name_en AS term_name_en,
@@ -566,7 +566,7 @@ module Trade::ShipmentReportQueries
       exporter AS country,
       TRIM_DECIMAL_ZERO(
         SUM(gross_quantity)
-      ) AS gross_quantity
+      )::TEXT AS gross_quantity
     FROM gross_net_subquery
     GROUP BY
       year,
@@ -621,7 +621,7 @@ module Trade::ShipmentReportQueries
       importer AS country,
       TRIM_DECIMAL_ZERO(
         SUM(gross_quantity)
-      ) AS gross_quantity
+      )::TEXT AS gross_quantity
     FROM gross_net_subquery
     GROUP BY
       year,
@@ -682,7 +682,7 @@ module Trade::ShipmentReportQueries
           THEN exports.gross_quantity - COALESCE(imports.gross_quantity, 0)
           ELSE NULL
         END
-      ) AS gross_quantity
+      )::TEXT AS gross_quantity
     FROM exports
     LEFT JOIN imports
     ON exports.taxon_concept_id = imports.taxon_concept_id
@@ -734,7 +734,7 @@ module Trade::ShipmentReportQueries
           THEN imports.gross_quantity - COALESCE(exports.gross_quantity, 0)
           ELSE NULL
         END
-      ) AS gross_quantity
+      )::TEXT AS gross_quantity
     FROM imports
     LEFT JOIN exports
     ON exports.taxon_concept_id = imports.taxon_concept_id
