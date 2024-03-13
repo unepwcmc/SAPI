@@ -68,7 +68,7 @@ class Checklist::DownloadsController < ApplicationController
   end
 
   def download_history
-    @doc = download_module::History.new(params)
+    @doc = download_module::History.new(checklist_params)
     send_download
   end
 
