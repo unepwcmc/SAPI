@@ -1,4 +1,5 @@
-require 'aws-sdk'
+require 'aws-sdk-s3'
+
 class ChangesHistoryGeneratorWorker
   include Sidekiq::Worker
   sidekiq_options :queue => :admin
