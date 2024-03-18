@@ -43,8 +43,8 @@ module ComparisonAttributes
         # I had to transform all the queries into strings because I couldn't find a proper way
         # to do this using Arel.
         elsif attr_val.is_a?(Array)
-          if attr_val.length > 0
-            %Q("#{a.table_name}"."#{attr_name}" = ARRAY[#{attr_val.join(',')}])
+          if attr_val.compact.length > 0
+            %Q("#{a.table_name}"."#{attr_name}" = ARRAY[#{attr_val.join(',')}]::INTEGER[])
           else
             # array_length(array, 1) checks the length of the topmost level of
             # an array (which might be multidimensional)
