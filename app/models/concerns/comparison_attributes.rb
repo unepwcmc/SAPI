@@ -1,3 +1,15 @@
+##
+# This module is intended to apply to ActiveRecord::Base subclasses (and is in
+# fact applied to ApplicationRecord, primarily to provide helper method
+# `duplicates`, which finds
+#
+# The following methods should return Arrays of symbols, and can be overridden
+# to customise what should count for the purpose of calculating duplication:
+#
+# - text_attributes (class method)
+# - ignored_attributes (class method)
+# - comparison_attributes
+
 module ComparisonAttributes
   extend ActiveSupport::Concern
 
@@ -22,6 +34,9 @@ module ComparisonAttributes
     end
   end
 
+  # Returns an array of symbols, listing all the model's columns except
+  # those in `class.ignored_attributes`. These are the columns which will be
+  # used to determine if two rows are is similar.
   def comparison_attributes
     attributes.except(*self.class.ignored_attributes.map(&:to_s)).symbolize_keys
   end
@@ -60,6 +75,21 @@ module ComparisonAttributes
     arel_nodes.join(' AND ')
   end
 
+  # This method operates on a database row and returns a relation representing
+  # all those rows in the same table which are duplicates, defined as rows where
+  # all columns in `comparison_attributes` match.
+  #
+  # If the parameter comparison_attributes_override is provided (which should
+  # be a hash of key-value pairs), the values in that hash are used in preference
+  # to those of the `self` row, e.g.:
+  #
+  # ```
+  # if row.duplicates({ parent_id: new_parent_id })
+  #   raise "Cannot reassign row #{row.id} from parent #{row.parent_id} to #{new_parent_id} - duplicate exists"
+  # end
+  # ```
+  #
+  # This is used heavily in code relating to nomenclature changes.
   def duplicates(comparison_attributes_override)
     self.class.where(
       comparison_conditions(
