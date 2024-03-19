@@ -46,7 +46,7 @@ describe Trade::SandboxFilter do
       :validation_error,
       annual_report_upload_id: annual_report_upload.id,
       validation_rule_id: validation_rule.id,
-      matching_criteria: { "taxon_concept_id": canis_lupus.id, "appendix": "III", "year": 2016 },
+      matching_criteria: { "taxon_concept_id": canis_lupus.id.to_s, "appendix": "III", "year": 2016.to_s },
       is_ignored: false,
       is_primary: false,
       error_message: "taxon_name Canis lupus with appendix III with year 2016 is invalid",
