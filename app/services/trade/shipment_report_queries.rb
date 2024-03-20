@@ -565,7 +565,7 @@ module Trade::ShipmentReportQueries
       exporter_id AS country_id,
       exporter AS country,
       TRIM_DECIMAL_ZERO(
-        SUM(gross_quantity)
+        SUM(gross_quantity::NUMERIC)
       )::TEXT AS gross_quantity
     FROM gross_net_subquery
     GROUP BY
@@ -620,7 +620,7 @@ module Trade::ShipmentReportQueries
       importer_id AS country_id,
       importer AS country,
       TRIM_DECIMAL_ZERO(
-        SUM(gross_quantity)
+        SUM(gross_quantity::NUMERIC)
       )::TEXT AS gross_quantity
     FROM gross_net_subquery
     GROUP BY
@@ -678,8 +678,8 @@ module Trade::ShipmentReportQueries
       exports.country,
       TRIM_DECIMAL_ZERO(
         CASE
-          WHEN (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0
-          THEN exports.gross_quantity - COALESCE(imports.gross_quantity, 0)
+          WHEN (exports.gross_quantity::NUMERIC - COALESCE(imports.gross_quantity::NUMERIC, 0)) > 0
+          THEN exports.gross_quantity::NUMERIC - COALESCE(imports.gross_quantity::NUMERIC, 0)
           ELSE NULL
         END
       )::TEXT AS gross_quantity
@@ -692,7 +692,7 @@ module Trade::ShipmentReportQueries
     AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
     AND exports.year = imports.year
     AND exports.country_id = imports.country_id
-    WHERE (exports.gross_quantity - COALESCE(imports.gross_quantity, 0)) > 0
+    WHERE (exports.gross_quantity::NUMERIC - COALESCE(imports.gross_quantity::NUMERIC, 0)) > 0
     ORDER BY
       appendix,
       taxon,
@@ -730,8 +730,8 @@ module Trade::ShipmentReportQueries
       imports.country,
       TRIM_DECIMAL_ZERO(
         CASE
-          WHEN (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0
-          THEN imports.gross_quantity - COALESCE(exports.gross_quantity, 0)
+          WHEN (imports.gross_quantity::NUMERIC - COALESCE(exports.gross_quantity::NUMERIC, 0)) > 0
+          THEN imports.gross_quantity::NUMERIC - COALESCE(exports.gross_quantity::NUMERIC, 0)
           ELSE NULL
         END
       )::TEXT AS gross_quantity
@@ -743,7 +743,7 @@ module Trade::ShipmentReportQueries
     AND exports.term_id = imports.term_id
     AND (exports.unit_id = imports.unit_id OR exports.unit_id IS NULL AND imports.unit_id IS NULL)
     AND exports.country_id = imports.country_id
-    WHERE (imports.gross_quantity - COALESCE(exports.gross_quantity, 0)) > 0
+    WHERE (imports.gross_quantity::NUMERIC - COALESCE(exports.gross_quantity::NUMERIC, 0)) > 0
     ORDER BY
       appendix,
       taxon,
