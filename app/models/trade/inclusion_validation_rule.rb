@@ -64,14 +64,20 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def refresh_errors_if_needed(annual_report_upload)
     return true unless refresh_needed?(annual_report_upload)
     errors_to_destroy = validation_errors.to_a
+
     matching_records_grouped(annual_report_upload).map do |mr|
-      values_hash = Hash[column_names.map { |cn| [cn, mr.send(cn)] }]
+      values_hash = matching_record_to_matching_hash(mr)
       values_hash_for_display = Hash[column_names_for_display.map { |cn| [cn, mr.send(cn)] }]
+
       matching_criteria_jsonb = jsonb_matching_criteria_for_comparison(
         values_hash
       )
-      existing_record = validation_errors_for_aru(annual_report_upload).
-        where("matching_criteria @> (#{matching_criteria_jsonb})::JSONB").first
+
+      # if existing_record exists, we will update, rather than create
+      existing_record = validation_errors_for_aru(annual_report_upload).where(
+        "matching_criteria @> (#{matching_criteria_jsonb})::JSONB"
+      ).first
+
       update_or_create_error_record(
         annual_report_upload,
         existing_record,
@@ -79,6 +85,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         error_message(values_hash_for_display),
         values_hash
       )
+
       if existing_record
         errors_to_destroy.reject! { |e| e.id == existing_record.id }
       end
@@ -113,28 +120,51 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     end
   end
 
+  ##
+  # Returns a Hash whose keys are all column_names
+  # and whose values are stringified values of those columns
+  # so that there are no type mismatch issues for when we later query
+  # matching_criteria using jsonb_matching_criteria_for_comparison
+  def matching_record_to_matching_hash(mr)
+    (
+      column_names.map do |column_name|
+        column_value = mr.send(column_name)
+        if column_value.nil?
+          [ column_name, column_value ]
+        else
+          [ column_name, column_value.to_s ]
+        end
+      end
+    ).to_h
+  end
+
+  ##
+  # Returns a string which can be interpolated into an SQL statement,
+  # and used in an expression (which should be coerced to type JSONB),
+  # checking matching_criteria.
+  #
+  # The string will be at minimum "'{' || ... || '}'" - i.e. it is a
+  # concatenation of sql strings.
   def jsonb_matching_criteria_for_comparison(values_hash = nil)
     jsonb_keys_and_values = column_names.map do |c|
-      is_numeric = (c =~ /.+_id$/ || c == 'year')
       value_present = values_hash && values_hash.key?(c)
       value = value_present && values_hash[c]
       column_reference = c.to_s
       value_or_column_reference_quoted =
-        if value_present && is_numeric
-          value
-        elsif value_present && !is_numeric
-          "'\"#{value}\"'"
-        elsif !value_present && is_numeric
-          column_reference
+        if value_present
+          Arel::Nodes.build_quoted(
+            value.to_s.to_json
+          ).to_sql
         else
           <<-EOT
-            '"' || COALESCE(#{column_reference}, '') || '"'
+            '"' || COALESCE("#{column_reference}"::TEXT, '') || '"'
           EOT
         end
       <<-EOT
         '"' || '#{c}' || '": ' || #{value_or_column_reference_quoted}
       EOT
     end.join("|| ', ' ||")
+
     "'{' || #{jsonb_keys_and_values} || '}'"
   end
 

@@ -24,7 +24,7 @@ describe Trade::SandboxShipmentsController do
       :validation_error,
       annual_report_upload_id: annual_report_upload.id,
       validation_rule_id: create_taxon_concept_appendix_year_validation.id,
-      matching_criteria: { "taxon_concept_id": @species.id, "appendix": "I", "year": 2016 },
+      matching_criteria: { "taxon_concept_id": @species.id.to_s, "appendix": "I", "year": 2016.to_s },
       is_ignored: false,
       is_primary: false,
       error_message: "taxon_name Acipenser baerii with appendix I with year 2016 is invalid",

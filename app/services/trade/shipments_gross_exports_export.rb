@@ -108,7 +108,7 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
     ct_columns = [
       'row_name TEXT[]',
       report_crosstab_columns.map.each_with_index { |c, i| "#{sql_crosstab_columns[i]} #{crosstab_columns[c][:pg_type]}" },
-      years_columns.map { |y| "#{y} numeric" }
+      years_columns.map { |y| "#{y} text" }
     ].flatten.join(', ')
     # a set returning query requires that output columns are specified
     <<-SQL

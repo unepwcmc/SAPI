@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.0.6' # Can't upgrade to 3.1 until Rails 7.0.4 (https://stackoverflow.com/a/75007303/556780)
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '6.1.7.6'
+gem 'rails', '6.1.7.7'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
@@ -70,7 +70,7 @@ gem 'prawn', '0.13.2'
 gem 'pdfkit', '~> 0.8.7.3'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.6'
 
-gem 'aws-sdk', '~> 2' # TODO: v2 Deprecated, need to upgrade to v3
+gem 'aws-sdk-s3', '~> 1.143'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
