@@ -1,3 +1,15 @@
+##
+# This module is intended to apply to ActiveRecord::Base subclasses (and is in
+# fact applied to ApplicationRecord, primarily to provide helper method
+# `duplicates`, which finds
+#
+# The following methods should return Arrays of symbols, and can be overridden
+# to customise what should count for the purpose of calculating duplication:
+#
+# - text_attributes (class method)
+# - ignored_attributes (class method)
+# - comparison_attributes
+
 module ComparisonAttributes
   extend ActiveSupport::Concern
 
@@ -22,6 +34,9 @@ module ComparisonAttributes
     end
   end
 
+  # Returns an array of symbols, listing all the model's columns except
+  # those in `class.ignored_attributes`. These are the columns which will be
+  # used to determine if two rows are is similar.
   def comparison_attributes
     attributes.except(*self.class.ignored_attributes.map(&:to_s)).symbolize_keys
   end
@@ -38,16 +53,20 @@ module ComparisonAttributes
         # ActiveRecord 4 saves arrays as '[]' instead of using the postgres notation '{}'
         # Also, Arel doesn't seem to be able to manage the comparison when passing '[]' in 'eq'
         # The workaround below checks if the attribute value is an empty array,
-        # if it is it checks if the length is 0,
+        # if it is, it checks the array length (note that an empty array has a length of NULL),
         # otherwise, it will perform an array equality check.
         # I had to transform all the queries into strings because I couldn't find a proper way
         # to do this using Arel.
         elsif attr_val.is_a?(Array)
-          if attr_val.length > 0
-            %Q("#{a.table_name}"."#{attr_name}" = ARRAY[#{attr_val.join(',')}])
+          if attr_val.compact.length > 0
+            %Q("#{a.table_name}"."#{attr_name}" = ARRAY[#{attr_val.join(',')}]::INTEGER[])
           else
-            Arel::Nodes::NamedFunction.new('ARRAY_LENGTH', [a.table[attr_name], 1]).
-              eq(0).to_sql
+            # array_length(array, 1) checks the length of the topmost level of
+            # an array (which might be multidimensional)
+            # array_length('{}'::int[], 1) returns NULL, not 0.
+            Arel::Nodes::NamedFunction.new(
+              'ARRAY_LENGTH', [a.table[attr_name], 1]
+            ).eq(nil).to_sql
           end
         else
           a.table[attr_name].eq(attr_val).to_sql
@@ -56,6 +75,21 @@ module ComparisonAttributes
     arel_nodes.join(' AND ')
   end
 
+  # This method operates on a database row and returns a relation representing
+  # all those rows in the same table which are duplicates, defined as rows where
+  # all columns in `comparison_attributes` match.
+  #
+  # If the parameter comparison_attributes_override is provided (which should
+  # be a hash of key-value pairs), the values in that hash are used in preference
+  # to those of the `self` row, e.g.:
+  #
+  # ```
+  # if row.duplicates({ parent_id: new_parent_id })
+  #   raise "Cannot reassign row #{row.id} from parent #{row.parent_id} to #{new_parent_id} - duplicate exists"
+  # end
+  # ```
+  #
+  # This is used heavily in code relating to nomenclature changes.
   def duplicates(comparison_attributes_override)
     self.class.where(
       comparison_conditions(
