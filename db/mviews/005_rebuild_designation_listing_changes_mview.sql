@@ -1,9 +1,27 @@
 DROP FUNCTION IF EXISTS rebuild_designation_listing_changes_mview(
   taxonomy taxonomies, designation designations
 );
+
+-- This function dynamically produces tables of the form
+--
+-- * cites_listing_changes_mview, cms_listing_changes_mview, eu_listing_changes_mview
+-- * child_cites_listing_changes_mview, child_cms_listing_changes_mview, child_eu_listing_changes_mview
+-- * child_eu_55_49_66_41_48_listing_changes_mview (where event_ids is specified)
+--
+-- Note that this function has special-cased behaviour for the following:
+--
+-- * change_type where name is one of:
+--   * ADDITION
+--   * DELETION
+--   * EXCEPTION
+--   * RESERVATION
+--   * RESERVATION_WITHDRAWAL
+-- * designation where name is one of:
+--   * CMS
+--   * EU
 CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
   taxonomy taxonomies, designation designations, events_ids INT[]
-  ) RETURNS void
+) RETURNS void
   LANGUAGE plpgsql
   AS $$
   DECLARE
@@ -27,9 +45,18 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     SELECT listing_changes_mview_name(NULL, designation.name, events_ids)
     INTO master_lc_table_name;
 
-
     RAISE INFO 'Creating %', tmp_lc_table_name;
-    EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
+
+    SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION' AND designation_id = designation.id;
+    SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION' AND designation_id = designation.id;
+
+    IF deletion_id IS NULL THEN
+      RAISE EXCEPTION 'Could not find change_type of type DELETION';
+    END IF;
+
+    IF addition_id IS NULL THEN
+      RAISE EXCEPTION 'Could not find change_type of type ADDITION';
+    END IF;
 
     sql := 'CREATE TABLE ' || tmp_lc_table_name || ' AS
     WITH applicable_listing_changes AS (
@@ -47,22 +74,22 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     listing_changes.event_id,
     listing_changes.effective_at,
     listing_changes.species_listing_id,
-    species_listings.abbreviation AS species_listing_name,
+    species_listings.abbreviation::VARCHAR(255) AS species_listing_name,
     listing_changes.change_type_id,
-    change_types.name AS change_type_name,
+    change_types.name::VARCHAR(255) AS change_type_name,
     change_types.designation_id AS designation_id,
-    designations.name AS designation_name,
+    designations.name::VARCHAR(255) AS designation_name,
     listing_changes.parent_id,
-    listing_changes.nomenclature_note_en,
-    listing_changes.nomenclature_note_fr,
-    listing_changes.nomenclature_note_es,
+    listing_changes.nomenclature_note_en::text,
+    listing_changes.nomenclature_note_fr::text,
+    listing_changes.nomenclature_note_es::text,
     tmp_lc.party_id,
-    geo_entities.iso_code2 AS party_iso_code,
-    geo_entities.name_en AS party_full_name_en,
-    geo_entities.name_es AS party_full_name_es,
-    geo_entities.name_fr AS party_full_name_fr,
+    geo_entities.iso_code2::VARCHAR(255) AS party_iso_code,
+    geo_entities.name_en::VARCHAR(255) AS party_full_name_en,
+    geo_entities.name_es::VARCHAR(255) AS party_full_name_es,
+    geo_entities.name_fr::VARCHAR(255) AS party_full_name_fr,
     geo_entity_types.name AS geo_entity_type,
-    annotations.symbol AS ann_symbol,
+    annotations.symbol::VARCHAR(255) AS ann_symbol,
     annotations.full_note_en,
     annotations.full_note_es,
     annotations.full_note_fr,
@@ -71,8 +98,8 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     annotations.short_note_fr,
     annotations.display_in_index,
     annotations.display_in_footnote,
-    hash_annotations.symbol AS hash_ann_symbol,
-    hash_annotations.parent_symbol AS hash_ann_parent_symbol,
+    hash_annotations.symbol::VARCHAR(255) AS hash_ann_symbol,
+    hash_annotations.parent_symbol::VARCHAR(255) AS hash_ann_parent_symbol,
     hash_annotations.full_note_en AS hash_full_note_en,
     hash_annotations.full_note_es AS hash_full_note_es,
     hash_annotations.full_note_fr AS hash_full_note_fr,
@@ -171,6 +198,8 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     WHEN change_types.name = ''DELETION'' THEN 3
     END';
 
+    EXECUTE 'DROP TABLE IF EXISTS ' || tmp_lc_table_name || ' CASCADE';
+
     EXECUTE sql;
 
     EXECUTE 'CREATE INDEX ON ' || tmp_lc_table_name || ' (id, taxon_concept_id)';
@@ -192,8 +221,6 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
 
     EXECUTE sql;
 
-    SELECT id INTO deletion_id FROM change_types WHERE name = 'DELETION' AND designation_id = designation.id;
-    SELECT id INTO addition_id FROM change_types WHERE name = 'ADDITION' AND designation_id = designation.id;
     -- find inherited listing changes superceded by own listing changes
     -- mark them as not current in context of the child and add fake deletion records
     -- so that those inherited events are terminated properly on the timelines

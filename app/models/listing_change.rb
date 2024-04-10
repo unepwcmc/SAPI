@@ -26,40 +26,45 @@
 #  internal_notes             :text
 #
 
-class ListingChange < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
-    :effective_at, :is_current, :parent_id, :geo_entity_ids,
-    :party_listing_distribution_attributes, :inclusion_taxon_concept_id,
-    :annotation_attributes, :hash_annotation_id, :event_id,
-    :excluded_geo_entities_ids, :excluded_taxon_concepts_ids, :internal_notes,
-    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id
+class ListingChange < ApplicationRecord
+  include Changeable
+  extend Mobility
+  include TrackWhoDoesIt
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :taxon_concept_id, :species_listing_id, :change_type_id,
+  #   :effective_at, :is_current, :parent_id, :geo_entity_ids,
+  #   :party_listing_distribution_attributes, :inclusion_taxon_concept_id,
+  #   :annotation_attributes, :hash_annotation_id, :event_id,
+  #   :excluded_geo_entities_ids, :excluded_taxon_concepts_ids, :internal_notes,
+  #   :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+  #   :created_by_id, :updated_by_id
 
-  attr_accessor :excluded_geo_entities_ids, :excluded_taxon_concepts_ids
+  attr_accessor :excluded_geo_entities_ids, # Array
+                :excluded_taxon_concepts_ids # String
 
-  belongs_to :event
+  belongs_to :event, optional: true
   has_many :listing_change_copies, :foreign_key => :original_id,
     :class_name => "ListingChange", :dependent => :nullify
   belongs_to :species_listing
   belongs_to :taxon_concept
   belongs_to :change_type
-  has_many :listing_distributions, -> { where is_party: false }, :dependent => :destroy
+  has_many :listing_distributions, -> { where is_party: false }, :inverse_of => :listing_change, :dependent => :destroy
   has_one :party_listing_distribution, -> { where is_party: true }, :class_name => 'ListingDistribution',
-     :dependent => :destroy
+     :dependent => :destroy, :inverse_of => :listing_change
   has_many :geo_entities, :through => :listing_distributions
   has_one :party_geo_entity, :class_name => 'GeoEntity',
     :through => :party_listing_distribution, :source => :geo_entity
-  belongs_to :annotation
-  belongs_to :hash_annotation, :class_name => 'Annotation'
-  belongs_to :parent, :class_name => 'ListingChange'
-  belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id'
+  belongs_to :annotation, optional: true
+  belongs_to :hash_annotation, :class_name => 'Annotation', optional: true
+  belongs_to :parent, :class_name => 'ListingChange', optional: true
+  belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id', optional: true
   has_many :exclusions, :class_name => 'ListingChange', :foreign_key => 'parent_id', :dependent => :destroy
-  validates :change_type_id, :presence => true
   validates :effective_at, :presence => true
   validate :inclusion_at_higher_rank
   validate :species_listing_designation_mismatch
   validate :event_designation_mismatch
+
+  before_save :listing_change_before_save_callback
 
   accepts_nested_attributes_for :party_listing_distribution,
     :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
@@ -71,8 +76,6 @@ class ListingChange < ActiveRecord::Base
   scope :by_designation, lambda { |designation_id|
     joins(:change_type).where(:"change_types.designation_id" => designation_id)
   }
-
-  scope :none, -> { where("1 = 0") }
 
   def effective_at_formatted
     effective_at ? effective_at.strftime('%d/%m/%Y') : ''
@@ -137,14 +140,14 @@ class ListingChange < ActiveRecord::Base
       )
     )
     if party_listing_distribution
-      relation = relation.includes(:party_listing_distribution).where(
+      relation = relation.includes(:party_listing_distribution).references(:party_listing_distribution).where(
         party_listing_distribution.comparison_conditions(
           party_listing_distribution.comparison_attributes.except(:listing_change_id)
         )
       )
     end
     if annotation
-      relation = relation.includes(:annotation).where(
+      relation = relation.includes(:annotation).references(:annotation).where(
         annotation.comparison_conditions
       )
     end
@@ -183,5 +186,64 @@ class ListingChange < ActiveRecord::Base
       errors.add(:event_id, "designation mismatch between change type and event")
       return false
     end
+  end
+
+  def listing_change_before_save_callback
+    # check if annotation should be deleted
+    if annotation &&
+       annotation.short_note_en.blank? &&
+       annotation.short_note_fr.blank? &&
+       annotation.short_note_es.blank? &&
+       annotation.full_note_en.blank? &&
+       annotation.full_note_fr.blank? &&
+       annotation.full_note_es.blank?
+      ann = annotation
+      self.annotation = nil
+      if ann.reload.listing_changes.empty?
+        ann.delete
+      end
+    end
+
+    original_change_type = ChangeType.find(change_type_id)
+
+    @excluded_geo_entities_ids = @excluded_geo_entities_ids &&
+      @excluded_geo_entities_ids.reject(&:blank?).map(&:to_i)
+
+    @excluded_taxon_concepts_ids = @excluded_taxon_concepts_ids &&
+      @excluded_taxon_concepts_ids.split(',').reject(&:blank?).map(&:to_i)
+
+    return self if original_change_type.name == ChangeType::EXCEPTION
+    return self if @excluded_geo_entities_ids.nil? &&
+      @excluded_taxon_concepts_ids.nil?
+
+    new_exclusions = []
+    exclusion_change_type = ChangeType.find_by_name_and_designation_id(
+      ChangeType::EXCEPTION, original_change_type.designation_id
+    )
+
+    # geographic exclusions
+    excluded_geo_entities =
+      if @excluded_geo_entities_ids && !@excluded_geo_entities_ids.empty?
+        new_exclusions << ListingChange.new(
+          :change_type_id => exclusion_change_type.id,
+          :species_listing_id => species_listing_id,
+          :taxon_concept_id => taxon_concept_id,
+          :geo_entity_ids => @excluded_geo_entities_ids
+        )
+      end
+
+    # taxonomic exclusions
+    excluded_taxon_concepts =
+      if @excluded_taxon_concepts_ids && !@excluded_taxon_concepts_ids.empty?
+        @excluded_taxon_concepts_ids.map do |id|
+          new_exclusions << ListingChange.new(
+            :change_type_id => exclusion_change_type.id,
+            :species_listing_id => species_listing_id,
+            :taxon_concept_id => id
+          )
+        end
+      end
+
+    self.exclusions = new_exclusions
   end
 end

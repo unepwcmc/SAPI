@@ -52,7 +52,7 @@ describe NomenclatureChange::Output do
       }
       specify { expect(output).to have(1).errors_on(:new_scientific_name) }
       specify { expect(output).to have(1).errors_on(:new_parent_id) }
-      specify { expect(output).to have(1).errors_on(:new_rank_id) }
+      specify { expect(output).to have(1).errors_on(:new_rank) }
       specify { expect(output).to have(1).errors_on(:new_name_status) }
       specify { expect(output).to have(1).errors_on(:new_taxon_concept) }
     end
@@ -66,7 +66,7 @@ describe NomenclatureChange::Output do
           :new_name_status => 'A'
         )
       }
-      specify { expect(output).to have(1).error_on(:new_parent_id) }
+      specify { expect(output.error_on(:new_parent_id).size).to eq(1) }
     end
     context "when taxon concept specified" do
       let(:tc) { create_cites_eu_species }

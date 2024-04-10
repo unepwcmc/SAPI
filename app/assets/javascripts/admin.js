@@ -20,4 +20,5 @@
 //= require jquery.chained
 //= require html.sortable
 //= require underscore
+//= require chartkick
 //= require_tree ./admin

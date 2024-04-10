@@ -1,7 +1,7 @@
 class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
   belongs_to :taxon_concept
-  before_filter :load_lib_objects
-  before_filter :load_search, :only => [:new, :index, :edit]
+  before_action :load_lib_objects
+  before_action :load_search, :only => [:new, :index, :edit]
   layout 'taxon_concepts'
 
   def update
@@ -47,5 +47,16 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
       order('is_current DESC, start_date DESC,
         geo_entities.name_en ASC').
       page(params[:page])
+  end
+
+  private
+
+  def cites_captivity_process_params
+    params.require(:cites_captivity_process).permit(
+      # attributes were in model `attr_accessible`.
+      :start_event_id, :geo_entity_id, :resolution, :start_date,
+      :taxon_concept_id, :notes, :status, :document, :document_title,
+      :created_by_id, :updated_by_id
+    )
   end
 end

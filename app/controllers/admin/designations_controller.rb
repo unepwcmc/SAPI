@@ -6,7 +6,7 @@ class Admin::DesignationsController < Admin::StandardAuthorizationController
     @custom_title = 'MEAs'
     index! do |format|
       format.json {
-        render :text => end_of_association_chain.order(:name).
+        render :json => end_of_association_chain.order(:name).
           select([:id, :name]).map { |d| { :value => d.id, :text => d.name } }.to_json
       }
     end
@@ -22,5 +22,14 @@ class Admin::DesignationsController < Admin::StandardAuthorizationController
 
   def load_associations
     @taxonomies = Taxonomy.order(:name)
+  end
+
+  private
+
+  def designation_params
+    params.require(:designation).permit(
+      # attributes were in model `attr_accessible`.
+      :name, :taxonomy_id
+    )
   end
 end

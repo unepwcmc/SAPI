@@ -1,16 +1,16 @@
 # This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
+# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 #
 # Examples:
 #
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+#   cities = City.create!([{ name: 'Chicago' }, { name: 'Copenhagen' }])
+#   Mayor.create!(name: 'Emanuel', city: cities.first)
 
 puts "#{ListingDistribution.delete_all} listing distributions deleted"
 puts "#{GeoRelationship.delete_all} geo relationships deleted"
 puts "#{GeoRelationshipType.delete_all} geo relationship types deleted"
 GeoRelationshipType.dict.each do |type|
-  GeoRelationshipType.create(name: type)
+  GeoRelationshipType.create!(name: type)
 end
 puts "#{GeoRelationshipType.count} geo relationship types created"
 
@@ -22,17 +22,17 @@ puts "#{ListingChange.delete_all} listing changes deleted"
 puts "#{GeoEntity.delete_all} geo entities deleted"
 puts "#{GeoEntityType.delete_all} geo entity types deleted"
 GeoEntityType.dict.each do |type|
-  GeoEntityType.create(name: type)
+  GeoEntityType.create!(name: type)
 end
 puts "#{GeoEntityType.count} geo entity types created"
 
 puts "#{TaxonRelationship.delete_all} taxon relationships deleted"
 puts "#{TaxonRelationshipType.delete_all} taxon relationship types deleted"
 ['EQUAL_TO', 'INCLUDES', 'OVERLAPS', 'DISJUNCT'].each do |relationship|
-  TaxonRelationshipType.create(:name => relationship, :is_intertaxonomic => true, :is_bidirectional => ['EQUAL_TO', 'DISJUNCT'].include?(relationship))
+  TaxonRelationshipType.create!(:name => relationship, :is_intertaxonomic => true, :is_bidirectional => ['EQUAL_TO', 'DISJUNCT'].include?(relationship))
 end
 ['HAS_SYNONYM', 'HAS_HYBRID', 'HAS_TRADE_NAME'].each do |relationship|
-  TaxonRelationshipType.create(:name => relationship, :is_intertaxonomic => false)
+  TaxonRelationshipType.create!(:name => relationship, :is_intertaxonomic => false)
 end
 puts "#{TaxonRelationshipType.count} taxon relationship types created"
 
@@ -47,16 +47,16 @@ puts "#{TradeRestrictionTerm.delete_all} trade restrictions terms deleted"
 puts "#{TradeRestrictionSource.delete_all} trade restrictions sources deleted"
 puts "#{TradeRestrictionPurpose.delete_all} trade restrictions purposes deleted"
 
-Rank.create(:name => Rank::KINGDOM, :taxonomic_position => '1', :fixed_order => true)
-Rank.create(:name => Rank::PHYLUM, :taxonomic_position => '2', :fixed_order => true)
-Rank.create(:name => Rank::CLASS, :taxonomic_position => '3', :fixed_order => true)
-Rank.create(:name => Rank::ORDER, :taxonomic_position => '4', :fixed_order => false)
-Rank.create(:name => Rank::FAMILY, :taxonomic_position => '5', :fixed_order => false)
-Rank.create(:name => Rank::SUBFAMILY, :taxonomic_position => '5.1', :fixed_order => false)
-Rank.create(:name => Rank::GENUS, :taxonomic_position => '6', :fixed_order => false)
-Rank.create(:name => Rank::SPECIES, :taxonomic_position => '7', :fixed_order => false)
-Rank.create(:name => Rank::SUBSPECIES, :taxonomic_position => '7.1', :fixed_order => false)
-Rank.create(:name => Rank::VARIETY, :taxonomic_position => '7.2', :fixed_order => false)
+Rank.create!(:name => Rank::KINGDOM, :display_name_en => Rank::KINGDOM, :taxonomic_position => '1', :fixed_order => true)
+Rank.create!(:name => Rank::PHYLUM, :display_name_en => Rank::PHYLUM, :taxonomic_position => '2', :fixed_order => true)
+Rank.create!(:name => Rank::CLASS, :display_name_en => Rank::CLASS, :taxonomic_position => '3', :fixed_order => true)
+Rank.create!(:name => Rank::ORDER, :display_name_en => Rank::ORDER, :taxonomic_position => '4', :fixed_order => false)
+Rank.create!(:name => Rank::FAMILY, :display_name_en => Rank::FAMILY, :taxonomic_position => '5', :fixed_order => false)
+Rank.create!(:name => Rank::SUBFAMILY, :display_name_en => Rank::SUBFAMILY, :taxonomic_position => '5.1', :fixed_order => false)
+Rank.create!(:name => Rank::GENUS, :display_name_en => Rank::GENUS, :taxonomic_position => '6', :fixed_order => false)
+Rank.create!(:name => Rank::SPECIES, :display_name_en => Rank::SPECIES, :taxonomic_position => '7', :fixed_order => false)
+Rank.create!(:name => Rank::SUBSPECIES, :display_name_en => Rank::SUBSPECIES, :taxonomic_position => '7.1', :fixed_order => false)
+Rank.create!(:name => Rank::VARIETY, :display_name_en => Rank::VARIETY, :taxonomic_position => '7.2', :fixed_order => false)
 
 puts "#{Rank.count} ranks created"
 
@@ -71,7 +71,7 @@ puts "#{DocumentTag.delete_all} document tags deleted"
 [
   "I", "II", "III", "IV", "June 1986", "None",
   "Post-CoP11", "Post-CoP12", "Post-CoP13"
-].each { |tag| DocumentTag::ReviewPhase.create(name: tag) }
+].each { |tag| DocumentTag::ReviewPhase.create!(name: tag) }
 
 [
   "AC review and categorization (k)", "AC review and categorization [k]",
@@ -79,33 +79,34 @@ puts "#{DocumentTag.delete_all} document tags deleted"
   "PC review and categorization [k]", "PC review and categorization (m)", "PC review (e)",
   "Research of species [j]", "Selection of species (b)", "Selection of species [b]",
   "Species selection (b)", "Species selection [b]"
-].each { |tag| DocumentTag::ProcessStage.create(name: tag) }
+].each { |tag| DocumentTag::ProcessStage.create!(name: tag) }
 
 [
   "Accepted", "Cancelled", "Deferred",
   "Redundant", "Rejected", "Transferred to other proposals",
   "Withdrawn", "Accepted as amended", "Rejected as amended",
   "Adopted"
-].each { |tag| DocumentTag::ProposalOutcome.create(name: tag) }
+].each { |tag| DocumentTag::ProposalOutcome.create!(name: tag) }
 
 puts "#{DocumentTag.count} document tags created"
 
 Taxonomy.dict.each do |type|
-  Taxonomy.create(name: type)
+  Taxonomy.create!(name: type)
 end
 taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
 cms_taxonomy = Taxonomy.find_by_name(Taxonomy::CMS)
 puts "#{Taxonomy.count} taxonomies created"
 
 [Designation::CITES, Designation::EU].each do |designation|
-  d = Designation.create(:name => designation, :taxonomy_id => taxonomy.id)
+  d = Designation.create!(:name => designation, :taxonomy_id => taxonomy.id)
+
   ChangeType.dict.each do |change_type_name|
-    ChangeType.create(:name => change_type_name, :designation_id => d.id)
+    ChangeType.create!(:name => change_type_name, :display_name_en => change_type_name, :designation_id => d.id)
   end
 end
 
 [Designation::CMS].each do |designation|
-  d = Designation.create(:name => designation, :taxonomy_id => cms_taxonomy.id)
+  d = Designation.create!(:name => designation, :taxonomy_id => cms_taxonomy.id)
 end
 
 puts "#{Designation.count} designations created"
@@ -114,7 +115,7 @@ puts "#{ChangeType.count} change types created"
 cites = Designation.find_by_name(Designation::CITES)
 
 %w(I II III).each do |app_abbr|
-  SpeciesListing.create(
+  SpeciesListing.create!(
     :name => "Appendix #{app_abbr}",
     :abbreviation => app_abbr,
     :designation_id => cites.id
@@ -124,7 +125,7 @@ end
 eu = Designation.find_by_name(Designation::EU)
 
 %w(A B C D).each do |app_abbr|
-  SpeciesListing.create(
+  SpeciesListing.create!(
     :name => "Annex #{app_abbr}",
     :abbreviation => app_abbr,
     :designation_id => eu.id
@@ -134,7 +135,7 @@ end
 cms = Designation.find_by_name(Designation::CMS)
 
 %w(I II).each do |app_abbr|
-  SpeciesListing.create(
+  SpeciesListing.create!(
     :name => "Appendix #{app_abbr}",
     :abbreviation => app_abbr,
     :designation_id => cms.id
@@ -317,7 +318,7 @@ higher_taxa.each do |kingdom_props|
   [cms_taxonomy, taxonomy].each do |taksonomy|
     name = TaxonName.find_or_create_by(scientific_name: kingdom_name)
     next if taksonomy.name == Taxonomy::CMS && kingdom_name == 'Plantae'
-    kingdom = TaxonConcept.create(:rank_id => kingdom_rank_id,
+    kingdom = TaxonConcept.create!(:rank_id => kingdom_rank_id,
                                   :taxon_name_id => name.id,
                                   :taxonomy_id => taksonomy.id,
                                   :legacy_id => kingdom_props[:legacy_id], :legacy_type => kingdom_props[:legacy_type],
@@ -328,7 +329,7 @@ higher_taxa.each do |kingdom_props|
     phyla.each do |phylum_props|
       phylum_name = phylum_props[:name]
       name = TaxonName.find_or_create_by(scientific_name: phylum_name)
-      phylum = TaxonConcept.create(:rank_id => phylum_rank_id,
+      phylum = TaxonConcept.create!(:rank_id => phylum_rank_id,
          :taxon_name_id => name.id,
          :taxonomy_id => taksonomy.id,
          :legacy_id => phylum_props[:legacy_id], :legacy_type => phylum_props[:legacy_type],
@@ -340,7 +341,7 @@ higher_taxa.each do |kingdom_props|
       klasses.each do |klass_props|
         klass_name = klass_props[:name]
         name = TaxonName.find_or_create_by(scientific_name: klass_name)
-        klass = TaxonConcept.create(:rank_id => klass_rank_id,
+        klass = TaxonConcept.create!(:rank_id => klass_rank_id,
           :taxon_name_id => name.id,
           :taxonomy_id => taksonomy.id,
           :legacy_id => klass_props[:legacy_id], :legacy_type => klass_props[:legacy_type],
@@ -361,98 +362,98 @@ puts "#{Reference.delete_all} references deleted"
 puts "#{TradeRestriction.delete_all} trade restrictions deleted"
 
 ['trading_partner', 'term_code', 'taxon_name', 'appendix', 'quantity', 'year'].each do |col|
-  Trade::PresenceValidationRule.create(:column_names => [col], :run_order => 1)
+  Trade::PresenceValidationRule.create!(:column_names => [col], :run_order => 1)
 end
 ['quantity', 'year'].each do |col|
-  Trade::NumericalityValidationRule.create(
+  Trade::NumericalityValidationRule.create!(
     :column_names => [col],
     :run_order => 2,
     :is_strict => true
   )
 end
 
-Trade::FormatValidationRule.create(
+Trade::FormatValidationRule.create!(
   :column_names => ['year'],
   :format_re => '^\d{4}$',
   :run_order => 2,
   :is_strict => true
 )
 
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['term_code'],
   :valid_values_view => 'valid_term_code_view',
   :run_order => 3,
   :is_strict => true
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['source_code'],
   :valid_values_view => 'valid_source_code_view',
   :run_order => 3,
   :is_strict => true
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['purpose_code'],
   :valid_values_view => 'valid_purpose_code_view',
   :run_order => 3,
   :is_strict => true
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['unit_code'],
   :valid_values_view => 'valid_unit_code_view',
   :run_order => 3,
   :is_strict => true
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['trading_partner'],
   :valid_values_view => 'valid_trading_partner_view',
   :run_order => 3,
   :is_strict => true
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['country_of_origin'],
   :valid_values_view => 'valid_country_of_origin_view',
   :run_order => 3,
   :is_strict => true
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['taxon_name'],
   :valid_values_view => 'valid_taxon_name_view',
   :run_order => 3,
   :is_strict => true
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['appendix'],
   :valid_values_view => 'valid_appendix_view',
   :run_order => 3,
   :is_strict => true
 )
-Trade::TaxonConceptAppendixYearValidationRule.create(
+Trade::TaxonConceptAppendixYearValidationRule.create!(
   :column_names => ['taxon_concept_id', 'appendix', 'year'],
   :valid_values_view => 'valid_taxon_concept_appendix_year_mview',
   :run_order => 4,
   :is_primary => false,
   :is_strict => true
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['term_code', 'unit_code'],
   :valid_values_view => 'valid_term_unit_view',
   :run_order => 4,
   :is_primary => false
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['term_code', 'purpose_code'],
   :valid_values_view => 'valid_term_purpose_view',
   :run_order => 4,
   :is_primary => false
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :column_names => ['taxon_concept_id', 'term_code'],
   :valid_values_view => 'valid_taxon_concept_term_view',
   :run_order => 4,
   :is_primary => false,
   :is_strict => true
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :scope => {
     :rank => { :inclusion => [Rank::SPECIES, Rank::SUBSPECIES] },
     :source_code => { :inclusion => ['W'] },
@@ -464,7 +465,7 @@ Trade::InclusionValidationRule.create(
   :is_primary => false,
   :is_strict => true
 )
-Trade::InclusionValidationRule.create(
+Trade::InclusionValidationRule.create!(
   :scope => {
     :rank => { :inclusion => [Rank::SPECIES, Rank::SUBSPECIES] },
     :source_code => { :inclusion => ['W'] },
@@ -477,20 +478,20 @@ Trade::InclusionValidationRule.create(
   :is_primary => false,
   :is_strict => true
 )
-Trade::DistinctValuesValidationRule.create(
+Trade::DistinctValuesValidationRule.create!(
   :column_names => ['exporter', 'country_of_origin'],
   :run_order => 4,
   :is_primary => false,
   :is_strict => true
 )
-Trade::DistinctValuesValidationRule.create(
+Trade::DistinctValuesValidationRule.create!(
   :column_names => ['exporter', 'importer'],
   :run_order => 4,
   :is_primary => false,
   :is_strict => true
 )
 
-Trade::TaxonConceptSourceValidationRule.create(
+Trade::TaxonConceptSourceValidationRule.create!(
   :column_names => ['taxon_concept_id', 'source_code'],
   :run_order => 4,
   :is_primary => false,

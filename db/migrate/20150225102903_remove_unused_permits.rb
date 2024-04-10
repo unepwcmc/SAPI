@@ -1,4 +1,4 @@
-class RemoveUnusedPermits < ActiveRecord::Migration
+class RemoveUnusedPermits < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       WITH unused_permits(id) AS (

@@ -6,9 +6,11 @@ namespace :import do
       current_count = klass.count
       CSV.foreach("lib/files/#{klass.to_s.downcase}_codes_utf8.csv") do |row|
         code = klass.find_or_initialize_by(code: row[0].strip.upcase)
-        code.update_attributes(:name_en => row[1].strip,
-                               :name_fr => row[2].strip,
-                               :name_es => row[3].strip)
+        code.update(
+          :name_en => row[1].strip,
+          :name_fr => row[2].strip,
+          :name_es => row[3].strip
+        )
       end
       puts "#{klass.count - current_count} new #{klass} added"
     end
@@ -43,7 +45,7 @@ namespace :import do
 
       ) as subquery;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
     puts "#{TermTradeCodesPair.where(:trade_code_type => 'Purpose').count} terms and purpose codes pairs created"
   end
 
@@ -76,7 +78,7 @@ namespace :import do
 
       ) AS subquery;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
     puts "#{TermTradeCodesPair.where(:trade_code_type => 'Unit').count} terms and unit codes pairs created"
   end
 
@@ -110,7 +112,7 @@ namespace :import do
 
       ) AS subquery;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
     puts "#{Trade::TaxonConceptTermPair.count} terms and unit codes pairs created"
   end
 

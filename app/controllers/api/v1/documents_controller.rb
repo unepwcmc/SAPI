@@ -34,7 +34,7 @@ class Api::V1::DocumentsController < ApplicationController
 
     #TODO move pagination and ordering to the document_search module after refactoring of SQL mviews
     page = params[:page] || 1
-    per_page = params[:per_page] || 100
+    per_page = (params[:per_page] || 100).to_i
 
     ordered_docs =
       if params[:taxon_concepts_ids].present? && params[:event_type] == 'IdMaterials'
@@ -58,7 +58,7 @@ class Api::V1::DocumentsController < ApplicationController
       meta: {
         total: @search.cached_total_cnt,
         page: @search.page,
-        per_page: @search.per_page
+        per_page: per_page
       }
   end
 
@@ -68,7 +68,7 @@ class Api::V1::DocumentsController < ApplicationController
     if access_denied? && !@document.is_public
       render_403
     elsif @document.is_link?
-      redirect_to @document.filename
+      redirect_to @document.filename.model[:filename]
     elsif !File.exists?(path_to_file)
       render_404
     else
@@ -84,8 +84,6 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def download_zip
-    require 'zip'
-
     @documents = Document.find(params[:ids].split(','))
 
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
@@ -125,13 +123,11 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def render_404
-    render file: "#{Rails.root}/public/404", layout: false, formats: [:html],
-    status: 404
+    head 404
   end
 
   def render_403
-    render file: "#{Rails.root}/public/403", layout: false, formats: [:html],
-    status: 403
+    head 403
   end
 
 end

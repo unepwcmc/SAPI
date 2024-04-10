@@ -19,7 +19,7 @@ namespace :import do
         FROM references_legacy_id_mapping map
         WHERE map.alias_legacy_id = #{TMP_TABLE}.ref_legacy_id
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
       puts "inserting reference distribution links"
       sql = <<-SQL
@@ -48,7 +48,7 @@ namespace :import do
               AND distribution_id = distributions.id
           )
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
     puts "There are now #{DistributionReference.count} distribution references in the database"
   end

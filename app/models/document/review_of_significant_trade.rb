@@ -29,10 +29,11 @@ class Document::ReviewOfSignificantTrade < Document
     'Review of Significant Trade'
   end
 
-  attr_accessible :review_details_attributes
+  # Used by DocumentsController.
+  # attr_accessible :review_details_attributes
 
   has_one :review_details,
-    :class_name => 'Document::ReviewDetails',
+    :class_name => 'ReviewDetails',
     :foreign_key => 'document_id',
     dependent: :destroy
   accepts_nested_attributes_for :review_details, :allow_destroy => true

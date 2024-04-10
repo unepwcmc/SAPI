@@ -7,7 +7,7 @@ class Api::V1::DocumentTagsController < ApplicationController
       order([:type, :name])
     render :json => @document_tags,
       :each_serializer => Species::DocumentTagSerializer,
-      :meta => { :total => @document_tags.count }
+      :meta => { :total => @document_tags.count(:all) }
   end
 
 end

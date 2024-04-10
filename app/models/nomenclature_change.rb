@@ -12,17 +12,34 @@
 #  updated_at    :datetime         not null
 #
 
-class NomenclatureChange < ActiveRecord::Base
+class NomenclatureChange < ApplicationRecord
   include Dictionary
   include StatusDictionary
-  build_steps
-  track_who_does_it
-  attr_accessible :event_id, :status
 
-  belongs_to :event
+  build_steps
+
+  include TrackWhoDoesIt
+
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :event_id, :status
+
+  belongs_to :event, optional: true
 
   validates :status, presence: true
   validate :cannot_update_when_locked
+
+  after_save do
+    if status == self.class::SUBMITTED
+      Rails.logger.warn "SUBMIT #{type}"
+      begin
+        processor_klass = "#{type}::Processor".constantize
+      rescue NameError
+        Rails.logger.warn "No processor found for #{type}"
+      else
+        processor_klass.new(self).run
+      end
+    end
+  end
 
   def in_progress?
     ![NomenclatureChange::SUBMITTED, NomenclatureChange::CLOSED].
@@ -44,7 +61,7 @@ class NomenclatureChange < ActiveRecord::Base
     if status_was == NomenclatureChange::CLOSED ||
       status_was == NomenclatureChange::SUBMITTED &&
       status != NomenclatureChange::CLOSED
-      errors[:base] << "Nomenclature change is locked for updates"
+      errors.add(:base, "Nomenclature change is locked for updates")
       return false
     end
   end

@@ -1,4 +1,4 @@
-class AddEpixFieldsToSandboxTemplate < ActiveRecord::Migration
+class AddEpixFieldsToSandboxTemplate < ActiveRecord::Migration[4.2]
   def change
     add_column :trade_sandbox_template, :epix_created_at, :timestamp
     add_column :trade_sandbox_template, :epix_updated_at, :timestamp

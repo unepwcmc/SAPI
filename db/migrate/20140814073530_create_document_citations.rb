@@ -1,4 +1,4 @@
-class CreateDocumentCitations < ActiveRecord::Migration
+class CreateDocumentCitations < ActiveRecord::Migration[4.2]
   def change
     create_table :document_citations do |t|
       t.integer :document_id

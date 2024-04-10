@@ -25,23 +25,23 @@ namespace :import do
 
     files = files_from_args(t, args)
     files.each do |file|
-      Sapi::Indexes.drop_indexes_on_shipments
+      SapiModule::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
       sql = <<-SQL
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
       fix_term_codes = { 12227624 => "LIV", 12225022 => "DER", 12224783 => "DER" }
       fix_term_codes.each do |shipment_number, term_code|
         sql = <<-SQL
           UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
         SQL
-        ActiveRecord::Base.connection.execute(sql)
+        ApplicationRecord.connection.execute(sql)
       end
       update_country_codes
       populate_shipments
       populate_shipments_for_trade_names
-      Sapi::Indexes.create_indexes_on_shipments
+      SapiModule::Indexes.create_indexes_on_shipments
     end
   end
 
@@ -53,23 +53,23 @@ namespace :import do
 
     files = files_from_args(t, args)
     files.each do |file|
-      Sapi::Indexes.drop_indexes_on_shipments
+      SapiModule::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
       sql = <<-SQL
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
       fix_term_codes = { 12227624 => "LIV", 12225022 => "DER", 12224783 => "DER" }
       fix_term_codes.each do |shipment_number, term_code|
         sql = <<-SQL
           UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
         SQL
-        ActiveRecord::Base.connection.execute(sql)
+        ApplicationRecord.connection.execute(sql)
       end
       update_country_codes
       # populate_shipments
       populate_shipments_for_trade_names
-      Sapi::Indexes.create_indexes_on_shipments
+      SapiModule::Indexes.create_indexes_on_shipments
     end
   end
 end
@@ -142,7 +142,7 @@ def update_country_codes
     WHERE quantity_1 IS NULL;
   SQL
   puts "Cleaning Up Import Table #{Time.now.strftime("%d/%m/%Y %H:%M")}"
-  ActiveRecord::Base.connection.execute(sql)
+  ApplicationRecord.connection.execute(sql)
 end
 
 def populate_shipments
@@ -231,7 +231,7 @@ def populate_shipments
       (tc.name_status = 'S' AND taxon_relationships.other_taxon_concept_id = tc.id)
   SQL
   puts "Populating trade_shipments #{Time.now.strftime("%d/%m/%Y %H:%M")}"
-  ActiveRecord::Base.connection.execute(sql)
+  ApplicationRecord.connection.execute(sql)
 end
 
 def populate_shipments_for_trade_names
@@ -312,5 +312,5 @@ def populate_shipments_for_trade_names
     LEFT JOIN geo_entities AS origins ON si.origin_country_code = origins.iso_code2
   SQL
   puts "Populating trade_shipments with Trade Names' shipments #{Time.now.strftime("%d/%m/%Y %H:%M")}"
-  ActiveRecord::Base.connection.execute(sql)
+  ApplicationRecord.connection.execute(sql)
 end

@@ -1,6 +1,6 @@
 class TradePlusFiltersWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :admin, unique: :until_and_while_executing, retry: false
+  sidekiq_options queue: :admin, lock: :until_and_while_executing, retry: false
 
   def perform(locale)
     I18n.with_locale(locale) do

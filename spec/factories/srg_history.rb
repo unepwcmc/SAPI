@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :srg_history do
     sequence(:name) { |n| "srg_history#{n}" }
-    tooltip 'asdfasdf'
+    tooltip { 'asdfasdf' }
   end
 end

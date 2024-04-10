@@ -14,13 +14,14 @@
 
 class NomenclatureChange::Lump < NomenclatureChange
   build_steps(:inputs, :outputs, :notes, :legislation, :summary)
-  attr_accessible :inputs_attributes, :output_attributes
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :inputs_attributes, :output_attributes
   has_many :inputs, :inverse_of => :nomenclature_change,
-    :class_name => NomenclatureChange::Input,
+    :class_name => 'NomenclatureChange::Input',
     :foreign_key => :nomenclature_change_id,
     :dependent => :destroy
   has_one :output, :inverse_of => :nomenclature_change,
-    :class_name => NomenclatureChange::Output,
+    :class_name => 'NomenclatureChange::Output',
     :foreign_key => :nomenclature_change_id,
     :dependent => :destroy
   accepts_nested_attributes_for :inputs, :allow_destroy => true

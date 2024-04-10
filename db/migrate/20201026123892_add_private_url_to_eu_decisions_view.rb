@@ -1,4 +1,4 @@
-class AddPrivateUrlToEuDecisionsView < ActiveRecord::Migration
+class AddPrivateUrlToEuDecisionsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS api_eu_decisions_view"
     execute "CREATE VIEW api_eu_decisions_view AS #{view_sql('20200807121747', 'api_eu_decisions_view')}"

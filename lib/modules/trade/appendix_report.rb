@@ -17,7 +17,7 @@ class Trade::AppendixReport
       SQL
     ).uniq
 
-    @query = Trade::Shipment.from("(#{@query.to_sql}) s").
+    @query = Trade::Shipment.from("(#{@query.to_sql}) AS s").
     select([
       's.id', :legacy_shipment_number, :taxon_concept_id,
       :full_name, :year, :appendix,

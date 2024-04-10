@@ -1,4 +1,3 @@
-require 'fileutils'
 # The purpose of this is to go over all document records and match them
 # with respective files.
 # Where files are present, create the expected directory structure, e.g.

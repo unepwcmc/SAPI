@@ -52,15 +52,15 @@ describe TaxonRelationship do
     }
     specify {
       hybrid_rel.save
-      tc.hybrids.map(&:full_name).should include('Lolcatus lolatus x lolcatus')
+      expect(tc.hybrids.map(&:full_name)).to include('Lolcatus lolatus x lolcatus')
     }
     specify {
       hybrid_rel.save
       another_hybrid_rel.save
       hybrid_rel.other_taxon_concept = another_hybrid
       hybrid_rel.save
-      tc.hybrids.map(&:full_name).should include('Lolcatus lolcatus x ?')
-      another_tc.hybrids.map(&:full_name).should include('Lolcatus lolatus x lolcatus')
+      expect(tc.hybrids.map(&:full_name)).to include('Lolcatus lolcatus x ?')
+      expect(another_tc.hybrids.map(&:full_name)).to include('Lolcatus lolatus x lolcatus')
     }
   end
 end

@@ -15,13 +15,14 @@
 class NomenclatureChange::Split < NomenclatureChange
   build_steps(:inputs, :outputs, :notes, :children, :names, :distribution,
     :legislation, :summary)
-  attr_accessible :input_attributes, :outputs_attributes
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :input_attributes, :outputs_attributes
   has_one :input, :inverse_of => :nomenclature_change,
-    :class_name => NomenclatureChange::Input,
+    :class_name => 'NomenclatureChange::Input',
     :foreign_key => :nomenclature_change_id,
     :dependent => :destroy, :autosave => true
   has_many :outputs, :inverse_of => :nomenclature_change,
-    :class_name => NomenclatureChange::Output,
+    :class_name => 'NomenclatureChange::Output',
     :foreign_key => :nomenclature_change_id,
     :dependent => :destroy, :autosave => true
   accepts_nested_attributes_for :input, :allow_destroy => true

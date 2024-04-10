@@ -3,7 +3,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   defaults :resource_class => ListingChange,
     :collection_name => 'listing_changes', :instance_name => 'listing_change'
   belongs_to :taxon_concept, :designation
-  before_filter :load_search, :except => [:create, :update, :destroy]
+  before_action :load_search, :except => [:create, :update, :destroy]
   layout 'taxon_concepts'
 
   authorize_resource :class => false
@@ -28,12 +28,14 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   def create
     @taxon_concept = TaxonConcept.find(params[:taxon_concept_id])
     @designation = Designation.find(params[:designation_id])
-    @listing_change = ListingChange.new(params[:listing_change])
+    @listing_change = ListingChange.new(listing_change_params)
+
     if @taxon_concept.listing_changes << @listing_change
       redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
     else
       load_change_types
       build_dependants
+      load_search
       render 'new'
     end
   end
@@ -77,13 +79,13 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
     unless @listing_change.party_listing_distribution
       @listing_change.build_party_listing_distribution(
         params[:listing_change] &&
-        params[:listing_change][:party_listing_distribution_attributes]
+        listing_change_params[:party_listing_distribution_attributes]
       )
     end
     unless @listing_change.annotation
       @listing_change.build_annotation(
         params[:listing_change] &&
-        params[:listing_change][:annotation_attributes]
+        listing_change_params[:annotation_attributes]
       )
     end
   end
@@ -128,5 +130,29 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
       where("taxon_concept_id" => @taxon_concept.id).
       order('listing_changes.effective_at DESC').
       page(params[:page]).where(:parent_id => nil)
+  end
+
+  private
+
+  def listing_change_params
+    params.require(:listing_change).permit(
+      :taxon_concept_id, :species_listing_id, :change_type_id,
+      :effective_at, :is_current, :parent_id,
+      :inclusion_taxon_concept_id, :hash_annotation_id, :event_id,
+      :internal_notes,
+      :excluded_taxon_concepts_ids, # String
+      :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+      :created_by_id, :updated_by_id,
+      annotation_attributes: [
+        :listing_change_id, :symbol, :parent_symbol, :short_note_en,
+        :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
+        :display_in_index, :display_in_footnote, :event_id, :id, :_destroy
+      ],
+      party_listing_distribution_attributes: [
+        :id, :_destroy, :geo_entity_id, :listing_change_id, :is_party
+      ],
+      geo_entity_ids: [],
+      excluded_geo_entities_ids: []
+    )
   end
 end

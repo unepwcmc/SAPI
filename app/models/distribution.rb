@@ -12,13 +12,14 @@
 #  internal_notes   :text
 #
 
-class Distribution < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :geo_entity_id, :taxon_concept_id, :tag_list,
-    :references_attributes, :internal_notes, :created_by_id, :updated_by_id
-  acts_as_taggable
+class Distribution < ApplicationRecord
+  include Changeable
+  include TrackWhoDoesIt
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :geo_entity_id, :taxon_concept_id, :tag_list,
+  #   :references_attributes, :internal_notes, :created_by_id, :updated_by_id
 
-  normalise_blank_values
+  acts_as_taggable
 
   belongs_to :geo_entity
   belongs_to :taxon_concept
@@ -31,6 +32,7 @@ class Distribution < ActiveRecord::Base
   accepts_nested_attributes_for :references, :allow_destroy => true
 
   validates :taxon_concept_id, :uniqueness => { :scope => :geo_entity_id, :message => 'already has this distribution' }
+  before_save :normalise_blank_values
 
   def add_existing_references(ids)
     reference_ids = ids.split(",")
@@ -44,6 +46,14 @@ class Distribution < ActiveRecord::Base
             :reference_id => reference.id
           })
       end
+    end
+  end
+
+  private
+
+  def normalise_blank_values
+    attributes.each do |column, value|
+      self[column].present? || self[column] = nil
     end
   end
 end

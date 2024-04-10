@@ -8,7 +8,7 @@ class Trade::ValidationErrorsController < TradeController
 
   def update
     @validation_error = Trade::ValidationError.find(params[:id])
-    if @validation_error.update_attributes(validation_error_params)
+    if @validation_error.update(validation_error_params)
       render json: @validation_error, status: :ok
     else
       render json: { 'errors' => @validation_error.errors },

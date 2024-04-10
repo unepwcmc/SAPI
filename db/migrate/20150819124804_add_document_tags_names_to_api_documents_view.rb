@@ -1,4 +1,4 @@
-class AddDocumentTagsNamesToApiDocumentsView < ActiveRecord::Migration
+class AddDocumentTagsNamesToApiDocumentsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS api_documents_view"
     execute "CREATE VIEW api_documents_view AS #{view_sql('20150819124804', 'api_documents_view')}"

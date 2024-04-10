@@ -1,11 +1,17 @@
 class Api::V1::UnitsController < ApplicationController
-  caches_action :index, :cache_path => Proc.new { |c|
-    { :locale => "en" }.merge(c.params.select { |k, v| !v.blank? && "locale" == k })
-  }
+  CACHE_KEY_ALL = 'all_units'
+
   def index
-    @units = Unit.all(:order => "code")
-    render :json => @units,
+    @all_rows = Rails.cache.fetch(CACHE_KEY_ALL, expires_in: 1.hour) do
+      Unit.all.order(:code).as_json
+    end
+
+    render :json => @all_rows.map { |row_data| Unit.new(row_data) },
       :each_serializer => Species::UnitSerializer,
-      :meta => { :total => @units.count }
+      :meta => { :total => @all_rows.count }
+  end
+
+  def self.invalidate_cache
+    Rails.cache.delete(CACHE_KEY_ALL)
   end
 end

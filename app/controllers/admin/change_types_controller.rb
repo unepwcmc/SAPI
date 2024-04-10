@@ -12,4 +12,12 @@ class Admin::ChangeTypesController < Admin::StandardAuthorizationController
       @designations = Designation.order(:name)
     end
 
+  private
+
+  def change_type_params
+    params.require(:change_type).permit(
+      # attributes were in model `attr_accessible`.
+      :name, :display_name_en, :display_name_es, :display_name_fr, :designation_id
+    )
+  end
 end

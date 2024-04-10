@@ -1,4 +1,4 @@
-class SetupHstore < ActiveRecord::Migration
+class SetupHstore < ActiveRecord::Migration[4.2]
   def self.up
     if Rails.env.staging? or Rails.env.production?
       puts "Please add extension by hand: CREATE EXTENSION hstore"

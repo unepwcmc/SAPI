@@ -1,4 +1,4 @@
-class UpdateTradeShipmentsAppendixIView < ActiveRecord::Migration
+class UpdateTradeShipmentsAppendixIView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP MATERIALIZED VIEW IF EXISTS trade_shipments_appendix_i_mview CASCADE"
     execute "DROP VIEW IF EXISTS trade_shipments_appendix_i_view"

@@ -1,4 +1,4 @@
-class AddIndexesToApiDocumentsMview < ActiveRecord::Migration
+class AddIndexesToApiDocumentsMview < ActiveRecord::Migration[4.2]
   def up
     add_index :api_documents_mview, [:event_id],
       name: 'index_documents_mview_on_event_id'

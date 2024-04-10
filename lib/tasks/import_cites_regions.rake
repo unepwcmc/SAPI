@@ -19,7 +19,7 @@ namespace :import do
           WHERE UPPER(BTRIM(name)) = UPPER(BTRIM(TMP.name)) AND geo_entity_type_id = #{regions_type.id}
         );
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
     puts "There are now #{GeoEntity.count(conditions: { geo_entity_type_id: regions_type.id })} CITES Regions in the database"
   end
@@ -38,7 +38,7 @@ namespace :import do
       WHERE UPPER(BTRIM(t.name)) = UPPER(BTRIM(geo_entities.name_en))
       AND geo_entities.geo_entity_type_id = #{regions_type.id}
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
 end

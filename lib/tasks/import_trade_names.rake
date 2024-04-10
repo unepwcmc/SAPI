@@ -45,7 +45,7 @@ namespace :import do
       ) AS subquery;
     SQL
     puts "Inserting taxon names"
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     sql = <<-SQL
       INSERT INTO taxon_concepts (full_name,
@@ -83,7 +83,7 @@ namespace :import do
       ) AS subquery;
     SQL
     puts "Inserting the trade names into taxon_concepts table"
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     sql = <<-SQL
       INSERT INTO taxon_relationships
@@ -116,7 +116,7 @@ namespace :import do
       ) AS subquery;
     SQL
     puts "Inserting the taxon Relationships between taxon concepts and trade_names"
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
     puts "There are #{TaxonConcept.where(:name_status => "T",
       :taxonomy_id => taxonomy_id).count} Trade Names in the database"
   end
@@ -127,7 +127,7 @@ namespace :import do
     file = "lib/files/synonyms_to_trade_names.csv"
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
-    Sapi::Indexes.drop_indexes_on_trade_names
+    SapiModule::Indexes.drop_indexes_on_trade_names
     copy_data(file, TMP_TABLE)
     has_trade_name = TaxonRelationshipType.
       find_or_create_by(:name => TaxonRelationshipType::HAS_TRADE_NAME).id
@@ -138,7 +138,7 @@ namespace :import do
     count_taxon_names = TaxonName.count
     count_trade_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_trade_name).count
     count_synonym_relationships = TaxonRelationship.where(:taxon_relationship_type_id => has_synonym).count
-    taxon_concept_ids = ActiveRecord::Base.connection.execute("SELECT cites_taxon_code, species_plus_id AS id FROM #{TMP_TABLE}").
+    taxon_concept_ids = ApplicationRecord.connection.execute("SELECT cites_taxon_code, species_plus_id AS id FROM #{TMP_TABLE}").
       map { |h| [h["cites_taxon_code"], h["id"]] }
     taxon_concept_ids.each do |cites_code, id|
       tc = TaxonConcept.find id
@@ -146,15 +146,14 @@ namespace :import do
       puts "Updating #{tc.full_name}"
       unless tc.accepted_names.any?
         puts "from synonym to trade_name"
-        tc.update_attributes(:name_status => "T", :parent_id => nil,
-                            :legacy_trade_code => cites_code)
+        tc.update(:name_status => "T", :parent_id => nil, :legacy_trade_code => cites_code)
       end
       puts "Update its children's taxon_name_id"
       tc.children.each do |child|
         if child.accepted_names.any?
           puts "looking at #{child.full_name} scientific_name"
           taxon_name = TaxonName.find_or_create_by(scientific_name: child.full_name)
-          child.update_attributes(:parent_id => nil, :taxon_name_id => taxon_name.id)
+          child.update(:parent_id => nil, :taxon_name_id => taxon_name.id)
         end
       end
     end
@@ -183,7 +182,7 @@ namespace :import do
       ) as subquery;
 
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     puts "Update trade_species_mapping_import table"
     sql = <<-SQL
@@ -200,7 +199,7 @@ namespace :import do
       FROM new_mapping
       WHERE trade_species_mapping_import.cites_taxon_code = new_mapping.cites_taxon_code;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     final_count_trade_names = TaxonConcept.where(:name_status => 'T').count
     final_count_synonyms = TaxonConcept.where(:name_status => 'S').count
@@ -219,6 +218,6 @@ namespace :import do
       Diff: #{final_count_trade_relationships - count_trade_relationships}"
     puts "Pre-Existing synonym_relationships: #{count_synonym_relationships}; Final count synonym_relationships: #{final_count_synonym_relationships};\
       Diff: #{final_count_synonym_relationships - count_synonym_relationships}"
-    Sapi::Indexes.create_indexes_on_trade_names
+    SapiModule::Indexes.create_indexes_on_trade_names
   end
 end

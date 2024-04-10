@@ -12,7 +12,7 @@ namespace :import do
         puts "There was a problem with this Taxon Concept #{row['ID'].strip}"
         next
       end
-      @nomenclature_change.update_attributes(:status => NomenclatureChange::SUBMITTED)
+      @nomenclature_change.update(:status => NomenclatureChange::SUBMITTED)
     end
   end
 end

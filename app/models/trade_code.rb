@@ -12,9 +12,10 @@
 #  name_fr    :string(255)
 #
 
-class TradeCode < ActiveRecord::Base
-  attr_accessible :code, :type,
-    :name_en, :name_es, :name_fr
+class TradeCode < ApplicationRecord
+  extend Mobility
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :code, :type, :name_en, :name_es, :name_fr
   translates :name
 
   validates :code, :presence => true, :uniqueness => { :scope => :type }

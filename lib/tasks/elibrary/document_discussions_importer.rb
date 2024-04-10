@@ -29,7 +29,7 @@ class Elibrary::DocumentDiscussionsImporter
   end
 
   def run_preparatory_queries
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentOrder = NULL WHERE DocumentOrder='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET DocumentOrder = NULL WHERE DocumentOrder='NULL'")
   end
 
   def run_queries
@@ -44,7 +44,7 @@ class Elibrary::DocumentDiscussionsImporter
       SELECT DiscussionTitle, 'DocumentTag::Discussion', NOW(), NOW()
       FROM missing_discussions;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     # update documents
     sql = <<-SQL
@@ -56,7 +56,7 @@ class Elibrary::DocumentDiscussionsImporter
       FROM rows_to_insert t
       WHERE documents.id = t.id;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   def all_rows_sql

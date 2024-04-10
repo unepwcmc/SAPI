@@ -19,11 +19,12 @@
 
 # Reassignable is a taxon concept that is reassigned to a new parent
 class NomenclatureChange::ParentReassignment < NomenclatureChange::Reassignment
-  attr_accessible :reassignment_target_attributes
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :reassignment_target_attributes
   has_one :reassignment_target, :inverse_of => :reassignment,
-    :class_name => NomenclatureChange::ReassignmentTarget,
+    :class_name => 'NomenclatureChange::ReassignmentTarget',
     :foreign_key => :nomenclature_change_reassignment_id
-  belongs_to :input, class_name: NomenclatureChange::Input,
+  belongs_to :input, class_name: 'NomenclatureChange::Input',
     inverse_of: :parent_reassignments,
     foreign_key: :nomenclature_change_input_id
   accepts_nested_attributes_for :reassignment_target, :allow_destroy => true

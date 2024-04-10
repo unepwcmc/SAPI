@@ -36,7 +36,12 @@ module MaterialDocIdsRetriever
         chi_ids = MTaxonConcept.descendants_ids(params['taxon_concept_id']).map(&:to_i)
         anc_ids | chi_ids
       else
-        check_params = params.symbolize_keys
+        check_params =
+          if params.respond_to?(:permit!)
+            params.dup.permit!.to_h.symbolize_keys
+          else
+            params.symbolize_keys
+          end
         Checklist::Checklist.new(check_params).results.map(&:id)
       end
 
@@ -64,7 +69,7 @@ module MaterialDocIdsRetriever
   end
 
   def self.ancestors_ids(tc_ids, taxon_name = nil, exact_match = nil)
-    res = ActiveRecord::Base.connection.execute(
+    res = ApplicationRecord.connection.execute(
       <<-SQL
       SELECT ancestor_taxon_concept_id
       FROM taxon_concepts_and_ancestors_mview

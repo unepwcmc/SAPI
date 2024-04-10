@@ -13,4 +13,12 @@ class Admin::SpeciesListingsController < Admin::StandardAuthorizationController
       @designations = Designation.order(:name)
     end
 
+  private
+
+  def species_listing_params
+    params.require(:species_listing).permit(
+      # attributes were in model `attr_accessible`.
+      :designation_id, :name, :abbreviation
+    )
+  end
 end

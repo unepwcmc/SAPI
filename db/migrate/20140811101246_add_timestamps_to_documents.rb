@@ -1,4 +1,4 @@
-class AddTimestampsToDocuments < ActiveRecord::Migration
+class AddTimestampsToDocuments < ActiveRecord::Migration[4.2]
   def change
     add_column :documents, :created_at, :datetime
     add_column :documents, :updated_at, :datetime

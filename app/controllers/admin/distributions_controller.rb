@@ -1,12 +1,15 @@
 class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesController
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_filter :load_tags_and_geo_entities, :only => [:new, :edit]
-  before_filter :load_search, :only => [:index]
+  before_action :load_tags_and_geo_entities, :only => [:new, :edit]
+  before_action :load_search, :only => [:index]
 
   def index
-    @distributions = @taxon_concept.distributions.
-      joins(:geo_entity).order('UPPER(geo_entities.name_en) ASC')
+    @distributions = @taxon_concept.distributions.joins(
+      :geo_entity
+    ).order(
+      Arel.sql('UPPER(geo_entities.name_en) ASC')
+    )
   end
 
   def edit
@@ -71,5 +74,16 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
   def load_distributions
     @distributions = @taxon_concept.distributions.
       joins(:geo_entity).order('geo_entities.name_en ASC')
+  end
+
+  private
+
+  def distribution_params
+    params.require(:distribution).permit(
+      # attributes were in model `attr_accessible`.
+      :geo_entity_id, :taxon_concept_id, :internal_notes, :created_by_id, :updated_by_id,
+      references_attributes: [:citation, :created_by_id, :updated_by_id, :id, :_destroy],
+      tag_list: []
+    )
   end
 end

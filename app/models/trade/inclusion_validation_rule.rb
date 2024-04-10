@@ -16,13 +16,23 @@
 #
 
 class Trade::InclusionValidationRule < Trade::ValidationRule
-  attr_accessible :valid_values_view
+  # Only created by seed.
+  # attr_accessible :valid_values_view
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
-    @query = matching_records(annual_report_upload).
-      where(
-        "'#{validation_error.matching_criteria}'::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
-      )
+    # The format of validation_error.matching_criteria seems to vary - sometimes
+    # it's a string, whereas under rspec it's an object.
+    matching_criteria_json = if
+      validation_error.matching_criteria.is_a? String
+    then
+      validation_error.matching_criteria
+    else
+      validation_error.matching_criteria.to_json
+    end
+
+    @query = matching_records(annual_report_upload).where(
+      "#{Arel::Nodes.build_quoted(matching_criteria_json).to_sql}::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
+    )
   end
 
   def error_message(values_hash = nil)
@@ -54,21 +64,28 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def refresh_errors_if_needed(annual_report_upload)
     return true unless refresh_needed?(annual_report_upload)
     errors_to_destroy = validation_errors.to_a
+
     matching_records_grouped(annual_report_upload).map do |mr|
-      values_hash = Hash[column_names.map { |cn| [cn, mr.send(cn)] }]
+      values_hash = matching_record_to_matching_hash(mr)
       values_hash_for_display = Hash[column_names_for_display.map { |cn| [cn, mr.send(cn)] }]
+
       matching_criteria_jsonb = jsonb_matching_criteria_for_comparison(
         values_hash
       )
-      existing_record = validation_errors_for_aru(annual_report_upload).
-        where("matching_criteria @> (#{matching_criteria_jsonb})::JSONB").first
+
+      # if existing_record exists, we will update, rather than create
+      existing_record = validation_errors_for_aru(annual_report_upload).where(
+        "matching_criteria @> (#{matching_criteria_jsonb})::JSONB"
+      ).first
+
       update_or_create_error_record(
         annual_report_upload,
         existing_record,
         mr.error_count.to_i,
         error_message(values_hash_for_display),
-        jsonb_matching_criteria_for_insert(values_hash)
+        values_hash
       )
+
       if existing_record
         errors_to_destroy.reject! { |e| e.id == existing_record.id }
       end
@@ -81,7 +98,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     # if it is, check if it has a match in valid values view
     v = Arel::Table.new(valid_values_view)
     arel_nodes = shipments_columns.map { |c| v[c].eq(shipment.send(c)) }
-    return nil if Trade::Shipment.find_by_sql(v.project('*').where(arel_nodes.inject(&:and))).any?
+    return nil if Trade::Shipment.find_by_sql(v.project(Arel.star).where(arel_nodes.inject(&:and))).any?
     error_message
   end
 
@@ -89,6 +106,10 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def column_names_for_matching
     column_names
+  end
+
+  def column_names_for_display_with_custom_table_name(table_name:)
+    column_names_for_display.map{ |column_name| Arel::Nodes::SqlLiteral.new("#{table_name}.#{column_name}") }
   end
 
   def column_names_for_display
@@ -99,43 +120,51 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     end
   end
 
-  def jsonb_matching_criteria_for_insert(values_hash)
-    jsonb_keys_and_values = column_names.map do |c|
-      is_numeric = (c =~ /.+_id$/ || c == 'year')
-      value = values_hash[c]
-      value_quoted =
-        if is_numeric
-          value
+  ##
+  # Returns a Hash whose keys are all column_names
+  # and whose values are stringified values of those columns
+  # so that there are no type mismatch issues for when we later query
+  # matching_criteria using jsonb_matching_criteria_for_comparison
+  def matching_record_to_matching_hash(mr)
+    (
+      column_names.map do |column_name|
+        column_value = mr.send(column_name)
+        if column_value.nil?
+          [ column_name, column_value ]
         else
-          "\"#{value}\""
+          [ column_name, column_value.to_s ]
         end
-      "\"#{c}\": #{value_quoted}"
-    end.join(', ')
-    '{' + jsonb_keys_and_values + '}'
+      end
+    ).to_h
   end
 
+  ##
+  # Returns a string which can be interpolated into an SQL statement,
+  # and used in an expression (which should be coerced to type JSONB),
+  # checking matching_criteria.
+  #
+  # The string will be at minimum "'{' || ... || '}'" - i.e. it is a
+  # concatenation of sql strings.
   def jsonb_matching_criteria_for_comparison(values_hash = nil)
     jsonb_keys_and_values = column_names.map do |c|
-      is_numeric = (c =~ /.+_id$/ || c == 'year')
       value_present = values_hash && values_hash.key?(c)
       value = value_present && values_hash[c]
       column_reference = c.to_s
       value_or_column_reference_quoted =
-        if value_present && is_numeric
-          value
-        elsif value_present && !is_numeric
-          "'\"#{value}\"'"
-        elsif !value_present && is_numeric
-          column_reference
+        if value_present
+          Arel::Nodes.build_quoted(
+            value.to_s.to_json
+          ).to_sql
         else
           <<-EOT
-            '"' || COALESCE(#{column_reference}, '') || '"'
+            '"' || COALESCE("#{column_reference}"::TEXT, '') || '"'
           EOT
         end
       <<-EOT
         '"' || '#{c}' || '": ' || #{value_or_column_reference_quoted}
       EOT
     end.join("|| ', ' ||")
+
     "'{' || #{jsonb_keys_and_values} || '}'"
   end
 
@@ -145,13 +174,20 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     table_name = annual_report_upload.sandbox.table_name
     Trade::SandboxTemplate.
     select(
-      column_names_for_display +
+      # IMPORTANT NOTE:
+      # After upgrading to Rails 4.1 (Arel 5.0.1), Rails injects the table name in front of column names.
+      # For example: From `SELECT taxon_concept_id FROM...` to `SELECT trade_sandbox_template.taxon_concept_id FROM...`.
+      # There is nothing inherently wrong with Rails, but it doesn't work well with this project, which involves many
+      # highly customized low-level SQL queries.
+      # In this case the FROM clause aliases a name which does not have a model.
+      # A quick and temporary solution for now is to manually inject the correct table name ourselves.
+      column_names_for_display_with_custom_table_name(table_name: 'matching_records') +
       [
         'COUNT(*) AS error_count',
         'ARRAY_AGG(id) AS matching_records_ids'
       ]
-    ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) matching_records")).
-    group(column_names_for_display).having(
+    ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
+    group(column_names_for_display_with_custom_table_name(table_name: 'matching_records')).having(
       required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
     )
   end
@@ -159,8 +195,11 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def matching_records(annual_report_upload)
     table_name = annual_report_upload.sandbox.table_name
     sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
-    sandbox_klass.select('*').
-      from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) matching_records"))
+    sandbox_klass.select(
+      Arel.star
+    ).from(
+      Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")
+    )
   end
 
   # Returns records from sandbox where values in column_names are not null
@@ -172,7 +211,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     end
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each { |n| not_null_conds = not_null_conds.and(n) }
-    result = s.project('*').where(not_null_conds)
+    result = s.project(Arel.star).where(not_null_conds)
     scope_nodes = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
       if scope_def['inclusion']
@@ -198,19 +237,18 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # The valid_values_view should have the same column names and data types as
   # the sandbox columns specified in column_names.
   def matching_records_arel(table_name)
-    s = Arel::Table.new("#{table_name}_view")
-    v = Arel::Table.new(valid_values_view)
-    arel_nodes = column_names_for_matching.map do |c|
-      if required_column_names.include? c
-        v[c].eq(s[c])
+    table_s = Arel::Table.new("#{table_name}_view")
+    table_v = Arel::Table.new(valid_values_view)
+    arel_nodes = column_names_for_matching.map do |column_name|
+      if required_column_names.include?(column_name)
+        table_v[column_name].eq(table_s[column_name])
       else
         # if optional, check if NULL is allowed for this particular combination
         # e.g. unit code can be blank only if paired with certain terms
-        v[c].eq(s[c]).or(v[c].eq(nil).and(s[c].eq(nil)))
+        table_v[column_name].eq(table_s[column_name]).or(table_v[column_name].eq(nil).and(table_s[column_name].eq(nil)))
       end
     end
-    valid_values = s.project(s['*']).join(v).on(arel_nodes.inject(&:and))
-    scoped_records_arel(s).except(valid_values)
+    valid_values = table_s.project(table_s[Arel.star]).join(table_v).on(arel_nodes.inject(&:and))
+    scoped_records_arel(table_s).except(valid_values)
   end
-
 end

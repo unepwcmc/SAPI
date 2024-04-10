@@ -6,7 +6,7 @@
 <tbody>
   <% @taxon_instruments.each do |ti| %>
     <tr>
-      <td><%= ti.instrument.name %></td>
+      <td><%= ti.instrument&.name %></td>
       <td><%= ti.effective_from_formatted %></td>
       <td>
         <%= link_to delete_icon,

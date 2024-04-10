@@ -28,31 +28,34 @@
 
 require 'digest/sha1'
 require 'csv'
-class EuDecision < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :end_date, :end_event_id, :geo_entity_id, :internal_notes,
-    :is_current, :notes, :start_date, :start_event_id, :eu_decision_type_id,
-    :taxon_concept_id, :type, :conditions_apply, :term_id, :source_id,
-    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id, :srg_history_id
+class EuDecision < ApplicationRecord
+  include Changeable
+  extend Mobility
+  include TrackWhoDoesIt
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :end_date, :end_event_id, :geo_entity_id, :internal_notes,
+  #   :is_current, :notes, :start_date, :start_event_id, :eu_decision_type_id,
+  #   :taxon_concept_id, :type, :conditions_apply, :term_id, :source_id,
+  #   :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+  #   :created_by_id, :updated_by_id, :srg_history_id
 
   belongs_to :taxon_concept
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
+  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
   belongs_to :geo_entity
-  belongs_to :eu_decision_type
-  belongs_to :srg_history
-  belongs_to :source, :class_name => 'TradeCode'
-  belongs_to :term, :class_name => 'TradeCode'
-  belongs_to :start_event, :class_name => 'Event'
-  belongs_to :end_event, :class_name => 'Event'
+  belongs_to :eu_decision_type, optional: true
+  belongs_to :srg_history, optional: true
+  belongs_to :source, :class_name => 'TradeCode', optional: true
+  belongs_to :term, :class_name => 'TradeCode', optional: true
+  belongs_to :start_event, :class_name => 'Event', optional: true
+  belongs_to :end_event, :class_name => 'Event', optional: true
   has_many :eu_decision_confirmations,
     :dependent => :destroy
 
-  validates :taxon_concept, presence: true
-  validates :geo_entity, presence: true
   validate :eu_decision_type_and_or_srg_history
 
   translates :nomenclature_note
+
+  after_commit :cache_cleanup, on: :destroy
 
   def year
     start_date ? start_date.strftime('%Y') : ''
@@ -89,5 +92,11 @@ class EuDecision < ActiveRecord::Base
   def eu_decision_type_and_or_srg_history
     return if eu_decision_type_id || srg_history_id
     errors.add(:base, "Eu decision type and SRG history can't be blank at the same time")
+  end
+
+  private
+
+  def cache_cleanup
+    DownloadsCacheCleanupWorker.perform_async('eu_decisions')
   end
 end

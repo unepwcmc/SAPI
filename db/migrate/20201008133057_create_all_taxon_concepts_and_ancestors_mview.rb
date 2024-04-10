@@ -1,4 +1,4 @@
-class CreateAllTaxonConceptsAndAncestorsMview < ActiveRecord::Migration
+class CreateAllTaxonConceptsAndAncestorsMview < ActiveRecord::Migration[4.2]
   def up
     execute "DROP MATERIALIZED VIEW IF EXISTS all_taxon_concepts_and_ancestors_mview"
     execute "CREATE MATERIALIZED VIEW all_taxon_concepts_and_ancestors_mview AS #{view_sql('20201008133057', 'all_taxon_concepts_and_ancestors_mview')}"

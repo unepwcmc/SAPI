@@ -30,16 +30,16 @@ describe TaxonConcept do
     }
     context "when new" do
       specify {
-        tc.has_hybrids?.should be_truthy
+        expect(tc.has_hybrids?).to be_truthy
       }
       specify {
-        hybrid.is_hybrid?.should be_truthy
+        expect(hybrid.is_hybrid?).to be_truthy
       }
       specify {
-        hybrid.has_hybrid_parents?.should be_truthy
+        expect(hybrid.has_hybrid_parents?).to be_truthy
       }
       specify {
-        hybrid.full_name.should == 'Lolcatus lolcatus x lolatus'
+        expect(hybrid.full_name).to eq('Lolcatus lolcatus x lolatus')
       }
     end
     context "when duplicate" do
@@ -47,9 +47,9 @@ describe TaxonConcept do
         hybrid.dup
       }
       specify {
-        lambda do
+        expect do
           duplicate.save
-        end.should change(TaxonConcept, :count).by(0)
+        end.to change(TaxonConcept, :count).by(0)
       }
     end
     context "when duplicate but author name different" do
@@ -59,9 +59,9 @@ describe TaxonConcept do
         res
       }
       specify {
-        lambda do
+        expect do
           duplicate.save
-        end.should change(TaxonConcept, :count).by(1)
+        end.to change(TaxonConcept, :count).by(1)
       }
     end
   end

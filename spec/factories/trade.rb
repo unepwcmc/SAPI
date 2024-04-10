@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :trade_code do
     factory :source, :class => Source do
@@ -24,24 +24,24 @@ FactoryGirl.define do
 
   factory :annual_report_upload, :class => Trade::AnnualReportUpload do
     trading_country
-    point_of_view 'E'
+    point_of_view { 'E' }
   end
 
   factory :validation_rule, :class => Trade::ValidationRule do
-    column_names ['taxon_name']
-    run_order 1
+    column_names { ['taxon_name'] }
+    run_order { 1 }
     factory :presence_validation_rule, :class => Trade::PresenceValidationRule
     factory :numericality_validation_rule, :class => Trade::NumericalityValidationRule
     factory :format_validation_rule, :class => Trade::FormatValidationRule do
-      format_re '^\w+$'
+      format_re { '^\w+$' }
     end
     factory :inclusion_validation_rule, :class => Trade::InclusionValidationRule do
-      valid_values_view 'valid_taxon_concept_view'
+      valid_values_view { 'valid_taxon_concept_view' }
     end
     factory :taxon_concept_appendix_year_validation_rule,
       :class => Trade::TaxonConceptAppendixYearValidationRule do
-      column_names ['taxon_concept_id', 'appendix', 'year']
-      valid_values_view 'valid_taxon_concept_appendix_year_mview'
+      column_names { ['taxon_concept_id', 'appendix', 'year'] }
+      valid_values_view { 'valid_taxon_concept_appendix_year_mview' }
     end
     factory :distinct_values_validation_rule,
       :class => Trade::DistinctValuesValidationRule
@@ -52,8 +52,8 @@ FactoryGirl.define do
   factory :validation_error, :class => Trade::ValidationError do
     annual_report_upload
     validation_rule
-    matching_criteria '{}'
-    is_ignored false
+    matching_criteria {}
+    is_ignored { false }
   end
 
   factory :trade_taxon_concept_term_pair, :class => Trade::TaxonConceptTermPair do
@@ -74,10 +74,10 @@ FactoryGirl.define do
     source
     importer
     exporter
-    quantity 1
-    appendix 'I'
-    year 2013
-    ignore_warnings true
+    quantity { 1 }
+    appendix { 'I' }
+    year { 2013 }
+    ignore_warnings { true }
   end
 
   factory :permit, :class => Trade::Permit do

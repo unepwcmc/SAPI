@@ -7,7 +7,16 @@ class Admin::TagsController < Admin::SimpleCrudController
 
   def collection
     @tags ||= end_of_association_chain.page(params[:page]).
-      order('UPPER(name) ASC, model ASC').
+      order(Arel.sql('UPPER(name) ASC'), :model).
       search(params[:query])
+  end
+
+  private
+
+  def tag_params
+    params.require(:tag).permit(
+      # attributes were in model `attr_accessible`.
+      :model, :name
+    )
   end
 end

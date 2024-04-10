@@ -44,11 +44,11 @@ class Elibrary::DocumentsImporter
   end
 
   def run_preparatory_queries
-    ActiveRecord::Base.connection.execute("DELETE FROM #{table_name} WHERE DocumentTypeName LIKE 'CoP Proceedings%'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentTitle = NULL WHERE DocumentTitle='NULL'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentDate = NULL WHERE DocumentDate='NULL'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET EventDate = NULL WHERE EventDate='NULL'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET DocumentFileName = NULL WHERE DocumentFileName='NULL'")
+    ApplicationRecord.connection.execute("DELETE FROM #{table_name} WHERE DocumentTypeName LIKE 'CoP Proceedings%'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET DocumentTitle = NULL WHERE DocumentTitle='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET DocumentDate = NULL WHERE DocumentDate='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET EventDate = NULL WHERE EventDate='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET DocumentFileName = NULL WHERE DocumentFileName='NULL'")
   end
 
   def run_queries
@@ -91,7 +91,7 @@ class Elibrary::DocumentsImporter
         NOW()
       FROM rows_to_insert_resolved
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     sql = <<-SQL
       WITH rows_with_master_document_id AS (
@@ -110,7 +110,7 @@ class Elibrary::DocumentsImporter
       FROM rows_with_master_document_id
       WHERE rows_with_master_document_id.id = documents.id
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   def all_rows_sql

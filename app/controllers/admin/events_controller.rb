@@ -6,7 +6,7 @@ class Admin::EventsController < Admin::StandardAuthorizationController
     load_associations
     index! do |format|
       format.json {
-        render :text => end_of_association_chain.order(:effective_at, :name).
+        render :json => end_of_association_chain.order(:effective_at, :name).
           select([:id, :name]).map { |d| { :value => d.id, :text => d.name } }.to_json
       }
     end
@@ -42,5 +42,16 @@ class Admin::EventsController < Admin::StandardAuthorizationController
 
   def load_associations
     @designations = Designation.order(:name)
+  end
+
+  private
+
+  def event_params
+    params.require(:event).permit(
+      # attributes were in model `attr_accessible`.
+      :name, :designation_id, :description, :extended_description,
+      :url, :private_url, :multilingual_url, :published_at, :effective_at, :is_current, :end_date,
+      :created_by_id, :updated_by_id
+    )
   end
 end

@@ -58,7 +58,7 @@ describe NomenclatureChange::Lump do
             :inputs_attributes => { 0 => { :taxon_concept_id => create_cites_eu_subspecies.id } }
           )
         }
-        specify { expect(lump).to have(1).errors_on(:inputs) }
+        specify { expect(lump.errors_on(:inputs).size).to eq(1) }
       end
     end
   end

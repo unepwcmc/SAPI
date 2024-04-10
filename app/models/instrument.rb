@@ -9,8 +9,10 @@
 #  updated_at     :datetime         not null
 #
 
-class Instrument < ActiveRecord::Base
-  attr_accessible :designation_id, :name
+class Instrument < ApplicationRecord
+  include Deletable
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :designation_id, :name
 
   validates :name, :presence => true, :uniqueness => { :scope => :designation_id }
 

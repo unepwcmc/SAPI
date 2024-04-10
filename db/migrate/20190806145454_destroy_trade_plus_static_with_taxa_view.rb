@@ -1,4 +1,4 @@
-class DestroyTradePlusStaticWithTaxaView < ActiveRecord::Migration
+class DestroyTradePlusStaticWithTaxaView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS trade_plus_static_complete_view"
     execute "DROP VIEW IF EXISTS trade_plus_static_with_taxa_view"

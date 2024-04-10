@@ -7,10 +7,10 @@ describe Admin::AhoyEventsController, :type => :controller do
   describe "index" do
 
     let!(:ahoy_event1) {
-      FactoryGirl.create(:ahoy_event, :name => "Search")
+      FactoryBot.create(:ahoy_event, :name => "Search")
     }
     let!(:ahoy_event2) {
-      FactoryGirl.create(:ahoy_event, :name => "Taxon Concept")
+      FactoryBot.create(:ahoy_event, :name => "Taxon Concept")
     }
 
     describe "GET index" do

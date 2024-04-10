@@ -7,7 +7,7 @@ describe Api::V1::UnitsController do
     end
     it "returns units" do
       get :index
-      response.body.should have_json_size(1).at_path('units')
+      expect(response.body).to have_json_size(1).at_path('units')
     end
   end
 end

@@ -1,4 +1,4 @@
-class CreateSrgHistories < ActiveRecord::Migration
+class CreateSrgHistories < ActiveRecord::Migration[4.2]
   def up
     create_table :srg_histories do |t|
       t.string :name

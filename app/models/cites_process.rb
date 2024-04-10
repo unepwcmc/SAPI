@@ -1,15 +1,15 @@
-class CitesProcess < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :start_event_id, :geo_entity_id, :resolution, :start_date,
-                  :taxon_concept_id, :notes, :status, :document, :document_title,
-                  :created_by_id, :updated_by_id
+class CitesProcess < ApplicationRecord
+  include TrackWhoDoesIt
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :start_event_id, :geo_entity_id, :resolution, :start_date,
+  #                 :taxon_concept_id, :notes, :status, :document, :document_title,
+  #                 :created_by_id, :updated_by_id
+
   belongs_to :taxon_concept
   belongs_to :geo_entity
-  belongs_to :start_event, :class_name => 'Event'
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
+  belongs_to :start_event, :class_name => 'Event', optional: true
+  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
 
-  validates :taxon_concept, presence: true
-  validates :geo_entity, presence: true
   validates :resolution, presence: true
   validates :start_date, presence: true
 

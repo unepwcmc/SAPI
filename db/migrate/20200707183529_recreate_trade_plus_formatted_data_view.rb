@@ -1,4 +1,4 @@
-class RecreateTradePlusFormattedDataView < ActiveRecord::Migration
+class RecreateTradePlusFormattedDataView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP MATERIALIZED VIEW IF EXISTS trade_plus_complete_mview"
     execute "DROP VIEW IF EXISTS trade_plus_complete_view"

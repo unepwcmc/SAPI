@@ -3,8 +3,8 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
     :collection_name => 'quotas', :instance_name => 'quota'
   belongs_to :taxon_concept
 
-  before_filter :load_lib_objects
-  before_filter :load_search, :except => [:destroy]
+  before_action :load_lib_objects
+  before_action :load_search, :except => [:destroy]
   layout 'taxon_concepts'
 
   authorize_resource :class => false
@@ -65,5 +65,21 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
       order('start_date DESC, geo_entities.name_en ASC,
         notes ASC').
       page(params[:page])
+  end
+
+  private
+
+  def quota_params
+    params.require(:quota).permit(
+      :public_display, :end_date, :geo_entity_id, :is_current,
+      :notes, :publication_date, :quota, :type,
+      :start_date, :unit_id, :internal_notes,
+      :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+      :created_by_id, :updated_by_id, :url,
+      :taxon_concept_id,
+      term_ids: [],
+      source_ids: [],
+      purpose_ids: []
+    )
   end
 end

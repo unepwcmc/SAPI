@@ -24,14 +24,14 @@ namespace :import do
       copy_data(file, TMP_TABLE)
 
       puts "CREATING temporary column and view"
-      ActiveRecord::Base.connection.execute(<<-SQL
+      ApplicationRecord.connection.execute(<<-SQL
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT DISTINCT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
         ORDER BY start_date
       SQL
       )
-      ActiveRecord::Base.connection.execute("ALTER TABLE trade_restrictions DROP COLUMN IF EXISTS import_row_id")
-      ActiveRecord::Base.connection.execute("ALTER TABLE trade_restrictions ADD COLUMN import_row_id integer")
+      ApplicationRecord.connection.execute("ALTER TABLE trade_restrictions DROP COLUMN IF EXISTS import_row_id")
+      ApplicationRecord.connection.execute("ALTER TABLE trade_restrictions ADD COLUMN import_row_id integer")
 
       sql = <<-SQL
         INSERT INTO trade_restrictions(is_current, start_date, end_date, geo_entity_id, quota, publication_date,
@@ -56,7 +56,7 @@ namespace :import do
           WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
       SQL
 
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
 
       # Add Terms & Sources Relationships
       ["terms", "sources"].each do |code|
@@ -72,12 +72,12 @@ namespace :import do
           INNER JOIN trade_codes ON UPPER(trade_codes.code) = UPPER(BTRIM(t.code)) AND trade_codes.type = '#{code.singularize.titleize}'
         SQL
         puts "Linking #{code} to quotas"
-        ActiveRecord::Base.connection.execute(sql)
+        ApplicationRecord.connection.execute(sql)
       end
     end
     puts "DROPPING temporary column and view"
-    ActiveRecord::Base.connection.execute("ALTER TABLE trade_restrictions DROP COLUMN import_row_id")
-    ActiveRecord::Base.connection.execute("DROP VIEW #{TMP_TABLE}_view")
+    ApplicationRecord.connection.execute("ALTER TABLE trade_restrictions DROP COLUMN import_row_id")
+    ApplicationRecord.connection.execute("DROP VIEW #{TMP_TABLE}_view")
 
     puts "There are now #{Quota.count} CITES quotas in the database"
   end

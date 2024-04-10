@@ -22,7 +22,7 @@ describe Trade::ValidationErrorsController do
       :validation_error,
       annual_report_upload_id: annual_report_upload.id,
       validation_rule_id: validation_rule.id,
-      matching_criteria: "{\"taxon_name\": \"Caniis lupus\"}",
+      matching_criteria: { "taxon_name": "Caniis lupus" },
       is_ignored: false,
       is_primary: true,
       error_message: "taxon_name Caniis lupus is invalid",
@@ -32,19 +32,17 @@ describe Trade::ValidationErrorsController do
 
   describe "PUT update" do
     it "should update is_ignored" do
-      put :update,
-        id: validation_error.id,
-        validation_error: {
+      put :update, params: { id: validation_error.id, validation_error: {
           is_ignored: true
-        }
+        } }
       expect(validation_error.reload.is_ignored).to be_truthy
     end
   end
 
   describe "GET show" do
     it "should return success" do
-      get :show, id: validation_error.id, format: :json
-      response.body.should have_json_path('validation_error')
+      get :show, params: { id: validation_error.id, format: :json }
+      expect(response.body).to have_json_path('validation_error')
     end
   end
 

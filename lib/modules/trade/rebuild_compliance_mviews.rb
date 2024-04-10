@@ -1,5 +1,7 @@
 module Trade::RebuildComplianceMviews
   def self.run
+    puts 'Trade::RebuildComplianceMviews.run starting'
+
     [
       :appendix_i,
       :mandatory_quotas,
@@ -12,7 +14,10 @@ module Trade::RebuildComplianceMviews
       puts "Rebuild #{p} mview..."
       self.rebuild_compliance_mview(p)
     end
+
     recreate_non_compliant_view
+
+    puts 'Trade::RebuildComplianceMviews.run complete'
   end
 
   def self.rebuild_sql_views(type, timestamp)
@@ -34,7 +39,7 @@ module Trade::RebuildComplianceMviews
   def self.recreate_mview(type, sql_view)
     view_name = "trade_shipments_#{type}_view"
     mview_name = "trade_shipments_#{type}_mview"
-    ActiveRecord::Base.transaction do
+    ApplicationRecord.transaction do
       command = "DROP MATERIALIZED VIEW IF EXISTS #{mview_name} CASCADE"
       puts command
       puts db.execute(command)
@@ -54,10 +59,12 @@ module Trade::RebuildComplianceMviews
   end
 
   def self.recreate_non_compliant_view
-    db.execute("SELECT rebuild_non_compliant_shipments_view()")
+    command = "SELECT rebuild_non_compliant_shipments_view()"
+    puts command
+    db.execute(command)
   end
 
   def self.db
-    ActiveRecord::Base.connection
+    ApplicationRecord.connection
   end
 end

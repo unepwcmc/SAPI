@@ -29,7 +29,7 @@ namespace :import do
             WHERE "events".name = #{TMP_TABLE}.name
           )
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
     puts "There are now #{Event.count} events in the database"
   end
@@ -60,7 +60,7 @@ namespace :import do
       FROM eu_annex_regulations e
       WHERE e.id = events.id;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   task :cites_cops_start_dates => [:environment] do
@@ -83,7 +83,7 @@ namespace :import do
       FROM cites_cops e
       WHERE e.id = events.id;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
 end

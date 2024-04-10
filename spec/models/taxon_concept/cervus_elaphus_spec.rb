@@ -7,13 +7,13 @@ describe TaxonConcept do
     context "TAXONOMY" do
       describe :full_name do
         context "for subspecies Cervus elaphus bactrianus" do
-          specify { @subspecies1.full_name.should == 'Cervus elaphus bactrianus' }
+          specify { expect(@subspecies1.full_name).to eq('Cervus elaphus bactrianus') }
         end
         context "for species Cervus elaphus" do
-          specify { @species.full_name.should == 'Cervus elaphus' }
+          specify { expect(@species.full_name).to eq('Cervus elaphus') }
         end
         context "for genus Cervus" do
-          specify { @genus.full_name.should == 'Cervus' }
+          specify { expect(@genus.full_name).to eq('Cervus') }
         end
       end
     end
@@ -21,100 +21,100 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for species Cervus elaphus" do
-          specify { @species.cites_listing.should == 'I/II/III/NC' }
+          specify { expect(@species.cites_listing).to eq('I/II/III/NC') }
         end
         context "for subspecies Cervus elaphus bactrianus" do
-          specify { @subspecies1.cites_listing.should == 'II' }
+          specify { expect(@subspecies1.cites_listing).to eq('II') }
         end
         context "for subspecies Cervus elaphus barbarus" do
-          specify { @subspecies2.cites_listing.should == 'III' }
+          specify { expect(@subspecies2.cites_listing).to eq('III') }
         end
         context "for subspecies Cervus elaphus hanglu" do
-          specify { @subspecies3.cites_listing.should == 'I' }
+          specify { expect(@subspecies3.cites_listing).to eq('I') }
         end
         context "for subspecies Cervus elaphus canadensis" do
-          specify { @subspecies4.cites_listing.should == 'NC' }
+          specify { expect(@subspecies4.cites_listing).to eq('NC') }
         end
       end
 
       describe :eu_listing do
         context "for species Cervus elaphus" do
-          specify { @species.eu_listing.should == 'A/B/C/NC' }
+          specify { expect(@species.eu_listing).to eq('A/B/C/NC') }
         end
         context "for subspecies Cervus elaphus bactrianus" do
-          specify { @subspecies1.eu_listing.should == 'B' }
+          specify { expect(@subspecies1.eu_listing).to eq('B') }
         end
         context "for subspecies Cervus elaphus barbarus" do
-          specify { @subspecies2.eu_listing.should == 'C' }
+          specify { expect(@subspecies2.eu_listing).to eq('C') }
         end
         context "for subspecies Cervus elaphus hanglu" do
-          specify { @subspecies3.eu_listing.should == 'A' }
+          specify { expect(@subspecies3.eu_listing).to eq('A') }
         end
         context "for subspecies Cervus elaphus canadensis" do
-          specify { @subspecies4.eu_listing.should == 'NC' }
+          specify { expect(@subspecies4.eu_listing).to eq('NC') }
         end
       end
 
       describe :cites_listed do
         context "for order Artiodactyla" do
-          specify { @order.cites_listed.should == false }
+          specify { expect(@order.cites_listed).to eq(false) }
         end
         context "for family Cervidae" do
-          specify { @family.cites_listed.should == false }
+          specify { expect(@family.cites_listed).to eq(false) }
         end
         context "for genus Cervus" do
-          specify { @genus.cites_listed.should == false }
+          specify { expect(@genus.cites_listed).to eq(false) }
         end
         context "for species Cervus elaphus" do
-          specify { @species.cites_listed.should == false }
+          specify { expect(@species.cites_listed).to eq(false) }
         end
         context "for subspecies Cervus elaphus bactrianus" do
-          specify { @subspecies1.cites_listed.should be_truthy }
+          specify { expect(@subspecies1.cites_listed).to be_truthy }
         end
         context "for subspecies Cervus elaphus barbarus" do
-          specify { @subspecies2.cites_listed.should be_truthy }
+          specify { expect(@subspecies2.cites_listed).to be_truthy }
         end
         context "for subspecies Cervus elaphus hanglu" do
-          specify { @subspecies3.cites_listed.should be_truthy }
+          specify { expect(@subspecies3.cites_listed).to be_truthy }
         end
         context "for subspecies Cervus elaphus canadensis" do
-          specify { @subspecies4.cites_listed.should be_blank }
+          specify { expect(@subspecies4.cites_listed).to be_blank }
         end
       end
 
       describe :eu_listed do
         context "for order Artiodactyla" do
-          specify { @order.eu_listed.should == false }
+          specify { expect(@order.eu_listed).to eq(false) }
         end
         context "for family Cervidae" do
-          specify { @family.eu_listed.should == false }
+          specify { expect(@family.eu_listed).to eq(false) }
         end
         context "for genus Cervus" do
-          specify { @genus.eu_listed.should == false }
+          specify { expect(@genus.eu_listed).to eq(false) }
         end
         context "for species Cervus elaphus" do
-          specify { @species.eu_listed.should == false }
+          specify { expect(@species.eu_listed).to eq(false) }
         end
         context "for subspecies Cervus elaphus bactrianus" do
-          specify { @subspecies1.eu_listed.should be_truthy }
+          specify { expect(@subspecies1.eu_listed).to be_truthy }
         end
         context "for subspecies Cervus elaphus barbarus" do
-          specify { @subspecies2.eu_listed.should be_truthy }
+          specify { expect(@subspecies2.eu_listed).to be_truthy }
         end
         context "for subspecies Cervus elaphus hanglu" do
-          specify { @subspecies3.eu_listed.should be_truthy }
+          specify { expect(@subspecies3.eu_listed).to be_truthy }
         end
         context "for subspecies Cervus elaphus canadensis" do
-          specify { @subspecies4.eu_listed.should be_blank }
+          specify { expect(@subspecies4.eu_listed).to be_blank }
         end
       end
 
       describe :cites_show do
         context "for subspecies Cervus elaphus hanglu" do
-          specify { @subspecies3.cites_show.should be_truthy }
+          specify { expect(@subspecies3.cites_show).to be_truthy }
         end
         context "for subspecies Cervus elaphus canadensis" do
-          specify { @subspecies4.cites_show.should be_falsey }
+          specify { expect(@subspecies4.cites_show).to be_falsey }
         end
       end
 

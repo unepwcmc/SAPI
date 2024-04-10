@@ -1,4 +1,4 @@
-class AddInternalNomenclatureNoteColumns < ActiveRecord::Migration
+class AddInternalNomenclatureNoteColumns < ActiveRecord::Migration[4.2]
   def change
     add_column :taxon_concepts, :internal_nomenclature_note, :text
     add_column :listing_changes, :internal_nomenclature_note, :text

@@ -42,17 +42,17 @@ describe Admin::ListingChangesController do
         :event_id => @eu_regulation.id,
         :effective_at => 1.week.ago
       )
-      get :index, :eu_regulation_id => @eu_regulation.id
-      assigns(:listing_changes).should eq([listing_change2, listing_change1])
-      assigns(:eu_regulation).should eq @eu_regulation
+      get :index, params: { :eu_regulation_id => @eu_regulation.id }
+      expect(assigns(:listing_changes)).to eq([listing_change2, listing_change1])
+      expect(assigns(:eu_regulation)).to eq @eu_regulation
     end
     it "renders the index template" do
-      get :index, :eu_regulation_id => @eu_regulation.id
-      response.should render_template("index")
+      get :index, params: { :eu_regulation_id => @eu_regulation.id }
+      expect(response).to render_template("index")
     end
     it "renders the admin layout" do
-      get :index, :eu_regulation_id => @eu_regulation.id
-      response.should render_template('layouts/admin')
+      get :index, params: { :eu_regulation_id => @eu_regulation.id }
+      expect(response).to render_template('layouts/admin')
     end
   end
 
@@ -68,9 +68,8 @@ describe Admin::ListingChangesController do
       )
     end
     it "redirects after delete" do
-      delete :destroy, :id => @listing_change.id,
-        :eu_regulation_id => @eu_regulation.id
-      response.should redirect_to(
+      delete :destroy, params: { :id => @listing_change.id, :eu_regulation_id => @eu_regulation.id }
+      expect(response).to redirect_to(
         admin_eu_regulation_listing_changes_url(@eu_regulation)
       )
     end

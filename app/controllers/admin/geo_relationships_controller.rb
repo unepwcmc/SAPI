@@ -1,8 +1,8 @@
 class Admin::GeoRelationshipsController < Admin::StandardAuthorizationController
 
   belongs_to :geo_entity
-  before_filter :load_geo_relationship_types, :only => [:index, :create]
-  before_filter :load_geo_entities, :only => [:index, :create]
+  before_action :load_geo_relationship_types, :only => [:index, :create]
+  before_action :load_geo_entities, :only => [:index, :create]
 
   def index
     index! do
@@ -36,4 +36,12 @@ class Admin::GeoRelationshipsController < Admin::StandardAuthorizationController
       page(params[:page])
   end
 
+  private
+
+  def geo_relationship_params
+    params.require(:geo_relationship).permit(
+      # attributes were in model `attr_accessible`.
+      :geo_entity_id, :geo_relationship_type_id, :other_geo_entity_id
+    )
+  end
 end

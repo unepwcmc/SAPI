@@ -1,7 +1,7 @@
 class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationController
   defaults :resource_class => TaxonConceptReference, :collection_name => 'taxon_concept_references', :instance_name => 'taxon_concept_reference'
   belongs_to :taxon_concept
-  before_filter :load_search, :only => [:index]
+  before_action :load_search, :only => [:index]
   respond_to :js, :only => [:new, :create]
   layout 'taxon_concepts'
 
@@ -69,5 +69,17 @@ class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationCont
         :notice => 'Operation failed'
       }
     end
+  end
+
+  private
+
+  def taxon_concept_reference_params
+    params.require(:taxon_concept_reference).permit(
+      # attributes were in model `attr_accessible`.
+      :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
+      :created_by_id, :updated_by_id,
+      :excluded_taxon_concepts_ids, # String
+      reference_attributes: [:citation, :created_by_id, :updated_by_id, :id, :_destroy]
+    )
   end
 end

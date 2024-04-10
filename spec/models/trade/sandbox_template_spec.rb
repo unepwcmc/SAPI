@@ -54,8 +54,8 @@ describe Trade::SandboxTemplate, :drops_tables => true do
       @shipment1 = sandbox_klass.create(:taxon_name => canis_lupus.full_name)
     end
     specify {
-      @shipment1.update_attributes(:taxon_name => canis_aureus.full_name)
-      @shipment1.reload.taxon_concept_id.should == canis_aureus.id
+      @shipment1.update(:taxon_name => canis_aureus.full_name)
+      expect(@shipment1.reload.taxon_concept_id).to eq(canis_aureus.id)
     }
   end
 
@@ -68,7 +68,7 @@ describe Trade::SandboxTemplate, :drops_tables => true do
         :validation_error,
         annual_report_upload_id: annual_report_upload.id,
         validation_rule_id: validation_rule.id,
-        matching_criteria: "{\"taxon_name\": \"Caniis lupus\"}",
+        matching_criteria: { "taxon_name": "Caniis lupus" },
         is_ignored: false,
         is_primary: true,
         error_message: "taxon_name Caniis lupus is invalid",
@@ -76,13 +76,13 @@ describe Trade::SandboxTemplate, :drops_tables => true do
       )
     end
     specify {
-      @shipment.reload.taxon_concept_id.should be_nil
+      expect(@shipment.reload.taxon_concept_id).to be_nil
       sandbox_klass.update_batch(
         { taxon_name: 'Canis lupus' },
         @validation_error,
         annual_report_upload
       )
-      @shipment.reload.taxon_concept_id.should == canis_lupus.id
+      expect(@shipment.reload.taxon_concept_id).to eq(canis_lupus.id)
     }
   end
 

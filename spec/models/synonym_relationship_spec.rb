@@ -51,15 +51,15 @@ describe TaxonRelationship do
     }
     specify {
       synonymy_rel.save
-      tc.synonyms.map(&:full_name).should include('Lolcatus lolus')
+      expect(tc.synonyms.map(&:full_name)).to include('Lolcatus lolus')
     }
     specify {
       synonymy_rel.save
       another_synonymy_rel.save
       synonymy_rel.other_taxon_concept = another_synonym
       synonymy_rel.save
-      tc.synonyms.map(&:full_name).should include('Lolcatus lolatus')
-      another_tc.synonyms.map(&:full_name).should include('Lolcatus lolus')
+      expect(tc.synonyms.map(&:full_name)).to include('Lolcatus lolatus')
+      expect(another_tc.synonyms.map(&:full_name)).to include('Lolcatus lolus')
     }
   end
 end

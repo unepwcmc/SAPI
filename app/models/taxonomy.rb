@@ -8,11 +8,13 @@
 #  updated_at :datetime         not null
 #
 
-class Taxonomy < ActiveRecord::Base
+class Taxonomy < ApplicationRecord
+  include Deletable
   include Dictionary
   build_dictionary :cites_eu, :cms
 
-  attr_accessible :name
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :name
   has_many :designations
   has_many :taxon_concepts
 

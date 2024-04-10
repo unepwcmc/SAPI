@@ -7,34 +7,39 @@ class Checklist::DownloadsController < ApplicationController
   def index
     ids = params[:ids] || ""
     @downloads = Download.where(:id => ids).order('updated_at DESC').limit(5)
-    @downloads.map! { |v| v.attributes.except("filename", "path") }
+    @downloads = @downloads.map { |v| v.attributes.except("filename", "path") }
     @downloads.each do |v|
       v["updated_at"] = v["updated_at"].strftime("%A, %e %b %Y %H:%M")
     end
 
-    render :text => @downloads.to_json
+    render :json => @downloads.to_json
   end
+
+  # Permissions are not checked here, therefore CSRF is redundant.
+  # Requests are triggered from the CITES checklist which has no means of
+  # generating adequate CSRF protection.
+  skip_before_action :verify_authenticity_token, only:[:create]
 
   # POST downloads/
   def create
-    @download = Download.create(params[:download])
-    if params[:download][:doc_type] == 'citesidmanual'
-      ManualDownloadWorker.perform_async(@download.id, params)
+    @download = Download.create(download_params)
+    if download_params[:doc_type] == 'citesidmanual'
+      ManualDownloadWorker.perform_async(@download.id, params.dup.permit!.to_h)
     else
-      DownloadWorker.perform_async(@download.id, params)
+      DownloadWorker.perform_async(@download.id, params.dup.permit!.to_h)
     end
 
     @download = @download.attributes.except("filename", "path")
     @download["updated_at"] = @download["updated_at"].strftime("%A, %e %b %Y %H:%M")
 
-    render :text => @download.to_json
+    render :json => @download.to_json
   end
 
   # GET downloads/:id/
   def show
     @download = Download.find(params[:id])
 
-    render :text => { status: @download.status }.to_json
+    render :json => { status: @download.status }
   end
 
   # GET downloads/:id/download
@@ -53,17 +58,17 @@ class Checklist::DownloadsController < ApplicationController
         :filename => @download.filename,
         :type => @download.format)
     else
-      render :text => { error: "Download not processed" }.to_json
+      render :json => { error: "Download not processed" }
     end
   end
 
   def download_index
-    @doc = download_module::Index.new(params)
+    @doc = download_module::Index.new(checklist_params)
     send_download
   end
 
   def download_history
-    @doc = download_module::History.new(params)
+    @doc = download_module::History.new(checklist_params)
     send_download
   end
 
@@ -90,7 +95,21 @@ class Checklist::DownloadsController < ApplicationController
   end
 
   def not_found
-    render :text => { error: "No downloads available" }.to_json
+    render :json => { error: "No downloads available" }
   end
 
+  def download_params
+    params.require(:download).permit(
+      # attributes used in this controller.
+      :doc_type,
+      # other attributes were in model `attr_accessible`.
+      :format
+    )
+  end
+
+  def checklist_params
+    Checklist::ChecklistParams.sanitize(
+      params
+    )
+  end
 end

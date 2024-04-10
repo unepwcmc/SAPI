@@ -1,4 +1,4 @@
-class AddMultiLingualNomenclatureNotesToAllLegislation < ActiveRecord::Migration
+class AddMultiLingualNomenclatureNotesToAllLegislation < ActiveRecord::Migration[4.2]
   def change
     rename_column :eu_decisions, :nomenclature_note, :nomenclature_note_en
     add_column :eu_decisions, :nomenclature_note_es, :text

@@ -1,8 +1,8 @@
 class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationController
 
   belongs_to :taxon_concept
-  before_filter :load_taxon_relationship_types, :only => [:index, :create]
-  before_filter :load_search, :except => [:create, :update, :destroy]
+  before_action :load_taxon_relationship_types, :only => [:index, :create]
+  before_action :load_search, :except => [:create, :update, :destroy]
   layout 'taxon_concepts'
 
   def index
@@ -24,7 +24,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
     # we want it to use the information that comes from the form in the params hash.
     # We still want the @taxon_concept variable to be instantiated, so we keep using
     # the *belongs_to* helper for that.
-    @taxon_relationship = TaxonRelationship.new(params[:taxon_relationship])
+    @taxon_relationship = TaxonRelationship.new(taxon_relationship_params)
 
     create! do |success, failure|
       success.js { render 'create' }
@@ -69,5 +69,14 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
       joins(:taxon_relationship_type).
       where(:"taxon_relationship_types.name" => @taxon_relationship_type.name).
       page(params[:page])
+  end
+
+  private
+
+  def taxon_relationship_params
+    params.require(:taxon_relationship).permit(
+      :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
+      :created_by_id, :updated_by_id
+    )
   end
 end

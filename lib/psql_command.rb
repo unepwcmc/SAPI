@@ -1,7 +1,7 @@
 class PsqlCommand
 
   def initialize(sql_cmd)
-    db_conf = ActiveRecord::Base.connection_config
+    db_conf = ApplicationRecord.connection_db_config.configuration_hash
     @host = db_conf[:host] || 'localhost'
     @port = db_conf[:port] || 5432
     @username = db_conf[:username]

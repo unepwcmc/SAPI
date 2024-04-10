@@ -3,7 +3,7 @@ class UpdateTaxonomyWorker
 
   def perform
     puts "Procedure: taxonomy"
-    ActiveRecord::Base.connection.execute(
+    ApplicationRecord.connection.execute(
       "SELECT * FROM rebuild_taxonomy()"
     )
 
@@ -15,9 +15,10 @@ class UpdateTaxonomyWorker
       Species::TaxonConceptPrefixMatcher.increment_cache_iterator
       Checklist::Checklist.increment_cache_iterator
 
-      TaxonConcept.update_all(
-        'updated_at = touched_at',
+      TaxonConcept.where(
         'touched_at IS NOT NULL AND touched_at > updated_at'
+      ).update_all(
+        'updated_at = touched_at',
       )
     end
   end

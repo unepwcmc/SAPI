@@ -42,7 +42,7 @@ def attributes_for_variety
   { name: Rank::VARIETY, taxonomic_position: '7.2', fixed_order: false }
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :rank do
     name {
       [

@@ -6,20 +6,19 @@ describe Admin::TagsController do
   describe "GET index" do
     it "renders the index template" do
       get :index
-      response.should render_template("index")
-      response.should render_template("layouts/admin")
+      expect(response).to render_template("index")
+      expect(response).to render_template("layouts/admin")
     end
   end
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create,
-        preset_tag: { name: "Test Tag", model: "TaxonConcept" }
-      response.should render_template("create")
+      post :create, params: { tag: { name: "Test Tag", model: "TaxonConcept" } }, xhr: true
+      expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, preset_tag: {}
-      response.should render_template("new")
+      post :create, params: { tag: { dummy: 'test' } }, xhr: true
+      expect(response).to render_template("new")
     end
   end
 
@@ -27,14 +26,12 @@ describe Admin::TagsController do
     let(:preset_tag) { create(:preset_tag) }
     context "when JSON" do
       it "responds with 200 when successful" do
-        xhr :put, :update, :format => 'json', :id => preset_tag.id,
-          :preset_tag => {}
-        response.should be_success
+        put :update, :format => 'json', params: { :id => preset_tag.id, :tag => { dummy: 'test' } }, xhr: true
+        expect(response).to be_successful
       end
       it "responds with json error when not successful" do
-        xhr :put, :update, :format => 'json', :id => preset_tag.id,
-          :preset_tag => { :model => 'FakeCategory' }
-        JSON.parse(response.body).should include('errors')
+        put :update, :format => 'json', params: { :id => preset_tag.id, :tag => { :model => 'FakeCategory' } }, xhr: true
+        expect(JSON.parse(response.body)).to include('errors')
       end
     end
   end
@@ -42,8 +39,8 @@ describe Admin::TagsController do
   describe "DELETE destroy" do
     let(:preset_tag) { create(:preset_tag) }
     it "redirects after delete" do
-      delete :destroy, :id => preset_tag.id
-      response.should redirect_to(admin_tags_url)
+      delete :destroy, params: { :id => preset_tag.id }
+      expect(response).to redirect_to(admin_tags_url)
     end
   end
 end

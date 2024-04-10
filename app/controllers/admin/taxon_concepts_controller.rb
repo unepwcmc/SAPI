@@ -1,11 +1,11 @@
 class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   respond_to :json
   layout :determine_layout
-  before_filter :sanitize_search_params, :only => [:index, :autocomplete]
-  before_filter :load_taxonomies, only: [:index, :edit]
-  before_filter :load_ranks, only: [:index, :edit]
-  before_filter :load_tags, :only => [:index, :edit]
-  before_filter :split_stringified_ids_lists, only: [:create, :update]
+  before_action :sanitize_search_params, :only => [:index, :autocomplete]
+  before_action :load_taxonomies, only: [:index, :edit]
+  before_action :load_ranks, only: [:index, :edit]
+  before_action :load_tags, :only => [:index, :edit]
+  before_action :split_stringified_ids_lists, only: [:create, :update]
 
   def index
     @taxon_concept = TaxonConcept.new
@@ -104,6 +104,8 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     @tags = PresetTag.where(:model => PresetTag::TYPES[:TaxonConcept])
   end
 
+  # The frontend will send these as comma-separated string lists of ids
+  # We need to coerce them to arrays of integers.
   def split_stringified_ids_lists
     return true if !params[:taxon_concept] || !params[:taxon_concept][:name_status]
     ids_list_key =
@@ -134,4 +136,21 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     end
   end
 
+  private
+
+  def taxon_concept_params
+    params.require(:taxon_concept).permit(
+      # attributes were in model `attr_accessible`.
+      :parent_id, :taxonomy_id, :rank_id,
+      :parent_id, :author_year, :taxon_name_id, :taxonomic_position,
+      :legacy_id, :legacy_type, :scientific_name, :name_status,
+      :legacy_trade_code,
+      :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+      :created_by_id, :updated_by_id, :dependents_updated_at, :kew_id,
+      hybrid_parents_ids: [], # Coerced to int array by split_stringified_ids_lists
+      accepted_names_ids: [], # Coerced to int array by split_stringified_ids_lists
+      accepted_names_for_trade_name_ids: [], # Coerced to int array by split_stringified_ids_lists
+      tag_list: []
+    )
+  end
 end

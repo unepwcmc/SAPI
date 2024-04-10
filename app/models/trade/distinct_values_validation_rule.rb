@@ -40,7 +40,7 @@ class Trade::DistinctValuesValidationRule < Trade::InclusionValidationRule
   def matching_records_arel(table_name)
     s = Arel::Table.new("#{table_name}_view")
     arel_columns = column_names.map { |c| Arel::Attribute.new(s, c) }
-    Trade::SandboxTemplate.select('*').from("#{table_name}_view").where(
+    Trade::SandboxTemplate.select(Arel.star).from("#{table_name}_view").where(
       arel_columns.shift.eq(arel_columns.shift)
     )
   end

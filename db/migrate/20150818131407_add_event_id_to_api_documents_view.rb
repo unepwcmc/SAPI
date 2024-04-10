@@ -1,4 +1,4 @@
-class AddEventIdToApiDocumentsView < ActiveRecord::Migration
+class AddEventIdToApiDocumentsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP VIEW IF EXISTS api_documents_view"
     execute "CREATE VIEW api_documents_view AS #{view_sql('20150818131407', 'api_documents_view')}"
