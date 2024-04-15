@@ -63,7 +63,7 @@ gem 'httparty', '~> 0.21.0'
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
 gem 'acts-as-taggable-on', '~> 10.0'
-gem 'carrierwave', '~> 3.0', '>= 3.0.5'
+gem 'carrierwave', '~> 3.0'
 
 # PDF
 gem 'prawn', '0.13.2'
