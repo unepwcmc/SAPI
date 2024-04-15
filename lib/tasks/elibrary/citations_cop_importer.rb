@@ -17,9 +17,9 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
 
   def run_preparatory_queries
     super()
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalNature = NULL WHERE ProposalNature='NULL'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalOutcome = NULL WHERE ProposalOutcome='NULL'")
-    ActiveRecord::Base.connection.execute("UPDATE #{table_name} SET ProposalRepresentation = NULL WHERE ProposalRepresentation='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET ProposalNature = NULL WHERE ProposalNature='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET ProposalOutcome = NULL WHERE ProposalOutcome='NULL'")
+    ApplicationRecord.connection.execute("UPDATE #{table_name} SET ProposalRepresentation = NULL WHERE ProposalRepresentation='NULL'")
 
     # revert any previous CoP document duplication
     sql = <<-SQL
@@ -36,7 +36,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
       DELETE FROM documents
       WHERE original_id IS NOT NULL;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   def run_final_queries
@@ -101,7 +101,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
       FROM proposal_details_to_update pd
       WHERE proposal_details.id = pd.id;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
     # in case you need to revert
     # WITH new_docs AS (
     #   SELECT * FROM documents WHERE original_id IS NOT NULL
@@ -122,7 +122,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
       proposal_details pd
       WHERE documents.id = pd.document_id;
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   def run_queries
@@ -140,7 +140,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
       SELECT document_id, proposal_outcome_id, ProposalNature, ProposalRepresentation, ProposalNo, NOW(), NOW()
       FROM rows_to_insert_resolved
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
     run_final_queries
   end
 

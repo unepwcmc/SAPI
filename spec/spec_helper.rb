@@ -7,14 +7,16 @@ Coveralls::Output.no_color = true
 formatters = [Coveralls::SimpleCov::Formatter, SimpleCov::Formatter::HTMLFormatter]
 formatters.push CodeClimate::TestReporter::Formatter if ENV['CI']
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
-SimpleCov.start 'rails'
+SimpleCov.formatters = formatters
+SimpleCov.start 'rails' do
+  add_group "Services", "app/services"
+  add_group "Serializers", "app/serializers"
+end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
 require 'sidekiq/testing'
 require 'capybara/rspec'
 require 'capybara/rails'
@@ -47,17 +49,22 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = true
   config.infer_spec_type_from_file_location!
 
-  config.include Devise::TestHelpers, type: :controller
+  config.include ActiveSupport::Testing::TimeHelpers
+  config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, :type => :controller
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include JsonSpec::Helpers
   config.include SapiSpec::Helpers
 
   config.before(:all) do
+    # https://github.com/thoughtbot/factory_bot/issues/1255
+    # https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md#build-strategies-1
+    FactoryBot.use_parent_strategy = false
+
     DatabaseCleaner.clean_with(:deletion, { :cache_tables => false })
     @user = create(:user)
-    @user.make_current
+    RequestStore.store[:track_who_does_it_current_user] = @user
   end
 
   config.before(:each) do
@@ -66,7 +73,7 @@ RSpec.configure do |config|
 
   config.before(:each, :drops_tables => true) do
     DatabaseCleaner.strategy = :deletion, { :cache_tables => false }
-    ActiveRecord::Base.connection.execute('SELECT * FROM drop_trade_sandboxes()')
+    ApplicationRecord.connection.execute('SELECT * FROM drop_trade_sandboxes()')
   end
 
   config.before(:each) do
@@ -77,7 +84,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
     # this is duplicated here because of the :drops_tables specs
     @user = create(:user)
-    @user.make_current
+    RequestStore.store[:track_who_does_it_current_user] = @user
   end
 
   config.before(:each) do |example|
@@ -98,22 +105,7 @@ RSpec.configure do |config|
 end
 
 def build_attributes(*args)
-  FactoryGirl.build(*args).attributes.delete_if do |k, v|
+  FactoryBot.build(*args).attributes.delete_if do |k, v|
     ["id", "created_at", "updated_at", "touched_at"].member?(k)
   end
-end
-
-def sign_up(user, opts = {})
-  options = {
-    terms_and_conditions: true
-  }.merge(opts)
-  visit api_path
-  within('#registration-form') do
-    fill_in 'user_name', :with => user.name
-    fill_in 'user_email', :with => user.email
-    fill_in 'Password', :with => user.password
-    fill_in 'Password confirmation', :with => user.password
-    find(:css, "#user_terms_and_conditions").set(options[:terms_and_conditions])
-  end
-  click_button 'Sign up'
 end

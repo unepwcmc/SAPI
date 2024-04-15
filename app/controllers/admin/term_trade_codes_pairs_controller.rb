@@ -1,7 +1,7 @@
 class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationController
 
-  before_filter :load_term_codes, :only => [:index, :create]
-  before_filter :load_trade_code_types, :only => [:index, :create]
+  before_action :load_term_codes, :only => [:index, :create]
+  before_action :load_trade_code_types, :only => [:index, :create]
 
   def index
     load_associations
@@ -50,5 +50,13 @@ class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationControl
       order('term_id').
       page(params[:page]).
       search(params[:query])
+  end
+
+  private
+
+  def term_trade_codes_pair_params
+    params.require(:term_trade_codes_pair).permit(
+      :trade_code_id, :trade_code_type, :term_id
+    )
   end
 end

@@ -4,5 +4,5 @@ Species.DownloadsPopup = Ember.View.extend
 
   didInsertElement: () ->
     $('input[name=csv_separator]').click( (e) ->
-      $.cookie('speciesplus.csv_separator', e.target.value)
+      Cookies.set('speciesplus.csv_separator', e.target.value)
     )

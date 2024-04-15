@@ -1,4 +1,4 @@
-class CreateApiHigherTaxaType < ActiveRecord::Migration
+class CreateApiHigherTaxaType < ActiveRecord::Migration[4.2]
   def change
     execute <<-SQL
     DROP TYPE IF EXISTS api_higher_taxa CASCADE;

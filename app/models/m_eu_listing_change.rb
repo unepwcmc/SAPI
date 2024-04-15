@@ -60,7 +60,7 @@
 #  geo_entity_type            :string(255)
 #
 
-class MEuListingChange < ActiveRecord::Base
+class MEuListingChange < ApplicationRecord
   self.table_name = :eu_listing_changes_mview
   self.primary_key = :id
   include MListingChange

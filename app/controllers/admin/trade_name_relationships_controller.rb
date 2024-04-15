@@ -2,7 +2,7 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
   defaults :resource_class => TaxonRelationship, :collection_name => 'trade_name_relationships', :instance_name => 'trade_name_relationship'
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_filter :load_trade_name_relationship_type, :only => [:new, :create, :update]
+  before_action :load_trade_name_relationship_type, :only => [:new, :create, :update]
 
   def new
     new! do |format|
@@ -61,6 +61,15 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
   def load_trade_name_relationship_type
     @trade_name_relationship_type = TaxonRelationshipType.
       find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
+  end
+
+  private
+
+  def trade_name_relationship_params
+    params.require(:taxon_relationship).permit(
+      :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
+      :created_by_id, :updated_by_id
+    )
   end
 
 end

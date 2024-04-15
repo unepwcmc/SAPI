@@ -1,4 +1,4 @@
-class CreateApiRequests < ActiveRecord::Migration
+class CreateApiRequests < ActiveRecord::Migration[4.2]
   def change
     create_table :api_requests do |t|
       t.references :user, index: true

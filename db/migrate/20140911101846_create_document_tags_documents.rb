@@ -1,4 +1,4 @@
-class CreateDocumentTagsDocuments < ActiveRecord::Migration
+class CreateDocumentTagsDocuments < ActiveRecord::Migration[4.2]
   def change
     create_table :document_tags_documents, :id => false do |t|
       t.references :document

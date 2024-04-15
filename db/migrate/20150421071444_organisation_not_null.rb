@@ -1,4 +1,4 @@
-class OrganisationNotNull < ActiveRecord::Migration
+class OrganisationNotNull < ActiveRecord::Migration[4.2]
   def up
     execute "UPDATE users SET organisation = 'UNKNOWN' WHERE SQUISH_NULL(organisation) IS NULL"
     change_column :users, :organisation, :text, null: false, default: 'UNKNOWN'

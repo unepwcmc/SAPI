@@ -19,7 +19,7 @@
 
 # Reassignable is a distribution that is assigned to a new taxon concept
 class NomenclatureChange::DistributionReassignment < NomenclatureChange::Reassignment
-  belongs_to :input, class_name: NomenclatureChange::Input,
+  belongs_to :input, class_name: 'NomenclatureChange::Input',
     inverse_of: :distribution_reassignments,
     foreign_key: :nomenclature_change_input_id
 end

@@ -12,50 +12,50 @@ describe Admin::TaxonomiesController do
     describe "GET index" do
       it "assigns @taxonomies sorted by name" do
         get :index
-        assigns(:taxonomies).should eq([@taxonomy2, @taxonomy1])
+        expect(assigns(:taxonomies)).to eq([@taxonomy2, @taxonomy1])
       end
       it "renders the index template" do
         get :index
-        response.should render_template("index")
+        expect(response).to render_template("index")
       end
     end
     describe "XHR GET index JSON" do
       it "renders json for dropdown" do
-        xhr :get, :index, :format => 'json'
-        response.body.should have_json_size(2)
-        parse_json(response.body, "0/text").should == 'AA'
+        get :index, :format => 'json', xhr: true
+        expect(response.body).to have_json_size(2)
+        expect(parse_json(response.body, "0/text")).to eq('AA')
       end
     end
   end
 
   describe "XHR POST create" do
     it "renders create when successful" do
-      xhr :post, :create, taxonomy: FactoryGirl.attributes_for(:taxonomy)
-      response.should render_template("create")
+      post :create, params: { taxonomy: FactoryBot.attributes_for(:taxonomy) }, xhr: true
+      expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      xhr :post, :create, taxonomy: { :name => nil }
-      response.should render_template("new")
+      post :create, params: { taxonomy: { :name => nil } }, xhr: true
+      expect(response).to render_template("new")
     end
   end
 
   describe "XHR PUT update JSON" do
     let(:taxonomy) { create(:taxonomy) }
     it "responds with 200 when successful" do
-      xhr :put, :update, :format => 'json', :id => taxonomy.id, :taxonomy => { :name => 'ZZ' }
-      response.should be_success
+      put :update, :format => 'json', params: { :id => taxonomy.id, :taxonomy => { :name => 'ZZ' } }, xhr: true
+      expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      xhr :put, :update, :format => 'json', :id => taxonomy.id, :taxonomy => { :name => nil }
-      JSON.parse(response.body).should include('errors')
+      put :update, :format => 'json', params: { :id => taxonomy.id, :taxonomy => { :name => nil } }, xhr: true
+      expect(JSON.parse(response.body)).to include('errors')
     end
   end
 
   describe "DELETE destroy" do
     let(:taxonomy) { create(:taxonomy) }
     it "redirects after delete" do
-      delete :destroy, :id => taxonomy.id
-      response.should redirect_to(admin_taxonomies_url)
+      delete :destroy, params: { :id => taxonomy.id }
+      expect(response).to redirect_to(admin_taxonomies_url)
     end
   end
 
@@ -64,15 +64,15 @@ describe Admin::TaxonomiesController do
     describe "GET index" do
       it "redirects to admin root" do
         get :index
-        response.should redirect_to admin_root_path
+        expect(response).to redirect_to admin_root_path
       end
     end
     describe "DELETE destroy" do
       let(:taxonomy) { create(:taxonomy) }
       it "fails to delete and redirects to admin_root_path" do
-        delete :destroy, :id => taxonomy.id
-        response.should redirect_to(admin_root_path)
-        Taxonomy.find(taxonomy.id).should_not be_nil
+        delete :destroy, params: { :id => taxonomy.id }
+        expect(response).to redirect_to(admin_root_path)
+        expect(Taxonomy.find(taxonomy.id)).not_to be_nil
       end
     end
   end

@@ -2,8 +2,8 @@ namespace :db do
   namespace :migrate do
     desc "Run custom sql scripts"
     task :sql => :environment do
-      ActiveRecord::Base.transaction do
-        connection = ActiveRecord::Base.connection
+      ApplicationRecord.transaction do
+        connection = ApplicationRecord.connection
 
         ['helpers', 'mviews', 'plpgsql'].each do |dir|
           files = Dir.glob(Rails.root.join("db/#{dir}/*.sql"))
@@ -26,15 +26,15 @@ namespace :db do
 
     desc "Rebuild all computed values"
     task :rebuild => :migrate do
-      Sapi.rebuild
+      SapiModule::rebuild
     end
 
     task :drop_indexes => :migrate do
-      Sapi::drop_indexes
+      SapiModule::drop_indexes
     end
 
     task :create_indexes => :migrate do
-      Sapi::create_indexes
+      SapiModule::create_indexes
     end
   end
 
@@ -52,9 +52,9 @@ namespace :db do
   desc "Drop all trade (shipments, permits, arus & sandboxes - use responsibly)"
   task :drop_trade => [:environment] do
     puts "Deleting shipments"
-    ActiveRecord::Base.connection.execute('DELETE FROM trade_shipments')
+    ApplicationRecord.connection.execute('DELETE FROM trade_shipments')
     puts "Deleting permits"
-    ActiveRecord::Base.connection.execute('DELETE FROM trade_permits')
+    ApplicationRecord.connection.execute('DELETE FROM trade_permits')
     puts "Deleting annual report uploads & dropping sandboxes"
     Trade::AnnualReportUpload.all.each { |aru| aru.destroy }
   end

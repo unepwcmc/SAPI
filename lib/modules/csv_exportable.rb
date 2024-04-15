@@ -17,7 +17,7 @@ module CsvExportable
       ENCODING :encoding
       CSV HEADER;
     PSQL
-    ActiveRecord::Base.send(
+    ApplicationRecord.send(
       :sanitize_sql_array, [sql, {
         :delimiter => options[:delimiter] || ',',
         :encoding => options[:encoding] || 'UTF8',

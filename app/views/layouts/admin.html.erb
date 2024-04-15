@@ -12,12 +12,13 @@
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 
+  <% if controller_name == 'api_usage' %>
+    <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+  <% end %>
   <%= stylesheet_link_tag    "admin" %>
   <%= javascript_include_tag "admin" %>
   <%= csrf_meta_tags %>
-  <% if controller_name == 'api_usage' %>
-    <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
-  <% end %>
+  <%= csp_meta_tag %>
   <script type="text/javascript">
     window.editorClass = '<%= controller.controller_name %>'
   </script>

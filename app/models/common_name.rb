@@ -11,10 +11,12 @@
 #  updated_by_id :integer
 #
 
-class CommonName < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :language_id, :name,
-    :created_by_id, :updated_by_id
+class CommonName < ApplicationRecord
+  include TrackWhoDoesIt
+  # Used by app/models/taxon_common.rb
+  # attr_accessible :language_id, :name,
+  #   :created_by_id, :updated_by_id
+
   belongs_to :language
   validates :name, :presence => true,
     :uniqueness => { :scope => :language_id }
@@ -30,6 +32,7 @@ class CommonName < ActiveRecord::Base
   # for distinguishing between official CITES languages an non official languages
   # might need to be reviewed: TODO
   def convention_language
-    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(self[:convention_language])
+    value = self[:convention_language]
+    ActiveRecord::Type::Boolean.new.cast(value)
   end
 end

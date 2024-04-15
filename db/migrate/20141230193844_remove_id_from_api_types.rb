@@ -1,4 +1,4 @@
-class RemoveIdFromApiTypes < ActiveRecord::Migration
+class RemoveIdFromApiTypes < ActiveRecord::Migration[4.2]
   def change
     execute "DROP VIEW IF EXISTS api_cites_listing_changes_view"
     execute "DROP VIEW IF EXISTS api_cites_suspensions_view"

@@ -45,7 +45,7 @@ describe Trade::ValidationRule, :drops_tables => true do
         :validation_error,
         annual_report_upload_id: annual_report_upload.id,
         validation_rule_id: validation_rule.id,
-        matching_criteria: "{}",
+        matching_criteria: {},
         is_ignored: false,
         is_primary: true,
         error_message: "taxon_name cannot be blank",
@@ -81,7 +81,7 @@ describe Trade::ValidationRule, :drops_tables => true do
         :validation_error,
         annual_report_upload_id: annual_report_upload.id,
         validation_rule_id: validation_rule.id,
-        matching_criteria: "{}",
+        matching_criteria: {},
         is_ignored: false,
         is_primary: true,
         error_message: "taxon_name cannot be blank",
@@ -100,22 +100,24 @@ describe Trade::ValidationRule, :drops_tables => true do
 
     context "when updates and error fixed for all records" do
       specify "error record is destroyed" do
-        Timecop.travel(Time.now + 1)
-        @shipment2.update_attributes(taxon_name: 'Canis lupus')
-        @shipment3.update_attributes(taxon_name: 'Canis lupus')
-        expect {
-          validation_rule.refresh_errors_if_needed(annual_report_upload)
-        }.to change { Trade::ValidationError.count }.by(-1)
+        travel_to(Time.now + 1) do
+          @shipment2.update(taxon_name: 'Canis lupus')
+          @shipment3.update(taxon_name: 'Canis lupus')
+          expect {
+            validation_rule.refresh_errors_if_needed(annual_report_upload)
+          }.to change { Trade::ValidationError.count }.by(-1)
+        end
       end
     end
 
     context "when updates and error fixed for some records" do
       specify "error record is updated to reflect new error_count" do
-        Timecop.travel(Time.now + 1)
-        @shipment2.update_attributes(taxon_name: 'Canis lupus')
-        expect {
-          validation_rule.refresh_errors_if_needed(annual_report_upload)
-        }.to change { @validation_error.reload.error_count }.by(-1)
+        travel_to(Time.now + 1) do
+          @shipment2.update(taxon_name: 'Canis lupus')
+          expect {
+            validation_rule.refresh_errors_if_needed(annual_report_upload)
+          }.to change { @validation_error.reload.error_count }.by(-1)
+        end
       end
     end
 
@@ -135,7 +137,7 @@ describe Trade::ValidationRule, :drops_tables => true do
         }
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
+          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
         }
       end
     end
@@ -156,7 +158,7 @@ describe Trade::ValidationRule, :drops_tables => true do
         }
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
+          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
         }
       end
     end
@@ -173,7 +175,7 @@ describe Trade::ValidationRule, :drops_tables => true do
         }
         specify {
           subject.refresh_errors_if_needed(annual_report_upload)
-          subject.validation_errors_for_aru(annual_report_upload).size.should == 1
+          expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
         }
       end
     end

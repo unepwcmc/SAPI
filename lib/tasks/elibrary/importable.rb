@@ -16,13 +16,13 @@ module Elibrary
     end
 
     def drop_table_if_exists(table_name)
-      ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
+      ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
       puts "Table removed"
     end
 
     def create_table_from_column_array(table_name, db_columns_with_type)
       drop_table_if_exists(table_name)
-      ActiveRecord::Base.connection.execute "CREATE TABLE #{table_name} (#{db_columns_with_type.join(', ')})"
+      ApplicationRecord.connection.execute "CREATE TABLE #{table_name} (#{db_columns_with_type.join(', ')})"
       puts "Table created"
     end
 
@@ -43,9 +43,9 @@ module Elibrary
 
     def print_query_counts
       queries = { 'rows_in_import_file' => "SELECT COUNT(*) FROM #{table_name}" }
-      queries['rows_to_insert'] = "SELECT COUNT(*) FROM (#{rows_to_insert_sql}) t"
+      queries['rows_to_insert'] = "SELECT COUNT(*) FROM (#{rows_to_insert_sql}) AS t"
       queries.each do |q_name, q|
-        res = ActiveRecord::Base.connection.execute(q)
+        res = ApplicationRecord.connection.execute(q)
         puts "#{res[0]['count']} #{q_name.humanize}"
       end
     end

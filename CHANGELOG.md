@@ -1,3 +1,20 @@
+### 1.14.0
+
+**Rails 6 Upgrade**
+The primary goal of this release is to upgrade the Rails version without causing
+any breaking changes to functionality.
+
+* Upgrades Rails 4.0 to 6.1
+* Upgrades Ruby 2.3 to 3.0
+* Many other dependency upgrades, and associated fixes
+* See notes in https://github.com/unepwcmc/SAPI/pull/969 for most of the changes
+
+**CITES Checklist**
+* List of countries/territories in Checklist API endpoint for taxa no longer
+  includes countries where the taxon is listed 'extinct'. Taxa with multiple
+  distribution tags will still be pulled through, even if one of them is the
+  tag 'extinct'.
+
 ### 1.13.1
 **Trade shipments API**
 * Fix an issue where queries to the trade filters route could pile up and cause

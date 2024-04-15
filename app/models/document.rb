@@ -24,22 +24,26 @@
 #  designation_id               :integer
 #
 
-class Document < ActiveRecord::Base
-  include PgSearch
+class Document < ApplicationRecord
+  include PgSearch::Model
+
   pg_search_scope :search_by_title, :against => :title,
     :using => { :tsearch => { :prefix => true } },
     :order_within_rank => "documents.date, documents.title, documents.id"
-  track_who_does_it
-  attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
-    :language_id, :citations_attributes,
-    :sort_index, :discussion_id, :discussion_sort_index,
-    :primary_language_document_id,
-    :designation_id
-  belongs_to :designation
-  belongs_to :event
-  belongs_to :language
+
+  include TrackWhoDoesIt
+
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
+  #   :language_id, :citations_attributes,
+  #   :sort_index, :discussion_id, :discussion_sort_index,
+  #   :primary_language_document_id,
+  #   :designation_id
+  belongs_to :designation, optional: true
+  belongs_to :event, optional: true
+  belongs_to :language, optional: true
   belongs_to :primary_language_document, class_name: 'Document',
-    foreign_key: 'primary_language_document_id'
+    foreign_key: 'primary_language_document_id', optional: true
   has_many :secondary_language_documents, class_name: 'Document',
     foreign_key: 'primary_language_document_id',
     dependent: :nullify
@@ -61,12 +65,15 @@ class Document < ActiveRecord::Base
   before_validation :set_title
   before_validation :reset_designation_if_event_set
 
-# order docs based on a custom list of ids
+  after_save :sync_sort_index
+  after_commit :clear_cache
+
+  # order docs based on a custom list of ids
   scope :for_ids_with_order, ->(ids) {
     order = sanitize_sql_array(
       ["position((',' || id::text || ',') in ?)", ids.join(',') + ',']
     )
-    where(id: ids).order(order)
+    where(id: ids).order(Arel.sql(order))
   }
 
   # This hot fix was needed to import document objects without attachment(external link)
@@ -140,4 +147,42 @@ class Document < ActiveRecord::Base
     (attr =~ /\.pdf/).present?
   end
 
+  def clear_cache
+    DocumentSearch.clear_cache
+  end
+
+  def sync_sort_index
+    # Rails 5.1 to 5.2
+    # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
+    # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+    # To maintain the current behavior, use `attribute_before_last_save` instead.
+    #
+    # DEPRECATION WARNING: The behavior of `attribute_changed?` inside of after callbacks will be changing in the next version of Rails.
+    # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+    # To maintain the current behavior, use `saved_change_to_attribute?` instead.
+    #
+    # DEPRECATION WARNING: The behavior of `changed_attributes` inside of after callbacks will be changing in the next version of Rails.
+    # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+    # To maintain the current behavior, use `saved_changes.transform_values(&:first)` instead.
+    #
+    # == Original code ==
+    # if sort_index_changed?
+    # == Changed to fix deprecation warnings ==
+    if saved_change_to_sort_index?
+      if primary_language_document &&
+        primary_language_document_id != id
+        primary_language_document.update_attribute(
+          :sort_index,
+          sort_index
+        )
+      else
+        secondary_language_documents.reload.each do |d|
+          d.update_attribute(
+            :sort_index,
+            sort_index
+          )
+        end
+      end
+    end
+  end
 end

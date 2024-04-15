@@ -1,4 +1,4 @@
-class AddMultiLingualNotesToNomenclatureChanges < ActiveRecord::Migration
+class AddMultiLingualNotesToNomenclatureChanges < ActiveRecord::Migration[4.2]
   def change
     rename_column :nomenclature_change_inputs, :note, :note_en
     add_column :nomenclature_change_inputs, :note_es, :text

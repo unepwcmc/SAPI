@@ -319,7 +319,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
         #{quantity_condition(quantity_field)}
         ORDER BY value DESC
         #{limit}
-      ) row
+      ) AS row
     SQL
   end
 

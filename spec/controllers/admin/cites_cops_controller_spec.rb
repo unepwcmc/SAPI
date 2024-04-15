@@ -12,11 +12,11 @@ describe Admin::CitesCopsController do
     describe "GET index" do
       it "assigns @cites_cops sorted by name" do
         get :index
-        assigns(:cites_cops).should eq([@cites_cop2, @cites_cop1])
+        expect(assigns(:cites_cops)).to eq([@cites_cop2, @cites_cop1])
       end
       it "renders the index template" do
         get :index
-        response.should render_template("index")
+        expect(response).to render_template("index")
       end
     end
   end

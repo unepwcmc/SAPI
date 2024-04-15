@@ -15,7 +15,7 @@ namespace :db do
         USING objects_to_delete
         WHERE common_names.id = objects_to_delete.id
       SQL
-      ActiveRecord::Base.connection.execute sql
+      ApplicationRecord.connection.execute sql
     end
   end
   namespace :taxon_names do
@@ -34,7 +34,7 @@ namespace :db do
         USING objects_to_delete
         WHERE taxon_names.id = objects_to_delete.id
       SQL
-      ActiveRecord::Base.connection.execute sql
+      ApplicationRecord.connection.execute sql
     end
   end
 end

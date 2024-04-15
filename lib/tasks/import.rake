@@ -1,7 +1,7 @@
 namespace :import do
 
   task :drop_import_tables => :environment do
-    ActiveRecord::Base.connection.execute 'SELECT * FROM drop_import_tables()'
+    ApplicationRecord.connection.execute 'SELECT * FROM drop_import_tables()'
   end
 
   namespace :cleaned do
@@ -118,7 +118,7 @@ namespace :import do
 
   desc 'Shows database summary stats'
   task :stats => :environment do
-    Sapi::database_summary
+    SapiModule::database_summary
   end
 
   desc 'Runs import tasks for cleaned files'

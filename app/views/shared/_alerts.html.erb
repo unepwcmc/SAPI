@@ -1,5 +1,8 @@
 <% flash.each do |name, msg| %>
-  <%= content_tag :div, :class => "alert #{[:error, :alert].include?(name) ? "alert-error" : "alert-success" }" do %>
+  <%
+  # https://guides.rubyonrails.org/v4.1/upgrading_ruby_on_rails.html#flash-structure-changes
+  %>
+  <%= content_tag :div, :class => "alert #{["error", "alert"].include?(name.to_s) ? "alert-error" : "alert-success" }" do %>
     <a class="close" data-dismiss="alert" href="#">×</a>
     <%= msg %>
   <% end %>

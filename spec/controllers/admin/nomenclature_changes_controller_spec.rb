@@ -8,19 +8,19 @@ describe Admin::NomenclatureChangesController do
       nomenclature_change1 = create(:nomenclature_change)
       nomenclature_change2 = create(:nomenclature_change)
       get :index
-      assigns(:collection).should eq([nomenclature_change2, nomenclature_change1])
+      expect(assigns(:collection)).to eq([nomenclature_change2, nomenclature_change1])
     end
     it "renders the index template" do
       get :index
-      response.should render_template("index")
+      expect(response).to render_template("index")
     end
   end
 
   describe "DELETE destroy" do
     let(:nomenclature_change) { create(:nomenclature_change) }
     it "redirects after delete" do
-      delete :destroy, :id => nomenclature_change.id
-      response.should redirect_to(admin_nomenclature_changes_url)
+      delete :destroy, params: { :id => nomenclature_change.id }
+      expect(response).to redirect_to(admin_nomenclature_changes_url)
     end
   end
 

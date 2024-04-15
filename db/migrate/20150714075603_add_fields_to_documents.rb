@@ -1,4 +1,4 @@
-class AddFieldsToDocuments < ActiveRecord::Migration
+class AddFieldsToDocuments < ActiveRecord::Migration[4.2]
   def change
     execute 'DROP VIEW documents_view'
     rename_column :documents, :legacy_id, :elib_legacy_id

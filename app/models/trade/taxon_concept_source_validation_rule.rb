@@ -43,11 +43,11 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
 
     upper_kingdom_name = Arel::Nodes::NamedFunction.new(
       "UPPER",
-      [Arel::SqlLiteral.new("taxon_concepts.data->'kingdom_name'")]
+      [Arel::Nodes::SqlLiteral.new("taxon_concepts.data->'kingdom_name'")]
     )
 
     arel = s.project(
-      s['*']
+      s[Arel.star]
     ).join(tc).on(
       s['taxon_concept_id'].eq(tc['id'])
     ).join(t).on(

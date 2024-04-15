@@ -91,7 +91,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def common_names
-    CommonName.from('api_common_names_view common_names').
+    CommonName.from('api_common_names_view AS common_names').
       where(taxon_concept_id: object.id).
       select("language_name_en AS lang").
       select("string_agg(name, ', ') AS names").
@@ -109,7 +109,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distributions_with_tags_and_references
-    Distribution.from('api_distributions_view distributions').
+    Distribution.from('api_distributions_view AS distributions').
       where(taxon_concept_id: object.id).
       select("name_en AS name, name_en AS country, ARRAY_TO_STRING(tags,  ',') AS tags_list, ARRAY_TO_STRING(citations, '; ') AS country_references").
       order('name_en').all
@@ -120,7 +120,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distributions_with_tags_and_references_trimmed
-    Distribution.from('api_distributions_view distributions').
+    Distribution.from('api_distributions_view AS distributions').
       where(taxon_concept_id: object.id).
       select("iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list").
       order('iso_code2').all
@@ -156,7 +156,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def nomenclature_notification
-    outputs = NomenclatureChange::Output.includes("nomenclature_change").where(
+    outputs = NomenclatureChange::Output.includes(:nomenclature_change).references(:nomenclature_change).where(
       "
         (taxon_concept_id = ? OR new_taxon_concept_id = ?) AND
         nomenclature_changes.created_at > ? AND nomenclature_changes.status = 'submitted'

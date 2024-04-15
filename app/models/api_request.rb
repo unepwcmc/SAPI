@@ -15,10 +15,10 @@
 #  updated_at      :datetime         not null
 #
 
-class ApiRequest < ActiveRecord::Base
+class ApiRequest < ApplicationRecord
   serialize :params, JSON
 
-  belongs_to :user
+  belongs_to :user, optional: true
 
   RECENT_DAYS = 90
   RECENT_MONTHS = 6
@@ -40,14 +40,14 @@ class ApiRequest < ActiveRecord::Base
       ]
     ).group(:user_id).
       where('user_id IS NOT NULL')
-    self.from("(#{subquery.to_sql}) api_requests").
+    self.from("(#{subquery.to_sql}) AS api_requests").
       order('cnt DESC').limit(50)
   end
 
   def self.recent_requests(user = nil)
     query = self.select([:response_status, :created_at]).recent.order(:response_status)
     query = query.where(user_id: user.id) if user
-    query.group(:response_status).group_by_day(:created_at, format: "%Y-%m-%d").count
+    query.group(:response_status).group_by_day(:created_at, format: "%Y-%m-%d").count(:all)
   end
 
   def self.requests_by_response_status(user = nil)
@@ -67,7 +67,7 @@ class ApiRequest < ActiveRecord::Base
   private
 
   def self.hash_aggregate_by_keys(key_name, key_ary, subquery)
-    sql = ActiveRecord::Base.send(:sanitize_sql_array, [
+    sql = ApplicationRecord.send(:sanitize_sql_array, [
       "SELECT JSON_OBJECT_AGG(#{key_name}_1, COALESCE(cnt, 0))
       FROM UNNEST(ARRAY[:key_ary]) #{key_name}_1
       LEFT JOIN (

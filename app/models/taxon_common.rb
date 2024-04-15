@@ -11,14 +11,21 @@
 #  updated_by_id    :integer
 #
 
-class TaxonCommon < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :common_name_id, :taxon_concept_id, :created_by_id,
-    :updated_by_id, :name, :language_id
-  attr_accessor :name, :language_id
-  belongs_to :common_name
-  belongs_to :taxon_concept
+class TaxonCommon < ApplicationRecord
+  include Changeable
+  include TrackWhoDoesIt
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :common_name_id, :taxon_concept_id, :created_by_id,
+  #   :updated_by_id, :name, :language_id
 
+  attr_accessor :name, :language_id
+
+  # Rspec file such as `spec/shared/agave.rb`, which assign taxon_concept.common_names = [array of common_name] broken
+  # if we remove `optional: true`, although it should be false.
+  belongs_to :common_name, optional: true
+  belongs_to :taxon_concept, optional: true
+
+  # rspec ./spec/controllers/admin/taxon_commons_controller_spec.rb borken if we remove the following validates.
   validates :common_name_id, :presence => true
 
   before_validation do

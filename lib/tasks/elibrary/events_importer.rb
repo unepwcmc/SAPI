@@ -34,7 +34,7 @@ class Elibrary::EventsImporter
       FROM cops_to_update
       WHERE events.id = cops_to_update.id
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
 
     sql = <<-SQL
       WITH srgs_to_update AS (
@@ -46,7 +46,7 @@ class Elibrary::EventsImporter
       FROM srgs_to_update
       WHERE events.id = srgs_to_update.id
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   def run_queries
@@ -66,7 +66,7 @@ class Elibrary::EventsImporter
         NOW()
       FROM rows_to_insert
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   def all_rows_sql

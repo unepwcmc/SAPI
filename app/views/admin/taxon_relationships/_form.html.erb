@@ -18,7 +18,7 @@
     </li>
     <li id="right">
       <div class="elements">
-        <%= select_tag :taxonomy_id, options_from_collection_for_select(@form_taxonomies, :id, :name), :class => "taxonomy_selector" %><br />
+        <%= select_tag :taxonomy_id, options_from_collection_for_select(@form_taxonomies || [], :id, :name), :class => "taxonomy_selector" %><br />
         <input type="text" class="tr-autocomplete"><br />
       </div>
     </li>

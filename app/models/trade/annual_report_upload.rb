@@ -18,19 +18,28 @@
 #
 
 require 'csv_column_headers_validator'
-class Trade::AnnualReportUpload < ActiveRecord::Base
+class Trade::AnnualReportUpload < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection
-  track_who_does_it
-  attr_accessible :csv_source_file, :trading_country_id, :point_of_view,
-                  :submitted_at, :submitted_by_id, :number_of_rows,
-                  :number_of_records_submitted, :aws_storage_path
+  include TrackWhoDoesIt
+
+  # Suppose use in controller, but controller using strong parameters...
+  # attr_accessible :csv_source_file, :trading_country_id, :point_of_view,
+  #                 :submitted_at, :submitted_by_id, :number_of_rows,
+  #                 :number_of_records_submitted, :aws_storage_path
+
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
-  belongs_to :trading_country, :class_name => GeoEntity, :foreign_key => :trading_country_id
+  belongs_to :trading_country, :class_name => 'GeoEntity', :foreign_key => :trading_country_id
   validates :csv_source_file, :csv_column_headers => true, :on => :create
 
   scope :created_by_sapi, -> {
     where("epix_created_by_id IS NULL")
   }
+
+  after_create :copy_to_sandbox
+  before_destroy do
+    success = sandbox && sandbox.destroy
+    throw(:abort) unless success
+  end
 
   def copy_to_sandbox
     sandbox.copy
@@ -91,14 +100,14 @@ class Trade::AnnualReportUpload < ActiveRecord::Base
     FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
 
     # clear downloads cache
-    DownloadsCacheCleanupWorker.perform_async(:shipments)
+    DownloadsCacheCleanupWorker.perform_async('shipments')
 
     # flag as submitted
-    update_attributes({
+    update(
       submitted_at: DateTime.now,
       submitted_by_id: submitter.id,
       number_of_records_submitted: records_submitted
-    })
+    )
 
     # This has been temporarily disabled as originally part of EPIX
     #ChangesHistoryGeneratorWorker.perform_async(self.id, submitter.id)

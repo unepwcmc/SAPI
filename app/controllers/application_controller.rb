@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery
-  include SentientController
-  before_filter :set_locale
-  before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_action :track_who_does_it_current_user
+  before_action :set_locale
+  before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_paper_trail_whodunnit
 
   rescue_from CanCan::AccessDenied, with: :access_denied_error
 
@@ -39,11 +39,15 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     extra_parameters = [:name, :is_cites_authority, :organisation, :geo_entity_id]
-    devise_parameter_sanitizer.for(:sign_up).push(*extra_parameters)
-    devise_parameter_sanitizer.for(:account_update).push(*extra_parameters)
+    devise_parameter_sanitizer.permit(:sign_up, keys: extra_parameters)
+    devise_parameter_sanitizer.permit(:account_update, keys: extra_parameters)
   end
 
   private
+
+  def track_who_does_it_current_user
+    RequestStore.store[:track_who_does_it_current_user] = current_user
+  end
 
   def set_locale
     I18n.locale = params[:locale] || I18n.default_locale

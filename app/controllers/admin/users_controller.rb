@@ -18,10 +18,10 @@ class Admin::UsersController < Admin::SimpleCrudController
 
   def update
     update_result =
-      if params[:user][:password].blank?
-        @user.update_without_password(params[:user])
+      if user_params[:password].blank?
+        @user.update_without_password(user_params)
       else
-        @user.update_attributes(params[:user])
+        @user.update(user_params)
       end
     respond_to do |format|
       format.js {
@@ -49,5 +49,15 @@ class Admin::UsersController < Admin::SimpleCrudController
         is_current: true
       ).
       order('name_en')
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(
+      :email, :name, :password, :password_confirmation,
+      :remember_me, :role, :terms_and_conditions, :is_cites_authority,
+      :organisation, :geo_entity_id, :is_active
+    )
   end
 end

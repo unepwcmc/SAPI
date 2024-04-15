@@ -38,15 +38,15 @@ describe Trade::Shipment do
   describe :create do
     context "when reporter_type not given" do
       subject { build(:shipment, :reporter_type => nil) }
-      specify { subject.should have(2).error_on(:reporter_type) }
+      specify { expect(subject.error_on(:reporter_type).size).to eq(2) }
     end
     context "when appendix valid" do
       subject { build(:shipment, :appendix => 'N') }
-      specify { subject.should be_valid }
+      specify { expect(subject).to be_valid }
     end
     context "when appendix not valid" do
       subject { build(:shipment, :appendix => 'I/II') }
-      specify { subject.should have(1).error_on(:appendix) }
+      specify { expect(subject.error_on(:appendix).size).to eq(1) }
     end
     context "when permit numbers given" do
       before(:each) do
@@ -57,13 +57,13 @@ describe Trade::Shipment do
         )
       end
       context "when export permit" do
-        specify { @shipment.export_permit_number.should == 'A' }
+        specify { expect(@shipment.export_permit_number).to eq('A') }
       end
       context "when import permit" do
-        specify { @shipment.import_permit_number.should == 'B' }
+        specify { expect(@shipment.import_permit_number).to eq('B') }
       end
       context "when origin permit" do
-        specify { @shipment.origin_permit_number.should == 'C' }
+        specify { expect(@shipment.origin_permit_number).to eq('C') }
       end
     end
   end
@@ -110,7 +110,7 @@ describe Trade::Shipment do
           :is_current => true
         )
         reg2013 # EU event
-        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
       context "invalid" do
@@ -120,7 +120,7 @@ describe Trade::Shipment do
             :taxon_concept => @taxon_concept, :appendix => 'II', :year => 2013
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
       context "invalid" do
         subject {
@@ -129,7 +129,7 @@ describe Trade::Shipment do
             :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
       context "valid" do
         subject {
@@ -138,7 +138,7 @@ describe Trade::Shipment do
             :taxon_concept => @taxon_concept, :appendix => 'I', :year => 2013
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
     end
 
@@ -150,7 +150,7 @@ describe Trade::Shipment do
           :event => reg2013,
           :is_current => true
         )
-        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
       context "valid" do
@@ -160,7 +160,7 @@ describe Trade::Shipment do
             :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
     end
 
@@ -171,7 +171,7 @@ describe Trade::Shipment do
           :parent => @genus
         )
         reg2013 # EU event
-        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
       context "not CITES listed and not EU listed" do
@@ -181,7 +181,7 @@ describe Trade::Shipment do
             :taxon_concept => @taxon_concept, :appendix => 'N', :year => 2013
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
     end
 
@@ -206,7 +206,7 @@ describe Trade::Shipment do
             :term => @cav, :unit => @bag
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
       context "valid" do
         subject {
@@ -215,7 +215,7 @@ describe Trade::Shipment do
             :term => @cav, :unit => @kil
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
       context "blank unit is valid" do
         subject {
@@ -224,7 +224,7 @@ describe Trade::Shipment do
             :term => @cav, :unit => nil
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
       context "blank unit is invalid" do
         subject {
@@ -233,7 +233,7 @@ describe Trade::Shipment do
             :term => @cap, :unit => nil
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
     end
     context "when term + purpose" do
@@ -252,7 +252,7 @@ describe Trade::Shipment do
             :term => @cav, :purpose => @b
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
       context "valid" do
         subject {
@@ -261,7 +261,7 @@ describe Trade::Shipment do
             :term => @cav, :purpose => @p
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
     end
     context "when species name + term" do
@@ -280,7 +280,7 @@ describe Trade::Shipment do
             :taxon_concept => @taxon_concept, :term => @cav
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
       context "valid" do
         subject {
@@ -289,7 +289,7 @@ describe Trade::Shipment do
             :taxon_concept => @taxon_concept, :term => @bal
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
     end
     context "when species name + country of origin" do
@@ -305,7 +305,7 @@ describe Trade::Shipment do
             :country_of_origin => @poland
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
       context "valid" do
         subject {
@@ -316,7 +316,7 @@ describe Trade::Shipment do
             :country_of_origin => @argentina
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
       context "blank" do
         subject {
@@ -327,7 +327,7 @@ describe Trade::Shipment do
             :country_of_origin => nil
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
     end
     context "when species name + exporter" do
@@ -344,7 +344,7 @@ describe Trade::Shipment do
             :exporter => @poland
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
       context "valid" do
         subject {
@@ -356,7 +356,7 @@ describe Trade::Shipment do
             :exporter => @argentina
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
       context "valid with XX" do
         subject {
@@ -368,7 +368,7 @@ describe Trade::Shipment do
             :exporter => @xx
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
     end
     context "when exporter + country of origin" do
@@ -384,7 +384,7 @@ describe Trade::Shipment do
             :country_of_origin => @argentina
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
       context "valid" do
         subject {
@@ -395,7 +395,7 @@ describe Trade::Shipment do
             :country_of_origin => @argentina
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
     end
     context "when exporter + importer" do
@@ -411,7 +411,7 @@ describe Trade::Shipment do
             :exporter => @argentina
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
       context "valid" do
         subject {
@@ -422,7 +422,7 @@ describe Trade::Shipment do
             :exporter => @argentina
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
     end
     context "when species name + source code" do
@@ -431,7 +431,7 @@ describe Trade::Shipment do
         create_taxon_concept_source_validation
         cites
         reg2013 # EU event
-        Sapi::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         @taxon_concept.reload
       end
       context "invalid" do
@@ -442,7 +442,7 @@ describe Trade::Shipment do
             :source => @artificial
           )
         }
-        specify { subject.warnings.should_not be_empty }
+        specify { expect(subject.warnings).not_to be_empty }
       end
       context "valid" do
         subject {
@@ -452,7 +452,7 @@ describe Trade::Shipment do
             :source => @wild
           )
         }
-        specify { subject.warnings.should be_empty }
+        specify { expect(subject.warnings).to be_empty }
       end
     end
   end

@@ -6,43 +6,43 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for species Mellivora capensis" do
-          specify { @species.cites_listing.should == 'III' }
+          specify { expect(@species.cites_listing).to eq('III') }
         end
       end
 
       describe :eu_listing do
         context "for species Mellivora capensis" do
-          specify { @species.eu_listing.should == 'C' }
+          specify { expect(@species.eu_listing).to eq('C') }
         end
       end
 
       describe :cites_listed do
         context "for family Mustelinae" do
-          specify { @family.cites_listed.should == false }
+          specify { expect(@family.cites_listed).to eq(false) }
         end
         context "for genus Mellivora" do
-          specify { @genus.cites_listed.should == false }
+          specify { expect(@genus.cites_listed).to eq(false) }
         end
         context "for species Mellivora capensis" do
-          specify { @species.cites_listed.should be_truthy }
+          specify { expect(@species.cites_listed).to be_truthy }
         end
       end
 
       describe :eu_listed do
         context "for family Mustelinae" do
-          specify { @family.eu_listed.should == false }
+          specify { expect(@family.eu_listed).to eq(false) }
         end
         context "for genus Mellivora" do
-          specify { @genus.eu_listed.should == false }
+          specify { expect(@genus.eu_listed).to eq(false) }
         end
         context "for species Mellivora capensis" do
-          specify { @species.eu_listed.should be_truthy }
+          specify { expect(@species.eu_listed).to be_truthy }
         end
       end
 
       describe :current_party_ids do
         context "for species Mellivora capensis" do
-          specify { @species.current_parties_ids.should == [GeoEntity.find_by_iso_code2('BW').id] }
+          specify { expect(@species.current_parties_ids).to eq([GeoEntity.find_by_iso_code2('BW').id]) }
         end
       end
 

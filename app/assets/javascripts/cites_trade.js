@@ -1,9 +1,9 @@
 //= require underscore
 //= require jquery
 //= require jquery_ujs
-//= require jquery.ui.all
+//= require cites_trade/jquery-ui-1.10.4.custom
 //= require jquery-deparam
-//= require jquery.cookie
+//= require js.cookie
 //= require cites_trade/jquery.jgrowl_minimized
 //= require cites_trade/jquery.multi-select
 //= require cites_trade/select2

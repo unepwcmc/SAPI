@@ -28,6 +28,7 @@ class ManualDownloadWorker
     Appsignal.add_exception(exception) if defined? Appsignal
     @download.status = "failed"
     @download.save!
+    raise exception
   end
 
   private
@@ -54,8 +55,6 @@ class ManualDownloadWorker
   end
 
   def zip_file_generator
-    require 'zip'
-
     missing_files = []
     pdf_file_paths = []
     tmp_dir_path = [Rails.root, "/tmp/", SecureRandom.hex(8)].join
@@ -91,13 +90,25 @@ class ManualDownloadWorker
     Appsignal.add_exception(exception) if defined? Appsignal
     @download.status = "failed"
     @download.save!
+    raise exception
   end
 
   def cover_path_generator
     I18n.locale = @locale
-    kit = PDFKit.new(ActionController::Base.new().render_to_string(template: '/checklist/_custom_id_manual_cover.html.erb', locals: { taxon_name: @display_name }), page_size: 'A4')
+
+    kit = PDFKit.new(
+      ActionController::Base.new().render_to_string(
+          template: '/checklist/_custom_id_manual_cover.html.erb',
+          locals: { taxon_name: @display_name }
+      ),
+      page_size: 'A4',
+      enable_local_file_access: true
+    )
+
     kit.stylesheets << "#{Rails.root.to_s}/app/assets/stylesheets/checklist/custom_id_manual_cover.css"
+
     @cover_path = "public/downloads/checklist/#{@display_name}-cover.pdf"
+
     kit.to_file(@cover_path)
   end
 end

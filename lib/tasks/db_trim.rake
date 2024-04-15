@@ -18,9 +18,9 @@ namespace :db do
   task :trim_trade => :environment do
     puts 'Deleting old shipments'
     year = Date.today.year - 5
-    ActiveRecord::Base.connection.execute "DELETE FROM trade_shipments WHERE year <= #{year}"
+    ApplicationRecord.connection.execute "DELETE FROM trade_shipments WHERE year <= #{year}"
     puts 'Clearing permit and annual report data'
-    ActiveRecord::Base.connection.execute 'UPDATE trade_shipments SET
+    ApplicationRecord.connection.execute 'UPDATE trade_shipments SET
         import_permit_number = NULL,
         export_permit_number = NULL,
         origin_permit_number = NULL,
@@ -30,11 +30,11 @@ namespace :db do
         trade_annual_report_upload_id = NULL,
         sandbox_id = NULL'
     puts 'Dropping sandboxes'
-    ActiveRecord::Base.connection.execute 'SELECT * FROM drop_trade_sandboxes()'
+    ApplicationRecord.connection.execute 'SELECT * FROM drop_trade_sandboxes()'
     puts 'Truncating annual reports'
-    ActiveRecord::Base.connection.execute 'DELETE FROM trade_annual_report_uploads'
+    ApplicationRecord.connection.execute 'DELETE FROM trade_annual_report_uploads'
     puts 'Truncating permits'
-    ActiveRecord::Base.connection.execute 'TRUNCATE trade_permits'
+    ApplicationRecord.connection.execute 'TRUNCATE trade_permits'
   end
 
   task :trim_listing_changes => :environment do
@@ -69,7 +69,7 @@ namespace :db do
       WHERE lc.id = listing_changes.id
     SQL
     puts 'Deleting old listing changes'
-    ActiveRecord::Base.connection.execute sql
+    ApplicationRecord.connection.execute sql
   end
 
   task :trim_trade_restrictions => :environment do
@@ -100,18 +100,18 @@ namespace :db do
       WHERE tr.id = trade_restrictions.id
     SQL
     puts 'Deleting old trade restrictions'
-    ActiveRecord::Base.connection.execute sql
+    ApplicationRecord.connection.execute sql
   end
 
   task :trim_eu_decisions => :environment do
     sql = 'DELETE FROM eu_decisions WHERE NOT is_current'
     puts 'Deleting old EU decisions'
-    ActiveRecord::Base.connection.execute sql
+    ApplicationRecord.connection.execute sql
   end
 
   task :trim_users => :environment do
     puts 'Clearing user data'
-    ActiveRecord::Base.connection.execute <<-SQL
+    ApplicationRecord.connection.execute <<-SQL
       UPDATE users SET
         name = 'user ' || users.id,
         email = 'user.' || users.id || '@test.org'
@@ -120,7 +120,7 @@ namespace :db do
 
   task :drop_temporary_tables => :environment do
     puts 'Dropping temporary tables'
-    ActiveRecord::Base.connection.execute 'SELECT * FROM drop_eu_lc_mviews()'
+    ApplicationRecord.connection.execute 'SELECT * FROM drop_eu_lc_mviews()'
   end
 
 end

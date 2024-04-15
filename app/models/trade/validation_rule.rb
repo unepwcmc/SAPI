@@ -15,10 +15,11 @@
 #  is_strict         :boolean          default(FALSE), not null
 #
 
-class Trade::ValidationRule < ActiveRecord::Base
-  attr_accessible :column_names, :run_order, :is_primary, :scope, :is_strict
+class Trade::ValidationRule < ApplicationRecord
+  # Used by seed.
+  # attr_accessible :column_names, :run_order, :is_primary, :scope, :is_strict
   serialize :scope, ActiveRecord::Coders::NestedHstore
-  has_many :validation_errors, class_name: Trade::ValidationError
+  has_many :validation_errors, class_name: 'Trade::ValidationError'
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
     table_name = annual_report_upload.sandbox.table_name
@@ -64,7 +65,7 @@ class Trade::ValidationRule < ActiveRecord::Base
       existing_record,
       matching_records.length,
       error_message,
-      '{}'
+      {}
     )
   end
 
@@ -105,7 +106,7 @@ class Trade::ValidationRule < ActiveRecord::Base
       if error_count == 0
         existing_record.destroy
       else
-        existing_record.update_attributes(
+        existing_record.update(
           error_count: error_count
         )
       end

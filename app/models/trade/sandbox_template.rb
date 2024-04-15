@@ -20,7 +20,7 @@
 #  taxon_concept_id          :integer
 #
 
-class Trade::SandboxTemplate < ActiveRecord::Base
+class Trade::SandboxTemplate < ApplicationRecord
 
   self.table_name = :trade_sandbox_template
   has_paper_trail
@@ -42,25 +42,26 @@ class Trade::SandboxTemplate < ActiveRecord::Base
     begin
       "Trade::#{klass_name}".constantize
     rescue NameError
-      klass = Class.new(ActiveRecord::Base) do
+      klass = Class.new(ApplicationRecord) do
         self.table_name = table_name
         has_paper_trail
         include ActiveModel::ForbiddenAttributesProtection
-        attr_accessible :appendix,
-          :taxon_name,
-          :term_code,
-          :quantity,
-          :unit_code,
-          :trading_partner,
-          :country_of_origin,
-          :import_permit,
-          :export_permit,
-          :origin_permit,
-          :purpose_code,
-          :source_code,
-          :year
-        belongs_to :taxon_concept
-        belongs_to :reported_taxon_concept, :class_name => TaxonConcept
+        # Too dynamic, hard to trace where using it.
+        # attr_accessible :appendix,
+        #   :taxon_name,
+        #   :term_code,
+        #   :quantity,
+        #   :unit_code,
+        #   :trading_partner,
+        #   :country_of_origin,
+        #   :import_permit,
+        #   :export_permit,
+        #   :origin_permit,
+        #   :purpose_code,
+        #   :source_code,
+        #   :year
+        belongs_to :taxon_concept, optional: true
+        belongs_to :reported_taxon_concept, :class_name => 'TaxonConcept', optional: true
 
         def sanitize
           self.class.sanitize(self.id)
@@ -91,8 +92,8 @@ class Trade::SandboxTemplate < ActiveRecord::Base
           )
         end
 
-        def save(attributes = {})
-          super(attributes)
+        def save(*args, **options, &block)
+          super(*args, **options, &block)
           sanitize
         end
 
@@ -116,7 +117,7 @@ class Trade::SandboxTemplate < ActiveRecord::Base
           return unless updates
           updates[:updated_at] = Time.now
           records_for_batch_operation(validation_error, annual_report_upload).
-            update_all(updates)
+            update_all(updates.to_h)
           sanitize
         end
 

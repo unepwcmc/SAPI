@@ -9,6 +9,7 @@ services:
   db:
     container_name: sapi-db
     image: postgres:10
+    command: postgres -c max_wal_size=2GB
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       timeout: 45s
@@ -23,6 +24,21 @@ services:
     environment:
       POSTGRES_HOST_AUTH_METHOD: "trust"
       POSTGRES_DB: "sapi_development"
+
+  deploy:
+    container_name: sapi-cap-deploy
+    build:
+      context: ./
+      dockerfile: Dockerfile.cap-deploy
+    volumes:
+      - '.:/SAPI'
+    networks:
+      - sapi
+    stdin_open: true
+    tty: true
+    secrets:
+      - host_ssh_key
+      - host_ssh_config
 
   rails:
     container_name: sapi-rails
@@ -104,3 +120,9 @@ volumes:
   pgdata:
   bundler_gems:
   redis_data:
+
+secrets:
+  host_ssh_key:
+    file: ~/.ssh/id_ed25519
+  host_ssh_config:
+    file: ~/.ssh/config

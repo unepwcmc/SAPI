@@ -1,9 +1,9 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :taxon_relationship_type do
     sequence(:name) { |n| "INCLUDES#{n}" }
-    is_bidirectional false
-    is_intertaxonomic true
+    is_bidirectional { false }
+    is_intertaxonomic { true }
   end
 
   factory :taxon_relationship do

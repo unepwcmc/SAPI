@@ -22,23 +22,43 @@
 #  updated_by_id       :integer
 #
 
-class Annotation < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :listing_change_id, :symbol, :parent_symbol, :short_note_en,
-    :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
-    :display_in_index, :display_in_footnote, :event_id
+class Annotation < ApplicationRecord
+  include Deletable
+  extend Mobility
+  include TrackWhoDoesIt
+
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :listing_change_id, :symbol, :parent_symbol, :short_note_en,
+  #   :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
+  #   :display_in_index, :display_in_footnote, :event_id
 
   has_many :listing_changes
   has_many :hashed_listing_changes,
     :foreign_key => :hash_annotation_id, :class_name => "ListingChange"
 
-  belongs_to :event
+  belongs_to :event, optional: true
   translates :short_note, :full_note
 
   scope :for_cites, -> { joins(:event).where("events.type = 'CitesCop'").
     order([:parent_symbol, :symbol]) }
   scope :for_eu, -> { joins(:event).where("events.type = 'EuRegulation'").
     order([:parent_symbol, :symbol]) }
+
+  # If this pattern is not respected, a query which parses (most of) the
+  # symbol as an integer
+  #
+  # OK: '^1', '#33'; not ok '#18edit'
+  validates :symbol, presence: false, format: {
+    allow_blank: true,
+    message: "should be a symbol followed by one or more digits",
+    with: /\A[^0-9a-z\s]\d+\z/i
+  }
+
+  before_save do
+    if event
+      self.parent_symbol = event.name
+    end
+  end
 
   def self.search(query)
     if query.present?

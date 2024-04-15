@@ -45,12 +45,12 @@ $(document).ready(function(){
   $("#tabs li").removeClass('ui-corner-top').addClass('ui-corner-left');
 
   $(".someClass").tipTip({maxWidth: "300px"});
-  //using the qtip2 plugin
-  $(".qtipify").qtip(
-  {
+
+  // using the qtip2 plugin
+  $(".qtipify").qtip({
     style: {
       classes: 'ui-tooltip-green ui-tooltip-cluetip'
-     }
+    }
   });
 
   $("#genus_all_id").val('').trigger("liszt:updated");
@@ -148,17 +148,17 @@ $(document).ready(function(){
 
   //function to reset all the countrols on the expert_accord page
   function resetSelects() {
-     $('#qryFrom').find('option:first').attr('selected', 'selected')
+    $('#qryFrom').find('option:first').attr('selected', 'selected')
       .trigger('change');
-     $('#qryTo').find('option:first').attr('selected', 'selected')
+    $('#qryTo').find('option:first').attr('selected', 'selected')
       .trigger('change');
-     $('#taxonomic_cascade_search').val('');
-     $('#species_out').text('');
-     $('#sources').select2("val","all_sou");
-     $('#purposes').select2("val","all_pur");
-     $('#terms').select2("val","all_ter");
-     $('#expcty').select2("val","all_exp");
-     $('#impcty').select2("val","all_imp");
+    $('#taxonomic_cascade_search').val('');
+    $('#species_out').text('');
+    $('#sources').select2("val","all_sou");
+    $('#purposes').select2("val","all_pur");
+    $('#terms').select2("val","all_ter");
+    $('#expcty').select2("val","all_exp");
+    $('#impcty').select2("val","all_imp");
     notySticky('Values are being reset...');
     $('#search-error-message').hide();
     $("#cites-trade-loading").hide();
@@ -485,7 +485,7 @@ $(document).ready(function(){
 
   function setEuDisclaimerVisibility () {
     ['imp', 'exp'].forEach(function (type) {
-      const disclaimerEl = $('#eu_disclaimer_' + type)
+      var disclaimerEl = $('#eu_disclaimer_' + type)
 
       if (disclaimerEl.length) {
         hasEuDisclaimer(type) ? disclaimerEl.show() : disclaimerEl.hide()
@@ -494,7 +494,7 @@ $(document).ready(function(){
   }
 
   function hasEuDisclaimer (type) {
-    const selections = $('#'+ type + 'cty').val()
+    var selections = $('#'+ type + 'cty').val()
 
     if (!selections) {
       return false
@@ -714,7 +714,7 @@ $(document).ready(function(){
       $('input[value=web]').attr("disabled",true);
       $('span#web-option').css('color', 'LightGray');
     }
-    $('select[name=csvSeparator]').val($.cookie('cites_trade.csv_separator') || 'comma')
+    $('select[name=csvSeparator]').val(Cookies.get('cites_trade.csv_separator') || 'comma')
   }
 
   function displayResults (q) {
@@ -750,7 +750,7 @@ $(document).ready(function(){
 
   function goToResults (q) {
     var $link = $('#view_genie'),
-     href = '/' + locale + '/cites_trade/download/view_results?' + q;
+      href = '/' + locale + '/cites_trade/download/view_results?' + q;
     $link.attr('href', href).click();
     window.location.href = $link.attr("href");
   }
@@ -784,7 +784,7 @@ $(document).ready(function(){
       goToResults(query);
       return;
     } else {
-      $.cookie('cites_trade.csv_separator', csv_separator)
+      Cookies.set('cites_trade.csv_separator', csv_separator)
       query += '&filters[csv_separator]=' + csv_separator;
 
       ga('send', {
@@ -832,7 +832,7 @@ $(document).ready(function(){
     if (!l && is_view_results_page) {
       // It is time to show these tables!
       displayResults(getParamsFromURI());
-   }
+    }
   }
 
 });

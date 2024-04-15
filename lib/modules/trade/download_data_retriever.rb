@@ -127,6 +127,6 @@ module Trade::DownloadDataRetriever
   end
 
   def self.query_runner(query)
-    ActiveRecord::Base.connection.execute(query)
+    ApplicationRecord.connection.execute(query)
   end
 end

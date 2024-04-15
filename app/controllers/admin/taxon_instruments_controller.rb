@@ -1,7 +1,7 @@
 class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesController
   respond_to :js, :only => [:create, :update]
   belongs_to :taxon_concept
-  before_filter :load_search, :only => [:new, :index, :edit, :create]
+  before_action :load_search, :only => [:new, :index, :edit, :create]
   layout 'taxon_concepts'
 
   def index
@@ -18,7 +18,7 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
 
   def create
     @taxon_concept = TaxonConcept.find(params[:taxon_concept_id])
-    @taxon_instrument = TaxonInstrument.new(params[:taxon_instrument])
+    @taxon_instrument = TaxonInstrument.new(taxon_instrument_params)
     if @taxon_concept.taxon_instruments << @taxon_instrument
       load_taxon_instruments
       render 'index'
@@ -62,5 +62,14 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
     @taxon_instruments = @taxon_concept.taxon_instruments.
       includes(:instrument).
       page(params[:page])
+  end
+
+  private
+
+  def taxon_instrument_params
+    params.require(:taxon_instrument).permit(
+      # attributes were in model `attr_accessible`.
+      :effective_from, :instrument_id, :taxon_concept_id
+    )
   end
 end

@@ -15,7 +15,7 @@ module SearchParamSanitiser
   end
 
   def sanitise_boolean(b, default = nil)
-    b && ActiveRecord::ConnectionAdapters::Column.value_to_boolean(b) || default
+    b && ActiveRecord::Type::Boolean.new.cast(b) || default
   end
 
   def sanitise_positive_integer(i, default = nil)

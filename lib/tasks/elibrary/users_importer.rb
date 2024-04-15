@@ -38,7 +38,7 @@ class Elibrary::UsersImporter
         NOW()
       FROM rows_to_insert
     SQL
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   def all_rows_sql

@@ -9,8 +9,10 @@
 #  updated_at     :datetime         not null
 #
 
-class EuDecisionConfirmation < ActiveRecord::Base
-  attr_accessible :eu_decision_id, :event_id
+class EuDecisionConfirmation < ApplicationRecord
+  # Relationship table between Event and EuDecision
+  # attr_accessible :eu_decision_id, :event_id
 
   belongs_to :eu_decision
+  belongs_to :event
 end

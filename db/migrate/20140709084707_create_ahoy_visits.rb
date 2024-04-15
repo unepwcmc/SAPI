@@ -1,4 +1,4 @@
-class CreateAhoyVisits < ActiveRecord::Migration
+class CreateAhoyVisits < ActiveRecord::Migration[4.2]
   def change
     create_table :ahoy_visits, id: false do |t|
       t.uuid :id, primary_key: true

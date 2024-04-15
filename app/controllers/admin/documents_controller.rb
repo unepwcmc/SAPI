@@ -21,9 +21,9 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     edit! do |format|
       load_associations
       if @document.is_a?(Document::ReviewOfSignificantTrade)
-        @document.review_details ||= Document::ReviewDetails.new
+        @document.review_details ||= ReviewDetails.new
       elsif @document.is_a?(Document::Proposal)
-        @document.proposal_details ||= Document::ProposalDetails.new
+        @document.proposal_details ||= ProposalDetails.new
       end
       @document.citations.build
       format.html { render 'new' }
@@ -51,7 +51,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     @document = Document.find(params[:id])
     path_to_file = @document.filename.path unless @document.is_link?
     if @document.is_link?
-      redirect_to @document.filename
+      redirect_to @document.filename.model[:filename]
     elsif !File.exists?(path_to_file)
       render :file => "#{Rails.root}/public/404.html", :status => 404
     else
@@ -88,7 +88,10 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     # TO DO: figure out if the cascading feature has been completed, and if so move the
     # pagination back into the search class and out of the controllers.
     @documents = Kaminari::PaginatableArray.new(
-      @search.cached_results.limit(@search.per_page).offset(@search.offset),
+      # @search.cached_results.limit(@search.per_page).offset(@search.offset).to_a,
+      # Leonardo: rollback https://github.com/unepwcmc/SAPI/commit/52f6439bdd05ce8bbf4e5121c2a8af427668b079
+      # cached_results return array, not ActiveRecord Relation, cannot chain to use .limit(), etc.
+      @search.cached_results,
       limit: @search.per_page,
       offset: @search.offset,
       total_count: @search.cached_total_cnt
@@ -137,5 +140,29 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
       else
         admin_documents_url
       end
+  end
+
+  private
+
+  def document_params
+    params.require(:document).permit(
+      # attributes were in model `attr_accessible`.
+      :event_id, :filename, :date, :type, :title, :is_public,
+      :language_id,
+      :sort_index, :discussion_id, :discussion_sort_index,
+      :primary_language_document_id,
+      :designation_id,
+      citations_attributes: [
+        :id, :_destroy, :document_id, :stringy_taxon_concept_ids,
+        geo_entity_ids: []
+      ],
+      proposal_details_attributes: [
+        :id, :_destroy, :document_id, :proposal_nature, :proposal_outcome_id,
+        :representation, :proposal_number
+      ],
+      review_details_attributes: [
+        :id, :_destroy, :document_id, :review_phase_id, :process_stage_id, :recommended_category
+      ]
+    )
   end
 end

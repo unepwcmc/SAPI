@@ -458,20 +458,20 @@ end
 def create_table_from_column_array(table_name, db_columns)
   begin
     puts "Creating tmp table"
-    ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
-    ActiveRecord::Base.connection.execute "CREATE TABLE #{table_name} (#{db_columns.join(', ')})"
+    ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
+    ApplicationRecord.connection.execute "CREATE TABLE #{table_name} (#{db_columns.join(', ')})"
     puts "Table created"
   rescue Exception => e
     puts e.inspect
     puts "Tmp already exists removing data from tmp table before starting the import"
-    ActiveRecord::Base.connection.execute "DELETE FROM #{table_name};"
+    ApplicationRecord.connection.execute "DELETE FROM #{table_name};"
     puts "Data removed"
   end
 end
 
 def drop_table(table_name)
   begin
-    ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS #{table_name};"
+    ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name};"
     puts "Table removed"
   rescue Exception
     puts "Could not drop table #{table_name}. It might not exist if this is the first time you are running this rake task."

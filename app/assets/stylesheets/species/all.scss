@@ -110,14 +110,14 @@ p.browsehappy a {
   float: left;
   text-indent: -9999px;
   overflow: hidden;
-  background: image-url('species/species+_logo_header.png') no-repeat;
+  background: image-url('species/species_plus_logo_header.png') no-repeat;
   background-size:100%;
 }
 
 html.lt-ie9 #header .logo{
   background: none;
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
-  src='species/species+_logo_header.png',
+  src='species/species_plus_logo_header.png',
   sizingMethod='scale');
 }
 
@@ -256,7 +256,7 @@ span.beta{
   display: inline-block;
   overflow: hidden;
   text-indent: -9999px;
-  background: image-url('species/species+_logo_text.png') no-repeat;
+  background: image-url('species/species_plus_logo_text.png') no-repeat;
   background-size: 100%;
 }
 .text-species {
@@ -271,7 +271,7 @@ span.beta{
 html.lt-ie9 .text-species{
   background: none;
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
-  src='species/species+_logo_text.png',
+  src='species/species_plus_logo_text.png',
   sizingMethod='scale');
 }
 a.learn-more {

@@ -1,6 +1,4 @@
 # encoding: utf-8
-require 'fileutils'
-
 class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
@@ -73,7 +71,7 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
 
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
-  def extension_white_list
+  def extension_allowlist
     %w(csv)
   end
 

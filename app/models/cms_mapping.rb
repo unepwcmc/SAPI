@@ -13,14 +13,15 @@
 #  updated_at       :datetime         not null
 #
 
-class CmsMapping < ActiveRecord::Base
-  attr_accessible :accepted_name_id, :cms_author, :cms_taxon_name, :cms_uuid, :details, :taxon_concept_id
+class CmsMapping < ApplicationRecord
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :accepted_name_id, :cms_author, :cms_taxon_name, :cms_uuid, :details, :taxon_concept_id
 
   # serialize :details, ActiveRecord::Coders::Hstore
-  belongs_to :taxon_concept
-  belongs_to :accepted_name, :class_name => 'TaxonConcept'
+  belongs_to :taxon_concept, optional: true
+  belongs_to :accepted_name, :class_name => 'TaxonConcept', optional: true
 
-  scope :filter, lambda { |option|
+  scope :index_filter, lambda { |option|
     case option
     when "MATCHES"
       where('taxon_concept_id IS NOT NULL')

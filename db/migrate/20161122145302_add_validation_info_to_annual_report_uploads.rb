@@ -1,4 +1,4 @@
-class AddValidationInfoToAnnualReportUploads < ActiveRecord::Migration
+class AddValidationInfoToAnnualReportUploads < ActiveRecord::Migration[4.2]
   def change
     add_column :trade_annual_report_uploads, :validated_at, :datetime
     add_column :trade_annual_report_uploads, :validation_report, :jsonb

@@ -26,11 +26,20 @@
 #
 
 module Ahoy
-  class Visit < ActiveRecord::Base
+  class Visit < ApplicationRecord
     self.table_name = 'ahoy_visits'
 
     has_many :ahoy_events, class_name: 'Ahoy::Event'
-    belongs_to :user
+    belongs_to :user, optional: true
     serialize :properties, JSON
+
+    # https://github.com/ankane/ahoy/issues/549
+    # This project start using ahoy since version 1.0.1
+    # The DB migration file come with version 1.0.1 create columns `id` and `visitor_id`.
+    # (https://github.com/ankane/ahoy/blob/v1.0.1/lib/generators/ahoy/stores/templates/active_record_visits_migration.rb)
+    # However it has changed since version 1.4.0, from `id` to `visit_token`, and from `visitor_id` to `visitor_token`.
+    # (https://github.com/ankane/ahoy/blob/v1.4.0/lib/generators/ahoy/stores/templates/active_record_visits_migration.rb)
+    alias_attribute :visit_token, :id
+    alias_attribute :visitor_token, :visitor_id
   end
 end

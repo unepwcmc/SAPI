@@ -1,4 +1,4 @@
-class AddNomenclatureNoteColumns < ActiveRecord::Migration
+class AddNomenclatureNoteColumns < ActiveRecord::Migration[4.2]
   def change
     [:en, :es, :fr].each do |lng|
       add_column :taxon_concepts, :"nomenclature_note_#{lng}", :text

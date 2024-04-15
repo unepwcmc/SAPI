@@ -7,31 +7,31 @@ describe TaxonConcept do
     context "LISTING" do
       describe :cites_listing do
         context "for genus Moschus" do
-          specify { @genus.cites_listing.should == 'I/II' }
+          specify { expect(@genus.cites_listing).to eq('I/II') }
         end
         context "for species Moschus leucogaster" do
-          specify { @species1.cites_listing.should == 'I' }
+          specify { expect(@species1.cites_listing).to eq('I') }
         end
         context "for species Moschus moschiferus" do
-          specify { @species2.cites_listing.should == 'II' }
+          specify { expect(@species2.cites_listing).to eq('II') }
         end
         context "for subspecies Moschus moschiferus moschiferus" do
-          specify { @subspecies.cites_listing.should == 'II' }
+          specify { expect(@subspecies.cites_listing).to eq('II') }
         end
       end
 
       describe :cites_listed do
         context "for genus Moschus" do
-          specify { @genus.cites_listed.should be_truthy }
+          specify { expect(@genus.cites_listed).to be_truthy }
         end
         context "for species Moschus leucogaster" do
-          specify { @species1.cites_listed.should == false }
+          specify { expect(@species1.cites_listed).to eq(false) }
         end
         context "for species Moschus moschiferus" do
-          specify { @species2.cites_listed.should == false }
+          specify { expect(@species2.cites_listed).to eq(false) }
         end
         context "for subspecies Moschus moschiferus moschiferus" do
-          specify { @subspecies.cites_listed.should == false }
+          specify { expect(@subspecies.cites_listed).to eq(false) }
         end
       end
     end
@@ -40,29 +40,29 @@ describe TaxonConcept do
       describe :current_cites_additions do
         context "for species Moschus leucogaster" do
           specify {
-            @species1.current_cites_additions.size.should == 1
+            expect(@species1.current_cites_additions.size).to eq(1)
             addition = @species1.current_cites_additions.first
-            addition.original_taxon_concept_id.should == @genus.id
+            expect(addition.original_taxon_concept_id).to eq(@genus.id)
             # should inherit just the I listing from split listed genus
-            addition.species_listing_name.should == 'I'
+            expect(addition.species_listing_name).to eq('I')
           }
         end
         context "for species Moschus moschiferus" do
           specify {
-            @species2.current_cites_additions.size.should == 1
+            expect(@species2.current_cites_additions.size).to eq(1)
             addition = @species2.current_cites_additions.first
-            addition.original_taxon_concept_id.should == @genus.id
+            expect(addition.original_taxon_concept_id).to eq(@genus.id)
             # should inherit just the II listing from split listed genus
-            addition.species_listing_name.should == 'II'
+            expect(addition.species_listing_name).to eq('II')
           }
         end
         context "for subspecies Moschus moschiferus moschiferus" do
           specify {
-            @subspecies.current_cites_additions.size.should == 1
+            expect(@subspecies.current_cites_additions.size).to eq(1)
             addition = @subspecies.current_cites_additions.first
-            addition.original_taxon_concept_id.should == @genus.id
+            expect(addition.original_taxon_concept_id).to eq(@genus.id)
             # should inherit just the II listing from split listed genus
-            addition.species_listing_name.should == 'II'
+            expect(addition.species_listing_name).to eq('II')
           }
         end
       end

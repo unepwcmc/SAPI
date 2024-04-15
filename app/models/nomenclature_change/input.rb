@@ -17,14 +17,16 @@
 
 # Represents an input of a nomenclature change.
 # Inputs are required to be existing taxon concepts.
-class NomenclatureChange::Input < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :nomenclature_change_id, :taxon_concept_id,
-    :note_en, :note_es, :note_fr, :internal_note,
-    :parent_reassignments_attributes,
-    :name_reassignments_attributes,
-    :distribution_reassignments_attributes,
-    :legislation_reassignments_attributes
+class NomenclatureChange::Input < ApplicationRecord
+  include TrackWhoDoesIt
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :nomenclature_change_id, :taxon_concept_id,
+  #   :note_en, :note_es, :note_fr, :internal_note,
+  #   :parent_reassignments_attributes,
+  #   :name_reassignments_attributes,
+  #   :distribution_reassignments_attributes,
+  #   :legislation_reassignments_attributes
+
   belongs_to :nomenclature_change
   belongs_to :taxon_concept
   has_many :reassignments,
@@ -63,8 +65,6 @@ class NomenclatureChange::Input < ActiveRecord::Base
     foreign_key: :nomenclature_change_input_id,
     dependent: :destroy,
     autosave: true
-  validates :nomenclature_change, :presence => true
-  validates :taxon_concept, :presence => true
   accepts_nested_attributes_for :parent_reassignments, :allow_destroy => true
   accepts_nested_attributes_for :name_reassignments, :allow_destroy => true
   accepts_nested_attributes_for :distribution_reassignments, :allow_destroy => true

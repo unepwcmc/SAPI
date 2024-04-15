@@ -28,7 +28,7 @@ namespace :import do
 
         ) AS subquery
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
     puts "There are now #{Annotation.count} hash_annotations in the database"
   end
@@ -41,7 +41,7 @@ namespace :import do
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
 
-    res = ActiveRecord::Base.connection.execute("SELECT COUNT(*) FROM #{TMP_TABLE}")
+    res = ApplicationRecord.connection.execute("SELECT COUNT(*) FROM #{TMP_TABLE}")
     puts "Attempting to import #{res[0]['count']} rows"
 
     sql = <<-SQL
@@ -66,7 +66,7 @@ namespace :import do
       WHERE ta.id = annotations.id
     SQL
 
-    res = ActiveRecord::Base.connection.execute(sql)
+    res = ApplicationRecord.connection.execute(sql)
 
     puts "Updated #{res.cmd_tuples} rows"
   end

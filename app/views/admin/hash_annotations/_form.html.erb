@@ -10,7 +10,7 @@
   <%= f.label :symbol %>
   <%= f.text_field :symbol %>
 
-  <% Annotation.locale_columns(:full_note).each do |column| %>
+  <% traco_locale_columns(:full_note).each do |column| %>
     <%= f.label column %>
     <%= f.text_area column %>
   <% end %>

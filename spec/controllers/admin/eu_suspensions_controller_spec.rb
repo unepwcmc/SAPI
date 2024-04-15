@@ -11,12 +11,12 @@ describe Admin::EuSuspensionsController do
 
   describe "GET index" do
     it "renders the index template" do
-      get :index, :eu_suspension_regulation_id => @eu_suspension_regulation
-      response.should render_template("index")
+      get :index, params: { :eu_suspension_regulation_id => @eu_suspension_regulation }
+      expect(response).to render_template("index")
     end
     it "renders the admin layout" do
-      get :index, :eu_suspension_regulation_id => @eu_suspension_regulation
-      response.should render_template('layouts/admin')
+      get :index, params: { :eu_suspension_regulation_id => @eu_suspension_regulation }
+      expect(response).to render_template('layouts/admin')
     end
   end
 
@@ -29,9 +29,8 @@ describe Admin::EuSuspensionsController do
       )
     end
     it "redirects after delete" do
-      delete :destroy, :id => @eu_suspension.id,
-        :eu_suspension_regulation_id => @eu_suspension_regulation.id
-      response.should redirect_to(
+      delete :destroy, params: { :id => @eu_suspension.id, :eu_suspension_regulation_id => @eu_suspension_regulation.id }
+      expect(response).to redirect_to(
         admin_eu_suspension_regulation_eu_suspensions_url(@eu_suspension_regulation)
       )
     end

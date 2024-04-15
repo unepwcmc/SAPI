@@ -1,4 +1,4 @@
-class AddManualIdToApiDocumentsView < ActiveRecord::Migration
+class AddManualIdToApiDocumentsView < ActiveRecord::Migration[4.2]
   def up
     execute "DROP MATERIALIZED VIEW IF EXISTS api_documents_mview"
     execute "DROP VIEW IF EXISTS api_documents_view"

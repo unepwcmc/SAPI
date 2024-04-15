@@ -10,14 +10,14 @@ class SubmissionWorker
       # catch this exception so that retry is not scheduled
       Rails.logger.warn "CITES Report #{aru_id} not found"
       Appsignal.add_exception(e) if defined? Appsignal
-      NotificationMailer.changelog_failed(submitter, aru).deliver
+      NotificationMailer.changelog_failed(submitter, aru).deliver_now
       return false
     end
 
     duplicates = aru.sandbox.check_for_duplicates_in_shipments
     if duplicates.present?
       tempfile = Trade::ChangelogCsvGenerator.call(aru, submitter, duplicates)
-      NotificationMailer.duplicates(submitter, aru, tempfile).deliver
+      NotificationMailer.duplicates(submitter, aru, tempfile).deliver_now
       return false
     end
 
@@ -41,13 +41,13 @@ class SubmissionWorker
     aru.sandbox.destroy
 
     # flag as submitted
-    aru.update_attributes({
+    aru.update(
       submitted_at: DateTime.now,
       submitted_by_id: submitter.id,
       number_of_records_submitted: records_submitted
-    })
+    )
 
-    NotificationMailer.changelog(submitter, aru, tempfile).deliver
+    NotificationMailer.changelog(submitter, aru, tempfile).deliver_now
 
     tempfile.delete
   end
@@ -58,11 +58,11 @@ class SubmissionWorker
     begin
       s3 = Aws::S3::Resource.new
       filename = "#{Rails.env}/trade/annual_report_upload/#{aru.id}/changelog.csv"
-      bucket_name = Rails.application.secrets.aws['bucket_name']
+      bucket_name = Rails.application.secrets.aws[:bucket_name]
       obj = s3.bucket(bucket_name).object(filename)
       obj.upload_file(tempfile.path)
 
-      aru.update_attributes(aws_storage_path: obj.public_url)
+      aru.update(aws_storage_path: obj.public_url)
     rescue Aws::S3::Errors::ServiceError => e
       Rails.logger.warn "Something went wrong while uploading #{aru.id} to S3"
       Appsignal.add_exception(e) if defined? Appsignal

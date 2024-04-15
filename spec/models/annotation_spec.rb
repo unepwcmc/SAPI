@@ -25,6 +25,19 @@
 require 'spec_helper'
 
 describe Annotation do
+  describe :validate do
+    context "symbol" do
+      context "should not be alphanumeric" do
+        let(:annotation) {
+          build(
+            :annotation, :parent_symbol => 'CoP1', :symbol => '#1a'
+          )
+        }
+        specify { expect(annotation).to have(1).errors_on(:symbol) }
+      end
+    end
+  end
+
   describe :full_name do
     context "when parent_symbol given" do
       let(:annotation) {
@@ -43,16 +56,16 @@ describe Annotation do
   describe :destroy do
     let(:annotation) { create(:annotation) }
     context "when no dependent objects attached" do
-      specify { annotation.destroy.should be_truthy }
+      specify { expect(annotation.destroy).to be_truthy }
     end
     context "when dependent objects attached" do
       context "when listing changes" do
         let!(:listing_change) { create_cites_I_addition(:annotation_id => annotation.id) }
-        specify { annotation.destroy.should be_falsey }
+        specify { expect(annotation.destroy).to be_falsey }
       end
       context "when hashed listing changes" do
         let!(:listing_change) { create_cites_I_addition(:hash_annotation_id => annotation.id) }
-        specify { annotation.destroy.should be_falsey }
+        specify { expect(annotation.destroy).to be_falsey }
       end
     end
   end

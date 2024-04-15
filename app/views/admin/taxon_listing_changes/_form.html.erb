@@ -194,12 +194,12 @@
 
   <%= f.fields_for :annotation do |ff| %>
     <% if @designation.is_cites? %>
-      <% Annotation.locale_columns(:short_note).each do |column| %>
+      <% traco_locale_columns(:short_note).each do |column| %>
         <%= ff.label column %>
         <%= ff.text_field column, :class => :annotation %>
       <% end %>
     <% end %>
-    <% Annotation.locale_columns(:full_note).each do |column| %>
+    <% traco_locale_columns(:full_note).each do |column| %>
       <%= ff.label column %>
       <%= ff.text_area column, :class => :annotation %>
     <% end %>
@@ -221,7 +221,7 @@
     <%= render :partial => 'admin/shared/nomenclature_notes_form',
       locals: {
         f: f,
-        locale_columns: ListingChange.locale_columns(:nomenclature_note)
+        locale_columns: traco_locale_columns(:nomenclature_note)
       }
     %>
   </div>

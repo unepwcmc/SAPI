@@ -1,4 +1,4 @@
-class MergedMigrations < ActiveRecord::Migration
+class MergedMigrations < ActiveRecord::Migration[4.2]
   def change
   create_table "annotations", :force => true do |t|
     t.string   "symbol"

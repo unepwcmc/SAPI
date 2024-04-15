@@ -20,11 +20,11 @@ describe Admin::EuHashAnnotationsController do
     describe "GET index" do
       it "assigns @annotations sorted by parent_symbol and symbol" do
         get :index
-        assigns(:annotations).should eq([@annotation2, @annotation1])
+        expect(assigns(:annotations)).to eq([@annotation2, @annotation1])
       end
       it "renders the index template" do
         get :index
-        response.should render_template("index")
+        expect(response).to render_template("index")
       end
     end
   end

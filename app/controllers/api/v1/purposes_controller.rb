@@ -1,11 +1,17 @@
 class Api::V1::PurposesController < ApplicationController
-  caches_action :index, :cache_path => Proc.new { |c|
-    { :locale => "en" }.merge(c.params.select { |k, v| !v.blank? && "locale" == k })
-  }
+  CACHE_KEY_ALL = 'all_purposes'
+
   def index
-    @purposes = Purpose.all(:order => "code")
-    render :json => @purposes,
+    @all_rows = Rails.cache.fetch(CACHE_KEY_ALL, expires_in: 1.hour) do
+      Purpose.all.order(:code).as_json
+    end
+
+    render :json => @all_rows.map { |row_data| Purpose.new(row_data) },
       :each_serializer => Species::PurposeSerializer,
-      :meta => { :total => @purposes.count }
+      :meta => { :total => @all_rows.count }
+  end
+
+  def self.invalidate_cache
+    Rails.cache.delete(CACHE_KEY_ALL)
   end
 end

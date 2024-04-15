@@ -32,18 +32,20 @@
 
 require 'digest/sha1'
 require 'csv'
-class TradeRestriction < ActiveRecord::Base
-  track_who_does_it
-  attr_accessible :end_date, :geo_entity_id, :is_current,
-    :notes, :publication_date, :purpose_ids, :quota, :type,
-    :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
-    :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-    :created_by_id, :updated_by_id, :url,
-    :taxon_concept_id
+class TradeRestriction < ApplicationRecord
+  extend Mobility
+  include TrackWhoDoesIt
+  # Migrated to controller (Strong Parameters)
+  # attr_accessible :end_date, :geo_entity_id, :is_current,
+  #   :notes, :publication_date, :purpose_ids, :quota, :type,
+  #   :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
+  #   :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+  #   :created_by_id, :updated_by_id, :url,
+  #   :taxon_concept_id
 
-  belongs_to :taxon_concept
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id
-  belongs_to :unit, :class_name => 'TradeCode'
+  belongs_to :taxon_concept, optional: true
+  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
+  belongs_to :unit, :class_name => 'TradeCode', optional: true
   has_many :trade_restriction_terms, :dependent => :destroy
   has_many :terms, :through => :trade_restriction_terms
   has_many :trade_restriction_sources, :dependent => :destroy
@@ -51,12 +53,17 @@ class TradeRestriction < ActiveRecord::Base
   has_many :trade_restriction_purposes, :dependent => :destroy
   has_many :purposes, :through => :trade_restriction_purposes
 
-  belongs_to :geo_entity
+  belongs_to :geo_entity, optional: true
 
   validates :publication_date, :presence => true
   validate :valid_dates
 
   translates :nomenclature_note
+
+  after_save :touch_descendants, unless: -> { taxon_concept.nil? }
+  before_destroy :touch_descendants, unless: -> { taxon_concept.nil? }
+  after_save :touch_taxa_with_applicable_distribution, if: -> { taxon_concept.nil? }
+  before_destroy :touch_taxa_with_applicable_distribution, if: -> { taxon_concept.nil? }
 
   def valid_dates
     if !(start_date.nil? || end_date.nil?) && (start_date > end_date)
@@ -112,12 +119,14 @@ class TradeRestriction < ActiveRecord::Base
       filter_geo_entities(filters).
       filter_years(filters).
       filter_taxon_concepts(filters).
-      where(:public_display => true).
-      order('
-        taxon_concepts.name_status ASC,
-        taxon_concepts_mview.taxonomic_position ASC,
-        trade_restrictions.start_date DESC, geo_entities.name_en ASC,
-        trade_restrictions.notes ASC')
+      where(public_display: true).
+      order(
+        'taxon_concepts.name_status': :asc,
+        'taxon_concepts_mview.taxonomic_position': :asc,
+        start_date: :desc,
+        'geo_entities.name_en': :asc,
+        notes: :asc
+      )
   end
 
   # Gets the display text for each CSV_COLUMNS
@@ -135,7 +144,7 @@ class TradeRestriction < ActiveRecord::Base
       when :semicolon then ';'
       else ','
       end
-    CSV.open(file_path, 'wb', { :col_sep => csv_separator_char }) do |csv|
+    CSV.open(file_path, 'wb', col_sep: csv_separator_char) do |csv|
       csv << Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +
         ['Remarks'] + self.csv_columns_headers
       ids = []
@@ -198,5 +207,74 @@ class TradeRestriction < ActiveRecord::Base
                    filters["years"].map(&:to_i))
     end
     all
+  end
+
+  private
+
+  def touch_taxa_with_applicable_distribution
+    update_stmt = TaxonConcept.send(:sanitize_sql_array, [
+      "UPDATE taxon_concepts
+      SET dependents_updated_at = CURRENT_TIMESTAMP, dependents_updated_by_id = :updated_by_id
+      FROM distributions
+      WHERE distributions.taxon_concept_id = taxon_concepts.id
+      AND distributions.geo_entity_id IN (:geo_entity_id)",
+      updated_by_id: updated_by_id,
+      geo_entity_id: [
+        # Rails 5.1 to 5.2
+        # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `attribute_before_last_save` instead.
+        #
+        # DEPRECATION WARNING: The behavior of `attribute_changed?` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `saved_change_to_attribute?` instead.
+        #
+        # DEPRECATION WARNING: The behavior of `changed_attributes` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `saved_changes.transform_values(&:first)` instead.
+        #
+        # == Original code ==
+        # geo_entity_id, geo_entity_id_was
+        # == Changed to fix deprecation warnings ==
+        geo_entity_id, geo_entity_id_before_last_save
+      ].compact.uniq
+    ])
+    TaxonConcept.connection.execute update_stmt
+  end
+
+  def touch_descendants
+    update_stmt = TaxonConcept.send(:sanitize_sql_array, [
+      "UPDATE taxon_concepts
+      SET dependents_updated_at = CURRENT_TIMESTAMP, dependents_updated_by_id = :updated_by_id
+      WHERE data IS NOT NULL
+      AND ARRAY[
+        (data->'species_id')::INT,
+        (data->'genus_id')::INT,
+        (data->'subfamily_id')::INT,
+        (data->'family_id')::INT,
+        (data->'order_id')::INT
+      ] && ARRAY[:taxon_concept_id] ",
+      updated_by_id: updated_by_id,
+      taxon_concept_id: [
+        # Rails 5.1 to 5.2
+        # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `attribute_before_last_save` instead.
+        #
+        # DEPRECATION WARNING: The behavior of `attribute_changed?` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `saved_change_to_attribute?` instead.
+        #
+        # DEPRECATION WARNING: The behavior of `changed_attributes` inside of after callbacks will be changing in the next version of Rails.
+        # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
+        # To maintain the current behavior, use `saved_changes.transform_values(&:first)` instead.
+        #
+        # == Original code ==
+        # taxon_concept_id, taxon_concept_id_was
+        # == Changed to fix deprecation warnings ==
+        taxon_concept_id, taxon_concept_id_before_last_save
+      ].compact.uniq
+    ])
+    TaxonConcept.connection.execute(update_stmt)
   end
 end

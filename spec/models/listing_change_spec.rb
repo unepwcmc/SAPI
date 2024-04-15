@@ -44,7 +44,7 @@ describe ListingChange do
             excluded_taxon_concepts_ids: "#{excluded_taxon_concept.id}"
           )
         }
-        specify { listing_change.should be_valid }
+        specify { expect(listing_change).to be_valid }
       end
       context "inclusion taxon concept is lower rank" do
         let(:inclusion) { create_cites_eu_subspecies }
@@ -56,7 +56,7 @@ describe ListingChange do
             inclusion_taxon_concept_id: inclusion.id
           )
         }
-        specify { listing_change.should have(1).error_on(:inclusion_taxon_concept_id) }
+        specify { expect(listing_change.error_on(:inclusion_taxon_concept_id).size).to eq(1) }
       end
       context "species listing designation mismatch" do
         let(:designation1) { create(:designation) }
@@ -68,7 +68,7 @@ describe ListingChange do
             :change_type => create(:change_type, :designation => designation2)
           )
         }
-        specify { listing_change.should have(1).error_on(:species_listing_id) }
+        specify { expect(listing_change.error_on(:species_listing_id).size).to eq(1) }
       end
       context "event designation mismatch" do
         let(:designation1) { create(:designation) }
@@ -80,13 +80,13 @@ describe ListingChange do
             :change_type => create(:change_type, :designation => designation2)
           )
         }
-        specify { listing_change.should have(1).error_on(:event_id) }
+        specify { expect(listing_change.error_on(:event_id).size).to eq(1) }
       end
     end
   end
   describe :effective_at_formatted do
     let(:listing_change) { create_cites_I_addition(:effective_at => '2012-05-10') }
-    specify { listing_change.effective_at_formatted.should == '10/05/2012' }
+    specify { expect(listing_change.effective_at_formatted).to eq('10/05/2012') }
   end
 
   describe :duplicates do

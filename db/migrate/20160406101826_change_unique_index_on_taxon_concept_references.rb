@@ -1,4 +1,4 @@
-class ChangeUniqueIndexOnTaxonConceptReferences < ActiveRecord::Migration
+class ChangeUniqueIndexOnTaxonConceptReferences < ActiveRecord::Migration[4.2]
   def up
     remove_index "taxon_concept_references",
       name: "index_taxon_concept_references_on_tc_id_is_std_is_cascaded"

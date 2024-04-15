@@ -30,6 +30,6 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
     arel_nodes = column_names.map do |c|
       s[c].eq(nil)
     end
-    sandbox_klass.select('*').where(arel_nodes.inject(&:and))
+    sandbox_klass.select(Arel.star).where(arel_nodes.inject(&:and))
   end
 end

@@ -50,7 +50,7 @@ namespace :import do
           ) AS subquery
           SQL
         # TODO: do sth about those unknown distributions!
-        ActiveRecord::Base.connection.execute(sql)
+        ApplicationRecord.connection.execute(sql)
       end
       if has_reference_id
         puts "There are #{DistributionReference.count} distribution references in the database."
@@ -71,7 +71,7 @@ namespace :import do
             SELECT distribution_id, reference_id FROM distribution_references
           ) AS subquery
         SQL
-        ActiveRecord::Base.connection.execute(sql)
+        ApplicationRecord.connection.execute(sql)
       end
       if has_reference
         puts "There are #{Reference.count} references in the database."
@@ -90,7 +90,7 @@ namespace :import do
             FROM "references" r
           ) AS subquery
         SQL
-        ActiveRecord::Base.connection.execute(sql)
+        ApplicationRecord.connection.execute(sql)
         puts "There are now #{Reference.count} references in the database"
 
         distribution_references = DistributionReference.count
@@ -111,7 +111,7 @@ namespace :import do
             SELECT distribution_id, reference_id FROM distribution_references
           ) AS subquery
         SQL
-        ActiveRecord::Base.connection.execute(sql)
+        ApplicationRecord.connection.execute(sql)
         puts "Extra #{DistributionReference.count - distribution_references} distribution references have been added to the database"
       end
     end

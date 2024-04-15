@@ -2,7 +2,7 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
   defaults :resource_class => TaxonRelationship, :collection_name => 'synonym_relationships', :instance_name => 'synonym_relationship'
   respond_to :js, :only => [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_filter :load_synonym_relationship_type, :only => [:new, :create, :update]
+  before_action :load_synonym_relationship_type, :only => [:new, :create, :update]
 
   def new
     new! do |format|
@@ -63,4 +63,13 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
       find_by_name(TaxonRelationshipType::HAS_SYNONYM)
   end
 
+  private
+
+  def synonym_relationship_params
+    params.require(:taxon_relationship).permit(
+      # attributes were in model `attr_accessible`.
+      :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
+      :created_by_id, :updated_by_id
+    )
+  end
 end

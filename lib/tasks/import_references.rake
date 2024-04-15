@@ -52,7 +52,7 @@ namespace :import do
               "references".legacy_type = '#{kingdom}'
           )
       SQL
-      ActiveRecord::Base.connection.execute(sql)
+      ApplicationRecord.connection.execute(sql)
     end
     puts "There are now #{Reference.count} references in the database"
   end

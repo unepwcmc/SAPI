@@ -1,4 +1,4 @@
-class RemoveRegionFromAhoyVisits < ActiveRecord::Migration
+class RemoveRegionFromAhoyVisits < ActiveRecord::Migration[4.2]
   def up
     remove_column :ahoy_visits, :region
   end
