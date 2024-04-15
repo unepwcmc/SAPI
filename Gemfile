@@ -189,7 +189,7 @@ gem 'ember-rails', '~> 0.21.0' # Latest @ 2017
 #     $ rails generate ember:install --tag=v1.6.1 --ember
 #     $ rails generate ember:install --tag=v0.14 --ember-data
 
-gem 'ember-source', '1.8.0' # NOTE: not what we actually use
+gem 'ember-source', '1.11.4' # NOTE: not what we actually use
 gem 'ember-data-source', '1.13.0' # NOTE: not what we actually use
 
 gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will change the handlebars.js version.
