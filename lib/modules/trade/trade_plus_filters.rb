@@ -39,7 +39,7 @@ class Trade::TradePlusFilters
         AND id NOT IN (
           -- this is to exclude
           218, -- Taiwan (included into China)
-          221, -- Sudan prior to secession
+          221  -- Sudan prior to secession
         )
         -- The following have null or empty iso2 codes:
         --
