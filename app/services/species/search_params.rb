@@ -29,7 +29,7 @@ class Species::SearchParams < Hash
       ),
       visibility: whitelist_param(
         sanitise_symbol(params[:visibility]),
-        [:speciesplus, :trade, :trade_internal, :elibrary],
+        [:speciesplus, :trade, :trade_internal, :elibrary, :checklist],
         :speciesplus
       ),
       include_synonyms: sanitise_boolean(params[:include_synonyms], false),
