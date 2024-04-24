@@ -1,5 +1,4 @@
 module MaterialDocIdsRetriever
-  include SearchParamSanitiser
 
   def self.run(params)
     params['taxon_concepts_ids'] =
