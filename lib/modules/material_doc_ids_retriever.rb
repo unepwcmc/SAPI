@@ -1,4 +1,5 @@
 module MaterialDocIdsRetriever
+  include SearchParamSanitiser
 
   def self.run(params)
     params['taxon_concepts_ids'] =
@@ -69,17 +70,27 @@ module MaterialDocIdsRetriever
   end
 
   def self.ancestors_ids(tc_ids, taxon_name = nil, exact_match = nil)
+    # TODO: Raise an error if any of these are not integers instead of leaving
+    # it to the db to do this. That logic maybe belongs elsewhere?
+    # Consider using `SearchParamSanitiser.sanitise_integer_array` for this.
+    tc_ids_array = tc_ids.is_a?(String) ? tc_ids.split(',') : tc_ids
+    tc_ids_sql = tc_ids_array.map(&:to_i).filter{ |tc_id| tc_id > 0 }.join(', ')
+
+    # Don't bother running a query if we didn't get any taxon concept ids
+    return [] if tc_ids_sql.empty?
+
     res = ApplicationRecord.connection.execute(
       <<-SQL
       SELECT ancestor_taxon_concept_id
       FROM taxon_concepts_and_ancestors_mview
-      WHERE taxon_concept_id IN (#{tc_ids})
+      WHERE taxon_concept_id IN (#{tc_ids_sql})
       AND ancestor_taxon_concept_id IS NOT NULL
       ORDER BY
         #{order_case(exact_match, taxon_name)}
       tree_distance DESC, ancestor_taxon_concept_id;
       SQL
     )
+
     res.map(&:values).flatten.map(&:to_i).uniq
   end
 
