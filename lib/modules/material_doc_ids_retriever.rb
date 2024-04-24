@@ -72,7 +72,7 @@ module MaterialDocIdsRetriever
     # TODO: Raise an error if any of these are not integers instead of leaving
     # it to the db to do this. That logic maybe belongs elsewhere?
     # Consider using `SearchParamSanitiser.sanitise_integer_array` for this.
-    tc_ids_array = tc_ids.is_a?(String) ? tc_ids.split(',') : tc_ids
+    tc_ids_array = Array(tc_ids.is_a?(String) ? tc_ids.split(',') : tc_ids)
     tc_ids_sql = tc_ids_array.map(&:to_i).filter{ |tc_id| tc_id > 0 }.join(', ')
 
     # Don't bother running a query if we didn't get any taxon concept ids
