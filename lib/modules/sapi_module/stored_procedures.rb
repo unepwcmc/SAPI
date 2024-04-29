@@ -3,7 +3,7 @@ module SapiModule
 
     def self.rebuild
       ActiveRecord::Base.transaction do
-        [
+        to_rebuild = [
           :taxonomy,
           :cites_accepted_flags,
           :listing_changes_mview,
@@ -24,7 +24,20 @@ module SapiModule
           :trade_shipments_cites_suspensions_mview,
           :non_compliant_shipments_view,
           :trade_plus_complete_mview
-        ].each { |p|
+        ]
+
+        to_rebuild.select{ |p| p.to_s.end_with?('_mview') }.each { |p|
+          # Lock tables in advance to prevent deadlocks forcing a rollback.
+          puts "Locking table: #{p}"
+          connection = ActiveRecord::Base.connection
+
+          # We need ACCESS EXCLUSIVE because this is used by DROP TABLE, and
+          # most of the rebuild_... functions are dropping and recreating the
+          # matviews.
+          connection.execute("LOCK TABLE IF EXISTS #{p} IN ACCESS EXCLUSIVE MODE")
+        }
+
+        to_rebuild.each { |p|
           puts "Procedure: #{p}"
           connection = ActiveRecord::Base.connection
 
