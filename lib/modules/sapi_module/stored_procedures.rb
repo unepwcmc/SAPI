@@ -1,6 +1,15 @@
 module SapiModule
   module StoredProcedures
 
+    ##
+    # This takes several hours to run:
+    #
+    # - The first hour is for all the views prior to trade_plus_complete view
+    # - The remainder of the time is exclusively spent on trade_plus_complete_view
+    #
+    # Runtime grows as the database grows, and in particular the trade plus
+    # dataset is growing quite a bit year on year.
+
     def self.rebuild
       ActiveRecord::Base.transaction do
         # The names of the functions beginnning 'rebuild_' to be run in sequence
