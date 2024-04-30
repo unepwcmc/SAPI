@@ -34,7 +34,7 @@ module SapiModule
           # We need ACCESS EXCLUSIVE because this is used by DROP TABLE, and
           # most of the rebuild_... functions are dropping and recreating the
           # matviews.
-          connection.execute("LOCK TABLE IF EXISTS #{p} IN ACCESS EXCLUSIVE MODE")
+          connection.execute("LOCK TABLE #{p} IN ACCESS EXCLUSIVE MODE")
         }
 
         to_rebuild.each { |p|
