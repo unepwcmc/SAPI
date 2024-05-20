@@ -17,8 +17,13 @@ module SAPI
     #
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
+
+    # Don't set the time zone - it causes issues when converting to columns of
+    # type TIMESTAMP WITHOUT TIME ZONE - during BST, dates without time parts
+    # first become midnight, then become 2300 the day before.
     #
-    config.time_zone = "London"
+    # config.time_zone = "London"
+
     # config.eager_load_paths << Rails.root.join("extras")
 
     # @see https://gist.github.com/maxivak/381f1e964923f1d469c8d39da8e2522f
