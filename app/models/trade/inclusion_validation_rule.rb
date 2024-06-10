@@ -130,7 +130,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
       column_names.map do |column_name|
         column_value = mr.send(column_name)
         if column_value.nil?
-          [ column_name, column_value ]
+          [ column_name, "" ]
         else
           [ column_name, column_value.to_s ]
         end
