@@ -542,7 +542,7 @@ rules:
     - rule_no: 20
       rule_name: 'rulename'
       input:
-        units: ['NULL']
+        units: ['NULL', 'NAR']
         taxa_fields:
           group: 'Coral'
         terms_fields:
