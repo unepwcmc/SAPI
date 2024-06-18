@@ -1,9 +1,19 @@
 module SapiModule
   module StoredProcedures
 
+    ##
+    # This takes several hours to run:
+    #
+    # - The first hour is for all the views prior to trade_plus_complete view
+    # - The remainder of the time is exclusively spent on trade_plus_complete_view
+    #
+    # Runtime grows as the database grows, and in particular the trade plus
+    # dataset is growing quite a bit year on year.
+
     def self.rebuild
       ActiveRecord::Base.transaction do
-        [
+        # The names of the functions beginnning 'rebuild_' to be run in sequence
+        to_rebuild = [
           :taxonomy,
           :cites_accepted_flags,
           :listing_changes_mview,
@@ -24,9 +34,29 @@ module SapiModule
           :trade_shipments_cites_suspensions_mview,
           :non_compliant_shipments_view,
           :trade_plus_complete_mview
-        ].each { |p|
+        ]
+
+        connection = ActiveRecord::Base.connection
+
+        to_lock = connection.execute(
+          # This is not great, because it relies on things being called mview
+          # when they're not matviews, it's the tables we're locking, matviews
+          # don't respond to LOCK TABLE.
+          "SELECT relname FROM pg_class WHERE relname LIKE '%_mview' AND relkind = 'r';"
+        ).to_a.map{ |row| row['relname'] }
+
+        to_lock.each { |relname|
+          # Lock tables in advance to prevent deadlocks forcing a rollback.
+          puts "Locking table: #{relname}"
+
+          # We need ACCESS EXCLUSIVE because this is used by DROP TABLE, and
+          # most of the rebuild_... functions are dropping and recreating the
+          # matviews.
+          connection.execute("LOCK TABLE #{relname} IN ACCESS EXCLUSIVE MODE")
+        }
+
+        to_rebuild.each { |p|
           puts "Procedure: #{p}"
-          connection = ActiveRecord::Base.connection
 
           # Within the current transaction, set work_mem to a higher-than-usual
           # value, so that matviews can be built more efficiently.

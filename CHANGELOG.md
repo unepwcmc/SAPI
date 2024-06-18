@@ -1,3 +1,15 @@
+### 1.14.1
+
+**Rails 6 Upgrade**
+
+Hotfixes to solve issues mostly relating to the Rails 6 upgrade
+
+* Sanitizing some parameters.
+* Avoiding retries on jobs which was causing instability during the overnight
+  scripts.
+* Fixing an issue with storing timestamped dates which was affected by the
+  difference between BST and UTC.
+
 ### 1.14.0
 
 **Rails 6 Upgrade**
