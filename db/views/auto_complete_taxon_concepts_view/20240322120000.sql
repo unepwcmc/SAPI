@@ -161,20 +161,14 @@ WITH synonyms_segmented(taxon_concept_id, full_name, author_year, matched_taxon_
         name_status = 'A'
         AND (
           -- The checklist autocomplete should show all those and only those
-          -- taxa at species level and above which are either:
+          -- taxa which are either:
           --
           -- a) marked as suitable for appearing in the checklist, or
           -- b) have CITES-listed descendants
           (listing->'cites_show')::BOOLEAN
           OR
           (listing->'cites_listed_descendants')::BOOLEAN
-        ) AND (
-          -- The autocomplete does not need to show subspecies or varieties
-          -- as the user will almost always know the species name and search
-          -- for that first.
-          ranks.name != 'SUBSPECIES'
-          AND ranks.name != 'VARIETY'
-        )
+        ) 
       THEN TRUE
       ELSE FALSE
     END AS show_in_checklist_ac,
