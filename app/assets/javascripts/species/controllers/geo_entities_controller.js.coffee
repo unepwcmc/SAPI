@@ -10,5 +10,5 @@ Species.GeoEntitiesController = Ember.ArrayController.extend Species.ArrayLoadOb
   handleLoadFinished: () ->
     @set('regions', @get('content').filterProperty('geoEntityType', 'CITES_REGION'))
     @set('countries', @get('content').filter((item, index, enumerable) ->
-      return item.get('geoEntityType') == 'COUNTRY' || item.get('geoEntityType') == 'TERRITORY'
+      return item.get('geoEntityType') == 'COUNTRY' || (item.get('geoEntityType') == 'TERRITORY' && item.get('isoCode2') != null && item.get('isoCode2') != '')
     ))

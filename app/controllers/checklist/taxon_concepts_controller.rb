@@ -15,6 +15,7 @@ class Checklist::TaxonConceptsController < ApplicationController
   def autocomplete
     matcher = Species::TaxonConceptPrefixMatcher.new(
       :taxon_concept_query => params[:scientific_name],
+      :visibility => :checklist,
       :ranks => [],
       :per_page => params[:per_page]
     )

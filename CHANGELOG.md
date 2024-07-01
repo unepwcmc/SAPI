@@ -1,3 +1,11 @@
+### 1.14.2
+
+* Add new synonym file for bulk uploads
+* Remove Stocks territories from S+ location search filter
+* Update CITES Trade DB to 2024 version
+* Remove Annex D species from checklist autocomplete
+* Changes to about page
+
 ### 1.14.1
 
 **Rails 6 Upgrade**

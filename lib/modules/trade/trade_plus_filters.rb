@@ -36,8 +36,21 @@ class Trade::TradePlusFilters
         SELECT id,name_#{locale},iso_code2
         FROM geo_entities
         WHERE geo_entity_type_id IN (1,4,7) --(1,4,7) this is to include both countries, territories and trade entities
-        AND id NOT IN (218,221,277,278,279) --this is to exclude TW(included into CH), Sudan prior secession, North and South Atlantic stock and All stocks
-
+        AND id NOT IN (
+          -- this is to exclude
+          218, -- Taiwan (included into China)
+          221  -- Sudan prior to secession
+        )
+        -- The following have null or empty iso2 codes:
+        --
+        -- North Atlantic stock
+        -- South Atlantic stock
+        -- All stocks
+        -- Indian Ocean stock
+        -- Mediterranean stock
+        --
+        -- others may follow
+        AND iso_code2 != ''
       )
       SELECT 'countries' AS attribute_name, json_build_object('id', id, 'name', name_#{locale}, 'iso2', iso_code2)::jsonb AS data
       FROM country_data

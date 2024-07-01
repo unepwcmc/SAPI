@@ -204,7 +204,8 @@ namespace :export do
 
   def process_results(results, options)
     columns = results.fields
-    columns.map do |column|
+    unfrozen_columns = columns.deep_dup
+    unfrozen_columns.map do |column|
       column.capitalize!
       column.gsub! '_', ' '
     end
@@ -221,7 +222,7 @@ namespace :export do
     end
     Rails.logger.info("Processing #{filename}.")
     File.open("#{options[:dir]}#{filename}", 'w') do |file|
-      file.write columns.join('|')
+      file.write unfrozen_columns.join('|')
       values.each do |record|
         file.write "\n"
         file.write record.join('|')
