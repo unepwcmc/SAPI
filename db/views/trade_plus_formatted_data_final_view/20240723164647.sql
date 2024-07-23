@@ -1,10 +1,10 @@
-            WITH codes_map(term_id,term_code,term_name,unit_id,unit_code,unit_name,output_term_id,output_term_code,output_term_name,output_unit_id,output_unit_code,output_unit_name,taxa_field,term_quantity_modifier,term_modifier_value,unit_quantity_modifier,unit_modifier_value) AS (
-        VALUES (84,'SKI','skins',129,'BSK','bellyskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
-(84,'SKI','skins',126,'BAK','backskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
-(84,'SKI','skins',140,'HRN','hornback skins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
-(82,'SKP','skin pieces',129,'BSK','bellyskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
-(82,'SKP','skin pieces',126,'BAK','backskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
-(82,'SKP','skin pieces',140,'HRN','hornback skins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0)
+            WITH codes_map(rule_id,term_id,term_code,term_name,unit_id,unit_code,unit_name,output_term_id,output_term_code,output_term_name,output_unit_id,output_unit_code,output_unit_name,taxa_field,term_quantity_modifier,term_modifier_value,unit_quantity_modifier,unit_modifier_value) AS (
+        VALUES (1,84,'SKI','skins',129,'BSK','bellyskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
+(2,84,'SKI','skins',126,'BAK','backskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
+(3,84,'SKI','skins',140,'HRN','hornback skins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
+(4,82,'SKP','skin pieces',129,'BSK','bellyskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
+(5,82,'SKP','skin pieces',126,'BAK','backskins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0),
+(6,82,'SKP','skin pieces',140,'HRN','hornback skins',84,'SKI','skins',-1,'NULL','NULL',NULL,NULL,NULL,'/',2.0)
       )
 
       -- Use DISTINCT ON, as it is possible for multiple rules to match,
@@ -46,3 +46,4 @@
 
       LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
       LEFT OUTER JOIN trade_codes units ON ts.unit_id = units.id
+      ORDER BY ts.id, codes_map.rule_id
