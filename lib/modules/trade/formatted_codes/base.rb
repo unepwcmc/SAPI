@@ -18,6 +18,7 @@ class Trade::FormattedCodes::Base
 
   # Generate WITH AS table containing all possible mappings.
   MAPPING_COLUMNS = %w(
+    rule_id
     term_id term_code term_name
     unit_id unit_code unit_name
     output_term_id output_term_code output_term_name
@@ -27,13 +28,18 @@ class Trade::FormattedCodes::Base
   ).freeze
   def codes_mapping_table
     rows = []
+
     codes_map.each do |rule|
-      rows.concat generate_mapping_table_rows(rule)
+      rows.concat(generate_mapping_table_rows(rule))
+    end
+
+    rows_as_text = rows.each.with_index(1).map do |row, rule_id|
+      "(#{[rule_id].concat(row).join(',')})"
     end
 
     <<-SQL
       WITH codes_map(#{MAPPING_COLUMNS.join(',')}) AS (
-        VALUES #{rows.join(",\n")}
+        VALUES #{rows_as_text.join(",\n")}
       )
     SQL
   end
@@ -187,9 +193,10 @@ class Trade::FormattedCodes::Base
     input_values = input_terms_values.product(input_units_values)
     input_values = input_values.map { |v| "#{v[0]},#{v[1]}" }
 
-    input_values.each do |input_codes|
-      rows << "(#{input_codes},#{output_codes},#{input_taxa_fields},#{modifier_values})"
+    input_values.each do |input_codes, rule_id|
+      rows << [ input_codes, output_codes, input_taxa_fields, modifier_values ]
     end
+
     rows
   end
 end

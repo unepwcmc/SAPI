@@ -38,6 +38,7 @@ class Trade::FormattedCodes::TradePlusFormattedFinalCodes < Trade::FormattedCode
       #{mapping_join}
       LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
       LEFT OUTER JOIN trade_codes units ON ts.unit_id = units.id
+      ORDER BY ts.id, codes_map.rule_id
     SQL
   end
 

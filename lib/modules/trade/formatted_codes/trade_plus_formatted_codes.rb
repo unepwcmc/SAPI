@@ -46,6 +46,7 @@ class Trade::FormattedCodes::TradePlusFormattedCodes < Trade::FormattedCodes::Ba
       LEFT OUTER JOIN geo_entities importers ON ts.china_importer_id = importers.id
       LEFT OUTER JOIN geo_entities origins ON ts.china_origin_id = origins.id
       WHERE #{exemptions}
+      ORDER BY ts.id, codes_map.rule_id
     SQL
   end
 
