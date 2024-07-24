@@ -39,7 +39,7 @@
               <br /><br />
             {{/if}}
             {{{suspension.nomenclature_note_en}}}
-          </td> 
+          </td>
         </tr>
       {{else}}
         <tr class="current">
@@ -70,9 +70,13 @@
                 <i>{{#if suspension.applies_to_import}}(import){{/if}}</i>
               </td>
               <td>
-                <a class="legal-links" href="{{unbound suspension.start_notification.url}}">
-                  {{suspension.start_notification.name}}
-                </a>,
+                <a class="legal-links" href="{{unbound suspension.start_notification.url}}">{{
+                  suspension.start_notification.name
+                }}</a>{{#if suspension.end_notification }},<br/>
+                  <a class="legal-links" href="{{unbound suspension.end_notification.url}}">{{
+                    suspension.end_notification.name
+                  }}</a>
+                {{/if}}
               </td>
               <td>
                 {{#if suspension.subspecies_info}}
