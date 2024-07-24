@@ -85,6 +85,8 @@ puts "#{DocumentTag.delete_all} document tags deleted"
   "Accepted", "Cancelled", "Deferred",
   "Redundant", "Rejected", "Transferred to other proposals",
   "Withdrawn", "Accepted as amended", "Rejected as amended",
+  "Accepted with implementation delay",
+  "Accepted as amended with implementation delay",
   "Adopted"
 ].each { |tag| DocumentTag::ProposalOutcome.create!(name: tag) }
 

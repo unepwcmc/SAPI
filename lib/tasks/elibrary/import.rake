@@ -40,6 +40,8 @@ namespace :elibrary do
         "Accepted", "Cancelled", "Deferred",
         "Redundant", "Rejected", "Transferred to other proposals",
         "Withdrawn", "Accepted as amended", "Rejected as amended",
+        "Accepted with implementation delay",
+        "Accepted as amended with implementation delay",
         "Adopted"
       ].each { |tag| DocumentTag::ProposalOutcome.find_or_create_by(name: tag) }
 
