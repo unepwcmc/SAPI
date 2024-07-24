@@ -1,6 +1,7 @@
 ### Forthcoming
 
 * Fix some issues with conversion of trade code term and unit rules
+* CITES suspension history now shows end notification where available
 
 ### 1.14.2
 
