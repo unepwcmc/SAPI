@@ -1,3 +1,7 @@
+### Forthcoming
+
+* Fix some issues with conversion of trade code term and unit rules
+
 ### 1.14.2
 
 * Add new synonym file for bulk uploads
