@@ -21,6 +21,15 @@ class CommonName < ApplicationRecord
   validates :name, :presence => true,
     :uniqueness => { :scope => :language_id }
 
+  validate :enforce_latin_chars_for_pdf
+
+  def enforce_latin_chars_for_pdf
+    if name.present? && ['EN', 'FR', 'ES'].include?(language.iso_code1)
+      errors.add(:name, 'Name in EN/FR/ES must be PDF-friendly') unless
+        name.match? PDF_SAFE_REGEX
+    end
+  end
+
   def self.english_to_pdf(common_name)
     words = common_name.split
     return common_name if words.size == 1

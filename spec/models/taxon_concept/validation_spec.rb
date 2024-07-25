@@ -180,5 +180,16 @@ describe TaxonConcept do
         expect(s_species.error_on(:full_name).size).to eq(0)
       end
     end
+    context "author_year" do
+      specify "is valid with lots of non-ASCII PDF-safe characters" do
+        species.author_year = 'Sigríður O’Brian–Żądło (2003)'
+        expect(species.error_on(:author_year).size).to eq(0)
+      end
+
+      specify "is not valid with cyrillic characters" do
+        species.author_year = 'Дмитровна (2001)'
+        expect(species.error_on(:author_year).size).to eq(1)
+      end
+    end
   end
 end

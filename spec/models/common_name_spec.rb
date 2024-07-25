@@ -27,4 +27,49 @@ describe CommonName do
       end
     end
   end
+
+  describe 'Validations' do
+    # Use this context for the pre-defined languages
+    context "Agave" do
+      include_context "Agave"
+
+      it 'Is valid with name and language id' do
+        new_record = CommonName.new(
+          name: 'Agave arizonique',
+          language_id: @fr.id
+        )
+
+        expect(new_record).to be_valid
+      end
+
+      it 'Is valid with lots of non-ASCII PDF-safe characters' do
+        new_record = CommonName.new(
+          name: 'Sigríður O’Brian–Żądło’s agave',
+          language_id: @en.id
+        )
+
+        expect(new_record).to be_valid
+      end
+
+      it 'Rejects cyrillic text in FR common name' do
+        new_record = CommonName.new(
+          name: 'Агава аризонская',
+          language_id: @fr.id
+        )
+
+        expect(new_record).not_to be_valid
+      end
+
+      it 'Accepts cyrillic text in RU common name' do
+        lang_ru = create(:language, :name => 'Russian', :iso_code1 => 'RU', :iso_code3 => 'RUS').id
+
+        new_record = CommonName.new(
+          name: 'Агава аризонская',
+          language_id: lang_ru
+        )
+
+        expect(new_record).to be_valid
+      end
+    end
+  end
 end
