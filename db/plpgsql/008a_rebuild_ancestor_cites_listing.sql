@@ -36,8 +36,12 @@ CREATE OR REPLACE FUNCTION cites_aggregate_children_listing(node_id INT)
       -- descendants, the timeline might differ from the current listing
       -- and a note should be displayed to inform the user
       hstore('cites_listed_descendants', BOOL_OR(
-        (listing -> 'cites_status_original')::BOOLEAN
-        OR (listing -> 'cites_listed_descendants')::BOOLEAN
+        id != $1
+        AND (
+          (listing -> 'cites_status_original')::BOOLEAN
+          OR
+          (listing -> 'cites_listed_descendants')::BOOLEAN
+        )
       )::VARCHAR) ||
       hstore('cites_I', MAX((listing -> 'cites_I')::VARCHAR)) ||
       hstore('cites_II', MAX((listing -> 'cites_II')::VARCHAR)) ||
