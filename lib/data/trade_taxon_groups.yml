@@ -1,0 +1,48 @@
+- id: 1
+  code: 'mammalia'
+  name_en: 'Mammals'
+  name_es: 'Mamiferos'
+  name_fr: 'Mammifères'
+- id: 2
+  code: 'aves'
+  name_en: 'Birds'
+  name_es: 'Aves'
+  name_fr: 'Oiseaux'
+- id: 3
+  code: 'reptilia'
+  name_en: 'Reptiles'
+  name_es: 'Reptiles'
+  name_fr: 'Reptiles'
+- id: 4
+  code: 'amphibia'
+  name_en: 'Amphibians'
+  name_es: 'Anfibios'
+  name_fr: 'Amphibiens'
+- id: 5
+  code: 'pisces'
+  name_en: 'Fish'
+  name_es: 'Pez'
+  name_fr: 'Poissons'
+- id: 6
+  code: 'invertebrata'
+  name_en: 'Non-coral invertebrates'
+  name_es: 'Invertebrados no coralinos'
+  name_fr: 'Invertébrés autres que les coraux'
+- id: 7
+  code: 'corallia'
+  name_en: 'Coral'
+  name_es: 'Coral'
+  name_fr: 'Coraux'
+- id: 8
+  # Timber implemented as two groups - genera and species
+  code: 'arbores'
+  name_en: 'Plants (timber)'
+  name_es: 'Plantas (madera)'
+  name_fr: 'Plantes (bois)'
+# Rule number is important on this one as this needs to be the last
+# rule processed to make mapping work correctly
+- id: 9
+  code: 'plantae'
+  name_en: 'Plants (other than timber)'
+  name_es: 'Plantas (otro que madera)'
+  name_fr: 'Plantes (autres que le bois)'
