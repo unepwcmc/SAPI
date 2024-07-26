@@ -16,7 +16,6 @@ WITH rule AS (
     ARRAY(SELECT jsonb_array_elements_text(rule.rule_input->'order_names'))::TEXT[] AS order_names,
     ARRAY(SELECT jsonb_array_elements_text(rule.rule_input->'family_names'))::TEXT[] AS family_names,
     ARRAY(SELECT jsonb_array_elements_text(rule.rule_input->'genus_names'))::TEXT[] AS genus_names,
-    ARRAY(SELECT jsonb_array_elements_text(rule.rule_input->'species_names'))::TEXT[] AS species_names,
     ARRAY(SELECT jsonb_array_elements_text(rule.rule_input->'taxon_names'))::TEXT[] AS taxon_names,
     rule.rule_output->'group' AS output_group_code
   FROM trade_conversion_rules rule
@@ -42,7 +41,6 @@ JOIN rule
     (taxon.data->'order_name') = ANY(rule.order_names) OR
     (taxon.data->'family_name') = ANY(rule.family_names) OR
     (taxon.data->'genus_name') = ANY(rule.genus_names) OR
-    (taxon.data->'species_name') = ANY(rule.species_names) OR
     taxon.full_name = ANY(rule.taxon_names)
   )
 ORDER BY

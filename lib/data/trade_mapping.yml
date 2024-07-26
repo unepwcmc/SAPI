@@ -3,60 +3,50 @@ rules:
   # exclusions:
   #   appendices: ['N']
   taxon_group:
-    # priority can be omitted if rules are listed already in order
-    - priority: 1
-      rule_name: 'mammalia'
+    - rule_name: 'Mammals'
       output:
         group: 'mammalia'
       input:
         class_names: ['Mammalia']
-    - priority: 2
-      rule_name: 'aves'
+    - rule_name: 'Birds'
       output:
         group: 'aves'
       input:
         class_names: ['Aves']
-    - priority: 3
-      rule_name: 'reptilia'
+    - rule_name: 'Reptiles'
       output:
         group: 'reptilia'
       input:
         class_names: ['Reptilia']
-    - priority: 4
-      rule_name: 'amphibia'
+    - rule_name: 'Amphibians'
       output:
         group: 'amphibia'
       input:
         class_names: ['Amphibia']
-    - priority: 5
-      rule_name: 'pisces'
+    - rule_name: 'pisces'
       output:
         group: 'pisces'
       input:
         # NB: Elasmobranchii tend to be measured in FIN BOD MEA
         class_names: ['Elasmobranchii','Actinopteri','Coelacanthi','Dipneusti','Actinopterygii']
-    - priority: 6
-      rule_name: 'invertebrata'
+    - rule_name: 'Non-coral invertebrates'
       output:
         group: 'invertebrata'
       input:
         # NB: Gastropoda tend to be measured in MEA
         class_names: ["Holothuroidea","Arachnida","Insecta","Hirudinoidea","Bivalvia","Gastropoda","Cephalopoda"]
-    - priority: 7
-      output:
+    - output:
         group: 'corallia'
-      rule_name: 'corallia'
+      rule_name: 'Corals'
       input:
         class_names: ["Anthozoa","Hydrozoa"]
-    - priority: 8
-      # Timber implemented as two groups - genera and species
+    - # Timber implemented as two groups - genera and species
       output:
-        group: 'arbores'
+        group: 'Timber genera'
       rule_name: 'arbores'
       input:
         genus_names: ["Aquilaria","Pericopsis","Cedrela","Guaiacum","Swietenia","Dalbergia","Prunus","Gonystylus","Diospyros","Abies","Guarea","Guibourtia","Gyrinops","Platymiscium","Pterocarpus","Taxus"]
-    - priority: 9
-      rule_name: 'arbores'
+    - rule_name: 'Timber species'
       # Timber implemented as two groups - genera and species
       output:
         group: 'arbores'
@@ -64,172 +54,114 @@ rules:
         taxon_names: ["Araucaria araucana","Fitzroya cupressoides","Abies guatemalensis","Pterocarpus santalinus","Pilgerodendron uviferum","Aniba rosaeodora","Caesalpinia echinata","Bulnesia sarmientoi","Dipteryx panamensis","Pinus koraiensis","Caryocar costaricense","Celtis aetnensis","Cynometra hemitomophylla","Magnolia liliifera","Oreomunnea pterocarpa","Osyris lanceolata","Pterygota excelsa","Tachigali versicolor"]
     # Rule number is important on this one as this needs to be the last
     # rule processed to make mapping work correctly
-    - priority: 10
-      rule_name: 'plantae'
+    - rule_name: 'Plants (other than timber)'
       output:
         group: 'plantae'
       input:
         kingdom_names: ['Plantae']
   standardise_terms:
-    - priority: 1
-      rule_name: 'Roots are now simply live specimens'
+    - rule_name: 'Roots are now simply live specimens'
       input:
         terms: ['ROO']
-        taxa_fields:
+        taxon_filters:
           genus_names: ['Galanthus', 'Cyclamen', 'Sternbergia']
       output:
         term: 'LIV'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 2
-      rule_name: 'Frog legs are meat'
+    - rule_name: 'Frog legs are meat'
       input:
         terms: ['LEG']
         units_fields:
           units: ['KGM']
       output:
         term: 'MEA'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 3
-      rule_name: 'Shells merged into carapaces'
+    - rule_name: 'Shells merged into carapaces'
       input:
         terms: ['SHE']
-        taxa_fields:
+        taxon_filters:
           order_names: ['Testudines']
       output:
         term: 'CAP'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 4
-      rule_name: 'Derivatives and Powder of Aloe and Euphorbia are now Extract'
+    - rule_name: 'Derivatives and Powder of Aloe and Euphorbia are now Extract'
       input:
         terms: ['DER','POW']
-        taxa_fields:
+        taxon_filters:
           genus_names: ['Aloe','Euphorbia']
       output:
         term: 'EXT'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 5
-      rule_name: 'Eggs of Acipenseriformes are Caviar'
+    - rule_name: 'Eggs of Acipenseriformes are Caviar'
       input:
         terms: ['EGG']
-        taxa_fields:
+        taxon_filters:
           order_names: ['Acipenseriformes']
       output:
         term: 'CAV'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 6
-      rule_name: 'Derivatives of Acipenseriformes (fish oil) are Extract'
+    - rule_name: 'Derivatives of Acipenseriformes (fish oil) are Extract'
       input:
         terms: ['DER']
-        taxa_fields:
+        taxon_filters:
           order_names: ['Acipenseriformes']
       output:
         term: 'EXT'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 7
-      rule_name: 'Shoes and leather items are now small leather products'
+    - rule_name: 'Shoes and leather items are now small leather products'
       input:
         # BEL, HAN, WAL, WAT no longer exist but used to be covered by this rule
         terms: ["SHO", "SKO"]
-
       output:
         term: 'LPS'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 8
-      rule_name: 'Spectacle frames are now carvings'
+    - rule_name: 'Spectacle frames are now carvings'
       input:
         # CST no longer exists but used to be covered by this rule
         terms: ["FRA"]
-
       output:
         term: 'CAR'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 9
-      rule_name: 'Bone products are now Bone Carvings'
+    - rule_name: 'Bone products are now Bone Carvings'
       input:
         terms: ['BPR']
-
       output:
         term: 'BOC'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 10
-      rule_name: 'Horn scraps are now horn pieces'
+    - rule_name: 'Horn scraps are now horn pieces'
       input:
         terms: ['HOS']
-
       output:
         term: 'HOP'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 11
-      rule_name: 'Ivory scraps are now ivory pieces'
+    - rule_name: 'Ivory scraps are now ivory pieces'
       input:
         terms: ['IVS']
-
       output:
         term: 'IVP'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 12
-      rule_name: 'Quills are now feathers'
+    - rule_name: 'Quills are now feathers'
       input:
         terms: ['QUI']
-        taxa_fields:
-          group_codes: 'aves'
+        taxon_filters:
+          group_codes: ['aves']
       output:
         term: 'FEA'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 13
-      rule_name: 'Scraps are now derivatives'
+    - rule_name: 'Scraps are now derivatives'
       input:
         terms: ['SCR']
-
       output:
         term: 'DER'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 14
-      rule_name: 'Skin scraps are now skin pieces'
+    - rule_name: 'Skin scraps are now skin pieces'
       input:
         terms: ['SKS']
-
       output:
         term: 'SKP'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 15
-      rule_name: 'Timber carvings are now wood products'
+    - rule_name: 'Timber carvings are now wood products'
       input:
         terms: ['TIC']
-
       output:
         term: 'WPR'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 16
-      rule_name: 'Timber pieces are now timber'
+    - rule_name: 'Timber pieces are now timber'
       input:
         terms: ['TIP']
-
       output:
         term: 'TIM'
-        quantity_modifier: ''
-        modifier_value: 1
     # TIS no longer exists
     # - priority: 17
     #   rule_name: 'rulename'
     #   input:
     #     terms: ['TIS']
-    #     taxa_fields:
+    #     taxon_filters:
     #       group: ''
     #     units_fields:
     #       units: []
@@ -237,71 +169,50 @@ rules:
     #     term: 'CUL'
     #     quantity_modifier: ''
     #     modifier_value: 1
-    - priority: 18
-      rule_name: 'Venom is now extract'
+    - rule_name: 'Venom is now extract'
       input:
         terms: ['VNM']
-
       output:
         term: 'EXT'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 19
-      rule_name: 'Heads are now skulls'
+    - rule_name: 'Heads are now skulls'
       input:
         terms: ['HEA']
       output:
         term: 'SKU'
-        quantity_modifier: ''
-        modifier_value: 1
     # Rules 20 and 21 together are mapping the overall rule:
     # If term 'FRN' and group 'Timber' then term 'WPR' else term 'CAR'
-    - priority: 20
-      rule_name: 'Furniture, if timber, is now wood products'
+    - rule_name: 'Furniture, if timber, is now wood products'
       input:
         terms: ['FRN']
-        taxa_fields:
+        taxon_filters:
           group_codes: ['arbores']
       output:
         term: 'WPR'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 21
-      rule_name: 'Other furniture is carvings'
+    - rule_name: 'Other furniture is carvings'
       input:
         terms: ['FRN']
       output:
         term: 'CAR'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 22
-      rule_name: 'Plants do not have leather, they have leaves'
+    - rule_name: 'Plants do not have leather, they have leaves'
       input:
         terms: ['LEA']
-        taxa_fields:
+        taxon_filters:
           group_codes: ['plantae']
       output:
         term: 'LVS'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 23
-      rule_name: 'Leather is now leather products (small)'
+    - rule_name: 'Leather is now leather products (small)'
       input:
         terms: ['LEA']
       output:
         term: 'LPS'
-        quantity_modifier: ''
-        modifier_value: 1
-    - priority: 24
-      rule_name: 'Sets of piano keys are now 52 piano keys'
+    - rule_name: 'Sets of piano keys are now 52 piano keys'
       input:
         terms: ['PKY']
       output:
         term: 'KEY'
         quantity_modifier: '*'
         modifier_value: 52
-    - priority: 25
-      rule_name: 'Sides of skins are now half a skin'
+    - rule_name: 'Sides of skins are now half a skin'
       input:
         # SKD no longer exists, but used to be covered by this rule
         terms: ['SID']
@@ -312,17 +223,13 @@ rules:
         unit: 'NULL'
         quantity_modifier: '/'
         modifier_value: 2
-    - priority: 26
-      rule_name: 'Wood products WOO is now Wood product WPR'
+    - rule_name: 'Wood products WOO is now Wood product WPR'
       input:
         terms: ['WOO']
       output:
         term: 'WPR'
-        quantity_modifier: ''
-        modifier_value: 1
   standardise_units:
-    - priority: 1
-      rule_name: 'Pairs become 2 individual units'
+    - rule_name: 'Pairs become 2 individual units'
       # Please note that attributes not used in specific rules can be omitted,
       # like taxa related fields for the input.
       input:
@@ -332,319 +239,270 @@ rules:
         unit: 'NULL' #blank
         quantity_modifier: '*'
         modifier_value: 2
-    - priority: 2
-      rule_name: 'All of these count as individual items'
+    - rule_name: 'All of these count as individual items'
       input:
         units: ["BAG", "BOT", "BOX", "CAN", "CAS", "CRT", "FLA", "ITE", "PCS", "SET", "SHP", "SKI"]
       output:
         unit: 'NULL'
-    - priority: 3
-      rule_name: 'Micrograms to kilos'
+    - rule_name: 'Micrograms to kilos'
       input:
         units: ['MYG']
       output:
         unit: 'KGM'
         quantity_modifier: '/'
         modifier_value: 1e+9
-    - priority: 4
-      rule_name: 'Milligrams to kilos'
+    - rule_name: 'Milligrams to kilos'
       input:
         units: ['MGM']
       output:
         unit: 'KGM'
         quantity_modifier: '/'
         modifier_value: 1e+6
-    - priority: 5
-      rule_name: 'Grams to kilos'
+    - rule_name: 'Grams to kilos'
       input:
         units: ['GRM']
       output:
         unit: 'KGM'
         quantity_modifier: '/'
         modifier_value: 1000
-    - priority: 6
-      rule_name: 'Tonnes to kilos'
+    - rule_name: 'Tonnes to kilos'
       input:
         units: ['TON']
       output:
         unit: 'KGM'
         quantity_modifier: '*'
         modifier_value: 1000
-    - priority: 7
-      rule_name: 'Millilitres to litres'
+    - rule_name: 'Millilitres to litres'
       input:
         units: ['MLT']
       output:
         unit: 'LTR'
         quantity_modifier: '/'
         modifier_value: 1000
-    - priority: 8
-      rule_name: 'Centimetres to metres'
+    - rule_name: 'Centimetres to metres'
       input:
         units: ['CTM']
       output:
         unit: 'MTR'
         quantity_modifier: '/'
         modifier_value: 100
-    - priority: 9
-      rule_name: 'Square centimetres to square metres'
+    - rule_name: 'Square centimetres to square metres'
       input:
         units: ['SQC']
       output:
         unit: 'MTK'
         quantity_modifier: '/'
         modifier_value: 1e+4
-    - priority: 10
-      rule_name: 'Square decimetres to square metres'
+    - rule_name: 'Square decimetres to square metres'
       input:
         units: ['SQD']
       output:
         unit: 'MTK'
         quantity_modifier: '/'
         modifier_value: 100
-    - priority: 11
-      rule_name: 'Cubic centimetres to cubic metres'
+    - rule_name: 'Cubic centimetres to cubic metres'
       input:
         units: ['CMQ']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 1e+6
-    - priority: 12
-      rule_name: 'Ounces to kilos'
+    - rule_name: 'Ounces to kilos'
       input:
         units: ['OUN']
       output:
         unit: 'KGM'
         quantity_modifier: '/'
         modifier_value: 35.274
-    - priority: 13
-      rule_name: 'Pounds to kilos'
+    - rule_name: 'Pounds to kilos'
       input:
         units: ['PND']
       output:
         unit: 'KGM'
         quantity_modifier: '/'
         modifier_value: 2.205
-    - priority: 14
-      rule_name: 'Inches to metres'
+    - rule_name: 'Inches to metres'
       input:
         units: ['INC']
       output:
         unit: 'MTR'
         quantity_modifier: '/'
         modifier_value: 39.37
-    - priority: 15
-      rule_name: 'Feet to metres'
+    - rule_name: 'Feet to metres'
       input:
         units: ['FEE']
       output:
         unit: 'MTR'
         quantity_modifier: '/'
         modifier_value: 3.281
-    - priority: 16
-      rule_name: 'Yards to metres'
+    - rule_name: 'Yards to metres'
       input:
         units: ['YAR']
       output:
         unit: 'MTR'
         quantity_modifier: '/'
         modifier_value: 1.094
-    - priority: 17
-      rule_name: 'Square feet to square metres'
+    - rule_name: 'Square feet to square metres'
       input:
         units: ['SQF']
       output:
         unit: 'MTK'
         quantity_modifier: '/'
         modifier_value: 10.764
-    - priority: 18
-      rule_name: 'Cubic feet to cubic metres'
+    - rule_name: 'Cubic feet to cubic metres'
       input:
         units: ['CUF']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 35.315
-    - priority: 19
-      rule_name: 'Kilos of live coral to dead coral?'
+    - rule_name: 'Kilos of live coral to dead coral?'
       input:
         units: ['KGM']
-        taxa_fields:
-          group_codes: ['coralia']
-        terms_fields:
-          terms: ['LIV']
+        taxon_filters:
+          group_codes: ['corallia']
+        terms: ['LIV']
       output:
         unit: 'NULL'
         quantity_modifier: '/'
         modifier_value: 0.206
-    - priority: 20
-      rule_name: 'rulename'
+    - rule_name: 'Individual coral specimens to kilos'
       input:
         units: ['NULL', 'NAR']
-        taxa_fields:
-          group_codes: ['coralia']
-        terms_fields:
-          terms: ['COR']
+        taxon_filters:
+          group_codes: ['corallia']
+        terms: ['COR']
       output:
         unit: 'KGM'
         quantity_modifier: '*'
         modifier_value: 0.58
-    - priority: 21
-      rule_name: 'Kilos of Pericopsis elata converted to cubic metres'
+    - rule_name: 'Kilos of Pericopsis elata converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ['Pericopsis elata']
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ['Pericopsis elata']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 725
-    - priority: 22
-      rule_name: 'Kilos of Cedrela odorata converted to cubic metres'
+    - rule_name: 'Kilos of Cedrela odorata converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ['Cedrela odorata']
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ['Cedrela odorata']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 440
-    - priority: 23
-      rule_name: 'Kilos of Guaiacum converted to cubic metres'
+    - rule_name: 'Kilos of Guaiacum converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ["Guaiacum sanctum","Guaiacum officinale"]
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ["Guaiacum sanctum","Guaiacum officinale"]
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 1230
-    - priority: 24
-      rule_name: 'Kilos of Swietenia macrophylla converted to cubic metres'
+    - rule_name: 'Kilos of Swietenia macrophylla converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ['Swietenia macrophylla']
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ['Swietenia macrophylla']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 730
-    - priority: 25
-      rule_name: 'Kilos of Swietenia humilis converted to cubic metres'
+    - rule_name: 'Kilos of Swietenia humilis converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ['Swietenia humilis']
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ['Swietenia humilis']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 610
-    - priority: 26
-      rule_name: 'Kilos of Swietenia mahagoni converted to cubic metres'
+    - rule_name: 'Kilos of Swietenia mahagoni converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ['Swietenia mahagoni']
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ['Swietenia mahagoni']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 750
-    - priority: 27
-      rule_name: 'Kilos of Araucaria araucana converted to cubic metres'
+    - rule_name: 'Kilos of Araucaria araucana converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ['Araucaria araucana']
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ['Araucaria araucana']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 570
-    - priority: 28
-      rule_name: 'Kilos of Fitzroya cupressoides converted to cubic metres'
+    - rule_name: 'Kilos of Fitzroya cupressoides converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ['Fitzroya cupressoides']
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ['Fitzroya cupressoides']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 480
-    - priority: 29
-      rule_name: 'Kilos of Dalbergia nigra converted to cubic metres'
+    - rule_name: 'Kilos of Dalbergia nigra converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ['Dalbergia nigra']
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ['Dalbergia nigra']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 970
-    - priority: 30
-      rule_name: 'Kilos of Abies guatemalensis converted to cubic metres'
+    - rule_name: 'Kilos of Abies guatemalensis converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ['Abies guatemalensis']
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ['Abies guatemalensis']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 350
-    - priority: 31
-      rule_name: 'Kilos of Prunus africana converted to cubic metres'
+    - rule_name: 'Kilos of Prunus africana converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
-          taxa: ['Prunus africana']
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
+          taxon_names: ['Prunus africana']
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 740
-    - priority: 32
-      rule_name: 'Kilos of Gonystylus converted to cubic metres'
+    - rule_name: 'Kilos of Gonystylus converted to cubic metres'
       input:
         units: ['KGM']
-        terms_fields:
-          terms: ['LOG', 'SAW', 'TIM']
-        taxa_fields:
+        terms: ['LOG', 'SAW', 'TIM']
+        taxon_filters:
           genus_names: ["Gonystylus spp.","Gonystylus"]
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
         modifier_value: 660
-    - priority: 33
-      rule_name: 'Replace NAR with null, which is equivalent'
+    - rule_name: 'Replace NAR with null, which is equivalent'
       input:
         units: ['NAR']
       output:
         unit: 'NULL'
-        quantity_modifier: ''
-        modifier_value: 1
   standardise_terms_and_units:
-    - priority: 1
-      rule_name: 'Belly skins, back skins, hornback skins each count as half a skin'
+    - rule_name: 'Belly skins, back skins, hornback skins each count as half a skin'
       input:
         terms: ['SKI', 'SKP']
         units: ['BSK', 'BAK', 'HRN']
