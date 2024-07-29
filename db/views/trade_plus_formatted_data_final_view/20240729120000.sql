@@ -1,0 +1,1 @@
+SELECT * FROM trade_plus_formatted_data_view ts;

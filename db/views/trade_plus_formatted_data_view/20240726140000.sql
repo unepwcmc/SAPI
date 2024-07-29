@@ -92,35 +92,6 @@ SELECT DISTINCT ON (ts.id)
   ts.group_es                   AS group_name_es,
   ts.group_fr                   AS group_name_fr,
   ts.quantity                   AS quantity,
-  exporters.id                  AS exporter_id,
-  exporters.iso_code2           AS exporter_iso,
-  exporters.name_en             AS exporter_en,
-  exporters.name_es             AS exporter_es,
-  exporters.name_fr             AS exporter_fr,
-  importers.id                  AS importer_id,
-  importers.iso_code2           AS importer_iso,
-  importers.name_en             AS importer_en,
-  importers.name_es             AS importer_es,
-  importers.name_fr             AS importer_fr,
-  origins.id                    AS origin_id,
-  origins.iso_code2             AS origin_iso,
-  origins.name_en               AS origin_en,
-  origins.name_es               AS origin_es,
-  origins.name_fr               AS origin_fr,
-  purposes.id                   AS purpose_id,
-  purposes.name_en              AS purpose_en,
-  purposes.name_es              AS purpose_es,
-  purposes.name_fr              AS purpose_fr,
-  purposes.code                 AS purpose_code,
-  sources.id                    AS source_id,
-  sources.name_en               AS source_en,
-  sources.name_es               AS source_es,
-  sources.name_fr               AS source_fr,
-  sources.code                  AS source_code,
-  ranks.id                      AS rank_id,
-  ranks.display_name_en         AS rank_name_en,
-  ranks.display_name_es         AS rank_name_es,
-  ranks.display_name_fr         AS rank_name_fr,
 
   ts.term_id      AS original_term_id,
   terms.code      AS original_term_code,
@@ -136,34 +107,19 @@ SELECT DISTINCT ON (ts.id)
   NULLIF(COALESCE(r.output_term_id,      ts.term_id),        -1) AS term_id,
   NULLIF(COALESCE(r.output_term_code,    terms.code),    'NULL') AS term_code,
   NULLIF(COALESCE(r.output_term_name_en, terms.name_en), 'NULL') AS term_en,
+  NULLIF(COALESCE(r.output_term_name_es, terms.name_es), 'NULL') AS term_es,
+  NULLIF(COALESCE(r.output_term_name_fr, terms.name_fr), 'NULL') AS term_fr,
   NULLIF(COALESCE(r.output_unit_id,      ts.unit_id),        -1) AS unit_id,
   NULLIF(COALESCE(r.output_unit_code,    units.code),    'NULL') AS unit_code,
   NULLIF(COALESCE(r.output_unit_name_en, units.name_en), 'NULL') AS unit_en,
+  NULLIF(COALESCE(r.output_unit_name_es, units.name_es), 'NULL') AS unit_es,
+  NULLIF(COALESCE(r.output_unit_name_fr, units.name_fr), 'NULL') AS unit_fr,
 
   rule_id, ts.group_code,
 
   quantity_modifier     AS quantity_modifier,
   modifier_value::FLOAT AS modifier_value
-FROM (
-  SELECT
-    ts.*,
-    tg.trade_taxon_group_code    AS group_code,
-    tg.trade_taxon_group_name_en AS group_en,
-    tg.trade_taxon_group_name_es AS group_es,
-    tg.trade_taxon_group_name_fr AS group_fr,
-    -- mapping Taiwan trades to China trades, so that they appear as the same country on Tradeplus
-    CASE WHEN ts.importer_id = 218 THEN 160
-    ELSE ts.importer_id
-    END AS china_importer_id,
-    CASE WHEN ts.exporter_id = 218 THEN 160
-    ELSE ts.exporter_id
-    END AS china_exporter_id,
-    CASE WHEN ts.country_of_origin_id = 218 THEN 160
-    ELSE ts.country_of_origin_id
-    END AS china_origin_id
-  FROM trade_plus_shipments_view ts
-  LEFT JOIN taxon_trade_taxon_groups_view tg ON ts.taxon_concept_id = tg.taxon_concept_id
-) ts
+FROM trade_plus_group_view ts
 LEFT OUTER JOIN unnested_rules_with_trade_codes r ON (
   (r.unit_code IS NULL OR (r.unit_code = 'NULL' AND ts.unit_id IS NULL) OR r.unit_id = ts.unit_id)
   AND
@@ -183,11 +139,5 @@ LEFT OUTER JOIN unnested_rules_with_trade_codes r ON (
 
 LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
 LEFT OUTER JOIN trade_codes units ON ts.unit_id = units.id
-LEFT OUTER JOIN trade_codes sources ON ts.source_id = sources.id
-LEFT OUTER JOIN trade_codes purposes ON ts.purpose_id = purposes.id
-INNER JOIN ranks ON ranks.id = ts.taxon_concept_rank_id
-LEFT OUTER JOIN geo_entities exporters ON ts.china_exporter_id = exporters.id
-LEFT OUTER JOIN geo_entities importers ON ts.china_importer_id = importers.id
-LEFT OUTER JOIN geo_entities origins ON ts.china_origin_id = origins.id
 
 ORDER BY ts.id, r.rule_type_priority, r.rule_priority, r.rule_id
