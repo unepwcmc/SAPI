@@ -92,6 +92,20 @@ SELECT DISTINCT ON (ts.id)
   ts.group_es                   AS group_name_es,
   ts.group_fr                   AS group_name_fr,
   ts.quantity                   AS quantity,
+  ts.taxon_concept_rank_id      AS taxon_concept_rank_id,
+  ts.source_id                  AS source_id,
+  ts.purpose_id                 AS purpose_id,
+
+  -- mapping Taiwan trades to China trades, so that they appear as the same country on Tradeplus
+  CASE WHEN ts.importer_id = 218 THEN 160
+  ELSE ts.importer_id
+  END AS china_importer_id,
+  CASE WHEN ts.exporter_id = 218 THEN 160
+  ELSE ts.exporter_id
+  END AS china_exporter_id,
+  CASE WHEN ts.country_of_origin_id = 218 THEN 160
+  ELSE ts.country_of_origin_id
+  END AS china_origin_id,
 
   ts.term_id      AS original_term_id,
   terms.code      AS original_term_code,
