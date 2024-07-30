@@ -40,10 +40,10 @@ rules:
       rule_name: 'Corals'
       input:
         class_names: ["Anthozoa","Hydrozoa"]
-    - # Timber implemented as two groups - genera and species
+    # Timber implemented as two groups - genera and species
+    - rule_name: 'Timber genera'
       output:
-        group: 'Timber genera'
-      rule_name: 'arbores'
+        group: 'arbores'
       input:
         genus_names: ["Aquilaria","Pericopsis","Cedrela","Guaiacum","Swietenia","Dalbergia","Prunus","Gonystylus","Diospyros","Abies","Guarea","Guibourtia","Gyrinops","Platymiscium","Pterocarpus","Taxus"]
     - rule_name: 'Timber species'

@@ -34,13 +34,10 @@
   name_es: 'Coral'
   name_fr: 'Coraux'
 - id: 8
-  # Timber implemented as two groups - genera and species
   code: 'arbores'
   name_en: 'Plants (timber)'
   name_es: 'Plantas (madera)'
   name_fr: 'Plantes (bois)'
-# Rule number is important on this one as this needs to be the last
-# rule processed to make mapping work correctly
 - id: 9
   code: 'plantae'
   name_en: 'Plants (other than timber)'
