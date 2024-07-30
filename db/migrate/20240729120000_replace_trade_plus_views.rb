@@ -28,6 +28,10 @@ class ReplaceTradePlusViews < ActiveRecord::Migration[4.2]
       execute "CREATE VIEW trade_plus_complete_view AS #{view_sql('20240729120000', 'trade_plus_complete_view')}"
       execute 'CREATE MATERIALIZED VIEW trade_plus_complete_mview AS SELECT * FROM trade_plus_complete_view WITH NO DATA'
       execute 'SELECT create_trade_plus_complete_mview_indexes()'
+      # Don't do this during the migration, it will take over half an hour and
+      # introduces a risk that the migration will fail, e.g. if ssh connection
+      # is lost. Instead do it manually afterwards.
+      #
       # execute 'REFRESH MATERIALIZED VIEW trade_plus_complete_mview'
     end
   end
@@ -47,6 +51,11 @@ class ReplaceTradePlusViews < ActiveRecord::Migration[4.2]
       execute "CREATE VIEW trade_plus_complete_view AS #{view_sql('20200707183829', 'trade_plus_complete_view')}"
       execute 'CREATE MATERIALIZED VIEW trade_plus_complete_mview AS SELECT * FROM trade_plus_complete_view WITH NO DATA'
       execute 'SELECT create_trade_plus_complete_mview_indexes()'
+
+      # Don't do this during the migration, it will take over half an hour and
+      # introduces a risk that the migration will fail, e.g. if ssh connection
+      # is lost. Instead do it manually afterwards.
+      #
       # execute 'REFRESH MATERIALIZED VIEW trade_plus_complete_mview'
     end
   end
