@@ -80,3 +80,48 @@ Layout/SpaceAroundOperators:
 # Configuration parameters: AllowIfMethodIsEmpty.
 Style/SingleLineMethods:
   AllowIfMethodIsEmpty: true
+
+Layout/LineLength:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/ArrayAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/BlockAlignment:
+  EnforcedStyleAlignWith: either
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+Metrics/MethodLength:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/HashAlignment:
+  EnforcedLastArgumentHashStyle: always_ignore
+
+Rails/NotNullColumn:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/NumericPredicate:
+  EnforcedStyle: comparison
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
