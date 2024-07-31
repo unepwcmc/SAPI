@@ -176,7 +176,7 @@ class TaxonConcept < ApplicationRecord
   validates :author_year,
     format: {
       with: PDF_SAFE_REGEX,
-      message: "Author-year should only contain PDF-safe characters"
+      message: "should only contain PDF-safe characters"
     }
 
   before_validation :ensure_taxonomic_position

@@ -188,7 +188,9 @@ describe TaxonConcept do
 
       specify "is not valid with cyrillic characters" do
         species.author_year = 'Дмитровна (2001)'
-        expect(species.error_on(:author_year).size).to eq(1)
+        expect(species.error_on(:author_year)).to contain_exactly(
+          'should only contain PDF-safe characters'
+        )
       end
     end
   end

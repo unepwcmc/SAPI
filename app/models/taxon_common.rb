@@ -34,19 +34,21 @@ class TaxonCommon < ApplicationRecord
     #
     # This may mean that we create orphaned CommonName records over time.
     cname = CommonName.find_or_create_by(
-      name: name, language_id: language_id
+      name: name || common_name&.name,
+      language_id: language_id || common_name&.language_id
     )
 
-    if cname.valid? && cname.id && common_name_id != cname.id
-      self.common_name_id = cname.id
-    elsif !cname.valid?
+    if cname && !cname&.valid?
       # Slightly hackily insert the errors - we don't want to fail silently.
       # The message isn't beautiful but it's clear enough and it's only for
       # internal staff.
       #
       # We're not using accept_nested_attributes_for and because of the above
       # logic so we cannot rely on validates_associated.
-      errors.add(:base, cname.errors.full_messages&.join(',') || :invalid)
+
+      errors.add(:base, cname.errors.full_messages&.join(', ') || :invalid)
+    elsif cname.id && common_name_id != cname.id
+      self.common_name_id = cname.id
     end
   end
 end

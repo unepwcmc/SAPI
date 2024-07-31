@@ -57,7 +57,9 @@ describe CommonName do
           language_id: @fr.id
         )
 
-        expect(new_record).not_to be_valid
+        expect(new_record.error_on(:name)).to contain_exactly(
+          'in EN/FR/ES must be PDF-friendly'
+        )
       end
 
       it 'Accepts cyrillic text in RU common name' do
@@ -65,7 +67,7 @@ describe CommonName do
 
         new_record = CommonName.new(
           name: 'Агава аризонская',
-          language_id: lang_ru
+          language_id: lang_ru.id
         )
 
         expect(new_record).to be_valid
