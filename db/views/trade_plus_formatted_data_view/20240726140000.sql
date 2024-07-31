@@ -3,13 +3,7 @@ WITH unnested_rules AS (
     r.id AS rule_id,
     r.rule_priority,
     r.rule_name,
-
-    CASE
-      WHEN rule_type = 'standardise_terms'           THEN 1
-      WHEN rule_type = 'standardise_units'           THEN 2
-      WHEN rule_type = 'standardise_terms_and_units' THEN 3
-      ELSE                                                4
-    END AS rule_type_priority,
+    r.rule_type,
 
     r_terms.term_code,
     r_units.unit_code,
@@ -65,8 +59,8 @@ WITH unnested_rules AS (
   LEFT JOIN trade_codes output_unit ON output_unit.code = output_unit_code AND output_unit.type = 'Unit'
 )
 -- Use DISTINCT ON, as it is possible for multiple rules to match,
--- e.g. term=COR, unit=NAR (* 0.58, kg); unit=NAR (* 1). In this case,
--- we expect the first matching rule to apply.
+-- e.g. term=COR, unit=NAR (* 0.58, kg); unit=NAR (* 1).
+-- We expect the first matching rule from each rule type to apply.
 SELECT DISTINCT ON (ts.id)
   ts.id                         AS id,
   ts.year                       AS year,
@@ -118,40 +112,86 @@ SELECT DISTINCT ON (ts.id)
   -- Moreover, if ids are -1 or codes/names are 'NULL' strings, replace those with NULL
   -- after the processing is done. This is to get back to just a unique NULL representation.
 
-  NULLIF(COALESCE(r.output_term_id,      ts.term_id),        -1) AS term_id,
-  NULLIF(COALESCE(r.output_term_code,    terms.code),    'NULL') AS term_code,
-  NULLIF(COALESCE(r.output_term_name_en, terms.name_en), 'NULL') AS term_en,
-  NULLIF(COALESCE(r.output_term_name_es, terms.name_es), 'NULL') AS term_es,
-  NULLIF(COALESCE(r.output_term_name_fr, terms.name_fr), 'NULL') AS term_fr,
-  NULLIF(COALESCE(r.output_unit_id,      ts.unit_id),        -1) AS unit_id,
-  NULLIF(COALESCE(r.output_unit_code,    units.code),    'NULL') AS unit_code,
-  NULLIF(COALESCE(r.output_unit_name_en, units.name_en), 'NULL') AS unit_en,
-  NULLIF(COALESCE(r.output_unit_name_es, units.name_es), 'NULL') AS unit_es,
-  NULLIF(COALESCE(r.output_unit_name_fr, units.name_fr), 'NULL') AS unit_fr,
+  NULLIF(COALESCE(tur.output_term_id,      ur.output_term_id,      tr.output_term_id,      ts.term_id),        -1) AS term_id,
+  NULLIF(COALESCE(tur.output_term_code,    ur.output_term_code,    tr.output_term_code,    terms.code),    'NULL') AS term_code,
+  NULLIF(COALESCE(tur.output_term_name_en, ur.output_term_name_en, tr.output_term_name_en, terms.name_en), 'NULL') AS term_en,
+  NULLIF(COALESCE(tur.output_term_name_es, ur.output_term_name_es, tr.output_term_name_es, terms.name_es), 'NULL') AS term_es,
+  NULLIF(COALESCE(tur.output_term_name_fr, ur.output_term_name_fr, tr.output_term_name_fr, terms.name_fr), 'NULL') AS term_fr,
+  NULLIF(COALESCE(tur.output_unit_id,      ur.output_unit_id,      tr.output_unit_id,      ts.unit_id),        -1) AS unit_id,
+  NULLIF(COALESCE(tur.output_unit_code,    ur.output_unit_code,    tr.output_unit_code,    units.code),    'NULL') AS unit_code,
+  NULLIF(COALESCE(tur.output_unit_name_en, ur.output_unit_name_en, tr.output_unit_name_en, units.name_en), 'NULL') AS unit_en,
+  NULLIF(COALESCE(tur.output_unit_name_es, ur.output_unit_name_es, tr.output_unit_name_es, units.name_es), 'NULL') AS unit_es,
+  NULLIF(COALESCE(tur.output_unit_name_fr, ur.output_unit_name_fr, tr.output_unit_name_fr, units.name_fr), 'NULL') AS unit_fr,
 
-  rule_id, ts.group_code,
+  tr.rule_id  AS term_rule_id,
+  ur.rule_id  AS unit_rule_id,
+  tur.rule_id AS term_and_unit_rule_id,
 
-  quantity_modifier     AS quantity_modifier,
-  modifier_value::FLOAT AS modifier_value
+  ts.group_code,
+
+  -- Although at the time of writing, there are no cases where two or three of these affect the same taxon,
+  -- it seems plausible and has perhaps happened in the past.
+  tr.quantity_modifier                                          AS term_quantity_modifier,
+  tr.modifier_value::FLOAT                                      AS term_modifier_value,
+  COALESCE(tur.quantity_modifier,     ur.quantity_modifier    ) AS unit_quantity_modifier,
+  COALESCE(tur.modifier_value::FLOAT, ur.modifier_value::FLOAT) AS unit_modifier_value
 FROM trade_plus_group_view ts
-LEFT OUTER JOIN unnested_rules_with_trade_codes r ON (
-  (r.unit_code IS NULL OR (r.unit_code = 'NULL' AND ts.unit_id IS NULL) OR r.unit_id = ts.unit_id)
+LEFT OUTER JOIN unnested_rules_with_trade_codes tr ON (
+  tr.rule_type = 'standardise_terms'
   AND
-  (r.term_code IS NULL OR (r.term_code = 'NULL' AND ts.term_id IS NULL) OR r.term_id = ts.term_id)
+  (tr.unit_code IS NULL OR (tr.unit_code = 'NULL' AND ts.unit_id IS NULL) OR tr.unit_id = ts.unit_id)
+  AND
+  (tr.term_code IS NULL OR (tr.term_code = 'NULL' AND ts.term_id IS NULL) OR tr.term_id = ts.term_id)
   AND (
-    NOT has_taxon_filters
-    OR ts.taxon_concept_kingdom_name = ANY(r.kingdom_names)
-    OR ts.taxon_concept_phylum_name = ANY(r.phylum_names)
-    OR ts.taxon_concept_class_name = ANY(r.class_names)
-    OR ts.taxon_concept_order_name = ANY(r.order_names)
-    OR ts.taxon_concept_family_name = ANY(r.family_names)
-    OR ts.taxon_concept_genus_name = ANY(r.genus_names)
-    OR ts.taxon_concept_full_name = ANY(r.taxon_names) -- note full name is neither taxon_name nor species_name
-    OR ts.group_code = ANY(r.group_codes)
+    NOT tr.has_taxon_filters
+    OR ts.taxon_concept_kingdom_name = ANY(tr.kingdom_names)
+    OR ts.taxon_concept_phylum_name = ANY(tr.phylum_names)
+    OR ts.taxon_concept_class_name = ANY(tr.class_names)
+    OR ts.taxon_concept_order_name = ANY(tr.order_names)
+    OR ts.taxon_concept_family_name = ANY(tr.family_names)
+    OR ts.taxon_concept_genus_name = ANY(tr.genus_names)
+    OR ts.taxon_concept_full_name = ANY(tr.taxon_names) -- note full name is neither taxon_name nor species_name
+    OR ts.group_code = ANY(tr.group_codes)
+  )
+)
+LEFT OUTER JOIN unnested_rules_with_trade_codes ur ON (
+  ur.rule_type IN ('standardise_units')
+  AND
+  (ur.unit_code IS NULL OR (ur.unit_code = 'NULL' AND ts.unit_id IS NULL) OR ur.unit_id = ts.unit_id)
+  AND
+  (ur.term_code IS NULL OR (ur.term_code = 'NULL' AND ts.term_id IS NULL) OR ur.term_id = ts.term_id)
+  AND (
+    NOT ur.has_taxon_filters
+    OR ts.taxon_concept_kingdom_name = ANY(ur.kingdom_names)
+    OR ts.taxon_concept_phylum_name = ANY(ur.phylum_names)
+    OR ts.taxon_concept_class_name = ANY(ur.class_names)
+    OR ts.taxon_concept_order_name = ANY(ur.order_names)
+    OR ts.taxon_concept_family_name = ANY(ur.family_names)
+    OR ts.taxon_concept_genus_name = ANY(ur.genus_names)
+    OR ts.taxon_concept_full_name = ANY(ur.taxon_names) -- note full name is neither taxon_name nor species_name
+    OR ts.group_code = ANY(ur.group_codes)
+  )
+)
+LEFT OUTER JOIN unnested_rules_with_trade_codes tur ON (
+  tur.rule_type IN ('standardise_terms_and_units')
+  AND
+  (tur.unit_code IS NULL OR (tur.unit_code = 'NULL' AND ts.unit_id IS NULL) OR tur.unit_id = ts.unit_id)
+  AND
+  (tur.term_code IS NULL OR (tur.term_code = 'NULL' AND ts.term_id IS NULL) OR tur.term_id = ts.term_id)
+  AND (
+    NOT tur.has_taxon_filters
+    OR ts.taxon_concept_kingdom_name = ANY(tur.kingdom_names)
+    OR ts.taxon_concept_phylum_name = ANY(tur.phylum_names)
+    OR ts.taxon_concept_class_name = ANY(tur.class_names)
+    OR ts.taxon_concept_order_name = ANY(tur.order_names)
+    OR ts.taxon_concept_family_name = ANY(tur.family_names)
+    OR ts.taxon_concept_genus_name = ANY(tur.genus_names)
+    OR ts.taxon_concept_full_name = ANY(tur.taxon_names) -- note full name is neither taxon_name nor species_name
+    OR ts.group_code = ANY(tur.group_codes)
   )
 )
 
 LEFT OUTER JOIN trade_codes terms ON ts.term_id = terms.id
 LEFT OUTER JOIN trade_codes units ON ts.unit_id = units.id
 
-ORDER BY ts.id, r.rule_type_priority, r.rule_priority, r.rule_id
+ORDER BY ts.id, tr.rule_priority, ur.rule_priority, tur.rule_priority
