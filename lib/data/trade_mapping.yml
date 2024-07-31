@@ -70,8 +70,7 @@ rules:
     - rule_name: 'Frog legs are meat'
       input:
         terms: ['LEG']
-        units_fields:
-          units: ['KGM']
+        units: ['KGM']
       output:
         term: 'MEA'
     - rule_name: 'Shells merged into carapaces'
@@ -216,8 +215,7 @@ rules:
       input:
         # SKD no longer exists, but used to be covered by this rule
         terms: ['SID']
-        units_fields:
-          units: ['NULL', 'NAR']
+        units: ['NULL', 'NAR']
       output:
         term: 'SKI'
         unit: 'NULL'
