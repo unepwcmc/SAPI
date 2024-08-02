@@ -147,7 +147,7 @@ describe Admin::NomenclatureChanges::LumpController do
           get :show, params: { id: :legislation, nomenclature_change_id: @lump.id, back: true }
           expect(response).to redirect_to action: :show, id: :notes
           get :show, params: { id: :notes, nomenclature_change_id: @lump.id }
-          expect(response).to redirect_to action: :show, id: :notes
+          expect(response).to render_template('notes')
         end
       end
     end
