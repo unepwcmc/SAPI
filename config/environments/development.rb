@@ -57,6 +57,10 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
+  # Leonardo: Rails 7.0 remove the following config, however the CSS font doesn't work locally.
+  # Lets keep this for now, its development mode only.
+  config.assets.debug = true
+
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
