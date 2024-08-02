@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.0.6' # Can't upgrade to 3.1 until Rails 7.0.4 (https://stackoverflow.com/a/75007303/556780)
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '6.1.7.7'
+gem 'rails', '7.0.8.4'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
