@@ -191,7 +191,7 @@ describe Admin::NomenclatureChanges::SplitController do
           get :show, params: { id: :children, nomenclature_change_id: @split.id, back: true }
           expect(response).to redirect_to action: :show, id: :notes
           get :show, params: { id: :notes, nomenclature_change_id: @split.id }
-          expect(response).to redirect_to action: :show, id: :notes
+          expect(response).to render_template('notes')
         end
       end
     end
