@@ -27,7 +27,7 @@ module ApplicationHelper
           !message.include? "confirmation"
         end
       else
-        resource.errors.messages[field]
+        resource.errors.messages[field&.to_sym]
       end.first
     return "" unless message
     message = message.sub("confirmation", "")
