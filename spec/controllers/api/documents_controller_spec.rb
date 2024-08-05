@@ -98,13 +98,13 @@ describe Api::V1::DocumentsController, type: :controller do
   context "download documents" do
     context "single document selected" do
       it "should return 404 if file is missing" do
-        expect(File).to receive(:exists?).and_return(false)
+        expect(File).to receive(:exist?).and_return(false)
         get :download_zip, params: { ids: @document2.id }
         expect(response.status).to eq(404)
       end
       it "should return zip file if file is found" do
         allow(controller).to receive(:render)
-        expect(File).to receive(:exists?).and_return(true)
+        expect(File).to receive(:exist?).and_return(true)
         get :download_zip, params: { ids: @document2.id }
         expect(response.headers['Content-Type']).to eq 'application/zip'
       end
@@ -112,13 +112,13 @@ describe Api::V1::DocumentsController, type: :controller do
 
     context "multiple documents selected" do
       it "should return 404 if all files are missing" do
-        expect(File).to receive(:exists?).and_return(false, false)
+        expect(File).to receive(:exist?).and_return(false, false)
         get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
         expect(response.status).to eq(404)
       end
 
       it "should return zip file if at least a file is found" do
-        expect(File).to receive(:exists?).and_return(false, true)
+        expect(File).to receive(:exist?).and_return(false, true)
         get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
         expect(response.headers['Content-Type']).to eq 'application/zip'
       end
