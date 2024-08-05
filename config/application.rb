@@ -2,7 +2,7 @@ require_relative "boot"
 
 require 'zip'
 require 'susy'
-require "rails/all"
+require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -13,25 +13,20 @@ module SAPI
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(
+      ignore: %w(assets capistrano data files pt scripts tasks)
+    )
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
-
-    # Don't set the time zone - it causes issues when converting to columns of
-    # type TIMESTAMP WITHOUT TIME ZONE - during BST, dates without time parts
-    # first become midnight, then become 2300 the day before.
     #
     # config.time_zone = "London"
-
     # config.eager_load_paths << Rails.root.join("extras")
-
-    # @see https://gist.github.com/maxivak/381f1e964923f1d469c8d39da8e2522f
-    # TODO: Rails 7.1 https://stackoverflow.com/a/77198784/556780
-    # Custom directories with classes and modules you want to be autoloadable.
-    # config.autoload_paths += %W(#{config.root}/extras)
-    config.autoload_paths << Rails.root.join("lib", "modules")
-    config.eager_load_paths << Rails.root.join("lib", "modules")
 
     # Active Job
     config.active_job.queue_adapter = :sidekiq
