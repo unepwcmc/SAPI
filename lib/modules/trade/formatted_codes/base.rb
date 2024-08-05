@@ -6,7 +6,7 @@ class Trade::FormattedCodes::Base
   end
 
   def generate_view(timestamp)
-    Dir.mkdir(view_dir) unless Dir.exists?(view_dir)
+    Dir.mkdir(view_dir) unless Dir.exist?(view_dir)
     File.open("#{view_dir}/#{timestamp}.sql", 'w') { |f| f.write(@query) }
   end
 

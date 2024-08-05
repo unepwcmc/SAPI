@@ -3,7 +3,7 @@ namespace :import do
   task :eu_country_dates => :environment do
     file_path = "#{Rails.root}/lib/files/CITES_trade_EU_countries_list.csv"
 
-    if File.exists?(file_path)
+    if File.exist?(file_path)
       Rails.logger.info "There are #{EuCountryDate.count} records in the EuCoutryDate table"
       CSV.foreach(file_path, headers: true) do |row|
         geo_entity = GeoEntity.find_by_iso_code2(row['ISO2'])

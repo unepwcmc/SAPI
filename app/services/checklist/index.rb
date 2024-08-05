@@ -6,7 +6,7 @@ class Checklist::Index < Checklist::Checklist
     @download_path = download_location(params, "index", ext)
     # If a cached download exists, only initialize the params for the
     # helper methods, otherwise run the generation queries.
-    if !File.exists?(@download_path)
+    if !File.exist?(@download_path)
       super(params)
     else
       initialize_params(params)
@@ -27,7 +27,7 @@ class Checklist::Index < Checklist::Checklist
   end
 
   def generate
-    if !File.exists?(@download_path)
+    if !File.exist?(@download_path)
       prepare_queries
       document do |doc|
         content(doc)

@@ -10,7 +10,7 @@ class Trade::AppendixIReservationsShipments < Trade::ReservationsShipmentsParser
   end
 
   def generate_view(timestamp)
-    Dir.mkdir(VIEW_DIR) unless Dir.exists?(VIEW_DIR)
+    Dir.mkdir(VIEW_DIR) unless Dir.exist?(VIEW_DIR)
     File.open("#{VIEW_DIR}/#{timestamp}.sql", 'w') { |f| f.write(@query) }
   end
 

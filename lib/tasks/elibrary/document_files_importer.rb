@@ -22,13 +22,13 @@ class Elibrary::DocumentFilesImporter
       info_txt = "#{doc.filename} (#{idx} of #{total})"
       target_location = @target_dir + "/documents/#{doc.id}/#{doc.elib_legacy_file_name}"
       # check if file exists at target location
-      if File.exists?(target_location)
+      if File.exist?(target_location)
         puts "TARGET PRESENT #{target_location}" + info_txt
         next
       end
       source_location = @source_dir + "/#{doc.elib_legacy_file_name}"
       # check if file exists at source location
-      unless File.exists?(source_location)
+      unless File.exist?(source_location)
         puts "SOURCE MISSING #{source_location}" + info_txt
         next
       end
