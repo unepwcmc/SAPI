@@ -13,6 +13,8 @@ set :sudo_user, "wcmc"
 
 set :app_port, "80"
 
+append :linked_files, "config/credentials/#{fetch(:stage)}.key"
+
 # server-based syntax
 # ======================
 # Defines a single server with a list of roles and multiple properties.

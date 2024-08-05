@@ -63,6 +63,8 @@ services:
       MAILER_ADDRESS: sapi-mailcatcher
       MEMCACHE_SERVERS: sapi-memcached:11211
       SAPI_DATABASE_HOST: sapi-db
+      SAPI_DATABASE_USERNAME: postgres
+      SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
     depends_on:
       - redis
@@ -101,6 +103,8 @@ services:
       MAILER_ADDRESS: sapi-mailcatcher
       MEMCACHE_SERVERS: sapi-memcached:11211
       SAPI_DATABASE_HOST: sapi-db
+      SAPI_DATABASE_USERNAME: postgres
+      SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
 
   mailcatcher:

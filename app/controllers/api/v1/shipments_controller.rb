@@ -169,7 +169,7 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def authenticate
     token = request.headers['X-Authentication-Token']
-    unless token == Rails.application.secrets[:shipments_api_token]
+    unless token == Rails.application.credentials.dig(:shipments_api_token)
       head :unauthorized
       return false
     end

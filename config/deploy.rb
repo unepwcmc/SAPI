@@ -42,7 +42,7 @@ set :ssh_options, {
 #set :service_unit_name, "sidekiq_#{fetch(:application)}.service"
 
 # Default value for :linked_files is []
-set :linked_files, %w{config/database.yml .env}
+# set :linked_files, %w{} - set config/{production,staging}.key in staging/production config
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle','public/.well-known')
@@ -56,10 +56,13 @@ set :keep_releases, 5
 
 require 'yaml'
 require 'json'
-secrets = YAML.load(File.open('config/secrets.yml'))
+secrets = YAML.load(
+  %x[bundle exec rails credentials:show]
+)
 
-set :slack_token, secrets["development"]["capistrano_slack"] # comes from inbound webhook integration
-set :api_token, secrets["development"]["api_token"]
+set :api_token, secrets["api_token"] # used in smoke testing
+
+set :slack_token, secrets["slack_exception_notification_webhook_url"] # comes from inbound webhook integration
 set :slack_room, "#speciesplus" # the room to send the message to
 set :slack_subdomain, "wcmc" # if your subdomain is example.slack.com
 

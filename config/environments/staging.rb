@@ -125,16 +125,31 @@ Rails.application.configure do
   config.ember.variant = :production
 
   # Custom email settings
+  mailer_credentials = Rails.application.credentials[:mailer]
+
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    domain: Rails.application.secrets.mailer[:domain],
-    address: Rails.application.secrets.mailer[:address],
-    port: 587,
-    authentication: :login,
-    enable_starttls_auto: true,
-    user_name: Rails.application.secrets.mailer[:username],
-    password: Rails.application.secrets.mailer[:password]
+    address:              mailer_credentials[:address],
+    port:                 mailer_credentials[:port],
+    domain:               mailer_credentials[:domain],
+    user_name:            mailer_credentials[:username],
+    password:             mailer_credentials[:password],
+    authentication:       :login,
+    enable_starttls_auto: true
   }
+
   config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.mailer[:host]
+    host: mailer_credentials[:host]
+  }
+
+  # fix for current version of mail gem: https://github.com/mikel/mail/issues/1538
+  # config.action_mailer.delivery_method = :sendmail
+  # config.action_mailer.sendmail_settings = {
+  #   location: '/usr/sbin/sendmail', arguments: ['-i']
+  # }
+
+  config.action_mailer.default_options = {
+    from:     mailer_credentials[:from],
+    reply_to: mailer_credentials[:from]
   }
 end

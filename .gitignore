@@ -31,6 +31,7 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+/config/credentials/*.key
 
 /coverage
 /rdoc
@@ -98,5 +99,3 @@ db/structure.sql
 db/schema.rb
 
 *.xlsx
-
-/config/database.yml

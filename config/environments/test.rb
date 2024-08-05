@@ -71,6 +71,8 @@ Rails.application.configure do
 
   # Custom email settings
   config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.mailer[:host]
+    host: Rails.application.credentials.dig(:mailer, :host)
   }
+
+  Rails.application.credentials.secret_key_base = Rails.application.credentials.secret_key_base.presence || SecureRandom.hex(64)
 end
