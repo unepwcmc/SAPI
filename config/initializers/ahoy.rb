@@ -1,5 +1,3 @@
-require 'sapi_module/geo_i_p'
-
 class Ahoy::Store < Ahoy::DatabaseStore
   def authenticate(data)
     # https://github.com/ankane/ahoy/tree/v5.0.2?tab=readme-ov-file#gdpr-compliance-1

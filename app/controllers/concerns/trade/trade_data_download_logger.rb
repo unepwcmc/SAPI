@@ -1,4 +1,3 @@
-require 'sapi_module/geo_i_p'
 module Trade::TradeDataDownloadLogger
 
   module_function
