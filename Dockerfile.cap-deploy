@@ -30,8 +30,8 @@ COPY Gemfile.lock /SAPI/Gemfile.lock
 
 ENV BUNDLE_SILENCE_ROOT_WARNING=1
 RUN /bin/bash -c "source /etc/profile.d/rvm.sh \
-    && gem install bundler:2.2.33 \
-    && bundle"
+  && gem install bundler:2.5.17 \
+  && bundle"
 
 ENTRYPOINT ["/bin/bash", "-l"]
 
