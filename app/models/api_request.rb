@@ -16,7 +16,7 @@
 #
 
 class ApiRequest < ApplicationRecord
-  serialize :params, JSON
+  serialize :params, coder: JSON
 
   belongs_to :user, optional: true
 

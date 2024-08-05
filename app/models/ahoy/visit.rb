@@ -31,7 +31,7 @@ module Ahoy
 
     has_many :ahoy_events, class_name: 'Ahoy::Event'
     belongs_to :user, optional: true
-    serialize :properties, JSON
+    serialize :properties, coder: JSON
 
     # https://github.com/ankane/ahoy/issues/549
     # This project start using ahoy since version 1.0.1

@@ -59,8 +59,8 @@ class TaxonConcept < ApplicationRecord
 
   acts_as_taggable
 
-  # serialize :data, ActiveRecord::Coders::Hstore
-  # serialize :listing, ActiveRecord::Coders::Hstore
+  # serialize :data, coder: ActiveRecord::Coders::Hstore
+  # serialize :listing, coder: ActiveRecord::Coders::Hstore
 
   has_one :m_taxon_concept, :foreign_key => :id
 

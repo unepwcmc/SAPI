@@ -18,7 +18,7 @@
 class Trade::ValidationRule < ApplicationRecord
   # Used by seed.
   # attr_accessible :column_names, :run_order, :is_primary, :scope, :is_strict
-  serialize :scope, ActiveRecord::Coders::NestedHstore
+  serialize :scope, coder: ActiveRecord::Coders::NestedHstore
   has_many :validation_errors, class_name: 'Trade::ValidationError'
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)

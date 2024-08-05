@@ -30,7 +30,7 @@ class CommonName < ApplicationRecord
   end
 
   # attribute_accessor to convert postgresql "t" or "f" to a Ruby boolean
-  # used in app/serializeres/species/show_taxon_concept_serializer.rb
+  # used in app/serializers/species/show_taxon_concept_serializer.rb
   # for distinguishing between official CITES languages an non official languages
   # might need to be reviewed: TODO
   def convention_language
