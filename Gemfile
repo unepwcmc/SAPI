@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.2.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '7.0.8.4'
+gem 'rails', '7.1.3.4'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
@@ -146,7 +146,7 @@ end
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
 
 gem 'request_store', '~> 1.5', '>= 1.5.1'
-gem 'paper_trail', '13.0.0' # TODO: latest is 15.1.0
+gem 'paper_trail', '15.1.0'
 
 gem 'dotenv-rails', '2.0.1'
 
