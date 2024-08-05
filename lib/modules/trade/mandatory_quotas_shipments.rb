@@ -76,7 +76,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def generate_view(timestamp)
-    Dir.mkdir(VIEW_DIR) unless Dir.exists?(VIEW_DIR)
+    Dir.mkdir(VIEW_DIR) unless Dir.exist?(VIEW_DIR)
     #timestamp = Time.now.strftime('%Y%m%d%H%M%S')
     File.open("#{VIEW_DIR}/#{timestamp}.sql", 'w') { |f| f.write(@final_query) }
   end

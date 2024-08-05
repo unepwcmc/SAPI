@@ -66,7 +66,7 @@ class ManualDownloadWorker
     @documents.each do |document|
       path_to_file = document.filename.path
       filename = path_to_file.split('/').last
-      unless File.exists?(path_to_file)
+      unless File.exist?(path_to_file)
         missing_files <<
           "{\n  title: #{document.title},\n  filename: #{filename}\n}"
       else

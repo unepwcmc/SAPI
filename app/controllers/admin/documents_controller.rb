@@ -52,7 +52,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     path_to_file = @document.filename.path unless @document.is_link?
     if @document.is_link?
       redirect_to @document.filename.model[:filename]
-    elsif !File.exists?(path_to_file)
+    elsif !File.exist?(path_to_file)
       render :file => "#{Rails.root}/public/404.html", :status => 404
     else
       send_file(

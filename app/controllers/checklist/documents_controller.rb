@@ -26,7 +26,7 @@ class Checklist::DocumentsController < ApplicationController
       render_403
     elsif @document.is_link?
       redirect_to @document.filename.model[:filename]
-    elsif !File.exists?(path_to_file)
+    elsif !File.exist?(path_to_file)
       render_404
     else
       response.headers['Content-Length'] = File.size(path_to_file).to_s
@@ -85,7 +85,7 @@ class Checklist::DocumentsController < ApplicationController
       @pdf_file_paths.each do |doc_path|
         path_to_file = doc_path.rpartition('/').first
         filename = doc_path.rpartition('/').last
-        unless File.exists?(doc_path)
+        unless File.exist?(doc_path)
           missing_files <<
             "{\n  path: #{path_to_file},\n  filename: #{filename}\n}"
         else

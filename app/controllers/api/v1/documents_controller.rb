@@ -69,7 +69,7 @@ class Api::V1::DocumentsController < ApplicationController
       render_403
     elsif @document.is_link?
       redirect_to @document.filename.model[:filename]
-    elsif !File.exists?(path_to_file)
+    elsif !File.exist?(path_to_file)
       render_404
     else
       response.headers['Content-Length'] = File.size(path_to_file).to_s
@@ -92,7 +92,7 @@ class Api::V1::DocumentsController < ApplicationController
       @documents.each do |document|
         path_to_file = document.filename.path
         filename = path_to_file.split('/').last
-        unless File.exists?(path_to_file)
+        unless File.exist?(path_to_file)
           missing_files <<
             "{\n  title: #{document.title},\n  filename: #{filename}\n}"
         else

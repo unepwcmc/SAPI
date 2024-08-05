@@ -6,7 +6,7 @@ namespace :import do
     abort('File not provided.') unless args[:path_to_file]
 
     path_to_file = "#{Rails.application.root}/#{args[:path_to_file]}"
-    abort("File doesn't exist.") unless File.exists?(path_to_file)
+    abort("File doesn't exist.") unless File.exist?(path_to_file)
 
     COLUMNS = %w(
       id origin_iso importer_iso exporter_iso year appendix taxon_name group_name taxon_id
