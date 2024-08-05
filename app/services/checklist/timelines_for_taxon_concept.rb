@@ -16,8 +16,8 @@ class Checklist::TimelinesForTaxonConcept
     @timeline_events = listing_changes.map(&:to_timeline_event)
     @has_descendant_timelines = taxon_concept.cites_listed_descendants
     @has_events = !@timeline_events.empty?
-    @time_start = Time.new('1975-01-01')
-    @time_end = Time.new("#{Time.now.year + 2}-01-01")
+    @time_start = Time.new(1975, 01, 01)
+    @time_end = Time.new(Time.now.year + 2, 1, 1)
     generate_timelines
     generate_timeline_years
   end
@@ -59,7 +59,7 @@ class Checklist::TimelinesForTaxonConcept
         Checklist::TimelineYear.new({
           :taxon_concept_id => @taxon_concept_id,
           :year => year,
-          :pos => ((Time.new("#{year}-01-01") - @time_start) / (@time_end - @time_start)).round(2)
+          :pos => ((Time.new(year, 1, 1) - @time_start) / (@time_end - @time_start)).round(2)
         })
       end
   end
