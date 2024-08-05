@@ -569,7 +569,7 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    wicked (1.3.4)
+    wicked (2.0.0)
       railties (>= 3.0.7)
     wkhtmltopdf-binary (0.12.6.7)
     xpath (3.2.0)
@@ -668,7 +668,7 @@ DEPENDENCIES
   uuidtools (~> 2.2)
   web-console (>= 4.1.0)
   webdrivers
-  wicked (= 1.3.4)
+  wicked (= 2.0.0)
   wkhtmltopdf-binary (~> 0.12.6.6)
 
 RUBY VERSION
