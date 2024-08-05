@@ -43,10 +43,7 @@ gem 'cancancan', '~> 3.5'
 gem 'ahoy_matey', '~> 5.0', '>= 5.0.2'
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
 
-# TODO: starting from v1.4, it break our test due to redirection changes:
-#   rspec ./spec/controllers/admin/nomenclature_changes/lump_controller_spec.rb:147
-#   rspec ./spec/controllers/admin/nomenclature_changes/split_controller_spec.rb:191
-gem 'wicked', '1.3.4'
+gem 'wicked', '2.0.0'
 
 gem 'groupdate', '~> 6.4'
 
@@ -149,7 +146,7 @@ end
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
 
 gem 'request_store', '~> 1.5', '>= 1.5.1'
-gem 'paper_trail', '12.3.0' # TODO: latest is 15.1.0. Can't upgrade until we fix https://github.com/paper-trail-gem/paper_trail/blob/master/doc/pt_13_yaml_safe_load.md
+gem 'paper_trail', '12.3.0' # TODO: latest is 15.1.0. Can't upgrade until we fix https://github.com/paper-trail-gem/paper_trail/blob/master/doc/pt_13_yaml_safe_load.md # Need upgrade before Rails 7.1 (https://github.com/paper-trail-gem/paper_trail?tab=readme-ov-file#1a-compatibility)
 
 gem 'dotenv-rails', '2.0.1'
 
