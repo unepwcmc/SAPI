@@ -6,7 +6,7 @@ require:
 Rails:
   Enabled: true
 AllCops:
-  TargetRubyVersion: 3.0.6
+  TargetRubyVersion: 3.1.6
   TargetRailsVersion: 6.0
   Exclude:
     - 'lib/tasks/bbgem.rake'
