@@ -19,6 +19,18 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     end
   end
 
+  def show
+    raise NotImplementedError
+  end
+
+  def update
+    raise NotImplementedError
+  end
+
+  def destroy
+    raise NotImplementedError
+  end
+
   private
 
   def set_nomenclature_change

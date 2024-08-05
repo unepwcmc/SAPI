@@ -8,6 +8,30 @@ class TradeController < ApplicationController
     render json: { can_edit: current_user.is_manager? && current_user.is_active? }
   end
 
+  def update
+    raise NotImplementedError
+  end
+
+  def create
+    raise NotImplementedError
+  end
+
+  def submit
+    raise NotImplementedError
+  end
+
+  def destroy
+    raise NotImplementedError
+  end
+
+  def update_batch
+    raise NotImplementedError
+  end
+
+  def destroy_batch
+    raise NotImplementedError
+  end
+
   private
 
   def verify_manager_or_secretariat_or_active
