@@ -55,9 +55,11 @@
     <%= yield %>
 
     <div class="top-level-container">
+      <a href="#feedback_modal" class="btn-fixed-vertical btn-page-feedback">Feedback</a>
       <%= render "layouts/logged_header" %>
       <div id="ember_app"></div>
       <%= render "layouts/login_modal" %>
+      <%= render "layouts/feedback_modal" %>
       <%= render "layouts/footer" %>
       <div class="skip">
         <a href="#main">skip to content</a>

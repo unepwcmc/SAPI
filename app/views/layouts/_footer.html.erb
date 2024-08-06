@@ -30,10 +30,12 @@
         </a>
       </div>
     </div>
-    <% unless current_user %>
-      <div class="login-link">
+    <div class="login-link">
+      <% unless current_user %>
         <a href="#login_modal"><i class="fa fa-sign-in"></i> EU Member Login</a>
-      </div>
-    <% end %>
+        <br />
+      <% end %>
+      <a href="#feedback_modal"><i class="fa fa-envelope"></i> Send feedback</a>
+    </div>
   </div>
 </div>
