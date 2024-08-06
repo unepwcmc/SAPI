@@ -60,7 +60,7 @@ Rails.application.configure do
   # Leonardo: Rails 7.0 remove the following config, however the CSS font doesn't work locally.
   # Lets keep this for now, its development mode only.
   config.assets.debug = true
- 
+
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
 
@@ -79,6 +79,9 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 
+  ###
+  # Everything below are WCMC custom settings.
+  #
   # Custom ember settings
   config.ember.variant = :development
 
