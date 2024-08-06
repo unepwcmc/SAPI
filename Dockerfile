@@ -1,6 +1,6 @@
 # WARNING:
 # This file is for development, not for production.
-# For produciton, please refer to https://railsdiff.org/7.0.8.4/7.1.3.4#diff-466a28a0e93935ce250159682062e5a94698a3d8
+# For production, please refer to https://railsdiff.org/7.0.8.4/7.1.3.4#diff-466a28a0e93935ce250159682062e5a94698a3d8
 # or SUS-ORS project.
 
 # Dockerfile
