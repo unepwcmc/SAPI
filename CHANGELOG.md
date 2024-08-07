@@ -9,6 +9,7 @@
   to handle them.
 * Fix for the CITES Checklist, which was showing "this taxon is split-listed"
   in some cases where this was not true.
+* Replace feedback modal
 
 ### 1.14.2
 

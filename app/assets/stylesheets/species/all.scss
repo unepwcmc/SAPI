@@ -300,7 +300,7 @@ a.learn-more:hover {
 
 #footer .logos {
   margin: 25px 0 0;
-  height: 70px;
+  height: 72px;
 }
 #footer .holder {
   margin: 0 auto;
@@ -309,7 +309,10 @@ a.learn-more:hover {
 }
 .power-by, .login-link {
   float: right;
-  height: 40px;
+  height: 56px;
+}
+.login-link p {
+  margin-bottom: 8px;
 }
 .login-link a {
   color: #648aa2;
