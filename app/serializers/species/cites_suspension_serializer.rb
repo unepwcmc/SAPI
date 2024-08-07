@@ -5,6 +5,7 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
     :geo_entity,
     :applies_to_import,
     :start_notification,
+    :end_notification,
     :source_ids
 
   def geo_entity
@@ -13,6 +14,10 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
 
   def start_notification
     @options[:trimmed] == 'true' ? object['start_notification'].except('date') : object['start_notification']
+  end
+
+  def end_notification
+    @options[:trimmed] == 'true' ? object['end_notification'].except('date') : object['end_notification']
   end
 
   def include_nomenclature_note_fr?

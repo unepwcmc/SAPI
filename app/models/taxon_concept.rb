@@ -173,6 +173,12 @@ class TaxonConcept < ApplicationRecord
     tc.taxonomy && tc.taxonomy_id_changed?
   }
 
+  validates :author_year,
+    format: {
+      with: PDF_SAFE_REGEX,
+      message: "should only contain PDF-safe characters"
+    }
+
   before_validation :ensure_taxonomic_position
   before_validation do
     before_validate_scientific_name

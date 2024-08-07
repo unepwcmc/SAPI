@@ -1,3 +1,15 @@
+### Forthcoming
+
+* Fix some issues with conversion of trade code term and unit rules
+* CITES suspension history now shows end notification where available
+* Fix a frontend bug in the downloads, where a dropdown value was being used
+  in the request, even when the dropdown was not being displayed.
+* Fix to the admin area to ensure non-Latin letters aren't being entered into
+  certain fields which are used for PDFs, where pdflatex does not know how
+  to handle them.
+* Fix for the CITES Checklist, which was showing "this taxon is split-listed"
+  in some cases where this was not true.
+
 ### 1.14.2
 
 * Add new synonym file for bulk uploads

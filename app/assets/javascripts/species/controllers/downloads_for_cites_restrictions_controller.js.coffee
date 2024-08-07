@@ -35,7 +35,7 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
         }
       ).filter((e) ->
         e.taxonConcepts.length > 0
-      )      
+      )
     else
       @get('higherTaxaController.contentByRank')
   ).property('higherTaxaController.contentByRank.@each', 'taxonConceptQuery')
@@ -68,19 +68,26 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
     @get('selectedTaxonConcepts').mapProperty('id')
   ).property('selectedTaxonConcepts.@each')
 
+  selectedYearsIfRelevant: ( ->
+    if @get('documentTypeIsCitesSuspensions')
+      []
+    else
+      @get('selectedYears')
+  ).property('documentTypeIsCitesSuspensions', 'selectedYears.@each')
+
   toParams: ( ->
     {
       data_type: @get('documentType')
-      filters: 
+      filters:
         designation: @get('designation')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
         taxon_concepts_ids: @get('selectedTaxonConceptsIds')
         set: @get('timeScope')
-        years: @get('selectedYears')
+        years: @get('selectedYearsIfRelevant')
         csv_separator: @get('controllers.downloads.csvSeparator')
     }
   ).property(
-    'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each', 
+    'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each',
     'timeScope', 'selectedYears.@each', 'documentType', 'controllers.downloads.csvSeparator'
   )
 

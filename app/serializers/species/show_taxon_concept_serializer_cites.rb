@@ -116,6 +116,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               trade_restrictions.geo_entity_en,
               trade_restrictions.applies_to_import,
               trade_restrictions.start_notification,
+              trade_restrictions.end_notification,
               trade_restrictions.source_ids,
               CASE
                 WHEN taxon_concept->>'rank' = '#{object.rank_name}'
