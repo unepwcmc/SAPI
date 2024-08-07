@@ -120,6 +120,38 @@ $(document).ready ->
     citationGeoEntityField.select2(citationGeoEntitySelect2Options)
   )
 
+
+  $('button.sort-documents-reorder-list').click(
+    (e) ->
+      e.preventDefault() # button should not cause page refresh
+
+      # Assumes there's only one of these per page.
+      listElement = $('ul.documents-reorder-list').get(0)
+      listItems = Array.from(listElement.children)
+
+      listItems.sort(
+        (a, b) -> a.innerText.localeCompare(
+          b.innerText, 'en-GB', {
+            numeric: true,
+            ignorePunctuation: true
+          }
+        )
+      ).forEach(
+        # Once you know the correct order, take each node in the correct order
+        # and place it at the end of the parent. This may involve more DOM
+        # changes than necessary, but hopefully not so many that it's a problem.
+        (node) -> return listElement.appendChild(node)
+      )
+
+      # Ensure the ui component is aware of the DOM change
+      $('ul.documents-reorder-list').sortable('refresh')
+
+      # Update the hidden fields so that the form submission works
+      $(listElement).find('input').each( (idx) ->
+        $(@).val(idx)
+      )
+  )
+
   $('ul.documents-reorder-list').sortable(
     items: 'li'
   ).bind('sortupdate', (e, ui) ->
