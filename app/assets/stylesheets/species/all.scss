@@ -2063,7 +2063,7 @@ div.alert .close {
 }
 
 #feedback_form {
-  height: 200px;
+  height: fit-content;
   width: 560px;
   margin: auto;
   position: absolute;
@@ -2076,22 +2076,25 @@ div.alert .close {
   background-color: #A4C5DA;
   .feedback-cancel {
     float: right;
-    margin: 15px;
+    padding: 4px 8px;
+    margin: 10px 10px 0;
     color: #376382;
     text-decoration: none;
     cursor: pointer;
   }
   .feedback-header {
-    clear: both;
-    padding: 0 32px 16px;
+    padding: 32px 32px 16px;
     h2 {
+      padding: 0;
+      margin: 0;
+      text-transform: none;
       font-size: 24px;
       font-weight: bold;
       color: black;
     }
   }
   .feedback-body {
-    padding: 16px 32px;
+    padding: 16px 32px 32px;
     color: black;
     p {
       padding-bottom: 8px;
