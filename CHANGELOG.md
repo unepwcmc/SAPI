@@ -1,4 +1,4 @@
-### Forthcoming
+### 1.15.0
 
 * Fix some issues with conversion of trade code term and unit rules
 * CITES suspension history now shows end notification where available
