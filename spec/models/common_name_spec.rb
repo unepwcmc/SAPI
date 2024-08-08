@@ -63,7 +63,7 @@ describe CommonName do
       end
 
       it 'Accepts cyrillic text in RU common name' do
-        lang_ru = create(:language, :name => 'Russian', :iso_code1 => 'RU', :iso_code3 => 'RUS').id
+        lang_ru = create(:language, :name => 'Russian', :iso_code1 => 'RU', :iso_code3 => 'RUS')
 
         new_record = CommonName.new(
           name: 'Агава аризонская',
