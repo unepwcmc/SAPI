@@ -4,18 +4,12 @@ ruby '3.2.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '7.1.3.4'
-# Use sqlite3 as the database for Active Record
-# gem 'sqlite3'
+
 # Use Puma as the app server
 gem 'puma', '~> 5.0'
 
 # Use SCSS for stylesheets
-# TODO: Can't upgrade sass-rails to 6.0, it raise the following error when running `RAILS_ENV=staging rake assets:precompile`.
-# SassC::SyntaxError: Error: Invalid CSS after "...in-bottom:-3px;": expected "}", was ".margin-bottom:-3px"
-#         on line 3712:5063 of stdin
-# >> ction=135,Strength=3)";_margin-bottom:-3px;.margin-bottom:-3px;}/*!Add round
-# gem 'sass-rails', '>= 6'
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 6.0'
 
 # https://stackoverflow.com/questions/55213868/rails-6-how-to-disable-webpack-and-use-sprockets-instead
 gem 'sprockets', '3.7.2'
@@ -30,11 +24,16 @@ gem 'coffee-rails', '~> 5.0'
 # gem 'mini_racer', platforms: :ruby
 
 gem 'active_model_serializers', '0.8.4' # Deprecated
+
+# Memcached driver for Rails.cache
 gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
+
+# Use PostgreSQL database
 gem 'pg', '~> 1.5', '>= 1.5.4'
 gem 'pg_array_parser', '~> 0.0.9'
 gem 'nested-hstore', '~> 0.1.2'
 gem 'pg_search', '~> 2.3', '>= 2.3.6'
+
 gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
 gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmin/inherited_resources#notice)
 gem 'nokogiri', '~> 1.16'
