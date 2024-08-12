@@ -141,7 +141,6 @@ group :test do
   gem 'webdrivers'
 
   gem 'rails-controller-testing'
-  gem "codeclimate-test-reporter", '0.1.1', require: nil # TODO, should be removed
   gem 'factory_bot_rails', '5.2.0'
   gem 'simplecov', '~> 0.22.0', :require => false
   gem 'coveralls_reborn', '~> 0.28.0', require: false
