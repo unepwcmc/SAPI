@@ -62,7 +62,7 @@ class Elibrary::CitationsImporter
     ApplicationRecord.connection.execute('DROP TABLE IF EXISTS elibrary_citations_resolved_tmp')
     ApplicationRecord.connection.execute('CREATE TABLE elibrary_citations_resolved_tmp (document_id INT, CitationId INT, CtyISO2 TEXT, splus_taxon_concept_id INT)')
     ApplicationRecord.connection.execute(
-      <<-SQL
+      <<-SQL.squish
       INSERT INTO elibrary_citations_resolved_tmp (document_id, CitationId, CtyISO2, splus_taxon_concept_id)
         SELECT
         d.id AS document_id,
@@ -80,7 +80,7 @@ class Elibrary::CitationsImporter
     ApplicationRecord.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (CtyISO2)')
     ApplicationRecord.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (splus_taxon_concept_id)')
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH inserted_citations AS (
         INSERT INTO document_citations (
           document_id,
@@ -140,7 +140,7 @@ class Elibrary::CitationsImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
         #{geo_entity_and_taxon_concept_rows_to_insert_sql}
         UNION ALL
         #{geo_entity_rows_to_insert_sql}
@@ -151,7 +151,7 @@ class Elibrary::CitationsImporter
 
   # both geo entity and taxon concept present
   def geo_entity_and_taxon_concept_rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT all_rows_in_table_name.* FROM (
         #{all_rows_sql}
       ) all_rows_in_table_name
@@ -177,7 +177,7 @@ class Elibrary::CitationsImporter
 
   # only geo entity present
   def geo_entity_rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT all_rows_in_table_name.* FROM (
         #{all_rows_sql}
       ) all_rows_in_table_name
@@ -202,7 +202,7 @@ class Elibrary::CitationsImporter
 
   # only taxon concpet taxon concept present
   def taxon_concept_rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT all_rows_in_table_name.* FROM (
         #{all_rows_sql}
       ) all_rows_in_table_name
@@ -225,7 +225,7 @@ class Elibrary::CitationsImporter
   end
 
   def print_breakdown
-    puts "#{Time.now} There are #{DocumentCitation.count} citations in total"
+    Rails.logger.debug { "#{Time.zone.now} There are #{DocumentCitation.count} citations in total" }
     DocumentCitation.includes(:document).group('documents.type').order('documents.type').count.each do |type, count|
       puts "\t #{type} #{count}"
     end

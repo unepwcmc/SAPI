@@ -10,7 +10,7 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe AdminHelper, type: :helper do
+describe AdminHelper do
   describe 'edit_icon' do
     it 'ouputs pencil icon for edit' do
       expect(helper.edit_icon).to eq('<i class="icon-pencil" title="Edit"></i>')

@@ -5,7 +5,7 @@ class Species::CsvCopyExport
 
   def initialize(filters = {})
     @filters = filters || {}
-    @taxonomy = @filters[:taxonomy] && Taxonomy.find_by_name(filters[:taxonomy])
+    @taxonomy = @filters[:taxonomy] && Taxonomy.find_by(name: filters[:taxonomy])
     initialize_csv_separator(@filters[:csv_separator])
     initialize_file_name
   end

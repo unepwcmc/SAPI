@@ -15,7 +15,7 @@ class Api::SpeciesListingsController < ApplicationController
   end
 
   def sanitized_params
-    return nil if trade_plus_params.empty? || !trade_plus_params[:designation].present?
+    return nil if trade_plus_params.empty? || trade_plus_params[:designation].blank?
 
     user_designations = trade_plus_params[:designation].split(',').map(&:upcase)
     designations = Designation.pluck(:name).map(&:upcase)

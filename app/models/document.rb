@@ -75,7 +75,7 @@ class Document < ApplicationRecord
   accepts_nested_attributes_for :citations, allow_destroy: true,
     reject_if: proc { |attributes|
       attributes['stringy_taxon_concept_ids'].blank? && (
-        attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].reject(&:blank?).empty?
+        attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].compact_blank.empty?
       )
     }
   mount_uploader :filename, DocumentFileUploader

@@ -36,14 +36,14 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
       it 'creates a new Document' do
         expect do
           post :create, params: { document_batch: {
-            date: Date.today, documents_attributes: { '0' => document_attrs }, files: files
+            date: Time.zone.today, documents_attributes: { '0' => document_attrs }, files: files
           } }
         end.to change(Document, :count).by(1)
       end
 
       it 'redirects to index when successful' do
         post :create, params: { document_batch: {
-          date: Date.today, documents_attributes: { '0' => document_attrs }, files: files
+          date: Time.zone.today, documents_attributes: { '0' => document_attrs }, files: files
         } }
         expect(response).to redirect_to(admin_documents_url)
       end
@@ -69,7 +69,7 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
 
       it 'redirects to index when successful' do
         post :create, params: { event_id: event.id, document_batch: {
-          date: Date.today, documents_attributes: { '0' => document_attrs }, files: files
+          date: Time.zone.today, documents_attributes: { '0' => document_attrs }, files: files
         } }
         expect(response).to redirect_to(admin_event_documents_url(event))
       end

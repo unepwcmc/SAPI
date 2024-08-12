@@ -9,9 +9,9 @@ class SundayCleanupJob < ApplicationJob
     Rails.logger.warn '### rake db:common_names:cleanup'
     objects_to_delete = CommonName.
       joins('LEFT JOIN taxon_commons tc ON tc.common_name_id = common_names.id').
-      where('tc.id IS NULL')
+      where(tc: { id: nil })
     Rails.logger.warn "Going to delete #{objects_to_delete.count} common names"
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH objects_to_delete AS (
         #{objects_to_delete.to_sql}
       )
@@ -25,9 +25,9 @@ class SundayCleanupJob < ApplicationJob
     Rails.logger.warn '### rake db:taxon_names:cleanup'
     objects_to_delete = TaxonName.
       joins('LEFT JOIN taxon_concepts tc ON tc.taxon_name_id = taxon_names.id').
-      where('tc.id IS NULL')
+      where(tc: { id: nil })
     Rails.logger.warn "Going to delete #{objects_to_delete.count} taxon names"
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH objects_to_delete AS (
         #{objects_to_delete.to_sql}
       )

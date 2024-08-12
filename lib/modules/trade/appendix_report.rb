@@ -6,7 +6,7 @@ class Trade::AppendixReport
       'trade_shipments.id', :legacy_shipment_number, :year,
       'trade_shipments.taxon_concept_id', 'trade_shipments.appendix',
       'm.appendix AS auto_appendix'
-    ]).joins(<<-SQL
+    ]).joins(<<-SQL.squish
       LEFT JOIN valid_taxon_concept_appendix_year_mview m
       ON DATE_PART('year', m.effective_from) <= trade_shipments.year
       AND (
@@ -29,7 +29,7 @@ class Trade::AppendixReport
         'taxon_concepts.full_name', :year, :appendix
     ]).order([ :full_name, :year, :appendix, 's.id' ])
 
-    @diff_query = @query.having(<<-SQL
+    @diff_query = @query.having(<<-SQL.squish
       NOT ARRAY_AGG_NOTNULL(auto_appendix) @> ARRAY[appendix]
       SQL
     )

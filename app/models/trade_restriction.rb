@@ -124,7 +124,7 @@ class TradeRestriction < ApplicationRecord
 
   def self.export_query(filters)
     self.joins(:geo_entity).
-      joins(<<-SQL
+      joins(<<-SQL.squish
           LEFT JOIN taxon_concepts ON taxon_concepts.id = trade_restrictions.taxon_concept_id
           LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id
         SQL
@@ -171,7 +171,7 @@ class TradeRestriction < ApplicationRecord
             if c.is_a?(Array)
               row << q.send(c[1])
             elsif c == :notes
-              row << [ q.send(c), q.send(:nomenclature_note_en) ].reject(&:blank?).join('; ')
+              row << [ q.send(c), q.send(:nomenclature_note_en) ].compact_blank.join('; ')
             else
               row << q.send(c)
             end
@@ -202,7 +202,7 @@ class TradeRestriction < ApplicationRecord
 
   def self.filter_taxon_concepts(filters)
     if filters.key?('taxon_concepts_ids')
-      conds_str = <<-SQL
+      conds_str = <<-SQL.squish
         ARRAY[
           taxon_concepts_mview.id, taxon_concepts_mview.family_id,
           taxon_concepts_mview.order_id, taxon_concepts_mview.class_id,

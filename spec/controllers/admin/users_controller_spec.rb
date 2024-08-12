@@ -14,7 +14,7 @@ describe Admin::UsersController do
 
   describe 'XHR POST create' do
     it 'renders create when successful' do
-      post :create, params: { user: FactoryBot.attributes_for(:user) }, xhr: true
+      post :create, params: { user: attributes_for(:user) }, xhr: true
       expect(response).to render_template('create')
     end
     it 'renders new when not successful' do

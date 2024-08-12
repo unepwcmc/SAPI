@@ -42,7 +42,7 @@ class CitesProcess < ApplicationRecord
   before_validation :set_resolution_value
 
   def is_current?
-    ![ 'Closed' ].include? status
+    [ 'Closed' ].exclude?(status)
   end
 
   def year

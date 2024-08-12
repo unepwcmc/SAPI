@@ -95,7 +95,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       where(taxon_concept_id: object.id).
       select('language_name_en AS lang').
       select("string_agg(name, ', ') AS names").
-      select(<<-SQL
+      select(<<-SQL.squish
           CASE
             WHEN UPPER(language_name_en) = 'ENGLISH' OR
               UPPER(language_name_en) = 'FRENCH' OR
@@ -149,7 +149,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       object.dependents_updated_at,
       object.m_taxon_concept.try(:updated_at) || '',
       scope.current_user ? true : false,
-      @options[:trimmed] == 'true' ? true : false
+      @options[:trimmed] == 'true'
     ]
     Rails.logger.debug { "CACHE KEY: #{key.inspect}" }
     key

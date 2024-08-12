@@ -59,7 +59,7 @@ module SapiModule
     end
 
     def self.drop_indexes_on_shipments
-      sql = <<-SQL
+      sql = <<-SQL.squish
       DROP INDEX IF EXISTS index_trade_shipments_on_appendix;
       DROP INDEX IF EXISTS index_trade_shipments_on_country_of_origin_id;
       DROP INDEX IF EXISTS index_trade_shipments_on_exporter_id;
@@ -82,8 +82,8 @@ module SapiModule
     end
 
     def self.drop_indexes_on_trade_names
-      puts 'Destroy trade_names related indexes'
-      sql = <<-SQL
+      Rails.logger.debug 'Destroy trade_names related indexes'
+      sql = <<-SQL.squish
         DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_trade_code;
         DROP INDEX IF EXISTS index_trade_species_mapping_import_cites_taxon_code;
       SQL
@@ -91,8 +91,8 @@ module SapiModule
     end
 
     def self.create_indexes_on_trade_names
-      puts 'Add index for trade_names and trade_species_mapping_import'
-      sql = <<-SQL
+      Rails.logger.debug 'Add index for trade_names and trade_species_mapping_import'
+      sql = <<-SQL.squish
         CREATE INDEX index_taxon_concepts_on_legacy_trade_code
           ON taxon_concepts
           USING btree
@@ -106,7 +106,7 @@ module SapiModule
     end
 
     def self.create_indexes_on_shipments
-      sql = <<-SQL
+      sql = <<-SQL.squish
       CREATE INDEX index_trade_shipments_on_appendix
         ON trade_shipments
         USING btree

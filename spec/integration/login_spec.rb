@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe 'Home page', type: :request do
+RSpec.describe 'Home page' do
   it 'redirects Data Manager to admin root path' do
     user = create(:user, role: User::MANAGER)
     post '/users/sign_in', params: { user: { email: user.email, password: user.password } }

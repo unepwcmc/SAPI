@@ -1,8 +1,6 @@
 module AdminHelper
   def ancestors_path(taxon_concept)
-    Rank.where(
-      [ 'taxonomic_position < ?', taxon_concept.rank.taxonomic_position ]
-      ).order(:taxonomic_position).map do |r|
+    Rank.where(taxonomic_position: ...taxon_concept.rank.taxonomic_position).order(:taxonomic_position).map do |r|
       return nil unless taxon_concept.data
       name = taxon_concept.data["#{r.name.downcase}_name"]
       id = taxon_concept.data["#{r.name.downcase}_id"]
@@ -30,7 +28,7 @@ module AdminHelper
   end
 
   def internal_notes(record)
-    return '' unless record.internal_notes.present?
+    return '' if record.internal_notes.blank?
     info = content_tag(:div) do
       content_tag(:b, 'Internal notes:') +
       content_tag(:p, record.internal_notes)

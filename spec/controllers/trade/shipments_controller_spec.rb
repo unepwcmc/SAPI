@@ -41,7 +41,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
       put :update, params: { id: @shipment1.id, shipment: {
         import_permit_number: 'YYY'
       } }
-      expect(Trade::Permit.find_by_id(@import_permit.id)).to be_nil
+      expect(Trade::Permit.find_by(id: @import_permit.id)).to be_nil
     end
   end
 
@@ -129,7 +129,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
       } }
       expect(@shipment1.reload.import_permits_ids).to be_blank
       expect(@shipment1.import_permit_number).to be_nil
-      expect(Trade::Permit.find_by_id(@import_permit.id)).to be_nil
+      expect(Trade::Permit.find_by(id: @import_permit.id)).to be_nil
     end
   end
 
@@ -186,8 +186,8 @@ describe Trade::ShipmentsController, sidekiq: :inline do
 
     it 'should delete orphaned permits' do
       post :destroy_batch, params: { time_range_start: @shipment1.year, time_range_end: @shipment2.year, year: 2013, exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ], importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ] }
-      expect(Trade::Shipment.find_by_id(@shipment1.id)).to be_nil
-      expect(Trade::Permit.find_by_id(@import_permit.id)).to be_nil
+      expect(Trade::Shipment.find_by(id: @shipment1.id)).to be_nil
+      expect(Trade::Permit.find_by(id: @import_permit.id)).to be_nil
     end
   end
 
@@ -199,7 +199,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
     end
     it 'should delete orphaned permits' do
       delete :destroy, params: { id: @shipment1.id }
-      expect(Trade::Permit.find_by_id(@import_permit.id)).to be_nil
+      expect(Trade::Permit.find_by(id: @import_permit.id)).to be_nil
     end
   end
 end

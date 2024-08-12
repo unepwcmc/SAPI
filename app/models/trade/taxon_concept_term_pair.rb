@@ -27,7 +27,7 @@ class Trade::TaxonConceptTermPair < ApplicationRecord
       where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
             OR UPPER(trade_codes.code) LIKE UPPER(:query)",
         query: "%#{query}%").
-        joins(<<-SQL
+        joins(<<-SQL.squish
           LEFT JOIN taxon_concepts
             ON taxon_concepts.id = trade_taxon_concept_term_pairs.taxon_concept_id
           LEFT JOIN trade_codes

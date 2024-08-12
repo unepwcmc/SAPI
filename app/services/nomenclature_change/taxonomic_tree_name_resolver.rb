@@ -30,7 +30,7 @@ class NomenclatureChange::TaxonomicTreeNameResolver
       end.first
     if !compatible_node
       compatible_node = create_compatible_node(node)
-    elsif compatible_node && ![ 'A', 'N' ].include?(compatible_node.name_status)
+    elsif compatible_node && [ 'A', 'N' ].exclude?(compatible_node.name_status)
       upgrade_node(compatible_node, node.parent)
     end
 

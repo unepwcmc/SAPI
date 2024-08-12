@@ -9,9 +9,7 @@ class CountryDictionary
       joins(:geo_entity_type).
       where('geo_entity_types.name': [ GeoEntityType::COUNTRY, GeoEntityType::TERRITORY ]).
       all
-    @dictionary = Hash[
-      @collection.map { |c| [ c.id, [ c.name, c.iso_code2 ] ] }
-    ]
+    @dictionary = @collection.to_h { |c| [ c.id, [ c.name, c.iso_code2 ] ] }
   end
 
   def get_iso_code_by_id(id)

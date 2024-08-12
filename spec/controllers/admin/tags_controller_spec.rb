@@ -31,7 +31,7 @@ describe Admin::TagsController do
       end
       it 'responds with json error when not successful' do
         put :update, format: 'json', params: { id: preset_tag.id, tag: { model: 'FakeCategory' } }, xhr: true
-        expect(JSON.parse(response.body)).to include('errors')
+        expect(response.parsed_body).to include('errors')
       end
     end
   end

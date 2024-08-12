@@ -38,7 +38,7 @@ describe Admin::ChangeTypesController do
     end
     it 'responds with json when not successful' do
       put :update, format: 'json', params: { id: change_type.id, change_type: { name: nil } }, xhr: true
-      expect(JSON.parse(response.body)).to include('errors')
+      expect(response.parsed_body).to include('errors')
     end
   end
 

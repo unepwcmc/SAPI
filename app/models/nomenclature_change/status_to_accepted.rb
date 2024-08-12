@@ -36,7 +36,7 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   before_validation :set_output_parent_id, if: :primary_output_or_submitting?
 
   def required_primary_output_name_status
-    if primary_output && ![ 'N', 'T' ].include?(primary_output.name_status)
+    if primary_output && [ 'N', 'T' ].exclude?(primary_output.name_status)
       errors.add(:primary_output, 'Must be N or T taxon')
       return false
     end

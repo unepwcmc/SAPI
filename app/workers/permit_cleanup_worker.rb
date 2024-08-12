@@ -4,7 +4,7 @@ class PermitCleanupWorker
 
   def perform(permits_ids = [])
     return if permits_ids.empty?
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH unused_permits(id) AS (
         SELECT id FROM trade_permits WHERE id IN (:permits_ids)
         EXCEPT

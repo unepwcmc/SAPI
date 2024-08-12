@@ -23,7 +23,7 @@ class Trade::SearchParams < Hash
         nil
       ),
       time_range_start: sanitise_positive_integer(params[:time_range_start], 1975),
-      time_range_end: sanitise_positive_integer(params[:time_range_end], Date.today.year),
+      time_range_end: sanitise_positive_integer(params[:time_range_end], Time.zone.today.year),
       quantity: sanitise_float(params[:quantity]),
       unit_blank: sanitise_boolean(params[:unit_blank]),
       purpose_blank: sanitise_boolean(params[:purpose_blank]),

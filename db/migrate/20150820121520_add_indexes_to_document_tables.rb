@@ -1,6 +1,6 @@
 class AddIndexesToDocumentTables < ActiveRecord::Migration[4.2]
   def change
-    sql = <<-SQL
+    sql = <<-SQL.squish
   WITH duplicated_document_citation_taxon_concepts AS (
     SELECT primary_id, cnt, UNNEST(ids) AS id FROM (
       SELECT MIN(id) AS primary_id, COUNT(*) AS cnt, ARRAY_AGG_NOTNULL(id) AS ids
@@ -23,7 +23,7 @@ class AddIndexesToDocumentTables < ActiveRecord::Migration[4.2]
     add_index 'document_citation_taxon_concepts', [ 'taxon_concept_id', 'document_citation_id' ],
       name: 'index_citation_taxon_concepts_on_taxon_concept_id_citation_id',
       unique: true
-    sql = <<-SQL
+    sql = <<-SQL.squish
   WITH duplicated_document_citation_geo_entities AS (
     SELECT primary_id, cnt, UNNEST(ids) AS id FROM (
       SELECT MIN(id) AS primary_id, COUNT(*) AS cnt, ARRAY_AGG_NOTNULL(id) AS ids

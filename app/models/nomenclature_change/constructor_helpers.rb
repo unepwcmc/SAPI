@@ -227,7 +227,7 @@ module NomenclatureChange::ConstructorHelpers
     I18n.with_locale(lng) do
       I18n.t(
         'in_year',
-        year: (event && event.effective_at.try(:year)) || Date.today.year,
+        year: (event && event.effective_at.try(:year)) || Time.zone.today.year,
         default: ''
       )
     end

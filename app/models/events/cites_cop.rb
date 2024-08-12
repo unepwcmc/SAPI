@@ -41,7 +41,7 @@ class CitesCop < Event
   validates :effective_at, presence: true
 
   before_validation do
-    cites = Designation.find_by_name('CITES')
+    cites = Designation.find_by(name: 'CITES')
     self.designation_id = cites && cites.id
   end
 

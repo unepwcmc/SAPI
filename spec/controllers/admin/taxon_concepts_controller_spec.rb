@@ -82,7 +82,7 @@ describe Admin::TaxonConceptsController do
           taxon_concept: { taxonomy_id: nil }
         }, xhr: true
 
-        expect(JSON.parse(response.body)).to include('errors')
+        expect(response.parsed_body).to include('errors')
       end
     end
     context 'when HTML' do

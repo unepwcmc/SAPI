@@ -46,7 +46,7 @@ describe Admin::EuOpinionsController do
           post :create, params: { eu_opinion: {
             eu_decision_type_id: @eu_decision_type.id,
             srg_history_id: @srg_history.id,
-            start_date: Date.today,
+            start_date: Time.zone.today,
             document_id: @document.id,
             geo_entity_id: create(
               :geo_entity, geo_entity_type_id: country_geo_entity_type.id
@@ -60,7 +60,7 @@ describe Admin::EuOpinionsController do
           post :create, params: { eu_opinion: {
             eu_decision_type_id: @eu_decision_type.id,
             srg_history_id: @srg_history.id,
-            start_date: Date.today,
+            start_date: Time.zone.today,
             start_event_id: @eu_regulation.id,
             geo_entity_id: create(
               :geo_entity, geo_entity_type_id: country_geo_entity_type.id

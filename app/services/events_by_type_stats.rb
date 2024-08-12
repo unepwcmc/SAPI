@@ -5,7 +5,7 @@ class EventsByTypeStats
   end
 
   def data
-    Ahoy::Event.from(<<-SQL
+    Ahoy::Event.from(<<-SQL.squish
       (
         WITH weeks_as_timestamps AS (
           SELECT * FROM generate_series(

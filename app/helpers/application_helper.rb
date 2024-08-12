@@ -1,6 +1,6 @@
 module ApplicationHelper
   def speciesplus_taxon_concept_id_url(taxon_concept_id)
-    speciesplus_taxon_concept_url(TaxonConcept.find_by_id(taxon_concept_id))
+    speciesplus_taxon_concept_url(TaxonConcept.find_by(id: taxon_concept_id))
   end
 
   def speciesplus_taxon_concept_url(taxon_concept)
@@ -23,7 +23,7 @@ module ApplicationHelper
         end
       elsif field == :password
         resource.errors.messages[:password].select do |message|
-          !message.include? 'confirmation'
+          message.exclude?('confirmation')
         end
       else
         resource.errors.messages[field&.to_sym]

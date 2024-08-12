@@ -62,7 +62,7 @@ class Trade::Sandbox
   def shipments=(new_shipments)
     # TODO: handle errors
     new_shipments.each do |shipment|
-      s = @ar_klass.find_by_id(shipment.delete('id'))
+      s = @ar_klass.find_by(id: shipment.delete('id'))
       s.delete_or_update_attributes(shipment)
     end
   end

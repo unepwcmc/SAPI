@@ -7,13 +7,13 @@ class AddTimestampsToSandboxTemplate < ActiveRecord::Migration[4.2]
 
     change_column :trade_sandbox_template, :created_at, :datetime,
       null: false
-    execute <<-SQL
+    execute <<-SQL.squish
       ALTER TABLE "trade_sandbox_template" ALTER COLUMN "created_at"
       SET DEFAULT (NOW() at time zone 'utc')
     SQL
     change_column :trade_sandbox_template, :updated_at, :datetime,
       null: false
-    execute <<-SQL
+    execute <<-SQL.squish
       ALTER TABLE "trade_sandbox_template" ALTER COLUMN "updated_at"
       SET DEFAULT (NOW() at time zone 'utc')
     SQL

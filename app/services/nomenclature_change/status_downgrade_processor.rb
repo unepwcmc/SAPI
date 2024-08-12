@@ -60,7 +60,7 @@ class NomenclatureChange::StatusDowngradeProcessor < NomenclatureChange::StatusC
       @input_or_output.taxon_concept.inverse_trade_name_relationships
     )
     rel_type = TaxonRelationshipType.
-      find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+      find_by(name: TaxonRelationshipType::HAS_SYNONYM)
     # set input_or_output as synonym of linked names
     create_inverse_relationships(@input_or_output.taxon_concept, rel_type)
   end
@@ -76,7 +76,7 @@ class NomenclatureChange::StatusDowngradeProcessor < NomenclatureChange::StatusC
       @input_or_output.taxon_concept.trade_name_relationships
     )
     rel_type = TaxonRelationshipType.
-      find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+      find_by(name: TaxonRelationshipType::HAS_SYNONYM)
     # set input_or_output as synonym of linked names
     create_inverse_relationships(@input_or_output.taxon_concept, rel_type)
   end

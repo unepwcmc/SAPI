@@ -9,9 +9,7 @@ class Trade::ChangelogCsvGenerator
       Trade::SandboxTemplate::IMPORTER_COLUMNS
     end
 
-    sapi_users = Hash[
-      User.select('id, name').all.map { |u| [ u.id, u.name ] }
-    ]
+    sapi_users = User.select('id, name').all.to_h { |u| [ u.id, u.name ] }
 
     tempfile = Tempfile.new([ "changelog_sapi_#{aru.id}-", '.csv' ], Rails.root.join('tmp'))
 
@@ -26,7 +24,7 @@ class Trade::ChangelogCsvGenerator
       offset = 0
       query = ar_klass.includes(:versions).limit(limit).offset(offset)
       while query.any?
-        query.all.each do |shipment|
+        query.find_each do |shipment|
           duplicate = (duplicates && duplicates.split(',').include?(shipment.id.to_s)) ? 'D' : ''
           values = [ shipment.id, nil, nil, shipment.created_at, nil ] +
             data_columns.map do |dc|

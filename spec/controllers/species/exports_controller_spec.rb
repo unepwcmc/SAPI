@@ -4,7 +4,7 @@ describe Species::ExportsController do
   context 'when data type and filters not given' do
     it 'returns unprocessable entity status' do
       get :download
-      expect(response.status).to eq(422)
+      expect(response).to have_http_status(422)
     end
   end
   context 'with ip address to csv separator conversion' do

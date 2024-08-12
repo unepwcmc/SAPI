@@ -126,7 +126,7 @@ class MTaxonConcept < ApplicationRecord
       show_in_downloads: true
     ).order(
       Arel.sql(
-        <<-SQL
+        <<-SQL.squish
           effective_at,
           CASE
           WHEN change_type_name = 'ADDITION' THEN 0
@@ -183,7 +183,7 @@ class MTaxonConcept < ApplicationRecord
   end
 
   def self.descendants_ids(taxon_concept)
-    query = <<-SQL
+    query = <<-SQL.squish
     WITH RECURSIVE descendents AS (
       SELECT id, rank_id, full_name
       FROM #{self.table_name}
@@ -197,7 +197,7 @@ class MTaxonConcept < ApplicationRecord
     ORDER BY rank_id ASC, full_name
     SQL
     res = ApplicationRecord.connection.execute(query)
-    res.ntuples.zero? ? [ taxon_concept.to_i ] : res.map(&:values).flatten << taxon_concept.to_i
+    res.ntuples == 0 ? [ taxon_concept.to_i ] : res.map(&:values).flatten << taxon_concept.to_i
   end
 
   def spp
@@ -230,7 +230,7 @@ class MTaxonConcept < ApplicationRecord
   def db_ary_to_array(ary)
     if respond_to?(ary)
       attr = send(ary)
-      return [] unless attr.present?
+      return [] if attr.blank?
       attr.map(&:to_s)
     else
       []

@@ -111,7 +111,7 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
       years_columns.map { |y| "#{y} text" }
     ].flatten.join(', ')
     # a set returning query requires that output columns are specified
-    <<-SQL
+    <<-SQL.squish
       SELECT * FROM CROSSTAB('#{source_sql}', '#{categories_sql}')
       AS ct(#{ct_columns})
     SQL

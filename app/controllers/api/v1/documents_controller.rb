@@ -96,7 +96,7 @@ class Api::V1::DocumentsController < ApplicationController
             "{\n  title: #{document.title},\n  filename: #{filename}\n}"
         else
           zos.put_next_entry(filename)
-          zos.print IO.read(path_to_file)
+          zos.print File.read(path_to_file)
         end
       end
       if missing_files.present?

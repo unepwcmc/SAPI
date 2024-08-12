@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Api::V1::DocumentsController, type: :controller do
+describe Api::V1::DocumentsController do
   before(:each) do
     @taxon_concept = create_cites_eu_species
     @subspecies = create_cites_eu_subspecies(parent: @taxon_concept)
@@ -83,7 +83,7 @@ describe Api::V1::DocumentsController, type: :controller do
     login_api_user
     it 'should return 403 status when permission denied' do
       get :show, params: { id: @document2.id }
-      expect(response.status).to eq(403)
+      expect(response).to have_http_status(403)
     end
   end
 
@@ -99,7 +99,7 @@ describe Api::V1::DocumentsController, type: :controller do
       it 'should return 404 if file is missing' do
         expect(File).to receive(:exist?).and_return(false)
         get :download_zip, params: { ids: @document2.id }
-        expect(response.status).to eq(404)
+        expect(response).to have_http_status(404)
       end
       it 'should return zip file if file is found' do
         allow(controller).to receive(:render)
@@ -113,7 +113,7 @@ describe Api::V1::DocumentsController, type: :controller do
       it 'should return 404 if all files are missing' do
         expect(File).to receive(:exist?).and_return(false, false)
         get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
-        expect(response.status).to eq(404)
+        expect(response).to have_http_status(404)
       end
 
       it 'should return zip file if at least a file is found' do

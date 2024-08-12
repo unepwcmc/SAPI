@@ -73,17 +73,17 @@ class DocumentSearch
       @query = @query.where(event_id: @events_ids)
       return
     end
-    return unless @event_type.present?
+    return if @event_type.blank?
     if @event_type == 'Other'
       # public interface event type "other"
       @query = @query.where(
-        <<-SQL
+        <<-SQL.squish
           event_type IS NULL
           OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'CitesTc', 'CitesExtraordinaryMeeting', 'IdMaterials')
         SQL
       )
     else
-      @query = @query.where('event_type IN (?)', @event_type.split(','))
+      @query = @query.where(event_type: @event_type.split(','))
     end
   end
 
@@ -91,24 +91,24 @@ class DocumentSearch
     @query = @query.search_by_title(@title_query) if @title_query.present?
 
     if @document_type.present?
-      @query = @query.where('document_type IN (?)', @document_type.split(','))
+      @query = @query.where(document_type: @document_type.split(','))
     end
 
     if @volume.present?
-      @query = @query.where('volume IN (?)', @volume)
+      @query = @query.where(volume: @volume)
     end
 
     if admin_interface?
       if @document_date_start.present?
-        @query = @query.where('documents.date_raw >= ?', @document_date_start)
+        @query = @query.where(documents: { date_raw: @document_date_start.. })
       end
       if @document_date_end.present?
-        @query = @query.where('documents.date_raw <= ?', @document_date_end)
+        @query = @query.where(documents: { date_raw: ..@document_date_end })
       end
     end
 
     if @general_subtype.present?
-      @query = @query.where('general_subtype IN (?)', @general_subtype.split(',').flatten)
+      @query = @query.where(general_subtype: @general_subtype.split(',').flatten)
     end
   end
 
@@ -189,7 +189,7 @@ class DocumentSearch
       proposal_number, primary_document_id,
       geo_entity_names, taxon_names, taxon_concept_ids,
       proposal_outcome, review_phase"
-    aggregators = <<-SQL
+    aggregators = <<-SQL.squish
       ARRAY_TO_JSON(
         ARRAY_AGG_NOTNULL(
           ROW(
@@ -207,8 +207,8 @@ class DocumentSearch
   end
 
   def locale_document
-    return 'TRUE' unless @language.present?
-    <<-SQL
+    return 'TRUE' if @language.blank?
+    <<-SQL.squish
       CASE
       WHEN documents.language = '#{@language.upcase}' AND '#{@language}' = 'en'
       THEN 'true'
@@ -234,7 +234,7 @@ class DocumentSearch
   end
 
   def self.citations_need_refreshing?
-    puts DocumentCitation.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).to_sql
+    Rails.logger.debug DocumentCitation.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).to_sql
     DocumentCitation.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).limit(1).count > 0 ||
     DocumentCitation.count < DocumentCitation.select('DISTINCT id').
       from('document_citations_mview AS citations').count

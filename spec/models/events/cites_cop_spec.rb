@@ -34,7 +34,7 @@ describe CitesCop do
           designation: eu
         )
       end
-      specify { expect(cites_cop).to be_invalid }
+      specify { expect(cites_cop).not_to be_valid }
       specify { expect(cites_cop).to have(1).error_on(:designation_id) }
     end
     context 'when effective_at is blank' do
@@ -44,7 +44,7 @@ describe CitesCop do
           effective_at: nil
         )
       end
-      specify { expect(cites_cop).to be_invalid }
+      specify { expect(cites_cop).not_to be_valid }
       specify { expect(cites_cop).to have(1).error_on(:effective_at) }
     end
   end

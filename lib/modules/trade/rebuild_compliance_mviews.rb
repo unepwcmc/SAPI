@@ -1,23 +1,23 @@
 module Trade::RebuildComplianceMviews
   def self.run
-    puts 'Trade::RebuildComplianceMviews.run starting'
+    Rails.logger.debug 'Trade::RebuildComplianceMviews.run starting'
 
     [
       :appendix_i,
       :mandatory_quotas,
       :cites_suspensions
     ].each do |p|
-      time = "#{Time.now.hour}#{Time.now.min}#{Time.now.sec}"
-      timestamp = Date.today.to_s.gsub('-', '') + time
-      puts "Rebuild #{p} SQL script..."
+      time = "#{Time.zone.now.hour}#{Time.zone.now.min}#{Time.zone.now.sec}"
+      timestamp = Time.zone.today.to_s.gsub('-', '') + time
+      Rails.logger.debug { "Rebuild #{p} SQL script..." }
       self.rebuild_sql_views(p, timestamp)
-      puts "Rebuild #{p} mview..."
+      Rails.logger.debug { "Rebuild #{p} mview..." }
       self.rebuild_compliance_mview(p)
     end
 
     recreate_non_compliant_view
 
-    puts 'Trade::RebuildComplianceMviews.run complete'
+    Rails.logger.debug 'Trade::RebuildComplianceMviews.run complete'
   end
 
   def self.rebuild_sql_views(type, timestamp)
@@ -41,26 +41,26 @@ module Trade::RebuildComplianceMviews
     mview_name = "trade_shipments_#{type}_mview"
     ApplicationRecord.transaction do
       command = "DROP MATERIALIZED VIEW IF EXISTS #{mview_name} CASCADE"
-      puts command
-      puts db.execute(command)
+      Rails.logger.debug command
+      Rails.logger.debug db.execute(command)
 
       command = "DROP VIEW IF EXISTS #{view_name}"
-      puts command
+      Rails.logger.debug command
       db.execute(command)
 
       command = "CREATE VIEW #{view_name} AS #{ActiveRecord::Migration.view_sql(sql_view, view_name)}"
-      puts command
+      Rails.logger.debug command
       db.execute(command)
 
       command = "CREATE MATERIALIZED VIEW #{mview_name} AS SELECT * FROM #{view_name}"
-      puts command
+      Rails.logger.debug command
       db.execute(command)
     end
   end
 
   def self.recreate_non_compliant_view
     command = 'SELECT rebuild_non_compliant_shipments_view()'
-    puts command
+    Rails.logger.debug command
     db.execute(command)
   end
 

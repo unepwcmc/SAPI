@@ -44,10 +44,8 @@ module ComparisonAttributes
   def comparison_conditions(comparison_attributes = nil)
     comparison_attributes ||= self.comparison_attributes
     a = self.class.all
-    arel_nodes = []
-    comparison_attributes.each do |attr_name, attr_val|
-      arel_nodes <<
-        if self.class.text_attributes.include? attr_name
+    arel_nodes = comparison_attributes.map do |attr_name, attr_val|
+      if self.class.text_attributes.include? attr_name
           Arel::Nodes::NamedFunction.new('SQUISH_NULL', [ a.table[attr_name] ]).
             eq(attr_val.presence).to_sql
         # ActiveRecord 4 saves arrays as '[]' instead of using the postgres notation '{}'
@@ -57,7 +55,7 @@ module ComparisonAttributes
         # otherwise, it will perform an array equality check.
         # I had to transform all the queries into strings because I couldn't find a proper way
         # to do this using Arel.
-        elsif attr_val.is_a?(Array)
+      elsif attr_val.is_a?(Array)
           if attr_val.compact.length > 0
             %Q("#{a.table_name}"."#{attr_name}" = ARRAY[#{attr_val.join(',')}]::INTEGER[])
           else
@@ -68,9 +66,9 @@ module ComparisonAttributes
               'ARRAY_LENGTH', [ a.table[attr_name], 1 ]
             ).eq(nil).to_sql
           end
-        else
+      else
           a.table[attr_name].eq(attr_val).to_sql
-        end
+      end
     end
     arel_nodes.join(' AND ')
   end

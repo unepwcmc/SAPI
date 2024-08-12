@@ -15,7 +15,7 @@ class MTaxonConceptFilterByIdWithDescendants
       ancestor_ranks.map { |r| "#{r.downcase}_id" }
     ).map { |c| "#{@table}.#{c}" }
     @relation.where(
-      <<-SQL
+      <<-SQL.squish
       ARRAY[#{fields_to_check.join(', ')}] &&
       ARRAY[#{@ids.join(', ')}]
       SQL

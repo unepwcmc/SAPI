@@ -132,7 +132,7 @@ module DownloadsCache
   end
 
   def self.update_checklist_downloads
-    puts 'Updating CITES Checklist downloads'
+    Rails.logger.debug 'Updating CITES Checklist downloads'
     modules = [
       Checklist::Pdf,
       Checklist::Csv,
@@ -154,76 +154,76 @@ module DownloadsCache
         elapsed_time = Benchmark.realtime do
           puts m::Index.new(params).generate
         end
-        puts "#{Time.now} #{m}::Index download #{locale} generated in #{elapsed_time}s"
+        Rails.logger.debug { "#{Time.zone.now} #{m}::Index download #{locale} generated in #{elapsed_time}s" }
         elapsed_time = Benchmark.realtime do
           puts m::History.new(params).generate
         end
-        puts "#{Time.now} #{m}::History download #{locale} generated in #{elapsed_time}s"
+        Rails.logger.debug { "#{Time.zone.now} #{m}::History download #{locale} generated in #{elapsed_time}s" }
       end
     end
   end
 
   def self.update_species_downloads
-    puts 'Updating Species+ downloads'
+    Rails.logger.debug 'Updating Species+ downloads'
     Designation.dict.each do |d|
       elapsed_time = Benchmark.realtime do
         Species::ListingsExportFactory.new(designation: d).export
       end
-      puts "#{Time.now} #{d} Listings download generated in #{elapsed_time}s"
+      Rails.logger.debug { "#{Time.zone.now} #{d} Listings download generated in #{elapsed_time}s" }
     end
 
     elapsed_time = Benchmark.realtime do
       CitesSuspension.export('set' => 'current')
     end
-    puts "#{Time.now} current CITES Suspensions download generated in #{elapsed_time}s"
+    Rails.logger.debug { "#{Time.zone.now} current CITES Suspensions download generated in #{elapsed_time}s" }
     elapsed_time = Benchmark.realtime do
       CitesSuspension.export('set' => 'all')
     end
-    puts "#{Time.now} all CITES Suspensions download generated in #{elapsed_time}s"
+    Rails.logger.debug { "#{Time.zone.now} all CITES Suspensions download generated in #{elapsed_time}s" }
 
     elapsed_time = Benchmark.realtime do
       Quota.export('set' => 'current')
     end
-    puts "#{Time.now} current CITES Quotas download generated in #{elapsed_time}s"
+    Rails.logger.debug { "#{Time.zone.now} current CITES Quotas download generated in #{elapsed_time}s" }
     elapsed_time = Benchmark.realtime do
       Quota.export('set' => 'all')
     end
-    puts "#{Time.now} all CITES Quotas download generated in #{elapsed_time}s"
+    Rails.logger.debug { "#{Time.zone.now} all CITES Quotas download generated in #{elapsed_time}s" }
 
     elapsed_time = Benchmark.realtime do
       Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
     end
-    puts "#{Time.now} current EU Decisions download generated in #{elapsed_time}s"
+    Rails.logger.debug { "#{Time.zone.now} current EU Decisions download generated in #{elapsed_time}s" }
     elapsed_time = Benchmark.realtime do
       Species::EuDecisionsExport.new(set: 'all', decision_types: {}).export
     end
-    puts "#{Time.now} all EU Decisions download generated in #{elapsed_time}s"
+    Rails.logger.debug { "#{Time.zone.now} all EU Decisions download generated in #{elapsed_time}s" }
   end
 
   def self.update_admin_downloads
-    puts 'Updating admin downloads'
+    Rails.logger.debug 'Updating admin downloads'
     [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
-      puts "#{taxonomy_name} Names"
+      Rails.logger.debug { "#{taxonomy_name} Names" }
       elapsed_time = Benchmark.realtime do
         Species::TaxonConceptsNamesExport.new(taxonomy: taxonomy_name).export
       end
-      puts "#{Time.now} Taxon Concepts Names #{taxonomy_name} download generated in #{elapsed_time}s"
-      puts "#{taxonomy_name} Synonyms and Trade Names"
+      Rails.logger.debug { "#{Time.zone.now} Taxon Concepts Names #{taxonomy_name} download generated in #{elapsed_time}s" }
+      Rails.logger.debug { "#{taxonomy_name} Synonyms and Trade Names" }
       elapsed_time = Benchmark.realtime do
         Species::SynonymsAndTradeNamesExport.new(taxonomy: taxonomy_name).export
       end
-      puts "#{Time.now} Synonyms & Trade Names #{taxonomy_name} download generated in #{elapsed_time}s"
-      puts "#{taxonomy_name} Distributions"
+      Rails.logger.debug { "#{Time.zone.now} Synonyms & Trade Names #{taxonomy_name} download generated in #{elapsed_time}s" }
+      Rails.logger.debug { "#{taxonomy_name} Distributions" }
       elapsed_time = Benchmark.realtime do
         Species::TaxonConceptsDistributionsExport.new(taxonomy: taxonomy_name).export
       end
-      puts "#{Time.now} Distributions #{taxonomy_name} download generated in #{elapsed_time}s"
-      puts "#{Time.now} Common Names #{taxonomy_name} download generated in #{elapsed_time}s"
-      puts "#{taxonomy_name} Common Names"
+      Rails.logger.debug { "#{Time.zone.now} Distributions #{taxonomy_name} download generated in #{elapsed_time}s" }
+      Rails.logger.debug { "#{Time.zone.now} Common Names #{taxonomy_name} download generated in #{elapsed_time}s" }
+      Rails.logger.debug { "#{taxonomy_name} Common Names" }
       elapsed_time = Benchmark.realtime do
         Species::CommonNamesExport.new(taxonomy: taxonomy_name).export
       end
-      puts "#{Time.now} Common Names #{taxonomy_name} download generated in #{elapsed_time}s"
+      Rails.logger.debug { "#{Time.zone.now} Common Names #{taxonomy_name} download generated in #{elapsed_time}s" }
     end
   end
 end

@@ -75,7 +75,7 @@ class GeoEntity < ApplicationRecord
   after_commit :geo_entity_search_increment_cache_iterator
 
   def self.nodes_and_descendants(nodes_ids = [])
-    joins_sql = <<-SQL
+    joins_sql = <<-SQL.squish
       INNER JOIN (
         WITH RECURSIVE search_tree(id) AS (
             SELECT id

@@ -2,7 +2,7 @@ class UpdateTaxonomyWorker
   include Sidekiq::Worker
 
   def perform
-    puts 'Procedure: taxonomy'
+    Rails.logger.debug 'Procedure: taxonomy'
     ApplicationRecord.connection.execute(
       'SELECT * FROM rebuild_taxonomy()'
     )

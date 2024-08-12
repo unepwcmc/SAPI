@@ -3,7 +3,7 @@ class QuotasCopyWorker
   sidekiq_options queue: :admin, retry: false, backtrace: 50
 
   def perform(options)
-    sql = <<-SQL
+    sql = <<-SQL.squish
         SELECT * FROM copy_quotas_across_years(
           :from_year,
           :start_date,

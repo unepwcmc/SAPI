@@ -3,7 +3,7 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
   attr_reader :query
 
   def initialize
-    @query = TaxonConcept.from(<<-SQL
+    @query = TaxonConcept.from(<<-SQL.squish
       (
         WITH cites_species (
           id, legacy_id,

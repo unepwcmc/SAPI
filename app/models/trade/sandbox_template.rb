@@ -106,13 +106,13 @@ class Trade::SandboxTemplate < ApplicationRecord
 
         def destroy
           super
-          self.class.update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
+          self.class.update_all(updated_at: Time.zone.now) # bump timestamp to ensure errors refreshed
         end
 
         def self.records_for_batch_operation(validation_error, annual_report_upload)
           vr = validation_error.validation_rule
           joins(
-            <<-SQL
+            <<-SQL.squish
             JOIN (
               #{vr.matching_records_for_aru_and_error(annual_report_upload, validation_error).to_sql}
             ) matching_records on #{table_name}.id = matching_records.id
@@ -122,7 +122,7 @@ class Trade::SandboxTemplate < ApplicationRecord
 
         def self.update_batch(updates, validation_error, annual_report_upload)
           return unless updates
-          updates[:updated_at] = Time.now
+          updates[:updated_at] = Time.zone.now
           records_for_batch_operation(validation_error, annual_report_upload).
             update_all(updates.to_h)
           sanitize
@@ -131,7 +131,7 @@ class Trade::SandboxTemplate < ApplicationRecord
         def self.destroy_batch(validation_error, annual_report_upload)
           records_for_batch_operation(validation_error, annual_report_upload).
             each(&:delete)
-          update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
+          update_all(updated_at: Time.zone.now) # bump timestamp to ensure errors refreshed
         end
       end
       Trade.const_set(klass_name, klass)
@@ -141,14 +141,14 @@ class Trade::SandboxTemplate < ApplicationRecord
   private
 
   def self.create_table_stmt(target_table_name)
-    sql = <<-SQL
+    sql = <<-SQL.squish
       CREATE TABLE #{target_table_name} (PRIMARY KEY(id))
       INHERITS (#{table_name})
     SQL
   end
 
   def self.create_indexes_stmt(target_table_name)
-    sql = <<-SQL
+    sql = <<-SQL.squish
       CREATE INDEX ON #{target_table_name} (trading_partner);
       CREATE INDEX ON #{target_table_name} (term_code);
       CREATE INDEX ON #{target_table_name} (taxon_name);
@@ -171,7 +171,7 @@ class Trade::SandboxTemplate < ApplicationRecord
   end
 
   def self.drop_stmt(target_table_name)
-    sql = <<-SQL
+    sql = <<-SQL.squish
       DROP TABLE IF EXISTS #{target_table_name} CASCADE
     SQL
   end

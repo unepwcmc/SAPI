@@ -64,11 +64,11 @@ class Quota < TradeRestriction
   ]
 
   def start_date_formatted
-    start_date ? start_date.strftime('%d/%m/%Y') : Time.now.beginning_of_year.strftime('%d/%m/%Y')
+    start_date ? start_date.strftime('%d/%m/%Y') : Time.zone.now.beginning_of_year.strftime('%d/%m/%Y')
   end
 
   def end_date_formatted
-    end_date ? end_date.strftime('%d/%m/%Y') : Time.now.end_of_year.strftime('%d/%m/%Y')
+    end_date ? end_date.strftime('%d/%m/%Y') : Time.zone.now.end_of_year.strftime('%d/%m/%Y')
   end
 
   def self.search(query)
@@ -80,7 +80,7 @@ class Quota < TradeRestriction
             OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(taxon_concepts.full_name) LIKE UPPER(:query)",
         query: "%#{query}%").
-        joins(<<-SQL
+        joins(<<-SQL.squish
           LEFT JOIN taxon_concepts
             ON taxon_concepts.id = trade_restrictions.taxon_concept_id
           LEFT JOIN geo_entities

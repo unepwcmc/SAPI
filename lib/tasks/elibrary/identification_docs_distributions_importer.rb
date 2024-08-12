@@ -1,12 +1,12 @@
 class Elibrary::IdentificationDocsDistributionsImporter
   def self.run
-    puts 'Importing distributions at species level...'
+    Rails.logger.debug 'Importing distributions at species level...'
     import_species_distributions
-    puts 'Importing distributions at higher taxa level...'
+    Rails.logger.debug 'Importing distributions at higher taxa level...'
     import_higher_taxa_distributions
-    puts 'Managing exceptions'
+    Rails.logger.debug 'Managing exceptions'
     exceptions
-    puts 'Refresh materialized views'
+    Rails.logger.debug 'Refresh materialized views'
     DocumentSearch.refresh_citations_and_documents
   end
 
@@ -14,7 +14,7 @@ class Elibrary::IdentificationDocsDistributionsImporter
 
   # import distribution on material documents tagged at species level
   def self.import_species_distributions
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH doc_taxon_tmp AS (
       SELECT dc.id doc_cit_id, dctc.taxon_concept_id tc_id
       FROM document_citation_taxon_concepts dctc
@@ -51,7 +51,7 @@ class Elibrary::IdentificationDocsDistributionsImporter
 
   # import distribution on material documents tagged at level higher than species
   def self.import_higher_taxa_distributions
-    sql = <<-SQL
+    sql = <<-SQL.squish
     WITH doc_taxon_tmp AS (
       SELECT DISTINCT(dc.id) doc_cit_id, UNNEST(d.taxon_concept_ids)tc_ids
       FROM document_citation_taxon_concepts dctc
@@ -86,7 +86,7 @@ class Elibrary::IdentificationDocsDistributionsImporter
                 FROM UNNEST(ARRAY#{countries_ids}) geo_entity_id"
       end
 
-      query = <<-SQL
+      query = <<-SQL.squish
        WITH doc_cit_country_tmp AS (
          #{sql.join("\n\nUNION\n\n")}
        )
@@ -124,7 +124,7 @@ class Elibrary::IdentificationDocsDistributionsImporter
       doc = Document.where(manual_id: exception[:manual_id]).first
       doc_cit_id = DocumentCitation.where(document_id: doc.id).first.id
       DocumentCitationGeoEntity.where(document_citation_id: doc_cit_id).destroy_all
-      geo_id = GeoEntity.find_by_name_en(exception[:geo_entity]).id
+      geo_id = GeoEntity.find_by(name_en: exception[:geo_entity]).id
       DocumentCitationGeoEntity.create!(document_citation_id: doc_cit_id, geo_entity_id: geo_id)
     end
   end

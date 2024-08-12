@@ -76,7 +76,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def generate_view(timestamp)
-    Dir.mkdir(VIEW_DIR) unless Dir.exist?(VIEW_DIR)
+    FileUtils.mkdir_p(VIEW_DIR)
     # timestamp = Time.now.strftime('%Y%m%d%H%M%S')
     File.write("#{VIEW_DIR}/#{timestamp}.sql", @final_query)
   end
@@ -180,7 +180,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def parse_end_date(date)
-    year = date == 'Present' ? Date.today.year : date.split('/').last.to_i
+    year = date == 'Present' ? Time.zone.today.year : date.split('/').last.to_i
     "ts.year <= #{year}"
   end
 

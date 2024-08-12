@@ -60,7 +60,7 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
 
   def load_hybrid_relationship_type
     @hybrid_relationship_type = TaxonRelationshipType.
-      find_by_name(TaxonRelationshipType::HAS_HYBRID)
+      find_by(name: TaxonRelationshipType::HAS_HYBRID)
   end
 
   private

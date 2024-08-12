@@ -27,7 +27,7 @@ module Trade::DownloadDataRetriever
           "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]}"
         end
       else
-        "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year >= '2012' AND year <= '#{Date.today.year - 1}' ORDER BY year DESC"
+        "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year >= '2012' AND year <= '#{Time.zone.today.year - 1}' ORDER BY year DESC"
       end
     query_runner(query)
   end
@@ -39,7 +39,7 @@ module Trade::DownloadDataRetriever
     query =
       case params[:group_by]
       when 'exporting'
-        <<-SQL
+        <<-SQL.squish
                SELECT #{ATTRIBUTES.join(',')}
                FROM non_compliant_shipments_view
                WHERE year = #{year}
@@ -48,7 +48,7 @@ module Trade::DownloadDataRetriever
       when 'species'
         appendix = params[:appendix]
         if appendix.present?
-          <<-SQL
+          <<-SQL.squish
                 SELECT #{ATTRIBUTES.join(',')}
                 FROM non_compliant_shipments_view
                 WHERE year = #{year}
@@ -56,7 +56,7 @@ module Trade::DownloadDataRetriever
                 AND appendix = '#{appendix}'
           SQL
         else
-          <<-SQL
+          <<-SQL.squish
                 SELECT #{ATTRIBUTES.join(',')}
                 FROM non_compliant_shipments_view
                 WHERE year = #{year}
@@ -64,7 +64,7 @@ module Trade::DownloadDataRetriever
           SQL
         end
       when 'commodity'
-        <<-SQL
+        <<-SQL.squish
                SELECT #{ATTRIBUTES.join(',')}
                FROM non_compliant_shipments_view
                WHERE year = #{year}

@@ -2,9 +2,9 @@ class Trade::StatisticsController < TradeController
   layout 'admin'
 
   def index
-    @start_date = params[:stats_start_date] ? Date.parse(params[:stats_start_date]) : Date.today.beginning_of_year
-    @end_date = params[:stats_end_date] ? Date.parse(params[:stats_end_date]) : Date.today
-    @years = (1975..Date.today.year).to_a.reverse
+    @start_date = params[:stats_start_date] ? Date.parse(params[:stats_start_date]) : Time.zone.today.beginning_of_year
+    @end_date = params[:stats_end_date] ? Date.parse(params[:stats_end_date]) : Time.zone.today
+    @years = (1975..Time.zone.today.year).to_a.reverse
     @total_shipments = Trade::Shipment.count
     @last_updated = Trade::Shipment.maximum(:updated_at).strftime('%d/%m/%Y %H:%M')
     @shipments_uploaded = Trade::Shipment.
@@ -21,7 +21,7 @@ class Trade::StatisticsController < TradeController
     @created_date_selected = if params[:date]
                                params[:date]['createdDateSelected'].to_i
     else
-                               Time.now.year
+                               Time.zone.now.year
     end
     @countries_reported_by_date_created = YearAnnualReportsByCountry.
       where(year_created: @created_date_selected)
@@ -31,7 +31,7 @@ class Trade::StatisticsController < TradeController
     @date_selected = if params[:date]
                        Date.parse("01/01/#{params[:date]['yearSelected']}")
     else
-                       Date.today
+                       Time.zone.today
     end
     @countries_reported_by_year = YearAnnualReportsByCountry.where(year: @date_selected.year)
   end

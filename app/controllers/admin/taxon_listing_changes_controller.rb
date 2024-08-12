@@ -94,7 +94,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
     @change_types = @designation.change_types.order(:name).
       where("name <> '#{ChangeType::EXCEPTION}'")
     @exception_change_type = @designation.change_types.
-      find_by_name(ChangeType::EXCEPTION)
+      find_by(name: ChangeType::EXCEPTION)
     @species_listings = @designation.species_listings.order(:abbreviation)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(is_current: true, geo_entity_types: { name: [ 'COUNTRY', 'REGION' ] })

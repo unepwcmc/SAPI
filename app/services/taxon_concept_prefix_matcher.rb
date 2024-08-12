@@ -16,7 +16,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
   def initialize_rel
     super.
       select(
-      <<-SQL
+      <<-SQL.squish
         data,
         taxonomy_id,
         #{Taxonomy.table_name}.name AS taxonomy_name,
@@ -53,7 +53,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
       taxon_concept = TaxonConcept.find(@taxon_concept_id) if @taxon_concept_scope
       if @taxon_concept_scope.to_sym == :ancestors
         @taxon_concepts = @taxon_concepts.joins(
-          <<-SQL
+          <<-SQL.squish
           INNER JOIN (
             WITH RECURSIVE node AS (
               SELECT h.id, h.parent_id
@@ -75,7 +75,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
 
       elsif @taxon_concept_scope.to_sym == :descendants
         @taxon_concepts = @taxon_concepts.joins(
-          <<-SQL
+          <<-SQL.squish
           INNER JOIN (
             WITH RECURSIVE node AS (
               SELECT h.id

@@ -7,7 +7,7 @@ class MTaxonConceptFilterByAppendixQuery
 
   def initialize_species_listings_conditions(designation_name = 'CITES')
     unless @appendix_abbreviations.empty?
-      @appendix_abbreviations_conditions = <<-SQL
+      @appendix_abbreviations_conditions = <<-SQL.squish
         REGEXP_SPLIT_TO_ARRAY(
           #{@table}.#{designation_name.downcase}_listing_original,
           '/'

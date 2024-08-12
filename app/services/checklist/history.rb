@@ -34,7 +34,7 @@ class Checklist::History < Checklist::Checklist
   def prepare_main_query
     @taxon_concepts_rel = MTaxonConcept.where(taxonomy_is_cites_eu: true).
       where(
-        <<-SQL
+        <<-SQL.squish
         EXISTS (
           SELECT * FROM cites_listing_changes_mview
           WHERE taxon_concept_id = taxon_concepts_mview.id

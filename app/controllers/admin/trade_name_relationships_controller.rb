@@ -60,7 +60,7 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
 
   def load_trade_name_relationship_type
     @trade_name_relationship_type = TaxonRelationshipType.
-      find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
+      find_by(name: TaxonRelationshipType::HAS_TRADE_NAME)
   end
 
   private

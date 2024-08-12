@@ -37,7 +37,7 @@ describe EuOpinion do
         )
       end
 
-      specify { expect(eu_opinion).to be_invalid }
+      specify { expect(eu_opinion).not_to be_valid }
       specify { expect(eu_opinion).to have(1).error_on(:taxon_concept) }
     end
 
@@ -48,7 +48,7 @@ describe EuOpinion do
         )
       end
 
-      specify { expect(eu_opinion).to be_invalid }
+      specify { expect(eu_opinion).not_to be_valid }
       specify { expect(eu_opinion.error_on(:geo_entity).size).to eq(1) }
     end
 
@@ -57,7 +57,7 @@ describe EuOpinion do
         build(:eu_opinion, start_date: nil)
       end
 
-      specify { expect(eu_opinion).to be_invalid }
+      specify { expect(eu_opinion).not_to be_valid }
       specify { expect(eu_opinion.error_on(:start_date).size).to eq(1) }
     end
 

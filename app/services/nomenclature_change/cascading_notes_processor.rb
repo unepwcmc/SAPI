@@ -38,7 +38,7 @@ class NomenclatureChange::CascadingNotesProcessor
     end
     # if it is a genus or a species, we want taxon-level nomenclature notes,
     # both public and private, to cascade to descendents
-    subquery = <<-SQL
+    subquery = <<-SQL.squish
       WITH RECURSIVE descendents AS (
         SELECT id,
           full_name,

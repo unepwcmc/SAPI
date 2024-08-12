@@ -30,7 +30,7 @@ describe Admin::ReferencesController do
 
   describe 'XHR POST create' do
     it 'renders create when successful' do
-      post :create, params: { reference: FactoryBot.attributes_for(:reference) }, xhr: true
+      post :create, params: { reference: attributes_for(:reference) }, xhr: true
       expect(response).to render_template('create')
     end
     it 'renders new when not successful' do
@@ -47,7 +47,7 @@ describe Admin::ReferencesController do
     end
     it 'responds with json when not successful' do
       put :update, format: 'json', params: { id: reference.id, reference: { citation: nil } }, xhr: true
-      expect(JSON.parse(response.body)).to include('errors')
+      expect(response.parsed_body).to include('errors')
     end
   end
 

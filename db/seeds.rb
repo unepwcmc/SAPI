@@ -8,46 +8,46 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-puts "#{ListingDistribution.delete_all} listing distributions deleted"
-puts "#{GeoRelationship.delete_all} geo relationships deleted"
-puts "#{GeoRelationshipType.delete_all} geo relationship types deleted"
+Rails.logger.debug { "#{ListingDistribution.delete_all} listing distributions deleted" }
+Rails.logger.debug { "#{GeoRelationship.delete_all} geo relationships deleted" }
+Rails.logger.debug { "#{GeoRelationshipType.delete_all} geo relationship types deleted" }
 GeoRelationshipType.dict.each do |type|
   GeoRelationshipType.create!(name: type)
 end
-puts "#{GeoRelationshipType.count} geo relationship types created"
+Rails.logger.debug { "#{GeoRelationshipType.count} geo relationship types created" }
 
-puts "#{DistributionReference.delete_all} taxon concept geo entity references deleted"
-puts "#{Distribution.delete_all} taxon concept geo entities deleted"
+Rails.logger.debug { "#{DistributionReference.delete_all} taxon concept geo entity references deleted" }
+Rails.logger.debug { "#{Distribution.delete_all} taxon concept geo entities deleted" }
 ListingChange.update_all annotation_id: nil
-puts "#{Annotation.delete_all} annotations deleted"
-puts "#{ListingChange.delete_all} listing changes deleted"
-puts "#{GeoEntity.delete_all} geo entities deleted"
-puts "#{GeoEntityType.delete_all} geo entity types deleted"
+Rails.logger.debug { "#{Annotation.delete_all} annotations deleted" }
+Rails.logger.debug { "#{ListingChange.delete_all} listing changes deleted" }
+Rails.logger.debug { "#{GeoEntity.delete_all} geo entities deleted" }
+Rails.logger.debug { "#{GeoEntityType.delete_all} geo entity types deleted" }
 GeoEntityType.dict.each do |type|
   GeoEntityType.create!(name: type)
 end
-puts "#{GeoEntityType.count} geo entity types created"
+Rails.logger.debug { "#{GeoEntityType.count} geo entity types created" }
 
-puts "#{TaxonRelationship.delete_all} taxon relationships deleted"
-puts "#{TaxonRelationshipType.delete_all} taxon relationship types deleted"
+Rails.logger.debug { "#{TaxonRelationship.delete_all} taxon relationships deleted" }
+Rails.logger.debug { "#{TaxonRelationshipType.delete_all} taxon relationship types deleted" }
 [ 'EQUAL_TO', 'INCLUDES', 'OVERLAPS', 'DISJUNCT' ].each do |relationship|
   TaxonRelationshipType.create!(name: relationship, is_intertaxonomic: true, is_bidirectional: [ 'EQUAL_TO', 'DISJUNCT' ].include?(relationship))
 end
 [ 'HAS_SYNONYM', 'HAS_HYBRID', 'HAS_TRADE_NAME' ].each do |relationship|
   TaxonRelationshipType.create!(name: relationship, is_intertaxonomic: false)
 end
-puts "#{TaxonRelationshipType.count} taxon relationship types created"
+Rails.logger.debug { "#{TaxonRelationshipType.count} taxon relationship types created" }
 
-puts "#{TaxonCommon.delete_all} taxon commons deleted"
-puts "#{TaxonConceptReference.delete_all} taxon_concept references deleted"
-puts "#{TaxonConcept.delete_all} taxon_concepts deleted"
-puts "#{TaxonName.delete_all} taxon_names deleted"
-puts "#{Rank.delete_all} ranks deleted"
+Rails.logger.debug { "#{TaxonCommon.delete_all} taxon commons deleted" }
+Rails.logger.debug { "#{TaxonConceptReference.delete_all} taxon_concept references deleted" }
+Rails.logger.debug { "#{TaxonConcept.delete_all} taxon_concepts deleted" }
+Rails.logger.debug { "#{TaxonName.delete_all} taxon_names deleted" }
+Rails.logger.debug { "#{Rank.delete_all} ranks deleted" }
 
-puts "#{Quota.delete_all} quotas deleted"
-puts "#{TradeRestrictionTerm.delete_all} trade restrictions terms deleted"
-puts "#{TradeRestrictionSource.delete_all} trade restrictions sources deleted"
-puts "#{TradeRestrictionPurpose.delete_all} trade restrictions purposes deleted"
+Rails.logger.debug { "#{Quota.delete_all} quotas deleted" }
+Rails.logger.debug { "#{TradeRestrictionTerm.delete_all} trade restrictions terms deleted" }
+Rails.logger.debug { "#{TradeRestrictionSource.delete_all} trade restrictions sources deleted" }
+Rails.logger.debug { "#{TradeRestrictionPurpose.delete_all} trade restrictions purposes deleted" }
 
 Rank.create!(name: Rank::KINGDOM, display_name_en: Rank::KINGDOM, taxonomic_position: '1', fixed_order: true)
 Rank.create!(name: Rank::PHYLUM, display_name_en: Rank::PHYLUM, taxonomic_position: '2', fixed_order: true)
@@ -60,15 +60,15 @@ Rank.create!(name: Rank::SPECIES, display_name_en: Rank::SPECIES, taxonomic_posi
 Rank.create!(name: Rank::SUBSPECIES, display_name_en: Rank::SUBSPECIES, taxonomic_position: '7.1', fixed_order: false)
 Rank.create!(name: Rank::VARIETY, display_name_en: Rank::VARIETY, taxonomic_position: '7.2', fixed_order: false)
 
-puts "#{Rank.count} ranks created"
+Rails.logger.debug { "#{Rank.count} ranks created" }
 
-puts "#{SpeciesListing.delete_all} species listings deleted"
-puts "#{ChangeType.delete_all} change types deleted"
-puts "#{Event.delete_all} events deleted"
-puts "#{Designation.delete_all} designations deleted"
-puts "#{Taxonomy.delete_all} taxonomies deleted"
+Rails.logger.debug { "#{SpeciesListing.delete_all} species listings deleted" }
+Rails.logger.debug { "#{ChangeType.delete_all} change types deleted" }
+Rails.logger.debug { "#{Event.delete_all} events deleted" }
+Rails.logger.debug { "#{Designation.delete_all} designations deleted" }
+Rails.logger.debug { "#{Taxonomy.delete_all} taxonomies deleted" }
 
-puts "#{DocumentTag.delete_all} document tags deleted"
+Rails.logger.debug { "#{DocumentTag.delete_all} document tags deleted" }
 
 [
   'I', 'II', 'III', 'IV', 'June 1986', 'None',
@@ -92,14 +92,14 @@ puts "#{DocumentTag.delete_all} document tags deleted"
   'Adopted'
 ].each { |tag| DocumentTag::ProposalOutcome.create!(name: tag) }
 
-puts "#{DocumentTag.count} document tags created"
+Rails.logger.debug { "#{DocumentTag.count} document tags created" }
 
 Taxonomy.dict.each do |type|
   Taxonomy.create!(name: type)
 end
-taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
-cms_taxonomy = Taxonomy.find_by_name(Taxonomy::CMS)
-puts "#{Taxonomy.count} taxonomies created"
+taxonomy = Taxonomy.find_by(name: Taxonomy::CITES_EU)
+cms_taxonomy = Taxonomy.find_by(name: Taxonomy::CMS)
+Rails.logger.debug { "#{Taxonomy.count} taxonomies created" }
 
 [ Designation::CITES, Designation::EU ].each do |designation|
   d = Designation.create!(name: designation, taxonomy_id: taxonomy.id)
@@ -113,10 +113,10 @@ end
   d = Designation.create!(name: designation, taxonomy_id: cms_taxonomy.id)
 end
 
-puts "#{Designation.count} designations created"
-puts "#{ChangeType.count} change types created"
+Rails.logger.debug { "#{Designation.count} designations created" }
+Rails.logger.debug { "#{ChangeType.count} change types created" }
 
-cites = Designation.find_by_name(Designation::CITES)
+cites = Designation.find_by(name: Designation::CITES)
 
 %w[I II III].each do |app_abbr|
   SpeciesListing.create!(
@@ -126,7 +126,7 @@ cites = Designation.find_by_name(Designation::CITES)
   )
 end
 
-eu = Designation.find_by_name(Designation::EU)
+eu = Designation.find_by(name: Designation::EU)
 
 %w[A B C D].each do |app_abbr|
   SpeciesListing.create!(
@@ -136,7 +136,7 @@ eu = Designation.find_by_name(Designation::EU)
   )
 end
 
-cms = Designation.find_by_name(Designation::CMS)
+cms = Designation.find_by(name: Designation::CMS)
 
 %w[I II].each do |app_abbr|
   SpeciesListing.create!(
@@ -146,7 +146,7 @@ cms = Designation.find_by_name(Designation::CMS)
   )
 end
 
-puts "#{SpeciesListing.count} species listings created"
+Rails.logger.debug { "#{SpeciesListing.count} species listings created" }
 
 higher_taxa = [
   {
@@ -316,7 +316,7 @@ higher_taxa = [
   }
 ]
 
-kingdom_rank_id = Rank.find_by_name(Rank::KINGDOM).id
+kingdom_rank_id = Rank.find_by(name: Rank::KINGDOM).id
 higher_taxa.each do |kingdom_props|
   kingdom_name = kingdom_props[:name]
   [ cms_taxonomy, taxonomy ].each do |taksonomy|
@@ -329,7 +329,7 @@ higher_taxa.each do |kingdom_props|
       taxonomic_position: kingdom_props[:taxonomic_position],
       name_status: 'A')
     phyla = kingdom_props[:sub_taxa]
-    phylum_rank_id = Rank.find_by_name(Rank::PHYLUM).id
+    phylum_rank_id = Rank.find_by(name: Rank::PHYLUM).id
     phyla.each do |phylum_props|
       phylum_name = phylum_props[:name]
       name = TaxonName.find_or_create_by(scientific_name: phylum_name)
@@ -341,7 +341,7 @@ higher_taxa.each do |kingdom_props|
         taxonomic_position: phylum_props[:taxonomic_position],
         name_status: 'A')
       klasses = phylum_props[:sub_taxa]
-      klass_rank_id = Rank.find_by_name(Rank::CLASS).id
+      klass_rank_id = Rank.find_by(name: Rank::CLASS).id
       klasses.each do |klass_props|
         klass_name = klass_props[:name]
         name = TaxonName.find_or_create_by(scientific_name: klass_name)
@@ -357,13 +357,13 @@ higher_taxa.each do |kingdom_props|
   end
 end
 
-puts "#{TaxonConcept.count} taxon_concepts created"
-puts "#{TaxonName.count} taxon_names created"
+Rails.logger.debug { "#{TaxonConcept.count} taxon_concepts created" }
+Rails.logger.debug { "#{TaxonName.count} taxon_names created" }
 
-puts "#{CommonName.delete_all} common names deleted"
-puts "#{Language.delete_all} languages deleted"
-puts "#{Reference.delete_all} references deleted"
-puts "#{TradeRestriction.delete_all} trade restrictions deleted"
+Rails.logger.debug { "#{CommonName.delete_all} common names deleted" }
+Rails.logger.debug { "#{Language.delete_all} languages deleted" }
+Rails.logger.debug { "#{Reference.delete_all} references deleted" }
+Rails.logger.debug { "#{TradeRestriction.delete_all} trade restrictions deleted" }
 
 [ 'trading_partner', 'term_code', 'taxon_name', 'appendix', 'quantity', 'year' ].each do |col|
   Trade::PresenceValidationRule.create!(column_names: [ col ], run_order: 1)

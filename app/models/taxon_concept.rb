@@ -251,7 +251,7 @@ class TaxonConcept < ApplicationRecord
   translates :nomenclature_note
 
   scope :at_parent_ranks, lambda { |rank|
-    joins_sql = <<-SQL
+    joins_sql = <<-SQL.squish
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position >= ?
         AND ranks.taxonomic_position < ?
@@ -264,7 +264,7 @@ class TaxonConcept < ApplicationRecord
   }
 
   scope :at_ancestor_ranks, lambda { |rank|
-    joins_sql = <<-SQL
+    joins_sql = <<-SQL.squish
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position < ?
     SQL
@@ -274,7 +274,7 @@ class TaxonConcept < ApplicationRecord
   }
 
   scope :at_self_and_ancestor_ranks, lambda { |rank|
-    joins_sql = <<-SQL
+    joins_sql = <<-SQL.squish
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position <= ?
     SQL
@@ -286,13 +286,13 @@ class TaxonConcept < ApplicationRecord
   def self.fetch_taxons_full_name(taxon_ids)
     if taxon_ids.present?
       ApplicationRecord.connection.execute(
-        <<-SQL
+        <<-SQL.squish
           SELECT tc.full_name
           FROM taxon_concepts tc
           WHERE tc.id = ANY (ARRAY#{taxon_ids.map(&:to_i)})
           ORDER BY tc.id
         SQL
-      ).map { |row| row['full_name'] }
+      ).pluck('full_name')
     end
   end
 
@@ -390,7 +390,7 @@ class TaxonConcept < ApplicationRecord
 
   def inherited_standard_taxon_concept_references
     ref_ids = taxon_concept_references.map(&:reference_id)
-    standard_taxon_concept_references.keep_if { |ref| !ref_ids.include? ref.id }
+    standard_taxon_concept_references.keep_if { |ref| ref_ids.exclude?(ref.id) }
   end
 
   def expected_full_name(parent)
@@ -431,11 +431,11 @@ class TaxonConcept < ApplicationRecord
       rel_type =
         case name_status
         when 'S'
-          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+          TaxonRelationshipType.find_by(name: TaxonRelationshipType::HAS_SYNONYM)
         when 'T'
-          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
+          TaxonRelationshipType.find_by(name: TaxonRelationshipType::HAS_TRADE_NAME)
         when 'H'
-          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_HYBRID)
+          TaxonRelationshipType.find_by(name: TaxonRelationshipType::HAS_HYBRID)
         end
       add_remove_relationships(new_taxa, removed_taxa, rel_type)
     end

@@ -16,18 +16,18 @@ module Elibrary
 
     def drop_table_if_exists(table_name)
       ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
-      puts 'Table removed'
+      Rails.logger.debug 'Table removed'
     end
 
     def create_table_from_column_array(table_name, db_columns_with_type)
       drop_table_if_exists(table_name)
       ApplicationRecord.connection.execute "CREATE TABLE #{table_name} (#{db_columns_with_type.join(', ')})"
-      puts 'Table created'
+      Rails.logger.debug 'Table created'
     end
 
     def copy_from_csv(path_to_file, table_name, db_columns)
       require 'psql_command'
-      puts "Copying data from #{path_to_file} into #{table_name}"
+      Rails.logger.debug { "Copying data from #{path_to_file} into #{table_name}" }
       cmd = <<-PSQL
     SET DateStyle = "ISO,DMY";
     \\COPY #{table_name} (#{db_columns.join(', ')})
@@ -37,7 +37,7 @@ module Elibrary
     CSV HEADER
     PSQL
       PsqlCommand.new(cmd).execute
-      puts 'Data copied to tmp table'
+      Rails.logger.debug 'Data copied to tmp table'
     end
 
     def print_query_counts
@@ -45,7 +45,7 @@ module Elibrary
       queries['rows_to_insert'] = "SELECT COUNT(*) FROM (#{rows_to_insert_sql}) AS t"
       queries.each do |q_name, q|
         res = ApplicationRecord.connection.execute(q)
-        puts "#{res[0]['count']} #{q_name.humanize}"
+        Rails.logger.debug { "#{res[0]['count']} #{q_name.humanize}" }
       end
     end
 

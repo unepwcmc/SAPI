@@ -88,7 +88,7 @@ class Checklist::DocumentsController < ApplicationController
             "{\n  path: #{path_to_file},\n  filename: #{filename}\n}"
         else
           zos.put_next_entry("Identification-materials-#{filename}")
-          zos.print IO.read(doc_path)
+          zos.print File.read(doc_path)
         end
         if missing_files.present?
           if missing_files.length == @pdf_file_paths.count

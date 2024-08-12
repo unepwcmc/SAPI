@@ -30,7 +30,7 @@ describe Admin::TaxonomiesController do
 
   describe 'XHR POST create' do
     it 'renders create when successful' do
-      post :create, params: { taxonomy: FactoryBot.attributes_for(:taxonomy) }, xhr: true
+      post :create, params: { taxonomy: attributes_for(:taxonomy) }, xhr: true
       expect(response).to render_template('create')
     end
     it 'renders new when not successful' do
@@ -47,7 +47,7 @@ describe Admin::TaxonomiesController do
     end
     it 'responds with json when not successful' do
       put :update, format: 'json', params: { id: taxonomy.id, taxonomy: { name: nil } }, xhr: true
-      expect(JSON.parse(response.body)).to include('errors')
+      expect(response.parsed_body).to include('errors')
     end
   end
 

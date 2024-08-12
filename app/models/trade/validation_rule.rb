@@ -142,14 +142,14 @@ class Trade::ValidationRule < ApplicationRecord
       when 'exporter', 'importer', 'country_of_origin'
         tmp_def = {}
         (scope_def.keys & [ 'inclusion', 'exclusion' ]).each do |k|
-          tmp_def[k] = scope_def[k].map { |value| GeoEntity.find_by_iso_code2(value).id }
+          tmp_def[k] = scope_def[k].map { |value| GeoEntity.find_by(iso_code2: value).id }
         end
         tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
         res[scope_column + '_id'] = tmp_def
       when /(.+)_code$/
         tmp_def = {}
         (scope_def.keys & [ 'inclusion', 'exclusion' ]).each do |k|
-          tmp_def[k] = scope_def[k].map { |value| TradeCode.find_by_type_and_code($1.capitalize, value).id }
+          tmp_def[k] = scope_def[k].map { |value| TradeCode.find_by(type: $1.capitalize, code: value).id }
         end
         tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
         res[$1 + '_id'] = tmp_def

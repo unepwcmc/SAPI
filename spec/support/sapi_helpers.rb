@@ -9,16 +9,16 @@ shared_context :sapi do
 
   def cites
     return @_cites if @_cites
-    d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::CITES)
+    d = Designation.find_by(taxonomy_id: cites_eu.id, name: Designation::CITES)
     unless d
       d = create(:designation, name: Designation::CITES, taxonomy: cites_eu)
       %w[ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION].each do |ch|
-        ch_type = ChangeType.find_by_designation_id_and_name(d.id, ch)
+        ch_type = ChangeType.find_by(designation_id: d.id, name: ch)
         unless ch_type
           create(:change_type, name: ch, designation: d)
         end
         %w[I II III].each do |app|
-          unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
+          unless SpeciesListing.find_by(designation_id: d.id, abbreviation: app)
             create(
               :species_listing, name: "Appendix #{app}", abbreviation: app,
               designation: d
@@ -32,15 +32,15 @@ shared_context :sapi do
 
   def eu
     return @_eu if @_eu
-    d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::EU)
+    d = Designation.find_by(taxonomy_id: cites_eu.id, name: Designation::EU)
     unless d
       d = create(:designation, name: Designation::EU, taxonomy: cites_eu)
       %w[ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION].each do |ch|
-        unless ChangeType.find_by_designation_id_and_name(d.id, ch)
+        unless ChangeType.find_by(designation_id: d.id, name: ch)
           create(:change_type, name: ch, designation: d)
         end
         %w[A B C D].each do |app|
-          unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
+          unless SpeciesListing.find_by(designation_id: d.id, abbreviation: app)
             create(
               :species_listing, name: "Annex #{app}", abbreviation: app,
               designation: d
@@ -54,15 +54,15 @@ shared_context :sapi do
 
   def cms_designation
     return @_cms_designation if @_cms_designation
-    d = Designation.find_by_taxonomy_id_and_name(cms.id, Designation::CMS)
+    d = Designation.find_by(taxonomy_id: cms.id, name: Designation::CMS)
     unless d
       d = create(:designation, name: Designation::CMS, taxonomy: cms)
       %w[ADDITION DELETION EXCEPTION].each do |ch|
-        unless ChangeType.find_by_designation_id_and_name(d.id, ch)
+        unless ChangeType.find_by(designation_id: d.id, name: ch)
           create(:change_type, name: ch, designation: d)
         end
         %w[I II].each do |app|
-          unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
+          unless SpeciesListing.find_by(designation_id: d.id, abbreviation: app)
             create(
               :species_listing, name: "Appendix #{app}", abbreviation: app,
               designation: d
@@ -76,16 +76,16 @@ shared_context :sapi do
 
   %w[ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION].each do |ch|
     define_method "cites_#{ch.downcase}" do
-      ChangeType.find_by_designation_id_and_name(cites.id, ch)
+      ChangeType.find_by(designation_id: cites.id, name: ch)
     end
 
     define_method "eu_#{ch.downcase}" do
-      ChangeType.find_by_designation_id_and_name(eu.id, ch)
+      ChangeType.find_by(designation_id: eu.id, name: ch)
     end
 
     %w[I II III].each do |app|
       define_method "cites_#{app}" do
-        SpeciesListing.find_by_designation_id_and_abbreviation(cites.id, app)
+        SpeciesListing.find_by(designation_id: cites.id, abbreviation: app)
       end
       define_method "create_cites_#{app}_#{ch.downcase}" do |options = {}|
         create(
@@ -99,7 +99,7 @@ shared_context :sapi do
     end
     %w[A B C D].each do |app|
       define_method "eu_#{app}" do
-        SpeciesListing.find_by_designation_id_and_abbreviation(eu.id, app)
+        SpeciesListing.find_by(designation_id: eu.id, abbreviation: app)
       end
       define_method "create_eu_#{app}_#{ch.downcase}" do |options = {}|
         create(
@@ -115,12 +115,12 @@ shared_context :sapi do
 
   %w[ADDITION DELETION EXCEPTION].each do |ch|
     define_method "cms_#{ch.downcase}" do
-      ChangeType.find_by_designation_id_and_name(cms_designation.id, ch)
+      ChangeType.find_by(designation_id: cms_designation.id, name: ch)
     end
 
     %w[I II].each do |app|
       define_method "cms_#{app}" do
-        SpeciesListing.find_by_designation_id_and_abbreviation(cms_designation.id, app)
+        SpeciesListing.find_by(designation_id: cms_designation.id, abbreviation: app)
       end
       define_method "create_cms_#{app}_#{ch.downcase}" do |options = {}|
         create(

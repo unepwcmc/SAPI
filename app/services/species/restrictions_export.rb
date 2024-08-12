@@ -16,7 +16,6 @@ class Species::RestrictionsExport
   ]
 
   def self.fill_taxon_columns(restriction)
-    columns = []
     remark = ''
     case restriction.taxon_concept.try(:name_status)
     when 'A'
@@ -35,8 +34,8 @@ class Species::RestrictionsExport
       taxon = nil
     end
     return [ '' ] * (TAXONOMY_COLUMNS.size + 1) unless taxon # return array with empty strings
-    TAXONOMY_COLUMNS.each do |c|
-      columns << taxon.send(c)
+    columns = TAXONOMY_COLUMNS.map do |c|
+      taxon.send(c)
     end
     columns << remark
     columns

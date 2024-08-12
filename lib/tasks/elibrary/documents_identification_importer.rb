@@ -31,7 +31,7 @@ class Elibrary::DocumentsIdentificationImporter
 
   def run_queries
     # insert master documents
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       ), rows_to_insert_resolved AS (
@@ -75,7 +75,7 @@ class Elibrary::DocumentsIdentificationImporter
     ApplicationRecord.connection.execute(sql)
 
     # now insert the documents to be linked with the master document
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_with_master_document_id AS (
         SELECT
         rows_to_insert.Type,
@@ -128,7 +128,7 @@ class Elibrary::DocumentsIdentificationImporter
 
   def all_rows_sql
     event = Event.where(name: 'Identification Materials').first_or_create { |e| e.type = 'IdMaterials' }
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT
         CASE WHEN BTRIM(t.Type) LIKE '%Manual%' THEN 'Document::IdManual'
              WHEN BTRIM(t.Type) LIKE '%Virtual%' THEN 'Document::VirtualCollege'
@@ -150,7 +150,7 @@ class Elibrary::DocumentsIdentificationImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT * FROM (
         #{all_rows_sql}
       ) all_rows_in_table_name
@@ -184,7 +184,7 @@ class Elibrary::DocumentsIdentificationImporter
   end
 
   def print_breakdown
-    puts "#{Time.now} There are #{Document.count} documents in total"
+    Rails.logger.debug { "#{Time.zone.now} There are #{Document.count} documents in total" }
     Document.group(:type).order(:type).count.each do |type, count|
       puts "\t #{type} #{count}"
     end

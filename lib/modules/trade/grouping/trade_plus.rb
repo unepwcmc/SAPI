@@ -5,7 +5,7 @@ class Trade::Grouping::TradePlus
 
   def group_query
     columns = @attributes.compact.uniq.join(',')
-    <<-SQL
+    <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt
       FROM #{shipments_table}
       WHERE #{@condition}

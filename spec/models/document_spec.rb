@@ -54,7 +54,7 @@ describe Document, sidekiq: :inline do
           date: nil
         )
       end
-      specify { expect(document).to be_invalid }
+      specify { expect(document).not_to be_valid }
       specify { expect(document).to have(1).error_on(:date) }
     end
     context 'setting title from filename' do
@@ -81,7 +81,7 @@ describe Document, sidekiq: :inline do
         primary_language_document_id: primary_document.id)
       end
 
-      specify { expect(document2).to be_invalid }
+      specify { expect(document2).not_to be_valid }
       specify { expect(document2).to have(1).error_on(:primary_language_document_id) }
     end
   end

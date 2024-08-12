@@ -48,8 +48,7 @@ class NomenclatureChange < ApplicationRecord
   end
 
   def in_progress?
-    ![ NomenclatureChange::SUBMITTED, NomenclatureChange::CLOSED ].
-      include?(status)
+    [ NomenclatureChange::SUBMITTED, NomenclatureChange::CLOSED ].exclude?(status)
   end
 
   def submitting?

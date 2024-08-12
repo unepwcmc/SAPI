@@ -230,18 +230,18 @@ class ListingChange < ApplicationRecord
     original_change_type = ChangeType.find(change_type_id)
 
     @excluded_geo_entities_ids = @excluded_geo_entities_ids &&
-      @excluded_geo_entities_ids.reject(&:blank?).map(&:to_i)
+      @excluded_geo_entities_ids.compact_blank.map(&:to_i)
 
     @excluded_taxon_concepts_ids = @excluded_taxon_concepts_ids &&
-      @excluded_taxon_concepts_ids.split(',').reject(&:blank?).map(&:to_i)
+      @excluded_taxon_concepts_ids.split(',').compact_blank.map(&:to_i)
 
     return self if original_change_type.name == ChangeType::EXCEPTION
     return self if @excluded_geo_entities_ids.nil? &&
       @excluded_taxon_concepts_ids.nil?
 
     new_exclusions = []
-    exclusion_change_type = ChangeType.find_by_name_and_designation_id(
-      ChangeType::EXCEPTION, original_change_type.designation_id
+    exclusion_change_type = ChangeType.find_by(
+      name: ChangeType::EXCEPTION, designation_id: original_change_type.designation_id
     )
 
     # geographic exclusions

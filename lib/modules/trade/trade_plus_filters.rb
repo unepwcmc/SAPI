@@ -24,7 +24,7 @@ class Trade::TradePlusFilters
   end
 
   def query
-    <<-SQL
+    <<-SQL.squish
       SELECT *
       FROM (#{inner_query}) AS s
     SQL
@@ -74,7 +74,7 @@ class Trade::TradePlusFilters
     query << sub_query([ "group_name_#{locale}", "group_name_#{locale}" ], 'taxonomic_groups')
     query << country_query
 
-    <<-SQL
+    <<-SQL.squish
       #{query.join(' UNION ') }
     SQL
   end
@@ -88,7 +88,7 @@ class Trade::TradePlusFilters
 
     #  Exclude possible null values for taxonomic groups
     condition = "WHERE #{attributes[0]} IS NOT NULL" if attributes[0] == "group_name_#{locale}"
-    <<-SQL
+    <<-SQL.squish
       SELECT '#{as}' AS attribute_name, json_build_object(#{json_values})::jsonb AS data
       FROM #{table_name}
       #{condition}

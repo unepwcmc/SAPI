@@ -69,7 +69,7 @@ class EuSuspension < EuDecision
 
   def is_current
     return false if !start_event
-    start_event.effective_at <= Date.today && start_event.is_current &&
-      (!end_event || end_event.effective_at > Date.today)
+    start_event.effective_at <= Time.zone.today && start_event.is_current &&
+      (!end_event || end_event.effective_at > Time.zone.today)
   end
 end

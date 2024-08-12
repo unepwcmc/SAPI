@@ -3,7 +3,7 @@ class Api::V1::SourcesController < ApplicationController
 
   def index
     @all_rows = Rails.cache.fetch(CACHE_KEY_ALL, expires_in: 1.hour) do
-      Source.all.order(:code).as_json
+      Source.order(:code).as_json
     end
 
     render json: @all_rows.map { |row_data| Source.new(row_data) },

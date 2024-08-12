@@ -1,7 +1,7 @@
 class UpdateDocumentsViewForSearch < ActiveRecord::Migration[4.2]
   def up
     execute 'DROP VIEW IF EXISTS api_documents_view'
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE TYPE document_language_version AS (
         id INT,
         title TEXT,

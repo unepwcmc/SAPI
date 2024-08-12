@@ -42,7 +42,7 @@ class Trade::AnnualReportUploadsController < TradeController
 
   def destroy
     @annual_report_upload = Trade::AnnualReportUpload.find(params[:id])
-    unless @annual_report_upload.submitted_at.present?
+    if @annual_report_upload.submitted_at.blank?
       @annual_report_upload.destroy
       render json: nil, status: :ok
     else

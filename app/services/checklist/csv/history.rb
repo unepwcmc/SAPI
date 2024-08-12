@@ -10,7 +10,7 @@ class Checklist::Csv::History < Checklist::History
         'cites_listing_changes_mview.show_in_downloads': true
       ).
       joins('LEFT JOIN geo_entities ON cites_listing_changes_mview.party_id = geo_entities.id').
-      order(Arel.sql(<<-SQL
+      order(Arel.sql(<<-SQL.squish
         taxonomic_position, effective_at,
         CASE
           WHEN change_type_name = 'ADDITION' THEN 0

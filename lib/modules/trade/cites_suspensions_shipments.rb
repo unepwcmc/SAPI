@@ -10,7 +10,7 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
   end
 
   def generate_view(timestamp)
-    Dir.mkdir(VIEW_DIR) unless Dir.exist?(VIEW_DIR)
+    FileUtils.mkdir_p(VIEW_DIR)
     File.write("#{VIEW_DIR}/#{timestamp}.sql", @query)
   end
 

@@ -18,7 +18,7 @@ describe Admin::LanguagesController do
 
   describe 'XHR POST create' do
     it 'renders create when successful' do
-      post :create, params: { language: FactoryBot.attributes_for(:language) }, xhr: true
+      post :create, params: { language: attributes_for(:language) }, xhr: true
       expect(response).to render_template('create')
     end
     it 'renders new when not successful' do
@@ -35,7 +35,7 @@ describe Admin::LanguagesController do
     end
     it 'responds with json when not successful' do
       put :update, format: 'json', params: { id: language.id, language: { iso_code1: 'zzz' } }, xhr: true
-      expect(JSON.parse(response.body)).to include('errors')
+      expect(response.parsed_body).to include('errors')
     end
   end
 

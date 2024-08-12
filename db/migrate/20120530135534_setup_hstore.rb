@@ -1,7 +1,7 @@
 class SetupHstore < ActiveRecord::Migration[4.2]
   def self.up
     if Rails.env.staging? or Rails.env.production?
-      puts 'Please add extension by hand: CREATE EXTENSION hstore'
+      Rails.logger.debug 'Please add extension by hand: CREATE EXTENSION hstore'
     else
       execute 'CREATE EXTENSION IF NOT EXISTS hstore'
     end
@@ -9,7 +9,7 @@ class SetupHstore < ActiveRecord::Migration[4.2]
 
   def self.down
     if Rails.env.staging? or Rails.env.production?
-      puts 'Please drop extension by hand: DROP EXTENSION hstore'
+      Rails.logger.debug 'Please drop extension by hand: DROP EXTENSION hstore'
     else
       execute 'DROP EXTENSION hstore'
     end

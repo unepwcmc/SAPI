@@ -11,7 +11,7 @@ module Trade::TradeDataDownloadLogger
     data['appendix'] = search_params['appendix']
     data['unit'] = search_params['unit']
     data['taxon'] = TaxonConcept.where(id: search_params[:taxon_concepts_ids]).
-      order(:full_name).select(:full_name).map(&:full_name).join(', ')
+      order(:full_name).pluck(:full_name).join(', ')
     data['term'] = self.get_field_values(search_params[:terms_ids], Term)
     data['purpose'] = self.get_field_values(search_params[:purposes_ids], Purpose)
     data['source'] = self.get_field_values(search_params[:sources_ids], Source)

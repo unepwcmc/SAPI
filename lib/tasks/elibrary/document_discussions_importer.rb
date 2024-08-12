@@ -34,7 +34,7 @@ class Elibrary::DocumentDiscussionsImporter
 
   def run_queries
     # insert missing discussions
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH missing_discussions AS (
         SELECT DISTINCT DiscussionTitle FROM #{table_name}
         EXCEPT
@@ -47,7 +47,7 @@ class Elibrary::DocumentDiscussionsImporter
     ApplicationRecord.connection.execute(sql)
 
     # update documents
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       )
@@ -60,7 +60,7 @@ class Elibrary::DocumentDiscussionsImporter
   end
 
   def all_rows_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT
         DocumentID,
         CAST(DocumentOrder AS INT) AS DocumentOrder,
@@ -70,7 +70,7 @@ class Elibrary::DocumentDiscussionsImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT
       d.id AS id,
       DocumentOrder,
@@ -96,8 +96,8 @@ class Elibrary::DocumentDiscussionsImporter
   end
 
   def print_breakdown
-    puts <<-EOT
-      #{Time.now} There are #{Document.where.not(discussion_id: nil).count} documents
+    Rails.logger.debug { <<-EOT }
+      #{Time.zone.now} There are #{Document.where.not(discussion_id: nil).count} documents
       in #{DocumentTag.where(type: 'DocumentTag::Discussion').count} discussions in total
     EOT
   end

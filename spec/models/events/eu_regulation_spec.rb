@@ -42,7 +42,7 @@ describe EuRegulation do
           designation: cites
         )
       end
-      specify { expect(eu_regulation).to be_invalid }
+      specify { expect(eu_regulation).not_to be_valid }
       specify { expect(eu_regulation).to have(1).error_on(:designation_id) }
     end
     context 'when effective_at is blank' do
@@ -52,7 +52,7 @@ describe EuRegulation do
           effective_at: nil
         )
       end
-      specify { expect(eu_regulation).to be_invalid }
+      specify { expect(eu_regulation).not_to be_valid }
       specify { expect(eu_regulation).to have(1).error_on(:effective_at) }
     end
   end

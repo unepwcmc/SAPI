@@ -42,7 +42,7 @@ describe TaxonConcept do
 
       describe :current_party_ids do
         context 'for species Mellivora capensis' do
-          specify { expect(@species.current_parties_ids).to eq([ GeoEntity.find_by_iso_code2('BW').id ]) }
+          specify { expect(@species.current_parties_ids).to eq([ GeoEntity.find_by(iso_code2: 'BW').id ]) }
         end
       end
     end

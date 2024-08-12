@@ -61,7 +61,7 @@ describe Admin::GeoEntitiesController do
     end
     it 'responds with json when not successful' do
       put :update, format: 'json', params: { id: geo_entity.id, geo_entity: { iso_code2: nil } }, xhr: true
-      expect(JSON.parse(response.body)).to include('errors')
+      expect(response.parsed_body).to include('errors')
     end
   end
 

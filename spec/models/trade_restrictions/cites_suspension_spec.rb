@@ -207,7 +207,7 @@ describe CitesSuspension, sidekiq: :inline do
           )
         end
 
-        specify { expect(cites_suspension).to be_invalid }
+        specify { expect(cites_suspension).not_to be_valid }
         specify { expect(cites_suspension.error_on(:start_notification).size).to eq(1) }
       end
 
@@ -221,7 +221,7 @@ describe CitesSuspension, sidekiq: :inline do
           )
         end
 
-        specify { expect(cites_suspension).to be_invalid }
+        specify { expect(cites_suspension).not_to be_valid }
         specify { expect(cites_suspension.error_on(:start_date).size).to eq(1) }
       end
 

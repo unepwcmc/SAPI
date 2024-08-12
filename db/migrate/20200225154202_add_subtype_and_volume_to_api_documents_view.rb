@@ -10,7 +10,7 @@ class AddSubtypeAndVolumeToApiDocumentsView < ActiveRecord::Migration[4.2]
       name: 'index_documents_mview_on_event_id'
     add_index :api_documents_mview, [ :date_raw ],
       name: 'index_documents_mview_on_date_raw'
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE INDEX index_documents_mview_on_title_to_ts_vector
       ON api_documents_mview
       USING gin
@@ -29,7 +29,7 @@ class AddSubtypeAndVolumeToApiDocumentsView < ActiveRecord::Migration[4.2]
       name: 'index_documents_mview_on_event_id'
     add_index :api_documents_mview, [ :date_raw ],
       name: 'index_documents_mview_on_date_raw'
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE INDEX index_documents_mview_on_title_to_ts_vector
       ON api_documents_mview
       USING gin

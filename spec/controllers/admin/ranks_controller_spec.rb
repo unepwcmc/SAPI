@@ -35,7 +35,7 @@ describe Admin::RanksController do
     end
     it 'responds with json when not successful' do
       put :update, format: 'json', params: { id: rank.id, rank: { name: nil } }, xhr: true
-      expect(JSON.parse(response.body)).to include('errors')
+      expect(response.parsed_body).to include('errors')
     end
   end
 

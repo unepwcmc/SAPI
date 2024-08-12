@@ -106,8 +106,8 @@ class Trade::Filter
     end
 
     if !@sources_ids.empty?
-      if !@internal && (w = Source.find_by_code('W')) && @sources_ids.include?(w.id)
-        u = Source.find_by_code('U')
+      if !@internal && (w = Source.find_by(code: 'W')) && @sources_ids.include?(w.id)
+        u = Source.find_by(code: 'U')
         @sources_ids << u.id if u
         @source_blank = true
       end
@@ -143,11 +143,11 @@ class Trade::Filter
   end
 
   def eu_id
-    GeoEntity.where(iso_code2: 'EU').pluck(:id).first
+    GeoEntity.where(iso_code2: 'EU').pick(:id)
   end
 
   def eu_country_ids
-    EuCountryDate.all.pluck(:geo_entity_id)
+    EuCountryDate.pluck(:geo_entity_id)
   end
 
   def sanitize_exporter_ids(ids)
@@ -193,11 +193,11 @@ class Trade::Filter
   def time_range_query
     unless @time_range_start.blank? && @time_range_end.blank?
       if @time_range_start.blank?
-        @query = @query.where([ 'year <= ?', @time_range_end ])
+        @query = @query.where(year: ..@time_range_end)
       elsif @time_range_end.blank?
-        @query = @query.where([ 'year >= ?', @time_range_start ])
+        @query = @query.where(year: @time_range_start..)
       else
-        @query = @query.where([ 'year >= ? AND year <= ?', @time_range_start, @time_range_end ])
+        @query = @query.where(year: @time_range_start..@time_range_end)
       end
     end
   end

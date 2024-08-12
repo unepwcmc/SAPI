@@ -68,7 +68,7 @@ module Changeable
     # == Changed to fix deprecation warnings ==
     if (taxon_concept.nil? && taxon_concept_id_before_last_save) ||
       (taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save)
-      previous_taxon_concept = TaxonConcept.find_by_id(taxon_concept_id_before_last_save)
+      previous_taxon_concept = TaxonConcept.find_by(id: taxon_concept_id_before_last_save)
       if previous_taxon_concept
         changeable_bump_dependents_timestamp_part_one(previous_taxon_concept, updated_by_id)
       end
@@ -118,7 +118,7 @@ module Changeable
     # == Changed to fix deprecation warnings ==
     if (taxon_concept.nil? && taxon_concept_id_before_last_save) ||
       (taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save)
-      previous_taxon_concept = TaxonConcept.find_by_id(taxon_concept_id_before_last_save)
+      previous_taxon_concept = TaxonConcept.find_by(id: taxon_concept_id_before_last_save)
       if previous_taxon_concept
         changeable_bump_dependents_timestamp_part_two
       end
@@ -135,7 +135,7 @@ module Changeable
     return unless taxon_concept
 
     TaxonConcept.where(id: taxon_concept.id).update_all(
-      dependents_updated_at: Time.now,
+      dependents_updated_at: Time.zone.now,
       dependents_updated_by_id: updated_by_id
     )
   end

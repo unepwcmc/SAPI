@@ -10,7 +10,7 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe Admin::NomenclatureChangesHelper, type: :helper do
+describe Admin::NomenclatureChangesHelper do
   describe 'split_blurb' do
     include_context 'split_definitions'
     context 'split with input' do

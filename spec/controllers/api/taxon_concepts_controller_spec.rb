@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Api::V1::TaxonConceptsController, type: :controller do
+describe Api::V1::TaxonConceptsController do
   context 'GET index' do
     it ' logs with Ahoy with different parameters' do
       expect do

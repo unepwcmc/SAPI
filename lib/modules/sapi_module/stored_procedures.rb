@@ -42,11 +42,11 @@ module SapiModule
           # when they're not matviews, it's the tables we're locking, matviews
           # don't respond to LOCK TABLE.
           "SELECT relname FROM pg_class WHERE relname LIKE '%_mview' AND relkind = 'r';"
-        ).to_a.map { |row| row['relname'] }
+        ).to_a.pluck('relname')
 
         to_lock.each do |relname|
           # Lock tables in advance to prevent deadlocks forcing a rollback.
-          puts "Locking table: #{relname}"
+          Rails.logger.debug { "Locking table: #{relname}" }
 
           # We need ACCESS EXCLUSIVE because this is used by DROP TABLE, and
           # most of the rebuild_... functions are dropping and recreating the
@@ -55,7 +55,7 @@ module SapiModule
         end
 
         to_rebuild.each do |p|
-          puts "Procedure: #{p}"
+          Rails.logger.debug { "Procedure: #{p}" }
 
           # Within the current transaction, set work_mem to a higher-than-usual
           # value, so that matviews can be built more efficiently.
@@ -131,16 +131,16 @@ module SapiModule
 
     def self.run_procedures(procedures)
       procedures.each do |p|
-        puts "Procedure: #{p}"
+        Rails.logger.debug { "Procedure: #{p}" }
         ApplicationRecord.connection.execute("SELECT * FROM rebuild_#{p}()")
       end
     end
 
     def self.rebuild_permit_numbers
-      puts "Procedure: #{p}"
+      Rails.logger.debug { "Procedure: #{Rails.logger.debug}" }
       ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_trade_shipments_on_permits_ids')
       ApplicationRecord.connection.execute('SELECT * FROM rebuild_permit_numbers()')
-      sql = <<-SQL
+      sql = <<-SQL.squish
       CREATE INDEX index_trade_shipments_on_permits_ids
         ON trade_shipments
         USING GIN
@@ -156,20 +156,20 @@ module SapiModule
         :trade_shipments_cites_suspensions_mview,
         :non_compliant_shipments_view
       ].each do |p|
-        puts "Procedure: #{p}"
+        Rails.logger.debug { "Procedure: #{p}" }
         ApplicationRecord.connection.execute("SELECT * FROM rebuild_#{p}()")
       end
     end
 
     def self.rebuild_trade_plus_mviews
       view = 'trade_plus_complete_mview'
-      puts "Procedure: #{view}"
+      Rails.logger.debug { "Procedure: #{view}" }
       ApplicationRecord.connection.execute("SELECT * FROM rebuild_#{view}()")
     end
 
     def self.create_trade_plus_mview_indexes
       _function = 'create_trade_plus_complete_mview_indexes'
-      puts "Procedure: #{_function}"
+      Rails.logger.debug { "Procedure: #{_function}" }
       ApplicationRecord.connection.execute("SELECT * FROM #{_function}()")
     end
   end

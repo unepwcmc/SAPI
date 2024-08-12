@@ -1,6 +1,6 @@
 class AddRankNameToSandboxViews < ActiveRecord::Migration[4.2]
   def change
-    execute <<-SQL
+    execute <<-SQL.squish
 
 CREATE OR REPLACE FUNCTION refresh_trade_sandbox_views() RETURNS void
   LANGUAGE plpgsql

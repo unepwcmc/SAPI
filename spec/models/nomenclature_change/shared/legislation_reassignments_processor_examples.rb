@@ -102,47 +102,47 @@ shared_context 'legislation_reassignments_processor_examples' do
   specify do
     expect(
       output_species1.listing_changes.
-      find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id)
+      find_by(effective_at: '2013-01-01', change_type_id: cites_addition.id)
     ).not_to be_nil
   end
   specify do
     expect(
       output_species1.listing_changes.
-      find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id).
+      find_by(effective_at: '2013-01-01', change_type_id: cites_addition.id).
       party_listing_distribution.geo_entity
     ).to eq(poland)
   end
   specify do
     expect(
       output_species1.listing_changes.
-      find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id).
+      find_by(effective_at: '2013-01-01', change_type_id: cites_addition.id).
       listing_distributions.count
     ).to eq(2)
   end
   specify do
     expect(
       output_species1.listing_changes.
-      find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id).
+      find_by(effective_at: '2013-01-01', change_type_id: cites_addition.id).
       annotation
     ).not_to be_nil
   end
   specify do
     expect(
       output_species1.listing_changes.
-      find_by_effective_at_and_change_type_id('2013-01-01', cites_addition.id).
+      find_by(effective_at: '2013-01-01', change_type_id: cites_addition.id).
       exclusions
     ).not_to be_empty
   end
   specify do
     expect(
       output_species1.listing_changes.
-      find_by_effective_at_and_change_type_id('2013-01-02', cites_addition.id)
+      find_by(effective_at: '2013-01-02', change_type_id: cites_addition.id)
     ).not_to be_nil
   end
   specify do
     expect(
       output_species1.listing_changes.
-      find_by_effective_at_and_change_type_id('2013-01-02', cites_addition.id).
+      find_by(effective_at: '2013-01-02', change_type_id: cites_addition.id).
       party_listing_distribution.geo_entity
     ).to eq(portugal)
   end
@@ -150,27 +150,27 @@ shared_context 'legislation_reassignments_processor_examples' do
   specify do
     expect(
       output_species1.quotas.
-      find_by_geo_entity_id(poland.id)
+      find_by(geo_entity_id: poland.id)
     ).not_to be_nil
   end
   specify do
     expect(
       output_species1.quotas.
-      find_by_geo_entity_id(poland.id).
+      find_by(geo_entity_id: poland.id).
       terms
     ).not_to be_empty
   end
   specify do
     expect(
       output_species1.quotas.
-      find_by_geo_entity_id(poland.id).
+      find_by(geo_entity_id: poland.id).
       sources
     ).not_to be_empty
   end
   specify do
     expect(
       output_species1.quotas.
-      find_by_geo_entity_id(poland.id).
+      find_by(geo_entity_id: poland.id).
       purposes
     ).not_to be_empty
   end

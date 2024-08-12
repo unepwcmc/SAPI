@@ -422,9 +422,9 @@ def files_from_args(t, args)
 end
 
 def file_ok?(path_to_file)
-  if !File.file?(Rails.root.join(path_to_file)) # if the file is not defined, explain and leave.
-    puts 'Please specify a valid csv file from which to import data'
-    puts 'Usage: rake import:XXX[path/to/file,path/to/another]'
+  if !Rails.root.join(path_to_file).file? # if the file is not defined, explain and leave.
+    Rails.logger.debug 'Please specify a valid csv file from which to import data'
+    Rails.logger.debug 'Usage: rake import:XXX[path/to/file,path/to/another]'
     return false
   end
   true
@@ -445,8 +445,8 @@ def db_columns_from_csv_headers(path_to_file, table_name, include_data_type = tr
   csv_columns = csv_headers(path_to_file)
   db_columns = csv_columns.map { |col| m.csv_to_db(table_name, col) }
   db_columns = db_columns.map { |col| col.sub(/\s\w+$/, '') } unless include_data_type
-  puts csv_columns.inspect
-  puts db_columns.inspect
+  Rails.logger.debug csv_columns.inspect
+  Rails.logger.debug db_columns.inspect
   db_columns
 end
 
@@ -457,24 +457,24 @@ end
 
 def create_table_from_column_array(table_name, db_columns)
   begin
-    puts 'Creating tmp table'
+    Rails.logger.debug 'Creating tmp table'
     ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
     ApplicationRecord.connection.execute "CREATE TABLE #{table_name} (#{db_columns.join(', ')})"
-    puts 'Table created'
+    Rails.logger.debug 'Table created'
   rescue Exception => e
-    puts e.inspect
-    puts 'Tmp already exists removing data from tmp table before starting the import'
+    Rails.logger.debug e.inspect
+    Rails.logger.debug 'Tmp already exists removing data from tmp table before starting the import'
     ApplicationRecord.connection.execute "DELETE FROM #{table_name};"
-    puts 'Data removed'
+    Rails.logger.debug 'Data removed'
   end
 end
 
 def drop_table(table_name)
   begin
     ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name};"
-    puts 'Table removed'
+    Rails.logger.debug 'Table removed'
   rescue Exception
-    puts "Could not drop table #{table_name}. It might not exist if this is the first time you are running this rake task."
+    Rails.logger.debug { "Could not drop table #{table_name}. It might not exist if this is the first time you are running this rake task." }
   end
 end
 
@@ -485,7 +485,7 @@ end
 
 def copy_data_into_table(path_to_file, table_name, db_columns)
   require 'psql_command'
-  puts "Copying data from #{path_to_file} into tmp table #{table_name}"
+  Rails.logger.debug { "Copying data from #{path_to_file} into tmp table #{table_name}" }
   cmd = <<-PSQL
 SET DateStyle = "ISO,DMY";
 \\COPY #{table_name} (#{db_columns.join(', ')})
@@ -495,5 +495,5 @@ ENCODING 'utf-8'
 CSV HEADER
 PSQL
   PsqlCommand.new(cmd).execute
-  puts 'Data copied to tmp table'
+  Rails.logger.debug 'Data copied to tmp table'
 end

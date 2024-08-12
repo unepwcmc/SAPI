@@ -1,6 +1,6 @@
 class AddSrgHistoryToEuDecisionsView < ActiveRecord::Migration[4.2]
   def up
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE TYPE api_srg_history AS (
         name TEXT,
         description TEXT
@@ -20,7 +20,7 @@ class AddSrgHistoryToEuDecisionsView < ActiveRecord::Migration[4.2]
     execute 'DROP VIEW IF EXISTS eu_decisions_view'
     execute "CREATE VIEW eu_decisions_view AS #{view_sql('20150210140508', 'eu_decisions_view')}"
 
-    execute <<-SQL
+    execute <<-SQL.squish
       DROP TYPE api_srg_history
     SQL
   end

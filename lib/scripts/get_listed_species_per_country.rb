@@ -21,4 +21,4 @@ countries.each do |country|
   end
 end
 
-puts JSON.pretty_generate(results)
+Rails.logger.debug JSON.pretty_generate(results)

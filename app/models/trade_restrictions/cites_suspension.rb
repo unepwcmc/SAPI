@@ -67,7 +67,7 @@ class CitesSuspension < TradeRestriction
   end
 
   def handle_current_flag
-    self.is_current = !end_notification_id.present?
+    self.is_current = end_notification_id.blank?
     true
   end
 
@@ -106,7 +106,7 @@ class CitesSuspension < TradeRestriction
             OR UPPER(events.subtype) LIKE UPPER(:query)",
         query: "%#{query}%").
         joins([ :start_notification ]).
-        joins(<<-SQL
+        joins(<<-SQL.squish
           LEFT JOIN taxon_concepts
             ON taxon_concepts.id = trade_restrictions.taxon_concept_id
           LEFT JOIN geo_entities

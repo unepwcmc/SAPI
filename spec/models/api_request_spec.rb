@@ -47,7 +47,7 @@ describe ApiRequest do
       format: 'json',
       ip: '127.0.0.1',
       response_status: 500,
-      created_at: Date.today
+      created_at: Time.zone.today
     )
   end
 
@@ -67,9 +67,9 @@ describe ApiRequest do
     specify do
       expect(subject).to eq({
         [ 200, Date.yesterday.strftime('%Y-%m-%d') ] => 1,
-        [ 200, Date.today.strftime('%Y-%m-%d') ] => 0,
+        [ 200, Time.zone.today.strftime('%Y-%m-%d') ] => 0,
         [ 500, Date.yesterday.strftime('%Y-%m-%d') ] => 0,
-        [ 500, Date.today.strftime('%Y-%m-%d') ] => 1
+        [ 500, Time.zone.today.strftime('%Y-%m-%d') ] => 1
       })
     end
   end

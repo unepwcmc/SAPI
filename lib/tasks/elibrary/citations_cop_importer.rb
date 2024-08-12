@@ -21,7 +21,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
     ApplicationRecord.connection.execute("UPDATE #{table_name} SET ProposalRepresentation = NULL WHERE ProposalRepresentation='NULL'")
 
     # revert any previous CoP document duplication
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH new_docs AS (
         SELECT id, original_id FROM documents
         WHERE type = 'Document::Proposal' AND original_id IS NOT NULL
@@ -41,7 +41,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
   def run_final_queries
     # need to duplicate CoP documents, which are linked to more than one proposal
     # that applies to old documents
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH proposal_details AS (
         SELECT proposal_details.*, ROW_NUMBER(*) OVER(PARTITION BY document_id)
         FROM proposal_details
@@ -114,7 +114,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
     # DELETE FROM documents
     # WHERE original_id IS NOT NULL;
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       UPDATE documents
       SET title = COALESCE(pd.proposal_nature, title)
       FROM
@@ -126,7 +126,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
 
   def run_queries
     super
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_to_insert AS (
         #{proposal_details_rows_to_insert_sql}
       ), rows_to_insert_resolved AS (
@@ -146,7 +146,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
   # this performs grouping, the proposal meta data used to be citation-level
   # but in the new system it is document-level
   def all_proposal_details_rows_sql
-    <<-SQL
+    <<-SQL.squish
       SELECT CAST(DocumentID AS INT), ProposalNature, ProposalOutcome, ProposalRepresentation, ProposalNo
       FROM #{table_name}
       GROUP BY DocumentID, ProposalNature, ProposalOutcome, ProposalRepresentation, ProposalNo
@@ -158,7 +158,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
   # that is not expected in the new structure; to work around the problem
   # after the import documents with multiple details will need to be duplicated
   def proposal_details_rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT * FROM (
         #{all_proposal_details_rows_sql}
       ) all_rows_in_table_name

@@ -182,7 +182,7 @@ describe Trade::AnnualReportUpload, drops_tables: true do
         iso_code2: 'PT'
       )
 
-      @submitter = FactoryBot.create(:user, role: User::MANAGER)
+      @submitter = create(:user, role: User::MANAGER)
     end
     pending 'it calls submission worker' do
       # This has been disabled due to some issues with asynchronous reports submission"

@@ -42,7 +42,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   end
 
   def set_taxonomy
-    @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+    @taxonomy = Taxonomy.find_by(name: Taxonomy::CITES_EU)
   end
 
   def set_ranks

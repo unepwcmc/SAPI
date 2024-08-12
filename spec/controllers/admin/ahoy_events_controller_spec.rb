@@ -1,15 +1,15 @@
 require 'spec_helper'
 require 'securerandom'
 
-describe Admin::AhoyEventsController, type: :controller do
+describe Admin::AhoyEventsController do
   login_admin
 
   describe 'index' do
     let!(:ahoy_event1) do
-      FactoryBot.create(:ahoy_event, name: 'Search')
+      create(:ahoy_event, name: 'Search')
     end
     let!(:ahoy_event2) do
-      FactoryBot.create(:ahoy_event, name: 'Taxon Concept')
+      create(:ahoy_event, name: 'Taxon Concept')
     end
 
     describe 'GET index' do

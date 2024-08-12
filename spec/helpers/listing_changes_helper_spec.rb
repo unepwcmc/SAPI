@@ -10,9 +10,9 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe ListingChangesHelper, type: :helper do
+describe ListingChangesHelper do
   let(:poland) do
-    GeoEntity.find_by_iso_code2('PL') || create(:geo_entity, iso_code2: 'PL', name: 'Poland')
+    GeoEntity.find_by(iso_code2: 'PL') || create(:geo_entity, iso_code2: 'PL', name: 'Poland')
   end
   let(:taxon_concept) do
     create_cites_eu_genus(

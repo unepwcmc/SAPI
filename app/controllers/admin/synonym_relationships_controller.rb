@@ -60,7 +60,7 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
 
   def load_synonym_relationship_type
     @synonym_relationship_type = TaxonRelationshipType.
-      find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+      find_by(name: TaxonRelationshipType::HAS_SYNONYM)
   end
 
   private

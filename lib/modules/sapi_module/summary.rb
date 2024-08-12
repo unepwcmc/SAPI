@@ -75,8 +75,8 @@ module SapiModule
 
     def self.taxonomy_kingdom_stats(taxonomy, kingdom)
       stats = {}
-      t = Taxonomy.find_by_name(taxonomy)
-      k = TaxonConcept.find_by_full_name_and_taxonomy_id(kingdom, t.id)
+      t = Taxonomy.find_by(name: taxonomy)
+      k = TaxonConcept.find_by(full_name: kingdom, taxonomy_id: t.id)
       stats[:accepted_taxa] = TaxonConcept.where(
         taxonomy_id: t.id,
         name_status: 'A'
@@ -95,7 +95,7 @@ module SapiModule
         where(taxon_concepts: { taxonomy_id: t.id }).
         where([ "(data->'kingdom_id')::INT = ?", k.id ])
       stats[:distributions] = distributions.count
-      stats[:distribution_tags] = ApplicationRecord.connection.execute(<<-SQL
+      stats[:distribution_tags] = ApplicationRecord.connection.execute(<<-SQL.squish
             SELECT COUNT(*) FROM taggings
               INNER JOIN distributions ON
                 taggings.taggable_id = distributions.id AND
@@ -123,11 +123,11 @@ module SapiModule
     end
 
     def self.database_summary
-      puts '#############################################################'
-      puts '#################                  ##########################'
-      puts '################# Database Summary ##########################'
-      puts '#################                  ##########################'
-      puts "#############################################################\n"
+      Rails.logger.debug '#############################################################'
+      Rails.logger.debug '#################                  ##########################'
+      Rails.logger.debug '################# Database Summary ##########################'
+      Rails.logger.debug '#################                  ##########################'
+      Rails.logger.debug "#############################################################\n"
 
       stats = self.database_stats
       print_count_for 'Taxonomies', stats[:core][:taxonomies]
@@ -149,35 +149,35 @@ module SapiModule
       print_count_for 'English CommonNames', stats[:taxonomic][:common_names_en]
       print_count_for 'French CommonNames', stats[:taxonomic][:common_names_fr]
       print_count_for 'Spanish CommonNames', stats[:taxonomic][:common_names_es]
-      puts ''
+      Rails.logger.debug ''
       print_count_for 'Quotas', Quota.count
       print_count_for 'CITES Suspensions', CitesSuspension.count
       print_count_for 'EU Opinions', EuOpinion.count
       print_count_for 'EU Suspensions', EuSuspension.count
-      puts ''
+      Rails.logger.debug ''
       print_count_for 'Terms', stats[:trade][:terms]
       print_count_for 'Sources', stats[:trade][:sources]
       print_count_for 'Units', stats[:trade][:units]
       print_count_for 'Purpose', stats[:trade][:purposes]
-      puts ''
-      Taxonomy.all.each { |t| taxonomy_summary(t) }
+      Rails.logger.debug ''
+      Taxonomy.find_each { |t| taxonomy_summary(t) }
     end
 
     def self.taxonomy_summary(t)
-      puts '#############################################################'
-      puts '#############################################################'
-      puts "Details for Taxa under #{t.name}"
+      Rails.logger.debug '#############################################################'
+      Rails.logger.debug '#############################################################'
+      Rails.logger.debug { "Details for Taxa under #{t.name}" }
       TaxonConcept.joins(:rank).where(
         'ranks.name': Rank::KINGDOM, taxonomy_id: t.id
-      ).each do |k|
+      ).find_each do |k|
         kingdom_summary(t, k)
       end
     end
 
     def self.kingdom_summary(t, k)
-      puts '#############################################################'
-      puts '#############################################################'
-      puts ">>> #{k.full_name} general stats"
+      Rails.logger.debug '#############################################################'
+      Rails.logger.debug '#############################################################'
+      Rails.logger.debug { ">>> #{k.full_name} general stats" }
 
       stats = self.taxonomy_kingdom_stats t.name, k.full_name
 
@@ -192,24 +192,24 @@ module SapiModule
       print_count_for 'Taxon Concept Standard References', stats[:taxon_standard_references]
       print_count_for 'TaxonCommons', stats[:common_names]
 
-      puts ''
+      Rails.logger.debug ''
       Rank.order(:taxonomic_position).each do |r|
-        puts "##############   Rank: #{r.name} ####################"
+        Rails.logger.debug { "##############   Rank: #{r.name} ####################" }
         ranked_taxon_concept_ids = TaxonConcept.
           where(taxonomy_id: t.id, rank_id: r.id).
           where([ "(data->'kingdom_id')::INT = ?", k.id ]).
-          select(:id).map(&:id)
+          pluck(:id)
         print_count_for 'Taxa', ranked_taxon_concept_ids.count
         print_count_for ' Listing Changes', ListingChange.where(
           taxon_concept_id: ranked_taxon_concept_ids
         ).count
       end
-      puts '#####################################################'
-      puts ''
+      Rails.logger.debug '#####################################################'
+      Rails.logger.debug ''
     end
 
     def self.print_count_for(klass, count)
-      puts "#{count} #{klass}"
+      Rails.logger.debug { "#{count} #{klass}" }
     end
   end
 end

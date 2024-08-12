@@ -3,7 +3,7 @@ class Api::V1::UnitsController < ApplicationController
 
   def index
     @all_rows = Rails.cache.fetch(CACHE_KEY_ALL, expires_in: 1.hour) do
-      Unit.all.order(:code).as_json
+      Unit.order(:code).as_json
     end
 
     render json: @all_rows.map { |row_data| Unit.new(row_data) },

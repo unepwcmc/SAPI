@@ -32,7 +32,7 @@ class Elibrary::NonCitesTaxaImporter
 
   def run_queries
     # insert taxon names
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       ), taxon_names_to_insert AS (
@@ -49,7 +49,7 @@ class Elibrary::NonCitesTaxaImporter
     SQL
     ApplicationRecord.connection.execute(sql)
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       )
@@ -71,8 +71,8 @@ class Elibrary::NonCitesTaxaImporter
   end
 
   def all_rows_sql
-    cites_eu = Taxonomy.find_by_name('CITES_EU')
-    sql = <<-SQL
+    cites_eu = Taxonomy.find_by(name: 'CITES_EU')
+    sql = <<-SQL.squish
       SELECT
         normalised_name,
         ranks.id AS rank_id,
@@ -85,7 +85,7 @@ class Elibrary::NonCitesTaxaImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT * FROM (
         #{all_rows_sql}
       ) all_rows_in_table_name
@@ -97,6 +97,6 @@ class Elibrary::NonCitesTaxaImporter
   end
 
   def print_breakdown
-    puts "#{Time.now} There are #{TaxonConcept.where(name_status: 'N').count} N taxa in total"
+    Rails.logger.debug { "#{Time.zone.now} There are #{TaxonConcept.where(name_status: 'N').count} N taxa in total" }
   end
 end

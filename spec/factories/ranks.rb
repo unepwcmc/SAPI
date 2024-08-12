@@ -73,6 +73,6 @@ FactoryBot.define do
       ].sample
     end
     display_name_en { |r| r.name }
-    initialize_with { Rank.find_by_name(name) || new(attributes_for_rank(name)) }
+    initialize_with { Rank.find_by(name: name) || new(attributes_for_rank(name)) }
   end
 end

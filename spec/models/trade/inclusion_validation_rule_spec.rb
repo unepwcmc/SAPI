@@ -110,7 +110,7 @@ describe Trade::InclusionValidationRule, drops_tables: true do
 
     context 'when updates and error fixed for all records' do
       specify 'error record is destroyed' do
-        travel_to(Time.now + 1) do
+        travel_to(Time.zone.now + 1) do
           @shipment2.update(taxon_name: 'Canis lupus')
           @shipment3.update(taxon_name: 'Canis lupus')
           expect do
@@ -122,7 +122,7 @@ describe Trade::InclusionValidationRule, drops_tables: true do
 
     context 'when updates and error fixed for some records' do
       specify 'error record is updated to reflect new error_count' do
-        travel_to(Time.now + 1) do
+        travel_to(Time.zone.now + 1) do
           @shipment2.update(taxon_name: 'Canis lupus')
           expect do
             validation_rule.refresh_errors_if_needed(annual_report_upload)

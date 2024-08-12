@@ -12,7 +12,7 @@ class TaxonConceptViewStats
   private
 
   def query
-    Ahoy::Event.select(<<-SQL
+    Ahoy::Event.select(<<-SQL.squish
       properties->>'id' AS tc_id,
       properties ->>'full_name' AS tc_full_name,
       COUNT(*) AS number_of_visits

@@ -126,7 +126,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
           party_listing_distribution.comparison_attributes
         ))
     # taxonomic exclusions (population exclusions already duplicated)
-    reassignable.exclusions.where.not(taxon_concept_id: nil).each do |exclusion|
+    reassignable.exclusions.where.not(taxon_concept_id: nil).find_each do |exclusion|
       (!copied_object.new_record? && exclusion.duplicates({
         parent_id: copied_object.id
       }).first) || copied_object.exclusions.build(

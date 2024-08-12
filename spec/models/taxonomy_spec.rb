@@ -18,13 +18,13 @@ describe Taxonomy do
     end
     context 'when name missing' do
       let(:taxonomy) { build(:taxonomy, name: nil) }
-      specify { expect(taxonomy).to be_invalid }
+      specify { expect(taxonomy).not_to be_valid }
       specify { expect(taxonomy).to have(1).error_on(:name) }
     end
     context 'when name duplicated' do
       let!(:taxonomy1) { create(:taxonomy) }
       let(:taxonomy2) { build(:taxonomy, name: taxonomy1.name) }
-      specify { expect(taxonomy2).to be_invalid }
+      specify { expect(taxonomy2).not_to be_valid }
       specify { expect(taxonomy2).to have(1).error_on(:name) }
     end
   end

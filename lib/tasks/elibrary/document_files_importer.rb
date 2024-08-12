@@ -23,17 +23,17 @@ class Elibrary::DocumentFilesImporter
       target_location = @target_dir + "/documents/#{doc.id}/#{doc.elib_legacy_file_name}"
       # check if file exists at target location
       if File.exist?(target_location)
-        puts "TARGET PRESENT #{target_location}" + info_txt
+        Rails.logger.debug "TARGET PRESENT #{target_location}" + info_txt
         next
       end
       source_location = @source_dir + "/#{doc.elib_legacy_file_name}"
       # check if file exists at source location
       unless File.exist?(source_location)
-        puts "SOURCE MISSING #{source_location}" + info_txt
+        Rails.logger.debug "SOURCE MISSING #{source_location}" + info_txt
         next
       end
       copy_with_path(source_location, target_location)
-      puts 'COPIED ' + info_txt
+      Rails.logger.debug 'COPIED ' + info_txt
     end
   end
 end

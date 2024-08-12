@@ -34,7 +34,7 @@ describe Admin::EventsController do
 
   describe 'XHR POST create' do
     it 'renders create when successful' do
-      post :create, params: { event: FactoryBot.attributes_for(:event) }, xhr: true
+      post :create, params: { event: attributes_for(:event) }, xhr: true
       expect(response).to render_template('create')
     end
     it 'renders new when not successful' do
@@ -63,7 +63,7 @@ describe Admin::EventsController do
     end
     it 'responds with json when not successful' do
       put :update, format: 'json', params: { id: event.id, event: { name: nil } }, xhr: true
-      expect(JSON.parse(response.body)).to include('errors')
+      expect(response.parsed_body).to include('errors')
     end
   end
 

@@ -52,10 +52,10 @@ describe TaxonConcept do
 
       describe :current_party_ids do
         context 'for genus Colophon' do
-          specify { expect(@genus.current_parties_ids).to eq([ GeoEntity.find_by_iso_code2('ZA').id ]) }
+          specify { expect(@genus.current_parties_ids).to eq([ GeoEntity.find_by(iso_code2: 'ZA').id ]) }
         end
         context 'for species Colophon barnardi' do
-          specify { expect(@species.current_parties_ids).to eq([ GeoEntity.find_by_iso_code2('ZA').id ]) }
+          specify { expect(@species.current_parties_ids).to eq([ GeoEntity.find_by(iso_code2: 'ZA').id ]) }
         end
       end
     end

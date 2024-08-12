@@ -172,7 +172,7 @@ class NomenclatureChange::Output < ApplicationRecord
         if taxonomy_id.present?
           Taxonomy.find(taxonomy_id)
         else
-          Taxonomy.find_by_name(Taxonomy::CITES_EU)
+          Taxonomy.find_by(name: Taxonomy::CITES_EU)
         end
       TaxonConcept.new(
         taxon_concept_attrs.merge({
@@ -221,8 +221,8 @@ class NomenclatureChange::Output < ApplicationRecord
     if [ 'S', 'T' ].include?(name_status) &&
       parent_full_name = expected_parent_name
       TaxonConcept.where(
-        taxonomy_id: Taxonomy.find_by_name(Taxonomy::CITES_EU).try(:id),
-        rank_id: Rank.find_by_name(rank.parent_rank_name).try(:id),
+        taxonomy_id: Taxonomy.find_by(name: Taxonomy::CITES_EU).try(:id),
+        rank_id: Rank.find_by(name: rank.parent_rank_name).try(:id),
         name_status: 'A'
       ).where(
         'UPPER(SQUISH_NULL(full_name)) = UPPER(?)',

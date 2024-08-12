@@ -42,7 +42,7 @@ class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
 
   def run_queries
     super
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_to_insert AS (
         #{review_details_rows_to_insert_sql}
       ), rows_to_insert_resolved AS (
@@ -62,7 +62,7 @@ class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
   # this performs grouping, the review meta data used to be citation-level
   # but in the new system it is document-level
   def all_review_details_rows_sql
-    <<-SQL
+    <<-SQL.squish
       SELECT CAST(DocumentID AS INT) AS DocumentID, SigTradePhase, SigTradeProcessStage, SigTradeRecommendedCategory
       FROM #{table_name}
       GROUP BY DocumentID, SigTradePhase, SigTradeProcessStage, SigTradeRecommendedCategory
@@ -74,7 +74,7 @@ class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
   # that is not expected in the new structure; to work around the problem
   # after the import documents with multiple details will need to be duplicated
   def review_details_rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT * FROM (
         #{all_review_details_rows_sql}
       ) all_rows_in_table_name

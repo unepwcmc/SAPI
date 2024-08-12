@@ -7,7 +7,7 @@ describe Checklist::Pdf::IndexFetcher do
     create(:language, name_en: 'English', iso_code1: 'EN', iso_code3: 'ENG')
   end
   let(:es) do
-    Language.find_by_name_en('Spanish')
+    Language.find_by(name_en: 'Spanish')
   end
 
   let(:english_common_name) do

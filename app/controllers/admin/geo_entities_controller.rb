@@ -10,8 +10,8 @@ class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
   protected
 
   def load_geo_entity_types
-    @geo_entity_type = GeoEntityType.find_by_name(
-      params[:type] || GeoEntityType::COUNTRY
+    @geo_entity_type = GeoEntityType.find_by(
+      name: params[:type] || GeoEntityType::COUNTRY
     )
     @geo_entity_types = GeoEntityType.order(:name)
     @geo_entity_types_for_dropdown = @geo_entity_types.map do |t|

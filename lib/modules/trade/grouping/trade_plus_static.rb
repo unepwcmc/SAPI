@@ -122,11 +122,13 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     }
   end
 
-  DEFAULT_FILTERING_ATTRIBUTES = {
-    time_range_start: 2.years.ago.year,
-    time_range_end: 1.year.ago.year,
-    unit_name: 'Number of specimens'
-  }.freeze
+  def self.default_filtering_attributes
+    {
+      time_range_start: 2.years.ago.year,
+      time_range_end: 1.year.ago.year,
+      unit_name: 'Number of specimens'
+    }.freeze
+  end
   def self.default_filtering_attributes
     DEFAULT_FILTERING_ATTRIBUTES
   end
@@ -168,7 +170,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     child_taxa_uniquify
     return '' if @opts['taxon_id'].blank? && !tc_id
 
-    <<-SQL
+    <<-SQL.squish
     JOIN all_taxon_concepts_and_ancestors_mview ON taxon_concept_id=taxon_id
     SQL
   end
@@ -183,7 +185,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def group_query
     columns = @attributes.compact.uniq.join(',')
     quantity_field = "#{@reported_by}_reported_quantity"
-    <<-SQL
+    <<-SQL.squish
       SELECT
         #{sanitise_column_names},
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
@@ -235,7 +237,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     # while the @query variable is assigned as well because of the grouped_query
     sanitised_column_names = @sanitised_column_names.compact.uniq.join(',')
 
-    <<-SQL
+    <<-SQL.squish
       SELECT ROW_TO_JSON(row)
       FROM (
         SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
@@ -261,7 +263,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def aggregated_over_time_query
     quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
 
-    <<-SQL
+    <<-SQL.squish
       SELECT ROW_TO_JSON(row)
       FROM (
         SELECT JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints

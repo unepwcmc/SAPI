@@ -23,13 +23,13 @@ describe Designation do
     end
     context 'when name missing' do
       let(:designation) { build(:designation, name: nil) }
-      specify { expect(designation).to be_invalid }
+      specify { expect(designation).not_to be_valid }
       specify { expect(designation).to have(1).error_on(:name) }
     end
     context 'when name duplicated' do
       let!(:designation1) { create(:designation) }
       let(:designation2) { build(:designation, name: designation1.name) }
-      specify { expect(designation2).to be_invalid }
+      specify { expect(designation2).not_to be_valid }
       specify { expect(designation2).to have(1).error_on(:name) }
     end
   end

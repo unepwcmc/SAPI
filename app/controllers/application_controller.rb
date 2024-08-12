@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
                 'You are not authorised to access this page'
     end
 
-    flash[:error] = message
+    flash.now[:error] = message
     respond_to do |format|
       format.html { redirect_to rescue_path }
       format.js { render inline: 'location.reload();' }

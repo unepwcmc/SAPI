@@ -27,9 +27,9 @@ describe QuotasCopyWorker do
   let(:job_defaults) do
     {
       'from_year' => quota.start_date.year,
-      'start_date' => Time.now.strftime('%d/%m/%Y'),
+      'start_date' => Time.zone.now.strftime('%d/%m/%Y'),
       'end_date' => 1.day.from_now.strftime('%d/%m/%Y'),
-      'publication_date' => Time.now.strftime('%d/%m/%Y'),
+      'publication_date' => Time.zone.now.strftime('%d/%m/%Y'),
       'excluded_taxon_concepts_ids' => nil,
       'included_taxon_concepts_ids' => nil,
       'excluded_geo_entities_ids' => nil,

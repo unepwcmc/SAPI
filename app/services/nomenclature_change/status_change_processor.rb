@@ -57,7 +57,7 @@ class NomenclatureChange::StatusChangeProcessor
   end
 
   def destroy_relationships(relationships)
-    relationships.includes(:taxon_concept, :taxon_relationship_type).each do |rel|
+    relationships.includes(:taxon_concept, :taxon_relationship_type).find_each do |rel|
       Rails.logger.debug { "Removing #{rel.taxon_relationship_type.name} relationship with #{rel.taxon_concept.full_name}" }
       rel.destroy
     end

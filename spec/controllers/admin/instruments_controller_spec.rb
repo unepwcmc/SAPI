@@ -46,7 +46,7 @@ describe Admin::InstrumentsController do
     end
     it 'responds with json when not successful' do
       put :update, format: 'json', params: { id: instrument.id, instrument: { name: nil } }, xhr: true
-      expect(JSON.parse(response.body)).to include('errors')
+      expect(response.parsed_body).to include('errors')
     end
   end
 

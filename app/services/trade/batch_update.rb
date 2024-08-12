@@ -2,7 +2,7 @@ class Trade::BatchUpdate
   def initialize(search_params)
     search = Trade::Filter.new(search_params)
     @shipments = Trade::Shipment.joins(
-      <<-SQL
+      <<-SQL.squish
       JOIN (
         #{search.query.to_sql}
       ) q

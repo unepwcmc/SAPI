@@ -6,7 +6,7 @@ class CreateApiDocumentsMview < ActiveRecord::Migration[4.2]
     execute 'CREATE INDEX ON api_documents_mview (date_raw)'
     execute 'CREATE INDEX ON api_documents_mview USING GIN (taxon_concept_ids)'
     execute 'CREATE INDEX ON api_documents_mview USING GIN (geo_entity_ids)'
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE INDEX index_mdocuments_on_title_to_ts_vector
       ON api_documents_mview
       USING gin

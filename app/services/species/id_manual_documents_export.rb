@@ -17,7 +17,7 @@ class Species::IdManualDocumentsExport < Species::CsvCopyExport
   end
 
   def sql_columns
-    general_subtype_column = <<-SQL
+    general_subtype_column = <<-SQL.squish
       case
         when general_subtype is TRUE
           then 'Whole animals/plants'

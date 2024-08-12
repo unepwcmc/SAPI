@@ -8,8 +8,8 @@ class DashboardStats
     @geo_entity = geo_entity
     @kingdom = options[:kingdom] || 'Animalia'
     @trade_limit = options[:trade_limit]
-    @time_range_start = options[:time_range_start] || (Time.now.year - 7) # 2007
-    @time_range_end = options[:time_range_end] || (Time.now.year - 2) # 2012
+    @time_range_start = options[:time_range_start] || (Time.zone.now.year - 7) # 2007
+    @time_range_end = options[:time_range_end] || (Time.zone.now.year - 2) # 2012
   end
 
   def species
@@ -29,7 +29,7 @@ class DashboardStats
   private
 
   def species_stats_per_taxonomy(taxonomy_name)
-    taxonomy = Taxonomy.find_by_name(taxonomy_name)
+    taxonomy = Taxonomy.find_by(name: taxonomy_name)
     classes = taxonomy && MTaxonConcept.where(
       taxonomy_id: taxonomy.id,
       rank_name: Rank::CLASS,
@@ -49,9 +49,9 @@ class DashboardStats
   end
 
   def trade_stats_per_reporter_type(reporter_type)
-    source = Source.find_by_code('W')
-    term = Term.find_by_code('LIV')
-    purpose = Purpose.find_by_code('T')
+    source = Source.find_by(code: 'W')
+    term = Term.find_by(code: 'LIV')
+    purpose = Purpose.find_by(code: 'T')
     shipments_for_country = Trade::Shipment.where(
       country_of_origin_id: nil,
       term_id: term.id,
@@ -64,13 +64,11 @@ class DashboardStats
 
     if @time_range_start && @time_range_end &&
       @time_range_start <= @time_range_end
-      shipments_for_country = shipments_for_country.where(
-        [ 'year >= ? AND year <= ?', @time_range_start, @time_range_end ]
-      )
+      shipments_for_country = shipments_for_country.where(year: @time_range_start..@time_range_end)
     end
 
     top_traded_taxa_for_country = shipments_for_country.
-      joins(<<-SQL
+      joins(<<-SQL.squish
         JOIN taxon_concepts_mview tc
         ON tc.id = trade_shipments.taxon_concept_id
         AND kingdom_name = '#{@kingdom}'

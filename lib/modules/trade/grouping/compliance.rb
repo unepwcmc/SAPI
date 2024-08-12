@@ -29,7 +29,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     years = case year
     when 2012
         [ year, year + 1 ]
-    when Date.today.year - 1
+    when Time.zone.today.year - 1
         [ year - 1, year ]
     else
         [ year - 1, year, year + 1 ]
@@ -142,11 +142,11 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
 
   def filter_download_data(data, params)
     if params[:group_by].include?('commodity')
-      data.map { |d| d['term_id'] }
+      data.pluck('term_id')
     elsif params[:group_by].include?('species')
-      data.map { |d| d['taxon_concept_id'] }
+      data.pluck('taxon_concept_id')
     elsif params[:group_by].include?('exporting')
-      data.map { |d| d[:id] }
+      data.pluck(:id)
     end
   end
 
@@ -176,10 +176,12 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     FILTERING_ATTRIBUTES
   end
 
-  DEFAULT_FILTERING_ATTRIBUTES = {
-    time_range_start: 2012,
-    time_range_end: 1.year.ago.year
-  }.freeze
+  def self.default_filtering_attributes
+    {
+      time_range_start: 2012,
+      time_range_end: 1.year.ago.year
+    }.freeze
+  end
   def self.default_filtering_attributes
     DEFAULT_FILTERING_ATTRIBUTES
   end
@@ -276,7 +278,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     else
       attributes.values.join(',')
     end
-    <<-SQL
+    <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt, 100.0*COUNT(*)/(SUM(COUNT(*)) OVER (PARTITION BY year)) AS percent
       FROM non_compliant_shipments_view
       WHERE #{@condition}
@@ -287,7 +289,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   end
 
   def countries_reported(year)
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT COUNT(*) AS cnt
       FROM(
         (
@@ -305,7 +307,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     SQL
     countries_reported = db.execute(sql).first['cnt'].to_i
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT COUNT(*) AS cnt
       FROM #{shipments_table}
       WHERE year = #{year}

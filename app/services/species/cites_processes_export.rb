@@ -17,7 +17,7 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
     rel = rel.where("DATE_PART('YEAR', start_date) IN (?)", @filters['years']) if @filters['years']&.any?
     # commenting this out as there are no historic cases yet, but there will be in the future
     # rel = rel.where("status != 'Closed'") if @filters['set'] == 'current'
-    rel = rel.where('geo_entities.id IN (?)', geo_entities_ids) if @filters['geo_entities_ids']&.any?
+    rel = rel.where(geo_entities: { id: geo_entities_ids }) if @filters['geo_entities_ids']&.any?
 
     # Query 'data' json field for taxon concepts that have the submitted taxon_concept_id in their ancestry,
     # or are the taxon_concept indicated by the txon_concept_id.

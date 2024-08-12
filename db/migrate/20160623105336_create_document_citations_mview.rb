@@ -18,7 +18,7 @@ class CreateDocumentCitationsMview < ActiveRecord::Migration[4.2]
       name: 'index_documents_mview_on_event_id'
     add_index :api_documents_mview, [ :date_raw ],
       name: 'index_documents_mview_on_date_raw'
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE INDEX index_documents_mview_on_title_to_ts_vector
       ON api_documents_mview
       USING gin
@@ -39,17 +39,17 @@ class CreateDocumentCitationsMview < ActiveRecord::Migration[4.2]
       name: 'index_documents_mview_on_event_id'
     add_index :api_documents_mview, [ :date_raw ],
       name: 'index_documents_mview_on_date_raw'
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE INDEX index_documents_mview_on_taxon_concepts_ids
       ON api_documents_mview
       USING GIN (taxon_concept_ids)
     SQL
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE INDEX index_documents_mview_on_geo_entity_ids
       ON api_documents_mview
       USING GIN (geo_entity_ids)
     SQL
-    execute <<-SQL
+    execute <<-SQL.squish
       CREATE INDEX index_documents_mview_on_title_to_ts_vector
       ON api_documents_mview
       USING gin

@@ -31,7 +31,7 @@ class Checklist::Pdf::IndexQuery
         spanish: 'UNNEST(spanish_names_ary)',
         french: 'UNNEST(french_names_ary)',
         synonym: if @authors
-            <<-SQL
+            <<-SQL.squish
             UNNEST(ARRAY(SELECT synonym ||
             CASE
             WHEN author_year IS NOT NULL
@@ -68,7 +68,7 @@ class Checklist::Pdf::IndexQuery
   end
 
   def to_sql(limit, offset)
-    inner_query = <<-SQL
+    inner_query = <<-SQL.squish
       WITH taxon_concept_matches AS (
         #{@rel.to_sql}
       )
@@ -79,7 +79,7 @@ class Checklist::Pdf::IndexQuery
     inner_query << " UNION #{@french_select_clause}" if @french_common_names
     inner_query << " UNION #{@synonym_select_clause}" if @synonyms
 
-    outer_query = <<-SQL
+    outer_query = <<-SQL.squish
     WITH name_matches AS (
       #{inner_query}
     )

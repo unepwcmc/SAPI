@@ -56,7 +56,7 @@ module MaterialDocIdsRetriever
     end
 
     doc_ids = ordered_docs.map { |doc| locale_document(doc) }.flatten
-    doc_ids = doc_ids.map { |d| d['id'] }
+    doc_ids = doc_ids.pluck('id')
   end
 
   private
@@ -78,7 +78,7 @@ module MaterialDocIdsRetriever
     return [] if tc_ids_sql.empty?
 
     res = ApplicationRecord.connection.execute(
-      <<-SQL
+      <<-SQL.squish
       SELECT ancestor_taxon_concept_id
       FROM taxon_concepts_and_ancestors_mview
       WHERE taxon_concept_id IN (#{tc_ids_sql})

@@ -25,9 +25,9 @@ class Checklist::Pdf::IndexAnnotationsKey
     tex = "\\newpage\n"
     tex << "\\section*{\\hashAnnotations}\n"
     tex << ('\\hashAnnotationsIndexInfo' + "\n\n")
-    cop = CitesCop.find_by_is_current(true)
+    cop = CitesCop.find_by(is_current: true)
     annotations = cop && cop.hash_annotations.order(Arel.sql('SUBSTRING(symbol FROM 2)::INT'))
-    unless annotations.present?
+    if annotations.blank?
       tex << "No current hash annotations found.\n\n"
       return tex
     end

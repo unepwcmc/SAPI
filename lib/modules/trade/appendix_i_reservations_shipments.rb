@@ -10,14 +10,14 @@ class Trade::AppendixIReservationsShipments < Trade::ReservationsShipmentsParser
   end
 
   def generate_view(timestamp)
-    Dir.mkdir(VIEW_DIR) unless Dir.exist?(VIEW_DIR)
+    FileUtils.mkdir_p(VIEW_DIR)
     File.write("#{VIEW_DIR}/#{timestamp}.sql", @query)
   end
 
   private
 
   def exceptions_query
-    <<-SQL
+    <<-SQL.squish
     SELECT DISTINCT *
     FROM (
       SELECT ts.id, ts.year, ts.appendix, ts.taxon_concept_id,

@@ -35,7 +35,7 @@ describe SubmissionWorker do
       iso_code2: 'PT'
     )
 
-    @submitter = FactoryBot.create(:user, role: User::MANAGER)
+    @submitter = create(:user, role: User::MANAGER)
 
     allow(Trade::ChangelogCsvGenerator).to receive(:call).and_return(Tempfile.new('changelog.csv'))
     allow_any_instance_of(SubmissionWorker).to receive(:upload_on_S3)
@@ -69,7 +69,7 @@ describe SubmissionWorker do
     end
     specify 'leading space is stripped' do
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
-      expect(Trade::Permit.find_by_number('BBB')).not_to be_nil
+      expect(Trade::Permit.find_by(number: 'BBB')).not_to be_nil
     end
     context 'when permit previously reported' do
       before(:each) { create(:permit, number: 'xxx') }

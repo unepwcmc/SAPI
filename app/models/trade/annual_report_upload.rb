@@ -57,7 +57,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
   validates :csv_source_file, csv_column_headers: true, on: :create
 
   scope :created_by_sapi, -> {
-    where('epix_created_by_id IS NULL')
+    where(epix_created_by_id: nil)
   }
 
   after_create :copy_to_sandbox
@@ -120,8 +120,8 @@ class Trade::AnnualReportUpload < ApplicationRecord
     # remove uploaded file
     store_dir = csv_source_file.store_dir
     remove_csv_source_file!
-    puts '### removing uploads dir ###'
-    puts Rails.public_path.join(store_dir)
+    Rails.logger.debug '### removing uploads dir ###'
+    Rails.logger.debug Rails.public_path.join(store_dir)
     FileUtils.remove_dir(Rails.public_path.join(store_dir), force: true)
 
     # clear downloads cache

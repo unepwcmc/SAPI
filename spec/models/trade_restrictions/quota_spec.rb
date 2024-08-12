@@ -92,7 +92,7 @@ describe Quota, sidekiq: :inline do
           )
         end
 
-        specify { expect(quota1).to be_invalid }
+        specify { expect(quota1).not_to be_valid }
         specify { expect(quota1.error_on(:quota).size).to eq(2) }
       end
 
@@ -106,7 +106,7 @@ describe Quota, sidekiq: :inline do
           )
         end
 
-        specify { expect(quota).to be_invalid }
+        specify { expect(quota).not_to be_valid }
         specify { expect(quota.error_on(:publication_date).size).to eq(1) }
       end
 
@@ -121,7 +121,7 @@ describe Quota, sidekiq: :inline do
           )
         end
 
-        specify { expect(quota).to be_invalid }
+        specify { expect(quota).not_to be_valid }
         specify { expect(quota.error_on(:start_date).size).to eq(1) }
       end
 

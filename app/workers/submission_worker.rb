@@ -31,8 +31,8 @@ class SubmissionWorker
     # remove uploaded file
     store_dir = aru.csv_source_file.store_dir
     aru.remove_csv_source_file!
-    puts '### removing uploads dir ###'
-    puts Rails.public_path.join(store_dir)
+    Rails.logger.debug '### removing uploads dir ###'
+    Rails.logger.debug Rails.public_path.join(store_dir)
     FileUtils.remove_dir(Rails.public_path.join(store_dir), force: true)
 
     # clear downloads cache
