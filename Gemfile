@@ -59,7 +59,7 @@ gem 'httparty', '~> 0.21.0'
 
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
-gem 'acts-as-taggable-on', '~> 10.0'
+gem 'acts-as-taggable-on', '~> 10.0' # TODO: refuses to install against Rails 7.2
 gem 'carrierwave', '~> 3.0', '>= 3.0.5'
 
 # PDF
