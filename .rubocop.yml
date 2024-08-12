@@ -126,6 +126,13 @@ Layout/HashAlignment:
 Rails/NotNullColumn:
   Enabled: false
 
+Rails/UnknownEnv:
+  Environments:
+    - development
+    - test
+    - staging
+    - production
+
 Style/Documentation:
   Enabled: false
 
