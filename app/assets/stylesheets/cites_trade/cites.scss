@@ -1,28 +1,28 @@
 body {
-	top: 0;
-	/*background: white;*/
-	font-face: Verdana, Arial, Helvetica, sans-serif;
-	/*bgcolor: #FFFFFF;*/
+  top: 0;
+  /*background: white;*/
+  font-face: Verdana, Arial, Helvetica, sans-serif;
+  /*bgcolor: #FFFFFF;*/
 
 
 }
 #tot {
-	margin-left:50px;
-	margin-right: 50px;
-	margin-top: 0px;
-	background: inherit;
-	width: 100%;
-	align: center;
+  margin-left:50px;
+  margin-right: 50px;
+  margin-top: 0px;
+  background: inherit;
+  width: 100%;
+  align: center;
 
 }
 #selections {
-	margin-left:50px;
-	margin-right: 50px;
-	margin-top: 0px;
-	background: white;
-	border: 0px, solid;
-	align:center;
-	width: 800px;
+  margin-left:50px;
+  margin-right: 50px;
+  margin-top: 0px;
+  background: white;
+  border: 0px, solid;
+  align:center;
+  width: 800px;
 
 }
 
@@ -32,25 +32,25 @@ body {
 .linkStyle a:active { color: #00CC00; }
 
 #language_links {
-	align: right;
-	font-face: Verdana, Arial, Helvetica, sans-serif;
-	position: absolute; right: 350px;
-	padding-top: 10px;
+  align: right;
+  font-face: Verdana, Arial, Helvetica, sans-serif;
+  position: absolute; right: 350px;
+  padding-top: 10px;
 }
 .heading_label{
-	/*width: 400px;*/
-	font-size: 20px;
-	font-weight:400;
-	font-face: Verdana, Arial, Helvetica, sans-serif;
-	color: green;
-	/*align: center;*/
-	padding-top:10px;
+  /*width: 400px;*/
+  font-size: 20px;
+  font-weight:400;
+  font-face: Verdana, Arial, Helvetica, sans-serif;
+  color: green;
+  /*align: center;*/
+  padding-top:10px;
 }
 .text_label{
-	border: 1px;
-	font-size: 1em;
-	font-face: Verdana, Arial, Helvetica, sans-serif;
-	color: #000;
+  border: 1px;
+  font-size: 1em;
+  font-face: Verdana, Arial, Helvetica, sans-serif;
+  color: #000;
 }
 
 .ui-autocomplete-loading { background: image-url('cites_trade/ui-anim_basic_16x16.gif') no-repeat right center }

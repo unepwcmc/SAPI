@@ -17,11 +17,11 @@ class Elibrary::IdentificationDocsDistributionsImporter
   def self.import_species_distributions
     sql = <<-SQL
       WITH doc_taxon_tmp AS (
-  	    SELECT dc.id doc_cit_id, dctc.taxon_concept_id tc_id
-  	    FROM document_citation_taxon_concepts dctc
-  	    JOIN document_citations dc ON dc.id = dctc.document_citation_id
-  	    JOIN api_documents_mview d ON d.id = dc.document_id
-  	    WHERE d.document_type IN ('Document::IdManual', 'Document::VirtualCollege')
+      SELECT dc.id doc_cit_id, dctc.taxon_concept_id tc_id
+      FROM document_citation_taxon_concepts dctc
+      JOIN document_citations dc ON dc.id = dctc.document_citation_id
+      JOIN api_documents_mview d ON d.id = dc.document_id
+      WHERE d.document_type IN ('Document::IdManual', 'Document::VirtualCollege')
       )
 
       INSERT INTO "document_citation_geo_entities" (
@@ -37,9 +37,9 @@ class Elibrary::IdentificationDocsDistributionsImporter
         NOW(),
         NOW()
       FROM (
-  	     SELECT doc_cit_id, UNNEST(countries_ids_ary)
-  	     FROM  doc_taxon_tmp tmp
-  	     LEFT OUTER JOIN taxon_concepts_mview tc ON tc_id=tc.id
+       SELECT doc_cit_id, UNNEST(countries_ids_ary)
+       FROM  doc_taxon_tmp tmp
+       LEFT OUTER JOIN taxon_concepts_mview tc ON tc_id=tc.id
          ) AS t(doc_cit_id,country_id)
       GROUP BY doc_cit_id
 
