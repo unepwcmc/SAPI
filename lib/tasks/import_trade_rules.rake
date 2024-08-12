@@ -2,7 +2,7 @@ require Rails.root.join('lib/tasks/helpers_for_import.rb')
 
 namespace :import do
   desc 'import trade plus conversion rules'
-  task :trade_rules => [:environment] do
+  task trade_rules: [ :environment ] do
     path_to_groups_file = "#{Rails.application.root}/lib/data/trade_taxon_groups.yml"
     abort("File doesn't exist.") unless File.exists?(path_to_groups_file)
     groups_definition = YAML.load_file(path_to_groups_file)

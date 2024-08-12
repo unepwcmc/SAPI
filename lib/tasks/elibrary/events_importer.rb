@@ -13,13 +13,13 @@ class Elibrary::EventsImporter
 
   def columns_with_type
     [
-      ['EventTypeID', 'INT'],
-      ['EventTypeName', 'TEXT'],
-      ['splus_event_type', 'TEXT'],
-      ['EventID', 'INT'],
-      ['EventName', 'TEXT'],
-      ['MeetingType', 'TEXT'],
-      ['EventDate', 'TEXT']
+      [ 'EventTypeID', 'INT' ],
+      [ 'EventTypeName', 'TEXT' ],
+      [ 'splus_event_type', 'TEXT' ],
+      [ 'EventID', 'INT' ],
+      [ 'EventName', 'TEXT' ],
+      [ 'MeetingType', 'TEXT' ],
+      [ 'EventDate', 'TEXT' ]
     ]
   end
 
@@ -135,5 +135,4 @@ class Elibrary::EventsImporter
       puts "\t #{type} #{count}"
     end
   end
-
 end

@@ -1,5 +1,4 @@
 class TaxonConceptData
-
   def initialize(taxon_concept)
     @taxon_concept = taxon_concept.reload
     @rank_name = taxon_concept.rank && taxon_concept.rank.name
@@ -65,8 +64,7 @@ class TaxonConceptData
         Rank.in_range(nil, nil)
       end
     higher_taxa_ranks.map do |r|
-      ["#{r.downcase}_id", "#{r.downcase}_name"]
+      [ "#{r.downcase}_id", "#{r.downcase}_name" ]
     end.flatten
   end
-
 end

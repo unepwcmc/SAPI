@@ -16,20 +16,19 @@
 #
 
 class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
-
   INVALID_KINGDOM_SOURCE = {
-    'ANIMALIA' => ['A'],
-    'PLANTAE' => ['C', 'R']
+    'ANIMALIA' => [ 'A' ],
+    'PLANTAE' => [ 'C', 'R' ]
   }
 
   def validation_errors_for_shipment(shipment)
     return nil unless shipment.source && (
-      shipment.taxon_concept &&
+      (shipment.taxon_concept &&
       shipment.taxon_concept.data['kingdom_name'] == 'Animalia' &&
-      INVALID_KINGDOM_SOURCE['ANIMALIA'].include?(shipment.source.code) ||
-      shipment.taxon_concept &&
+      INVALID_KINGDOM_SOURCE['ANIMALIA'].include?(shipment.source.code)) ||
+      (shipment.taxon_concept &&
       shipment.taxon_concept.data['kingdom_name'] == 'Plantae' &&
-      INVALID_KINGDOM_SOURCE['PLANTAE'].include?(shipment.source.code)
+      INVALID_KINGDOM_SOURCE['PLANTAE'].include?(shipment.source.code))
     )
     error_message
   end
@@ -43,7 +42,7 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
 
     upper_kingdom_name = Arel::Nodes::NamedFunction.new(
       'UPPER',
-      [Arel::Nodes::SqlLiteral.new("taxon_concepts.data->'kingdom_name'")]
+      [ Arel::Nodes::SqlLiteral.new("taxon_concepts.data->'kingdom_name'") ]
     )
 
     arel = s.project(

@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import reference distribution links from csv file (usage: rake import:reference_distribution_links[path/to/file,path/to/another])'
-  task :reference_distribution_links, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :reference_distribution_links, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'reference_distribution_links_import'
     puts "There are #{DistributionReference.count} distribution references in the database."
 
@@ -21,7 +20,7 @@ namespace :import do
       SQL
       ApplicationRecord.connection.execute(sql)
 
-      puts "inserting reference distribution links"
+      puts 'inserting reference distribution links'
       sql = <<-SQL
         INSERT INTO "distribution_references"
           (distribution_id, reference_id)
@@ -52,5 +51,4 @@ namespace :import do
     end
     puts "There are now #{DistributionReference.count} distribution references in the database"
   end
-
 end

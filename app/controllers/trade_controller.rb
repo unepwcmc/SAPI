@@ -1,20 +1,19 @@
 class TradeController < ApplicationController
-
   before_action :authenticate_user!
-  before_action :verify_manager_or_secretariat_or_active, except: [:update, :create, :submit, :destroy]
-  before_action :verify_manager, only: [:update, :create, :submit, :destroy, :update_batch, :destroy_batch]
+  before_action :verify_manager_or_secretariat_or_active, except: [ :update, :create, :submit, :destroy ]
+  before_action :verify_manager, only: [ :update, :create, :submit, :destroy, :update_batch, :destroy_batch ]
 
   def user_can_edit
     render json: { can_edit: current_user.is_manager? && current_user.is_active? }
   end
 
+  def create
+    raise NotImplementedError
+  end
   def update
     raise NotImplementedError
   end
 
-  def create
-    raise NotImplementedError
-  end
 
   def submit
     raise NotImplementedError
@@ -59,7 +58,7 @@ class TradeController < ApplicationController
       :internal,
       :page,
       :csv_separator,
-      taxon_concepts_ids: [], #For downloads needs to be array, but not for search... make array in custom transition?Or is this mapped away from array in ruby!?!!!?!?!?!?!?!
+      taxon_concepts_ids: [], # For downloads needs to be array, but not for search... make array in custom transition?Or is this mapped away from array in ruby!?!!!?!?!?!?!?!
       reported_taxon_concepts_ids: [],
       appendices: [],
       terms_ids: [],
@@ -80,8 +79,8 @@ class TradeController < ApplicationController
       taxon_with_descendants: true,
       report_type:
         if params[:filters] && params[:filters][:report_type] &&
-          Trade::ShipmentsExportFactory.report_types &
-          [report_type = params[:filters][:report_type].downcase.strip.to_sym]
+          (Trade::ShipmentsExportFactory.report_types &
+          [ report_type = params[:filters][:report_type].downcase.strip.to_sym ])
           report_type
         else
           :raw

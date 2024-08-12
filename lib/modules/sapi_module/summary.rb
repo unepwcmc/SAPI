@@ -1,6 +1,5 @@
 module SapiModule
   module Summary
-
     def self.database_stats
       stats = {}
       stats[:core] = self.core_stats
@@ -81,20 +80,20 @@ module SapiModule
       stats[:accepted_taxa] = TaxonConcept.where(
         taxonomy_id: t.id,
         name_status: 'A'
-      ).where(["(data->'kingdom_id')::INT = ?", k.id]).count
+      ).where([ "(data->'kingdom_id')::INT = ?", k.id ]).count
       stats[:synonym_taxa] = TaxonConcept.where(
         taxonomy_id: t.id, name_status: 'S'
-      ).where(["(data->'kingdom_id')::INT = ?", k.id]).count
+      ).where([ "(data->'kingdom_id')::INT = ?", k.id ]).count
       stats[:other_taxa] = TaxonConcept.where(
         taxonomy_id: t.id
-      ).where(["(data->'kingdom_id')::INT = ?", k.id]).
+      ).where([ "(data->'kingdom_id')::INT = ?", k.id ]).
         where("name_status NOT IN ('A', 'S')").count
       stats[:listing_changes] = ListingChange.joins(:taxon_concept).
         where(taxon_concepts: { taxonomy_id: t.id }).
-        where(["(data->'kingdom_id')::INT = ?", k.id]).count
+        where([ "(data->'kingdom_id')::INT = ?", k.id ]).count
       distributions = Distribution.joins(:taxon_concept).
         where(taxon_concepts: { taxonomy_id: t.id }).
-        where(["(data->'kingdom_id')::INT = ?", k.id])
+        where([ "(data->'kingdom_id')::INT = ?", k.id ])
       stats[:distributions] = distributions.count
       stats[:distribution_tags] = ApplicationRecord.connection.execute(<<-SQL
             SELECT COUNT(*) FROM taggings
@@ -110,16 +109,16 @@ module SapiModule
       stats[:distribution_references] = DistributionReference.
         joins(distribution: :taxon_concept).
         where(taxon_concepts: { taxonomy_id: t.id }).
-        where(["(data->'kingdom_id')::INT = ?", k.id]).count
+        where([ "(data->'kingdom_id')::INT = ?", k.id ]).count
       stats[:taxon_references] = TaxonConceptReference.joins(:taxon_concept).
         where(taxon_concepts: { taxonomy_id: t.id }).
-        where(["(data->'kingdom_id')::INT = ?", k.id]).count
+        where([ "(data->'kingdom_id')::INT = ?", k.id ]).count
       stats[:taxon_standard_references] = TaxonConceptReference.joins(:taxon_concept).
         where(taxon_concepts: { taxonomy_id: t.id }, taxon_concept_references: { is_standard: true }).
-        where(["(data->'kingdom_id')::INT = ?", k.id]).count
-      stats[:common_names] =  TaxonCommon.joins(:taxon_concept).
+        where([ "(data->'kingdom_id')::INT = ?", k.id ]).count
+      stats[:common_names] = TaxonCommon.joins(:taxon_concept).
         where(taxon_concepts: { taxonomy_id: t.id }).
-        where(["(data->'kingdom_id')::INT = ?", k.id]).count
+        where([ "(data->'kingdom_id')::INT = ?", k.id ]).count
       stats
     end
 
@@ -169,7 +168,7 @@ module SapiModule
       puts '#############################################################'
       puts "Details for Taxa under #{t.name}"
       TaxonConcept.joins(:rank).where(
-        "ranks.name": Rank::KINGDOM, taxonomy_id: t.id
+        'ranks.name': Rank::KINGDOM, taxonomy_id: t.id
       ).each do |k|
         kingdom_summary(t, k)
       end
@@ -198,7 +197,7 @@ module SapiModule
         puts "##############   Rank: #{r.name} ####################"
         ranked_taxon_concept_ids = TaxonConcept.
           where(taxonomy_id: t.id, rank_id: r.id).
-          where(["(data->'kingdom_id')::INT = ?", k.id]).
+          where([ "(data->'kingdom_id')::INT = ?", k.id ]).
           select(:id).map(&:id)
         print_count_for 'Taxa', ranked_taxon_concept_ids.count
         print_count_for ' Listing Changes', ListingChange.where(
@@ -212,6 +211,5 @@ module SapiModule
     def self.print_count_for(klass, count)
       puts "#{count} #{klass}"
     end
-
   end
 end

@@ -1,5 +1,4 @@
 class Admin::CmsMappingsController < Admin::SimpleCrudController
-
   def index
     @totals = {
       species_plus: TaxonConcept.joins(:taxonomy).

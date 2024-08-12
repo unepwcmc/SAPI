@@ -1,5 +1,4 @@
 module NomenclatureChange::StatusChangeHelpers
-
   def self.included(base)
     base.class_eval do
       # Migrated to controller (Strong Parameters)
@@ -35,5 +34,4 @@ module NomenclatureChange::StatusChangeHelpers
     end
     true
   end
-
 end

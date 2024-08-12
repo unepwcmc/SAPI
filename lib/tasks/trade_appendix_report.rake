@@ -1,6 +1,5 @@
 namespace :trade do
-
-  task :appendix_report => :environment do
+  task appendix_report: :environment do
     dir = 'tmp/appendix_report'
     Dir.mkdir(dir) unless File.exist?(dir)
     puts "Saving appendix report in #{dir}"
@@ -16,5 +15,4 @@ namespace :trade do
     )
     report.export("#{dir}/diff.csv", true)
   end
-
 end

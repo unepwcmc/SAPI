@@ -13,7 +13,7 @@ module Import::Rst::Fetcher
         page += 1
       end
 
-      flat_data = responses.flat_map {|r| r['data']['items'] }
+      flat_data = responses.flat_map { |r| r['data']['items'] }
       Rails.logger.info "Retrieved #{flat_data.count} RST cases"
 
       flat_data

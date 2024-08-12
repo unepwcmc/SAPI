@@ -1,5 +1,4 @@
 class Checklist::DocumentsController < ApplicationController
-
   def index
     return render json: []  if params[:taxon_concepts_ids].nil?
     return render json: []  unless params[:taxon_concepts_ids].kind_of?(Array)
@@ -32,10 +31,10 @@ class Checklist::DocumentsController < ApplicationController
       response.headers['Content-Length'] = File.size(path_to_file).to_s
       send_file(
         path_to_file,
-          filename: File.basename(path_to_file),
-          type: @document.filename.content_type,
-          disposition: 'attachment',
-          url_based_filename: true
+        filename: File.basename(path_to_file),
+        type: @document.filename.content_type,
+        disposition: 'attachment',
+        url_based_filename: true
       )
     end
   end
@@ -47,7 +46,6 @@ class Checklist::DocumentsController < ApplicationController
   end
 
   def volume_download
-
     t = full_volume_downloader
 
     volumes = params[:volume].sort.join(',')
@@ -67,19 +65,19 @@ class Checklist::DocumentsController < ApplicationController
   end
 
   def render_404
-    render file: "#{Rails.root}/public/404", layout: false, formats: [:html],
-    status: 404
+    render file: "#{Rails.public_path.join('404')}", layout: false, formats: [ :html ],
+      status: :not_found
   end
 
   def render_403
-    render file: "#{Rails.root}/public/403", layout: false, formats: [:html],
-    status: 403
+    render file: "#{Rails.public_path.join('403')}", layout: false, formats: [ :html ],
+      status: :forbidden
   end
 
   def full_volume_downloader
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
     missing_files = []
-    vol_path = [Rails.root, '/public/ID_manual_volumes/', params['locale'], '/'].join
+    vol_path = [ Rails.root, '/public/ID_manual_volumes/', params['locale'], '/' ].join
     @pdf_file_paths = params['volume'].map { |vol| vol_path + "Volume#{vol}" + "_#{params['locale'].upcase}" + '.pdf' }
     Zip::OutputStream.open(t.path) do |zos|
       @pdf_file_paths.each do |doc_path|

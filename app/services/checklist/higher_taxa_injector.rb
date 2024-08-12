@@ -11,16 +11,15 @@ class Checklist::HigherTaxaInjector
   def initialize(taxon_concepts, options = {})
     @skip_ancestor_ids = options[:skip_ancestor_ids]
     @expand_headers = options[:expand_headers] || false
-    @ranks = ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS', 'SPECIES']
-    @header_ranks = options[:header_ranks] || ['PHYLUM', 'CLASS', 'ORDER', 'FAMILY']
+    @ranks = [ 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY', 'GENUS', 'SPECIES' ]
+    @header_ranks = options[:header_ranks] || [ 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY' ]
     @taxon_concepts = taxon_concepts
     # fetch all higher taxa first
     higher_taxa_ids = @taxon_concepts.map do |tc|
-      [tc.phylum_id, tc.class_id, tc.order_id, tc.family_id]
+      [ tc.phylum_id, tc.class_id, tc.order_id, tc.family_id ]
     end.flatten.uniq
-    @higher_taxa = Hash[
-      MTaxonConcept.where(id: higher_taxa_ids).map { |tc| [tc.id, tc] }
-    ]
+    @higher_taxa =
+      MTaxonConcept.where(id: higher_taxa_ids).index_by { |tc| tc.id }
   end
 
   def run
@@ -74,23 +73,23 @@ class Checklist::HigherTaxaInjector
         for rank in @header_ranks.reverse
           rank_id_attr = "#{rank.downcase}_id"
           curr_item.send(rank_id_attr)
-          if prev_item.send(rank_id_attr) != curr_item.send(rank_id_attr)
-            tmp << rank
-          else
+          if prev_item.send(rank_id_attr) == curr_item.send(rank_id_attr)
             break
+          else
+            tmp << rank
           end
         end
         tmp.reverse
       end
 
-    ranks = [ranks.last].compact unless @expand_headers
+    ranks = [ ranks.last ].compact unless @expand_headers
 
     res = []
     @last_ancestor_ids = @header_ranks.map { |rank| curr_item.send("#{rank.downcase}_id") }
     ranks.each_with_index do |rank, idx|
       higher_taxon_id = curr_item.send("#{rank.downcase}_id")
 
-      unless (prev_item && prev_item.send("#{rank.downcase}_id") == higher_taxon_id && !@expand_headers)
+      unless prev_item && prev_item.send("#{rank.downcase}_id") == higher_taxon_id && !@expand_headers
         higher_taxon = @higher_taxa[higher_taxon_id]
         if higher_taxon && !(@skip_ancestor_ids && @skip_ancestor_ids.include?(higher_taxon.id))
           res << higher_taxon
@@ -99,5 +98,4 @@ class Checklist::HigherTaxaInjector
     end
     res
   end
-
 end

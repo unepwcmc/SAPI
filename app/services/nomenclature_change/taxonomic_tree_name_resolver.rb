@@ -1,5 +1,4 @@
 class NomenclatureChange::TaxonomicTreeNameResolver
-
   def initialize(taxon_concept, taxon_concept_old_copy)
     @node = taxon_concept
     @node_old_copy = taxon_concept_old_copy
@@ -15,7 +14,7 @@ class NomenclatureChange::TaxonomicTreeNameResolver
   def resolve(node)
     @expected_full_name = node.expected_full_name(node.parent)
     return node if name_compatible_with_parent?(node)
-    Rails.logger.debug("Resolving node name: #{node.full_name} (expected: #{@expected_full_name})")
+    Rails.logger.debug { "Resolving node name: #{node.full_name} (expected: #{@expected_full_name})" }
 
     # find or create a new accepted name compatible with this parent
     compatible_node = TaxonConcept.where(
@@ -31,7 +30,7 @@ class NomenclatureChange::TaxonomicTreeNameResolver
       end.first
     if !compatible_node
       compatible_node = create_compatible_node(node)
-    elsif compatible_node && !['A', 'N'].include?(compatible_node.name_status)
+    elsif compatible_node && ![ 'A', 'N' ].include?(compatible_node.name_status)
       upgrade_node(compatible_node, node.parent)
     end
 
@@ -51,7 +50,7 @@ class NomenclatureChange::TaxonomicTreeNameResolver
 
   def create_compatible_node(node)
     expected_scientific_name =
-      if ['A', 'N'].include?(node.name_status)
+      if [ 'A', 'N' ].include?(node.name_status)
         @expected_full_name.split.last
       else
         @expected_full_name
@@ -86,5 +85,4 @@ class NomenclatureChange::TaxonomicTreeNameResolver
   def name_compatible_with_parent?(node)
     @expected_full_name == node.full_name
   end
-
 end

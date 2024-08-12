@@ -43,5 +43,4 @@ class Trade::PermitMatcher
     end
     query_parts.join
   end
-
 end

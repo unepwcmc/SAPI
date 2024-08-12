@@ -9,13 +9,13 @@ class Species::SearchParams < Hash
       # possible taxonomies are cms and cites_eu
       taxonomy: whitelist_param(
         sanitise_symbol(params[:taxonomy]),
-        [:cites_eu, :cms],
+        [ :cites_eu, :cms ],
         :cites_eu
       ),
       # possible geo_entity_scope values are: cites, eu, occurrences
       geo_entity_scope: whitelist_param(
         sanitise_symbol(params[:geo_entity_scope]),
-        [:cites, :eu, :cms],
+        [ :cites, :eu, :cms ],
         :cites
       ),
       # filtering options
@@ -25,11 +25,11 @@ class Species::SearchParams < Hash
       ranks: whitelist_param_array(
         sanitise_upcase_string_array(params[:ranks]),
         Rank.dict,
-        [Rank::SPECIES, Rank::SUBSPECIES]
+        [ Rank::SPECIES, Rank::SUBSPECIES ]
       ),
       visibility: whitelist_param(
         sanitise_symbol(params[:visibility]),
-        [:speciesplus, :trade, :trade_internal, :elibrary, :checklist],
+        [ :speciesplus, :trade, :trade_internal, :elibrary, :checklist ],
         :speciesplus
       ),
       include_synonyms: sanitise_boolean(params[:include_synonyms], false),
@@ -44,5 +44,4 @@ class Species::SearchParams < Hash
   def self.sanitize(params)
     new(params)
   end
-
 end

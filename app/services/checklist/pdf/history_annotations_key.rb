@@ -28,5 +28,4 @@ class Checklist::Pdf::HistoryAnnotationsKey
     end
     tex
   end
-
 end

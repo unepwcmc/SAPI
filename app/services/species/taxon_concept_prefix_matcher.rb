@@ -8,13 +8,13 @@ class Species::TaxonConceptPrefixMatcher
   end
 
   def results
-    (@taxon_concept_query || !@ranks.empty?) &&
+    ((@taxon_concept_query || !@ranks.empty?) &&
     @query.limit(@options[:per_page]).
-      offset(@options[:per_page] * (@options[:page] - 1)).to_a || []
+      offset(@options[:per_page] * (@options[:page] - 1)).to_a) || []
   end
 
   def total_cnt
-    (@taxon_concept_query || !@ranks.empty?) && @query.count(:all) || 0
+    ((@taxon_concept_query || !@ranks.empty?) && @query.count(:all)) || 0
   end
 
   private
@@ -31,7 +31,7 @@ class Species::TaxonConceptPrefixMatcher
       if @visibility == :trade
         @query.order(:full_name)
       else
-        @query.order([:rank_order, :full_name])
+        @query.order([ :rank_order, :full_name ])
       end
 
     unless @ranks.empty?
@@ -67,11 +67,11 @@ class Species::TaxonConceptPrefixMatcher
     # in addition, the 'reported taxon' in internal trade matches only on self
     types_of_match =
       if @visibility == :trade_internal && @include_synonyms
-        ['SELF']
-      elsif [:trade_internal, :trade].include? @visibility
-        ['SELF', 'SYNONYM', 'COMMON_NAME']
+        [ 'SELF' ]
+      elsif [ :trade_internal, :trade ].include? @visibility
+        [ 'SELF', 'SYNONYM', 'COMMON_NAME' ]
       else
-        ['SELF', 'SYNONYM', 'COMMON_NAME', 'SUBSPECIES']
+        [ 'SELF', 'SYNONYM', 'COMMON_NAME', 'SUBSPECIES' ]
       end
 
     @query = @query.
@@ -101,5 +101,4 @@ class Species::TaxonConceptPrefixMatcher
     end
     @query
   end
-
 end

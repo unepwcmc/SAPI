@@ -1,11 +1,10 @@
 namespace :import do
-  desc "Import trade permits from csv file (usage: rake import:trade_permits[path/to/file])"
-  task :trade_permits, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
-
-    TMP_TABLE = "permits_import"
-    permits_import_to_index = { "permits_import" => ["permit_number", "shipment_number", "permit_reporter_type"] }
-    trade_shipments_indexed = { "trade_shipments" => ["export_permits_ids", "import_permits_ids", "origin_permits_ids"] }
-    trade_shipments_to_index = { "trade_shipments" => ["legacy_shipment_number"] }
+  desc 'Import trade permits from csv file (usage: rake import:trade_permits[path/to/file])'
+  task :trade_permits, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    TMP_TABLE = 'permits_import'
+    permits_import_to_index = { 'permits_import' => [ 'permit_number', 'shipment_number', 'permit_reporter_type' ] }
+    trade_shipments_indexed = { 'trade_shipments' => [ 'export_permits_ids', 'import_permits_ids', 'origin_permits_ids' ] }
+    trade_shipments_to_index = { 'trade_shipments' => [ 'legacy_shipment_number' ] }
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -20,16 +19,16 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      create_indices(permits_import_to_index, "btree")
+      create_indices(permits_import_to_index, 'btree')
 
       populate_trade_permits
 
       drop_indices(trade_shipments_indexed)
-      create_indices(trade_shipments_to_index, "btree")
+      create_indices(trade_shipments_to_index, 'btree')
 
       insert_into_trade_shipments
 
-      create_indices(trade_shipments_indexed, "GIN")
+      create_indices(trade_shipments_indexed, 'GIN')
       drop_indices(trade_shipments_to_index)
       drop_indices(permits_import_to_index)
     end
@@ -80,7 +79,7 @@ def populate_trade_permits
 end
 
 def insert_into_trade_shipments
-  permits_entity = { "import" => "I", "export" => 'E', "origin" => 'O' }
+  permits_entity = { 'import' => 'I', 'export' => 'E', 'origin' => 'O' }
   permits_entity.each do |k, v|
     sql = <<-SQL
       WITH grouped_permits AS (

@@ -17,7 +17,7 @@ class DownloadWorker
       format_module = format_modules[@download.format]
 
       document_modules = {
-        'index'   => format_module::Index,
+        'index' => format_module::Index,
         'history' => format_module::History
       }
 

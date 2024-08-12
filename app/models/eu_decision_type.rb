@@ -19,7 +19,7 @@ class EuDecisionType < ApplicationRecord
   build_dictionary :negative_opinion, :positive_opinion, :no_opinion,
     :suspension, :srg_referral
 
-  scope :opinions, -> { where('decision_type <> ?', EuDecisionType::SUSPENSION).
+  scope :opinions, -> { where.not(decision_type: EuDecisionType::SUSPENSION).
     order(Arel.sql('UPPER(name) ASC')) }
   scope :suspensions, -> { where(decision_type: EuDecisionType::SUSPENSION).
     order(Arel.sql('UPPER(name) ASC')) }

@@ -1,5 +1,4 @@
 class Species::CmsMappingsExport < Species::CsvCopyExport
-
   def query
     rel = CmsMapping.from(table_name).
       joins("LEFT JOIN taxon_concepts ON

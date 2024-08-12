@@ -82,18 +82,18 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
       'COUNT(eu_opinions.id)',
       'COUNT(eu_suspensions.id)'
     ]).
-    joins("LEFT JOIN trade_restrictions quotas ON quotas.taxon_concept_id = taxon_concepts.id AND quotas.type = 'Quota'").
-    joins("LEFT JOIN trade_restrictions cites_suspensions ON cites_suspensions.taxon_concept_id = taxon_concepts.id AND cites_suspensions.type = 'CitesSuspension'").
-    joins("LEFT JOIN eu_decisions eu_opinions ON eu_opinions.taxon_concept_id = taxon_concepts.id AND eu_opinions.type = 'EuOpinions'").
-    joins("LEFT JOIN eu_decisions eu_suspensions ON eu_suspensions.taxon_concept_id = taxon_concepts.id AND eu_suspensions.type = 'EuSuspension'").
-    group(:'taxon_concepts.id', :legacy_id,
-      :kingdom_name, :phylum_name, :class_name,
-      :order_name, :family_name, :genus_name,
-      :species_name, :full_name, :author_year, :name_status,
-      :cites_listed_descendants, :eu_listed_descendants,
-      :taxonomic_position
+      joins("LEFT JOIN trade_restrictions quotas ON quotas.taxon_concept_id = taxon_concepts.id AND quotas.type = 'Quota'").
+      joins("LEFT JOIN trade_restrictions cites_suspensions ON cites_suspensions.taxon_concept_id = taxon_concepts.id AND cites_suspensions.type = 'CitesSuspension'").
+      joins("LEFT JOIN eu_decisions eu_opinions ON eu_opinions.taxon_concept_id = taxon_concepts.id AND eu_opinions.type = 'EuOpinions'").
+      joins("LEFT JOIN eu_decisions eu_suspensions ON eu_suspensions.taxon_concept_id = taxon_concepts.id AND eu_suspensions.type = 'EuSuspension'").
+      group(:'taxon_concepts.id', :legacy_id,
+        :kingdom_name, :phylum_name, :class_name,
+        :order_name, :family_name, :genus_name,
+        :species_name, :full_name, :author_year, :name_status,
+        :cites_listed_descendants, :eu_listed_descendants,
+        :taxonomic_position
     ).
-    order(:taxonomic_position)
+      order(:taxonomic_position)
   end
 
   def export(file_path)
@@ -111,5 +111,4 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
       delimiter: ';'
     )
   end
-
 end

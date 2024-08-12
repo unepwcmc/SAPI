@@ -38,5 +38,4 @@ class NomenclatureChange::OutputReassignment < ApplicationRecord
 
   belongs_to :output, class_name: 'NomenclatureChange::Output',
     foreign_key: :nomenclature_change_output_id
-
 end

@@ -1,5 +1,4 @@
 class Admin::QuotasController < Admin::StandardAuthorizationController
-
   def index
     @years = Quota.years_array
     if params[:year] && !@years.include?(params[:year])

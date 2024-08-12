@@ -1,12 +1,11 @@
 module ApplicationHelper
-
   def speciesplus_taxon_concept_id_url(taxon_concept_id)
     speciesplus_taxon_concept_url(TaxonConcept.find_by_id(taxon_concept_id))
   end
 
   def speciesplus_taxon_concept_url(taxon_concept)
     return nil unless taxon_concept
-    if [Rank::SPECIES, Rank::SUBSPECIES].include?(taxon_concept.rank.name)
+    if [ Rank::SPECIES, Rank::SUBSPECIES ].include?(taxon_concept.rank.name)
       "/species#/taxon_concepts/#{taxon_concept.id}/legal"
     else
       taxonomy = taxon_concept.taxonomy.name.downcase
@@ -41,10 +40,9 @@ module ApplicationHelper
   def error_message_header
     return '' if resource.errors.count <= 0
     message = I18n.t('errors.messages.not_saved',
-                      count: resource.errors.count,
-                      resource: resource.class.model_name.human.downcase)
+      count: resource.errors.count,
+      resource: resource.class.model_name.human.downcase)
 
     content_tag :div, content_tag(:i, '', class: 'fa fa-exclamation-triangle') + message, class: 'error-header'
   end
-
 end

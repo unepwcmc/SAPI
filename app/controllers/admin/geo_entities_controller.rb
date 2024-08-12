@@ -1,6 +1,5 @@
 class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
-
-  before_action :load_geo_entity_types, only: [:index, :create]
+  before_action :load_geo_entity_types, only: [ :index, :create ]
 
   def index
     index! do |format|
@@ -23,7 +22,7 @@ class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
   def collection
     @geo_entities ||= end_of_association_chain.
       joins(:geo_entity_type).
-      where("geo_entity_types.name": @geo_entity_type.name).
+      where('geo_entity_types.name': @geo_entity_type.name).
       order(:name_en).
       page(params[:page]).
       search(params[:query])

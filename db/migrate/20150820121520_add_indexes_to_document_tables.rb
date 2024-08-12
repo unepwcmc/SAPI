@@ -20,8 +20,8 @@ class AddIndexesToDocumentTables < ActiveRecord::Migration[4.2]
   SQL
     # remove duplicates
     execute sql
-    add_index "document_citation_taxon_concepts", ["taxon_concept_id", "document_citation_id"],
-      name: "index_citation_taxon_concepts_on_taxon_concept_id_citation_id",
+    add_index 'document_citation_taxon_concepts', [ 'taxon_concept_id', 'document_citation_id' ],
+      name: 'index_citation_taxon_concepts_on_taxon_concept_id_citation_id',
       unique: true
     sql = <<-SQL
   WITH duplicated_document_citation_geo_entities AS (
@@ -43,15 +43,15 @@ class AddIndexesToDocumentTables < ActiveRecord::Migration[4.2]
   SQL
     # remove duplicates
     execute sql
-    add_index "document_citation_geo_entities", ["geo_entity_id", "document_citation_id"],
-      name: "index_citation_geo_entities_on_geo_entity_id_citation_id",
+    add_index 'document_citation_geo_entities', [ 'geo_entity_id', 'document_citation_id' ],
+      name: 'index_citation_geo_entities_on_geo_entity_id_citation_id',
       unique: true
-    add_index "document_citations", "document_id"
-    add_index "proposal_details", "proposal_outcome_id"
-    add_index "review_details", "review_phase_id"
-    add_index "review_details", "process_stage_id"
-    add_index "documents", ["language_id", "primary_language_document_id"],
+    add_index 'document_citations', 'document_id'
+    add_index 'proposal_details', 'proposal_outcome_id'
+    add_index 'review_details', 'review_phase_id'
+    add_index 'review_details', 'process_stage_id'
+    add_index 'documents', [ 'language_id', 'primary_language_document_id' ],
       unique: true
-    add_index "documents", "event_id"
+    add_index 'documents', 'event_id'
   end
 end

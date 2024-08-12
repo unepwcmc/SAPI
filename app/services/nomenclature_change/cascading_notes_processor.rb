@@ -1,5 +1,4 @@
 class NomenclatureChange::CascadingNotesProcessor
-
   def initialize(input_or_output)
     @input_or_output = input_or_output
   end
@@ -13,7 +12,7 @@ class NomenclatureChange::CascadingNotesProcessor
       end
     return false unless @taxon_concept
     descendents_for_note_cascading(@taxon_concept).each do |d|
-      Rails.logger.debug("Processing note for descendant #{d.full_name} of input #{@taxon_concept.full_name}")
+      Rails.logger.debug { "Processing note for descendant #{d.full_name} of input #{@taxon_concept.full_name}" }
       append_nomenclature_notes(d, @input_or_output)
       (
         d.listing_changes +
@@ -34,7 +33,7 @@ class NomenclatureChange::CascadingNotesProcessor
   private
 
   def descendents_for_note_cascading(taxon_concept)
-    unless [Rank::GENUS, Rank::SPECIES].include? taxon_concept.rank.try(:name)
+    unless [ Rank::GENUS, Rank::SPECIES ].include? taxon_concept.rank.try(:name)
       return []
     end
     # if it is a genus or a species, we want taxon-level nomenclature notes,
@@ -74,7 +73,7 @@ class NomenclatureChange::CascadingNotesProcessor
       SELECT * FROM descendents
     SQL
     sanitized_subquery = ApplicationRecord.send(
-      :sanitize_sql_array, [subquery, taxon_concept_id: taxon_concept.id]
+      :sanitize_sql_array, [ subquery, taxon_concept_id: taxon_concept.id ]
     )
     TaxonConcept.from(
       "(#{sanitized_subquery}) AS taxon_concepts"
@@ -101,5 +100,4 @@ class NomenclatureChange::CascadingNotesProcessor
     legislation.internal_notes = "#{legislation.internal_notes} #{input_or_output.internal_note}"
     legislation.save(validate: false)
   end
-
 end

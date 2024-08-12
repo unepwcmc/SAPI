@@ -50,7 +50,7 @@ class CitesSuspensionNotification < Event
   end
 
   def handle_new_subtype
-    unless new_subtype.blank?
+    if new_subtype.present?
       self.subtype = new_subtype
     end
   end
@@ -67,5 +67,4 @@ class CitesSuspensionNotification < Event
       'ended CITES suspensions' => ended_suspensions
     }
   end
-
 end

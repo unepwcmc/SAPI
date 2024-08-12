@@ -1,5 +1,4 @@
 class Checklist::TimelinesController < ApplicationController
-
   def index
     return render json: []  if params[:taxon_concept_ids].nil?
     return render json: []  unless params[:taxon_concept_ids].kind_of?(Array)
@@ -19,5 +18,4 @@ class Checklist::TimelinesController < ApplicationController
       root: false
     }
   end
-
 end

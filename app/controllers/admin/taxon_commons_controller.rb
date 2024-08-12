@@ -1,5 +1,5 @@
 class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesController
-  respond_to :js, only: [:new, :edit, :create, :update]
+  respond_to :js, only: [ :new, :edit, :create, :update ]
   belongs_to :taxon_concept
 
   authorize_resource
@@ -11,48 +11,48 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
     end
   end
 
-  def create
-    create! do |success, failure|
-      success.js {
-        @taxon_commons = @taxon_concept.taxon_commons
-      }
-      failure.js {
-        load_associations
-        render 'new'
-      }
-    end
-  end
-
   def edit
     edit! do |format|
       load_associations
       format.js { render 'new' }
     end
   end
+  def create
+    create! do |success, failure|
+      success.js do
+        @taxon_commons = @taxon_concept.taxon_commons
+      end
+      failure.js do
+        load_associations
+        render 'new'
+      end
+    end
+  end
+
 
   def update
     update! do |success, failure|
-      success.js {
+      success.js do
         @taxon_commons = @taxon_concept.taxon_commons
         render 'create'
-      }
-      failure.js {
+      end
+      failure.js do
         load_associations
         render 'new'
-      }
+      end
     end
   end
 
   def destroy
     destroy! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_taxon_concept_names_url(@taxon_concept),
           notice: 'Operation succeeded'
-      }
-      failure.html {
+      end
+      failure.html do
         redirect_to admin_taxon_concept_names_url(@taxon_concept),
           notice: 'Operation failed'
-      }
+      end
     end
   end
 

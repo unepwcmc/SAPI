@@ -1,4 +1,4 @@
-shared_context "Canis lupus" do
+shared_context 'Canis lupus' do
   {
     bhutan: 'BT',
     india: 'IN',
@@ -45,7 +45,7 @@ shared_context "Canis lupus" do
       parent: @species
     )
 
-    [bhutan, india, nepal, pakistan, poland, spain, greece].each do |country|
+    [ bhutan, india, nepal, pakistan, poland, spain, greece ].each do |country|
       create(
         :distribution,
         taxon_concept: @species,
@@ -78,7 +78,7 @@ shared_context "Canis lupus" do
       effective_at: '2010-06-23',
       parent_id: cites_lc_II.id
     )
-    [bhutan, india, nepal, pakistan].each do |country|
+    [ bhutan, india, nepal, pakistan ].each do |country|
       create(
         :listing_distribution,
         geo_entity: country,
@@ -112,7 +112,7 @@ shared_context "Canis lupus" do
       is_current: true
     )
 
-    [spain, greece].each do |country|
+    [ spain, greece ].each do |country|
       create(
         :listing_distribution,
         geo_entity: country,
@@ -129,8 +129,8 @@ shared_context "Canis lupus" do
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
-      #Skip old sapi context let statements,
-      #which are now instance variables starting with _
+      # Skip old sapi context let statements,
+      # which are now instance variables starting with _
       next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

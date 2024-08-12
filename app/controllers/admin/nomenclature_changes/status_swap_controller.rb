@@ -1,5 +1,4 @@
 class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChanges::BuildController
-
   steps *NomenclatureChange::StatusSwap::STEPS
 
   def show

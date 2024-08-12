@@ -15,39 +15,39 @@ class Elibrary::CitationsImporter
 
   def columns_with_type
     [
-      ['EventTypeID', 'TEXT'],
-      ['EventTypeName', 'TEXT'],
-      ['splus_event_type', 'TEXT'],
-      ['EventID', 'TEXT'],
-      ['EventName', 'TEXT'],
-      ['EventDate', 'TEXT'],
-      ['MeetingType', 'TEXT'],
-      ['EventDocumentReference', 'TEXT'],
-      ['DocumentOrder', 'TEXT'],
-      ['DocumentTypeID', 'TEXT'],
-      ['DocumentTypeName', 'TEXT'],
-      ['splus_document_type', 'TEXT'],
-      ['DocumentID', 'TEXT'],
-      ['DocumentTitle', 'TEXT'],
-      ['supertitle', 'TEXT'],
-      ['subtitle', 'TEXT'],
-      ['DocumentDate', 'TEXT'],
-      ['DocumentFileName', 'TEXT'],
-      ['DocumentFilePath', 'TEXT'],
-      ['DocumentIsPubliclyAccessible', 'TEXT'],
-      ['DateCreated', 'TEXT'],
-      ['DateModified', 'TEXT'],
-      ['LanguageName', 'TEXT'],
-      ['DocumentIsTranslationIntoEnglish', 'TEXT'],
-      ['CitationID', 'INT'],
-      ['CtyRecID', 'TEXT'],
-      ['CtyShort', 'TEXT'],
-      ['CtyISO2', 'TEXT'],
-      ['SpeciesID', 'TEXT'],
-      ['SpeciesName', 'TEXT'],
-      ['splus_taxon_concept_id', 'TEXT'],
-      ['CtyShortCombined', 'TEXT'],
-      ['SpeciesNameCombined', 'TEXT']
+      [ 'EventTypeID', 'TEXT' ],
+      [ 'EventTypeName', 'TEXT' ],
+      [ 'splus_event_type', 'TEXT' ],
+      [ 'EventID', 'TEXT' ],
+      [ 'EventName', 'TEXT' ],
+      [ 'EventDate', 'TEXT' ],
+      [ 'MeetingType', 'TEXT' ],
+      [ 'EventDocumentReference', 'TEXT' ],
+      [ 'DocumentOrder', 'TEXT' ],
+      [ 'DocumentTypeID', 'TEXT' ],
+      [ 'DocumentTypeName', 'TEXT' ],
+      [ 'splus_document_type', 'TEXT' ],
+      [ 'DocumentID', 'TEXT' ],
+      [ 'DocumentTitle', 'TEXT' ],
+      [ 'supertitle', 'TEXT' ],
+      [ 'subtitle', 'TEXT' ],
+      [ 'DocumentDate', 'TEXT' ],
+      [ 'DocumentFileName', 'TEXT' ],
+      [ 'DocumentFilePath', 'TEXT' ],
+      [ 'DocumentIsPubliclyAccessible', 'TEXT' ],
+      [ 'DateCreated', 'TEXT' ],
+      [ 'DateModified', 'TEXT' ],
+      [ 'LanguageName', 'TEXT' ],
+      [ 'DocumentIsTranslationIntoEnglish', 'TEXT' ],
+      [ 'CitationID', 'INT' ],
+      [ 'CtyRecID', 'TEXT' ],
+      [ 'CtyShort', 'TEXT' ],
+      [ 'CtyISO2', 'TEXT' ],
+      [ 'SpeciesID', 'TEXT' ],
+      [ 'SpeciesName', 'TEXT' ],
+      [ 'splus_taxon_concept_id', 'TEXT' ],
+      [ 'CtyShortCombined', 'TEXT' ],
+      [ 'SpeciesNameCombined', 'TEXT' ]
     ]
   end
 
@@ -230,5 +230,4 @@ class Elibrary::CitationsImporter
       puts "\t #{type} #{count}"
     end
   end
-
 end

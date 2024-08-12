@@ -13,16 +13,16 @@ class Elibrary::NonCitesTaxaImporter
 
   def columns_with_type
     [
-      ['normalised_name', 'TEXT'],
-      ['notes', 'TEXT'],
-      ['genus_name', 'TEXT'],
-      ['genus_id', 'INT'],
-      ['species_name', 'TEXT'],
-      ['species_id', 'INT'],
-      ['rank', 'TEXT'],
-      ['parent_id', 'TEXT'],
-      ['Family', 'TEXT'],
-      ['Comments', 'TEXT']
+      [ 'normalised_name', 'TEXT' ],
+      [ 'notes', 'TEXT' ],
+      [ 'genus_name', 'TEXT' ],
+      [ 'genus_id', 'INT' ],
+      [ 'species_name', 'TEXT' ],
+      [ 'species_id', 'INT' ],
+      [ 'rank', 'TEXT' ],
+      [ 'parent_id', 'TEXT' ],
+      [ 'Family', 'TEXT' ],
+      [ 'Comments', 'TEXT' ]
     ]
   end
 
@@ -99,5 +99,4 @@ class Elibrary::NonCitesTaxaImporter
   def print_breakdown
     puts "#{Time.now} There are #{TaxonConcept.where(name_status: 'N').count} N taxa in total"
   end
-
 end

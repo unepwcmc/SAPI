@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::EuHashAnnotationsController do
   login_admin
 
-  describe "index" do
+  describe 'index' do
     before(:each) do
       reg1 = create_eu_regulation(name: 'Regulation1')
       reg2 = create_eu_regulation(name: 'Regulation2')
@@ -17,16 +17,15 @@ describe Admin::EuHashAnnotationsController do
       )
     end
 
-    describe "GET index" do
-      it "assigns @annotations sorted by parent_symbol and symbol" do
+    describe 'GET index' do
+      it 'assigns @annotations sorted by parent_symbol and symbol' do
         get :index
-        expect(assigns(:annotations)).to eq([@annotation2, @annotation1])
+        expect(assigns(:annotations)).to eq([ @annotation2, @annotation1 ])
       end
-      it "renders the index template" do
+      it 'renders the index template' do
         get :index
-        expect(response).to render_template("index")
+        expect(response).to render_template('index')
       end
     end
   end
-
 end

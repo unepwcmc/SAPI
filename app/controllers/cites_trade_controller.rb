@@ -1,5 +1,4 @@
 class CitesTradeController < ApplicationController
-
   private
 
   def search_params
@@ -27,16 +26,15 @@ class CitesTradeController < ApplicationController
             report_type = params[:filters][:report_type].downcase.strip.to_sym
           )
           report_type
-        else
+                           else
           :comptab
-        end,
+                           end,
       csv_separator:         if params[:filters] && params[:filters][:csv_separator] &&
           params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
           :semicolon
-        else
+                             else
           :comma
-        end
+                             end
     })
   end
-
 end

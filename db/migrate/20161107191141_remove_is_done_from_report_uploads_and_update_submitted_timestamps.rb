@@ -9,7 +9,6 @@ class RemoveIsDoneFromReportUploadsAndUpdateSubmittedTimestamps < ActiveRecord::
     )
 
     remove_column :trade_annual_report_uploads, :is_done
-
   end
 
   def down

@@ -59,7 +59,7 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
 
   # extra columns returned by crosstab
   def row_name_columns
-    [:appendix, :taxon, :term, :unit, :country]
+    [ :appendix, :taxon, :term, :unit, :country ]
   end
 
   def crosstab_columns
@@ -100,11 +100,11 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
       #{sql_crosstab_columns.join(', ')}, year, gross_quantity
       FROM (#{subquery_sql(options)}) subquery
       ORDER BY 1, #{sql_crosstab_columns.length + 2}" # order by row_name and year
-    source_sql = ApplicationRecord.send(:sanitize_sql_array, [source_sql, years])
+    source_sql = ApplicationRecord.send(:sanitize_sql_array, [ source_sql, years ])
     source_sql = ApplicationRecord.connection.quote_string(source_sql)
     # the categories query returns values by which to pivot (years)
     categories_sql = 'SELECT * FROM UNNEST(ARRAY[?])'
-    categories_sql = ApplicationRecord.send(:sanitize_sql_array, [categories_sql, years.map(&:to_i)])
+    categories_sql = ApplicationRecord.send(:sanitize_sql_array, [ categories_sql, years.map(&:to_i) ])
     ct_columns = [
       'row_name TEXT[]',
       report_crosstab_columns.map.each_with_index { |c, i| "#{sql_crosstab_columns[i]} #{crosstab_columns[c][:pg_type]}" },
@@ -116,5 +116,4 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
       AS ct(#{ct_columns})
     SQL
   end
-
 end

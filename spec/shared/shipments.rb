@@ -86,16 +86,16 @@ shared_context 'Shipments' do
 
     country = create(:geo_entity_type, name: 'COUNTRY')
     @argentina = create(:geo_entity,
-                        geo_entity_type: country,
-                        name: 'Argentina',
-                        iso_code2: 'AR'
-                       )
+      geo_entity_type: country,
+      name: 'Argentina',
+      iso_code2: 'AR'
+    )
 
     @portugal = create(:geo_entity,
-                       geo_entity_type: country,
-                       name: 'Portugal',
-                       iso_code2: 'PT'
-                      )
+      geo_entity_type: country,
+      name: 'Portugal',
+      iso_code2: 'PT'
+    )
 
     @term_cav = create(:term, code: 'CAV')
     @term_liv = create(:term, code: 'LIV')

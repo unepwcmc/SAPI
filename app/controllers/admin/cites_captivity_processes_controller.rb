@@ -1,35 +1,35 @@
 class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
   belongs_to :taxon_concept
   before_action :load_lib_objects
-  before_action :load_search, only: [:new, :index, :edit]
+  before_action :load_search, only: [ :new, :index, :edit ]
   layout 'taxon_concepts'
-
-  def update
-    update! do |success, failure|
-      success.html {
-        redirect_to admin_taxon_concept_cites_captivity_processes_url(params[:taxon_concept_id]),
-        notice: 'Operation successful'
-      }
-      failure.html {
-        load_lib_objects
-        load_search
-        render 'new'
-      }
-    end
-  end
 
   def create
     create! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_taxon_concept_cites_captivity_processes_url(params[:taxon_concept_id]),
-        notice: 'Operation successful'
-      }
-      failure.html {
+          notice: 'Operation successful'
+      end
+      failure.html do
         load_search
         render 'new'
-      }
+      end
     end
   end
+  def update
+    update! do |success, failure|
+      success.html do
+        redirect_to admin_taxon_concept_cites_captivity_processes_url(params[:taxon_concept_id]),
+          notice: 'Operation successful'
+      end
+      failure.html do
+        load_lib_objects
+        load_search
+        render 'new'
+      end
+    end
+  end
+
 
   protected
 

@@ -1,29 +1,29 @@
 class Admin::CitesSuspensionsController < Admin::StandardAuthorizationController
-  before_action :load_lib_objects, only: [:new, :edit]
+  before_action :load_lib_objects, only: [ :new, :edit ]
 
   def create
     create! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_cites_suspensions_url,
-        notice: 'Operation successful'
-      }
-      failure.html {
+          notice: 'Operation successful'
+      end
+      failure.html do
         load_lib_objects
         render 'new'
-      }
+      end
     end
   end
 
   def update
     update! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_cites_suspensions_url,
-        notice: 'Operation successful'
-      }
-      failure.html {
+          notice: 'Operation successful'
+      end
+      failure.html do
         load_lib_objects
         render 'edit'
-      }
+      end
     end
   end
 
@@ -39,9 +39,9 @@ class Admin::CitesSuspensionsController < Admin::StandardAuthorizationController
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(is_current: true,
-            geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
+        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
     @suspension_notifications = CitesSuspensionNotification.
-      select([:id, :name]).
+      select([ :id, :name ]).
       order('effective_at DESC')
   end
 

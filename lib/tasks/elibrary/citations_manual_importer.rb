@@ -15,8 +15,8 @@ class Elibrary::CitationsManualImporter
 
   def columns_with_type
     [
-      ['splus_taxon_concept_id', 'TEXT'],
-      ['Manual_ID', 'TEXT']
+      [ 'splus_taxon_concept_id', 'TEXT' ],
+      [ 'Manual_ID', 'TEXT' ]
     ]
   end
 
@@ -39,7 +39,6 @@ class Elibrary::CitationsManualImporter
   end
 
   def run_queries
-
     ApplicationRecord.connection.execute('DROP TABLE IF EXISTS elibrary_citations_resolved_tmp')
     ApplicationRecord.connection.execute('CREATE TABLE elibrary_citations_resolved_tmp (document_id INT, taxon_concept_id INT)')
     ApplicationRecord.connection.execute(
@@ -125,5 +124,4 @@ class Elibrary::CitationsManualImporter
       puts "\t #{type} #{count}"
     end
   end
-
 end

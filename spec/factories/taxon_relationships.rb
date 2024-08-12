@@ -19,7 +19,6 @@
 #  taxon_relationships_updated_by_id_fk               (updated_by_id => users.id)
 #
 FactoryBot.define do
-
   factory :taxon_relationship_type do
     sequence(:name) { |n| "INCLUDES#{n}" }
     is_bidirectional { false }

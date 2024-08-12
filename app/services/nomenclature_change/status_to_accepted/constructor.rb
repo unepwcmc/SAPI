@@ -6,5 +6,4 @@ class NomenclatureChange::StatusToAccepted::Constructor
     @nomenclature_change = nomenclature_change
     @event = @nomenclature_change.event
   end
-
 end

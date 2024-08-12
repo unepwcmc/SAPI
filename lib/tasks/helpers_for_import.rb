@@ -417,7 +417,7 @@ end
 
 def files_from_args(t, args)
   files = t.arg_names.map { |a| args[a] }.compact
-  files = ['lib/files/animals.csv'] if files.empty?
+  files = [ 'lib/files/animals.csv' ] if files.empty?
   files.reject { |file| !file_ok?(file) }
 end
 
@@ -487,7 +487,7 @@ def copy_data_into_table(path_to_file, table_name, db_columns)
   require 'psql_command'
   puts "Copying data from #{path_to_file} into tmp table #{table_name}"
   cmd = <<-PSQL
-SET DateStyle = \"ISO,DMY\";
+SET DateStyle = "ISO,DMY";
 \\COPY #{table_name} (#{db_columns.join(', ')})
 FROM '#{Rails.root + path_to_file}'
 WITH DELIMITER ','

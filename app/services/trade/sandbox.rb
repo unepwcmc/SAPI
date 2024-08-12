@@ -41,7 +41,7 @@ class Trade::Sandbox
       pg_result = Trade::SandboxTemplate.connection.execute(
         Trade::SandboxTemplate.send(:sanitize_sql_array, [
           'SELECT * FROM check_for_duplicates_in_shipments(?)',
-          @annual_report_upload.id,
+          @annual_report_upload.id
         ])
       )
       duplicates = pg_result.values.first.first.delete('{}')
@@ -100,7 +100,7 @@ class Trade::Sandbox
   def copy_csv_to_target_table
     require 'psql_command'
     columns_in_csv_order =
-      if (@annual_report_upload.point_of_view == 'E')
+      if @annual_report_upload.point_of_view == 'E'
         Trade::SandboxTemplate::EXPORTER_COLUMNS
       else
         Trade::SandboxTemplate::IMPORTER_COLUMNS
@@ -108,5 +108,4 @@ class Trade::Sandbox
     cmd = Trade::SandboxTemplate.copy_stmt(@table_name, @csv_file_path, columns_in_csv_order)
     PsqlCommand.new(cmd).execute
   end
-
 end

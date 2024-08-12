@@ -3,7 +3,7 @@ class Checklist::Checklist
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
   attr_accessor :animalia, :plantae, :authors, :synonyms, :synonyms_with_authors,
-  :english_common_names, :spanish_common_names, :french_common_names, :total_cnt
+    :english_common_names, :spanish_common_names, :french_common_names, :total_cnt
   attr_reader :query
 
   # Constructs a query to retrieve CITES listed taxon concepts based on user
@@ -42,7 +42,7 @@ class Checklist::Checklist
       ).relation
     end
 
-    unless @scientific_name.blank?
+    if @scientific_name.present?
       @taxon_concepts_rel = @taxon_concepts_rel.
         by_name(
           @scientific_name,
@@ -89,7 +89,7 @@ class Checklist::Checklist
       injector = Checklist::HigherTaxaInjector.new(@plantae)
       @plantae = injector.run
     end
-    [self] # TODO: just for compatibility with frontend, no sensible reason for this
+    [ self ] # TODO: just for compatibility with frontend, no sensible reason for this
   end
 
   # Converts a list of search filters into a limited length
@@ -108,7 +108,7 @@ class Checklist::Checklist
     # country
     @countries_count = 0
     unless @countries.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
+      summary = [ I18n.t('filter_summary.when_no_taxon') ] if summary.empty?
 
       countries = GeoEntity.where(id: @countries).to_a
 
@@ -123,7 +123,7 @@ class Checklist::Checklist
     # region
     @regions_count = 0
     unless @cites_regions.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
+      summary = [ I18n.t('filter_summary.when_no_taxon') ] if summary.empty?
 
       regions = GeoEntity.where(id: params[:cites_region_ids]).to_a
 
@@ -136,7 +136,7 @@ class Checklist::Checklist
 
     # appendix
     unless @cites_appendices.empty?
-      summary = [I18n.t('filter_summary.when_no_taxon')] if summary.empty?
+      summary = [ I18n.t('filter_summary.when_no_taxon') ] if summary.empty?
 
       if (!@cites_regions.empty? ||
           !@countries.empty?) &&
@@ -151,8 +151,8 @@ class Checklist::Checklist
     end
 
     # name
-    unless @scientific_name.blank?
-      summary = [I18n.t('filter_summary.when_taxon')] if summary.empty?
+    if @scientific_name.present?
+      summary = [ I18n.t('filter_summary.when_taxon') ] if summary.empty?
 
       summary << "'#{@scientific_name}'"
     end
@@ -168,10 +168,10 @@ class Checklist::Checklist
 
     # TODO: common names, authors
 
-    if !summary.empty?
-      summary.join(' ')
-    else
+    if summary.empty?
       I18n.t('filter_summary.all')
+    else
+      summary.join(' ')
     end
   end
 
@@ -199,7 +199,6 @@ class Checklist::Checklist
       to_s
     )
 
-    return [Rails.root, '/public/downloads/checklist/', @filename, '.', format].join
+    [ Rails.root, '/public/downloads/checklist/', @filename, '.', format ].join
   end
-
 end

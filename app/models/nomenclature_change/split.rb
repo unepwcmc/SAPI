@@ -58,14 +58,14 @@ class NomenclatureChange::Split < NomenclatureChange
   def required_inputs
     if input.blank?
       errors.add(:input, 'Must have one input')
-      return false
+      false
     end
   end
 
   def required_outputs
     if outputs.size < 2
       errors.add(:outputs, 'Must have at least two outputs')
-      return false
+      false
     end
   end
 
@@ -73,9 +73,9 @@ class NomenclatureChange::Split < NomenclatureChange
     if !(
       outputs.map do |o|
         o.try(:new_rank_id) || o.try(:taxon_concept).try(:rank_id)
-      end.uniq - [input.try(:taxon_concept).try(:rank_id)]).empty?
+      end.uniq - [ input.try(:taxon_concept).try(:rank_id) ]).empty?
       errors.add(:outputs, 'Must be at same rank as input')
-      return false
+      false
     end
   end
 
@@ -83,7 +83,7 @@ class NomenclatureChange::Split < NomenclatureChange
     outputs.each do |output|
       if output.new_name_status.blank? && (
         output.new_scientific_name.present? ||
-        output.taxon_concept && output.taxon_concept.name_status != 'A'
+        (output.taxon_concept && output.taxon_concept.name_status != 'A')
         )
         output.new_name_status = 'A'
       end
@@ -94,7 +94,7 @@ class NomenclatureChange::Split < NomenclatureChange
     outputs.each do |output|
       if output.new_rank_id.blank? && (
         output.new_scientific_name.present? ||
-        output.taxon_concept && output.taxon_concept.rank_id != new_output_rank.id
+        (output.taxon_concept && output.taxon_concept.rank_id != new_output_rank.id)
         )
         output.new_rank_id = new_output_rank.id
       end

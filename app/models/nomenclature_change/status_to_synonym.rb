@@ -36,16 +36,16 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   }
   validate :required_primary_output_name_status, if: :primary_output_or_submitting?
   validate :required_secondary_output, if: :relay_or_submitting?
+  before_validation :ensure_new_name_status, if: :primary_output?
   before_save :build_input_for_relay, if: :relay?
   after_save :build_auto_reassignments, if: :relay?
-  before_validation :ensure_new_name_status, if: :primary_output?
 
   def ensure_new_name_status
     primary_output && primary_output.new_name_status = 'S'
   end
 
   def required_primary_output_name_status
-    if primary_output && !['N', 'T'].include?(primary_output.name_status)
+    if primary_output && ![ 'N', 'T' ].include?(primary_output.name_status)
       errors.add(:primary_output, 'Must be N or T taxon')
       return false
     end
@@ -99,5 +99,4 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
     end
     true
   end
-
 end

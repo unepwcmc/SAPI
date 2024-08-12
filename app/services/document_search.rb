@@ -13,9 +13,9 @@ class DocumentSearch
     initialize_query
   end
 
-  #TODO temporarly removing pagination here because of the new cascading feature. Add it back after the refactor of the SQL mviews
+  # TODO temporarly removing pagination here because of the new cascading feature. Add it back after the refactor of the SQL mviews
   def results
-    @query #.limit(@per_page).offset(@offset)
+    @query # .limit(@per_page).offset(@offset)
   end
 
   def total_cnt
@@ -99,10 +99,10 @@ class DocumentSearch
     end
 
     if admin_interface?
-      if !@document_date_start.blank?
+      if @document_date_start.present?
         @query = @query.where('documents.date_raw >= ?', @document_date_start)
       end
-      if !@document_date_end.blank?
+      if @document_date_end.present?
         @query = @query.where('documents.date_raw <= ?', @document_date_end)
       end
     end
@@ -139,14 +139,14 @@ class DocumentSearch
   def add_taxon_concepts_condition
     filter_by_citations(
       'taxon_concept_id IN (?)',
-      [@taxon_concepts_ids]
+      [ @taxon_concepts_ids ]
     )
   end
 
   def add_geo_entities_condition
     filter_by_citations(
       'geo_entity_id IN (?)',
-      [@geo_entities_ids]
+      [ @geo_entities_ids ]
     )
   end
 
@@ -174,7 +174,7 @@ class DocumentSearch
 
     @query =
       if @events_ids.present?
-        @query.order(['date_raw DESC', :title])
+        @query.order([ 'date_raw DESC', :title ])
       else
         @query.order('created_at DESC')
       end
@@ -254,5 +254,4 @@ class DocumentSearch
     RefreshDocumentsWorker.perform_async
     DownloadsCacheCleanupWorker.perform_async('documents')
   end
-
 end

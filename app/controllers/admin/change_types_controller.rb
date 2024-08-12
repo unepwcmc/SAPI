@@ -1,5 +1,4 @@
 class Admin::ChangeTypesController < Admin::StandardAuthorizationController
-
   protected
 
     def collection

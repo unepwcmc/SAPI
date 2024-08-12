@@ -73,5 +73,4 @@ class DocumentCitation < ApplicationRecord
     end
     relation
   end
-
 end

@@ -1,9 +1,8 @@
 module Trade::DownloadDataRetriever
-
   ATTRIBUTES = %w[id year appendix taxon_name class_name order_name family_name genus_name
-                  term importer_reported_quantity exporter_reported_quantity
-                  unit importer exporter origin purpose source
-                  import_permit export_permit origin_permit issue_type].freeze
+    term importer_reported_quantity exporter_reported_quantity
+    unit importer exporter origin purpose source
+    import_permit export_permit origin_permit issue_type].freeze
 
   ID_MAPPING = {
     commodity: 'term_id',

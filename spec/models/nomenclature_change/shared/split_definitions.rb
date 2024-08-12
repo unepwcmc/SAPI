@@ -1,23 +1,23 @@
 shared_context 'split_definitions' do
-  let(:genus1) {
+  let(:genus1) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Genus1')
     )
-  }
-  let(:genus2) {
+  end
+  let(:genus2) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Genus2')
     )
-  }
+  end
   let(:input_species) { create_cites_eu_species(parent: genus1) }
   let(:output_species1) { create_cites_eu_species(parent: genus1) }
   let(:output_species2) { create_cites_eu_species(parent: genus2) }
-  let(:errorus_genus) {
+  let(:errorus_genus) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Errorus')
     )
-  }
-  let(:output_subspecies2) {
+  end
+  let(:output_subspecies2) do
     create_cites_eu_subspecies(
       taxon_name: create(:taxon_name, scientific_name: 'fatalus'),
       parent: create_cites_eu_species(
@@ -25,16 +25,16 @@ shared_context 'split_definitions' do
         parent: errorus_genus
       )
     )
-  }
-  let(:split_with_input) {
+  end
+  let(:split_with_input) do
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id }
     )
-  }
-  let(:split_with_input_and_output) {
+  end
+  let(:split_with_input_and_output) do
     split_with_input_and_output_existing_taxon
-  }
-  let(:split_with_input_and_same_output) {
+  end
+  let(:split_with_input_and_same_output) do
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
@@ -43,8 +43,8 @@ shared_context 'split_definitions' do
       },
       status: NomenclatureChange::Split::OUTPUTS
     )
-  }
-  let(:split_with_input_and_output_existing_taxon) {
+  end
+  let(:split_with_input_and_output_existing_taxon) do
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
@@ -53,8 +53,8 @@ shared_context 'split_definitions' do
       },
       status: NomenclatureChange::Split::OUTPUTS
     )
-  }
-  let(:split_with_input_and_output_new_taxon) {
+  end
+  let(:split_with_input_and_output_new_taxon) do
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
@@ -68,8 +68,8 @@ shared_context 'split_definitions' do
       },
       status: NomenclatureChange::Split::OUTPUTS
     )
-  }
-  let(:split_with_input_and_outputs_status_change) {
+  end
+  let(:split_with_input_and_outputs_status_change) do
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
@@ -82,8 +82,8 @@ shared_context 'split_definitions' do
       },
       status: NomenclatureChange::Split::OUTPUTS
     )
-  }
-  let(:split_with_input_and_outputs_name_change) {
+  end
+  let(:split_with_input_and_outputs_name_change) do
     create(:nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
@@ -98,8 +98,8 @@ shared_context 'split_definitions' do
       },
       status: NomenclatureChange::Split::OUTPUTS
     )
-  }
-  let(:split_with_input_with_reassignments) {
+  end
+  let(:split_with_input_with_reassignments) do
     2.times { create(:distribution, taxon_concept: input_species) }
     unreassigned_distribution = create(:distribution, taxon_concept: input_species)
     reassigned_distribution = create(:distribution, taxon_concept: input_species)
@@ -120,12 +120,12 @@ shared_context 'split_definitions' do
       :document_citation_geo_entity, geo_entity: reassigned_distribution.geo_entity
     )
 
-    2.times { create(:taxon_relationship,
+    2.times do create(:taxon_relationship,
       taxon_concept: input_species,
       other_taxon_concept: create_cites_eu_species(name_status: 'S'),
       taxon_relationship_type: synonym_relationship_type
     )
-    }
+    end
     name1 = create(:taxon_relationship,
       taxon_concept: input_species,
       other_taxon_concept: create_cites_eu_species(name_status: 'S'),
@@ -178,5 +178,5 @@ shared_context 'split_definitions' do
       output: nc.outputs.last
     )
     nc
-  }
+  end
 end

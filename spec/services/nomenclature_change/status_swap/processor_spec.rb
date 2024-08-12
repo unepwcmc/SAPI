@@ -5,7 +5,7 @@ describe NomenclatureChange::StatusSwap::Processor do
 
   let(:accepted_name) { create_cites_eu_species }
 
-  let(:synonym) {
+  let(:synonym) do
     tc = create_cites_eu_species(name_status: 'S')
     create(:taxon_relationship,
       taxon_concept: accepted_name,
@@ -13,7 +13,7 @@ describe NomenclatureChange::StatusSwap::Processor do
       taxon_relationship_type: synonym_relationship_type
     )
     tc
-  }
+  end
 
   before(:each) { synonym_relationship_type }
   let(:processor) { NomenclatureChange::StatusSwap::Processor.new(status_change) }
@@ -21,26 +21,26 @@ describe NomenclatureChange::StatusSwap::Processor do
   let(:secondary_output_taxon_concept) { status_change.secondary_output.taxon_concept }
 
   describe :run do
-    context "from accepted name" do
+    context 'from accepted name' do
       let(:accepted_name_parent) { create_cites_eu_genus }
       let(:accepted_name) { create_cites_eu_species(parent: accepted_name_parent) }
       let(:status_change) { a_to_s_with_swap }
-      before(:each) {
+      before(:each) do
         @shipment = create(:shipment,
           taxon_concept: primary_output_taxon_concept,
           reported_taxon_concept: primary_output_taxon_concept
         )
         secondary_output_taxon_concept.create_nomenclature_comment
         processor.run
-      }
+      end
       specify { expect(primary_output_taxon_concept).to be_is_synonym }
       specify { expect(primary_output_taxon_concept.parent).to eq(accepted_name_parent) }
       specify { expect(secondary_output_taxon_concept.name_status).to eq('A') }
       specify { expect(primary_output_taxon_concept.accepted_names).to include(secondary_output_taxon_concept) }
-      specify "public nomenclature note is set" do
+      specify 'public nomenclature note is set' do
         expect(secondary_output_taxon_concept.nomenclature_note_en).to eq(' public')
       end
-      specify "internal nomenclature note is set" do
+      specify 'internal nomenclature note is set' do
         expect(secondary_output_taxon_concept.nomenclature_comment.try(:note)).to eq(' internal')
       end
     end

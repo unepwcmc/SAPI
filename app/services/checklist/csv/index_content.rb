@@ -1,5 +1,4 @@
 module Checklist::Csv::IndexContent
-
   def content(csv)
     csv << column_headers
     fetcher = Checklist::IndexFetcher.new(@animalia_rel)
@@ -23,5 +22,4 @@ module Checklist::Csv::IndexContent
       end
     end while !kingdom.empty?
   end
-
 end

@@ -21,5 +21,4 @@ class NomenclatureChange::StatusToAccepted::Processor < NomenclatureChange::Proc
     @primary_output = @nc.primary_output
     @secondary_output = @nc.secondary_output
   end
-
 end

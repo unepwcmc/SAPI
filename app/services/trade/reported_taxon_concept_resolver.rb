@@ -11,7 +11,7 @@ class Trade::ReportedTaxonConceptResolver
       when 'T'
         reported_taxon.accepted_names_for_trade_name
       else
-        [reported_taxon]
+        [ reported_taxon ]
       end
   end
 end

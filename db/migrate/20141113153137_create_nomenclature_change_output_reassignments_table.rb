@@ -15,8 +15,8 @@ class CreateNomenclatureChangeOutputReassignmentsTable < ActiveRecord::Migration
       t.timestamps
     end
 
-  add_foreign_key :nomenclature_change_output_reassignments, :nomenclature_change_outputs, name: "nomenclature_change_output_reassignments_output_id_fk"
-  add_foreign_key :nomenclature_change_output_reassignments, :users, name: "nomenclature_change_output_reassignments_created_by_id_fk", column: :created_by_id
-  add_foreign_key :nomenclature_change_output_reassignments, :users, name: "nomenclature_change_output_reassignments_updated_by_id_fk", column: :updated_by_id
+  add_foreign_key :nomenclature_change_output_reassignments, :nomenclature_change_outputs, name: 'nomenclature_change_output_reassignments_output_id_fk'
+  add_foreign_key :nomenclature_change_output_reassignments, :users, name: 'nomenclature_change_output_reassignments_created_by_id_fk', column: :created_by_id
+  add_foreign_key :nomenclature_change_output_reassignments, :users, name: 'nomenclature_change_output_reassignments_updated_by_id_fk', column: :updated_by_id
   end
 end

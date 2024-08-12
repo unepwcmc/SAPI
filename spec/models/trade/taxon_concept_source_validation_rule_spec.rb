@@ -18,17 +18,17 @@
 require 'spec_helper'
 
 describe Trade::TaxonConceptSourceValidationRule, drops_tables: true do
-  let(:annual_report_upload) {
+  let(:annual_report_upload) do
     annual_report = build(
       :annual_report_upload,
       point_of_view: 'E'
     )
     annual_report.save(validate: false)
     annual_report
-  }
-  let(:sandbox_klass) {
+  end
+  let(:sandbox_klass) do
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
-  }
+  end
   describe :validation_errors_for_aru do
     context "when species name is from Kingdom Animalia, source_code can't be A" do
       before do
@@ -36,18 +36,18 @@ describe Trade::TaxonConceptSourceValidationRule, drops_tables: true do
         sandbox_klass.create(source_code: 'A', taxon_name: @animal.full_name)
         sandbox_klass.create(source_code: 'B', taxon_name: @animal.full_name)
       end
-      subject {
+      subject do
         create_taxon_concept_source_validation
-      }
-      specify {
+      end
+      specify do
         subject.refresh_errors_if_needed(annual_report_upload)
         expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
-      }
-      specify {
+      end
+      specify do
         subject.refresh_errors_if_needed(annual_report_upload)
         ve = subject.validation_errors_for_aru(annual_report_upload).first
         expect(ve.error_message).to eq("taxon_name #{@animal.full_name} with source_code A is invalid")
-      }
+      end
     end
     context "when species name is from Kingdom Plantae, source_code can't be C or R" do
       before do
@@ -57,13 +57,13 @@ describe Trade::TaxonConceptSourceValidationRule, drops_tables: true do
         sandbox_klass.create(source_code: 'A', taxon_name: @plant.full_name)
         sandbox_klass.create(source_code: 'B', taxon_name: @plant.full_name)
       end
-      subject {
+      subject do
         create_taxon_concept_source_validation
-      }
-      specify {
+      end
+      specify do
         subject.refresh_errors_if_needed(annual_report_upload)
         expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(2)
-      }
+      end
     end
   end
 end

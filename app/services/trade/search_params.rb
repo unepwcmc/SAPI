@@ -19,7 +19,7 @@ class Trade::SearchParams < Hash
       permits_ids: sanitise_integer_array(params[:permits_ids]),
       reporter_type: whitelist_param(
         sanitise_upcase_string(params[:reporter_type]),
-        ['I', 'E'],
+        [ 'I', 'E' ],
         nil
       ),
       time_range_start: sanitise_positive_integer(params[:time_range_start], 1975),
@@ -56,5 +56,4 @@ class Trade::SearchParams < Hash
   def sanitise_compliance_type(compliance_type)
     compliance_type.present? ? COMPLIANCE_TYPES_VIEWS[compliance_type.to_sym] : 'trade_shipments_with_taxa_view'
   end
-
 end

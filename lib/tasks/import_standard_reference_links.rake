@@ -1,9 +1,8 @@
 namespace :import do
-
-  desc "Import standard reference links from csv file (usage: rake import:standard_references[path/to/file,path/to/another])"
-  task :standard_reference_links, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  desc 'Import standard reference links from csv file (usage: rake import:standard_references[path/to/file,path/to/another])'
+  task :standard_reference_links, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'standard_reference_links_import'
-    puts "There are #{TaxonConceptReference.where(:is_standard => true).count} standard references in the database."
+    puts "There are #{TaxonConceptReference.where(is_standard: true).count} standard references in the database."
 
     ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
     ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
@@ -17,7 +16,7 @@ namespace :import do
 
       split_file_name = file.split('/').last.split('_')
       if split_file_name[0] == Taxonomy::CMS
-        kingdom = "Animalia"
+        kingdom = 'Animalia'
         taxonomy = Taxonomy.find_by_name(Taxonomy::CMS)
       else
         kingdom = split_file_name[0].titleize
@@ -34,7 +33,7 @@ namespace :import do
       SQL
       ApplicationRecord.connection.execute(sql)
 
-      puts "inserting reference links"
+      puts 'inserting reference links'
       # add taxon_concept_references where missing
       sql = <<-SQL
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id, created_at, updated_at)
@@ -59,7 +58,7 @@ namespace :import do
       SQL
       ApplicationRecord.connection.execute(sql)
 
-      puts "updating standard reference links"
+      puts 'updating standard reference links'
       # update usr_std_ref flags
       sql = <<-SQL
       WITH standard_references_as_ids AS (
@@ -107,11 +106,9 @@ namespace :import do
 
       SQL
       ApplicationRecord.connection.execute(sql)
-
     end
-    puts "There are now #{TaxonConceptReference.where(:is_standard => true).count} standard references in the database"
+    puts "There are now #{TaxonConceptReference.where(is_standard: true).count} standard references in the database"
     ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
     ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
   end
-
 end

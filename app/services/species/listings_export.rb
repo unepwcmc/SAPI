@@ -1,5 +1,4 @@
 class Species::ListingsExport < Species::CsvCopyExport
-
   def initialize(designation, filters)
     @designation = designation
     @filters = filters
@@ -59,6 +58,6 @@ class Species::ListingsExport < Species::CsvCopyExport
   # highly customized low-level SQL queries.
   # A quick and temporary solution for now is to manually inject the correct table name ourselves.
   def sql_columns_with_table_name
-    sql_columns.map{ |sql_column| "#{table_name}.#{sql_column}" }
+    sql_columns.map { |sql_column| "#{table_name}.#{sql_column}" }
   end
 end

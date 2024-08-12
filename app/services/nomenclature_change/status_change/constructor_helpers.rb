@@ -1,5 +1,4 @@
 module NomenclatureChange::StatusChange::ConstructorHelpers
-
   def build_primary_output
     if @nomenclature_change.primary_output.nil?
       @nomenclature_change.build_primary_output(
@@ -40,37 +39,37 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
 
   def build_name_reassignments
     input_output_for_reassignment do |input, output|
-      _build_names_reassignments(input, [output])
+      _build_names_reassignments(input, [ output ])
     end
   end
 
   def build_distribution_reassignments
     input_output_for_reassignment do |input, output|
-      _build_distribution_reassignments(input, [output])
+      _build_distribution_reassignments(input, [ output ])
     end
   end
 
   def build_legislation_reassignments
     input_output_for_reassignment do |input, output|
-      _build_legislation_reassignments(input, [output])
+      _build_legislation_reassignments(input, [ output ])
     end
   end
 
   def build_common_names_reassignments
     input_output_for_reassignment do |input, output|
-      _build_common_names_reassignments(input, [output])
+      _build_common_names_reassignments(input, [ output ])
     end
   end
 
   def build_references_reassignments
     input_output_for_reassignment do |input, output|
-      _build_references_reassignments(input, [output])
+      _build_references_reassignments(input, [ output ])
     end
   end
 
   def build_documents_reassignments
     input_output_for_reassignment do |input, output|
-      _build_document_reassignments(input, [output])
+      _build_document_reassignments(input, [ output ])
     end
   end
 
@@ -84,7 +83,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
       output_old.display_rank_name
     )
     I18n.with_locale(lng) do
-      I18n.translate(
+      I18n.t(
         'status_change.status_elevated_to_accepted_name',
         output_new_taxon: output_new_html,
         output_old_taxon: output_old_html,
@@ -95,7 +94,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
 
   def multi_lingual_public_output_note(output_new, output_old, event)
     result = {}
-    [:en, :es, :fr].each do |lng|
+    [ :en, :es, :fr ].each do |lng|
       result[lng] = public_output_note(output_new, output_old, event, lng)
     end
     result
@@ -146,5 +145,4 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
   def legislation_note(lng)
     nil
   end
-
 end

@@ -64,6 +64,6 @@ CREATE OR REPLACE FUNCTION create_trade_sandbox_view(
 
     SQL
 
-    execute "SELECT * FROM refresh_trade_sandbox_views()"
+    execute 'SELECT * FROM refresh_trade_sandbox_views()'
   end
 end

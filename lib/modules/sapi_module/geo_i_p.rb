@@ -45,7 +45,7 @@ module SapiModule
     end
 
     def default_separator(ip)
-      invalid_addresses = ['127.0.0.1', nil, 'localhost', 'nil', '', 'unknown']
+      invalid_addresses = [ '127.0.0.1', nil, 'localhost', 'nil', '', 'unknown' ]
 
       if invalid_addresses.include?(ip)
         :comma
@@ -56,6 +56,5 @@ module SapiModule
         (separator_char == ';' ? :semicolon : :comma)
       end
     end
-
   end
 end

@@ -3,15 +3,19 @@ class Api::V1::ShipmentsController < ApplicationController
 
   before_action :authenticate
   before_action :load_grouping_type
-  after_action only: [:grouped_query, :country_query] do
+  after_action only: [ :grouped_query, :country_query ] do
     set_pagination_headers(:data, :grouped_params)
   end
 
   def chart_query
-    @chart_data = Rails.cache.fetch(['chart_data', permit_params], expires_in: 1.week) do
-                    @grouping_class.new(['issue_type', 'year'])
-                                             .countries_reported_range(params[:year])
-                  end
+    @chart_data = Rails.cache.fetch(
+      [ 'chart_data', permit_params ],
+      expires_in: 1.week
+    ) do
+      @grouping_class.new([ 'issue_type', 'year' ]).
+        countries_reported_range(params[:year])
+    end
+
     render json: @chart_data
   end
 
@@ -25,11 +29,18 @@ class Api::V1::ShipmentsController < ApplicationController
 
     query = @grouping_class.new(sanitized_attributes, _grouped_params)
     params_hash = { attribute: 'year' }
+
     sanitized_attributes.map { |p| params_hash[p] = p }
-    @data = Rails.cache.fetch(['grouped_data', grouped_params], expires_in: 1.week) do
-                      sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
-                                                          query.json_by_attribute(query.run, params_hash)
-            end
+
+    @data = Rails.cache.fetch(
+      [ 'grouped_data', grouped_params ], expires_in: 1.week
+    ) do
+      if sanitized_attributes.first.empty?
+        query.taxonomic_grouping(taxonomic_params)
+      else
+        query.json_by_attribute(query.run, params_hash)
+      end
+    end
 
     render json: @data
   end
@@ -44,11 +55,19 @@ class Api::V1::ShipmentsController < ApplicationController
 
     query = @grouping_class.new(sanitized_attributes, _grouped_params)
     params_hash = { attribute: 'year' }
+
     sanitized_attributes.map { |p| params_hash[p] = p }
-    @data = Rails.cache.fetch(['country_data', grouped_params], expires_in: 1.week) do
-                      sanitized_attributes.first.empty? ? query.taxonomic_grouping(taxonomic_params) :
-                                                          query.json_by_attribute(query.country_data, params_hash)
-            end
+
+    @data = Rails.cache.fetch(
+      [ 'country_data', grouped_params ],
+      expires_in: 1.week
+    ) do
+      if sanitized_attributes.first.empty?
+        query.taxonomic_grouping(taxonomic_params)
+      else
+        query.json_by_attribute(query.country_data, params_hash)
+      end
+    end
 
     render json: @data
   end
@@ -57,18 +76,26 @@ class Api::V1::ShipmentsController < ApplicationController
   def search_query
     query = @grouping_class.new(sanitized_attributes, permit_params)
     data = query.run
-    @search_data =  Rails.cache.fetch(['search_data', permit_params], expires_in: 1.week) do
-                      query.build_hash(data, permit_params)
-                    end
+    @search_data = Rails.cache.fetch(
+      [ 'search_data', permit_params ],
+      expires_in: 1.week
+    ) do
+      query.build_hash(data, permit_params)
+    end
+
     @filtered_data = query.filter(@search_data, permit_params)
+
     render json: Kaminari.paginate_array(@filtered_data).page(params[:page]).per(params[:per_page]),
-           meta: metadata(@filtered_data, permit_params)
+      meta: metadata(@filtered_data, permit_params)
   end
 
   def over_time_query
     # TODO Remember to implement permitted parameters here
     query = @grouping_class.new(sanitized_attributes, permit_params)
-    @over_time_data = Rails.cache.fetch(['over_time_data', permit_params], expires_in: 1.week) do
+
+    @over_time_data = Rails.cache.fetch(
+      [ 'over_time_data', permit_params ], expires_in: 1.week
+    ) do
       query.over_time_data
     end
 
@@ -79,7 +106,11 @@ class Api::V1::ShipmentsController < ApplicationController
   def aggregated_over_time_query
     # TODO Remember to implement permitted parameters here
     query = @grouping_class.new(sanitized_attributes, permit_params)
-    @aggregated_over_time_data = Rails.cache.fetch(['aggregated_over_time_data', permit_params], expires_in: 1.week) do
+
+    @aggregated_over_time_data = Rails.cache.fetch(
+      [ 'aggregated_over_time_data', permit_params ],
+      expires_in: 1.week
+    ) do
       query.aggregated_over_time_data
     end
 
@@ -87,29 +118,36 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def download_data
-    @download_data = Rails.cache.fetch(['download_data', permit_params], expires_in: 1.week) do
-                       Trade::DownloadDataRetriever.dashboard_download(download_params).to_a
-                     end
+    @download_data = Rails.cache.fetch(
+      [ 'download_data', permit_params ], expires_in: 1.week
+    ) do
+      Trade::DownloadDataRetriever.dashboard_download(download_params).to_a
+    end
     render json: @download_data
   end
 
   def search_download_data
-    @download_data = Rails.cache.fetch(['search_download_data', permit_params], expires_in: 1.week) do
-                       Trade::DownloadDataRetriever.search_download(download_params).to_a
-                     end
+    @download_data = Rails.cache.fetch(
+      [ 'search_download_data', permit_params ], expires_in: 1.week
+    ) do
+      Trade::DownloadDataRetriever.search_download(download_params).to_a
+    end
+
     render json: @download_data
   end
 
   def search_download_all_data
     query = @grouping_class.new(sanitized_attributes, permit_params)
     data = query.run
-    @search_download_all_data = Rails.cache.fetch(['search_download_all_data', permit_params], expires_in: 1.week) do
-                                  search_data = query.build_hash(data, permit_params)
-                                  filtered_data = query.filter(search_data, permit_params)
-                                  data_ids = query.filter_download_data(filtered_data, permit_params)
-                                  hash_params = params_hash_builder(data_ids, download_params)
-                                  Trade::DownloadDataRetriever.search_download(hash_params).to_a
-                                end
+    @search_download_all_data = Rails.cache.fetch(
+      [ 'search_download_all_data', permit_params ], expires_in: 1.week
+    ) do
+      search_data = query.build_hash(data, permit_params)
+      filtered_data = query.filter(search_data, permit_params)
+      data_ids = query.filter_download_data(filtered_data, permit_params)
+      hash_params = params_hash_builder(data_ids, download_params)
+      Trade::DownloadDataRetriever.search_download(hash_params).to_a
+    end
     render json: @search_download_all_data
   end
 
@@ -171,7 +209,7 @@ class Api::V1::ShipmentsController < ApplicationController
     token = request.headers['X-Authentication-Token']
     unless token == Rails.application.credentials.dig(:shipments_api_token)
       head :unauthorized
-      return false
+      false
     end
   end
 

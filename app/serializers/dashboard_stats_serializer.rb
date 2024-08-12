@@ -26,7 +26,7 @@ class DashboardStatsSerializer < ActiveModel::Serializer
       @object.time_range_start,
       @object.time_range_end
     ]
-    Rails.logger.debug "CACHE KEY: #{key.inspect}"
+    Rails.logger.debug { "CACHE KEY: #{key.inspect}" }
     key
   end
 end

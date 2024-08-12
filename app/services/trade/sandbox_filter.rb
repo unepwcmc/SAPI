@@ -1,5 +1,4 @@
 class Trade::SandboxFilter < Trade::Filter
-
   private
 
   def initialize_params(options)

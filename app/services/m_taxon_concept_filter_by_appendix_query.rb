@@ -1,5 +1,4 @@
 class MTaxonConceptFilterByAppendixQuery
-
   def initialize(relation = MTaxonConcept.all, appendix_abbreviations = [])
     @relation = relation
     @appendix_abbreviations = appendix_abbreviations
@@ -24,5 +23,4 @@ class MTaxonConceptFilterByAppendixQuery
     initialize_species_listings_conditions(designation_name)
     @relation.where(@appendix_abbreviations_conditions)
   end
-
 end

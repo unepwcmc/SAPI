@@ -32,8 +32,8 @@ class SubmissionWorker
     store_dir = aru.csv_source_file.store_dir
     aru.remove_csv_source_file!
     puts '### removing uploads dir ###'
-    puts Rails.root.join('public', store_dir)
-    FileUtils.remove_dir(Rails.root.join('public', store_dir), force: true)
+    puts Rails.public_path.join(store_dir)
+    FileUtils.remove_dir(Rails.public_path.join(store_dir), force: true)
 
     # clear downloads cache
     DownloadsCache.send(:clear_shipments)
@@ -68,5 +68,4 @@ class SubmissionWorker
       Appsignal.add_exception(e) if defined? Appsignal
     end
   end
-
 end

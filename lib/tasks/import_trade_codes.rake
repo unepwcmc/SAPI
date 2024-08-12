@@ -1,30 +1,29 @@
 namespace :import do
-
   desc 'Import trade codes'
-  task :trade_codes => [:environment] do
-    [Purpose, Source, Term, Unit].each do |klass|
+  task trade_codes: [ :environment ] do
+    [ Purpose, Source, Term, Unit ].each do |klass|
       current_count = klass.count
       CSV.foreach("lib/files/#{klass.to_s.downcase}_codes_utf8.csv") do |row|
         code = klass.find_or_initialize_by(code: row[0].strip.upcase)
         code.update(
-          :name_en => row[1].strip,
-          :name_fr => row[2].strip,
-          :name_es => row[3].strip
+          name_en: row[1].strip,
+          name_fr: row[2].strip,
+          name_es: row[3].strip
         )
       end
       puts "#{klass.count - current_count} new #{klass} added"
     end
   end
 
-  desc "Import terms and purpose codes acceptable pairing"
-  task :trade_codes_t_p_pairs, [:clear] => [:environment] do |t, args|
-    TMP_TABLE = "terms_and_purpose_pairs_import"
-    file = "lib/files/term_purpose_pairs_utf8.csv"
+  desc 'Import terms and purpose codes acceptable pairing'
+  task :trade_codes_t_p_pairs, [ :clear ] => [ :environment ] do |t, args|
+    TMP_TABLE = 'terms_and_purpose_pairs_import'
+    file = 'lib/files/term_purpose_pairs_utf8.csv'
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
     if args[:clear]
-      puts "#{TermTradeCodesPair.where(:trade_code_type => 'Purpose').delete_all} TermPurposePairs deleted"
+      puts "#{TermTradeCodesPair.where(trade_code_type: 'Purpose').delete_all} TermPurposePairs deleted"
     end
     sql = <<-SQL
       INSERT INTO term_trade_codes_pairs(term_id,
@@ -46,18 +45,18 @@ namespace :import do
       ) as subquery;
     SQL
     ApplicationRecord.connection.execute(sql)
-    puts "#{TermTradeCodesPair.where(:trade_code_type => 'Purpose').count} terms and purpose codes pairs created"
+    puts "#{TermTradeCodesPair.where(trade_code_type: 'Purpose').count} terms and purpose codes pairs created"
   end
 
-  desc "Import terms and unit codes acceptable pairing"
-  task :trade_codes_t_u_pairs, [:clear] => [:environment] do |t, args|
-    TMP_TABLE = "terms_and_unit_pairs_import"
-    file = "lib/files/term_unit_pairs_utf8.csv"
+  desc 'Import terms and unit codes acceptable pairing'
+  task :trade_codes_t_u_pairs, [ :clear ] => [ :environment ] do |t, args|
+    TMP_TABLE = 'terms_and_unit_pairs_import'
+    file = 'lib/files/term_unit_pairs_utf8.csv'
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
     if args[:clear]
-      puts "#{TermTradeCodesPair.where(:trade_code_type => 'Unit').delete_all} TermUnitPairs deleted"
+      puts "#{TermTradeCodesPair.where(trade_code_type: 'Unit').delete_all} TermUnitPairs deleted"
     end
     sql = <<-SQL
       INSERT INTO term_trade_codes_pairs(term_id,
@@ -79,13 +78,13 @@ namespace :import do
       ) AS subquery;
     SQL
     ApplicationRecord.connection.execute(sql)
-    puts "#{TermTradeCodesPair.where(:trade_code_type => 'Unit').count} terms and unit codes pairs created"
+    puts "#{TermTradeCodesPair.where(trade_code_type: 'Unit').count} terms and unit codes pairs created"
   end
 
-  desc "Import taxon concepts terms acceptable pairing. (i.e.: which terms can go with each taxon concept)"
-  task :taxon_concept_terms_pairs, [:clear] => [:environment] do |t, args|
-    TMP_TABLE = "taxon_concepts_and_terms_pairs_import"
-    file = "lib/files/taxon_concept_term_pairs_utf8.csv"
+  desc 'Import taxon concepts terms acceptable pairing. (i.e.: which terms can go with each taxon concept)'
+  task :taxon_concept_terms_pairs, [ :clear ] => [ :environment ] do |t, args|
+    TMP_TABLE = 'taxon_concepts_and_terms_pairs_import'
+    file = 'lib/files/taxon_concept_term_pairs_utf8.csv'
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
@@ -116,8 +115,8 @@ namespace :import do
     puts "#{Trade::TaxonConceptTermPair.count} terms and unit codes pairs created"
   end
 
-  desc "Empties taxon_concept_term_pairs and term_trade_codes_pairs"
-  task :clear_acceptable_pairs => [:environment] do
+  desc 'Empties taxon_concept_term_pairs and term_trade_codes_pairs'
+  task clear_acceptable_pairs: [ :environment ] do
     puts "#{TermTradeCodesPair.delete_all} term_trade_codes_pairs deleted"
     puts "#{Trade::TaxonConceptTermPair.delete_all} taxon_concept_term_pairs deleted"
   end

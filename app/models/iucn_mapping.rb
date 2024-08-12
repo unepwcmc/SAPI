@@ -28,11 +28,11 @@ class IucnMapping < ApplicationRecord
     when 'ALL'
       all
     when 'MATCHING'
-      where('iucn_taxon_id IS NOT NULL')
+      where.not(iucn_taxon_id: nil)
     when 'NON_MATCHING'
       where(iucn_taxon_id: nil)
     when 'SYNONYMS'
-      where('accepted_name_id IS NOT NULL')
+      where.not(accepted_name_id: nil)
     when 'ACCEPTED'
       where(accepted_name_id: nil)
     else

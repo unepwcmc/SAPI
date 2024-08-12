@@ -1,4 +1,4 @@
-shared_context "Tapiridae" do
+shared_context 'Tapiridae' do
   before(:all) do
     @order = create_cites_eu_order(
       taxon_name: create(:taxon_name, scientific_name: 'Perissodactyla'),
@@ -12,11 +12,11 @@ shared_context "Tapiridae" do
       taxon_name: create(:taxon_name, scientific_name: 'Tapirus'),
       parent: @family
     )
-    ['Bairdii', 'Indicus', 'Pinchaque', 'Terrestris'].each do |n|
+    [ 'Bairdii', 'Indicus', 'Pinchaque', 'Terrestris' ].each do |n|
       @species = create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: n),
         parent: @genus,
-      name_status: 'A'
+        name_status: 'A'
       )
     end
 
@@ -46,8 +46,8 @@ shared_context "Tapiridae" do
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
-      #Skip old sapi context let statements,
-      #which are now instance variables starting with _
+      # Skip old sapi context let statements,
+      # which are now instance variables starting with _
       next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

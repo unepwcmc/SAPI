@@ -1,5 +1,4 @@
 class Admin::RanksController < Admin::StandardAuthorizationController
-
   protected
 
   def collection

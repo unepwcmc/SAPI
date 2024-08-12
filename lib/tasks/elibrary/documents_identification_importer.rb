@@ -15,15 +15,15 @@ class Elibrary::DocumentsIdentificationImporter
 
   def columns_with_type
     [
-      ['DocumentDate', 'TEXT'],
-      ['Manual_ID', 'TEXT'],
-      ['DocumentTitle', 'TEXT'],
-      ['LanguageName', 'TEXT'],
-      ['Master_Document_ID', 'TEXT'],
-      ['Volume', 'INT'],
-      ['Type', 'TEXT'],
-      ['GeneralSubType', 'TEXT'],
-      ['DocumentFileName', 'TEXT']
+      [ 'DocumentDate', 'TEXT' ],
+      [ 'Manual_ID', 'TEXT' ],
+      [ 'DocumentTitle', 'TEXT' ],
+      [ 'LanguageName', 'TEXT' ],
+      [ 'Master_Document_ID', 'TEXT' ],
+      [ 'Volume', 'INT' ],
+      [ 'Type', 'TEXT' ],
+      [ 'GeneralSubType', 'TEXT' ],
+      [ 'DocumentFileName', 'TEXT' ]
     ]
   end
 
@@ -189,5 +189,4 @@ class Elibrary::DocumentsIdentificationImporter
       puts "\t #{type} #{count}"
     end
   end
-
 end

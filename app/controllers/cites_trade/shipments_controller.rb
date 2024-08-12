@@ -20,5 +20,4 @@ class CitesTrade::ShipmentsController < CitesTradeController
       Trade::ShipmentGrossNetExportSerializer
     end
   end
-
 end

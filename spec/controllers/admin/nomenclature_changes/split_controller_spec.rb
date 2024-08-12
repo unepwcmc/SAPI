@@ -31,7 +31,7 @@ describe Admin::NomenclatureChanges::SplitController do
         get :show, params: { id: :notes, nomenclature_change_id: @split.id }
         expect(response).to render_template('notes')
       end
-      context "when children present" do
+      context 'when children present' do
         before(:each) do
           create_cites_eu_subspecies(parent: input_species)
         end
@@ -40,7 +40,7 @@ describe Admin::NomenclatureChanges::SplitController do
           expect(response).to render_template('children')
         end
       end
-      context "when no children" do
+      context 'when no children' do
         it 'redirects to next step' do
           get :show, params: { id: :children, nomenclature_change_id: @split.id }
           expect(response).to redirect_to(
@@ -50,7 +50,7 @@ describe Admin::NomenclatureChanges::SplitController do
           )
         end
       end
-      context "when names present" do
+      context 'when names present' do
         before(:each) do
           create(:taxon_relationship,
             taxon_concept: input_species,
@@ -63,7 +63,7 @@ describe Admin::NomenclatureChanges::SplitController do
           expect(response).to render_template('names')
         end
       end
-      context "when no names" do
+      context 'when no names' do
         it 'redirects to next step' do
           get :show, params: { id: :names, nomenclature_change_id: @split.id }
           expect(response).to redirect_to(
@@ -73,7 +73,7 @@ describe Admin::NomenclatureChanges::SplitController do
           )
         end
       end
-      context "when distribution present" do
+      context 'when distribution present' do
         before(:each) do
           create(:distribution, taxon_concept: input_species)
         end
@@ -82,7 +82,7 @@ describe Admin::NomenclatureChanges::SplitController do
           expect(response).to render_template('distribution')
         end
       end
-      context "when no distribution" do
+      context 'when no distribution' do
         it 'redirects to next step' do
           get :show, params: { id: :distribution, nomenclature_change_id: @split.id }
           expect(response).to redirect_to(
@@ -92,7 +92,7 @@ describe Admin::NomenclatureChanges::SplitController do
           )
         end
       end
-      context "when legislation present" do
+      context 'when legislation present' do
         before(:each) do
           create_cites_I_addition(taxon_concept: input_species)
         end
@@ -101,7 +101,7 @@ describe Admin::NomenclatureChanges::SplitController do
           expect(response).to render_template('legislation')
         end
       end
-      context "when no legislation" do
+      context 'when no legislation' do
         it 'redirects to next step' do
           get :show, params: { id: :legislation, nomenclature_change_id: @split.id }
           expect(response).to redirect_to(
@@ -148,8 +148,8 @@ describe Admin::NomenclatureChanges::SplitController do
     context 'when unsuccessful' do
       it 're-renders step' do
         put :update, params: { nomenclature_change_split: {
-            input_attributes: { taxon_concept_id: nil }
-          }, nomenclature_change_id: @split.id, id: 'inputs' }
+          input_attributes: { taxon_concept_id: nil }
+        }, nomenclature_change_id: @split.id, id: 'inputs' }
         expect(response).to render_template('inputs')
       end
     end
@@ -163,10 +163,10 @@ describe Admin::NomenclatureChanges::SplitController do
       end
       context 'when user is manager' do
         it 'redirects to nomenclature changes path' do
-          pending("Strange render mismatch after upgrading to Rails 4")
+          pending('Strange render mismatch after upgrading to Rails 4')
           put :update, params: { nomenclature_change_id: @split.id, id: 'summary', nomenclature_change_split: { dummy: 'test' } }
           expect(response).to be_successful
-          expect(response).to render_template("nomenclature_changes")
+          expect(response).to render_template('nomenclature_changes')
         end
       end
     end

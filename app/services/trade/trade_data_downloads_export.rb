@@ -1,5 +1,4 @@
 class Trade::TradeDataDownloadsExport < Species::CsvCopyExport
-
   def query
     Trade::TradeDataDownload.order(:created_at)
   end
@@ -36,5 +35,4 @@ class Trade::TradeDataDownloadsExport < Species::CsvCopyExport
   def csv_column_headers
     sql_columns.map(&:to_s).map(&:humanize)
   end
-
 end

@@ -1,5 +1,4 @@
 class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::ReassignmentProcessor
-
   def process_reassignment(reassignment, reassignable)
     object_before_reassignment = reassignable.dup
     reassigned_object = transferred_object_before_save(reassignment, reassignable)
@@ -15,7 +14,7 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
     return nil if conflicting_listing_change_reassignment?(reassignment, reassignable)
     new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
 
-    Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} transfer to #{new_taxon_concept.full_name}")
+    Rails.logger.debug { "Processing #{reassignable.class} #{reassignable.id} transfer to #{new_taxon_concept.full_name}" }
     if reassignment.kind_of?(NomenclatureChange::ParentReassignment) ||
       reassignment.kind_of?(NomenclatureChange::OutputParentReassignment)
       reassignable.parent_id = new_taxon_concept.id
@@ -85,11 +84,8 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
     distribution_references_to_transfer = reassignable.distribution_references
     if reassigned_object.distribution_references.count > 0
       distribution_references_to_transfer = distribution_references_to_transfer.
-      where(
-        'reference_id NOT IN (?)',
-        reassigned_object.distribution_references.select(:reference_id).
-          map(&:reference_id)
-      )
+        where.not(reference_id: reassigned_object.distribution_references.select(:reference_id).
+          map(&:reference_id))
     end
     distribution_references_to_transfer.update_all(distribution_id: reassigned_object.id)
   end
@@ -102,10 +98,7 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
       return
     end
     taggings_to_transfer = reassignable.taggings.
-    where(
-      'tag_id NOT IN (?)',
-      reassigned_object.taggings.select(:tag_id).map(&:tag_id)
-    )
+      where.not(tag_id: reassigned_object.taggings.select(:tag_id).map(&:tag_id))
     taggings_to_transfer.update_all(taggable_id: reassigned_object.id)
   end
 
@@ -121,11 +114,8 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
 
     if reassigned_object.listing_distributions.count > 0
       listing_distributions_to_transfer = listing_distributions_to_transfer.
-      where(
-        'geo_entity_id NOT IN (?)',
-        reassigned_object.listing_distributions.select(:geo_entity_id).
-          map(&:geo_entity_id)
-      )
+        where.not(geo_entity_id: reassigned_object.listing_distributions.select(:geo_entity_id).
+          map(&:geo_entity_id))
     end
     listing_distributions_to_transfer.update_all(listing_change_id: reassigned_object.id)
   end
@@ -135,11 +125,8 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
     taxonomic_exclusions_to_transfer = reassignable.taxonomic_exclusions
     if reassigned_object.taxonomic_exclusions.count > 0
       taxonomic_exclusions_to_transfer = taxonomic_exclusions_to_transfer.
-      where(
-        'taxon_concept_id NOT IN (?)',
-        reassigned_object.taxonomic_exclusions.select(:taxon_concept_id).
-          map(&:taxon_concept_id)
-      )
+        where.not(taxon_concept_id: reassigned_object.taxonomic_exclusions.select(:taxon_concept_id).
+          map(&:taxon_concept_id))
     end
     taxonomic_exclusions_to_transfer.update_all(parent_id: reassigned_object.id)
   end
@@ -147,5 +134,4 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
   def transfer_geographic_exclusions(reassigned_object, reassignable)
     reassignable.geographic_exclusions.update_all(parent_id: reassigned_object.id)
   end
-
 end

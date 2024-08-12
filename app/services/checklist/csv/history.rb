@@ -7,7 +7,7 @@ class Checklist::Csv::History < Checklist::History
       select(select_columns).
       where(taxonomy_is_cites_eu: true).
       joins(:cites_listing_changes).where(
-        "cites_listing_changes_mview.show_in_downloads": true
+        'cites_listing_changes_mview.show_in_downloads': true
       ).
       joins('LEFT JOIN geo_entities ON cites_listing_changes_mview.party_id = geo_entities.id').
       order(Arel.sql(<<-SQL
@@ -70,5 +70,4 @@ class Checklist::Csv::History < Checklist::History
       :nomenclature_note_en
     ]
   end
-
 end

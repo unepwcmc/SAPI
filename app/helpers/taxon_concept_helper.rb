@@ -16,19 +16,19 @@ module TaxonConceptHelper
   def admin_add_new_taxon_concept_multi
     content_tag(:div, class: 'btn-group', style: 'float:right') do
       link_to('<i class="icon-plus-sign"></i> Add new Taxon Concept'.html_safe, '#', class: 'btn') +
-      link_to('<span class="caret"></span>'.html_safe, '#', class: 'btn dropdown-toggle', "data-toggle": 'dropdown') +
+      link_to('<span class="caret"></span>'.html_safe, '#', class: 'btn dropdown-toggle', 'data-toggle': 'dropdown') +
       content_tag(:ul, class: 'dropdown-menu') do
         content_tag(:li) do
-          link_to('Accepted name', '#new-taxon_concept', "data-toggle": 'modal')
+          link_to('Accepted name', '#new-taxon_concept', 'data-toggle': 'modal')
         end +
         content_tag(:li) do
-          link_to('Synonym', '#new-taxon_concept_synonym', "data-toggle": 'modal')
+          link_to('Synonym', '#new-taxon_concept_synonym', 'data-toggle': 'modal')
         end +
         content_tag(:li) do
-          link_to('Hybrid', '#new-taxon_concept_hybrid', "data-toggle": 'modal')
+          link_to('Hybrid', '#new-taxon_concept_hybrid', 'data-toggle': 'modal')
         end +
         content_tag(:li) do
-          link_to('N name', '#new-taxon_concept_n_name', "data-toggle": 'modal')
+          link_to('N name', '#new-taxon_concept_n_name', 'data-toggle': 'modal')
         end
       end
     end
@@ -40,7 +40,7 @@ module TaxonConceptHelper
       href: new_admin_taxon_concept_synonym_relationship_url(@taxon_concept),
       name: 'Add new Synonym',
       remote: true,
-      "data-toggle": nil,
+      'data-toggle': nil,
       role: nil
     )
   end
@@ -51,7 +51,7 @@ module TaxonConceptHelper
       href: new_admin_taxon_concept_trade_name_relationship_url(@taxon_concept),
       name: 'Add new Trade name',
       remote: true,
-      "data-toggle": nil,
+      'data-toggle': nil,
       role: nil
     )
   end
@@ -62,7 +62,7 @@ module TaxonConceptHelper
       href: new_admin_taxon_concept_hybrid_relationship_url(@taxon_concept),
       name: 'Add new Hybrid',
       remote: true,
-      "data-toggle": nil,
+      'data-toggle': nil,
       role: nil
     )
   end
@@ -150,7 +150,7 @@ module TaxonConceptHelper
       href: new_admin_taxon_concept_taxon_concept_reference_url(@taxon_concept),
       name: 'Add new reference',
       remote: true,
-      "data-toggle": nil,
+      'data-toggle': nil,
       role: nil
     )
   end
@@ -173,7 +173,7 @@ module TaxonConceptHelper
       resource: 'common_name',
       href: new_admin_taxon_concept_taxon_common_url(@taxon_concept),
       remote: true,
-      "data-toggle": nil,
+      'data-toggle': nil,
       role: nil
     )
   end
@@ -227,7 +227,7 @@ module TaxonConceptHelper
   end
 
   def taxon_concept_internal_note_form(comment)
-    form_for [:admin, @taxon_concept, comment] do |f|
+    form_for [ :admin, @taxon_concept, comment ] do |f|
       content_tag(:table, style: 'width:100%') do
         content_tag(:tr) do
           content_tag(:td, style: 'width:30%') do

@@ -19,7 +19,6 @@ class Api::SpeciesListingsController < ApplicationController
 
     user_designations = trade_plus_params[:designation].split(',').map(&:upcase)
     designations = Designation.pluck(:name).map(&:upcase)
-    {name: user_designations & designations }
+    { name: user_designations & designations }
   end
-
 end

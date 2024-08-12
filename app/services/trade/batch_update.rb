@@ -1,5 +1,4 @@
 class Trade::BatchUpdate
-
   def initialize(search_params)
     search = Trade::Filter.new(search_params)
     @shipments = Trade::Shipment.joins(
@@ -26,5 +25,4 @@ class Trade::BatchUpdate
     PermitCleanupWorker.perform_async(disconnected_permits_ids)
     affected_shipments
   end
-
 end

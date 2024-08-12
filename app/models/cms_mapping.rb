@@ -24,7 +24,7 @@ class CmsMapping < ApplicationRecord
   scope :index_filter, lambda { |option|
     case option
     when 'MATCHES'
-      where('taxon_concept_id IS NOT NULL')
+      where.not(taxon_concept_id: nil)
     when 'MISSING_SPECIES_PLUS'
       where(taxon_concept_id: nil)
     else

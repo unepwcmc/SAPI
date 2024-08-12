@@ -3,57 +3,57 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
   defaults resource_class: EuSuspension,
     collection_name: 'eu_suspensions', instance_name: 'eu_suspension'
   before_action :load_lib_objects
-  before_action :load_search, only: [:new, :index, :edit]
+  before_action :load_search, only: [ :new, :index, :edit ]
 
   layout 'taxon_concepts'
 
   authorize_resource class: false
 
+  def create
+    create! do |success, failure|
+      success.html do
+        redirect_to admin_taxon_concept_eu_suspensions_url(params[:taxon_concept_id]),
+          notice: 'Operation successful'
+      end
+      failure.html do
+        load_search
+        render 'create'
+      end
+    end
+  end
   def update
     update! do |success, failure|
-      success.html {
+      success.html do
         if '1' == params[:redirect_to_eu_suspension_reg]
           redirect_to admin_eu_suspension_regulation_eu_suspensions_url(
             @eu_suspension.start_event_id)
         else
           redirect_to admin_taxon_concept_eu_suspensions_url(
             params[:taxon_concept_id]),
-          notice: 'Operation successful'
+            notice: 'Operation successful'
         end
-      }
-      failure.html {
+      end
+      failure.html do
         load_lib_objects
         load_search
         render 'new'
-      }
+      end
 
       success.js { render 'create' }
-      failure.js {
+      failure.js do
         load_lib_objects
         render 'new'
-      }
+      end
     end
   end
 
-  def create
-    create! do |success, failure|
-      success.html {
-        redirect_to admin_taxon_concept_eu_suspensions_url(params[:taxon_concept_id]),
-        notice: 'Operation successful'
-      }
-      failure.html {
-        load_search
-        render 'create'
-      }
-    end
-  end
 
   def destroy
     destroy! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_taxon_concept_eu_suspensions_url(@taxon_concept),
-        notice: 'Operation successful'
-      }
+          notice: 'Operation successful'
+      end
     end
   end
 

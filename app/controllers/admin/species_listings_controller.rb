@@ -1,5 +1,4 @@
 class Admin::SpeciesListingsController < Admin::StandardAuthorizationController
-
   protected
 
     def collection

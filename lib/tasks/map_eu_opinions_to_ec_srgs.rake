@@ -20,7 +20,7 @@
 # join geo_entities on geo_entities.id = eu_opinions.geo_entity_id
 # order by start_date;
 
-task :map_eu_opinions_to_ec_srgs => :environment do
+task map_eu_opinions_to_ec_srgs: :environment do
   update_query = <<-SQL
     WITH eu_opinions_matching_with_ec_srgs AS (
       SELECT

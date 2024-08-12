@@ -1,5 +1,4 @@
 class NomenclatureChange::ReassignmentSummarizer
-
   def initialize(input, output)
     @input = input
     @output = output
@@ -52,7 +51,7 @@ class NomenclatureChange::ReassignmentSummarizer
         children_cnt
       else
         @input.parent_reassignments.includes(:reassignment_targets).
-        where(
+          where(
           'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
         ).count
       end
@@ -70,7 +69,7 @@ class NomenclatureChange::ReassignmentSummarizer
         names_cnt
       else
         @input.name_reassignments.includes(:reassignment_targets).
-        where(
+          where(
           'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
         ).count
       end
@@ -85,7 +84,7 @@ class NomenclatureChange::ReassignmentSummarizer
         distributions_cnt
       else
         @input.distribution_reassignments.includes(:reassignment_targets).
-        where(
+          where(
           'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
         ).count
       end
@@ -126,5 +125,4 @@ class NomenclatureChange::ReassignmentSummarizer
       ).where(reassignable_type: reassignable_type).count
     "#{(cnt == 1 || @input.is_a?(NomenclatureChange::Output) ? objects_cnt : 0)} (of #{objects_cnt}) #{title}"
   end
-
 end

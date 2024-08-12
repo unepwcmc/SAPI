@@ -1,7 +1,6 @@
 class Trade::Grouping::TradePlus
-
-  def initialize(attributes, opts={})
-    super(attributes, opts)
+  def initialize(attributes, opts = {})
+    super
   end
 
   def group_query
@@ -23,6 +22,6 @@ class Trade::Grouping::TradePlus
   end
 
   def attributes
-    #TODO
+    # TODO
   end
 end

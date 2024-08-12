@@ -63,7 +63,7 @@ class ListingChange < ApplicationRecord
   #   :created_by_id, :updated_by_id
 
   attr_accessor :excluded_geo_entities_ids, # Array
-                :excluded_taxon_concepts_ids # String
+    :excluded_taxon_concepts_ids # String
 
   belongs_to :event, optional: true
   has_many :listing_change_copies, foreign_key: :original_id,
@@ -73,7 +73,7 @@ class ListingChange < ApplicationRecord
   belongs_to :change_type
   has_many :listing_distributions, -> { where is_party: false }, inverse_of: :listing_change, dependent: :destroy
   has_one :party_listing_distribution, -> { where is_party: true }, class_name: 'ListingDistribution',
-     dependent: :destroy, inverse_of: :listing_change
+    dependent: :destroy, inverse_of: :listing_change
   has_many :geo_entities, through: :listing_distributions
   has_one :party_geo_entity, class_name: 'GeoEntity',
     through: :party_listing_distribution, source: :geo_entity
@@ -97,7 +97,7 @@ class ListingChange < ApplicationRecord
   translates :nomenclature_note
 
   scope :by_designation, lambda { |designation_id|
-    joins(:change_type).where("change_types.designation_id": designation_id)
+    joins(:change_type).where('change_types.designation_id': designation_id)
   }
 
   def effective_at_formatted
@@ -130,12 +130,12 @@ class ListingChange < ApplicationRecord
 
   def inclusion_scientific_name
     @inclusion_scientific_name ||
-    inclusion && inclusion.full_name
+    (inclusion && inclusion.full_name)
   end
 
   def scientific_name
     @scientific_name ||
-    taxon_concept && taxon_concept.full_name
+    (taxon_concept && taxon_concept.full_name)
   end
 
   def self.search(query)
@@ -149,11 +149,11 @@ class ListingChange < ApplicationRecord
   end
 
   def self.ignored_attributes
-    super() + [:source_id, :annotation_id, :import_row_id]
+    super + [ :source_id, :annotation_id, :import_row_id ]
   end
 
   def self.text_attributes
-    [:internal_notes, :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr]
+    [ :internal_notes, :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr ]
   end
 
   def duplicates(comparison_attributes_override = {})
@@ -191,7 +191,7 @@ class ListingChange < ApplicationRecord
     return true unless inclusion
     unless inclusion.rank.taxonomic_position < taxon_concept.rank.taxonomic_position
       errors.add(:inclusion_taxon_concept_id, 'must be at higher rank')
-      return false
+      false
     end
   end
 
@@ -199,7 +199,7 @@ class ListingChange < ApplicationRecord
     return true unless species_listing
     unless species_listing.designation_id == change_type.designation_id
       errors.add(:species_listing_id, 'designation mismatch between change type and species listing')
-      return false
+      false
     end
   end
 
@@ -207,7 +207,7 @@ class ListingChange < ApplicationRecord
     return true unless event
     unless event.designation_id == change_type.designation_id
       errors.add(:event_id, 'designation mismatch between change type and event')
-      return false
+      false
     end
   end
 
@@ -246,7 +246,7 @@ class ListingChange < ApplicationRecord
 
     # geographic exclusions
     excluded_geo_entities =
-      if @excluded_geo_entities_ids && !@excluded_geo_entities_ids.empty?
+      if @excluded_geo_entities_ids.present?
         new_exclusions << ListingChange.new(
           change_type_id: exclusion_change_type.id,
           species_listing_id: species_listing_id,
@@ -257,7 +257,7 @@ class ListingChange < ApplicationRecord
 
     # taxonomic exclusions
     excluded_taxon_concepts =
-      if @excluded_taxon_concepts_ids && !@excluded_taxon_concepts_ids.empty?
+      if @excluded_taxon_concepts_ids.present?
         @excluded_taxon_concepts_ids.map do |id|
           new_exclusions << ListingChange.new(
             change_type_id: exclusion_change_type.id,

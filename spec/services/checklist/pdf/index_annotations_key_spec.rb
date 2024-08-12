@@ -5,11 +5,11 @@ describe Checklist::Pdf::IndexAnnotationsKey do
 
   describe :annotations_key do
     subject { Checklist::Pdf::IndexAnnotationsKey.new }
-    specify {
+    specify do
       allow(subject).to receive(:non_hash_annotations_key).and_return('x')
       allow(subject).to receive(:hash_annotations_key).and_return('x')
       expect(subject.annotations_key).to eq("\\newpage\n\\parindent 0in\\cpart{\\annotationsKey}\nxx\\parindent -0.1in")
-    }
+    end
   end
 
   describe :hash_annotations_key do
@@ -43,9 +43,9 @@ describe Checklist::Pdf::IndexAnnotationsKey do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
     subject { Checklist::Pdf::IndexAnnotationsKey.new }
-    specify {
+    specify do
       expect(subject.hash_annotations_key).to eq("\\newpage\n\\section*{\\hashAnnotations}\n\\hashAnnotationsIndexInfo\n\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP2 & \\validFrom \\hspace{2 pt} 01/07/2013\\\\\n\\#1 & Only bark \\\\\n\n}\n")
-    }
+    end
   end
 
   describe :non_hash_annotations_key do
@@ -99,10 +99,9 @@ describe Checklist::Pdf::IndexAnnotationsKey do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
     subject { Checklist::Pdf::IndexAnnotationsKey.new }
-    specify {
+    specify do
       allow(LatexToPdf).to receive(:html2latex).and_return('x')
       expect(subject.non_hash_annotations_key).to eq("\\section*{\\nonHashAnnotations}\n\\cfbox{orange}{\\superscript{1} \\textbf{\\textit{Foobarus bizarrus}}}\n\nx\n\n\\cfbox{green}{\\superscript{2} \\textbf{\\textit{Foobaria curiosa}}}\n\nx\n\n")
-    }
+    end
   end
-
 end

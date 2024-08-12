@@ -78,7 +78,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def object_and_children
-    [object.id] + object.children.pluck(:id)
+    [ object.id ] + object.children.pluck(:id)
   end
 
   def ancestors
@@ -129,7 +129,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   def subspecies
     MTaxonConcept.where(parent_id: object.id).
       where("name_status NOT IN ('S', 'T', 'N')").
-      select([:full_name, :author_year, :id, :show_in_species_plus]).
+      select([ :full_name, :author_year, :id, :show_in_species_plus ]).
       order(:full_name).all
   end
 
@@ -151,7 +151,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       scope.current_user ? true : false,
       @options[:trimmed] == 'true' ? true : false
     ]
-    Rails.logger.debug "CACHE KEY: #{key.inspect}"
+    Rails.logger.debug { "CACHE KEY: #{key.inspect}" }
     key
   end
 

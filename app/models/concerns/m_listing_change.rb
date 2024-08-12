@@ -1,5 +1,4 @@
 module MListingChange
-
   def self.included(base)
     base.class_eval do
       extend Mobility
@@ -60,5 +59,4 @@ module MListingChange
       ).symbolize_keys
     )
   end
-
 end

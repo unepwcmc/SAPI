@@ -1,6 +1,5 @@
 module SapiModule
   module StoredProcedures
-
     ##
     # This takes several hours to run:
     #
@@ -43,9 +42,9 @@ module SapiModule
           # when they're not matviews, it's the tables we're locking, matviews
           # don't respond to LOCK TABLE.
           "SELECT relname FROM pg_class WHERE relname LIKE '%_mview' AND relkind = 'r';"
-        ).to_a.map{ |row| row['relname'] }
+        ).to_a.map { |row| row['relname'] }
 
-        to_lock.each { |relname|
+        to_lock.each do |relname|
           # Lock tables in advance to prevent deadlocks forcing a rollback.
           puts "Locking table: #{relname}"
 
@@ -53,9 +52,9 @@ module SapiModule
           # most of the rebuild_... functions are dropping and recreating the
           # matviews.
           connection.execute("LOCK TABLE #{relname} IN ACCESS EXCLUSIVE MODE")
-        }
+        end
 
-        to_rebuild.each { |p|
+        to_rebuild.each do |p|
           puts "Procedure: #{p}"
 
           # Within the current transaction, set work_mem to a higher-than-usual
@@ -67,7 +66,7 @@ module SapiModule
           connection.execute("SET work_mem TO '64MB';")
 
           connection.execute("SELECT * FROM rebuild_#{p}()")
-        }
+        end
 
         changed_cnt = TaxonConcept.where('touched_at IS NOT NULL AND touched_at > updated_at').count
 
@@ -131,10 +130,10 @@ module SapiModule
     end
 
     def self.run_procedures(procedures)
-      procedures.each { |p|
+      procedures.each do |p|
         puts "Procedure: #{p}"
         ApplicationRecord.connection.execute("SELECT * FROM rebuild_#{p}()")
-      }
+      end
     end
 
     def self.rebuild_permit_numbers
@@ -156,10 +155,10 @@ module SapiModule
         :trade_shipments_mandatory_quotas_mview,
         :trade_shipments_cites_suspensions_mview,
         :non_compliant_shipments_view
-      ].each { |p|
+      ].each do |p|
         puts "Procedure: #{p}"
         ApplicationRecord.connection.execute("SELECT * FROM rebuild_#{p}()")
-      }
+      end
     end
 
     def self.rebuild_trade_plus_mviews

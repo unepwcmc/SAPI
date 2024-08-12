@@ -1,12 +1,11 @@
 namespace :import do
-
   ## When I first tried to import the countries file I got an error related with character encoding
   ## I've then followed the instructions in this stackoverflow answer: http://stackoverflow.com/questions/4867272/invalid-byte-sequence-for-encoding-utf8
   ## So:
   ### 1- check current character encoding with: file path/to/file
   ### 2- change character encoding: iconv -f original_charset -t utf-8 originalfile > newfile
   desc 'Import countries from csv file (usage: rake import:countries[path/to/file,path/to/another])'
-  task :countries, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :countries, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'countries_import'
     country_type = GeoEntityType.find_by_name(GeoEntityType::COUNTRY)
     territory_type = GeoEntityType.find_by_name(GeoEntityType::TERRITORY)
@@ -39,22 +38,22 @@ namespace :import do
     puts "There are now #{GeoEntity.count(conditions: { geo_entity_type_id: territory_type.id })} territories in the database."
   end
 
-  desc "Add country names in spanish and french"
-  task :countries_translations => [:environment] do
-    CSV.foreach("lib/files/country_codes_en_es_fr_utf8.csv") do |row|
+  desc 'Add country names in spanish and french'
+  task countries_translations: [ :environment ] do
+    CSV.foreach('lib/files/country_codes_en_es_fr_utf8.csv') do |row|
       country = GeoEntity.find_or_initialize_by(iso_code2: row[0].strip.upcase)
       unless country.id.nil?
         country.update(
-          :name_fr => row[1].strip, :name_es => row[2].strip
+          name_fr: row[1].strip, name_es: row[2].strip
         )
       end
     end
-    puts "Countries updated with french and spanish names"
+    puts 'Countries updated with french and spanish names'
   end
 end
 
 def link_countries
-  puts "Link territories to countries and countries to respective CITES regions"
+  puts 'Link territories to countries and countries to respective CITES regions'
   puts "There are #{GeoRelationship.count} geo_relationships in the database."
   sql = <<-SQL
     INSERT INTO geo_relationships(geo_entity_id, other_geo_entity_id, geo_relationship_type_id, created_at, updated_at)

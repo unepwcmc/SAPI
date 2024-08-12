@@ -1,11 +1,10 @@
 class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
-
   # Generate a summary based on the subprocessors chain
   def summary
-    result = [[
+    result = [ [
       "#{@nc.input.taxon_concept.full_name} will be split into:",
       @nc.outputs.map(&:display_full_name)
-    ]]
+    ] ]
     @subprocessors.each { |processor| result << processor.summary }
     result.flatten(1)
   end
@@ -32,7 +31,7 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
           chain << NomenclatureChange::StatusDowngradeProcessor.new(output)
         # for the case when an existing synonym subspecies is turned into a species
         elsif output.name_status == 'S'
-          chain << NomenclatureChange::StatusDowngradeProcessor.new(output, [output])
+          chain << NomenclatureChange::StatusDowngradeProcessor.new(output, [ output ])
         end
       elsif !output.will_create_taxon? && output.name_status == 'S'
         chain << NomenclatureChange::StatusUpgradeProcessor.new(output)
@@ -66,5 +65,4 @@ class NomenclatureChange::Split::Processor < NomenclatureChange::Processor
     @input = @nc.input
     @outputs = @nc.outputs
   end
-
 end

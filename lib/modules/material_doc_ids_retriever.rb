@@ -1,38 +1,37 @@
 module MaterialDocIdsRetriever
-
   def self.run(params)
     params['taxon_concepts_ids'] =
       if params['taxon_name'].present?
-        exact_match = MTaxonConcept.where('LOWER(full_name) = ?', params['taxon_name'].downcase)
-                                   .where(taxonomy_id: 1)
-                                   .first
+        exact_match = MTaxonConcept.where('LOWER(full_name) = ?', params['taxon_name'].downcase).
+          where(taxonomy_id: 1).
+          first
 
         # retrieve the same taxa as shown in the page
         check_params = params.symbolize_keys
         ids =
-          if params['scientific_name'].present? ||  params['country_ids'].present? ||  params['cites_appendices'].present?
+          if params['scientific_name'].present? || params['country_ids'].present? || params['cites_appendices'].present?
             check_params[:scientific_name] = params['taxon_name']
             Checklist::Checklist.new(check_params).query.pluck(:id)
 
           else
-            MTaxonConcept.by_cites_eu_taxonomy
-                             .without_non_accepted
-                             .without_hidden
-                             .by_name(
-                                params['taxon_name'],
-                                { synonyms: true, common_names: true, subspecies: false }
-                               )
-                             .order('rank_id ASC, full_name')
-                             .pluck(:id)
+            MTaxonConcept.by_cites_eu_taxonomy.
+              without_non_accepted.
+              without_hidden.
+              by_name(
+                params['taxon_name'],
+                { synonyms: true, common_names: true, subspecies: false }
+              ).
+              order('rank_id ASC, full_name').
+              pluck(:id)
           end
 
         anc_ids = []
-        anc_ids = ancestors_ids(exact_match.try(:id), params['taxon_name'], exact_match).uniq  if ids.include?(exact_match.try(:id))
+        anc_ids = ancestors_ids(exact_match.try(:id), params['taxon_name'], exact_match).uniq if ids.include?(exact_match.try(:id))
         anc_ids | ids
       elsif params['taxon_concept_id'].present?
         # retrieve all the ancestors taxa given a taxon(included)
         anc_ids = ancestors_ids(params['taxon_concept_id'])
-        #retrieve all the children taxa given a taxon(included)
+        # retrieve all the children taxa given a taxon(included)
         chi_ids = MTaxonConcept.descendants_ids(params['taxon_concept_id']).map(&:to_i)
         anc_ids | chi_ids
       else
@@ -53,11 +52,11 @@ module MaterialDocIdsRetriever
 
     ordered_docs = docs.cached_results.sort_by do |doc|
       doc_tc_ids = doc.taxon_concept_ids
-      params['taxon_concepts_ids'].index{ |id| doc_tc_ids.include? id }
+      params['taxon_concepts_ids'].index { |id| doc_tc_ids.include? id }
     end
 
     doc_ids = ordered_docs.map { |doc| locale_document(doc) }.flatten
-    doc_ids = doc_ids.map{ |d| d['id'] }
+    doc_ids = doc_ids.map { |d| d['id'] }
   end
 
   private
@@ -73,7 +72,7 @@ module MaterialDocIdsRetriever
     # it to the db to do this. That logic maybe belongs elsewhere?
     # Consider using `SearchParamSanitiser.sanitise_integer_array` for this.
     tc_ids_array = Array(tc_ids.is_a?(String) ? tc_ids.split(',') : tc_ids)
-    tc_ids_sql = tc_ids_array.map(&:to_i).filter{ |tc_id| tc_id > 0 }.join(', ')
+    tc_ids_sql = tc_ids_array.map(&:to_i).filter { |tc_id| tc_id > 0 }.join(', ')
 
     # Don't bother running a query if we didn't get any taxon concept ids
     return [] if tc_ids_sql.empty?
@@ -94,7 +93,7 @@ module MaterialDocIdsRetriever
   end
 
   def self.order_case(match, taxon_name)
-    return '' if (taxon_name.present? && match.nil?)
+    return '' if taxon_name.present? && match.nil?
     query = "CASE
               WHEN taxon_concept_id = ancestor_taxon_concept_id
             "

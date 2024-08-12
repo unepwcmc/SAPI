@@ -1,5 +1,4 @@
 class Admin::IucnMappingsController < Admin::SimpleCrudController
-
   def index
     @totals = {
       matching: IucnMapping.index_filter('MATCHING').count,

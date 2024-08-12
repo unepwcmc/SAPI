@@ -1,5 +1,5 @@
 class Species::ExportsController < ApplicationController
-  before_action :ensure_data_type_and_filters, only: [:download]
+  before_action :ensure_data_type_and_filters, only: [ :download ]
 
   def download
     set_csv_separator
@@ -20,7 +20,7 @@ class Species::ExportsController < ApplicationController
       result = Species::CitesProcessesExport.new(@filters).export
     end
     respond_to do |format|
-      format.html {
+      format.html do
         if result.is_a?(Array)
           # this was added in order to prevent download managers from
           # failing when chunked_transfer_encoding is set in nginx (1.8.1)
@@ -30,10 +30,10 @@ class Species::ExportsController < ApplicationController
         else
           redirect_to species_exports_path, notice: "There are no #{params[:data_type]} to download."
         end
-      }
-      format.json {
+      end
+      format.json do
         render json: { total: result.is_a?(Array) ? 1 : 0 }
-      }
+      end
     end
   end
 
@@ -51,7 +51,7 @@ class Species::ExportsController < ApplicationController
     if separator_params.present?
       cookies.permanent['speciesplus.csv_separator'] = separator_params
     elsif separator_cookie.present?
-      return
+      nil
     else
       ip = request.remote_ip
       separator = SapiModule::GeoIP.instance.default_separator(ip)

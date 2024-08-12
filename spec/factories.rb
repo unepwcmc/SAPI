@@ -1,5 +1,4 @@
 FactoryBot.define do
-
   factory :user do
     sequence(:name) { |n| "user#{n}" }
     email { "#{name}@test.pl" }
@@ -48,7 +47,7 @@ FactoryBot.define do
     factory :cites_extraordinary_meeting, class: CitesExtraordinaryMeeting
     factory :ec_srg, class: EcSrg
     factory :cites_suspension_notification, class: CitesSuspensionNotification,
-      aliases: [:start_notification] do
+      aliases: [ :start_notification ] do
       end_date { '2012-01-01' }
     end
   end
@@ -109,7 +108,7 @@ FactoryBot.define do
 
   factory :eu_decision_type do
     sequence(:name) { |n| "Opinion#{n}" }
-    decision_type { "NO_OPINION" }
+    decision_type { 'NO_OPINION' }
   end
 
   factory :ahoy_event, class: Ahoy::Event do

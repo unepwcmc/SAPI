@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe NomenclatureChange::FullReassignment do
-
   describe 'process' do
     let(:old_tc) { create_cites_eu_species }
     let(:new_tc) { create_cites_eu_species }
@@ -88,7 +87,5 @@ describe NomenclatureChange::FullReassignment do
       end
       specify { expect(new_tc.document_citation_taxon_concepts.count).to eq(1) }
     end
-
   end
-
 end

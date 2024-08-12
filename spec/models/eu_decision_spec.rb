@@ -77,7 +77,7 @@ describe EuDecision, sidekiq: :inline do
   end
 
   describe :create do
-    context "downloads cache should be populated" do
+    context 'downloads cache should be populated' do
       before(:each) do
         DownloadsCache.clear_eu_decisions
         create(:eu_decision, start_date: Time.utc(2013), type: 'EuOpinion')
@@ -121,7 +121,7 @@ describe EuDecision, sidekiq: :inline do
   end
 
   describe :destroy do
-    context "downloads cache should be cleared" do
+    context 'downloads cache should be cleared' do
       before(:each) do
         DownloadsCache.clear_eu_decisions
         d = create(:eu_decision, start_date: Time.utc(2013))
@@ -133,5 +133,4 @@ describe EuDecision, sidekiq: :inline do
       specify { expect(subject).to be_empty }
     end
   end
-
 end

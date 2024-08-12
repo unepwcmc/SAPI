@@ -1,6 +1,5 @@
 # Array parameters are sorted for caching purposes.
 module SearchParamSanitiser
-
   def sanitise_string(s)
     s && s.strip
   end
@@ -11,11 +10,11 @@ module SearchParamSanitiser
 
   def sanitise_symbol(s, default = nil)
     return nil unless s
-    s.is_a?(Symbol) && s || s.is_a?(String) && s.strip.downcase.to_sym || default
+    (s.is_a?(Symbol) && s) || (s.is_a?(String) && s.strip.downcase.to_sym) || default
   end
 
   def sanitise_boolean(b, default = nil)
-    b && ActiveRecord::Type::Boolean.new.cast(b) || default
+    (b && ActiveRecord::Type::Boolean.new.cast(b)) || default
   end
 
   def sanitise_positive_integer(i, default = nil)
@@ -65,7 +64,7 @@ module SearchParamSanitiser
 
   def sanitise_upcase_string_array(ary)
     new_ary = sanitise_string_array(ary)
-    new_ary && new_ary.map!(&:upcase) || []
+    (new_ary && new_ary.map!(&:upcase)) || []
   end
 
   def whitelist_param(value, allowed_values, default)
@@ -83,5 +82,4 @@ module SearchParamSanitiser
       defaults
     end
   end
-
 end

@@ -5,15 +5,15 @@ class Checklist::TimelineEvent
     :hash_full_note, :hash_ann_symbol, :hash_ann_parent_symbol,
     :inherited_short_note, :inherited_full_note, :nomenclature_note
   # options to be passed:
-  #:change_type_name
-  #:effective_at
-  #:is_current
-  #:hash_full_note may be rich text (html)
-  #:short_note may be rich text (html)
-  #:full_note may be rich text (html)
-  #:hash_ann_symbol e.g. #4
-  #:hash_ann_parent_symbol e.g. CoP15
-  #:pos - position (%)
+  # :change_type_name
+  # :effective_at
+  # :is_current
+  # :hash_full_note may be rich text (html)
+  # :short_note may be rich text (html)
+  # :full_note may be rich text (html)
+  # :hash_ann_symbol e.g. #4
+  # :hash_ann_parent_symbol e.g. CoP15
+  # :pos - position (%)
   def initialize(options)
     options[:effective_at] = Time.zone.parse(options[:effective_at]) if options[:effective_at].is_a?(String)
 
@@ -69,5 +69,4 @@ class Checklist::TimelineEvent
   def effective_at_formatted
     effective_at.strftime('%d/%m/%y')
   end
-
 end

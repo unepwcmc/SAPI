@@ -1,12 +1,12 @@
 require 'spec_helper'
 describe DocumentSearch, sidekiq: :inline do
   describe :results do
-    let(:meliaceae) {
+    let(:meliaceae) do
       create_cites_eu_family(
         taxon_name: create(:taxon_name, scientific_name: 'Meliaceae')
       )
-    }
-    let(:swietenia_macrophylla) {
+    end
+    let(:swietenia_macrophylla) do
       create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: 'Swietenia macrophylla'),
         parent: create_cites_eu_genus(
@@ -14,8 +14,8 @@ describe DocumentSearch, sidekiq: :inline do
           parent: meliaceae
         )
       )
-    }
-    let(:cedrela_odorata) {
+    end
+    let(:cedrela_odorata) do
       create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: 'Cedrela odorata'),
         parent: create_cites_eu_genus(
@@ -23,24 +23,24 @@ describe DocumentSearch, sidekiq: :inline do
           parent: meliaceae
         )
       )
-    }
-    let(:belize) {
+    end
+    let(:belize) do
       create(
         :geo_entity,
         geo_entity_type: country_geo_entity_type,
         name: 'Belize',
         iso_code2: 'BZ'
       )
-    }
-    let(:brazil) {
+    end
+    let(:brazil) do
       create(
         :geo_entity,
         geo_entity_type: country_geo_entity_type,
         name: 'Brazil',
         iso_code2: 'BR'
       )
-    }
-    let(:document_on_swietenia) {
+    end
+    let(:document_on_swietenia) do
       document = create(
         :proposal,
         is_public: true,
@@ -57,8 +57,8 @@ describe DocumentSearch, sidekiq: :inline do
         taxon_concept_id: swietenia_macrophylla.id
       )
       document
-    }
-    let(:document_on_swietenia_in_belize) {
+    end
+    let(:document_on_swietenia_in_belize) do
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
@@ -79,8 +79,8 @@ describe DocumentSearch, sidekiq: :inline do
         geo_entity_id: belize.id
       )
       document
-    }
-    let(:document_on_swietenia_in_brazil) {
+    end
+    let(:document_on_swietenia_in_brazil) do
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
@@ -101,8 +101,8 @@ describe DocumentSearch, sidekiq: :inline do
         geo_entity_id: brazil.id
       )
       document
-    }
-    let(:document_on_swietenia_in_belize_and_brazil) {
+    end
+    let(:document_on_swietenia_in_belize_and_brazil) do
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
@@ -128,8 +128,8 @@ describe DocumentSearch, sidekiq: :inline do
         geo_entity_id: brazil.id
       )
       document
-    }
-    let(:document_on_swietenia_in_belize_and_cedrela_in_brazil) {
+    end
+    let(:document_on_swietenia_in_belize_and_cedrela_in_brazil) do
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
@@ -163,8 +163,8 @@ describe DocumentSearch, sidekiq: :inline do
         geo_entity_id: brazil.id
       )
       document
-    }
-    let(:document_on_brazil) {
+    end
+    let(:document_on_brazil) do
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
@@ -180,15 +180,15 @@ describe DocumentSearch, sidekiq: :inline do
         geo_entity_id: brazil.id
       )
       document
-    }
-    let(:document_without_citations) {
+    end
+    let(:document_without_citations) do
       document = create(
         :proposal, is_public: true,
         event: create(:cites_cop, designation: cites),
         title: 'Document without citations',
         sort_index: 7
       )
-    }
+    end
 
     before(:each) do
       document_on_swietenia
@@ -201,16 +201,16 @@ describe DocumentSearch, sidekiq: :inline do
       DocumentSearch.refresh_citations_and_documents
     end
 
-    context "when searching by Swietenia macrophylla" do
-      subject {
+    context 'when searching by Swietenia macrophylla' do
+      subject do
         DocumentSearch.new(
           {
-            'taxon_concepts_ids' => [swietenia_macrophylla.id]
+            'taxon_concepts_ids' => [ swietenia_macrophylla.id ]
           },
           'admin'
         ).results
-      }
-      specify {
+      end
+      specify do
         expect(subject.map(&:id).sort).to eq(
           [
             document_on_swietenia,
@@ -220,19 +220,19 @@ describe DocumentSearch, sidekiq: :inline do
             document_on_swietenia_in_belize_and_cedrela_in_brazil
           ].map(&:id).sort
         )
-      }
+      end
     end
 
-    context "when searching by Brazil" do
-      subject {
+    context 'when searching by Brazil' do
+      subject do
         DocumentSearch.new(
           {
-            'geo_entities_ids' => [brazil.id]
+            'geo_entities_ids' => [ brazil.id ]
           },
           'admin'
         ).results
-      }
-      specify {
+      end
+      specify do
         expect(subject.map(&:id).sort).to eq(
           [
             document_on_swietenia_in_brazil,
@@ -241,40 +241,40 @@ describe DocumentSearch, sidekiq: :inline do
             document_on_brazil
           ].map(&:id).sort
         )
-      }
+      end
     end
 
-    context "when searching by Swietenia macrophylla in Brazil" do
-      subject {
+    context 'when searching by Swietenia macrophylla in Brazil' do
+      subject do
         DocumentSearch.new(
           {
-            'taxon_concepts_ids' => [swietenia_macrophylla.id],
-            'geo_entities_ids' => [brazil.id]
+            'taxon_concepts_ids' => [ swietenia_macrophylla.id ],
+            'geo_entities_ids' => [ brazil.id ]
           },
           'admin'
         ).results
-      }
-      specify {
+      end
+      specify do
         expect(subject.map(&:id).sort).to eq(
           [
             document_on_swietenia_in_brazil,
             document_on_swietenia_in_belize_and_brazil
           ].map(&:id).sort
         )
-      }
+      end
     end
 
-    context "when searching by Swietenia macrophylla in Brazil and Belize" do
-      subject {
+    context 'when searching by Swietenia macrophylla in Brazil and Belize' do
+      subject do
         DocumentSearch.new(
           {
-            'taxon_concepts_ids' => [swietenia_macrophylla.id],
-            'geo_entities_ids' => [brazil.id, belize.id]
+            'taxon_concepts_ids' => [ swietenia_macrophylla.id ],
+            'geo_entities_ids' => [ brazil.id, belize.id ]
           },
           'admin'
         ).results
-      }
-      specify {
+      end
+      specify do
         expect(subject.map(&:id).sort).to eq(
           [
             document_on_swietenia_in_belize,
@@ -283,9 +283,8 @@ describe DocumentSearch, sidekiq: :inline do
             document_on_swietenia_in_belize_and_cedrela_in_brazil
           ].map(&:id).sort
         )
-      }
+      end
     end
-
   end
 
   describe :documents_need_refreshing? do

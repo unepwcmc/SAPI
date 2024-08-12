@@ -1,6 +1,5 @@
 require 'psql_command'
 module CsvExportable
-
   def export_to_csv(options)
     PsqlCommand.new(copy_stmt(options)).execute
   end
@@ -11,18 +10,18 @@ module CsvExportable
     basic_query = query_sql(options[:query], options[:csv_columns])
     # escape quotes around attributes for psql
     sql = <<-PSQL
-      \\COPY (#{basic_query.gsub(/"/, "\\\"")})
+      \\COPY (#{basic_query.gsub('"', "\\\"")})
       TO :file_name
       WITH DELIMITER :delimiter
       ENCODING :encoding
       CSV HEADER;
     PSQL
     ApplicationRecord.send(
-      :sanitize_sql_array, [sql, {
+      :sanitize_sql_array, [ sql, {
         delimiter: options[:delimiter] || ',',
         encoding: options[:encoding] || 'UTF8',
         file_name: options[:file_path]
-      }]
+      } ]
     )
   end
 
@@ -36,5 +35,4 @@ module CsvExportable
       "#{c} AS \"#{csv_columns[i]}\""
     end
   end
-
 end

@@ -1,12 +1,12 @@
 class Admin::ReferencesController < Admin::StandardAuthorizationController
-  respond_to :json, only: [:index, :update]
+  respond_to :json, only: [ :index, :update ]
 
   def index
     index! do |format|
-      format.json {
+      format.json do
         render json: end_of_association_chain.order(:citation).
-          select([:id, :citation]).map { |d| { value: d.id, text: d.citation } }.to_json
-      }
+          select([ :id, :citation ]).map { |d| { value: d.id, text: d.citation } }.to_json
+      end
     end
   end
 

@@ -1,5 +1,4 @@
 class Api::V1::DashboardStatsController < ApplicationController
-
   def index
     iso_code = params['iso_code']
     geo_entity = GeoEntity.where(iso_code2: iso_code.upcase).first
@@ -8,8 +7,7 @@ class Api::V1::DashboardStatsController < ApplicationController
       render json: stats, serializer: DashboardStatsSerializer
     else
       render json: { 'error' => "#{iso_code} is not a valid iso2 code!" },
-             status: :unprocessable_entity
+        status: :unprocessable_entity
     end
   end
-
 end

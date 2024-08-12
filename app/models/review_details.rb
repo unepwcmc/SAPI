@@ -31,5 +31,4 @@ class ReviewDetails < ApplicationRecord
   def self.display_name
     'Review Details'
   end
-
 end

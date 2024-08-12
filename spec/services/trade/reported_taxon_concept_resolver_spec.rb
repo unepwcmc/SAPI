@@ -1,7 +1,6 @@
 require 'spec_helper'
 describe Trade::ReportedTaxonConceptResolver do
-
-  context "resolving trade names" do
+  context 'resolving trade names' do
     before(:each) do
       @accepted_name = create_cites_eu_species
       @trade_name = create_cites_eu_species(
@@ -14,13 +13,13 @@ describe Trade::ReportedTaxonConceptResolver do
         taxon_relationship_type: trade_name_relationship_type
       )
     end
-    let(:resolver) {
+    let(:resolver) do
       Trade::ReportedTaxonConceptResolver.new(@trade_name.id)
-    }
+    end
     specify { expect(resolver.accepted_taxa).to include(@accepted_name) }
   end
 
-  context "resolving synonyms" do
+  context 'resolving synonyms' do
     before(:each) do
       @accepted_name = create_cites_eu_species
       @synonym = create_cites_eu_species(
@@ -33,20 +32,19 @@ describe Trade::ReportedTaxonConceptResolver do
         taxon_relationship_type: synonym_relationship_type
       )
     end
-    let(:resolver) {
+    let(:resolver) do
       Trade::ReportedTaxonConceptResolver.new(@synonym.id)
-    }
+    end
     specify { expect(resolver.accepted_taxa).to include(@accepted_name) }
   end
 
-  context "resolving accepted names" do
+  context 'resolving accepted names' do
     before(:each) do
       @accepted_name = create_cites_eu_species
     end
-    let(:resolver) {
+    let(:resolver) do
       Trade::ReportedTaxonConceptResolver.new(@accepted_name.id)
-    }
+    end
     specify { expect(resolver.accepted_taxa).to include(@accepted_name) }
   end
-
 end

@@ -1,7 +1,6 @@
 class Species::EuListingsExport < Species::ListingsExport
-
   def initialize(designation, filters)
-    super(designation, filters)
+    super
     @include_cites = filters[:include_cites] == 'true'
   end
 
@@ -49,5 +48,4 @@ class Species::EuListingsExport < Species::ListingsExport
       'Distribution_Uncertain'
     ]
   end
-
 end

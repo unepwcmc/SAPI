@@ -3,44 +3,44 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
     collection_name: 'cites_suspensions', instance_name: 'cites_suspension'
   belongs_to :taxon_concept
 
-  before_action :load_lib_objects, only: [:new, :edit]
-  before_action :load_search, except: [:create, :destroy]
+  before_action :load_lib_objects, only: [ :new, :edit ]
+  before_action :load_search, except: [ :create, :destroy ]
   layout 'taxon_concepts'
 
   authorize_resource class: false
 
   def create
     create! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
-        notice: 'Operation successful'
-      }
-      failure.html {
+          notice: 'Operation successful'
+      end
+      failure.html do
         load_lib_objects
         render 'new'
-      }
+      end
     end
   end
 
   def update
     update! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
-        notice: 'Operation successful'
-      }
-      failure.html {
+          notice: 'Operation successful'
+      end
+      failure.html do
         load_lib_objects
         render 'edit'
-      }
+      end
     end
   end
 
   def destroy
     destroy! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
-        notice: 'Operation successful'
-      }
+          notice: 'Operation successful'
+      end
     end
   end
 
@@ -51,9 +51,9 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(is_current: true,
-            geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
+        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
     @suspension_notifications = CitesSuspensionNotification.
-      select([:id, :name]).
+      select([ :id, :name ]).
       order('effective_at DESC')
   end
 

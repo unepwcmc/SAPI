@@ -5,7 +5,7 @@ class CreateDocumentTagsDocuments < ActiveRecord::Migration[4.2]
       t.references :document_tag
     end
 
-    add_index :document_tags_documents, [:document_id, :document_tag_id],
+    add_index :document_tags_documents, [ :document_id, :document_tag_id ],
       name: 'index_document_tags_documents_composite'
     add_index :document_tags_documents, :document_tag_id
   end

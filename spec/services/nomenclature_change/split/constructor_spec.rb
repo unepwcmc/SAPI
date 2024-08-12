@@ -11,10 +11,10 @@ describe NomenclatureChange::Split::Constructor do
         @old_input = split.input
         constructor.build_input
       end
-      context "when previously no input in place" do
+      context 'when previously no input in place' do
         specify { expect(split.input).not_to be_nil }
       end
-      context "when previously input in place" do
+      context 'when previously input in place' do
         let(:split) { split_with_input }
         specify { expect(split.input).to eq(@old_input) }
       end
@@ -27,10 +27,10 @@ describe NomenclatureChange::Split::Constructor do
         @old_outputs = split.outputs
         constructor.build_outputs
       end
-      context "when previously no outputs in place" do
+      context 'when previously no outputs in place' do
         specify { expect(split.outputs.size).not_to eq(0) }
       end
-      context "when previously output in place" do
+      context 'when previously output in place' do
         let(:split) { split_with_input_and_output }
         specify { expect(split.outputs).to eq(@old_outputs) }
       end
@@ -47,32 +47,32 @@ describe NomenclatureChange::Split::Constructor do
         @old_output_note = output.note_en
         constructor.build_input_and_output_notes
       end
-      context "when previously no notes in place" do
-        let(:split) {
+      context 'when previously no notes in place' do
+        let(:split) do
           s = create(:nomenclature_change_split)
           create(:nomenclature_change_input, nomenclature_change: s)
           create(:nomenclature_change_output, nomenclature_change: s)
           s
-        }
+        end
         specify { expect(input.note_en).not_to be_blank }
         specify { expect(output.note_en).not_to be_blank }
-        context "when output = input" do
-          let(:split) {
+        context 'when output = input' do
+          let(:split) do
             s = create(:nomenclature_change_split)
             create(:nomenclature_change_input, nomenclature_change: s, taxon_concept: input_species)
             create(:nomenclature_change_output, nomenclature_change: s, taxon_concept: input_species)
             s
-          }
+          end
           specify { expect(output.note_en).to be_blank }
         end
       end
-      context "when previously notes in place" do
-        let(:input) {
+      context 'when previously notes in place' do
+        let(:input) do
           create(:nomenclature_change_input, nomenclature_change: split, note_en: 'blah')
-        }
-        let(:output) {
+        end
+        let(:output) do
           create(:nomenclature_change_output, nomenclature_change: split, note_en: 'blah')
-        }
+        end
         specify { expect(input.note_en).to eq(@old_input_note) }
         specify { expect(output.note_en).to eq(@old_output_note) }
       end
@@ -84,26 +84,26 @@ describe NomenclatureChange::Split::Constructor do
       end
       include_context 'parent_reassignments_constructor_examples'
 
-      context "when output = input" do
-        let(:input_species) {
+      context 'when output = input' do
+        let(:input_species) do
           s = create_cites_eu_species
           2.times { create_cites_eu_subspecies(parent: s) }
           s
-        }
+        end
         let(:split_with_input_and_output) { split_with_input_and_same_output }
         let(:default_output) { split.outputs_intersect_inputs.first }
-        specify {
+        specify do
           reassignment_targets = input.parent_reassignments.map(&:reassignment_target)
-          expect(reassignment_targets.map(&:output).uniq).to(eq([default_output]))
-        }
+          expect(reassignment_targets.map(&:output).uniq).to(eq([ default_output ]))
+        end
       end
 
-      context "when previously reassignments in place" do
-        let(:input) {
+      context 'when previously reassignments in place' do
+        let(:input) do
           i = create(:nomenclature_change_input, nomenclature_change: split, taxon_concept: input_species)
           create(:nomenclature_change_parent_reassignment, input: i)
           i
-        }
+        end
         specify { expect(input.parent_reassignments).to eq(@old_reassignments) }
       end
     end
@@ -114,8 +114,8 @@ describe NomenclatureChange::Split::Constructor do
       end
       include_context 'name_reassignments_constructor_examples'
 
-      context "when output = input" do
-        let(:input_species) {
+      context 'when output = input' do
+        let(:input_species) do
           s = create_cites_eu_species
           2.times do
             create(:taxon_relationship,
@@ -125,17 +125,16 @@ describe NomenclatureChange::Split::Constructor do
             )
           end
           s
-        }
+        end
         let(:split_with_input_and_output) { split_with_input_and_same_output }
         let(:default_output) { split.outputs_intersect_inputs.first }
-        specify {
+        specify do
           reassignment_targets = input.name_reassignments.map do |reassignment|
             reassignment.reassignment_targets
           end.flatten
-          expect(reassignment_targets.map(&:output).uniq).to eq([default_output])
-        }
+          expect(reassignment_targets.map(&:output).uniq).to eq([ default_output ])
+        end
       end
-
     end
     describe :build_distribution_reassignments do
       before(:each) do
@@ -151,9 +150,9 @@ describe NomenclatureChange::Split::Constructor do
       end
       include_context 'document_reassignments_constructor_examples'
 
-      context "when geo_entity citations mismatch distribution" do
-        let(:geo_entity){ create(:geo_entity) }
-        let(:input_species) {
+      context 'when geo_entity citations mismatch distribution' do
+        let(:geo_entity) { create(:geo_entity) }
+        let(:input_species) do
           s = create_cites_eu_species
           dc = create(:document_citation)
           create(
@@ -172,12 +171,11 @@ describe NomenclatureChange::Split::Constructor do
             geo_entity: geo_entity
           )
           s
-        }
+        end
         let(:default_output) { split.outputs.first }
-        let(:non_default_output){ split.outputs.where('id != ?', default_output.id).first }
+        let(:non_default_output) { split.outputs.where.not(id: default_output.id).first }
 
-        specify {
-
+        specify do
           distribution_reassignment = split.input.distribution_reassignments.first
           reassignment_targets = distribution_reassignment.reassignment_targets
           non_default_target = reassignment_targets.where(
@@ -192,7 +190,7 @@ describe NomenclatureChange::Split::Constructor do
           constructor.build_document_reassignments
           expect(split.input.document_citation_reassignments.first.
             output_ids).not_to include(non_default_output.id)
-        }
+        end
       end
     end
     describe :build_legislation_reassignments do

@@ -12,5 +12,4 @@ class Trade::ShipmentsNetImportsExport < Trade::ShipmentsGrossExportsExport
   def resource_name
     'net_imports'
   end
-
 end

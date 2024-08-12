@@ -1,5 +1,4 @@
 class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerializer
-
   attributes :cites_listing, :eu_listing
   has_many :quotas, serializer: Species::QuotaSerializer, key: :cites_quotas
   has_many :cites_suspensions, serializer: Species::CitesSuspensionSerializer
@@ -11,10 +10,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :processes, serializer: Species::CitesProcessSerializer, key: :cites_processes
 
   def processes
-     CitesProcess.includes(:start_event)
-                 .joins('LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id')
-                 .where(taxon_concept_id: object.id)
-                 .order('resolution DESC', 'geo_entities.name_en')
+     CitesProcess.includes(:start_event).
+       joins('LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id').
+       where(taxon_concept_id: object.id).
+       order('resolution DESC', 'geo_entities.name_en')
   end
 
   def include_distribution_references?
@@ -139,7 +138,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def eu_decisions
     # The following variables are used to temporarily force the Anthozoa negative opinion
     # for Cambodia to cascade down and show regardless of the children distributions.
-    anthozoa_statement, ancestors_field = force_anthozoa_statement.values_at(*%i(statement ancestors_field))
+    anthozoa_statement, ancestors_field = force_anthozoa_statement.values_at(*%i[statement ancestors_field])
     EuDecision.from('api_eu_decisions_view AS eu_decisions').
       where("
             eu_decisions.taxon_concept_id IN (?)
@@ -204,7 +203,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
       )
     if object.rank_name == Rank::SPECIES
       rel = rel.
-      where(<<-SQL
+        where(<<-SQL
               taxon_concepts_mview.rank_name = 'SPECIES' OR
               (
                 (

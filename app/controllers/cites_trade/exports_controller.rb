@@ -3,7 +3,7 @@ class CitesTrade::ExportsController < CitesTradeController
 
   def download
     respond_to do |format|
-      format.html {
+      format.html do
         search = Trade::ShipmentsExportFactory.new(search_params.merge({
           per_page: Trade::ShipmentsExport::PUBLIC_CSV_LIMIT
         }))
@@ -18,8 +18,8 @@ class CitesTrade::ExportsController < CitesTradeController
         else
           redirect_to cites_trade_root_url
         end
-      }
-      format.json {
+      end
+      format.json do
         search = Trade::ShipmentsExportFactory.new(search_params.merge({
           report_type: :raw # get the raw count
         }))
@@ -28,7 +28,7 @@ class CitesTrade::ExportsController < CitesTradeController
           csv_limit: Trade::ShipmentsExport::PUBLIC_CSV_LIMIT,
           web_limit: Trade::ShipmentsExport::PUBLIC_WEB_LIMIT
         }
-      }
+      end
     end
   end
 end

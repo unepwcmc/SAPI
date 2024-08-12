@@ -8,16 +8,16 @@ class Elibrary::UsersImporter
   end
 
   def table_name
-    :"elibrary_users_import"
+    :elibrary_users_import
   end
 
   def columns_with_type
     [
-      ['LoweredUserName', 'TEXT'],
-      ['LoweredEmail', 'TEXT'],
-      ['RoleName', 'TEXT'],
-      ['CreateDate', 'TEXT'],
-      ['LastLoginDate', 'TEXT']
+      [ 'LoweredUserName', 'TEXT' ],
+      [ 'LoweredEmail', 'TEXT' ],
+      [ 'RoleName', 'TEXT' ],
+      [ 'CreateDate', 'TEXT' ],
+      [ 'LastLoginDate', 'TEXT' ]
     ]
   end
 
@@ -57,7 +57,7 @@ class Elibrary::UsersImporter
           LoweredEmail,
           REGEXP_SPLIT_TO_ARRAY(
             SUBSTRING(LoweredEmail FROM '(.+)@.+'),
-            '[\._]'
+            '[._]'
           ) AS name_ary,
           UPPER(BTRIM(SUBSTRING(LoweredEmail FROM '.+\\.(.+)$'))) AS iso_code2,
           CASE
@@ -102,5 +102,4 @@ class Elibrary::UsersImporter
       puts "\t #{role} #{count}"
     end
   end
-
 end

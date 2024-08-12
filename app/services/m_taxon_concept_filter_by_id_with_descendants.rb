@@ -1,5 +1,4 @@
 class MTaxonConceptFilterByIdWithDescendants
-
   def initialize(relation, ids)
     @relation = relation || MTaxonConcept.all
     @ids = ids
@@ -12,7 +11,7 @@ class MTaxonConceptFilterByIdWithDescendants
       Rank::KINGDOM
     ] # TODO: SUBFAMILY is missing here. we don't have it in listings mviews.
     fields_to_check = (
-      [:id] +
+      [ :id ] +
       ancestor_ranks.map { |r| "#{r.downcase}_id" }
     ).map { |c| "#{@table}.#{c}" }
     @relation.where(
@@ -22,5 +21,4 @@ class MTaxonConceptFilterByIdWithDescendants
       SQL
     )
   end
-
 end

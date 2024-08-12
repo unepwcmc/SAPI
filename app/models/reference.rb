@@ -48,5 +48,4 @@ class Reference < ApplicationRecord
       'distribution references' => distribution_references
     }
   end
-
 end

@@ -1,6 +1,5 @@
 module Import::Rst::Importer
   class << self
-
     def import(data)
       # Array of CitesRstProcesses in current import we can use to
       # destroy records no longer being returned from the RST API.
@@ -50,7 +49,7 @@ module Import::Rst::Importer
 
     def map_event(item)
       event = Event.where('type IN (:event_type) AND name = :event_name',
-        event_type: ['CitesAc', 'CitesPc'], event_name: item['meeting']['name']).first
+        event_type: [ 'CitesAc', 'CitesPc' ], event_name: item['meeting']['name']).first
 
       Rails.logger.info "Event #{item['meeting']['name']} for case #{item['id']} not found" unless event
       event

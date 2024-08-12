@@ -1,4 +1,4 @@
-shared_context "Pecari tajacu" do
+shared_context 'Pecari tajacu' do
   {
     argentina: 'AR',
     canada: 'CA',
@@ -23,7 +23,7 @@ shared_context "Pecari tajacu" do
       create(
         :geo_entity,
         geo_entity_type: cites_region_geo_entity_type,
-        name: "5- North America"
+        name: '5- North America'
       )
   end
 
@@ -32,7 +32,7 @@ shared_context "Pecari tajacu" do
       create(
         :geo_entity,
         geo_entity_type: cites_region_geo_entity_type,
-        name: "3- Central and South America and the Caribbean"
+        name: '3- Central and South America and the Caribbean'
       )
   end
 
@@ -74,7 +74,7 @@ shared_context "Pecari tajacu" do
       parent_id: cites_lc1.id,
       is_current: true
     )
-    [america, mexico].each do |country|
+    [ america, mexico ].each do |country|
       create(
         :listing_distribution,
         geo_entity: country,
@@ -83,7 +83,7 @@ shared_context "Pecari tajacu" do
       )
     end
 
-    [america, mexico, argentina].each do |country|
+    [ america, mexico, argentina ].each do |country|
       create(
         :distribution,
         taxon_concept: @species,
@@ -91,7 +91,7 @@ shared_context "Pecari tajacu" do
       )
     end
 
-    [america, mexico, canada].each do |country|
+    [ america, mexico, canada ].each do |country|
       create(
         :geo_relationship,
         geo_entity: north_america,
@@ -108,8 +108,8 @@ shared_context "Pecari tajacu" do
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
-      #Skip old sapi context let statements,
-      #which are now instance variables starting with _
+      # Skip old sapi context let statements,
+      # which are now instance variables starting with _
       next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

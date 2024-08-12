@@ -1,5 +1,4 @@
 FactoryBot.define do
-
   factory :species_listing do
     sequence(:name) { |n| "Appendix #{n}" }
     sequence(:abbreviation) { |n| "#{n}" }
@@ -25,7 +24,7 @@ FactoryBot.define do
     is_party { true }
   end
 
-  factory :annotation, aliases: [:hash_annotation] do
+  factory :annotation, aliases: [ :hash_annotation ] do
     symbol { '#4' }
     parent_symbol { 'CoP15' }
     short_note_en { "I'm a short note" }
@@ -33,5 +32,4 @@ FactoryBot.define do
     display_in_index { false }
     display_in_footnote { false }
   end
-
 end

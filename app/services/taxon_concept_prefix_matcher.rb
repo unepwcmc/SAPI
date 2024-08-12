@@ -1,5 +1,4 @@
 class TaxonConceptPrefixMatcher < TaxonConceptMatcher
-
   def initialize(search_params)
     super
     @rank_options = search_params.rank
@@ -16,7 +15,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
 
   def initialize_rel
     super.
-    select(
+      select(
       <<-SQL
         data,
         taxonomy_id,
@@ -26,7 +25,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
         name_status
       SQL
     ).
-    joins(:taxonomy).order(:full_name)
+      joins(:taxonomy).order(:full_name)
   end
 
   def apply_rank_options_to_rel
@@ -98,5 +97,4 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
       end
     end
   end
-
 end

@@ -56,77 +56,77 @@ describe TaxonRelationship do
       let(:taxon_concept) { create(:taxon_concept, taxonomy_id: taxonomy.id) }
       let(:taxon_concept2) { create(:taxon_concept, taxonomy_id: taxonomy2.id) }
       let(:taxon_relationship_type) { create(:taxon_relationship_type) }
-      let!(:taxon_relationship) {
+      let!(:taxon_relationship) do
         create(:taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type.id
         )
-      }
-      let(:taxon_relationship2) {
+      end
+      let(:taxon_relationship2) do
         build(:taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type.id
         )
-      }
+      end
       specify { taxon_relationship2.valid? == false }
     end
   end
 
   describe :validate_intertaxonomic_relationship_uniqueness do
-    context "adding an intertaxonomic relationship between taxon concepts that are already related (A -> B)" do
+    context 'adding an intertaxonomic relationship between taxon concepts that are already related (A -> B)' do
       let(:taxonomy) { create(:taxonomy) }
       let(:taxonomy2) { create(:taxonomy) }
       let(:taxon_concept) { create(:taxon_concept, taxonomy_id: taxonomy.id) }
       let(:taxon_concept2) { create(:taxon_concept, taxonomy_id: taxonomy2.id) }
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let(:taxon_relationship_type2) { create(:taxon_relationship_type, is_intertaxonomic: true) }
-      let!(:taxon_relationship) {
+      let!(:taxon_relationship) do
         create(:taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type.id
         )
-      }
-      let(:taxon_relationship2) {
+      end
+      let(:taxon_relationship2) do
         build(:taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type2.id
         )
-      }
-      specify {
+      end
+      specify do
         expect(taxon_relationship2.valid?).to eq(false)
-      }
+      end
     end
-    context "adding an intertaxonomic relationship between taxon concepts that are already related in the opposite direction (B -> A)" do
+    context 'adding an intertaxonomic relationship between taxon concepts that are already related in the opposite direction (B -> A)' do
       let(:taxonomy) { create(:taxonomy) }
       let(:taxonomy2) { create(:taxonomy) }
       let(:taxon_concept) { create(:taxon_concept, taxonomy_id: taxonomy.id) }
       let(:taxon_concept2) { create(:taxon_concept, taxonomy_id: taxonomy2.id) }
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let(:taxon_relationship_type2) { create(:taxon_relationship_type, is_intertaxonomic: true) }
-      let!(:taxon_relationship) {
+      let!(:taxon_relationship) do
         create(:taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type.id
         )
-      }
+      end
 
-      let(:taxon_relationship2) {
+      let(:taxon_relationship2) do
         build(:taxon_relationship,
           taxon_concept_id: taxon_concept2.id,
           other_taxon_concept_id: taxon_concept.id,
           taxon_relationship_type_id: taxon_relationship_type2.id
         )
-      }
-      specify {
+      end
+      specify do
         expect(taxon_relationship2.valid?).to eq(false)
-      }
+      end
     end
-    context "adding an intertaxonomic relationship between taxon concepts that are not already related" do
+    context 'adding an intertaxonomic relationship between taxon concepts that are not already related' do
       let(:taxonomy) { create(:taxonomy) }
       let(:taxonomy2) { create(:taxonomy) }
       let(:taxon_concept) { create(:taxon_concept, taxonomy_id: taxonomy.id) }
@@ -134,25 +134,25 @@ describe TaxonRelationship do
       let(:taxon_concept3) { create(:taxon_concept, taxonomy_id: taxonomy2.id) }
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let(:taxon_relationship_type2) { create(:taxon_relationship_type, is_intertaxonomic: true) }
-      let!(:taxon_relationship) {
+      let!(:taxon_relationship) do
         create(:taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type.id
         )
-      }
+      end
 
-      let(:taxon_relationship2) {
+      let(:taxon_relationship2) do
         build(:taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept3.id,
           taxon_relationship_type_id: taxon_relationship_type2.id
         )
-      }
+      end
 
-      specify {
+      specify do
         expect(taxon_relationship2.valid?).to eq(true)
-      }
+      end
     end
   end
 end

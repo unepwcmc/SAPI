@@ -1,14 +1,13 @@
 namespace :import do
-
-  desc "Import CITES species listings from csv file (usage: rake import:cites_listings[path/to/file,path/to/another])"
-  task :cites_listings, 10.times.map { |i| "file_#{i}".to_sym } => [:environment, "cites_listings:defaults"] do |t, args|
+  desc 'Import CITES species listings from csv file (usage: rake import:cites_listings[path/to/file,path/to/another])'
+  task :cites_listings, 10.times.map { |i| :"file_#{i}" } => [ :environment, 'cites_listings:defaults' ] do |t, args|
     TMP_TABLE = 'cites_listings_import'
     designation = Designation.find_by_name(Designation::CITES)
     taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
     puts "There are #{ListingChange.joins(:species_listing).
-      where(:species_listings => { :designation_id => designation.id }).count} CITES listings in the database"
-    puts "There are #{ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => { :designation_id => designation.id }).count} CITES listing distributions in the database"
+      where(species_listings: { designation_id: designation.id }).count} CITES listings in the database"
+    puts "There are #{ListingDistribution.joins(listing_change: :species_listing).
+      where(species_listings: { designation_id: designation.id }).count} CITES listing distributions in the database"
     appendix_1 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'I')
     appendix_2 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'II')
     appendix_3 = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'III')
@@ -19,9 +18,9 @@ namespace :import do
     rw = ChangeType.find_by_name_and_designation_id(ChangeType::RESERVATION_WITHDRAWAL, designation.id)
     english = Language.find_by_name_en('English')
     listings_count = ListingChange.joins(:species_listing).
-      where(:species_listings => { :designation_id => designation.id }).count
-    listings_d_count = ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => { :designation_id => designation.id }).count
+      where(species_listings: { designation_id: designation.id }).count
+    listings_d_count = ListingDistribution.joins(listing_change: :species_listing).
+      where(species_listings: { designation_id: designation.id }).count
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -30,17 +29,17 @@ namespace :import do
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
-      puts "CREATING temporary column and view"
+      puts 'CREATING temporary column and view'
       ApplicationRecord.connection.execute(<<-SQL
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
         ORDER BY legacy_id, listing_date, appendix, country_iso2
       SQL
       )
-      ApplicationRecord.connection.execute("ALTER TABLE listing_changes DROP COLUMN IF EXISTS import_row_id")
-      ApplicationRecord.connection.execute("ALTER TABLE listing_changes ADD COLUMN import_row_id integer")
-      ApplicationRecord.connection.execute("ALTER TABLE annotations DROP COLUMN IF EXISTS import_row_id")
-      ApplicationRecord.connection.execute("ALTER TABLE annotations ADD COLUMN import_row_id integer")
+      ApplicationRecord.connection.execute('ALTER TABLE listing_changes DROP COLUMN IF EXISTS import_row_id')
+      ApplicationRecord.connection.execute('ALTER TABLE listing_changes ADD COLUMN import_row_id integer')
+      ApplicationRecord.connection.execute('ALTER TABLE annotations DROP COLUMN IF EXISTS import_row_id')
+      ApplicationRecord.connection.execute('ALTER TABLE annotations ADD COLUMN import_row_id integer')
 
       copy_data(file, TMP_TABLE)
 
@@ -117,7 +116,7 @@ namespace :import do
           LEFT JOIN events ON events.id = hash_annotations.event_id AND events.designation_id = #{designation.id};
       SQL
 
-      puts "INSERTING listing_changes"
+      puts 'INSERTING listing_changes'
       ApplicationRecord.connection.execute(sql)
 
       # add taxonomic exceptions
@@ -154,7 +153,7 @@ namespace :import do
       ) q
       SQL
 
-      puts "INSERTING taxonomic exceptions"
+      puts 'INSERTING taxonomic exceptions'
       ApplicationRecord.connection.execute(sql)
 
       # add population exceptions
@@ -188,7 +187,7 @@ namespace :import do
       INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(excluded_populations.iso_code2)) AND geo_entities.is_current = 't'
       SQL
 
-      puts "INSERTING population exceptions (listing distributions)"
+      puts 'INSERTING population exceptions (listing distributions)'
       ApplicationRecord.connection.execute(sql)
 
       sql = <<-SQL
@@ -203,7 +202,7 @@ namespace :import do
       INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(listed_populations.iso_code2)) AND geo_entities.is_current = 't'
       SQL
 
-      puts "INSERTING listed populations (listing distributions)"
+      puts 'INSERTING listed populations (listing distributions)'
       ApplicationRecord.connection.execute(sql)
 
       sql = <<-SQL
@@ -214,20 +213,19 @@ namespace :import do
           INNER JOIN listing_changes ON TMP.row_id = listing_changes.import_row_id
           WHERE TMP.country_iso2 <> 'Null' AND TMP.country_iso2 IS NOT NULL AND geo_entities.is_current = 't'
       SQL
-      puts "INSERTING parties (listing distributions)"
+      puts 'INSERTING parties (listing distributions)'
       ApplicationRecord.connection.execute(sql)
-
     end
 
-    puts "DROPPING temporary column and view"
-    ApplicationRecord.connection.execute("ALTER TABLE listing_changes DROP COLUMN import_row_id")
-    ApplicationRecord.connection.execute("ALTER TABLE annotations DROP COLUMN import_row_id")
-    ApplicationRecord.connection.execute("DROP VIEW cites_listings_import_view")
+    puts 'DROPPING temporary column and view'
+    ApplicationRecord.connection.execute('ALTER TABLE listing_changes DROP COLUMN import_row_id')
+    ApplicationRecord.connection.execute('ALTER TABLE annotations DROP COLUMN import_row_id')
+    ApplicationRecord.connection.execute('DROP VIEW cites_listings_import_view')
 
     new_listings_count = ListingChange.joins(:species_listing).
-      where(:species_listings => { :designation_id => designation.id }).count
-    new_listings_d_count = ListingDistribution.joins(:listing_change => :species_listing).
-      where(:species_listings => { :designation_id => designation.id }).count
+      where(species_listings: { designation_id: designation.id }).count
+    new_listings_d_count = ListingDistribution.joins(listing_change: :species_listing).
+      where(species_listings: { designation_id: designation.id }).count
     puts "#{new_listings_count - listings_count} CITES listings were added to the database"
     puts "#{new_listings_d_count - listings_d_count} CITES listing distributions were added to the database"
 
@@ -256,10 +254,10 @@ namespace :import do
 
   namespace :cites_listings do
     desc 'Add defaults CITES listings and default ChangeTypes'
-    task :defaults => :environment do
+    task defaults: :environment do
       puts 'Going to create CITES default species listings, if they do not exist'
-      designation = Designation.find_by_name("CITES")
-      ["I", "II", "III"].each do |appendix|
+      designation = Designation.find_by_name('CITES')
+      [ 'I', 'II', 'III' ].each do |appendix|
         SpeciesListing.find_or_create_by(name: "Appendix #{appendix}", abbreviation: appendix, designation_id: designation.id)
       end
       puts 'Going to create change types defaults, if they dont already exist'
@@ -268,16 +266,16 @@ namespace :import do
       end
       puts 'Created appendices and change type defaults'
     end
-    desc "Drop CITES species listings"
-    task :delete_all => :environment do
-      designation = Designation.find_by_name("CITES")
-      AnnotationTranslation.joins(:annotation => :event).
-        where(:events => { :designation_id => designation.id }).delete_all
+    desc 'Drop CITES species listings'
+    task delete_all: :environment do
+      designation = Designation.find_by_name('CITES')
+      AnnotationTranslation.joins(annotation: :event).
+        where(events: { designation_id: designation.id }).delete_all
       Annotation.joins(:event).
-        where(:events => { :designation_id => designation.id }).delete_all
+        where(events: { designation_id: designation.id }).delete_all
       ListingDistribution.joins(:listing_change).
-        where(:listing_changes => { :desigantion_id => designation.id }).delete_all
-      ListingChange.where(:designation_id => designation.id).delete_all
+        where(listing_changes: { desigantion_id: designation.id }).delete_all
+      ListingChange.where(designation_id: designation.id).delete_all
     end
   end
 end

@@ -74,10 +74,10 @@ class TradeRestriction < ApplicationRecord
 
   translates :nomenclature_note
 
-  after_save :touch_descendants, unless: -> { taxon_concept.nil? }
   before_destroy :touch_descendants, unless: -> { taxon_concept.nil? }
-  after_save :touch_taxa_with_applicable_distribution, if: -> { taxon_concept.nil? }
   before_destroy :touch_taxa_with_applicable_distribution, if: -> { taxon_concept.nil? }
+  after_save :touch_descendants, unless: -> { taxon_concept.nil? }
+  after_save :touch_taxa_with_applicable_distribution, if: -> { taxon_concept.nil? }
 
   def valid_dates
     if !(start_date.nil? || end_date.nil?) && (start_date > end_date)
@@ -159,8 +159,8 @@ class TradeRestriction < ApplicationRecord
       else ','
       end
     CSV.open(file_path, 'wb', col_sep: csv_separator_char) do |csv|
-      csv << Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +
-        ['Remarks'] + self.csv_columns_headers
+      csv << (Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +
+        [ 'Remarks' ] + self.csv_columns_headers)
       ids = []
       until (objs = export_query(filters).limit(limit).
              offset(offset)).empty?
@@ -171,7 +171,7 @@ class TradeRestriction < ApplicationRecord
             if c.is_a?(Array)
               row << q.send(c[1])
             elsif c == :notes
-              row << [q.send(c), q.send(:nomenclature_note_en)].reject(&:blank?).join('; ')
+              row << [ q.send(c), q.send(:nomenclature_note_en) ].reject(&:blank?).join('; ')
             else
               row << q.send(c)
             end
@@ -218,7 +218,7 @@ class TradeRestriction < ApplicationRecord
   def self.filter_years(filters)
     if filters.key?('years')
       return where('EXTRACT(YEAR FROM trade_restrictions.start_date)::INTEGER IN (?)',
-                   filters['years'].map(&:to_i))
+        filters['years'].map(&:to_i))
     end
     all
   end

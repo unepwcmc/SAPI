@@ -34,7 +34,7 @@ describe Admin::NomenclatureChanges::LumpController do
         get :show, params: { id: :notes, nomenclature_change_id: @lump.id }
         expect(response).to render_template('notes')
       end
-      context "when legislation present" do
+      context 'when legislation present' do
         before(:each) do
           create_cites_I_addition(taxon_concept: @input_species)
         end
@@ -43,7 +43,7 @@ describe Admin::NomenclatureChanges::LumpController do
           expect(response).to render_template('legislation')
         end
       end
-      context "when no legislation" do
+      context 'when no legislation' do
         it 'redirects to next step' do
           get :show, params: { id: :legislation, nomenclature_change_id: @lump.id }
           expect(response).to redirect_to(
@@ -93,10 +93,10 @@ describe Admin::NomenclatureChanges::LumpController do
     context 'when unsuccessful' do
       it 're-renders step' do
         put :update, params: { nomenclature_change_lump: {
-            inputs_attributes: {
-              '0' => { taxon_concept_id: nil }
-            }
-          }, nomenclature_change_id: @lump.id, id: 'inputs' }
+          inputs_attributes: {
+            '0' => { taxon_concept_id: nil }
+          }
+        }, nomenclature_change_id: @lump.id, id: 'inputs' }
         expect(response).to render_template('inputs')
       end
     end
@@ -110,10 +110,10 @@ describe Admin::NomenclatureChanges::LumpController do
       end
       context 'when user is manager' do
         it 'redirects to nomenclature changes path' do
-          pending("Strange render mismatch after upgrading to Rails 4")
+          pending('Strange render mismatch after upgrading to Rails 4')
           put :update, params: { nomenclature_change_id: @lump.id, id: 'summary', nomenclature_change_lump: { dummy: 'test' } }
           expect(response).to be_successful
-          expect(response).to render_template("nomenclature_changes")
+          expect(response).to render_template('nomenclature_changes')
         end
       end
     end
@@ -152,5 +152,4 @@ describe Admin::NomenclatureChanges::LumpController do
       end
     end
   end
-
 end

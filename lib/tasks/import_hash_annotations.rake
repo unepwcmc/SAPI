@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import hash annotations from csv file (usage: rake import:hash_annotations[path/to/file,path/to/another])'
-  task :hash_annotations, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :hash_annotations, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'hash_annotations_import'
     puts "There are #{Annotation.count} annotations in the database."
     files = files_from_args(t, args)
@@ -34,9 +33,9 @@ namespace :import do
   end
 
   desc 'Import hash annotation translations'
-  task :hash_annotations_cites_translations => [:environment] do
-    TMP_TABLE = "hash_annotations_translations_import"
-    file = "lib/files/hash_annotations_cites_translations.csv"
+  task hash_annotations_cites_translations: [ :environment ] do
+    TMP_TABLE = 'hash_annotations_translations_import'
+    file = 'lib/files/hash_annotations_cites_translations.csv'
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
@@ -70,5 +69,4 @@ namespace :import do
 
     puts "Updated #{res.cmd_tuples} rows"
   end
-
 end

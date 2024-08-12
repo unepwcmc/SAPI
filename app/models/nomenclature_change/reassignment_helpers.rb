@@ -1,5 +1,4 @@
 module NomenclatureChange::ReassignmentHelpers
-
   def self.included(base)
     base.class_eval do
       include TrackWhoDoesIt
@@ -40,9 +39,8 @@ module NomenclatureChange::ReassignmentHelpers
   private
 
   def note_with_resolved_placeholders(note, input, output)
-    note && note.
-      sub(/\[\[input\]\]/, input.taxon_concept.full_name).
-      sub(/\[\[output\]\]/, output.display_full_name) || ''
+    (note && note.
+      sub('[[input]]', input.taxon_concept.full_name).
+      sub('[[output]]', output.display_full_name)) || ''
   end
-
 end

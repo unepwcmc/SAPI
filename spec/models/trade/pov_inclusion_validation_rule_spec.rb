@@ -17,30 +17,30 @@
 require 'spec_helper'
 
 describe Trade::InclusionValidationRule, drops_tables: true do
-  let(:canada) {
+  let(:canada) do
     create(
       :geo_entity,
       geo_entity_type: country_geo_entity_type,
       name: 'Canada',
       iso_code2: 'CA'
     )
-  }
-  let(:argentina) {
+  end
+  let(:argentina) do
     create(
       :geo_entity,
       geo_entity_type: country_geo_entity_type,
       name: 'Argentina',
       iso_code2: 'AR'
     )
-  }
-  let(:xx) {
+  end
+  let(:xx) do
     create(
       :geo_entity,
       geo_entity_type: trade_geo_entity_type,
       name: 'Unknown',
       iso_code2: 'XX'
     )
-  }
+  end
   before(:each) do
     genus = create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Pecari')
@@ -68,13 +68,13 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           taxon_name: 'Pecari tajacu', source_code: 'W', country_of_origin: argentina.iso_code2
         )
       end
-      subject {
+      subject do
         create_taxon_concept_exporter_validation
-      }
-      specify {
+      end
+      specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru).size).to eq(1)
-      }
+      end
     end
     context "when W source and country of origin blank and exporter doesn't match distribution (I)" do
       before(:each) do
@@ -91,15 +91,15 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           country_of_origin: argentina.iso_code2
         )
       end
-      subject {
+      subject do
         create_taxon_concept_exporter_validation
-      }
-      specify {
+      end
+      specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru).size).to eq(1)
-      }
+      end
     end
-    context "when W source and country XX" do
+    context 'when W source and country XX' do
       before(:each) do
         @aru = build(:annual_report_upload, point_of_view: 'I', trading_country_id: argentina.id)
         @aru.save(validate: false)
@@ -114,13 +114,13 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           country_of_origin: argentina.iso_code2
         )
       end
-      subject {
+      subject do
         create_taxon_concept_exporter_validation
-      }
-      specify {
+      end
+      specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru)).to be_empty
-      }
+      end
     end
     context "when W source and country doesn't match distribution of higher taxa" do
       before(:each) do
@@ -137,15 +137,15 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           country_of_origin: canada.iso_code2
         )
       end
-      subject {
+      subject do
         create_taxon_concept_exporter_validation
-      }
-      specify {
+      end
+      specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru)).to be_empty
-      }
+      end
     end
-    context "when invalid scope specified" do
+    context 'when invalid scope specified' do
       before(:each) do
         @aru = build(:annual_report_upload, point_of_view: 'E', trading_country_id: canada.id)
         @aru.save(validate: false)
@@ -154,12 +154,12 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           taxon_name: 'Pecari tajacu', source_code: 'W', country_of_origin: argentina.iso_code2
         )
       end
-      subject {
+      subject do
         create_taxon_concept_exporter_validation
-      }
-      specify {
+      end
+      specify do
         expect { subject.validation_errors_for_aru(@aru) }.to_not raise_error
-      }
+      end
     end
   end
 end

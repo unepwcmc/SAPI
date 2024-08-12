@@ -27,7 +27,7 @@ require 'spec_helper'
 
 describe EuRegulation do
   describe :create do
-    context "when eu_regulation to copy from given" do
+    context 'when eu_regulation to copy from given' do
       let(:eu_regulation1) { create_eu_regulation }
       before do
         EventListingChangesCopyWorker.jobs.clear
@@ -35,23 +35,23 @@ describe EuRegulation do
       end
       specify { expect(EventListingChangesCopyWorker.jobs.size).to eq(1) }
     end
-    context "when designation invalid" do
-      let(:eu_regulation) {
+    context 'when designation invalid' do
+      let(:eu_regulation) do
         build(
           :eu_regulation,
           designation: cites
         )
-      }
+      end
       specify { expect(eu_regulation).to be_invalid }
       specify { expect(eu_regulation).to have(1).error_on(:designation_id) }
     end
-    context "when effective_at is blank" do
-      let(:eu_regulation) {
+    context 'when effective_at is blank' do
+      let(:eu_regulation) do
         build(
           :eu_regulation,
           effective_at: nil
         )
-      }
+      end
       specify { expect(eu_regulation).to be_invalid }
       specify { expect(eu_regulation).to have(1).error_on(:effective_at) }
     end
@@ -78,15 +78,14 @@ describe EuRegulation do
 
   describe :destroy do
     let(:eu_regulation) { create_eu_regulation }
-    context "when no dependent objects attached" do
+    context 'when no dependent objects attached' do
       specify { expect(eu_regulation.destroy).to be_truthy }
     end
-    context "when dependent objects attached" do
-      context "when listing changes" do
+    context 'when dependent objects attached' do
+      context 'when listing changes' do
         let!(:listing_change) { create_eu_A_addition(event: eu_regulation) }
         specify { expect(eu_regulation.destroy).to be_truthy }
       end
     end
   end
-
 end

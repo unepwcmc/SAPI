@@ -19,7 +19,6 @@
 #
 
 module Checklist::Json::Document
-
   def ext
     'json'
   end
@@ -31,5 +30,4 @@ module Checklist::Json::Document
 
     @download_path
   end
-
 end

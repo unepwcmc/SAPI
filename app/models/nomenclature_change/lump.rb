@@ -57,21 +57,21 @@ class NomenclatureChange::Lump < NomenclatureChange
   def required_inputs
     if inputs.size < 2
       errors.add(:inputs, 'Must have at least two inputs')
-      return false
+      false
     end
   end
 
   def required_outputs
     unless output
       errors.add(:output, 'Must have one output')
-      return false
+      false
     end
   end
 
   def set_output_name_status
     if output.new_name_status.blank? && (
       output.new_scientific_name.present? ||
-      output.taxon_concept && output.taxon_concept.name_status != 'A'
+      (output.taxon_concept && output.taxon_concept.name_status != 'A')
       )
       output.new_name_status = 'A'
     end

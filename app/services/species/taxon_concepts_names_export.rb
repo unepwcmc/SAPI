@@ -1,5 +1,4 @@
 class Species::TaxonConceptsNamesExport < Species::CsvCopyExport
-
   def query
     rel = TaxonConcept.from(table_name).
       order('name_status, taxonomic_position')
@@ -36,5 +35,4 @@ class Species::TaxonConceptsNamesExport < Species::CsvCopyExport
       'Associations updated date', 'Associations updated by'
     ]
   end
-
 end

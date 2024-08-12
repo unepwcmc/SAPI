@@ -1,14 +1,13 @@
 require Rails.root.join('lib/tasks/helpers_for_import.rb')
 namespace :import do
-
-  desc "Import hybrids records from csv files (usage: rake import:hybrids[path/to/file,path/to/another])"
-  task :hybrids, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  desc 'Import hybrids records from csv files (usage: rake import:hybrids[path/to/file,path/to/another])'
+  task :hybrids, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'hybrids_import'
-    taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
-    taxon_relationship_type_id = TaxonRelationshipType.where(:name => 'HAS_HYBRID').first.id
+    taxonomy_id = Taxonomy.where(name: 'CITES_EU').first.id
+    taxon_relationship_type_id = TaxonRelationshipType.where(name: 'HAS_HYBRID').first.id
 
-    puts "There are #{TaxonConcept.where(:name_status => "H",
-      :taxonomy_id => taxonomy_id).count} Hybrids in the database"
+    puts "There are #{TaxonConcept.where(name_status: "H",
+      taxonomy_id: taxonomy_id).count} Hybrids in the database"
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -101,9 +100,8 @@ namespace :import do
       ) AS subquery;
       SQL
       ApplicationRecord.connection.execute(sql)
-      puts "There are #{TaxonConcept.where(:name_status => "H",
-        :taxonomy_id => taxonomy_id).count} Hybrids in the database"
-
+      puts "There are #{TaxonConcept.where(name_status: "H",
+        taxonomy_id: taxonomy_id).count} Hybrids in the database"
     end
   end
 end

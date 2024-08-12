@@ -1,5 +1,5 @@
 class Admin::UnitsController < Admin::StandardAuthorizationController
-  respond_to :json, only: [:update]
+  respond_to :json, only: [ :update ]
 
   def index
     index! do |format|

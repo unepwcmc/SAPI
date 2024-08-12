@@ -11,5 +11,4 @@ class Checklist::HistoryTaxonConceptSerializer < ActiveModel::Serializer
   def include_author_year?
     @options[:authors]
   end
-
 end

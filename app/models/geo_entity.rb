@@ -57,17 +57,17 @@ class GeoEntity < ApplicationRecord
   # geo entities containing those given by ids
   scope :containing_geo_entities, lambda { |geo_entity_ids|
     select("#{table_name}.*").
-    joins(geo_relationships: [:geo_relationship_type, :related_geo_entity]).
-    where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'").
-    where('related_geo_entities_geo_relationships.id' => geo_entity_ids)
+      joins(geo_relationships: [ :geo_relationship_type, :related_geo_entity ]).
+      where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'").
+      where('related_geo_entities_geo_relationships.id' => geo_entity_ids)
   }
 
   # geo entities contained in those given by ids
   scope :contained_geo_entities, lambda { |geo_entity_ids|
     select('related_geo_entities_geo_relationships.*').
-    where(id: geo_entity_ids).
-    joins(geo_relationships: [:geo_relationship_type, :related_geo_entity]).
-    where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'")
+      where(id: geo_entity_ids).
+      joins(geo_relationships: [ :geo_relationship_type, :related_geo_entity ]).
+      where("geo_relationship_types.name = '#{GeoRelationshipType::CONTAINS}'")
   }
 
   scope :current, -> { where(is_current: true) }
@@ -96,7 +96,7 @@ class GeoEntity < ApplicationRecord
       ) nodes_and_descendants_ids ON #{table_name}.id = nodes_and_descendants_ids.id
       SQL
     joins(
-      sanitize_sql_array([joins_sql, nodes_ids])
+      sanitize_sql_array([ joins_sql, nodes_ids ])
     )
   end
 
@@ -113,7 +113,7 @@ class GeoEntity < ApplicationRecord
   end
 
   def as_json(options = {})
-    super(only: [:id, :iso_code2, :is_current], methods: [:name])
+    super(only: [ :id, :iso_code2, :is_current ], methods: [ :name ])
   end
 
   def self.search(query)
@@ -124,7 +124,7 @@ class GeoEntity < ApplicationRecord
             OR UPPER(long_name) LIKE UPPER(:query)
             OR UPPER(iso_code3) LIKE UPPER(:query)
             OR UPPER(iso_code2) LIKE UPPER(:query)",
-            query: "%#{query}%")
+        query: "%#{query}%")
     else
       all
     end

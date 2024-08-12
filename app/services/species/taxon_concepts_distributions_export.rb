@@ -1,5 +1,4 @@
 class Species::TaxonConceptsDistributionsExport < Species::CsvCopyExport
-
   def query
     rel = TaxonConcept.from(table_name).
       order('taxonomic_position, geo_entity_name')
@@ -36,5 +35,4 @@ class Species::TaxonConceptsDistributionsExport < Species::CsvCopyExport
       'Date added', 'Added by', 'Date updated', 'Updated by'
     ]
   end
-
 end

@@ -1,5 +1,4 @@
 class Species::EuDecisionsExport < Species::CsvCopyExport
-
   def initialize(filters)
     @filters = filters
     @taxon_concepts_ids = filters[:taxon_concepts_ids]
@@ -12,7 +11,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     initialize_file_name
   end
 
-  HISTORIC_III_OPINIONS = ['(No opinion) iii)','(No opinion) iii) removed'].freeze
+  HISTORIC_III_OPINIONS = [ '(No opinion) iii)', '(No opinion) iii) removed' ].freeze
   def query
     rel = EuDecision.from("#{table_name} AS eu_decisions").
       select(sql_columns).
@@ -56,8 +55,8 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
         end
     end
 
-    # remove decisions with NULL type 'decision_type IS NOT NULL'
-     rel = rel.where('decision_type IS NOT NULL')
+     # remove decisions with NULL type 'decision_type IS NOT NULL'
+     rel = rel.where.not(decision_type: nil)
 
     # exclude EU decisions 'Discussed at SRG' by default
     # IS DISTINCT FROM allows to return records with NULL as well

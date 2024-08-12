@@ -18,16 +18,16 @@ class Trade::AppendixReport
     ).uniq
 
     @query = Trade::Shipment.from("(#{@query.to_sql}) AS s").
-    select([
-      's.id', :legacy_shipment_number, :taxon_concept_id,
-      :full_name, :year, :appendix,
-      'ARRAY_TO_STRING(ARRAY_AGG_NOTNULL(auto_appendix ORDER BY auto_appendix), \'/\')'
+      select([
+        's.id', :legacy_shipment_number, :taxon_concept_id,
+        :full_name, :year, :appendix,
+        'ARRAY_TO_STRING(ARRAY_AGG_NOTNULL(auto_appendix ORDER BY auto_appendix), \'/\')'
     ]).
-    joins('JOIN taxon_concepts ON s.taxon_concept_id = taxon_concepts.id').
-    group([
-      's.id', :legacy_shipment_number, :taxon_concept_id,
-      'taxon_concepts.full_name', :year, :appendix
-    ]).order([:full_name, :year, :appendix, 's.id'])
+      joins('JOIN taxon_concepts ON s.taxon_concept_id = taxon_concepts.id').
+      group([
+        's.id', :legacy_shipment_number, :taxon_concept_id,
+        'taxon_concepts.full_name', :year, :appendix
+    ]).order([ :full_name, :year, :appendix, 's.id' ])
 
     @diff_query = @query.having(<<-SQL
       NOT ARRAY_AGG_NOTNULL(auto_appendix) @> ARRAY[appendix]
@@ -46,5 +46,4 @@ class Trade::AppendixReport
       delimiter: ';'
     )
   end
-
 end

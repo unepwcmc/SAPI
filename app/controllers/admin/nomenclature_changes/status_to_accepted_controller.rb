@@ -1,5 +1,4 @@
 class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::NomenclatureChanges::BuildController
-
   steps *NomenclatureChange::StatusToAccepted::STEPS
 
   def show

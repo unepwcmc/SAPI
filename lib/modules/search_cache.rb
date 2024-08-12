@@ -9,7 +9,6 @@
 
 require 'digest/md5'
 module SearchCache
-
   def cached_results
     Rails.cache.fetch(results_cache_key, expires_in: 24.hours) do
       results.to_a
@@ -39,5 +38,4 @@ module SearchCache
   def total_cnt_cache_key
     generic_cache_key('total_cnt')
   end
-
 end

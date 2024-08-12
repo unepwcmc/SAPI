@@ -47,7 +47,7 @@ class CommonName < ApplicationRecord
   private
 
   def enforce_latin_chars_for_pdf
-    return unless name.present? && ['EN', 'FR', 'ES'].include?(language.iso_code1)
+    return unless name.present? && [ 'EN', 'FR', 'ES' ].include?(language.iso_code1)
 
     errors.add(:name, 'in EN/FR/ES must be PDF-friendly') unless
       name.match? PDF_SAFE_REGEX

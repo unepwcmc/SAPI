@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import synonyms from csv file (usage: rake import:synonyms_kew_id[path/to/file,path/to/another])'
-  task :synonyms_kew_id, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :synonyms_kew_id, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'synonym_kew_id_import'
     puts "There are #{TaxonRelationship.
       joins(:taxon_relationship_type).
@@ -34,7 +33,7 @@ namespace :import do
       end
       # [END]copied over from import:species
 
-      [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+      [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
         puts "Import #{taxonomy_name} taxa"
         taxonomy = Taxonomy.find_by_name(taxonomy_name)
         sql = <<-SQL
@@ -89,5 +88,4 @@ namespace :import do
         "taxon_relationship_types.name" => TaxonRelationshipType::HAS_SYNONYM
       ).count} synonyms in the database."
   end
-
 end

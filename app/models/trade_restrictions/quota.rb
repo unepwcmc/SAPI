@@ -59,7 +59,7 @@ class Quota < TradeRestriction
   # or a single symbol if the display text and the method are the same
   CSV_COLUMNS = [
     :year, :party, :quota,
-    [:unit, :unit_name], :publication_date,
+    [ :unit, :unit_name ], :publication_date,
     :notes, :url
   ]
 
@@ -79,8 +79,8 @@ class Quota < TradeRestriction
             OR trade_restrictions.end_date::text LIKE :query
             OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(taxon_concepts.full_name) LIKE UPPER(:query)",
-            query: "%#{query}%").
-      joins(<<-SQL
+        query: "%#{query}%").
+        joins(<<-SQL
           LEFT JOIN taxon_concepts
             ON taxon_concepts.id = trade_restrictions.taxon_concept_id
           LEFT JOIN geo_entities
@@ -94,7 +94,7 @@ class Quota < TradeRestriction
 
   def self.years_array
     self.select('EXTRACT(year from start_date)::VARCHAR years').
-          group(:years).order('years DESC').map(&:years)
+      group(:years).order('years DESC').map(&:years)
   end
 
   def self.count_matching(params)

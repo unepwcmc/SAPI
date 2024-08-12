@@ -1,7 +1,7 @@
 namespace :import do
   desc 'Import EU country entry/exit dates from csv file usage: rake import:eu_country_dates'
-  task :eu_country_dates => :environment do
-    file_path = "#{Rails.root}/lib/files/CITES_trade_EU_countries_list.csv"
+  task eu_country_dates: :environment do
+    file_path = "#{Rails.root.join("lib/files/CITES_trade_EU_countries_list.csv")}"
 
     if File.exist?(file_path)
       Rails.logger.info "There are #{EuCountryDate.count} records in the EuCoutryDate table"
@@ -18,7 +18,7 @@ namespace :import do
       end
       Rails.logger.info "There are #{EuCountryDate.count} records in the EuCoutryDate table after the import"
     else
-      puts "CITES_trade_EU_countries_list.csv file is missing within the lib/files/ directory"
+      puts 'CITES_trade_EU_countries_list.csv file is missing within the lib/files/ directory'
     end
   end
 end

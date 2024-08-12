@@ -1,6 +1,5 @@
 module DownloadsCache
-
-  LISTINGS_DOWNLOAD_DIRS = ['checklist', 'eu_listings', 'cites_listings', 'cms_listings']
+  LISTINGS_DOWNLOAD_DIRS = [ 'checklist', 'eu_listings', 'cites_listings', 'cms_listings' ]
   ADMIN_DOWNLOAD_DIRS = [
     'taxon_concepts_names', 'synonyms_and_trade_names',
     'orphaned_taxon_concepts', 'taxon_concepts_distributions', 'common_names',
@@ -26,12 +25,12 @@ module DownloadsCache
   end
 
   def self.downloads_path(dir)
-    "#{Rails.root}/public/downloads/#{dir}"
+    "#{Rails.root.join("public/downloads/#{dir}")}"
   end
 
   def self.clear_dirs(dirs)
     dirs.each do |dir|
-      Rails.logger.debug("Clearing #{dir}")
+      Rails.logger.debug { "Clearing #{dir}" }
       FileUtils.rm_rf(Dir["#{downloads_path(dir)}/*"], secure: true)
     end
   end
@@ -43,32 +42,32 @@ module DownloadsCache
   end
 
   def self.clear_cites_listings
-    clear_dirs(['cites_listings'])
+    clear_dirs([ 'cites_listings' ])
   end
 
   def self.clear_eu_listings
-    clear_dirs(['eu_listings'])
+    clear_dirs([ 'eu_listings' ])
   end
 
   def self.clear_cms_listings
-    clear_dirs(['cms_listings'])
+    clear_dirs([ 'cms_listings' ])
   end
 
   ## Clear admin downloads
   def self.clear_taxon_concepts
-    clear_dirs(['taxon_concepts_names', 'synonyms_and_trade_names', 'orphaned_taxon_concepts'])
+    clear_dirs([ 'taxon_concepts_names', 'synonyms_and_trade_names', 'orphaned_taxon_concepts' ])
   end
 
   def self.clear_taxon_relationships
-    clear_dirs(['taxon_concepts_names', 'synonyms_and_trade_names'])
+    clear_dirs([ 'taxon_concepts_names', 'synonyms_and_trade_names' ])
   end
 
   def self.clear_distributions
-    clear_dirs(['taxon_concepts_distributions'])
+    clear_dirs([ 'taxon_concepts_distributions' ])
   end
 
   def self.clear_taxon_commons
-    clear_dirs(['common_names'])
+    clear_dirs([ 'common_names' ])
   end
 
   def self.clear_listing_changes
@@ -80,30 +79,30 @@ module DownloadsCache
   end
 
   def self.clear_taxon_concept_references
-    clear_dirs(['species_reference_output', 'standard_reference_output'])
+    clear_dirs([ 'species_reference_output', 'standard_reference_output' ])
   end
 
   def self.clear_documents
-    clear_dirs(['documents'])
+    clear_dirs([ 'documents' ])
   end
 
   def self.clear_cites_processes
-    clear_dirs(['cites_processes'])
+    clear_dirs([ 'cites_processes' ])
   end
 
   # cleared after destroy
   def self.clear_quotas
-    clear_dirs(['quotas'])
+    clear_dirs([ 'quotas' ])
   end
 
   # cleared after destroy
   def self.clear_cites_suspensions
-    clear_dirs(['cites_suspensions'])
+    clear_dirs([ 'cites_suspensions' ])
   end
 
   # cleared after destroy
   def self.clear_eu_decisions
-    clear_dirs(['eu_decisions'])
+    clear_dirs([ 'eu_decisions' ])
   end
 
   class << self
@@ -113,16 +112,16 @@ module DownloadsCache
 
   # cleared after save & destroy
   def self.clear_shipments
-    clear_dirs(['shipments'])
-    clear_dirs(['comptab'])
-    clear_dirs(['gross_exports'])
-    clear_dirs(['gross_imports'])
-    clear_dirs(['net_exports'])
-    clear_dirs(['net_imports'])
+    clear_dirs([ 'shipments' ])
+    clear_dirs([ 'comptab' ])
+    clear_dirs([ 'gross_exports' ])
+    clear_dirs([ 'gross_imports' ])
+    clear_dirs([ 'net_exports' ])
+    clear_dirs([ 'net_imports' ])
   end
 
   def self.clear_trade_download_stats
-    clear_dirs(['trade_download_stats'])
+    clear_dirs([ 'trade_download_stats' ])
   end
 
   def self.update
@@ -139,7 +138,7 @@ module DownloadsCache
       Checklist::Csv,
       Checklist::Json
     ]
-    ['en', 'es', 'fr'].each do |locale|
+    [ 'en', 'es', 'fr' ].each do |locale|
       # full download parameters
       params = {
         show_synonyms: '1',
@@ -203,7 +202,7 @@ module DownloadsCache
 
   def self.update_admin_downloads
     puts 'Updating admin downloads'
-    [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+    [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
       puts "#{taxonomy_name} Names"
       elapsed_time = Benchmark.realtime do
         Species::TaxonConceptsNamesExport.new(taxonomy: taxonomy_name).export

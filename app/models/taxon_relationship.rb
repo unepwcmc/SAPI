@@ -28,8 +28,7 @@ class TaxonRelationship < ApplicationRecord
 
   belongs_to :taxon_relationship_type
   belongs_to :taxon_concept
-  belongs_to :other_taxon_concept, class_name: 'TaxonConcept',
-    foreign_key: :other_taxon_concept_id
+  belongs_to :other_taxon_concept, class_name: 'TaxonConcept'
   has_many :name_reassignments,
     class_name: 'NomenclatureChange::NameReassignment',
     as: :reassignable,
@@ -37,35 +36,41 @@ class TaxonRelationship < ApplicationRecord
 
   delegate :is_bidirectional?, to: :taxon_relationship_type
 
-  before_destroy :destroy_opposite, if: Proc.new { self.is_bidirectional? && self.has_opposite? }
   after_create :create_opposite, if: Proc.new { self.is_bidirectional? && !self.has_opposite? }
+  before_destroy :destroy_opposite, if: Proc.new { self.is_bidirectional? && self.has_opposite? }
   after_save :update_higher_taxa_for_hybrid_child
   validates :taxon_concept_id, uniqueness: {
-    scope: [:taxon_relationship_type_id, :other_taxon_concept_id],
+    scope: [ :taxon_relationship_type_id, :other_taxon_concept_id ],
     message: 'This relationship already exists, choose another taxon.'
   }
   validate :intertaxonomic_relationship_uniqueness, if: -> { taxon_relationship_type.is_intertaxonomic? }
 
-  scope :hybrids, -> { where(
+  scope :hybrids, -> {
+    where(
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
         WHERE name = '#{TaxonRelationshipType::HAS_HYBRID}'
-      )")
-    }
+      )"
+    )
+  }
 
-  scope :trades, -> { where(
+  scope :trades, -> {
+    where(
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
         WHERE name = '#{TaxonRelationshipType::HAS_TRADE_NAME}'
-      )")
-    }
+      )"
+    )
+  }
 
-  scope :synonyms, -> { where(
+  scope :synonyms, -> {
+    where(
       "taxon_relationship_type_id IN
       (SELECT id FROM taxon_relationship_types
         WHERE name = '#{TaxonRelationshipType::HAS_SYNONYM}'
-      )")
-    }
+      )"
+    )
+  }
 
 
   def update_higher_taxa_for_hybrid_child
@@ -114,12 +119,12 @@ class TaxonRelationship < ApplicationRecord
       taxon_concept_id: self.taxon_concept_id,
       other_taxon_concept_id: self.other_taxon_concept_id
     ).
-         joins(:taxon_relationship_type).
-         where(taxon_relationship_types: { is_intertaxonomic: true }).any? ||
+        joins(:taxon_relationship_type).
+        where(taxon_relationship_types: { is_intertaxonomic: true }).any? ||
       TaxonRelationship.where(taxon_concept_id: self.other_taxon_concept_id,
-         other_taxon_concept_id: self.taxon_concept_id).
-         joins(:taxon_relationship_type).
-         where(taxon_relationship_types: { is_intertaxonomic: true }).where('taxon_relationship_types.id <> ?', self.taxon_relationship_type_id).any?
+        other_taxon_concept_id: self.taxon_concept_id).
+          joins(:taxon_relationship_type).
+          where(taxon_relationship_types: { is_intertaxonomic: true }).where.not(taxon_relationship_types: { id: self.taxon_relationship_type_id }).any?
       errors.add(:taxon_concept_id, 'these taxon are already related through another relationship.')
     end
   end

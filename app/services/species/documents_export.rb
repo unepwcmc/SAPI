@@ -1,5 +1,4 @@
 class Species::DocumentsExport < Species::CsvCopyExport
-
   def query
     rel = Document.from("#{table_name} AS documents").
       order('event_type, date_raw, title')
@@ -61,5 +60,4 @@ class Species::DocumentsExport < Species::CsvCopyExport
       'Updated by'
     ]
   end
-
 end

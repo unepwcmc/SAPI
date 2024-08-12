@@ -1,8 +1,8 @@
 class AddIndexesToApiDocumentsMview < ActiveRecord::Migration[4.2]
   def up
-    add_index :api_documents_mview, [:event_id],
+    add_index :api_documents_mview, [ :event_id ],
       name: 'index_documents_mview_on_event_id'
-    add_index :api_documents_mview, [:date_raw],
+    add_index :api_documents_mview, [ :date_raw ],
       name: 'index_documents_mview_on_date_raw'
     execute <<-SQL
       CREATE INDEX index_documents_mview_on_taxon_concepts_ids

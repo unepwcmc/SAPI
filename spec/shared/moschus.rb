@@ -1,9 +1,9 @@
-shared_context "Moschus" do
+shared_context 'Moschus' do
   {
     bhutan: 'BT',
     india: 'IN',
     nepal: 'NP',
-    china: 'CH',
+    china: 'CH'
   }.each do |name, iso_code|
     define_method(name) do
       name = name.to_s
@@ -44,14 +44,14 @@ shared_context "Moschus" do
       parent: @species2
     )
 
-    [bhutan, india, nepal].each do |country|
+    [ bhutan, india, nepal ].each do |country|
       create(
         :distribution,
         taxon_concept: @species1,
         geo_entity: country
       )
     end
-    [@species2, @subspecies].each do |taxon|
+    [ @species2, @subspecies ].each do |taxon|
       create(
         :distribution,
         taxon_concept: taxon,
@@ -102,7 +102,7 @@ shared_context "Moschus" do
       effective_at: '1983-07-29',
       is_current: true
     )
-    [bhutan, india, nepal].each do |country|
+    [ bhutan, india, nepal ].each do |country|
       create(
         :listing_distribution,
         geo_entity: country,
@@ -121,7 +121,7 @@ shared_context "Moschus" do
       effective_at: '1983-07-29',
       parent_id: cites_lc2.id
     )
-    [bhutan, india, nepal].each do |country|
+    [ bhutan, india, nepal ].each do |country|
       create(
         :listing_distribution,
         geo_entity: country,
@@ -145,8 +145,8 @@ shared_context "Moschus" do
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
-      #Skip old sapi context let statements,
-      #which are now instance variables starting with _
+      # Skip old sapi context let statements,
+      # which are now instance variables starting with _
       next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

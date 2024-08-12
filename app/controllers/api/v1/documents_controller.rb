@@ -1,10 +1,9 @@
 class Api::V1::DocumentsController < ApplicationController
-
   def index
     if params[:taxon_concept_query].present?
-      exact_match = MTaxonConcept.where('LOWER(full_name) = ?', params[:taxon_concept_query].downcase)
-                                 .where(taxonomy_id: 1)
-                                 .first
+      exact_match = MTaxonConcept.where('LOWER(full_name) = ?', params[:taxon_concept_query].downcase).
+        where(taxonomy_id: 1).
+        first
       @species_search = Species::Search.new({
         visibility: :elibrary,
         taxon_concept_query: params[:taxon_concept_query]
@@ -32,22 +31,22 @@ class Api::V1::DocumentsController < ApplicationController
       params.merge(show_private: !access_denied?, per_page: 100), 'public'
     )
 
-    #TODO move pagination and ordering to the document_search module after refactoring of SQL mviews
+    # TODO move pagination and ordering to the document_search module after refactoring of SQL mviews
     page = params[:page] || 1
     per_page = (params[:per_page] || 100).to_i
 
     ordered_docs =
       if params[:taxon_concepts_ids].present? && params[:event_type] == 'IdMaterials'
         if params[:taxon_concept_query].present? && !exact_match
-          @search.cached_results.sort_by{ |doc| [doc.taxon_names.first, doc.date_raw] }
+          @search.cached_results.sort_by { |doc| [ doc.taxon_names.first, doc.date_raw ] }
         else
           @search.cached_results.sort_by do |doc|
             doc_tc_ids = doc.taxon_concept_ids
-            params[:taxon_concepts_ids].index{ |id| doc_tc_ids.include?(id) } || 1_000_000
+            params[:taxon_concepts_ids].index { |id| doc_tc_ids.include?(id) } || 1_000_000
           end
         end
       else
-        @search.cached_results.sort{ |a, b| [b.date_raw , a.taxon_names.first || ''] <=> [a.date_raw, b.taxon_names.first || ''] }
+        @search.cached_results.sort { |a, b| [ b.date_raw, a.taxon_names.first || '' ] <=> [ a.date_raw, b.taxon_names.first || '' ] }
       end
 
     ordered_docs =
@@ -75,10 +74,10 @@ class Api::V1::DocumentsController < ApplicationController
       response.headers['Content-Length'] = File.size(path_to_file).to_s
       send_file(
         path_to_file,
-          filename: File.basename(path_to_file),
-          type: @document.filename.content_type,
-          disposition: 'inline',
-          url_based_filename: true
+        filename: File.basename(path_to_file),
+        type: @document.filename.content_type,
+        disposition: 'inline',
+        url_based_filename: true
       )
     end
   end
@@ -123,11 +122,10 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def render_404
-    head 404
+    head :not_found
   end
 
   def render_403
-    head 403
+    head :forbidden
   end
-
 end

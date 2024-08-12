@@ -5,11 +5,11 @@ describe Checklist::Pdf::HistoryAnnotationsKey do
 
   describe :annotations_key do
     subject { Checklist::Pdf::HistoryAnnotationsKey.new }
-    specify {
+    specify do
       allow(subject).to receive(:non_hash_annotations_key).and_return('x')
       allow(subject).to receive(:hash_annotations_key).and_return('x')
       expect(subject.annotations_key).to eq("\\newpage\n\\parindent 0in\\cpart{\\historicalSummaryOfAnnotations}\nx\\parindent -0.1in")
-    }
+    end
   end
 
   describe :hash_annotations_key do
@@ -56,9 +56,8 @@ describe Checklist::Pdf::HistoryAnnotationsKey do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
     subject { Checklist::Pdf::HistoryAnnotationsKey.new }
-    specify {
+    specify do
       expect(subject.hash_annotations_key).to eq("\\hashAnnotationsHistoryInfo\n\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP1 & \\validFrom \\hspace{2 pt} 01/07/2012\\\\\n\\#1 & Only trunks \\\\\n\n}\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP2 & \\validFrom \\hspace{2 pt} 01/07/2013\\\\\n\\#1 & Only bark \\\\\n\n}\n")
-    }
+    end
   end
-
 end

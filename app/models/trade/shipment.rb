@@ -90,14 +90,14 @@ class Trade::Shipment < ApplicationRecord
     greater_than_or_equal_to: 0, message: 'should be a positive number'
   }
   validates :appendix, presence: true, inclusion: {
-    in: ['I', 'II', 'III', 'N'], message: 'should be one of I, II, III, N'
+    in: [ 'I', 'II', 'III', 'N' ], message: 'should be one of I, II, III, N'
   }
   validates :year, presence: true, numericality: {
     only_integer: true, greater_than_or_equal_to: 1975, less_than: 3000,
     message: 'should be a 4 digit year'
   }
   validates :reporter_type, presence: true, inclusion: {
-    in: ['E', 'I'], message: 'should be one of E, I'
+    in: [ 'E', 'I' ], message: 'should be one of E, I'
   }
   validates_with Trade::ShipmentSecondaryErrorsValidator
 
@@ -128,7 +128,7 @@ class Trade::Shipment < ApplicationRecord
   before_destroy do
     @old_permits_ids = permits_ids.dup
   end
-  after_commit :async_tasks_after_save, on: [:create, :update]
+  after_commit :async_tasks_after_save, on: [ :create, :update ]
   after_commit :async_tasks_for_destroy, on: :destroy
 
   after_validation do
@@ -209,7 +209,7 @@ class Trade::Shipment < ApplicationRecord
       Trade::Permit.find_or_create_by(number: number.strip.upcase)
     end
     # save the concatenated permit numbers in the precomputed field
-    write_attribute("#{permit_type}_permit_number", permits && permits.map(&:number).join(';'))
+    self["#{permit_type}_permit_number"] = permits && permits.map(&:number).join(';')
     # save the array of permit ids in the precomputed field
     send("#{permit_type}_permits_ids=", permits && permits.map(&:id))
   end

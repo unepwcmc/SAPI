@@ -1,5 +1,4 @@
 class Species::StandardReferenceOutputExport < Species::CsvCopyExport
-
   def query
     rel = MTaxonConcept.from(table_name).
       order('name_status, taxonomic_position')
@@ -42,5 +41,4 @@ class Species::StandardReferenceOutputExport < Species::CsvCopyExport
       'Date added', 'Added by', 'Date updated', 'Updated by'
     ]
   end
-
 end

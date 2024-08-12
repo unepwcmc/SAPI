@@ -1,13 +1,12 @@
 namespace :import do
-
-  task :checklist_translations => [
+  task checklist_translations: [
     :hash_annotations_cites_translations, :cites_regions_translations,
     :ranks_translations, :change_types_translations
   ]
 
-  task :ranks_translations => :environment do
-    TMP_TABLE = "ranks_translations_import"
-    file = "lib/files/ranks.csv"
+  task ranks_translations: :environment do
+    TMP_TABLE = 'ranks_translations_import'
+    file = 'lib/files/ranks.csv'
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
@@ -20,9 +19,9 @@ namespace :import do
     ApplicationRecord.connection.execute(sql)
   end
 
-  task :change_types_translations => :environment do
-    TMP_TABLE = "change_types_translations_import"
-    file = "lib/files/change_types.csv"
+  task change_types_translations: :environment do
+    TMP_TABLE = 'change_types_translations_import'
+    file = 'lib/files/change_types.csv'
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
@@ -34,5 +33,4 @@ namespace :import do
     SQL
     ApplicationRecord.connection.execute(sql)
   end
-
 end

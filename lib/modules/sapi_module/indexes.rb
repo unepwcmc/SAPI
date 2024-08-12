@@ -1,6 +1,5 @@
 module SapiModule
   module Indexes
-
     # rewrite the code below to just use add_index and add UNIQUE to the mview ids
     # add_index "listing_changes_mview", ["id"], :name => "listing_changes_mview_on_id", :unique => true
 
@@ -179,6 +178,5 @@ module SapiModule
       SQL
       ApplicationRecord.connection.execute(sql)
     end
-
   end
 end

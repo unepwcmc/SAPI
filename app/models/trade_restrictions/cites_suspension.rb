@@ -74,9 +74,9 @@ class CitesSuspension < TradeRestriction
   # Each element of CSV columns can be either an array [display_text, method]
   # or a single symbol if the display text and the method are the same
   CSV_COLUMNS = [
-    [:start_date, :start_date_formatted], [:start_notification, :start_notification_name],
-    [:end_date, :end_date_formatted], [:end_notification, :end_notification_name],
-    :party, :notes, [:valid, :is_current]
+    [ :start_date, :start_date_formatted ], [ :start_notification, :start_notification_name ],
+    [ :end_date, :end_date_formatted ], [ :end_notification, :end_notification_name ],
+    :party, :notes, [ :valid, :is_current ]
   ]
 
   def start_notification_name
@@ -104,9 +104,9 @@ class CitesSuspension < TradeRestriction
             OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
             OR UPPER(events.subtype) LIKE UPPER(:query)",
-            query: "%#{query}%").
-      joins([:start_notification]).
-      joins(<<-SQL
+        query: "%#{query}%").
+        joins([ :start_notification ]).
+        joins(<<-SQL
           LEFT JOIN taxon_concepts
             ON taxon_concepts.id = trade_restrictions.taxon_concept_id
           LEFT JOIN geo_entities

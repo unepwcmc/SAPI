@@ -52,12 +52,12 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     info = column_names_for_matching.each_with_index.map do |cn|
       # for taxon concept validations output human readable taxon_name
       if cn == 'taxon_concept_id'
-        "taxon_name #{values_hash && (values_hash['accepted_taxon_name'].blank? ? '[BLANK]' : values_hash['accepted_taxon_name'])}"
+        "taxon_name #{values_hash && (values_hash['accepted_taxon_name'].presence || '[BLANK]')}"
       else
-        "#{cn} #{values_hash && (values_hash[cn].blank? ? '[BLANK]' : values_hash[cn])}"
+        "#{cn} #{values_hash && (values_hash[cn].presence || '[BLANK]')}"
       end
     end.join(' with ')
-    info = "#{info} (#{scope_info})" unless scope_info.blank?
+    info = "#{info} (#{scope_info})" if scope_info.present?
     info + ' is invalid'
   end
 
@@ -67,7 +67,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
     matching_records_grouped(annual_report_upload).map do |mr|
       values_hash = matching_record_to_matching_hash(mr)
-      values_hash_for_display = Hash[column_names_for_display.map { |cn| [cn, mr.send(cn)] }]
+      values_hash_for_display = column_names_for_display.index_with { |cn| mr.send(cn) }
 
       matching_criteria_jsonb = jsonb_matching_criteria_for_comparison(
         values_hash
@@ -109,7 +109,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   end
 
   def column_names_for_display_with_custom_table_name(table_name:)
-    column_names_for_display.map{ |column_name| Arel::Nodes::SqlLiteral.new("#{table_name}.#{column_name}") }
+    column_names_for_display.map { |column_name| Arel::Nodes::SqlLiteral.new("#{table_name}.#{column_name}") }
   end
 
   def column_names_for_display
@@ -173,7 +173,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def matching_records_grouped(annual_report_upload)
     table_name = annual_report_upload.sandbox.table_name
     Trade::SandboxTemplate.
-    select(
+      select(
       # IMPORTANT NOTE:
       # After upgrading to Rails 4.1 (Arel 5.0.1), Rails injects the table name in front of column names.
       # For example: From `SELECT taxon_concept_id FROM...` to `SELECT trade_sandbox_template.taxon_concept_id FROM...`.
@@ -187,7 +187,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         'ARRAY_AGG(id) AS matching_records_ids'
       ]
     ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
-    group(column_names_for_display_with_custom_table_name(table_name: 'matching_records')).having(
+      group(column_names_for_display_with_custom_table_name(table_name: 'matching_records')).having(
       required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
     )
   end

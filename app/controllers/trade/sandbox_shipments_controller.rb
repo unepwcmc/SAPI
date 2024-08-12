@@ -84,5 +84,4 @@ class Trade::SandboxShipmentsController < TradeController
       :year
     ]
   end
-
 end

@@ -47,9 +47,9 @@ class Annotation < ApplicationRecord
   translates :short_note, :full_note
 
   scope :for_cites, -> { joins(:event).where("events.type = 'CitesCop'").
-    order([:parent_symbol, :symbol]) }
+    order([ :parent_symbol, :symbol ]) }
   scope :for_eu, -> { joins(:event).where("events.type = 'EuRegulation'").
-    order([:parent_symbol, :symbol]) }
+    order([ :parent_symbol, :symbol ]) }
 
   # If this pattern is not respected, a query which parses (most of) the
   # symbol as an integer
@@ -78,7 +78,7 @@ class Annotation < ApplicationRecord
             OR UPPER(short_note_es) LIKE UPPER(:query)
             OR UPPER(full_note_es) LIKE UPPER(:query)
             OR UPPER(description) LIKE UPPER(:query)",
-            query: "%#{query}%")
+        query: "%#{query}%")
     else
       all
     end
@@ -89,7 +89,7 @@ class Annotation < ApplicationRecord
   end
 
   def self.ignored_attributes
-    super() + [:import_row_id, :original_id]
+    super + [ :import_row_id, :original_id ]
   end
 
   def self.text_attributes
@@ -108,5 +108,4 @@ class Annotation < ApplicationRecord
       '# listing_changes' => hashed_listing_changes
     }
   end
-
 end

@@ -12,7 +12,7 @@ class NomenclatureChange::StatusToSynonym::Processor < NomenclatureChange::Proce
 
     chain << reassignment_processor(output)
 
-    accepted_names = @secondary_output ? [@secondary_output] : []
+    accepted_names = @secondary_output ? [ @secondary_output ] : []
     chain << NomenclatureChange::StatusDowngradeProcessor.new(@primary_output, accepted_names)
     chain.compact
   end
@@ -22,5 +22,4 @@ class NomenclatureChange::StatusToSynonym::Processor < NomenclatureChange::Proce
     @primary_output = @nc.primary_output
     @secondary_output = @nc.secondary_output
   end
-
 end

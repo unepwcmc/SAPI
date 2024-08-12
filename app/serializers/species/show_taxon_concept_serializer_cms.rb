@@ -1,5 +1,4 @@
 class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializer
-
   attributes :cms_listing
   has_many :cms_listing_changes, serializer: Species::ListingChangeSerializer,
     key: :cms_listings
@@ -86,5 +85,4 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
   def cms_listing
     object.listing && object.listing['cms_listing']
   end
-
 end

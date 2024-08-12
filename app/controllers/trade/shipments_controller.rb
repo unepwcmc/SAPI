@@ -94,10 +94,10 @@ class Trade::ShipmentsController < TradeController
     update_params = params.permit(
       updates: shipment_attributes
     )
-    res = update_params && update_params.delete('updates') || {}
+    res = (update_params && update_params.delete('updates')) || {}
     res.each { |k, v| res[k] = nil if v.blank? }
     reporter_type = res.delete(:reporter_type)
-    unless reporter_type.blank?
+    if reporter_type.present?
       res[:reported_by_exporter] = Trade::Shipment.reporter_type_to_reported_by_exporter(reporter_type)
     end
     if res.key?(:import_permit_number) && res[:import_permit_number].nil?
@@ -113,7 +113,7 @@ class Trade::ShipmentsController < TradeController
   end
 
   def populate_accepted_taxon_concept(update_params)
-    if !update_params[:reported_taxon_concept_id].blank? && update_params[:taxon_concept_id].blank?
+    if update_params[:reported_taxon_concept_id].present? && update_params[:taxon_concept_id].blank?
       # automatically resolve accepted taxon name
       accepted_tc = Trade::ReportedTaxonConceptResolver.new(
         update_params[:reported_taxon_concept_id]
@@ -122,5 +122,4 @@ class Trade::ShipmentsController < TradeController
     end
     update_params
   end
-
 end

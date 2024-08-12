@@ -46,7 +46,7 @@ class CitesCop < Event
   end
 
   def self.elibrary_document_types
-    [Document::Proposal]
+    [ Document::Proposal ]
   end
 
   private
@@ -56,5 +56,4 @@ class CitesCop < Event
       'listing changes' => listing_changes
     }
   end
-
 end

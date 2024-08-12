@@ -1,5 +1,4 @@
 class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::ReassignmentProcessor
-
   def process_reassignment(reassignment, reassignable)
     object_before_reassignment = reassignable.dup
     reassigned_object = copied_object_before_save(reassignment, reassignable)
@@ -14,7 +13,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     return nil if conflicting_listing_change_reassignment?(reassignment, reassignable)
     new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
 
-    Rails.logger.debug("Processing #{reassignable.class} #{reassignable.id} copy to #{new_taxon_concept.full_name}")
+    Rails.logger.debug { "Processing #{reassignable.class} #{reassignable.id} copy to #{new_taxon_concept.full_name}" }
     if reassignment.kind_of?(NomenclatureChange::ParentReassignment)
       reassignable.parent_id = new_taxon_concept.id
       reassignable
@@ -87,9 +86,9 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
   def build_distribution_associations(reassignable, copied_object)
     # for distributions this needs to copy distribution references and tags
     reassignable.distribution_references.each do |distr_ref|
-      !copied_object.new_record? && distr_ref.duplicates({
+      (!copied_object.new_record? && distr_ref.duplicates({
         distribution_id: copied_object.id
-      }).first || copied_object.distribution_references.build(distr_ref.comparison_attributes)
+      }).first) || copied_object.distribution_references.build(distr_ref.comparison_attributes)
     end
     # taggings
     copy_distribution_taggings(reassignable, copied_object)
@@ -104,33 +103,33 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
     end
 
     reassignable.taggings.each do |tagging|
-      !copied_object.new_record? && tagging.duplicates({
+      (!copied_object.new_record? && tagging.duplicates({
         taggable_id: copied_object.id
-      }).first || copied_object.taggings.build(tagging.comparison_attributes)
+      }).first) || copied_object.taggings.build(tagging.comparison_attributes)
     end
   end
 
   def build_listing_change_associations(reassignable, copied_object)
     # for listing changes this needs to copy listing distributions and exceptions
     reassignable.listing_distributions.each do |listing_distr|
-      !copied_object.new_record? && listing_distr.duplicates({
+      (!copied_object.new_record? && listing_distr.duplicates({
         listing_change_id: copied_object.id
-      }).first || copied_object.listing_distributions.build(listing_distr.comparison_attributes)
+      }).first) || copied_object.listing_distributions.build(listing_distr.comparison_attributes)
     end
     # party distribution
     party_listing_distribution = reassignable.party_listing_distribution
-    !copied_object.new_record? && party_listing_distribution &&
+    (!copied_object.new_record? && party_listing_distribution &&
       party_listing_distribution.duplicates({
         listing_change_id: copied_object.id
-      }).first || party_listing_distribution &&
+      }).first) || (party_listing_distribution &&
         copied_object.build_party_listing_distribution(
           party_listing_distribution.comparison_attributes
-        )
+        ))
     # taxonomic exclusions (population exclusions already duplicated)
-    reassignable.exclusions.where('taxon_concept_id IS NOT NULL').each do |exclusion|
-      !copied_object.new_record? && exclusion.duplicates({
+    reassignable.exclusions.where.not(taxon_concept_id: nil).each do |exclusion|
+      (!copied_object.new_record? && exclusion.duplicates({
         parent_id: copied_object.id
-      }).first || copied_object.exclusions.build(
+      }).first) || copied_object.exclusions.build(
         exclusion.comparison_attributes
       )
     end
@@ -147,13 +146,12 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
       :trade_restriction_purposes
     ].each do |trade_restriction_codes|
       reassignable.send(trade_restriction_codes).each do |trade_restr_code|
-        !copied_object.new_record? && trade_restr_code.duplicates({
+        (!copied_object.new_record? && trade_restr_code.duplicates({
           trade_restriction_id: copied_object.id
-        }).first || copied_object.send(trade_restriction_codes).build(
+        }).first) || copied_object.send(trade_restriction_codes).build(
           trade_restr_code.comparison_attributes
         )
       end
     end
   end
-
 end

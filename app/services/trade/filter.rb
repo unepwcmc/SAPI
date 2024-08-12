@@ -44,11 +44,11 @@ class Trade::Filter
       taxon_concepts = MTaxonConcept.where(id: @taxon_concepts_ids)
       taxon_concepts_conditions =
         taxon_concepts.map do |tc|
-          [:id, tc.id]
+          [ :id, tc.id ]
         end + taxon_concepts.select do |tc|
           cascading_ranks.include?(tc.rank_name)
         end.map do |tc|
-          [:"#{tc.rank_name.downcase}_id", tc.id]
+          [ :"#{tc.rank_name.downcase}_id", tc.id ]
         end
       @query = @query.where(
         taxon_concepts_conditions.map { |c| "taxon_concept_#{c[0]} = #{c[1]}" }.join(' OR ')
@@ -60,11 +60,11 @@ class Trade::Filter
       reported_taxon_concepts = MTaxonConcept.where(id: @reported_taxon_concepts_ids)
       reported_taxon_concepts_conditions =
         reported_taxon_concepts.map do |tc|
-          [:id, tc.id]
+          [ :id, tc.id ]
         end + reported_taxon_concepts.select do |tc|
           cascading_ranks.include?(tc.rank_name)
         end.map do |tc|
-          [:"#{tc.rank_name.downcase}_id", tc.id]
+          [ :"#{tc.rank_name.downcase}_id", tc.id ]
         end
       @query = @query.where(
         reported_taxon_concepts_conditions.map { |c| "reported_taxon_concept_#{c[0]} = #{c[1]}" }.join(' OR ')
@@ -129,14 +129,14 @@ class Trade::Filter
     # Other cases
     time_range_query
 
-    unless @importer_eu_country_ids.blank?
+    if @importer_eu_country_ids.present?
       query = eu_country_date_query(@time_range_start, @time_range_end, 'importer')
-      @query = @query.where.not(query) unless query.blank?
+      @query = @query.where.not(query) if query.present?
     end
 
-    unless @exporter_eu_country_ids.blank?
+    if @exporter_eu_country_ids.present?
       query = eu_country_date_query(@time_range_start, @time_range_end, 'exporter')
-      @query = @query.where.not(query) unless query.blank?
+      @query = @query.where.not(query) if query.present?
     end
 
     initialize_internal_query if @internal
@@ -174,11 +174,10 @@ class Trade::Filter
     eu_country_ids.each do |eu_country|
       # check for multiple entries for the same countries(UK might rejoin at some point)
       eu_entry_exit_dates(eu_country).each do |entry_date, exit_date|
-
         # exclude countries for which we will need to retreive all the shipments
         # within the user selected year range anyway
         exit_date_check = exit_date.nil? ? true : (exit_date > end_year) # workaround to avoid nil > integer
-        next if (entry_date < start_year && exit_date_check)
+        next if entry_date < start_year && exit_date_check
 
         exit_year_check = exit_date.nil? ? 'AND TRUE' : "OR year >= #{exit_date}"
         country_query_arr << "(trade_shipments.#{type}_id = #{eu_country} AND (year < #{entry_date} #{exit_year_check}))"
@@ -194,11 +193,11 @@ class Trade::Filter
   def time_range_query
     unless @time_range_start.blank? && @time_range_end.blank?
       if @time_range_start.blank?
-        @query = @query.where(['year <= ?', @time_range_end])
+        @query = @query.where([ 'year <= ?', @time_range_end ])
       elsif @time_range_end.blank?
-        @query = @query.where(['year >= ?', @time_range_start])
+        @query = @query.where([ 'year >= ?', @time_range_start ])
       else
-        @query = @query.where(['year >= ? AND year <= ?', @time_range_start, @time_range_end])
+        @query = @query.where([ 'year >= ? AND year <= ?', @time_range_start, @time_range_end ])
       end
     end
   end
@@ -209,7 +208,7 @@ class Trade::Filter
       @query = @query.preload(:reported_taxon_concept)
     end
 
-    if ['I', 'E'].include? @reporter_type
+    if [ 'I', 'E' ].include? @reporter_type
       if @reporter_type == 'E'
         @query = @query.where(reported_by_exporter: true)
       elsif @reporter_type == 'I'
@@ -241,5 +240,4 @@ class Trade::Filter
       end
     end
   end
-
 end

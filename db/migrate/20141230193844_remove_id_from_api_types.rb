@@ -1,10 +1,10 @@
 class RemoveIdFromApiTypes < ActiveRecord::Migration[4.2]
   def change
-    execute "DROP VIEW IF EXISTS api_cites_listing_changes_view"
-    execute "DROP VIEW IF EXISTS api_cites_suspensions_view"
-    execute "DROP VIEW IF EXISTS api_cites_quotas_view"
-    execute "DROP VIEW IF EXISTS api_eu_listing_changes_view"
-    execute "DROP VIEW IF EXISTS api_eu_decisions_view"
+    execute 'DROP VIEW IF EXISTS api_cites_listing_changes_view'
+    execute 'DROP VIEW IF EXISTS api_cites_suspensions_view'
+    execute 'DROP VIEW IF EXISTS api_cites_quotas_view'
+    execute 'DROP VIEW IF EXISTS api_eu_listing_changes_view'
+    execute 'DROP VIEW IF EXISTS api_eu_decisions_view'
 
     execute <<-SQL
       DROP TYPE api_geo_entity;

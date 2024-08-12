@@ -51,5 +51,4 @@ class EcSrg < Event
       Document::ListOfParticipants
     ]
   end
-
 end

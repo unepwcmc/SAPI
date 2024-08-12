@@ -1,13 +1,12 @@
 namespace :eu_opinions do
-
-  desc "transfer the current eu_opinions with iii) eu_decision type to the new SRG referral decision type"
-  task :transfer_to_srg_referral_type => :environment do
-    old_decision_type_ids = EuDecisionType.where(name: "iii)").pluck(:id)
-    fail "Old decision type not found" if old_decision_type_ids.empty?
+  desc 'transfer the current eu_opinions with iii) eu_decision type to the new SRG referral decision type'
+  task transfer_to_srg_referral_type: :environment do
+    old_decision_type_ids = EuDecisionType.where(name: 'iii)').pluck(:id)
+    fail 'Old decision type not found' if old_decision_type_ids.empty?
     eu_opinions = EuOpinion.where(eu_decision_type_id: old_decision_type_ids, is_current: true)
-    fail "No eu opinions to transfer" if eu_opinions.count.zero?
-    new_decision_type_id = EuDecisionType.find_by_name("SRG Referral").try(:id)
-    fail "New decision type not found" if new_decision_type_id.nil?
+    fail 'No eu opinions to transfer' if eu_opinions.count.zero?
+    new_decision_type_id = EuDecisionType.find_by_name('SRG Referral').try(:id)
+    fail 'New decision type not found' if new_decision_type_id.nil?
 
     puts "There are #{eu_opinions.count} eu_opinions to be transferred"
 
@@ -18,13 +17,13 @@ namespace :eu_opinions do
   end
 
   desc "transfer the current eu_opinions with ii) eu_decision type to the new SRG History 'In consultation'"
-  task :transfer_to_srg_history => :environment do
-    old_decision_type_ids = EuDecisionType.where(name: "ii)").pluck(:id)
-    fail "Old decision type not found" if old_decision_type_ids.empty?
+  task transfer_to_srg_history: :environment do
+    old_decision_type_ids = EuDecisionType.where(name: 'ii)').pluck(:id)
+    fail 'Old decision type not found' if old_decision_type_ids.empty?
     eu_opinions = EuOpinion.where(eu_decision_type_id: old_decision_type_ids, is_current: true)
-    fail "No eu opinions to transfer" if eu_opinions.count.zero?
-    srg_history_id = SrgHistory.find_by_name("In consultation").try(:id)
-    fail "New decision type not found" if srg_history_id.nil?
+    fail 'No eu opinions to transfer' if eu_opinions.count.zero?
+    srg_history_id = SrgHistory.find_by_name('In consultation').try(:id)
+    fail 'New decision type not found' if srg_history_id.nil?
 
     puts "There are #{eu_opinions.count} eu_opinions to be transferred"
 

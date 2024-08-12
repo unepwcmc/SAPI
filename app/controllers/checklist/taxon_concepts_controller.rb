@@ -1,5 +1,4 @@
 class Checklist::TaxonConceptsController < ApplicationController
-
   def index
     checklist = Checklist::Checklist.new(params)
 
@@ -36,5 +35,4 @@ class Checklist::TaxonConceptsController < ApplicationController
       root: false
     }
   end
-
 end

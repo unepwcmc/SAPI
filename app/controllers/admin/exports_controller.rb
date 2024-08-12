@@ -1,5 +1,4 @@
 class Admin::ExportsController < Admin::AdminController
-
   def index; end
 
   def download
@@ -7,9 +6,9 @@ class Admin::ExportsController < Admin::AdminController
       csv_separator:         if filter_params && filter_params[:csv_separator] &&
           filter_params[:csv_separator].downcase.strip.to_sym == :semicolon
           :semicolon
-        else
+                             else
           :comma
-        end
+                             end
     })
     case params[:data_type]
     when 'Names'

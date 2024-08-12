@@ -1,6 +1,6 @@
 class CreateMasterListingChangesMviews < ActiveRecord::Migration[4.2]
   def change
-    [:cites, :eu, :cms].each do |designation|
+    [ :cites, :eu, :cms ].each do |designation|
       listing_changes_mview = "#{designation}_listing_changes_mview"
 
       # create master cites/eu/cms listing changes mview

@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import distributions from csv file (usage: rake import:distributions[path/to/file,path/to/another])'
-  task :distributions, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :distributions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'distribution_import'
     puts "There are #{Distribution.count} taxon concept distributions in the database."
     files = files_from_args(t, args)
@@ -16,7 +15,7 @@ namespace :import do
       has_reference_id = csv_headers.include? 'Reference IDs'
       kingdom = has_tc_id ? '' : file.split('/').last.split('_')[0].titleize
 
-      [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+      [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
         puts "Import #{taxonomy_name} distributions"
         taxonomy = Taxonomy.find_by_name(taxonomy_name)
         sql = <<-SQL
@@ -118,5 +117,4 @@ namespace :import do
     puts "There are now #{Distribution.count} taxon concept distributions in the database"
     puts "There are now #{DistributionReference.count} distribution references in the database"
   end
-
 end

@@ -1,6 +1,5 @@
 module Elibrary
   module Importable
-
     def run
       drop_table_if_exists(table_name)
       create_table_from_column_array(
@@ -30,7 +29,7 @@ module Elibrary
       require 'psql_command'
       puts "Copying data from #{path_to_file} into #{table_name}"
       cmd = <<-PSQL
-    SET DateStyle = \"ISO,DMY\";
+    SET DateStyle = "ISO,DMY";
     \\COPY #{table_name} (#{db_columns.join(', ')})
     FROM '#{Rails.root + path_to_file}'
     WITH DELIMITER ','

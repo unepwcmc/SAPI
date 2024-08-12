@@ -68,7 +68,7 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
     end
     context 'when unsuccessful' do
       it 're-renders step' do
-        put :update, params: { nomenclature_change_status_to_synonym: { dummy: 'test'}, nomenclature_change_id: @status_change.id, id: 'primary_output' }
+        put :update, params: { nomenclature_change_status_to_synonym: { dummy: 'test' }, nomenclature_change_id: @status_change.id, id: 'primary_output' }
         expect(response).to render_template('primary_output')
       end
     end
@@ -82,13 +82,12 @@ describe Admin::NomenclatureChanges::StatusToSynonymController do
       end
       context 'when user is manager' do
         it 'redirects to nomenclature changes path' do
-          pending("Strange render mismatch after upgrading to Rails 4")
+          pending('Strange render mismatch after upgrading to Rails 4')
           put :update, params: { nomenclature_change_id: @status_change.id, id: 'summary', nomenclature_change_status_to_synonym: { dummy: 'test' } }
           expect(response).to be_successful
-          expect(response).to render_template("nomenclature_changes")
+          expect(response).to render_template('nomenclature_changes')
         end
       end
     end
   end
-
 end

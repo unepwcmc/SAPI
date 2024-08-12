@@ -32,8 +32,8 @@ class TermTradeCodesPair < ApplicationRecord
     if query.present?
       where("UPPER(trade_codes.code) LIKE UPPER(:query)
             OR UPPER(terms.code) LIKE UPPER(:query)",
-            query: "%#{query}%").
-      joins(<<-SQL
+        query: "%#{query}%").
+        joins(<<-SQL
           LEFT JOIN trade_codes
             ON trade_codes.id = term_trade_codes_pairs.trade_code_id
           LEFT JOIN trade_codes terms

@@ -1,44 +1,44 @@
 # REQUIRES SIEGE TO BE INSTALLED
-# Brew is an option for installing siege.
+#  Brew is an option for installing siege.
 
 # PARAMS
 PARAMS = {
   start_year: {
-    values: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018],
+    values: [ 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 ],
     multiple: false
   },
   term_ids: {
     # Live, Stems, Skins, Medicine, Eggs (Live)
-    values: [57, 89, 84, 60, 23],
+    values: [ 57, 89, 84, 60, 23 ],
     multiple: true
   },
   taxonomic_groups: {
-    values: ['Plants', 'Mammals'],
+    values: [ 'Plants', 'Mammals' ],
     multiple: true
   },
   taxon_ids: {
     # Orchidaceae, Aves, Plantae, Phalaenopsis, Galanthus, Macaca fascicularis, Scleractinia, Alligator mississippiensis, Acipenser, Acipenser baerii
-    values: [12509, 333, 45, 12827, 13395, 3920, 78, 6810, 1528, 9647],
+    values: [ 12509, 333, 45, 12827, 13395, 3920, 78, 6810, 1528, 9647 ],
     multiple: true
   },
   country_ids: {
     # USA, China, Thailand, Turkey, Germany, Netherlands
-    values: [80, 160, 230, 112, 23, 165],
+    values: [ 80, 160, 230, 112, 23, 165 ],
     multiple: true
   },
   reported_by: {
-    values: ['exporter', 'importer'],
+    values: [ 'exporter', 'importer' ],
     multiple: false
   },
   reported_by_party: {
-    values: [true, false],
+    values: [ true, false ],
     multiple: false
   },
   unit: {
     # no. items, kg, m^3
-    values: ['items', '143', '136'],
+    values: [ 'items', '143', '136' ],
     multiple: false
-  },
+  }
 }.freeze
 
 PARAM_PERMUTATIONS = 10 # To avoid hitting too much caching
@@ -83,18 +83,18 @@ def str_replace(str, values)
   end
 end
 
-def create_staging_urls_file()
+def create_staging_urls_file
   text = File.read(URL_TEMPLATE_FILENAME)
   new_text = str_replace(text, PARAMS)
 
-  File.open(TMP_FILENAME, 'w') { |file|
+  File.open(TMP_FILENAME, 'w') do |file|
     PARAM_PERMUTATIONS.times do
       file.write(new_text)
     end
-  }
+  end
 end
 
-def run_test ()
+def run_test
   create_staging_urls_file()
 
   puts `siege --delay=0.5 --file=staging-urls.txt --internet --verbose --time=#{TIME} --concurrent=#{CONCURRENT}`

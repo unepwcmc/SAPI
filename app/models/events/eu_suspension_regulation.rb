@@ -83,7 +83,7 @@ class EuSuspensionRegulation < EuEvent
   end
 
   def after_create_async_tasks
-    unless eu_suspensions_event_id.blank?
+    if eu_suspensions_event_id.present?
       EventEuSuspensionCopyWorker.perform_async(eu_suspensions_event_id, id)
       DownloadsCacheCleanupWorker.perform_async('eu_decisions')
     end
@@ -92,5 +92,4 @@ class EuSuspensionRegulation < EuEvent
   def async_downloads_cache_cleanup
     DownloadsCacheCleanupWorker.perform_async('eu_decisions')
   end
-
 end

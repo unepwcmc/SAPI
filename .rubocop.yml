@@ -17,6 +17,13 @@ AllCops:
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
+  Include:
+    - 'app/**/*'
+    - 'config/**/*'
+    - 'db/**/*'
+    - 'lib/**/*'
+    - 'spec/**/*'
+    - 'Gemfile'
 
 Style/BlockDelimiters:
   AllowedMethods: []

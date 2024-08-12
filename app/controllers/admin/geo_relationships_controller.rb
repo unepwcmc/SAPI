@@ -1,8 +1,7 @@
 class Admin::GeoRelationshipsController < Admin::StandardAuthorizationController
-
   belongs_to :geo_entity
-  before_action :load_geo_relationship_types, only: [:index, :create]
-  before_action :load_geo_entities, only: [:index, :create]
+  before_action :load_geo_relationship_types, only: [ :index, :create ]
+  before_action :load_geo_entities, only: [ :index, :create ]
 
   def index
     index! do
@@ -32,7 +31,7 @@ class Admin::GeoRelationshipsController < Admin::StandardAuthorizationController
   def collection
     @geo_relationships ||= end_of_association_chain.
       joins(:geo_relationship_type).
-      where("geo_relationship_types.name": @geo_relationship_type.name).
+      where('geo_relationship_types.name': @geo_relationship_type.name).
       page(params[:page])
   end
 

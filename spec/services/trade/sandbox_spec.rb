@@ -13,18 +13,18 @@ describe Trade::Sandbox, drops_tables: true do
     create(:unit, code: 'KIL')
     country = create(:geo_entity_type, name: 'COUNTRY')
     @argentina = create(:geo_entity,
-                        geo_entity_type: country,
-                        name: 'Argentina',
-                        iso_code2: 'AR'
-                       )
+      geo_entity_type: country,
+      name: 'Argentina',
+      iso_code2: 'AR'
+    )
 
     @portugal = create(:geo_entity,
-                       geo_entity_type: country,
-                       name: 'Portugal',
-                       iso_code2: 'PT'
-                      )
+      geo_entity_type: country,
+      name: 'Portugal',
+      iso_code2: 'PT'
+    )
   end
-  let(:annual_report_upload) {
+  let(:annual_report_upload) do
     aru = build(:annual_report_upload, trading_country_id: @argentina.id, point_of_view: 'I')
     aru.save(validate: false)
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
@@ -41,14 +41,13 @@ describe Trade::Sandbox, drops_tables: true do
     )
     create_year_format_validation
     aru
-  }
+  end
   describe :destroy do
     subject { annual_report_upload.sandbox }
-    specify {
+    specify do
       sandbox_klass = Trade::SandboxTemplate.ar_klass(subject.table_name)
       subject.destroy
       expect(ApplicationRecord.connection.data_source_exists?('trade_sandbox_1')).to be_falsey
-    }
+    end
   end
-
 end

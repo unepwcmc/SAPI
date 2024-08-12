@@ -1,5 +1,4 @@
 class DocumentCollectionOrder
-
   def initialize(event_id)
     @event_id = event_id
   end
@@ -32,5 +31,4 @@ class DocumentCollectionOrder
     end
     DocumentSearch.clear_cache
   end
-
 end

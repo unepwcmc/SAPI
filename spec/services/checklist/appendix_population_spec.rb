@@ -1,170 +1,170 @@
 require 'spec_helper'
 
 describe Checklist do
-  include_context "Canis lupus"
+  include_context 'Canis lupus'
 
-  context "search by cites populations" do
+  context 'search by cites populations' do
     before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
-    context "when Nepal" do
-      subject {
+    context 'when Nepal' do
+      subject do
         checklist = Checklist::Checklist.new({
-          country_ids: [nepal.id]
+          country_ids: [ nepal.id ]
         })
         checklist.results
-      }
+      end
       specify do
         expect(subject).to include(@species)
       end
     end
-    context "when Poland" do
-      subject {
+    context 'when Poland' do
+      subject do
         checklist = Checklist::Checklist.new({
-          country_ids: [poland.id]
+          country_ids: [ poland.id ]
         })
         checklist.results
-      }
+      end
       specify do
         expect(subject).to include(@species)
       end
     end
   end
-  context "search by cites appendices" do
+  context 'search by cites appendices' do
     before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
-    context "when App I" do
-      subject {
+    context 'when App I' do
+      subject do
         checklist = Checklist::Checklist.new({
-          cites_appendices: ['I']
+          cites_appendices: [ 'I' ]
         })
         checklist.results
-      }
+      end
       specify do
         expect(subject).to include(@species)
       end
     end
-    context "when App II" do
-      subject {
+    context 'when App II' do
+      subject do
         checklist = Checklist::Checklist.new({
-          cites_appendices: ['II']
+          cites_appendices: [ 'II' ]
         })
         checklist.results
-      }
+      end
       specify do
         expect(subject).to include(@species)
       end
     end
-    context "when App III" do
-      subject {
+    context 'when App III' do
+      subject do
         checklist = Checklist::Checklist.new({
-          cites_appendices: ['III']
+          cites_appendices: [ 'III' ]
         })
         checklist.results
-      }
+      end
       specify do
         expect(subject).not_to include(@species)
       end
     end
   end
-  context "search by cites populations and appendices" do
+  context 'search by cites populations and appendices' do
     before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
-    context "when Nepal" do
-      context "when App I" do
-        subject {
+    context 'when Nepal' do
+      context 'when App I' do
+        subject do
           checklist = Checklist::Checklist.new({
-            cites_appendices: ['I'],
-            country_ids: [nepal.id]
+            cites_appendices: [ 'I' ],
+            country_ids: [ nepal.id ]
           })
           checklist.results
-        }
+        end
         specify do
           expect(subject).to include(@species)
         end
       end
-      context "when App II" do
-        subject {
+      context 'when App II' do
+        subject do
           checklist = Checklist::Checklist.new({
-            cites_appendices: ['II'],
-            country_ids: [nepal.id]
+            cites_appendices: [ 'II' ],
+            country_ids: [ nepal.id ]
           })
           checklist.results
-        }
+        end
         specify do
           expect(subject).not_to include(@species)
         end
       end
     end
-    context "when Poland" do
-      context "when App I" do
-        subject {
+    context 'when Poland' do
+      context 'when App I' do
+        subject do
           checklist = Checklist::Checklist.new({
-            cites_appendices: ['I'],
-            country_ids: [poland.id]
+            cites_appendices: [ 'I' ],
+            country_ids: [ poland.id ]
           })
           checklist.results
-        }
+        end
         specify do
           expect(subject).not_to include(@species)
         end
       end
-      context "when App II" do
-        subject {
+      context 'when App II' do
+        subject do
           checklist = Checklist::Checklist.new({
-            cites_appendices: ['II'],
-            country_ids: [poland.id]
+            cites_appendices: [ 'II' ],
+            country_ids: [ poland.id ]
           })
           checklist.results
-        }
+        end
         specify do
           expect(subject).to include(@species)
         end
       end
     end
-    context "when Poland or Nepal" do
-      context "when App I" do
-        subject {
+    context 'when Poland or Nepal' do
+      context 'when App I' do
+        subject do
           checklist = Checklist::Checklist.new({
-            cites_appendices: ['I'],
-            country_ids: [poland.id, nepal.id]
+            cites_appendices: [ 'I' ],
+            country_ids: [ poland.id, nepal.id ]
           })
           checklist.results
-        }
+        end
         specify do
           expect(subject).to include(@species)
         end
       end
-      context "when App II" do
-        subject {
+      context 'when App II' do
+        subject do
           checklist = Checklist::Checklist.new({
-            cites_appendices: ['II'],
-            country_ids: [poland.id, nepal.id]
+            cites_appendices: [ 'II' ],
+            country_ids: [ poland.id, nepal.id ]
           })
           checklist.results
-        }
+        end
         specify do
           expect(subject).to include(@species)
         end
       end
     end
-    context "when App I or II" do
-      context "when Poland" do
-        subject {
+    context 'when App I or II' do
+      context 'when Poland' do
+        subject do
           checklist = Checklist::Checklist.new({
-            cites_appendices: ['I', 'II'],
-            country_ids: [poland.id]
+            cites_appendices: [ 'I', 'II' ],
+            country_ids: [ poland.id ]
           })
           checklist.results
-        }
+        end
         specify do
           expect(subject).to include(@species)
         end
       end
-      context "when Nepal" do
-        subject {
+      context 'when Nepal' do
+        subject do
           checklist = Checklist::Checklist.new({
-            cites_appendices: ['I', 'II'],
-            country_ids: [nepal.id]
+            cites_appendices: [ 'I', 'II' ],
+            country_ids: [ nepal.id ]
           })
           checklist.results
-        }
+        end
         specify do
           expect(subject).to include(@species)
         end

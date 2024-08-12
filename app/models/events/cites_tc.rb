@@ -41,7 +41,7 @@ class CitesTc < Event
   before_destroy :check_for_documents
 
   def self.elibrary_document_types
-    [Document::ReviewOfSignificantTrade]
+    [ Document::ReviewOfSignificantTrade ]
   end
 
   private
@@ -52,5 +52,4 @@ class CitesTc < Event
       throw :abort
     end
   end
-
 end

@@ -1,5 +1,4 @@
 FactoryBot.define do
-
   factory :document_tag do
     name { 'You taaaag' }
     factory :review_phase, class: DocumentTag::ReviewPhase do
@@ -12,5 +11,4 @@ FactoryBot.define do
       type { 'DocumentTag::ProposalOutcome' }
     end
   end
-
 end

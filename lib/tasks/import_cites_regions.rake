@@ -1,7 +1,6 @@
 namespace :import do
-
-  desc "Import CITES Regions records from csv file (usage: rake import:cites_regions[path/to/file,path/to/another])"
-  task :cites_regions, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  desc 'Import CITES Regions records from csv file (usage: rake import:cites_regions[path/to/file,path/to/another])'
+  task :cites_regions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     tmp_table = 'cites_regions_import'
     regions_type = GeoEntityType.find_by_name(GeoEntityType::CITES_REGION)
     puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: regions_type.id })} CITES Regions in the database."
@@ -24,9 +23,9 @@ namespace :import do
     puts "There are now #{GeoEntity.count(conditions: { geo_entity_type_id: regions_type.id })} CITES Regions in the database"
   end
 
-  task :cites_regions_translations => :environment do
-    TMP_TABLE = "cites_regions_import"
-    file = "lib/files/cites_regions_utf8.csv"
+  task cites_regions_translations: :environment do
+    TMP_TABLE = 'cites_regions_import'
+    file = 'lib/files/cites_regions_utf8.csv'
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
@@ -40,5 +39,4 @@ namespace :import do
     SQL
     ApplicationRecord.connection.execute(sql)
   end
-
 end

@@ -18,7 +18,7 @@ class Elibrary::DocumentFilesImporter
 
   def run
     total = Document.count
-    Document.order(:type, :date).select([:id, :elib_legacy_file_name]).each_with_index do |doc, idx|
+    Document.order(:type, :date).select([ :id, :elib_legacy_file_name ]).each_with_index do |doc, idx|
       info_txt = "#{doc.filename} (#{idx} of #{total})"
       target_location = @target_dir + "/documents/#{doc.id}/#{doc.elib_legacy_file_name}"
       # check if file exists at target location

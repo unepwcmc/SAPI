@@ -1,5 +1,4 @@
 class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::BuildController
-
   steps *NomenclatureChange::Lump::STEPS
 
   def show

@@ -1,5 +1,4 @@
 class CsvColumnHeadersValidator < ActiveModel::EachValidator
-
   def validate_each(record, attribute, value)
     raise(ArgumentError, 'A CarrierWave::Uploader::Base object was expected') unless value.kind_of? CarrierWave::Uploader::Base
 
@@ -9,7 +8,7 @@ class CsvColumnHeadersValidator < ActiveModel::EachValidator
         reported_column_headers = csv.first.map(&:downcase)
 
         required_column_headers =
-          if (record.point_of_view == 'E')
+          if record.point_of_view == 'E'
             Trade::SandboxTemplate::CSV_EXPORTER_COLUMNS
           else
             Trade::SandboxTemplate::CSV_IMPORTER_COLUMNS

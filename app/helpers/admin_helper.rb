@@ -1,8 +1,7 @@
 module AdminHelper
-
   def ancestors_path(taxon_concept)
     Rank.where(
-      ['taxonomic_position < ?', taxon_concept.rank.taxonomic_position]
+      [ 'taxonomic_position < ?', taxon_concept.rank.taxonomic_position ]
       ).order(:taxonomic_position).map do |r|
       return nil unless taxon_concept.data
       name = taxon_concept.data["#{r.name.downcase}_name"]
@@ -24,7 +23,7 @@ module AdminHelper
       </p>
     HTML
     content_tag(:a, rel: 'tooltip', href: '#',
-      "data-original-title": info, "data-html": true
+      'data-original-title': info, 'data-html': true
     ) do
       info_icon
     end.html_safe
@@ -77,7 +76,7 @@ module AdminHelper
     resource = instance_variable_get("@#{resource}") if resource.is_a? Symbol
     return '' unless resource && resource.errors.any?
     content_tag(:div, class: 'alert alert-error') do
-      link_to('×', '#', "data-dismiss": 'alert', class: 'close') +
+      link_to('×', '#', 'data-dismiss': 'alert', class: 'close') +
       content_tag(
         :p,
         "#{pluralize(resource.errors.count, "error")} " +
@@ -114,7 +113,7 @@ module AdminHelper
     link_to('<i class="icon-plus-sign"></i> '.html_safe + name, href,
       {
         role: 'button',
-        "data-toggle": 'modal',
+        'data-toggle': 'modal',
         class: 'btn new-button'
       }.merge(options)
     )
@@ -128,13 +127,12 @@ module AdminHelper
       :div,
       id: id,
       class: 'modal hide fade', tabindex: '-1', role: 'dialog',
-      "aria-labelledby": "#{id}-label",
-      "aria-hidden": 'true') do
-
+      'aria-labelledby': "#{id}-label",
+      'aria-hidden': 'true') do
       content_tag(:div, class: 'modal-header') do
         button_tag(
-          type: 'button', class: 'close', "data-dismiss": 'modal',
-          "aria-hidden": true
+          type: 'button', class: 'close', 'data-dismiss': 'modal',
+          'aria-hidden': true
         ) { '×' } +
         content_tag(:h3,
           id: "#{id}-label"
@@ -151,8 +149,8 @@ module AdminHelper
       end +
       content_tag(:div, class: 'modal-footer') do
         button_tag(
-          type: 'button', class: 'btn', "data-dismiss": 'modal',
-          "aria-hidden": 'true'
+          type: 'button', class: 'btn', 'data-dismiss': 'modal',
+          'aria-hidden': 'true'
         ) { 'Close' } +
         if options[:save_and_reopen]
           button_tag(
@@ -174,7 +172,7 @@ module AdminHelper
     content_tag(
       :table, id: 'admin-in-place-editor',
       class: 'table table-bordered table-striped ',
-      "data-editor-for": "#{controller_name.singularize}",
+      'data-editor-for': "#{controller_name.singularize}",
       style: 'clear: both'
     ) do
       if block_given?
@@ -201,8 +199,8 @@ module AdminHelper
   def traco_locale_columns(column_name)
     all_locales = I18n.available_locales
     current_locale = I18n.locale
-    result = ["#{column_name}_#{current_locale}"] # current locale 1st.
-    remaining_locales = all_locales - [current_locale]
+    result = [ "#{column_name}_#{current_locale}" ] # current locale 1st.
+    remaining_locales = all_locales - [ current_locale ]
     unless I18n.locale == I18n.default_locale
       result << "#{column_name}_#{I18n.default_locale}" # default locale 2nd.
       remaining_locales -= I18n.default_locale

@@ -20,7 +20,6 @@
 
 require 'csv'
 module Checklist::Csv::Document
-
   def ext
     'csv'
   end
@@ -42,5 +41,4 @@ module Checklist::Csv::Document
   def column_export_name(col)
     Checklist::ColumnDisplayNameMapping.column_display_name_for(col)
   end
-
 end

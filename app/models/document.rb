@@ -61,8 +61,7 @@ class Document < ApplicationRecord
   belongs_to :designation, optional: true
   belongs_to :event, optional: true
   belongs_to :language, optional: true
-  belongs_to :primary_language_document, class_name: 'Document',
-    foreign_key: 'primary_language_document_id', optional: true
+  belongs_to :primary_language_document, class_name: 'Document', optional: true
   has_many :secondary_language_documents, class_name: 'Document',
     foreign_key: 'primary_language_document_id',
     dependent: :nullify
@@ -71,7 +70,7 @@ class Document < ApplicationRecord
   has_and_belongs_to_many :tags, class_name: 'DocumentTag', join_table: 'document_tags_documents'
   validates :title, presence: true
   validates :date, presence: true
-  validates_uniqueness_of :primary_language_document_id, scope: :language_id, allow_nil: true
+  validates :primary_language_document_id, uniqueness: { scope: :language_id, allow_nil: true }
   # TODO: validates inclusion of type in available types
   accepts_nested_attributes_for :citations, allow_destroy: true,
     reject_if: proc { |attributes|
@@ -90,7 +89,7 @@ class Document < ApplicationRecord
   # order docs based on a custom list of ids
   scope :for_ids_with_order, ->(ids) {
     order = sanitize_sql_array(
-      ["position((',' || id::text || ',') in ?)", ids.join(',') + ',']
+      [ "position((',' || id::text || ',') in ?)", ids.join(',') + ',' ]
     )
     where(id: ids).order(Arel.sql(order))
   }
@@ -132,7 +131,7 @@ class Document < ApplicationRecord
 
   # Returns document tag types (class objects) that are relevant to E-Library
   def self.elibrary_document_tag_types
-    [DocumentTag::ProposalOutcome, DocumentTag::ReviewPhase, DocumentTag::ProcessStage]
+    [ DocumentTag::ProposalOutcome, DocumentTag::ReviewPhase, DocumentTag::ProcessStage ]
   end
 
   def set_title

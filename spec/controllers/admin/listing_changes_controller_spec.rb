@@ -5,7 +5,7 @@ describe Admin::ListingChangesController do
 
   before do
     @taxon_concept = create(:taxon_concept)
-    @designation = create(:designation, name: "EU", taxonomy: @taxon_concept.taxonomy)
+    @designation = create(:designation, name: 'EU', taxonomy: @taxon_concept.taxonomy)
     @eu_regulation = create(:eu_regulation, designation_id: @designation.id)
     @annex = create(
       :species_listing,
@@ -25,8 +25,8 @@ describe Admin::ListingChangesController do
     )
   end
 
-  describe "GET index" do
-    it "assigns @listing_changes sorted by effective_at" do
+  describe 'GET index' do
+    it 'assigns @listing_changes sorted by effective_at' do
       listing_change1 = create(
         :listing_change,
         species_listing: @annex,
@@ -43,20 +43,20 @@ describe Admin::ListingChangesController do
         effective_at: 1.week.ago
       )
       get :index, params: { eu_regulation_id: @eu_regulation.id }
-      expect(assigns(:listing_changes)).to eq([listing_change2, listing_change1])
+      expect(assigns(:listing_changes)).to eq([ listing_change2, listing_change1 ])
       expect(assigns(:eu_regulation)).to eq @eu_regulation
     end
-    it "renders the index template" do
+    it 'renders the index template' do
       get :index, params: { eu_regulation_id: @eu_regulation.id }
-      expect(response).to render_template("index")
+      expect(response).to render_template('index')
     end
-    it "renders the admin layout" do
+    it 'renders the admin layout' do
       get :index, params: { eu_regulation_id: @eu_regulation.id }
       expect(response).to render_template('layouts/admin')
     end
   end
 
-  describe "DELETE destroy" do
+  describe 'DELETE destroy' do
     before(:each) do
       @listing_change = create(
         :listing_change,
@@ -67,7 +67,7 @@ describe Admin::ListingChangesController do
         effective_at: 1.week.ago
       )
     end
-    it "redirects after delete" do
+    it 'redirects after delete' do
       delete :destroy, params: { id: @listing_change.id, eu_regulation_id: @eu_regulation.id }
       expect(response).to redirect_to(
         admin_eu_regulation_listing_changes_url(@eu_regulation)

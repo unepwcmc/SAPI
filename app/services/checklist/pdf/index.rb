@@ -4,7 +4,7 @@ class Checklist::Pdf::Index < Checklist::Index
   include Checklist::Pdf::IndexContent
 
   def initialize(options = {})
-    super(options)
+    super
     @input_name = 'index'
   end
 
@@ -31,5 +31,4 @@ class Checklist::Pdf::Index < Checklist::Index
       options
     )
   end
-
 end

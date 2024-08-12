@@ -34,19 +34,19 @@ set :pty, true
 
 set :ssh_options, {
   keepalive: true,
-  keepalive_interval: 60, #seconds
+  keepalive_interval: 60, # seconds
   forward_agent: true
 }
 
-#set :init_system, :systemd
-#set :service_unit_name, "sidekiq_#{fetch(:application)}.service"
+# set :init_system, :systemd
+# set :service_unit_name, "sidekiq_#{fetch(:application)}.service"
 
 # Default value for :linked_files is []
 # set :linked_files, %w{} - set config/{production,staging}.key in staging/production config
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle','public/.well-known')
-set :linked_dirs, fetch(:linked_dirs) + %w{public/uploads public/downloads private public/ID_manual_volumes}
+set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/.well-known')
+set :linked_dirs, fetch(:linked_dirs) + %w[public/uploads public/downloads private public/ID_manual_volumes]
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -57,7 +57,7 @@ set :keep_releases, 5
 require 'yaml'
 require 'json'
 secrets = YAML.load(
-  %x[bundle exec rails credentials:show]
+  %x(bundle exec rails credentials:show)
 )
 
 set :api_token, secrets['api_token'] # used in smoke testing
@@ -69,13 +69,13 @@ set :slack_subdomain, 'wcmc' # if your subdomain is example.slack.com
 # optional
 set :slack_application, 'SAPI' # override Capistrano `application`
 deployment_animals = [
-  ['Loxodonta deployana', ':elephant:'],
-  ['Canis deployus', ':wolf:'],
-  ['Panthera capistranis', ':tiger:'],
-  ['Bison deployon', ':ox:'],
-  ['Ursus capistranus', ':bear:'],
-  ['Crotalus rattledeploy', ':snake:'],
-  ['Caiman assetocompilatus', ':crocodile:']
+  [ 'Loxodonta deployana', ':elephant:' ],
+  [ 'Canis deployus', ':wolf:' ],
+  [ 'Panthera capistranis', ':tiger:' ],
+  [ 'Bison deployon', ':ox:' ],
+  [ 'Ursus capistranus', ':bear:' ],
+  [ 'Crotalus rattledeploy', ':snake:' ],
+  [ 'Caiman assetocompilatus', ':crocodile:' ]
 ]
 
 shuffle_deployer = deployment_animals.shuffle.first
@@ -83,7 +83,7 @@ shuffle_deployer = deployment_animals.shuffle.first
 set :slack_username, shuffle_deployer[0] # displayed as name of message sender
 set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the message
 
-#namespace :sidekiq do
+# namespace :sidekiq do
 # task :quiet do
 #   on roles(:app) do
 #     puts capture("pgrep -f 'sidekiq.*sapi' | xargs kill -TSTP")
@@ -94,11 +94,11 @@ set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the messa
 #     execute :sudo, :systemctl, :restart, :'sidekiq_sapi'
 #   end
 # end
-#end
+# end
 
-#after 'deploy:starting', 'sidekiq:quiet'
-#after 'deploy:reverted', 'sidekiq:restart'
-#after 'deploy:published', 'sidekiq:restart'
+# after 'deploy:starting', 'sidekiq:quiet'
+# after 'deploy:reverted', 'sidekiq:restart'
+# after 'deploy:published', 'sidekiq:restart'
 
 after 'deploy', 'smoke_test:test_endpoints'
 

@@ -1,20 +1,19 @@
 namespace :import do
-
   desc 'Import CITES suspensions from csv file (usage: rake import:cites_suspensions[path/to/file,path/to/another])'
-  task :cites_suspensions, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :cites_suspensions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'cites_suspensions_import'
 
     if CitesSuspension.any?
-      puts "Removing CitesSuspensions related records"
+      puts 'Removing CitesSuspensions related records'
       puts "#{CitesSuspensionConfirmation.delete_all} suspension confirmations deleted"
       puts "#{TradeRestrictionSource.
-        where(:trade_restriction_id => CitesSuspension.select(:id)).
+        where(trade_restriction_id: CitesSuspension.select(:id)).
         delete_all} trade restriction Sources deleted"
       puts "#{TradeRestrictionTerm.
-        where(:trade_restriction_id => CitesSuspension.select(:id)).
+        where(trade_restriction_id: CitesSuspension.select(:id)).
         delete_all} trade restriction Term deleted"
       puts "#{TradeRestrictionPurpose.
-        where(:trade_restriction_id => CitesSuspension.select(:id)).
+        where(trade_restriction_id: CitesSuspension.select(:id)).
         delete_all} trade restriction Purposes deleted"
       puts "#{CitesSuspension.delete_all} suspensions deleted"
     end
@@ -26,8 +25,8 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      taxonomy_id = Taxonomy.where(:name => Taxonomy::CITES_EU).first.id
-      cites_id = Designation.where(:name => Designation::CITES).first.id
+      taxonomy_id = Taxonomy.where(name: Taxonomy::CITES_EU).first.id
+      cites_id = Designation.where(name: Designation::CITES).first.id
 
       sql = <<-SQL
         WITH suspensions_with_ids AS (
@@ -130,5 +129,4 @@ namespace :import do
 
     puts "There are now #{CitesSuspension.count} CITES suspensions in the database"
   end
-
 end

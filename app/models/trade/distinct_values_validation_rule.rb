@@ -16,7 +16,6 @@
 #
 
 class Trade::DistinctValuesValidationRule < Trade::InclusionValidationRule
-
   # TODO: should have a validation for at least 2 column names
 
   def validation_errors_for_shipment(shipment)

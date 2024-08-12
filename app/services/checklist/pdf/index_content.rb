@@ -2,7 +2,6 @@
 # or better yet, define methods such as "ranks_below_family"
 # in the rank class to clean up the code here
 module Checklist::Pdf::IndexContent
-
   def content(tex)
     fetcher = Checklist::Pdf::IndexFetcher.new(@animalia_query)
     kingdom(tex, fetcher, 'FAUNA')
@@ -47,9 +46,9 @@ module Checklist::Pdf::IndexContent
     res = listed_taxon_name(tc)
     res += " #{LatexToPdf.escape_latex(tc.author_year)}" if @authors
     res += current_listing_with_annotations(tc)
-    if ['SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY', 'SUBFAMILY'].include? tc.rank_name
+    if [ 'SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY', 'SUBFAMILY' ].include? tc.rank_name
       res += " #{"#{tc.family_name}".upcase}" if tc.rank_name != 'FAMILY'
-      res += " (#{tc.class_name})" unless tc.class_name.blank?
+      res += " (#{tc.class_name})" if tc.class_name.present?
     end
     res += common_names_with_lng_initials(tc)
     res
@@ -63,14 +62,13 @@ module Checklist::Pdf::IndexContent
 
   def current_listing_with_annotations(taxon_concept)
     res = " \\textbf{#{taxon_concept.current_listing}} "
-    unless taxon_concept.hash_ann_symbol.blank?
+    if taxon_concept.hash_ann_symbol.present?
       symbol = LatexToPdf.escape_latex(taxon_concept.hash_ann_symbol)
       res = " #{symbol}#{res}"
     end
-    unless taxon_concept.ann_symbol.blank?
+    if taxon_concept.ann_symbol.present?
       res += "\\superscript{#{taxon_concept.ann_symbol}}"
     end
     res
   end
-
 end

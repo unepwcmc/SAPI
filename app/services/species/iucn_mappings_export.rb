@@ -1,5 +1,4 @@
 class Species::IucnMappingsExport < Species::CsvCopyExport
-
   def query
     rel = IucnMapping.from(table_name).
       joins(:taxon_concept).

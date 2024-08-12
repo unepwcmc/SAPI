@@ -23,11 +23,10 @@ class Trade::ShipmentsExportFactory
   end
 
   def self.report_types
-    public_report_types + [:raw]
+    public_report_types + [ :raw ]
   end
 
   def self.public_report_types
-    [:comptab, :gross_exports, :gross_imports, :net_exports, :net_imports]
+    [ :comptab, :gross_exports, :gross_imports, :net_exports, :net_imports ]
   end
-
 end

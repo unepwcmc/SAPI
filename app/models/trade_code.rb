@@ -26,10 +26,9 @@ class TradeCode < ApplicationRecord
             OR UPPER(name_en) LIKE UPPER(:query)
             OR UPPER(name_fr) LIKE UPPER(:query)
             OR UPPER(name_es) LIKE UPPER(:query)",
-            query: "%#{query}%")
+        query: "%#{query}%")
     else
       all
     end
   end
-
 end

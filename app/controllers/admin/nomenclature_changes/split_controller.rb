@@ -1,5 +1,4 @@
 class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::BuildController
-
   steps *NomenclatureChange::Split::STEPS
 
   def show

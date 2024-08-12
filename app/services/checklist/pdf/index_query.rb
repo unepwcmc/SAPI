@@ -8,15 +8,15 @@ class Checklist::Pdf::IndexQuery
     @authors = options[:authors]
     # we want common names and synonyms returned as separate records
     # and sorted alphabetically
-    shared_columns = [:full_name, :rank_name, :family_name, :class_name,
-    :cites_accepted, :cites_listing, :name_status,
-    :ann_symbol, :hash_ann_symbol]
+    shared_columns = [ :full_name, :rank_name, :family_name, :class_name,
+      :cites_accepted, :cites_listing, :name_status,
+      :ann_symbol, :hash_ann_symbol ]
     shared_columns << :english_names_ary if @english_common_names
     shared_columns << :spanish_names_ary if @spanish_common_names
     shared_columns << :french_names_ary if @french_common_names
     shared_columns << :author_year if @authors
 
-    distinct_columns = [:name_type, :sort_name, :lng]
+    distinct_columns = [ :name_type, :sort_name, :lng ]
     distinct_columns_values = {
       name_type: {
         basic: "'basic'",
@@ -30,7 +30,7 @@ class Checklist::Pdf::IndexQuery
         english: "REGEXP_REPLACE(UNNEST(english_names_ary), '(.+) (.+)', '\\2, \\1')",
         spanish: 'UNNEST(spanish_names_ary)',
         french: 'UNNEST(french_names_ary)',
-        synonym:           if @authors
+        synonym: if @authors
             <<-SQL
             UNNEST(ARRAY(SELECT synonym ||
             CASE
@@ -46,9 +46,9 @@ class Checklist::Pdf::IndexQuery
             )
             ))
             SQL
-          else
+                 else
             'UNNEST(synonyms_ary)'
-          end
+                 end
       },
       lng: {
         english: "'E'",
@@ -57,7 +57,7 @@ class Checklist::Pdf::IndexQuery
       }
     }
 
-    [:basic, :english, :spanish, :french, :synonym].each do |name_type|
+    [ :basic, :english, :spanish, :french, :synonym ].each do |name_type|
       select_clause = ' SELECT ' + (
         distinct_columns.map do |dc|
           (distinct_columns_values[dc][name_type] || 'null') + " AS #{dc}"
@@ -88,5 +88,4 @@ class Checklist::Pdf::IndexQuery
     LIMIT #{limit} OFFSET #{offset}
     SQL
   end
-
 end

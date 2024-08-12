@@ -1,5 +1,4 @@
 class Admin::NomenclatureChanges::StatusToSynonymController < Admin::NomenclatureChanges::BuildController
-
   steps *NomenclatureChange::StatusToSynonym::STEPS
 
   def show

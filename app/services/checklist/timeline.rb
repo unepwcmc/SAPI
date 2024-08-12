@@ -47,7 +47,7 @@ class Checklist::Timeline
   end
 
   def change_consecutive_additions_to_amendments
-    (@timelines + [self]).flatten.each do |timeline|
+    (@timelines + [ self ]).flatten.each do |timeline|
       prev_event = nil
       timeline.timeline_events.each_with_index do |event, idx|
         if prev_event && (
@@ -64,14 +64,14 @@ class Checklist::Timeline
   end
 
   def add_intervals
-    (@timelines + [self]).flatten.each do |timeline|
+    (@timelines + [ self ]).flatten.each do |timeline|
       timeline.timeline_events.each_with_index do |event, idx|
         interval =
           if idx < (timeline.timeline_events.size - 1)
             next_event = timeline.timeline_events[idx + 1]
             if !(
-              event.is_deletion? && next_event.is_addition? ||
-              event.is_reservation_withdrawal? && next_event.is_reservation?
+              (event.is_deletion? && next_event.is_addition?) ||
+              (event.is_reservation_withdrawal? && next_event.is_reservation?)
               )
               Checklist::TimelineInterval.new(
                 taxon_concept_id: @taxon_concept_id,
@@ -84,8 +84,8 @@ class Checklist::Timeline
             # the meaning of @current: there is a current listing in this appdx
             # this is to ensure an appdx III deletion does not terminate
             # the timeline if appdx III is still current
-            if (event.is_addition? || event.is_amendment? || event.is_deletion?) &&
-              @current || event.is_reservation? && event.is_current
+            if ((event.is_addition? || event.is_amendment? || event.is_deletion?) &&
+              @current) || (event.is_reservation? && event.is_current)
               @continues_in_present = true
               Checklist::TimelineInterval.new(
                 taxon_concept_id: @taxon_concept_id,
@@ -120,5 +120,4 @@ class Checklist::Timeline
   def party
     @party_id
   end
-
 end

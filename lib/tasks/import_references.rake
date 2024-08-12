@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import references from csv file (usage: rake import:references[path/to/file,path/to/another])'
-  task :references, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :references, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'references_import'
     puts "There are #{Reference.count} references in the database."
     files = files_from_args(t, args)
@@ -56,5 +55,4 @@ namespace :import do
     end
     puts "There are now #{Reference.count} references in the database"
   end
-
 end

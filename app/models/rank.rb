@@ -41,18 +41,18 @@ class Rank < ApplicationRecord
   end
 
   def can_be_deleted?
-    super() && !has_protected_name?
+    super && !has_protected_name?
   end
 
   # returns ranks in given range
   def self.in_range(lower_rank, higher_rank)
-    lower_rank_idx = lower_rank && dict.index(lower_rank) || dict.size - 1
-    higher_rank_idx = higher_rank && dict.index(higher_rank) || 0
+    lower_rank_idx = (lower_rank && dict.index(lower_rank)) || (dict.size - 1)
+    higher_rank_idx = (higher_rank && dict.index(higher_rank)) || 0
     dict[higher_rank_idx..lower_rank_idx]
   end
 
   def parent_rank_name
-    if [Rank::SUBSPECIES, Rank::VARIETY].include?(name)
+    if [ Rank::SUBSPECIES, Rank::VARIETY ].include?(name)
       Rank::SPECIES
     elsif name != Rank::KINGDOM
       rank_index = self.class.dict.index(name)
@@ -73,5 +73,4 @@ class Rank < ApplicationRecord
   def has_protected_name?
     self.class.dict.include? self.name
   end
-
 end

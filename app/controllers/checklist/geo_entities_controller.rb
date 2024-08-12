@@ -1,5 +1,4 @@
 class Checklist::GeoEntitiesController < ApplicationController
-
   def index
     @geo_entities = GeoEntitySearch.new(
       params.slice(:geo_entity_types_set, :locale)

@@ -1,5 +1,4 @@
 module Checklist::ColumnDisplayNameMapping
-
   ALIASES = {
     id: 'TaxonId',
     change_type_name: 'ChangeType',
@@ -41,5 +40,4 @@ module Checklist::ColumnDisplayNameMapping
   def self.column_display_name_for(column_name)
     ALIASES[column_name] || column_name.to_s.camelize
   end
-
 end

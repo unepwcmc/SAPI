@@ -1,5 +1,5 @@
 shared_context 'output_document_reassignments_processor_examples' do
-  let(:citation){
+  let(:citation) do
     citation = create(
       :document_citation
     )
@@ -9,7 +9,7 @@ shared_context 'output_document_reassignments_processor_examples' do
       taxon_concept: old_output_subspecies
     )
     citation
-  }
+  end
   before(:each) do
     create(:nomenclature_change_output_reassignment,
       output: output,

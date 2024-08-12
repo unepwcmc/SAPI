@@ -36,7 +36,7 @@ class Elibrary::ManualDocumentFilesImporter
         when 'Document::VirtualCollege'
           unless doc.elib_legacy_file_name =~ /\.pdf/
             puts "THIS IS A LINK TO EXTERNAL RESOURCES, NOT A PDF #{source_location}" + info_txt
-          # else
+            # else
             # remote_doc = Document.find(doc.id)
             # remote_doc.remote_filename_url = doc.elib_legacy_file_name
             # remote_doc.save!
@@ -51,8 +51,8 @@ class Elibrary::ManualDocumentFilesImporter
   end
 
   def identification_docs
-    Document.where("type IN ('Document::IdManual', 'Document::VirtualCollege')")
-            .order(:type, :date)
-            .select([:id, :elib_legacy_file_name, :type])
+    Document.where("type IN ('Document::IdManual', 'Document::VirtualCollege')").
+      order(:type, :date).
+      select([ :id, :elib_legacy_file_name, :type ])
   end
 end

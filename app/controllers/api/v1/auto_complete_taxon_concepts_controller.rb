@@ -1,5 +1,4 @@
 class Api::V1::AutoCompleteTaxonConceptsController < ApplicationController
-
   def index
     params['ranks'] ||= []
     matcher = Species::TaxonConceptPrefixMatcher.new params
@@ -16,5 +15,4 @@ class Api::V1::AutoCompleteTaxonConceptsController < ApplicationController
         end
       }
   end
-
 end

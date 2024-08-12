@@ -101,8 +101,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
   end
 
   def new_output_rank
-    secondary_output && secondary_output.taxon_concept.try(:rank) ||
-    primary_output && primary_output.taxon_concept.try(:rank)
+    (secondary_output && secondary_output.taxon_concept.try(:rank)) ||
+    (primary_output && primary_output.taxon_concept.try(:rank))
   end
-
 end

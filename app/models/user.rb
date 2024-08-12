@@ -45,8 +45,8 @@ class User < ApplicationRecord
   ELIBRARY_USER = 'elibrary'
   API_USER = 'api'
   SECRETARIAT = 'secretariat'
-  ROLES = [MANAGER, CONTRIBUTOR, ELIBRARY_USER, API_USER, SECRETARIAT]
-  NON_ADMIN_ROLES = [ELIBRARY_USER, API_USER, SECRETARIAT]
+  ROLES = [ MANAGER, CONTRIBUTOR, ELIBRARY_USER, API_USER, SECRETARIAT ]
+  NON_ADMIN_ROLES = [ ELIBRARY_USER, API_USER, SECRETARIAT ]
   ROLES_FOR_DISPLAY = {
     MANAGER => 'Manager',
     CONTRIBUTOR => 'Contributor',
@@ -116,7 +116,7 @@ class User < ApplicationRecord
       Trade::AnnualReportUpload, Trade::Shipment
     ]
     for i in 0..tracked_objects.length - 1
-      if tracked_objects[i].where(['created_by_id = :id OR updated_by_id = :id', id: self.id]).limit(1).count > 0
+      if tracked_objects[i].where([ 'created_by_id = :id OR updated_by_id = :id', id: self.id ]).limit(1).count > 0
         return false
       end
     end
@@ -130,7 +130,7 @@ class User < ApplicationRecord
   end
 
   # https://github.com/heartcombo/devise/tree/v4.4.3#active-job-integration
-  def send_devise_notification(notification, *args)
-    devise_mailer.send(notification, self, *args).deliver_later
+  def send_devise_notification(notification, *)
+    devise_mailer.send(notification, self, *).deliver_later
   end
 end

@@ -1,5 +1,4 @@
 module Admin::NomenclatureChangesHelper
-
   def nomenclature_change_form(submit_label = 'Next', &block)
     nested_form_for @nomenclature_change, url: wizard_path, method: :put,
       html: { class: 'form-horizontal' } do |f|
@@ -27,7 +26,8 @@ module Admin::NomenclatureChangesHelper
     content_tag(:div, class: 'progress') do
       content_tag(:div, class: 'bar',
         style: "width:#{(wizard_steps.index(step).to_f / wizard_steps.size) * 100}%"
-      ) do; end
+      ) do
+      end
     end
   end
 
@@ -133,7 +133,7 @@ module Admin::NomenclatureChangesHelper
       'Select a taxon below to populate all fields with that taxon.')
     @nomenclature_change.outputs.map do |output|
       html += content_tag(:div, class: 'species-checkbox') do
-        tag('input', { type: 'checkbox', class: 'select-partial-checkbox', checked: checked }) +
+        tag.input({ type: 'checkbox', class: 'select-partial-checkbox', checked: checked }) +
         content_tag(:span, output.display_full_name, class: 'species-name')
       end
     end
@@ -145,7 +145,7 @@ module Admin::NomenclatureChangesHelper
       if ff.object.taxon_concept_id.nil?
         'new_taxon'
       elsif ff.object.taxon_concept &&
-        !ff.object.new_scientific_name.blank? &&
+        ff.object.new_scientific_name.present? &&
         ff.object.taxon_concept.full_name != ff.object.new_scientific_name
         # this scenario occurrs when an existing taxon will change name
         'existing_subspecies'
@@ -153,7 +153,7 @@ module Admin::NomenclatureChangesHelper
         'existing_taxon'
       end
     content_tag(:div, class: 'outputs_selection') do
-      ['New taxon', 'Existing subspecies', 'Existing taxon'].each do |opt|
+      [ 'New taxon', 'Existing subspecies', 'Existing taxon' ].each do |opt|
         opt_val = opt.downcase.gsub(/\s+/, '_')
         concat content_tag(:span,
           ff.radio_button(
@@ -307,7 +307,7 @@ module Admin::NomenclatureChangesHelper
     if is_output
       content_tag(:p, "Name status: #{input_or_output.new_name_status || input_or_output.name_status}")
     end +
-    content_tag(:p, "Author: #{tc.author_year || is_output && input_or_output.new_author_year}") +
+    content_tag(:p, "Author: #{tc.author_year || (is_output && input_or_output.new_author_year)}") +
     content_tag(:p, "Internal note: #{input_or_output.internal_note}")
   end
 
@@ -315,7 +315,7 @@ module Admin::NomenclatureChangesHelper
     if @nc.is_a?(NomenclatureChange::Split)
       @nc.outputs
     else
-      [@nc.primary_output, @nc.secondary_output].compact
+      [ @nc.primary_output, @nc.secondary_output ].compact
     end
   end
 
@@ -328,7 +328,7 @@ module Admin::NomenclatureChangesHelper
     other_taxon_concept = taxon_relationship.other_taxon_concept
     content_tag(:label, class: 'control-label') do
       content_tag(:span, taxon_relationship.taxon_relationship_type.name) +
-      tag(:br) +
+      tag.br() +
       link_to(
         other_taxon_concept.full_name,
         admin_taxon_concept_names_path(other_taxon_concept)
@@ -336,13 +336,13 @@ module Admin::NomenclatureChangesHelper
       content_tag(:span) do
         ' (' + (other_taxon_concept.name_status || '--') + ')'
       end +
-      tag(:br) +
+      tag.br() +
       content_tag(:span, other_taxon_concept.author_year).html_safe
     end
   end
 
   def select_taxonomy
-    select('taxonomy', 'taxonomy_id', Taxonomy.all.collect { |t| [t.name, t.id] })
+    select('taxonomy', 'taxonomy_id', Taxonomy.all.collect { |t| [ t.name, t.id ] })
   end
 
   def select_rank
@@ -350,11 +350,11 @@ module Admin::NomenclatureChangesHelper
   end
 
   def ranks_collection
-    Rank.all.collect { |r| [r.name, r.id] }
+    Rank.all.collect { |r| [ r.name, r.id ] }
   end
 
   def taxon_concepts_collection
-    TaxonConcept.where(taxonomy_id: 1).collect { |t| [t.full_name, t.id] }
+    TaxonConcept.where(taxonomy_id: 1).collect { |t| [ t.full_name, t.id ] }
   end
 
   def new_name_scientific_name_hint

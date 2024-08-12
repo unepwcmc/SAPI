@@ -29,5 +29,4 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
     return true unless @options[:trimmed]
     @options[:trimmed] == 'false'
   end
-
 end

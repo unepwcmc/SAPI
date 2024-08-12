@@ -46,15 +46,15 @@ class Event < ApplicationRecord
   has_many :cites_processes
 
   validates :name, presence: true, uniqueness: true
-  validates :url, format: URI::regexp(%w(http https)), allow_blank: true
+  validates :url, format: URI.regexp(%w[http https]), allow_blank: true
 
   def self.elibrary_current_event_types
-    [CitesCop, CitesAc, CitesPc, EcSrg]
+    [ CitesCop, CitesAc, CitesPc, EcSrg ]
   end
 
   # Returns event types (class objects) that are relevant to E-Library
   def self.elibrary_event_types
-    elibrary_current_event_types + [CitesTc, CitesExtraordinaryMeeting]
+    elibrary_current_event_types + [ CitesTc, CitesExtraordinaryMeeting ]
   end
 
   def self.event_types_with_names
@@ -90,7 +90,7 @@ class Event < ApplicationRecord
   # that can be associated with this event type
   # Should be overriden in subclasses
   def self.elibrary_document_types
-    [Document]
+    [ Document ]
   end
 
   def effective_at_formatted
@@ -109,7 +109,7 @@ class Event < ApplicationRecord
     if query.present?
       where("UPPER(events.name) LIKE UPPER(:query)
             OR UPPER(events.description) LIKE UPPER(:query)",
-            query: "%#{query}%")
+        query: "%#{query}%")
     else
       all
     end

@@ -46,13 +46,13 @@ class Designation < ApplicationRecord
   end
 
   def can_be_deleted?
-    super() && !has_protected_name?
+    super && !has_protected_name?
   end
 
   def self.search(query)
     if query.present?
       where('UPPER(name) LIKE UPPER(:query)',
-            query: "%#{query}%")
+        query: "%#{query}%")
     else
       all
     end
@@ -63,7 +63,7 @@ class Designation < ApplicationRecord
   def taxonomy_cannot_be_changed_if_dependent_objects_present
     if taxonomy_id_changed? && !dependent_objects.empty?
       errors.add(:taxonomy, 'cannot be changed once dependent objects are attached')
-      return false
+      false
     end
   end
 
@@ -77,5 +77,4 @@ class Designation < ApplicationRecord
   def has_protected_name?
     self.class.dict.include? self.name
   end
-
 end

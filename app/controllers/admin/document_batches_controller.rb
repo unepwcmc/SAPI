@@ -1,7 +1,6 @@
 # /admin/event/:event_id/document_batch
 # /admin/document_batch
 class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
-
   def new
     load_associations
     @document_batch = DocumentBatch.new(
@@ -31,13 +30,13 @@ class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
 
   def load_associations
     @event = Event.find(params[:event_id]) if params[:event_id]
-    @languages = Language.select([:id, :name_en, :name_es, :name_fr]).order(:name_en)
+    @languages = Language.select([ :id, :name_en, :name_es, :name_fr ]).order(:name_en)
     @english = Language.find_by_iso_code1('EN')
     @document_types =
       if @event
-        @event.class.elibrary_document_types.map { |l| [l.display_name, l.name] }
+        @event.class.elibrary_document_types.map { |l| [ l.display_name, l.name ] }
       else
-        Document.elibrary_document_types.map { |l| [l.display_name, l.name] }
+        Document.elibrary_document_types.map { |l| [ l.display_name, l.name ] }
       end
   end
 
@@ -49,5 +48,4 @@ class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
       ], files: []
     )
   end
-
 end

@@ -1,14 +1,14 @@
 class Admin::DesignationsController < Admin::StandardAuthorizationController
-  respond_to :json, only: [:index, :update]
+  respond_to :json, only: [ :index, :update ]
 
   def index
     load_associations
     @custom_title = 'MEAs'
     index! do |format|
-      format.json {
+      format.json do
         render json: end_of_association_chain.order(:name).
-          select([:id, :name]).map { |d| { value: d.id, text: d.name } }.to_json
-      }
+          select([ :id, :name ]).map { |d| { value: d.id, text: d.name } }.to_json
+      end
     end
   end
 

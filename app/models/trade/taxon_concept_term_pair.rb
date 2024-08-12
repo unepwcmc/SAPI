@@ -17,7 +17,7 @@
 class Trade::TaxonConceptTermPair < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :taxon_concept_id, :term_id
-  validates_uniqueness_of :taxon_concept_id, scope: :term_id
+  validates :taxon_concept_id, uniqueness: { scope: :term_id }
 
   belongs_to :taxon_concept
   belongs_to :term, class_name: 'TradeCode'
@@ -26,8 +26,8 @@ class Trade::TaxonConceptTermPair < ApplicationRecord
     if query.present?
       where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
             OR UPPER(trade_codes.code) LIKE UPPER(:query)",
-            query: "%#{query}%").
-      joins(<<-SQL
+        query: "%#{query}%").
+        joins(<<-SQL
           LEFT JOIN taxon_concepts
             ON taxon_concepts.id = trade_taxon_concept_term_pairs.taxon_concept_id
           LEFT JOIN trade_codes

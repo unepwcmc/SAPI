@@ -26,7 +26,7 @@ class Checklist::TimelinesForTaxonConcept
 
   def generate_timelines
     @raw_timelines = {}
-    ['I', 'II', 'III'].each do |species_listing_name|
+    [ 'I', 'II', 'III' ].each do |species_listing_name|
       @raw_timelines[species_listing_name] = Checklist::Timeline.new(
         taxon_concept_id: @taxon_concept_id,
         appendix: species_listing_name,
@@ -50,11 +50,11 @@ class Checklist::TimelinesForTaxonConcept
       t.add_intervals
       @has_reservations = true if t.has_nested_timelines
     end
-    @timelines = [@raw_timelines['I'], @raw_timelines['II'], @raw_timelines['III']]
+    @timelines = [ @raw_timelines['I'], @raw_timelines['II'], @raw_timelines['III'] ]
   end
 
   def generate_timeline_years
-    @timeline_years = @time_start.year.step((@time_end.year - @time_end.year % 5 + 5), 5).
+    @timeline_years = @time_start.year.step((@time_end.year - (@time_end.year % 5) + 5), 5).
       to_a.map do |year|
         Checklist::TimelineYear.new({
           taxon_concept_id: @taxon_concept_id,
@@ -63,5 +63,4 @@ class Checklist::TimelinesForTaxonConcept
         })
       end
   end
-
 end

@@ -86,7 +86,7 @@ class TaxonConcept < ApplicationRecord
 
   belongs_to :dependents_updater, foreign_key: :dependents_updated_by_id, class_name: 'User', optional: true
   belongs_to :parent, class_name: 'TaxonConcept', optional: true
-  has_many :children, -> { where(name_status: ['A', 'N']) }, class_name: 'TaxonConcept', foreign_key: :parent_id # conditions: { name_status: ['A', 'N'] }
+  has_many :children, -> { where(name_status: [ 'A', 'N' ]) }, class_name: 'TaxonConcept', foreign_key: :parent_id # conditions: { name_status: ['A', 'N'] }
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, through: :taxonomy
@@ -132,7 +132,7 @@ class TaxonConcept < ApplicationRecord
   has_many :distributions, dependent: :destroy
   has_many :geo_entities, through: :distributions
   has_many :listing_changes
-  has_many :current_listing_changes,  -> { where 'is_current = true' }, class_name: 'ListingChange'
+  has_many :current_listing_changes, -> { where 'is_current = true' }, class_name: 'ListingChange'
   has_many :species_listings, through: :listing_changes
   has_many :taxon_commons, -> { includes :common_name }, dependent: :destroy
   has_many :common_names, through: :taxon_commons
@@ -174,7 +174,7 @@ class TaxonConcept < ApplicationRecord
 
   validates :name_status, presence: true
   validates :parent_id, presence: true,
-    if: lambda { |tc| ['A', 'N'].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM' }
+    if: lambda { |tc| [ 'A', 'N' ].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM' }
   validate :parent_in_same_taxonomy, if: lambda { |tc| tc.parent }
   validate :parent_at_immediately_higher_rank,
     if: lambda { |tc| tc.parent && tc.name_status == 'A' }
@@ -183,7 +183,7 @@ class TaxonConcept < ApplicationRecord
     if: lambda { |tc| tc.name_status == 'H' }
   validates :taxon_name_id, presence: true,
     unless: lambda { |tc| tc.taxon_name.try(:valid?) }
-  validates :full_name, uniqueness: { scope: [:taxonomy_id, :author_year] }
+  validates :full_name, uniqueness: { scope: [ :taxonomy_id, :author_year ] }
   validate :full_name_cannot_be_changed, on: :update
   validates :taxonomic_position,
     presence: true,
@@ -223,7 +223,7 @@ class TaxonConcept < ApplicationRecord
     end
   end
   after_save do
-    if ['A', 'N'].include? name_status
+    if [ 'A', 'N' ].include? name_status
       tcd = TaxonConceptData.new(self)
       data = tcd.to_h
       update_column(:data, data)
@@ -245,8 +245,8 @@ class TaxonConcept < ApplicationRecord
     Species::TaxonConceptPrefixMatcher.increment_cache_iterator
     Checklist::Checklist.increment_cache_iterator
   end
-  after_touch :ensure_species_touched
   after_commit :cache_cleanup
+  after_touch :ensure_species_touched
 
   translates :nomenclature_note
 
@@ -269,7 +269,7 @@ class TaxonConcept < ApplicationRecord
         AND ranks.taxonomic_position < ?
     SQL
     joins(
-      sanitize_sql_array([joins_sql, rank.taxonomic_position])
+      sanitize_sql_array([ joins_sql, rank.taxonomic_position ])
     )
   }
 
@@ -279,7 +279,7 @@ class TaxonConcept < ApplicationRecord
         AND ranks.taxonomic_position <= ?
     SQL
     joins(
-      sanitize_sql_array([joins_sql, rank.taxonomic_position])
+      sanitize_sql_array([ joins_sql, rank.taxonomic_position ])
     )
   }
 
@@ -414,31 +414,19 @@ class TaxonConcept < ApplicationRecord
   end
 
   def accepted_names_ids
-    if @accepted_names_ids.present?
-      @accepted_names_ids
-    else
-      accepted_names.pluck(:id)
-    end
+    (@accepted_names_ids.presence || accepted_names.pluck(:id))
   end
 
   def accepted_names_for_trade_name_ids
-    if @accepted_names_for_trade_name_ids.present?
-      @accepted_names_for_trade_name_ids
-    else
-      accepted_names_for_trade_name.pluck(:id)
-    end
+    (@accepted_names_for_trade_name_ids.presence || accepted_names_for_trade_name.pluck(:id))
   end
 
   def hybrid_parents_ids
-    if @hybrid_parents_ids.present?
-      @hybrid_parents_ids
-    else
-      hybrid_parents.pluck(:id)
-    end
+    (@hybrid_parents_ids.presence || hybrid_parents.pluck(:id))
   end
 
   def rebuild_relationships(taxa_ids)
-    if ['S', 'T', 'H'].include? name_status
+    if [ 'S', 'T', 'H' ].include? name_status
       new_taxa, removed_taxa = init_accepted_taxa(taxa_ids)
       rel_type =
         case name_status
@@ -457,12 +445,12 @@ class TaxonConcept < ApplicationRecord
 
   def before_validate_scientific_name
     sanitized_scientific_name =
-      if ['A', 'N'].include?(name_status)
+      if [ 'A', 'N' ].include?(name_status)
         TaxonName.sanitize_scientific_name(@scientific_name || scientific_name)
       else
         @scientific_name || scientific_name
       end
-    tn = TaxonName.where(['UPPER(scientific_name) = UPPER(?)', sanitized_scientific_name]).first
+    tn = TaxonName.where([ 'UPPER(scientific_name) = UPPER(?)', sanitized_scientific_name ]).first
     if tn
       self.taxon_name = tn
       self.taxon_name_id = tn.id
@@ -473,7 +461,7 @@ class TaxonConcept < ApplicationRecord
 
   def before_validate_full_name
     self.full_name =
-      if rank && parent && ['A', 'N'].include?(name_status)
+      if rank && parent && [ 'A', 'N' ].include?(name_status)
         rank_name = rank.name
         parent_full_name = parent.full_name
         name = @scientific_name || scientific_name
@@ -485,7 +473,7 @@ class TaxonConcept < ApplicationRecord
         end
         if name.blank?
           nil
-        elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
+        elsif [ Rank::SPECIES, Rank::SUBSPECIES ].include?(rank_name)
           "#{parent_full_name} #{name.downcase}"
         elsif rank_name == Rank::VARIETY
           "#{parent_full_name} var. #{name.downcase}"
@@ -516,7 +504,7 @@ class TaxonConcept < ApplicationRecord
   end
 
   def init_accepted_taxa(new_ids)
-    return [[], []] unless ['S', 'T', 'H'].include?(name_status)
+    return [ [], [] ] unless [ 'S', 'T', 'H' ].include?(name_status)
     current_ids =
       case name_status
       when 'S' then accepted_names.pluck(:id)
@@ -562,30 +550,30 @@ class TaxonConcept < ApplicationRecord
   def taxonomy_can_be_changed
     if !can_be_deleted?
       errors.add(:taxonomy_id, 'dependent objects present, unable to change taxonomy')
-      return false
+      false
     end
   end
 
   def parent_is_an_accepted_name
-    unless ['A', 'N'].include?(parent.name_status)
+    unless [ 'A', 'N' ].include?(parent.name_status)
       errors.add(:parent_id, 'must be an accepted name')
-      return false
+      false
     end
   end
 
   def parent_in_same_taxonomy
     if taxonomy_id != parent.taxonomy_id
       errors.add(:parent_id, 'must be in same taxonomy')
-      return false
+      false
     end
   end
 
   def parent_at_immediately_higher_rank
-    return true if (parent.rank.name == 'KINGDOM' && parent.full_name == 'Plantae' && rank.name == 'ORDER')
+    return true if parent.rank.name == 'KINGDOM' && parent.full_name == 'Plantae' && rank.name == 'ORDER'
     unless parent.rank.taxonomic_position >= rank.parent_rank_lower_bound &&
       parent.rank.taxonomic_position < rank.taxonomic_position
       errors.add(:parent_id, 'must be at immediately higher rank')
-      return false
+      false
     end
   end
 
@@ -610,7 +598,7 @@ class TaxonConcept < ApplicationRecord
           last_root || '0'
         end
       prev_taxonomic_position_parts = prev_taxonomic_position.split('.')
-      prev_taxonomic_position_parts << (prev_taxonomic_position_parts.pop || 0).to_i + 1
+      prev_taxonomic_position_parts << ((prev_taxonomic_position_parts.pop || 0).to_i + 1)
       self.taxonomic_position = prev_taxonomic_position_parts.join('.')
     end
     true
@@ -629,11 +617,10 @@ class TaxonConcept < ApplicationRecord
   end
 
   def ensure_species_touched
-    if rank && parent && [Rank::SUBSPECIES, Rank::VARIETY].include?(rank.name)
+    if rank && parent && [ Rank::SUBSPECIES, Rank::VARIETY ].include?(rank.name)
       # touch parent if we're a variety or subspecies
       Rails.logger.info 'Touch species'
       parent.touch
     end
   end
-
 end

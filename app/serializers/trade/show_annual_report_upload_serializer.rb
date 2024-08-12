@@ -1,8 +1,8 @@
 class Trade::ShowAnnualReportUploadSerializer < ActiveModel::Serializer
   root 'annual_report_upload'
   attributes :id, :trading_country_id, :point_of_view, :number_of_rows,
-  :file_name, :has_primary_errors, :created_at, :updated_at,
-  :created_by, :updated_by
+    :file_name, :has_primary_errors, :created_at, :updated_at,
+    :created_by, :updated_by
   has_many :validation_errors, :ignored_validation_errors
 
   def validation_errors

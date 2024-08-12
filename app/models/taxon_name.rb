@@ -16,7 +16,6 @@ class TaxonName < ApplicationRecord
 
   def self.sanitize_scientific_name(some_scientific_name)
     last = some_scientific_name && some_scientific_name.split(/\s/).last
-    last && last.capitalize || nil
+    (last && last.capitalize) || nil
   end
-
 end

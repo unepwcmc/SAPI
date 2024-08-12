@@ -1,36 +1,36 @@
 class Admin::EuOpinionsController < Admin::StandardAuthorizationController
   belongs_to :taxon_concept
   before_action :load_lib_objects
-  before_action :load_search, only: [:new, :index, :edit]
+  before_action :load_search, only: [ :new, :index, :edit ]
 
   layout 'taxon_concepts'
 
+  def create
+    create! do |success, failure|
+      success.html do
+        redirect_to admin_taxon_concept_eu_opinions_url(params[:taxon_concept_id]),
+          notice: 'Operation successful'
+      end
+      failure.html do
+        load_search
+        render 'new'
+      end
+    end
+  end
   def update
     update! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_taxon_concept_eu_opinions_url(params[:taxon_concept_id]),
-        notice: 'Operation successful'
-      }
-      failure.html {
+          notice: 'Operation successful'
+      end
+      failure.html do
         load_lib_objects
         load_search
         render 'new'
-      }
+      end
     end
   end
 
-  def create
-    create! do |success, failure|
-      success.html {
-        redirect_to admin_taxon_concept_eu_opinions_url(params[:taxon_concept_id]),
-        notice: 'Operation successful'
-      }
-      failure.html {
-        load_search
-        render 'new'
-      }
-    end
-  end
 
   protected
 
@@ -45,8 +45,8 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
       type = 'EuRegulation' AND name IN ('No 338/97', 'No 938/97', 'No 750/2013')"
     ).order('effective_at DESC')
     # this will only return intersessional docs
-    @documents = Document.where("event_id IS NULL AND type = 'Document::CommissionNotes'")
-                         .order('date DESC, title')
+    @documents = Document.where("event_id IS NULL AND type = 'Document::CommissionNotes'").
+      order('date DESC, title')
   end
 
   def collection

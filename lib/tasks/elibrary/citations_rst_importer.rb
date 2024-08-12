@@ -1,48 +1,47 @@
 require Rails.root.join('lib/tasks/elibrary/importable.rb')
 
 class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
-
   def columns_with_type
-    super() + [
-      ['SigTradePhase', 'TEXT'],
-      ['SigTradeProcessStage', 'TEXT'],
-      ['SigTradeDocumentNumber', 'TEXT'],
-      ['SigTradeIntroduced', 'TEXT'],
-      ['SigTradeMeeting1', 'TEXT'],
-      ['SigTradeACMeetingDate1', 'TEXT'],
-      ['SigTradeMeeting2', 'TEXT'],
-      ['SigTradeCommitteeFirstDiscussed', 'TEXT'],
-      ['SigTradeSignificantTradeReviewFor', 'TEXT'],
-      ['SigTradeRegion1', 'TEXT'],
-      ['SigTradeRegion2', 'TEXT'],
-      ['SigTradeRegion3', 'TEXT'],
-      ['SigTradeURL', 'TEXT'],
-      ['SigTradeURL2', 'TEXT'],
-      ['SigTradeHardCopyLocation', 'TEXT'],
-      ['SigTradeFileName', 'TEXT'],
-      ['SigTradePages', 'TEXT'],
-      ['SigTradeLanguage', 'TEXT'],
-      ['SigTradeIUCNConservationStatus', 'TEXT'],
-      ['SigTradeIUCNConservationStatusCriteria', 'TEXT'],
-      ['SigTradeAssessorsOfIUCNStatus', 'TEXT'],
-      ['SigTradeDateOfIUCNAssessment', 'TEXT'],
-      ['SigTradeRecommendedCategory', 'TEXT'],
-      ['SigTradeNotes', 'TEXT'],
-      ['SigTradeOtherDocumentInformation', 'TEXT'],
-      ['SigTradeInitials', 'TEXT'],
-      ['SigTradeTaxonID', 'TEXT']
+    super + [
+      [ 'SigTradePhase', 'TEXT' ],
+      [ 'SigTradeProcessStage', 'TEXT' ],
+      [ 'SigTradeDocumentNumber', 'TEXT' ],
+      [ 'SigTradeIntroduced', 'TEXT' ],
+      [ 'SigTradeMeeting1', 'TEXT' ],
+      [ 'SigTradeACMeetingDate1', 'TEXT' ],
+      [ 'SigTradeMeeting2', 'TEXT' ],
+      [ 'SigTradeCommitteeFirstDiscussed', 'TEXT' ],
+      [ 'SigTradeSignificantTradeReviewFor', 'TEXT' ],
+      [ 'SigTradeRegion1', 'TEXT' ],
+      [ 'SigTradeRegion2', 'TEXT' ],
+      [ 'SigTradeRegion3', 'TEXT' ],
+      [ 'SigTradeURL', 'TEXT' ],
+      [ 'SigTradeURL2', 'TEXT' ],
+      [ 'SigTradeHardCopyLocation', 'TEXT' ],
+      [ 'SigTradeFileName', 'TEXT' ],
+      [ 'SigTradePages', 'TEXT' ],
+      [ 'SigTradeLanguage', 'TEXT' ],
+      [ 'SigTradeIUCNConservationStatus', 'TEXT' ],
+      [ 'SigTradeIUCNConservationStatusCriteria', 'TEXT' ],
+      [ 'SigTradeAssessorsOfIUCNStatus', 'TEXT' ],
+      [ 'SigTradeDateOfIUCNAssessment', 'TEXT' ],
+      [ 'SigTradeRecommendedCategory', 'TEXT' ],
+      [ 'SigTradeNotes', 'TEXT' ],
+      [ 'SigTradeOtherDocumentInformation', 'TEXT' ],
+      [ 'SigTradeInitials', 'TEXT' ],
+      [ 'SigTradeTaxonID', 'TEXT' ]
     ]
   end
 
   def run_preparatory_queries
-    super()
+    super
     ApplicationRecord.connection.execute("UPDATE #{table_name} SET SigTradePhase = NULL WHERE SigTradePhase='NULL'")
     ApplicationRecord.connection.execute("UPDATE #{table_name} SET SigTradeProcessStage = NULL WHERE SigTradeProcessStage='NULL'")
     ApplicationRecord.connection.execute("UPDATE #{table_name} SET SigTradeRecommendedCategory = NULL WHERE SigTradeRecommendedCategory='NULL'")
   end
 
   def run_queries
-    super()
+    super
     sql = <<-SQL
       WITH rows_to_insert AS (
         #{review_details_rows_to_insert_sql}
@@ -97,5 +96,4 @@ class Elibrary::CitationsRstImporter < Elibrary::CitationsImporter
       JOIN document_tags stages ON dd.process_stage_id = stages.id AND stages.type = 'DocumentTag::ProcessStage'
     SQL
   end
-
 end

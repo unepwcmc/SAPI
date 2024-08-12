@@ -24,7 +24,7 @@ class CaptiveBreeding::EuDecisionSerializer < ActiveModel::Serializer
   end
 
   def geo_entity
-    { 'id'=> object['geo_entity_id'] }.merge(object['geo_entity_en'])
+    { 'id' => object['geo_entity_id'] }.merge(object['geo_entity_en'])
   end
 
   def start_event

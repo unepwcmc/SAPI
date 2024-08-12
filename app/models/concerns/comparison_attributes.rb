@@ -19,13 +19,13 @@ module ComparisonAttributes
 
   module ClassMethods
     def ignored_attributes
-      attr_to_ignore = [:id, :created_at, :updated_at, :created_by_id, :updated_by_id, :original_id]
+      attr_to_ignore = [ :id, :created_at, :updated_at, :created_by_id, :updated_by_id, :original_id ]
       # When upgrade `acts_as_taggable` gem from version 5 to 8.1, we found that
       #  `attributes` now return `xxx_list` as well. Put them in ignore list.
       # `ignored_attributes` is used by ComparisonAttributes when identifying
       # duplicate records. Attributes in this list won't be considered when
       # determining if the record is a duplicate.
-      attr_to_ignore += tag_types.map{|t| "#{t.to_s.singularize}_list" } if taggable?
+      attr_to_ignore += tag_types.map { |t| "#{t.to_s.singularize}_list" } if taggable?
       attr_to_ignore
     end
 
@@ -48,7 +48,7 @@ module ComparisonAttributes
     comparison_attributes.each do |attr_name, attr_val|
       arel_nodes <<
         if self.class.text_attributes.include? attr_name
-          Arel::Nodes::NamedFunction.new('SQUISH_NULL', [a.table[attr_name]]).
+          Arel::Nodes::NamedFunction.new('SQUISH_NULL', [ a.table[attr_name] ]).
             eq(attr_val.presence).to_sql
         # ActiveRecord 4 saves arrays as '[]' instead of using the postgres notation '{}'
         # Also, Arel doesn't seem to be able to manage the comparison when passing '[]' in 'eq'
@@ -65,7 +65,7 @@ module ComparisonAttributes
             # an array (which might be multidimensional)
             # array_length('{}'::int[], 1) returns NULL, not 0.
             Arel::Nodes::NamedFunction.new(
-              'ARRAY_LENGTH', [a.table[attr_name], 1]
+              'ARRAY_LENGTH', [ a.table[attr_name], 1 ]
             ).eq(nil).to_sql
           end
         else
@@ -97,7 +97,6 @@ module ComparisonAttributes
       )
     )
   end
-
 end
 
 # ApplicationRecord.send :include, ComparisonAttributes

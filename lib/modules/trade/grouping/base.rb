@@ -10,7 +10,7 @@ class Trade::Grouping::Base
   # Trade::Grouping::Compliance.new(['year, 'issue_type']})
   # Group by importer and limit result to 5 records
   # Trade::Grouping::Compliance.new('importer', {limit: 5})
-  def initialize(attributes, opts={})
+  def initialize(attributes, opts = {})
     @attributes = sanitise_params(attributes)
     @opts = opts.clone
     @condition = sanitise_condition
@@ -31,7 +31,7 @@ class Trade::Grouping::Base
     db.execute(sql)
   end
 
-  def json_by_attribute(data, opts={})
+  def json_by_attribute(data, opts = {})
     raise NotImplementedError
   end
 
@@ -71,7 +71,7 @@ class Trade::Grouping::Base
     raise NotImplementedError
   end
 
-  def self.get_grouping_attributes(group, locale=nil)
+  def self.get_grouping_attributes(group, locale = nil)
     @locale = locale
     Array.new(grouping_attributes[group.to_sym])
   end
@@ -109,7 +109,7 @@ class Trade::Grouping::Base
   end
 
   def sanitise_pagination(opts)
-    page, per_page = [opts[:page].to_i, opts[:per_page].to_i]
+    page, per_page = [ opts[:page].to_i, opts[:per_page].to_i ]
     return {} unless page > 0 || per_page > 0
     {
       page: page,
@@ -138,7 +138,7 @@ class Trade::Grouping::Base
       # taxon_id equality check can be skipped as this is also managed through the recursive child_taxa query
       # in TradeVis
       next if column == 'taxon_id' && skip_taxon_id?
-      column = (['year', 'appendix'].include?(column) || is_id_column?(column)) ? column : "LOWER(#{column})"
+      column = "LOWER(#{column})" unless [ 'year', 'appendix' ].include?(column) || is_id_column?(column)
 
       "(#{column} #{val})"
     end.compact.join(' AND ')
@@ -152,7 +152,7 @@ class Trade::Grouping::Base
     column.match(/_id(s)?/).present?
   end
 
-  #TODO This is shared between the ComplianceTool and TradePlus,
+  # TODO This is shared between the ComplianceTool and TradePlus,
   # so make sure the other tool won't break after making changes for one of them,
   # or override this function in each related module.
   def get_condition_value(key, value)
@@ -167,7 +167,7 @@ class Trade::Grouping::Base
       when /_id(s)?/
         null = []
         values = value.split(',')
-        values.delete_if { |v| null << v if ['unreported', 'direct', 'items'].include? v.downcase }
+        values.delete_if { |v| null << v if [ 'unreported', 'direct', 'items' ].include? v.downcase }
         value = values.join(',')
         if value.present? && null.present?
           return "IN (#{value}) OR #{column_name} IS NULL"
@@ -188,18 +188,17 @@ class Trade::Grouping::Base
     return 'IS NULL' if value == 'NULL'
 
     operator = case key
-      when :time_range_start
+    when :time_range_start
         '>='
-      when :time_range_end
+    when :time_range_end
         '<='
-      else
+    else
         '='
-      end
+    end
     "#{operator} #{value.to_i}"
   end
 
   def db
     ApplicationRecord.connection
   end
-
 end

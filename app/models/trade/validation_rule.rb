@@ -91,7 +91,7 @@ class Trade::ValidationRule < ApplicationRecord
     scope && scope.each do |scope_column, scope_def|
       if (
         Trade::SandboxTemplate.column_names +
-        ['point_of_view', 'importer', 'exporter', 'rank']
+        [ 'point_of_view', 'importer', 'exporter', 'rank' ]
       ).include? scope_column
         res[scope_column] = scope_def
       end
@@ -141,21 +141,21 @@ class Trade::ValidationRule < ApplicationRecord
         res[scope_column] = scope_def
       when 'exporter', 'importer', 'country_of_origin'
         tmp_def = {}
-        (scope_def.keys & ['inclusion', 'exclusion']).each do |k|
+        (scope_def.keys & [ 'inclusion', 'exclusion' ]).each do |k|
           tmp_def[k] = scope_def[k].map { |value| GeoEntity.find_by_iso_code2(value).id }
         end
         tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
         res[scope_column + '_id'] = tmp_def
       when /(.+)_code$/
         tmp_def = {}
-        (scope_def.keys & ['inclusion', 'exclusion']).each do |k|
+        (scope_def.keys & [ 'inclusion', 'exclusion' ]).each do |k|
           tmp_def[k] = scope_def[k].map { |value| TradeCode.find_by_type_and_code($1.capitalize, value).id }
         end
         tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
         res[$1 + '_id'] = tmp_def
       else
         tmp_def = {}
-        scope_def.keys & ['inclusion', 'exclusion', 'blank'].each do |k|
+        scope_def.keys & [ 'inclusion', 'exclusion', 'blank' ].each do |k|
           tmp_def[k] = scope_def[k]
         end
         res[scope_column + '_id'] = tmp_def
@@ -176,7 +176,7 @@ class Trade::ValidationRule < ApplicationRecord
         shipment_in_scope = false if scope_def['exclusion'].include?(value)
       end
       if scope_def['blank']
-        shipment_in_scope = false unless shipment.send(scope_column).blank?
+        shipment_in_scope = false if shipment.send(scope_column).present?
       end
     end
     # make sure the validated fields are not blank
@@ -207,5 +207,4 @@ class Trade::ValidationRule < ApplicationRecord
       ]
     end
   end
-
 end

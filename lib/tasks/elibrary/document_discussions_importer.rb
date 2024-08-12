@@ -8,23 +8,23 @@ class Elibrary::DocumentDiscussionsImporter
   end
 
   def table_name
-    :"elibrary_document_discussions_import"
+    :elibrary_document_discussions_import
   end
 
   def columns_with_type
     [
-      ['EventTypeName', 'TEXT'],
-      ['EventName', 'TEXT'],
-      ['EventDate', 'TEXT'],
-      ['DocumentTypeName', 'TEXT'],
-      ['DocumentID', 'INT'],
-      ['DocumentTitle', 'TEXT'],
-      ['DocumentFilePath', 'TEXT'],
-      ['DocumentFileName', 'TEXT'],
-      ['DocumentDate', 'TEXT'],
-      ['DiscussionID', 'INT'],
-      ['DocumentOrder', 'TEXT'],
-      ['DiscussionTitle', 'TEXT']
+      [ 'EventTypeName', 'TEXT' ],
+      [ 'EventName', 'TEXT' ],
+      [ 'EventDate', 'TEXT' ],
+      [ 'DocumentTypeName', 'TEXT' ],
+      [ 'DocumentID', 'INT' ],
+      [ 'DocumentTitle', 'TEXT' ],
+      [ 'DocumentFilePath', 'TEXT' ],
+      [ 'DocumentFileName', 'TEXT' ],
+      [ 'DocumentDate', 'TEXT' ],
+      [ 'DiscussionID', 'INT' ],
+      [ 'DocumentOrder', 'TEXT' ],
+      [ 'DiscussionTitle', 'TEXT' ]
     ]
   end
 
@@ -97,9 +97,8 @@ class Elibrary::DocumentDiscussionsImporter
 
   def print_breakdown
     puts <<-EOT
-      #{Time.now} There are #{Document.where('discussion_id IS NOT NULL').count} documents
+      #{Time.now} There are #{Document.where.not(discussion_id: nil).count} documents
       in #{DocumentTag.where(type: 'DocumentTag::Discussion').count} discussions in total
     EOT
   end
-
 end

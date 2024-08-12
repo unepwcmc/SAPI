@@ -1,5 +1,4 @@
 class Api::V1::GeoEntitiesController < ApplicationController
-
   def index
     @geo_entities = GeoEntitySearch.new(
       params.slice(:geo_entity_types_set, :locale, :query_string)
@@ -8,5 +7,4 @@ class Api::V1::GeoEntitiesController < ApplicationController
       each_serializer: Species::GeoEntitySerializer,
       meta: { total: @geo_entities.count }
   end
-
 end

@@ -15,10 +15,10 @@ class Checklist::History < Checklist::Checklist
     # If a cached download exists, only initialize the params for the
     # helper methods, otherwise initialize the generation queries.
 
-    if !File.exist?(@download_path)
-      super(options)
-    else
+    if File.exist?(@download_path)
       initialize_params(options)
+    else
+      super
     end
   end
 
@@ -57,5 +57,4 @@ class Checklist::History < Checklist::Checklist
     @download_name = "#{doc_name}_#{has_full_options? ? '' : '[CUSTOM]_'}#{ctime}.#{ext}"
     @download_path
   end
-
 end

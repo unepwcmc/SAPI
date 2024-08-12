@@ -5,9 +5,9 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
   PUBLIC_CSV_LIMIT = 1000000
   PUBLIC_WEB_LIMIT = 50000
   include ActiveModel::SerializerSupport
-  delegate :report_type, to: :"@search"
-  delegate :page, to: :"@search"
-  delegate :per_page, to: :"@search"
+  delegate :report_type, to: :@search
+  delegate :page, to: :@search
+  delegate :per_page, to: :@search
 
   def initialize(filters)
     @search = Trade::Filter.new(filters)
@@ -80,13 +80,13 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
     # escape quotes around attributes for psql
     # Requires UTF8 encoding for diacritics.
     sql = <<-PSQL
-      \\COPY (#{query_sql(limit: !internal?).gsub(/"/, "\\\"")})
+      \\COPY (#{query_sql(limit: !internal?).gsub('"', "\\\"")})
       TO ?
       WITH DELIMITER '#{@csv_separator_char}'
       ENCODING 'UTF8'
       CSV HEADER;
     PSQL
-    ApplicationRecord.send(:sanitize_sql_array, [sql, @file_name])
+    ApplicationRecord.send(:sanitize_sql_array, [ sql, @file_name ])
   end
 
   def to_csv
@@ -135,5 +135,4 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
   def sql_columns
     report_columns.map { |column, properties| properties[I18n.locale] || column }
   end
-
 end

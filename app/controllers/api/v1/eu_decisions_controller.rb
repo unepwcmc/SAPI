@@ -1,12 +1,11 @@
 class Api::V1::EuDecisionsController < ApplicationController
-
   # makes params available to the ActiveModel::Serializers
   serialization_scope :view_context
 
   def index
     @eu_decisions = eu_decision_search(sanitized_params)
     render json: @eu_decisions,
-    each_serializer: CaptiveBreeding::EuDecisionSerializer
+      each_serializer: CaptiveBreeding::EuDecisionSerializer
   end
 
   private
@@ -38,7 +37,7 @@ class Api::V1::EuDecisionsController < ApplicationController
   end
 
   def eu_decision_select_attrs
-    string = %{
+    string = %(
             eu_decisions.notes,
             eu_decisions.start_date,
             v.original_start_date_formatted,
@@ -61,12 +60,12 @@ class Api::V1::EuDecisionsController < ApplicationController
             taxon_concept,
             term_en,
             source_en
-          }
+          )
     current_user ? "#{string},\n private_url" : string
   end
 
   def sanitized_params
-    filters = permitted_params.to_h.inject({}) do |h, (k,v)|
+    filters = permitted_params.to_h.inject({}) do |h, (k, v)|
       h[k] = v.reject(&:empty?).map!(&:to_i)
       h
     end

@@ -40,10 +40,10 @@ Rails.application.routes.draw do
 
   scope '(:locale)', locale: /en|es|fr/ do
     namespace :cites_trade do
-      resources :shipments, only: [:index]
+      resources :shipments, only: [ :index ]
       get 'download' => 'home#download'
       get 'download/view_results' => 'home#view_results'
-      get 'exports/download' => 'exports#download'  # not sure about this, post??
+      get 'exports/download' => 'exports#download' # not sure about this, post??
       get 'download_db' => 'home#download_db'
       root to: 'home#index'
     end

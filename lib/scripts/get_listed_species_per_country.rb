@@ -7,10 +7,10 @@ results = { cites_eu: [], cms: [] }
 countries = GeoEntity.where('geo_entity_type_id = 1')
 
 countries.each do |country|
-  [:cites_eu, :cms].each do |taxonomy|
+  [ :cites_eu, :cms ].each do |taxonomy|
     params = {
       taxonomy: taxonomy.to_s, taxon_concept_query: '',
-      geo_entities_ids: ["#{country.id}"], page: '1'
+      geo_entities_ids: [ "#{country.id}" ], page: '1'
     }
     search = Species::Search.new(params)
     result = {

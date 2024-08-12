@@ -15,31 +15,31 @@ class Elibrary::DocumentsImporter
 
   def columns_with_type
     [
-      ['EventTypeID', 'TEXT'],
-      ['EventTypeName', 'TEXT'],
-      ['splus_event_type', 'TEXT'],
-      ['EventID', 'INT'],
-      ['EventName', 'TEXT'],
-      ['EventDate', 'TEXT'],
-      ['MeetingType', 'TEXT'],
-      ['EventDocumentReference', 'TEXT'],
-      ['DocumentOrder', 'TEXT'],
-      ['DocumentTypeID', 'TEXT'],
-      ['DocumentTypeName', 'TEXT'],
-      ['splus_document_type', 'TEXT'],
-      ['DocumentID', 'INT'],
-      ['DocumentTitle', 'TEXT'],
-      ['supertitle', 'TEXT'],
-      ['subtitle', 'TEXT'],
-      ['DocumentDate', 'TEXT'],
-      ['DocumentFileName', 'TEXT'],
-      ['DocumentFilePath', 'TEXT'],
-      ['DocumentIsPubliclyAccessible', 'TEXT'],
-      ['DateCreated', 'TEXT'],
-      ['DateModified', 'TEXT'],
-      ['LanguageName', 'TEXT'],
-      ['DocumentIsTranslationIntoEnglish', 'TEXT'],
-      ['MasterDocumentID', 'INT']
+      [ 'EventTypeID', 'TEXT' ],
+      [ 'EventTypeName', 'TEXT' ],
+      [ 'splus_event_type', 'TEXT' ],
+      [ 'EventID', 'INT' ],
+      [ 'EventName', 'TEXT' ],
+      [ 'EventDate', 'TEXT' ],
+      [ 'MeetingType', 'TEXT' ],
+      [ 'EventDocumentReference', 'TEXT' ],
+      [ 'DocumentOrder', 'TEXT' ],
+      [ 'DocumentTypeID', 'TEXT' ],
+      [ 'DocumentTypeName', 'TEXT' ],
+      [ 'splus_document_type', 'TEXT' ],
+      [ 'DocumentID', 'INT' ],
+      [ 'DocumentTitle', 'TEXT' ],
+      [ 'supertitle', 'TEXT' ],
+      [ 'subtitle', 'TEXT' ],
+      [ 'DocumentDate', 'TEXT' ],
+      [ 'DocumentFileName', 'TEXT' ],
+      [ 'DocumentFilePath', 'TEXT' ],
+      [ 'DocumentIsPubliclyAccessible', 'TEXT' ],
+      [ 'DateCreated', 'TEXT' ],
+      [ 'DateModified', 'TEXT' ],
+      [ 'LanguageName', 'TEXT' ],
+      [ 'DocumentIsTranslationIntoEnglish', 'TEXT' ],
+      [ 'MasterDocumentID', 'INT' ]
     ]
   end
 
@@ -173,5 +173,4 @@ class Elibrary::DocumentsImporter
       puts "\t #{type} #{count}"
     end
   end
-
 end

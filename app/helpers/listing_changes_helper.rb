@@ -18,5 +18,4 @@ module ListingChangesHelper
       listing_change.hash_annotation.full_note_en
     end
   end
-
 end

@@ -42,7 +42,7 @@ class CitesProcess < ApplicationRecord
   before_validation :set_resolution_value
 
   def is_current?
-    !['Closed'].include? status
+    ![ 'Closed' ].include? status
   end
 
   def year
@@ -56,7 +56,7 @@ class CitesProcess < ApplicationRecord
   private
 
   def start_event_value
-    unless  ['CitesAc','CitesPc'].include? self.start_event.type
+    unless [ 'CitesAc', 'CitesPc' ].include? self.start_event.type
       errors.add(:start_event, 'is not valid')
     end
   end

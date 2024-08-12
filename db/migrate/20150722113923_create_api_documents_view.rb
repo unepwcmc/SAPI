@@ -4,6 +4,6 @@ class CreateApiDocumentsView < ActiveRecord::Migration[4.2]
   end
 
   def down
-    execute "DROP VIEW IF EXISTS api_documents_view"
+    execute 'DROP VIEW IF EXISTS api_documents_view'
   end
 end

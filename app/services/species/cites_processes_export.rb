@@ -1,12 +1,11 @@
 class Species::CitesProcessesExport < Species::CsvCopyExport
-
   def query
-    rel = CitesProcess
-          .joins("LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
+    rel = CitesProcess.
+      joins("LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
                   LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id
                   LEFT JOIN events ON start_event_id = events.id")
     rel = apply_filters(rel)
-    rel = rel.order('taxon_concepts.full_name','cites_processes.type DESC','geo_entities.name_en')
+    rel = rel.order('taxon_concepts.full_name', 'cites_processes.type DESC', 'geo_entities.name_en')
 
     rel.select(sql_columns)
   end
@@ -25,7 +24,7 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
     if @filters['taxon_concepts_ids']&.any?
       taxon_concept = TaxonConcept.find(@filters['taxon_concepts_ids'].first)
       rel = rel.where('taxon_concepts.data -> :rank_id_key = :taxon_concept_id OR taxon_concept_id = :taxon_concept_id',
-                      rank_id_key: "#{taxon_concept.rank.name.downcase}_id", taxon_concept_id: taxon_concept.id.to_s)
+        rank_id_key: "#{taxon_concept.rank.name.downcase}_id", taxon_concept_id: taxon_concept.id.to_s)
     end
 
     rel
@@ -38,11 +37,11 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
   def resolution
     case @filters['process_type']
     when 'Rst'
-      ['Significant Trade']
+      [ 'Significant Trade' ]
     when 'CaptiveBreeding'
-      ['Captive Breeding']
+      [ 'Captive Breeding' ]
     else
-      ['Significant Trade', 'Captive Breeding']
+      [ 'Significant Trade', 'Captive Breeding' ]
     end
   end
 
@@ -68,5 +67,4 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
       'Event date', 'Status', 'Document', 'Notes'
     ]
   end
-
 end

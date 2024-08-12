@@ -1,5 +1,4 @@
 class DashboardStats
-
   include ActiveModel::Serializers::JSON
 
   attr_reader :geo_entity, :kingdom, :time_range_start, :time_range_end,
@@ -37,7 +36,7 @@ class DashboardStats
       kingdom_name: @kingdom
     )
     designation_name = (taxonomy_name == Taxonomy::CMS ? :cms : :cites)
-    classes && classes.map do |klass|
+    (classes && classes.map do |klass|
       cnt = MTaxonConcept.where(class_id: klass.id).
         where("countries_ids_ary && ARRAY[#{@geo_entity.id}]").
         where("#{designation_name}_listed IS NOT NULL").count
@@ -46,7 +45,7 @@ class DashboardStats
         common_name_en: klass.english_names.first,
         count: cnt
       }
-    end || []
+    end) || []
   end
 
   def trade_stats_per_reporter_type(reporter_type)
@@ -66,7 +65,7 @@ class DashboardStats
     if @time_range_start && @time_range_end &&
       @time_range_start <= @time_range_end
       shipments_for_country = shipments_for_country.where(
-        ['year >= ? AND year <= ?', @time_range_start, @time_range_end]
+        [ 'year >= ? AND year <= ?', @time_range_start, @time_range_end ]
       )
     end
 
@@ -94,5 +93,4 @@ class DashboardStats
       end
     }
   end
-
 end

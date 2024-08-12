@@ -45,8 +45,8 @@ class Species::CsvCopyExport
   def initialize_csv_separator(csv_separator)
     @csv_separator, @csv_separator_char =
       case csv_separator
-      when :semicolon then [:semicolon, ';']
-      else [:comma, ',']
+      when :semicolon then [ :semicolon, ';' ]
+      else [ :comma, ',' ]
       end
   end
 
@@ -87,5 +87,4 @@ class Species::CsvCopyExport
   def csv_column_headers
     raise 'Needs to be implemented'
   end
-
 end

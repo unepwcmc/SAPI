@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import languages from csv file (usage: rake import:languages[path/to/file,path/to/another])'
-  task :languages, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :languages, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'languages_import'
     puts "There are #{Language.count} languages in the database."
     files = files_from_args(t, args)
@@ -24,5 +23,4 @@ namespace :import do
     end
     puts "There are now #{Language.count} languages in the database"
   end
-
 end

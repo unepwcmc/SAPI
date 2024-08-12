@@ -33,12 +33,10 @@
 # Cites Animal Committee
 
 class IdMaterials < Event
-
   def self.elibrary_document_types
     [
       Document::IdManual,
       Document::VirtualCollege
     ]
   end
-
 end

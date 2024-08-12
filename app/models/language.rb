@@ -45,5 +45,4 @@ class Language < ApplicationRecord
       'common names' => common_names
     }
   end
-
 end

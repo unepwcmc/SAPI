@@ -2,21 +2,20 @@ require Rails.root.join('lib/tasks/elibrary/importable.rb')
 require Rails.root.join('lib/tasks/elibrary/citations_importer.rb')
 
 class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
-
   def columns_with_type
-    super() + [
-      ['ProposalNo', 'TEXT'],
-      ['ProposalNature', 'TEXT'],
-      ['ProposalOutcome', 'TEXT'],
-      ['ProposalAdditionalComments', 'TEXT'],
-      ['ProposalHardCopy', 'TEXT'],
-      ['ProposalRepresentation', 'TEXT'],
-      ['ProposalOtherTaxonName', 'TEXT']
+    super + [
+      [ 'ProposalNo', 'TEXT' ],
+      [ 'ProposalNature', 'TEXT' ],
+      [ 'ProposalOutcome', 'TEXT' ],
+      [ 'ProposalAdditionalComments', 'TEXT' ],
+      [ 'ProposalHardCopy', 'TEXT' ],
+      [ 'ProposalRepresentation', 'TEXT' ],
+      [ 'ProposalOtherTaxonName', 'TEXT' ]
     ]
   end
 
   def run_preparatory_queries
-    super()
+    super
     ApplicationRecord.connection.execute("UPDATE #{table_name} SET ProposalNature = NULL WHERE ProposalNature='NULL'")
     ApplicationRecord.connection.execute("UPDATE #{table_name} SET ProposalOutcome = NULL WHERE ProposalOutcome='NULL'")
     ApplicationRecord.connection.execute("UPDATE #{table_name} SET ProposalRepresentation = NULL WHERE ProposalRepresentation='NULL'")
@@ -126,7 +125,7 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
   end
 
   def run_queries
-    super()
+    super
     sql = <<-SQL
       WITH rows_to_insert AS (
         #{proposal_details_rows_to_insert_sql}
@@ -181,5 +180,4 @@ class Elibrary::CitationsCopImporter < Elibrary::CitationsImporter
       JOIN document_tags outcomes ON dd.proposal_outcome_id = outcomes.id
     SQL
   end
-
 end

@@ -1,7 +1,6 @@
 # Poor man's implementation. Don't event want to say more.
 # Reason for this: pandoc was either extremely slow or hanging.
 class HtmlToLatex
-
   # We're only expecting <p>, <i> and <b>
   def self.convert(input_str)
     doc = Nokogiri::HTML(input_str)
@@ -23,5 +22,4 @@ class HtmlToLatex
     end
     output_str
   end
-
 end

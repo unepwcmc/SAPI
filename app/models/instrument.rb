@@ -26,7 +26,7 @@ class Instrument < ApplicationRecord
   def self.search(query)
     if query.present?
       where('UPPER(name) LIKE UPPER(:query)',
-            query: "%#{query}%")
+        query: "%#{query}%")
     else
       all
     end
@@ -39,5 +39,4 @@ class Instrument < ApplicationRecord
       'taxon instruments' => taxon_instruments
     }
   end
-
 end

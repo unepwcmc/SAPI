@@ -20,9 +20,9 @@ class AddTimestampsToSandboxTemplate < ActiveRecord::Migration[4.2]
   end
 
   def down
-    execute "SELECT * FROM drop_trade_sandbox_views()"
+    execute 'SELECT * FROM drop_trade_sandbox_views()'
     remove_column :trade_sandbox_template, :created_at
     remove_column :trade_sandbox_template, :updated_at
-    execute "SELECT * FROM create_trade_sandbox_views()"
+    execute 'SELECT * FROM create_trade_sandbox_views()'
   end
 end

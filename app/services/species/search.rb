@@ -51,15 +51,15 @@ class Species::Search
 
     if !@geo_entities.empty? && @geo_entity_scope == :cms
       @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @query, ['I', 'II'], @geo_entities
+        @query, [ 'I', 'II' ], @geo_entities
       ).relation('CMS')
     elsif !@geo_entities.empty? && @geo_entity_scope == :cites
       @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @query, ['I', 'II', 'III'], @geo_entities
+        @query, [ 'I', 'II', 'III' ], @geo_entities
       ).relation('CITES')
     elsif !@geo_entities.empty? && @geo_entity_scope == :eu
       @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @query, ['A', 'B', 'C', 'D'], @geo_entities
+        @query, [ 'A', 'B', 'C', 'D' ], @geo_entities
       ).relation('EU')
     elsif !@geo_entities.empty? && @geo_entity_scope == :occurrences
       @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
@@ -67,7 +67,7 @@ class Species::Search
       ).relation
     end
 
-    unless @scientific_name.blank?
+    if @scientific_name.present?
       @query = @query.
         by_name(@scientific_name, { synonyms: true, subspecies: true, common_names: true }).
         select(
@@ -76,5 +76,4 @@ class Species::Search
     end
     @query = @query
   end
-
 end

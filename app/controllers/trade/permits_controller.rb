@@ -1,5 +1,4 @@
 class Trade::PermitsController < TradeController
-
   def index
     matcher = Trade::PermitMatcher.new(params)
     render json: matcher.results,
@@ -10,5 +9,4 @@ class Trade::PermitsController < TradeController
         per_page: matcher.per_page
       }
   end
-
 end

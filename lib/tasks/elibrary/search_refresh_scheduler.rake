@@ -1,5 +1,5 @@
 namespace :elibrary do
-  task :refresh_document_search => :environment do
+  task refresh_document_search: :environment do
     if DocumentSearch.citations_need_refreshing?
       elapsed_time = Benchmark.realtime do
         DocumentSearch.refresh_citations_and_documents

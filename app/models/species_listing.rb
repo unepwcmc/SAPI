@@ -30,7 +30,7 @@ class SpeciesListing < ApplicationRecord
       where("UPPER(species_listings.name) LIKE UPPER(:query)
             OR UPPER(species_listings.abbreviation) LIKE UPPER(:query)
             OR UPPER(designations.name) LIKE UPPER(:query)",
-            query: "%#{query}%").
+        query: "%#{query}%").
         joins(:designation)
     else
       all

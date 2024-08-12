@@ -40,7 +40,7 @@ class TaxonConceptReference < ApplicationRecord
 
   accepts_nested_attributes_for :reference
 
-  validates :reference_id, uniqueness: { scope: [:taxon_concept_id] }
+  validates :reference_id, uniqueness: { scope: [ :taxon_concept_id ] }
 
   def excluded_taxon_concepts
     ids = excluded_taxon_concepts_ids.try(:split, ',')&.flatten
@@ -55,5 +55,4 @@ class TaxonConceptReference < ApplicationRecord
     # Make sure ary won't be between double curly braces
     write_attribute(:excluded_taxon_concepts_ids, "{#{ary.delete('{}')}}")
   end
-
 end

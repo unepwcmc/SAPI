@@ -1,8 +1,8 @@
 require 'csv'
 class Trade::ChangelogCsvGenerator
-  DEFAULT_COLUMNS = ['ID', 'Version', 'OP', 'ChangedAt', 'ChangedBy']
+  DEFAULT_COLUMNS = [ 'ID', 'Version', 'OP', 'ChangedAt', 'ChangedBy' ]
 
-  def self.call(aru, requester, duplicates=nil)
+  def self.call(aru, requester, duplicates = nil)
     data_columns = if aru.reported_by_exporter?
       Trade::SandboxTemplate::EXPORTER_COLUMNS
     else
@@ -10,15 +10,15 @@ class Trade::ChangelogCsvGenerator
     end
 
     sapi_users = Hash[
-      User.select('id, name').all.map{ |u| [u.id, u.name] }
+      User.select('id, name').all.map { |u| [ u.id, u.name ] }
     ]
 
-    tempfile = Tempfile.new(["changelog_sapi_#{aru.id}-", '.csv'], Rails.root.join('tmp'))
+    tempfile = Tempfile.new([ "changelog_sapi_#{aru.id}-", '.csv' ], Rails.root.join('tmp'))
 
     ar_klass = aru.sandbox(true).ar_klass
 
     all_columns = DEFAULT_COLUMNS + data_columns.map(&:camelize)
-    all_columns = all_columns + ['Duplicate'] if duplicates
+    all_columns = all_columns + [ 'Duplicate' ] if duplicates
 
     CSV.open(tempfile, 'w', headers: true) do |csv|
       csv << all_columns
@@ -28,11 +28,11 @@ class Trade::ChangelogCsvGenerator
       while query.any?
         query.all.each do |shipment|
           duplicate = (duplicates && duplicates.split(',').include?(shipment.id.to_s)) ? 'D' : ''
-          values = [shipment.id, nil, nil, shipment.created_at, nil] +
+          values = [ shipment.id, nil, nil, shipment.created_at, nil ] +
             data_columns.map do |dc|
               shipment[dc]
             end
-          values = values + [duplicate] if duplicates
+          values = values + [ duplicate ] if duplicates
           csv << values
 
           shipment.versions.each do |version|
@@ -42,15 +42,15 @@ class Trade::ChangelogCsvGenerator
             whodunnit = if id_as_number && type == 'Epix'
               'epix'
             elsif id_as_number
-              sapi_users && sapi_users[id_as_number] || 'WCMC'
+              (sapi_users && sapi_users[id_as_number]) || 'WCMC'
             end
             values = [
-                version.item_id, version.id, version.event, version.created_at, whodunnit
+              version.item_id, version.id, version.event, version.created_at, whodunnit
               ] +
               data_columns.map do |dc|
                 reified[dc]
               end
-            values = values + [''] if duplicates
+            values = values + [ '' ] if duplicates
             csv << values
           end
 
@@ -61,5 +61,4 @@ class Trade::ChangelogCsvGenerator
     end
     tempfile
   end
-
 end

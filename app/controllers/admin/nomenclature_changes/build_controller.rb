@@ -1,14 +1,17 @@
 class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   include Wicked::Wizard
 
-  before_action :set_nomenclature_change, only: [:show, :update, :destroy]
-  before_action :unset_back, only: [:update]
-  before_action :authorise_finish, only: [:update]
+  before_action :set_nomenclature_change, only: [ :show, :update, :destroy ]
+  before_action :unset_back, only: [ :update ]
+  before_action :authorise_finish, only: [ :update ]
 
   def finish_wizard_path
     admin_nomenclature_changes_path
   end
 
+  def show
+    raise NotImplementedError
+  end
   def create
     @nomenclature_change = klass.new()
     @nomenclature_change.status = NomenclatureChange::NEW
@@ -19,9 +22,6 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     end
   end
 
-  def show
-    raise NotImplementedError
-  end
 
   def update
     raise NotImplementedError
@@ -73,5 +73,4 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   def unset_back
     session[:back] = false
   end
-
 end

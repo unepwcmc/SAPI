@@ -9,8 +9,8 @@ class Checklist::IndexTaxonConceptSerializer < ActiveModel::Serializer
     :current_listing, :current_parties_iso_codes, :current_parties_full_names
 
   has_many :current_cites_additions,
-   key: :current_listing_changes,
-   serializer: Checklist::IndexListingChangeSerializer
+    key: :current_listing_changes,
+    serializer: Checklist::IndexListingChangeSerializer
 
   def include_author_year?
     @options[:authors]
@@ -35,5 +35,4 @@ class Checklist::IndexTaxonConceptSerializer < ActiveModel::Serializer
   def include_synonyms?
     @options[:synonyms] && !@options[:authors]
   end
-
 end

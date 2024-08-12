@@ -58,7 +58,7 @@ class EuRegulation < EuEvent
   private
 
   def async_event_listing_changes_copy_worker
-    unless listing_changes_event_id.blank?
+    if listing_changes_event_id.present?
       EventListingChangesCopyWorker.perform_async(
         listing_changes_event_id.to_i, id
       )

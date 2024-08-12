@@ -1,5 +1,4 @@
 class Trade::Grouping::Compliance < Trade::Grouping::Base
-
   # Complete up to current year - 1
   COUNTRIES = {
     2022 => 183,
@@ -16,8 +15,8 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     2011 => 175
   }.freeze
 
-  def initialize(attributes, opts={})
-    super(attributes, opts)
+  def initialize(attributes, opts = {})
+    super
   end
 
   # TODO
@@ -28,13 +27,13 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   def countries_reported_range(year)
     year = year.to_i
     years = case year
-      when 2012
-        [year, year + 1]
-     when Date.today.year - 1
-        [year - 1, year]
-      else
-        [year - 1, year, year + 1]
-      end
+    when 2012
+        [ year, year + 1 ]
+    when Date.today.year - 1
+        [ year - 1, year ]
+    else
+        [ year - 1, year, year + 1 ]
+    end
     hash = {}
     years.map do |y|
       data = countries_reported(y)
@@ -44,7 +43,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     hash
   end
 
-  def taxonomic_grouping(opts={})
+  def taxonomic_grouping(opts = {})
     YEARS.map do |year|
       { "#{year}": taxonomic_grouping_per_year(year) }
     end.inject(:merge)
@@ -89,11 +88,11 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   def build_hash(data, params)
     hash, array = {}, []
     if params[:group_by].include?('commodity') || params[:group_by].include?('species')
-      hash[params[:year]] = data.map {|d| d.except('year', 'percent')}
+      hash[params[:year]] = data.map { |d| d.except('year', 'percent') }
     elsif params[:group_by].include?('exporting')
       _grouping_attributes = Array.new(GROUPING_ATTRIBUTES[:importing]) << 'year'
       importers = Trade::Grouping::Compliance.new(_grouping_attributes, params).run
-      data, importers = data.group_by {|d| d['exporter']}, importers.group_by {|d| d['importer']}
+      data, importers = data.group_by { |d| d['exporter'] }, importers.group_by { |d| d['importer'] }
       sum = importer_exporter_countries(data, importers, params[:year])
       keys = sum.map { |s| s.keys }.flatten
       imp = only_importer_countries(importers, keys, params[:year])
@@ -103,13 +102,13 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
       merged_hash = imp_hash.merge(exp_hash)
       merged_hash =
         merged_hash.map do |k, v|
-          { "#{k}": merged_hash[k].merge(percentage: (v[:cnt]*100.0/v[:total_cnt]).round(2)) }
+          { "#{k}": merged_hash[k].merge(percentage: (v[:cnt] * 100.0 / v[:total_cnt]).round(2)) }
         end
       merged_hash.each do |country|
         country.values.first.merge!(country: country.keys.first.to_s)
         array << country.values.first
       end
-      hash[params[:year]] = array.sort_by { |x| x[:cnt]}.reverse!
+      hash[params[:year]] = array.sort_by { |x| x[:cnt] }.reverse!
     end
     hash
   end
@@ -151,7 +150,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     end
   end
 
-  def json_by_attribute(data, opts={})
+  def json_by_attribute(data, opts = {})
     attribute = sanitise_group(opts[:attribute])
 
     begin
@@ -186,18 +185,18 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   end
 
   GROUPING_ATTRIBUTES = {
-    category: ['issue_type'],
-    commodity: ['term', 'term_id'],
-    exporting: ['exporter', 'exporter_iso', 'exporter_id'],
-    importing: ['importer', 'importer_iso', 'importer_id'],
-    species: ['taxon_name', 'appendix', 'taxon_concept_id'],
-    taxonomy: ['']
+    category: [ 'issue_type' ],
+    commodity: [ 'term', 'term_id' ],
+    exporting: [ 'exporter', 'exporter_iso', 'exporter_id' ],
+    importing: [ 'importer', 'importer_iso', 'importer_id' ],
+    species: [ 'taxon_name', 'appendix', 'taxon_concept_id' ],
+    taxonomy: [ '' ]
   }.freeze
   def self.grouping_attributes
     GROUPING_ATTRIBUTES
   end
 
-  def self.get_grouping_attributes(group, locale=nil)
+  def self.get_grouping_attributes(group, locale = nil)
     super(group) << 'year'
   end
 
@@ -316,7 +315,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
       year: year,
       issuesReported: issues_reported,
       countriesReported: countries_reported,
-      countriesYetToReport: COUNTRIES[year]-countries_reported
+      countriesYetToReport: COUNTRIES[year] - countries_reported
     }
   end
 
@@ -326,10 +325,10 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
       rank_name = "#{rank_name}_name"
       return true if shipment[rank_name] == grouping[:taxon_name]
     end
-    return false
+    false
   end
 
-  #def sanitise_condition(condition)
+  # def sanitise_condition(condition)
   #  # TODO
   #  return nil if condition.blank?
   #  condition.map do |key, value|
@@ -339,7 +338,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   #      "#{ATTRIBUTES[key]} = #{value}"
   #    end
   #  end.join(' AND ')
-  #end
+  # end
 
   def total_ships_exp_cnt(id, year)
     query_exp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE exporter_id = #{id} AND year = #{year}"

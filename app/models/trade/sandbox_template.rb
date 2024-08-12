@@ -29,7 +29,6 @@
 #
 
 class Trade::SandboxTemplate < ApplicationRecord
-
   self.table_name = :trade_sandbox_template
   has_paper_trail
 
@@ -39,7 +38,7 @@ class Trade::SandboxTemplate < ApplicationRecord
     'origin_permit', 'purpose_code', 'source_code', 'year'
   ]
   CSV_IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
-  CSV_EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - ['import_permit']
+  CSV_EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - [ 'import_permit' ]
   IMPORTER_COLUMNS = CSV_IMPORTER_COLUMNS.map { |c| c == 'species_name' ? 'taxon_name' : c }
   EXPORTER_COLUMNS = CSV_EXPORTER_COLUMNS.map { |c| c == 'species_name' ? 'taxon_name' : c }
 
@@ -100,8 +99,8 @@ class Trade::SandboxTemplate < ApplicationRecord
           )
         end
 
-        def save(*args, **options, &block)
-          super(*args, **options, &block)
+        def save(...)
+          super
           sanitize
         end
 
@@ -134,7 +133,6 @@ class Trade::SandboxTemplate < ApplicationRecord
             each(&:delete)
           update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
         end
-
       end
       Trade.const_set(klass_name, klass)
     end
@@ -186,7 +184,6 @@ class Trade::SandboxTemplate < ApplicationRecord
       ENCODING 'utf-8'
       CSV HEADER;
     PSQL
-    sanitize_sql_array([sql, csv_file_path])
+    sanitize_sql_array([ sql, csv_file_path ])
   end
-
 end

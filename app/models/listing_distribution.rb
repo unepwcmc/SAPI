@@ -35,6 +35,6 @@ class ListingDistribution < ApplicationRecord
   belongs_to :listing_change, inverse_of: :listing_distributions
 
   def self.ignored_attributes
-    super() + [:source_id]
+    super + [ :source_id ]
   end
 end

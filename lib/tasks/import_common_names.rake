@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import common names from csv file (usage: rake import:common_names[path/to/file,path/to/another])'
-  task :common_names, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :common_names, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'common_name_import'
     puts "There are #{CommonName.count} common names in the database."
     puts "There are #{TaxonCommon.count} taxon commons in the database."
@@ -29,7 +28,7 @@ namespace :import do
       SQL
       ApplicationRecord.connection.execute(sql)
 
-      [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+      [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
         puts "Import #{taxonomy_name} common names"
         taxonomy = Taxonomy.find_by_name(taxonomy_name)
         sql = <<-SQL
@@ -76,7 +75,7 @@ namespace :import do
 
   namespace :common_names do
     desc 'Delete all existing common names, and taxon commons'
-    task :delete_all => :environment do
+    task delete_all: :environment do
       puts "Deleting #{TaxonCommon.delete_all} taxon commons"
       puts "Deleting #{CommonName.delete_all} common names"
     end

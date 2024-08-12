@@ -1,7 +1,7 @@
 class Admin::SimpleCrudController < Admin::AdminController
   inherit_resources
-  respond_to :js, only: [:create]
-  respond_to :json, only: [:update]
+  respond_to :js, only: [ :create ]
+  respond_to :json, only: [ :update ]
 
   def index
     load_associations
@@ -31,14 +31,15 @@ class Admin::SimpleCrudController < Admin::AdminController
   def destroy
     destroy! do |success, failure|
       success.html { redirect_to collection_url, notice: 'Operation succeeded' }
-      failure.html {
+      failure.html do
         redirect_to collection_url,
-          alert:             if resource.errors.present?
+          alert:
+            if resource.errors.present?
               "Operation #{resource.errors.messages[:base].join(", ")}"
             else
               'Operation failed'
             end
-      }
+      end
     end
   end
 

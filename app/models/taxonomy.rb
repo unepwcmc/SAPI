@@ -27,14 +27,14 @@ class Taxonomy < ApplicationRecord
   def self.search(query)
     if query.present?
       where('UPPER(name) LIKE UPPER(:query)',
-            query: "%#{query}%")
+        query: "%#{query}%")
     else
       all
     end
   end
 
   def can_be_deleted?
-    super() && !has_protected_name?
+    super && !has_protected_name?
   end
 
   private
@@ -49,5 +49,4 @@ class Taxonomy < ApplicationRecord
   def has_protected_name?
     self.class.dict.include? self.name
   end
-
 end

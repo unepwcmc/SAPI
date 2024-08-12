@@ -1,6 +1,5 @@
 # Implements "comptab" shipments export
 class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
-
   def total_cnt
     ApplicationRecord.connection.execute(query_sql(limit: false)).ntuples
   end
@@ -48,5 +47,4 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
       source: {}
     }
   end
-
 end

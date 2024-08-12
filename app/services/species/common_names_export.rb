@@ -1,5 +1,4 @@
 class Species::CommonNamesExport < Species::CsvCopyExport
-
   def query
     rel = MTaxonConcept.from(table_name).
       order('taxonomic_position, common_name_language, common_name')
@@ -42,5 +41,4 @@ class Species::CommonNamesExport < Species::CsvCopyExport
       'Date added', 'Added by', 'Date updated', 'Updated by'
     ]
   end
-
 end

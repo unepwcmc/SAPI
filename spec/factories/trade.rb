@@ -1,24 +1,23 @@
 FactoryBot.define do
-
   factory :trade_code do
     factory :source, class: Source do
-      sequence(:code) { |n| (97 + n % 26).chr }
-      sequence(:name_en) { |n| "Source @{n}" }
+      sequence(:code) { |n| (97 + (n % 26)).chr }
+      sequence(:name_en) { |n| 'Source @{n}' }
     end
 
     factory :purpose, class: Purpose do
-      sequence(:code) { |n| (97 + n % 26).chr }
-      sequence(:name_en) { |n| "Purpose @{n}" }
+      sequence(:code) { |n| (97 + (n % 26)).chr }
+      sequence(:name_en) { |n| 'Purpose @{n}' }
     end
 
     factory :term, class: Term do
-      sequence(:code) { |n| [n, n + 1, n + 2].map { |i| (97 + i % 26).chr }.join }
-      sequence(:name_en) { |n| "Term @{n}" }
+      sequence(:code) { |n| [ n, n + 1, n + 2 ].map { |i| (97 + (i % 26)).chr }.join }
+      sequence(:name_en) { |n| 'Term @{n}' }
     end
 
     factory :unit, class: Unit do
-      sequence(:code) { |n| [n, n + 1, n + 2].map { |i| (97 + i % 26).chr }.join }
-      sequence(:name_en) { |n| "Unit @{n}" }
+      sequence(:code) { |n| [ n, n + 1, n + 2 ].map { |i| (97 + (i % 26)).chr }.join }
+      sequence(:name_en) { |n| 'Unit @{n}' }
     end
   end
 
@@ -28,7 +27,7 @@ FactoryBot.define do
   end
 
   factory :validation_rule, class: Trade::ValidationRule do
-    column_names { ['taxon_name'] }
+    column_names { [ 'taxon_name' ] }
     run_order { 1 }
     factory :presence_validation_rule, class: Trade::PresenceValidationRule
     factory :numericality_validation_rule, class: Trade::NumericalityValidationRule
@@ -40,7 +39,7 @@ FactoryBot.define do
     end
     factory :taxon_concept_appendix_year_validation_rule,
       class: Trade::TaxonConceptAppendixYearValidationRule do
-      column_names { ['taxon_concept_id', 'appendix', 'year'] }
+      column_names { [ 'taxon_concept_id', 'appendix', 'year' ] }
       valid_values_view { 'valid_taxon_concept_appendix_year_mview' }
     end
     factory :distinct_values_validation_rule,
@@ -52,7 +51,7 @@ FactoryBot.define do
   factory :validation_error, class: Trade::ValidationError do
     annual_report_upload
     validation_rule
-    matching_criteria {}
+    matching_criteria { }
     is_ignored { false }
   end
 

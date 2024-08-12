@@ -12,7 +12,7 @@ class Admin::ListingChangesController < Admin::StandardAuthorizationController
         :geo_entities,
         :annotation,
         :taxon_concept,
-        exclusions: [:geo_entities, :taxon_concept]
+        exclusions: [ :geo_entities, :taxon_concept ]
       ]).
       where("change_types.name <> '#{ChangeType::EXCEPTION}'").
       page(params[:page]).per(200).where(parent_id: nil).

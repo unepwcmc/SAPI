@@ -9,13 +9,13 @@ class ApplicationController < ActionController::Base
   protected
 
   def access_denied_error(exception)
-    rescue_path = if request.referrer && request.referrer != request.url
+    rescue_path = if request.referer && request.referer != request.url
                     request.referer
-                  elsif current_user.is_manager_or_contributor_or_secretariat?
+    elsif current_user.is_manager_or_contributor_or_secretariat?
                     admin_root_path
-                  else
+    else
                     root_path
-                  end
+    end
 
     message = if current_user.is_manager_or_contributor?
                 case exception.action
@@ -24,11 +24,11 @@ class ApplicationController < ActionController::Base
                 else
                   exception.message
                 end
-              elsif current_user.is_secretariat?
+    elsif current_user.is_secretariat?
                 t('secretariat_alert')
-              else
+    else
                 'You are not authorised to access this page'
-              end
+    end
 
     flash[:error] = message
     respond_to do |format|
@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    extra_parameters = [:name, :is_cites_authority, :organisation, :geo_entity_id]
+    extra_parameters = [ :name, :is_cites_authority, :organisation, :geo_entity_id ]
     devise_parameter_sanitizer.permit(:sign_up, keys: extra_parameters)
     devise_parameter_sanitizer.permit(:account_update, keys: extra_parameters)
   end
@@ -77,5 +77,4 @@ class ApplicationController < ActionController::Base
   def delete_email
     session.delete(:email)
   end
-
 end

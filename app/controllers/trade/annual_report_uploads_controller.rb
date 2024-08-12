@@ -26,7 +26,7 @@ class Trade::AnnualReportUploadsController < TradeController
     @annual_report_upload = Trade::AnnualReportUpload.create(
       annual_report_upload_params
     )
-    render json: { files: [@annual_report_upload.to_jq_upload] }
+    render json: { files: [ @annual_report_upload.to_jq_upload ] }
   end
 
   def submit
@@ -46,7 +46,7 @@ class Trade::AnnualReportUploadsController < TradeController
       @annual_report_upload.destroy
       render json: nil, status: :ok
     else
-      head 403
+      head :forbidden
     end
   end
 
@@ -74,5 +74,4 @@ class Trade::AnnualReportUploadsController < TradeController
       ]
     )
   end
-
 end

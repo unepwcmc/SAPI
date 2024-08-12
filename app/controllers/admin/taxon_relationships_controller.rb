@@ -1,18 +1,17 @@
 class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationController
-
   belongs_to :taxon_concept
-  before_action :load_taxon_relationship_types, only: [:index, :create]
-  before_action :load_search, except: [:create, :update, :destroy]
+  before_action :load_taxon_relationship_types, only: [ :index, :create ]
+  before_action :load_search, except: [ :create, :update, :destroy ]
   layout 'taxon_concepts'
 
   def index
     index! do
       @form_taxonomies = Taxonomy.order(:name). # for Inter-taxonomic relationships
-        where('id <> ?', @taxon_concept.taxonomy_id)
+        where.not(id: @taxon_concept.taxonomy_id)
       @inverse_taxon_relationships = TaxonRelationship.
         where(other_taxon_concept_id: @taxon_concept.id,
           taxon_relationship_type_id: @taxon_relationship_type.id).
-          page(params[:page])
+        page(params[:page])
     end
   end
 
@@ -28,12 +27,12 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
 
     create! do |success, failure|
       success.js { render 'create' }
-      failure.js {
+      failure.js do
         @taxonomies = Taxonomy.order(:name). # for Inter-taxonomic relationships
-          where('id <> ?', TaxonConcept.find(params[:taxon_relationship][:taxon_concept_id]).
+          where.not(id: TaxonConcept.find(params[:taxon_relationship][:taxon_concept_id]).
           try(:taxonomy_id))
         render 'admin/simple_crud/new'
-      }
+      end
     end
   end
 
@@ -67,7 +66,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
   def collection
     @taxon_relationships ||= end_of_association_chain.
       joins(:taxon_relationship_type).
-      where("taxon_relationship_types.name": @taxon_relationship_type.name).
+      where('taxon_relationship_types.name': @taxon_relationship_type.name).
       page(params[:page])
   end
 

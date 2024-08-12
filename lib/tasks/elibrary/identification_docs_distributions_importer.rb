@@ -1,5 +1,4 @@
 class Elibrary::IdentificationDocsDistributionsImporter
-
   def self.run
     puts 'Importing distributions at species level...'
     import_species_distributions
@@ -52,7 +51,6 @@ class Elibrary::IdentificationDocsDistributionsImporter
 
   # import distribution on material documents tagged at level higher than species
   def self.import_higher_taxa_distributions
-
     sql = <<-SQL
     WITH doc_taxon_tmp AS (
       SELECT DISTINCT(dc.id) doc_cit_id, UNNEST(d.taxon_concept_ids)tc_ids
@@ -76,11 +74,11 @@ class Elibrary::IdentificationDocsDistributionsImporter
 
         children = MTaxonConcept.descendants_ids(res['tc_ids'])
 
-        countries_ids = MTaxonConcept.where(id: children).pluck(:countries_ids_ary)
-          .compact.flatten.uniq.sort
+        countries_ids = MTaxonConcept.where(id: children).pluck(:countries_ids_ary).
+          compact.flatten.uniq.sort
 
         if countries_ids.empty?
-          no_distr << [doc_cit_id, children]
+          no_distr << [ doc_cit_id, children ]
           next
         end
 

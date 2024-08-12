@@ -1,5 +1,4 @@
 module DashboardStatsCache
-
   def self.update_dashboard_stats
     puts 'Updating Dashboard Stats'
     DashboardStatsSerializer.cache.clear

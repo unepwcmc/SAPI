@@ -31,8 +31,8 @@ class ApiRequest < ApplicationRecord
   scope :by_response_status, -> { group(:response_status) }
   scope :by_controller, -> { group(:controller) }
 
-  RESPONSE_STATUSES = [200, 400, 401, 404, 422, 500]
-  CONTROLLERS = ['taxon_concepts', 'distributions', 'cites_legislation', 'eu_legislation', 'references']
+  RESPONSE_STATUSES = [ 200, 400, 401, 404, 422, 500 ]
+  CONTROLLERS = [ 'taxon_concepts', 'distributions', 'cites_legislation', 'eu_legislation', 'references' ]
 
   def self.top_50_most_active_users
     subquery = self.recent.select(
@@ -43,13 +43,13 @@ class ApiRequest < ApplicationRecord
         'COUNT(NULLIF(response_status = 200, TRUE)) AS failure_cnt'
       ]
     ).group(:user_id).
-      where('user_id IS NOT NULL')
+      where.not(user_id: nil)
     self.from("(#{subquery.to_sql}) AS api_requests").
       order('cnt DESC').limit(50)
   end
 
   def self.recent_requests(user = nil)
-    query = self.select([:response_status, :created_at]).recent.order(:response_status)
+    query = self.select([ :response_status, :created_at ]).recent.order(:response_status)
     query = query.where(user_id: user.id) if user
     query.group(:response_status).group_by_day(:created_at, format: '%Y-%m-%d').count(:all)
   end
@@ -83,5 +83,4 @@ class ApiRequest < ApplicationRecord
     res = ApiRequest.find_by_sql(sql).first
     res['json_object_agg']
   end
-
 end

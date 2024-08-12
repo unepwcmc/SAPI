@@ -12,7 +12,7 @@ module Changeable
     #########################################################
     ### after save
     after_save :changeable_after_save_callback
-    after_commit :changeable_after_save_callback_on_commit, on: [:create, :update]
+    after_commit :changeable_after_save_callback_on_commit, on: [ :create, :update ]
     #########################################################
     ### before destroy
     before_destroy :changeable_before_destroy_callback
@@ -66,8 +66,8 @@ module Changeable
     #   end
     # end
     # == Changed to fix deprecation warnings ==
-    if taxon_concept.nil? && taxon_concept_id_before_last_save ||
-      taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save
+    if (taxon_concept.nil? && taxon_concept_id_before_last_save) ||
+      (taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save)
       previous_taxon_concept = TaxonConcept.find_by_id(taxon_concept_id_before_last_save)
       if previous_taxon_concept
         changeable_bump_dependents_timestamp_part_one(previous_taxon_concept, updated_by_id)
@@ -116,8 +116,8 @@ module Changeable
     #   end
     # end
     # == Changed to fix deprecation warnings ==
-    if taxon_concept.nil? && taxon_concept_id_before_last_save ||
-      taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save
+    if (taxon_concept.nil? && taxon_concept_id_before_last_save) ||
+      (taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save)
       previous_taxon_concept = TaxonConcept.find_by_id(taxon_concept_id_before_last_save)
       if previous_taxon_concept
         changeable_bump_dependents_timestamp_part_two

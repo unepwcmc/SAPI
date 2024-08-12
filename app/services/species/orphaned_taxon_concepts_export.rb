@@ -1,5 +1,4 @@
 class Species::OrphanedTaxonConceptsExport < Species::CsvCopyExport
-
   def query
     rel = TaxonConcept.from(table_name).
       order('full_name')
@@ -34,5 +33,4 @@ class Species::OrphanedTaxonConceptsExport < Species::CsvCopyExport
       'Associations updated date', 'Associations updated by'
     ]
   end
-
 end

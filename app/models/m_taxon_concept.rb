@@ -149,7 +149,7 @@ class MTaxonConcept < ApplicationRecord
   scope :by_cites_eu_taxonomy, -> { where(taxonomy_is_cites_eu: true) }
   scope :by_cms_taxonomy, -> { where(taxonomy_is_cites_eu: false) }
 
-  scope :without_non_accepted, -> { where(name_status: ['A', 'H']) }
+  scope :without_non_accepted, -> { where(name_status: [ 'A', 'H' ]) }
 
   scope :without_hidden, -> { where("#{table_name}.cites_show = 't'") }
 
@@ -170,7 +170,7 @@ class MTaxonConcept < ApplicationRecord
   scope :at_level_of_listing, -> { where(cites_listed: 't') }
 
   scope :taxonomic_layout, -> { order('taxonomic_position') }
-  scope :alphabetical_layout, -> { order(['kingdom_position', 'full_name']) }
+  scope :alphabetical_layout, -> { order([ 'kingdom_position', 'full_name' ]) }
   translates :rank_display_name,
     :all_distribution_ary, :native_distribution_ary,
     :introduced_distribution_ary, :introduced_uncertain_distribution_ary,
@@ -197,18 +197,18 @@ class MTaxonConcept < ApplicationRecord
     ORDER BY rank_id ASC, full_name
     SQL
     res = ApplicationRecord.connection.execute(query)
-    res.ntuples.zero? ? [taxon_concept.to_i] : res.map(&:values).flatten << taxon_concept.to_i
+    res.ntuples.zero? ? [ taxon_concept.to_i ] : res.map(&:values).flatten << taxon_concept.to_i
   end
 
   def spp
-    if ['GENUS', 'FAMILY', 'SUBFAMILY', 'ORDER'].include?(rank_name)
+    if [ 'GENUS', 'FAMILY', 'SUBFAMILY', 'ORDER' ].include?(rank_name)
       'spp.' unless name_status == 'H' # Hybrids are not species groups
     else
       nil
     end
   end
 
-  ['English', 'Spanish', 'French'].each do |lng|
+  [ 'English', 'Spanish', 'French' ].each do |lng|
     define_method("#{lng.downcase}_names") do
       sym = :"#{lng.downcase}_names_ary"
       db_ary_to_array(sym)
@@ -292,17 +292,17 @@ class MTaxonConcept < ApplicationRecord
   end
 
   def recently_changed
-    return (cites_listing_updated_at ? cites_listing_updated_at > 8.year.ago : false)
+    (cites_listing_updated_at ? cites_listing_updated_at > 8.years.ago : false)
   end
 
   # the methods below are for checklist downloads only and a bad idea as well
 
-  ['en', 'es', 'fr'].each do |lng|
-    ["hash_full_note_#{lng.downcase}", "full_note_#{lng.downcase}", "short_note_#{lng.downcase}"].each do |method_name|
+  [ 'en', 'es', 'fr' ].each do |lng|
+    [ "hash_full_note_#{lng.downcase}", "full_note_#{lng.downcase}", "short_note_#{lng.downcase}" ].each do |method_name|
       define_method(method_name) do
         current_cites_additions.map do |lc|
           note = lc.send(method_name) || ''
-          note && "Appendix #{lc.species_listing_name}:" + (note || '') + (" #{lc.nomenclature_note}" || '')
+          note && ("Appendix #{lc.species_listing_name}:" + (note || '') + (" #{lc.nomenclature_note}" || ''))
         end.join("\n")
       end
     end
@@ -321,5 +321,4 @@ class MTaxonConcept < ApplicationRecord
   def current_parties_full_names
     CountryDictionary.instance.get_names_by_ids(current_parties_ids).compact
   end
-
 end

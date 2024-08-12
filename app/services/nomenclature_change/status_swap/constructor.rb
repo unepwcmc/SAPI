@@ -33,5 +33,4 @@ class NomenclatureChange::StatusSwap::Constructor
     end
     note + '.</p>'
   end
-
 end

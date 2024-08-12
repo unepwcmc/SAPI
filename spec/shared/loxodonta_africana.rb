@@ -1,4 +1,4 @@
-shared_context "Loxodonta africana" do
+shared_context 'Loxodonta africana' do
   {
     ghana: 'GH',
     botswana: 'BW',
@@ -47,7 +47,7 @@ shared_context "Loxodonta africana" do
       taxon_concept: @species,
       effective_at: '1997-09-18'
     )
-    [botswana, namibia, zimbabwe].each do |country|
+    [ botswana, namibia, zimbabwe ].each do |country|
       create(
         :listing_distribution,
         geo_entity: country,
@@ -77,7 +77,7 @@ shared_context "Loxodonta africana" do
       event: reg2013,
       is_current: true
     )
-    [botswana, namibia, zambia, zimbabwe].each do |country|
+    [ botswana, namibia, zambia, zimbabwe ].each do |country|
       create(
         :listing_distribution,
         geo_entity: country,
@@ -94,8 +94,8 @@ shared_context "Loxodonta africana" do
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
-      #Skip old sapi context let statements,
-      #which are now instance variables starting with _
+      # Skip old sapi context let statements,
+      # which are now instance variables starting with _
       next if t.to_s.include?('@_')
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept

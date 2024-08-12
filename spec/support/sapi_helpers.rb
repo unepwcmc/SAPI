@@ -1,5 +1,4 @@
 shared_context :sapi do
-
   def cites_eu
     @_cites_eu ||= create(:taxonomy, name: Taxonomy::CITES_EU)
   end
@@ -13,12 +12,12 @@ shared_context :sapi do
     d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::CITES)
     unless d
       d = create(:designation, name: Designation::CITES, taxonomy: cites_eu)
-      %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
+      %w[ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION].each do |ch|
         ch_type = ChangeType.find_by_designation_id_and_name(d.id, ch)
         unless ch_type
           create(:change_type, name: ch, designation: d)
         end
-        %w(I II III).each do |app|
+        %w[I II III].each do |app|
           unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
             create(
               :species_listing, name: "Appendix #{app}", abbreviation: app,
@@ -36,11 +35,11 @@ shared_context :sapi do
     d = Designation.find_by_taxonomy_id_and_name(cites_eu.id, Designation::EU)
     unless d
       d = create(:designation, name: Designation::EU, taxonomy: cites_eu)
-      %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
+      %w[ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION].each do |ch|
         unless ChangeType.find_by_designation_id_and_name(d.id, ch)
           create(:change_type, name: ch, designation: d)
         end
-        %w(A B C D).each do |app|
+        %w[A B C D].each do |app|
           unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
             create(
               :species_listing, name: "Annex #{app}", abbreviation: app,
@@ -58,11 +57,11 @@ shared_context :sapi do
     d = Designation.find_by_taxonomy_id_and_name(cms.id, Designation::CMS)
     unless d
       d = create(:designation, name: Designation::CMS, taxonomy: cms)
-      %w(ADDITION DELETION EXCEPTION).each do |ch|
+      %w[ADDITION DELETION EXCEPTION].each do |ch|
         unless ChangeType.find_by_designation_id_and_name(d.id, ch)
           create(:change_type, name: ch, designation: d)
         end
-        %w(I II).each do |app|
+        %w[I II].each do |app|
           unless SpeciesListing.find_by_designation_id_and_abbreviation(d.id, app)
             create(
               :species_listing, name: "Appendix #{app}", abbreviation: app,
@@ -75,8 +74,7 @@ shared_context :sapi do
     @_cms_designation = d
   end
 
-  %w(ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION).each do |ch|
-
+  %w[ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION].each do |ch|
     define_method "cites_#{ch.downcase}" do
       ChangeType.find_by_designation_id_and_name(cites.id, ch)
     end
@@ -85,7 +83,7 @@ shared_context :sapi do
       ChangeType.find_by_designation_id_and_name(eu.id, ch)
     end
 
-    %w(I II III).each do |app|
+    %w[I II III].each do |app|
       define_method "cites_#{app}" do
         SpeciesListing.find_by_designation_id_and_abbreviation(cites.id, app)
       end
@@ -99,7 +97,7 @@ shared_context :sapi do
         )
       end
     end
-    %w(A B C D).each do |app|
+    %w[A B C D].each do |app|
       define_method "eu_#{app}" do
         SpeciesListing.find_by_designation_id_and_abbreviation(eu.id, app)
       end
@@ -115,13 +113,12 @@ shared_context :sapi do
     end
   end
 
-  %w(ADDITION DELETION EXCEPTION).each do |ch|
-
+  %w[ADDITION DELETION EXCEPTION].each do |ch|
     define_method "cms_#{ch.downcase}" do
       ChangeType.find_by_designation_id_and_name(cms_designation.id, ch)
     end
 
-    %w(I II).each do |app|
+    %w[I II].each do |app|
       define_method "cms_#{app}" do
         SpeciesListing.find_by_designation_id_and_abbreviation(cms_designation.id, app)
       end
@@ -282,7 +279,7 @@ shared_context :sapi do
     )
   end
 
-  %w(KINGDOM PHYLUM CLASS ORDER FAMILY SUBFAMILY GENUS SPECIES SUBSPECIES VARIETY).each do |rank|
+  %w[KINGDOM PHYLUM CLASS ORDER FAMILY SUBFAMILY GENUS SPECIES SUBSPECIES VARIETY].each do |rank|
     define_method "create_#{rank.downcase}" do |options = {}|
       create(
         :taxon_concept,
@@ -333,8 +330,8 @@ shared_context :sapi do
     end
   end
 
-  [:cites_cop, :cites_ac, :cites_pc, :cites_tc, :cites_extraordinary_meeting,
-    :cites_suspension_notification].each do |cites_event_type|
+  [ :cites_cop, :cites_ac, :cites_pc, :cites_tc, :cites_extraordinary_meeting,
+    :cites_suspension_notification ].each do |cites_event_type|
     define_method "create_#{cites_event_type}" do |options = {}|
       create(
         cites_event_type,
@@ -348,8 +345,8 @@ shared_context :sapi do
       )
     end
   end
-  [:eu_regulation, :eu_suspension_regulation, :eu_implementing_regulation,
-    :eu_council_regulation, :ec_srg].each do |eu_event_type|
+  [ :eu_regulation, :eu_suspension_regulation, :eu_implementing_regulation,
+    :eu_council_regulation, :ec_srg ].each do |eu_event_type|
     define_method "create_#{eu_event_type}" do |options = {}|
       create(
         eu_event_type,
@@ -367,14 +364,14 @@ shared_context :sapi do
   def create_taxon_name_presence_validation
     create(
       :presence_validation_rule,
-      column_names: ['taxon_name']
+      column_names: [ 'taxon_name' ]
     )
   end
 
   def create_year_format_validation
     create(
       :format_validation_rule,
-      column_names: ['year'],
+      column_names: [ 'year' ],
       format_re: '^\d{4}$',
       is_strict: true
     )
@@ -383,7 +380,7 @@ shared_context :sapi do
   def create_taxon_concept_validation
     create(
       :inclusion_validation_rule,
-      column_names: ['taxon_name'],
+      column_names: [ 'taxon_name' ],
       valid_values_view: 'valid_taxon_name_view',
       is_strict: true
     )
@@ -398,7 +395,7 @@ shared_context :sapi do
 
   def create_term_unit_validation
     create(:inclusion_validation_rule,
-      column_names: ['term_code', 'unit_code'],
+      column_names: [ 'term_code', 'unit_code' ],
       valid_values_view: 'valid_term_unit_view',
       is_primary: false
     )
@@ -406,7 +403,7 @@ shared_context :sapi do
 
   def create_term_purpose_validation
     create(:inclusion_validation_rule,
-      column_names: ['term_code', 'purpose_code'],
+      column_names: [ 'term_code', 'purpose_code' ],
       valid_values_view: 'valid_term_purpose_view',
       is_primary: false
     )
@@ -414,7 +411,7 @@ shared_context :sapi do
 
   def create_taxon_concept_term_validation
     create(:inclusion_validation_rule,
-      column_names: ['taxon_concept_id', 'term_code'],
+      column_names: [ 'taxon_concept_id', 'term_code' ],
       valid_values_view: 'valid_taxon_concept_term_view',
       is_primary: false,
       is_strict: true
@@ -424,11 +421,11 @@ shared_context :sapi do
   def create_taxon_concept_country_of_origin_validation
     create(:inclusion_validation_rule,
       scope: {
-        rank: { inclusion: [Rank::SPECIES, Rank::SUBSPECIES] },
-        source_code: { inclusion: ['W'] },
-        country_of_origin: { exclusion: ['XX'] }
+        rank: { inclusion: [ Rank::SPECIES, Rank::SUBSPECIES ] },
+        source_code: { inclusion: [ 'W' ] },
+        country_of_origin: { exclusion: [ 'XX' ] }
       },
-      column_names: ['taxon_concept_id', 'country_of_origin'],
+      column_names: [ 'taxon_concept_id', 'country_of_origin' ],
       valid_values_view: 'valid_taxon_concept_country_of_origin_view',
       is_primary: false,
       is_strict: true
@@ -438,12 +435,12 @@ shared_context :sapi do
   def create_taxon_concept_exporter_validation
     create(:inclusion_validation_rule,
       scope: {
-        rank: { inclusion: [Rank::SPECIES, Rank::SUBSPECIES] },
-        source_code: { inclusion: ['W'] },
+        rank: { inclusion: [ Rank::SPECIES, Rank::SUBSPECIES ] },
+        source_code: { inclusion: [ 'W' ] },
         country_of_origin: { blank: true },
-        exporter: { exclusion: ['XX'] }
+        exporter: { exclusion: [ 'XX' ] }
       },
-      column_names: ['taxon_concept_id', 'exporter'],
+      column_names: [ 'taxon_concept_id', 'exporter' ],
       valid_values_view: 'valid_taxon_concept_exporter_view',
       is_primary: false,
       is_strict: true
@@ -452,7 +449,7 @@ shared_context :sapi do
 
   def create_exporter_country_of_origin_validation
     create(:distinct_values_validation_rule,
-      column_names: ['exporter', 'country_of_origin'],
+      column_names: [ 'exporter', 'country_of_origin' ],
       is_primary: false,
       is_strict: true
     )
@@ -460,7 +457,7 @@ shared_context :sapi do
 
   def create_exporter_importer_validation
     create(:distinct_values_validation_rule,
-      column_names: ['exporter', 'importer'],
+      column_names: [ 'exporter', 'importer' ],
       is_primary: false,
       is_strict: true
     )
@@ -468,7 +465,7 @@ shared_context :sapi do
 
   def create_taxon_concept_source_validation
     create(:taxon_concept_source_validation_rule,
-      column_names: ['taxon_concept_id', 'source_code'],
+      column_names: [ 'taxon_concept_id', 'source_code' ],
       is_primary: false,
       is_strict: true
     )
@@ -497,7 +494,7 @@ shared_context :sapi do
   def reg2013
     @_reg2013 ||=
       create(:eu_regulation, name: 'No 750/2013', designation: eu,
-      effective_at: '2013-08-10', end_date: nil, is_current: true)
+        effective_at: '2013-08-10', end_date: nil, is_current: true)
   end
 
   {

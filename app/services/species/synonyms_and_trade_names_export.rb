@@ -1,5 +1,4 @@
 class Species::SynonymsAndTradeNamesExport < Species::CsvCopyExport
-
   def query
     rel = MTaxonConcept.from(table_name).
       order('name_status, rank_name, full_name')
@@ -44,5 +43,4 @@ class Species::SynonymsAndTradeNamesExport < Species::CsvCopyExport
       'Associations updated date', 'Associations updated by'
     ]
   end
-
 end

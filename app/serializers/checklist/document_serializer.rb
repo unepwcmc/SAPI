@@ -15,9 +15,7 @@ class Checklist::DocumentSerializer < ActiveModel::Serializer
     doc
   end
 
-  def taxon_concept_ids
-    object.taxon_concept_ids
-  end
+  delegate :taxon_concept_ids, to: :object
 
   def is_link
     object.document_type == 'Document::VirtualCollege' && !is_pdf?
