@@ -195,3 +195,14 @@ gem 'ember-source', '1.8.0' # NOTE: not what we actually use
 gem 'ember-data-source', '1.13.0' # NOTE: not what we actually use
 
 gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will change the handlebars.js version.
+
+# TODO: Fixing base64 to 0.1.1 because otherwise you get:
+#
+#     You have already activated base64 0.1.1, but your Gemfile requires base64
+#     0.2.0. Since base64 is a default gem, you can either remove your
+#     dependency on it or try updating to a newer version of bundler that
+#     supports base64 as a default gem
+#
+# It might be possible to fix this if we had an nginx version which supported
+# the config: `passenger_preload_bundler on;`
+gem 'base64', '0.1.1'
