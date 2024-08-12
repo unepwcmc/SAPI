@@ -21,8 +21,8 @@ gem 'sass-rails', '~> 5.0'
 gem 'sprockets', '3.7.2'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '~> 4.2.0'
+# Use Terser as compressor for JavaScript assets
+gem 'terser', '~> 1.2.3'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 5.0'
