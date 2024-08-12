@@ -99,14 +99,18 @@ group :development do
 
   gem 'annotate', "2.5.0"
   # gem 'sextant'
+
+  # Used to fix capistrano-local-precompile on Ruby 3.2 - see comment in Capfile
+  gem 'file_exists', '~> 0.2.0', require: false
+
   # Deploy with Capistrano
   gem 'capistrano', '3.18.0', require: false
-  gem 'capistrano-rails',   '1.6.3', require: false
+  gem 'capistrano-rails', '1.6.3', require: false
   gem 'capistrano-bundler', '1.6.0', require: false
   gem 'capistrano-rvm', '0.1.2', require: false
   gem 'capistrano-maintenance', '1.0.0', require: false
   gem 'capistrano-passenger', '0.2.0', require: false
-  gem 'capistrano-local-precompile', '1.2.0', require: false
+  gem 'capistrano-local-precompile', '1.2.0', require: false # NB: buggy on Ruby 3.2 - see comment in Capfile
   gem 'capistrano-sidekiq', '~> 2.3', '>= 2.3.1'
   gem 'slackistrano', '0.1.9', require: false
   gem 'brightbox', '2.3.9'
