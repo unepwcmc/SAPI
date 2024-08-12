@@ -121,12 +121,23 @@ group :development do
   gem 'slackistrano', '0.1.9', require: false
 
   gem 'jslint_on_rails', '1.1.1'
+
+  ##
+  # Rubocop and its plugins
+  gem 'rubocop'
+  gem 'rubocop-capybara'
+  gem 'rubocop-factory_bot'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
+  gem 'rubocop-rspec_rails'
+
+  ##
+  # For capistrano ssh
   gem 'rbnacl', '4.0.2'
   gem 'rbnacl-libsodium', '1.0.16'
   gem 'bcrypt_pbkdf', '1.1.0'
   gem 'ed25519', '1.2.4'
+
   # @TODO: bring back when ruby updated to > 2.6 # gem 'net-ssh', '7.0.0.beta1' # openssl 3.0 compatibility @see https://stackoverflow.com/q/72068406/1090438
 end
 
