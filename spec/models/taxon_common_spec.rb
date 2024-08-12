@@ -3,12 +3,19 @@
 # Table name: taxon_commons
 #
 #  id               :integer          not null, primary key
-#  taxon_concept_id :integer          not null
-#  common_name_id   :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  common_name_id   :integer          not null
 #  created_by_id    :integer
+#  taxon_concept_id :integer          not null
 #  updated_by_id    :integer
+#
+# Foreign Keys
+#
+#  taxon_commons_common_name_id_fk    (common_name_id => common_names.id)
+#  taxon_commons_created_by_id_fk     (created_by_id => users.id)
+#  taxon_commons_taxon_concept_id_fk  (taxon_concept_id => taxon_concepts.id)
+#  taxon_commons_updated_by_id_fk     (updated_by_id => users.id)
 #
 
 require 'spec_helper'

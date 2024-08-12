@@ -3,10 +3,14 @@
 # Table name: instruments
 #
 #  id             :integer          not null, primary key
-#  designation_id :integer
 #  name           :string(255)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  designation_id :integer
+#
+# Foreign Keys
+#
+#  instruments_designation_id_fk  (designation_id => designations.id)
 #
 
 class Instrument < ApplicationRecord

@@ -3,30 +3,40 @@
 # Table name: nomenclature_change_outputs
 #
 #  id                     :integer          not null, primary key
-#  nomenclature_change_id :integer          not null
-#  taxon_concept_id       :integer
-#  new_taxon_concept_id   :integer
-#  new_parent_id          :integer
-#  new_rank_id            :integer
-#  new_scientific_name    :string(255)
-#  new_author_year        :string(255)
-#  new_name_status        :string(255)
-#  note_en                :text             default("")
-#  created_by_id          :integer          not null
-#  updated_by_id          :integer          not null
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
+#  author_year            :string(255)
 #  internal_note          :text             default("")
 #  is_primary_output      :boolean          default(TRUE)
-#  parent_id              :integer
-#  rank_id                :integer
-#  scientific_name        :string(255)
-#  author_year            :string(255)
 #  name_status            :string(255)
+#  new_author_year        :string(255)
+#  new_name_status        :string(255)
+#  new_scientific_name    :string(255)
+#  note_en                :text             default("")
 #  note_es                :text             default("")
 #  note_fr                :text             default("")
-#  taxonomy_id            :integer
+#  scientific_name        :string(255)
 #  tag_list               :text             default("--- []\n")
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  created_by_id          :integer          not null
+#  new_parent_id          :integer
+#  new_rank_id            :integer
+#  new_taxon_concept_id   :integer
+#  nomenclature_change_id :integer          not null
+#  parent_id              :integer
+#  rank_id                :integer
+#  taxon_concept_id       :integer
+#  taxonomy_id            :integer
+#  updated_by_id          :integer          not null
+#
+# Foreign Keys
+#
+#  nomenclature_change_outputs_created_by_id_fk           (created_by_id => users.id)
+#  nomenclature_change_outputs_new_parent_id_fk           (new_parent_id => taxon_concepts.id)
+#  nomenclature_change_outputs_new_rank_id_fk             (new_rank_id => ranks.id)
+#  nomenclature_change_outputs_new_taxon_concept_id_fk    (new_taxon_concept_id => taxon_concepts.id)
+#  nomenclature_change_outputs_nomenclature_change_id_fk  (nomenclature_change_id => nomenclature_changes.id)
+#  nomenclature_change_outputs_taxon_concept_id_fk        (taxon_concept_id => taxon_concepts.id)
+#  nomenclature_change_outputs_updated_by_id_fk           (updated_by_id => users.id)
 #
 
 require 'spec_helper'

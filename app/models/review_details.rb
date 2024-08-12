@@ -3,12 +3,23 @@
 # Table name: review_details
 #
 #  id                   :integer          not null, primary key
-#  document_id          :integer
-#  review_phase_id      :integer
-#  process_stage_id     :integer
 #  recommended_category :text
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  document_id          :integer
+#  process_stage_id     :integer
+#  review_phase_id      :integer
+#
+# Indexes
+#
+#  index_review_details_on_process_stage_id  (process_stage_id)
+#  index_review_details_on_review_phase_id   (review_phase_id)
+#
+# Foreign Keys
+#
+#  review_details_document_id_fk       (document_id => documents.id) ON DELETE => cascade
+#  review_details_process_stage_id_fk  (process_stage_id => document_tags.id)
+#  review_details_review_phase_id_fk   (review_phase_id => document_tags.id)
 #
 
 class ReviewDetails < ApplicationRecord

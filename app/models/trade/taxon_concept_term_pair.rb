@@ -3,10 +3,15 @@
 # Table name: trade_taxon_concept_term_pairs
 #
 #  id               :integer          not null, primary key
-#  taxon_concept_id :integer
-#  term_id          :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  taxon_concept_id :integer
+#  term_id          :integer
+#
+# Foreign Keys
+#
+#  trade_taxon_concept_code_pairs_taxon_concept_id_fk  (taxon_concept_id => taxon_concepts.id)
+#  trade_taxon_concept_code_pairs_term_id_fk           (term_id => trade_codes.id)
 #
 
 class Trade::TaxonConceptTermPair < ApplicationRecord

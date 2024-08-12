@@ -3,12 +3,22 @@
 # Table name: document_citations
 #
 #  id             :integer          not null, primary key
-#  document_id    :integer
-#  created_by_id  :integer
-#  updated_by_id  :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  created_by_id  :integer
+#  document_id    :integer
 #  elib_legacy_id :integer
+#  updated_by_id  :integer
+#
+# Indexes
+#
+#  index_document_citations_on_document_id  (document_id)
+#
+# Foreign Keys
+#
+#  document_citations_created_by_id_fk  (created_by_id => users.id)
+#  document_citations_document_id_fk    (document_id => documents.id)
+#  document_citations_updated_by_id_fk  (updated_by_id => users.id)
 #
 
 class DocumentCitation < ApplicationRecord

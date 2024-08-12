@@ -3,12 +3,19 @@
 # Table name: trade_restriction_purposes
 #
 #  id                   :integer          not null, primary key
-#  trade_restriction_id :integer
-#  purpose_id           :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  created_by_id        :integer
+#  purpose_id           :integer
+#  trade_restriction_id :integer
 #  updated_by_id        :integer
+#
+# Foreign Keys
+#
+#  trade_restriction_purposes_created_by_id_fk      (created_by_id => users.id)
+#  trade_restriction_purposes_purpose_id            (purpose_id => trade_codes.id)
+#  trade_restriction_purposes_trade_restriction_id  (trade_restriction_id => trade_restrictions.id)
+#  trade_restriction_purposes_updated_by_id_fk      (updated_by_id => users.id)
 #
 
 class TradeRestrictionPurpose < ApplicationRecord

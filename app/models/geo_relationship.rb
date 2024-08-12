@@ -3,11 +3,17 @@
 # Table name: geo_relationships
 #
 #  id                       :integer          not null, primary key
-#  geo_entity_id            :integer          not null
-#  other_geo_entity_id      :integer          not null
-#  geo_relationship_type_id :integer          not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  geo_entity_id            :integer          not null
+#  geo_relationship_type_id :integer          not null
+#  other_geo_entity_id      :integer          not null
+#
+# Foreign Keys
+#
+#  geo_relationships_geo_entity_id_fk             (geo_entity_id => geo_entities.id)
+#  geo_relationships_geo_relationship_type_id_fk  (geo_relationship_type_id => geo_relationship_types.id)
+#  geo_relationships_other_geo_entity_id_fk       (other_geo_entity_id => geo_entities.id)
 #
 
 class GeoRelationship < ApplicationRecord

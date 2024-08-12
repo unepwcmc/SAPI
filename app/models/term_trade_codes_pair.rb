@@ -3,11 +3,20 @@
 # Table name: term_trade_codes_pairs
 #
 #  id              :integer          not null, primary key
-#  term_id         :integer          not null
-#  trade_code_id   :integer
 #  trade_code_type :string(255)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  term_id         :integer          not null
+#  trade_code_id   :integer
+#
+# Indexes
+#
+#  index_term_trade_codes_pairs_on_term_and_trade_code  (term_id,trade_code_id,trade_code_type) UNIQUE
+#
+# Foreign Keys
+#
+#  term_trade_codes_pairs_term_id_fk        (term_id => trade_codes.id)
+#  term_trade_codes_pairs_trade_code_id_fk  (trade_code_id => trade_codes.id)
 #
 
 class TermTradeCodesPair < ApplicationRecord

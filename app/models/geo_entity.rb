@@ -3,18 +3,22 @@
 # Table name: geo_entities
 #
 #  id                 :integer          not null, primary key
-#  geo_entity_type_id :integer          not null
-#  name_en            :string(255)      not null
-#  long_name          :string(255)
+#  is_current         :boolean          default(TRUE)
 #  iso_code2          :string(255)
 #  iso_code3          :string(255)
-#  legacy_id          :integer
 #  legacy_type        :string(255)
+#  long_name          :string(255)
+#  name_en            :string(255)      not null
+#  name_es            :string(255)
+#  name_fr            :string(255)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  is_current         :boolean          default(TRUE)
-#  name_fr            :string(255)
-#  name_es            :string(255)
+#  geo_entity_type_id :integer          not null
+#  legacy_id          :integer
+#
+# Foreign Keys
+#
+#  geo_entities_geo_entity_type_id_fk  (geo_entity_type_id => geo_entity_types.id)
 #
 
 class GeoEntity < ApplicationRecord

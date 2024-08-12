@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: analytics_events
+#
+#  id         :integer          not null, primary key
+#  event_name :string(255)
+#  event_type :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
 class AnalyticsEvent < ApplicationRecord
   # Can use enum once upgraded to > Rails 4.1
   EVENT_TYPES = %w( download )

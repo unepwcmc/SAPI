@@ -3,23 +3,30 @@
 # Table name: annotations
 #
 #  id                  :integer          not null, primary key
-#  symbol              :string(255)
-#  parent_symbol       :string(255)
-#  display_in_index    :boolean          default(FALSE), not null
 #  display_in_footnote :boolean          default(FALSE), not null
-#  short_note_en       :text
+#  display_in_index    :boolean          default(FALSE), not null
 #  full_note_en        :text
-#  short_note_fr       :text
-#  full_note_fr        :text
-#  short_note_es       :text
 #  full_note_es        :text
-#  original_id         :integer
-#  event_id            :integer
+#  full_note_fr        :text
+#  parent_symbol       :string(255)
+#  short_note_en       :text
+#  short_note_es       :text
+#  short_note_fr       :text
+#  symbol              :string(255)
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  import_row_id       :integer
 #  created_by_id       :integer
+#  event_id            :integer
+#  import_row_id       :integer
+#  original_id         :integer
 #  updated_by_id       :integer
+#
+# Foreign Keys
+#
+#  annotations_created_by_id_fk  (created_by_id => users.id)
+#  annotations_event_id_fk       (event_id => events.id)
+#  annotations_source_id_fk      (original_id => annotations.id)
+#  annotations_updated_by_id_fk  (updated_by_id => users.id)
 #
 
 require 'spec_helper'

@@ -3,13 +3,24 @@
 # Table name: taxon_instruments
 #
 #  id               :integer          not null, primary key
-#  taxon_concept_id :integer
-#  instrument_id    :integer
 #  effective_from   :datetime
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  created_by_id    :integer
+#  instrument_id    :integer
+#  taxon_concept_id :integer
 #  updated_by_id    :integer
+#
+# Indexes
+#
+#  index_taxon_instruments_on_taxon_concept_id  (taxon_concept_id)
+#
+# Foreign Keys
+#
+#  taxon_instruments_created_by_id_fk     (created_by_id => users.id)
+#  taxon_instruments_instrument_id_fk     (instrument_id => instruments.id)
+#  taxon_instruments_taxon_concept_id_fk  (taxon_concept_id => taxon_concepts.id)
+#  taxon_instruments_updated_by_id_fk     (updated_by_id => users.id)
 #
 
 class TaxonInstrument < ApplicationRecord

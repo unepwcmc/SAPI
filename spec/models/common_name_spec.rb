@@ -4,11 +4,17 @@
 #
 #  id            :integer          not null, primary key
 #  name          :string(255)      not null
-#  language_id   :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  created_by_id :integer
+#  language_id   :integer          not null
 #  updated_by_id :integer
+#
+# Foreign Keys
+#
+#  common_names_created_by_id_fk  (created_by_id => users.id)
+#  common_names_language_id_fk    (language_id => languages.id)
+#  common_names_updated_by_id_fk  (updated_by_id => users.id)
 #
 
 require 'spec_helper'

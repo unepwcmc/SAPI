@@ -3,13 +3,17 @@
 # Table name: change_types
 #
 #  id              :integer          not null, primary key
-#  name            :string(255)      not null
-#  designation_id  :integer          not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
 #  display_name_en :text             not null
 #  display_name_es :text
 #  display_name_fr :text
+#  name            :string(255)      not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  designation_id  :integer          not null
+#
+# Foreign Keys
+#
+#  change_types_designation_id_fk  (designation_id => designations.id)
 #
 
 require 'spec_helper'

@@ -3,31 +3,45 @@
 # Table name: trade_restrictions
 #
 #  id                          :integer          not null, primary key
-#  is_current                  :boolean          default(TRUE)
-#  start_date                  :datetime
+#  applies_to_import           :boolean          default(FALSE), not null
 #  end_date                    :datetime
-#  geo_entity_id               :integer
-#  quota                       :float
-#  publication_date            :datetime
-#  notes                       :text
-#  type                        :string(255)
-#  unit_id                     :integer
-#  taxon_concept_id            :integer
-#  public_display              :boolean          default(TRUE)
-#  url                         :text
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
-#  start_notification_id       :integer
-#  end_notification_id         :integer
-#  excluded_taxon_concepts_ids :string
-#  original_id                 :integer
-#  updated_by_id               :integer
-#  created_by_id               :integer
+#  excluded_taxon_concepts_ids :integer          is an Array
 #  internal_notes              :text
+#  is_current                  :boolean          default(TRUE)
 #  nomenclature_note_en        :text
 #  nomenclature_note_es        :text
 #  nomenclature_note_fr        :text
-#  applies_to_import           :boolean          default(FALSE), not null
+#  notes                       :text
+#  public_display              :boolean          default(TRUE)
+#  publication_date            :datetime
+#  quota                       :float
+#  start_date                  :datetime
+#  type                        :string(255)
+#  url                         :text
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  created_by_id               :integer
+#  end_notification_id         :integer
+#  geo_entity_id               :integer
+#  original_id                 :integer
+#  start_notification_id       :integer
+#  taxon_concept_id            :integer
+#  unit_id                     :integer
+#  updated_by_id               :integer
+#
+# Indexes
+#
+#  trade_restrictions_extract_year_from_start_date  (date_part('year'::text, start_date)) WHERE ((type)::text = 'Quota'::text)
+#
+# Foreign Keys
+#
+#  trade_restrictions_created_by_id_fk          (created_by_id => users.id)
+#  trade_restrictions_end_notification_id_fk    (end_notification_id => events.id)
+#  trade_restrictions_geo_entity_id_fk          (geo_entity_id => geo_entities.id)
+#  trade_restrictions_start_notification_id_fk  (start_notification_id => events.id)
+#  trade_restrictions_taxon_concept_id_fk       (taxon_concept_id => taxon_concepts.id)
+#  trade_restrictions_unit_id_fk                (unit_id => trade_codes.id)
+#  trade_restrictions_updated_by_id_fk          (updated_by_id => users.id)
 #
 
 require 'digest/sha1'

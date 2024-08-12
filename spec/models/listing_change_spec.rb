@@ -3,27 +3,50 @@
 # Table name: listing_changes
 #
 #  id                         :integer          not null, primary key
-#  taxon_concept_id           :integer          not null
-#  species_listing_id         :integer
-#  change_type_id             :integer          not null
-#  annotation_id              :integer
-#  hash_annotation_id         :integer
-#  effective_at               :datetime         default(2012-09-21 07:32:20 UTC), not null
-#  is_current                 :boolean          default(FALSE), not null
-#  parent_id                  :integer
-#  inclusion_taxon_concept_id :integer
-#  event_id                   :integer
-#  original_id                :integer
+#  effective_at               :datetime         default(Fri, 21 Sep 2012 07:32:20.000000000 UTC +00:00), not null
 #  explicit_change            :boolean          default(TRUE)
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  import_row_id              :integer
-#  created_by_id              :integer
-#  updated_by_id              :integer
+#  internal_notes             :text
+#  is_current                 :boolean          default(FALSE), not null
 #  nomenclature_note_en       :text
 #  nomenclature_note_es       :text
 #  nomenclature_note_fr       :text
-#  internal_notes             :text
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  annotation_id              :integer
+#  change_type_id             :integer          not null
+#  created_by_id              :integer
+#  event_id                   :integer
+#  hash_annotation_id         :integer
+#  import_row_id              :integer
+#  inclusion_taxon_concept_id :integer
+#  original_id                :integer
+#  parent_id                  :integer
+#  species_listing_id         :integer
+#  taxon_concept_id           :integer          not null
+#  updated_by_id              :integer
+#
+# Indexes
+#
+#  index_listing_changes_on_annotation_id               (annotation_id)
+#  index_listing_changes_on_event_id                    (event_id)
+#  index_listing_changes_on_hash_annotation_id          (hash_annotation_id)
+#  index_listing_changes_on_inclusion_taxon_concept_id  (inclusion_taxon_concept_id)
+#  index_listing_changes_on_parent_id                   (parent_id)
+#  index_listing_changes_on_taxon_concept_id            (taxon_concept_id)
+#
+# Foreign Keys
+#
+#  listing_changes_annotation_id_fk               (annotation_id => annotations.id)
+#  listing_changes_change_type_id_fk              (change_type_id => change_types.id)
+#  listing_changes_created_by_id_fk               (created_by_id => users.id)
+#  listing_changes_event_id_fk                    (event_id => events.id)
+#  listing_changes_hash_annotation_id_fk          (hash_annotation_id => annotations.id)
+#  listing_changes_inclusion_taxon_concept_id_fk  (inclusion_taxon_concept_id => taxon_concepts.id)
+#  listing_changes_parent_id_fk                   (parent_id => listing_changes.id)
+#  listing_changes_source_id_fk                   (original_id => listing_changes.id)
+#  listing_changes_species_listing_id_fk          (species_listing_id => species_listings.id)
+#  listing_changes_taxon_concept_id_fk            (taxon_concept_id => taxon_concepts.id)
+#  listing_changes_updated_by_id_fk               (updated_by_id => users.id)
 #
 
 require 'spec_helper'

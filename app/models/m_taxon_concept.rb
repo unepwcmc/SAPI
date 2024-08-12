@@ -3,105 +3,115 @@
 # Table name: taxon_concepts_mview
 #
 #  id                                       :integer          primary key
-#  parent_id                                :integer
-#  taxonomy_id                              :integer
-#  taxonomy_is_cites_eu                     :boolean
-#  full_name                                :string(255)
-#  name_status                              :string(255)
-#  rank_id                                  :integer
-#  rank_name                                :string(255)
-#  rank_display_name_en                     :string(255)
-#  rank_display_name_es                     :string(255)
-#  rank_display_name_fr                     :string(255)
-#  spp                                      :boolean
+#  all_distribution_ary_en                  :string           is an Array
+#  all_distribution_ary_es                  :string           is an Array
+#  all_distribution_ary_fr                  :string           is an Array
+#  all_distribution_iso_codes_ary           :string           is an Array
+#  ann_symbol                               :string(255)
+#  author_year                              :string(255)
 #  cites_accepted                           :boolean
-#  kingdom_position                         :integer
-#  taxonomic_position                       :string(255)
-#  kingdom_name                             :string(255)
-#  phylum_name                              :string(255)
-#  class_name                               :string(255)
-#  order_name                               :string(255)
-#  family_name                              :string(255)
-#  subfamily_name                           :string(255)
-#  genus_name                               :string(255)
-#  species_name                             :string(255)
-#  subspecies_name                          :string(255)
-#  kingdom_id                               :integer
-#  phylum_id                                :integer
-#  class_id                                 :integer
-#  order_id                                 :integer
-#  family_id                                :integer
-#  subfamily_id                             :integer
-#  genus_id                                 :integer
-#  species_id                               :integer
-#  subspecies_id                            :integer
 #  cites_i                                  :boolean
 #  cites_ii                                 :boolean
 #  cites_iii                                :boolean
 #  cites_listed                             :boolean
 #  cites_listed_descendants                 :boolean
+#  cites_listing                            :string(255)
+#  cites_listing_original                   :string(255)
+#  cites_listing_updated_at                 :datetime
 #  cites_show                               :boolean
 #  cites_status                             :string(255)
-#  cites_listing_original                   :string(255)
-#  cites_listing                            :string(255)
-#  cites_listing_updated_at                 :datetime
-#  ann_symbol                               :string(255)
-#  hash_ann_symbol                          :string(255)
-#  hash_ann_parent_symbol                   :string(255)
-#  eu_listed                                :boolean
-#  eu_show                                  :boolean
-#  eu_status                                :string(255)
-#  eu_listing_original                      :string(255)
-#  eu_listing                               :string(255)
-#  eu_listing_updated_at                    :datetime
+#  class_name                               :string(255)
 #  cms_listed                               :boolean
+#  cms_listing                              :string(255)
+#  cms_listing_original                     :string(255)
+#  cms_listing_updated_at                   :datetime
 #  cms_show                                 :boolean
 #  cms_status                               :string(255)
-#  cms_listing_original                     :string(255)
-#  cms_listing                              :string(255)
-#  cms_listing_updated_at                   :datetime
-#  species_listings_ids                     :string
-#  species_listings_ids_aggregated          :string
-#  author_year                              :string(255)
+#  countries_ids_ary                        :integer          is an Array
+#  dependents_updated_at                    :datetime
+#  dirty                                    :boolean
+#  english_names_ary                        :string           is an Array
+#  eu_listed                                :boolean
+#  eu_listing                               :string(255)
+#  eu_listing_original                      :string(255)
+#  eu_listing_updated_at                    :datetime
+#  eu_show                                  :boolean
+#  eu_status                                :string(255)
+#  expiry                                   :timestamptz
+#  extinct_distribution_ary_en              :string           is an Array
+#  extinct_distribution_ary_es              :string           is an Array
+#  extinct_distribution_ary_fr              :string           is an Array
+#  extinct_uncertain_distribution_ary_en    :string           is an Array
+#  extinct_uncertain_distribution_ary_es    :string           is an Array
+#  extinct_uncertain_distribution_ary_fr    :string           is an Array
+#  family_name                              :string(255)
+#  french_names_ary                         :string           is an Array
+#  full_name                                :string(255)
+#  genus_name                               :string(255)
+#  hash_ann_parent_symbol                   :string(255)
+#  hash_ann_symbol                          :string(255)
+#  introduced_distribution_ary_en           :string           is an Array
+#  introduced_distribution_ary_es           :string           is an Array
+#  introduced_distribution_ary_fr           :string           is an Array
+#  introduced_uncertain_distribution_ary_en :string           is an Array
+#  introduced_uncertain_distribution_ary_es :string           is an Array
+#  introduced_uncertain_distribution_ary_fr :string           is an Array
+#  kingdom_name                             :string(255)
+#  kingdom_position                         :integer
+#  name_status                              :string(255)
+#  native_distribution_ary_en               :string           is an Array
+#  native_distribution_ary_es               :string           is an Array
+#  native_distribution_ary_fr               :string           is an Array
+#  order_name                               :string(255)
+#  phylum_name                              :string(255)
+#  rank_display_name_en                     :string(255)
+#  rank_display_name_es                     :string(255)
+#  rank_display_name_fr                     :string(255)
+#  rank_name                                :string(255)
+#  reintroduced_distribution_ary_en         :string           is an Array
+#  reintroduced_distribution_ary_es         :string           is an Array
+#  reintroduced_distribution_ary_fr         :string           is an Array
+#  show_in_species_plus                     :boolean
+#  spanish_names_ary                        :string           is an Array
+#  species_listings_ids                     :integer          is an Array
+#  species_listings_ids_aggregated          :integer          is an Array
+#  species_name                             :string(255)
+#  spp                                      :boolean
+#  subfamily_name                           :string(255)
+#  subspecies_name                          :string(255)
+#  synonyms_ary                             :string           is an Array
+#  synonyms_author_years_ary                :string           is an Array
+#  taxon_concept_id_com                     :integer
+#  taxon_concept_id_syn                     :integer
+#  taxonomic_position                       :string(255)
+#  taxonomy_is_cites_eu                     :boolean
+#  uncertain_distribution_ary_en            :string           is an Array
+#  uncertain_distribution_ary_es            :string           is an Array
+#  uncertain_distribution_ary_fr            :string           is an Array
 #  created_at                               :datetime
 #  updated_at                               :datetime
-#  dependents_updated_at                    :datetime
-#  taxon_concept_id_com                     :integer
-#  english_names_ary                        :string
-#  spanish_names_ary                        :string
-#  french_names_ary                         :string
-#  taxon_concept_id_syn                     :integer
-#  synonyms_ary                             :string
-#  synonyms_author_years_ary                :string
-#  countries_ids_ary                        :string
-#  all_distribution_iso_codes_ary           :string
-#  all_distribution_ary_en                  :string
-#  native_distribution_ary_en               :string
-#  introduced_distribution_ary_en           :string
-#  introduced_uncertain_distribution_ary_en :string
-#  reintroduced_distribution_ary_en         :string
-#  extinct_distribution_ary_en              :string
-#  extinct_uncertain_distribution_ary_en    :string
-#  uncertain_distribution_ary_en            :string
-#  all_distribution_ary_es                  :string
-#  native_distribution_ary_es               :string
-#  introduced_distribution_ary_es           :string
-#  introduced_uncertain_distribution_ary_es :string
-#  reintroduced_distribution_ary_es         :string
-#  extinct_distribution_ary_es              :string
-#  extinct_uncertain_distribution_ary_es    :string
-#  uncertain_distribution_ary_es            :string
-#  all_distribution_ary_fr                  :string
-#  native_distribution_ary_fr               :string
-#  introduced_distribution_ary_fr           :string
-#  introduced_uncertain_distribution_ary_fr :string
-#  reintroduced_distribution_ary_fr         :string
-#  extinct_distribution_ary_fr              :string
-#  extinct_uncertain_distribution_ary_fr    :string
-#  uncertain_distribution_ary_fr            :string
-#  show_in_species_plus                     :boolean
-#  dirty                                    :boolean
-#  expiry                                   :datetime
+#  class_id                                 :integer
+#  family_id                                :integer
+#  genus_id                                 :integer
+#  kingdom_id                               :integer
+#  order_id                                 :integer
+#  parent_id                                :integer
+#  phylum_id                                :integer
+#  rank_id                                  :integer
+#  species_id                               :integer
+#  subfamily_id                             :integer
+#  subspecies_id                            :integer
+#  taxonomy_id                              :integer
+#
+# Indexes
+#
+#  taxon_concepts_mview_tmp_cites_show_name_status_cites_listi_idx  (cites_show,name_status,cites_listing_original,taxonomy_is_cites_eu,rank_name)
+#  taxon_concepts_mview_tmp_cms_show_name_status_cms_listing_o_idx  (cms_show,name_status,cms_listing_original,taxonomy_is_cites_eu,rank_name)
+#  taxon_concepts_mview_tmp_countries_ids_ary_idx1                  (countries_ids_ary) USING gin
+#  taxon_concepts_mview_tmp_eu_show_name_status_eu_listing_ori_idx  (eu_show,name_status,eu_listing_original,taxonomy_is_cites_eu,rank_name)
+#  taxon_concepts_mview_tmp_id_idx                                  (id)
+#  taxon_concepts_mview_tmp_parent_id_idx                           (parent_id)
+#  taxon_concepts_mview_tmp_taxonomy_is_cites_eu_cites_listed__idx  (taxonomy_is_cites_eu,cites_listed,kingdom_position)
 #
 
 class MTaxonConcept < ApplicationRecord

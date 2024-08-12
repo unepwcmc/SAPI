@@ -8,6 +8,10 @@
 #  updated_at  :datetime         not null
 #  taxonomy_id :integer          default(1), not null
 #
+# Foreign Keys
+#
+#  designations_taxonomy_id_fk  (taxonomy_id => taxonomies.id)
+#
 
 class Designation < ApplicationRecord
   # Migrated to controller (Strong Parameters)

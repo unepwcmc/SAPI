@@ -3,16 +3,20 @@
 # Table name: api_requests
 #
 #  id              :integer          not null, primary key
-#  user_id         :integer
-#  controller      :string(255)
 #  action          :string(255)
-#  format          :string(255)
-#  params          :text
-#  ip              :string(255)
-#  response_status :integer
+#  controller      :string(255)
 #  error_message   :text
+#  format          :string(255)
+#  ip              :string(255)
+#  params          :text
+#  response_status :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  user_id         :integer
+#
+# Indexes
+#
+#  index_api_requests_on_created_at  (created_at)
 #
 
 require 'spec_helper'

@@ -3,15 +3,26 @@
 # Table name: taxon_concept_references
 #
 #  id                          :integer          not null, primary key
-#  taxon_concept_id            :integer          not null
-#  reference_id                :integer          not null
-#  is_standard                 :boolean          default(FALSE), not null
+#  excluded_taxon_concepts_ids :integer          is an Array
 #  is_cascaded                 :boolean          default(FALSE), not null
+#  is_standard                 :boolean          default(FALSE), not null
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
-#  excluded_taxon_concepts_ids :string
 #  created_by_id               :integer
+#  reference_id                :integer          not null
+#  taxon_concept_id            :integer          not null
 #  updated_by_id               :integer
+#
+# Indexes
+#
+#  index_taxon_concept_references_on_tc_id_is_std_is_cascaded  (taxon_concept_id,reference_id,is_standard,is_cascaded) UNIQUE
+#
+# Foreign Keys
+#
+#  taxon_concept_references_created_by_id_fk     (created_by_id => users.id)
+#  taxon_concept_references_reference_id_fk      (reference_id => references.id)
+#  taxon_concept_references_taxon_concept_id_fk  (taxon_concept_id => taxon_concepts.id)
+#  taxon_concept_references_updated_by_id_fk     (updated_by_id => users.id)
 #
 
 class TaxonConceptReference < ApplicationRecord

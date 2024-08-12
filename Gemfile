@@ -87,6 +87,10 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # gem 'jbuilder', '~> 2.7'
 
 group :development do
+  # Adds comments at the top of models describing table column
+  # (replaces annotate)
+  gem 'annotaterb', '~> 4.10.2'
+
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 4.1.0'
   # Display performance information such as SQL time and flame graphs for each request in your browser.
@@ -95,9 +99,6 @@ group :development do
   gem 'listen', '~> 3.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-
-  gem 'annotate', "2.5.0"
-  # gem 'sextant'
 
   # Used to fix capistrano-local-precompile on Ruby 3.2 - see comment in Capfile
   gem 'file_exists', '~> 0.2.0', require: false

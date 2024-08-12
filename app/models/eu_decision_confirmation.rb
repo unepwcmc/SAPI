@@ -3,10 +3,15 @@
 # Table name: eu_decision_confirmations
 #
 #  id             :integer          not null, primary key
-#  eu_decision_id :integer
-#  event_id       :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  eu_decision_id :integer
+#  event_id       :integer
+#
+# Foreign Keys
+#
+#  eu_decision_confirmations_eu_decision_id_fk  (eu_decision_id => eu_decisions.id)
+#  eu_decision_confirmations_event_id_fk        (event_id => events.id)
 #
 
 class EuDecisionConfirmation < ApplicationRecord

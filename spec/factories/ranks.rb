@@ -1,4 +1,18 @@
 def attributes_for_rank(name)
+# == Schema Information
+#
+# Table name: ranks
+#
+#  id                 :integer          not null, primary key
+#  display_name_en    :text             not null
+#  display_name_es    :text
+#  display_name_fr    :text
+#  fixed_order        :boolean          default(FALSE), not null
+#  name               :string(255)      not null
+#  taxonomic_position :string(255)      default("0"), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
   send("attributes_for_#{name.downcase}")
 end
 
