@@ -26,7 +26,7 @@ gem 'coffee-rails', '~> 5.0'
 gem 'active_model_serializers', '0.8.4' # Deprecated
 
 # Memcached driver for Rails.cache
-gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
+gem 'dalli', '~> 3.2.8'
 
 # Use PostgreSQL database
 gem 'pg', '~> 1.5', '>= 1.5.4'
