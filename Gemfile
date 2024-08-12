@@ -113,7 +113,7 @@ group :development do
   gem 'capistrano-local-precompile', '1.2.0', require: false # NB: buggy on Ruby 3.2 - see comment in Capfile
   gem 'capistrano-sidekiq', '~> 2.3', '>= 2.3.1'
   gem 'slackistrano', '0.1.9', require: false
-  gem 'brightbox', '2.3.9'
+
   gem 'jslint_on_rails', '1.1.1'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'

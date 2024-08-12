@@ -128,8 +128,6 @@ GEM
       msgpack (~> 1.2)
     bootstrap-sass (2.3.2.2)
       sass (~> 3.2)
-    brightbox (2.3.9)
-      capistrano (>= 2.5)
     brpoplpush-redis_script (0.1.3)
       concurrent-ruby (~> 1.0, >= 1.0.5)
       redis (>= 1.0, < 6)
@@ -617,7 +615,6 @@ DEPENDENCIES
   bcrypt_pbkdf (= 1.1.0)
   bootsnap (>= 1.4.4)
   bootstrap-sass (= 2.3.2.2)
-  brightbox (= 2.3.9)
   byebug
   cancancan (~> 3.5)
   capistrano (= 3.18.0)
