@@ -67,8 +67,8 @@ CREATE OR REPLACE FUNCTION rebuild_valid_taxon_concept_appendix_year_designation
       GROUP  BY F.effective_from, L.effective_to,  F.taxon_concept_id, F.species_listing_name
       HAVING COUNT(
         CASE
-          WHEN (E.effective_from < F.effective_from AND (F.effective_from <= E.effective_to OR E.effective_to IS NULL))  
-            OR (E.effective_from <= L.effective_to AND (L.effective_to < E.effective_to OR E.effective_to IS NULL)) 
+          WHEN (E.effective_from < F.effective_from AND (F.effective_from <= E.effective_to OR E.effective_to IS NULL))
+            OR (E.effective_from <= L.effective_to AND (L.effective_to < E.effective_to OR E.effective_to IS NULL))
           THEN 1
         END
       ) = 0

@@ -7,4 +7,4 @@ Trade.ShipmentForm = Ember.View.extend
     @.$().on('hidden', () =>
       @get('controller').send('cancelShipment')
     )
-      
+

@@ -58,10 +58,10 @@ def get_random_values(param)
 end
 
 def get_value(params, key)
-  if params.nil? 
+  if params.nil?
     raise "The placeholder '${#{key}}' can not be replaced as no params hash is provided."
   end
-  
+
   param = params[key.to_sym]
 
   if param.nil?
@@ -79,17 +79,17 @@ def str_replace(str, values)
       puts e
     end
 
-    value ? value : $1 
+    value ? value : $1
   end
 end
 
 def create_staging_urls_file()
   text = File.read(URL_TEMPLATE_FILENAME)
   new_text = str_replace(text, PARAMS)
-  
-  File.open(TMP_FILENAME, 'w') { |file| 
+
+  File.open(TMP_FILENAME, 'w') { |file|
     PARAM_PERMUTATIONS.times do
-      file.write(new_text) 
+      file.write(new_text)
     end
   }
 end

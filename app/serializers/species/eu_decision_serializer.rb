@@ -53,7 +53,7 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
   end
 
   def term
-    @options[:trimmed] == 'true' ? object['term_en'].slice('name') : object['term_en'] 
+    @options[:trimmed] == 'true' ? object['term_en'].slice('name') : object['term_en']
   end
 
   def private_url

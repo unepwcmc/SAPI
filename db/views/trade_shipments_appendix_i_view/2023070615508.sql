@@ -65,7 +65,7 @@
         FROM trade_shipments_with_taxa_view ts
         INNER JOIN geo_entities importers ON ts.importer_id = importers.id
         INNER JOIN geo_entities exporters ON ts.exporter_id = exporters.id
-        WHERE 
+        WHERE
         (ts.year > 2013 AND ts.year < 2015 AND ts.taxon_concept_id = 531 AND ((ts.reported_by_exporter IS TRUE AND exporters.iso_code2 = 'CA')
     OR (ts.reported_by_exporter IS FALSE AND importers.iso_code2 = 'CA')))
 

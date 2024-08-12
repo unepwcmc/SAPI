@@ -60,7 +60,7 @@ Species.DocumentsRoute = Ember.Route.extend Species.Spinner,
     isLoadingProperty = eventType + 'DocsIsLoading'
 
     controller.set(isLoadingProperty, true)
-    @loadDocuments(eventQueryParams, (documents) =>      
+    @loadDocuments(eventQueryParams, (documents) =>
       controller.set(eventKey, documents)
     )
 

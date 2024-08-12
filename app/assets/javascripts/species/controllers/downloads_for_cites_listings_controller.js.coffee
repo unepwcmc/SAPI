@@ -61,7 +61,7 @@ Species.DownloadsForCitesListingsController = Ember.Controller.extend
   toParams: ( ->
     {
       data_type: 'Listings'
-      filters: 
+      filters:
         designation: @get('designation')
         appendices: @get('selectedAppendices')
         geo_entities_ids: @get('selectedGeoEntitiesIds')

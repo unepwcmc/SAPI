@@ -1,22 +1,22 @@
 // Select box utilizing Select2 functionality that overrides Ember.Select;
-// Define view in the same way that you would an Ember.Select view. 
+// Define view in the same way that you would an Ember.Select view.
 // Additional attributes supported are: width, allowClear, and closeOnSelect;
 // Example view:
-//                {{ view App.Select2 
+//                {{ view App.Select2
 //                     viewName="fieldValueSelect2"
 //                     prompt="Please select a value list"
-//                     contentBinding="controller.fieldValuesLists" 
+//                     contentBinding="controller.fieldValuesLists"
 //                     optionLabelPath="content.name"
 //                     optionValuePath="content.id"
 //                     selectionBinding="content.allowedValuesList"
 //                     required="" }}
-// 
-// To enable routing upon selection of an item from Select2 box, subclass the 
+//
+// To enable routing upon selection of an item from Select2 box, subclass the
 // Select2 view and add the actions to the valueDidChange event:
 //
 //  App.ContainterSelect2 = App.Select2.extend({
-//  
-//  // bind change in selected portfolio to trigger routing 
+//
+//  // bind change in selected portfolio to trigger routing
 //  // to show portfolio or portfolio list if null
 //    valueDidChange: Ember.observer(function() {
 //        this._super();
@@ -45,7 +45,7 @@ Trade.Select2 = Ember.Select.extend({
   didInsertElement : function() {
     //this._super();
     var placeholderText = this.get('prompt') || '';
-      if (!this.$().select2) 
+      if (!this.$().select2)
         throw new Exception('select2 is required for Trade.Select2 control');
     this.$().select2({
       containerCssClass: 'select2-portfolio',
@@ -87,10 +87,10 @@ Trade.Select2 = Ember.Select.extend({
   },
 
   // observe controller selected content and update select2
-  // selected item if selected item is changed on the 
+  // selected item if selected item is changed on the
   // controller and does not match currently selected value;
   // this occurs when the selected value is changed outside of
-  // the control; must wait until next ember run since 
+  // the control; must wait until next ember run since
   // it seems that after create, a new item is not yet available
   // in the list to be selected
   setSelected : function() {
@@ -100,7 +100,7 @@ Trade.Select2 = Ember.Select.extend({
     var fieldvalue = '';
     var selected = this.get('selection');
     var sel2Val = this.$().select2('val');
-    if (selected) { 
+    if (selected) {
       fieldvalue = selected.get(fieldname);
     }
     Ember.run.sync();

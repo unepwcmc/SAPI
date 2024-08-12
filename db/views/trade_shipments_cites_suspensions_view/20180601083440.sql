@@ -119,7 +119,7 @@
         LEFT OUTER JOIN trade_codes purposes ON purposes.id = ts.purpose_id
         LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
         LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
-        WHERE 
+        WHERE
         (ts.year >= 2018 AND ts.year <= 2018 AND TRUE AND exporters.iso_code2 = 'IN' AND TRUE AND TRUE AND sources.code IN ('A','C','D','F','I','O','R','U','X') AND purposes.code IN ('Z','G','Q','S','H','P','M','E','N','B','L') AND ts.country_of_origin_id IS NULL)
 
         OR

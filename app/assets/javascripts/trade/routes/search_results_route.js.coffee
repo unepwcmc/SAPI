@@ -44,7 +44,7 @@ Trade.SearchResultsRoute = Trade.BeforeRoute.extend Trade.LoadingModal,
     # So you can open the edit/delete modal again
     if mode
       window.history.replaceState({}, 'Search', @removeParam('mode', window.location.href))
-    
+
 
   actions:
     dataChanged: () ->

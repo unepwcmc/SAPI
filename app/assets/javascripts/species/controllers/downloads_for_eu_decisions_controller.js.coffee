@@ -116,7 +116,7 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
           ####################################################
         }
       }
-    
+
   ).property(
     'controllers.downloads.csvSeparator',
     'euDecisionFilter',

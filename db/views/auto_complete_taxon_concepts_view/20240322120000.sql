@@ -168,7 +168,7 @@ WITH synonyms_segmented(taxon_concept_id, full_name, author_year, matched_taxon_
           (listing->'cites_show')::BOOLEAN
           OR
           (listing->'cites_listed_descendants')::BOOLEAN
-        ) 
+        )
       THEN TRUE
       ELSE FALSE
     END AS show_in_checklist_ac,

@@ -6,7 +6,7 @@
 <p>Summary of CITES annual reports uploaded into
   the CITES Trade Database in a given year</p>
 
-<%= form_tag("summary_creation", :method => "get") do %> 
+<%= form_tag("summary_creation", :method => "get") do %>
   <div class="control-group">
     <%= select_year(@created_date_selected, :start_year => Time.now.year,
                     :end_year => 1975, :field_name => "createdDateSelected") %>

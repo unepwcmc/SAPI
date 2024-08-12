@@ -36,7 +36,7 @@ BEGIN
       AND excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
     )
     THEN FALSE
-    WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL 
+    WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL
     -- if taxon or any of its ancestors is excluded from this listing
     AND excluded_taxon_concept_ids && ARRAY[
       affected_taxon_concept_id,
@@ -50,11 +50,11 @@ BEGIN
     ]
     THEN FALSE
     ELSE
-    TRUE 
+    TRUE
     END AS is_applicable
     FROM ' || all_listing_changes_mview || ' all_listing_changes_mview
     JOIN cms_tmp_taxon_concepts_mview taxon_concepts_mview
-    ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id 
+    ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id
     WHERE all_listing_changes_mview.affected_taxon_concept_id = $1
     AND timeline_position = 1
 
@@ -80,7 +80,7 @@ BEGIN
     hi.species_listing_id,
     hi.change_type_id,
     hi.effective_at,
-    CASE 
+    CASE
     WHEN hi.inclusion_taxon_concept_id IS NOT NULL
     OR hi.tree_distance < listing_changes_timeline.context_tree_distance
     THEN hi.tree_distance
@@ -103,7 +103,7 @@ BEGIN
       AND hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
     )
     THEN FALSE
-    WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL 
+    WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL
     -- if taxon or any of its ancestors is excluded from this listing
     AND hi.excluded_taxon_concept_ids && ARRAY[
       hi.affected_taxon_concept_id,
@@ -126,7 +126,7 @@ BEGIN
     AND listing_changes_timeline.timeline_position + 1 = hi.timeline_position
     JOIN change_types ON hi.change_type_id = change_types.id
     JOIN cms_tmp_taxon_concepts_mview taxon_concepts_mview
-    ON hi.affected_taxon_concept_id = taxon_concepts_mview.id 
+    ON hi.affected_taxon_concept_id = taxon_concepts_mview.id
   )
   SELECT listing_changes_timeline.id
   FROM listing_changes_timeline
