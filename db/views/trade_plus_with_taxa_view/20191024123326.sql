@@ -14,7 +14,8 @@
                  ts.taxon_concept_genus_id AS genus_id,
                  ts.taxon_concept_genus_name AS genus_name,
                  ts.group AS group_name,
-                 CASE 									WHEN terms.code IN ('ROO') AND ts.taxon_concept_genus_name IN ('Galanthus','Cyclamen','Sternbergia')
+                 CASE
+                  WHEN terms.code IN ('ROO') AND ts.taxon_concept_genus_name IN ('Galanthus','Cyclamen','Sternbergia')
                   THEN
                     Array['LIV', (ts.quantity)::text, units.code]
                   WHEN terms.code IN ('LEG') AND units.code IN ('KIL')
@@ -188,8 +189,8 @@
                   WHEN units.code IN ('SID')
                   THEN
                     Array['SKI', (ts.quantity/2)::text, 'NULL']
-                  ELSE										Array[terms.code, ts.quantity::text, units.code]
-
+                  ELSE
+                    Array[terms.code, ts.quantity::text, units.code]
                   END AS term_quantity_unit,
                  -- terms.id AS term_id,
                  -- terms.name_en AS term,

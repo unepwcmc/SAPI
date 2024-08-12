@@ -1,6 +1,7 @@
     SELECT
       ts.*,
-      CASE 			WHEN ts.taxon_concept_class_name IN ('Mammalia') THEN 'Mammals'
+      CASE
+      WHEN ts.taxon_concept_class_name IN ('Mammalia') THEN 'Mammals'
       WHEN ts.taxon_concept_class_name IN ('Aves') THEN 'Birds'
       WHEN ts.taxon_concept_class_name IN ('Reptilia') THEN 'Reptiles'
       WHEN ts.taxon_concept_class_name IN ('Amphibia') THEN 'Amphibians'
@@ -14,7 +15,8 @@
       THEN 'Plants (other than timber)'
       END AS group_en,
 
-      CASE 			WHEN ts.taxon_concept_class_name IN ('Mammalia') THEN 'Mamiferos'
+      CASE
+      WHEN ts.taxon_concept_class_name IN ('Mammalia') THEN 'Mamiferos'
       WHEN ts.taxon_concept_class_name IN ('Aves') THEN 'Aves'
       WHEN ts.taxon_concept_class_name IN ('Reptilia') THEN 'Reptiles'
       WHEN ts.taxon_concept_class_name IN ('Amphibia') THEN 'Anfibios'
@@ -28,7 +30,8 @@
       THEN 'Plantas (otro que madera)'
       END AS group_es,
 
-      CASE 			WHEN ts.taxon_concept_class_name IN ('Mammalia') THEN 'Mammifères'
+      CASE
+      WHEN ts.taxon_concept_class_name IN ('Mammalia') THEN 'Mammifères'
       WHEN ts.taxon_concept_class_name IN ('Aves') THEN 'Oiseaux'
       WHEN ts.taxon_concept_class_name IN ('Reptilia') THEN 'Reptiles'
       WHEN ts.taxon_concept_class_name IN ('Amphibia') THEN 'Amphibiens'
