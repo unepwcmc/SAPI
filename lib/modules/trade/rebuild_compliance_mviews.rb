@@ -32,7 +32,7 @@ module Trade::RebuildComplianceMviews
 
   def self.rebuild_compliance_mview(type)
     views = Dir["db/views/trade_shipments_#{type}_view/*"]
-    latest_view = views.map { |v| v.split("/").last }.sort.last.split('.').first
+    latest_view = views.map { |v| v.split('/').last }.sort.last.split('.').first
     self.recreate_mview(type, latest_view)
   end
 
@@ -59,7 +59,7 @@ module Trade::RebuildComplianceMviews
   end
 
   def self.recreate_non_compliant_view
-    command = "SELECT rebuild_non_compliant_shipments_view()"
+    command = 'SELECT rebuild_non_compliant_shipments_view()'
     puts command
     db.execute(command)
   end

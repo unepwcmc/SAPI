@@ -12,7 +12,7 @@ class Api::V1::ShipmentsController < ApplicationController
                     @grouping_class.new(['issue_type', 'year'])
                                              .countries_reported_range(params[:year])
                   end
-    render :json => @chart_data
+    render json: @chart_data
   end
 
   def grouped_query
@@ -31,7 +31,7 @@ class Api::V1::ShipmentsController < ApplicationController
                                                           query.json_by_attribute(query.run, params_hash)
             end
 
-    render :json => @data
+    render json: @data
   end
 
   def country_query
@@ -50,7 +50,7 @@ class Api::V1::ShipmentsController < ApplicationController
                                                           query.json_by_attribute(query.country_data, params_hash)
             end
 
-    render :json => @data
+    render json: @data
   end
 
   # Compliance tool search & full list action
@@ -61,8 +61,8 @@ class Api::V1::ShipmentsController < ApplicationController
                       query.build_hash(data, permit_params)
                     end
     @filtered_data = query.filter(@search_data, permit_params)
-    render :json => Kaminari.paginate_array(@filtered_data).page(params[:page]).per(params[:per_page]),
-           :meta => metadata(@filtered_data, permit_params)
+    render json: Kaminari.paginate_array(@filtered_data).page(params[:page]).per(params[:per_page]),
+           meta: metadata(@filtered_data, permit_params)
   end
 
   def over_time_query
@@ -90,14 +90,14 @@ class Api::V1::ShipmentsController < ApplicationController
     @download_data = Rails.cache.fetch(['download_data', permit_params], expires_in: 1.week) do
                        Trade::DownloadDataRetriever.dashboard_download(download_params).to_a
                      end
-    render :json => @download_data
+    render json: @download_data
   end
 
   def search_download_data
     @download_data = Rails.cache.fetch(['search_download_data', permit_params], expires_in: 1.week) do
                        Trade::DownloadDataRetriever.search_download(download_params).to_a
                      end
-    render :json => @download_data
+    render json: @download_data
   end
 
   def search_download_all_data
@@ -110,7 +110,7 @@ class Api::V1::ShipmentsController < ApplicationController
                                   hash_params = params_hash_builder(data_ids, download_params)
                                   Trade::DownloadDataRetriever.search_download(hash_params).to_a
                                 end
-    render :json => @search_download_all_data
+    render json: @search_download_all_data
   end
 
   private
@@ -138,9 +138,9 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def metadata(data, params)
     {
-      :total => data.count,
-      :page => params[:page] || 1,
-      :per_page => params[:per_page] || 25
+      total: data.count,
+      page: params[:page] || 1,
+      per_page: params[:per_page] || 25
     }
   end
 

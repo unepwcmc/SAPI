@@ -3,17 +3,17 @@ require 'spec_helper'
 describe EventListingChangesCopyWorker do
   let(:prev_eu_regulation) {
     create_eu_regulation(
-      :name => 'REGULATION 1.0',
-      :designation => eu,
-      :is_current => true
+      name: 'REGULATION 1.0',
+      designation: eu,
+      is_current: true
     )
   }
   let(:eu_regulation) {
     create_eu_regulation(
-      :name => 'REGULATION 2.0',
-      :listing_changes_event_id => prev_eu_regulation.id,
-      :designation => eu,
-      :is_current => true
+      name: 'REGULATION 2.0',
+      listing_changes_event_id: prev_eu_regulation.id,
+      designation: eu,
+      is_current: true
     )
   }
   let(:species) {
@@ -24,18 +24,18 @@ describe EventListingChangesCopyWorker do
   }
   let!(:listing_change) {
     create_eu_A_addition(
-      :event_id => prev_eu_regulation.id,
-      :taxon_concept_id => species.id
+      event_id: prev_eu_regulation.id,
+      taxon_concept_id: species.id
     )
   }
 
   context "when copy into non-current regulation" do
     let(:eu_regulation) {
       create_eu_regulation(
-        :name => 'REGULATION 2.0',
-        :listing_changes_event_id => prev_eu_regulation.id,
-        :designation => eu,
-        :is_current => false
+        name: 'REGULATION 2.0',
+        listing_changes_event_id: prev_eu_regulation.id,
+        designation: eu,
+        is_current: false
       )
     }
     before { EventListingChangesCopyWorker.new.perform(prev_eu_regulation.id, eu_regulation.id) }
@@ -52,14 +52,14 @@ describe EventListingChangesCopyWorker do
   context "when exclusion" do
     let!(:taxonomic_exclusion) {
       create_eu_A_exception(
-        :parent_id => listing_change.id,
-        :taxon_concept_id => subspecies.id
+        parent_id: listing_change.id,
+        taxon_concept_id: subspecies.id
       )
     }
     let!(:geographic_exclusion) {
       create_eu_A_exception(
-        :parent_id => listing_change.id,
-        :taxon_concept_id => species.id
+        parent_id: listing_change.id,
+        taxon_concept_id: species.id
       )
     }
     let!(:exclusion_distribution) {

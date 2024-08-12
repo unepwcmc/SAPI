@@ -31,7 +31,7 @@ describe CitesSuspensionNotification do
       let(:cites_suspension_notification) {
         build(
           :cites_suspension_notification,
-          :designation => eu
+          designation: eu
         )
       }
       specify { expect(cites_suspension_notification).to be_invalid }
@@ -41,7 +41,7 @@ describe CitesSuspensionNotification do
       let(:cites_suspension_notification) {
         build(
           :cites_suspension_notification,
-          :effective_at => nil
+          effective_at: nil
         )
       }
       specify { expect(cites_suspension_notification).to be_invalid }
@@ -58,7 +58,7 @@ describe CitesSuspensionNotification do
       context "when start notification" do
         let!(:cites_suspension) {
           create(
-            :cites_suspension, :start_notification => cites_suspension_notification
+            :cites_suspension, start_notification: cites_suspension_notification
           )
         }
         specify { expect(cites_suspension_notification.destroy).to be_falsey }
@@ -67,8 +67,8 @@ describe CitesSuspensionNotification do
         let!(:cites_suspension) {
           create(
             :cites_suspension,
-            :start_notification => create_cites_suspension_notification,
-            :end_notification => cites_suspension_notification
+            start_notification: create_cites_suspension_notification,
+            end_notification: cites_suspension_notification
           )
         }
         specify { expect(cites_suspension_notification.destroy).to be_falsey }
@@ -81,13 +81,13 @@ describe CitesSuspensionNotification do
           # This seems to be the only test which fails for this reason.
           suspension = create(
             :cites_suspension,
-            :start_notification => create_cites_suspension_notification,
+            start_notification: create_cites_suspension_notification,
           )
 
           create(
             :cites_suspension_confirmation,
-            :confirmation_notification => cites_suspension_notification,
-            :confirmed_suspension => suspension,
+            confirmation_notification: cites_suspension_notification,
+            confirmed_suspension: suspension,
           )
 
           suspension
@@ -102,14 +102,14 @@ describe CitesSuspensionNotification do
   end
 
   describe :end_date_formatted do
-    let(:cites_suspension_notification) { create_cites_suspension_notification(:end_date => '2012-05-10') }
+    let(:cites_suspension_notification) { create_cites_suspension_notification(end_date: '2012-05-10') }
     specify { expect(cites_suspension_notification.end_date_formatted).to eq('10/05/2012') }
   end
 
   describe :bases_for_suspension do
-    let!(:cites_suspension_notification1) { create_cites_suspension_notification(:subtype => 'A') }
-    let!(:cites_suspension_notification2) { create_cites_suspension_notification(:subtype => 'A') }
-    let!(:cites_suspension_notification3) { create_cites_suspension_notification(:subtype => 'B') }
+    let!(:cites_suspension_notification1) { create_cites_suspension_notification(subtype: 'A') }
+    let!(:cites_suspension_notification2) { create_cites_suspension_notification(subtype: 'A') }
+    let!(:cites_suspension_notification3) { create_cites_suspension_notification(subtype: 'B') }
     subject { CitesSuspensionNotification.bases_for_suspension }
     specify { subject.length == 2 }
   end

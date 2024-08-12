@@ -5,7 +5,7 @@ class Api::SpeciesListingsController < ApplicationController
   def index
     designations = Designation.where(sanitized_params)
     listings = SpeciesListing.where(designation_id: designations)
-    render :json => listings
+    render json: listings
   end
 
   private

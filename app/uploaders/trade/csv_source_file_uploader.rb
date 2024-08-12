@@ -40,7 +40,7 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
   def remove_blank_lines
     cache_stored_file! if !cached?
     directory = File.dirname(current_path)
-    tmp_path = File.join(directory, "tmpfile")
+    tmp_path = File.join(directory, 'tmpfile')
     if system("cat #{current_path} | sed 's/\r//g' | grep -v -E '^(\"?[[:blank:]]*\"?,)*$' > #{tmp_path}")
       FileUtils.mv(tmp_path, current_path)
     else

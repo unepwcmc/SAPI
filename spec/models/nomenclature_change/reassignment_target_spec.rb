@@ -26,7 +26,7 @@ describe NomenclatureChange::ReassignmentTarget do
       let(:reassignment_target) {
         build(
           :nomenclature_change_reassignment_target,
-          :nomenclature_change_reassignment_id => nil
+          nomenclature_change_reassignment_id: nil
         )
       }
       specify { expect(reassignment_target).not_to be_valid }
@@ -35,7 +35,7 @@ describe NomenclatureChange::ReassignmentTarget do
       let(:reassignment_target) {
         build(
           :nomenclature_change_reassignment_target,
-          :nomenclature_change_output_id => nil
+          nomenclature_change_output_id: nil
         )
       }
       specify { expect(reassignment_target).not_to be_valid }

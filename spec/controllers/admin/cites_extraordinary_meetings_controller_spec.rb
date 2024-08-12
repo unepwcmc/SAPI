@@ -5,8 +5,8 @@ describe Admin::CitesExtraordinaryMeetingsController do
 
   describe "index" do
     before(:each) do
-      @cites_ex1 = create_cites_extraordinary_meeting(:name => 'Ex1')
-      @cites_ex2 = create_cites_extraordinary_meeting(:name => 'Ex2')
+      @cites_ex1 = create_cites_extraordinary_meeting(name: 'Ex1')
+      @cites_ex2 = create_cites_extraordinary_meeting(name: 'Ex2')
     end
 
     describe "GET index" do

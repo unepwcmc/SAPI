@@ -3,17 +3,17 @@ class Trade::ShipmentsController < TradeController
 
   def index
     @search = Trade::Filter.new(search_params)
-    render :json => @search.results,
-      :each_serializer => Trade::ShipmentFromViewSerializer,
-      :meta => metadata_for_search(@search)
+    render json: @search.results,
+      each_serializer: Trade::ShipmentFromViewSerializer,
+      meta: metadata_for_search(@search)
   end
 
   def create
     @shipment = Trade::Shipment.new(shipment_params)
     if @shipment.save
-      render :json => @shipment, :status => :ok
+      render json: @shipment, status: :ok
     else
-      render :json => { "errors" => @shipment.errors }, :status => :unprocessable_entity
+      render json: { 'errors' => @shipment.errors }, status: :unprocessable_entity
     end
   end
 
@@ -21,9 +21,9 @@ class Trade::ShipmentsController < TradeController
     @shipment = Trade::Shipment.find(params[:id])
     update_params = populate_accepted_taxon_concept(shipment_params)
     if @shipment.update(update_params)
-      render :json => @shipment, :status => :ok
+      render json: @shipment, status: :ok
     else
-      render :json => { "errors" => @shipment.errors }, :status => :unprocessable_entity
+      render json: { 'errors' => @shipment.errors }, status: :unprocessable_entity
     end
   end
 
@@ -32,13 +32,13 @@ class Trade::ShipmentsController < TradeController
     affected_rows = @batch_update.execute(
       populate_accepted_taxon_concept(batch_update_params)
     )
-    render :json => { rows: affected_rows }, :status => :ok
+    render json: { rows: affected_rows }, status: :ok
   end
 
   def destroy
     @shipment = Trade::Shipment.find(params[:id])
     @shipment.destroy # TODO: didn't check if the destory is successful.
-    render :json => nil, :status => :ok
+    render json: nil, status: :ok
   end
 
   def destroy_batch
@@ -49,13 +49,13 @@ class Trade::ShipmentsController < TradeController
     end.flatten.uniq
     @search.query.destroy_all
     PermitCleanupWorker.perform_async(disconnected_permits_ids)
-    render :json => { rows: cnt }, :status => :ok
+    render json: { rows: cnt }, status: :ok
   end
 
   def accepted_taxa_for_reported_taxon_concept
     @resolver = Trade::ReportedTaxonConceptResolver.new(params[:reported_taxon_concept_id])
-    render :json => @resolver.accepted_taxa,
-      :each_serializer => Trade::TaxonConceptSerializer
+    render json: @resolver.accepted_taxa,
+      each_serializer: Trade::TaxonConceptSerializer
   end
 
   private
@@ -92,7 +92,7 @@ class Trade::ShipmentsController < TradeController
 
   def batch_update_params
     update_params = params.permit(
-      :updates => shipment_attributes
+      updates: shipment_attributes
     )
     res = update_params && update_params.delete('updates') || {}
     res.each { |k, v| res[k] = nil if v.blank? }

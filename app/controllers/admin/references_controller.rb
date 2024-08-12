@@ -1,11 +1,11 @@
 class Admin::ReferencesController < Admin::StandardAuthorizationController
-  respond_to :json, :only => [:index, :update]
+  respond_to :json, only: [:index, :update]
 
   def index
     index! do |format|
       format.json {
-        render :json => end_of_association_chain.order(:citation).
-          select([:id, :citation]).map { |d| { :value => d.id, :text => d.citation } }.to_json
+        render json: end_of_association_chain.order(:citation).
+          select([:id, :citation]).map { |d| { value: d.id, text: d.citation } }.to_json
       }
     end
   end
@@ -15,12 +15,12 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
       order(:citation)
     @references = @references.map do |r|
       {
-        :id => r.id,
-        :value => r.citation
+        id: r.id,
+        value: r.citation
       }
     end
 
-    render :json => @references.to_json
+    render json: @references.to_json
   end
 
   protected

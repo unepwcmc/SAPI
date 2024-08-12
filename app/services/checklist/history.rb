@@ -3,14 +3,14 @@ class Checklist::History < Checklist::Checklist
 
   def initialize(options = {})
     options = {
-      :output_layout => :taxonomic,
-      :show_english => true,
-      :show_french => true,
-      :show_spanish => true,
-      :intro => true
+      output_layout: :taxonomic,
+      show_english: true,
+      show_french: true,
+      show_spanish: true,
+      intro: true
     }
     # History cannot be parametrized like other Checklist reports
-    @download_path = download_location(options, "history", ext)
+    @download_path = download_location(options, 'history', ext)
 
     # If a cached download exists, only initialize the params for the
     # helper methods, otherwise initialize the generation queries.
@@ -27,12 +27,12 @@ class Checklist::History < Checklist::Checklist
   end
 
   def prepare_kingdom_queries
-    @animalia_rel = @taxon_concepts_rel.where("kingdom_position = 0")
-    @plantae_rel = @taxon_concepts_rel.where("kingdom_position = 1")
+    @animalia_rel = @taxon_concepts_rel.where('kingdom_position = 0')
+    @plantae_rel = @taxon_concepts_rel.where('kingdom_position = 1')
   end
 
   def prepare_main_query
-    @taxon_concepts_rel = MTaxonConcept.where(:taxonomy_is_cites_eu => true).
+    @taxon_concepts_rel = MTaxonConcept.where(taxonomy_is_cites_eu: true).
       where(
         <<-SQL
         EXISTS (

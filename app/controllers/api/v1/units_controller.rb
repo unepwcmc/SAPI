@@ -6,9 +6,9 @@ class Api::V1::UnitsController < ApplicationController
       Unit.all.order(:code).as_json
     end
 
-    render :json => @all_rows.map { |row_data| Unit.new(row_data) },
-      :each_serializer => Species::UnitSerializer,
-      :meta => { :total => @all_rows.count }
+    render json: @all_rows.map { |row_data| Unit.new(row_data) },
+      each_serializer: Species::UnitSerializer,
+      meta: { total: @all_rows.count }
   end
 
   def self.invalidate_cache

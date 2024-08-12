@@ -5,7 +5,7 @@ describe Trade::SandboxShipmentsController do
 
   let(:annual_report_upload) {
     aru = build(:annual_report_upload)
-    aru.save(:validate => false)
+    aru.save(validate: false)
     aru
   }
   let(:sandbox_klass) {
@@ -13,11 +13,11 @@ describe Trade::SandboxShipmentsController do
   }
   before(:each) do
     @genus = create_cites_eu_genus(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Acipenser')
+      taxon_name: create(:taxon_name, scientific_name: 'Acipenser')
     )
     @species = create_cites_eu_species(
-      :taxon_name => create(:taxon_name, :scientific_name => 'baerii'),
-      :parent_id => @genus.id
+      taxon_name: create(:taxon_name, scientific_name: 'baerii'),
+      parent_id: @genus.id
     )
     @shipment = sandbox_klass.create(taxon_name: 'Acipenser baerii', appendix: 'I', year: 2016)
     @validation_error = create(
@@ -33,18 +33,18 @@ describe Trade::SandboxShipmentsController do
   end
   describe "PUT update" do
     it "should return success when taxon_name not set" do
-      put :update, params: { :annual_report_upload_id => annual_report_upload.id, :id => @shipment.id, :sandbox_shipment => { :taxon_name => nil, :accepted_taxon_name => nil }, :format => :json }
+      put :update, params: { annual_report_upload_id: annual_report_upload.id, id: @shipment.id, sandbox_shipment: { taxon_name: nil, accepted_taxon_name: nil }, format: :json }
       expect(response.body).to be_blank
     end
     it "should return success when taxon_name does not exist" do
-      put :update, params: { :annual_report_upload_id => annual_report_upload.id, :id => @shipment.id, :sandbox_shipment => { :taxon_name => 'Acipenser foobarus' }, :format => :json }
+      put :update, params: { annual_report_upload_id: annual_report_upload.id, id: @shipment.id, sandbox_shipment: { taxon_name: 'Acipenser foobarus' }, format: :json }
       expect(response.body).to be_blank
     end
   end
 
   describe "DELETE destroy" do
     it "should return success" do
-      delete :destroy, params: { :annual_report_upload_id => annual_report_upload.id, :id => @shipment.id, :format => :json }
+      delete :destroy, params: { annual_report_upload_id: annual_report_upload.id, id: @shipment.id, format: :json }
       expect(response.body).to be_blank
     end
   end

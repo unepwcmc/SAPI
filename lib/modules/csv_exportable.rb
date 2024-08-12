@@ -19,9 +19,9 @@ module CsvExportable
     PSQL
     ApplicationRecord.send(
       :sanitize_sql_array, [sql, {
-        :delimiter => options[:delimiter] || ',',
-        :encoding => options[:encoding] || 'UTF8',
-        :file_name => options[:file_path]
+        delimiter: options[:delimiter] || ',',
+        encoding: options[:encoding] || 'UTF8',
+        file_name: options[:file_path]
       }]
     )
   end

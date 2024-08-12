@@ -5,7 +5,7 @@ class CitesTrade::ExportsController < CitesTradeController
     respond_to do |format|
       format.html {
         search = Trade::ShipmentsExportFactory.new(search_params.merge({
-          :per_page => Trade::ShipmentsExport::PUBLIC_CSV_LIMIT
+          per_page: Trade::ShipmentsExport::PUBLIC_CSV_LIMIT
         }))
         result = search.export
         if result.is_a?(Array)
@@ -21,12 +21,12 @@ class CitesTrade::ExportsController < CitesTradeController
       }
       format.json {
         search = Trade::ShipmentsExportFactory.new(search_params.merge({
-          :report_type => :raw # get the raw count
+          report_type: :raw # get the raw count
         }))
-        render :json => {
-          :total => search.total_cnt,
-          :csv_limit => Trade::ShipmentsExport::PUBLIC_CSV_LIMIT,
-          :web_limit => Trade::ShipmentsExport::PUBLIC_WEB_LIMIT
+        render json: {
+          total: search.total_cnt,
+          csv_limit: Trade::ShipmentsExport::PUBLIC_CSV_LIMIT,
+          web_limit: Trade::ShipmentsExport::PUBLIC_WEB_LIMIT
         }
       }
     end

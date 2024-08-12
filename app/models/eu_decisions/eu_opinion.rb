@@ -56,6 +56,6 @@ class EuOpinion < EuDecision
 
   def event_or_document_presence
     return unless start_event_id.present? && document_id.present?
-    errors.add(:base, "Select at an Event, a Document or neither, but not both")
+    errors.add(:base, 'Select at an Event, a Document or neither, but not both')
   end
 end

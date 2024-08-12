@@ -17,7 +17,7 @@ class Trade::ExportsController < TradeController
         end
       }
       format.json {
-        render :json => { :total => search.total_cnt }
+        render json: { total: search.total_cnt }
       }
     end
   end

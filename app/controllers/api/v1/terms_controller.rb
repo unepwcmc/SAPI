@@ -6,9 +6,9 @@ class Api::V1::TermsController < ApplicationController
       Term.all.order(:code).as_json
     end
 
-    render :json => @all_rows.map { |row_data| Term.new(row_data) },
-      :each_serializer => Species::TermSerializer,
-      :meta => { :total => @all_rows.count }
+    render json: @all_rows.map { |row_data| Term.new(row_data) },
+      each_serializer: Species::TermSerializer,
+      meta: { total: @all_rows.count }
   end
 
   def self.invalidate_cache

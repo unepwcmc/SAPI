@@ -12,33 +12,33 @@ require 'spec_helper'
 # end
 describe ListingChangesHelper, type: :helper do
   let(:poland) {
-    GeoEntity.find_by_iso_code2('PL') || create(:geo_entity, :iso_code2 => 'PL', :name => 'Poland')
+    GeoEntity.find_by_iso_code2('PL') || create(:geo_entity, iso_code2: 'PL', name: 'Poland')
   }
   let(:taxon_concept) {
     create_cites_eu_genus(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
+      taxon_name: create(:taxon_name, scientific_name: 'Foobarus')
     )
   }
   let(:annotation) {
     create(
       :annotation,
-      :short_note_en => 'Only population of PL',
-      :full_note_en => 'Only population of Poland'
+      short_note_en: 'Only population of PL',
+      full_note_en: 'Only population of Poland'
     )
   }
   let(:hash_annotation) {
     create(
       :annotation,
-      :symbol => '#1',
-      :parent_symbol => 'CoP1',
-      :full_note_en => 'Only seeds and roots.'
+      symbol: '#1',
+      parent_symbol: 'CoP1',
+      full_note_en: 'Only seeds and roots.'
     )
   }
   let(:listing_change) {
     create_cites_I_addition(
-      :taxon_concept_id => taxon_concept.id,
-      :annotation_id => annotation.id,
-      :hash_annotation_id => hash_annotation.id
+      taxon_concept_id: taxon_concept.id,
+      annotation_id: annotation.id,
+      hash_annotation_id: hash_annotation.id
     )
   }
 
@@ -46,9 +46,9 @@ describe ListingChangesHelper, type: :helper do
     let!(:listing_distribution) {
       create(
         :listing_distribution,
-        :listing_change_id => listing_change.id,
-        :geo_entity_id => poland.id,
-        :is_party => false
+        listing_change_id: listing_change.id,
+        geo_entity_id: poland.id,
+        is_party: false
       )
     }
     it "outputs all geo entities comma separated" do
@@ -79,16 +79,16 @@ describe ListingChangesHelper, type: :helper do
     context "geographic exclusion" do
       let(:exclusion) {
         create_cites_I_exception(
-          :parent_id => listing_change.id,
-          :taxon_concept_id => listing_change.taxon_concept_id
+          parent_id: listing_change.id,
+          taxon_concept_id: listing_change.taxon_concept_id
         )
       }
       let!(:listing_distribution) {
         create(
           :listing_distribution,
-          :listing_change_id => exclusion.id,
-          :geo_entity_id => poland.id,
-          :is_party => false
+          listing_change_id: exclusion.id,
+          geo_entity_id: poland.id,
+          is_party: false
         )
       }
       it "should list geographic exception" do
@@ -99,8 +99,8 @@ describe ListingChangesHelper, type: :helper do
   describe 'excluded_taxon_concepts_tooltip' do
     let(:child_taxon_concept) {
       create_cites_eu_species(
-        :parent_id => taxon_concept.id,
-        :taxon_name => create(:taxon_name, :scientific_name => 'cracovianus')
+        parent_id: taxon_concept.id,
+        taxon_name: create(:taxon_name, scientific_name: 'cracovianus')
       )
     }
     context "no exclusions" do
@@ -112,8 +112,8 @@ describe ListingChangesHelper, type: :helper do
     context "taxonomic exclusion" do
       let!(:exclusion) {
         create_cites_I_exception(
-          :taxon_concept_id => child_taxon_concept.id,
-          :parent_id => listing_change.id
+          taxon_concept_id: child_taxon_concept.id,
+          parent_id: listing_change.id
         )
       }
       it "should list taxonomic exception" do

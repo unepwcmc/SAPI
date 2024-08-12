@@ -4,16 +4,16 @@ describe TaxonConcept do
   context "create" do
     let(:kingdom_tc) {
       create_kingdom(
-        :taxonomy_id => cites_eu.id,
-        :taxonomic_position => '1',
-        :taxon_name => build(:taxon_name, :scientific_name => 'Foobaria')
+        taxonomy_id: cites_eu.id,
+        taxonomic_position: '1',
+        taxon_name: build(:taxon_name, scientific_name: 'Foobaria')
       )
     }
     context "all fine" do
       let(:tc) {
         create_phylum(
-          :taxonomy_id => cites_eu.id,
-          :parent_id => kingdom_tc.id
+          taxonomy_id: cites_eu.id,
+          parent_id: kingdom_tc.id
         )
       }
       specify { tc.valid? is_expected.to be_truthy }
@@ -21,8 +21,8 @@ describe TaxonConcept do
     context "taxonomy does not match parent" do
       let(:tc) {
         build_phylum(
-          :taxonomy_id => cms.id,
-          :parent_id => kingdom_tc.id
+          taxonomy_id: cms.id,
+          parent_id: kingdom_tc.id
         )
       }
       specify { expect(tc.error_on(:parent_id).size).to eq(1) }
@@ -30,14 +30,14 @@ describe TaxonConcept do
     context "parent is not an accepted name" do
       let(:genus_tc) {
         create_genus(
-          :taxonomy_id => cites_eu.id,
-          :name_status => 'S'
+          taxonomy_id: cites_eu.id,
+          name_status: 'S'
         )
       }
       let(:tc) {
         build_species(
-          :taxonomy_id => cites_eu.id,
-          :parent_id => genus_tc.id
+          taxonomy_id: cites_eu.id,
+          parent_id: genus_tc.id
         )
       }
       specify { expect(tc.error_on(:parent_id).size).to eq(1) }
@@ -45,8 +45,8 @@ describe TaxonConcept do
     context "parent rank is too high above child rank" do
       let(:tc) {
         build_class(
-          :taxonomy_id => cites_eu.id,
-          :parent_id => kingdom_tc.id
+          taxonomy_id: cites_eu.id,
+          parent_id: kingdom_tc.id
         )
       }
       specify { expect(tc.error_on(:parent_id).size).to eq(1) }
@@ -54,14 +54,14 @@ describe TaxonConcept do
     context "parent rank is below child rank" do
       let(:parent) {
         create_phylum(
-          :taxonomy_id => cites_eu.id,
-          :parent_id => kingdom_tc.id
+          taxonomy_id: cites_eu.id,
+          parent_id: kingdom_tc.id
         )
       }
       let(:tc) {
         build_kingdom(
-          :taxonomy_id => cites_eu.id,
-          :parent_id => parent.id
+          taxonomy_id: cites_eu.id,
+          parent_id: parent.id
         )
       }
       specify { expect(tc.error_on(:parent_id).size).to eq(1) }
@@ -69,9 +69,9 @@ describe TaxonConcept do
     context "scientific name is not given" do
       let(:tc) {
         build_phylum(
-          :taxonomy_id => cites_eu.id,
-          :parent_id => kingdom_tc.id,
-          :taxon_name => build(:taxon_name, :scientific_name => nil)
+          taxonomy_id: cites_eu.id,
+          parent_id: kingdom_tc.id,
+          taxon_name: build(:taxon_name, scientific_name: nil)
         )
       }
       specify { expect(tc.error_on(:taxon_name_id).size).to eq(1) }
@@ -79,9 +79,9 @@ describe TaxonConcept do
     context "when taxonomic position malformed" do
       let(:tc) {
         build_phylum(
-          :taxonomy_id => cites_eu.id,
-          :parent_id => kingdom_tc.id,
-          :taxonomic_position => '1.a.b'
+          taxonomy_id: cites_eu.id,
+          parent_id: kingdom_tc.id,
+          taxonomic_position: '1.a.b'
         )
       }
       specify { expect(tc.error_on(:taxonomic_position).size).to eq(1) }

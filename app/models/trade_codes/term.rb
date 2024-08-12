@@ -15,11 +15,11 @@
 class Term < TradeCode
   include Deletable
 
-  validates :code, :length => { :is => 3 }
+  validates :code, length: { is: 3 }
 
   has_many :trade_restriction_terms
   has_many :eu_decisions
-  has_many :shipments, :class_name => 'Trade::Shipment'
+  has_many :shipments, class_name: 'Trade::Shipment'
 
   after_commit :invalidate_controller_action_cache
 

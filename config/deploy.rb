@@ -14,7 +14,7 @@ set :deploy_to, "/home/#{fetch(:deploy_user)}/#{fetch(:application)}"
 set :backup_path, "/home/#{fetch(:deploy_user)}/Backup"
 
 # Default value for :scm is :git
-set :scm_username, "unepwcmc-read"
+set :scm_username, 'unepwcmc-read'
 
 # Default value for :format is :pretty
 # set :format, :pretty
@@ -33,8 +33,8 @@ set :sidekiq_service_unit_name, 'sidekiq_sapi'
 set :pty, true
 
 set :ssh_options, {
-  :keepalive => true,
-  :keepalive_interval => 60, #seconds
+  keepalive: true,
+  keepalive_interval: 60, #seconds
   forward_agent: true
 }
 
@@ -60,22 +60,22 @@ secrets = YAML.load(
   %x[bundle exec rails credentials:show]
 )
 
-set :api_token, secrets["api_token"] # used in smoke testing
+set :api_token, secrets['api_token'] # used in smoke testing
 
-set :slack_token, secrets["slack_exception_notification_webhook_url"] # comes from inbound webhook integration
-set :slack_room, "#speciesplus" # the room to send the message to
-set :slack_subdomain, "wcmc" # if your subdomain is example.slack.com
+set :slack_token, secrets['slack_exception_notification_webhook_url'] # comes from inbound webhook integration
+set :slack_room, '#speciesplus' # the room to send the message to
+set :slack_subdomain, 'wcmc' # if your subdomain is example.slack.com
 
 # optional
-set :slack_application, "SAPI" # override Capistrano `application`
+set :slack_application, 'SAPI' # override Capistrano `application`
 deployment_animals = [
-  ["Loxodonta deployana", ":elephant:"],
-  ["Canis deployus", ":wolf:"],
-  ["Panthera capistranis", ":tiger:"],
-  ["Bison deployon", ":ox:"],
-  ["Ursus capistranus", ":bear:"],
-  ["Crotalus rattledeploy", ":snake:"],
-  ["Caiman assetocompilatus", ":crocodile:"]
+  ['Loxodonta deployana', ':elephant:'],
+  ['Canis deployus', ':wolf:'],
+  ['Panthera capistranis', ':tiger:'],
+  ['Bison deployon', ':ox:'],
+  ['Ursus capistranus', ':bear:'],
+  ['Crotalus rattledeploy', ':snake:'],
+  ['Caiman assetocompilatus', ':crocodile:']
 ]
 
 shuffle_deployer = deployment_animals.shuffle.first
@@ -100,7 +100,7 @@ set :slack_emoji, shuffle_deployer[1] # will be used as the avatar for the messa
 #after 'deploy:reverted', 'sidekiq:restart'
 #after 'deploy:published', 'sidekiq:restart'
 
-after "deploy", "smoke_test:test_endpoints"
+after 'deploy', 'smoke_test:test_endpoints'
 
 
 require 'appsignal/capistrano'

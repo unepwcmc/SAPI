@@ -6,9 +6,9 @@ class Api::V1::SourcesController < ApplicationController
       Source.all.order(:code).as_json
     end
 
-    render :json => @all_rows.map { |row_data| Source.new(row_data) },
-      :each_serializer => Species::SourceSerializer,
-      :meta => { :total => @all_rows.count }
+    render json: @all_rows.map { |row_data| Source.new(row_data) },
+      each_serializer: Species::SourceSerializer,
+      meta: { total: @all_rows.count }
   end
 
   def self.invalidate_cache

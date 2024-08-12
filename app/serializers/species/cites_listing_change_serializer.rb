@@ -20,9 +20,9 @@ class Species::CitesListingChangeSerializer < Species::ListingChangeSerializer
 
   def change_type
     if object.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
-      "w"
+      'w'
     elsif object.change_type_name == ChangeType::DELETION
-      "x"
+      'x'
     else
       object.change_type_name.downcase[0]
     end

@@ -4,7 +4,7 @@ describe Species::ListingsExport do
   describe :path do
     subject {
       Species::ListingsExportFactory.new({
-        :designation_id => cites.id
+        designation_id: cites.id
       })
     }
     specify { expect(subject.path).to eq("public/downloads/cites_listings/") }
@@ -13,9 +13,9 @@ describe Species::ListingsExport do
     context "when no results" do
       subject {
         Species::ListingsExportFactory.new({
-          :designation_id => cites.id,
-          :species_listings_ids => [cites_I.id],
-          :geo_entities_ids => [poland.id]
+          designation_id: cites.id,
+          species_listings_ids: [cites_I.id],
+          geo_entities_ids: [poland.id]
         })
       }
       specify { expect(subject.export).to be_falsey }
@@ -33,9 +33,9 @@ describe Species::ListingsExport do
       }
       subject {
         Species::ListingsExportFactory.new({
-          :designation_id => cites.id,
-          :species_listings_ids => [cites_I.id],
-          :geo_entities_ids => [nepal.id]
+          designation_id: cites.id,
+          species_listings_ids: [cites_I.id],
+          geo_entities_ids: [nepal.id]
         })
       }
       context "when file not cached" do
@@ -58,8 +58,8 @@ describe Species::ListingsExport do
       context "when Appendix I" do
         subject {
           Species::ListingsExportFactory.new({
-            :designation_id => cites.id,
-            :species_listings_ids => [cites_I.id]
+            designation_id: cites.id,
+            species_listings_ids: [cites_I.id]
           })
         }
         specify { expect(subject.query.to_a.size).to eq(1) }
@@ -67,9 +67,9 @@ describe Species::ListingsExport do
         context "when Poland" do
           subject {
             Species::ListingsExportFactory.new({
-              :designation_id => cites.id,
-              :species_listings_ids => [cites_I.id],
-              :geo_entities_ids => [poland.id]
+              designation_id: cites.id,
+              species_listings_ids: [cites_I.id],
+              geo_entities_ids: [poland.id]
             })
           }
           specify { expect(subject.query.to_a.size).to eq(0) }
@@ -78,9 +78,9 @@ describe Species::ListingsExport do
         context "when Nepal" do
           subject {
             Species::ListingsExportFactory.new({
-              :designation_id => cites.id,
-              :species_listings_ids => [cites_I.id],
-              :geo_entities_ids => [nepal.id]
+              designation_id: cites.id,
+              species_listings_ids: [cites_I.id],
+              geo_entities_ids: [nepal.id]
             })
           }
           specify { expect(subject.query.to_a.size).to eq(1) }
@@ -89,8 +89,8 @@ describe Species::ListingsExport do
       context "when higher taxon ids" do
         subject {
           Species::ListingsExportFactory.new({
-            :designation_id => cites.id,
-            :taxon_concepts_ids => [@family.id]
+            designation_id: cites.id,
+            taxon_concepts_ids: [@family.id]
           })
         }
         specify { expect(subject.query.to_a.size).to eq(1) }
@@ -98,14 +98,14 @@ describe Species::ListingsExport do
       context "when implicitly listed subspecies present" do
         before(:each) do
           create_cites_eu_subspecies(
-            :parent_id => @species.id
+            parent_id: @species.id
           )
           SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
         subject {
           Species::ListingsExportFactory.new({
-            :designation_id => cites.id,
-            :taxon_concepts_ids => [@family.id]
+            designation_id: cites.id,
+            taxon_concepts_ids: [@family.id]
           })
         }
         specify { expect(subject.query.to_a.size).to eq(1) }
@@ -115,8 +115,8 @@ describe Species::ListingsExport do
       context "when Annex A" do
         subject {
           Species::ListingsExportFactory.new({
-            :designation_id => eu.id,
-            :species_listings_ids => [eu_A.id]
+            designation_id: eu.id,
+            species_listings_ids: [eu_A.id]
           })
         }
         specify { expect(subject.query.to_a.size).to eq(1) }
@@ -124,9 +124,9 @@ describe Species::ListingsExport do
         context "when Spain" do
           subject {
             Species::ListingsExportFactory.new({
-              :designation_id => eu.id,
-              :species_listings_ids => [eu_A.id],
-              :geo_entities_ids => [spain.id]
+              designation_id: eu.id,
+              species_listings_ids: [eu_A.id],
+              geo_entities_ids: [spain.id]
             })
           }
           specify { expect(subject.query.to_a.size).to eq(0) }
@@ -135,9 +135,9 @@ describe Species::ListingsExport do
         context "when Nepal" do
           subject {
             Species::ListingsExportFactory.new({
-              :designation_id => eu.id,
-              :species_listings_ids => [eu_A.id],
-              :geo_entities_ids => [nepal.id]
+              designation_id: eu.id,
+              species_listings_ids: [eu_A.id],
+              geo_entities_ids: [nepal.id]
             })
           }
           specify { expect(subject.query.to_a.size).to eq(1) }
@@ -146,8 +146,8 @@ describe Species::ListingsExport do
       context "when higher taxon ids" do
         subject {
           Species::ListingsExportFactory.new({
-            :designation_id => eu.id,
-            :taxon_concepts_ids => [@family.id]
+            designation_id: eu.id,
+            taxon_concepts_ids: [@family.id]
           })
         }
         specify { expect(subject.query.to_a.size).to eq(1) }

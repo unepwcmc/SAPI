@@ -5,9 +5,9 @@ class Checklist::Csv::History < Checklist::History
   def prepare_main_query
     @taxon_concepts_rel = MTaxonConcept.
       select(select_columns).
-      where(:taxonomy_is_cites_eu => true).
+      where(taxonomy_is_cites_eu: true).
       joins(:cites_listing_changes).where(
-        :"cites_listing_changes_mview.show_in_downloads" => true
+        "cites_listing_changes_mview.show_in_downloads": true
       ).
       joins('LEFT JOIN geo_entities ON cites_listing_changes_mview.party_id = geo_entities.id').
       order(Arel.sql(<<-SQL
@@ -24,31 +24,31 @@ class Checklist::Csv::History < Checklist::History
 
   def select_columns
     [
-      "taxon_concepts_mview.id AS id",
-      "taxon_concepts_mview.kingdom_name",
-      "taxon_concepts_mview.phylum_name",
-      "taxon_concepts_mview.class_name",
-      "taxon_concepts_mview.order_name",
-      "taxon_concepts_mview.family_name",
-      "taxon_concepts_mview.genus_name",
-      "LOWER(taxon_concepts_mview.species_name) AS species_name",
-      "LOWER(taxon_concepts_mview.subspecies_name) AS subspecies_name",
-      "taxon_concepts_mview.full_name",
-      "taxon_concepts_mview.author_year",
-      "taxon_concepts_mview.rank_name",
-      "cites_listing_changes_mview.species_listing_name",
-      "cites_listing_changes_mview.party_iso_code",
-      "geo_entities.name_en AS party_full_name",
-      "cites_listing_changes_mview.change_type_name",
+      'taxon_concepts_mview.id AS id',
+      'taxon_concepts_mview.kingdom_name',
+      'taxon_concepts_mview.phylum_name',
+      'taxon_concepts_mview.class_name',
+      'taxon_concepts_mview.order_name',
+      'taxon_concepts_mview.family_name',
+      'taxon_concepts_mview.genus_name',
+      'LOWER(taxon_concepts_mview.species_name) AS species_name',
+      'LOWER(taxon_concepts_mview.subspecies_name) AS subspecies_name',
+      'taxon_concepts_mview.full_name',
+      'taxon_concepts_mview.author_year',
+      'taxon_concepts_mview.rank_name',
+      'cites_listing_changes_mview.species_listing_name',
+      'cites_listing_changes_mview.party_iso_code',
+      'geo_entities.name_en AS party_full_name',
+      'cites_listing_changes_mview.change_type_name',
       "to_char(effective_at, 'DD/MM/YYYY') AS effective_at_formatted",
-      "cites_listing_changes_mview.is_current",
-      "cites_listing_changes_mview.hash_ann_symbol",
-      "strip_tags(cites_listing_changes_mview.hash_full_note_en) AS hash_full_note_en",
+      'cites_listing_changes_mview.is_current',
+      'cites_listing_changes_mview.hash_ann_symbol',
+      'strip_tags(cites_listing_changes_mview.hash_full_note_en) AS hash_full_note_en',
       "(strip_tags(cites_listing_changes_mview.full_note_en) || ' ' || strip_tags(cites_listing_changes_mview.nomenclature_note_en)) AS full_note_en",
-      "strip_tags(cites_listing_changes_mview.short_note_en) AS short_note_en",
-      "strip_tags(cites_listing_changes_mview.short_note_es) AS short_note_es",
-      "strip_tags(cites_listing_changes_mview.short_note_fr) AS short_note_fr",
-      "strip_tags(cites_listing_changes_mview.nomenclature_note_en) AS nomenclature_note_en"
+      'strip_tags(cites_listing_changes_mview.short_note_en) AS short_note_en',
+      'strip_tags(cites_listing_changes_mview.short_note_es) AS short_note_es',
+      'strip_tags(cites_listing_changes_mview.short_note_fr) AS short_note_fr',
+      'strip_tags(cites_listing_changes_mview.nomenclature_note_en) AS nomenclature_note_en'
     ]
   end
 

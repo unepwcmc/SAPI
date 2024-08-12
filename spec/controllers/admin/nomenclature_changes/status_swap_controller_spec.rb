@@ -41,7 +41,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
           get :show, params: { id: :legislation, nomenclature_change_id: @status_change.id }
           expect(response).to redirect_to(
             admin_nomenclature_change_status_swap_url(
-              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
+              nomenclature_change_id: assigns(:nomenclature_change).id, id: 'summary'
             )
           )
         end
@@ -63,7 +63,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
       post :create, params: { nomenclature_change_id: 'new' }
       expect(response).to redirect_to(
         admin_nomenclature_change_status_swap_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'primary_output'
+          nomenclature_change_id: assigns(:nomenclature_change).id, id: 'primary_output'
         )
       )
     end
@@ -83,7 +83,7 @@ describe Admin::NomenclatureChanges::StatusSwapController do
         }, nomenclature_change_id: @status_change.id, id: 'primary_output' }
         expect(response).to redirect_to(
           admin_nomenclature_change_status_swap_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'secondary_output'
+            nomenclature_change_id: assigns(:nomenclature_change).id, id: 'secondary_output'
           )
         )
       end

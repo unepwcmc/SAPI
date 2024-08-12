@@ -6,8 +6,8 @@ describe Checklist do
   describe "ann_symbol" do
     before(:all) do
       @checklist = Checklist::Checklist.new({
-        :output_layout => 'alphabetical',
-        :locale => 'en'
+        output_layout: 'alphabetical',
+        locale: 'en'
       })
       @taxon_concepts = @checklist.results
     end

@@ -26,16 +26,16 @@ module Checklist::Pdf::Document
 
   def document
     # create directory for intermediate files
-    tmp_dir_path = [Rails.root, "/tmp/", SecureRandom.hex(8)].join
+    tmp_dir_path = [Rails.root, '/tmp/', SecureRandom.hex(8)].join
     FileUtils.mkdir tmp_dir_path
     # copy the template to intermediate directory
-    FileUtils.cp [Rails.root, "/public/latex/", "#{@input_name}.tex"].join,
+    FileUtils.cp [Rails.root, '/public/latex/', "#{@input_name}.tex"].join,
       tmp_dir_path
     # copy the dictionary to intermediate directory
-    FileUtils.copy_file [Rails.root, "/public/latex/", "_dict_#{I18n.locale}.tex"].join,
+    FileUtils.copy_file [Rails.root, '/public/latex/', "_dict_#{I18n.locale}.tex"].join,
       [tmp_dir_path, '/_dict.tex'].join
     # set flags for latex
-    flags_tex = [tmp_dir_path, "/_flags.tex"].join
+    flags_tex = [tmp_dir_path, '/_flags.tex'].join
     File.open(flags_tex, 'wb') do |tex|
       tex << (@intro ? "\\introtrue\n" : "\\introfalse\n")
     end
@@ -43,7 +43,7 @@ module Checklist::Pdf::Document
     @template_tex = [tmp_dir_path, "/#{@input_name}.tex"].join
     @tmp_tex = [tmp_dir_path, "/_#{@input_name}.tex"].join
     # create the dynamic part
-    File.open(@tmp_tex, "wb") do |tex|
+    File.open(@tmp_tex, 'wb') do |tex|
       yield tex
     end
     output = LatexToPdf.generate_pdf_from_file(tmp_dir_path, @input_name)

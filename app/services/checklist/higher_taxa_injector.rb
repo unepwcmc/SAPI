@@ -19,7 +19,7 @@ class Checklist::HigherTaxaInjector
       [tc.phylum_id, tc.class_id, tc.order_id, tc.family_id]
     end.flatten.uniq
     @higher_taxa = Hash[
-      MTaxonConcept.where(:id => higher_taxa_ids).map { |tc| [tc.id, tc] }
+      MTaxonConcept.where(id: higher_taxa_ids).map { |tc| [tc.id, tc] }
     ]
   end
 
@@ -46,8 +46,8 @@ class Checklist::HigherTaxaInjector
       higher_taxon = higher_taxa_headers(prev_item, tc).first
       if higher_taxon
         res.push({
-          :higher_taxon => Checklist::HigherTaxaItem.new(current_higher_taxon),
-          :taxon_concept_ids => current_higher_taxon_children_ids
+          higher_taxon: Checklist::HigherTaxaItem.new(current_higher_taxon),
+          taxon_concept_ids: current_higher_taxon_children_ids
         }) unless current_higher_taxon.nil?
         current_higher_taxon = higher_taxon
         current_higher_taxon_children_ids = []
@@ -56,8 +56,8 @@ class Checklist::HigherTaxaInjector
     end
     # push the last one
     res.push({
-      :higher_taxon => Checklist::HigherTaxaItem.new(current_higher_taxon),
-      :taxon_concept_ids => current_higher_taxon_children_ids
+      higher_taxon: Checklist::HigherTaxaItem.new(current_higher_taxon),
+      taxon_concept_ids: current_higher_taxon_children_ids
     }) unless current_higher_taxon.nil?
     res
   end

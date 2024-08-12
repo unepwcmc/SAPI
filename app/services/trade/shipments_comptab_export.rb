@@ -2,11 +2,11 @@
 class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
 
   def total_cnt
-    ApplicationRecord.connection.execute(query_sql(:limit => false)).ntuples
+    ApplicationRecord.connection.execute(query_sql(limit: false)).ntuples
   end
 
   def query
-    ApplicationRecord.connection.execute(query_sql(:limit => true))
+    ApplicationRecord.connection.execute(query_sql(limit: true))
   end
 
   private
@@ -24,28 +24,28 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
   end
 
   def resource_name
-    "comptab"
+    'comptab'
   end
 
   def available_columns
     {
-      :year => {},
-      :appendix => {},
-      :taxon => {},
-      :taxon_concept_id => { :internal => true },
-      :class_name => {},
-      :order_name => {},
-      :family_name => {},
-      :genus_name => {},
-      :importer => {},
-      :exporter => {},
-      :country_of_origin => {},
-      :importer_quantity => {},
-      :exporter_quantity => {},
-      :term => { :en => :term_name_en, :es => :term_name_es, :fr => :term_name_fr },
-      :unit => { :en => :unit_name_en, :es => :unit_name_es, :fr => :unit_name_fr },
-      :purpose => {},
-      :source => {}
+      year: {},
+      appendix: {},
+      taxon: {},
+      taxon_concept_id: { internal: true },
+      class_name: {},
+      order_name: {},
+      family_name: {},
+      genus_name: {},
+      importer: {},
+      exporter: {},
+      country_of_origin: {},
+      importer_quantity: {},
+      exporter_quantity: {},
+      term: { en: :term_name_en, es: :term_name_es, fr: :term_name_fr },
+      unit: { en: :unit_name_en, es: :unit_name_es, fr: :unit_name_fr },
+      purpose: {},
+      source: {}
     }
   end
 

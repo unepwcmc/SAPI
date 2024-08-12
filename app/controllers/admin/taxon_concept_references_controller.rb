@@ -1,8 +1,8 @@
 class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationController
-  defaults :resource_class => TaxonConceptReference, :collection_name => 'taxon_concept_references', :instance_name => 'taxon_concept_reference'
+  defaults resource_class: TaxonConceptReference, collection_name: 'taxon_concept_references', instance_name: 'taxon_concept_reference'
   belongs_to :taxon_concept
-  before_action :load_search, :only => [:index]
-  respond_to :js, :only => [:new, :create]
+  before_action :load_search, only: [:index]
+  respond_to :js, only: [:new, :create]
   layout 'taxon_concepts'
 
   def index
@@ -13,21 +13,21 @@ class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationCont
   def new
     @taxon_concept_reference = TaxonConceptReference.new
     @taxon_concept_reference.reference = Reference.new
-    @references = TaxonConceptReference.where(:taxon_concept_id => params["taxon_concept_id"])
+    @references = TaxonConceptReference.where(taxon_concept_id: params['taxon_concept_id'])
     new!
   end
 
   def create
-    @references = TaxonConceptReference.where(:taxon_concept_id => params["taxon_concept_id"])
+    @references = TaxonConceptReference.where(taxon_concept_id: params['taxon_concept_id'])
 
-    reference_id = params["reference"] && params["reference"]["id"]
+    reference_id = params['reference'] && params['reference']['id']
     unless reference_id.blank?
       @taxon_concept_reference = TaxonConceptReference.new(
-        :taxon_concept_id => params["taxon_concept_id"],
-        :reference_id     => reference_id,
-        :is_standard => "1" == params[:taxon_concept_reference][:is_standard],
-        :is_cascaded => "1" == params[:taxon_concept_reference][:is_cascaded],
-        :excluded_taxon_concepts_ids => params[:taxon_concept_reference][:excluded_taxon_concepts_ids]
+        taxon_concept_id: params['taxon_concept_id'],
+        reference_id: reference_id,
+        is_standard: '1' == params[:taxon_concept_reference][:is_standard],
+        is_cascaded: '1' == params[:taxon_concept_reference][:is_cascaded],
+        excluded_taxon_concepts_ids: params[:taxon_concept_reference][:excluded_taxon_concepts_ids]
       )
     end
 
@@ -62,11 +62,11 @@ class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationCont
     destroy! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_taxon_concept_references_path(@taxon_concept),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
       failure.html {
         redirect_to admin_taxon_concept_taxon_concept_references_path(@taxon_concept),
-        :notice => 'Operation failed'
+        notice: 'Operation failed'
       }
     end
   end

@@ -5,8 +5,8 @@ class Api::V1::EuDecisionsController < ApplicationController
 
   def index
     @eu_decisions = eu_decision_search(sanitized_params)
-    render :json => @eu_decisions,
-    :each_serializer => CaptiveBreeding::EuDecisionSerializer
+    render json: @eu_decisions,
+    each_serializer: CaptiveBreeding::EuDecisionSerializer
   end
 
   private
@@ -31,8 +31,8 @@ class Api::V1::EuDecisionsController < ApplicationController
       )
     )
 
-    list = list.where("eu_decisions.taxon_concept_id IN (?)", params['taxon_concept_ids']) if params['taxon_concept_ids'].present?
-    list = list.where("eu_decisions.geo_entity_id IN (?)", params['geo_entity_ids']) if params['geo_entity_ids'].present?
+    list = list.where('eu_decisions.taxon_concept_id IN (?)', params['taxon_concept_ids']) if params['taxon_concept_ids'].present?
+    list = list.where('eu_decisions.geo_entity_id IN (?)', params['geo_entity_ids']) if params['geo_entity_ids'].present?
 
     list.all
   end

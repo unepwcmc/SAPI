@@ -27,7 +27,7 @@ class Trade::PermitMatcher
     @query = Trade::Permit.order(:number)
     if @permit_query
       @query = @query.where([
-        "UPPER(number) LIKE :number", :number => "%#{@permit_query}%"
+        'UPPER(number) LIKE :number', number: "%#{@permit_query}%"
       ])
     end
   end

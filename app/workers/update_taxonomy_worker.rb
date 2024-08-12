@@ -2,9 +2,9 @@ class UpdateTaxonomyWorker
   include Sidekiq::Worker
 
   def perform
-    puts "Procedure: taxonomy"
+    puts 'Procedure: taxonomy'
     ApplicationRecord.connection.execute(
-      "SELECT * FROM rebuild_taxonomy()"
+      'SELECT * FROM rebuild_taxonomy()'
     )
 
     changed_cnt = TaxonConcept.where('touched_at IS NOT NULL AND touched_at > updated_at').count

@@ -11,13 +11,13 @@ require 'digest/md5'
 module SearchCache
 
   def cached_results
-    Rails.cache.fetch(results_cache_key, :expires_in => 24.hours) do
+    Rails.cache.fetch(results_cache_key, expires_in: 24.hours) do
       results.to_a
     end
   end
 
   def cached_total_cnt
-    Rails.cache.fetch(total_cnt_cache_key, :expires_in => 24.hours) do
+    Rails.cache.fetch(total_cnt_cache_key, expires_in: 24.hours) do
       total_cnt
     end
   end
@@ -25,7 +25,7 @@ module SearchCache
   private
 
   def generic_cache_key(suffix)
-    raw_key = @options.merge(:locale => I18n.locale).to_a.sort.
+    raw_key = @options.merge(locale: I18n.locale).to_a.sort.
       unshift("#{self.class.name}-#{suffix}").
       push(self.class.cache_iterator).inspect
     Rails.logger.debug raw_key

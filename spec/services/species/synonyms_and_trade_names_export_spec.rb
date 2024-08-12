@@ -16,11 +16,11 @@ describe Species::SynonymsAndTradeNamesExport do
     context "when results" do
       before(:each) {
         species = create_cites_eu_species
-        synonym = create_cites_eu_species(:name_status => 'S')
+        synonym = create_cites_eu_species(name_status: 'S')
         create(:taxon_relationship,
-          :taxon_concept => species,
-          :other_taxon_concept => synonym,
-          :taxon_relationship_type => synonym_relationship_type
+          taxon_concept: species,
+          other_taxon_concept: synonym,
+          taxon_relationship_type: synonym_relationship_type
         )
         FileUtils.mkpath(
           File.expand_path("spec/public/downloads/synonyms_and_trade_names")

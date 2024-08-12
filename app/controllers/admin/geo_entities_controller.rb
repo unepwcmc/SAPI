@@ -1,10 +1,10 @@
 class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
 
-  before_action :load_geo_entity_types, :only => [:index, :create]
+  before_action :load_geo_entity_types, only: [:index, :create]
 
   def index
     index! do |format|
-      @geo_entity = GeoEntity.new(:is_current => true)
+      @geo_entity = GeoEntity.new(is_current: true)
     end
   end
 
@@ -16,14 +16,14 @@ class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
     )
     @geo_entity_types = GeoEntityType.order(:name)
     @geo_entity_types_for_dropdown = @geo_entity_types.map do |t|
-      { :value => t.id, :text => t.name }
+      { value: t.id, text: t.name }
     end
   end
 
   def collection
     @geo_entities ||= end_of_association_chain.
       joins(:geo_entity_type).
-      where(:"geo_entity_types.name" => @geo_entity_type.name).
+      where("geo_entity_types.name": @geo_entity_type.name).
       order(:name_en).
       page(params[:page]).
       search(params[:query])

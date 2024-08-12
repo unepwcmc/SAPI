@@ -9,13 +9,13 @@ class Species::ListingsExport < Species::CsvCopyExport
     @species_listings_ids =
       if filters[:species_listings_ids]
         SpeciesListing.where(
-          :id => filters[:species_listings_ids],
-          :designation_id => @designation.id
+          id: filters[:species_listings_ids],
+          designation_id: @designation.id
         ).map(&:abbreviation)
       elsif filters[:appendices]
         SpeciesListing.where(
-          :abbreviation => filters[:appendices],
-          :designation_id => @designation.id
+          abbreviation: filters[:appendices],
+          designation_id: @designation.id
         ).map(&:abbreviation)
       end
     initialize_csv_separator(@filters[:csv_separator])

@@ -25,7 +25,7 @@ module Checklist::Json::Document
   end
 
   def document
-    File.open(@download_path, "wb") do |json|
+    File.open(@download_path, 'wb') do |json|
       yield json
     end
 

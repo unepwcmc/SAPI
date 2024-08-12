@@ -24,7 +24,7 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
     # or are the taxon_concept indicated by the txon_concept_id.
     if @filters['taxon_concepts_ids']&.any?
       taxon_concept = TaxonConcept.find(@filters['taxon_concepts_ids'].first)
-      rel = rel.where("taxon_concepts.data -> :rank_id_key = :taxon_concept_id OR taxon_concept_id = :taxon_concept_id",
+      rel = rel.where('taxon_concepts.data -> :rank_id_key = :taxon_concept_id OR taxon_concept_id = :taxon_concept_id',
                       rank_id_key: "#{taxon_concept.rank.name.downcase}_id", taxon_concept_id: taxon_concept.id.to_s)
     end
 

@@ -30,11 +30,11 @@ describe Admin::RanksController do
   describe "XHR PUT update" do
     let(:rank) { create(:rank) }
     it "responds with 200 when successful" do
-      put :update, :format => 'json', params: { :id => rank.id, :rank => { :name => 'ZZ' } }, xhr: true
+      put :update, format: 'json', params: { id: rank.id, rank: { name: 'ZZ' } }, xhr: true
       expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      put :update, :format => 'json', params: { :id => rank.id, :rank => { :name => nil } }, xhr: true
+      put :update, format: 'json', params: { id: rank.id, rank: { name: nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -42,7 +42,7 @@ describe Admin::RanksController do
   describe "DELETE destroy" do
     let(:rank) { create(:rank) }
     it "redirects after delete" do
-      delete :destroy, params: { :id => rank.id }
+      delete :destroy, params: { id: rank.id }
       expect(response).to redirect_to(admin_ranks_url)
     end
   end

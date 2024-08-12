@@ -30,7 +30,7 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
   def update
     @nomenclature_change.assign_attributes(
       (nomenclature_change_status_to_synonym_params || {}).merge({
-        :status => (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
+        status: (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
       })
     )
     success = @nomenclature_change.valid?

@@ -20,9 +20,9 @@ module Checklist::Pdf::HistoryContent
       injector = Checklist::HigherTaxaInjector.new(
         kingdom,
         {
-          :skip_ancestor_ids => @skip_ancestor_ids,
-          :expand_headers => true,
-          :header_ranks => (kingdom_name == 'FLORA' ? ['FAMILY'] : nil)
+          skip_ancestor_ids: @skip_ancestor_ids,
+          expand_headers: true,
+          header_ranks: (kingdom_name == 'FLORA' ? ['FAMILY'] : nil)
         }
       )
       kingdom = injector.run
@@ -75,7 +75,7 @@ module Checklist::Pdf::HistoryContent
       end
     end
     tex << rows.join("\\\\\n")
-    tex << "}"
+    tex << '}'
   end
 
   def listing_with_change_type(listing_change)

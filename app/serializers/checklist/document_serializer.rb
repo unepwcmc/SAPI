@@ -6,7 +6,7 @@ class Checklist::DocumentSerializer < ActiveModel::Serializer
   include PgArrayParser
 
   def document_type
-    object.document_type.split(":").last
+    object.document_type.split(':').last
   end
 
   def locale_document

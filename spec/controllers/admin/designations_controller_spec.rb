@@ -5,8 +5,8 @@ describe Admin::DesignationsController do
 
   describe "GET index" do
     before(:each) do
-      @designation1 = create(:designation, :name => 'BB', :taxonomy => create(:taxonomy))
-      @designation2 = create(:designation, :name => 'AA', :taxonomy => create(:taxonomy))
+      @designation1 = create(:designation, name: 'BB', taxonomy: create(:taxonomy))
+      @designation2 = create(:designation, name: 'AA', taxonomy: create(:taxonomy))
     end
     describe "GET index" do
       it "assigns @designations sorted by name" do
@@ -20,7 +20,7 @@ describe Admin::DesignationsController do
     end
     describe "XHR GET index JSON" do
       it "renders json for dropdown" do
-        get :index, :format => 'json', xhr: true
+        get :index, format: 'json', xhr: true
         expect(response.body).to have_json_size(2)
         expect(parse_json(response.body, "0/text")).to eq('AA')
       end
@@ -42,11 +42,11 @@ describe Admin::DesignationsController do
   describe "XHR PUT update" do
     let(:designation) { create(:designation) }
     it "responds with 200 when successful" do
-      put :update, :format => 'json', params: { :id => designation.id, :designation => { :name => 'ZZ' } }, xhr: true
+      put :update, format: 'json', params: { id: designation.id, designation: { name: 'ZZ' } }, xhr: true
       expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      put :update, :format => 'json', params: { :id => designation.id, :designation => { :name => nil } }, xhr: true
+      put :update, format: 'json', params: { id: designation.id, designation: { name: nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -54,7 +54,7 @@ describe Admin::DesignationsController do
   describe "DELETE destroy" do
     let(:designation) { create(:designation) }
     it "redirects after delete" do
-      delete :destroy, params: { :id => designation.id }
+      delete :destroy, params: { id: designation.id }
       expect(response).to redirect_to(admin_designations_url)
     end
   end

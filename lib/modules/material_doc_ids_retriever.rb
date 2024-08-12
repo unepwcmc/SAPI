@@ -3,7 +3,7 @@ module MaterialDocIdsRetriever
   def self.run(params)
     params['taxon_concepts_ids'] =
       if params['taxon_name'].present?
-        exact_match = MTaxonConcept.where("LOWER(full_name) = ?", params['taxon_name'].downcase)
+        exact_match = MTaxonConcept.where('LOWER(full_name) = ?', params['taxon_name'].downcase)
                                    .where(taxonomy_id: 1)
                                    .first
 
@@ -20,7 +20,7 @@ module MaterialDocIdsRetriever
                              .without_hidden
                              .by_name(
                                 params['taxon_name'],
-                                { :synonyms => true, :common_names => true, :subspecies => false }
+                                { synonyms: true, common_names: true, subspecies: false }
                                )
                              .order('rank_id ASC, full_name')
                              .pluck(:id)

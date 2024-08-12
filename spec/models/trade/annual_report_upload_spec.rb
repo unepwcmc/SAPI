@@ -44,7 +44,7 @@
 
 require 'spec_helper'
 
-describe Trade::AnnualReportUpload, :drops_tables => true do
+describe Trade::AnnualReportUpload, drops_tables: true do
   def exporter_file
     Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')
@@ -73,8 +73,8 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       subject {
         build(
           :annual_report_upload,
-          :point_of_view => 'E',
-          :csv_source_file => exporter_file
+          point_of_view: 'E',
+          csv_source_file: exporter_file
         )
       }
       specify { expect(subject).to be_valid }
@@ -83,8 +83,8 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       subject {
         build(
           :annual_report_upload,
-          :point_of_view => 'I',
-          :csv_source_file => exporter_file
+          point_of_view: 'I',
+          csv_source_file: exporter_file
         )
       }
       specify { expect(subject).not_to be_valid }
@@ -93,8 +93,8 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       subject {
         build(
           :annual_report_upload,
-          :point_of_view => 'I',
-          :csv_source_file => importer_file
+          point_of_view: 'I',
+          csv_source_file: importer_file
         )
       }
       specify { expect(subject).to be_valid }
@@ -103,8 +103,8 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       subject {
         build(
           :annual_report_upload,
-          :point_of_view => 'E',
-          :csv_source_file => importer_file
+          point_of_view: 'E',
+          csv_source_file: importer_file
         )
       }
       specify { expect(subject).not_to be_valid }
@@ -118,8 +118,8 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
     subject {
       create(
         :annual_report_upload,
-        :point_of_view => 'I',
-        :csv_source_file => importer_file
+        point_of_view: 'I',
+        csv_source_file: importer_file
       )
     }
     specify { expect(subject.validation_errors).to be_empty }
@@ -131,8 +131,8 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
       subject {
         create(
           :annual_report_upload,
-          :point_of_view => 'I',
-          :csv_source_file => importer_file_w_blanks
+          point_of_view: 'I',
+          csv_source_file: importer_file_w_blanks
         )
       }
       specify {
@@ -146,8 +146,8 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
     subject {
       create(
         :annual_report_upload,
-        :point_of_view => 'I',
-        :csv_source_file => importer_file
+        point_of_view: 'I',
+        csv_source_file: importer_file
       )
     }
     specify {
@@ -159,44 +159,44 @@ describe Trade::AnnualReportUpload, :drops_tables => true do
   describe :submit do
     before(:each) do
       genus = create_cites_eu_genus(
-        :taxon_name => create(:taxon_name, :scientific_name => 'Acipenser')
+        taxon_name: create(:taxon_name, scientific_name: 'Acipenser')
       )
       @species = create_cites_eu_species(
-        :taxon_name => create(:taxon_name, :scientific_name => 'baerii'),
-        :parent_id => genus.id
+        taxon_name: create(:taxon_name, scientific_name: 'baerii'),
+        parent_id: genus.id
       )
-      create(:term, :code => 'CAV')
-      create(:unit, :code => 'KIL')
-      country = create(:geo_entity_type, :name => 'COUNTRY')
+      create(:term, code: 'CAV')
+      create(:unit, code: 'KIL')
+      country = create(:geo_entity_type, name: 'COUNTRY')
       @argentina = create(:geo_entity,
-                          :geo_entity_type => country,
-                          :name => 'Argentina',
-                          :iso_code2 => 'AR'
+                          geo_entity_type: country,
+                          name: 'Argentina',
+                          iso_code2: 'AR'
                          )
 
       @portugal = create(:geo_entity,
-                         :geo_entity_type => country,
-                         :name => 'Portugal',
-                         :iso_code2 => 'PT'
+                         geo_entity_type: country,
+                         name: 'Portugal',
+                         iso_code2: 'PT'
                         )
       @submitter = FactoryBot.create(:user, role: User::MANAGER)
     end
     pending "it calls submission worker" do
       # This has been disabled due to some issues with asynchronous reports submission"
       subject { # aru no primary errors
-        aru = build(:annual_report_upload, :trading_country_id => @argentina.id, :point_of_view => 'I')
-        aru.save(:validate => false)
+        aru = build(:annual_report_upload, trading_country_id: @argentina.id, point_of_view: 'I')
+        aru.save(validate: false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
         sandbox_klass.create(
-          :taxon_name => 'Acipenser baerii',
-          :appendix => 'II',
-          :trading_partner => @portugal.iso_code2,
-          :term_code => 'CAV',
-          :unit_code => 'KIL',
-          :year => '2010',
-          :quantity => 1,
-          :import_permit => 'XXX',
-          :export_permit => 'AAA; BBB'
+          taxon_name: 'Acipenser baerii',
+          appendix: 'II',
+          trading_partner: @portugal.iso_code2,
+          term_code: 'CAV',
+          unit_code: 'KIL',
+          year: '2010',
+          quantity: 1,
+          import_permit: 'XXX',
+          export_permit: 'AAA; BBB'
         )
         create_year_format_validation
         aru

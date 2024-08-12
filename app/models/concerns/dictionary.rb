@@ -24,7 +24,7 @@ module Dictionary
           key
         end
       end
-      define_singleton_method("dict") { keys.map { |k| k.to_s.upcase } }
+      define_singleton_method('dict') { keys.map { |k| k.to_s.upcase } }
     end
   end
 end

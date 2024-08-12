@@ -6,7 +6,7 @@ class SundayCleanupJob < ApplicationJob
     DashboardStatsCache.update_dashboard_stats
 
     # rake "db:common_names:cleanup"
-    Rails.logger.warn "### rake db:common_names:cleanup"
+    Rails.logger.warn '### rake db:common_names:cleanup'
     objects_to_delete = CommonName.
       joins('LEFT JOIN taxon_commons tc ON tc.common_name_id = common_names.id').
       where('tc.id IS NULL')
@@ -22,7 +22,7 @@ class SundayCleanupJob < ApplicationJob
     ApplicationRecord.connection.execute sql
 
     # rake "db:taxon_names:cleanup"
-    Rails.logger.warn "### rake db:taxon_names:cleanup"
+    Rails.logger.warn '### rake db:taxon_names:cleanup'
     objects_to_delete = TaxonName.
       joins('LEFT JOIN taxon_concepts tc ON tc.taxon_name_id = taxon_names.id').
       where('tc.id IS NULL')

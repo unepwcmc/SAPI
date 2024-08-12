@@ -1,7 +1,7 @@
 class Admin::EuImplementingRegulationsController < Admin::EventsController
   # this needs to be specified, because otherwise defaults to 'event'
-  defaults :resource_class => EuImplementingRegulation,
-    :collection_name => 'eu_implementing_regulations', :instance_name => 'eu_implementing_regulation'
+  defaults resource_class: EuImplementingRegulation,
+    collection_name: 'eu_implementing_regulations', instance_name: 'eu_implementing_regulation'
 
   protected
 

@@ -50,7 +50,7 @@ class NomenclatureChange::StatusDowngradeProcessor < NomenclatureChange::StatusC
   end
 
   def summary_line_long
-    summary_line + " with the following accepted names:"
+    summary_line + ' with the following accepted names:'
   end
 
   def run_t_to_s

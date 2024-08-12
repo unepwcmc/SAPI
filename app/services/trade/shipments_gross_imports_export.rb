@@ -10,7 +10,7 @@ class Trade::ShipmentsGrossImportsExport < Trade::ShipmentsGrossExportsExport
   end
 
   def resource_name
-    "gross_imports"
+    'gross_imports'
   end
 
 end

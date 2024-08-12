@@ -45,7 +45,7 @@ describe Admin::NomenclatureChanges::SplitController do
           get :show, params: { id: :children, nomenclature_change_id: @split.id }
           expect(response).to redirect_to(
             admin_nomenclature_change_split_url(
-              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'names'
+              nomenclature_change_id: assigns(:nomenclature_change).id, id: 'names'
             )
           )
         end
@@ -68,7 +68,7 @@ describe Admin::NomenclatureChanges::SplitController do
           get :show, params: { id: :names, nomenclature_change_id: @split.id }
           expect(response).to redirect_to(
             admin_nomenclature_change_split_url(
-              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'distribution'
+              nomenclature_change_id: assigns(:nomenclature_change).id, id: 'distribution'
             )
           )
         end
@@ -87,7 +87,7 @@ describe Admin::NomenclatureChanges::SplitController do
           get :show, params: { id: :distribution, nomenclature_change_id: @split.id }
           expect(response).to redirect_to(
             admin_nomenclature_change_split_url(
-              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'legislation'
+              nomenclature_change_id: assigns(:nomenclature_change).id, id: 'legislation'
             )
           )
         end
@@ -106,7 +106,7 @@ describe Admin::NomenclatureChanges::SplitController do
           get :show, params: { id: :legislation, nomenclature_change_id: @split.id }
           expect(response).to redirect_to(
             admin_nomenclature_change_split_url(
-              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
+              nomenclature_change_id: assigns(:nomenclature_change).id, id: 'summary'
             )
           )
         end
@@ -123,7 +123,7 @@ describe Admin::NomenclatureChanges::SplitController do
       post :create, params: { nomenclature_change_id: 'new' }
       expect(response).to redirect_to(
         admin_nomenclature_change_split_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'inputs'
+          nomenclature_change_id: assigns(:nomenclature_change).id, id: 'inputs'
         )
       )
     end
@@ -140,7 +140,7 @@ describe Admin::NomenclatureChanges::SplitController do
         }, nomenclature_change_id: @split.id, id: 'inputs' }
         expect(response).to redirect_to(
           admin_nomenclature_change_split_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'outputs'
+            nomenclature_change_id: assigns(:nomenclature_change).id, id: 'outputs'
           )
         )
       end

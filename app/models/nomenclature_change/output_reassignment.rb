@@ -36,7 +36,7 @@
 class NomenclatureChange::OutputReassignment < ApplicationRecord
   include NomenclatureChange::ReassignmentHelpers
 
-  belongs_to :output, :class_name => 'NomenclatureChange::Output',
-    :foreign_key => :nomenclature_change_output_id
+  belongs_to :output, class_name: 'NomenclatureChange::Output',
+    foreign_key: :nomenclature_change_output_id
 
 end

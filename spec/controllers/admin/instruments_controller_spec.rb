@@ -5,8 +5,8 @@ describe Admin::InstrumentsController do
 
   describe "GET index" do
     before(:each) do
-      @instrument1 = create(:instrument, :name => 'BB', :designation => create(:designation))
-      @instrument2 = create(:instrument, :name => 'AA', :designation => create(:designation))
+      @instrument1 = create(:instrument, name: 'BB', designation: create(:designation))
+      @instrument2 = create(:instrument, name: 'AA', designation: create(:designation))
     end
     describe "GET index" do
       it "assigns @instruments sorted by name" do
@@ -20,7 +20,7 @@ describe Admin::InstrumentsController do
     end
     describe "XHR GET index JSON" do
       it "renders json for dropdown" do
-        get :index, :format => 'json', xhr: true
+        get :index, format: 'json', xhr: true
         expect(response.body).to have_json_size(2)
         expect(parse_json(response.body, "0/text")).to eq('AA')
       end
@@ -42,11 +42,11 @@ describe Admin::InstrumentsController do
   describe "XHR PUT update" do
     let(:instrument) { create(:instrument) }
     it "responds with 200 when successful" do
-      put :update, :format => 'json', params: { :id => instrument.id, :instrument => { :name => 'ZZ' } }, xhr: true
+      put :update, format: 'json', params: { id: instrument.id, instrument: { name: 'ZZ' } }, xhr: true
       expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      put :update, :format => 'json', params: { :id => instrument.id, :instrument => { :name => nil } }, xhr: true
+      put :update, format: 'json', params: { id: instrument.id, instrument: { name: nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -54,15 +54,15 @@ describe Admin::InstrumentsController do
   describe "DELETE destroy" do
     let(:instrument) { create(:instrument) }
     it "redirects after delete" do
-      delete :destroy, params: { :id => instrument.id }
+      delete :destroy, params: { id: instrument.id }
       expect(flash[:notice]).not_to be_nil
       expect(flash[:alert]).to be_nil
       expect(response).to redirect_to(admin_instruments_url)
     end
     let(:instrument2) { create(:instrument) }
-    let!(:taxon_instrument) { create(:taxon_instrument, :instrument_id => instrument2.id) }
+    let!(:taxon_instrument) { create(:taxon_instrument, instrument_id: instrument2.id) }
     it "fails to delete instrument because there are dependent objects" do
-      delete :destroy, params: { :id => instrument2.id }
+      delete :destroy, params: { id: instrument2.id }
       expect(flash[:notice]).to be_nil
       expect(flash[:alert]).not_to be_nil
       expect(instrument2.reload).not_to be_nil

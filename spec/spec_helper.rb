@@ -52,7 +52,7 @@ RSpec.configure do |config|
 
   config.include ActiveSupport::Testing::TimeHelpers
   config.include Devise::Test::ControllerHelpers, type: :controller
-  config.extend ControllerMacros, :type => :controller
+  config.extend ControllerMacros, type: :controller
 
   config.include FactoryBot::Syntax::Methods
   config.include JsonSpec::Helpers
@@ -63,7 +63,7 @@ RSpec.configure do |config|
     # https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md#build-strategies-1
     FactoryBot.use_parent_strategy = false
 
-    DatabaseCleaner.clean_with(:deletion, { :cache_tables => false })
+    DatabaseCleaner.clean_with(:deletion, { cache_tables: false })
     @user = create(:user)
     RequestStore.store[:track_who_does_it_current_user] = @user
   end
@@ -72,8 +72,8 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :transaction
   end
 
-  config.before(:each, :drops_tables => true) do
-    DatabaseCleaner.strategy = :deletion, { :cache_tables => false }
+  config.before(:each, drops_tables: true) do
+    DatabaseCleaner.strategy = :deletion, { cache_tables: false }
     ApplicationRecord.connection.execute('SELECT * FROM drop_trade_sandboxes()')
   end
 

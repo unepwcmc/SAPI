@@ -2,7 +2,7 @@ class Species::EuListingsExport < Species::ListingsExport
 
   def initialize(designation, filters)
     super(designation, filters)
-    @include_cites = filters[:include_cites] == "true"
+    @include_cites = filters[:include_cites] == 'true'
   end
 
   private

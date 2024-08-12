@@ -23,12 +23,12 @@ class Species::CsvCopyExport
     @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}_separated.csv"
     [
       @file_name,
-      { :filename => public_file_name, :type => 'text/csv' }
+      { filename: public_file_name, type: 'text/csv' }
     ]
   end
 
   def query
-    raise "Needs to be implemented"
+    raise 'Needs to be implemented'
   end
 
   private
@@ -65,27 +65,27 @@ class Species::CsvCopyExport
 
   def to_csv
     export_to_csv({
-      :query => query,
-      :csv_columns => csv_column_headers,
-      :file_path => @file_name,
-      :delimiter => @csv_separator_char
+      query: query,
+      csv_columns: csv_column_headers,
+      file_path: @file_name,
+      delimiter: @csv_separator_char
     })
   end
 
   def resource_name
-    raise "Needs to be implemented"
+    raise 'Needs to be implemented'
   end
 
   def table_name
-    raise "Needs to be implemented"
+    raise 'Needs to be implemented'
   end
 
   def sql_columns
-    raise "Needs to be implemented"
+    raise 'Needs to be implemented'
   end
 
   def csv_column_headers
-    raise "Needs to be implemented"
+    raise 'Needs to be implemented'
   end
 
 end

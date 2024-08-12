@@ -5,8 +5,8 @@ describe Admin::EuRegulationsController do
 
   describe "index" do
     before(:each) do
-      @eu_regulation1 = create_eu_regulation(:name => 'BB')
-      @eu_regulation2 = create_eu_regulation(:name => 'AA')
+      @eu_regulation1 = create_eu_regulation(name: 'BB')
+      @eu_regulation2 = create_eu_regulation(name: 'AA')
     end
 
     describe "GET index" do
@@ -24,7 +24,7 @@ describe Admin::EuRegulationsController do
   describe "XHR POST activate" do
     let(:eu_regulation) { create_eu_regulation }
     it "renders create when successful" do
-      post :activate, :format => 'js', params: { :id => eu_regulation.id }, xhr: true
+      post :activate, format: 'js', params: { id: eu_regulation.id }, xhr: true
       expect(response).to render_template("create")
     end
   end

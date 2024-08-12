@@ -39,7 +39,7 @@ class NomenclatureChange::StatusUpgradeProcessor < NomenclatureChange::StatusCha
   end
 
   def summary_line_long
-    summary_line + " with the following linked names:"
+    summary_line + ' with the following linked names:'
   end
 
   def run_s_to_a

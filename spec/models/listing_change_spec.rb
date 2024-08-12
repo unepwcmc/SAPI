@@ -87,8 +87,8 @@ describe ListingChange do
         let(:listing_change) {
           build(
             :listing_change,
-            :species_listing => create(:species_listing, :designation => designation1),
-            :change_type => create(:change_type, :designation => designation2)
+            species_listing: create(:species_listing, designation: designation1),
+            change_type: create(:change_type, designation: designation2)
           )
         }
         specify { expect(listing_change.error_on(:species_listing_id).size).to eq(1) }
@@ -99,8 +99,8 @@ describe ListingChange do
         let(:listing_change) {
           build(
             :listing_change,
-            :event_id => create(:event, :designation => designation1).id,
-            :change_type => create(:change_type, :designation => designation2)
+            event_id: create(:event, designation: designation1).id,
+            change_type: create(:change_type, designation: designation2)
           )
         }
         specify { expect(listing_change.error_on(:event_id).size).to eq(1) }
@@ -108,7 +108,7 @@ describe ListingChange do
     end
   end
   describe :effective_at_formatted do
-    let(:listing_change) { create_cites_I_addition(:effective_at => '2012-05-10') }
+    let(:listing_change) { create_cites_I_addition(effective_at: '2012-05-10') }
     specify { expect(listing_change.effective_at_formatted).to eq('10/05/2012') }
   end
 

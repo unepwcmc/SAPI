@@ -31,7 +31,7 @@ describe NomenclatureChange::OutputReassignment do
       let(:reassignment) {
         build(
           :nomenclature_change_output_reassignment,
-          :nomenclature_change_output_id => nil
+          nomenclature_change_output_id: nil
         )
       }
       specify { expect(reassignment).not_to be_valid }
@@ -39,7 +39,7 @@ describe NomenclatureChange::OutputReassignment do
     context "when reassignable_type not specified" do
       let(:reassignment) {
         build(
-          :nomenclature_change_output_reassignment, :reassignable_type => nil
+          :nomenclature_change_output_reassignment, reassignable_type: nil
         )
       }
       specify { expect(reassignment).not_to be_valid }

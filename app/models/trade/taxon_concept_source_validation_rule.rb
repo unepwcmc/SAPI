@@ -42,7 +42,7 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
     t = Arel::Table.new('taxonomies')
 
     upper_kingdom_name = Arel::Nodes::NamedFunction.new(
-      "UPPER",
+      'UPPER',
       [Arel::Nodes::SqlLiteral.new("taxon_concepts.data->'kingdom_name'")]
     )
 

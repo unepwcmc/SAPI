@@ -3,11 +3,11 @@ class Checklist::Pdf::IndexAnnotationsKey
 
   def annotations_key
     tex = "\\newpage\n"
-    tex << "\\parindent 0in"
+    tex << '\\parindent 0in'
     tex << "\\cpart{\\annotationsKey}\n"
     tex << non_hash_annotations_key
     tex << hash_annotations_key
-    tex << "\\parindent -0.1in"
+    tex << '\\parindent -0.1in'
     tex
   end
 
@@ -24,7 +24,7 @@ class Checklist::Pdf::IndexAnnotationsKey
   def hash_annotations_key
     tex = "\\newpage\n"
     tex << "\\section*{\\hashAnnotations}\n"
-    tex << "\\hashAnnotationsIndexInfo" + "\n\n"
+    tex << '\\hashAnnotationsIndexInfo' + "\n\n"
     cop = CitesCop.find_by_is_current(true)
     annotations = cop && cop.hash_annotations.order(Arel.sql('SUBSTRING(symbol FROM 2)::INT'))
     unless annotations && !annotations.empty?
@@ -48,16 +48,16 @@ class Checklist::Pdf::IndexAnnotationsKey
       joins(:taxon_concept).
       includes(:taxon_concept).
       where(
-        :is_current => true,
-        :display_in_index => true
+        is_current: true,
+        display_in_index: true
       ).
       where('taxon_concept_id = original_taxon_concept_id').
       where('cites_listing_changes_mview.ann_symbol IS NOT NULL').
       order(Arel.sql('cites_listing_changes_mview.ann_symbol::INT')).map do |lc|
         {
-          :taxon_concept => lc.taxon_concept,
-          :symbol => lc.ann_symbol,
-          :note => lc.full_note
+          taxon_concept: lc.taxon_concept,
+          symbol: lc.ann_symbol,
+          note: lc.full_note
         }
       end
   end

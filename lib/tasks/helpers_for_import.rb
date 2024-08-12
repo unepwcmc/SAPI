@@ -338,25 +338,25 @@ class CsvToDbMap
       'rank' => 'rank varchar'
     },
     'shipments_import' => {
-      "SHIPMENT_NUMBER" => 'shipment_number int',
-      "ISO_COUNTRY_CODE" => 'iso_country_code varchar',
-      "REPORTER_TYPE" => 'reporter_type varchar',
-      "SHIPMENT_YEAR" => 'shipment_year int',
-      "APPENDIX" => 'appendix varchar',
-      "CITES_TAXON_CODE" => 'cites_taxon_code varchar',
-      "TERM_CODE_1" => 'term_code_1 varchar',
-      "TERM_CODE_2" => 'term_code_2 varchar',
-      "UNIT_CODE_1" => 'unit_code_1 varchar',
-      "UNIT_CODE_2" => 'unit_code_2 varchar',
-      "QUANTITY_1" => 'quantity_1 numeric',
-      "QUANTITY_2" => 'quantity_2 numeric',
-      "EXPORT_COUNTRY_CODE" => 'export_country_code varchar',
-      "IMPORT_COUNTRY_CODE" => 'import_country_code varchar',
-      "ORIGIN_COUNTRY_CODE" => 'origin_country_code varchar',
-      "SOURCE_CODE" => 'source_code varchar',
-      "PURPOSE_CODE" => 'purpose_code varchar',
-      "PERMIT_NUMBER_COUNT" => 'permit_number_count int',
-      "RECORD_LOAD_STATUS" => 'record_load_status varchar'
+      'SHIPMENT_NUMBER' => 'shipment_number int',
+      'ISO_COUNTRY_CODE' => 'iso_country_code varchar',
+      'REPORTER_TYPE' => 'reporter_type varchar',
+      'SHIPMENT_YEAR' => 'shipment_year int',
+      'APPENDIX' => 'appendix varchar',
+      'CITES_TAXON_CODE' => 'cites_taxon_code varchar',
+      'TERM_CODE_1' => 'term_code_1 varchar',
+      'TERM_CODE_2' => 'term_code_2 varchar',
+      'UNIT_CODE_1' => 'unit_code_1 varchar',
+      'UNIT_CODE_2' => 'unit_code_2 varchar',
+      'QUANTITY_1' => 'quantity_1 numeric',
+      'QUANTITY_2' => 'quantity_2 numeric',
+      'EXPORT_COUNTRY_CODE' => 'export_country_code varchar',
+      'IMPORT_COUNTRY_CODE' => 'import_country_code varchar',
+      'ORIGIN_COUNTRY_CODE' => 'origin_country_code varchar',
+      'SOURCE_CODE' => 'source_code varchar',
+      'PURPOSE_CODE' => 'purpose_code varchar',
+      'PERMIT_NUMBER_COUNT' => 'permit_number_count int',
+      'RECORD_LOAD_STATUS' => 'record_load_status varchar'
     },
     'permits_import' => {
       'SHIPMENT_NUMBER' => 'shipment_number int',
@@ -423,8 +423,8 @@ end
 
 def file_ok?(path_to_file)
   if !File.file?(Rails.root.join(path_to_file)) # if the file is not defined, explain and leave.
-    puts "Please specify a valid csv file from which to import data"
-    puts "Usage: rake import:XXX[path/to/file,path/to/another]"
+    puts 'Please specify a valid csv file from which to import data'
+    puts 'Usage: rake import:XXX[path/to/file,path/to/another]'
     return false
   end
   true
@@ -457,22 +457,22 @@ end
 
 def create_table_from_column_array(table_name, db_columns)
   begin
-    puts "Creating tmp table"
+    puts 'Creating tmp table'
     ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
     ApplicationRecord.connection.execute "CREATE TABLE #{table_name} (#{db_columns.join(', ')})"
-    puts "Table created"
+    puts 'Table created'
   rescue Exception => e
     puts e.inspect
-    puts "Tmp already exists removing data from tmp table before starting the import"
+    puts 'Tmp already exists removing data from tmp table before starting the import'
     ApplicationRecord.connection.execute "DELETE FROM #{table_name};"
-    puts "Data removed"
+    puts 'Data removed'
   end
 end
 
 def drop_table(table_name)
   begin
     ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name};"
-    puts "Table removed"
+    puts 'Table removed'
   rescue Exception
     puts "Could not drop table #{table_name}. It might not exist if this is the first time you are running this rake task."
   end
@@ -495,5 +495,5 @@ ENCODING 'utf-8'
 CSV HEADER
 PSQL
   PsqlCommand.new(cmd).execute
-  puts "Data copied to tmp table"
+  puts 'Data copied to tmp table'
 end

@@ -67,7 +67,7 @@ class NomenclatureChange < ApplicationRecord
     if status_was == NomenclatureChange::CLOSED ||
       status_was == NomenclatureChange::SUBMITTED &&
       status != NomenclatureChange::CLOSED
-      errors.add(:base, "Nomenclature change is locked for updates")
+      errors.add(:base, 'Nomenclature change is locked for updates')
       return false
     end
   end

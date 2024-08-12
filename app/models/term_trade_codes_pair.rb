@@ -23,16 +23,16 @@ class TermTradeCodesPair < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :trade_code_id, :trade_code_type, :term_id
 
-  belongs_to :term, :class_name => "TradeCode"
+  belongs_to :term, class_name: 'TradeCode'
   belongs_to :trade_code, optional: true
 
-  validates :term_id, :uniqueness => { :scope => :trade_code_id }
+  validates :term_id, uniqueness: { scope: :trade_code_id }
 
   def self.search(query)
     if query.present?
       where("UPPER(trade_codes.code) LIKE UPPER(:query)
             OR UPPER(terms.code) LIKE UPPER(:query)",
-            :query => "%#{query}%").
+            query: "%#{query}%").
       joins(<<-SQL
           LEFT JOIN trade_codes
             ON trade_codes.id = term_trade_codes_pairs.trade_code_id

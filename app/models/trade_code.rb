@@ -18,7 +18,7 @@ class TradeCode < ApplicationRecord
   # attr_accessible :code, :type, :name_en, :name_es, :name_fr
   translates :name
 
-  validates :code, :presence => true, :uniqueness => { :scope => :type }
+  validates :code, presence: true, uniqueness: { scope: :type }
 
   def self.search(query)
     if query.present?
@@ -26,7 +26,7 @@ class TradeCode < ApplicationRecord
             OR UPPER(name_en) LIKE UPPER(:query)
             OR UPPER(name_fr) LIKE UPPER(:query)
             OR UPPER(name_es) LIKE UPPER(:query)",
-            :query => "%#{query}%")
+            query: "%#{query}%")
     else
       all
     end

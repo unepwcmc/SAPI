@@ -36,14 +36,14 @@ class TaxonConceptReference < ApplicationRecord
   belongs_to :reference
   belongs_to :taxon_concept
 
-  delegate :citation, :to => :reference
+  delegate :citation, to: :reference
 
   accepts_nested_attributes_for :reference
 
-  validates :reference_id, :uniqueness => { :scope => [:taxon_concept_id] }
+  validates :reference_id, uniqueness: { scope: [:taxon_concept_id] }
 
   def excluded_taxon_concepts
-    ids = excluded_taxon_concepts_ids.try(:split, ",")&.flatten
+    ids = excluded_taxon_concepts_ids.try(:split, ',')&.flatten
     ids.flatten.present? ? TaxonConcept.where(id: ids).order(:full_name) : []
   end
 

@@ -12,7 +12,7 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
-  def taxon_concept_html(full_name, rank_name, existing_name = "", existing_rank_name = "")
+  def taxon_concept_html(full_name, rank_name, existing_name = '', existing_rank_name = '')
     if LOWER_RANKS.include?(rank_name)
       lower_ranks_cases(full_name, existing_name, existing_rank_name)
     elsif HIGHER_RANKS.include?(rank_name)

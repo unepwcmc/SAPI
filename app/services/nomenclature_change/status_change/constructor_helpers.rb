@@ -3,7 +3,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
   def build_primary_output
     if @nomenclature_change.primary_output.nil?
       @nomenclature_change.build_primary_output(
-        :is_primary_output => true
+        is_primary_output: true
       )
     end
   end
@@ -11,8 +11,8 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
   def build_secondary_output
     if @nomenclature_change.secondary_output.nil?
       @nomenclature_change.build_secondary_output(
-        :is_primary_output => false,
-        :new_name_status => @nomenclature_change.primary_output.taxon_concept.name_status
+        is_primary_output: false,
+        new_name_status: @nomenclature_change.primary_output.taxon_concept.name_status
       )
     end
   end
@@ -85,7 +85,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     )
     I18n.with_locale(lng) do
       I18n.translate(
-        "status_change.status_elevated_to_accepted_name",
+        'status_change.status_elevated_to_accepted_name',
         output_new_taxon: output_new_html,
         output_old_taxon: output_old_html,
         default: ''

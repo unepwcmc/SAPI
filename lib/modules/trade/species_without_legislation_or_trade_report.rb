@@ -98,17 +98,17 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
 
   def export(file_path)
     export_to_csv(
-      :query => @report_query,
-      :csv_columns => [
-        "ID", "Legacy id", "Kingdom", "Phylum", "Class",
-        "Order", "Family", "Genus", "Species",
-        "Full name", "Author year", "Name Status",
-        "Has CITES listed descendants?", "Has EU listed descendants?",
-        "NQuotas", "N EU Opinions", "N EU Suspensions", "N CITES Suspensions"
+      query: @report_query,
+      csv_columns: [
+        'ID', 'Legacy id', 'Kingdom', 'Phylum', 'Class',
+        'Order', 'Family', 'Genus', 'Species',
+        'Full name', 'Author year', 'Name Status',
+        'Has CITES listed descendants?', 'Has EU listed descendants?',
+        'NQuotas', 'N EU Opinions', 'N EU Suspensions', 'N CITES Suspensions'
       ],
-      :file_path => file_path,
-      :encoding => 'latin1',
-      :delimiter => ';'
+      file_path: file_path,
+      encoding: 'latin1',
+      delimiter: ';'
     )
   end
 

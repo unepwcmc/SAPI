@@ -10,7 +10,7 @@ describe Admin::TaxonCommonsController do
 
   describe "XHR GET 'new'" do
     it "returns http success and renders the new template" do
-      get :new, params: { :taxon_concept_id => @taxon_concept.id, :format => 'js' }, xhr: true
+      get :new, params: { taxon_concept_id: @taxon_concept.id, format: 'js' }, xhr: true
       expect(response).to be_successful
       expect(response).to render_template('new')
     end
@@ -20,10 +20,10 @@ describe Admin::TaxonCommonsController do
     it "renders create when successful" do
       post :create, xhr: true,
         params: {
-          :taxon_concept_id => @taxon_concept.id,
-          :taxon_common => {
-            :name => @common_name.name,
-            :language_id => @common_name.language_id
+          taxon_concept_id: @taxon_concept.id,
+          taxon_common: {
+            name: @common_name.name,
+            language_id: @common_name.language_id
           }
         }
       expect(response).to render_template("create")
@@ -31,8 +31,8 @@ describe Admin::TaxonCommonsController do
     it "renders new when not successful" do
       post :create, xhr: true,
         params: {
-          :taxon_concept_id => @taxon_concept.id,
-          :taxon_common => { dummy: 'test' }
+          taxon_concept_id: @taxon_concept.id,
+          taxon_common: { dummy: 'test' }
         }
       expect(response).to render_template("new")
     end
@@ -42,16 +42,16 @@ describe Admin::TaxonCommonsController do
     before do
       @taxon_common = create(
         :taxon_common,
-        :common_name_id => @common_name.id,
-        :taxon_concept_id => @taxon_concept.id
+        common_name_id: @common_name.id,
+        taxon_concept_id: @taxon_concept.id
       )
     end
     it "renders the edit template" do
-      get :edit, params: { :taxon_concept_id => @taxon_concept.id, :id => @taxon_common.id }, xhr: true
+      get :edit, params: { taxon_concept_id: @taxon_concept.id, id: @taxon_common.id }, xhr: true
       expect(response).to render_template('new')
     end
     it "assigns the  taxon common variable" do
-      get :edit, params: { :taxon_concept_id => @taxon_concept.id, :id => @taxon_common.id }, xhr: true
+      get :edit, params: { taxon_concept_id: @taxon_concept.id, id: @taxon_common.id }, xhr: true
       expect(assigns(:taxon_common)).not_to be_nil
     end
   end
@@ -60,29 +60,29 @@ describe Admin::TaxonCommonsController do
     before do
       @taxon_common = create(
         :taxon_common,
-        :common_name_id => @common_name.id,
-        :taxon_concept_id => @taxon_concept.id
+        common_name_id: @common_name.id,
+        taxon_concept_id: @taxon_concept.id
       )
     end
     it "renders create when successful" do
-      put :update, :format => 'js', xhr: true,
+      put :update, format: 'js', xhr: true,
         params: {
-          :taxon_concept_id => @taxon_concept.id,
-          :id => @taxon_common.id,
-          :taxon_common => {
-            :name => @common_name.name,
-            :language_id => @common_name.language_id
+          taxon_concept_id: @taxon_concept.id,
+          id: @taxon_common.id,
+          taxon_common: {
+            name: @common_name.name,
+            language_id: @common_name.language_id
           }
         }
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      put :update, :format => 'js', xhr: true,
+      put :update, format: 'js', xhr: true,
         params: {
-          :taxon_concept_id => @taxon_concept.id,
-          :id => @taxon_common.id,
-          :taxon_common => {
-            :common_name_id => nil
+          taxon_concept_id: @taxon_concept.id,
+          id: @taxon_common.id,
+          taxon_common: {
+            common_name_id: nil
           }
         }
       expect(response).to render_template('new')
@@ -93,12 +93,12 @@ describe Admin::TaxonCommonsController do
     let(:taxon_common) {
       create(
         :taxon_common,
-        :taxon_concept_id => @taxon_concept.id,
-        :common_name => @common_name
+        taxon_concept_id: @taxon_concept.id,
+        common_name: @common_name
       )
     }
     it "redirects after delete" do
-      delete :destroy, params: { :taxon_concept_id => @taxon_concept.id, :id => taxon_common.id }
+      delete :destroy, params: { taxon_concept_id: @taxon_concept.id, id: taxon_common.id }
       expect(response).to redirect_to(
         admin_taxon_concept_names_url(@taxon_concept)
       )
@@ -111,8 +111,8 @@ describe Admin::TaxonCommonsController do
     before do
       @taxon_common = create(
         :taxon_common,
-        :common_name_id => @common_name.id,
-        :taxon_concept_id => @taxon_concept.id
+        common_name_id: @common_name.id,
+        taxon_concept_id: @taxon_concept.id
       )
     end
 
@@ -126,13 +126,13 @@ describe Admin::TaxonCommonsController do
       expect(@taxon_concept.reload.dependents_updated_at).not_to be_nil
       old_date = @taxon_concept.dependents_updated_at
 
-      put :update, :format => 'js', xhr: true,
+      put :update, format: 'js', xhr: true,
         params: {
-          :taxon_concept_id => @taxon_concept.id,
-          :id => @taxon_common.id,
-          :taxon_common => {
-            :name => @common_name.name,
-            :language_id => @common_name.language_id
+          taxon_concept_id: @taxon_concept.id,
+          id: @taxon_common.id,
+          taxon_common: {
+            name: @common_name.name,
+            language_id: @common_name.language_id
           }
         }
 
@@ -149,10 +149,10 @@ describe Admin::TaxonCommonsController do
       expect(@taxon_concept.reload.dependents_updated_at).not_to be_nil
       old_date = @taxon_concept.dependents_updated_at
 
-      delete :destroy, params: { :taxon_concept_id => @taxon_concept.id, :id => @taxon_common.id }
+      delete :destroy, params: { taxon_concept_id: @taxon_concept.id, id: @taxon_common.id }
 
       expect(@taxon_concept.reload.dependents_updated_at).not_to eq(old_date)
-      expect(TaxonCommon.where(:id => @taxon_common.id).size).to eq(0)
+      expect(TaxonCommon.where(id: @taxon_common.id).size).to eq(0)
     end
   end
 
@@ -161,14 +161,14 @@ describe Admin::TaxonCommonsController do
     let(:taxon_common) {
       create(
         :taxon_common,
-        :taxon_concept_id => @taxon_concept.id,
-        :common_name => @common_name
+        taxon_concept_id: @taxon_concept.id,
+        common_name: @common_name
       )
     }
     describe "DELETE destroy" do
       it "fails to delete and redirects" do
         @request.env['HTTP_REFERER'] = admin_taxon_concept_names_url(@taxon_concept)
-        delete :destroy, params: { :id => taxon_common.id, :taxon_concept_id => @taxon_concept.id }
+        delete :destroy, params: { id: taxon_common.id, taxon_concept_id: @taxon_concept.id }
         expect(response).to redirect_to(
           admin_taxon_concept_names_url(@taxon_concept)
         )

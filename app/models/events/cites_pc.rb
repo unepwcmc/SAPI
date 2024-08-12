@@ -36,7 +36,7 @@ class CitesPc < Event
   # Migrated to controller (Strong Parameters)
   # attr_accessible :is_current
 
-  validates :effective_at, :presence => true
+  validates :effective_at, presence: true
 
   def self.elibrary_document_types
     [Document::ReviewOfSignificantTrade]

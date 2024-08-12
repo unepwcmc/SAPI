@@ -36,7 +36,7 @@ describe NomenclatureChange::Lump::Processor do
       end
     end
     context "when output is existing taxon with new status" do
-      let(:output_species2) { create_cites_eu_species(:name_status => 'S') }
+      let(:output_species2) { create_cites_eu_species(name_status: 'S') }
       let!(:lump) { lump_with_inputs_and_output_status_change }
       specify { expect { processor.run }.not_to change(TaxonConcept, :count) }
       specify { expect { processor.run }.not_to change(output_species, :full_name) }

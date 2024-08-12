@@ -39,15 +39,15 @@ describe TaxonConceptPrefixMatcher do
     )
     create(
       :taxon_relationship,
-      :taxon_concept => taxon_concept4,
-      :other_taxon_concept => tmp,
-      :taxon_relationship_type => hybrid_relationship_type
+      taxon_concept: taxon_concept4,
+      other_taxon_concept: tmp,
+      taxon_relationship_type: hybrid_relationship_type
     )
     tmp
   }
   context "when name status not specified" do
     let(:matcher_params) {
-      SearchParams.new(:taxonomy => { :id => taxonomy.id }, :scientific_name => 'Ab')
+      SearchParams.new(taxonomy: { id: taxonomy.id }, scientific_name: 'Ab')
     }
     let(:matcher) { TaxonConceptPrefixMatcher.new matcher_params }
     specify { expect(matcher.taxon_concepts).to include(taxon_concept4) }
@@ -56,7 +56,7 @@ describe TaxonConceptPrefixMatcher do
 
   context "when name status H" do
     let(:matcher_params) {
-      SearchParams.new(:taxonomy => { :id => taxonomy.id }, :scientific_name => 'Ab', :name_status => 'H')
+      SearchParams.new(taxonomy: { id: taxonomy.id }, scientific_name: 'Ab', name_status: 'H')
     }
     let(:matcher) { TaxonConceptPrefixMatcher.new matcher_params }
     specify { expect(matcher.taxon_concepts).not_to include(taxon_concept4) }
@@ -66,9 +66,9 @@ describe TaxonConceptPrefixMatcher do
   context "when rank scope applied" do
     let(:parent_matcher_params) {
       SearchParams.new(
-        :taxonomy => { :id => taxonomy.id },
-        :rank => { :id => taxon_concept4.rank_id, :scope => :parent },
-        :scientific_name => 'A'
+        taxonomy: { id: taxonomy.id },
+        rank: { id: taxon_concept4.rank_id, scope: :parent },
+        scientific_name: 'A'
       )
     }
     let(:parent_matcher) {
@@ -83,9 +83,9 @@ describe TaxonConceptPrefixMatcher do
 
     let(:ancestor_matcher_params) {
       SearchParams.new(
-        :taxonomy => { :id => taxonomy.id },
-        :rank => { :id => taxon_concept4.rank_id, :scope => :ancestors },
-        :scientific_name => 'AAA'
+        taxonomy: { id: taxonomy.id },
+        rank: { id: taxon_concept4.rank_id, scope: :ancestors },
+        scientific_name: 'AAA'
       )
     }
     let(:ancestor_matcher) {
@@ -100,9 +100,9 @@ describe TaxonConceptPrefixMatcher do
 
     let(:self_and_ancestor_matcher_params) {
       SearchParams.new(
-        :taxonomy => { :id => taxonomy.id },
-        :rank => { :id => taxon_concept4.rank_id, :scope => :self_and_ancestors },
-        :scientific_name => 'AAA'
+        taxonomy: { id: taxonomy.id },
+        rank: { id: taxon_concept4.rank_id, scope: :self_and_ancestors },
+        scientific_name: 'AAA'
       )
     }
     let(:self_and_ancestor_matcher) {
@@ -119,9 +119,9 @@ describe TaxonConceptPrefixMatcher do
   context "when taxon concept scope applied" do
     let(:ancestor_matcher_params) {
       SearchParams.new(
-        :taxonomy => { :id => taxonomy.id },
-        :taxon_concept => { :id => taxon_concept4.id, :scope => :ancestors },
-        :scientific_name => 'A'
+        taxonomy: { id: taxonomy.id },
+        taxon_concept: { id: taxon_concept4.id, scope: :ancestors },
+        scientific_name: 'A'
       )
     }
     let(:ancestor_matcher) {
@@ -136,9 +136,9 @@ describe TaxonConceptPrefixMatcher do
 
     let(:descendant_matcher_params) {
       SearchParams.new(
-        :taxonomy => { :id => taxonomy.id },
-        :taxon_concept => { :id => taxon_concept2.id, :scope => :descendants },
-        :scientific_name => 'A'
+        taxonomy: { id: taxonomy.id },
+        taxon_concept: { id: taxon_concept2.id, scope: :descendants },
+        scientific_name: 'A'
       )
     }
     let(:descendant_matcher) {

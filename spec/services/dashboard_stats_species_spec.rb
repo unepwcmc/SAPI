@@ -4,24 +4,24 @@ describe DashboardStats do
   let(:argentina) {
     create(
       :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Argentina',
-      :iso_code2 => 'AR'
+      geo_entity_type: country_geo_entity_type,
+      name: 'Argentina',
+      iso_code2: 'AR'
     )
   }
   let(:ghana) {
     create(
       :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Ghana',
-      :iso_code2 => 'GH'
+      geo_entity_type: country_geo_entity_type,
+      name: 'Ghana',
+      iso_code2: 'GH'
     )
   }
   let(:ds_ar) {
-    DashboardStats.new argentina, { :kingdom => 'Animalia', :trade_limit => 5 }
+    DashboardStats.new argentina, { kingdom: 'Animalia', trade_limit: 5 }
   }
   let(:ds_gh) {
-    DashboardStats.new ghana, { :kingdom => 'Animalia', :trade_limit => 5 }
+    DashboardStats.new ghana, { kingdom: 'Animalia', trade_limit: 5 }
   }
 
   describe "#new" do

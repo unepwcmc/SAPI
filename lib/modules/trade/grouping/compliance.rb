@@ -67,7 +67,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
           res[group] ||= 0
           # If we are looping through plants but the shipment is about a Timber taxon
           # don't include this in the sum
-          next if group == 'Plants' && is_timber?(shipment, conversion["Timber"])
+          next if group == 'Plants' && is_timber?(shipment, conversion['Timber'])
           rank_name = grouping[:rank] == 'Species' ? 'taxon' : grouping[:rank].downcase
           rank_name = "#{rank_name}_name"
           res[group] += 1 if shipment[rank_name] == grouping[:taxon_name]

@@ -5,14 +5,14 @@ describe Trade::ValidationErrorsController do
 
   let(:annual_report_upload) {
     aru = build(:annual_report_upload)
-    aru.save(:validate => false)
+    aru.save(validate: false)
     aru
   }
   let(:sandbox_klass) {
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   }
   let!(:shipment) {
-    sandbox_klass.create(:taxon_name => 'Caniis lupus')
+    sandbox_klass.create(taxon_name: 'Caniis lupus')
   }
   let(:validation_rule) {
     create_taxon_concept_validation

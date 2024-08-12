@@ -1,7 +1,7 @@
 class Admin::EuRegulationsController < Admin::EventsController
   # this needs to be specified, because otherwise defaults to 'event'
-  defaults :resource_class => EuRegulation,
-    :collection_name => 'eu_regulations', :instance_name => 'eu_regulation'
+  defaults resource_class: EuRegulation,
+    collection_name: 'eu_regulations', instance_name: 'eu_regulation'
 
   def activate
     @eu_regulation = EuRegulation.find(params[:id])

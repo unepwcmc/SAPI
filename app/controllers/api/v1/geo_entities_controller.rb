@@ -4,9 +4,9 @@ class Api::V1::GeoEntitiesController < ApplicationController
     @geo_entities = GeoEntitySearch.new(
       params.slice(:geo_entity_types_set, :locale, :query_string)
     ).cached_results
-    render :json => @geo_entities,
-      :each_serializer => Species::GeoEntitySerializer,
-      :meta => { :total => @geo_entities.count }
+    render json: @geo_entities,
+      each_serializer: Species::GeoEntitySerializer,
+      meta: { total: @geo_entities.count }
   end
 
 end

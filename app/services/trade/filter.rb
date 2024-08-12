@@ -72,37 +72,37 @@ class Trade::Filter
     end
 
     unless @appendices.empty?
-      @query = @query.where(:appendix => @appendices)
+      @query = @query.where(appendix: @appendices)
     end
 
     unless @terms_ids.empty?
-      @query = @query.where(:term_id => @terms_ids)
+      @query = @query.where(term_id: @terms_ids)
     end
 
     unless @importers_ids.empty?
       importers_ids = sanitize_importer_ids(@importers_ids)
-      @query = @query.where(:importer_id => importers_ids)
+      @query = @query.where(importer_id: importers_ids)
     end
 
     unless @exporters_ids.empty?
       exporters_ids = sanitize_exporter_ids(@exporters_ids)
-      @query = @query.where(:exporter_id => exporters_ids)
+      @query = @query.where(exporter_id: exporters_ids)
     end
 
     if !@units_ids.empty?
-      local_field = "unit_id"
-      blank_query = @unit_blank ? "OR unit_id IS NULL" : ""
+      local_field = 'unit_id'
+      blank_query = @unit_blank ? 'OR unit_id IS NULL' : ''
       @query = @query.where("#{local_field} IN (?) #{blank_query}", @units_ids)
     elsif @unit_blank
-      @query = @query.where(:unit_id => nil)
+      @query = @query.where(unit_id: nil)
     end
 
     if !@purposes_ids.empty?
-      local_field = "purpose_id"
-      blank_query = @purpose_blank ? "OR purpose_id IS NULL" : ""
+      local_field = 'purpose_id'
+      blank_query = @purpose_blank ? 'OR purpose_id IS NULL' : ''
       @query = @query.where("#{local_field} IN (?) #{blank_query}", @purposes_ids)
     elsif @purpose_blank
-      @query = @query.where(:purpose_id => nil)
+      @query = @query.where(purpose_id: nil)
     end
 
     if !@sources_ids.empty?
@@ -111,19 +111,19 @@ class Trade::Filter
         @sources_ids << u.id if u
         @source_blank = true
       end
-      local_field = "source_id"
-      blank_query = @source_blank ? "OR source_id IS NULL" : ""
+      local_field = 'source_id'
+      blank_query = @source_blank ? 'OR source_id IS NULL' : ''
       @query = @query.where("#{local_field} IN (?) #{blank_query}", @sources_ids)
     elsif @source_blank
-      @query = @query.where(:source_id => nil)
+      @query = @query.where(source_id: nil)
     end
 
     if !@countries_of_origin_ids.empty?
-      local_field = "country_of_origin_id"
-      blank_query = @country_of_origin_blank ? "OR country_of_origin_id IS NULL" : ""
+      local_field = 'country_of_origin_id'
+      blank_query = @country_of_origin_blank ? 'OR country_of_origin_id IS NULL' : ''
       @query = @query.where("#{local_field} IN (?) #{blank_query}", @countries_of_origin_ids)
     elsif @country_of_origin_blank
-      @query = @query.where(:country_of_origin_id => nil)
+      @query = @query.where(country_of_origin_id: nil)
     end
 
     # Other cases
@@ -194,11 +194,11 @@ class Trade::Filter
   def time_range_query
     unless @time_range_start.blank? && @time_range_end.blank?
       if @time_range_start.blank?
-        @query = @query.where(["year <= ?", @time_range_end])
+        @query = @query.where(['year <= ?', @time_range_end])
       elsif @time_range_end.blank?
-        @query = @query.where(["year >= ?", @time_range_start])
+        @query = @query.where(['year >= ?', @time_range_start])
       else
-        @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_end])
+        @query = @query.where(['year >= ? AND year <= ?', @time_range_start, @time_range_end])
       end
     end
   end
@@ -211,9 +211,9 @@ class Trade::Filter
 
     if ['I', 'E'].include? @reporter_type
       if @reporter_type == 'E'
-        @query = @query.where(:reported_by_exporter => true)
+        @query = @query.where(reported_by_exporter: true)
       elsif @reporter_type == 'I'
-        @query = @query.where(:reported_by_exporter => false)
+        @query = @query.where(reported_by_exporter: false)
       end
     end
 
@@ -227,7 +227,7 @@ class Trade::Filter
         OR export_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
         OR origin_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
         #{@permit_blank ? "OR #{permit_blank_query}" : ''}",
-        :permits_ids => @permits_ids
+        permits_ids: @permits_ids
         )
     elsif @permit_blank
       @query = @query.where(permit_blank_query)
@@ -237,7 +237,7 @@ class Trade::Filter
       if @quantity == 0
         @query = @query.where('quantity = 0 OR quantity IS NULL')
       else
-        @query = @query.where(:quantity => @quantity)
+        @query = @query.where(quantity: @quantity)
       end
     end
   end

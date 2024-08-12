@@ -2,7 +2,7 @@ require 'spec_helper'
 describe Trade::SandboxFilter do
   let(:annual_report_upload) {
     aru = build(:annual_report_upload)
-    aru.save(:validate => false)
+    aru.save(validate: false)
     aru
   }
   let(:sandbox_klass) {

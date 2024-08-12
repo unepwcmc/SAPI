@@ -74,10 +74,10 @@ class Checklist::Timeline
               event.is_reservation_withdrawal? && next_event.is_reservation?
               )
               Checklist::TimelineInterval.new(
-                :taxon_concept_id => @taxon_concept_id,
-                :listing_change_id => event.id,
-                :start_pos => event.pos,
-                :end_pos => next_event.pos
+                taxon_concept_id: @taxon_concept_id,
+                listing_change_id: event.id,
+                start_pos: event.pos,
+                end_pos: next_event.pos
               )
             end
           else
@@ -88,10 +88,10 @@ class Checklist::Timeline
               @current || event.is_reservation? && event.is_current
               @continues_in_present = true
               Checklist::TimelineInterval.new(
-                :taxon_concept_id => @taxon_concept_id,
-                :listing_change_id => event.id,
-                :start_pos => event.pos,
-                :end_pos => 1
+                taxon_concept_id: @taxon_concept_id,
+                listing_change_id: event.id,
+                start_pos: event.pos,
+                end_pos: 1
               )
             end
           end
@@ -108,9 +108,9 @@ class Checklist::Timeline
       # create party timeline
       @parties << party_id
       party_timeline = Checklist::Timeline.new(
-        :taxon_concept_id => @taxon_concept_id,
-        :appendix => appendix,
-        :party_id => party_id
+        taxon_concept_id: @taxon_concept_id,
+        appendix: appendix,
+        party_id: party_id
       )
       @timelines << party_timeline
       party_timeline

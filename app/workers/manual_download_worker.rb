@@ -2,7 +2,7 @@ class ManualDownloadWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
 
-  sidekiq_options :retry => false, :backtrace => 50
+  sidekiq_options retry: false, backtrace: 50
 
   def perform(download_id, params)
     @locale = params['locale']
@@ -21,12 +21,12 @@ class ManualDownloadWorker
 
     @download.display_name = @display_name # 'Id Manual resources'
 
-    @download.status = "completed"
+    @download.status = 'completed'
 
     @download.save!
   rescue => exception
     Appsignal.add_exception(exception) if defined? Appsignal
-    @download.status = "failed"
+    @download.status = 'failed'
     @download.save!
     raise exception
   end
@@ -57,7 +57,7 @@ class ManualDownloadWorker
   def zip_file_generator
     missing_files = []
     pdf_file_paths = []
-    tmp_dir_path = [Rails.root, "/tmp/", SecureRandom.hex(8)].join
+    tmp_dir_path = [Rails.root, '/tmp/', SecureRandom.hex(8)].join
     FileUtils.mkdir tmp_dir_path
     input_name = 'merged_file.pdf'
     file_path = tmp_dir_path + '/' + input_name
@@ -88,7 +88,7 @@ class ManualDownloadWorker
     FileUtils.rm(@download_path)
   rescue => exception
     Appsignal.add_exception(exception) if defined? Appsignal
-    @download.status = "failed"
+    @download.status = 'failed'
     @download.save!
     raise exception
   end

@@ -174,7 +174,7 @@ class Trade::Grouping::Base
         elsif value.present?
           return "IN (#{value})"
         elsif null.present?
-          return "IS NULL"
+          return 'IS NULL'
         else
           return ''
         end
@@ -185,7 +185,7 @@ class Trade::Grouping::Base
 
     end
 
-    return "IS NULL" if value == 'NULL'
+    return 'IS NULL' if value == 'NULL'
 
     operator = case key
       when :time_range_start

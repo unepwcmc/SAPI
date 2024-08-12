@@ -41,12 +41,12 @@ class Event < ApplicationRecord
   attr_reader :effective_at_formatted
 
   belongs_to :designation, optional: true
-  has_many :annotations, :dependent => :destroy
+  has_many :annotations, dependent: :destroy
   has_many :documents
   has_many :cites_processes
 
-  validates :name, :presence => true, :uniqueness => true
-  validates :url, :format => URI::regexp(%w(http https)), :allow_blank => true
+  validates :name, presence: true, uniqueness: true
+  validates :url, format: URI::regexp(%w(http https)), allow_blank: true
 
   def self.elibrary_current_event_types
     [CitesCop, CitesAc, CitesPc, EcSrg]
@@ -94,33 +94,33 @@ class Event < ApplicationRecord
   end
 
   def effective_at_formatted
-    effective_at && effective_at.strftime("%d/%m/%Y")
+    effective_at && effective_at.strftime('%d/%m/%Y')
   end
 
   def published_at_formatted
-    published_at && published_at.strftime("%d/%m/%Y")
+    published_at && published_at.strftime('%d/%m/%Y')
   end
 
   def end_date_formatted
-    end_date && end_date.strftime("%d/%m/%Y")
+    end_date && end_date.strftime('%d/%m/%Y')
   end
 
   def self.search(query)
     if query.present?
       where("UPPER(events.name) LIKE UPPER(:query)
             OR UPPER(events.description) LIKE UPPER(:query)",
-            :query => "%#{query}%")
+            query: "%#{query}%")
     else
       all
     end
   end
 
   def activate!
-    update(:is_current => true)
+    update(is_current: true)
   end
 
   def deactivate!
-    update(:is_current => false)
+    update(is_current: false)
   end
 
   protected

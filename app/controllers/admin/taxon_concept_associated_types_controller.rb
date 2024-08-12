@@ -7,11 +7,11 @@ class Admin::TaxonConceptAssociatedTypesController < Admin::SimpleCrudController
     destroy! do |success, failure|
       success.html {
         redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
       failure.html {
         redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
-        :notice => 'Operation failed'
+        notice: 'Operation failed'
       }
     end
   end

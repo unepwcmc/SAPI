@@ -32,8 +32,8 @@ class CitesProcess < ApplicationRecord
 
   belongs_to :taxon_concept
   belongs_to :geo_entity
-  belongs_to :start_event, :class_name => 'Event', optional: true
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
+  belongs_to :start_event, class_name: 'Event', optional: true
+  belongs_to :m_taxon_concept, foreign_key: :taxon_concept_id, optional: true
 
   validates :resolution, presence: true
   validates :start_date, presence: true
@@ -57,7 +57,7 @@ class CitesProcess < ApplicationRecord
 
   def start_event_value
     unless  ['CitesAc','CitesPc'].include? self.start_event.type
-      errors.add(:start_event, "is not valid")
+      errors.add(:start_event, 'is not valid')
     end
   end
 

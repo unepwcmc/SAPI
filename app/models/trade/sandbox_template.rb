@@ -34,9 +34,9 @@ class Trade::SandboxTemplate < ApplicationRecord
   has_paper_trail
 
   COLUMNS_IN_CSV_ORDER = [
-    "appendix", "species_name", "term_code", "quantity", "unit_code",
-    "trading_partner", "country_of_origin", "import_permit", "export_permit",
-    "origin_permit", "purpose_code", "source_code", "year"
+    'appendix', 'species_name', 'term_code', 'quantity', 'unit_code',
+    'trading_partner', 'country_of_origin', 'import_permit', 'export_permit',
+    'origin_permit', 'purpose_code', 'source_code', 'year'
   ]
   CSV_IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
   CSV_EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - ['import_permit']
@@ -69,7 +69,7 @@ class Trade::SandboxTemplate < ApplicationRecord
         #   :source_code,
         #   :year
         belongs_to :taxon_concept, optional: true
-        belongs_to :reported_taxon_concept, :class_name => 'TaxonConcept', optional: true
+        belongs_to :reported_taxon_concept, class_name: 'TaxonConcept', optional: true
 
         def sanitize
           self.class.sanitize(self.id)
@@ -166,7 +166,7 @@ class Trade::SandboxTemplate < ApplicationRecord
 
   def self.create_view_stmt(target_table_name, idx)
     sanitize_sql_array([
-      "SELECT * FROM create_trade_sandbox_view(?, ?)",
+      'SELECT * FROM create_trade_sandbox_view(?, ?)',
       target_table_name,
       idx
     ])

@@ -44,9 +44,9 @@ class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
   def document_batch_params
     params.require(:document_batch).permit(
       :event_id, :date, :language_id, :is_public,
-      :documents_attributes => [
+      documents_attributes: [
         :type
-      ], :files => []
+      ], files: []
     )
   end
 

@@ -48,7 +48,7 @@ describe Admin::NomenclatureChanges::LumpController do
           get :show, params: { id: :legislation, nomenclature_change_id: @lump.id }
           expect(response).to redirect_to(
             admin_nomenclature_change_lump_url(
-              nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
+              nomenclature_change_id: assigns(:nomenclature_change).id, id: 'summary'
             )
           )
         end
@@ -65,7 +65,7 @@ describe Admin::NomenclatureChanges::LumpController do
       post :create, params: { nomenclature_change_id: 'new' }
       expect(response).to redirect_to(
         admin_nomenclature_change_lump_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'inputs'
+          nomenclature_change_id: assigns(:nomenclature_change).id, id: 'inputs'
         )
       )
     end
@@ -85,7 +85,7 @@ describe Admin::NomenclatureChanges::LumpController do
         }, nomenclature_change_id: @lump.id, id: 'inputs' }
         expect(response).to redirect_to(
           admin_nomenclature_change_lump_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'outputs'
+            nomenclature_change_id: assigns(:nomenclature_change).id, id: 'outputs'
           )
         )
       end

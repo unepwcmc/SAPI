@@ -5,19 +5,19 @@ describe TaxonConcept do
   describe :create do
     let(:parent) {
       create_cites_eu_genus(
-        :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
+        taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
       )
     }
     let!(:tc) {
       create_cites_eu_species(
-        :parent_id => parent.id,
-        :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
+        parent_id: parent.id,
+        taxon_name: create(:taxon_name, scientific_name: 'lolatus')
       )
     }
     let(:trade_name) {
       create_cites_eu_species(
-        :name_status => 'T',
-        :author_year => 'Taxonomus 2014',
+        name_status: 'T',
+        author_year: 'Taxonomus 2014',
         taxon_name: create(:taxon_name, scientific_name: 'Lolcatus lolus')
       )
     }
@@ -67,20 +67,20 @@ describe TaxonConcept do
     context "when has accepted parent" do
       before(:each) do
         @subspecies = create_cites_eu_subspecies(
-          :parent => tc,
-          :taxon_name => create(:taxon_name, :scientific_name => 'perfidius')
+          parent: tc,
+          taxon_name: create(:taxon_name, scientific_name: 'perfidius')
         )
         @trade_name = create_cites_eu_subspecies(
-          :parent_id => tc.id,
-          :name_status => 'T',
-          :author_year => 'Taxonomus 2013',
+          parent_id: tc.id,
+          name_status: 'T',
+          author_year: 'Taxonomus 2013',
           scientific_name: 'Lolcatus lolus furiatus'
         )
         create(
           :taxon_relationship,
-          :taxon_relationship_type => trade_name_relationship_type,
-          :taxon_concept => @subspecies,
-          :other_taxon_concept => @trade_name
+          taxon_relationship_type: trade_name_relationship_type,
+          taxon_concept: @subspecies,
+          other_taxon_concept: @trade_name
         )
       end
       # should not modify a trade_name's full name when saving

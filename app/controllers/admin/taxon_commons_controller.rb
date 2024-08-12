@@ -1,5 +1,5 @@
 class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesController
-  respond_to :js, :only => [:new, :edit, :create, :update]
+  respond_to :js, only: [:new, :edit, :create, :update]
   belongs_to :taxon_concept
 
   authorize_resource
@@ -47,11 +47,11 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
     destroy! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_names_url(@taxon_concept),
-          :notice => 'Operation succeeded'
+          notice: 'Operation succeeded'
       }
       failure.html {
         redirect_to admin_taxon_concept_names_url(@taxon_concept),
-          :notice => 'Operation failed'
+          notice: 'Operation failed'
       }
     end
   end

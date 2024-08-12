@@ -1,7 +1,7 @@
 class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesController
-  respond_to :js, :only => [:create, :update]
+  respond_to :js, only: [:create, :update]
   belongs_to :taxon_concept
-  before_action :load_search, :only => [:new, :index, :edit, :create]
+  before_action :load_search, only: [:new, :index, :edit, :create]
   layout 'taxon_concepts'
 
   def index
@@ -44,7 +44,7 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
     destroy! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_taxon_instruments_url(@taxon_concept),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
     end
   end
@@ -52,9 +52,9 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
   protected
 
   def load_instruments
-    @taxon_instrument = TaxonInstrument.new(:taxon_concept_id => @taxon_concept.id)
-    @instruments = Instrument.joins(:designation => :taxonomy).
-      where(:taxonomies => { :id => @taxon_concept.taxonomy_id }).
+    @taxon_instrument = TaxonInstrument.new(taxon_concept_id: @taxon_concept.id)
+    @instruments = Instrument.joins(designation: :taxonomy).
+      where(taxonomies: { id: @taxon_concept.taxonomy_id }).
       order(:name)
   end
 

@@ -26,7 +26,7 @@ module Checklist::Csv::Document
   end
 
   def document
-    CSV.open(@download_path, "wb") do |csv|
+    CSV.open(@download_path, 'wb') do |csv|
       yield csv
     end
 

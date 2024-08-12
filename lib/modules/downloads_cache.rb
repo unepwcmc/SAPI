@@ -32,7 +32,7 @@ module DownloadsCache
   def self.clear_dirs(dirs)
     dirs.each do |dir|
       Rails.logger.debug("Clearing #{dir}")
-      FileUtils.rm_rf(Dir["#{downloads_path(dir)}/*"], :secure => true)
+      FileUtils.rm_rf(Dir["#{downloads_path(dir)}/*"], secure: true)
     end
   end
 
@@ -133,7 +133,7 @@ module DownloadsCache
   end
 
   def self.update_checklist_downloads
-    puts "Updating CITES Checklist downloads"
+    puts 'Updating CITES Checklist downloads'
     modules = [
       Checklist::Pdf,
       Checklist::Csv,
@@ -142,12 +142,12 @@ module DownloadsCache
     ['en', 'es', 'fr'].each do |locale|
       # full download parameters
       params = {
-        show_synonyms: "1",
-        show_author: "1",
-        show_english: "1",
-        show_spanish: "1",
-        show_french: "1",
-        intro: "1",
+        show_synonyms: '1',
+        show_author: '1',
+        show_english: '1',
+        show_spanish: '1',
+        show_french: '1',
+        intro: '1',
         locale: locale
       }
 
@@ -165,10 +165,10 @@ module DownloadsCache
   end
 
   def self.update_species_downloads
-    puts "Updating Species+ downloads"
+    puts 'Updating Species+ downloads'
     Designation.dict.each do |d|
       elapsed_time = Benchmark.realtime do
-        Species::ListingsExportFactory.new(:designation => d).export
+        Species::ListingsExportFactory.new(designation: d).export
       end
       puts "#{Time.now} #{d} Listings download generated in #{elapsed_time}s"
     end
@@ -202,27 +202,27 @@ module DownloadsCache
   end
 
   def self.update_admin_downloads
-    puts "Updating admin downloads"
+    puts 'Updating admin downloads'
     [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
       puts "#{taxonomy_name} Names"
       elapsed_time = Benchmark.realtime do
-        Species::TaxonConceptsNamesExport.new(:taxonomy => taxonomy_name).export
+        Species::TaxonConceptsNamesExport.new(taxonomy: taxonomy_name).export
       end
       puts "#{Time.now} Taxon Concepts Names #{taxonomy_name} download generated in #{elapsed_time}s"
       puts "#{taxonomy_name} Synonyms and Trade Names"
       elapsed_time = Benchmark.realtime do
-        Species::SynonymsAndTradeNamesExport.new(:taxonomy => taxonomy_name).export
+        Species::SynonymsAndTradeNamesExport.new(taxonomy: taxonomy_name).export
       end
       puts "#{Time.now} Synonyms & Trade Names #{taxonomy_name} download generated in #{elapsed_time}s"
       puts "#{taxonomy_name} Distributions"
       elapsed_time = Benchmark.realtime do
-        Species::TaxonConceptsDistributionsExport.new(:taxonomy => taxonomy_name).export
+        Species::TaxonConceptsDistributionsExport.new(taxonomy: taxonomy_name).export
       end
       puts "#{Time.now} Distributions #{taxonomy_name} download generated in #{elapsed_time}s"
       puts "#{Time.now} Common Names #{taxonomy_name} download generated in #{elapsed_time}s"
       puts "#{taxonomy_name} Common Names"
       elapsed_time = Benchmark.realtime do
-        Species::CommonNamesExport.new(:taxonomy => taxonomy_name).export
+        Species::CommonNamesExport.new(taxonomy: taxonomy_name).export
       end
       puts "#{Time.now} Common Names #{taxonomy_name} download generated in #{elapsed_time}s"
     end

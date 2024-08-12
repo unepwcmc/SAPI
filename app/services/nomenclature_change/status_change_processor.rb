@@ -41,8 +41,8 @@ class NomenclatureChange::StatusChangeProcessor
     @linked_names.each do |linked_name|
       Rails.logger.debug "Creating #{rel_type.name} relationship with #{linked_name.full_name}"
       taxon_concept.taxon_relationships << TaxonRelationship.new(
-        :taxon_relationship_type_id => rel_type.id,
-        :other_taxon_concept_id => linked_name.id
+        taxon_relationship_type_id: rel_type.id,
+        other_taxon_concept_id: linked_name.id
       )
     end
   end
@@ -51,8 +51,8 @@ class NomenclatureChange::StatusChangeProcessor
     @linked_names.each do |linked_name|
       Rails.logger.debug "Creating #{rel_type.name} inverse relationship with #{linked_name.full_name}"
       linked_name.taxon_relationships << TaxonRelationship.new(
-        :taxon_relationship_type_id => rel_type.id,
-        :other_taxon_concept_id => taxon_concept.id
+        taxon_relationship_type_id: rel_type.id,
+        other_taxon_concept_id: taxon_concept.id
       )
     end
   end

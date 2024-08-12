@@ -53,11 +53,11 @@ class Trade::AnnualReportUpload < ApplicationRecord
   #                 :number_of_records_submitted, :aws_storage_path
 
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
-  belongs_to :trading_country, :class_name => 'GeoEntity', :foreign_key => :trading_country_id
-  validates :csv_source_file, :csv_column_headers => true, :on => :create
+  belongs_to :trading_country, class_name: 'GeoEntity', foreign_key: :trading_country_id
+  validates :csv_source_file, csv_column_headers: true, on: :create
 
   scope :created_by_sapi, -> {
-    where("epix_created_by_id IS NULL")
+    where('epix_created_by_id IS NULL')
   }
 
   after_create :copy_to_sandbox
@@ -95,15 +95,15 @@ class Trade::AnnualReportUpload < ApplicationRecord
   def to_jq_upload
     if valid?
       {
-        "id" => self.id,
-        "name" => read_attribute(:csv_source_file),
-        "size" => csv_source_file.size,
-        "url" => csv_source_file.url
+        'id' => self.id,
+        'name' => read_attribute(:csv_source_file),
+        'size' => csv_source_file.size,
+        'url' => csv_source_file.url
       }
     else
       {
-        "name" => read_attribute(:csv_source_file),
-        'error' => "Upload failed on: " + errors[:csv_source_file].join('; ')
+        'name' => read_attribute(:csv_source_file),
+        'error' => 'Upload failed on: ' + errors[:csv_source_file].join('; ')
       }
     end
   end
@@ -111,7 +111,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
   def submit(submitter)
     run_primary_validations
     unless @validation_errors.count == 0
-      self.errors[:base] << "Submit failed, primary validation errors present."
+      self.errors[:base] << 'Submit failed, primary validation errors present.'
       return false
     end
     return false unless sandbox.copy_from_sandbox_to_shipments(submitter)
@@ -122,7 +122,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
     remove_csv_source_file!
     puts '### removing uploads dir ###'
     puts Rails.root.join('public', store_dir)
-    FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
+    FileUtils.remove_dir(Rails.root.join('public', store_dir), force: true)
 
     # clear downloads cache
     DownloadsCacheCleanupWorker.perform_async('shipments')
@@ -160,13 +160,13 @@ class Trade::AnnualReportUpload < ApplicationRecord
 
   def run_primary_validations
     @validation_errors = run_validations(
-      Trade::ValidationRule.where(:is_primary => true)
+      Trade::ValidationRule.where(is_primary: true)
     )
   end
 
   def run_secondary_validations
     @validation_errors += run_validations(
-      Trade::ValidationRule.where(:is_primary => false)
+      Trade::ValidationRule.where(is_primary: false)
     )
   end
 

@@ -19,14 +19,14 @@ class CmsMapping < ApplicationRecord
 
   # serialize :details, coder: ActiveRecord::Coders::Hstore
   belongs_to :taxon_concept, optional: true
-  belongs_to :accepted_name, :class_name => 'TaxonConcept', optional: true
+  belongs_to :accepted_name, class_name: 'TaxonConcept', optional: true
 
   scope :index_filter, lambda { |option|
     case option
-    when "MATCHES"
+    when 'MATCHES'
       where('taxon_concept_id IS NOT NULL')
-    when "MISSING_SPECIES_PLUS"
-      where(:taxon_concept_id => nil)
+    when 'MISSING_SPECIES_PLUS'
+      where(taxon_concept_id: nil)
     else
       all
     end

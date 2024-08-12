@@ -23,7 +23,7 @@ module SapiModule
           if v.nil?
             'Unknown'
           else
-            v.force_encoding("ISO-8859-1").encode("UTF-8")
+            v.force_encoding('ISO-8859-1').encode('UTF-8')
           end
       end
     end

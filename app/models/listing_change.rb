@@ -66,23 +66,23 @@ class ListingChange < ApplicationRecord
                 :excluded_taxon_concepts_ids # String
 
   belongs_to :event, optional: true
-  has_many :listing_change_copies, :foreign_key => :original_id,
-    :class_name => "ListingChange", :dependent => :nullify
+  has_many :listing_change_copies, foreign_key: :original_id,
+    class_name: 'ListingChange', dependent: :nullify
   belongs_to :species_listing
   belongs_to :taxon_concept
   belongs_to :change_type
-  has_many :listing_distributions, -> { where is_party: false }, :inverse_of => :listing_change, :dependent => :destroy
-  has_one :party_listing_distribution, -> { where is_party: true }, :class_name => 'ListingDistribution',
-     :dependent => :destroy, :inverse_of => :listing_change
-  has_many :geo_entities, :through => :listing_distributions
-  has_one :party_geo_entity, :class_name => 'GeoEntity',
-    :through => :party_listing_distribution, :source => :geo_entity
+  has_many :listing_distributions, -> { where is_party: false }, inverse_of: :listing_change, dependent: :destroy
+  has_one :party_listing_distribution, -> { where is_party: true }, class_name: 'ListingDistribution',
+     dependent: :destroy, inverse_of: :listing_change
+  has_many :geo_entities, through: :listing_distributions
+  has_one :party_geo_entity, class_name: 'GeoEntity',
+    through: :party_listing_distribution, source: :geo_entity
   belongs_to :annotation, optional: true
-  belongs_to :hash_annotation, :class_name => 'Annotation', optional: true
-  belongs_to :parent, :class_name => 'ListingChange', optional: true
-  belongs_to :inclusion, :class_name => 'TaxonConcept', :foreign_key => 'inclusion_taxon_concept_id', optional: true
-  has_many :exclusions, :class_name => 'ListingChange', :foreign_key => 'parent_id', :dependent => :destroy
-  validates :effective_at, :presence => true
+  belongs_to :hash_annotation, class_name: 'Annotation', optional: true
+  belongs_to :parent, class_name: 'ListingChange', optional: true
+  belongs_to :inclusion, class_name: 'TaxonConcept', foreign_key: 'inclusion_taxon_concept_id', optional: true
+  has_many :exclusions, class_name: 'ListingChange', foreign_key: 'parent_id', dependent: :destroy
+  validates :effective_at, presence: true
   validate :inclusion_at_higher_rank
   validate :species_listing_designation_mismatch
   validate :event_designation_mismatch
@@ -90,14 +90,14 @@ class ListingChange < ApplicationRecord
   before_save :listing_change_before_save_callback
 
   accepts_nested_attributes_for :party_listing_distribution,
-    :reject_if => proc { |attributes| attributes['geo_entity_id'].blank? }
+    reject_if: proc { |attributes| attributes['geo_entity_id'].blank? }
 
   accepts_nested_attributes_for :annotation
 
   translates :nomenclature_note
 
   scope :by_designation, lambda { |designation_id|
-    joins(:change_type).where(:"change_types.designation_id" => designation_id)
+    joins(:change_type).where("change_types.designation_id": designation_id)
   }
 
   def effective_at_formatted
@@ -123,7 +123,7 @@ class ListingChange < ApplicationRecord
   end
 
   def excluded_geo_entities
-    geographic_exclusions.includes(:listing_distributions => :geo_entity).map do |e|
+    geographic_exclusions.includes(listing_distributions: :geo_entity).map do |e|
       e.listing_distributions.map(&:geo_entity)
     end.flatten
   end
@@ -142,7 +142,7 @@ class ListingChange < ApplicationRecord
     if query.present?
       where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
              OR UPPER(change_types.name) LIKE UPPER(:query)
-            ", :query => "%#{query}%")
+            ", query: "%#{query}%")
     else
       all
     end
@@ -190,7 +190,7 @@ class ListingChange < ApplicationRecord
   def inclusion_at_higher_rank
     return true unless inclusion
     unless inclusion.rank.taxonomic_position < taxon_concept.rank.taxonomic_position
-      errors.add(:inclusion_taxon_concept_id, "must be at higher rank")
+      errors.add(:inclusion_taxon_concept_id, 'must be at higher rank')
       return false
     end
   end
@@ -198,7 +198,7 @@ class ListingChange < ApplicationRecord
   def species_listing_designation_mismatch
     return true unless species_listing
     unless species_listing.designation_id == change_type.designation_id
-      errors.add(:species_listing_id, "designation mismatch between change type and species listing")
+      errors.add(:species_listing_id, 'designation mismatch between change type and species listing')
       return false
     end
   end
@@ -206,7 +206,7 @@ class ListingChange < ApplicationRecord
   def event_designation_mismatch
     return true unless event
     unless event.designation_id == change_type.designation_id
-      errors.add(:event_id, "designation mismatch between change type and event")
+      errors.add(:event_id, 'designation mismatch between change type and event')
       return false
     end
   end
@@ -248,10 +248,10 @@ class ListingChange < ApplicationRecord
     excluded_geo_entities =
       if @excluded_geo_entities_ids && !@excluded_geo_entities_ids.empty?
         new_exclusions << ListingChange.new(
-          :change_type_id => exclusion_change_type.id,
-          :species_listing_id => species_listing_id,
-          :taxon_concept_id => taxon_concept_id,
-          :geo_entity_ids => @excluded_geo_entities_ids
+          change_type_id: exclusion_change_type.id,
+          species_listing_id: species_listing_id,
+          taxon_concept_id: taxon_concept_id,
+          geo_entity_ids: @excluded_geo_entities_ids
         )
       end
 
@@ -260,9 +260,9 @@ class ListingChange < ApplicationRecord
       if @excluded_taxon_concepts_ids && !@excluded_taxon_concepts_ids.empty?
         @excluded_taxon_concepts_ids.map do |id|
           new_exclusions << ListingChange.new(
-            :change_type_id => exclusion_change_type.id,
-            :species_listing_id => species_listing_id,
-            :taxon_concept_id => id
+            change_type_id: exclusion_change_type.id,
+            species_listing_id: species_listing_id,
+            taxon_concept_id: id
           )
         end
       end

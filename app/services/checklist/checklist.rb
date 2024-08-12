@@ -46,7 +46,7 @@ class Checklist::Checklist
       @taxon_concepts_rel = @taxon_concepts_rel.
         by_name(
           @scientific_name,
-          { :synonyms => true, :common_names => true, :subspecies => false }
+          { synonyms: true, common_names: true, subspecies: false }
         )
     end
 
@@ -114,7 +114,7 @@ class Checklist::Checklist
 
       @countries_count = countries.count
       if (1..3).include?(@countries_count)
-        summary << countries.map { |c| c.name }.join(", ")
+        summary << countries.map { |c| c.name }.join(', ')
       elsif @countries_count > 3
         summary << "#{@countries_count} #{I18n.t('filter_summary.countries')}"
       end
@@ -147,7 +147,7 @@ class Checklist::Checklist
         summary << I18n.t('filter_summary.from_appx')
       end
 
-      summary << @cites_appendices.join(", ")
+      summary << @cites_appendices.join(', ')
     end
 
     # name
@@ -169,7 +169,7 @@ class Checklist::Checklist
     # TODO: common names, authors
 
     if !summary.empty?
-      summary.join(" ")
+      summary.join(' ')
     else
       I18n.t('filter_summary.all')
     end

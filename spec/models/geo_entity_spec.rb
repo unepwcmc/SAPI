@@ -28,40 +28,40 @@ describe GeoEntity do
     let(:europe) {
       create(
         :geo_entity,
-        :geo_entity_type => cites_region_geo_entity_type,
-        :name => 'Europe'
+        geo_entity_type: cites_region_geo_entity_type,
+        name: 'Europe'
       )
     }
     let(:poland) {
       create(
         :geo_entity,
-        :geo_entity_type => country_geo_entity_type,
-        :name => 'Poland',
-        :iso_code2 => 'PL'
+        geo_entity_type: country_geo_entity_type,
+        name: 'Poland',
+        iso_code2: 'PL'
       )
     }
     let(:wolin) {
       create(
         :geo_entity,
-        :geo_entity_type => territory_geo_entity_type,
-        :name => 'Wolin'
+        geo_entity_type: territory_geo_entity_type,
+        name: 'Wolin'
       )
     }
     context "Europe should contain Europe, Poland and Wolin" do
       let!(:poland_contains_wolin) {
         create(
           :geo_relationship,
-          :geo_relationship_type => contains_geo_relationship_type,
-          :geo_entity => poland,
-          :related_geo_entity => wolin
+          geo_relationship_type: contains_geo_relationship_type,
+          geo_entity: poland,
+          related_geo_entity: wolin
         )
       }
       let!(:europe_contains_poland) {
         create(
           :geo_relationship,
-          :geo_relationship_type => contains_geo_relationship_type,
-          :geo_entity => europe,
-          :related_geo_entity => poland
+          geo_relationship_type: contains_geo_relationship_type,
+          geo_entity: europe,
+          related_geo_entity: poland
         )
       }
       subject { GeoEntity.nodes_and_descendants([europe.id]) }
@@ -76,19 +76,19 @@ describe GeoEntity do
     end
     context "when dependent objects attached" do
       context "when distributions" do
-        before(:each) { create(:distribution, :geo_entity => geo_entity) }
+        before(:each) { create(:distribution, geo_entity: geo_entity) }
         specify { expect(geo_entity.destroy).to be_falsey }
       end
       context "when exported shipments" do
-        before(:each) { create(:shipment, :exporter => geo_entity) }
+        before(:each) { create(:shipment, exporter: geo_entity) }
         specify { expect(geo_entity.destroy).to be_falsey }
       end
       context "when imported shipments" do
-        before(:each) { create(:shipment, :importer => geo_entity) }
+        before(:each) { create(:shipment, importer: geo_entity) }
         specify { expect(geo_entity.destroy).to be_falsey }
       end
       context "when originated shipments" do
-        before(:each) { create(:shipment, :country_of_origin => geo_entity) }
+        before(:each) { create(:shipment, country_of_origin: geo_entity) }
         specify { expect(geo_entity.destroy).to be_falsey }
       end
       context "when connected geo entities" do
@@ -96,9 +96,9 @@ describe GeoEntity do
         before(:each) do
           create(
             :geo_relationship,
-            :geo_relationship_type => contains_geo_relationship_type,
-            :geo_entity => geo_entity,
-            :related_geo_entity => child_geo_entity
+            geo_relationship_type: contains_geo_relationship_type,
+            geo_entity: geo_entity,
+            related_geo_entity: child_geo_entity
           )
         end
         specify { expect(geo_entity.destroy).to be_falsey }

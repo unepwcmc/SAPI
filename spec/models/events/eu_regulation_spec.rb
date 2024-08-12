@@ -31,7 +31,7 @@ describe EuRegulation do
       let(:eu_regulation1) { create_eu_regulation }
       before do
         EventListingChangesCopyWorker.jobs.clear
-        create_eu_regulation(:listing_changes_event_id => eu_regulation1.id)
+        create_eu_regulation(listing_changes_event_id: eu_regulation1.id)
       end
       specify { expect(EventListingChangesCopyWorker.jobs.size).to eq(1) }
     end
@@ -39,7 +39,7 @@ describe EuRegulation do
       let(:eu_regulation) {
         build(
           :eu_regulation,
-          :designation => cites
+          designation: cites
         )
       }
       specify { expect(eu_regulation).to be_invalid }
@@ -49,7 +49,7 @@ describe EuRegulation do
       let(:eu_regulation) {
         build(
           :eu_regulation,
-          :effective_at => nil
+          effective_at: nil
         )
       }
       specify { expect(eu_regulation).to be_invalid }
@@ -57,7 +57,7 @@ describe EuRegulation do
     end
   end
   describe :activate do
-    let(:eu_regulation) { create_eu_regulation(:name => 'REGULATION 2.0') }
+    let(:eu_regulation) { create_eu_regulation(name: 'REGULATION 2.0') }
     before do
       EuRegulationActivationWorker.jobs.clear
       eu_regulation.activate!
@@ -67,7 +67,7 @@ describe EuRegulation do
   end
 
   describe :deactivate do
-    let(:eu_regulation) { create_eu_regulation(:name => 'REGULATION 2.0', :is_current => true) }
+    let(:eu_regulation) { create_eu_regulation(name: 'REGULATION 2.0', is_current: true) }
     before do
       EuRegulationActivationWorker.jobs.clear
       eu_regulation.deactivate!
@@ -83,7 +83,7 @@ describe EuRegulation do
     end
     context "when dependent objects attached" do
       context "when listing changes" do
-        let!(:listing_change) { create_eu_A_addition(:event => eu_regulation) }
+        let!(:listing_change) { create_eu_A_addition(event: eu_regulation) }
         specify { expect(eu_regulation.destroy).to be_truthy }
       end
     end

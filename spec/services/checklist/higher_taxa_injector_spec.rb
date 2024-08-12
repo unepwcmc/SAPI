@@ -3,95 +3,95 @@ require 'spec_helper'
 describe Checklist::HigherTaxaInjector do
   before do
     kingdom = create_cites_eu_kingdom(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Testae'),
-      :taxonomic_position => '1'
+      taxon_name: create(:taxon_name, scientific_name: 'Testae'),
+      taxonomic_position: '1'
     )
     phylum = create_cites_eu_phylum(
-      :parent => kingdom,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Rotflata'),
-      :taxonomic_position => '1.1'
+      parent: kingdom,
+      taxon_name: create(:taxon_name, scientific_name: 'Rotflata'),
+      taxonomic_position: '1.1'
     )
     klass = create_cites_eu_class(
-      :parent => phylum,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Forfiteria'),
-      :taxonomic_position => '1.1.1'
+      parent: phylum,
+      taxon_name: create(:taxon_name, scientific_name: 'Forfiteria'),
+      taxonomic_position: '1.1.1'
     )
     order1 = create_cites_eu_order(
-      :parent => klass,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatiformes')
+      parent: klass,
+      taxon_name: create(:taxon_name, scientific_name: 'Lolcatiformes')
     )
     family1 = create_cites_eu_family(
-      :parent => order1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatidae')
+      parent: order1,
+      taxon_name: create(:taxon_name, scientific_name: 'Lolcatidae')
     )
     genus1_1 = create_cites_eu_genus(
-      :parent => family1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
+      parent: family1,
+      taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
     )
     species1_1_1 = create_cites_eu_species(
-      :parent => genus1_1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'lolus')
+      parent: genus1_1,
+      taxon_name: create(:taxon_name, scientific_name: 'lolus')
     )
     subspecies1_1_1_1 = create_cites_eu_subspecies(
-      :parent => species1_1_1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'cracovianus')
+      parent: species1_1_1,
+      taxon_name: create(:taxon_name, scientific_name: 'cracovianus')
     )
     species1_1_2 = create_cites_eu_species(
-      :parent => genus1_1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'ridiculus')
+      parent: genus1_1,
+      taxon_name: create(:taxon_name, scientific_name: 'ridiculus')
     )
     genus1_2 = create_cites_eu_genus(
-      :parent => family1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Lollipopus')
+      parent: family1,
+      taxon_name: create(:taxon_name, scientific_name: 'Lollipopus')
     )
     species1_2_1 = create_cites_eu_species(
-      :parent => genus1_2,
-      :taxon_name => create(:taxon_name, :scientific_name => 'lolus')
+      parent: genus1_2,
+      taxon_name: create(:taxon_name, scientific_name: 'lolus')
     )
     species1_2_2 = create_cites_eu_species(
-      :parent => genus1_2,
-      :taxon_name => create(:taxon_name, :scientific_name => 'ridiculus')
+      parent: genus1_2,
+      taxon_name: create(:taxon_name, scientific_name: 'ridiculus')
     )
     family2 = create_cites_eu_family(
-      :parent => order1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Foobaridae')
+      parent: order1,
+      taxon_name: create(:taxon_name, scientific_name: 'Foobaridae')
     )
     genus2_1 = create_cites_eu_genus(
-      :parent => family2,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus')
+      parent: family2,
+      taxon_name: create(:taxon_name, scientific_name: 'Foobarus')
     )
     species2_1_1 = create_cites_eu_species(
-      :parent => genus2_1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'lolus')
+      parent: genus2_1,
+      taxon_name: create(:taxon_name, scientific_name: 'lolus')
     )
     species2_1_2 = create_cites_eu_species(
-      :parent => genus2_1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'ridiculus')
+      parent: genus2_1,
+      taxon_name: create(:taxon_name, scientific_name: 'ridiculus')
     )
     order2 = create_cites_eu_order(
-      :parent => klass,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Testariformes')
+      parent: klass,
+      taxon_name: create(:taxon_name, scientific_name: 'Testariformes')
     )
     klass2 = create_cites_eu_class(
-      :parent => phylum,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Memaria'),
-      :taxonomic_position => '1.1.2'
+      parent: phylum,
+      taxon_name: create(:taxon_name, scientific_name: 'Memaria'),
+      taxonomic_position: '1.1.2'
     )
     order2_1 = create_cites_eu_order(
-      :parent => klass2,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Memariformes')
+      parent: klass2,
+      taxon_name: create(:taxon_name, scientific_name: 'Memariformes')
     )
     family2_1_1 = create_cites_eu_family(
-      :parent => order2_1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Memaridae')
+      parent: order2_1,
+      taxon_name: create(:taxon_name, scientific_name: 'Memaridae')
     )
     genus2_1_1_1 = create_cites_eu_genus(
-      :parent => family2_1_1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Zonker')
+      parent: family2_1_1,
+      taxon_name: create(:taxon_name, scientific_name: 'Zonker')
     )
     species2_1_1_1_1 = create_cites_eu_species(
-      :parent => genus2_1_1_1,
-      :taxon_name => create(:taxon_name, :scientific_name => 'fatalus')
+      parent: genus2_1_1_1,
+      taxon_name: create(:taxon_name, scientific_name: 'fatalus')
     )
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     @order2 = MTaxonConcept.find(order2.id)
@@ -133,7 +133,7 @@ describe Checklist::HigherTaxaInjector do
             [
               @species1_1_1,
               @species2_1_1_1_1
-            ], { :expand_headers => true }
+            ], { expand_headers: true }
           )
         }
         specify {
@@ -165,7 +165,7 @@ describe Checklist::HigherTaxaInjector do
             [
               @species1_1_1,
               @species2_1_1
-            ], { :skip_ancestor_ids => [@family1.id] }
+            ], { skip_ancestor_ids: [@family1.id] }
           )
         }
         specify {
@@ -195,7 +195,7 @@ describe Checklist::HigherTaxaInjector do
           Checklist::HigherTaxaInjector.new(
             [
               @species1_1_1
-            ], { :skip_ancestor_ids => [@family1.id] }
+            ], { skip_ancestor_ids: [@family1.id] }
           )
         }
         specify {
@@ -207,7 +207,7 @@ describe Checklist::HigherTaxaInjector do
           Checklist::HigherTaxaInjector.new(
             [
               @species1_1_1
-            ], { :expand_headers => true }
+            ], { expand_headers: true }
           )
         }
         specify {
@@ -282,7 +282,7 @@ describe Checklist::HigherTaxaInjector do
             [
               @species1_1_1,
               @species2_1_1
-            ], { :expand_headers => true }
+            ], { expand_headers: true }
           )
         }
         specify {
@@ -348,7 +348,7 @@ describe Checklist::HigherTaxaInjector do
             [
               @order2,
               @genus2_1
-            ], { :expand_headers => true }
+            ], { expand_headers: true }
           )
         }
         specify {

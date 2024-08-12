@@ -67,7 +67,7 @@ class Checklist::TimelineEvent
   end
 
   def effective_at_formatted
-    effective_at.strftime("%d/%m/%y")
+    effective_at.strftime('%d/%m/%y')
   end
 
 end

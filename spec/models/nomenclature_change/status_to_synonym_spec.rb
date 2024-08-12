@@ -47,7 +47,7 @@ describe NomenclatureChange::StatusToSynonym do
         let(:status_change) {
           build(
             :nomenclature_change_status_to_synonym,
-            :primary_output_attributes => {
+            primary_output_attributes: {
               taxon_concept_id: create_cites_eu_species(name_status: 'A').id
             },
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
@@ -61,7 +61,7 @@ describe NomenclatureChange::StatusToSynonym do
         let(:status_change) {
           build(
             :nomenclature_change_status_to_synonym,
-            :primary_output_attributes => {
+            primary_output_attributes: {
               taxon_concept_id: create_cites_eu_species(name_status: 'N').id
             },
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT

@@ -1,12 +1,12 @@
 class Admin::TaxonListingChangesController < Admin::SimpleCrudController
-  respond_to :js, :only => [:create, :update]
-  defaults :resource_class => ListingChange,
-    :collection_name => 'listing_changes', :instance_name => 'listing_change'
+  respond_to :js, only: [:create, :update]
+  defaults resource_class: ListingChange,
+    collection_name: 'listing_changes', instance_name: 'listing_change'
   belongs_to :taxon_concept, :designation
-  before_action :load_search, :except => [:create, :update, :destroy]
+  before_action :load_search, except: [:create, :update, :destroy]
   layout 'taxon_concepts'
 
-  authorize_resource :class => false
+  authorize_resource class: false
 
   def index
     index! do
@@ -50,7 +50,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   def update
     update! do |success, failure|
       success.html {
-        if "1" == params[:redirect_to_eu_reg]
+        if '1' == params[:redirect_to_eu_reg]
           redirect_to admin_eu_regulation_listing_changes_path(@listing_change.event)
         else
           redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
@@ -68,7 +68,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
     destroy! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
     end
   end
@@ -97,7 +97,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
       find_by_name(ChangeType::EXCEPTION)
     @species_listings = @designation.species_listings.order(:abbreviation)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true, :geo_entity_types => { :name => ['COUNTRY', 'REGION'] })
+      where(is_current: true, geo_entity_types: { name: ['COUNTRY', 'REGION'] })
     @hash_annotations =
       if @designation.is_eu?
         Annotation.for_eu
@@ -123,13 +123,13 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
         :change_type,
         :party_geo_entity,
         :geo_entities,
-        :exclusions => [:geo_entities, :taxon_concept]
+        exclusions: [:geo_entities, :taxon_concept]
       ]).
       where("change_types.name <> '#{ChangeType::EXCEPTION}'").
-      where("change_types.designation_id" => @designation.id).
-      where("taxon_concept_id" => @taxon_concept.id).
+      where('change_types.designation_id' => @designation.id).
+      where('taxon_concept_id' => @taxon_concept.id).
       order('listing_changes.effective_at DESC').
-      page(params[:page]).where(:parent_id => nil)
+      page(params[:page]).where(parent_id: nil)
   end
 
   private

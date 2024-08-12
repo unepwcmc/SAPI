@@ -5,9 +5,9 @@ class Api::V1::DocumentTagsController < ApplicationController
       where(type: ['DocumentTag::ProposalOutcome', 'DocumentTag::ReviewPhase']).
       select([:id, :name, :type]).
       order([:type, :name])
-    render :json => @document_tags,
-      :each_serializer => Species::DocumentTagSerializer,
-      :meta => { :total => @document_tags.count(:all) }
+    render json: @document_tags,
+      each_serializer: Species::DocumentTagSerializer,
+      meta: { total: @document_tags.count(:all) }
   end
 
 end

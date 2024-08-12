@@ -5,8 +5,8 @@ class Checklist::GeoEntitiesController < ApplicationController
       params.slice(:geo_entity_types_set, :locale)
     ).cached_results
 
-    render :json => @geo_entities,
-      :each_serializer => Checklist::GeoEntitySerializer
+    render json: @geo_entities,
+      each_serializer: Checklist::GeoEntitySerializer
   end
 
   private

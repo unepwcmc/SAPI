@@ -5,8 +5,8 @@ describe Admin::ReferencesController do
 
   describe "index" do
     before(:each) do
-      @reference1 = create(:reference, :citation => 'BB')
-      @reference2 = create(:reference, :citation => 'AA')
+      @reference1 = create(:reference, citation: 'BB')
+      @reference2 = create(:reference, citation: 'AA')
     end
 
     describe "GET index" do
@@ -21,7 +21,7 @@ describe Admin::ReferencesController do
     end
     describe "XHR GET index JSON" do
       it "renders json for dropdown" do
-        get :index, :format => 'json', xhr: true
+        get :index, format: 'json', xhr: true
         expect(response.body).to have_json_size(2)
         expect(parse_json(response.body, "0/text")).to eq('AA')
       end
@@ -34,7 +34,7 @@ describe Admin::ReferencesController do
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      post :create, params: { reference: { :citation => nil } }, xhr: true
+      post :create, params: { reference: { citation: nil } }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -42,11 +42,11 @@ describe Admin::ReferencesController do
   describe "XHR PUT update JSON" do
     let(:reference) { create(:reference) }
     it "responds with 200 when successful" do
-      put :update, :format => 'json', params: { :id => reference.id, :reference => { :citation => 'ZZ' } }, xhr: true
+      put :update, format: 'json', params: { id: reference.id, reference: { citation: 'ZZ' } }, xhr: true
       expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      put :update, :format => 'json', params: { :id => reference.id, :reference => { :citation => nil } }, xhr: true
+      put :update, format: 'json', params: { id: reference.id, reference: { citation: nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -54,7 +54,7 @@ describe Admin::ReferencesController do
   describe "DELETE destroy" do
     let(:reference) { create(:reference) }
     it "redirects after delete" do
-      delete :destroy, params: { :id => reference.id }
+      delete :destroy, params: { id: reference.id }
       expect(response).to redirect_to(admin_references_url)
     end
   end

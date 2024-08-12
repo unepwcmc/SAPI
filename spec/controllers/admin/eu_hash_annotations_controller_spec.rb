@@ -5,15 +5,15 @@ describe Admin::EuHashAnnotationsController do
 
   describe "index" do
     before(:each) do
-      reg1 = create_eu_regulation(:name => 'Regulation1')
-      reg2 = create_eu_regulation(:name => 'Regulation2')
+      reg1 = create_eu_regulation(name: 'Regulation1')
+      reg2 = create_eu_regulation(name: 'Regulation2')
       @annotation1 = create(
         :annotation,
-        :parent_symbol => 'Reg2', :symbol => '#1', :event_id => reg2.id
+        parent_symbol: 'Reg2', symbol: '#1', event_id: reg2.id
       )
       @annotation2 = create(
         :annotation,
-        :parent_symbol => 'Reg1', :symbol => '#1', :event_id => reg1.id
+        parent_symbol: 'Reg1', symbol: '#1', event_id: reg1.id
       )
     end
 

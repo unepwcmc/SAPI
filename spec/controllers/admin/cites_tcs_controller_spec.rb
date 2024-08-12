@@ -5,8 +5,8 @@ describe Admin::CitesTcsController do
 
   describe "index" do
     before(:each) do
-      @cites_tc1 = create_cites_tc(:name => 'Tc1')
-      @cites_tc2 = create_cites_tc(:name => 'Tc2')
+      @cites_tc1 = create_cites_tc(name: 'Tc1')
+      @cites_tc2 = create_cites_tc(name: 'Tc2')
     end
 
     describe "GET index" do

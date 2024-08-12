@@ -32,7 +32,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   )
   validates :status, inclusion: {
     in: self.status_dict,
-    message: "%{value} is not a valid status"
+    message: '%{value} is not a valid status'
   }
   validate :required_primary_output_name_status, if: :primary_output_or_submitting?
   validate :required_secondary_output, if: :relay_or_submitting?
@@ -46,7 +46,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
 
   def required_primary_output_name_status
     if primary_output && !['N', 'T'].include?(primary_output.name_status)
-      errors.add(:primary_output, "Must be N or T taxon")
+      errors.add(:primary_output, 'Must be N or T taxon')
       return false
     end
     true
@@ -57,7 +57,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   def required_secondary_output
     if (needs_to_relay_associations? || requires_accepted_name_assignment?) &&
       secondary_output.nil?
-      errors.add(:secondary_output, "Must have a secondary output")
+      errors.add(:secondary_output, 'Must have a secondary output')
       return false
     end
     true

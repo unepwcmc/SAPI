@@ -52,7 +52,7 @@ describe Document, sidekiq: :inline do
       let(:document) {
         build(
           :document,
-          :date => nil
+          date: nil
         )
       }
       specify { expect(document).to be_invalid }

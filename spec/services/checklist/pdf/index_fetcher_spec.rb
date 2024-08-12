@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Checklist::Pdf::IndexFetcher do
   let(:en) {
-    create(:language, :name_en => 'French', :iso_code1 => 'FR', :iso_code3 => 'FRA')
-    create(:language, :name_en => 'Spanish', :iso_code1 => 'ES', :iso_code3 => 'SPA')
-    create(:language, :name_en => 'English', :iso_code1 => 'EN', :iso_code3 => 'ENG')
+    create(:language, name_en: 'French', iso_code1: 'FR', iso_code3: 'FRA')
+    create(:language, name_en: 'Spanish', iso_code1: 'ES', iso_code3: 'SPA')
+    create(:language, name_en: 'English', iso_code1: 'EN', iso_code3: 'ENG')
   }
   let(:es) {
     Language.find_by_name_en("Spanish")
@@ -13,21 +13,21 @@ describe Checklist::Pdf::IndexFetcher do
   let(:english_common_name) {
     create(
       :common_name,
-      :name => 'Domestic lolcat',
-      :language => en
+      name: 'Domestic lolcat',
+      language: en
     )
   }
   let(:spanish_common_name) {
     create(
       :common_name,
-      :name => 'Lolgato domestico',
-      :language => es
+      name: 'Lolgato domestico',
+      language: es
     )
   }
   let!(:tc) {
     tc = create(
       :taxon_concept,
-      :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
+      taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
     )
     tc.common_names << english_common_name
     tc.common_names << spanish_common_name
@@ -40,8 +40,8 @@ describe Checklist::Pdf::IndexFetcher do
     let(:query) {
       Checklist::Pdf::IndexQuery.new(
         rel, {
-          :english_common_names => true,
-          :spanish_common_names => true
+          english_common_names: true,
+          spanish_common_names: true
         }
       )
     }
@@ -52,24 +52,24 @@ describe Checklist::Pdf::IndexFetcher do
     let!(:synonym) {
       create(
         :taxon_concept,
-        :name_status => 'S',
+        name_status: 'S',
         scientific_name: 'Catus fluffianus'
       )
     }
     let!(:synonymy_rel) {
       create(
         :taxon_relationship,
-        :taxon_relationship_type => synonym_relationship_type,
-        :taxon_concept_id => tc.id,
-        :other_taxon_concept_id => synonym.id
+        taxon_relationship_type: synonym_relationship_type,
+        taxon_concept_id: tc.id,
+        other_taxon_concept_id: synonym.id
       )
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     }
     let(:query) {
       Checklist::Pdf::IndexQuery.new(
         rel, {
-          :synonyms => true,
-          :authors => true
+          synonyms: true,
+          authors: true
         }
       )
     }

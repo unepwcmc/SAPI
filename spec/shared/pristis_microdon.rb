@@ -2,61 +2,61 @@ shared_context 'Pristis microdon' do
   before(:all) do
     @klass = cites_eu_elasmobranchii
     @order = create_cites_eu_order(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Pristiformes'),
-      :parent => @klass
+      taxon_name: create(:taxon_name, scientific_name: 'Pristiformes'),
+      parent: @klass
     )
     @family = create_cites_eu_family(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Pristidae'),
-      :parent => @order
+      taxon_name: create(:taxon_name, scientific_name: 'Pristidae'),
+      parent: @order
     )
     @genus = create_cites_eu_genus(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Pristis'),
-      :parent => @family
+      taxon_name: create(:taxon_name, scientific_name: 'Pristis'),
+      parent: @family
     )
     @species = create_cites_eu_species(
-      :taxon_name => create(:taxon_name, :scientific_name => 'microdon'),
-      :parent => @genus
+      taxon_name: create(:taxon_name, scientific_name: 'microdon'),
+      parent: @genus
     )
 
     create_cites_I_addition(
-      :taxon_concept => @family,
-      :effective_at => '2007-09-13',
-      :is_current => true
+      taxon_concept: @family,
+      effective_at: '2007-09-13',
+      is_current: true
     )
     create_cites_II_addition(
-      :taxon_concept => @species,
-      :effective_at => '2007-09-13',
-      :is_current => false
+      taxon_concept: @species,
+      effective_at: '2007-09-13',
+      is_current: false
     )
     create_cites_I_addition(
-      :taxon_concept => @species,
-      :effective_at => '2013-06-12',
-      :inclusion_taxon_concept_id => @family.id,
-      :is_current => true
+      taxon_concept: @species,
+      effective_at: '2013-06-12',
+      inclusion_taxon_concept_id: @family.id,
+      is_current: true
     )
 
     eu_lc = create_eu_A_addition(
-      :taxon_concept => @family,
-      :effective_at => '2012-12-15',
-      :event => reg2012,
-      :is_current => false
+      taxon_concept: @family,
+      effective_at: '2012-12-15',
+      event: reg2012,
+      is_current: false
     )
     create_eu_A_exception(
-      :taxon_concept => @species,
-      :effective_at => '2012-12-15',
-      :parent_id => eu_lc.id
+      taxon_concept: @species,
+      effective_at: '2012-12-15',
+      parent_id: eu_lc.id
     )
     create_eu_B_addition(
-      :taxon_concept => @family,
-      :effective_at => '2012-12-15',
-      :event => reg2012,
-      :is_current => false
+      taxon_concept: @family,
+      effective_at: '2012-12-15',
+      event: reg2012,
+      is_current: false
     )
     create_eu_A_addition(
-      :taxon_concept => @family,
-      :effective_at => '2013-08-10',
-      :event => reg2013,
-      :is_current => true
+      taxon_concept: @family,
+      effective_at: '2013-08-10',
+      event: reg2013,
+      is_current: true
     )
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings

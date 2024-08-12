@@ -58,18 +58,18 @@ class TradeRestriction < ApplicationRecord
   #   :taxon_concept_id
 
   belongs_to :taxon_concept, optional: true
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
-  belongs_to :unit, :class_name => 'TradeCode', optional: true
-  has_many :trade_restriction_terms, :dependent => :destroy
-  has_many :terms, :through => :trade_restriction_terms
-  has_many :trade_restriction_sources, :dependent => :destroy
-  has_many :sources, :through => :trade_restriction_sources
-  has_many :trade_restriction_purposes, :dependent => :destroy
-  has_many :purposes, :through => :trade_restriction_purposes
+  belongs_to :m_taxon_concept, foreign_key: :taxon_concept_id, optional: true
+  belongs_to :unit, class_name: 'TradeCode', optional: true
+  has_many :trade_restriction_terms, dependent: :destroy
+  has_many :terms, through: :trade_restriction_terms
+  has_many :trade_restriction_sources, dependent: :destroy
+  has_many :sources, through: :trade_restriction_sources
+  has_many :trade_restriction_purposes, dependent: :destroy
+  has_many :purposes, through: :trade_restriction_purposes
 
   belongs_to :geo_entity, optional: true
 
-  validates :publication_date, :presence => true
+  validates :publication_date, presence: true
   validate :valid_dates
 
   translates :nomenclature_note
@@ -104,11 +104,11 @@ class TradeRestriction < ApplicationRecord
   def self.export(filters)
     return false unless export_query(filters).any?
     path = "public/downloads/#{self.to_s.tableize}/"
-    latest = self.order("updated_at DESC").
-      limit(1).first.updated_at.strftime("%d%m%Y-%H%M%S")
+    latest = self.order('updated_at DESC').
+      limit(1).first.updated_at.strftime('%d%m%Y-%H%M%S')
     public_file_name = "#{self.to_s.downcase}s_#{latest}_#{filters[:csv_separator]}_separated.csv"
     file_name = Digest::SHA1.hexdigest(
-      filters.merge(:latest_date => latest).
+      filters.merge(latest_date: latest).
       to_hash.
       symbolize_keys!.sort.
       to_s
@@ -118,7 +118,7 @@ class TradeRestriction < ApplicationRecord
     end
     [
       path + file_name,
-      { :filename => public_file_name, :type => 'text/csv' }
+      { filename: public_file_name, type: 'text/csv' }
     ]
   end
 
@@ -129,7 +129,7 @@ class TradeRestriction < ApplicationRecord
           LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id
         SQL
       ).
-      filter_is_current(filters["set"]).
+      filter_is_current(filters['set']).
       filter_geo_entities(filters).
       filter_years(filters).
       filter_taxon_concepts(filters).
@@ -184,24 +184,24 @@ class TradeRestriction < ApplicationRecord
   end
 
   def self.filter_is_current(set)
-    if set == "current"
-      return where(:is_current => true)
+    if set == 'current'
+      return where(is_current: true)
     end
     all
   end
 
   def self.filter_geo_entities(filters)
-    if filters.key?("geo_entities_ids")
+    if filters.key?('geo_entities_ids')
       geo_entities_ids = GeoEntity.nodes_and_descendants(
-        filters["geo_entities_ids"]
+        filters['geo_entities_ids']
       ).map(&:id)
-      return where(:geo_entity_id => geo_entities_ids)
+      return where(geo_entity_id: geo_entities_ids)
     end
     all
   end
 
   def self.filter_taxon_concepts(filters)
-    if filters.key?("taxon_concepts_ids")
+    if filters.key?('taxon_concepts_ids')
       conds_str = <<-SQL
         ARRAY[
           taxon_concepts_mview.id, taxon_concepts_mview.family_id,
@@ -210,15 +210,15 @@ class TradeRestriction < ApplicationRecord
         ] && ARRAY[?]
         OR trade_restrictions.taxon_concept_id IS NULL
       SQL
-      return where(conds_str, filters["taxon_concepts_ids"].map(&:to_i))
+      return where(conds_str, filters['taxon_concepts_ids'].map(&:to_i))
     end
     all
   end
 
   def self.filter_years(filters)
-    if filters.key?("years")
+    if filters.key?('years')
       return where('EXTRACT(YEAR FROM trade_restrictions.start_date)::INTEGER IN (?)',
-                   filters["years"].map(&:to_i))
+                   filters['years'].map(&:to_i))
     end
     all
   end

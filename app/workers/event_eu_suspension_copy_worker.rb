@@ -1,6 +1,6 @@
 class EventEuSuspensionCopyWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :admin, :retry => false, :backtrace => 50
+  sidekiq_options queue: :admin, retry: false, backtrace: 50
 
   def perform(from_event_id, to_event_id)
     ApplicationRecord.connection.execute <<-SQL

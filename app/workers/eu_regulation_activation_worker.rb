@@ -1,6 +1,6 @@
 class EuRegulationActivationWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :admin, :retry => false, :backtrace => 50
+  sidekiq_options queue: :admin, retry: false, backtrace: 50
 
   def perform(event_id, state)
     ApplicationRecord.connection.execute <<-SQL

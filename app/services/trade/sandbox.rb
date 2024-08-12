@@ -28,7 +28,7 @@ class Trade::Sandbox
       @moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
       if @moved_rows_cnt < 0
         # if -1 returned, not all rows have been moved
-        @annual_report_upload.errors.add(:base, "Submit failed, could not save all rows.")
+        @annual_report_upload.errors.add(:base, 'Submit failed, could not save all rows.')
         success = false
         raise ActiveRecord::Rollback
       end

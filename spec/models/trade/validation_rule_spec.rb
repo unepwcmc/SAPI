@@ -17,13 +17,13 @@
 
 require 'spec_helper'
 
-describe Trade::ValidationRule, :drops_tables => true do
+describe Trade::ValidationRule, drops_tables: true do
   let(:annual_report_upload) {
     annual_report = build(
       :annual_report_upload,
-      :point_of_view => 'E'
+      point_of_view: 'E'
     )
-    annual_report.save(:validate => false)
+    annual_report.save(validate: false)
     annual_report
   }
   let(:sandbox_klass) {
@@ -126,13 +126,13 @@ describe Trade::ValidationRule, :drops_tables => true do
   describe Trade::PresenceValidationRule do
     describe :validation_errors_for_aru do
       before(:each) do
-        sandbox_klass.create(:trading_partner => nil)
+        sandbox_klass.create(trading_partner: nil)
       end
       context 'trading_partner should not be blank' do
         subject {
           create(
             :presence_validation_rule,
-            :column_names => ['trading_partner']
+            column_names: ['trading_partner']
           )
         }
         specify {
@@ -146,14 +146,14 @@ describe Trade::ValidationRule, :drops_tables => true do
   describe Trade::NumericalityValidationRule do
     describe :validation_errors_for_aru do
       before(:each) do
-        sandbox_klass.create(:quantity => 'www')
+        sandbox_klass.create(quantity: 'www')
       end
       context 'quantity should be a number' do
         subject {
           create(
             :numericality_validation_rule,
-            :column_names => ['quantity'],
-            :is_strict => true
+            column_names: ['quantity'],
+            is_strict: true
           )
         }
         specify {
@@ -167,7 +167,7 @@ describe Trade::ValidationRule, :drops_tables => true do
   describe Trade::FormatValidationRule do
     describe :validation_errors_for_aru do
       before(:each) do
-        sandbox_klass.create(:year => '33333')
+        sandbox_klass.create(year: '33333')
       end
       context 'year should be a 4 digit value' do
         subject {

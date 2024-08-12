@@ -3,12 +3,12 @@ class Trade::SandboxShipmentsController < TradeController
 
   def index
     @search = Trade::SandboxFilter.new(params)
-    render :json => @search.results,
-      :each_serializer => Trade::SandboxShipmentSerializer,
-      :meta => {
-        :total => @search.total_cnt,
-        :page => @search.page,
-        :per_page => @search.per_page
+    render json: @search.results,
+      each_serializer: Trade::SandboxShipmentSerializer,
+      meta: {
+        total: @search.total_cnt,
+        page: @search.page,
+        per_page: @search.per_page
       }
   end
 
@@ -62,7 +62,7 @@ class Trade::SandboxShipmentsController < TradeController
     params.permit(
       :annual_report_upload_id,
       :validation_error_id,
-      :updates => sandbox_shipment_attributes
+      updates: sandbox_shipment_attributes
     )
   end
 

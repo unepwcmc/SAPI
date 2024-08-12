@@ -5,8 +5,8 @@ describe Admin::EcSrgsController do
 
   describe "index" do
     before(:each) do
-      @cites_srg1 = create_ec_srg(:name => 'S1')
-      @cites_srg2 = create_ec_srg(:name => 'S2')
+      @cites_srg1 = create_ec_srg(name: 'S1')
+      @cites_srg2 = create_ec_srg(name: 'S2')
     end
 
     describe "GET index" do

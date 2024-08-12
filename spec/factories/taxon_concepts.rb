@@ -50,7 +50,7 @@
 #  taxon_concepts_updated_by_id_fk             (updated_by_id => users.id)
 #
 FactoryBot.define do
-  factory :taxon_concept, :aliases => [:other_taxon_concept] do
+  factory :taxon_concept, aliases: [:other_taxon_concept] do
     taxonomy
     rank
     taxon_name

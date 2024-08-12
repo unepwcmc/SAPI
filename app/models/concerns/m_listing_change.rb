@@ -5,8 +5,8 @@ module MListingChange
       extend Mobility
 
       belongs_to :designation, optional: true
-      belongs_to :taxon_concept, :class_name => 'MTaxonConcept', optional: true
-      belongs_to :listing_change, :foreign_key => :id, optional: true
+      belongs_to :taxon_concept, class_name: 'MTaxonConcept', optional: true
+      belongs_to :listing_change, foreign_key: :id, optional: true
       belongs_to :event, optional: true
       translates :short_note, fallbacks: false
       translates :full_note, fallbacks: false
@@ -17,7 +17,7 @@ module MListingChange
   end
 
   def effective_at_formatted
-    effective_at.strftime("%d/%m/%Y")
+    effective_at.strftime('%d/%m/%Y')
   end
 
   def full_hash_ann_symbol
@@ -45,13 +45,13 @@ module MListingChange
   def to_timeline_event
     Checklist::TimelineEvent.new(
       self.as_json(
-        :only => [
+        only: [
           :id, :taxon_concept_id, :change_type_id, :change_type_name,
           :species_listing_id, :species_listing_name, :party_id,
           :is_current, :hash_ann_symbol, :hash_ann_parent_symbol,
           :effective_at, :auto_note, :inclusion_taxon_concept_id
         ],
-        :methods => [
+        methods: [
           :countries_ids,
           :short_note, :full_note, :hash_full_note,
           :inherited_short_note, :inherited_full_note, :auto_note,

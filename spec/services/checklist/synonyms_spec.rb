@@ -6,8 +6,8 @@ describe Checklist do
   context "when synonyms displayed" do
     before(:all) do
       @checklist = Checklist::Checklist.new({
-        :output_layout => :alphabetical,
-        :show_synonyms => '1'
+        output_layout: :alphabetical,
+        show_synonyms: '1'
       })
       @taxon_concepts = @checklist.results
     end

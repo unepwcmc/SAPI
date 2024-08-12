@@ -1,12 +1,12 @@
 class Admin::InstrumentsController < Admin::StandardAuthorizationController
-  respond_to :json, :only => [:index, :update]
+  respond_to :json, only: [:index, :update]
 
   def index
     load_associations
     index! do |format|
       format.json {
-        render :json => end_of_association_chain.order(:name).
-          select([:id, :name]).map { |d| { :value => d.id, :text => d.name } }.to_json
+        render json: end_of_association_chain.order(:name).
+          select([:id, :name]).map { |d| { value: d.id, text: d.name } }.to_json
       }
     end
   end

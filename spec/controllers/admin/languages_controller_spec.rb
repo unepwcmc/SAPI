@@ -5,8 +5,8 @@ describe Admin::LanguagesController do
 
   describe "GET index" do
     it "assigns @languages sorted by iso_code1" do
-      language1 = create(:language, :iso_code1 => 'BB', :iso_code3 => 'BBB')
-      language2 = create(:language, :iso_code1 => 'AA', :iso_code3 => 'AAA')
+      language1 = create(:language, iso_code1: 'BB', iso_code3: 'BBB')
+      language2 = create(:language, iso_code1: 'AA', iso_code3: 'AAA')
       get :index
       expect(assigns(:languages)).to eq([language2, language1])
     end
@@ -30,11 +30,11 @@ describe Admin::LanguagesController do
   describe "XHR PUT update" do
     let(:language) { create(:language) }
     it "responds with 200 when successful" do
-      put :update, :format => 'json', params: { :id => language.id, :language => { :iso_code1 => 'ZZ' } }, xhr: true
+      put :update, format: 'json', params: { id: language.id, language: { iso_code1: 'ZZ' } }, xhr: true
       expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      put :update, :format => 'json', params: { :id => language.id, :language => { :iso_code1 => 'zzz' } }, xhr: true
+      put :update, format: 'json', params: { id: language.id, language: { iso_code1: 'zzz' } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -42,7 +42,7 @@ describe Admin::LanguagesController do
   describe "DELETE destroy" do
     let(:language) { create(:language) }
     it "redirects after delete" do
-      delete :destroy, params: { :id => language.id }
+      delete :destroy, params: { id: language.id }
       expect(response).to redirect_to(admin_languages_url)
     end
   end

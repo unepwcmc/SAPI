@@ -119,8 +119,8 @@ class MTaxonConcept < ApplicationRecord
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 
-  belongs_to :taxon_concept, :foreign_key => :id, optional: true
-  has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => 'MCitesListingChange'
+  belongs_to :taxon_concept, foreign_key: :id, optional: true
+  has_many :cites_listing_changes, foreign_key: :taxon_concept_id, class_name: 'MCitesListingChange'
   has_many :historic_cites_listing_changes_for_downloads, -> {
     where(
       show_in_downloads: true
@@ -137,19 +137,19 @@ class MTaxonConcept < ApplicationRecord
         SQL
       )
     )
-  }, :foreign_key => :taxon_concept_id,
-    :class_name => 'MCitesListingChange'
+  }, foreign_key: :taxon_concept_id,
+    class_name: 'MCitesListingChange'
   has_many :current_cites_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
-    :foreign_key => :taxon_concept_id,
-    :class_name => 'MCitesListingChange'
+    foreign_key: :taxon_concept_id,
+    class_name: 'MCitesListingChange'
   has_many :current_cms_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
-    :foreign_key => :taxon_concept_id,
-    :class_name => 'MCmsListingChange'
+    foreign_key: :taxon_concept_id,
+    class_name: 'MCmsListingChange'
   has_many :cites_processes
-  scope :by_cites_eu_taxonomy, -> { where(:taxonomy_is_cites_eu => true) }
-  scope :by_cms_taxonomy, -> { where(:taxonomy_is_cites_eu => false) }
+  scope :by_cites_eu_taxonomy, -> { where(taxonomy_is_cites_eu: true) }
+  scope :by_cms_taxonomy, -> { where(taxonomy_is_cites_eu: false) }
 
-  scope :without_non_accepted, -> { where(:name_status => ['A', 'H']) }
+  scope :without_non_accepted, -> { where(name_status: ['A', 'H']) }
 
   scope :without_hidden, -> { where("#{table_name}.cites_show = 't'") }
 
@@ -163,11 +163,11 @@ class MTaxonConcept < ApplicationRecord
     MTaxonConceptFilterByScientificNameWithDescendants.new(
       self,
       scientific_name,
-      { :synonyms => true, :common_names => true, :subspecies => false }
+      { synonyms: true, common_names: true, subspecies: false }
     ).relation
   }
 
-  scope :at_level_of_listing, -> { where(:cites_listed => 't') }
+  scope :at_level_of_listing, -> { where(cites_listed: 't') }
 
   scope :taxonomic_layout, -> { order('taxonomic_position') }
   scope :alphabetical_layout, -> { order(['kingdom_position', 'full_name']) }

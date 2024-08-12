@@ -26,7 +26,7 @@ describe NomenclatureChange::Lump do
       context "when inputs" do
         let(:lump) {
           build(
-            :nomenclature_change_lump, :status => NomenclatureChange::Lump::INPUTS
+            :nomenclature_change_lump, status: NomenclatureChange::Lump::INPUTS
           )
         }
         specify { expect(lump).to have(1).errors_on(:inputs) }
@@ -34,7 +34,7 @@ describe NomenclatureChange::Lump do
       context "when submitting" do
         let(:lump) {
           build(
-            :nomenclature_change_lump, :status => NomenclatureChange::Lump::SUBMITTED
+            :nomenclature_change_lump, status: NomenclatureChange::Lump::SUBMITTED
           )
         }
         specify { expect(lump).to have(1).errors_on(:inputs) }
@@ -44,7 +44,7 @@ describe NomenclatureChange::Lump do
       context "when outputs" do
         let(:lump) {
           build(
-            :nomenclature_change_lump, :status => NomenclatureChange::Lump::OUTPUTS
+            :nomenclature_change_lump, status: NomenclatureChange::Lump::OUTPUTS
           )
         }
         specify { expect(lump).to have(1).errors_on(:output) }
@@ -52,7 +52,7 @@ describe NomenclatureChange::Lump do
       context "when submitting" do
         let(:lump) {
           build(
-            :nomenclature_change_lump, :status => NomenclatureChange::Lump::SUBMITTED
+            :nomenclature_change_lump, status: NomenclatureChange::Lump::SUBMITTED
           )
         }
         specify { expect(lump).to have(1).errors_on(:output) }
@@ -60,8 +60,8 @@ describe NomenclatureChange::Lump do
       context "when only 1 input" do
         let(:lump) {
           build(
-            :nomenclature_change_lump, :status => NomenclatureChange::Lump::SUBMITTED,
-            :inputs_attributes => { 0 => { :taxon_concept_id => create_cites_eu_subspecies.id } }
+            :nomenclature_change_lump, status: NomenclatureChange::Lump::SUBMITTED,
+            inputs_attributes: { 0 => { taxon_concept_id: create_cites_eu_subspecies.id } }
           )
         }
         specify { expect(lump.errors_on(:inputs).size).to eq(1) }

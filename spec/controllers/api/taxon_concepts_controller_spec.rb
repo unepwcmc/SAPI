@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe Api::V1::TaxonConceptsController, :type => :controller do
+describe Api::V1::TaxonConceptsController, type: :controller do
   context "GET index" do
     it " logs with Ahoy with different parameters" do
       expect {
-        get :index, params: { :taxonomy => 'cites_eu', :taxon_concept_query => 'stork', :geo_entity_scope => 'cites', :page => 1 }
+        get :index, params: { taxonomy: 'cites_eu', taxon_concept_query: 'stork', geo_entity_scope: 'cites', page: 1 }
       }.to change { Ahoy::Event.count }.by(1)
       expect(Ahoy::Event.last.visit_id).to_not be(nil)
 
       expect {
-        get :index, params: { :taxonomy => 'cites_eu', :taxon_concept_query => 'dolphin', :geo_entity_scope => 'cites', :page => 1 }
+        get :index, params: { taxonomy: 'cites_eu', taxon_concept_query: 'dolphin', geo_entity_scope: 'cites', page: 1 }
       }.to change { Ahoy::Event.count }.by(1)
       expect(@ahoy_event1).to eq(@ahoy_event2)
     end
@@ -25,7 +25,7 @@ describe Api::V1::TaxonConceptsController, :type => :controller do
       }
 
       it "Serialises a minimal taxon correctly" do
-        get :show, params: { :id => taxon_concept.id }
+        get :show, params: { id: taxon_concept.id }
 
         response_body = parse_json(response.body)
 
@@ -84,7 +84,7 @@ describe Api::V1::TaxonConceptsController, :type => :controller do
       }
 
       it "Serialises a minimal taxon correctly" do
-        get :show, params: { :id => taxon_concept.id }
+        get :show, params: { id: taxon_concept.id }
 
         response_body = parse_json(response.body)
 

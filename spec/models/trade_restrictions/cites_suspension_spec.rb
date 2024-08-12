@@ -36,17 +36,17 @@ describe CitesSuspension, sidekiq: :inline do
   let(:tanzania) {
     create(
       :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'United Republic of Tanzania',
-      :iso_code2 => 'TZ'
+      geo_entity_type: country_geo_entity_type,
+      name: 'United Republic of Tanzania',
+      iso_code2: 'TZ'
     )
   }
   let(:rwanda) {
     create(
       :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Republic of Rwanda',
-      :iso_code2 => 'RW'
+      geo_entity_type: country_geo_entity_type,
+      name: 'Republic of Rwanda',
+      iso_code2: 'RW'
     )
   }
   before do
@@ -56,13 +56,13 @@ describe CitesSuspension, sidekiq: :inline do
     @another_taxon_concept = create_cites_eu_species
     create(
       :distribution,
-      :taxon_concept_id => @taxon_concept.id,
-      :geo_entity_id => tanzania.id
+      taxon_concept_id: @taxon_concept.id,
+      geo_entity_id: tanzania.id
     )
     create(
       :distribution,
-      :taxon_concept_id => @another_taxon_concept.id,
-      :geo_entity_id => rwanda.id
+      taxon_concept_id: @another_taxon_concept.id,
+      geo_entity_id: rwanda.id
     )
     travel_back
   end
@@ -73,8 +73,8 @@ describe CitesSuspension, sidekiq: :inline do
         subject {
           build(
             :cites_suspension,
-            :taxon_concept => @taxon_concept,
-            :start_notification => create_cites_suspension_notification
+            taxon_concept: @taxon_concept,
+            start_notification: create_cites_suspension_notification
           )
         }
         specify {
@@ -85,9 +85,9 @@ describe CitesSuspension, sidekiq: :inline do
         subject {
           build(
             :cites_suspension,
-            :taxon_concept_id => nil,
-            :geo_entity_id => tanzania.id,
-            :start_notification => create_cites_suspension_notification
+            taxon_concept_id: nil,
+            geo_entity_id: tanzania.id,
+            start_notification: create_cites_suspension_notification
           )
         }
         specify {
@@ -98,8 +98,8 @@ describe CitesSuspension, sidekiq: :inline do
         subject {
           create(
             :cites_suspension,
-            :taxon_concept => @genus,
-            :start_notification => create_cites_suspension_notification
+            taxon_concept: @genus,
+            start_notification: create_cites_suspension_notification
           )
         }
         specify {
@@ -112,8 +112,8 @@ describe CitesSuspension, sidekiq: :inline do
         subject {
           create(
             :cites_suspension,
-            :taxon_concept => @taxon_concept,
-            :start_notification => create_cites_suspension_notification
+            taxon_concept: @taxon_concept,
+            start_notification: create_cites_suspension_notification
           )
         }
         specify {
@@ -125,9 +125,9 @@ describe CitesSuspension, sidekiq: :inline do
         subject {
           create(
             :cites_suspension,
-            :taxon_concept_id => nil,
-            :geo_entity_id => tanzania.id,
-            :start_notification => create_cites_suspension_notification
+            taxon_concept_id: nil,
+            geo_entity_id: tanzania.id,
+            start_notification: create_cites_suspension_notification
           )
         }
         specify {
@@ -143,8 +143,8 @@ describe CitesSuspension, sidekiq: :inline do
         subject {
           create(
             :cites_suspension,
-            :taxon_concept => @genus,
-            :start_notification => create_cites_suspension_notification
+            taxon_concept: @genus,
+            start_notification: create_cites_suspension_notification
           )
         }
         specify {
@@ -158,8 +158,8 @@ describe CitesSuspension, sidekiq: :inline do
         subject {
           create(
             :cites_suspension,
-            :taxon_concept => @taxon_concept,
-            :start_notification => create_cites_suspension_notification
+            taxon_concept: @taxon_concept,
+            start_notification: create_cites_suspension_notification
           )
         }
         specify {
@@ -170,9 +170,9 @@ describe CitesSuspension, sidekiq: :inline do
         subject {
           create(
             :cites_suspension,
-            :taxon_concept_id => nil,
-            :geo_entity_id => tanzania.id,
-            :start_notification => create_cites_suspension_notification
+            taxon_concept_id: nil,
+            geo_entity_id: tanzania.id,
+            start_notification: create_cites_suspension_notification
           )
         }
         specify {
@@ -184,8 +184,8 @@ describe CitesSuspension, sidekiq: :inline do
         subject {
           create(
             :cites_suspension,
-            :taxon_concept => @genus,
-            :start_notification => create_cites_suspension_notification
+            taxon_concept: @genus,
+            start_notification: create_cites_suspension_notification
           )
         }
         specify {
@@ -202,8 +202,8 @@ describe CitesSuspension, sidekiq: :inline do
         let(:cites_suspension) {
           build(
             :cites_suspension,
-            :start_notification => nil,
-            :taxon_concept => @taxon_concept
+            start_notification: nil,
+            taxon_concept: @taxon_concept
           )
         }
 
@@ -215,9 +215,9 @@ describe CitesSuspension, sidekiq: :inline do
         let(:cites_suspension) {
           build(
             :cites_suspension,
-            :start_notification => create_cites_suspension_notification(:effective_at => 1.week.from_now),
-            :end_notification => create_cites_suspension_notification(:effective_at => 1.week.ago),
-            :taxon_concept => @taxon_concept
+            start_notification: create_cites_suspension_notification(effective_at: 1.week.from_now),
+            end_notification: create_cites_suspension_notification(effective_at: 1.week.ago),
+            taxon_concept: @taxon_concept
           )
         }
 
@@ -229,8 +229,8 @@ describe CitesSuspension, sidekiq: :inline do
         let(:cites_suspension) {
           build(
             :cites_suspension,
-            :taxon_concept => @taxon_concept,
-            :start_notification => create_cites_suspension_notification
+            taxon_concept: @taxon_concept,
+            start_notification: create_cites_suspension_notification
           )
         }
 
@@ -245,9 +245,9 @@ describe CitesSuspension, sidekiq: :inline do
         DownloadsCache.clear_cites_suspensions
         create(
           :cites_suspension,
-          :taxon_concept_id => nil,
-          :geo_entity_id => tanzania.id,
-          :start_notification => create_cites_suspension_notification
+          taxon_concept_id: nil,
+          geo_entity_id: tanzania.id,
+          start_notification: create_cites_suspension_notification
         )
         CitesSuspension.export('set' => 'current')
       end
@@ -262,9 +262,9 @@ describe CitesSuspension, sidekiq: :inline do
         DownloadsCache.clear_cites_suspensions
         s = create(
           :cites_suspension,
-          :taxon_concept_id => nil,
-          :geo_entity_id => tanzania.id,
-          :start_notification => create_cites_suspension_notification
+          taxon_concept_id: nil,
+          geo_entity_id: tanzania.id,
+          start_notification: create_cites_suspension_notification
         )
         CitesSuspension.export('set' => 'current')
         s.destroy

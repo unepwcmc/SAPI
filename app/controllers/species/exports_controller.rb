@@ -1,11 +1,11 @@
 class Species::ExportsController < ApplicationController
-  before_action :ensure_data_type_and_filters, :only => [:download]
+  before_action :ensure_data_type_and_filters, only: [:download]
 
   def download
     set_csv_separator
 
     @filters = filter_params.merge({
-      :csv_separator => cookies['speciesplus.csv_separator'].try(:to_sym)
+      csv_separator: cookies['speciesplus.csv_separator'].try(:to_sym)
     })
     case params[:data_type]
     when 'Quotas'
@@ -28,11 +28,11 @@ class Species::ExportsController < ApplicationController
           response.headers['Content-Length'] = File.size(file_path).to_s
           send_file file_path, result[1]
         else
-          redirect_to species_exports_path, :notice => "There are no #{params[:data_type]} to download."
+          redirect_to species_exports_path, notice: "There are no #{params[:data_type]} to download."
         end
       }
       format.json {
-        render :json => { :total => result.is_a?(Array) ? 1 : 0 }
+        render json: { total: result.is_a?(Array) ? 1 : 0 }
       }
     end
   end

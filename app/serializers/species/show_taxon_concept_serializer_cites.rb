@@ -1,18 +1,18 @@
 class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerializer
 
   attributes :cites_listing, :eu_listing
-  has_many :quotas, :serializer => Species::QuotaSerializer, :key => :cites_quotas
-  has_many :cites_suspensions, :serializer => Species::CitesSuspensionSerializer
-  has_many :cites_listing_changes, :serializer => Species::CitesListingChangeSerializer,
-    :key => :cites_listings
-  has_many :eu_listing_changes, :serializer => Species::EuListingChangeSerializer,
-    :key => :eu_listings
-  has_many :eu_decisions, :serializer => Species::EuDecisionSerializer
-  has_many :processes, :serializer => Species::CitesProcessSerializer, :key => :cites_processes
+  has_many :quotas, serializer: Species::QuotaSerializer, key: :cites_quotas
+  has_many :cites_suspensions, serializer: Species::CitesSuspensionSerializer
+  has_many :cites_listing_changes, serializer: Species::CitesListingChangeSerializer,
+    key: :cites_listings
+  has_many :eu_listing_changes, serializer: Species::EuListingChangeSerializer,
+    key: :eu_listings
+  has_many :eu_decisions, serializer: Species::EuDecisionSerializer
+  has_many :processes, serializer: Species::CitesProcessSerializer, key: :cites_processes
 
   def processes
      CitesProcess.includes(:start_event)
-                 .joins("LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id")
+                 .joins('LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id')
                  .where(taxon_concept_id: object.id)
                  .order('resolution DESC', 'geo_entities.name_en')
   end

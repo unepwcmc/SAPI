@@ -32,5 +32,5 @@
 
 class EuCouncilRegulation < EuEvent
   validate :designation_is_eu
-  validates :effective_at, :presence => true
+  validates :effective_at, presence: true
 end

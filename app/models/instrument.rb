@@ -18,15 +18,15 @@ class Instrument < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :designation_id, :name
 
-  validates :name, :presence => true, :uniqueness => { :scope => :designation_id }
+  validates :name, presence: true, uniqueness: { scope: :designation_id }
 
   belongs_to :designation
   has_many :taxon_instruments
 
   def self.search(query)
     if query.present?
-      where("UPPER(name) LIKE UPPER(:query)",
-            :query => "%#{query}%")
+      where('UPPER(name) LIKE UPPER(:query)',
+            query: "%#{query}%")
     else
       all
     end

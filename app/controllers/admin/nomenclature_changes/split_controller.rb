@@ -38,7 +38,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
   def update
     @nomenclature_change.assign_attributes(
       (nomenclature_change_split_params || {}).merge({
-        :status => (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
+        status: (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
       })
     )
     success = @nomenclature_change.valid?

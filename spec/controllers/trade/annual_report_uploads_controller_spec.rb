@@ -6,9 +6,9 @@ describe Trade::AnnualReportUploadsController do
   let(:france) {
     create(
       :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'France',
-      :iso_code2 => 'FR'
+      geo_entity_type: country_geo_entity_type,
+      name: 'France',
+      iso_code2: 'FR'
     )
   }
   def exporter_csv
@@ -18,18 +18,18 @@ describe Trade::AnnualReportUploadsController do
   let(:annual_report_upload) {
     create(
       :annual_report_upload,
-      :point_of_view => 'E',
-      :trading_country_id => france.id,
-      :csv_source_file => exporter_csv
+      point_of_view: 'E',
+      trading_country_id: france.id,
+      csv_source_file: exporter_csv
     )
   }
   describe "GET index" do
     before(:each) do
       cites_eu
       @aru = build(:annual_report_upload)
-      @aru.save(:validate => false)
+      @aru.save(validate: false)
       @completed_aru = build(:annual_report_upload)
-      @completed_aru.save(:validate => false)
+      @completed_aru.save(validate: false)
       @completed_aru.update(submitted_at: Time.now)
     end
     it "should return all annual report uploads" do
@@ -52,20 +52,20 @@ describe Trade::AnnualReportUploadsController do
   describe "POST create" do
     it "should return success in jQuery File Upload way" do
       post :create, params: {
-        :annual_report_upload => {
-          :point_of_view => 'E', :trading_country_id => france.id,
-          :csv_source_file => exporter_csv
+        annual_report_upload: {
+          point_of_view: 'E', trading_country_id: france.id,
+          csv_source_file: exporter_csv
         }
-      }, xhr: true, :format => 'json'
+      }, xhr: true, format: 'json'
       expect(parse_json(response.body, "files/0")['id']).not_to be_blank
     end
     it "should return error in jQuery File Upload way" do
       post :create, params: {
-        :annual_report_upload => {
-          :point_of_view => 'I', :trading_country_id => france.id,
-          :csv_source_file => exporter_csv
+        annual_report_upload: {
+          point_of_view: 'I', trading_country_id: france.id,
+          csv_source_file: exporter_csv
         }
-      }, :format => 'json', xhr: true
+      }, format: 'json', xhr: true
       expect(parse_json(response.body, "files/0")['id']).to be_blank
     end
   end

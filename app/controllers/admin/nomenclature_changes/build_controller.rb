@@ -1,7 +1,7 @@
 class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   include Wicked::Wizard
 
-  before_action :set_nomenclature_change, :only => [:show, :update, :destroy]
+  before_action :set_nomenclature_change, only: [:show, :update, :destroy]
   before_action :unset_back, only: [:update]
   before_action :authorise_finish, only: [:update]
 
@@ -13,9 +13,9 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     @nomenclature_change = klass.new()
     @nomenclature_change.status = NomenclatureChange::NEW
     if @nomenclature_change.save
-      redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
+      redirect_to wizard_path(steps.first, nomenclature_change_id: @nomenclature_change.id)
     else
-      redirect_to admin_nomenclature_changes_url, :alert => "Could not start a new nomenclature change"
+      redirect_to admin_nomenclature_changes_url, alert: 'Could not start a new nomenclature change'
     end
   end
 

@@ -30,10 +30,10 @@
 
 require 'spec_helper'
 
-describe Trade::SandboxTemplate, :drops_tables => true do
+describe Trade::SandboxTemplate, drops_tables: true do
   let(:annual_report_upload) {
     aru = build(:annual_report_upload)
-    aru.save(:validate => false)
+    aru.save(validate: false)
     aru
   }
   let(:sandbox_klass) {
@@ -41,28 +41,28 @@ describe Trade::SandboxTemplate, :drops_tables => true do
   }
   let(:canis) {
     create_cites_eu_genus(
-      :taxon_name => create(:taxon_name, :scientific_name => 'Canis')
+      taxon_name: create(:taxon_name, scientific_name: 'Canis')
     )
   }
   let(:canis_lupus) {
     create_cites_eu_species(
-      :taxon_name => create(:taxon_name, :scientific_name => 'lupus'),
-      :parent => canis
+      taxon_name: create(:taxon_name, scientific_name: 'lupus'),
+      parent: canis
     )
   }
   let(:canis_aureus) {
     create_cites_eu_species(
-      :taxon_name => create(:taxon_name, :scientific_name => 'aureus'),
-      :parent => canis
+      taxon_name: create(:taxon_name, scientific_name: 'aureus'),
+      parent: canis
     )
   }
 
   describe :update do
     before(:each) do
-      @shipment1 = sandbox_klass.create(:taxon_name => canis_lupus.full_name)
+      @shipment1 = sandbox_klass.create(taxon_name: canis_lupus.full_name)
     end
     specify {
-      @shipment1.update(:taxon_name => canis_aureus.full_name)
+      @shipment1.update(taxon_name: canis_aureus.full_name)
       expect(@shipment1.reload.taxon_concept_id).to eq(canis_aureus.id)
     }
   end
@@ -70,7 +70,7 @@ describe Trade::SandboxTemplate, :drops_tables => true do
   describe :update_batch do
     before(:each) do
       canis_lupus
-      @shipment = sandbox_klass.create(:taxon_name => 'Caniis lupus')
+      @shipment = sandbox_klass.create(taxon_name: 'Caniis lupus')
       validation_rule = create_taxon_concept_validation
       @validation_error = create(
         :validation_error,

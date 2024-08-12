@@ -44,7 +44,7 @@ class Species::Search
       end
 
     if @visibility == :speciesplus
-      @query = @query.where(:show_in_species_plus => true)
+      @query = @query.where(show_in_species_plus: true)
     elsif @visibility == :elibrary
       @query = @query.where("show_in_species_plus OR name_status = 'N'")
     end
@@ -69,9 +69,9 @@ class Species::Search
 
     unless @scientific_name.blank?
       @query = @query.
-        by_name(@scientific_name, { :synonyms => true, :subspecies => true, :common_names => true }).
+        by_name(@scientific_name, { synonyms: true, subspecies: true, common_names: true }).
         select(
-          "taxon_concepts_mview.*, matching_names.matched_names_ary AS synonyms_ary"
+          'taxon_concepts_mview.*, matching_names.matched_names_ary AS synonyms_ary'
         )
     end
     @query = @query

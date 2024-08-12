@@ -5,15 +5,15 @@ describe Admin::CitesHashAnnotationsController do
 
   describe "index" do
     before(:each) do
-      cop1 = create_cites_cop(:name => 'CoP1')
-      cop2 = create_cites_cop(:name => 'CoP2')
+      cop1 = create_cites_cop(name: 'CoP1')
+      cop2 = create_cites_cop(name: 'CoP2')
       @annotation1 = create(
         :annotation,
-        :parent_symbol => 'CoP2', :symbol => '#1', :event_id => cop2.id
+        parent_symbol: 'CoP2', symbol: '#1', event_id: cop2.id
       )
       @annotation2 = create(
         :annotation,
-        :parent_symbol => 'CoP1', :symbol => '#1', :event_id => cop1.id
+        parent_symbol: 'CoP1', symbol: '#1', event_id: cop1.id
       )
     end
 

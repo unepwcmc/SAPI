@@ -3,28 +3,28 @@ class Checklist::TaxonConceptsController < ApplicationController
   def index
     checklist = Checklist::Checklist.new(params)
 
-    render :json => checklist.generate,
-      :each_serializer => Checklist::ChecklistSerializer,
-      :authors => checklist.authors,
-      :synonyms => checklist.synonyms,
-      :english_names => checklist.english_common_names,
-      :spanish_names => checklist.spanish_common_names,
-      :french_names => checklist.french_common_names
+    render json: checklist.generate,
+      each_serializer: Checklist::ChecklistSerializer,
+      authors: checklist.authors,
+      synonyms: checklist.synonyms,
+      english_names: checklist.english_common_names,
+      spanish_names: checklist.spanish_common_names,
+      french_names: checklist.french_common_names
   end
 
   def autocomplete
     matcher = Species::TaxonConceptPrefixMatcher.new(
-      :taxon_concept_query => params[:scientific_name],
-      :visibility => :checklist,
-      :ranks => [],
-      :per_page => params[:per_page]
+      taxon_concept_query: params[:scientific_name],
+      visibility: :checklist,
+      ranks: [],
+      per_page: params[:per_page]
     )
-    render :json => matcher.cached_results,
-      :each_serializer => Checklist::AutocompleteTaxonConceptSerializer
+    render json: matcher.cached_results,
+      each_serializer: Checklist::AutocompleteTaxonConceptSerializer
   end
 
   def summarise_filters
-    render :plain => Checklist::Checklist.summarise_filters(params)
+    render plain: Checklist::Checklist.summarise_filters(params)
   end
 
   private

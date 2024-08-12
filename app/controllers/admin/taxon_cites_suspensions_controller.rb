@@ -1,19 +1,19 @@
 class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
-  defaults :resource_class => CitesSuspension,
-    :collection_name => 'cites_suspensions', :instance_name => 'cites_suspension'
+  defaults resource_class: CitesSuspension,
+    collection_name: 'cites_suspensions', instance_name: 'cites_suspension'
   belongs_to :taxon_concept
 
-  before_action :load_lib_objects, :only => [:new, :edit]
-  before_action :load_search, :except => [:create, :destroy]
+  before_action :load_lib_objects, only: [:new, :edit]
+  before_action :load_search, except: [:create, :destroy]
   layout 'taxon_concepts'
 
-  authorize_resource :class => false
+  authorize_resource class: false
 
   def create
     create! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
       failure.html {
         load_lib_objects
@@ -26,7 +26,7 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
     update! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
       failure.html {
         load_lib_objects
@@ -39,7 +39,7 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
     destroy! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_cites_suspensions_url(@taxon_concept),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
     end
   end
@@ -50,8 +50,8 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
     @sources = Source.order(:code)
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true,
-            :geo_entity_types => { :name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
+      where(is_current: true,
+            geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
     @suspension_notifications = CitesSuspensionNotification.
       select([:id, :name]).
       order('effective_at DESC')

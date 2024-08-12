@@ -20,20 +20,20 @@ class ApplicationController < ActionController::Base
     message = if current_user.is_manager_or_contributor?
                 case exception.action
                 when :destroy
-                  "You are not authorised to destroy that record"
+                  'You are not authorised to destroy that record'
                 else
                   exception.message
                 end
               elsif current_user.is_secretariat?
                 t('secretariat_alert')
               else
-                "You are not authorised to access this page"
+                'You are not authorised to access this page'
               end
 
     flash[:error] = message
     respond_to do |format|
       format.html { redirect_to rescue_path }
-      format.js { render inline: "location.reload();" }
+      format.js { render inline: 'location.reload();' }
     end
   end
 
@@ -55,9 +55,9 @@ class ApplicationController < ActionController::Base
 
   def metadata_for_search(search)
     {
-      :total => search.total_cnt,
-      :page => search.page,
-      :per_page => search.per_page
+      total: search.total_cnt,
+      page: search.page,
+      per_page: search.per_page
     }
   end
 
@@ -71,7 +71,7 @@ class ApplicationController < ActionController::Base
   end
 
   def save_email
-    session[:email] = params[:user][:email] || ""
+    session[:email] = params[:user][:email] || ''
   end
 
   def delete_email

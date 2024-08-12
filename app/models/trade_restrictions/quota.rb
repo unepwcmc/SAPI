@@ -49,9 +49,9 @@ class Quota < TradeRestriction
   # Migrated to controller (Strong Parameters)
   # attr_accessible :public_display
 
-  validates :quota, :presence => true
-  validates :quota, :numericality => { :greater_than_or_equal_to => -1.0 }
-  validates :geo_entity_id, :presence => true
+  validates :quota, presence: true
+  validates :quota, numericality: { greater_than_or_equal_to: -1.0 }
+  validates :geo_entity_id, presence: true
 
   after_commit :async_downloads_cache_cleanup, on: :destroy
 
@@ -64,11 +64,11 @@ class Quota < TradeRestriction
   ]
 
   def start_date_formatted
-    start_date ? start_date.strftime('%d/%m/%Y') : Time.now.beginning_of_year.strftime("%d/%m/%Y")
+    start_date ? start_date.strftime('%d/%m/%Y') : Time.now.beginning_of_year.strftime('%d/%m/%Y')
   end
 
   def end_date_formatted
-    end_date ? end_date.strftime('%d/%m/%Y') : Time.now.end_of_year.strftime("%d/%m/%Y")
+    end_date ? end_date.strftime('%d/%m/%Y') : Time.now.end_of_year.strftime('%d/%m/%Y')
   end
 
   def self.search(query)
@@ -79,7 +79,7 @@ class Quota < TradeRestriction
             OR trade_restrictions.end_date::text LIKE :query
             OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(taxon_concepts.full_name) LIKE UPPER(:query)",
-            :query => "%#{query}%").
+            query: "%#{query}%").
       joins(<<-SQL
           LEFT JOIN taxon_concepts
             ON taxon_concepts.id = trade_restrictions.taxon_concept_id
@@ -106,15 +106,15 @@ class Quota < TradeRestriction
         AND ((:excluded_taxon_concepts) IS NULL OR taxon_concept_id NOT IN (:excluded_taxon_concepts))
         AND ((:included_taxon_concepts) IS NULL OR taxon_concept_id IN (:included_taxon_concepts))
         AND is_current = true",
-        :year => params[:year].to_i,
-        :excluded_geo_entities => params[:excluded_geo_entities_ids].present? ?
+        year: params[:year].to_i,
+        excluded_geo_entities: params[:excluded_geo_entities_ids].present? ?
           params[:excluded_geo_entities_ids].map(&:to_i) : nil,
-        :included_geo_entities => params[:included_geo_entities_ids].present? ?
+        included_geo_entities: params[:included_geo_entities_ids].present? ?
           params[:included_geo_entities_ids].map(&:to_i) : nil,
-        :excluded_taxon_concepts => params[:excluded_taxon_concepts_ids].present? ?
-          params[:excluded_taxon_concepts_ids].split(",").map(&:to_i) : nil,
-        :included_taxon_concepts => params[:included_taxon_concepts_ids].present? ?
-          params[:included_taxon_concepts_ids].split(",").map(&:to_i) : nil
+        excluded_taxon_concepts: params[:excluded_taxon_concepts_ids].present? ?
+          params[:excluded_taxon_concepts_ids].split(',').map(&:to_i) : nil,
+        included_taxon_concepts: params[:included_taxon_concepts_ids].present? ?
+          params[:included_taxon_concepts_ids].split(',').map(&:to_i) : nil
       ]
     ).count
   end

@@ -1,5 +1,5 @@
 class CaptiveBreeding::EuDecisionSerializer < ActiveModel::Serializer
-  attributes :taxon_concept, :notes, { :start_date_formatted => :start_date },
+  attributes :taxon_concept, :notes, { start_date_formatted: :start_date },
     :is_current, :nomenclature_note_en, :nomenclature_note_fr,
     :nomenclature_note_es,
     :eu_decision_type,
@@ -8,7 +8,7 @@ class CaptiveBreeding::EuDecisionSerializer < ActiveModel::Serializer
     :start_event,
     :source,
     :term,
-    { :original_start_date_formatted => :original_start_date },
+    { original_start_date_formatted: :original_start_date },
     :private_url
 
   def taxon_concept

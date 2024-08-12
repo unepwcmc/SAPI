@@ -22,8 +22,8 @@ class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidation
     # if it is, check if it has a match in valid values view
     v = Arel::Table.new(valid_values_view)
     appendix_node = v['appendix'].eq(shipment.appendix)
-    effective_from = Arel::Nodes::NamedFunction.new "DATE_PART", [Arel::Nodes.build_quoted("year"), v['effective_from']]
-    effective_to = Arel::Nodes::NamedFunction.new "DATE_PART", [Arel::Nodes.build_quoted("year"), v['effective_to']]
+    effective_from = Arel::Nodes::NamedFunction.new 'DATE_PART', [Arel::Nodes.build_quoted('year'), v['effective_from']]
+    effective_to = Arel::Nodes::NamedFunction.new 'DATE_PART', [Arel::Nodes.build_quoted('year'), v['effective_to']]
     year_node = effective_from.lteq(shipment.year).and(effective_to.gteq(shipment.year).or(effective_to.eq(nil)))
     taxon_concept_node = v['taxon_concept_id'].eq(shipment.taxon_concept_id)
     conditions = appendix_node.and(year_node).and(taxon_concept_node)
@@ -34,9 +34,9 @@ class Trade::TaxonConceptAppendixYearValidationRule < Trade::InclusionValidation
   private
 
   def year_join_node(s, v)
-    sandbox_year = Arel::Nodes::NamedFunction.new "CAST", [s['year'].as('INT')]
-    effective_from = Arel::Nodes::NamedFunction.new "DATE_PART", [Arel::Nodes.build_quoted("year"), v['effective_from']]
-    effective_to = Arel::Nodes::NamedFunction.new "DATE_PART", [Arel::Nodes.build_quoted("year"), v['effective_to']]
+    sandbox_year = Arel::Nodes::NamedFunction.new 'CAST', [s['year'].as('INT')]
+    effective_from = Arel::Nodes::NamedFunction.new 'DATE_PART', [Arel::Nodes.build_quoted('year'), v['effective_from']]
+    effective_to = Arel::Nodes::NamedFunction.new 'DATE_PART', [Arel::Nodes.build_quoted('year'), v['effective_to']]
     effective_from.lteq(sandbox_year).and(effective_to.gteq(sandbox_year).or(effective_to.eq(nil)))
   end
 

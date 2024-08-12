@@ -1,13 +1,13 @@
 class Elibrary::IdentificationDocsDistributionsImporter
 
   def self.run
-    puts "Importing distributions at species level..."
+    puts 'Importing distributions at species level...'
     import_species_distributions
-    puts "Importing distributions at higher taxa level..."
+    puts 'Importing distributions at higher taxa level...'
     import_higher_taxa_distributions
-    puts "Managing exceptions"
+    puts 'Managing exceptions'
     exceptions
-    puts "Refresh materialized views"
+    puts 'Refresh materialized views'
     DocumentSearch.refresh_citations_and_documents
   end
 
@@ -112,14 +112,14 @@ class Elibrary::IdentificationDocsDistributionsImporter
   end
 
   EXCEPTIONS = [
-    { manual_id: "Commercial species of freshwater stingrays in Brazil_EN.pdf", geo_entity: 'Brazil' },
+    { manual_id: 'Commercial species of freshwater stingrays in Brazil_EN.pdf', geo_entity: 'Brazil' },
     { manual_id: "Guide d'identification Des espèces du Tchad CITES_FR.pdf", geo_entity: 'Chad' },
-    { manual_id: "Identification Manual for the Conservation of Turtles in China_EN.pdf", geo_entity: 'China' },
-    { manual_id: "Guía para la identificación de especies de tiburones, rayas y quimeras de Colombia_ES.pdf", geo_entity: 'Colombia' },
+    { manual_id: 'Identification Manual for the Conservation of Turtles in China_EN.pdf', geo_entity: 'China' },
+    { manual_id: 'Guía para la identificación de especies de tiburones, rayas y quimeras de Colombia_ES.pdf', geo_entity: 'Colombia' },
     { manual_id: "Guide d'identification Des espèces du Gabon CITES_FR.pdf", geo_entity: 'Gabon' },
-    { manual_id: "Guía de identificación para aves silvestres de mayor comercio en México_ES.pdf", geo_entity: 'Mexico' },
-    { manual_id: "Guía de identificación para mamíferos silvestres de mayor comercio en México_ES.pdf", geo_entity: 'Mexico' },
-    { manual_id: "http://biodiversityadvisor.sanbi.org/species-id-tool/", geo_entity: 'South Africa' }
+    { manual_id: 'Guía de identificación para aves silvestres de mayor comercio en México_ES.pdf', geo_entity: 'Mexico' },
+    { manual_id: 'Guía de identificación para mamíferos silvestres de mayor comercio en México_ES.pdf', geo_entity: 'Mexico' },
+    { manual_id: 'http://biodiversityadvisor.sanbi.org/species-id-tool/', geo_entity: 'South Africa' }
   ].freeze
   def self.exceptions
     EXCEPTIONS.each do |exception|

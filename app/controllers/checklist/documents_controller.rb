@@ -1,8 +1,8 @@
 class Checklist::DocumentsController < ApplicationController
 
   def index
-    return render :json => []  if params[:taxon_concepts_ids].nil?
-    return render :json => []  unless params[:taxon_concepts_ids].kind_of?(Array)
+    return render json: []  if params[:taxon_concepts_ids].nil?
+    return render json: []  unless params[:taxon_concepts_ids].kind_of?(Array)
     anc_ids = MaterialDocIdsRetriever.ancestors_ids(params[:taxon_concepts_ids].first)
     chi_ids = MTaxonConcept.descendants_ids(params[:taxon_concepts_ids].first).map(&:to_i)
     params[:taxon_concepts_ids] = anc_ids | chi_ids
@@ -10,7 +10,7 @@ class Checklist::DocumentsController < ApplicationController
       params.merge(show_private: !access_denied?, per_page: 10_000), 'public'
     )
 
-    render :json => @search.cached_results,
+    render json: @search.cached_results,
       each_serializer: Checklist::DocumentSerializer,
       meta: {
         total: @search.cached_total_cnt,
@@ -32,10 +32,10 @@ class Checklist::DocumentsController < ApplicationController
       response.headers['Content-Length'] = File.size(path_to_file).to_s
       send_file(
         path_to_file,
-          :filename => File.basename(path_to_file),
-          :type => @document.filename.content_type,
-          :disposition => 'attachment',
-          :url_based_filename => true
+          filename: File.basename(path_to_file),
+          type: @document.filename.content_type,
+          disposition: 'attachment',
+          url_based_filename: true
       )
     end
   end
@@ -43,7 +43,7 @@ class Checklist::DocumentsController < ApplicationController
   def check_doc_presence
     doc_ids = MaterialDocIdsRetriever.run(params.dup.permit!.to_h)
 
-    render :json => doc_ids.present?
+    render json: doc_ids.present?
   end
 
   def volume_download
@@ -54,8 +54,8 @@ class Checklist::DocumentsController < ApplicationController
 
 
     send_file t.path,
-      :type => "application/zip",
-      :filename => "Identifications-documents-volume-#{volumes}.zip"
+      type: 'application/zip',
+      filename: "Identifications-documents-volume-#{volumes}.zip"
 
     t.close
   end

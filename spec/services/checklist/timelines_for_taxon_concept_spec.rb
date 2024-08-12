@@ -14,9 +14,9 @@ describe Checklist::TimelinesForTaxonConcept do
       let(:tc) {
         tc = create_cites_eu_species
         create_cites_I_addition(
-          :taxon_concept => tc,
-          :effective_at => '1975-06-06',
-          :is_current => true
+          taxon_concept: tc,
+          effective_at: '1975-06-06',
+          is_current: true
         )
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MTaxonConcept.find(tc.id)
@@ -29,15 +29,15 @@ describe Checklist::TimelinesForTaxonConcept do
       let(:tc) {
         tc = create_cites_eu_species
         lc = create_cites_III_addition(
-          :taxon_concept => tc,
-          :effective_at => '1975-06-06',
-          :is_current => true
+          taxon_concept: tc,
+          effective_at: '1975-06-06',
+          is_current: true
         )
         create(
           :listing_distribution,
-          :geo_entity => create(:geo_entity),
-          :listing_change => lc,
-          :is_party => true
+          geo_entity: create(:geo_entity),
+          listing_change: lc,
+          is_party: true
         )
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MTaxonConcept.find(tc.id)
@@ -50,15 +50,15 @@ describe Checklist::TimelinesForTaxonConcept do
       let(:tc) {
         tc = create_cites_eu_species
         lc = create_cites_III_reservation(
-          :taxon_concept => tc,
-          :effective_at => '1975-06-06',
-          :is_current => true
+          taxon_concept: tc,
+          effective_at: '1975-06-06',
+          is_current: true
         )
         create(
           :listing_distribution,
-          :geo_entity => create(:geo_entity),
-          :listing_change => lc,
-          :is_party => true
+          geo_entity: create(:geo_entity),
+          listing_change: lc,
+          is_party: true
         )
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MTaxonConcept.find(tc.id)

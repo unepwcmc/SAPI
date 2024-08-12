@@ -9,24 +9,24 @@ describe Admin::TaxonEuSuspensionsController do
 
   describe "GET index" do
     it "renders the index template" do
-      get :index, params: { :taxon_concept_id => @taxon_concept.id }
+      get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response).to render_template("index")
     end
     it "renders the taxon_concepts_layout" do
-      get :index, params: { :taxon_concept_id => @taxon_concept.id }
+      get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response).to render_template('layouts/taxon_concepts')
     end
   end
 
   describe "GET new" do
     it "renders the new template" do
-      get :new, params: { :taxon_concept_id => @taxon_concept.id }
+      get :new, params: { taxon_concept_id: @taxon_concept.id }
       expect(response).to render_template('new')
     end
     it "assigns @geo_entities (country and territory) with two objects" do
-      territory = create(:geo_entity, :geo_entity_type_id => territory_geo_entity_type.id)
+      territory = create(:geo_entity, geo_entity_type_id: territory_geo_entity_type.id)
       country = create(:geo_entity)
-      get :new, params: { :taxon_concept_id => @taxon_concept.id }
+      get :new, params: { taxon_concept_id: @taxon_concept.id }
       expect(assigns(:geo_entities).size).to eq(2)
     end
   end
@@ -37,20 +37,20 @@ describe Admin::TaxonEuSuspensionsController do
         @eu_decision_type = create(:eu_decision_type)
       end
       it "redirects to the EU suspensions index" do
-        post :create, params: { :eu_suspension => {
-            :eu_decision_type_id => @eu_decision_type.id,
-            :start_date => Date.new(2013, 1, 1),
-            :geo_entity_id => create(
-              :geo_entity, :geo_entity_type_id => country_geo_entity_type.id
+        post :create, params: { eu_suspension: {
+            eu_decision_type_id: @eu_decision_type.id,
+            start_date: Date.new(2013, 1, 1),
+            geo_entity_id: create(
+              :geo_entity, geo_entity_type_id: country_geo_entity_type.id
             )
-          }, :taxon_concept_id => @taxon_concept.id }
+          }, taxon_concept_id: @taxon_concept.id }
         expect(response).to redirect_to(admin_taxon_concept_eu_suspensions_url(@taxon_concept.id))
       end
     end
 
     context "when not successful" do
       it "renders new" do
-        post :create, params: { :eu_suspension => { dummy: 'test' }, :taxon_concept_id => @taxon_concept.id }
+        post :create, params: { eu_suspension: { dummy: 'test' }, taxon_concept_id: @taxon_concept.id }
         expect(response).to render_template("new")
       end
     end
@@ -60,16 +60,16 @@ describe Admin::TaxonEuSuspensionsController do
     before(:each) do
       @eu_suspension = create(
         :eu_suspension,
-        :taxon_concept_id => @taxon_concept.id
+        taxon_concept_id: @taxon_concept.id
       )
     end
     it "renders the edit template" do
-      get :edit, params: { :id => @eu_suspension.id, :taxon_concept_id => @taxon_concept.id }
+      get :edit, params: { id: @eu_suspension.id, taxon_concept_id: @taxon_concept.id }
       expect(response).to render_template('edit')
     end
     it "assigns @geo_entities" do
-      territory = create(:geo_entity, :geo_entity_type_id => territory_geo_entity_type.id)
-      get :edit, params: { :id => @eu_suspension.id, :taxon_concept_id => @taxon_concept.id }
+      territory = create(:geo_entity, geo_entity_type_id: territory_geo_entity_type.id)
+      get :edit, params: { id: @eu_suspension.id, taxon_concept_id: @taxon_concept.id }
       expect(assigns(:geo_entities)).to include(territory)
     end
   end
@@ -89,7 +89,7 @@ describe Admin::TaxonEuSuspensionsController do
           put :update, params: { eu_suspension: {
               eu_decision_type_id: create(:eu_decision_type),
               geo_entity_id: create(
-                :geo_entity, :geo_entity_type_id => country_geo_entity_type.id
+                :geo_entity, geo_entity_type_id: country_geo_entity_type.id
               )
             }, id: @eu_suspension.id, taxon_concept_id: @taxon_concept.id }
           expect(response).to redirect_to(
@@ -103,7 +103,7 @@ describe Admin::TaxonEuSuspensionsController do
               eu_decision_type_id: nil,
               srg_history_id: @srg_history.id,
               geo_entity_id: create(
-                :geo_entity, :geo_entity_type_id => country_geo_entity_type.id
+                :geo_entity, geo_entity_type_id: country_geo_entity_type.id
               )
             }, id: @eu_suspension.id, taxon_concept_id: @taxon_concept.id }
           expect(response).to redirect_to(
@@ -151,11 +151,11 @@ describe Admin::TaxonEuSuspensionsController do
     before(:each) do
       @eu_suspension = create(
         :eu_suspension,
-        :taxon_concept_id => @taxon_concept.id
+        taxon_concept_id: @taxon_concept.id
       )
     end
     it "redirects after delete" do
-      delete :destroy, params: { :id => @eu_suspension.id, :taxon_concept_id => @taxon_concept.id }
+      delete :destroy, params: { id: @eu_suspension.id, taxon_concept_id: @taxon_concept.id }
       expect(response).to redirect_to(
         admin_taxon_concept_eu_suspensions_url(@taxon_concept)
       )
@@ -167,23 +167,23 @@ describe Admin::TaxonEuSuspensionsController do
     let!(:eu_suspension) {
       create(
         :eu_suspension,
-        :taxon_concept_id => @taxon_concept.id
+        taxon_concept_id: @taxon_concept.id
       )
     }
     describe "GET index" do
       it "renders the index template" do
-        get :index, params: { :taxon_concept_id => @taxon_concept.id }
+        get :index, params: { taxon_concept_id: @taxon_concept.id }
         expect(response).to render_template("index")
       end
       it "renders the taxon_concepts_layout" do
-        get :index, params: { :taxon_concept_id => @taxon_concept.id }
+        get :index, params: { taxon_concept_id: @taxon_concept.id }
         expect(response).to render_template('layouts/taxon_concepts')
       end
     end
     describe "DELETE destroy" do
       it "fails to delete and redirects" do
         @request.env['HTTP_REFERER'] = admin_taxon_concept_eu_suspensions_url(@taxon_concept)
-        delete :destroy, params: { :id => eu_suspension.id, :taxon_concept_id => @taxon_concept.id }
+        delete :destroy, params: { id: eu_suspension.id, taxon_concept_id: @taxon_concept.id }
         expect(response).to redirect_to(
           admin_taxon_concept_eu_suspensions_url(@taxon_concept)
         )

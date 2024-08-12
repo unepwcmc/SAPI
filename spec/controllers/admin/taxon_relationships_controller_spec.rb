@@ -7,19 +7,19 @@ describe Admin::TaxonRelationshipsController do
   let(:taxon_concept) { create(:taxon_concept) }
   describe "GET index" do
     let(:taxon_relationship) {
-      create(:taxon_relationship, :taxon_concept_id => taxon_concept.id)
+      create(:taxon_relationship, taxon_concept_id: taxon_concept.id)
     }
     it "assigns @taxon_relationships" do
-      get :index, params: { :taxon_concept_id => taxon_concept.id, :type => taxon_relationship.taxon_relationship_type.name }
+      get :index, params: { taxon_concept_id: taxon_concept.id, type: taxon_relationship.taxon_relationship_type.name }
       expect(assigns(:taxon_relationships)).to eq([taxon_relationship])
       assigns(:taxon_concept)
     end
     it "renders the index template" do
-      get :index, params: { :taxon_concept_id => taxon_concept.id }
+      get :index, params: { taxon_concept_id: taxon_concept.id }
       expect(response).to render_template("index")
     end
     it "renders the taxon_concepts_layout" do
-      get :index, params: { :taxon_concept_id => taxon_concept.id }
+      get :index, params: { taxon_concept_id: taxon_concept.id }
       expect(response).to render_template('layouts/taxon_concepts')
     end
   end
@@ -30,14 +30,14 @@ describe Admin::TaxonRelationshipsController do
       allow(TaxonRelationshipType).to receive(:find).and_return(equal_relationship_type)
     end
     it "renders create when successful" do
-      post :create, params: { :taxon_relationship => taxon_relationship_attributes,
-        :taxon_concept_id => taxon_concept.id }, xhr: true
+      post :create, params: { taxon_relationship: taxon_relationship_attributes,
+        taxon_concept_id: taxon_concept.id }, xhr: true
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
       taxon_relationship = create(:taxon_relationship, taxon_relationship_attributes)
       post :create, params: { taxon_relationship: taxon_relationship_attributes,
-        :taxon_concept_id => taxon_relationship.taxon_concept_id }, xhr: true
+        taxon_concept_id: taxon_relationship.taxon_concept_id }, xhr: true
       expect(response).to render_template("new")
     end
   end

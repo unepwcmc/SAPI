@@ -1,9 +1,9 @@
 class LatexToPdf
   def self.config
     @config ||= {
-      :command => 'pdflatex',
-      :arguments => ['-halt-on-error'],
-      :parse_twice => false
+      command: 'pdflatex',
+      arguments: ['-halt-on-error'],
+      parse_twice: false
     }
   end
 
@@ -18,7 +18,7 @@ class LatexToPdf
         begin
           Dir.chdir dir
           original_stdout, original_stderr = $stdout, $stderr
-          $stderr = $stdout = File.open("#{input}.log", "a")
+          $stderr = $stdout = File.open("#{input}.log", 'a')
           args = config[:arguments] + %w[-shell-escape -interaction batchmode] + ["#{input}.tex"]
           exec config[:command], *args
         rescue

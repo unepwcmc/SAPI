@@ -7,8 +7,8 @@ describe Checklist do
     context "by scientific name" do
       subject {
         checklist = Checklist::Checklist.new({
-          :scientific_name => "Arctocephalus townsendi",
-          :output_layout => :taxonomic
+          scientific_name: "Arctocephalus townsendi",
+          output_layout: :taxonomic
         })
         checklist.results
       }
@@ -20,8 +20,8 @@ describe Checklist do
     context "by common name" do
       subject {
         checklist = Checklist::Checklist.new({
-          :scientific_name => "Guadalupe Fur Seal",
-          :output_layout => :taxonomic
+          scientific_name: "Guadalupe Fur Seal",
+          output_layout: :taxonomic
         })
         checklist.results
       }

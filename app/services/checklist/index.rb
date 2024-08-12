@@ -2,8 +2,8 @@ class Checklist::Index < Checklist::Checklist
   attr_reader :download_name
 
   def initialize(options = {})
-    params = options.merge({ :output_layout => :alphabetical })
-    @download_path = download_location(params, "index", ext)
+    params = options.merge({ output_layout: :alphabetical })
+    @download_path = download_location(params, 'index', ext)
     # If a cached download exists, only initialize the params for the
     # helper methods, otherwise run the generation queries.
     if !File.exist?(@download_path)
@@ -22,8 +22,8 @@ class Checklist::Index < Checklist::Checklist
   end
 
   def prepare_kingdom_queries
-    @animalia_rel = @taxon_concepts_rel.where("kingdom_position = 0")
-    @plantae_rel = @taxon_concepts_rel.where("kingdom_position = 1")
+    @animalia_rel = @taxon_concepts_rel.where('kingdom_position = 0')
+    @plantae_rel = @taxon_concepts_rel.where('kingdom_position = 1')
   end
 
   def generate

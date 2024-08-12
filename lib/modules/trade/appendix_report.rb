@@ -37,13 +37,13 @@ class Trade::AppendixReport
 
   def export(file_path, diff = false)
     export_to_csv(
-      :query => (diff ? @diff_query : @query),
-      :csv_columns => [
+      query: (diff ? @diff_query : @query),
+      csv_columns: [
         'ID', 'Legacy Shipment ID', 'Taxon ID', 'Accepted Taxon', 'Year', 'Appendix', 'Auto Appendix'
       ],
-      :file_path => file_path,
-      :encoding => 'latin1',
-      :delimiter => ';'
+      file_path: file_path,
+      encoding: 'latin1',
+      delimiter: ';'
     )
   end
 

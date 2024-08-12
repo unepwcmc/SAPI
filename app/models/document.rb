@@ -46,9 +46,9 @@
 class Document < ApplicationRecord
   include PgSearch::Model
 
-  pg_search_scope :search_by_title, :against => :title,
-    :using => { :tsearch => { :prefix => true } },
-    :order_within_rank => "documents.date, documents.title, documents.id"
+  pg_search_scope :search_by_title, against: :title,
+    using: { tsearch: { prefix: true } },
+    order_within_rank: 'documents.date, documents.title, documents.id'
 
   include TrackWhoDoesIt
 
@@ -73,8 +73,8 @@ class Document < ApplicationRecord
   validates :date, presence: true
   validates_uniqueness_of :primary_language_document_id, scope: :language_id, allow_nil: true
   # TODO: validates inclusion of type in available types
-  accepts_nested_attributes_for :citations, :allow_destroy => true,
-    :reject_if => proc { |attributes|
+  accepts_nested_attributes_for :citations, allow_destroy: true,
+    reject_if: proc { |attributes|
       attributes['stringy_taxon_concept_ids'].blank? && (
         attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].reject(&:blank?).empty?
       )
@@ -148,7 +148,7 @@ class Document < ApplicationRecord
   end
 
   def date_formatted
-    date && Date.parse(date.to_s).strftime("%d/%m/%Y")
+    date && Date.parse(date.to_s).strftime('%d/%m/%Y')
   end
 
   def taxon_names

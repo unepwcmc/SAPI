@@ -12,18 +12,18 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
   describe "index" do
     before(:each) do
-      @document1 = create(:document, :title => 'BB hello world', event: event)
-      @document2 = create(:document, :title => 'AA goodbye world', event: event)
-      @public_document = create(:document, :title => 'DD public document', event: event, is_public: true)
-      create(:document_citation, :document_id => @document1.id, :taxon_concepts => [taxon_concept])
-      create(:document_citation, :document_id => @document2.id, :geo_entities => [geo_entity])
-      create(:document_citation, :document_id => @public_document.id, :taxon_concepts => [taxon_concept])
+      @document1 = create(:document, title: 'BB hello world', event: event)
+      @document2 = create(:document, title: 'AA goodbye world', event: event)
+      @public_document = create(:document, title: 'DD public document', event: event, is_public: true)
+      create(:document_citation, document_id: @document1.id, taxon_concepts: [taxon_concept])
+      create(:document_citation, document_id: @document2.id, geo_entities: [geo_entity])
+      create(:document_citation, document_id: @public_document.id, taxon_concepts: [taxon_concept])
     end
 
     describe "GET index" do
       login_admin
       before(:each) do
-        @document3 = create(:document, :title => 'CC no event!', date: DateTime.new(2014, 01, 01))
+        @document3 = create(:document, title: 'CC no event!', date: DateTime.new(2014, 01, 01))
         DocumentSearch.refresh_citations_and_documents
       end
 
@@ -279,8 +279,8 @@ describe Admin::DocumentsController, sidekiq: :inline do
     login_admin
     let(:poland) {
       create(:geo_entity,
-        :name_en => 'Poland', :iso_code2 => 'PL',
-        :geo_entity_type => country_geo_entity_type
+        name_en: 'Poland', iso_code2: 'PL',
+        geo_entity_type: country_geo_entity_type
       )
     }
     let(:document) {
@@ -298,15 +298,15 @@ describe Admin::DocumentsController, sidekiq: :inline do
     login_admin
     let!(:document) {
       create(:document,
-        :title => 'Title',
-        :event_id => event.id
+        title: 'Title',
+        event_id: event.id
       )
     }
-    let!(:document2) { create(:document, :title => 'Title2') }
+    let!(:document2) { create(:document, title: 'Title2') }
 
     context "When no event specified" do
       it "returns properly formatted json" do
-        get :autocomplete, :format => 'json', params: { :title => 'tit' }, xhr: true
+        get :autocomplete, format: 'json', params: { title: 'tit' }, xhr: true
         expect(response.body).to have_json_size(2)
         expect(parse_json(response.body, "0/title")).to eq('Title')
         expect(parse_json(response.body, "1/title")).to eq('Title2')
@@ -315,7 +315,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
     context "When an event is specified" do
       it "returns properly formatted json" do
-        get :autocomplete, :format => 'json', params: { :title => 'tit', :event_id => event.id }, xhr: true
+        get :autocomplete, format: 'json', params: { title: 'tit', event_id: event.id }, xhr: true
         expect(response.body).to have_json_size(1)
         expect(parse_json(response.body, "0/title")).to eq('Title')
       end

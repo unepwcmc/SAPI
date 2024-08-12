@@ -26,11 +26,11 @@ describe Admin::TagsController do
     let(:preset_tag) { create(:preset_tag) }
     context "when JSON" do
       it "responds with 200 when successful" do
-        put :update, :format => 'json', params: { :id => preset_tag.id, :tag => { dummy: 'test' } }, xhr: true
+        put :update, format: 'json', params: { id: preset_tag.id, tag: { dummy: 'test' } }, xhr: true
         expect(response).to be_successful
       end
       it "responds with json error when not successful" do
-        put :update, :format => 'json', params: { :id => preset_tag.id, :tag => { :model => 'FakeCategory' } }, xhr: true
+        put :update, format: 'json', params: { id: preset_tag.id, tag: { model: 'FakeCategory' } }, xhr: true
         expect(JSON.parse(response.body)).to include('errors')
       end
     end
@@ -39,7 +39,7 @@ describe Admin::TagsController do
   describe "DELETE destroy" do
     let(:preset_tag) { create(:preset_tag) }
     it "redirects after delete" do
-      delete :destroy, params: { :id => preset_tag.id }
+      delete :destroy, params: { id: preset_tag.id }
       expect(response).to redirect_to(admin_tags_url)
     end
   end

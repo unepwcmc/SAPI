@@ -1,9 +1,9 @@
 class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializer
 
   attributes :cms_listing
-  has_many :cms_listing_changes, :serializer => Species::ListingChangeSerializer,
-    :key => :cms_listings
-  has_many :cms_instruments, :serializer => Species::CmsInstrumentsSerializer
+  has_many :cms_listing_changes, serializer: Species::ListingChangeSerializer,
+    key: :cms_listings
+  has_many :cms_instruments, serializer: Species::CmsInstrumentsSerializer
 
   def include_standard_references?
     return true unless @options[:trimmed]

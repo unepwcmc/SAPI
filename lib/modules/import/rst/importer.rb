@@ -49,7 +49,7 @@ module Import::Rst::Importer
     end
 
     def map_event(item)
-      event = Event.where("type IN (:event_type) AND name = :event_name",
+      event = Event.where('type IN (:event_type) AND name = :event_name',
         event_type: ['CitesAc', 'CitesPc'], event_name: item['meeting']['name']).first
 
       Rails.logger.info "Event #{item['meeting']['name']} for case #{item['id']} not found" unless event

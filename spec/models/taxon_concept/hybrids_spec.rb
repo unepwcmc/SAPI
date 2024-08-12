@@ -5,20 +5,20 @@ describe TaxonConcept do
   describe :create do
     let(:parent) {
       create_cites_eu_genus(
-        :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
+        taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
       )
     }
     let!(:tc) {
       create_cites_eu_species(
-        :parent_id => parent.id,
-        :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
+        parent_id: parent.id,
+        taxon_name: create(:taxon_name, scientific_name: 'lolatus')
       )
     }
     let(:hybrid) {
       create_cites_eu_species(
         name_status: 'H',
         author_year: 'Taxonomus 2013',
-        taxon_name: create(:taxon_name, :scientific_name => 'Lolcatus lolcatus x lolatus')
+        taxon_name: create(:taxon_name, scientific_name: 'Lolcatus lolcatus x lolatus')
       )
     }
     let!(:hybrid_rel) {

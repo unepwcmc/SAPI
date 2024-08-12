@@ -6,8 +6,8 @@ describe Species::TaxonConceptPrefixMatcher do
     context "when query in capital letters" do
       subject {
         Species::TaxonConceptPrefixMatcher.new({
-          :taxon_concept_query => 'BOA',
-          :ranks => []
+          taxon_concept_query: 'BOA',
+          ranks: []
         })
       }
       specify { expect(subject.results.size).to eq(3) }
@@ -15,8 +15,8 @@ describe Species::TaxonConceptPrefixMatcher do
     context "when match on accepted name" do
       subject {
         Species::TaxonConceptPrefixMatcher.new({
-          :taxon_concept_query => 'boa',
-          :ranks => []
+          taxon_concept_query: 'boa',
+          ranks: []
         })
       }
       specify { expect(subject.results.size).to eq(3) }
@@ -24,8 +24,8 @@ describe Species::TaxonConceptPrefixMatcher do
     context "when match on synonym" do
       subject {
         Species::TaxonConceptPrefixMatcher.new({
-          :taxon_concept_query => 'constrictor',
-          :ranks => []
+          taxon_concept_query: 'constrictor',
+          ranks: []
         })
       }
       specify { expect(subject.results.size).to eq(2) }
@@ -33,8 +33,8 @@ describe Species::TaxonConceptPrefixMatcher do
     context "when match on common name" do
       subject {
         Species::TaxonConceptPrefixMatcher.new({
-          :taxon_concept_query => 'red',
-          :ranks => []
+          taxon_concept_query: 'red',
+          ranks: []
         })
       }
       specify { expect(subject.results.size).to eq(1) }

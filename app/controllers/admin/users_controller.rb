@@ -1,7 +1,7 @@
 class Admin::UsersController < Admin::SimpleCrudController
-  respond_to :js, :except => [:index, :destroy]
+  respond_to :js, except: [:index, :destroy]
 
-  load_and_authorize_resource :except => :index
+  load_and_authorize_resource except: :index
 
   def new
     new! do

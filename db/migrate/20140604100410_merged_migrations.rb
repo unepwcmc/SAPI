@@ -1,10 +1,10 @@
 class MergedMigrations < ActiveRecord::Migration[4.2]
   def change
-  create_table "annotations", :force => true do |t|
+  create_table "annotations", force: true do |t|
     t.string   "symbol"
     t.string   "parent_symbol"
-    t.boolean  "display_in_index",    :default => false, :null => false
-    t.boolean  "display_in_footnote", :default => false, :null => false
+    t.boolean  "display_in_index",    default: false, null: false
+    t.boolean  "display_in_footnote", default: false, null: false
     t.text     "short_note_en"
     t.text     "full_note_en"
     t.text     "short_note_fr"
@@ -13,104 +13,104 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.text     "full_note_es"
     t.integer  "source_id"
     t.integer  "event_id"
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  create_table "change_types", :force => true do |t|
-    t.string   "name",            :null => false
-    t.integer  "designation_id",  :null => false
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-    t.text     "display_name_en", :null => false
+  create_table "change_types", force: true do |t|
+    t.string   "name",            null: false
+    t.integer  "designation_id",  null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.text     "display_name_en", null: false
     t.text     "display_name_es"
     t.text     "display_name_fr"
   end
 
-  create_table "cites_suspension_confirmations", :force => true do |t|
-    t.integer  "cites_suspension_id",              :null => false
-    t.integer  "cites_suspension_notification_id", :null => false
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+  create_table "cites_suspension_confirmations", force: true do |t|
+    t.integer  "cites_suspension_id",              null: false
+    t.integer  "cites_suspension_notification_id", null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
-  create_table "common_names", :force => true do |t|
-    t.string   "name",          :null => false
-    t.integer  "language_id",   :null => false
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+  create_table "common_names", force: true do |t|
+    t.string   "name",          null: false
+    t.integer  "language_id",   null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  create_table "designation_geo_entities", :force => true do |t|
-    t.integer  "designation_id", :null => false
-    t.integer  "geo_entity_id",  :null => false
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+  create_table "designation_geo_entities", force: true do |t|
+    t.integer  "designation_id", null: false
+    t.integer  "geo_entity_id",  null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
-  create_table "designations", :force => true do |t|
-    t.string   "name",                       :null => false
-    t.integer  "taxonomy_id", :default => 1, :null => false
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+  create_table "designations", force: true do |t|
+    t.string   "name",                       null: false
+    t.integer  "taxonomy_id", default: 1, null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
-  create_table "distribution_references", :force => true do |t|
-    t.integer  "distribution_id", :null => false
-    t.integer  "reference_id",    :null => false
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+  create_table "distribution_references", force: true do |t|
+    t.integer  "distribution_id", null: false
+    t.integer  "reference_id",    null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.integer  "updated_by_id"
     t.integer  "created_by_id"
   end
 
-  add_index "distribution_references", ["distribution_id", "reference_id"], :name => "index_distribution_refs_on_distribution_id_reference_id", :unique => true
-  add_index "distribution_references", ["distribution_id"], :name => "index_distribution_references_on_distribution_id"
-  add_index "distribution_references", ["reference_id"], :name => "index_distribution_references_on_reference_id"
+  add_index "distribution_references", ["distribution_id", "reference_id"], name: "index_distribution_refs_on_distribution_id_reference_id", unique: true
+  add_index "distribution_references", ["distribution_id"], name: "index_distribution_references_on_distribution_id"
+  add_index "distribution_references", ["reference_id"], name: "index_distribution_references_on_reference_id"
 
-  create_table "distributions", :force => true do |t|
-    t.integer  "taxon_concept_id", :null => false
-    t.integer  "geo_entity_id",    :null => false
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+  create_table "distributions", force: true do |t|
+    t.integer  "taxon_concept_id", null: false
+    t.integer  "geo_entity_id",    null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  add_index "distributions", ["taxon_concept_id"], :name => "index_distributions_on_taxon_concept_id"
+  add_index "distributions", ["taxon_concept_id"], name: "index_distributions_on_taxon_concept_id"
 
-  create_table "downloads", :force => true do |t|
+  create_table "downloads", force: true do |t|
     t.string   "doc_type"
     t.string   "format"
-    t.string   "status",       :default => "working"
+    t.string   "status",       default: "working"
     t.string   "path"
     t.string   "filename"
     t.string   "display_name"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
   end
 
-  create_table "eu_decision_confirmations", :force => true do |t|
+  create_table "eu_decision_confirmations", force: true do |t|
     t.integer  "eu_decision_id"
     t.integer  "event_id"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
-  create_table "eu_decision_types", :force => true do |t|
+  create_table "eu_decision_types", force: true do |t|
     t.string   "name"
     t.string   "tooltip"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.string   "decision_type"
   end
 
-  create_table "eu_decisions", :force => true do |t|
-    t.boolean  "is_current",          :default => true
+  create_table "eu_decisions", force: true do |t|
+    t.boolean  "is_current",          default: true
     t.text     "notes"
     t.text     "internal_notes"
     t.integer  "taxon_concept_id"
@@ -121,8 +121,8 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.integer  "end_event_id"
     t.string   "type"
     t.boolean  "conditions_apply"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.integer  "eu_decision_type_id"
     t.integer  "term_id"
     t.integer  "source_id"
@@ -130,17 +130,17 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.integer  "updated_by_id"
   end
 
-  create_table "events", :force => true do |t|
+  create_table "events", force: true do |t|
     t.string   "name"
     t.integer  "designation_id"
     t.text     "description"
     t.text     "url"
-    t.boolean  "is_current",     :default => false,   :null => false
-    t.string   "type",           :default => "Event", :null => false
+    t.boolean  "is_current",     default: false,   null: false
+    t.string   "type",           default: "Event", null: false
     t.datetime "effective_at"
     t.datetime "published_at"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.integer  "legacy_id"
     t.datetime "end_date"
     t.string   "subtype"
@@ -148,9 +148,9 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.integer  "created_by_id"
   end
 
-  create_table "geo_entities", :force => true do |t|
-    t.integer  "geo_entity_type_id",                   :null => false
-    t.string   "name_en",                              :null => false
+  create_table "geo_entities", force: true do |t|
+    t.integer  "geo_entity_type_id",                   null: false
+    t.string   "name_en",                              null: false
     t.string   "name_fr"
     t.string   "name_es"
     t.string   "long_name"
@@ -158,85 +158,85 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.string   "iso_code3"
     t.integer  "legacy_id"
     t.string   "legacy_type"
-    t.boolean  "is_current",         :default => true
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.boolean  "is_current",         default: true
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
   end
 
-  create_table "geo_entity_types", :force => true do |t|
-    t.string   "name",       :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "geo_entity_types", force: true do |t|
+    t.string   "name",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "geo_relationship_types", :force => true do |t|
-    t.string   "name",       :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "geo_relationship_types", force: true do |t|
+    t.string   "name",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "geo_relationships", :force => true do |t|
-    t.integer  "geo_entity_id",            :null => false
-    t.integer  "other_geo_entity_id",      :null => false
-    t.integer  "geo_relationship_type_id", :null => false
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+  create_table "geo_relationships", force: true do |t|
+    t.integer  "geo_entity_id",            null: false
+    t.integer  "other_geo_entity_id",      null: false
+    t.integer  "geo_relationship_type_id", null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
-  create_table "instruments", :force => true do |t|
+  create_table "instruments", force: true do |t|
     t.integer  "designation_id"
     t.string   "name"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
-  create_table "iucn_mappings", :force => true do |t|
+  create_table "iucn_mappings", force: true do |t|
     t.integer  "taxon_concept_id"
     t.integer  "iucn_taxon_id"
     t.string   "iucn_taxon_name"
     t.string   "iucn_author"
     t.string   "iucn_category"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.hstore   "details"
     t.integer  "synonym_id"
   end
 
-  create_table "languages", :force => true do |t|
-    t.string   "name_en",    :null => false
+  create_table "languages", force: true do |t|
+    t.string   "name_en",    null: false
     t.string   "name_fr"
     t.string   "name_es"
     t.string   "iso_code1"
-    t.string   "iso_code3",  :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "iso_code3",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "listing_changes", :force => true do |t|
-    t.integer  "taxon_concept_id",                                              :null => false
+  create_table "listing_changes", force: true do |t|
+    t.integer  "taxon_concept_id",                                              null: false
     t.integer  "species_listing_id"
-    t.integer  "change_type_id",                                                :null => false
+    t.integer  "change_type_id",                                                null: false
     t.integer  "annotation_id"
     t.integer  "hash_annotation_id"
-    t.datetime "effective_at",               :default => '2012-09-21 07:32:20', :null => false
-    t.boolean  "is_current",                 :default => false,                 :null => false
+    t.datetime "effective_at",               default: '2012-09-21 07:32:20', null: false
+    t.boolean  "is_current",                 default: false,                 null: false
     t.integer  "parent_id"
     t.integer  "inclusion_taxon_concept_id"
     t.integer  "event_id"
     t.integer  "source_id"
-    t.boolean  "explicit_change",            :default => true
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
+    t.boolean  "explicit_change",            default: true
+    t.datetime "created_at",                                                    null: false
+    t.datetime "updated_at",                                                    null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  add_index "listing_changes", ["annotation_id"], :name => "index_listing_changes_on_annotation_id"
-  add_index "listing_changes", ["event_id"], :name => "index_listing_changes_on_event_id"
-  add_index "listing_changes", ["hash_annotation_id"], :name => "index_listing_changes_on_hash_annotation_id"
-  add_index "listing_changes", ["parent_id"], :name => "index_listing_changes_on_parent_id"
+  add_index "listing_changes", ["annotation_id"], name: "index_listing_changes_on_annotation_id"
+  add_index "listing_changes", ["event_id"], name: "index_listing_changes_on_event_id"
+  add_index "listing_changes", ["hash_annotation_id"], name: "index_listing_changes_on_hash_annotation_id"
+  add_index "listing_changes", ["parent_id"], name: "index_listing_changes_on_parent_id"
 
-  create_table "listing_changes_mview", :id => false, :force => true do |t|
+  create_table "listing_changes_mview", id: false, force: true do |t|
     t.integer  "id"
     t.integer  "taxon_concept_id"
     t.datetime "effective_at"
@@ -264,130 +264,130 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.text     "hash_full_note_fr"
     t.boolean  "is_current"
     t.boolean  "explicit_change"
-    t.string   "countries_ids_ary",      :limit => nil
+    t.string   "countries_ids_ary",      limit: nil
     t.boolean  "dirty"
     t.datetime "expiry"
   end
 
-  add_index "listing_changes_mview", ["is_current", "display_in_index", "designation_id"], :name => "listing_changes_mview_display_in_index"
+  add_index "listing_changes_mview", ["is_current", "display_in_index", "designation_id"], name: "listing_changes_mview_display_in_index"
 
-  create_table "listing_distributions", :force => true do |t|
-    t.integer  "listing_change_id",                   :null => false
-    t.integer  "geo_entity_id",                       :null => false
-    t.boolean  "is_party",          :default => true, :null => false
+  create_table "listing_distributions", force: true do |t|
+    t.integer  "listing_change_id",                   null: false
+    t.integer  "geo_entity_id",                       null: false
+    t.boolean  "is_party",          default: true, null: false
     t.integer  "source_id"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  add_index "listing_distributions", ["geo_entity_id"], :name => "index_listing_distributions_on_geo_entity_id"
-  add_index "listing_distributions", ["listing_change_id"], :name => "index_listing_distributions_on_listing_change_id"
+  add_index "listing_distributions", ["geo_entity_id"], name: "index_listing_distributions_on_geo_entity_id"
+  add_index "listing_distributions", ["listing_change_id"], name: "index_listing_distributions_on_listing_change_id"
 
-  create_table "preset_tags", :force => true do |t|
+  create_table "preset_tags", force: true do |t|
     t.string   "name"
     t.string   "model"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "ranks", :force => true do |t|
-    t.string   "name",                                  :null => false
-    t.string   "taxonomic_position", :default => "0",   :null => false
-    t.boolean  "fixed_order",        :default => false, :null => false
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
-    t.text     "display_name_en",                       :null => false
+  create_table "ranks", force: true do |t|
+    t.string   "name",                                  null: false
+    t.string   "taxonomic_position", default: "0",   null: false
+    t.boolean  "fixed_order",        default: false, null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.text     "display_name_en",                       null: false
     t.text     "display_name_es"
     t.text     "display_name_fr"
   end
 
-  create_table "references", :force => true do |t|
+  create_table "references", force: true do |t|
     t.text     "title"
     t.string   "year"
     t.string   "author"
-    t.text     "citation",      :null => false
+    t.text     "citation",      null: false
     t.text     "publisher"
     t.integer  "legacy_id"
     t.string   "legacy_type"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.integer  "updated_by_id"
     t.integer  "created_by_id"
   end
 
-  create_table "references_legacy_id_mapping", :force => true do |t|
-    t.integer "legacy_id",       :null => false
-    t.text    "legacy_type",     :null => false
-    t.integer "alias_legacy_id", :null => false
+  create_table "references_legacy_id_mapping", force: true do |t|
+    t.integer "legacy_id",       null: false
+    t.text    "legacy_type",     null: false
+    t.integer "alias_legacy_id", null: false
   end
 
-  create_table "species_listings", :force => true do |t|
-    t.integer  "designation_id", :null => false
-    t.string   "name",           :null => false
+  create_table "species_listings", force: true do |t|
+    t.integer  "designation_id", null: false
+    t.string   "name",           null: false
     t.string   "abbreviation"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
-  create_table "taggings", :force => true do |t|
+  create_table "taggings", force: true do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
     t.string   "taggable_type"
     t.integer  "tagger_id"
     t.string   "tagger_type"
-    t.string   "context",       :limit => 128
+    t.string   "context",       limit: 128
     t.datetime "created_at"
   end
 
-  add_index "taggings", ["tag_id"], :name => "index_taggings_on_tag_id"
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], :name => "index_taggings_on_taggable_id_and_taggable_type_and_context"
+  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id"
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
 
-  create_table "tags", :force => true do |t|
+  create_table "tags", force: true do |t|
     t.string "name"
   end
 
-  create_table "taxon_commons", :force => true do |t|
-    t.integer  "taxon_concept_id", :null => false
-    t.integer  "common_name_id",   :null => false
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+  create_table "taxon_commons", force: true do |t|
+    t.integer  "taxon_concept_id", null: false
+    t.integer  "common_name_id",   null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  create_table "taxon_concept_references", :force => true do |t|
-    t.integer  "taxon_concept_id",                                              :null => false
-    t.integer  "reference_id",                                                  :null => false
-    t.boolean  "is_standard",                                :default => false, :null => false
-    t.boolean  "is_cascaded",                                :default => false, :null => false
-    t.datetime "created_at",                                                    :null => false
-    t.datetime "updated_at",                                                    :null => false
+  create_table "taxon_concept_references", force: true do |t|
+    t.integer  "taxon_concept_id",                                              null: false
+    t.integer  "reference_id",                                                  null: false
+    t.boolean  "is_standard",                                default: false, null: false
+    t.boolean  "is_cascaded",                                default: false, null: false
+    t.datetime "created_at",                                                    null: false
+    t.datetime "updated_at",                                                    null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
   add_column :taxon_concept_references, :excluded_taxon_concepts_ids, "INTEGER[]"
 
-  add_index "taxon_concept_references", ["taxon_concept_id", "reference_id"], :name => "index_taxon_concept_references_on_taxon_concept_id_and_ref_id"
+  add_index "taxon_concept_references", ["taxon_concept_id", "reference_id"], name: "index_taxon_concept_references_on_taxon_concept_id_and_ref_id"
 
-  create_table "taxon_concepts", :force => true do |t|
-    t.integer  "taxonomy_id",           :default => 1,   :null => false
+  create_table "taxon_concepts", force: true do |t|
+    t.integer  "taxonomy_id",           default: 1,   null: false
     t.integer  "parent_id"
-    t.integer  "rank_id",                                :null => false
-    t.integer  "taxon_name_id",                          :null => false
+    t.integer  "rank_id",                                null: false
+    t.integer  "taxon_name_id",                          null: false
     t.string   "author_year"
     t.integer  "legacy_id"
     t.string   "legacy_type"
     t.hstore   "data"
     t.hstore   "listing"
     t.text     "notes"
-    t.string   "taxonomic_position",    :default => "0", :null => false
+    t.string   "taxonomic_position",    default: "0", null: false
     t.string   "full_name"
-    t.string   "name_status",           :default => "A", :null => false
-    t.datetime "created_at",                             :null => false
-    t.datetime "updated_at",                             :null => false
+    t.string   "name_status",           default: "A", null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.datetime "touched_at"
     t.string   "legacy_trade_code"
     t.integer  "updated_by_id"
@@ -395,11 +395,11 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.datetime "dependents_updated_at"
   end
 
-  add_index "taxon_concepts", ["name_status"], :name => "index_taxon_concepts_on_name_status"
-  add_index "taxon_concepts", ["parent_id"], :name => "index_taxon_concepts_on_parent_id"
-  add_index "taxon_concepts", ["taxonomy_id"], :name => "index_taxon_concepts_on_taxonomy_id"
+  add_index "taxon_concepts", ["name_status"], name: "index_taxon_concepts_on_name_status"
+  add_index "taxon_concepts", ["parent_id"], name: "index_taxon_concepts_on_parent_id"
+  add_index "taxon_concepts", ["taxonomy_id"], name: "index_taxon_concepts_on_taxonomy_id"
 
-  create_table "taxon_concepts_mview", :id => false, :force => true do |t|
+  create_table "taxon_concepts_mview", id: false, force: true do |t|
     t.integer  "id"
     t.integer  "parent_id"
     t.boolean  "taxonomy_is_cites_eu"
@@ -450,136 +450,136 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.text     "eu_listing"
     t.integer  "eu_closest_listed_ancestor_id"
     t.datetime "eu_listing_updated_at"
-    t.string   "species_listings_ids",             :limit => nil
-    t.string   "species_listings_ids_aggregated",  :limit => nil
+    t.string   "species_listings_ids",             limit: nil
+    t.string   "species_listings_ids_aggregated",  limit: nil
     t.string   "author_year"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "taxon_concept_id_com"
-    t.string   "english_names_ary",                :limit => nil
-    t.string   "spanish_names_ary",                :limit => nil
-    t.string   "french_names_ary",                 :limit => nil
+    t.string   "english_names_ary",                limit: nil
+    t.string   "spanish_names_ary",                limit: nil
+    t.string   "french_names_ary",                 limit: nil
     t.integer  "taxon_concept_id_syn"
-    t.string   "synonyms_ary",                     :limit => nil
-    t.string   "synonyms_author_years_ary",        :limit => nil
-    t.string   "countries_ids_ary",                :limit => nil
+    t.string   "synonyms_ary",                     limit: nil
+    t.string   "synonyms_author_years_ary",        limit: nil
+    t.string   "countries_ids_ary",                limit: nil
     t.boolean  "dirty"
     t.datetime "expiry"
   end
 
-  create_table "taxon_instruments", :force => true do |t|
+  create_table "taxon_instruments", force: true do |t|
     t.integer  "taxon_concept_id"
     t.integer  "instrument_id"
     t.datetime "effective_from"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  add_index "taxon_instruments", ["taxon_concept_id"], :name => "index_taxon_instruments_on_taxon_concept_id"
+  add_index "taxon_instruments", ["taxon_concept_id"], name: "index_taxon_instruments_on_taxon_concept_id"
 
-  create_table "taxon_names", :force => true do |t|
-    t.string   "scientific_name", :null => false
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+  create_table "taxon_names", force: true do |t|
+    t.string   "scientific_name", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
-  create_table "taxon_relationship_types", :force => true do |t|
-    t.string   "name",                                 :null => false
-    t.boolean  "is_intertaxonomic", :default => false, :null => false
-    t.boolean  "is_bidirectional",  :default => false, :null => false
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+  create_table "taxon_relationship_types", force: true do |t|
+    t.string   "name",                                 null: false
+    t.boolean  "is_intertaxonomic", default: false, null: false
+    t.boolean  "is_bidirectional",  default: false, null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
   end
 
-  create_table "taxon_relationships", :force => true do |t|
-    t.integer  "taxon_concept_id",           :null => false
-    t.integer  "other_taxon_concept_id",     :null => false
-    t.integer  "taxon_relationship_type_id", :null => false
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+  create_table "taxon_relationships", force: true do |t|
+    t.integer  "taxon_concept_id",           null: false
+    t.integer  "other_taxon_concept_id",     null: false
+    t.integer  "taxon_relationship_type_id", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  create_table "taxonomies", :force => true do |t|
-    t.string   "name",       :default => "DEAFAULT TAXONOMY", :null => false
-    t.datetime "created_at",                                  :null => false
-    t.datetime "updated_at",                                  :null => false
+  create_table "taxonomies", force: true do |t|
+    t.string   "name",       default: "DEAFAULT TAXONOMY", null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
   end
 
-  create_table "term_trade_codes_pairs", :force => true do |t|
-    t.integer  "term_id",         :null => false
+  create_table "term_trade_codes_pairs", force: true do |t|
+    t.integer  "term_id",         null: false
     t.integer  "trade_code_id"
     t.string   "trade_code_type"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
-  add_index "term_trade_codes_pairs", ["term_id", "trade_code_id", "trade_code_type"], :name => "index_term_trade_codes_pairs_on_term_and_trade_code", :unique => true
+  add_index "term_trade_codes_pairs", ["term_id", "trade_code_id", "trade_code_type"], name: "index_term_trade_codes_pairs_on_term_and_trade_code", unique: true
 
-  create_table "trade_annual_report_uploads", :force => true do |t|
+  create_table "trade_annual_report_uploads", force: true do |t|
     t.integer  "created_by"
     t.integer  "updated_by"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
-    t.boolean  "is_done",            :default => false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.boolean  "is_done",            default: false
     t.integer  "number_of_rows"
     t.text     "csv_source_file"
-    t.integer  "trading_country_id",                    :null => false
-    t.string   "point_of_view",      :default => "E",   :null => false
+    t.integer  "trading_country_id",                    null: false
+    t.string   "point_of_view",      default: "E",   null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  create_table "trade_codes", :force => true do |t|
-    t.string   "code",       :null => false
-    t.string   "type",       :null => false
-    t.string   "name_en",    :null => false
+  create_table "trade_codes", force: true do |t|
+    t.string   "code",       null: false
+    t.string   "type",       null: false
+    t.string   "name_en",    null: false
     t.string   "name_es"
     t.string   "name_fr"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "trade_permits", :force => true do |t|
-    t.string   "number",     :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "trade_permits", force: true do |t|
+    t.string   "number",     null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  add_index "trade_permits", ["number"], :name => "trade_permits_number_idx", :unique => true
+  add_index "trade_permits", ["number"], name: "trade_permits_number_idx", unique: true
 
-  create_table "trade_restriction_purposes", :force => true do |t|
+  create_table "trade_restriction_purposes", force: true do |t|
     t.integer  "trade_restriction_id"
     t.integer  "purpose_id"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  create_table "trade_restriction_sources", :force => true do |t|
+  create_table "trade_restriction_sources", force: true do |t|
     t.integer  "trade_restriction_id"
     t.integer  "source_id"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  create_table "trade_restriction_terms", :force => true do |t|
+  create_table "trade_restriction_terms", force: true do |t|
     t.integer  "trade_restriction_id"
     t.integer  "term_id"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
   end
 
-  create_table "trade_restrictions", :force => true do |t|
-    t.boolean  "is_current",                                 :default => true
+  create_table "trade_restrictions", force: true do |t|
+    t.boolean  "is_current",                                 default: true
     t.datetime "start_date"
     t.datetime "end_date"
     t.integer  "geo_entity_id"
@@ -589,10 +589,10 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.string   "type"
     t.integer  "unit_id"
     t.integer  "taxon_concept_id"
-    t.boolean  "public_display",                             :default => true
+    t.boolean  "public_display",                             default: true
     t.text     "url"
-    t.datetime "created_at",                                                   :null => false
-    t.datetime "updated_at",                                                   :null => false
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
     t.integer  "start_notification_id"
     t.integer  "end_notification_id"
     t.integer  "original_id"
@@ -602,7 +602,7 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
 
   add_column :trade_restrictions, :excluded_taxon_concepts_ids, "INTEGER[]"
 
-  create_table "trade_sandbox_template", :force => true do |t|
+  create_table "trade_sandbox_template", force: true do |t|
     t.string  "appendix"
     t.string  "taxon_name"
     t.string  "term_code"
@@ -620,22 +620,22 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.integer "taxon_concept_id"
   end
 
-  create_table "trade_shipments", :force => true do |t|
+  create_table "trade_shipments", force: true do |t|
     t.integer  "source_id"
     t.integer  "unit_id"
     t.integer  "purpose_id"
-    t.integer  "term_id",                                                        :null => false
-    t.decimal  "quantity",                                                       :null => false
-    t.string   "appendix",                                                       :null => false
+    t.integer  "term_id",                                                        null: false
+    t.decimal  "quantity",                                                       null: false
+    t.string   "appendix",                                                       null: false
     t.integer  "trade_annual_report_upload_id"
-    t.integer  "exporter_id",                                                    :null => false
-    t.integer  "importer_id",                                                    :null => false
+    t.integer  "exporter_id",                                                    null: false
+    t.integer  "importer_id",                                                    null: false
     t.integer  "country_of_origin_id"
-    t.boolean  "reported_by_exporter",                         :default => true, :null => false
-    t.integer  "taxon_concept_id",                                               :null => false
-    t.integer  "year",                                                           :null => false
-    t.datetime "created_at",                                                     :null => false
-    t.datetime "updated_at",                                                     :null => false
+    t.boolean  "reported_by_exporter",                         default: true, null: false
+    t.integer  "taxon_concept_id",                                               null: false
+    t.integer  "year",                                                           null: false
+    t.datetime "created_at",                                                     null: false
+    t.datetime "updated_at",                                                     null: false
     t.integer  "sandbox_id"
     t.integer  "reported_taxon_concept_id"
     t.string   "import_permit_number"
@@ -650,34 +650,34 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
   add_column :trade_shipments, :export_permits_ids, "INTEGER[]"
   add_column :trade_shipments, :origin_permits_ids, "INTEGER[]"
 
-  add_index "trade_shipments", ["appendix"], :name => "index_trade_shipments_on_appendix"
-  add_index "trade_shipments", ["country_of_origin_id"], :name => "index_trade_shipments_on_country_of_origin_id"
-  add_index "trade_shipments", ["export_permits_ids"], :name => "index_trade_shipments_on_export_permits_ids"
-  add_index "trade_shipments", ["exporter_id"], :name => "index_trade_shipments_on_exporter_id"
-  add_index "trade_shipments", ["import_permits_ids"], :name => "index_trade_shipments_on_import_permits_ids"
-  add_index "trade_shipments", ["importer_id"], :name => "index_trade_shipments_on_importer_id"
-  add_index "trade_shipments", ["legacy_shipment_number"], :name => "index_trade_shipments_on_legacy_shipment_number"
-  add_index "trade_shipments", ["origin_permits_ids"], :name => "index_trade_shipments_on_origin_permits_ids"
-  add_index "trade_shipments", ["purpose_id"], :name => "index_trade_shipments_on_purpose_id"
-  add_index "trade_shipments", ["quantity"], :name => "index_trade_shipments_on_quantity"
-  add_index "trade_shipments", ["reported_taxon_concept_id"], :name => "index_trade_shipments_on_reported_taxon_concept_id"
-  add_index "trade_shipments", ["sandbox_id"], :name => "index_trade_shipments_on_sandbox_id"
-  add_index "trade_shipments", ["source_id"], :name => "index_trade_shipments_on_source_id"
-  add_index "trade_shipments", ["taxon_concept_id"], :name => "index_trade_shipments_on_taxon_concept_id"
-  add_index "trade_shipments", ["term_id"], :name => "index_trade_shipments_on_term_id"
-  add_index "trade_shipments", ["unit_id"], :name => "index_trade_shipments_on_unit_id"
-  add_index "trade_shipments", ["year", "exporter_id"], :name => "index_trade_shipments_on_year_exporter_id"
-  add_index "trade_shipments", ["year", "importer_id"], :name => "index_trade_shipments_on_year_importer_id"
-  add_index "trade_shipments", ["year"], :name => "index_trade_shipments_on_year"
+  add_index "trade_shipments", ["appendix"], name: "index_trade_shipments_on_appendix"
+  add_index "trade_shipments", ["country_of_origin_id"], name: "index_trade_shipments_on_country_of_origin_id"
+  add_index "trade_shipments", ["export_permits_ids"], name: "index_trade_shipments_on_export_permits_ids"
+  add_index "trade_shipments", ["exporter_id"], name: "index_trade_shipments_on_exporter_id"
+  add_index "trade_shipments", ["import_permits_ids"], name: "index_trade_shipments_on_import_permits_ids"
+  add_index "trade_shipments", ["importer_id"], name: "index_trade_shipments_on_importer_id"
+  add_index "trade_shipments", ["legacy_shipment_number"], name: "index_trade_shipments_on_legacy_shipment_number"
+  add_index "trade_shipments", ["origin_permits_ids"], name: "index_trade_shipments_on_origin_permits_ids"
+  add_index "trade_shipments", ["purpose_id"], name: "index_trade_shipments_on_purpose_id"
+  add_index "trade_shipments", ["quantity"], name: "index_trade_shipments_on_quantity"
+  add_index "trade_shipments", ["reported_taxon_concept_id"], name: "index_trade_shipments_on_reported_taxon_concept_id"
+  add_index "trade_shipments", ["sandbox_id"], name: "index_trade_shipments_on_sandbox_id"
+  add_index "trade_shipments", ["source_id"], name: "index_trade_shipments_on_source_id"
+  add_index "trade_shipments", ["taxon_concept_id"], name: "index_trade_shipments_on_taxon_concept_id"
+  add_index "trade_shipments", ["term_id"], name: "index_trade_shipments_on_term_id"
+  add_index "trade_shipments", ["unit_id"], name: "index_trade_shipments_on_unit_id"
+  add_index "trade_shipments", ["year", "exporter_id"], name: "index_trade_shipments_on_year_exporter_id"
+  add_index "trade_shipments", ["year", "importer_id"], name: "index_trade_shipments_on_year_importer_id"
+  add_index "trade_shipments", ["year"], name: "index_trade_shipments_on_year"
 
-  create_table "trade_taxon_concept_term_pairs", :force => true do |t|
+  create_table "trade_taxon_concept_term_pairs", force: true do |t|
     t.integer  "taxon_concept_id"
     t.integer  "term_id"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
-  create_table "trade_trade_data_downloads", :force => true do |t|
+  create_table "trade_trade_data_downloads", force: true do |t|
     t.string   "user_ip"
     t.string   "report_type"
     t.integer  "year_from"
@@ -691,64 +691,64 @@ class MergedMigrations < ActiveRecord::Migration[4.2]
     t.string   "unit"
     t.string   "source"
     t.string   "purpose"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.integer  "number_of_rows"
-    t.string   "city",           :limit => nil
-    t.string   "country",        :limit => nil
-    t.string   "organization",   :limit => nil
+    t.string   "city",           limit: nil
+    t.string   "country",        limit: nil
+    t.string   "organization",   limit: nil
   end
 
-  create_table "trade_validation_rules", :force => true do |t|
+  create_table "trade_validation_rules", force: true do |t|
     t.string   "valid_values_view"
-    t.string   "type",                                 :null => false
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.string   "type",                                 null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.string   "format_re"
-    t.integer  "run_order",                            :null => false
+    t.integer  "run_order",                            null: false
     t.string   "column_names"
-    t.boolean  "is_primary",        :default => true,  :null => false
+    t.boolean  "is_primary",        default: true,  null: false
     t.hstore   "scope"
-    t.boolean  "is_strict",         :default => false, :null => false
+    t.boolean  "is_strict",         default: false, null: false
   end
 
-  create_table "users", :force => true do |t|
-    t.string   "name",                                      :null => false
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
-    t.string   "email",                  :default => "",    :null => false
-    t.string   "encrypted_password",     :default => "",    :null => false
+  create_table "users", force: true do |t|
+    t.string   "name",                                      null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          :default => 0,     :null => false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.boolean  "is_manager",             :default => false, :null => false
+    t.boolean  "is_manager",             default: false, null: false
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
-  create_table "valid_taxon_concept_annex_year_mview", :id => false, :force => true do |t|
+  create_table "valid_taxon_concept_annex_year_mview", id: false, force: true do |t|
     t.integer "taxon_concept_id"
     t.string  "annex"
     t.date    "effective_from"
     t.date    "effective_to"
   end
 
-  add_index "valid_taxon_concept_annex_year_mview", ["taxon_concept_id", "annex", "effective_from", "effective_to"], :name => "valid_taxon_concept_annex_year_mview_idx"
+  add_index "valid_taxon_concept_annex_year_mview", ["taxon_concept_id", "annex", "effective_from", "effective_to"], name: "valid_taxon_concept_annex_year_mview_idx"
 
-  create_table "valid_taxon_concept_appendix_year_mview", :id => false, :force => true do |t|
+  create_table "valid_taxon_concept_appendix_year_mview", id: false, force: true do |t|
     t.integer "taxon_concept_id"
     t.string  "appendix"
     t.date    "effective_from"
     t.date    "effective_to"
   end
 
-  add_index "valid_taxon_concept_appendix_year_mview", ["taxon_concept_id", "appendix", "effective_from", "effective_to"], :name => "valid_taxon_concept_appendix_year_mview_idx"
+  add_index "valid_taxon_concept_appendix_year_mview", ["taxon_concept_id", "appendix", "effective_from", "effective_to"], name: "valid_taxon_concept_appendix_year_mview_idx"
 
   add_foreign_key "annotations", "annotations", name: "annotations_source_id_fk", column: "source_id"
   add_foreign_key "annotations", "events", name: "annotations_event_id_fk"

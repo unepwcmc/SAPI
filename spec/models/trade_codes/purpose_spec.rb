@@ -26,14 +26,14 @@ describe Purpose do
         let!(:cites_suspension) {
           create(
             :cites_suspension,
-            :purposes => [purpose],
-            :start_notification_id => create_cites_suspension_notification.id
+            purposes: [purpose],
+            start_notification_id: create_cites_suspension_notification.id
           )
         }
         specify { expect(purpose.destroy).to be_falsey }
       end
       context "when shipments" do
-        before(:each) { create(:shipment, :purpose => purpose) }
+        before(:each) { create(:shipment, purpose: purpose) }
         specify { expect(purpose.destroy).to be_falsey }
       end
     end

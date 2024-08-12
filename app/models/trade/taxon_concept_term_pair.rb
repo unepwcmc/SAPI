@@ -20,13 +20,13 @@ class Trade::TaxonConceptTermPair < ApplicationRecord
   validates_uniqueness_of :taxon_concept_id, scope: :term_id
 
   belongs_to :taxon_concept
-  belongs_to :term, :class_name => "TradeCode"
+  belongs_to :term, class_name: 'TradeCode'
 
   def self.search(query)
     if query.present?
       where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
             OR UPPER(trade_codes.code) LIKE UPPER(:query)",
-            :query => "%#{query}%").
+            query: "%#{query}%").
       joins(<<-SQL
           LEFT JOIN taxon_concepts
             ON taxon_concepts.id = trade_taxon_concept_term_pairs.taxon_concept_id

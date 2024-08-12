@@ -31,7 +31,7 @@ describe CitesCop do
       let(:cites_cop) {
         build(
           :cites_cop,
-          :designation => eu
+          designation: eu
         )
       }
       specify { expect(cites_cop).to be_invalid }
@@ -41,7 +41,7 @@ describe CitesCop do
       let(:cites_cop) {
         build(
           :cites_cop,
-          :effective_at => nil
+          effective_at: nil
         )
       }
       specify { expect(cites_cop).to be_invalid }
@@ -56,7 +56,7 @@ describe CitesCop do
     end
     context "when dependent objects attached" do
       context "when listing changes" do
-        let!(:listing_change) { create_cites_I_addition(:event => cites_cop) }
+        let!(:listing_change) { create_cites_I_addition(event: cites_cop) }
         specify { expect(cites_cop.destroy).to be_falsey }
       end
     end

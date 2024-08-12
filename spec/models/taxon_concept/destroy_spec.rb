@@ -8,15 +8,15 @@ describe TaxonConcept do
         specify { expect(@taxon_concept.destroy).to be_truthy }
       end
       context "when distributions" do
-        before(:each) { create(:distribution, :taxon_concept => @taxon_concept) }
+        before(:each) { create(:distribution, taxon_concept: @taxon_concept) }
         specify { expect(@taxon_concept.destroy).to be_truthy }
       end
       context "when common names" do
-        before(:each) { create(:taxon_common, :taxon_concept => @taxon_concept) }
+        before(:each) { create(:taxon_common, taxon_concept: @taxon_concept) }
         specify { expect(@taxon_concept.destroy).to be_truthy }
       end
       context "when references" do
-        before(:each) { create(:taxon_concept_reference, :taxon_concept => @taxon_concept) }
+        before(:each) { create(:taxon_concept_reference, taxon_concept: @taxon_concept) }
         specify { expect(@taxon_concept.destroy).to be_truthy }
       end
       context "when document citations" do
@@ -29,38 +29,38 @@ describe TaxonConcept do
     context "CMS" do
       before(:each) { @taxon_concept = create_cms_species }
       context "when taxon instruments" do
-        before(:each) { create(:taxon_instrument, :taxon_concept => @taxon_concept) }
+        before(:each) { create(:taxon_instrument, taxon_concept: @taxon_concept) }
         specify { expect(@taxon_concept.destroy).to be_falsey }
       end
     end
     context "CITES / EU" do
       before(:each) { @taxon_concept = create_cites_eu_species }
       context "when listing changes" do
-        before(:each) { create_cites_I_addition(:taxon_concept => @taxon_concept) }
+        before(:each) { create_cites_I_addition(taxon_concept: @taxon_concept) }
         specify { expect(@taxon_concept.destroy).to be_falsey }
       end
       context "when CITES quotas" do
-        before(:each) { create(:quota, :taxon_concept => @taxon_concept, :geo_entity => create(:geo_entity)) }
+        before(:each) { create(:quota, taxon_concept: @taxon_concept, geo_entity: create(:geo_entity)) }
         specify { expect(@taxon_concept.destroy).to be_falsey }
       end
       context "when CITES suspensions" do
-        before(:each) { create(:cites_suspension, :taxon_concept => @taxon_concept, :start_notification => create(:cites_suspension_notification, :designation => cites)) }
+        before(:each) { create(:cites_suspension, taxon_concept: @taxon_concept, start_notification: create(:cites_suspension_notification, designation: cites)) }
         specify { expect(@taxon_concept.destroy).to be_falsey }
       end
       context "when EU opinions" do
-        before(:each) { create(:eu_opinion, :taxon_concept => @taxon_concept, start_event: create(:ec_srg)) }
+        before(:each) { create(:eu_opinion, taxon_concept: @taxon_concept, start_event: create(:ec_srg)) }
         specify { expect(@taxon_concept.destroy).to be_falsey }
       end
       context "when EU suspensions" do
-        before(:each) { create(:eu_suspension, :taxon_concept => @taxon_concept) }
+        before(:each) { create(:eu_suspension, taxon_concept: @taxon_concept) }
         specify { expect(@taxon_concept.destroy).to be_falsey }
       end
       context "when shipments" do
-        before(:each) { create(:shipment, :taxon_concept => @taxon_concept) }
+        before(:each) { create(:shipment, taxon_concept: @taxon_concept) }
         specify { expect(@taxon_concept.destroy).to be_falsey }
       end
       context "when reported shipments" do
-        before(:each) { create(:shipment, :reported_taxon_concept => @taxon_concept) }
+        before(:each) { create(:shipment, reported_taxon_concept: @taxon_concept) }
         specify { expect(@taxon_concept.destroy).to be_falsey }
       end
     end

@@ -3,7 +3,7 @@ class Admin::EuDecisionTypesController < Admin::StandardAuthorizationController
   def index
     index! do |format|
       format.json {
-        render :json => EuDecisionType.dict.sort.to_json
+        render json: EuDecisionType.dict.sort.to_json
       }
     end
   end

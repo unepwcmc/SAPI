@@ -19,21 +19,21 @@ class TaxonConceptMatcher
     apply_taxonomy_options_to_rel
     if @scientific_name.present?
       @taxon_concepts = @taxon_concepts.where([
-        "UPPER(taxon_concepts.full_name) LIKE BTRIM(UPPER(:sci_name_prefix))",
-        :sci_name_prefix => "#{@scientific_name}%"
+        'UPPER(taxon_concepts.full_name) LIKE BTRIM(UPPER(:sci_name_prefix))',
+        sci_name_prefix: "#{@scientific_name}%"
       ])
 
     end
   end
 
   def initialize_rel
-    TaxonConcept.where(:name_status => @name_status)
+    TaxonConcept.where(name_status: @name_status)
   end
 
   def apply_taxonomy_options_to_rel
     @taxonomy_id = @taxonomy_options && @taxonomy_options[:id]
     if @taxonomy_id
-      @taxon_concepts = @taxon_concepts.where(:taxonomy_id => @taxonomy_id)
+      @taxon_concepts = @taxon_concepts.where(taxonomy_id: @taxonomy_id)
     end
   end
 end

@@ -6,10 +6,10 @@ describe Checklist do
   context "when common names displayed" do
     before(:all) do
       @checklist = Checklist::Checklist.new({
-        :output_layout => :alphabetical,
-        :show_english => '1',
-        :show_spanish => '1',
-        :show_french => '1'
+        output_layout: :alphabetical,
+        show_english: '1',
+        show_spanish: '1',
+        show_french: '1'
       })
       @taxon_concepts = @checklist.results
       @australis = @taxon_concepts.select { |e| e.full_name == @species1.full_name }.first

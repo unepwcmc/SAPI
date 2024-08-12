@@ -2,7 +2,7 @@ class Api::V1::DocumentsController < ApplicationController
 
   def index
     if params[:taxon_concept_query].present?
-      exact_match = MTaxonConcept.where("LOWER(full_name) = ?", params[:taxon_concept_query].downcase)
+      exact_match = MTaxonConcept.where('LOWER(full_name) = ?', params[:taxon_concept_query].downcase)
                                  .where(taxonomy_id: 1)
                                  .first
       @species_search = Species::Search.new({
@@ -53,7 +53,7 @@ class Api::V1::DocumentsController < ApplicationController
     ordered_docs =
       Kaminari.paginate_array(ordered_docs).page(page).per(per_page) if ordered_docs.kind_of?(Array)
 
-    render :json => ordered_docs,
+    render json: ordered_docs,
       each_serializer: Species::DocumentSerializer,
       meta: {
         total: @search.cached_total_cnt,
@@ -75,10 +75,10 @@ class Api::V1::DocumentsController < ApplicationController
       response.headers['Content-Length'] = File.size(path_to_file).to_s
       send_file(
         path_to_file,
-          :filename => File.basename(path_to_file),
-          :type => @document.filename.content_type,
-          :disposition => 'inline',
-          :url_based_filename => true
+          filename: File.basename(path_to_file),
+          type: @document.filename.content_type,
+          disposition: 'inline',
+          url_based_filename: true
       )
     end
   end
@@ -110,8 +110,8 @@ class Api::V1::DocumentsController < ApplicationController
     end
 
     send_file t.path,
-      :type => "application/zip",
-      :filename => "elibrary-documents.zip"
+      type: 'application/zip',
+      filename: 'elibrary-documents.zip'
 
     t.close
   end

@@ -18,7 +18,7 @@ class MTaxonConceptFilterByScientificNameWithDescendants
     ).
     where(
       ApplicationRecord.send(:sanitize_sql_array, [
-        "name_for_matching LIKE :sci_name_prefix AND type_of_match IN (:types_of_match)",
+        'name_for_matching LIKE :sci_name_prefix AND type_of_match IN (:types_of_match)',
         sci_name_prefix: "#{@scientific_name}%",
         types_of_match: types_of_match
       ])
@@ -43,8 +43,8 @@ class MTaxonConceptFilterByScientificNameWithDescendants
 
     @relation.where(
       conditions.join("\nOR "),
-      :sci_name_prefix => "#{@scientific_name}%",
-      :sci_name_infix => "%#{@scientific_name}%"
+      sci_name_prefix: "#{@scientific_name}%",
+      sci_name_infix: "%#{@scientific_name}%"
     )
   end
 

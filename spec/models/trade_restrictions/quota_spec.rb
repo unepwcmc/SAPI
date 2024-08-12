@@ -41,7 +41,7 @@ describe Quota, sidekiq: :inline do
     context "downloads cache should be populated" do
       before(:each) do
         DownloadsCache.clear_quotas
-        create(:quota, :start_date => Time.utc(2013), :geo_entity => create(:geo_entity))
+        create(:quota, start_date: Time.utc(2013), geo_entity: create(:geo_entity))
         Quota.export('set' => 'current')
       end
       subject { Dir["#{DownloadsCache.quotas_path}/*"] }
@@ -53,7 +53,7 @@ describe Quota, sidekiq: :inline do
     context "downloads cache should be cleared" do
       before(:each) do
         DownloadsCache.clear_quotas
-        q = create(:quota, :start_date => Time.utc(2013), :geo_entity => create(:geo_entity))
+        q = create(:quota, start_date: Time.utc(2013), geo_entity: create(:geo_entity))
         Quota.export('set' => 'current')
         q.destroy
         Quota.export('set' => 'current')
@@ -73,9 +73,9 @@ describe Quota, sidekiq: :inline do
         let(:quota) {
           build(
             :quota,
-            :unit => @unit,
-            :taxon_concept => @taxon_concept,
-            :geo_entity => create(:geo_entity)
+            unit: @unit,
+            taxon_concept: @taxon_concept,
+            geo_entity: create(:geo_entity)
           )
         }
 
@@ -86,9 +86,9 @@ describe Quota, sidekiq: :inline do
         let(:quota1) {
           build(
             :quota,
-            :quota => nil,
-            :unit => @unit,
-            :taxon_concept => @taxon_concept
+            quota: nil,
+            unit: @unit,
+            taxon_concept: @taxon_concept
           )
         }
 
@@ -100,9 +100,9 @@ describe Quota, sidekiq: :inline do
         let(:quota) {
           build(
             :quota,
-            :publication_date => nil,
-            :unit => @unit,
-            :taxon_concept => @taxon_concept
+            publication_date: nil,
+            unit: @unit,
+            taxon_concept: @taxon_concept
           )
         }
 
@@ -114,10 +114,10 @@ describe Quota, sidekiq: :inline do
         let(:quota) {
           build(
             :quota,
-            :start_date => 1.week.from_now,
-            :end_date => 1.week.ago,
-            :unit => @unit,
-            :taxon_concept => @taxon_concept
+            start_date: 1.week.from_now,
+            end_date: 1.week.ago,
+            unit: @unit,
+            taxon_concept: @taxon_concept
           )
         }
 
@@ -129,8 +129,8 @@ describe Quota, sidekiq: :inline do
         let(:quota) {
           build(
             :quota,
-            :unit => nil,
-            :taxon_concept => @taxon_concept
+            unit: nil,
+            taxon_concept: @taxon_concept
           )
         }
 

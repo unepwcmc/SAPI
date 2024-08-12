@@ -1,14 +1,14 @@
 class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
   belongs_to :taxon_concept
   before_action :load_lib_objects
-  before_action :load_search, :only => [:new, :index, :edit]
+  before_action :load_search, only: [:new, :index, :edit]
   layout 'taxon_concepts'
 
   def update
     update! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_cites_captivity_processes_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
       failure.html {
         load_lib_objects
@@ -22,7 +22,7 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
     create! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_cites_captivity_processes_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
       failure.html {
         load_search
@@ -35,10 +35,10 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
 
   def load_lib_objects
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:geo_entity_types => { :name => GeoEntityType::SETS['2'] })
+      where(geo_entity_types: { name: GeoEntityType::SETS['2'] })
     @status = CitesCaptivityProcess::STATUS
     @events = Event.where("type IN ('CitesAc','CitesPc')"
-    ).order("effective_at DESC")
+    ).order('effective_at DESC')
   end
 
   def collection

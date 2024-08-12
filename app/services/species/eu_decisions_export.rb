@@ -25,7 +25,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
       geo_entities_ids = GeoEntity.nodes_and_descendants(
         @geo_entities_ids
       ).map(&:id)
-      rel = rel.where(:geo_entity_id => geo_entities_ids)
+      rel = rel.where(geo_entity_id: geo_entities_ids)
     end
     unless @taxon_concepts_ids.nil? || @taxon_concepts_ids.empty?
       conds_str = <<-SQL
@@ -50,7 +50,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     if excluded_decision_types.present?
       rel =
         if @set == 'all' && !excluded_decision_types.include?('SRG_REFERRAL')
-          rel.where("decision_type NOT IN(?) OR decision_type_for_display IN(?)", excluded_decision_types, HISTORIC_III_OPINIONS)
+          rel.where('decision_type NOT IN(?) OR decision_type_for_display IN(?)', excluded_decision_types, HISTORIC_III_OPINIONS)
         else
           rel.where('decision_type NOT IN(?)', excluded_decision_types)
         end

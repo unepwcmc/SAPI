@@ -5,8 +5,8 @@ describe Admin::CitesSuspensionNotificationsController do
 
   describe "index" do
     before(:each) do
-      @cites_suspension_notification1 = create_cites_suspension_notification(:name => 'B')
-      @cites_suspension_notification2 = create_cites_suspension_notification(:name => 'A')
+      @cites_suspension_notification1 = create_cites_suspension_notification(name: 'B')
+      @cites_suspension_notification2 = create_cites_suspension_notification(name: 'A')
     end
 
     describe "GET index" do

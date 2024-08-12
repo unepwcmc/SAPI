@@ -5,11 +5,11 @@ describe Admin::ChangeTypesController do
 
   describe "GET index" do
     it "assigns @change_types sorted by designation and name" do
-      designation1 = create(:designation, :name => 'BB', :taxonomy => create(:taxonomy))
-      designation2 = create(:designation, :name => 'AA', :taxonomy => create(:taxonomy))
-      change_type2_1 = create(:change_type, :designation => designation2, :name => 'ADD')
-      change_type2_2 = create(:change_type, :designation => designation2, :name => 'DEL')
-      change_type1 = create(:change_type, :designation => designation1, :name => 'ADD')
+      designation1 = create(:designation, name: 'BB', taxonomy: create(:taxonomy))
+      designation2 = create(:designation, name: 'AA', taxonomy: create(:taxonomy))
+      change_type2_1 = create(:change_type, designation: designation2, name: 'ADD')
+      change_type2_2 = create(:change_type, designation: designation2, name: 'DEL')
+      change_type1 = create(:change_type, designation: designation1, name: 'ADD')
       get :index
       expect(assigns(:change_types)).to eq([change_type1, change_type2_1, change_type2_2])
     end
@@ -33,11 +33,11 @@ describe Admin::ChangeTypesController do
   describe "XHR PUT update" do
     let(:change_type) { create(:change_type) }
     it "responds with 200 when successful" do
-      put :update, :format => 'json', params: { :id => change_type.id, :change_type => { :name => 'ZZ' } }, xhr: true
+      put :update, format: 'json', params: { id: change_type.id, change_type: { name: 'ZZ' } }, xhr: true
       expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      put :update, :format => 'json', params: { :id => change_type.id, :change_type => { :name => nil } }, xhr: true
+      put :update, format: 'json', params: { id: change_type.id, change_type: { name: nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -45,7 +45,7 @@ describe Admin::ChangeTypesController do
   describe "DELETE destroy" do
     let(:change_type) { create(:change_type) }
     it "redirects after delete" do
-      delete :destroy, params: { :id => change_type.id }
+      delete :destroy, params: { id: change_type.id }
       expect(response).to redirect_to(admin_change_types_url)
     end
   end

@@ -35,7 +35,7 @@ class Species::TaxonConceptPrefixMatcher
       end
 
     unless @ranks.empty?
-      @query = @query.where(:rank_name => @ranks)
+      @query = @query.where(rank_name: @ranks)
     end
 
     @query =
@@ -49,15 +49,15 @@ class Species::TaxonConceptPrefixMatcher
       if @visibility == :trade_internal && @include_synonyms
         @query # no filter on name_status for internal search on reported taxon
       elsif @visibility == :trade_internal && !@include_synonyms
-        @query.where(:show_in_trade_internal_ac => true)
+        @query.where(show_in_trade_internal_ac: true)
       elsif @visibility == :trade
-        @query.where(:show_in_trade_ac => true)
+        @query.where(show_in_trade_ac: true)
       elsif @visibility == :checklist
-        @query.where(:show_in_checklist_ac => true)
+        @query.where(show_in_checklist_ac: true)
       elsif @visibility == :elibrary
         @query.where("show_in_species_plus_ac OR name_status = 'N'")
       else
-        @query.where(:show_in_species_plus_ac => true)
+        @query.where(show_in_species_plus_ac: true)
       end
 
     # different types of name matching are required
@@ -94,8 +94,8 @@ class Species::TaxonConceptPrefixMatcher
     if @taxon_concept_query
       @query = @query.where(
         ApplicationRecord.send(:sanitize_sql_array, [
-          "name_for_matching LIKE :sci_name_prefix",
-          :sci_name_prefix => "#{@taxon_concept_query}%"
+          'name_for_matching LIKE :sci_name_prefix',
+          sci_name_prefix: "#{@taxon_concept_query}%"
         ])
       )
     end

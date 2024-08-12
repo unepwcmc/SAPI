@@ -6,9 +6,9 @@ class Api::V1::PurposesController < ApplicationController
       Purpose.all.order(:code).as_json
     end
 
-    render :json => @all_rows.map { |row_data| Purpose.new(row_data) },
-      :each_serializer => Species::PurposeSerializer,
-      :meta => { :total => @all_rows.count }
+    render json: @all_rows.map { |row_data| Purpose.new(row_data) },
+      each_serializer: Species::PurposeSerializer,
+      meta: { total: @all_rows.count }
   end
 
   def self.invalidate_cache

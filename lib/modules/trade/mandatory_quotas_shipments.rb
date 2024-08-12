@@ -92,7 +92,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def query
-    """
+    ''"
     (
       SELECT #{sanitised_select}
       #{from}
@@ -105,12 +105,12 @@ class Trade::MandatoryQuotasShipments
       )
       ORDER BY ts.year, ts.taxon_concept_full_name, ts.exporter_id, ts.importer_id
     )
-    """
+    "''
   end
 
 # We add the AND after the WHERE clause to exclude specific sources while still mantain the shipments with source blank
   def sub_query
-    """
+    ''"
           #{inner_select}
           #{from}
           #{inner_joins}
@@ -118,7 +118,7 @@ class Trade::MandatoryQuotasShipments
           AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
           #{group_by}
           #{having}
-    """
+    "''
   end
 
   def sanitised_select
@@ -134,7 +134,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def inner_select
-    "SELECT ARRAY_AGG(ts.id) AS ids"
+    'SELECT ARRAY_AGG(ts.id) AS ids'
   end
 
   def from
@@ -142,24 +142,24 @@ class Trade::MandatoryQuotasShipments
   end
 
   def joins
-    """
+    ''"
       INNER JOIN geo_entities AS exporter ON exporter.id = ts.exporter_id
       INNER JOIN geo_entities AS importer ON importer.id = ts.importer_id
       LEFT OUTER JOIN trade_codes source ON ts.source_id = source.id
       LEFT OUTER JOIN trade_codes purpose ON ts.purpose_id = purpose.id
       LEFT OUTER JOIN trade_codes unit ON ts.unit_id = unit.id
       LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
-    """
+    "''
   end
 
   def inner_joins
-    """
+    ''"
           INNER JOIN geo_entities AS #{imp_or_exp_country} ON #{imp_or_exp_country}.id = ts.#{imp_or_exp_country}_id
           LEFT OUTER JOIN trade_codes source ON ts.source_id = source.id
           LEFT OUTER JOIN trade_codes purpose ON ts.purpose_id = purpose.id
           LEFT OUTER JOIN trade_codes unit ON ts.unit_id = unit.id
           LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
-    """
+    "''
   end
 
   def where
@@ -167,7 +167,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def group_by
-    "GROUP BY year, reported_by_exporter"
+    'GROUP BY year, reported_by_exporter'
   end
 
   def having
@@ -218,7 +218,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def parse_origin(origin)
-    "ts.country_of_origin_id IS NULL"
+    'ts.country_of_origin_id IS NULL'
   end
 
   def imp_or_exp_country

@@ -2,7 +2,7 @@ require 'aws-sdk-s3'
 
 class ChangesHistoryGeneratorWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :admin
+  sidekiq_options queue: :admin
 
   def perform(aru_id, user_id)
     begin

@@ -1,19 +1,19 @@
 class Admin::TaxonQuotasController < Admin::SimpleCrudController
-  defaults :resource_class => Quota,
-    :collection_name => 'quotas', :instance_name => 'quota'
+  defaults resource_class: Quota,
+    collection_name: 'quotas', instance_name: 'quota'
   belongs_to :taxon_concept
 
   before_action :load_lib_objects
-  before_action :load_search, :except => [:destroy]
+  before_action :load_search, except: [:destroy]
   layout 'taxon_concepts'
 
-  authorize_resource :class => false
+  authorize_resource class: false
 
   def update
     update! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_quotas_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
       failure.html {
         load_lib_objects
@@ -32,7 +32,7 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
     create! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_quotas_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
       failure.html { render 'create' }
     end
@@ -42,7 +42,7 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
     destroy! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_quotas_url(@taxon_concept),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
     end
   end
@@ -55,8 +55,8 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
     @sources = Source.order(:code)
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:is_current => true,
-            :geo_entity_types => { :name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
+      where(is_current: true,
+            geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
   end
 
   def collection

@@ -33,7 +33,7 @@ class Elibrary::DocumentFilesImporter
         next
       end
       copy_with_path(source_location, target_location)
-      puts "COPIED " + info_txt
+      puts 'COPIED ' + info_txt
     end
   end
 end

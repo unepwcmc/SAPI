@@ -43,7 +43,7 @@ describe Rank do
     end
     context "when dependent objects attached" do
       let(:rank) { create(:rank, name: Rank::PHYLUM, taxonomic_position: '1.1') }
-      let!(:taxon_concept) { create(:taxon_concept, :rank => rank) }
+      let!(:taxon_concept) { create(:taxon_concept, rank: rank) }
       specify { expect(rank.destroy).to be_falsey }
     end
     context "when protected name" do

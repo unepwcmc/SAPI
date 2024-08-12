@@ -1,8 +1,8 @@
 class Admin::CitesExtraordinaryMeetingsController < Admin::EventsController
   # this needs to be specified, because otherwise defaults to 'event'
-  defaults :resource_class => CitesExtraordinaryMeeting,
-    :collection_name => 'cites_extraordinary_meetings',
-    :instance_name => 'cites_extraordinary_meeting'
+  defaults resource_class: CitesExtraordinaryMeeting,
+    collection_name: 'cites_extraordinary_meetings',
+    instance_name: 'cites_extraordinary_meeting'
 
   protected
 

@@ -21,7 +21,7 @@ class EuDecisionType < ApplicationRecord
 
   scope :opinions, -> { where('decision_type <> ?', EuDecisionType::SUSPENSION).
     order(Arel.sql('UPPER(name) ASC')) }
-  scope :suspensions, -> { where(:decision_type => EuDecisionType::SUSPENSION).
+  scope :suspensions, -> { where(decision_type: EuDecisionType::SUSPENSION).
     order(Arel.sql('UPPER(name) ASC')) }
 
   validates :name, presence: true, uniqueness: true

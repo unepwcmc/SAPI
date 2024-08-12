@@ -17,34 +17,34 @@
 
 require 'spec_helper'
 
-describe Trade::DistinctValuesValidationRule, :drops_tables => true do
+describe Trade::DistinctValuesValidationRule, drops_tables: true do
   let(:canada) {
     create(
       :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Canada',
-      :iso_code2 => 'CA'
+      geo_entity_type: country_geo_entity_type,
+      name: 'Canada',
+      iso_code2: 'CA'
     )
   }
   let(:argentina) {
     create(
       :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'Argentina',
-      :iso_code2 => 'AR'
+      geo_entity_type: country_geo_entity_type,
+      name: 'Argentina',
+      iso_code2: 'AR'
     )
   }
   describe :validation_errors_for_aru do
     before(:each) do
-      @aru = build(:annual_report_upload, :point_of_view => 'E',
-        :trading_country_id => canada.id)
-      @aru.save(:validate => false)
+      @aru = build(:annual_report_upload, point_of_view: 'E',
+        trading_country_id: canada.id)
+      @aru.save(validate: false)
       @sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
     end
     context 'exporter should not equal importer (E)' do
       before(:each) do
-        @sandbox_klass.create(:trading_partner => argentina.iso_code2)
-        @sandbox_klass.create(:trading_partner => canada.iso_code2)
+        @sandbox_klass.create(trading_partner: argentina.iso_code2)
+        @sandbox_klass.create(trading_partner: canada.iso_code2)
       end
       subject {
         create_exporter_importer_validation
@@ -56,12 +56,12 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
     end
     context 'exporter should not equal importer (I)' do
       before(:each) do
-        @aru = build(:annual_report_upload, :point_of_view => 'I',
-          :trading_country_id => canada.id)
-        @aru.save(:validate => false)
+        @aru = build(:annual_report_upload, point_of_view: 'I',
+          trading_country_id: canada.id)
+        @aru.save(validate: false)
         @sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
-        @sandbox_klass.create(:trading_partner => argentina.iso_code2)
-        @sandbox_klass.create(:trading_partner => canada.iso_code2)
+        @sandbox_klass.create(trading_partner: argentina.iso_code2)
+        @sandbox_klass.create(trading_partner: canada.iso_code2)
       end
       subject {
         create_exporter_importer_validation
@@ -73,8 +73,8 @@ describe Trade::DistinctValuesValidationRule, :drops_tables => true do
     end
     context 'exporter should not equal country of origin' do
       before(:each) do
-        @sandbox_klass.create(:country_of_origin => argentina.iso_code2)
-        @sandbox_klass.create(:country_of_origin => canada.iso_code2)
+        @sandbox_klass.create(country_of_origin: argentina.iso_code2)
+        @sandbox_klass.create(country_of_origin: canada.iso_code2)
       end
       subject {
         create_exporter_country_of_origin_validation

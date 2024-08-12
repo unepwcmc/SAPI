@@ -1,15 +1,15 @@
 class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesController
-  defaults :resource_class => TaxonRelationship, :collection_name => 'hybrid_relationships', :instance_name => 'hybrid_relationship'
-  respond_to :js, :only => [:new, :edit, :create, :update]
+  defaults resource_class: TaxonRelationship, collection_name: 'hybrid_relationships', instance_name: 'hybrid_relationship'
+  respond_to :js, only: [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_action :load_hybrid_relationship_type, :only => [:new, :create, :update]
+  before_action :load_hybrid_relationship_type, only: [:new, :create, :update]
 
-  authorize_resource :class => false
+  authorize_resource class: false
 
   def new
     new! do |format|
       @hybrid_relationship = TaxonRelationship.new(
-        :taxon_relationship_type_id => @hybrid_relationship_type.id
+        taxon_relationship_type_id: @hybrid_relationship_type.id
       )
     end
   end

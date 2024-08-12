@@ -5,8 +5,8 @@ describe Admin::EventsController do
 
   describe "index" do
     before(:each) do
-      @event1 = create(:event, :name => 'BB')
-      @event2 = create(:event, :name => 'AA', :designation_id => @event1.designation_id)
+      @event1 = create(:event, name: 'BB')
+      @event2 = create(:event, name: 'AA', designation_id: @event1.designation_id)
     end
 
     describe "GET index" do
@@ -38,7 +38,7 @@ describe Admin::EventsController do
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      post :create, params: { event: { :name => nil } }, xhr: true
+      post :create, params: { event: { name: nil } }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -46,11 +46,11 @@ describe Admin::EventsController do
   describe "XHR GET edit" do
     let(:event) { create(:event) }
     it "renders the edit template" do
-      get :edit, params: { :id => event.id }, xhr: true
+      get :edit, params: { id: event.id }, xhr: true
       expect(response).to render_template('new')
     end
     it "assigns the hybrid_relationship variable" do
-      get :edit, params: { :id => event.id }, xhr: true
+      get :edit, params: { id: event.id }, xhr: true
       expect(assigns(:event)).not_to be_nil
     end
   end
@@ -58,11 +58,11 @@ describe Admin::EventsController do
   describe "XHR PUT update JSON" do
     let(:event) { create(:event) }
     it "responds with 200 when successful" do
-      put :update, :format => 'json', params: { :id => event.id, :event => { :name => 'ZZ' } }, xhr: true
+      put :update, format: 'json', params: { id: event.id, event: { name: 'ZZ' } }, xhr: true
       expect(response).to be_successful
     end
     it "responds with json when not successful" do
-      put :update, :format => 'json', params: { :id => event.id, :event => { :name => nil } }, xhr: true
+      put :update, format: 'json', params: { id: event.id, event: { name: nil } }, xhr: true
       expect(JSON.parse(response.body)).to include('errors')
     end
   end
@@ -70,7 +70,7 @@ describe Admin::EventsController do
   describe "DELETE destroy" do
     let(:event) { create(:event) }
     it "redirects after delete" do
-      delete :destroy, params: { :id => event.id }
+      delete :destroy, params: { id: event.id }
       expect(response).to redirect_to(admin_events_url)
     end
   end

@@ -30,7 +30,7 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
       post :create, params: { nomenclature_change_id: 'new' }
       expect(response).to redirect_to(
         admin_nomenclature_change_status_to_accepted_url(
-          nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'primary_output'
+          nomenclature_change_id: assigns(:nomenclature_change).id, id: 'primary_output'
         )
       )
     end
@@ -56,7 +56,7 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
         }, nomenclature_change_id: @status_change.id, id: 'primary_output' }
         expect(response).to redirect_to(
           admin_nomenclature_change_status_to_accepted_url(
-            nomenclature_change_id: assigns(:nomenclature_change).id, :id => 'summary'
+            nomenclature_change_id: assigns(:nomenclature_change).id, id: 'summary'
           )
         )
       end

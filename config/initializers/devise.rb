@@ -257,8 +257,8 @@ Devise.setup do |config|
 
   # use custom layouts for devise
   Rails.application.config.to_prepare do
-    Devise::RegistrationsController.layout "pages"
-    Devise::PasswordsController.layout "pages"
+    Devise::RegistrationsController.layout 'pages'
+    Devise::PasswordsController.layout 'pages'
     Devise::PasswordsController.after_action :save_email, only: [:create]
     Devise::PasswordsController.after_action :delete_email, only: [:update]
   end

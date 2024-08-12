@@ -23,7 +23,7 @@ class DocumentSearch
       @query.count(:all)
     else
       query = "SELECT count(*) AS count_all FROM (#{@query.to_sql}) x"
-      count = ApplicationRecord.connection.execute(query).first.try(:[], "count_all").to_i
+      count = ApplicationRecord.connection.execute(query).first.try(:[], 'count_all').to_i
     end
   end
 
@@ -100,10 +100,10 @@ class DocumentSearch
 
     if admin_interface?
       if !@document_date_start.blank?
-        @query = @query.where("documents.date_raw >= ?", @document_date_start)
+        @query = @query.where('documents.date_raw >= ?', @document_date_start)
       end
       if !@document_date_end.blank?
-        @query = @query.where("documents.date_raw <= ?", @document_date_end)
+        @query = @query.where('documents.date_raw <= ?', @document_date_end)
       end
     end
 
@@ -181,7 +181,7 @@ class DocumentSearch
   end
 
   def add_ordering_for_public
-    @query = @query.order("date_raw DESC")
+    @query = @query.order('date_raw DESC')
   end
 
   def select_and_group_query
@@ -203,7 +203,7 @@ class DocumentSearch
     SQL
     @query = Document.from(
       '(' + @query.to_sql + ') AS documents'
-    ).select(columns + "," + aggregators).group(columns)
+    ).select(columns + ',' + aggregators).group(columns)
   end
 
   def locale_document

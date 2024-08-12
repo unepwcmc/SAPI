@@ -18,20 +18,19 @@ class Checklist::Pdf::IndexQuery
 
     distinct_columns = [:name_type, :sort_name, :lng]
     distinct_columns_values = {
-      :name_type => {
-        :basic => "'basic'",
-        :english => "'common'",
-        :spanish => "'common'",
-        :french => "'common'",
-        :synonym => "'synonym'"
+      name_type: {
+        basic: "'basic'",
+        english: "'common'",
+        spanish: "'common'",
+        french: "'common'",
+        synonym: "'synonym'"
       },
-      :sort_name => {
-        :basic => 'full_name',
-        :english => "REGEXP_REPLACE(UNNEST(english_names_ary), '(.+) (.+)', '\\2, \\1')",
-        :spanish => 'UNNEST(spanish_names_ary)',
-        :french => 'UNNEST(french_names_ary)',
-        :synonym =>
-          if @authors
+      sort_name: {
+        basic: 'full_name',
+        english: "REGEXP_REPLACE(UNNEST(english_names_ary), '(.+) (.+)', '\\2, \\1')",
+        spanish: 'UNNEST(spanish_names_ary)',
+        french: 'UNNEST(french_names_ary)',
+        synonym:           if @authors
             <<-SQL
             UNNEST(ARRAY(SELECT synonym ||
             CASE
@@ -51,10 +50,10 @@ class Checklist::Pdf::IndexQuery
             'UNNEST(synonyms_ary)'
           end
       },
-      :lng => {
-        :english => "'E'",
-        :spanish => "'S'",
-        :french => "'F'"
+      lng: {
+        english: "'E'",
+        spanish: "'S'",
+        french: "'F'"
       }
     }
 

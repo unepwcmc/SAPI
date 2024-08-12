@@ -15,10 +15,10 @@
 class Purpose < TradeCode
   include Deletable
 
-  validates :code, :length => { :is => 1 }
+  validates :code, length: { is: 1 }
 
   has_many :trade_restriction_purposes
-  has_many :shipments, :class_name => 'Trade::Shipment'
+  has_many :shipments, class_name: 'Trade::Shipment'
 
   after_commit :invalidate_controller_action_cache
 

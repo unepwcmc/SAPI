@@ -1,18 +1,18 @@
 class Checklist::DownloadsController < ApplicationController
-  rescue_from ActiveRecord::RecordNotFound, :with => :not_found
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   # GET downloads/
   #
   # Lists a set of downloads for a given list of IDs
   def index
-    ids = params[:ids] || ""
-    @downloads = Download.where(:id => ids).order('updated_at DESC').limit(5)
-    @downloads = @downloads.map { |v| v.attributes.except("filename", "path") }
+    ids = params[:ids] || ''
+    @downloads = Download.where(id: ids).order('updated_at DESC').limit(5)
+    @downloads = @downloads.map { |v| v.attributes.except('filename', 'path') }
     @downloads.each do |v|
-      v["updated_at"] = v["updated_at"].strftime("%A, %e %b %Y %H:%M")
+      v['updated_at'] = v['updated_at'].strftime('%A, %e %b %Y %H:%M')
     end
 
-    render :json => @downloads.to_json
+    render json: @downloads.to_json
   end
 
   # Permissions are not checked here, therefore CSRF is redundant.
@@ -29,17 +29,17 @@ class Checklist::DownloadsController < ApplicationController
       DownloadWorker.perform_async(@download.id, params.dup.permit!.to_h)
     end
 
-    @download = @download.attributes.except("filename", "path")
-    @download["updated_at"] = @download["updated_at"].strftime("%A, %e %b %Y %H:%M")
+    @download = @download.attributes.except('filename', 'path')
+    @download['updated_at'] = @download['updated_at'].strftime('%A, %e %b %Y %H:%M')
 
-    render :json => @download.to_json
+    render json: @download.to_json
   end
 
   # GET downloads/:id/
   def show
     @download = Download.find(params[:id])
 
-    render :json => { status: @download.status }
+    render json: { status: @download.status }
   end
 
   # GET downloads/:id/download
@@ -55,10 +55,10 @@ class Checklist::DownloadsController < ApplicationController
       file_path = Pathname.new(@download.path).realpath
       response.headers['Content-Length'] = File.size(file_path).to_s
       send_file(file_path,
-        :filename => @download.filename,
-        :type => @download.format)
+        filename: @download.filename,
+        type: @download.format)
     else
-      render :json => { error: "Download not processed" }
+      render json: { error: 'Download not processed' }
     end
   end
 
@@ -76,9 +76,9 @@ class Checklist::DownloadsController < ApplicationController
 
   def download_module
     format_mapping = {
-      "pdf" => Checklist::Pdf,
-      "csv" => Checklist::Csv,
-      "json" => Checklist::Json
+      'pdf' => Checklist::Pdf,
+      'csv' => Checklist::Csv,
+      'json' => Checklist::Json
     }
     format_mapping[params[:format]] || Checklist::Pdf
   end
@@ -90,12 +90,12 @@ class Checklist::DownloadsController < ApplicationController
     file_path = Pathname.new(@download_path).realpath
     response.headers['Content-Length'] = File.size(file_path).to_s
     send_file(file_path,
-      :filename => @doc.download_name,
-      :type => @doc.ext)
+      filename: @doc.download_name,
+      type: @doc.ext)
   end
 
   def not_found
-    render :json => { error: "No downloads available" }
+    render json: { error: 'No downloads available' }
   end
 
   def download_params

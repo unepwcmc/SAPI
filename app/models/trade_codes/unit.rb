@@ -15,11 +15,11 @@
 class Unit < TradeCode
   include Deletable
 
-  validates :code, :length => { :is => 3 }
+  validates :code, length: { is: 3 }
 
-  has_many :term_trade_codes_pairs, :as => :trade_code
+  has_many :term_trade_codes_pairs, as: :trade_code
   has_many :quotas
-  has_many :shipments, :class_name => 'Trade::Shipment'
+  has_many :shipments, class_name: 'Trade::Shipment'
 
   after_commit :invalidate_controller_action_cache
 

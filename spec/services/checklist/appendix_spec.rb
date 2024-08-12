@@ -7,7 +7,7 @@ describe Checklist do
     context "I" do
       before(:all) do
         @checklist = Checklist::Checklist.new({
-          :cites_appendices => ['I']
+          cites_appendices: ['I']
         })
         @taxon_concepts = @checklist.results
       end

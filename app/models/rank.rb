@@ -26,10 +26,10 @@ class Rank < ApplicationRecord
 
   has_many :taxon_concepts
 
-  validates :name, :presence => true, :uniqueness => true
-  validates :display_name_en, :presence => true, :uniqueness => true
-  validates :taxonomic_position, :presence => true,
-    :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" }
+  validates :name, presence: true, uniqueness: true
+  validates :display_name_en, presence: true, uniqueness: true
+  validates :taxonomic_position, presence: true,
+    format: { with: /\A\d(\.\d*)*\z/, message: 'Use prefix notation, e.g. 1.2' }
 
   def parent_rank_lower_bound
     parts = taxonomic_position.split('.')

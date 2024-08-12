@@ -5,14 +5,14 @@ class DashboardStatsSerializer < ActiveModel::Serializer
 
   def meta
     {
-      :trade => {
-        :country_of_origin_id => nil,
-        :term => "LIV",
-        :unit => nil,
-        :source => "W"
+      trade: {
+        country_of_origin_id: nil,
+        term: 'LIV',
+        unit: nil,
+        source: 'W'
       },
-      :species => {
-        :cites_listed => 'IS NOT NULL'
+      species: {
+        cites_listed: 'IS NOT NULL'
       }
     }
   end

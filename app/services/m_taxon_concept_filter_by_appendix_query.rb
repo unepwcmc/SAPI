@@ -16,7 +16,7 @@ class MTaxonConceptFilterByAppendixQuery
         ARRAY[#{@appendix_abbreviations.map { |e| "'#{e}'" }.join(',')}]::TEXT[]
       SQL
     end
-    @species_listings_ids = SpeciesListing.where(:abbreviation => @appendix_abbreviations).map(&:id)
+    @species_listings_ids = SpeciesListing.where(abbreviation: @appendix_abbreviations).map(&:id)
     @species_listings_in_clause = @species_listings_ids.compact.join(',')
   end
 

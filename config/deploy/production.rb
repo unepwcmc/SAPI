@@ -1,17 +1,17 @@
 set :stage, :production
 set :branch, ENV['CAP_BRANCH'] || 'master'
 
-server "sapi-production.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
+server 'sapi-production.linode.unep-wcmc.org', user: 'wcmc', roles: %w{app web db}
 
-set :domain, "sapi-production.linode.unep-wcmc.org"
+set :domain, 'sapi-production.linode.unep-wcmc.org'
 
-set :application, "sapi"
+set :application, 'sapi'
 
 set :server_name, "#{fetch(:application)}.#{fetch(:domain)}"
 
-set :sudo_user, "wcmc"
+set :sudo_user, 'wcmc'
 
-set :app_port, "80"
+set :app_port, '80'
 
 set :backup_path, "/home/#{fetch(:deploy_user)}/Backup"
 

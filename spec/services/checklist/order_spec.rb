@@ -10,7 +10,7 @@ describe Checklist do
   context "when taxonomic order" do
     context("Plantae") do
       before(:all) do
-        @checklist = Checklist::Checklist.new({ :output_layout => :taxonomic, :per_page => 100 })
+        @checklist = Checklist::Checklist.new({ output_layout: :taxonomic, per_page: 100 })
         @checklist.generate
         @taxon_concepts = @checklist.plantae
       end
@@ -21,7 +21,7 @@ describe Checklist do
     end
     context("Animalia") do
       before(:all) do
-        @checklist = Checklist::Checklist.new({ :output_layout => :taxonomic, :per_page => 100 })
+        @checklist = Checklist::Checklist.new({ output_layout: :taxonomic, per_page: 100 })
         @checklist.generate
         @taxon_concepts = @checklist.animalia
       end
@@ -56,7 +56,7 @@ describe Checklist do
   end
   context "when alphabetical order" do
     before(:all) do
-      @checklist = Checklist::Checklist.new({ :output_layout => :alphabetical, :per_page => 100 })
+      @checklist = Checklist::Checklist.new({ output_layout: :alphabetical, per_page: 100 })
       @taxon_concepts = @checklist.results
     end
     it "should include Falconiformes (Aves) before Psittaciformes (Aves)" do

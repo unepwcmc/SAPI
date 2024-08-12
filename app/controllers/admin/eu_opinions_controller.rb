@@ -1,7 +1,7 @@
 class Admin::EuOpinionsController < Admin::StandardAuthorizationController
   belongs_to :taxon_concept
   before_action :load_lib_objects
-  before_action :load_search, :only => [:new, :index, :edit]
+  before_action :load_search, only: [:new, :index, :edit]
 
   layout 'taxon_concepts'
 
@@ -9,7 +9,7 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
     update! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_eu_opinions_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
       failure.html {
         load_lib_objects
@@ -23,7 +23,7 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
     create! do |success, failure|
       success.html {
         redirect_to admin_taxon_concept_eu_opinions_url(params[:taxon_concept_id]),
-        :notice => 'Operation successful'
+        notice: 'Operation successful'
       }
       failure.html {
         load_search
@@ -38,12 +38,12 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
     @terms = Term.order(:code)
     @sources = Source.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(:geo_entity_types => { :name => GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
+      where(geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
     @eu_decision_types = EuDecisionType.opinions
     @srg_histories = SrgHistory.order(:name)
     @ec_srgs = Event.where("type = 'EcSrg' OR
       type = 'EuRegulation' AND name IN ('No 338/97', 'No 938/97', 'No 750/2013')"
-    ).order("effective_at DESC")
+    ).order('effective_at DESC')
     # this will only return intersessional docs
     @documents = Document.where("event_id IS NULL AND type = 'Document::CommissionNotes'")
                          .order('date DESC, title')

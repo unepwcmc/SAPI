@@ -18,17 +18,17 @@ require 'spec_helper'
 describe Designation do
   describe :create do
     context "when valid" do
-      let(:designation) { build(:designation, :name => 'GALACTIC REGULATIONS') }
+      let(:designation) { build(:designation, name: 'GALACTIC REGULATIONS') }
       specify { expect(designation).to be_valid }
     end
     context "when name missing" do
-      let(:designation) { build(:designation, :name => nil) }
+      let(:designation) { build(:designation, name: nil) }
       specify { expect(designation).to be_invalid }
       specify { expect(designation).to have(1).error_on(:name) }
     end
     context "when name duplicated" do
       let!(:designation1) { create(:designation) }
-      let(:designation2) { build(:designation, :name => designation1.name) }
+      let(:designation2) { build(:designation, name: designation1.name) }
       specify { expect(designation2).to be_invalid }
       specify { expect(designation2).to have(1).error_on(:name) }
     end
@@ -38,37 +38,37 @@ describe Designation do
       let(:designation) { create(:designation) }
       specify {
         expect(designation.update(
-          { :name => 'RULES OF INTERGALACTIC TRADE' }
+          { name: 'RULES OF INTERGALACTIC TRADE' }
         )).to be_truthy
       }
     end
     context "when updating a protected name" do
       specify {
         expect(cites.update(
-          { :name => 'RULES OF INTERGALACTIC TRADE' }
+          { name: 'RULES OF INTERGALACTIC TRADE' }
         )).to be_falsey
       }
     end
     context "when updating taxonomy with no dependent objects attached" do
       let(:designation) { create(:designation) }
       let(:taxonomy) { create(:taxonomy) }
-      specify { expect(designation.update(:taxonomy_id => taxonomy.id)).to be_truthy }
+      specify { expect(designation.update(taxonomy_id: taxonomy.id)).to be_truthy }
     end
     context "when updating taxonomy with dependent objects attached" do
       let(:designation) { create(:designation) }
-      let!(:change_type) { create(:change_type, :designation => designation) }
+      let!(:change_type) { create(:change_type, designation: designation) }
       let(:taxonomy) { create(:taxonomy) }
-      specify { expect(designation.update(:taxonomy_id => taxonomy.id)).to be_falsey }
+      specify { expect(designation.update(taxonomy_id: taxonomy.id)).to be_falsey }
     end
   end
   describe :destroy do
     context "when no dependent objects attached" do
-      let(:designation) { create(:designation, :name => 'GALACTIC REGULATIONS') }
+      let(:designation) { create(:designation, name: 'GALACTIC REGULATIONS') }
       specify { expect(designation.destroy).to be_truthy }
     end
     context "when dependent objects attached" do
-      let(:designation) { create(:designation, :name => 'GALACTIC REGULATIONS') }
-      let!(:change_type) { create(:change_type, :designation => designation) }
+      let(:designation) { create(:designation, name: 'GALACTIC REGULATIONS') }
+      let!(:change_type) { create(:change_type, designation: designation) }
       specify { expect(designation.destroy).to be_falsey }
     end
     context "when protected name" do

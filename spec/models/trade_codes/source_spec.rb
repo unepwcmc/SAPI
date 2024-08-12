@@ -26,19 +26,19 @@ describe Source do
         let!(:cites_suspension) {
           create(
             :cites_suspension,
-            :sources => [source],
-            :start_notification_id => create_cites_suspension_notification.id
+            sources: [source],
+            start_notification_id: create_cites_suspension_notification.id
           )
         }
         specify { expect(source.destroy).to be_falsey }
       end
       context "when CITES quota" do
         let(:geo_entity) { create(:geo_entity) }
-        let!(:quota) { create(:quota, :sources => [source], :geo_entity_id => geo_entity.id) }
+        let!(:quota) { create(:quota, sources: [source], geo_entity_id: geo_entity.id) }
         specify { expect(source.destroy).to be_falsey }
       end
       context "when shipments" do
-        before(:each) { create(:shipment, :source => source) }
+        before(:each) { create(:shipment, source: source) }
         specify { expect(source.destroy).to be_falsey }
       end
     end

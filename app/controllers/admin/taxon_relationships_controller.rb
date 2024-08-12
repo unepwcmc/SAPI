@@ -1,8 +1,8 @@
 class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationController
 
   belongs_to :taxon_concept
-  before_action :load_taxon_relationship_types, :only => [:index, :create]
-  before_action :load_search, :except => [:create, :update, :destroy]
+  before_action :load_taxon_relationship_types, only: [:index, :create]
+  before_action :load_search, except: [:create, :update, :destroy]
   layout 'taxon_concepts'
 
   def index
@@ -10,8 +10,8 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
       @form_taxonomies = Taxonomy.order(:name). # for Inter-taxonomic relationships
         where('id <> ?', @taxon_concept.taxonomy_id)
       @inverse_taxon_relationships = TaxonRelationship.
-        where(:other_taxon_concept_id => @taxon_concept.id,
-          :taxon_relationship_type_id => @taxon_relationship_type.id).
+        where(other_taxon_concept_id: @taxon_concept.id,
+          taxon_relationship_type_id: @taxon_relationship_type.id).
           page(params[:page])
     end
   end
@@ -47,7 +47,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
     @taxon_relationship = TaxonRelationship.find(params[:id])
     type = @taxon_relationship.taxon_relationship_type.name
     destroy! do |success, failure|
-      success.html { redirect_to collection_url(:type => type), :notice => 'Operation succeeded' }
+      success.html { redirect_to collection_url(type: type), notice: 'Operation succeeded' }
     end
   end
 
@@ -67,7 +67,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
   def collection
     @taxon_relationships ||= end_of_association_chain.
       joins(:taxon_relationship_type).
-      where(:"taxon_relationship_types.name" => @taxon_relationship_type.name).
+      where("taxon_relationship_types.name": @taxon_relationship_type.name).
       page(params[:page])
   end
 

@@ -5,8 +5,8 @@ describe Admin::EuCouncilRegulationsController do
 
   describe "index" do
     before(:each) do
-      @eu_regulation1 = create_eu_council_regulation(:name => 'BB')
-      @eu_regulation2 = create_eu_council_regulation(:name => 'AA')
+      @eu_regulation1 = create_eu_council_regulation(name: 'BB')
+      @eu_regulation2 = create_eu_council_regulation(name: 'AA')
     end
 
     describe "GET index" do

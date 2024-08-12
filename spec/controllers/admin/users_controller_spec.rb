@@ -18,7 +18,7 @@ describe Admin::UsersController do
       expect(response).to render_template("create")
     end
     it "renders new when not successful" do
-      post :create, params: { user: { :name => nil } }, xhr: true
+      post :create, params: { user: { name: nil } }, xhr: true
       expect(response).to render_template("new")
     end
   end
@@ -26,11 +26,11 @@ describe Admin::UsersController do
   describe "XHR GET edit" do
     let(:user) { create(:user) }
     it "renders the edit template" do
-      get :edit, params: { :id => user.id }, xhr: true
+      get :edit, params: { id: user.id }, xhr: true
       expect(response).to render_template('new')
     end
     it "assigns the hybrid_relationship variable" do
-      get :edit, params: { :id => user.id }, xhr: true
+      get :edit, params: { id: user.id }, xhr: true
       expect(assigns(:user)).not_to be_nil
     end
   end
@@ -38,12 +38,12 @@ describe Admin::UsersController do
   describe "XHR PUT update JS" do
     let(:user) { create(:user) }
     it "responds with 200 when successful" do
-      put :update, :format => 'js', params: { :id => user.id, :user => { :name => 'ZZ' } }, xhr: true
+      put :update, format: 'js', params: { id: user.id, user: { name: 'ZZ' } }, xhr: true
       expect(response).to be_successful
       expect(response).to render_template('create')
     end
     it "responds with template new when not successful" do
-      put :update, :format => 'js', params: { :id => user.id, :user => { :name => nil } }, xhr: true
+      put :update, format: 'js', params: { id: user.id, user: { name: nil } }, xhr: true
       expect(response).to render_template('new')
     end
   end
@@ -51,7 +51,7 @@ describe Admin::UsersController do
   describe "DELETE destroy" do
     let(:user) { create(:user) }
     it "redirects after delete" do
-      delete :destroy, params: { :id => user.id }
+      delete :destroy, params: { id: user.id }
       expect(response).to redirect_to(admin_users_url)
     end
   end

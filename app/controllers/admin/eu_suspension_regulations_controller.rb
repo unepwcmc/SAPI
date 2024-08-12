@@ -1,7 +1,7 @@
 class Admin::EuSuspensionRegulationsController < Admin::EventsController
   # this needs to be specified, because otherwise defaults to 'event'
-  defaults :resource_class => EuSuspensionRegulation,
-    :collection_name => 'eu_suspension_regulations', :instance_name => 'eu_suspension_regulation'
+  defaults resource_class: EuSuspensionRegulation,
+    collection_name: 'eu_suspension_regulations', instance_name: 'eu_suspension_regulation'
 
   def activate
     @eu_suspension_regulation = EuSuspensionRegulation.find(params[:id])

@@ -51,10 +51,10 @@ class CitesSuspension < TradeRestriction
   #   :cites_suspension_confirmations_attributes,
   #   :applies_to_import
   belongs_to :taxon_concept, optional: true
-  belongs_to :start_notification, :class_name => 'CitesSuspensionNotification'
-  belongs_to :end_notification, :class_name => 'CitesSuspensionNotification', optional: true
-  has_many :cites_suspension_confirmations, :dependent => :destroy
-  has_many :confirmation_notifications, :through => :cites_suspension_confirmations
+  belongs_to :start_notification, class_name: 'CitesSuspensionNotification'
+  belongs_to :end_notification, class_name: 'CitesSuspensionNotification', optional: true
+  has_many :cites_suspension_confirmations, dependent: :destroy
+  has_many :confirmation_notifications, through: :cites_suspension_confirmations
   before_validation :handle_dates
   before_save :handle_current_flag
   accepts_nested_attributes_for :cites_suspension_confirmations
@@ -104,7 +104,7 @@ class CitesSuspension < TradeRestriction
             OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
             OR UPPER(events.subtype) LIKE UPPER(:query)",
-            :query => "%#{query}%").
+            query: "%#{query}%").
       joins([:start_notification]).
       joins(<<-SQL
           LEFT JOIN taxon_concepts

@@ -26,19 +26,19 @@ describe Term do
         let!(:cites_suspension) {
           create(
             :cites_suspension,
-            :terms => [term],
-            :start_notification_id => create_cites_suspension_notification.id
+            terms: [term],
+            start_notification_id: create_cites_suspension_notification.id
           )
         }
         specify { expect(term.destroy).to be_falsey }
       end
       context "when CITES quota" do
         let(:geo_entity) { create(:geo_entity) }
-        let!(:quota) { create(:quota, :terms => [term], :geo_entity_id => geo_entity.id) }
+        let!(:quota) { create(:quota, terms: [term], geo_entity_id: geo_entity.id) }
         specify { expect(term.destroy).to be_falsey }
       end
       context "when shipments" do
-        before(:each) { create(:shipment, :term => term) }
+        before(:each) { create(:shipment, term: term) }
         specify { expect(term.destroy).to be_falsey }
       end
     end

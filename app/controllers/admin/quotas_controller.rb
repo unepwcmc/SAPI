@@ -16,16 +16,16 @@ class Admin::QuotasController < Admin::StandardAuthorizationController
   end
 
   def duplicate
-    quota_params = params[:quotas].merge(:current_user_id => current_user.id)
+    quota_params = params[:quotas].merge(current_user_id: current_user.id)
     QuotasCopyWorker.perform_async(quota_params.permit!.to_hash)
-    redirect_to admin_quotas_path({ :year => params[:quotas][:start_date].split("/")[2] }),
-      :notice => "Your quotas are being duplicated in the background.
+    redirect_to admin_quotas_path({ year: params[:quotas][:start_date].split('/')[2] }),
+      notice: "Your quotas are being duplicated in the background.
       They will be available from this page in a few seconds (please refresh it)"
   end
 
   def count
     @count = Quota.count_matching params
-    render :json => @count.to_json
+    render json: @count.to_json
   end
 
   protected

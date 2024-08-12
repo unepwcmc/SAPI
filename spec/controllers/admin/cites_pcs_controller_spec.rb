@@ -5,8 +5,8 @@ describe Admin::CitesPcsController do
 
   describe "index" do
     before(:each) do
-      @cites_pc1 = create_cites_pc(:name => 'Pc1')
-      @cites_pc2 = create_cites_pc(:name => 'Pc2')
+      @cites_pc1 = create_cites_pc(name: 'Pc1')
+      @cites_pc2 = create_cites_pc(name: 'Pc2')
     end
 
     describe "GET index" do

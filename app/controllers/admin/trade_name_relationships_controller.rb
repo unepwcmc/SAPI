@@ -1,13 +1,13 @@
 class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTypesController
-  defaults :resource_class => TaxonRelationship, :collection_name => 'trade_name_relationships', :instance_name => 'trade_name_relationship'
-  respond_to :js, :only => [:new, :edit, :create, :update]
+  defaults resource_class: TaxonRelationship, collection_name: 'trade_name_relationships', instance_name: 'trade_name_relationship'
+  respond_to :js, only: [:new, :edit, :create, :update]
   belongs_to :taxon_concept
-  before_action :load_trade_name_relationship_type, :only => [:new, :create, :update]
+  before_action :load_trade_name_relationship_type, only: [:new, :create, :update]
 
   def new
     new! do |format|
       @trade_name_relationship = TaxonRelationship.new(
-        :taxon_relationship_type_id => @trade_name_relationship_type.id
+        taxon_relationship_type_id: @trade_name_relationship_type.id
       )
     end
   end

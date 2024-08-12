@@ -11,7 +11,7 @@ class Api::V1::TradePlusFiltersController < ApplicationController
       TradePlusFiltersWorker.perform_async(I18n.locale.to_s)
       head 409 # Cache not ready yet.
     else
-      render :json => filters
+      render json: filters
     end
   end
 end

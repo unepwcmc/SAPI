@@ -17,13 +17,13 @@
 
 require 'spec_helper'
 
-describe Trade::TaxonConceptSourceValidationRule, :drops_tables => true do
+describe Trade::TaxonConceptSourceValidationRule, drops_tables: true do
   let(:annual_report_upload) {
     annual_report = build(
       :annual_report_upload,
-      :point_of_view => 'E'
+      point_of_view: 'E'
     )
-    annual_report.save(:validate => false)
+    annual_report.save(validate: false)
     annual_report
   }
   let(:sandbox_klass) {
@@ -33,8 +33,8 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables => true do
     context "when species name is from Kingdom Animalia, source_code can't be A" do
       before do
         @animal = create_cites_eu_animal_species
-        sandbox_klass.create(:source_code => 'A', :taxon_name => @animal.full_name)
-        sandbox_klass.create(:source_code => 'B', :taxon_name => @animal.full_name)
+        sandbox_klass.create(source_code: 'A', taxon_name: @animal.full_name)
+        sandbox_klass.create(source_code: 'B', taxon_name: @animal.full_name)
       end
       subject {
         create_taxon_concept_source_validation
@@ -52,10 +52,10 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables => true do
     context "when species name is from Kingdom Plantae, source_code can't be C or R" do
       before do
         @plant = create_cites_eu_plant_species
-        sandbox_klass.create(:source_code => 'C', :taxon_name => @plant.full_name)
-        sandbox_klass.create(:source_code => 'R', :taxon_name => @plant.full_name)
-        sandbox_klass.create(:source_code => 'A', :taxon_name => @plant.full_name)
-        sandbox_klass.create(:source_code => 'B', :taxon_name => @plant.full_name)
+        sandbox_klass.create(source_code: 'C', taxon_name: @plant.full_name)
+        sandbox_klass.create(source_code: 'R', taxon_name: @plant.full_name)
+        sandbox_klass.create(source_code: 'A', taxon_name: @plant.full_name)
+        sandbox_klass.create(source_code: 'B', taxon_name: @plant.full_name)
       end
       subject {
         create_taxon_concept_source_validation

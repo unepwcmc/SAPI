@@ -41,7 +41,7 @@ class Annotation < ApplicationRecord
 
   has_many :listing_changes
   has_many :hashed_listing_changes,
-    :foreign_key => :hash_annotation_id, :class_name => "ListingChange"
+    foreign_key: :hash_annotation_id, class_name: 'ListingChange'
 
   belongs_to :event, optional: true
   translates :short_note, :full_note
@@ -57,7 +57,7 @@ class Annotation < ApplicationRecord
   # OK: '^1', '#33'; not ok '#18edit'
   validates :symbol, presence: false, format: {
     allow_blank: true,
-    message: "should be a symbol followed by one or more digits",
+    message: 'should be a symbol followed by one or more digits',
     with: /\A[^0-9a-z\s]\d+\z/i
   }
 
@@ -78,7 +78,7 @@ class Annotation < ApplicationRecord
             OR UPPER(short_note_es) LIKE UPPER(:query)
             OR UPPER(full_note_es) LIKE UPPER(:query)
             OR UPPER(description) LIKE UPPER(:query)",
-            :query => "%#{query}%")
+            query: "%#{query}%")
     else
       all
     end

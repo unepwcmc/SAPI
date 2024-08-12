@@ -6,9 +6,9 @@ describe Species::TaxonConceptPrefixMatcher do
       context "when trade visibility" do
         subject {
           Species::TaxonConceptPrefixMatcher.new({
-            :taxon_concept_query => 'Falco hybrid',
-            :ranks => [],
-            :visibility => :trade
+            taxon_concept_query: 'Falco hybrid',
+            ranks: [],
+            visibility: :trade
           })
         }
         specify { expect(subject.results).to include(@hybrid_ac) }
@@ -16,9 +16,9 @@ describe Species::TaxonConceptPrefixMatcher do
       context "when trade internal visibility" do
         subject {
           Species::TaxonConceptPrefixMatcher.new({
-            :taxon_concept_query => 'Falco hybrid',
-            :ranks => [],
-            :visibility => :trade_internal
+            taxon_concept_query: 'Falco hybrid',
+            ranks: [],
+            visibility: :trade_internal
           })
         }
         specify { expect(subject.results).to include(@hybrid_ac) }
@@ -26,8 +26,8 @@ describe Species::TaxonConceptPrefixMatcher do
       context "when speciesplus visibility" do
         subject {
           Species::TaxonConceptPrefixMatcher.new({
-            :taxon_concept_query => 'Falco hybrid',
-            :ranks => []
+            taxon_concept_query: 'Falco hybrid',
+            ranks: []
           })
         }
         specify { expect(subject.results).to be_empty }

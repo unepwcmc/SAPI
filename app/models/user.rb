@@ -60,8 +60,8 @@ class User < ApplicationRecord
   has_many :api_requests
   belongs_to :geo_entity, optional: true
 
-  validates :email, :uniqueness => true, :presence => true
-  validates :name, :presence => true
+  validates :email, uniqueness: true, presence: true
+  validates :name, presence: true
   validates :role, inclusion: { in: ROLES }, presence: true
   validates :organisation, presence: true
   before_create :set_default_role
@@ -116,7 +116,7 @@ class User < ApplicationRecord
       Trade::AnnualReportUpload, Trade::Shipment
     ]
     for i in 0..tracked_objects.length - 1
-      if tracked_objects[i].where(['created_by_id = :id OR updated_by_id = :id', :id => self.id]).limit(1).count > 0
+      if tracked_objects[i].where(['created_by_id = :id OR updated_by_id = :id', id: self.id]).limit(1).count > 0
         return false
       end
     end

@@ -1,13 +1,13 @@
 class CreateNomenclatureChangeOutputReassignmentsTable < ActiveRecord::Migration[4.2]
   def change
     create_table :nomenclature_change_output_reassignments do |t|
-      t.integer  :nomenclature_change_output_id, :null => false
-      t.string   :type, :null => false
+      t.integer  :nomenclature_change_output_id, null: false
+      t.string   :type, null: false
       t.string   :reassignable_type
       t.integer  :reassignable_id
       t.text     :note_en
-      t.integer  :created_by_id, :null => false
-      t.integer  :updated_by_id, :null => false
+      t.integer  :created_by_id, null: false
+      t.integer  :updated_by_id, null: false
       t.text     :note_es
       t.text     :note_fr
       t.text     :internal_note

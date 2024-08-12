@@ -6,11 +6,11 @@ describe Admin::TaxonConceptsController do
   describe "GET index" do
     before(:each) do
       @taxon = create_cites_eu_species(
-        :taxon_name => create(:taxon_name, :scientific_name => 'indefinitus'),
-        :taxonomic_position => '1.1.2',
-        :parent => create_cites_eu_genus(
-          :taxon_name => create(:taxon_name, :scientific_name => 'Foobarus'),
-          :taxonomic_position => '1.1.1'
+        taxon_name: create(:taxon_name, scientific_name: 'indefinitus'),
+        taxonomic_position: '1.1.2',
+        parent: create_cites_eu_genus(
+          taxon_name: create(:taxon_name, scientific_name: 'Foobarus'),
+          taxonomic_position: '1.1.1'
         )
       )
     end
@@ -69,23 +69,23 @@ describe Admin::TaxonConceptsController do
     let(:taxon_concept) { create(:taxon_concept) }
     context "when JSON" do
       it "responds with 200 when successful" do
-        put :update, :format => 'json', params: { :id => taxon_concept.id,
-          :taxon_concept => { dummy: 'test' } }, xhr: true
+        put :update, format: 'json', params: { id: taxon_concept.id,
+          taxon_concept: { dummy: 'test' } }, xhr: true
         expect(response).to be_successful
       end
       it "responds with json error when not successful" do
-        put :update, :format => 'json', params: { :id => taxon_concept.id,
-          :taxon_concept => { :taxonomy_id => nil } }, xhr: true
+        put :update, format: 'json', params: { id: taxon_concept.id,
+          taxon_concept: { taxonomy_id: nil } }, xhr: true
         expect(JSON.parse(response.body)).to include('errors')
       end
     end
     context "when HTML" do
       it "redirects to edit when successful" do
-        put :update, params: { :id => taxon_concept.id, :taxon_concept => { dummy: 'test' } }
+        put :update, params: { id: taxon_concept.id, taxon_concept: { dummy: 'test' } }
         expect(response).to redirect_to(edit_admin_taxon_concept_url(taxon_concept))
       end
       it "renders edit when not successful" do
-        put :update, params: { :id => taxon_concept.id, :taxon_concept => { :taxonomy_id => nil } }
+        put :update, params: { id: taxon_concept.id, taxon_concept: { taxonomy_id: nil } }
         expect(response).to render_template("edit")
       end
     end
@@ -94,7 +94,7 @@ describe Admin::TaxonConceptsController do
   describe "DELETE destroy" do
     let(:taxon_concept) { create(:taxon_concept) }
     it "redirects after delete" do
-      delete :destroy, params: { :id => taxon_concept.id }
+      delete :destroy, params: { id: taxon_concept.id }
       expect(response).to redirect_to(admin_taxon_concepts_url)
     end
   end
@@ -104,9 +104,9 @@ describe Admin::TaxonConceptsController do
     let(:taxon_concept) { create(:taxon_concept) }
 
     it "redirects to admin root path and doesn't delete" do
-      delete :destroy, params: { :id => taxon_concept.id }
+      delete :destroy, params: { id: taxon_concept.id }
       expect(response).to redirect_to(admin_root_path)
-      expect(TaxonConcept.where(:id => taxon_concept.id).size).to eq(1)
+      expect(TaxonConcept.where(id: taxon_concept.id).size).to eq(1)
     end
   end
 
@@ -120,21 +120,21 @@ describe Admin::TaxonConceptsController do
     end
 
     it "redirects to root path and doesn't delete" do
-      delete :destroy, params: { :id => taxon_concept.id }
+      delete :destroy, params: { id: taxon_concept.id }
       expect(response).to redirect_to(root_path)
-      expect(TaxonConcept.where(:id => taxon_concept.id).size).to eq(1)
+      expect(TaxonConcept.where(id: taxon_concept.id).size).to eq(1)
     end
   end
 
   describe "XHR GET JSON autocomplete" do
     let!(:taxon_concept) {
       create_cites_eu_genus(
-        :taxon_name => create(:taxon_name, :scientific_name => 'AAA')
+        taxon_name: create(:taxon_name, scientific_name: 'AAA')
       )
     }
     it "returns properly formatted json" do
-      get :autocomplete, :format => 'json',
-        params: { :search_params => { :scientific_name => 'AAA' } }, xhr: true
+      get :autocomplete, format: 'json',
+        params: { search_params: { scientific_name: 'AAA' } }, xhr: true
       expect(response.body).to have_json_size(1)
       expect(parse_json(response.body, "0/full_name")).to eq('Aaa')
     end

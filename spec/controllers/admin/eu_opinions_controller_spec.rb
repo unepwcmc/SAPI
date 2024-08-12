@@ -25,7 +25,7 @@ describe Admin::EuOpinionsController do
       expect(response).to render_template('new')
     end
     it "assigns @geo_entities (country and territory) with two objects" do
-      create(:geo_entity, :geo_entity_type_id => territory_geo_entity_type.id)
+      create(:geo_entity, geo_entity_type_id: territory_geo_entity_type.id)
       create(:geo_entity)
       get :new, params: { taxon_concept_id: @taxon_concept.id }
       expect(assigns(:geo_entities).size).to eq(2)

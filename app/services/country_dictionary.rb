@@ -7,7 +7,7 @@ class CountryDictionary
         :id, :name_en, :name_es, :name_fr, 'UPPER(geo_entities.iso_code2) AS iso_code2'
       ).
       joins(:geo_entity_type).
-      where(:"geo_entity_types.name" => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]).
+      where("geo_entity_types.name": [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY]).
       all
     @dictionary = Hash[
       @collection.map { |c| [c.id, [c.name, c.iso_code2]] }

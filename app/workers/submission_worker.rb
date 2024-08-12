@@ -1,6 +1,6 @@
 class SubmissionWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :admin
+  sidekiq_options queue: :admin
 
   def perform(aru_id, submitter_id)
     submitter = User.find(submitter_id)
@@ -33,7 +33,7 @@ class SubmissionWorker
     aru.remove_csv_source_file!
     puts '### removing uploads dir ###'
     puts Rails.root.join('public', store_dir)
-    FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
+    FileUtils.remove_dir(Rails.root.join('public', store_dir), force: true)
 
     # clear downloads cache
     DownloadsCache.send(:clear_shipments)

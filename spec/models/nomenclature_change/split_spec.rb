@@ -26,7 +26,7 @@ describe NomenclatureChange::Split do
       context "when inputs" do
         let(:split) {
           build(
-            :nomenclature_change_split, :status => NomenclatureChange::Split::INPUTS
+            :nomenclature_change_split, status: NomenclatureChange::Split::INPUTS
           )
         }
         specify { expect(split).to have(1).errors_on(:input) }
@@ -34,7 +34,7 @@ describe NomenclatureChange::Split do
       context "when submitting" do
         let(:split) {
           build(
-            :nomenclature_change_split, :status => NomenclatureChange::Split::SUBMITTED
+            :nomenclature_change_split, status: NomenclatureChange::Split::SUBMITTED
           )
         }
         specify { expect(split).to have(1).errors_on(:input) }
@@ -44,7 +44,7 @@ describe NomenclatureChange::Split do
       context "when outputs" do
         let(:split) {
           build(
-            :nomenclature_change_split, :status => NomenclatureChange::Split::OUTPUTS
+            :nomenclature_change_split, status: NomenclatureChange::Split::OUTPUTS
           )
         }
         specify { expect(split).to have(1).errors_on(:outputs) }
@@ -52,7 +52,7 @@ describe NomenclatureChange::Split do
       context "when submitting" do
         let(:split) {
           build(
-            :nomenclature_change_split, :status => NomenclatureChange::Split::SUBMITTED
+            :nomenclature_change_split, status: NomenclatureChange::Split::SUBMITTED
           )
         }
         specify { expect(split).to have(1).errors_on(:outputs) }
@@ -61,16 +61,16 @@ describe NomenclatureChange::Split do
     context "when output has different rank than input" do
       let(:split) {
         build(:nomenclature_change_split,
-          :status => NomenclatureChange::Split::OUTPUTS,
-          :input_attributes => { :taxon_concept_id => create_cites_eu_species.id },
-          :outputs_attributes => {
+          status: NomenclatureChange::Split::OUTPUTS,
+          input_attributes: { taxon_concept_id: create_cites_eu_species.id },
+          outputs_attributes: {
             0 => {
-              :taxon_concept_id => create_cites_eu_subspecies.id,
-              :new_rank_id => create(:rank, name: Rank::SUBSPECIES).id
+              taxon_concept_id: create_cites_eu_subspecies.id,
+              new_rank_id: create(:rank, name: Rank::SUBSPECIES).id
             },
             1 => {
-              :taxon_concept_id => create_cites_eu_subspecies.id,
-              :new_rank_id => create(:rank, name: Rank::SUBSPECIES).id
+              taxon_concept_id: create_cites_eu_subspecies.id,
+              new_rank_id: create(:rank, name: Rank::SUBSPECIES).id
             }
           }
         )

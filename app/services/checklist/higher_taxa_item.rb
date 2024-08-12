@@ -42,11 +42,11 @@ class Checklist::HigherTaxaItem
 
   def as_json(options = {})
     {
-      :id => id + 100000,
-      :item_type => @item_type,
-      :rank_name => rank_name,
-      :ancestors_path => ancestors_path,
-      :ancestors_ids => ancestors_ids
+      id: id + 100000,
+      item_type: @item_type,
+      rank_name: rank_name,
+      ancestors_path: ancestors_path,
+      ancestors_ids: ancestors_ids
     }
   end
 

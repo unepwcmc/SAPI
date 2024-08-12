@@ -4,19 +4,19 @@ describe TaxonRelationship do
   context "when hybrid" do
     let(:parent) {
       create_cites_eu_genus(
-        :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
+        taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
       )
     }
     let!(:tc) {
       create_cites_eu_species(
-        :parent_id => parent.id,
-        :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
+        parent_id: parent.id,
+        taxon_name: create(:taxon_name, scientific_name: 'lolatus')
       )
     }
     let!(:another_tc) {
       create_cites_eu_species(
-        :parent_id => parent.id,
-        :taxon_name => create(:taxon_name, :scientific_name => 'lolcatus')
+        parent_id: parent.id,
+        taxon_name: create(:taxon_name, scientific_name: 'lolcatus')
       )
     }
 

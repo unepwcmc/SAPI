@@ -52,7 +52,7 @@ class Trade::ComplianceShipmentsParser
   end
 
   def parse_origin(origin)
-    "ts.country_of_origin_id IS NULL"
+    'ts.country_of_origin_id IS NULL'
   end
 
   def imp_or_exp_country
