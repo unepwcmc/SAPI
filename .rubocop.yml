@@ -1,4 +1,6 @@
-inherit_from: .rubocop_todo.yml
+# Omakase Ruby styling for Rails
+inherit_gem:
+  rubocop-rails-omakase: rubocop.yml
 
 require:
   - rubocop-capybara

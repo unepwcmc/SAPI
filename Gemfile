@@ -128,6 +128,7 @@ group :development do
   gem 'rubocop-capybara'
   gem 'rubocop-factory_bot'
   gem 'rubocop-rails'
+  gem 'rubocop-rails-omakase'
   gem 'rubocop-rspec'
   gem 'rubocop-rspec_rails'
 
