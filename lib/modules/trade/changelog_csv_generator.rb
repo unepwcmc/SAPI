@@ -3,11 +3,12 @@ class Trade::ChangelogCsvGenerator
   DEFAULT_COLUMNS = [ 'ID', 'Version', 'OP', 'ChangedAt', 'ChangedBy' ]
 
   def self.call(aru, requester, duplicates = nil)
-    data_columns = if aru.reported_by_exporter?
-      Trade::SandboxTemplate::EXPORTER_COLUMNS
-    else
-      Trade::SandboxTemplate::IMPORTER_COLUMNS
-    end
+    data_columns =
+      if aru.reported_by_exporter?
+        Trade::SandboxTemplate::EXPORTER_COLUMNS
+      else
+        Trade::SandboxTemplate::IMPORTER_COLUMNS
+      end
 
     sapi_users = User.select('id, name').all.to_h { |u| [ u.id, u.name ] }
 
@@ -37,11 +38,14 @@ class Trade::ChangelogCsvGenerator
             reified = version.reify(dup: true)
             type, id = version.whodunnit && version.whodunnit.split(':')
             id_as_number = id.present? ? id.to_i : type.to_i
-            whodunnit = if id_as_number && type == 'Epix'
-              'epix'
-            elsif id_as_number
-              (sapi_users && sapi_users[id_as_number]) || 'WCMC'
-            end
+
+            whodunnit =
+              if id_as_number && type == 'Epix'
+                'epix'
+              elsif id_as_number
+                (sapi_users && sapi_users[id_as_number]) || 'WCMC'
+              end
+
             values = [
               version.item_id, version.id, version.event, version.created_at, whodunnit
               ] +

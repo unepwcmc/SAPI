@@ -2,14 +2,18 @@ class Admin::ExportsController < Admin::AdminController
   def index; end
 
   def download
-    filters = (filter_params || {}).merge({
-      csv_separator:         if filter_params && filter_params[:csv_separator] &&
-          filter_params[:csv_separator].downcase.strip.to_sym == :semicolon
-          :semicolon
-                             else
-          :comma
-                             end
-    })
+    filters = (filter_params || {}).merge(
+      {
+        csv_separator:
+          if filter_params && filter_params[:csv_separator] &&
+            filter_params[:csv_separator].downcase.strip.to_sym == :semicolon
+            :semicolon
+          else
+            :comma
+          end
+      }
+    )
+
     case params[:data_type]
     when 'Names'
       result = Species::TaxonConceptsNamesExport.new(filters).export
@@ -36,6 +40,7 @@ class Admin::ExportsController < Admin::AdminController
     when 'CitesProcesses'
       result = Species::CitesProcessesExport.new.export
     end
+
     if result.is_a?(Array)
       # this was added in order to prevent download managers from
       # failing when chunked_transfer_encoding is set in nginx (1.8.1)

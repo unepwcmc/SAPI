@@ -4,11 +4,13 @@ class Trade::AnnualReportUploadsController < TradeController
   def index
     @annual_report_uploads = Trade::AnnualReportUpload.created_by_sapi
     if params[:is_done].present?
-      null_cond = if params[:submitted] == 1
-        'submitted_at IS NOT NULL'
-      else
-        'submitted_at IS NULL'
-      end
+      null_cond =
+        if params[:submitted] == 1
+          'submitted_at IS NOT NULL'
+        else
+          'submitted_at IS NULL'
+        end
+
       @annual_report_uploads = @annual_report_uploads.where(
         null_cond
       )

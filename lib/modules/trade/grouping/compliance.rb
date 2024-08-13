@@ -273,11 +273,13 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   end
 
   def group_query
-    columns = if @attributes
-      @attributes.compact.uniq.join(',')
-    else
-      attributes.values.join(',')
-    end
+    columns =
+      if @attributes
+        @attributes.compact.uniq.join(',')
+      else
+        attributes.values.join(',')
+      end
+
     <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt, 100.0*COUNT(*)/(SUM(COUNT(*)) OVER (PARTITION BY year)) AS percent
       FROM non_compliant_shipments_view

@@ -18,21 +18,25 @@ class Trade::StatisticsController < TradeController
   end
 
   def summary_creation
-    @created_date_selected = if params[:date]
-                               params[:date]['createdDateSelected'].to_i
-    else
-                               Time.now.year
-    end
+    @created_date_selected =
+      if params[:date]
+        params[:date]['createdDateSelected'].to_i
+      else
+        Time.now.year
+      end
+
     @countries_reported_by_date_created = YearAnnualReportsByCountry.
       where(year_created: @created_date_selected)
   end
 
   def summary_year
-    @date_selected = if params[:date]
-                       Date.parse("01/01/#{params[:date]['yearSelected']}")
-    else
-                       Date.today
-    end
+    @date_selected =
+      if params[:date]
+        Date.parse("01/01/#{params[:date]['yearSelected']}")
+      else
+        Date.today
+      end
+
     @countries_reported_by_year = YearAnnualReportsByCountry.where(year: @date_selected.year)
   end
 

@@ -22,13 +22,12 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
     # The format of validation_error.matching_criteria seems to vary - sometimes
     # it's a string, whereas under rspec it's an object.
-    matching_criteria_json = if
-      validation_error.matching_criteria.is_a? String
-    then
-      validation_error.matching_criteria
-    else
-      validation_error.matching_criteria.to_json
-    end
+    matching_criteria_json =
+      if validation_error.matching_criteria.is_a? String
+        validation_error.matching_criteria
+      else
+        validation_error.matching_criteria.to_json
+      end
 
     @query = matching_records(annual_report_upload).where(
       "#{Arel::Nodes.build_quoted(matching_criteria_json).to_sql}::JSONB @> (#{jsonb_matching_criteria_for_comparison})::JSONB"
@@ -38,17 +37,22 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def error_message(values_hash = nil)
     scope_info = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
+
       if scope_def['inclusion']
         tmp << "#{scope_column} = #{scope_def['inclusion'].join(', ')}"
       end
+
       if scope_def['exclusion']
         tmp << "#{scope_column} != #{scope_def['exclusion'].join(', ')}"
       end
+
       if scope_def['blank']
         tmp << "#{scope_column} is empty"
       end
+
       tmp.join(' and ')
     end.compact.join(', ')
+
     info = column_names_for_matching.each_with_index.map do |cn|
       # for taxon concept validations output human readable taxon_name
       if cn == 'taxon_concept_id'
@@ -57,12 +61,14 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         "#{cn} #{values_hash && (values_hash[cn].presence || '[BLANK]')}"
       end
     end.join(' with ')
+
     info = "#{info} (#{scope_info})" if scope_info.present?
     info + ' is invalid'
   end
 
   def refresh_errors_if_needed(annual_report_upload)
     return true unless refresh_needed?(annual_report_upload)
+
     errors_to_destroy = validation_errors.to_a
 
     matching_records_grouped(annual_report_upload).map do |mr|
@@ -90,6 +96,7 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         errors_to_destroy.reject! { |e| e.id == existing_record.id }
       end
     end
+
     errors_to_destroy.each(&:destroy)
   end
 
@@ -214,21 +221,27 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     result = s.project(Arel.star).where(not_null_conds)
     scope_nodes = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
+
       if scope_def['inclusion']
         inclusion_nodes = scope_def['inclusion'].map { |value| s[scope_column].eq(value) }
         tmp << inclusion_nodes.inject(&:or)
       end
+
       if scope_def['exclusion']
         exclusion_nodes = scope_def['exclusion'].map { |value| s[scope_column].not_eq(value) }
         tmp << exclusion_nodes.inject(&:or)
       end
+
       if scope_def['blank']
         tmp << s[scope_column].eq(nil)
       end
+
       tmp
     end.flatten
+
     scope_conds = scope_nodes.inject(&:and)
     result = result.where(scope_conds) if scope_conds
+
     result
   end
 
@@ -248,7 +261,9 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
         table_v[column_name].eq(table_s[column_name]).or(table_v[column_name].eq(nil).and(table_s[column_name].eq(nil)))
       end
     end
+
     valid_values = table_s.project(table_s[Arel.star]).join(table_v).on(arel_nodes.inject(&:and))
+
     scoped_records_arel(table_s).except(valid_values)
   end
 end

@@ -1,10 +1,12 @@
 shared_context 'document_reassignments_processor_examples' do
   def create_citation(taxon_concepts_ary, geo_entities_ary, document = nil)
-    citation = if document.present?
-      create(:document_citation, document: document)
-    else
-      create(:document_citation)
-    end
+    citation =
+      if document.present?
+        create(:document_citation, document: document)
+      else
+        create(:document_citation)
+      end
+
     taxon_concepts_ary.each do |taxon_concept|
       create(
         :document_citation_taxon_concept,
@@ -12,6 +14,7 @@ shared_context 'document_reassignments_processor_examples' do
         taxon_concept: taxon_concept
       )
     end
+
     geo_entities_ary.each do |geo_entity|
       create(
         :document_citation_geo_entity,
@@ -19,6 +22,7 @@ shared_context 'document_reassignments_processor_examples' do
         geo_entity: geo_entity
       )
     end
+
     citation
   end
 
@@ -30,12 +34,14 @@ shared_context 'document_reassignments_processor_examples' do
       reassignable: citation
     )
   end
+
   let!(:reassignment_target) do
     create(:nomenclature_change_reassignment_target,
       reassignment: reassignment,
       output: output
     )
   end
+
   let(:poland) do
     create(
       :geo_entity,
@@ -52,11 +58,14 @@ shared_context 'document_reassignments_processor_examples' do
       expect(output_species1.document_citation_taxon_concepts.count).to eq(1)
     end
   end
+
   context 'when output species had an identical citation in place' do
     before(:each) do
       processor.run
     end
+
     let!(:identical_citation) { create_citation([ input_species ], [ poland ]) }
+
     specify do
       expect(output_species1.document_citation_taxon_concepts.count).to eq(1)
     end
