@@ -18,7 +18,7 @@ namespace :import do
       puts "There are #{PresetTag.where(model: 'Distribution').count} distribution tags"
       puts "There are #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
       puts 'ADDING: preset_tags and tags'
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO preset_tags(model, name, created_at, updated_at)
         SELECT subquery.*, NOW(), NOW()
         FROM (
@@ -47,8 +47,8 @@ namespace :import do
       puts "There are #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
       [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
         puts "Import #{taxonomy_name} distribution tags"
-        taxonomy = Taxonomy.find_by_name(taxonomy_name)
-        sql = <<-SQL
+        taxonomy = Taxonomy.find_by(name: taxonomy_name)
+        sql = <<-SQL.squish
           WITH tmp AS (
             SELECT DISTINCT #{id_type}, rank, geo_entity_type, iso_code2, regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
             FROM #{TMP_TABLE}

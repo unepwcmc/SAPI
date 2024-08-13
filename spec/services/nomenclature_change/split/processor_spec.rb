@@ -5,7 +5,8 @@ describe NomenclatureChange::Split::Processor do
 
   before(:each) do
     synonym_relationship_type
-    @shipment = create(:shipment,
+    @shipment = create(
+      :shipment,
       taxon_concept: input_species,
       reported_taxon_concept: input_species
     )
@@ -84,7 +85,8 @@ describe NomenclatureChange::Split::Processor do
         create_cites_I_addition(taxon_concept: input_species_child)
       end
       let(:split) do
-        create(:nomenclature_change_split,
+        create(
+          :nomenclature_change_split,
           input_attributes: {
             taxon_concept_id: input_species.id,
             note_en: 'input species was split into input species and output species 2',
@@ -138,7 +140,8 @@ describe NomenclatureChange::Split::Processor do
         create_cites_eu_subspecies(parent: output_species1)
       end
       let(:split) do
-        create(:nomenclature_change_split,
+        create(
+          :nomenclature_change_split,
           input_attributes: {
             taxon_concept_id: input_species.id,
             note_en: 'input species was split into output species 1 and output species 2',
@@ -158,13 +161,15 @@ describe NomenclatureChange::Split::Processor do
       let(:input) { split.input }
       let(:output) { split.outputs.first }
       let(:reassignment) do
-        create(:nomenclature_change_parent_reassignment,
+        create(
+          :nomenclature_change_parent_reassignment,
           input: input,
           reassignable_id: input_species_child.id
         )
       end
       let!(:reassignment_target) do
-        create(:nomenclature_change_reassignment_target,
+        create(
+          :nomenclature_change_reassignment_target,
           reassignment: reassignment,
           output: output
         )
@@ -257,7 +262,8 @@ describe NomenclatureChange::Split::Processor do
       )
     end
     let(:split) do
-      create(:nomenclature_change_split,
+      create(
+        :nomenclature_change_split,
         input_attributes: { taxon_concept_id: input_genus.id },
         outputs_attributes: {
           0 => { taxon_concept_id: input_genus.id },
@@ -267,13 +273,15 @@ describe NomenclatureChange::Split::Processor do
       )
     end
     let(:reassignment) do
-      create(:nomenclature_change_parent_reassignment,
+      create(
+        :nomenclature_change_parent_reassignment,
         input: split.input,
         reassignable_id: input_genus_child.id
       )
     end
     let!(:reassignment_target) do
-      create(:nomenclature_change_reassignment_target,
+      create(
+        :nomenclature_change_reassignment_target,
         reassignment: reassignment,
         output: split.outputs.last
       )

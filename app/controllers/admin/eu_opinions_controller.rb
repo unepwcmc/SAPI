@@ -32,7 +32,7 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
   end
 
 
-  protected
+protected
 
   def load_lib_objects
     @terms = Term.order(:code)
@@ -41,23 +41,27 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
       where(geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
     @eu_decision_types = EuDecisionType.opinions
     @srg_histories = SrgHistory.order(:name)
-    @ec_srgs = Event.where("type = 'EcSrg' OR
+    @ec_srgs = Event.where(
+      "type = 'EcSrg' OR
       type = 'EuRegulation' AND name IN ('No 338/97', 'No 938/97', 'No 750/2013')"
     ).order('effective_at DESC')
     # this will only return intersessional docs
-    @documents = Document.where("event_id IS NULL AND type = 'Document::CommissionNotes'").
-      order('date DESC, title')
+    @documents = Document.where(
+      "event_id IS NULL AND type = 'Document::CommissionNotes'"
+    ).order(
+      'date DESC, title'
+    )
   end
 
   def collection
-    @eu_opinions ||= end_of_association_chain.
-      joins(:geo_entity).
-      order('is_current DESC, start_date DESC,
-        geo_entities.name_en ASC').
-      page(params[:page])
+    @eu_opinions ||= end_of_association_chain.joins(
+      :geo_entity
+    ).order(
+      'is_current DESC, start_date DESC, geo_entities.name_en ASC'
+    ).page(params[:page])
   end
 
-  private
+private
 
   def eu_opinion_params
     params.require(:eu_opinion).permit(

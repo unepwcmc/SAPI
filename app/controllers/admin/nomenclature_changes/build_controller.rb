@@ -31,7 +31,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     raise NotImplementedError
   end
 
-  private
+private
 
   def set_nomenclature_change
     @nomenclature_change = NomenclatureChange.find(params[:nomenclature_change_id])
@@ -64,7 +64,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     end
   end
 
-  private
+private
 
   def klass
     NomenclatureChange

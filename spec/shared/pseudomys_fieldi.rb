@@ -55,6 +55,7 @@ shared_context 'Pseudomys fieldi' do
       # Skip old sapi context let statements,
       # which are now instance variables starting with _
       next if t.to_s.include?('@_')
+
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

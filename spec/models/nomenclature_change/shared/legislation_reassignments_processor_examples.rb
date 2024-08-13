@@ -72,7 +72,8 @@ shared_context 'legislation_reassignments_processor_examples' do
 
     2.times { create(:cites_suspension, taxon_concept: input_species) }
 
-    create(:nomenclature_change_reassignment_target,
+    create(
+      :nomenclature_change_reassignment_target,
       reassignment: create(
         :nomenclature_change_legislation_reassignment,
         input: input,
@@ -80,7 +81,8 @@ shared_context 'legislation_reassignments_processor_examples' do
       ),
       output: output
     )
-    create(:nomenclature_change_reassignment_target,
+    create(
+      :nomenclature_change_reassignment_target,
       reassignment: create(
         :nomenclature_change_legislation_reassignment,
         input: input,
@@ -88,7 +90,8 @@ shared_context 'legislation_reassignments_processor_examples' do
       ),
       output: output
     )
-    create(:nomenclature_change_reassignment_target,
+    create(
+      :nomenclature_change_reassignment_target,
       reassignment: create(
         :nomenclature_change_legislation_reassignment,
         input: input,

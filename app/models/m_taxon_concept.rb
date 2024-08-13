@@ -121,12 +121,13 @@ class MTaxonConcept < ApplicationRecord
 
   belongs_to :taxon_concept, foreign_key: :id, optional: true
   has_many :cites_listing_changes, foreign_key: :taxon_concept_id, class_name: 'MCitesListingChange'
-  has_many :historic_cites_listing_changes_for_downloads, -> {
-    where(
-      show_in_downloads: true
-    ).order(
-      Arel.sql(
-        <<-SQL.squish
+  has_many :historic_cites_listing_changes_for_downloads,
+    -> {
+      where(
+        show_in_downloads: true
+      ).order(
+        Arel.sql(
+          <<-SQL.squish
           effective_at,
           CASE
           WHEN change_type_name = 'ADDITION' THEN 0
@@ -135,22 +136,27 @@ class MTaxonConcept < ApplicationRecord
           WHEN change_type_name = 'DELETION' THEN 3
           END
         SQL
+        )
       )
-    )
-  }, foreign_key: :taxon_concept_id,
-    class_name: 'MCitesListingChange'
-  has_many :current_cites_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
+    },
     foreign_key: :taxon_concept_id,
     class_name: 'MCitesListingChange'
-  has_many :current_cms_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
+
+  has_many :current_cites_additions,
+    -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
+    foreign_key: :taxon_concept_id,
+    class_name: 'MCitesListingChange'
+
+  has_many :current_cms_additions,
+    -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
     foreign_key: :taxon_concept_id,
     class_name: 'MCmsListingChange'
+
   has_many :cites_processes
+
   scope :by_cites_eu_taxonomy, -> { where(taxonomy_is_cites_eu: true) }
   scope :by_cms_taxonomy, -> { where(taxonomy_is_cites_eu: false) }
-
   scope :without_non_accepted, -> { where(name_status: [ 'A', 'H' ]) }
-
   scope :without_hidden, -> { where("#{table_name}.cites_show = 't'") }
 
   scope :by_name, lambda { |name, match_options|
@@ -185,16 +191,16 @@ class MTaxonConcept < ApplicationRecord
   def self.descendants_ids(taxon_concept)
     query = <<-SQL.squish
     WITH RECURSIVE descendents AS (
-      SELECT id, rank_id, full_name
-      FROM #{self.table_name}
-      WHERE parent_id = #{taxon_concept.to_i}
-      UNION ALL
-      SELECT taxon_concepts.id, taxon_concepts.rank_id, taxon_concepts.full_name
-      FROM #{self.table_name} taxon_concepts
-      JOIN descendents h ON h.id = taxon_concepts.parent_id
-    )
-    SELECT id FROM descendents
-    ORDER BY rank_id ASC, full_name
+        SELECT id, rank_id, full_name
+        FROM #{self.table_name}
+        WHERE parent_id = #{taxon_concept.to_i}
+        UNION ALL
+        SELECT taxon_concepts.id, taxon_concepts.rank_id, taxon_concepts.full_name
+        FROM #{self.table_name} taxon_concepts
+        JOIN descendents h ON h.id = taxon_concepts.parent_id
+      )
+      SELECT id FROM descendents
+      ORDER BY rank_id ASC, full_name
     SQL
     res = ApplicationRecord.connection.execute(query)
     res.ntuples == 0 ? [ taxon_concept.to_i ] : res.map(&:values).flatten << taxon_concept.to_i
@@ -231,6 +237,7 @@ class MTaxonConcept < ApplicationRecord
     if respond_to?(ary)
       attr = send(ary)
       return [] if attr.blank?
+
       attr.map(&:to_s)
     else
       []

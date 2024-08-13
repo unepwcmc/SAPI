@@ -31,7 +31,7 @@ class ManualDownloadWorker
     raise exception
   end
 
-  private
+private
 
   def download_filename
     ctime = File.ctime(@download.path).strftime('%Y-%m-%d %H:%M')

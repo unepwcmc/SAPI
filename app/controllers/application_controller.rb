@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from CanCan::AccessDenied, with: :access_denied_error
 
-  protected
+protected
 
   def access_denied_error(exception)
     rescue_path =
@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys: extra_parameters)
   end
 
-  private
+private
 
   def track_who_does_it_current_user
     RequestStore.store[:track_who_does_it_current_user] = current_user

@@ -49,7 +49,7 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
     end
   end
 
-  protected
+protected
 
   def load_instruments
     @taxon_instrument = TaxonInstrument.new(taxon_concept_id: @taxon_concept.id)
@@ -64,7 +64,7 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
       page(params[:page])
   end
 
-  private
+private
 
   def taxon_instrument_params
     params.require(:taxon_instrument).permit(

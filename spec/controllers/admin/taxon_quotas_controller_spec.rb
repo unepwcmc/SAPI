@@ -36,12 +36,14 @@ describe Admin::TaxonQuotasController do
   describe 'POST create' do
     context 'when successful' do
       it 'renders index' do
-        post :create, params: { quota: {
-          quota: 1,
-          unit_id: @unit.id,
-          publication_date: 1.week.ago,
-          geo_entity_id: @geo_entity.id
-        }, taxon_concept_id: @taxon_concept.id }
+        post :create, params: {
+          quota: {
+            quota: 1,
+            unit_id: @unit.id,
+            publication_date: 1.week.ago,
+            geo_entity_id: @geo_entity.id
+          }, taxon_concept_id: @taxon_concept.id
+        }
         expect(response).to redirect_to(
           admin_taxon_concept_quotas_url(@taxon_concept)
         )
@@ -86,9 +88,11 @@ describe Admin::TaxonQuotasController do
 
     context 'when successful' do
       it 'renders taxon_concepts quotas page' do
-        put :update, params: { quota: {
-          publication_date: 1.week.ago
-        }, id: @quota.id, taxon_concept_id: @taxon_concept.id }
+        put :update, params: {
+          quota: {
+            publication_date: 1.week.ago
+          }, id: @quota.id, taxon_concept_id: @taxon_concept.id
+        }
         expect(response).to redirect_to(
           admin_taxon_concept_quotas_url(@taxon_concept)
         )
@@ -96,9 +100,11 @@ describe Admin::TaxonQuotasController do
     end
 
     it 'renders new when not successful' do
-      put :update, params: { quota: {
-        publication_date: nil
-      }, id: @quota.id, taxon_concept_id: @taxon_concept.id }
+      put :update, params: {
+        quota: {
+          publication_date: nil
+        }, id: @quota.id, taxon_concept_id: @taxon_concept.id
+      }
       expect(response).to render_template('new')
     end
   end

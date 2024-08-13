@@ -41,19 +41,20 @@ class NomenclatureChange::ReassignmentSummarizer
     ].compact
   end
 
-  private
+private
 
   def output_children_summary
     children_cnt = @input.taxon_concept.children.count
     return nil unless children_cnt > 0
+
     cnt =
       if @input.is_a?(NomenclatureChange::Output)
         children_cnt
       else
         @input.parent_reassignments.includes(:reassignment_targets).
           where(
-          'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
-        ).count
+            'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
+          ).count
       end
     "#{cnt} (of #{children_cnt}) children"
   end
@@ -64,14 +65,15 @@ class NomenclatureChange::ReassignmentSummarizer
       @input.taxon_concept.hybrids.count +
       @input.taxon_concept.trade_names.count
     return nil unless names_cnt > 0
+
     cnt =
       if @input.is_a?(NomenclatureChange::Output)
         names_cnt
       else
         @input.name_reassignments.includes(:reassignment_targets).
           where(
-          'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
-        ).count
+            'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
+          ).count
       end
     "#{cnt} (of #{names_cnt}) names"
   end
@@ -79,14 +81,15 @@ class NomenclatureChange::ReassignmentSummarizer
   def output_distribution_summary
     distributions_cnt = @input.taxon_concept.distributions.count
     return nil unless distributions_cnt > 0
+
     cnt =
       if @input.is_a?(NomenclatureChange::Output)
         distributions_cnt
       else
         @input.distribution_reassignments.includes(:reassignment_targets).
           where(
-          'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
-        ).count
+            'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
+          ).count
       end
     "#{cnt} (of #{distributions_cnt}) distributions"
   end
@@ -94,6 +97,7 @@ class NomenclatureChange::ReassignmentSummarizer
   def output_documents_summary
     document_citations_cnt = @input.taxon_concept.document_citation_taxon_concepts.count
     return nil unless document_citations_cnt > 0
+
     cnt =
       if @input.is_a?(NomenclatureChange::Output)
         document_citations_cnt
@@ -101,7 +105,7 @@ class NomenclatureChange::ReassignmentSummarizer
         @input.document_citation_reassignments.includes(:reassignment_targets).
           where(
             'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
-        ).count
+          ).count
       end
     "#{cnt} (of #{document_citations_cnt}) document citations"
   end
@@ -109,6 +113,7 @@ class NomenclatureChange::ReassignmentSummarizer
   def output_legislation_summary(rel, reassignable_type, title)
     objects_cnt = rel.count
     return nil unless objects_cnt > 0
+
     cnt = @input.legislation_reassignments.includes(:reassignment_targets).
       where(
         'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
@@ -119,6 +124,7 @@ class NomenclatureChange::ReassignmentSummarizer
   def output_generic_summary(rel, reassignable_type, title)
     objects_cnt = rel.count
     return nil unless objects_cnt > 0
+
     cnt = @input.reassignments.includes(:reassignment_targets).
       where(
         'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id

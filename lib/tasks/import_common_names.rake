@@ -11,7 +11,7 @@ namespace :import do
       copy_data(file, TMP_TABLE)
       ApplicationRecord.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO common_names(name, language_id, created_at, updated_at)
         SELECT subquery.*, NOW(), NOW()
         FROM (
@@ -30,8 +30,8 @@ namespace :import do
 
       [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
         puts "Import #{taxonomy_name} common names"
-        taxonomy = Taxonomy.find_by_name(taxonomy_name)
-        sql = <<-SQL
+        taxonomy = Taxonomy.find_by(name: taxonomy_name)
+        sql = <<-SQL.squish
 
           INSERT INTO taxon_commons(taxon_concept_id, common_name_id, created_at, updated_at)
           SELECT subquery.*, NOW(), NOW()
@@ -58,7 +58,7 @@ namespace :import do
       # The import process allows duplicates to enter the db, as well as case-insensitive duplicates.
       # We can delete these here, by grouping by common name converted to lowercase, language,
       # taxon_concept and taxonomy, and only keeping the first example.
-      sql = <<-SQL
+      sql = <<-SQL.squish
         SELECT min(taxon_commons.id)
         FROM taxon_commons
         LEFT JOIN common_names ON common_names.id = taxon_commons.common_name_id

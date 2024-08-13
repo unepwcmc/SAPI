@@ -110,10 +110,11 @@ class EuDecision < ApplicationRecord
 
   def eu_decision_type_and_or_srg_history
     return if eu_decision_type_id || srg_history_id
+
     errors.add(:base, "Eu decision type and SRG history can't be blank at the same time")
   end
 
-  private
+private
 
   def cache_cleanup
     DownloadsCacheCleanupWorker.perform_async('eu_decisions')

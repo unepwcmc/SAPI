@@ -5,7 +5,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
     @taxon_concept_options = search_params.taxon_concept
   end
 
-  protected
+protected
 
   def build_rel
     super
@@ -16,7 +16,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
   def initialize_rel
     super.
       select(
-      <<-SQL.squish
+        <<-SQL.squish
         data,
         taxonomy_id,
         #{Taxonomy.table_name}.name AS taxonomy_name,
@@ -24,7 +24,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
         full_name,
         name_status
       SQL
-    ).
+      ).
       joins(:taxonomy).order(:full_name)
   end
 

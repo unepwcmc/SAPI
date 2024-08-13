@@ -26,13 +26,13 @@ namespace :import do
     files.each do |file|
       SapiModule::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
-      sql = <<-SQL
+      sql = <<-SQL.squish
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
       SQL
       ApplicationRecord.connection.execute(sql)
       fix_term_codes = { 12227624 => 'LIV', 12225022 => 'DER', 12224783 => 'DER' }
       fix_term_codes.each do |shipment_number, term_code|
-        sql = <<-SQL
+        sql = <<-SQL.squish
           UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
         SQL
         ApplicationRecord.connection.execute(sql)
@@ -54,13 +54,13 @@ namespace :import do
     files.each do |file|
       SapiModule::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
-      sql = <<-SQL
+      sql = <<-SQL.squish
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
       SQL
       ApplicationRecord.connection.execute(sql)
       fix_term_codes = { 12227624 => 'LIV', 12225022 => 'DER', 12224783 => 'DER' }
       fix_term_codes.each do |shipment_number, term_code|
-        sql = <<-SQL
+        sql = <<-SQL.squish
           UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
         SQL
         ApplicationRecord.connection.execute(sql)
@@ -148,7 +148,7 @@ def populate_shipments
   has_synonym = TaxonRelationshipType.where(name: 'HAS_SYNONYM').
     select(:id).first.id
   puts 'Inserting into trade_shipments table'
-  sql = <<-SQL
+  sql = <<-SQL.squish
     INSERT INTO trade_shipments(
       legacy_shipment_number,
       source_id,
@@ -235,7 +235,7 @@ end
 
 def populate_shipments_for_trade_names
   puts "Inserting into trade_shipments Trade Names' shipments table"
-  sql = <<-SQL
+  sql = <<-SQL.squish
     INSERT INTO trade_shipments(
       legacy_shipment_number,
       source_id,

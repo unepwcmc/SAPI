@@ -87,7 +87,7 @@ namespace :elibrary do
     end
   end
     namespace :document_discussions do
-    require Rails.root.join('lib/tasks/elibrary/document_discussions_importer.rb')
+      require Rails.root.join('lib/tasks/elibrary/document_discussions_importer.rb')
     desc 'Import document discussions'
     task import: :environment do |task_name|
       check_file_provided(task_name)
@@ -102,6 +102,7 @@ namespace :elibrary do
       if ENV['SOURCE_DIR'].blank? || ENV['TARGET_DIR'].blank?
         fail "Usage: SOURCE_DIR=/abs/path/to/dir TARGET_DIR=/abs/path/to/dir rake elibrary:import:#{task_name}"
       end
+
       importer = Elibrary::DocumentFilesImporter.new(ENV.fetch('SOURCE_DIR', nil), ENV.fetch('TARGET_DIR', nil))
       importer.run
     end
@@ -113,6 +114,7 @@ namespace :elibrary do
       if ENV['SOURCE_DIR'].blank? || ENV['TARGET_DIR'].blank?
         fail "Usage: SOURCE_DIR=/abs/path/to/dir TARGET_DIR=/abs/path/to/dir rake elibrary:import:#{task_name}"
       end
+
       importer = Elibrary::ManualDocumentFilesImporter.new(ENV.fetch('SOURCE_DIR', nil), ENV.fetch('TARGET_DIR', nil))
       importer.run
     end

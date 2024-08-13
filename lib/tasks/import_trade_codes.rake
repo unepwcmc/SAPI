@@ -25,7 +25,7 @@ namespace :import do
     if args[:clear]
       puts "#{TermTradeCodesPair.where(trade_code_type: 'Purpose').delete_all} TermPurposePairs deleted"
     end
-    sql = <<-SQL
+    sql = <<-SQL.squish
       INSERT INTO term_trade_codes_pairs(term_id,
         trade_code_id, trade_code_type, created_at, updated_at)
       SELECT subquery.*, NOW(), NOW()
@@ -58,7 +58,7 @@ namespace :import do
     if args[:clear]
       puts "#{TermTradeCodesPair.where(trade_code_type: 'Unit').delete_all} TermUnitPairs deleted"
     end
-    sql = <<-SQL
+    sql = <<-SQL.squish
       INSERT INTO term_trade_codes_pairs(term_id,
         trade_code_id, trade_code_type, created_at, updated_at)
       SELECT subquery.*, NOW(), NOW()
@@ -91,7 +91,7 @@ namespace :import do
     if args[:clear]
       puts "#{Trade::TaxonConceptTermPair.delete_all} taxon_concept_term_pairs deleted"
     end
-    sql = <<-SQL
+    sql = <<-SQL.squish
       INSERT INTO trade_taxon_concept_term_pairs(taxon_concept_id, term_id,
         created_at, updated_at)
       SELECT subquery.*, NOW(), NOW()

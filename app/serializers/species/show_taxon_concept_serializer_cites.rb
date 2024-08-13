@@ -10,34 +10,39 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   has_many :processes, serializer: Species::CitesProcessSerializer, key: :cites_processes
 
   def processes
-     CitesProcess.includes(:start_event).
-       joins('LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id').
-       where(taxon_concept_id: object.id).
-       order('resolution DESC', 'geo_entities.name_en')
+    CitesProcess.includes(:start_event).
+      joins('LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id').
+      where(taxon_concept_id: object.id).
+      order('resolution DESC', 'geo_entities.name_en')
   end
 
   def include_distribution_references?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_standard_references?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_taxon_concept_references?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_cites_listing?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_eu_listing?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
@@ -50,7 +55,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
               AND trade_restrictions.geo_entity_id IN
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = :taxon_concept_id)
             )
-      ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id).
+      ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id
+      ).
       select(<<-SQL.squish
               trade_restrictions.id,
               trade_restrictions.notes,
@@ -75,15 +81,15 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 '[Quota for ' || (taxon_concept->>'rank')::TEXT || ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
               END AS subspecies_info
             SQL
-      ).order(
-        Arel.sql(
-          <<-SQL.squish
+            ).order(
+              Arel.sql(
+                <<-SQL.squish
             trade_restrictions.start_date DESC,
             geo_entity_en->>'name' ASC, trade_restrictions.notes ASC,
             subspecies_info DESC
           SQL
-        )
-      ).all
+              )
+            ).all
   end
 
   def cites_suspensions
@@ -99,7 +105,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
             OR (
               (applies_to_import OR trade_restrictions.geo_entity_id IS NULL)
               AND trade_restrictions.taxon_concept_id IN (:ancestors))
-      ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id).
+      ", object_and_children: object_and_children, ancestors: ancestors, taxon_concept_id: object.id
+      ).
       select(<<-SQL.squish
               trade_restrictions.id,
               trade_restrictions.notes,
@@ -124,15 +131,15 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 '[Suspension for ' || (taxon_concept->>'rank')::TEXT || ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
               END AS subspecies_info
             SQL
-      ).order(
-        Arel.sql(
-          <<-SQL.squish
+            ).order(
+              Arel.sql(
+                <<-SQL.squish
             trade_restrictions.is_current DESC,
             trade_restrictions.start_date DESC, geo_entity_en->>'name' ASC,
             subspecies_info DESC
           SQL
-        )
-      ).all
+              )
+            ).all
   end
 
   def eu_decisions
@@ -148,7 +155,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
             )
             #{anthozoa_statement}
-      ", object_and_children, ancestors, object.id, ancestors_field).
+      ", object_and_children, ancestors, object.id, ancestors_field
+      ).
       select(eu_decision_select_attrs).
       joins('LEFT JOIN eu_suspensions_applicability_view v ON eu_decisions.id = v.id').
       order(
@@ -213,14 +221,14 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 AND listing_changes_mview.auto_note_en IS NULL
               )
             SQL
-      )
+             )
     end
     rel.
       joins(<<-SQL.squish
               INNER JOIN taxon_concepts_mview
                 ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
             SQL
-      ).
+           ).
       select(<<-SQL.squish
               listing_changes_mview.is_current,
               listing_changes_mview.species_listing_name,
@@ -252,17 +260,17 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 ELSE NULL
               END AS subspecies_info
            SQL
-      ).order(
-        Arel.sql(
-          <<-SQL.squish
+            ).order(
+              Arel.sql(
+                <<-SQL.squish
             effective_at DESC,
             change_type_order ASC,
             species_listing_name ASC,
             subspecies_info DESC,
             party_full_name_en ASC
           SQL
-        )
-      ).all
+              )
+            ).all
   end
 
   def eu_listing_changes
@@ -281,13 +289,13 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 AND listing_changes_mview.auto_note_en IS NULL
               )
             SQL
-      )
+                     )
     end
     rel.joins(<<-SQL.squish
               INNER JOIN taxon_concepts_mview
                 ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
             SQL
-      ).
+             ).
       select(<<-SQL.squish
               listing_changes_mview.id,
               listing_changes_mview.is_current,
@@ -320,17 +328,17 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
                 ELSE NULL
               END AS subspecies_info
            SQL
-      ).order(
-        Arel.sql(
-          <<-SQL.squish
+            ).order(
+              Arel.sql(
+                <<-SQL.squish
             effective_at DESC,
             change_type_order ASC,
             species_listing_name ASC,
             subspecies_info DESC,
             party_full_name_en ASC
           SQL
-        )
-      ).all
+              )
+            ).all
   end
 
   def cites_listing
@@ -341,7 +349,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
     object.listing && object.listing['eu_listing']
   end
 
-  private
+private
 
   # The following variables are used to temporarily force the Anthozoa negative opinion
   # for Cambodia to cascade down and show regardless of the children distributions.

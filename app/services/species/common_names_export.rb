@@ -6,7 +6,7 @@ class Species::CommonNamesExport < Species::CsvCopyExport
     rel.select(sql_columns)
   end
 
-  private
+private
 
   def resource_name
     'common_names'

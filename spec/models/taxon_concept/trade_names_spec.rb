@@ -22,7 +22,8 @@ describe TaxonConcept do
       )
     end
     let!(:trade_name_rel) do
-      create(:taxon_relationship,
+      create(
+        :taxon_relationship,
         taxon_relationship_type: trade_name_relationship_type,
         taxon_concept_id: tc.id,
         other_taxon_concept_id: trade_name.id

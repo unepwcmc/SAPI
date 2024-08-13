@@ -4,7 +4,7 @@ class Trade::ComplianceShipmentsParser
     :unit, :term, :source, :purpose, :origin
   ]
 
-  protected
+protected
 
   def parse_start_date(date)
     year = date.split('/').last.to_i
@@ -18,11 +18,13 @@ class Trade::ComplianceShipmentsParser
 
   def parse_iso_code2(iso)
     return 'TRUE' if iso.blank? || iso.upcase == 'ALL'
+
     "#{imp_or_exp_country}.iso_code2 = '#{iso}'"
   end
 
   def parse_taxon_concept_id(tc)
     return 'TRUE' if tc.blank? || tc.upcase == 'ALL'
+
     "ts.taxon_concept_id = #{tc}"
   end
 

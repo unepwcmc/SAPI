@@ -51,14 +51,16 @@ class Designation < ApplicationRecord
 
   def self.search(query)
     if query.present?
-      where('UPPER(name) LIKE UPPER(:query)',
-        query: "%#{query}%")
+      where(
+        'UPPER(name) LIKE UPPER(:query)',
+        query: "%#{query}%"
+      )
     else
       all
     end
   end
 
-  private
+private
 
   def taxonomy_cannot_be_changed_if_dependent_objects_present
     if taxonomy_id_changed? && !dependent_objects.empty?

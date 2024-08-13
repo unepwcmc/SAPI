@@ -8,6 +8,7 @@ shared_context 'Pecari tajacu' do
       name = name.to_s
       var = instance_variable_get("@#{name}")
       return var if var
+
       country =  create(
         :geo_entity,
         geo_entity_type: country_geo_entity_type,
@@ -111,6 +112,7 @@ shared_context 'Pecari tajacu' do
       # Skip old sapi context let statements,
       # which are now instance variables starting with _
       next if t.to_s.include?('@_')
+
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

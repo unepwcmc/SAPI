@@ -17,16 +17,16 @@ namespace :import do
       split_file_name = file.split('/').last.split('_')
       if split_file_name[0] == Taxonomy::CMS
         kingdom = 'Animalia'
-        taxonomy = Taxonomy.find_by_name(Taxonomy::CMS)
+        taxonomy = Taxonomy.find_by(name: Taxonomy::CMS)
       else
         kingdom = split_file_name[0].titleize
-        taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+        taxonomy = Taxonomy.find_by(name: Taxonomy::CITES_EU)
       end
 
       puts "Standard reference links for #{kingdom} of #{taxonomy.name}"
 
       puts "unaliasing reference ids in #{TMP_TABLE}"
-      sql = <<-SQL
+      sql = <<-SQL.squish
         UPDATE #{TMP_TABLE} SET ref_legacy_id = map.legacy_id
         FROM references_legacy_id_mapping map
         WHERE map.alias_legacy_id = #{TMP_TABLE}.ref_legacy_id
@@ -35,7 +35,7 @@ namespace :import do
 
       puts 'inserting reference links'
       # add taxon_concept_references where missing
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id, created_at, updated_at)
         SELECT taxon_concepts.id, "references".id, NOW(), NOW()
           FROM #{TMP_TABLE}
@@ -60,7 +60,7 @@ namespace :import do
 
       puts 'updating standard reference links'
       # update usr_std_ref flags
-      sql = <<-SQL
+      sql = <<-SQL.squish
       WITH standard_references_as_ids AS (
         WITH standard_references_per_exclusion AS (
           SELECT rank, taxon_legacy_id, ref_legacy_id, '#{kingdom}'::VARCHAR AS legacy_type, is_cascaded,

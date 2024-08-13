@@ -48,7 +48,7 @@ class Trade::ChangelogCsvGenerator
 
             values = [
               version.item_id, version.id, version.event, version.created_at, whodunnit
-              ] +
+            ] +
               data_columns.map do |dc|
                 reified[dc]
               end

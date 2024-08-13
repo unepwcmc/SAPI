@@ -14,7 +14,7 @@ class Admin::SourcesController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def collection
     @sources ||= end_of_association_chain.order('code').
@@ -22,7 +22,7 @@ class Admin::SourcesController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 
-  private
+private
 
   def source_params
     params.require(:source).permit(

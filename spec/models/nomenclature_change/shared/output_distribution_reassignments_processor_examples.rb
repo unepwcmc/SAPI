@@ -16,7 +16,8 @@ shared_context 'output_distribution_reassignments_processor_examples' do
     )
     d.distribution_references.create(reference_id: create(:reference).id)
     create(:distribution, taxon_concept: old_output_subspecies)
-    create(:nomenclature_change_output_distribution_reassignment,
+    create(
+      :nomenclature_change_output_distribution_reassignment,
       output: output,
       reassignable_type: 'Distribution'
     )

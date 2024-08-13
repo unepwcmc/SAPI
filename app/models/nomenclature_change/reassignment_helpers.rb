@@ -36,7 +36,7 @@ module NomenclatureChange::ReassignmentHelpers
     note_with_resolved_placeholders(internal_note, input, output)
   end
 
-  private
+private
 
   def note_with_resolved_placeholders(note, input, output)
     (note && note.

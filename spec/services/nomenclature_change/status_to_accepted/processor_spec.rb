@@ -10,7 +10,8 @@ describe NomenclatureChange::StatusToAccepted::Processor do
       name_status: 'T',
       taxon_name: create(:taxon_name, scientific_name: 'Lolcatus nonsensus')
     )
-    create(:taxon_relationship,
+    create(
+      :taxon_relationship,
       taxon_concept: accepted_name,
       other_taxon_concept: tc,
       taxon_relationship_type: trade_name_relationship_type
@@ -27,7 +28,8 @@ describe NomenclatureChange::StatusToAccepted::Processor do
       name_status: 'S',
       taxon_name: create(:taxon_name, scientific_name: 'Foobarus ridiculus')
     )
-    create(:taxon_relationship,
+    create(
+      :taxon_relationship,
       taxon_concept: accepted_name,
       other_taxon_concept: tc,
       taxon_relationship_type: synonym_relationship_type
@@ -49,7 +51,8 @@ describe NomenclatureChange::StatusToAccepted::Processor do
       let(:output_species) { secondary_output_taxon_concept }
       let(:status_change) { t_to_a_with_input }
       before(:each) do
-        @shipment = create(:shipment,
+        @shipment = create(
+          :shipment,
           taxon_concept: accepted_name,
           reported_taxon_concept: primary_output_taxon_concept
         )

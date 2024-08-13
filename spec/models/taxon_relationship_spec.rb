@@ -57,14 +57,16 @@ describe TaxonRelationship do
       let(:taxon_concept2) { create(:taxon_concept, taxonomy_id: taxonomy2.id) }
       let(:taxon_relationship_type) { create(:taxon_relationship_type) }
       let!(:taxon_relationship) do
-        create(:taxon_relationship,
+        create(
+          :taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type.id
         )
       end
       let(:taxon_relationship2) do
-        build(:taxon_relationship,
+        build(
+          :taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type.id
@@ -83,14 +85,16 @@ describe TaxonRelationship do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let(:taxon_relationship_type2) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let!(:taxon_relationship) do
-        create(:taxon_relationship,
+        create(
+          :taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type.id
         )
       end
       let(:taxon_relationship2) do
-        build(:taxon_relationship,
+        build(
+          :taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type2.id
@@ -108,7 +112,8 @@ describe TaxonRelationship do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let(:taxon_relationship_type2) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let!(:taxon_relationship) do
-        create(:taxon_relationship,
+        create(
+          :taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type.id
@@ -116,7 +121,8 @@ describe TaxonRelationship do
       end
 
       let(:taxon_relationship2) do
-        build(:taxon_relationship,
+        build(
+          :taxon_relationship,
           taxon_concept_id: taxon_concept2.id,
           other_taxon_concept_id: taxon_concept.id,
           taxon_relationship_type_id: taxon_relationship_type2.id
@@ -135,7 +141,8 @@ describe TaxonRelationship do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let(:taxon_relationship_type2) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let!(:taxon_relationship) do
-        create(:taxon_relationship,
+        create(
+          :taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept2.id,
           taxon_relationship_type_id: taxon_relationship_type.id
@@ -143,7 +150,8 @@ describe TaxonRelationship do
       end
 
       let(:taxon_relationship2) do
-        build(:taxon_relationship,
+        build(
+          :taxon_relationship,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: taxon_concept3.id,
           taxon_relationship_type_id: taxon_relationship_type2.id

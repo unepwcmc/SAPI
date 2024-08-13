@@ -37,7 +37,7 @@ namespace :db do
   end
 
   task trim_listing_changes: :environment do
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH non_current_listing_changes AS (
         SELECT * FROM listing_changes
         WHERE NOT is_current
@@ -72,7 +72,7 @@ namespace :db do
   end
 
   task trim_trade_restrictions: :environment do
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH trade_restrictions_to_delete AS (
         SELECT * FROM trade_restrictions
         WHERE NOT is_current
@@ -110,7 +110,7 @@ namespace :db do
 
   task trim_users: :environment do
     puts 'Clearing user data'
-    ApplicationRecord.connection.execute <<-SQL
+    ApplicationRecord.connection.execute <<-SQL.squish
       UPDATE users SET
         name = 'user ' || users.id,
         email = 'user.' || users.id || '@test.org'

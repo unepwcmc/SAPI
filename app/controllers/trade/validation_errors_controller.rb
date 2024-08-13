@@ -16,7 +16,7 @@ class Trade::ValidationErrorsController < TradeController
     end
   end
 
-  private
+private
 
   def validation_error_params
     params.require(:validation_error).permit(

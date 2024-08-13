@@ -30,16 +30,18 @@ class TermTradeCodesPair < ApplicationRecord
 
   def self.search(query)
     if query.present?
-      where("UPPER(trade_codes.code) LIKE UPPER(:query)
+      where(
+        "UPPER(trade_codes.code) LIKE UPPER(:query)
             OR UPPER(terms.code) LIKE UPPER(:query)",
-        query: "%#{query}%").
+        query: "%#{query}%"
+      ).
         joins(<<-SQL.squish
           LEFT JOIN trade_codes
             ON trade_codes.id = term_trade_codes_pairs.trade_code_id
           LEFT JOIN trade_codes terms
             ON terms.id = term_trade_codes_pairs.term_id
         SQL
-      )
+             )
     else
       all
     end

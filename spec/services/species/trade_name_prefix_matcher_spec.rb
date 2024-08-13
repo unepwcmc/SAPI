@@ -15,7 +15,8 @@ describe Species::TaxonConceptPrefixMatcher do
       ),
       name_status: 'N'
     )
-    create(:taxon_relationship,
+    create(
+      :taxon_relationship,
       taxon_concept: @accepted_name,
       other_taxon_concept: @trade_name,
       taxon_relationship_type: trade_name_relationship_type
@@ -30,30 +31,36 @@ describe Species::TaxonConceptPrefixMatcher do
     context 'when searching for status N species' do
       context 'when trade visibility' do
         subject do
-          Species::TaxonConceptPrefixMatcher.new({
-            taxon_concept_query: 'Vidua',
-            ranks: [],
-            visibility: :trade
-          })
+          Species::TaxonConceptPrefixMatcher.new(
+            {
+              taxon_concept_query: 'Vidua',
+              ranks: [],
+              visibility: :trade
+            }
+          )
         end
         specify { expect(subject.results).to include(@status_N_species_ac) }
       end
       context 'when trade internal visibility' do
         subject do
-          Species::TaxonConceptPrefixMatcher.new({
-            taxon_concept_query: 'Vidua',
-            ranks: [],
-            visibility: :trade_internal
-          })
+          Species::TaxonConceptPrefixMatcher.new(
+            {
+              taxon_concept_query: 'Vidua',
+              ranks: [],
+              visibility: :trade_internal
+            }
+          )
         end
         specify { expect(subject.results).to include(@status_N_species_ac) }
       end
       context 'when speciesplus visibility' do
         subject do
-          Species::TaxonConceptPrefixMatcher.new({
-            taxon_concept_query: 'Vidua',
-            ranks: []
-          })
+          Species::TaxonConceptPrefixMatcher.new(
+            {
+              taxon_concept_query: 'Vidua',
+              ranks: []
+            }
+          )
         end
         specify { expect(subject.results).not_to include(@status_N_species_ac) }
       end
@@ -61,32 +68,38 @@ describe Species::TaxonConceptPrefixMatcher do
     context 'when searching for trade name' do
       context 'when trade visibility' do
         subject do
-          Species::TaxonConceptPrefixMatcher.new({
-            taxon_concept_query: 'Pavona',
-            ranks: [],
-            visibility: :trade
-          })
+          Species::TaxonConceptPrefixMatcher.new(
+            {
+              taxon_concept_query: 'Pavona',
+              ranks: [],
+              visibility: :trade
+            }
+          )
         end
         specify { expect(subject.results).not_to include(@trade_name_ac) }
         specify { expect(subject.results).to include(@accepted_name_ac) }
       end
       context 'when trade internal visibility' do
         subject do
-          Species::TaxonConceptPrefixMatcher.new({
-            taxon_concept_query: 'Pavona',
-            ranks: [],
-            visibility: :trade_internal
-          })
+          Species::TaxonConceptPrefixMatcher.new(
+            {
+              taxon_concept_query: 'Pavona',
+              ranks: [],
+              visibility: :trade_internal
+            }
+          )
         end
         specify { expect(subject.results).to include(@trade_name_ac) }
         specify { expect(subject.results).to include(@accepted_name_ac) }
       end
       context 'when speciesplus visibility' do
         subject do
-          Species::TaxonConceptPrefixMatcher.new({
-            taxon_concept_query: 'Pavona',
-            ranks: []
-          })
+          Species::TaxonConceptPrefixMatcher.new(
+            {
+              taxon_concept_query: 'Pavona',
+              ranks: []
+            }
+          )
         end
         specify { expect(subject.results).not_to include(@trade_name_ac) }
         specify { expect(subject.results).to include(@accepted_name_ac) }

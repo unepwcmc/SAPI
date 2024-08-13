@@ -55,7 +55,8 @@ describe Admin::TaxonRelationshipsController do
         create_cms_species
       end
       let!(:rel) do
-        create(:taxon_relationship,
+        create(
+          :taxon_relationship,
           taxon_relationship_type: equal_relationship_type,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: other_taxon_concept.id
@@ -84,7 +85,8 @@ describe Admin::TaxonRelationshipsController do
         create_cites_eu_species(name_status: 'S')
       end
       let!(:rel) do
-        create(:taxon_relationship,
+        create(
+          :taxon_relationship,
           taxon_relationship_type: synonym_relationship_type,
           taxon_concept_id: taxon_concept.id,
           other_taxon_concept_id: other_taxon_concept.id

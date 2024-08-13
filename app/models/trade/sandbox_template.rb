@@ -49,34 +49,35 @@ class Trade::SandboxTemplate < ApplicationRecord
     begin
       "Trade::#{klass_name}".constantize
     rescue NameError
-      klass = Class.new(ApplicationRecord) do
-        self.table_name = table_name
-        has_paper_trail
-        include ActiveModel::ForbiddenAttributesProtection
-        # Too dynamic, hard to trace where using it.
-        # attr_accessible :appendix,
-        #   :taxon_name,
-        #   :term_code,
-        #   :quantity,
-        #   :unit_code,
-        #   :trading_partner,
-        #   :country_of_origin,
-        #   :import_permit,
-        #   :export_permit,
-        #   :origin_permit,
-        #   :purpose_code,
-        #   :source_code,
-        #   :year
-        belongs_to :taxon_concept, optional: true
-        belongs_to :reported_taxon_concept, class_name: 'TaxonConcept', optional: true
+      klass =
+        Class.new(ApplicationRecord) do
+          self.table_name = table_name
+               has_paper_trail
+               include ActiveModel::ForbiddenAttributesProtection
+               # Too dynamic, hard to trace where using it.
+               # attr_accessible :appendix,
+               #   :taxon_name,
+               #   :term_code,
+               #   :quantity,
+               #   :unit_code,
+               #   :trading_partner,
+               #   :country_of_origin,
+               #   :import_permit,
+               #   :export_permit,
+               #   :origin_permit,
+               #   :purpose_code,
+               #   :source_code,
+               #   :year
+               belongs_to :taxon_concept, optional: true
+               belongs_to :reported_taxon_concept, class_name: 'TaxonConcept', optional: true
 
-        def sanitize
-          self.class.sanitize(self.id)
-        end
+               def sanitize
+                 self.class.sanitize(self.id)
+               end
 
-        def self.sanitize(id = nil)
-          where(id: id).update_all(
-            'appendix = UPPER(SQUISH_NULL(appendix)),
+               def self.sanitize(id = nil)
+                 where(id: id).update_all(
+                   'appendix = UPPER(SQUISH_NULL(appendix)),
             year = SQUISH_NULL(year),
             term_code = UPPER(SQUISH_NULL(term_code)),
             unit_code = UPPER(SQUISH_NULL(unit_code)),
@@ -88,57 +89,61 @@ class Trade::SandboxTemplate < ApplicationRecord
             import_permit = UPPER(SQUISH_NULL(import_permit)),
             export_permit = UPPER(SQUISH_NULL(export_permit)),
             origin_permit = UPPER(SQUISH_NULL(origin_permit))
-            ')
-          # resolve reported & accepted taxon
-          connection.execute(
-            sanitize_sql_array([
-              'SELECT * FROM resolve_taxa_in_sandbox(?, ?)',
-              @table_name,
-              id
-            ])
-          )
-        end
+            '
+                 )
+                 # resolve reported & accepted taxon
+                 connection.execute(
+                   sanitize_sql_array(
+                     [
+                       'SELECT * FROM resolve_taxa_in_sandbox(?, ?)',
+                       @table_name,
+                       id
+                     ]
+                   )
+                 )
+               end
 
-        def save(...)
-          super
-          sanitize
-        end
+               def save(...)
+                 super
+                 sanitize
+               end
 
-        def destroy
-          super
-          self.class.update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
-        end
+               def destroy
+                 super
+                 self.class.update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
+               end
 
-        def self.records_for_batch_operation(validation_error, annual_report_upload)
-          vr = validation_error.validation_rule
-          joins(
-            <<-SQL.squish
+               def self.records_for_batch_operation(validation_error, annual_report_upload)
+                 vr = validation_error.validation_rule
+                 joins(
+                   <<-SQL.squish
             JOIN (
               #{vr.matching_records_for_aru_and_error(annual_report_upload, validation_error).to_sql}
             ) matching_records on #{table_name}.id = matching_records.id
             SQL
-          )
-        end
+                 )
+               end
 
-        def self.update_batch(updates, validation_error, annual_report_upload)
-          return unless updates
-          updates[:updated_at] = Time.now
-          records_for_batch_operation(validation_error, annual_report_upload).
-            update_all(updates.to_h)
-          sanitize
-        end
+               def self.update_batch(updates, validation_error, annual_report_upload)
+                 return unless updates
 
-        def self.destroy_batch(validation_error, annual_report_upload)
-          records_for_batch_operation(validation_error, annual_report_upload).
-            each(&:delete)
-          update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
+                 updates[:updated_at] = Time.now
+                 records_for_batch_operation(validation_error, annual_report_upload).
+                   update_all(updates.to_h)
+                 sanitize
+               end
+
+               def self.destroy_batch(validation_error, annual_report_upload)
+                 records_for_batch_operation(validation_error, annual_report_upload).
+                   each(&:delete)
+                 update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
+               end
         end
-      end
       Trade.const_set(klass_name, klass)
     end
   end
 
-  private
+private
 
   def self.create_table_stmt(target_table_name)
     sql = <<-SQL.squish
@@ -163,11 +168,13 @@ class Trade::SandboxTemplate < ApplicationRecord
   end
 
   def self.create_view_stmt(target_table_name, idx)
-    sanitize_sql_array([
-      'SELECT * FROM create_trade_sandbox_view(?, ?)',
-      target_table_name,
-      idx
-    ])
+    sanitize_sql_array(
+      [
+        'SELECT * FROM create_trade_sandbox_view(?, ?)',
+        target_table_name,
+        idx
+      ]
+    )
   end
 
   def self.drop_stmt(target_table_name)

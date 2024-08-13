@@ -4,6 +4,7 @@ class Trade::ReportedTaxonConceptResolver
     # automatically resolve accepted taxon name
     reported_taxon = TaxonConcept.find_by(id: reported_taxon_concept_id)
     return [] unless reported_taxon
+
     @accepted_taxa = reported_taxon &&
       case reported_taxon.name_status
       when 'S'

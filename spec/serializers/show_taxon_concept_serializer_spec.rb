@@ -5,13 +5,15 @@ describe Species::ShowTaxonConceptSerializer do
   pending 'when species is output of recent nomenclature changes' do
     let(:species) { create_cites_eu_species }
     let(:nomenclature_change) do
-      create(:nomenclature_change,
+      create(
+        :nomenclature_change,
         status: 'submitted',
         created_at: 5.months.ago
       )
     end
     let!(:output) do
-      create(:nomenclature_change_output,
+      create(
+        :nomenclature_change_output,
         nomenclature_change_id: nomenclature_change.id,
         taxon_concept_id: species.id
       )
@@ -23,13 +25,15 @@ describe Species::ShowTaxonConceptSerializer do
   pending 'when new species is output of recent nomenclature changes' do
     let(:species) { create_cites_eu_species }
     let(:nomenclature_change) do
-      create(:nomenclature_change,
+      create(
+        :nomenclature_change,
         status: 'submitted',
         created_at: 5.months.ago
       )
     end
     let!(:output) do
-      create(:nomenclature_change_output,
+      create(
+        :nomenclature_change_output,
         nomenclature_change_id: nomenclature_change.id,
         new_taxon_concept_id: species.id
       )
@@ -41,13 +45,15 @@ describe Species::ShowTaxonConceptSerializer do
   context 'when species is output of old nomenclature changes' do
     let(:species) { create_cites_eu_species }
     let(:nomenclature_change) do
-      create(:nomenclature_change,
+      create(
+        :nomenclature_change,
         status: 'submitted',
         created_at: 7.months.ago
       )
     end
     let!(:output) do
-      create(:nomenclature_change_output,
+      create(
+        :nomenclature_change_output,
         nomenclature_change_id: nomenclature_change.id,
         taxon_concept_id: species.id
       )
@@ -65,12 +71,14 @@ describe Species::ShowTaxonConceptSerializer do
   context 'when nomenclature changes is not yet submitted' do
     let(:species) { create_cites_eu_species }
     let(:nomenclature_change) do
-      create(:nomenclature_change,
+      create(
+        :nomenclature_change,
         created_at: 5.months.ago
       )
     end
     let!(:output) do
-      create(:nomenclature_change_output,
+      create(
+        :nomenclature_change_output,
         nomenclature_change_id: nomenclature_change.id,
         taxon_concept_id: species.id
       )

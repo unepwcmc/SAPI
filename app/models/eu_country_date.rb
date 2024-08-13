@@ -17,7 +17,7 @@ class EuCountryDate < ApplicationRecord
   validates :eu_accession_year, presence: true
   validate :is_country
 
-  private
+private
 
   def is_country
     unless self.geo_entity.is_country?

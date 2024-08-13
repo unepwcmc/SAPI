@@ -9,7 +9,7 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO "languages" (name_en, iso_code3, iso_code1, created_at, updated_at)
         SELECT name_en, UPPER(iso_code3), UPPER(iso_code1), current_date, current_date
           FROM #{TMP_TABLE}

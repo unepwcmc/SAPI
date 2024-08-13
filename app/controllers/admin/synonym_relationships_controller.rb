@@ -56,14 +56,14 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
     end
   end
 
-  protected
+protected
 
   def load_synonym_relationship_type
     @synonym_relationship_type = TaxonRelationshipType.
       find_by(name: TaxonRelationshipType::HAS_SYNONYM)
   end
 
-  private
+private
 
   def synonym_relationship_params
     params.require(:taxon_relationship).permit(

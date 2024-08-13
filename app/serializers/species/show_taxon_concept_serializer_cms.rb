@@ -6,21 +6,25 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
 
   def include_standard_references?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_taxon_concept_references?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_distribution_references?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_cms_listing?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
@@ -40,12 +44,12 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
                 AND listing_changes_mview.auto_note_en IS NULL
               )
             SQL
-      ).
+           ).
       joins(<<-SQL.squish
               INNER JOIN taxon_concepts_mview
                 ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
             SQL
-      ).
+           ).
       select(<<-SQL.squish
               CASE
                 WHEN listing_changes_mview.change_type_name = 'DELETION'
@@ -70,12 +74,13 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
                 ELSE NULL
               END AS subspecies_info
            SQL
-      ).
+            ).
       order(Arel.sql(<<-SQL.squish
           effective_at DESC,
           subspecies_info DESC
         SQL
-      )).all
+                    )
+           ).all
   end
 
   def cms_instruments

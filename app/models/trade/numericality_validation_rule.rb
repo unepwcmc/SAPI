@@ -20,7 +20,7 @@ class Trade::NumericalityValidationRule < Trade::ValidationRule
     column_names.join(', ') + ' must be a number'
   end
 
-  private
+private
 
   # Returns records that do not pass the ISNUMERIC test for all columns
   # specified in column_names.
@@ -29,9 +29,10 @@ class Trade::NumericalityValidationRule < Trade::ValidationRule
     sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
     s = Arel::Table.new(table_name)
     arel_columns = column_names.map { |c| Arel::Attribute.new(s, c) }
-    isnumeric_columns = arel_columns.map do |a|
-      Arel::Nodes::NamedFunction.new 'isnumeric', [ a ]
-    end
+    isnumeric_columns =
+      arel_columns.map do |a|
+        Arel::Nodes::NamedFunction.new 'isnumeric', [ a ]
+      end
     arel_nodes = isnumeric_columns.map { |c| c.eq(false) }
     sandbox_klass.select('*').where(arel_nodes.inject(&:or))
   end

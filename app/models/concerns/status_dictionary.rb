@@ -17,7 +17,7 @@ module StatusDictionary
       end
     end
 
-    protected
+  protected
 
     def define_dynamic_status_check(status)
       class_eval <<-RUBY

@@ -43,7 +43,7 @@ class Admin::SimpleCrudController < Admin::AdminController
     end
   end
 
-  protected
+protected
 
   def load_associations; end
 

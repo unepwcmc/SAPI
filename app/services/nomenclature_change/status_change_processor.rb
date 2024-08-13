@@ -34,7 +34,7 @@ class NomenclatureChange::StatusChangeProcessor
     ]
   end
 
-  private
+private
 
   def create_relationships(taxon_concept, rel_type)
     @linked_names.each do |linked_name|

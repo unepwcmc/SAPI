@@ -57,7 +57,8 @@ describe NomenclatureChange::FullReassignment do
 
     context 'when CITES Suspensions present' do
       before(:each) do
-        create(:cites_suspension, taxon_concept: old_tc,
+        create(
+          :cites_suspension, taxon_concept: old_tc,
           start_notification: create(:cites_suspension_notification, designation: cites)
         )
         subject.process

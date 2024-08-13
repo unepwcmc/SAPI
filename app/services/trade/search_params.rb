@@ -46,7 +46,7 @@ class Trade::SearchParams < Hash
     new(params)
   end
 
-  private
+private
 
   COMPLIANCE_TYPES_VIEWS = {
     appendix_i: 'trade_shipments_appendix_i_mview',

@@ -5,6 +5,7 @@ class NomenclatureChange::InputTaxonConceptProcessor
 
   def run
     return false unless @input.taxon_concept
+
     Rails.logger.debug { "Processing input #{@input.taxon_concept.full_name}" }
     tc = @input.taxon_concept
     tc.update(

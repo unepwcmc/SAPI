@@ -5,16 +5,19 @@ class Species::CitesListingChangeSerializer < Species::ListingChangeSerializer
 
   def include_is_addition?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_note_fr?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_note_es?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 

@@ -3,12 +3,13 @@ class Species::IucnMappingsExport < Species::CsvCopyExport
     rel = IucnMapping.from(table_name).
       joins(:taxon_concept).
       joins("LEFT JOIN taxon_concepts AS accepted_names ON
-            accepted_name_id = accepted_names.id").
+            accepted_name_id = accepted_names.id"
+           ).
       order('taxon_concepts.name_status, taxon_concepts.taxonomic_position, taxon_concepts.full_name')
     rel.select(sql_columns)
   end
 
-  private
+private
 
   def resource_name
     'iucn_mappings'

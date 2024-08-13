@@ -53,9 +53,11 @@ class Checklist::DownloadsController < ApplicationController
       # failing when chunked_transfer_encoding is set in nginx (1.8.1)
       file_path = Pathname.new(@download.path).realpath
       response.headers['Content-Length'] = File.size(file_path).to_s
-      send_file(file_path,
+      send_file(
+        file_path,
         filename: @download.filename,
-        type: @download.format)
+        type: @download.format
+      )
     else
       render json: { error: 'Download not processed' }
     end
@@ -71,7 +73,7 @@ class Checklist::DownloadsController < ApplicationController
     send_download
   end
 
-  private
+private
 
   def download_module
     format_mapping = {
@@ -88,9 +90,11 @@ class Checklist::DownloadsController < ApplicationController
     # failing when chunked_transfer_encoding is set in nginx (1.8.1)
     file_path = Pathname.new(@download_path).realpath
     response.headers['Content-Length'] = File.size(file_path).to_s
-    send_file(file_path,
+    send_file(
+      file_path,
       filename: @doc.download_name,
-      type: @doc.ext)
+      type: @doc.ext
+    )
   end
 
   def not_found

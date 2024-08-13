@@ -5,7 +5,8 @@ describe NomenclatureChange::Lump::Processor do
 
   before(:each) do
     synonym_relationship_type
-    @shipment = create(:shipment,
+    @shipment = create(
+      :shipment,
       taxon_concept: input_species1,
       reported_taxon_concept: input_species1
     )
@@ -71,7 +72,8 @@ describe NomenclatureChange::Lump::Processor do
         create_cites_I_addition(taxon_concept: input_species1_child)
       end
       let(:lump) do
-        create(:nomenclature_change_lump,
+        create(
+          :nomenclature_change_lump,
           inputs_attributes: {
             0 => {
               taxon_concept_id: input_species1.id,
@@ -125,7 +127,8 @@ describe NomenclatureChange::Lump::Processor do
         create_cites_eu_subspecies(parent: output_species)
       end
       let(:lump) do
-        create(:nomenclature_change_lump,
+        create(
+          :nomenclature_change_lump,
           inputs_attributes: {
             0 => {
               taxon_concept_id: input_species1.id,
@@ -145,13 +148,15 @@ describe NomenclatureChange::Lump::Processor do
       let(:input) { lump.inputs.first }
       let(:output) { lump.output }
       let(:reassignment) do
-        create(:nomenclature_change_parent_reassignment,
+        create(
+          :nomenclature_change_parent_reassignment,
           input: input,
           reassignable_id: input_species1_child.id
         )
       end
       let!(:reassignment_target) do
-        create(:nomenclature_change_reassignment_target,
+        create(
+          :nomenclature_change_reassignment_target,
           reassignment: reassignment,
           output: output
         )
@@ -244,7 +249,8 @@ describe NomenclatureChange::Lump::Processor do
       )
     end
     let(:lump) do
-      create(:nomenclature_change_lump,
+      create(
+        :nomenclature_change_lump,
         inputs_attributes: {
           0 => { taxon_concept_id: input_genus.id },
           1 => { taxon_concept_id: output_genus.id }
@@ -254,13 +260,15 @@ describe NomenclatureChange::Lump::Processor do
       )
     end
     let(:reassignment) do
-      create(:nomenclature_change_parent_reassignment,
+      create(
+        :nomenclature_change_parent_reassignment,
         input: lump.inputs.first,
         reassignable_id: input_genus_child.id
       )
     end
     let!(:reassignment_target) do
-      create(:nomenclature_change_reassignment_target,
+      create(
+        :nomenclature_change_reassignment_target,
         reassignment: reassignment,
         output: lump.output
       )

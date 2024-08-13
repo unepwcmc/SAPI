@@ -27,9 +27,10 @@ class Trade::PresenceValidationRule < Trade::ValidationRule
     table_name = annual_report_upload.sandbox.table_name
     sandbox_klass = Trade::SandboxTemplate.ar_klass(table_name)
     s = Arel::Table.new(table_name)
-    arel_nodes = column_names.map do |c|
-      s[c].eq(nil)
-    end
+    arel_nodes =
+      column_names.map do |c|
+        s[c].eq(nil)
+      end
     sandbox_klass.select(Arel.star).where(arel_nodes.inject(&:and))
   end
 end

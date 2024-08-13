@@ -4,9 +4,13 @@ class CitesTrade::ExportsController < CitesTradeController
   def download
     respond_to do |format|
       format.html do
-        search = Trade::ShipmentsExportFactory.new(search_params.merge({
-          per_page: Trade::ShipmentsExport::PUBLIC_CSV_LIMIT
-        }))
+        search = Trade::ShipmentsExportFactory.new(
+          search_params.merge(
+            {
+              per_page: Trade::ShipmentsExport::PUBLIC_CSV_LIMIT
+            }
+          )
+        )
         result = search.export
         if result.is_a?(Array)
           # this was added in order to prevent download managers from
@@ -20,9 +24,13 @@ class CitesTrade::ExportsController < CitesTradeController
         end
       end
       format.json do
-        search = Trade::ShipmentsExportFactory.new(search_params.merge({
-          report_type: :raw # get the raw count
-        }))
+        search = Trade::ShipmentsExportFactory.new(
+          search_params.merge(
+            {
+              report_type: :raw # get the raw count
+            }
+          )
+        )
         render json: {
           total: search.total_cnt,
           csv_limit: Trade::ShipmentsExport::PUBLIC_CSV_LIMIT,

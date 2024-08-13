@@ -50,16 +50,17 @@ module MaterialDocIdsRetriever
       params.merge(show_private: false, per_page: 10_000), 'public'
     )
 
-    ordered_docs = docs.cached_results.sort_by do |doc|
-      doc_tc_ids = doc.taxon_concept_ids
-      params['taxon_concepts_ids'].index { |id| doc_tc_ids.include? id }
-    end
+    ordered_docs =
+      docs.cached_results.sort_by do |doc|
+        doc_tc_ids = doc.taxon_concept_ids
+           params['taxon_concepts_ids'].index { |id| doc_tc_ids.include? id }
+      end
 
     doc_ids = ordered_docs.map { |doc| locale_document(doc) }.flatten
     doc_ids = doc_ids.pluck('id')
   end
 
-  private
+private
 
   def self.locale_document(doc)
     document = doc.document_language_versions.select { |h| h['locale_document'] == 'true' }
@@ -94,6 +95,7 @@ module MaterialDocIdsRetriever
 
   def self.order_case(match, taxon_name)
     return '' if taxon_name.present? && match.nil?
+
     query = "CASE
               WHEN taxon_concept_id = ancestor_taxon_concept_id
             "

@@ -19,7 +19,8 @@ class Checklist::Csv::History < Checklist::History
           WHEN change_type_name = 'DELETION' THEN 3
         END
         SQL
-      ))
+                    )
+           )
   end
 
   def select_columns

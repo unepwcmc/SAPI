@@ -58,7 +58,7 @@ class Trade::ShipmentsController < TradeController
       each_serializer: Trade::TaxonConceptSerializer
   end
 
-  private
+private
 
   def shipment_attributes
     [

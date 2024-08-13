@@ -9,6 +9,7 @@ class Species::ListingChangeSerializer < ActiveModel::Serializer
 
   def hash_display
     return '' if object.hash_ann_parent_symbol.blank?
+
     object.hash_ann_parent_symbol + ' ' + object.hash_ann_symbol
   end
 end

@@ -49,7 +49,8 @@ describe NomenclatureChange::Lump::Constructor do
       end
       context 'when previously no notes in place' do
         let(:lump) do
-          create(:nomenclature_change_lump,
+          create(
+            :nomenclature_change_lump,
             inputs_attributes: {
               0 => { taxon_concept_id: input_species1.id },
               1 => { taxon_concept_id: input_species2.id }
@@ -61,7 +62,8 @@ describe NomenclatureChange::Lump::Constructor do
         specify { expect(output.note_en).not_to be_blank }
         context 'when output = input' do
           let(:lump) do
-            create(:nomenclature_change_lump,
+            create(
+              :nomenclature_change_lump,
               inputs_attributes: {
                 0 => { taxon_concept_id: input_species1.id },
                 1 => { taxon_concept_id: input_species2.id }
@@ -125,7 +127,8 @@ describe NomenclatureChange::Lump::Constructor do
         let(:input_species) do
           s = create_cites_eu_species
           2.times do
-            create(:taxon_relationship,
+            create(
+              :taxon_relationship,
               taxon_concept: s,
               other_taxon_concept: create_cites_eu_species(name_status: 'S'),
               taxon_relationship_type: synonym_relationship_type

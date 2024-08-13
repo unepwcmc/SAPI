@@ -1,12 +1,14 @@
 shared_context 'distribution_reassignments_processor_examples' do
   let(:reassignment) do
-    create(:nomenclature_change_distribution_reassignment,
+    create(
+      :nomenclature_change_distribution_reassignment,
       input: input,
       reassignable_type: 'Distribution'
     )
   end
   let!(:reassignment_target) do
-    create(:nomenclature_change_reassignment_target,
+    create(
+      :nomenclature_change_reassignment_target,
       reassignment: reassignment,
       output: output
     )

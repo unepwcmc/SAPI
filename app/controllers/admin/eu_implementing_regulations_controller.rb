@@ -3,7 +3,7 @@ class Admin::EuImplementingRegulationsController < Admin::EventsController
   defaults resource_class: EuImplementingRegulation,
     collection_name: 'eu_implementing_regulations', instance_name: 'eu_implementing_regulation'
 
-  protected
+protected
 
   def collection
     @eu_implementing_regulations ||= end_of_association_chain.
@@ -16,7 +16,7 @@ class Admin::EuImplementingRegulationsController < Admin::EventsController
     'admin/eu_regulations_common/list'
   end
 
-  private
+private
 
   def eu_implementing_regulation_params
     params.require(:eu_implementing_regulation).permit(

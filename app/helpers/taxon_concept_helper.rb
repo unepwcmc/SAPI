@@ -1,15 +1,19 @@
 module TaxonConceptHelper
   def admin_taxon_concept_title
     content_tag(:div, class: 'admin-header') do
-      content_tag(:h1,
+      content_tag(
+        :h1,
         if block_given?
           yield
         else
           controller_name.titleize
         end
-      ) + (content_tag(:div, class: 'action-buttons') do
-        admin_add_new_taxon_concept_multi
-      end)
+      ) + (
+        content_tag(:div, class: 'action-buttons'
+        ) do
+          admin_add_new_taxon_concept_multi
+        end
+      )
     end
   end
 
@@ -217,6 +221,7 @@ module TaxonConceptHelper
       end +
       content_tag(:div, class: 'internal-notes-meta') do
         updated_at = comment.try(:updated_at).try(:strftime, '%d/%m/%y %H:%M')
+
         if updated_at
           "at #{updated_at}"
         else
@@ -249,6 +254,7 @@ module TaxonConceptHelper
 
   def taxon_concept_internal_note_display(comment)
     return '' unless comment
+
     content_tag(:table, style: 'width:100%') do
       content_tag(:tr) do
         content_tag(:td, style: 'width:30%') do

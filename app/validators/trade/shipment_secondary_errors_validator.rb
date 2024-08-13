@@ -6,6 +6,7 @@ class Trade::ShipmentSecondaryErrorsValidator < ActiveModel::Validator
     end.compact
     # return true if secondary errors should not prevent from saving
     return true if shipment.ignore_warnings
+
     false unless shipment.warnings.empty?
   end
 end

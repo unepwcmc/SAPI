@@ -2,7 +2,7 @@ class Api::RanksController < ApplicationController
   respond_to :json
   inherit_resources
 
-  protected
+protected
 
   def collection
     @ranks ||= end_of_association_chain.

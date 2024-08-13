@@ -55,12 +55,13 @@ class Distribution < ApplicationRecord
           create({
             distribution_id: self.id,
             reference_id: reference.id
-          })
+          }
+                )
       end
     end
   end
 
-  private
+private
 
   def normalise_blank_values
     attributes.each do |column, value|

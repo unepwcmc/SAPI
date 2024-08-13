@@ -9,6 +9,7 @@ shared_context :sapi do
 
   def cites
     return @_cites if @_cites
+
     d = Designation.find_by(taxonomy_id: cites_eu.id, name: Designation::CITES)
     unless d
       d = create(:designation, name: Designation::CITES, taxonomy: cites_eu)
@@ -32,6 +33,7 @@ shared_context :sapi do
 
   def eu
     return @_eu if @_eu
+
     d = Designation.find_by(taxonomy_id: cites_eu.id, name: Designation::EU)
     unless d
       d = create(:designation, name: Designation::EU, taxonomy: cites_eu)
@@ -54,6 +56,7 @@ shared_context :sapi do
 
   def cms_designation
     return @_cms_designation if @_cms_designation
+
     d = Designation.find_by(taxonomy_id: cms.id, name: Designation::CMS)
     unless d
       d = create(:designation, name: Designation::CMS, taxonomy: cms)
@@ -90,10 +93,12 @@ shared_context :sapi do
       define_method "create_cites_#{app}_#{ch.downcase}" do |options = {}|
         create(
           :listing_change,
-          options.merge({
-            change_type: send(:"cites_#{ch.downcase}"),
-            species_listing: send(:"cites_#{app}")
-          })
+          options.merge(
+            {
+              change_type: send(:"cites_#{ch.downcase}"),
+              species_listing: send(:"cites_#{app}")
+            }
+          )
         )
       end
     end
@@ -104,10 +109,12 @@ shared_context :sapi do
       define_method "create_eu_#{app}_#{ch.downcase}" do |options = {}|
         create(
           :listing_change,
-          options.merge({
-            change_type: send(:"eu_#{ch.downcase}"),
-            species_listing: send(:"eu_#{app}")
-          })
+          options.merge(
+            {
+              change_type: send(:"eu_#{ch.downcase}"),
+              species_listing: send(:"eu_#{app}")
+            }
+          )
         )
       end
     end
@@ -125,10 +132,12 @@ shared_context :sapi do
       define_method "create_cms_#{app}_#{ch.downcase}" do |options = {}|
         create(
           :listing_change,
-          options.merge({
-            change_type: send(:"cms_#{ch.downcase}"),
-            species_listing: send(:"cms_#{app}")
-          })
+          options.merge(
+            {
+              change_type: send(:"cms_#{ch.downcase}"),
+              species_listing: send(:"cms_#{app}")
+            }
+          )
         )
       end
     end
@@ -295,43 +304,53 @@ shared_context :sapi do
     define_method "create_cites_eu_#{rank.downcase}" do |options = {}|
       create(
         :taxon_concept,
-        options.merge({
-          rank: create(:rank, name: rank),
-          taxonomy: cites_eu
-        })
+        options.merge(
+          {
+            rank: create(:rank, name: rank),
+            taxonomy: cites_eu
+          }
+        )
       )
     end
     define_method "build_cites_eu_#{rank.downcase}" do |options = {}|
       build(
         :taxon_concept,
-        options.merge({
-          rank: create(:rank, name: rank),
-          taxonomy: cites_eu
-        })
+        options.merge(
+          {
+            rank: create(:rank, name: rank),
+            taxonomy: cites_eu
+          }
+        )
       )
     end
     define_method "create_cms_#{rank.downcase}" do |options = {}|
       create(
         :taxon_concept,
-        options.merge({
-          rank: create(:rank, name: rank),
-          taxonomy: cms
-        })
+        options.merge(
+          {
+            rank: create(:rank, name: rank),
+            taxonomy: cms
+          }
+        )
       )
     end
     define_method "build_cms_#{rank.downcase}" do |options = {}|
       build(
         :taxon_concept,
-        options.merge({
-          rank: create(:rank, name: rank),
-          taxonomy: cms
-        })
+        options.merge(
+          {
+            rank: create(:rank, name: rank),
+            taxonomy: cms
+          }
+        )
       )
     end
   end
 
-  [ :cites_cop, :cites_ac, :cites_pc, :cites_tc, :cites_extraordinary_meeting,
-    :cites_suspension_notification ].each do |cites_event_type|
+  [
+    :cites_cop, :cites_ac, :cites_pc, :cites_tc, :cites_extraordinary_meeting,
+    :cites_suspension_notification
+  ].each do |cites_event_type|
     define_method "create_#{cites_event_type}" do |options = {}|
       create(
         cites_event_type,
@@ -345,8 +364,10 @@ shared_context :sapi do
       )
     end
   end
-  [ :eu_regulation, :eu_suspension_regulation, :eu_implementing_regulation,
-    :eu_council_regulation, :ec_srg ].each do |eu_event_type|
+  [
+    :eu_regulation, :eu_suspension_regulation, :eu_implementing_regulation,
+    :eu_council_regulation, :ec_srg
+  ].each do |eu_event_type|
     define_method "create_#{eu_event_type}" do |options = {}|
       create(
         eu_event_type,
@@ -387,14 +408,16 @@ shared_context :sapi do
   end
 
   def create_taxon_concept_appendix_year_validation
-    create(:taxon_concept_appendix_year_validation_rule,
+    create(
+      :taxon_concept_appendix_year_validation_rule,
       is_primary: false,
       is_strict: true
     )
   end
 
   def create_term_unit_validation
-    create(:inclusion_validation_rule,
+    create(
+      :inclusion_validation_rule,
       column_names: [ 'term_code', 'unit_code' ],
       valid_values_view: 'valid_term_unit_view',
       is_primary: false
@@ -402,7 +425,8 @@ shared_context :sapi do
   end
 
   def create_term_purpose_validation
-    create(:inclusion_validation_rule,
+    create(
+      :inclusion_validation_rule,
       column_names: [ 'term_code', 'purpose_code' ],
       valid_values_view: 'valid_term_purpose_view',
       is_primary: false
@@ -410,7 +434,8 @@ shared_context :sapi do
   end
 
   def create_taxon_concept_term_validation
-    create(:inclusion_validation_rule,
+    create(
+      :inclusion_validation_rule,
       column_names: [ 'taxon_concept_id', 'term_code' ],
       valid_values_view: 'valid_taxon_concept_term_view',
       is_primary: false,
@@ -419,7 +444,8 @@ shared_context :sapi do
   end
 
   def create_taxon_concept_country_of_origin_validation
-    create(:inclusion_validation_rule,
+    create(
+      :inclusion_validation_rule,
       scope: {
         rank: { inclusion: [ Rank::SPECIES, Rank::SUBSPECIES ] },
         source_code: { inclusion: [ 'W' ] },
@@ -433,7 +459,8 @@ shared_context :sapi do
   end
 
   def create_taxon_concept_exporter_validation
-    create(:inclusion_validation_rule,
+    create(
+      :inclusion_validation_rule,
       scope: {
         rank: { inclusion: [ Rank::SPECIES, Rank::SUBSPECIES ] },
         source_code: { inclusion: [ 'W' ] },
@@ -448,7 +475,8 @@ shared_context :sapi do
   end
 
   def create_exporter_country_of_origin_validation
-    create(:distinct_values_validation_rule,
+    create(
+      :distinct_values_validation_rule,
       column_names: [ 'exporter', 'country_of_origin' ],
       is_primary: false,
       is_strict: true
@@ -456,7 +484,8 @@ shared_context :sapi do
   end
 
   def create_exporter_importer_validation
-    create(:distinct_values_validation_rule,
+    create(
+      :distinct_values_validation_rule,
       column_names: [ 'exporter', 'importer' ],
       is_primary: false,
       is_strict: true
@@ -464,7 +493,8 @@ shared_context :sapi do
   end
 
   def create_taxon_concept_source_validation
-    create(:taxon_concept_source_validation_rule,
+    create(
+      :taxon_concept_source_validation_rule,
       column_names: [ 'taxon_concept_id', 'source_code' ],
       is_primary: false,
       is_strict: true
@@ -473,28 +503,38 @@ shared_context :sapi do
 
   def reg1997
     @_reg1997 ||=
-      create(:eu_regulation, name: 'No 938/97', designation: eu,
-        effective_at: '1997-06-01', end_date: '2000-12-18')
+      create(
+        :eu_regulation, name: 'No 938/97', designation: eu,
+        effective_at: '1997-06-01', end_date: '2000-12-18'
+      )
   end
   def reg2005
     @_reg2005 ||=
-      create(:eu_regulation, name: 'No 1332/2005', designation: eu,
-        effective_at: '2005-08-22', end_date: '2008-04-11')
+      create(
+        :eu_regulation, name: 'No 1332/2005', designation: eu,
+        effective_at: '2005-08-22', end_date: '2008-04-11'
+      )
   end
   def reg2008
     @_reg2008 ||=
-      create(:eu_regulation, name: 'No 318/2008', designation: eu,
-        effective_at: '2008-04-11', end_date: '2009-05-22')
+      create(
+        :eu_regulation, name: 'No 318/2008', designation: eu,
+        effective_at: '2008-04-11', end_date: '2009-05-22'
+      )
   end
   def reg2012
     @_reg2012 ||=
-      create(:eu_regulation, name: 'No 1158/2012', designation: eu,
-        effective_at: '2012-12-15', end_date: '2013-08-10')
+      create(
+        :eu_regulation, name: 'No 1158/2012', designation: eu,
+        effective_at: '2012-12-15', end_date: '2013-08-10'
+      )
   end
   def reg2013
     @_reg2013 ||=
-      create(:eu_regulation, name: 'No 750/2013', designation: eu,
-        effective_at: '2013-08-10', end_date: nil, is_current: true)
+      create(
+        :eu_regulation, name: 'No 750/2013', designation: eu,
+        effective_at: '2013-08-10', end_date: nil, is_current: true
+      )
   end
 
   {
@@ -508,6 +548,7 @@ shared_context :sapi do
       met_name = met_name.to_s
       var = instance_variable_get("@_#{met_name}")
       return var if var
+
       geo_rel_type = create(:geo_entity_type, name: geo_type)
       instance_variable_set("@_#{met_name}", geo_rel_type)
     end
@@ -528,6 +569,7 @@ shared_context :sapi do
       met_name = met_name.to_s
       var = instance_variable_get("@_#{met_name}")
       return var if var
+
       relationship = create(
         :taxon_relationship_type,
         name: rel_type,

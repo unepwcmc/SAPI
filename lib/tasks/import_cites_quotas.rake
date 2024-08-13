@@ -23,16 +23,16 @@ namespace :import do
       copy_data(file, TMP_TABLE)
 
       puts 'CREATING temporary column and view'
-      ApplicationRecord.connection.execute(<<-SQL
+      ApplicationRecord.connection.execute(<<-SQL.squish
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT DISTINCT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
         ORDER BY start_date
       SQL
-      )
+                                          )
       ApplicationRecord.connection.execute('ALTER TABLE trade_restrictions DROP COLUMN IF EXISTS import_row_id')
       ApplicationRecord.connection.execute('ALTER TABLE trade_restrictions ADD COLUMN import_row_id integer')
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO trade_restrictions(is_current, start_date, end_date, geo_entity_id, quota, publication_date,
           notes, type, unit_id, taxon_concept_id, public_display, url, created_at, updated_at, import_row_id)
         SELECT DISTINCT #{TMP_TABLE}_view.is_current, start_date, end_date, geo_entities.id, quota, publication_date,
@@ -59,7 +59,7 @@ namespace :import do
 
       # Add Terms & Sources Relationships
       [ 'terms', 'sources' ].each do |code|
-        sql = <<-SQL
+        sql = <<-SQL.squish
           WITH #{code}_codes_per_quota AS (
             SELECT row_id, regexp_split_to_table(quotas_import_view.#{code}, E',') AS code
             FROM #{TMP_TABLE}_view

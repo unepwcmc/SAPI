@@ -97,6 +97,7 @@ class NomenclatureChange::Output < ApplicationRecord
   def tag_list
     attr = read_attribute(:tag_list)
     return [] if attr.is_a?(String) && attr.match(/--- \[\]\n/).present?
+
     (attr || []).compact
   end
 
@@ -114,6 +115,7 @@ class NomenclatureChange::Output < ApplicationRecord
 
   def new_full_name
     return nil if new_scientific_name.blank?
+
     rank = new_rank
     parent = new_parent || nomenclature_change.new_output_parent
     if parent && [ Rank::SPECIES, Rank::SUBSPECIES ].include?(rank.name)
@@ -175,10 +177,12 @@ class NomenclatureChange::Output < ApplicationRecord
           Taxonomy.find_by(name: Taxonomy::CITES_EU)
         end
       TaxonConcept.new(
-        taxon_concept_attrs.merge({
-          taxonomy_id: taxonomy.id,
-          tag_list: tag_list
-        })
+        taxon_concept_attrs.merge(
+          {
+            taxonomy_id: taxonomy.id,
+            tag_list: tag_list
+          }
+        )
       )
     elsif will_update_taxon?
       taxon_concept.assign_attributes(taxon_concept_attrs)

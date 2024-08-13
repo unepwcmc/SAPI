@@ -84,22 +84,25 @@ class TaxonRelationship < ApplicationRecord
   end
 
   def opposite
-    TaxonRelationship.where(taxon_concept_id: self.other_taxon_concept_id,
+    TaxonRelationship.where(
+      taxon_concept_id: self.other_taxon_concept_id,
       other_taxon_concept_id: self.taxon_concept_id,
-      taxon_relationship_type_id: self.taxon_relationship_type_id).first
+      taxon_relationship_type_id: self.taxon_relationship_type_id
+    ).first
   end
 
   def has_opposite?
     opposite.present?
   end
 
-  private
+private
 
   def create_opposite
     TaxonRelationship.create(
       taxon_concept_id: self.other_taxon_concept_id,
       other_taxon_concept_id: self.taxon_concept_id,
-      taxon_relationship_type_id: self.taxon_relationship_type_id)
+      taxon_relationship_type_id: self.taxon_relationship_type_id
+    )
   end
 
   def destroy_opposite
@@ -121,8 +124,10 @@ class TaxonRelationship < ApplicationRecord
     ).
         joins(:taxon_relationship_type).
         where(taxon_relationship_types: { is_intertaxonomic: true }).any? ||
-      TaxonRelationship.where(taxon_concept_id: self.other_taxon_concept_id,
-        other_taxon_concept_id: self.taxon_concept_id).
+      TaxonRelationship.where(
+        taxon_concept_id: self.other_taxon_concept_id,
+        other_taxon_concept_id: self.taxon_concept_id
+      ).
           joins(:taxon_relationship_type).
           where(taxon_relationship_types: { is_intertaxonomic: true }).where.not(taxon_relationship_types: { id: self.taxon_relationship_type_id }).any?
       errors.add(:taxon_concept_id, 'these taxon are already related through another relationship.')

@@ -11,6 +11,7 @@ class NomenclatureChange::CascadingNotesProcessor
         @input_or_output.taxon_concept
       end
     return false unless @taxon_concept
+
     descendents_for_note_cascading(@taxon_concept).each do |d|
       Rails.logger.debug { "Processing note for descendant #{d.full_name} of input #{@taxon_concept.full_name}" }
       append_nomenclature_notes(d, @input_or_output)
@@ -30,12 +31,13 @@ class NomenclatureChange::CascadingNotesProcessor
     []
   end
 
-  private
+private
 
   def descendents_for_note_cascading(taxon_concept)
     unless [ Rank::GENUS, Rank::SPECIES ].include? taxon_concept.rank.try(:name)
       return []
     end
+
     # if it is a genus or a species, we want taxon-level nomenclature notes,
     # both public and private, to cascade to descendents
     subquery = <<-SQL.squish

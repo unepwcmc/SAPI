@@ -75,7 +75,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     )
   end
 
-  protected
+protected
 
   # used in create
   def collection
@@ -108,6 +108,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   # We need to coerce them to arrays of integers.
   def split_stringified_ids_lists
     return true if !params[:taxon_concept] || !params[:taxon_concept][:name_status]
+
     ids_list_key =
       case params[:taxon_concept][:name_status]
       when 'S' then :accepted_names_ids
@@ -136,7 +137,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     end
   end
 
-  private
+private
 
   def taxon_concept_params
     params.require(:taxon_concept).permit(

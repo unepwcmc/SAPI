@@ -8,9 +8,9 @@ namespace :update do
     # Full Name Rank  Date of Decision  Party EU Decision Source  Term  Notes
     copy_data_into_table(file, TMP_TABLE, db_columns)
 
-    wild_source = Source.find_by_code('W')
+    wild_source = Source.find_by(code: 'W')
 
-    update_query = <<-SQL
+    update_query = <<-SQL.squish
     WITH tt AS (
       select t.*
       ,taxon_concepts.id AS taxon_concept_id

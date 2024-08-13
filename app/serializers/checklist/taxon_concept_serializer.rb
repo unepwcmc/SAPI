@@ -20,6 +20,7 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
 
   def item_type
     return 'HigherTaxa' if object.is_a? Checklist::HigherTaxaItem
+
     'TaxonConcept'
   end
 
@@ -78,7 +79,8 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
       return object.countries_ids
     end
 
-    non_extinct_distributions = Distribution.joins("
+    non_extinct_distributions = Distribution.joins(
+      "
       LEFT JOIN (
         SELECT taggings.taggable_id, array_agg(tags.name) AS tag_names
         FROM taggings
@@ -88,10 +90,12 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
       ) d_t ON
         d_t.taggable_id = distributions.id AND
         d_t.tag_names = '{extinct}'::VARCHAR[]
-    ").where({
+    "
+    ).where({
       taxon_concept_id: object.id,
       'd_t.taggable_id': nil
-    })
+    }
+           )
 
     # We can't just return the ids, we need to retain the order of the original
     # array, which is sorted on English name.

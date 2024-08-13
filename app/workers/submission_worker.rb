@@ -52,7 +52,7 @@ class SubmissionWorker
     tempfile.delete
   end
 
-  private
+private
 
   def upload_on_S3(aru, tempfile)
     begin

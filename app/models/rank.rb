@@ -62,7 +62,7 @@ class Rank < ApplicationRecord
     end
   end
 
-  private
+private
 
   def dependent_objects_map
     {

@@ -9,7 +9,7 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO "events" (legacy_id, designation_id, name, description, url, effective_at, type, subtype, created_at, updated_at)
         SELECT legacy_id, designations.id, #{TMP_TABLE}.name, description, url, effective_at,
           CASE
@@ -46,7 +46,7 @@ namespace :import do
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH eu_annex_regulations AS (
         SELECT events.id, e.end_date FROM
         #{TMP_TABLE} e
@@ -69,7 +69,7 @@ namespace :import do
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH cites_cops AS (
         SELECT events.id, e.start_date FROM
         #{TMP_TABLE} e

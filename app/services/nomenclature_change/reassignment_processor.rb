@@ -64,7 +64,7 @@ class NomenclatureChange::ReassignmentProcessor
     ]
   end
 
-  protected
+protected
 
   def conflicting_listing_change_reassignment?(reassignment, reassignable)
     # this amazing condition to ensure that in cases when there are listing changes

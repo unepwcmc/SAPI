@@ -4,7 +4,7 @@ class Admin::HashAnnotationsController < Admin::SimpleCrudController
   defaults resource_class: Annotation, collection_name: 'annotations',
     instance_name: 'annotation'
 
-  protected
+protected
 
   def collection
     @annotations = load_collection.page(params[:page]).

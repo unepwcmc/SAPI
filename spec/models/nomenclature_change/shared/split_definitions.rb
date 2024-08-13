@@ -27,7 +27,8 @@ shared_context 'split_definitions' do
     )
   end
   let(:split_with_input) do
-    create(:nomenclature_change_split,
+    create(
+      :nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id }
     )
   end
@@ -35,7 +36,8 @@ shared_context 'split_definitions' do
     split_with_input_and_output_existing_taxon
   end
   let(:split_with_input_and_same_output) do
-    create(:nomenclature_change_split,
+    create(
+      :nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
@@ -45,7 +47,8 @@ shared_context 'split_definitions' do
     )
   end
   let(:split_with_input_and_output_existing_taxon) do
-    create(:nomenclature_change_split,
+    create(
+      :nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
@@ -55,7 +58,8 @@ shared_context 'split_definitions' do
     )
   end
   let(:split_with_input_and_output_new_taxon) do
-    create(:nomenclature_change_split,
+    create(
+      :nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
@@ -70,7 +74,8 @@ shared_context 'split_definitions' do
     )
   end
   let(:split_with_input_and_outputs_status_change) do
-    create(:nomenclature_change_split,
+    create(
+      :nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
@@ -84,7 +89,8 @@ shared_context 'split_definitions' do
     )
   end
   let(:split_with_input_and_outputs_name_change) do
-    create(:nomenclature_change_split,
+    create(
+      :nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
@@ -120,60 +126,72 @@ shared_context 'split_definitions' do
       :document_citation_geo_entity, geo_entity: reassigned_distribution.geo_entity
     )
 
-    2.times do create(:taxon_relationship,
+    2.times do create(
+      :taxon_relationship,
       taxon_concept: input_species,
       other_taxon_concept: create_cites_eu_species(name_status: 'S'),
       taxon_relationship_type: synonym_relationship_type
     )
     end
-    name1 = create(:taxon_relationship,
+    name1 = create(
+      :taxon_relationship,
       taxon_concept: input_species,
       other_taxon_concept: create_cites_eu_species(name_status: 'S'),
       taxon_relationship_type: synonym_relationship_type
     )
-    name2 = create(:taxon_relationship,
+    name2 = create(
+      :taxon_relationship,
       taxon_concept: input_species,
       other_taxon_concept: create_cites_eu_species(name_status: 'T'),
       taxon_relationship_type: trade_name_relationship_type
     )
 
-    nc = create(:nomenclature_change_split,
+    nc = create(
+      :nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id },
       outputs_attributes: {
         0 => { taxon_concept_id: output_species1.id },
         1 => { taxon_concept_id: input_species.id }
       }
     )
-    distribution_reassignment = create(:nomenclature_change_distribution_reassignment,
+    distribution_reassignment = create(
+      :nomenclature_change_distribution_reassignment,
       input: nc.input,
       reassignable: reassigned_distribution
     )
-    citation_reassignment = create(:nomenclature_change_document_citation_reassignment,
+    citation_reassignment = create(
+      :nomenclature_change_document_citation_reassignment,
       input: nc.input,
       reassignable: reassigned_citation
     )
-    name_reassignment1 = create(:nomenclature_change_name_reassignment,
+    name_reassignment1 = create(
+      :nomenclature_change_name_reassignment,
       input: nc.input,
       reassignable: name1
     )
-    name_reassignment2 = create(:nomenclature_change_name_reassignment,
+    name_reassignment2 = create(
+      :nomenclature_change_name_reassignment,
       input: nc.input,
       reassignable: name2
     )
 
-    create(:nomenclature_change_reassignment_target,
+    create(
+      :nomenclature_change_reassignment_target,
       reassignment: distribution_reassignment,
       output: nc.outputs.last
     )
-    create(:nomenclature_change_reassignment_target,
+    create(
+      :nomenclature_change_reassignment_target,
       reassignment: citation_reassignment,
       output: nc.outputs.last
     )
-    create(:nomenclature_change_reassignment_target,
+    create(
+      :nomenclature_change_reassignment_target,
       reassignment: name_reassignment1,
       output: nc.outputs.last
     )
-    create(:nomenclature_change_reassignment_target,
+    create(
+      :nomenclature_change_reassignment_target,
       reassignment: name_reassignment2,
       output: nc.outputs.last
     )

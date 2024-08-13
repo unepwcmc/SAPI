@@ -11,7 +11,7 @@ namespace :import do
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         DELETE FROM references_legacy_id_mapping;
 
         WITH references_with_aliases AS (

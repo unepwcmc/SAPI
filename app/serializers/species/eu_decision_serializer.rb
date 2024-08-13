@@ -14,21 +14,25 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
 
   def include_nomenclature_note_fr?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_note_es?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_private_url?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_intersessional_decision_id?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 

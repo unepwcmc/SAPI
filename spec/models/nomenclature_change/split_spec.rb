@@ -60,7 +60,8 @@ describe NomenclatureChange::Split do
     end
     context 'when output has different rank than input' do
       let(:split) do
-        build(:nomenclature_change_split,
+        build(
+          :nomenclature_change_split,
           status: NomenclatureChange::Split::OUTPUTS,
           input_attributes: { taxon_concept_id: create_cites_eu_species.id },
           outputs_attributes: {

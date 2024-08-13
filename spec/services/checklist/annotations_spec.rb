@@ -5,10 +5,12 @@ describe Checklist do
   include_context 'Caiman latirostris'
   describe 'ann_symbol' do
     before(:all) do
-      @checklist = Checklist::Checklist.new({
-        output_layout: 'alphabetical',
-        locale: 'en'
-      })
+      @checklist = Checklist::Checklist.new(
+        {
+          output_layout: 'alphabetical',
+          locale: 'en'
+        }
+      )
       @taxon_concepts = @checklist.results
     end
     context 'for species Caiman latirostris' do

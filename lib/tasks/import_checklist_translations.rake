@@ -10,7 +10,7 @@ namespace :import do
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    sql = <<-SQL
+    sql = <<-SQL.squish
       UPDATE ranks
       SET display_name_fr = t.display_name_fr, display_name_es = t.display_name_es
       FROM #{TMP_TABLE} t
@@ -25,7 +25,7 @@ namespace :import do
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    sql = <<-SQL
+    sql = <<-SQL.squish
       UPDATE change_types
       SET display_name_fr = t.display_name_fr, display_name_es = t.display_name_es
       FROM #{TMP_TABLE} t

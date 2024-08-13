@@ -36,7 +36,7 @@ def import_data_with_legacy_for(kingdom, rank, synonyms = nil)
   existing = TaxonConcept.where(rank_id: rank_id).count
   puts "There were #{existing} #{rank} before we started"
 
-  sql = <<-SQL
+  sql = <<-SQL.squish
     INSERT INTO taxon_names(scientific_name, created_at, updated_at)
       SELECT DISTINCT INITCAP(BTRIM(#{TMP_TABLE}.Name)), current_date, current_date
       FROM #{TMP_TABLE}
@@ -63,8 +63,8 @@ def import_data_with_legacy_for(kingdom, rank, synonyms = nil)
 
   [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
     puts "Import #{taxonomy_name} taxa"
-    taxonomy = Taxonomy.find_by_name(taxonomy_name)
-    sql = <<-SQL
+    taxonomy = Taxonomy.find_by(name: taxonomy_name)
+    sql = <<-SQL.squish
       WITH to_be_inserted AS (
         SELECT DISTINCT
           taxon_names.id AS taxon_name_id,

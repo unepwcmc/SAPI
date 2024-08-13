@@ -4,7 +4,7 @@ class Admin::CitesPcsController < Admin::EventsController
     collection_name: 'cites_pcs',
     instance_name: 'cites_pc'
 
-  protected
+protected
 
   def collection
     @cites_pcs ||= end_of_association_chain.
@@ -13,7 +13,7 @@ class Admin::CitesPcsController < Admin::EventsController
       search(params[:query])
   end
 
-  private
+private
 
   def cites_pc_params
     params.require(:cites_pc).permit(

@@ -26,7 +26,7 @@ class DashboardStats
     }
   end
 
-  private
+private
 
   def species_stats_per_taxonomy(taxonomy_name)
     taxonomy = Taxonomy.find_by(name: taxonomy_name)
@@ -74,7 +74,7 @@ class DashboardStats
         AND kingdom_name = '#{@kingdom}'
         AND cites_listed IS NOT NULL
       SQL
-      ).
+           ).
       includes(:m_taxon_concept).
       select('taxon_concept_id, sum(quantity) as count_all').
       group(:taxon_concept_id).

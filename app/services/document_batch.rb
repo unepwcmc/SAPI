@@ -16,6 +16,7 @@ class DocumentBatch
 
   def save
     return false unless valid?
+
     success = true
     Document.transaction do
       @documents.each do |d|
@@ -32,7 +33,7 @@ class DocumentBatch
     false
   end
 
-  private
+private
 
   def initialize_documents(documents_attributes, files)
     @documents = []

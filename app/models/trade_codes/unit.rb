@@ -23,7 +23,7 @@ class Unit < TradeCode
 
   after_commit :invalidate_controller_action_cache
 
-  protected
+protected
 
   def dependent_objects_map
     {
@@ -32,7 +32,7 @@ class Unit < TradeCode
     }
   end
 
-  private
+private
 
   def invalidate_controller_action_cache
     Api::V1::UnitsController.invalidate_cache

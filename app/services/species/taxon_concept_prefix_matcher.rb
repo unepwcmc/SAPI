@@ -17,7 +17,7 @@ class Species::TaxonConceptPrefixMatcher
     ((@taxon_concept_query || !@ranks.empty?) && @query.count(:all)) || 0
   end
 
-  private
+private
 
   def initialize_options(options)
     @options = Species::SearchParams.sanitize(options)
@@ -84,19 +84,23 @@ class Species::TaxonConceptPrefixMatcher
             WHEN matched_name != full_name THEN matched_name ELSE NULL
           END
         ) AS matching_names_ary,
-        rank_display_name_en, rank_display_name_es, rank_display_name_fr').
+        rank_display_name_en, rank_display_name_es, rank_display_name_fr'
+            ).
       where(type_of_match: types_of_match).
       group([
         :id, :full_name, :rank_name, :name_status, :author_year, :rank_order,
         :rank_display_name_en, :rank_display_name_es, :rank_display_name_fr
-      ])
+      ]
+           )
 
     if @taxon_concept_query
       @query = @query.where(
-        ApplicationRecord.send(:sanitize_sql_array, [
-          'name_for_matching LIKE :sci_name_prefix',
-          sci_name_prefix: "#{@taxon_concept_query}%"
-        ])
+        ApplicationRecord.send(
+          :sanitize_sql_array, [
+            'name_for_matching LIKE :sci_name_prefix',
+            sci_name_prefix: "#{@taxon_concept_query}%"
+          ]
+        )
       )
     end
     @query

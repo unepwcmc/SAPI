@@ -6,7 +6,7 @@ namespace :db do
         connection = ApplicationRecord.connection
 
         [ 'helpers', 'mviews', 'plpgsql' ].each do |dir|
-          files = Dir.glob(Rails.root.join("db/#{dir}/*.sql"))
+          files = Rails.root.glob("db/#{dir}/*.sql")
 
           # Within the current transaction, set work_mem to a higher-than-usual
           # value, so that matviews can be built more efficiently.
@@ -38,13 +38,13 @@ namespace :db do
     end
   end
 
-  task :migrate do
+  task migrate: :environment do
     Rake::Task['db:migrate:sql'].invoke
   end
 
   desc 'Drop sandboxes in progress'
   task drop_sandboxes: :environment do
-    Trade::AnnualReportUpload.where(is_done: false).each do |aru|
+    Trade::AnnualReportUpload.where(is_done: false).find_each do |aru|
       aru.destroy
     end
   end
@@ -56,6 +56,6 @@ namespace :db do
     puts 'Deleting permits'
     ApplicationRecord.connection.execute('DELETE FROM trade_permits')
     puts 'Deleting annual report uploads & dropping sandboxes'
-    Trade::AnnualReportUpload.all.each { |aru| aru.destroy }
+    Trade::AnnualReportUpload.find_each { |aru| aru.destroy }
   end
 end

@@ -184,12 +184,18 @@ describe Trade::InclusionValidationRule, drops_tables: true do
         cav = create(:term, code: 'CAV')
         create(:unit, code: 'BAG')
         kil = create(:unit, code: 'KIL')
-        create(:term_trade_codes_pair, term_id: cav.id, trade_code_id: kil.id,
-          trade_code_type: kil.type)
-        create(:term_trade_codes_pair, term_id: cav.id, trade_code_id: nil,
-          trade_code_type: kil.type)
-        create(:term_trade_codes_pair, term_id: cap.id, trade_code_id: kil.id,
-          trade_code_type: kil.type)
+        create(
+          :term_trade_codes_pair, term_id: cav.id, trade_code_id: kil.id,
+          trade_code_type: kil.type
+        )
+        create(
+          :term_trade_codes_pair, term_id: cav.id, trade_code_id: nil,
+          trade_code_type: kil.type
+        )
+        create(
+          :term_trade_codes_pair, term_id: cap.id, trade_code_id: kil.id,
+          trade_code_type: kil.type
+        )
         sandbox_klass.create(term_code: 'CAV', unit_code: 'KIL')
         sandbox_klass.create(term_code: 'CAV', unit_code: '')
       end
@@ -223,8 +229,10 @@ describe Trade::InclusionValidationRule, drops_tables: true do
         cav = create(:term, code: 'CAV')
         create(:purpose, code: 'B')
         purpose = create(:purpose, code: 'P')
-        create(:term_trade_codes_pair, term_id: cav.id, trade_code_id: purpose.id,
-          trade_code_type: purpose.type)
+        create(
+          :term_trade_codes_pair, term_id: cav.id, trade_code_id: purpose.id,
+          trade_code_type: purpose.type
+        )
         sandbox_klass.create(term_code: 'CAV', purpose_code: 'B')
         sandbox_klass.create(term_code: 'CAV', purpose_code: 'P')
         sandbox_klass.create(term_code: 'CAV', purpose_code: '')

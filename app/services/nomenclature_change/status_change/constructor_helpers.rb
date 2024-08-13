@@ -21,7 +21,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     output = @nomenclature_change.primary_output
     if @nomenclature_change.needs_to_relay_associations? && (
       input.nil? || input.taxon_concept_id != output.taxon_concept_id
-      )
+    )
       # we need to create an input with same taxon as this output
       @nomenclature_change.build_input(
         taxon_concept_id: output.taxon_concept_id
@@ -128,7 +128,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     multi_lingual_legislation_note('status_change.quota')
   end
 
-  private
+private
 
   def input_output_for_reassignment
     input = @nomenclature_change.input
@@ -139,6 +139,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
         @nomenclature_change.primary_output
       end
     return false unless input && output
+
     yield(input, output)
   end
 

@@ -9,9 +9,9 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      designation_id = Designation.find_by_name(file.split('.')[0].split('_')[2].upcase).id
+      designation_id = Designation.find_by(name: file.split('.')[0].split('_')[2].upcase).id
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO annotations (symbol, parent_symbol, event_id, full_note_en, created_at, updated_at)
         SELECT subquery.*, NOW(), NOW()
         FROM (
@@ -43,7 +43,7 @@ namespace :import do
     res = ApplicationRecord.connection.execute("SELECT COUNT(*) FROM #{TMP_TABLE}")
     puts "Attempting to import #{res[0]['count']} rows"
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH translated_annotations AS (
         SELECT
         annotations.id,

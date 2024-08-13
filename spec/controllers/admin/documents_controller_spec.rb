@@ -168,27 +168,33 @@ describe Admin::DocumentsController, sidekiq: :inline do
       let(:recommended_category) { 'A wonderful category' }
 
       it 'assign review phase to Review' do
-        put :update, params: { id: document.id, document: {
-          date: Date.today, review_details_attributes: { review_phase_id: review_phase.id }
-        } }
+        put :update, params: {
+          id: document.id, document: {
+            date: Date.today, review_details_attributes: { review_phase_id: review_phase.id }
+          }
+        }
         expect(response).to redirect_to(admin_documents_url)
 
         expect(document.reload.review_details.review_phase_id).to eq(review_phase.id)
       end
 
       it 'assign process stage to Review' do
-        put :update, params: { id: document.id, document: {
-          date: Date.today, review_details_attributes: { process_stage_id: process_stage.id }
-        } }
+        put :update, params: {
+          id: document.id, document: {
+            date: Date.today, review_details_attributes: { process_stage_id: process_stage.id }
+          }
+        }
         expect(response).to redirect_to(admin_documents_url)
 
         expect(document.reload.review_details.process_stage_id).to eq(process_stage.id)
       end
 
       it 'assign recommended category to Review' do
-        put :update, params: { id: document.id, document: {
-          date: Date.today, review_details_attributes: { recommended_category: recommended_category }
-        } }
+        put :update, params: {
+          id: document.id, document: {
+            date: Date.today, review_details_attributes: { recommended_category: recommended_category }
+          }
+        }
         expect(response).to redirect_to(admin_documents_url)
 
         expect(document.reload.review_details.recommended_category).to eq(recommended_category)
@@ -200,9 +206,11 @@ describe Admin::DocumentsController, sidekiq: :inline do
       let(:proposal_outcome) { create(:document_tag, type: 'DocumentTag::ProposalOutcome') }
 
       it 'assign outcome to Proposal' do
-        put :update, params: { id: document.id, document: {
-          date: Date.today, proposal_details_attributes: { proposal_outcome_id: proposal_outcome.id }
-        } }
+        put :update, params: {
+          id: document.id, document: {
+            date: Date.today, proposal_details_attributes: { proposal_outcome_id: proposal_outcome.id }
+          }
+        }
         expect(response).to redirect_to(admin_documents_url)
 
         expect(document.reload.proposal_details.proposal_outcome_id).to eq(proposal_outcome.id)
@@ -246,13 +254,17 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
         expect(document.reload.citations.length).to eq(1)
         expect(document.reload.citations[0].taxon_concepts.length).to eq(2)
-        expect([
-          document.reload.citations[0].taxon_concepts[0].id,
-          document.reload.citations[0].taxon_concepts[1].id
-        ].sort!).to eq([
-          taxon_concept.id,
-          taxon_concept2.id
-        ])
+        expect(
+          [
+            document.reload.citations[0].taxon_concepts[0].id,
+            document.reload.citations[0].taxon_concepts[1].id
+          ].sort!
+        ).to eq(
+          [
+            taxon_concept.id,
+            taxon_concept2.id
+          ]
+        )
       end
 
       it 'assigns a geo_entity_id' do
@@ -278,7 +290,8 @@ describe Admin::DocumentsController, sidekiq: :inline do
   describe 'DELETE destroy' do
     login_admin
     let(:poland) do
-      create(:geo_entity,
+      create(
+        :geo_entity,
         name_en: 'Poland', iso_code2: 'PL',
         geo_entity_type: country_geo_entity_type
       )
@@ -297,7 +310,8 @@ describe Admin::DocumentsController, sidekiq: :inline do
   describe 'XHR GET JSON autocomplete' do
     login_admin
     let!(:document) do
-      create(:document,
+      create(
+        :document,
         title: 'Title',
         event_id: event.id
       )

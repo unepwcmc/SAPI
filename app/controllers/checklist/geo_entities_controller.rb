@@ -8,7 +8,7 @@ class Checklist::GeoEntitiesController < ApplicationController
       each_serializer: Checklist::GeoEntitySerializer
   end
 
-  private
+private
 
   # this disables json root for this controller
   # remove when checklist frontend upgraded to new Ember.js

@@ -322,36 +322,43 @@ higher_taxa.each do |kingdom_props|
   [ cms_taxonomy, taxonomy ].each do |taksonomy|
     name = TaxonName.find_or_create_by(scientific_name: kingdom_name)
     next if taksonomy.name == Taxonomy::CMS && kingdom_name == 'Plantae'
-    kingdom = TaxonConcept.create!(rank_id: kingdom_rank_id,
+
+    kingdom = TaxonConcept.create!(
+      rank_id: kingdom_rank_id,
       taxon_name_id: name.id,
       taxonomy_id: taksonomy.id,
       legacy_id: kingdom_props[:legacy_id], legacy_type: kingdom_props[:legacy_type],
       taxonomic_position: kingdom_props[:taxonomic_position],
-      name_status: 'A')
+      name_status: 'A'
+    )
     phyla = kingdom_props[:sub_taxa]
     phylum_rank_id = Rank.find_by(name: Rank::PHYLUM).id
     phyla.each do |phylum_props|
       phylum_name = phylum_props[:name]
       name = TaxonName.find_or_create_by(scientific_name: phylum_name)
-      phylum = TaxonConcept.create!(rank_id: phylum_rank_id,
+      phylum = TaxonConcept.create!(
+        rank_id: phylum_rank_id,
         taxon_name_id: name.id,
         taxonomy_id: taksonomy.id,
         legacy_id: phylum_props[:legacy_id], legacy_type: phylum_props[:legacy_type],
         parent_id: kingdom.id,
         taxonomic_position: phylum_props[:taxonomic_position],
-        name_status: 'A')
+        name_status: 'A'
+      )
       klasses = phylum_props[:sub_taxa]
       klass_rank_id = Rank.find_by(name: Rank::CLASS).id
       klasses.each do |klass_props|
         klass_name = klass_props[:name]
         name = TaxonName.find_or_create_by(scientific_name: klass_name)
-        klass = TaxonConcept.create!(rank_id: klass_rank_id,
+        klass = TaxonConcept.create!(
+          rank_id: klass_rank_id,
           taxon_name_id: name.id,
           taxonomy_id: taksonomy.id,
           legacy_id: klass_props[:legacy_id], legacy_type: klass_props[:legacy_type],
           parent_id: phylum.id,
           taxonomic_position: klass_props[:taxonomic_position],
-          name_status: 'A')
+          name_status: 'A'
+        )
       end
     end
   end

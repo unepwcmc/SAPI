@@ -12,7 +12,7 @@ class Admin::DesignationsController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def collection
     @designations ||= end_of_association_chain.order(:name).
@@ -24,7 +24,7 @@ class Admin::DesignationsController < Admin::StandardAuthorizationController
     @taxonomies = Taxonomy.order(:name)
   end
 
-  private
+private
 
   def designation_params
     params.require(:designation).permit(

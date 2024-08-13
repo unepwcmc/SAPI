@@ -20,10 +20,12 @@ describe Admin::EventDocumentsController, sidekiq: :inline do
 
     describe 'POST update_order' do
       it 'updates sort index for collection of documents' do
-        post :update_order, params: { event_id: event.id, documents: {
-          "#{@document1.id}" => '1',
-          "#{@document2.id}" => '2'
-        } }
+        post :update_order, params: {
+          event_id: event.id, documents: {
+            "#{@document1.id}" => '1',
+            "#{@document2.id}" => '2'
+          }
+        }
         expect(@document1.reload.sort_index).to eq(1)
         expect(@document2.reload.sort_index).to eq(2)
       end

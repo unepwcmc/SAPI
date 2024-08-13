@@ -2,14 +2,14 @@ namespace :import do
   desc 'Import CITES Regions records from csv file (usage: rake import:cites_regions[path/to/file,path/to/another])'
   task :cites_regions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     tmp_table = 'cites_regions_import'
-    regions_type = GeoEntityType.find_by_name(GeoEntityType::CITES_REGION)
+    regions_type = GeoEntityType.find_by(name: GeoEntityType::CITES_REGION)
     puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: regions_type.id })} CITES Regions in the database."
     files = files_from_args(t, args)
     files.each do |file|
       drop_table(tmp_table)
       create_table_from_csv_headers(file, tmp_table)
       copy_data(file, tmp_table)
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO geo_entities(name_en, geo_entity_type_id, created_at, updated_at)
         SELECT DISTINCT BTRIM(TMP.name), #{regions_type.id}, current_date, current_date
         FROM #{tmp_table} AS TMP
@@ -29,8 +29,8 @@ namespace :import do
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
-    regions_type = GeoEntityType.find_by_name(GeoEntityType::CITES_REGION)
-    sql = <<-SQL
+    regions_type = GeoEntityType.find_by(name: GeoEntityType::CITES_REGION)
+    sql = <<-SQL.squish
       UPDATE geo_entities
       SET name_fr = t.name_fr, name_es = t.name_es
       FROM #{TMP_TABLE} t, geo_entity_types

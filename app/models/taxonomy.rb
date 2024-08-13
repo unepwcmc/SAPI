@@ -26,8 +26,10 @@ class Taxonomy < ApplicationRecord
 
   def self.search(query)
     if query.present?
-      where('UPPER(name) LIKE UPPER(:query)',
-        query: "%#{query}%")
+      where(
+        'UPPER(name) LIKE UPPER(:query)',
+        query: "%#{query}%"
+      )
     else
       all
     end
@@ -37,7 +39,7 @@ class Taxonomy < ApplicationRecord
     super && !has_protected_name?
   end
 
-  private
+private
 
   def dependent_objects_map
     {

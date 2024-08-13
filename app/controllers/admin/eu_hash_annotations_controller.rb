@@ -1,5 +1,5 @@
 class Admin::EuHashAnnotationsController < Admin::HashAnnotationsController
-  protected
+protected
 
   def load_collection
     end_of_association_chain.for_eu
@@ -9,7 +9,7 @@ class Admin::EuHashAnnotationsController < Admin::HashAnnotationsController
     @events = EuRegulation.order(:effective_at)
   end
 
-  private
+private
 
   def eu_hash_annotation_params
     params.require(:annotation).permit(

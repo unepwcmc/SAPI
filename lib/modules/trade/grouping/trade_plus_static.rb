@@ -57,7 +57,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     hash[key]
   end
 
-  private
+private
 
   def shipments_table
     'trade_plus_complete_mview'
@@ -156,12 +156,16 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def child_taxa_uniquify
     return if @opts['taxon_id'].blank?
+
     unique_taxa = []
     taxa = @opts['taxon_id'].split(',')
     return if taxa.count < 2
+
     taxa.each do |taxon|
-      unique_taxa.push(taxon) unless db.execute("SELECT COUNT(*) FROM all_taxon_concepts_and_ancestors_mview WHERE ancestor_taxon_concept_id IN ( #{(taxa - [ taxon ]).join(',')\
-} ) AND taxon_concept_id = #{taxon}").values.first[0].to_i > 0
+      unique_taxa.push(taxon) unless db.execute(
+        "SELECT COUNT(*) FROM all_taxon_concepts_and_ancestors_mview WHERE ancestor_taxon_concept_id IN ( #{(taxa - [ taxon ]).join(',')\
+                                                                                                          } ) AND taxon_concept_id = #{taxon}"
+      ).values.first[0].to_i > 0
     end
     @opts['taxon_id'] = unique_taxa.join(',')
   end
@@ -178,6 +182,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def child_taxa_condition
     return 'TRUE' if @opts['taxon_id'].blank?
+
     tc_id = @opts['taxon_id'] || tc_id
     "ancestor_taxon_concept_id IN ( #{tc_id} )"
   end
@@ -335,6 +340,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def ancestors_list(taxonomic_level)
     return 'kingdom_name' if taxonomic_level == 'kingdom'
+
     ancestors_ranks(taxonomic_level).map do |rank|
       "#{rank}_name"
     end.join(',')
@@ -342,8 +348,10 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def sanitise_column_names
     return '' if @attributes.blank?
+
     @attributes.map do |attribute|
       next if attribute == 'year' || attribute.nil?
+
       name = attribute.include?('id') ? 'id' : attribute.include?('iso') ? 'iso2' : attribute.include?('code') ? 'code' : 'name'
       @sanitised_column_names << name
 
@@ -357,6 +365,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def sanitise_boolean(bool)
     return true unless [ 'true', 'false' ].include? bool
+
     bool == 'true'
   end
 
@@ -371,6 +380,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
 
   def country_condition
     return 'TRUE' unless @country_ids
+
     reported_by_party = sanitise_boolean(@reported_by_party)
     "#{@reported_by}_id IN (#{country_ids}) AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_ids})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_ids})))"
   end

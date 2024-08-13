@@ -71,7 +71,7 @@ class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationCont
     end
   end
 
-  private
+private
 
   def taxon_concept_reference_params
     params.require(:taxon_concept_reference).permit(

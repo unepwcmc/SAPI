@@ -28,7 +28,7 @@ namespace :import do
       taxonomy_id = Taxonomy.where(name: Taxonomy::CITES_EU).first.id
       cites_id = Designation.where(name: Designation::CITES).first.id
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         WITH suspensions_with_ids AS (
           WITH suspensions_per_exclusion AS (
             SELECT

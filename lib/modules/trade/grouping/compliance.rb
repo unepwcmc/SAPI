@@ -26,14 +26,15 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   # all the shipments instead of the non-compliant ones only.
   def countries_reported_range(year)
     year = year.to_i
-    years = case year
-    when 2012
+    years =
+      case year
+      when 2012
         [ year, year + 1 ]
-    when Date.today.year - 1
+      when Date.today.year - 1
         [ year - 1, year ]
-    else
+      else
         [ year - 1, year, year + 1 ]
-    end
+      end
     hash = {}
     years.map do |y|
       data = countries_reported(y)
@@ -57,6 +58,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     query = "SELECT * FROM #{shipments_table} WHERE year = #{year}"
     shipments = db.execute(query)
     return [] unless shipments.first
+
     # Loop through all the non-compliant shipments
     shipments.map do |shipment|
       # Loop through the conversion hash to consider one group at a time
@@ -67,6 +69,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
           # If we are looping through plants but the shipment is about a Timber taxon
           # don't include this in the sum
           next if group == 'Plants' && is_timber?(shipment, conversion['Timber'])
+
           rank_name = grouping[:rank] == 'Species' ? 'taxon' : grouping[:rank].downcase
           rank_name = "#{rank_name}_name"
           res[group] += 1 if shipment[rank_name] == grouping[:taxon_name]
@@ -202,7 +205,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     super(group) << 'year'
   end
 
-  private
+private
 
   def shipments_table
     'non_compliant_shipments_view'

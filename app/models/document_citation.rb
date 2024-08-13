@@ -58,8 +58,9 @@ class DocumentCitation < ApplicationRecord
     geo_entities_ids = document_citation_geo_entities.pluck(:geo_entity_id)
     if !geo_entities_ids.empty?
       relation = relation.joins(
-        ApplicationRecord.send(:sanitize_sql_array, [
-          "JOIN (
+        ApplicationRecord.send(
+          :sanitize_sql_array, [
+            "JOIN (
             SELECT document_citation_id, CASE
               WHEN ARRAY_AGG(geo_entity_id) @> ARRAY[:geo_entities_ids]::INT[] THEN TRUE
               ELSE FALSE
@@ -67,8 +68,9 @@ class DocumentCitation < ApplicationRecord
             FROM document_citation_geo_entities
             GROUP BY document_citation_id
           ) s ON s.document_citation_id = document_citations.id AND s.geo_entities_match",
-          geo_entities_ids: geo_entities_ids
-        ])
+            geo_entities_ids: geo_entities_ids
+          ]
+        )
       )
     end
     relation

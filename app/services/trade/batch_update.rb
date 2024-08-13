@@ -13,6 +13,7 @@ class Trade::BatchUpdate
 
   def execute(update_params)
     return 0 if update_params.keys.empty?
+
     disconnected_permits_ids = @shipments.map do |s|
       s.permits_ids
     end.flatten.uniq

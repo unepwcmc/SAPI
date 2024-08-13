@@ -15,7 +15,7 @@ class Admin::EuRegulationsController < Admin::EventsController
     render 'create'
   end
 
-  protected
+protected
 
   def collection
     @eu_regulations ||= end_of_association_chain.
@@ -29,7 +29,7 @@ class Admin::EuRegulationsController < Admin::EventsController
       order('effective_at DESC, name ASC')
   end
 
-  private
+private
 
   def eu_regulation_params
     params.require(:eu_regulation).permit(

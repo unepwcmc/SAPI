@@ -5,6 +5,7 @@ module ApplicationHelper
 
   def speciesplus_taxon_concept_url(taxon_concept)
     return nil unless taxon_concept
+
     if [ Rank::SPECIES, Rank::SUBSPECIES ].include?(taxon_concept.rank.name)
       "/species#/taxon_concepts/#{taxon_concept.id}/legal"
     else
@@ -15,6 +16,7 @@ module ApplicationHelper
 
   def error_message_for(field)
     return '' if resource.errors[field].empty? && field != :password_confirmation
+
     message =
       if field == :password_confirmation
         field = :password
@@ -29,6 +31,7 @@ module ApplicationHelper
         resource.errors.messages[field&.to_sym]
       end.first
     return '' unless message
+
     message = message.sub('confirmation', '')
     to_html "#{field.to_s.humanize.capitalize} #{message}"
   end
@@ -39,9 +42,12 @@ module ApplicationHelper
 
   def error_message_header
     return '' if resource.errors.count <= 0
-    message = I18n.t('errors.messages.not_saved',
+
+    message = I18n.t(
+      'errors.messages.not_saved',
       count: resource.errors.count,
-      resource: resource.class.model_name.human.downcase)
+      resource: resource.class.model_name.human.downcase
+    )
 
     content_tag :div, content_tag(:i, '', class: 'fa fa-exclamation-triangle') + message, class: 'error-header'
   end

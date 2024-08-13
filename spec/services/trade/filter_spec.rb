@@ -7,49 +7,59 @@ describe Trade::Filter do
       before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
       context 'in the public interface' do
         context 'at GENUS rank' do
-          subject do Trade::Filter.new({
-            taxon_concepts_ids: [ @animal_genus.id ],
-            internal: false,
-            taxon_with_descendants: true
-          }).results end
+          subject do Trade::Filter.new(
+            {
+              taxon_concepts_ids: [ @animal_genus.id ],
+              internal: false,
+              taxon_with_descendants: true
+            }
+          ).results end
           specify { expect(subject).to include(@shipment1) }
           specify { expect(subject).not_to include(@shipment2) }
           specify { expect(subject.length).to eq(2) }
         end
         context 'at FAMILY rank' do
-          subject do Trade::Filter.new({
-            taxon_concepts_ids: [ @animal_family.id ],
-            internal: false,
-            taxon_with_descendants: false
-          }).results end
+          subject do Trade::Filter.new(
+            {
+              taxon_concepts_ids: [ @animal_family.id ],
+              internal: false,
+              taxon_with_descendants: false
+            }
+          ).results end
           specify { expect(subject.length).to eq(0) }
         end
       end
       context 'in the admin interface' do
         context 'at GENUS rank' do
-          subject do Trade::Filter.new({
-            taxon_concepts_ids: [ @animal_genus.id ],
-            internal: true
-          }).results end
+          subject do Trade::Filter.new(
+            {
+              taxon_concepts_ids: [ @animal_genus.id ],
+              internal: true
+            }
+          ).results end
           specify { expect(subject).to include(@shipment1) }
           specify { expect(subject).not_to include(@shipment2) }
           specify { expect(subject.length).to eq(2) }
         end
         context 'at FAMILY rank' do
-          subject do Trade::Filter.new({
-            taxon_concepts_ids: [ @plant_family.id ],
-            internal: true
-          }).results end
+          subject do Trade::Filter.new(
+            {
+              taxon_concepts_ids: [ @plant_family.id ],
+              internal: true
+            }
+          ).results end
           specify { expect(subject).to include(@shipment2) }
           specify { expect(subject).not_to include(@shipment1) }
           specify { expect(subject.length).to eq(4) }
         end
         context 'at mixed ranks' do
           subject do
-            Trade::Filter.new({
-              taxon_concepts_ids: [ @animal_genus.id, @plant_species.id ],
-              internal: true
-            }).results
+            Trade::Filter.new(
+              {
+                taxon_concepts_ids: [ @animal_genus.id, @plant_species.id ],
+                internal: true
+              }
+            ).results
           end
           specify { expect(subject).to include(@shipment1) }
           specify { expect(subject).to include(@shipment2) }
@@ -61,9 +71,11 @@ describe Trade::Filter do
           @shipment_of_status_N = create(:shipment, taxon_concept_id: @status_N_species.id)
         end
         subject do
-          Trade::Filter.new({
-            taxon_concepts_ids: [ @status_N_species.id ]
-          }).results
+          Trade::Filter.new(
+            {
+              taxon_concepts_ids: [ @status_N_species.id ]
+            }
+          ).results
         end
         specify { expect(subject).to include(@shipment_of_status_N) }
       end
@@ -72,9 +84,11 @@ describe Trade::Filter do
           @shipment_of_subspecies = create(:shipment, taxon_concept_id: @subspecies.id)
         end
         subject do
-          Trade::Filter.new({
-            taxon_concepts_ids: [ @animal_species.id ]
-          }).results
+          Trade::Filter.new(
+            {
+              taxon_concepts_ids: [ @animal_species.id ]
+            }
+          ).results
         end
         specify { expect(subject).to include(@shipment_of_subspecies) }
       end
@@ -88,17 +102,21 @@ describe Trade::Filter do
         end
         context 'when searching by taxonomic parent' do
           subject do
-            Trade::Filter.new({
-              taxon_concepts_ids: [ @animal_species.id ]
-            }).results
+            Trade::Filter.new(
+              {
+                taxon_concepts_ids: [ @animal_species.id ]
+              }
+            ).results
           end
           specify { expect(subject).not_to include(@shipment_of_synonym_subspecies) }
         end
         context 'when searching by accepted name' do
           subject do
-            Trade::Filter.new({
-              taxon_concepts_ids: [ @plant_species.id ]
-            }).results
+            Trade::Filter.new(
+              {
+                taxon_concepts_ids: [ @plant_species.id ]
+              }
+            ).results
           end
           specify { expect(subject).to include(@shipment_of_synonym_subspecies) }
         end
@@ -115,9 +133,11 @@ describe Trade::Filter do
           )
         end
         subject do
-          Trade::Filter.new({
-            reported_taxon_concepts_ids: [ @trade_name.id ]
-          }).results
+          Trade::Filter.new(
+            {
+              reported_taxon_concepts_ids: [ @trade_name.id ]
+            }
+          ).results
         end
         specify { expect(subject).to include(@shipment_of_trade_name) }
       end
@@ -168,9 +188,11 @@ describe Trade::Filter do
         specify { expect(subject.length).to eq(5) }
       end
       context 'when wild and internal' do
-        subject do Trade::Filter.new({
-          sources_ids: [ @source_wild.id ], source_blank: true, internal: true
-        }).results end
+        subject do Trade::Filter.new(
+          {
+            sources_ids: [ @source_wild.id ], source_blank: true, internal: true
+          }
+        ).results end
         specify { expect(subject).to include(@shipment3) }
         specify { expect(subject.length).to eq(4) }
       end

@@ -17,8 +17,8 @@ namespace :import do
 
       [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
         puts "Import #{taxonomy_name} distributions"
-        taxonomy = Taxonomy.find_by_name(taxonomy_name)
-        sql = <<-SQL
+        taxonomy = Taxonomy.find_by(name: taxonomy_name)
+        sql = <<-SQL.squish
         INSERT INTO distributions(taxon_concept_id, geo_entity_id, created_at, updated_at)
         SELECT subquery.*, NOW(), NOW()
         FROM (
@@ -53,7 +53,7 @@ namespace :import do
       end
       if has_reference_id
         puts "There are #{DistributionReference.count} distribution references in the database."
-        sql = <<-SQL
+        sql = <<-SQL.squish
           INSERT INTO "distribution_references"
             (distribution_id, reference_id, created_at, updated_at)
           SELECT subquery.*, NOW(), NOW()
@@ -74,7 +74,7 @@ namespace :import do
       end
       if has_reference
         puts "There are #{Reference.count} references in the database."
-        sql = <<-SQL
+        sql = <<-SQL.squish
           INSERT INTO "references"
             (citation, created_at, updated_at)
           SELECT subquery.*, NOW(), NOW()
@@ -93,7 +93,7 @@ namespace :import do
         puts "There are now #{Reference.count} references in the database"
 
         distribution_references = DistributionReference.count
-        sql = <<-SQL
+        sql = <<-SQL.squish
           INSERT INTO "distribution_references"
             (distribution_id, reference_id, created_at, updated_at)
           SELECT subquery.*, NOW(), NOW()

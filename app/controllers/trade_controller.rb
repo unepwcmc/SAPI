@@ -31,7 +31,7 @@ class TradeController < ApplicationController
     raise NotImplementedError
   end
 
-  private
+private
 
   def verify_manager_or_secretariat_or_active
     unless current_user.is_manager_or_secretariat? || current_user.is_active

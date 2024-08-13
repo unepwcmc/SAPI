@@ -31,7 +31,8 @@ describe Admin::TaxonListingChangesController do
         species_listing: @appendix,
         taxon_concept_id: @taxon_concept.id,
         change_type_id: @addition.id,
-        effective_at: 2.weeks.ago)
+        effective_at: 2.weeks.ago
+      )
       listing_change2 = create(
         :listing_change,
         species_listing: @appendix,
@@ -67,11 +68,13 @@ describe Admin::TaxonListingChangesController do
   describe 'POST create' do
     context 'when successful' do
       it 'redirects to taxon_concept listing_changes page' do
-        post :create, params: { listing_change: {
-          change_type_id: @addition.id,
-          species_listing_id: @appendix.id,
-          effective_at: 1.week.ago
-        }, taxon_concept_id: @taxon_concept.id, designation_id: @designation.id }
+        post :create, params: {
+          listing_change: {
+            change_type_id: @addition.id,
+            species_listing_id: @appendix.id,
+            effective_at: 1.week.ago
+          }, taxon_concept_id: @taxon_concept.id, designation_id: @designation.id
+        }
         expect(response).to redirect_to(
           admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
         )
@@ -118,19 +121,23 @@ describe Admin::TaxonListingChangesController do
     end
     context 'when successful' do
       it 'redirects to taxon_concept listing_changes page' do
-        put :update, params: { listing_change: {
-          change_type_id: @addition.id,
-          species_listing_id: @appendix.id,
-          effective_at: 1.week.ago
-        }, id: @listing_change.id, taxon_concept_id: @taxon_concept.id, designation_id: @designation.id }
+        put :update, params: {
+          listing_change: {
+            change_type_id: @addition.id,
+            species_listing_id: @appendix.id,
+            effective_at: 1.week.ago
+          }, id: @listing_change.id, taxon_concept_id: @taxon_concept.id, designation_id: @designation.id
+        }
         expect(response).to redirect_to(
           admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
         )
       end
       it 'redirects to eu regulation listing changes page when param is set' do
         taxon_concept = create(:taxon_concept)
-        eu_designation = create(:designation, name: 'EU',
-          taxonomy: taxon_concept.taxonomy)
+        eu_designation = create(
+          :designation, name: 'EU',
+          taxonomy: taxon_concept.taxonomy
+        )
         eu_regulation = create(:eu_regulation, designation_id: eu_designation.id)
         annex = create(
           :species_listing,
@@ -151,11 +158,13 @@ describe Admin::TaxonListingChangesController do
           effective_at: 1.week.ago,
           event_id: eu_regulation.id
         )
-        put :update, params: { listing_change: {
-          change_type_id: addition.id,
-          species_listing_id: annex.id,
-          effective_at: 1.week.ago
-        }, id: listing_change2.id, taxon_concept_id: taxon_concept.id, designation_id: eu_designation.id, redirect_to_eu_reg: '1' }
+        put :update, params: {
+          listing_change: {
+            change_type_id: addition.id,
+            species_listing_id: annex.id,
+            effective_at: 1.week.ago
+          }, id: listing_change2.id, taxon_concept_id: taxon_concept.id, designation_id: eu_designation.id, redirect_to_eu_reg: '1'
+        }
         expect(response).to redirect_to(
           admin_eu_regulation_listing_changes_url(eu_regulation)
         )
@@ -167,17 +176,20 @@ describe Admin::TaxonListingChangesController do
     end
 
     it 'redirects to index page and removes annotation when fields cleared' do
-      put :update, params: { id: @listing_change.id, taxon_concept_id: @taxon_concept.id, designation_id: @designation.id, listing_change: {
-        annotation_attributes: {
-          'short_note_en' => '', 'short_note_es' => '',
-          'short_note_fr' => '', 'full_note_en' => '',
-          'full_note_es' => '', 'full_note_fr' => '',
-          'id' => @annotation.id
+      put :update, params: {
+        id: @listing_change.id, taxon_concept_id: @taxon_concept.id, designation_id: @designation.id, listing_change: {
+          annotation_attributes: {
+            'short_note_en' => '', 'short_note_es' => '',
+            'short_note_fr' => '', 'full_note_en' => '',
+            'full_note_es' => '', 'full_note_fr' => '',
+            'id' => @annotation.id
+          }
         }
-      } }
+      }
       expect(response).to redirect_to(
         admin_taxon_concept_designation_listing_changes_url(
-          @taxon_concept, @designation)
+          @taxon_concept, @designation
+        )
       )
       expect(@listing_change.reload.annotation).to be_nil
     end

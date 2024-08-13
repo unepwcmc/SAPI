@@ -10,7 +10,7 @@ class Admin::CmsMappingsController < Admin::SimpleCrudController
     }
   end
 
-  protected
+protected
 
   def collection
     @cms_mappings ||= end_of_association_chain.order(

@@ -42,7 +42,7 @@ class ChangeType < ApplicationRecord
     self.name.titleize
   end
 
-  private
+private
 
   def dependent_objects_map
     {

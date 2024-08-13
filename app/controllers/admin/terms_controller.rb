@@ -14,7 +14,7 @@ class Admin::TermsController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def collection
     @terms ||= end_of_association_chain.order('code').
@@ -22,7 +22,7 @@ class Admin::TermsController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 
-  private
+private
 
   def term_params
     params.require(:term).permit(:code, :type, :name_en, :name_es, :name_fr)

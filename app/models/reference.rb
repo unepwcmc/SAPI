@@ -33,14 +33,16 @@ class Reference < ApplicationRecord
 
   def self.search(query)
     if query.present?
-      where('UPPER(citation) LIKE UPPER(:query)',
-        query: "%#{query}%")
+      where(
+        'UPPER(citation) LIKE UPPER(:query)',
+        query: "%#{query}%"
+      )
     else
       all
     end
   end
 
-  private
+private
 
   def dependent_objects_map
     {

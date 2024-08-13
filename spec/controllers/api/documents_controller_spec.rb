@@ -6,21 +6,31 @@ describe Api::V1::DocumentsController do
     @subspecies = create_cites_eu_subspecies(parent: @taxon_concept)
     @document = create(:proposal, is_public: true, event: create_cites_cop)
     citation = create(:document_citation, document_id: @document.id)
-    create(:document_citation_taxon_concept, document_citation_id: citation.id,
-      taxon_concept_id: @taxon_concept.id)
-    @subspecies_document = create(:proposal, is_public: true,
-      event: create_cites_cop)
+    create(
+      :document_citation_taxon_concept, document_citation_id: citation.id,
+      taxon_concept_id: @taxon_concept.id
+    )
+    @subspecies_document = create(
+      :proposal, is_public: true,
+      event: create_cites_cop
+    )
     subspecies_citation = create(:document_citation, document_id: @subspecies_document.id)
-    create(:document_citation_taxon_concept, document_citation_id: subspecies_citation.id,
-      taxon_concept_id: @subspecies.id)
+    create(
+      :document_citation_taxon_concept, document_citation_id: subspecies_citation.id,
+      taxon_concept_id: @subspecies.id
+    )
     @document2 = create(:proposal, event: create_cites_cop)
     citation2 = create(:document_citation, document_id: @document2.id)
-    create(:document_citation_taxon_concept, document_citation_id: citation2.id,
-      taxon_concept_id: @taxon_concept.id)
+    create(
+      :document_citation_taxon_concept, document_citation_id: citation2.id,
+      taxon_concept_id: @taxon_concept.id
+    )
     @document3 = create(:proposal, is_public: true, event: nil)
     citation3 = create(:document_citation, document_id: @document3.id)
-    create(:document_citation_taxon_concept, document_citation_id: citation3.id,
-      taxon_concept_id: @taxon_concept.id)
+    create(
+      :document_citation_taxon_concept, document_citation_id: citation3.id,
+      taxon_concept_id: @taxon_concept.id
+    )
     DocumentSearch.refresh_citations_and_documents
   end
 

@@ -13,7 +13,7 @@ module ProtectedDeletion
     end.compact
   end
 
-  protected
+protected
 
   # returns hash that maps the displayable name of a dependency
   # to a relation that returns dependent objects

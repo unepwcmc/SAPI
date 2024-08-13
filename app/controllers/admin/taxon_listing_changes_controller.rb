@@ -73,7 +73,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
     end
   end
 
-  protected
+protected
 
   def build_dependants
     unless @listing_change.party_listing_distribution
@@ -124,7 +124,8 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
         :party_geo_entity,
         :geo_entities,
         exclusions: [ :geo_entities, :taxon_concept ]
-      ]).
+      ]
+              ).
       where("change_types.name <> '#{ChangeType::EXCEPTION}'").
       where('change_types.designation_id' => @designation.id).
       where('taxon_concept_id' => @taxon_concept.id).
@@ -132,7 +133,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
       page(params[:page]).where(parent_id: nil)
   end
 
-  private
+private
 
   def listing_change_params
     params.require(:listing_change).permit(

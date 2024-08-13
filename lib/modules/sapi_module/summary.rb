@@ -105,7 +105,7 @@ module SapiModule
                 AND taxon_concepts.taxonomy_id = #{t.id}
                 AND (data->'kingdom_id')::INT = #{k.id};
            SQL
-        ).values.flatten[0]
+                                                                      ).values.flatten[0]
       stats[:distribution_references] = DistributionReference.
         joins(distribution: :taxon_concept).
         where(taxon_concepts: { taxonomy_id: t.id }).

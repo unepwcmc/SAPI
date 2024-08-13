@@ -27,18 +27,20 @@ class Language < ApplicationRecord
 
   def self.search(query)
     if query.present?
-      where("UPPER(name_en) LIKE UPPER(:query) OR
+      where(
+        "UPPER(name_en) LIKE UPPER(:query) OR
         UPPER(name_fr) LIKE UPPER(:query) OR
         UPPER(name_es) LIKE UPPER(:query) OR
         UPPER(iso_code1) LIKE UPPER(:query) OR
         UPPER(iso_code3) LIKE UPPER(:query)",
-        query: "%#{query}%")
+        query: "%#{query}%"
+      )
     else
       all
     end
   end
 
-  private
+private
 
   def dependent_objects_map
     {

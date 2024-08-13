@@ -22,7 +22,7 @@ class Purpose < TradeCode
 
   after_commit :invalidate_controller_action_cache
 
-  protected
+protected
 
   def dependent_objects_map
     {
@@ -31,7 +31,7 @@ class Purpose < TradeCode
     }
   end
 
-  private
+private
 
   def invalidate_controller_action_cache
     Api::V1::PurposesController.invalidate_cache

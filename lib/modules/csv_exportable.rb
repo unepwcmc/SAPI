@@ -4,7 +4,7 @@ module CsvExportable
     PsqlCommand.new(copy_stmt(options)).execute
   end
 
-  private
+private
 
   def copy_stmt(options)
     basic_query = query_sql(options[:query], options[:csv_columns])
@@ -17,11 +17,13 @@ module CsvExportable
       CSV HEADER;
     PSQL
     ApplicationRecord.send(
-      :sanitize_sql_array, [ sql, {
-        delimiter: options[:delimiter] || ',',
-        encoding: options[:encoding] || 'UTF8',
-        file_name: options[:file_path]
-      } ]
+      :sanitize_sql_array, [
+        sql, {
+          delimiter: options[:delimiter] || ',',
+          encoding: options[:encoding] || 'UTF8',
+          file_name: options[:file_path]
+        }
+      ]
     )
   end
 

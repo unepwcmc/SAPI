@@ -7,7 +7,8 @@ describe NomenclatureChange::StatusSwap::Processor do
 
   let(:synonym) do
     tc = create_cites_eu_species(name_status: 'S')
-    create(:taxon_relationship,
+    create(
+      :taxon_relationship,
       taxon_concept: accepted_name,
       other_taxon_concept: tc,
       taxon_relationship_type: synonym_relationship_type
@@ -26,7 +27,8 @@ describe NomenclatureChange::StatusSwap::Processor do
       let(:accepted_name) { create_cites_eu_species(parent: accepted_name_parent) }
       let(:status_change) { a_to_s_with_swap }
       before(:each) do
-        @shipment = create(:shipment,
+        @shipment = create(
+          :shipment,
           taxon_concept: primary_output_taxon_concept,
           reported_taxon_concept: primary_output_taxon_concept
         )

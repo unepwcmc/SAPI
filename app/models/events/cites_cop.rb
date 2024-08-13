@@ -49,7 +49,7 @@ class CitesCop < Event
     [ Document::Proposal ]
   end
 
-  private
+private
 
   def dependent_objects_map
     {

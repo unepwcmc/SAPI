@@ -51,7 +51,8 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(is_current: true,
-        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
+        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] }
+      )
     @suspension_notifications = CitesSuspensionNotification.
       select([ :id, :name ]).
       order('effective_at DESC')
@@ -61,7 +62,7 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
     @cites_suspensions ||= end_of_association_chain.page(params[:page])
   end
 
-  private
+private
 
   def cites_suspension_params
     params.require(:cites_suspension).permit(

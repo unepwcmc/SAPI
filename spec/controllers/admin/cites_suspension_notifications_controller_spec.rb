@@ -12,9 +12,11 @@ describe Admin::CitesSuspensionNotificationsController do
     describe 'GET index' do
       it 'assigns @cites_suspension_notifications sorted by name' do
         get :index
-        expect(assigns(:cites_suspension_notifications)).to eq([
-          @cites_suspension_notification2, @cites_suspension_notification1
-        ])
+        expect(assigns(:cites_suspension_notifications)).to eq(
+          [
+            @cites_suspension_notification2, @cites_suspension_notification1
+          ]
+        )
       end
       it 'renders the index template' do
         get :index

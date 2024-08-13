@@ -2,6 +2,7 @@ class Checklist::DocumentsController < ApplicationController
   def index
     return render json: []  if params[:taxon_concepts_ids].nil?
     return render json: []  unless params[:taxon_concepts_ids].kind_of?(Array)
+
     anc_ids = MaterialDocIdsRetriever.ancestors_ids(params[:taxon_concepts_ids].first)
     chi_ids = MTaxonConcept.descendants_ids(params[:taxon_concepts_ids].first).map(&:to_i)
     params[:taxon_concepts_ids] = anc_ids | chi_ids
@@ -58,7 +59,7 @@ class Checklist::DocumentsController < ApplicationController
     t.close
   end
 
-  private
+private
 
   def access_denied?
     !current_user || current_user.is_api_user_or_secretariat?
@@ -94,6 +95,7 @@ class Checklist::DocumentsController < ApplicationController
           if missing_files.length == @pdf_file_paths.count
             render_404 && return
           end
+
           zos.put_next_entry('missing_files.txt')
           zos.print missing_files.join("\n\n")
         end

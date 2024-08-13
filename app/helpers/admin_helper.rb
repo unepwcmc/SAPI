@@ -2,6 +2,7 @@ module AdminHelper
   def ancestors_path(taxon_concept)
     Rank.where(taxonomic_position: ...taxon_concept.rank.taxonomic_position).order(:taxonomic_position).map do |r|
       return nil unless taxon_concept.data
+
       name = taxon_concept.data["#{r.name.downcase}_name"]
       id = taxon_concept.data["#{r.name.downcase}_id"]
       if name && id
@@ -20,7 +21,8 @@ module AdminHelper
         #{record.updated_at.strftime("%d/%m/%Y")}
       </p>
     HTML
-    content_tag(:a, rel: 'tooltip', href: '#',
+    content_tag(
+      :a, rel: 'tooltip', href: '#',
       'data-original-title': info, 'data-html': true
     ) do
       info_icon
@@ -29,10 +31,12 @@ module AdminHelper
 
   def internal_notes(record)
     return '' if record.internal_notes.blank?
-    info = content_tag(:div) do
-      content_tag(:b, 'Internal notes:') +
-      content_tag(:p, record.internal_notes)
-    end
+
+    info =
+      content_tag(:div) do
+        content_tag(:b, 'Internal notes:') +
+        content_tag(:p, record.internal_notes)
+      end
     comment_icon_with_tooltip(info)
   end
 
@@ -73,6 +77,7 @@ module AdminHelper
   def error_messages_for(resource)
     resource = instance_variable_get("@#{resource}") if resource.is_a? Symbol
     return '' unless resource && resource.errors.any?
+
     content_tag(:div, class: 'alert alert-error') do
       link_to('×', '#', 'data-dismiss': 'alert', class: 'close') +
       content_tag(
@@ -90,7 +95,8 @@ module AdminHelper
 
   def admin_title
     content_tag(:div, class: 'admin-header') do
-      content_tag(:h1,
+      content_tag(
+        :h1,
         if block_given?
           yield
         elsif @custom_title
@@ -98,7 +104,9 @@ module AdminHelper
         else
           controller_name.titleize
         end
-      ) + content_tag(:div, class: 'action-buttons') do
+      ) + content_tag(
+        :div, class: 'action-buttons'
+      ) do
         admin_add_new_button custom_btn_title: @custom_btn_title
       end
     end
@@ -108,7 +116,8 @@ module AdminHelper
     resource = options[:resource] || controller_name.singularize
     href = options.delete(:href) || "#new-#{resource}"
     name = options.delete(:name) || options[:custom_btn_title] || "Add new #{resource.titleize}"
-    link_to('<i class="icon-plus-sign"></i> '.html_safe + name, href,
+    link_to(
+      '<i class="icon-plus-sign"></i> '.html_safe + name, href,
       {
         role: 'button',
         'data-toggle': 'modal',
@@ -126,13 +135,15 @@ module AdminHelper
       id: id,
       class: 'modal hide fade', tabindex: '-1', role: 'dialog',
       'aria-labelledby': "#{id}-label",
-      'aria-hidden': 'true') do
+      'aria-hidden': 'true'
+    ) do
       content_tag(:div, class: 'modal-header') do
         button_tag(
           type: 'button', class: 'close', 'data-dismiss': 'modal',
           'aria-hidden': true
         ) { '×' } +
-        content_tag(:h3,
+        content_tag(
+          :h3,
           id: "#{id}-label"
         ) { title }
       end +

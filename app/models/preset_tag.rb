@@ -26,9 +26,11 @@ class PresetTag < ApplicationRecord
 
   def self.search(query)
     if query.present?
-      where("UPPER(name) LIKE UPPER(:query) OR
+      where(
+        "UPPER(name) LIKE UPPER(:query) OR
         UPPER(model) LIKE UPPER(:query)",
-        query: "%#{query}%")
+        query: "%#{query}%"
+      )
     else
       all
     end

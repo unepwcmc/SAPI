@@ -29,7 +29,8 @@ class LatexToPdf
           $stdout, $stderr = original_stdout, original_stderr
           Process.exit! 1
         end
-      end)
+      end
+    )
     if File.exist?(pdf_file = [ dir, "/#{input}.pdf" ].join)
       pdf_file
     else
@@ -78,6 +79,7 @@ class LatexToPdf
 
   def self.html2latex(text)
     return '' if text.blank?
+
     HtmlToLatex.convert(text)
   end
 end

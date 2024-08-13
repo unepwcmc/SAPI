@@ -158,7 +158,7 @@ class Document < ApplicationRecord
     (read_attribute(:geo_entity_names) || []).compact
   end
 
-  private
+private
 
   def is_pdf?
     attr = elib_legacy_file_name || filename.file.filename

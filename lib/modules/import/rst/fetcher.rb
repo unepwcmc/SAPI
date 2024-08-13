@@ -10,6 +10,7 @@ module Import::Rst::Fetcher
         responses << res
 
         break if res['data']['links']['next'].blank?
+
         page += 1
       end
 

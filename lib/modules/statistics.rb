@@ -4,14 +4,20 @@ module Statistics
     years = Trade::Shipment.where.not(year: nil).uniq.pluck(:year)
     years.each do |y|
       unless y.nil?
-        reported_by_exporter = Trade::Shipment.where(year: y,
-          reported_by_exporter: true).count
-        reported_by_importer = Trade::Shipment.where(year: y,
-          reported_by_exporter: false).count
+        reported_by_exporter = Trade::Shipment.where(
+          year: y,
+          reported_by_exporter: true
+        ).count
+        reported_by_importer = Trade::Shipment.where(
+          year: y,
+          reported_by_exporter: false
+        ).count
         total_transactions = Trade::Shipment.where(year: y).count
-        trade_transactions[y] = { total: total_transactions,
+        trade_transactions[y] = {
+          total: total_transactions,
           reported_by_exporter: reported_by_exporter,
-          reported_by_importer: reported_by_importer }
+          reported_by_importer: reported_by_importer
+        }
       end
     end
     trade_transactions[:total] = {}

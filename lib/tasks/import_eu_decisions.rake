@@ -4,7 +4,7 @@ namespace :import do
     TMP_TABLE = 'eu_decisions_import'
 
     taxonomy_id = Taxonomy.where(name: 'CITES_EU').first.id
-    designation_id = Designation.find_by_name('EU').id
+    designation_id = Designation.find_by(name: 'EU').id
     puts "There are #{EuDecision.count} EU Decisions in the database."
     files = files_from_args(t, args)
     files.each do |file|

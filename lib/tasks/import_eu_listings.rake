@@ -2,20 +2,20 @@ namespace :import do
   desc 'Import EU species listings from csv file (usage: rake import:eu_listings[path/to/file,path/to/another])'
   task :eu_listings, 10.times.map { |i| :"file_#{i}" } => [ :environment, 'eu_listings:defaults' ] do |t, args|
     TMP_TABLE = 'eu_listings_import'
-    designation = Designation.find_by_name(Designation::EU)
-    taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+    designation = Designation.find_by(name: Designation::EU)
+    taxonomy = Taxonomy.find_by(name: Taxonomy::CITES_EU)
     puts "There are #{ListingChange.joins(:species_listing).
       where(species_listings: { designation_id: designation.id }).count} EU listings in the database"
     puts "There are #{ListingDistribution.joins(listing_change: :species_listing).
       where(species_listings: { designation_id: designation.id }).count} EU listing distributions in the database"
-    annex_A = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'A')
-    annex_B = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'B')
-    annex_C = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'C')
-    annex_D = SpeciesListing.find_by_designation_id_and_abbreviation(designation.id, 'D')
-    a = ChangeType.find_by_name_and_designation_id(ChangeType::ADDITION, designation.id)
-    d = ChangeType.find_by_name_and_designation_id(ChangeType::DELETION, designation.id)
-    e = ChangeType.find_by_name_and_designation_id(ChangeType::EXCEPTION, designation.id)
-    english = Language.find_by_name_en('English')
+    annex_A = SpeciesListing.find_by(designation_id: designation.id, abbreviation: 'A')
+    annex_B = SpeciesListing.find_by(designation_id: designation.id, abbreviation: 'B')
+    annex_C = SpeciesListing.find_by(designation_id: designation.id, abbreviation: 'C')
+    annex_D = SpeciesListing.find_by(designation_id: designation.id, abbreviation: 'D')
+    a = ChangeType.find_by(name: ChangeType::ADDITION, designation_id: designation.id)
+    d = ChangeType.find_by(name: ChangeType::DELETION, designation_id: designation.id)
+    e = ChangeType.find_by(name: ChangeType::EXCEPTION, designation_id: designation.id)
+    english = Language.find_by(name_en: 'English')
     listings_count = ListingChange.joins(:species_listing).
       where(species_listings: { designation_id: designation.id }).count
     listings_d_count = ListingDistribution.joins(listing_change: :species_listing).
@@ -29,12 +29,12 @@ namespace :import do
       kingdom = file.split('/').last.split('_')[0].titleize
 
       puts 'CREATING temporary column and view'
-      ApplicationRecord.connection.execute(<<-SQL
+      ApplicationRecord.connection.execute(<<-SQL.squish
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
         ORDER BY legacy_id, listing_date, annex, country_iso2
       SQL
-      )
+                                          )
       ApplicationRecord.connection.execute('ALTER TABLE listing_changes DROP COLUMN IF EXISTS import_row_id')
       ApplicationRecord.connection.execute('ALTER TABLE listing_changes ADD COLUMN import_row_id integer')
       ApplicationRecord.connection.execute('ALTER TABLE annotations DROP COLUMN IF EXISTS import_row_id')
@@ -42,7 +42,7 @@ namespace :import do
 
       copy_data(file, TMP_TABLE)
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
           WITH new_annotations AS (
             INSERT INTO annotations(
               import_row_id,
@@ -180,7 +180,7 @@ namespace :import do
       puts 'INSERTING population exceptions (listing distributions)'
       ApplicationRecord.connection.execute(sql)
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
       WITH listed_populations AS (
         SELECT listing_changes.id, split_part(regexp_split_to_table(populations_iso2,','),':',1) AS iso_code2
         FROM eu_listings_import_view AS TMP
@@ -195,7 +195,7 @@ namespace :import do
       puts 'INSERTING listed populations (listing distributions)'
       ApplicationRecord.connection.execute(sql)
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
           INSERT INTO listing_distributions(listing_change_id, geo_entity_id, is_party, created_at, updated_at)
           SELECT DISTINCT listing_changes.id, geo_entities.id, 't'::BOOLEAN, current_date, current_date
           FROM #{TMP_TABLE}_view AS TMP
@@ -224,7 +224,7 @@ namespace :import do
     desc 'Add defaults EU listings and default ChangeTypes'
     task defaults: :environment do
       puts 'Going to create EU default species listings, if they do not exist'
-      designation = Designation.find_by_name('EU')
+      designation = Designation.find_by(name: 'EU')
       [ 'A', 'B', 'C', 'D' ].each do |annex|
         SpeciesListing.find_or_create_by(name: "Annex #{annex}", abbreviation: annex, designation_id: designation.id)
       end
@@ -236,7 +236,7 @@ namespace :import do
     end
     desc 'Drop EU species listings'
     task delete_all: :environment do
-      designation = Designation.find_by_name('EU')
+      designation = Designation.find_by(name: 'EU')
       Annotation.joins(:event).
         where(events: { designation_id: designation.id }).delete_all
       ListingDistribution.joins(:listing_change).

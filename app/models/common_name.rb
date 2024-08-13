@@ -32,6 +32,7 @@ class CommonName < ApplicationRecord
   def self.english_to_pdf(common_name)
     words = common_name.split
     return common_name if words.size == 1
+
     words.last + ', ' + common_name.chomp(' ' + words.last)
   end
 
@@ -44,7 +45,7 @@ class CommonName < ApplicationRecord
     ActiveRecord::Type::Boolean.new.cast(value)
   end
 
-  private
+private
 
   def enforce_latin_chars_for_pdf
     return unless name.present? && [ 'EN', 'FR', 'ES' ].include?(language.iso_code1)

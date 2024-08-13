@@ -15,7 +15,8 @@ describe NomenclatureChange::StatusToSynonym::Processor do
       let(:input_species) { create_cites_eu_species(parent: input_species_parent) }
       let(:status_change) { n_to_s_with_input_and_secondary_output }
       before(:each) do
-        @shipment = create(:shipment,
+        @shipment = create(
+          :shipment,
           taxon_concept: primary_output_taxon_concept,
           reported_taxon_concept: primary_output_taxon_concept
         )
@@ -32,7 +33,8 @@ describe NomenclatureChange::StatusToSynonym::Processor do
       let(:input_species) { trade_name }
       let(:status_change) { t_to_s_with_primary_and_secondary_output }
       before(:each) do
-        @shipment = create(:shipment,
+        @shipment = create(
+          :shipment,
           taxon_concept: accepted_name,
           reported_taxon_concept: primary_output_taxon_concept
         )

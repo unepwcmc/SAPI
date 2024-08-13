@@ -1,8 +1,10 @@
 class Trade::TradePlusFilters
   attr_reader :locale
 
-  ATTRIBUTES = %w[importer exporter origin term
-    source purpose unit year appendix].freeze
+  ATTRIBUTES = %w[
+    importer exporter origin term
+    source purpose unit year appendix
+  ].freeze
 
   LOCALISED_ATTRIBUTES = (ATTRIBUTES - %w[year appendix]).freeze
 
@@ -96,7 +98,7 @@ class Trade::TradePlusFilters
     SQL
   end
 
-  private
+private
 
   def table_name
     'trade_plus_complete_mview'

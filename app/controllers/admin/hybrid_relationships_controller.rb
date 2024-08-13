@@ -56,14 +56,14 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
     end
   end
 
-  protected
+protected
 
   def load_hybrid_relationship_type
     @hybrid_relationship_type = TaxonRelationshipType.
       find_by(name: TaxonRelationshipType::HAS_HYBRID)
   end
 
-  private
+private
 
   def hybrid_relationship_params
     params.require(:taxon_relationship).permit(

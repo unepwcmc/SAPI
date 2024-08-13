@@ -12,13 +12,15 @@ describe Trade::Sandbox, drops_tables: true do
     create(:term, code: 'CAV')
     create(:unit, code: 'KIL')
     country = create(:geo_entity_type, name: 'COUNTRY')
-    @argentina = create(:geo_entity,
+    @argentina = create(
+      :geo_entity,
       geo_entity_type: country,
       name: 'Argentina',
       iso_code2: 'AR'
     )
 
-    @portugal = create(:geo_entity,
+    @portugal = create(
+      :geo_entity,
       geo_entity_type: country,
       name: 'Portugal',
       iso_code2: 'PT'

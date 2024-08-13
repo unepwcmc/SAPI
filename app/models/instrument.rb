@@ -25,14 +25,16 @@ class Instrument < ApplicationRecord
 
   def self.search(query)
     if query.present?
-      where('UPPER(name) LIKE UPPER(:query)',
-        query: "%#{query}%")
+      where(
+        'UPPER(name) LIKE UPPER(:query)',
+        query: "%#{query}%"
+      )
     else
       all
     end
   end
 
-  private
+private
 
   def dependent_objects_map
     {

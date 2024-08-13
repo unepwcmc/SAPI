@@ -62,12 +62,13 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
     end
   end
 
-  protected
+protected
 
   def load_tags_and_geo_entities
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(is_current: true,
-        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
+        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] }
+      )
     @tags = PresetTag.where(model: PresetTag::TYPES[:Distribution])
   end
 
@@ -76,7 +77,7 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
       joins(:geo_entity).order('geo_entities.name_en ASC')
   end
 
-  private
+private
 
   def distribution_params
     params.require(:distribution).permit(

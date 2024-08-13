@@ -77,12 +77,14 @@ describe Admin::NomenclatureChanges::LumpController do
     end
     context 'when successful' do
       it 'redirects to next step' do
-        put :update, params: { nomenclature_change_lump: {
-          inputs_attributes: {
-            '0' => { taxon_concept_id: create_cites_eu_species.id },
-            '1' => { taxon_concept_id: create_cites_eu_species.id }
-          }
-        }, nomenclature_change_id: @lump.id, id: 'inputs' }
+        put :update, params: {
+          nomenclature_change_lump: {
+            inputs_attributes: {
+              '0' => { taxon_concept_id: create_cites_eu_species.id },
+              '1' => { taxon_concept_id: create_cites_eu_species.id }
+            }
+          }, nomenclature_change_id: @lump.id, id: 'inputs'
+        }
         expect(response).to redirect_to(
           admin_nomenclature_change_lump_url(
             nomenclature_change_id: assigns(:nomenclature_change).id, id: 'outputs'
@@ -92,11 +94,13 @@ describe Admin::NomenclatureChanges::LumpController do
     end
     context 'when unsuccessful' do
       it 're-renders step' do
-        put :update, params: { nomenclature_change_lump: {
-          inputs_attributes: {
-            '0' => { taxon_concept_id: nil }
-          }
-        }, nomenclature_change_id: @lump.id, id: 'inputs' }
+        put :update, params: {
+          nomenclature_change_lump: {
+            inputs_attributes: {
+              '0' => { taxon_concept_id: nil }
+            }
+          }, nomenclature_change_id: @lump.id, id: 'inputs'
+        }
         expect(response).to render_template('inputs')
       end
     end

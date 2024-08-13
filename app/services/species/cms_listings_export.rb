@@ -1,5 +1,5 @@
 class Species::CmsListingsExport < Species::ListingsExport
-  private
+private
 
   def designation_name
     'cms'

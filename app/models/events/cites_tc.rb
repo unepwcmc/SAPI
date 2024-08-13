@@ -44,7 +44,7 @@ class CitesTc < Event
     [ Document::ReviewOfSignificantTrade ]
   end
 
-  private
+private
 
   def check_for_documents
     if documents.present?

@@ -8,16 +8,19 @@ class Species::QuotaSerializer < ActiveModel::Serializer
 
   def include_nomenclature_note_fr?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_note_es?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_publication_date_formatted?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 

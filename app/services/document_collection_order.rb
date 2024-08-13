@@ -22,10 +22,12 @@ class DocumentCollectionOrder
 
   def update(id_sort_index_hash)
     id_sort_index_hash.each do |id, sort_index|
-      Document.where([
-        'id = :id OR primary_language_document_id = :id',
-        id: id
-      ]).update_all(
+      Document.where(
+        [
+          'id = :id OR primary_language_document_id = :id',
+          id: id
+        ]
+      ).update_all(
         { sort_index: sort_index, updated_at: DateTime.now },
       )
     end

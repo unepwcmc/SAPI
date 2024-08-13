@@ -11,6 +11,7 @@ module Checklist::Pdf::HistoryContent
   def kingdom(tex, fetcher, kingdom_name)
     kingdom = fetcher.next
     return if kingdom.empty?
+
     @skip_ancestor_ids = nil
 
     tex << "\\cpart{#{kingdom_name}}\n"

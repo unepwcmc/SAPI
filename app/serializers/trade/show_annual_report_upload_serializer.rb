@@ -30,7 +30,7 @@ class Trade::ShowAnnualReportUploadSerializer < ActiveModel::Serializer
   end
 
   def updated_at
-   object.updated_at && object.updated_at.strftime('%d/%m/%y')
+    object.updated_at && object.updated_at.strftime('%d/%m/%y')
   end
 
   def created_by

@@ -87,8 +87,10 @@ class NomenclatureChange::Split::Constructor
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     outputs_html = @nomenclature_change.outputs.map do |output|
       if output.scientific_name.present? && output.new_scientific_name.present?
-        taxon_concept_html(output.display_full_name, output.display_rank_name,
-          output.scientific_name, output.rank.name)
+        taxon_concept_html(
+          output.display_full_name, output.display_rank_name,
+          output.scientific_name, output.rank.name
+        )
       else
         taxon_concept_html(output.display_full_name, output.display_rank_name)
       end
@@ -113,8 +115,10 @@ class NomenclatureChange::Split::Constructor
     output_html =
       if output.scientific_name.present? &&
         output.new_scientific_name.present?
-        taxon_concept_html(output.display_full_name, output.display_rank_name,
-          output.scientific_name, output.rank.name)
+        taxon_concept_html(
+          output.display_full_name, output.display_rank_name,
+          output.scientific_name, output.rank.name
+        )
       else
         taxon_concept_html(output.display_full_name, output.display_rank_name)
       end

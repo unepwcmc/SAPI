@@ -20,12 +20,16 @@ def primary_output(row, user, event)
   builder = klass::Constructor.new(@nomenclature_change)
   builder.build_primary_output
   @nomenclature_change.assign_attributes(
-    { event_id: event,
-      primary_output_attributes: { taxon_concept_id: row['ID'].strip,
-                                   new_rank_id: Rank.where(name: 'SPECIES').first,
-                                   new_parent_id: row['ParentID'],
-                                   created_by_id: user,
-                                   updated_by_id: user } }.
+    {
+      event_id: event,
+      primary_output_attributes: {
+        taxon_concept_id: row['ID'].strip,
+        new_rank_id: Rank.where(name: 'SPECIES').first,
+        new_parent_id: row['ParentID'],
+        created_by_id: user,
+        updated_by_id: user
+      }
+    }.
     merge({ status: 'primary_output' })
   )
   @nomenclature_change.save

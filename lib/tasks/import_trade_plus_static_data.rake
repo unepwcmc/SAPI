@@ -14,7 +14,7 @@ namespace :import do
       exporter importer origin kingdom_name phylum_name
     ].freeze
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       COPY trade_plus_static(#{COLUMNS.join(',')})
       FROM '#{path_to_file}' DELIMITER ',' CSV HEADER
     SQL

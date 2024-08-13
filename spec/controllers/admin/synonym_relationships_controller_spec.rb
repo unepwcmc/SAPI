@@ -7,7 +7,8 @@ describe Admin::SynonymRelationshipsController do
   let(:taxon_concept) { create(:taxon_concept) }
   let(:synonym) { create(:taxon_concept, name_status: 'S') }
   let(:synonym_relationship) do
-    create(:taxon_relationship,
+    create(
+      :taxon_relationship,
       taxon_relationship_type_id: synonym_relationship_type.id,
       taxon_concept: taxon_concept,
       other_taxon_concept: synonym

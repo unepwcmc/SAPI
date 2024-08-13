@@ -49,12 +49,14 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
 
   def set_output_rank_id
     return true if primary_output && primary_output.new_rank_id.present?
+
     primary_output && primary_output.taxon_concept &&
       primary_output.new_rank_id = primary_output.taxon_concept.rank_id
   end
 
   def set_output_parent_id
     return true unless needs_to_set_parent? && primary_output.new_parent_id.nil?
+
     primary_output && primary_output.taxon_concept &&
       primary_output.new_parent_id = primary_output.default_parent.try(:id)
   end

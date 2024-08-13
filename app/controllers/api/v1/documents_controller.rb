@@ -4,10 +4,12 @@ class Api::V1::DocumentsController < ApplicationController
       exact_match = MTaxonConcept.where('LOWER(full_name) = ?', params[:taxon_concept_query].downcase).
         where(taxonomy_id: 1).
         first
-      @species_search = Species::Search.new({
-        visibility: :elibrary,
-        taxon_concept_query: params[:taxon_concept_query]
-      })
+      @species_search = Species::Search.new(
+        {
+          visibility: :elibrary,
+          taxon_concept_query: params[:taxon_concept_query]
+        }
+      )
 
       ids = @species_search.ids
       anc_ids = []
@@ -103,6 +105,7 @@ class Api::V1::DocumentsController < ApplicationController
         if missing_files.length == @documents.count
           render_404 && return
         end
+
         zos.put_next_entry('missing_files.txt')
         zos.print missing_files.join("\n\n")
       end
@@ -115,7 +118,7 @@ class Api::V1::DocumentsController < ApplicationController
     t.close
   end
 
-  private
+private
 
   def access_denied?
     !current_user || current_user.is_api_user_or_secretariat?

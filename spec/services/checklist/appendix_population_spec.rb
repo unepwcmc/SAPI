@@ -7,9 +7,11 @@ describe Checklist do
     before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     context 'when Nepal' do
       subject do
-        checklist = Checklist::Checklist.new({
-          country_ids: [ nepal.id ]
-        })
+        checklist = Checklist::Checklist.new(
+          {
+            country_ids: [ nepal.id ]
+          }
+        )
         checklist.results
       end
       specify do
@@ -18,9 +20,11 @@ describe Checklist do
     end
     context 'when Poland' do
       subject do
-        checklist = Checklist::Checklist.new({
-          country_ids: [ poland.id ]
-        })
+        checklist = Checklist::Checklist.new(
+          {
+            country_ids: [ poland.id ]
+          }
+        )
         checklist.results
       end
       specify do
@@ -32,9 +36,11 @@ describe Checklist do
     before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     context 'when App I' do
       subject do
-        checklist = Checklist::Checklist.new({
-          cites_appendices: [ 'I' ]
-        })
+        checklist = Checklist::Checklist.new(
+          {
+            cites_appendices: [ 'I' ]
+          }
+        )
         checklist.results
       end
       specify do
@@ -43,9 +49,11 @@ describe Checklist do
     end
     context 'when App II' do
       subject do
-        checklist = Checklist::Checklist.new({
-          cites_appendices: [ 'II' ]
-        })
+        checklist = Checklist::Checklist.new(
+          {
+            cites_appendices: [ 'II' ]
+          }
+        )
         checklist.results
       end
       specify do
@@ -54,9 +62,11 @@ describe Checklist do
     end
     context 'when App III' do
       subject do
-        checklist = Checklist::Checklist.new({
-          cites_appendices: [ 'III' ]
-        })
+        checklist = Checklist::Checklist.new(
+          {
+            cites_appendices: [ 'III' ]
+          }
+        )
         checklist.results
       end
       specify do
@@ -69,10 +79,12 @@ describe Checklist do
     context 'when Nepal' do
       context 'when App I' do
         subject do
-          checklist = Checklist::Checklist.new({
-            cites_appendices: [ 'I' ],
-            country_ids: [ nepal.id ]
-          })
+          checklist = Checklist::Checklist.new(
+            {
+              cites_appendices: [ 'I' ],
+              country_ids: [ nepal.id ]
+            }
+          )
           checklist.results
         end
         specify do
@@ -81,10 +93,12 @@ describe Checklist do
       end
       context 'when App II' do
         subject do
-          checklist = Checklist::Checklist.new({
-            cites_appendices: [ 'II' ],
-            country_ids: [ nepal.id ]
-          })
+          checklist = Checklist::Checklist.new(
+            {
+              cites_appendices: [ 'II' ],
+              country_ids: [ nepal.id ]
+            }
+          )
           checklist.results
         end
         specify do
@@ -95,10 +109,12 @@ describe Checklist do
     context 'when Poland' do
       context 'when App I' do
         subject do
-          checklist = Checklist::Checklist.new({
-            cites_appendices: [ 'I' ],
-            country_ids: [ poland.id ]
-          })
+          checklist = Checklist::Checklist.new(
+            {
+              cites_appendices: [ 'I' ],
+              country_ids: [ poland.id ]
+            }
+          )
           checklist.results
         end
         specify do
@@ -107,10 +123,12 @@ describe Checklist do
       end
       context 'when App II' do
         subject do
-          checklist = Checklist::Checklist.new({
-            cites_appendices: [ 'II' ],
-            country_ids: [ poland.id ]
-          })
+          checklist = Checklist::Checklist.new(
+            {
+              cites_appendices: [ 'II' ],
+              country_ids: [ poland.id ]
+            }
+          )
           checklist.results
         end
         specify do
@@ -121,10 +139,12 @@ describe Checklist do
     context 'when Poland or Nepal' do
       context 'when App I' do
         subject do
-          checklist = Checklist::Checklist.new({
-            cites_appendices: [ 'I' ],
-            country_ids: [ poland.id, nepal.id ]
-          })
+          checklist = Checklist::Checklist.new(
+            {
+              cites_appendices: [ 'I' ],
+              country_ids: [ poland.id, nepal.id ]
+            }
+          )
           checklist.results
         end
         specify do
@@ -133,10 +153,12 @@ describe Checklist do
       end
       context 'when App II' do
         subject do
-          checklist = Checklist::Checklist.new({
-            cites_appendices: [ 'II' ],
-            country_ids: [ poland.id, nepal.id ]
-          })
+          checklist = Checklist::Checklist.new(
+            {
+              cites_appendices: [ 'II' ],
+              country_ids: [ poland.id, nepal.id ]
+            }
+          )
           checklist.results
         end
         specify do
@@ -147,10 +169,12 @@ describe Checklist do
     context 'when App I or II' do
       context 'when Poland' do
         subject do
-          checklist = Checklist::Checklist.new({
-            cites_appendices: [ 'I', 'II' ],
-            country_ids: [ poland.id ]
-          })
+          checklist = Checklist::Checklist.new(
+            {
+              cites_appendices: [ 'I', 'II' ],
+              country_ids: [ poland.id ]
+            }
+          )
           checklist.results
         end
         specify do
@@ -159,10 +183,12 @@ describe Checklist do
       end
       context 'when Nepal' do
         subject do
-          checklist = Checklist::Checklist.new({
-            cites_appendices: [ 'I', 'II' ],
-            country_ids: [ nepal.id ]
-          })
+          checklist = Checklist::Checklist.new(
+            {
+              cites_appendices: [ 'I', 'II' ],
+              country_ids: [ nepal.id ]
+            }
+          )
           checklist.results
         end
         specify do

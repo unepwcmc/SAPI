@@ -37,7 +37,7 @@ shared_context 'Agalychnis' do
     @ref = create(
       :reference,
       author: 'Frost, D. R.',
-      title:         'Taxonomic Checklist of CITES-listed Amphibians',
+      title: 'Taxonomic Checklist of CITES-listed Amphibians',
       year: 2006
     )
 
@@ -55,6 +55,7 @@ shared_context 'Agalychnis' do
       # Skip old sapi context let statements,
       # which are now instance variables starting with _
       next if t.to_s.include?('@_')
+
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

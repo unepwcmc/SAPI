@@ -123,7 +123,7 @@ class User < ApplicationRecord
     true
   end
 
-  private
+private
 
   def set_default_role
     self.role ||= 'api'

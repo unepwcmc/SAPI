@@ -38,10 +38,12 @@ describe DashboardStats do
     end
     context 'when no time range specified' do
       subject do
-        DashboardStats.new(@argentina, {
-          kingdom: 'Animalia', trade_limit: 5,
-          time_range_start: 2010, time_range_end: 2013
-        }).trade
+        DashboardStats.new(
+          @argentina, {
+            kingdom: 'Animalia', trade_limit: 5,
+            time_range_start: 2010, time_range_end: 2013
+          }
+        ).trade
       end
       it 'argentina should have 40 exported animals and no imports' do
         expect(subject[:exports][:top_traded].length).to eq(1)
@@ -51,11 +53,13 @@ describe DashboardStats do
     end
     context 'when time range specified' do
       subject do
-        DashboardStats.new(@argentina, {
-          kingdom: 'Animalia',
-          trade_limit: 5,
-          time_range_start: 2012, time_range_end: 2012
-        }).trade
+        DashboardStats.new(
+          @argentina, {
+            kingdom: 'Animalia',
+            trade_limit: 5,
+            time_range_start: 2012, time_range_end: 2012
+          }
+        ).trade
       end
       it 'argentina should have no exports in 2012-2012' do
         expect(subject[:exports][:top_traded].length).to eq(0)

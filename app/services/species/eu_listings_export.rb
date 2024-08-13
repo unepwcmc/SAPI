@@ -4,7 +4,7 @@ class Species::EuListingsExport < Species::ListingsExport
     @include_cites = filters[:include_cites] == 'true'
   end
 
-  private
+private
 
   def designation_name
     'eu'

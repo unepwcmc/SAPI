@@ -26,7 +26,7 @@ class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def load_associations
     @event = Event.find(params[:event_id]) if params[:event_id]

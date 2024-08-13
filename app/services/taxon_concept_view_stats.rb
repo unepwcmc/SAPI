@@ -9,7 +9,7 @@ class TaxonConceptViewStats
     query.limit(10)
   end
 
-  private
+private
 
   def query
     Ahoy::Event.select(<<-SQL.squish
@@ -17,7 +17,7 @@ class TaxonConceptViewStats
       properties ->>'full_name' AS tc_full_name,
       COUNT(*) AS number_of_visits
     SQL
-    ).
+                      ).
       where(name: 'Taxon Concept').
       where([ 'time > ? AND time <= ?', @start_date, @end_date ]).
       where([ "properties->>'taxonomy_name' = ?", @taxonomy ]).

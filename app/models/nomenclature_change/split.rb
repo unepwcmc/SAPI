@@ -19,8 +19,10 @@
 #
 
 class NomenclatureChange::Split < NomenclatureChange
-  build_steps(:inputs, :outputs, :notes, :children, :names, :distribution,
-    :legislation, :summary)
+  build_steps(
+    :inputs, :outputs, :notes, :children, :names, :distribution,
+    :legislation, :summary
+  )
   # Migrated to controller (Strong Parameters)
   # attr_accessible :input_attributes, :outputs_attributes
   has_one :input, inverse_of: :nomenclature_change,
@@ -84,7 +86,7 @@ class NomenclatureChange::Split < NomenclatureChange
       if output.new_name_status.blank? && (
         output.new_scientific_name.present? ||
         (output.taxon_concept && output.taxon_concept.name_status != 'A')
-        )
+      )
         output.new_name_status = 'A'
       end
     end
@@ -95,7 +97,7 @@ class NomenclatureChange::Split < NomenclatureChange
       if output.new_rank_id.blank? && (
         output.new_scientific_name.present? ||
         (output.taxon_concept && output.taxon_concept.rank_id != new_output_rank.id)
-        )
+      )
         output.new_rank_id = new_output_rank.id
       end
     end

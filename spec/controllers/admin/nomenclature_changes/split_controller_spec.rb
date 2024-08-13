@@ -52,7 +52,8 @@ describe Admin::NomenclatureChanges::SplitController do
       end
       context 'when names present' do
         before(:each) do
-          create(:taxon_relationship,
+          create(
+            :taxon_relationship,
             taxon_concept: input_species,
             other_taxon_concept: create_cites_eu_species(name_status: 'S'),
             taxon_relationship_type: synonym_relationship_type
@@ -135,9 +136,11 @@ describe Admin::NomenclatureChanges::SplitController do
     end
     context 'when successful' do
       it 'redirects to next step' do
-        put :update, params: { nomenclature_change_split: {
-          input_attributes: { taxon_concept_id: create_cites_eu_species.id }
-        }, nomenclature_change_id: @split.id, id: 'inputs' }
+        put :update, params: {
+          nomenclature_change_split: {
+            input_attributes: { taxon_concept_id: create_cites_eu_species.id }
+          }, nomenclature_change_id: @split.id, id: 'inputs'
+        }
         expect(response).to redirect_to(
           admin_nomenclature_change_split_url(
             nomenclature_change_id: assigns(:nomenclature_change).id, id: 'outputs'
@@ -147,9 +150,11 @@ describe Admin::NomenclatureChanges::SplitController do
     end
     context 'when unsuccessful' do
       it 're-renders step' do
-        put :update, params: { nomenclature_change_split: {
-          input_attributes: { taxon_concept_id: nil }
-        }, nomenclature_change_id: @split.id, id: 'inputs' }
+        put :update, params: {
+          nomenclature_change_split: {
+            input_attributes: { taxon_concept_id: nil }
+          }, nomenclature_change_id: @split.id, id: 'inputs'
+        }
         expect(response).to render_template('inputs')
       end
     end
@@ -198,7 +203,8 @@ describe Admin::NomenclatureChanges::SplitController do
     context 'when step is distribution' do
       context 'when names' do
         before(:each) do
-          create(:taxon_relationship,
+          create(
+            :taxon_relationship,
             taxon_concept: input_species,
             other_taxon_concept: create_cites_eu_species(name_status: 'S'),
             taxon_relationship_type: synonym_relationship_type

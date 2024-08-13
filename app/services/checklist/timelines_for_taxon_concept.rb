@@ -22,7 +22,7 @@ class Checklist::TimelinesForTaxonConcept
     generate_timeline_years
   end
 
-  protected
+protected
 
   def generate_timelines
     @raw_timelines = {}
@@ -54,13 +54,16 @@ class Checklist::TimelinesForTaxonConcept
   end
 
   def generate_timeline_years
-    @timeline_years = @time_start.year.step((@time_end.year - (@time_end.year % 5) + 5), 5).
-      to_a.map do |year|
-        Checklist::TimelineYear.new({
-          taxon_concept_id: @taxon_concept_id,
-          year: year,
-          pos: ((Time.new(year, 1, 1) - @time_start) / (@time_end - @time_start)).round(2)
-        })
+    @timeline_years =
+      @time_start.year.step((@time_end.year - (@time_end.year % 5) + 5), 5).
+        to_a.map do |year|
+        Checklist::TimelineYear.new(
+          {
+            taxon_concept_id: @taxon_concept_id,
+            year: year,
+            pos: ((Time.new(year, 1, 1) - @time_start) / (@time_end - @time_start)).round(2)
+          }
+        )
       end
   end
 end

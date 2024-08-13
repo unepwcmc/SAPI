@@ -32,7 +32,7 @@ class CitesCaptivityProcess < CitesProcess
   validates :document, presence: true, if: :document_title?
   before_validation :set_resolution_value
 
-  private
+private
 
   def set_resolution_value
     self.resolution = 'Captive Breeding'

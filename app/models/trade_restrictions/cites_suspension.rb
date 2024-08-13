@@ -97,14 +97,16 @@ class CitesSuspension < TradeRestriction
 
   def self.search(query)
     if query.present?
-      where("UPPER(geo_entities.name_en) LIKE UPPER(:query)
+      where(
+        "UPPER(geo_entities.name_en) LIKE UPPER(:query)
             OR UPPER(geo_entities.iso_code2) LIKE UPPER(:query)
             OR trade_restrictions.start_date::text LIKE :query
             OR trade_restrictions.end_date::text LIKE :query
             OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
             OR UPPER(events.subtype) LIKE UPPER(:query)",
-        query: "%#{query}%").
+        query: "%#{query}%"
+      ).
         joins([ :start_notification ]).
         joins(<<-SQL.squish
           LEFT JOIN taxon_concepts
@@ -112,13 +114,13 @@ class CitesSuspension < TradeRestriction
           LEFT JOIN geo_entities
             ON geo_entities.id = trade_restrictions.geo_entity_id
         SQL
-      )
+             )
     else
       all
     end
   end
 
-  private
+private
 
   def async_downloads_cache_cleanup
     DownloadsCacheCleanupWorker.perform_async('cites_suspensions')

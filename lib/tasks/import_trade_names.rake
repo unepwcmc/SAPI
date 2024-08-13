@@ -21,15 +21,17 @@ namespace :import do
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
 
-    puts "There are #{TaxonConcept.where(name_status: "T",
-      taxonomy_id: taxonomy_id).count} Trade Names in the database"
+    puts "There are #{TaxonConcept.where(
+      name_status: "T",
+      taxonomy_id: taxonomy_id
+    ).count} Trade Names in the database"
 
     # Importing Trade Names, step by step:
     # TaxonConcepts  many to one relationship with taxon_names [scientific_name]
     # 1- Insert all scientific_names into taxon_names table (DISTINCT)
     # 2- Join back to insert the taxon_concepts
     # 3- Create taxon_relationships
-    sql = <<-SQL
+    sql = <<-SQL.squish
       INSERT INTO taxon_names(scientific_name, created_at, updated_at)
       SELECT subquery.*,
         now()::date AS created_at,
@@ -47,7 +49,7 @@ namespace :import do
     puts 'Inserting taxon names'
     ApplicationRecord.connection.execute(sql)
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       INSERT INTO taxon_concepts (full_name,
         rank_id,
         taxon_name_id,
@@ -85,7 +87,7 @@ namespace :import do
     puts 'Inserting the trade names into taxon_concepts table'
     ApplicationRecord.connection.execute(sql)
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       INSERT INTO taxon_relationships
         (taxon_concept_id,
         other_taxon_concept_id,
@@ -117,8 +119,10 @@ namespace :import do
     SQL
     puts 'Inserting the taxon Relationships between taxon concepts and trade_names'
     ApplicationRecord.connection.execute(sql)
-    puts "There are #{TaxonConcept.where(name_status: "T",
-      taxonomy_id: taxonomy_id).count} Trade Names in the database"
+    puts "There are #{TaxonConcept.where(
+      name_status: "T",
+      taxonomy_id: taxonomy_id
+    ).count} Trade Names in the database"
   end
 
   desc 'Change status of fake synonyms to be trade_names, update leaf nodes'
@@ -143,6 +147,7 @@ namespace :import do
     taxon_concept_ids.each do |cites_code, id|
       tc = TaxonConcept.find id
       next if tc.name_status != 'S'
+
       puts "Updating #{tc.full_name}"
       unless tc.accepted_names.any?
         puts 'from synonym to trade_name'
@@ -158,7 +163,7 @@ namespace :import do
       end
     end
     TaxonName.joins('LEFT JOIN taxon_concepts ON taxon_name_id = taxon_names.id').
-      where('taxon_concepts.id IS NULL').each do |t_name|
+      where(taxon_concepts: { id: nil }).find_each do |t_name|
       unless TaxonConcept.where(taxon_name_id: t_name.id).any?
         puts "deleting unnused taxon_name #{t_name.scientific_name}"
         t_name.delete
@@ -166,7 +171,7 @@ namespace :import do
     end
     puts 'Create trade_names relationship'
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       INSERT INTO taxon_relationships(taxon_concept_id, other_taxon_concept_id, taxon_relationship_type_id,
         created_at, updated_at)
       SELECT subquery.*, current_date, current_date
@@ -185,7 +190,7 @@ namespace :import do
     ApplicationRecord.connection.execute(sql)
 
     puts 'Update trade_species_mapping_import table'
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH new_mapping AS (
         SELECT cites_taxon_code, new_mapper.full_name, new_mapper.id FROM taxon_concepts
         INNER JOIN taxon_relationships ON other_taxon_concept_id = taxon_concepts.id

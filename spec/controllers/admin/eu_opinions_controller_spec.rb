@@ -43,29 +43,33 @@ describe Admin::EuOpinionsController do
           @document = create(:commission_note)
         end
         it 'redirects to the EU Opinions index' do
-          post :create, params: { eu_opinion: {
-            eu_decision_type_id: @eu_decision_type.id,
-            srg_history_id: @srg_history.id,
-            start_date: Date.today,
-            document_id: @document.id,
-            geo_entity_id: create(
-              :geo_entity, geo_entity_type_id: country_geo_entity_type.id
+          post :create, params: {
+            eu_opinion: {
+              eu_decision_type_id: @eu_decision_type.id,
+              srg_history_id: @srg_history.id,
+              start_date: Date.today,
+              document_id: @document.id,
+              geo_entity_id: create(
+                :geo_entity, geo_entity_type_id: country_geo_entity_type.id
               )
-          }, taxon_concept_id: @taxon_concept.id }
+            }, taxon_concept_id: @taxon_concept.id
+          }
           expect(response).to redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept))
         end
       end
       context 'when event is present' do
         it 'redirects to the EU Opinions index' do
-          post :create, params: { eu_opinion: {
-            eu_decision_type_id: @eu_decision_type.id,
-            srg_history_id: @srg_history.id,
-            start_date: Date.today,
-            start_event_id: @eu_regulation.id,
-            geo_entity_id: create(
-              :geo_entity, geo_entity_type_id: country_geo_entity_type.id
+          post :create, params: {
+            eu_opinion: {
+              eu_decision_type_id: @eu_decision_type.id,
+              srg_history_id: @srg_history.id,
+              start_date: Date.today,
+              start_event_id: @eu_regulation.id,
+              geo_entity_id: create(
+                :geo_entity, geo_entity_type_id: country_geo_entity_type.id
               )
-          }, taxon_concept_id: @taxon_concept.id }
+            }, taxon_concept_id: @taxon_concept.id
+          }
           expect(response).to redirect_to(admin_taxon_concept_eu_opinions_url(@taxon_concept))
         end
       end
@@ -113,10 +117,12 @@ describe Admin::EuOpinionsController do
     context 'when successful' do
       context 'when eu decision type is present' do
         it 'renders taxon_concepts EU Opinions page' do
-          put :update, params: { eu_opinion: {
-            eu_decision_type_id: @eu_decision_type.id,
-            start_event_id: @eu_regulation.id
-          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+          put :update, params: {
+            eu_opinion: {
+              eu_decision_type_id: @eu_decision_type.id,
+              start_event_id: @eu_regulation.id
+            }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+          }
           expect(response).to redirect_to(
             admin_taxon_concept_eu_opinions_url(@taxon_concept)
           )
@@ -125,11 +131,13 @@ describe Admin::EuOpinionsController do
 
       context 'when eu decision type is not present' do
         it 'renders taxon_concepts EU Opinions page' do
-          put :update, params: { eu_opinion: {
-            eu_decision_type_id: nil,
-            srg_history_id: @srg_history.id,
-            start_event_id: @eu_regulation.id
-          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+          put :update, params: {
+            eu_opinion: {
+              eu_decision_type_id: nil,
+              srg_history_id: @srg_history.id,
+              start_event_id: @eu_regulation.id
+            }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+          }
           expect(response).to redirect_to(
             admin_taxon_concept_eu_opinions_url(@taxon_concept)
           )
@@ -138,10 +146,12 @@ describe Admin::EuOpinionsController do
 
       context 'when event is present' do
         it 'renders taxon_concepts EU Opinions page' do
-          put :update, params: { eu_opinion: {
-            eu_decision_type_id: @eu_decision_type.id,
-            start_event_id: @eu_regulation.id
-          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+          put :update, params: {
+            eu_opinion: {
+              eu_decision_type_id: @eu_decision_type.id,
+              start_event_id: @eu_regulation.id
+            }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+          }
           expect(response).to redirect_to(
             admin_taxon_concept_eu_opinions_url(@taxon_concept)
           )
@@ -150,11 +160,13 @@ describe Admin::EuOpinionsController do
 
       context 'when event is not present' do
         it 'renders taxon_concepts EU Opinions page' do
-          put :update, params: { eu_opinion: {
-            eu_decision_type_id: @eu_decision_type.id,
-            start_event_id: nil,
-            document_id: @document.id
-          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+          put :update, params: {
+            eu_opinion: {
+              eu_decision_type_id: @eu_decision_type.id,
+              start_event_id: nil,
+              document_id: @document.id
+            }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+          }
           expect(response).to redirect_to(
             admin_taxon_concept_eu_opinions_url(@taxon_concept)
           )
@@ -165,23 +177,27 @@ describe Admin::EuOpinionsController do
     context 'when not successful' do
       context 'when eu decision type is present' do
         it 'renders new' do
-          put :update, params: { eu_opinion: {
-            eu_decision_type_id: @eu_decision_type.id,
-            start_event_id: @eu_regulation.id,
-            start_date: nil
-          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+          put :update, params: {
+            eu_opinion: {
+              eu_decision_type_id: @eu_decision_type.id,
+              start_event_id: @eu_regulation.id,
+              start_date: nil
+            }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+          }
           expect(response).to render_template('new')
         end
       end
 
       context 'when eu decision type is not present' do
         it 'renders new' do
-          put :update, params: { eu_opinion: {
-            eu_decision_type_id: nil,
-            srg_history_id: @srg_history.id,
-            start_event_id: @eu_regulation.id,
-            start_date: nil
-          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+          put :update, params: {
+            eu_opinion: {
+              eu_decision_type_id: nil,
+              srg_history_id: @srg_history.id,
+              start_event_id: @eu_regulation.id,
+              start_date: nil
+            }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+          }
           expect(response).to render_template('new')
         end
       end
@@ -189,58 +205,68 @@ describe Admin::EuOpinionsController do
 
     context 'when both eu_decision_type and srg_history are empty' do
       it 'renders new' do
-        put :update, params: { eu_opinion: {
-          eu_decision_type_id: nil,
-          srg_history_id: nil,
-          start_date: nil
-        }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+        put :update, params: {
+          eu_opinion: {
+            eu_decision_type_id: nil,
+            srg_history_id: nil,
+            start_date: nil
+          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+        }
         expect(response).to render_template('new')
       end
     end
 
     context 'when event is present' do
       it 'renders new' do
-        put :update, params: { eu_opinion: {
-          eu_decision_type_id: @eu_decision_type.id,
-          start_event_id: @eu_regulation.id,
-          start_date: nil
-        }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+        put :update, params: {
+          eu_opinion: {
+            eu_decision_type_id: @eu_decision_type.id,
+            start_event_id: @eu_regulation.id,
+            start_date: nil
+          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+        }
         expect(response).to render_template('new')
       end
     end
 
     context 'when event is not present' do
       it 'renders new' do
-        put :update, params: { eu_opinion: {
-          eu_decision_type_id: @eu_decision_type.id,
-          start_event_id: nil,
-          document_id: @document.id,
-          start_date: nil
-        }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+        put :update, params: {
+          eu_opinion: {
+            eu_decision_type_id: @eu_decision_type.id,
+            start_event_id: nil,
+            document_id: @document.id,
+            start_date: nil
+          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+        }
         expect(response).to render_template('new')
       end
     end
 
     context 'when both event and intersessional doc are empty' do
       it 'renders new' do
-        put :update, params: { eu_opinion: {
-          eu_decision_type_id: @eu_decision_type.id,
-          start_event_id: nil,
-          document_id: nil,
-          start_date: nil
-        }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+        put :update, params: {
+          eu_opinion: {
+            eu_decision_type_id: @eu_decision_type.id,
+            start_event_id: nil,
+            document_id: nil,
+            start_date: nil
+          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+        }
         expect(response).to render_template('new')
       end
     end
 
     context 'when both event and intersessional doc are present' do
       it 'renders new' do
-        put :update, params: { eu_opinion: {
-          eu_decision_type_id: @eu_decision_type.id,
-          start_event_id: @eu_regulation.id,
-          document_id: @document.id,
-          start_date: nil
-        }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id }
+        put :update, params: {
+          eu_opinion: {
+            eu_decision_type_id: @eu_decision_type.id,
+            start_event_id: @eu_regulation.id,
+            document_id: @document.id,
+            start_date: nil
+          }, id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id
+        }
         expect(response).to render_template('new')
       end
     end

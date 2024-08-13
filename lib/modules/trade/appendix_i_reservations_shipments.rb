@@ -14,7 +14,7 @@ class Trade::AppendixIReservationsShipments < Trade::ReservationsShipmentsParser
     File.write("#{VIEW_DIR}/#{timestamp}.sql", @query)
   end
 
-  private
+private
 
   def exceptions_query
     <<-SQL.squish

@@ -1,7 +1,7 @@
 namespace :trade do
   task appendix_report: :environment do
     dir = 'tmp/appendix_report'
-    Dir.mkdir(dir) unless File.exist?(dir)
+    FileUtils.mkdir_p(dir)
     puts "Saving appendix report in #{dir}"
     # (1975..Trade::Shipment.scoped.maximum(:year)).each do |year|
     #   puts year

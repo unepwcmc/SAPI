@@ -9,7 +9,7 @@ namespace :import do
       ).count} synonyms in the database."
 
     rel = TaxonRelationshipType.
-      find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+      find_by(name: TaxonRelationshipType::HAS_SYNONYM)
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -35,8 +35,8 @@ namespace :import do
 
       [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
         puts "Import #{taxonomy_name} taxa"
-        taxonomy = Taxonomy.find_by_name(taxonomy_name)
-        sql = <<-SQL
+        taxonomy = Taxonomy.find_by(name: taxonomy_name)
+        sql = <<-SQL.squish
           INSERT INTO taxon_relationships(taxon_relationship_type_id,
             taxon_concept_id, other_taxon_concept_id,
             created_at, updated_at)
@@ -70,7 +70,7 @@ namespace :import do
         ApplicationRecord.connection.execute(sql)
       end
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         UPDATE taxon_concepts
         SET full_name = full_name(ranks.name, ancestors_names(taxon_concepts.id))
         FROM taxon_concepts q

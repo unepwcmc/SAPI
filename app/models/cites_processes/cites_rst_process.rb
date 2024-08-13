@@ -33,7 +33,7 @@ class CitesRstProcess < CitesProcess
   validates :status, presence: true, inclusion: { in: STATUS }
   before_validation :set_resolution_value
 
-  private
+private
 
   def set_resolution_value
     self.resolution = 'Significant Trade'

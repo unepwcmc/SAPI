@@ -107,9 +107,14 @@ class Event < ApplicationRecord
 
   def self.search(query)
     if query.present?
-      where("UPPER(events.name) LIKE UPPER(:query)
-            OR UPPER(events.description) LIKE UPPER(:query)",
-        query: "%#{query}%")
+      where(
+        %q{
+          UPPER(events.name) LIKE UPPER(:query)
+          OR
+          UPPER(events.description) LIKE UPPER(:query)
+        }.squish,
+        query: "%#{query}%"
+      )
     else
       all
     end
@@ -123,7 +128,7 @@ class Event < ApplicationRecord
     update(is_current: false)
   end
 
-  protected
+protected
 
   def designation_is_cites
     cites = Designation.find_by(name: 'CITES')

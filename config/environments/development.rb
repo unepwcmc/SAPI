@@ -90,12 +90,12 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              mailer_credentials[:address],
-    port:                 mailer_credentials[:port],
-    domain:               mailer_credentials[:domain],
-    user_name:            mailer_credentials[:username],
-    password:             mailer_credentials[:password],
-    authentication:       :login,
+    address: mailer_credentials[:address],
+    port: mailer_credentials[:port],
+    domain: mailer_credentials[:domain],
+    user_name: mailer_credentials[:username],
+    password: mailer_credentials[:password],
+    authentication: :login,
     enable_starttls_auto: true
   }
 
@@ -110,7 +110,7 @@ Rails.application.configure do
   # }
 
   config.action_mailer.default_options = {
-    from:     mailer_credentials[:from],
+    from: mailer_credentials[:from],
     reply_to: mailer_credentials[:from]
   }
 end

@@ -8,7 +8,7 @@ class Api::V1::EuDecisionsController < ApplicationController
       each_serializer: CaptiveBreeding::EuDecisionSerializer
   end
 
-  private
+private
 
   def permitted_params
     params.permit(taxon_concept_ids: [], geo_entity_ids: [])
@@ -65,10 +65,11 @@ class Api::V1::EuDecisionsController < ApplicationController
   end
 
   def sanitized_params
-    filters = permitted_params.to_h.inject({}) do |h, (k, v)|
-      h[k] = v.reject(&:empty?).map!(&:to_i)
-      h
-    end
+    filters =
+      permitted_params.to_h.inject({}) do |h, (k, v)|
+        h[k] = v.reject(&:empty?).map!(&:to_i)
+           h
+      end
     filters
   end
 end

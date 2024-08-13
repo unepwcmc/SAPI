@@ -19,7 +19,7 @@ module Changeable
     after_commit :changeable_before_destroy_callback_on_commit, on: :destroy
   end
 
-  private
+private
 
   def changeable_before_destroy_callback
     if respond_to?(:taxon_concept) && taxon_concept && can_be_deleted?

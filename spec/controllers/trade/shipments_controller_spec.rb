@@ -25,22 +25,28 @@ describe Trade::ShipmentsController, sidekiq: :inline do
   describe 'PUT update' do
     before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it 'should auto resolve accepted taxon when blank' do
-      put :update, params: { id: @shipment1.id, shipment: {
-        reported_taxon_concept_id: @synonym_subspecies.id
-      } }
+      put :update, params: {
+        id: @shipment1.id, shipment: {
+          reported_taxon_concept_id: @synonym_subspecies.id
+        }
+      }
       expect(@shipment1.reload.taxon_concept_id).to eq(@plant_species.id)
     end
     it 'should not auto resolve accepted taxon when given' do
-      put :update, params: { id: @shipment1.id, shipment: {
-        reported_taxon_concept_id: @synonym_subspecies.id,
-        taxon_concept_id: @animal_species.id
-      } }
+      put :update, params: {
+        id: @shipment1.id, shipment: {
+          reported_taxon_concept_id: @synonym_subspecies.id,
+          taxon_concept_id: @animal_species.id
+        }
+      }
       expect(@shipment1.reload.taxon_concept_id).to eq(@animal_species.id)
     end
     it 'should delete orphaned permits' do
-      put :update, params: { id: @shipment1.id, shipment: {
-        import_permit_number: 'YYY'
-      } }
+      put :update, params: {
+        id: @shipment1.id, shipment: {
+          import_permit_number: 'YYY'
+        }
+      }
       expect(Trade::Permit.find_by(id: @import_permit.id)).to be_nil
     end
   end
@@ -48,85 +54,97 @@ describe Trade::ShipmentsController, sidekiq: :inline do
   describe 'POST update_batch' do
     before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
     it 'should change reporter type from I to E' do
-      post :update_batch, params: { filters: { # shipment2
-        time_range_start: @shipment1.year,
-        time_range_end: @shipment2.year,
-        reporter_type: 'I',
-        exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
-        importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
-        taxon_concepts_ids: [ @plant_species.id ]
-      }, updates: {
-        reporter_type: 'E'
-      } }
+      post :update_batch, params: {
+        filters: { # shipment2
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          reporter_type: 'I',
+          exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
+          importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
+          taxon_concepts_ids: [ @plant_species.id ]
+        }, updates: {
+          reporter_type: 'E'
+        }
+      }
       expect(@shipment1.reported_by_exporter).to be_truthy
       expect(@shipment2.reload.reported_by_exporter).to be_truthy
     end
     it 'should change reporter type from E to I' do
-      post :update_batch, params: { filters: { # shipment1
-        time_range_start: @shipment1.year,
-        time_range_end: @shipment2.year,
-        reporter_type: 'E',
-        exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
-        importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ]
-      }, updates: {
-        reporter_type: 'I'
-      } }
+      post :update_batch, params: {
+        filters: { # shipment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          reporter_type: 'E',
+          exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
+          importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ]
+        }, updates: {
+          reporter_type: 'I'
+        }
+      }
 
       expect(@shipment1.reload.reported_by_exporter).to be_falsey
       expect(@shipment2.reported_by_exporter).to be_falsey
     end
 
     it 'should update year' do
-      post :update_batch, params: { filters: { # shipment1
-        time_range_start: @shipment1.year,
-        time_range_end: @shipment2.year,
-        year: 2013,
-        exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
-        importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ]
-      }, updates: {
-        year: 2014
-      } }
+      post :update_batch, params: {
+        filters: { # shipment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          year: 2013,
+          exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
+          importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ]
+        }, updates: {
+          year: 2014
+        }
+      }
       expect(Trade::Shipment.where(year: 2013).count).to eq(0)
       expect(Trade::Shipment.where(year: 2014).count).to be > 0
     end
 
     it 'should auto resolve accepted taxon when blank' do
-      post :update_batch, params: { filters: { # shipment1
-        time_range_start: @shipment1.year,
-        time_range_end: @shipment2.year,
-        year: 2013,
-        exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
-        importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ]
-      }, updates: {
-        reported_taxon_concept_id: @synonym_subspecies.id
-      } }
+      post :update_batch, params: {
+        filters: { # shipment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          year: 2013,
+          exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
+          importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ]
+        }, updates: {
+          reported_taxon_concept_id: @synonym_subspecies.id
+        }
+      }
       expect(@shipment1.reload.taxon_concept_id).to eq(@plant_species.id)
     end
 
     it 'should not auto resolve accepted taxon when given' do
-      post :update_batch, params: { filters: { # shipment1
-        time_range_start: @shipment1.year,
-        time_range_end: @shipment2.year,
-        year: 2013,
-        exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
-        importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ]
-      }, updates: {
-        reported_taxon_concept_id: @synonym_subspecies.id,
-        taxon_concept_id: @animal_species.id
-      } }
+      post :update_batch, params: {
+        filters: { # shipment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          year: 2013,
+          exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
+          importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ]
+        }, updates: {
+          reported_taxon_concept_id: @synonym_subspecies.id,
+          taxon_concept_id: @animal_species.id
+        }
+      }
       expect(@shipment1.reload.taxon_concept_id).to eq(@animal_species.id)
     end
 
     it 'should set permit number to blank and delete orphaned permits' do
-      post :update_batch, params: { filters: { # shipment1
-        time_range_start: @shipment1.year,
-        time_range_end: @shipment2.year,
-        year: 2013,
-        exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
-        importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ]
-      }, updates: {
-        import_permit_number: nil
-      } }
+      post :update_batch, params: {
+        filters: { # shipment1
+          time_range_start: @shipment1.year,
+          time_range_end: @shipment2.year,
+          year: 2013,
+          exporters_ids: [ @portugal.id.to_s, @argentina.id.to_s ],
+          importers_ids: [ @portugal.id.to_s, @argentina.id.to_s ]
+        }, updates: {
+          import_permit_number: nil
+        }
+      }
       expect(@shipment1.reload.import_permits_ids).to be_blank
       expect(@shipment1.import_permit_number).to be_nil
       expect(Trade::Permit.find_by(id: @import_permit.id)).to be_nil

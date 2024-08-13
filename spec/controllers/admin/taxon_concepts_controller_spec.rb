@@ -20,15 +20,19 @@ describe Admin::TaxonConceptsController do
       expect(response).to render_template('layouts/admin')
     end
     it 'redirects if 1 result' do
-      get :index, params: { search_params: {
-        taxonomy: { id: cites_eu.id }, scientific_name: 'Foobarus i'
-      } }
+      get :index, params: {
+        search_params: {
+          taxonomy: { id: cites_eu.id }, scientific_name: 'Foobarus i'
+        }
+      }
       expect(response).to redirect_to(admin_taxon_concept_names_path(@taxon))
     end
     it 'assigns taxa in taxonomic order' do
-      get :index, params: { search_params: {
-        taxonomy: { id: cites_eu.id }, scientific_name: 'Foobarus'
-      } }
+      get :index, params: {
+        search_params: {
+          taxonomy: { id: cites_eu.id }, scientific_name: 'Foobarus'
+        }
+      }
       expect(assigns(:taxon_concepts)).to eq([ @taxon.parent, @taxon ])
     end
   end

@@ -9,23 +9,25 @@ class Admin::GeoRelationshipsController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def load_geo_relationship_types
     @geo_relationship_type = GeoRelationshipType.find_by(
       name: params[:type] || GeoRelationshipType::CONTAINS
     )
     @geo_relationship_types = GeoRelationshipType.order(:name)
-    @geo_relationship_types_for_dropdown = @geo_relationship_types.map do |t|
-      { value: t.id, text: t.name }
-    end
+    @geo_relationship_types_for_dropdown =
+      @geo_relationship_types.map do |t|
+        { value: t.id, text: t.name }
+      end
   end
 
   def load_geo_entities
     @geo_entities = GeoEntity.order(:geo_entity_type_id, :name_en)
-    @geo_entities_for_dropdown = @geo_entities.map do |t|
-      { value: t.id, text: t.name }
-    end
+    @geo_entities_for_dropdown =
+      @geo_entities.map do |t|
+        { value: t.id, text: t.name }
+      end
   end
 
   def collection
@@ -35,7 +37,7 @@ class Admin::GeoRelationshipsController < Admin::StandardAuthorizationController
       page(params[:page])
   end
 
-  private
+private
 
   def geo_relationship_params
     params.require(:geo_relationship).permit(

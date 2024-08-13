@@ -81,7 +81,7 @@ namespace :export do
       Rails.logger.info('Trade database completely exported!')
       zipfile = 'tmp/trade_db_files/trade_db.zip'
       Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
-          zipfile.add(filename, path_to_file)
+        zipfile.add(filename, path_to_file)
       end
       delete_csv_files(dir)
     rescue => e

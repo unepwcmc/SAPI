@@ -8,13 +8,14 @@ class Trade::ShipmentsComptabExport < Trade::ShipmentsExport
     ApplicationRecord.connection.execute(query_sql(limit: true))
   end
 
-  private
+private
 
   def query_sql(options)
     headers = csv_column_headers
-    select_columns = sql_columns.each_with_index.map do |c, i|
-      "#{c} AS \"#{headers[i]}\""
-    end
+    select_columns =
+      sql_columns.each_with_index.map do |c, i|
+        "#{c} AS \"#{headers[i]}\""
+      end
     "SELECT #{select_columns.join(', ')} FROM (#{subquery_sql(options)}) AS subquery"
   end
 

@@ -69,7 +69,8 @@ class Annotation < ApplicationRecord
 
   def self.search(query)
     if query.present?
-      where("UPPER(symbol) LIKE UPPER(:query)
+      where(
+        "UPPER(symbol) LIKE UPPER(:query)
             OR UPPER(parent_symbol) LIKE UPPER(:query)
             OR UPPER(short_note_en) LIKE UPPER(:query)
             OR UPPER(full_note_en) LIKE UPPER(:query)
@@ -78,7 +79,8 @@ class Annotation < ApplicationRecord
             OR UPPER(short_note_es) LIKE UPPER(:query)
             OR UPPER(full_note_es) LIKE UPPER(:query)
             OR UPPER(description) LIKE UPPER(:query)",
-        query: "%#{query}%")
+        query: "%#{query}%"
+      )
     else
       all
     end
@@ -100,7 +102,7 @@ class Annotation < ApplicationRecord
     ]
   end
 
-  private
+private
 
   def dependent_objects_map
     {

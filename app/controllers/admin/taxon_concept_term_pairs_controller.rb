@@ -5,7 +5,7 @@ class Admin::TaxonConceptTermPairsController < Admin::SimpleCrudController
 
   authorize_resource class: Trade::TaxonConceptTermPair
 
-  protected
+protected
 
   def load_term_codes
     @term_codes_obj = Term.select([ :id, :code ]).
@@ -18,7 +18,7 @@ class Admin::TaxonConceptTermPairsController < Admin::SimpleCrudController
       search(params[:query])
   end
 
-  private
+private
 
   def taxon_concept_term_pair_params
     params.require(:taxon_concept_term_pair).permit(

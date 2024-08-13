@@ -26,10 +26,12 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
       success.html do
         if '1' == params[:redirect_to_eu_suspension_reg]
           redirect_to admin_eu_suspension_regulation_eu_suspensions_url(
-            @eu_suspension.start_event_id)
+            @eu_suspension.start_event_id
+          )
         else
           redirect_to admin_taxon_concept_eu_suspensions_url(
-            params[:taxon_concept_id]),
+            params[:taxon_concept_id]
+          ),
             notice: 'Operation successful'
         end
       end
@@ -57,7 +59,7 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
     end
   end
 
-  protected
+protected
 
   def load_lib_objects
     @terms = Term.order(:code)
@@ -72,11 +74,12 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
     @eu_suspensions ||= end_of_association_chain.
       joins(:geo_entity).
       order('is_current DESC, start_date DESC,
-        geo_entities.name_en ASC').
+        geo_entities.name_en ASC'
+           ).
       page(params[:page])
   end
 
-  private
+private
 
   def eu_suspension_params
     params.require(:eu_suspension).permit(

@@ -14,18 +14,20 @@ module Checklist::Pdf::IndexContent
   def kingdom(tex, fetcher, kingdom_name)
     kingdom = fetcher.next
     return if kingdom.empty?
+
     tex << "\\cpart{#{kingdom_name}}\n"
     tex << '\\begin{multicols}{2}{' # start multicols
     begin
-      entries = kingdom.map do |tc|
-        if tc.read_attribute(:name_type) == 'synonym'
-          synonym_entry(tc)
-        elsif tc.read_attribute(:name_type) == 'common'
-          common_name_entry(tc)
-        else
-          main_entry(tc)
+      entries =
+        kingdom.map do |tc|
+          if tc.read_attribute(:name_type) == 'synonym'
+            synonym_entry(tc)
+          elsif tc.read_attribute(:name_type) == 'common'
+            common_name_entry(tc)
+          else
+            main_entry(tc)
+          end
         end
-      end
       tex << entries.join("\n\n")
       kingdom = fetcher.next
     end while !kingdom.empty?

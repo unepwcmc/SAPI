@@ -14,7 +14,7 @@ class Admin::PurposesController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def collection
     @purposes ||= end_of_association_chain.order('code').
@@ -22,7 +22,7 @@ class Admin::PurposesController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 
-  private
+private
 
   def purpose_params
     params.require(:purpose).permit(

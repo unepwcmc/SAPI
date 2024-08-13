@@ -74,7 +74,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     )
   end
 
-  protected
+protected
 
   def collection
     # Super hacky. Pagination has been disabled in the DocumentSearch class
@@ -141,7 +141,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
       end
   end
 
-  private
+private
 
   def document_params
     params.require(:document).permit(

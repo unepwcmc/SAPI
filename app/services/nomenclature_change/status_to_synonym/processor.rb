@@ -1,7 +1,7 @@
 class NomenclatureChange::StatusToSynonym::Processor < NomenclatureChange::Processor
   include NomenclatureChange::StatusChange::ProcessorHelpers
 
-  private
+private
 
   # Constructs an array of subprocessors which will be run in sequence
   # A subprocessor needs to respond to #run

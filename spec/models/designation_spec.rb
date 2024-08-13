@@ -37,16 +37,20 @@ describe Designation do
     context 'when updating a non-protected name' do
       let(:designation) { create(:designation) }
       specify do
-        expect(designation.update(
-          { name: 'RULES OF INTERGALACTIC TRADE' }
-        )).to be_truthy
+        expect(
+          designation.update(
+            { name: 'RULES OF INTERGALACTIC TRADE' }
+          )
+        ).to be_truthy
       end
     end
     context 'when updating a protected name' do
       specify do
-        expect(cites.update(
-          { name: 'RULES OF INTERGALACTIC TRADE' }
-        )).to be_falsey
+        expect(
+          cites.update(
+            { name: 'RULES OF INTERGALACTIC TRADE' }
+          )
+        ).to be_falsey
       end
     end
     context 'when updating taxonomy with no dependent objects attached' do

@@ -10,7 +10,8 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
         where.not(id: @taxon_concept.taxonomy_id)
       @inverse_taxon_relationships = TaxonRelationship.
         where(other_taxon_concept_id: @taxon_concept.id,
-          taxon_relationship_type_id: @taxon_relationship_type.id).
+          taxon_relationship_type_id: @taxon_relationship_type.id
+        ).
         page(params[:page])
     end
   end
@@ -29,8 +30,11 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
       success.js { render 'create' }
       failure.js do
         @taxonomies = Taxonomy.order(:name). # for Inter-taxonomic relationships
-          where.not(id: TaxonConcept.find(params[:taxon_relationship][:taxon_concept_id]).
-          try(:taxonomy_id))
+          where.not(
+            id: TaxonConcept.find(
+              params[:taxon_relationship][:taxon_concept_id]
+            ).try(:taxonomy_id)
+          )
         render 'admin/simple_crud/new'
       end
     end
@@ -50,7 +54,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
     end
   end
 
-  protected
+protected
 
   def load_taxon_relationship_types
     @taxon_relationship_type =
@@ -70,7 +74,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
       page(params[:page])
   end
 
-  private
+private
 
   def taxon_relationship_params
     params.require(:taxon_relationship).permit(

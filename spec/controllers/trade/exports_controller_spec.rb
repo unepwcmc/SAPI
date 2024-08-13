@@ -14,12 +14,14 @@ describe Trade::ExportsController do
         create(:shipment)
         allow_any_instance_of(Trade::ShipmentsExport).to receive(:public_file_name).and_return('shipments.csv')
         expect do
-          get :download, params: { filters: {
-            report_type: :raw,
-            exporters_ids: [ '40' ],
-            time_range_start: '1975',
-            time_range_end: '2000'
-          } }
+          get :download, params: {
+            filters: {
+              report_type: :raw,
+              exporters_ids: [ '40' ],
+              time_range_start: '1975',
+              time_range_end: '2000'
+            }
+          }
         end.not_to change(Trade::TradeDataDownload, :count)
       end
     end

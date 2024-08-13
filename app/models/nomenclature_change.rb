@@ -74,6 +74,7 @@ class NomenclatureChange < ApplicationRecord
   def next_step
     steps = self.class::STEPS
     return nil if steps.empty?
+
     if status == NomenclatureChange::NEW
       steps.first
     elsif self.summary?

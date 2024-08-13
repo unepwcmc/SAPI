@@ -3,13 +3,15 @@ shared_context 'parent_reassignments_processor_examples' do
     create_cites_eu_subspecies(parent: input_species)
   end
   let(:reassignment) do
-    create(:nomenclature_change_parent_reassignment,
+    create(
+      :nomenclature_change_parent_reassignment,
       input: input,
       reassignable_id: input_species_child.id
     )
   end
   let!(:reassignment_target) do
-    create(:nomenclature_change_reassignment_target,
+    create(
+      :nomenclature_change_reassignment_target,
       reassignment: reassignment,
       output: output
     )

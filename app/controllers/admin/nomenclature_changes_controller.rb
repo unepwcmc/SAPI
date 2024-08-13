@@ -9,7 +9,7 @@ class Admin::NomenclatureChangesController < Admin::StandardAuthorizationControl
     redirect_to admin_nomenclature_changes_path
   end
 
-  protected
+protected
 
   def collection
     @collection ||= NomenclatureChange.includes([ :event, :creator ]).

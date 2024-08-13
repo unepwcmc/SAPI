@@ -6,10 +6,12 @@ describe Checklist do
   context 'when filtering by name' do
     context 'by scientific name' do
       subject do
-        checklist = Checklist::Checklist.new({
-          scientific_name: 'Arctocephalus townsendi',
-          output_layout: :taxonomic
-        })
+        checklist = Checklist::Checklist.new(
+          {
+            scientific_name: 'Arctocephalus townsendi',
+            output_layout: :taxonomic
+          }
+        )
         checklist.results
       end
       specify do
@@ -19,10 +21,12 @@ describe Checklist do
     end
     context 'by common name' do
       subject do
-        checklist = Checklist::Checklist.new({
-          scientific_name: 'Guadalupe Fur Seal',
-          output_layout: :taxonomic
-        })
+        checklist = Checklist::Checklist.new(
+          {
+            scientific_name: 'Guadalupe Fur Seal',
+            output_layout: :taxonomic
+          }
+        )
         checklist.results
       end
       specify do

@@ -7,16 +7,17 @@ class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def load_geo_entity_types
     @geo_entity_type = GeoEntityType.find_by(
       name: params[:type] || GeoEntityType::COUNTRY
     )
     @geo_entity_types = GeoEntityType.order(:name)
-    @geo_entity_types_for_dropdown = @geo_entity_types.map do |t|
-      { value: t.id, text: t.name }
-    end
+    @geo_entity_types_for_dropdown =
+      @geo_entity_types.map do |t|
+        { value: t.id, text: t.name }
+      end
   end
 
   def collection
@@ -28,7 +29,7 @@ class Admin::GeoEntitiesController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 
-  private
+private
 
   def geo_entity_params
     params.require(:geo_entity).permit(

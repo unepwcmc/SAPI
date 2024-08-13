@@ -9,11 +9,12 @@ class NomenclatureChange::TaxonomicTreeNameResolver
     resolve(@node)
   end
 
-  private
+private
 
   def resolve(node)
     @expected_full_name = node.expected_full_name(node.parent)
     return node if name_compatible_with_parent?(node)
+
     Rails.logger.debug { "Resolving node name: #{node.full_name} (expected: #{@expected_full_name})" }
 
     # find or create a new accepted name compatible with this parent

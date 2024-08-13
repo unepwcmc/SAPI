@@ -35,31 +35,39 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
 
       it 'creates a new Document' do
         expect do
-          post :create, params: { document_batch: {
-            date: Date.today, documents_attributes: { '0' => document_attrs }, files: files
-          } }
+          post :create, params: {
+            document_batch: {
+              date: Date.today, documents_attributes: { '0' => document_attrs }, files: files
+            }
+          }
         end.to change(Document, :count).by(1)
       end
 
       it 'redirects to index when successful' do
-        post :create, params: { document_batch: {
-          date: Date.today, documents_attributes: { '0' => document_attrs }, files: files
-        } }
+        post :create, params: {
+          document_batch: {
+            date: Date.today, documents_attributes: { '0' => document_attrs }, files: files
+          }
+        }
         expect(response).to redirect_to(admin_documents_url)
       end
 
       it 'does not create a new Document' do
         expect do
-          post :create, params: { document_batch: {
-            date: nil, documents_attributes: { '0' => document_attrs }, files: files
-          } }
+          post :create, params: {
+            document_batch: {
+              date: nil, documents_attributes: { '0' => document_attrs }, files: files
+            }
+          }
         end.to change(Document, :count).by(0)
       end
 
       it 'renders new when not successful' do
-        post :create, params: { document_batch: {
-          date: nil, documents_attributes: { '0' => document_attrs }, files: files
-        } }
+        post :create, params: {
+          document_batch: {
+            date: nil, documents_attributes: { '0' => document_attrs }, files: files
+          }
+        }
         expect(response).to render_template('new')
       end
     end
@@ -68,16 +76,20 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
       let(:document) { create(:document, event_id: event.id) }
 
       it 'redirects to index when successful' do
-        post :create, params: { event_id: event.id, document_batch: {
-          date: Date.today, documents_attributes: { '0' => document_attrs }, files: files
-        } }
+        post :create, params: {
+          event_id: event.id, document_batch: {
+            date: Date.today, documents_attributes: { '0' => document_attrs }, files: files
+          }
+        }
         expect(response).to redirect_to(admin_event_documents_url(event))
       end
 
       it 'renders new when not successful' do
-        post :create, params: { event_id: event.id, document_batch: {
-          date: nil, documents_attributes: { '0' => document_attrs }, files: files
-        } }
+        post :create, params: {
+          event_id: event.id, document_batch: {
+            date: nil, documents_attributes: { '0' => document_attrs }, files: files
+          }
+        }
         expect(response).to render_template('new')
       end
     end

@@ -42,7 +42,7 @@ end
 def drop_indices(index)
   index.each do |table, columns|
     columns.each do |column|
-      sql = <<-SQL
+      sql = <<-SQL.squish
       DROP INDEX IF EXISTS index_#{table}_on_#{column};
       SQL
       puts "Dropping index #{column} on #{table} #{Time.now.strftime("%d/%m/%Y %H:%M")}"
@@ -54,7 +54,7 @@ end
 def create_indices(table_columns, method)
   table_columns.each do |table, columns|
     columns.each do |column|
-      sql = <<-SQL
+      sql = <<-SQL.squish
       CREATE INDEX index_#{table}_on_#{column}
       ON #{table}
       USING #{method}
@@ -67,7 +67,7 @@ def create_indices(table_columns, method)
 end
 
 def populate_trade_permits
-  sql = <<-SQL
+  sql = <<-SQL.squish
   INSERT INTO trade_permits (number, created_At, updated_at)
   SELECT DISTINCT permit_number,
          now()::date AS created_at,
@@ -81,7 +81,7 @@ end
 def insert_into_trade_shipments
   permits_entity = { 'import' => 'I', 'export' => 'E', 'origin' => 'O' }
   permits_entity.each do |k, v|
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH grouped_permits AS (
         SELECT array_agg(id) AS ids,
           string_agg(number, ';') AS permit_number,

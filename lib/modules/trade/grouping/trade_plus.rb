@@ -15,7 +15,7 @@ class Trade::Grouping::TradePlus
     SQL
   end
 
-  private
+private
 
   def shipments_table
     'trade_plus_shipments_view'

@@ -27,7 +27,7 @@ class Admin::CitesSuspensionsController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def load_lib_objects
     @current_suspensions = CitesSuspension.
@@ -39,7 +39,8 @@ class Admin::CitesSuspensionsController < Admin::StandardAuthorizationController
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(is_current: true,
-        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
+        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] }
+      )
     @suspension_notifications = CitesSuspensionNotification.
       select([ :id, :name ]).
       order('effective_at DESC')
@@ -50,7 +51,7 @@ class Admin::CitesSuspensionsController < Admin::StandardAuthorizationController
       page(params[:page]).search(params[:query])
   end
 
-  private
+private
 
   def cites_suspension_params
     params.require(:cites_suspension).permit(
@@ -61,7 +62,8 @@ class Admin::CitesSuspensionsController < Admin::StandardAuthorizationController
       :start_date, :unit_id, :internal_notes,
       :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
       :created_by_id, :updated_by_id, :url,
-      :taxon_concept_id, cites_suspension_confirmations_attributes: [
+      :taxon_concept_id,
+      cites_suspension_confirmations_attributes: [
         :id, :cites_suspension_notification_id, :_destroy
       ],
       purpose_ids: [],

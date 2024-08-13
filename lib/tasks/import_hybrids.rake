@@ -6,8 +6,10 @@ namespace :import do
     taxonomy_id = Taxonomy.where(name: 'CITES_EU').first.id
     taxon_relationship_type_id = TaxonRelationshipType.where(name: 'HAS_HYBRID').first.id
 
-    puts "There are #{TaxonConcept.where(name_status: "H",
-      taxonomy_id: taxonomy_id).count} Hybrids in the database"
+    puts "There are #{TaxonConcept.where(
+      name_status: "H",
+      taxonomy_id: taxonomy_id
+    ).count} Hybrids in the database"
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -20,7 +22,7 @@ namespace :import do
       # 1- Insert all scientific_names into taxon_names table (DISTINCT)
       # 2- Join back to insert the taxon_concepts
       # 3- Create taxon_relationships
-      sql = <<-SQL
+      sql = <<-SQL.squish
 
       INSERT INTO taxon_names(scientific_name, created_at, updated_at)
       SELECT subquery.*,
@@ -100,8 +102,10 @@ namespace :import do
       ) AS subquery;
       SQL
       ApplicationRecord.connection.execute(sql)
-      puts "There are #{TaxonConcept.where(name_status: "H",
-        taxonomy_id: taxonomy_id).count} Hybrids in the database"
+      puts "There are #{TaxonConcept.where(
+        name_status: "H",
+        taxonomy_id: taxonomy_id
+      ).count} Hybrids in the database"
     end
   end
 end

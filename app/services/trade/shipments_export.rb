@@ -50,7 +50,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
     resource_name
   end
 
-  private
+private
 
   def basic_query(options)
     options[:limit] ? @search.query_with_limit : @search.query
@@ -58,9 +58,10 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
 
   def query_sql(options)
     headers = csv_column_headers
-    select_columns = sql_columns.each_with_index.map do |c, i|
-      "#{c} AS \"#{headers[i]}\""
-    end
+    select_columns =
+      sql_columns.each_with_index.map do |c, i|
+        "#{c} AS \"#{headers[i]}\""
+      end
     "SELECT #{select_columns.join(', ')} FROM (#{raw_query(options)}) AS subquery"
   end
 

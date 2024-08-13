@@ -13,17 +13,18 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
   def autocomplete
     @references = Reference.search(params[:query]).
       order(:citation)
-    @references = @references.map do |r|
-      {
-        id: r.id,
-        value: r.citation
-      }
-    end
+    @references =
+      @references.map do |r|
+        {
+          id: r.id,
+          value: r.citation
+        }
+      end
 
     render json: @references.to_json
   end
 
-  protected
+protected
 
   def collection
     @references ||= end_of_association_chain.order(:citation).
@@ -31,7 +32,7 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 
-  private
+private
 
   def reference_params
     params.require(:reference).permit(

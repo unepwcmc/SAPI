@@ -56,13 +56,13 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
     end
   end
 
-  protected
+protected
 
   def load_associations
     @languages = Language.order(:name_en)
   end
 
-  private
+private
 
   def taxon_common_params
     params.require(:taxon_common).permit(

@@ -13,7 +13,7 @@ namespace :import do
       kingdom = file.split('/').last.split('_')[0].titleize
 
       puts "unaliasing reference ids in #{TMP_TABLE}"
-      sql = <<-SQL
+      sql = <<-SQL.squish
         UPDATE #{TMP_TABLE} SET ref_legacy_id = map.legacy_id
         FROM references_legacy_id_mapping map
         WHERE map.alias_legacy_id = #{TMP_TABLE}.ref_legacy_id
@@ -21,7 +21,7 @@ namespace :import do
       ApplicationRecord.connection.execute(sql)
 
       puts 'inserting reference distribution links'
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO "distribution_references"
           (distribution_id, reference_id)
         SELECT distributions.id, "references".id

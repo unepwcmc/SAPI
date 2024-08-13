@@ -2,26 +2,33 @@ require 'spec_helper'
 
 describe QuotasCopyWorker do
   let(:taxonomy) do
-    create(:taxonomy,
-      name: 'CITES_EU')
+    create(
+      :taxonomy,
+      name: 'CITES_EU'
+    )
   end
   let(:geo_entity) do
-    create(:geo_entity,
-      name_en: 'Portugal')
+    create(
+      :geo_entity,
+      name_en: 'Portugal'
+    )
   end
   let(:taxon_concept) do
-    create(:taxon_concept,
-      taxonomy_id: taxonomy.id)
+    create(
+      :taxon_concept,
+      taxonomy_id: taxonomy.id
+    )
   end
   let!(:quota) do
-    create(:quota,
+    create(
+      :quota,
       start_date: 1.year.ago,
       end_date: 1.month.ago,
       geo_entity_id: geo_entity.id,
       taxon_concept_id: taxon_concept.id,
       is_current: true,
       notes: 'Le Caviar Quota Forever'
-          )
+    )
   end
 
   let(:job_defaults) do
@@ -52,9 +59,13 @@ describe QuotasCopyWorker do
 
   describe 'Try to copy quota from wrong year' do
     before(:each) do
-      QuotasCopyWorker.new.perform(job_defaults.merge({
-        'from_year' => quota.start_date.year + 1
-      }))
+      QuotasCopyWorker.new.perform(
+        job_defaults.merge(
+          {
+            'from_year' => quota.start_date.year + 1
+          }
+        )
+      )
     end
     specify { expect(Quota.count(true)).to eq(1) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(1) }
@@ -75,17 +86,25 @@ describe QuotasCopyWorker do
   describe 'When multiple quotas copy quota for given country' do
     before(:each) do
       geo_entity2 = create(:geo_entity)
-      tc2 = create(:taxon_concept,
-        taxonomy_id: taxonomy.id)
-      @quota2 = create(:quota,
+      tc2 = create(
+        :taxon_concept,
+        taxonomy_id: taxonomy.id
+      )
+      @quota2 = create(
+        :quota,
         start_date: quota.start_date,
         end_date: quota.end_date,
         is_current: true,
         geo_entity_id: geo_entity2.id,
-        taxon_concept_id: tc2.id)
-      QuotasCopyWorker.new.perform(job_defaults.merge({
-        'included_geo_entities_ids' => [ geo_entity.id ]
-      }))
+        taxon_concept_id: tc2.id
+      )
+      QuotasCopyWorker.new.perform(
+        job_defaults.merge(
+          {
+            'included_geo_entities_ids' => [ geo_entity.id ]
+          }
+        )
+      )
     end
     specify { expect(Quota.count(true)).to eq(3) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
@@ -97,17 +116,25 @@ describe QuotasCopyWorker do
   describe 'When multiple quotas copy quota for both countries' do
     before(:each) do
       geo_entity2 = create(:geo_entity)
-      tc2 = create(:taxon_concept,
-        taxonomy_id: taxonomy.id)
-      @quota2 = create(:quota,
+      tc2 = create(
+        :taxon_concept,
+        taxonomy_id: taxonomy.id
+      )
+      @quota2 = create(
+        :quota,
         start_date: quota.start_date,
         end_date: quota.end_date,
         is_current: true,
         geo_entity_id: geo_entity2.id,
-        taxon_concept_id: tc2.id)
-      QuotasCopyWorker.new.perform(job_defaults.merge({
-        'included_geo_entities_ids' => [ geo_entity.id.to_s, geo_entity2.id.to_s ]
-      }))
+        taxon_concept_id: tc2.id
+      )
+      QuotasCopyWorker.new.perform(
+        job_defaults.merge(
+          {
+            'included_geo_entities_ids' => [ geo_entity.id.to_s, geo_entity2.id.to_s ]
+          }
+        )
+      )
     end
     specify { expect(Quota.count(true)).to eq(4) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
@@ -119,17 +146,25 @@ describe QuotasCopyWorker do
   describe "When multiple quotas don't copy quota for given country" do
     before(:each) do
       geo_entity2 = create(:geo_entity)
-      tc2 = create(:taxon_concept,
-        taxonomy_id: taxonomy.id)
-      @quota2 = create(:quota,
+      tc2 = create(
+        :taxon_concept,
+        taxonomy_id: taxonomy.id
+      )
+      @quota2 = create(
+        :quota,
         start_date: quota.start_date,
         end_date: quota.end_date,
         is_current: true,
         geo_entity_id: geo_entity2.id,
-        taxon_concept_id: tc2.id)
-      QuotasCopyWorker.new.perform(job_defaults.merge({
-        'excluded_geo_entities_ids' => [ geo_entity2.id.to_s ]
-      }))
+        taxon_concept_id: tc2.id
+      )
+      QuotasCopyWorker.new.perform(
+        job_defaults.merge(
+          {
+            'excluded_geo_entities_ids' => [ geo_entity2.id.to_s ]
+          }
+        )
+      )
     end
     specify { expect(Quota.count(true)).to eq(3) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
@@ -142,15 +177,21 @@ describe QuotasCopyWorker do
     before(:each) do
       geo_entity2 = create(:geo_entity)
       tc = create(:taxon_concept)
-      @quota2 = create(:quota,
+      @quota2 = create(
+        :quota,
         start_date: quota.start_date,
         end_date: quota.end_date,
         is_current: true,
         geo_entity_id: geo_entity2.id,
-        taxon_concept_id: tc.id)
-      QuotasCopyWorker.new.perform(job_defaults.merge({
-        'included_taxon_concepts_ids' => quota.taxon_concept_id.to_s
-      }))
+        taxon_concept_id: tc.id
+      )
+      QuotasCopyWorker.new.perform(
+        job_defaults.merge(
+          {
+            'included_taxon_concepts_ids' => quota.taxon_concept_id.to_s
+          }
+        )
+      )
     end
     specify { expect(Quota.count(true)).to eq(3) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
@@ -162,17 +203,25 @@ describe QuotasCopyWorker do
   describe 'When multiple quotas copy quota for both taxon_concepts' do
     before(:each) do
       geo_entity2 = create(:geo_entity)
-      tc = create(:taxon_concept,
-        taxonomy_id: taxonomy.id)
-      @quota2 = create(:quota,
+      tc = create(
+        :taxon_concept,
+        taxonomy_id: taxonomy.id
+      )
+      @quota2 = create(
+        :quota,
         start_date: quota.start_date,
         end_date: quota.end_date,
         is_current: true,
         geo_entity_id: geo_entity2.id,
-        taxon_concept_id: tc.id)
-      QuotasCopyWorker.new.perform(job_defaults.merge({
-        'included_taxon_concepts_ids' => "#{taxon_concept.id},#{tc.id}"
-      }))
+        taxon_concept_id: tc.id
+      )
+      QuotasCopyWorker.new.perform(
+        job_defaults.merge(
+          {
+            'included_taxon_concepts_ids' => "#{taxon_concept.id},#{tc.id}"
+          }
+        )
+      )
     end
     specify { expect(Quota.count(true)).to eq(4) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
@@ -185,15 +234,21 @@ describe QuotasCopyWorker do
     before(:each) do
       geo_entity2 = create(:geo_entity)
       tc = create(:taxon_concept, taxonomy_id: taxonomy.id)
-      @quota2 = create(:quota,
+      @quota2 = create(
+        :quota,
         start_date: quota.start_date,
         end_date: quota.end_date,
         is_current: true,
         geo_entity_id: geo_entity2.id,
-        taxon_concept_id: tc.id)
-      QuotasCopyWorker.new.perform(job_defaults.merge({
-        'excluded_taxon_concepts_ids' => tc.id.to_s
-      }))
+        taxon_concept_id: tc.id
+      )
+      QuotasCopyWorker.new.perform(
+        job_defaults.merge(
+          {
+            'excluded_taxon_concepts_ids' => tc.id.to_s
+          }
+        )
+      )
     end
     specify { expect(Quota.count(true)).to eq(3) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
@@ -206,17 +261,23 @@ describe QuotasCopyWorker do
     before(:each) do
       geo_entity2 = create(:geo_entity)
       tc = create(:taxon_concept, taxonomy_id: taxonomy.id)
-      @quota2 = create(:quota,
+      @quota2 = create(
+        :quota,
         start_date: quota.start_date,
         end_date: quota.end_date,
         is_current: true,
         geo_entity_id: geo_entity2.id,
         taxon_concept_id: tc.id,
-        notes: 'Derp di doo wildlife')
-      QuotasCopyWorker.new.perform(job_defaults.merge({
-        'from_text' => 'Caviar Quota Forever',
-        'to_text' => 'Salmon is my favourite fish'
-      }))
+        notes: 'Derp di doo wildlife'
+      )
+      QuotasCopyWorker.new.perform(
+        job_defaults.merge(
+          {
+            'from_text' => 'Caviar Quota Forever',
+            'to_text' => 'Salmon is my favourite fish'
+          }
+        )
+      )
     end
     specify { expect(Quota.count(true)).to eq(4) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
@@ -232,13 +293,15 @@ describe QuotasCopyWorker do
     before(:each) do
       geo_entity2 = create(:geo_entity)
       tc = create(:taxon_concept, taxonomy_id: taxonomy.id)
-      @quota2 = create(:quota,
+      @quota2 = create(
+        :quota,
         start_date: quota.start_date,
         end_date: quota.end_date,
         is_current: true,
         geo_entity_id: geo_entity2.id,
         taxon_concept_id: tc.id,
-        notes: 'Derp di doo wildlife')
+        notes: 'Derp di doo wildlife'
+      )
       QuotasCopyWorker.new.perform(job_defaults.merge({ 'url' => 'http://myurl.co.uk' }))
     end
     specify { expect(Quota.count(true)).to eq(4) }

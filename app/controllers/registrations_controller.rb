@@ -19,7 +19,7 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  private
+private
 
   def after_update_path_for(resource)
     if resource.is_manager_or_contributor?

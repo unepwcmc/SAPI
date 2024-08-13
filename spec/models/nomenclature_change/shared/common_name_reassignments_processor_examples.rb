@@ -1,12 +1,14 @@
 shared_context 'common_name_reassignments_processor_examples' do
   let(:reassignment) do
-    create(:nomenclature_change_reassignment,
+    create(
+      :nomenclature_change_reassignment,
       input: input,
       reassignable_type: 'TaxonCommon'
     )
   end
   let!(:reassignment_target) do
-    create(:nomenclature_change_reassignment_target,
+    create(
+      :nomenclature_change_reassignment_target,
       reassignment: reassignment,
       output: output
     )

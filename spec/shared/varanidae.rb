@@ -48,13 +48,13 @@ shared_context 'Varanidae' do
     @ref1 = create(
       :reference,
       author: 'Böhme, W.',
-      title:         'Checklist of the living monitor lizards of the world (family Varanidae)',
+      title: 'Checklist of the living monitor lizards of the world (family Varanidae)',
       year: 2003
     )
     @ref2 = create(
       :reference,
       author: 'Aplin, K. P., Fitch, A. J. & King, D. J.',
-      title:         'A new species of Varanus Merrem (Squamata: Varanidae) from the Pilbara
+      title: 'A new species of Varanus Merrem (Squamata: Varanidae) from the Pilbara
         region of Western Australia, with observations on sexual dimorphism in
         closely related species.',
       year: 2006
@@ -80,6 +80,7 @@ shared_context 'Varanidae' do
       # Skip old sapi context let statements,
       # which are now instance variables starting with _
       next if t.to_s.include?('@_')
+
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

@@ -11,12 +11,12 @@ class GeoEntitySearch
     @query.reload
   end
 
-  private
+private
 
   def initialize_params(options)
     @geo_entity_types_set = (GeoEntityType::SETS.key?(
       options[:geo_entity_types_set]
-      ) &&
+    ) &&
       options[:geo_entity_types_set]) ||
       GeoEntityType::DEFAULT_SET
     @locale =

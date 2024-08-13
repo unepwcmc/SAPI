@@ -110,6 +110,7 @@ class ListingChange < ApplicationRecord
 
   def taxonomic_exclusions
     return ListingChange.none if new_record?
+
     exclusions.where("taxon_concept_id != #{self.taxon_concept_id}")
   end
 
@@ -119,6 +120,7 @@ class ListingChange < ApplicationRecord
 
   def geographic_exclusions
     return ListingChange.none if new_record?
+
     exclusions.where("taxon_concept_id = #{self.taxon_concept_id}")
   end
 
@@ -140,9 +142,11 @@ class ListingChange < ApplicationRecord
 
   def self.search(query)
     if query.present?
-      where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
+      where(
+        "UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
              OR UPPER(change_types.name) LIKE UPPER(:query)
-            ", query: "%#{query}%")
+            ", query: "%#{query}%"
+      )
     else
       all
     end
@@ -185,10 +189,11 @@ class ListingChange < ApplicationRecord
     change_type.try(:designation).try(:is_eu?)
   end
 
-  private
+private
 
   def inclusion_at_higher_rank
     return true unless inclusion
+
     unless inclusion.rank.taxonomic_position < taxon_concept.rank.taxonomic_position
       errors.add(:inclusion_taxon_concept_id, 'must be at higher rank')
       false
@@ -197,6 +202,7 @@ class ListingChange < ApplicationRecord
 
   def species_listing_designation_mismatch
     return true unless species_listing
+
     unless species_listing.designation_id == change_type.designation_id
       errors.add(:species_listing_id, 'designation mismatch between change type and species listing')
       false
@@ -205,6 +211,7 @@ class ListingChange < ApplicationRecord
 
   def event_designation_mismatch
     return true unless event
+
     unless event.designation_id == change_type.designation_id
       errors.add(:event_id, 'designation mismatch between change type and event')
       false

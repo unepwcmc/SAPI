@@ -17,6 +17,7 @@ class Species::CsvCopyExport
   def export
     unless csv_cached?
       return false unless query.any?
+
       to_csv
     end
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
@@ -31,7 +32,7 @@ class Species::CsvCopyExport
     raise 'Needs to be implemented'
   end
 
-  private
+private
 
   def csv_created?
     File.file?(@file_name)
@@ -64,12 +65,14 @@ class Species::CsvCopyExport
   end
 
   def to_csv
-    export_to_csv({
-      query: query,
-      csv_columns: csv_column_headers,
-      file_path: @file_name,
-      delimiter: @csv_separator_char
-    })
+    export_to_csv(
+      {
+        query: query,
+        csv_columns: csv_column_headers,
+        file_path: @file_name,
+        delimiter: @csv_separator_char
+      }
+    )
   end
 
   def resource_name

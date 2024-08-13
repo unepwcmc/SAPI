@@ -42,18 +42,20 @@ describe Admin::NomenclatureChanges::StatusToAcceptedController do
     end
     context 'when successful' do
       it 'redirects to next step' do
-        put :update, params: { nomenclature_change_status_to_accepted: {
-          primary_output_attributes: {
-            taxon_concept_id: create_cites_eu_species(
-              name_status: 'T',
-              taxon_name: create(:taxon_name, scientific_name: 'Patagonus miserabilis')
-            ).id,
-            new_parent_id: create_cites_eu_genus(
-              taxon_name: create(:taxon_name, scientific_name: 'Patagonus')
-            ).id,
-            new_name_status: 'A'
-          }
-        }, nomenclature_change_id: @status_change.id, id: 'primary_output' }
+        put :update, params: {
+          nomenclature_change_status_to_accepted: {
+            primary_output_attributes: {
+              taxon_concept_id: create_cites_eu_species(
+                name_status: 'T',
+                taxon_name: create(:taxon_name, scientific_name: 'Patagonus miserabilis')
+              ).id,
+              new_parent_id: create_cites_eu_genus(
+                taxon_name: create(:taxon_name, scientific_name: 'Patagonus')
+              ).id,
+              new_name_status: 'A'
+            }
+          }, nomenclature_change_id: @status_change.id, id: 'primary_output'
+        }
         expect(response).to redirect_to(
           admin_nomenclature_change_status_to_accepted_url(
             nomenclature_change_id: assigns(:nomenclature_change).id, id: 'summary'

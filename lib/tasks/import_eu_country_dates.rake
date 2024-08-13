@@ -6,7 +6,7 @@ namespace :import do
     if File.exist?(file_path)
       Rails.logger.info "There are #{EuCountryDate.count} records in the EuCoutryDate table"
       CSV.foreach(file_path, headers: true) do |row|
-        geo_entity = GeoEntity.find_by_iso_code2(row['ISO2'])
+        geo_entity = GeoEntity.find_by(iso_code2: row['ISO2'])
         accession_year = row['EU_accession_year']
         exit_year = row['EU_exit_year']
         if geo_entity.nil?

@@ -14,7 +14,7 @@ class Admin::UnitsController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def collection
     @units ||= end_of_association_chain.order('code').
@@ -22,7 +22,7 @@ class Admin::UnitsController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 
-  private
+private
 
   def unit_params
     params.require(:unit).permit(

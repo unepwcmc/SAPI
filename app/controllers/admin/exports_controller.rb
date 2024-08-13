@@ -52,7 +52,7 @@ class Admin::ExportsController < Admin::AdminController
     end
   end
 
-  private
+private
 
   def filter_params
     params[:filters].permit!

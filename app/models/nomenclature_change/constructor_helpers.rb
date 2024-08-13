@@ -22,9 +22,10 @@ module NomenclatureChange::ConstructorHelpers
 
   def _build_parent_reassignments(input, output, children = nil)
     children ||= input.taxon_concept.children
-    input.parent_reassignments = children.map do |child|
-      _build_parent_reassignment(child, input, output)
-    end
+    input.parent_reassignments =
+      children.map do |child|
+        _build_parent_reassignment(child, input, output)
+      end
   end
 
   def _build_parent_reassignment(child, input, output)
@@ -54,13 +55,15 @@ module NomenclatureChange::ConstructorHelpers
       # do not reassign relationships that involve outputs
       # e.g. in case a synonym of the input of a split is one of the outputs
       taxon_concepts_ids = all_outputs.map(&:taxon_concept_id)
-      relationships = relationships.reject do |relationship|
-        taxon_concepts_ids.include?(relationship.other_taxon_concept_id)
+      relationships =
+        relationships.reject do |relationship|
+          taxon_concepts_ids.include?(relationship.other_taxon_concept_id)
+        end
+    end
+    input.name_reassignments =
+      relationships.map do |relationship|
+        _build_name_reassignment(relationship, input, outputs)
       end
-    end
-    input.name_reassignments = relationships.map do |relationship|
-      _build_name_reassignment(relationship, input, outputs)
-    end
   end
 
   def _build_name_reassignment(relationship, input, outputs)
@@ -75,9 +78,11 @@ module NomenclatureChange::ConstructorHelpers
       reassignment = input.name_reassignment_class.new(
         reassignment_attrs
       )
-      _build_multiple_targets(reassignment, outputs.select do |o|
-        o.taxon_concept_id != reassignment.reassignable.other_taxon_concept_id
-      end)
+      _build_multiple_targets(
+        reassignment, outputs.select do |o|
+                        o.taxon_concept_id != reassignment.reassignable.other_taxon_concept_id
+                      end
+      )
     end
     reassignment
   end
@@ -85,9 +90,10 @@ module NomenclatureChange::ConstructorHelpers
   def _build_distribution_reassignments(input, outputs)
     distributions = input.taxon_concept.
       distributions.includes(:geo_entity).order('geo_entities.name_en')
-    input.distribution_reassignments = distributions.map do |distribution|
-      _build_distribution_reassignment(distribution, input, outputs)
-    end
+    input.distribution_reassignments =
+      distributions.map do |distribution|
+        _build_distribution_reassignment(distribution, input, outputs)
+      end
   end
 
   def _build_distribution_reassignment(distribution, input, outputs)
@@ -236,15 +242,16 @@ module NomenclatureChange::ConstructorHelpers
   def multi_lingual_legislation_note(note_type)
     result = {}
     [ :en, :es, :fr ].each do |lng|
-      result[lng] = legislation_note(lng) do |input_html, output_html|
-        I18n.with_locale(lng) do
-          I18n.t(
-            note_type,
-            input_taxon: input_html, output_taxon: output_html,
-            default: ''
-          )
+      result[lng] =
+        legislation_note(lng) do |input_html, output_html|
+          I18n.with_locale(lng) do
+            I18n.t(
+              note_type,
+              input_taxon: input_html, output_taxon: output_html,
+              default: ''
+            )
+          end
         end
-      end
     end
     result
   end

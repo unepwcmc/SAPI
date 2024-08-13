@@ -17,7 +17,8 @@ describe Species::SynonymsAndTradeNamesExport do
       before(:each) do
         species = create_cites_eu_species
         synonym = create_cites_eu_species(name_status: 'S')
-        create(:taxon_relationship,
+        create(
+          :taxon_relationship,
           taxon_concept: species,
           other_taxon_concept: synonym,
           taxon_relationship_type: synonym_relationship_type

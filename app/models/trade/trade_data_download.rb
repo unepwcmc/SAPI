@@ -32,7 +32,7 @@ class Trade::TradeDataDownload < ApplicationRecord
 
   after_commit :async_downloads_cache_cleanup, on: [ :create, :update ]
 
-  private
+private
 
   def async_downloads_cache_cleanup
     DownloadsCacheCleanupWorker.perform_async('trade_download_stats')

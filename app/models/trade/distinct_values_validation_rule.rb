@@ -20,6 +20,7 @@ class Trade::DistinctValuesValidationRule < Trade::InclusionValidationRule
 
   def validation_errors_for_shipment(shipment)
     return nil unless shipment_in_scope?(shipment)
+
     # if it is, check if validated columns are not equal
     distinct_values = true
     shipments_columns.each do |c1|
@@ -28,10 +29,11 @@ class Trade::DistinctValuesValidationRule < Trade::InclusionValidationRule
       end
     end
     return nil if distinct_values
+
     error_message
   end
 
-  private
+private
 
   # Returns records that have the same value for both columns
   # specified in column_names. If more then 2 columns are specified,

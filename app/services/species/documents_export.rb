@@ -5,7 +5,7 @@ class Species::DocumentsExport < Species::CsvCopyExport
     rel.select(sql_columns)
   end
 
-  private
+private
 
   def resource_name
     'documents'

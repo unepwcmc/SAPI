@@ -18,7 +18,8 @@ shared_context 'lump_definitions' do
     )
   end
   let(:lump_with_inputs) do
-    create(:nomenclature_change_lump,
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
@@ -29,7 +30,8 @@ shared_context 'lump_definitions' do
     lump_with_inputs_and_output_existing_taxon
   end
   let(:lump_with_inputs_and_same_output) do
-    create(:nomenclature_change_lump,
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
@@ -41,7 +43,8 @@ shared_context 'lump_definitions' do
     )
   end
   let(:lump_with_inputs_and_output_existing_taxon) do
-    create(:nomenclature_change_lump,
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
@@ -53,7 +56,8 @@ shared_context 'lump_definitions' do
     )
   end
   let(:lump_with_inputs_and_output_new_taxon) do
-    create(:nomenclature_change_lump,
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
@@ -67,7 +71,8 @@ shared_context 'lump_definitions' do
     )
   end
   let(:lump_with_inputs_and_output_status_change) do
-    create(:nomenclature_change_lump,
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
@@ -79,7 +84,8 @@ shared_context 'lump_definitions' do
     )
   end
   let(:lump_with_inputs_and_output_name_change) do
-    create(:nomenclature_change_lump,
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }

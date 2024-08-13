@@ -27,12 +27,13 @@ class Admin::QuotasController < Admin::StandardAuthorizationController
     render json: @count.to_json
   end
 
-  protected
+protected
 
   def collection
     @quotas ||= end_of_association_chain.order('start_date DESC').
       page(params[:page]).search(params[:query])
     return @quotas if !params[:year]
+
     @quotas = @quotas.where('EXTRACT(year from start_date)::INTEGER = ?', params[:year].to_i)
   end
 end

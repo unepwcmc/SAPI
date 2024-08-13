@@ -77,7 +77,7 @@ describe TaxonConceptPrefixMatcher do
 
     specify do
       expect(parent_matcher.taxon_concepts.map(&:full_name)).to eq(
-      [ 'Aab', 'Aac' ]
+        [ 'Aab', 'Aac' ]
       )
     end
 
@@ -94,7 +94,7 @@ describe TaxonConceptPrefixMatcher do
 
     specify do
       expect(ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
-      [ 'Aaa' ]
+        [ 'Aaa' ]
       )
     end
 
@@ -111,7 +111,7 @@ describe TaxonConceptPrefixMatcher do
 
     specify do
       expect(self_and_ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
-      [ 'Aaa', 'Aaab' ]
+        [ 'Aaa', 'Aaab' ]
       )
     end
   end
@@ -129,7 +129,7 @@ describe TaxonConceptPrefixMatcher do
 
     specify do
       expect(ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
-      [ 'Aaa', 'Aab', 'Aac' ]
+        [ 'Aaa', 'Aab', 'Aac' ]
       )
     end
 
@@ -146,7 +146,7 @@ describe TaxonConceptPrefixMatcher do
 
     specify do
       expect(descendant_matcher.taxon_concepts.map(&:full_name)).to eq(
-      [ 'Aaab', 'Aab', 'Abb' ]
+        [ 'Aaab', 'Aab', 'Abb' ]
       )
     end
   end

@@ -30,9 +30,11 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
 
   def update
     @nomenclature_change.assign_attributes(
-      (nomenclature_change_lump_params || {}).merge({
-        status: (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
-      })
+      (nomenclature_change_lump_params || {}).merge(
+        {
+          status: (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
+        }
+      )
     )
     success = @nomenclature_change.valid?
     case step
@@ -51,7 +53,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
     render_wizard @nomenclature_change
   end
 
-  private
+private
 
   def klass
     NomenclatureChange::Lump

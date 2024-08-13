@@ -32,9 +32,11 @@ describe Trade::ValidationErrorsController do
 
   describe 'PUT update' do
     it 'should update is_ignored' do
-      put :update, params: { id: validation_error.id, validation_error: {
-        is_ignored: true
-      } }
+      put :update, params: {
+        id: validation_error.id, validation_error: {
+          is_ignored: true
+        }
+      }
       expect(validation_error.reload.is_ignored).to be_truthy
     end
   end

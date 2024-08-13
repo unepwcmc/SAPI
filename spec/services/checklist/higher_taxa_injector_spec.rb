@@ -116,13 +116,13 @@ describe Checklist::HigherTaxaInjector do
               @species1_1_1,
               @species2_1_1_1_1
             ]
-            )
+          )
         end
         specify do
           headers = hti_different_class.higher_taxa_headers(
             @species1_1_1,
             @species2_1_1_1_1
-            )
+          )
           expect(headers.map(&:full_name)).to eq([ 'Memaridae' ])
         end
       end
@@ -139,7 +139,7 @@ describe Checklist::HigherTaxaInjector do
           headers = hti_different_class.higher_taxa_headers(
             @species1_1_1,
             @species2_1_1_1_1
-            )
+          )
           expect(headers.map(&:full_name)).to eq([ 'Memaria', 'Memariformes', 'Memaridae' ])
         end
       end
@@ -152,7 +152,7 @@ describe Checklist::HigherTaxaInjector do
               @species1_1_1,
               @species2_1_1
             ]
-            )
+          )
         end
         specify do
           expect(hti_different_family.run.size).to eq(4)
@@ -182,7 +182,7 @@ describe Checklist::HigherTaxaInjector do
             [
               @species1_1_1
             ]
-            )
+          )
         end
         specify do
           headers = hti_one_species.higher_taxa_headers(nil, @species1_1_1)
@@ -212,7 +212,7 @@ describe Checklist::HigherTaxaInjector do
         specify do
           headers = hti_one_species_expand_headers.higher_taxa_headers(nil, @species1_1_1)
           expect(headers.map(&:full_name)).to eq(
-          [ 'Rotflata', 'Forfiteria', 'Lolcatiformes', 'Lolcatidae' ]
+            [ 'Rotflata', 'Forfiteria', 'Lolcatiformes', 'Lolcatidae' ]
           )
         end
       end
@@ -223,7 +223,7 @@ describe Checklist::HigherTaxaInjector do
               @species1_1_1,
               @species1_1_2
             ]
-            )
+          )
         end
         specify do
           expect(hti_same_genus.higher_taxa_headers(@species1_1_1, @species1_1_2)).to be_empty
@@ -236,7 +236,7 @@ describe Checklist::HigherTaxaInjector do
               @species1_1_2,
               @subspecies1_1_1_1
             ]
-            )
+          )
         end
         specify do
           expect(hti_species_subspecies.higher_taxa_headers(@species1_1_2, @subspecies1_1_1_1)).to be_empty
@@ -251,7 +251,7 @@ describe Checklist::HigherTaxaInjector do
               @species1_1_1,
               @species1_2_1
             ]
-            )
+          )
         end
         specify do
           expect(hti_same_family.higher_taxa_headers(@species1_1_1, @species1_2_1)).to be_empty
@@ -266,12 +266,12 @@ describe Checklist::HigherTaxaInjector do
               @species1_1_1,
               @species2_1_1
             ]
-            )
+          )
         end
         specify do
           headers = hti_different_family.higher_taxa_headers(@species1_1_1, @species2_1_1)
           expect(headers.map(&:full_name)).to eq(
-          [ 'Foobaridae' ]
+            [ 'Foobaridae' ]
           )
         end
       end
@@ -287,7 +287,7 @@ describe Checklist::HigherTaxaInjector do
         specify do
           headers = hti_different_family.higher_taxa_headers(@species1_1_1, @species2_1_1)
           expect(headers.map(&:full_name)).to eq(
-          [ 'Foobaridae' ]
+            [ 'Foobaridae' ]
           )
         end
       end
@@ -298,12 +298,12 @@ describe Checklist::HigherTaxaInjector do
               @genus1_1,
               @family2
             ]
-            )
+          )
         end
         specify do
           headers = hti_genus_family.higher_taxa_headers(@genus1_1, @family2)
           expect(headers.map(&:full_name)).to eq(
-          [ 'Foobaridae' ]
+            [ 'Foobaridae' ]
           )
         end
       end
@@ -314,12 +314,12 @@ describe Checklist::HigherTaxaInjector do
               @family1,
               @genus2_1
             ]
-            )
+          )
         end
         specify do
           headers = hti_family_genus.higher_taxa_headers(@family1, @genus2_1)
           expect(headers.map(&:full_name)).to eq(
-          [ 'Foobaridae' ]
+            [ 'Foobaridae' ]
           )
         end
       end
@@ -332,12 +332,12 @@ describe Checklist::HigherTaxaInjector do
               @order2,
               @genus2_1
             ]
-            )
+          )
         end
         specify do
           headers = hti_different_orders.higher_taxa_headers(@order2, @genus2_1)
           expect(headers.map(&:full_name)).to eq(
-          [ 'Foobaridae' ]
+            [ 'Foobaridae' ]
           )
         end
       end
@@ -353,7 +353,7 @@ describe Checklist::HigherTaxaInjector do
         specify do
           headers = hti_different_orders_expand.higher_taxa_headers(@order2, @genus2_1)
           expect(headers.map(&:full_name)).to eq(
-          [ 'Lolcatiformes', 'Foobaridae' ]
+            [ 'Lolcatiformes', 'Foobaridae' ]
           )
         end
       end

@@ -81,7 +81,7 @@ class Trade::MandatoryQuotasShipments
     File.write("#{VIEW_DIR}/#{timestamp}.sql", @final_query)
   end
 
-  private
+private
 
   def run
     @queries << query
@@ -122,15 +122,17 @@ class Trade::MandatoryQuotasShipments
   end
 
   def sanitised_select
-    SELECT.merge({
-      quota_type: "'#{@row['quota_type']}' AS details_of_compliance_issue",
-      compliance_start_date: "'#{@row['start_date']}' AS compliance_type_start_date",
-      compliance_end_date: "'#{@row['end_date']}' AS compliance_type_end_date",
-      compliance_taxon: "'#{@row['taxon_name']}' AS compliance_type_taxon",
-      compliance_taxon_rank: "'#{@row['rank']}' AS rank_name",
-      quota_quantity: "'#{@row['quota']}' AS quota_quantity",
-      notes: "'#{@row['notes']}' AS notes"
-    }).values.join(',')
+    SELECT.merge(
+      {
+        quota_type: "'#{@row['quota_type']}' AS details_of_compliance_issue",
+        compliance_start_date: "'#{@row['start_date']}' AS compliance_type_start_date",
+        compliance_end_date: "'#{@row['end_date']}' AS compliance_type_end_date",
+        compliance_taxon: "'#{@row['taxon_name']}' AS compliance_type_taxon",
+        compliance_taxon_rank: "'#{@row['rank']}' AS rank_name",
+        quota_quantity: "'#{@row['quota']}' AS quota_quantity",
+        notes: "'#{@row['notes']}' AS notes"
+      }
+    ).values.join(',')
   end
 
   def inner_select
@@ -186,6 +188,7 @@ class Trade::MandatoryQuotasShipments
 
   def parse_iso_code2(iso)
     return 'TRUE' if iso == 'All' || iso.blank?
+
     "#{imp_or_exp_country}.iso_code2 = '#{iso}'"
   end
 

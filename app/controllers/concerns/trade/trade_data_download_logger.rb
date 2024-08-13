@@ -1,5 +1,5 @@
 module Trade::TradeDataDownloadLogger
-  module_function
+module_function
 
   def log_download(request, search_params, rows)
     data = {}
@@ -25,11 +25,12 @@ module Trade::TradeDataDownloadLogger
     w.save
   end
 
-  private
+private
 
   def self.get_field_values(param, model)
     if param == '' then return 'All' end
     if param == nil then return '' end
+
     if model.to_s == 'GeoEntity'
       model.where(id: param.map(&:to_i)).to_a.
         map { |r| r.iso_code2 }.join ' '

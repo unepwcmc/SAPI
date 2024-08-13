@@ -11,7 +11,8 @@ shared_context 'output_document_reassignments_processor_examples' do
     citation
   end
   before(:each) do
-    create(:nomenclature_change_output_reassignment,
+    create(
+      :nomenclature_change_output_reassignment,
       output: output,
       reassignable_type: 'DocumentCitation',
       reassignable: citation

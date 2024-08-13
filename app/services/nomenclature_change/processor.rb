@@ -17,7 +17,7 @@ class NomenclatureChange::Processor
   def summary
   end
 
-  private
+private
 
   def initialize_inputs_and_outputs; end
 

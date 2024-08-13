@@ -11,7 +11,7 @@ class Admin::InstrumentsController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def collection
     @instruments ||= end_of_association_chain.order(:name).
@@ -23,7 +23,7 @@ class Admin::InstrumentsController < Admin::StandardAuthorizationController
     @designations = Designation.order(:name)
   end
 
-  private
+private
 
   def instrument_params
     params.require(:instrument).permit(

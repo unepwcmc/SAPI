@@ -7,7 +7,8 @@ shared_context 'name_reassignments_constructor_examples' do
       let(:input_species) do
         s = create_cites_eu_species
         2.times do
-          create(:taxon_relationship,
+          create(
+            :taxon_relationship,
             taxon_concept: s,
             other_taxon_concept: create_cites_eu_species(name_status: 'S'),
             taxon_relationship_type: synonym_relationship_type

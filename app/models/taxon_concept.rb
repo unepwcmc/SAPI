@@ -257,9 +257,11 @@ class TaxonConcept < ApplicationRecord
         AND ranks.taxonomic_position < ?
     SQL
     joins(
-      sanitize_sql_array([
-        joins_sql, rank.parent_rank_lower_bound, rank.taxonomic_position
-      ])
+      sanitize_sql_array(
+        [
+          joins_sql, rank.parent_rank_lower_bound, rank.taxonomic_position
+        ]
+      )
     )
   }
 
@@ -441,7 +443,7 @@ class TaxonConcept < ApplicationRecord
     end
   end
 
-  protected
+protected
 
   def before_validate_scientific_name
     sanitized_scientific_name =
@@ -485,13 +487,14 @@ class TaxonConcept < ApplicationRecord
       end
   end
 
-  private
+private
 
   def add_remove_relationships(new_taxa, removed_taxa, rel_type)
     removed_taxa.each do |taxon_concept|
       taxon_concept.taxon_relationships.
         where('other_taxon_concept_id = ? AND
-              taxon_relationship_type_id = ?', id, rel_type.id).
+              taxon_relationship_type_id = ?', id, rel_type.id
+        ).
         destroy_all
     end
 
@@ -505,6 +508,7 @@ class TaxonConcept < ApplicationRecord
 
   def init_accepted_taxa(new_ids)
     return [ [], [] ] unless [ 'S', 'T', 'H' ].include?(name_status)
+
     current_ids =
       case name_status
       when 'S' then accepted_names.pluck(:id)
@@ -570,6 +574,7 @@ class TaxonConcept < ApplicationRecord
 
   def parent_at_immediately_higher_rank
     return true if parent.rank.name == 'KINGDOM' && parent.full_name == 'Plantae' && rank.name == 'ORDER'
+
     unless parent.rank.taxonomic_position >= rank.parent_rank_lower_bound &&
       parent.rank.taxonomic_position < rank.taxonomic_position
       errors.add(:parent_id, 'must be at immediately higher rank')

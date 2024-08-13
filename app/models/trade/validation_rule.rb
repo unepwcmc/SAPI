@@ -58,6 +58,7 @@ class Trade::ValidationRule < ApplicationRecord
 
   def refresh_errors_if_needed(annual_report_upload)
     return true unless refresh_needed?(annual_report_upload)
+
     existing_record = validation_errors_for_aru(annual_report_upload).first
     matching_records = matching_records(annual_report_upload)
     update_or_create_error_record(
@@ -75,6 +76,7 @@ class Trade::ValidationRule < ApplicationRecord
 
   def validation_errors_for_shipment(shipment)
     return nil if is_primary # primary validations are handled by AR
+
     'shipment validation not implemented'
   end
 
@@ -99,7 +101,7 @@ class Trade::ValidationRule < ApplicationRecord
     res
   end
 
-  private
+private
 
   def update_or_create_error_record(annual_report_upload, existing_record, error_count, error_message, matching_criteria)
     if existing_record
@@ -155,6 +157,7 @@ class Trade::ValidationRule < ApplicationRecord
         res[$1 + '_id'] = tmp_def
       else
         tmp_def = {}
+        # TODO: bracket the following
         scope_def.keys & [ 'inclusion', 'exclusion', 'blank' ].each do |k|
           tmp_def[k] = scope_def[k]
         end

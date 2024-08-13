@@ -18,7 +18,7 @@ class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationControl
     end
   end
 
-  protected
+protected
 
   def custom_title
     if params[:type] == 'Unit'
@@ -50,7 +50,7 @@ class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationControl
       search(params[:query])
   end
 
-  private
+private
 
   def term_trade_codes_pair_params
     params.require(:term_trade_codes_pair).permit(

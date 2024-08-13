@@ -41,7 +41,7 @@ class Checklist::Pdf::IndexAnnotationsKey
     tex
   end
 
-  private
+private
 
   def non_hash_annotations
     MCitesListingChange.

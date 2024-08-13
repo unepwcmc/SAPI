@@ -118,7 +118,8 @@ describe NomenclatureChange::Split::Constructor do
         let(:input_species) do
           s = create_cites_eu_species
           2.times do
-            create(:taxon_relationship,
+            create(
+              :taxon_relationship,
               taxon_concept: s,
               other_taxon_concept: create_cites_eu_species(name_status: 'S'),
               taxon_relationship_type: synonym_relationship_type
@@ -188,8 +189,10 @@ describe NomenclatureChange::Split::Constructor do
           # split.input.distribution_reassignments.first.
           #   update(output_ids: [split.outputs.first.id])
           constructor.build_document_reassignments
-          expect(split.input.document_citation_reassignments.first.
-            output_ids).not_to include(non_default_output.id)
+          expect(
+            split.input.document_citation_reassignments.first.
+                        output_ids
+          ).not_to include(non_default_output.id)
         end
       end
     end

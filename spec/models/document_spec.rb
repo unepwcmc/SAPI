@@ -71,14 +71,18 @@ describe Document, sidekiq: :inline do
     context 'when documents with same language and same primary document' do
       let(:language) { create(:language) }
       let(:primary_document) { create(:document) }
-      let!(:document1) do create(:document,
+      let!(:document1) do create(
+        :document,
         language_id: language.id,
-        primary_language_document_id: primary_document.id)
+        primary_language_document_id: primary_document.id
+      )
       end
 
-      let(:document2) do build(:document,
+      let(:document2) do build(
+        :document,
         language_id: language.id,
-        primary_language_document_id: primary_document.id)
+        primary_language_document_id: primary_document.id
+      )
       end
 
       specify { expect(document2).not_to be_valid }
@@ -91,7 +95,8 @@ describe Document, sidekiq: :inline do
       create(:proposal, sort_index: 1)
     end
     let!(:secondary_document) do
-      create(:proposal,
+      create(
+        :proposal,
         sort_index: 2,
         primary_language_document_id: primary_document.id
       )

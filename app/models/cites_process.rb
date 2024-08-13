@@ -53,7 +53,7 @@ class CitesProcess < ApplicationRecord
     start_date ? start_date.strftime('%d/%m/%Y') : ''
   end
 
-  private
+private
 
   def start_event_value
     unless [ 'CitesAc', 'CitesPc' ].include? self.start_event.type

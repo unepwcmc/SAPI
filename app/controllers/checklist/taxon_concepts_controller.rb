@@ -26,7 +26,7 @@ class Checklist::TaxonConceptsController < ApplicationController
     render plain: Checklist::Checklist.summarise_filters(params)
   end
 
-  private
+private
 
   # this disables json root for this controller
   # remove when checklist frontend upgraded to new Ember.js

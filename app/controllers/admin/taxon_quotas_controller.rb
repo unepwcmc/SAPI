@@ -47,7 +47,7 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
     end
   end
 
-  protected
+protected
 
   def load_lib_objects
     @units = Unit.order(:code)
@@ -56,18 +56,20 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
     @purposes = Purpose.order(:code)
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(is_current: true,
-        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] })
+        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] }
+      )
   end
 
   def collection
     @quotas ||= end_of_association_chain.
       joins(:geo_entity).
       order('start_date DESC, geo_entities.name_en ASC,
-        notes ASC').
+        notes ASC'
+           ).
       page(params[:page])
   end
 
-  private
+private
 
   def quota_params
     params.require(:quota).permit(

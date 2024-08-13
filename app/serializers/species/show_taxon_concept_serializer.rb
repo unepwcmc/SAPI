@@ -13,21 +13,25 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
 
   def include_parent_id?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_notification?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_kingdom_name?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_name_status?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
@@ -104,7 +108,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
             ELSE false
           END AS convention_language
         SQL
-      ).
+            ).
       group('language_name_en').order('language_name_en').all
   end
 

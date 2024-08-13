@@ -59,7 +59,7 @@ class CitesSuspensionNotification < Event
     select(:subtype).distinct
   end
 
-  private
+private
 
   def dependent_objects_map
     {

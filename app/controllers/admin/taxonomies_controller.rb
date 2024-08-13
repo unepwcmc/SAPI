@@ -10,7 +10,7 @@ class Admin::TaxonomiesController < Admin::StandardAuthorizationController
     end
   end
 
-  protected
+protected
 
   def collection
     @taxonomies ||= end_of_association_chain.order(:name).
@@ -18,7 +18,7 @@ class Admin::TaxonomiesController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 
-  private
+private
 
   def taxonomy_params
     params.require(:taxonomy).permit(:name)

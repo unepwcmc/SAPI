@@ -7,8 +7,8 @@ namespace :import do
   desc 'Import countries from csv file (usage: rake import:countries[path/to/file,path/to/another])'
   task :countries, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'countries_import'
-    country_type = GeoEntityType.find_by_name(GeoEntityType::COUNTRY)
-    territory_type = GeoEntityType.find_by_name(GeoEntityType::TERRITORY)
+    country_type = GeoEntityType.find_by(name: GeoEntityType::COUNTRY)
+    territory_type = GeoEntityType.find_by(name: GeoEntityType::TERRITORY)
     puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: country_type.id })} countries in the database."
     puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: territory_type.id })} territories in the database."
     files = files_from_args(t, args)
@@ -16,7 +16,7 @@ namespace :import do
       drop_table(TMP_TABLE)
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
-      sql = <<-SQL
+      sql = <<-SQL.squish
           INSERT INTO geo_entities(name_en, iso_code2, geo_entity_type_id, legacy_type, created_at, updated_at, long_name, is_current)
           SELECT DISTINCT BTRIM(TMP.name), BTRIM(TMP.iso2), geo_entity_types.id, UPPER(BTRIM(geo_entity_type)),
           current_date, current_date, INITCAP(BTRIM(TMP.long_name)),
@@ -55,7 +55,7 @@ end
 def link_countries
   puts 'Link territories to countries and countries to respective CITES regions'
   puts "There are #{GeoRelationship.count} geo_relationships in the database."
-  sql = <<-SQL
+  sql = <<-SQL.squish
     INSERT INTO geo_relationships(geo_entity_id, other_geo_entity_id, geo_relationship_type_id, created_at, updated_at)
     SELECT
       DISTINCT
@@ -86,7 +86,7 @@ def link_countries
   SQL
   ApplicationRecord.connection.execute(sql)
 
-  sql = <<-SQL
+  sql = <<-SQL.squish
     INSERT INTO geo_relationships(geo_entity_id, other_geo_entity_id, geo_relationship_type_id, created_at, updated_at)
     SELECT
       DISTINCT

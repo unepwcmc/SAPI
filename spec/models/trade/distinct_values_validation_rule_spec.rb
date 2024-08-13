@@ -36,8 +36,10 @@ describe Trade::DistinctValuesValidationRule, drops_tables: true do
   end
   describe :validation_errors_for_aru do
     before(:each) do
-      @aru = build(:annual_report_upload, point_of_view: 'E',
-        trading_country_id: canada.id)
+      @aru = build(
+        :annual_report_upload, point_of_view: 'E',
+        trading_country_id: canada.id
+      )
       @aru.save(validate: false)
       @sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
     end
@@ -56,8 +58,10 @@ describe Trade::DistinctValuesValidationRule, drops_tables: true do
     end
     context 'exporter should not equal importer (I)' do
       before(:each) do
-        @aru = build(:annual_report_upload, point_of_view: 'I',
-          trading_country_id: canada.id)
+        @aru = build(
+          :annual_report_upload, point_of_view: 'I',
+          trading_country_id: canada.id
+        )
         @aru.save(validate: false)
         @sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
         @sandbox_klass.create(trading_partner: argentina.iso_code2)

@@ -8,7 +8,7 @@ class Api::SpeciesListingsController < ApplicationController
     render json: listings
   end
 
-  private
+private
 
   def trade_plus_params
     params.permit(:designation)

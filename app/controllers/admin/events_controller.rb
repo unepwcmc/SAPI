@@ -31,7 +31,7 @@ class Admin::EventsController < Admin::StandardAuthorizationController
   end
 
 
-  protected
+protected
 
   def collection
     @events ||= end_of_association_chain.order(:designation_id, :name).
@@ -44,7 +44,7 @@ class Admin::EventsController < Admin::StandardAuthorizationController
     @designations = Designation.order(:name)
   end
 
-  private
+private
 
   def event_params
     params.require(:event).permit(

@@ -33,7 +33,7 @@ class EuDecisionType < ApplicationRecord
     !!(self.name =~ /^i+\)/) ? "(No opinion) #{self.name}" : self.name
   end
 
-  private
+private
 
   def dependent_objects_map
     {

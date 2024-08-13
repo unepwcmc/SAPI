@@ -75,16 +75,19 @@ class Trade::AnnualReportUpload < ApplicationRecord
   # report upload
   def sandbox(tmp = false)
     return nil if submitted_at.present? && !tmp
+
     @sandbox ||= Trade::Sandbox.new(self)
   end
 
   def sandbox_shipments
     return [] if submitted_at.present?
+
     sandbox.shipments
   end
 
   def validation_errors
     return [] if submitted_at.present?
+
     run_primary_validations
     if @validation_errors.count == 0
       run_secondary_validations
@@ -146,7 +149,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
     submitted_at.present?
   end
 
-  private
+private
 
   # Expects a relation object
   def run_validations(validation_rules)

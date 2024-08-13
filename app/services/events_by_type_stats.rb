@@ -30,6 +30,6 @@ class EventsByTypeStats
         ORDER BY start_date
       ) AS q
       SQL
-    ).select([ :start_date, :taxon_concept_cnt, :search_cnt ])
+                    ).select([ :start_date, :taxon_concept_cnt, :search_cnt ])
   end
 end

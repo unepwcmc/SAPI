@@ -37,7 +37,7 @@ shared_context 'Uroplatus' do
     @ref = create(
       :reference,
       author: 'Glaw, F., Kosuch, J., Henkel, W. F., Sound, P. and Böhme, W.',
-      title:         'Genetic and morphological variation of the leaf-tailed gecko Uroplatus
+      title: 'Genetic and morphological variation of the leaf-tailed gecko Uroplatus
         fimbriatus from Madagascar, with description of a new giant species.',
       year: 2006
     )
@@ -55,6 +55,7 @@ shared_context 'Uroplatus' do
       # Skip old sapi context let statements,
       # which are now instance variables starting with _
       next if t.to_s.include?('@_')
+
       var = self.instance_variable_get(t)
       if var.kind_of? TaxonConcept
         self.instance_variable_set(t, MTaxonConcept.find(var.id))

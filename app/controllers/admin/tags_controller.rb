@@ -3,7 +3,7 @@ class Admin::TagsController < Admin::SimpleCrudController
 
   authorize_resource class: false
 
-  protected
+protected
 
   def collection
     @tags ||= end_of_association_chain.page(params[:page]).
@@ -11,7 +11,7 @@ class Admin::TagsController < Admin::SimpleCrudController
       search(params[:query])
   end
 
-  private
+private
 
   def tag_params
     params.require(:tag).permit(

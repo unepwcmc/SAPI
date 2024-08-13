@@ -4,7 +4,7 @@ class Admin::EcSrgsController < Admin::EventsController
     collection_name: 'ec_srgs',
     instance_name: 'ec_srg'
 
-  protected
+protected
 
   def collection
     @ec_srgs ||= end_of_association_chain.
@@ -13,7 +13,7 @@ class Admin::EcSrgsController < Admin::EventsController
       search(params[:query])
   end
 
-  private
+private
 
   def ec_srg_params
     params.require(:ec_srg).permit(

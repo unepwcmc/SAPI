@@ -17,6 +17,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
       select(sql_columns).
       order(:taxonomic_position, :party, :ordering_date)
     return rel.where(srg_history: @eu_decision_filter) if @eu_decision_filter == 'In consultation'
+
     if @set == 'current'
       rel = rel.where(is_valid: true)
     end
@@ -63,7 +64,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     rel = rel.where('srg_history IS DISTINCT FROM ?', 'Discussed at SRG')
   end
 
-  private
+private
 
   def resource_name
     'eu_decisions'

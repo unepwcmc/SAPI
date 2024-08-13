@@ -23,7 +23,8 @@ class Api::V1::TaxonConceptsController < ApplicationController
         distributions: :geo_entity,
         quotas: [ :geo_entity, :sources ],
         cites_suspensions: [ :geo_entity, :sources ],
-        cites_processes: :geo_entity).
+        cites_processes: :geo_entity
+      ).
       includes(:taxonomy).find(params[:id])
     if @taxon_concept.taxonomy.name == Taxonomy::CMS
       s = Species::ShowTaxonConceptSerializerCms
@@ -34,7 +35,7 @@ class Api::V1::TaxonConceptsController < ApplicationController
       serializer: s, trimmed: params[:trimmed]
   end
 
-  protected
+protected
 
   def track_index
     ahoy.track 'Search', request.filtered_parameters

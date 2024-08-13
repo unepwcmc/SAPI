@@ -14,7 +14,7 @@ class SessionsController < Devise::SessionsController
     invalid_login_attempt
   end
 
-  protected
+protected
 
   def invalid_login_attempt
     @user = User.new
@@ -25,7 +25,7 @@ class SessionsController < Devise::SessionsController
     end
   end
 
-  private
+private
 
   def user_params
     params.require(:user).permit(:email, :password)

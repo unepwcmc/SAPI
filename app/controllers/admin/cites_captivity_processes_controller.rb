@@ -31,25 +31,26 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
   end
 
 
-  protected
+protected
 
   def load_lib_objects
     @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
       where(geo_entity_types: { name: GeoEntityType::SETS['2'] })
     @status = CitesCaptivityProcess::STATUS
     @events = Event.where("type IN ('CitesAc','CitesPc')"
-    ).order('effective_at DESC')
+                         ).order('effective_at DESC')
   end
 
   def collection
     @cites_captivity_process ||= end_of_association_chain.
       joins(:geo_entity).
       order('is_current DESC, start_date DESC,
-        geo_entities.name_en ASC').
+        geo_entities.name_en ASC'
+           ).
       page(params[:page])
   end
 
-  private
+private
 
   def cites_captivity_process_params
     params.require(:cites_captivity_process).permit(

@@ -55,10 +55,12 @@ class EuSuspensionRegulation < EuEvent
   end
 
   def touch_suspensions_and_taxa
-    eu_suspensions = EuSuspension.where([
-      'start_event_id = :to_event_id OR end_event_id = :to_event_id',
-      to_event_id: self.id
-    ])
+    eu_suspensions = EuSuspension.where(
+      [
+        'start_event_id = :to_event_id OR end_event_id = :to_event_id',
+        to_event_id: self.id
+      ]
+    )
     eu_suspensions.update_all(
       updated_at: Time.now, updated_by_id: self.updated_by_id
     )
@@ -68,7 +70,7 @@ class EuSuspensionRegulation < EuEvent
     )
   end
 
-  private
+private
 
   def dependent_objects_map
     {

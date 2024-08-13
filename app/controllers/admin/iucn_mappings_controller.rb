@@ -14,7 +14,7 @@ class Admin::IucnMappingsController < Admin::SimpleCrudController
     }
   end
 
-  protected
+protected
 
   def collection
     @iucn_mappings ||= end_of_association_chain.order(:taxon_concept_id).

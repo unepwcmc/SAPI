@@ -10,7 +10,7 @@ class Elibrary::IdentificationDocsDistributionsImporter
     DocumentSearch.refresh_citations_and_documents
   end
 
-  private
+private
 
   # import distribution on material documents tagged at species level
   def self.import_species_distributions

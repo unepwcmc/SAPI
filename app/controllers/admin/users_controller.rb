@@ -35,7 +35,7 @@ class Admin::UsersController < Admin::SimpleCrudController
     end
   end
 
-  protected
+protected
 
   def collection
     @users ||= end_of_association_chain.
@@ -51,7 +51,7 @@ class Admin::UsersController < Admin::SimpleCrudController
       order('name_en')
   end
 
-  private
+private
 
   def user_params
     params.require(:user).permit(

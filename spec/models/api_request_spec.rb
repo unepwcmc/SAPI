@@ -65,12 +65,14 @@ describe ApiRequest do
       ApiRequest.recent_requests
     end
     specify do
-      expect(subject).to eq({
-        [ 200, Date.yesterday.strftime('%Y-%m-%d') ] => 1,
-        [ 200, Date.today.strftime('%Y-%m-%d') ] => 0,
-        [ 500, Date.yesterday.strftime('%Y-%m-%d') ] => 0,
-        [ 500, Date.today.strftime('%Y-%m-%d') ] => 1
-      })
+      expect(subject).to eq(
+        {
+          [ 200, Date.yesterday.strftime('%Y-%m-%d') ] => 1,
+          [ 200, Date.today.strftime('%Y-%m-%d') ] => 0,
+          [ 500, Date.yesterday.strftime('%Y-%m-%d') ] => 0,
+          [ 500, Date.today.strftime('%Y-%m-%d') ] => 1
+        }
+      )
     end
   end
 
@@ -79,14 +81,16 @@ describe ApiRequest do
       ApiRequest.requests_by_response_status
     end
     specify do
-      expect(subject).to eq({
-        '200' => 1,
-        '400' => 0,
-        '401' => 0,
-        '404' => 0,
-        '422' => 0,
-        '500' => 1
-      })
+      expect(subject).to eq(
+        {
+          '200' => 1,
+          '400' => 0,
+          '401' => 0,
+          '404' => 0,
+          '422' => 0,
+          '500' => 1
+        }
+      )
     end
   end
 
@@ -95,13 +99,15 @@ describe ApiRequest do
       ApiRequest.requests_by_controller
     end
     specify do
-      expect(subject).to eq({
-        'taxon_concepts' => 2,
-        'distributions' => 0,
-        'cites_legislation' => 0,
-        'eu_legislation' => 0,
-        'references' => 0
-      })
+      expect(subject).to eq(
+        {
+          'taxon_concepts' => 2,
+          'distributions' => 0,
+          'cites_legislation' => 0,
+          'eu_legislation' => 0,
+          'references' => 0
+        }
+      )
     end
   end
 end

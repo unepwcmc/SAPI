@@ -68,18 +68,22 @@ class ApiRequest < ApplicationRecord
     hash_aggregate_by_keys('controller', CONTROLLERS, subquery)
   end
 
-  private
+private
 
   def self.hash_aggregate_by_keys(key_name, key_ary, subquery)
-    sql = ApplicationRecord.send(:sanitize_sql_array, [
-      "SELECT JSON_OBJECT_AGG(#{key_name}_1, COALESCE(cnt, 0))
-      FROM UNNEST(ARRAY[:key_ary]) #{key_name}_1
-      LEFT JOIN (
-        #{subquery.to_sql}
-      ) s ON #{key_name}_1 = s.#{key_name}",
-      key_ary: key_ary,
-      key_name: key_name
-    ])
+    sql = ApplicationRecord.send(
+      :sanitize_sql_array, [
+        %Q{
+          SELECT JSON_OBJECT_AGG(#{key_name}_1, COALESCE(cnt, 0))
+          FROM UNNEST(ARRAY[:key_ary]) #{key_name}_1
+          LEFT JOIN (
+            #{subquery.to_sql}
+          ) s ON #{key_name}_1 = s.#{key_name}
+        }.squish,
+        key_ary: key_ary,
+        key_name: key_name
+      ]
+    )
     res = ApiRequest.find_by_sql(sql).first
     res['json_object_agg']
   end

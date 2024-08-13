@@ -4,7 +4,8 @@ describe Checklist::HigherTaxaItem do
   describe :ancestors_path do
     context 'when animal' do
       let(:taxon_concept) do
-        obj = double('MTaxonConcept',
+        obj = double(
+          'MTaxonConcept',
           rank_name: 'FAMILY',
           kingdom_name: 'Animalia',
           phylum_name: 'Chordata',
@@ -18,7 +19,8 @@ describe Checklist::HigherTaxaItem do
     end
     context 'when plant' do
       let(:taxon_concept) do
-        obj = double('MTaxonConcept',
+        obj = double(
+          'MTaxonConcept',
           rank_name: 'FAMILY',
           kingdom_name: 'Plantae',
           phylum_name: nil,

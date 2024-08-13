@@ -55,7 +55,7 @@ class EuRegulation < EuEvent
     EuRegulationActivationWorker.perform_async(id, false)
   end
 
-  private
+private
 
   def async_event_listing_changes_copy_worker
     if listing_changes_event_id.present?

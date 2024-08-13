@@ -17,7 +17,7 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
     render 'create'
   end
 
-  protected
+protected
 
   def collection
     @eu_suspension_regulations ||= end_of_association_chain.
@@ -32,7 +32,7 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
       order('effective_at DESC, name ASC')
   end
 
-  private
+private
 
   def eu_suspension_regulation_params
     params.require(:eu_suspension_regulation).permit(

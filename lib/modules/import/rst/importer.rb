@@ -37,7 +37,7 @@ module Import::Rst::Importer
       destroy_invalid_rst_processes(active_ids)
     end
 
-    private
+  private
 
     def map_taxon_concept(item)
       MTaxonConcept.find_by(taxonomy_id: 1, full_name: item['species']['name'])
@@ -48,8 +48,10 @@ module Import::Rst::Importer
     end
 
     def map_event(item)
-      event = Event.where('type IN (:event_type) AND name = :event_name',
-        event_type: [ 'CitesAc', 'CitesPc' ], event_name: item['meeting']['name']).first
+      event = Event.where(
+        'type IN (:event_type) AND name = :event_name',
+        event_type: [ 'CitesAc', 'CitesPc' ], event_name: item['meeting']['name']
+      ).first
 
       Rails.logger.info "Event #{item['meeting']['name']} for case #{item['id']} not found" unless event
       event

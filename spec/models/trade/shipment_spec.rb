@@ -90,7 +90,8 @@ describe Trade::Shipment do
     end
     context 'when permit numbers given' do
       before(:each) do
-        @shipment = create(:shipment,
+        @shipment = create(
+          :shipment,
           export_permit_number: 'a',
           import_permit_number: 'b',
           origin_permit_number: 'c'
@@ -123,11 +124,13 @@ describe Trade::Shipment do
         taxon_name: create(:taxon_name, scientific_name: 'yolocatus'),
         parent: @genus
       )
-      @poland = create(:geo_entity,
+      @poland = create(
+        :geo_entity,
         name_en: 'Poland', iso_code2: 'PL',
         geo_entity_type: country_geo_entity_type
       )
-      @argentina = create(:geo_entity,
+      @argentina = create(
+        :geo_entity,
         name_en: 'Argentina', iso_code2: 'AR',
         geo_entity_type: country_geo_entity_type
       )
@@ -230,12 +233,18 @@ describe Trade::Shipment do
         @cap = create(:term, code: 'CAP')
         @bag = create(:unit, code: 'BAG')
         @kil = create(:unit, code: 'KIL')
-        create(:term_trade_codes_pair, term_id: @cav.id, trade_code_id: @kil.id,
-          trade_code_type: @kil.type)
-        create(:term_trade_codes_pair, term_id: @cav.id, trade_code_id: nil,
-          trade_code_type: @kil.type)
-        create(:term_trade_codes_pair, term_id: @cap.id, trade_code_id: @kil.id,
-          trade_code_type: @kil.type)
+        create(
+          :term_trade_codes_pair, term_id: @cav.id, trade_code_id: @kil.id,
+          trade_code_type: @kil.type
+        )
+        create(
+          :term_trade_codes_pair, term_id: @cav.id, trade_code_id: nil,
+          trade_code_type: @kil.type
+        )
+        create(
+          :term_trade_codes_pair, term_id: @cap.id, trade_code_id: @kil.id,
+          trade_code_type: @kil.type
+        )
         create_term_unit_validation
       end
       context 'invalid' do
@@ -280,8 +289,10 @@ describe Trade::Shipment do
         @cav = create(:term, code: 'CAV')
         @b = create(:purpose, code: 'B')
         @p = create(:purpose, code: 'P')
-        create(:term_trade_codes_pair, term_id: @cav.id, trade_code_id: @p.id,
-          trade_code_type: @p.type)
+        create(
+          :term_trade_codes_pair, term_id: @cav.id, trade_code_id: @p.id,
+          trade_code_type: @p.type
+        )
         create_term_purpose_validation
       end
       context 'invalid' do
@@ -307,7 +318,8 @@ describe Trade::Shipment do
       before(:each) do
         @cav = create(:term, code: 'CAV')
         @bal = create(:term, code: 'BAL')
-        create(:trade_taxon_concept_term_pair,
+        create(
+          :trade_taxon_concept_term_pair,
           taxon_concept_id: @taxon_concept.id, term_id: @bal.id
         )
         create_taxon_concept_term_validation

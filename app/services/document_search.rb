@@ -39,7 +39,7 @@ class DocumentSearch
     @document_tags ||= DocumentTag.where(id: @document_tags_ids)
   end
 
-  private
+private
 
   def admin_interface?
     @interface == 'admin'
@@ -74,6 +74,7 @@ class DocumentSearch
       return
     end
     return if @event_type.blank?
+
     if @event_type == 'Other'
       # public interface event type "other"
       @query = @query.where(
@@ -208,6 +209,7 @@ class DocumentSearch
 
   def locale_document
     return 'TRUE' if @language.blank?
+
     <<-SQL.squish
       CASE
       WHEN documents.language = '#{@language.upcase}' AND '#{@language}' = 'en'

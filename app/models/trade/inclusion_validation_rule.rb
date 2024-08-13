@@ -102,14 +102,16 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
 
   def validation_errors_for_shipment(shipment)
     return nil unless shipment_in_scope?(shipment)
+
     # if it is, check if it has a match in valid values view
     v = Arel::Table.new(valid_values_view)
     arel_nodes = shipments_columns.map { |c| v[c].eq(shipment.send(c)) }
     return nil if Trade::Shipment.find_by_sql(v.project(Arel.star).where(arel_nodes.inject(&:and))).any?
+
     error_message
   end
 
-  private
+private
 
   def column_names_for_matching
     column_names
@@ -181,22 +183,22 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
     table_name = annual_report_upload.sandbox.table_name
     Trade::SandboxTemplate.
       select(
-      # IMPORTANT NOTE:
-      # After upgrading to Rails 4.1 (Arel 5.0.1), Rails injects the table name in front of column names.
-      # For example: From `SELECT taxon_concept_id FROM...` to `SELECT trade_sandbox_template.taxon_concept_id FROM...`.
-      # There is nothing inherently wrong with Rails, but it doesn't work well with this project, which involves many
-      # highly customized low-level SQL queries.
-      # In this case the FROM clause aliases a name which does not have a model.
-      # A quick and temporary solution for now is to manually inject the correct table name ourselves.
-      column_names_for_display_with_custom_table_name(table_name: 'matching_records') +
-      [
-        'COUNT(*) AS error_count',
-        'ARRAY_AGG(id) AS matching_records_ids'
-      ]
-    ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
+        # IMPORTANT NOTE:
+        # After upgrading to Rails 4.1 (Arel 5.0.1), Rails injects the table name in front of column names.
+        # For example: From `SELECT taxon_concept_id FROM...` to `SELECT trade_sandbox_template.taxon_concept_id FROM...`.
+        # There is nothing inherently wrong with Rails, but it doesn't work well with this project, which involves many
+        # highly customized low-level SQL queries.
+        # In this case the FROM clause aliases a name which does not have a model.
+        # A quick and temporary solution for now is to manually inject the correct table name ourselves.
+        column_names_for_display_with_custom_table_name(table_name: 'matching_records') +
+        [
+          'COUNT(*) AS error_count',
+          'ARRAY_AGG(id) AS matching_records_ids'
+        ]
+      ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
       group(column_names_for_display_with_custom_table_name(table_name: 'matching_records')).having(
-      required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
-    )
+        required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
+      )
   end
 
   def matching_records(annual_report_upload)
@@ -213,9 +215,10 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   # and optionally filtered down by specified scope
   # Pass Arel::Table
   def scoped_records_arel(s)
-    not_null_nodes = required_column_names.map do |c|
-      s[c].not_eq(nil)
-    end
+    not_null_nodes =
+      required_column_names.map do |c|
+        s[c].not_eq(nil)
+      end
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each { |n| not_null_conds = not_null_conds.and(n) }
     result = s.project(Arel.star).where(not_null_conds)
@@ -252,15 +255,16 @@ class Trade::InclusionValidationRule < Trade::ValidationRule
   def matching_records_arel(table_name)
     table_s = Arel::Table.new("#{table_name}_view")
     table_v = Arel::Table.new(valid_values_view)
-    arel_nodes = column_names_for_matching.map do |column_name|
-      if required_column_names.include?(column_name)
-        table_v[column_name].eq(table_s[column_name])
-      else
-        # if optional, check if NULL is allowed for this particular combination
-        # e.g. unit code can be blank only if paired with certain terms
-        table_v[column_name].eq(table_s[column_name]).or(table_v[column_name].eq(nil).and(table_s[column_name].eq(nil)))
+    arel_nodes =
+      column_names_for_matching.map do |column_name|
+        if required_column_names.include?(column_name)
+          table_v[column_name].eq(table_s[column_name])
+        else
+          # if optional, check if NULL is allowed for this particular combination
+          # e.g. unit code can be blank only if paired with certain terms
+          table_v[column_name].eq(table_s[column_name]).or(table_v[column_name].eq(nil).and(table_s[column_name].eq(nil)))
+        end
       end
-    end
 
     valid_values = table_s.project(table_s[Arel.star]).join(table_v).on(arel_nodes.inject(&:and))
 

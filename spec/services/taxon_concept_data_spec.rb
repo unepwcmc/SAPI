@@ -34,7 +34,8 @@ describe TaxonConceptData do
         create_cites_eu_subspecies(name_status: 'H')
       end
       let!(:hybrid_parent_relationship) do
-        create(:taxon_relationship,
+        create(
+          :taxon_relationship,
           taxon_relationship_type: hybrid_relationship_type,
           taxon_concept: accepted_species,
           other_taxon_concept: taxon_concept
@@ -47,7 +48,8 @@ describe TaxonConceptData do
         create_cites_eu_subspecies(name_status: 'S')
       end
       let!(:hybrid_parent_relationship) do
-        create(:taxon_relationship,
+        create(
+          :taxon_relationship,
           taxon_relationship_type: synonym_relationship_type,
           taxon_concept: accepted_species,
           other_taxon_concept: taxon_concept
@@ -60,7 +62,8 @@ describe TaxonConceptData do
         create_cites_eu_subspecies(name_status: 'T')
       end
       let!(:hybrid_parent_relationship) do
-        create(:taxon_relationship,
+        create(
+          :taxon_relationship,
           taxon_relationship_type: trade_name_relationship_type,
           taxon_concept: accepted_species,
           other_taxon_concept: taxon_concept

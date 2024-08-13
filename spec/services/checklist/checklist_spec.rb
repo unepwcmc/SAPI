@@ -13,10 +13,14 @@ describe Checklist::Checklist do
   end
   context 'when 1 region' do
     let(:region) do
-      region_type = create(:geo_entity_type,
-        name: 'REGION')
-      create(:geo_entity,
-        geo_entity_type_id: region_type.id)
+      region_type = create(
+        :geo_entity_type,
+        name: 'REGION'
+      )
+      create(
+        :geo_entity,
+        geo_entity_type_id: region_type.id
+      )
     end
     let(:summary) do
       Checklist::Checklist.summarise_filters({ cites_region_ids: [ region.id ] })
@@ -27,12 +31,18 @@ describe Checklist::Checklist do
   end
   context 'when > 1 region' do
     let(:regions) do
-      region_type = create(:geo_entity_type,
-        name: 'REGION')
-      region = create(:geo_entity,
-        geo_entity_type_id: region_type.id)
-      region2 = create(:geo_entity,
-        geo_entity_type_id: region_type.id)
+      region_type = create(
+        :geo_entity_type,
+        name: 'REGION'
+      )
+      region = create(
+        :geo_entity,
+        geo_entity_type_id: region_type.id
+      )
+      region2 = create(
+        :geo_entity,
+        geo_entity_type_id: region_type.id
+      )
       [ region.id, region2.id ]
     end
     let(:summary) do

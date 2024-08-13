@@ -27,12 +27,14 @@ describe CitesTrade::ExportsController do
         allow(Trade::TradeDataDownloadLogger).to receive(:city_country_from).and_return([ 'Cambridge', 'United Kingdom' ])
         allow(Trade::TradeDataDownloadLogger).to receive(:organization_from).and_return('UNEP-WCMC')
         expect do
-          get :download, params: { filters: {
-            report_type: 'comptab',
-            exporters_ids: [ '40' ],
-            time_range_start: '1975',
-            time_range_end: '2000'
-          } }
+          get :download, params: {
+            filters: {
+              report_type: 'comptab',
+              exporters_ids: [ '40' ],
+              time_range_start: '1975',
+              time_range_end: '2000'
+            }
+          }
         end.to change(Trade::TradeDataDownload, :count).by(1)
       end
     end

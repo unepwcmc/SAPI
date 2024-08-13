@@ -3,14 +3,15 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
     rel = CitesProcess.
       joins("LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
                   LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id
-                  LEFT JOIN events ON start_event_id = events.id")
+                  LEFT JOIN events ON start_event_id = events.id"
+           )
     rel = apply_filters(rel)
     rel = rel.order('taxon_concepts.full_name', 'cites_processes.type DESC', 'geo_entities.name_en')
 
     rel.select(sql_columns)
   end
 
-  private
+private
 
   def apply_filters(rel)
     rel = rel.where(resolution: resolution) unless @filters['process_type'] == 'Both'
@@ -23,8 +24,10 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
     # or are the taxon_concept indicated by the txon_concept_id.
     if @filters['taxon_concepts_ids']&.any?
       taxon_concept = TaxonConcept.find(@filters['taxon_concepts_ids'].first)
-      rel = rel.where('taxon_concepts.data -> :rank_id_key = :taxon_concept_id OR taxon_concept_id = :taxon_concept_id',
-        rank_id_key: "#{taxon_concept.rank.name.downcase}_id", taxon_concept_id: taxon_concept.id.to_s)
+      rel = rel.where(
+        'taxon_concepts.data -> :rank_id_key = :taxon_concept_id OR taxon_concept_id = :taxon_concept_id',
+        rank_id_key: "#{taxon_concept.rank.name.downcase}_id", taxon_concept_id: taxon_concept.id.to_s
+      )
     end
 
     rel

@@ -18,7 +18,7 @@ class Trade::Filter
     @query.count
   end
 
-  private
+private
 
   def initialize_params(options)
     @options = Trade::SearchParams.sanitize(options)
@@ -227,7 +227,7 @@ class Trade::Filter
         OR origin_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
         #{@permit_blank ? "OR #{permit_blank_query}" : ''}",
         permits_ids: @permits_ids
-        )
+      )
     elsif @permit_blank
       @query = @query.where(permit_blank_query)
     end

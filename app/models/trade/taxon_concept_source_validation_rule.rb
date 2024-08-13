@@ -30,10 +30,11 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
       shipment.taxon_concept.data['kingdom_name'] == 'Plantae' &&
       INVALID_KINGDOM_SOURCE['PLANTAE'].include?(shipment.source.code))
     )
+
     error_message
   end
 
-  private
+private
 
   def matching_records_arel(table_name)
     s = Arel::Table.new("#{table_name}_view")

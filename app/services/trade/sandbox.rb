@@ -18,12 +18,14 @@ class Trade::Sandbox
     success = true
     Trade::Shipment.transaction do
       pg_result = Trade::SandboxTemplate.connection.execute(
-        Trade::SandboxTemplate.send(:sanitize_sql_array, [
-          'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?, ?, ?)',
-          @annual_report_upload.id,
-          'Sapi',
-          submitter.id
-        ])
+        Trade::SandboxTemplate.send(
+          :sanitize_sql_array, [
+            'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?, ?, ?)',
+            @annual_report_upload.id,
+            'Sapi',
+            submitter.id
+          ]
+        )
       )
       @moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
       if @moved_rows_cnt < 0
@@ -39,10 +41,12 @@ class Trade::Sandbox
   def check_for_duplicates_in_shipments
     Trade::Shipment.transaction do
       pg_result = Trade::SandboxTemplate.connection.execute(
-        Trade::SandboxTemplate.send(:sanitize_sql_array, [
-          'SELECT * FROM check_for_duplicates_in_shipments(?)',
-          @annual_report_upload.id
-        ])
+        Trade::SandboxTemplate.send(
+          :sanitize_sql_array, [
+            'SELECT * FROM check_for_duplicates_in_shipments(?)',
+            @annual_report_upload.id
+          ]
+        )
       )
       duplicates = pg_result.values.first.first.delete('{}')
       return duplicates
@@ -67,7 +71,7 @@ class Trade::Sandbox
     end
   end
 
-  private
+private
 
   def create_target_table
     unless Trade::SandboxTemplate.connection.data_source_exists? @table_name

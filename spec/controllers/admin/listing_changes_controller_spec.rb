@@ -33,7 +33,8 @@ describe Admin::ListingChangesController do
         taxon_concept_id: @taxon_concept.id,
         change_type_id: @addition.id,
         event_id: @eu_regulation.id,
-        effective_at: 2.weeks.ago)
+        effective_at: 2.weeks.ago
+      )
       listing_change2 = create(
         :listing_change,
         species_listing: @annex,

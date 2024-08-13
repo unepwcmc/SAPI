@@ -56,14 +56,14 @@ class Admin::TradeNameRelationshipsController < Admin::TaxonConceptAssociatedTyp
     end
   end
 
-  protected
+protected
 
   def load_trade_name_relationship_type
     @trade_name_relationship_type = TaxonRelationshipType.
       find_by(name: TaxonRelationshipType::HAS_TRADE_NAME)
   end
 
-  private
+private
 
   def trade_name_relationship_params
     params.require(:taxon_relationship).permit(

@@ -3,11 +3,13 @@ class NomenclatureChange::StatusUpgradeProcessor < NomenclatureChange::StatusCha
     super
     @where_to_reassign_trade_from = @input_or_output
     @where_to_reassign_trade_to = @input_or_output
-    @trade_to_reassign = Trade::Shipment.where([
-      "taxon_concept_id = :taxon_concept_id OR
+    @trade_to_reassign = Trade::Shipment.where(
+      [
+        "taxon_concept_id = :taxon_concept_id OR
       reported_taxon_concept_id = :taxon_concept_id",
-      taxon_concept_id: @where_to_reassign_trade_from.taxon_concept_id
-    ])
+        taxon_concept_id: @where_to_reassign_trade_from.taxon_concept_id
+      ]
+    )
   end
 
   def run
@@ -31,7 +33,7 @@ class NomenclatureChange::StatusUpgradeProcessor < NomenclatureChange::StatusCha
     end
   end
 
-  private
+private
 
   def summary_line
     "#{@input_or_output.taxon_concept.full_name} will be promoted to accepted name"

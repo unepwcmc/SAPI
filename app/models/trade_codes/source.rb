@@ -23,7 +23,7 @@ class Source < TradeCode
 
   after_commit :invalidate_controller_action_cache
 
-  protected
+protected
 
   def dependent_objects_map
     {
@@ -33,7 +33,7 @@ class Source < TradeCode
     }
   end
 
-  private
+private
 
   def invalidate_controller_action_cache
     Api::V1::SourcesController.invalidate_cache

@@ -3,9 +3,11 @@ namespace :eu_opinions do
   task transfer_to_srg_referral_type: :environment do
     old_decision_type_ids = EuDecisionType.where(name: 'iii)').pluck(:id)
     fail 'Old decision type not found' if old_decision_type_ids.empty?
+
     eu_opinions = EuOpinion.where(eu_decision_type_id: old_decision_type_ids, is_current: true)
-    fail 'No eu opinions to transfer' if eu_opinions.count.zero?
-    new_decision_type_id = EuDecisionType.find_by_name('SRG Referral').try(:id)
+    fail 'No eu opinions to transfer' if eu_opinions.count == 0
+
+    new_decision_type_id = EuDecisionType.find_by(name: 'SRG Referral').try(:id)
     fail 'New decision type not found' if new_decision_type_id.nil?
 
     puts "There are #{eu_opinions.count} eu_opinions to be transferred"
@@ -20,9 +22,11 @@ namespace :eu_opinions do
   task transfer_to_srg_history: :environment do
     old_decision_type_ids = EuDecisionType.where(name: 'ii)').pluck(:id)
     fail 'Old decision type not found' if old_decision_type_ids.empty?
+
     eu_opinions = EuOpinion.where(eu_decision_type_id: old_decision_type_ids, is_current: true)
-    fail 'No eu opinions to transfer' if eu_opinions.count.zero?
-    srg_history_id = SrgHistory.find_by_name('In consultation').try(:id)
+    fail 'No eu opinions to transfer' if eu_opinions.count == 0
+
+    srg_history_id = SrgHistory.find_by(name: 'In consultation').try(:id)
     fail 'New decision type not found' if srg_history_id.nil?
 
     puts "There are #{eu_opinions.count} eu_opinions to be transferred"
@@ -40,7 +44,7 @@ namespace :eu_opinions do
       else
         "SET eu_decision_type_id = #{new_type}, updated_at = CURRENT_TIMESTAMP"
       end
-    <<-SQL
+    <<-SQL.squish
       WITH current_eu_opinions_with_old_type AS (
         SELECT *
         FROM eu_decisions

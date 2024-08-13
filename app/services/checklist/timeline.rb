@@ -53,7 +53,7 @@ class Checklist::Timeline
         if prev_event && (
           prev_event.is_addition? ||
             prev_event.change_type_name == 'AMENDMENT'
-          ) &&
+        ) &&
           event.is_addition? &&
           (event.party_id.nil? || event.party_id == prev_event.party_id)
           event.change_type_name = 'AMENDMENT'
@@ -72,7 +72,7 @@ class Checklist::Timeline
             if !(
               (event.is_deletion? && next_event.is_addition?) ||
               (event.is_reservation_withdrawal? && next_event.is_reservation?)
-              )
+            )
               Checklist::TimelineInterval.new(
                 taxon_concept_id: @taxon_concept_id,
                 listing_change_id: event.id,

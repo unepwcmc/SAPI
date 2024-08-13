@@ -150,6 +150,7 @@ class Trade::Shipment < ApplicationRecord
 
   def reporter_type
     return nil if reported_by_exporter.nil?
+
     reported_by_exporter ? 'E' : 'I'
   end
 
@@ -199,7 +200,7 @@ class Trade::Shipment < ApplicationRecord
     ).uniq.compact || []
   end
 
-  private
+private
 
   # note: this updates the precomputed fields
   # needs to be invoked via custom permit number setters
