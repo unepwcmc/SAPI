@@ -60,10 +60,10 @@ class EuSuspensionRegulation < EuEvent
       to_event_id: self.id
     ])
     eu_suspensions.update_all(
-      updated_at: Time.zone.now, updated_by_id: self.updated_by_id
+      updated_at: Time.now, updated_by_id: self.updated_by_id
     )
     TaxonConcept.joins(:eu_suspensions).merge(eu_suspensions).update_all(
-      dependents_updated_at: Time.zone.now,
+      dependents_updated_at: Time.now,
       dependents_updated_by_id: self.updated_by_id
     )
   end

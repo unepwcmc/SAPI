@@ -180,7 +180,7 @@ class Trade::MandatoryQuotasShipments
   end
 
   def parse_end_date(date)
-    year = date == 'Present' ? Time.zone.today.year : date.split('/').last.to_i
+    year = date == 'Present' ? Date.today.year : date.split('/').last.to_i
     "ts.year <= #{year}"
   end
 

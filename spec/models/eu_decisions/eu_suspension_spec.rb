@@ -93,7 +93,7 @@ describe EuSuspension do
 
     context 'when start_event is set but date is in past or present' do
       let(:start_event) do
-        create(:event, effective_at: Time.zone.today, is_current: true)
+        create(:event, effective_at: Date.today, is_current: true)
       end
       let(:start_event2) do
         create(:event, effective_at: 1.day.ago, is_current: true)
@@ -112,7 +112,7 @@ describe EuSuspension do
 
     context 'when end_event is set, but no start_event is set' do
       let(:end_event) do
-        create(:event, effective_at: Time.zone.today)
+        create(:event, effective_at: Date.today)
       end
       let(:eu_suspension) do
         create(:eu_suspension, start_event: nil, end_event: end_event)
@@ -123,7 +123,7 @@ describe EuSuspension do
 
     context 'when end_event is set, and start_event is set with date in future' do
       let(:end_event) do
-        create(:event, effective_at: Time.zone.today)
+        create(:event, effective_at: Date.today)
       end
       let(:start_event) do
         create(:event, effective_at: 1.day.from_now)

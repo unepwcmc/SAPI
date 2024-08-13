@@ -147,6 +147,22 @@ Style/SymbolArray:
 #  Style/WordArray:
 #   Enabled: false
 
+##
+# There are a number of cases where we don't want this, because we're using
+# time stamps without time zones.
+Rails/TimeZone:
+  Enabled: false
+
+Rails/Date:
+  Enabled: false
+
+Rails/TimeZoneAssignment:
+  Enabled: true
+
+
+##
+# The remainder of this file is explicitly opting into rules and was generated
+# by rubocop itself, with the exception of rules overridden above.
 
 Gemspec/AddRuntimeDependency: # new in 1.65
   Enabled: true
@@ -445,8 +461,6 @@ Rails/SquishedSQLHeredocs: # new in 2.8
 Rails/StripHeredoc: # new in 2.15
   Enabled: true
 Rails/ThreeStateBooleanColumn: # new in 2.19
-  Enabled: true
-Rails/TimeZoneAssignment: # new in 2.10
   Enabled: true
 Rails/ToFormattedS: # new in 2.15
   Enabled: true

@@ -6,7 +6,7 @@ class NomenclatureChange::FullReassignment
 
   def process
     Rails.logger.debug { "FULL REASSIGNMENT #{@old_taxon_concept.full_name} to #{@new_taxon_concept.full_name}" }
-    update_timestamp = Time.zone.now
+    update_timestamp = Time.now
     update_attrs = {
       taxon_concept_id: @new_taxon_concept.id,
       updated_at: update_timestamp,

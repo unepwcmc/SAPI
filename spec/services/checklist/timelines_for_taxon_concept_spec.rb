@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Checklist::TimelinesForTaxonConcept do
   before do
-    travel_to Time.zone.local(1990)
+    travel_to Time.local(1990)
   end
 
   after do

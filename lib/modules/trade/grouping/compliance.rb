@@ -29,7 +29,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     years = case year
     when 2012
         [ year, year + 1 ]
-    when Time.zone.today.year - 1
+    when Date.today.year - 1
         [ year - 1, year ]
     else
         [ year - 1, year, year + 1 ]

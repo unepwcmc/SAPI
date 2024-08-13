@@ -6,12 +6,12 @@ class ElibraryRefreshDocumentSearchJob < ApplicationJob
       elapsed_time = Benchmark.realtime do
         DocumentSearch.refresh_citations_and_documents
       end
-      Rails.logger.debug { "#{Time.zone.now} Citations & documents refreshed in #{elapsed_time}s" }
+      Rails.logger.debug { "#{Time.now} Citations & documents refreshed in #{elapsed_time}s" }
     elsif DocumentSearch.documents_need_refreshing?
       elapsed_time = Benchmark.realtime do
         DocumentSearch.refresh_documents
       end
-      Rails.logger.debug { "#{Time.zone.now} Documents refreshed in #{elapsed_time}s" }
+      Rails.logger.debug { "#{Time.now} Documents refreshed in #{elapsed_time}s" }
     end
   end
 end

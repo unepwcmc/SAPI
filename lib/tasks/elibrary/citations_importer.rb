@@ -225,7 +225,7 @@ class Elibrary::CitationsImporter
   end
 
   def print_breakdown
-    Rails.logger.debug { "#{Time.zone.now} There are #{DocumentCitation.count} citations in total" }
+    Rails.logger.debug { "#{Time.now} There are #{DocumentCitation.count} citations in total" }
     DocumentCitation.includes(:document).group('documents.type').order('documents.type').count.each do |type, count|
       puts "\t #{type} #{count}"
     end

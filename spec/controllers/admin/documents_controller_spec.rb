@@ -138,7 +138,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
     context 'when no event' do
       let(:document) { create(:document) }
       it 'redirects to index when successful' do
-        put :update, params: { id: document.id, document: { date: Time.zone.today } }
+        put :update, params: { id: document.id, document: { date: Date.today } }
         expect(response).to redirect_to(admin_documents_url)
         expect(flash[:notice]).not_to be_nil
       end
@@ -151,7 +151,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
     context 'when event' do
       let(:document) { create(:document, event_id: event.id) }
       it 'redirects to index when successful' do
-        put :update, params: { id: document.id, event_id: event.id, document: { date: Time.zone.today } }
+        put :update, params: { id: document.id, event_id: event.id, document: { date: Date.today } }
         expect(response).to redirect_to(admin_event_documents_url(event))
         expect(flash[:notice]).not_to be_nil
       end
@@ -169,7 +169,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       it 'assign review phase to Review' do
         put :update, params: { id: document.id, document: {
-          date: Time.zone.today, review_details_attributes: { review_phase_id: review_phase.id }
+          date: Date.today, review_details_attributes: { review_phase_id: review_phase.id }
         } }
         expect(response).to redirect_to(admin_documents_url)
 
@@ -178,7 +178,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       it 'assign process stage to Review' do
         put :update, params: { id: document.id, document: {
-          date: Time.zone.today, review_details_attributes: { process_stage_id: process_stage.id }
+          date: Date.today, review_details_attributes: { process_stage_id: process_stage.id }
         } }
         expect(response).to redirect_to(admin_documents_url)
 
@@ -187,7 +187,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       it 'assign recommended category to Review' do
         put :update, params: { id: document.id, document: {
-          date: Time.zone.today, review_details_attributes: { recommended_category: recommended_category }
+          date: Date.today, review_details_attributes: { recommended_category: recommended_category }
         } }
         expect(response).to redirect_to(admin_documents_url)
 
@@ -201,7 +201,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       it 'assign outcome to Proposal' do
         put :update, params: { id: document.id, document: {
-          date: Time.zone.today, proposal_details_attributes: { proposal_outcome_id: proposal_outcome.id }
+          date: Date.today, proposal_details_attributes: { proposal_outcome_id: proposal_outcome.id }
         } }
         expect(response).to redirect_to(admin_documents_url)
 
@@ -217,7 +217,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
         put :update, params: {
           id: document.id,
           document: {
-            date: Time.zone.today,
+            date: Date.today,
             citations_attributes: [
               {
                 stringy_taxon_concept_ids: taxon_concept.id
@@ -235,7 +235,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
         put :update, params: {
           id: document.id,
           document: {
-            date: Time.zone.today,
+            date: Date.today,
             citations_attributes: [
               {
                 stringy_taxon_concept_ids: "#{taxon_concept.id},#{taxon_concept2.id}"
@@ -259,7 +259,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
         put :update, params: {
           id: document.id,
           document: {
-            date: Time.zone.today,
+            date: Date.today,
             citations_attributes: [
               {
                 geo_entity_ids: [ geo_entity.id ]

@@ -300,7 +300,7 @@ describe DocumentSearch, sidekiq: :inline do
     before(:each) do
       @d = nil
 
-      travel_to(Time.zone.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
+      travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
         @d = create(:proposal)
         DocumentSearch.refresh_citations_and_documents
       end
@@ -312,7 +312,7 @@ describe DocumentSearch, sidekiq: :inline do
 
     context "when document created in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
-        travel_to(Time.zone.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           create(:proposal)
         end
 
@@ -322,7 +322,7 @@ describe DocumentSearch, sidekiq: :inline do
 
     context "when document destroyed in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
-        travel_to(Time.zone.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           @d.destroy
         end
 
@@ -332,7 +332,7 @@ describe DocumentSearch, sidekiq: :inline do
 
     context "when document updated in last #{DocumentSearch::REFRESH_INTERVAL} minutes" do
       specify do
-        travel_to(Time.zone.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
+        travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes) do
           @d.update!(is_public: true)
         end
 
@@ -359,8 +359,8 @@ describe DocumentSearch, sidekiq: :inline do
     # updated_at on @c and @d
 
     before(:each) do
-      @refresh_threshold = Time.zone.now - (DocumentSearch::REFRESH_INTERVAL).minutes
-      @recent_time = Time.zone.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes
+      @refresh_threshold = Time.now - (DocumentSearch::REFRESH_INTERVAL).minutes
+      @recent_time = Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes
 
       @d = nil
 
@@ -371,7 +371,7 @@ describe DocumentSearch, sidekiq: :inline do
         iso_code2: 'BR'
       )
 
-      travel_to(Time.zone.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
+      travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
         @d = create(:proposal)
         @c = create(:document_citation, document: @d)
         @c_tc = create(:document_citation_taxon_concept, document_citation: @c)

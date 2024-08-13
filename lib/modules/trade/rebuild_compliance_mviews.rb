@@ -7,8 +7,8 @@ module Trade::RebuildComplianceMviews
       :mandatory_quotas,
       :cites_suspensions
     ].each do |p|
-      time = "#{Time.zone.now.hour}#{Time.zone.now.min}#{Time.zone.now.sec}"
-      timestamp = Time.zone.today.to_s.gsub('-', '') + time
+      time = "#{Time.now.hour}#{Time.now.min}#{Time.now.sec}"
+      timestamp = Date.today.to_s.gsub('-', '') + time
       Rails.logger.debug { "Rebuild #{p} SQL script..." }
       self.rebuild_sql_views(p, timestamp)
       Rails.logger.debug { "Rebuild #{p} mview..." }

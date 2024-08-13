@@ -97,6 +97,6 @@ class Elibrary::NonCitesTaxaImporter
   end
 
   def print_breakdown
-    Rails.logger.debug { "#{Time.zone.now} There are #{TaxonConcept.where(name_status: 'N').count} N taxa in total" }
+    Rails.logger.debug { "#{Time.now} There are #{TaxonConcept.where(name_status: 'N').count} N taxa in total" }
   end
 end

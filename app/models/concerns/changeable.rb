@@ -135,7 +135,7 @@ module Changeable
     return unless taxon_concept
 
     TaxonConcept.where(id: taxon_concept.id).update_all(
-      dependents_updated_at: Time.zone.now,
+      dependents_updated_at: Time.now,
       dependents_updated_by_id: updated_by_id
     )
   end

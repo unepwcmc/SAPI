@@ -184,7 +184,7 @@ class Elibrary::DocumentsIdentificationImporter
   end
 
   def print_breakdown
-    Rails.logger.debug { "#{Time.zone.now} There are #{Document.count} documents in total" }
+    Rails.logger.debug { "#{Time.now} There are #{Document.count} documents in total" }
     Document.group(:type).order(:type).count.each do |type, count|
       puts "\t #{type} #{count}"
     end

@@ -3,7 +3,7 @@ class Trade::Grouping::Base
 
   TAXONOMIC_GROUPING = 'lib/data/group_conversions.csv'.freeze
 
-  YEARS = (2012..Time.zone.today.year - 1).to_a
+  YEARS = (2012..Date.today.year - 1).to_a
 
   # Example usage
   # Group by year considering compliance types:

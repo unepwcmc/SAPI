@@ -97,7 +97,7 @@ class Elibrary::DocumentDiscussionsImporter
 
   def print_breakdown
     Rails.logger.debug { <<-EOT }
-      #{Time.zone.now} There are #{Document.where.not(discussion_id: nil).count} documents
+      #{Time.now} There are #{Document.where.not(discussion_id: nil).count} documents
       in #{DocumentTag.where(type: 'DocumentTag::Discussion').count} discussions in total
     EOT
   end

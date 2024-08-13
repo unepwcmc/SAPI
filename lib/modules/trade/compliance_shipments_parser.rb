@@ -12,7 +12,7 @@ class Trade::ComplianceShipmentsParser
   end
 
   def parse_end_date(date)
-    year = date.blank? || date.upcase == 'PRESENT' ? Time.zone.today.year : date.split('/').last.to_i
+    year = date.blank? || date.upcase == 'PRESENT' ? Date.today.year : date.split('/').last.to_i
     "ts.year <= #{year}"
   end
 

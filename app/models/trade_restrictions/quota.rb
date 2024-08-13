@@ -64,11 +64,11 @@ class Quota < TradeRestriction
   ]
 
   def start_date_formatted
-    start_date ? start_date.strftime('%d/%m/%Y') : Time.zone.now.beginning_of_year.strftime('%d/%m/%Y')
+    start_date ? start_date.strftime('%d/%m/%Y') : Time.now.beginning_of_year.strftime('%d/%m/%Y')
   end
 
   def end_date_formatted
-    end_date ? end_date.strftime('%d/%m/%Y') : Time.zone.now.end_of_year.strftime('%d/%m/%Y')
+    end_date ? end_date.strftime('%d/%m/%Y') : Time.now.end_of_year.strftime('%d/%m/%Y')
   end
 
   def self.search(query)

@@ -106,7 +106,7 @@ class Trade::SandboxTemplate < ApplicationRecord
 
         def destroy
           super
-          self.class.update_all(updated_at: Time.zone.now) # bump timestamp to ensure errors refreshed
+          self.class.update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
         end
 
         def self.records_for_batch_operation(validation_error, annual_report_upload)
@@ -122,7 +122,7 @@ class Trade::SandboxTemplate < ApplicationRecord
 
         def self.update_batch(updates, validation_error, annual_report_upload)
           return unless updates
-          updates[:updated_at] = Time.zone.now
+          updates[:updated_at] = Time.now
           records_for_batch_operation(validation_error, annual_report_upload).
             update_all(updates.to_h)
           sanitize
@@ -131,7 +131,7 @@ class Trade::SandboxTemplate < ApplicationRecord
         def self.destroy_batch(validation_error, annual_report_upload)
           records_for_batch_operation(validation_error, annual_report_upload).
             each(&:delete)
-          update_all(updated_at: Time.zone.now) # bump timestamp to ensure errors refreshed
+          update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
         end
       end
       Trade.const_set(klass_name, klass)

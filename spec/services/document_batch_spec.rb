@@ -19,7 +19,7 @@ describe DocumentBatch, sidekiq: :inline do
     context 'when valid' do
       subject do
         DocumentBatch.new(
-          date: Time.zone.today,
+          date: Date.today,
           documents_attributes: {
             '0' => { type: 'Document' }
           },

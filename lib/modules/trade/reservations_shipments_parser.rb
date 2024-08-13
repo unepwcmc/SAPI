@@ -9,7 +9,7 @@ class Trade::ReservationsShipmentsParser
   end
 
   def parse_end_date(date)
-    year = date.blank? ? Time.zone.today.year : date.split('/').last.to_i
+    year = date.blank? ? Date.today.year : date.split('/').last.to_i
     "ts.year < #{year}"
   end
 

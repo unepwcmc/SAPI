@@ -130,7 +130,7 @@ class Elibrary::EventsImporter
   end
 
   def print_breakdown
-    Rails.logger.debug { "#{Time.zone.now} There are #{Event.count} events in total" }
+    Rails.logger.debug { "#{Time.now} There are #{Event.count} events in total" }
     Event.group(:type).order(:type).count.each do |type, count|
       puts "\t #{type} #{count}"
     end

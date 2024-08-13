@@ -97,7 +97,7 @@ class Elibrary::UsersImporter
   end
 
   def print_breakdown
-    Rails.logger.debug { "#{Time.zone.now} There are #{User.count} users in total" }
+    Rails.logger.debug { "#{Time.now} There are #{User.count} users in total" }
     User.group(:role).order(:role).count.each do |role, count|
       puts "\t #{role} #{count}"
     end
