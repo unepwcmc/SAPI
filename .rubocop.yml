@@ -28,11 +28,13 @@ Style/StringLiterals:
 Style/BlockDelimiters:
   AllowedMethods: []
 
+# Deviate from omakase
 # Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
 # SupportedStyles: outdent, indent
 Layout/AccessModifierIndentation:
-  EnforcedStyle: indent
+  EnforcedStyle: outdent
 
+# Deviate from omakase
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: normal, rails
 Layout/IndentationConsistency:
@@ -43,12 +45,50 @@ Layout/IndentationConsistency:
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: symmetrical, new_line, same_line
 Layout/MultilineArrayBraceLayout:
-  EnforcedStyle: symmetrical
+  Enabled: true
+  EnforcedStyle: new_line
 
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: symmetrical, new_line, same_line
 Layout/MultilineHashBraceLayout:
-  EnforcedStyle: symmetrical
+  Enabled: true
+  EnforcedStyle: new_line
+
+Layout/MultilineMethodCallBraceLayout:
+  Enabled: true
+  EnforcedStyle: new_line
+
+Layout/MultilineMethodDefinitionBraceLayout:
+  Enabled: true
+  EnforcedStyle: new_line
+
+Layout/FirstArrayElementLineBreak:
+  Enabled: true
+
+Layout/FirstHashElementLineBreak:
+  Enabled: true
+
+Layout/FirstMethodArgumentLineBreak:
+  Enabled: true
+
+Layout/FirstMethodParameterLineBreak:
+  Enabled: true
+
+Layout/FirstArgumentIndentation:
+  EnforcedStyle: consistent
+  Enabled: true
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+  Enabled: true
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+  Enabled: true
+
+Layout/FirstParameterIndentation:
+  EnforcedStyle: consistent
+  Enabled: true
 
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: always, conditionals
@@ -69,15 +109,22 @@ Layout/ExtraSpacing:
   Exclude:
     - 'db/migrate/*'
 
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: consistent, special_for_inner_method_call, special_for_inner_method_call_in_parentheses
-Layout/FirstParameterIndentation:
-  Enabled: true
 
+# Detect hard tabs, no hard tabs.
+Layout/IndentationStyle:
+  Enabled: true
+  IndentationWidth: 2
+  EnforcedStyle: spaces
+
+# Deviate from omakase
 # Configuration parameters: Width.
 Layout/IndentationWidth:
+  Enabled: true
   Exclude:
     - 'db/migrate/*'
+
+Layout/ClosingParenthesisIndentation:
+  Enabled: true
 
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SupportedStyles.
 # SupportedStyles: space, no_space
@@ -97,19 +144,34 @@ Layout/LineLength:
   Enabled: false
 
 Layout/MultilineMethodCallIndentation:
+  Enabled: true
   EnforcedStyle: indented
 
 Layout/ArgumentAlignment:
+  Enabled: true
   EnforcedStyle: with_fixed_indentation
 
 Layout/ArrayAlignment:
+  Enabled: true
   EnforcedStyle: with_fixed_indentation
 
 Layout/BlockAlignment:
+  Enabled: true
   EnforcedStyleAlignWith: either
 
 Layout/CaseIndentation:
+  Enabled: true
   EnforcedStyle: end
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: true
+
+Layout/MultilineAssignmentLayout:
+  Enabled: true
+  EnforcedStyle: new_line
+
+Layout/AssignmentIndentation:
+  Enabled: true
 
 Metrics/MethodLength:
   Enabled: false
@@ -117,16 +179,15 @@ Metrics/MethodLength:
 Naming/VariableNumber:
   Enabled: false
 
-Layout/FirstHashElementIndentation:
-  EnforcedStyle: consistent
-
 Layout/HashAlignment:
-  EnforcedLastArgumentHashStyle: always_ignore
+  Enabled: true
+  EnforcedLastArgumentHashStyle: always_inspect
 
 Rails/NotNullColumn:
   Enabled: false
 
 Rails/UnknownEnv:
+  Enabled: true
   Environments:
     - development
     - test
@@ -166,6 +227,7 @@ Rails/I18nLocaleTexts:
 # Quite a few controllers subclass other controllers
 Rails/LexicallyScopedActionFilter:
   Enabled: false
+
 
 ##
 # The remainder of this file is explicitly opting into rules and was generated
