@@ -47,15 +47,19 @@ module ComparisonAttributes
     arel_nodes =
       comparison_attributes.map do |attr_name, attr_val|
         if self.class.text_attributes.include? attr_name
-          Arel::Nodes::NamedFunction.new('SQUISH_NULL', [ a.table[attr_name] ]).
-            eq(attr_val.presence).to_sql
-          # ActiveRecord 4 saves arrays as '[]' instead of using the postgres notation '{}'
-          # Also, Arel doesn't seem to be able to manage the comparison when passing '[]' in 'eq'
-          # The workaround below checks if the attribute value is an empty array,
-          # if it is, it checks the array length (note that an empty array has a length of NULL),
-          # otherwise, it will perform an array equality check.
-          # I had to transform all the queries into strings because I couldn't find a proper way
-          # to do this using Arel.
+          Arel::Nodes::NamedFunction.new(
+            'SQUISH_NULL', [ a.table[attr_name] ]
+          ).eq(
+            attr_val.presence
+          ).to_sql
+
+        # ActiveRecord 4 saves arrays as '[]' instead of using the postgres notation '{}'
+        # Also, Arel doesn't seem to be able to manage the comparison when passing '[]' in 'eq'
+        # The workaround below checks if the attribute value is an empty array,
+        # if it is, it checks the array length (note that an empty array has a length of NULL),
+        # otherwise, it will perform an array equality check.
+        # I had to transform all the queries into strings because I couldn't find a proper way
+        # to do this using Arel.
         elsif attr_val.is_a?(Array)
           if attr_val.compact.length > 0
             %Q("#{a.table_name}"."#{attr_name}" = ARRAY[#{attr_val.join(',')}]::INTEGER[])

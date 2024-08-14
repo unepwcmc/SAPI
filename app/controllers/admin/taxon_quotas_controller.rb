@@ -54,19 +54,22 @@ protected
     @terms = Term.order(:code)
     @sources = Source.order(:code)
     @purposes = Purpose.order(:code)
-    @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(is_current: true,
-        geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] }
-      )
+    @geo_entities = GeoEntity.order(:name_en).joins(
+      :geo_entity_type
+    ).where(
+      is_current: true,
+      geo_entity_types: {
+        name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]
+      }
+    )
   end
 
   def collection
-    @quotas ||= end_of_association_chain.
-      joins(:geo_entity).
-      order('start_date DESC, geo_entities.name_en ASC,
-        notes ASC'
-           ).
-      page(params[:page])
+    @quotas ||= end_of_association_chain.joins(
+      :geo_entity
+    ).order(
+      'start_date DESC, geo_entities.name_en ASC, notes ASC'
+    ).page(params[:page])
   end
 
 private

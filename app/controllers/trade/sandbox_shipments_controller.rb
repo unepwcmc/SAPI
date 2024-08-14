@@ -3,6 +3,7 @@ class Trade::SandboxShipmentsController < TradeController
 
   def index
     @search = Trade::SandboxFilter.new(params)
+
     render json: @search.results,
       each_serializer: Trade::SandboxShipmentSerializer,
       meta: {
@@ -17,6 +18,7 @@ class Trade::SandboxShipmentsController < TradeController
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     @sandbox_shipment = sandbox_klass.find(params[:id])
     @sandbox_shipment.update(sandbox_shipment_params)
+
     head :no_content
   end
 
@@ -24,8 +26,10 @@ class Trade::SandboxShipmentsController < TradeController
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     @sandbox_shipment = sandbox_klass.find(params[:id])
+
     @sandbox_shipment.destroy
     aru.update_attribute(:number_of_rows, aru.sandbox_shipments.size)
+
     head :no_content
   end
 
@@ -33,9 +37,11 @@ class Trade::SandboxShipmentsController < TradeController
     aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
     ve = Trade::ValidationError.find(params[:validation_error_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
+
     sandbox_klass.update_batch(
       update_batch_params[:updates], ve, aru
     )
+
     head :no_content
   end
 
@@ -44,7 +50,9 @@ class Trade::SandboxShipmentsController < TradeController
     ve = Trade::ValidationError.find(params[:validation_error_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     sandbox_klass.destroy_batch(ve, aru)
+
     aru.update_attribute(:number_of_rows, aru.sandbox_shipments.size)
+
     head :no_content
   end
 

@@ -37,38 +37,40 @@ private
   end
 
   def eu_decision_select_attrs
-    string = %(
-            eu_decisions.notes,
-            eu_decisions.start_date,
-            v.original_start_date_formatted,
-            eu_decisions.is_current,
-            eu_decisions.geo_entity_id,
-            eu_decisions.start_event_id,
-            eu_decisions.term_id,
-            eu_decisions.source_id,
-            eu_decisions.eu_decision_type_id,
-            eu_decisions.term_id,
-            eu_decisions.source_id,
-            eu_decisions.nomenclature_note_en,
-            eu_decisions.nomenclature_note_fr,
-            eu_decisions.nomenclature_note_es,
-            eu_decision_type,
-            srg_history,
-            start_event,
-            end_event,
-            geo_entity_en,
-            taxon_concept,
-            term_en,
-            source_en
-          )
-    current_user ? "#{string},\n private_url" : string
+    string = <<-SQL.squish
+      eu_decisions.notes,
+      eu_decisions.start_date,
+      v.original_start_date_formatted,
+      eu_decisions.is_current,
+      eu_decisions.geo_entity_id,
+      eu_decisions.start_event_id,
+      eu_decisions.term_id,
+      eu_decisions.source_id,
+      eu_decisions.eu_decision_type_id,
+      eu_decisions.term_id,
+      eu_decisions.source_id,
+      eu_decisions.nomenclature_note_en,
+      eu_decisions.nomenclature_note_fr,
+      eu_decisions.nomenclature_note_es,
+      eu_decision_type,
+      srg_history,
+      start_event,
+      end_event,
+      geo_entity_en,
+      taxon_concept,
+      term_en,
+      source_en
+    SQL
+
+    current_user ? "#{string}, private_url" : string
   end
 
   def sanitized_params
     filters =
       permitted_params.to_h.inject({}) do |h, (k, v)|
         h[k] = v.reject(&:empty?).map!(&:to_i)
-           h
+
+        h
       end
     filters
   end

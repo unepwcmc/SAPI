@@ -4,8 +4,8 @@ class Admin::ListingChangesController < Admin::StandardAuthorizationController
 protected
 
   def collection
-    @listing_changes ||= end_of_association_chain.
-      includes([
+    @listing_changes ||= end_of_association_chain.includes(
+      [
         :species_listing,
         :change_type,
         :party_geo_entity,
@@ -14,10 +14,16 @@ protected
         :taxon_concept,
         exclusions: [ :geo_entities, :taxon_concept ]
       ]
-              ).
-      where("change_types.name <> '#{ChangeType::EXCEPTION}'").
-      page(params[:page]).per(200).where(parent_id: nil).
-      order('taxon_concepts.full_name ASC, listing_changes.effective_at DESC').
-      search(params[:query])
+    ).where(
+      "change_types.name <> '#{ChangeType::EXCEPTION}'"
+    ).page(
+      params[:page]
+    ).per(200).where(
+      parent_id: nil
+    ).order(
+      'taxon_concepts.full_name ASC, listing_changes.effective_at DESC'
+    ).search(
+      params[:query]
+    )
   end
 end

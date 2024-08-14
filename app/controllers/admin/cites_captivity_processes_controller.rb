@@ -7,7 +7,9 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
   def create
     create! do |success, failure|
       success.html do
-        redirect_to admin_taxon_concept_cites_captivity_processes_url(params[:taxon_concept_id]),
+        redirect_to admin_taxon_concept_cites_captivity_processes_url(
+          params[:taxon_concept_id]
+        ),
           notice: 'Operation successful'
       end
       failure.html do
@@ -19,7 +21,9 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
   def update
     update! do |success, failure|
       success.html do
-        redirect_to admin_taxon_concept_cites_captivity_processes_url(params[:taxon_concept_id]),
+        redirect_to admin_taxon_concept_cites_captivity_processes_url(
+          params[:taxon_concept_id]
+        ),
           notice: 'Operation successful'
       end
       failure.html do
@@ -34,20 +38,21 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
 protected
 
   def load_lib_objects
-    @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).
-      where(geo_entity_types: { name: GeoEntityType::SETS['2'] })
+    @geo_entities = GeoEntity.order(:name_en).joins(:geo_entity_type).where(
+      geo_entity_types: { name: GeoEntityType::SETS['2'] }
+    )
     @status = CitesCaptivityProcess::STATUS
-    @events = Event.where("type IN ('CitesAc','CitesPc')"
-                         ).order('effective_at DESC')
+    @events = Event.where(
+      "type IN ('CitesAc','CitesPc')"
+    ).order('effective_at DESC')
   end
 
   def collection
-    @cites_captivity_process ||= end_of_association_chain.
-      joins(:geo_entity).
-      order('is_current DESC, start_date DESC,
-        geo_entities.name_en ASC'
-           ).
-      page(params[:page])
+    @cites_captivity_process ||= end_of_association_chain.joins(
+      :geo_entity
+    ).order(
+      'is_current DESC, start_date DESC, geo_entities.name_en ASC'
+    ).page(params[:page])
   end
 
 private

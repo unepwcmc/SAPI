@@ -10,6 +10,7 @@ module ApplicationHelper
       "/species#/taxon_concepts/#{taxon_concept.id}/legal"
     else
       taxonomy = taxon_concept.taxonomy.name.downcase
+
       "/species#/taxon_concepts?taxonomy=#{taxonomy}&taxon_concept_query=#{taxon_concept.full_name}"
     end
   end
@@ -33,6 +34,7 @@ module ApplicationHelper
     return '' unless message
 
     message = message.sub('confirmation', '')
+
     to_html "#{field.to_s.humanize.capitalize} #{message}"
   end
 

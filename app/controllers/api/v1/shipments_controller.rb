@@ -152,11 +152,13 @@ class Api::V1::ShipmentsController < ApplicationController
         [ 'search_download_all_data', permit_params ], expires_in: 1.week
       ) do
         search_data = query.build_hash(data, permit_params)
-           filtered_data = query.filter(search_data, permit_params)
-           data_ids = query.filter_download_data(filtered_data, permit_params)
-           hash_params = params_hash_builder(data_ids, download_params)
-           Trade::DownloadDataRetriever.search_download(hash_params).to_a
+        filtered_data = query.filter(search_data, permit_params)
+        data_ids = query.filter_download_data(filtered_data, permit_params)
+        hash_params = params_hash_builder(data_ids, download_params)
+
+        Trade::DownloadDataRetriever.search_download(hash_params).to_a
       end
+
     render json: @search_download_all_data
   end
 
@@ -168,8 +170,19 @@ private
 
   def set_pagination_headers(data, params)
     data = instance_variable_get("@#{data}").presence
+
     # Make sure the count works for both TradeView and ComplianceTool
-    _count = data ? (data.first.is_a?(Array) ? data.count : data.first['total_count']) : 0
+    _count =
+      if data
+        if data.first.is_a?(Array)
+          data.count
+        else
+          data.first['total_count']
+        end
+      else
+        0
+      end
+
     params = send(params)
     response.headers['X-Total-Count'] = _count.to_s
     response.headers['X-Page'] = params[:page].to_s.presence || '1'
