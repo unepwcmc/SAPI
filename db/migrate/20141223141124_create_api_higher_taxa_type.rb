@@ -1,6 +1,6 @@
 class CreateApiHigherTaxaType < ActiveRecord::Migration[4.2]
   def change
-    execute <<-SQL
+    execute <<-SQL.squish
     DROP TYPE IF EXISTS api_higher_taxa CASCADE;
     CREATE TYPE api_higher_taxa AS (
       kingdom TEXT,

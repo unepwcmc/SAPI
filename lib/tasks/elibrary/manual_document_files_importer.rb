@@ -23,7 +23,7 @@ class Elibrary::ManualDocumentFilesImporter
       target_location = @target_dir + "/documents/#{doc.id}/#{doc.elib_legacy_file_name}"
       # check if file exists at target location
       if File.exist?(target_location)
-        puts "TARGET PRESENT #{target_location}" + info_txt
+        Rails.logger.debug "TARGET PRESENT #{target_location}" + info_txt
         next
       end
       source_location = @source_dir + "/#{doc.elib_legacy_file_name}"
@@ -31,28 +31,28 @@ class Elibrary::ManualDocumentFilesImporter
       unless File.exist?(source_location)
         case doc.type
         when 'Document::IdManual'
-          puts "SOURCE MISSING #{source_location}" + info_txt
+          Rails.logger.debug "SOURCE MISSING #{source_location}" + info_txt
           next
         when 'Document::VirtualCollege'
           unless doc.elib_legacy_file_name =~ /\.pdf/
-            puts "THIS IS A LINK TO EXTERNAL RESOURCES, NOT A PDF #{source_location}" + info_txt
-          # else
+            Rails.logger.debug "THIS IS A LINK TO EXTERNAL RESOURCES, NOT A PDF #{source_location}" + info_txt
+            # else
             # remote_doc = Document.find(doc.id)
             # remote_doc.remote_filename_url = doc.elib_legacy_file_name
             # remote_doc.save!
           end
-          puts "SOURCE MISSING #{source_location}" + info_txt
+          Rails.logger.debug "SOURCE MISSING #{source_location}" + info_txt
           next
         end
       end
       copy_with_path(source_location, target_location)
-      puts "COPIED " + info_txt
+      Rails.logger.debug 'COPIED ' + info_txt
     end
   end
 
   def identification_docs
-    Document.where("type IN ('Document::IdManual', 'Document::VirtualCollege')")
-            .order(:type, :date)
-            .select([:id, :elib_legacy_file_name, :type])
+    Document.where("type IN ('Document::IdManual', 'Document::VirtualCollege')").
+      order(:type, :date).
+      select([ :id, :elib_legacy_file_name, :type ])
   end
 end

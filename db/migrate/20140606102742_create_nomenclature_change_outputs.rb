@@ -1,7 +1,7 @@
 class CreateNomenclatureChangeOutputs < ActiveRecord::Migration[4.2]
   def change
     create_table :nomenclature_change_outputs do |t|
-      t.integer :nomenclature_change_id, :null => false
+      t.integer :nomenclature_change_id, null: false
       t.integer :taxon_concept_id
       t.integer :new_taxon_concept_id
       t.integer :new_parent_id
@@ -10,8 +10,8 @@ class CreateNomenclatureChangeOutputs < ActiveRecord::Migration[4.2]
       t.string :new_author_year
       t.string :new_name_status
       t.text :note
-      t.integer :created_by_id, :null => false
-      t.integer :updated_by_id, :null => false
+      t.integer :created_by_id, null: false
+      t.integer :updated_by_id, null: false
 
       t.timestamps
     end

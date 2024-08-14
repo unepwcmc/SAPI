@@ -22,9 +22,9 @@
 require 'spec_helper'
 
 describe ApiRequest do
-  let(:api_user) {
+  let(:api_user) do
     create(:user, role: 'api')
-  }
+  end
 
   before(:each) do
     create(
@@ -52,56 +52,62 @@ describe ApiRequest do
   end
 
   describe :top_50_most_active_users do
-    subject {
+    subject do
       ApiRequest.top_50_most_active_users
-    }
-    specify {
+    end
+    specify do
       expect(subject.first.user_id).to eq(api_user.id)
-    }
+    end
   end
 
   describe :recent_requests do
-    subject {
+    subject do
       ApiRequest.recent_requests
-    }
-    specify {
-      expect(subject).to eq({
-        [200, Date.yesterday.strftime('%Y-%m-%d')] => 1,
-        [200, Date.today.strftime('%Y-%m-%d')] => 0,
-        [500, Date.yesterday.strftime('%Y-%m-%d')] => 0,
-        [500, Date.today.strftime('%Y-%m-%d')] => 1
-      })
-    }
+    end
+    specify do
+      expect(subject).to eq(
+        {
+          [ 200, Date.yesterday.strftime('%Y-%m-%d') ] => 1,
+          [ 200, Date.today.strftime('%Y-%m-%d') ] => 0,
+          [ 500, Date.yesterday.strftime('%Y-%m-%d') ] => 0,
+          [ 500, Date.today.strftime('%Y-%m-%d') ] => 1
+        }
+      )
+    end
   end
 
   describe :requests_by_response_status do
-    subject {
+    subject do
       ApiRequest.requests_by_response_status
-    }
-    specify {
-      expect(subject).to eq({
-        '200' => 1,
-        '400' => 0,
-        '401' => 0,
-        '404' => 0,
-        '422' => 0,
-        '500' => 1
-      })
-    }
+    end
+    specify do
+      expect(subject).to eq(
+        {
+          '200' => 1,
+          '400' => 0,
+          '401' => 0,
+          '404' => 0,
+          '422' => 0,
+          '500' => 1
+        }
+      )
+    end
   end
 
   describe :requests_by_controller do
-    subject {
+    subject do
       ApiRequest.requests_by_controller
-    }
-    specify {
-      expect(subject).to eq({
-        'taxon_concepts' => 2,
-        'distributions' => 0,
-        'cites_legislation' => 0,
-        'eu_legislation' => 0,
-        'references' => 0
-      })
-    }
+    end
+    specify do
+      expect(subject).to eq(
+        {
+          'taxon_concepts' => 2,
+          'distributions' => 0,
+          'cites_legislation' => 0,
+          'eu_legislation' => 0,
+          'references' => 0
+        }
+      )
+    end
   end
 end

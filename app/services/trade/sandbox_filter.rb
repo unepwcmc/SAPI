@@ -1,6 +1,5 @@
 class Trade::SandboxFilter < Trade::Filter
-
-  private
+private
 
   def initialize_params(options)
     @options = Trade::SandboxSearchParams.sanitize(options)

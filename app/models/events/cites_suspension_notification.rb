@@ -35,22 +35,22 @@ class CitesSuspensionNotification < Event
   # Migrated to controller (Strong Parameters)
   # attr_accessible :subtype, :new_subtype, :end_date
   attr_accessor :new_subtype
-  has_many :started_suspensions, :foreign_key => :start_notification_id, :class_name => 'CitesSuspension'
-  has_many :ended_suspensions, :foreign_key => :end_notification_id, :class_name => 'CitesSuspension'
-  has_many :cites_suspension_confirmations, :dependent => :destroy
-  has_many :confirmed_suspensions, :through => :cites_suspension_confirmations
+  has_many :started_suspensions, foreign_key: :start_notification_id, class_name: 'CitesSuspension'
+  has_many :ended_suspensions, foreign_key: :end_notification_id, class_name: 'CitesSuspension'
+  has_many :cites_suspension_confirmations, dependent: :destroy
+  has_many :confirmed_suspensions, through: :cites_suspension_confirmations
 
   validate :designation_is_cites
-  validates :effective_at, :presence => true
+  validates :effective_at, presence: true
 
   before_save :handle_new_subtype
   before_validation do
-    cites = Designation.find_by_name('CITES')
+    cites = Designation.find_by(name: 'CITES')
     self.designation_id = cites && cites.id
   end
 
   def handle_new_subtype
-    unless new_subtype.blank?
+    if new_subtype.present?
       self.subtype = new_subtype
     end
   end
@@ -59,7 +59,7 @@ class CitesSuspensionNotification < Event
     select(:subtype).distinct
   end
 
-  private
+private
 
   def dependent_objects_map
     {
@@ -67,5 +67,4 @@ class CitesSuspensionNotification < Event
       'ended CITES suspensions' => ended_suspensions
     }
   end
-
 end

@@ -1,20 +1,20 @@
 class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   respond_to :json
   layout :determine_layout
-  before_action :sanitize_search_params, :only => [:index, :autocomplete]
-  before_action :load_taxonomies, only: [:index, :edit]
-  before_action :load_ranks, only: [:index, :edit]
-  before_action :load_tags, :only => [:index, :edit]
-  before_action :split_stringified_ids_lists, only: [:create, :update]
+  before_action :sanitize_search_params, only: [ :index, :autocomplete ]
+  before_action :load_taxonomies, only: [ :index, :edit ]
+  before_action :load_ranks, only: [ :index, :edit ]
+  before_action :load_tags, only: [ :index, :edit ]
+  before_action :split_stringified_ids_lists, only: [ :create, :update ]
 
   def index
     @taxon_concept = TaxonConcept.new
     @taxon_concepts = TaxonConceptMatcher.new(@search_params).taxon_concepts.
-      includes([:rank, :taxonomy, :taxon_name, :parent]).
-      order("taxon_concepts.taxonomic_position").page(params[:page])
+      includes([ :rank, :taxonomy, :taxon_name, :parent ]).
+      order('taxon_concepts.taxonomic_position').page(params[:page])
     if @taxon_concepts.count == 1
       redirect_to admin_taxon_concept_names_path(@taxon_concepts.first),
-        :notice => "Your search returned only one result,
+        notice: "Your search returned only one result,
           you have been redirected to the page of #{@taxon_concepts.first.full_name}"
     end
   end
@@ -29,12 +29,12 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   def create
     create! do |success, failure|
       success.js { render('create') }
-      failure.js {
+      failure.js do
         load_taxonomies
         load_ranks
         load_tags
         render_new_by_name_status
-      }
+      end
     end
   end
 
@@ -42,45 +42,45 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     @taxon_concept = TaxonConcept.find(params[:id])
     rebuild_taxonomy = @taxon_concept.rebuild_taxonomy?(params)
     update! do |success, failure|
-      success.js {
+      success.js do
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         render 'update'
-      }
-      failure.js {
+      end
+      failure.js do
         load_taxonomies
         load_ranks
         load_tags
         render_new_by_name_status
-      }
-      success.html {
+      end
+      success.html do
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
         redirect_to edit_admin_taxon_concept_url(@taxon_concept),
-          :notice => 'Operation successful'
-      }
-      failure.html {
+          notice: 'Operation successful'
+      end
+      failure.html do
         load_taxonomies
         load_ranks
         load_tags
         render 'edit'
-      }
+      end
     end
   end
 
   def autocomplete
     @taxon_concepts = TaxonConceptPrefixMatcher.new(@search_params).
-     taxon_concepts
-    render :json => @taxon_concepts.to_json(
-      :only => [:id, :taxonomy_name],
-      :methods => [:rank_name, :full_name, :name_status]
+      taxon_concepts
+    render json: @taxon_concepts.to_json(
+      only: [ :id, :taxonomy_name ],
+      methods: [ :rank_name, :full_name, :name_status ]
     )
   end
 
-  protected
+protected
 
   # used in create
   def collection
-    @taxon_concepts ||= end_of_association_chain.where(:name_status => 'A').
-      includes([:rank, :taxonomy, :taxon_name, :parent]).
+    @taxon_concepts ||= end_of_association_chain.where(name_status: 'A').
+      includes([ :rank, :taxonomy, :taxon_name, :parent ]).
       order(:taxonomic_position).page(params[:page])
   end
 
@@ -92,8 +92,8 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     @search_params = SearchParams.new(
       params[:search_params] ||
       {
-        :taxonomy => {
-          :id => Taxonomy.where(:name => Taxonomy::CITES_EU).limit(1).
+        taxonomy: {
+          id: Taxonomy.where(name: Taxonomy::CITES_EU).limit(1).
             select(:id).first.id
         }
       }
@@ -101,13 +101,14 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   end
 
   def load_tags
-    @tags = PresetTag.where(:model => PresetTag::TYPES[:TaxonConcept])
+    @tags = PresetTag.where(model: PresetTag::TYPES[:TaxonConcept])
   end
 
   # The frontend will send these as comma-separated string lists of ids
   # We need to coerce them to arrays of integers.
   def split_stringified_ids_lists
     return true if !params[:taxon_concept] || !params[:taxon_concept][:name_status]
+
     ids_list_key =
       case params[:taxon_concept][:name_status]
       when 'S' then :accepted_names_ids
@@ -136,7 +137,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     end
   end
 
-  private
+private
 
   def taxon_concept_params
     params.require(:taxon_concept).permit(

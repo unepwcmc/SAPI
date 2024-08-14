@@ -1,10 +1,11 @@
 class PermitCleanupWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :admin, :backtrace => 50
+  sidekiq_options queue: :admin, backtrace: 50
 
   def perform(permits_ids = [])
     return if permits_ids.empty?
-    sql = <<-SQL
+
+    sql = <<-SQL.squish
       WITH unused_permits(id) AS (
         SELECT id FROM trade_permits WHERE id IN (:permits_ids)
         EXCEPT
@@ -19,10 +20,12 @@ class PermitCleanupWorker
       WHERE trade_permits.id = unused_permits.id
       SQL
     ApplicationRecord.connection.execute(
-      ApplicationRecord.send(:sanitize_sql_array, [
-        sql,
-        permits_ids: permits_ids.map(&:to_i)
-      ])
+      ApplicationRecord.send(
+        :sanitize_sql_array, [
+          sql,
+          permits_ids: permits_ids.map(&:to_i)
+        ]
+      )
     )
   end
 end

@@ -12,11 +12,10 @@ class TaxonName < ApplicationRecord
   # Used by seed and rake task.
   # attr_accessible :basionym_id, :scientific_name
 
-  validates :scientific_name, :presence => true
+  validates :scientific_name, presence: true
 
   def self.sanitize_scientific_name(some_scientific_name)
     last = some_scientific_name && some_scientific_name.split(/\s/).last
-    last && last.capitalize || nil
+    (last && last.capitalize) || nil
   end
-
 end

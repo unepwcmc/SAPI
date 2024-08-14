@@ -1,7 +1,7 @@
 class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesController
-  respond_to :js, :only => [:create, :update]
+  respond_to :js, only: [ :create, :update ]
   belongs_to :taxon_concept
-  before_action :load_search, :only => [:new, :index, :edit, :create]
+  before_action :load_search, only: [ :new, :index, :edit, :create ]
   layout 'taxon_concepts'
 
   def index
@@ -30,31 +30,31 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
 
   def update
     update! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_taxon_concept_taxon_instruments_url(@taxon_concept)
-      }
-      failure.html {
+      end
+      failure.html do
         load_instruments
         render 'edit'
-      }
+      end
     end
   end
 
   def destroy
     destroy! do |success, failure|
-      success.html {
+      success.html do
         redirect_to admin_taxon_concept_taxon_instruments_url(@taxon_concept),
-        :notice => 'Operation successful'
-      }
+          notice: 'Operation successful'
+      end
     end
   end
 
-  protected
+protected
 
   def load_instruments
-    @taxon_instrument = TaxonInstrument.new(:taxon_concept_id => @taxon_concept.id)
-    @instruments = Instrument.joins(:designation => :taxonomy).
-      where(:taxonomies => { :id => @taxon_concept.taxonomy_id }).
+    @taxon_instrument = TaxonInstrument.new(taxon_concept_id: @taxon_concept.id)
+    @instruments = Instrument.joins(designation: :taxonomy).
+      where(taxonomies: { id: @taxon_concept.taxonomy_id }).
       order(:name)
   end
 
@@ -64,7 +64,7 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
       page(params[:page])
   end
 
-  private
+private
 
   def taxon_instrument_params
     params.require(:taxon_instrument).permit(

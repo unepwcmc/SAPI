@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import reference accepted links from csv file (usage: rake import:reference_accepted_links[path/to/file,path/to/another])'
-  task :reference_accepted_links, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :reference_accepted_links, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'reference_accepted_links_import'
     puts "There are #{TaxonConceptReference.count} taxon concept references in the database."
 
@@ -50,11 +49,9 @@ namespace :import do
           )
       SQL
       ApplicationRecord.connection.execute(sql)
-
     end
     puts "There are now #{TaxonConceptReference.count} taxon concept references in the database"
     ApplicationRecord.connection.execute('DROP INDEX index_taxon_concepts_on_legacy_id_and_legacy_type')
     ApplicationRecord.connection.execute('DROP INDEX index_references_on_legacy_id_and_legacy_type')
   end
-
 end

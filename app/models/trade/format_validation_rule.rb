@@ -23,7 +23,7 @@ class Trade::FormatValidationRule < Trade::ValidationRule
     column_names.join(', ') + ' must be formatted as ' + format_re
   end
 
-  private
+private
 
   # Returns records that do not pass the regex test for all columns
   # specified in column_names.

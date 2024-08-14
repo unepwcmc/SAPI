@@ -119,14 +119,15 @@ class MTaxonConcept < ApplicationRecord
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 
-  belongs_to :taxon_concept, :foreign_key => :id, optional: true
-  has_many :cites_listing_changes, :foreign_key => :taxon_concept_id, :class_name => 'MCitesListingChange'
-  has_many :historic_cites_listing_changes_for_downloads, -> {
-    where(
-      show_in_downloads: true
-    ).order(
-      Arel.sql(
-        <<-SQL
+  belongs_to :taxon_concept, foreign_key: :id, optional: true
+  has_many :cites_listing_changes, foreign_key: :taxon_concept_id, class_name: 'MCitesListingChange'
+  has_many :historic_cites_listing_changes_for_downloads,
+    -> {
+      where(
+        show_in_downloads: true
+      ).order(
+        Arel.sql(
+          <<-SQL.squish
           effective_at,
           CASE
           WHEN change_type_name = 'ADDITION' THEN 0
@@ -135,22 +136,27 @@ class MTaxonConcept < ApplicationRecord
           WHEN change_type_name = 'DELETION' THEN 3
           END
         SQL
+        )
       )
-    )
-  }, :foreign_key => :taxon_concept_id,
-    :class_name => 'MCitesListingChange'
-  has_many :current_cites_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
-    :foreign_key => :taxon_concept_id,
-    :class_name => 'MCitesListingChange'
-  has_many :current_cms_additions, -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
-    :foreign_key => :taxon_concept_id,
-    :class_name => 'MCmsListingChange'
+    },
+    foreign_key: :taxon_concept_id,
+    class_name: 'MCitesListingChange'
+
+  has_many :current_cites_additions,
+    -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
+    foreign_key: :taxon_concept_id,
+    class_name: 'MCitesListingChange'
+
+  has_many :current_cms_additions,
+    -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
+    foreign_key: :taxon_concept_id,
+    class_name: 'MCmsListingChange'
+
   has_many :cites_processes
-  scope :by_cites_eu_taxonomy, -> { where(:taxonomy_is_cites_eu => true) }
-  scope :by_cms_taxonomy, -> { where(:taxonomy_is_cites_eu => false) }
 
-  scope :without_non_accepted, -> { where(:name_status => ['A', 'H']) }
-
+  scope :by_cites_eu_taxonomy, -> { where(taxonomy_is_cites_eu: true) }
+  scope :by_cms_taxonomy, -> { where(taxonomy_is_cites_eu: false) }
+  scope :without_non_accepted, -> { where(name_status: [ 'A', 'H' ]) }
   scope :without_hidden, -> { where("#{table_name}.cites_show = 't'") }
 
   scope :by_name, lambda { |name, match_options|
@@ -163,14 +169,14 @@ class MTaxonConcept < ApplicationRecord
     MTaxonConceptFilterByScientificNameWithDescendants.new(
       self,
       scientific_name,
-      { :synonyms => true, :common_names => true, :subspecies => false }
+      { synonyms: true, common_names: true, subspecies: false }
     ).relation
   }
 
-  scope :at_level_of_listing, -> { where(:cites_listed => 't') }
+  scope :at_level_of_listing, -> { where(cites_listed: 't') }
 
   scope :taxonomic_layout, -> { order('taxonomic_position') }
-  scope :alphabetical_layout, -> { order(['kingdom_position', 'full_name']) }
+  scope :alphabetical_layout, -> { order([ 'kingdom_position', 'full_name' ]) }
   translates :rank_display_name,
     :all_distribution_ary, :native_distribution_ary,
     :introduced_distribution_ary, :introduced_uncertain_distribution_ary,
@@ -183,32 +189,32 @@ class MTaxonConcept < ApplicationRecord
   end
 
   def self.descendants_ids(taxon_concept)
-    query = <<-SQL
+    query = <<-SQL.squish
     WITH RECURSIVE descendents AS (
-      SELECT id, rank_id, full_name
-      FROM #{self.table_name}
-      WHERE parent_id = #{taxon_concept.to_i}
-      UNION ALL
-      SELECT taxon_concepts.id, taxon_concepts.rank_id, taxon_concepts.full_name
-      FROM #{self.table_name} taxon_concepts
-      JOIN descendents h ON h.id = taxon_concepts.parent_id
-    )
-    SELECT id FROM descendents
-    ORDER BY rank_id ASC, full_name
+        SELECT id, rank_id, full_name
+        FROM #{self.table_name}
+        WHERE parent_id = #{taxon_concept.to_i}
+        UNION ALL
+        SELECT taxon_concepts.id, taxon_concepts.rank_id, taxon_concepts.full_name
+        FROM #{self.table_name} taxon_concepts
+        JOIN descendents h ON h.id = taxon_concepts.parent_id
+      )
+      SELECT id FROM descendents
+      ORDER BY rank_id ASC, full_name
     SQL
     res = ApplicationRecord.connection.execute(query)
-    res.ntuples.zero? ? [taxon_concept.to_i] : res.map(&:values).flatten << taxon_concept.to_i
+    res.ntuples == 0 ? [ taxon_concept.to_i ] : res.map(&:values).flatten << taxon_concept.to_i
   end
 
   def spp
-    if ['GENUS', 'FAMILY', 'SUBFAMILY', 'ORDER'].include?(rank_name)
+    if [ 'GENUS', 'FAMILY', 'SUBFAMILY', 'ORDER' ].include?(rank_name)
       'spp.' unless name_status == 'H' # Hybrids are not species groups
     else
       nil
     end
   end
 
-  ['English', 'Spanish', 'French'].each do |lng|
+  [ 'English', 'Spanish', 'French' ].each do |lng|
     define_method("#{lng.downcase}_names") do
       sym = :"#{lng.downcase}_names_ary"
       db_ary_to_array(sym)
@@ -230,7 +236,8 @@ class MTaxonConcept < ApplicationRecord
   def db_ary_to_array(ary)
     if respond_to?(ary)
       attr = send(ary)
-      return [] unless attr.present?
+      return [] if attr.blank?
+
       attr.map(&:to_s)
     else
       []
@@ -292,17 +299,17 @@ class MTaxonConcept < ApplicationRecord
   end
 
   def recently_changed
-    return (cites_listing_updated_at ? cites_listing_updated_at > 8.year.ago : false)
+    (cites_listing_updated_at ? cites_listing_updated_at > 8.years.ago : false)
   end
 
   # the methods below are for checklist downloads only and a bad idea as well
 
-  ['en', 'es', 'fr'].each do |lng|
-    ["hash_full_note_#{lng.downcase}", "full_note_#{lng.downcase}", "short_note_#{lng.downcase}"].each do |method_name|
+  [ 'en', 'es', 'fr' ].each do |lng|
+    [ "hash_full_note_#{lng.downcase}", "full_note_#{lng.downcase}", "short_note_#{lng.downcase}" ].each do |method_name|
       define_method(method_name) do
         current_cites_additions.map do |lc|
           note = lc.send(method_name) || ''
-          note && "Appendix #{lc.species_listing_name}:" + (note || '') + (" #{lc.nomenclature_note}" || '')
+          note && ("Appendix #{lc.species_listing_name}:" + (note || '') + (" #{lc.nomenclature_note}" || ''))
         end.join("\n")
       end
     end
@@ -321,5 +328,4 @@ class MTaxonConcept < ApplicationRecord
   def current_parties_full_names
     CountryDictionary.instance.get_names_by_ids(current_parties_ids).compact
   end
-
 end

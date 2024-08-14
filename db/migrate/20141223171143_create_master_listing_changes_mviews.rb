@@ -1,10 +1,10 @@
 class CreateMasterListingChangesMviews < ActiveRecord::Migration[4.2]
   def change
-    [:cites, :eu, :cms].each do |designation|
+    [ :cites, :eu, :cms ].each do |designation|
       listing_changes_mview = "#{designation}_listing_changes_mview"
 
       # create master cites/eu/cms listing changes mview
-      execute <<-SQL
+      execute <<-SQL.squish
       CREATE TABLE master_#{listing_changes_mview}
       (
         taxon_concept_id integer,
@@ -68,7 +68,7 @@ class CreateMasterListingChangesMviews < ActiveRecord::Migration[4.2]
         unless column_exists?(listing_changes_mview, :event_id)
           execute "ALTER TABLE #{listing_changes_mview} ADD COLUMN event_id INT"
         end
-        execute <<-SQL
+        execute <<-SQL.squish
         UPDATE #{listing_changes_mview}
         SET event_id = listing_changes.event_id
         FROM listing_changes
@@ -77,7 +77,7 @@ class CreateMasterListingChangesMviews < ActiveRecord::Migration[4.2]
 
         # rename to child cites/eu/cms listing changes mview
         # and link to master
-        execute <<-SQL
+        execute <<-SQL.squish
         ALTER TABLE #{listing_changes_mview}
         RENAME TO child_#{listing_changes_mview};
         ALTER TABLE child_#{listing_changes_mview}
@@ -86,7 +86,7 @@ class CreateMasterListingChangesMviews < ActiveRecord::Migration[4.2]
       end
 
       # rename master
-      execute <<-SQL
+      execute <<-SQL.squish
       ALTER TABLE master_#{listing_changes_mview}
       RENAME TO #{listing_changes_mview};
       SQL

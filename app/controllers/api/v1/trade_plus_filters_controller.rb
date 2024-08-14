@@ -9,9 +9,9 @@ class Api::V1::TradePlusFiltersController < ApplicationController
     filters = Rails.cache.read(cache_key)
     if filters.nil?
       TradePlusFiltersWorker.perform_async(I18n.locale.to_s)
-      head 409 # Cache not ready yet.
+      head :conflict # Cache not ready yet.
     else
-      render :json => filters
+      render json: filters
     end
   end
 end

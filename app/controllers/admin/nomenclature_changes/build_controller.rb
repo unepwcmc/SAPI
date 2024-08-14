@@ -1,27 +1,27 @@
 class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   include Wicked::Wizard
 
-  before_action :set_nomenclature_change, :only => [:show, :update, :destroy]
-  before_action :unset_back, only: [:update]
-  before_action :authorise_finish, only: [:update]
+  before_action :set_nomenclature_change, only: [ :show, :update, :destroy ]
+  before_action :unset_back, only: [ :update ]
+  before_action :authorise_finish, only: [ :update ]
 
   def finish_wizard_path
     admin_nomenclature_changes_path
   end
 
+  def show
+    raise NotImplementedError
+  end
   def create
     @nomenclature_change = klass.new()
     @nomenclature_change.status = NomenclatureChange::NEW
     if @nomenclature_change.save
-      redirect_to wizard_path(steps.first, :nomenclature_change_id => @nomenclature_change.id)
+      redirect_to wizard_path(steps.first, nomenclature_change_id: @nomenclature_change.id)
     else
-      redirect_to admin_nomenclature_changes_url, :alert => "Could not start a new nomenclature change"
+      redirect_to admin_nomenclature_changes_url, alert: 'Could not start a new nomenclature change'
     end
   end
 
-  def show
-    raise NotImplementedError
-  end
 
   def update
     raise NotImplementedError
@@ -31,7 +31,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     raise NotImplementedError
   end
 
-  private
+private
 
   def set_nomenclature_change
     @nomenclature_change = NomenclatureChange.find(params[:nomenclature_change_id])
@@ -42,7 +42,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   end
 
   def set_taxonomy
-    @taxonomy = Taxonomy.find_by_name(Taxonomy::CITES_EU)
+    @taxonomy = Taxonomy.find_by(name: Taxonomy::CITES_EU)
   end
 
   def set_ranks
@@ -64,7 +64,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     end
   end
 
-  private
+private
 
   def klass
     NomenclatureChange
@@ -73,5 +73,4 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   def unset_back
     session[:back] = false
   end
-
 end

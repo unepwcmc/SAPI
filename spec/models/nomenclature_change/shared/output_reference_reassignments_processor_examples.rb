@@ -1,6 +1,7 @@
 shared_context 'output_reference_reassignments_processor_examples' do
   before(:each) do
-    create(:nomenclature_change_output_reassignment,
+    create(
+      :nomenclature_change_output_reassignment,
       output: output,
       reassignable_type: 'TaxonConceptReference'
     )

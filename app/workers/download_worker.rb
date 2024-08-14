@@ -2,7 +2,7 @@ class DownloadWorker
   include Sidekiq::Worker
   include Sidekiq::Status::Worker
 
-  sidekiq_options :retry => false, :backtrace => 50
+  sidekiq_options retry: false, backtrace: 50
 
   def perform(download_id, params)
     @download = Download.find(download_id)
@@ -17,7 +17,7 @@ class DownloadWorker
       format_module = format_modules[@download.format]
 
       document_modules = {
-        'index'   => format_module::Index,
+        'index' => format_module::Index,
         'history' => format_module::History
       }
 
@@ -30,12 +30,12 @@ class DownloadWorker
 
       @download.display_name = Checklist::Checklist.summarise_filters(params)
 
-      @download.status = "completed"
+      @download.status = 'completed'
 
       @download.save!
     rescue => exception
       Appsignal.add_exception(exception) if defined? Appsignal
-      @download.status = "failed"
+      @download.status = 'failed'
       @download.save!
     end
   end

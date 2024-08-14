@@ -1,16 +1,16 @@
 class Admin::TaxonomiesController < Admin::StandardAuthorizationController
-  respond_to :json, :only => [:index, :update]
+  respond_to :json, only: [ :index, :update ]
 
   def index
     index! do |format|
-      format.json {
-        render :json => end_of_association_chain.order(:name).
-          select([:id, :name]).map { |d| { :value => d.id, :text => d.name } }.to_json
-      }
+      format.json do
+        render json: end_of_association_chain.order(:name).
+          select([ :id, :name ]).map { |d| { value: d.id, text: d.name } }.to_json
+      end
     end
   end
 
-  protected
+protected
 
   def collection
     @taxonomies ||= end_of_association_chain.order(:name).
@@ -18,7 +18,7 @@ class Admin::TaxonomiesController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 
-  private
+private
 
   def taxonomy_params
     params.require(:taxonomy).permit(:name)

@@ -1,12 +1,12 @@
 class NomenclatureChange::InputTaxonConceptProcessor
-
   def initialize(input)
     @input = input
   end
 
   def run
     return false unless @input.taxon_concept
-    Rails.logger.debug("Processing input #{@input.taxon_concept.full_name}")
+
+    Rails.logger.debug { "Processing input #{@input.taxon_concept.full_name}" }
     tc = @input.taxon_concept
     tc.update(
       nomenclature_note_en: "#{tc.nomenclature_note_en} #{@input.note_en}",
@@ -21,6 +21,6 @@ class NomenclatureChange::InputTaxonConceptProcessor
   end
 
   def summary
-    ["Will add nomenclature note for input #{@input.taxon_concept.full_name}"]
+    [ "Will add nomenclature note for input #{@input.taxon_concept.full_name}" ]
   end
 end

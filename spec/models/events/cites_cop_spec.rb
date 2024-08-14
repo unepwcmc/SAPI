@@ -27,36 +27,36 @@ require 'spec_helper'
 
 describe CitesCop do
   describe :create do
-    context "when designation invalid" do
-      let(:cites_cop) {
+    context 'when designation invalid' do
+      let(:cites_cop) do
         build(
           :cites_cop,
-          :designation => eu
+          designation: eu
         )
-      }
-      specify { expect(cites_cop).to be_invalid }
+      end
+      specify { expect(cites_cop).not_to be_valid }
       specify { expect(cites_cop).to have(1).error_on(:designation_id) }
     end
-    context "when effective_at is blank" do
-      let(:cites_cop) {
+    context 'when effective_at is blank' do
+      let(:cites_cop) do
         build(
           :cites_cop,
-          :effective_at => nil
+          effective_at: nil
         )
-      }
-      specify { expect(cites_cop).to be_invalid }
+      end
+      specify { expect(cites_cop).not_to be_valid }
       specify { expect(cites_cop).to have(1).error_on(:effective_at) }
     end
   end
 
   describe :destroy do
     let(:cites_cop) { create_cites_cop }
-    context "when no dependent objects attached" do
+    context 'when no dependent objects attached' do
       specify { expect(cites_cop.destroy).to be_truthy }
     end
-    context "when dependent objects attached" do
-      context "when listing changes" do
-        let!(:listing_change) { create_cites_I_addition(:event => cites_cop) }
+    context 'when dependent objects attached' do
+      context 'when listing changes' do
+        let!(:listing_change) { create_cites_I_addition(event: cites_cop) }
         specify { expect(cites_cop.destroy).to be_falsey }
       end
     end

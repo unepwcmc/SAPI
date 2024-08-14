@@ -1,6 +1,6 @@
 class SubmissionWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :admin
+  sidekiq_options queue: :admin
 
   def perform(aru_id, submitter_id)
     submitter = User.find(submitter_id)
@@ -31,9 +31,9 @@ class SubmissionWorker
     # remove uploaded file
     store_dir = aru.csv_source_file.store_dir
     aru.remove_csv_source_file!
-    puts '### removing uploads dir ###'
-    puts Rails.root.join('public', store_dir)
-    FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
+    Rails.logger.debug '### removing uploads dir ###'
+    Rails.logger.debug Rails.public_path.join(store_dir)
+    FileUtils.remove_dir(Rails.public_path.join(store_dir), force: true)
 
     # clear downloads cache
     DownloadsCache.send(:clear_shipments)
@@ -52,7 +52,7 @@ class SubmissionWorker
     tempfile.delete
   end
 
-  private
+private
 
   def upload_on_S3(aru, tempfile)
     begin
@@ -68,5 +68,4 @@ class SubmissionWorker
       Appsignal.add_exception(e) if defined? Appsignal
     end
   end
-
 end

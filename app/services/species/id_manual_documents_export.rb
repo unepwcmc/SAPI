@@ -1,13 +1,12 @@
 class Species::IdManualDocumentsExport < Species::CsvCopyExport
-
   def query
-    rel = Document.from("#{table_name} AS documents")
-                  .where(document_type: ['Document::IdManual', 'Document::VirtualCollege'])
-                  .order('volume, manual_id')
+    rel = Document.from("#{table_name} AS documents").
+      where(document_type: [ 'Document::IdManual', 'Document::VirtualCollege' ]).
+      order('volume, manual_id')
     rel.select(sql_columns)
   end
 
-  private
+private
 
   def resource_name
     'documents'
@@ -18,7 +17,7 @@ class Species::IdManualDocumentsExport < Species::CsvCopyExport
   end
 
   def sql_columns
-    general_subtype_column = <<-SQL
+    general_subtype_column = <<-SQL.squish
       case
         when general_subtype is TRUE
           then 'Whole animals/plants'
@@ -68,5 +67,4 @@ class Species::IdManualDocumentsExport < Species::CsvCopyExport
       'Updated by'
     ]
   end
-
 end

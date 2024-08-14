@@ -53,11 +53,11 @@ class Trade::AnnualReportUpload < ApplicationRecord
   #                 :number_of_records_submitted, :aws_storage_path
 
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
-  belongs_to :trading_country, :class_name => 'GeoEntity', :foreign_key => :trading_country_id
-  validates :csv_source_file, :csv_column_headers => true, :on => :create
+  belongs_to :trading_country, class_name: 'GeoEntity'
+  validates :csv_source_file, csv_column_headers: true, on: :create
 
   scope :created_by_sapi, -> {
-    where("epix_created_by_id IS NULL")
+    where(epix_created_by_id: nil)
   }
 
   after_create :copy_to_sandbox
@@ -73,20 +73,23 @@ class Trade::AnnualReportUpload < ApplicationRecord
 
   # object that represents the particular sandbox table linked to this annual
   # report upload
-  def sandbox(tmp=false)
+  def sandbox(tmp = false)
     return nil if submitted_at.present? && !tmp
+
     @sandbox ||= Trade::Sandbox.new(self)
   end
 
   def sandbox_shipments
     return [] if submitted_at.present?
+
     sandbox.shipments
   end
 
   def validation_errors
     return [] if submitted_at.present?
+
     run_primary_validations
-    if (@validation_errors.count == 0)
+    if @validation_errors.count == 0
       run_secondary_validations
     end
     @validation_errors
@@ -95,15 +98,15 @@ class Trade::AnnualReportUpload < ApplicationRecord
   def to_jq_upload
     if valid?
       {
-        "id" => self.id,
-        "name" => read_attribute(:csv_source_file),
-        "size" => csv_source_file.size,
-        "url" => csv_source_file.url
+        'id' => self.id,
+        'name' => self[:csv_source_file],
+        'size' => csv_source_file.size,
+        'url' => csv_source_file.url
       }
     else
       {
-        "name" => read_attribute(:csv_source_file),
-        'error' => "Upload failed on: " + errors[:csv_source_file].join('; ')
+        'name' => self[:csv_source_file],
+        'error' => 'Upload failed on: ' + errors[:csv_source_file].join('; ')
       }
     end
   end
@@ -111,7 +114,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
   def submit(submitter)
     run_primary_validations
     unless @validation_errors.count == 0
-      self.errors[:base] << "Submit failed, primary validation errors present."
+      self.errors[:base] << 'Submit failed, primary validation errors present.'
       return false
     end
     return false unless sandbox.copy_from_sandbox_to_shipments(submitter)
@@ -120,9 +123,9 @@ class Trade::AnnualReportUpload < ApplicationRecord
     # remove uploaded file
     store_dir = csv_source_file.store_dir
     remove_csv_source_file!
-    puts '### removing uploads dir ###'
-    puts Rails.root.join('public', store_dir)
-    FileUtils.remove_dir(Rails.root.join('public', store_dir), :force => true)
+    Rails.logger.debug '### removing uploads dir ###'
+    Rails.logger.debug Rails.public_path.join(store_dir)
+    FileUtils.remove_dir(Rails.public_path.join(store_dir), force: true)
 
     # clear downloads cache
     DownloadsCacheCleanupWorker.perform_async('shipments')
@@ -135,7 +138,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
     )
 
     # This has been temporarily disabled as originally part of EPIX
-    #ChangesHistoryGeneratorWorker.perform_async(self.id, submitter.id)
+    # ChangesHistoryGeneratorWorker.perform_async(self.id, submitter.id)
   end
 
   def reported_by_exporter?
@@ -146,7 +149,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
     submitted_at.present?
   end
 
-  private
+private
 
   # Expects a relation object
   def run_validations(validation_rules)
@@ -160,14 +163,13 @@ class Trade::AnnualReportUpload < ApplicationRecord
 
   def run_primary_validations
     @validation_errors = run_validations(
-      Trade::ValidationRule.where(:is_primary => true)
+      Trade::ValidationRule.where(is_primary: true)
     )
   end
 
   def run_secondary_validations
     @validation_errors += run_validations(
-      Trade::ValidationRule.where(:is_primary => false)
+      Trade::ValidationRule.where(is_primary: false)
     )
   end
-
 end

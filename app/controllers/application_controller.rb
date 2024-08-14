@@ -6,44 +6,46 @@ class ApplicationController < ActionController::Base
 
   rescue_from CanCan::AccessDenied, with: :access_denied_error
 
-  protected
+protected
 
   def access_denied_error(exception)
-    rescue_path = if request.referrer && request.referrer != request.url
-                    request.referer
-                  elsif current_user.is_manager_or_contributor_or_secretariat?
-                    admin_root_path
-                  else
-                    root_path
-                  end
+    rescue_path =
+      if request.referer && request.referer != request.url
+        request.referer
+      elsif current_user.is_manager_or_contributor_or_secretariat?
+        admin_root_path
+      else
+        root_path
+      end
 
-    message = if current_user.is_manager_or_contributor?
-                case exception.action
-                when :destroy
-                  "You are not authorised to destroy that record"
-                else
-                  exception.message
-                end
-              elsif current_user.is_secretariat?
-                t('secretariat_alert')
-              else
-                "You are not authorised to access this page"
-              end
+    message =
+      if current_user.is_manager_or_contributor?
+        case exception.action
+        when :destroy
+          'You are not authorised to destroy that record'
+        else
+          exception.message
+        end
+      elsif current_user.is_secretariat?
+        t('secretariat_alert')
+      else
+        'You are not authorised to access this page'
+      end
 
-    flash[:error] = message
+    flash.now[:error] = message
     respond_to do |format|
       format.html { redirect_to rescue_path }
-      format.js { render inline: "location.reload();" }
+      format.js { render inline: 'location.reload();' }
     end
   end
 
   def configure_permitted_parameters
-    extra_parameters = [:name, :is_cites_authority, :organisation, :geo_entity_id]
+    extra_parameters = [ :name, :is_cites_authority, :organisation, :geo_entity_id ]
     devise_parameter_sanitizer.permit(:sign_up, keys: extra_parameters)
     devise_parameter_sanitizer.permit(:account_update, keys: extra_parameters)
   end
 
-  private
+private
 
   def track_who_does_it_current_user
     RequestStore.store[:track_who_does_it_current_user] = current_user
@@ -55,9 +57,9 @@ class ApplicationController < ActionController::Base
 
   def metadata_for_search(search)
     {
-      :total => search.total_cnt,
-      :page => search.page,
-      :per_page => search.per_page
+      total: search.total_cnt,
+      page: search.page,
+      per_page: search.per_page
     }
   end
 
@@ -71,11 +73,10 @@ class ApplicationController < ActionController::Base
   end
 
   def save_email
-    session[:email] = params[:user][:email] || ""
+    session[:email] = params[:user][:email] || ''
   end
 
   def delete_email
     session.delete(:email)
   end
-
 end

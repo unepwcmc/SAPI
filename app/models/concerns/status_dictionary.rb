@@ -1,13 +1,11 @@
 module StatusDictionary
-
   def self.included(base)
     base.extend ClassMethods
   end
 
   module ClassMethods
-
     def build_steps(*steps)
-      statuses = ([:new, :submitted, :closed] + steps).map(&:to_s)
+      statuses = ([ :new, :submitted, :closed ] + steps).map(&:to_s)
       const_set(:STEPS, steps)
       build_basic_dictionary(*statuses)
       define_singleton_method :status_dict do
@@ -19,7 +17,7 @@ module StatusDictionary
       end
     end
 
-    protected
+  protected
 
     def define_dynamic_status_check(status)
       class_eval <<-RUBY
@@ -42,6 +40,5 @@ module StatusDictionary
         end
       RUBY
     end
-
   end
 end

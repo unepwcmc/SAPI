@@ -1,9 +1,10 @@
 module Trade::DownloadDataRetriever
-
-  ATTRIBUTES = %w[id year appendix taxon_name class_name order_name family_name genus_name
-                  term importer_reported_quantity exporter_reported_quantity
-                  unit importer exporter origin purpose source
-                  import_permit export_permit origin_permit issue_type].freeze
+  ATTRIBUTES = %w[
+    id year appendix taxon_name class_name order_name family_name genus_name
+    term importer_reported_quantity exporter_reported_quantity
+    unit importer exporter origin purpose source
+    import_permit export_permit origin_permit issue_type
+  ].freeze
 
   ID_MAPPING = {
     commodity: 'term_id',
@@ -14,6 +15,7 @@ module Trade::DownloadDataRetriever
 
   def self.dashboard_download(params)
     return taxonomic_download(params) if params[:type] == 'taxonomy'
+
     query =
       if params[:year].present?
         if params[:type].present?
@@ -37,10 +39,11 @@ module Trade::DownloadDataRetriever
     id = params[:ids]
     year = params[:year]
     return [] if id.empty?
+
     query =
       case params[:group_by]
       when 'exporting'
-        <<-SQL
+        <<-SQL.squish
                SELECT #{ATTRIBUTES.join(',')}
                FROM non_compliant_shipments_view
                WHERE year = #{year}
@@ -49,7 +52,7 @@ module Trade::DownloadDataRetriever
       when 'species'
         appendix = params[:appendix]
         if appendix.present?
-          <<-SQL
+          <<-SQL.squish
                 SELECT #{ATTRIBUTES.join(',')}
                 FROM non_compliant_shipments_view
                 WHERE year = #{year}
@@ -57,7 +60,7 @@ module Trade::DownloadDataRetriever
                 AND appendix = '#{appendix}'
           SQL
         else
-          <<-SQL
+          <<-SQL.squish
                 SELECT #{ATTRIBUTES.join(',')}
                 FROM non_compliant_shipments_view
                 WHERE year = #{year}
@@ -65,7 +68,7 @@ module Trade::DownloadDataRetriever
           SQL
         end
       when 'commodity'
-        <<-SQL
+        <<-SQL.squish
                SELECT #{ATTRIBUTES.join(',')}
                FROM non_compliant_shipments_view
                WHERE year = #{year}
@@ -88,6 +91,7 @@ module Trade::DownloadDataRetriever
       array_ids = plant_timber_distinction(params[:year], mapping, array_ids) if params[:ids].include?('Plants')
     end
     return if array_ids.empty?
+
     query = "SELECT #{ATTRIBUTES.join(',')}
              FROM non_compliant_shipments_view
              WHERE year = #{params[:year]}

@@ -24,15 +24,16 @@ class CommonName < ApplicationRecord
   #   :created_by_id, :updated_by_id
 
   belongs_to :language
-  validates :name, :presence => true,
-    :uniqueness => { :scope => :language_id }
+  validates :name, presence: true,
+    uniqueness: { scope: :language_id }
 
   validate :enforce_latin_chars_for_pdf
 
   def self.english_to_pdf(common_name)
     words = common_name.split
     return common_name if words.size == 1
-    words.last + ", " + common_name.chomp(" " + words.last)
+
+    words.last + ', ' + common_name.chomp(' ' + words.last)
   end
 
   # attribute_accessor to convert postgresql "t" or "f" to a Ruby boolean
@@ -44,10 +45,10 @@ class CommonName < ApplicationRecord
     ActiveRecord::Type::Boolean.new.cast(value)
   end
 
-  private
+private
 
   def enforce_latin_chars_for_pdf
-    return unless name.present? && ['EN', 'FR', 'ES'].include?(language.iso_code1)
+    return unless name.present? && [ 'EN', 'FR', 'ES' ].include?(language.iso_code1)
 
     errors.add(:name, 'in EN/FR/ES must be PDF-friendly') unless
       name.match? PDF_SAFE_REGEX

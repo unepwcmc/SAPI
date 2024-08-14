@@ -1,8 +1,10 @@
 class Trade::TradePlusFilters
   attr_reader :locale
 
-  ATTRIBUTES = %w[importer exporter origin term
-                  source purpose unit year appendix].freeze
+  ATTRIBUTES = %w[
+    importer exporter origin term
+    source purpose unit year appendix
+  ].freeze
 
   LOCALISED_ATTRIBUTES = (ATTRIBUTES - %w[year appendix]).freeze
 
@@ -18,13 +20,13 @@ class Trade::TradePlusFilters
       result[k] = values.sort_by { |i| ordering(k, i['name']) }
 
       # this is to push the "unreported" value at the bottom of the list
-      result[k] = values.partition { |value| value['id'] != 'unreported' }.reduce(:+) if ['sources', 'purposes'].include?(k)
+      result[k] = values.partition { |value| value['id'] != 'unreported' }.reduce(:+) if [ 'sources', 'purposes' ].include?(k)
     end
     result
   end
 
   def query
-    <<-SQL
+    <<-SQL.squish
       SELECT *
       FROM (#{inner_query}) AS s
     SQL
@@ -62,19 +64,19 @@ class Trade::TradePlusFilters
     query = []
     ATTRIBUTES.each do |attr|
       if %w[year appendix].include? attr
-        query << sub_query([attr, attr], attr.pluralize)
+        query << sub_query([ attr, attr ], attr.pluralize)
       elsif %w[importer exporter origin].include? attr
-        query << sub_query([attr, "#{attr}_id", "#{attr}_iso"], attr.pluralize)
+        query << sub_query([ attr, "#{attr}_id", "#{attr}_iso" ], attr.pluralize)
       elsif %w[term source purpose].include? attr
-        query << sub_query([attr, "#{attr}_id", "#{attr}_code"], attr.pluralize)
+        query << sub_query([ attr, "#{attr}_id", "#{attr}_code" ], attr.pluralize)
       else
-        query << sub_query([attr, "#{attr}_id"], attr.pluralize)
+        query << sub_query([ attr, "#{attr}_id" ], attr.pluralize)
       end
     end
-    query << sub_query(["group_name_#{locale}", "group_name_#{locale}"], 'taxonomic_groups')
+    query << sub_query([ "group_name_#{locale}", "group_name_#{locale}" ], 'taxonomic_groups')
     query << country_query
 
-    <<-SQL
+    <<-SQL.squish
       #{query.join(' UNION ') }
     SQL
   end
@@ -86,9 +88,9 @@ class Trade::TradePlusFilters
     json_values << ",'code',#{attributes[2]}" if attributes.grep(/code/).present?
     group_by_attrs = attributes.uniq.join(',')
 
-    # Exclude possible null values for taxonomic groups
+    #  Exclude possible null values for taxonomic groups
     condition = "WHERE #{attributes[0]} IS NOT NULL" if attributes[0] == "group_name_#{locale}"
-    <<-SQL
+    <<-SQL.squish
       SELECT '#{as}' AS attribute_name, json_build_object(#{json_values})::jsonb AS data
       FROM #{table_name}
       #{condition}
@@ -96,7 +98,7 @@ class Trade::TradePlusFilters
     SQL
   end
 
-  private
+private
 
   def table_name
     'trade_plus_complete_mview'

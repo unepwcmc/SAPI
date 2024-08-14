@@ -36,10 +36,10 @@ class EcSrg < Event
   # Migrated to controller (Strong Parameters)
   # attr_accessible :is_current
 
-  has_many :eu_opinions, :foreign_key => :start_event_id,
-    :dependent => :nullify
+  has_many :eu_opinions, foreign_key: :start_event_id,
+    dependent: :nullify
 
-  validates :effective_at, :presence => true
+  validates :effective_at, presence: true
 
   def self.elibrary_document_types
     [
@@ -51,5 +51,4 @@ class EcSrg < Event
       Document::ListOfParticipants
     ]
   end
-
 end

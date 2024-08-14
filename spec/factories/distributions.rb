@@ -23,7 +23,6 @@
 #  taxon_concept_geo_entities_taxon_concept_id_fk  (taxon_concept_id => taxon_concepts.id)
 #
 FactoryBot.define do
-
   factory :geo_relationship_type do
     sequence(:name) { |n| "CONTAINS#{n}" }
   end
@@ -38,10 +37,10 @@ FactoryBot.define do
     name { 'COUNTRY' }
   end
 
-  factory :geo_entity, :aliases => [:related_geo_entity, :trading_country, :importer, :exporter] do
+  factory :geo_entity, aliases: [ :related_geo_entity, :trading_country, :importer, :exporter ] do
     geo_entity_type
     name_en { 'Wonderland' }
-    sequence(:iso_code2) { |n| [n, n + 1].map { |i| (65 + i % 26).chr }.join }
+    sequence(:iso_code2) { |n| [ n, n + 1 ].map { |i| (65 + (i % 26)).chr }.join }
     is_current { true }
   end
 
@@ -49,5 +48,4 @@ FactoryBot.define do
     taxon_concept
     geo_entity
   end
-
 end

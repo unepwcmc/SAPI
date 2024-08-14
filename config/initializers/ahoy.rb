@@ -14,13 +14,13 @@ class Ahoy::Store < Ahoy::DatabaseStore
     data[:city] = geo_ip_data[:city]
     data[:organization] = geo_ip_data[:organization]
 
-    super(data)
+    super
   end
 
   def track_event(data)
     # Map the new column names (since 1.4.0), to old column name (< 1.4.0).
     data[:id] = ensure_uuid(data.delete(:event_id))
-    super(data)
+    super
   end
 
   def ensure_uuid(id)

@@ -29,40 +29,39 @@
 require 'spec_helper'
 
 describe EuOpinion do
-
   describe :create do
-    context "when taxon concept missing" do
-      let(:eu_opinion) {
+    context 'when taxon concept missing' do
+      let(:eu_opinion) do
         build(
           :eu_opinion, taxon_concept: nil
         )
-      }
+      end
 
-      specify { expect(eu_opinion).to be_invalid }
+      specify { expect(eu_opinion).not_to be_valid }
       specify { expect(eu_opinion).to have(1).error_on(:taxon_concept) }
     end
 
-    context "when geo_entity missing" do
-      let(:eu_opinion) {
+    context 'when geo_entity missing' do
+      let(:eu_opinion) do
         build(
           :eu_opinion, geo_entity: nil
         )
-      }
+      end
 
-      specify { expect(eu_opinion).to be_invalid }
+      specify { expect(eu_opinion).not_to be_valid }
       specify { expect(eu_opinion.error_on(:geo_entity).size).to eq(1) }
     end
 
-    context "when start_date missing" do
-      let(:eu_opinion) {
+    context 'when start_date missing' do
+      let(:eu_opinion) do
         build(:eu_opinion, start_date: nil)
-      }
+      end
 
-      specify { expect(eu_opinion).to be_invalid }
+      specify { expect(eu_opinion).not_to be_valid }
       specify { expect(eu_opinion.error_on(:start_date).size).to eq(1) }
     end
 
-    context "when valid" do
+    context 'when valid' do
       before do
         @eu_regulation = create(:ec_srg)
       end
@@ -71,5 +70,4 @@ describe EuOpinion do
       specify { expect(eu_opinion).to be_valid }
     end
   end
-
 end

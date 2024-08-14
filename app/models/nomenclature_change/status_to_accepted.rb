@@ -28,7 +28,7 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   )
   validates :status, inclusion: {
     in: self.status_dict,
-    message: "%{value} is not a valid status"
+    message: '%{value} is not a valid status'
   }
   validate :required_primary_output_name_status, if: :primary_output_or_submitting?
   before_validation :set_output_name_status, if: :primary_output_or_submitting?
@@ -36,8 +36,8 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   before_validation :set_output_parent_id, if: :primary_output_or_submitting?
 
   def required_primary_output_name_status
-    if primary_output && !['N', 'T'].include?(primary_output.name_status)
-      errors.add(:primary_output, "Must be N or T taxon")
+    if primary_output && [ 'N', 'T' ].exclude?(primary_output.name_status)
+      errors.add(:primary_output, 'Must be N or T taxon')
       return false
     end
     true
@@ -49,12 +49,14 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
 
   def set_output_rank_id
     return true if primary_output && primary_output.new_rank_id.present?
+
     primary_output && primary_output.taxon_concept &&
       primary_output.new_rank_id = primary_output.taxon_concept.rank_id
   end
 
   def set_output_parent_id
     return true unless needs_to_set_parent? && primary_output.new_parent_id.nil?
+
     primary_output && primary_output.taxon_concept &&
       primary_output.new_parent_id = primary_output.default_parent.try(:id)
   end
@@ -74,5 +76,4 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
   def needs_to_set_parent?
     primary_output.try(:name_status) == 'T'
   end
-
 end

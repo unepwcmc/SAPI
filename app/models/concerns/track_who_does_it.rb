@@ -8,7 +8,7 @@ module TrackWhoDoesIt
     belongs_to :updater, class_name: 'User', foreign_key: 'updated_by_id', optional: true
   end
 
-  private
+private
 
   def track_who_does_it_create_callback
     current_user = RequestStore.store[:track_who_does_it_current_user]

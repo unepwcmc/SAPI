@@ -1,4 +1,4 @@
-require "active_support/core_ext/integer/time"
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb
@@ -86,13 +86,13 @@ Rails.application.configure do
   config.active_support.disallowed_deprecation_warnings = []
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  config.log_formatter = Logger::Formatter.new
 
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
@@ -130,12 +130,12 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              mailer_credentials[:address],
-    port:                 mailer_credentials[:port],
-    domain:               mailer_credentials[:domain],
-    user_name:            mailer_credentials[:username],
-    password:             mailer_credentials[:password],
-    authentication:       :login,
+    address: mailer_credentials[:address],
+    port: mailer_credentials[:port],
+    domain: mailer_credentials[:domain],
+    user_name: mailer_credentials[:username],
+    password: mailer_credentials[:password],
+    authentication: :login,
     enable_starttls_auto: true
   }
 
@@ -150,7 +150,7 @@ Rails.application.configure do
   # }
 
   config.action_mailer.default_options = {
-    from:     mailer_credentials[:from],
+    from: mailer_credentials[:from],
     reply_to: mailer_credentials[:from]
   }
 end

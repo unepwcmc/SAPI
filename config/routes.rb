@@ -4,9 +4,9 @@ require 'sidekiq/cron/web'
 Rails.application.routes.draw do
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
 
-  devise_for :users, :controllers => { :passwords => "passwords", :registrations => "registrations", :sessions => "sessions" }
+  devise_for :users, controllers: { passwords: 'passwords', registrations: 'registrations', sessions: 'sessions' }
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registratione'
     put 'users' => 'registrations#update', :as => 'user_registration_update'
@@ -38,25 +38,25 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
-  scope "(:locale)", :locale => /en|es|fr/ do
+  scope '(:locale)', locale: /en|es|fr/ do
     namespace :cites_trade do
-      resources :shipments, :only => [:index]
+      resources :shipments, only: [ :index ]
       get 'download' => 'home#download'
       get 'download/view_results' => 'home#view_results'
-      get 'exports/download' => 'exports#download'  # not sure about this, post??
+      get 'exports/download' => 'exports#download' # not sure about this, post??
       get 'download_db' => 'home#download_db'
-      root :to => 'home#index'
+      root to: 'home#index'
     end
   end
 
-  get '/', :to => 'cites_trade/home#index',
-    :constraints => lambda { |request|
+  get '/', to: 'cites_trade/home#index',
+    constraints: lambda { |request|
       request.domain(3) == 'trade.cites.org'
     }
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'species/ember#start'
+  root to: 'species/ember#start'
 
   # See how all your routes lay out with "rake routes"
 

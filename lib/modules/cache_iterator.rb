@@ -1,5 +1,4 @@
 module CacheIterator
-
   def cache_iterator
     cache_key = "#{self.class.name}-#{id}-cache-iterator"
     # fetch the cache key
@@ -15,7 +14,7 @@ module CacheIterator
   end
 
   def increment_cache_iterator
-    Rails.logger.debug "#{self.class.name} #{id} incrementing cache iterator"
+    Rails.logger.debug { "#{self.class.name} #{id} incrementing cache iterator" }
     Rails.cache.write("#{self.class.name}-#{id}-cache-iterator", self.cache_iterator + 1)
     self.class.increment_cache_iterator
   end
@@ -25,7 +24,6 @@ module CacheIterator
   end
 
   module ClassMethods
-
     def cache_iterator
       cache_key = "#{name}-cache-iterator"
       # fetch the cache key
@@ -41,9 +39,8 @@ module CacheIterator
     end
 
     def increment_cache_iterator
-      Rails.logger.debug "#{name} incrementing cache iterator"
+      Rails.logger.debug { "#{name} incrementing cache iterator" }
       Rails.cache.write("#{name}-cache-iterator", self.cache_iterator + 1)
     end
   end
-
 end

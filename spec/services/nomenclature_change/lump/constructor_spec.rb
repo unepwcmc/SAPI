@@ -11,10 +11,10 @@ describe NomenclatureChange::Lump::Constructor do
         @old_inputs = lump.inputs
         constructor.build_inputs
       end
-      context "when previously no inputs in place" do
+      context 'when previously no inputs in place' do
         specify { expect(lump.inputs.size).not_to eq(0) }
       end
-      context "when previously inputs in place" do
+      context 'when previously inputs in place' do
         let(:lump) { lump_with_inputs }
         specify { expect(lump.inputs).to eq(@old_inputs) }
       end
@@ -27,10 +27,10 @@ describe NomenclatureChange::Lump::Constructor do
         @old_output = lump.output
         constructor.build_output
       end
-      context "when previously no output in place" do
+      context 'when previously no output in place' do
         specify { expect(lump.output).not_to be_nil }
       end
-      context "when previously output in place" do
+      context 'when previously output in place' do
         let(:lump) { lump_with_inputs_and_output }
         specify { expect(lump.output).to eq(@old_output) }
       end
@@ -47,38 +47,40 @@ describe NomenclatureChange::Lump::Constructor do
         @old_output_note = output.note_en
         constructor.build_input_and_output_notes
       end
-      context "when previously no notes in place" do
-        let(:lump) {
-          create(:nomenclature_change_lump,
+      context 'when previously no notes in place' do
+        let(:lump) do
+          create(
+            :nomenclature_change_lump,
             inputs_attributes: {
               0 => { taxon_concept_id: input_species1.id },
               1 => { taxon_concept_id: input_species2.id }
             },
             output_attributes: { taxon_concept_id: output_species.id }
           )
-        }
+        end
         specify { expect(input.note_en).not_to be_blank }
         specify { expect(output.note_en).not_to be_blank }
-        context "when output = input" do
-          let(:lump) {
-            create(:nomenclature_change_lump,
+        context 'when output = input' do
+          let(:lump) do
+            create(
+              :nomenclature_change_lump,
               inputs_attributes: {
                 0 => { taxon_concept_id: input_species1.id },
                 1 => { taxon_concept_id: input_species2.id }
               },
               output_attributes: { taxon_concept_id: input_species1.id }
             )
-          }
+          end
           specify { expect(input.note_en).to be_blank }
         end
       end
-      context "when previously notes in place" do
-        let(:input) {
+      context 'when previously notes in place' do
+        let(:input) do
           create(:nomenclature_change_input, nomenclature_change: lump, note_en: 'blah')
-        }
-        let(:output) {
+        end
+        let(:output) do
           create(:nomenclature_change_output, nomenclature_change: lump, note_en: 'blah')
-        }
+        end
         specify { expect(input.note_en).to eq(@old_input_note) }
         specify { expect(output.note_en).to eq(@old_output_note) }
       end
@@ -90,27 +92,27 @@ describe NomenclatureChange::Lump::Constructor do
       end
       include_context 'parent_reassignments_constructor_examples'
 
-      context "when output = input" do
-        let(:input_species) {
+      context 'when output = input' do
+        let(:input_species) do
           s = create_cites_eu_species
           2.times { create_cites_eu_subspecies(parent: s) }
           s
-        }
+        end
         let(:lump_with_inputs_and_output) { lump_with_inputs_and_same_output }
         let(:input) { lump.inputs_intersect_outputs.first }
         let(:default_output) { lump.output }
-        specify {
+        specify do
           reassignment_targets = input.parent_reassignments.map(&:reassignment_target)
-          expect(reassignment_targets.map(&:output).uniq).to(eq([default_output]))
-        }
+          expect(reassignment_targets.map(&:output).uniq).to(eq([ default_output ]))
+        end
       end
 
-      context "when previously reassignments in place" do
-        let(:input) {
+      context 'when previously reassignments in place' do
+        let(:input) do
           i = create(:nomenclature_change_input, nomenclature_change: lump, taxon_concept: input_species)
           create(:nomenclature_change_parent_reassignment, input: i)
           i
-        }
+        end
         specify { expect(input.parent_reassignments).to eq(@old_reassignments) }
       end
     end
@@ -121,29 +123,29 @@ describe NomenclatureChange::Lump::Constructor do
       end
       include_context 'name_reassignments_constructor_examples'
 
-      context "when output = input" do
-        let(:input_species) {
+      context 'when output = input' do
+        let(:input_species) do
           s = create_cites_eu_species
           2.times do
-            create(:taxon_relationship,
+            create(
+              :taxon_relationship,
               taxon_concept: s,
               other_taxon_concept: create_cites_eu_species(name_status: 'S'),
               taxon_relationship_type: synonym_relationship_type
             )
           end
           s
-        }
+        end
         let(:lump_with_inputs_and_output) { lump_with_inputs_and_same_output }
         let(:input) { lump.inputs_intersect_outputs.first }
         let(:default_output) { lump.output }
-        specify {
+        specify do
           reassignment_targets = input.name_reassignments.map do |reassignment|
             reassignment.reassignment_targets
           end.flatten
-          expect(reassignment_targets.map(&:output).uniq).to eq([default_output])
-        }
+          expect(reassignment_targets.map(&:output).uniq).to eq([ default_output ])
+        end
       end
-
     end
     describe :build_distribution_reassignments do
       before(:each) do

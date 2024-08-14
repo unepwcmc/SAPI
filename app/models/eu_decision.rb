@@ -59,16 +59,16 @@ class EuDecision < ApplicationRecord
   #   :created_by_id, :updated_by_id, :srg_history_id
 
   belongs_to :taxon_concept
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
+  belongs_to :m_taxon_concept, foreign_key: :taxon_concept_id, optional: true
   belongs_to :geo_entity
   belongs_to :eu_decision_type, optional: true
   belongs_to :srg_history, optional: true
-  belongs_to :source, :class_name => 'TradeCode', optional: true
-  belongs_to :term, :class_name => 'TradeCode', optional: true
-  belongs_to :start_event, :class_name => 'Event', optional: true
-  belongs_to :end_event, :class_name => 'Event', optional: true
+  belongs_to :source, class_name: 'TradeCode', optional: true
+  belongs_to :term, class_name: 'TradeCode', optional: true
+  belongs_to :start_event, class_name: 'Event', optional: true
+  belongs_to :end_event, class_name: 'Event', optional: true
   has_many :eu_decision_confirmations,
-    :dependent => :destroy
+    dependent: :destroy
 
   validate :eu_decision_type_and_or_srg_history
 
@@ -81,7 +81,7 @@ class EuDecision < ApplicationRecord
   end
 
   def start_date_formatted
-    start_date ? start_date.strftime("%d/%m/%Y") : ""
+    start_date ? start_date.strftime('%d/%m/%Y') : ''
   end
 
   def party
@@ -110,10 +110,11 @@ class EuDecision < ApplicationRecord
 
   def eu_decision_type_and_or_srg_history
     return if eu_decision_type_id || srg_history_id
+
     errors.add(:base, "Eu decision type and SRG history can't be blank at the same time")
   end
 
-  private
+private
 
   def cache_cleanup
     DownloadsCacheCleanupWorker.perform_async('eu_decisions')

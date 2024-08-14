@@ -14,7 +14,7 @@ class Trade::PermitMatcher
     @query.count
   end
 
-  private
+private
 
   def initialize_options(options)
     @page = options[:page] || 1
@@ -26,22 +26,24 @@ class Trade::PermitMatcher
   def initialize_query
     @query = Trade::Permit.order(:number)
     if @permit_query
-      @query = @query.where([
-        "UPPER(number) LIKE :number", :number => "%#{@permit_query}%"
-      ])
+      @query = @query.where(
+        [
+          'UPPER(number) LIKE :number', number: "%#{@permit_query}%"
+        ]
+      )
     end
   end
 
   def sanitize_permit_query(query)
     # negative limit does not suppress trailing nulls
-    query_parts = query.upcase.strip.split('%', -1).map do |qp|
-      if qp.blank?
-        '%' # replace the wildcard
-      else
-        ApplicationRecord.connection.quote_string(qp)
+    query_parts =
+      query.upcase.strip.split('%', -1).map do |qp|
+        if qp.blank?
+          '%' # replace the wildcard
+        else
+          ApplicationRecord.connection.quote_string(qp)
+        end
       end
-    end
     query_parts.join
   end
-
 end

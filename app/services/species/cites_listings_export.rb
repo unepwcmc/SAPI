@@ -1,6 +1,5 @@
 class Species::CitesListingsExport < Species::ListingsExport
-
-  private
+private
 
   def designation_name
     'cites'
@@ -34,5 +33,4 @@ class Species::CitesListingsExport < Species::ListingsExport
       'Distribution_Uncertain'
     ]
   end
-
 end

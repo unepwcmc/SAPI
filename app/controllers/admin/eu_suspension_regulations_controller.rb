@@ -1,7 +1,7 @@
 class Admin::EuSuspensionRegulationsController < Admin::EventsController
   # this needs to be specified, because otherwise defaults to 'event'
-  defaults :resource_class => EuSuspensionRegulation,
-    :collection_name => 'eu_suspension_regulations', :instance_name => 'eu_suspension_regulation'
+  defaults resource_class: EuSuspensionRegulation,
+    collection_name: 'eu_suspension_regulations', instance_name: 'eu_suspension_regulation'
 
   def activate
     @eu_suspension_regulation = EuSuspensionRegulation.find(params[:id])
@@ -17,11 +17,11 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
     render 'create'
   end
 
-  protected
+protected
 
   def collection
     @eu_suspension_regulations ||= end_of_association_chain.
-      includes([:creator, :updater]).
+      includes([ :creator, :updater ]).
       order('effective_at DESC, name ASC').
       page(params[:page]).
       search(params[:query])
@@ -32,7 +32,7 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
       order('effective_at DESC, name ASC')
   end
 
-  private
+private
 
   def eu_suspension_regulation_params
     params.require(:eu_suspension_regulation).permit(

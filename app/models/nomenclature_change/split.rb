@@ -19,24 +19,26 @@
 #
 
 class NomenclatureChange::Split < NomenclatureChange
-  build_steps(:inputs, :outputs, :notes, :children, :names, :distribution,
-    :legislation, :summary)
+  build_steps(
+    :inputs, :outputs, :notes, :children, :names, :distribution,
+    :legislation, :summary
+  )
   # Migrated to controller (Strong Parameters)
   # attr_accessible :input_attributes, :outputs_attributes
-  has_one :input, :inverse_of => :nomenclature_change,
-    :class_name => 'NomenclatureChange::Input',
-    :foreign_key => :nomenclature_change_id,
-    :dependent => :destroy, :autosave => true
-  has_many :outputs, :inverse_of => :nomenclature_change,
-    :class_name => 'NomenclatureChange::Output',
-    :foreign_key => :nomenclature_change_id,
-    :dependent => :destroy, :autosave => true
-  accepts_nested_attributes_for :input, :allow_destroy => true
-  accepts_nested_attributes_for :outputs, :allow_destroy => true
+  has_one :input, inverse_of: :nomenclature_change,
+    class_name: 'NomenclatureChange::Input',
+    foreign_key: :nomenclature_change_id,
+    dependent: :destroy, autosave: true
+  has_many :outputs, inverse_of: :nomenclature_change,
+    class_name: 'NomenclatureChange::Output',
+    foreign_key: :nomenclature_change_id,
+    dependent: :destroy, autosave: true
+  accepts_nested_attributes_for :input, allow_destroy: true
+  accepts_nested_attributes_for :outputs, allow_destroy: true
 
   validates :status, inclusion: {
     in: self.status_dict,
-    message: "%{value} is not a valid status"
+    message: '%{value} is not a valid status'
   }
   validate :required_inputs, if: :inputs_or_submitting?
   validate :required_outputs, if: :outputs_or_submitting?
@@ -57,15 +59,15 @@ class NomenclatureChange::Split < NomenclatureChange
 
   def required_inputs
     if input.blank?
-      errors.add(:input, "Must have one input")
-      return false
+      errors.add(:input, 'Must have one input')
+      false
     end
   end
 
   def required_outputs
     if outputs.size < 2
-      errors.add(:outputs, "Must have at least two outputs")
-      return false
+      errors.add(:outputs, 'Must have at least two outputs')
+      false
     end
   end
 
@@ -73,9 +75,9 @@ class NomenclatureChange::Split < NomenclatureChange
     if !(
       outputs.map do |o|
         o.try(:new_rank_id) || o.try(:taxon_concept).try(:rank_id)
-      end.uniq - [input.try(:taxon_concept).try(:rank_id)]).empty?
-      errors.add(:outputs, "Must be at same rank as input")
-      return false
+      end.uniq - [ input.try(:taxon_concept).try(:rank_id) ]).empty?
+      errors.add(:outputs, 'Must be at same rank as input')
+      false
     end
   end
 
@@ -83,8 +85,8 @@ class NomenclatureChange::Split < NomenclatureChange
     outputs.each do |output|
       if output.new_name_status.blank? && (
         output.new_scientific_name.present? ||
-        output.taxon_concept && output.taxon_concept.name_status != 'A'
-        )
+        (output.taxon_concept && output.taxon_concept.name_status != 'A')
+      )
         output.new_name_status = 'A'
       end
     end
@@ -94,8 +96,8 @@ class NomenclatureChange::Split < NomenclatureChange
     outputs.each do |output|
       if output.new_rank_id.blank? && (
         output.new_scientific_name.present? ||
-        output.taxon_concept && output.taxon_concept.rank_id != new_output_rank.id
-        )
+        (output.taxon_concept && output.taxon_concept.rank_id != new_output_rank.id)
+      )
         output.new_rank_id = new_output_rank.id
       end
     end

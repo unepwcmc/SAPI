@@ -22,50 +22,50 @@ require 'spec_helper'
 
 describe TaxonCommon do
   describe :update do
-    let(:language) {
+    let(:language) do
       create(:language)
-    }
-    let(:parent) {
+    end
+    let(:parent) do
       create_cites_eu_genus(
-        :taxon_name => create(:taxon_name, :scientific_name => 'Lolcatus')
+        taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
       )
-    }
-    let!(:tc) {
+    end
+    let!(:tc) do
       create_cites_eu_species(
-        :parent_id => parent.id,
-        :taxon_name => create(:taxon_name, :scientific_name => 'lolatus')
+        parent_id: parent.id,
+        taxon_name: create(:taxon_name, scientific_name: 'lolatus')
       )
-    }
-    let!(:another_tc) {
+    end
+    let!(:another_tc) do
       create_cites_eu_species(
-        :parent_id => parent.id,
-        :taxon_name => create(:taxon_name, :scientific_name => 'lolcatus')
+        parent_id: parent.id,
+        taxon_name: create(:taxon_name, scientific_name: 'lolcatus')
       )
-    }
-    let(:tc_common) {
+    end
+    let(:tc_common) do
       build(
         :taxon_common,
-        :taxon_concept_id => tc.id,
-        :name => 'Lolcat',
-        :language_id => language.id
+        taxon_concept_id: tc.id,
+        name: 'Lolcat',
+        language_id: language.id
       )
-    }
-    context "when common name changed" do
-      let(:another_tc_common) {
+    end
+    context 'when common name changed' do
+      let(:another_tc_common) do
         build(
           :taxon_common,
-          :taxon_concept_id => another_tc.id,
-          :name => 'Lolcat',
-          :language_id => language.id
+          taxon_concept_id: another_tc.id,
+          name: 'Lolcat',
+          language_id: language.id
         )
-      }
-      specify {
+      end
+      specify do
         tc_common.save
         another_tc_common.save
-        tc_common.name = "Black lolcat"
+        tc_common.name = 'Black lolcat'
         tc_common.save
         expect(another_tc.common_names.map(&:name)).to include('Lolcat')
-      }
+      end
     end
   end
 end

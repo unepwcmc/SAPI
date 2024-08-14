@@ -3,15 +3,15 @@ class Checklist::Pdf::HistoryAnnotationsKey
 
   def annotations_key
     tex = "\\newpage\n"
-    tex << "\\parindent 0in"
+    tex << '\\parindent 0in'
     tex << "\\cpart{\\historicalSummaryOfAnnotations}\n"
     tex << hash_annotations_key
-    tex << "\\parindent -0.1in"
+    tex << '\\parindent -0.1in'
     tex
   end
 
   def hash_annotations_key
-    tex = "\\hashAnnotationsHistoryInfo" + "\n\n"
+    tex = '\\hashAnnotationsHistoryInfo' + "\n\n"
     cops = CitesCop.order('effective_at')
     cops.each do |cop|
       annotations = cop.hash_annotations.order(Arel.sql('SUBSTRING(symbol FROM 2)::INT'))
@@ -28,5 +28,4 @@ class Checklist::Pdf::HistoryAnnotationsKey
     end
     tex
   end
-
 end

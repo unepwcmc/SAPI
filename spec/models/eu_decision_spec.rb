@@ -77,10 +77,10 @@ describe EuDecision, sidekiq: :inline do
   end
 
   describe :create do
-    context "downloads cache should be populated" do
+    context 'downloads cache should be populated' do
       before(:each) do
         DownloadsCache.clear_eu_decisions
-        create(:eu_decision, :start_date => Time.utc(2013), :type => 'EuOpinion')
+        create(:eu_decision, start_date: Time.utc(2013), type: 'EuOpinion')
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
       end
       subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
@@ -121,10 +121,10 @@ describe EuDecision, sidekiq: :inline do
   end
 
   describe :destroy do
-    context "downloads cache should be cleared" do
+    context 'downloads cache should be cleared' do
       before(:each) do
         DownloadsCache.clear_eu_decisions
-        d = create(:eu_decision, :start_date => Time.utc(2013))
+        d = create(:eu_decision, start_date: Time.utc(2013))
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
         d.destroy
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
@@ -133,5 +133,4 @@ describe EuDecision, sidekiq: :inline do
       specify { expect(subject).to be_empty }
     end
   end
-
 end

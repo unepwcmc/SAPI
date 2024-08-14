@@ -19,7 +19,7 @@ gem 'sass-rails', '~> 5.0'
 
 # https://stackoverflow.com/questions/55213868/rails-6-how-to-disable-webpack-and-use-sprockets-instead
 gem 'sprockets', '3.7.2'
-gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'sprockets-rails', require: 'sprockets/railtie'
 
 # Use Terser as compressor for JavaScript assets
 gem 'terser', '~> 1.2.3'
@@ -121,12 +121,24 @@ group :development do
   gem 'slackistrano', '0.1.9', require: false
 
   gem 'jslint_on_rails', '1.1.1'
+
+  ##
+  # Rubocop and its plugins
+  gem 'rubocop'
+  gem 'rubocop-capybara'
+  gem 'rubocop-factory_bot'
   gem 'rubocop-rails'
+  gem 'rubocop-rails-omakase'
   gem 'rubocop-rspec'
+  gem 'rubocop-rspec_rails'
+
+  ##
+  # For capistrano ssh
   gem 'rbnacl', '4.0.2'
   gem 'rbnacl-libsodium', '1.0.16'
   gem 'bcrypt_pbkdf', '1.1.0'
   gem 'ed25519', '1.2.4'
+
   # @TODO: bring back when ruby updated to > 2.6 # gem 'net-ssh', '7.0.0.beta1' # openssl 3.0 compatibility @see https://stackoverflow.com/q/72068406/1090438
 end
 
@@ -135,7 +147,7 @@ group :test, :development do
   gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
   gem 'json_spec', '~> 1.1', '>= 1.1.5'
   gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
-  gem "launchy", '2.4.3'
+  gem 'launchy', '2.4.3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 end
@@ -149,7 +161,7 @@ group :test do
 
   gem 'rails-controller-testing'
   gem 'factory_bot_rails', '5.2.0'
-  gem 'simplecov', '~> 0.22.0', :require => false
+  gem 'simplecov', '~> 0.22.0', require: false
   gem 'coveralls_reborn', '~> 0.28.0', require: false
 end
 

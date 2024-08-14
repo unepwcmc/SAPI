@@ -1,20 +1,20 @@
 class Admin::PurposesController < Admin::StandardAuthorizationController
-  respond_to :json, :only => [:update]
+  respond_to :json, only: [ :update ]
 
   def index
     index! do |format|
-      format.html { render :template => 'admin/trade_codes/index' }
+      format.html { render template: 'admin/trade_codes/index' }
     end
   end
 
   def create
     create! do |success, failure|
-      success.js { render :template => 'admin/trade_codes/create' }
-      failure.js { render :template => 'admin/trade_codes/new' }
+      success.js { render template: 'admin/trade_codes/create' }
+      failure.js { render template: 'admin/trade_codes/new' }
     end
   end
 
-  protected
+protected
 
   def collection
     @purposes ||= end_of_association_chain.order('code').
@@ -22,7 +22,7 @@ class Admin::PurposesController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 
-  private
+private
 
   def purpose_params
     params.require(:purpose).permit(

@@ -1,27 +1,30 @@
 class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializer
-
   attributes :cms_listing
-  has_many :cms_listing_changes, :serializer => Species::ListingChangeSerializer,
-    :key => :cms_listings
-  has_many :cms_instruments, :serializer => Species::CmsInstrumentsSerializer
+  has_many :cms_listing_changes, serializer: Species::ListingChangeSerializer,
+    key: :cms_listings
+  has_many :cms_instruments, serializer: Species::CmsInstrumentsSerializer
 
   def include_standard_references?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_taxon_concept_references?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_distribution_references?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_cms_listing?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
@@ -31,7 +34,7 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
         'listing_changes_mview.taxon_concept_id' => object_and_children,
         'listing_changes_mview.show_in_history' => true
       ).
-      where(<<-SQL
+      where(<<-SQL.squish
               taxon_concepts_mview.rank_name = 'SPECIES' OR
               (
                 (
@@ -41,13 +44,13 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
                 AND listing_changes_mview.auto_note_en IS NULL
               )
             SQL
-      ).
-      joins(<<-SQL
+           ).
+      joins(<<-SQL.squish
               INNER JOIN taxon_concepts_mview
                 ON taxon_concepts_mview.id = listing_changes_mview.taxon_concept_id
             SQL
-      ).
-      select(<<-SQL
+           ).
+      select(<<-SQL.squish
               CASE
                 WHEN listing_changes_mview.change_type_name = 'DELETION'
                   THEN 'f'
@@ -71,12 +74,13 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
                 ELSE NULL
               END AS subspecies_info
            SQL
-      ).
-      order(Arel.sql(<<-SQL
+            ).
+      order(Arel.sql(<<-SQL.squish
           effective_at DESC,
           subspecies_info DESC
         SQL
-      )).all
+                    )
+           ).all
   end
 
   def cms_instruments
@@ -86,5 +90,4 @@ class Species::ShowTaxonConceptSerializerCms < Species::ShowTaxonConceptSerializ
   def cms_listing
     object.listing && object.listing['cms_listing']
   end
-
 end

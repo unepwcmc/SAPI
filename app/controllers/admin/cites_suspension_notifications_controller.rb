@@ -1,9 +1,9 @@
 class Admin::CitesSuspensionNotificationsController < Admin::EventsController
   # this needs to be specified, because otherwise defaults to 'event'
-  defaults :resource_class => CitesSuspensionNotification,
-    :collection_name => 'cites_suspension_notifications', :instance_name => 'cites_suspension_notification'
+  defaults resource_class: CitesSuspensionNotification,
+    collection_name: 'cites_suspension_notifications', instance_name: 'cites_suspension_notification'
 
-  protected
+protected
 
   def collection
     @cites_suspension_notifications ||= end_of_association_chain.
@@ -13,7 +13,7 @@ class Admin::CitesSuspensionNotificationsController < Admin::EventsController
       search(params[:query])
   end
 
-  private
+private
 
   def cites_suspension_notification_params
     params.require(:cites_suspension_notification).permit(

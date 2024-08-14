@@ -1,4 +1,4 @@
-require "active_support/core_ext/integer/time"
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -57,9 +57,9 @@ Rails.application.configure do
   # TODO: Since Rails 7.1, the log no longer output to file, but STDOUT, which is the better approach, specially suitable
   # for docker. However this project still deploying use cap, we may need to change it back until we ready?
   # Log to STDOUT by default
-  config.logger = ActiveSupport::Logger.new(STDOUT)
-    .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-    .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+  config.logger = ActiveSupport::Logger.new(STDOUT).
+    tap  { |logger| logger.formatter = Logger::Formatter.new }.
+    then { |logger| ActiveSupport::TaggedLogging.new(logger) }
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
@@ -117,12 +117,12 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              mailer_credentials[:address],
-    port:                 mailer_credentials[:port],
-    domain:               mailer_credentials[:domain],
-    user_name:            mailer_credentials[:username],
-    password:             mailer_credentials[:password],
-    authentication:       :login,
+    address: mailer_credentials[:address],
+    port: mailer_credentials[:port],
+    domain: mailer_credentials[:domain],
+    user_name: mailer_credentials[:username],
+    password: mailer_credentials[:password],
+    authentication: :login,
     enable_starttls_auto: true
   }
 
@@ -137,7 +137,7 @@ Rails.application.configure do
   # }
 
   config.action_mailer.default_options = {
-    from:     mailer_credentials[:from],
+    from: mailer_credentials[:from],
     reply_to: mailer_credentials[:from]
   }
 end

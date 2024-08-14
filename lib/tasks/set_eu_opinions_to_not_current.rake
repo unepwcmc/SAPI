@@ -1,8 +1,8 @@
-task :set_eu_opinions_to_not_current => :environment do
+task set_eu_opinions_to_not_current: :environment do
   TMP_TABLE = 'eu_opinions_to_not_current'
   filename = 'lib/files/eu_opinions_4404_Conolophus_to_be_reset_to_not_current.csv'
   drop_table(TMP_TABLE)
-  db_columns = %w(taxon_concept_id start_regulation_name country_name start_date opinion_name term_code source_code is_current)
+  db_columns = %w[taxon_concept_id start_regulation_name country_name start_date opinion_name term_code source_code is_current]
   create_table_from_column_array(TMP_TABLE, db_columns.map { |c| c == 'taxon_concept_id' ? "#{c} INTEGER" : "#{c} TEXT" })
   copy_data_into_table(filename, TMP_TABLE, db_columns)
 

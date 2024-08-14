@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import hash annotations from csv file (usage: rake import:hash_annotations[path/to/file,path/to/another])'
-  task :hash_annotations, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :hash_annotations, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'hash_annotations_import'
     puts "There are #{Annotation.count} annotations in the database."
     files = files_from_args(t, args)
@@ -10,9 +9,9 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      designation_id = Designation.find_by_name(file.split('.')[0].split('_')[2].upcase).id
+      designation_id = Designation.find_by(name: file.split('.')[0].split('_')[2].upcase).id
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO annotations (symbol, parent_symbol, event_id, full_note_en, created_at, updated_at)
         SELECT subquery.*, NOW(), NOW()
         FROM (
@@ -34,9 +33,9 @@ namespace :import do
   end
 
   desc 'Import hash annotation translations'
-  task :hash_annotations_cites_translations => [:environment] do
-    TMP_TABLE = "hash_annotations_translations_import"
-    file = "lib/files/hash_annotations_cites_translations.csv"
+  task hash_annotations_cites_translations: [ :environment ] do
+    TMP_TABLE = 'hash_annotations_translations_import'
+    file = 'lib/files/hash_annotations_cites_translations.csv'
     drop_table(TMP_TABLE)
     create_table_from_csv_headers(file, TMP_TABLE)
     copy_data(file, TMP_TABLE)
@@ -44,7 +43,7 @@ namespace :import do
     res = ApplicationRecord.connection.execute("SELECT COUNT(*) FROM #{TMP_TABLE}")
     puts "Attempting to import #{res[0]['count']} rows"
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH translated_annotations AS (
         SELECT
         annotations.id,
@@ -70,5 +69,4 @@ namespace :import do
 
     puts "Updated #{res.cmd_tuples} rows"
   end
-
 end

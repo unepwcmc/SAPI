@@ -16,5 +16,4 @@ class SearchParams
   def persisted?
     false
   end
-
 end

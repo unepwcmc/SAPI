@@ -36,21 +36,20 @@ class CitesTc < Event
   # Migrated to controller (Strong Parameters)
   # attr_accessible :is_current
 
-  validates :effective_at, :presence => true
+  validates :effective_at, presence: true
 
   before_destroy :check_for_documents
 
   def self.elibrary_document_types
-    [Document::ReviewOfSignificantTrade]
+    [ Document::ReviewOfSignificantTrade ]
   end
 
-  private
+private
 
   def check_for_documents
     if documents.present?
-      errors.add(:base, "failed. Please delete the associated documents before destroying this event.")
+      errors.add(:base, 'failed. Please delete the associated documents before destroying this event.')
       throw :abort
     end
   end
-
 end

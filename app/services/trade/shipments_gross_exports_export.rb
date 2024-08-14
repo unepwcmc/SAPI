@@ -7,7 +7,7 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
     csv_column_headers + years
   end
 
-  private
+private
 
   def query_sql(options)
     headers = csv_column_headers
@@ -18,7 +18,7 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
   end
 
   def resource_name
-    "gross_exports"
+    'gross_exports'
   end
 
   def outer_report_columns
@@ -46,30 +46,30 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
 
   def available_columns
     {
-      :appendix => {},
-      :taxon => {},
-      :taxon_concept_id => { :internal => true },
-      :term => { :en => :term_name_en, :es => :term_name_es, :fr => :term_name_fr },
-      :unit => { :en => :unit_name_en, :es => :unit_name_es, :fr => :unit_name_fr },
-      :country => {},
-      :year => { :subquery => true },
-      :gross_quantity => { :subquery => true }
+      appendix: {},
+      taxon: {},
+      taxon_concept_id: { internal: true },
+      term: { en: :term_name_en, es: :term_name_es, fr: :term_name_fr },
+      unit: { en: :unit_name_en, es: :unit_name_es, fr: :unit_name_fr },
+      country: {},
+      year: { subquery: true },
+      gross_quantity: { subquery: true }
     }
   end
 
   # extra columns returned by crosstab
   def row_name_columns
-    [:appendix, :taxon, :term, :unit, :country]
+    [ :appendix, :taxon, :term, :unit, :country ]
   end
 
   def crosstab_columns
     {
-      :appendix => { :pg_type => 'TEXT' },
-      :taxon_concept_id => { :pg_type => 'INT' },
-      :taxon => { :pg_type => 'TEXT' },
-      :term => { :pg_type => 'TEXT' },
-      :unit => { :pg_type => 'TEXT' },
-      :country => { :pg_type => 'TEXT' }
+      appendix: { pg_type: 'TEXT' },
+      taxon_concept_id: { pg_type: 'INT' },
+      taxon: { pg_type: 'TEXT' },
+      term: { pg_type: 'TEXT' },
+      unit: { pg_type: 'TEXT' },
+      country: { pg_type: 'TEXT' }
     }
   end
 
@@ -100,21 +100,20 @@ class Trade::ShipmentsGrossExportsExport < Trade::ShipmentsComptabExport
       #{sql_crosstab_columns.join(', ')}, year, gross_quantity
       FROM (#{subquery_sql(options)}) subquery
       ORDER BY 1, #{sql_crosstab_columns.length + 2}" # order by row_name and year
-    source_sql = ApplicationRecord.send(:sanitize_sql_array, [source_sql, years])
+    source_sql = ApplicationRecord.send(:sanitize_sql_array, [ source_sql, years ])
     source_sql = ApplicationRecord.connection.quote_string(source_sql)
     # the categories query returns values by which to pivot (years)
     categories_sql = 'SELECT * FROM UNNEST(ARRAY[?])'
-    categories_sql = ApplicationRecord.send(:sanitize_sql_array, [categories_sql, years.map(&:to_i)])
+    categories_sql = ApplicationRecord.send(:sanitize_sql_array, [ categories_sql, years.map(&:to_i) ])
     ct_columns = [
       'row_name TEXT[]',
       report_crosstab_columns.map.each_with_index { |c, i| "#{sql_crosstab_columns[i]} #{crosstab_columns[c][:pg_type]}" },
       years_columns.map { |y| "#{y} text" }
     ].flatten.join(', ')
     # a set returning query requires that output columns are specified
-    <<-SQL
+    <<-SQL.squish
       SELECT * FROM CROSSTAB('#{source_sql}', '#{categories_sql}')
       AS ct(#{ct_columns})
     SQL
   end
-
 end

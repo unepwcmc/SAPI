@@ -11,7 +11,7 @@ class Checklist::ChecklistParams < Hash
       # alphabetical (flat, alphabetical order)
       output_layout: whitelist_param(
         sanitise_symbol(params[:output_layout]),
-        [:taxonomic, :alphabetical, :appendix],
+        [ :taxonomic, :alphabetical, :appendix ],
         :alphabetical
       ),
       level_of_listing: sanitise_boolean(params[:level_of_listing], false),
@@ -38,5 +38,4 @@ class Checklist::ChecklistParams < Hash
   def self.sanitize(params)
     new(params)
   end
-
 end

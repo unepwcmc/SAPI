@@ -1,7 +1,7 @@
 class NomenclatureChange::StatusToAccepted::Processor < NomenclatureChange::Processor
   include NomenclatureChange::StatusChange::ProcessorHelpers
 
-  private
+private
 
   # Constructs an array of subprocessors which will be run in sequence
   # A subprocessor needs to respond to #run
@@ -21,5 +21,4 @@ class NomenclatureChange::StatusToAccepted::Processor < NomenclatureChange::Proc
     @primary_output = @nc.primary_output
     @secondary_output = @nc.secondary_output
   end
-
 end

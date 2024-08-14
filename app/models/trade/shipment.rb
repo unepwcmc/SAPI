@@ -86,31 +86,31 @@ class Trade::Shipment < ApplicationRecord
 
   attr_accessor :reporter_type, :warnings, :ignore_warnings
 
-  validates :quantity, :presence => true, :numericality => {
-    :greater_than_or_equal_to => 0, :message => 'should be a positive number'
+  validates :quantity, presence: true, numericality: {
+    greater_than_or_equal_to: 0, message: 'should be a positive number'
   }
-  validates :appendix, :presence => true, :inclusion => {
-    :in => ['I', 'II', 'III', 'N'], :message => 'should be one of I, II, III, N'
+  validates :appendix, presence: true, inclusion: {
+    in: [ 'I', 'II', 'III', 'N' ], message: 'should be one of I, II, III, N'
   }
-  validates :year, :presence => true, :numericality => {
-    :only_integer => true, :greater_than_or_equal_to => 1975, :less_than => 3000,
-    :message => 'should be a 4 digit year'
+  validates :year, presence: true, numericality: {
+    only_integer: true, greater_than_or_equal_to: 1975, less_than: 3000,
+    message: 'should be a 4 digit year'
   }
-  validates :reporter_type, :presence => true, :inclusion => {
-    :in => ['E', 'I'], :message => 'should be one of E, I'
+  validates :reporter_type, presence: true, inclusion: {
+    in: [ 'E', 'I' ], message: 'should be one of E, I'
   }
   validates_with Trade::ShipmentSecondaryErrorsValidator
 
   belongs_to :taxon_concept
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
-  belongs_to :reported_taxon_concept, :class_name => 'TaxonConcept', optional: true
-  belongs_to :purpose, :class_name => "TradeCode", optional: true
-  belongs_to :source, :class_name => "TradeCode", optional: true
-  belongs_to :term, :class_name => "TradeCode"
-  belongs_to :unit, :class_name => "TradeCode", optional: true
-  belongs_to :country_of_origin, :class_name => "GeoEntity", optional: true
-  belongs_to :exporter, :class_name => "GeoEntity"
-  belongs_to :importer, :class_name => "GeoEntity"
+  belongs_to :m_taxon_concept, foreign_key: :taxon_concept_id, optional: true
+  belongs_to :reported_taxon_concept, class_name: 'TaxonConcept', optional: true
+  belongs_to :purpose, class_name: 'TradeCode', optional: true
+  belongs_to :source, class_name: 'TradeCode', optional: true
+  belongs_to :term, class_name: 'TradeCode'
+  belongs_to :unit, class_name: 'TradeCode', optional: true
+  belongs_to :country_of_origin, class_name: 'GeoEntity', optional: true
+  belongs_to :exporter, class_name: 'GeoEntity'
+  belongs_to :importer, class_name: 'GeoEntity'
 
   before_save do
     @old_permits_ids = []
@@ -128,7 +128,7 @@ class Trade::Shipment < ApplicationRecord
   before_destroy do
     @old_permits_ids = permits_ids.dup
   end
-  after_commit :async_tasks_after_save, on: [:create, :update]
+  after_commit :async_tasks_after_save, on: [ :create, :update ]
   after_commit :async_tasks_for_destroy, on: :destroy
 
   after_validation do
@@ -150,6 +150,7 @@ class Trade::Shipment < ApplicationRecord
 
   def reporter_type
     return nil if reported_by_exporter.nil?
+
     reported_by_exporter ? 'E' : 'I'
   end
 
@@ -199,7 +200,7 @@ class Trade::Shipment < ApplicationRecord
     ).uniq.compact || []
   end
 
-  private
+private
 
   # note: this updates the precomputed fields
   # needs to be invoked via custom permit number setters
@@ -209,7 +210,7 @@ class Trade::Shipment < ApplicationRecord
       Trade::Permit.find_or_create_by(number: number.strip.upcase)
     end
     # save the concatenated permit numbers in the precomputed field
-    write_attribute("#{permit_type}_permit_number", permits && permits.map(&:number).join(';'))
+    self["#{permit_type}_permit_number"] = permits && permits.map(&:number).join(';')
     # save the array of permit ids in the precomputed field
     send("#{permit_type}_permits_ids=", permits && permits.map(&:id))
   end

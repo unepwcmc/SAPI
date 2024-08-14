@@ -1,20 +1,20 @@
 class Admin::TermsController < Admin::StandardAuthorizationController
-  respond_to :json, :only => [:update]
+  respond_to :json, only: [ :update ]
 
   def index
     index! do |format|
-      format.html { render :template => 'admin/trade_codes/index' }
+      format.html { render template: 'admin/trade_codes/index' }
     end
   end
 
   def create
     create! do |success, failure|
-      success.js { render :template => 'admin/trade_codes/create' }
-      failure.js { render :template => 'admin/trade_codes/new' }
+      success.js { render template: 'admin/trade_codes/create' }
+      failure.js { render template: 'admin/trade_codes/new' }
     end
   end
 
-  protected
+protected
 
   def collection
     @terms ||= end_of_association_chain.order('code').
@@ -22,7 +22,7 @@ class Admin::TermsController < Admin::StandardAuthorizationController
       search(params[:query])
   end
 
-  private
+private
 
   def term_params
     params.require(:term).permit(:code, :type, :name_en, :name_es, :name_fr)

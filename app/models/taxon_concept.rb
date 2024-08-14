@@ -54,7 +54,7 @@ class TaxonConcept < ApplicationRecord
   include Deletable
   extend Mobility
   include TrackWhoDoesIt
-  has_paper_trail versions: { class_name: "TaxonConceptVersion" }, on: :destroy,
+  has_paper_trail versions: { class_name: 'TaxonConceptVersion' }, on: :destroy,
     meta: {
       taxon_concept_id: :id,
       taxonomy_name: :taxonomy_name,
@@ -82,80 +82,80 @@ class TaxonConcept < ApplicationRecord
   # serialize :data, coder: ActiveRecord::Coders::Hstore
   # serialize :listing, coder: ActiveRecord::Coders::Hstore
 
-  has_one :m_taxon_concept, :foreign_key => :id
+  has_one :m_taxon_concept, foreign_key: :id
 
   belongs_to :dependents_updater, foreign_key: :dependents_updated_by_id, class_name: 'User', optional: true
-  belongs_to :parent, :class_name => 'TaxonConcept', optional: true
-  has_many :children, -> { where(name_status: ['A', 'N']) }, class_name: 'TaxonConcept', foreign_key: :parent_id # conditions: { name_status: ['A', 'N'] }
+  belongs_to :parent, class_name: 'TaxonConcept', optional: true
+  has_many :children, -> { where(name_status: [ 'A', 'N' ]) }, class_name: 'TaxonConcept', foreign_key: :parent_id # conditions: { name_status: ['A', 'N'] }
   belongs_to :rank
   belongs_to :taxonomy
-  has_many :designations, :through => :taxonomy
+  has_many :designations, through: :taxonomy
   belongs_to :taxon_name, optional: true
-  has_many :taxon_relationships, :dependent => :destroy
-  has_many :inverse_taxon_relationships, :class_name => 'TaxonRelationship',
-    :foreign_key => :other_taxon_concept_id, :dependent => :destroy
-  has_many :related_taxon_concepts, :class_name => 'TaxonConcept',
-    :through => :taxon_relationships
+  has_many :taxon_relationships, dependent: :destroy
+  has_many :inverse_taxon_relationships, class_name: 'TaxonRelationship',
+    foreign_key: :other_taxon_concept_id, dependent: :destroy
+  has_many :related_taxon_concepts, class_name: 'TaxonConcept',
+    through: :taxon_relationships
   has_many :synonym_relationships, -> { TaxonRelationship.synonyms },
-    :class_name => 'TaxonRelationship', :dependent => :destroy
+    class_name: 'TaxonRelationship', dependent: :destroy
 
   has_many :inverse_synonym_relationships, -> { TaxonRelationship.synonyms },
-    :class_name => 'TaxonRelationship',
-    :foreign_key => :other_taxon_concept_id, :dependent => :destroy
+    class_name: 'TaxonRelationship',
+    foreign_key: :other_taxon_concept_id, dependent: :destroy
 
-  has_many :synonyms, :class_name => 'TaxonConcept',
-    :through => :synonym_relationships, :source => :other_taxon_concept
-  has_many :accepted_names, :class_name => 'TaxonConcept',
-    :through => :inverse_synonym_relationships, :source => :taxon_concept
+  has_many :synonyms, class_name: 'TaxonConcept',
+    through: :synonym_relationships, source: :other_taxon_concept
+  has_many :accepted_names, class_name: 'TaxonConcept',
+    through: :inverse_synonym_relationships, source: :taxon_concept
   has_many :hybrid_relationships, -> { TaxonRelationship.hybrids },
-    :class_name => 'TaxonRelationship', :dependent => :destroy
+    class_name: 'TaxonRelationship', dependent: :destroy
 
   has_many :inverse_hybrid_relationships, -> { TaxonRelationship.hybrids },
-    :class_name => 'TaxonRelationship',
-    :foreign_key => :other_taxon_concept_id, :dependent => :destroy
+    class_name: 'TaxonRelationship',
+    foreign_key: :other_taxon_concept_id, dependent: :destroy
 
-  has_many :hybrids, :class_name => 'TaxonConcept',
-    :through => :hybrid_relationships, :source => :other_taxon_concept
-  has_many :hybrid_parents, :class_name => 'TaxonConcept',
-    :through => :inverse_hybrid_relationships, :source => :taxon_concept
+  has_many :hybrids, class_name: 'TaxonConcept',
+    through: :hybrid_relationships, source: :other_taxon_concept
+  has_many :hybrid_parents, class_name: 'TaxonConcept',
+    through: :inverse_hybrid_relationships, source: :taxon_concept
   has_many :trade_name_relationships, -> { TaxonRelationship.trades },
-    :class_name => 'TaxonRelationship', :dependent => :destroy
+    class_name: 'TaxonRelationship', dependent: :destroy
 
   has_many :inverse_trade_name_relationships, -> { TaxonRelationship.trades },
-    :class_name => 'TaxonRelationship',
-    :foreign_key => :other_taxon_concept_id, :dependent => :destroy
+    class_name: 'TaxonRelationship',
+    foreign_key: :other_taxon_concept_id, dependent: :destroy
 
-  has_many :trade_names, :class_name => 'TaxonConcept',
-    :through => :trade_name_relationships, :source => :other_taxon_concept
-  has_many :accepted_names_for_trade_name, :class_name => 'TaxonConcept',
-    :through => :inverse_trade_name_relationships, :source => :taxon_concept
-  has_many :distributions, :dependent => :destroy
-  has_many :geo_entities, :through => :distributions
+  has_many :trade_names, class_name: 'TaxonConcept',
+    through: :trade_name_relationships, source: :other_taxon_concept
+  has_many :accepted_names_for_trade_name, class_name: 'TaxonConcept',
+    through: :inverse_trade_name_relationships, source: :taxon_concept
+  has_many :distributions, dependent: :destroy
+  has_many :geo_entities, through: :distributions
   has_many :listing_changes
-  has_many :current_listing_changes,  -> { where 'is_current = true' }, :class_name => 'ListingChange'
-  has_many :species_listings, :through => :listing_changes
-  has_many :taxon_commons, -> { includes :common_name }, :dependent => :destroy
-  has_many :common_names, :through => :taxon_commons
+  has_many :current_listing_changes, -> { where 'is_current = true' }, class_name: 'ListingChange'
+  has_many :species_listings, through: :listing_changes
+  has_many :taxon_commons, -> { includes :common_name }, dependent: :destroy
+  has_many :common_names, through: :taxon_commons
 
-  has_many :taxon_concept_references, -> { includes :reference }, :dependent => :destroy
-  has_many :references, :through => :taxon_concept_references
+  has_many :taxon_concept_references, -> { includes :reference }, dependent: :destroy
+  has_many :references, through: :taxon_concept_references
 
   has_many :quotas, -> { order 'start_date DESC' }
-  has_many :current_quotas, -> { where "is_current = true" }, :class_name => 'Quota'
+  has_many :current_quotas, -> { where 'is_current = true' }, class_name: 'Quota'
 
   has_many :cites_suspensions
-  has_many :current_cites_suspensions, -> { where "is_current = true" }, :class_name => 'CitesSuspension'
+  has_many :current_cites_suspensions, -> { where 'is_current = true' }, class_name: 'CitesSuspension'
 
   has_many :eu_opinions
-  has_many :current_eu_opinions, -> { where "is_current = true" }, :class_name => 'EuOpinion'
+  has_many :current_eu_opinions, -> { where 'is_current = true' }, class_name: 'EuOpinion'
   has_many :eu_suspensions
-  has_many :current_eu_suspensions, -> { where "is_current = true" }, :class_name => 'EuSuspension'
+  has_many :current_eu_suspensions, -> { where 'is_current = true' }, class_name: 'EuSuspension'
 
   has_many :taxon_instruments
-  has_many :instruments, :through => :taxon_instruments
-  has_many :shipments, :class_name => 'Trade::Shipment'
-  has_many :reported_shipments, :class_name => 'Trade::Shipment',
-    :foreign_key => :reported_taxon_concept_id
+  has_many :instruments, through: :taxon_instruments
+  has_many :shipments, class_name: 'Trade::Shipment'
+  has_many :reported_shipments, class_name: 'Trade::Shipment',
+    foreign_key: :reported_taxon_concept_id
   has_many :comments, as: 'commentable'
   has_one :general_comment, -> { where comment_type: 'General' }, class_name: 'Comment', as: 'commentable'
   has_one :nomenclature_comment, -> { where comment_type: 'Nomenclature' }, class_name: 'Comment', as: 'commentable'
@@ -172,31 +172,31 @@ class TaxonConcept < ApplicationRecord
   has_many :cites_processes
   has_many :cites_captivity_processes
 
-  validates :name_status, :presence => true
+  validates :name_status, presence: true
   validates :parent_id, presence: true,
-    if: lambda { |tc| ['A', 'N'].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM' }
-  validate :parent_in_same_taxonomy, :if => lambda { |tc| tc.parent }
+    if: lambda { |tc| [ 'A', 'N' ].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM' }
+  validate :parent_in_same_taxonomy, if: lambda { |tc| tc.parent }
   validate :parent_at_immediately_higher_rank,
-    :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
-  validate :parent_is_an_accepted_name, :if => lambda { |tc| tc.parent && tc.name_status == 'A' }
+    if: lambda { |tc| tc.parent && tc.name_status == 'A' }
+  validate :parent_is_an_accepted_name, if: lambda { |tc| tc.parent && tc.name_status == 'A' }
   validate :maximum_2_hybrid_parents,
-    :if => lambda { |tc| tc.name_status == 'H' }
-  validates :taxon_name_id, :presence => true,
-    :unless => lambda { |tc| tc.taxon_name.try(:valid?) }
-  validates :full_name, :uniqueness => { :scope => [:taxonomy_id, :author_year] }
+    if: lambda { |tc| tc.name_status == 'H' }
+  validates :taxon_name_id, presence: true,
+    unless: lambda { |tc| tc.taxon_name.try(:valid?) }
+  validates :full_name, uniqueness: { scope: [ :taxonomy_id, :author_year ] }
   validate :full_name_cannot_be_changed, on: :update
   validates :taxonomic_position,
-    :presence => true,
-    :format => { :with => /\A\d(\.\d*)*\z/, :message => "Use prefix notation, e.g. 1.2" },
-    :if => :fixed_order_required?
-  validate :taxonomy_can_be_changed, :on => :update, :if => lambda { |tc|
+    presence: true,
+    format: { with: /\A\d(\.\d*)*\z/, message: 'Use prefix notation, e.g. 1.2' },
+    if: :fixed_order_required?
+  validate :taxonomy_can_be_changed, on: :update, if: lambda { |tc|
     tc.taxonomy && tc.taxonomy_id_changed?
   }
 
   validates :author_year,
     format: {
       with: PDF_SAFE_REGEX,
-      message: "should only contain PDF-safe characters"
+      message: 'should only contain PDF-safe characters'
     }
 
   before_validation :ensure_taxonomic_position
@@ -223,7 +223,7 @@ class TaxonConcept < ApplicationRecord
     end
   end
   after_save do
-    if ['A', 'N'].include? name_status
+    if [ 'A', 'N' ].include? name_status
       tcd = TaxonConceptData.new(self)
       data = tcd.to_h
       update_column(:data, data)
@@ -245,54 +245,56 @@ class TaxonConcept < ApplicationRecord
     Species::TaxonConceptPrefixMatcher.increment_cache_iterator
     Checklist::Checklist.increment_cache_iterator
   end
-  after_touch :ensure_species_touched
   after_commit :cache_cleanup
+  after_touch :ensure_species_touched
 
   translates :nomenclature_note
 
   scope :at_parent_ranks, lambda { |rank|
-    joins_sql = <<-SQL
+    joins_sql = <<-SQL.squish
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position >= ?
         AND ranks.taxonomic_position < ?
     SQL
     joins(
-      sanitize_sql_array([
-        joins_sql, rank.parent_rank_lower_bound, rank.taxonomic_position
-      ])
+      sanitize_sql_array(
+        [
+          joins_sql, rank.parent_rank_lower_bound, rank.taxonomic_position
+        ]
+      )
     )
   }
 
   scope :at_ancestor_ranks, lambda { |rank|
-    joins_sql = <<-SQL
+    joins_sql = <<-SQL.squish
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position < ?
     SQL
     joins(
-      sanitize_sql_array([joins_sql, rank.taxonomic_position])
+      sanitize_sql_array([ joins_sql, rank.taxonomic_position ])
     )
   }
 
   scope :at_self_and_ancestor_ranks, lambda { |rank|
-    joins_sql = <<-SQL
+    joins_sql = <<-SQL.squish
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position <= ?
     SQL
     joins(
-      sanitize_sql_array([joins_sql, rank.taxonomic_position])
+      sanitize_sql_array([ joins_sql, rank.taxonomic_position ])
     )
   }
 
   def self.fetch_taxons_full_name(taxon_ids)
     if taxon_ids.present?
       ApplicationRecord.connection.execute(
-        <<-SQL
+        <<-SQL.squish
           SELECT tc.full_name
           FROM taxon_concepts tc
           WHERE tc.id = ANY (ARRAY#{taxon_ids.map(&:to_i)})
           ORDER BY tc.id
         SQL
-      ).map { |row| row['full_name'] }
+      ).pluck('full_name')
     end
   end
 
@@ -390,7 +392,7 @@ class TaxonConcept < ApplicationRecord
 
   def inherited_standard_taxon_concept_references
     ref_ids = taxon_concept_references.map(&:reference_id)
-    standard_taxon_concept_references.keep_if { |ref| !ref_ids.include? ref.id }
+    standard_taxon_concept_references.keep_if { |ref| ref_ids.exclude?(ref.id) }
   end
 
   def expected_full_name(parent)
@@ -414,55 +416,43 @@ class TaxonConcept < ApplicationRecord
   end
 
   def accepted_names_ids
-    if @accepted_names_ids.present?
-      @accepted_names_ids
-    else
-      accepted_names.pluck(:id)
-    end
+    (@accepted_names_ids.presence || accepted_names.pluck(:id))
   end
 
   def accepted_names_for_trade_name_ids
-    if @accepted_names_for_trade_name_ids.present?
-      @accepted_names_for_trade_name_ids
-    else
-      accepted_names_for_trade_name.pluck(:id)
-    end
+    (@accepted_names_for_trade_name_ids.presence || accepted_names_for_trade_name.pluck(:id))
   end
 
   def hybrid_parents_ids
-    if @hybrid_parents_ids.present?
-      @hybrid_parents_ids
-    else
-      hybrid_parents.pluck(:id)
-    end
+    (@hybrid_parents_ids.presence || hybrid_parents.pluck(:id))
   end
 
   def rebuild_relationships(taxa_ids)
-    if ['S', 'T', 'H'].include? name_status
+    if [ 'S', 'T', 'H' ].include? name_status
       new_taxa, removed_taxa = init_accepted_taxa(taxa_ids)
       rel_type =
         case name_status
         when 'S'
-          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+          TaxonRelationshipType.find_by(name: TaxonRelationshipType::HAS_SYNONYM)
         when 'T'
-          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_TRADE_NAME)
+          TaxonRelationshipType.find_by(name: TaxonRelationshipType::HAS_TRADE_NAME)
         when 'H'
-          TaxonRelationshipType.find_by_name(TaxonRelationshipType::HAS_HYBRID)
+          TaxonRelationshipType.find_by(name: TaxonRelationshipType::HAS_HYBRID)
         end
       add_remove_relationships(new_taxa, removed_taxa, rel_type)
     end
   end
 
-  protected
+protected
 
   def before_validate_scientific_name
     sanitized_scientific_name =
-      if ['A', 'N'].include?(name_status)
+      if [ 'A', 'N' ].include?(name_status)
         TaxonName.sanitize_scientific_name(@scientific_name || scientific_name)
       else
         @scientific_name || scientific_name
       end
-    tn = TaxonName.where(["UPPER(scientific_name) = UPPER(?)", sanitized_scientific_name]).first
+    tn = TaxonName.where([ 'UPPER(scientific_name) = UPPER(?)', sanitized_scientific_name ]).first
     if tn
       self.taxon_name = tn
       self.taxon_name_id = tn.id
@@ -473,7 +463,7 @@ class TaxonConcept < ApplicationRecord
 
   def before_validate_full_name
     self.full_name =
-      if rank && parent && ['A', 'N'].include?(name_status)
+      if rank && parent && [ 'A', 'N' ].include?(name_status)
         rank_name = rank.name
         parent_full_name = parent.full_name
         name = @scientific_name || scientific_name
@@ -485,7 +475,7 @@ class TaxonConcept < ApplicationRecord
         end
         if name.blank?
           nil
-        elsif [Rank::SPECIES, Rank::SUBSPECIES].include?(rank_name)
+        elsif [ Rank::SPECIES, Rank::SUBSPECIES ].include?(rank_name)
           "#{parent_full_name} #{name.downcase}"
         elsif rank_name == Rank::VARIETY
           "#{parent_full_name} var. #{name.downcase}"
@@ -497,26 +487,28 @@ class TaxonConcept < ApplicationRecord
       end
   end
 
-  private
+private
 
   def add_remove_relationships(new_taxa, removed_taxa, rel_type)
     removed_taxa.each do |taxon_concept|
       taxon_concept.taxon_relationships.
         where('other_taxon_concept_id = ? AND
-              taxon_relationship_type_id = ?', id, rel_type.id).
+              taxon_relationship_type_id = ?', id, rel_type.id
+        ).
         destroy_all
     end
 
     new_taxa.each do |taxon_concept|
       taxon_concept.taxon_relationships << TaxonRelationship.new(
-        :taxon_relationship_type_id => rel_type.id,
-        :other_taxon_concept_id => id
+        taxon_relationship_type_id: rel_type.id,
+        other_taxon_concept_id: id
       )
     end
   end
 
   def init_accepted_taxa(new_ids)
-    return [[], []] unless ['S', 'T', 'H'].include?(name_status)
+    return [ [], [] ] unless [ 'S', 'T', 'H' ].include?(name_status)
+
     current_ids =
       case name_status
       when 'S' then accepted_names.pluck(:id)
@@ -561,37 +553,38 @@ class TaxonConcept < ApplicationRecord
 
   def taxonomy_can_be_changed
     if !can_be_deleted?
-      errors.add(:taxonomy_id, "dependent objects present, unable to change taxonomy")
-      return false
+      errors.add(:taxonomy_id, 'dependent objects present, unable to change taxonomy')
+      false
     end
   end
 
   def parent_is_an_accepted_name
-    unless ['A', 'N'].include?(parent.name_status)
-      errors.add(:parent_id, "must be an accepted name")
-      return false
+    unless [ 'A', 'N' ].include?(parent.name_status)
+      errors.add(:parent_id, 'must be an accepted name')
+      false
     end
   end
 
   def parent_in_same_taxonomy
     if taxonomy_id != parent.taxonomy_id
-      errors.add(:parent_id, "must be in same taxonomy")
-      return false
+      errors.add(:parent_id, 'must be in same taxonomy')
+      false
     end
   end
 
   def parent_at_immediately_higher_rank
-    return true if (parent.rank.name == 'KINGDOM' && parent.full_name == 'Plantae' && rank.name == 'ORDER')
+    return true if parent.rank.name == 'KINGDOM' && parent.full_name == 'Plantae' && rank.name == 'ORDER'
+
     unless parent.rank.taxonomic_position >= rank.parent_rank_lower_bound &&
       parent.rank.taxonomic_position < rank.taxonomic_position
-      errors.add(:parent_id, "must be at immediately higher rank")
-      return false
+      errors.add(:parent_id, 'must be at immediately higher rank')
+      false
     end
   end
 
   def maximum_2_hybrid_parents
     if hybrid_parents_ids.size > 2
-      errors.add(:hybrid_parents_ids, "maximum 2 hybrid parents")
+      errors.add(:hybrid_parents_ids, 'maximum 2 hybrid parents')
       return false
     end
     true
@@ -601,16 +594,16 @@ class TaxonConcept < ApplicationRecord
     if new_record? && fixed_order_required? && taxonomic_position.blank?
       prev_taxonomic_position =
         if parent
-          last_sibling = TaxonConcept.where(:parent_id => parent_id).
+          last_sibling = TaxonConcept.where(parent_id: parent_id).
             maximum(:taxonomic_position)
           last_sibling || (parent.taxonomic_position + '.0')
         else
-          last_root = TaxonConcept.where(:parent_id => nil).
+          last_root = TaxonConcept.where(parent_id: nil).
             maximum(:taxonomic_position)
           last_root || '0'
         end
       prev_taxonomic_position_parts = prev_taxonomic_position.split('.')
-      prev_taxonomic_position_parts << (prev_taxonomic_position_parts.pop || 0).to_i + 1
+      prev_taxonomic_position_parts << ((prev_taxonomic_position_parts.pop || 0).to_i + 1)
       self.taxonomic_position = prev_taxonomic_position_parts.join('.')
     end
     true
@@ -618,7 +611,7 @@ class TaxonConcept < ApplicationRecord
 
   def full_name_cannot_be_changed
     if full_name != full_name_was
-      errors.add(:full_name, "cannot be changed")
+      errors.add(:full_name, 'cannot be changed')
       return false
     end
     true
@@ -629,11 +622,10 @@ class TaxonConcept < ApplicationRecord
   end
 
   def ensure_species_touched
-    if rank && parent && [Rank::SUBSPECIES, Rank::VARIETY].include?(rank.name)
+    if rank && parent && [ Rank::SUBSPECIES, Rank::VARIETY ].include?(rank.name)
       # touch parent if we're a variety or subspecies
-      Rails.logger.info "Touch species"
+      Rails.logger.info 'Touch species'
       parent.touch
     end
   end
-
 end

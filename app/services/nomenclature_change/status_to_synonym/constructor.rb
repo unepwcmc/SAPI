@@ -20,5 +20,4 @@ class NomenclatureChange::StatusToSynonym::Constructor
       )
     end
   end
-
 end

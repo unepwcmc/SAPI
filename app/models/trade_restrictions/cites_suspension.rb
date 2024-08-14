@@ -51,10 +51,10 @@ class CitesSuspension < TradeRestriction
   #   :cites_suspension_confirmations_attributes,
   #   :applies_to_import
   belongs_to :taxon_concept, optional: true
-  belongs_to :start_notification, :class_name => 'CitesSuspensionNotification'
-  belongs_to :end_notification, :class_name => 'CitesSuspensionNotification', optional: true
-  has_many :cites_suspension_confirmations, :dependent => :destroy
-  has_many :confirmation_notifications, :through => :cites_suspension_confirmations
+  belongs_to :start_notification, class_name: 'CitesSuspensionNotification'
+  belongs_to :end_notification, class_name: 'CitesSuspensionNotification', optional: true
+  has_many :cites_suspension_confirmations, dependent: :destroy
+  has_many :confirmation_notifications, through: :cites_suspension_confirmations
   before_validation :handle_dates
   before_save :handle_current_flag
   accepts_nested_attributes_for :cites_suspension_confirmations
@@ -67,16 +67,16 @@ class CitesSuspension < TradeRestriction
   end
 
   def handle_current_flag
-    self.is_current = !end_notification_id.present?
+    self.is_current = end_notification_id.blank?
     true
   end
 
   # Each element of CSV columns can be either an array [display_text, method]
   # or a single symbol if the display text and the method are the same
   CSV_COLUMNS = [
-    [:start_date, :start_date_formatted], [:start_notification, :start_notification_name],
-    [:end_date, :end_date_formatted], [:end_notification, :end_notification_name],
-    :party, :notes, [:valid, :is_current]
+    [ :start_date, :start_date_formatted ], [ :start_notification, :start_notification_name ],
+    [ :end_date, :end_date_formatted ], [ :end_notification, :end_notification_name ],
+    :party, :notes, [ :valid, :is_current ]
   ]
 
   def start_notification_name
@@ -97,28 +97,30 @@ class CitesSuspension < TradeRestriction
 
   def self.search(query)
     if query.present?
-      where("UPPER(geo_entities.name_en) LIKE UPPER(:query)
+      where(
+        "UPPER(geo_entities.name_en) LIKE UPPER(:query)
             OR UPPER(geo_entities.iso_code2) LIKE UPPER(:query)
             OR trade_restrictions.start_date::text LIKE :query
             OR trade_restrictions.end_date::text LIKE :query
             OR UPPER(trade_restrictions.notes) LIKE UPPER(:query)
             OR UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
             OR UPPER(events.subtype) LIKE UPPER(:query)",
-            :query => "%#{query}%").
-      joins([:start_notification]).
-      joins(<<-SQL
+        query: "%#{query}%"
+      ).
+        joins([ :start_notification ]).
+        joins(<<-SQL.squish
           LEFT JOIN taxon_concepts
             ON taxon_concepts.id = trade_restrictions.taxon_concept_id
           LEFT JOIN geo_entities
             ON geo_entities.id = trade_restrictions.geo_entity_id
         SQL
-      )
+             )
     else
       all
     end
   end
 
-  private
+private
 
   def async_downloads_cache_cleanup
     DownloadsCacheCleanupWorker.perform_async('cites_suspensions')

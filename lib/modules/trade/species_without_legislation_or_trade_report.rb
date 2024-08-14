@@ -3,7 +3,7 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
   attr_reader :query
 
   def initialize
-    @query = TaxonConcept.from(<<-SQL
+    @query = TaxonConcept.from(<<-SQL.squish
       (
         WITH cites_species (
           id, legacy_id,
@@ -70,46 +70,47 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
         cites_listed_descendants, eu_listed_descendants, taxonomic_position
       ) AS taxon_concepts
     SQL
-    )
-    @report_query = @query.select([
-      :'taxon_concepts.id', :legacy_id,
-      :kingdom_name, :phylum_name, :class_name,
-      :order_name, :family_name, :genus_name, :species_name,
-      :full_name, :author_year, :name_status,
-      :cites_listed_descendants, :eu_listed_descendants,
-      'COUNT(quotas.id)',
-      'COUNT(cites_suspensions.id)',
-      'COUNT(eu_opinions.id)',
-      'COUNT(eu_suspensions.id)'
-    ]).
-    joins("LEFT JOIN trade_restrictions quotas ON quotas.taxon_concept_id = taxon_concepts.id AND quotas.type = 'Quota'").
-    joins("LEFT JOIN trade_restrictions cites_suspensions ON cites_suspensions.taxon_concept_id = taxon_concepts.id AND cites_suspensions.type = 'CitesSuspension'").
-    joins("LEFT JOIN eu_decisions eu_opinions ON eu_opinions.taxon_concept_id = taxon_concepts.id AND eu_opinions.type = 'EuOpinions'").
-    joins("LEFT JOIN eu_decisions eu_suspensions ON eu_suspensions.taxon_concept_id = taxon_concepts.id AND eu_suspensions.type = 'EuSuspension'").
-    group(:'taxon_concepts.id', :legacy_id,
-      :kingdom_name, :phylum_name, :class_name,
-      :order_name, :family_name, :genus_name,
-      :species_name, :full_name, :author_year, :name_status,
-      :cites_listed_descendants, :eu_listed_descendants,
-      :taxonomic_position
+                              )
+    @report_query = @query.select(
+      [
+        :'taxon_concepts.id', :legacy_id,
+        :kingdom_name, :phylum_name, :class_name,
+        :order_name, :family_name, :genus_name, :species_name,
+        :full_name, :author_year, :name_status,
+        :cites_listed_descendants, :eu_listed_descendants,
+        'COUNT(quotas.id)',
+        'COUNT(cites_suspensions.id)',
+        'COUNT(eu_opinions.id)',
+        'COUNT(eu_suspensions.id)'
+      ]
     ).
-    order(:taxonomic_position)
+      joins("LEFT JOIN trade_restrictions quotas ON quotas.taxon_concept_id = taxon_concepts.id AND quotas.type = 'Quota'").
+      joins("LEFT JOIN trade_restrictions cites_suspensions ON cites_suspensions.taxon_concept_id = taxon_concepts.id AND cites_suspensions.type = 'CitesSuspension'").
+      joins("LEFT JOIN eu_decisions eu_opinions ON eu_opinions.taxon_concept_id = taxon_concepts.id AND eu_opinions.type = 'EuOpinions'").
+      joins("LEFT JOIN eu_decisions eu_suspensions ON eu_suspensions.taxon_concept_id = taxon_concepts.id AND eu_suspensions.type = 'EuSuspension'").
+      group(:'taxon_concepts.id', :legacy_id,
+        :kingdom_name, :phylum_name, :class_name,
+        :order_name, :family_name, :genus_name,
+        :species_name, :full_name, :author_year, :name_status,
+        :cites_listed_descendants, :eu_listed_descendants,
+        :taxonomic_position
+      ).
+      order(:taxonomic_position)
   end
 
   def export(file_path)
     export_to_csv(
-      :query => @report_query,
-      :csv_columns => [
-        "ID", "Legacy id", "Kingdom", "Phylum", "Class",
-        "Order", "Family", "Genus", "Species",
-        "Full name", "Author year", "Name Status",
-        "Has CITES listed descendants?", "Has EU listed descendants?",
-        "NQuotas", "N EU Opinions", "N EU Suspensions", "N CITES Suspensions"
+      query: @report_query,
+      csv_columns: [
+        'ID', 'Legacy id', 'Kingdom', 'Phylum', 'Class',
+        'Order', 'Family', 'Genus', 'Species',
+        'Full name', 'Author year', 'Name Status',
+        'Has CITES listed descendants?', 'Has EU listed descendants?',
+        'NQuotas', 'N EU Opinions', 'N EU Suspensions', 'N CITES Suspensions'
       ],
-      :file_path => file_path,
-      :encoding => 'latin1',
-      :delimiter => ';'
+      file_path: file_path,
+      encoding: 'latin1',
+      delimiter: ';'
     )
   end
-
 end

@@ -43,10 +43,9 @@
 #  documents_updated_by_id_fk                 (updated_by_id => users.id)
 #
 FactoryBot.define do
-
   factory :document do
     date { Date.today }
-    filename { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')) }
+    filename { Rack::Test::UploadedFile.new(Rails.root.join('spec/support/annual_report_upload_exporter.csv').to_s) }
     designation
     event
     type { 'Document' }
@@ -66,7 +65,7 @@ FactoryBot.define do
     # doesn't write the file to the correct location in the file system for unknown reason.
     # This hacking callback copy the file to the correct location.
     after :create do |document|
-      dummy_path = File.join(Rails.root, 'spec', 'support', 'annual_report_upload_exporter.csv')
+      dummy_path = Rails.root.join('spec/support/annual_report_upload_exporter.csv').to_s
       FileUtils.mkdir_p(document.filename.store_dir)
       FileUtils.cp(dummy_path, document.filename.store_dir)
     end
@@ -95,5 +94,4 @@ FactoryBot.define do
     document
     review_phase
   end
-
 end

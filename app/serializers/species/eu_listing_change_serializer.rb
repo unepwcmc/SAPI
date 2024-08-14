@@ -6,24 +6,27 @@ class Species::EuListingChangeSerializer < Species::ListingChangeSerializer
 
   def include_change_type_class?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_note_fr?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_note_es?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def change_type
     if object.change_type_name == ChangeType::RESERVATION_WITHDRAWAL
-      "w"
+      'w'
     elsif object.change_type_name == ChangeType::DELETION
-      "x"
+      'x'
     else
       object.change_type_name.downcase[0]
     end

@@ -2,7 +2,6 @@
 # or better yet, define methods such as "ranks_below_family"
 # in the rank class to clean up the code here
 module Checklist::Pdf::IndexContent
-
   def content(tex)
     fetcher = Checklist::Pdf::IndexFetcher.new(@animalia_query)
     kingdom(tex, fetcher, 'FAUNA')
@@ -15,18 +14,20 @@ module Checklist::Pdf::IndexContent
   def kingdom(tex, fetcher, kingdom_name)
     kingdom = fetcher.next
     return if kingdom.empty?
+
     tex << "\\cpart{#{kingdom_name}}\n"
-    tex << "\\begin{multicols}{2}{" # start multicols
+    tex << '\\begin{multicols}{2}{' # start multicols
     begin
-      entries = kingdom.map do |tc|
-        if tc.read_attribute(:name_type) == 'synonym'
-          synonym_entry(tc)
-        elsif tc.read_attribute(:name_type) == 'common'
-          common_name_entry(tc)
-        else
-          main_entry(tc)
+      entries =
+        kingdom.map do |tc|
+          if tc.read_attribute(:name_type) == 'synonym'
+            synonym_entry(tc)
+          elsif tc.read_attribute(:name_type) == 'common'
+            common_name_entry(tc)
+          else
+            main_entry(tc)
+          end
         end
-      end
       tex << entries.join("\n\n")
       kingdom = fetcher.next
     end while !kingdom.empty?
@@ -47,9 +48,9 @@ module Checklist::Pdf::IndexContent
     res = listed_taxon_name(tc)
     res += " #{LatexToPdf.escape_latex(tc.author_year)}" if @authors
     res += current_listing_with_annotations(tc)
-    if ['SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY', 'SUBFAMILY'].include? tc.rank_name
+    if [ 'SPECIES', 'SUBSPECIES', 'GENUS', 'FAMILY', 'SUBFAMILY' ].include? tc.rank_name
       res += " #{"#{tc.family_name}".upcase}" if tc.rank_name != 'FAMILY'
-      res += " (#{tc.class_name})" unless tc.class_name.blank?
+      res += " (#{tc.class_name})" if tc.class_name.present?
     end
     res += common_names_with_lng_initials(tc)
     res
@@ -63,14 +64,13 @@ module Checklist::Pdf::IndexContent
 
   def current_listing_with_annotations(taxon_concept)
     res = " \\textbf{#{taxon_concept.current_listing}} "
-    unless taxon_concept.hash_ann_symbol.blank?
+    if taxon_concept.hash_ann_symbol.present?
       symbol = LatexToPdf.escape_latex(taxon_concept.hash_ann_symbol)
       res = " #{symbol}#{res}"
     end
-    unless taxon_concept.ann_symbol.blank?
+    if taxon_concept.ann_symbol.present?
       res += "\\superscript{#{taxon_concept.ann_symbol}}"
     end
     res
   end
-
 end

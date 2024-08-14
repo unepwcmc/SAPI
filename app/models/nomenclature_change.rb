@@ -48,8 +48,7 @@ class NomenclatureChange < ApplicationRecord
   end
 
   def in_progress?
-    ![NomenclatureChange::SUBMITTED, NomenclatureChange::CLOSED].
-      include?(status)
+    [ NomenclatureChange::SUBMITTED, NomenclatureChange::CLOSED ].exclude?(status)
   end
 
   def submitting?
@@ -65,16 +64,17 @@ class NomenclatureChange < ApplicationRecord
 
   def cannot_update_when_locked
     if status_was == NomenclatureChange::CLOSED ||
-      status_was == NomenclatureChange::SUBMITTED &&
-      status != NomenclatureChange::CLOSED
-      errors.add(:base, "Nomenclature change is locked for updates")
-      return false
+      (status_was == NomenclatureChange::SUBMITTED &&
+      status != NomenclatureChange::CLOSED)
+      errors.add(:base, 'Nomenclature change is locked for updates')
+      false
     end
   end
 
   def next_step
     steps = self.class::STEPS
     return nil if steps.empty?
+
     if status == NomenclatureChange::NEW
       steps.first
     elsif self.summary?
@@ -85,5 +85,4 @@ class NomenclatureChange < ApplicationRecord
       steps[steps.index(self.status.to_sym) + 1]
     end
   end
-
 end

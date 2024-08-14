@@ -1,5 +1,5 @@
 class Admin::CitesHashAnnotationsController < Admin::HashAnnotationsController
-  protected
+protected
 
   def load_collection
     end_of_association_chain.for_cites
@@ -9,7 +9,7 @@ class Admin::CitesHashAnnotationsController < Admin::HashAnnotationsController
     @events = CitesCop.order(:effective_at)
   end
 
-  private
+private
 
   def cites_hash_annotation_params
     params.require(:annotation).permit(

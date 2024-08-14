@@ -37,13 +37,13 @@ class EuSuspensionRegulation < EuEvent
   # attr_accessible :eu_suspensions_event_id
   attr_accessor :eu_suspensions_event_id
 
-  has_many :eu_suspensions, :foreign_key => :start_event_id,
-    :dependent => :destroy
+  has_many :eu_suspensions, foreign_key: :start_event_id,
+    dependent: :destroy
   has_many :ended_eu_suspensions, class_name: 'EuSuspension',
     foreign_key: :end_event_id, dependent: :nullify
 
   validate :designation_is_eu
-  validates :effective_at, :presence => true
+  validates :effective_at, presence: true
   validate :end_date_presence
 
   after_update :touch_suspensions_and_taxa
@@ -55,10 +55,12 @@ class EuSuspensionRegulation < EuEvent
   end
 
   def touch_suspensions_and_taxa
-    eu_suspensions = EuSuspension.where([
-      "start_event_id = :to_event_id OR end_event_id = :to_event_id",
-      to_event_id: self.id
-    ])
+    eu_suspensions = EuSuspension.where(
+      [
+        'start_event_id = :to_event_id OR end_event_id = :to_event_id',
+        to_event_id: self.id
+      ]
+    )
     eu_suspensions.update_all(
       updated_at: Time.now, updated_by_id: self.updated_by_id
     )
@@ -68,7 +70,7 @@ class EuSuspensionRegulation < EuEvent
     )
   end
 
-  private
+private
 
   def dependent_objects_map
     {
@@ -78,12 +80,12 @@ class EuSuspensionRegulation < EuEvent
 
   def end_date_presence
     unless is_current? ^ end_date.present?
-      errors.add(:base, "Is current and End date are mutually exclusive")
+      errors.add(:base, 'Is current and End date are mutually exclusive')
     end
   end
 
   def after_create_async_tasks
-    unless eu_suspensions_event_id.blank?
+    if eu_suspensions_event_id.present?
       EventEuSuspensionCopyWorker.perform_async(eu_suspensions_event_id, id)
       DownloadsCacheCleanupWorker.perform_async('eu_decisions')
     end
@@ -92,5 +94,4 @@ class EuSuspensionRegulation < EuEvent
   def async_downloads_cache_cleanup
     DownloadsCacheCleanupWorker.perform_async('eu_decisions')
   end
-
 end

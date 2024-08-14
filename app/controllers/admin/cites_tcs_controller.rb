@@ -1,10 +1,10 @@
 class Admin::CitesTcsController < Admin::EventsController
   # this needs to be specified, because otherwise defaults to 'event'
-  defaults :resource_class => CitesTc,
-    :collection_name => 'cites_tcs',
-    :instance_name => 'cites_tc'
+  defaults resource_class: CitesTc,
+    collection_name: 'cites_tcs',
+    instance_name: 'cites_tc'
 
-  protected
+protected
 
   def collection
     @cites_tcs ||= end_of_association_chain.
@@ -13,7 +13,7 @@ class Admin::CitesTcsController < Admin::EventsController
       search(params[:query])
   end
 
-  private
+private
 
   def cites_tc_params
     params.require(:cites_tc).permit(

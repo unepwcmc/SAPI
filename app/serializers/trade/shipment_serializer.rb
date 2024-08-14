@@ -79,7 +79,6 @@ class Trade::ShipmentSerializer < ActiveModel::Serializer
     :import_permit_number, :export_permit_number, :origin_permit_number,
     :legacy_shipment_number, :warnings
 
-  has_one :taxon_concept, :serializer => Trade::TaxonConceptSerializer
-  has_one :reported_taxon_concept, :serializer => Trade::TaxonConceptSerializer
-
+  has_one :taxon_concept, serializer: Trade::TaxonConceptSerializer
+  has_one :reported_taxon_concept, serializer: Trade::TaxonConceptSerializer
 end

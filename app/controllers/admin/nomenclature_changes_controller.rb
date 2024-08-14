@@ -1,5 +1,4 @@
 class Admin::NomenclatureChangesController < Admin::StandardAuthorizationController
-
   def show
     @nc = NomenclatureChange.find(params[:id])
   end
@@ -10,11 +9,10 @@ class Admin::NomenclatureChangesController < Admin::StandardAuthorizationControl
     redirect_to admin_nomenclature_changes_path
   end
 
-  protected
+protected
 
   def collection
-    @collection ||= NomenclatureChange.includes([:event, :creator]).
+    @collection ||= NomenclatureChange.includes([ :event, :creator ]).
       order('created_at DESC').page(params[:page]).per(10)
   end
-
 end

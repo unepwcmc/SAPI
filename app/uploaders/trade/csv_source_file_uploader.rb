@@ -1,6 +1,6 @@
 # encoding: utf-8
-class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
 
+class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
@@ -40,7 +40,7 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
   def remove_blank_lines
     cache_stored_file! if !cached?
     directory = File.dirname(current_path)
-    tmp_path = File.join(directory, "tmpfile")
+    tmp_path = File.join(directory, 'tmpfile')
     if system("cat #{current_path} | sed 's/\r//g' | grep -v -E '^(\"?[[:blank:]]*\"?,)*$' > #{tmp_path}")
       FileUtils.mv(tmp_path, current_path)
     else
@@ -61,7 +61,7 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
       # Force it to UTF-8, throwing out invalid bits
       content.encode!('UTF-8', invalid: :replace, undef: :replace)
     end
-    File.open(current_path, 'w') { |file| file.write(content) }
+    File.write(current_path, content)
   end
 
   # Create different versions of your uploaded files:
@@ -72,7 +72,7 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_allowlist
-    %w(csv)
+    %w[csv]
   end
 
   # Override the filename of the uploaded files:
@@ -80,5 +80,4 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
   # def filename
   #   "something.jpg" if original_filename
   # end
-
 end

@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import synonyms from csv file (usage: rake import:synonyms_kew_id[path/to/file,path/to/another])'
-  task :synonyms_kew_id, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :synonyms_kew_id, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'synonym_kew_id_import'
     puts "There are #{TaxonRelationship.
       joins(:taxon_relationship_type).
@@ -10,7 +9,7 @@ namespace :import do
       ).count} synonyms in the database."
 
     rel = TaxonRelationshipType.
-      find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+      find_by(name: TaxonRelationshipType::HAS_SYNONYM)
 
     files = files_from_args(t, args)
     files.each do |file|
@@ -34,10 +33,10 @@ namespace :import do
       end
       # [END]copied over from import:species
 
-      [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+      [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
         puts "Import #{taxonomy_name} taxa"
-        taxonomy = Taxonomy.find_by_name(taxonomy_name)
-        sql = <<-SQL
+        taxonomy = Taxonomy.find_by(name: taxonomy_name)
+        sql = <<-SQL.squish
           INSERT INTO taxon_relationships(taxon_relationship_type_id,
             taxon_concept_id, other_taxon_concept_id,
             created_at, updated_at)
@@ -71,7 +70,7 @@ namespace :import do
         ApplicationRecord.connection.execute(sql)
       end
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         UPDATE taxon_concepts
         SET full_name = full_name(ranks.name, ancestors_names(taxon_concepts.id))
         FROM taxon_concepts q
@@ -89,5 +88,4 @@ namespace :import do
         "taxon_relationship_types.name" => TaxonRelationshipType::HAS_SYNONYM
       ).count} synonyms in the database."
   end
-
 end

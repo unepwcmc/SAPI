@@ -1,5 +1,4 @@
 class NomenclatureChange::Processor
-
   def initialize(nc)
     @nc = nc
     initialize_inputs_and_outputs
@@ -18,12 +17,11 @@ class NomenclatureChange::Processor
   def summary
   end
 
-  private
+private
 
   def initialize_inputs_and_outputs; end
 
   def prepare_chain
     @subprocessors = []
   end
-
 end

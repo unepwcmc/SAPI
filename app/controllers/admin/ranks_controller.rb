@@ -1,12 +1,11 @@
 class Admin::RanksController < Admin::StandardAuthorizationController
-
-  protected
+protected
 
   def collection
     @ranks ||= end_of_association_chain.order(:taxonomic_position).page(params[:page])
   end
 
-  private
+private
 
   def rank_params
     params.require(:rank).permit(

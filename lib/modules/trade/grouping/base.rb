@@ -10,7 +10,7 @@ class Trade::Grouping::Base
   # Trade::Grouping::Compliance.new(['year, 'issue_type']})
   # Group by importer and limit result to 5 records
   # Trade::Grouping::Compliance.new('importer', {limit: 5})
-  def initialize(attributes, opts={})
+  def initialize(attributes, opts = {})
     @attributes = sanitise_params(attributes)
     @opts = opts.clone
     @condition = sanitise_condition
@@ -24,14 +24,14 @@ class Trade::Grouping::Base
   end
 
   def shipments
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT *
       FROM #{shipments_table}
     SQL
     db.execute(sql)
   end
 
-  def json_by_attribute(data, opts={})
+  def json_by_attribute(data, opts = {})
     raise NotImplementedError
   end
 
@@ -49,7 +49,7 @@ class Trade::Grouping::Base
     conversion
   end
 
-  protected
+protected
 
   def shipments_table
     raise NotImplementedError
@@ -71,14 +71,14 @@ class Trade::Grouping::Base
     raise NotImplementedError
   end
 
-  def self.get_grouping_attributes(group, locale=nil)
+  def self.get_grouping_attributes(group, locale = nil)
     @locale = locale
     Array.new(grouping_attributes[group.to_sym])
   end
 
   def group_query
     columns = @attributes.compact.uniq.join(',')
-    <<-SQL
+    <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt
       FROM #{shipments_table}
       WHERE #{@condition}
@@ -92,15 +92,17 @@ class Trade::Grouping::Base
     @limit ? "LIMIT #{@limit}" : ''
   end
 
-  private
+private
 
   def sanitise_group(group)
     return nil unless group
+
     attributes[group.to_sym]
   end
 
   def sanitise_params(params)
     return nil if params.blank?
+
     Array.wrap(params).map { |p| attributes[p.to_sym] }
   end
 
@@ -109,8 +111,9 @@ class Trade::Grouping::Base
   end
 
   def sanitise_pagination(opts)
-    page, per_page = [opts[:page].to_i, opts[:per_page].to_i]
+    page, per_page = [ opts[:page].to_i, opts[:per_page].to_i ]
     return {} unless page > 0 || per_page > 0
+
     {
       page: page,
       per_page: per_page
@@ -119,9 +122,10 @@ class Trade::Grouping::Base
 
   def sanitise_condition
     filtering_attributes = self.class.filtering_attributes
-    condition_attributes = @opts.keep_if do |k, v|
-      filtering_attributes.key?(k.to_sym) && v.present?
-    end
+    condition_attributes =
+      @opts.keep_if do |k, v|
+        filtering_attributes.key?(k.to_sym) && v.present?
+      end
     unless condition_attributes.is_a?(Hash)
       condition_attributes.permit!
       condition_attributes = condition_attributes.to_h
@@ -132,13 +136,15 @@ class Trade::Grouping::Base
     end
 
     return 'TRUE' if condition_attributes.blank?
+
     condition_attributes.map do |key, value|
       val = get_condition_value(key.to_sym, value)
       column = filtering_attributes[key.to_sym]
       # taxon_id equality check can be skipped as this is also managed through the recursive child_taxa query
       # in TradeVis
       next if column == 'taxon_id' && skip_taxon_id?
-      column = (['year', 'appendix'].include?(column) || is_id_column?(column)) ? column : "LOWER(#{column})"
+
+      column = "LOWER(#{column})" unless [ 'year', 'appendix' ].include?(column) || is_id_column?(column)
 
       "(#{column} #{val})"
     end.compact.join(' AND ')
@@ -152,7 +158,7 @@ class Trade::Grouping::Base
     column.match(/_id(s)?/).present?
   end
 
-  #TODO This is shared between the ComplianceTool and TradePlus,
+  # TODO This is shared between the ComplianceTool and TradePlus,
   # so make sure the other tool won't break after making changes for one of them,
   # or override this function in each related module.
   def get_condition_value(key, value)
@@ -167,14 +173,14 @@ class Trade::Grouping::Base
       when /_id(s)?/
         null = []
         values = value.split(',')
-        values.delete_if { |v| null << v if ['unreported', 'direct', 'items'].include? v.downcase }
+        values.delete_if { |v| null << v if [ 'unreported', 'direct', 'items' ].include? v.downcase }
         value = values.join(',')
         if value.present? && null.present?
           return "IN (#{value}) OR #{column_name} IS NULL"
         elsif value.present?
           return "IN (#{value})"
         elsif null.present?
-          return "IS NULL"
+          return 'IS NULL'
         else
           return ''
         end
@@ -185,9 +191,10 @@ class Trade::Grouping::Base
 
     end
 
-    return "IS NULL" if value == 'NULL'
+    return 'IS NULL' if value == 'NULL'
 
-    operator = case key
+    operator =
+      case key
       when :time_range_start
         '>='
       when :time_range_end
@@ -201,5 +208,4 @@ class Trade::Grouping::Base
   def db
     ApplicationRecord.connection
   end
-
 end

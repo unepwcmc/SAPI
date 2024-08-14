@@ -8,16 +8,16 @@ class Species::TaxonConceptPrefixMatcher
   end
 
   def results
-    (@taxon_concept_query || !@ranks.empty?) &&
+    ((@taxon_concept_query || !@ranks.empty?) &&
     @query.limit(@options[:per_page]).
-      offset(@options[:per_page] * (@options[:page] - 1)).to_a || []
+      offset(@options[:per_page] * (@options[:page] - 1)).to_a) || []
   end
 
   def total_cnt
-    (@taxon_concept_query || !@ranks.empty?) && @query.count(:all) || 0
+    ((@taxon_concept_query || !@ranks.empty?) && @query.count(:all)) || 0
   end
 
-  private
+private
 
   def initialize_options(options)
     @options = Species::SearchParams.sanitize(options)
@@ -31,11 +31,11 @@ class Species::TaxonConceptPrefixMatcher
       if @visibility == :trade
         @query.order(:full_name)
       else
-        @query.order([:rank_order, :full_name])
+        @query.order([ :rank_order, :full_name ])
       end
 
     unless @ranks.empty?
-      @query = @query.where(:rank_name => @ranks)
+      @query = @query.where(rank_name: @ranks)
     end
 
     @query =
@@ -49,15 +49,15 @@ class Species::TaxonConceptPrefixMatcher
       if @visibility == :trade_internal && @include_synonyms
         @query # no filter on name_status for internal search on reported taxon
       elsif @visibility == :trade_internal && !@include_synonyms
-        @query.where(:show_in_trade_internal_ac => true)
+        @query.where(show_in_trade_internal_ac: true)
       elsif @visibility == :trade
-        @query.where(:show_in_trade_ac => true)
+        @query.where(show_in_trade_ac: true)
       elsif @visibility == :checklist
-        @query.where(:show_in_checklist_ac => true)
+        @query.where(show_in_checklist_ac: true)
       elsif @visibility == :elibrary
         @query.where("show_in_species_plus_ac OR name_status = 'N'")
       else
-        @query.where(:show_in_species_plus_ac => true)
+        @query.where(show_in_species_plus_ac: true)
       end
 
     # different types of name matching are required
@@ -67,11 +67,11 @@ class Species::TaxonConceptPrefixMatcher
     # in addition, the 'reported taxon' in internal trade matches only on self
     types_of_match =
       if @visibility == :trade_internal && @include_synonyms
-        ['SELF']
-      elsif [:trade_internal, :trade].include? @visibility
-        ['SELF', 'SYNONYM', 'COMMON_NAME']
+        [ 'SELF' ]
+      elsif [ :trade_internal, :trade ].include? @visibility
+        [ 'SELF', 'SYNONYM', 'COMMON_NAME' ]
       else
-        ['SELF', 'SYNONYM', 'COMMON_NAME', 'SUBSPECIES']
+        [ 'SELF', 'SYNONYM', 'COMMON_NAME', 'SUBSPECIES' ]
       end
 
     @query = @query.
@@ -84,22 +84,25 @@ class Species::TaxonConceptPrefixMatcher
             WHEN matched_name != full_name THEN matched_name ELSE NULL
           END
         ) AS matching_names_ary,
-        rank_display_name_en, rank_display_name_es, rank_display_name_fr').
+        rank_display_name_en, rank_display_name_es, rank_display_name_fr'
+            ).
       where(type_of_match: types_of_match).
       group([
         :id, :full_name, :rank_name, :name_status, :author_year, :rank_order,
         :rank_display_name_en, :rank_display_name_es, :rank_display_name_fr
-      ])
+      ]
+           )
 
     if @taxon_concept_query
       @query = @query.where(
-        ApplicationRecord.send(:sanitize_sql_array, [
-          "name_for_matching LIKE :sci_name_prefix",
-          :sci_name_prefix => "#{@taxon_concept_query}%"
-        ])
+        ApplicationRecord.send(
+          :sanitize_sql_array, [
+            'name_for_matching LIKE :sci_name_prefix',
+            sci_name_prefix: "#{@taxon_concept_query}%"
+          ]
+        )
       )
     end
     @query
   end
-
 end

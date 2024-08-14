@@ -30,7 +30,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
   )
   validates :status, inclusion: {
     in: self.status_dict,
-    message: "%{value} is not a valid status"
+    message: '%{value} is not a valid status'
   }
   validate :required_secondary_output, if: :secondary_output_or_submitting?
   validate :required_primary_output_name_status, if: :primary_output_or_submitting?
@@ -42,7 +42,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
 
   def required_secondary_output
     if secondary_output.nil?
-      errors.add(:secondary_output, "Must have a secondary output")
+      errors.add(:secondary_output, 'Must have a secondary output')
       return false
     end
     true
@@ -50,7 +50,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
 
   def required_primary_output_name_status
     if primary_output && primary_output.name_status != 'A'
-      errors.add(:primary_output, "Must be A taxon")
+      errors.add(:primary_output, 'Must be A taxon')
       return false
     end
     true
@@ -58,7 +58,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
 
   def required_secondary_output_name_status
     if secondary_output && secondary_output.name_status != 'S'
-      errors.add(:secondary_output, "Must be S taxon")
+      errors.add(:secondary_output, 'Must be S taxon')
       return false
     end
     true
@@ -101,8 +101,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
   end
 
   def new_output_rank
-    secondary_output && secondary_output.taxon_concept.try(:rank) ||
-    primary_output && primary_output.taxon_concept.try(:rank)
+    (secondary_output && secondary_output.taxon_concept.try(:rank)) ||
+    (primary_output && primary_output.taxon_concept.try(:rank))
   end
-
 end

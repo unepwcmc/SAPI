@@ -1,5 +1,4 @@
 class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChanges::BuildController
-
   steps *NomenclatureChange::StatusSwap::STEPS
 
   def show
@@ -27,9 +26,11 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
 
   def update
     @nomenclature_change.assign_attributes(
-      (nomenclature_change_status_swap_params || {}).merge({
-        :status => (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
-      })
+      (nomenclature_change_status_swap_params || {}).merge(
+        {
+          status: (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
+        }
+      )
     )
     success = @nomenclature_change.valid?
     case step
@@ -47,7 +48,7 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
     render_wizard @nomenclature_change
   end
 
-  private
+private
 
   def klass
     NomenclatureChange::StatusSwap

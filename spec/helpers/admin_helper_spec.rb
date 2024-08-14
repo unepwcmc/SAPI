@@ -10,24 +10,23 @@ require 'spec_helper'
 #     end
 #   end
 # end
-describe AdminHelper, type: :helper do
+describe AdminHelper do
   describe 'edit_icon' do
-    it "ouputs pencil icon for edit" do
+    it 'ouputs pencil icon for edit' do
       expect(helper.edit_icon).to eq('<i class="icon-pencil" title="Edit"></i>')
     end
   end
   describe 'delete_icon' do
-    it "ouputs bin icon for delete" do
+    it 'ouputs bin icon for delete' do
       expect(helper.delete_icon).to eq('<i class="icon-trash" title="Delete"></i>')
     end
   end
   describe 'true_false_icon' do
-    it "outputs tick icon for true" do
+    it 'outputs tick icon for true' do
       expect(helper.true_false_icon(true)).to eq('<i class="icon-ok"></i>')
     end
-    it "outputs blank for false" do
+    it 'outputs blank for false' do
       expect(helper.true_false_icon(false)).to be_blank
     end
   end
-
 end

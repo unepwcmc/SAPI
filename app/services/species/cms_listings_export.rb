@@ -1,6 +1,5 @@
 class Species::CmsListingsExport < Species::ListingsExport
-
-  private
+private
 
   def designation_name
     'cms'
@@ -31,5 +30,4 @@ class Species::CmsListingsExport < Species::ListingsExport
       'Distribution_Uncertain'
     ]
   end
-
 end

@@ -27,11 +27,11 @@
 class NomenclatureChange::ParentReassignment < NomenclatureChange::Reassignment
   # Migrated to controller (Strong Parameters)
   # attr_accessible :reassignment_target_attributes
-  has_one :reassignment_target, :inverse_of => :reassignment,
-    :class_name => 'NomenclatureChange::ReassignmentTarget',
-    :foreign_key => :nomenclature_change_reassignment_id
+  has_one :reassignment_target, inverse_of: :reassignment,
+    class_name: 'NomenclatureChange::ReassignmentTarget',
+    foreign_key: :nomenclature_change_reassignment_id
   belongs_to :input, class_name: 'NomenclatureChange::Input',
     inverse_of: :parent_reassignments,
     foreign_key: :nomenclature_change_input_id
-  accepts_nested_attributes_for :reassignment_target, :allow_destroy => true
+  accepts_nested_attributes_for :reassignment_target, allow_destroy: true
 end

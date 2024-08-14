@@ -5,7 +5,7 @@ module Deletable
     before_destroy :before_destroy_checking
   end
 
-  private
+private
 
   def before_destroy_checking
     unless can_be_deleted?

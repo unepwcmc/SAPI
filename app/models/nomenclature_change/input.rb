@@ -72,15 +72,15 @@ class NomenclatureChange::Input < ApplicationRecord
     foreign_key: :nomenclature_change_input_id,
     dependent: :destroy,
     autosave: true
-  accepts_nested_attributes_for :parent_reassignments, :allow_destroy => true
-  accepts_nested_attributes_for :name_reassignments, :allow_destroy => true
-  accepts_nested_attributes_for :distribution_reassignments, :allow_destroy => true
-  accepts_nested_attributes_for :legislation_reassignments, :allow_destroy => true
+  accepts_nested_attributes_for :parent_reassignments, allow_destroy: true
+  accepts_nested_attributes_for :name_reassignments, allow_destroy: true
+  accepts_nested_attributes_for :distribution_reassignments, allow_destroy: true
+  accepts_nested_attributes_for :legislation_reassignments, allow_destroy: true
 
   # all objects of reassignable_type that are linked to input taxon
   def reassignables_by_class(reassignable_type)
     reassignable_type.constantize.where(
-      :taxon_concept_id => taxon_concept.id
+      taxon_concept_id: taxon_concept.id
     )
   end
 

@@ -1,7 +1,7 @@
 class Admin::SimpleCrudController < Admin::AdminController
   inherit_resources
-  respond_to :js, :only => [:create]
-  respond_to :json, :only => [:update]
+  respond_to :js, only: [ :create ]
+  respond_to :json, only: [ :update ]
 
   def index
     load_associations
@@ -30,20 +30,20 @@ class Admin::SimpleCrudController < Admin::AdminController
 
   def destroy
     destroy! do |success, failure|
-      success.html { redirect_to collection_url, :notice => 'Operation succeeded' }
-      failure.html {
+      success.html { redirect_to collection_url, notice: 'Operation succeeded' }
+      failure.html do
         redirect_to collection_url,
-          :alert =>
+          alert:
             if resource.errors.present?
               "Operation #{resource.errors.messages[:base].join(", ")}"
             else
-              "Operation failed"
+              'Operation failed'
             end
-      }
+      end
     end
   end
 
-  protected
+protected
 
   def load_associations; end
 
@@ -52,9 +52,9 @@ class Admin::SimpleCrudController < Admin::AdminController
     @taxon_concept ||= TaxonConcept.find(params[:taxon_concept_id])
     @search_params = SearchParams.new(
       {
-        :taxonomy => { :id => @taxon_concept.taxonomy_id },
-        :scientific_name => @taxon_concept.full_name,
-        :name_status => @taxon_concept.name_status
+        taxonomy: { id: @taxon_concept.taxonomy_id },
+        scientific_name: @taxon_concept.full_name,
+        name_status: @taxon_concept.name_status
       }
     )
   end

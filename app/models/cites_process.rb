@@ -32,8 +32,8 @@ class CitesProcess < ApplicationRecord
 
   belongs_to :taxon_concept
   belongs_to :geo_entity
-  belongs_to :start_event, :class_name => 'Event', optional: true
-  belongs_to :m_taxon_concept, :foreign_key => :taxon_concept_id, optional: true
+  belongs_to :start_event, class_name: 'Event', optional: true
+  belongs_to :m_taxon_concept, foreign_key: :taxon_concept_id, optional: true
 
   validates :resolution, presence: true
   validates :start_date, presence: true
@@ -42,7 +42,7 @@ class CitesProcess < ApplicationRecord
   before_validation :set_resolution_value
 
   def is_current?
-    !['Closed'].include? status
+    [ 'Closed' ].exclude?(status)
   end
 
   def year
@@ -53,11 +53,11 @@ class CitesProcess < ApplicationRecord
     start_date ? start_date.strftime('%d/%m/%Y') : ''
   end
 
-  private
+private
 
   def start_event_value
-    unless  ['CitesAc','CitesPc'].include? self.start_event.type
-      errors.add(:start_event, "is not valid")
+    unless [ 'CitesAc', 'CitesPc' ].include? self.start_event.type
+      errors.add(:start_event, 'is not valid')
     end
   end
 

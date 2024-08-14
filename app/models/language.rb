@@ -22,28 +22,29 @@ class Language < ApplicationRecord
 
   has_many :common_names
 
-  validates :iso_code1, :uniqueness => true, :length => { :is => 2 }, :allow_blank => true
-  validates :iso_code3, :presence => true, :uniqueness => true, :length => { :is => 3 }
+  validates :iso_code1, uniqueness: true, length: { is: 2 }, allow_blank: true
+  validates :iso_code3, presence: true, uniqueness: true, length: { is: 3 }
 
   def self.search(query)
     if query.present?
-      where("UPPER(name_en) LIKE UPPER(:query) OR
+      where(
+        "UPPER(name_en) LIKE UPPER(:query) OR
         UPPER(name_fr) LIKE UPPER(:query) OR
         UPPER(name_es) LIKE UPPER(:query) OR
         UPPER(iso_code1) LIKE UPPER(:query) OR
         UPPER(iso_code3) LIKE UPPER(:query)",
-        :query => "%#{query}%")
+        query: "%#{query}%"
+      )
     else
       all
     end
   end
 
-  private
+private
 
   def dependent_objects_map
     {
       'common names' => common_names
     }
   end
-
 end

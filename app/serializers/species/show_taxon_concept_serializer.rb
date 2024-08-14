@@ -6,28 +6,32 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     :taxonomy, :kingdom_name, :phylum_name, :order_name, :class_name, :family_name,
     :genus_name, :species_name, :rank_name, :name_status, :nomenclature_note_en, :nomenclature_notification
 
-  has_many :accepted_names, :serializer => Species::AcceptedNameSerializer
-  has_many :synonyms, :serializer => Species::SynonymSerializer
-  has_many :taxon_concept_references, :serializer => Species::ReferenceSerializer,
-    :key => :references
+  has_many :accepted_names, serializer: Species::AcceptedNameSerializer
+  has_many :synonyms, serializer: Species::SynonymSerializer
+  has_many :taxon_concept_references, serializer: Species::ReferenceSerializer,
+    key: :references
 
   def include_parent_id?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_notification?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_kingdom_name?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_name_status?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
@@ -69,16 +73,16 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
 
   def accepted_names
     object.accepted_names.
-      order("full_name")
+      order('full_name')
   end
 
   def synonyms
     object.synonyms.
-      order("full_name")
+      order('full_name')
   end
 
   def object_and_children
-    [object.id] + object.children.pluck(:id)
+    [ object.id ] + object.children.pluck(:id)
   end
 
   def ancestors
@@ -93,9 +97,9 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   def common_names
     CommonName.from('api_common_names_view AS common_names').
       where(taxon_concept_id: object.id).
-      select("language_name_en AS lang").
+      select('language_name_en AS lang').
       select("string_agg(name, ', ') AS names").
-      select(<<-SQL
+      select(<<-SQL.squish
           CASE
             WHEN UPPER(language_name_en) = 'ENGLISH' OR
               UPPER(language_name_en) = 'FRENCH' OR
@@ -104,8 +108,8 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
             ELSE false
           END AS convention_language
         SQL
-      ).
-      group("language_name_en").order("language_name_en").all
+            ).
+      group('language_name_en').order('language_name_en').all
   end
 
   def distributions_with_tags_and_references
@@ -127,9 +131,9 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def subspecies
-    MTaxonConcept.where(:parent_id => object.id).
+    MTaxonConcept.where(parent_id: object.id).
       where("name_status NOT IN ('S', 'T', 'N')").
-      select([:full_name, :author_year, :id, :show_in_species_plus]).
+      select([ :full_name, :author_year, :id, :show_in_species_plus ]).
       order(:full_name).all
   end
 
@@ -147,11 +151,11 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       self.id,
       object.updated_at,
       object.dependents_updated_at,
-      object.m_taxon_concept.try(:updated_at) || "",
+      object.m_taxon_concept.try(:updated_at) || '',
       scope.current_user ? true : false,
-      @options[:trimmed] == 'true' ? true : false
+      @options[:trimmed] == 'true'
     ]
-    Rails.logger.debug "CACHE KEY: #{key.inspect}"
+    Rails.logger.debug { "CACHE KEY: #{key.inspect}" }
     key
   end
 

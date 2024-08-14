@@ -18,17 +18,19 @@ class Trade::Sandbox
     success = true
     Trade::Shipment.transaction do
       pg_result = Trade::SandboxTemplate.connection.execute(
-        Trade::SandboxTemplate.send(:sanitize_sql_array, [
-          'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?, ?, ?)',
-          @annual_report_upload.id,
-          'Sapi',
-          submitter.id
-        ])
+        Trade::SandboxTemplate.send(
+          :sanitize_sql_array, [
+            'SELECT * FROM copy_transactions_from_sandbox_to_shipments(?, ?, ?)',
+            @annual_report_upload.id,
+            'Sapi',
+            submitter.id
+          ]
+        )
       )
       @moved_rows_cnt = pg_result.first['copy_transactions_from_sandbox_to_shipments'].to_i
       if @moved_rows_cnt < 0
         # if -1 returned, not all rows have been moved
-        @annual_report_upload.errors.add(:base, "Submit failed, could not save all rows.")
+        @annual_report_upload.errors.add(:base, 'Submit failed, could not save all rows.')
         success = false
         raise ActiveRecord::Rollback
       end
@@ -39,10 +41,12 @@ class Trade::Sandbox
   def check_for_duplicates_in_shipments
     Trade::Shipment.transaction do
       pg_result = Trade::SandboxTemplate.connection.execute(
-        Trade::SandboxTemplate.send(:sanitize_sql_array, [
-          'SELECT * FROM check_for_duplicates_in_shipments(?)',
-          @annual_report_upload.id,
-        ])
+        Trade::SandboxTemplate.send(
+          :sanitize_sql_array, [
+            'SELECT * FROM check_for_duplicates_in_shipments(?)',
+            @annual_report_upload.id
+          ]
+        )
       )
       duplicates = pg_result.values.first.first.delete('{}')
       return duplicates
@@ -62,12 +66,12 @@ class Trade::Sandbox
   def shipments=(new_shipments)
     # TODO: handle errors
     new_shipments.each do |shipment|
-      s = @ar_klass.find_by_id(shipment.delete('id'))
+      s = @ar_klass.find_by(id: shipment.delete('id'))
       s.delete_or_update_attributes(shipment)
     end
   end
 
-  private
+private
 
   def create_target_table
     unless Trade::SandboxTemplate.connection.data_source_exists? @table_name
@@ -100,7 +104,7 @@ class Trade::Sandbox
   def copy_csv_to_target_table
     require 'psql_command'
     columns_in_csv_order =
-      if (@annual_report_upload.point_of_view == 'E')
+      if @annual_report_upload.point_of_view == 'E'
         Trade::SandboxTemplate::EXPORTER_COLUMNS
       else
         Trade::SandboxTemplate::IMPORTER_COLUMNS
@@ -108,5 +112,4 @@ class Trade::Sandbox
     cmd = Trade::SandboxTemplate.copy_stmt(@table_name, @csv_file_path, columns_in_csv_order)
     PsqlCommand.new(cmd).execute
   end
-
 end

@@ -3,12 +3,12 @@ shared_context 'lump_definitions' do
   let(:input_species1) { input_species }
   let(:input_species2) { create_cites_eu_species }
   let(:output_species) { create_cites_eu_species }
-  let(:errorus_genus) {
+  let(:errorus_genus) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Errorus')
     )
-  }
-  let(:output_subspecies) {
+  end
+  let(:output_subspecies) do
     create_cites_eu_subspecies(
       taxon_name: create(:taxon_name, scientific_name: 'fatalus'),
       parent: create_cites_eu_species(
@@ -16,20 +16,22 @@ shared_context 'lump_definitions' do
         parent: errorus_genus
       )
     )
-  }
-  let(:lump_with_inputs) {
-    create(:nomenclature_change_lump,
+  end
+  let(:lump_with_inputs) do
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
       }
     )
-  }
-  let(:lump_with_inputs_and_output) {
+  end
+  let(:lump_with_inputs_and_output) do
     lump_with_inputs_and_output_existing_taxon
-  }
-  let(:lump_with_inputs_and_same_output) {
-    create(:nomenclature_change_lump,
+  end
+  let(:lump_with_inputs_and_same_output) do
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
@@ -39,9 +41,10 @@ shared_context 'lump_definitions' do
       },
       status: NomenclatureChange::Lump::OUTPUTS
     )
-  }
-  let(:lump_with_inputs_and_output_existing_taxon) {
-    create(:nomenclature_change_lump,
+  end
+  let(:lump_with_inputs_and_output_existing_taxon) do
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
@@ -51,9 +54,10 @@ shared_context 'lump_definitions' do
       },
       status: NomenclatureChange::Lump::OUTPUTS
     )
-  }
-  let(:lump_with_inputs_and_output_new_taxon) {
-    create(:nomenclature_change_lump,
+  end
+  let(:lump_with_inputs_and_output_new_taxon) do
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
@@ -65,9 +69,10 @@ shared_context 'lump_definitions' do
       },
       status: NomenclatureChange::Lump::OUTPUTS
     )
-  }
-  let(:lump_with_inputs_and_output_status_change) {
-    create(:nomenclature_change_lump,
+  end
+  let(:lump_with_inputs_and_output_status_change) do
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
@@ -77,9 +82,10 @@ shared_context 'lump_definitions' do
       },
       status: NomenclatureChange::Lump::OUTPUTS
     )
-  }
-  let(:lump_with_inputs_and_output_name_change) {
-    create(:nomenclature_change_lump,
+  end
+  let(:lump_with_inputs_and_output_name_change) do
+    create(
+      :nomenclature_change_lump,
       inputs_attributes: {
         0 => { taxon_concept_id: input_species1.id },
         1 => { taxon_concept_id: input_species2.id }
@@ -92,5 +98,5 @@ shared_context 'lump_definitions' do
       },
       status: NomenclatureChange::Lump::OUTPUTS
     )
-  }
+  end
 end

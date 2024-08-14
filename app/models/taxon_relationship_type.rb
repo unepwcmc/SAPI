@@ -18,6 +18,6 @@ class TaxonRelationshipType < ApplicationRecord
   build_dictionary :equal_to, :includes, :overlaps, :disjunct, :has_synonym,
     :has_hybrid, :has_trade_name
 
-  scope :intertaxonomic, -> { where(:is_intertaxonomic => true) }
-  scope :intrataxonomic, -> { where(:is_intertaxonomic => false) }
+  scope :intertaxonomic, -> { where(is_intertaxonomic: true) }
+  scope :intrataxonomic, -> { where(is_intertaxonomic: false) }
 end

@@ -10,11 +10,11 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
   end
 
   def generate_view(timestamp)
-    Dir.mkdir(VIEW_DIR) unless Dir.exist?(VIEW_DIR)
-    File.open("#{VIEW_DIR}/#{timestamp}.sql", 'w') { |f| f.write(@query) }
+    FileUtils.mkdir_p(VIEW_DIR)
+    File.write("#{VIEW_DIR}/#{timestamp}.sql", @query)
   end
 
-  private
+private
 
   def exceptions_query
     <<-SQL
@@ -212,7 +212,7 @@ class Trade::CitesSuspensionsShipments < Trade::ComplianceShipmentsParser
     where = []
     CSV.foreach(EXEMPTIONS_PATH, headers: true) do |row|
       @row = row
-      where << "\n\t\t\t\t(#{ATTRIBUTES.map { |a| send("parse_#{a.to_s}", row[a.to_s]) }.join(' AND ')})\n"
+      where << "\n\t\t\t\t(#{ATTRIBUTES.map { |a| send("parse_#{a}", row[a.to_s]) }.join(' AND ')})\n"
     end
     where.join("\n\t\t\t\tOR\n")
   end

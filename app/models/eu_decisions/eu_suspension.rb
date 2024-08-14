@@ -46,11 +46,12 @@
 #
 
 class EuSuspension < EuDecision
-
   def self.search(query)
     if query.present?
-      where("UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
-            ", :query => "%#{query}%")
+      where(
+        "UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
+            ", query: "%#{query}%"
+      )
     else
       all
     end
@@ -70,7 +71,8 @@ class EuSuspension < EuDecision
 
   def is_current
     return false if !start_event
-    return start_event.effective_at <= Date.today && start_event.is_current &&
+
+    start_event.effective_at <= Date.today && start_event.is_current &&
       (!end_event || end_event.effective_at > Date.today)
   end
 end

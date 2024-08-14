@@ -1,7 +1,7 @@
 class Admin::EuRegulationsController < Admin::EventsController
   # this needs to be specified, because otherwise defaults to 'event'
-  defaults :resource_class => EuRegulation,
-    :collection_name => 'eu_regulations', :instance_name => 'eu_regulation'
+  defaults resource_class: EuRegulation,
+    collection_name: 'eu_regulations', instance_name: 'eu_regulation'
 
   def activate
     @eu_regulation = EuRegulation.find(params[:id])
@@ -15,7 +15,7 @@ class Admin::EuRegulationsController < Admin::EventsController
     render 'create'
   end
 
-  protected
+protected
 
   def collection
     @eu_regulations ||= end_of_association_chain.
@@ -29,7 +29,7 @@ class Admin::EuRegulationsController < Admin::EventsController
       order('effective_at DESC, name ASC')
   end
 
-  private
+private
 
   def eu_regulation_params
     params.require(:eu_regulation).permit(

@@ -13,18 +13,18 @@ class Elibrary::EventsImporter
 
   def columns_with_type
     [
-      ['EventTypeID', 'INT'],
-      ['EventTypeName', 'TEXT'],
-      ['splus_event_type', 'TEXT'],
-      ['EventID', 'INT'],
-      ['EventName', 'TEXT'],
-      ['MeetingType', 'TEXT'],
-      ['EventDate', 'TEXT']
+      [ 'EventTypeID', 'INT' ],
+      [ 'EventTypeName', 'TEXT' ],
+      [ 'splus_event_type', 'TEXT' ],
+      [ 'EventID', 'INT' ],
+      [ 'EventName', 'TEXT' ],
+      [ 'MeetingType', 'TEXT' ],
+      [ 'EventDate', 'TEXT' ]
     ]
   end
 
   def run_preparatory_queries
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH cops_to_update AS (
         #{cops_to_update_sql}
       )
@@ -36,7 +36,7 @@ class Elibrary::EventsImporter
     SQL
     ApplicationRecord.connection.execute(sql)
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH srgs_to_update AS (
         #{srgs_to_update_sql}
       )
@@ -50,7 +50,7 @@ class Elibrary::EventsImporter
   end
 
   def run_queries
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       )
@@ -70,8 +70,8 @@ class Elibrary::EventsImporter
   end
 
   def all_rows_sql
-    cites = Designation.find_by_name('CITES')
-    sql = <<-SQL
+    cites = Designation.find_by(name: 'CITES')
+    sql = <<-SQL.squish
       SELECT
         EventID,
         CASE
@@ -89,7 +89,7 @@ class Elibrary::EventsImporter
   # need to update them with the elib_legacy_id & published_at date
   # matching depends on the event name & type
   def cops_to_update_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT id, e.designation_id, name, type, ne.EventID AS elib_legacy_id, ne.EventDate AS published_at
       FROM (#{all_rows_sql}) ne
       JOIN events e
@@ -115,7 +115,7 @@ class Elibrary::EventsImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT * FROM (
         #{all_rows_sql}
       ) all_rows_in_table_name
@@ -130,10 +130,9 @@ class Elibrary::EventsImporter
   end
 
   def print_breakdown
-    puts "#{Time.now} There are #{Event.count} events in total"
+    Rails.logger.debug { "#{Time.now} There are #{Event.count} events in total" }
     Event.group(:type).order(:type).count.each do |type, count|
       puts "\t #{type} #{count}"
     end
   end
-
 end

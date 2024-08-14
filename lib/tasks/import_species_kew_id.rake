@@ -1,8 +1,7 @@
 require Rails.root.join('lib/tasks/helpers_for_import.rb')
 namespace :import do
-
-  desc "Import species records from csv files (usage: rake import:species_kew_id[path/to/file,path/to/another])"
-  task :species_kew_id, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  desc 'Import species records from csv files (usage: rake import:species_kew_id[path/to/file,path/to/another])'
+  task :species_kew_id, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'species_kew_id_import'
     files = files_from_args(t, args)
     files.each do |file|
@@ -33,11 +32,11 @@ end
 # @param [String] which the rank to be copied.
 def import_data_for_kew_id(kingdom, rank, synonyms = nil)
   puts "Importing #{rank}"
-  rank_id = Rank.select(:id).where(:name => rank).first.id
-  existing = TaxonConcept.where(:rank_id => rank_id).count
+  rank_id = Rank.select(:id).where(name: rank).first.id
+  existing = TaxonConcept.where(rank_id: rank_id).count
   puts "There were #{existing} #{rank} before we started"
 
-  sql = <<-SQL
+  sql = <<-SQL.squish
     INSERT INTO taxon_names(scientific_name, created_at, updated_at)
       SELECT DISTINCT
         CASE
@@ -50,14 +49,14 @@ def import_data_for_kew_id(kingdom, rank, synonyms = nil)
         FROM taxon_names
         WHERE (
           #{if rank == 'SPECIES'
-              """
+              "
                 UPPER(BTRIM(scientific_name)) = UPPER(BTRIM(SPLIT_PART(#{TMP_TABLE}.Name,' ',2)))
                 AND #{TMP_TABLE}.Rank = 'Species'
-              """
+              "
             else
-              """
+              "
                 UPPER(BTRIM(scientific_name)) = UPPER(BTRIM(#{TMP_TABLE}.Name))
-              """
+              "
             end
           }
         )
@@ -78,10 +77,10 @@ def import_data_for_kew_id(kingdom, rank, synonyms = nil)
     ApplicationRecord.connection.execute('CREATE INDEX species_import_name ON species_kew_id_import (name)')
   end
 
-  [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+  [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
     puts "Import #{taxonomy_name} taxa"
-    taxonomy = Taxonomy.find_by_name(taxonomy_name)
-    sql = <<-SQL
+    taxonomy = Taxonomy.find_by(name: taxonomy_name)
+    sql = <<-SQL.squish
       WITH to_be_inserted AS (
         SELECT DISTINCT
           taxon_names.id AS taxon_name_id,
@@ -163,5 +162,5 @@ def import_data_for_kew_id(kingdom, rank, synonyms = nil)
     # puts "#{taxonomy.name} #{rank} #{kingdom}"
     ApplicationRecord.connection.execute(sql)
   end
-  puts "#{TaxonConcept.where(:rank_id => rank_id).count - existing} #{rank} added"
+  puts "#{TaxonConcept.where(rank_id: rank_id).count - existing} #{rank} added"
 end
