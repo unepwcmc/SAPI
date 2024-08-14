@@ -157,8 +157,7 @@ private
         res[$1 + '_id'] = tmp_def
       else
         tmp_def = {}
-        # TODO: bracket the following
-        scope_def.keys & [ 'inclusion', 'exclusion', 'blank' ].each do |k|
+        (scope_def.keys & [ 'inclusion', 'exclusion', 'blank' ]).each do |k|
           tmp_def[k] = scope_def[k]
         end
         res[scope_column + '_id'] = tmp_def
