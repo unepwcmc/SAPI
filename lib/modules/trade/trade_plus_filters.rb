@@ -1,5 +1,9 @@
+
 class Trade::TradePlusFilters
   attr_reader :locale
+
+  # We are composing SQL with comments, so line breaks are important.
+  # rubocop:disable Rails/SquishedSQLHeredocs
 
   ATTRIBUTES = %w[
     importer exporter origin term
@@ -15,6 +19,7 @@ class Trade::TradePlusFilters
   def response_ordering(response)
     result = {}
     grouped = response.group_by { |r| r['attribute_name'] }
+
     grouped.each do |k, v|
       values = format_values(k, v)
       result[k] = values.sort_by { |i| ordering(k, i['name']) }
@@ -22,11 +27,13 @@ class Trade::TradePlusFilters
       # this is to push the "unreported" value at the bottom of the list
       result[k] = values.partition { |value| value['id'] != 'unreported' }.reduce(:+) if [ 'sources', 'purposes' ].include?(k)
     end
+
     result
   end
 
   def query
-    <<-SQL.squish
+    # inner_query has comments, so don't be tempted to squish this string
+    <<-SQL
       SELECT *
       FROM (#{inner_query}) AS s
     SQL
@@ -62,6 +69,7 @@ class Trade::TradePlusFilters
 
   def inner_query
     query = []
+
     ATTRIBUTES.each do |attr|
       if %w[year appendix].include? attr
         query << sub_query([ attr, attr ], attr.pluralize)
@@ -73,10 +81,12 @@ class Trade::TradePlusFilters
         query << sub_query([ attr, "#{attr}_id" ], attr.pluralize)
       end
     end
+
     query << sub_query([ "group_name_#{locale}", "group_name_#{locale}" ], 'taxonomic_groups')
     query << country_query
 
-    <<-SQL.squish
+    # country_query has comments, so don't be tempted to squish this string
+    <<-SQL
       #{query.join(' UNION ') }
     SQL
   end
@@ -90,7 +100,8 @@ class Trade::TradePlusFilters
 
     #  Exclude possible null values for taxonomic groups
     condition = "WHERE #{attributes[0]} IS NOT NULL" if attributes[0] == "group_name_#{locale}"
-    <<-SQL.squish
+
+    <<-SQL
       SELECT '#{as}' AS attribute_name, json_build_object(#{json_values})::jsonb AS data
       FROM #{table_name}
       #{condition}

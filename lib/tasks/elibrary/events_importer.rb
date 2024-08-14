@@ -3,6 +3,9 @@ require Rails.root.join('lib/tasks/elibrary/importable.rb')
 class Elibrary::EventsImporter
   include Elibrary::Importable
 
+  # We are composing SQL with comments, so line breaks are important.
+  # rubocop:disable Rails/SquishedSQLHeredocs
+
   def initialize(file_name)
     @file_name = file_name
   end
@@ -24,7 +27,7 @@ class Elibrary::EventsImporter
   end
 
   def run_preparatory_queries
-    sql = <<-SQL.squish
+    sql = <<-SQL
       WITH cops_to_update AS (
         #{cops_to_update_sql}
       )
@@ -34,9 +37,10 @@ class Elibrary::EventsImporter
       FROM cops_to_update
       WHERE events.id = cops_to_update.id
     SQL
+
     ApplicationRecord.connection.execute(sql)
 
-    sql = <<-SQL.squish
+    sql = <<-SQL
       WITH srgs_to_update AS (
         #{srgs_to_update_sql}
       )
@@ -46,11 +50,12 @@ class Elibrary::EventsImporter
       FROM srgs_to_update
       WHERE events.id = srgs_to_update.id
     SQL
+
     ApplicationRecord.connection.execute(sql)
   end
 
   def run_queries
-    sql = <<-SQL.squish
+    sql = <<-SQL
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       )
@@ -71,7 +76,8 @@ class Elibrary::EventsImporter
 
   def all_rows_sql
     cites = Designation.find_by(name: 'CITES')
-    sql = <<-SQL.squish
+
+    <<-SQL
       SELECT
         EventID,
         CASE
@@ -89,7 +95,7 @@ class Elibrary::EventsImporter
   # need to update them with the elib_legacy_id & published_at date
   # matching depends on the event name & type
   def cops_to_update_sql
-    sql = <<-SQL.squish
+    <<-SQL
       SELECT id, e.designation_id, name, type, ne.EventID AS elib_legacy_id, ne.EventDate AS published_at
       FROM (#{all_rows_sql}) ne
       JOIN events e
@@ -104,7 +110,7 @@ class Elibrary::EventsImporter
   # need to update them with the elib_legacy_id & published_at date
   # matching depends on the event name & type
   def srgs_to_update_sql
-    sql = <<-SQL
+    <<-SQL
       SELECT id, e.designation_id, name, type, ne.EventID AS elib_legacy_id, ne.EventDate AS published_at
       FROM (#{all_rows_sql}) ne
       JOIN events e -- designation_id left empty for EC SRGs
@@ -115,7 +121,7 @@ class Elibrary::EventsImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL.squish
+    <<-SQL
       SELECT * FROM (
         #{all_rows_sql}
       ) all_rows_in_table_name
