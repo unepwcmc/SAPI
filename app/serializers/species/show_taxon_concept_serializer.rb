@@ -95,28 +95,37 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def common_names
-    CommonName.from('api_common_names_view AS common_names').
-      where(taxon_concept_id: object.id).
-      select('language_name_en AS lang').
-      select("string_agg(name, ', ') AS names").
-      select(<<-SQL.squish
-          CASE
-            WHEN UPPER(language_name_en) = 'ENGLISH' OR
-              UPPER(language_name_en) = 'FRENCH' OR
-              UPPER(language_name_en) = 'SPANISH'
-              THEN true
-            ELSE false
-          END AS convention_language
-        SQL
-            ).
-      group('language_name_en').order('language_name_en').all
+    CommonName.from(
+      'api_common_names_view AS common_names'
+    ).where(
+      taxon_concept_id: object.id
+    ).select(
+      'language_name_en AS lang'
+    ).select(
+      "string_agg(name, ', ') AS names"
+    ).select(
+      <<-SQL.squish
+        CASE
+          WHEN UPPER(language_name_en) = 'ENGLISH' OR
+            UPPER(language_name_en) = 'FRENCH' OR
+            UPPER(language_name_en) = 'SPANISH'
+            THEN true
+          ELSE false
+        END AS convention_language
+      SQL
+    ).group('language_name_en').order('language_name_en').all
   end
 
   def distributions_with_tags_and_references
-    Distribution.from('api_distributions_view AS distributions').
-      where(taxon_concept_id: object.id).
-      select("name_en AS name, name_en AS country, ARRAY_TO_STRING(tags,  ',') AS tags_list, ARRAY_TO_STRING(citations, '; ') AS country_references").
-      order('name_en').all
+    Distribution.from(
+      'api_distributions_view AS distributions'
+    ).where(
+      taxon_concept_id: object.id
+    ).select(
+      "name_en AS name, name_en AS country, ARRAY_TO_STRING(tags,  ',') AS tags_list, ARRAY_TO_STRING(citations, '; ') AS country_references"
+    ).order(
+      'name_en'
+    ).all
   end
 
   def distributions
@@ -124,17 +133,27 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def distributions_with_tags_and_references_trimmed
-    Distribution.from('api_distributions_view AS distributions').
-      where(taxon_concept_id: object.id).
-      select("iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list").
-      order('iso_code2').all
+    Distribution.from(
+      'api_distributions_view AS distributions'
+    ).where(
+      taxon_concept_id: object.id
+    ).select(
+      "iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list"
+    ).order(
+      'iso_code2'
+    ).all
   end
 
   def subspecies
-    MTaxonConcept.where(parent_id: object.id).
-      where("name_status NOT IN ('S', 'T', 'N')").
-      select([ :full_name, :author_year, :id, :show_in_species_plus ]).
-      order(:full_name).all
+    MTaxonConcept.where(
+      parent_id: object.id
+    ).where(
+      "name_status NOT IN ('S', 'T', 'N')"
+    ).select(
+      [ :full_name, :author_year, :id, :show_in_species_plus ]
+    ).order(
+      :full_name
+    ).all
   end
 
   def standard_references
