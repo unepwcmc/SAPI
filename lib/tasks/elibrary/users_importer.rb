@@ -38,11 +38,12 @@ class Elibrary::UsersImporter
         NOW()
       FROM rows_to_insert
     SQL
+
     ApplicationRecord.connection.execute(sql)
   end
 
   def all_rows_sql
-    sql = <<-SQL.squish
+    <<-SQL.squish
       SELECT
         LoweredEmail,
         COALESCE(
@@ -79,7 +80,7 @@ class Elibrary::UsersImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL.squish
+    <<-SQL.squish
       SELECT
         email,
         name,
