@@ -4,11 +4,11 @@ namespace :import do
   desc 'import trade plus conversion rules'
   task trade_rules: [ :environment ] do
     path_to_groups_file = "#{Rails.application.root}/lib/data/trade_taxon_groups.yml"
-    abort("File doesn't exist.") unless File.exists?(path_to_groups_file)
+    abort("File doesn't exist.") unless File.exist?(path_to_groups_file)
     groups_definition = YAML.load_file(path_to_groups_file)
 
     path_to_rules_file = "#{Rails.application.root}/lib/data/trade_mapping.yml"
-    abort("File doesn't exist.") unless File.exists?(path_to_rules_file)
+    abort("File doesn't exist.") unless File.exist?(path_to_rules_file)
     rules_definition = YAML.load_file(path_to_rules_file)
 
     ApplicationRecord.transaction do
