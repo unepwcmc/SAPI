@@ -261,10 +261,6 @@ private
   end
 
   def self.citations_need_refreshing?
-    Rails.logger.debug DocumentCitation.where(
-      'updated_at > ?', REFRESH_INTERVAL.minutes.ago
-    ).to_sql
-
     DocumentCitation.where(
       'updated_at > ?', REFRESH_INTERVAL.minutes.ago
     ).limit(1).count > 0 ||

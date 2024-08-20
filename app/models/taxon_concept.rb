@@ -630,7 +630,6 @@ private
   def ensure_species_touched
     if rank && parent && [ Rank::SUBSPECIES, Rank::VARIETY ].include?(rank.name)
       # touch parent if we're a variety or subspecies
-      Rails.logger.info 'Touch species'
       parent.touch
     end
   end
