@@ -94,6 +94,8 @@ class Document < ApplicationRecord
     where(id: ids).order(Arel.sql(order))
   }
 
+  serialize :document_language_versions, coder: JSON
+
   # This hot fix was needed to import document objects without attachment(external link)
   # Kepping this code just as reference for future
   # def filename=(arg)
