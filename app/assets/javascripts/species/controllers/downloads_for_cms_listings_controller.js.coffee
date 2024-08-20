@@ -97,6 +97,12 @@ Species.DownloadsForCmsListingsController = Ember.Controller.extend
           return
         else
           @set('downloadMessage', 'No results')
+      ).fail((jqXHR) =>
+        @set('downloadInProgress', false)
+
+        errorStatusText = jqXHR.statusText || 'Unknown error'
+
+        @set('downloadMessage', 'Download Failed (' + errorStatusText + ')')
       )
 
     deleteTaxonConceptSelection: (context) ->
