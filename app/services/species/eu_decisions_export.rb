@@ -13,10 +13,18 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
 
   HISTORIC_III_OPINIONS = [ '(No opinion) iii)', '(No opinion) iii) removed' ].freeze
   def query
-    rel = EuDecision.from("#{table_name} AS eu_decisions").
-      select(sql_columns).
-      order(:taxonomic_position, :party, :ordering_date)
-    return rel.where(srg_history: @eu_decision_filter) if @eu_decision_filter == 'In consultation'
+    rel = EuDecision.from(
+      "#{table_name} AS eu_decisions"
+    ).select(sql_columns).order(
+      :taxonomic_position, :party, :ordering_date
+    )
+
+    return rel.where( # rubocop:disable Rails/WhereEquals
+      # Base table has `srg_history_id`, view has string `srg_history`:
+      # Use literal, as with a hash, Rails will assume you mean the
+      # association `srg_history`, and test the foreign key.
+      'srg_history = ?', @eu_decision_filter
+    ) if @eu_decision_filter == 'In consultation'
 
     if @set == 'current'
       rel = rel.where(is_valid: true)
