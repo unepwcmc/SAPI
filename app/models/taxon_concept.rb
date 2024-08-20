@@ -439,6 +439,7 @@ class TaxonConcept < ApplicationRecord
         when 'H'
           TaxonRelationshipType.find_by(name: TaxonRelationshipType::HAS_HYBRID)
         end
+
       add_remove_relationships(new_taxa, removed_taxa, rel_type)
     end
   end
@@ -467,12 +468,14 @@ protected
         rank_name = rank.name
         parent_full_name = parent.full_name
         name = @scientific_name || scientific_name
+
         # if name is present, just in case it is a multipart name
         # e.g. when changing status from S, T, H
         # make sure to only use last part
         if name.present?
           name = TaxonName.sanitize_scientific_name(name)
         end
+
         if name.blank?
           nil
         elsif [ Rank::SPECIES, Rank::SUBSPECIES ].include?(rank_name)
@@ -491,11 +494,10 @@ private
 
   def add_remove_relationships(new_taxa, removed_taxa, rel_type)
     removed_taxa.each do |taxon_concept|
-      taxon_concept.taxon_relationships.
-        where('other_taxon_concept_id = ? AND
-              taxon_relationship_type_id = ?', id, rel_type.id
-        ).
-        destroy_all
+      taxon_concept.taxon_relationships.where(
+        'other_taxon_concept_id = ? AND taxon_relationship_type_id = ?',
+        id, rel_type.id
+      ).destroy_all
     end
 
     new_taxa.each do |taxon_concept|
@@ -511,10 +513,11 @@ private
 
     current_ids =
       case name_status
-      when 'S' then accepted_names.pluck(:id)
-      when 'T' then accepted_names_for_trade_name.pluck(:id)
-      when 'H' then hybrid_parents.pluck(:id)
+        when 'S' then accepted_names.pluck(:id)
+        when 'T' then accepted_names_for_trade_name.pluck(:id)
+        when 'H' then hybrid_parents.pluck(:id)
       end
+
     ids_to_add = new_ids - current_ids
     ids_to_remove = current_ids - new_ids
 
@@ -547,6 +550,7 @@ private
     if some_full_name =~ /\A(.+)\s+(#{Rank.dict.join('|')})\s*\Z/
       some_full_name = $1
     end
+
     # strip redundant whitespace between words
     some_full_name = some_full_name.split(/\s/).join(' ').capitalize
   end
@@ -602,6 +606,7 @@ private
             maximum(:taxonomic_position)
           last_root || '0'
         end
+
       prev_taxonomic_position_parts = prev_taxonomic_position.split('.')
       prev_taxonomic_position_parts << ((prev_taxonomic_position_parts.pop || 0).to_i + 1)
       self.taxonomic_position = prev_taxonomic_position_parts.join('.')
@@ -614,6 +619,7 @@ private
       errors.add(:full_name, 'cannot be changed')
       return false
     end
+
     true
   end
 

@@ -23,7 +23,11 @@ class DocumentSearch
       @query.count(:all)
     else
       query = "SELECT count(*) AS count_all FROM (#{@query.to_sql}) x"
-      count = ApplicationRecord.connection.execute(query).first.try(:[], 'count_all').to_i
+      count = ApplicationRecord.connection.execute(
+        query
+      ).first.try(
+        :[], 'count_all'
+      ).to_i
     end
   end
 
@@ -51,16 +55,20 @@ private
 
   def initialize_params(options)
     @options = DocumentSearchParams.sanitize(options)
+
     @options.keys.each { |k| instance_variable_set("@#{k}", @options[k]) }
+
     @offset = @per_page * (@page - 1)
   end
 
   def initialize_query
     @query = Document.from("#{table_name} AS documents")
     @query = @query.where(is_public: true) unless @show_private
+
     add_conditions_for_event
     add_conditions_for_document
     add_extra_conditions
+
     if admin_interface?
       add_ordering_for_admin
     else
@@ -71,8 +79,10 @@ private
   def add_conditions_for_event
     if @events_ids.present?
       @query = @query.where(event_id: @events_ids)
+
       return
     end
+
     return if @event_type.blank?
 
     if @event_type == 'Other'
@@ -80,7 +90,10 @@ private
       @query = @query.where(
         <<-SQL.squish
           event_type IS NULL
-          OR event_type NOT IN ('EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'CitesTc', 'CitesExtraordinaryMeeting', 'IdMaterials')
+          OR event_type NOT IN (
+            'EcSrg', 'CitesCop', 'CitesAc', 'CitesPc', 'CitesTc',
+            'CitesExtraordinaryMeeting', 'IdMaterials'
+          )
         SQL
       )
     else
@@ -103,13 +116,16 @@ private
       if @document_date_start.present?
         @query = @query.where(documents: { date_raw: @document_date_start.. })
       end
+
       if @document_date_end.present?
         @query = @query.where(documents: { date_raw: ..@document_date_end })
       end
     end
 
     if @general_subtype.present?
-      @query = @query.where(general_subtype: @general_subtype.split(',').flatten)
+      @query = @query.where(
+        general_subtype: @general_subtype.split(',').flatten
+      )
     end
   end
 
@@ -121,16 +137,19 @@ private
     elsif @geo_entities_ids.present?
       add_geo_entities_condition
     end
+
     add_document_tags_condition if @document_tags_ids.present?
   end
 
   def add_citations_condition
     combinations = @taxon_concepts_ids.product(@geo_entities_ids)
     condition_values = []
+
     condition_string = combinations.map do |c|
       condition_values += c
       'taxon_concept_id = ? AND geo_entity_id = ?'
     end.join(' OR ')
+
     filter_by_citations(
       condition_string,
       condition_values
@@ -167,7 +186,9 @@ private
   end
 
   def add_document_tags_condition
-    @query = @query.where("document_tags_ids && ARRAY[#{@document_tags_ids.join(',')}]")
+    @query = @query.where(
+      "document_tags_ids && ARRAY[#{@document_tags_ids.join(',')}]"
+    )
   end
 
   def add_ordering_for_admin
@@ -190,6 +211,7 @@ private
       proposal_number, primary_document_id,
       geo_entity_names, taxon_names, taxon_concept_ids,
       proposal_outcome, review_phase"
+
     aggregators = <<-SQL.squish
       ARRAY_TO_JSON(
         ARRAY_AGG_NOTNULL(
@@ -202,6 +224,7 @@ private
         )
       ) AS document_language_versions
     SQL
+
     @query = Document.from(
       '(' + @query.to_sql + ') AS documents'
     ).select(columns + ',' + aggregators).group(columns)
@@ -231,24 +254,40 @@ private
   REFRESH_INTERVAL = 5
 
   def self.documents_need_refreshing?
-    Document.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).limit(1).count > 0 ||
-    Document.count < Document.from('api_documents_mview AS documents').count
+    Document.where(
+      'updated_at > ?', REFRESH_INTERVAL.minutes.ago
+    ).limit(1).count > 0 ||
+      Document.count < Document.from('api_documents_mview AS documents').count
   end
 
   def self.citations_need_refreshing?
-    Rails.logger.debug DocumentCitation.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).to_sql
-    DocumentCitation.where('updated_at > ?', REFRESH_INTERVAL.minutes.ago).limit(1).count > 0 ||
-    DocumentCitation.count < DocumentCitation.select('DISTINCT id').
-      from('document_citations_mview AS citations').count
+    Rails.logger.debug DocumentCitation.where(
+      'updated_at > ?', REFRESH_INTERVAL.minutes.ago
+    ).to_sql
+
+    DocumentCitation.where(
+      'updated_at > ?', REFRESH_INTERVAL.minutes.ago
+    ).limit(1).count > 0 ||
+      DocumentCitation.count < DocumentCitation.select(
+        'DISTINCT id'
+      ).from(
+        'document_citations_mview AS citations'
+      ).count
   end
 
   def self.refresh_documents
-    ApplicationRecord.connection.execute('REFRESH MATERIALIZED VIEW api_documents_mview')
+    ApplicationRecord.connection.execute(
+      'REFRESH MATERIALIZED VIEW api_documents_mview'
+    )
+
     DocumentSearch.increment_cache_iterator
   end
 
   def self.refresh_citations_and_documents
-    ApplicationRecord.connection.execute('REFRESH MATERIALIZED VIEW document_citations_mview')
+    ApplicationRecord.connection.execute(
+      'REFRESH MATERIALIZED VIEW document_citations_mview'
+    )
+
     refresh_documents
   end
 

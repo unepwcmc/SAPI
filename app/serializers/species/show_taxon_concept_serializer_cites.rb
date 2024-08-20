@@ -1,13 +1,22 @@
 class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerializer
   attributes :cites_listing, :eu_listing
-  has_many :quotas, serializer: Species::QuotaSerializer, key: :cites_quotas
-  has_many :cites_suspensions, serializer: Species::CitesSuspensionSerializer
-  has_many :cites_listing_changes, serializer: Species::CitesListingChangeSerializer,
+
+  has_many :quotas,
+    serializer: Species::QuotaSerializer,
+    key: :cites_quotas
+  has_many :cites_suspensions,
+    serializer: Species::CitesSuspensionSerializer
+  has_many :cites_listing_changes,
+    serializer: Species::CitesListingChangeSerializer,
     key: :cites_listings
-  has_many :eu_listing_changes, serializer: Species::EuListingChangeSerializer,
+  has_many :eu_listing_changes,
+    serializer: Species::EuListingChangeSerializer,
     key: :eu_listings
-  has_many :eu_decisions, serializer: Species::EuDecisionSerializer
-  has_many :processes, serializer: Species::CitesProcessSerializer, key: :cites_processes
+  has_many :eu_decisions,
+    serializer: Species::EuDecisionSerializer
+  has_many :processes,
+    serializer: Species::CitesProcessSerializer,
+    key: :cites_processes
 
   def processes
     CitesProcess.includes(
@@ -59,9 +68,15 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
         <<-SQL.squish
           trade_restrictions.taxon_concept_id IN (:object_and_children)
           OR (
-            (trade_restrictions.taxon_concept_id IN (:ancestors) OR trade_restrictions.taxon_concept_id IS NULL)
-            AND trade_restrictions.geo_entity_id IN
-              (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = :taxon_concept_id)
+            (
+              trade_restrictions.taxon_concept_id IN (:ancestors)
+              OR trade_restrictions.taxon_concept_id IS NULL
+            )
+            AND trade_restrictions.geo_entity_id IN (
+              SELECT geo_entity_id
+              FROM distributions
+              WHERE distributions.taxon_concept_id = :taxon_concept_id
+            )
           )
         SQL
       ),
@@ -78,7 +93,10 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
         trade_restrictions.is_current,
         trade_restrictions.geo_entity_id,
         trade_restrictions.unit_id,
-        CASE WHEN quota IS NULL THEN 'in prep.' ELSE quota::TEXT END AS quota_for_display,
+        CASE
+          WHEN quota IS NULL THEN 'in prep.'
+          ELSE quota::TEXT
+        END AS quota_for_display,
         trade_restrictions.public_display,
         trade_restrictions.nomenclature_note_en,
         trade_restrictions.nomenclature_note_fr,
@@ -90,7 +108,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           WHEN taxon_concept->>'rank' = '#{object.rank_name}'
           THEN NULL
           ELSE
-          '[Quota for ' || (taxon_concept->>'rank')::TEXT || ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
+            '[Quota for ' || (taxon_concept->>'rank')::TEXT ||
+            ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
         END AS subspecies_info
       SQL
     ).order(
@@ -113,9 +132,15 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           trade_restrictions.taxon_concept_id IN (:object_and_children)
           OR (
             NOT applies_to_import
-            AND (trade_restrictions.taxon_concept_id IN (:ancestors) OR trade_restrictions.taxon_concept_id IS NULL)
-            AND trade_restrictions.geo_entity_id IN
-              (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = :taxon_concept_id)
+            AND (
+              trade_restrictions.taxon_concept_id IN (:ancestors)
+              OR trade_restrictions.taxon_concept_id IS NULL
+            )
+            AND trade_restrictions.geo_entity_id IN (
+              SELECT geo_entity_id
+              FROM distributions
+              WHERE distributions.taxon_concept_id = :taxon_concept_id
+            )
           )
           OR (
             (applies_to_import OR trade_restrictions.geo_entity_id IS NULL)
@@ -147,7 +172,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           WHEN taxon_concept->>'rank' = '#{object.rank_name}'
           THEN NULL
           ELSE
-          '[Suspension for ' || (taxon_concept->>'rank')::TEXT || ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
+            '[Suspension for ' || (taxon_concept->>'rank')::TEXT ||
+            ' <i>' || (taxon_concept->>'full_name')::TEXT || '</i>]'
         END AS subspecies_info
       SQL
     ).order(
@@ -164,7 +190,9 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def eu_decisions
     # The following variables are used to temporarily force the Anthozoa negative opinion
     # for Cambodia to cascade down and show regardless of the children distributions.
-    anthozoa_statement, ancestors_field = force_anthozoa_statement.values_at(*%i[statement ancestors_field])
+    anthozoa_statement, ancestors_field = force_anthozoa_statement.values_at(
+      *%i[statement ancestors_field]
+    )
 
     EuDecision.from(
       'api_eu_decisions_view AS eu_decisions'
@@ -174,8 +202,11 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           eu_decisions.taxon_concept_id IN (?)
           OR (
             eu_decisions.taxon_concept_id IN (?)
-            AND eu_decisions.geo_entity_id IN
-              (SELECT geo_entity_id FROM distributions WHERE distributions.taxon_concept_id = ?)
+            AND eu_decisions.geo_entity_id IN (
+              SELECT geo_entity_id
+              FROM distributions
+              WHERE distributions.taxon_concept_id = ?
+            )
           )
           #{anthozoa_statement}
         SQL
