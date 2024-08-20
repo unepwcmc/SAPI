@@ -29,12 +29,14 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     if @set == 'current'
       rel = rel.where(is_valid: true)
     end
+
     if @geo_entities_ids.present?
       geo_entities_ids = GeoEntity.nodes_and_descendants(
         @geo_entities_ids
       ).map(&:id)
       rel = rel.where(geo_entity_id: geo_entities_ids)
     end
+
     if @taxon_concepts_ids.present?
       conds_str = <<-SQL.squish
         ARRAY[
@@ -45,6 +47,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
       SQL
       rel = rel.where(conds_str, @taxon_concepts_ids.map(&:to_i))
     end
+
     if @years.present?
       rel = rel.where(
         'EXTRACT(YEAR FROM start_date)::INTEGER IN (?)', @years.map(&:to_i)
@@ -64,8 +67,8 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
         end
     end
 
-     # remove decisions with NULL type 'decision_type IS NOT NULL'
-     rel = rel.where.not(decision_type: nil)
+    # remove decisions with NULL type 'decision_type IS NOT NULL'
+    rel = rel.where.not(decision_type: nil)
 
     # exclude EU decisions 'Discussed at SRG' by default
     # IS DISTINCT FROM allows to return records with NULL as well
@@ -83,7 +86,7 @@ private
   end
 
   def csv_column_headers
-    headers = [
+    [
       'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
       'Genus', 'Species', 'Subspecies',
       'Full Name', 'Rank', 'Date of Decision', 'Valid since', 'Party',
@@ -93,7 +96,7 @@ private
   end
 
   def sql_columns
-    columns = [
+    [
       :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
       :full_name, :rank_name, :start_date_formatted, :original_start_date_formatted, :party,
