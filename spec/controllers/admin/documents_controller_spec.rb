@@ -29,41 +29,43 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
       it 'assigns @documents sorted by time of creation' do
         get :index
-        expect(assigns(:documents)).to eq([ @document3, @public_document, @document2, @document1 ])
+        expect(assigns(:documents).map(&:id)).to eq(
+          [ @document3, @public_document, @document2, @document1 ].map(&:id)
+        )
       end
 
       context 'search' do
         it 'runs a full text search on title' do
           get :index, params: { 'title_query' => 'good' }
-          expect(assigns(:documents)).to eq([ @document2 ])
+          expect(assigns(:documents).map(&:id)).to eq([ @document2 ].map(&:id))
         end
         it 'retrieves documents inclusive of the given start date' do
           get :index, params: { 'document_date_start' => '25/12/2014' }
-          expect(assigns(:documents)).to eq([ @public_document, @document2, @document1 ])
+          expect(assigns(:documents).map(&:id)).to eq([ @public_document, @document2, @document1 ].map(&:id))
         end
         it 'retrieves documents inclusive of the given end date' do
           get :index, params: { 'document_date_end' => '01/01/2014' }
-          expect(assigns(:documents)).to eq([ @document3 ])
+          expect(assigns(:documents).map(&:id)).to eq([ @document3 ].map(&:id))
         end
         it 'retrieves documents after the given date' do
           get :index, params: { 'document_date_start' => '10/01/2014' }
-          expect(assigns(:documents)).to eq([ @public_document, @document2, @document1 ])
+          expect(assigns(:documents).map(&:id)).to eq([ @public_document, @document2, @document1 ].map(&:id))
         end
         it 'retrieves documents before the given date' do
           get :index, params: { 'document_date_end' => '10/01/2014' }
-          expect(assigns(:documents)).to eq([ @document3 ])
+          expect(assigns(:documents).map(&:id)).to eq([ @document3 ].map(&:id))
         end
         it 'ignores invalid dates' do
           get :index, params: { 'document_date_start' => '34/24/12', 'document_date_end' => '34/24/12' }
-          expect(assigns(:documents)).to eq([ @document3, @public_document, @document2, @document1 ])
+          expect(assigns(:documents).map(&:id)).to eq([ @document3, @public_document, @document2, @document1 ].map(&:id))
         end
         it 'retrieves documents for taxon concept' do
           get :index, params: { 'taxon_concepts_ids' => taxon_concept.id }
-          expect(assigns(:documents)).to eq([ @public_document, @document1 ])
+          expect(assigns(:documents).map(&:id)).to eq([ @public_document, @document1 ].map(&:id))
         end
         it 'retrieves documents for geo entity' do
           get :index, params: { 'geo_entities_ids' => [ geo_entity.id ] }
-          expect(assigns(:documents)).to eq([ @document2 ])
+          expect(assigns(:documents).map(&:id)).to eq([ @document2 ].map(&:id))
         end
         context 'by proposal outcome' do
           before(:each) do
@@ -109,14 +111,14 @@ describe Admin::DocumentsController, sidekiq: :inline do
           @document3 = create(:document, title: 'CC hello world', event: event2)
           DocumentSearch.refresh_citations_and_documents
           get :index, params: { events_ids: [ event.id, event2.id ] }
-          expect(assigns(:documents)).to eq([ @document3, @document2, @document1, @public_document ])
+          expect(assigns(:documents).map(&:id)).to eq([ @document3, @document2, @document1, @public_document ].map(&:id))
         end
       end
       context 'when secretariat is logged in' do
         login_secretariat_user
         it 'returns only public documents' do
           get :index
-          expect(assigns(:documents)).to eq([ @public_document ])
+          expect(assigns(:documents).map(&:id)).to eq([ @public_document ].map(&:id))
         end
       end
     end
