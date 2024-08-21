@@ -14,13 +14,22 @@ module AdminHelper
   end
 
   def tracking_info(record)
+    creator_name = Rack::Utils.escape_html(
+      record.creator.try(:name) || 'DATA_IMPORT'
+    )
+
+    updater_name = Rack::Utils.escape_html(
+      record.updater.try(:name) || 'DATA_IMPORT'
+    )
+
     info = <<-HTML
-      <p>Created by #{record.creator.try(:name) || "DATA_IMPORT"} on
+      <p>Created by #{creator_name} on
         #{record.created_at.strftime("%d/%m/%Y")}<br />
-        Last updated by #{record.updater.try(:name) || "DATA_IMPORT"} on
+        Last updated by #{updater_name} on
         #{record.updated_at.strftime("%d/%m/%Y")}
       </p>
     HTML
+
     content_tag(
       :a, rel: 'tooltip', href: '#',
       'data-original-title': info, 'data-html': true
