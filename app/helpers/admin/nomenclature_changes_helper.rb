@@ -144,7 +144,7 @@ module Admin::NomenclatureChangesHelper
     @nomenclature_change.outputs.map do |output|
       html +=
         content_tag(:div, class: 'species-checkbox') do
-          tag.input({ type: 'checkbox', class: 'select-partial-checkbox', checked: checked }) +
+          tag.input(type: 'checkbox', class: 'select-partial-checkbox', checked: checked) +
           content_tag(:span, output.display_full_name, class: 'species-name')
         end
     end
