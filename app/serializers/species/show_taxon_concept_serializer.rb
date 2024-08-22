@@ -122,7 +122,15 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     ).where(
       taxon_concept_id: object.id
     ).select(
-      "name_en AS name, name_en AS country, ARRAY_TO_STRING(tags,  ',') AS tags_list, ARRAY_TO_STRING(citations, '; ') AS country_references"
+      <<-SQL.squish
+        iso_code2,
+        geo_entity_id,
+        json_build_object(
+          'id', geo_entity_id
+        ) AS geo_entity,
+        ARRAY_TO_STRING(tags,  ',') AS tags_list,
+        ARRAY_TO_STRING(citations, '; ') AS country_references
+      SQL
     ).order(
       'name_en'
     ).all
@@ -138,7 +146,14 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     ).where(
       taxon_concept_id: object.id
     ).select(
-      "iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list"
+      <<-SQL.squish
+        iso_code2,
+        geo_entity_id,
+        json_build_object(
+          'id', geo_entity_id
+        ) AS geo_entity,
+        ARRAY_TO_STRING(tags,  ',') AS tags_list
+      SQL
     ).order(
       'iso_code2'
     ).all
