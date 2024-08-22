@@ -9,6 +9,10 @@ class Document::SearchResult < Document
   attribute :taxon_names, type: String, array: true
   attribute :document_tags_ids, type: Integer, array: true
 
+  # Under no circumstances should we attempt to save this reconstituted model
+  # into the database
+  after_initialize { readonly! }
+
   # We need these attributes because we create these objects as
   # Document.from('some_table AS documents'), and some_table may have additional
   # attributes compared to document
