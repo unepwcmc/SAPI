@@ -6,18 +6,32 @@ class Checklist::TimelinesForTaxonConcept
   def initialize(taxon_concept)
     @taxon_concept_id = taxon_concept.id
     @id = @taxon_concept_id
+
     listing_changes = taxon_concept.cites_listing_changes.where(
       show_in_timeline: true
-    ).order(:effective_at)
+    ).order(
+      Arel.sql(
+        <<-SQL.squish
+          effective_at ASC,
+          array_position(
+            '{DELETION,RESERVATION,RESERVATION_WITHDRAWAL,EXCEPTION,ADDITION,AMENDMENT}'::TEXT[],
+            change_type_name::TEXT
+          ) ASC
+        SQL
+      )
+    )
+
     @current_appendices = listing_changes.where(
       is_current: true,
       change_type_name: ChangeType::ADDITION
     ).map(&:species_listing_name)
+
     @timeline_events = listing_changes.map(&:to_timeline_event)
     @has_descendant_timelines = taxon_concept.cites_listed_descendants
     @has_events = !@timeline_events.empty?
     @time_start = Time.new(1975, 01, 01)
     @time_end = Time.new(Time.now.year + 2, 1, 1)
+
     generate_timelines
     generate_timeline_years
   end
