@@ -18,7 +18,16 @@ class DocumentSearch
   # NB: this TODO has existed for some time.
   # .limit(@per_page).offset(@offset)
   def results
-    @query.to_a
+    @query.to_a.map do |record|
+      record.attributes
+    end
+  end
+
+  def cached_results
+    # Deserialise the result
+    super.map do |json_doc|
+      Document::SearchResult.new json_doc
+    end
   end
 
   def total_cnt

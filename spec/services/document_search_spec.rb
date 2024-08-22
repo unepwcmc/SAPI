@@ -211,7 +211,7 @@ describe DocumentSearch, sidekiq: :inline do
         ).results
       end
       specify do
-        expect(subject.map(&:id).sort).to eq(
+        expect(subject.pluck('id').sort).to eq(
           [
             document_on_swietenia,
             document_on_swietenia_in_belize,
@@ -233,7 +233,7 @@ describe DocumentSearch, sidekiq: :inline do
         ).results
       end
       specify do
-        expect(subject.map(&:id).sort).to eq(
+        expect(subject.pluck('id').sort).to eq(
           [
             document_on_swietenia_in_brazil,
             document_on_swietenia_in_belize_and_brazil,
@@ -255,7 +255,7 @@ describe DocumentSearch, sidekiq: :inline do
         ).results
       end
       specify do
-        expect(subject.map(&:id).sort).to eq(
+        expect(subject.pluck('id').sort).to eq(
           [
             document_on_swietenia_in_brazil,
             document_on_swietenia_in_belize_and_brazil
@@ -275,7 +275,7 @@ describe DocumentSearch, sidekiq: :inline do
         ).results
       end
       specify do
-        expect(subject.map(&:id).sort).to eq(
+        expect(subject.pluck('id').sort).to eq(
           [
             document_on_swietenia_in_belize,
             document_on_swietenia_in_brazil,
