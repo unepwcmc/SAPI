@@ -14,7 +14,7 @@ class Checklist::TimelinesForTaxonConcept
         <<-SQL.squish
           effective_at ASC,
           array_position(
-            '{DELETION,RESERVATION,RESERVATION_WITHDRAWAL,EXCEPTION,ADDITION,AMENDMENT}'::TEXT[],
+            '{DELETION,RESERVATION_WITHDRAWAL,RESERVATION,EXCEPTION,ADDITION,AMENDMENT}'::TEXT[],
             change_type_name::TEXT
           ) ASC
         SQL
