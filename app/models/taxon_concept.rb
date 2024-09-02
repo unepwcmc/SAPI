@@ -513,9 +513,9 @@ private
 
     current_ids =
       case name_status
-        when 'S' then accepted_names.pluck(:id)
-        when 'T' then accepted_names_for_trade_name.pluck(:id)
-        when 'H' then hybrid_parents.pluck(:id)
+      when 'S' then accepted_names.pluck(:id)
+      when 'T' then accepted_names_for_trade_name.pluck(:id)
+      when 'H' then hybrid_parents.pluck(:id)
       end
 
     ids_to_add = new_ids - current_ids
