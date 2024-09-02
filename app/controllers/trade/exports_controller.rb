@@ -16,7 +16,7 @@ class Trade::ExportsController < TradeController
 
           send_file file_path, result[1]
         else
-          redirect_to trade_root_url
+          redirect_to trade_root_url, allow_other_host: true
         end
       end
 

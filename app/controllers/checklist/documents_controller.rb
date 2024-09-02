@@ -22,14 +22,16 @@ class Checklist::DocumentsController < ApplicationController
   def show
     @document = Document.find(params[:id])
     path_to_file = @document.filename.path unless @document.is_link?
+
     if access_denied? && !@document.is_public
       render_403
     elsif @document.is_link?
-      redirect_to @document.filename.model[:filename]
+      redirect_to @document.filename.model[:filename], allow_other_host: true
     elsif !File.exist?(path_to_file)
       render_404
     else
       response.headers['Content-Length'] = File.size(path_to_file).to_s
+
       send_file(
         path_to_file,
         filename: File.basename(path_to_file),
