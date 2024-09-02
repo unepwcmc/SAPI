@@ -1,8 +1,9 @@
 class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::BuildController
-  steps *NomenclatureChange::Split::STEPS
+  steps(*NomenclatureChange::Split::STEPS)
 
   def show
     builder = NomenclatureChange::Split::Constructor.new(@nomenclature_change)
+
     case step
     when :inputs
       set_events
@@ -31,6 +32,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       processor = NomenclatureChange::Split::Processor.new(@nomenclature_change)
       @summary = processor.summary
     end
+
     render_wizard
   end
 
@@ -43,6 +45,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       )
     )
     success = @nomenclature_change.valid?
+
     case step
     when :inputs, :outputs
       unless success
@@ -51,6 +54,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         set_ranks
       end
     end
+
     render_wizard @nomenclature_change
   end
 
@@ -72,6 +76,7 @@ private
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
           :note_en, :note_es, :note_fr, :internal_note,
+          :output_ids,
           output_ids: [],
           reassignment_target_attributes: [
             :id, :_destroy,
@@ -84,6 +89,7 @@ private
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
           :note_en, :note_es, :note_fr, :internal_note,
+          :output_ids,
           output_ids: []
         ],
         distribution_reassignments_attributes: [
@@ -91,6 +97,7 @@ private
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
           :note_en, :note_es, :note_fr, :internal_note,
+          :output_ids,
           output_ids: []
         ],
         legislation_reassignments_attributes: [
@@ -98,6 +105,7 @@ private
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
           :note_en, :note_es, :note_fr, :internal_note,
+          :output_ids,
           output_ids: []
         ]
       ],
