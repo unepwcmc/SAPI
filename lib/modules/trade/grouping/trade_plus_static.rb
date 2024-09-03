@@ -108,6 +108,7 @@ private
     origin_ids: 'origin_id',
     appendices: 'appendix'
   }.freeze
+
   def self.filtering_attributes
     FILTERING_ATTRIBUTES.merge(localize_filtering_attributes)
   end
@@ -129,6 +130,7 @@ private
       unit_name: 'Number of specimens'
     }.freeze
   end
+
   def self.default_filtering_attributes
     DEFAULT_FILTERING_ATTRIBUTES
   end
@@ -158,13 +160,17 @@ private
     return if @opts['taxon_id'].blank?
 
     unique_taxa = []
-    taxa = @opts['taxon_id'].split(',')
+    taxa = @opts['taxon_id'].split(',').map(&:to_i)
     return if taxa.count < 2
 
     taxa.each do |taxon|
       unique_taxa.push(taxon) unless db.execute(
-        "SELECT COUNT(*) FROM all_taxon_concepts_and_ancestors_mview WHERE ancestor_taxon_concept_id IN ( #{(taxa - [ taxon ]).join(',')\
-                                                                                                          } ) AND taxon_concept_id = #{taxon}"
+        <<-SQL.squish
+          SELECT COUNT(*)
+          FROM all_taxon_concepts_and_ancestors_mview
+          WHERE ancestor_taxon_concept_id IN (#{(taxa - [ taxon.to_i ]).join(',')})
+            AND taxon_concept_id = #{taxon.to_i}
+        SQL
       ).values.first[0].to_i > 0
     end
     @opts['taxon_id'] = unique_taxa.join(',')
@@ -175,7 +181,8 @@ private
     return '' if @opts['taxon_id'].blank? && !tc_id
 
     <<-SQL.squish
-    JOIN all_taxon_concepts_and_ancestors_mview ON taxon_concept_id=taxon_id
+      JOIN all_taxon_concepts_and_ancestors_mview
+        ON taxon_concept_id = taxon_id
     SQL
   end
 
@@ -247,7 +254,6 @@ private
       FROM (
         SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
-
           SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
           #{child_taxa_join}
