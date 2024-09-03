@@ -52,7 +52,14 @@ private
   end
 
   def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
+    lc_locale_param = params[:locale]&.downcase
+
+    I18n.locale =
+      if I18n.locale_available?(lc_locale_param)
+        lc_locale_param
+      else
+        I18n.default_locale
+      end
   end
 
   def metadata_for_search(search)
