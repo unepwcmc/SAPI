@@ -8,6 +8,8 @@ protected
       'designation_id, name'
     ).page(
       params[:page]
+    ).search(
+      params[:query]
     )
   end
 

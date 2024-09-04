@@ -16,6 +16,8 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
   def autocomplete
     @references = Reference.order(
       :citation
+    ).search(
+      params[:query]
     )
 
     @references =

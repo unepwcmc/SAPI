@@ -6,6 +6,8 @@ protected
       :taxonomic_position
     ).page(
       params[:page]
+    ).search(
+      params[:query]
     )
   end
 

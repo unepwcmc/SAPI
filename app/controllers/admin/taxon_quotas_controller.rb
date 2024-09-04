@@ -71,6 +71,8 @@ protected
       'start_date DESC, geo_entities.name_en ASC, notes ASC'
     ).page(
       params[:page]
+    ).search(
+      params[:query]
     )
   end
 

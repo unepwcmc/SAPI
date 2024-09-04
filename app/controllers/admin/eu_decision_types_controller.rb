@@ -14,6 +14,8 @@ protected
       Arel.sql('UPPER(name) ASC')
     ).page(
       params[:page]
+    ).search(
+      params[:query]
     )
   end
 

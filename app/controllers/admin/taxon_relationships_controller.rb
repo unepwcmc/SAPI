@@ -81,6 +81,8 @@ protected
       'taxon_relationship_types.name': @taxon_relationship_type.name
     ).page(
       params[:page]
+    ).search(
+      params[:query]
     )
   end
 

@@ -20,6 +20,8 @@ protected
       'created_at DESC'
     ).page(
       params[:page]
-    ).per(10)
+    ).per(10).search(
+      params[:query]
+    )
   end
 end
