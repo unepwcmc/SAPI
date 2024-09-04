@@ -106,18 +106,12 @@ class Event < ApplicationRecord
   end
 
   def self.search(query)
-    if query.present?
-      where(
-        %q{
-          UPPER(events.name) LIKE UPPER(:query)
-          OR
-          UPPER(events.description) LIKE UPPER(:query)
-        }.squish,
-        query: "%#{query}%"
-      )
-    else
-      all
-    end
+    self.ilike_search(
+      query, [
+        Events.arel_table['name'],
+        Events.arel_table['description']
+      ]
+    )
   end
 
   def activate!

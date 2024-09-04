@@ -101,6 +101,33 @@ class TradeRestriction < ApplicationRecord
     unit_id ? unit.name_en : ''
   end
 
+  def self.search(query)
+    return all if query.blank?
+
+    self.ilike_search(
+      query, [
+        GeoEntity.arel_table['name_en'],
+        GeoEntity.arel_table['iso_code2'],
+        TaxonConcept.arel_table['full_name'],
+        Event.arel_table['subtype']
+      ]
+    ).or(
+      where(
+        'trade_restrictions.start_date::text LIKE :query OR trade_restrictions.end_date::text LIKE :query',
+        query: "%#{sanitize_sql_like(query)}%"
+      )
+    ).joins(
+      [ :start_notification ]
+    ).joins(
+      <<-SQL.squish
+        LEFT JOIN taxon_concepts
+          ON taxon_concepts.id = trade_restrictions.taxon_concept_id
+        LEFT JOIN geo_entities
+          ON geo_entities.id = trade_restrictions.geo_entity_id
+      SQL
+    )
+  end
+
   def self.export(filters)
     return false unless export_query(filters).any?
 
@@ -124,24 +151,30 @@ class TradeRestriction < ApplicationRecord
   end
 
   def self.export_query(filters)
-    self.joins(:geo_entity).
-      joins(<<-SQL.squish
-          LEFT JOIN taxon_concepts ON taxon_concepts.id = trade_restrictions.taxon_concept_id
-          LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id
-        SQL
-           ).
-      filter_is_current(filters['set']).
-      filter_geo_entities(filters).
-      filter_years(filters).
-      filter_taxon_concepts(filters).
-      where(public_display: true).
-      order(
-        'taxon_concepts.name_status': :asc,
-        'taxon_concepts_mview.taxonomic_position': :asc,
-        start_date: :desc,
-        'geo_entities.name_en': :asc,
-        notes: :asc
-      )
+    self.joins(
+      :geo_entity
+    ).joins(
+      <<-SQL.squish
+        LEFT JOIN taxon_concepts ON taxon_concepts.id = trade_restrictions.taxon_concept_id
+        LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id
+      SQL
+    ).filter_is_current(
+      filters['set']
+    ).filter_geo_entities(
+      filters
+    ).filter_years(
+      filters
+    ).filter_taxon_concepts(
+      filters
+    ).where(
+      public_display: true
+    ).order(
+      'taxon_concepts.name_status': :asc,
+      'taxon_concepts_mview.taxonomic_position': :asc,
+      start_date: :desc,
+      'geo_entities.name_en': :asc,
+      notes: :asc
+    )
   end
 
   # Gets the display text for each CSV_COLUMNS
@@ -160,14 +193,18 @@ class TradeRestriction < ApplicationRecord
       else ','
       end
     CSV.open(file_path, 'wb', col_sep: csv_separator_char) do |csv|
-      csv << (Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +
-        [ 'Remarks' ] + self.csv_columns_headers)
-      ids = []
-      until (objs = export_query(filters).limit(limit).
-             offset(offset)).empty?
+      csv << (
+        Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +
+        [ 'Remarks' ] + self.csv_columns_headers
+      )
+
+      until (
+        objs = export_query(filters).limit(limit).offset(offset)
+      ).empty?
         objs.each do |q|
           row = []
           row += Species::RestrictionsExport.fill_taxon_columns(q)
+
           self::CSV_COLUMNS.each do |c|
             if c.is_a?(Array)
               row << q.send(c[1])
@@ -177,8 +214,10 @@ class TradeRestriction < ApplicationRecord
               row << q.send(c)
             end
           end
+
           csv << row
         end
+
         offset += limit
       end
     end
@@ -197,8 +236,10 @@ class TradeRestriction < ApplicationRecord
       geo_entities_ids = GeoEntity.nodes_and_descendants(
         filters['geo_entities_ids']
       ).map(&:id)
+
       return where(geo_entity_id: geo_entities_ids)
     end
+
     all
   end
 
@@ -212,8 +253,10 @@ class TradeRestriction < ApplicationRecord
         ] && ARRAY[?]
         OR trade_restrictions.taxon_concept_id IS NULL
       SQL
+
       return where(conds_str, filters['taxon_concepts_ids'].map(&:to_i))
     end
+
     all
   end
 
@@ -224,6 +267,7 @@ class TradeRestriction < ApplicationRecord
         filters['years'].map(&:to_i)
       )
     end
+
     all
   end
 

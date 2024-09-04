@@ -22,19 +22,8 @@ class PresetTag < ApplicationRecord
   validates :name, presence: true, uniqueness: {
     scope: :model, case_sensitive: false
   }
-  validates :model, inclusion: { in: TYPES.values }
 
-  def self.search(query)
-    if query.present?
-      where(
-        "UPPER(name) LIKE UPPER(:query) OR
-        UPPER(model) LIKE UPPER(:query)",
-        query: "%#{query}%"
-      )
-    else
-      all
-    end
-  end
+  validates :model, inclusion: { in: TYPES.values }
 
   def can_be_deleted?
     ActsAsTaggableOn::Tag.where(name: name).joins(:taggings).limit(1).empty?

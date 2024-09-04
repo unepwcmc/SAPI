@@ -23,21 +23,20 @@ class Trade::TaxonConceptTermPair < ApplicationRecord
   belongs_to :term, class_name: 'TradeCode'
 
   def self.search(query)
-    if query.present?
-      where(
-        "UPPER(taxon_concepts.full_name) LIKE UPPER(:query)
-            OR UPPER(trade_codes.code) LIKE UPPER(:query)",
-        query: "%#{query}%"
-      ).
-        joins(<<-SQL.squish
-          LEFT JOIN taxon_concepts
-            ON taxon_concepts.id = trade_taxon_concept_term_pairs.taxon_concept_id
-          LEFT JOIN trade_codes
-            ON trade_codes.id = trade_taxon_concept_term_pairs.term_id
-        SQL
-             )
-    else
-      all
-    end
+    return all if query.blank?
+
+    ilike_search(
+      query, [
+        TaxonConcept.arel_table['full_name'],
+        TradeCode.arel_table['code']
+      ]
+    ).joins(
+      <<-SQL.squish
+        LEFT JOIN taxon_concepts
+          ON taxon_concepts.id = trade_taxon_concept_term_pairs.taxon_concept_id
+        LEFT JOIN trade_codes
+          ON trade_codes.id = trade_taxon_concept_term_pairs.term_id
+      SQL
+    )
   end
 end

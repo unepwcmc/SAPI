@@ -24,17 +24,6 @@ class Taxonomy < ApplicationRecord
     if: lambda { |t| t.name_changed? && t.class.dict.include?(t.name_was) },
     on: :update
 
-  def self.search(query)
-    if query.present?
-      where(
-        'UPPER(name) LIKE UPPER(:query)',
-        query: "%#{query}%"
-      )
-    else
-      all
-    end
-  end
-
   def can_be_deleted?
     super && !has_protected_name?
   end

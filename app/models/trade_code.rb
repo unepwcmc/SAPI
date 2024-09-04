@@ -21,16 +21,15 @@ class TradeCode < ApplicationRecord
   validates :code, presence: true, uniqueness: { scope: :type }
 
   def self.search(query)
-    if query.present?
-      where(
-        "UPPER(code) LIKE UPPER(:query)
-            OR UPPER(name_en) LIKE UPPER(:query)
-            OR UPPER(name_fr) LIKE UPPER(:query)
-            OR UPPER(name_es) LIKE UPPER(:query)",
-        query: "%#{query}%"
-      )
-    else
-      all
-    end
+    return all if query.blank?
+
+    self.ilike_search(
+      query, [
+        :code,
+        :name_en,
+        :name_es,
+        :name_fr
+      ]
+    )
   end
 end

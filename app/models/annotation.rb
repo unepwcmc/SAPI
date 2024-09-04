@@ -68,22 +68,18 @@ class Annotation < ApplicationRecord
   end
 
   def self.search(query)
-    if query.present?
-      where(
-        "UPPER(symbol) LIKE UPPER(:query)
-            OR UPPER(parent_symbol) LIKE UPPER(:query)
-            OR UPPER(short_note_en) LIKE UPPER(:query)
-            OR UPPER(full_note_en) LIKE UPPER(:query)
-            OR UPPER(short_note_fr) LIKE UPPER(:query)
-            OR UPPER(full_note_fr) LIKE UPPER(:query)
-            OR UPPER(short_note_es) LIKE UPPER(:query)
-            OR UPPER(full_note_es) LIKE UPPER(:query)
-            OR UPPER(description) LIKE UPPER(:query)",
-        query: "%#{query}%"
-      )
-    else
-      all
-    end
+    self.ilike_search(
+      query, [
+        *searchable_text_columns,
+
+        query && Arel::Nodes::Concat.new(
+          arel_table['parent_symbol'],
+          arel_table['symbol']
+        ).matches(
+          "%#{sanitize_sql_like(query)}%"
+        )
+      ]
+    )
   end
 
   def full_symbol

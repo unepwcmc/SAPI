@@ -32,14 +32,9 @@ class Reference < ApplicationRecord
   has_many :distribution_references
 
   def self.search(query)
-    if query.present?
-      where(
-        'UPPER(citation) LIKE UPPER(:query)',
-        query: "%#{query}%"
-      )
-    else
-      all
-    end
+    self.ilike_search(
+      query, [ :citation ]
+    )
   end
 
 private

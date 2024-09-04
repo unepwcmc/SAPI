@@ -29,21 +29,20 @@ class TermTradeCodesPair < ApplicationRecord
   validates :term_id, uniqueness: { scope: :trade_code_id }
 
   def self.search(query)
-    if query.present?
-      where(
-        "UPPER(trade_codes.code) LIKE UPPER(:query)
-            OR UPPER(terms.code) LIKE UPPER(:query)",
-        query: "%#{query}%"
-      ).
-        joins(<<-SQL.squish
-          LEFT JOIN trade_codes
-            ON trade_codes.id = term_trade_codes_pairs.trade_code_id
-          LEFT JOIN trade_codes terms
-            ON terms.id = term_trade_codes_pairs.term_id
-        SQL
-             )
-    else
-      all
-    end
+    return all if query.blank?
+
+    self.ilike_search(
+      query, [
+        TradeCode.arel_table['code'],
+        Term.arel_table['code']
+      ]
+    ).joins(
+      <<-SQL.squish
+        LEFT JOIN trade_codes
+          ON trade_codes.id = term_trade_codes_pairs.trade_code_id
+        LEFT JOIN trade_codes terms
+          ON terms.id = term_trade_codes_pairs.term_id
+      SQL
+    )
   end
 end
