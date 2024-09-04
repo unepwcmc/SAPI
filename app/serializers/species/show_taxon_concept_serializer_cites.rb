@@ -21,8 +21,8 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
   def processes
     CitesProcess.includes(
       :start_event
-    ).joins(
-      'LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id'
+    ).left_joins(
+      :geo_entity
     ).where(
       taxon_concept_id: object.id
     ).order(

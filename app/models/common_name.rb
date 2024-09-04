@@ -24,6 +24,9 @@ class CommonName < ApplicationRecord
   #   :created_by_id, :updated_by_id
 
   belongs_to :language
+
+  has_many :taxon_commons, dependent: :destroy
+
   validates :name, presence: true,
     uniqueness: { scope: :language_id }
 

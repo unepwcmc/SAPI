@@ -3,7 +3,8 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
   attr_reader :query
 
   def initialize
-    @query = TaxonConcept.from(<<-SQL.squish
+    @query = TaxonConcept.from(
+      <<-SQL.squish
       (
         WITH cites_species (
           id, legacy_id,
@@ -69,8 +70,9 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
         species_name, full_name, author_year, name_status,
         cites_listed_descendants, eu_listed_descendants, taxonomic_position
       ) AS taxon_concepts
-    SQL
-                              )
+      SQL
+    )
+
     @report_query = @query.select(
       [
         :'taxon_concepts.id', :legacy_id,

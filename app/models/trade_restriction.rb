@@ -46,6 +46,7 @@
 
 require 'digest/sha1'
 require 'csv'
+
 class TradeRestriction < ApplicationRecord
   extend Mobility
   include TrackWhoDoesIt
@@ -118,13 +119,11 @@ class TradeRestriction < ApplicationRecord
       )
     ).joins(
       [ :start_notification ]
-    ).joins(
-      <<-SQL.squish
-        LEFT JOIN taxon_concepts
-          ON taxon_concepts.id = trade_restrictions.taxon_concept_id
-        LEFT JOIN geo_entities
-          ON geo_entities.id = trade_restrictions.geo_entity_id
-      SQL
+    ).left_joins(
+      [
+        :taxon_concept,
+        :geo_entity
+      ]
     )
   end
 
@@ -153,11 +152,8 @@ class TradeRestriction < ApplicationRecord
   def self.export_query(filters)
     self.joins(
       :geo_entity
-    ).joins(
-      <<-SQL.squish
-        LEFT JOIN taxon_concepts ON taxon_concepts.id = trade_restrictions.taxon_concept_id
-        LEFT JOIN taxon_concepts_mview ON taxon_concepts_mview.id = trade_restrictions.taxon_concept_id
-      SQL
+    ).left_joins(
+      [ :taxon_concept, :m_taxon_concept ]
     ).filter_is_current(
       filters['set']
     ).filter_geo_entities(

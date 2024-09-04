@@ -31,18 +31,11 @@ class TermTradeCodesPair < ApplicationRecord
   def self.search(query)
     return all if query.blank?
 
-    self.ilike_search(
+    self.left_joins([ :term, :trade_code ]).ilike_search(
       query, [
         TradeCode.arel_table['code'],
         Term.arel_table['code']
       ]
-    ).joins(
-      <<-SQL.squish
-        LEFT JOIN trade_codes
-          ON trade_codes.id = term_trade_codes_pairs.trade_code_id
-        LEFT JOIN trade_codes terms
-          ON terms.id = term_trade_codes_pairs.term_id
-      SQL
     )
   end
 end

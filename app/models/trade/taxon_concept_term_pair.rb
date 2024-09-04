@@ -30,13 +30,6 @@ class Trade::TaxonConceptTermPair < ApplicationRecord
         TaxonConcept.arel_table['full_name'],
         TradeCode.arel_table['code']
       ]
-    ).joins(
-      <<-SQL.squish
-        LEFT JOIN taxon_concepts
-          ON taxon_concepts.id = trade_taxon_concept_term_pairs.taxon_concept_id
-        LEFT JOIN trade_codes
-          ON trade_codes.id = trade_taxon_concept_term_pairs.term_id
-      SQL
-    )
+    ).left_joins([ :taxon_concept, :term ])
   end
 end

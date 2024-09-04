@@ -67,6 +67,7 @@ class Document < ApplicationRecord
     dependent: :nullify
   has_many :citations, class_name: 'DocumentCitation', dependent: :destroy
   has_many :eu_opinions
+  has_one :proposal_details, class_name: 'ProposalDetails', dependent: :nullify # strictly this is has_many, since there's no uniqueness constraint
   has_and_belongs_to_many :tags, class_name: 'DocumentTag', join_table: 'document_tags_documents'
   validates :title, presence: true
   validates :date, presence: true

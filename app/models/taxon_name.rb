@@ -12,6 +12,8 @@ class TaxonName < ApplicationRecord
   # Used by seed and rake task.
   # attr_accessible :basionym_id, :scientific_name
 
+  has_many :taxon_concepts, dependent: :nullify
+
   validates :scientific_name, presence: true
 
   def self.sanitize_scientific_name(some_scientific_name)

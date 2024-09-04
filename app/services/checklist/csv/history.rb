@@ -4,23 +4,29 @@ class Checklist::Csv::History < Checklist::History
 
   def prepare_main_query
     @taxon_concepts_rel = MTaxonConcept.
-      select(select_columns).
-      where(taxonomy_is_cites_eu: true).
-      joins(:cites_listing_changes).where(
+      select(
+        select_columns
+      ).where(
+        taxonomy_is_cites_eu: true
+      ).joins(
+        :cites_listing_changes
+      ).where(
         'cites_listing_changes_mview.show_in_downloads': true
-      ).
-      joins('LEFT JOIN geo_entities ON cites_listing_changes_mview.party_id = geo_entities.id').
-      order(Arel.sql(<<-SQL.squish
-        taxonomic_position, effective_at,
-        CASE
-          WHEN change_type_name = 'ADDITION' THEN 0
-          WHEN change_type_name = 'RESERVATION' THEN 1
-          WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
-          WHEN change_type_name = 'DELETION' THEN 3
-        END
-        SQL
-                    )
-           )
+      ).joins(
+        'LEFT JOIN geo_entities ON cites_listing_changes_mview.party_id = geo_entities.id'
+      ).order(
+        Arel.sql(
+          <<-SQL.squish
+            taxonomic_position, effective_at,
+            CASE
+              WHEN change_type_name = 'ADDITION' THEN 0
+              WHEN change_type_name = 'RESERVATION' THEN 1
+              WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
+              WHEN change_type_name = 'DELETION' THEN 3
+            END
+          SQL
+        )
+      )
   end
 
   def select_columns
