@@ -22,6 +22,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def show
     @document = Document.find(params[:id])
     path_to_file = @document.filename.path unless @document.is_link?
+
     if @document.is_link?
       redirect_to @document.filename.model[:filename]
     elsif !File.exist?(path_to_file)
@@ -39,12 +40,15 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def edit
     edit! do |format|
       load_associations
+
       if @document.is_a?(Document::ReviewOfSignificantTrade)
         @document.review_details ||= ReviewDetails.new
       elsif @document.is_a?(Document::Proposal)
         @document.proposal_details ||= ProposalDetails.new
       end
+
       @document.citations.build
+
       format.html { render 'new' }
     end
   end
@@ -72,6 +76,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
     event_id = params[:event_id]
     @matched_documents = event_id.present? ? Document.where(event_id: event_id) : Document
     @matched_documents = @matched_documents.search_by_title(title)
+
     render json: @matched_documents.to_json(
       only: [ :id, :title ]
     )
@@ -101,23 +106,36 @@ protected
   end
 
   def load_associations
-    @designations = Designation.where(name: [ 'CITES', 'EU' ]).select([ :id, :name ]).order(:name)
+    @designations = Designation.where(
+      name: [ 'CITES', 'EU' ]
+    ).select(
+      [ :id, :name ]
+    ).order(
+      :name
+    )
+
     @event_types =
       if @document && @document.event
         [ { id: @document.event.type } ]
       else
         Event.event_types_with_names
       end
+
     @events = Event.where(type: @event_types.pluck(:id)).order(:published_at).reverse_order
     @event = Event.find(params[:event_id]) if params[:event_id].present?
-    @languages = Language.select([ :id, :name_en, :name_es, :name_fr ]).
-      order(:name_en)
+    @languages = Language.select(
+      [ :id, :name_en, :name_es, :name_fr ]
+    ).order(
+      :name_en
+    )
+
     @english = Language.find_by(iso_code1: 'EN')
     @taxonomy = Taxonomy.find_by(name: Taxonomy::CITES_EU)
-    @geo_entities = GeoEntity.select([ 'geo_entities.id AS id', :name_en ]).
-      joins(:geo_entity_type).where(
-        'geo_entity_types.name': [ GeoEntityType::COUNTRY, GeoEntityType::TERRITORY ]
-      ).order(:name_en)
+    @geo_entities = GeoEntity.select(
+      [ 'geo_entities.id AS id', :name_en ]
+    ).joins(:geo_entity_type).where(
+      'geo_entity_types.name': [ GeoEntityType::COUNTRY, GeoEntityType::TERRITORY ]
+    ).order(:name_en)
   end
 
   def success_redirect
@@ -131,17 +149,18 @@ protected
       else
         'Operation failed'
       end
+
     redirect_to redirect_url, alert: alert
   end
 
   def redirect_url
     event_id = params[:event_id]
-    url =
-      if event_id.present?
-        admin_event_documents_url(Event.find(event_id))
-      else
-        admin_documents_url
-      end
+
+    if event_id.present?
+      admin_event_documents_url(Event.find(event_id))
+    else
+      admin_documents_url
+    end
   end
 
 private

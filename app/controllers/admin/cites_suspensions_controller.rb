@@ -35,6 +35,7 @@ protected
     ).where(
       taxon_concept_id: nil
     )
+
     @units = Unit.order(:code)
     @terms = Term.order(:code)
     @sources = Source.order(:code)
@@ -45,14 +46,22 @@ protected
       is_current: true,
       geo_entity_types: { name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET] }
     )
-    @suspension_notifications = CitesSuspensionNotification.
-      select([ :id, :name ]).
-      order('effective_at DESC')
+
+    @suspension_notifications = CitesSuspensionNotification.select(
+      [ :id, :name ]
+    ).order(
+      'effective_at DESC'
+    )
   end
 
   def collection
-    @cites_suspensions ||= end_of_association_chain.order('start_date DESC').
-      page(params[:page]).search(params[:query])
+    @cites_suspensions ||= end_of_association_chain.order(
+      'start_date DESC'
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
 private

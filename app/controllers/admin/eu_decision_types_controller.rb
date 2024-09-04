@@ -10,8 +10,11 @@ class Admin::EuDecisionTypesController < Admin::StandardAuthorizationController
 protected
 
   def collection
-    @eu_decision_types ||= end_of_association_chain.page(params[:page]).
-      order(Arel.sql('UPPER(name) ASC'))
+    @eu_decision_types ||= end_of_association_chain.order(
+      Arel.sql('UPPER(name) ASC')
+    ).page(
+      params[:page]
+    )
   end
 
 private

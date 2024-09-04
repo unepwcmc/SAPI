@@ -17,9 +17,13 @@ class Admin::UnitsController < Admin::StandardAuthorizationController
 protected
 
   def collection
-    @units ||= end_of_association_chain.order('code').
-      page(params[:page]).
-      search(params[:query])
+    @units ||= end_of_association_chain.order(
+      'code'
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
 private

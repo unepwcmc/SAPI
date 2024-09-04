@@ -13,9 +13,13 @@ protected
   end
 
   def collection
-    @taxon_concept_term_pairs ||= end_of_association_chain.order('term_id').
-      page(params[:page]).
-      search(params[:query])
+    @taxon_concept_term_pairs ||= end_of_association_chain.order(
+      'term_id'
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
 private

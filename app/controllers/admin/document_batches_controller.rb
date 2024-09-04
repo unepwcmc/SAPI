@@ -3,6 +3,7 @@
 class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
   def new
     load_associations
+
     @document_batch = DocumentBatch.new(
       event_id: @event.try(:id),
       date: @event.try(:published_at_formatted),

@@ -14,9 +14,13 @@ class Admin::InstrumentsController < Admin::StandardAuthorizationController
 protected
 
   def collection
-    @instruments ||= end_of_association_chain.order(:name).
-      page(params[:page]).
-      search(params[:query])
+    @instruments ||= end_of_association_chain.order(
+      :name
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
   def load_associations

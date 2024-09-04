@@ -7,7 +7,10 @@ class Admin::HashAnnotationsController < Admin::SimpleCrudController
 protected
 
   def collection
-    @annotations = load_collection.page(params[:page]).
-      search(params[:query])
+    @annotations = load_collection.page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 end

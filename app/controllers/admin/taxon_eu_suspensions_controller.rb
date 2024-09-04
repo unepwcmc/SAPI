@@ -37,6 +37,7 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
             notice: 'Operation successful'
         end
       end
+
       failure.html do
         load_lib_objects
         load_search
@@ -44,6 +45,7 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
       end
 
       success.js { render 'create' }
+
       failure.js do
         load_lib_objects
         render 'new'
@@ -80,7 +82,11 @@ protected
       :geo_entity
     ).order(
       'is_current DESC, start_date DESC, geo_entities.name_en ASC'
-    ).page(params[:page])
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
 private

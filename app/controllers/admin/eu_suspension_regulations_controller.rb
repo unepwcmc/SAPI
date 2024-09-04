@@ -7,6 +7,7 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
     @eu_suspension_regulation = EuSuspensionRegulation.find(params[:id])
     @eu_suspension_regulation.activate!
     @errors = @eu_suspension_regulation.errors.messages.values.flatten.join(' - ')
+
     render 'create'
   end
 
@@ -14,22 +15,28 @@ class Admin::EuSuspensionRegulationsController < Admin::EventsController
     @eu_suspension_regulation = EuSuspensionRegulation.find(params[:id])
     @eu_suspension_regulation.deactivate!
     @errors = @eu_suspension_regulation.errors.messages.values.flatten.join(' - ')
+
     render 'create'
   end
 
 protected
 
   def collection
-    @eu_suspension_regulations ||= end_of_association_chain.
-      includes([ :creator, :updater ]).
-      order('effective_at DESC, name ASC').
-      page(params[:page]).
-      search(params[:query])
+    @eu_suspension_regulations ||= end_of_association_chain.includes(
+      [ :creator, :updater ]
+    ).order(
+      'effective_at DESC, name ASC'
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
   def load_associations
-    @eu_suspension_regulations_for_dropdown = EuSuspensionRegulation.
-      order('effective_at DESC, name ASC')
+    @eu_suspension_regulations_for_dropdown = EuSuspensionRegulation.order(
+      'effective_at DESC, name ASC'
+    )
   end
 
 private

@@ -7,10 +7,15 @@ class Admin::CitesAcsController < Admin::EventsController
 protected
 
   def collection
-    @cites_acs ||= end_of_association_chain.
-      order(:designation_id, :name).includes(:designation).
-      page(params[:page]).
-      search(params[:query])
+    @cites_acs ||= end_of_association_chain.order(
+      :designation_id, :name
+    ).includes(
+      :designation
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
 private

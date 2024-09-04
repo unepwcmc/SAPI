@@ -17,9 +17,13 @@ class Admin::TermsController < Admin::StandardAuthorizationController
 protected
 
   def collection
-    @terms ||= end_of_association_chain.order('code').
-      page(params[:page]).
-      search(params[:query])
+    @terms ||= end_of_association_chain.order(
+      'code'
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
 private

@@ -5,7 +5,11 @@ class Admin::GeoRelationshipsController < Admin::StandardAuthorizationController
 
   def index
     index! do
-      @inverse_geo_relationships = GeoRelationship.where(other_geo_entity_id: @geo_entity.id).page(params[:page])
+      @inverse_geo_relationships = GeoRelationship.where(
+        other_geo_entity_id: @geo_entity.id
+      ).page(
+        params[:page]
+      )
     end
   end
 
@@ -31,10 +35,13 @@ protected
   end
 
   def collection
-    @geo_relationships ||= end_of_association_chain.
-      joins(:geo_relationship_type).
-      where('geo_relationship_types.name': @geo_relationship_type.name).
-      page(params[:page])
+    @geo_relationships ||= end_of_association_chain.joins(
+      :geo_relationship_type
+    ).where(
+      'geo_relationship_types.name': @geo_relationship_type.name
+    ).page(
+      params[:page]
+    )
   end
 
 private

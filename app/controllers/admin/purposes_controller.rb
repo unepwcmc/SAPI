@@ -17,9 +17,13 @@ class Admin::PurposesController < Admin::StandardAuthorizationController
 protected
 
   def collection
-    @purposes ||= end_of_association_chain.order('code').
-      page(params[:page]).
-      search(params[:query])
+    @purposes ||= end_of_association_chain.order(
+      'code'
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
 private

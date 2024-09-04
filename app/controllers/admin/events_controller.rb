@@ -34,10 +34,17 @@ class Admin::EventsController < Admin::StandardAuthorizationController
 protected
 
   def collection
-    @events ||= end_of_association_chain.order(:designation_id, :name).
-      includes(:designation).
-      where(type: 'Event').page(params[:page]).
-      search(params[:query])
+    @events ||= end_of_association_chain.order(
+      :designation_id, :name
+    ).includes(
+      :designation
+    ).where(
+      type: 'Event'
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
   def load_associations

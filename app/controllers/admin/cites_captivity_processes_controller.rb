@@ -52,7 +52,9 @@ protected
       :geo_entity
     ).order(
       'is_current DESC, start_date DESC, geo_entities.name_en ASC'
-    ).page(params[:page])
+    ).page(
+      params[:page]
+    )
   end
 
 private

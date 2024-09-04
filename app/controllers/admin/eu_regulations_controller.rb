@@ -18,10 +18,13 @@ class Admin::EuRegulationsController < Admin::EventsController
 protected
 
   def collection
-    @eu_regulations ||= end_of_association_chain.
-      order('effective_at DESC, name ASC').
-      page(params[:page]).
-      search(params[:query])
+    @eu_regulations ||= end_of_association_chain.order(
+      'effective_at DESC, name ASC'
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
   def load_associations

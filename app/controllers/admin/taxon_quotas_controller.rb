@@ -69,7 +69,9 @@ protected
       :geo_entity
     ).order(
       'start_date DESC, geo_entities.name_en ASC, notes ASC'
-    ).page(params[:page])
+    ).page(
+      params[:page]
+    )
   end
 
 private

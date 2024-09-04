@@ -38,8 +38,11 @@ class Admin::UsersController < Admin::SimpleCrudController
 protected
 
   def collection
-    @users ||= end_of_association_chain.
-      order(:name).page(params[:page])
+    @users ||= end_of_association_chain.order(
+      :name
+    ).page(
+      params[:page]
+    )
   end
 
   def load_associations
@@ -47,8 +50,9 @@ protected
       where(
         'geo_entity_types.name' => [ GeoEntityType::COUNTRY, GeoEntityType::TERRITORY ],
         is_current: true
-      ).
-      order('name_en')
+      ).order(
+        'name_en'
+      )
   end
 
 private

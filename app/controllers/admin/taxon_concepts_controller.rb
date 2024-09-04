@@ -44,19 +44,24 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
     update! do |success, failure|
       success.js do
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
+
         render 'update'
       end
+
       failure.js do
         load_taxonomies
         load_ranks
         load_tags
         render_new_by_name_status
       end
+
       success.html do
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
+
         redirect_to edit_admin_taxon_concept_url(@taxon_concept),
           notice: 'Operation successful'
       end
+
       failure.html do
         load_taxonomies
         load_ranks
@@ -67,8 +72,10 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   end
 
   def autocomplete
-    @taxon_concepts = TaxonConceptPrefixMatcher.new(@search_params).
-      taxon_concepts
+    @taxon_concepts = TaxonConceptPrefixMatcher.new(
+      @search_params
+    ).taxon_concepts
+
     render json: @taxon_concepts.to_json(
       only: [ :id, :taxonomy_name ],
       methods: [ :rank_name, :full_name, :name_status ]
@@ -79,9 +86,16 @@ protected
 
   # used in create
   def collection
-    @taxon_concepts ||= end_of_association_chain.where(name_status: 'A').
-      includes([ :rank, :taxonomy, :taxon_name, :parent ]).
-      order(:taxonomic_position).page(params[:page])
+    @taxon_concepts ||= end_of_association_chain.where(
+      name_status: 'A'
+    ).includes(
+      [ :rank, :taxonomy, :taxon_name, :parent ]
+    ).order(
+      :taxonomic_position
+    ).page(
+      params[:page]
+    )
+    # NO .search( params[:query]) ?
   end
 
   def determine_layout

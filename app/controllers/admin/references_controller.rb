@@ -4,15 +4,20 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
   def index
     index! do |format|
       format.json do
-        render json: end_of_association_chain.order(:citation).
-          select([ :id, :citation ]).map { |d| { value: d.id, text: d.citation } }.to_json
+        render json: end_of_association_chain.order(
+          :citation
+        ).select(
+          [ :id, :citation ]
+        ).map { |d| { value: d.id, text: d.citation } }.to_json
       end
     end
   end
 
   def autocomplete
-    @references = Reference.search(params[:query]).
-      order(:citation)
+    @references = Reference.order(
+      :citation
+    )
+
     @references =
       @references.map do |r|
         {
@@ -27,9 +32,13 @@ class Admin::ReferencesController < Admin::StandardAuthorizationController
 protected
 
   def collection
-    @references ||= end_of_association_chain.order(:citation).
-      page(params[:page]).
-      search(params[:query])
+    @references ||= end_of_association_chain.order(
+      :citation
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
 private

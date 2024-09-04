@@ -10,15 +10,22 @@ class Admin::IucnMappingsController < Admin::SimpleCrudController
       synonyms: IucnMapping.index_filter('SYNONYMS').count,
       accepted: IucnMapping.index_filter('ACCEPTED').count,
       all: IucnMapping.count
-
     }
   end
 
 protected
 
   def collection
-    @iucn_mappings ||= end_of_association_chain.order(:taxon_concept_id).
-      page(params[:page]).index_filter(params[:show] || 'ALL').includes(:taxon_concept).
-      includes(:accepted_name)
+    @iucn_mappings ||= end_of_association_chain.order(
+      :taxon_concept_id
+    ).page(
+      params[:page]
+    ).index_filter(
+      params[:show] || 'ALL'
+    ).includes(
+      :taxon_concept
+    ).includes(
+      :accepted_name
+    )
   end
 end

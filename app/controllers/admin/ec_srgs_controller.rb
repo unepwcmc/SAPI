@@ -7,10 +7,13 @@ class Admin::EcSrgsController < Admin::EventsController
 protected
 
   def collection
-    @ec_srgs ||= end_of_association_chain.
-      order('designation_id, effective_at DESC').includes(:designation).
-      page(params[:page]).
-      search(params[:query])
+    @ec_srgs ||= end_of_association_chain.order(
+      'designation_id, effective_at DESC'
+    ).includes(:designation).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
 private

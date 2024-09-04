@@ -6,13 +6,19 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
 
   def index
     index! do
-      @form_taxonomies = Taxonomy.order(:name). # for Inter-taxonomic relationships
-        where.not(id: @taxon_concept.taxonomy_id)
-      @inverse_taxon_relationships = TaxonRelationship.
-        where(other_taxon_concept_id: @taxon_concept.id,
-          taxon_relationship_type_id: @taxon_relationship_type.id
-        ).
-        page(params[:page])
+      # for Inter-taxonomic relationships
+      @form_taxonomies = Taxonomy.order(:name).where.not(
+        id: @taxon_concept.taxonomy_id
+      )
+
+      @inverse_taxon_relationships = TaxonRelationship.where(
+        other_taxon_concept_id: @taxon_concept.id,
+        taxon_relationship_type_id: @taxon_relationship_type.id
+      ).page(
+        params[:page]
+      ).search(
+        params[:query]
+      )
     end
   end
 
@@ -29,12 +35,13 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
     create! do |success, failure|
       success.js { render 'create' }
       failure.js do
-        @taxonomies = Taxonomy.order(:name). # for Inter-taxonomic relationships
-          where.not(
-            id: TaxonConcept.find(
-              params[:taxon_relationship][:taxon_concept_id]
-            ).try(:taxonomy_id)
-          )
+        # for Inter-taxonomic relationships
+        @taxonomies = Taxonomy.order(:name).where.not(
+          id: TaxonConcept.find(
+            params[:taxon_relationship][:taxon_concept_id]
+          ).try(:taxonomy_id)
+        )
+
         render 'admin/simple_crud/new'
       end
     end
@@ -68,10 +75,13 @@ protected
   end
 
   def collection
-    @taxon_relationships ||= end_of_association_chain.
-      joins(:taxon_relationship_type).
-      where('taxon_relationship_types.name': @taxon_relationship_type.name).
-      page(params[:page])
+    @taxon_relationships ||= end_of_association_chain.joins(
+      :taxon_relationship_type
+    ).where(
+      'taxon_relationship_types.name': @taxon_relationship_type.name
+    ).page(
+      params[:page]
+    )
   end
 
 private

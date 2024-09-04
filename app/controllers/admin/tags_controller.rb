@@ -6,9 +6,13 @@ class Admin::TagsController < Admin::SimpleCrudController
 protected
 
   def collection
-    @tags ||= end_of_association_chain.page(params[:page]).
-      order(Arel.sql('UPPER(name) ASC'), :model).
-      search(params[:query])
+    @tags ||= end_of_association_chain.page(
+      params[:page]
+    ).order(
+      Arel.sql('UPPER(name) ASC'), :model
+    ).search(
+      params[:query]
+    )
   end
 
 private

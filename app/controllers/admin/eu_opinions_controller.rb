@@ -11,21 +11,26 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
         redirect_to admin_taxon_concept_eu_opinions_url(params[:taxon_concept_id]),
           notice: 'Operation successful'
       end
+
       failure.html do
         load_search
+
         render 'new'
       end
     end
   end
+
   def update
     update! do |success, failure|
       success.html do
         redirect_to admin_taxon_concept_eu_opinions_url(params[:taxon_concept_id]),
           notice: 'Operation successful'
       end
+
       failure.html do
         load_lib_objects
         load_search
+
         render 'new'
       end
     end
@@ -58,7 +63,9 @@ protected
       :geo_entity
     ).order(
       'is_current DESC, start_date DESC, geo_entities.name_en ASC'
-    ).page(params[:page])
+    ).page(
+      params[:page]
+    )
   end
 
 private
