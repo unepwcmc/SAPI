@@ -2,31 +2,43 @@ module SearchableRelation
   extend ActiveSupport::Concern
 
   class_methods do
-    def search(query, searched_column_names = searchable_text_columns)
-      ilike_search(query, searched_column_names)
+    def search(query, cols = searchable_text_columns)
+      ilike_search(query, cols)
     end
 
     ##
+    # Convenience method for building up ILIKE "%foo%" where clauses.
+    #
     # SomeModel.ilike_search('foo', [:name, :description_en])
-    # equivalent to
+    #
+    # is equivalent to:
+    #
     # SomeModel.where(%{"name" ilike '%foo%' OR description_en ilike '%foo%'})
     def ilike_search(
-      query, searched_column_names = searchable_text_columns
+      query, cols = searchable_text_columns
     )
       return all if query.blank?
 
       where(
-        searched_column_names.map do |column_name|
-          arel_table[column_name.to_s].matches(
-            "%#{sanitize_sql_like(query)}%"
-          ).to_sql
-        end.join(' OR ')
+        cols.map do |col|
+          if col.is_a?(Arel::Nodes::NodeExpression)
+            col
+          else
+            if col.is_a?(Arel::Attributes::Attribute)
+              col
+            else
+              arel_table[col.to_s]
+            end.matches(
+              "%#{sanitize_sql_like(query)}%"
+            )
+          end
+        end.reduce(&:or)
       )
     end
 
     def searchable_text_columns
-      columns.select do |c|
-        [ :text, :string ].include? c.type
+      columns.select do |col|
+        [ :text, :string ].include? col.type
       end.map(&:name)
     end
   end
