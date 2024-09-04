@@ -107,10 +107,7 @@ class Event < ApplicationRecord
 
   def self.search(query)
     self.ilike_search(
-      query, [
-        Events.arel_table['name'],
-        Events.arel_table['description']
-      ]
+      query, [ :name, :description ]
     )
   end
 
