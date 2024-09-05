@@ -45,6 +45,7 @@ private
 
   def output_children_summary
     children_cnt = @input.taxon_concept.children.count
+
     return nil unless children_cnt > 0
 
     cnt =
@@ -56,6 +57,7 @@ private
             'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
           ).count
       end
+
     "#{cnt} (of #{children_cnt}) children"
   end
 
@@ -64,7 +66,8 @@ private
       @input.taxon_concept.synonyms.count +
       @input.taxon_concept.hybrids.count +
       @input.taxon_concept.trade_names.count
-    return nil unless names_cnt > 0
+
+      return nil unless names_cnt > 0
 
     cnt =
       if @input.is_a?(NomenclatureChange::Output)
@@ -75,11 +78,13 @@ private
             'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
           ).count
       end
+
     "#{cnt} (of #{names_cnt}) names"
   end
 
   def output_distribution_summary
     distributions_cnt = @input.taxon_concept.distributions.count
+
     return nil unless distributions_cnt > 0
 
     cnt =
@@ -91,11 +96,13 @@ private
             'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
           ).count
       end
+
     "#{cnt} (of #{distributions_cnt}) distributions"
   end
 
   def output_documents_summary
     document_citations_cnt = @input.taxon_concept.document_citation_taxon_concepts.count
+
     return nil unless document_citations_cnt > 0
 
     cnt =
@@ -107,28 +114,41 @@ private
             'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
           ).count
       end
+
     "#{cnt} (of #{document_citations_cnt}) document citations"
   end
 
   def output_legislation_summary(rel, reassignable_type, title)
     objects_cnt = rel.count
+
     return nil unless objects_cnt > 0
 
-    cnt = @input.legislation_reassignments.includes(:reassignment_targets).
-      where(
+    cnt =
+      @input.legislation_reassignments.includes(
+        :reassignment_targets
+      ).where(
         'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
-      ).where(reassignable_type: reassignable_type).count
+      ).where(
+        reassignable_type: reassignable_type
+      ).count
+
     "#{(cnt == 1 || @input.is_a?(NomenclatureChange::Output) ? objects_cnt : 0)} (of #{objects_cnt}) #{title}"
   end
 
   def output_generic_summary(rel, reassignable_type, title)
     objects_cnt = rel.count
+
     return nil unless objects_cnt > 0
 
-    cnt = @input.reassignments.includes(:reassignment_targets).
-      where(
+    cnt =
+      @input.reassignments.includes(
+        :reassignment_targets
+      ).where(
         'nomenclature_change_reassignment_targets.nomenclature_change_output_id' => @output.id
-      ).where(reassignable_type: reassignable_type).count
+      ).where(
+        reassignable_type: reassignable_type
+      ).count
+
     "#{(cnt == 1 || @input.is_a?(NomenclatureChange::Output) ? objects_cnt : 0)} (of #{objects_cnt}) #{title}"
   end
 end

@@ -9,7 +9,8 @@ class NomenclatureChange::TradeShipmentsResolver
     Trade::Shipment.where(
       taxon_concept_id: @old_taxon_relationship.taxon_concept_id,
       reported_taxon_concept_id: @taxon_relationship.other_taxon_concept_id
-    ).
-      update_all(taxon_concept_id: @taxon_relationship.taxon_concept_id)
+    ).update_all(
+      taxon_concept_id: @taxon_relationship.taxon_concept_id
+    )
   end
 end

@@ -22,6 +22,7 @@ private
       taxonomy_id: node.taxonomy_id,
       full_name: @expected_full_name
     )
+
     # match on author & year as well
     compatible_node =
       if node.author_year.blank?
@@ -29,6 +30,7 @@ private
       else
         compatible_node.where(author_year: node.author_year)
       end.first
+
     if !compatible_node
       compatible_node = create_compatible_node(node)
     elsif compatible_node && [ 'A', 'N' ].exclude?(compatible_node.name_status)
@@ -40,11 +42,14 @@ private
     node.update_attribute(:parent_id, @node_old_copy.parent_id)
 
     r = NomenclatureChange::FullReassignment.new(node, compatible_node)
+
     r.process
+
     downgrade_node(node, compatible_node)
 
     node.children.each do |child_node|
       child_node.parent = compatible_node
+
       resolve(child_node)
     end
   end
@@ -56,6 +61,7 @@ private
       else
         @expected_full_name
       end
+
     compatible_node = TaxonConcept.create(
       taxonomy_id: node.taxonomy_id,
       scientific_name: expected_scientific_name,
@@ -67,19 +73,23 @@ private
       nomenclature_note_es: node.nomenclature_note_es,
       nomenclature_note_fr: node.nomenclature_note_fr
     )
+
     if node.nomenclature_comment
       compatible_node.create_nomenclature_comment(note: node.nomenclature_comment.note)
     end
+
     compatible_node
   end
 
   def upgrade_node(node, parent)
     t = NomenclatureChange::ToAcceptedNameTransformation.new(node, parent)
+
     t.process
   end
 
   def downgrade_node(node, compatible_node)
     t = NomenclatureChange::ToSynonymTransformation.new(node, compatible_node)
+
     t.process
   end
 

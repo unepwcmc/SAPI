@@ -39,6 +39,7 @@ private
   def create_relationships(taxon_concept, rel_type)
     @linked_names.each do |linked_name|
       Rails.logger.debug { "Creating #{rel_type.name} relationship with #{linked_name.full_name}" }
+
       taxon_concept.taxon_relationships << TaxonRelationship.new(
         taxon_relationship_type_id: rel_type.id,
         other_taxon_concept_id: linked_name.id
@@ -49,6 +50,7 @@ private
   def create_inverse_relationships(taxon_concept, rel_type)
     @linked_names.each do |linked_name|
       Rails.logger.debug { "Creating #{rel_type.name} inverse relationship with #{linked_name.full_name}" }
+
       linked_name.taxon_relationships << TaxonRelationship.new(
         taxon_relationship_type_id: rel_type.id,
         other_taxon_concept_id: taxon_concept.id
@@ -59,6 +61,7 @@ private
   def destroy_relationships(relationships)
     relationships.includes(:taxon_concept, :taxon_relationship_type).find_each do |rel|
       Rails.logger.debug { "Removing #{rel.taxon_relationship_type.name} relationship with #{rel.taxon_concept.full_name}" }
+
       rel.destroy
     end
   end

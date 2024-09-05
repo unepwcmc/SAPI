@@ -9,6 +9,7 @@ class NomenclatureChange::ToAcceptedNameTransformation
     destroy_relationships(
       @non_accepted_taxon_concept.inverse_synonym_relationships
     )
+
     destroy_relationships(
       @non_accepted_taxon_concept.inverse_trade_name_relationships
     )
@@ -22,6 +23,7 @@ class NomenclatureChange::ToAcceptedNameTransformation
   def destroy_relationships(relationships)
     relationships.includes(:taxon_concept, :taxon_relationship_type).find_each do |rel|
       Rails.logger.debug { "Removing #{rel.taxon_relationship_type.name} relationship with #{rel.taxon_concept.full_name}" }
+
       rel.destroy
     end
   end

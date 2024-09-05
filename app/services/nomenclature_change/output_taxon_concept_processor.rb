@@ -10,13 +10,19 @@ class NomenclatureChange::OutputTaxonConceptProcessor
     tc.nomenclature_note_fr = "#{tc.nomenclature_note_fr} #{@output.note_fr}"
     nomenclature_comment = tc.nomenclature_comment || tc.build_nomenclature_comment
     nomenclature_comment.note = "#{nomenclature_comment.note} #{@output.internal_note}"
+
     Rails.logger.debug { "Processing output #{tc.full_name}" }
+
     new_record = tc.new_record?
+
     unless tc.save
       Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
+
       return false
     end
+
     nomenclature_comment.save
+
     if new_record
       Rails.logger.debug { "UPDATE NEW TAXON ID #{tc.id}" }
       @output.update_column(:new_taxon_concept_id, tc.id)
