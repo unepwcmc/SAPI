@@ -49,6 +49,9 @@ private
   def check_for_documents
     if documents.present?
       errors.add(:base, 'failed. Please delete the associated documents before destroying this event.')
+
+      # Throw rather than raise per:
+      # https://api.rubyonrails.org/classes/ActiveRecord/RecordNotDestroyed.html
       throw :abort
     end
   end
