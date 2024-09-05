@@ -39,17 +39,28 @@ $(document).ready ->
       elementValue = $(element).val()
       # Reset value attribute to let Select2 work properly when submitting the values again
       $(element).attr('value','')
+
       if elementValue?
-        ids = elementValue.match(/({|\[)(.*)(}|\])/)[2]
         names = $(element).data('name')
+        regexJsonArray = /^(?:{|\[)([\d,]*)(?:}|\])$/
+
+        ids = (
+          if Array.isArray(elementValue) then elementValue
+          else if /^\d+$/.test(elementValue) then [elementValue]
+          else if regexJsonArray.test(ids) then ids.match(regexJsonArray)[1].split(',')
+          else (elementValue || '').split(/\D+/).filter(Boolean)
+        )
+
         name_status = $(element).data('name-status')
+
         result = []
-        if ids != ''
-          ids = ids.split(',')
-          for id, i in ids
-            result.push({id: id, text: names && names[i] + ' ' + name_status})
+
+        for id, i in ids
+          result.push({id: id, text: names && names[i] + ' ' + name_status})
+
         callback(result)
   }
+
   window.max2Select2Options = {
     maximumSelectionSize: 2,
     formatSelectionTooBig: (limit) ->
