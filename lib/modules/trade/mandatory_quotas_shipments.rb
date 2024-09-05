@@ -111,13 +111,13 @@ private
   # We add the AND after the WHERE clause to exclude specific sources while still mantain the shipments with source blank
   def sub_query
     "
-          #{inner_select}
-          #{from}
-          #{inner_joins}
-          WHERE #{where}
-          AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
-          #{group_by}
-          #{having}
+      #{inner_select}
+      #{from}
+      #{inner_joins}
+      WHERE #{where}
+      AND (source.name_en != 'Confiscations/seizures' OR ts.source_id IS NULL)
+      #{group_by}
+      #{having}
     "
   end
 
@@ -156,11 +156,11 @@ private
 
   def inner_joins
     "
-          INNER JOIN geo_entities AS #{imp_or_exp_country} ON #{imp_or_exp_country}.id = ts.#{imp_or_exp_country}_id
-          LEFT OUTER JOIN trade_codes source ON ts.source_id = source.id
-          LEFT OUTER JOIN trade_codes purpose ON ts.purpose_id = purpose.id
-          LEFT OUTER JOIN trade_codes unit ON ts.unit_id = unit.id
-          LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
+      INNER JOIN geo_entities AS #{imp_or_exp_country} ON #{imp_or_exp_country}.id = ts.#{imp_or_exp_country}_id
+      LEFT OUTER JOIN trade_codes source ON ts.source_id = source.id
+      LEFT OUTER JOIN trade_codes purpose ON ts.purpose_id = purpose.id
+      LEFT OUTER JOIN trade_codes unit ON ts.unit_id = unit.id
+      LEFT OUTER JOIN trade_codes term ON ts.term_id = term.id
     "
   end
 

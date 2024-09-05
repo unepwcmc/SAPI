@@ -9,9 +9,13 @@ module Trade::RebuildComplianceMviews
     ].each do |p|
       time = "#{Time.now.hour}#{Time.now.min}#{Time.now.sec}"
       timestamp = Date.today.to_s.gsub('-', '') + time
+
       Rails.logger.debug { "Rebuild #{p} SQL script..." }
+
       self.rebuild_sql_views(p, timestamp)
+
       Rails.logger.debug { "Rebuild #{p} mview..." }
+
       self.rebuild_compliance_mview(p)
     end
 
@@ -33,26 +37,32 @@ module Trade::RebuildComplianceMviews
   def self.rebuild_compliance_mview(type)
     views = Dir["db/views/trade_shipments_#{type}_view/*"]
     latest_view = views.map { |v| v.split('/').last }.sort.last.split('.').first
+
     self.recreate_mview(type, latest_view)
   end
 
   def self.recreate_mview(type, sql_view)
     view_name = "trade_shipments_#{type}_view"
     mview_name = "trade_shipments_#{type}_mview"
+
     ApplicationRecord.transaction do
       command = "DROP MATERIALIZED VIEW IF EXISTS #{mview_name} CASCADE"
+
       Rails.logger.debug command
       Rails.logger.debug db.execute(command)
 
       command = "DROP VIEW IF EXISTS #{view_name}"
+
       Rails.logger.debug command
       db.execute(command)
 
       command = "CREATE VIEW #{view_name} AS #{ActiveRecord::Migration.view_sql(sql_view, view_name)}"
+
       Rails.logger.debug command
       db.execute(command)
 
       command = "CREATE MATERIALIZED VIEW #{mview_name} AS SELECT * FROM #{view_name}"
+
       Rails.logger.debug command
       db.execute(command)
     end
