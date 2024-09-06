@@ -150,7 +150,9 @@ private
     end
 
     # party distribution
-    party_listing_distribution = reassignable.party_listing_distribution(
+    party_listing_distribution = reassignable.party_listing_distribution
+
+    (
       !copied_object.new_record? && party_listing_distribution &&
       party_listing_distribution.duplicates(
         { listing_change_id: copied_object.id }
