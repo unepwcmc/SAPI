@@ -32,9 +32,14 @@
 
 class CitesCop < Event
   include Deletable
+
   # Migrated to controller (Strong Parameters)
   # attr_accessible :is_current
-  has_many :hash_annotations, class_name: 'Annotation', foreign_key: :event_id
+
+  has_many :hash_annotations,
+    class_name: 'Annotation',
+    dependent: :destroy,
+    foreign_key: :event_id
 
   validate :designation_is_cites
   validates :effective_at, presence: true
