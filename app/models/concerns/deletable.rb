@@ -5,6 +5,18 @@ module Deletable
     before_destroy :before_destroy_checking
   end
 
+  def destroy
+    super
+  rescue StandardError => e
+    errors.add(:base, e.message)
+
+    raise e
+  ensure
+    if !destroyed? && errors.blank?
+      errors.add(:base, "Unknown error during destroy of #{self.class.model_name.singular} #{id}")
+    end
+  end
+
 private
 
   def before_destroy_checking
@@ -16,6 +28,15 @@ private
       end
 
       errors.add(:base, msg)
+
+      # When deleting A has_many B has_many C, and C is blocking deletion of B
+      # Then store the error on A also so that inherited_resources knows that
+      # a failure has happened.
+      if RequestStore.store[:original_resource_to_delete] != self
+        RequestStore.store[:original_resource_to_delete]&.errors&.add(
+          :base, "#{self.class.model_name.singular.capitalise} #{id}: #{msg}"
+        )
+      end
 
       # Throw rather than raise per:
       # https://api.rubyonrails.org/classes/ActiveRecord/RecordNotDestroyed.html

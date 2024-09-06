@@ -29,6 +29,9 @@ class Admin::SimpleCrudController < Admin::AdminController
   end
 
   def destroy
+    # See app/models/concerns/deletable.rb for why this hack is needed
+    RequestStore.store[:original_resource_to_delete] = resource
+
     destroy! do |success, failure|
       success.html { redirect_to collection_url, notice: 'Operation succeeded' }
       failure.html do
