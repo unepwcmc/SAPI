@@ -51,10 +51,21 @@ class Annotation < ApplicationRecord
   belongs_to :event, optional: true
   translates :short_note, :full_note
 
-  scope :for_cites, -> { joins(:event).where("events.type = 'CitesCop'").
-    order([ :parent_symbol, :symbol ]) }
-  scope :for_eu, -> { joins(:event).where("events.type = 'EuRegulation'").
-    order([ :parent_symbol, :symbol ]) }
+  scope :for_cites, -> do
+    joins(:event).where(
+      "events.type = 'CitesCop'"
+    ).order(
+      [ :parent_symbol, :symbol ]
+    )
+  end
+
+  scope :for_eu, -> {
+    joins(:event).where(
+      "events.type = 'EuRegulation'"
+    ).order(
+      [ :parent_symbol, :symbol ]
+    )
+  }
 
   # If this pattern is not respected, a query which parses (most of) the
   # symbol as an integer
