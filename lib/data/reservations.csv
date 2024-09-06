@@ -1,4 +1,4 @@
-start_date,end_date,taxon_name,taxon_concept_id,rank,iso_code2,notes,Internal Notes 
+start_date,end_date,taxon_name,taxon_concept_id,rank,iso_code2,notes,Internal Notes
 12/06/2013,20/05/2015,Platysternidae,531,FAMILY,CA, ,
 09/07/1975,11/08/1978,Eubalaena,923,GENUS,CA, ,
 28/06/1979,29/10/1982,Sousa,1286,GENUS,CA, ,
@@ -68,7 +68,7 @@ start_date,end_date,taxon_name,taxon_concept_id,rank,iso_code2,notes,Internal No
 01/08/1985,06/01/1989,Ara macao,4650,SPECIES,AT, ,
 01/08/1985,12/06/2014,Ara macao,4650,SPECIES,CH, ,
 01/08/1985,12/06/2014,Ara macao,4650,SPECIES,LI, ,
-01/08/1985,,Ara macao,4650,SPECIES,SR, ,
+01/08/1985,31/12/2014,Ara macao,4650,SPECIES,SR, ,
 29/07/1983,06/01/1989,Hyperoodon ampullatus,4979,SPECIES,AT, ,
 02/04/2000,,Hyperoodon ampullatus,4979,SPECIES,IS, ,
 29/07/1983,26/04/1995,Hyperoodon ampullatus,4979,SPECIES,RU,Original reservation as USSR. ,
@@ -110,7 +110,6 @@ start_date,end_date,taxon_name,taxon_concept_id,rank,iso_code2,notes,Internal No
 26/11/2019,02/12/2020,Crocodylus acutus,6436,SPECIES,CA,,
 02/04/2000,,Balaenoptera bonaerensis,6477,SPECIES,IS,Reservation entered under Balaenoptera acutorostrata. ,
 19/07/2000,,Balaenoptera bonaerensis,6477,SPECIES,JP, ,
-01/01/1986,,Balaenoptera bonaerensis,6477,SPECIES,NO,Reservation entered under Balaenoptera acutorostrata. ,
 31/10/1976,03/07/1978,Alligator sinensis,6693,SPECIES,GB,On behalf of HK. ,
 31/10/1976,03/07/1978,Terrapene coahuila,6708,SPECIES,GB,On behalf of HK. ,
 10/06/1996,,Aquila heliaca,6741,SPECIES,SA, ,
@@ -153,7 +152,6 @@ start_date,end_date,taxon_name,taxon_concept_id,rank,iso_code2,notes,Internal No
 01/01/1986,07/05/1991,Balaenoptera acutorostrata,8288,SPECIES,BR, ,
 02/04/2000,,Balaenoptera acutorostrata,8288,SPECIES,IS,Except stock of west Greenland. ,
 01/01/1986,,Balaenoptera acutorostrata,8288,SPECIES,JP,Except stock of west Greenland. ,
-01/01/1986,,Balaenoptera acutorostrata,8288,SPECIES,NO,Except stock of west Greenland. ,
 01/01/1986,24/10/2001,Balaenoptera acutorostrata,8288,SPECIES,PE,Except stock of west Greenland. ,
 15/07/2004,,Balaenoptera acutorostrata,8288,SPECIES,PW, ,
 01/01/1986,26/04/1995,Balaenoptera acutorostrata,8288,SPECIES,RU,Original reservation as USSR. ,
@@ -387,3 +385,4 @@ start_date,end_date,taxon_name,taxon_concept_id,rank,iso_code2,notes,Internal No
 23/02/2023,,Tiliqua adelaidensis,100209,SPECIES,CA,,
 23/02/2023,,Kinosternon cora,100473,SPECIES,CA,,
 23/02/2023,,Kinosternon vogti,100472,SPECIES,CA,,
+01/01/2015,,Oryx leucoryx,4154,SPECIES,AE,,
