@@ -39,9 +39,14 @@ class Annotation < ApplicationRecord
   #   :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
   #   :display_in_index, :display_in_footnote, :event_id
 
-  has_many :listing_changes
+  has_many :listing_changes,
+    dependent: :nullify
+
   has_many :hashed_listing_changes,
-    foreign_key: :hash_annotation_id, class_name: 'ListingChange'
+    class_name: 'ListingChange',
+    dependent: :nullify,
+    foreign_key: :hash_annotation_id,
+    inverse_of: :hash_annotation
 
   belongs_to :event, optional: true
   translates :short_note, :full_note
