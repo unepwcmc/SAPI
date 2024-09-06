@@ -41,6 +41,7 @@ class Event < ApplicationRecord
   attr_reader :effective_at_formatted
 
   belongs_to :designation, optional: true
+  has_many :listing_changes, dependent: :destroy
   has_many :annotations, dependent: :destroy
   has_many :documents
   has_many :cites_processes
