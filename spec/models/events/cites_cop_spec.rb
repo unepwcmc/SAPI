@@ -51,12 +51,42 @@ describe CitesCop do
 
   describe :destroy do
     let(:cites_cop) { create_cites_cop }
+
     context 'when no dependent objects attached' do
       specify { expect(cites_cop.destroy).to be_truthy }
     end
+
     context 'when dependent objects attached' do
-      context 'when listing changes' do
+      ##
+      # NB: deleting EU regulation events will cause all its listing changes to
+      # be deleted, whereas CITES CoPs will refuse to be deleted until its
+      # listing changes are deleted.
+      context 'when listing changes exist' do
         let!(:listing_change) { create_cites_I_addition(event: cites_cop) }
+        specify { expect(cites_cop.destroy).to be_falsey }
+      end
+
+      context 'when listing change and annotation' do
+        let!(:annotation) { create(:annotation, event: cites_cop) }
+        let!(:listing_change) do
+          create_cites_I_addition(
+            event: cites_cop,
+            annotation: annotation
+          )
+        end
+
+        specify { expect(cites_cop.destroy).to be_falsey }
+      end
+
+      context 'when listing change and hash annotation' do
+        let!(:hash_annotation) { create(:annotation, event: cites_cop) }
+        let!(:listing_change) do
+          create_cites_I_addition(
+            event: cites_cop,
+            hash_annotation: hash_annotation
+          )
+        end
+
         specify { expect(cites_cop.destroy).to be_falsey }
       end
     end

@@ -36,6 +36,16 @@ class CitesCop < Event
   # Migrated to controller (Strong Parameters)
   # attr_accessible :is_current
 
+  ##
+  # The only time we would delete a CoP/EU regulation is just after we've
+  # created it by mistake, but we don't want to be able to delete the CoP
+  # event once it's started to be populated, whereas an EU Regulation
+  # starts off being populated with lots of associated data so we can't
+  # restrict deletion.
+  has_many :listing_changes,
+    dependent: :restrict_with_error,
+    foreign_key: :event_id
+
   has_many :hash_annotations,
     class_name: 'Annotation',
     dependent: :destroy,

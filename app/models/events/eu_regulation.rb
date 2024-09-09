@@ -37,6 +37,20 @@ class EuRegulation < EuEvent
   # attr_accessible :listing_changes_event_id, :end_date
   attr_accessor :listing_changes_event_id
 
+  ##
+  # The only time we would delete a CoP/EU regulation is just after we've
+  # created it by mistake, but we don't want to be able to delete the CoP
+  # event once it's started to be populated, whereas an EU Regulation
+  # starts off being populated with lots of associated data so we can't
+  # restrict deletion.
+  has_many :listing_changes,
+    dependent: :destroy,
+    foreign_key: :event_id
+
+  has_many :annotations,
+    dependent: :destroy,
+    foreign_key: :event_id
+
   validate :designation_is_eu
   validates :effective_at, presence: true
 

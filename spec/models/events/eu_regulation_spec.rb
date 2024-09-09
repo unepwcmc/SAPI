@@ -78,12 +78,42 @@ describe EuRegulation do
 
   describe :destroy do
     let(:eu_regulation) { create_eu_regulation }
+
     context 'when no dependent objects attached' do
       specify { expect(eu_regulation.destroy).to be_truthy }
     end
+
     context 'when dependent objects attached' do
+      ##
+      # NB: deleting EU regulation events will cause all its listing changes to
+      # be deleted, whereas CITES CoPs will refuse to be deleted until its
+      # listing changes are deleted.
       context 'when listing changes' do
         let!(:listing_change) { create_eu_A_addition(event: eu_regulation) }
+        specify { expect(eu_regulation.destroy).to be_truthy }
+      end
+
+      context 'when listing change and annotation' do
+        let!(:annotation) { create(:annotation, event: eu_regulation) }
+        let!(:listing_change) do
+          create_eu_A_addition(
+            event: eu_regulation,
+            annotation: annotation
+          )
+        end
+
+        specify { expect(eu_regulation.destroy).to be_truthy }
+      end
+
+      context 'when listing change and hash annotation' do
+        let!(:hash_annotation) { create(:annotation, event: eu_regulation) }
+        let!(:listing_change) do
+          create_eu_A_addition(
+            event: eu_regulation,
+            hash_annotation: hash_annotation
+          )
+        end
+
         specify { expect(eu_regulation.destroy).to be_truthy }
       end
     end
