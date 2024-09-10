@@ -17,7 +17,10 @@ class Unit < TradeCode
 
   validates :code, length: { is: 3 }
 
-  has_many :term_trade_codes_pairs, as: :trade_code
+  has_many :term_trade_codes_pairs,
+    as: :trade_code,
+    dependent: :restrict_with_error
+
   has_many :quotas
   has_many :shipments, class_name: 'Trade::Shipment'
 
