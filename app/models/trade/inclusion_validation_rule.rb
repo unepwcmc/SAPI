@@ -181,24 +181,28 @@ private
   # specific errors and ids of matching records
   def matching_records_grouped(annual_report_upload)
     table_name = annual_report_upload.sandbox.table_name
-    Trade::SandboxTemplate.
-      select(
-        # IMPORTANT NOTE:
-        # After upgrading to Rails 4.1 (Arel 5.0.1), Rails injects the table name in front of column names.
-        # For example: From `SELECT taxon_concept_id FROM...` to `SELECT trade_sandbox_template.taxon_concept_id FROM...`.
-        # There is nothing inherently wrong with Rails, but it doesn't work well with this project, which involves many
-        # highly customized low-level SQL queries.
-        # In this case the FROM clause aliases a name which does not have a model.
-        # A quick and temporary solution for now is to manually inject the correct table name ourselves.
-        column_names_for_display_with_custom_table_name(table_name: 'matching_records') +
-        [
-          'COUNT(*) AS error_count',
-          'ARRAY_AGG(id) AS matching_records_ids'
-        ]
-      ).from(Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")).
-      group(column_names_for_display_with_custom_table_name(table_name: 'matching_records')).having(
-        required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
-      )
+
+    Trade::SandboxTemplate.select(
+      # IMPORTANT NOTE:
+      # After upgrading to Rails 4.1 (Arel 5.0.1), Rails injects the table name in front of column names.
+      # For example: From `SELECT taxon_concept_id FROM...` to `SELECT trade_sandbox_template.taxon_concept_id FROM...`.
+      # There is nothing inherently wrong with Rails, but it doesn't work well with this project, which involves many
+      # highly customized low-level SQL queries.
+      # In this case the FROM clause aliases a name which does not have a model.
+      # A quick and temporary solution for now is to manually inject the correct table name ourselves.
+      column_names_for_display_with_custom_table_name(
+        table_name: 'matching_records'
+      ) + [
+        'COUNT(*) AS error_count',
+        'ARRAY_AGG(id) AS matching_records_ids'
+      ]
+    ).from(
+      Arel.sql("(#{matching_records_arel(table_name).to_sql}) AS matching_records")
+    ).group(
+      column_names_for_display_with_custom_table_name(table_name: 'matching_records')
+    ).having(
+      required_column_names.map { |cn| "#{cn} IS NOT NULL" }.join(' AND ')
+    )
   end
 
   def matching_records(annual_report_upload)
