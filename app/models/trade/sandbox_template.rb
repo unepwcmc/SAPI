@@ -73,12 +73,19 @@ class Trade::SandboxTemplate < ApplicationRecord
           belongs_to :taxon_concept, optional: true
           belongs_to :reported_taxon_concept, class_name: 'TaxonConcept', optional: true
 
+          after_save :sanitize
+
+          after_destroy do
+            # Bump timestamp to ensure errors refreshed
+            self.class.update_all(updated_at: Time.now) # rubocop:disable Rails/SkipsModelValidations
+          end
+
           def sanitize
-            self.class.sanitize(self.id)
+            self.class.where(id: id).sanitize(id)
           end
 
           def self.sanitize(id = nil)
-            where(id: id).update_all(
+            update_all(
               <<-SQL.squish
                 appendix = UPPER(SQUISH_NULL(appendix)),
                 year = SQUISH_NULL(year),
@@ -94,6 +101,7 @@ class Trade::SandboxTemplate < ApplicationRecord
                 origin_permit = UPPER(SQUISH_NULL(origin_permit))
               SQL
             )
+
             # resolve reported & accepted taxon
             connection.execute(
               sanitize_sql_array(
@@ -104,16 +112,6 @@ class Trade::SandboxTemplate < ApplicationRecord
                 ]
               )
             )
-          end
-
-          def save(...)
-            super
-            sanitize
-          end
-
-          def destroy
-            super
-            self.class.update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
           end
 
           def self.records_for_batch_operation(validation_error, annual_report_upload)
