@@ -80,14 +80,17 @@ describe Trade::Shipment do
       subject { build(:shipment, reporter_type: nil) }
       specify { expect(subject.error_on(:reporter_type).size).to eq(2) }
     end
+
     context 'when appendix valid' do
       subject { build(:shipment, appendix: 'N') }
       specify { expect(subject).to be_valid }
     end
+
     context 'when appendix not valid' do
       subject { build(:shipment, appendix: 'I/II') }
       specify { expect(subject.error_on(:appendix).size).to eq(1) }
     end
+
     context 'when permit numbers given' do
       before(:each) do
         @shipment = create(
@@ -97,12 +100,15 @@ describe Trade::Shipment do
           origin_permit_number: 'c'
         )
       end
+
       context 'when export permit' do
         specify { expect(@shipment.export_permit_number).to eq('A') }
       end
+
       context 'when import permit' do
         specify { expect(@shipment.import_permit_number).to eq('B') }
       end
+
       context 'when origin permit' do
         specify { expect(@shipment.origin_permit_number).to eq('C') }
       end
@@ -155,30 +161,33 @@ describe Trade::Shipment do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
+
       context 'invalid' do
         subject do
           create(
             :shipment,
             taxon_concept: @taxon_concept, appendix: 'II', year: 2013
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
+
       context 'invalid' do
         subject do
           create(
             :shipment,
             taxon_concept: @taxon_concept, appendix: 'N', year: 2013
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
+
       context 'valid' do
         subject do
           create(
             :shipment,
             taxon_concept: @taxon_concept, appendix: 'I', year: 2013
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
@@ -195,12 +204,13 @@ describe Trade::Shipment do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
+
       context 'valid' do
         subject do
           create(
             :shipment,
             taxon_concept: @taxon_concept, appendix: 'N', year: 2013
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
@@ -211,17 +221,18 @@ describe Trade::Shipment do
         @taxon_concept = create_cites_eu_species(
           taxon_name: create(:taxon_name, scientific_name: 'nonsignificatus'),
           parent: @genus
-        )
+        ).tap(&:validate)
         reg2013 # EU event
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         create_taxon_concept_appendix_year_validation
       end
+
       context 'not CITES listed and not EU listed' do
         subject do
           create(
             :shipment,
             taxon_concept: @taxon_concept, appendix: 'N', year: 2013
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
@@ -247,43 +258,48 @@ describe Trade::Shipment do
         )
         create_term_unit_validation
       end
+
       context 'invalid' do
         subject do
           create(
             :shipment,
             term: @cav, unit: @bag
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
+
       context 'valid' do
         subject do
           create(
             :shipment,
             term: @cav, unit: @kil
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
+
       context 'blank unit is valid' do
         subject do
           create(
             :shipment,
             term: @cav, unit: nil
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
+
       context 'blank unit is invalid' do
         subject do
           create(
             :shipment,
             term: @cap, unit: nil
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
     end
+
     context 'when term + purpose' do
       before(:each) do
         @cav = create(:term, code: 'CAV')
@@ -295,25 +311,28 @@ describe Trade::Shipment do
         )
         create_term_purpose_validation
       end
+
       context 'invalid' do
         subject do
           create(
             :shipment,
             term: @cav, purpose: @b
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
+
       context 'valid' do
         subject do
           create(
             :shipment,
             term: @cav, purpose: @p
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
     end
+
     context 'when species name + term' do
       before(:each) do
         @cav = create(:term, code: 'CAV')
@@ -324,15 +343,17 @@ describe Trade::Shipment do
         )
         create_taxon_concept_term_validation
       end
+
       context 'invalid' do
         subject do
           create(
             :shipment,
             taxon_concept: @taxon_concept, term: @cav
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
+
       context 'valid' do
         subject do
           create(
@@ -343,10 +364,12 @@ describe Trade::Shipment do
         specify { expect(subject.warnings).to be_empty }
       end
     end
+
     context 'when species name + country of origin' do
       before(:each) do
         create_taxon_concept_country_of_origin_validation
       end
+
       context 'invalid' do
         subject do
           create(
@@ -354,10 +377,11 @@ describe Trade::Shipment do
             source: @wild,
             taxon_concept: @taxon_concept,
             country_of_origin: @poland
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
+
       context 'valid' do
         subject do
           create(
@@ -365,10 +389,11 @@ describe Trade::Shipment do
             source: @wild,
             taxon_concept: @taxon_concept,
             country_of_origin: @argentina
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
+
       context 'blank' do
         subject do
           create(
@@ -376,15 +401,17 @@ describe Trade::Shipment do
             source: @wild,
             taxon_concept: @taxon_concept,
             country_of_origin: nil
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
     end
+
     context 'when species name + exporter' do
       before(:each) do
         create_taxon_concept_exporter_validation
       end
+
       context 'invalid' do
         subject do
           create(
@@ -393,10 +420,11 @@ describe Trade::Shipment do
             taxon_concept: @taxon_concept,
             country_of_origin: nil,
             exporter: @poland
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
+
       context 'valid' do
         subject do
           create(
@@ -405,10 +433,11 @@ describe Trade::Shipment do
             taxon_concept: @taxon_concept,
             country_of_origin: nil,
             exporter: @argentina
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
+
       context 'valid with XX' do
         subject do
           create(
@@ -417,15 +446,17 @@ describe Trade::Shipment do
             taxon_concept: @taxon_concept,
             country_of_origin: nil,
             exporter: @xx
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
     end
+
     context 'when exporter + country of origin' do
       before(:each) do
         create_exporter_country_of_origin_validation
       end
+
       context 'invalid' do
         subject do
           create(
@@ -433,10 +464,11 @@ describe Trade::Shipment do
             taxon_concept: @taxon_concept,
             exporter: @argentina,
             country_of_origin: @argentina
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
+
       context 'valid' do
         subject do
           create(
@@ -444,15 +476,17 @@ describe Trade::Shipment do
             taxon_concept: @taxon_concept,
             exporter: @poland,
             country_of_origin: @argentina
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
     end
+
     context 'when exporter + importer' do
       before(:each) do
         create_exporter_importer_validation
       end
+
       context 'invalid' do
         subject do
           create(
@@ -460,10 +494,11 @@ describe Trade::Shipment do
             taxon_concept: @taxon_concept,
             importer: @argentina,
             exporter: @argentina
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
+
       context 'valid' do
         subject do
           create(
@@ -471,11 +506,12 @@ describe Trade::Shipment do
             taxon_concept: @taxon_concept,
             importer: @poland,
             exporter: @argentina
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end
     end
+
     context 'when species name + source code' do
       before(:each) do
         @artificial = create(:trade_code, type: 'Source', code: 'A', name_en: 'Artificially propagated')
@@ -485,23 +521,25 @@ describe Trade::Shipment do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         @taxon_concept.reload
       end
+
       context 'invalid' do
         subject do
           create(
             :shipment,
             taxon_concept: @taxon_concept,
             source: @artificial
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).not_to be_empty }
       end
+
       context 'valid' do
         subject do
           create(
             :shipment,
             taxon_concept: @taxon_concept,
             source: @wild
-          )
+          ).tap(&:validate)
         end
         specify { expect(subject.warnings).to be_empty }
       end

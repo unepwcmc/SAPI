@@ -131,13 +131,6 @@ class Trade::Shipment < ApplicationRecord
   after_commit :async_tasks_after_save, on: [ :create, :update ]
   after_commit :async_tasks_for_destroy, on: :destroy
 
-  after_validation do
-    unless self.errors.empty? && self.ignore_warnings
-      # inject warnings here
-      warnings.each { |w| self.errors[:warnings] << w }
-    end
-  end
-
   def self.reporter_type_to_reported_by_exporter(str)
     if str && str.upcase.strip == 'E'
       true
