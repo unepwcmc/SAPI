@@ -87,18 +87,18 @@ class Trade::SandboxTemplate < ApplicationRecord
           def self.sanitize(id = nil)
             update_all(
               <<-SQL.squish
-                appendix = UPPER(SQUISH_NULL(appendix)),
-                year = SQUISH_NULL(year),
-                term_code = UPPER(SQUISH_NULL(term_code)),
-                unit_code = UPPER(SQUISH_NULL(unit_code)),
-                purpose_code = UPPER(SQUISH_NULL(purpose_code)),
-                source_code = UPPER(SQUISH_NULL(source_code)),
-                quantity = SQUISH_NULL(quantity),
-                trading_partner = UPPER(SQUISH_NULL(trading_partner)),
-                country_of_origin = UPPER(SQUISH_NULL(country_of_origin)),
-                import_permit = UPPER(SQUISH_NULL(import_permit)),
-                export_permit = UPPER(SQUISH_NULL(export_permit)),
-                origin_permit = UPPER(SQUISH_NULL(origin_permit))
+                appendix = UPPER(SQUISH_NULL(TRIM(appendix))),
+                year = SQUISH_NULL(TRIM(year)),
+                term_code = UPPER(SQUISH_NULL(TRIM(term_code))),
+                unit_code = UPPER(SQUISH_NULL(TRIM(unit_code))),
+                purpose_code = UPPER(SQUISH_NULL(TRIM(purpose_code))),
+                source_code = UPPER(SQUISH_NULL(TRIM(source_code))),
+                quantity = SQUISH_NULL(TRIM(quantity)),
+                trading_partner = UPPER(SQUISH_NULL(TRIM(trading_partner))),
+                country_of_origin = UPPER(SQUISH_NULL(TRIM(country_of_origin))),
+                import_permit = UPPER(SQUISH_NULL(TRIM(import_permit))),
+                export_permit = UPPER(SQUISH_NULL(TRIM(export_permit))),
+                origin_permit = UPPER(SQUISH_NULL(TRIM(origin_permit)))
               SQL
             )
 
