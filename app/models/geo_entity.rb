@@ -48,11 +48,31 @@ class GeoEntity < ApplicationRecord
   has_many :users
   has_many :cites_processes
   has_many :eu_country_dates
-  validates :iso_code2, uniqueness: true, allow_blank: true
-  validates :iso_code2, presence: true, length: { is: 2 },
+
+  # ISO-3166-1-alpha-2 codes MUST be of length 2 and MUST be unique, where they
+  # exist
+  validates :iso_code2,
+    uniqueness: true,
+    length: { is: 2 },
+    format: { with: /\A[A-Z]+\z/, message: 'must be uppercase letters only' },
+    allow_nil: true
+
+  # countries MUST have an ISO-3166-1-alpha-2 code
+  validates :iso_code2,
+    presence: true,
     if: :is_country?
-  validates :iso_code3, uniqueness: true, length: { is: 3 },
-    allow_blank: true, if: :is_country?
+
+  # ISO-3166-1-alpha-3 codes MUST be of length 3 and MUST be unique, where they
+  # exist, but we've not actually imported any yet.
+  validates :iso_code3,
+    uniqueness: true,
+    length: { is: 3 },
+    format: { with: /\A[A-Z]+\z/, message: 'must be uppercase letters only' },
+    allow_nil: true
+
+  # Remove leading and trailing spaces from ISO-3166-1
+  normalizes :iso_code2, with: ->(value) { value&.strip&.upcase&.presence }
+  normalizes :iso_code3, with: ->(value) { value&.strip&.upcase&.presence }
 
   # geo entities containing those given by ids
   scope :containing_geo_entities, lambda { |geo_entity_ids|
