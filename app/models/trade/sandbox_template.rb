@@ -30,6 +30,7 @@
 
 class Trade::SandboxTemplate < ApplicationRecord
   self.table_name = :trade_sandbox_template
+
   has_paper_trail
 
   COLUMNS_IN_CSV_ORDER = [
@@ -37,15 +38,17 @@ class Trade::SandboxTemplate < ApplicationRecord
     'trading_partner', 'country_of_origin', 'import_permit', 'export_permit',
     'origin_permit', 'purpose_code', 'source_code', 'year'
   ]
+
   CSV_IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
   CSV_EXPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER - [ 'import_permit' ]
   IMPORTER_COLUMNS = CSV_IMPORTER_COLUMNS.map { |c| c == 'species_name' ? 'taxon_name' : c }
   EXPORTER_COLUMNS = CSV_EXPORTER_COLUMNS.map { |c| c == 'species_name' ? 'taxon_name' : c }
 
-  # Dynamically define AR class for table_name
+  # Dynamically define Annual Report class for table_name
   # (unless one exists already)
   def self.ar_klass(table_name)
     klass_name = table_name.camelize
+
     begin
       "Trade::#{klass_name}".constantize
     rescue NameError
@@ -72,6 +75,40 @@ class Trade::SandboxTemplate < ApplicationRecord
           #   :year
           belongs_to :taxon_concept, optional: true
           belongs_to :reported_taxon_concept, class_name: 'TaxonConcept', optional: true
+
+          [
+            :appendix,
+            :term_code,
+            :unit_code,
+            :purpose_code,
+            :source_code,
+            :trading_partner,
+            :country_of_origin,
+            :import_permit,
+            :export_permit,
+            :origin_permit
+          ].each do |attr_name|
+            normalizes(
+              attr_name,
+              with: ->(value) do
+                value&.strip&.presence&.upcase
+              end
+            )
+          end
+
+          normalizes(
+            :year,
+            with: ->(value) do
+              value&.strip&.presence&.to_i
+            end
+          )
+
+          normalizes(
+            :quantity,
+            with: ->(value) do
+              value&.strip&.presence
+            end
+          )
 
           after_save :sanitize
 
@@ -130,17 +167,23 @@ class Trade::SandboxTemplate < ApplicationRecord
             return unless updates
 
             updates[:updated_at] = Time.now
-            records_for_batch_operation(validation_error, annual_report_upload).
-              update_all(updates.to_h)
+
+            records_for_batch_operation(
+              validation_error, annual_report_upload
+            ).update_all(updates.to_h)
+
             sanitize
           end
 
           def self.destroy_batch(validation_error, annual_report_upload)
-            records_for_batch_operation(validation_error, annual_report_upload).
-              each(&:delete)
+            records_for_batch_operation(
+              validation_error, annual_report_upload
+            ).each(&:delete)
+
             update_all(updated_at: Time.now) # bump timestamp to ensure errors refreshed
           end
         end
+
       Trade.const_set(klass_name, klass)
     end
   end
