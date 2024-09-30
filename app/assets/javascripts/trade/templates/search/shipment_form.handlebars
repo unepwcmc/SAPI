@@ -5,6 +5,11 @@
 
 <div class="modal-body filters">
   <div class="secondary-errors">
+    {{#each currentShipment.fieldErrors}}
+      <p class="text-important"><i class="icon-exclamation-sign"></i>{{this}}</p>
+    {{/each}}
+  </div>
+  <div class="secondary-errors">
     {{#each currentShipment.errors.warnings}}
       <p class="text-warning"><i class="icon-exclamation-sign"></i>{{this}}</p>
     {{/each}}
@@ -193,17 +198,26 @@
   </form>
 </div>
 <div class="modal-footer">
-  {{confirm-button title="Save changes" action="saveShipment" shipmentBinding="currentShipment"
+  {{confirm-button
+    title="Save changes"
+    action="saveShipment"
+    shipmentBinding="currentShipment"
     needsConfirmationBinding="currentShipment.warningsConfirmation"
     ignoreWarningBinding="currentShipment.ignoreWarnings"
   }}
+
   <button {{action 'cancelShipment'}} class="pull-right btn">
     Cancel
   </button>
-  {{#if currentShipment.warningsPresent}}
-    <span class="label label-warning">WARNING</span> Secondary errors detected.
-    {{#if currentShipment.warningsConfirmation}}
-      Click 'Save changes' again to save anyway.
+
+    {{#if currentShipment.fieldErrorsPresent}}
+      <span class="label label-important">ERROR</span> Primary errors detected.
+    {{else}}
+      {{#if currentShipment.warningsPresent}}
+        <span class="label label-warning">WARNING</span> Secondary errors detected.
+        {{#if currentShipment.warningsConfirmation}}
+          Click 'Save changes' again to save anyway.
+        {{/if}}
+      {{/if}}
     {{/if}}
-  {{/if}}
 </div>

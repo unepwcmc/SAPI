@@ -7,6 +7,7 @@ $dark-blue: #0e76b1;
 $light-blue: #00a2db;
 $link-blue: #0088cc;
 $warning-yellow: #c09853;
+$danger-red: #b94a48;
 
 /* full_screen modal window */
 .modal.shipment-form-modal.fade.in, .modal.batch-form-modal.fade.in{
@@ -91,13 +92,21 @@ div.filters {
   }
 }
 
-div.secondary-errors {
+div.primary-errors, div.secondary-errors {
   p {
     padding-bottom: 0;
     border-bottom: 0;
     color: $warning-yellow;
     font-weight: normal;
   }
+}
+
+div.primary-errors p {
+  color: $danger-red;
+}
+
+div.secondary-errors p {
+  color: $warning-yellow;
 }
 
 .inner {

@@ -35,19 +35,49 @@ Trade.Shipment = DS.Model.extend
   ignoreWarnings: DS.attr('boolean')
   propertyChanged: false
 
-  errorsPresent: ( ->
-    result = false
-    keys = (k for own k of @get('errors'))
-    (keys.filter (k) -> k != 'warnings').length > 0
+  fieldErrorsByType: ( ->
+    errorsByType = @get('errors')
+
+    Object.keys(errorsByType || {}).reduce(
+      (
+        (acc, k) ->
+          if 'warnings' != k
+            acc[k] = errorsByType[k]
+
+          acc
+      ),
+      {}
+    )
   ).property('errors.@each')
 
+  fieldErrors: ( ->
+    fieldErrorsByType = @get('fieldErrorsByType')
+
+    Object.keys(fieldErrorsByType).reduce(
+      (
+        (acc, k) ->
+          acc.concat(
+            (fieldErrorsByType[k] || []).map(
+              (msg) ->
+                k + ': ' + msg
+            )
+          )
+      ),
+      []
+    )
+  ).property('fieldErrorsByType.@each')
+
+  fieldErrorsPresent: ( ->
+    (k for own k of @get('fieldErrorsByType')).length > 0
+  ).property('fieldErrorsByType.@each')
+
   warningsPresent: ( ->
-    @get('errors.warnings.length') > 0 && !@get('propertyChanged')
-  ).property('errors.@each.warnings.@each', 'propertyChanged')
+    @get('errors.warnings.length') > 0
+  ).property('errors.@each.warnings.@each')
 
   warningsConfirmation: ( ->
-    @get('warningsPresent') && !@get('errorsPresent')
-  ).property('warningsPresent', 'errorsPresent')
+    @get('warningsPresent') && !@get('fieldErrorsPresent')
+  ).property('warningsPresent', 'fieldErrorsPresent')
 
   taxonConceptIdDidChange: ( ->
     if @get('taxonConceptId')
