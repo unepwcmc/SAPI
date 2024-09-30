@@ -24,10 +24,10 @@
 #
 # Indexes
 #
-#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx1  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_checklist_ac)
-#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx2  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_trade_ac)
-#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx7  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_trade_internal_ac)
-#  auto_complete_taxon_concepts__name_for_matching_taxonomy_is_idx  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_species_plus_ac)
+#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx3  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_species_plus_ac)
+#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx4  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_checklist_ac)
+#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx5  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_trade_ac)
+#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx6  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_trade_internal_ac)
 #
 
 class MAutoCompleteTaxonConcept < ApplicationRecord
