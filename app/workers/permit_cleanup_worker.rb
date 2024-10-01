@@ -11,9 +11,10 @@ class PermitCleanupWorker
         EXCEPT
         SELECT UNNEST(import_permits_ids || export_permits_ids || origin_permits_ids)
         FROM trade_shipments
-        WHERE import_permits_ids @> ARRAY[:permits_ids] OR
-          export_permits_ids @> ARRAY[:permits_ids] OR
-          origin_permits_ids @> ARRAY[:permits_ids]
+        WHERE
+          import_permits_ids && ARRAY[:permits_ids] OR
+          export_permits_ids && ARRAY[:permits_ids] OR
+          origin_permits_ids && ARRAY[:permits_ids]
       )
       DELETE FROM trade_permits
       USING unused_permits
