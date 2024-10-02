@@ -36,9 +36,13 @@ CREATE OR REPLACE FUNCTION create_trade_plus_complete_mview_indexes() RETURNS vo
     CREATE INDEX "index_trade_plus_complete_mview_on_term_id" ON trade_plus_complete_mview USING btree (term_id);
     CREATE INDEX "index_trade_plus_complete_mview_on_term_code" ON trade_plus_complete_mview USING btree (term_code);
     CREATE INDEX "index_trade_plus_complete_mview_on_term_en" ON trade_plus_complete_mview USING btree (term_en);
+    CREATE INDEX "index_trade_plus_complete_mview_on_term_es" ON trade_plus_complete_mview USING btree (term_es);
+    CREATE INDEX "index_trade_plus_complete_mview_on_term_fr" ON trade_plus_complete_mview USING btree (term_fr);
     CREATE INDEX "index_trade_plus_complete_mview_on_unit_id" ON trade_plus_complete_mview USING btree (unit_id);
     CREATE INDEX "index_trade_plus_complete_mview_on_unit_code" ON trade_plus_complete_mview USING btree (unit_code);
     CREATE INDEX "index_trade_plus_complete_mview_on_unit_en" ON trade_plus_complete_mview USING btree (unit_en);
+    CREATE INDEX "index_trade_plus_complete_mview_on_unit_es" ON trade_plus_complete_mview USING btree (unit_es);
+    CREATE INDEX "index_trade_plus_complete_mview_on_unit_fr" ON trade_plus_complete_mview USING btree (unit_fr);
     CREATE INDEX "index_trade_plus_complete_mview_on_year_btree" ON trade_plus_complete_mview USING btree (year);
     CREATE INDEX "index_trade_plus_complete_mview_on_year" ON trade_plus_complete_mview USING brin (year);
     CREATE INDEX "index_trade_plus_complete_mview_on_year_exporter_id" ON trade_plus_complete_mview USING brin (year, exporter_id);
