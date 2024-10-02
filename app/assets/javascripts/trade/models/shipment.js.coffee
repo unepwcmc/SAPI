@@ -76,8 +76,8 @@ Trade.Shipment = DS.Model.extend
   ).property('errors.@each.warnings.@each')
 
   warningsConfirmation: ( ->
-    @get('warningsPresent') && !@get('fieldErrorsPresent')
-  ).property('warningsPresent', 'fieldErrorsPresent')
+    @get('warningsPresent') && !@get('fieldErrorsPresent') && !@get('propertyChanged')
+  ).property('warningsPresent', 'fieldErrorsPresent', 'propertyChanged')
 
   taxonConceptIdDidChange: ( ->
     if @get('taxonConceptId')
