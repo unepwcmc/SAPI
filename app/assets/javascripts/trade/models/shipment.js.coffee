@@ -1,5 +1,35 @@
-Trade.Shipment = DS.Model.extend
+# The default behaviour of ember in the version we have is to find the model
+# and find all its attributes, and then use that to filter json.errors, before
+# setting modelInstance.errors (which becomes a DS.Errors object)
+#
+# This means views do not have access to errors on base or any associations.
+# This hack overrides that behaviour.
+#
+# https://stackoverflow.com/questions/27713649/handling-validation-errors-in-ember-js
+# https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/319
+#
+# ```js
+# extractValidationErrors: function(type, json) {
+#   var errors = {};
+#
+#   get(type, 'attributes').forEach(function(name) {
+#     var key = this._keyForAttributeName(type, name);
+#     if (json['errors'].hasOwnProperty(key)) {
+#       errors[name] = json['errors'][key];
+#     }
+#   }, this);
+#
+#   return errors;
+# }
+# ```
+DS.RESTSerializer.reopen
+  extractValidationErrors: (type, json) ->
+    if Object.values(type).includes('Trade.Shipment')
+      json.errors
+    else
+      @_super(type, json)
 
+Trade.Shipment = DS.Model.extend
   importerId: DS.attr('number')
   exporterId: DS.attr('number')
   termId: DS.attr('number')
