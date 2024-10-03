@@ -71,7 +71,7 @@ class Trade::TradePlusFilters
         SELECT
           'importers' AS attribute_name,
           json_build_object(
-            'name', g.name_#{@locale},
+            'name', COALESCE(g.name_#{@locale}, g.name_en),
             'id',   g.id,
             'iso2', g.iso_code2
           )::jsonb AS "data"
@@ -85,7 +85,7 @@ class Trade::TradePlusFilters
         SELECT
           'exporters' AS attribute_name,
           json_build_object(
-            'name', g.name_#{@locale},
+            'name', COALESCE(g.name_#{@locale}, g.name_en),
             'id',   g.id,
             'iso2', g.iso_code2
           )::jsonb AS "data"
@@ -99,7 +99,7 @@ class Trade::TradePlusFilters
         SELECT
           'origins' AS attribute_name,
           json_build_object(
-            'name', g.name_#{@locale},
+            'name', COALESCE(g.name_#{@locale}, g.name_en),
             'id',   g.id,
             'iso2', g.iso_code2
           )::jsonb AS "data"
@@ -113,7 +113,7 @@ class Trade::TradePlusFilters
         SELECT
           'terms' AS attribute_name,
           json_build_object(
-            'name', t.name_#{@locale},
+            'name', COALESCE(t.name_#{@locale}, t.name_en),
             'id',   t.id,
             'code', t.code
           )::jsonb AS "data"
@@ -127,7 +127,7 @@ class Trade::TradePlusFilters
         SELECT
           'sources' AS attribute_name,
           json_build_object(
-            'name', t.name_#{@locale},
+            'name', COALESCE(t.name_#{@locale}, t.name_en),
             'id',   t.id,
             'code', t.code
           )::jsonb AS "data"
@@ -141,7 +141,7 @@ class Trade::TradePlusFilters
         SELECT
           'purposes' AS attribute_name,
           json_build_object(
-            'name', t.name_#{@locale},
+            'name', COALESCE(t.name_#{@locale}, t.name_en),
             'id',   t.id,
             'code', t.code
           )::jsonb AS "data"
@@ -155,7 +155,7 @@ class Trade::TradePlusFilters
         SELECT
           'units' AS attribute_name,
           json_build_object(
-            'name', t.name_#{@locale},
+            'name', COALESCE(t.name_#{@locale}, t.name_en),
             'id',   t.id,
             'code', t.code
           )::jsonb AS "data"
@@ -198,7 +198,7 @@ class Trade::TradePlusFilters
         SELECT
           'taxonomic_groups' AS attribute_name,
           json_build_object(
-            'name', g.name_#{@locale},
+            'name', COALESCE(g.name_#{@locale}, g.name_en),
             'id',   g.name_en
           )::jsonb AS "data"
           FROM trade_taxon_groups g
@@ -211,7 +211,7 @@ class Trade::TradePlusFilters
         SELECT
           'countries' AS attribute_name,
           json_build_object(
-            'name', g.name_#{@locale},
+            'name', COALESCE(g.name_#{@locale}, g.name_en),
             'id',   g.id,
             'iso2', g.iso_code2
           )::jsonb AS "data"
@@ -273,7 +273,7 @@ private
     when 'terms'
       values.map do |value|
         value = JSON.parse(value['data'])
-        value['name'].capitalize!
+        value['name']&.capitalize!
 
         value
       end
