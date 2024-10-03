@@ -8,7 +8,6 @@ class Api::V1::TradePlusFiltersController < ApplicationController
 
     filters =
       Rails.cache.fetch(cache_key, expires_in: 4.weeks) do
-        cache_key = "#{Api::V1::TradePlusFiltersController::CACHE_KEY_PREFIX}#{I18n.locale}"
         filters_service = Trade::TradePlusFilters.new(locale)
         res = ActiveRecord::Base.connection.execute(filters_service.query)
 
