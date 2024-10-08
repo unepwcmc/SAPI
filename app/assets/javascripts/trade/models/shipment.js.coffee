@@ -109,6 +109,11 @@ Trade.Shipment = DS.Model.extend
     @get('warningsPresent') && !@get('fieldErrorsPresent') && !@get('propertyChanged')
   ).property('warningsPresent', 'fieldErrorsPresent', 'propertyChanged')
 
+  propertyChangedDidChange: ( ->
+    if @get('propertyChanged')
+      @set('ignoreWarnings', false)
+  ).observes('taxonConceptId')
+
   taxonConceptIdDidChange: ( ->
     if @get('taxonConceptId')
       @set('taxonConcept', Trade.TaxonConcept.find(@get('taxonConceptId')))
