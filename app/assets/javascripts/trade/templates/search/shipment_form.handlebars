@@ -210,14 +210,20 @@
     Cancel
   </button>
 
-    {{#if currentShipment.fieldErrorsPresent}}
-      <span class="label label-important">ERROR</span> Primary errors detected.
+  <div style="margin-top: 0.5em">
+    {{#if currentShipment.isSaving}}
+      <span class="label label-info">WORKING</span> please wait
     {{else}}
-      {{#if currentShipment.warningsPresent}}
-        <span class="label label-warning">WARNING</span> Secondary errors detected.
-        {{#if currentShipment.warningsConfirmation}}
-          Click 'Save changes' again to save anyway.
+      {{#if currentShipment.fieldErrorsPresent}}
+        <span class="label label-important">ERROR</span> Primary errors detected.
+      {{else}}
+        {{#if currentShipment.warningsPresent}}
+          <span class="label label-warning">WARNING</span> Secondary errors detected.
+          {{#if currentShipment.warningsConfirmation}}
+            Click 'Save changes' again to save anyway.
+          {{/if}}
         {{/if}}
       {{/if}}
     {{/if}}
+  </div>
 </div>
