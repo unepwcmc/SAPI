@@ -37,10 +37,21 @@ class EuSuspensionRegulation < EuEvent
   # attr_accessible :eu_suspensions_event_id
   attr_accessor :eu_suspensions_event_id
 
-  has_many :eu_suspensions, foreign_key: :start_event_id,
+  # Because EuSuspensionRegulation events are created with many suspensions
+  # copied over from the previous event, it's legitimate to allow cascade
+  # deletion via dependent: :destroy.
+  # Note that this behaviour differs from the relationship between CITES CoPs
+  # and CITES Listings
+  has_many :eu_suspensions,
+    foreign_key: :start_event_id,
     dependent: :destroy
-  has_many :ended_eu_suspensions, class_name: 'EuSuspension',
-    foreign_key: :end_event_id, dependent: :nullify
+
+  # These are suspensions which belong to another eu reg but which this eu reg
+  # supersedes, therefore we use dependent: nullify
+  has_many :ended_eu_suspensions,
+    class_name: 'EuSuspension',
+    foreign_key: :end_event_id,
+    dependent: :nullify
 
   validate :designation_is_eu
   validates :effective_at, presence: true
@@ -72,11 +83,13 @@ class EuSuspensionRegulation < EuEvent
 
 private
 
-  def dependent_objects_map
-    {
-      'EU suspensions' => eu_suspensions
-    }
-  end
+  # dependent: destroy is set above, therefore if eu_suspensions exist,
+  # we should not prevent deletion.
+  # def dependent_objects_map
+  #   {
+  #     'EU suspensions' => eu_suspensions
+  #   }
+  # end
 
   def end_date_presence
     unless is_current? ^ end_date.present?
