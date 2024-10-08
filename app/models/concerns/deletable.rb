@@ -1,3 +1,10 @@
+##
+# See also ProtectedDeletion, which all Deletable classes must also include.
+#
+# This module implements a hook `before_destroy_checking`. Classes which include
+# Deletable will not delete if "dependent objects" are present, which should be
+# those which have a has_one or has_many relationship and no cascade deletion
+# or nullification of the foreign key.
 module Deletable
   extend ActiveSupport::Concern
 
