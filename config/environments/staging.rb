@@ -130,7 +130,7 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: mailer_credentials[:username],
+    address: mailer_credentials[:address],
     port: mailer_credentials[:port],
     domain: mailer_credentials[:domain],
     user_name: mailer_credentials[:username],
