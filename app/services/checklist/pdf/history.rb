@@ -4,8 +4,7 @@ class Checklist::Pdf::History < Checklist::History
   include Checklist::Pdf::HistoryContent
 
   def initialize(options = {})
-    super(options)
+    super
     @input_name = 'history'
   end
-
 end

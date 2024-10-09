@@ -18,7 +18,7 @@ class NomenclatureChange::StatusSwap::Constructor
     @nomenclature_change.secondary_output.note_fr = secondary_note[:fr]
   end
 
-  private
+private
 
   def legislation_note(lng)
     input = @nomenclature_change.input
@@ -33,5 +33,4 @@ class NomenclatureChange::StatusSwap::Constructor
     end
     note + '.</p>'
   end
-
 end

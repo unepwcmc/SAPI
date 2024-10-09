@@ -1,5 +1,4 @@
 class NomenclatureChange::CascadingNotesProcessor
-
   def initialize(input_or_output)
     @input_or_output = input_or_output
   end
@@ -11,10 +10,14 @@ class NomenclatureChange::CascadingNotesProcessor
       else
         @input_or_output.taxon_concept
       end
+
     return false unless @taxon_concept
+
     descendents_for_note_cascading(@taxon_concept).each do |d|
-      Rails.logger.debug("Processing note for descendant #{d.full_name} of input #{@taxon_concept.full_name}")
+      Rails.logger.debug { "Processing note for descendant #{d.full_name} of input #{@taxon_concept.full_name}" }
+
       append_nomenclature_notes(d, @input_or_output)
+
       (
         d.listing_changes +
         d.cites_suspensions +
@@ -31,15 +34,16 @@ class NomenclatureChange::CascadingNotesProcessor
     []
   end
 
-  private
+private
 
   def descendents_for_note_cascading(taxon_concept)
-    unless [Rank::GENUS, Rank::SPECIES].include? taxon_concept.rank.try(:name)
+    unless [ Rank::GENUS, Rank::SPECIES ].include? taxon_concept.rank.try(:name)
       return []
     end
+
     # if it is a genus or a species, we want taxon-level nomenclature notes,
     # both public and private, to cascade to descendents
-    subquery = <<-SQL
+    subquery = <<-SQL.squish
       WITH RECURSIVE descendents AS (
         SELECT id,
           full_name,
@@ -73,9 +77,11 @@ class NomenclatureChange::CascadingNotesProcessor
       )
       SELECT * FROM descendents
     SQL
+
     sanitized_subquery = ApplicationRecord.send(
-      :sanitize_sql_array, [subquery, taxon_concept_id: taxon_concept.id]
+      :sanitize_sql_array, [ subquery, taxon_concept_id: taxon_concept.id ]
     )
+
     TaxonConcept.from(
       "(#{sanitized_subquery}) AS taxon_concepts"
     )
@@ -86,11 +92,12 @@ class NomenclatureChange::CascadingNotesProcessor
     tc.nomenclature_note_es = "#{tc.nomenclature_note_es} #{input_or_output.note_es}"
     tc.nomenclature_note_fr = "#{tc.nomenclature_note_fr} #{input_or_output.note_fr}"
     tc.save(validate: false)
-    nomenclature_comment = tc.nomenclature_comment ||
-      tc.create_nomenclature_comment
+
+    nomenclature_comment =
+      tc.nomenclature_comment || tc.create_nomenclature_comment
+
     nomenclature_comment.update_attribute(
-      :note,
-      "#{nomenclature_comment.note} #{input_or_output.internal_note}"
+      :note, "#{nomenclature_comment.note} #{input_or_output.internal_note}"
     )
   end
 
@@ -99,7 +106,7 @@ class NomenclatureChange::CascadingNotesProcessor
     legislation.nomenclature_note_es = "#{legislation.nomenclature_note_es} #{input_or_output.note_es}"
     legislation.nomenclature_note_fr = "#{legislation.nomenclature_note_fr} #{input_or_output.note_fr}"
     legislation.internal_notes = "#{legislation.internal_notes} #{input_or_output.internal_note}"
+
     legislation.save(validate: false)
   end
-
 end

@@ -1,5 +1,4 @@
 class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppendixQuery
-
   def initialize(relation, appendix_abbreviations, geo_entities_ids = [])
     @relation = relation || MTaxonConcept.all
     @appendix_abbreviations = appendix_abbreviations || []
@@ -10,7 +9,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
   end
 
   def relation(designation_name = 'CITES')
-    unless ['CITES', 'EU', 'CMS'].include? designation_name
+    unless [ 'CITES', 'EU', 'CMS' ].include? designation_name
       designation_name = 'CITES'
     end
     listing_changes_mview = "#{designation_name.downcase}_listing_changes_mview"
@@ -38,5 +37,4 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
       "countries_ids_ary && ARRAY[#{@geo_entities_in_clause}]"
     )
   end
-
 end

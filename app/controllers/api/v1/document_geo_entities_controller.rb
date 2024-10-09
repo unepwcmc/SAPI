@@ -4,13 +4,15 @@ class Api::V1::DocumentGeoEntitiesController < ApplicationController
       order("name_#{I18n.locale}")
     @geo_entities = @geo_entities.
       joins(:geo_entity_type).
-      where(:"geo_entity_types.name" => GeoEntityType::SETS['5'])
+      where('geo_entity_types.name': GeoEntityType::SETS['5'])
 
     if params[:taxon_concept_query].present?
-      @species_search = Species::Search.new({
-        visibility: :elibrary,
-        taxon_concept_query: params[:taxon_concept_query]
-      })
+      @species_search = Species::Search.new(
+        {
+          visibility: :elibrary,
+          taxon_concept_query: params[:taxon_concept_query]
+        }
+      )
       @geo_entities = @geo_entities.joins(
         document_citation_geo_entities: {
           document_citation: :document_citation_taxon_concepts
@@ -20,7 +22,7 @@ class Api::V1::DocumentGeoEntitiesController < ApplicationController
       )
     end
 
-    render :json => @geo_entities,
+    render json: @geo_entities,
       each_serializer: Species::GeoEntitySerializer,
       meta: { total: @geo_entities.count }
   end

@@ -1,21 +1,20 @@
 namespace :import do
-
   desc 'Import CITES quotas from csv file (usage: rake import:cites_quotas[path/to/file,path/to/another])'
-  task :cites_quotas, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :cites_quotas, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'quotas_import'
 
     if Quota.any?
-      puts "Removing quotas related records"
+      puts 'Removing quotas related records'
       puts "#{TradeRestrictionSource.
-        where(:trade_restriction_id => Quota.select(:id)).
+        where(trade_restriction_id: Quota.select(:id)).
         delete_all} trade restriction Sources deleted"
       puts "#{TradeRestrictionTerm.
-        where(:trade_restriction_id => Quota.select(:id)).
+        where(trade_restriction_id: Quota.select(:id)).
         delete_all} trade restriction Term deleted"
       puts "#{Quota.delete_all} quotas deleted"
     end
 
-    taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
+    taxonomy_id = Taxonomy.where(name: 'CITES_EU').first.id
     puts "There are #{Quota.count} CITES quotas in the database."
     files = files_from_args(t, args)
     files.each do |file|
@@ -23,17 +22,17 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      puts "CREATING temporary column and view"
-      ApplicationRecord.connection.execute(<<-SQL
+      puts 'CREATING temporary column and view'
+      ApplicationRecord.connection.execute(<<-SQL.squish
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT DISTINCT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
         ORDER BY start_date
       SQL
-      )
-      ApplicationRecord.connection.execute("ALTER TABLE trade_restrictions DROP COLUMN IF EXISTS import_row_id")
-      ApplicationRecord.connection.execute("ALTER TABLE trade_restrictions ADD COLUMN import_row_id integer")
+                                          )
+      ApplicationRecord.connection.execute('ALTER TABLE trade_restrictions DROP COLUMN IF EXISTS import_row_id')
+      ApplicationRecord.connection.execute('ALTER TABLE trade_restrictions ADD COLUMN import_row_id integer')
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO trade_restrictions(is_current, start_date, end_date, geo_entity_id, quota, publication_date,
           notes, type, unit_id, taxon_concept_id, public_display, url, created_at, updated_at, import_row_id)
         SELECT DISTINCT #{TMP_TABLE}_view.is_current, start_date, end_date, geo_entities.id, quota, publication_date,
@@ -59,8 +58,8 @@ namespace :import do
       ApplicationRecord.connection.execute(sql)
 
       # Add Terms & Sources Relationships
-      ["terms", "sources"].each do |code|
-        sql = <<-SQL
+      [ 'terms', 'sources' ].each do |code|
+        sql = <<-SQL.squish
           WITH #{code}_codes_per_quota AS (
             SELECT row_id, regexp_split_to_table(quotas_import_view.#{code}, E',') AS code
             FROM #{TMP_TABLE}_view
@@ -75,11 +74,10 @@ namespace :import do
         ApplicationRecord.connection.execute(sql)
       end
     end
-    puts "DROPPING temporary column and view"
-    ApplicationRecord.connection.execute("ALTER TABLE trade_restrictions DROP COLUMN import_row_id")
+    puts 'DROPPING temporary column and view'
+    ApplicationRecord.connection.execute('ALTER TABLE trade_restrictions DROP COLUMN import_row_id')
     ApplicationRecord.connection.execute("DROP VIEW #{TMP_TABLE}_view")
 
     puts "There are now #{Quota.count} CITES quotas in the database"
   end
-
 end

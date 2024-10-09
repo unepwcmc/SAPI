@@ -1,5 +1,4 @@
 class PsqlCommand
-
   def initialize(sql_cmd)
     db_conf = ApplicationRecord.connection_db_config.configuration_hash
     @host = db_conf[:host] || 'localhost'
@@ -17,5 +16,4 @@ class PsqlCommand
       Rails.logger.error("#{$!}")
     end
   end
-
 end

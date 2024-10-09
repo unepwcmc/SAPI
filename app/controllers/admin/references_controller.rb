@@ -1,37 +1,49 @@
 class Admin::ReferencesController < Admin::StandardAuthorizationController
-  respond_to :json, :only => [:index, :update]
+  respond_to :json, only: [ :index, :update ]
 
   def index
     index! do |format|
-      format.json {
-        render :json => end_of_association_chain.order(:citation).
-          select([:id, :citation]).map { |d| { :value => d.id, :text => d.citation } }.to_json
-      }
+      format.json do
+        render json: end_of_association_chain.order(
+          :citation
+        ).select(
+          [ :id, :citation ]
+        ).map { |d| { value: d.id, text: d.citation } }.to_json
+      end
     end
   end
 
   def autocomplete
-    @references = Reference.search(params[:query]).
-      order(:citation)
-    @references = @references.map do |r|
-      {
-        :id => r.id,
-        :value => r.citation
-      }
-    end
+    @references = Reference.order(
+      :citation
+    ).search(
+      params[:query]
+    )
 
-    render :json => @references.to_json
+    @references =
+      @references.map do |r|
+        {
+          id: r.id,
+          value: r.citation
+        }
+      end
+
+    render json: @references.to_json
   end
 
-  protected
+protected
 
   def collection
-    @references ||= end_of_association_chain.order(:citation).
-      page(params[:page]).
-      search(params[:query])
+    @references ||= end_of_association_chain.order(
+      :citation
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
-  private
+private
 
   def reference_params
     params.require(:reference).permit(

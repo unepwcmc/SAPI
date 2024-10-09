@@ -23,20 +23,20 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_eu_listing_for_node(node_id integer)
       ) AS listing
       FROM (
         SELECT taxon_concept_id,
-        CASE 
-          WHEN BOOL_OR(species_listing_name = 'A') 
-          THEN hstore('eu_A', 'A') ELSE hstore('eu_A', NULL)
-        END || 
-        CASE 
-          WHEN BOOL_OR(species_listing_name = 'B') 
-          THEN hstore('eu_B', 'B') ELSE hstore('eu_B', NULL)
-        END || 
-        CASE 
-          WHEN BOOL_OR(species_listing_name = 'C') 
-          THEN hstore('eu_C', 'C') ELSE hstore('eu_C', NULL)
-        END || 
         CASE
-          WHEN BOOL_OR(species_listing_name = 'D') 
+          WHEN BOOL_OR(species_listing_name = 'A')
+          THEN hstore('eu_A', 'A') ELSE hstore('eu_A', NULL)
+        END ||
+        CASE
+          WHEN BOOL_OR(species_listing_name = 'B')
+          THEN hstore('eu_B', 'B') ELSE hstore('eu_B', NULL)
+        END ||
+        CASE
+          WHEN BOOL_OR(species_listing_name = 'C')
+          THEN hstore('eu_C', 'C') ELSE hstore('eu_C', NULL)
+        END ||
+        CASE
+          WHEN BOOL_OR(species_listing_name = 'D')
           THEN hstore('eu_D', 'D') ELSE hstore('eu_D', NULL)
         END AS listing
         FROM eu_listing_changes_mview

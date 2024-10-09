@@ -16,24 +16,24 @@ require 'spec_helper'
 
 describe Purpose do
   describe :destroy do
-    context "when no dependent objects attached" do
+    context 'when no dependent objects attached' do
       let(:purpose) { create(:purpose) }
       specify { expect(purpose.destroy).to be_truthy }
     end
-    context "when dependent objects attached" do
+    context 'when dependent objects attached' do
       let(:purpose) { create(:purpose) }
-      context "when CITES suspension" do
-        let!(:cites_suspension) {
+      context 'when CITES suspension' do
+        let!(:cites_suspension) do
           create(
             :cites_suspension,
-            :purposes => [purpose],
-            :start_notification_id => create_cites_suspension_notification.id
+            purposes: [ purpose ],
+            start_notification_id: create_cites_suspension_notification.id
           )
-        }
+        end
         specify { expect(purpose.destroy).to be_falsey }
       end
-      context "when shipments" do
-        before(:each) { create(:shipment, :purpose => purpose) }
+      context 'when shipments' do
+        before(:each) { create(:shipment, purpose: purpose) }
         specify { expect(purpose.destroy).to be_falsey }
       end
     end

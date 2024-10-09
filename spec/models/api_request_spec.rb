@@ -3,24 +3,28 @@
 # Table name: api_requests
 #
 #  id              :integer          not null, primary key
-#  user_id         :integer
-#  controller      :string(255)
 #  action          :string(255)
-#  format          :string(255)
-#  params          :text
-#  ip              :string(255)
-#  response_status :integer
+#  controller      :string(255)
 #  error_message   :text
+#  format          :string(255)
+#  ip              :string(255)
+#  params          :text
+#  response_status :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  user_id         :integer
+#
+# Indexes
+#
+#  index_api_requests_on_created_at  (created_at)
 #
 
 require 'spec_helper'
 
 describe ApiRequest do
-  let(:api_user) {
+  let(:api_user) do
     create(:user, role: 'api')
-  }
+  end
 
   before(:each) do
     create(
@@ -48,56 +52,62 @@ describe ApiRequest do
   end
 
   describe :top_50_most_active_users do
-    subject {
+    subject do
       ApiRequest.top_50_most_active_users
-    }
-    specify {
+    end
+    specify do
       expect(subject.first.user_id).to eq(api_user.id)
-    }
+    end
   end
 
   describe :recent_requests do
-    subject {
+    subject do
       ApiRequest.recent_requests
-    }
-    specify {
-      expect(subject).to eq({
-        [200, Date.yesterday.strftime('%Y-%m-%d')] => 1,
-        [200, Date.today.strftime('%Y-%m-%d')] => 0,
-        [500, Date.yesterday.strftime('%Y-%m-%d')] => 0,
-        [500, Date.today.strftime('%Y-%m-%d')] => 1
-      })
-    }
+    end
+    specify do
+      expect(subject).to eq(
+        {
+          [ 200, Date.yesterday.strftime('%Y-%m-%d') ] => 1,
+          [ 200, Date.today.strftime('%Y-%m-%d') ] => 0,
+          [ 500, Date.yesterday.strftime('%Y-%m-%d') ] => 0,
+          [ 500, Date.today.strftime('%Y-%m-%d') ] => 1
+        }
+      )
+    end
   end
 
   describe :requests_by_response_status do
-    subject {
+    subject do
       ApiRequest.requests_by_response_status
-    }
-    specify {
-      expect(subject).to eq({
-        '200' => 1,
-        '400' => 0,
-        '401' => 0,
-        '404' => 0,
-        '422' => 0,
-        '500' => 1
-      })
-    }
+    end
+    specify do
+      expect(subject).to eq(
+        {
+          '200' => 1,
+          '400' => 0,
+          '401' => 0,
+          '404' => 0,
+          '422' => 0,
+          '500' => 1
+        }
+      )
+    end
   end
 
   describe :requests_by_controller do
-    subject {
+    subject do
       ApiRequest.requests_by_controller
-    }
-    specify {
-      expect(subject).to eq({
-        'taxon_concepts' => 2,
-        'distributions' => 0,
-        'cites_legislation' => 0,
-        'eu_legislation' => 0,
-        'references' => 0
-      })
-    }
+    end
+    specify do
+      expect(subject).to eq(
+        {
+          'taxon_concepts' => 2,
+          'distributions' => 0,
+          'cites_legislation' => 0,
+          'eu_legislation' => 0,
+          'references' => 0
+        }
+      )
+    end
   end
 end

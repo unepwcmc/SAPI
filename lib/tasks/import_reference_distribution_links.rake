@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import reference distribution links from csv file (usage: rake import:reference_distribution_links[path/to/file,path/to/another])'
-  task :reference_distribution_links, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :reference_distribution_links, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'reference_distribution_links_import'
     puts "There are #{DistributionReference.count} distribution references in the database."
 
@@ -14,15 +13,15 @@ namespace :import do
       kingdom = file.split('/').last.split('_')[0].titleize
 
       puts "unaliasing reference ids in #{TMP_TABLE}"
-      sql = <<-SQL
+      sql = <<-SQL.squish
         UPDATE #{TMP_TABLE} SET ref_legacy_id = map.legacy_id
         FROM references_legacy_id_mapping map
         WHERE map.alias_legacy_id = #{TMP_TABLE}.ref_legacy_id
       SQL
       ApplicationRecord.connection.execute(sql)
 
-      puts "inserting reference distribution links"
-      sql = <<-SQL
+      puts 'inserting reference distribution links'
+      sql = <<-SQL.squish
         INSERT INTO "distribution_references"
           (distribution_id, reference_id)
         SELECT distributions.id, "references".id
@@ -52,5 +51,4 @@ namespace :import do
     end
     puts "There are now #{DistributionReference.count} distribution references in the database"
   end
-
 end

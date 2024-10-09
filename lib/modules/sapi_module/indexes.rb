@@ -1,49 +1,48 @@
 module SapiModule
   module Indexes
-
     # rewrite the code below to just use add_index and add UNIQUE to the mview ids
     # add_index "listing_changes_mview", ["id"], :name => "listing_changes_mview_on_id", :unique => true
 
     INDEXES = [
       {
-        :name => 'index_taxon_concepts_on_parent_id',
-        :on => 'taxon_concepts (parent_id)'
+        name: 'index_taxon_concepts_on_parent_id',
+        on: 'taxon_concepts (parent_id)'
       },
       {
-        :name => 'index_taxon_concepts_on_full_name_prefix',
-        :on => 'taxon_concepts USING BTREE(UPPER(full_name) text_pattern_ops)'
+        name: 'index_taxon_concepts_on_full_name_prefix',
+        on: 'taxon_concepts USING BTREE(UPPER(full_name) text_pattern_ops)'
       },
       {
-        :name => 'index_taxon_concepts_on_full_name',
-        :on => 'taxon_concepts (full_name)'
+        name: 'index_taxon_concepts_on_full_name',
+        on: 'taxon_concepts (full_name)'
       },
       {
-        :name => 'index_listing_changes_on_annotation_id',
-        :on => 'listing_changes (annotation_id)'
+        name: 'index_listing_changes_on_annotation_id',
+        on: 'listing_changes (annotation_id)'
       },
       {
-        :name => 'index_listing_changes_on_hash_annotation_id',
-        :on => 'listing_changes (hash_annotation_id)'
+        name: 'index_listing_changes_on_hash_annotation_id',
+        on: 'listing_changes (hash_annotation_id)'
       },
       {
-        :name => 'index_listing_changes_on_parent_id',
-        :on => 'listing_changes (parent_id)'
+        name: 'index_listing_changes_on_parent_id',
+        on: 'listing_changes (parent_id)'
       },
       {
-        :name => 'index_listing_changes_on_taxon_concept_id',
-        :on => 'listing_changes (taxon_concept_id)'
+        name: 'index_listing_changes_on_taxon_concept_id',
+        on: 'listing_changes (taxon_concept_id)'
       },
       {
-        :name => 'index_listing_changes_on_inclusion_taxon_concept_id',
-        :on => 'listing_changes (inclusion_taxon_concept_id)'
+        name: 'index_listing_changes_on_inclusion_taxon_concept_id',
+        on: 'listing_changes (inclusion_taxon_concept_id)'
       },
       {
-        :name => 'index_listing_distributions_on_geo_entity_id',
-        :on => 'listing_distributions (geo_entity_id)'
+        name: 'index_listing_distributions_on_geo_entity_id',
+        on: 'listing_distributions (geo_entity_id)'
       },
       {
-        :name => 'index_listing_distributions_on_listing_change_id',
-        :on => 'listing_distributions (listing_change_id)'
+        name: 'index_listing_distributions_on_listing_change_id',
+        on: 'listing_distributions (listing_change_id)'
       }
     ]
 
@@ -60,7 +59,7 @@ module SapiModule
     end
 
     def self.drop_indexes_on_shipments
-      sql = <<-SQL
+      sql = <<-SQL.squish
       DROP INDEX IF EXISTS index_trade_shipments_on_appendix;
       DROP INDEX IF EXISTS index_trade_shipments_on_country_of_origin_id;
       DROP INDEX IF EXISTS index_trade_shipments_on_exporter_id;
@@ -83,8 +82,8 @@ module SapiModule
     end
 
     def self.drop_indexes_on_trade_names
-      puts "Destroy trade_names related indexes"
-      sql = <<-SQL
+      Rails.logger.debug 'Destroy trade_names related indexes'
+      sql = <<-SQL.squish
         DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_trade_code;
         DROP INDEX IF EXISTS index_trade_species_mapping_import_cites_taxon_code;
       SQL
@@ -92,8 +91,8 @@ module SapiModule
     end
 
     def self.create_indexes_on_trade_names
-      puts "Add index for trade_names and trade_species_mapping_import"
-      sql = <<-SQL
+      Rails.logger.debug 'Add index for trade_names and trade_species_mapping_import'
+      sql = <<-SQL.squish
         CREATE INDEX index_taxon_concepts_on_legacy_trade_code
           ON taxon_concepts
           USING btree
@@ -107,7 +106,7 @@ module SapiModule
     end
 
     def self.create_indexes_on_shipments
-      sql = <<-SQL
+      sql = <<-SQL.squish
       CREATE INDEX index_trade_shipments_on_appendix
         ON trade_shipments
         USING btree
@@ -179,6 +178,5 @@ module SapiModule
       SQL
       ApplicationRecord.connection.execute(sql)
     end
-
   end
 end

@@ -3,13 +3,19 @@
 # Table name: nomenclature_changes
 #
 #  id            :integer          not null, primary key
-#  event_id      :integer
-#  type          :string(255)      not null
 #  status        :string(255)      not null
-#  created_by_id :integer          not null
-#  updated_by_id :integer          not null
+#  type          :string(255)      not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  created_by_id :integer          not null
+#  event_id      :integer
+#  updated_by_id :integer          not null
+#
+# Foreign Keys
+#
+#  nomenclature_changes_created_by_id_fk  (created_by_id => users.id)
+#  nomenclature_changes_event_id_fk       (event_id => events.id)
+#  nomenclature_changes_updated_by_id_fk  (updated_by_id => users.id)
 #
 
 class NomenclatureChange < ApplicationRecord
@@ -42,8 +48,7 @@ class NomenclatureChange < ApplicationRecord
   end
 
   def in_progress?
-    ![NomenclatureChange::SUBMITTED, NomenclatureChange::CLOSED].
-      include?(status)
+    [ NomenclatureChange::SUBMITTED, NomenclatureChange::CLOSED ].exclude?(status)
   end
 
   def submitting?
@@ -59,16 +64,17 @@ class NomenclatureChange < ApplicationRecord
 
   def cannot_update_when_locked
     if status_was == NomenclatureChange::CLOSED ||
-      status_was == NomenclatureChange::SUBMITTED &&
-      status != NomenclatureChange::CLOSED
-      errors.add(:base, "Nomenclature change is locked for updates")
-      return false
+      (status_was == NomenclatureChange::SUBMITTED &&
+      status != NomenclatureChange::CLOSED)
+      errors.add(:base, 'Nomenclature change is locked for updates')
+      false
     end
   end
 
   def next_step
     steps = self.class::STEPS
     return nil if steps.empty?
+
     if status == NomenclatureChange::NEW
       steps.first
     elsif self.summary?
@@ -79,5 +85,4 @@ class NomenclatureChange < ApplicationRecord
       steps[steps.index(self.status.to_sym) + 1]
     end
   end
-
 end

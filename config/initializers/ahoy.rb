@@ -1,5 +1,3 @@
-require 'sapi_module/geo_i_p'
-
 class Ahoy::Store < Ahoy::DatabaseStore
   def authenticate(data)
     # https://github.com/ankane/ahoy/tree/v5.0.2?tab=readme-ov-file#gdpr-compliance-1
@@ -16,13 +14,13 @@ class Ahoy::Store < Ahoy::DatabaseStore
     data[:city] = geo_ip_data[:city]
     data[:organization] = geo_ip_data[:organization]
 
-    super(data)
+    super
   end
 
   def track_event(data)
     # Map the new column names (since 1.4.0), to old column name (< 1.4.0).
     data[:id] = ensure_uuid(data.delete(:event_id))
-    super(data)
+    super
   end
 
   def ensure_uuid(id)

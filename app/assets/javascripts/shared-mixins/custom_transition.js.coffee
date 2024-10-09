@@ -28,7 +28,7 @@ ROUTES = {
 isNotUndefinedOrNull = (x) ->
   x != undefined && x != null
 
-@CustomTransitionMixinCreate = (App, appName) -> 
+@CustomTransitionMixinCreate = (App, appName) ->
   App.CustomTransition = Ember.Mixin.create
     customTransitionToRoute: (emberRoute, arg2, arg3) ->
       @routes = ROUTES[appName]
@@ -39,7 +39,7 @@ isNotUndefinedOrNull = (x) ->
       path = @getPath()
       base_url = window.location.origin + '/' + @appName + '#/' + path
       queryString = if @queryParams then @getQueryString(@queryParams) else ''
-      
+
       window.location.href = base_url + queryString
 
     assignArguments: (args) ->
@@ -53,13 +53,13 @@ isNotUndefinedOrNull = (x) ->
         params = args[2]
         @queryParams = if params then params.queryParams else null
         @model = args[1]
-    
+
     getPathWithIDPlaceholder: (emberRoute) ->
       pathArray = []
 
-      emberRoute.split('.').forEach (pathElement) => 
+      emberRoute.split('.').forEach (pathElement) =>
         pathArray.push(@getUrlPathItem(pathElement))
-      
+
       return pathArray.join('/')
 
     getUrlPathItem: (name) ->
@@ -71,7 +71,7 @@ isNotUndefinedOrNull = (x) ->
 
       return @pathWithIDPlaceholder
 
-    getQueryString: (queryParams) -> 
+    getQueryString: (queryParams) ->
       queryString = '?'
 
       if @appName == 'trade'
@@ -81,7 +81,7 @@ isNotUndefinedOrNull = (x) ->
           @getQueryStringItem(key, queryParams[key])
         ).filter(isNotUndefinedOrNull).join('&')
 
-    getQueryStringItem: (key, param) ->    
+    getQueryStringItem: (key, param) ->
       if Array.isArray(param)
         @getArrayQueryStringItem(key, param)
       else if isNotUndefinedOrNull(param)
@@ -97,7 +97,7 @@ isNotUndefinedOrNull = (x) ->
         @paramsMapping.forEach (paramConfig) ->
           if paramConfig.name == paramName
             urlParam = paramConfig.urlParam
-      
+
       return urlParam
 
     getParameterByName: (name, url = window.location.href) ->

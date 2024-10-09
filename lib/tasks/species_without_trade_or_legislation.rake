@@ -1,10 +1,9 @@
 namespace :species_without_legislation_or_trade do
-
-  task :export => :environment do
+  task export: :environment do
     Trade::SpeciesWithoutLegislationOrTradeReport.new.export('tmp/species_to_delete.csv')
   end
 
-  task :delete => :environment do
+  task delete: :environment do
     cnt = Trade::SpeciesWithoutLegislationOrTradeReport.new.query.count
     deleted_cnt = 0
     Rails.logger.warn("### BEGIN removal of #{cnt} species without legislation or trade")
@@ -18,5 +17,4 @@ namespace :species_without_legislation_or_trade do
     end
     Rails.logger.warn("### END removal of #{deleted_cnt} species without legislation or trade")
   end
-
 end

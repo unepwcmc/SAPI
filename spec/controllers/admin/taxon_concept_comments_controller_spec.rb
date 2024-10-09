@@ -34,5 +34,4 @@ describe Admin::TaxonConceptCommentsController do
       expect(flash[:notice]).not_to be_nil
     end
   end
-
 end

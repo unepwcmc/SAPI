@@ -7,12 +7,10 @@ class Species::DocumentSerializer < ActiveModel::Serializer
     :proposal_outcome, :is_link
 
   def document_type
-    object.document_type.split(":").last
+    object.document_type.split(':').last
   end
 
-  def document_language_versions
-    object.document_language_versions
-  end
+  delegate :document_language_versions, to: :object
 
   def is_link
     object.document_type == 'Document::VirtualCollege' && !is_pdf?

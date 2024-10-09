@@ -25,7 +25,7 @@ class Species::Search
     @query.pluck(:id)
   end
 
-  private
+private
 
   def initialize_params(options)
     @options = Species::SearchParams.sanitize(options)
@@ -44,22 +44,22 @@ class Species::Search
       end
 
     if @visibility == :speciesplus
-      @query = @query.where(:show_in_species_plus => true)
+      @query = @query.where(show_in_species_plus: true)
     elsif @visibility == :elibrary
       @query = @query.where("show_in_species_plus OR name_status = 'N'")
     end
 
     if !@geo_entities.empty? && @geo_entity_scope == :cms
       @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @query, ['I', 'II'], @geo_entities
+        @query, [ 'I', 'II' ], @geo_entities
       ).relation('CMS')
     elsif !@geo_entities.empty? && @geo_entity_scope == :cites
       @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @query, ['I', 'II', 'III'], @geo_entities
+        @query, [ 'I', 'II', 'III' ], @geo_entities
       ).relation('CITES')
     elsif !@geo_entities.empty? && @geo_entity_scope == :eu
       @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @query, ['A', 'B', 'C', 'D'], @geo_entities
+        @query, [ 'A', 'B', 'C', 'D' ], @geo_entities
       ).relation('EU')
     elsif !@geo_entities.empty? && @geo_entity_scope == :occurrences
       @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
@@ -67,14 +67,13 @@ class Species::Search
       ).relation
     end
 
-    unless @scientific_name.blank?
+    if @scientific_name.present?
       @query = @query.
-        by_name(@scientific_name, { :synonyms => true, :subspecies => true, :common_names => true }).
+        by_name(@scientific_name, { synonyms: true, subspecies: true, common_names: true }).
         select(
-          "taxon_concepts_mview.*, matching_names.matched_names_ary AS synonyms_ary"
+          'taxon_concepts_mview.*, matching_names.matched_names_ary AS synonyms_ary'
         )
     end
     @query = @query
   end
-
 end

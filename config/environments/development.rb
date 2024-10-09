@@ -1,4 +1,4 @@
-require "active_support/core_ext/integer/time"
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -6,7 +6,7 @@ Rails.application.configure do
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  config.cache_classes = false
+  config.enable_reloading = true
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -14,15 +14,17 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  # Enable server timing
+  config.server_timing = true
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  if Rails.root.join('tmp/caching-dev.txt').exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
     # Use a memcached instance as a cache store in local development.
     config.cache_store = :mem_cache_store
-
     config.public_file_server.headers = {
       'Cache-Control' => "public, max-age=#{2.days.to_i}"
     }
@@ -55,10 +57,12 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  # Debug mode disables concatenation and preprocessing of assets.
-  # This option may cause significant delays in view rendering with a large
-  # number of complex assets.
+  # Leonardo: Rails 7.0 remove the following config, however the CSS font doesn't work locally.
+  # Lets keep this for now, its development mode only.
   config.assets.debug = true
+
+  # Highlight code that enqueued background job in logs.
+  config.active_job.verbose_enqueue_logs = true
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
@@ -69,20 +73,44 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
-  # Use an evented file watcher to asynchronously detect changes in source code,
-  # routes, locales, etc. This feature depends on the listen gem.
-  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
-
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
+  # Raise error when a before_action's only/except options reference missing actions
+  config.action_controller.raise_on_missing_callback_actions = true
+
+  ###
+  # Everything below are WCMC custom settings.
+  #
   # Custom ember settings
   config.ember.variant = :development
 
   # Custom email settings
+  mailer_credentials = Rails.application.credentials[:mailer]
+
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { address: Rails.application.secrets.mailer[:address], port: 1025 }
+  config.action_mailer.smtp_settings = {
+    address: mailer_credentials[:address],
+    port: mailer_credentials[:port],
+    domain: mailer_credentials[:domain],
+    user_name: mailer_credentials[:username],
+    password: mailer_credentials[:password],
+    authentication: :login,
+    enable_starttls_auto: true
+  }
+
   config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.mailer[:host] || 'http://localhost:3000'
+    host: mailer_credentials[:host]
+  }
+
+  # fix for current version of mail gem: https://github.com/mikel/mail/issues/1538
+  # config.action_mailer.delivery_method = :sendmail
+  # config.action_mailer.sendmail_settings = {
+  #   location: '/usr/sbin/sendmail', arguments: ['-i']
+  # }
+
+  config.action_mailer.default_options = {
+    from: mailer_credentials[:from],
+    reply_to: mailer_credentials[:from]
   }
 end

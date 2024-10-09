@@ -1,46 +1,46 @@
 require 'spec_helper'
 
 describe Api::V1::GeoEntitiesController do
-  let!(:europe) {
+  let!(:europe) do
     create(
       :geo_entity,
-      :geo_entity_type => cites_region_geo_entity_type,
-      :name => 'Europe'
+      geo_entity_type: cites_region_geo_entity_type,
+      name: 'Europe'
     )
-  }
-  let!(:france) {
+  end
+  let!(:france) do
     create(
       :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'France',
-      :iso_code2 => 'FR',
-      :designations => [cites]
+      geo_entity_type: country_geo_entity_type,
+      name: 'France',
+      iso_code2: 'FR',
+      designations: [ cites ]
     )
-  }
-  let!(:andorra) {
+  end
+  let!(:andorra) do
     create(
       :geo_entity,
-      :geo_entity_type => country_geo_entity_type,
-      :name => 'andorra',
-      :iso_code2 => 'AD'
+      geo_entity_type: country_geo_entity_type,
+      name: 'andorra',
+      iso_code2: 'AD'
     )
-  }
-  let!(:french_guiana) {
+  end
+  let!(:french_guiana) do
     create(
       :geo_entity,
-      :geo_entity_type => territory_geo_entity_type,
-      :name => 'French Guiana',
-      :iso_code2 => 'GF',
-      :designations => [cites]
+      geo_entity_type: territory_geo_entity_type,
+      name: 'French Guiana',
+      iso_code2: 'GF',
+      designations: [ cites ]
     )
-  }
-  describe "GET index" do
-    it "returns regions" do
-      get :index, params: { :geo_entity_types_set => "1" }
+  end
+  describe 'GET index' do
+    it 'returns regions' do
+      get :index, params: { geo_entity_types_set: '1' }
       expect(response.body).to have_json_size(1).at_path('geo_entities')
     end
-    it "returns countries & territories" do
-      get :index, params: { :geo_entity_types_set => "2" }
+    it 'returns countries & territories' do
+      get :index, params: { geo_entity_types_set: '2' }
       expect(response.body).to have_json_size(3).at_path('geo_entities')
     end
   end

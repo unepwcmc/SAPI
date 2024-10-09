@@ -32,11 +32,11 @@ class Ability
     user ||= User.new
 
     if user.is_secretariat? || !user.is_active
-      can [:autocomplete, :read, :edit, :new], :all
+      can [ :autocomplete, :read, :edit, :new ], :all
     elsif user.is_manager?
       can :manage, :all
     elsif user.is_contributor?
-      can [:autocomplete, :read], :all
+      can [ :autocomplete, :read ], :all
       can :update, :all
       can :create, :all
       cannot :update, User do |u|

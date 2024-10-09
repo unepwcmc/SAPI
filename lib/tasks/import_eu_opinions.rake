@@ -1,9 +1,9 @@
 namespace :import do
   desc 'Import EU decisions from csv file (usage: rake import:eu_opinions[path/to/file,path/to/another])'
-  task :eu_opinions, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :eu_opinions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'eu_opinions_import'
 
-    taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
+    taxonomy_id = Taxonomy.where(name: 'CITES_EU').first.id
     puts "There are #{EuOpinion.count} EU opinions in the database."
     files = files_from_args(t, args)
     files.each do |file|
@@ -41,7 +41,7 @@ namespace :import do
         FROM tt
       SQL
 
-      puts "Importing eu opinions"
+      puts 'Importing eu opinions'
       ApplicationRecord.connection.execute(sql)
     end
     puts "There are now #{EuOpinion.count} EU opinions in the database"

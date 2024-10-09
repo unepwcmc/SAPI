@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: ranks
+#
+#  id                 :integer          not null, primary key
+#  display_name_en    :text             not null
+#  display_name_es    :text
+#  display_name_fr    :text
+#  fixed_order        :boolean          default(FALSE), not null
+#  name               :string(255)      not null
+#  taxonomic_position :string(255)      default("0"), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
+
 def attributes_for_rank(name)
   send("attributes_for_#{name.downcase}")
 end
@@ -44,7 +59,7 @@ end
 
 FactoryBot.define do
   factory :rank do
-    name {
+    name do
       [
         Rank::KINGDOM,
         Rank::PHYLUM,
@@ -57,8 +72,8 @@ FactoryBot.define do
         Rank::SUBSPECIES,
         Rank::VARIETY
       ].sample
-    }
+    end
     display_name_en { |r| r.name }
-    initialize_with { Rank.find_by_name(name) || new(attributes_for_rank(name)) }
+    initialize_with { Rank.find_by(name: name) || new(attributes_for_rank(name)) }
   end
 end

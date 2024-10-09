@@ -1,29 +1,33 @@
 class Admin::InstrumentsController < Admin::StandardAuthorizationController
-  respond_to :json, :only => [:index, :update]
+  respond_to :json, only: [ :index, :update ]
 
   def index
     load_associations
     index! do |format|
-      format.json {
-        render :json => end_of_association_chain.order(:name).
-          select([:id, :name]).map { |d| { :value => d.id, :text => d.name } }.to_json
-      }
+      format.json do
+        render json: end_of_association_chain.order(:name).
+          select([ :id, :name ]).map { |d| { value: d.id, text: d.name } }.to_json
+      end
     end
   end
 
-  protected
+protected
 
   def collection
-    @instruments ||= end_of_association_chain.order(:name).
-      page(params[:page]).
-      search(params[:query])
+    @instruments ||= end_of_association_chain.order(
+      :name
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
   def load_associations
     @designations = Designation.order(:name)
   end
 
-  private
+private
 
   def instrument_params
     params.require(:instrument).permit(

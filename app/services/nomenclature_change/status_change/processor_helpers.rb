@@ -1,12 +1,11 @@
 module NomenclatureChange::StatusChange::ProcessorHelpers
-
   def reassignment_processor(output)
     return nil unless @input && output
 
     # if input is not one of outputs, that means it only acts as a template
     # for associations and reassignment processor should copy rather than
     # transfer associations; if it is one of the outputs it is probably a swap
-    transfer = [@primary_output, @secondary_output].compact.map(&:taxon_concept).include?(
+    transfer = [ @primary_output, @secondary_output ].compact.map(&:taxon_concept).include?(
       @input.taxon_concept
     )
     if transfer
@@ -18,9 +17,7 @@ module NomenclatureChange::StatusChange::ProcessorHelpers
 
   # Generate a summary based on the subprocessors chain
   def summary
-    result = []
-    @subprocessors.each { |processor| result << processor.summary }
+    result = @subprocessors.map { |processor| processor.summary }
     result.flatten(1).compact
   end
-
 end

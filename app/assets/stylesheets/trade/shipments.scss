@@ -7,6 +7,7 @@ $dark-blue: #0e76b1;
 $light-blue: #00a2db;
 $link-blue: #0088cc;
 $warning-yellow: #c09853;
+$danger-red: #b94a48;
 
 /* full_screen modal window */
 .modal.shipment-form-modal.fade.in, .modal.batch-form-modal.fade.in{
@@ -36,7 +37,7 @@ $warning-yellow: #c09853;
 #loading-modal {
   width: 500px;
   /* must be half of the width, minus scrollbar on the left (30px) */
-  margin-left: -220px;  
+  margin-left: -220px;
 }
 
 .loading-box {
@@ -91,13 +92,21 @@ div.filters {
   }
 }
 
-div.secondary-errors {
+div.primary-errors, div.secondary-errors {
   p {
     padding-bottom: 0;
     border-bottom: 0;
     color: $warning-yellow;
     font-weight: normal;
   }
+}
+
+div.primary-errors p {
+  color: $danger-red;
+}
+
+div.secondary-errors p {
+  color: $warning-yellow;
 }
 
 .inner {
@@ -115,7 +124,7 @@ div.secondary-errors {
     padding: 6px 0;
     margin-bottom: 6px;
     background-color: #fff;
-    a { 
+    a {
       color: darken($medium-grey, 54%);
       padding: 0 6px;
     }
@@ -161,7 +170,7 @@ div.secondary-errors {
    }
 }
 
-div.popup-holder01 { 
+div.popup-holder01 {
   top: 42px;
   left: 0px;
   padding-top: 0;
@@ -177,7 +186,7 @@ div.popup-holder01 {
   .popup {
     padding-top: 11px;
     border: none;
-    
+
     div.search-block01.no-padding {
       padding: 0;
       border-radius: 0;
@@ -192,7 +201,7 @@ div.popup-holder01 {
       ul {
         padding: 0 0 4px 12px;
         margin: 0;
-        
+
         li {
           border-radius: 0;
           background-color: $dark-blue;
@@ -235,7 +244,7 @@ div.popup-holder01 {
         margin: 0;
         list-style-type: none;
         li {
-          cursor: pointer; 
+          cursor: pointer;
           cursor: hand;
         }
         li:hover {
@@ -256,7 +265,7 @@ div.popup-holder01 {
         }
       }
     }
-    
+
   }
 }
 
@@ -294,7 +303,7 @@ div.popup-holder01 {
       select {
         width: 190px;
         margin: 0;
-        option { 
+        option {
           color: $link-blue;
         }
       }
@@ -367,7 +376,7 @@ span.error {
 .autocomplete {
   .select2-container, .select2-results {
     width: 190px;
-  } 
+  }
 }
 
 .select2-drop.other_autocomplete {

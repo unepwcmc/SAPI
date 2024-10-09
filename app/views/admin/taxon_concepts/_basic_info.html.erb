@@ -15,7 +15,7 @@
   </dl>
   <%= link_to edit_icon, edit_admin_taxon_concept_url(@taxon_concept), :remote => true %>
   <% if can? :destroy, @taxon_concept %>
-    <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept), 
+    <%= link_to delete_icon, admin_taxon_concept_url(@taxon_concept),
       data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete %>
   <% end %>
   <%= @taxon_concept.author_year %>

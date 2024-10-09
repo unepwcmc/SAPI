@@ -1,9 +1,8 @@
 namespace :import do
-
-  desc "Import unusual geo_entities"
-  task :unusual_geo_entities => [:environment] do
+  desc 'Import unusual geo_entities'
+  task unusual_geo_entities: [ :environment ] do
     GeoEntityType.find_or_create_by(name: 'TRADE_ENTITY')
-    CSV.foreach("lib/files/former_and_adapted_geo_entities.csv", :headers => true) do |row|
+    CSV.foreach('lib/files/former_and_adapted_geo_entities.csv', headers: true) do |row|
       GeoEntity.find_or_create_by(
         iso_code2: row[1],
         geo_entity_type_id: GeoEntityType.where(name: row[5]).first.id,
@@ -17,23 +16,23 @@ namespace :import do
     end
   end
 
-  desc "Import shipments from csv file (usage: rake import:shipments[path/to/file])"
-  task :shipments, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
-    puts "opening file"
+  desc 'Import shipments from csv file (usage: rake import:shipments[path/to/file])'
+  task :shipments, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    puts 'opening file'
 
-    TMP_TABLE = "shipments_import"
+    TMP_TABLE = 'shipments_import'
 
     files = files_from_args(t, args)
     files.each do |file|
       SapiModule::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
-      sql = <<-SQL
+      sql = <<-SQL.squish
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
       SQL
       ApplicationRecord.connection.execute(sql)
-      fix_term_codes = { 12227624 => "LIV", 12225022 => "DER", 12224783 => "DER" }
+      fix_term_codes = { 12227624 => 'LIV', 12225022 => 'DER', 12224783 => 'DER' }
       fix_term_codes.each do |shipment_number, term_code|
-        sql = <<-SQL
+        sql = <<-SQL.squish
           UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
         SQL
         ApplicationRecord.connection.execute(sql)
@@ -45,23 +44,23 @@ namespace :import do
     end
   end
 
-  desc "Import shipments for Trade Names from csv file (usage: rake import:shipmets[path/to/file])"
-  task :shipments_for_trade_names, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
-    puts "opening file"
+  desc 'Import shipments for Trade Names from csv file (usage: rake import:shipmets[path/to/file])'
+  task :shipments_for_trade_names, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    puts 'opening file'
 
-    TMP_TABLE = "shipments_import"
+    TMP_TABLE = 'shipments_import'
 
     files = files_from_args(t, args)
     files.each do |file|
       SapiModule::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
-      sql = <<-SQL
+      sql = <<-SQL.squish
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
       SQL
       ApplicationRecord.connection.execute(sql)
-      fix_term_codes = { 12227624 => "LIV", 12225022 => "DER", 12224783 => "DER" }
+      fix_term_codes = { 12227624 => 'LIV', 12225022 => 'DER', 12224783 => 'DER' }
       fix_term_codes.each do |shipment_number, term_code|
-        sql = <<-SQL
+        sql = <<-SQL.squish
           UPDATE shipments_import SET term_code_1 = '#{term_code}' WHERE shipment_number =  #{shipment_number};
         SQL
         ApplicationRecord.connection.execute(sql)
@@ -75,7 +74,7 @@ namespace :import do
 end
 
 def drop_create_and_copy_temp(tmp_table, file)
-  puts "Creating temp table"
+  puts 'Creating temp table'
   drop_table(tmp_table)
   create_table_from_csv_headers(file, tmp_table)
   copy_data(file, tmp_table)
@@ -146,10 +145,10 @@ def update_country_codes
 end
 
 def populate_shipments
-  has_synonym = TaxonRelationshipType.where(:name => "HAS_SYNONYM").
+  has_synonym = TaxonRelationshipType.where(name: 'HAS_SYNONYM').
     select(:id).first.id
-  puts "Inserting into trade_shipments table"
-  sql = <<-SQL
+  puts 'Inserting into trade_shipments table'
+  sql = <<-SQL.squish
     INSERT INTO trade_shipments(
       legacy_shipment_number,
       source_id,
@@ -236,7 +235,7 @@ end
 
 def populate_shipments_for_trade_names
   puts "Inserting into trade_shipments Trade Names' shipments table"
-  sql = <<-SQL
+  sql = <<-SQL.squish
     INSERT INTO trade_shipments(
       legacy_shipment_number,
       source_id,

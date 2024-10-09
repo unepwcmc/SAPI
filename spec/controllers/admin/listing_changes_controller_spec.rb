@@ -5,70 +5,71 @@ describe Admin::ListingChangesController do
 
   before do
     @taxon_concept = create(:taxon_concept)
-    @designation = create(:designation, :name => "EU", :taxonomy => @taxon_concept.taxonomy)
-    @eu_regulation = create(:eu_regulation, :designation_id => @designation.id)
+    @designation = create(:designation, name: 'EU', taxonomy: @taxon_concept.taxonomy)
+    @eu_regulation = create(:eu_regulation, designation_id: @designation.id)
     @annex = create(
       :species_listing,
-      :designation_id => @designation.id,
-      :name => 'Annex A',
-      :abbreviation => 'A'
+      designation_id: @designation.id,
+      name: 'Annex A',
+      abbreviation: 'A'
     )
     @addition = create(
       :change_type,
-      :designation_id => @designation.id,
-      :name => 'ADDITION'
+      designation_id: @designation.id,
+      name: 'ADDITION'
     )
     create(
       :change_type,
-      :designation_id => @designation.id,
-      :name => 'EXCEPTION'
+      designation_id: @designation.id,
+      name: 'EXCEPTION'
     )
   end
 
-  describe "GET index" do
-    it "assigns @listing_changes sorted by effective_at" do
+  describe 'GET index' do
+    it 'assigns @listing_changes sorted by effective_at' do
       listing_change1 = create(
         :listing_change,
-        :species_listing => @annex,
-        :taxon_concept_id => @taxon_concept.id,
-        :change_type_id => @addition.id,
-        :event_id => @eu_regulation.id,
-        :effective_at => 2.weeks.ago)
+        species_listing: @annex,
+        taxon_concept_id: @taxon_concept.id,
+        change_type_id: @addition.id,
+        event_id: @eu_regulation.id,
+        effective_at: 2.weeks.ago
+      )
       listing_change2 = create(
         :listing_change,
-        :species_listing => @annex,
-        :taxon_concept_id => @taxon_concept.id,
-        :change_type_id => @addition.id,
-        :event_id => @eu_regulation.id,
-        :effective_at => 1.week.ago
+        species_listing: @annex,
+        taxon_concept_id: @taxon_concept.id,
+        change_type_id: @addition.id,
+        event_id: @eu_regulation.id,
+        effective_at: 1.week.ago
       )
-      get :index, params: { :eu_regulation_id => @eu_regulation.id }
-      expect(assigns(:listing_changes)).to eq([listing_change2, listing_change1])
+      get :index, params: { eu_regulation_id: @eu_regulation.id }
+      expect(assigns(:listing_changes)).to eq([ listing_change2, listing_change1 ])
       expect(assigns(:eu_regulation)).to eq @eu_regulation
     end
-    it "renders the index template" do
-      get :index, params: { :eu_regulation_id => @eu_regulation.id }
-      expect(response).to render_template("index")
+    it 'renders the index template' do
+      get :index, params: { eu_regulation_id: @eu_regulation.id }
+      expect(response).to render_template('index')
     end
-    it "renders the admin layout" do
-      get :index, params: { :eu_regulation_id => @eu_regulation.id }
+    it 'renders the admin layout' do
+      get :index, params: { eu_regulation_id: @eu_regulation.id }
       expect(response).to render_template('layouts/admin')
     end
   end
 
-  describe "DELETE destroy" do
+  describe 'DELETE destroy' do
     before(:each) do
       @listing_change = create(
         :listing_change,
-        :taxon_concept_id => @taxon_concept.id,
-        :change_type_id => @addition.id,
-        :species_listing_id => @annex.id,
-        :event_id => @eu_regulation.id,
-        :effective_at => 1.week.ago
+        taxon_concept_id: @taxon_concept.id,
+        change_type_id: @addition.id,
+        species_listing_id: @annex.id,
+        event_id: @eu_regulation.id,
+        effective_at: 1.week.ago
       )
     end
-    it "redirects after delete" do
-      delete :destroy, params: { :id => @listing_change.id, :eu_regulation_id => @eu_regulation.id }
+    it 'redirects after delete' do
+      delete :destroy, params: { id: @listing_change.id, eu_regulation_id: @eu_regulation.id }
       expect(response).to redirect_to(
         admin_eu_regulation_listing_changes_url(@eu_regulation)
       )

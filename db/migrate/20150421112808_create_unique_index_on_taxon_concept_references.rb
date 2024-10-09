@@ -1,6 +1,6 @@
 class CreateUniqueIndexOnTaxonConceptReferences < ActiveRecord::Migration[4.2]
   def up
-    sql = <<-SQL
+    sql = <<-SQL.squish
   WITH duplicated_taxon_concept_references AS (
     SELECT primary_id, cnt, UNNEST(ids) AS id FROM (
       SELECT MIN(id) AS primary_id, COUNT(*) AS cnt, ARRAY_AGG_NOTNULL(id) AS ids
@@ -21,19 +21,19 @@ class CreateUniqueIndexOnTaxonConceptReferences < ActiveRecord::Migration[4.2]
     # remove duplicates
     execute sql
 
-    remove_index "taxon_concept_references",
-      name: "index_taxon_concept_references_on_taxon_concept_id_and_ref_id"
+    remove_index 'taxon_concept_references',
+      name: 'index_taxon_concept_references_on_taxon_concept_id_and_ref_id'
 
-    add_index "taxon_concept_references", ["taxon_concept_id", "reference_id"],
-      name: "index_taxon_concept_references_on_taxon_concept_id_and_ref_id",
+    add_index 'taxon_concept_references', [ 'taxon_concept_id', 'reference_id' ],
+      name: 'index_taxon_concept_references_on_taxon_concept_id_and_ref_id',
       unique: true
   end
 
   def down
-    remove_index "taxon_concept_references",
-      name: "index_taxon_concept_references_on_taxon_concept_id_and_ref_id"
+    remove_index 'taxon_concept_references',
+      name: 'index_taxon_concept_references_on_taxon_concept_id_and_ref_id'
 
-    add_index "taxon_concept_references", ["taxon_concept_id", "reference_id"],
-      name: "index_taxon_concept_references_on_taxon_concept_id_and_ref_id"
+    add_index 'taxon_concept_references', [ 'taxon_concept_id', 'reference_id' ],
+      name: 'index_taxon_concept_references_on_taxon_concept_id_and_ref_id'
   end
 end

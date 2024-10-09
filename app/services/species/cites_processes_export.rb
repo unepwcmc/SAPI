@@ -1,31 +1,29 @@
 class Species::CitesProcessesExport < Species::CsvCopyExport
-
   def query
-    rel = CitesProcess
-          .joins("LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id
-                  LEFT JOIN geo_entities ON geo_entity_id = geo_entities.id
-                  LEFT JOIN events ON start_event_id = events.id")
+    rel = CitesProcess.left_joins([ :taxon_concept, :geo_entity, :start_event ])
     rel = apply_filters(rel)
-    rel = rel.order('taxon_concepts.full_name','cites_processes.type DESC','geo_entities.name_en')
+    rel = rel.order('taxon_concepts.full_name', 'cites_processes.type DESC', 'geo_entities.name_en')
 
     rel.select(sql_columns)
   end
 
-  private
+private
 
   def apply_filters(rel)
     rel = rel.where(resolution: resolution) unless @filters['process_type'] == 'Both'
     rel = rel.where("DATE_PART('YEAR', start_date) IN (?)", @filters['years']) if @filters['years']&.any?
     # commenting this out as there are no historic cases yet, but there will be in the future
     # rel = rel.where("status != 'Closed'") if @filters['set'] == 'current'
-    rel = rel.where('geo_entities.id IN (?)', geo_entities_ids) if @filters['geo_entities_ids']&.any?
+    rel = rel.where(geo_entities: { id: geo_entities_ids }) if @filters['geo_entities_ids']&.any?
 
     # Query 'data' json field for taxon concepts that have the submitted taxon_concept_id in their ancestry,
     # or are the taxon_concept indicated by the txon_concept_id.
     if @filters['taxon_concepts_ids']&.any?
       taxon_concept = TaxonConcept.find(@filters['taxon_concepts_ids'].first)
-      rel = rel.where("taxon_concepts.data -> :rank_id_key = :taxon_concept_id OR taxon_concept_id = :taxon_concept_id",
-                      rank_id_key: "#{taxon_concept.rank.name.downcase}_id", taxon_concept_id: taxon_concept.id.to_s)
+      rel = rel.where(
+        'taxon_concepts.data -> :rank_id_key = :taxon_concept_id OR taxon_concept_id = :taxon_concept_id',
+        rank_id_key: "#{taxon_concept.rank.name.downcase}_id", taxon_concept_id: taxon_concept.id.to_s
+      )
     end
 
     rel
@@ -38,11 +36,11 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
   def resolution
     case @filters['process_type']
     when 'Rst'
-      ['Significant Trade']
+      [ 'Significant Trade' ]
     when 'CaptiveBreeding'
-      ['Captive Breeding']
+      [ 'Captive Breeding' ]
     else
-      ['Significant Trade', 'Captive Breeding']
+      [ 'Significant Trade', 'Captive Breeding' ]
     end
   end
 
@@ -68,5 +66,4 @@ class Species::CitesProcessesExport < Species::CsvCopyExport
       'Event date', 'Status', 'Document', 'Notes'
     ]
   end
-
 end

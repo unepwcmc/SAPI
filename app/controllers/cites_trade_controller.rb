@@ -1,6 +1,5 @@
 class CitesTradeController < ApplicationController
-
-  private
+private
 
   def search_params
     (params[:filters] || params).permit(
@@ -19,27 +18,29 @@ class CitesTradeController < ApplicationController
       importers_ids: [],
       exporters_ids: [],
       countries_of_origin_ids: []
-    ).merge({
-      # if taxon search comes from the genus selector, search descendants
-      :taxon_with_descendants =>
-        (params[:filters] && params[:filters][:selection_taxon] == 'taxonomic_cascade'),
-      :report_type =>
-        if params[:filters] && params[:filters][:report_type] &&
-          Trade::ShipmentsExportFactory.public_report_types.include?(
-            report_type = params[:filters][:report_type].downcase.strip.to_sym
-          )
-          report_type
-        else
-          :comptab
-        end,
-      :csv_separator =>
-        if params[:filters] && params[:filters][:csv_separator] &&
-          params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
-          :semicolon
-        else
-          :comma
-        end
-    })
+    ).merge(
+      {
+        # if taxon search comes from the genus selector, search descendants
+        taxon_with_descendants: (
+          params[:filters] && params[:filters][:selection_taxon] == 'taxonomic_cascade'
+        ),
+        report_type:
+          if params[:filters] && params[:filters][:report_type] &&
+            Trade::ShipmentsExportFactory.public_report_types.include?(
+              report_type = params[:filters][:report_type].downcase.strip.to_sym
+            )
+            report_type
+          else
+            :comptab
+          end,
+        csv_separator:
+          if params[:filters] && params[:filters][:csv_separator] &&
+            params[:filters][:csv_separator].downcase.strip.to_sym == :semicolon
+            :semicolon
+          else
+            :comma
+          end
+      }
+    )
   end
-
 end

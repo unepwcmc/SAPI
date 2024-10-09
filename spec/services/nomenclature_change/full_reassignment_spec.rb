@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe NomenclatureChange::FullReassignment do
-
   describe 'process' do
     let(:old_tc) { create_cites_eu_species }
     let(:new_tc) { create_cites_eu_species }
@@ -58,8 +57,9 @@ describe NomenclatureChange::FullReassignment do
 
     context 'when CITES Suspensions present' do
       before(:each) do
-        create(:cites_suspension, taxon_concept: old_tc,
-          start_notification: create(:cites_suspension_notification, :designation => cites)
+        create(
+          :cites_suspension, taxon_concept: old_tc,
+          start_notification: create(:cites_suspension_notification, designation: cites)
         )
         subject.process
       end
@@ -88,7 +88,5 @@ describe NomenclatureChange::FullReassignment do
       end
       specify { expect(new_tc.document_citation_taxon_concepts.count).to eq(1) }
     end
-
   end
-
 end

@@ -15,31 +15,31 @@ class Elibrary::DocumentsImporter
 
   def columns_with_type
     [
-      ['EventTypeID', 'TEXT'],
-      ['EventTypeName', 'TEXT'],
-      ['splus_event_type', 'TEXT'],
-      ['EventID', 'INT'],
-      ['EventName', 'TEXT'],
-      ['EventDate', 'TEXT'],
-      ['MeetingType', 'TEXT'],
-      ['EventDocumentReference', 'TEXT'],
-      ['DocumentOrder', 'TEXT'],
-      ['DocumentTypeID', 'TEXT'],
-      ['DocumentTypeName', 'TEXT'],
-      ['splus_document_type', 'TEXT'],
-      ['DocumentID', 'INT'],
-      ['DocumentTitle', 'TEXT'],
-      ['supertitle', 'TEXT'],
-      ['subtitle', 'TEXT'],
-      ['DocumentDate', 'TEXT'],
-      ['DocumentFileName', 'TEXT'],
-      ['DocumentFilePath', 'TEXT'],
-      ['DocumentIsPubliclyAccessible', 'TEXT'],
-      ['DateCreated', 'TEXT'],
-      ['DateModified', 'TEXT'],
-      ['LanguageName', 'TEXT'],
-      ['DocumentIsTranslationIntoEnglish', 'TEXT'],
-      ['MasterDocumentID', 'INT']
+      [ 'EventTypeID', 'TEXT' ],
+      [ 'EventTypeName', 'TEXT' ],
+      [ 'splus_event_type', 'TEXT' ],
+      [ 'EventID', 'INT' ],
+      [ 'EventName', 'TEXT' ],
+      [ 'EventDate', 'TEXT' ],
+      [ 'MeetingType', 'TEXT' ],
+      [ 'EventDocumentReference', 'TEXT' ],
+      [ 'DocumentOrder', 'TEXT' ],
+      [ 'DocumentTypeID', 'TEXT' ],
+      [ 'DocumentTypeName', 'TEXT' ],
+      [ 'splus_document_type', 'TEXT' ],
+      [ 'DocumentID', 'INT' ],
+      [ 'DocumentTitle', 'TEXT' ],
+      [ 'supertitle', 'TEXT' ],
+      [ 'subtitle', 'TEXT' ],
+      [ 'DocumentDate', 'TEXT' ],
+      [ 'DocumentFileName', 'TEXT' ],
+      [ 'DocumentFilePath', 'TEXT' ],
+      [ 'DocumentIsPubliclyAccessible', 'TEXT' ],
+      [ 'DateCreated', 'TEXT' ],
+      [ 'DateModified', 'TEXT' ],
+      [ 'LanguageName', 'TEXT' ],
+      [ 'DocumentIsTranslationIntoEnglish', 'TEXT' ],
+      [ 'MasterDocumentID', 'INT' ]
     ]
   end
 
@@ -52,7 +52,7 @@ class Elibrary::DocumentsImporter
   end
 
   def run_queries
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       ), rows_to_insert_resolved AS (
@@ -114,7 +114,7 @@ class Elibrary::DocumentsImporter
   end
 
   def all_rows_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT
         EventID,
         CASE WHEN DocumentOrder = 'NULL' THEN NULL ELSE CAST(DocumentOrder AS INT) END AS DocumentOrder,
@@ -137,7 +137,7 @@ class Elibrary::DocumentsImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       SELECT * FROM (
         #{all_rows_sql}
       ) all_rows_in_table_name
@@ -168,10 +168,9 @@ class Elibrary::DocumentsImporter
   end
 
   def print_breakdown
-    puts "#{Time.now} There are #{Document.count} documents in total"
+    Rails.logger.debug { "#{Time.now} There are #{Document.count} documents in total" }
     Document.group(:type).order(:type).count.each do |type, count|
       puts "\t #{type} #{count}"
     end
   end
-
 end

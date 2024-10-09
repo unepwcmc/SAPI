@@ -1,12 +1,11 @@
 class Trade::Grouping::TradePlus
-
-  def initialize(attributes, opts={})
-    super(attributes, opts)
+  def initialize(attributes, opts = {})
+    super
   end
 
   def group_query
     columns = @attributes.compact.uniq.join(',')
-    <<-SQL
+    <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt
       FROM #{shipments_table}
       WHERE #{@condition}
@@ -16,13 +15,13 @@ class Trade::Grouping::TradePlus
     SQL
   end
 
-  private
+private
 
   def shipments_table
     'trade_plus_shipments_view'
   end
 
   def attributes
-    #TODO
+    # TODO
   end
 end

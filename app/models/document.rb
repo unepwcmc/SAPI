@@ -3,33 +3,52 @@
 # Table name: documents
 #
 #  id                           :integer          not null, primary key
-#  title                        :text             not null
-#  filename                     :text             not null
 #  date                         :date             not null
-#  type                         :string(255)      not null
+#  discussion_sort_index        :integer
+#  elib_legacy_file_name        :text
+#  filename                     :text             not null
+#  general_subtype              :boolean
 #  is_public                    :boolean          default(FALSE), not null
-#  event_id                     :integer
-#  language_id                  :integer
-#  elib_legacy_id               :integer
-#  created_by_id                :integer
-#  updated_by_id                :integer
+#  sort_index                   :integer
+#  title                        :text             not null
+#  type                         :string(255)      not null
+#  volume                       :integer
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
-#  sort_index                   :integer
-#  primary_language_document_id :integer
-#  elib_legacy_file_name        :text
-#  original_id                  :integer
-#  discussion_id                :integer
-#  discussion_sort_index        :integer
+#  created_by_id                :integer
 #  designation_id               :integer
+#  discussion_id                :integer
+#  elib_legacy_id               :integer
+#  event_id                     :integer
+#  language_id                  :integer
+#  manual_id                    :text
+#  original_id                  :integer
+#  primary_language_document_id :integer
+#  updated_by_id                :integer
+#
+# Indexes
+#
+#  index_documents_on_event_id                                      (event_id)
+#  index_documents_on_language_id_and_primary_language_document_id  (language_id,primary_language_document_id) UNIQUE
+#  index_documents_on_title_to_ts_vector                            (to_tsvector('simple'::regconfig, COALESCE(title, ''::text))) USING gin
+#
+# Foreign Keys
+#
+#  documents_created_by_id_fk                 (created_by_id => users.id)
+#  documents_designation_id_fk                (designation_id => designations.id) ON DELETE => nullify
+#  documents_event_id_fk                      (event_id => events.id)
+#  documents_language_id_fk                   (language_id => languages.id)
+#  documents_original_id_fk                   (original_id => documents.id) ON DELETE => nullify
+#  documents_primary_language_document_id_fk  (primary_language_document_id => documents.id) ON DELETE => nullify
+#  documents_updated_by_id_fk                 (updated_by_id => users.id)
 #
 
 class Document < ApplicationRecord
   include PgSearch::Model
 
-  pg_search_scope :search_by_title, :against => :title,
-    :using => { :tsearch => { :prefix => true } },
-    :order_within_rank => "documents.date, documents.title, documents.id"
+  pg_search_scope :search_by_title, against: :title,
+    using: { tsearch: { prefix: true } },
+    order_within_rank: 'documents.date, documents.title, documents.id'
 
   include TrackWhoDoesIt
 
@@ -42,22 +61,22 @@ class Document < ApplicationRecord
   belongs_to :designation, optional: true
   belongs_to :event, optional: true
   belongs_to :language, optional: true
-  belongs_to :primary_language_document, class_name: 'Document',
-    foreign_key: 'primary_language_document_id', optional: true
+  belongs_to :primary_language_document, class_name: 'Document', optional: true
   has_many :secondary_language_documents, class_name: 'Document',
     foreign_key: 'primary_language_document_id',
     dependent: :nullify
   has_many :citations, class_name: 'DocumentCitation', dependent: :destroy
   has_many :eu_opinions
+  has_one :proposal_details, class_name: 'ProposalDetails', dependent: :nullify # strictly this is has_many, since there's no uniqueness constraint
   has_and_belongs_to_many :tags, class_name: 'DocumentTag', join_table: 'document_tags_documents'
   validates :title, presence: true
   validates :date, presence: true
-  validates_uniqueness_of :primary_language_document_id, scope: :language_id, allow_nil: true
+  validates :primary_language_document_id, uniqueness: { scope: :language_id, allow_nil: true }
   # TODO: validates inclusion of type in available types
-  accepts_nested_attributes_for :citations, :allow_destroy => true,
-    :reject_if => proc { |attributes|
+  accepts_nested_attributes_for :citations, allow_destroy: true,
+    reject_if: proc { |attributes|
       attributes['stringy_taxon_concept_ids'].blank? && (
-        attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].reject(&:blank?).empty?
+        attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].compact_blank.empty?
       )
     }
   mount_uploader :filename, DocumentFileUploader
@@ -71,7 +90,7 @@ class Document < ApplicationRecord
   # order docs based on a custom list of ids
   scope :for_ids_with_order, ->(ids) {
     order = sanitize_sql_array(
-      ["position((',' || id::text || ',') in ?)", ids.join(',') + ',']
+      [ "position((',' || id::text || ',') in ?)", ids.join(',') + ',' ]
     )
     where(id: ids).order(Arel.sql(order))
   }
@@ -113,7 +132,7 @@ class Document < ApplicationRecord
 
   # Returns document tag types (class objects) that are relevant to E-Library
   def self.elibrary_document_tag_types
-    [DocumentTag::ProposalOutcome, DocumentTag::ReviewPhase, DocumentTag::ProcessStage]
+    [ DocumentTag::ProposalOutcome, DocumentTag::ReviewPhase, DocumentTag::ProcessStage ]
   end
 
   def set_title
@@ -129,7 +148,7 @@ class Document < ApplicationRecord
   end
 
   def date_formatted
-    date && Date.parse(date.to_s).strftime("%d/%m/%Y")
+    date && Date.parse(date.to_s).strftime('%d/%m/%Y')
   end
 
   def taxon_names
@@ -140,7 +159,7 @@ class Document < ApplicationRecord
     (read_attribute(:geo_entity_names) || []).compact
   end
 
-  private
+private
 
   def is_pdf?
     attr = elib_legacy_file_name || filename.file.filename

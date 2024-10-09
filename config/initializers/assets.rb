@@ -11,9 +11,13 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
-Rails.application.config.assets.precompile += %w( vendor/* admin.js admin.css trade.js trade.css species.js species.css
-                                pages.css pages.js cites_trade.js cites_trade.css
-                                activities.css activities.js mobile.css)
+Rails.application.config.assets.precompile += %w[
+  vendor/* admin.js admin.css trade.js trade.css species.js species.css
+  pages.css pages.js cites_trade.js cites_trade.css
+  activities.css activities.js mobile.css
+]
 
 # select2-rails 3.5.10 https://rubygems.org/gems/select2-rails/versions/3.5.10
-Rails.application.config.assets.precompile += %w(select2.png select2-spinner.gif select2x2.png)
+Rails.application.config.assets.precompile += %w[
+  select2.png select2-spinner.gif select2x2.png
+]

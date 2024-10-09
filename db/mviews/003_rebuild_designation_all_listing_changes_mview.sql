@@ -111,9 +111,9 @@
 
     sql := 'CREATE TEMP TABLE ' || all_lc_table_name || ' AS
     SELECT
-      lc.*, 
-      tc.taxon_concept_id AS affected_taxon_concept_id, 
-      tc.tree_distance, 
+      lc.*,
+      tc.taxon_concept_id AS affected_taxon_concept_id,
+      tc.tree_distance,
       -- the following ROW_NUMBER call will assign chronological order to listing changes
       -- in scope of the affected taxon concept and a particular designation
       ROW_NUMBER() OVER (
@@ -156,6 +156,6 @@
   COMMENT ON FUNCTION rebuild_designation_all_listing_changes_mview(
     taxonomy taxonomies, designation designations, events_ids INT[]
   ) IS
-  'Procedure to create a helper table with all listing changes 
-  + their included / excluded populations 
+  'Procedure to create a helper table with all listing changes
+  + their included / excluded populations
   + tree distance between affected taxon concept and the taxon concept this listing change applies to.';

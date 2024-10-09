@@ -1,8 +1,7 @@
 class Trade::ReservationsShipmentsParser
+  ATTRIBUTES = [ :start_date, :end_date, :taxon_concept_id, :iso_code2 ]
 
-  ATTRIBUTES = [:start_date, :end_date, :taxon_concept_id, :iso_code2]
-
-  protected
+protected
 
   def parse_start_date(date)
     year = date.split('/').last.to_i

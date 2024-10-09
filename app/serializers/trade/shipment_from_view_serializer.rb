@@ -21,5 +21,4 @@ class Trade::ShipmentFromViewSerializer < ActiveModel::Serializer
       author_year: object.reported_taxon_concept_author_year
     }
   end
-
 end

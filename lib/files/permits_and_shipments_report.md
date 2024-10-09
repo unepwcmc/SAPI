@@ -1,9 +1,9 @@
 # Duplicated permit numbers
 
-SELECT permit_number, 
-count(*) 
-FROM permit_details 
-group by permit_number 
+SELECT permit_number,
+count(*)
+FROM permit_details
+group by permit_number
 having count(*) > 1;
 
 # Total: 1,972,339
@@ -17,10 +17,10 @@ having count(*) > 1;
 
 #Shipments with 2 or more permits
 
-SELECT shipment_number, 
-count(*) 
-FROM permit_details 
-group by shipment_number 
+SELECT shipment_number,
+count(*)
+FROM permit_details
+group by shipment_number
 having count(*) > 1;
 
 #Total: 2,457,845
@@ -35,9 +35,9 @@ having count(*) > 1;
 
 #Odd Permit Numbers
 
-SELECT COUNT(*) 
-FROM permits_import 
-WHERE permit_number 
+SELECT COUNT(*)
+FROM permits_import
+WHERE permit_number
 SIMILAR TO '%(~|,|`|\?)%'
 
 #Total: 24429

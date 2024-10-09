@@ -1,4 +1,4 @@
-/* 
+/*
 This styling is very hacky - pdfkit is being used to turn an html and css file into a pdf.
 It seems to only support a very narrow range of styling options.
 Also note the images need to be pngs - svgs will not resize properly
@@ -24,7 +24,7 @@ body {
 
 .id-manual-cover__banner-logo {
   width: 105px; height: 60px;
-  
+
   display: block;
   position: absolute;
   top: 25px; left: 40px;

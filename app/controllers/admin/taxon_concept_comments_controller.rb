@@ -1,10 +1,10 @@
 class Admin::TaxonConceptCommentsController < Admin::SimpleCrudController
-  defaults :resource_class => Comment, :collection_name => 'comments',
-    :instance_name => 'comment'
+  defaults resource_class: Comment, collection_name: 'comments',
+    instance_name: 'comment'
   belongs_to :taxon_concept
   before_action :load_search
   layout 'taxon_concepts'
-  authorize_resource :class => false
+  authorize_resource class: false
 
   def index
     @taxon_concept = TaxonConcept.find(params[:taxon_concept_id])
@@ -28,7 +28,7 @@ class Admin::TaxonConceptCommentsController < Admin::SimpleCrudController
       notice: 'Operation succeeded'
   end
 
-  private
+private
 
   def comment_params
     params.require(:comment).permit(

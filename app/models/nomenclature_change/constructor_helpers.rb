@@ -1,6 +1,6 @@
 module NomenclatureChange::ConstructorHelpers
-  LOWER_RANKS = [Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY]
-  HIGHER_RANKS = [Rank::CLASS, Rank::ORDER, Rank::FAMILY, Rank::SUBFAMILY]
+  LOWER_RANKS = [ Rank::GENUS, Rank::SPECIES, Rank::SUBSPECIES, Rank::VARIETY ]
+  HIGHER_RANKS = [ Rank::CLASS, Rank::ORDER, Rank::FAMILY, Rank::SUBFAMILY ]
 
   def _build_single_target(reassignment, output)
     reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
@@ -12,7 +12,7 @@ module NomenclatureChange::ConstructorHelpers
     end
   end
 
-  def taxon_concept_html(full_name, rank_name, existing_name = "", existing_rank_name = "")
+  def taxon_concept_html(full_name, rank_name, existing_name = '', existing_rank_name = '')
     if LOWER_RANKS.include?(rank_name)
       lower_ranks_cases(full_name, existing_name, existing_rank_name)
     elsif HIGHER_RANKS.include?(rank_name)
@@ -22,9 +22,10 @@ module NomenclatureChange::ConstructorHelpers
 
   def _build_parent_reassignments(input, output, children = nil)
     children ||= input.taxon_concept.children
-    input.parent_reassignments = children.map do |child|
-      _build_parent_reassignment(child, input, output)
-    end
+    input.parent_reassignments =
+      children.map do |child|
+        _build_parent_reassignment(child, input, output)
+      end
   end
 
   def _build_parent_reassignment(child, input, output)
@@ -54,13 +55,15 @@ module NomenclatureChange::ConstructorHelpers
       # do not reassign relationships that involve outputs
       # e.g. in case a synonym of the input of a split is one of the outputs
       taxon_concepts_ids = all_outputs.map(&:taxon_concept_id)
-      relationships = relationships.reject do |relationship|
-        taxon_concepts_ids.include?(relationship.other_taxon_concept_id)
+      relationships =
+        relationships.reject do |relationship|
+          taxon_concepts_ids.include?(relationship.other_taxon_concept_id)
+        end
+    end
+    input.name_reassignments =
+      relationships.map do |relationship|
+        _build_name_reassignment(relationship, input, outputs)
       end
-    end
-    input.name_reassignments = relationships.map do |relationship|
-      _build_name_reassignment(relationship, input, outputs)
-    end
   end
 
   def _build_name_reassignment(relationship, input, outputs)
@@ -75,9 +78,11 @@ module NomenclatureChange::ConstructorHelpers
       reassignment = input.name_reassignment_class.new(
         reassignment_attrs
       )
-      _build_multiple_targets(reassignment, outputs.select do |o|
-        o.taxon_concept_id != reassignment.reassignable.other_taxon_concept_id
-      end)
+      _build_multiple_targets(
+        reassignment, outputs.select do |o|
+                        o.taxon_concept_id != reassignment.reassignable.other_taxon_concept_id
+                      end
+      )
     end
     reassignment
   end
@@ -85,9 +90,10 @@ module NomenclatureChange::ConstructorHelpers
   def _build_distribution_reassignments(input, outputs)
     distributions = input.taxon_concept.
       distributions.includes(:geo_entity).order('geo_entities.name_en')
-    input.distribution_reassignments = distributions.map do |distribution|
-      _build_distribution_reassignment(distribution, input, outputs)
-    end
+    input.distribution_reassignments =
+      distributions.map do |distribution|
+        _build_distribution_reassignment(distribution, input, outputs)
+      end
   end
 
   def _build_distribution_reassignment(distribution, input, outputs)
@@ -129,13 +135,13 @@ module NomenclatureChange::ConstructorHelpers
   def _build_legislation_type_reassignment(legislation_collection_name, input)
     legislation_type = legislation_collection_name.to_s.singularize.camelize
     public_note = send(:"multi_lingual_#{legislation_collection_name.to_s.singularize}_note")
-    input.taxon_concept.send(legislation_collection_name).limit(1).count > 0 &&
+    (input.taxon_concept.send(legislation_collection_name).limit(1).count > 0 &&
       input.legislation_reassignment_class.new(
         reassignable_type: legislation_type,
         note_en: public_note[:en],
         note_es: public_note[:es],
         note_fr: public_note[:fr]
-      ) || nil
+      )) || nil
   end
 
   def _build_document_reassignments(input, outputs)
@@ -161,8 +167,8 @@ module NomenclatureChange::ConstructorHelpers
       outputs.each do |output|
         reassigned_distributions = distribution_reassignments.select do |dr|
           dr.reassignment_targets.
-          where(nomenclature_change_output_id: output.id).
-          any?
+            where(nomenclature_change_output_id: output.id).
+            any?
         end.map(&:reassignable)
         output_tc_ge_ids = reassigned_distributions.map(&:geo_entity_id)
         dc_ge_ids_to_reassign = (dc_ge_ids & output_tc_ge_ids) + (dc_ge_ids - input_tc_ge_ids)
@@ -186,11 +192,11 @@ module NomenclatureChange::ConstructorHelpers
     reassignable_type = reassignable_collection_name.to_s.singularize.camelize
     input_class = input.reassignment_class
     input.send(:"#{reassignable_collection_name}_reassignments").first ||
-      input.taxon_concept.send(reassignable_collection_name).limit(1).count > 0 &&
+      (input.taxon_concept.send(reassignable_collection_name).limit(1).count > 0 &&
       input.reassignment_class.new(
         reassignable_type: reassignable_type,
         type: input_class.to_s
-      ) || nil
+      )) || nil
   end
 
   def _build_common_names_reassignments(input, outputs)
@@ -215,7 +221,7 @@ module NomenclatureChange::ConstructorHelpers
 
   def following_taxonomic_changes(event, lng)
     I18n.with_locale(lng) do
-      I18n.translate(
+      I18n.t(
         'following_taxonomic_changes',
         event: event.name,
         default: ''
@@ -225,9 +231,9 @@ module NomenclatureChange::ConstructorHelpers
 
   def in_year(event, lng)
     I18n.with_locale(lng) do
-      I18n.translate(
+      I18n.t(
         'in_year',
-        year: event && event.effective_at.try(:year) || Date.today.year,
+        year: (event && event.effective_at.try(:year)) || Date.today.year,
         default: ''
       )
     end
@@ -235,16 +241,17 @@ module NomenclatureChange::ConstructorHelpers
 
   def multi_lingual_legislation_note(note_type)
     result = {}
-    [:en, :es, :fr].each do |lng|
-      result[lng] = legislation_note(lng) do |input_html, output_html|
-        I18n.with_locale(lng) do
-          I18n.translate(
-            note_type,
-            input_taxon: input_html, output_taxon: output_html,
-            default: ''
-          )
+    [ :en, :es, :fr ].each do |lng|
+      result[lng] =
+        legislation_note(lng) do |input_html, output_html|
+          I18n.with_locale(lng) do
+            I18n.t(
+              note_type,
+              input_taxon: input_html, output_taxon: output_html,
+              default: ''
+            )
+          end
         end
-      end
     end
     result
   end

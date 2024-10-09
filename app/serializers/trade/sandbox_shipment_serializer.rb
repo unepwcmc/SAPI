@@ -5,12 +5,11 @@ class Trade::SandboxShipmentSerializer < ActiveModel::Serializer
     :year, :import_permit
 
   def reported_taxon_name
-    object.reported_taxon_concept && "#{object.reported_taxon_concept.full_name} (#{object.reported_taxon_concept.name_status})" ||
+    (object.reported_taxon_concept && "#{object.reported_taxon_concept.full_name} (#{object.reported_taxon_concept.name_status})") ||
     object.taxon_name
   end
 
   def accepted_taxon_name
     object.taxon_concept && "#{object.taxon_concept.full_name} (#{object.taxon_concept.name_status})"
   end
-
 end

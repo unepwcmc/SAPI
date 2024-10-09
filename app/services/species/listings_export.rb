@@ -1,5 +1,4 @@
 class Species::ListingsExport < Species::CsvCopyExport
-
   def initialize(designation, filters)
     @designation = designation
     @filters = filters
@@ -9,13 +8,13 @@ class Species::ListingsExport < Species::CsvCopyExport
     @species_listings_ids =
       if filters[:species_listings_ids]
         SpeciesListing.where(
-          :id => filters[:species_listings_ids],
-          :designation_id => @designation.id
+          id: filters[:species_listings_ids],
+          designation_id: @designation.id
         ).map(&:abbreviation)
       elsif filters[:appendices]
         SpeciesListing.where(
-          :abbreviation => filters[:appendices],
-          :designation_id => @designation.id
+          abbreviation: filters[:appendices],
+          designation_id: @designation.id
         ).map(&:abbreviation)
       end
     initialize_csv_separator(@filters[:csv_separator])
@@ -42,7 +41,7 @@ class Species::ListingsExport < Species::CsvCopyExport
     rel
   end
 
-  private
+private
 
   def resource_name
     "#{designation_name}_listings"
@@ -59,6 +58,6 @@ class Species::ListingsExport < Species::CsvCopyExport
   # highly customized low-level SQL queries.
   # A quick and temporary solution for now is to manually inject the correct table name ourselves.
   def sql_columns_with_table_name
-    sql_columns.map{ |sql_column| "#{table_name}.#{sql_column}" }
+    sql_columns.map { |sql_column| "#{table_name}.#{sql_column}" }
   end
 end

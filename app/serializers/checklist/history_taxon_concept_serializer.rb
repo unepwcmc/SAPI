@@ -5,11 +5,10 @@ class Checklist::HistoryTaxonConceptSerializer < ActiveModel::Serializer
     :full_name, :author_year, :rank_name
 
   has_many :historic_cites_listing_changes_for_downloads,
-    :key => :listing_changes,
-    :serializer => Checklist::HistoryListingChangeSerializer
+    key: :listing_changes,
+    serializer: Checklist::HistoryListingChangeSerializer
 
   def include_author_year?
     @options[:authors]
   end
-
 end

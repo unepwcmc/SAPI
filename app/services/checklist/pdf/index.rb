@@ -4,7 +4,7 @@ class Checklist::Pdf::Index < Checklist::Index
   include Checklist::Pdf::IndexContent
 
   def initialize(options = {})
-    super(options)
+    super
     @input_name = 'index'
   end
 
@@ -15,11 +15,11 @@ class Checklist::Pdf::Index < Checklist::Index
 
   def prepare_kingdom_queries
     options = {
-      :synonyms => @synonyms,
-      :authors => @authors,
-      :english_common_names => @english_common_names,
-      :spanish_common_names => @spanish_common_names,
-      :french_common_names => @french_common_names
+      synonyms: @synonyms,
+      authors: @authors,
+      english_common_names: @english_common_names,
+      spanish_common_names: @spanish_common_names,
+      french_common_names: @french_common_names
     }
     super
     @animalia_query = Checklist::Pdf::IndexQuery.new(
@@ -31,5 +31,4 @@ class Checklist::Pdf::Index < Checklist::Index
       options
     )
   end
-
 end

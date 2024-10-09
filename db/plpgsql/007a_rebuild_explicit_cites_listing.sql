@@ -23,17 +23,17 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_cites_listing_for_node(node_id integ
         )
       ) AS listing
       FROM (
-        SELECT taxon_concept_id, 
-        CASE 
-          WHEN BOOL_OR(species_listing_name = 'I') 
-          THEN hstore('cites_I', 'I') ELSE hstore('cites_I', NULL)
-        END || 
+        SELECT taxon_concept_id,
         CASE
-          WHEN BOOL_OR(species_listing_name = 'II') 
+          WHEN BOOL_OR(species_listing_name = 'I')
+          THEN hstore('cites_I', 'I') ELSE hstore('cites_I', NULL)
+        END ||
+        CASE
+          WHEN BOOL_OR(species_listing_name = 'II')
           THEN hstore('cites_II', 'II') ELSE hstore('cites_II', NULL)
         END ||
         CASE
-          WHEN BOOL_OR(species_listing_name = 'III') 
+          WHEN BOOL_OR(species_listing_name = 'III')
           THEN hstore('cites_III', 'III') ELSE hstore('cites_III', NULL)
         END AS listing
         FROM cites_listing_changes_mview

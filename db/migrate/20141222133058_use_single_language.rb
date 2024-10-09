@@ -1,6 +1,6 @@
 class UseSingleLanguage < ActiveRecord::Migration[4.2]
   def change
-    execute <<-SQL
+    execute <<-SQL.squish
     DROP TYPE api_trade_code CASCADE;
     CREATE TYPE api_trade_code AS (
       id INT,

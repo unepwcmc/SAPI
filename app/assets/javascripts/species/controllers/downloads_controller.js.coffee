@@ -1,6 +1,6 @@
 Species.DownloadsController = Ember.Controller.extend Species.Spinner,
   needs: [
-    'downloadsForCmsListings', 
+    'downloadsForCmsListings',
     'downloadsForCitesListings', 'downloadsForCitesRestrictions', 'downloadsForCitesProcesses',
     'downloadsForEuListings', 'downloadsForEuDecisions'
   ]
@@ -40,7 +40,7 @@ Species.DownloadsController = Ember.Controller.extend Species.Spinner,
 
   hideCsvOptions: () ->
     $('#csv_options').hide()
-    $('.csv_options_holder > a').html('Trouble viewing outputs?')   
+    $('.csv_options_holder > a').html('Trouble viewing outputs?')
 
   actions:
     close: () ->

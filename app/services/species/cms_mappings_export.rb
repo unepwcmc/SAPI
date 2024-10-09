@@ -1,14 +1,11 @@
 class Species::CmsMappingsExport < Species::CsvCopyExport
-
   def query
-    rel = CmsMapping.from(table_name).
-      joins("LEFT JOIN taxon_concepts ON
-            taxon_concept_id = taxon_concepts.id").
-      order('taxon_concepts.name_status, taxon_concepts.taxonomic_position, taxon_concepts.full_name')
-    rel.select(sql_columns)
+    CmsMapping.from(table_name).left_joins(:taxon_concept).order(
+      'taxon_concepts.name_status, taxon_concepts.taxonomic_position, taxon_concepts.full_name'
+    ).select(sql_columns)
   end
 
-  private
+private
 
   def resource_name
     'cms_mappings'

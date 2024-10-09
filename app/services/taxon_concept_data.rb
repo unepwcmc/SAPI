@@ -1,5 +1,4 @@
 class TaxonConceptData
-
   def initialize(taxon_concept)
     @taxon_concept = taxon_concept.reload
     @rank_name = taxon_concept.rank && taxon_concept.rank.name
@@ -12,7 +11,7 @@ class TaxonConceptData
     }.merge(@higher_taxa)
   end
 
-  private
+private
 
   def higher_taxa
     parent_data = higher_taxa_from_parent
@@ -28,6 +27,7 @@ class TaxonConceptData
 
   def higher_taxa_from_self
     return nil unless @rank_name
+
     {
       "#{@rank_name.downcase}_id" => @taxon_concept.id,
       "#{@rank_name.downcase}_name" => @taxon_concept.taxon_name.try(:scientific_name)
@@ -52,6 +52,7 @@ class TaxonConceptData
         fake_parent && fake_parent.data
       end
     return nil unless data
+
     data.slice(*field_names)
   end
 
@@ -65,8 +66,7 @@ class TaxonConceptData
         Rank.in_range(nil, nil)
       end
     higher_taxa_ranks.map do |r|
-      ["#{r.downcase}_id", "#{r.downcase}_name"]
+      [ "#{r.downcase}_id", "#{r.downcase}_name" ]
     end.flatten
   end
-
 end

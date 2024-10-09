@@ -8,7 +8,10 @@ Sidekiq.configure_client do |config|
     chain.add SidekiqUniqueJobs::Middleware::Client
   end
   config.redis = {
-    url: Rails.application.secrets.redis[:url]
+    url: ENV.fetch(
+      'SAPI_SIDEKIQ_REDIS_URL',
+      Rails.application.credentials.dig(:redis, :url)
+    )
   }
 end
 
@@ -22,7 +25,10 @@ Sidekiq.configure_server do |config|
     chain.add SidekiqUniqueJobs::Middleware::Client
   end
   config.redis = {
-    url: Rails.application.secrets.redis[:url]
+    url: ENV.fetch(
+      'SAPI_SIDEKIQ_REDIS_URL',
+      Rails.application.credentials.dig(:redis, :url)
+    )
   }
 
   SidekiqUniqueJobs::Server.configure(config)

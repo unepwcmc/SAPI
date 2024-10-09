@@ -50,7 +50,7 @@ Trade.Store.registerAdapter('Trade.SandboxShipment', DS.RESTAdapter.extend({
   buildURL: (model_name, model_id) ->
     model_id ||= ""
     hash = location.hash.split('?')
-    annual_report_upload_id = hash[0].split("/").find( (el) -> 
+    annual_report_upload_id = hash[0].split("/").find( (el) ->
       el.match(/[1-9]\d*/)
     )
     "trade/annual_report_uploads/#{annual_report_upload_id}/sandbox_shipments/#{model_id}"

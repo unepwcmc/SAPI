@@ -1,11 +1,10 @@
 class Trade::ComplianceShipmentsParser
-
   ATTRIBUTES = [
     :start_date, :end_date, :taxon_concept_id, :iso_code2,
     :unit, :term, :source, :purpose, :origin
   ]
 
-  protected
+protected
 
   def parse_start_date(date)
     year = date.split('/').last.to_i
@@ -19,11 +18,13 @@ class Trade::ComplianceShipmentsParser
 
   def parse_iso_code2(iso)
     return 'TRUE' if iso.blank? || iso.upcase == 'ALL'
+
     "#{imp_or_exp_country}.iso_code2 = '#{iso}'"
   end
 
   def parse_taxon_concept_id(tc)
     return 'TRUE' if tc.blank? || tc.upcase == 'ALL'
+
     "ts.taxon_concept_id = #{tc}"
   end
 
@@ -44,15 +45,15 @@ class Trade::ComplianceShipmentsParser
   end
 
   def parse_trade_code(code, type)
-    #Return TRUE to prevent empty conditions and a malformed query
+    # Return TRUE to prevent empty conditions and a malformed query
     return 'TRUE' if code.blank? || code.upcase == 'ALL'
 
     codes = code.split(';').map(&:strip)
-    "#{type}.code IN (#{codes.map{|c| "'#{c}'"}.join(',')})"
+    "#{type}.code IN (#{codes.map { |c| "'#{c}'" }.join(',')})"
   end
 
   def parse_origin(origin)
-    "ts.country_of_origin_id IS NULL"
+    'ts.country_of_origin_id IS NULL'
   end
 
   def imp_or_exp_country
@@ -60,6 +61,6 @@ class Trade::ComplianceShipmentsParser
   end
 
   def imp_or_exp_country_reverse
-    ['importer', 'exporter'].tap { |arr| arr.delete(imp_or_exp) }.first
+    [ 'importer', 'exporter' ].tap { |arr| arr.delete(imp_or_exp) }.first
   end
 end

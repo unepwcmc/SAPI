@@ -1,6 +1,6 @@
 class AddEmptyStringAsDefaultToNotes < ActiveRecord::Migration[4.2]
   def change
-    [:en, :es, :fr].each do |lng|
+    [ :en, :es, :fr ].each do |lng|
       change_column :nomenclature_change_outputs, :"note_#{lng}", :text, default: ''
       change_column :nomenclature_change_inputs, :"note_#{lng}", :text, default: ''
     end
@@ -8,7 +8,7 @@ class AddEmptyStringAsDefaultToNotes < ActiveRecord::Migration[4.2]
     change_column :nomenclature_change_inputs, :internal_note, :text, default: ''
 
     ApplicationRecord.connection.execute(
-      <<-SQL
+      <<-SQL.squish
         UPDATE nomenclature_change_outputs
         SET note_en=''
         WHERE note_en IS NULL;

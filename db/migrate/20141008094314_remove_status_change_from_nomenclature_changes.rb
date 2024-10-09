@@ -1,6 +1,6 @@
 class RemoveStatusChangeFromNomenclatureChanges < ActiveRecord::Migration[4.2]
   def up
-    execute <<-SQL
+    execute <<-SQL.squish
       WITH status_changes AS (
         SELECT * FROM nomenclature_changes
         WHERE type = 'NomenclatureChange::StatusChange'

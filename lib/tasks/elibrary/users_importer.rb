@@ -8,23 +8,23 @@ class Elibrary::UsersImporter
   end
 
   def table_name
-    :"elibrary_users_import"
+    :elibrary_users_import
   end
 
   def columns_with_type
     [
-      ['LoweredUserName', 'TEXT'],
-      ['LoweredEmail', 'TEXT'],
-      ['RoleName', 'TEXT'],
-      ['CreateDate', 'TEXT'],
-      ['LastLoginDate', 'TEXT']
+      [ 'LoweredUserName', 'TEXT' ],
+      [ 'LoweredEmail', 'TEXT' ],
+      [ 'RoleName', 'TEXT' ],
+      [ 'CreateDate', 'TEXT' ],
+      [ 'LastLoginDate', 'TEXT' ]
     ]
   end
 
   def run_preparatory_queries; end
 
   def run_queries
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_to_insert AS (
         #{rows_to_insert_sql}
       )
@@ -38,11 +38,12 @@ class Elibrary::UsersImporter
         NOW()
       FROM rows_to_insert
     SQL
+
     ApplicationRecord.connection.execute(sql)
   end
 
   def all_rows_sql
-    sql = <<-SQL
+    <<-SQL.squish
       SELECT
         LoweredEmail,
         COALESCE(
@@ -57,7 +58,7 @@ class Elibrary::UsersImporter
           LoweredEmail,
           REGEXP_SPLIT_TO_ARRAY(
             SUBSTRING(LoweredEmail FROM '(.+)@.+'),
-            '[\._]'
+            '[._]'
           ) AS name_ary,
           UPPER(BTRIM(SUBSTRING(LoweredEmail FROM '.+\\.(.+)$'))) AS iso_code2,
           CASE
@@ -79,7 +80,7 @@ class Elibrary::UsersImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL
+    <<-SQL.squish
       SELECT
         email,
         name,
@@ -97,10 +98,9 @@ class Elibrary::UsersImporter
   end
 
   def print_breakdown
-    puts "#{Time.now} There are #{User.count} users in total"
+    Rails.logger.debug { "#{Time.now} There are #{User.count} users in total" }
     User.group(:role).order(:role).count.each do |role, count|
       puts "\t #{role} #{count}"
     end
   end
-
 end

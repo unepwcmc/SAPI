@@ -1,14 +1,12 @@
 module AdminHelper
-
   def ancestors_path(taxon_concept)
-    Rank.where(
-      ["taxonomic_position < ?", taxon_concept.rank.taxonomic_position]
-      ).order(:taxonomic_position).map do |r|
+    Rank.where(taxonomic_position: ...taxon_concept.rank.taxonomic_position).order(:taxonomic_position).map do |r|
       return nil unless taxon_concept.data
+
       name = taxon_concept.data["#{r.name.downcase}_name"]
       id = taxon_concept.data["#{r.name.downcase}_id"]
       if name && id
-        link_to(name, params.permit!.merge(:taxon_concept_id => id), :title => r.name)
+        link_to(name, params.permit!.merge(taxon_concept_id: id), title: r.name)
       else
         nil
       end
@@ -16,26 +14,38 @@ module AdminHelper
   end
 
   def tracking_info(record)
+    creator_name = Rack::Utils.escape_html(
+      record.creator.try(:name) || 'DATA_IMPORT'
+    )
+
+    updater_name = Rack::Utils.escape_html(
+      record.updater.try(:name) || 'DATA_IMPORT'
+    )
+
     info = <<-HTML
-      <p>Created by #{record.creator.try(:name) || "DATA_IMPORT"} on
+      <p>Created by #{creator_name} on
         #{record.created_at.strftime("%d/%m/%Y")}<br />
-        Last updated by #{record.updater.try(:name) || "DATA_IMPORT"} on
+        Last updated by #{updater_name} on
         #{record.updated_at.strftime("%d/%m/%Y")}
       </p>
     HTML
-    content_tag(:a, :rel => 'tooltip', :href => '#',
-      :"data-original-title" => info, :"data-html" => true
+
+    content_tag(
+      :a, rel: 'tooltip', href: '#',
+      'data-original-title': info, 'data-html': true
     ) do
       info_icon
     end.html_safe
   end
 
   def internal_notes(record)
-    return '' unless record.internal_notes.present?
-    info = content_tag(:div) do
-      content_tag(:b, 'Internal notes:') +
-      content_tag(:p, record.internal_notes)
-    end
+    return '' if record.internal_notes.blank?
+
+    info =
+      content_tag(:div) do
+        content_tag(:b, 'Internal notes:') +
+        content_tag(:p, record.internal_notes)
+      end
     comment_icon_with_tooltip(info)
   end
 
@@ -70,18 +80,19 @@ module AdminHelper
   end
 
   def tag_list(tags_ary)
-    tags_ary.map { |t| content_tag(:span, :class => 'myMinTag') { t } }.join(', ').html_safe
+    tags_ary.map { |t| content_tag(:span, class: 'myMinTag') { t } }.join(', ').html_safe
   end
 
   def error_messages_for(resource)
     resource = instance_variable_get("@#{resource}") if resource.is_a? Symbol
     return '' unless resource && resource.errors.any?
-    content_tag(:div, :class => 'alert alert-error') do
-      link_to('×', '#', :"data-dismiss" => 'alert', :class => 'close') +
+
+    content_tag(:div, class: 'alert alert-error') do
+      link_to('×', '#', 'data-dismiss': 'alert', class: 'close') +
       content_tag(
         :p,
         "#{pluralize(resource.errors.count, "error")} " +
-        "prohibited this record from being saved:"
+        'prohibited this record from being saved:'
       ) +
       content_tag(:ul) do
         resource.errors.full_messages.collect do |item|
@@ -92,8 +103,9 @@ module AdminHelper
   end
 
   def admin_title
-    content_tag(:div, :class => 'admin-header') do
-      content_tag(:h1,
+    content_tag(:div, class: 'admin-header') do
+      content_tag(
+        :h1,
         if block_given?
           yield
         elsif @custom_title
@@ -101,8 +113,10 @@ module AdminHelper
         else
           controller_name.titleize
         end
-      ) + content_tag(:div, :class => 'action-buttons') do
-        admin_add_new_button :custom_btn_title => @custom_btn_title
+      ) + content_tag(
+        :div, class: 'action-buttons'
+      ) do
+        admin_add_new_button custom_btn_title: @custom_btn_title
       end
     end
   end
@@ -111,11 +125,12 @@ module AdminHelper
     resource = options[:resource] || controller_name.singularize
     href = options.delete(:href) || "#new-#{resource}"
     name = options.delete(:name) || options[:custom_btn_title] || "Add new #{resource.titleize}"
-    link_to('<i class="icon-plus-sign"></i> '.html_safe + name, href,
+    link_to(
+      '<i class="icon-plus-sign"></i> '.html_safe + name, href,
       {
-        :role => "button",
-        :"data-toggle" => "modal",
-        :class => "btn new-button"
+        role: 'button',
+        'data-toggle': 'modal',
+        class: 'btn new-button'
       }.merge(options)
     )
   end
@@ -126,44 +141,45 @@ module AdminHelper
     title = options[:title] || "Add new #{resource.titleize}"
     content_tag(
       :div,
-      :id => id,
-      :class => "modal hide fade", :tabindex => "-1", :role => "dialog",
-      :"aria-labelledby" => "#{id}-label",
-      :"aria-hidden" => "true") do
-
-      content_tag(:div, :class => "modal-header") do
+      id: id,
+      class: 'modal hide fade', tabindex: '-1', role: 'dialog',
+      'aria-labelledby': "#{id}-label",
+      'aria-hidden': 'true'
+    ) do
+      content_tag(:div, class: 'modal-header') do
         button_tag(
-          :type => "button", :class => "close", :"data-dismiss" => "modal",
-          :"aria-hidden" => true
+          type: 'button', class: 'close', 'data-dismiss': 'modal',
+          'aria-hidden': true
         ) { '×' } +
-        content_tag(:h3,
-          :id => "#{id}-label"
+        content_tag(
+          :h3,
+          id: "#{id}-label"
         ) { title }
       end +
       content_tag(
-        :div, :id => "admin-#{id}-form", :class => "modal-body" # TODO
+        :div, id: "admin-#{id}-form", class: 'modal-body' # TODO
       ) do
         if block_given?
           yield
         else
-          render :partial => 'form'
+          render partial: 'form'
         end
       end +
-      content_tag(:div, :class => "modal-footer") do
+      content_tag(:div, class: 'modal-footer') do
         button_tag(
-          :type => "button", :class => "btn", :"data-dismiss" => "modal",
-          :"aria-hidden" => "true"
+          type: 'button', class: 'btn', 'data-dismiss': 'modal',
+          'aria-hidden': 'true'
         ) { 'Close' } +
         if options[:save_and_reopen]
           button_tag(
-            :type => "button", :class => "btn btn-primary save-button save-and-reopen-button"
+            type: 'button', class: 'btn btn-primary save-button save-and-reopen-button'
           ) { 'Save changes' } +
           button_tag(
-            :type => "button", :class => "btn btn-primary save-button"
+            type: 'button', class: 'btn btn-primary save-button'
           ) { 'Save changes & close' }
         else
           button_tag(
-            :type => "button", :class => "btn btn-primary save-button"
+            type: 'button', class: 'btn btn-primary save-button'
           ) { 'Save changes' }
         end
       end
@@ -172,10 +188,10 @@ module AdminHelper
 
   def admin_table
     content_tag(
-      :table, :id => "admin-in-place-editor",
-      :class => "table table-bordered table-striped ",
-      :"data-editor-for" => "#{controller_name.singularize}",
-      :style => "clear: both"
+      :table, id: 'admin-in-place-editor',
+      class: 'table table-bordered table-striped ',
+      'data-editor-for': "#{controller_name.singularize}",
+      style: 'clear: both'
     ) do
       if block_given?
         yield
@@ -187,11 +203,11 @@ module AdminHelper
 
   def admin_simple_search
     content_tag(
-      :div, :id => "admin-simple-search",
-      :class => "simple-search",
-      :style => "clear: both"
+      :div, id: 'admin-simple-search',
+      class: 'simple-search',
+      style: 'clear: both'
     ) do
-      render :partial => 'admin/simple_crud/simple_search'
+      render partial: 'admin/simple_crud/simple_search'
     end
   end
 
@@ -201,8 +217,8 @@ module AdminHelper
   def traco_locale_columns(column_name)
     all_locales = I18n.available_locales
     current_locale = I18n.locale
-    result = ["#{column_name}_#{current_locale}"] # current locale 1st.
-    remaining_locales = all_locales - [current_locale]
+    result = [ "#{column_name}_#{current_locale}" ] # current locale 1st.
+    remaining_locales = all_locales - [ current_locale ]
     unless I18n.locale == I18n.default_locale
       result << "#{column_name}_#{I18n.default_locale}" # default locale 2nd.
       remaining_locales -= I18n.default_locale

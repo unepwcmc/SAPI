@@ -1,6 +1,7 @@
 SELECT
   ts.*,
-  CASE 			WHEN ts.taxon_concept_class_name IN ('Mammalia') THEN 'Mammals'
+  CASE
+  WHEN ts.taxon_concept_class_name IN ('Mammalia') THEN 'Mammals'
   WHEN ts.taxon_concept_class_name IN ('Aves') THEN 'Birds'
   WHEN ts.taxon_concept_class_name IN ('Reptilia') THEN 'Reptiles'
   WHEN ts.taxon_concept_class_name IN ('Amphibia') THEN 'Amphibians'

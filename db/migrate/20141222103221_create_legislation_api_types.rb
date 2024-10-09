@@ -1,6 +1,6 @@
 class CreateLegislationApiTypes < ActiveRecord::Migration[4.2]
   def change
-    execute <<-SQL
+    execute <<-SQL.squish
     DROP TYPE IF EXISTS api_taxon_concept CASCADE;
     CREATE TYPE api_taxon_concept AS (
       id INT,

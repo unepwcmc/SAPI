@@ -32,5 +32,4 @@ class DocumentSearchParams < Hash
   def self.sanitize(params)
     new(params)
   end
-
 end

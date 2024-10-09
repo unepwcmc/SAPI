@@ -2,7 +2,7 @@
 class Trade::ShipmentsGrossImportsExport < Trade::ShipmentsGrossExportsExport
   include Trade::ShipmentReportQueries
 
-  private
+private
 
   # the query before pivoting
   def subquery_sql(options)
@@ -10,7 +10,6 @@ class Trade::ShipmentsGrossImportsExport < Trade::ShipmentsGrossExportsExport
   end
 
   def resource_name
-    "gross_imports"
+    'gross_imports'
   end
-
 end

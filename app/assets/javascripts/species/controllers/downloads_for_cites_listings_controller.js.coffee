@@ -61,7 +61,7 @@ Species.DownloadsForCitesListingsController = Ember.Controller.extend
   toParams: ( ->
     {
       data_type: 'Listings'
-      filters: 
+      filters:
         designation: @get('designation')
         appendices: @get('selectedAppendices')
         geo_entities_ids: @get('selectedGeoEntitiesIds')
@@ -97,6 +97,12 @@ Species.DownloadsForCitesListingsController = Ember.Controller.extend
           return
         else
           @set('downloadMessage', 'No results')
+      ).fail((jqXHR) =>
+        @set('downloadInProgress', false)
+
+        errorStatusText = jqXHR.statusText || 'Unknown error'
+
+        @set('downloadMessage', 'Download Failed (' + errorStatusText + ')')
       )
 
     deleteTaxonConceptSelection: (context) ->

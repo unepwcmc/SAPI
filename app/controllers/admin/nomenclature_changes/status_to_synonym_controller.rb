@@ -1,5 +1,4 @@
 class Admin::NomenclatureChanges::StatusToSynonymController < Admin::NomenclatureChanges::BuildController
-
   steps *NomenclatureChange::StatusToSynonym::STEPS
 
   def show
@@ -29,9 +28,11 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
 
   def update
     @nomenclature_change.assign_attributes(
-      (nomenclature_change_status_to_synonym_params || {}).merge({
-        :status => (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
-      })
+      (nomenclature_change_status_to_synonym_params || {}).merge(
+        {
+          status: (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
+        }
+      )
     )
     success = @nomenclature_change.valid?
     case step
@@ -46,7 +47,7 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
     render_wizard @nomenclature_change
   end
 
-  private
+private
 
   def klass
     NomenclatureChange::StatusToSynonym

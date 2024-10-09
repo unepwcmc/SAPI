@@ -1,6 +1,6 @@
 class TradeValidationRuleColumnNamesToBeArray < ActiveRecord::Migration[4.2]
   def change
-    unless Trade::ValidationRule.columns_hash["column_names"].array
+    unless Trade::ValidationRule.columns_hash['column_names'].array
       change_column :trade_validation_rules, :column_names, "varchar[] USING (string_to_array(column_names, ','))"
     end
   end

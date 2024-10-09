@@ -1,5 +1,5 @@
 class Species::CitesSuspensionSerializer < ActiveModel::Serializer
-  attributes :notes, { :start_date_formatted => :start_date },
+  attributes :notes, { start_date_formatted: :start_date },
     :is_current, :subspecies_info, :nomenclature_note_en, :nomenclature_note_fr,
     :nomenclature_note_es,
     :geo_entity,
@@ -22,12 +22,13 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
 
   def include_nomenclature_note_fr?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_note_es?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
-
 end

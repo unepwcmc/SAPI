@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import distribution tags from csv file (usage: rake import:distribution_tags[path/to/file,path/to/another])'
-  task :distribution_tags, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :distribution_tags, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'distribution_tags_import'
     files = files_from_args(t, args)
     files.each do |file|
@@ -16,10 +15,10 @@ namespace :import do
       kingdom = file.split('/').last.split('_')[0].titleize
 
       # import all distinct tags to both PresetTags and Tags table
-      puts "There are #{PresetTag.where(:model => 'Distribution').count} distribution tags"
+      puts "There are #{PresetTag.where(model: 'Distribution').count} distribution tags"
       puts "There are #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
-      puts "ADDING: preset_tags and tags"
-      sql = <<-SQL
+      puts 'ADDING: preset_tags and tags'
+      sql = <<-SQL.squish
         INSERT INTO preset_tags(model, name, created_at, updated_at)
         SELECT subquery.*, NOW(), NOW()
         FROM (
@@ -42,14 +41,14 @@ namespace :import do
         SELECT name FROM tags;
       SQL
       ApplicationRecord.connection.execute(sql)
-      puts "There are now #{PresetTag.where(:model => 'Distribution').count} distribution tags"
+      puts "There are now #{PresetTag.where(model: 'Distribution').count} distribution tags"
       puts "There are now #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
 
       puts "There are #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
-      [Taxonomy::CITES_EU, Taxonomy::CMS].each do |taxonomy_name|
+      [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
         puts "Import #{taxonomy_name} distribution tags"
-        taxonomy = Taxonomy.find_by_name(taxonomy_name)
-        sql = <<-SQL
+        taxonomy = Taxonomy.find_by(name: taxonomy_name)
+        sql = <<-SQL.squish
           WITH tmp AS (
             SELECT DISTINCT #{id_type}, rank, geo_entity_type, iso_code2, regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
             FROM #{TMP_TABLE}
@@ -85,11 +84,10 @@ namespace :import do
 
           ) AS subquery;
         SQL
-        puts "ADDING: distribution taggings"
+        puts 'ADDING: distribution taggings'
         ApplicationRecord.connection.execute(sql)
       end
       puts "There are now #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
     end
   end
-
 end

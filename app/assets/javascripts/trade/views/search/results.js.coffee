@@ -30,7 +30,7 @@ Trade.SearchResultsView = Ember.View.extend
     {
       header: 'Rep. Taxon Concept'
       displayProperty: 'reportedTaxonConcept.fullName'
-    },   
+    },
     {
       header: 'Term'
       displayProperty: 'term.code'

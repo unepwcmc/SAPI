@@ -1,7 +1,7 @@
 class Admin::UsersController < Admin::SimpleCrudController
-  respond_to :js, :except => [:index, :destroy]
+  respond_to :js, except: [ :index, :destroy ]
 
-  load_and_authorize_resource :except => :index
+  load_and_authorize_resource except: :index
 
   def new
     new! do
@@ -24,34 +24,39 @@ class Admin::UsersController < Admin::SimpleCrudController
         @user.update(user_params)
       end
     respond_to do |format|
-      format.js {
+      format.js do
         if update_result
           render 'create'
         else
           load_associations
           render 'new'
         end
-      }
+      end
     end
   end
 
-  protected
+protected
 
   def collection
-    @users ||= end_of_association_chain.
-      order(:name).page(params[:page])
+    @users ||= end_of_association_chain.order(
+      :name
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
   def load_associations
     @countries = GeoEntity.joins(:geo_entity_type).
       where(
-        'geo_entity_types.name' => [GeoEntityType::COUNTRY, GeoEntityType::TERRITORY],
+        'geo_entity_types.name' => [ GeoEntityType::COUNTRY, GeoEntityType::TERRITORY ],
         is_current: true
       ).
       order('name_en')
   end
 
-  private
+private
 
   def user_params
     params.require(:user).permit(

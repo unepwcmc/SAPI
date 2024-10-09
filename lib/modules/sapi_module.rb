@@ -1,6 +1,3 @@
-require 'sapi_module/stored_procedures.rb'
-require 'sapi_module/indexes.rb'
-require 'sapi_module/summary.rb'
 module SapiModule
   def self.rebuild
     SapiModule::StoredProcedures.rebuild

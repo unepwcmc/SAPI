@@ -52,7 +52,7 @@ $screen-xl: 1600px;
 
   &-header {
     text-align: center;
-    
+
     &__hero {
       background-color: $navy;
       color: white;
@@ -63,7 +63,7 @@ $screen-xl: 1600px;
 
   &-body {
     padding: 0 2rem 2rem;
-  } 
+  }
 
 // breakpoints
   // @media screen and (min-width:$screen-sm){
@@ -74,7 +74,7 @@ $screen-xl: 1600px;
 
     &-body {
       padding: 0 6rem 6rem;
-    } 
+    }
 
     h2 {
       font-size: 1.75rem;

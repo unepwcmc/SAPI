@@ -1,20 +1,27 @@
 class Admin::NomenclatureChangesController < Admin::StandardAuthorizationController
-
   def show
     @nc = NomenclatureChange.find(params[:id])
   end
 
   def destroy
     @nomenclature_change = NomenclatureChange.find(params[:id])
+
     @nomenclature_change.destroy
+
     redirect_to admin_nomenclature_changes_path
   end
 
-  protected
+protected
 
   def collection
-    @collection ||= NomenclatureChange.includes([:event, :creator]).
-      order('created_at DESC').page(params[:page]).per(10)
+    @collection ||= NomenclatureChange.includes(
+      [ :event, :creator ]
+    ).order(
+      'created_at DESC'
+    ).page(
+      params[:page]
+    ).per(10).search(
+      params[:query]
+    )
   end
-
 end

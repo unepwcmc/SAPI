@@ -3,6 +3,9 @@ require Rails.root.join('lib/tasks/elibrary/importable.rb')
 class Elibrary::EventsImporter
   include Elibrary::Importable
 
+  # We are composing SQL with comments, so line breaks are important.
+  # rubocop:disable Rails/SquishedSQLHeredocs
+
   def initialize(file_name)
     @file_name = file_name
   end
@@ -13,13 +16,13 @@ class Elibrary::EventsImporter
 
   def columns_with_type
     [
-      ['EventTypeID', 'INT'],
-      ['EventTypeName', 'TEXT'],
-      ['splus_event_type', 'TEXT'],
-      ['EventID', 'INT'],
-      ['EventName', 'TEXT'],
-      ['MeetingType', 'TEXT'],
-      ['EventDate', 'TEXT']
+      [ 'EventTypeID', 'INT' ],
+      [ 'EventTypeName', 'TEXT' ],
+      [ 'splus_event_type', 'TEXT' ],
+      [ 'EventID', 'INT' ],
+      [ 'EventName', 'TEXT' ],
+      [ 'MeetingType', 'TEXT' ],
+      [ 'EventDate', 'TEXT' ]
     ]
   end
 
@@ -34,6 +37,7 @@ class Elibrary::EventsImporter
       FROM cops_to_update
       WHERE events.id = cops_to_update.id
     SQL
+
     ApplicationRecord.connection.execute(sql)
 
     sql = <<-SQL
@@ -46,6 +50,7 @@ class Elibrary::EventsImporter
       FROM srgs_to_update
       WHERE events.id = srgs_to_update.id
     SQL
+
     ApplicationRecord.connection.execute(sql)
   end
 
@@ -70,8 +75,9 @@ class Elibrary::EventsImporter
   end
 
   def all_rows_sql
-    cites = Designation.find_by_name('CITES')
-    sql = <<-SQL
+    cites = Designation.find_by(name: 'CITES')
+
+    <<-SQL
       SELECT
         EventID,
         CASE
@@ -89,7 +95,7 @@ class Elibrary::EventsImporter
   # need to update them with the elib_legacy_id & published_at date
   # matching depends on the event name & type
   def cops_to_update_sql
-    sql = <<-SQL
+    <<-SQL
       SELECT id, e.designation_id, name, type, ne.EventID AS elib_legacy_id, ne.EventDate AS published_at
       FROM (#{all_rows_sql}) ne
       JOIN events e
@@ -104,7 +110,7 @@ class Elibrary::EventsImporter
   # need to update them with the elib_legacy_id & published_at date
   # matching depends on the event name & type
   def srgs_to_update_sql
-    sql = <<-SQL
+    <<-SQL
       SELECT id, e.designation_id, name, type, ne.EventID AS elib_legacy_id, ne.EventDate AS published_at
       FROM (#{all_rows_sql}) ne
       JOIN events e -- designation_id left empty for EC SRGs
@@ -115,7 +121,7 @@ class Elibrary::EventsImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL
+    <<-SQL
       SELECT * FROM (
         #{all_rows_sql}
       ) all_rows_in_table_name
@@ -130,10 +136,9 @@ class Elibrary::EventsImporter
   end
 
   def print_breakdown
-    puts "#{Time.now} There are #{Event.count} events in total"
+    Rails.logger.debug { "#{Time.now} There are #{Event.count} events in total" }
     Event.group(:type).order(:type).count.each do |type, count|
       puts "\t #{type} #{count}"
     end
   end
-
 end

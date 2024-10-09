@@ -32,9 +32,8 @@ class Checklist::Csv::Index < Checklist::Index
   end
 
   def prepare_main_query
-    super()
+    super
     @taxon_concepts_rel = @taxon_concepts_rel.
       includes(:current_cites_additions)
   end
-
 end

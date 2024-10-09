@@ -1,6 +1,6 @@
 class CreateEuLegislationApiTypes < ActiveRecord::Migration[4.2]
   def change
-    execute <<-SQL
+    execute <<-SQL.squish
     CREATE TYPE api_trade_code AS (
       id INT,
       code TEXT,

@@ -1,5 +1,23 @@
+# == Schema Information
+#
+# Table name: nomenclature_changes
+#
+#  id            :integer          not null, primary key
+#  status        :string(255)      not null
+#  type          :string(255)      not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  created_by_id :integer          not null
+#  event_id      :integer
+#  updated_by_id :integer          not null
+#
+# Foreign Keys
+#
+#  nomenclature_changes_created_by_id_fk  (created_by_id => users.id)
+#  nomenclature_changes_event_id_fk       (event_id => events.id)
+#  nomenclature_changes_updated_by_id_fk  (updated_by_id => users.id)
+#
 FactoryBot.define do
-
   factory :nomenclature_change do
     event
     status { 'new' }
@@ -23,19 +41,19 @@ FactoryBot.define do
   end
 
   factory :nomenclature_change_input, class: NomenclatureChange::Input,
-    aliases: [:input] do
+    aliases: [ :input ] do
     nomenclature_change
     taxon_concept
   end
 
   factory :nomenclature_change_output, class: NomenclatureChange::Output,
-    aliases: [:output] do
+    aliases: [ :output ] do
     nomenclature_change
     taxon_concept
   end
 
   factory :nomenclature_change_reassignment, class: NomenclatureChange::Reassignment,
-    aliases: [:reassignment] do
+    aliases: [ :reassignment ] do
     input
     type { 'NomenclatureChange::Reassignment' }
     reassignable_type { 'TaxonConcept' }
@@ -60,7 +78,7 @@ FactoryBot.define do
   end
 
   factory :nomenclature_change_output_reassignment, class: NomenclatureChange::OutputReassignment,
-    aliases: [:output_reassignment] do
+    aliases: [ :output_reassignment ] do
     output
     type { 'NomenclatureChange::OutputReassignment' }
     reassignable_type { 'TaxonConcept' }
@@ -85,5 +103,4 @@ FactoryBot.define do
     reassignment
     output
   end
-
 end

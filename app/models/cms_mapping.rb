@@ -17,16 +17,16 @@ class CmsMapping < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :accepted_name_id, :cms_author, :cms_taxon_name, :cms_uuid, :details, :taxon_concept_id
 
-  # serialize :details, ActiveRecord::Coders::Hstore
+  # serialize :details, coder: ActiveRecord::Coders::Hstore
   belongs_to :taxon_concept, optional: true
-  belongs_to :accepted_name, :class_name => 'TaxonConcept', optional: true
+  belongs_to :accepted_name, class_name: 'TaxonConcept', optional: true
 
   scope :index_filter, lambda { |option|
     case option
-    when "MATCHES"
-      where('taxon_concept_id IS NOT NULL')
-    when "MISSING_SPECIES_PLUS"
-      where(:taxon_concept_id => nil)
+    when 'MATCHES'
+      where.not(taxon_concept_id: nil)
+    when 'MISSING_SPECIES_PLUS'
+      where(taxon_concept_id: nil)
     else
       all
     end

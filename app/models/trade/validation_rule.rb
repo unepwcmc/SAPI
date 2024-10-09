@@ -3,22 +3,22 @@
 # Table name: trade_validation_rules
 #
 #  id                :integer          not null, primary key
-#  valid_values_view :string(255)
+#  column_names      :string(255)      is an Array
+#  format_re         :string(255)
+#  is_primary        :boolean          default(TRUE), not null
+#  is_strict         :boolean          default(FALSE), not null
+#  run_order         :integer          not null
+#  scope             :hstore
 #  type              :string(255)      not null
+#  valid_values_view :string(255)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  format_re         :string(255)
-#  run_order         :integer          not null
-#  column_names      :string(255)
-#  is_primary        :boolean          default(TRUE), not null
-#  scope             :hstore
-#  is_strict         :boolean          default(FALSE), not null
 #
 
 class Trade::ValidationRule < ApplicationRecord
   # Used by seed.
   # attr_accessible :column_names, :run_order, :is_primary, :scope, :is_strict
-  serialize :scope, ActiveRecord::Coders::NestedHstore
+  serialize :scope, coder: ActiveRecord::Coders::NestedHstore
   has_many :validation_errors, class_name: 'Trade::ValidationError'
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
@@ -58,6 +58,7 @@ class Trade::ValidationRule < ApplicationRecord
 
   def refresh_errors_if_needed(annual_report_upload)
     return true unless refresh_needed?(annual_report_upload)
+
     existing_record = validation_errors_for_aru(annual_report_upload).first
     matching_records = matching_records(annual_report_upload)
     update_or_create_error_record(
@@ -75,6 +76,7 @@ class Trade::ValidationRule < ApplicationRecord
 
   def validation_errors_for_shipment(shipment)
     return nil if is_primary # primary validations are handled by AR
+
     'shipment validation not implemented'
   end
 
@@ -91,7 +93,7 @@ class Trade::ValidationRule < ApplicationRecord
     scope && scope.each do |scope_column, scope_def|
       if (
         Trade::SandboxTemplate.column_names +
-        ['point_of_view', 'importer', 'exporter', 'rank']
+        [ 'point_of_view', 'importer', 'exporter', 'rank' ]
       ).include? scope_column
         res[scope_column] = scope_def
       end
@@ -99,7 +101,7 @@ class Trade::ValidationRule < ApplicationRecord
     res
   end
 
-  private
+private
 
   def update_or_create_error_record(annual_report_upload, existing_record, error_count, error_message, matching_criteria)
     if existing_record
@@ -141,21 +143,21 @@ class Trade::ValidationRule < ApplicationRecord
         res[scope_column] = scope_def
       when 'exporter', 'importer', 'country_of_origin'
         tmp_def = {}
-        (scope_def.keys & ['inclusion', 'exclusion']).each do |k|
-          tmp_def[k] = scope_def[k].map { |value| GeoEntity.find_by_iso_code2(value).id }
+        (scope_def.keys & [ 'inclusion', 'exclusion' ]).each do |k|
+          tmp_def[k] = scope_def[k].map { |value| GeoEntity.find_by(iso_code2: value).id }
         end
         tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
         res[scope_column + '_id'] = tmp_def
       when /(.+)_code$/
         tmp_def = {}
-        (scope_def.keys & ['inclusion', 'exclusion']).each do |k|
-          tmp_def[k] = scope_def[k].map { |value| TradeCode.find_by_type_and_code($1.capitalize, value).id }
+        (scope_def.keys & [ 'inclusion', 'exclusion' ]).each do |k|
+          tmp_def[k] = scope_def[k].map { |value| TradeCode.find_by(type: $1.capitalize, code: value).id }
         end
         tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
         res[$1 + '_id'] = tmp_def
       else
         tmp_def = {}
-        scope_def.keys & ['inclusion', 'exclusion', 'blank'].each do |k|
+        (scope_def.keys & [ 'inclusion', 'exclusion', 'blank' ]).each do |k|
           tmp_def[k] = scope_def[k]
         end
         res[scope_column + '_id'] = tmp_def
@@ -176,7 +178,7 @@ class Trade::ValidationRule < ApplicationRecord
         shipment_in_scope = false if scope_def['exclusion'].include?(value)
       end
       if scope_def['blank']
-        shipment_in_scope = false unless shipment.send(scope_column).blank?
+        shipment_in_scope = false if shipment.send(scope_column).present?
       end
     end
     # make sure the validated fields are not blank
@@ -207,5 +209,4 @@ class Trade::ValidationRule < ApplicationRecord
       ]
     end
   end
-
 end

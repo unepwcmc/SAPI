@@ -9,7 +9,7 @@ Species.HigherTaxaCmsController = Ember.ArrayController.extend
   ).observes("content.@each.didLoad")
 
   groupHigherTaxaByRank: ->
-    @set('contentByRank', 
+    @set('contentByRank',
       ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY'].map((e) =>
         {
           rankName: e
@@ -22,7 +22,7 @@ Species.HigherTaxaCmsController = Ember.ArrayController.extend
 
   load: ->
     unless @get('loaded')
-      @set('content', 
+      @set('content',
         Species.AutoCompleteTaxonConcept.find({
           taxonomy: 'cms'
           ranks: ['KINGDOM', 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY']

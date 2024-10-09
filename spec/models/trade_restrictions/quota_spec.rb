@@ -38,10 +38,10 @@ describe Quota, sidekiq: :inline do
   end
 
   describe :create do
-    context "downloads cache should be populated" do
+    context 'downloads cache should be populated' do
       before(:each) do
         DownloadsCache.clear_quotas
-        create(:quota, :start_date => Time.utc(2013), :geo_entity => create(:geo_entity))
+        create(:quota, start_date: Time.utc(2013), geo_entity: create(:geo_entity))
         Quota.export('set' => 'current')
       end
       subject { Dir["#{DownloadsCache.quotas_path}/*"] }
@@ -50,10 +50,10 @@ describe Quota, sidekiq: :inline do
   end
 
   describe :destroy do
-    context "downloads cache should be cleared" do
+    context 'downloads cache should be cleared' do
       before(:each) do
         DownloadsCache.clear_quotas
-        q = create(:quota, :start_date => Time.utc(2013), :geo_entity => create(:geo_entity))
+        q = create(:quota, start_date: Time.utc(2013), geo_entity: create(:geo_entity))
         Quota.export('set' => 'current')
         q.destroy
         Quota.export('set' => 'current')
@@ -63,76 +63,76 @@ describe Quota, sidekiq: :inline do
     end
   end
 
-  context "validations" do
+  context 'validations' do
     describe :create do
       before(:all) do
         @unit = create(:unit)
       end
 
-      context "when valid" do
-        let(:quota) {
+      context 'when valid' do
+        let(:quota) do
           build(
             :quota,
-            :unit => @unit,
-            :taxon_concept => @taxon_concept,
-            :geo_entity => create(:geo_entity)
+            unit: @unit,
+            taxon_concept: @taxon_concept,
+            geo_entity: create(:geo_entity)
           )
-        }
+        end
 
         specify { expect(quota).to be_valid }
       end
 
-      context "when quota missing" do
-        let(:quota1) {
+      context 'when quota missing' do
+        let(:quota1) do
           build(
             :quota,
-            :quota => nil,
-            :unit => @unit,
-            :taxon_concept => @taxon_concept
+            quota: nil,
+            unit: @unit,
+            taxon_concept: @taxon_concept
           )
-        }
+        end
 
-        specify { expect(quota1).to be_invalid }
+        specify { expect(quota1).not_to be_valid }
         specify { expect(quota1.error_on(:quota).size).to eq(2) }
       end
 
-      context "when publication date missing" do
-        let(:quota) {
+      context 'when publication date missing' do
+        let(:quota) do
           build(
             :quota,
-            :publication_date => nil,
-            :unit => @unit,
-            :taxon_concept => @taxon_concept
+            publication_date: nil,
+            unit: @unit,
+            taxon_concept: @taxon_concept
           )
-        }
+        end
 
-        specify { expect(quota).to be_invalid }
+        specify { expect(quota).not_to be_valid }
         specify { expect(quota.error_on(:publication_date).size).to eq(1) }
       end
 
-      context "when start date greater than end date" do
-        let(:quota) {
+      context 'when start date greater than end date' do
+        let(:quota) do
           build(
             :quota,
-            :start_date => 1.week.from_now,
-            :end_date => 1.week.ago,
-            :unit => @unit,
-            :taxon_concept => @taxon_concept
+            start_date: 1.week.from_now,
+            end_date: 1.week.ago,
+            unit: @unit,
+            taxon_concept: @taxon_concept
           )
-        }
+        end
 
-        specify { expect(quota).to be_invalid }
+        specify { expect(quota).not_to be_valid }
         specify { expect(quota.error_on(:start_date).size).to eq(1) }
       end
 
       pending "doesn't save a quota without a unit" do
-        let(:quota) {
+        let(:quota) do
           build(
             :quota,
-            :unit => nil,
-            :taxon_concept => @taxon_concept
+            unit: nil,
+            taxon_concept: @taxon_concept
           )
-        }
+        end
 
         specify { quota.should_not be_valid }
         specify { quota.should have(1).error_on(:unit) }

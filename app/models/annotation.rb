@@ -3,23 +3,30 @@
 # Table name: annotations
 #
 #  id                  :integer          not null, primary key
-#  symbol              :string(255)
-#  parent_symbol       :string(255)
-#  display_in_index    :boolean          default(FALSE), not null
 #  display_in_footnote :boolean          default(FALSE), not null
-#  short_note_en       :text
+#  display_in_index    :boolean          default(FALSE), not null
 #  full_note_en        :text
-#  short_note_fr       :text
-#  full_note_fr        :text
-#  short_note_es       :text
 #  full_note_es        :text
-#  original_id         :integer
-#  event_id            :integer
+#  full_note_fr        :text
+#  parent_symbol       :string(255)
+#  short_note_en       :text
+#  short_note_es       :text
+#  short_note_fr       :text
+#  symbol              :string(255)
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  import_row_id       :integer
 #  created_by_id       :integer
+#  event_id            :integer
+#  import_row_id       :integer
+#  original_id         :integer
 #  updated_by_id       :integer
+#
+# Foreign Keys
+#
+#  annotations_created_by_id_fk  (created_by_id => users.id)
+#  annotations_event_id_fk       (event_id => events.id)
+#  annotations_source_id_fk      (original_id => annotations.id)
+#  annotations_updated_by_id_fk  (updated_by_id => users.id)
 #
 
 class Annotation < ApplicationRecord
@@ -32,17 +39,33 @@ class Annotation < ApplicationRecord
   #   :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
   #   :display_in_index, :display_in_footnote, :event_id
 
-  has_many :listing_changes
+  has_many :listing_changes,
+    dependent: :nullify
+
   has_many :hashed_listing_changes,
-    :foreign_key => :hash_annotation_id, :class_name => "ListingChange"
+    class_name: 'ListingChange',
+    dependent: :nullify,
+    foreign_key: :hash_annotation_id,
+    inverse_of: :hash_annotation
 
   belongs_to :event, optional: true
   translates :short_note, :full_note
 
-  scope :for_cites, -> { joins(:event).where("events.type = 'CitesCop'").
-    order([:parent_symbol, :symbol]) }
-  scope :for_eu, -> { joins(:event).where("events.type = 'EuRegulation'").
-    order([:parent_symbol, :symbol]) }
+  scope :for_cites, -> do
+    joins(:event).where(
+      "events.type = 'CitesCop'"
+    ).order(
+      [ :parent_symbol, :symbol ]
+    )
+  end
+
+  scope :for_eu, -> {
+    joins(:event).where(
+      "events.type = 'EuRegulation'"
+    ).order(
+      [ :parent_symbol, :symbol ]
+    )
+  }
 
   # If this pattern is not respected, a query which parses (most of) the
   # symbol as an integer
@@ -50,7 +73,7 @@ class Annotation < ApplicationRecord
   # OK: '^1', '#33'; not ok '#18edit'
   validates :symbol, presence: false, format: {
     allow_blank: true,
-    message: "should be a symbol followed by one or more digits",
+    message: 'should be a symbol followed by one or more digits',
     with: /\A[^0-9a-z\s]\d+\z/i
   }
 
@@ -61,20 +84,18 @@ class Annotation < ApplicationRecord
   end
 
   def self.search(query)
-    if query.present?
-      where("UPPER(symbol) LIKE UPPER(:query)
-            OR UPPER(parent_symbol) LIKE UPPER(:query)
-            OR UPPER(short_note_en) LIKE UPPER(:query)
-            OR UPPER(full_note_en) LIKE UPPER(:query)
-            OR UPPER(short_note_fr) LIKE UPPER(:query)
-            OR UPPER(full_note_fr) LIKE UPPER(:query)
-            OR UPPER(short_note_es) LIKE UPPER(:query)
-            OR UPPER(full_note_es) LIKE UPPER(:query)
-            OR UPPER(description) LIKE UPPER(:query)",
-            :query => "%#{query}%")
-    else
-      all
-    end
+    self.ilike_search(
+      query, [
+        *searchable_text_columns,
+
+        query && Arel::Nodes::Concat.new(
+          arel_table['parent_symbol'],
+          arel_table['symbol']
+        ).matches(
+          "%#{sanitize_sql_like(query)}%"
+        )
+      ]
+    )
   end
 
   def full_symbol
@@ -82,7 +103,7 @@ class Annotation < ApplicationRecord
   end
 
   def self.ignored_attributes
-    super() + [:import_row_id, :original_id]
+    super + [ :import_row_id, :original_id ]
   end
 
   def self.text_attributes
@@ -93,7 +114,7 @@ class Annotation < ApplicationRecord
     ]
   end
 
-  private
+private
 
   def dependent_objects_map
     {
@@ -101,5 +122,4 @@ class Annotation < ApplicationRecord
       '# listing_changes' => hashed_listing_changes
     }
   end
-
 end

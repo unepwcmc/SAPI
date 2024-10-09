@@ -17,8 +17,8 @@ class Download < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :format, :doc_type
 
-  validates :format, :presence => true, :inclusion => { :in => %w(pdf csv json zip) }
-  validates :doc_type, :presence => true, :inclusion => { :in => %w(history index citesidmanual) }
+  validates :format, presence: true, inclusion: { in: %w[pdf csv json zip] }
+  validates :doc_type, presence: true, inclusion: { in: %w[history index citesidmanual] }
 
   COMPLETED = 'completed'
   FAILED    = 'failed'

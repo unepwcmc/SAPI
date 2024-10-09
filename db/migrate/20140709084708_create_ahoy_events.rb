@@ -13,9 +13,9 @@ class CreateAhoyEvents < ActiveRecord::Migration[4.2]
       t.timestamp :time
     end
 
-    add_index :ahoy_events, [:visit_id]
-    add_index :ahoy_events, [:user_id]
-    add_index :ahoy_events, [:time]
+    add_index :ahoy_events, [ :visit_id ]
+    add_index :ahoy_events, [ :user_id ]
+    add_index :ahoy_events, [ :time ]
     add_foreign_key :ahoy_events, :users, name: :ahoy_events_user_id_fk, column: :user_id
   end
 end
