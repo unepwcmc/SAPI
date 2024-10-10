@@ -40,8 +40,9 @@ class EuSuspensionRegulation < EuEvent
   # Because EuSuspensionRegulation events are created with many suspensions
   # copied over from the previous event, it's legitimate to allow cascade
   # deletion via dependent: :destroy.
+  #
   # Note that this behaviour differs from the relationship between CITES CoPs
-  # and CITES Listings
+  # and CITES Listings, as the listings are added one by one.
   has_many :eu_suspensions,
     foreign_key: :start_event_id,
     dependent: :destroy
