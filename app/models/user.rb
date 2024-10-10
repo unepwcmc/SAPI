@@ -123,6 +123,18 @@ class User < ApplicationRecord
     true
   end
 
+protected
+
+  def self.searchable_text_columns
+    columns.select do |col|
+      [ :text, :string ].include? col.type
+    end.map(&:name) - [
+      'reset_password_token',
+      'authentication_token',
+      'encrypted_password'
+    ]
+  end
+
 private
 
   def set_default_role
