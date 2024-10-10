@@ -56,11 +56,18 @@ set :keep_releases, 5
 
 require 'yaml'
 require 'json'
+
+# snake_case to prevent injection
+safe_stage = fetch(:stage).to_s.gsub(/\W+/, '_')
 secrets = YAML.load(
-  %x(bundle exec rails credentials:show)
+  %x(bundle exec rails credentials:show -e #{safe_stage})
 )
 
 set :api_token, secrets['api_token'] # used in smoke testing
+
+set :appsignal_config,
+  push_api_key: secrets['appsignal_push_api_key'],
+  active: true
 
 set :slack_token, secrets['slack_exception_notification_webhook_url'] # comes from inbound webhook integration
 set :slack_room, '#speciesplus' # the room to send the message to
