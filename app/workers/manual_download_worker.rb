@@ -98,7 +98,7 @@ private
 
     kit = PDFKit.new(
       ActionController::Base.new().render_to_string(
-        template: '/checklist/_custom_id_manual_cover.html.erb',
+        template: '/checklist/_custom_id_manual_cover',
         locals: { taxon_name: @display_name }
       ),
       page_size: 'A4',
