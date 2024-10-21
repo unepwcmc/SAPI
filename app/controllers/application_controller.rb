@@ -80,7 +80,7 @@ private
   end
 
   def save_email
-    session[:email] = params[:user][:email] || ''
+    session[:email] = params&.dig(:user, :email) || ''
   end
 
   def delete_email
