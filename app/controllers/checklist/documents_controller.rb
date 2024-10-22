@@ -68,12 +68,16 @@ private
   end
 
   def render_404
-    render file: "#{Rails.public_path.join('404')}", layout: false, formats: [ :html ],
+    render file: "#{Rails.public_path.join('404.html')}",
+      layout: false,
+      formats: [ :html ],
       status: :not_found
   end
 
   def render_403
-    render file: "#{Rails.public_path.join('403')}", layout: false, formats: [ :html ],
+    render file: "#{Rails.public_path.join('403.html')}",
+      layout: false,
+      formats: [ :html ],
       status: :forbidden
   end
 
