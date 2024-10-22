@@ -1,10 +1,13 @@
 source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.0.6' # Can't upgrade to 3.1 until Rails 7.0.4 (https://stackoverflow.com/a/75007303/556780)
+ruby '3.2.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '6.1.7.7'
+gem 'rails', '7.1.3.4'
+
+# Configure Cross-Origin resource sharing
+gem 'rack-cors'
+
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
@@ -20,20 +23,27 @@ gem 'sass-rails', '~> 5.0'
 
 # https://stackoverflow.com/questions/55213868/rails-6-how-to-disable-webpack-and-use-sprockets-instead
 gem 'sprockets', '3.7.2'
-gem 'sprockets-rails', :require => 'sprockets/railtie'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'sprockets-rails', require: 'sprockets/railtie'
+
+# Use Terser as compressor for JavaScript assets
+gem 'terser', '~> 1.2.3'
+
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 5.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
 
 gem 'active_model_serializers', '0.8.4' # Deprecated
-gem 'dalli', '2.7.10' # TODO: latest is 3.2.6. I believe should be fine to upgrade but we have no way to test.
+
+# Memcached driver for Rails.cache
+gem 'dalli', '~> 3.2.8'
+
+# Use PostgreSQL database
 gem 'pg', '~> 1.5', '>= 1.5.4'
 gem 'pg_array_parser', '~> 0.0.9'
 gem 'nested-hstore', '~> 0.1.2'
 gem 'pg_search', '~> 2.3', '>= 2.3.6'
+
 gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
 gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmin/inherited_resources#notice)
 gem 'nokogiri', '~> 1.16'
@@ -43,10 +53,7 @@ gem 'cancancan', '~> 3.5'
 gem 'ahoy_matey', '~> 5.0', '>= 5.0.2'
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
 
-# TODO: starting from v1.4, it break our test due to redirection changes:
-#   rspec ./spec/controllers/admin/nomenclature_changes/lump_controller_spec.rb:147
-#   rspec ./spec/controllers/admin/nomenclature_changes/split_controller_spec.rb:191
-gem 'wicked', '1.3.4'
+gem 'wicked', '2.0.0'
 
 gem 'groupdate', '~> 6.4'
 
@@ -62,7 +69,7 @@ gem 'httparty', '~> 0.21.0'
 
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
-gem 'acts-as-taggable-on', '~> 10.0'
+gem 'acts-as-taggable-on', '~> 10.0' # TODO: refuses to install against Rails 7.2
 gem 'carrierwave', '~> 3.0', '>= 3.0.5'
 
 # PDF
@@ -90,6 +97,10 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # gem 'jbuilder', '~> 2.7'
 
 group :development do
+  # Adds comments at the top of models describing table column
+  # (replaces annotate)
+  gem 'annotaterb', '~> 4.10.2'
+
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 4.1.0'
   # Display performance information such as SQL time and flame graphs for each request in your browser.
@@ -97,28 +108,41 @@ group :development do
   gem 'rack-mini-profiler', '~> 2.0'
   gem 'listen', '~> 3.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-	gem 'spring'
+  gem 'spring'
 
-  gem 'annotate', "2.5.0"
-  # gem 'sextant'
+  # Used to fix capistrano-local-precompile on Ruby 3.2 - see comment in Capfile
+  gem 'file_exists', '~> 0.2.0', require: false
+
   # Deploy with Capistrano
   gem 'capistrano', '3.18.0', require: false
-  gem 'capistrano-rails',   '1.6.3', require: false
+  gem 'capistrano-rails', '1.6.3', require: false
   gem 'capistrano-bundler', '1.6.0', require: false
   gem 'capistrano-rvm', '0.1.2', require: false
   gem 'capistrano-maintenance', '1.0.0', require: false
   gem 'capistrano-passenger', '0.2.0', require: false
-  gem 'capistrano-local-precompile', '1.2.0', require: false
+  gem 'capistrano-local-precompile', '1.2.0', require: false # NB: buggy on Ruby 3.2 - see comment in Capfile
   gem 'capistrano-sidekiq', '~> 2.3', '>= 2.3.1'
   gem 'slackistrano', '0.1.9', require: false
-  gem 'brightbox', '2.3.9'
+
   gem 'jslint_on_rails', '1.1.1'
+
+  ##
+  # Rubocop and its plugins
+  gem 'rubocop'
+  gem 'rubocop-capybara'
+  gem 'rubocop-factory_bot'
   gem 'rubocop-rails'
+  gem 'rubocop-rails-omakase'
   gem 'rubocop-rspec'
+  gem 'rubocop-rspec_rails'
+
+  ##
+  # For capistrano ssh
   gem 'rbnacl', '4.0.2'
   gem 'rbnacl-libsodium', '1.0.16'
   gem 'bcrypt_pbkdf', '1.1.0'
   gem 'ed25519', '1.2.4'
+
   # @TODO: bring back when ruby updated to > 2.6 # gem 'net-ssh', '7.0.0.beta1' # openssl 3.0 compatibility @see https://stackoverflow.com/q/72068406/1090438
 end
 
@@ -127,7 +151,7 @@ group :test, :development do
   gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
   gem 'json_spec', '~> 1.1', '>= 1.1.5'
   gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
-  gem "launchy", '2.4.3'
+  gem 'launchy', '2.4.3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 end
@@ -140,16 +164,15 @@ group :test do
   gem 'webdrivers'
 
   gem 'rails-controller-testing'
-  gem "codeclimate-test-reporter", '0.1.1', require: nil # TODO, should be removed
   gem 'factory_bot_rails', '5.2.0'
-  gem 'simplecov', '~> 0.22.0', :require => false
+  gem 'simplecov', '~> 0.22.0', require: false
   gem 'coveralls_reborn', '~> 0.28.0', require: false
 end
 
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
 
 gem 'request_store', '~> 1.5', '>= 1.5.1'
-gem 'paper_trail', '12.3.0' # TODO: latest is 15.1.0. Can't upgrade until we fix https://github.com/paper-trail-gem/paper_trail/blob/master/doc/pt_13_yaml_safe_load.md
+gem 'paper_trail', '15.1.0'
 
 gem 'dotenv-rails', '2.0.1'
 
@@ -193,3 +216,14 @@ gem 'ember-source', '1.8.0' # NOTE: not what we actually use
 gem 'ember-data-source', '1.13.0' # NOTE: not what we actually use
 
 gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will change the handlebars.js version.
+
+# TODO: Fixing base64 to 0.1.1 because otherwise you get:
+#
+#     You have already activated base64 0.1.1, but your Gemfile requires base64
+#     0.2.0. Since base64 is a default gem, you can either remove your
+#     dependency on it or try updating to a newer version of bundler that
+#     supports base64 as a default gem
+#
+# It might be possible to fix this if we had an nginx version which supported
+# the config: `passenger_preload_bundler on;`
+gem 'base64', '0.1.1'

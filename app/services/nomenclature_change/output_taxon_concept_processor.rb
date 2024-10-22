@@ -1,5 +1,4 @@
 class NomenclatureChange::OutputTaxonConceptProcessor
-
   def initialize(output)
     @output = output
   end
@@ -11,15 +10,21 @@ class NomenclatureChange::OutputTaxonConceptProcessor
     tc.nomenclature_note_fr = "#{tc.nomenclature_note_fr} #{@output.note_fr}"
     nomenclature_comment = tc.nomenclature_comment || tc.build_nomenclature_comment
     nomenclature_comment.note = "#{nomenclature_comment.note} #{@output.internal_note}"
-    Rails.logger.debug("Processing output #{tc.full_name}")
+
+    Rails.logger.debug { "Processing output #{tc.full_name}" }
+
     new_record = tc.new_record?
+
     unless tc.save
       Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
+
       return false
     end
+
     nomenclature_comment.save
+
     if new_record
-      Rails.logger.debug("UPDATE NEW TAXON ID #{tc.id}")
+      Rails.logger.debug { "UPDATE NEW TAXON ID #{tc.id}" }
       @output.update_column(:new_taxon_concept_id, tc.id)
     end
   end
@@ -33,7 +38,7 @@ class NomenclatureChange::OutputTaxonConceptProcessor
       res << "New #{rank_name} #{full_name} (#{name_status}) will be created"
     elsif @output.will_create_taxon?
       res << "New #{rank_name} #{full_name} (#{name_status}) will be created, based on #{@output.taxon_concept.full_name}"
-      if ['A', 'N', 'H'].include? @output.taxon_concept.name_status
+      if [ 'A', 'N', 'H' ].include? @output.taxon_concept.name_status
         res << "#{@output.taxon_concept.full_name} will be turned into a synonym of #{@output.display_full_name}"
       end
     else
@@ -57,5 +62,4 @@ class NomenclatureChange::OutputTaxonConceptProcessor
     end
     res
   end
-
 end

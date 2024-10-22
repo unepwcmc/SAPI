@@ -1,6 +1,6 @@
 class RemoveUnusedPermits < ActiveRecord::Migration[4.2]
   def up
-    execute <<-SQL
+    execute <<-SQL.squish
       WITH unused_permits(id) AS (
         SELECT id FROM trade_permits
         EXCEPT

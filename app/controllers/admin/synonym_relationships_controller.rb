@@ -1,29 +1,14 @@
 class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypesController
-  defaults :resource_class => TaxonRelationship, :collection_name => 'synonym_relationships', :instance_name => 'synonym_relationship'
-  respond_to :js, :only => [:new, :edit, :create, :update]
+  defaults resource_class: TaxonRelationship, collection_name: 'synonym_relationships', instance_name: 'synonym_relationship'
+  respond_to :js, only: [ :new, :edit, :create, :update ]
   belongs_to :taxon_concept
-  before_action :load_synonym_relationship_type, :only => [:new, :create, :update]
+  before_action :load_synonym_relationship_type, only: [ :new, :create, :update ]
 
   def new
     new! do |format|
       @synonym_relationship = TaxonRelationship.new(
-        :taxon_relationship_type_id => @synonym_relationship_type.id
+        taxon_relationship_type_id: @synonym_relationship_type.id
       )
-    end
-  end
-
-  def create
-    params[:taxon_relationship][:taxon_relationship_type_id] =
-      @synonym_relationship_type.id
-    create! do |success, failure|
-      success.js {
-        @synonym_relationships = @taxon_concept.synonym_relationships.
-          includes(:other_taxon_concept).order('taxon_concepts.full_name')
-        render 'create'
-      }
-      failure.js {
-        render 'new'
-      }
     end
   end
 
@@ -32,38 +17,53 @@ class Admin::SynonymRelationshipsController < Admin::TaxonConceptAssociatedTypes
       format.js { render 'new' }
     end
   end
+  def create
+    params[:taxon_relationship][:taxon_relationship_type_id] =
+      @synonym_relationship_type.id
+    create! do |success, failure|
+      success.js do
+        @synonym_relationships = @taxon_concept.synonym_relationships.
+          includes(:other_taxon_concept).order('taxon_concepts.full_name')
+        render 'create'
+      end
+      failure.js do
+        render 'new'
+      end
+    end
+  end
+
 
   def update
     params[:taxon_relationship][:taxon_relationship_type_id] =
       @synonym_relationship_type.id
     update! do |success, failure|
-      success.js {
+      success.js do
         @synonym_relationships = @taxon_concept.synonym_relationships.
           includes(:other_taxon_concept).order('taxon_concepts.full_name')
         render 'create'
-      }
-      failure.js {
+      end
+      failure.js do
         render 'new'
-      }
+      end
     end
   end
 
   def destroy
     destroy! do |success|
-      success.html {
+      success.html do
         redirect_to admin_taxon_concept_names_path(@taxon_concept)
-      }
+      end
     end
   end
 
-  protected
+protected
 
   def load_synonym_relationship_type
     @synonym_relationship_type = TaxonRelationshipType.
-      find_by_name(TaxonRelationshipType::HAS_SYNONYM)
+      find_by(name: TaxonRelationshipType::HAS_SYNONYM)
   end
 
-  private
+private
 
   def synonym_relationship_params
     params.require(:taxon_relationship).permit(

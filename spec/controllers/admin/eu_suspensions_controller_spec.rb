@@ -5,31 +5,31 @@ describe Admin::EuSuspensionsController do
 
   before do
     @taxon_concept = create(:taxon_concept)
-    @designation = create(:designation, :name => "EU", :taxonomy => @taxon_concept.taxonomy)
-    @eu_suspension_regulation = create(:eu_suspension_regulation, :designation_id => @designation.id, :is_current => true)
+    @designation = create(:designation, name: 'EU', taxonomy: @taxon_concept.taxonomy)
+    @eu_suspension_regulation = create(:eu_suspension_regulation, designation_id: @designation.id, is_current: true)
   end
 
-  describe "GET index" do
-    it "renders the index template" do
-      get :index, params: { :eu_suspension_regulation_id => @eu_suspension_regulation }
-      expect(response).to render_template("index")
+  describe 'GET index' do
+    it 'renders the index template' do
+      get :index, params: { eu_suspension_regulation_id: @eu_suspension_regulation }
+      expect(response).to render_template('index')
     end
-    it "renders the admin layout" do
-      get :index, params: { :eu_suspension_regulation_id => @eu_suspension_regulation }
+    it 'renders the admin layout' do
+      get :index, params: { eu_suspension_regulation_id: @eu_suspension_regulation }
       expect(response).to render_template('layouts/admin')
     end
   end
 
-  describe "DELETE destroy" do
+  describe 'DELETE destroy' do
     before(:each) do
       @eu_suspension = create(
         :eu_suspension,
-        :taxon_concept_id => @taxon_concept.id,
-        :start_event_id => @eu_suspension_regulation.id
+        taxon_concept_id: @taxon_concept.id,
+        start_event_id: @eu_suspension_regulation.id
       )
     end
-    it "redirects after delete" do
-      delete :destroy, params: { :id => @eu_suspension.id, :eu_suspension_regulation_id => @eu_suspension_regulation.id }
+    it 'redirects after delete' do
+      delete :destroy, params: { id: @eu_suspension.id, eu_suspension_regulation_id: @eu_suspension_regulation.id }
       expect(response).to redirect_to(
         admin_eu_suspension_regulation_eu_suspensions_url(@eu_suspension_regulation)
       )

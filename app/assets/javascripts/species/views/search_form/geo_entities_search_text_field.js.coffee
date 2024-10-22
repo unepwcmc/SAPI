@@ -3,7 +3,7 @@ Species.GeoEntitiesSearchTextField = Em.TextField.extend
 
   attributeBindings: ['autocomplete']
 
-  click: (event) ->  
+  click: (event) ->
     if (@.$().val() == @get('placeholder'))
       @.$().val('')
     @.$().attr('placeholder', '')
@@ -12,4 +12,4 @@ Species.GeoEntitiesSearchTextField = Em.TextField.extend
     @.$().attr('placeholder', @get('placeholder'))
 
   keyUp: (event) ->
-    @set('controller.geoEntityQuery', event.currentTarget.value)  
+    @set('controller.geoEntityQuery', event.currentTarget.value)

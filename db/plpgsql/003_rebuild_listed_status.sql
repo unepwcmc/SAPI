@@ -35,10 +35,10 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     level_of_listing_flag := designation_name || '_level_of_listing';
     not_listed_flag := designation_name || '_not_listed';
     show_flag := designation_name || '_show';
-    
-    
+
+
     flags_to_reset := ARRAY[
-      status_flag, status_original_flag, listing_flag, listing_original_flag, 
+      status_flag, status_original_flag, listing_flag, listing_original_flag,
       not_listed_flag, listing_updated_at_flag, level_of_listing_flag,
       show_flag
     ];
@@ -79,7 +79,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
     SET listing = listing || hstore(status_flag, 'LISTED') ||
       hstore(status_original_flag, 't') ||
       hstore(level_of_listing_flag, 't') ||
-      hstore(listing_updated_at_flag, listing_updated_at::VARCHAR) 
+      hstore(listing_updated_at_flag, listing_updated_at::VARCHAR)
     FROM listed_taxa
     WHERE taxon_concepts.id = listed_taxa.id AND
       CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
@@ -172,12 +172,12 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         listed_geo_entities_ids,
         excluded_geo_entities_ids,
         excluded_taxon_concept_ids,
-        HSTORE(''' || designation_name || '_status_original'', ''t'') || 
-        CASE 
+        HSTORE(''' || designation_name || '_status_original'', ''t'') ||
+        CASE
           WHEN lc.change_type_name = ''DELETION''
-          THEN HSTORE(''' || designation_name || '_status'',  ''DELETED'') || 
+          THEN HSTORE(''' || designation_name || '_status'',  ''DELETED'') ||
             HSTORE(''' || designation_name || '_not_listed'', ''NC'')
-          ELSE HSTORE(''' || designation_name || '_status'',  ''LISTED'') || 
+          ELSE HSTORE(''' || designation_name || '_status'',  ''LISTED'') ||
             HSTORE(''' || designation_name || '_not_listed'', NULL)
         END AS status_hstore
       FROM    taxon_concepts h
@@ -205,21 +205,21 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         CASE
         WHEN (hi.listing->''' || designation_name || '_status_original'')::BOOLEAN
         THEN SLICE(hi.listing, ARRAY[
-          ''' || designation_name || '_status_original'', 
-          ''' || designation_name || '_status'', 
+          ''' || designation_name || '_status_original'',
+          ''' || designation_name || '_status'',
           ''' || designation_name || '_level_of_listing'',
-          ''' || designation_name || '_updated_at'', 
+          ''' || designation_name || '_updated_at'',
           ''' || designation_name || '_not_listed''
         ])
         ELSE
           HSTORE(''' || designation_name || '_status_original'', ''f'') ||
             HSTORE(''' || designation_name || '_level_of_listing'', ''f'') ||
             CASE
-              WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL 
+              WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL
                 AND excluded_taxon_concept_ids @> ARRAY[hi.id]
-              THEN HSTORE(''' || designation_name || '_status'', ''EXCLUDED'') || 
+              THEN HSTORE(''' || designation_name || '_status'', ''EXCLUDED'') ||
                 HSTORE(''' || designation_name || '_not_listed'', ''NC'')
-              WHEN ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL 
+              WHEN ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL
                 AND EXISTS (
                 SELECT 1 FROM distributions
                 WHERE q.excluded_geo_entities_ids @> ARRAY[geo_entity_id]
@@ -227,7 +227,7 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
               )
               THEN HSTORE(''' || designation_name || '_status'', ''EXCLUDED'') ||
                 HSTORE(''' || designation_name || '_not_listed'', ''NC'')
-              WHEN ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL 
+              WHEN ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL
                 AND NOT EXISTS (
                 SELECT 1 FROM distributions
                 WHERE q.listed_geo_entities_ids @> ARRAY[geo_entity_id]
@@ -246,9 +246,9 @@ CREATE OR REPLACE FUNCTION rebuild_listing_status_for_designation_and_node(
         END
       FROM q
       JOIN taxon_concepts hi
-        ON hi.parent_id = q.id      
+        ON hi.parent_id = q.id
     ), grouped AS (
-      SELECT id, 
+      SELECT id,
       HSTORE(
         ''' || designation_name || '_status'',
         CASE

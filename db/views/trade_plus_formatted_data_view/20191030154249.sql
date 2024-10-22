@@ -16,7 +16,8 @@ SELECT ts.id, ts.year, ts.appendix, ts.reported_by_exporter,
        ts.taxon_concept_genus_id AS genus_id,
        ts.taxon_concept_genus_name AS genus_name,
        ts.group AS group_name,
-       CASE 									WHEN term_id IN (73) AND ts.taxon_concept_genus_name IN ('Galanthus','Cyclamen','Sternbergia')
+       CASE
+        WHEN term_id IN (73) AND ts.taxon_concept_genus_name IN ('Galanthus','Cyclamen','Sternbergia')
         THEN
           Array[57, (ts.quantity), unit_id]
         WHEN term_id IN (56) AND unit_id IN (143)
@@ -190,8 +191,8 @@ SELECT ts.id, ts.year, ts.appendix, ts.reported_by_exporter,
         WHEN unit_id IN (155)
         THEN
           Array[84, (ts.quantity/2), NULL]
-        ELSE										Array[term_id, ts.quantity, unit_id]
-
+        ELSE
+          Array[term_id, ts.quantity, unit_id]
         END AS term_quantity_unit,
        exporters.id AS exporter_id,
        exporters.iso_code2 AS exporter_iso,

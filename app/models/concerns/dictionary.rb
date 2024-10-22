@@ -1,5 +1,4 @@
 module Dictionary
-
   def self.included(base)
     base.extend ClassMethods
   end
@@ -18,13 +17,13 @@ module Dictionary
     def build_basic_dictionary(*keys)
       keys.each do |key|
         const_set key.to_s.upcase,
-        if block_given?
-          yield(key)
-        else
-          key
-        end
+          if block_given?
+            yield(key)
+          else
+            key
+          end
       end
-      define_singleton_method("dict") { keys.map { |k| k.to_s.upcase } }
+      define_singleton_method('dict') { keys.map { |k| k.to_s.upcase } }
     end
   end
 end

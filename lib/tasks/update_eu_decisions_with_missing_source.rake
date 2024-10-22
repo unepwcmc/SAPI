@@ -1,16 +1,16 @@
 namespace :update do
-  task :eu_decisions_with_missing_source => [:environment] do
-    TMP_TABLE = "eu_decisions_with_missing_source"
-    file = "lib/files/eu_decisions_with_missing_source.csv"
+  task eu_decisions_with_missing_source: [ :environment ] do
+    TMP_TABLE = 'eu_decisions_with_missing_source'
+    file = 'lib/files/eu_decisions_with_missing_source.csv'
     drop_table(TMP_TABLE)
-    db_columns = ['full_name', 'rank_name', 'start_date', 'party_name', 'decision_type', 'source_code', 'term_code', 'notes']
+    db_columns = [ 'full_name', 'rank_name', 'start_date', 'party_name', 'decision_type', 'source_code', 'term_code', 'notes' ]
     create_table_from_column_array(TMP_TABLE, db_columns.map { |c| "#{c} TEXT" })
     # Full Name Rank  Date of Decision  Party EU Decision Source  Term  Notes
     copy_data_into_table(file, TMP_TABLE, db_columns)
 
-    wild_source = Source.find_by_code('W')
+    wild_source = Source.find_by(code: 'W')
 
-    update_query = <<-SQL
+    update_query = <<-SQL.squish
     WITH tt AS (
       select t.*
       ,taxon_concepts.id AS taxon_concept_id

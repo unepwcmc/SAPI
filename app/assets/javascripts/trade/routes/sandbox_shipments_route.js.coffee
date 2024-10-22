@@ -9,7 +9,7 @@ Trade.SandboxShipmentsRoute = Trade.BeforeRoute.extend
 
   model: (params, transition) ->
     queryParams = params.queryParams
-    
+
     @annualReportUpload = @modelFor('annualReportUpload')
     Trade.ValidationError.find(queryParams.validation_error_id).then((validationError) =>
       @validationError = validationError

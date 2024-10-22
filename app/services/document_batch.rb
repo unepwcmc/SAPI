@@ -16,6 +16,7 @@ class DocumentBatch
 
   def save
     return false unless valid?
+
     success = true
     Document.transaction do
       @documents.each do |d|
@@ -32,7 +33,7 @@ class DocumentBatch
     false
   end
 
-  private
+private
 
   def initialize_documents(documents_attributes, files)
     @documents = []
@@ -41,7 +42,7 @@ class DocumentBatch
         document_params = {
           type: documents_attributes[idx.to_s][:type],
           filename: files[idx],
-          title:  document_title(files[idx])
+          title: document_title(files[idx])
         }
         @documents.push(Document.new(common_attributes.merge(document_params)))
       end
@@ -62,7 +63,7 @@ class DocumentBatch
   end
 
   def document_title(file)
-    original_filename = file.is_a?(Hash) ? file[:filename].original_filename :  file.original_filename
+    original_filename = file.is_a?(Hash) ? file[:filename].original_filename : file.original_filename
     original_filename.sub(/.\w+$/, '')
   end
 end

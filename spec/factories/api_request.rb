@@ -1,5 +1,4 @@
 FactoryBot.define do
-
   factory :api_request do
     user
     controller { 'taxon_concepts' }
@@ -8,5 +7,4 @@ FactoryBot.define do
     ip { '127.0.0.1' }
     response_status { 200 }
   end
-
 end

@@ -1,11 +1,10 @@
 namespace :import do
-
   desc 'Import EU decisions from csv file (usage: rake import:eu_decisions[path/to/file,path/to/another])'
-  task :eu_decisions, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :eu_decisions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'eu_decisions_import'
 
-    taxonomy_id = Taxonomy.where(:name => 'CITES_EU').first.id
-    designation_id = Designation.find_by_name('EU').id
+    taxonomy_id = Taxonomy.where(name: 'CITES_EU').first.id
+    designation_id = Designation.find_by(name: 'EU').id
     puts "There are #{EuDecision.count} EU Decisions in the database."
     files = files_from_args(t, args)
     files.each do |file|
@@ -80,10 +79,9 @@ namespace :import do
         LEFT JOIN trade_codes AS terms ON UPPER(terms.code) = BTRIM(UPPER(q.term))
         WHERE taxon_concepts.taxonomy_id = #{taxonomy_id};
       SQL
-      puts "Importing eu decision types and eu decisions"
+      puts 'Importing eu decision types and eu decisions'
       ApplicationRecord.connection.execute(sql)
     end
     puts "There are now #{EuDecision.count} EU decisions in the database"
   end
-
 end

@@ -3,12 +3,22 @@
 # Table name: document_citations
 #
 #  id             :integer          not null, primary key
-#  document_id    :integer
-#  created_by_id  :integer
-#  updated_by_id  :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  created_by_id  :integer
+#  document_id    :integer
 #  elib_legacy_id :integer
+#  updated_by_id  :integer
+#
+# Indexes
+#
+#  index_document_citations_on_document_id  (document_id)
+#
+# Foreign Keys
+#
+#  document_citations_created_by_id_fk  (created_by_id => users.id)
+#  document_citations_document_id_fk    (document_id => documents.id)
+#  document_citations_updated_by_id_fk  (updated_by_id => users.id)
 #
 
 class DocumentCitation < ApplicationRecord
@@ -48,8 +58,9 @@ class DocumentCitation < ApplicationRecord
     geo_entities_ids = document_citation_geo_entities.pluck(:geo_entity_id)
     if !geo_entities_ids.empty?
       relation = relation.joins(
-        ApplicationRecord.send(:sanitize_sql_array, [
-          "JOIN (
+        ApplicationRecord.send(
+          :sanitize_sql_array, [
+            "JOIN (
             SELECT document_citation_id, CASE
               WHEN ARRAY_AGG(geo_entity_id) @> ARRAY[:geo_entities_ids]::INT[] THEN TRUE
               ELSE FALSE
@@ -57,11 +68,11 @@ class DocumentCitation < ApplicationRecord
             FROM document_citation_geo_entities
             GROUP BY document_citation_id
           ) s ON s.document_citation_id = document_citations.id AND s.geo_entities_match",
-          geo_entities_ids: geo_entities_ids
-        ])
+            geo_entities_ids: geo_entities_ids
+          ]
+        )
       )
     end
     relation
   end
-
 end

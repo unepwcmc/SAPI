@@ -4,7 +4,7 @@ Devise.setup do |config|
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
-  config.secret_key = '<%= ENV["SECRET_KEY_BASE"] %>'
+  config.secret_key = Rails.application.credentials.secret_key_base!
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
@@ -41,12 +41,12 @@ Devise.setup do |config|
   # Configure which authentication keys should be case-insensitive.
   # These keys will be downcased upon creating or modifying a user and when used
   # to authenticate or find a user. Default is :email.
-  config.case_insensitive_keys = [:email]
+  config.case_insensitive_keys = [ :email ]
 
   # Configure which authentication keys should have whitespace stripped.
   # These keys will have whitespace before and after removed upon creating or
   # modifying a user and when used to authenticate or find a user. Default is :email.
-  config.strip_whitespace_keys = [:email]
+  config.strip_whitespace_keys = [ :email ]
 
   # Tell if authentication through request.params is enabled. True by default.
   # It can be set to an array that will enable params authentication only for the
@@ -77,7 +77,7 @@ Devise.setup do |config|
   # Notice that if you are skipping storage for all authentication paths, you
   # may want to disable generating routes to Devise's sessions controller by
   # passing skip: :sessions to `devise_for` in your config/routes.rb
-  config.skip_session_storage = [:http_auth]
+  config.skip_session_storage = [ :http_auth ]
 
   # By default, Devise cleans up the CSRF token on authentication to
   # avoid CSRF token fixation attacks. This means that, when using AJAX
@@ -94,7 +94,7 @@ Devise.setup do |config|
   # a value less than 10 in other environments. Note that, for bcrypt (the default
   # encryptor), the cost increases exponentially with the number of stretches (e.g.
   # a value of 20 is already extremely slow: approx. 60 seconds for 1 calculation).
-  config.stretches = Rails.env.test? ? 1 : 10
+  config.stretches = Rails.env.test? ? 1 : 12
 
   # Setup a pepper to generate the encrypted password.
   # config.pepper = '2b124f816b98c8e849e2bf8687acedb78155d240fb5fa53f8a9ec56715b3c4676c8027ca08318c2e84239e7f94a637167b19d46b719074e8388d3264e31b4037'
@@ -257,10 +257,10 @@ Devise.setup do |config|
 
   # use custom layouts for devise
   Rails.application.config.to_prepare do
-    Devise::RegistrationsController.layout "pages"
-    Devise::PasswordsController.layout "pages"
-    Devise::PasswordsController.after_action :save_email, only: [:create]
-    Devise::PasswordsController.after_action :delete_email, only: [:update]
+    Devise::RegistrationsController.layout 'pages'
+    Devise::PasswordsController.layout 'pages'
+    Devise::PasswordsController.after_action :save_email, only: [ :create ]
+    Devise::PasswordsController.after_action :delete_email, only: [ :update ]
   end
 
   # custom redirection when login fails
@@ -269,11 +269,10 @@ Devise.setup do |config|
   end
 
   Warden::Manager.after_set_user do |user, auth, opts|
-    auth.cookies[:"speciesplus.signed_in"] = 1
+    auth.cookies[:'speciesplus.signed_in'] = 1
   end
 
   Warden::Manager.before_logout do |user, auth, opts|
-    auth.cookies.delete :"speciesplus.signed_in"
+    auth.cookies.delete :'speciesplus.signed_in'
   end
-
 end

@@ -1,12 +1,14 @@
 class Species::ExportsController < ApplicationController
-  before_action :ensure_data_type_and_filters, :only => [:download]
+  before_action :ensure_data_type_and_filters, only: [ :download ]
 
   def download
     set_csv_separator
 
-    @filters = filter_params.merge({
-      :csv_separator => cookies['speciesplus.csv_separator'].try(:to_sym)
-    })
+    @filters = filter_params.merge(
+      {
+        csv_separator: cookies['speciesplus.csv_separator'].try(:to_sym)
+      }
+    )
     case params[:data_type]
     when 'Quotas'
       result = Quota.export @filters
@@ -20,7 +22,7 @@ class Species::ExportsController < ApplicationController
       result = Species::CitesProcessesExport.new(@filters).export
     end
     respond_to do |format|
-      format.html {
+      format.html do
         if result.is_a?(Array)
           # this was added in order to prevent download managers from
           # failing when chunked_transfer_encoding is set in nginx (1.8.1)
@@ -28,16 +30,16 @@ class Species::ExportsController < ApplicationController
           response.headers['Content-Length'] = File.size(file_path).to_s
           send_file file_path, result[1]
         else
-          redirect_to species_exports_path, :notice => "There are no #{params[:data_type]} to download."
+          redirect_to species_exports_path, notice: "There are no #{params[:data_type]} to download."
         end
-      }
-      format.json {
-        render :json => { :total => result.is_a?(Array) ? 1 : 0 }
-      }
+      end
+      format.json do
+        render json: { total: result.is_a?(Array) ? 1 : 0 }
+      end
     end
   end
 
-  private
+private
 
   def filter_params
     params[:filters].permit!.to_h
@@ -51,7 +53,7 @@ class Species::ExportsController < ApplicationController
     if separator_params.present?
       cookies.permanent['speciesplus.csv_separator'] = separator_params
     elsif separator_cookie.present?
-      return
+      nil
     else
       ip = request.remote_ip
       separator = SapiModule::GeoIP.instance.default_separator(ip)

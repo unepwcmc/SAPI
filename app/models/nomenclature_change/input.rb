@@ -3,16 +3,23 @@
 # Table name: nomenclature_change_inputs
 #
 #  id                     :integer          not null, primary key
-#  nomenclature_change_id :integer          not null
-#  taxon_concept_id       :integer          not null
-#  note_en                :text             default("")
-#  created_by_id          :integer          not null
-#  updated_by_id          :integer          not null
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
 #  internal_note          :text             default("")
+#  note_en                :text             default("")
 #  note_es                :text             default("")
 #  note_fr                :text             default("")
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  created_by_id          :integer          not null
+#  nomenclature_change_id :integer          not null
+#  taxon_concept_id       :integer          not null
+#  updated_by_id          :integer          not null
+#
+# Foreign Keys
+#
+#  nomenclature_change_inputs_created_by_id_fk           (created_by_id => users.id)
+#  nomenclature_change_inputs_nomenclature_change_id_fk  (nomenclature_change_id => nomenclature_changes.id)
+#  nomenclature_change_inputs_taxon_concept_id_fk        (taxon_concept_id => taxon_concepts.id)
+#  nomenclature_change_inputs_updated_by_id_fk           (updated_by_id => users.id)
 #
 
 # Represents an input of a nomenclature change.
@@ -65,15 +72,15 @@ class NomenclatureChange::Input < ApplicationRecord
     foreign_key: :nomenclature_change_input_id,
     dependent: :destroy,
     autosave: true
-  accepts_nested_attributes_for :parent_reassignments, :allow_destroy => true
-  accepts_nested_attributes_for :name_reassignments, :allow_destroy => true
-  accepts_nested_attributes_for :distribution_reassignments, :allow_destroy => true
-  accepts_nested_attributes_for :legislation_reassignments, :allow_destroy => true
+  accepts_nested_attributes_for :parent_reassignments, allow_destroy: true
+  accepts_nested_attributes_for :name_reassignments, allow_destroy: true
+  accepts_nested_attributes_for :distribution_reassignments, allow_destroy: true
+  accepts_nested_attributes_for :legislation_reassignments, allow_destroy: true
 
   # all objects of reassignable_type that are linked to input taxon
   def reassignables_by_class(reassignable_type)
     reassignable_type.constantize.where(
-      :taxon_concept_id => taxon_concept.id
+      taxon_concept_id: taxon_concept.id
     )
   end
 

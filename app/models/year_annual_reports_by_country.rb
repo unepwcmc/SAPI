@@ -2,10 +2,10 @@
 #
 # Table name: year_annual_reports_by_countries
 #
-#  no            :integer
 #  name_en       :string(255)
-#  year          :integer
+#  no            :bigint
 #  reporter_type :text
+#  year          :integer
 #  year_created  :float
 #
 

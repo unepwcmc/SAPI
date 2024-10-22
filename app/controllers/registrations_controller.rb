@@ -15,11 +15,11 @@ class RegistrationsController < Devise::RegistrationsController
       bypass_sign_in @user
       redirect_to after_update_path_for(@user)
     else
-      render "edit"
+      render 'edit'
     end
   end
 
-  private
+private
 
   def after_update_path_for(resource)
     if resource.is_manager_or_contributor?

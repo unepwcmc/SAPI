@@ -3,12 +3,23 @@
 # Table name: document_citation_geo_entities
 #
 #  id                   :integer          not null, primary key
-#  document_citation_id :integer
-#  geo_entity_id        :integer
-#  created_by_id        :integer
-#  updated_by_id        :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  created_by_id        :integer
+#  document_citation_id :integer
+#  geo_entity_id        :integer
+#  updated_by_id        :integer
+#
+# Indexes
+#
+#  index_citation_geo_entities_on_geo_entity_id_citation_id  (geo_entity_id,document_citation_id) UNIQUE
+#
+# Foreign Keys
+#
+#  document_citation_geo_entities_created_by_id_fk         (created_by_id => users.id)
+#  document_citation_geo_entities_document_citation_id_fk  (document_citation_id => document_citations.id)
+#  document_citation_geo_entities_geo_entity_id_fk         (geo_entity_id => geo_entities.id)
+#  document_citation_geo_entities_updated_by_id_fk         (updated_by_id => users.id)
 #
 
 class DocumentCitationGeoEntity < ApplicationRecord

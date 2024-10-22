@@ -1,7 +1,6 @@
 class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationController
-
-  before_action :load_term_codes, :only => [:index, :create]
-  before_action :load_trade_code_types, :only => [:index, :create]
+  before_action :load_term_codes, only: [ :index, :create ]
+  before_action :load_trade_code_types, only: [ :index, :create ]
 
   def index
     load_associations
@@ -13,14 +12,13 @@ class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationControl
   def destroy
     @term_trade_codes_pair = TermTradeCodesPair.find params[:id]
     destroy! do |format|
-      format.html {
-        redirect_to admin_term_trade_codes_pairs_path(:type =>
-                                                      @term_trade_codes_pair.trade_code_type)
-      }
+      format.html do
+        redirect_to admin_term_trade_codes_pairs_path(type: @term_trade_codes_pair.trade_code_type)
+      end
     end
   end
 
-  protected
+protected
 
   def custom_title
     if params[:type] == 'Unit'
@@ -31,28 +29,32 @@ class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationControl
   end
 
   def load_term_codes
-    @term_codes_obj = Term.select([:id, :code]).
-      map { |c| { "id" => c.id, "code" => c.code } }.to_json
+    @term_codes_obj = Term.select([ :id, :code ]).
+      map { |c| { 'id' => c.id, 'code' => c.code } }.to_json
   end
 
   def load_trade_code_types
     @trade_code_type = params[:type] ||
-      params[:term_trade_codes_pair] && params[:term_trade_codes_pair][:trade_code_type] ||
+      (params[:term_trade_codes_pair] && params[:term_trade_codes_pair][:trade_code_type]) ||
       'Unit'
-    @trade_code_codes = TradeCode.where(:type => @trade_code_type).
-      select([:id, :code]).order('code')
-    @trade_code_codes_obj = @trade_code_codes.map { |c| { "value" => c.id, "text" => c.code } }.to_json
+    @trade_code_codes = TradeCode.where(type: @trade_code_type).
+      select([ :id, :code ]).order('code')
+    @trade_code_codes_obj = @trade_code_codes.map { |c| { 'value' => c.id, 'text' => c.code } }.to_json
   end
 
   def collection
-    @term_trade_codes_pairs ||= end_of_association_chain.
-      where(:trade_code_type => @trade_code_type).
-      order('term_id').
-      page(params[:page]).
-      search(params[:query])
+    @term_trade_codes_pairs ||= end_of_association_chain.where(
+      trade_code_type: @trade_code_type
+    ).order(
+      'term_id'
+    ).page(
+      params[:page]
+    ).search(
+      params[:query]
+    )
   end
 
-  private
+private
 
   def term_trade_codes_pair_params
     params.require(:term_trade_codes_pair).permit(

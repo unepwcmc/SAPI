@@ -1,7 +1,7 @@
 class NomenclatureChange::StatusSwap::Processor < NomenclatureChange::Processor
   include NomenclatureChange::StatusChange::ProcessorHelpers
 
-  private
+private
 
   # Constructs an array of subprocessors which will be run in sequence
   # A subprocessor needs to respond to #run
@@ -14,10 +14,10 @@ class NomenclatureChange::StatusSwap::Processor < NomenclatureChange::Processor
 
     chain <<
       if @primary_output.new_name_status == 'A'
-        linked_names = @secondary_output ? [@secondary_output] : []
+        linked_names = @secondary_output ? [ @secondary_output ] : []
         NomenclatureChange::StatusUpgradeProcessor.new(@primary_output, linked_names)
       else
-        accepted_names = @secondary_output ? [@secondary_output] : []
+        accepted_names = @secondary_output ? [ @secondary_output ] : []
         NomenclatureChange::StatusDowngradeProcessor.new(@primary_output, accepted_names)
       end
     chain.compact
@@ -28,5 +28,4 @@ class NomenclatureChange::StatusSwap::Processor < NomenclatureChange::Processor
     @primary_output = @nc.primary_output
     @secondary_output = @nc.secondary_output
   end
-
 end

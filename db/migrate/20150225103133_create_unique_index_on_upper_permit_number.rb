@@ -3,7 +3,7 @@ class CreateUniqueIndexOnUpperPermitNumber < ActiveRecord::Migration[4.2]
     # before creating a unique index on UPPER(number) need to deal with duplicates
     # all detected duplicates will need to be removed, but first the shipments
     # need to be updated
-    execute <<-SQL
+    execute <<-SQL.squish
     WITH duplicated_permit_ids AS (
       SELECT min_id, dup_id FROM (
         SELECT min_id, UNNEST(duplicated_ids) AS dup_id FROM (

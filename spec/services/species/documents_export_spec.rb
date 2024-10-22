@@ -1,12 +1,12 @@
 require 'spec_helper'
 describe Species::DocumentsExport do
   describe :path do
-    subject {
+    subject do
       Species::DocumentsExport.new({})
-    }
-    specify { expect(subject.path).to eq("public/downloads/documents/") }
+    end
+    specify { expect(subject.path).to eq('public/downloads/documents/') }
   end
-  SPEC_DOCUMENTS_DOWNLOAD_PATH = "spec/public/downloads/documents"
+  SPEC_DOCUMENTS_DOWNLOAD_PATH = 'spec/public/downloads/documents'
   describe :export do
     before(:each) do
       FileUtils.mkpath(
@@ -18,32 +18,32 @@ describe Species::DocumentsExport do
     after(:each) do
       FileUtils.remove_dir("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}", true)
     end
-    context "when no results" do
-      before(:each) {
+    context 'when no results' do
+      before(:each) do
         FileUtils.rm_rf(Dir.glob("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}/*"))
-      }
-      subject {
+      end
+      subject do
         Species::DocumentsExport.new({})
-      }
-      specify "when file not cached it should not be generated" do
+      end
+      specify 'when file not cached it should not be generated' do
         expect(subject.export).to be_falsey
       end
     end
-    context "when results" do
-      #Commented as was causing issues and tests are pending anyway
-      #before(:each) {
+    context 'when results' do
+      # Commented as was causing issues and tests are pending anyway
+      # before(:each) {
       #  create(:document)
       #  DocumentSearch.refresh_citations_and_documents
-      #}
-      #subject {
+      # }
+      # subject {
       #  Species::DocumentsExport.new({})
-      #}
-      pending "when file not cached it should be generated" do
+      # }
+      pending 'when file not cached it should be generated' do
         subject.export
         expect(File.file?(subject.file_name)).to be_truthy
         expect(File.size(subject.file_name)).to be > 0
       end
-      pending "when file cached it should not be generated" do
+      pending 'when file cached it should not be generated' do
         FileUtils.touch(subject.file_name)
         expect(subject).not_to receive(:to_csv)
         subject.export

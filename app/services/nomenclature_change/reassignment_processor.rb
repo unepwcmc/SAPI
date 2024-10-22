@@ -1,5 +1,4 @@
 class NomenclatureChange::ReassignmentProcessor
-
   def initialize(input, output)
     @input = input
     @output = output
@@ -22,7 +21,8 @@ class NomenclatureChange::ReassignmentProcessor
 
   def process_reassignments(reassignments)
     reassignments.each do |reassignment|
-      Rails.logger.debug("Processing #{reassignment.reassignable_type} reassignment from #{@input.taxon_concept.full_name}")
+      Rails.logger.debug { "Processing #{reassignment.reassignable_type} reassignment from #{@input.taxon_concept.full_name}" }
+
       if reassignment.reassignable_id.blank?
         process_reassignment_of_anonymous_reassignable(reassignment)
       else
@@ -34,8 +34,12 @@ class NomenclatureChange::ReassignmentProcessor
   def process_reassignment_of_anonymous_reassignable(reassignment)
     if reassignment.reassignable_type == 'Trade::Shipment'
       new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
-      Trade::Shipment.where(taxon_concept_id: @input.taxon_concept_id)
-                     .update_all(taxon_concept_id: new_taxon_concept.id)
+
+      Trade::Shipment.where(
+        taxon_concept_id: @input.taxon_concept_id
+      ).update_all(
+        taxon_concept_id: new_taxon_concept.id
+      )
     else
       @input.reassignables_by_class(reassignment.reassignable_type).each do |reassignable|
         process_reassignment(reassignment, reassignable)
@@ -65,7 +69,7 @@ class NomenclatureChange::ReassignmentProcessor
     ]
   end
 
-  protected
+protected
 
   def conflicting_listing_change_reassignment?(reassignment, reassignable)
     # this amazing condition to ensure that in cases when there are listing changes
@@ -77,21 +81,24 @@ class NomenclatureChange::ReassignmentProcessor
     @output.taxon_concept && @output.new_taxon_concept &&
     reassignable.taxon_concept_id != @output.taxon_concept_id &&
     (
-      reassignable.is_cites? && @output.taxon_concept.cites_listed ||
-      reassignable.is_eu? && @output.taxon_concept.eu_listed
+      (reassignable.is_cites? && @output.taxon_concept.cites_listed) ||
+      (reassignable.is_eu? && @output.taxon_concept.eu_listed)
     )
   end
 
   def post_process(reassigned_object, object_before_reassignment)
-    Rails.logger.warn("Reassignment post processing BEGIN")
+    Rails.logger.warn('Reassignment post processing BEGIN')
+
     if reassigned_object.is_a?(TaxonConcept)
       resolver = NomenclatureChange::TaxonomicTreeNameResolver.new(reassigned_object, object_before_reassignment)
+
       resolver.process
     elsif reassigned_object.is_a?(TaxonRelationship)
       resolver = NomenclatureChange::TradeShipmentsResolver.new(reassigned_object, object_before_reassignment)
+
       resolver.process
     end
-    Rails.logger.warn("Reassignment post processing END")
-  end
 
+    Rails.logger.warn('Reassignment post processing END')
+  end
 end

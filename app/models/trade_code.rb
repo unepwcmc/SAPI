@@ -18,18 +18,24 @@ class TradeCode < ApplicationRecord
   # attr_accessible :code, :type, :name_en, :name_es, :name_fr
   translates :name
 
-  validates :code, :presence => true, :uniqueness => { :scope => :type }
+  has_many :taxon_concept_term_pairs,
+    class_name: 'Trade::TaxonConceptTermPair',
+    foreign_key: :term_id,
+    dependent: :restrict_with_error
+
+  has_many :term_trade_codes_pairs, dependent: :restrict_with_error
+  validates :code, presence: true, uniqueness: { scope: :type }
 
   def self.search(query)
-    if query.present?
-      where("UPPER(code) LIKE UPPER(:query)
-            OR UPPER(name_en) LIKE UPPER(:query)
-            OR UPPER(name_fr) LIKE UPPER(:query)
-            OR UPPER(name_es) LIKE UPPER(:query)",
-            :query => "%#{query}%")
-    else
-      all
-    end
-  end
+    return all if query.blank?
 
+    self.ilike_search(
+      query, [
+        :code,
+        :name_en,
+        :name_es,
+        :name_fr
+      ]
+    )
+  end
 end

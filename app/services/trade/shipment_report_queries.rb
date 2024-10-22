@@ -1,5 +1,4 @@
 module Trade::ShipmentReportQueries
-
   def raw_query(options)
     "SELECT
       shipments.id,
@@ -303,13 +302,15 @@ module Trade::ShipmentReportQueries
 
   def self.partial_db_query(limit, offset, updated_at: nil, created_at: nil)
     full_db_query(limit, offset) unless updated_at || created_at
-    where = if updated_at && !created_at
-              "shipments.updated_at > '#{updated_at}'"
-            elsif created_at && !updated_at
-              "shipments.created_at > '#{created_at}'"
-            else
-              "shipments.updated_at > '#{updated_at}' AND shipments.created_at < '#{created_at}'"
-            end
+    where =
+      if updated_at && !created_at
+        "shipments.updated_at > '#{updated_at}'"
+      elsif created_at && !updated_at
+        "shipments.created_at > '#{created_at}'"
+      else
+        "shipments.updated_at > '#{updated_at}' AND shipments.created_at < '#{created_at}'"
+      end
+
     "SELECT
       shipments.id AS id,
       year AS year,
@@ -751,5 +752,4 @@ module Trade::ShipmentReportQueries
       unit,
       country"
   end
-
 end

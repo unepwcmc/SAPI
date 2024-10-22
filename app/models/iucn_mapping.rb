@@ -19,22 +19,22 @@ class IucnMapping < ApplicationRecord
   # attr_accessible :iucn_author, :iucn_category, :iucn_taxon_id,
   #   :iucn_taxon_name, :taxon_concept_id, :details, :accepted_name_id
 
-  # serialize :details, ActiveRecord::Coders::Hstore
+  # serialize :details, coder: ActiveRecord::Coders::Hstore
   belongs_to :taxon_concept
-  belongs_to :accepted_name, :class_name => 'TaxonConcept', optional: true
+  belongs_to :accepted_name, class_name: 'TaxonConcept', optional: true
 
   scope :index_filter, lambda { |option|
     case option
-    when "ALL"
+    when 'ALL'
       all
-    when "MATCHING"
-      where('iucn_taxon_id IS NOT NULL')
-    when "NON_MATCHING"
-      where(:iucn_taxon_id => nil)
+    when 'MATCHING'
+      where.not(iucn_taxon_id: nil)
+    when 'NON_MATCHING'
+      where(iucn_taxon_id: nil)
     when 'SYNONYMS'
-      where('accepted_name_id IS NOT NULL')
+      where.not(accepted_name_id: nil)
     when 'ACCEPTED'
-      where(:accepted_name_id => nil)
+      where(accepted_name_id: nil)
     else
       where("details->'match' = ?", option)
     end

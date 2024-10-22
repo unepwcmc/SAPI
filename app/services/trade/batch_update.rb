@@ -1,9 +1,8 @@
 class Trade::BatchUpdate
-
   def initialize(search_params)
     search = Trade::Filter.new(search_params)
     @shipments = Trade::Shipment.joins(
-      <<-SQL
+      <<-SQL.squish
       JOIN (
         #{search.query.to_sql}
       ) q
@@ -14,6 +13,7 @@ class Trade::BatchUpdate
 
   def execute(update_params)
     return 0 if update_params.keys.empty?
+
     disconnected_permits_ids = @shipments.map do |s|
       s.permits_ids
     end.flatten.uniq
@@ -26,5 +26,4 @@ class Trade::BatchUpdate
     PermitCleanupWorker.perform_async(disconnected_permits_ids)
     affected_shipments
   end
-
 end

@@ -169,7 +169,7 @@
       <td>
         <%= f.select :event_id,
           options_from_collection_for_select(
-            @events, :id, :name, 
+            @events, :id, :name,
             @listing_change.event_id || @listing_change.hash_annotation && @listing_change.hash_annotation.event_id
           ),
           { :selected => @listing_change.event_id, :include_blank => @designation.is_cites? },
@@ -209,7 +209,7 @@
           :class => 'inline' %>
         <%= ff.check_box :display_in_index %>
         </p>
-        <p><%= ff.label :display_in_footnote, 
+        <p><%= ff.label :display_in_footnote,
           'Display FullNote in Checklist History of Listing footnote',
           :class => 'inline' %>
         <%= ff.check_box :display_in_footnote %>

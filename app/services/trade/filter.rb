@@ -18,7 +18,7 @@ class Trade::Filter
     @query.count
   end
 
-  private
+private
 
   def initialize_params(options)
     @options = Trade::SearchParams.sanitize(options)
@@ -44,11 +44,11 @@ class Trade::Filter
       taxon_concepts = MTaxonConcept.where(id: @taxon_concepts_ids)
       taxon_concepts_conditions =
         taxon_concepts.map do |tc|
-          [:id, tc.id]
+          [ :id, tc.id ]
         end + taxon_concepts.select do |tc|
           cascading_ranks.include?(tc.rank_name)
         end.map do |tc|
-          [:"#{tc.rank_name.downcase}_id", tc.id]
+          [ :"#{tc.rank_name.downcase}_id", tc.id ]
         end
       @query = @query.where(
         taxon_concepts_conditions.map { |c| "taxon_concept_#{c[0]} = #{c[1]}" }.join(' OR ')
@@ -60,11 +60,11 @@ class Trade::Filter
       reported_taxon_concepts = MTaxonConcept.where(id: @reported_taxon_concepts_ids)
       reported_taxon_concepts_conditions =
         reported_taxon_concepts.map do |tc|
-          [:id, tc.id]
+          [ :id, tc.id ]
         end + reported_taxon_concepts.select do |tc|
           cascading_ranks.include?(tc.rank_name)
         end.map do |tc|
-          [:"#{tc.rank_name.downcase}_id", tc.id]
+          [ :"#{tc.rank_name.downcase}_id", tc.id ]
         end
       @query = @query.where(
         reported_taxon_concepts_conditions.map { |c| "reported_taxon_concept_#{c[0]} = #{c[1]}" }.join(' OR ')
@@ -72,82 +72,82 @@ class Trade::Filter
     end
 
     unless @appendices.empty?
-      @query = @query.where(:appendix => @appendices)
+      @query = @query.where(appendix: @appendices)
     end
 
     unless @terms_ids.empty?
-      @query = @query.where(:term_id => @terms_ids)
+      @query = @query.where(term_id: @terms_ids)
     end
 
     unless @importers_ids.empty?
       importers_ids = sanitize_importer_ids(@importers_ids)
-      @query = @query.where(:importer_id => importers_ids)
+      @query = @query.where(importer_id: importers_ids)
     end
 
     unless @exporters_ids.empty?
       exporters_ids = sanitize_exporter_ids(@exporters_ids)
-      @query = @query.where(:exporter_id => exporters_ids)
+      @query = @query.where(exporter_id: exporters_ids)
     end
 
     if !@units_ids.empty?
-      local_field = "unit_id"
-      blank_query = @unit_blank ? "OR unit_id IS NULL" : ""
+      local_field = 'unit_id'
+      blank_query = @unit_blank ? 'OR unit_id IS NULL' : ''
       @query = @query.where("#{local_field} IN (?) #{blank_query}", @units_ids)
     elsif @unit_blank
-      @query = @query.where(:unit_id => nil)
+      @query = @query.where(unit_id: nil)
     end
 
     if !@purposes_ids.empty?
-      local_field = "purpose_id"
-      blank_query = @purpose_blank ? "OR purpose_id IS NULL" : ""
+      local_field = 'purpose_id'
+      blank_query = @purpose_blank ? 'OR purpose_id IS NULL' : ''
       @query = @query.where("#{local_field} IN (?) #{blank_query}", @purposes_ids)
     elsif @purpose_blank
-      @query = @query.where(:purpose_id => nil)
+      @query = @query.where(purpose_id: nil)
     end
 
     if !@sources_ids.empty?
-      if !@internal && (w = Source.find_by_code('W')) && @sources_ids.include?(w.id)
-        u = Source.find_by_code('U')
+      if !@internal && (w = Source.find_by(code: 'W')) && @sources_ids.include?(w.id)
+        u = Source.find_by(code: 'U')
         @sources_ids << u.id if u
         @source_blank = true
       end
-      local_field = "source_id"
-      blank_query = @source_blank ? "OR source_id IS NULL" : ""
+      local_field = 'source_id'
+      blank_query = @source_blank ? 'OR source_id IS NULL' : ''
       @query = @query.where("#{local_field} IN (?) #{blank_query}", @sources_ids)
     elsif @source_blank
-      @query = @query.where(:source_id => nil)
+      @query = @query.where(source_id: nil)
     end
 
     if !@countries_of_origin_ids.empty?
-      local_field = "country_of_origin_id"
-      blank_query = @country_of_origin_blank ? "OR country_of_origin_id IS NULL" : ""
+      local_field = 'country_of_origin_id'
+      blank_query = @country_of_origin_blank ? 'OR country_of_origin_id IS NULL' : ''
       @query = @query.where("#{local_field} IN (?) #{blank_query}", @countries_of_origin_ids)
     elsif @country_of_origin_blank
-      @query = @query.where(:country_of_origin_id => nil)
+      @query = @query.where(country_of_origin_id: nil)
     end
 
     # Other cases
     time_range_query
 
-    unless @importer_eu_country_ids.blank?
+    if @importer_eu_country_ids.present?
       query = eu_country_date_query(@time_range_start, @time_range_end, 'importer')
-      @query = @query.where.not(query) unless query.blank?
+      @query = @query.where.not(query) if query.present?
     end
 
-    unless @exporter_eu_country_ids.blank?
+    if @exporter_eu_country_ids.present?
       query = eu_country_date_query(@time_range_start, @time_range_end, 'exporter')
-      @query = @query.where.not(query) unless query.blank?
+      @query = @query.where.not(query) if query.present?
     end
 
     initialize_internal_query if @internal
   end
 
   def eu_id
-    GeoEntity.where(iso_code2: 'EU').pluck(:id).first
+    GeoEntity.where(iso_code2: 'EU').pick(:id)
   end
 
   def eu_country_ids
-    EuCountryDate.all.pluck(:geo_entity_id)
+    EuCountryDate.pluck(:geo_entity_id)
   end
 
   def sanitize_exporter_ids(ids)
@@ -174,11 +174,10 @@ class Trade::Filter
     eu_country_ids.each do |eu_country|
       # check for multiple entries for the same countries(UK might rejoin at some point)
       eu_entry_exit_dates(eu_country).each do |entry_date, exit_date|
-
         # exclude countries for which we will need to retreive all the shipments
         # within the user selected year range anyway
         exit_date_check = exit_date.nil? ? true : (exit_date > end_year) # workaround to avoid nil > integer
-        next if (entry_date < start_year && exit_date_check)
+        next if entry_date < start_year && exit_date_check
 
         exit_year_check = exit_date.nil? ? 'AND TRUE' : "OR year >= #{exit_date}"
         country_query_arr << "(trade_shipments.#{type}_id = #{eu_country} AND (year < #{entry_date} #{exit_year_check}))"
@@ -194,11 +193,11 @@ class Trade::Filter
   def time_range_query
     unless @time_range_start.blank? && @time_range_end.blank?
       if @time_range_start.blank?
-        @query = @query.where(["year <= ?", @time_range_end])
+        @query = @query.where(year: ..@time_range_end)
       elsif @time_range_end.blank?
-        @query = @query.where(["year >= ?", @time_range_start])
+        @query = @query.where(year: @time_range_start..)
       else
-        @query = @query.where(["year >= ? AND year <= ?", @time_range_start, @time_range_end])
+        @query = @query.where(year: @time_range_start..@time_range_end)
       end
     end
   end
@@ -209,11 +208,11 @@ class Trade::Filter
       @query = @query.preload(:reported_taxon_concept)
     end
 
-    if ['I', 'E'].include? @reporter_type
+    if [ 'I', 'E' ].include? @reporter_type
       if @reporter_type == 'E'
-        @query = @query.where(:reported_by_exporter => true)
+        @query = @query.where(reported_by_exporter: true)
       elsif @reporter_type == 'I'
-        @query = @query.where(:reported_by_exporter => false)
+        @query = @query.where(reported_by_exporter: false)
       end
     end
 
@@ -227,8 +226,8 @@ class Trade::Filter
         OR export_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
         OR origin_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
         #{@permit_blank ? "OR #{permit_blank_query}" : ''}",
-        :permits_ids => @permits_ids
-        )
+        permits_ids: @permits_ids
+      )
     elsif @permit_blank
       @query = @query.where(permit_blank_query)
     end
@@ -237,9 +236,8 @@ class Trade::Filter
       if @quantity == 0
         @query = @query.where('quantity = 0 OR quantity IS NULL')
       else
-        @query = @query.where(:quantity => @quantity)
+        @query = @query.where(quantity: @quantity)
       end
     end
   end
-
 end

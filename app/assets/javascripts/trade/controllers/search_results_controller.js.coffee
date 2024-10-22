@@ -137,7 +137,7 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
       @userCanEdit( =>
         @customTransitionToRoute('search.results', {queryParams: $.extend({}, @get('controllers.search.searchParams'), {mode: 'delete'})})
       )
-    
+
     deleteBatch: ->
       if confirm("This will delete #{@get('total')} shipments. Are you sure?")
         $.ajax(
@@ -167,8 +167,8 @@ Trade.SearchResultsController = Ember.ArrayController.extend Trade.QueryParams, 
 
     editBatchTransition: ->
       @customTransitionToRoute('search.results', {queryParams: $.extend({}, @get('controllers.search.searchParams'), {mode: 'edit'})})
-    
-    editBatch: -> 
+
+    editBatch: ->
       @get('batchUpdateParams').reset()
       @set('currentShipment', @get('batchUpdateParams'))
       $('.batch-form-modal').modal('show')

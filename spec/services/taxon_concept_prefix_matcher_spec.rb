@@ -3,153 +3,151 @@ require 'spec_helper'
 describe TaxonConceptPrefixMatcher do
   let(:taxonomy) { cites_eu }
 
-  let!(:taxon_concept1) {
+  let!(:taxon_concept1) do
     create_cites_eu_order(
       taxon_name: create(:taxon_name, scientific_name: 'Aaa')
     )
-  }
-  let!(:taxon_concept2) {
+  end
+  let!(:taxon_concept2) do
     create_cites_eu_family(
       taxon_name: create(:taxon_name, scientific_name: 'Aac'),
       parent: taxon_concept1
     )
-  }
-  let!(:taxon_concept3) {
+  end
+  let!(:taxon_concept3) do
     create_cites_eu_subfamily(
       taxon_name: create(:taxon_name, scientific_name: 'Aab'),
       parent: taxon_concept2
     )
-  }
-  let!(:taxon_concept4) {
+  end
+  let!(:taxon_concept4) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Abb'),
       parent: taxon_concept3
     )
-  }
-  let!(:taxon_concept4_sibling) {
+  end
+  let!(:taxon_concept4_sibling) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Aaab'),
       parent: taxon_concept3
     )
-  }
-  let!(:hybrid) {
+  end
+  let!(:hybrid) do
     tmp = create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Abc'),
       name_status: 'H'
     )
     create(
       :taxon_relationship,
-      :taxon_concept => taxon_concept4,
-      :other_taxon_concept => tmp,
-      :taxon_relationship_type => hybrid_relationship_type
+      taxon_concept: taxon_concept4,
+      other_taxon_concept: tmp,
+      taxon_relationship_type: hybrid_relationship_type
     )
     tmp
-  }
-  context "when name status not specified" do
-    let(:matcher_params) {
-      SearchParams.new(:taxonomy => { :id => taxonomy.id }, :scientific_name => 'Ab')
-    }
+  end
+  context 'when name status not specified' do
+    let(:matcher_params) do
+      SearchParams.new(taxonomy: { id: taxonomy.id }, scientific_name: 'Ab')
+    end
     let(:matcher) { TaxonConceptPrefixMatcher.new matcher_params }
     specify { expect(matcher.taxon_concepts).to include(taxon_concept4) }
     specify { expect(matcher.taxon_concepts).not_to include(hybrid) }
   end
 
-  context "when name status H" do
-    let(:matcher_params) {
-      SearchParams.new(:taxonomy => { :id => taxonomy.id }, :scientific_name => 'Ab', :name_status => 'H')
-    }
+  context 'when name status H' do
+    let(:matcher_params) do
+      SearchParams.new(taxonomy: { id: taxonomy.id }, scientific_name: 'Ab', name_status: 'H')
+    end
     let(:matcher) { TaxonConceptPrefixMatcher.new matcher_params }
     specify { expect(matcher.taxon_concepts).not_to include(taxon_concept4) }
     specify { expect(matcher.taxon_concepts).to include(hybrid) }
   end
 
-  context "when rank scope applied" do
-    let(:parent_matcher_params) {
+  context 'when rank scope applied' do
+    let(:parent_matcher_params) do
       SearchParams.new(
-        :taxonomy => { :id => taxonomy.id },
-        :rank => { :id => taxon_concept4.rank_id, :scope => :parent },
-        :scientific_name => 'A'
+        taxonomy: { id: taxonomy.id },
+        rank: { id: taxon_concept4.rank_id, scope: :parent },
+        scientific_name: 'A'
       )
-    }
-    let(:parent_matcher) {
+    end
+    let(:parent_matcher) do
       TaxonConceptPrefixMatcher.new parent_matcher_params
-    }
+    end
 
-    specify {
+    specify do
       expect(parent_matcher.taxon_concepts.map(&:full_name)).to eq(
-      ['Aab', 'Aac']
+        [ 'Aab', 'Aac' ]
       )
-    }
+    end
 
-    let(:ancestor_matcher_params) {
+    let(:ancestor_matcher_params) do
       SearchParams.new(
-        :taxonomy => { :id => taxonomy.id },
-        :rank => { :id => taxon_concept4.rank_id, :scope => :ancestors },
-        :scientific_name => 'AAA'
+        taxonomy: { id: taxonomy.id },
+        rank: { id: taxon_concept4.rank_id, scope: :ancestors },
+        scientific_name: 'AAA'
       )
-    }
-    let(:ancestor_matcher) {
+    end
+    let(:ancestor_matcher) do
       TaxonConceptPrefixMatcher.new ancestor_matcher_params
-    }
+    end
 
-    specify {
+    specify do
       expect(ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
-      ['Aaa']
+        [ 'Aaa' ]
       )
-    }
+    end
 
-    let(:self_and_ancestor_matcher_params) {
+    let(:self_and_ancestor_matcher_params) do
       SearchParams.new(
-        :taxonomy => { :id => taxonomy.id },
-        :rank => { :id => taxon_concept4.rank_id, :scope => :self_and_ancestors },
-        :scientific_name => 'AAA'
+        taxonomy: { id: taxonomy.id },
+        rank: { id: taxon_concept4.rank_id, scope: :self_and_ancestors },
+        scientific_name: 'AAA'
       )
-    }
-    let(:self_and_ancestor_matcher) {
+    end
+    let(:self_and_ancestor_matcher) do
       TaxonConceptPrefixMatcher.new self_and_ancestor_matcher_params
-    }
+    end
 
-    specify {
+    specify do
       expect(self_and_ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
-      ['Aaa', 'Aaab']
+        [ 'Aaa', 'Aaab' ]
       )
-    }
-
+    end
   end
-  context "when taxon concept scope applied" do
-    let(:ancestor_matcher_params) {
+  context 'when taxon concept scope applied' do
+    let(:ancestor_matcher_params) do
       SearchParams.new(
-        :taxonomy => { :id => taxonomy.id },
-        :taxon_concept => { :id => taxon_concept4.id, :scope => :ancestors },
-        :scientific_name => 'A'
+        taxonomy: { id: taxonomy.id },
+        taxon_concept: { id: taxon_concept4.id, scope: :ancestors },
+        scientific_name: 'A'
       )
-    }
-    let(:ancestor_matcher) {
+    end
+    let(:ancestor_matcher) do
       TaxonConceptPrefixMatcher.new ancestor_matcher_params
-    }
+    end
 
-    specify {
+    specify do
       expect(ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
-      ['Aaa', 'Aab', 'Aac']
+        [ 'Aaa', 'Aab', 'Aac' ]
       )
-    }
+    end
 
-    let(:descendant_matcher_params) {
+    let(:descendant_matcher_params) do
       SearchParams.new(
-        :taxonomy => { :id => taxonomy.id },
-        :taxon_concept => { :id => taxon_concept2.id, :scope => :descendants },
-        :scientific_name => 'A'
+        taxonomy: { id: taxonomy.id },
+        taxon_concept: { id: taxon_concept2.id, scope: :descendants },
+        scientific_name: 'A'
       )
-    }
-    let(:descendant_matcher) {
+    end
+    let(:descendant_matcher) do
       TaxonConceptPrefixMatcher.new descendant_matcher_params
-    }
+    end
 
-    specify {
+    specify do
       expect(descendant_matcher.taxon_concepts.map(&:full_name)).to eq(
-      ['Aaab', 'Aab', 'Abb']
+        [ 'Aaab', 'Aab', 'Abb' ]
       )
-    }
+    end
   end
-
 end

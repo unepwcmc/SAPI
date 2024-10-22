@@ -3,26 +3,35 @@
 # Table name: ahoy_visits
 #
 #  id               :uuid             not null, primary key
-#  visitor_id       :uuid
+#  browser          :string(255)
+#  city             :string(255)
+#  country          :string(255)
+#  device_type      :string(255)
 #  ip               :string(255)
-#  user_agent       :text
-#  referrer         :text
 #  landing_page     :text
-#  user_id          :integer
+#  organization     :text
+#  os               :string(255)
+#  referrer         :text
 #  referring_domain :string(255)
 #  search_keyword   :string(255)
-#  browser          :string(255)
-#  os               :string(255)
-#  device_type      :string(255)
-#  country          :string(255)
-#  city             :string(255)
-#  utm_source       :string(255)
-#  utm_medium       :string(255)
-#  utm_term         :string(255)
-#  utm_content      :string(255)
-#  utm_campaign     :string(255)
 #  started_at       :datetime
-#  organization     :text
+#  user_agent       :text
+#  utm_campaign     :string(255)
+#  utm_content      :string(255)
+#  utm_medium       :string(255)
+#  utm_source       :string(255)
+#  utm_term         :string(255)
+#  user_id          :integer
+#  visitor_id       :uuid
+#
+# Indexes
+#
+#  index_ahoy_visits_on_user_id                    (user_id)
+#  index_ahoy_visits_on_visitor_id_and_started_at  (visitor_id,started_at)
+#
+# Foreign Keys
+#
+#  ahoy_visits_user_id_fk  (user_id => users.id)
 #
 
 module Ahoy
@@ -31,7 +40,7 @@ module Ahoy
 
     has_many :ahoy_events, class_name: 'Ahoy::Event'
     belongs_to :user, optional: true
-    serialize :properties, JSON
+    serialize :properties, coder: JSON
 
     # https://github.com/ankane/ahoy/issues/549
     # This project start using ahoy since version 1.0.1

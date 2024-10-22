@@ -1,9 +1,9 @@
 class LatexToPdf
   def self.config
     @config ||= {
-      :command => 'pdflatex',
-      :arguments => ['-halt-on-error'],
-      :parse_twice => false
+      command: 'pdflatex',
+      arguments: [ '-halt-on-error' ],
+      parse_twice: false
     }
   end
 
@@ -18,22 +18,23 @@ class LatexToPdf
         begin
           Dir.chdir dir
           original_stdout, original_stderr = $stdout, $stderr
-          $stderr = $stdout = File.open("#{input}.log", "a")
-          args = config[:arguments] + %w[-shell-escape -interaction batchmode] + ["#{input}.tex"]
+          $stderr = $stdout = File.open("#{input}.log", 'a')
+          args = config[:arguments] + %w[-shell-escape -interaction batchmode] + [ "#{input}.tex" ]
           exec config[:command], *args
         rescue
-          File.open("#{input}.log", 'a') {|io|
+          File.open("#{input}.log", 'a') do |io|
             io.write("#{$!.message}:\n#{$!.backtrace.join("\n")}\n")
-          }
+          end
         ensure
           $stdout, $stderr = original_stdout, original_stderr
           Process.exit! 1
         end
-      end)
-    if File.exist?(pdf_file = [dir, "/#{input}.pdf"].join)
+      end
+    )
+    if File.exist?(pdf_file = [ dir, "/#{input}.pdf" ].join)
       pdf_file
     else
-      raise "pdflatex failed: See #{[dir, "/#{input}.log"].join} for details"
+      raise "pdflatex failed: See #{[ dir, "/#{input}.log" ].join} for details"
     end
   end
 
@@ -60,13 +61,13 @@ class LatexToPdf
           }
 
           def latex_esc(text) # :nodoc:
-            text.gsub(ESCAPE_RE) {|m|
+            text.gsub(ESCAPE_RE) do |m|
               if $1
                 "\\#{m}"
               else
                 "\\text#{ESC_MAP[m]}{}"
               end
-            }
+            end
           end
         end
       end
@@ -78,7 +79,7 @@ class LatexToPdf
 
   def self.html2latex(text)
     return '' if text.blank?
+
     HtmlToLatex.convert(text)
   end
-
 end

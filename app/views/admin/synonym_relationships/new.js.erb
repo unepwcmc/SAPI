@@ -1,3 +1,4 @@
 $('#admin-new-taxon_concept_synonym-form').html("<%= escape_javascript(render('form')) %>");
-$('#new-taxon_concept_synonym').modal('show');
-$('.taxon-concept').select2(window.defaultTaxonSelect2Options);
+$('#new-taxon_concept_synonym').on(
+  'shown.bs.modal', function () { window.adminEditor.initSelect2Inputs(); }
+).modal('show');

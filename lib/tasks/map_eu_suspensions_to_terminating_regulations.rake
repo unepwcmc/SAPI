@@ -1,5 +1,5 @@
-task :map_eu_suspensions_to_terminating_regulations => :environment do
-  update_query = <<-SQL
+task map_eu_suspensions_to_terminating_regulations: :environment do
+  update_query = <<-SQL.squish
   WITH suspension_regulations AS (
     SELECT events1.id, events1.name, events1.effective_at, events2.id AS end_event_id, events2.name, events2.effective_at
     FROM events events1

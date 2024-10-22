@@ -2,6 +2,6 @@ class RebuildJob < ApplicationJob
   queue_as :admin
 
   def perform(*args)
-    SapiModule::rebuild
+    SapiModule.rebuild
   end
 end

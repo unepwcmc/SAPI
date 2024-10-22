@@ -1,10 +1,14 @@
+
 class Trade::TradePlusFilters
   attr_reader :locale
 
-  ATTRIBUTES = %w[importer exporter origin term
-                  source purpose unit year appendix].freeze
+  # We are composing SQL with comments, so line breaks are important.
+  # rubocop:disable Rails/SquishedSQLHeredocs
 
-  LOCALISED_ATTRIBUTES = (ATTRIBUTES - %w[year appendix]).freeze
+  ATTRIBUTES = %w[
+    importer exporter origin term
+    source purpose unit year appendix
+  ].freeze
 
   def initialize(locale)
     @locale = locale
@@ -13,29 +17,40 @@ class Trade::TradePlusFilters
   def response_ordering(response)
     result = {}
     grouped = response.group_by { |r| r['attribute_name'] }
+
     grouped.each do |k, v|
       values = format_values(k, v)
       result[k] = values.sort_by { |i| ordering(k, i['name']) }
 
       # this is to push the "unreported" value at the bottom of the list
-      result[k] = values.partition { |value| value['id'] != 'unreported' }.reduce(:+) if ['sources', 'purposes'].include?(k)
+      result[k] = values.partition { |value| value['id'] != 'unreported' }.reduce(:+) if [ 'sources', 'purposes' ].include?(k)
     end
+
     result
   end
 
+  ##
+  # This query has been structured carefully to optimise it for performance,
+  # specifically to avoid seq scans on the very large trade_plus_complete_mview
+  # matview, and instead make the most possible use of index-only scans.
+  #
+  # A more conventional approach using GROUP BY instead of WHERE EXISTS
+  # previously took over 10m, which meant that we had to reject the first
+  # request for trade data, kick off a worker to calculate it, and put the
+  # result into a shared cache.
+  #
+  # Therefore when making changes here, please test thoroughly!
+  #
+  # There is a small downside to this approach, which is that if the contents of
+  # the original tables like geo_entities, trade_codes etc. change, then the
+  # results here might be slightly out of sync with trade_plus_complete_mview,
+  # until it is refreshed.
   def query
     <<-SQL
-      SELECT *
-      FROM (#{inner_query}) AS s
-    SQL
-  end
-
-  def country_query
-    <<-SQL
-      (WITH country_data AS (
-        SELECT id,name_#{locale},iso_code2
+      WITH country_data AS (
+        SELECT id, name_en, name_es, name_fr, iso_code2
         FROM geo_entities
-        WHERE geo_entity_type_id IN (1,4,7) --(1,4,7) this is to include both countries, territories and trade entities
+        WHERE geo_entity_type_id IN (1,4,7) -- (1,4,7) this is to include both countries, territories and trade entities
         AND id NOT IN (
           -- this is to exclude
           218, -- Taiwan (included into China)
@@ -52,93 +67,220 @@ class Trade::TradePlusFilters
         -- others may follow
         AND iso_code2 != ''
       )
-      SELECT 'countries' AS attribute_name, json_build_object('id', id, 'name', name_#{locale}, 'iso2', iso_code2)::jsonb AS data
-      FROM country_data
-      GROUP BY id,name_#{locale},iso_code2)
+      SELECT * FROM (
+        SELECT
+          'importers' AS attribute_name,
+          json_build_object(
+            'name', COALESCE(g.name_#{@locale}, g.name_en),
+            'id',   g.id,
+            'iso2', g.iso_code2
+          )::jsonb AS "data"
+        FROM geo_entities g
+        WHERE EXISTS (
+          SELECT importer_id
+          FROM trade_plus_complete_mview
+          WHERE importer_id = g.id
+        )
+      UNION
+        SELECT
+          'exporters' AS attribute_name,
+          json_build_object(
+            'name', COALESCE(g.name_#{@locale}, g.name_en),
+            'id',   g.id,
+            'iso2', g.iso_code2
+          )::jsonb AS "data"
+        FROM geo_entities g
+        WHERE EXISTS (
+          SELECT exporter_id
+          FROM trade_plus_complete_mview
+          WHERE exporter_id = g.id
+        )
+      UNION
+        SELECT
+          'origins' AS attribute_name,
+          json_build_object(
+            'name', COALESCE(g.name_#{@locale}, g.name_en),
+            'id',   g.id,
+            'iso2', g.iso_code2
+          )::jsonb AS "data"
+        FROM geo_entities g
+        WHERE EXISTS (
+          SELECT origin_id
+          FROM trade_plus_complete_mview
+          WHERE origin_id = g.id
+        )
+      UNION
+        SELECT
+          'terms' AS attribute_name,
+          json_build_object(
+            'name', COALESCE(t.name_#{@locale}, t.name_en),
+            'id',   t.id,
+            'code', t.code
+          )::jsonb AS "data"
+        FROM trade_codes t
+        WHERE EXISTS (
+          SELECT term_id
+          FROM trade_plus_complete_mview
+          WHERE term_id = t.id
+        )
+      UNION
+        SELECT
+          'sources' AS attribute_name,
+          json_build_object(
+            'name', COALESCE(t.name_#{@locale}, t.name_en),
+            'id',   t.id,
+            'code', t.code
+          )::jsonb AS "data"
+        FROM trade_codes t
+        WHERE EXISTS (
+          SELECT source_id
+          FROM trade_plus_complete_mview
+          WHERE source_id = t.id
+        )
+      UNION
+        SELECT
+          'purposes' AS attribute_name,
+          json_build_object(
+            'name', COALESCE(t.name_#{@locale}, t.name_en),
+            'id',   t.id,
+            'code', t.code
+          )::jsonb AS "data"
+        FROM trade_codes t
+        WHERE EXISTS (
+          SELECT purpose_id
+          FROM trade_plus_complete_mview
+          WHERE purpose_id = t.id
+        )
+      UNION
+        SELECT
+          'units' AS attribute_name,
+          json_build_object(
+            'name', COALESCE(t.name_#{@locale}, t.name_en),
+            'id',   t.id,
+            'code', t.code
+          )::jsonb AS "data"
+        FROM trade_codes t
+        WHERE EXISTS (
+          SELECT unit_id
+          FROM trade_plus_complete_mview
+          WHERE unit_id = t.id
+        )
+      UNION
+        SELECT
+          'years' AS attribute_name,
+          json_build_object(
+            'name', t.year,
+            'id',   t.year
+          )::jsonb AS "data"
+        FROM (
+          SELECT generate_series(min(year), max(year)) AS "year"
+          FROM trade_plus_complete_mview
+        ) t
+        WHERE EXISTS (
+          SELECT "year"
+          FROM trade_plus_complete_mview
+          WHERE "year" = t."year"
+        )
+      UNION
+        SELECT
+        'appendixes' AS attribute_name,
+        json_build_object(
+          'name', l.abbreviation,
+          'id',   l.abbreviation
+        )::jsonb AS "data"
+        FROM species_listings l
+        WHERE EXISTS (
+          SELECT appendix
+          FROM trade_plus_complete_mview
+          WHERE l.abbreviation = appendix
+        )
+      UNION
+        SELECT
+          'taxonomic_groups' AS attribute_name,
+          json_build_object(
+            'name', COALESCE(g.name_#{@locale}, g.name_en),
+            'id',   g.name_en
+          )::jsonb AS "data"
+          FROM trade_taxon_groups g
+          WHERE EXISTS (
+            SELECT group_code
+            FROM trade_plus_complete_mview
+            WHERE group_code = g.code
+          )
+      UNION
+        SELECT
+          'countries' AS attribute_name,
+          json_build_object(
+            'name', COALESCE(g.name_#{@locale}, g.name_en),
+            'id',   g.id,
+            'iso2', g.iso_code2
+          )::jsonb AS "data"
+        FROM country_data g
+      ) AS s
+      ORDER BY attribute_name
     SQL
   end
 
-  def inner_query
-    query = []
-    ATTRIBUTES.each do |attr|
-      if %w[year appendix].include? attr
-        query << sub_query([attr, attr], attr.pluralize)
-      elsif %w[importer exporter origin].include? attr
-        query << sub_query([attr, "#{attr}_id", "#{attr}_iso"], attr.pluralize)
-      elsif %w[term source purpose].include? attr
-        query << sub_query([attr, "#{attr}_id", "#{attr}_code"], attr.pluralize)
-      else
-        query << sub_query([attr, "#{attr}_id"], attr.pluralize)
-      end
-    end
-    query << sub_query(["group_name_#{locale}", "group_name_#{locale}"], 'taxonomic_groups')
-    query << country_query
 
-    <<-SQL
-      #{query.join(' UNION ') }
-    SQL
-  end
-
-  def sub_query(attributes, as)
-    attributes[0] += "_#{locale}" if LOCALISED_ATTRIBUTES.include? attributes[0]
-    json_values = "'name',#{attributes[0]},'id',#{attributes[1]}"
-    json_values << ",'iso2',#{attributes[2]}" if attributes.grep(/iso/).present?
-    json_values << ",'code',#{attributes[2]}" if attributes.grep(/code/).present?
-    group_by_attrs = attributes.uniq.join(',')
-
-    # Exclude possible null values for taxonomic groups
-    condition = "WHERE #{attributes[0]} IS NOT NULL" if attributes[0] == "group_name_#{locale}"
-    <<-SQL
-      SELECT '#{as}' AS attribute_name, json_build_object(#{json_values})::jsonb AS data
-      FROM #{table_name}
-      #{condition}
-      #{group_by(group_by_attrs)}
-    SQL
-  end
-
-  private
-
-  def table_name
-    'trade_plus_complete_mview'
-  end
-
-  def group_by(column_names)
-    "GROUP BY #{column_names}"
-  end
+private
 
   def format_values(key, values)
     case key
     when 'sources', 'purposes'
       values.map do |value|
-        value = JSON.parse(value['data'])
-        value['id'], value['name'], value['code'] = 'unreported', I18n.t('tradeplus.unreported'), 'UNR' if value['id'].nil?
-
-        value
-      end
+        JSON.parse(value['data'])
+      end.sort_by do |value|
+        value['code']
+      end.append(
+        {
+          'id' => 'unreported',
+          'code' => 'UNR',
+          'name' => I18n.t('tradeplus.unreported')
+        }
+      )
     when 'units'
       values.map do |value|
         value = JSON.parse(value['data'])
-        value['id'] = value['name'] = 'items' if value['id'].nil?
-        value['name'] = I18n.t("tradeplus.units.#{value['name']}", default: nil)
 
-        value['name'].nil? ? nil : value
-      end.compact
-    when 'origins'
-      values.map do |value|
-        value = JSON.parse(value['data'])
-        value['id'], value['iso2'], value['name'] = 'direct', I18n.t('tradeplus.direct'), I18n.t('tradeplus.direct') if value['id'].nil?
+        value['name'] = I18n.t(
+          "tradeplus.units.#{value['name']}",
+          default: nil
+        )
 
         value
-      end
+      end.select do |value|
+        # Only show units in the translations file. This is because there are
+        # some rare shipments with odd units like sides which we don't care
+        # about filtering for.
+        value['name']
+      end.append(
+        {
+          'id' => 'items',
+          'code' => 'NAR',
+          'name' => I18n.t('tradeplus.units.items')
+        }
+      )
+    when 'origins'
+      values.map do |value|
+        JSON.parse(value['data'])
+      end.append(
+        {
+          'id' => 'direct',
+          'iso2' => I18n.t('tradeplus.direct'),
+          'name' => I18n.t('tradeplus.direct')
+        }
+      )
     when 'terms'
       values.map do |value|
         value = JSON.parse(value['data'])
-        value['id'], value['name'], value['code'] = value['id'], value['name'].capitalize, value['code']
+        value['name']&.capitalize!
 
         value
       end
     else
-      values.map { |value| JSON.parse(value['data']) }
+      values.map do |value|
+        JSON.parse(value['data'])
+      end
     end
   end
 

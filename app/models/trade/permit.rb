@@ -7,6 +7,11 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+# Indexes
+#
+#  trade_permits_number_idx        (upper((number)::text) varchar_pattern_ops) UNIQUE
+#  trade_permits_number_trigm_idx  (upper((number)::text) gin_trgm_ops) USING gin
+#
 
 class Trade::Permit < ApplicationRecord
   # app/models/trade/shipment.rb is the only place create this record.

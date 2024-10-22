@@ -1,5 +1,5 @@
 # Dockerfile
-FROM ruby:3.0.6
+FROM ruby:3.2.5
 
 ENV DEBIAN_FRONTEND=noninteractive
 # Rails and SAPI has some additional dependencies, e.g. rake requires a JS
@@ -20,7 +20,7 @@ WORKDIR /SAPI
 # https://stackoverflow.com/questions/43612927/how-to-correctly-install-rvm-in-docker
 RUN gpg --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 RUN curl -sSL https://get.rvm.io | bash -s
-RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 3.0.6"
+RUN /bin/bash -l -c ". /etc/profile.d/rvm.sh && rvm install 3.2.5"
 # RVM installed in multi-user mode. However cap assume rvm is installed in single user mode.
 # Create a soft link to fake it.
 RUN mkdir -p ~/.rvm/bin && ln -s /usr/local/rvm/bin/rvm ~/.rvm/bin/rvm
@@ -30,8 +30,8 @@ COPY Gemfile.lock /SAPI/Gemfile.lock
 
 ENV BUNDLE_SILENCE_ROOT_WARNING=1
 RUN /bin/bash -c "source /etc/profile.d/rvm.sh \
-    && gem install bundler:2.2.33 \
-    && bundle"
+  && gem install bundler:2.5.17 \
+  && bundle"
 
 ENTRYPOINT ["/bin/bash", "-l"]
 

@@ -18,26 +18,17 @@ class Taxonomy < ApplicationRecord
   has_many :designations
   has_many :taxon_concepts
 
-  validates :name, :presence => true, :uniqueness => true
+  validates :name, presence: true, uniqueness: true
   validates :name,
-    :inclusion => { :in => self.dict, :message => 'cannot change protected name' },
-    :if => lambda { |t| t.name_changed? && t.class.dict.include?(t.name_was) },
-    :on => :update
-
-  def self.search(query)
-    if query.present?
-      where("UPPER(name) LIKE UPPER(:query)",
-            :query => "%#{query}%")
-    else
-      all
-    end
-  end
+    inclusion: { in: self.dict, message: 'cannot change protected name' },
+    if: lambda { |t| t.name_changed? && t.class.dict.include?(t.name_was) },
+    on: :update
 
   def can_be_deleted?
-    super() && !has_protected_name?
+    super && !has_protected_name?
   end
 
-  private
+private
 
   def dependent_objects_map
     {
@@ -49,5 +40,4 @@ class Taxonomy < ApplicationRecord
   def has_protected_name?
     self.class.dict.include? self.name
   end
-
 end

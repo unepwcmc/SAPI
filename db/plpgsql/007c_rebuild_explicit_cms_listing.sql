@@ -23,12 +23,12 @@ CREATE OR REPLACE FUNCTION rebuild_explicit_cms_listing_for_node(node_id integer
       ) AS listing
       FROM (
         SELECT taxon_concept_id,
-        CASE 
-          WHEN BOOL_OR(species_listing_name = 'I') 
-          THEN hstore('cms_I', 'I') ELSE hstore('cms_I', NULL)
-        END || 
         CASE
-          WHEN BOOL_OR(species_listing_name = 'II') 
+          WHEN BOOL_OR(species_listing_name = 'I')
+          THEN hstore('cms_I', 'I') ELSE hstore('cms_I', NULL)
+        END ||
+        CASE
+          WHEN BOOL_OR(species_listing_name = 'II')
           THEN hstore('cms_II', 'II') ELSE hstore('cms_II', NULL)
         END AS listing
         FROM cms_listing_changes_mview

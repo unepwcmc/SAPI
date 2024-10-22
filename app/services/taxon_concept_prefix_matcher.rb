@@ -1,12 +1,11 @@
 class TaxonConceptPrefixMatcher < TaxonConceptMatcher
-
   def initialize(search_params)
     super
     @rank_options = search_params.rank
     @taxon_concept_options = search_params.taxon_concept
   end
 
-  protected
+protected
 
   def build_rel
     super
@@ -16,8 +15,8 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
 
   def initialize_rel
     super.
-    select(
-      <<-SQL
+      select(
+        <<-SQL.squish
         data,
         taxonomy_id,
         #{Taxonomy.table_name}.name AS taxonomy_name,
@@ -25,8 +24,8 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
         full_name,
         name_status
       SQL
-    ).
-    joins(:taxonomy).order(:full_name)
+      ).
+      joins(:taxonomy).order(:full_name)
   end
 
   def apply_rank_options_to_rel
@@ -54,7 +53,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
       taxon_concept = TaxonConcept.find(@taxon_concept_id) if @taxon_concept_scope
       if @taxon_concept_scope.to_sym == :ancestors
         @taxon_concepts = @taxon_concepts.joins(
-          <<-SQL
+          <<-SQL.squish
           INNER JOIN (
             WITH RECURSIVE node AS (
               SELECT h.id, h.parent_id
@@ -76,7 +75,7 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
 
       elsif @taxon_concept_scope.to_sym == :descendants
         @taxon_concepts = @taxon_concepts.joins(
-          <<-SQL
+          <<-SQL.squish
           INNER JOIN (
             WITH RECURSIVE node AS (
               SELECT h.id
@@ -98,5 +97,4 @@ class TaxonConceptPrefixMatcher < TaxonConceptMatcher
       end
     end
   end
-
 end

@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 class DocumentFileUploader < CarrierWave::Uploader::Base
-
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
@@ -13,11 +12,11 @@ class DocumentFileUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    "#{Rails.root}/private/elibrary/documents/#{model.id}"
+    "#{Rails.root.join("private/elibrary/documents/#{model.id}")}"
   end
 
   def cache_dir
-    "#{Rails.root}/tmp/private/elibrary/documents/cache/#{model.id}"
+    "#{Rails.root.join("tmp/private/elibrary/documents/cache/#{model.id}")}"
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
@@ -43,7 +42,7 @@ class DocumentFileUploader < CarrierWave::Uploader::Base
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_allowlist
-    %w(jpg jpeg gif png bmp tif tiff ppt pptx xls xlsx rtf txt doc docx pdf csv tsv odt ods odp)
+    %w[jpg jpeg gif png bmp tif tiff ppt pptx xls xlsx rtf txt doc docx pdf csv tsv odt ods odp]
   end
 
   # Override the filename of the uploaded files:
@@ -51,5 +50,4 @@ class DocumentFileUploader < CarrierWave::Uploader::Base
   # def filename
   #   "something.jpg" if original_filename
   # end
-
 end

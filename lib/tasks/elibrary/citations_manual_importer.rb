@@ -15,14 +15,14 @@ class Elibrary::CitationsManualImporter
 
   def columns_with_type
     [
-      ['splus_taxon_concept_id', 'TEXT'],
-      ['Manual_ID', 'TEXT']
+      [ 'splus_taxon_concept_id', 'TEXT' ],
+      [ 'Manual_ID', 'TEXT' ]
     ]
   end
 
   def run_preparatory_queries
     ApplicationRecord.connection.execute(
-      <<-SQL
+      <<-SQL.squish
       BEGIN;
         CREATE TABLE temp_table (LIKE #{table_name});
 
@@ -39,11 +39,10 @@ class Elibrary::CitationsManualImporter
   end
 
   def run_queries
-
     ApplicationRecord.connection.execute('DROP TABLE IF EXISTS elibrary_citations_resolved_tmp')
     ApplicationRecord.connection.execute('CREATE TABLE elibrary_citations_resolved_tmp (document_id INT, taxon_concept_id INT)')
     ApplicationRecord.connection.execute(
-      <<-SQL
+      <<-SQL.squish
       INSERT INTO elibrary_citations_resolved_tmp (document_id, taxon_concept_id)
         SELECT
           t.doc_id,
@@ -57,7 +56,7 @@ class Elibrary::CitationsManualImporter
     ApplicationRecord.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (document_id)')
     ApplicationRecord.connection.execute('CREATE INDEX ON elibrary_citations_resolved_tmp (taxon_concept_id)')
 
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH inserted_citations AS (
         INSERT INTO document_citations (
           document_id,
@@ -91,7 +90,7 @@ class Elibrary::CitationsManualImporter
   end
 
   def rows_to_insert_sql
-    sql = <<-SQL
+    sql = <<-SQL.squish
       WITH rows_to_insert AS (
         SELECT DISTINCT
           d.id AS doc_id,
@@ -120,10 +119,9 @@ class Elibrary::CitationsManualImporter
   end
 
   def print_breakdown
-    puts "#{Time.now} There are #{DocumentCitation.count} citations in total"
+    Rails.logger.debug { "#{Time.now} There are #{DocumentCitation.count} citations in total" }
     DocumentCitation.includes(:document).group('documents.type').order('documents.type').count.each do |type, count|
       puts "\t #{type} #{count}"
     end
   end
-
 end

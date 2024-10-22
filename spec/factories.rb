@@ -1,5 +1,4 @@
 FactoryBot.define do
-
   factory :user do
     sequence(:name) { |n| "user#{n}" }
     email { "#{name}@test.pl" }
@@ -35,20 +34,20 @@ FactoryBot.define do
     published_at { '2011-02-01' }
     designation
 
-    factory :eu_regulation, :class => EuRegulation do
+    factory :eu_regulation, class: EuRegulation do
       end_date { '2012-01-01' }
     end
-    factory :eu_suspension_regulation, :class => EuSuspensionRegulation
-    factory :eu_implementing_regulation, :class => EuImplementingRegulation
-    factory :eu_council_regulation, :class => EuCouncilRegulation
-    factory :cites_cop, :class => CitesCop
-    factory :cites_ac, :class => CitesAc
-    factory :cites_pc, :class => CitesPc
-    factory :cites_tc, :class => CitesTc
-    factory :cites_extraordinary_meeting, :class => CitesExtraordinaryMeeting
-    factory :ec_srg, :class => EcSrg
-    factory :cites_suspension_notification, :class => CitesSuspensionNotification,
-      :aliases => [:start_notification] do
+    factory :eu_suspension_regulation, class: EuSuspensionRegulation
+    factory :eu_implementing_regulation, class: EuImplementingRegulation
+    factory :eu_council_regulation, class: EuCouncilRegulation
+    factory :cites_cop, class: CitesCop
+    factory :cites_ac, class: CitesAc
+    factory :cites_pc, class: CitesPc
+    factory :cites_tc, class: CitesTc
+    factory :cites_extraordinary_meeting, class: CitesExtraordinaryMeeting
+    factory :ec_srg, class: EcSrg
+    factory :cites_suspension_notification, class: CitesSuspensionNotification,
+      aliases: [ :start_notification ] do
       end_date { '2012-01-01' }
     end
   end
@@ -70,8 +69,8 @@ FactoryBot.define do
   end
 
   factory :cites_suspension_confirmation do
-    factory :confirmation_notification, :class => 'CitesSuspensionNotification'
-    factory :confirmed_suspension, :class => 'CitesSuspension'
+    factory :confirmation_notification, class: 'CitesSuspensionNotification'
+    factory :confirmed_suspension, class: 'CitesSuspension'
   end
 
   factory :quota do
@@ -109,15 +108,15 @@ FactoryBot.define do
 
   factory :eu_decision_type do
     sequence(:name) { |n| "Opinion#{n}" }
-    decision_type { "NO_OPINION" }
+    decision_type { 'NO_OPINION' }
   end
 
-  factory :ahoy_event, :class => Ahoy::Event do
+  factory :ahoy_event, class: Ahoy::Event do
     id { SecureRandom.uuid }
     user
   end
 
-  factory :ahoy_visit, :class => Ahoy::Visit do
+  factory :ahoy_visit, class: Ahoy::Visit do
     id { SecureRandom.uuid }
     user
   end

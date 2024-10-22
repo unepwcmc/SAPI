@@ -3,38 +3,38 @@
 # Table name: trade_validation_rules
 #
 #  id                :integer          not null, primary key
-#  valid_values_view :string(255)
+#  column_names      :string(255)      is an Array
+#  format_re         :string(255)
+#  is_primary        :boolean          default(TRUE), not null
+#  is_strict         :boolean          default(FALSE), not null
+#  run_order         :integer          not null
+#  scope             :hstore
 #  type              :string(255)      not null
+#  valid_values_view :string(255)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  format_re         :string(255)
-#  run_order         :integer          not null
-#  column_names      :string(255)
-#  is_primary        :boolean          default(TRUE), not null
-#  scope             :hstore
-#  is_strict         :boolean          default(FALSE), not null
 #
 
 class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
-
   INVALID_KINGDOM_SOURCE = {
-    'ANIMALIA' => ['A'],
-    'PLANTAE' => ['C', 'R']
+    'ANIMALIA' => [ 'A' ],
+    'PLANTAE' => [ 'C', 'R' ]
   }
 
   def validation_errors_for_shipment(shipment)
     return nil unless shipment.source && (
-      shipment.taxon_concept &&
+      (shipment.taxon_concept &&
       shipment.taxon_concept.data['kingdom_name'] == 'Animalia' &&
-      INVALID_KINGDOM_SOURCE['ANIMALIA'].include?(shipment.source.code) ||
-      shipment.taxon_concept &&
+      INVALID_KINGDOM_SOURCE['ANIMALIA'].include?(shipment.source.code)) ||
+      (shipment.taxon_concept &&
       shipment.taxon_concept.data['kingdom_name'] == 'Plantae' &&
-      INVALID_KINGDOM_SOURCE['PLANTAE'].include?(shipment.source.code)
+      INVALID_KINGDOM_SOURCE['PLANTAE'].include?(shipment.source.code))
     )
+
     error_message
   end
 
-  private
+private
 
   def matching_records_arel(table_name)
     s = Arel::Table.new("#{table_name}_view")
@@ -42,8 +42,8 @@ class Trade::TaxonConceptSourceValidationRule < Trade::InclusionValidationRule
     t = Arel::Table.new('taxonomies')
 
     upper_kingdom_name = Arel::Nodes::NamedFunction.new(
-      "UPPER",
-      [Arel::Nodes::SqlLiteral.new("taxon_concepts.data->'kingdom_name'")]
+      'UPPER',
+      [ Arel::Nodes::SqlLiteral.new("taxon_concepts.data->'kingdom_name'") ]
     )
 
     arel = s.project(

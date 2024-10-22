@@ -1,7 +1,7 @@
 default: &defaults
   # Your push api key, it is possible to set this dynamically using ERB:
   # push_api_key: "<%= ENV['APPSIGNAL_PUSH_API_KEY'] %>"
-  push_api_key: "<%= ENV['APPSIGNAL_PUSH_API_KEY'] %>"
+  push_api_key: "<%= Object.const_defined?('Rails') && Rails.application.credentials.dig(:appsignal_push_api_key) %>"
   ignore_exceptions:
     - ActiveRecord::RecordNotFound
 
@@ -9,7 +9,7 @@ default: &defaults
   name: "Species+"
   active: false
 
-  # The cuttoff point in ms above which a request is considered slow, default is 200
+  # The cutoff point in ms above which a request is considered slow, default is 200
   # slow_request_threshold: 200
 
   # Actions that should not be monitored by AppSignal

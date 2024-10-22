@@ -3,13 +3,22 @@
 # Table name: proposal_details
 #
 #  id                  :integer          not null, primary key
-#  document_id         :integer
 #  proposal_nature     :text
-#  proposal_outcome_id :integer
+#  proposal_number     :text
 #  representation      :text
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  proposal_number     :text
+#  document_id         :integer
+#  proposal_outcome_id :integer
+#
+# Indexes
+#
+#  index_proposal_details_on_proposal_outcome_id  (proposal_outcome_id)
+#
+# Foreign Keys
+#
+#  proposal_details_document_id_fk          (document_id => documents.id) ON DELETE => cascade
+#  proposal_details_proposal_outcome_id_fk  (proposal_outcome_id => document_tags.id)
 #
 
 class ProposalDetails < ApplicationRecord

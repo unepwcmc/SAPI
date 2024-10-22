@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-RSpec.describe RefreshSitemapJob, type: :job do
+RSpec.describe RefreshSitemapJob do
   pending "add some examples to (or delete) #{__FILE__}"
 end

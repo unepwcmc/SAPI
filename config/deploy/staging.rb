@@ -1,17 +1,19 @@
 set :stage, :staging
 set :branch, ENV['CAP_BRANCH'] || 'develop'
 
-server "sapi-staging.linode.unep-wcmc.org", user: "wcmc", roles: %w{app web db}
+server 'sapi-staging.linode.unep-wcmc.org', user: 'wcmc', roles: %w[app web db]
 
-set :domain, "sapi-staging.linode.unep-wcmc.org"
+set :domain, 'sapi-staging.linode.unep-wcmc.org'
 
-set :application, "sapi"
+set :application, 'sapi'
 
 set :server_name, "#{fetch(:application)}.#{fetch(:domain)}"
 
-set :sudo_user, "wcmc"
+set :sudo_user, 'wcmc'
 
-set :app_port, "80"
+set :app_port, '80'
+
+append :linked_files, "config/credentials/#{fetch(:stage)}.key"
 
 # server-based syntax
 # ======================

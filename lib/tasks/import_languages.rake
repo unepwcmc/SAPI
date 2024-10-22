@@ -1,7 +1,6 @@
 namespace :import do
-
   desc 'Import languages from csv file (usage: rake import:languages[path/to/file,path/to/another])'
-  task :languages, 10.times.map { |i| "file_#{i}".to_sym } => [:environment] do |t, args|
+  task :languages, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'languages_import'
     puts "There are #{Language.count} languages in the database."
     files = files_from_args(t, args)
@@ -10,7 +9,7 @@ namespace :import do
       create_table_from_csv_headers(file, TMP_TABLE)
       copy_data(file, TMP_TABLE)
 
-      sql = <<-SQL
+      sql = <<-SQL.squish
         INSERT INTO "languages" (name_en, iso_code3, iso_code1, created_at, updated_at)
         SELECT name_en, UPPER(iso_code3), UPPER(iso_code1), current_date, current_date
           FROM #{TMP_TABLE}
@@ -24,5 +23,4 @@ namespace :import do
     end
     puts "There are now #{Language.count} languages in the database"
   end
-
 end

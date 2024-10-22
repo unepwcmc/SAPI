@@ -22,7 +22,7 @@ class CreateTradeGroupAndRuleTables < ActiveRecord::Migration[6.1]
         end
 
         add_index :trade_conversion_rules,
-          [:rule_type, :rule_priority], unique: true
+          [ :rule_type, :rule_priority ], unique: true
 
         safety_assured do
           execute 'DROP VIEW IF EXISTS taxon_trade_taxon_groups_view'

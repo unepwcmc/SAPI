@@ -2,10 +2,10 @@ class CreateNomenclatureChanges < ActiveRecord::Migration[4.2]
   def change
     create_table :nomenclature_changes do |t|
       t.integer :event_id
-      t.string :type, :null => false
-      t.string :status, :null => false
-      t.integer :created_by_id, :null => false
-      t.integer :updated_by_id, :null => false
+      t.string :type, null: false
+      t.string :status, null: false
+      t.integer :created_by_id, null: false
+      t.integer :updated_by_id, null: false
 
       t.timestamps
     end

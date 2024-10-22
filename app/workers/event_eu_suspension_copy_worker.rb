@@ -1,9 +1,9 @@
 class EventEuSuspensionCopyWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :admin, :retry => false, :backtrace => 50
+  sidekiq_options queue: :admin, retry: false, backtrace: 50
 
   def perform(from_event_id, to_event_id)
-    ApplicationRecord.connection.execute <<-SQL
+    ApplicationRecord.connection.execute <<-SQL.squish
       SELECT * FROM copy_eu_suspensions_across_events(
         #{from_event_id.to_i},
         #{to_event_id.to_i}

@@ -1,4 +1,34 @@
-### 1.15.0
+### 1.16.0
+
+**Rails 7 Upgrade**
+The primary goal of this release is to upgrade the Rails version without causing
+any breaking changes to functionality.
+
+* Upgrades Rails 6.1.7.7 to 7.1.3.4
+* Upgrades Ruby 3.0.6 to 3.2.5
+* Some dependency updates/changes allowed or required by the above:
+  * Uses `terser` rather than `uglifier` for compressing JS assets
+  * Upgraded `dalli` from 2.7.10 to 3.2.8
+  * Upgraded `papertrail` from 12.3.0 to 15.1.0
+  * Upgraded `wicked` from 1.3.4 to 2.0.0
+* Some dev dependency changes, in particular:
+  * `rubocop` rules are now actually applied, and these have been tweaked.
+  * `annotate`, which wasn't working, replaced with `annotaterb`
+* Many fixes for issues found in incidental testing, in particular:
+  * Fixes to error handling in trade database shipment editing form
+  * The query for trade filters is now much faster
+  * Fix a bug within the trade database admin area, where editing shipments which affected the permit search
+  * Added some rules to trim leading/trailing spaces and validate certain text fields
+  * Fixes to trade database
+  * Fixes to how Species+ admin interface handles associated records and deletion
+  * Fix for Species+ admin interface where under certain circumstances listing changes could be inadvertently duplicated
+  * Species+ admin interface now allows searching in the users table
+  * Species+ admin interface now allows searching in the users table
+  * Requests for a locale which is unavailable should no longer cause internal error (500) responses.
+  * Fix for the CITES checklist, where certain timelines were being incorrectly rendered with 'gaps' due to the ordering in which listing changes were being returned by the API.
+  * Species+ downloads - if these fail for any reason after a download has been triggered, the spinner should stop and an error message should be shown.
+
+### Forthcoming
 
 * Fix some issues with conversion of trade code term and unit rules
 * CITES suspension history now shows end notification where available

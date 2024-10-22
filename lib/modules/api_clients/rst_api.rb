@@ -2,7 +2,7 @@ module ApiClients::RstApi
   class << self
     include HTTParty
 
-    BASE_URI = Rails.application.secrets[:rst_api_base_url]
+    BASE_URI = Rails.application.credentials.dig(:rst_api_base_url)
     PUBLIC_CASES_ENDPOINT = 'case/publicData/getCases'
     COUNTRY_ENDPOINT = 'countries/countryId'
     RETRIES = 3

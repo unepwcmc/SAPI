@@ -41,13 +41,13 @@ SELECT
   ARRAY_TO_STRING(
     ARRAY_AGG(
       '**' || listing_changes_mview.species_listing_name || '** '
-      || CASE 
-      WHEN LENGTH(listing_changes_mview.auto_note_en) > 0 THEN '[' || listing_changes_mview.auto_note_en || '] ' 
-      ELSE '' 
-      END 
-      || CASE 
-      WHEN LENGTH(listing_changes_mview.full_note_en) > 0 THEN strip_tags(listing_changes_mview.full_note_en) 
-      ELSE strip_tags(listing_changes_mview.short_note_en) 
+      || CASE
+      WHEN LENGTH(listing_changes_mview.auto_note_en) > 0 THEN '[' || listing_changes_mview.auto_note_en || '] '
+      ELSE ''
+      END
+      || CASE
+      WHEN LENGTH(listing_changes_mview.full_note_en) > 0 THEN strip_tags(listing_changes_mview.full_note_en)
+      ELSE strip_tags(listing_changes_mview.short_note_en)
       END
       || CASE
           WHEN LENGTH(listing_changes_mview.nomenclature_note_en) > 0 THEN strip_tags(listing_changes_mview.nomenclature_note_en)
@@ -75,13 +75,13 @@ JOIN cms_listing_changes_mview listing_changes_mview
 JOIN taxon_concepts_mview original_taxon_concepts_mview
    ON listing_changes_mview.original_taxon_concept_id = original_taxon_concepts_mview.id
 LEFT JOIN taxon_concepts_mview inclusion_taxon_concepts_mview
-   ON listing_changes_mview.inclusion_taxon_concept_id = inclusion_taxon_concepts_mview.id 
+   ON listing_changes_mview.inclusion_taxon_concept_id = inclusion_taxon_concepts_mview.id
 WHERE "taxon_concepts_mview"."name_status" = 'A'
-   AND "taxon_concepts_mview"."taxonomy_is_cites_eu" = FALSE 
-   AND "taxon_concepts_mview"."cms_show" = 't' 
-   AND "taxon_concepts_mview"."rank_name" IN ('SPECIES', 'SUBSPECIES', 'VARIETY') 
-   AND (taxon_concepts_mview.cms_listing_original != 'NC') 
-GROUP BY 
+   AND "taxon_concepts_mview"."taxonomy_is_cites_eu" = FALSE
+   AND "taxon_concepts_mview"."cms_show" = 't'
+   AND "taxon_concepts_mview"."rank_name" IN ('SPECIES', 'SUBSPECIES', 'VARIETY')
+   AND (taxon_concepts_mview.cms_listing_original != 'NC')
+GROUP BY
   taxon_concepts_mview.id,
   taxon_concepts_mview.kingdom_id,
   taxon_concepts_mview.phylum_id,

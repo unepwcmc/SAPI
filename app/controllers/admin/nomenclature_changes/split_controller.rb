@@ -1,9 +1,9 @@
 class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::BuildController
-
-  steps *NomenclatureChange::Split::STEPS
+  steps(*NomenclatureChange::Split::STEPS)
 
   def show
     builder = NomenclatureChange::Split::Constructor.new(@nomenclature_change)
+
     case step
     when :inputs
       set_events
@@ -32,16 +32,20 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       processor = NomenclatureChange::Split::Processor.new(@nomenclature_change)
       @summary = processor.summary
     end
+
     render_wizard
   end
 
   def update
     @nomenclature_change.assign_attributes(
-      (nomenclature_change_split_params || {}).merge({
-        :status => (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
-      })
+      (nomenclature_change_split_params || {}).merge(
+        {
+          status: (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
+        }
+      )
     )
     success = @nomenclature_change.valid?
+
     case step
     when :inputs, :outputs
       unless success
@@ -50,10 +54,11 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
         set_ranks
       end
     end
+
     render_wizard @nomenclature_change
   end
 
-  private
+private
 
   def klass
     NomenclatureChange::Split
@@ -71,6 +76,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
           :note_en, :note_es, :note_fr, :internal_note,
+          :output_ids,
           output_ids: [],
           reassignment_target_attributes: [
             :id, :_destroy,
@@ -83,6 +89,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
           :note_en, :note_es, :note_fr, :internal_note,
+          :output_ids,
           output_ids: []
         ],
         distribution_reassignments_attributes: [
@@ -90,6 +97,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
           :note_en, :note_es, :note_fr, :internal_note,
+          :output_ids,
           output_ids: []
         ],
         legislation_reassignments_attributes: [
@@ -97,6 +105,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
           :type, :reassignable_id, :reassignable_type,
           :nomenclature_change_input_id, :nomenclature_change_output_id,
           :note_en, :note_es, :note_fr, :internal_note,
+          :output_ids,
           output_ids: []
         ]
       ],

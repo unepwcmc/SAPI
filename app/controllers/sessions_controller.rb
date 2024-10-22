@@ -14,18 +14,18 @@ class SessionsController < Devise::SessionsController
     invalid_login_attempt
   end
 
-  protected
+protected
 
   def invalid_login_attempt
     @user = User.new
     set_flash_message(:error, :invalid)
     respond_to do |format|
-      format.html { render :new, status: 401 }
-      format.json { render json: flash[:error], status: 401 }
+      format.html { render :new, status: :unauthorized }
+      format.json { render json: flash[:error], status: :unauthorized }
     end
   end
 
-  private
+private
 
   def user_params
     params.require(:user).permit(:email, :password)

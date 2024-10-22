@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  context "Dalbergia" do
-    include_context "Dalbergia"
+  context 'Dalbergia' do
+    include_context 'Dalbergia'
 
-    context "LISTING" do
+    context 'LISTING' do
       describe :cites_listing do
         context 'for species Dalbergia abbreviata' do
           specify { expect(@species1.cites_listing).to eq('NC') }
@@ -15,19 +15,19 @@ describe TaxonConcept do
       end
 
       describe :cites_listed do
-        context "for species Dalbergia abbreviata" do
+        context 'for species Dalbergia abbreviata' do
           specify { expect(@species1.cites_listed).to be_nil }
         end
-        context "for species Dalbergia abrahamii" do
+        context 'for species Dalbergia abrahamii' do
           specify { expect(@species2.cites_listed).to eq(false) }
         end
       end
 
       describe :cites_show do
-        context "for species Dalbergia abbreviata" do
+        context 'for species Dalbergia abbreviata' do
           specify { expect(@species1.cites_show).to be_falsey }
         end
-        context "for species Dalbergia abrahamii" do
+        context 'for species Dalbergia abrahamii' do
           specify { expect(@species2.cites_show).to be_truthy }
         end
       end

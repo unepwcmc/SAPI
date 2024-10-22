@@ -1,5 +1,5 @@
 class Species::EuDecisionSerializer < ActiveModel::Serializer
-  attributes :notes, { :start_date_formatted => :start_date },
+  attributes :notes, { start_date_formatted: :start_date },
     :is_current, :subspecies_info, :nomenclature_note_en, :nomenclature_note_fr,
     :nomenclature_note_es,
     :eu_decision_type,
@@ -8,27 +8,31 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
     :start_event,
     :source,
     :term,
-    { :original_start_date_formatted => :original_start_date },
+    { original_start_date_formatted: :original_start_date },
     :private_url,
     :intersessional_decision_id
 
   def include_nomenclature_note_fr?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_nomenclature_note_es?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_private_url?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
   def include_intersessional_decision_id?
     return true unless @options[:trimmed]
+
     @options[:trimmed] == 'false'
   end
 
@@ -53,7 +57,7 @@ class Species::EuDecisionSerializer < ActiveModel::Serializer
   end
 
   def term
-    @options[:trimmed] == 'true' ? object['term_en'].slice('name') : object['term_en'] 
+    @options[:trimmed] == 'true' ? object['term_en'].slice('name') : object['term_en']
   end
 
   def private_url

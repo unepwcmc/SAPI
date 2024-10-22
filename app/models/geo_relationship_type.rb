@@ -14,5 +14,4 @@ class GeoRelationshipType < ApplicationRecord
 
   include Dictionary
   build_dictionary :contains, :intersects
-
 end

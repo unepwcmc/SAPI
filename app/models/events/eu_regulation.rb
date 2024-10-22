@@ -3,24 +3,31 @@
 # Table name: events
 #
 #  id                   :integer          not null, primary key
-#  name                 :string(255)
-#  designation_id       :integer
 #  description          :text
-#  url                  :text
-#  is_current           :boolean          default(FALSE), not null
-#  type                 :string(255)      default("Event"), not null
 #  effective_at         :datetime
+#  end_date             :datetime
+#  extended_description :text
+#  is_current           :boolean          default(FALSE), not null
+#  multilingual_url     :text
+#  name                 :string(255)
+#  private_url          :text
 #  published_at         :datetime
+#  subtype              :string(255)
+#  type                 :string(255)      default("Event"), not null
+#  url                  :text
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  legacy_id            :integer
-#  end_date             :datetime
-#  subtype              :string(255)
-#  updated_by_id        :integer
 #  created_by_id        :integer
-#  extended_description :text
-#  multilingual_url     :text
+#  designation_id       :integer
 #  elib_legacy_id       :integer
+#  legacy_id            :integer
+#  updated_by_id        :integer
+#
+# Foreign Keys
+#
+#  events_created_by_id_fk   (created_by_id => users.id)
+#  events_designation_id_fk  (designation_id => designations.id)
+#  events_updated_by_id_fk   (updated_by_id => users.id)
 #
 
 class EuRegulation < EuEvent
@@ -30,11 +37,22 @@ class EuRegulation < EuEvent
   # attr_accessible :listing_changes_event_id, :end_date
   attr_accessor :listing_changes_event_id
 
-  has_many :listing_changes, :foreign_key => :event_id,
-    :dependent => :destroy
+  ##
+  # The only time we would delete a CoP/EU regulation is just after we've
+  # created it by mistake, but we don't want to be able to delete the CoP
+  # event once it's started to be populated, whereas an EU Regulation
+  # starts off being populated with lots of associated data so we can't
+  # restrict deletion.
+  has_many :listing_changes,
+    dependent: :destroy,
+    foreign_key: :event_id
+
+  has_many :annotations,
+    dependent: :destroy,
+    foreign_key: :event_id
 
   validate :designation_is_eu
-  validates :effective_at, :presence => true
+  validates :effective_at, presence: true
 
   after_commit :async_event_listing_changes_copy_worker, on: :create
 
@@ -48,10 +66,10 @@ class EuRegulation < EuEvent
     EuRegulationActivationWorker.perform_async(id, false)
   end
 
-  private
+private
 
   def async_event_listing_changes_copy_worker
-    unless listing_changes_event_id.blank?
+    if listing_changes_event_id.present?
       EventListingChangesCopyWorker.perform_async(
         listing_changes_event_id.to_i, id
       )

@@ -3,24 +3,31 @@
 # Table name: users
 #
 #  id                     :integer          not null, primary key
-#  name                   :string(255)      not null
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
+#  authentication_token   :string(255)
+#  current_sign_in_at     :datetime
+#  current_sign_in_ip     :string(255)
 #  email                  :string(255)      default(""), not null
 #  encrypted_password     :string(255)      default(""), not null
-#  reset_password_token   :string(255)
-#  reset_password_sent_at :datetime
-#  remember_created_at    :datetime
-#  sign_in_count          :integer          default(0), not null
-#  current_sign_in_at     :datetime
-#  last_sign_in_at        :datetime
-#  current_sign_in_ip     :string(255)
-#  last_sign_in_ip        :string(255)
-#  role                   :text             default("api"), not null
-#  authentication_token   :string(255)
-#  organisation           :text             default("UNKNOWN"), not null
-#  geo_entity_id          :integer
+#  is_active              :boolean          default(TRUE), not null
 #  is_cites_authority     :boolean          default(FALSE), not null
+#  last_sign_in_at        :datetime
+#  last_sign_in_ip        :string(255)
+#  name                   :string(255)      not null
+#  organisation           :text             default("UNKNOWN"), not null
+#  remember_created_at    :datetime
+#  reset_password_sent_at :datetime
+#  reset_password_token   :string(255)
+#  role                   :text             default("api"), not null
+#  sign_in_count          :integer          default(0), not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  geo_entity_id          :integer
+#
+# Indexes
+#
+#  index_users_on_authentication_token  (authentication_token)
+#  index_users_on_email                 (email) UNIQUE
+#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #
 
 class User < ApplicationRecord
@@ -38,8 +45,8 @@ class User < ApplicationRecord
   ELIBRARY_USER = 'elibrary'
   API_USER = 'api'
   SECRETARIAT = 'secretariat'
-  ROLES = [MANAGER, CONTRIBUTOR, ELIBRARY_USER, API_USER, SECRETARIAT]
-  NON_ADMIN_ROLES = [ELIBRARY_USER, API_USER, SECRETARIAT]
+  ROLES = [ MANAGER, CONTRIBUTOR, ELIBRARY_USER, API_USER, SECRETARIAT ]
+  NON_ADMIN_ROLES = [ ELIBRARY_USER, API_USER, SECRETARIAT ]
   ROLES_FOR_DISPLAY = {
     MANAGER => 'Manager',
     CONTRIBUTOR => 'Contributor',
@@ -53,8 +60,8 @@ class User < ApplicationRecord
   has_many :api_requests
   belongs_to :geo_entity, optional: true
 
-  validates :email, :uniqueness => true, :presence => true
-  validates :name, :presence => true
+  validates :email, uniqueness: true, presence: true
+  validates :name, presence: true
   validates :role, inclusion: { in: ROLES }, presence: true
   validates :organisation, presence: true
   before_create :set_default_role
@@ -109,21 +116,21 @@ class User < ApplicationRecord
       Trade::AnnualReportUpload, Trade::Shipment
     ]
     for i in 0..tracked_objects.length - 1
-      if tracked_objects[i].where(['created_by_id = :id OR updated_by_id = :id', :id => self.id]).limit(1).count > 0
+      if tracked_objects[i].where([ 'created_by_id = :id OR updated_by_id = :id', id: self.id ]).limit(1).count > 0
         return false
       end
     end
     true
   end
 
-  private
+private
 
   def set_default_role
     self.role ||= 'api'
   end
 
   # https://github.com/heartcombo/devise/tree/v4.4.3#active-job-integration
-  def send_devise_notification(notification, *args)
-    devise_mailer.send(notification, self, *args).deliver_later
+  def send_devise_notification(notification, *)
+    devise_mailer.send(notification, self, *).deliver_later
   end
 end

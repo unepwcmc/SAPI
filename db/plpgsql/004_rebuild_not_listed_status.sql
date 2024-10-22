@@ -67,7 +67,7 @@ CREATE OR REPLACE FUNCTION rebuild_not_listed_status_for_designation_and_node(
       INNER JOIN listing_changes
         ON listing_changes.id = listing_distributions.listing_change_id
       INNER JOIN change_types
-        ON change_types.id = listing_changes.change_type_id 
+        ON change_types.id = listing_changes.change_type_id
         AND change_types.designation_id = designation.id
         AND change_types.name = 'ADDITION'
       WHERE is_current = 't'
@@ -95,7 +95,7 @@ CREATE OR REPLACE FUNCTION rebuild_not_listed_status_for_designation_and_node(
 
     WITH RECURSIVE taxa_without_cascaded_listing AS (
       SELECT id
-      FROM taxon_concepts 
+      FROM taxon_concepts
       WHERE taxonomy_id = designation.taxonomy_id
         AND parent_id IS NULL
 
@@ -140,7 +140,7 @@ CREATE OR REPLACE FUNCTION rebuild_not_listed_status_for_designation_and_node(
     UPDATE taxon_concepts
     SET listing = listing ||
     hstore(not_listed_flag, 'NC') || hstore(listing_original_flag, 'NC') || hstore(listing_flag, 'NC')
-    WHERE taxonomy_id = designation.taxonomy_id 
+    WHERE taxonomy_id = designation.taxonomy_id
       AND (listing->status_flag)::VARCHAR IS NULL
       AND CASE WHEN node_id IS NOT NULL THEN taxon_concepts.id = node_id ELSE TRUE END;
 
@@ -163,7 +163,7 @@ CREATE OR REPLACE FUNCTION rebuild_not_listed_status_for_designation_and_node(
       )
       AND listing->status_flag = 'LISTED'
       AND (listing->status_original_flag)::BOOLEAN = FALSE
-      THEN hstore(show_flag, 'f')  
+      THEN hstore(show_flag, 'f')
       WHEN NOT (
         data->'rank_name' = 'SPECIES'
       )

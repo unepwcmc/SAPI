@@ -16,44 +16,44 @@ class NomenclatureChange::Lump::Constructor
   def build_parent_reassignments
     output = @nomenclature_change.output
     @nomenclature_change.inputs.each do |input|
-      children = input.taxon_concept.children - [output.taxon_concept]
+      children = input.taxon_concept.children - [ output.taxon_concept ]
       _build_parent_reassignments(input, output, children)
     end
   end
 
   def build_name_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_names_reassignments(input, [@nomenclature_change.output])
+      _build_names_reassignments(input, [ @nomenclature_change.output ])
     end
   end
 
   def build_distribution_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_distribution_reassignments(input, [@nomenclature_change.output])
+      _build_distribution_reassignments(input, [ @nomenclature_change.output ])
     end
   end
 
   def build_legislation_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_legislation_reassignments(input, [@nomenclature_change.output])
+      _build_legislation_reassignments(input, [ @nomenclature_change.output ])
     end
   end
 
   def build_document_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_document_reassignments(input, [@nomenclature_change.output])
+      _build_document_reassignments(input, [ @nomenclature_change.output ])
     end
   end
 
   def build_common_names_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_common_names_reassignments(input, [@nomenclature_change.output])
+      _build_common_names_reassignments(input, [ @nomenclature_change.output ])
     end
   end
 
   def build_references_reassignments
     @nomenclature_change.inputs.each do |input|
-      _build_references_reassignments(input, [@nomenclature_change.output])
+      _build_references_reassignments(input, [ @nomenclature_change.output ])
     end
   end
 
@@ -61,7 +61,7 @@ class NomenclatureChange::Lump::Constructor
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
     I18n.with_locale(lng) do
-      I18n.translate(
+      I18n.t(
         'lump.input_lumped_into',
         input_taxon: input_html,
         output_taxon: output_html,
@@ -76,7 +76,7 @@ class NomenclatureChange::Lump::Constructor
       taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     end.join(', ')
     I18n.with_locale(lng) do
-      I18n.translate(
+      I18n.t(
         'lump.output_lumped_from',
         output_taxon: output_html,
         input_taxa: inputs_html,
@@ -87,7 +87,7 @@ class NomenclatureChange::Lump::Constructor
 
   def multi_lingual_input_note(input, output, event)
     result = {}
-    [:en, :es, :fr].each do |lng|
+    [ :en, :es, :fr ].each do |lng|
       note = '<p>'
       note << input_lumped_into(input, output, lng)
       note << in_year(event, lng)
@@ -100,7 +100,7 @@ class NomenclatureChange::Lump::Constructor
 
   def multi_lingual_output_note(output, inputs, event)
     result = {}
-    [:en, :es, :fr].each do |lng|
+    [ :en, :es, :fr ].each do |lng|
       note = '<p>'
       note << output_lumped_from(output, @nomenclature_change.inputs, lng)
       note << in_year(event, lng)

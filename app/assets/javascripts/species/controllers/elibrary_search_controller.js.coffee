@@ -25,7 +25,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     @set('titleQuery', filtersHash.title_query)
 
     allEventTypes = @get('controllers.events.eventTypes').slice()
-    allEventTypes.push(@get('controllers.events.idMaterialsEvent')) 
+    allEventTypes.push(@get('controllers.events.idMaterialsEvent'))
 
     @set('selectedEventType', allEventTypes.findBy('id', filtersHash.event_type))
     @set('selectedEventsIds', filtersHash.events_ids || [])
@@ -36,14 +36,14 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     if @get('isSignedIn')
       allDocumentTypes = allDocumentTypes.concat(@get('controllers.events.interSessionalNonPublicDocumentTypes'))
     @set('selectedDocumentType', allDocumentTypes.findBy('id', filtersHash.document_type))
-   
+
     general_subtype_type = @get_general_subtype_type(filtersHash)
     @set('selectedGeneralSubType', general_subtype_type)
 
     @set('selectedReviewPhaseId', filtersHash.review_phase_id)
 
   get_general_subtype_type: (filtersHash) ->
-    if filtersHash.general_subtype == 'true' 
+    if filtersHash.general_subtype == 'true'
       general_subtype_id = 'general'
     else if filtersHash.general_subtype == 'false'
       general_subtype_id = 'parts'
@@ -51,7 +51,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
     if general_subtype_id
       return @get('controllers.events.generalSubTypes')
         .findBy('id', general_subtype_id)
-    
+
     return null
 
   getFilters: ->
@@ -134,7 +134,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
       return true
 
     contains = false
-    docTypes.forEach((docType) -> 
+    docTypes.forEach((docType) ->
       if (docType.id == selectedDocTypeId)
         contains = true
     )
@@ -166,7 +166,7 @@ Species.ElibrarySearchController = Ember.Controller.extend Species.Spinner,
 
     handleGeneralSubTypeSelection: (type) ->
       @set('selectedGeneralSubType', type)
-    
+
     handleGeneralSubTypeDeselection: ->
       @set('selectedGeneralSubType', null)
 
