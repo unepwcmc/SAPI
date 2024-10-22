@@ -52,7 +52,7 @@ private
   end
 
   def set_locale
-    lc_locale_param = params[:locale]&.downcase
+    lc_locale_param = params[:locale].try(:downcase) || I18n.default_locale
 
     I18n.locale =
       if I18n.locale_available?(lc_locale_param)
