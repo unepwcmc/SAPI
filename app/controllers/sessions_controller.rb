@@ -4,7 +4,7 @@ class SessionsController < Devise::SessionsController
   def create
     # Remove null bytes (which postgres dislikes) and strip leading and trailing
     # spaces. If empty string, consider nil and do not bother searching.
-    email_address = user_params[:email]&.gsub("\x00", '')&.strip&.presence?
+    email_address = user_params[:email]&.gsub("\x00", '')&.strip&.presence
 
     # Crude email regex to save work only. If the record actually exists, the
     # address should have already been fully validated on creation
