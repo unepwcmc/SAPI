@@ -1,3 +1,7 @@
+### 1.16.2
+
+* Fixes an issue where logging was not happening (affecting production only).
+
 ### 1.16.1
 
 * Post-release hotfixes for a handful of minor issues.
