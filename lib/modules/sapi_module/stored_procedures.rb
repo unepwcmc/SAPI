@@ -37,6 +37,20 @@ module SapiModule
 
         connection = ActiveRecord::Base.connection
 
+        # Within the current transaction, set work_mem to a higher-than-usual
+        # value, so that matviews can be built more efficiently.
+        #
+        # The default low value of work_mem (default 4MB) is suitable for
+        # small queries with high concurrency (for instance, those performed
+        # by a web server), but the restriction just hampers jobs like this.
+        connection.execute("SET LOCAL work_mem TO '64MB';")
+
+        # Within the current transaction, increase the deadlock_timeout. The
+        # default low value of 1s is fine for short-running queries, but this
+        # job will take much longer: we can afford to be patient to outlast
+        # other queries - and we really want to avoid failing here.
+        connection.execute("SET LOCAL deadlock_timeout='30s';")
+
         to_lock = connection.execute(
           # This is not great, because it relies on things being called mview
           # when they're not matviews, it's the tables we're locking, matviews
@@ -56,14 +70,6 @@ module SapiModule
 
         to_rebuild.each do |p|
           Rails.logger.debug { "Procedure: #{p}" }
-
-          # Within the current transaction, set work_mem to a higher-than-usual
-          # value, so that matviews can be built more efficiently.
-          #
-          # The default low value of work_mem (default 4MB) is suitable for
-          # small queries with high concurrency (for instance, those performed
-          # by a web server), but the restriction just hampers jobs like this.
-          connection.execute("SET work_mem TO '64MB';")
 
           connection.execute("SELECT * FROM rebuild_#{p}()")
         end
