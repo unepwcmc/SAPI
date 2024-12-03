@@ -1,3 +1,7 @@
+### 1.16.1
+
+* Post-release hotfixes for a handful of minor issues.
+
 ### 1.16.0
 
 **Rails 7 Upgrade**
@@ -17,29 +21,34 @@ any breaking changes to functionality.
 * Many fixes for issues found in incidental testing, in particular:
   * Fixes to error handling in trade database shipment editing form
   * The query for trade filters is now much faster
-  * Fix a bug within the trade database admin area, where editing shipments which affected the permit search
-  * Added some rules to trim leading/trailing spaces and validate certain text fields
+  * Fix a bug within the trade database admin area, where editing shipments
+    which affected the permit search
+  * Added some rules to trim leading/trailing spaces and validate certain text
+    fields
   * Fixes to trade database
-  * Fixes to how Species+ admin interface handles associated records and deletion
-  * Fix for Species+ admin interface where under certain circumstances listing changes could be inadvertently duplicated
+  * Fixes to how Species+ admin interface handles associated records and
+    deletion
+  * Fix for Species+ admin interface where under certain circumstances listing
+    changes could be inadvertently duplicated
   * Species+ admin interface now allows searching in the users table
   * Species+ admin interface now allows searching in the users table
-  * Requests for a locale which is unavailable should no longer cause internal error (500) responses.
-  * Fix for the CITES checklist, where certain timelines were being incorrectly rendered with 'gaps' due to the ordering in which listing changes were being returned by the API.
-  * Species+ downloads - if these fail for any reason after a download has been triggered, the spinner should stop and an error message should be shown.
-
-### Forthcoming
-
-* Fix some issues with conversion of trade code term and unit rules
-* CITES suspension history now shows end notification where available
-* Fix a frontend bug in the downloads, where a dropdown value was being used
-  in the request, even when the dropdown was not being displayed.
-* Fix to the admin area to ensure non-Latin letters aren't being entered into
-  certain fields which are used for PDFs, where pdflatex does not know how
-  to handle them.
-* Fix for the CITES Checklist, which was showing "this taxon is split-listed"
-  in some cases where this was not true.
-* Replace feedback modal
+  * Requests for a locale which is unavailable should no longer cause internal
+    error (500) responses.
+  * Fix for the CITES checklist, where certain timelines were being incorrectly
+    rendered with 'gaps' due to the ordering in which listing changes were being
+    returned by the API.
+  * Species+ downloads - if these fail for any reason after a download has been
+    triggered, the spinner should stop and an error message should be shown.
+  * Fix some issues with conversion of trade code term and unit rules
+  * CITES suspension history now shows end notification where available
+  * Fix a frontend bug in the downloads, where a dropdown value was being used
+    in the request, even when the dropdown was not being displayed.
+  * Fix to the admin area to ensure non-Latin letters aren't being entered into
+    certain fields which are used for PDFs, where pdflatex does not know how
+    to handle them.
+  * Fix for the CITES Checklist, which was showing "this taxon is split-listed"
+    in some cases where this was not true.
+  * Replace feedback modal
 
 ### 1.14.2
 

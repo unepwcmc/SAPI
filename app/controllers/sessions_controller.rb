@@ -2,7 +2,17 @@ class SessionsController < Devise::SessionsController
   respond_to :html, :json
 
   def create
-    resource = User.find_for_database_authentication(email: user_params[:email])
+    # Remove null bytes (which postgres dislikes) and strip leading and trailing
+    # spaces. If empty string, consider nil and do not bother searching.
+    email_address = user_params[:email]&.gsub("\x00", '')&.strip&.presence
+
+    # Crude email regex to save work only. If the record actually exists, the
+    # address should have already been fully validated on creation
+    resource =
+      /@/.match(email_address) && User.find_for_database_authentication(
+        email: email_address
+      )
+
     return invalid_login_attempt unless resource
 
     if resource.valid_password?(user_params[:password])
