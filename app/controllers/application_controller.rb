@@ -5,8 +5,38 @@ class ApplicationController < ActionController::Base
   before_action :set_paper_trail_whodunnit
 
   rescue_from CanCan::AccessDenied, with: :access_denied_error
+  rescue_from ActionController::BadRequest,
+    ActionController::UnknownFormat,
+    ActionDispatch::Http::MimeNegotiation::InvalidType,
+    with: :invalid_request_error
 
 protected
+
+  def invalid_request_error(exception)
+    http_status_symbol =
+      case exception
+      when ActionController::BadRequest
+        then :bad_request
+      when ActionController::UnknownFormat,
+        ActionDispatch::Http::MimeNegotiation::InvalidType
+        then :not_acceptable
+      else
+        :unprocessable_entity
+      end
+
+    respond_to do |format|
+      format.json do
+        render json: { errors: [ 'Bad request' ] },
+          status: http_status_symbol
+      end
+
+      format.all do
+        render file: "#{Rails.public_path.join('422.html')}",
+          layout: nil,
+          status: http_status_symbol
+      end
+    end
+  end
 
   def access_denied_error(exception)
     rescue_path =
@@ -52,7 +82,7 @@ private
   end
 
   def set_locale
-    lc_locale_param = params[:locale]&.downcase
+    lc_locale_param = params[:locale].try(:downcase) || I18n.default_locale
 
     I18n.locale =
       if I18n.locale_available?(lc_locale_param)
@@ -80,7 +110,7 @@ private
   end
 
   def save_email
-    session[:email] = params[:user][:email] || ''
+    session[:email] = params&.dig(:user, :email) || ''
   end
 
   def delete_email

@@ -41,4 +41,4 @@ Ahoy.mask_ips = true
 Ahoy.cookies = :none
 
 # https://github.com/ankane/ahoy/tree/v2.2.1#exceptions
-Safely.report_exception_method = ->(e) { Appsignal.add_exception(exception) if defined? Appsignal }
+Safely.report_exception_method = ->(e) { Appsignal.add_exception(e) if defined? Appsignal }
