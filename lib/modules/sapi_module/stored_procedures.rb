@@ -51,6 +51,11 @@ module SapiModule
         # other queries - and we really want to avoid failing here.
         connection.execute("SET LOCAL deadlock_timeout='30s';")
 
+        # Within the current transaction, increase the lock_timeout. The default
+        # postgres value is 0 (infinite) but config/database.yml sets this to a
+        # lower value.
+        connection.execute("SET LOCAL lock_timeout='60s';")
+
         to_lock = connection.execute(
           # This is not great, because it relies on things being called mview
           # when they're not matviews, it's the tables we're locking, matviews
