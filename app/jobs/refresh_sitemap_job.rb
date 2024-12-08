@@ -7,7 +7,7 @@ class RefreshSitemapJob < ApplicationJob
       # Within the current transaction, increase the lock_timeout. The default
       # postgres value is 0 (infinite) but config/database.yml sets this to a
       # lower value.
-      connection.execute("SET LOCAL lock_timeout='30s';")
+      connection.execute("SET LOCAL lock_timeout='20s';")
 
       # https://github.com/kjvarga/sitemap_generator/issues/231
       SitemapGenerator::Interpreter.run
