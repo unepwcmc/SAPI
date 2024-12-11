@@ -5,6 +5,8 @@
   limiting the default lock timeout and extending it for long-running queries.
 * Errors of class Errno::EPIPE no longer reported to AppSignal, to reduce noise:
   these are likely harmless client disconnects.
+* Fixes a 500 error where required params are missing when requesting CITES
+  Identification Manual volumes.
 
 ### 1.16.1
 

@@ -1,4 +1,6 @@
 class Checklist::DocumentsController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :render_404
+
   def index
     return render json: []  if params[:taxon_concepts_ids].nil?
     return render json: []  unless params[:taxon_concepts_ids].kind_of?(Array)
@@ -48,17 +50,58 @@ class Checklist::DocumentsController < ApplicationController
     render json: doc_ids.present?
   end
 
+  ##
+  # Produces and sends a zip file containing the ID manuals based on the
+  # params `locale` and `volumes`, taken from `./public/ID_manual_volumes`.
+  # The Document::IdManual and Language must exist in the database.
   def volume_download
-    t = full_volume_downloader
+    # We are building a path, so we must ensure that this is safe. to_i is
+    # sufficient.
+    volumes = Array.wrap(
+      params['volume']
+    ).map(&:to_i).filter(&:positive?).sort.uniq
 
-    volumes = params[:volume].sort.join(',')
+    # First, ensure the language exists. Default to the current
+    language = Language.find_by!(
+      iso_code1: (params['locale'] || I18n.locale)&.to_s&.upcase
+    )
 
+    documents = Document::IdManual.where(
+      # If volumes is empty, get all volumes (expressed as `volume >= 1`)
+      volume: volumes.presence || (1..),
+      language: language.id
+    )
 
-    send_file t.path,
-      type: 'application/zip',
-      filename: "Identifications-documents-volume-#{volumes}.zip"
+    if documents.size < volumes.size
+      raise ActiveRecord::RecordNotFound(
+        primary_key: 'volume',
+        id: documents.pluck(:volumes) - volumes,
+        model: Document::IdManual,
+      )
+    end
 
-    t.close
+    temp_zip_file = full_volume_downloader(
+      volumes: documents.pluck(:volume),
+      language_code: language.iso_code1,
+      temp_file: Tempfile.new(
+        'tmp-zip-' + request.remote_ip.to_s.gsub(/\W+/, '-')
+      )
+    )
+
+    unless temp_zip_file
+      render_404
+      return
+    end
+
+    begin
+      volumes_list = volumes.join(',')
+
+      send_file temp_zip_file.path,
+        type: 'application/zip',
+        filename: "Identifications-documents-volume-#{volumes_list}.zip"
+    ensure
+      temp_zip_file.close
+    end
   end
 
 private
@@ -81,15 +124,40 @@ private
       status: :forbidden
   end
 
-  def full_volume_downloader
-    t = Tempfile.new('tmp-zip-' + request.remote_ip)
+  ##
+  # Returns a zip archive with one or more volumes of the CITES ID manuals.
+  #
+  # If no files are found, returns null. If some files are found, a list
+  # of missing files is added to the archive.
+  def full_volume_downloader(
+    ##
+    # An array of integers, corresponding to the "volume" column
+    volumes = [],
+    ##
+    # A two-letter ISO language code
+    language_code = I18n.default_locale.to_s.upcase,
+    ##
+    # The file into which a zip archive will be written
+    temp_file = Tempfile.new
+  )
     missing_files = []
-    vol_path = [ Rails.root, '/public/ID_manual_volumes/', params['locale'], '/' ].join
-    @pdf_file_paths = params['volume'].map { |vol| vol_path + "Volume#{vol}" + "_#{params['locale'].upcase}" + '.pdf' }
-    Zip::OutputStream.open(t.path) do |zos|
+
+    vol_path = "ID_manual_volumes/#{language_code.downcase}"
+
+    ##
+    # An array of Pathname objects
+    @pdf_file_paths =
+      volumes.map do |vol|
+        Rails.public_path.join(
+          "#{vol_path}/Volume#{vol}_#{language_code}.pdf"
+        )
+      end
+
+    Zip::OutputStream.open(temp_file.path) do |zos|
       @pdf_file_paths.each do |doc_path|
-        path_to_file = doc_path.rpartition('/').first
-        filename = doc_path.rpartition('/').last
+        path_to_file = doc_path.dirname
+        filename = doc_path.basename
+
         unless File.exist?(doc_path)
           missing_files <<
             "{\n  path: #{path_to_file},\n  filename: #{filename}\n}"
@@ -97,9 +165,10 @@ private
           zos.put_next_entry("Identification-materials-#{filename}")
           zos.print File.read(doc_path)
         end
+
         if missing_files.present?
           if missing_files.length == @pdf_file_paths.count
-            render_404 && return
+            return
           end
 
           zos.put_next_entry('missing_files.txt')
@@ -107,6 +176,7 @@ private
         end
       end
     end
-    t
+
+    temp_file
   end
 end
