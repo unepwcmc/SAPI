@@ -53,7 +53,7 @@ class Checklist::DocumentsController < ApplicationController
   ##
   # Produces and sends a zip file containing the ID manuals based on the
   # params `locale` and `volumes`, taken from `./public/ID_manual_volumes`.
-  # The Document::IdManual and Language must exist in the database.
+  # At least one Document::IdManual in that Language must exist in the database.
   def volume_download
     # We are building a path, so we must ensure that this is safe. to_i is
     # sufficient.
@@ -68,20 +68,23 @@ class Checklist::DocumentsController < ApplicationController
 
     documents = Document::IdManual.where(
       # If volumes is empty, get all volumes (expressed as `volume >= 1`)
+      # Note that there are many documents in each volume.
       volume: volumes.presence || (1..),
       language: language.id
     )
 
-    if documents.size < volumes.size
+    document_volumes = documents.pluck(:volume).sort.uniq
+
+    if document_volumes.size < volumes.size
       raise ActiveRecord::RecordNotFound(
         primary_key: 'volume',
-        id: documents.pluck(:volumes) - volumes,
+        id: document_volumes - volumes,
         model: Document::IdManual,
       )
     end
 
     temp_zip_file = full_volume_downloader(
-      volumes: documents.pluck(:volume),
+      volumes: document_volumes,
       language_code: language.iso_code1,
       temp_file: Tempfile.new(
         'tmp-zip-' + request.remote_ip.to_s.gsub(/\W+/, '-')
