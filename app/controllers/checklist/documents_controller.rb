@@ -76,7 +76,7 @@ class Checklist::DocumentsController < ApplicationController
     document_volumes = documents.pluck(:volume).sort.uniq
 
     if document_volumes.size < volumes.size
-      raise ActiveRecord::RecordNotFound(
+      raise ActiveRecord::RecordNotFound.new(
         primary_key: 'volume',
         id: document_volumes - volumes,
         model: Document::IdManual,
@@ -132,17 +132,19 @@ private
   #
   # If no files are found, returns null. If some files are found, a list
   # of missing files is added to the archive.
-  def full_volume_downloader(
+  def full_volume_downloader(**kwargs)
     ##
     # An array of integers, corresponding to the "volume" column
-    volumes = [],
+    volumes = kwargs[:volumes] || []
+
     ##
     # A two-letter ISO language code
-    language_code = I18n.default_locale.to_s.upcase,
+    language_code = kwargs[:language_code] || I18n.default_locale.to_s.upcase
+
     ##
     # The file into which a zip archive will be written
-    temp_file = Tempfile.new
-  )
+    temp_file = kwargs[:temp_file] || Tempfile.new
+
     missing_files = []
 
     vol_path = "ID_manual_volumes/#{language_code.downcase}"
