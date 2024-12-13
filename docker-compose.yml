@@ -70,6 +70,7 @@ services:
       SAPI_DATABASE_USERNAME: postgres
       SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+      CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
     depends_on:
       - redis
       - db
@@ -110,6 +111,7 @@ services:
       SAPI_DATABASE_USERNAME: postgres
       SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+      CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
 
   mailcatcher:
     container_name: sapi-mailcatcher

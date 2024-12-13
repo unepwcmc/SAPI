@@ -1,29 +1,31 @@
-
 default: &default
-  adapter: postgresql
-  encoding: unicode
-  host:     <%= ENV.fetch("SAPI_DATABASE_HOST",     Rails.application.credentials.dig(:db, :host)) %>
-  username: <%= ENV.fetch("SAPI_DATABASE_USERNAME", Rails.application.credentials.dig(:db, :username)) %>
-  password: <%= ENV.fetch("SAPI_DATABASE_PASSWORD", Rails.application.credentials.dig(:db, :password)) %>
-  port:     <%= ENV.fetch("SAPI_DATABASE_PORT",     Rails.application.credentials.dig(:db, :port)) %>
+  primary:
+    adapter: postgresql
+    encoding: unicode
+    pool: <%= ENV.fetch("SAPI_RAILS_MAX_THREADS") { 5 } %>
+    host: <%= ENV.fetch("SAPI_DATABASE_HOST",     Rails.application.credentials.dig(:db, :host)) %>
+    username: <%= ENV.fetch("SAPI_DATABASE_USERNAME", Rails.application.credentials.dig(:db, :username)) %>
+    password: <%= ENV.fetch("SAPI_DATABASE_PASSWORD", Rails.application.credentials.dig(:db, :password)) %>
+    port: <%= ENV.fetch("SAPI_DATABASE_PORT",     Rails.application.credentials.dig(:db, :port)) %>
+    database: <%= "sapi_#{Rails.env}" %>
+  captive_breeding:
+    adapter: postgresql
+    encoding: unicode
+    host: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_HOST", 'localhost') %>
+    username: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_USERNAME", 'postgres') %>
+    password: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PASSWORD", '') %>
+    port: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PORT", 5432) %>
+    database: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE", "captive_breeding_database_#{Rails.env}") %>
+    database_tasks: false
 
 development:
   <<: *default
-  database: sapi_development
-  timeout: 5000
-  # For details on connection pooling, see Rails configuration guide
-  # https://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("SAPI_RAILS_MAX_THREADS") { 5 } %>
 
 test:
   <<: *default
-  database: sapi_test
-  timeout: 5000
 
 staging:
   <<: *default
-  database: sapi_staging
 
 production:
   <<: *default
-  database: sapi_production
