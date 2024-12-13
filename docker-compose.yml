@@ -16,6 +16,7 @@ services:
       interval: 10s
       retries: 10
     volumes:
+      - ./db_init:/docker-entrypoint-initdb.d
       - 'pgdata:/var/lib/postgresql/data'
     ports:
       - "${SAPI_CONTAINER_DB_PORT:-5432}:5432"
