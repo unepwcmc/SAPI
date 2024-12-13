@@ -3,5 +3,5 @@ class ApplicationRecord < ActiveRecord::Base
   include ProtectedDeletion
   include ComparisonAttributes
 
-  self.abstract_class = true
+  primary_abstract_class
 end
