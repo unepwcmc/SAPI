@@ -9,7 +9,11 @@ module SapiModule
     # Runtime grows as the database grows, and in particular the trade plus
     # dataset is growing quite a bit year on year.
 
-    def self.rebuild
+    def self.rebuild(retry_count = 0, max_retries = 5, retry_delay = 30)
+      Rails.logger.debug do
+        'Beginning SapiModule::StoredProcedures.rebuild'
+      end
+
       ActiveRecord::Base.transaction do
         # The names of the functions beginnning 'rebuild_' to be run in sequence
         to_rebuild = [
@@ -49,12 +53,12 @@ module SapiModule
         # default low value of 1s is fine for short-running queries, but this
         # job will take much longer: we can afford to be patient to outlast
         # other queries - and we really want to avoid failing here.
-        connection.execute("SET LOCAL deadlock_timeout='30s';")
+        connection.execute("SET LOCAL deadlock_timeout TO '30s';")
 
         # Within the current transaction, increase the lock_timeout. The default
         # postgres value is 0 (infinite) but config/database.yml sets this to a
         # lower value.
-        connection.execute("SET LOCAL lock_timeout='60s';")
+        connection.execute("SET LOCAL lock_timeout TO '60s';")
 
         to_lock = connection.execute(
           # This is not great, because it relies on things being called mview
@@ -94,6 +98,22 @@ module SapiModule
           )
         end
       end
+    rescue ActiveRecord::LockWaitTimeout => e
+      if retry_count < max_retries
+        Rails.logger.debug do
+          [
+            "Deadlock detected on attempt #{retry_count + 1} of #{max_retries}:",
+            e,
+            "Retrying in #{retry_delay} seconds"
+          ].join "\n\n"
+        end
+
+        sleep retry_delay
+
+        return rebuild(retry_count + 1, max_retries)
+      end
+
+      raise e
     end
 
     def self.rebuild_cms_taxonomy_and_listings
