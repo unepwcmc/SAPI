@@ -113,6 +113,14 @@ module SapiModule
         return rebuild(retry_count + 1, max_retries)
       end
 
+      Rails.logger.debug do
+        [
+          "Deadlock detected on attempt #{retry_count + 1} of #{max_retries}:",
+          e,
+          'No more retries.'
+        ].join "\n\n"
+      end
+
       raise e
     end
 
