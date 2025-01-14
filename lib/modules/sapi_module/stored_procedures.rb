@@ -9,7 +9,7 @@ module SapiModule
     # Runtime grows as the database grows, and in particular the trade plus
     # dataset is growing quite a bit year on year.
 
-    def self.rebuild(retry_count = 0, max_retries = 5, retry_delay = 30)
+    def self.rebuild
       Rails.logger.debug do
         'Beginning SapiModule::StoredProcedures.rebuild'
       end
@@ -98,30 +98,6 @@ module SapiModule
           )
         end
       end
-    rescue ActiveRecord::LockWaitTimeout => e
-      if retry_count < max_retries
-        Rails.logger.debug do
-          [
-            "Deadlock detected on attempt #{retry_count + 1} of #{max_retries}:",
-            e,
-            "Retrying in #{retry_delay} seconds"
-          ].join "\n\n"
-        end
-
-        sleep retry_delay
-
-        return rebuild(retry_count + 1, max_retries)
-      end
-
-      Rails.logger.debug do
-        [
-          "Deadlock detected on attempt #{retry_count + 1} of #{max_retries}:",
-          e,
-          'No more retries.'
-        ].join "\n\n"
-      end
-
-      raise e
     end
 
     def self.rebuild_cms_taxonomy_and_listings
