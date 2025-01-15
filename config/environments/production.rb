@@ -57,9 +57,22 @@ Rails.application.configure do
   # TODO: Since Rails 7.1, the log no longer output to file, but STDOUT, which is the better approach, specially suitable
   # for docker. However this project still deploying use cap, we may need to change it back until we ready?
   # Log to STDOUT by default
-  config.logger = ActiveSupport::Logger.new(STDOUT).
-    tap  { |logger| logger.formatter = Logger::Formatter.new }.
-    then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+  # config.logger = ActiveSupport::Logger.new(STDOUT).
+  #   tap  { |logger| logger.formatter = Logger::Formatter.new }.
+  #   then { |logger| ActiveSupport::TaggedLogging.new(logger) }
+
+  # Use default logging formatter so that PID and timestamp are not suppressed.
+  config.log_formatter = Logger::Formatter.new
+
+  # Use a different logger for distributed setups.
+  # require 'syslog/logger'
+  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
+
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  end
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
