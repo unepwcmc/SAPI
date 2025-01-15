@@ -6,6 +6,14 @@ default: &default
   username: <%= ENV.fetch("SAPI_DATABASE_USERNAME", Rails.application.credentials.dig(:db, :username)) %>
   password: <%= ENV.fetch("SAPI_DATABASE_PASSWORD", Rails.application.credentials.dig(:db, :password)) %>
   port:     <%= ENV.fetch("SAPI_DATABASE_PORT",     Rails.application.credentials.dig(:db, :port)) %>
+  variables:
+    # It is important that ordinary queries do not hang while waiting for a
+    # lock, as they risk piling up and also preventing important background
+    # tasks from running. The deadlicks may only be evident on production.
+    # The value given here, 10s, is generous. For longer-running queries that
+    # can afford to wait, this can be overridden; for an example, see
+    # `lib/modules/sapi_module/stored_procedures.rb`
+    lock_timeout: 10s
 
 development:
   <<: *default
