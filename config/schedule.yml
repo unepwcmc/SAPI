@@ -30,6 +30,6 @@ refresh_sitemap_job:
   class: "RefreshSitemapJob"
   queue: admin
 rst_processes_import_job:
-  cron: "30 1 * * 0"
+  cron: "30 2 * * 0"
   class: "RstProcessesImportJob"
   queue: admin
