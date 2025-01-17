@@ -10,6 +10,7 @@
 #
 # Indexes
 #
+#  index_designations_on_name         (name) UNIQUE
 #  index_designations_on_taxonomy_id  (taxonomy_id)
 #
 # Foreign Keys

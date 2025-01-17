@@ -84,6 +84,8 @@ class Annotation < ApplicationRecord
     with: /\A[^0-9a-z\s]\d+\z/i
   }
 
+  # cannot make [ :parent_symbol, :symbol ] unique - see https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/282
+
   before_save do
     if event
       self.parent_symbol = event.name

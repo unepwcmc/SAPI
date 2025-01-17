@@ -27,6 +27,7 @@
 #
 #  index_events_on_created_by_id   (created_by_id)
 #  index_events_on_designation_id  (designation_id)
+#  index_events_on_name            (name) UNIQUE
 #  index_events_on_updated_by_id   (updated_by_id)
 #
 # Foreign Keys

@@ -10,7 +10,9 @@
 #
 # Indexes
 #
-#  index_instruments_on_designation_id  (designation_id)
+#  index_instruments_on_designation_id           (designation_id)
+#  index_instruments_on_designation_id_and_name  (designation_id,name) UNIQUE
+#  index_instruments_on_name_and_designation_id  (name,designation_id) UNIQUE
 #
 # Foreign Keys
 #

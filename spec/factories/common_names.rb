@@ -12,9 +12,10 @@
 #
 # Indexes
 #
-#  index_common_names_on_created_by_id  (created_by_id)
-#  index_common_names_on_language_id    (language_id)
-#  index_common_names_on_updated_by_id  (updated_by_id)
+#  index_common_names_on_created_by_id         (created_by_id)
+#  index_common_names_on_language_id           (language_id)
+#  index_common_names_on_language_id_and_name  (language_id,name) UNIQUE
+#  index_common_names_on_updated_by_id         (updated_by_id)
 #
 # Foreign Keys
 #

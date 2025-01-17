@@ -15,6 +15,8 @@
 #
 # Indexes
 #
+#  idx_on_reference_id_taxon_concept_id_0ee5d90f26             (reference_id,taxon_concept_id) UNIQUE
+#  idx_on_taxon_concept_id_reference_id_762bf1e1d6             (taxon_concept_id,reference_id) UNIQUE
 #  index_taxon_concept_references_on_created_by_id             (created_by_id)
 #  index_taxon_concept_references_on_reference_id              (reference_id)
 #  index_taxon_concept_references_on_taxon_concept_id          (taxon_concept_id)
