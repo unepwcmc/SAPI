@@ -64,12 +64,12 @@ class Checklist::DownloadsController < ApplicationController
   end
 
   def download_index
-    @doc = download_module::Index.new(checklist_params)
+    @doc = download_module::Index.new(**checklist_params)
     send_download
   end
 
   def download_history
-    @doc = download_module::History.new(checklist_params)
+    @doc = download_module::History.new(**checklist_params)
     send_download
   end
 
@@ -112,7 +112,8 @@ private
 
   def checklist_params
     Checklist::ChecklistParams.sanitize(
-      params
+      # defer param permitting to Checklist::ChecklistParams
+      params.permit(params.keys).to_h
     )
   end
 end
