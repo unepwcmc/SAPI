@@ -10,6 +10,12 @@
 #  language_id   :integer          not null
 #  updated_by_id :integer
 #
+# Indexes
+#
+#  index_common_names_on_created_by_id  (created_by_id)
+#  index_common_names_on_language_id    (language_id)
+#  index_common_names_on_updated_by_id  (updated_by_id)
+#
 # Foreign Keys
 #
 #  common_names_created_by_id_fk  (created_by_id => users.id)

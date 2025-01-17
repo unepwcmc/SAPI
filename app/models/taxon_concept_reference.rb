@@ -15,7 +15,11 @@
 #
 # Indexes
 #
+#  index_taxon_concept_references_on_created_by_id             (created_by_id)
+#  index_taxon_concept_references_on_reference_id              (reference_id)
+#  index_taxon_concept_references_on_taxon_concept_id          (taxon_concept_id)
 #  index_taxon_concept_references_on_tc_id_is_std_is_cascaded  (taxon_concept_id,reference_id,is_standard,is_cascaded) UNIQUE
+#  index_taxon_concept_references_on_updated_by_id             (updated_by_id)
 #
 # Foreign Keys
 #

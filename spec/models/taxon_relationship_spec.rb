@@ -11,6 +11,13 @@
 #  taxon_relationship_type_id :integer          not null
 #  updated_by_id              :integer
 #
+# Indexes
+#
+#  index_taxon_relationships_on_created_by_id               (created_by_id)
+#  index_taxon_relationships_on_taxon_concept_id            (taxon_concept_id)
+#  index_taxon_relationships_on_taxon_relationship_type_id  (taxon_relationship_type_id)
+#  index_taxon_relationships_on_updated_by_id               (updated_by_id)
+#
 # Foreign Keys
 #
 #  taxon_relationships_created_by_id_fk               (created_by_id => users.id)

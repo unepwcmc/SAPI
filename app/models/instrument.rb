@@ -8,6 +8,10 @@
 #  updated_at     :datetime         not null
 #  designation_id :integer
 #
+# Indexes
+#
+#  index_instruments_on_designation_id  (designation_id)
+#
 # Foreign Keys
 #
 #  instruments_designation_id_fk  (designation_id => designations.id)

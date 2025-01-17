@@ -11,6 +11,10 @@
 #  updated_at      :datetime         not null
 #  designation_id  :integer          not null
 #
+# Indexes
+#
+#  index_change_types_on_designation_id  (designation_id)
+#
 # Foreign Keys
 #
 #  change_types_designation_id_fk  (designation_id => designations.id)

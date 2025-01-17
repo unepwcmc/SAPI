@@ -13,7 +13,10 @@
 #
 # Indexes
 #
+#  index_distributions_on_created_by_id     (created_by_id)
+#  index_distributions_on_geo_entity_id     (geo_entity_id)
 #  index_distributions_on_taxon_concept_id  (taxon_concept_id)
+#  index_distributions_on_updated_by_id     (updated_by_id)
 #
 # Foreign Keys
 #

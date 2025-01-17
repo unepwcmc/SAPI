@@ -9,6 +9,12 @@
 #  geo_relationship_type_id :integer          not null
 #  other_geo_entity_id      :integer          not null
 #
+# Indexes
+#
+#  index_geo_relationships_on_geo_entity_id             (geo_entity_id)
+#  index_geo_relationships_on_geo_relationship_type_id  (geo_relationship_type_id)
+#  index_geo_relationships_on_other_geo_entity_id       (other_geo_entity_id)
+#
 # Foreign Keys
 #
 #  geo_relationships_geo_entity_id_fk             (geo_entity_id => geo_entities.id)

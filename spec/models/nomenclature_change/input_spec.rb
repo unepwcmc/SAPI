@@ -14,6 +14,13 @@
 #  taxon_concept_id       :integer          not null
 #  updated_by_id          :integer          not null
 #
+# Indexes
+#
+#  index_nomenclature_change_inputs_on_created_by_id           (created_by_id)
+#  index_nomenclature_change_inputs_on_nomenclature_change_id  (nomenclature_change_id)
+#  index_nomenclature_change_inputs_on_taxon_concept_id        (taxon_concept_id)
+#  index_nomenclature_change_inputs_on_updated_by_id           (updated_by_id)
+#
 # Foreign Keys
 #
 #  nomenclature_change_inputs_created_by_id_fk           (created_by_id => users.id)

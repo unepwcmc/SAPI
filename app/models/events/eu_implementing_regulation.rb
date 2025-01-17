@@ -23,6 +23,12 @@
 #  legacy_id            :integer
 #  updated_by_id        :integer
 #
+# Indexes
+#
+#  index_events_on_created_by_id   (created_by_id)
+#  index_events_on_designation_id  (designation_id)
+#  index_events_on_updated_by_id   (updated_by_id)
+#
 # Foreign Keys
 #
 #  events_created_by_id_fk   (created_by_id => users.id)

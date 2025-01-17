@@ -16,6 +16,10 @@
 #  geo_entity_type_id :integer          not null
 #  legacy_id          :integer
 #
+# Indexes
+#
+#  index_geo_entities_on_geo_entity_type_id  (geo_entity_type_id)
+#
 # Foreign Keys
 #
 #  geo_entities_geo_entity_type_id_fk  (geo_entity_type_id => geo_entity_types.id)

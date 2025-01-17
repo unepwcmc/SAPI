@@ -14,8 +14,11 @@
 #
 # Indexes
 #
+#  index_listing_distributions_on_created_by_id      (created_by_id)
 #  index_listing_distributions_on_geo_entity_id      (geo_entity_id)
 #  index_listing_distributions_on_listing_change_id  (listing_change_id)
+#  index_listing_distributions_on_original_id        (original_id)
+#  index_listing_distributions_on_updated_by_id      (updated_by_id)
 #
 # Foreign Keys
 #
