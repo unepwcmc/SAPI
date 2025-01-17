@@ -25,36 +25,30 @@ services:
       POSTGRES_HOST_AUTH_METHOD: "trust"
       POSTGRES_DB: "sapi_development"
 
-  deploy:
-    container_name: sapi-cap-deploy
-    build:
-      context: ./
-      dockerfile: Dockerfile.cap-deploy
-    volumes:
-      - '.:/SAPI'
-      - bundler_gems:/usr/local/bundle
-    networks:
-      - sapi
-    stdin_open: true
-    tty: true
-    environment:
-      SAPI_DATABASE_HOST: sapi-db
-      SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
-      # Defaults to blank; used by AppSignal:
-      USER: "$USER"
-      USERNAME: "$USERNAME"
-    secrets:
-      - host_ssh_key
-      - host_ssh_config
-
   rails:
     container_name: sapi-rails
     build:
       context: ./
       dockerfile: Dockerfile
     command: /bin/bash -l -c "rm -f ./tmp/pids/server.pid && bundle install && bundle exec rails s -p 3000 -b '0.0.0.0'"
-    volumes:
-      - '.:/SAPI'
+    volumes: &rails_volumes
+      # Used for both rails and sidekiq
+
+      # The following paths are writable by the application at runtime
+      - 'app_tmp:/SAPI/tmp'
+      - 'app_log:/SAPI/log'
+      - 'app_public_uploads:/SAPI/public/uploads'
+      - 'app_public_downloads:/SAPI/public/downloads'
+      - 'app_private_elibrary:/SAPI/private/elibrary'
+
+      # The following paths are writable during build/development
+      - './Gemfile.lock:/SAPI/Gemfile.lock'
+
+      # The rest of the application should not be writable, except to run
+      # specific tasks like db migrations
+      - '.:/SAPI:${SAPI_CONTAINER_FS_MODE:-ro}'
+
+      # Keep the cache of bundler gems for sharing across install commands
       - bundler_gems:/usr/local/bundle
     ports:
       - '${SAPI_CONTAINER_RAILS_PORT:-3000}:3000'
@@ -74,6 +68,26 @@ services:
       - db
       - mailcatcher
       - memcached
+
+  deploy:
+    container_name: sapi-cap-deploy
+    build:
+      context: ./
+      dockerfile: Dockerfile.cap-deploy
+    volumes: *rails_volumes
+    networks:
+      - sapi
+    stdin_open: true
+    tty: true
+    environment:
+      SAPI_DATABASE_HOST: sapi-db
+      SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+      # Defaults to blank; used by AppSignal:
+      USER: "$USER"
+      USERNAME: "$USERNAME"
+    secrets:
+      - host_ssh_key
+      - host_ssh_config
 
   redis:
     container_name: sapi-redis
@@ -99,9 +113,7 @@ services:
       - mailcatcher
       - memcached
     command: /bin/bash -l -c "bundle install && bundle exec sidekiq -C config/sidekiq.yml"
-    volumes:
-      - '.:/SAPI'
-      - bundler_gems:/usr/local/bundle
+    volumes: *rails_volumes
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
       MEMCACHE_SERVERS: sapi-memcached:11211
@@ -131,6 +143,11 @@ volumes:
   pgdata:
   bundler_gems:
   redis_data:
+  app_tmp:
+  app_log:
+  app_private_elibrary:
+  app_public_uploads:
+  app_public_downloads:
 
 secrets:
   host_ssh_key:
