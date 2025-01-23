@@ -3,13 +3,18 @@
 # Table name: languages
 #
 #  id         :integer          not null, primary key
-#  name_en    :string(255)      not null
-#  name_fr    :string(255)
-#  name_es    :string(255)
 #  iso_code1  :string(255)
 #  iso_code3  :string(255)      not null
+#  name_en    :string(255)      not null
+#  name_es    :string(255)
+#  name_fr    :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_languages_on_iso_code1  (iso_code1) UNIQUE WHERE (iso_code1 IS NOT NULL)
+#  index_languages_on_iso_code3  (iso_code3) UNIQUE
 #
 
 class Language < ApplicationRecord

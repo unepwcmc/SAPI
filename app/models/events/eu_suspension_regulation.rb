@@ -23,6 +23,15 @@
 #  legacy_id            :integer
 #  updated_by_id        :integer
 #
+# Indexes
+#
+#  idx_events_where_is_current_on_type_subtype_designation  (type,subtype,designation_id) WHERE is_current
+#  index_events_on_created_by_id                            (created_by_id)
+#  index_events_on_designation_id                           (designation_id)
+#  index_events_on_name                                     (name) UNIQUE
+#  index_events_on_type_and_subtype_and_designation_id      (type,subtype,designation_id)
+#  index_events_on_updated_by_id                            (updated_by_id)
+#
 # Foreign Keys
 #
 #  events_created_by_id_fk   (created_by_id => users.id)
@@ -40,8 +49,9 @@ class EuSuspensionRegulation < EuEvent
   # Because EuSuspensionRegulation events are created with many suspensions
   # copied over from the previous event, it's legitimate to allow cascade
   # deletion via dependent: :destroy.
+  #
   # Note that this behaviour differs from the relationship between CITES CoPs
-  # and CITES Listings
+  # and CITES Listings, as the listings are added one by one.
   has_many :eu_suspensions,
     foreign_key: :start_event_id,
     dependent: :destroy

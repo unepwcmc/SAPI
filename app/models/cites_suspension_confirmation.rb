@@ -8,6 +8,11 @@
 #  cites_suspension_id              :integer          not null
 #  cites_suspension_notification_id :integer          not null
 #
+# Indexes
+#
+#  idx_on_cites_suspension_notification_id_90078b2a64           (cites_suspension_notification_id)
+#  index_cites_suspension_confirmations_on_cites_suspension_id  (cites_suspension_id)
+#
 # Foreign Keys
 #
 #  cites_suspension_confirmations_cites_suspension_id_fk  (cites_suspension_id => trade_restrictions.id)

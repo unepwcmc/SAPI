@@ -10,6 +10,13 @@
 #  taxon_concept_id :integer          not null
 #  updated_by_id    :integer
 #
+# Indexes
+#
+#  index_taxon_commons_on_common_name_id    (common_name_id)
+#  index_taxon_commons_on_created_by_id     (created_by_id)
+#  index_taxon_commons_on_taxon_concept_id  (taxon_concept_id)
+#  index_taxon_commons_on_updated_by_id     (updated_by_id)
+#
 # Foreign Keys
 #
 #  taxon_commons_common_name_id_fk    (common_name_id => common_names.id)

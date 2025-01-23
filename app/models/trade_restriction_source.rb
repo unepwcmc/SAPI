@@ -10,6 +10,13 @@
 #  trade_restriction_id :integer
 #  updated_by_id        :integer
 #
+# Indexes
+#
+#  index_trade_restriction_sources_on_created_by_id         (created_by_id)
+#  index_trade_restriction_sources_on_source_id             (source_id)
+#  index_trade_restriction_sources_on_trade_restriction_id  (trade_restriction_id)
+#  index_trade_restriction_sources_on_updated_by_id         (updated_by_id)
+#
 # Foreign Keys
 #
 #  trade_restriction_sources_created_by_id_fk      (created_by_id => users.id)

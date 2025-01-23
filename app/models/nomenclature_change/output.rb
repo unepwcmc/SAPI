@@ -28,6 +28,16 @@
 #  taxonomy_id            :integer
 #  updated_by_id          :integer          not null
 #
+# Indexes
+#
+#  index_nomenclature_change_outputs_on_created_by_id           (created_by_id)
+#  index_nomenclature_change_outputs_on_new_parent_id           (new_parent_id)
+#  index_nomenclature_change_outputs_on_new_rank_id             (new_rank_id)
+#  index_nomenclature_change_outputs_on_new_taxon_concept_id    (new_taxon_concept_id)
+#  index_nomenclature_change_outputs_on_nomenclature_change_id  (nomenclature_change_id)
+#  index_nomenclature_change_outputs_on_taxon_concept_id        (taxon_concept_id)
+#  index_nomenclature_change_outputs_on_updated_by_id           (updated_by_id)
+#
 # Foreign Keys
 #
 #  nomenclature_change_outputs_created_by_id_fk           (created_by_id => users.id)

@@ -8,6 +8,11 @@
 #  eu_decision_id :integer
 #  event_id       :integer
 #
+# Indexes
+#
+#  index_eu_decision_confirmations_on_eu_decision_id  (eu_decision_id)
+#  index_eu_decision_confirmations_on_event_id        (event_id)
+#
 # Foreign Keys
 #
 #  eu_decision_confirmations_eu_decision_id_fk  (eu_decision_id => eu_decisions.id)

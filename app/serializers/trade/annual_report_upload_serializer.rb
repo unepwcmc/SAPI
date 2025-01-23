@@ -33,6 +33,14 @@
 #  trading_country_id          :integer          not null
 #  updated_by_id               :integer
 #
+# Indexes
+#
+#  index_trade_annual_report_uploads_on_created_by          (created_by)
+#  index_trade_annual_report_uploads_on_created_by_id       (created_by_id)
+#  index_trade_annual_report_uploads_on_trading_country_id  (trading_country_id)
+#  index_trade_annual_report_uploads_on_updated_by          (updated_by)
+#  index_trade_annual_report_uploads_on_updated_by_id       (updated_by_id)
+#
 # Foreign Keys
 #
 #  trade_annual_report_uploads_created_by_fk          (created_by => users.id)

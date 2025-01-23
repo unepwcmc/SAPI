@@ -1,7 +1,7 @@
 ##
 # See also Deletable.
 #
-# This class defines methods used by Deletable in order to determine if records
+# This module defines methods used by Deletable in order to determine if records
 # can be deleted safely, prior to attempting deletion.
 #
 # TODO: replace the manually-curated `dependent_objects_map` with introspection

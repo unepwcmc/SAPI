@@ -8,6 +8,11 @@
 #  designation_id :integer          not null
 #  geo_entity_id  :integer          not null
 #
+# Indexes
+#
+#  index_designation_geo_entities_on_designation_id  (designation_id)
+#  index_designation_geo_entities_on_geo_entity_id   (geo_entity_id)
+#
 # Foreign Keys
 #
 #  designation_geo_entities_designation_id_fk  (designation_id => designations.id)

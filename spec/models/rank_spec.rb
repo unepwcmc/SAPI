@@ -3,14 +3,21 @@
 # Table name: ranks
 #
 #  id                 :integer          not null, primary key
-#  name               :string(255)      not null
-#  taxonomic_position :string(255)      default("0"), not null
-#  fixed_order        :boolean          default(FALSE), not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
 #  display_name_en    :text             not null
 #  display_name_es    :text
 #  display_name_fr    :text
+#  fixed_order        :boolean          default(FALSE), not null
+#  name               :string(255)      not null
+#  taxonomic_position :string(255)      default("0"), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
+# Indexes
+#
+#  index_ranks_on_display_name_en  (display_name_en) UNIQUE
+#  index_ranks_on_display_name_es  (display_name_es) UNIQUE WHERE (display_name_es IS NOT NULL)
+#  index_ranks_on_display_name_fr  (display_name_fr) UNIQUE WHERE (display_name_fr IS NOT NULL)
+#  index_ranks_on_name             (name) UNIQUE
 #
 
 require 'spec_helper'

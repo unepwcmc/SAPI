@@ -12,8 +12,10 @@
 #
 # Indexes
 #
+#  index_distribution_references_on_created_by_id           (created_by_id)
 #  index_distribution_references_on_distribution_id         (distribution_id)
 #  index_distribution_references_on_reference_id            (reference_id)
+#  index_distribution_references_on_updated_by_id           (updated_by_id)
 #  index_distribution_refs_on_distribution_id_reference_id  (distribution_id,reference_id) UNIQUE
 #
 # Foreign Keys

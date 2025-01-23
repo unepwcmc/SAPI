@@ -32,12 +32,17 @@
 #
 # Indexes
 #
+#  index_taxon_concepts_on_created_by_id                    (created_by_id)
 #  index_taxon_concepts_on_created_by_id_and_updated_by_id  (created_by_id,updated_by_id)
+#  index_taxon_concepts_on_dependents_updated_by_id         (dependents_updated_by_id)
 #  index_taxon_concepts_on_full_name                        (upper((full_name)::text) text_pattern_ops)
 #  index_taxon_concepts_on_legacy_trade_code                (legacy_trade_code)
 #  index_taxon_concepts_on_name_status                      (name_status)
 #  index_taxon_concepts_on_parent_id                        (parent_id)
+#  index_taxon_concepts_on_rank_id                          (rank_id)
+#  index_taxon_concepts_on_taxon_name_id                    (taxon_name_id)
 #  index_taxon_concepts_on_taxonomy_id                      (taxonomy_id)
+#  index_taxon_concepts_on_updated_by_id                    (updated_by_id)
 #
 # Foreign Keys
 #

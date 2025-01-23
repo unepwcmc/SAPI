@@ -13,6 +13,7 @@
 #
 # Indexes
 #
+#  index_proposal_details_on_document_id          (document_id)
 #  index_proposal_details_on_proposal_outcome_id  (proposal_outcome_id)
 #
 # Foreign Keys

@@ -10,6 +10,13 @@
 #  nomenclature_change_reassignment_id :integer          not null
 #  updated_by_id                       :integer          not null
 #
+# Indexes
+#
+#  idx_on_created_by_id_9d0424fa57                        (created_by_id)
+#  idx_on_nomenclature_change_output_id_8c146310b0        (nomenclature_change_output_id)
+#  idx_on_nomenclature_change_reassignment_id_f4d2638734  (nomenclature_change_reassignment_id)
+#  idx_on_updated_by_id_50171fe98f                        (updated_by_id)
+#
 # Foreign Keys
 #
 #  nomenclature_change_reassignment_targets_created_by_id_fk    (created_by_id => users.id)

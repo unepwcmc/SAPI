@@ -12,7 +12,9 @@
 #
 # Indexes
 #
-#  index_document_citations_on_document_id  (document_id)
+#  index_document_citations_on_created_by_id  (created_by_id)
+#  index_document_citations_on_document_id    (document_id)
+#  index_document_citations_on_updated_by_id  (updated_by_id)
 #
 # Foreign Keys
 #

@@ -16,6 +16,12 @@
 #  geo_entity_type_id :integer          not null
 #  legacy_id          :integer
 #
+# Indexes
+#
+#  index_geo_entities_on_geo_entity_type_id  (geo_entity_type_id)
+#  index_geo_entities_on_iso_code2           (iso_code2) UNIQUE WHERE (iso_code2 IS NOT NULL)
+#  index_geo_entities_on_iso_code3           (iso_code3) UNIQUE WHERE (iso_code3 IS NOT NULL)
+#
 # Foreign Keys
 #
 #  geo_entities_geo_entity_type_id_fk  (geo_entity_type_id => geo_entity_types.id)

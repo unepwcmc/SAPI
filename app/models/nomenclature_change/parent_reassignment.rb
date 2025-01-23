@@ -16,6 +16,12 @@
 #  reassignable_id              :integer
 #  updated_by_id                :integer          not null
 #
+# Indexes
+#
+#  idx_on_nomenclature_change_input_id_837992fd1b            (nomenclature_change_input_id)
+#  index_nomenclature_change_reassignments_on_created_by_id  (created_by_id)
+#  index_nomenclature_change_reassignments_on_updated_by_id  (updated_by_id)
+#
 # Foreign Keys
 #
 #  nomenclature_change_reassignments_created_by_id_fk  (created_by_id => users.id)

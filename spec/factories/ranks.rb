@@ -12,6 +12,13 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #
+# Indexes
+#
+#  index_ranks_on_display_name_en  (display_name_en) UNIQUE
+#  index_ranks_on_display_name_es  (display_name_es) UNIQUE WHERE (display_name_es IS NOT NULL)
+#  index_ranks_on_display_name_fr  (display_name_fr) UNIQUE WHERE (display_name_fr IS NOT NULL)
+#  index_ranks_on_name             (name) UNIQUE
+#
 
 def attributes_for_rank(name)
   send("attributes_for_#{name.downcase}")

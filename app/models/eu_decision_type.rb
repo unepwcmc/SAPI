@@ -3,11 +3,15 @@
 # Table name: eu_decision_types
 #
 #  id            :integer          not null, primary key
+#  decision_type :string(255)
 #  name          :string(255)
 #  tooltip       :string(255)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  decision_type :string(255)
+#
+# Indexes
+#
+#  index_eu_decision_types_on_name  (name) UNIQUE
 #
 
 class EuDecisionType < ApplicationRecord
