@@ -70,6 +70,7 @@ private
 
       # Distributions
       [ :distributions, [ :taxon_concept_id, :geo_entity_id ] ],
+      [ :distributions, [ :geo_entity_id, :taxon_concept_id ] ],
 
       # Event
       [ :events, :name ],

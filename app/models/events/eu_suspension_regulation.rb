@@ -25,10 +25,12 @@
 #
 # Indexes
 #
-#  index_events_on_created_by_id   (created_by_id)
-#  index_events_on_designation_id  (designation_id)
-#  index_events_on_name            (name) UNIQUE
-#  index_events_on_updated_by_id   (updated_by_id)
+#  idx_events_where_is_current_on_type_subtype_designation  (type,subtype,designation_id) WHERE is_current
+#  index_events_on_created_by_id                            (created_by_id)
+#  index_events_on_designation_id                           (designation_id)
+#  index_events_on_name                                     (name) UNIQUE
+#  index_events_on_type_and_subtype_and_designation_id      (type,subtype,designation_id)
+#  index_events_on_updated_by_id                            (updated_by_id)
 #
 # Foreign Keys
 #

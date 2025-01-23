@@ -27,6 +27,7 @@
 #
 # Indexes
 #
+#  idx_listing_changes_where_is_current_on_taxon_type_listing      (taxon_concept_id,change_type_id,species_listing_id) WHERE is_current
 #  idx_on_taxon_concept_id_change_type_id_species_list_cd32a66f6c  (taxon_concept_id,change_type_id,species_listing_id)
 #  idx_on_taxon_concept_id_species_listing_id_change_t_46cc05e312  (taxon_concept_id,species_listing_id,change_type_id)
 #  index_listing_changes_on_annotation_id                          (annotation_id)
