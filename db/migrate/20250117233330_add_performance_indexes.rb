@@ -1,22 +1,8 @@
 class AddPerformanceIndexes < ActiveRecord::Migration[7.1]
   def change
+    # These lock tables for writes, but these tables are generally only written
+    # to by WCMC staff so we can handle a short period of downtime here.
     safety_assured do
-      add_index :api_requests, [
-        :user_id, :created_at, :response_status
-      ]
-
-      add_index :api_requests, [
-        :user_id, :response_status, :created_at
-      ]
-
-      add_index :api_requests, [
-        :response_status, :created_at
-      ]
-
-      add_index :api_requests, [
-        :controller, :action, :response_status, :created_at
-      ]
-
       add_index :listing_changes, [
         :taxon_concept_id, :change_type_id, :species_listing_id
       ]
