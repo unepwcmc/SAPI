@@ -1,37 +1,40 @@
-
 default: &default
-  adapter: postgresql
-  encoding: unicode
-  host:     <%= ENV.fetch("SAPI_DATABASE_HOST",     Rails.application.credentials.dig(:db, :host)) %>
-  username: <%= ENV.fetch("SAPI_DATABASE_USERNAME", Rails.application.credentials.dig(:db, :username)) %>
-  password: <%= ENV.fetch("SAPI_DATABASE_PASSWORD", Rails.application.credentials.dig(:db, :password)) %>
-  port:     <%= ENV.fetch("SAPI_DATABASE_PORT",     Rails.application.credentials.dig(:db, :port)) %>
-  variables:
-    # It is important that ordinary queries do not hang while waiting for a
-    # lock, as they risk piling up and also preventing important background
-    # tasks from running. The deadlicks may only be evident on production.
-    # The value given here, 10s, is generous. For longer-running queries that
-    # can afford to wait, this can be overridden; for an example, see
-    # `lib/modules/sapi_module/stored_procedures.rb`
-    lock_timeout: 10s
+  primary:
+    adapter: postgresql
+    encoding: unicode
+    pool:     <%= ENV.fetch("SAPI_RAILS_MAX_THREADS") { 5 } %>
+    host:     <%= ENV.fetch("SAPI_DATABASE_HOST",     Rails.application.credentials.dig(:db, :host)) %>
+    username: <%= ENV.fetch("SAPI_DATABASE_USERNAME", Rails.application.credentials.dig(:db, :username)) %>
+    password: <%= ENV.fetch("SAPI_DATABASE_PASSWORD", Rails.application.credentials.dig(:db, :password)) %>
+    port:     <%= ENV.fetch("SAPI_DATABASE_PORT",     Rails.application.credentials.dig(:db, :port)) %>
+    database: <%= "sapi_#{Rails.env}" %>
+    variables:
+      # It is important that ordinary queries do not hang while waiting for a
+      # lock, as they risk piling up and also preventing important background
+      # tasks from running. The deadlicks may only be evident on production.
+      # The value given here, 10s, is generous. For longer-running queries that
+      # can afford to wait, this can be overridden; for an example, see
+      # `lib/modules/sapi_module/stored_procedures.rb`
+      lock_timeout: 10s
+  captive_breeding:
+    adapter: postgresql
+    encoding: unicode
+    pool:     <%= ENV.fetch("SAPI_RAILS_MAX_THREADS") { 5 } %>
+    host:     <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_HOST",     Rails.application.credentials.dig(:captive_breeding_db, :host) || 'localhost') %>
+    username: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_USERNAME", Rails.application.credentials.dig(:captive_breeding_db, :username) || 'postgres') %>
+    password: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PASSWORD", Rails.application.credentials.dig(:captive_breeding_db, :password)) %>
+    port:     <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PORT",     Rails.application.credentials.dig(:captive_breeding_db, :port) || '5432') %>
+    database: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE",          Rails.application.credentials.dig(:captive_breeding_db, :database) || "captive_breeding_database_#{Rails.env}") %>
+    database_tasks: false
 
 development:
   <<: *default
-  database: sapi_development
-  timeout: 5000
-  # For details on connection pooling, see Rails configuration guide
-  # https://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("SAPI_RAILS_MAX_THREADS") { 5 } %>
 
 test:
   <<: *default
-  database: sapi_test
-  timeout: 5000
 
 staging:
   <<: *default
-  database: sapi_staging
 
 production:
   <<: *default
-  database: sapi_production
