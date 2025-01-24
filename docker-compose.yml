@@ -38,6 +38,7 @@ services:
       # The following paths are writable by the application at runtime
       - 'app_tmp:/SAPI/tmp'
       - 'app_log:/SAPI/log'
+      - 'app_public_assets:/SAPI/public/assets'
       - 'app_public_uploads:/SAPI/public/uploads'
       - 'app_public_downloads:/SAPI/public/downloads'
       - 'app_private_elibrary:/SAPI/private/elibrary'
@@ -150,6 +151,7 @@ volumes:
   app_log:
   app_private_elibrary:
   app_public_uploads:
+  app_public_assets:
   app_public_downloads:
 
 secrets:
