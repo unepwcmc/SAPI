@@ -12,7 +12,11 @@
 #
 # Indexes
 #
-#  index_citation_geo_entities_on_geo_entity_id_citation_id  (geo_entity_id,document_citation_id) UNIQUE
+#  index_citation_geo_entities_on_geo_entity_id_citation_id      (geo_entity_id,document_citation_id) UNIQUE
+#  index_document_citation_geo_entities_on_created_by_id         (created_by_id)
+#  index_document_citation_geo_entities_on_document_citation_id  (document_citation_id)
+#  index_document_citation_geo_entities_on_geo_entity_id         (geo_entity_id)
+#  index_document_citation_geo_entities_on_updated_by_id         (updated_by_id)
 #
 # Foreign Keys
 #

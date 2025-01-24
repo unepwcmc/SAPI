@@ -13,12 +13,8 @@ class DocumentSearch
     initialize_query
   end
 
-  # TODO: temporarily removing pagination here because of the new cascading
-  # feature. Add it back after the refactor of the SQL mviews.
-  # NB: this TODO has existed for some time.
-  # .limit(@per_page).offset(@offset)
   def results
-    @query.to_a.map do |record|
+    @query.limit(@per_page).offset(@offset).to_a.map do |record|
       record.attributes
     end
   end
@@ -35,7 +31,8 @@ class DocumentSearch
       @query.count(:all)
     else
       query = "SELECT count(*) AS count_all FROM (#{@query.to_sql}) x"
-      count = ApplicationRecord.connection.execute(
+
+      ApplicationRecord.connection.execute(
         query
       ).first.try(
         :[], 'count_all'

@@ -11,7 +11,11 @@
 #
 # Indexes
 #
-#  index_term_trade_codes_pairs_on_term_and_trade_code  (term_id,trade_code_id,trade_code_type) UNIQUE
+#  index_term_trade_codes_pairs_on_term_and_trade_code        (term_id,trade_code_id,trade_code_type) UNIQUE
+#  index_term_trade_codes_pairs_on_term_id                    (term_id)
+#  index_term_trade_codes_pairs_on_term_id_and_trade_code_id  (term_id,trade_code_id) UNIQUE
+#  index_term_trade_codes_pairs_on_trade_code_id              (trade_code_id)
+#  index_term_trade_codes_pairs_on_trade_code_id_and_term_id  (trade_code_id,term_id) UNIQUE
 #
 # Foreign Keys
 #

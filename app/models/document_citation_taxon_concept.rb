@@ -12,7 +12,11 @@
 #
 # Indexes
 #
-#  index_citation_taxon_concepts_on_taxon_concept_id_citation_id  (taxon_concept_id,document_citation_id) UNIQUE
+#  index_citation_taxon_concepts_on_taxon_concept_id_citation_id   (taxon_concept_id,document_citation_id) UNIQUE
+#  index_document_citation_taxon_concepts_on_created_by_id         (created_by_id)
+#  index_document_citation_taxon_concepts_on_document_citation_id  (document_citation_id)
+#  index_document_citation_taxon_concepts_on_taxon_concept_id      (taxon_concept_id)
+#  index_document_citation_taxon_concepts_on_updated_by_id         (updated_by_id)
 #
 # Foreign Keys
 #

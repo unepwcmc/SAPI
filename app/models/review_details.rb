@@ -12,6 +12,7 @@
 #
 # Indexes
 #
+#  index_review_details_on_document_id       (document_id)
 #  index_review_details_on_process_stage_id  (process_stage_id)
 #  index_review_details_on_review_phase_id   (review_phase_id)
 #

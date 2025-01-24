@@ -15,6 +15,8 @@
 # Indexes
 #
 #  index_comments_on_commentable_and_comment_type  (commentable_id,commentable_type,comment_type)
+#  index_comments_on_created_by_id                 (created_by_id)
+#  index_comments_on_updated_by_id                 (updated_by_id)
 #
 # Foreign Keys
 #

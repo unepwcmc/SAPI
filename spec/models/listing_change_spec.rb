@@ -27,12 +27,20 @@
 #
 # Indexes
 #
-#  index_listing_changes_on_annotation_id               (annotation_id)
-#  index_listing_changes_on_event_id                    (event_id)
-#  index_listing_changes_on_hash_annotation_id          (hash_annotation_id)
-#  index_listing_changes_on_inclusion_taxon_concept_id  (inclusion_taxon_concept_id)
-#  index_listing_changes_on_parent_id                   (parent_id)
-#  index_listing_changes_on_taxon_concept_id            (taxon_concept_id)
+#  idx_listing_changes_where_is_current_on_taxon_type_listing      (taxon_concept_id,change_type_id,species_listing_id) WHERE is_current
+#  idx_on_taxon_concept_id_change_type_id_species_list_cd32a66f6c  (taxon_concept_id,change_type_id,species_listing_id)
+#  idx_on_taxon_concept_id_species_listing_id_change_t_46cc05e312  (taxon_concept_id,species_listing_id,change_type_id)
+#  index_listing_changes_on_annotation_id                          (annotation_id)
+#  index_listing_changes_on_change_type_id                         (change_type_id)
+#  index_listing_changes_on_created_by_id                          (created_by_id)
+#  index_listing_changes_on_event_id                               (event_id)
+#  index_listing_changes_on_hash_annotation_id                     (hash_annotation_id)
+#  index_listing_changes_on_inclusion_taxon_concept_id             (inclusion_taxon_concept_id)
+#  index_listing_changes_on_original_id                            (original_id)
+#  index_listing_changes_on_parent_id                              (parent_id)
+#  index_listing_changes_on_species_listing_id                     (species_listing_id)
+#  index_listing_changes_on_taxon_concept_id                       (taxon_concept_id)
+#  index_listing_changes_on_updated_by_id                          (updated_by_id)
 #
 # Foreign Keys
 #
