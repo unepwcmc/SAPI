@@ -87,7 +87,7 @@ private
       [ :preset_tags, 'name, upper(model)' ],
 
       # SrgHistory
-      [ :srg_history, :name ],
+      [ :srg_histories, :name ],
 
       # Taggings
       [
