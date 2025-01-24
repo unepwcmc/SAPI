@@ -11,12 +11,12 @@ default: &default
   captive_breeding:
     adapter: postgresql
     encoding: unicode
-    pool:     1
-    host:     <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_HOST",     Rails.application.credentials.dig(:captive_breeding_db, :host)) %>
-    username: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_USERNAME", Rails.application.credentials.dig(:captive_breeding_db, :username)) %>
+    pool:     <%= ENV.fetch("SAPI_RAILS_MAX_THREADS") { 5 } %>
+    host:     <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_HOST",     Rails.application.credentials.dig(:captive_breeding_db, :host) || 'localhost') %>
+    username: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_USERNAME", Rails.application.credentials.dig(:captive_breeding_db, :username) || 'postgres') %>
     password: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PASSWORD", Rails.application.credentials.dig(:captive_breeding_db, :password)) %>
-    port:     <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PORT",     Rails.application.credentials.dig(:captive_breeding_db, :port)) %>
-    database: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE",          Rails.application.credentials.dig(:captive_breeding_db, :database)) %>
+    port:     <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PORT",     Rails.application.credentials.dig(:captive_breeding_db, :port) || '5432') %>
+    database: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE",          Rails.application.credentials.dig(:captive_breeding_db, :database) || "captive_breeding_database_#{Rails.env}") %>
     database_tasks: false
 
 development:
