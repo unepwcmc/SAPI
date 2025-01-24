@@ -2,20 +2,21 @@ default: &default
   primary:
     adapter: postgresql
     encoding: unicode
-    pool: <%= ENV.fetch("SAPI_RAILS_MAX_THREADS") { 5 } %>
-    host: <%= ENV.fetch("SAPI_DATABASE_HOST",     Rails.application.credentials.dig(:db, :host)) %>
+    pool:     <%= ENV.fetch("SAPI_RAILS_MAX_THREADS") { 5 } %>
+    host:     <%= ENV.fetch("SAPI_DATABASE_HOST",     Rails.application.credentials.dig(:db, :host)) %>
     username: <%= ENV.fetch("SAPI_DATABASE_USERNAME", Rails.application.credentials.dig(:db, :username)) %>
     password: <%= ENV.fetch("SAPI_DATABASE_PASSWORD", Rails.application.credentials.dig(:db, :password)) %>
-    port: <%= ENV.fetch("SAPI_DATABASE_PORT",     Rails.application.credentials.dig(:db, :port)) %>
+    port:     <%= ENV.fetch("SAPI_DATABASE_PORT",     Rails.application.credentials.dig(:db, :port)) %>
     database: <%= "sapi_#{Rails.env}" %>
   captive_breeding:
     adapter: postgresql
     encoding: unicode
-    host: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_HOST", 'localhost') %>
-    username: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_USERNAME", 'postgres') %>
-    password: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PASSWORD", '') %>
-    port: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PORT", 5432) %>
-    database: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE", "captive_breeding_database_#{Rails.env}") %>
+    pool:     1
+    host:     <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_HOST",     Rails.application.credentials.dig(:captive_breeding_db, :host)) %>
+    username: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_USERNAME", Rails.application.credentials.dig(:captive_breeding_db, :username)) %>
+    password: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PASSWORD", Rails.application.credentials.dig(:captive_breeding_db, :password)) %>
+    port:     <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PORT",     Rails.application.credentials.dig(:captive_breeding_db, :port)) %>
+    database: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE",          Rails.application.credentials.dig(:captive_breeding_db, :database)) %>
     database_tasks: false
 
 development:
