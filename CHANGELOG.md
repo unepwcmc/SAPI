@@ -1,3 +1,8 @@
+### Forthcoming
+
+* Fixes an issue where certain params for downloading content of CITES
+  checklists were being ignored.
+
 ### 1.16.2
 
 * Fixes an issue where logging was not happening (affecting production only).
