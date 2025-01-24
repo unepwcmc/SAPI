@@ -35,10 +35,9 @@ services:
     volumes: &rails_volumes
       # Used for both rails and sidekiq
 
-      # The following paths are writable by the application at runtime
+      # The following paths are commonly written by the application at runtime
       - 'app_tmp:/SAPI/tmp'
       - 'app_log:/SAPI/log'
-      - 'app_public_assets:/SAPI/public/assets'
       - 'app_public_uploads:/SAPI/public/uploads'
       - 'app_public_downloads:/SAPI/public/downloads'
       - 'app_private_elibrary:/SAPI/private/elibrary'
@@ -46,9 +45,22 @@ services:
       # The following paths are writable during build/development
       - './Gemfile.lock:/SAPI/Gemfile.lock'
 
-      # The rest of the application should not be writable, except to run
+      # Most rest of the application should not be writable, except to run
       # specific tasks like db migrations
-      - '.:/SAPI:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './app:/SAPI/app:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './bin:/SAPI/bin:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './config:/SAPI/config:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './db:/SAPI/db:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './db_init:/SAPI/db_init:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './doc:/SAPI/doc:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './lib:/SAPI/lib:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './script:/SAPI/script:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './spec:/SAPI/spec:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './vendor:/SAPI/vendor:${SAPI_CONTAINER_FS_MODE:-ro}'
+
+      # During deploy public/assets is removed and re-added
+      - './public:/SAPI/public'
+      - '.:/SAPI'
 
       # Keep the cache of bundler gems for sharing across install commands
       - bundler_gems:/usr/local/bundle
@@ -149,9 +161,10 @@ volumes:
   redis_data:
   app_tmp:
   app_log:
+  app_private:
+  app_public:
   app_private_elibrary:
   app_public_uploads:
-  app_public_assets:
   app_public_downloads:
 
 secrets:
