@@ -19,7 +19,7 @@ class Trade::Grouping::Base
     raise ArgumentError, 'Bad taxonomic_level' unless opts[:taxonomic_level].blank? || /\A\w+\z/.match?(opts[:taxonomic_level])
     raise ArgumentError, 'Bad group_name' unless opts[:group_name].blank? || /\A\w+\z/.match?(opts[:group_name])
     raise ArgumentError, 'Bad country_ids' unless opts[:country_ids].blank? || /\A[\d,]+\z/.match?(opts[:country_ids])
-    raise ArgumentError, 'Bad origin_ids' unless opts[:country_ids].blank? || /\A[\w,]+\z/.match?(opts[:origin_ids])
+    raise ArgumentError, 'Bad origin_ids' unless opts[:origin_ids].blank? || /\A[\w,]+\z/.match?(opts[:origin_ids])
     raise ArgumentError, 'Bad taxon_id' unless opts[:taxon_id].blank? || /\A[\d,]+\z/.match?(opts[:taxon_id])
     raise ArgumentError, 'Bad time_range_end' unless opts[:time_range_end].blank? || /\A\d+\z/.match?(opts[:time_range_end])
     raise ArgumentError, 'Bad time_range_start' unless opts[:time_range_start].blank? || /\A\d+\z/.match?(opts[:time_range_start])
