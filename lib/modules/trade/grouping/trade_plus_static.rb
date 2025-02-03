@@ -13,9 +13,9 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     raise StandardError('Bad reported_by') unless /\A\w+\z/.match?(opts[:reported_by])
     raise StandardError('Bad reported_by_party') unless /\A\w+\z/.match?(opts[:reported_by_party])
     raise StandardError('Bad locale') unless /\A\w+\z/.match?(opts[:locale])
-    raise StandardError('Bad taxonomic level') unless /\A\w+\z/.match?(opts[:taxonomic_level])
-    raise StandardError('Bad group name') unless !group_name || /\A\w+\z/.match?(group_name)
-    raise StandardError('Bad country_ids') unless /\A[\d,]+\z/.match?(opts[:country_ids])
+    raise StandardError('Bad taxonomic level') unless opts[:taxonomic_level].blank? || /\A\w+\z/.match?(opts[:taxonomic_level])
+    raise StandardError('Bad group name') unless opts[:group_name].blank? || /\A\w+\z/.match?(opts[:group_name])
+    raise StandardError('Bad country_ids') unless opts[:country_ids].blank? || /\A[\d,]+\z/.match?(opts[:country_ids])
 
     super
   end
