@@ -8,6 +8,15 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     @country_ids = opts[:country_ids]
     @sanitised_column_names = []
     @locale = opts[:locale] || 'en'
+
+    # TODO: there's certainly a better way to do this
+    raise StandardError('Bad reported_by') unless /\A\w+\z/.match?(opts[:reported_by])
+    raise StandardError('Bad reported_by_party') unless /\A\w+\z/.match?(opts[:reported_by_party])
+    raise StandardError('Bad locale') unless /\A\w+\z/.match?(opts[:locale])
+    raise StandardError('Bad taxonomic level') unless /\A\w+\z/.match?(opts[:taxonomic_level])
+    raise StandardError('Bad group name') unless !group_name || /\A\w+\z/.match?(group_name)
+    raise StandardError('Bad country_ids') unless /\A[\d,]+\z/.match?(opts[:country_ids])
+
     super
   end
 
@@ -296,14 +305,13 @@ private
   def taxonomic_query(opts)
     quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
 
-    raise StandardError('Bad taxonomic level') if /\A\w+\z/.match? opts[:taxonomic_level]
-
     taxonomic_level = opts[:taxonomic_level] || 'class'
     taxonomic_level_name = "#{taxonomic_level}_name"
     group_name = opts[:group_name]
+
     group_name_condition = " AND LOWER(group_name) = '#{group_name.downcase}'" if group_name
     # Exclude blanks in taxonomic level (empty strings at the selected taxonomic level)
-    taxonomic_level_not_null = "#{taxonomic_level_name} IS NOT NULL"
+    # taxonomic_level_not_null = "#{taxonomic_level_name} IS NOT NULL"
 
     fill_missing_taxonomy = <<-SQL
       CASE
@@ -328,7 +336,7 @@ private
         WHERE #{@condition} AND
         #{quantity_field} IS NOT NULL
         #{group_name_condition}
-        --AND #{taxonomic_level_not_null}
+        --AND taxonomic_level_not_null
         AND #{country_condition}
         AND #{child_taxa_condition}
         GROUP BY #{ancestors_list(taxonomic_level)}
