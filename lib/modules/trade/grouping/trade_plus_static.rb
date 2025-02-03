@@ -295,6 +295,9 @@ private
 
   def taxonomic_query(opts)
     quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
+
+    raise StandardError('Bad taxonomic level') if /\A\w+\z/.match? opts[:taxonomic_level]
+
     taxonomic_level = opts[:taxonomic_level] || 'class'
     taxonomic_level_name = "#{taxonomic_level}_name"
     group_name = opts[:group_name]
