@@ -178,7 +178,7 @@ gem 'dotenv-rails', '2.0.1'
 
 gem 'sitemap_generator', '~> 6.3'
 
-gem 'appsignal', '~> 3.5', '>= 3.5.5'
+gem 'appsignal', '~> 3.13.1'
 
 ### GEM for frontend ###
 # Remove the `jquery-rails` gem to eliminate any dependency issues that may block the upgrade process.

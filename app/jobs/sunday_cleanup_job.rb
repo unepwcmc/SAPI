@@ -2,18 +2,20 @@ class SundayCleanupJob < ApplicationJob
   queue_as :admin
 
   def perform(*args)
-    retry_on_deadlock do
-      ActiveRecord::Base.transaction do
-        connection = ActiveRecord::Base.connection
-        # Within the current transaction, increase the lock_timeout. The default
-        # postgres value is 0 (infinite) but config/database.yml sets this to a
-        # lower value.
-        connection.execute("SET LOCAL lock_timeout='20s';")
+    Appsignal::CheckIn.cron(self.class.name.tableize) do
+      self.class.retry_on_deadlock do
+        ActiveRecord::Base.transaction do
+          connection = ActiveRecord::Base.connection
+          # Within the current transaction, increase the lock_timeout. The default
+          # postgres value is 0 (infinite) but config/database.yml sets this to a
+          # lower value.
+          connection.execute("SET LOCAL lock_timeout='20s';")
 
-        # rake "dashboard_stats:cache:update"
-        DashboardStatsCache.update_dashboard_stats
+          # rake "dashboard_stats:cache:update"
+          DashboardStatsCache.update_dashboard_stats
 
-        cleanup_orphaned_records
+          cleanup_orphaned_records
+        end
       end
     end
   end
