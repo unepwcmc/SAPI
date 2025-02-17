@@ -11,6 +11,20 @@ class Trade::Grouping::Base
   # Group by importer and limit result to 5 records
   # Trade::Grouping::Compliance.new('importer', {limit: 5})
   def initialize(attributes, opts = {})
+    # TODO: there's certainly a better way to do this
+    # See https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/347
+    raise ArgumentError, 'Bad reported_by' unless opts[:reported_by].blank? || /\A\w+\z/.match?(opts[:reported_by])
+    raise ArgumentError, 'Bad reported_by_party' unless opts[:reported_by_party].blank? || /\A\w+\z/.match?(opts[:reported_by_party])
+    raise ArgumentError, 'Bad locale' unless opts[:locale].blank? || /\A\w+\z/.match?(opts[:locale])
+    raise ArgumentError, 'Bad taxonomic_level' unless opts[:taxonomic_level].blank? || /\A\w+\z/.match?(opts[:taxonomic_level])
+    raise ArgumentError, 'Bad group_name' unless opts[:group_name].blank? || /\A\w+\z/.match?(opts[:group_name])
+    raise ArgumentError, 'Bad country_ids' unless opts[:country_ids].blank? || /\A[\d,]+\z/.match?(opts[:country_ids])
+    raise ArgumentError, 'Bad origin_ids' unless opts[:origin_ids].blank? || /\A[\w,]+\z/.match?(opts[:origin_ids])
+    raise ArgumentError, 'Bad taxon_id' unless opts[:taxon_id].blank? || /\A[\d,]+\z/.match?(opts[:taxon_id])
+    raise ArgumentError, 'Bad time_range_end' unless opts[:time_range_end].blank? || /\A\d+\z/.match?(opts[:time_range_end])
+    raise ArgumentError, 'Bad time_range_start' unless opts[:time_range_start].blank? || /\A\d+\z/.match?(opts[:time_range_start])
+    raise ArgumentError, 'Bad unit_id' unless opts[:unit_id].blank? || /\A[\w,]+\z/.match?(opts[:unit_id])
+
     @attributes = sanitise_params(attributes)
     @opts = opts.clone
     @condition = sanitise_condition

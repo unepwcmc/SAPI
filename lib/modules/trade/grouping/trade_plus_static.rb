@@ -295,12 +295,14 @@ private
 
   def taxonomic_query(opts)
     quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
+
     taxonomic_level = opts[:taxonomic_level] || 'class'
     taxonomic_level_name = "#{taxonomic_level}_name"
     group_name = opts[:group_name]
+
     group_name_condition = " AND LOWER(group_name) = '#{group_name.downcase}'" if group_name
     # Exclude blanks in taxonomic level (empty strings at the selected taxonomic level)
-    taxonomic_level_not_null = "#{taxonomic_level_name} IS NOT NULL"
+    # taxonomic_level_not_null = "#{taxonomic_level_name} IS NOT NULL"
 
     fill_missing_taxonomy = <<-SQL
       CASE
@@ -325,7 +327,7 @@ private
         WHERE #{@condition} AND
         #{quantity_field} IS NOT NULL
         #{group_name_condition}
-        --AND #{taxonomic_level_not_null}
+        --AND taxonomic_level_not_null
         AND #{country_condition}
         AND #{child_taxa_condition}
         GROUP BY #{ancestors_list(taxonomic_level)}

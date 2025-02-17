@@ -236,11 +236,13 @@ private
   end
 
   def load_grouping_type
-    grouping_type = params[:grouping_type] || 'Compliance'
-    begin
-      @grouping_class = "Trade::Grouping::#{grouping_type.camelize}".constantize
-    rescue NameError
-      raise ArgumentError, 'Grouping type is not defined.'
-    end
+    @grouping_class =
+      if params[:grouping_type] == 'TradePlus'
+        Trade::Grouping::TradePlus
+      elsif params[:grouping_type] == 'TradePlusStatic'
+        Trade::Grouping::TradePlusStatic
+      else
+        Trade::Grouping::Compliance
+      end
   end
 end
