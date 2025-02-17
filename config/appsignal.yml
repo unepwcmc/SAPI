@@ -19,13 +19,6 @@ default: &defaults
   ignore_errors:
     - ActiveRecord::RecordNotFound
 
-    # EPIPE is probably due to a client disconnecting or navigating away before
-    # a download is complete. The errors typically come from or via Passenger's
-    # `phusion_passenger/utils/unseekable_socket.rb`, and are accompanied by the
-    # message `Broken pipe - writev()`. There's a (possibly) related issue:
-    # https://github.com/phusion/passenger/issues/1432
-    - Errno::EPIPE
-
 # Configuration per environment, leave out an environment or set active
 # to false to not push metrics for that environment.
 development:
