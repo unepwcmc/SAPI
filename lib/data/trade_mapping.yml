@@ -500,12 +500,19 @@ rules:
       output:
         unit: 'NULL'
   standardise_terms_and_units:
-    - rule_name: 'Belly skins, back skins, hornback skins each count as half a skin'
+    - rule_name: 'Back skins count as half a skin'
       input:
         terms: ['SKI', 'SKP']
-        units: ['BSK', 'BAK', 'HRN']
+        units: ['BAK']
       output:
         term: 'SKI'
         unit: 'NULL'
         quantity_modifier: '/'
         modifier_value: 2
+    - rule_name: 'Belly skins, hornback skins each count as one whole skin'
+      input:
+        terms: ['SKI', 'SKP']
+        units: ['BSK', 'HRN']
+      output:
+        term: 'SKI'
+        unit: 'NULL'
