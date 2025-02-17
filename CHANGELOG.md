@@ -3,6 +3,10 @@
 * Fixes an issue where certain params for downloading content of CITES
   checklists were being ignored.
 
+### 1.16.3
+
+* Various fixes and improvements to parameter validation for Trade DB downloads.
+
 ### 1.16.2
 
 * Fixes an issue where logging was not happening (affecting production only).
