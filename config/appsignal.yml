@@ -1,23 +1,26 @@
 default: &defaults
+  # Your app's name
+  name: "Species+"
+
+  # Overridden in staging/production
+  active: false
+
   # Your push api key, it is possible to set this dynamically using ERB:
   # push_api_key: "<%= ENV['APPSIGNAL_PUSH_API_KEY'] %>"
   push_api_key: "<%= Object.const_defined?('Rails') && Rails.application.credentials.dig(:appsignal_push_api_key) %>"
+
+  # Actions that should not be monitored by AppSignal
+  ignore_actions:
+    - "Rails::HealthController#show" # GET /up
+
   ignore_exceptions:
     - ActiveRecord::RecordNotFound
 
-  # Your app's name
-  name: "Species+"
-  active: false
+  ignore_errors:
+    - ActiveRecord::RecordNotFound
 
   # The cutoff point in ms above which a request is considered slow, default is 200
   # slow_request_threshold: 200
-
-  # Actions that should not be monitored by AppSignal
-  # ignore_actions:
-  #   - ApplicationController#isup
-
-  ignore_errors:
-    - ActiveRecord::RecordNotFound
 
 # Configuration per environment, leave out an environment or set active
 # to false to not push metrics for that environment.
