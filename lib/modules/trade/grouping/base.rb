@@ -46,7 +46,7 @@ class Trade::Grouping::Base
   end
 
   def json_by_attribute(data, opts = {})
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def read_taxonomy_conversion
@@ -66,23 +66,23 @@ class Trade::Grouping::Base
 protected
 
   def shipments_table
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def attributes
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def self.filtering_attributes
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def self.default_filtering_attributes
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def self.grouping_attributes
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def self.get_grouping_attributes(group, locale = nil)
@@ -165,7 +165,7 @@ private
   end
 
   def skip_taxon_id?
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def is_id_column?(column)
