@@ -13,6 +13,12 @@ module SAPI
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.1
 
+    # Since Rails 5, on submit, submission buttons in `form_for` are disabled.
+    # However, if errors are thrown and the whole form is not rerendered, then
+    # the submit button remains disabled and the form must be manually reloaded
+    # by the user.
+    config.action_view.automatically_disable_submit_tag = false
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
