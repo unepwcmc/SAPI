@@ -3,7 +3,7 @@ class SundayCleanupJob < ApplicationJob
 
   def perform(*args)
     Appsignal::CheckIn.cron(self.class.name.tableize) do
-      self.class.retry_on_deadlock do
+      retry_on_deadlock do
         ActiveRecord::Base.transaction do
           connection = ActiveRecord::Base.connection
           # Within the current transaction, increase the lock_timeout. The default
