@@ -18,21 +18,24 @@ class Api::V1::TaxonConceptsController < ApplicationController
   end
 
   def show
-    @taxon_concept = TaxonConcept.
-      includes(common_names: :language,
+    @taxon_concept =
+      TaxonConcept.includes(
+        common_names: :language,
         distributions: :geo_entity,
         quotas: [ :geo_entity, :sources ],
         cites_suspensions: [ :geo_entity, :sources ],
         cites_processes: :geo_entity
-      ).
-      includes(:taxonomy).find(params[:id])
-    if @taxon_concept.taxonomy.name == Taxonomy::CMS
-      s = Species::ShowTaxonConceptSerializerCms
-    else
-      s = Species::ShowTaxonConceptSerializerCites
-    end
+      ).includes(:taxonomy).find(params[:id])
+
+    serializer =
+      if @taxon_concept.taxonomy.name == Taxonomy::CMS
+        Species::ShowTaxonConceptSerializerCms
+      else
+        Species::ShowTaxonConceptSerializerCites
+      end
+
     render json: @taxon_concept,
-      serializer: s, trimmed: params[:trimmed]
+      serializer: serializer, trimmed: params[:trimmed]
   end
 
 protected
@@ -42,6 +45,12 @@ protected
   end
 
   def track_show
-    ahoy.track 'Taxon Concept', { id: @taxon_concept.id, full_name: @taxon_concept.full_name, taxonomy_name: @taxon_concept.taxonomy.name, rank_name: @taxon_concept.rank_name, family_name: @taxon_concept.data['family_name'] }
+    ahoy.track 'Taxon Concept', {
+      id: @taxon_concept.id,
+      full_name: @taxon_concept.full_name,
+      taxonomy_name: @taxon_concept.taxonomy.name,
+      rank_name: @taxon_concept.rank_name,
+      family_name: @taxon_concept.data['family_name']
+    }
   end
 end
