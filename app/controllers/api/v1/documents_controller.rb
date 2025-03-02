@@ -1,9 +1,13 @@
 class Api::V1::DocumentsController < ApplicationController
   def index
     if params[:taxon_concept_query].present?
-      exact_match = MTaxonConcept.where('LOWER(full_name) = ?', params[:taxon_concept_query].downcase).
-        where(taxonomy_id: 1).
-        first
+      exact_match =
+        MTaxonConcept.where(
+          'upper(full_name) = ?', params[:taxon_concept_query].upcase
+        ).where(
+          taxonomy_id: 1
+        ).first
+
       @species_search = Species::Search.new(
         {
           visibility: :elibrary,
@@ -12,19 +16,38 @@ class Api::V1::DocumentsController < ApplicationController
       )
 
       ids = @species_search.ids
-      anc_ids = []
-      children_ids = []
-      anc_ids = MaterialDocIdsRetriever.ancestors_ids(exact_match.try(:id), params[:taxon_concept_query], exact_match) if exact_match
-      children_ids = MTaxonConcept.descendants_ids(exact_match.try(:id)).map(&:to_i) if exact_match
+
+      anc_ids =
+        if exact_match
+          MaterialDocIdsRetriever.ancestors_ids(
+            exact_match.try(:id), params[:taxon_concept_query], exact_match
+          )
+        else
+          []
+        end
+
+      children_ids =
+        if exact_match
+          MTaxonConcept.descendants_ids(
+            exact_match.try(:id)
+          ).map(&:to_i)
+        else
+          []
+        end
+
       params[:taxon_concepts_ids] = anc_ids | children_ids | ids
     else
       if params[:taxon_concepts_ids].present?
         taxa = TaxonConcept.find(params[:taxon_concepts_ids])
-        children_ids = taxa.map(&:children).map do
-          |children| children.pluck(:id) if children.present?
-        end.flatten.uniq.compact
-        taxa_ids = taxa.map(&:id)
+
+        children_ids =
+          taxa.map(&:children).map do
+            |children| children.pluck(:id) if children.present?
+          end.flatten.uniq.compact
+
+          taxa_ids = taxa.map(&:id)
         ancestor_ids = MaterialDocIdsRetriever.ancestors_ids(taxa_ids.first)
+
         params[:taxon_concepts_ids] = taxa_ids | ancestor_ids | children_ids
       end
     end
