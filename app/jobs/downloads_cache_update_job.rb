@@ -2,7 +2,7 @@ class DownloadsCacheUpdateJob < ApplicationJob
   queue_as :admin
 
   def perform(*args)
-    Appsignal::CheckIn.cron(self.class.name.tableize) do
+    Appsignal::CheckIn.cron(self.class.name.underscore) do
       retry_on_deadlock do
         ActiveRecord::Base.transaction do
           connection = ActiveRecord::Base.connection
