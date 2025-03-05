@@ -41,11 +41,12 @@ class Api::V1::DocumentsController < ApplicationController
         taxa = TaxonConcept.find(params[:taxon_concepts_ids])
 
         children_ids =
-          taxa.map(&:children).map do
-            |children| children.pluck(:id) if children.present?
+          taxa.map(&:children).map do |children|
+            children.pluck(:id) if children.present?
           end.flatten.uniq.compact
 
           taxa_ids = taxa.map(&:id)
+
         ancestor_ids = MaterialDocIdsRetriever.ancestors_ids(taxa_ids.first)
 
         params[:taxon_concepts_ids] = taxa_ids | ancestor_ids | children_ids
@@ -71,11 +72,23 @@ class Api::V1::DocumentsController < ApplicationController
           end
         end
       else
-        @search.cached_results.sort { |a, b| [ b.date_raw, a.taxon_names.first || '' ] <=> [ a.date_raw, b.taxon_names.first || '' ] }
+        @search.cached_results.sort do |a, b|
+          [
+            b.date_raw, a.taxon_names.first || ''
+          ] <=> [
+            a.date_raw, b.taxon_names.first || ''
+          ]
+        end
       end
 
     ordered_docs =
-      Kaminari.paginate_array(ordered_docs).page(page).per(per_page) if ordered_docs.kind_of?(Array)
+      Kaminari.paginate_array(
+        ordered_docs
+      ).page(
+        page
+      ).per(
+        per_page
+      ) if ordered_docs.kind_of?(Array)
 
     render json: ordered_docs,
       each_serializer: Species::DocumentSerializer,
@@ -113,11 +126,14 @@ class Api::V1::DocumentsController < ApplicationController
     @documents = Document.find(params[:ids].split(','))
 
     t = Tempfile.new('tmp-zip-' + request.remote_ip)
+
     missing_files = []
+
     Zip::OutputStream.open(t.path) do |zos|
       @documents.each do |document|
         path_to_file = document.filename.path
         filename = path_to_file.split('/').last
+
         unless File.exist?(path_to_file)
           missing_files <<
             "{\n  title: #{document.title},\n  filename: #{filename}\n}"
@@ -126,6 +142,7 @@ class Api::V1::DocumentsController < ApplicationController
           zos.print File.read(path_to_file)
         end
       end
+
       if missing_files.present?
         if missing_files.length == @documents.count
           render_404 && return

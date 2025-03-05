@@ -17,12 +17,19 @@ class Species::ListingsExport < Species::CsvCopyExport
           designation_id: @designation.id
         ).map(&:abbreviation)
       end
+
     initialize_csv_separator(@filters[:csv_separator])
     initialize_file_name
   end
 
   def query
-    rel = MTaxonConcept.from(table_name).select(sql_columns_with_table_name).order('taxonomic_position')
+    rel =
+      MTaxonConcept.from(
+        table_name
+      ).select(
+        sql_columns_with_table_name
+      ).order('taxonomic_position')
+
     rel =
       if @geo_entities_ids
         MTaxonConceptFilterByAppendixPopulationQuery.new(
@@ -35,9 +42,14 @@ class Species::ListingsExport < Species::CsvCopyExport
       else
         rel
       end
+
     if @taxon_concepts_ids
-      rel = MTaxonConceptFilterByIdWithDescendants.new(rel, @taxon_concepts_ids).relation
+      rel =
+        MTaxonConceptFilterByIdWithDescendants.new(
+          rel, @taxon_concepts_ids
+        ).relation
     end
+
     rel
   end
 

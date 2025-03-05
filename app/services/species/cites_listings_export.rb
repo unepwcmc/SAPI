@@ -6,7 +6,7 @@ private
   end
 
   def sql_columns
-    columns = [
+    [
       :id, :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
       :full_name, :author_year, :rank_name, :"#{designation_name}_listing_original",
@@ -21,7 +21,7 @@ private
   end
 
   def csv_column_headers
-    headers = [
+    [
       'Id', 'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
       'Genus', 'Species', 'Subspecies',
       'Scientific Name', 'Author', 'Rank', 'Listing',
