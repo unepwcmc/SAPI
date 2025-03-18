@@ -13,22 +13,27 @@ rebuild_job_daily:
   class: "RebuildJob"
   queue: admin
 
+# This needs to happen late enough that the rebuild job has completed
 downloads_cache_update_job:
-  cron: "5 4 * * *"
+  cron: "5 6 * * *"
   class: "DownloadsCacheUpdateJob"
   queue: admin
+
 sunday_cleanup_job:
   cron: "45 4 * * 0"
   class: "SundayCleanupJob"
   queue: admin
+
 elibrary_refresh_document_search_job:
   cron: "*/5 * * * *"
   class: "ElibraryRefreshDocumentSearchJob"
   queue: admin
+
 refresh_sitemap_job:
   cron: "30 5 * * *"
   class: "RefreshSitemapJob"
   queue: admin
+
 rst_processes_import_job:
   cron: "30 2 * * 0"
   class: "RstProcessesImportJob"
