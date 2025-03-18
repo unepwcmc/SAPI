@@ -516,3 +516,12 @@ rules:
       output:
         term: 'SKI'
         unit: 'NULL'
+    - rule_name: 'Sides of skins are now half a skin'
+      input:
+        terms: ['SKI', 'SKP']
+        units: ['SID']
+      output:
+        term: 'SKI'
+        unit: 'NULL'
+        quantity_modifier: '/'
+        modifier_value: 2
