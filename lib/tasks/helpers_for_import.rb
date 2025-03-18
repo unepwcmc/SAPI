@@ -459,7 +459,7 @@ def create_table_from_column_array(table_name, db_columns)
   begin
     Rails.logger.debug 'Creating tmp table'
     ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
-    ApplicationRecord.connection.execute "CREATE TABLE #{table_name} (#{db_columns.join(', ')})"
+    ApplicationRecord.connection.execute "CREATE TEMP TABLE #{table_name} (#{db_columns.join(', ')}) ON COMMIT DROP"
     Rails.logger.debug 'Table created'
   rescue Exception => e
     Rails.logger.debug e.inspect
