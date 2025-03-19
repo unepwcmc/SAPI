@@ -1,17 +1,38 @@
 namespace :import do
   desc 'Import distributions from csv file (usage: rake import:distributions[path/to/file,path/to/another])'
   task :distributions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
-    TMP_TABLE = 'distribution_import'
-
     ApplicationRecord.transaction do
-      puts "There are #{Distribution.count} taxon concept distributions in the database."
+      TMP_TABLE = 'distribution_import'
+
+      def recheck_rolling_counts(prev_counts = nil)
+        new_counts = {
+          'taxon concept distributions' => Distribution.count,
+          'distribution references' => DistributionReference.count
+        }
+
+        new_counts.entries.each do |count_type, new_count|
+          delta = prev_counts && (new_count - prev_counts[count_type])
+          delta = "+#{delta}" if delta && delta > 0
+          delta = delta && " (#{delta})"
+
+          puts "There are #{new_count} #{count_type} in the database#{delta}"
+        end
+
+        new_counts
+      end
+
+      rolling_counts = recheck_rolling_counts
 
       files = files_from_args(t, args)
 
       files.each do |file|
+        puts "Importing distributions from #{file}"
+
         drop_table(TMP_TABLE)
         create_table_from_csv_headers(file, TMP_TABLE)
         copy_data(file, TMP_TABLE)
+        puts "There are #{Distribution.from(TMP_TABLE).count} rows in the CSV"
+
 
         csv_headers = csv_headers(file)
         has_tc_id = csv_headers.include? 'taxon_concept_id'
@@ -20,7 +41,7 @@ namespace :import do
         kingdom = has_tc_id ? '' : file.split('/').last.split('_')[0].titleize
 
         [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
-          puts "Import #{taxonomy_name} distributions"
+          puts "Importing #{taxonomy_name} distributions"
 
           taxonomy = Taxonomy.find_by(name: taxonomy_name)
 
@@ -57,10 +78,22 @@ namespace :import do
 
           # TODO: do sth about those unknown distributions!
           ApplicationRecord.connection.execute(sql)
+
+          puts "Imported #{taxonomy_name} distributions"
         end
 
+        assert_no_rows(
+          (
+            <<-SQL.squish
+              SELECT FROM #{TMP_TABLE} tmp
+              LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
+              WHERE tc.id IS NULL
+            SQL
+          ),
+          'unidentified taxon concepts'
+        ) if has_tc_id
+
         if has_reference_id
-          puts "There are #{DistributionReference.count} distribution references in the database."
 
           sql = <<-SQL.squish
             INSERT INTO "distribution_references"
@@ -83,8 +116,41 @@ namespace :import do
           ApplicationRecord.connection.execute(sql)
         end
 
+        assert_no_rows(
+          (
+            <<-SQL.squish
+              SELECT tmp.* FROM #{TMP_TABLE} tmp
+              LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
+              LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
+              LEFT JOIN distributions d
+                ON d.taxon_concept_id = tmp.taxon_concept_id
+                AND d.geo_entity_id = ge.id
+              WHERE d.id IS NULL
+            SQL
+          ),
+          'missing taxon concepts distributions'
+        ) if has_tc_id
+
+        assert_no_rows(
+          (
+            <<-SQL.squish
+              SELECT tmp.* FROM #{TMP_TABLE} tmp
+              LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
+              LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
+              LEFT JOIN distributions d
+                ON d.taxon_concept_id = tmp.taxon_concept_id
+                AND d.geo_entity_id = ge.id
+              LEFT JOIN distribution_references dr
+                ON dr.distribution_id = d.id
+                AND dr.reference_id = tmp.reference_id
+              WHERE tmp.reference_id IS NOT NULL
+                AND dr.id IS NULL
+            SQL
+          ),
+          'taxon concept distributions without references'
+        ) if has_tc_id && has_reference_id
+
         if has_reference
-          puts "There are #{Reference.count} references in the database."
           sql = <<-SQL.squish
             INSERT INTO "references"
               (citation, created_at, updated_at)
@@ -102,8 +168,6 @@ namespace :import do
           SQL
 
           ApplicationRecord.connection.execute(sql)
-
-          puts "There are now #{Reference.count} references in the database"
 
           distribution_references = DistributionReference.count
 
@@ -129,14 +193,13 @@ namespace :import do
 
           puts "Extra #{DistributionReference.count - distribution_references} distribution references have been added to the database"
         end
+
+        rolling_counts = recheck_rolling_counts rolling_counts
       end
 
-      puts "There are now #{Distribution.count} taxon concept distributions in the database"
-      puts "There are now #{DistributionReference.count} distribution references in the database"
+      rollback_if_dry_run
 
-      raise ActiveRecord::Rollback(
-        'Rolling back: dry run'
-      ) if ActiveModel::Type::Boolean.new.cast(ENV.fetch('DRY_RUN', nil))
+      puts 'Committing'
     end
   end
 end
