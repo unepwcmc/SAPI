@@ -120,4 +120,13 @@ Rails.application.configure do
     '172.16.0.0/12',
     '192.168.0.0/16'
   ]
+
+  # For Rake tasks, send logger messages to the command line
+  if Rails.const_defined?('Rake') && ENV['TERM']
+    stderr_logger = ActiveSupport::Logger.new(STDERR)
+
+    Rails.logger = Rails.logger&.extend(
+      ActiveSupport::Logger.broadcast(stderr_logger)
+    ) || stderr_logger
+  end
 end
