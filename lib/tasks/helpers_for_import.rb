@@ -112,7 +112,7 @@ class CsvToDbMap
       'Species RecID' => 'legacy_id integer',
       'taxon_concept_id' => 'taxon_concept_id integer',
       'Rank' => 'rank varchar',
-      'GEO_entity_type' => 'geo_entity_type varchar',
+      'GEO_entity' => 'geo_entity_type varchar',
       'ISO Code 2' => 'iso_code2 varchar',
       'Tags' => 'tags varchar',
       'Designation' => 'designation varchar'
@@ -610,4 +610,29 @@ def copy_data_into_table(
   end
 
   Rails.logger.debug { "Finished copying #{row_count} rows to #{table_name}" }
+end
+
+def assert_no_rows(query, why = 'failing rows')
+  failing_row_count = ApplicationRecord.connection.execute(
+    "SELECT COUNT(1) FROM (#{query}) t"
+  )[0]['count']
+
+  return [] unless failing_row_count > 0
+
+  raise StandardError.new do
+    "Assertion failed - got #{failing_row_count} #{why}\n\n#{query}"
+  end
+
+  failing_rows = ApplicationRecord.connection.execute(query)
+
+  failing_rows
+end
+
+
+def rollback_if_dry_run
+  raise ActiveRecord::Rollback.new do
+    'Rolling back: dry run'
+  end if ActiveModel::Type::Boolean.new.cast(
+    ENV.fetch('DRY_RUN', nil)
+  )
 end

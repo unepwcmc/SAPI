@@ -44,7 +44,9 @@ module PgCopy
     sql_copy_from_stdin: %{COPY #{table_expr} FROM STDIN WITH (FORMAT binary)}
   )
     Rails.logger.debug sql_copy_from_stdin
+
     writer = ->(arr) { raw_connection.put_copy_data(arr, pg_copy_encoder) }
+
     raw_connection.copy_data sql_copy_from_stdin, pg_copy_encoder do
       yield(writer, column_names) if block_given?
     end

@@ -97,15 +97,35 @@ namespace :import do
 
           puts 'ADDING: distribution taggings'
 
+          assert_no_rows(
+            (
+              <<-SQL.squish
+                SELECT tmp.* FROM (
+                  SELECT *, regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
+                  FROM #{TMP_TABLE}
+                ) tmp
+                LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
+                LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso_code2
+                LEFT JOIN distributions d
+                  ON d.taxon_concept_id = tmp.taxon_concept_id
+                  AND d.geo_entity_id = ge.id
+                LEFT JOIN tags t
+                  ON UPPER(t.name) = UPPER(BTRIM(tmp.tag))
+                WHERE t.id IS NULL
+              SQL
+            ),
+            'missing distribution tagss'
+          )
+
           ApplicationRecord.connection.execute(sql)
         end
 
         puts "There are now #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
       end
 
-      raise ActiveRecord::Rollback(
-        'Rolling back: dry run'
-      ) if ActiveModel::Type::Boolean.new.cast(ENV.fetch('DRY_RUN', nil))
+      rollback_if_dry_run
+
+      puts 'Committing'
     end
   end
 end
