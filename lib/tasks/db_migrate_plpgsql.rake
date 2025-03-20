@@ -28,14 +28,6 @@ namespace :db do
     task rebuild: :migrate do
       SapiModule.rebuild
     end
-
-    task drop_indexes: :migrate do
-      SapiModule.drop_indexes
-    end
-
-    task create_indexes: :migrate do
-      SapiModule.create_indexes
-    end
   end
 
   task migrate: :environment do
