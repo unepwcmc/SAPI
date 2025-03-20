@@ -26,6 +26,8 @@ module SAPI
       ignore: %w[assets capistrano data files pt scripts tasks]
     )
 
+    config.active_record.schema_format = :sql
+
     # TODO: figure out why we still need the following:
     config.autoload_paths << Rails.root.join('lib/modules')
     config.eager_load_paths << Rails.root.join('lib/modules')

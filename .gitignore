@@ -96,9 +96,6 @@
 .project
 .idea/
 
-db/structure.sql
-db/schema.rb
-
 *.xlsx
 
 !.keep
