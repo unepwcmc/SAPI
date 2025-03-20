@@ -8,6 +8,9 @@ gem 'rails', '7.1.3.4'
 # Configure Cross-Origin resource sharing
 gem 'rack-cors'
 
+# Active storage for persistent assets
+gem 'activestorage'
+
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
