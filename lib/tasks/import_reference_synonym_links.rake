@@ -9,11 +9,11 @@ namespace :import do
     ApplicationRecord.connection.execute('CREATE INDEX index_taxon_concepts_on_legacy_id_and_legacy_type ON taxon_concepts (legacy_id, legacy_type)')
     ApplicationRecord.connection.execute('CREATE INDEX index_references_on_legacy_id_and_legacy_type ON "references" (legacy_id, legacy_type)')
 
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       kingdom = file.split('/').last.split('_')[0].titleize
 

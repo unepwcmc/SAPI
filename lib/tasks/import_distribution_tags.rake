@@ -3,16 +3,17 @@ namespace :import do
 
   task :distribution_tags, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'distribution_tags_import'
+    import_helper = CsvImportHelper.new
 
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
 
     ApplicationRecord.transaction do
       files.each do |file|
-        drop_table(TMP_TABLE)
-        create_table_from_csv_headers(file, TMP_TABLE)
-        copy_data(file, TMP_TABLE)
+        import_helper.drop_table(TMP_TABLE)
+        import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+        import_helper.copy_data(file, TMP_TABLE)
 
-        csv_headers = csv_headers(file)
+        csv_headers = import_helper.csv_headers(file)
         has_legacy = csv_headers.include? 'Species RecID'
         id_type = has_legacy ? 'legacy_id' : 'taxon_concept_id'
         tc_id = has_legacy ? 'legacy_id' : 'id'
@@ -97,7 +98,7 @@ namespace :import do
 
           puts 'ADDING: distribution taggings'
 
-          assert_no_rows(
+          import_helper.assert_no_rows(
             (
               <<-SQL.squish
                 SELECT tmp.* FROM (
@@ -114,7 +115,7 @@ namespace :import do
                 WHERE t.id IS NULL
               SQL
             ),
-            'missing distribution tagss'
+            'missing distribution tags'
           )
 
           ApplicationRecord.connection.execute(sql)
@@ -123,7 +124,7 @@ namespace :import do
         puts "There are now #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
       end
 
-      rollback_if_dry_run
+      import_helper.rollback_if_dry_run
 
       puts 'Committing'
     end

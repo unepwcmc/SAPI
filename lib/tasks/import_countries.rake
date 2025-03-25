@@ -11,11 +11,11 @@ namespace :import do
     territory_type = GeoEntityType.find_by(name: GeoEntityType::TERRITORY)
     puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: country_type.id })} countries in the database."
     puts "There are #{GeoEntity.count(conditions: { geo_entity_type_id: territory_type.id })} territories in the database."
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
       sql = <<-SQL.squish
           INSERT INTO geo_entities(name_en, iso_code2, geo_entity_type_id, legacy_type, created_at, updated_at, long_name, is_current)
           SELECT DISTINCT BTRIM(TMP.name), BTRIM(TMP.iso2), geo_entity_types.id, UPPER(BTRIM(geo_entity_type)),

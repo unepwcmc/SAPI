@@ -3,11 +3,11 @@ namespace :import do
   desc 'Import species records from csv files (usage: rake import:species[path/to/file,path/to/another])'
   task :species_legacy, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'species_import_legacy'
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       kingdom = file.split('/').last.split('_')[0].titleize
 

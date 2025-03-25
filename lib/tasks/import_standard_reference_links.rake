@@ -1,18 +1,23 @@
 namespace :import do
   desc 'Import standard reference links from csv file (usage: rake import:standard_references[path/to/file,path/to/another])'
   task :standard_reference_links, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'standard_reference_links_import'
+
     puts "There are #{TaxonConceptReference.where(is_standard: true).count} standard references in the database."
 
     ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
     ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
     ApplicationRecord.connection.execute('CREATE INDEX index_taxon_concepts_on_legacy_id_and_legacy_type ON taxon_concepts (legacy_id, legacy_type)')
     ApplicationRecord.connection.execute('CREATE INDEX index_references_on_legacy_id_and_legacy_type ON "references" (legacy_id, legacy_type)')
-    files = files_from_args(t, args)
+
+    files = import_helper.files_from_args(t, args)
+
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       split_file_name = file.split('/').last.split('_')
       if split_file_name[0] == Taxonomy::CMS
@@ -26,14 +31,17 @@ namespace :import do
       puts "Standard reference links for #{kingdom} of #{taxonomy.name}"
 
       puts "unaliasing reference ids in #{TMP_TABLE}"
+
       sql = <<-SQL.squish
         UPDATE #{TMP_TABLE} SET ref_legacy_id = map.legacy_id
         FROM references_legacy_id_mapping map
         WHERE map.alias_legacy_id = #{TMP_TABLE}.ref_legacy_id
       SQL
+
       ApplicationRecord.connection.execute(sql)
 
       puts 'inserting reference links'
+
       # add taxon_concept_references where missing
       sql = <<-SQL.squish
         INSERT INTO "taxon_concept_references" (taxon_concept_id, reference_id, created_at, updated_at)
@@ -56,9 +64,11 @@ namespace :import do
               AND reference_id = "references".id
           )
       SQL
+
       ApplicationRecord.connection.execute(sql)
 
       puts 'updating standard reference links'
+
       # update usr_std_ref flags
       sql = <<-SQL.squish
       WITH standard_references_as_ids AS (
@@ -105,9 +115,12 @@ namespace :import do
       taxon_concept_references.reference_id = standard_references_as_ids.reference_id
 
       SQL
+
       ApplicationRecord.connection.execute(sql)
     end
+
     puts "There are now #{TaxonConceptReference.where(is_standard: true).count} standard references in the database"
+
     ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
     ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_references_on_legacy_id_and_legacy_type')
   end

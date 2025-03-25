@@ -1,10 +1,15 @@
 task set_eu_opinions_to_not_current: :environment do
+  import_helper = CsvImportHelper.new
   TMP_TABLE = 'eu_opinions_to_not_current'
+
   filename = 'lib/files/eu_opinions_4404_Conolophus_to_be_reset_to_not_current.csv'
-  drop_table(TMP_TABLE)
+
+  import_helper.drop_table(TMP_TABLE)
+
   db_columns = %w[taxon_concept_id start_regulation_name country_name start_date opinion_name term_code source_code is_current]
-  create_table_from_column_array(TMP_TABLE, db_columns.map { |c| c == 'taxon_concept_id' ? "#{c} INTEGER" : "#{c} TEXT" })
-  copy_data_into_table(filename, TMP_TABLE, db_columns)
+
+  import_helper.create_table_from_column_array(TMP_TABLE, db_columns.map { |c| c == 'taxon_concept_id' ? "#{c} INTEGER" : "#{c} TEXT" })
+  import_helper.copy_data_into_table(filename, TMP_TABLE, db_columns)
 
   query = <<-SQL
     WITH tt AS (
@@ -40,5 +45,6 @@ task set_eu_opinions_to_not_current: :environment do
   SQL
 
   res = ApplicationRecord.connection.execute(query)
+
   puts "#{res.cmd_tuples} rows updated with is_current to false"
 end

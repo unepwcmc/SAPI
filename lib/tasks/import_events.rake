@@ -1,13 +1,18 @@
 namespace :import do
   desc 'Import events from csv file (usage: rake import:events[path/to/file,path/to/another])'
   task :events, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'events_import'
+
     puts "There are #{Event.count} events in the database."
-    files = files_from_args(t, args)
+
+    files = import_helper.files_from_args(t, args)
+
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       sql = <<-SQL.squish
         INSERT INTO "events" (legacy_id, designation_id, name, description, url, effective_at, type, subtype, created_at, updated_at)
@@ -34,17 +39,23 @@ namespace :import do
   end
 
   task ec_srg: [ :environment ] do
+    import_helper = CsvImportHelper.new
+
     file = 'lib/files/SRG_meetings_and_SoCs_for_IT_CSV.csv'
-    copy_data_into_table(file, 'events', %w[name effective_at url created_at updated_at type])
+
+    import_helper.copy_data_into_table(file, 'events', %w[name effective_at url created_at updated_at type])
+
     puts "There are now #{EcSrg.count} EcSrg events in the database"
   end
 
   task eu_annex_regulations_end_dates: [ :environment ] do
+    import_helper = CsvImportHelper.new
     TMP_TABLE = 'eu_annex_regulations_end_dates_import'
     file = 'lib/files/eu_annex_regulations_end_dates_utf8.csv'
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
-    copy_data(file, TMP_TABLE)
+
+    import_helper.drop_table(TMP_TABLE)
+    import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+    import_helper.copy_data(file, TMP_TABLE)
 
     sql = <<-SQL.squish
       WITH eu_annex_regulations AS (
@@ -59,15 +70,20 @@ namespace :import do
       FROM eu_annex_regulations e
       WHERE e.id = events.id;
     SQL
+
     ApplicationRecord.connection.execute(sql)
   end
 
   task cites_cops_start_dates: [ :environment ] do
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'cites_cops_start_dates_import'
+
     file = 'lib/files/cites_cops_start_dates.csv'
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
-    copy_data(file, TMP_TABLE)
+
+    import_helper.drop_table(TMP_TABLE)
+    import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+    import_helper.copy_data(file, TMP_TABLE)
 
     sql = <<-SQL.squish
       WITH cites_cops AS (
@@ -82,6 +98,7 @@ namespace :import do
       FROM cites_cops e
       WHERE e.id = events.id;
     SQL
+
     ApplicationRecord.connection.execute(sql)
   end
 end

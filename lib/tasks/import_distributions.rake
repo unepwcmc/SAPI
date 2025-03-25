@@ -2,6 +2,8 @@ namespace :import do
   desc 'Import distributions from csv file (usage: rake import:distributions[path/to/file,path/to/another])'
   task :distributions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     ApplicationRecord.transaction do
+      import_helper = CsvImportHelper.new
+
       TMP_TABLE = 'distribution_import'
 
       def recheck_rolling_counts(prev_counts = nil)
@@ -23,18 +25,18 @@ namespace :import do
 
       rolling_counts = recheck_rolling_counts
 
-      files = files_from_args(t, args)
+      files = import_helper.files_from_args(t, args)
 
       files.each do |file|
         puts "Importing distributions from #{file}"
 
-        drop_table(TMP_TABLE)
-        create_table_from_csv_headers(file, TMP_TABLE)
-        copy_data(file, TMP_TABLE)
+        import_helper.drop_table(TMP_TABLE)
+        import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+        import_helper.copy_data(file, TMP_TABLE)
         puts "There are #{Distribution.from(TMP_TABLE).count} rows in the CSV"
 
 
-        csv_headers = csv_headers(file)
+        csv_headers = import_helper.csv_headers(file)
         has_tc_id = csv_headers.include? 'taxon_concept_id'
         has_reference = csv_headers.include? 'Reference'
         has_reference_id = csv_headers.include? 'Reference IDs'
@@ -82,7 +84,7 @@ namespace :import do
           puts "Imported #{taxonomy_name} distributions"
         end
 
-        assert_no_rows(
+        import_helper.assert_no_rows(
           (
             <<-SQL.squish
               SELECT FROM #{TMP_TABLE} tmp
@@ -116,7 +118,7 @@ namespace :import do
           ApplicationRecord.connection.execute(sql)
         end
 
-        assert_no_rows(
+        import_helper.assert_no_rows(
           (
             <<-SQL.squish
               SELECT tmp.* FROM #{TMP_TABLE} tmp
@@ -131,7 +133,7 @@ namespace :import do
           'missing taxon concepts distributions'
         ) if has_tc_id
 
-        assert_no_rows(
+        import_helper.assert_no_rows(
           (
             <<-SQL.squish
               SELECT tmp.* FROM #{TMP_TABLE} tmp
@@ -197,7 +199,7 @@ namespace :import do
         rolling_counts = recheck_rolling_counts rolling_counts
       end
 
-      rollback_if_dry_run
+      import_helper.rollback_if_dry_run
 
       puts 'Committing'
     end
