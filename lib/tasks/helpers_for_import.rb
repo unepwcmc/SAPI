@@ -634,9 +634,11 @@ class CsvImportHelper
 
     return [] unless failing_row_count > 0
 
-    raise StandardError.new do
-      "Assertion failed - got #{failing_row_count} #{why}\n\n#{query}"
-    end
+    error_message = "Assertion failed - got #{failing_row_count} #{why}\n\n#{query}"
+
+    Rails.logger.debug error_message
+
+    raise StandardError.new(error_message)
 
     failing_rows = ApplicationRecord.connection.execute(query)
 

@@ -1,6 +1,5 @@
 namespace :import do
   desc 'Import distribution tags from csv file (usage: rake import:distribution_tags[path/to/file,path/to/another])'
-
   task :distribution_tags, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'distribution_tags_import'
     import_helper = CsvImportHelper.new
@@ -64,11 +63,13 @@ namespace :import do
               SELECT DISTINCT #{id_type}, rank, geo_entity_type, iso_code2, regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
               FROM #{TMP_TABLE}
               WHERE
-                #{if taxonomy_name == Taxonomy::CITES_EU
+                #{
+                  if taxonomy_name == Taxonomy::CITES_EU
                     "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
                   else
                     "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
-                  end}
+                  end
+                }
             )
             INSERT INTO taggings(tag_id, taggable_id, taggable_type, context, created_at)
             SELECT subquery.*, NOW()
@@ -119,6 +120,18 @@ namespace :import do
           )
 
           ApplicationRecord.connection.execute(sql)
+
+          ApplicationRecord.connection.execute(
+            <<-SQL.squish
+              UPDATE taxon_concepts tc
+              SET dependents_updated_at = NOW(),
+                dependents_updated_by_id = NULL
+              WHERE id IN (
+                SELECT taxon_concept_id FROM #{TMP_TABLE} tmp
+                WHERE tags IS NOT NULL
+              )
+            SQL
+          )
         end
 
         puts "There are now #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"

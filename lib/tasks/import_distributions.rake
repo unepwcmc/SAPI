@@ -84,6 +84,15 @@ namespace :import do
           puts "Imported #{taxonomy_name} distributions"
         end
 
+        ApplicationRecord.connection.execute(
+          <<-SQL.squish
+            UPDATE taxon_concepts tc
+            SET dependents_updated_at = NOW(),
+              dependents_updated_by_id = NULL
+            WHERE id IN (SELECT taxon_concept_id FROM #{TMP_TABLE} tmp)
+          SQL
+        ) if has_tc_id
+
         import_helper.assert_no_rows(
           (
             <<-SQL.squish
@@ -192,6 +201,7 @@ namespace :import do
           SQL
 
           ApplicationRecord.connection.execute(sql)
+
 
           puts "Extra #{DistributionReference.count - distribution_references} distribution references have been added to the database"
         end
