@@ -6,12 +6,38 @@ namespace :import do
 
     files = import_helper.files_from_args(t, args)
 
+    def recheck_rolling_counts(prev_counts = nil)
+      new_counts = {
+        'taggings' => ApplicationRecord.connection.execute(
+          'SELECT COUNT(*) FROM taggings'
+        ).first['count'].to_i,
+        'distribution taggings' => ApplicationRecord.connection.execute(
+          "SELECT COUNT(*) FROM taggings where taggable_type = 'Distribution'"
+        ).first['count'].to_i,
+        'tag types' => ApplicationRecord.connection.execute(
+          'SELECT COUNT(*) FROM tags'
+        ).first['count'].to_i,
+        'preset distributon tag types' => PresetTag.where(model: 'Distribution').count
+      }
+
+      new_counts.entries.each do |count_type, new_count|
+        delta = prev_counts && (new_count - prev_counts[count_type])
+        delta = "+#{delta}" if delta && delta > 0
+        delta = delta && " (#{delta})"
+
+        puts "There are #{new_count} #{count_type} in the database#{delta}"
+      end
+
+      new_counts
+    end
+
     ApplicationRecord.transaction do
       files.each do |file|
         import_helper.drop_table(TMP_TABLE)
         import_helper.create_table_from_csv_headers(file, TMP_TABLE)
         import_helper.copy_data(file, TMP_TABLE)
 
+        rolling_counts = recheck_rolling_counts
         csv_headers = import_helper.csv_headers(file)
         has_legacy = csv_headers.include? 'Species RecID'
         id_type = has_legacy ? 'legacy_id' : 'taxon_concept_id'
@@ -19,8 +45,6 @@ namespace :import do
         kingdom = file.split('/').last.split('_')[0].titleize
 
         # import all distinct tags to both PresetTags and Tags table
-        puts "There are #{PresetTag.where(model: 'Distribution').count} distribution tags"
-        puts "There are #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
         puts 'ADDING: preset_tags and tags'
 
         sql = <<-SQL.squish
@@ -29,9 +53,11 @@ namespace :import do
           FROM (
             SELECT DISTINCT 'Distribution', BTRIM(tmp.tag)
             FROM #{TMP_TABLE}, (
-              SELECT DISTINCT regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
+              SELECT DISTINCT regexp_split_to_table(
+                #{TMP_TABLE}.tags, E','
+              ) AS tag
                 FROM #{TMP_TABLE}
-                ) AS tmp
+            ) AS tmp
             EXCEPT
 
             SELECT model, preset_tags.name
@@ -48,10 +74,7 @@ namespace :import do
 
         ApplicationRecord.connection.execute(sql)
 
-        puts "There are now #{PresetTag.where(model: 'Distribution').count} distribution tags"
-        puts "There are now #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM tags').first["count"]} tags in the tags table"
-
-        puts "There are #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
+        recheck_rolling_counts rolling_counts
 
         [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
           puts "Import #{taxonomy_name} distribution tags"
@@ -60,7 +83,9 @@ namespace :import do
 
           sql = <<-SQL.squish
             WITH tmp AS (
-              SELECT DISTINCT #{id_type}, rank, geo_entity_type, iso_code2, regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
+              SELECT DISTINCT
+                #{id_type}, rank, geo_entity_type, iso_code2,
+                regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
               FROM #{TMP_TABLE}
               WHERE
                 #{
@@ -97,13 +122,17 @@ namespace :import do
             ) AS subquery;
           SQL
 
+          ApplicationRecord.connection.execute(sql)
+
           puts 'ADDING: distribution taggings'
 
           import_helper.assert_no_rows(
             (
               <<-SQL.squish
                 SELECT tmp.* FROM (
-                  SELECT *, regexp_split_to_table(#{TMP_TABLE}.tags, E',') AS tag
+                  SELECT *, regexp_split_to_table(
+                    #{TMP_TABLE}.tags, E','
+                  ) AS tag
                   FROM #{TMP_TABLE}
                 ) tmp
                 LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
@@ -111,15 +140,19 @@ namespace :import do
                 LEFT JOIN distributions d
                   ON d.taxon_concept_id = tmp.taxon_concept_id
                   AND d.geo_entity_id = ge.id
-                LEFT JOIN tags t
+                LEFT JOIN (
+                  SELECT taggings.*, tags.name
+                  FROM taggings, tags
+                  WHERE taggings.tag_id = tags.id
+                    AND taggings.taggable_type = 'Distribution'
+                ) t
                   ON UPPER(t.name) = UPPER(BTRIM(tmp.tag))
+                  AND d.id = t.taggable_id
                 WHERE t.id IS NULL
               SQL
             ),
             'missing distribution tags'
           )
-
-          ApplicationRecord.connection.execute(sql)
 
           ApplicationRecord.connection.execute(
             <<-SQL.squish
@@ -134,7 +167,7 @@ namespace :import do
           )
         end
 
-        puts "There are now #{ApplicationRecord.connection.execute('SELECT COUNT(*) FROM taggings').first["count"]} distribution tags"
+        rolling_counts = recheck_rolling_counts rolling_counts
       end
 
       import_helper.rollback_if_dry_run
