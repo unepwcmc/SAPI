@@ -42,6 +42,7 @@ services:
       - 'app_public_uploads:/SAPI/public/uploads'
       - 'app_public_downloads:/SAPI/public/downloads'
       - 'app_private_elibrary:/SAPI/private/elibrary'
+      - 'app_spec_public:/SAPI/spec/public/'
 
       # The following paths are writable during build/development
       - './Gemfile.lock:/SAPI/Gemfile.lock'
@@ -162,11 +163,10 @@ volumes:
   redis_data:
   app_tmp:
   app_log:
-  app_private:
-  app_public:
   app_private_elibrary:
   app_public_uploads:
   app_public_downloads:
+  app_spec_public:
 
 secrets:
   host_ssh_key:

@@ -2,29 +2,29 @@
 
 rm -f ./tmp/pids/server.pid && bundle install
 
-mkdir -p public/downloads/checklist
-mkdir -p public/downloads/cites_listings
-mkdir -p public/downloads/cites_suspensions
-mkdir -p public/downloads/cms_listings
-mkdir -p public/downloads/cms_mappings
-mkdir -p public/downloads/common_names
-mkdir -p public/downloads/comptab
-mkdir -p public/downloads/documents
-mkdir -p public/downloads/eu_decisions
-mkdir -p public/downloads/eu_listings
-mkdir -p public/downloads/gross_exports
-mkdir -p public/downloads/gross_imports
-mkdir -p public/downloads/iucn_mappings
-mkdir -p public/downloads/net_exports
-mkdir -p public/downloads/net_imports
-mkdir -p public/downloads/orphaned_taxon_concepts
-mkdir -p public/downloads/quotas
-mkdir -p public/downloads/shipments
-mkdir -p public/downloads/species_reference_output
-mkdir -p public/downloads/standard_reference_output
-mkdir -p public/downloads/synonyms_and_trade_names
-mkdir -p public/downloads/taxon_concepts_distributions
-mkdir -p public/downloads/taxon_concepts_names
+mkdir -p {./,spec/}public/downloads/checklist
+mkdir -p {./,spec/}public/downloads/cites_listings
+mkdir -p {./,spec/}public/downloads/cites_suspensions
+mkdir -p {./,spec/}public/downloads/cms_listings
+mkdir -p {./,spec/}public/downloads/cms_mappings
+mkdir -p {./,spec/}public/downloads/common_names
+mkdir -p {./,spec/}public/downloads/comptab
+mkdir -p {./,spec/}public/downloads/documents
+mkdir -p {./,spec/}public/downloads/eu_decisions
+mkdir -p {./,spec/}public/downloads/eu_listings
+mkdir -p {./,spec/}public/downloads/gross_exports
+mkdir -p {./,spec/}public/downloads/gross_imports
+mkdir -p {./,spec/}public/downloads/iucn_mappings
+mkdir -p {./,spec/}public/downloads/net_exports
+mkdir -p {./,spec/}public/downloads/net_imports
+mkdir -p {./,spec/}public/downloads/orphaned_taxon_concepts
+mkdir -p {./,spec/}public/downloads/quotas
+mkdir -p {./,spec/}public/downloads/shipments
+mkdir -p {./,spec/}public/downloads/species_reference_output
+mkdir -p {./,spec/}public/downloads/standard_reference_output
+mkdir -p {./,spec/}public/downloads/synonyms_and_trade_names
+mkdir -p {./,spec/}public/downloads/taxon_concepts_distributions
+mkdir -p {./,spec/}public/downloads/taxon_concepts_names
 
 # If running the rails server then create or migrate existing database
 # if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
