@@ -125,6 +125,22 @@ namespace :import do
           SQL
 
           ApplicationRecord.connection.execute(sql)
+
+          # `DistributionReference` has `belongs_to :distribution, touch: true`;
+          # because we're skipping the Rails layer we must do this manually.
+          ApplicationRecord.connection.execute(
+            <<-SQL.squish
+              UPDATE "distributions"
+              SET updated_at = dr.updated_at, updated_by_id = dr.updated_by_id
+              FROM (
+                SELECT DISTINCT ON (distribution_id) distribution_id, updated_at, updated_by_id
+                FROM distribution_references dr
+                ORDER BY distribution_id, updated_at DESC
+              ) dr
+              WHERE "distributions".id = dr.distribution_id
+                AND "distributions".updated_at < dr.updated_at;
+            SQL
+          )
         end
 
         import_helper.assert_no_rows(
