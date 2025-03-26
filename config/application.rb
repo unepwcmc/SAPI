@@ -41,5 +41,7 @@ module SAPI
     # Active Job
     config.active_job.queue_adapter = :sidekiq
     config.action_mailer.deliver_later_queue_name = 'default'
+
+    config.active_record.schema_format = :sql
   end
 end
