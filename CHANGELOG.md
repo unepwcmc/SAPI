@@ -1,5 +1,18 @@
 ### Forthcoming
 
+* Updates to a task for bulk-uploading distributions
+* Various improvements to db indexes
+* Various updates to dependencies, including ra
+    * `appsignal` (3.5.5 to 3.13.1)
+    * `nokogiri` (1.16.7 to 1.18.3)
+    * `rack` (2.2.9 to 2.2.13)
+    * `sidekiq-unique-jobs` (7.1.31 to 7.1.33)
+    * `webrick` (1.8.1 to 1.8.2)
+* AppSignal now does checkins for cron jobs
+* Captive breeding db is now updated by cron job
+* login form submit button should not remain disabled on failure
+* Various dependencies updated
+* Fixes various issues with sidekiq jobs with cron triggers
 * Fixes an issue where certain params for downloading content of CITES
   checklists were being ignored.
 
