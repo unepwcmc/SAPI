@@ -1,4 +1,4 @@
-### Forthcoming
+### 1.17.0
 
 * Updates to a task for bulk-uploading distributions
 * Various improvements to db indexes
