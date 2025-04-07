@@ -1,6 +1,7 @@
 namespace :import do
   desc 'Import CITES suspensions from csv file (usage: rake import:cites_suspensions[path/to/file,path/to/another])'
   task :cites_suspensions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
     TMP_TABLE = 'cites_suspensions_import'
 
     if CitesSuspension.any?
@@ -19,11 +20,13 @@ namespace :import do
     end
 
     puts "There are #{CitesSuspension.count} CITES suspensions in the database."
-    files = files_from_args(t, args)
+
+    files = import_helper.files_from_args(t, args)
+
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       taxonomy_id = Taxonomy.where(name: Taxonomy::CITES_EU).first.id
       cites_id = Designation.where(name: Designation::CITES).first.id

@@ -1,35 +1,47 @@
+require Rails.root.join('lib/tasks/helpers_for_import.rb')
+
 namespace :import do
   desc 'Import CITES species listings from csv file (usage: rake import:cites_listings[path/to/file,path/to/another])'
   task :cites_listings, 10.times.map { |i| :"file_#{i}" } => [ :environment, 'cites_listings:defaults' ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'cites_listings_import'
+
     designation = Designation.find_by(name: Designation::CITES)
     taxonomy = Taxonomy.find_by(name: Taxonomy::CITES_EU)
+
     puts "There are #{ListingChange.joins(:species_listing).
       where(species_listings: { designation_id: designation.id }).count} CITES listings in the database"
     puts "There are #{ListingDistribution.joins(listing_change: :species_listing).
       where(species_listings: { designation_id: designation.id }).count} CITES listing distributions in the database"
+
     appendix_1 = SpeciesListing.find_by(designation_id: designation.id, abbreviation: 'I')
     appendix_2 = SpeciesListing.find_by(designation_id: designation.id, abbreviation: 'II')
     appendix_3 = SpeciesListing.find_by(designation_id: designation.id, abbreviation: 'III')
+
     a = ChangeType.find_by(name: ChangeType::ADDITION, designation_id: designation.id)
     d = ChangeType.find_by(name: ChangeType::DELETION, designation_id: designation.id)
     e = ChangeType.find_by(name: ChangeType::EXCEPTION, designation_id: designation.id)
     r = ChangeType.find_by(name: ChangeType::RESERVATION, designation_id: designation.id)
     rw = ChangeType.find_by(name: ChangeType::RESERVATION_WITHDRAWAL, designation_id: designation.id)
+
     english = Language.find_by(name_en: 'English')
+
     listings_count = ListingChange.joins(:species_listing).
       where(species_listings: { designation_id: designation.id }).count
+
     listings_d_count = ListingDistribution.joins(listing_change: :species_listing).
       where(species_listings: { designation_id: designation.id }).count
 
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
       puts 'CREATING temporary column and view'
+
       ApplicationRecord.connection.execute(<<-SQL.squish
         CREATE VIEW #{TMP_TABLE}_view AS
         SELECT ROW_NUMBER() OVER () AS row_id, * FROM #{TMP_TABLE}
@@ -41,7 +53,7 @@ namespace :import do
       ApplicationRecord.connection.execute('ALTER TABLE annotations DROP COLUMN IF EXISTS import_row_id')
       ApplicationRecord.connection.execute('ALTER TABLE annotations ADD COLUMN import_row_id integer')
 
-      copy_data(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       sql = <<-SQL.squish
           WITH new_annotations AS (
@@ -117,6 +129,7 @@ namespace :import do
       SQL
 
       puts 'INSERTING listing_changes'
+
       ApplicationRecord.connection.execute(sql)
 
       # add taxonomic exceptions
@@ -154,37 +167,43 @@ namespace :import do
       SQL
 
       puts 'INSERTING taxonomic exceptions'
+
       ApplicationRecord.connection.execute(sql)
 
       # add population exceptions
       sql = <<-SQL
-      WITH exceptions AS (
-              -- first insert the exception records -- there's just one / listing change
-              INSERT INTO listing_changes (parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at)
-              SELECT
-              listing_changes.id,
-              listing_changes.taxon_concept_id,
-              listing_changes.species_listing_id,
-              #{e.id},
-              effective_at,
-              false AS is_current,
-              NOW(), NOW()
-              FROM cites_listings_import_view
-              INNER JOIN listing_changes
-                ON row_id = import_row_id
-              WHERE excluded_populations_iso2 IS NOT NULL
-              RETURNING id, parent_id
-      ),
-      excluded_populations AS (
-      SELECT exceptions.*, split_part(regexp_split_to_table(excluded_populations_iso2,','),':',1) AS iso_code2
-      FROM exceptions
-      INNER JOIN listing_changes ON exceptions.parent_id = listing_changes.id
-      INNER JOIN cites_listings_import_view ON cites_listings_import_view.row_id = listing_changes.import_row_id
-      )
-      INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
-      SELECT excluded_populations.id, geo_entities.id, 'f', NOW(), NOW()
-      FROM excluded_populations
-      INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(excluded_populations.iso_code2)) AND geo_entities.is_current = 't'
+        WITH exceptions AS (
+          -- first insert the exception records -- there's just one / listing change
+          INSERT INTO listing_changes (
+            parent_id, taxon_concept_id, species_listing_id, change_type_id, effective_at, is_current, created_at, updated_at
+          )
+          SELECT
+          listing_changes.id,
+          listing_changes.taxon_concept_id,
+          listing_changes.species_listing_id,
+          #{e.id},
+          effective_at,
+          false AS is_current,
+          NOW(), NOW()
+          FROM cites_listings_import_view
+          INNER JOIN listing_changes
+            ON row_id = import_row_id
+          WHERE excluded_populations_iso2 IS NOT NULL
+          RETURNING id, parent_id
+        ),
+        excluded_populations AS (
+          SELECT exceptions.*,
+            split_part(regexp_split_to_table(excluded_populations_iso2,','),':',1) AS iso_code2
+          FROM exceptions
+          INNER JOIN listing_changes ON exceptions.parent_id = listing_changes.id
+          INNER JOIN cites_listings_import_view ON cites_listings_import_view.row_id = listing_changes.import_row_id
+        )
+        INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
+        SELECT excluded_populations.id, geo_entities.id, 'f', NOW(), NOW()
+        FROM excluded_populations
+        INNER JOIN geo_entities
+          ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(excluded_populations.iso_code2))
+          AND geo_entities.is_current = 't'
       SQL
 
       puts 'INSERTING population exceptions (listing distributions)'
@@ -203,6 +222,7 @@ namespace :import do
       SQL
 
       puts 'INSERTING listed populations (listing distributions)'
+
       ApplicationRecord.connection.execute(sql)
 
       sql = <<-SQL.squish
@@ -218,6 +238,7 @@ namespace :import do
     end
 
     puts 'DROPPING temporary column and view'
+
     ApplicationRecord.connection.execute('ALTER TABLE listing_changes DROP COLUMN import_row_id')
     ApplicationRecord.connection.execute('ALTER TABLE annotations DROP COLUMN import_row_id')
     ApplicationRecord.connection.execute('DROP VIEW cites_listings_import_view')
@@ -226,13 +247,14 @@ namespace :import do
       where(species_listings: { designation_id: designation.id }).count
     new_listings_d_count = ListingDistribution.joins(listing_change: :species_listing).
       where(species_listings: { designation_id: designation.id }).count
+
     puts "#{new_listings_count - listings_count} CITES listings were added to the database"
     puts "#{new_listings_d_count - listings_d_count} CITES listing distributions were added to the database"
 
     # and now some special care for species that have been deleted and then readded to the same appendix
     # those deletions are explicit, even though not current
     # Acipenser fulvescens, Incilius periglenes
-    sql = <<-SQL.squish
+    <<-SQL.squish
     WITH explicit_not_current_deletions AS (
       SELECT listing_changes.* FROM taxon_concepts
       JOIN listing_changes ON listing_changes.taxon_concept_id = taxon_concepts.id
@@ -256,25 +278,39 @@ namespace :import do
     desc 'Add defaults CITES listings and default ChangeTypes'
     task defaults: :environment do
       puts 'Going to create CITES default species listings, if they do not exist'
+
       designation = Designation.find_by(name: 'CITES')
+
       [ 'I', 'II', 'III' ].each do |appendix|
-        SpeciesListing.find_or_create_by(name: "Appendix #{appendix}", abbreviation: appendix, designation_id: designation.id)
+        SpeciesListing.find_or_create_by(
+          name: "Appendix #{appendix}",
+          abbreviation: appendix,
+          designation_id: designation.id
+        )
       end
+
       puts 'Going to create change types defaults, if they dont already exist'
+
       ChangeType.dict.each do |c_type|
         ChangeType.find_or_create_by(name: c_type, designation_id: designation.id)
       end
+
       puts 'Created appendices and change type defaults'
     end
+
     desc 'Drop CITES species listings'
     task delete_all: :environment do
       designation = Designation.find_by(name: 'CITES')
+
       AnnotationTranslation.joins(annotation: :event).
         where(events: { designation_id: designation.id }).delete_all
+
       Annotation.joins(:event).
         where(events: { designation_id: designation.id }).delete_all
+
       ListingDistribution.joins(:listing_change).
         where(listing_changes: { desigantion_id: designation.id }).delete_all
+
       ListingChange.where(designation_id: designation.id).delete_all
     end
   end

@@ -1,15 +1,20 @@
 namespace :import do
   desc 'Import trade - species_plus mapping table from csv file'
   task trade_species_mapping: [ :environment ] do
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'trade_species_mapping_import'
     file = 'lib/files/names_for_transfer_29116.csv'
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
-    copy_data(file, TMP_TABLE)
+
+    import_helper.drop_table(TMP_TABLE)
+    import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+    import_helper.copy_data(file, TMP_TABLE)
   end
 
   desc "Import trade names (which didn't exist in SpeciesPlus) from csv file"
   task trade_names: [ :environment ] do
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'trade_names_import'
     file = 'lib/files/trade_names_to_add_9513.csv'
 
@@ -17,9 +22,9 @@ namespace :import do
     taxon_relationship_type_id = TaxonRelationshipType.
       find_or_create_by(name: TaxonRelationshipType::HAS_TRADE_NAME).id
 
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
-    copy_data(file, TMP_TABLE)
+    import_helper.drop_table(TMP_TABLE)
+    import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+    import_helper.copy_data(file, TMP_TABLE)
 
     puts "There are #{TaxonConcept.where(
       name_status: "T",
@@ -129,10 +134,10 @@ namespace :import do
   task synonyms_to_trade_names: [ :environment ] do
     TMP_TABLE = 'synonyms_to_trade_mapping_import'
     file = 'lib/files/synonyms_to_trade_names.csv'
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
+    import_helper.drop_table(TMP_TABLE)
+    import_helper.create_table_from_csv_headers(file, TMP_TABLE)
     SapiModule::Indexes.drop_indexes_on_trade_names
-    copy_data(file, TMP_TABLE)
+    import_helper.copy_data(file, TMP_TABLE)
     has_trade_name = TaxonRelationshipType.
       find_or_create_by(name: TaxonRelationshipType::HAS_TRADE_NAME).id
     has_synonym = TaxonRelationshipType.
@@ -144,16 +149,21 @@ namespace :import do
     count_synonym_relationships = TaxonRelationship.where(taxon_relationship_type_id: has_synonym).count
     taxon_concept_ids = ApplicationRecord.connection.execute("SELECT cites_taxon_code, species_plus_id AS id FROM #{TMP_TABLE}").
       map { |h| [ h['cites_taxon_code'], h['id'] ] }
+
     taxon_concept_ids.each do |cites_code, id|
       tc = TaxonConcept.find id
+
       next if tc.name_status != 'S'
 
       puts "Updating #{tc.full_name}"
+
       unless tc.accepted_names.any?
         puts 'from synonym to trade_name'
         tc.update(name_status: 'T', parent_id: nil, legacy_trade_code: cites_code)
       end
+
       puts "Update its children's taxon_name_id"
+
       tc.children.each do |child|
         if child.accepted_names.any?
           puts "looking at #{child.full_name} scientific_name"
@@ -162,8 +172,10 @@ namespace :import do
         end
       end
     end
-    TaxonName.joins('LEFT JOIN taxon_concepts ON taxon_name_id = taxon_names.id').
-      where(taxon_concepts: { id: nil }).find_each do |t_name|
+
+    TaxonName.joins(
+      'LEFT JOIN taxon_concepts ON taxon_name_id = taxon_names.id'
+    ).where(taxon_concepts: { id: nil }).find_each do |t_name|
       unless TaxonConcept.where(taxon_name_id: t_name.id).any?
         puts "deleting unnused taxon_name #{t_name.scientific_name}"
         t_name.delete
@@ -223,6 +235,7 @@ namespace :import do
       Diff: #{final_count_trade_relationships - count_trade_relationships}"
     puts "Pre-Existing synonym_relationships: #{count_synonym_relationships}; Final count synonym_relationships: #{final_count_synonym_relationships};\
       Diff: #{final_count_synonym_relationships - count_synonym_relationships}"
+
     SapiModule::Indexes.create_indexes_on_trade_names
   end
 end

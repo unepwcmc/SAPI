@@ -29,13 +29,13 @@ module Elibrary
       require 'psql_command'
       Rails.logger.debug { "Copying data from #{path_to_file} into #{table_name}" }
       cmd = <<-PSQL
-    SET DateStyle = "ISO,DMY";
-    \\COPY #{table_name} (#{db_columns.join(', ')})
-    FROM '#{Rails.root + path_to_file}'
-    WITH DELIMITER ','
-    ENCODING 'utf-8'
-    CSV HEADER
-    PSQL
+SET DateStyle = "ISO,DMY";
+\\COPY #{table_name} (#{db_columns.join(', ')})
+FROM '#{Rails.root + path_to_file}'
+WITH DELIMITER ','
+ENCODING 'utf-8'
+CSV HEADER
+PSQL
       PsqlCommand.new(cmd).execute
       Rails.logger.debug 'Data copied to tmp table'
     end

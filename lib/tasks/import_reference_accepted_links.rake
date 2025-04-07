@@ -1,7 +1,10 @@
 namespace :import do
   desc 'Import reference accepted links from csv file (usage: rake import:reference_accepted_links[path/to/file,path/to/another])'
   task :reference_accepted_links, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'reference_accepted_links_import'
+
     puts "There are #{TaxonConceptReference.count} taxon concept references in the database."
 
     ApplicationRecord.connection.execute('DROP INDEX IF EXISTS index_taxon_concepts_on_legacy_id_and_legacy_type')
@@ -9,11 +12,12 @@ namespace :import do
     ApplicationRecord.connection.execute('CREATE INDEX index_taxon_concepts_on_legacy_id_and_legacy_type ON taxon_concepts (legacy_id, legacy_type)')
     ApplicationRecord.connection.execute('CREATE INDEX index_references_on_legacy_id_and_legacy_type ON "references" (legacy_id, legacy_type)')
 
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
+
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
@@ -48,9 +52,12 @@ namespace :import do
               AND reference_id = "references".id
           )
       SQL
+
       ApplicationRecord.connection.execute(sql)
     end
+
     puts "There are now #{TaxonConceptReference.count} taxon concept references in the database"
+
     ApplicationRecord.connection.execute('DROP INDEX index_taxon_concepts_on_legacy_id_and_legacy_type')
     ApplicationRecord.connection.execute('DROP INDEX index_references_on_legacy_id_and_legacy_type')
   end

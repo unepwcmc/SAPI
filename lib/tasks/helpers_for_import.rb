@@ -112,7 +112,7 @@ class CsvToDbMap
       'Species RecID' => 'legacy_id integer',
       'taxon_concept_id' => 'taxon_concept_id integer',
       'Rank' => 'rank varchar',
-      'GEO_entity_type' => 'geo_entity_type varchar',
+      'GEO_entity' => 'geo_entity_type varchar',
       'ISO Code 2' => 'iso_code2 varchar',
       'Tags' => 'tags varchar',
       'Designation' => 'designation varchar'
@@ -415,85 +415,242 @@ class CsvToDbMap
   end
 end
 
-def files_from_args(t, args)
-  files = t.arg_names.map { |a| args[a] }.compact
-  files = [ 'lib/files/animals.csv' ] if files.empty?
-  files.reject { |file| !file_ok?(file) }
-end
+class CsvImportHelper
+  def files_from_args(t, args)
+    files = t.arg_names.map { |a| args[a] }.compact
+    files = [ 'lib/files/animals.csv' ] if files.empty?
 
-def file_ok?(path_to_file)
-  if !Rails.root.join(path_to_file).file? # if the file is not defined, explain and leave.
-    Rails.logger.debug 'Please specify a valid csv file from which to import data'
-    Rails.logger.debug 'Usage: rake import:XXX[path/to/file,path/to/another]'
-    return false
+    files.reject { |file| !file_ok?(file) }
   end
-  true
-end
 
-def csv_headers(path_to_file)
-  res = nil
-  CSV.foreach(path_to_file) do |row|
-    res = row.map { |h| h && h.chomp.sub(/^\W/, '') }.compact
-    break
+  def file_ok?(path_to_file)
+    if !Rails.root.join(path_to_file).file? # if the file is not defined, explain and leave.
+      Rails.logger.debug 'Please specify a valid csv file from which to import data'
+      Rails.logger.debug 'Usage: rake import:XXX[path/to/file,path/to/another]'
+      return false
+    end
+
+    true
   end
-  res
-end
 
-def db_columns_from_csv_headers(path_to_file, table_name, include_data_type = true)
-  m = CsvToDbMap.instance
-  # work out the db columns to create
-  csv_columns = csv_headers(path_to_file)
-  db_columns = csv_columns.map { |col| m.csv_to_db(table_name, col) }
-  db_columns = db_columns.map { |col| col.sub(/\s\w+$/, '') } unless include_data_type
-  Rails.logger.debug csv_columns.inspect
-  Rails.logger.debug db_columns.inspect
-  db_columns
-end
+  def csv_headers(path_to_file)
+    res = nil
 
-def create_table_from_csv_headers(path_to_file, table_name)
-  db_columns = db_columns_from_csv_headers(path_to_file, table_name)
-  create_table_from_column_array(table_name, db_columns)
-end
+    CSV.foreach(path_to_file) do |row|
+      res = row.map { |h| h && h.chomp.sub(/^\W/, '') }.compact
+      break
+    end
 
-def create_table_from_column_array(table_name, db_columns)
-  begin
-    Rails.logger.debug 'Creating tmp table'
-    ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
-    ApplicationRecord.connection.execute "CREATE TABLE #{table_name} (#{db_columns.join(', ')})"
-    Rails.logger.debug 'Table created'
-  rescue Exception => e
-    Rails.logger.debug e.inspect
-    Rails.logger.debug 'Tmp already exists removing data from tmp table before starting the import'
-    ApplicationRecord.connection.execute "DELETE FROM #{table_name};"
-    Rails.logger.debug 'Data removed'
+    res
   end
-end
 
-def drop_table(table_name)
-  begin
-    ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name};"
-    Rails.logger.debug 'Table removed'
-  rescue Exception
-    Rails.logger.debug { "Could not drop table #{table_name}. It might not exist if this is the first time you are running this rake task." }
+  def db_columns_from_csv_headers(path_to_file, table_name, include_data_type = true)
+    m = CsvToDbMap.instance
+
+    # work out the db columns to create
+    csv_columns = csv_headers(path_to_file)
+    db_columns = csv_columns.map { |col| m.csv_to_db(table_name, col) || '' }
+    db_columns = db_columns.map { |col| col&.sub(/\s\w+$/, '') } unless include_data_type
+
+    db_columns.select(&:present?)
   end
-end
 
-def copy_data(path_to_file, table_name)
-  db_columns = db_columns_from_csv_headers(path_to_file, table_name, false)
-  copy_data_into_table(path_to_file, table_name, db_columns)
-end
+  def create_table_from_csv_headers(path_to_file, table_name)
+    db_columns = db_columns_from_csv_headers(path_to_file, table_name)
 
-def copy_data_into_table(path_to_file, table_name, db_columns)
-  require 'psql_command'
-  Rails.logger.debug { "Copying data from #{path_to_file} into tmp table #{table_name}" }
-  cmd = <<-PSQL
-SET DateStyle = "ISO,DMY";
-\\COPY #{table_name} (#{db_columns.join(', ')})
-FROM '#{Rails.root + path_to_file}'
-WITH DELIMITER ','
-ENCODING 'utf-8'
-CSV HEADER
-PSQL
-  PsqlCommand.new(cmd).execute
-  Rails.logger.debug 'Data copied to tmp table'
+    create_table_from_column_array(table_name, db_columns)
+
+    db_columns
+  end
+
+  def create_table_from_column_array(table_name, column_names)
+    raise StandardError(
+      'Not in a transaction - cannot create temp table'
+    ) unless ActiveRecord::Base.connection.open_transactions > 0
+
+    begin
+      # Dropping the table is redundant as temp tables have higher precedence
+      # in search_path than permanent ones.
+      # Rails.logger.debug { "Dropping table #{table_name}, if it exists" }
+      # ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{table_name} CASCADE"
+      connection = ApplicationRecord.connection
+
+      table_expr =
+        if column_names.present?
+          if column_names.is_a? Array
+            quoted_table_name = connection.quote_table_name(table_name)
+
+            if column_names[0]&.match? /\b(?:varchar|integer|boolean|float)$/i
+              "#{quoted_table_name} (#{column_names.join(', ')})"
+            else
+              column_names_quoted = column_names.map do |name|
+                connection.quote_column_name name
+              end.join(', ')
+
+              "#{quoted_table_name} (#{column_names_quoted})"
+            end
+          else
+            # also accept raw sql here: 'id INTEGER, code VARCHAR'
+            column_names
+          end
+        else
+          connection.quote_table_name(table_name)
+        end
+
+      Rails.logger.debug { "Creating temp table #{table_expr}" }
+
+      connection.execute "CREATE TEMP TABLE #{table_expr} ON COMMIT DROP"
+
+      Rails.logger.debug 'Table created'
+    rescue Exception => e
+      Rails.logger.debug e.inspect
+
+      raise e
+    end
+  end
+
+  def drop_table(table_name)
+    connection = ApplicationRecord.connection
+    quoted_table_name = connection.quote_column_name(table_name)
+
+    begin
+      Rails.logger.debug { "Dropping #{quoted_table_name}, if it exists" }
+      ApplicationRecord.connection.execute "DROP TABLE IF EXISTS #{quoted_table_name};"
+    rescue Exception
+      Rails.logger.debug do
+        "Could not drop table #{quoted_table_name}. " +
+          'It might not exist if this is the first time you are running this rake task.'
+      end
+      Rails.logger.debug e.inspect
+
+      raise e
+    end
+  end
+
+  def copy_data(path_to_file, table_name)
+    db_columns = db_columns_from_csv_headers(path_to_file, table_name)
+
+    copy_data_into_table(path_to_file, table_name, db_columns)
+  end
+
+  def copy_data_into_table(
+    path_to_file,
+    table_name,
+    column_mapping,
+    csv_options = {}
+  )
+    # For the rest of the transaction, parse dates as ISO or DMY, not MDY (US)
+    ApplicationRecord.connection.execute 'SET LOCAL DateStyle = "ISO,DMY"'
+
+    encoder_class = {
+      varchar: PG::BinaryEncoder::String,
+      text: PG::BinaryEncoder::String,
+      integer: PG::BinaryEncoder::Int4,
+      float: PG::BinaryEncoder::Float4,
+      boolean: PG::BinaryEncoder::Boolean,
+      date: PG::BinaryEncoder::Date
+    }
+
+    column_names =
+      if column_mapping.is_a? Array
+        column_mapping
+      elsif column_mapping.is_a? Hash
+        column_mapping.values
+      end.map do |v|
+        v.split(/\s+/)[0]
+      end
+
+    column_types =
+      if column_mapping.is_a? Array
+        column_mapping
+      elsif column_mapping.is_a? Hash
+        column_mapping.values
+      end.map do |v|
+        v.split(/\s+/)[1] || 'varchar'
+      end.map(&:downcase)
+
+    full_path = Rails.root + path_to_file
+
+    Rails.logger.debug do
+      "Copying data from #{full_path} into tmp table #{table_name} (#{column_names.zip column_types})"
+    end
+
+    encoder_type_map = PG::TypeMapByColumn.new(
+      column_types&.map do |t|
+        (encoder_class[t.to_sym] || encoder_class[:varchar]).new
+      end
+    )
+
+    row_count = 0
+    m = CsvToDbMap.instance
+
+    begin
+      PgCopy.copy_to_db(
+        table_name,
+        column_names: column_names,
+        pg_copy_encoder: PG::BinaryEncoder::CopyRow.new(type_map: encoder_type_map)
+      ) do |writer|
+        CSV.foreach(
+          full_path,
+          headers: true,
+          skip_blanks: true,
+          **csv_options
+        ) do |csv_row|
+          row_count += 1
+
+          row_as_hash =
+            csv_row.map do |cell|
+              [
+                m.csv_to_db(
+                  table_name, cell[0]
+                )&.split(/\s+/)&.first || cell[0],
+                cell[1]
+              ]
+            end.to_h
+
+
+          row_values =
+            column_names.map do |column_name|
+              row_as_hash[column_name]
+            end
+
+          writer.call(row_values)
+        end
+      end
+    rescue StandardError => e
+      Rails.logger.debug { "Failed at line #{row_count}" }
+      Rails.logger.debug e.inspect
+
+      raise e
+    end
+
+    Rails.logger.debug { "Finished copying #{row_count} rows to #{table_name}" }
+  end
+
+  def assert_no_rows(query, why = 'failing rows')
+    failing_row_count = ApplicationRecord.connection.execute(
+      "SELECT COUNT(1) FROM (#{query}) t"
+    )[0]['count']
+
+    return [] unless failing_row_count > 0
+
+    error_message = "Assertion failed - got #{failing_row_count} #{why}\n\n#{query}"
+
+    Rails.logger.debug error_message
+
+    raise StandardError.new(error_message)
+
+    failing_rows = ApplicationRecord.connection.execute(query)
+
+    failing_rows
+  end
+
+
+  def rollback_if_dry_run
+    raise ActiveRecord::Rollback.new do
+      'Rolling back: dry run'
+    end if ActiveModel::Type::Boolean.new.cast(
+      ENV.fetch('DRY_RUN', nil)
+    )
+  end
 end

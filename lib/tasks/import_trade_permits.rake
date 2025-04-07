@@ -1,23 +1,28 @@
 namespace :import do
   desc 'Import trade permits from csv file (usage: rake import:trade_permits[path/to/file])'
   task :trade_permits, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
-    TMP_TABLE = 'permits_import'
-    permits_import_to_index = { 'permits_import' => [ 'permit_number', 'shipment_number', 'permit_reporter_type' ] }
+    import_helper = CsvImportHelper.new
+
+  TMP_TABLE = 'permits_import'
+
+  permits_import_to_index = { 'permits_import' => [ 'permit_number', 'shipment_number', 'permit_reporter_type' ] }
     trade_shipments_indexed = { 'trade_shipments' => [ 'export_permits_ids', 'import_permits_ids', 'origin_permits_ids' ] }
     trade_shipments_to_index = { 'trade_shipments' => [ 'legacy_shipment_number' ] }
 
-    files = files_from_args(t, args)
+
+    files = import_helper.files_from_args(t, args)
+
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       drop_indices(permits_import_to_index)
       drop_indices(trade_shipments_to_index)
 
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       create_indices(permits_import_to_index, 'btree')
 
@@ -43,9 +48,11 @@ def drop_indices(index)
   index.each do |table, columns|
     columns.each do |column|
       sql = <<-SQL.squish
-      DROP INDEX IF EXISTS index_#{table}_on_#{column};
+        DROP INDEX IF EXISTS index_#{table}_on_#{column};
       SQL
+
       puts "Dropping index #{column} on #{table} #{Time.now.strftime("%d/%m/%Y %H:%M")}"
+
       execute_query(sql)
     end
   end
@@ -68,18 +75,21 @@ end
 
 def populate_trade_permits
   sql = <<-SQL.squish
-  INSERT INTO trade_permits (number, created_At, updated_at)
-  SELECT DISTINCT permit_number,
-         now()::date AS created_at,
-         now()::date AS updated_at
-  FROM permits_import;
+    INSERT INTO trade_permits (number, created_At, updated_at)
+    SELECT DISTINCT permit_number,
+      now()::date AS created_at,
+      now()::date AS updated_at
+    FROM permits_import;
   SQL
+
   puts "Inserting into trade_permits #{Time.now.strftime("%d/%m/%Y %H:%M")}"
+
   execute_query(sql)
 end
 
 def insert_into_trade_shipments
   permits_entity = { 'import' => 'I', 'export' => 'E', 'origin' => 'O' }
+
   permits_entity.each do |k, v|
     sql = <<-SQL.squish
       WITH grouped_permits AS (
@@ -96,7 +106,9 @@ def insert_into_trade_shipments
       FROM grouped_permits
       WHERE trade_shipments.legacy_shipment_number = grouped_permits.shipment_number
     SQL
+
     puts "Inserting #{k} permits into trade_shipments #{Time.now.strftime("%d/%m/%Y %H:%M")}"
+
     execute_query(sql)
   end
 end
