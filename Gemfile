@@ -8,9 +8,6 @@ gem 'rails', '7.1.3.4'
 # Configure Cross-Origin resource sharing
 gem 'rack-cors'
 
-# Active storage for persistent assets
-gem 'activestorage'
-
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
@@ -80,7 +77,8 @@ gem 'prawn', '0.13.2'
 gem 'pdfkit', '~> 0.8.7.3'
 gem 'wkhtmltopdf-binary', '~> 0.12.6.6'
 
-gem 'aws-sdk-s3', '~> 1.143'
+# AWS S3 for ActiveStorage; also used directly for ARU changes
+gem 'aws-sdk-s3', '~> 1.143', require: false
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby

@@ -623,7 +623,6 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (= 0.8.4)
-  activestorage
   acts-as-taggable-on (~> 10.0)
   ahoy_matey (~> 5.0, >= 5.0.2)
   annotaterb (~> 4.10.2)
