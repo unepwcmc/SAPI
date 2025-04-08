@@ -3,7 +3,7 @@ class CreateBulkDownloads < ActiveRecord::Migration[7.1]
     create_table :bulk_downloads do |t|
       t.string :download_type, null: false
       t.string :format, null: false
-      t.jsonb :filters, null: false
+      t.jsonb :filters, null: false, default: {}
       t.boolean :is_public, default: false, null: false
       t.jsonb :error_message, null: true
       t.jsonb :success_message, null: true
