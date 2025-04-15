@@ -12,7 +12,7 @@ class TaxonName < ApplicationRecord
   # Used by seed and rake task.
   # attr_accessible :basionym_id, :scientific_name
 
-  has_many :taxon_concepts, dependent: :nullify
+  has_many :taxon_concepts, dependent: :destroy
 
   validates :scientific_name, presence: true
 
