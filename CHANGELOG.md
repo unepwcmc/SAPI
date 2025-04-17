@@ -1,5 +1,6 @@
 ### Forthcoming
 
+* Users now see the current EU Annex(es) of a taxon when exporting EU decisions.
 * Users can now choose between "Under Tracking" and "In consultation" when
   exporting EU decisions.
 * ActiveStorage is now configured for storing bulk downloads to support changes
