@@ -9,7 +9,7 @@ module PgCopy
   # usage:
   #
   # ```
-  # copy_to_db(
+  # PgCopy.copy_to_db(
   #   'temp_names', column_names: ['taxon_id', 'name']
   # ) do |raw_connection|
   #   CSV.foreach(
@@ -49,6 +49,111 @@ module PgCopy
 
     raw_connection.copy_data sql_copy_from_stdin, pg_copy_encoder do
       yield(writer, column_names) if block_given?
+    end
+  end
+
+  ##
+  # usage:
+  #
+  # ```
+  # PgCopy.copy_to_csv_file(
+  #   'SELECT * FROM ranks',
+  #   'ranks.csv',
+  #   {
+  #      delimiter: ';',
+  #      encoding: 'Windows-1252',
+  #   }
+  # )
+  # ```
+  def self.copy_to_csv_file(
+    query, file_name, **kwargs
+  )
+    File.open(file_name, mode: 'w', encoding: kwargs[:encoding]) do |io|
+      self.copy_to_csv(query, io:, **kwargs)
+    end
+  end
+
+  def self.realias_query(
+    query,
+    column_names: nil,
+    column_aliases: column_names,
+    column_mappings: column_names&.zip(column_aliases)
+  )
+    if column_aliases
+      query_sql =
+        if query.respond_to? :to_sql
+          query.to_sql
+        else
+          query
+        end
+
+      column_aliases_sql = column_aliases.map do |column_alias|
+        ActiveRecord::Base.connection.quote_column_name(column_alias)
+      end.join(', ')
+
+      "SELECT * FROM (#{query_sql}) AS cte (#{column_aliases_sql})"
+    else
+      select_array =
+        column_mappings&.map do |alias_pair|
+          quoted_alias = ActiveRecord::Base.connection.quote_column_name(
+            alias_pair[1]
+          )
+
+          "#{alias_pair[0]} AS #{quoted_alias}"
+        end
+
+      if !select_array
+        query
+      elsif query.respond_to? :select
+        query.select(*select_array)
+      else
+        "SELECT #{select_array.join(', ')} FROM (#{query}) AS cte"
+      end
+    end
+  end
+
+  def self.copy_to_csv(
+    query,
+    io: nil,
+    connection: ActiveRecord::Base.connection,
+    raw_connection: connection.raw_connection,
+    encoding: 'UTF-8',
+    ruby_encoding: encoding,
+    delimiter: ',',
+    header: true,
+    query_sql:
+      if query.respond_to? :to_sql
+        query.to_sql
+      else
+        query.to_s
+      end,
+    sql_copy_to_stdout:
+      unless [ ',', ';' ].include? delimiter
+        raise StandardError ('Delimiter must be comma or semicolon')
+      else
+        %{
+          COPY (#{query_sql}) TO STDOUT WITH (
+            FORMAT csv,
+            DELIMITER #{connection.quote(delimiter)},
+            ENCODING #{connection.quote(encoding)},
+            HEADER
+          )
+        }
+      end
+  )
+    Rails.logger.debug sql_copy_to_stdout
+
+    raw_connection.copy_data sql_copy_to_stdout do
+      while row = raw_connection.get_copy_data
+        to_write =
+          if block_given?
+            yield row.force_encoding(ruby_encoding)
+          else
+            row.force_encoding(ruby_encoding)
+          end
+
+        io&.write to_write
+      end
     end
   end
 end
