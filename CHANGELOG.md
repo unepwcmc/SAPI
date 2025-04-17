@@ -1,5 +1,12 @@
 ### Forthcoming
 
+* Users can now choose between "Under Tracking" and "In consultation" when
+  exporting EU decisions.
+* ActiveStorage is now configured for storing bulk downloads to support changes
+  to the Species+/CITES API (separate `species-api` repository)
+
+### 1.17.0
+
 * Updates to a task for bulk-uploading distributions
 * Various improvements to db indexes
 * Various updates to dependencies, including ra
