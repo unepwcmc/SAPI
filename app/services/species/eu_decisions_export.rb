@@ -32,13 +32,8 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
         ]&.to_s === 'true'
       end
 
-    Rails.logger.warn do
-      @srg_history_types
-    end
-    Rails.logger.warn do
-      srg_history_types
-    end
-
+    # @eu_decision_filter == 'In consultation' to maintain compatibility for the
+    # Species+ app. 'SRG history' is what we get from the website as of 1.18.0.
     return rel.where( # rubocop:disable Rails/WhereEquals
       # Base table has `srg_history_id`, view has string `srg_history`:
       # Use literal, as with a hash, Rails will assume you mean the
