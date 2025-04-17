@@ -16,8 +16,10 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
   def query
     rel = EuDecision.from(
       "#{table_name} AS eu_decisions"
-    ).select(sql_columns).order(
-      :taxonomic_position, :party, :ordering_date
+    ).joins(:m_taxon_concept).select(sql_columns).order(
+      'eu_decisions.taxonomic_position',
+      'eu_decisions.party',
+      'eu_decisions.ordering_date'
     )
 
     srg_history_types =
@@ -104,7 +106,8 @@ private
     [
       'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
       'Genus', 'Species', 'Subspecies',
-      'Full Name', 'Rank', 'Date of Decision', 'Valid since', 'Party',
+      'Full Name', 'Rank', "Annex on Date: #{DateTime.now.strftime('%d/%m/%Y')}",
+      'Date of Decision', 'Valid since', 'Party',
       'EU Decision', 'SRG History', 'Source', 'Term',
       'Notes', 'Document', "Valid on Date: #{DateTime.now.strftime('%d/%m/%Y')}"
     ]
@@ -114,10 +117,17 @@ private
     [
       :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
-      :full_name, :rank_name, :start_date_formatted, :original_start_date_formatted, :party,
+      :full_name, :rank_name, 'taxon_concepts_mview.eu_listing',
+      :start_date_formatted, :original_start_date_formatted, :party,
       :decision_type_for_display, :srg_history, :source_code_and_name, :term_name,
       :full_note_en, :start_event_name, :is_valid_for_display
-    ]
+    ].map do |col_name|
+      if col_name.to_s.match?(/[.]/)
+        col_name
+      else
+        "eu_decisions.#{col_name}"
+      end
+    end
   end
 
   # Produces list of excluded decision types.
