@@ -85,7 +85,7 @@
       <div class="bs-col-auto p-3">
         <div class="sub-heading">
           <label>
-            {{view Ember.RadioButton name="in_consultation" selectionBinding="euDecisionFilter" value="Default"}}
+            {{view Ember.RadioButton name="eu_decision_filter" selectionBinding="euDecisionFilter" value="Default"}}
             EU Decision Types
           </label>
         </div>
@@ -93,14 +93,14 @@
       <div class="bs-col-auto p-3 bs-border-left">
         <div class="sub-heading">
           <label>
-            {{view Ember.RadioButton name="in_consultation" selectionBinding="euDecisionFilter" value="In consultation"}}
-            In Consultation
+            {{view Ember.RadioButton name="eu_decision_filter" selectionBinding="euDecisionFilter" value="SRG history"}}
+            SRG History
           </label>
         </div>
       </div>
     </div>
     {{#if euDecisionFilterIsDefault }}
-      <div class="mb-4">
+      <div class="mb-4 pl-1">
         <div>
           <label>
             {{view Ember.Checkbox checkedBinding="negativeOpinions"}}
@@ -176,8 +176,34 @@
           </div>
         </div>
       </div>
+
+    {{else}}
+      <div class="bs-row mb-4">
+        <div class="bs-col-4">
+        </div>
+        <div class="bs-col-auto pl-4">
+          <div>
+            <label>
+              {{view Ember.Checkbox checkedBinding="inConsultation"}}
+              In Consultation
+            </label>
+          </div>
+          <div>
+            <label>
+              {{view Ember.Checkbox checkedBinding="underTracking"}}
+              Under Tracking
+            </label>
+          </div>
+          <div>
+            <label>
+              {{view Ember.Checkbox checkedBinding="discussedAtSrg"}}
+              Discussed at SRG
+            </label>
+          </div>
+        </div>
+      </div>
     {{/if}}
-  </div>
+</div>
 
 
 

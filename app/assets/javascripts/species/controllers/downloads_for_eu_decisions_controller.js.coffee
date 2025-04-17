@@ -27,6 +27,9 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   noOpinions: true
   srgReferral: true
   suspensions: true
+  inConsultation: true
+  underTracking: true
+  discussedAtSrg: true
   euDecisionFilter: 'Default'
   euDecisionFilterIsDefault: ( ->
     @get('euDecisionFilter') == 'Default'
@@ -80,13 +83,18 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
 
   toParams: ( ->
     # IF EU DECISION FILTER IS "IN CONSULTATION" - DON'T APPLY ALL FILTERS
-    if @get('euDecisionFilter').toUpperCase() == 'IN CONSULTATION'
+    if @get('euDecisionFilter').toUpperCase() == 'SRG HISTORY'
       {
         data_type: 'EuDecisions'
         filters: {
           designation: @get('designation')
           csv_separator: @get('controllers.downloads.csvSeparator')
           eu_decision_filter: @get('euDecisionFilter')
+          srg_history_types: {
+            inConsultation: @get('inConsultation')
+            underTracking: @get('underTracking')
+            discussedAtSrg: @get('discussedAtSrg')
+          }
         }
       }
     else
@@ -128,6 +136,9 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
     'selectedYears.@each',
     'srgReferral',
     'suspensions',
+    'inConsultation',
+    'underTracking',
+    'discussedAtSrg',
     'timeScope'
   )
 

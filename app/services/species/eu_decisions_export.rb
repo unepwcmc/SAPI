@@ -5,6 +5,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     @geo_entities_ids = filters[:geo_entities_ids]
     @years = filters[:years]
     @decision_types = filters[:decision_types]
+    @srg_history_types = filters[:srg_history_types] || {}
     @eu_decision_filter = filters[:eu_decision_filter]
     @set = filters[:set]
     initialize_csv_separator(filters[:csv_separator])
@@ -19,12 +20,31 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
       :taxonomic_position, :party, :ordering_date
     )
 
+    srg_history_types =
+      [
+        'In consultation',
+        'Discussed at SRG',
+        'Under Tracking'
+      ].select do |srg_history_type|
+        @srg_history_types[
+          # Rails does not have a sensible camelcase function
+          srg_history_type.parameterize.underscore.camelize(:lower)
+        ]&.to_s === 'true'
+      end
+
+    Rails.logger.warn do
+      @srg_history_types
+    end
+    Rails.logger.warn do
+      srg_history_types
+    end
+
     return rel.where( # rubocop:disable Rails/WhereEquals
       # Base table has `srg_history_id`, view has string `srg_history`:
       # Use literal, as with a hash, Rails will assume you mean the
       # association `srg_history`, and test the foreign key.
-      'srg_history = ?', @eu_decision_filter
-    ) if @eu_decision_filter == 'In consultation'
+      'srg_history = ANY(ARRAY[?]::varchar[])', srg_history_types.presence || [ @eu_decision_filter ]
+    ) if @eu_decision_filter == 'In consultation' || @eu_decision_filter == 'SRG history'
 
     if @set == 'current'
       rel = rel.where(is_valid: true)
