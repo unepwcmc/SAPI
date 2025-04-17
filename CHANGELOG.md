@@ -16,6 +16,11 @@
 * Fixes an issue where certain params for downloading content of CITES
   checklists were being ignored.
 
+**Trade shipments API**
+
+* Fixes to the conversion rules affecting shipments having to do with skins,
+  specifically those reported in units `BAK`, `BSK`, `HRN` and `SID`.
+
 ### 1.16.3
 
 * Various fixes and improvements to parameter validation for Trade DB downloads.
