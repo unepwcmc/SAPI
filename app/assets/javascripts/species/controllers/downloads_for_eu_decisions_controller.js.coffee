@@ -29,7 +29,7 @@ Species.DownloadsForEuDecisionsController = Ember.Controller.extend
   suspensions: true
   inConsultation: true
   underTracking: true
-  discussedAtSrg: true
+  discussedAtSrg: false
   euDecisionFilter: 'Default'
   euDecisionFilterIsDefault: ( ->
     @get('euDecisionFilter') == 'Default'
