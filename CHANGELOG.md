@@ -2,7 +2,7 @@
 
 * Updates to a task for bulk-uploading distributions
 * Various improvements to db indexes
-* Various updates to dependencies, including ra
+* Various updates to dependencies, including:
     * `appsignal` (3.5.5 to 3.13.1)
     * `nokogiri` (1.16.7 to 1.18.3)
     * `rack` (2.2.9 to 2.2.13)
