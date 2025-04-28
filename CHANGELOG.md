@@ -1,8 +1,8 @@
-### Forthcoming
+### 1.17.0
 
 * Updates to a task for bulk-uploading distributions
 * Various improvements to db indexes
-* Various updates to dependencies, including ra
+* Various updates to dependencies, including:
     * `appsignal` (3.5.5 to 3.13.1)
     * `nokogiri` (1.16.7 to 1.18.3)
     * `rack` (2.2.9 to 2.2.13)
@@ -15,6 +15,11 @@
 * Fixes various issues with sidekiq jobs with cron triggers
 * Fixes an issue where certain params for downloading content of CITES
   checklists were being ignored.
+
+**Trade shipments API**
+
+* Fixes to the conversion rules affecting shipments having to do with skins,
+  specifically those reported in units `BAK`, `BSK`, `HRN` and `SID`.
 
 ### 1.16.3
 
