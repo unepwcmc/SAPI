@@ -29,7 +29,17 @@
 #
 # Indexes
 #
-#  index_eu_decisions_on_document_id  (document_id)
+#  index_eu_decisions_on_created_by_id        (created_by_id)
+#  index_eu_decisions_on_document_id          (document_id)
+#  index_eu_decisions_on_end_event_id         (end_event_id)
+#  index_eu_decisions_on_eu_decision_type_id  (eu_decision_type_id)
+#  index_eu_decisions_on_geo_entity_id        (geo_entity_id)
+#  index_eu_decisions_on_source_id            (source_id)
+#  index_eu_decisions_on_srg_history_id       (srg_history_id)
+#  index_eu_decisions_on_start_event_id       (start_event_id)
+#  index_eu_decisions_on_taxon_concept_id     (taxon_concept_id)
+#  index_eu_decisions_on_term_id              (term_id)
+#  index_eu_decisions_on_updated_by_id        (updated_by_id)
 #
 # Foreign Keys
 #

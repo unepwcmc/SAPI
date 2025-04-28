@@ -1,15 +1,20 @@
 namespace :import do
   desc 'Import EU decisions from csv file (usage: rake import:eu_opinions[path/to/file,path/to/another])'
   task :eu_opinions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'eu_opinions_import'
 
     taxonomy_id = Taxonomy.where(name: 'CITES_EU').first.id
+
     puts "There are #{EuOpinion.count} EU opinions in the database."
-    files = files_from_args(t, args)
+
+    files = import_helper.files_from_args(t, args)
+
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       # At this time there are no specific requirements regarding designation,
       # hence why there are no checks related to designation_id for events
@@ -44,6 +49,7 @@ namespace :import do
       puts 'Importing eu opinions'
       ApplicationRecord.connection.execute(sql)
     end
+
     puts "There are now #{EuOpinion.count} EU opinions in the database"
   end
 end

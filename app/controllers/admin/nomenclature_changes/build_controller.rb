@@ -10,7 +10,7 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
   end
 
   def show
-    raise NotImplementedError
+    raise NoMethodError
   end
   def create
     @nomenclature_change = klass.new()
@@ -24,11 +24,11 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
 
 
   def update
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def destroy
-    raise NotImplementedError
+    raise NoMethodError
   end
 
 private

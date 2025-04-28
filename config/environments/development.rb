@@ -113,4 +113,20 @@ Rails.application.configure do
     from: mailer_credentials[:from],
     reply_to: mailer_credentials[:from]
   }
+
+  # Fixes error "Cannot render console from 172.22.0.1!" when in Docker
+  config.web_console.whitelisted_ips = [
+    '10.0.0.0/8',
+    '172.16.0.0/12',
+    '192.168.0.0/16'
+  ]
+
+  # For Rake tasks, send logger messages to the command line
+  if Rails.const_defined?('Rake') && ENV['TERM']
+    stderr_logger = ActiveSupport::Logger.new(STDERR)
+
+    Rails.logger = Rails.logger&.extend(
+      ActiveSupport::Logger.broadcast(stderr_logger)
+    ) || stderr_logger
+  end
 end

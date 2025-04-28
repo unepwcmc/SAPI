@@ -46,7 +46,7 @@ gem 'pg_search', '~> 2.3', '>= 2.3.6'
 
 gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
 gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmin/inherited_resources#notice)
-gem 'nokogiri', '~> 1.16'
+gem 'nokogiri', '~> 1.18', force_ruby_platform: true
 gem 'mobility', '~> 1.2', '>= 1.2.9'
 gem 'devise', '~> 4.9', '>= 4.9.3'
 gem 'cancancan', '~> 3.5'
@@ -62,7 +62,7 @@ gem 'responders', '~> 3.1', '>= 3.1.1' # https://guides.rubyonrails.org/v4.2/upg
 
 gem 'sidekiq', '< 7' # TODO, latest is 7, which required Redis 6.2+, but our servers running Redis 4.0.9.
 gem 'sidekiq-status', '~> 3.0', '>= 3.0.3'
-gem 'sidekiq-unique-jobs', '7.1.31' # TODO: can upgrade to latest when sidekiq upgrade to 7
+gem 'sidekiq-unique-jobs', '7.1.33' # TODO: can upgrade to latest when sidekiq upgrade to 7
 gem 'sidekiq-cron', '~> 1.12'
 
 gem 'httparty', '~> 0.21.0'
@@ -178,7 +178,7 @@ gem 'dotenv-rails', '2.0.1'
 
 gem 'sitemap_generator', '~> 6.3'
 
-gem 'appsignal', '~> 3.5', '>= 3.5.5'
+gem 'appsignal', '~> 3.13.1'
 
 ### GEM for frontend ###
 # Remove the `jquery-rails` gem to eliminate any dependency issues that may block the upgrade process.

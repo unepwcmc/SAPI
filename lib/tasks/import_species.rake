@@ -2,12 +2,16 @@ require Rails.root.join('lib/tasks/helpers_for_import.rb')
 namespace :import do
   desc 'Import species records from csv files (usage: rake import:species[path/to/file,path/to/another])'
   task :species, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'species_import'
-    files = files_from_args(t, args)
+
+    files = import_helper.files_from_args(t, args)
+
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
@@ -32,8 +36,10 @@ end
 # @param [String] which the rank to be copied.
 def import_data_for(kingdom, rank, synonyms = nil)
   puts "Importing #{rank}"
+
   rank_id = Rank.select(:id).where(name: rank).first.id
   existing = TaxonConcept.where(rank_id: rank_id).count
+
   puts "There were #{existing} #{rank} before we started"
 
   sql = <<-SQL.squish
@@ -52,7 +58,9 @@ def import_data_for(kingdom, rank, synonyms = nil)
         OR BTRIM(#{TMP_TABLE}.Taxonomy) iLIKE '%CMS%'
       )
   SQL
+
   ApplicationRecord.connection.execute(sql)
+
   if synonyms
     ApplicationRecord.connection.execute('DROP INDEX IF EXISTS synonym_import_name')
     ApplicationRecord.connection.execute('CREATE INDEX synonym_import_name ON synonym_import (name)')
@@ -63,7 +71,9 @@ def import_data_for(kingdom, rank, synonyms = nil)
 
   [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
     puts "Import #{taxonomy_name} taxa"
+
     taxonomy = Taxonomy.find_by(name: taxonomy_name)
+
     sql = <<-SQL.squish
       WITH to_be_inserted AS (
         SELECT DISTINCT
@@ -131,5 +141,6 @@ def import_data_for(kingdom, rank, synonyms = nil)
     # puts "#{taxonomy.name} #{rank} #{kingdom}"
     ApplicationRecord.connection.execute(sql)
   end
+
   puts "#{TaxonConcept.where(rank_id: rank_id).count - existing} #{rank} added"
 end

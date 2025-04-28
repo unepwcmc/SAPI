@@ -21,6 +21,13 @@
 #  original_id         :integer
 #  updated_by_id       :integer
 #
+# Indexes
+#
+#  index_annotations_on_created_by_id  (created_by_id)
+#  index_annotations_on_event_id       (event_id)
+#  index_annotations_on_original_id    (original_id)
+#  index_annotations_on_updated_by_id  (updated_by_id)
+#
 # Foreign Keys
 #
 #  annotations_created_by_id_fk  (created_by_id => users.id)
@@ -76,6 +83,8 @@ class Annotation < ApplicationRecord
     message: 'should be a symbol followed by one or more digits',
     with: /\A[^0-9a-z\s]\d+\z/i
   }
+
+  # cannot make [ :parent_symbol, :symbol ] unique - see https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/282
 
   before_save do
     if event

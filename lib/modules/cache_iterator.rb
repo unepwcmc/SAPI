@@ -1,21 +1,19 @@
 module CacheIterator
+  def cache_iterator_key
+    "#{name}-cache-iterator"
+  end
+
   def cache_iterator
-    cache_key = "#{self.class.name}-#{id}-cache-iterator"
-    # fetch the cache key
-    # if there isn't one yet, assign it a random integer between 0 and 10
-    val = Rails.cache.fetch(cache_key) { rand(10) }
-    # Invalidate cache if value is a string. This seems to happen when switching ruby version
-    if val.is_a?(String)
-      new_val = rand(10)
-      Rails.cache.write(cache_key, new_val) && new_val
-    else
-      val
-    end
+    self.class.cache_iterator(cache_iterator_key)
   end
 
   def increment_cache_iterator
-    Rails.logger.debug { "#{self.class.name} #{id} incrementing cache iterator" }
-    Rails.cache.write("#{self.class.name}-#{id}-cache-iterator", self.cache_iterator + 1)
+    Rails.logger.debug do
+      "#{self.class.name} #{id} incrementing instance cache iterator"
+    end
+
+    Rails.cache.write(cache_iterator_key, self.cache_iterator + 1)
+
     self.class.increment_cache_iterator
   end
 
@@ -24,14 +22,19 @@ module CacheIterator
   end
 
   module ClassMethods
-    def cache_iterator
-      cache_key = "#{name}-cache-iterator"
+    def cache_iterator_key
+      "#{name}-cache-iterator"
+    end
+
+    def cache_iterator(key = cache_iterator_key)
       # fetch the cache key
       # if there isn't one yet, assign it a random integer between 0 and 10
-      val = Rails.cache.fetch(cache_key) { rand(10) }
+      val = Rails.cache.fetch(key) { rand(10) }
+
       # Invalidate cache if value is a string. This seems to happen when switching ruby version
       if val.is_a?(String)
         new_val = rand(10)
+
         Rails.cache.write(cache_key, new_val) && new_val
       else
         val
@@ -39,7 +42,8 @@ module CacheIterator
     end
 
     def increment_cache_iterator
-      Rails.logger.debug { "#{name} incrementing cache iterator" }
+      Rails.logger.debug { "#{name} incrementing class cache iterator" }
+
       Rails.cache.write("#{name}-cache-iterator", self.cache_iterator + 1)
     end
   end

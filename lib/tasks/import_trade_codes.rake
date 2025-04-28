@@ -3,6 +3,7 @@ namespace :import do
   task trade_codes: [ :environment ] do
     [ Purpose, Source, Term, Unit ].each do |klass|
       current_count = klass.count
+
       CSV.foreach("lib/files/#{klass.to_s.downcase}_codes_utf8.csv") do |row|
         code = klass.find_or_initialize_by(code: row[0].strip.upcase)
         code.update(
@@ -11,20 +12,26 @@ namespace :import do
           name_es: row[3].strip
         )
       end
+
       puts "#{klass.count - current_count} new #{klass} added"
     end
   end
 
   desc 'Import terms and purpose codes acceptable pairing'
   task :trade_codes_t_p_pairs, [ :clear ] => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'terms_and_purpose_pairs_import'
     file = 'lib/files/term_purpose_pairs_utf8.csv'
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
-    copy_data(file, TMP_TABLE)
+
+    import_helper.drop_table(TMP_TABLE)
+    import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+    import_helper.copy_data(file, TMP_TABLE)
+
     if args[:clear]
       puts "#{TermTradeCodesPair.where(trade_code_type: 'Purpose').delete_all} TermPurposePairs deleted"
     end
+
     sql = <<-SQL.squish
       INSERT INTO term_trade_codes_pairs(term_id,
         trade_code_id, trade_code_type, created_at, updated_at)
@@ -44,17 +51,22 @@ namespace :import do
 
       ) as subquery;
     SQL
+
     ApplicationRecord.connection.execute(sql)
+
     puts "#{TermTradeCodesPair.where(trade_code_type: 'Purpose').count} terms and purpose codes pairs created"
   end
 
   desc 'Import terms and unit codes acceptable pairing'
   task :trade_codes_t_u_pairs, [ :clear ] => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'terms_and_unit_pairs_import'
     file = 'lib/files/term_unit_pairs_utf8.csv'
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
-    copy_data(file, TMP_TABLE)
+
+    import_helper.drop_table(TMP_TABLE)
+    import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+    import_helper.copy_data(file, TMP_TABLE)
     if args[:clear]
       puts "#{TermTradeCodesPair.where(trade_code_type: 'Unit').delete_all} TermUnitPairs deleted"
     end
@@ -83,14 +95,19 @@ namespace :import do
 
   desc 'Import taxon concepts terms acceptable pairing. (i.e.: which terms can go with each taxon concept)'
   task :taxon_concept_terms_pairs, [ :clear ] => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'taxon_concepts_and_terms_pairs_import'
     file = 'lib/files/taxon_concept_term_pairs_utf8.csv'
-    drop_table(TMP_TABLE)
-    create_table_from_csv_headers(file, TMP_TABLE)
-    copy_data(file, TMP_TABLE)
+
+    import_helper.drop_table(TMP_TABLE)
+    import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+    import_helper.copy_data(file, TMP_TABLE)
+
     if args[:clear]
       puts "#{Trade::TaxonConceptTermPair.delete_all} taxon_concept_term_pairs deleted"
     end
+
     sql = <<-SQL.squish
       INSERT INTO trade_taxon_concept_term_pairs(taxon_concept_id, term_id,
         created_at, updated_at)
@@ -111,7 +128,9 @@ namespace :import do
 
       ) AS subquery;
     SQL
+
     ApplicationRecord.connection.execute(sql)
+
     puts "#{Trade::TaxonConceptTermPair.count} terms and unit codes pairs created"
   end
 

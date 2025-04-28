@@ -1,6 +1,8 @@
 namespace :import do
   desc 'Import CITES quotas from csv file (usage: rake import:cites_quotas[path/to/file,path/to/another])'
   task :cites_quotas, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'quotas_import'
 
     if Quota.any?
@@ -15,12 +17,15 @@ namespace :import do
     end
 
     taxonomy_id = Taxonomy.where(name: 'CITES_EU').first.id
+
     puts "There are #{Quota.count} CITES quotas in the database."
-    files = files_from_args(t, args)
+
+    files = import_helper.files_from_args(t, args)
+
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       puts 'CREATING temporary column and view'
       ApplicationRecord.connection.execute(<<-SQL.squish
@@ -70,11 +75,15 @@ namespace :import do
           INNER JOIN trade_restrictions ON trade_restrictions.import_row_id = t.row_id AND trade_restrictions.type = 'Quota'
           INNER JOIN trade_codes ON UPPER(trade_codes.code) = UPPER(BTRIM(t.code)) AND trade_codes.type = '#{code.singularize.titleize}'
         SQL
+
         puts "Linking #{code} to quotas"
+
         ApplicationRecord.connection.execute(sql)
       end
     end
+
     puts 'DROPPING temporary column and view'
+
     ApplicationRecord.connection.execute('ALTER TABLE trade_restrictions DROP COLUMN import_row_id')
     ApplicationRecord.connection.execute("DROP VIEW #{TMP_TABLE}_view")
 

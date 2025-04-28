@@ -8,6 +8,10 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+# Indexes
+#
+#  index_srg_histories_on_name  (name) UNIQUE
+#
 class SrgHistory < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :name, :tooltip

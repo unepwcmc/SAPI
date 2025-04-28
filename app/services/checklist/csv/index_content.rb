@@ -10,16 +10,17 @@ module Checklist::Csv::IndexContent
   def kingdom(csv, fetcher)
     begin
       kingdom = fetcher.next
+
       kingdom.each do |tc|
-        values =
-          taxon_concepts_csv_columns.map do |c|
-            tc.send(c)
-          end
+        values = taxon_concepts_csv_columns.map { |c| tc.send(c) }
+
         entry =
           values.map do |val|
             val = val.join(', ') if val.is_a? Array
-                   val
+
+            val
           end
+
         csv << entry
       end
     end while !kingdom.empty?

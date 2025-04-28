@@ -11,11 +11,11 @@ namespace :import do
       taxonomy_id: taxonomy_id
     ).count} Hybrids in the database"
 
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       # Importing Hybrids, step by step:
       # TaxonConcepts  many to one relationship with taxon_names [scientific_name]

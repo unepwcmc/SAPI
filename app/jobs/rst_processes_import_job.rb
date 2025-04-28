@@ -2,6 +2,8 @@ class RstProcessesImportJob < ApplicationJob
   queue_as :admin
 
   def perform(*args)
-    Import::Rst::RstCases.import_all
+    Appsignal::CheckIn.cron(self.class.name.underscore) do
+      Import::Rst::RstCases.import_all
+    end
   end
 end

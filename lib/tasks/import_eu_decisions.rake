@@ -6,11 +6,11 @@ namespace :import do
     taxonomy_id = Taxonomy.where(name: 'CITES_EU').first.id
     designation_id = Designation.find_by(name: 'EU').id
     puts "There are #{EuDecision.count} EU Decisions in the database."
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       sql = <<-SQL
         -- import eu_decision_types

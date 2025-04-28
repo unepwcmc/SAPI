@@ -31,7 +31,15 @@
 #
 # Indexes
 #
-#  trade_restrictions_extract_year_from_start_date  (date_part('year'::text, start_date)) WHERE ((type)::text = 'Quota'::text)
+#  idx_on_is_current_type_taxon_concept_id_a115d056cb  (is_current,type,taxon_concept_id)
+#  index_trade_restrictions_on_created_by_id           (created_by_id)
+#  index_trade_restrictions_on_end_notification_id     (end_notification_id)
+#  index_trade_restrictions_on_geo_entity_id           (geo_entity_id)
+#  index_trade_restrictions_on_start_notification_id   (start_notification_id)
+#  index_trade_restrictions_on_taxon_concept_id        (taxon_concept_id)
+#  index_trade_restrictions_on_unit_id                 (unit_id)
+#  index_trade_restrictions_on_updated_by_id           (updated_by_id)
+#  trade_restrictions_extract_year_from_start_date     (date_part('year'::text, start_date)) WHERE ((type)::text = 'Quota'::text)
 #
 # Foreign Keys
 #

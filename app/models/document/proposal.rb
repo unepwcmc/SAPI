@@ -28,9 +28,15 @@
 #
 # Indexes
 #
+#  index_documents_on_created_by_id                                 (created_by_id)
+#  index_documents_on_designation_id                                (designation_id)
 #  index_documents_on_event_id                                      (event_id)
+#  index_documents_on_language_id                                   (language_id)
 #  index_documents_on_language_id_and_primary_language_document_id  (language_id,primary_language_document_id) UNIQUE
+#  index_documents_on_original_id                                   (original_id)
+#  index_documents_on_primary_language_document_id                  (primary_language_document_id)
 #  index_documents_on_title_to_ts_vector                            (to_tsvector('simple'::regconfig, COALESCE(title, ''::text))) USING gin
+#  index_documents_on_updated_by_id                                 (updated_by_id)
 #
 # Foreign Keys
 #

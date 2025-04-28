@@ -11,6 +11,12 @@
 #  event_id      :integer
 #  updated_by_id :integer          not null
 #
+# Indexes
+#
+#  index_nomenclature_changes_on_created_by_id  (created_by_id)
+#  index_nomenclature_changes_on_event_id       (event_id)
+#  index_nomenclature_changes_on_updated_by_id  (updated_by_id)
+#
 # Foreign Keys
 #
 #  nomenclature_changes_created_by_id_fk  (created_by_id => users.id)

@@ -1,7 +1,10 @@
 namespace :import do
   desc 'Import synonyms from csv file (usage: rake import:synonyms[path/to/file,path/to/another])'
   task :synonyms_legacy, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'synonym_import_legacy'
+
     puts "There are #{TaxonRelationship.
       joins(:taxon_relationship_type).
       where(
@@ -11,11 +14,11 @@ namespace :import do
     rel = TaxonRelationshipType.
       find_by(name: TaxonRelationshipType::HAS_SYNONYM)
 
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
 
       kingdom = file.split('/').last.split('_')[0].titleize
 
@@ -67,6 +70,7 @@ namespace :import do
 
           ) q
         SQL
+
         ApplicationRecord.connection.execute(sql)
       end
 

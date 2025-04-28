@@ -8,6 +8,11 @@
 #  taxon_concept_id :integer
 #  term_id          :integer
 #
+# Indexes
+#
+#  idx_on_taxon_concept_id_term_id_7d43d0e952  (taxon_concept_id,term_id) UNIQUE
+#  idx_on_term_id_taxon_concept_id_884cb66b5b  (term_id,taxon_concept_id) UNIQUE
+#
 # Foreign Keys
 #
 #  trade_taxon_concept_code_pairs_taxon_concept_id_fk  (taxon_concept_id => taxon_concepts.id)

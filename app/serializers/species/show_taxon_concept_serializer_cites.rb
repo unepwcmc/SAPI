@@ -429,7 +429,7 @@ private
   def force_anthozoa_statement
     taxonomy = Taxonomy.find_by(name: 'CITES_EU')
     taxonomy_id = taxonomy && taxonomy.id
-    anthozoa = TaxonConcept.find_by(full_name: 'Anthozoa', taxonomy_id: taxonomy_id)
+    anthozoa = TaxonConcept.where(taxonomy_id:).find_by("upper(full_name) ='ANTHOZOA'") # use the index on upper(full_name)
     anthozoa_id = anthozoa && anthozoa.id
     cambodia = GeoEntity.find_by(name_en: 'Cambodia')
     cambodia_id = cambodia && cambodia.id

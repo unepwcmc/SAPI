@@ -13,7 +13,10 @@
 #
 # Indexes
 #
+#  index_taxon_instruments_on_created_by_id     (created_by_id)
+#  index_taxon_instruments_on_instrument_id     (instrument_id)
 #  index_taxon_instruments_on_taxon_concept_id  (taxon_concept_id)
+#  index_taxon_instruments_on_updated_by_id     (updated_by_id)
 #
 # Foreign Keys
 #

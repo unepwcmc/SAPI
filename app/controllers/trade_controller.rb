@@ -8,27 +8,27 @@ class TradeController < ApplicationController
   end
 
   def create
-    raise NotImplementedError
+    raise NoMethodError
   end
   def update
-    raise NotImplementedError
+    raise NoMethodError
   end
 
 
   def submit
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def destroy
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def update_batch
-    raise NotImplementedError
+    raise NoMethodError
   end
 
   def destroy_batch
-    raise NotImplementedError
+    raise NoMethodError
   end
 
 private

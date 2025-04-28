@@ -16,7 +16,8 @@
 #
 # Indexes
 #
-#  index_api_requests_on_created_at  (created_at)
+#  idx_on_user_id_response_status_created_at_04ab285ff3  (user_id,response_status,created_at)
+#  index_api_requests_on_created_at                      (created_at)
 #
 
 class ApiRequest < ApplicationRecord

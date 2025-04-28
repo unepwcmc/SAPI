@@ -38,6 +38,7 @@
 #
 #  index_trade_shipments_on_appendix                         (appendix)
 #  index_trade_shipments_on_country_of_origin_id             (country_of_origin_id)
+#  index_trade_shipments_on_created_by_id                    (created_by_id)
 #  index_trade_shipments_on_created_by_id_and_updated_by_id  (created_by_id,updated_by_id)
 #  index_trade_shipments_on_export_permits_ids               (export_permits_ids) USING gin
 #  index_trade_shipments_on_exporter_id                      (exporter_id)
@@ -51,7 +52,9 @@
 #  index_trade_shipments_on_source_id                        (source_id)
 #  index_trade_shipments_on_taxon_concept_id                 (taxon_concept_id)
 #  index_trade_shipments_on_term_id                          (term_id)
+#  index_trade_shipments_on_trade_annual_report_upload_id    (trade_annual_report_upload_id)
 #  index_trade_shipments_on_unit_id                          (unit_id)
+#  index_trade_shipments_on_updated_by_id                    (updated_by_id)
 #  index_trade_shipments_on_year                             (year)
 #  index_trade_shipments_on_year_exporter_id                 (year,exporter_id)
 #  index_trade_shipments_on_year_importer_id                 (year,importer_id)

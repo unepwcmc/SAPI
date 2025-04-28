@@ -2,6 +2,7 @@ namespace :import do
   desc 'Import unusual geo_entities'
   task unusual_geo_entities: [ :environment ] do
     GeoEntityType.find_or_create_by(name: 'TRADE_ENTITY')
+
     CSV.foreach('lib/files/former_and_adapted_geo_entities.csv', headers: true) do |row|
       GeoEntity.find_or_create_by(
         iso_code2: row[1],
@@ -22,14 +23,19 @@ namespace :import do
 
     TMP_TABLE = 'shipments_import'
 
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
+
     files.each do |file|
       SapiModule::Indexes.drop_indexes_on_shipments
+
       drop_create_and_copy_temp(TMP_TABLE, file)
+
       sql = <<-SQL.squish
         DELETE FROM shipments_import  WHERE shipment_number =  8122168;
       SQL
+
       ApplicationRecord.connection.execute(sql)
+
       fix_term_codes = { 12227624 => 'LIV', 12225022 => 'DER', 12224783 => 'DER' }
       fix_term_codes.each do |shipment_number, term_code|
         sql = <<-SQL.squish
@@ -37,9 +43,11 @@ namespace :import do
         SQL
         ApplicationRecord.connection.execute(sql)
       end
+
       update_country_codes
       populate_shipments
       populate_shipments_for_trade_names
+
       SapiModule::Indexes.create_indexes_on_shipments
     end
   end
@@ -50,7 +58,7 @@ namespace :import do
 
     TMP_TABLE = 'shipments_import'
 
-    files = files_from_args(t, args)
+    files = import_helper.files_from_args(t, args)
     files.each do |file|
       SapiModule::Indexes.drop_indexes_on_shipments
       drop_create_and_copy_temp(TMP_TABLE, file)
@@ -75,9 +83,9 @@ end
 
 def drop_create_and_copy_temp(tmp_table, file)
   puts 'Creating temp table'
-  drop_table(tmp_table)
-  create_table_from_csv_headers(file, tmp_table)
-  copy_data(file, tmp_table)
+  import_helper.drop_table(tmp_table)
+  import_helper.create_table_from_csv_headers(file, tmp_table)
+  import_helper.copy_data(file, tmp_table)
 end
 
 def update_country_codes
@@ -310,6 +318,7 @@ def populate_shipments_for_trade_names
     LEFT JOIN geo_entities AS importers ON si.import_country_code = importers.iso_code2
     LEFT JOIN geo_entities AS origins ON si.origin_country_code = origins.iso_code2
   SQL
+
   puts "Populating trade_shipments with Trade Names' shipments #{Time.now.strftime("%d/%m/%Y %H:%M")}"
   ApplicationRecord.connection.execute(sql)
 end

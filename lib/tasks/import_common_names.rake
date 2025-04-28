@@ -1,14 +1,20 @@
 namespace :import do
   desc 'Import common names from csv file (usage: rake import:common_names[path/to/file,path/to/another])'
   task :common_names, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
+    import_helper = CsvImportHelper.new
+
     TMP_TABLE = 'common_name_import'
+
     puts "There are #{CommonName.count} common names in the database."
     puts "There are #{TaxonCommon.count} taxon commons in the database."
-    files = files_from_args(t, args)
+
+    files = import_helper.files_from_args(t, args)
+
     files.each do |file|
-      drop_table(TMP_TABLE)
-      create_table_from_csv_headers(file, TMP_TABLE)
-      copy_data(file, TMP_TABLE)
+      import_helper.drop_table(TMP_TABLE)
+      import_helper.create_table_from_csv_headers(file, TMP_TABLE)
+      import_helper.copy_data(file, TMP_TABLE)
+
       ApplicationRecord.connection.execute("CREATE INDEX ON #{TMP_TABLE} (name, language, rank)")
 
       sql = <<-SQL.squish
@@ -65,10 +71,12 @@ namespace :import do
         LEFT JOIN taxon_concepts ON taxon_concepts.id = taxon_commons.taxon_concept_id
         GROUP BY LOWER(common_names.name), common_names.language_id, taxon_commons.taxon_concept_id, taxon_concepts.taxonomy_id
       SQL
+
       taxon_commons_ids_unique = ApplicationRecord.connection.execute(sql).values.flatten
       taxon_commons_duplicates = TaxonCommon.where.not(id: taxon_commons_ids_unique)
       taxon_commons_duplicates.destroy_all
     end
+
     puts "There are now #{CommonName.count} common names in the database"
     puts "There are now #{TaxonCommon.count} taxon commons in the database."
   end
