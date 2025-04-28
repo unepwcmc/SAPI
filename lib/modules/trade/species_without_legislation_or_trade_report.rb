@@ -1,5 +1,4 @@
 class Trade::SpeciesWithoutLegislationOrTradeReport
-  include CsvExportable
   attr_reader :query
 
   def initialize
@@ -101,18 +100,21 @@ class Trade::SpeciesWithoutLegislationOrTradeReport
   end
 
   def export(file_path)
-    export_to_csv(
-      query: @report_query,
-      csv_columns: [
-        'ID', 'Legacy id', 'Kingdom', 'Phylum', 'Class',
-        'Order', 'Family', 'Genus', 'Species',
-        'Full name', 'Author year', 'Name Status',
-        'Has CITES listed descendants?', 'Has EU listed descendants?',
-        'NQuotas', 'N EU Opinions', 'N EU Suspensions', 'N CITES Suspensions'
-      ],
-      file_path: file_path,
+    PgCopy.copy_to_csv_file(
+      PgCopy.realias_query(
+        @report_query,
+        column_aliases: [
+          'ID', 'Legacy id', 'Kingdom', 'Phylum', 'Class',
+          'Order', 'Family', 'Genus', 'Species',
+          'Full name', 'Author year', 'Name Status',
+          'Has CITES listed descendants?', 'Has EU listed descendants?',
+          'NQuotas', 'N EU Opinions', 'N EU Suspensions', 'N CITES Suspensions'
+        ]
+      ),
+      file_path,
+      delimiter: ';',
       encoding: 'latin1',
-      delimiter: ';'
+      ruby_encoding: 'Windows-1252',
     )
   end
 end
