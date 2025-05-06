@@ -36,8 +36,32 @@ class AdminEditor
       autoclose: true
 
   initModals: () ->
+    resubmit_delay_ms = 1000
+
+    # Prevent forms from being resubmitted within 1s to prevent accidental
+    # resubmission due to e.g. holding down the 'enter' key.
+    $('.modal').delegate 'form', 'submit', () ->
+      form = $(@)
+      btn = form.closest('.modal').find('.save-button')
+
+      return true unless btn
+      return false if btn.attr('disabled')
+
+      btn.attr('disabled', true);
+
+      setTimeout(
+        (
+          () ->
+            if btn
+              btn.attr('disabled', false)
+        ), resubmit_delay_ms
+      )
+
+      return true
+
     $('.modal .modal-footer .save-button').click () ->
       $(@).closest('.modal').find('form').submit()
+
     $('.modal').on 'hidden', () =>
       $('.modal.hide.fade').each((idx, element) =>
         @clearModalForm($(element))
