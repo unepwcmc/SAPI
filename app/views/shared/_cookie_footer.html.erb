@@ -1,0 +1,36 @@
+<style>
+  #cookie-consent-message {
+    background-color: white;
+    color: black;
+    padding: 0.5em;
+  }
+  #cookie-consent-message>form {
+    display: flex;
+    margin: auto;
+    max-width: 800px;
+  }
+  #cookie-consent-message>form>section {
+    flex: 1;
+  }
+  #cookie-consent-message>form>fieldset {
+    flex: 0;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+<aside id="cookie-consent-message">
+  <form>
+    <section>
+      We use necessary cookies to make our site work. We'd also like to set
+      analytics cookies that help us make improvements by measuring how you use
+      the site. These will be set only if you accept. For more detailed
+      information about the cookies we use, see our privacy policy.
+    <pre><%= cookies[:analytics_consent_x]=1 =%></pre>
+    <pre><%= cookies[:analytics_consent_x] =%></pre>
+    </section>
+    <fieldset>
+      <button id="cookie-consent-accept">Accept</button>
+      <button id="cookie-consent-reject">Reject</button>
+    </fieldset>
+  </form>
+</aside>
