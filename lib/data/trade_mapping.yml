@@ -65,20 +65,28 @@ rules:
       input:
         genus_names:
           - Abies
+          - Afzelia
           - Aquilaria
           - Cedrela
           - Dalbergia
           - Diospyros
+          - Dipteryx
           - Gonystylus
           - Guaiacum
           - Guarea
           - Guibourtia
           - Gyrinops
+          - Handroanthus
+          - Khaya
           - Pericopsis
           - Platymiscium
           - Prunus
           - Pterocarpus
+          - Podocarpus
+          - Quercus
+          - Roseodendron
           - Swietenia
+          - Tabebuia
           - Taxus
     - rule_name: 'Timber species'
       # Timber implemented as two groups - genera and species
@@ -90,20 +98,22 @@ rules:
           - Aniba rosaeodora
           - Araucaria araucana
           - Bulnesia sarmientoi
-          - Caesalpinia echinata
           - Caryocar costaricense
           - Celtis aetnensis
           - Cynometra hemitomophylla
           - Dipteryx panamensis
           - Fitzroya cupressoides
+          - Fraxinus mandshurica
           - Magnolia liliifera
           - Oreomunnea pterocarpa
           - Osyris lanceolata
+          - Paubrasilia echinata
           - Pilgerodendron uviferum
           - Pinus koraiensis
-          - Pterocarpus santalinus
           - Pterygota excelsa
           - Tachigali versicolor
+          - Tetracentron sinense
+          - Widdringtonia whytei
     # Rule number is important on this one as this needs to be the last
     # rule processed to make mapping work correctly
     - rule_name: 'Plants (other than timber)'
