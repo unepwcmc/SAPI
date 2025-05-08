@@ -7,64 +7,120 @@ rules:
       output:
         group: 'mammalia'
       input:
-        class_names: ['Mammalia']
+        class_names:
+          - Mammalia
     - rule_name: 'Birds'
       output:
         group: 'aves'
       input:
-        class_names: ['Aves']
+        class_names:
+          - Aves
     - rule_name: 'Reptiles'
       output:
         group: 'reptilia'
       input:
-        class_names: ['Reptilia']
+        class_names:
+          - Reptilia
     - rule_name: 'Amphibians'
       output:
         group: 'amphibia'
       input:
-        class_names: ['Amphibia']
+        class_names:
+          - Amphibia
     - rule_name: 'pisces'
       output:
         group: 'pisces'
       input:
         # NB: Elasmobranchii tend to be measured in FIN BOD MEA
-        class_names: ['Elasmobranchii','Actinopteri','Coelacanthi','Dipneusti','Actinopterygii']
+        class_names:
+          - Actinopteri
+          - Actinopterygii
+          - Coelacanthi
+          - Dipneusti
+          - Elasmobranchii
     - rule_name: 'Non-coral invertebrates'
       output:
         group: 'invertebrata'
       input:
         # NB: Gastropoda tend to be measured in MEA
-        class_names: ["Holothuroidea","Arachnida","Insecta","Hirudinoidea","Bivalvia","Gastropoda","Cephalopoda"]
+        class_names:
+          - Arachnida
+          - Bivalvia
+          - Cephalopoda
+          - Gastropoda
+          - Hirudinoidea
+          - Holothuroidea
+          - Insecta
     - output:
         group: 'corallia'
       rule_name: 'Corals'
       input:
-        class_names: ["Anthozoa","Hydrozoa"]
+        class_names:
+          - Anthozoa
+          - Hydrozoa
     # Timber implemented as two groups - genera and species
     - rule_name: 'Timber genera'
       output:
         group: 'arbores'
       input:
-        genus_names: ["Aquilaria","Pericopsis","Cedrela","Guaiacum","Swietenia","Dalbergia","Prunus","Gonystylus","Diospyros","Abies","Guarea","Guibourtia","Gyrinops","Platymiscium","Pterocarpus","Taxus"]
+        genus_names:
+          - Abies
+          - Aquilaria
+          - Cedrela
+          - Dalbergia
+          - Diospyros
+          - Gonystylus
+          - Guaiacum
+          - Guarea
+          - Guibourtia
+          - Gyrinops
+          - Pericopsis
+          - Platymiscium
+          - Prunus
+          - Pterocarpus
+          - Swietenia
+          - Taxus
     - rule_name: 'Timber species'
       # Timber implemented as two groups - genera and species
       output:
         group: 'arbores'
       input:
-        taxon_names: ["Araucaria araucana","Fitzroya cupressoides","Abies guatemalensis","Pterocarpus santalinus","Pilgerodendron uviferum","Aniba rosaeodora","Caesalpinia echinata","Bulnesia sarmientoi","Dipteryx panamensis","Pinus koraiensis","Caryocar costaricense","Celtis aetnensis","Cynometra hemitomophylla","Magnolia liliifera","Oreomunnea pterocarpa","Osyris lanceolata","Pterygota excelsa","Tachigali versicolor"]
+        taxon_names:
+          - Abies guatemalensis
+          - Aniba rosaeodora
+          - Araucaria araucana
+          - Bulnesia sarmientoi
+          - Caesalpinia echinata
+          - Caryocar costaricense
+          - Celtis aetnensis
+          - Cynometra hemitomophylla
+          - Dipteryx panamensis
+          - Fitzroya cupressoides
+          - Magnolia liliifera
+          - Oreomunnea pterocarpa
+          - Osyris lanceolata
+          - Pilgerodendron uviferum
+          - Pinus koraiensis
+          - Pterocarpus santalinus
+          - Pterygota excelsa
+          - Tachigali versicolor
     # Rule number is important on this one as this needs to be the last
     # rule processed to make mapping work correctly
     - rule_name: 'Plants (other than timber)'
       output:
         group: 'plantae'
       input:
-        kingdom_names: ['Plantae']
+        kingdom_names:
+          - Plantae
   standardise_terms:
     - rule_name: 'Roots are now simply live specimens'
       input:
         terms: ['ROO']
         taxon_filters:
-          genus_names: ['Galanthus', 'Cyclamen', 'Sternbergia']
+          genus_names:
+            - Cyclamen
+            - Galanthus
+            - Sternbergia
       output:
         term: 'LIV'
     - rule_name: 'Frog legs are meat'
@@ -77,14 +133,17 @@ rules:
       input:
         terms: ['SHE']
         taxon_filters:
-          order_names: ['Testudines']
+          order_names:
+            - Testudines
       output:
         term: 'CAP'
     - rule_name: 'Derivatives and Powder of Aloe and Euphorbia are now Extract'
       input:
         terms: ['DER','POW']
         taxon_filters:
-          genus_names: ['Aloe','Euphorbia']
+          genus_names:
+            - Aloe
+            - Euphorbia
       output:
         term: 'EXT'
     - rule_name: 'Eggs of Acipenseriformes are Caviar'
@@ -379,7 +438,8 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ['Pericopsis elata']
+          taxon_names:
+            - Pericopsis elata
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -389,7 +449,8 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ['Cedrela odorata']
+          taxon_names:
+            - Cedrela odorata
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -399,7 +460,9 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ["Guaiacum sanctum","Guaiacum officinale"]
+          taxon_names:
+            - Guaiacum officinale
+            - Guaiacum sanctum
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -409,7 +472,8 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ['Swietenia macrophylla']
+          taxon_names:
+            - Swietenia macrophylla
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -419,7 +483,8 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ['Swietenia humilis']
+          taxon_names:
+            - Swietenia humilis
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -429,7 +494,8 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ['Swietenia mahagoni']
+          taxon_names:
+            - Swietenia mahagoni
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -439,7 +505,8 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ['Araucaria araucana']
+          taxon_names:
+            - Araucaria araucana
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -449,7 +516,8 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ['Fitzroya cupressoides']
+          taxon_names:
+            - Fitzroya cupressoides
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -459,7 +527,8 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ['Dalbergia nigra']
+          taxon_names:
+            - Dalbergia nigra
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -469,7 +538,8 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ['Abies guatemalensis']
+          taxon_names:
+            - Abies guatemalensis
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -479,7 +549,8 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          taxon_names: ['Prunus africana']
+          taxon_names:
+            - Prunus africana
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
@@ -489,7 +560,9 @@ rules:
         units: ['KGM']
         terms: ['LOG', 'SAW', 'TIM']
         taxon_filters:
-          genus_names: ["Gonystylus spp.","Gonystylus"]
+          genus_names:
+            - Gonystylus spp.
+            - Gonystylus
       output:
         unit: 'MTQ'
         quantity_modifier: '/'
