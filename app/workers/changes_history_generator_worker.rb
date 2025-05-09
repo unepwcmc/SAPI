@@ -17,16 +17,22 @@ class ChangesHistoryGeneratorWorker
     user = User.find(user_id)
     tempfile = Trade::ChangelogCsvGenerator.call(aru, user)
 
+    aws_options = Rails.application.credentials.dig(:storage, :aru)
+
     begin
-      s3 = Aws::S3::Resource.new
+      s3 = Aws::S3::Resource.new(
+        client: Aws::S3::Client.new(**aws_options)
+      )
+
       filename = "#{Rails.env}/trade/annual_report_upload/#{aru.id}/changelog.csv"
-      bucket_name = Rails.application.credentials.dig(:aws, :bucket_name)
-      obj = s3.bucket(bucket_name).object(filename)
+
+      obj = s3.bucket(aws_options[:bucket]).object(filename)
       obj.upload_file(tempfile.path)
 
       aru.update(aws_storage_path: obj.public_url)
     rescue Aws::S3::Errors::ServiceError => e
       Rails.logger.warn "Something went wrong while uploading #{aru.id} to S3"
+
       Appsignal.add_exception(e) if defined? Appsignal
     end
 
