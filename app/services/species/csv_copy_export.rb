@@ -20,8 +20,10 @@ class Species::CsvCopyExport
 
       to_csv
     end
+
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
     @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}_separated.csv"
+
     [
       @file_name,
       { filename: public_file_name, type: 'text/csv' }

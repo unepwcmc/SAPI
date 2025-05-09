@@ -5,6 +5,7 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     @geo_entities_ids = filters[:geo_entities_ids]
     @years = filters[:years]
     @decision_types = filters[:decision_types]
+    @srg_history_types = filters[:srg_history_types] || {}
     @eu_decision_filter = filters[:eu_decision_filter]
     @set = filters[:set]
     initialize_csv_separator(filters[:csv_separator])
@@ -15,16 +16,32 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
   def query
     rel = EuDecision.from(
       "#{table_name} AS eu_decisions"
-    ).select(sql_columns).order(
-      :taxonomic_position, :party, :ordering_date
+    ).joins(:m_taxon_concept).select(sql_columns).order(
+      'eu_decisions.taxonomic_position',
+      'eu_decisions.party',
+      'eu_decisions.ordering_date'
     )
 
+    srg_history_types =
+      [
+        'In consultation',
+        'Discussed at SRG',
+        'Under Tracking'
+      ].select do |srg_history_type|
+        @srg_history_types[
+          # Rails does not have a sensible camelcase function
+          srg_history_type.parameterize.underscore.camelize(:lower)
+        ]&.to_s === 'true'
+      end
+
+    # @eu_decision_filter == 'In consultation' to maintain compatibility for the
+    # Species+ app. 'SRG history' is what we get from the website as of 1.18.0.
     return rel.where( # rubocop:disable Rails/WhereEquals
       # Base table has `srg_history_id`, view has string `srg_history`:
       # Use literal, as with a hash, Rails will assume you mean the
       # association `srg_history`, and test the foreign key.
-      'srg_history = ?', @eu_decision_filter
-    ) if @eu_decision_filter == 'In consultation'
+      'srg_history = ANY(ARRAY[?]::varchar[])', srg_history_types.presence || [ @eu_decision_filter ]
+    ) if @eu_decision_filter == 'In consultation' || @eu_decision_filter == 'SRG history'
 
     if @set == 'current'
       rel = rel.where(is_valid: true)
@@ -89,7 +106,8 @@ private
     [
       'Kingdom', 'Phylum', 'Class', 'Order', 'Family',
       'Genus', 'Species', 'Subspecies',
-      'Full Name', 'Rank', 'Date of Decision', 'Valid since', 'Party',
+      'Full Name', 'Rank', "Annex on Date: #{DateTime.now.strftime('%d/%m/%Y')}",
+      'Date of Decision', 'Valid since', 'Party',
       'EU Decision', 'SRG History', 'Source', 'Term',
       'Notes', 'Document', "Valid on Date: #{DateTime.now.strftime('%d/%m/%Y')}"
     ]
@@ -99,10 +117,17 @@ private
     [
       :kingdom_name, :phylum_name, :class_name, :order_name, :family_name,
       :genus_name, :species_name, :subspecies_name,
-      :full_name, :rank_name, :start_date_formatted, :original_start_date_formatted, :party,
+      :full_name, :rank_name, 'taxon_concepts_mview.eu_listing',
+      :start_date_formatted, :original_start_date_formatted, :party,
       :decision_type_for_display, :srg_history, :source_code_and_name, :term_name,
       :full_note_en, :start_event_name, :is_valid_for_display
-    ]
+    ].map do |col_name|
+      if col_name.to_s.match?(/[.]/)
+        col_name
+      else
+        "eu_decisions.#{col_name}"
+      end
+    end
   end
 
   # Produces list of excluded decision types.
