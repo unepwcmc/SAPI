@@ -17,8 +17,9 @@
 #
 # Indexes
 #
-#  index_references_on_created_by_id  (created_by_id)
-#  index_references_on_updated_by_id  (updated_by_id)
+#  index_references_on_citation_checksum  (((md5(citation) || "left"(citation, 992)))) UNIQUE
+#  index_references_on_created_by_id      (created_by_id)
+#  index_references_on_updated_by_id      (updated_by_id)
 #
 # Foreign Keys
 #

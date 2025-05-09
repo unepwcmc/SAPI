@@ -9,9 +9,8 @@
         <a href="#" class="editable editable-click editable-required"
           data-type="textarea" data-resource="reference" data-name="citation"
           data-placeholder="Required" data-original-title="Enter the reference's citation"
-          data-url="<%= resource_url(reference) %>" data-pk="<%= reference.id %>">
-          <%= reference.citation %>
-        </a>
+          data-url="<%= resource_url(reference) %>" data-pk="<%= reference.id %>"
+        ><%= reference.citation %></a>
       </td>
       <td>
         <%= link_to delete_icon, resource_url(reference), data: { confirm: "Warning: you are about to delete data. Are you sure?" }, :method => :delete %>
