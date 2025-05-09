@@ -51,7 +51,7 @@
 FactoryBot.define do
   factory :document do
     date { Date.today }
-    filename { Rack::Test::UploadedFile.new(Rails.root.join('spec/support/annual_report_upload_exporter.csv').to_s) }
+    file { Rack::Test::UploadedFile.new(Rails.root.join('spec/support/annual_report_upload_exporter.csv').to_s) }
     designation
     event
     type { 'Document' }
