@@ -10,6 +10,7 @@
   to exist.
 * Storage changes to enable Species+ API to produce and serve whole-database
   downloads
+* TradeView: recognise more species as timber
 
 ### 1.17.0
 
