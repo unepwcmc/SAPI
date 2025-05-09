@@ -1,10 +1,15 @@
-### 1.17.0
+### Forthcoming
 
 * Users now see the current EU Annex(es) of a taxon when exporting EU decisions.
 * Users can now choose between "Under Tracking" and "In consultation" when
   exporting EU decisions.
 * ActiveStorage is now configured for storing bulk downloads to support changes
   to the Species+/CITES API (separate `species-api` repository)
+* Fixes an issue that was creating duplicate form submissions.
+* Fixes an issue which allowed multiple references with the same citation
+  to exist.
+* Storage changes to enable Species+ API to produce and serve whole-database
+  downloads
 
 ### 1.17.0
 
