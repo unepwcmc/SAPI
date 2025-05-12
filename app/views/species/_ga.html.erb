@@ -1,10 +1,29 @@
+<% if Rails.application.config_for(:analytics)[:ga_property_id] %>
+  <script>
+    window.ga = window.ga || function (m, n, o, p, q) {
+      console.debug(
+        'Google Analytics not initialised; called:\n', m, n, o, p, q
+      )
+    }
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    window.ga_property_id = '<%= Rails.application.config_for(:analytics)[:ga_property_id] =%>';
 
-  ga('create', 'UA-21313092-1', 'auto');
-  ga('send', 'pageview');
-</script>
+    window.analytics.loadByProvider.ga = window.analytics.loadByProvider.ga || function () {
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', window.ga_property_id, 'auto');
+      ga('send', 'pageview');
+    }
+  </script>
+<% else %>
+  <script>
+    window.ga = window.ga || function (m, n, o, p, q) {
+      console.debug(
+        'Google Analytics not configured; called:\n', m, n, o, p, q
+      )
+    }
+  </script>
+<% end %>
