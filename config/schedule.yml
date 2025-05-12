@@ -43,8 +43,3 @@ rst_processes_import_job:
   cron: "30 2 * * 0"
   class: "RstProcessesImportJob"
   queue: admin
-
-refresh_api_downloads_job:
-  cron: "30 9 * * 0"
-  class: "RefreshApiDownloadsJob"
-  queue: admin
