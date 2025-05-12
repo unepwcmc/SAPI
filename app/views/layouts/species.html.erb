@@ -21,16 +21,9 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <% if Rails.env.production? %>
-      <%= render "species/ga" %>
-      <%= render "species/hotjar" %>
-    <% else %>
-      <script>
-        function ga() {
-          console.log('google analytics not enabled for this environment')
-        }
-      </script>
-    <% end %>
+    <%= render "species/analytics" %>
+    <%= render "species/ga" %>
+    <%= render "species/hotjar" %>
   </head>
   <body class="inner">
     <!--[if lt IE 9]>
@@ -46,9 +39,10 @@
 
     <div class="top-level-container">
       <a href="#feedback_modal" class="btn-fixed-vertical btn-page-feedback">Feedback</a>
+
+      <%= render "shared/cookie_banner" %>
       <%= render "layouts/logged_header" %>
       <div id="ember_app"></div>
-      <%= render "shared/cookie_footer" %>
       <%= render "layouts/login_modal" %>
       <%= render "layouts/feedback_modal" %>
       <%= render "layouts/footer" %>
