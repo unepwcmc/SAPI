@@ -22,7 +22,7 @@ Species.Router.reopen
 
     if window.ga
       Em.run.next ->
-        ga('send', 'pageview', {
+        analytics.ga('send', 'pageview', {
            'page': window.location.hash,
            'title': window.location.hash
         })
