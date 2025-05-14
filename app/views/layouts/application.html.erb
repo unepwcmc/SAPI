@@ -7,11 +7,6 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-  <!--[if lt IE 9]>
-    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-
   <%= stylesheet_link_tag "admin" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
@@ -26,12 +21,12 @@
       <div class="span12">
         <%= render 'shared/alerts' %>
         <%= yield %>
-      </div><!--/span-->
-    </div><!--/row-->
+      </div>
+    </div>
     <hr>
     <footer>
       <p>&copy; UNEP-WCMC <%= Date.today.year %></p>
     </footer>
-  </div><!--/.fluid-container-->
+  </div>
 </body>
 </html>
