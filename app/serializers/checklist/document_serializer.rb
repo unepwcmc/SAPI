@@ -16,12 +16,4 @@ class Checklist::DocumentSerializer < ActiveModel::Serializer
   end
 
   delegate :taxon_concept_ids, to: :object
-
-  def is_link
-    object.document_type == 'Document::VirtualCollege' && !is_pdf?
-  end
-
-  def is_pdf?
-    (Document.find(object.primary_document_id).elib_legacy_file_name =~ /\.pdf/).present?
-  end
 end

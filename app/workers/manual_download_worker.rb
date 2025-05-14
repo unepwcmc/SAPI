@@ -74,14 +74,20 @@ private
     pdf_file_paths << @cover_path
 
     @documents.each do |document|
-      path_to_file = document.filename.path
-      filename = path_to_file.split('/').last
-
-      unless File.exist?(path_to_file)
+      unless document.file.attached?
         # Note: this looks a bit like json. It's not. No idea why.
         missing_files <<
-          "{\n  title: #{document.title},\n  filename: #{filename}\n}"
+          "{\n  title: #{document.title},\n  filename: #{document.filename}\n}"
       else
+        # Download the file from S3, put in temp folder.
+        path_to_file = Rails.root.join(tmp_dir_path, document.file.filename.to_s).to_s
+        File.open(path_to_file, "wb") do |out|
+          # stream download in chunks
+          document.file.blob.service.download(document.file.blob.key) do |chunk|
+            out.write(chunk)
+          end
+        end
+
         pdf_file_paths << path_to_file
       end
     end

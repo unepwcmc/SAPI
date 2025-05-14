@@ -39,11 +39,18 @@ private
     @documents = []
     if documents_attributes && files
       for idx in 0..(files.length - 1) do
-        document_params = {
-          type: documents_attributes[idx.to_s][:type],
-          filename: files[idx],
-          title: document_title(files[idx])
-        }
+        document_params =
+          if files[idx].respond_to?(:read) # Filter out invalid params for ActiveStorage.
+            {
+              type: documents_attributes[idx.to_s][:type],
+              file: files[idx],
+              title: document_title(files[idx])
+            }
+          else
+            {
+              type: documents_attributes[idx.to_s][:type],
+            }
+          end
         @documents.push(Document.new(common_attributes.merge(document_params)))
       end
     end
@@ -64,6 +71,6 @@ private
 
   def document_title(file)
     original_filename = file.is_a?(Hash) ? file[:filename].original_filename : file.original_filename
-    original_filename.sub(/.\w+$/, '')
+    File.basename(original_filename, File.extname(original_filename))
   end
 end
