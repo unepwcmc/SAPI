@@ -72,5 +72,5 @@ Species.DocumentResultComponent = Ember.Component.extend
         eventLabel: "Context: #{@get('searchContextInfo')} (#{@get('signedInInfo')})",
         eventValue: 1
       }
-      ga('send', trackingInfo)
+      analytics.ga('send', trackingInfo)
       window.open(url, '_blank')

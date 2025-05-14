@@ -1,9 +1,13 @@
 <% if Rails.application.config_for(:analytics)[:ga_property_id] %>
   <script>
-    window.ga = window.ga || function (m, n, o, p, q) {
-      console.debug(
-        'Google Analytics not initialised; called:\n', m, n, o, p, q
-      )
+    window.analytics.ga = function (m, n, o, p, q) {
+      if (window.ga) {
+        window.ga(m, n, o, p, q)
+      } else {
+        console.debug(
+          'Google Analytics not initialised; called:\n', m, n, o, p, q
+        )
+      }
     }
 
     window.ga_property_id = '<%= Rails.application.config_for(:analytics)[:ga_property_id] =%>';
@@ -14,13 +18,13 @@
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', window.ga_property_id, 'auto');
-      ga('send', 'pageview');
+      window.analytics.ga('create', window.ga_property_id, 'auto');
+      window.analytics.ga('send', 'pageview');
     }
   </script>
 <% else %>
   <script>
-    window.ga = window.ga || function (m, n, o, p, q) {
+    window.analytics.ga = function (m, n, o, p, q) {
       console.debug(
         'Google Analytics not configured; called:\n', m, n, o, p, q
       )

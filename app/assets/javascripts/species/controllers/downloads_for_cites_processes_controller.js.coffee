@@ -101,7 +101,7 @@ Species.DownloadsForCitesProcessesController = Ember.Controller.extend
         @set('downloadInProgress', false)
         if data.total > 0
           @set('downloadMessage', null)
-          ga('send', {
+          analytics.ga('send', {
             hitType: 'event',
             eventCategory: 'Downloads: ' + @get('processType'),
             eventAction: 'Format: CSV',
