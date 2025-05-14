@@ -20,12 +20,9 @@ Species.Router.reopen
   didTransition: (infos) ->
     @_super(infos);
 
-    if window.ga
+    if window.analytics.gtag
       Em.run.next ->
-        analytics.ga('send', 'pageview', {
-           'page': window.location.hash,
-           'title': window.location.hash
-        })
-    return unless window._gaq
-    Em.run.next ->
-      _gaq.push(['_trackPageview', window.location.hash])
+        window.analytics.gtag('event', 'page_view', {
+          page_title: window.location.hash, # should really be something better
+          page_location: window.location.hash
+        });

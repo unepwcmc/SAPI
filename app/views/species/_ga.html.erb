@@ -1,25 +1,56 @@
 <% if Rails.application.config_for(:analytics)[:ga_property_id] %>
+  <!-- Google tag (gtag.js) -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=<%=
+      Rails.application.config_for(:analytics)[:ga_property_id]
+    %>"
+  ></script>
   <script>
-    window.analytics.ga = function (m, n, o, p, q) {
-      if (window.ga) {
-        window.ga(m, n, o, p, q)
+    window.dataLayer = window.dataLayer || [];
+    window.ga_property_id = '<%= Rails.application.config_for(:analytics)[:ga_property_id] =%>';
+
+    window.gtag = window.gtag || function() {
+      window.dataLayer.push(arguments);
+    }
+
+    window.analytics.gtag = function () {
+      if (window.gtag) {
+        window.gtag.apply(window, arguments)
       } else {
-        console.debug(
-          'Google Analytics not initialised; called:\n', m, n, o, p, q
+        window.dataLayer.push(arguments);
+        console.debug.apply(
+          console,
+          ['Google Analytics not initialised; called:\n'].concat(Array.from(arguments))
         )
       }
     }
 
-    window.ga_property_id = '<%= Rails.application.config_for(:analytics)[:ga_property_id] =%>';
+    window.analytics.gtag('js', new Date());
+    window.analytics.gtag('config', window.ga_property_id);
+    window.analytics.gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied'
+    });
+
+    window.analytics.rejectByProvider.ga = window.analytics.rejectByProvider.ga || function () {
+      window.analytics.gtag('consent', 'update', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied'
+      });
+    }
 
     window.analytics.loadByProvider.ga = window.analytics.loadByProvider.ga || function () {
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      window.analytics.ga('create', window.ga_property_id, 'auto');
-      window.analytics.ga('send', 'pageview');
+      window.analytics.gtag('consent', 'update', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'granted'
+      });
     }
   </script>
 <% else %>

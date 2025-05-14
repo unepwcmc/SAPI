@@ -6,6 +6,7 @@
     acceptsCookies: null,
     loadByProvider: {},
     isLoadedByProvider: {},
+    rejectByProvider: {},
 
     onLoadCookieConsentBanner: function(e) {
       if (window.analytics.getHasSetCookiePreference()) {
@@ -56,6 +57,14 @@
       );
 
       $('#cookie-consent-message').hide();
+
+      Object.values(
+        window.analytics.rejectByProvider
+      ).map(
+        function(rejectProvider) {
+          rejectProvider()
+        }
+      )
 
       if (mustReload) {
         window.location.reload();
