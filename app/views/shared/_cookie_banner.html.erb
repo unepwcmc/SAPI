@@ -7,6 +7,17 @@
     border-width: 0 0 2px;
   }
 
+  #cookie-consent-message a,
+  #cookie-consent-message a:link,
+  #cookie-consent-message a:visited {
+    color: white;
+    text-decoration: underline;
+  }
+
+  #cookie-consent-message a:hover {
+    text-decoration: none;
+  }
+
   #cookie-consent-message>form {
     display: flex;
     margin: auto;
@@ -56,7 +67,8 @@
       We use necessary cookies to make our site work. We'd also like to set
       analytics cookies that help us make improvements by measuring how you use
       the site. These will be set only if you accept. For more detailed
-      information about the cookies we use, see our privacy policy.
+      information about the cookies we use, see our
+      <a href="/terms-of-use#privacy">privacy policy</a>.
     </section>
     <fieldset>
       <button id="cookie-consent-accept" type="button" onclick="window.analytics.acceptCookies()">Accept</button>
