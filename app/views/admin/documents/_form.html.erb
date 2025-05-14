@@ -198,10 +198,10 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :filename, class: 'control-label' %>
+    <%= f.label :file, class: 'control-label' %>
     <div class="controls">
-      <%= @document.filename %>
-      <%= f.file_field :filename %>
+      <%= @document.file.filename %>
+      <%= f.file_field :file, accept: Document::ACCEPTED_CONTENT_TYPES.join(',') %>
     </div>
   </div>
 
