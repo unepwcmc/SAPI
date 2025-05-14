@@ -21,22 +21,19 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
 
   def show
     @document = Document.find(params[:id])
-    path_to_file = @document.filename.path unless @document.is_link?
 
     if @document.is_link?
-      redirect_to @document.filename.model[:filename]
-    elsif !File.exist?(path_to_file)
+      redirect_to @document.elib_legacy_file_name, allow_other_host: true
+    elsif !@document.file.attached?
       render file: "#{Rails.public_path.join('404.html')}", status: :not_found
     else
-      send_file(
-        path_to_file,
-        filename: File.basename(path_to_file),
-        type: @document.filename.content_type,
-        disposition: 'attachment',
-        url_based_filename: true
-      )
+      # Redirect to S3 URL, which only valid for 1 minute (override Rails 7.1 default, which was 5 minutes)
+      # WARNING: Don't use `rails_blob_url` for security reasons because it generates a permanent URL without requiring
+      # authentication.
+      redirect_to @document.file.url(disposition: 'attachment', expires_in: 1.minute), allow_other_host: true
     end
   end
+
   def edit
     edit! do |format|
       load_associations
@@ -168,7 +165,7 @@ private
   def document_params
     params.require(:document).permit(
       # attributes were in model `attr_accessible`.
-      :event_id, :filename, :date, :type, :title, :is_public,
+      :event_id, :file, :date, :type, :title, :is_public,
       :language_id,
       :sort_index, :discussion_id, :discussion_sort_index,
       :primary_language_document_id,
