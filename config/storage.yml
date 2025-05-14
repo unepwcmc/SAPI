@@ -12,12 +12,17 @@ local:
 #   aws:
 #     access_key_id: AAAAAAAAAAAAAAAAAAAA
 #     secret_access_key: xXXxxXXXx0Xx/XXxx000xxXX0XxX/xxx00X0xx0X
-amazon:
+amazon: &amazon
   service: S3
   access_key_id:     <%= ENV.fetch("AWS_S3_ACCESS_KEY_ID")     { Rails.application.credentials.dig(:storage, :aws, :access_key_id) } %>
   secret_access_key: <%= ENV.fetch("AWS_S3_SECRET_ACCESS_KEY") { Rails.application.credentials.dig(:storage, :aws, :secret_access_key) } %>
   region:            <%= ENV.fetch("AWS_S3_REGION")            { Rails.application.credentials.dig(:storage, :aws, :region) || 'eu-west-2' } %>
   bucket:            <%= ENV.fetch("AWS_S3_BUCKET")            { Rails.application.credentials.dig(:storage, :aws, :bucket) || "species-plus-#{Rails.env}" } %>
+
+local_s3:
+  <<: [*amazon]
+  endpoint: 'http://host.docker.internal:<%= ENV.fetch("SAPI_CONTAINER_S3_PORT", 9000) %>'
+  force_path_style: true
 
 # Remember not to checkin your GCS keyfile to a repository
 # google:
