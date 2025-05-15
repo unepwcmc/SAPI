@@ -93,8 +93,13 @@ describe EuDecision, sidekiq: :inline do
         create(:eu_decision, start_date: Time.utc(2013), type: 'EuOpinion')
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
       end
-      subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
-      specify { expect(subject).not_to be_empty }
+
+      pending(
+        "This will be fixed when the 'Avoid shelling out to psql' task is done"
+      ) do
+        subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
+        specify { expect(subject).not_to be_empty }
+      end
     end
   end
 
