@@ -72,7 +72,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     entrypoint: ./bin/docker-entrypoint
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bundle exec rails server -p 3000 -b '0.0.0.0'
     volumes: &rails_volumes
       # Used for both rails and sidekiq
 
@@ -121,6 +121,7 @@ services:
       SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
       CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
+      SAPI_S3_PORT: '${SAPI_CONTAINER_S3_PORT:-9000}'
     depends_on:
       - redis
       - db
@@ -164,6 +165,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    entrypoint: ./bin/docker-entrypoint
     networks:
       - sapi
     depends_on:
@@ -181,6 +183,7 @@ services:
       SAPI_DATABASE_USERNAME: postgres
       SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+      SAPI_S3_PORT: '${SAPI_CONTAINER_S3_PORT:-9000}'
       CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
 
   mailcatcher:

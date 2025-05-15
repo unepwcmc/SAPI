@@ -1,6 +1,10 @@
 #!/bin/bash -e
 
-rm -f ./tmp/pids/server.pid && bundle install
+if [[ "${@}" =~ "rails server" ]]; then
+  rm -f ./tmp/pids/server.pid;
+fi
+
+bundle install
 
 mkdir -p {./,spec/}public/downloads/checklist
 mkdir -p {./,spec/}public/downloads/cites_listings
@@ -35,7 +39,7 @@ mkdir -p {./,spec/}public/downloads/taxon_concepts_names
 # signed S3 urls.
 # We use the approach documented in:
 # https://docs.docker.com/engine/containers/multi-service_container/
-/usr/bin/socat TCP-LISTEN:9000,fork,reuseaddr TCP:minio:9000 &
+/usr/bin/socat TCP-LISTEN:$SAPI_S3_PORT,fork,reuseaddr TCP:minio:9000 &
 
 # This is the main rails/sidekiq command
 exec "${@}" &
