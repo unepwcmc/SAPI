@@ -26,6 +26,7 @@ class Checklist::DownloadsController < ApplicationController
 
     render json: { status: @download.status }
   end
+
   # POST downloads/
   def create
     @download = Download.create(download_params)

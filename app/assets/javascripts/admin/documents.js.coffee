@@ -27,12 +27,12 @@ $(document).ready ->
   $('#event-type').change( (e) ->
     newEventLink = $('#new-event-link')
     # if no event type selected
-    unless e.target.value
-      # disable new event link
-      newEventLink.hide()
-    else
+    if e.target.value && e.target.value != 'IdMaterials'
       newEventLink.attr('href', $(this).find('option:selected').data('path'))
       newEventLink.show()
+    else
+      # disable new event link
+      newEventLink.hide()
   )
 
   primaryDocumentSelect2Options = {
