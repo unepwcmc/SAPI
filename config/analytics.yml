@@ -1,0 +1,20 @@
+shared:
+  # Google Analytics
+  ga_property_id: ~
+  # Hotjar: hjid
+  hotjar_id: ~
+  # Hotjar: hjsv
+  hotjar_script_version: 6
+
+production:
+  # ga_property_id: UA-21313092-1
+  ga_property_id: G-8PEP4MXX40
+  hotjar_id: 2231279
+
+staging:
+  ga_property_id: G-8GS56F3837
+  hotjar_id: 2231279
+
+development:
+  ga_property_id: G-8GS56F3837
+  hotjar_id: 2231279

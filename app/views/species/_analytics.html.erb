@@ -1,0 +1,104 @@
+<script>
+  window.analytics = window.analytics || {
+    cookieConsentFooterId: '',
+    cookieConsentName: 'cookieconsent_status',
+    cookieConsentValue: '1',
+    acceptsCookies: null,
+    loadByProvider: {},
+    isLoadedByProvider: {},
+
+    onLoadCookieConsentBanner: function(e) {
+      if (window.analytics.getHasSetCookiePreference()) {
+        $('#cookie-consent-message').hide();
+
+        if (window.analytics.getHasAcceptedCookies()) {
+          window.analytics.loadAll();
+        }
+      } else {
+        $('#cookie-consent-message').show();
+      }
+    },
+
+    openCookieConsentBanner: function(e) {
+      $('#cookie-consent-message').show();
+
+      window.scrollTo(0, 0);
+
+      $('#cookie-consent-message btn').focus();
+
+      e && e.preventDefault();
+      e && e.stopPropagation();
+    },
+
+    acceptCookies: function(e) {
+      window.analytics.acceptsCookies = true;
+      window.analytics.loadAll();
+
+      Cookies.set(
+        window.analytics.cookieConsentName,
+        window.analytics.cookieConsentValue
+      );
+
+      $('#cookie-consent-message').hide();
+
+      e && e.preventDefault();
+      e && e.stopPropagation();
+    },
+
+    rejectCookies: function(e) {
+      // Rather than coordinating an opt-out having loaded scripts on-page,
+      // easier to throw it all away if we already opted in.
+      var mustReload = window.analytics.getHasAcceptedCookies();
+
+      Cookies.set(
+        window.analytics.cookieConsentName,
+        '0'
+      );
+
+      $('#cookie-consent-message').hide();
+
+      if (mustReload) {
+        window.location.reload();
+      }
+
+      e && e.preventDefault();
+      e && e.stopPropagation();
+    },
+
+    getHasSetCookiePreference: function() {
+      return Cookies.get(
+        window.analytics.cookieConsentName,
+      ) != null;
+    },
+
+    getHasAcceptedCookies: function() {
+      return Cookies.get(
+        window.analytics.cookieConsentName,
+      ) === window.analytics.cookieConsentValue;
+    },
+
+    rejectsAllTracking: (
+      (
+        navigator && navigator.globalPrivacyControl
+      ) || [
+        '1', 'yes', 'true'
+      ].includes(navigator && navigator.doNotTrack)
+    ),
+
+    loadAll: function() {
+      if (
+        window.analytics.getHasAcceptedCookies() && !window.analytics.rejectsAllTracking
+      ) {
+        Object.keys(
+          window.analytics.loadByProvider
+        ).map(
+          function(provider) {
+            if (!window.analytics.isLoadedByProvider[provider]) {
+              window.analytics.loadByProvider[provider]()
+            }
+          }
+        )
+      }
+    }
+  };
+</script>

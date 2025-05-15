@@ -17,5 +17,5 @@ Species.BatchDownloadComponent = Ember.Component.extend
       eventLabel: "Context: #{@get('searchContextInfo')} (#{@get('signedInInfo')})",
       eventValue: documentIds.length
     }
-    ga('send', trackingInfo)
+    analytics.ga('send', trackingInfo)
     window.location = url
