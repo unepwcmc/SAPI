@@ -21,7 +21,7 @@ amazon: &amazon
 
 local_s3:
   <<: [*amazon]
-  endpoint: 'http://host.docker.internal:<%= ENV.fetch("SAPI_CONTAINER_S3_PORT", 9000) %>'
+  endpoint: 'http://localhost:<%= ENV.fetch("SAPI_CONTAINER_S3_PORT", 9000) %>'
   force_path_style: true
 
 # Remember not to checkin your GCS keyfile to a repository

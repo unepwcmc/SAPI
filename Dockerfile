@@ -8,10 +8,12 @@ FROM ruby:3.2.5
 
 # Rails and SAPI has some additional dependencies, e.g. rake requires a JS
 # runtime, so attempt to get these from apt, where possible
+# socat is just for binding ports within docker, not needed for the application
 RUN apt-get update && apt-get install -y --force-yes \
   libsodium-dev libgmp3-dev libssl-dev \
   libpq-dev postgresql-client \
   nodejs \
+  socat \
   texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra \
   ;
 # NB: Postgres client from Debian is 9.4 - not sure if this is acceptable
