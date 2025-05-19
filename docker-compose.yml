@@ -10,7 +10,7 @@ services:
   minio:
     container_name: sapi-minio
     image: minio/minio:latest
-    command: server /data --console-address ":9001"
+    command: server /data --address 0.0.0.0:9000 --console-address ":9001"
     ports:
       - "${SAPI_CONTAINER_S3_PORT:-9000}:9000"
       - "${SAPI_CONTAINER_S3_CONSOLE_PORT:-9001}:9001"
