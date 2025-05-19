@@ -29,4 +29,5 @@ RUN gem install bundler -v 2.5.17
 # COPY . /SAPI
 
 EXPOSE 3000
-CMD ["rails", "server", "-b", "0.0.0.0"]
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
