@@ -14,7 +14,18 @@ class DocumentFilenameColumnDeprecated < ActiveRecord::Migration[7.1]
       end
 
       dir.down do
-        Document.where(filename: nil).destroy_all
+        invalid_documents = Document.where(filename: nil)
+
+        if Rails.env.production? && invalid_documents.count > 0
+          raise ActiveRecord::IrreversibleMigration,
+            "This migration is destructive - it will delete #{
+              invalid_documents.count
+            } Documents."
+        end
+
+        # Just in case of a race condition...
+        invalid_documents.destroy_all unless Rails.env.production?
+
         change_column_null :documents, :filename, false
       end
     end
