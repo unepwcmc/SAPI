@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+# Bind 'minio:9000' to 'localhost:9000' so that we can correctly generate
+# signed S3 urls.
+# We use the approach documented in:
+# https://docs.docker.com/engine/containers/multi-service_container/
+/usr/bin/socat TCP-LISTEN:$SAPI_S3_PORT,fork,reuseaddr TCP:minio:9000 &
+
+# This is the main rails/sidekiq command
+./bin/docker-entrypoint "${@}" &
+
+# Wait for any process to exit
+wait -n
+
+# Exit with status of process that exited first
+exit $?
