@@ -77,17 +77,17 @@ services:
     tty: true
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
-      MEMCACHE_SERVERS: sapi-memcached:11211
       SAPI_DATABASE_HOST: sapi-db
       SAPI_DATABASE_USERNAME: postgres
       SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+      SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
       CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
     depends_on:
       - redis
+      - redis_cache
       - db
       - mailcatcher
-      - memcached
 
   deploy:
     container_name: sapi-cap-deploy
@@ -120,6 +120,16 @@ services:
     volumes:
       - redis_data:/data
 
+  redis_cache:
+    container_name: sapi-redis-cache
+    image: redis:7.2.0
+    networks:
+      - sapi
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - redis_cache_data:/data
+      - ./docker_config/redis_cache:/usr/local/etc/redis
+
   sidekiq:
     container_name: sapi-sidekiq
     build:
@@ -130,17 +140,17 @@ services:
     depends_on:
       - db
       - redis
+      - redis_cache
       - mailcatcher
-      - memcached
     command: /bin/bash -l -c "bundle install && bundle exec sidekiq -C config/sidekiq.yml"
     volumes: *rails_volumes
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
-      MEMCACHE_SERVERS: sapi-memcached:11211
       SAPI_DATABASE_HOST: sapi-db
       SAPI_DATABASE_USERNAME: postgres
       SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+      SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
       CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
 
   mailcatcher:
@@ -151,19 +161,11 @@ services:
     networks:
       - sapi
 
-  memcached:
-    container_name: sapi-memcached
-    image: memcached:1.6
-    ports:
-      - "${SAPI_CONTAINER_MEMCACHE_PORT:-11211}:11211"
-    networks:
-      - sapi
-
-
 volumes:
   pgdata:
   bundler_gems:
   redis_data:
+  redis_cache_data:
   app_tmp:
   app_log:
   app_storage:

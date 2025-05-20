@@ -35,9 +35,6 @@ gem 'coffee-rails', '~> 5.0'
 
 gem 'active_model_serializers', '0.8.4' # Deprecated
 
-# Memcached driver for Rails.cache
-gem 'dalli', '~> 3.2.8'
-
 # Use PostgreSQL database
 gem 'pg', '~> 1.5', '>= 1.5.4'
 gem 'pg_array_parser', '~> 0.0.9'
@@ -228,3 +225,5 @@ gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will ch
 # It might be possible to fix this if we had an nginx version which supported
 # the config: `passenger_preload_bundler on;`
 gem 'base64', '0.1.1'
+
+gem "redis", "~> 4.8"
