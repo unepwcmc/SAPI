@@ -1,0 +1,81 @@
+<style>
+  #cookie-consent-message {
+    background-color: #376382;
+    color: white;
+    padding: 8px;
+    border: 0 solid;
+    border-width: 0 0 2px;
+  }
+
+  #cookie-consent-message a,
+  #cookie-consent-message a:link,
+  #cookie-consent-message a:visited {
+    color: white;
+    text-decoration: underline;
+  }
+
+  #cookie-consent-message a:hover {
+    text-decoration: none;
+  }
+
+  #cookie-consent-message>form {
+    display: flex;
+    margin: auto;
+    max-width: 960px;
+    gap: 16px;
+    align-items: center;
+  }
+
+  #cookie-consent-message>form>section {
+    flex: 1;
+  }
+
+  #cookie-consent-message>form>fieldset {
+    flex: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #cookie-consent-message button {
+    display: block;
+    margin: 2px;
+    padding: 4px 16px;
+    background-color: #376382;
+    border: 2px solid #fff;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 24px;
+    transition: all 0.5s ease;
+    font-family: inherit;
+    text-transform: uppercase;
+  }
+
+  #cookie-consent-message button:hover {
+    background-color: #253848;
+  }
+  #cookie-consent-message button:active {
+    background-color: #8fb7cf;
+  }
+
+</style>
+<aside
+  id="cookie-consent-message"
+  style="display: <%= cookies[:cookieconsent_status] ? 'none' : 'block' %>"
+>
+  <form>
+    <section>
+      We use necessary cookies to make our site work. We'd also like to set
+      analytics cookies that help us make improvements by measuring how you use
+      the site. These will be set only if you accept. For more detailed
+      information about the cookies we use, see our
+      <a href="/terms-of-use#privacy">privacy policy</a>.
+    </section>
+    <fieldset>
+      <button id="cookie-consent-accept" type="button" onclick="window.analytics.acceptCookies()">Accept</button>
+      <button id="cookie-consent-reject" type="button" onclick="window.analytics.rejectCookies()">Reject</button>
+    </fieldset>
+  </form>
+  <script>
+    window.analytics.onLoadCookieConsentBanner()
+  </script>
+</aside>
