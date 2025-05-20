@@ -1,14 +1,18 @@
+var saveAndReopen = window.adminEditor.saveAndReopen;
+
 var form = $("<%= escape_javascript(render('form')) %>");
+
 $('#admin-new-taxon_concept_reference-form').html(form);
 $('#references-list').html("<%= escape_javascript(render('list')) %>");
 
-var saveAndReopen = window.adminEditor.saveAndReopen;
 window.adminEditor.initModals();
 window.adminEditor.nonSuperInit();
 
-if (saveAndReopen){
+if (saveAndReopen) {
+
   window.adminEditor.alertSuccess("Operation successful");
   window.adminEditor.clearModalForm($('#admin-new-taxon_concept_reference-form'));
+
   $('#new-taxon_concept_reference').modal('show');
 } else {
   // Show alert in the parent window, rather than in the modal

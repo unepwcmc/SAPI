@@ -36,12 +36,22 @@ class AdminEditor
       autoclose: true
 
   initModals: () ->
+    editor = @
+    editor.saveAndReopen = false
+
     resubmit_delay_ms = 1000
+
+    modals = $('.modal').filter(
+      ':not([data-inititalised])'
+    ).data({
+      initialised: true
+    })
 
     # Prevent forms from being resubmitted within 1s to prevent accidental
     # resubmission due to e.g. holding down the 'enter' key.
-    $('.modal').delegate 'form', 'submit', () ->
+    modals.undelegate('form', 'submit').delegate 'form', 'submit', () ->
       form = $(@)
+
       btn = form.closest('.modal').find('.save-button')
 
       return true unless btn
@@ -59,13 +69,22 @@ class AdminEditor
 
       return true
 
-    $('.modal .modal-footer .save-button').click () ->
+    modals.undelegate('.modal-footer .save-button', 'click')
+    modals.delegate '.modal-footer .save-button', 'click', () ->
+      editor.saveAndReopen = !!$(@).is('.save-and-reopen-button')
+      isButtonDisabled = $(@).attr('disabled')
+
+      return false if isButtonDisabled
+
       $(@).closest('.modal').find('form').submit()
 
-    $('.modal').on 'hidden', () =>
+
+    modals.off 'hidden'
+    modals.on 'hidden', () =>
       $('.modal.hide.fade').each((idx, element) =>
         @clearModalForm($(element))
       )
+
     $(@).find('.alert').remove()
 
   alertSuccess: (txt) ->
@@ -203,12 +222,9 @@ class AdminInPlaceEditor extends AdminEditor
 class TaxonConceptsEditor extends AdminEditor
   init: () ->
     super
-    $('.modal .modal-footer .save-and-reopen-button').click () =>
-      @saveAndReopen = true
 
   initModals: () ->
     super
-    @saveAndReopen = false
     $('.distributions-list > a').popover({});
 
   alertSuccess: (txt) ->
@@ -303,14 +319,8 @@ class TaxonReferencesEditor extends AdminEditor
       e.preventDefault()
       window.adminEditor.clearModalForm $("#admin-new-taxon_concept_reference-form")
       $(this).tab "show"
-    @initSaveAndReOpenButton()
     @initReferencesTypeahead()
     @excludeTaxonConceptsIds()
-
-  initSaveAndReOpenButton: () ->
-    @saveAndReopen = false
-    $('.modal .modal-footer .save-and-reopen-button').click () =>
-      @saveAndReopen = true
 
   initReferencesTypeahead: () ->
     $("#reference_id").select2
@@ -329,7 +339,6 @@ class TaxonReferencesEditor extends AdminEditor
             results.push
               id: e.id
               text: e.value
-
 
           results: results
 
