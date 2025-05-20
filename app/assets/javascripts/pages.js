@@ -15,5 +15,5 @@
 //= require jquery_ujs
 //= require js.cookie
 //= require_self
-// //= require_tree ./pages
+//= require_tree ./pages
 //= require ./shared/login
