@@ -21,13 +21,19 @@ RUN apt-get update && apt-get install -y --force-yes \
 RUN mkdir /SAPI
 WORKDIR /SAPI
 
-# COPY Gemfile /SAPI/Gemfile
-# COPY Gemfile.lock /SAPI/Gemfile.lock
+#
+# Don't need to do these, as we have done this with Docker bindings
+#   COPY Gemfile /SAPI/Gemfile
+#   COPY Gemfile.lock /SAPI/Gemfile.lock
 RUN gem install bundler -v 2.5.17
-# RUN bundle install
 
-# COPY . /SAPI
+##
+# This happens in the entrypoint
+#   RUN bundle install
+#
+# This is done via docker bindings
+#   COPY . /SAPI
 
+ENTRYPOINT ["/SAPI/bin/docker-entrypoint-develop"]
 EXPOSE 3000
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
