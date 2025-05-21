@@ -22,9 +22,7 @@
       <% unless @event %>
         <td><%= link_to document.event.name, admin_event_documents_path(document.event) if document.event %></td>
       <% end %>
-      <td><%= link_to document.title, admin_document_url(document), {
-        rel: 'tooltip', :'data-title' => document.becomes(Document).filename.url
-      } %></td>
+      <td><%= link_to document.title, admin_document_url(document) %></td>
       <td>
         <% if document.geo_entity_names.length > 0 %>
           <%= link_to "#{document.geo_entity_names.length} countries", '#', {

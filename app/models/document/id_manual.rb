@@ -6,7 +6,7 @@
 #  date                         :date             not null
 #  discussion_sort_index        :integer
 #  elib_legacy_file_name        :text
-#  filename                     :text             not null
+#  filename                     :text
 #  general_subtype              :boolean
 #  is_public                    :boolean          default(FALSE), not null
 #  sort_index                   :integer

@@ -8,10 +8,12 @@ FROM ruby:3.2.5
 
 # Rails and SAPI has some additional dependencies, e.g. rake requires a JS
 # runtime, so attempt to get these from apt, where possible
+# socat is just for binding ports within docker, not needed for the application
 RUN apt-get update && apt-get install -y --force-yes \
   libsodium-dev libgmp3-dev libssl-dev \
   libpq-dev postgresql-client \
   nodejs \
+  socat \
   texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra \
   ;
 # NB: Postgres client from Debian is 9.4 - not sure if this is acceptable
@@ -19,12 +21,19 @@ RUN apt-get update && apt-get install -y --force-yes \
 RUN mkdir /SAPI
 WORKDIR /SAPI
 
-# COPY Gemfile /SAPI/Gemfile
-# COPY Gemfile.lock /SAPI/Gemfile.lock
+#
+# Don't need to do these, as we have done this with Docker bindings
+#   COPY Gemfile /SAPI/Gemfile
+#   COPY Gemfile.lock /SAPI/Gemfile.lock
 RUN gem install bundler -v 2.5.17
-# RUN bundle install
 
-# COPY . /SAPI
+##
+# This happens in the entrypoint
+#   RUN bundle install
+#
+# This is done via docker bindings
+#   COPY . /SAPI
 
+ENTRYPOINT ["/SAPI/bin/docker-entrypoint-develop"]
 EXPOSE 3000
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

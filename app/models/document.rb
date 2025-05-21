@@ -6,7 +6,7 @@
 #  date                         :date             not null
 #  discussion_sort_index        :integer
 #  elib_legacy_file_name        :text
-#  filename                     :text             not null
+#  filename                     :text
 #  general_subtype              :boolean
 #  is_public                    :boolean          default(FALSE), not null
 #  sort_index                   :integer
@@ -49,6 +49,9 @@
 #  documents_updated_by_id_fk                 (updated_by_id => users.id)
 #
 
+# The following DB columns are deprecated.
+#  filename
+
 class Document < ApplicationRecord
   include PgSearch::Model
 
@@ -85,7 +88,8 @@ class Document < ApplicationRecord
         attributes['geo_entity_ids'].blank? || attributes['geo_entity_ids'].compact_blank.empty?
       )
     }
-  mount_uploader :filename, DocumentFileUploader
+  mount_uploader :filename, DocumentFileUploader # Deprecated
+  has_one_attached :file
 
   before_validation :set_title
   before_validation :reset_designation_if_event_set
@@ -100,20 +104,6 @@ class Document < ApplicationRecord
     )
     where(id: ids).order(Arel.sql(order))
   }
-
-  # This hot fix was needed to import document objects without attachment(external link)
-  # Kepping this code just as reference for future
-  # def filename=(arg)
-  #   is_link? ? write_attribute(:filename, arg) : super
-  # end
-  #
-  # def filename
-  #   if self.has_attribute? :type
-  #     is_link? ? read_attribute(:filename) : super
-  #   else
-  #     super
-  #   end
-  # end
 
   def is_link?
     self.type == 'Document::VirtualCollege' && !is_pdf?
