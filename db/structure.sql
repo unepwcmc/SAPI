@@ -6819,8 +6819,12 @@ COMMENT ON FUNCTION public.squish(text) IS 'Squishes whitespace characters in a 
 CREATE FUNCTION public.squish_null(text) RETURNS text
     LANGUAGE sql IMMUTABLE
     AS $_$
-    SELECT CASE WHEN SQUISH($1) = '' THEN NULL ELSE SQUISH($1) END;
-  $_$;
+  SELECT
+    CASE WHEN public.squish($1) = ''
+    THEN NULL
+    ELSE public.squish($1)
+  END;
+$_$;
 
 
 --
