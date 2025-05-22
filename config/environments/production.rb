@@ -85,10 +85,8 @@ Rails.application.configure do
   # @see https://github.com/heartcombo/devise#password-reset-tokens-and-rails-logs
   config.log_level = 'warn'
 
-  # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
-  # TODO: change to redis
-  config.cache_store = :mem_cache_store
+  # Use a redis instance as a cache store on production.
+  config.cache_store = :redis_cache_store, { url: ENV.fetch('SAPI_SIDEKIQ_REDIS_CACHE_URL', Rails.application.credentials.dig(:redis_cache, :url)) }
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter = :resque
