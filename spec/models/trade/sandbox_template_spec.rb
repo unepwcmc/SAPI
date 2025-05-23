@@ -1,33 +1,3 @@
-# == Schema Information
-#
-# Table name: trade_sandbox_template
-#
-#  id                        :integer          not null, primary key
-#  appendix                  :string(255)
-#  country_of_origin         :string(255)
-#  epix_created_at           :datetime
-#  epix_updated_at           :datetime
-#  export_permit             :text
-#  import_permit             :text
-#  origin_permit             :text
-#  purpose_code              :string(255)
-#  quantity                  :string(255)
-#  source_code               :string(255)
-#  taxon_name                :string(255)
-#  term_code                 :string(255)
-#  trading_partner           :string(255)
-#  unit_code                 :string(255)
-#  year                      :string(255)
-#  created_at                :datetime
-#  updated_at                :datetime
-#  created_by_id             :integer
-#  epix_created_by_id        :integer
-#  epix_updated_by_id        :integer
-#  reported_taxon_concept_id :integer
-#  taxon_concept_id          :integer
-#  updated_by_id             :integer
-#
-
 require 'spec_helper'
 
 describe Trade::SandboxTemplate, drops_tables: true do

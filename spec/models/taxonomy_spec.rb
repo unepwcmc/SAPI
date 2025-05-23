@@ -1,17 +1,3 @@
-# == Schema Information
-#
-# Table name: taxonomies
-#
-#  id         :integer          not null, primary key
-#  name       :string(255)      default("DEAFAULT TAXONOMY"), not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_taxonomies_on_name  (name) UNIQUE
-#
-
 require 'spec_helper'
 
 describe Taxonomy do

@@ -1,18 +1,3 @@
-# == Schema Information
-#
-# Table name: preset_tags
-#
-#  id         :integer          not null, primary key
-#  model      :string(255)
-#  name       :string(255)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_preset_tags_on_name_upper_model  (name, upper((model)::text)) UNIQUE
-#
-
 require 'spec_helper'
 
 describe PresetTag do

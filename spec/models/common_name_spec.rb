@@ -1,29 +1,3 @@
-# == Schema Information
-#
-# Table name: common_names
-#
-#  id            :integer          not null, primary key
-#  name          :string(255)      not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  created_by_id :integer
-#  language_id   :integer          not null
-#  updated_by_id :integer
-#
-# Indexes
-#
-#  index_common_names_on_created_by_id         (created_by_id)
-#  index_common_names_on_language_id           (language_id)
-#  index_common_names_on_language_id_and_name  (language_id,name) UNIQUE
-#  index_common_names_on_updated_by_id         (updated_by_id)
-#
-# Foreign Keys
-#
-#  common_names_created_by_id_fk  (created_by_id => users.id)
-#  common_names_language_id_fk    (language_id => languages.id)
-#  common_names_updated_by_id_fk  (updated_by_id => users.id)
-#
-
 require 'spec_helper'
 
 describe CommonName do

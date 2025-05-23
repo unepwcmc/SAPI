@@ -1,32 +1,3 @@
-# == Schema Information
-#
-# Table name: distributions
-#
-#  id               :integer          not null, primary key
-#  internal_notes   :text
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  created_by_id    :integer
-#  geo_entity_id    :integer          not null
-#  taxon_concept_id :integer          not null
-#  updated_by_id    :integer
-#
-# Indexes
-#
-#  index_distributions_on_created_by_id                       (created_by_id)
-#  index_distributions_on_geo_entity_id                       (geo_entity_id)
-#  index_distributions_on_geo_entity_id_and_taxon_concept_id  (geo_entity_id,taxon_concept_id) UNIQUE
-#  index_distributions_on_taxon_concept_id                    (taxon_concept_id)
-#  index_distributions_on_taxon_concept_id_and_geo_entity_id  (taxon_concept_id,geo_entity_id) UNIQUE
-#  index_distributions_on_updated_by_id                       (updated_by_id)
-#
-# Foreign Keys
-#
-#  distributions_created_by_id_fk                  (created_by_id => users.id)
-#  distributions_updated_by_id_fk                  (updated_by_id => users.id)
-#  taxon_concept_geo_entities_geo_entity_id_fk     (geo_entity_id => geo_entities.id)
-#  taxon_concept_geo_entities_taxon_concept_id_fk  (taxon_concept_id => taxon_concepts.id)
-#
 FactoryBot.define do
   factory :geo_relationship_type do
     sequence(:name) { |n| "CONTAINS#{n}" }

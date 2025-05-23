@@ -1,25 +1,3 @@
-# == Schema Information
-#
-# Table name: api_requests
-#
-#  id              :integer          not null, primary key
-#  action          :string(255)
-#  controller      :string(255)
-#  error_message   :text
-#  format          :string(255)
-#  ip              :string(255)
-#  params          :text
-#  response_status :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  user_id         :integer
-#
-# Indexes
-#
-#  idx_on_user_id_response_status_created_at_04ab285ff3  (user_id,response_status,created_at)
-#  index_api_requests_on_created_at                      (created_at)
-#
-
 require 'spec_helper'
 
 describe ApiRequest do
