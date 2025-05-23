@@ -115,7 +115,7 @@ Rails.application.configure do
   }
 
   # Fixes error "Cannot render console from 172.22.0.1!" when in Docker
-  config.web_console.whitelisted_ips = [
+  config.web_console.allowed_ips = [
     '10.0.0.0/8',
     '172.16.0.0/12',
     '192.168.0.0/16'
