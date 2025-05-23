@@ -74,8 +74,9 @@ private
         [ 'SELF', 'SYNONYM', 'COMMON_NAME', 'SUBSPECIES' ]
       end
 
-    @query = @query.
-      select('id, full_name, rank_name, name_status, author_year,
+    @query = @query.select(
+      <<-SQL.squish
+        id, full_name, rank_name, name_status, author_year,
         ARRAY_AGG_NOTNULL(
           DISTINCT CASE
             WHEN matched_name != full_name THEN matched_name ELSE NULL
@@ -84,14 +85,16 @@ private
             WHEN matched_name != full_name THEN matched_name ELSE NULL
           END
         ) AS matching_names_ary,
-        rank_display_name_en, rank_display_name_es, rank_display_name_fr'
-            ).
-      where(type_of_match: types_of_match).
-      group([
+        rank_display_name_en, rank_display_name_es, rank_display_name_fr
+      SQL
+    ).where(
+      type_of_match: types_of_match
+    ).group(
+      [
         :id, :full_name, :rank_name, :name_status, :author_year, :rank_order,
         :rank_display_name_en, :rank_display_name_es, :rank_display_name_fr
       ]
-           )
+    )
 
     if @taxon_concept_query
       @query = @query.where(
@@ -103,6 +106,7 @@ private
         )
       )
     end
+
     @query
   end
 end
