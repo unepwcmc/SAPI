@@ -45,8 +45,8 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
 
-  db:
-    container_name: sapi-db
+  db-pg10:
+    container_name: sapi-db-pg10
     image: postgres:10
     command: postgres -c max_wal_size=2GB
     healthcheck:
@@ -60,6 +60,27 @@ services:
       - 'pgdata:/var/lib/postgresql/data'
     ports:
       - "${SAPI_CONTAINER_DB_PORT:-5432}:5432"
+    networks:
+      - sapi
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      POSTGRES_DB: "sapi_development"
+
+  db-pg17:
+    container_name: sapi-db-pg17
+    image: postgres:17
+    command: postgres -c max_wal_size=2GB
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    volumes:
+      - ./db_init:/docker-entrypoint-initdb.d
+      - ./db/structure.sql:/docker-entrypoint-initdb.d/sapi_schema.sql
+      - 'pg17data:/var/lib/postgresql/data'
+    ports:
+      - "${SAPI_CONTAINER_DB_PORT:-5417}:5432"
     networks:
       - sapi
     environment:
@@ -114,17 +135,18 @@ services:
     tty: true
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
-      SAPI_DATABASE_HOST: sapi-db
+      SAPI_DATABASE_HOST: sapi-db-pg17
       SAPI_DATABASE_USERNAME: postgres
       SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
       SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
-      CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
+      CAPTIVE_BREEDING_DATABASE_HOST: sapi-db-pg17
       SAPI_S3_PORT: '${SAPI_CONTAINER_S3_PORT:-9000}'
     depends_on:
       - redis
       - redis_cache
-      - db
+      - db-pg10
+      - db-pg17
       - mailcatcher
       - minio
   deploy:
@@ -138,7 +160,7 @@ services:
     stdin_open: true
     tty: true
     environment:
-      SAPI_DATABASE_HOST: sapi-db
+      SAPI_DATABASE_HOST: sapi-db-pg17
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
       # Defaults to blank; used by AppSignal:
       USER: "$USER"
@@ -176,7 +198,8 @@ services:
     networks:
       - sapi
     depends_on:
-      - db
+      - db-pg10
+      - db-pg17
       - redis
       - redis_cache
       - mailcatcher
@@ -185,14 +208,13 @@ services:
     volumes: *rails_volumes
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
-      SAPI_DATABASE_HOST: sapi-db
+      SAPI_DATABASE_HOST: sapi-db-pg17
       SAPI_DATABASE_USERNAME: postgres
       SAPI_DATABASE_PORT: 5432
-      SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
       SAPI_S3_PORT: '${SAPI_CONTAINER_S3_PORT:-9000}'
+      SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
       SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
-      CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
-
+      CAPTIVE_BREEDING_DATABASE_HOST: sapi-db-pg17
   mailcatcher:
     container_name: sapi-mailcatcher
     image: sj26/mailcatcher
@@ -203,6 +225,7 @@ services:
 
 volumes:
   pgdata:
+  pg17data:
   bundler_gems:
   redis_data:
   minio-data:
