@@ -65,12 +65,12 @@ Species.DocumentResultComponent = Ember.Component.extend
   actions:
     startDownload: () ->
       url = "/api/v1/documents/#{@get('documentId')}"
-      trackingInfo = {
-        hitType: 'event',
-        eventCategory: "Downloads: #{@get('doc.event_type')}",
-        eventAction: @get('doc.event_name') + ': ' + @get('doc.document_type'),
-        eventLabel: "Context: #{@get('searchContextInfo')} (#{@get('signedInInfo')})",
-        eventValue: 1
-      }
-      ga('send', trackingInfo)
+
+      analytics.gtag('event', 'download_single', {
+        document_type: @get('document_type'),
+        event_type: @get('event_type'),
+        event_name: @get('event_name'),
+        count: 1
+      })
+
       window.open(url, '_blank')

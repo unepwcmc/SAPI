@@ -1,27 +1,15 @@
-Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend Species.EventDownloader,
-  designation: 'cites'
-  documentType: 'CitesSuspensions'
-
-  needs: ['geoEntities','higherTaxaCitesEu', 'downloads']
+Species.EventDownloader = Ember.Mixin.create
+  documentType: 'UnknownDocumentType'
+  needs: ['geoEntities', 'downloads']
 
   higherTaxaController: ( ->
-    @get('controllers.higherTaxaCitesEu')
+    throw new Error('Unimplemented')
   ).property()
 
-  geoEntityQuery: null
-  taxonConceptQuery: null
+  selectedAppendices: []
   selectedGeoEntities: []
   selectedTaxonConcepts: []
-  timeScope: 'current'
-  timeScopeIsCurrent: ( ->
-    @get('timeScope') == 'current'
-  ).property('timeScope')
-  years: [1975..new Date().getFullYear()]
   selectedYears: []
-
-  documentTypeIsCitesSuspensions: ( ->
-    @get('documentType') == 'CitesSuspensions'
-  ).property('documentType')
 
   autoCompleteTaxonConcepts: ( ->
     if @get('taxonConceptQuery') && @get('taxonConceptQuery').length > 0
@@ -69,30 +57,68 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend Specie
     @get('selectedTaxonConcepts').mapProperty('id')
   ).property('selectedTaxonConcepts.@each')
 
-  selectedYearsIfRelevant: ( ->
-    if @get('documentTypeIsCitesSuspensions')
-      []
-    else
-      @get('selectedYears')
-  ).property('documentTypeIsCitesSuspensions', 'selectedYears.@each')
-
   toParams: ( ->
     {
       data_type: @get('documentType')
       filters:
-        designation: @get('designation')
-        geo_entities_ids: @get('selectedGeoEntitiesIds')
-        taxon_concepts_ids: @get('selectedTaxonConceptsIds')
-        set: @get('timeScope')
-        years: @get('selectedYearsIfRelevant')
         csv_separator: @get('controllers.downloads.csvSeparator')
     }
   ).property(
-    'selectedGeoEntitiesIds.@each', 'selectedTaxonConceptsIds.@each',
-    'timeScope', 'selectedYears.@each', 'documentType', 'controllers.downloads.csvSeparator'
+    'documentType', 'controllers.downloads.csvSeparator'
   )
 
+  downloadUrl: ( ->
+    '/species/exports/download?' + $.param(@get('toParams'))
+  ).property('toParams')
+
+  analyticsEventProperties: ( ->
+    {
+      download_type: @get('documentType'),
+      format: 'CSV',
+      separator: @get('controllers.downloads.csvSeparator')
+    }
+  ).property('documentType', 'controllers.downloads.csvSeparator')
+
   actions:
+    startDownload: () ->
+      @set('downloadInProgress', true)
+      @set('downloadMessage', 'Downloading...')
+
+      $.ajax({
+        type: 'GET'
+        dataType: 'json'
+        url: @get('downloadUrl')
+      }).done((data) =>
+        @set('downloadInProgress', false)
+
+        if data.total > 0
+          @set('downloadMessage', null)
+
+          analytics.gtag(
+            'event', 'download_started', @get('analyticsEventProperties')
+          )
+
+          window.location = @get('downloadUrl')
+
+          return
+        else
+          analytics.gtag(
+            'event', 'download_empty', @get('analyticsEventProperties')
+          )
+
+          @set('downloadMessage', 'No results')
+      ).fail((jqXHR) =>
+        @set('downloadInProgress', false)
+
+        errorStatusText = jqXHR.statusText || 'Unknown error'
+
+        @set('downloadMessage', 'Download Failed (' + errorStatusText + ')')
+
+        analytics.gtag(
+          'event', 'download_failed', @get('analyticsEventProperties')
+        )
+      )
+
     deleteTaxonConceptSelection: (context) ->
       @set('selectedTaxonConcepts', [])
 
