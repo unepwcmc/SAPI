@@ -47,7 +47,7 @@ es:
     reported_taxon_concept_id: 'Taxón Reportado ID'
     importer: 'Importador'
     exporter: 'Exportador'
-    country_of_origin: 'Origen'
+    country_of_origin: 'País de origen'
     importer_quantity: 'Cantidad de Importador'
     exporter_quantity: 'Cantidad de Exportador'
     quantity: 'Cantidad'
