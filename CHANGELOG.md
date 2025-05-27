@@ -5,7 +5,8 @@
   exporting EU decisions.
 * ActiveStorage is now configured for storing bulk downloads to support changes
   to the Species+/CITES API (separate `species-api` repository).
-* Fixes an issue that was creating duplicate form submissions.
+* Fixes an issue with the admin interface that was creating duplicate form
+  submissions.
 * Fixes an issue which allowed multiple references with the same citation
   to exist.
 * Species+ website now uses GA4 to and requests user consent before tracking is
