@@ -81,21 +81,23 @@ private
             Trade::SandboxTemplate.create_table_stmt(@table_name)
           )
         ensure
-          ApplicationRecord.connection_handler.clear_active_connections!
+          ApplicationRecord.connection_handler.clear_active_connections! :all
         end
+
         begin
           Trade::SandboxTemplate.connection.execute(
             Trade::SandboxTemplate.create_indexes_stmt(@table_name)
           )
         ensure
-          ApplicationRecord.connection_handler.clear_active_connections!
+          ApplicationRecord.connection_handler.clear_active_connections! :all
         end
+
         begin
           Trade::SandboxTemplate.connection.execute(
             Trade::SandboxTemplate.create_view_stmt(@table_name, @annual_report_upload.id)
           )
         ensure
-          ApplicationRecord.connection_handler.clear_active_connections!
+          ApplicationRecord.connection_handler.clear_active_connections! :all
         end
       end.join
     end
