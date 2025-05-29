@@ -1,6 +1,10 @@
 #!/bin/bash -e
 
-rm -f ./tmp/pids/server.pid && bundle install
+if [[ "${@}" =~ "rails server" ]]; then
+  rm -f ./tmp/pids/server.pid;
+fi
+
+bundle install
 
 mkdir -p {./,spec/}public/downloads/checklist
 mkdir -p {./,spec/}public/downloads/cites_listings
@@ -31,4 +35,5 @@ mkdir -p {./,spec/}public/downloads/taxon_concepts_names
 #   ./bin/rails db:prepare
 # fi
 
+# This is the main rails/sidekiq command
 exec "${@}"
