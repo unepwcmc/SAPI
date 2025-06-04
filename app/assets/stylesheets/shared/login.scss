@@ -130,6 +130,7 @@
   font-size: 12px;
   background-color: #376382;
   height: 30px;
+  position: relative; // ensure dropdown is positioned correctly
   .logged-header-container {
     padding: 6px 115px;
     color: white;
