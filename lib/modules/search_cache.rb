@@ -24,10 +24,15 @@ module SearchCache
 private
 
   def generic_cache_key(suffix)
-    raw_key = @options.merge(locale: I18n.locale).to_a.sort.
-      unshift("#{self.class.name}-#{suffix}").
-      push(self.class.cache_iterator).inspect
-    Rails.logger.debug raw_key
+    raw_key =
+      @options.merge(
+        locale: I18n.locale
+      ).to_a.sort.unshift(
+        "#{self.class.name}-#{suffix}"
+      ).push(
+        self.class.cache_iterator
+      ).to_json
+
     Digest::MD5.hexdigest(raw_key)
   end
 
