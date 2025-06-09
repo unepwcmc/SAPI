@@ -1,9 +1,28 @@
 shared_context 'Boa constrictor' do
+  def cz
+    @cz ||= create(:language, name: 'Czech', iso_code1: 'CZ', iso_code3: 'CZE')
+  end
+
   def en
-    @es ||= create(:language, name: 'Spanish', iso_code1: 'ES', iso_code3: 'SPA')
-    @fr ||= create(:language, name: 'French', iso_code1: 'FR', iso_code3: 'FRA')
     @en ||= create(:language, name: 'English', iso_code1: 'EN', iso_code3: 'ENG')
   end
+
+  def es
+    @es ||= create(:language, name: 'Spanish', iso_code1: 'ES', iso_code3: 'SPA')
+  end
+
+  def fr
+    @fr ||= create(:language, name: 'French', iso_code1: 'FR', iso_code3: 'FRA')
+  end
+
+  def sk
+    @sk ||= create(:language, name: 'Slovak', iso_code1: 'SK', iso_code3: 'SLK')
+  end
+
+  def zh
+    @zh ||= create(:language, name: 'Chinese', iso_code1: 'ZH', iso_code3: 'ZHN')
+  end
+
   before(:all) do
     @order = create_cites_eu_order(
       taxon_name: create(:taxon_name, scientific_name: 'Serpentes'),
@@ -21,7 +40,10 @@ shared_context 'Boa constrictor' do
       taxon_name: create(:taxon_name, scientific_name: 'Constrictor'),
       parent: @genus,
       common_names: [
-        create(:common_name, name: 'Red-tailed boa', language: en)
+        create(:common_name, name: 'Red-tailed boa', language: en),
+        create(:common_name, name: 'hroznýš královský', language: cz),
+        create(:common_name, name: 'veľhad kráľovský', language: sk),
+        create(:common_name, name: '红尾蚺阿根廷亚种', language: zh)
       ]
     )
     @subspecies1 = create_cites_eu_subspecies(
@@ -81,6 +103,10 @@ shared_context 'Boa constrictor' do
       event: reg2013,
       is_current: true
     )
+
+    [ cz, en, es, fr, sk, zh ].map do
+      # noop, just call the functions to populate the languages
+    end
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     self.instance_variables.each do |t|
