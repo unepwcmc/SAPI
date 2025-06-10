@@ -57,6 +57,19 @@ describe Api::V1::AutoCompleteTaxonConceptsController do
       )
     end
 
+    it 'returns 1 result when searching for first three letters of second word of common name' do
+      get :index, params: { taxonomy: 'CITES', taxon_concept_query: 'krá' }
+
+      expect(response.body).to have_json_size(1).at_path(
+        'auto_complete_taxon_concepts'
+      )
+
+      # Should match both CZ and SK names
+      expect(response.body).to have_json_size(2).at_path(
+        'auto_complete_taxon_concepts/0/matching_names'
+      )
+    end
+
     it 'returns 1 result when searching for part of common name' do
       get :index, params: { taxonomy: 'CITES', taxon_concept_query: 'álovský' }
 
@@ -64,6 +77,15 @@ describe Api::V1::AutoCompleteTaxonConceptsController do
         'auto_complete_taxon_concepts'
       )
     end
+
+    it 'returns no result when searching for non-initial three letters of second word of common name' do
+      get :index, params: { taxonomy: 'CITES', taxon_concept_query: 'álo' }
+
+      expect(response.body).to have_json_size(0).at_path(
+        'auto_complete_taxon_concepts'
+      )
+    end
+
 
     it 'returns no results when searching for single letter' do
       get :index, params: { taxonomy: 'CITES', taxon_concept_query: 'B' }
