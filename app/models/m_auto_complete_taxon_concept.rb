@@ -39,10 +39,39 @@ class MAutoCompleteTaxonConcept < ApplicationRecord
   extend Mobility
   self.table_name = :auto_complete_taxon_concepts_mview
   self.primary_key = :id
+
   scope :by_cites_eu_taxonomy, -> { where(taxonomy_is_cites_eu: true) }
   scope :by_cms_taxonomy, -> { where(taxonomy_is_cites_eu: false) }
+
   translates :rank_display_name
+
   def matching_names
     self[:matching_names_ary] || []
+  end
+
+  def self.where_prefix_matches(prefix_query)
+    return self unless prefix_query&.present?
+
+    where(
+      (
+        <<-SQL.squish
+          name_for_matching LIKE unaccent(upper(:prefix_query)) || '%'
+        SQL
+      ),
+      prefix_query: prefix_query && sanitize_sql_like(prefix_query)
+    )
+  end
+
+  def self.where_substring_matches(substring_query)
+    return self unless substring_query&.present?
+
+    where(
+      (
+        <<-SQL.squish
+          name_for_matching LIKE '%' || unaccent(upper(:substring_query)) || '%'
+        SQL
+      ),
+      substring_query: substring_query && sanitize_sql_like(substring_query)
+    )
   end
 end

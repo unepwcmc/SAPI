@@ -70,27 +70,13 @@ private
       end
 
     @query =
-      @query.where(
-        if text_search_strategies[:full_text_match]
-          # Unanchored
-          <<-SQL.squish
-            name_for_matching LIKE
-            '%' || unaccent(:taxon_concept_query) || '%'
-          SQL
-        elsif text_search_strategies[:prefix_match]
-          # Prefix-only search
-          <<-SQL.squish
-            name_for_matching LIKE
-            unaccent(:taxon_concept_query) || '%'
-          SQL
-        else
-          'FALSE'
-        end,
-        taxon_concept_query:
-          @taxon_concept_query && MAutoCompleteTaxonConcept.sanitize_sql_like(
-            @taxon_concept_query
-          )
-      )
+      if text_search_strategies[:full_text_match]
+        @query.where_substring_matches @taxon_concept_query
+      elsif text_search_strategies[:prefix_match]
+        @query.where_prefix_matches @taxon_concept_query
+      else
+        @query.where 'FALSE'
+      end
 
     desired_order =
       if @visibility == :trade
