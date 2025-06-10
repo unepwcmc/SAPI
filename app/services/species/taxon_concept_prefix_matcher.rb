@@ -77,15 +77,19 @@ private
             name_for_matching LIKE
             '%' || unaccent(:taxon_concept_query) || '%'
           SQL
-        else
+        elsif text_search_strategies[:prefix_match]
           # Prefix-only search
           <<-SQL.squish
             name_for_matching LIKE
             unaccent(:taxon_concept_query) || '%'
           SQL
+        else
+          'FALSE'
         end,
         taxon_concept_query:
-          MAutoCompleteTaxonConcept.sanitize_sql_like(@taxon_concept_query)
+          @taxon_concept_query && MAutoCompleteTaxonConcept.sanitize_sql_like(
+            @taxon_concept_query
+          )
       )
 
     desired_order =
@@ -152,7 +156,7 @@ private
   #
   # See detect_script_type for more.
   def detect_match_strategies (text)
-    trimmed_text = text.squish
+    trimmed_text = (text || '').squish
 
     match_options = detect_script_type trimmed_text
 
