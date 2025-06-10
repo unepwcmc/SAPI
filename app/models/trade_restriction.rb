@@ -113,26 +113,35 @@ class TradeRestriction < ApplicationRecord
   def self.search(query)
     return all if query.blank?
 
-    self.ilike_search(
-      query, [
-        GeoEntity.arel_table['name_en'],
-        GeoEntity.arel_table['iso_code2'],
-        TaxonConcept.arel_table['full_name'],
-        Event.arel_table['subtype']
-      ]
+    ilike_targets = [
+      GeoEntity.arel_table['name_en'],
+      GeoEntity.arel_table['iso_code2'],
+      TaxonConcept.arel_table['full_name']
+    ]
+
+    # Both Quota and CitesSuspension inherit from this model, but only CitesSuspension declares
+    # `belongs_to :start_notification`
+    ilike_targets << Event.arel_table['subtype'] if self.reflections.key?('start_notification')
+
+    chain = self.ilike_search(
+      query, ilike_targets
     ).or(
       where(
         'trade_restrictions.start_date::text LIKE :query OR trade_restrictions.end_date::text LIKE :query',
         query: "%#{sanitize_sql_like(query)}%"
       )
-    ).joins(
-      [ :start_notification ]
     ).left_joins(
       [
         :taxon_concept,
         :geo_entity
       ]
     )
+
+    # Both Quota and CitesSuspension inherit from this model, but only CitesSuspension declares
+    # `belongs_to :start_notification`
+    chain = chain.joins(:start_notification) if self.reflections.key?('start_notification')
+
+    chain
   end
 
   def self.export(filters)
