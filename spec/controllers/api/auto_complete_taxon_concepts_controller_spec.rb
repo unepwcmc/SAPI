@@ -53,7 +53,7 @@ describe Api::V1::AutoCompleteTaxonConceptsController do
 
       # Should match both CZ and SK names
       expect(response.body).to have_json_size(2).at_path(
-        'auto_complete_taxon_concepts/1/matching_names'
+        'auto_complete_taxon_concepts/0/matching_names'
       )
     end
 
