@@ -26,9 +26,22 @@ module PgCopy
   def self.copy_to_db(
     table_name,
     column_names: nil,
+    column_types: nil,
     connection: ActiveRecord::Base.connection,
     raw_connection: connection.raw_connection,
-    pg_copy_encoder: PG::BinaryEncoder::CopyRow.new,
+    pg_copy_encoder:
+      if column_types.present? && column_names.present?
+        PG::BinaryEncoder::CopyRow.new(
+          type_map: PG::TypeMapByColumn.new(
+            column_types.map do |column_type|
+              class_by_column_type = encoder_class_by_column_type
+              class_by_column_type[column_type || :text] || class_by_column_type[:text]
+            end.map(&:new)
+          )
+        )
+      else
+        PG::BinaryEncoder::CopyRow.new
+      end,
     table_expr:
       if column_names.present?
         quoted_table_name = connection.quote_table_name(table_name)
@@ -155,5 +168,16 @@ module PgCopy
         io&.write to_write
       end
     end
+  end
+
+  def self.encoder_class_by_column_type
+    {
+      string: PG::BinaryEncoder::String,
+      text: PG::BinaryEncoder::String,
+      integer: PG::BinaryEncoder::Int4,
+      float: PG::BinaryEncoder::Float4,
+      boolean: PG::BinaryEncoder::Boolean,
+      datetime: PG::BinaryEncoder::Date
+    }
   end
 end

@@ -10,7 +10,7 @@ class Trade::Sandbox
 
   def copy
     create_target_table
-    copy_csv_to_target_table
+    copy_csv_to_target_table if @csv_file_path
     @ar_klass.sanitize
   end
 
@@ -48,8 +48,10 @@ class Trade::Sandbox
           ]
         )
       )
+
       duplicates = pg_result.values.first.first.delete('{}')
-      return duplicates
+
+      duplicates
     end
   end
 
@@ -104,14 +106,35 @@ private
   end
 
   def copy_csv_to_target_table
-    require 'psql_command'
+    raise 'CSV file path not set' unless @csv_file_path
+
     columns_in_csv_order =
       if @annual_report_upload.point_of_view == 'E'
         Trade::SandboxTemplate::EXPORTER_COLUMNS
       else
         Trade::SandboxTemplate::IMPORTER_COLUMNS
       end
-    cmd = Trade::SandboxTemplate.copy_stmt(@table_name, @csv_file_path, columns_in_csv_order)
-    PsqlCommand.new(cmd).execute
+
+    column_types =
+      columns_in_csv_order.map do |column_name|
+        Trade::SandboxTemplate.columns_hash[column_name]&.type
+      end
+
+    csv_options = {}
+
+    PgCopy.copy_to_db(
+      @table_name,
+      column_names: columns_in_csv_order,
+      column_types: column_types
+    ) do |writer|
+      CSV.foreach(
+        @csv_file_path,
+        headers: true,
+        skip_blanks: true,
+        **csv_options
+      ) do |csv_row|
+        writer.call csv_row.to_a.map(&:last)
+      end
+    end
   end
 end

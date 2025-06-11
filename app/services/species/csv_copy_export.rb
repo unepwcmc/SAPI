@@ -73,9 +73,7 @@ private
         column_aliases: csv_column_headers
       ),
       @file_name,
-      {
-        delimiter: @csv_separator_char
-      }
+      delimiter: @csv_separator_char
     )
   end
 

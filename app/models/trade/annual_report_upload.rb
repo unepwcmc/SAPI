@@ -76,6 +76,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
 
   def copy_to_sandbox
     sandbox.copy
+
     update_attribute(:number_of_rows, sandbox_shipments.size)
   end
 

@@ -542,15 +542,6 @@ class CsvImportHelper
     # For the rest of the transaction, parse dates as ISO or DMY, not MDY (US)
     ApplicationRecord.connection.execute 'SET LOCAL DateStyle = "ISO,DMY"'
 
-    encoder_class = {
-      varchar: PG::BinaryEncoder::String,
-      text: PG::BinaryEncoder::String,
-      integer: PG::BinaryEncoder::Int4,
-      float: PG::BinaryEncoder::Float4,
-      boolean: PG::BinaryEncoder::Boolean,
-      date: PG::BinaryEncoder::Date
-    }
-
     column_names =
       if column_mapping.is_a? Array
         column_mapping
@@ -566,7 +557,7 @@ class CsvImportHelper
       elsif column_mapping.is_a? Hash
         column_mapping.values
       end.map do |v|
-        v.split(/\s+/)[1] || 'varchar'
+        v.split(/\s+/)[1] || 'text'
       end.map(&:downcase)
 
     full_path = Rails.root + path_to_file
@@ -575,12 +566,6 @@ class CsvImportHelper
       "Copying data from #{full_path} into tmp table #{table_name} (#{column_names.zip column_types})"
     end
 
-    encoder_type_map = PG::TypeMapByColumn.new(
-      column_types&.map do |t|
-        (encoder_class[t.to_sym] || encoder_class[:varchar]).new
-      end
-    )
-
     row_count = 0
     m = CsvToDbMap.instance
 
@@ -588,7 +573,7 @@ class CsvImportHelper
       PgCopy.copy_to_db(
         table_name,
         column_names: column_names,
-        pg_copy_encoder: PG::BinaryEncoder::CopyRow.new(type_map: encoder_type_map)
+        column_types: column_types
       ) do |writer|
         CSV.foreach(
           full_path,

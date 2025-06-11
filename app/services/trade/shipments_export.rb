@@ -1,4 +1,3 @@
-require 'psql_command'
 # Implements "raw" shipments export
 class Trade::ShipmentsExport < Species::CsvCopyExport
   include Trade::ShipmentReportQueries
@@ -62,6 +61,7 @@ private
       sql_columns.each_with_index.map do |c, i|
         "#{c} AS \"#{headers[i]}\""
       end
+
     "SELECT #{select_columns.join(', ')} FROM (#{raw_query(options)}) AS subquery"
   end
 
@@ -77,22 +77,8 @@ private
     'trade_shipments_view'
   end
 
-  def copy_stmt
-    # escape quotes around attributes for psql
-    # Requires UTF8 encoding for diacritics.
-    sql = <<-PSQL
-      \\COPY (#{query_sql(limit: !internal?).gsub('"', "\\\"")})
-      TO ?
-      WITH DELIMITER '#{@csv_separator_char}'
-      ENCODING 'UTF8'
-      CSV HEADER;
-    PSQL
-    ApplicationRecord.send(:sanitize_sql_array, [ sql, @file_name ])
-  end
-
   def to_csv
-    # User psql to export table to csv.
-    PsqlCommand.new(copy_stmt).execute
+    PgCopy.copy_to_csv_file(query_sql(limit: !internal?), @file_name)
   end
 
   def available_columns
