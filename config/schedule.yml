@@ -19,6 +19,11 @@ downloads_cache_update_job:
   class: "DownloadsCacheUpdateJob"
   queue: admin
 
+purge_unattached_job:
+  cron: "0 18 * * *"
+  class: "PurgeUnattachedJob"
+  queue: admin
+
 sunday_cleanup_job:
   cron: "45 4 * * 0"
   class: "SundayCleanupJob"

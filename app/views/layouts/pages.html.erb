@@ -1,81 +1,54 @@
 <!doctype html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta charset="utf-8">
-  <title>Species+</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
+    <title>Species+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-  <%= stylesheet_link_tag "pages" %>
-  <%= javascript_include_tag "pages" %>
+    <%= stylesheet_link_tag "pages" %>
+    <%= javascript_include_tag "pages" %>
 
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-  <% if Rails.env.production? %>
-    <!-- Google Analytics ga.js -->
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-21313092-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async =   true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-21313092-2', 'speciesplus.net');
-      ga('send', 'pageview');
-    </script>
-
+    <%= render "species/analytics" %>
+    <%= render "species/ga" %>
     <%= render "species/hotjar" %>
-  <% else %>
-    <script>
-      function ga() {
-        console.log('google analytics not enabled for this environment')
-      }
-    </script>
-  <% end %>
-
-</head>
-<body class="inner">
-  <a href="#feedback_modal" class="btn-fixed-vertical btn-page-feedback">Feedback</a>
-  <%= render "layouts/logged_header" %>
-  <%= render "layouts/feedback_modal" %>
-  <%= render "layouts/login_modal" %>
-  <div id="wrapper">
-    <div class="w1">
-      <div id="header">
-        <strong class="logo"><a href="/species">Species+</a></strong>
-        <ul id="nav">
-          <li><a href="/about">About</a></li>
-          <li class="add"><a href="#">Related Resources</a>
-          <div class="popup-holder">
-            <ul>
-              <li><a href="http://checklist.cites.org">Checklist of CITES Species</a></li>
-              <li><a href="http://trade.cites.org">CITES Trade Database</a></li>
-              <li><a href="http://api.speciesplus.net">Species+ / CITES Checklist API</a></li>
-              <li><a href="http://captivebreeding.unep-wcmc.org">EU Captive breeding database</a></li>
-              <li><a href="/eu_legislation">EU Wildlife Trade Legislation</a></li>
-              <li><a href="https://ec.europa.eu/environment/cites/reports_en.htm">EU analysis</a></li>
-              <li><a href="https://tradeview.cites.org/">CITES Wildlife TradeView</a></li>
-            </ul>
-          </div>
-          </li>
-          <li><a href="/terms-of-use">Terms of use</a></li>
-        </ul>
+  </head>
+  <body class="inner">
+    <a href="#feedback_modal" class="btn-fixed-vertical btn-page-feedback">Feedback</a>
+    <%= render "shared/cookie_banner" %>
+    <%= render "layouts/logged_header" %>
+    <%= render "layouts/feedback_modal" %>
+    <%= render "layouts/login_modal" %>
+    <div id="wrapper">
+      <div class="w1">
+        <div id="header">
+          <strong class="logo"><a href="/species">Species+</a></strong>
+          <ul id="nav">
+            <li><a href="/about">About</a></li>
+            <li class="add"><a href="#">Related Resources</a>
+            <div class="popup-holder">
+              <ul>
+                <li><a href="http://checklist.cites.org">Checklist of CITES Species</a></li>
+                <li><a href="http://trade.cites.org">CITES Trade Database</a></li>
+                <li><a href="http://api.speciesplus.net">Species+ / CITES Checklist API</a></li>
+                <li><a href="http://captivebreeding.unep-wcmc.org">EU Captive breeding database</a></li>
+                <li><a href="/eu_legislation">EU Wildlife Trade Legislation</a></li>
+                <li><a href="https://ec.europa.eu/environment/cites/reports_en.htm">EU analysis</a></li>
+                <li><a href="https://tradeview.cites.org/">CITES Wildlife TradeView</a></li>
+              </ul>
+            </div>
+            </li>
+            <li><a href="/terms-of-use">Terms of use</a></li>
+          </ul>
+        </div>
+        <%= yield %>
+        <%= render "layouts/footer" %>
       </div>
-      <%= yield %>
-      <%= render "layouts/footer" %>
     </div>
-  </div>
- </body>
+  </body>
 </html>

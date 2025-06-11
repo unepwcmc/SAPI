@@ -81,7 +81,8 @@ FactoryBot.define do
   end
 
   factory :reference do
-    citation { 'Przygód kilka wróbla ćwirka' }
+    # citation needs to be unique, enforced by index
+    sequence(:citation) { |n| "Przygód kilka wróbla ćwirka, #{2000 + n}" }
   end
 
   factory :taxon_concept_reference do

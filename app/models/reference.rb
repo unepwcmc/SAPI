@@ -17,8 +17,9 @@
 #
 # Indexes
 #
-#  index_references_on_created_by_id  (created_by_id)
-#  index_references_on_updated_by_id  (updated_by_id)
+#  index_references_on_citation_checksum  (((md5(citation) || "left"(citation, 992)))) UNIQUE
+#  index_references_on_created_by_id      (created_by_id)
+#  index_references_on_updated_by_id      (updated_by_id)
 #
 # Foreign Keys
 #
@@ -32,7 +33,7 @@ class Reference < ApplicationRecord
   # Migrated to controller (Strong Parameters)
   # attr_accessible :citation, :created_by_id, :updated_by_id
 
-  validates :citation, presence: true
+  validates :citation, presence: true, uniqueness: true
   has_many :taxon_concept_references
   has_many :distribution_references
 

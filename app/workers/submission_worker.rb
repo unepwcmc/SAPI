@@ -4,6 +4,7 @@ class SubmissionWorker
 
   def perform(aru_id, submitter_id)
     submitter = User.find(submitter_id)
+
     begin
       aru = Trade::AnnualReportUpload.find(aru_id)
     rescue ActiveRecord::RecordNotFound => e
@@ -11,13 +12,16 @@ class SubmissionWorker
       Rails.logger.warn "CITES Report #{aru_id} not found"
       Appsignal.add_exception(e) if defined? Appsignal
       NotificationMailer.changelog_failed(submitter, aru).deliver_now
+
       return false
     end
 
     duplicates = aru.sandbox.check_for_duplicates_in_shipments
     if duplicates.present?
       tempfile = Trade::ChangelogCsvGenerator.call(aru, submitter, duplicates)
+
       NotificationMailer.duplicates(submitter, aru, tempfile).deliver_now
+
       return false
     end
 
@@ -28,9 +32,12 @@ class SubmissionWorker
     upload_on_S3(aru, tempfile)
 
     records_submitted = aru.sandbox.moved_rows_cnt
+
     # remove uploaded file
     store_dir = aru.csv_source_file.store_dir
+
     aru.remove_csv_source_file!
+
     Rails.logger.debug '### removing uploads dir ###'
     Rails.logger.debug Rails.public_path.join(store_dir)
     FileUtils.remove_dir(Rails.public_path.join(store_dir), force: true)
@@ -55,11 +62,16 @@ class SubmissionWorker
 private
 
   def upload_on_S3(aru, tempfile)
+    aws_options = Rails.application.credentials.dig(:storage, :aru)
+
     begin
-      s3 = Aws::S3::Resource.new
+      s3 = Aws::S3::Resource.new(
+        client: Aws::S3::Client.new(**aws_options)
+      )
+
       filename = "#{Rails.env}/trade/annual_report_upload/#{aru.id}/changelog.csv"
-      bucket_name = Rails.application.credentials.dig(:aws, :bucket_name)
-      obj = s3.bucket(bucket_name).object(filename)
+      obj = s3.bucket(aws_options[:bucket]).object(filename)
+
       obj.upload_file(tempfile.path)
 
       aru.update(aws_storage_path: obj.public_url)

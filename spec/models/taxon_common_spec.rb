@@ -1,30 +1,3 @@
-# == Schema Information
-#
-# Table name: taxon_commons
-#
-#  id               :integer          not null, primary key
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  common_name_id   :integer          not null
-#  created_by_id    :integer
-#  taxon_concept_id :integer          not null
-#  updated_by_id    :integer
-#
-# Indexes
-#
-#  index_taxon_commons_on_common_name_id    (common_name_id)
-#  index_taxon_commons_on_created_by_id     (created_by_id)
-#  index_taxon_commons_on_taxon_concept_id  (taxon_concept_id)
-#  index_taxon_commons_on_updated_by_id     (updated_by_id)
-#
-# Foreign Keys
-#
-#  taxon_commons_common_name_id_fk    (common_name_id => common_names.id)
-#  taxon_commons_created_by_id_fk     (created_by_id => users.id)
-#  taxon_commons_taxon_concept_id_fk  (taxon_concept_id => taxon_concepts.id)
-#  taxon_commons_updated_by_id_fk     (updated_by_id => users.id)
-#
-
 require 'spec_helper'
 
 describe TaxonCommon do

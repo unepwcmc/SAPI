@@ -1,32 +1,3 @@
-# == Schema Information
-#
-# Table name: geo_entities
-#
-#  id                 :integer          not null, primary key
-#  is_current         :boolean          default(TRUE)
-#  iso_code2          :string(255)
-#  iso_code3          :string(255)
-#  legacy_type        :string(255)
-#  long_name          :string(255)
-#  name_en            :string(255)      not null
-#  name_es            :string(255)
-#  name_fr            :string(255)
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  geo_entity_type_id :integer          not null
-#  legacy_id          :integer
-#
-# Indexes
-#
-#  index_geo_entities_on_geo_entity_type_id  (geo_entity_type_id)
-#  index_geo_entities_on_iso_code2           (iso_code2) UNIQUE WHERE (iso_code2 IS NOT NULL)
-#  index_geo_entities_on_iso_code3           (iso_code3) UNIQUE WHERE (iso_code3 IS NOT NULL)
-#
-# Foreign Keys
-#
-#  geo_entities_geo_entity_type_id_fk  (geo_entity_type_id => geo_entity_types.id)
-#
-
 require 'spec_helper'
 
 describe GeoEntity do

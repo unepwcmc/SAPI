@@ -53,12 +53,33 @@ body.inner {
 
 img { border-style: none; }
 i { font-style: italic; }
-a {
+
+button.link {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  padding: 0;
+  padding-block: 0;
+  padding-inline: 0;
+  margin: 0;
+  margin-inline: 0;
+  margin-block: 0;
+  text-indent: inherit;
+  border: none;
+  background: none;
+  display: inline;
+  cursor: pointer;
+}
+
+a, button.link {
   text-decoration: none;
   color: #666;
 }
-a:hover { text-decoration: underline; }
-a:active { background-color: transparent; }
+
+a:hover, button.link:hover { text-decoration: underline; }
+a:active, button.link:active { background-color: transparent; }
+
 textarea, select, input {
   font: 100% 'Open Sans', Helvetica, Arial, sans-serif;
   vertical-align: middle;
@@ -309,12 +330,13 @@ a.learn-more:hover {
 }
 .power-by, .login-link {
   float: right;
-  height: 56px;
 }
 .login-link p {
   margin-bottom: 8px;
 }
-.login-link a {
+
+.login-link a,
+.login-link button.link {
   color: #648aa2;
   text-decoration: none;
   cursor: pointer;

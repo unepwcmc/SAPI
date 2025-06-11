@@ -1,5 +1,6 @@
-Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
+Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend Species.EventDownloader,
   designation: 'cites'
+  documentType: 'CitesSuspensions'
 
   needs: ['geoEntities','higherTaxaCitesEu', 'downloads']
 
@@ -17,7 +18,7 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
   ).property('timeScope')
   years: [1975..new Date().getFullYear()]
   selectedYears: []
-  documentType: 'CitesSuspensions'
+
   documentTypeIsCitesSuspensions: ( ->
     @get('documentType') == 'CitesSuspensions'
   ).property('documentType')
@@ -91,40 +92,7 @@ Species.DownloadsForCitesRestrictionsController = Ember.Controller.extend
     'timeScope', 'selectedYears.@each', 'documentType', 'controllers.downloads.csvSeparator'
   )
 
-  downloadUrl: ( ->
-    '/species/exports/download?' + $.param(@get('toParams'))
-  ).property('toParams')
-
   actions:
-    startDownload: () ->
-      @set('downloadInProgress', true)
-      @set('downloadMessage', 'Downloading...')
-      $.ajax({
-        type: 'GET'
-        dataType: 'json'
-        url: @get('downloadUrl')
-      }).done((data) =>
-        @set('downloadInProgress', false)
-        if data.total > 0
-          @set('downloadMessage', null)
-          ga('send', {
-            hitType: 'event',
-            eventCategory: 'Downloads: ' + @get('documentType'),
-            eventAction: 'Format: CSV',
-            eventLabel: @get('controllers.downloads.csvSeparator')
-          })
-          window.location = @get('downloadUrl')
-          return
-        else
-          @set('downloadMessage', 'No results')
-      ).fail((jqXHR) =>
-        @set('downloadInProgress', false)
-
-        errorStatusText = jqXHR.statusText || 'Unknown error'
-
-        @set('downloadMessage', 'Download Failed (' + errorStatusText + ')')
-      )
-
     deleteTaxonConceptSelection: (context) ->
       @set('selectedTaxonConcepts', [])
 

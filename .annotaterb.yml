@@ -9,13 +9,13 @@
 :position_in_test: before
 :classified_sort: true
 :exclude_controllers: true
-:exclude_factories: false
-:exclude_fixtures: false
+:exclude_factories: true
+:exclude_fixtures: true
 :exclude_helpers: true
 :exclude_scaffolds: true
-:exclude_serializers: false
+:exclude_serializers: true
 :exclude_sti_subclasses: false
-:exclude_tests: false
+:exclude_tests: true
 :force: false
 :format_markdown: false
 :format_rdoc: false
@@ -36,19 +36,19 @@
 :with_column_comments: true
 :with_table_comments: true
 :active_admin: false
-:command: 
+:command:
 :debug: false
 :hide_default_column_types: ''
 :hide_limit_column_types: ''
-:ignore_columns: 
-:ignore_routes: 
+:ignore_columns:
+:ignore_routes:
 :models: true
 :routes: false
 :skip_on_db_migrate: false
 :target_action: :do_annotations
-:wrapper: 
-:wrapper_close: 
-:wrapper_open: 
+:wrapper:
+:wrapper_close:
+:wrapper_open:
 :classes_default_to_s: []
 :additional_file_patterns: []
 :model_dir:

@@ -1,29 +1,3 @@
-# == Schema Information
-#
-# Table name: nomenclature_changes
-#
-#  id            :integer          not null, primary key
-#  status        :string(255)      not null
-#  type          :string(255)      not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  created_by_id :integer          not null
-#  event_id      :integer
-#  updated_by_id :integer          not null
-#
-# Indexes
-#
-#  index_nomenclature_changes_on_created_by_id  (created_by_id)
-#  index_nomenclature_changes_on_event_id       (event_id)
-#  index_nomenclature_changes_on_updated_by_id  (updated_by_id)
-#
-# Foreign Keys
-#
-#  nomenclature_changes_created_by_id_fk  (created_by_id => users.id)
-#  nomenclature_changes_event_id_fk       (event_id => events.id)
-#  nomenclature_changes_updated_by_id_fk  (updated_by_id => users.id)
-#
-
 require 'spec_helper'
 
 describe NomenclatureChange::Split do

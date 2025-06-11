@@ -1,23 +1,3 @@
-# == Schema Information
-#
-# Table name: designations
-#
-#  id          :integer          not null, primary key
-#  name        :string(255)      not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  taxonomy_id :integer          default(1), not null
-#
-# Indexes
-#
-#  index_designations_on_name         (name) UNIQUE
-#  index_designations_on_taxonomy_id  (taxonomy_id)
-#
-# Foreign Keys
-#
-#  designations_taxonomy_id_fk  (taxonomy_id => taxonomies.id)
-#
-
 require 'spec_helper'
 
 describe Designation do

@@ -1,3 +1,21 @@
+### 1.18.0
+
+* Users now see the current EU Annex(es) of a taxon when exporting EU decisions.
+* Users can now choose between "Under Tracking" and "In consultation" when
+  exporting EU decisions.
+* ActiveStorage is now configured for storing bulk downloads to support changes
+  to the Species+/CITES API (separate `species-api` repository).
+* Fixes an issue with the admin interface that was creating duplicate form
+  submissions.
+* Fixes an issue which allowed multiple references with the same citation
+  to exist.
+* Species+ website now uses GA4 to and requests user consent before tracking is
+  enabled. A privacy notice is posted accordingly.
+* **CITES TradeView**: recognise more species as timber.
+* **CITES Trade Database**: fix an issue where country/territory of origin
+  and source column were being mixed up in Spanish because they had both been
+  translated as "origen".
+
 ### 1.17.0
 
 * Updates to a task for bulk-uploading distributions
