@@ -27,22 +27,32 @@ require 'spec_helper'
 describe EuDecision, sidekiq: :inline do
   before do
     @taxon_concept = create(:taxon_concept)
+
+    # EuDecisionsExport depends on eu_decisions_view,
+    # which depends on taxon_concepts_mview, which must be populated
+    SapiModule::StoredProcedures.run_procedures [ :taxon_concepts_mview ]
   end
 
   describe :create do
     context 'downloads cache should be populated' do
       before(:each) do
         DownloadsCache.clear_eu_decisions
-        create(:eu_decision, start_date: Time.utc(2013), type: 'EuOpinion')
-        Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
+
+        create(
+          :eu_decision,
+          start_date: Time.utc(2013),
+          taxon_concept_id: @taxon_concept.id,
+          type: 'EuOpinion'
+        )
+
+        Species::EuDecisionsExport.new(
+          decision_types: {},
+          set: 'current',
+        ).export
       end
 
-      pending(
-        "This will be fixed when the 'Avoid shelling out to psql' task is done"
-      ) do
-        subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
-        specify { expect(subject).not_to be_empty }
-      end
+      subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
+      specify { expect(subject).not_to be_empty }
     end
   end
 
@@ -87,6 +97,7 @@ describe EuDecision, sidekiq: :inline do
         d.destroy
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
       end
+
       subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
       specify { expect(subject).to be_empty }
     end
