@@ -2,7 +2,14 @@ class CitesTradeController < ApplicationController
 private
 
   def search_params
-    (params[:filters] || params).permit(
+    original_params =
+      if params[:filters].respond_to? :permit
+        params[:filters]
+      else
+        params
+      end
+
+    original_params.permit(
       :time_range_start,
       :time_range_end,
       :report_type,
