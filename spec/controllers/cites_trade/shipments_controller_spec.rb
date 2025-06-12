@@ -31,10 +31,12 @@ describe CitesTrade::ShipmentsController do
         expect(response.body).to have_json_path('shipment_gross_net_export')
       end
     end
+
     it 'should return all comptab shipments' do
       get :index, format: :json
       expect(response.body).to have_json_size(7).at_path('shipment_comptab_export/rows')
     end
+
     it 'should return all gross_exports shipments' do
       get :index, params: {
         filters: {
@@ -45,6 +47,24 @@ describe CitesTrade::ShipmentsController do
       }
       expect(response.body).to have_json_size(5).at_path('shipment_gross_net_export/rows')
     end
+
+    it 'should treat params.$key as params.filters.$key' do
+      get :index, params: {
+        report_type: 'gross_exports',
+        time_range_start: 2012,
+        time_range_end: 2014,
+        format: :json
+      }
+
+      expect(response.body).to have_json_size(5).at_path('shipment_gross_net_export/rows')
+    end
+
+    it 'should not throw an error if filters is the empty string' do
+      get :index, params: { filters: '' }, format: :json
+
+      expect(response.body).to have_json_size(7).at_path('shipment_comptab_export/rows')
+    end
+
     it 'should return genus & species shipments when searching by genus' do
       get :index, params: {
         filters: {
@@ -54,6 +74,7 @@ describe CitesTrade::ShipmentsController do
       }
       expect(response.body).to have_json_size(2).at_path('shipment_comptab_export/rows')
     end
+
     it 'should return family, genus & species shipments when searching by family' do
       get :index, params: {
         filters: {
@@ -63,6 +84,7 @@ describe CitesTrade::ShipmentsController do
       }
       expect(response.body).to have_json_size(3).at_path('shipment_comptab_export/rows')
     end
+
     it 'should return genus shipments when searching by taxon' do
       get :index, params: {
         filters: {
