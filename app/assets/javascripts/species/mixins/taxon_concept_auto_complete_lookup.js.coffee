@@ -5,13 +5,21 @@ Species.TaxonConceptAutoCompleteLookup = Ember.Mixin.create({
 
   autoCompleteTaxonConcepts: ( ->
     taxonConceptQuery = @get('taxonConceptQuery')
-    if not taxonConceptQuery or taxonConceptQuery.length < 3
+
+    # No lower limit on some non-latin characters
+    if not taxonConceptQuery or (
+      taxonConceptQuery.length < 3 and
+      not /[^\x00-\u0530]/.test(taxonConceptQuery)
+    )
       return;
+
     ac_params = {
       taxonomy: @get('taxonomy')
       taxon_concept_query: taxonConceptQuery
     }
+
     ac_params['visibility'] = 'elibrary' if @get('searchContext') == 'documents'
+
     Species.AutoCompleteTaxonConcept.find(ac_params)
   ).property('taxonConceptQuery')
 
