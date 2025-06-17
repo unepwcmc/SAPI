@@ -72,10 +72,8 @@ module PgCopy
   # PgCopy.copy_to_csv_file(
   #   'SELECT * FROM ranks',
   #   'ranks.csv',
-  #   {
-  #      delimiter: ';',
-  #      encoding: 'Windows-1252',
-  #   }
+  #   delimiter: ';',
+  #   encoding: 'Windows-1252'
   # )
   # ```
   def self.copy_to_csv_file(

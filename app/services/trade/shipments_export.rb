@@ -78,7 +78,11 @@ private
   end
 
   def to_csv
-    PgCopy.copy_to_csv_file(query_sql(limit: !internal?), @file_name)
+    PgCopy.copy_to_csv_file(
+      query_sql(limit: !internal?),
+      @file_name,
+      delimiter: @csv_separator_char
+    )
   end
 
   def available_columns
