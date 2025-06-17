@@ -147,9 +147,9 @@ module PgCopy
         %{
           COPY (#{query_sql}) TO STDOUT WITH (
             FORMAT csv,
+            #{header ? 'HEADER,' : ''}
             DELIMITER #{connection.quote(delimiter)},
-            ENCODING #{connection.quote(encoding)},
-            HEADER
+            ENCODING #{connection.quote(encoding)}
           )
         }
       end
