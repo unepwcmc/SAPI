@@ -64,7 +64,6 @@ class Api::V1::DocumentsController < ApplicationController
     @search = DocumentSearch.new(
       params.merge(
         taxon_concepts_ids: @all_taxon_concepts_ids,
-        preferred_taxon_concepts_ids: @taxon_concepts_ids,
         show_private: !access_denied?,
         page: page,
         per_page: per_page,
