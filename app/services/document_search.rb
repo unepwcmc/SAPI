@@ -82,6 +82,7 @@ private
       add_ordering_for_admin
     else
       select_and_group_query
+      add_ordering_for_public
     end
   end
 
@@ -212,7 +213,20 @@ private
   end
 
   def add_ordering_for_public
-    @query = @query.order('date_raw DESC')
+    @query =
+      if @preferred_taxon_concepts_ids.present? && (
+        @taxon_concepts_ids - @preferred_taxon_concepts_ids
+      ).present?
+        @query.order ApplicationRecord.send(
+          :sanitize_sql_array,
+          [
+            'date_raw DESC, doc_tc_ids && ?::INT[] DESC NULLS LAST, taxon_names',
+            params[:taxon_concepts_ids]
+          ]
+        )
+      else
+        @query.order('date_raw DESC, taxon_names')
+      end
   end
 
   def select_and_group_query

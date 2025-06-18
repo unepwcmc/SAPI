@@ -1,5 +1,8 @@
 class Api::V1::DocumentsController < ApplicationController
   def index
+    @all_taxon_concepts_ids = []
+    @taxon_concepts_ids = []
+
     if params[:taxon_concept_query].present?
       exact_match =
         MTaxonConcept.where(
@@ -15,7 +18,7 @@ class Api::V1::DocumentsController < ApplicationController
         }
       )
 
-      ids = @species_search.ids
+      @taxon_concepts_ids = @species_search.ids
 
       anc_ids =
         if exact_match
@@ -35,62 +38,41 @@ class Api::V1::DocumentsController < ApplicationController
           []
         end
 
-      params[:taxon_concepts_ids] = anc_ids | children_ids | ids
+      @all_taxon_concepts_ids = @taxon_concepts_ids | anc_ids | children_ids
     else
       if params[:taxon_concepts_ids].present?
         taxa = TaxonConcept.find(params[:taxon_concepts_ids])
+
+        @taxon_concepts_ids = taxa.map(&:id)
 
         children_ids =
           taxa.map(&:children).map do |children|
             children.pluck(:id) if children.present?
           end.flatten.uniq.compact
 
-          taxa_ids = taxa.map(&:id)
+        ancestor_ids = MaterialDocIdsRetriever.ancestors_ids(
+          @taxon_concepts_ids.first
+        )
 
-        ancestor_ids = MaterialDocIdsRetriever.ancestors_ids(taxa_ids.first)
-
-        params[:taxon_concepts_ids] = taxa_ids | ancestor_ids | children_ids
+        @all_taxon_concepts_ids = @taxon_concepts_ids | ancestor_ids | children_ids
       end
     end
 
-    @search = DocumentSearch.new(
-      params.merge(show_private: !access_denied?, per_page: 100), 'public'
-    )
-
-    # TODO move pagination and ordering to the document_search module after refactoring of SQL mviews
-    page = params[:page] || 1
+    page = (params[:page] || 1).to_i
     per_page = (params[:per_page] || 100).to_i
 
-    ordered_docs =
-      if params[:taxon_concepts_ids].present? && params[:event_type] == 'IdMaterials'
-        if params[:taxon_concept_query].present? && !exact_match
-          @search.cached_results.sort_by { |doc| [ doc.taxon_names.first, doc.date_raw ] }
-        else
-          @search.cached_results.sort_by do |doc|
-            doc_tc_ids = doc.taxon_concept_ids
-            params[:taxon_concepts_ids].index { |id| doc_tc_ids.include?(id) } || 1_000_000
-          end
-        end
-      else
-        @search.cached_results.sort do |a, b|
-          [
-            b.date_raw, a.taxon_names.first || ''
-          ] <=> [
-            a.date_raw, b.taxon_names.first || ''
-          ]
-        end
-      end
+    @search = DocumentSearch.new(
+      params.merge(
+        taxon_concepts_ids: @all_taxon_concepts_ids,
+        preferred_taxon_concepts_ids: @taxon_concepts_ids,
+        show_private: !access_denied?,
+        page: page,
+        per_page: per_page,
+      ),
+      'public'
+    )
 
-    ordered_docs =
-      Kaminari.paginate_array(
-        ordered_docs
-      ).page(
-        page
-      ).per(
-        per_page
-      ) if ordered_docs.kind_of?(Array)
-
-    render json: ordered_docs,
+    render json: @search.cached_results,
       each_serializer: Species::DocumentSerializer,
       meta: {
         total: @search.cached_total_cnt,
