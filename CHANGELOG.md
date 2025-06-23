@@ -1,3 +1,7 @@
+### 1.18.1
+
+* Update CITES Trade DB to 2025 version.
+
 ### 1.18.0
 
 * Users now see the current EU Annex(es) of a taxon when exporting EU decisions.
