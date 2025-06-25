@@ -1,0 +1,10 @@
+shared:
+  version: '2025.1'
+  size: '441MB'
+  file_path: public/downloads/Trade_database_download_v2025.1.zip
+
+production:
+
+staging:
+
+development:

@@ -7,14 +7,16 @@
 
       <div class='banner'>
         <p class='bold font-18'>
-          <%= t('full_db_download_available').html_safe %>
+          <%= t('full_db_download_available', db_download_version: @db_download_version).html_safe %>
         </p>
         <a href=<%= cites_trade_download_db_path %> class='download-button' data-full-trade-db-download>
           <div>
             <p class='bold font-18 no-margin'><%= t('download_here') %> </p>
-            <p class='no-margin'><%= t('file_size') %>: 441MB</p>
-            </div>
-          </a>
+            <p class='no-margin'>
+              <%= t('file_size') %>: <%= @db_download_size %>
+            </p>
+          </div>
+        </a>
       </div>
 
       <div class='heading_label' style="text-align: center;"> &nbsp; <%= t('cites_title') %> </div>
@@ -192,7 +194,10 @@
 <div class="grid_16 other_info">
   <p align="center" class='no-margin'>
     <strong><%= t('download') %>:</strong>
-    <a href=<%= cites_trade_download_db_path %> data-full-trade-db-download><%= t('full_db_download') %> (479MB)</a>
+    <a href=<%= cites_trade_download_db_path %> data-full-trade-db-download>
+      <%= t('full_db_download', db_download_version: @db_download_version) %>
+      (<%= @db_download_size %>)
+    </a>
     <strong class="new">*<%= t('new') %>*</strong>
   </p>
   <p align="center" class='no-margin'>
