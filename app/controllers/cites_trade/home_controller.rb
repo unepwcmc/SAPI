@@ -1,8 +1,15 @@
 class CitesTrade::HomeController < CitesTradeController
+  def db_download_config
+    @@db_download_config ||= Rails.application.config_for(:cites_trade_db_download)
+  end
+
   def index
     respond_to do |format|
       format.html do
         @years = (1975..Trade::Shipment.maximum('year')).to_a.reverse
+
+        @db_download_version = db_download_config[:version]
+        @db_download_size = db_download_config[:size]
       end
     end
   end
@@ -14,10 +21,12 @@ class CitesTrade::HomeController < CitesTradeController
   end
 
   def download_db
-    full_download_path = Rails.application.credentials.dig(:cites_trade_full_download)
+    download_path = db_download_config[:file_path]
+    full_download_path = "#{Rails.root.join("#{download_path}")}"
+
     send_file(
-      "#{Rails.root.join("#{full_download_path}")}",
-      filename: full_download_path.split('/').last,
+      full_download_path,
+      filename: download_path.split('/').last,
       type: 'application/zip'
     )
 
