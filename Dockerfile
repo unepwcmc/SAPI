@@ -11,12 +11,15 @@ FROM ruby:3.2.5
 # socat is just for binding ports within docker, not needed for the application
 RUN apt-get update && apt-get install -y --force-yes \
   libsodium-dev libgmp3-dev libssl-dev \
-  libpq-dev postgresql-client \
+  postgresql-common \
   nodejs \
   socat \
   texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra \
-  ;
-# NB: Postgres client from Debian is 9.4 - not sure if this is acceptable
+;
+
+# pg_dump requires that the client library >= the server (major) version
+RUN yes | /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+RUN apt-get install -y --force-yes libpq-dev postgresql-client-17
 
 RUN mkdir /SAPI
 WORKDIR /SAPI
