@@ -1,3 +1,7 @@
+### 1.19.1
+
+* Completed migration of E-Library documents to Active Storage.
+
 ### 1.19.0
 
 * Species+: Fixed an issue with the pagination and ordering of documents on
