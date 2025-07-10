@@ -47,7 +47,7 @@
   <div class="control-group">
     <label class="control-label">Documents</label>
     <div class="controls">
-      <%= file_field_tag "document_batch[files][]", multiple: true, id: 'file-upload' %>
+      <%= file_field_tag "document_batch[files][]", multiple: true, accept: Document::ACCEPTED_CONTENT_TYPES.join(','), id: 'file-upload' %>
       <div id="document-form-collection"></div>
     </div>
   </div>
