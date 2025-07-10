@@ -1,3 +1,11 @@
+### 1.19.0
+
+* Begin migrating E-Library documents from local disk to Active Storage.
+  Note that this work will not be complete until another release.
+* Species+ Use Redis for caching rather than Memcached.
+* Remove uses of command-line `psql` in favour of using the open ActiveRecord
+  connection.
+
 ### 1.18.1
 
 * Update CITES Trade DB to 2025 version.
