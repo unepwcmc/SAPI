@@ -55,6 +55,21 @@
 #  taxon_concepts_updated_by_id_fk             (updated_by_id => users.id)
 #
 
+##
+# - `author_year`: It is possible for the same name to be used for different
+#     taxa, and the 'natural key' is `taxonomy_id`, `full_name`, `author_year`,
+#     although this is not currently enforced by a unique constraint as there
+#     remain some entries in the db which would violate this.
+#
+#     Note that there is a distinction between:
+#
+#     - `Antilocapra            Ord, 1818`
+#     - `Antilocapra americana (Ord, 1815)`
+#
+#     in that without brackets means 'Antilocapra as described by Ord in 1818',
+#     whereas with brackets means the species was originally described by Ord
+#     in 1815 in a different genus as Something americana, and then assigned
+#     to Antilocapra at a later date.
 class TaxonConcept < ApplicationRecord
   include Deletable
   extend Mobility

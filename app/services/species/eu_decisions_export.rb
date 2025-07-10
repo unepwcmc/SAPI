@@ -57,8 +57,8 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
     if @taxon_concepts_ids.present?
       conds_str = <<-SQL.squish
         ARRAY[
-          taxon_concept_id, family_id, order_id, class_id,
-          phylum_id, kingdom_id
+          taxon_concept_id, eu_decisions.family_id, eu_decisions.order_id, eu_decisions.class_id,
+          eu_decisions.phylum_id, eu_decisions.kingdom_id
         ] && ARRAY[?]
         OR taxon_concept_id IS NULL
       SQL

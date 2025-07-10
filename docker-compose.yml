@@ -7,6 +7,44 @@ networks:
     driver: bridge
 
 services:
+  minio:
+    container_name: sapi-minio
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    ports:
+      - "${SAPI_CONTAINER_S3_PORT:-9000}:9000"
+      - "${SAPI_CONTAINER_S3_CONSOLE_PORT:-9001}:9001"
+    networks:
+      - sapi
+    volumes:
+      - minio-data:/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_REGION: eu-west-2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      retries: 5
+
+  mc-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://sapi-minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD} &&
+      mc mb --ignore-existing local/species-plus-development &&
+      mc mb --ignore-existing local/annualreportuploadschangelogs &&
+      echo '✅ Bucket $${MINIO_BUCKET} is ready'
+      "
+    networks:
+      - sapi
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+
   db:
     container_name: sapi-db
     image: postgres:10
@@ -33,8 +71,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    entrypoint: ./bin/docker-entrypoint
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bundle exec rails server -p 3000 -b '0.0.0.0'
     volumes: &rails_volumes
       # Used for both rails and sidekiq
 
@@ -77,18 +114,19 @@ services:
     tty: true
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
-      MEMCACHE_SERVERS: sapi-memcached:11211
       SAPI_DATABASE_HOST: sapi-db
       SAPI_DATABASE_USERNAME: postgres
       SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+      SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
       CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
+      SAPI_S3_PORT: '${SAPI_CONTAINER_S3_PORT:-9000}'
     depends_on:
       - redis
+      - redis_cache
       - db
       - mailcatcher
-      - memcached
-
+      - minio
   deploy:
     container_name: sapi-cap-deploy
     build:
@@ -120,6 +158,16 @@ services:
     volumes:
       - redis_data:/data
 
+  redis_cache:
+    container_name: sapi-redis-cache
+    image: redis:7.2.0
+    networks:
+      - sapi
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - redis_cache_data:/data
+      - ./docker_config/redis_cache:/usr/local/etc/redis
+
   sidekiq:
     container_name: sapi-sidekiq
     build:
@@ -130,17 +178,19 @@ services:
     depends_on:
       - db
       - redis
+      - redis_cache
       - mailcatcher
-      - memcached
+      - minio
     command: /bin/bash -l -c "bundle install && bundle exec sidekiq -C config/sidekiq.yml"
     volumes: *rails_volumes
     environment:
       MAILER_ADDRESS: sapi-mailcatcher
-      MEMCACHE_SERVERS: sapi-memcached:11211
       SAPI_DATABASE_HOST: sapi-db
       SAPI_DATABASE_USERNAME: postgres
       SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+      SAPI_S3_PORT: '${SAPI_CONTAINER_S3_PORT:-9000}'
+      SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
       CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
 
   mailcatcher:
@@ -151,19 +201,12 @@ services:
     networks:
       - sapi
 
-  memcached:
-    container_name: sapi-memcached
-    image: memcached:1.6
-    ports:
-      - "${SAPI_CONTAINER_MEMCACHE_PORT:-11211}:11211"
-    networks:
-      - sapi
-
-
 volumes:
   pgdata:
   bundler_gems:
   redis_data:
+  minio-data:
+  redis_cache_data:
   app_tmp:
   app_log:
   app_storage:
