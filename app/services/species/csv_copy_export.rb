@@ -1,6 +1,5 @@
 require 'digest/sha1'
 class Species::CsvCopyExport
-  include CsvExportable
   attr_reader :public_file_name, :file_name
 
   def initialize(filters = {})
@@ -67,13 +66,14 @@ private
   end
 
   def to_csv
-    export_to_csv(
-      {
-        query: query,
-        csv_columns: csv_column_headers,
-        file_path: @file_name,
-        delimiter: @csv_separator_char
-      }
+    PgCopy.copy_to_csv_file(
+      PgCopy.realias_query(
+        query,
+        column_names: sql_columns,
+        column_aliases: csv_column_headers
+      ),
+      @file_name,
+      delimiter: @csv_separator_char
     )
   end
 
