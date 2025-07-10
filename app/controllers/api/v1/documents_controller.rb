@@ -82,24 +82,18 @@ class Api::V1::DocumentsController < ApplicationController
 
   def show
     @document = Document.find(params[:id])
-    path_to_file = @document.filename.path unless @document.is_link?
 
     if access_denied? && !@document.is_public
       render_403
     elsif @document.is_link?
-      redirect_to @document.filename.model[:filename], allow_other_host: true
-    elsif !File.exist?(path_to_file)
+      redirect_to @document.elib_legacy_file_name, allow_other_host: true
+    elsif !@document.file.attached?
       render_404
     else
-      response.headers['Content-Length'] = File.size(path_to_file).to_s
-
-      send_file(
-        path_to_file,
-        filename: File.basename(path_to_file),
-        type: @document.filename.content_type,
-        disposition: 'inline',
-        url_based_filename: true
-      )
+      # Redirect to S3 URL, which only valid for 1 minute (override Rails 7.1 default, which was 5 minutes)
+      # WARNING: Don't use `rails_blob_url` for security reasons because it generates a permanent URL without requiring
+      # authentication.
+      redirect_to @document.file.url(disposition: 'attachment', expires_in: 1.minute), allow_other_host: true
     end
   end
 
@@ -112,15 +106,14 @@ class Api::V1::DocumentsController < ApplicationController
 
     Zip::OutputStream.open(t.path) do |zos|
       @documents.each do |document|
-        path_to_file = document.filename.path
-        filename = path_to_file.split('/').last
-
-        unless File.exist?(path_to_file)
+        unless document.file.attached?
           missing_files <<
-            "{\n  title: #{document.title},\n  filename: #{filename}\n}"
+            "{\n  title: #{document.title},\n  filename: #{document.filename}\n}"
         else
-          zos.put_next_entry(filename)
-          zos.print File.read(path_to_file)
+          zos.put_next_entry(document.file.filename)
+          ActiveStorage::Blob.service.download(document.file.blob.key) do |chunk|
+            zos.print(chunk)
+          end
         end
       end
 

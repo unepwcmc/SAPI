@@ -55,6 +55,30 @@
 class Document < ApplicationRecord
   include PgSearch::Model
 
+  ACCEPTED_CONTENT_TYPES = [
+    "image/jpeg",                                           # jpg
+    "image/jpeg",                                           # jpeg
+    "image/gif",                                            # gif
+    "image/png",                                            # png
+    "image/bmp",                                            # bmp
+    "image/tiff",                                           # tif
+    "image/tiff",                                           # tiff
+    "application/vnd.ms-powerpoint",                        # ppt
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",  # pptx
+    "application/vnd.ms-excel",                             # xls
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",          # xlsx
+    "application/rtf",                                      # rtf
+    "text/plain",                                           # txt
+    "application/msword",                                   # doc
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",    # docx
+    "application/pdf",                                      # pdf
+    "text/csv",                                             # csv
+    "text/tab-separated-values",                            # tsv
+    "application/vnd.oasis.opendocument.text",              # odt
+    "application/vnd.oasis.opendocument.spreadsheet",       # ods
+    "application/vnd.oasis.opendocument.presentation"       # odp
+  ].freeze
+
   pg_search_scope :search_by_title, against: :title,
     using: { tsearch: { prefix: true } },
     order_within_rank: 'documents.date, documents.title, documents.id'
@@ -62,7 +86,7 @@ class Document < ApplicationRecord
   include TrackWhoDoesIt
 
   # Migrated to controller (Strong Parameters)
-  # attr_accessible :event_id, :filename, :date, :type, :title, :is_public,
+  # attr_accessible :event_id, :file, :date, :type, :title, :is_public,
   #   :language_id, :citations_attributes,
   #   :sort_index, :discussion_id, :discussion_sort_index,
   #   :primary_language_document_id,
@@ -91,6 +115,8 @@ class Document < ApplicationRecord
   mount_uploader :filename, DocumentFileUploader # Deprecated
   has_one_attached :file
 
+  validates :file, content_type: ACCEPTED_CONTENT_TYPES
+
   before_validation :set_title
   before_validation :reset_designation_if_event_set
 
@@ -108,6 +134,7 @@ class Document < ApplicationRecord
   def is_link?
     self.type == 'Document::VirtualCollege' && !is_pdf?
   end
+  alias_method :is_link, :is_link? # Used by Serializer.
 
   def self.display_name
     'Document'
@@ -132,8 +159,9 @@ class Document < ApplicationRecord
   end
 
   def set_title
-    if title.blank? && self.changed? && filename.file
-      self.title = filename.file.filename.sub(/.\w+$/, '').humanize
+    if title.blank? && self.changed? && file.attached?
+      string = file.filename.to_s
+      self.title = File.basename(string, File.extname(string)).humanize
     end
   end
 
@@ -155,12 +183,11 @@ class Document < ApplicationRecord
     (read_attribute(:geo_entity_names) || []).compact
   end
 
-private
-
   def is_pdf?
-    attr = elib_legacy_file_name || filename.file.filename
-    (attr =~ /\.pdf/).present?
+    file.attached? && file.blob.content_type == 'application/pdf'
   end
+
+  private
 
   def clear_cache
     DocumentSearch.clear_cache

@@ -34,6 +34,10 @@ gem 'coffee-rails', '~> 5.0'
 # gem 'mini_racer', platforms: :ruby
 
 gem 'active_model_serializers', '0.8.4' # Deprecated
+gem "active_storage_validations", "~> 2.0"
+
+# Use redis for caching
+gem "redis", "~> 4.8"
 
 # Use PostgreSQL database
 gem 'pg', '~> 1.5', '>= 1.5.4'
@@ -226,4 +230,4 @@ gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will ch
 # the config: `passenger_preload_bundler on;`
 gem 'base64', '0.1.1'
 
-gem "redis", "~> 4.8"
+
