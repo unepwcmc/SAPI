@@ -82,7 +82,6 @@ private
       add_ordering_for_admin
     else
       select_and_group_query
-      add_ordering_for_public
     end
   end
 
@@ -204,40 +203,49 @@ private
   def add_ordering_for_admin
     return if @title_query.present?
 
+    # order on id to ensure we have stable sorting for pagination
     @query =
       if @events_ids.present?
-        @query.order([ 'date_raw DESC', :title ])
+        @query.order([ 'date_raw DESC', :title, 'id DESC' ])
       else
-        @query.order('created_at DESC')
+        @query.order('created_at DESC', 'id DESC')
       end
   end
 
-  def add_ordering_for_public
-    @query = @query.order('date_raw DESC, taxon_names')
-  end
-
   def select_and_group_query
-    columns = "event_name, event_type, date, date_raw, is_public, document_type,
-      proposal_number, primary_document_id,
-      geo_entity_names, taxon_names, taxon_concept_ids,
-      proposal_outcome, review_phase"
+    columns =
+      <<-SQL.squish
+        event_name, event_type, date, date_raw, is_public, document_type,
+        proposal_number, primary_document_id,
+        geo_entity_names, taxon_names, taxon_concept_ids,
+        proposal_outcome, review_phase
+      SQL
 
-    aggregators = <<-SQL.squish
-      ARRAY_TO_JSON(
-        ARRAY_AGG_NOTNULL(
-          ROW(
-            documents.id,
-            documents.title,
-            documents.language,
-            #{locale_document}
-          )::document_language_version
-        )
-      ) AS document_language_versions
-    SQL
+    aggregators =
+      <<-SQL.squish
+        ARRAY_TO_JSON(
+          ARRAY_AGG_NOTNULL(
+            ROW(
+              documents.id,
+              documents.title,
+              documents.language,
+              #{locale_document}
+            )::document_language_version
+          )
+        ) AS document_language_versions
+      SQL
 
-    @query = Document.from(
-      '(' + @query.to_sql + ') AS documents'
-    ).select(columns + ',' + aggregators).group(columns)
+    @query =
+      Document.from(
+        '(' + @query.to_sql + ') AS documents'
+      ).select(
+        columns + ',' + aggregators
+      ).group(
+        columns
+      ).order(
+        # Ensure we have stable order for pagination
+        'date_raw DESC', :taxon_names, 'primary_document_id DESC'
+      )
   end
 
   def locale_document
