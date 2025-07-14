@@ -35,7 +35,16 @@
     {{else}}
       <div class="no-results">
         <p class="no-results-title">Your search for <u>{{unbound controllers.search.taxonConceptQueryForDisplay}}</u> returned no results.</p>
-        <p class="no-results-subtitle"> Try refining your search or selecting a taxa from the drop-down menu.</p>
+        {{#if suggestions.length}}
+          <p class="no-results-subtitle">Try adjusting your filters, or selecting a taxon from the drop-down menu. Alternatively, consider the following search terms:</p>
+          <ul class="search-suggestions">
+            {{#each suggestion in suggestions}}
+              <li><a {{action 'openSearchPage' suggestion.searchTerm}} class="hover-pointer">{{suggestion.searchTerm}}</a></li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <p class="no-results-subtitle">Try adjusting your filters or selecting a taxon from the drop-down menu.</p>
+        {{/if}}
         <p>Please note that this database contains species that are listed in the Appendices to CITES and CMS, as well as the Annexes to the EU Wildlife Trade Regulations; it is not a comprehensive source of all species.</p>
       </div>
     {{/each}}

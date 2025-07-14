@@ -74,4 +74,22 @@ class MAutoCompleteTaxonConcept < ApplicationRecord
       substring_query: substring_query && sanitize_sql_like(substring_query)
     )
   end
+
+  def self.where_fuzzily_matches(fuzzy_query)
+    return self.where('FALSE') unless fuzzy_query&.present?
+
+    where(
+      # Match score of 0.6 or lower. (Lower is better match, 0 is identity)
+      'name_for_matching % unaccent(upper(:fuzzy_query))',
+      fuzzy_query:
+    ).order(
+      [
+        'name_for_matching',
+        Arel.sql(
+          'name_for_matching <-> unaccent(upper(:fuzzy_query)) DESC',
+          fuzzy_query:
+        )
+      ]
+    )
+  end
 end
