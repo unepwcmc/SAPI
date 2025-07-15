@@ -8,6 +8,8 @@
 #  epix_updated_at               :datetime
 #  export_permit_number          :text
 #  export_permits_ids            :integer          is an Array
+#  ifs_permit_number             :text
+#  ifs_permits_ids               :integer          is an Array
 #  import_permit_number          :text
 #  import_permits_ids            :integer          is an Array
 #  legacy_shipment_number        :integer
@@ -42,6 +44,7 @@
 #  index_trade_shipments_on_created_by_id_and_updated_by_id  (created_by_id,updated_by_id)
 #  index_trade_shipments_on_export_permits_ids               (export_permits_ids) USING gin
 #  index_trade_shipments_on_exporter_id                      (exporter_id)
+#  index_trade_shipments_on_ifs_permits_ids                  (ifs_permits_ids) USING gin
 #  index_trade_shipments_on_import_permits_ids               (import_permits_ids) USING gin
 #  index_trade_shipments_on_importer_id                      (importer_id)
 #  index_trade_shipments_on_origin_permits_ids               (origin_permits_ids) USING gin

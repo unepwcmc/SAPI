@@ -8,6 +8,7 @@
 #  epix_created_at           :datetime
 #  epix_updated_at           :datetime
 #  export_permit             :text
+#  ifs_permit                :text
 #  import_permit             :text
 #  origin_permit             :text
 #  purpose_code              :string(255)

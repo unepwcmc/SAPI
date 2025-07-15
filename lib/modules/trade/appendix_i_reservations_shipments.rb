@@ -101,8 +101,8 @@ private
     where = []
     CSV.foreach(RESERVATIONS_PATH, headers: true) do |row|
       @row = row
-      where << "\n\t\t\t\t(#{ATTRIBUTES.map { |a| send("parse_#{a}", row[a.to_s]) }.join(' AND ')})\n"
+      where << "\n        (#{ATTRIBUTES.map { |a| send("parse_#{a}", row[a.to_s]) }.join(' AND ')})\n"
     end
-    where.join("\n\t\t\t\tOR\n")
+    where.join("\n        OR\n")
   end
 end
