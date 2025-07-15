@@ -60,9 +60,11 @@ private
           ts.import_permits_ids AS import_permits,
           ts.export_permits_ids AS export_permits,
           ts.origin_permits_ids AS origin_permits,
+          ts.ifs_permits_ids AS ifs_permits,
           ts.import_permit_number AS import_permit,
           ts.export_permit_number AS export_permit,
           ts.origin_permit_number AS origin_permit,
+          ts.ifs_permit_number AS ifs_permit,
           ranks.id AS rank_id,
           ranks.name AS rank_name,
           'AppendixI'::text AS issue_type

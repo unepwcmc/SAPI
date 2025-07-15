@@ -91,9 +91,11 @@ namespace :db do
         import_permit_number = NULL,
         export_permit_number = NULL,
         origin_permit_number = NULL,
+        ifs_permit_number = NULL,
         import_permits_ids = '{}'::INT[],
         export_permits_ids = '{}'::INT[],
         origin_permits_ids = '{}'::INT[],
+        ifs_permits_ids = '{}'::INT[],
         trade_annual_report_upload_id = NULL,
         sandbox_id = NULL
       WHERE origin_permit_number IS NOT NULL

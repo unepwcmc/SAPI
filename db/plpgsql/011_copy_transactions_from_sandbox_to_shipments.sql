@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION resolve_taxa_in_sandbox(
   table_name VARCHAR,
   shipment_id INTEGER
-  ) RETURNS INTEGER
+) RETURNS INTEGER
   LANGUAGE plpgsql
   AS $$
 DECLARE
@@ -72,12 +72,13 @@ BEGIN
     END
     FROM resolved_taxa
     WHERE ' || table_name || '.id = resolved_taxa.sandbox_shipment_id';
-    EXECUTE sql;
 
-    GET DIAGNOSTICS updated_rows = ROW_COUNT;
-    -- RAISE INFO '[%] Updated % sandbox shipments', table_name, updated_rows;
+  EXECUTE sql;
 
-    RETURN updated_rows;
+  GET DIAGNOSTICS updated_rows = ROW_COUNT;
+  -- RAISE INFO '[%] Updated % sandbox shipments', table_name, updated_rows;
+
+  RETURN updated_rows;
 END;
 $$;
 
@@ -120,7 +121,6 @@ BEGIN
   EXECUTE 'SELECT COUNT(*) FROM ' || table_name INTO total_shipments;
   RAISE INFO '[%] Copying % rows from %', table_name, total_shipments, table_name;
 
-
   sql := '
     WITH split_permits AS (
       SELECT id,
@@ -133,6 +133,10 @@ BEGIN
       UNION
       SELECT id,
       SQUISH(regexp_split_to_table(origin_permit, ''[:;,]'')) AS permit
+      FROM '|| table_name || '
+      UNION
+      SELECT id,
+      SQUISH(regexp_split_to_table(ifs_permit, ''[:;,]'')) AS permit
       FROM '|| table_name || '
     ), permits_to_be_inserted (number) AS (
       SELECT DISTINCT UPPER(permit) FROM split_permits WHERE permit IS NOT NULL

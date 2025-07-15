@@ -78,7 +78,8 @@ private
       :year,
       :import_permit_number,
       :export_permit_number,
-      :origin_permit_number
+      :origin_permit_number,
+      :ifs_permit_number
     ]
   end
 

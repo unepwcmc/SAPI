@@ -36,7 +36,7 @@ class Trade::SandboxTemplate < ApplicationRecord
   COLUMNS_IN_CSV_ORDER = [
     'appendix', 'species_name', 'term_code', 'quantity', 'unit_code',
     'trading_partner', 'country_of_origin', 'import_permit', 'export_permit',
-    'origin_permit', 'purpose_code', 'source_code', 'year'
+    'origin_permit', 'ifs_permit', 'purpose_code', 'source_code', 'year'
   ]
 
   CSV_IMPORTER_COLUMNS = COLUMNS_IN_CSV_ORDER
@@ -70,6 +70,7 @@ class Trade::SandboxTemplate < ApplicationRecord
           #   :import_permit,
           #   :export_permit,
           #   :origin_permit,
+          #   :ifs_permit,
           #   :purpose_code,
           #   :source_code,
           #   :year
@@ -86,7 +87,8 @@ class Trade::SandboxTemplate < ApplicationRecord
             :country_of_origin,
             :import_permit,
             :export_permit,
-            :origin_permit
+            :origin_permit,
+            :ifs_permit
           ].each do |attr_name|
             normalizes(
               attr_name,
@@ -135,7 +137,8 @@ class Trade::SandboxTemplate < ApplicationRecord
                 country_of_origin = UPPER(SQUISH_NULL(TRIM(country_of_origin))),
                 import_permit = UPPER(SQUISH_NULL(TRIM(import_permit))),
                 export_permit = UPPER(SQUISH_NULL(TRIM(export_permit))),
-                origin_permit = UPPER(SQUISH_NULL(TRIM(origin_permit)))
+                origin_permit = UPPER(SQUISH_NULL(TRIM(origin_permit))),
+                ifs_permit = UPPER(SQUISH_NULL(TRIM(ifs_permit)))
               SQL
             )
 

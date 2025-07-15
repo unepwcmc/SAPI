@@ -120,7 +120,8 @@ class Trade::Shipment < ApplicationRecord
     [
       import_permits_ids_was,
       export_permits_ids_was,
-      origin_permits_ids_was
+      origin_permits_ids_was,
+      ifs_permits_ids_was
     ].each do |permits_ids|
       @old_permits_ids += permits_ids ? permits_ids.dup : []
     end
@@ -190,9 +191,20 @@ class Trade::Shipment < ApplicationRecord
     write_attribute(:origin_permits_ids, "{#{ary && ary.join(',')}}")
   end
 
+  def ifs_permits_ids
+    read_attribute(:ifs_permits_ids) || []
+  end
+
+  def ifs_permits_ids=(ary)
+    write_attribute(:ifs_permits_ids, "{#{ary && ary.join(',')}}")
+  end
+
   def permits_ids
     (
-      import_permits_ids + export_permits_ids + origin_permits_ids
+      import_permits_ids +
+      export_permits_ids +
+      origin_permits_ids +
+      ifs_permits_ids
     ).uniq.compact || []
   end
 
