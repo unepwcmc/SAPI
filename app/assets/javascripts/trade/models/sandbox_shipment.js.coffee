@@ -11,6 +11,7 @@ Trade.SandboxShipment = DS.Model.extend
   importPermit: DS.attr('string')
   exportPermit: DS.attr('string')
   originPermit: DS.attr('string')
+  ifsPermit: DS.attr('string')
   purposeCode: DS.attr('string')
   sourceCode: DS.attr('string')
   year: DS.attr('string')
