@@ -12,9 +12,7 @@ class Api::V1::TaxonConceptsController < ApplicationController
       if @search.cached_total_cnt.to_i == 0
         Species::TaxonConceptSuggestSearch.new(
           params
-        ).results.map do |row|
-          row.as_json
-        end
+        ).results
       end
 
     render json: @taxon_concepts,
