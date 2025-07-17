@@ -170,6 +170,10 @@ class Trade::Shipment < ApplicationRecord
     set_permit_number('origin', str)
   end
 
+  def ifs_permit_number=(str)
+    set_permit_number('ifs', str)
+  end
+
   def import_permits_ids
     read_attribute(:import_permits_ids) || []
   end
@@ -220,8 +224,10 @@ private
     permits = str && str.split(';').compact.map do |number|
       Trade::Permit.find_or_create_by(number: number.strip.upcase)
     end
+
     # save the concatenated permit numbers in the precomputed field
     self["#{permit_type}_permit_number"] = permits && permits.map(&:number).join(';')
+
     # save the array of permit ids in the precomputed field
     send("#{permit_type}_permits_ids=", permits && permits.map(&:id))
   end
