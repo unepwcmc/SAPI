@@ -7,14 +7,24 @@ Species.SearchController = Ember.Controller.extend Species.Spinner,
   geoEntities: Ember.computed.alias("controllers.geoEntities")
   searchContext: 'species'
   taxonomy: 'cites_eu'
+  taxonomyLabel: 'CITES'
   redirected: false
 
   setFilters: (filtersHash) ->
     @set('taxonomy', filtersHash.taxonomy)
+    @set(
+      'taxonomyLabel',
+      if filtersHash.taxonomy == 'cites_eu'
+        'CITES'
+      else
+        'CMS'
+    )
+
     if filtersHash.taxon_concept_query == ''
       filtersHash.taxon_concept_query = null
     @set('taxonConceptQueryForDisplay', filtersHash.taxon_concept_query)
     @set('selectedGeoEntitiesIds', filtersHash.geo_entities_ids || [])
+    @set('hasSelectedGeoEntitiesIds', (filtersHash.geo_entities_ids || []).length > 0)
     @initForm()
 
   openSearchPage: (taxonFullName, page, perPage) ->

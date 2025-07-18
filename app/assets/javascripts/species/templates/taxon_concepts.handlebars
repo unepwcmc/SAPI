@@ -34,7 +34,16 @@
       {{/each}}
     {{else}}
       <div class="no-results">
-        <p class="no-results-title">Your search for <u>{{unbound controllers.search.taxonConceptQueryForDisplay}}</u> returned no results.</p>
+        <p class="no-results-title">
+          Your search for
+          <u>{{unbound controllers.search.taxonConceptQueryForDisplay}}</u>
+          {{#if controllers.search.hasSelectedGeoEntitiesIds}}
+            returned no {{unbound controllers.search.taxonomyLabel}}
+            results for the selected locations.
+          {{else}}
+            returned no {{unbound controllers.search.taxonomyLabel}} results.
+          {{/if}}
+        </p>
         {{#if suggestions.length}}
           <p class="no-results-subtitle">Try adjusting your filters, or selecting a taxon from the drop-down menu. Alternatively, consider the following search terms:</p>
           <ul class="search-suggestions">
