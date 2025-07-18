@@ -113,6 +113,7 @@ services:
     stdin_open: true
     tty: true
     environment:
+      ALLOWED_HOSTS: sapi-rails
       MAILER_ADDRESS: sapi-mailcatcher
       SAPI_DATABASE_HOST: sapi-db
       SAPI_DATABASE_USERNAME: postgres

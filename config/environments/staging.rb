@@ -101,6 +101,16 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  # Enable DNS rebinding protection and other `Host` header attacks.
+  # config.hosts = [
+  #   "example.com",     # Allow requests from example.com
+  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
+  # ]
+  # Skip DNS rebinding protection for the default health check endpoint.
+  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  config.hosts += ENV['ALLOWED_HOSTS'].split(',') if ENV['ALLOWED_HOSTS'].present?
+
+
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector
   # middleware. The `delay` is used to determine how long to wait after a write
