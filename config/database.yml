@@ -7,7 +7,7 @@ default: &default
     username: <%= ENV.fetch("SAPI_DATABASE_USERNAME", Rails.application.credentials.dig(:db, :username)) %>
     password: <%= ENV.fetch("SAPI_DATABASE_PASSWORD", Rails.application.credentials.dig(:db, :password)) %>
     port:     <%= ENV.fetch("SAPI_DATABASE_PORT",     Rails.application.credentials.dig(:db, :port)) %>
-    database: <%= "sapi_#{Rails.env}" %>
+    database: <%= ENV.fetch("SAPI_DATABASE_NAME",     "sapi_#{Rails.env}") %>
     variables:
       # It is important that ordinary queries do not hang while waiting for a
       # lock, as they risk piling up and also preventing important background
