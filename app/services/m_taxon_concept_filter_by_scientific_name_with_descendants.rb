@@ -12,32 +12,34 @@ class MTaxonConceptFilterByScientificNameWithDescendants
     types_of_match << 'SYNONYM' if @match_synonyms
     types_of_match << 'COMMON_NAME' if @match_common_names
     types_of_match << 'SUBSPECIES' if @match_subspecies
-    subquery = MAutoCompleteTaxonConcept.select(
-      'id, ARRAY_AGG_NOTNULL(matched_name) AS matched_names_ary'
-    ).where(
-      ApplicationRecord.send(
-        :sanitize_sql_array, [
-          'name_for_matching LIKE :sci_name_prefix AND type_of_match IN (:types_of_match)',
-          {
-            sci_name_prefix: "#{@scientific_name}%",
-            types_of_match: types_of_match
-          }
-        ]
-      )
-    ).group(:id)
 
-    @relation = @relation.joins(
-      "LEFT JOIN (
-        #{subquery.to_sql}
-      ) matching_names ON matching_names.id = taxon_concepts_mview.id"
-    )
+    subquery =
+      MAutoCompleteTaxonConcept.select(
+        'id, ARRAY_AGG_NOTNULL(matched_name) AS matched_names_ary'
+      ).where_substring_matches(
+        @scientific_name
+      ).where(
+        type_of_match: types_of_match,
+      ).group(:id)
+
+    @relation =
+      @relation.joins(
+        <<-SQL.squish
+          LEFT JOIN (
+            #{subquery.to_sql}
+          ) matching_names
+          ON matching_names.id = taxon_concepts_mview.id
+        SQL
+      )
 
     conditions = []
 
     cond = <<-SQL.squish
       EXISTS (
-        SELECT * FROM UNNEST(ARRAY[kingdom_name, phylum_name, class_name, order_name, family_name, subfamily_name]) name
-        WHERE UPPER(name) LIKE :sci_name_prefix
+        SELECT * FROM UNNEST(
+          ARRAY[kingdom_name, phylum_name, class_name, order_name, family_name, subfamily_name]
+        ) higher_taxon_name
+        WHERE UPPER(higher_taxon_name) LIKE :sci_name_prefix
       ) OR matching_names.id IS NOT NULL
     SQL
 
@@ -46,7 +48,6 @@ class MTaxonConceptFilterByScientificNameWithDescendants
     @relation.where(
       conditions.join("\nOR "),
       sci_name_prefix: "#{@scientific_name}%",
-      sci_name_infix: "%#{@scientific_name}%"
     )
   end
 end

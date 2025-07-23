@@ -7,13 +7,22 @@ class Api::V1::TaxonConceptsController < ApplicationController
   def index
     @search = Species::Search.new(params)
     @taxon_concepts = @search.cached_results
+
+    search_suggestions =
+      if @search.cached_total_cnt.to_i == 0
+        Species::TaxonConceptSuggestSearch.new(
+          params
+        ).results
+      end
+
     render json: @taxon_concepts,
       each_serializer: Species::TaxonConceptSerializer,
       meta: {
         total: @search.cached_total_cnt,
         higher_taxa_headers: Checklist::HigherTaxaInjector.new(@taxon_concepts).run_summary,
         page: @search.page,
-        per_page: @search.per_page
+        per_page: @search.per_page,
+        search_suggestions:
       }
   end
 

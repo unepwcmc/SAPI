@@ -2565,31 +2565,72 @@ CREATE FUNCTION public.rebuild_auto_complete_taxon_concepts_mview() RETURNS void
     LANGUAGE plpgsql
     AS $$
   BEGIN
+    DROP TABLE IF EXISTS auto_complete_taxon_concepts_mview_tmp CASCADE;
 
-    DROP table IF EXISTS auto_complete_taxon_concepts_mview_tmp CASCADE;
     RAISE INFO 'Creating auto complete taxon concepts materialized view (tmp)';
+
     CREATE TABLE auto_complete_taxon_concepts_mview_tmp AS
     SELECT * FROM auto_complete_taxon_concepts_view;
 
     RAISE INFO 'Creating indexes on auto complete taxon concepts materialized view (tmp)';
 
-    --this one used for Species+ autocomplete (both main and higher taxa in downloads)
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_species_plus_ac);
-    --this one used for Checklist autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_checklist_ac);
-    --this one used for Trade autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_ac);
-    --this one used for Trade internal autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_internal_ac);
+    CREATE INDEX idx_ac_taxon_gist_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING GIST(name_for_matching gist_trgm_ops);
+
+    -- For Species+ autocomplete (both main and higher taxa in downloads)
+    CREATE INDEX idx_ac_taxon_splus_btree_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match)
+      WHERE show_in_species_plus_ac;
+
+    -- For Species+ autocomplete (both main and higher taxa in downloads), GIST trigrams
+    CREATE INDEX idx_ac_taxon_splus_gist_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING GIST(name_for_matching gist_trgm_ops)
+      WHERE show_in_species_plus_ac;
+
+    -- For Checklist autocomplete
+    CREATE INDEX idx_ac_taxon_checklist_btree_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING BTREE(name_for_matching text_pattern_ops, type_of_match)
+      WHERE taxonomy_is_cites_eu AND show_in_checklist_ac;
+
+    -- For Checklist autocomplete, GIST trigrams
+    CREATE INDEX idx_ac_taxon_checklist_gist_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING GIST(name_for_matching gist_trgm_ops) WHERE taxonomy_is_cites_eu AND show_in_checklist_ac;
+
+    -- For Trade autocomplete
+    CREATE INDEX idx_ac_taxon_trade_ac_btree_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING BTREE(name_for_matching text_pattern_ops, type_of_match, taxonomy_is_cites_eu)
+      WHERE show_in_trade_ac;
+
+    -- For Trade autocomplete, GIST trigrams
+    CREATE INDEX idx_ac_taxon_trade_ac_gist_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING GIST(name_for_matching gist_trgm_ops)
+      WHERE show_in_trade_ac;
+
+    -- For Trade internal autocomplete
+    CREATE INDEX idx_ac_taxon_trade_internal_btree_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING BTREE(name_for_matching text_pattern_ops, type_of_match, taxonomy_is_cites_eu)
+      WHERE show_in_trade_internal_ac;
+
+    -- For Trade internal autocomplete, GIST trigrams
+    CREATE INDEX idx_ac_taxon_trade_internal_gist_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING GIST(name_for_matching gist_trgm_ops)
+      WHERE show_in_trade_internal_ac;
 
     RAISE INFO 'Swapping auto complete taxon concepts materialized view';
-    DROP table IF EXISTS auto_complete_taxon_concepts_mview CASCADE;
+
+    DROP TABLE IF EXISTS auto_complete_taxon_concepts_mview CASCADE;
+
     ALTER TABLE auto_complete_taxon_concepts_mview_tmp RENAME TO auto_complete_taxon_concepts_mview;
 
+    ALTER INDEX idx_ac_taxon_gist_tmp                 RENAME TO idx_ac_taxon_gist;
+    ALTER INDEX idx_ac_taxon_splus_btree_tmp          RENAME TO idx_ac_taxon_splus_btree;
+    ALTER INDEX idx_ac_taxon_splus_gist_tmp           RENAME TO idx_ac_taxon_splus_gist;
+    ALTER INDEX idx_ac_taxon_checklist_btree_tmp      RENAME TO idx_ac_taxon_checklist_btree;
+    ALTER INDEX idx_ac_taxon_checklist_gist_tmp       RENAME TO idx_ac_taxon_checklist_gist;
+    ALTER INDEX idx_ac_taxon_trade_ac_btree_tmp       RENAME TO idx_ac_taxon_trade_ac_btree;
+    ALTER INDEX idx_ac_taxon_trade_ac_gist_tmp        RENAME TO idx_ac_taxon_trade_ac_gist;
+    ALTER INDEX idx_ac_taxon_trade_internal_btree_tmp RENAME TO idx_ac_taxon_trade_internal_btree;
+    ALTER INDEX idx_ac_taxon_trade_internal_gist_tmp  RENAME TO idx_ac_taxon_trade_internal_gist;
   END;
   $$;
 
@@ -5696,52 +5737,38 @@ CREATE FUNCTION public.rebuild_taxon_concepts_mview() RETURNS void
     LANGUAGE plpgsql
     AS $$
   BEGIN
-    DROP table IF EXISTS taxon_concepts_mview_tmp CASCADE;
+    DROP TABLE IF EXISTS taxon_concepts_mview_tmp CASCADE;
 
     RAISE INFO 'Creating taxon concepts materialized view (tmp)';
     CREATE TABLE taxon_concepts_mview_tmp AS
     SELECT *,
-    false as dirty,
-    null::timestamp with time zone as expiry
+      FALSE AS dirty,
+      NULL::TIMESTAMP WITH TIME ZONE AS expiry
     FROM taxon_concepts_view;
 
     RAISE INFO 'Creating indexes on taxon concepts materialized view (tmp)';
-    CREATE INDEX ON taxon_concepts_mview_tmp (id);
-    CREATE INDEX ON taxon_concepts_mview_tmp (parent_id);
-    CREATE INDEX ON taxon_concepts_mview_tmp (taxonomy_is_cites_eu, cites_listed, kingdom_position);
-    CREATE INDEX ON taxon_concepts_mview_tmp (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name); -- cms csv download
-    CREATE INDEX ON taxon_concepts_mview_tmp (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name); -- cites csv download
-    CREATE INDEX ON taxon_concepts_mview_tmp (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name); -- eu csv download
-    CREATE INDEX ON taxon_concepts_mview_tmp USING GIN (countries_ids_ary);
+    CREATE INDEX idx_mtaxon_id_tmp               ON taxon_concepts_mview_tmp (id);
+    CREATE INDEX idx_mtaxon_parent_id_tmp        ON taxon_concepts_mview_tmp (parent_id);
+    CREATE INDEX idx_mtaxon_kingdom_position_tmp ON taxon_concepts_mview_tmp (taxonomy_is_cites_eu, cites_listed, kingdom_position);
+    CREATE INDEX idx_mtaxon_cms_csv_tmp          ON taxon_concepts_mview_tmp (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name); -- cms csv download
+    CREATE INDEX idx_mtaxon_cites_csv_tmp        ON taxon_concepts_mview_tmp (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name); -- cites csv download
+    CREATE INDEX idx_mtaxon_eu_csv_tmp           ON taxon_concepts_mview_tmp (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name); -- eu csv download
+    CREATE INDEX idx_mtaxon_id_countries_ids_tmp ON taxon_concepts_mview_tmp USING GIN (countries_ids_ary);
 
     RAISE INFO 'Swapping taxon concepts materialized view';
-    DROP table IF EXISTS taxon_concepts_mview CASCADE;
+
+    DROP TABLE IF EXISTS taxon_concepts_mview CASCADE;
     ALTER TABLE taxon_concepts_mview_tmp RENAME TO taxon_concepts_mview;
 
-    DROP table IF EXISTS auto_complete_taxon_concepts_mview_tmp CASCADE;
-    RAISE INFO 'Creating auto complete taxon concepts materialized view (tmp)';
-    CREATE TABLE auto_complete_taxon_concepts_mview_tmp AS
-    SELECT * FROM auto_complete_taxon_concepts_view;
+    ALTER INDEX idx_mtaxon_id_tmp               RENAME TO idx_mtaxon_id;
+    ALTER INDEX idx_mtaxon_parent_id_tmp        RENAME TO idx_mtaxon_parent_id;
+    ALTER INDEX idx_mtaxon_kingdom_position_tmp RENAME TO idx_mtaxon_kingdom_position;
+    ALTER INDEX idx_mtaxon_cms_csv_tmp          RENAME TO idx_mtaxon_cms_csv;
+    ALTER INDEX idx_mtaxon_cites_csv_tmp        RENAME TO idx_mtaxon_cites_csv;
+    ALTER INDEX idx_mtaxon_eu_csv_tmp           RENAME TO idx_mtaxon_eu_csv;
+    ALTER INDEX idx_mtaxon_id_countries_ids_tmp RENAME TO idx_mtaxon_id_countries_ids;
 
-    RAISE INFO 'Creating indexes on auto complete taxon concepts materialized view (tmp)';
-
-    --this one used for Species+ autocomplete (both main and higher taxa in downloads)
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_species_plus_ac);
-    --this one used for Checklist autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_checklist_ac);
-    --this one used for Trade autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_ac);
-    --this one used for Trade internal autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_internal_ac);
-
-    RAISE INFO 'Swapping auto complete taxon concepts materialized view';
-    DROP table IF EXISTS auto_complete_taxon_concepts_mview CASCADE;
-    ALTER TABLE auto_complete_taxon_concepts_mview_tmp RENAME TO auto_complete_taxon_concepts_mview;
-
+    PERFORM rebuild_auto_complete_taxon_concepts_mview();
   END;
   $$;
 
@@ -5750,7 +5777,7 @@ CREATE FUNCTION public.rebuild_taxon_concepts_mview() RETURNS void
 -- Name: FUNCTION rebuild_taxon_concepts_mview(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.rebuild_taxon_concepts_mview() IS 'Procedure to rebuild taxon concepts materialized view in the database.';
+COMMENT ON FUNCTION public.rebuild_taxon_concepts_mview() IS 'Procedure to rebuild taxon concepts managed table in the database.';
 
 
 --
@@ -8490,7 +8517,7 @@ CREATE VIEW public.auto_complete_taxon_concepts_view AS
             atc.author_year,
             tc.id,
             tc.full_name,
-            upper(regexp_split_to_table((tc.full_name)::text, ' '::text)) AS upper
+            upper(regexp_split_to_table((tc.full_name)::text, '(?:(?!-)[[:space:][:punct:]])+'::text)) AS upper
            FROM (((public.taxon_concepts tc
              JOIN public.taxon_relationships tr ON ((tr.other_taxon_concept_id = tc.id)))
              JOIN public.taxon_relationship_types trt ON (((trt.id = tr.taxon_relationship_type_id) AND ((trt.name)::text = 'HAS_SYNONYM'::text))))
@@ -8502,7 +8529,7 @@ CREATE VIEW public.auto_complete_taxon_concepts_view AS
             taxon_concepts.author_year,
             taxon_concepts.id,
             taxon_concepts.full_name,
-            upper(regexp_split_to_table((taxon_concepts.full_name)::text, ' '::text)) AS upper
+            upper(regexp_split_to_table((taxon_concepts.full_name)::text, '(?:(?!-)[[:space:][:punct:]])+'::text)) AS upper
            FROM public.taxon_concepts
         ), unlisted_subspecies_segmented(taxon_concept_id, full_name, author_year, matched_taxon_concept_id, matched_name, matched_name_segment) AS (
          SELECT parents.id,
@@ -8510,7 +8537,7 @@ CREATE VIEW public.auto_complete_taxon_concepts_view AS
             parents.author_year,
             taxon_concepts.id,
             taxon_concepts.full_name,
-            upper(regexp_split_to_table((taxon_concepts.full_name)::text, ' '::text)) AS upper
+            upper(regexp_split_to_table((taxon_concepts.full_name)::text, '(?:(?!-)[[:space:][:punct:]])+'::text)) AS upper
            FROM ((public.taxon_concepts
              JOIN public.ranks ON (((ranks.id = taxon_concepts.rank_id) AND ((ranks.name)::text = ANY ((ARRAY['SUBSPECIES'::character varying, 'VARIETY'::character varying])::text[])))))
              JOIN public.taxon_concepts parents ON ((parents.id = taxon_concepts.parent_id)))
@@ -8548,7 +8575,7 @@ CREATE VIEW public.auto_complete_taxon_concepts_view AS
             taxon_concepts.author_year,
             NULL::integer AS int4,
             taxon_common_names.name,
-            upper(regexp_split_to_table((taxon_common_names.name)::text, '\s|'''::text)) AS upper
+            upper(regexp_split_to_table((taxon_common_names.name)::text, '(?:(?!-)[[:space:][:punct:]])+'::text)) AS upper
            FROM (taxon_common_names
              JOIN public.taxon_concepts ON ((taxon_common_names.taxon_concept_id = taxon_concepts.id)))
         ), taxon_common_names_dehyphenated AS (
@@ -8600,7 +8627,7 @@ CREATE VIEW public.auto_complete_taxon_concepts_view AS
                     all_names_segmented.matched_taxon_concept_id,
                     all_names_segmented.matched_name,
                         CASE
-                            WHEN ("position"(upper((all_names_segmented.matched_name)::text), all_names_segmented.matched_name_segment) = 1) THEN upper((all_names_segmented.matched_name)::text)
+                            WHEN ("position"(upper(public.unaccent('public.unaccent'::regdictionary, (all_names_segmented.matched_name)::text)), upper(public.unaccent('public.unaccent'::regdictionary, all_names_segmented.matched_name_segment))) = 1) THEN upper(public.unaccent('public.unaccent'::regdictionary, (all_names_segmented.matched_name)::text))
                             ELSE all_names_segmented.matched_name_segment
                         END AS matched_name_segment,
                     all_names_segmented.type_of_match
@@ -8639,7 +8666,7 @@ CREATE VIEW public.auto_complete_taxon_concepts_view AS
                             common_names_segmented_dehyphenated.matched_name_segment,
                             'COMMON_NAME'::text
                            FROM common_names_segmented_dehyphenated) all_names_segmented) all_names_segmented_no_prefixes
-          WHERE (length(all_names_segmented_no_prefixes.matched_name_segment) >= 3)
+          WHERE ((length(all_names_segmented_no_prefixes.matched_name_segment) >= 3) OR ((all_names_segmented_no_prefixes.type_of_match = 'COMMON_NAME'::text) AND (all_names_segmented_no_prefixes.matched_name_segment ~ '[^\x00-\u0530]'::text)))
         ), taxa_with_visibility_flags AS (
          SELECT taxon_concepts.id,
                 CASE
@@ -8686,15 +8713,14 @@ CREATE VIEW public.auto_complete_taxon_concepts_view AS
     t1.show_in_checklist_ac,
     t1.show_in_trade_ac,
     t1.show_in_trade_internal_ac,
-    t2.matched_name_segment AS name_for_matching,
+    upper(public.unaccent('public.unaccent'::regdictionary, t2.matched_name_segment)) AS name_for_matching,
     t2.matched_taxon_concept_id AS matched_id,
     t2.matched_name,
     t2.full_name,
     t2.author_year,
     t2.type_of_match
    FROM (taxa_with_visibility_flags t1
-     JOIN all_names_segmented_cleaned t2 ON ((t1.id = t2.taxon_concept_id)))
-  WHERE (length(t2.matched_name_segment) >= 3);
+     JOIN all_names_segmented_cleaned t2 ON ((t1.id = t2.taxon_concept_id)));
 
 
 --
