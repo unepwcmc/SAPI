@@ -62,9 +62,9 @@ private
 
   def self.apply_visibility_filter(original_query, visibility)
     if visibility == :speciesplus
-      original_query.where(show_in_species_plus: true)
+      return original_query.where(show_in_species_plus: true)
     elsif visibility == :elibrary
-      original_query.where("show_in_species_plus OR name_status = 'N'")
+      return original_query.where("show_in_species_plus OR name_status = 'N'")
     end
 
     original_query
