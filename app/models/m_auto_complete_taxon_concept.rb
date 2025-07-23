@@ -42,6 +42,7 @@ class MAutoCompleteTaxonConcept < ApplicationRecord
 
   scope :by_cites_eu_taxonomy, -> { where(taxonomy_is_cites_eu: true) }
   scope :by_cms_taxonomy, -> { where(taxonomy_is_cites_eu: false) }
+  belongs_to :taxon_concept
 
   translates :rank_display_name
 
@@ -72,6 +73,29 @@ class MAutoCompleteTaxonConcept < ApplicationRecord
         SQL
       ),
       substring_query: substring_query && sanitize_sql_like(substring_query)
+    )
+  end
+
+  def self.where_fuzzily_matches(fuzzy_query)
+    return self.where('FALSE') unless fuzzy_query&.present?
+
+    where(
+      # Match score of 0.6 or lower. (Lower is better match, 0 is identity)
+      'name_for_matching % unaccent(upper(:fuzzy_query))',
+      fuzzy_query:
+    ).order_by_fuzzy_match_on(fuzzy_query)
+  end
+
+  def self.order_by_fuzzy_match_on(fuzzy_query)
+    return self.where('FALSE') unless fuzzy_query&.present?
+
+    order(
+      [
+        Arel.sql(
+          'name_for_matching <-> unaccent(upper(:fuzzy_query))',
+          fuzzy_query:
+        )
+      ]
     )
   end
 end
