@@ -22,16 +22,65 @@ Ember.Handlebars.helper "formattedTags", (value, options) ->
     ).join ""
   new Handlebars.SafeString(formatted)
 
+
+
 Ember.Handlebars.registerHelper('highlight', (suggestion, options) ->
   suggestion = Ember.Handlebars.get(this, suggestion, options)
   query = Ember.Handlebars.get(this, options.hash.query, options)
+
   return suggestion unless query
-  query = query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&")
-  # 'red collared' should highlight 'red-collared'
-  queryWithHyphens = query.replace(/\s/, '-')
-  transform = ($1, match) ->
-    "<span class='match'>" + match + "</span>"
-  new Handlebars.SafeString(suggestion.replace(new RegExp("(" + queryWithHyphens + '|' + query + ")", "gi"), transform))
+
+  # First work out if we have to deal with accent normalisation
+  if query.normalize("NFKD") != query or suggestion.normalize("NFKD") != suggestion
+    normalizeSearch = (
+      (searchTerm) -> searchTerm.normalize(
+        "NFKD"
+      ).replace(
+        /[\-\[\]{}()*+?.,\\\^$|#\s]/g, " "
+      ).replace(
+        /[\u0300-\u036f]/g, ""
+      ).toLowerCase()
+    )
+
+    normalisedQuery = normalizeSearch(query)
+    normalisedSuggestion = normalizeSearch(suggestion)
+
+    highlightedSuggestion = ''
+
+    i = 0
+
+    (
+      (j) ->
+        if j < i
+          return
+
+        windowedSuggestion = suggestion.substr(i, normalisedQuery.length)
+
+        if (normalizeSearch(windowedSuggestion) == normalisedQuery)
+          highlightedSuggestion += "<span class='match'>" + windowedSuggestion + "</span>"
+
+          i += windowedSuggestion.length
+        else
+          highlightedSuggestion += suggestion.substr(i, 1)
+
+          ++i
+    )(j) for j in [0..(suggestion.length)]
+
+    new Handlebars.SafeString(highlightedSuggestion)
+  else
+    # If not, do less work
+    # 'red collared' should highlight 'red-collared'
+    escapedQuery = query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&")
+    queryWithHyphens = query.replace(/\s/, '-')
+
+    transform = ($1, match) ->
+      "<span class='match'>" + match + "</span>"
+
+    new Handlebars.SafeString(
+      suggestion.replace(
+        new RegExp("(" + escapedQuery + '|' + queryWithHyphens + ")", "gi"), transform
+      )
+    )
 )
 
 Ember.Handlebars.registerHelper 'stringToArray', (string, options) ->

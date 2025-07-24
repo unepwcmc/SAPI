@@ -16,7 +16,9 @@ protected
 
   def build_rel
     @taxon_concepts = initialize_rel
+
     apply_taxonomy_options_to_rel
+
     if @scientific_name.present?
       @taxon_concepts = @taxon_concepts.where(
         [
@@ -34,6 +36,7 @@ protected
 
   def apply_taxonomy_options_to_rel
     @taxonomy_id = @taxonomy_options && @taxonomy_options[:id]
+
     if @taxonomy_id
       @taxon_concepts = @taxon_concepts.where(taxonomy_id: @taxonomy_id)
     end

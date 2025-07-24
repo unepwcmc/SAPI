@@ -7,13 +7,18 @@ Species.TaxonConceptSearchFieldComponent = Em.TextField.extend
 
   keyUp: (event) ->
     Ember.run.cancel(@currentTimeout)
+
     if event.keyCode == 13
       @get('targetObject').hideDropdown()
       return
-    @currentTimeout = Ember.run.later(@, ->
-      if @.$()?.val().length > 2
+
+    @currentTimeout = Ember.run.later(@, (->
+      searchTerm = @.$()?.val()
+
+      if (searchTerm.length > 2 or /[^\x00-\u0530]/.test(searchTerm))
         @get('targetObject').showDropdown()
       else
         @get('targetObject').hideDropdown()
+
       @set('query', event.target.value)
-    , 500)
+    ), 500)
