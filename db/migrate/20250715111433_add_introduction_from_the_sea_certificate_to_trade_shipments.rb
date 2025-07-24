@@ -9,6 +9,10 @@
 # Note: after this change, matviews will need to be refreshed. To do this, run
 # `Sapi::StoredProcedures.rebuild_compliance_views`. Matviews will error until
 # the refresh is complete.
+#
+# Additionally trade sandbox views will need to be recreated with
+# refresh_trade_sandbox_views(). Doing this inside a transaction will probably
+# fail due to limits on the number of DDL changes required.
 
 class AddIntroductionFromTheSeaCertificateToTradeShipments < ActiveRecord::Migration[7.1]
   def change
