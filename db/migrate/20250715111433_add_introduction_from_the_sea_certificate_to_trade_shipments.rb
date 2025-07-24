@@ -1,11 +1,22 @@
+##
+# Adds:
+#
+# - `ifs_permit` to `trade_sandbox_template` and all `trade_sandbox_\d+` tables
+#   which inherit from the template.
+# - `ifs_permit_number` and derived columns `ifs_permit_number`, `ifs_permits_ids` to
+#   `trade_shipments`, and all views and matviews which select from it.
+#
+# Note: after this change, matviews will need to be refreshed. To do this, run
+# `Sapi::StoredProcedures.rebuild_compliance_views`. Matviews will error until
+# the refresh is complete.
+
 class AddIntroductionFromTheSeaCertificateToTradeShipments < ActiveRecord::Migration[7.1]
   def change
-    # Strong Migrations doesn't like change_table blocks but the Rails linter
-    # prefers them, presumably as it means fewer whole-table rewrites.
     safety_assured do
-      change_table :trade_sandbox_template, bulk: true, cascade: true do |t|
-        t.column :ifs_permit, 'TEXT'
-      end
+      ##
+      # This cascades to all `trade_sandbox_\d+` tables via postgres inheritance
+      # Note that it is ifs_permit, not ifs_permit_number.
+      add_column :trade_sandbox_template, :ifs_permit, 'TEXT', cascade: true
 
       reversible do |direction|
         direction.up do
@@ -17,7 +28,8 @@ class AddIntroductionFromTheSeaCertificateToTradeShipments < ActiveRecord::Migra
         end
 
         direction.down do
-          # NB: this will also remove the index
+          ##
+          # NB: this will also remove `index_trade_shipments_on_ifs_permits_ids`
           execute <<-SQL.squish
             ALTER TABLE trade_shipments DROP COLUMN ifs_permits_ids CASCADE;
             ALTER TABLE trade_shipments DROP COLUMN ifs_permit_number CASCADE;
@@ -97,6 +109,10 @@ class AddIntroductionFromTheSeaCertificateToTradeShipments < ActiveRecord::Migra
           if view_info[:has_mview]
             mview_name = "#{view_info[:base_name]}_mview"
 
+            ##
+            # WITH NO DATA avoids holding the transaction open for hours; the
+            # tradeoff is that querying the matview will error until it can be
+            # refreshed.
             execute <<-SQL.squish
               CREATE MATERIALIZED VIEW #{mview_name} AS
               SELECT *
