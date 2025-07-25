@@ -760,6 +760,16 @@ $(document).ready(function(){
       href = '/' + locale + '/cites_trade/exports/download?' + q;
     $link.attr('href', href).click();
     window.location.href = $link.attr("href");
+
+    const $button = $('#button_report').attr('disabled', 'disabled');
+    const $message = $('#download_status_loading').show();
+
+    window.setTimeout(
+      function () {
+        $button.removeAttr('disabled');
+        $message.hide();
+      }, 10e3
+    )
   }
 
   function handleDownloadRequest (ignoreWarning) {
