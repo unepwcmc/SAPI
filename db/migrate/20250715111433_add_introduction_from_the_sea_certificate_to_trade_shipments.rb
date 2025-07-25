@@ -14,18 +14,21 @@
 # refresh_trade_sandbox_views(). Doing this inside a transaction will probably
 # fail due to limits on the number of DDL changes required.
 
-class AddIntroductionFromTheSeaCertificateToTradeShipments < ActiveRecord::Migration[7.1]
+class AddIntroductionFromTheSeaCertificateToTradeShipments <
+  ActiveRecord::Migration[7.1]
   def change
     safety_assured do
       ##
       # This cascades to all `trade_sandbox_\d+` tables via postgres inheritance
       # Note that it is ifs_permit, not ifs_permit_number.
-      add_column :trade_sandbox_template, :ifs_permit, 'TEXT', cascade: true
+      add_column :trade_sandbox_template, :ifs_permit, :text, cascade: true
 
       reversible do |direction|
         direction.up do
-          add_column :trade_shipments, :ifs_permits_ids, 'INTEGER[]'
-          add_column :trade_shipments, :ifs_permit_number, 'TEXT'
+          add_column :trade_shipments, :ifs_permits_ids, :integer,
+            array: true,
+            null: true
+          add_column :trade_shipments, :ifs_permit_number, :text
           add_index :trade_shipments, :ifs_permits_ids,
             using: 'gin',
             name: 'index_trade_shipments_on_ifs_permits_ids'
