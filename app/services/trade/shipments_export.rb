@@ -110,6 +110,7 @@ private
       import_permit_number: { internal: true },
       export_permit_number: { internal: true },
       origin_permit_number: { internal: true },
+      ifs_permit_number: { internal: true },
       legacy_shipment_number: { internal: true },
       created_by: { internal: true },
       updated_by: { internal: true }

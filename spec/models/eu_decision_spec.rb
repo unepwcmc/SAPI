@@ -30,7 +30,7 @@ describe EuDecision, sidekiq: :inline do
 
     # EuDecisionsExport depends on eu_decisions_view,
     # which depends on taxon_concepts_mview, which must be populated
-    SapiModule::StoredProcedures.run_procedures [ :taxon_concepts_mview ]
+    SapiModule::StoredProcedures.execute_proc :rebuild_taxon_concepts_mview
   end
 
   describe :create do

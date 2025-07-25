@@ -48,6 +48,10 @@ Trade.SandboxShipmentsView = Ember.View.extend
       displayProperty: 'originPermit'
     },
     {
+      header: 'IFS Permit'
+      displayProperty: 'ifsPermit'
+    },
+    {
       header: 'Purpose'
       displayProperty: 'purposeCode'
     },
