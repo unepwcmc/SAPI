@@ -17,6 +17,8 @@ RUN apt-get update -qq && \
   apt-get install --no-install-recommends -y curl libjemalloc2 libpq-dev \
   # ?
   libsodium-dev libgmp3-dev libssl-dev \
+  # install node js
+  curl xz-utils \
   # latex (huge file size)
   texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra \
   && rm -rf /var/lib/apt/lists /var/cache/apt/archives
@@ -27,16 +29,6 @@ ENV NODE_ENV="production" \
   BUNDLE_DEPLOYMENT="1" \
   BUNDLE_PATH="/usr/local/bundle" \
   BUNDLE_WITHOUT="development"
-
-# Throw-away build stage to reduce size of final image
-FROM base AS build
-
-# Install packages needed to build gems
-RUN apt-get update -qq && \
-  apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config \
-  # install node js
-  curl xz-utils \
-  && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install Node.js 18.20.8 manually
 ARG NODE_VERSION=18.20.8
@@ -49,6 +41,15 @@ RUN case "$TARGETARCH" in \
   esac && \
   curl -fsSL https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz \
   | tar -xJ -C /usr/local --strip-components=1
+
+
+# Throw-away build stage to reduce size of final image
+FROM base AS build
+
+# Install packages needed to build gems
+RUN apt-get update -qq && \
+  apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config \
+  && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
