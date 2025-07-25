@@ -12,6 +12,8 @@ FROM ruby:3.2.5-slim
 RUN apt-get update && apt-get install --no-install-recommends -y --force-yes \
   # ?
   libsodium-dev libgmp3-dev libssl-dev \
+  # Editor
+  vim nano \
   # PSQL
   libpq-dev postgresql-client \
   # node js
