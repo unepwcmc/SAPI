@@ -4,8 +4,6 @@ if [[ "${@}" =~ "rails server" ]]; then
   rm -f ./tmp/pids/server.pid;
 fi
 
-bundle install
-
 mkdir -p {./,spec/}public/downloads/checklist
 mkdir -p {./,spec/}public/downloads/cites_listings
 mkdir -p {./,spec/}public/downloads/cites_suspensions
