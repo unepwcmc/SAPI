@@ -18,17 +18,19 @@ class AddIntroductionFromTheSeaCertificateToTradeShipments <
   ActiveRecord::Migration[7.1]
   def change
     safety_assured do
-      ##
-      # This cascades to all `trade_sandbox_\d+` tables via postgres inheritance
-      # Note that it is ifs_permit, not ifs_permit_number.
-      add_column :trade_sandbox_template, :ifs_permit, :text, cascade: true
-
       reversible do |direction|
         direction.up do
+          ##
+          # This propagates to all `trade_sandbox_\d+` tables via postgres'
+          # inheritance. Note that it is ifs_permit, not ifs_permit_number.
+          add_column :trade_sandbox_template, :ifs_permit, :text
+
           add_column :trade_shipments, :ifs_permits_ids, :integer,
             array: true,
             null: true
+
           add_column :trade_shipments, :ifs_permit_number, :text
+
           add_index :trade_shipments, :ifs_permits_ids,
             using: 'gin',
             name: 'index_trade_shipments_on_ifs_permits_ids'
@@ -37,7 +39,9 @@ class AddIntroductionFromTheSeaCertificateToTradeShipments <
         direction.down do
           ##
           # NB: this will also remove `index_trade_shipments_on_ifs_permits_ids`
+          # and `ifs_permit` from all sandbox
           execute <<-SQL.squish
+            ALTER TABLE trade_sandbox_template DROP COLUMN ifs_permit CASCADE;
             ALTER TABLE trade_shipments DROP COLUMN ifs_permits_ids CASCADE;
             ALTER TABLE trade_shipments DROP COLUMN ifs_permit_number CASCADE;
           SQL
@@ -79,19 +83,19 @@ class AddIntroductionFromTheSeaCertificateToTradeShipments <
           {
             base_name: :trade_shipments_cites_suspensions,
             down: '2023070616851',
-            up: '20250716123123',
+            up: '2025072583635',
             has_mview: true
           },
           {
             base_name: :trade_shipments_mandatory_quotas,
             down: '20210511134942',
-            up: '20250716122916',
+            up: '2025072583437',
             has_mview: true
           },
           {
             base_name: :trade_shipments_appendix_i,
             down: '2023070615508',
-            up: '20250716113347',
+            up: '2025072583427',
             has_mview: true
           },
           {

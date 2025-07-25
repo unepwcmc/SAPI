@@ -195,7 +195,7 @@
         LEFT OUTER JOIN trade_codes purposes ON purposes.id = ts.purpose_id
         LEFT OUTER JOIN trade_codes units ON units.id = ts.unit_id
         LEFT OUTER JOIN trade_codes terms ON terms.id = ts.term_id
-        WHERE
+        WHERE 
         (ts.year >= 2005 AND ts.year <= 2025 AND TRUE AND exporters.iso_code2 = 'AF' AND TRUE AND TRUE AND TRUE AND purposes.code IN ('Z') AND ts.country_of_origin_id IS NULL)
 
         OR
