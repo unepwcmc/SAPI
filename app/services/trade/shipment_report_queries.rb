@@ -41,9 +41,11 @@ module Trade::ShipmentReportQueries
       import_permit_number,
       export_permit_number,
       origin_permit_number,
+      ifs_permit_number,
       import_permits_ids,
       export_permits_ids,
       origin_permits_ids,
+      ifs_permits_ids,
       legacy_shipment_number,
       uc.name AS created_by,
       uu.name AS updated_by
@@ -100,6 +102,7 @@ module Trade::ShipmentReportQueries
       import_permit_number AS import_permit,
       export_permit_number AS export_permit,
       origin_permit_number AS origin_permit,
+      ifs_permit_number AS ifs_permit,
       legacy_shipment_number AS legacy_shipment_no
     FROM trade_shipments_with_taxa_view AS shipments
     JOIN ranks
@@ -158,6 +161,7 @@ module Trade::ShipmentReportQueries
       import_permit_number AS import_permit,
       export_permit_number AS export_permit,
       origin_permit_number AS origin_permit,
+      ifs_permit_number AS ifs_permit,
       legacy_shipment_number AS legacy_shipment_no
     FROM trade_shipments_with_taxa_view AS shipments
     JOIN ranks
@@ -214,6 +218,7 @@ module Trade::ShipmentReportQueries
       import_permit_number AS import_permit,
       export_permit_number AS export_permit,
       origin_permit_number AS origin_permit,
+      ifs_permit_number AS ifs_permit,
       legacy_shipment_number AS legacy_shipment_no
     FROM trade_shipments_with_taxa_view AS shipments
     JOIN ranks

@@ -14,6 +14,7 @@ Trade.ShipmentBatchUpdate = Ember.Object.extend
   importPermitNumber: null
   exportPermitNumber: null
   originPermitNumber: null
+  ifsPermitNumber: null
   countryOfOriginBlank: false
   unitBlank: false
   sourceBlank: false
@@ -21,20 +22,23 @@ Trade.ShipmentBatchUpdate = Ember.Object.extend
   importPermitNumberBlank: false
   exportPermitNumberBlank: false
   originPermitNumberBlank: false
+  ifsPermitNumberBlank: false
 
   columns: (->
     [
       'taxonConceptId', 'reportedTaxonConceptId', 'appendix', 'year',
       'term', 'unit', 'purpose', 'source',
       'importer', 'exporter', 'countryOfOrigin', 'reporterType',
-      'importPermitNumber', 'exportPermitNumber', 'originPermitNumber'
+      'importPermitNumber', 'exportPermitNumber',
+      'originPermitNumber', 'ifsPermitNumber'
     ]
   ).property()
 
   nullableColumns: (->
     [
       'countryOfOrigin', 'unit', 'source', 'purpose',
-      'importPermitNumber', 'exportPermitNumber', 'originPermitNumber'
+      'importPermitNumber', 'exportPermitNumber',
+      'originPermitNumber', 'ifsPermitNumber'
     ]
   ).property()
 

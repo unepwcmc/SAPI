@@ -3,9 +3,9 @@ namespace :import do
   task :trade_permits, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 
-  TMP_TABLE = 'permits_import'
+    TMP_TABLE = 'permits_import'
 
-  permits_import_to_index = { 'permits_import' => [ 'permit_number', 'shipment_number', 'permit_reporter_type' ] }
+    permits_import_to_index = { 'permits_import' => [ 'permit_number', 'shipment_number', 'permit_reporter_type' ] }
     trade_shipments_indexed = { 'trade_shipments' => [ 'export_permits_ids', 'import_permits_ids', 'origin_permits_ids' ] }
     trade_shipments_to_index = { 'trade_shipments' => [ 'legacy_shipment_number' ] }
 
