@@ -68,9 +68,7 @@ services:
 
   rails:
     container_name: sapi-rails
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    build: .
     command: bundle exec rails server -p 3000 -b '0.0.0.0'
     volumes: &rails_volumes
       # Used for both rails and sidekiq
@@ -175,9 +173,7 @@ services:
 
   sidekiq:
     container_name: sapi-sidekiq
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     networks:
       - sapi
     depends_on:
