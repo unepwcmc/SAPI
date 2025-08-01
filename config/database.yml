@@ -6,7 +6,7 @@ default: &default
     host:     <%= ENV.fetch("SAPI_DATABASE_HOST",     Rails.application.credentials.dig(:db, :host)) %>
     username: <%= ENV.fetch("SAPI_DATABASE_USERNAME", Rails.application.credentials.dig(:db, :username)) %>
     password: <%= ENV.fetch("SAPI_DATABASE_PASSWORD", Rails.application.credentials.dig(:db, :password)) %>
-    port:     <%= ENV.fetch("SAPI_DATABASE_PORT",     Rails.application.credentials.dig(:db, :port)) %>
+    port:     <%= ENV.fetch("SAPI_DATABASE_PORT",     Rails.application.credentials.dig(:db, :port) || '5432') %>
     database: <%= ENV.fetch("SAPI_DATABASE_NAME",     "sapi_#{Rails.env}") %>
     variables:
       # It is important that ordinary queries do not hang while waiting for a
@@ -24,7 +24,7 @@ default: &default
     username: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_USERNAME", Rails.application.credentials.dig(:captive_breeding_db, :username) || 'postgres') %>
     password: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PASSWORD", Rails.application.credentials.dig(:captive_breeding_db, :password)) %>
     port:     <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_PORT",     Rails.application.credentials.dig(:captive_breeding_db, :port) || '5432') %>
-    database: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE",          Rails.application.credentials.dig(:captive_breeding_db, :database) || "captive_breeding_database_#{Rails.env}") %>
+    database: <%= ENV.fetch("CAPTIVE_BREEDING_DATABASE_NAME",     Rails.application.credentials.dig(:captive_breeding_db, :database) || "captive_breeding_database_#{Rails.env}") %>
     database_tasks: false
 
 development:
