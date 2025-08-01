@@ -164,6 +164,8 @@ services:
   redis_cache:
     container_name: sapi-redis-cache
     image: redis:7.2.0
+    ports:
+      - "${SAPI_CONTAINER_REDIS_PORT:-6380}:6380"
     networks:
       - sapi
     command: redis-server /usr/local/etc/redis/redis.conf
