@@ -25,7 +25,8 @@ class PermitCleanupWorker
       DELETE FROM trade_permits
       USING unused_permits
       WHERE trade_permits.id = unused_permits.id
-      SQL
+    SQL
+
     ApplicationRecord.connection.execute(
       ApplicationRecord.send(
         :sanitize_sql_array, [
