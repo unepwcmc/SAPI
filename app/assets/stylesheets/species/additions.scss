@@ -27,7 +27,7 @@ span.distrib_reference {
   position: relative;
   z-index: 666;
   .no-results {
-    padding: 80px 0;
+    padding: 80px 171px;
     margin-top: -18px;
     p {
       font-size: 16px;
@@ -35,7 +35,6 @@ span.distrib_reference {
       line-height: 24px;
       color: #999;
       text-align: left;
-      margin: 0 171px 0 171px;
       &.no-results-title {
         font-size: 20px;
         font-weight: bold;
@@ -45,10 +44,15 @@ span.distrib_reference {
       &.no-results-subtitle {
         font-size: 16px;
         font-weight: normal;
-        margin-bottom: 30px;
         color: #666;
       }
     }
+    ul {
+      list-style-type:circle;
+      padding: 0 0 0.75em 1.5em;
+      color: #666;
+    }
+
   }
 }
 

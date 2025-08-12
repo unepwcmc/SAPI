@@ -6,12 +6,23 @@ Species.TaxonConceptsController = Ember.ArrayController.extend Species.TaxonConc
 
   taxonConceptsByHigherTaxon: ( ->
     return [] unless @get('content.meta.higher_taxa_headers')
+
     @get('content.meta.higher_taxa_headers').map (h) ->
       higher_taxon: h.higher_taxon
       ancestors_path: h.higher_taxon.ancestors_path.split(',')
       taxon_concepts: h.taxon_concept_ids.map (tc_id) ->
         Species.TaxonConcept.find(tc_id)
   ).property('content.meta.higher_taxa_headers')
+
+  suggestions: ( ->
+    return [] unless @get('content.meta.search_suggestions')
+
+    searchController = @get("controllers.search")
+
+    @get('content.meta.search_suggestions').map (suggestion) ->
+      searchTerm: suggestion.matched_name
+      onClick: () -> searchController.openSearchPage suggestion.matched_name
+  ).property('content.meta.search_suggestions')
 
   openTaxonPage: (taxonConceptId, redirected) ->
     if redirected != undefined && redirected == true
