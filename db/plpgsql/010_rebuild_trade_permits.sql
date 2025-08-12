@@ -69,6 +69,19 @@ BEGIN
         )
       ) permit
     FROM trade_shipments
+  UNION ALL
+    SELECT
+      id trade_shipment_id,
+      'ifs' permit_type,
+      UPPER(
+        squish_null(
+          regexp_split_to_table(
+            ifs_permit_number,
+            ';'
+          )
+        )
+      ) permit
+    FROM trade_shipments
   ) p WHERE permit IS NOT NULL;
 
   RAISE NOTICE 'INSERTED INTO "tmp_shipment_permits" (txn % +%)',
@@ -107,8 +120,9 @@ BEGIN
   CREATE TEMP TABLE "to_update_shipments" AS
     SELECT trade_shipment_id,
       array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'import') AS import_permits_ids,
-      array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'origin') AS export_permits_ids,
-      array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'export') AS origin_permits_ids
+      array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'export') AS export_permits_ids,
+      array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'origin') AS origin_permits_ids
+      array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'ifs')    AS ifs_permits_ids
     FROM tmp_shipment_permits
     JOIN trade_permits
       ON tmp_shipment_permits.permit = trade_permits.number
@@ -165,7 +179,8 @@ BEGIN
       UPDATE trade_shipments SET
         import_permits_ids = to_update_slice.import_permits_ids,
         export_permits_ids = to_update_slice.export_permits_ids,
-        origin_permits_ids = to_update_slice.origin_permits_ids
+        origin_permits_ids = to_update_slice.origin_permits_ids,
+        ifs_permits_ids = to_update_slice.ifs_permits_ids
       FROM to_update_slice
       WHERE to_update_slice.trade_shipment_id = trade_shipments.id;
 
