@@ -20,6 +20,14 @@ describe Api::V1::AutoCompleteTaxonConceptsController do
       )
     end
 
+    it 'ignores leading and trailing spaces' do
+      get :index, params: { taxonomy: 'CITES', taxon_concept_query: '  Red tailed ' }
+
+      expect(response.body).to have_json_size(1).at_path(
+        'auto_complete_taxon_concepts'
+      )
+    end
+
     it 'returns 1 result when searching for common name with diacritics' do
       get :index, params: { taxonomy: 'CITES', taxon_concept_query: 'hroznýš' }
 
