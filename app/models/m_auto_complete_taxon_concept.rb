@@ -59,7 +59,7 @@ class MAutoCompleteTaxonConcept < ApplicationRecord
           name_for_matching LIKE unaccent(upper(:prefix_query)) || '%'
         SQL
       ),
-      prefix_query: prefix_query && sanitize_sql_like(prefix_query)
+      prefix_query: prefix_query && sanitize_sql_like(prefix_query.squish)
     )
   end
 
@@ -72,7 +72,7 @@ class MAutoCompleteTaxonConcept < ApplicationRecord
           name_for_matching LIKE '%' || unaccent(upper(:substring_query)) || '%'
         SQL
       ),
-      substring_query: substring_query && sanitize_sql_like(substring_query)
+      substring_query: substring_query && sanitize_sql_like(substring_query.squish)
     )
   end
 
@@ -93,7 +93,7 @@ class MAutoCompleteTaxonConcept < ApplicationRecord
       [
         Arel.sql(
           'name_for_matching <-> unaccent(upper(:fuzzy_query))',
-          fuzzy_query:
+          fuzzy_query: fuzzy_query.squish
         )
       ]
     )
