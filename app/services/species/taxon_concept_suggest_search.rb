@@ -8,7 +8,7 @@ class Species::TaxonConceptSuggestSearch < Species::Search
       # filter out 'panthera leo leo' if we have already seen 'panthera leo'
       seen_before =
         filtered_results.find do |existing_result|
-          ("#{ row.matched_name }").include? "#{ existing_result.matched_name }"
+          (" #{ row.matched_name } ").include? " #{ existing_result.matched_name } "
         end
 
       if !seen_before
