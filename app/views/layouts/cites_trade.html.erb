@@ -1,84 +1,191 @@
 <!doctype html>
 <html>
-
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta itemprop="description" content="<%= t('cites_description') %>" />
-  <meta name="description" content="<%= t('cites_description') %>" />
-  <meta itemprop="name" content="<%= t('cites_title') %>">
-  <%= stylesheet_link_tag "cites_trade" %>
-  <%= javascript_include_tag "cites_trade" %>
-  <script>
-    var locale = "<%= I18n.locale %>";
-  </script>
-  <title><%= t('cites_title') %></title>
-
-  <% if Rails.env.production? %>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta itemprop="description" content="<%= t('cites_description') %>" />
+    <meta name="description" content="<%= t('cites_description') %>" />
+    <meta itemprop="name" content="<%= t('cites_title') %>">
+    <link rel="stylesheet" href="https://use.typekit.net/ovv2poq.css">
+    <%= stylesheet_link_tag "cites_trade" %>
+    <%= javascript_include_tag "cites_trade" %>
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-49231962-1', 'auto');
-      ga('send', 'pageview');
-
+      var locale = "<%= I18n.locale %>";
     </script>
+    <title><%= t('cites_title') %></title>
 
-    <%= render "cites_trade/hotjar" %>
-  <% else %>
-    <script>
-      function ga() {
-        console.log('google analytics not enabled for this environment')
-      }
-    </script>
-  <% end %>
-</head>
+    <% if Rails.env.production? %>
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-<body class="markeeta">
-  <div class="container clearfix">
-    <div class="grid_16 cites_header">
-      <div style="text-align: center;position:relative;width:'100%'">
-        <a href="http://trade.cites.org/" target="_blank">
-          <%= image_tag "cites_trade/cites_banner_en.jpg", width: '100%', alt: "CITES" %>
-        </a>
+        ga('create', 'UA-49231962-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+
+      <%= render "cites_trade/hotjar" %>
+    <% else %>
+      <script>
+        function ga() {
+          console.log('google analytics not enabled for this environment')
+        }
+      </script>
+    <% end %>
+  </head>
+
+  <body>
+    <div class="topbar">
+      <div class="topbar__inner">
+        <div class="topbar__body">
+          <p class="topbar__text">
+            <%= t('full_db_download', db_download_version: @db_download_version) %>
+          </p>
+          <a
+            href=<%= cites_trade_download_db_path %>
+            download
+            class="topbar__button"
+          >
+            <%= raw File.read(Rails.root.join("app/assets/images/cites_trade/icon-download.svg")) %>
+            Download
+          </a>
+        </div>
       </div>
     </div>
+    <header class="header">
+      <div class="header__inner">
+        <div class="header__header">
+          <div class="header__logo">
+            <a href="http://trade.cites.org/" target="_blank">
+              <%= image_tag "cites_trade/cites_trade_logo_en.svg", alt: "CITES" %>
+            </a>
+          </div>
+          <div class="language_links">
+            <ul class="language_links__items">
+              <li class="language_links__item">
+                <%= link_to "English", { locale: 'en' }, class: ["language_links__link", ("active" if I18n.locale.to_s == 'en')] %>
+              </li>
+              <li class="language_links__item">
+                <%= link_to "Español", { locale: 'es' }, class: ["language_links__link", ("active" if I18n.locale.to_s == 'es')] %>
+              </li>
+              <li class="language_links__item">
+                <%= link_to "Français", { locale: 'fr' }, class: ["language_links__link", ("active" if I18n.locale.to_s == 'fr')] %>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="header__body">
+          <h2 class="header__title">
+            <%= t('cites_title') %>
+          </h2>
+          <h3 class="header__text">
+            The CITES Trade Database is the most comprehensive and authoritative database on international trade in wildlife. Dating back to 1975, it reflects the official trade records as reported by Parties in their annual reports to the Convention on International Trade in Endangered Species of Wild Fauna and Flora (CITES).
+          </h3>
+          <div class="header__infobox">
+            <div class="header__infobox-column">
+              <h4 class="header__infobox-heading">A guide to using the CITES Trade Database</h4>
+              <p class="header__infobox-text">Due to the complexities of interpreting CITES trade data, it is highly recommended that all those interested in using the CITES Trade Database read this guidance prior to using the data.</p>
+            </div>
+            <div class="header__infobox-column">
+              <a
+                href="/cites_trade_guidelines/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"
+                target="_blank"
+                class="header__infobox-link"
+              >
+                  <%= raw File.read(Rails.root.join("app/assets/images/cites_trade/icon-external.svg")) %>
+                  View Guide
+                </a>
+              <p class="header__infobox-disclaimer">Guide only available in English.</p>
+            </div>
+          </div>
+          <span class="header__image-credit">
+            Image credits: AdobeStock_255618473
+          </span>
+        </div>
+      </div>
+    </header>
+    <main class="layout">
+      <%= yield %>
+    </main>
 
-    <div id="language_links" class="linkStyle">
-      <% if I18n.locale == I18n.default_locale %>
-        <%= link_to "Espanol", :locale=>'es'%>
-        <%= link_to "Francais", :locale=>'fr'%>
-      <%end%>
-
-      <% if I18n.locale == :es %>
-        <%= link_to "English", :locale=>'en'%>
-        <%= link_to "Francais", :locale=>'fr'%>
-      <%end%>
-
-      <% if I18n.locale == :fr %>
-        <%= link_to "English", :locale=>'en'%>
-        <%= link_to "Espanol", :locale=>'es'%>
-      <%end%>
-    </div>
-
-    <br><br>
-  <%= yield %>
-  <div class="container clearfix">
-  <div class="grid_16 footer">
-  <br />
-  <div class='grid_14' align="center">
-  <font size="-2" face="Verdana, Arial, Helvetica, sans-serif">
-  The CITES Trade Database was developed and is maintained by UNEP-WCMC on behalf of the CITES Secretariat.
-  :&nbsp;<br>
-  <a href="http://www.cites.org">CITES</a> |
-  <a href="http://www.unep-wcmc.org">UNEP-WCMC</a> |
-  <a href="https://www.speciesplus.net">Species+</a> |
-  <a href="https://tradeview.cites.org/<%= I18n.locale.to_s %>">CITES Wildlife TradeView</a> |
-  <a href="mailto:species@unep-wcmc.org" target="_blank"> Contact Us </a>
-  </font>
-  </div>
-  <div class='grid_1' align='right' ><a href="/"><img src="https://s3.amazonaws.com/wcmc.logo/UN-Environment-WCMC+logo+2017+grey.svg" alt="UNEP-WCMC" width="100" height="52" border="0" float='right'></a></div>
-  </div>
-</body>
+    <!-- TODO: Finish the footer logos! -->
+    <footer class="footer">
+      <div class="footer__inner">
+        <div class="footer__body">
+          <div class="footer__items">
+            <div class="footer__item">
+              <h4 class="footer__heading">
+                The CITES Trade Database was developed and is maintained by UNEP-WCMC on behalf of the CITES Secretariat
+              </h4>
+              <ul class="footer__logo-items">
+                <li class="footer__logo-item">
+                  <a
+                    href="https://trade.cites.org/"
+                    target="_blank"
+                    title="CITES"
+                    class="footer__logo-link"
+                  >
+                    <%= image_tag "cites_trade/cites_logo.svg", alt: "CITES", class: "footer__logo-image--cites_logo" %>
+                  </a>
+                </li>
+                <li class="footer__logo-item">
+                  <a
+                    href="https://unep-wcmc.org/"
+                    target="_blank"
+                    title="UNEP-WCMC"
+                    class="footer__logo-link"
+                  >
+                    <%= image_tag "cites_trade/unepwcmc_logo.svg", alt: "UNEP-WCMC", class: "footer__logo-image--unepwcmc_logo" %>
+                  </a>
+                </li>
+              </ul>
+              <a
+                href="mailto:species@unep-wcmc.org"
+                target="_blank"
+                class="footer__link"
+              >
+                Contact us
+              </a>
+            </div>
+            <div class="footer__item">
+              <h4 class="footer__heading">Addition resources</h4>
+              <ul class="footer__logo-items">
+                <li class="footer__logo-item">
+                  <a
+                    href="https://checklist.cites.org"
+                    target="_blank"
+                    title="CITES Checklist of Species"
+                    class="footer__logo-link"
+                  >
+                    <%= image_tag "cites_trade/cites_checklist_logo.svg", alt: "CITES Checklist of Species", class: "footer__logo-image--cites_checklist_logo" %>
+                  </a>
+                </li>
+                <li class="footer__logo-item">
+                  <a
+                    href="https://www.speciesplus.net"
+                    target="_blank"
+                    title="Species+ (Species Plus)"
+                    class="footer__logo-link"
+                  >
+                    <%= image_tag "cites_trade/species_plus_logo.svg", alt: "Species+ (Species Plus)", class: "footer__logo-image--species_plus_logo" %>
+                  </a>
+                </li>
+                <li class="footer__logo-item">
+                  <a
+                    href="https://tradeview.cites.org"
+                    target="_blank"
+                    title="CITES Wildlife Tradeview"
+                    class="footer__logo-link"
+                  >
+                    <%= image_tag "cites_trade/cites_wildlife_tradeview_logo.svg", alt: "CITES Wildlife Tradeview", class: "footer__logo-image--cites_wildlife_tradeview_logo" %>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>
