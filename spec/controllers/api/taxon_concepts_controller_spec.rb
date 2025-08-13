@@ -30,6 +30,37 @@ describe Api::V1::TaxonConceptsController do
       )
     end
 
+    it 'ignores leading spaces when searching for typos' do
+      get :index, params: { taxonomy: 'CITES', taxon_concept_query: ' costrictor' }
+
+      expect(response.body).to have_json_size(0).at_path(
+        'taxon_concepts'
+      )
+
+      expect(response.body).to be_json_eql(
+        [ { matched_name: 'constrictor' } ].to_json
+      ).at_path(
+        'meta/search_suggestions'
+      )
+    end
+
+    it 'ignores duplicate spaces when searching for typos' do
+      get :index, params: { taxonomy: 'CITES', taxon_concept_query: ' Bob  costrictor' }
+
+      expect(response.body).to have_json_size(0).at_path(
+        'taxon_concepts'
+      )
+
+      expect(response.body).to be_json_eql(
+        [
+          { matched_name: 'boa constrictor' },
+          { matched_name: 'constrictor' }
+        ].to_json
+      ).at_path(
+        'meta/search_suggestions'
+      )
+    end
+
     it 'search suggestions are case-insensitive' do
       get :index, params: { taxonomy: 'CITES', taxon_concept_query: 'Costrictor' }
 
