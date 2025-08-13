@@ -121,7 +121,7 @@ BEGIN
     SELECT trade_shipment_id,
       array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'import') AS import_permits_ids,
       array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'export') AS export_permits_ids,
-      array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'origin') AS origin_permits_ids
+      array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'origin') AS origin_permits_ids,
       array_agg(trade_permits.id ORDER BY trade_permits.id) FILTER(WHERE permit_type = 'ifs')    AS ifs_permits_ids
     FROM tmp_shipment_permits
     JOIN trade_permits
