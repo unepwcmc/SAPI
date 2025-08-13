@@ -87,6 +87,10 @@ Trade.SearchResultsView = Ember.View.extend
       displayProperty: 'originPermitNumber'
     },
     {
+      header: 'IFS Permit'
+      displayProperty: 'ifsPermitNumber'
+    },
+    {
       header: 'Legacy ID'
       displayProperty: 'legacyShipmentNumber'
     }

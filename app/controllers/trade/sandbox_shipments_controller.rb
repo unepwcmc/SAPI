@@ -87,6 +87,7 @@ private
       :import_permit,
       :export_permit,
       :origin_permit,
+      :ifs_permit,
       :purpose_code,
       :source_code,
       :year
