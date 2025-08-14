@@ -1,427 +1,429 @@
-<section class="section">
-  <div class="section__inner">
-    <div class="section__header">
-      <!--Error message -->
-      <div class="grid_8">
-        <div
-          style="text-align: left; color: #FF0000; font-weight: bold; display: none;"
-          id="search-error-message"
-        >
-          <%= t('errors.no_data_1') %>. <br> <%= t('errors.no_data_2') %>.
-        </div>
-        <div
-          style="text-align: left; color: #FF0000; font-weight: bold; display: none;"
-          id="csv-limit-exceeded-error-message"
-        >
-          <%= t('errors.csv_limit_exceeded_1') %>. <br> <%#= t('errors.csv_limit_exceeded_2') %>
+<!-- This id is used by the JS to initialise form elements -->
+<form id="form_expert">
+  <section class="section">
+    <div class="section__inner">
+      <div class="section__header">
+        <!--Error message -->
+        <div class="grid_8">
+          <div
+            style="text-align: left; color: #FF0000; font-weight: bold; display: none;"
+            id="search-error-message"
+          >
+            <%= t('errors.no_data_1') %>. <br> <%= t('errors.no_data_2') %>.
+          </div>
+          <div
+            style="text-align: left; color: #FF0000; font-weight: bold; display: none;"
+            id="csv-limit-exceeded-error-message"
+          >
+            <%= t('errors.csv_limit_exceeded_1') %>. <br> <%#= t('errors.csv_limit_exceeded_2') %>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="section__body">
-      <div class="search">
-        <div class="search__columns">
-          <div class="search__column">
-            <div
-              id="tabs"
-              style="display: none;"
-              class="tabs"
-            >
-              <h4 class="search__heading">
-                Search database below:
-              </h4>
-              <div class="tabs__columns">
-                <div class="tabs__column">
-                <!-- Tab toggles -->
-                  <ul class="tabs__toggle-items">
-                    <li class="tabs__toggle-item">
-                      <a
-                        class="tabs__toggle"
-                        href="#tabs-year"
-                      >
+      <div class="section__body">
+        <div class="search">
+          <div class="search__columns">
+            <div class="search__column">
+              <div
+                id="tabs"
+                style="display: none;"
+                class="tabs"
+              >
+                <h4 class="search__heading">
+                  Search database below:
+                </h4>
+                <div class="tabs__columns">
+                  <div class="tabs__column">
+                  <!-- Tab toggles -->
+                    <ul class="tabs__toggle-items">
+                      <li class="tabs__toggle-item">
+                        <a
+                          class="tabs__toggle"
+                          href="#tabs-year"
+                        >
+                          <%= t('year_text') %>
+                        </a>
+                      </li>
+                      <li class="tabs__toggle-item">
+                        <a
+                          class="tabs__toggle"
+                          href="#tabs-exp"
+                        >
+                          <%= t('export_text') %>
+                        </a>
+                      </li>
+                      <li class="tabs__toggle-item">
+                        <a
+                          class="tabs__toggle"
+                          href="#tabs-imp"
+                        >
+                          <%= t('import_text') %>
+                        </a>
+                      </li>
+                      <li class="tabs__toggle-item">
+                        <a
+                          class="tabs__toggle"
+                          href="#tabs-source"
+                        >
+                          <%= t('source_text') %>
+                        </a>
+                      </li>
+                      <li class="tabs__toggle-item">
+                        <a
+                          class="tabs__toggle"
+                          href="#tabs-purpose"
+                        >
+                          <%= t('purpose_text') %>
+                        </a>
+                      </li>
+                      <li class="tabs__toggle-item">
+                        <a
+                          class="tabs__toggle"
+                          href="#tabs-terms"
+                        >
+                          <%= t('trade_text') %>
+                        </a>
+                      </li>
+                      <li class="tabs__toggle-item">
+                        <a
+                          class="tabs__toggle"
+                          href="#tabs-taxon"
+                        >
+                          <%= t('taxon_text') %>
+                        </a>
+                      </li>
+                    </ul>
+                    <!-- End of tab toggles -->
+                  </div>
+
+                  <div class="tabs__column">
+                    <!-- Tab content -->
+                    <div
+                      id="tabs-year"
+                      class="tabs__content"
+                    >
+                      <div id="year" class="tab__label">
                         <%= t('year_text') %>
-                      </a>
-                    </li>
-                    <li class="tabs__toggle-item">
-                      <a
-                        class="tabs__toggle"
-                        href="#tabs-exp"
-                      >
+                      </div>
+                      <p class="tab__description">
+                        <%= t('year_tip') %>
+                      </p>
+
+                      <div class="tab__select-items">
+                        <div class="tab__select-item">
+                          <span class="class="tab__select-label">
+                            <%= t('from') %>
+                          </span>
+                          <%= select_tag 'time_range_start', options_for_select(@years, @years.first), id: "qryFrom" %>
+                        </div>
+                        <div class="tab__select-item">
+                          <span class="class="tab__select-label">
+                            <%= t('to') %>:
+                          </span>
+                          <%= select_tag 'time_range_end', options_for_select(@years, @years.first), id: "qryTo" %>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      id="tabs-exp"
+                      class="tabs__content"
+                    >
+                      <div class="tab__label">
                         <%= t('export_text') %>
-                      </a>
-                    </li>
-                    <li class="tabs__toggle-item">
-                      <a
-                        class="tabs__toggle"
-                        href="#tabs-imp"
+                        <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('export_tip') %>
+                      </div>
+                      <div>
+                        <select
+                          id="expcty"
+                          multiple="multiple"
+                          name="exporters_ids[]"
+                          size="8"
+                          class="form__select form__select--multiple-choice multi_countries"
+                        >
+                          <option selected value="all_exp">
+                            <%= t('all_countries') %>
+                          </option>
+                        </select>
+                      </div>
+                      <div
+                        id="eu_disclaimer_exp"
+                        class="select_notes"
                       >
+                        <%= t('eu_disclaimer') %>
+                      </div>
+                    </div>
+
+                    <div
+                      id="tabs-imp"
+                      class="tabs__content"
+                    >
+                      <div class="tab__label">
                         <%= t('import_text') %>
-                      </a>
-                    </li>
-                    <li class="tabs__toggle-item">
-                      <a
-                        class="tabs__toggle"
-                        href="#tabs-source"
+                        <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('import_tip') %>
+                      </div>
+                      <div>
+                        <select
+                          id="impcty"
+                          multiple="multiple"
+                          name="importers_ids[]"
+                          size="8"
+                          class="form__select form__select--multiple-choice"
+                        >
+                          <option selected value="all_imp">
+                            <%= t('all_countries') %>
+                          </option>
+                        </select>
+                      </div>
+                      <div
+                        id="eu_disclaimer_imp"
+                        class="select_notes"
                       >
+                        <%= t('eu_disclaimer') %>
+                      </div>
+                    </div>
+
+                    <div
+                      id="tabs-source"
+                      class="tabs__content"
+                    >
+                      <div class="tab__label">
                         <%= t('source_text') %>
-                      </a>
-                    </li>
-                    <li class="tabs__toggle-item">
-                      <a
-                        class="tabs__toggle"
-                        href="#tabs-purpose"
-                      >
+                        <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('source_tip') %>
+                      </div>
+                      <div>
+                        <select
+                          id="sources"
+                          name="sources_ids[]"
+                          multiple="multiple"
+                          size="8"
+                          class="form__select form__select--multiple-choice"
+                        >
+                          <option
+                            value="all_sou"
+                            selected
+                          >
+                            <%= t('all_sources') %>
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div
+                      id="tabs-purpose"
+                      class="tabs__content"
+                    >
+                      <div class="tab__label">
                         <%= t('purpose_text') %>
-                      </a>
-                    </li>
-                    <li class="tabs__toggle-item">
-                      <a
-                        class="tabs__toggle"
-                        href="#tabs-terms"
-                      >
+                        <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('purpose_tip') %>
+                      </div>
+                      <div>
+                        <select
+                          id="purposes"
+                          name="purposes_ids[]"
+                          multiple="multiple"
+                          size="8"
+                          class="form__select form__select--multiple-choice"
+                        >
+                          <option
+                            value="all_pur"
+                            selected
+                          >
+                            <%= t('all_purposes') %>
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div
+                      id="tabs-terms"
+                      class="tabs__content"
+                    >
+                      <div class="tab__label">
                         <%= t('trade_text') %>
-                      </a>
-                    </li>
-                    <li class="tabs__toggle-item">
-                      <a
-                        class="tabs__toggle"
-                        href="#tabs-taxon"
-                      >
-                        <%= t('taxon_text') %> 
-                      </a>
-                    </li>
-                  </ul>
-                  <!-- End of tab toggles -->
+                        <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('trade_tip') %>
+                      </div>
+                      <div>
+                        <select
+                          id="terms"
+                          name="terms_ids[]"
+                          multiple="multiple"
+                          size="8"
+                          class="form__select form__select--multiple-choice"
+                        >
+                          <option
+                            value="all_ter"
+                            selected
+                          >
+                            <%= t('all_terms') %>
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div
+                      id="tabs-taxon"
+                      class="tabs__content"
+                    >
+                      <div class="tab__label">
+                        <%= t('taxon_text') %>
+                      </div>
+                      <div class="tab__description">
+                        <%= t('taxon_tip') %> <br>
+                      </div>
+                      <hr class="divider" />
+                      <div class="taxon-search-container">
+                        <div id="div_taxonomic_cascade" class="grid_8">
+                          <span style="padding:10px 0px">
+                            <%= t('taxon_search') %>
+                          </span>
+                          <br />
+                          <input
+                            type="text"
+                            size="30"
+                            name="taxon_concepts_ids[]"
+                            id="taxonomic_cascade_search"
+                            value=""
+                          >
+                          <br>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End of Tabs content -->
                 </div>
+              </div>
+            </div>
 
-                <div class="tabs__column">
-                  <!-- Tab content -->
-                  <div
-                    id="tabs-year"
-                    class="tabs__content"
+            <div class="search__column">
+              <!-- Search table -->
+              <div class="grid_5 selection_box">
+                <div id="empty_box">
+                  <h4 class="search__heading">
+                    <%= t('search_selection') %>
+                  </h4>
+                  <table
+                    id="table_selection"
+                    class="search-table"
+                    border="5"
+                    width="100%"
                   >
-                    <div id="year" class="tab__label">
-                      <%= t('year_text') %>
-                    </div>
-                    <p class="tab__description">
-                      <%= t('year_tip') %>
-                    </p>
-
-                    <div class="tab__select-items">
-                      <div class="tab__select-item">
-                        <span class="class="tab__select-label">
-                          <%= t('from') %>
-                        </span>
-                        <%= select_tag 'time_range_start', options_for_select(@years, @years.first), id: "qryFrom" %>
-                      </div>
-                      <div class="tab__select-item">
-                        <span class="class="tab__select-label">
-                          <%= t('to') %>:
-                        </span>
-                        <%= select_tag 'time_range_end', options_for_select(@years, @years.first), id: "qryTo" %>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    id="tabs-exp"
-                    class="tabs__content"
-                  >
-                    <div class="tab__label">
-                      <%= t('export_text') %>
-                      <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('export_tip') %>
-                    </div>
-                    <div>
-                      <select
-                        id="expcty"
-                        multiple="multiple"
-                        name="exporters_ids[]"
-                        size="8"
-                        class="form__select form__select--multiple-choice"
-                      >
-                        <option selected value="all_exp">
-                          <%= t('all_countries') %>
-                        </option>
-                      </select>
-                    </div>
-                    <div
-                      id="eu_disclaimer_exp"
-                      class="select_notes"
-                    >
-                      <%= t('eu_disclaimer') %>
-                    </div>
-                  </div>
-
-                  <div
-                    id="tabs-imp"
-                    class="tabs__content"
-                  >
-                    <div class="tab__label">
-                      <%= t('import_text') %>
-                      <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('import_tip') %>
-                    </div>
-                    <div>
-                      <select
-                        id="impcty"
-                        multiple="multiple"
-                        name="importers_ids[]"
-                        size="8"
-                        class="form__select form__select--multiple-choice"
-                      >
-                        <option selected value="all_imp">
-                          <%= t('all_countries') %>
-                        </option>
-                      </select>
-                    </div>
-                    <div
-                      id="eu_disclaimer_imp"
-                      class="select_notes"
-                    >
-                      <%= t('eu_disclaimer') %>
-                    </div>
-                  </div>
-
-                  <div
-                    id="tabs-source"
-                    class="tabs__content"
-                  >
-                    <div class="tab__label">
-                      <%= t('source_text') %>
-                      <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('source_tip') %>
-                    </div>
-                    <div>
-                      <select
-                        id="sources"
-                        name="sources_ids[]"
-                        multiple="multiple"
-                        size="8"
-                        class="form__select form__select--multiple-choice"
-                      >
-                        <option
-                          value="all_sou"
-                          selected
+                    <tr>
+                      <td width="30%">
+                        <%= t('year_text') %>
+                      </td>
+                      <td width="70%">
+                        <span
+                          id="year_from"
+                          class="span_label"
                         >
-                          <%= t('all_sources') %>
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div
-                    id="tabs-purpose"
-                    class="tabs__content"
-                  >
-                    <div class="tab__label">
-                      <%= t('purpose_text') %>
-                      <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('purpose_tip') %>
-                    </div>
-                    <div>
-                      <select
-                        id="purposes"
-                        name="purposes_ids[]"
-                        multiple="multiple"
-                        size="8"
-                        class="form__select form__select--multiple-choice"
-                      >
-                        <option
-                          value="all_pur"
-                          selected
-                        >
-                          <%= t('all_purposes') %>
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div
-                    id="tabs-terms"
-                    class="tabs__content"
-                  >
-                    <div class="tab__label">
-                      <%= t('trade_text') %>
-                      <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('trade_tip') %>
-                    </div>
-                    <div>
-                      <select
-                        id="terms"
-                        name="terms_ids[]"
-                        multiple="multiple"
-                        size="8"
-                        class="form__select form__select--multiple-choice"
-                      >
-                        <option
-                          value="all_ter"
-                          selected
-                        >
-                          <%= t('all_terms') %>
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div
-                    id="tabs-taxon"
-                    class="tabs__content"
-                  >
-                    <div class="tab__label">
-                      <%= t('taxon_text') %>
-                    </div>
-                    <div class="tab__description">
-                      <%= t('taxon_tip') %> <br>
-                    </div>
-                    <hr class="divider" />
-                    <div class="taxon-search-container">
-                      <div id="div_taxonomic_cascade" class="grid_8">
-                        <span style="padding:10px 0px">
-                          <%= t('taxon_search') %>
+                          <strong><%= t('from') %></strong>: <span></span>
                         </span>
                         <br />
-                        <input
-                          type="text"
-                          size="30"
-                          name="taxon_concepts_ids[]"
-                          id="taxonomic_cascade_search"
-                          value=""
+                        <span
+                          id="year_to"
+                          class="span_label"
                         >
-                        <br>
-                      </div>
-                    </div>
-                  </div>
+                          <strong><%= t('to') %></strong>: <span></span>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="30%">
+                        <%= t('export_text') %>
+                      </td>
+                      <td width="70%">
+                        <span
+                          id="expcty_out"
+                          class="span_label"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="30%">
+                        <%= t('import_text') %>
+                      </td>
+                      <td width="70%">
+                        <span
+                          id="impcty_out"
+                          class="span_label"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="30%">
+                        <%= t('source_text') %>
+                      </td>
+                      <td width="70%">
+                        <span
+                          id="sources_out"
+                          class="span_label"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="30%">
+                        <%= t('purpose_text') %>
+                      </td>
+                      <td width="70%">
+                        <span
+                          id="purposes_out"
+                          class="span_label"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="30%">
+                        <%= t('trade_text') %>
+                      </td>
+                      <td width="70%">
+                        <span
+                          id="terms_out"
+                          class="span_label"
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="30%">
+                        <%= t('species') %>
+                      </td>
+                      <td width="70%">
+                        <span
+                          id="species_out"
+                          class="span_label"
+                        />
+                      </td>
+                    </tr>
+                  </table>
                 </div>
-                <!-- End of Tabs content -->
-              </div>
-            </div>
-          </div>
+                <!-- Search Table End -->
 
-          <div class="search__column">
-            <!-- Search table -->
-            <div class="grid_5 selection_box">
-              <div id="empty_box">
-                <h4 class="search__heading">
-                  <%= t('search_selection') %>
-                </h4>
-                <table
-                  id="table_selection"
-                  class="search-table"
-                  border="5"
-                  width="100%"
-                >
-                  <tr>
-                    <td width="30%">
-                      <%= t('year_text') %>
-                    </td>
-                    <td width="70%">
-                      <span
-                        id="year_from"
-                        class="span_label"
-                      >
-                        <strong><%= t('from') %></strong>: <span></span>
-                      </span>
-                      <br />
-                      <span
-                        id="year_to"
-                        class="span_label"
-                      >
-                        <strong><%= t('to') %></strong>: <span></span>
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="30%">
-                      <%= t('export_text') %>
-                    </td>
-                    <td width="70%">
-                      <span
-                        id="expcty_out"
-                        class="span_label"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="30%">
-                      <%= t('import_text') %>
-                    </td>
-                    <td width="70%">
-                      <span
-                        id="impcty_out"
-                        class="span_label"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="30%">
-                      <%= t('source_text') %>
-                    </td>
-                    <td width="70%">
-                      <span
-                        id="sources_out"
-                        class="span_label"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="30%">
-                      <%= t('purpose_text') %>
-                    </td>
-                    <td width="70%">
-                      <span
-                        id="purposes_out"
-                        class="span_label"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="30%">
-                      <%= t('trade_text') %>
-                    </td>
-                    <td width="70%">
-                      <span
-                        id="terms_out"
-                        class="span_label"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="30%">
-                      <%= t('species') %>
-                    </td>
-                    <td width="70%">
-                      <span
-                        id="species_out"
-                        class="span_label"
-                      />
-                    </td>
-                  </tr>
-                </table>
+                <!-- Buttons -->
+                <div class="search__buttons">
+                  <button
+                    type="reset"
+                    name="reset"
+                    id="reset_search"
+                    class="search__button search__button--reset"
+                  >
+                    <%= t('reset') %>
+                  </button>
+                  <button
+                    id='submit_expert'
+                    href="#"
+                    class="search__button search__button--search"
+                  >
+                    <%= t('search') %>
+                  </button>
+                  <span id="cites-trade-loading" style="display:none">
+                    <%= image_tag('loading.gif') %>
+                  </span>
+                </div>
+                <!-- Buttons End -->
               </div>
-              <!-- Search Table End -->
-              
-              <!-- Buttons -->
-              <div class="search__buttons">
-                <button
-                  type="reset"
-                  name="reset"
-                  id="reset_search"
-                  class="search__button search__button--reset"
-                >
-                  <%= t('reset') %>
-                </button>
-                <button
-                  id='submit_expert'
-                  href="#"
-                  class="search__button search__button--search"
-                >
-                  <%= t('search') %>
-                </button>
-                <span id="cites-trade-loading" style="display:none">
-                  <%= image_tag('loading.gif') %>
-                </span>
-              </div>
-              <!-- Buttons End -->
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-
+  </section>
+</form>
