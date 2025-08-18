@@ -50,13 +50,14 @@ es:
   translation_in_progress_html: Una versión actualizada de la "Guía de utilización de la base de datos sobre el comercio CITES" ha sido publicada en <a href="/cites_trade_guidelines/en-CITES_Trade_Database_Guide.pdf">inglés</a> (traducción en curso).
   new: "Nueva versión"
 
+  search_results: "Resultados de la búsqueda:"
   reports: "INFORMES"
   report: "informe"
   select_output: "Seleccionar el tipo de salida:"
   select_report: "Seleccione el tipo de informe:"
   comparative_tabulations: "Tabulaciónes Comparativas"
   trade_tabulations: " Tabulaciones del Comercio Bruto/Neto"
-  get_report: "Obtener el informe"
+  get_report: "Obtener el Informe"
   new_search: "Nueva Búsqueda"
 
   from: "De"
@@ -67,8 +68,8 @@ es:
   gross_imports: "Importaciones Brutas"
   net_exports: "Exportaciones Netas"
   net_imports: "Importaciones Netas"
-  comma_separated: "separado por comas"
-  semicolon_separated: "separado por punto y coma"
+  comma_separated: "Separado por comas"
+  semicolon_separated: "Separado por punto y coma"
   csv_separator_tip: "¿Problemas para ver los resultados? Intente cambiar el tipo de resultado .csv a separado por punto y coma."
 
   table_title:

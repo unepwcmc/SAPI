@@ -53,13 +53,14 @@ en:
   trade_guide: "A Guide to Interpreting Gross/Net Trade Outputs."
   new: "New"
 
+  search_results: "Search results:"
   reports: "REPORTS"
   report: "report"
   select_output: "Select output type:"
   select_report: "Select report type: "
   comparative_tabulations: "Comparative Tabulations"
   trade_tabulations: "Gross/Net Trade Tabulations"
-  get_report: "Get report"
+  get_report: "Get Report"
   new_search: "New Search"
 
   from: "From"
@@ -70,8 +71,8 @@ en:
   gross_imports: "Gross Imports"
   net_exports: "Net Exports"
   net_imports: "Net Imports"
-  comma_separated: "comma separated"
-  semicolon_separated: "semicolon separated"
+  comma_separated: "Comma separated"
+  semicolon_separated: "Semicolon separated"
   csv_separator_tip: "Trouble viewing outputs? Try changing the .csv output type to semicolon separated."
 
   table_title:

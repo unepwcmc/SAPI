@@ -50,13 +50,14 @@ fr:
   translation_in_progress_html: Une version mise à jour du ‘Guide d’utilisation de la base de données sur le commerce CITES’ a été publiée en <a href="/cites_trade_guidelines/en-CITES_Trade_Database_Guide.pdf">anglais</a> (traduction en cours).
   new: "Nouvelle version"
 
+  search_results: "Résultats de la recherche:"
   reports: "RAPPORTS"
   report: "rapport"
   select_output: "Sélectionnez le type de sortie:"
   select_report: "Sélectionnez le type de rapport:"
   comparative_tabulations: "Tabulations Comparatives"
   trade_tabulations: "Tabulations du Commerce Brut/Net"
-  get_report: "Obtenir le rapport"
+  get_report: "Obtenir le Rapport"
   new_search: "Nouvelle Recherche"
 
   from: "De"
@@ -67,8 +68,8 @@ fr:
   gross_imports: "Importations Brutes"
   net_exports: "Exportations Nettes"
   net_imports: "Importations Nettes"
-  comma_separated: "séparés par des virgules"
-  semicolon_separated: "séparés par des points-virgules"
+  comma_separated: "Séparés par des virgules"
+  semicolon_separated: "Séparés par des points-virgules"
   csv_separator_tip: "Vous avez des difficultés à visualiser la sortie ? Essayez de changer le type de sortie .csv pour « séparés par des virgules »."
 
   table_title:

@@ -1,0 +1,88 @@
+<div class="grid_16 main_content">
+
+  <%= render :partial => 'net_trade_warning' %>
+
+  <table id="this_should_not_be_a_table" border="0" align="center">
+    <tr>
+      <td><h3 align="center"><%= t('reports') %> <br>
+      </h3></td>
+    </tr>
+    <tr>
+      <td style="padding:20px">
+        <span style="font-weight:900;font-size:14px;"> <%= t('select_output') %> </span>
+        <br>
+        <span style="display:none;"
+          id="web-limit-exceeded-error-message">
+          <%= t('errors.web_limit_exceeded_1') %>.<br>
+          <%= t('errors.web_limit_exceeded_2') %>.
+        </span>
+        <br>
+        <input type="radio" name="outputType" value="web" checked> <span id='web-option'>web</span>
+        <div>
+          <input type="radio" name="outputType" value="csv"> csv
+          <select name="csvSeparator" style='background-color:#CCFFFF' id="csv_separator" >
+            <option value="comma"> <%= t('comma_separated') %> </option>
+            <option value="semicolon"> <%= t('semicolon_separated') %> </option>
+          </select>
+          <%= image_tag "cites_trade/information3.gif", class: "qtipify", title: t('csv_separator_tip') %>
+        </div>
+      </td>
+    </tr>
+
+    <tr id="net_gross_options">
+      <td style="padding:20px">
+        <span style="font-weight:900;font-size:14px;"> <%= t('select_report') %> </span>
+        <br>
+        <br>
+        <input name="report" id="report_comparative" type="radio" value="comparative" checked="checked"  /> <%= t('comparative_tabulations') %>
+        <br>
+        <div id="gross_net_section">
+          <input name="report" id="report_gross_net" type="radio" value="gross_net" /> <%= t('trade_tabulations') %> <select name="reportType" style='background-color:#CCFFFF' id="report_type" >
+          <option value="gross_exports"> <%= t('gross_exports') %> </option>
+          <option value="gross_imports"> <%= t('gross_imports') %> </option>
+          <option value="net_exports"> <%= t('net_exports') %> </option>
+          <option value="net_imports"> <%= t('net_imports') %> </option>
+        </div>
+      </select>
+    </td></tr>
+    <tr>
+      <td>
+        <div align="right">
+          <button style="float:left; margin-top:12px" id='button_report' value=" Get report ">
+          <%= image_tag "cites_trade/page.gif", alt: "" %>
+          <%= t('get_report') %>
+          </button>
+          <a id='view_genie' href="" style="display:none"></a>
+          <a id='download_genie' href="#" style="display:none"></a>
+        </div>
+
+        <p><br><br></p>
+
+      </td></tr>
+    </form>
+    <tr><td>
+      <hr>
+
+      <div id="new_search_wrapper" align="center">
+
+        <a id="new_search" style="float:left" href="/<%= I18n.locale %>/cites_trade/">
+          <button id="new_search" style="float:left" value=" New Search ">
+            <%= image_tag "cites_trade/refresh1.png", alt: "" %> <%= t('new_search') %>
+          </button>
+        </a>
+
+        <br>
+      </div>
+      <br />
+      <div align="left">
+        <strong><%= t('download') %>: </strong>
+        <a href="/cites_trade_guidelines/<%= I18n.locale %>-CITES_Trade_Database_Guide.pdf"><%= t('db_guide') %></a>
+        <% if I18n.locale == :en %>
+          <i class="new"><%= t('new') %><i>
+        <% end %>
+      </div>
+
+    </td></tr>
+  </table>
+
+</div>
