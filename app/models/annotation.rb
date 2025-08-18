@@ -74,15 +74,25 @@ class Annotation < ApplicationRecord
     )
   }
 
+  ##
   # If this pattern is not respected, a query which parses (most of) the
   # symbol as an integer
   #
   # OK: '^1', '#33'; not ok '#18edit'
   validates :symbol, presence: false, format: {
     allow_blank: true,
-    message: 'should be a symbol followed by one or more digits',
+    message: 'should be a symbol followed by one or more digits, where parent_symbol is present',
     with: /\A[^0-9a-z\s]\d+\z/i
-  }
+  }, if: Proc.new { |annotation| annotation.parent_symbol&.present? }
+
+  ##
+  # The exception is for those entries with a purely numerical pattern which
+  # are set by `db/mviews/005_rebuild_designation_listing_changes_mview.sql`
+  validates :symbol, presence: false, format: {
+    allow_blank: true,
+    message: 'should be one or more digits, where parent_symbol is missing',
+    with: /\A\d+\z/i
+  }, if: Proc.new { |annotation| !annotation.parent_symbol }
 
   # cannot make [ :parent_symbol, :symbol ] unique - see https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/282
 
@@ -108,7 +118,11 @@ class Annotation < ApplicationRecord
   end
 
   def full_symbol
-    "#{parent_symbol}#{symbol}"
+    if parent_symbol
+      "#{parent_symbol}#{symbol}"
+    else
+      symbol
+    end
   end
 
   def self.ignored_attributes
