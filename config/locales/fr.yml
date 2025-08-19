@@ -3,8 +3,8 @@ fr:
   cites_description: "La base de données sur le commerce CITES, gérée par le Centre mondial de surveillance continue de la conservation de la nature du PNUE (PNUE-WCMC) au nom du Secrétariat CITES"
   cites_sub_title: "Veuillez saisir votre recherche ci-dessous"
   errors:
-    no_data_1: "Votre recherche n'a retourné aucune donnée"
-    no_data_2: "S'il vous plaît sélectionner autres variables"
+    no_data_1: "Votre recherche n'a retourné aucune donnée."
+    no_data_2: "S'il vous plaît sélectionner autres variables."
     csv_limit_exceeded_1: "Votre recherche a retourné un sous-ensemble trop grand (plus d’1 million d'enregistrements). Vous devez limiter la sélection temporelle (l’intervalle d’années) et sélectionner au moins un pays importateur/exportateur ou un taxon"
     csv_limit_exceeded_2: "Vous devez limiter la gamme des années et selectionner au moins un pays importateur/exportateur ou un taxon"
     web_limit_exceeded_1: "Vue en ligne n'est pas disponible pour les grands sous-ensembles"

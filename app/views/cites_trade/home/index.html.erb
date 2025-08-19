@@ -1,21 +1,36 @@
 <!-- This id is used by the JS to initialise form elements -->
-<form id="form_expert">
+<form
+  id="form_expert"
+  onsubmit="return false"
+>
   <section class="section">
     <div class="section__inner">
       <div class="section__header">
         <!--Error message -->
-        <div class="grid_8">
-          <div
-            style="text-align: left; color: #FF0000; font-weight: bold; display: none;"
-            id="search-error-message"
-          >
-            <%= t('errors.no_data_1') %>. <br> <%= t('errors.no_data_2') %>.
+        <div
+          id="search-error-message"
+          class="error-message"
+        >
+          <div class="error-message__content">
+            <div class="error-message__icon">
+              <%= raw File.read(Rails.root.join("app/assets/images/cites_trade/icon-info.svg")) %>
+            </div>
+            <p class="error-message__text">
+              <%= t('errors.no_data_1') %> <%= t('errors.no_data_2') %>
+            </p>
           </div>
-          <div
-            style="text-align: left; color: #FF0000; font-weight: bold; display: none;"
-            id="csv-limit-exceeded-error-message"
-          >
-            <%= t('errors.csv_limit_exceeded_1') %>. <br> <%#= t('errors.csv_limit_exceeded_2') %>
+        </div>
+        <div
+          id="csv-limit-exceeded-error-message"
+          class="error-message"
+        >
+          <div class="error-message__content">
+            <div class="error-message__icon">
+              <%= raw File.read(Rails.root.join("app/assets/images/cites_trade/icon-info.svg")) %>
+            </div>
+            <p class="error-message__text">
+              <%= t('errors.csv_limit_exceeded_1') %>. <br> <%#= t('errors.csv_limit_exceeded_2') %>
+            </p>
           </div>
         </div>
       </div>
