@@ -246,7 +246,7 @@ BEGIN
     RETURN -1;
   END IF;
 
-  FOREACH permit_type IN ARRAY ARRAY['export', 'import', 'origin'] LOOP
+  FOREACH permit_type IN ARRAY ARRAY['export', 'import', 'origin', 'ifs'] LOOP
 
     sql := 'WITH split_permits AS (
       SELECT id, SQUISH(regexp_split_to_table(' || permit_type || '_permit, ''[:;,]'')) AS permit
