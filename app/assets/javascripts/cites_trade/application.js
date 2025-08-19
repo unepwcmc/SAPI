@@ -141,10 +141,15 @@ $(document).ready(function(){
   }
   queryResults.ajax = true;
   $("#submit_expert").click(function(e) {
-    $("#cites-trade-loading").show();
+    hideAllErrors();
+    $("#cites-trade-loading").css('display', 'inline-block');
     queryResults.call(this);
   });
 
+  function hideAllErrors() {
+    $('#web-limit-exceeded-error-message').hide();
+    $('#csv-limit-exceeded-error-message').hide();
+  };
 
   //function to reset all the countrols on the expert_accord page
   function resetSelects() {

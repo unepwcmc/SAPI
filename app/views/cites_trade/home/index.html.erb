@@ -428,10 +428,11 @@
                     class="search__button search__button--search"
                   >
                     <%= t('search') %>
+                    <span
+                      id="cites-trade-loading"
+                      class="search__button-loader"
+                    />
                   </button>
-                  <span id="cites-trade-loading" style="display:none">
-                    <%= image_tag('loading.gif') %>
-                  </span>
                 </div>
                 <!-- Buttons End -->
               </div>
@@ -442,3 +443,11 @@
     </div>
   </section>
 </form>
+
+
+<span
+  id="cites-trade-loading"
+  class="search__button-loading"
+>
+  <%= image_tag('loading.gif') %>
+</span>
