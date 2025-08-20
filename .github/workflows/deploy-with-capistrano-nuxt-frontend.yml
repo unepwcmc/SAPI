@@ -13,7 +13,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: ${{ inputs.environment }}
 
     steps:
@@ -40,10 +40,10 @@ jobs:
           START_TIME: ${{ env.START_TIME }}
           JOB_LINK: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-      - name: Set Up Ruby 2.7.2
+      - name: Set Up Ruby 3.2.5
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.2
+          ruby-version: 3.2.5
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
