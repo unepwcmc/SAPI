@@ -1,0 +1,46 @@
+{
+  "text": "🎉 Deployment finished (Completed)",
+  "attachments": [
+    {
+      "pretext": "GitHub Action: Deployment finished successfully",
+      "color": "28a745",
+      "fields": [
+        {
+          "title": "Job",
+          "short": true,
+          "value": "Deployment"
+        },
+        {
+          "title": "Repository",
+          "short": true,
+          "value": "${{ env.REPOSITORY }}"
+        },
+        {
+          "title": "Runner",
+          "short": true,
+          "value": "${{ env.RUNNER_NAME }}"
+        },
+        {
+          "title": "Commit Message",
+          "short": true,
+          "value": "${{ env.COMMIT_MESSAGE }}"
+        },
+        {
+          "title": "Branch",
+          "short": true,
+          "value": "${{ github.ref }}"
+        },
+        {
+          "title": "Status",
+          "short": true,
+          "value": "Completed"
+        },
+        {
+          "title": "Job Link",
+          "short": true,
+          "value": "<${{ env.JOB_LINK }}|View Job>"
+        }
+      ]
+    }
+  ]
+}

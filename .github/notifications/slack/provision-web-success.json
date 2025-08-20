@@ -1,0 +1,46 @@
+{
+  "text": "🎉 Provision Web Instance completed successfully",
+  "attachments": [
+    {
+      "pretext": "GitHub Action: Provision Web Instance completed successfully",
+      "color": "36a64f",
+      "fields": [
+        {
+          "title": "Job",
+          "short": true,
+          "value": "Provision Web Instance"
+        },
+        {
+          "title": "Repository",
+          "short": true,
+          "value": "${{ env.REPOSITORY }}"
+        },
+        {
+          "title": "Runner",
+          "short": true,
+          "value": "${{ env.RUNNER_NAME }}"
+        },
+        {
+          "title": "Branch",
+          "short": true,
+          "value": "${{ github.ref }}"
+        },
+        {
+          "title": "Commit Message",
+          "short": true,
+          "value": "${{ env.COMMIT_MESSAGE }}"
+        },
+        {
+          "title": "Web Server IP",
+          "short": true,
+          "value": "${{ env.WEB_SERVER_IP }}"
+        },
+        {
+          "title": "Job Link",
+          "short": true,
+          "value": "<${{ env.JOB_LINK }}|View Job>"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+# name: Deploy to Production
+
+# on:
+#   push:
+#     branches:
+#       - 
+#   workflow_dispatch:
+#     inputs:
+#       confirm_production:
+#         description: 'Type "PRODUCTION" to confirm deployment'
+#         required: true
+#         default: ''
+
+# jobs:
+#   verify-production:
+#     if: github.event_name == 'workflow_dispatch'
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Verify Production Confirmation
+#         run: |
+#           if [ "${{ github.event.inputs.confirm_production }}" != "PRODUCTION" ]; then
+#             echo "❌ Production deployment not confirmed. Please type 'PRODUCTION' to proceed."
+#             exit 1
+#           fi
+#           echo "✅ Production deployment confirmed"
+
+#   deploy-production:
+#     name: Deploy to Production Environment
+#     needs: [verify-production]
+#     if: always() && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && needs.verify-production.result == 'success'))
+#     uses: unepwcmc/SAPI/tree/refactor/cites-trade-database-redesign/.github/workflows/deploy-with-capistrano-nuxt-frontend.yml@main
+#     with:
+#       branch: ${{ github.ref }}
+#       environment: production
+#     secrets: inherit 

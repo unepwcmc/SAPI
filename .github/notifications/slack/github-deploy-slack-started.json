@@ -1,0 +1,41 @@
+{
+  "text": "🚀 GitHub Action started (In Progress)",
+  "attachments": [
+    {
+      "pretext": "GitHub Action: Deploy to ${{ env.ENVIRONMENT }} started at ${{ env.START_TIME }} (In Progress)",
+      "color": "dbab09",
+      "fields": [
+        {
+          "title": "Job",
+          "short": true,
+          "value": "Deploy to ${{ env.ENVIRONMENT }}"
+        },
+        {
+          "title": "Repository",
+          "short": true,
+          "value": "${{ env.REPOSITORY }}"
+        },
+        {
+          "title": "Runner",
+          "short": true,
+          "value": "${{ env.RUNNER_NAME }}"
+        },
+        {
+          "title": "Environment",
+          "short": true,
+          "value": "${{ env.ENVIRONMENT }}"
+        },
+        {
+          "title": "Started At",
+          "short": true,
+          "value": "${{ env.START_TIME }}"
+        },
+        {
+          "title": "Job Link",
+          "short": true,
+          "value": "<${{ env.JOB_LINK }}|View Job>"
+        }
+      ]
+    }
+  ]
+}
