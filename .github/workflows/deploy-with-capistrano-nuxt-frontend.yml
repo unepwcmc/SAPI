@@ -106,6 +106,7 @@ jobs:
         env:
           SSH_AUTH_SOCK: ${{ env.SSH_AUTH_SOCK }}
           SSH_AGENT_PID: ${{ env.SSH_AGENT_PID }}
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: bundle exec cap ${{ inputs.environment }} deploy
 
       - name: Set end time
