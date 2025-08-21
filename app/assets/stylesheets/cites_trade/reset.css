@@ -53,13 +53,8 @@ h6 {
   overflow-wrap: break-word;
 }
 
-/* 9. Improve line wrapping */
-p {
-  text-wrap: pretty;
-}
-
 /*
-  10. Create a root stacking context
+  9. Create a root stacking context
 */
 #root,
 #__next {

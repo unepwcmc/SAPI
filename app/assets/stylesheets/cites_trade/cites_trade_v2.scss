@@ -576,6 +576,10 @@ a.header__infobox-link {
   font-weight: 600;
   margin-bottom: $spacer-small;
 }
+
+.tab__text {
+  margin-bottom: $spacer-medium;
+}
   
 .tab__select-items {
   display: flex;
@@ -783,6 +787,12 @@ a.header__infobox-link {
   align-items: center;
 }
 
+.results__title {
+  @include font_title-1;
+  font-weight: 600;
+  margin: 0;
+}
+
 .results__button {
   @include button_primary;
 }
@@ -791,7 +801,7 @@ a.header__infobox-link {
   @include text_small;
   background-color: $color-white;
   border-radius: 12px;
-  padding: $spacer-medium;
+  padding: $item-spacing;
 
   display: flex;
   justify-content: center;
