@@ -8,7 +8,6 @@ on:
 jobs:
   deploy-staging:
     name: Deploy to Staging Environment
-    environment: cites-trade-staging
     uses: ./.github/workflows/deploy-with-capistrano-nuxt-frontend.yml
     with:
       branch: ${{ github.ref }}
