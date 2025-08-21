@@ -48,7 +48,7 @@
             class="topbar__button"
           >
             <%= raw File.read(Rails.root.join("app/assets/images/cites_trade/icon-download.svg")) %>
-            Download
+            <%= t('download') %>
           </a>
         </div>
       </div>
@@ -80,12 +80,16 @@
             <%= t('cites_title') %>
           </h2>
           <h3 class="header__text">
-            The CITES Trade Database is the most comprehensive and authoritative database on international trade in wildlife. Dating back to 1975, it reflects the official trade records as reported by Parties in their annual reports to the Convention on International Trade in Endangered Species of Wild Fauna and Flora (CITES).
+            <%= t('cites_intro') %>
           </h3>
           <div class="header__infobox">
             <div class="header__infobox-column">
-              <h4 class="header__infobox-heading">A guide to using the CITES Trade Database</h4>
-              <p class="header__infobox-text">Due to the complexities of interpreting CITES trade data, it is highly recommended that all those interested in using the CITES Trade Database read this guidance prior to using the data.</p>
+              <h4 class="header__infobox-heading">
+                <%= t('cites_infobox.heading') %>
+              </h4>
+              <p class="header__infobox-text">
+                <%= t('cites_infobox.text') %>
+              </p>
             </div>
             <div class="header__infobox-column">
               <a
@@ -94,13 +98,15 @@
                 class="header__infobox-link"
               >
                   <%= raw File.read(Rails.root.join("app/assets/images/cites_trade/icon-external.svg")) %>
-                  View Guide
+                  <%= t('view_guide') %>
                 </a>
-              <p class="header__infobox-disclaimer">Guide only available in English.</p>
+              <p class="header__infobox-disclaimer">
+                <%= t('guide_in_english') %>
+              </p>
             </div>
           </div>
           <span class="header__image-credit">
-            Image credits: AdobeStock_255618473
+            <%= t('image_credits') %> AdobeStock_255618473
           </span>
         </div>
       </div>
@@ -116,7 +122,7 @@
           <div class="footer__items">
             <div class="footer__item">
               <h4 class="footer__heading">
-                The CITES Trade Database was developed and is maintained by UNEP-WCMC on behalf of the CITES Secretariat
+                <%= t('footer.heading') %>
               </h4>
               <ul class="footer__logo-items">
                 <li class="footer__logo-item">
@@ -145,11 +151,13 @@
                 target="_blank"
                 class="footer__link"
               >
-                Contact us
+                <%= t('footer.contact_us') %>
               </a>
             </div>
             <div class="footer__item">
-              <h4 class="footer__heading">Addition resources</h4>
+              <h4 class="footer__heading">
+                <%= t('footer.additional_resources') %>
+              </h4>
               <ul class="footer__logo-items">
                 <li class="footer__logo-item">
                   <a

@@ -95,6 +95,7 @@ $font-body: archivo, sans-serif;
   font-size: 18px;
   font-weight: bold;
   line-height: 1.4;
+  text-align: center;
   text-decoration: none;
   padding: 8px 30px;
 
@@ -326,9 +327,11 @@ a.language_links__link {
 a.header__infobox-link {
   @include button_ghost;
   margin-left: auto;
+  width: 100%;
 
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 
   svg {
     width: 20px;

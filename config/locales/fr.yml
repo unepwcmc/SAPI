@@ -1,7 +1,10 @@
 fr:
   cites_title: "Base de Données sur le Commerce CITES"
   cites_description: "La base de données sur le commerce CITES, gérée par le Centre mondial de surveillance continue de la conservation de la nature du PNUE (PNUE-WCMC) au nom du Secrétariat CITES"
-  cites_sub_title: "Veuillez saisir votre recherche ci-dessous"
+  cites_intro: "La base de données sur le commerce CITES est la base de données la plus complète et la plus fiable sur le commerce international des espèces sauvages. Datant de 1975, elle reflète les données commerciales officielles communiquées par les Parties dans leurs rapports annuels à la Convention sur le commerce international des espèces de faune et de flore sauvages menacées d'extinction (CITES)."
+  cites_infobox:
+    heading: "Guide d'utilisation de la base de données sur le commerce CITES"
+    text: "En raison de la complexité de l’interprétation des données commerciales de la CITES, il est fortement recommandé à tous ceux qui souhaitent utiliser la base de données sur le commerce de la CITES de lire ces instructions avant d’utiliser les données."
   errors:
     no_data_1: "Votre recherche n'a retourné aucune donnée."
     no_data_2: "S'il vous plaît sélectionner autres variables."
@@ -12,6 +15,7 @@ fr:
   warnings:
     net_trade_1: "S'il vous plaît lire attentivement:"
     net_trade_2: "Le commerce net est le résultat de la soustraction des réexportations d'un pays de ses importations. Par conséquent, si votre sélection de données concerne seulement des importations ou des exportations des pays spécifiés, vous ne pouvez pas calculer les importations ou les exportations nettes. Vous pouvez uniquement obtenir des importations ou exportations brutes."
+  image_credits: "Crédits image:"
 
   year_text: "Période"
   year_tip: "Sélectionnez les années de début (De) et de fin (A) pour votre recherche. Il est conseillé de limiter votre demande de données à une période de 5 années maximum"
@@ -38,6 +42,7 @@ fr:
   all_terms: "Tous les Termes"
 
   search_selection: "Critères de recherche sélectionnés:"
+  search_database: "Rechercher dans la base de données ci-dessous:"
   search: "Rechercher"
   reset: "Réinitialiser"
   reselect: "Resélectionner les Données"
@@ -45,6 +50,7 @@ fr:
 
   download: "Télécharger"
   db_guide: "Un Guide d'Utilisation de la Base de Données sur le Commerce CITES"
+  guide_in_english: "Guide disponible uniquement en anglais."
   tabulation_guide: "Un Guide pour Interpréter les Sorties de Tabulations Comparatives"
   trade_guide: "Un Guide pour Interpréter les Sorties du Commerce Brut/Net"
   translation_in_progress_html: Une version mise à jour du ‘Guide d’utilisation de la base de données sur le commerce CITES’ a été publiée en <a href="/cites_trade_guidelines/en-CITES_Trade_Database_Guide.pdf">anglais</a> (traduction en cours).
@@ -59,6 +65,7 @@ fr:
   trade_tabulations: "Tabulations du Commerce Brut/Net"
   get_report: "Obtenir le Rapport"
   new_search: "Nouvelle Recherche"
+  view_guide: "Voir le Guide"
 
   from: "De"
   to: "A"
@@ -115,7 +122,12 @@ fr:
         Ce projet a été financé par l'Union européenne dans le cadre d'un projet de l’accord de coopération du programme GPGC CE-PNUE, attribué au Secrétariat CITES.
       </p>
     "
-    citation_label: Citation
+    citation_label: "Citation"
     citation_text: "Programme des Nations Unies pour l'environnement - Centre mondial pour le suivi de la conservation (Comps.) 2020. Liste des espèces CITES – Manuel d’Identification CITES. Secrétariat CITES, Genève, Suisse, et UNEPWCMC, Cambridge, Royaume Uni. Consulté le %{date}."
-    copyright_label: Copyright
-    copyright_text: 2020 Secrétariat de la Convention sur le commerce international des espèces de faune et de flore sauvages menacées d'extinction
+    copyright_label: "Copyright"
+    copyright_text: "2020 Secrétariat de la Convention sur le commerce international des espèces de faune et de flore sauvages menacées d'extinction"
+
+  footer:
+    heading: "La base de données sur le commerce CITES a été développée et est maintenue par le PNUE-WCMC pour le compte du Secrétariat CITES"
+    additional_resources: "Ressources supplémentaires"
+    contact_us: "Contactez-nous"

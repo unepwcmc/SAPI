@@ -1,7 +1,10 @@
 es:
   cites_title: "Base de Datos sobre el Comercio CITES"
   cites_description: "La Base de datos sobre el comercio CITES, administrada por el PNUMA Centro de Monitoreo de la Conservación Mundial (PNUMA-CMCM) en nombre de la Secretaría CITES."
-  cites_sub_title: "Por favor introduzca sus criterios de búsqueda más abajo"
+  cites_intro: "La Base de Datos sobre el Comercio CITES es la base de datos más completa y fiable sobre el comercio internacional de vida silvestre. Desde 1975, refleja los registros oficiales de comercio notificados por las Partes en sus informes anuales a la Convención sobre el Comercio Internacional de Especies Amenazadas de Fauna y Flora Silvestres (CITES)."
+  cites_infobox:
+    heading: "Guía para el uso de la base de datos sobre el comercio de la CITES"
+    text: "Debido a la complejidad de la interpretación de los datos comerciales de la CITES, se recomienda encarecidamente que todos aquellos interesados ​​en utilizar la base de datos comerciales de la CITES lean esta guía antes de utilizar los datos."
   errors:
     no_data_1: "Su consulta ha devuelto ningún dato."
     no_data_2: "Por favor selecciona otras variables."
@@ -12,6 +15,7 @@ es:
   warnings:
     net_trade_1: "Por favor, lea cuidadosamente:"
     net_trade_2: "El comercio neto es el resultado de la sustracción de las reexportaciones de un país de sus importaciones. Por lo tanto, si su selección de datos sólo ha implicado importaciones o exportaciones de países especificados, no se podrán calcular las importaciones o exportaciones netas - sólo se pueden obtener importaciones o exportaciones brutas."
+  image_credits: "Créditos de la imagen:"
 
   year_text: "Rango de Años"
   year_tip: "Seleccione el año de inicio (De) y el año final (A) para su búsqueda. Es aconsejable limitar su búsqueda de datos a un rango que no exceda de los 5 años"
@@ -38,6 +42,7 @@ es:
   all_terms: "Todos los Términos"
 
   search_selection: "Criterios de búsqueda seleccionados:"
+  search_database: "Buscar en la base de datos a continuación:"
   search: "Buscar"
   reset: "Reajustar"
   reselect: "Volver a Seleccionar los Datos"
@@ -45,6 +50,7 @@ es:
 
   download: "Descargar"
   db_guide: "Una Guía para Utilizar la Base de Datos sobre el Comercio CITES"
+  guide_in_english: "Guía disponible sólo en inglés."
   tabulation_guide: "Una Guía para Interpretar las Salidas de Tabulaciones Comparativas"
   trade_guide: "Una Guía para Interpretar las Salidas de Comercio Bruto/Neto"
   translation_in_progress_html: Una versión actualizada de la "Guía de utilización de la base de datos sobre el comercio CITES" ha sido publicada en <a href="/cites_trade_guidelines/en-CITES_Trade_Database_Guide.pdf">inglés</a> (traducción en curso).
@@ -59,6 +65,7 @@ es:
   trade_tabulations: " Tabulaciones del Comercio Bruto/Neto"
   get_report: "Obtener el Informe"
   new_search: "Nueva Búsqueda"
+  view_guide: "Ver Guía"
 
   from: "De"
   to: "A"
@@ -115,7 +122,12 @@ es:
         Este proyecto fue financiado por la Unión Europea en el marco del proyecto de Acuerdo de Cooperación del Programa GPGC CE-ONU Medio Ambiente, otorgado a la Secretaría de la CITES.
       </p>
     "
-    citation_label: Cita
+    citation_label: "Cita"
     citation_text: "ONU Medio Ambiente - Centro Mundial para el Seguimiento de la Conservación (UNEP-WCMC) (Comps.) 2020. Lista de especies CITES - Manual de identificación CITES. Secretaría CITES, Ginebra, Suiza, y UNEP-WCMC, Cambridge, Reino Unido. Accedido el %{date}"
-    copyright_label: Copyright
-    copyright_text: 2020 Secretaría de la Convención sobre el Comercio Internacional de Especies Amenazadas de Fauna y Flora Silvestres
+    copyright_label: "Copyright"
+    copyright_text: "2020 Secretaría de la Convención sobre el Comercio Internacional de Especies Amenazadas de Fauna y Flora Silvestres"
+
+  footer:
+    heading: "La base de datos sobre el comercio de la CITES fue desarrollada y es mantenida por el PNUMA-WCMC en nombre de la Secretaría de la CITES."
+    additional_resources: "Recursos adicionales"
+    contact_us: "Contáctanos"

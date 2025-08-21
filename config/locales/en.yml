@@ -4,7 +4,10 @@
 en:
   cites_title: "CITES Trade Database"
   cites_description: "The CITES Trade Database, managed by the UNEP World Conservation Monitoring Centre (UNEP-WCMC) on behalf of the CITES Secretariat"
-  cites_sub_title: "Please enter your search below"
+  cites_intro: "The CITES Trade Database is the most comprehensive and authoritative database on international trade in wildlife. Dating back to 1975, it reflects the official trade records as reported by Parties in their annual reports to the Convention on International Trade in Endangered Species of Wild Fauna and Flora (CITES)."
+  cites_infobox:
+    heading: "A guide to using the CITES Trade Database"
+    text: "Due to the complexities of interpreting CITES trade data, it is highly recommended that all those interested in using the CITES Trade Database read this guidance prior to using the data."
   errors:
     no_data_1: "Your query has returned no data."
     no_data_2: "Please select other variables."
@@ -15,6 +18,7 @@ en:
   warnings:
     net_trade_1: "Please read carefully:"
     net_trade_2: "Net trade is the result of subtracting a country's re-exports from its imports. Therefore if your data selection only involved imports to or exports from specified countries then you cannot calculate net imports or exports. You will only be able to obtain gross imports or exports."
+  image_credits: "Image credits:"
 
   year_text: "Year Range"
   year_tip: "Select start (From) and end (To) years for your query. It is advisable to limit your data request to a year span not exceeding 5 years"
@@ -42,6 +46,7 @@ en:
   all_terms: "All Terms"
 
   search_selection: "Search Selection:"
+  search_database: "Search database below:"
   search: "Search"
   reset: "Reset"
   reselect: "Reselect Data"
@@ -49,6 +54,7 @@ en:
 
   download: "Download"
   db_guide: "A Guide to Using the CITES Trade Database"
+  guide_in_english: "Guide only available in English."
   tabulation_guide: "A Guide to Interpreting Comparative Tabulation Outputs ."
   trade_guide: "A Guide to Interpreting Gross/Net Trade Outputs."
   new: "New"
@@ -62,6 +68,7 @@ en:
   trade_tabulations: "Gross/Net Trade Tabulations"
   get_report: "Get Report"
   new_search: "New Search"
+  view_guide: "View Guide"
 
   from: "From"
   to: "To"
@@ -221,3 +228,8 @@ en:
             "
         - title: "Contact Us"
           description: '<p>‍If you have any questions about our Privacy Policy, please contact us at <a href="mailto:species@unep-wcmc.org">species@unep-wcmc.org</a>.</p>'
+
+footer:
+  heading: "The CITES Trade Database was developed and is maintained by UNEP-WCMC on behalf of the CITES Secretariat"
+  additional_resources: "Additional resources"
+  contact_us: "Contact us"
