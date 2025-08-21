@@ -47,7 +47,7 @@ gem 'pg_search', '~> 2.3', '>= 2.3.6'
 
 gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
 gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmin/inherited_resources#notice)
-gem 'nokogiri', '~> 1.18', force_ruby_platform: true
+gem 'nokogiri', '~> 1.18', platforms: :ruby
 gem 'mobility', '~> 1.2', '>= 1.2.9'
 gem 'devise', '~> 4.9', '>= 4.9.3'
 gem 'cancancan', '~> 3.5'
