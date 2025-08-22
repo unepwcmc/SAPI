@@ -229,7 +229,7 @@ en:
         - title: "Contact Us"
           description: '<p>‍If you have any questions about our Privacy Policy, please contact us at <a href="mailto:species@unep-wcmc.org">species@unep-wcmc.org</a>.</p>'
 
-footer:
-  heading: "The CITES Trade Database was developed and is maintained by UNEP-WCMC on behalf of the CITES Secretariat"
-  additional_resources: "Additional resources"
-  contact_us: "Contact us"
+  footer:
+    heading: "The CITES Trade Database was developed and is maintained by UNEP-WCMC on behalf of the CITES Secretariat"
+    additional_resources: "Additional resources"
+    contact_us: "Contact us"
