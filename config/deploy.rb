@@ -59,23 +59,17 @@ require 'json'
 
 # snake_case to prevent injection
 safe_stage = fetch(:stage).to_s.gsub(/\W+/, '_')
-begin
-  secrets = YAML.load(
-    %x(RAILS_MASTER_KEY=#{ENV['RAILS_MASTER_KEY']} bundle exec rails credentials:show -e #{safe_stage})
-  )
-rescue => e
-  puts "Warning: Could not load credentials during Capistrano configuration: #{e.message}"
-  puts "Credentials will be loaded during deployment instead."
-  secrets = {}
-end
+secrets = YAML.load(
+  %x(bundle exec rails credentials:show -e #{safe_stage})
+)
 
-set :api_token, secrets['api_token'] if secrets['api_token'] # used in smoke testing
+set :api_token, secrets['api_token'] # used in smoke testing
 
 set :appsignal_config,
   push_api_key: secrets['appsignal_push_api_key'],
   active: true
 
-set :slack_token, secrets['slack_exception_notification_webhook_url'] if secrets['slack_exception_notification_webhook_url'] # comes from inbound webhook integration
+set :slack_token, secrets['slack_exception_notification_webhook_url'] # comes from inbound webhook integration
 set :slack_room, '#speciesplus' # the room to send the message to
 set :slack_subdomain, 'wcmc' # if your subdomain is example.slack.com
 
