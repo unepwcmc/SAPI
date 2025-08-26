@@ -218,10 +218,33 @@ $font-body: archivo, sans-serif;
 
 /* UI Autocomplete changes*/
 .ui-autocomplete {
+  border: 1px solid #aaa;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, .15);
   max-height: 250px;
+  max-width: 600px;
   overflow-x: auto;
 
   position: absolute;
+
+  /* width */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: $color-secondary;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }
 
 /* Component containers
@@ -244,9 +267,15 @@ $font-body: archivo, sans-serif;
 }
 
 .ui-autocomplete.ui-widget-content {
-  border: 1px solid #ffffff;
   background: #ffffff;
+  border: 1px solid #aaa;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
   color: #312e25;
+}
+
+.rank-name {
+  font-weight: 600;
 }
 
 .ui-widget-content a {
@@ -258,30 +287,8 @@ $font-body: archivo, sans-serif;
 .ui-autocomplete.ui-widget-content .ui-state-hover,
 .ui-autocomplete.ui-state-focus,
 .ui-autocomplete.ui-widget-content .ui-state-focus {
-  // border: 1px solid $color-primary-light;
-  background-color: $color-primary-light;
-}
-
-.ui-autocomplete {
-  /* width */
-    &::-webkit-scrollbar {
-      width: 5px;
-    }
-  
-    /* Track */
-    &::-webkit-scrollbar-track {
-      background: #f1f1f1;
-    }
-  
-    /* Handle */
-    &::-webkit-scrollbar-thumb {
-      background: $color-primary-dark;
-    }
-  
-    /* Handle on hover */
-    &::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
+  background-color: #3875D7;
+  color: #fff;
 }
 
 // Global
