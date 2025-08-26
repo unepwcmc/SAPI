@@ -19,12 +19,8 @@ set :scm_username, 'unepwcmc-read'
 # Default value for :format is :pretty
 # set :format, :pretty
 
-# set :rvm_type, :user
-# set :rvm_ruby_version, '3.2.5'
-
-# Use system Ruby or rbenv instead of RVM
-# set :rbenv_type, :user
-# set :rbenv_ruby, '3.2.5'
+set :rvm_type, :user
+set :rvm_ruby_version, '3.2.5'
 
 # Sidekiq config
 set :sidekiq_service_unit_user, :system

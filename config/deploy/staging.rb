@@ -1,9 +1,9 @@
 set :stage, :staging
 set :branch, ENV['CAP_BRANCH'] || 'develop'
 
-server 'trade-cites.sapi-staging.linode.unep-wcmc.org', user: 'wcmc', roles: %w[app web db]
+server 'sapi-staging.linode.unep-wcmc.org', user: 'wcmc', roles: %w[app web db]
 
-set :domain, 'trade-cites.sapi-staging.linode.unep-wcmc.org'
+set :domain, 'sapi-staging.linode.unep-wcmc.org'
 
 set :application, 'sapi'
 
