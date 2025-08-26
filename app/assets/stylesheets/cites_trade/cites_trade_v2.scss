@@ -181,6 +181,12 @@ $font-body: archivo, sans-serif;
 
 // jQuery UI
 
+.ui-helper-hidden-accessible {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
 .ui-menu {
   list-style: none;
   padding: 2px;
