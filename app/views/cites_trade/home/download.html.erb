@@ -2,6 +2,19 @@
   <div class="section__inner">
     <div class="section__header">
       <%= render :partial => 'net_trade_warning' %>
+      <div
+        id="web-limit-exceeded-error-message"
+        class="error-message error-message--centered"
+      >
+        <div class="error-message__content">
+          <div class="error-message__icon">
+            <%= raw File.read(Rails.root.join("app/assets/images/cites_trade/icon-info.svg")) %>
+          </div>
+          <p class="error-message__text">
+            <%= t('errors.web_limit_exceeded_1') %>.<br> <%= t('errors.web_limit_exceeded_2') %>.
+          </p>
+        </div>
+      </div>
     </div>
 
     <div class="section__body">

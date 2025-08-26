@@ -602,6 +602,11 @@ a.header__infobox-link {
   max-width: calc((5 / 12) * 100%);
 
   display: none; // Initially hidden
+
+  &.error-message--centered {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .error-message__content {
