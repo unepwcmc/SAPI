@@ -219,11 +219,7 @@ $font-body: archivo, sans-serif;
 /* UI Autocomplete changes*/
 .ui-autocomplete {
   max-height: 250px;
-  overflow-y: auto;
-  /* prevent horizontal scrollbar */
-  overflow-x: hidden;
-  /* add padding to account for vertical scrollbar */
-  padding-right: 20px;
+  overflow-x: auto;
 
   position: absolute;
 }
@@ -266,6 +262,28 @@ $font-body: archivo, sans-serif;
   background-color: $color-primary-light;
 }
 
+.ui-autocomplete {
+  /* width */
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+  
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+  
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: $color-primary-dark;
+    }
+  
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+}
+
 // Global
 
 body {
@@ -281,6 +299,11 @@ body {
 
 .form__select {
   width: 100%;
+}
+
+.form__autocomplete {
+  display: block;
+  margin-top: $spacer-small / 2;
 }
 
 // Header
