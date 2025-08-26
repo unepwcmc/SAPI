@@ -186,11 +186,11 @@ $(document).ready(function(){
   $('#div_taxonomic_cascade :input').removeAttr('disabled');
   $('#species_out').text('');
 
-  $('#table_selection').colorize({
-    altColor: '#FFFFFF',
-    bgColor: '#FFFFFF',
-    hoverColor: '#e05129'
-  });
+  // $('#table_selection').colorize({
+  //   altColor: '#FFFFFF',
+  //   bgColor: '#FFFFFF',
+  //   hoverColor: '#e05129'
+  // });
 
   function getSelectionText(source) {
     myValues = new Array();

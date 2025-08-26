@@ -253,6 +253,10 @@ $font-body: archivo, sans-serif;
   }
 }
 
+.ui-autocomplete-input:focus {
+  outline-color: $color-primary;
+}
+
 /* Component containers
 ----------------------------------*/
 .ui-widget {
@@ -293,7 +297,7 @@ $font-body: archivo, sans-serif;
 .ui-autocomplete.ui-widget-content .ui-state-hover,
 .ui-autocomplete.ui-state-focus,
 .ui-autocomplete.ui-widget-content .ui-state-focus {
-  background-color: #3875D7;
+  background-color: $color-primary;
   color: #fff;
 }
 
@@ -724,6 +728,7 @@ a.header__infobox-link {
 .search-table {
   border: 1px solid $color-grey-mid;
   border-collapse: collapse;
+  background-color: $color-white;
 
   & td {
     padding: 5px;
