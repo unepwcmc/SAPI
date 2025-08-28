@@ -16,6 +16,7 @@ en:
     web_limit_exceeded_1: "Web output is not available for large subsets"
     web_limit_exceeded_2: "Please download the results in CSV format"
   warnings:
+    select_csv_separator: "Trouble viewing outputs? Try changing the .csv output type to semicolon separated."
     net_trade_1: "Please read carefully:"
     net_trade_2: "Net trade is the result of subtracting a country's re-exports from its imports. Therefore if your data selection only involved imports to or exports from specified countries then you cannot calculate net imports or exports. You will only be able to obtain gross imports or exports."
   image_credits: "Image credits:"
