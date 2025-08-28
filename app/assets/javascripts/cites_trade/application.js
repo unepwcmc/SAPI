@@ -717,7 +717,7 @@ $(document).ready(function(){
       $('#web-limit-exceeded-error-message').show();
       $('input[value=csv]').attr('checked', 'checked');
       $('input[value=web]').attr("disabled",true);
-      $('span#web-option').css('color', 'LightGray');
+      $('#web-option').css('color', 'LightGray');
     }
     $('select[name=csvSeparator]').val(Cookies.get('cites_trade.csv_separator') || 'comma')
   }

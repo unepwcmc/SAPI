@@ -819,6 +819,7 @@ a.header__infobox-link {
 }
 
 .reports__label {
+  color: currentColor;
   cursor: pointer;
   font-weight: 600;
   padding-left: 22px;
@@ -832,7 +833,7 @@ a.header__infobox-link {
     display: block;
     width: 14px;
     height: 14px;
-    border: 2px solid $color-black;
+    border: 2px solid currentColor;
     border-radius: 50%;
     margin-right: $spacer-small;
 
