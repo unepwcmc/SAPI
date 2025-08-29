@@ -9,18 +9,29 @@ $(document).ready(function(){
     is_view_results_page = $('#query_results_table').length > 0;
 
   ajaxFail = function (xhr, ajaxOptions, thrownError) {
-    //console.log(xhr, ajaxOptions, thrownError);
+    console.log(xhr, ajaxOptions, thrownError);
+
     growlMe("The request failed.");
   };
 
-  function growlMe(text){
-    $.jGrowl(text);
+  function growlMe(message){
+    notyError(message);
   };
 
   function notySticky(message){
     noty({
       layout: 'top',
       type: 'information',
+      closeWith: ['button'],
+      text: message,
+      timeout: 100000
+    });
+  };
+
+  function notyError(message){
+    noty({
+      layout: 'top',
+      type: 'error',
       closeWith: ['button'],
       text: message,
       timeout: 1000
