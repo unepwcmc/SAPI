@@ -13,7 +13,6 @@ fr:
     web_limit_exceeded_1: "Vue en ligne n'est pas disponible pour les grands sous-ensembles"
     web_limit_exceeded_2: "Vous pouvez télécharger les résultats en format CSV"
   warnings:
-    select_csv_separator: "Vous avez des difficultés à visualiser le résultat ? Essayez de changer le type de sortie .csv par l'option « séparés par des points-virgules »."
     net_trade_1: "S'il vous plaît lire attentivement:"
     net_trade_2: "Le commerce net est le résultat de la soustraction des réexportations d'un pays de ses importations. Par conséquent, si votre sélection de données concerne seulement des importations ou des exportations des pays spécifiés, vous ne pouvez pas calculer les importations ou les exportations nettes. Vous pouvez uniquement obtenir des importations ou exportations brutes."
   image_credits: "Crédits image:"
@@ -78,7 +77,7 @@ fr:
   net_imports: "Importations Nettes"
   comma_separated: "Séparés par des virgules"
   semicolon_separated: "Séparés par des points-virgules"
-  csv_separator_tip: "Vous avez des difficultés à visualiser la sortie ? Essayez de changer le type de sortie .csv pour « séparés par des virgules »."
+  csv_separator_tip: "Vous avez des difficultés à visualiser le résultat ? Essayez de changer le type de sortie .csv par l'option « séparés par des points-virgules »."
 
   table_title:
     gross_imports: "Rapport de la Importations Brutes"

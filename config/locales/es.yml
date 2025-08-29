@@ -13,7 +13,6 @@ es:
     web_limit_exceeded_1: "Vista en línea no está disponible para grandes subconjuntos"
     web_limit_exceeded_2: "Puede descargar los resultados en formato CSV"
   warnings:
-    select_csv_separator: "¿Problemas para ver los resultados? Intente cambiar el tipo de resultado .csv a separado por punto y coma."
     net_trade_1: "Por favor, lea cuidadosamente:"
     net_trade_2: "El comercio neto es el resultado de la sustracción de las reexportaciones de un país de sus importaciones. Por lo tanto, si su selección de datos sólo ha implicado importaciones o exportaciones de países especificados, no se podrán calcular las importaciones o exportaciones netas - sólo se pueden obtener importaciones o exportaciones brutas."
   image_credits: "Créditos de la imagen:"
