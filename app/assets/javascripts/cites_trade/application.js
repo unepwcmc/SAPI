@@ -13,9 +13,6 @@ $(document).ready(function(){
     growlMe("The request failed.");
   };
 
-  // Your code here
-  $(".tipify").tipTip();
-
   function growlMe(text){
     $.jGrowl(text);
   };
@@ -40,18 +37,10 @@ $(document).ready(function(){
 
   //setting the tabs for the search
   $("#tabs").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
+
   //enabling the tabs to be visible again
   $("#tabs").css("display", "block");
   $("#tabs li").removeClass('ui-corner-top').addClass('ui-corner-left');
-
-  $(".someClass").tipTip({maxWidth: "300px"});
-
-  // using the qtip2 plugin
-  $(".qtipify").qtip({
-    style: {
-      classes: 'ui-tooltip-green ui-tooltip-cluetip'
-    }
-  });
 
   $("#genus_all_id").val('').trigger("liszt:updated");
   $("#genus_all_id").chosen({
@@ -59,6 +48,7 @@ $(document).ready(function(){
     no_results_text: "No results matched"
   }).change(function(){
     var my_value = $(this).val();
+
     $('#species_out').text(my_value);
   });
 
