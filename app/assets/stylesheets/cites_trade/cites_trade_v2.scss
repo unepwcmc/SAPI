@@ -858,6 +858,13 @@ a.header__infobox-link {
   .reports__input:checked + &::after {
     display: block;
   }
+
+  input[type="radio"]:focus + & {
+    outline-color: $color-primary;
+    outline-width: 1px;
+    outline-style: solid;
+    outline-offset: 10px;
+  }
 }
 
 .reports__label-content {
