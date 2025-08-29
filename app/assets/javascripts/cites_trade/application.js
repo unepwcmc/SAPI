@@ -24,7 +24,7 @@ $(document).ready(function(){
       type: 'information',
       closeWith: ['button'],
       text: message,
-      timeout: 100000
+      timeout: 1000
     });
   };
 
