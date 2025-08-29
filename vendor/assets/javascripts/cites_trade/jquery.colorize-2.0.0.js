@@ -17,7 +17,7 @@ jQuery.fn.colorize = function(params) {
 		bgColor: '#fff',
 		hoverColor: '#BCD4EC',
 		hoverClass:'',
-		hiliteColor: '#e05129',
+		hiliteColor: 'yellow',
 		hiliteClass:'',
 		oneClick: false,
 		hover:'row',
