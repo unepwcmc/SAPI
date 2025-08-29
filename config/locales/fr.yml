@@ -77,7 +77,7 @@ fr:
   net_imports: "Importations Nettes"
   comma_separated: "Séparés par des virgules"
   semicolon_separated: "Séparés par des points-virgules"
-  csv_separator_tip: "Vous avez des difficultés à visualiser le résultat ? Essayez de changer le type de sortie .csv par l'option « séparés par des points-virgules »."
+  csv_separator_tip: "Vous avez des difficultés à visualiser le résultat ? Essayez de changer le type de sortie .csv par l'option « séparés par des points-virgules »."
 
   table_title:
     gross_imports: "Rapport de la Importations Brutes"
