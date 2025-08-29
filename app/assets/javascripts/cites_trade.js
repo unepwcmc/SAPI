@@ -10,7 +10,6 @@
 //= require cites_trade/jquery.qtip.min
 //= require cites_trade/jquery.tipTip.minified
 //= require cites_trade/chosen.jquery.min
-//= require cites_trade/jquery.colorize-2.0.0
 //= require cites_trade/jquery.noty
 //= require cites_trade/noty_themes_default
 //= require cites_trade/top
