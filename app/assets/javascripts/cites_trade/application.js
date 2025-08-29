@@ -781,7 +781,7 @@ $(document).ready(function(){
     if (!ignoreWarning &
       (report_type == 'net_imports' || report_type == 'net_exports')
     ) {
-      $('#this_should_not_be_a_table').hide();
+      $('#download-options').hide();
       $('#net-trade-warning').show();
       return;
     }
