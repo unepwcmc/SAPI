@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Cannot use `sidekiqmon`, because it rely on REDIS_URL env.
+# We do not store redis_url in REDIS_URL:
+# - it has password, is serect, should be in rails credentials;
+# - there maybe more than one redis (e.g. One for sidekiq [maxmemory-policy=noeviction]; one for cache [maxmemory-policy=lfu])
+if [ $(ps aux | grep 'sidekiq ' | grep -v grep | wc -l) -gt 0 ]; then
+  exit 0
+else
+  exit 1
+fi

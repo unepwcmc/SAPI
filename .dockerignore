@@ -45,3 +45,50 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+# SAPI
+/coverage
+/rdoc
+/private
+/public/system
+/public/downloads/*.pdf
+#LaTeX
+/public/latex/*.aux
+/public/latex/*.out
+/public/latex/*.log
+/public/latex/*.gz
+/public/latex/index.pdf
+/public/latex/history.pdf
+/public/sitemap*
+
+#checklist downloads
+/public/downloads/checklist/*.*
+
+#exports csvs
+/public/downloads/documents/*.csv
+/public/downloads/quotas/*.csv
+/public/downloads/cites_listings/*.csv
+/public/downloads/cites_suspensions/*.csv
+/public/downloads/eu_listings/*.csv
+/public/downloads/eu_decisions/*.csv
+/public/downloads/cms_listings/*.csv
+/public/downloads/checklist/*.pdf
+/public/downloads/checklist/*.csv
+/public/downloads/checklist/*.json
+/public/downloads/taxon_concepts_names/*.csv
+/public/downloads/synonyms_and_trade_names/*.csv
+/public/downloads/taxon_concepts_distributions/*.csv
+/public/downloads/shipments/*.csv
+/public/downloads/comptab/*.csv
+/public/downloads/gross_exports/*.csv
+/public/downloads/gross_imports/*.csv
+/public/downloads/net_exports/*.csv
+/public/downloads/net_imports/*.csv
+/public/downloads/trade_download_stats/*.csv
+/public/downloads/species_reference_output/*.csv
+/public/downloads/standard_reference_output/*.csv
+/public/downloads/common_names/*.csv
+/public/downloads/iucn_mappings/*.csv
+/public/downloads/cms_mappings/*.csv
+/public/downloads/orphaned_taxon_concepts/*.csv
+/public/uploads/*

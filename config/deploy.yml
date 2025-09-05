@@ -1,0 +1,48 @@
+# Name of your application. Used to uniquely configure containers.
+service: sapi
+
+# Credentials for your image host.
+registry:
+  server: ghcr.io
+  username:
+    - KAMAL_REGISTRY_USERNAME
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Inject ENV variables into containers (secrets come from .kamal/secrets.{environment})
+env:
+  clear:
+    RAILS_LOG_LEVEL: warn # @see https://github.com/heartcombo/devise#password-reset-tokens-and-rails-logs
+    PORT: 80
+    RAILS_SERVE_STATIC_FILES: 1
+    RAILS_LOG_TO_STDOUT: 1 # Need this before upgrade to Rails 7.1, which then default is STDOUT.
+  secret:
+    - RAILS_MASTER_KEY
+    - SAPI_DATABASE_HOST
+    - SAPI_DATABASE_NAME
+    - SAPI_DATABASE_USERNAME
+    - SAPI_DATABASE_PASSWORD
+    - SAPI_DATABASE_PORT
+    - CAPTIVE_BREEDING_DATABASE_HOST
+    - CAPTIVE_BREEDING_DATABASE_NAME
+    - CAPTIVE_BREEDING_DATABASE_USERNAME
+    - CAPTIVE_BREEDING_DATABASE_PASSWORD
+    - CAPTIVE_BREEDING_DATABASE_PORT
+    - MAIL_USERNAME
+    - MAIL_PASSWORD
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - AWS_REGION
+    - SAPI_SIDEKIQ_REDIS_URL
+    - SAPI_SIDEKIQ_REDIS_CACHE_URL
+
+# Use a different ssh user than root
+ssh:
+  user: wcmc
+
+# Configure builder setup
+builder:
+  arch: amd64
+  dockerfile: Dockerfile.deploy
+  args:
+    RUBY_VERSION: 3.2.5

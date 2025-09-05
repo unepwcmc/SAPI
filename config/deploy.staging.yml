@@ -1,0 +1,35 @@
+# Name of the container image
+image: ghcr.io/unepwcmc/sapi/rails-staging
+
+# Define services (servers for Kamal 2.5.2 compatibility)
+servers:
+  web:
+    hosts:
+      - example.com # TODO: Ruan
+    proxy:
+      hosts:
+        - sapi.sapi-staging.linode.unep-wcmc.org # Public-facing domain
+      ssl: true # Proxy terminates SSL
+      forward_headers: true # Forward headers like X-Forwarded-Proto
+      healthcheck:
+        path: /up
+      logging:
+        request_headers:
+          - Cache-Control
+          - User-Agent
+          - X-Forwarded-Proto # Critical for Rails to detect HTTPS
+        response_headers:
+          - X-Request-ID
+  job:
+    hosts:
+      - example.com # TODO: Ruan
+    options:
+      add-host: host.docker.internal:host-gateway
+    cmd: bundle exec sidekiq -C config/sidekiq.yml
+    healthcheck:
+      cmd: /rails/bin/docker-sidekiq-healthcheck
+
+# Environment variables
+env:
+  clear:
+    RAILS_ENV: staging
