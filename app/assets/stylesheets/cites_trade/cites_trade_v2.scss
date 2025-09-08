@@ -28,10 +28,15 @@ $font-body: archivo, sans-serif;
 
 @mixin inner_padding {
   padding: 0 $spacer-xlarge;
+
+  @media(max-width: 768px) {
+    padding: 0 $spacer-small;
+  }
 }
 
 @mixin inner {
   @include inner_padding;
+  min-width: 576px;
   max-width: 1440px;
   margin: 0 auto;
 }
@@ -339,6 +344,13 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media(max-width: 768px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: $spacer-small;
+    align-items: flex-start;
+  }
 }
 
 .topbar__text {
@@ -350,13 +362,13 @@ body {
 a.topbar__button {
   @include button_ghost;
   margin-left: auto;
-
   display: inline-flex;
   align-items: center;
 
   svg {
     width: 35px;
     margin-right: 10px;
+    flex: 0 0 1em;
   }
 }
 
@@ -378,6 +390,13 @@ a.topbar__button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media(max-width: 768px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: $spacer-medium;
+  }
 }
 
 .header__logo {
@@ -387,7 +406,12 @@ a.topbar__button {
 .language_links__items {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: $spacer-small;
+  padding: 0;
+
+  @media(max-width: 768px) {
+    align-items: flex-start;
+  }
 }
 
 .language_links__item {
@@ -431,11 +455,22 @@ a.language_links__link {
 
   display: flex;
   align-items: center;
+  gap: $spacer-medium;
+
+  @media(max-width: 1200px) {
+    flex-direction: column;
+    gap: $spacer-small;
+    align-items: flex-start;
+  }
 }
 
 .header__infobox-column {
   &:last-child {
     flex: 0 0 200px;
+
+    @media(max-width: 1200px) {
+      flex: 1 1 0;
+    }
   }
 }
 
@@ -448,7 +483,6 @@ a.language_links__link {
 
 .header__infobox-text {
   margin: 0;
-  max-width: calc((8 / 12) * 100%);
 }
 
 a.header__infobox-link {
@@ -547,7 +581,7 @@ a.header__infobox-link {
       content: "";
       width: 1px;
       height: 35px;
-      
+
       display: inline-block;
 
       position: absolute;
@@ -620,9 +654,9 @@ a.header__infobox-link {
 
 .error-message__icon {
   margin-right: $item-spacing;
-  
+
   flex: 0 0 35px;
-  
+
   svg {
     width: 32px;
     height: 32px;
@@ -645,6 +679,11 @@ a.header__infobox-link {
 .search__columns {
   display: flex;
   gap: $spacer-small;
+
+  @media(max-width: 1200px) {
+    flex-direction: column;
+    gap: $spacer-medium;
+  }
 }
 
 .search__column {
@@ -678,8 +717,8 @@ a.header__infobox-link {
   border-radius: 6px;
   color: $color-black;
   text-decoration: none;
-  transition: background-color 0.3s, color 0.3s;  
-  
+  transition: background-color 0.3s, color 0.3s;
+
   &:hover {
     background-color: rgba($color-primary, 0.2);
   }
@@ -715,7 +754,7 @@ a.header__infobox-link {
 .tab__text {
   margin-bottom: $spacer-medium;
 }
-  
+
 .tab__select-items {
   display: flex;
   gap: $spacer-small;
@@ -766,7 +805,7 @@ a.header__infobox-link {
   width: 3.5px;
   height: 3.5px;
   margin-left: 15px;
-  
+
   display: none;
 
   transform: translateY(-50%);
@@ -827,7 +866,7 @@ a.header__infobox-link {
   display: block;
 
   position: relative;
-  
+
   &::before {
     content: "";
     display: block;
@@ -914,7 +953,7 @@ a.header__infobox-link {
   &--new-search {
     @include button_primary_ghost;
   }
-  
+
   &--submit {
     @include button_primary;
     margin-left: $spacer-small;
