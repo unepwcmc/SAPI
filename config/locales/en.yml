@@ -29,7 +29,7 @@ en:
   source_text: "Sources"
   source_tip: "Type the source or sources (e.g. 'W - Wild') you wish to include in your final output. To include data for all sources, leave 'All sources' selected"
   purpose_text: "Purposes"
-  purpose_tip: "Type the purpose or purposes (e.g. 'T- Commercial' or 'S- Scientific') you wish to include in your final output. To include data for all purposes, leave 'All purposes' selected"
+  purpose_tip: "Type the purpose or purposes (e.g. 'T - Commercial' or 'S - Scientific') you wish to include in your final output. To include data for all purposes, leave 'All purposes' selected"
   trade_text: "Trade Terms"
   trade_tip: "Type the term or terms (e.g. 'live' or 'skins') you wish to include in your final output. To include data for all terms, leave 'All terms' selected"
   taxon_text: "Species"
