@@ -131,3 +131,19 @@ fr:
     heading: "La base de données sur le commerce CITES a été développée et est maintenue par le PNUE-WCMC pour le compte du Secrétariat CITES"
     additional_resources: "Ressources supplémentaires"
     contact_us: "Contactez-nous"
+    links:
+      cites:
+        label: CITES
+        url: https://cites.org/fra
+      unep_wcmc:
+        label: UNEP-WCMC
+        url: https://unep-wcmc.org/
+      tradeview:
+        label: CITES Wildlife Tradeview
+        url: https://tradeview.cites.org/fr
+      checklist:
+        label: CITES Checklist of Species
+        url: https://checklist.cites.org/#/fr
+      species_plus:
+        label: Species+ (Species Plus)
+        url: https://www.speciesplus.net/

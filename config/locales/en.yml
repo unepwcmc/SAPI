@@ -233,3 +233,19 @@ en:
     heading: "The CITES Trade Database was developed and is maintained by UNEP-WCMC on behalf of the CITES Secretariat"
     additional_resources: "Additional resources"
     contact_us: "Contact us"
+    links:
+      cites:
+        label: CITES
+        url: https://cites.org/eng
+      unep_wcmc:
+        label: UNEP-WCMC
+        url: https://unep-wcmc.org/
+      tradeview:
+        label: CITES Wildlife Tradeview
+        url: https://tradeview.cites.org/en
+      checklist:
+        label: CITES Checklist of Species
+        url: https://checklist.cites.org/#/en
+      species_plus:
+        label: Species+ (Species Plus)
+        url: https://www.speciesplus.net/

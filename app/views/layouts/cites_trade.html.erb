@@ -127,22 +127,22 @@
               <ul class="footer__logo-items">
                 <li class="footer__logo-item">
                   <a
-                    href="https://www.cites.org/"
+                    href="<%= t('footer.links.cites.url') %>"
                     target="_blank"
-                    title="CITES"
+                    title="<%= t('footer.links.cites.label') %>"
                     class="footer__logo-link"
                   >
-                    <%= image_tag "cites_trade/cites_logo.svg", alt: "CITES", class: "footer__logo-image--cites_logo" %>
+                    <%= image_tag "cites_trade/cites_logo.svg", alt: t('footer.links.cites.label'), class: "footer__logo-image--cites_logo" %>
                   </a>
                 </li>
                 <li class="footer__logo-item">
                   <a
-                    href="https://unep-wcmc.org/"
+                    href="<%= t('footer.links.unep_wcmc.url') %>"
                     target="_blank"
-                    title="UNEP-WCMC"
+                    title="<%= t('footer.links.unep_wcmc.label') %>"
                     class="footer__logo-link"
                   >
-                    <%= image_tag "cites_trade/unepwcmc_logo.svg", alt: "UNEP-WCMC", class: "footer__logo-image--unepwcmc_logo" %>
+                    <%= image_tag "cites_trade/unepwcmc_logo.svg", alt: t('footer.links.unep_wcmc.label'), class: "footer__logo-image--unepwcmc_logo" %>
                   </a>
                 </li>
               </ul>
@@ -161,32 +161,33 @@
               <ul class="footer__logo-items">
                 <li class="footer__logo-item">
                   <a
-                    href="https://tradeview.cites.org"
+                    href="<%= t('footer.links.tradeview.url') %>"
                     target="_blank"
-                    title="CITES Wildlife Tradeview"
+                    title="<%= t('footer.links.tradeview.label') %>"
                     class="footer__logo-link"
                   >
-                    <%= image_tag "cites_trade/cites_wildlife_tradeview_logo.svg", alt: "CITES Wildlife Tradeview", class: "footer__logo-image--cites_wildlife_tradeview_logo" %>
+                    <%= image_tag "cites_trade/cites_wildlife_tradeview_logo.svg", alt: t('footer.links.tradeview.label'), class: "footer__logo-image--cites_wildlife_tradeview_logo" %>
                   </a>
                 </li>
                 <li class="footer__logo-item">
                   <a
-                    href="https://checklist.cites.org"
+                    href="<%= t('footer.links.checklist.url') %>"
                     target="_blank"
-                    title="CITES Checklist of Species"
+                    title="<%= t('footer.links.checklist.label') %>"
                     class="footer__logo-link"
                   >
-                    <%= image_tag "cites_trade/cites_checklist_logo.svg", alt: "CITES Checklist of Species", class: "footer__logo-image--cites_checklist_logo" %>
+                    <%= image_tag "cites_trade/cites_checklist_logo.svg", alt: t('footer.links.checklist.label'), class: "footer__logo-image--cites_checklist_logo" %>
                   </a>
                 </li>
                 <li class="footer__logo-item">
                   <a
+                    href="<%= t('footer.links.species_plus.url') %>"
                     href="https://www.speciesplus.net"
                     target="_blank"
-                    title="Species+ (Species Plus)"
+                    title="<%= t('footer.links.species_plus.label') %>"
                     class="footer__logo-link"
                   >
-                    <%= image_tag "cites_trade/species_plus_logo.svg", alt: "Species+ (Species Plus)", class: "footer__logo-image--species_plus_logo" %>
+                    <%= image_tag "cites_trade/species_plus_logo.svg", alt: t('footer.links.species_plus.label'), class: "footer__logo-image--species_plus_logo" %>
                   </a>
                 </li>
               </ul>
