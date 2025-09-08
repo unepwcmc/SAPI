@@ -439,13 +439,21 @@ a.language_links__link {
   margin-top: 0;
   margin-bottom: $spacer-small;
   max-width: calc((8 / 12) * 100%);
+
+  @media(max-width: 1200px) {
+    max-width: 100%;
+  }
 }
 
 .header__text {
   @include font_title-2;
   font-weight: 400;
-  max-width: calc((8 / 12) * 100%);
   margin-bottom: $spacer-medium;
+  max-width: calc((8 / 12) * 100%);
+
+  @media(max-width: 1200px) {
+    max-width: 100%;
+  }
 }
 
 .header__infobox {
@@ -455,7 +463,7 @@ a.language_links__link {
 
   display: flex;
   align-items: center;
-  gap: $spacer-medium;
+  gap: $spacer-large;
 
   @media(max-width: 1200px) {
     flex-direction: column;
@@ -466,7 +474,7 @@ a.language_links__link {
 
 .header__infobox-column {
   &:last-child {
-    flex: 0 0 200px;
+    flex: 0 0 25%;
 
     @media(max-width: 1200px) {
       flex: 1 1 0;
