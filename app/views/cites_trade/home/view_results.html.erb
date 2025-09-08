@@ -21,12 +21,14 @@
         </div>
 
         <div class="results__body">
-          <table
-            id="query_results_table"
-            class="results__table"
-          ></table>
-          <div id='cites-trade-loading'><%= image_tag('loading.gif') %></div>
-          <p class="info"></p>
+          <div class="results__scrollable-area">
+            <table
+              id="query_results_table"
+              class="results__table"
+            ></table>
+            <div id='cites-trade-loading'><%= image_tag('loading.gif') %></div>
+            <p class="info"></p>
+          </div>
         </div>
       </div>
 

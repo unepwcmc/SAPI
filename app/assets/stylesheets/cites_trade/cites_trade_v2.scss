@@ -985,9 +985,13 @@ a.header__infobox-link {
   background-color: $color-white;
   border-radius: 12px;
   padding: $item-spacing;
-
   display: flex;
   justify-content: center;
+}
+
+.results__scrollable-area {
+  width: 100%;
+  overflow-x: scroll;
 }
 
 .results__table, th, td {
@@ -997,6 +1001,7 @@ a.header__infobox-link {
 
 .results__table {
   width: 100%;
+  margin: 0 auto;
 
   thead {
     font-weight: 600;
