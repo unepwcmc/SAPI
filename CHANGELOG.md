@@ -1,3 +1,23 @@
+### 1.20.0
+
+**Species+**
+
+* Changes to search and autocomplete:
+  * Autocomplete is now accent-insensitive
+    * "hok" matches "Accipiter badius (kaspisk hök)"
+  * Autocomplete will now match within a word, not just prefixes:
+    * "geier" matches "Aegypius monachus (Mönchsgeier)"
+  * Species+ only: Autocomplete requires fewer characters for matches in non-latin scripts:
+    * "熊" matches "Ailurus fulgens (小熊猫)" and other bears
+  * Species+ only: To account for misspellings, On a failed search, suggested corrections are shown
+    * searching for "pnathera" returns suggestions including "panthera"
+* Admin interface: fixed an issue where editing a listing would not save where there was an associated footnote
+
+**CITES Trade DB**
+
+* New column for Introduction from the Sea (IFS) permits
+* Admin interface: fixed two issues with permit search
+
 ### 1.19.1
 
 * Completed migration of E-Library documents to Active Storage.
