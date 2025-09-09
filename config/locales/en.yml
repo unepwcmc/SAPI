@@ -60,6 +60,7 @@ en:
   comparative_tabulations: "Comparative Tabulations"
   trade_tabulations: "Gross/Net Trade Tabulations"
   get_report: "Get report"
+  downloading_report: "Your file is being prepared and will be downloaded shortly"
   new_search: "New Search"
 
   from: "From"

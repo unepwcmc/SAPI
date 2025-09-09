@@ -57,6 +57,7 @@ fr:
   comparative_tabulations: "Tabulations Comparatives"
   trade_tabulations: "Tabulations du Commerce Brut/Net"
   get_report: "Obtenir le rapport"
+  downloading_report: "Your file is being prepared and will be downloaded shortly" # TODO: translate
   new_search: "Nouvelle Recherche"
 
   from: "De"

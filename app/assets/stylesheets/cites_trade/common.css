@@ -217,7 +217,15 @@ font-style:italic;
     height:16px;
 }
 
-/* STANDARD */button:hover, .buttons a:hover{
+/* STANDARD */
+button {
+  /**
+    * UA stylesheet sets this to 2, and we don't want the border width to change
+    * on hover
+    */
+  border-width: 1px;
+}
+button:hover:not(:disabled), .buttons a:hover{
     background-color:#dff4ff;
     border:1px solid #c2e1ef;
     color:#336699;

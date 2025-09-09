@@ -47,13 +47,22 @@
     </td></tr>
     <tr>
       <td>
-        <div align="right">
-          <button style="float:left; margin-top:12px" id='button_report' value=" Get report ">
-          <%= image_tag "cites_trade/page.gif", alt: "" %>
-          <%= t('get_report') %>
-          </button>
-          <a id='view_genie' href="" style="display:none"></a>
-          <a id='download_genie' href="#" style="display:none"></a>
+        <div style="align:left; margin-top:12px">
+          <div>
+            <button id='button_report' value=" Get report ">
+            <%= image_tag "cites_trade/page.gif", alt: "" %>
+            <%= t('get_report') %>
+            </button>
+            <a id='view_genie' href="" style="display:none"></a>
+            <a id='download_genie' href="#" style="display:none"></a>
+          </div>
+          <div
+            id='download_status_loading'
+            style="margin-top:6px; display: none"
+          >
+            <%= image_tag "cites_trade/spinner.gif", alt: "" %>
+            <%= t('downloading_report') %>
+          </div>
         </div>
 
         <p><br><br></p>
