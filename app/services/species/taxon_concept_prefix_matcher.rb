@@ -86,14 +86,32 @@ private
       end
 
     # Important to set @query and not just return it
-    @query = apply_match_types(@query).reorder(desired_order)
+    @query = apply_match_types(@query).reselect(
+      <<-SQL.squish
+        id, full_name, rank_name, name_status, author_year,
+        ARRAY_AGG_NOTNULL(
+          DISTINCT CASE
+            WHEN matched_name != full_name THEN matched_name ELSE NULL
+          END
+          ORDER BY CASE
+            WHEN matched_name != full_name THEN matched_name ELSE NULL
+          END
+        ) AS matching_names_ary,
+        rank_display_name_en, rank_display_name_es, rank_display_name_fr
+      SQL
+    ).group(
+      [
+        :id, :full_name, :rank_name, :name_status, :author_year, :rank_order,
+        :rank_display_name_en, :rank_display_name_es, :rank_display_name_fr
+      ]
+    ).reorder(desired_order)
 
     @query
   end
 
 private
 
-  def apply_match_types(original_query, also_group = [])
+  def apply_match_types(original_query)
     # different types of name matching are required
     # in Species+ & Checklist the name may match any of: scientific name, synonyms,
     # common names as well as not CITES listed subspecies
@@ -108,26 +126,8 @@ private
         [ 'SELF', 'SYNONYM', 'COMMON_NAME', 'SUBSPECIES' ]
       end
 
-    original_query.reselect(
-      <<-SQL.squish
-        id, full_name, rank_name, name_status, author_year,
-        ARRAY_AGG_NOTNULL(
-          DISTINCT CASE
-            WHEN matched_name != full_name THEN matched_name ELSE NULL
-          END
-          ORDER BY CASE
-            WHEN matched_name != full_name THEN matched_name ELSE NULL
-          END
-        ) AS matching_names_ary,
-        rank_display_name_en, rank_display_name_es, rank_display_name_fr
-      SQL
-    ).where(
+    original_query.where(
       type_of_match: types_of_match
-    ).group(
-      [
-        :id, :full_name, :rank_name, :name_status, :author_year, :rank_order,
-        :rank_display_name_en, :rank_display_name_es, :rank_display_name_fr
-      ]
     )
   end
 
