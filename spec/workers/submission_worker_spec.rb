@@ -59,7 +59,9 @@ describe SubmissionWorker do
         year: '2010',
         quantity: 1,
         import_permit: 'XXX',
-        export_permit: 'AAA; BBB'
+        export_permit: 'AAA; BBB',
+        origin_permit: 'BBB; AAA; Ccc',
+        ifs_permit: 'DDD'
       )
       create_year_format_validation
     end
@@ -67,7 +69,7 @@ describe SubmissionWorker do
       expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Shipment.count }.by(1)
     end
     specify do
-      expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Permit.count }.by(3)
+      expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Permit.count }.by(5)
     end
     specify 'leading space is stripped' do
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
@@ -76,7 +78,7 @@ describe SubmissionWorker do
     context 'when permit previously reported' do
       before(:each) { create(:permit, number: 'xxx') }
       specify do
-        expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Permit.count }.by(2)
+        expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Permit.count }.by(4)
       end
     end
   end

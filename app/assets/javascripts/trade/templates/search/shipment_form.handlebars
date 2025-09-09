@@ -192,8 +192,14 @@
               valueBinding="currentShipment.originPermitNumber"
             }}
         </div>
+        <div class="attribute-area left">
+          <p>IFS Permit <span class="error">{{currentShipment.errors.originPermitNumber}}</span></p>
+            {{view Ember.TextField
+              prompt="Please type IFS permit value"
+              valueBinding="currentShipment.ifsPermitNumber"
+            }}
+        </div>
       </div>
-
     </fieldset>
   </form>
 </div>

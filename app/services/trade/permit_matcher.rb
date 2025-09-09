@@ -24,11 +24,14 @@ private
   end
 
   def initialize_query
-    @query = Trade::Permit.order(:number)
+    # Better matches are shorter, (e.g. 100 matches 100 and 1000)
+    @query = Trade::Permit.order('length(number)', :number)
+
     if @permit_query
       @query = @query.where(
         [
-          'UPPER(number) LIKE :number', number: "%#{@permit_query}%"
+          'number LIKE :number',
+          number: "%#{Trade::Permit.sanitize_sql_like(@permit_query).upcase}%"
         ]
       )
     end
