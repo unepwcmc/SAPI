@@ -88,13 +88,15 @@ private
     end
 
     unless @importers_ids.empty?
-      importers_ids = sanitize_importer_ids(@importers_ids)
-      draft_query = draft_query.where(importer_id: importers_ids)
+      draft_query = draft_query.where(
+        importer_id: resolve_eu(@importers_ids)
+      )
     end
 
     unless @exporters_ids.empty?
-      exporters_ids = sanitize_exporter_ids(@exporters_ids)
-      draft_query = draft_query.where(exporter_id: exporters_ids)
+      draft_query = draft_query.where(
+        exporter_id: resolve_eu(@exporters_ids)
+      )
     end
 
     if !@units_ids.empty?
@@ -140,13 +142,13 @@ private
     # Other cases
     draft_query = time_range_query(draft_query)
 
-    if @importer_eu_country_ids.present?
-      sub_query = eu_country_date_query(@time_range_start, @time_range_end, 'importer')
+    if importer_eu_country_ids.present?
+      sub_query = eu_country_date_query(@time_range_start, @time_range_end, 'importer', importer_eu_country_ids)
       draft_query = draft_query.where.not(sub_query) if date_query.present?
     end
 
-    if @exporter_eu_country_ids.present?
-      sub_query = eu_country_date_query(@time_range_start, @time_range_end, 'exporter')
+    if exporter_eu_country_ids.present?
+      sub_query = eu_country_date_query(@time_range_start, @time_range_end, 'exporter', exporter_eu_country_ids)
       draft_query = draft_query.where.not(sub_query) if sub_query.present?
     end
 
@@ -158,46 +160,57 @@ private
   end
 
   def eu_id
-    GeoEntity.where(iso_code2: 'EU').pick(:id)
+    @eu_id ||= GeoEntity.where(iso_code2: 'EU').pick(:id)
   end
 
   def eu_country_ids
     EuCountryDate.pluck(:geo_entity_id)
   end
 
-  def sanitize_exporter_ids(ids)
-    return ids unless ids.include?(eu_id)
-
-    ids.delete(eu_id)
-    # this is to collect only eu country IDs to apply EU rules query to
-    # e.g. EU + Austria we don't have to apply EU rules to Austria
-    @exporter_eu_country_ids = eu_country_ids - ids
-    (eu_country_ids + ids).uniq
+  # this is to collect only eu country IDs to apply EU rules query to
+  # e.g. EU + Austria we don't have to apply EU rules to Austria
+  def importer_eu_country_ids
+    @importer_eu_country_ids ||=
+      if @importer_ids&.presence&.include?(eu_id)
+        eu_country_ids - @importer_ids
+      else
+        []
+      end
   end
 
-  def sanitize_importer_ids(ids)
-    return ids unless ids.include?(eu_id)
-
-    ids.delete(eu_id)
-    @importer_eu_country_ids = eu_country_ids - ids
-    (eu_country_ids + ids).uniq
+  def exporter_eu_country_ids
+    @exporter_eu_country_ids ||=
+      if @exporter_ids&.presence&.include?(eu_id)
+        eu_country_ids - @exporter_ids
+      else
+        []
+      end
   end
 
-  def eu_country_date_query(start_year, end_year, type)
-    eu_country_ids = instance_variable_get("@#{type}_eu_country_ids")
+  def resolve_eu(ids)
+    return ids unless ids.include?(eu_id)
+
+    (eu_country_ids + ids).uniq - [ eu_id ]
+  end
+
+  def eu_country_date_query(start_year, end_year, type, eu_country_ids)
     country_query_arr = []
+
     eu_country_ids.each do |eu_country|
       # check for multiple entries for the same countries(UK might rejoin at some point)
       eu_entry_exit_dates(eu_country).each do |entry_date, exit_date|
         # exclude countries for which we will need to retreive all the shipments
         # within the user selected year range anyway
         exit_date_check = exit_date.nil? ? true : (exit_date > end_year) # workaround to avoid nil > integer
+
         next if entry_date < start_year && exit_date_check
 
         exit_year_check = exit_date.nil? ? 'AND TRUE' : "OR year >= #{exit_date}"
+
         country_query_arr << "(trade_shipments.#{type}_id = #{eu_country} AND (year < #{entry_date} #{exit_year_check}))"
       end
     end
+
     country_query_arr.join(' OR ')
   end
 
