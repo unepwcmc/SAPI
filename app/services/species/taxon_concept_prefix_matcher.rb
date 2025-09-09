@@ -7,14 +7,30 @@ class Species::TaxonConceptPrefixMatcher
     initialize_query
   end
 
+  def text_search_strategies
+    @text_search_strategies ||= detect_match_strategies @taxon_concept_query
+
+    @text_search_strategies
+  end
+
   def results
-    ((@taxon_concept_query || !@ranks.empty?) &&
-    @query.limit(@options[:per_page]).
-      offset(@options[:per_page] * (@options[:page] - 1)).to_a) || []
+    (
+      (
+        text_search_strategies[:prefix_match] || text_search_strategies[:full_text_match] || !@ranks.empty?
+      ) && @query.limit(
+        @options[:per_page]
+      ).offset(
+        @options[:per_page] * (@options[:page] - 1)
+      ).to_a
+    ) || []
   end
 
   def total_cnt
-    ((@taxon_concept_query || !@ranks.empty?) && @query.count(:all)) || 0
+    if text_search_strategies[:prefix_match] || text_search_strategies[:full_text_match] || !@ranks.empty?
+      @query.count(:all) || 0
+    else
+      0
+    end
   end
 
 private
@@ -26,13 +42,6 @@ private
 
   def initialize_query
     @query = MAutoCompleteTaxonConcept.all
-
-    @query =
-      if @visibility == :trade
-        @query.order(:full_name)
-      else
-        @query.order([ :rank_order, :full_name ])
-      end
 
     unless @ranks.empty?
       @query = @query.where(rank_name: @ranks)
@@ -60,6 +69,49 @@ private
         @query.where(show_in_species_plus_ac: true)
       end
 
+    @query =
+      if text_search_strategies[:full_text_match]
+        @query.where_substring_matches @taxon_concept_query
+      elsif text_search_strategies[:prefix_match]
+        @query.where_prefix_matches @taxon_concept_query
+      else
+        @query.where 'FALSE'
+      end
+
+    desired_order =
+      if @visibility == :trade
+        [ :full_name ]
+      else
+        [ :rank_order, :full_name ]
+      end
+
+    # Important to set @query and not just return it
+    @query = apply_match_types(@query).reselect(
+      <<-SQL.squish
+        id, full_name, rank_name, name_status, author_year,
+        ARRAY_AGG_NOTNULL(
+          DISTINCT CASE
+            WHEN matched_name != full_name THEN matched_name ELSE NULL
+          END
+          ORDER BY CASE
+            WHEN matched_name != full_name THEN matched_name ELSE NULL
+          END
+        ) AS matching_names_ary,
+        rank_display_name_en, rank_display_name_es, rank_display_name_fr
+      SQL
+    ).group(
+      [
+        :id, :full_name, :rank_name, :name_status, :author_year, :rank_order,
+        :rank_display_name_en, :rank_display_name_es, :rank_display_name_fr
+      ]
+    ).reorder(desired_order)
+
+    @query
+  end
+
+private
+
+  def apply_match_types(original_query)
     # different types of name matching are required
     # in Species+ & Checklist the name may match any of: scientific name, synonyms,
     # common names as well as not CITES listed subspecies
@@ -74,35 +126,57 @@ private
         [ 'SELF', 'SYNONYM', 'COMMON_NAME', 'SUBSPECIES' ]
       end
 
-    @query = @query.
-      select('id, full_name, rank_name, name_status, author_year,
-        ARRAY_AGG_NOTNULL(
-          DISTINCT CASE
-            WHEN matched_name != full_name THEN matched_name ELSE NULL
-          END
-          ORDER BY CASE
-            WHEN matched_name != full_name THEN matched_name ELSE NULL
-          END
-        ) AS matching_names_ary,
-        rank_display_name_en, rank_display_name_es, rank_display_name_fr'
-            ).
-      where(type_of_match: types_of_match).
-      group([
-        :id, :full_name, :rank_name, :name_status, :author_year, :rank_order,
-        :rank_display_name_en, :rank_display_name_es, :rank_display_name_fr
-      ]
-           )
+    original_query.where(
+      type_of_match: types_of_match
+    )
+  end
 
-    if @taxon_concept_query
-      @query = @query.where(
-        ApplicationRecord.send(
-          :sanitize_sql_array, [
-            'name_for_matching LIKE :sci_name_prefix',
-            sci_name_prefix: "#{@taxon_concept_query}%"
-          ]
-        )
-      )
+private
+
+  ##
+  # Determine which matching strategy should be applied, based on the length of the text and the
+  # script of the characters within it:
+  #
+  # - prefix_match
+  # - full_text_match: full-text searching
+  #
+  # See detect_script_type for more.
+  def detect_match_strategies (text)
+    trimmed_text = (text || '').squish
+
+    match_options = detect_script_type trimmed_text
+
+    {
+      prefix_match: match_options[:min_prefix_match] && trimmed_text.size >= match_options[:min_prefix_match],
+      full_text_match: match_options[:min_full_text_match] && trimmed_text.size >= match_options[:min_full_text_match]
+    }
+  end
+
+  def detect_script_type (text)
+    if text =~ /\p{Han}/
+      {
+        type: :ideographic,
+        min_prefix_match: 1,
+        min_full_text_match: 1
+      }
+    elsif text =~ /\p{Arab}/
+      {
+        type: :abjad,
+        min_prefix_match: 2,
+        min_full_text_match: 2
+      }
+    elsif text =~ /\p{Hira}|\p{Kana}|\p{Hang}/
+      {
+        type: :syllabary,
+        min_prefix_match: 2,
+        min_full_text_match: nil
+      }
+    else
+      {
+        type: :default,
+        min_prefix_match: 3,
+        min_full_text_match: 5
+      }
     end
-    @query
   end
 end

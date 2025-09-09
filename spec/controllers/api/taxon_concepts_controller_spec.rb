@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe Api::V1::TaxonConceptsController do
   context 'GET index' do
-    it ' logs with Ahoy with different parameters' do
+    include_context 'Boa constrictor'
+
+    it 'logs with Ahoy with different parameters' do
       expect do
         get :index, params: { taxonomy: 'cites_eu', taxon_concept_query: 'stork', geo_entity_scope: 'cites', page: 1 }
       end.to change { Ahoy::Event.count }.by(1)
@@ -12,6 +14,79 @@ describe Api::V1::TaxonConceptsController do
         get :index, params: { taxonomy: 'cites_eu', taxon_concept_query: 'dolphin', geo_entity_scope: 'cites', page: 1 }
       end.to change { Ahoy::Event.count }.by(1)
       expect(@ahoy_event1).to eq(@ahoy_event2)
+    end
+
+    it 'returns search suggestions when searching for typos' do
+      get :index, params: { taxonomy: 'CITES', taxon_concept_query: 'costrictor' }
+
+      expect(response.body).to have_json_size(0).at_path(
+        'taxon_concepts'
+      )
+
+      expect(response.body).to be_json_eql(
+        [ { matched_name: 'constrictor' } ].to_json
+      ).at_path(
+        'meta/search_suggestions'
+      )
+    end
+
+    it 'ignores leading spaces when searching for typos' do
+      get :index, params: { taxonomy: 'CITES', taxon_concept_query: ' costrictor' }
+
+      expect(response.body).to have_json_size(0).at_path(
+        'taxon_concepts'
+      )
+
+      expect(response.body).to be_json_eql(
+        [ { matched_name: 'constrictor' } ].to_json
+      ).at_path(
+        'meta/search_suggestions'
+      )
+    end
+
+    it 'ignores duplicate spaces when searching for typos' do
+      get :index, params: { taxonomy: 'CITES', taxon_concept_query: ' Bob  costrictor' }
+
+      expect(response.body).to have_json_size(0).at_path(
+        'taxon_concepts'
+      )
+
+      expect(response.body).to be_json_eql(
+        [
+          { matched_name: 'boa constrictor' },
+          { matched_name: 'constrictor' }
+        ].to_json
+      ).at_path(
+        'meta/search_suggestions'
+      )
+    end
+
+    it 'search suggestions are case-insensitive' do
+      get :index, params: { taxonomy: 'CITES', taxon_concept_query: 'Costrictor' }
+
+      expect(response.body).to have_json_size(0).at_path(
+        'taxon_concepts'
+      )
+
+      expect(response.body).to be_json_eql(
+        [ { matched_name: 'constrictor' } ].to_json
+      ).at_path(
+        'meta/search_suggestions'
+      )
+    end
+
+    it 'search suggestions are accent-insensitive' do
+      get :index, params: { taxonomy: 'CITES', taxon_concept_query: 'kralowsky' }
+
+      expect(response.body).to have_json_size(0).at_path(
+        'taxon_concepts'
+      )
+
+      expect(response.body).to be_json_eql(
+        [ { matched_name: 'kralovsky' } ].to_json
+      ).at_path(
+        'meta/search_suggestions'
+      )
     end
   end
 

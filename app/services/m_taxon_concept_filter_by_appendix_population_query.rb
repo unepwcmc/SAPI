@@ -5,7 +5,7 @@ class MTaxonConceptFilterByAppendixPopulationQuery < MTaxonConceptFilterByAppend
     @original_geo_entities_ids = geo_entities_ids
     @geo_entities_ids = GeoEntity.nodes_and_descendants(geo_entities_ids).map(&:id)
     @geo_entities_in_clause = @geo_entities_ids.compact.join(',')
-    @table = @relation.from_clause.value || 'taxon_concepts_mview'
+    @table = @relation.from_clause.name || @relation.from_clause.value || 'taxon_concepts_mview'
   end
 
   def relation(designation_name = 'CITES')
