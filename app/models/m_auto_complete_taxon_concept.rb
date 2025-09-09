@@ -24,15 +24,10 @@
 #
 # Indexes
 #
-#  idx_ac_taxon_checklist_btree       (name_for_matching,type_of_match) WHERE (taxonomy_is_cites_eu AND show_in_checklist_ac)
-#  idx_ac_taxon_checklist_gist        (name_for_matching) WHERE (taxonomy_is_cites_eu AND show_in_checklist_ac) USING gist
-#  idx_ac_taxon_gist                  (name_for_matching) USING gist
-#  idx_ac_taxon_splus_btree           (name_for_matching,taxonomy_is_cites_eu,type_of_match) WHERE show_in_species_plus_ac
-#  idx_ac_taxon_splus_gist            (name_for_matching) WHERE show_in_species_plus_ac USING gist
-#  idx_ac_taxon_trade_ac_btree        (name_for_matching,type_of_match,taxonomy_is_cites_eu) WHERE show_in_trade_ac
-#  idx_ac_taxon_trade_ac_gist         (name_for_matching) WHERE show_in_trade_ac USING gist
-#  idx_ac_taxon_trade_internal_btree  (name_for_matching,type_of_match,taxonomy_is_cites_eu) WHERE show_in_trade_internal_ac
-#  idx_ac_taxon_trade_internal_gist   (name_for_matching) WHERE show_in_trade_internal_ac USING gist
+#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx4  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_species_plus_ac)
+#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx5  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_checklist_ac)
+#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx6  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_trade_ac)
+#  auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx7  (name_for_matching,taxonomy_is_cites_eu,type_of_match,show_in_trade_internal_ac)
 #
 
 class MAutoCompleteTaxonConcept < ApplicationRecord
