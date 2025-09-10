@@ -83,7 +83,7 @@ class Annotation < ApplicationRecord
     allow_blank: true,
     message: 'should be a symbol followed by one or more digits, where parent_symbol is present',
     with: /\A[^0-9a-z\s]\d+\z/i
-  }, if: Proc.new { |annotation| annotation.parent_symbol&.present? }
+  }, if: Proc.new { |annotation| annotation.is_hash_annotation? }
 
   ##
   # The exception is for those entries with a purely numerical pattern which
@@ -92,7 +92,7 @@ class Annotation < ApplicationRecord
     allow_blank: true,
     message: 'should be one or more digits, where parent_symbol is missing',
     with: /\A\d+\z/i
-  }, if: Proc.new { |annotation| !annotation.parent_symbol }
+  }, if: Proc.new { |annotation| !annotation.is_hash_annotation? }
 
   # cannot make [ :parent_symbol, :symbol ] unique - see https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/282
 
@@ -115,6 +115,10 @@ class Annotation < ApplicationRecord
         )
       ]
     )
+  end
+
+  def is_hash_annotation?
+    self.parent_symbol&.present? || self.event_id&.present?
   end
 
   def full_symbol
