@@ -9,6 +9,7 @@ class CitesTrade::HomeController < CitesTradeController
     respond_to do |format|
       format.html do
         @years = (1975..max_year).to_a.reverse
+        @default_year = Date.today.year - 2
 
         @db_download_version = db_download_config[:version]
         @db_download_size = db_download_config[:size]

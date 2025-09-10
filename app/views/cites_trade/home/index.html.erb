@@ -128,13 +128,13 @@
                           <span class="class="tab__select-label">
                             <%= t('from') %>
                           </span>
-                          <%= select_tag 'time_range_start', options_for_select(@years, @years.first), id: "qryFrom" %>
+                          <%= select_tag 'time_range_start', options_for_select(@years, @default_year), id: "qryFrom" %>
                         </div>
                         <div class="tab__select-item">
                           <span class="class="tab__select-label">
                             <%= t('to') %>:
                           </span>
-                          <%= select_tag 'time_range_end', options_for_select(@years, @years.first), id: "qryTo" %>
+                          <%= select_tag 'time_range_end', options_for_select(@years, @default_year), id: "qryTo" %>
                         </div>
                       </div>
                     </div>
