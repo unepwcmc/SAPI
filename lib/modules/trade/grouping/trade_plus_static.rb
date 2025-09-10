@@ -119,7 +119,7 @@ private
       source_names: "source_#{@locale}",
       purpose_names: "purpose_#{@locale}",
       unit_name: "unit_#{@locale}",
-      taxonomic_group: "group_name_#{@locale}"
+      taxonomic_group: 'group_code' # group_code is indexed
     }
   end
 
