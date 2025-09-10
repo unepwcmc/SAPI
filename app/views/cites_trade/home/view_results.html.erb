@@ -1,19 +1,37 @@
-<div class="grid_16 main_content">
+<section class="section">
+  <div class="section__inner-padding">
+    <div class="section__body">
 
-<div id="query_results" class="grid_16 results">
-  <div id="new_search_wrapper" align="center">
-      <a id="new_search" style="float:right;" href="/<%= I18n.locale %>/cites_trade/">
-        <button id="new_search" style="float:right; margin-right:15px;" value=" New Search ">
-        <%= image_tag "cites_trade/refresh1.png", alt: "" %> <%= t('new_search') %>
-        </button>
-      </a>
-    <br>
+      <div
+        id="query_results"
+        class="results"
+      >
+        <div class="results__header">
+          <h3
+            id="table_title"
+            class="results__title"
+          ></h3>
+          <a
+            id="new_search"
+            href="/<%= I18n.locale %>/cites_trade/"
+            class="results__button"
+          >
+            <%= t('new_search') %>
+          </a>
+        </div>
+
+        <div class="results__body">
+          <div class="results__scrollable-area">
+            <table
+              id="query_results_table"
+              class="results__table"
+            ></table>
+            <div id='cites-trade-loading'><%= image_tag('loading.gif') %></div>
+            <p class="info"></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
-  <h3 id="table_title" style="text-align:center"></h3>
-  <table id="query_results_table">
-  </table>
-  <div id='cites-trade-loading'><%= image_tag('loading.gif') %></div>
-  <p class="info"></p>
-</div>
-
-</div>
+</section>

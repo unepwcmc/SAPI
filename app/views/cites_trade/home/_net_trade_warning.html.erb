@@ -1,36 +1,31 @@
-<table id="net-trade-warning" width="80%" cellspacing="0" cellpadding="10" border="0" align="center" style="display:none">
-  <tbody>
-  <tr>
-    <td valign="top" class="style1">
-      <span style="font-size:14px;font-weight:bold;color:red;">
-        <%= t('warnings.net_trade_1') %>
-      </span>
-      <br><br>
-      <hr class="space">
+<div
+  id="net-trade-warning"
+  class="results-warning"
+  style="display:none"
+>
+  <div class="results-warning__body">
+    <h4 class="results-warning__heading">
+      <%= t('warnings.net_trade_1') %>
+    </h4>
+    <p class="results-warning__text">
       <%= t('warnings.net_trade_2') %>
-      <br><br>
-      <hr class="space">
-      <table>
-        <tbody>
-        <tr>
-          <td>
-            <a href="/<%= I18n.locale %>/cites_trade/">
-              <button value=" New Search " style="float:right" name="reset" type="submit">
-                <%= image_tag "cites_trade/page_find.gif" %>
-                <%= t('reselect') %>
-              </button>
-            </a>
-          </td>
-          <td>
-            <button id="ignore_warning_button_report" value=" New Search " style="float:right" name="ngTrade" type="submit">
-              <%= image_tag "cites_trade/page_right.gif" %>
-              <%= t('continue') %>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  </tbody>
-</table>
+    </p>
+  </div>
+  <div class="results-warning__footer">
+    <a
+      href="/<%= I18n.locale %>/cites_trade/"
+      class="results-warning__button--reselect"
+    >
+      <%= t('reselect') %>
+    </a>
+    <button
+      id="ignore_warning_button_report"
+      value="New Search"
+      name="ngTrade"
+      type="submit"
+      class="results-warning__button--continue"
+    >
+      <%= t('continue') %>
+    </button>
+  </div>
+</div>

@@ -9,21 +9,29 @@ $(document).ready(function(){
     is_view_results_page = $('#query_results_table').length > 0;
 
   ajaxFail = function (xhr, ajaxOptions, thrownError) {
-    //console.log(xhr, ajaxOptions, thrownError);
+    console.log(xhr, ajaxOptions, thrownError);
+
     growlMe("The request failed.");
   };
 
-  // Your code here
-  $(".tipify").tipTip();
-
-  function growlMe(text){
-    $.jGrowl(text);
+  function growlMe(message){
+    notyError(message);
   };
 
   function notySticky(message){
     noty({
       layout: 'top',
       type: 'information',
+      closeWith: ['button'],
+      text: message,
+      timeout: 1000
+    });
+  };
+
+  function notyError(message){
+    noty({
+      layout: 'top',
+      type: 'error',
       closeWith: ['button'],
       text: message,
       timeout: 1000
@@ -40,18 +48,10 @@ $(document).ready(function(){
 
   //setting the tabs for the search
   $("#tabs").tabs().addClass('ui-tabs-vertical ui-helper-clearfix');
+
   //enabling the tabs to be visible again
   $("#tabs").css("display", "block");
   $("#tabs li").removeClass('ui-corner-top').addClass('ui-corner-left');
-
-  $(".someClass").tipTip({maxWidth: "300px"});
-
-  // using the qtip2 plugin
-  $(".qtipify").qtip({
-    style: {
-      classes: 'ui-tooltip-green ui-tooltip-cluetip'
-    }
-  });
 
   $("#genus_all_id").val('').trigger("liszt:updated");
   $("#genus_all_id").chosen({
@@ -59,6 +59,7 @@ $(document).ready(function(){
     no_results_text: "No results matched"
   }).change(function(){
     var my_value = $(this).val();
+
     $('#species_out').text(my_value);
   });
 
@@ -141,10 +142,15 @@ $(document).ready(function(){
   }
   queryResults.ajax = true;
   $("#submit_expert").click(function(e) {
-    $("#cites-trade-loading").show();
+    hideAllErrors();
+    $("#cites-trade-loading").css('display', 'inline-block');
     queryResults.call(this);
   });
 
+  function hideAllErrors() {
+    $('#web-limit-exceeded-error-message').hide();
+    $('#csv-limit-exceeded-error-message').hide();
+  };
 
   //function to reset all the countrols on the expert_accord page
   function resetSelects() {
@@ -180,12 +186,6 @@ $(document).ready(function(){
     .addClass('ui-state-enabled');
   $('#div_taxonomic_cascade :input').removeAttr('disabled');
   $('#species_out').text('');
-
-  $('#table_selection').colorize({
-    altColor: '#E6EDD7',
-    bgColor: '#E6EDD7',
-    hoverColor: '#D2EF9A'
-  });
 
   function getSelectionText(source) {
     myValues = new Array();
@@ -712,7 +712,7 @@ $(document).ready(function(){
       $('#web-limit-exceeded-error-message').show();
       $('input[value=csv]').attr('checked', 'checked');
       $('input[value=web]').attr("disabled",true);
-      $('span#web-option').css('color', 'LightGray');
+      $('#web-option').css('color', 'LightGray');
     }
     $('select[name=csvSeparator]').val(Cookies.get('cites_trade.csv_separator') || 'comma')
   }
@@ -776,7 +776,7 @@ $(document).ready(function(){
     if (!ignoreWarning &
       (report_type == 'net_imports' || report_type == 'net_exports')
     ) {
-      $('#this_should_not_be_a_table').hide();
+      $('#download-options').hide();
       $('#net-trade-warning').show();
       return;
     }

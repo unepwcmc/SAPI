@@ -1,43 +1,47 @@
 es:
   cites_title: "Base de Datos sobre el Comercio CITES"
   cites_description: "La Base de datos sobre el comercio CITES, administrada por el PNUMA Centro de Monitoreo de la Conservación Mundial (PNUMA-CMCM) en nombre de la Secretaría CITES."
-  cites_sub_title: "Por favor introduzca sus criterios de búsqueda más abajo"
+  cites_intro: "La Base de Datos sobre el Comercio CITES es la base de datos más completa y fiable sobre el comercio internacional de vida silvestre. Desde 1975, refleja los registros oficiales de comercio notificados por las Partes en sus informes anuales a la Convención sobre el Comercio Internacional de Especies Amenazadas de Fauna y Flora Silvestres (CITES)."
+  cites_infobox:
+    heading: "Guía para el uso de la base de datos sobre el comercio de la CITES"
+    text: "Debido a la complejidad de la interpretación de los datos comerciales de la CITES, se recomienda encarecidamente que todos aquellos interesados en utilizar la base de datos comerciales de la CITES lean esta guía antes de utilizar los datos."
   errors:
-    no_data_1: "Su consulta ha devuelto ningún dato"
-    no_data_2: "Por favor selecciona otras variables"
-    csv_limit_exceeded_1: "Su búsqueda ha resultado en un subconjunto de datos demasiado grande (más de 1 millón de registros). Debe limitar el rango de años y seleccionar al menos un país de importación/exportación o un taxón"
-    csv_limit_exceeded_2: "Debe limitar el rango de años y seleccionar al menos un país de importación/exportación o un taxón"
+    no_data_1: "Su consulta ha devuelto ningún dato."
+    no_data_2: "Por favor selecciona otras variables."
+    csv_limit_exceeded_1: "Su búsqueda ha resultado en un subconjunto de datos demasiado grande (más de 1 millón de registros). Debe limitar el rango de años y seleccionar al menos un importador o un exportador o un taxón"
+    csv_limit_exceeded_2: "Debe limitar el rango de años y seleccionar al menos un importador or un exportador o un taxón"
     web_limit_exceeded_1: "Vista en línea no está disponible para grandes subconjuntos"
     web_limit_exceeded_2: "Puede descargar los resultados en formato CSV"
   warnings:
     net_trade_1: "Por favor, lea cuidadosamente:"
     net_trade_2: "El comercio neto es el resultado de la sustracción de las reexportaciones de un país de sus importaciones. Por lo tanto, si su selección de datos sólo ha implicado importaciones o exportaciones de países especificados, no se podrán calcular las importaciones o exportaciones netas - sólo se pueden obtener importaciones o exportaciones brutas."
+  image_credits: "Créditos de la imagen:"
 
-  year_text: "Rango de Años"
+  year_text: "Rango de años"
   year_tip: "Seleccione el año de inicio (De) y el año final (A) para su búsqueda. Es aconsejable limitar su búsqueda de datos a un rango que no exceda de los 5 años"
-  export_text: "Países de exportación"
-  export_tip: "Introduzca el país/los países que desea incluir en el producto final. Para incluir datos de todos los países, mantenga seleccionado 'Todos los Países'"
-  import_text: "Países importadores"
-  import_tip: "Introduzca el país/los países que desea incluir en el producto final. Para incluir datos de todos los países, mantenga seleccionado 'Todos los Países'"
-  source_text: "Origen"
-  source_tip: "Introduzca el origen/los origenes (ej. 'W- Recolectados en el medio silvestre') que desea incluir en el producto final.  Para incluir datos de todos los orígenes, mantenga seleccionado  'Todos los Orígenes'"
-  purpose_text: "Objetivo"
-  purpose_tip: "Introduzca el objetivo/los objetivos (ej. 'T- Comercial' o 'S- Científico') que desea incluir en el producto final.  Para incluir datos de todos los objetivos, mantenga seleccionado 'Todos los Objetivos'"
+  export_text: "Exportadores"
+  export_tip: "Introduzca el país/territorio o los países/territorios que desea incluir en el producto final. Para incluir datos de todos los países y territorios, mantenga seleccionado 'Todos los países y territorios'"
+  import_text: "Importadores"
+  import_tip: "Introduzca el país/territorio o los países/territorios que desea incluir en el producto final. Para incluir datos de todos los países y territorios, mantenga seleccionado 'Todos los países y territorios'"
+  source_text: "Orígenes"
+  source_tip: "Introduzca el origen/los origenes (ej. 'W - Recolectados en el medio silvestre') que desea incluir en el producto final. Para incluir datos de todos los orígenes, mantenga seleccionado 'Todos los orígenes'"
+  purpose_text: "Objetivos"
+  purpose_tip: "Introduzca el objetivo/los objetivos (ej. 'T - Comercial' o 'S - Científico') que desea incluir en el producto final. Para incluir datos de todos los objetivos, mantenga seleccionado 'Todos los objetivos'"
   trade_text: "Términos del Comercio"
-  trade_tip: "Introduzca el término/los términos (ej. 'vivo' o 'piel') que desea incluir en el producto final.  Para incluir datos de todos los los términos, mantenga seleccionado 'Todos los Términos'"
-  taxon_text: "Buscar por taxón"
+  trade_tip: "Introduzca el término/los términos (ej. 'vivo' o 'piel') que desea incluir en el producto final. Para incluir datos de todos los los términos, mantenga seleccionado 'Todos los términos'"
+  taxon_text: "Especies"
   taxon_tip: "Para buscar datos de un especie específica, escriba el nombre del taxón. Para buscar datos de todas las especies dentro de un grupo taxonómico en particular (por ejemplo género, familia, orden, clase, etc.), escriba el nombre y seleccione el grupo taxonómico en el menú desplegable de abajo. Para seleccionar todos los taxones, deje esta sección en blanco. Es aconsejable limitar la búsqueda de datos a un taxónn específico debido al volumen de datos (hay un límite de un millón de filas para la descarga de datos)."
-  taxon_title: "Buscar por taxón:"
   taxon_search: "Buscar por especie o grupo taxonómico"
   genus_title: "Seleccione un género:"
 
   eu_disclaimer: "La selección de 'Unión Europea' incluirá datos de comercio que involucren a países que eran Estados miembros de la UE en el momento del comercio (es decir, el rango de años de la búsqueda). Cuando el rango de años incluya el año de ingreso/salida de un país de la Unión Europea, todo el comercio relevante para la búsqueda reportado para ese país y año será incluido en los resultados de la búsqueda incluso cuando la fecha de ingreso/salida haya sido a mitad de ese año."
-  all_countries: "Todos los Países"
-  all_sources: "Todos los Orígenes"
-  all_purposes: "Todos los Objetivos"
-  all_terms: "Todos los Términos"
+  all_countries: "Todos los países y territorios"
+  all_sources: "Todos los orígenes"
+  all_purposes: "Todos los objetivos"
+  all_terms: "Todos los términos"
 
   search_selection: "Criterios de búsqueda seleccionados:"
+  search_database: "Buscar en la base de datos a continuación:"
   search: "Buscar"
   reset: "Reajustar"
   reselect: "Volver a Seleccionar los Datos"
@@ -45,19 +49,21 @@ es:
 
   download: "Descargar"
   db_guide: "Una Guía para Utilizar la Base de Datos sobre el Comercio CITES"
+  guide_in_english: "Guía disponible sólo en inglés."
   tabulation_guide: "Una Guía para Interpretar las Salidas de Tabulaciones Comparativas"
   trade_guide: "Una Guía para Interpretar las Salidas de Comercio Bruto/Neto"
-  translation_in_progress_html: Una versión actualizada de la "Guía de utilización de la base de datos sobre el comercio CITES" ha sido publicada en <a href="/cites_trade_guidelines/en-CITES_Trade_Database_Guide.pdf">inglés</a> (traducción en curso).
   new: "Nueva versión"
 
+  search_results: "Resultados de la búsqueda:"
   reports: "INFORMES"
   report: "informe"
   select_output: "Seleccionar el tipo de salida:"
   select_report: "Seleccione el tipo de informe:"
   comparative_tabulations: "Tabulaciónes Comparativas"
   trade_tabulations: " Tabulaciones del Comercio Bruto/Neto"
-  get_report: "Obtener el informe"
+  get_report: "Obtener el Informe"
   new_search: "Nueva Búsqueda"
+  view_guide: "Ver Guía"
 
   from: "De"
   to: "A"
@@ -67,8 +73,8 @@ es:
   gross_imports: "Importaciones Brutas"
   net_exports: "Exportaciones Netas"
   net_imports: "Importaciones Netas"
-  comma_separated: "separado por comas"
-  semicolon_separated: "separado por punto y coma"
+  comma_separated: "Separado por comas"
+  semicolon_separated: "Separado por punto y coma"
   csv_separator_tip: "¿Problemas para ver los resultados? Intente cambiar el tipo de resultado .csv a separado por punto y coma."
 
   table_title:
@@ -114,7 +120,28 @@ es:
         Este proyecto fue financiado por la Unión Europea en el marco del proyecto de Acuerdo de Cooperación del Programa GPGC CE-ONU Medio Ambiente, otorgado a la Secretaría de la CITES.
       </p>
     "
-    citation_label: Cita
+    citation_label: "Cita"
     citation_text: "ONU Medio Ambiente - Centro Mundial para el Seguimiento de la Conservación (UNEP-WCMC) (Comps.) 2020. Lista de especies CITES - Manual de identificación CITES. Secretaría CITES, Ginebra, Suiza, y UNEP-WCMC, Cambridge, Reino Unido. Accedido el %{date}"
-    copyright_label: Copyright
-    copyright_text: 2020 Secretaría de la Convención sobre el Comercio Internacional de Especies Amenazadas de Fauna y Flora Silvestres
+    copyright_label: "Copyright"
+    copyright_text: "2020 Secretaría de la Convención sobre el Comercio Internacional de Especies Amenazadas de Fauna y Flora Silvestres"
+
+  footer:
+    heading: "La base de datos sobre el comercio de la CITES fue desarrollada y es mantenida por el PNUMA-WCMC en nombre de la Secretaría de la CITES."
+    additional_resources: "Recursos adicionales"
+    contact_us: "Contáctanos"
+    links:
+      cites:
+        label: CITES
+        url: https://cites.org/esp
+      unep_wcmc:
+        label: UNEP-WCMC
+        url: https://unep-wcmc.org/
+      tradeview:
+        label: CITES Wildlife Tradeview
+        url: https://tradeview.cites.org/es
+      checklist:
+        label: CITES Checklist of Species
+        url: https://checklist.cites.org/#/es
+      species_plus:
+        label: Species+ (Species Plus)
+        url: https://www.speciesplus.net/
