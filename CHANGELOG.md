@@ -1,3 +1,18 @@
+### Forthcoming
+
+**Species+ admin interface**
+
+* Fixes an issue where hash annotations could not be created
+
+**CITES Trade DB**
+
+* Branding update and visual improvements
+* Fixes a cache key collision affecting filtering on EU as an importer/exporter
+
+**CITES Wildlife Tradeview**
+
+* Fix an issue where taxonomic groups filter (e.g. "Birds") worked only in English
+
 ### 1.20.0
 
 **Species+**
