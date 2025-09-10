@@ -13,6 +13,14 @@
     * searching for "pnathera" returns suggestions including "panthera"
 * Admin interface: fixed an issue where editing a listing would not save where there was an associated footnote
 
+Accent-insensitivity and within-word matching also applies to autocomplete in:
+
+* CITES Wildlife Tradeview
+* CITES Trade database
+* NDF Support Tool
+* CITES Captive Breeding database
+* Species+ app
+
 **CITES Trade DB**
 
 * New column for Introduction from the Sea (IFS) permits
