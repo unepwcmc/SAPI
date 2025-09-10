@@ -40,8 +40,7 @@ private
   end
 
   def csv_cached?
-    # Don't cache in development to allow easier debugging.
-    Rails.env.development? ? false : csv_created?
+    Rails.application.config.action_controller.perform_caching && csv_created?
   end
 
   def initialize_csv_separator(csv_separator)
