@@ -210,22 +210,6 @@ CREATE OR REPLACE FUNCTION drop_eu_lc_mviews() RETURNS void
   END;
   $$;
 
-CREATE OR REPLACE FUNCTION drop_import_tables() RETURNS void
-  LANGUAGE plpgsql
-  AS $$
-  DECLARE
-    current_table_name TEXT;
-  BEGIN
-    FOR current_table_name IN SELECT table_name FROM information_schema.tables
-    WHERE table_name LIKE '%_import'
-      AND table_type != 'VIEW'
-    LOOP
-      EXECUTE 'DROP TABLE ' || current_table_name || ' CASCADE';
-    END LOOP;
-    RETURN;
-  END;
-  $$;
-
 CREATE OR REPLACE FUNCTION listing_changes_mview_name(prefix TEXT, designation TEXT, events_ids INT[])
   RETURNS TEXT
   LANGUAGE SQL IMMUTABLE
