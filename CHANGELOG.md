@@ -1,5 +1,9 @@
 ### Forthcoming
 
+**Species+**
+
+* Fixes an issue with the login form being submitted multiple times in quick succession
+
 **Species+ admin interface**
 
 * Fixes an issue where hash annotations could not be created
