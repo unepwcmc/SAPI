@@ -7,6 +7,8 @@ $(document).ready(function(){
   $('#login_form form').submit( function(e) {
     e.preventDefault();
     var form = this;
+    var fieldset = $(form).find('fieldset');
+
     $.ajax({
       url: '/users/sign_in',
       type: 'POST',
@@ -19,16 +21,21 @@ $(document).ready(function(){
         }
       },
       success: function(data) {
-        location.href = '/'
+        location.href = '/';
+        fieldset.removeAttr('disabled');
       },
       error: function(xhr, ajaxOptions, thrownError) {
         var error = "<div class='error-box'><p class='error-message'>" +
           xhr.responseText + "</p></div>"
         $('.login-header').addClass('less-margin');
-        $('.error-box').remove()
-        $('.login-error').append(error)
+        $('.error-box').remove();
+        $('.login-error').append(error);
+
+        fieldset.removeAttr('disabled').find('input').first().focus();
       }
     });
+
+    fieldset.attr('disabled', 'disabled');
   });
 
   $('.logged-header-container .right').on('click', function(e){
