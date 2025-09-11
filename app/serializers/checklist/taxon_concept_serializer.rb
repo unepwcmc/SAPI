@@ -10,6 +10,9 @@ class Checklist::TaxonConceptSerializer < ActiveModel::Serializer
   has_many :current_cites_additions, serializer: Checklist::ListingChangeSerializer,
     key: :current_additions
 
+  has_many :distributions, serializer: Checklist::DistributionSerializer,
+    key: :distributions
+
   def id
     if object.is_a? Checklist::HigherTaxaItem
       object.id + 1000000 # unless ids differ, Ember will create a single object
