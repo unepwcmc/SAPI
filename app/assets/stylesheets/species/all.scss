@@ -1489,10 +1489,26 @@ div#banner p strong {
 div#banner button#remove {
   float: right;
   padding: 0;
-  border: none;
+  border: 2px solid #fff;
   background: none;
   outline: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 1rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  line-height: 1rem;
+  font-size: 1.05rem;
+  text-align: center;
+  font-weight: bold;
+  font-family: inherit;
+  vertical-align: middle;
 }
+
+div#banner button#remove:hover {
+  background: #253848;
+}
+
 
 .tooltip[data-descr] {
     position: relative;
