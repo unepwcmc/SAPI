@@ -2,6 +2,8 @@ $(document).ready(function(){
 
   var ajaxFail, initExpctyImpcty, initTerms, initSources, initPurposes,
     countries = {}, units = {}, terms = {}, purposes = {}, sources = {},
+    defaultFrom,
+    defaultTo,
     euId = '',
     selected_taxa = '',
     is_search_page = $('#form_expert').length > 0,
@@ -152,12 +154,17 @@ $(document).ready(function(){
     $('#csv-limit-exceeded-error-message').hide();
   };
 
+  // On document initialisation, get the default options of 'from' and 'to'
+  // fields so we can reset them later.
+  if (is_search_page) {
+    defaultFrom = $('#qryFrom').find('option[selected]').get(0).value;
+    defaultTo = $('#qryTo').find('option[selected]').get(0).value;
+  }
+
   //function to reset all the countrols on the expert_accord page
   function resetSelects() {
-    $('#qryFrom').find('option:first').attr('selected', 'selected')
-      .trigger('change');
-    $('#qryTo').find('option:first').attr('selected', 'selected')
-      .trigger('change');
+    $('#qryFrom').val(defaultFrom);
+    $('#qryTo').val(defaultTo);
     $('#taxonomic_cascade_search').val('');
     $('#species_out').text('');
     $('#sources').select2("val","all_sou");
