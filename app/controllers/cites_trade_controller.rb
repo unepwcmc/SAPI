@@ -1,4 +1,14 @@
 class CitesTradeController < ApplicationController
+  def db_download_config
+    @@db_download_config ||= Rails.application.config_for(:cites_trade_db_download)
+  end
+
+  def set_db_download_config
+    @db_download_version ||= db_download_config[:version]
+    @db_download_size ||= db_download_config[:size]
+  end
+
+
 private
 
   def search_params

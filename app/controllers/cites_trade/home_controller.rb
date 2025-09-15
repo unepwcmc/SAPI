@@ -1,8 +1,4 @@
 class CitesTrade::HomeController < CitesTradeController
-  def db_download_config
-    @@db_download_config ||= Rails.application.config_for(:cites_trade_db_download)
-  end
-
   def index
     max_year = Trade::Shipment.maximum('year') || Date.today.year
 
@@ -11,16 +7,17 @@ class CitesTrade::HomeController < CitesTradeController
         @years = (1975..max_year).to_a.reverse
         @default_year = Date.today.year - 2
 
-        @db_download_version = db_download_config[:version]
-        @db_download_size = db_download_config[:size]
+        set_db_download_config
       end
     end
   end
 
   def download
+    set_db_download_config
   end
 
   def view_results
+    set_db_download_config
   end
 
   def download_db

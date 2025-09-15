@@ -4,6 +4,8 @@ class CitesTrade::ExportsController < CitesTradeController
   def download
     respond_to do |format|
       format.html do
+        set_db_download_config
+
         search = Trade::ShipmentsExportFactory.new(
           search_params.merge(
             {
