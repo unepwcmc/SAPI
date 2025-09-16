@@ -217,15 +217,28 @@ private
     end
 
     permit_blank_query =
-      'ARRAY_UPPER(import_permits_ids, 1) IS NULL
-      OR ARRAY_UPPER(export_permits_ids, 1) IS NULL
-      OR ARRAY_UPPER(origin_permits_ids, 1) IS NULL'
+      <<-SQL.squish
+        ARRAY_UPPER(import_permits_ids, 1) IS NULL OR
+        ARRAY_UPPER(export_permits_ids, 1) IS NULL OR
+        ARRAY_UPPER(origin_permits_ids, 1) IS NULL OR
+        ARRAY_UPPER(ifs_permits_ids, 1) IS NULL
+      SQL
+
     if !@permits_ids.empty?
+      permit_match_sql =
+        <<-SQL.squish
+          import_permits_ids::INT[] && ARRAY[:permits_ids]::INT[] OR
+          export_permits_ids::INT[] && ARRAY[:permits_ids]::INT[] OR
+          origin_permits_ids::INT[] && ARRAY[:permits_ids]::INT[] OR
+          ifs_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
+        SQL
+
       @query = @query.where(
-        "import_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
-        OR export_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
-        OR origin_permits_ids::INT[] && ARRAY[:permits_ids]::INT[]
-        #{@permit_blank ? "OR #{permit_blank_query}" : ''}",
+        if @permit_blank
+          "#{permit_match_sql} OR #{permit_blank_query}"
+        else
+          permit_match_sql
+        end,
         permits_ids: @permits_ids
       )
     elsif @permit_blank

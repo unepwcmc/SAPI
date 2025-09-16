@@ -43,29 +43,12 @@ private
         @query.by_cites_eu_taxonomy
       end
 
-    if @visibility == :speciesplus
-      @query = @query.where(show_in_species_plus: true)
-    elsif @visibility == :elibrary
-      @query = @query.where("show_in_species_plus OR name_status = 'N'")
-    end
-
-    if !@geo_entities.empty? && @geo_entity_scope == :cms
-      @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @query, [ 'I', 'II' ], @geo_entities
-      ).relation('CMS')
-    elsif !@geo_entities.empty? && @geo_entity_scope == :cites
-      @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @query, [ 'I', 'II', 'III' ], @geo_entities
-      ).relation('CITES')
-    elsif !@geo_entities.empty? && @geo_entity_scope == :eu
-      @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @query, [ 'A', 'B', 'C', 'D' ], @geo_entities
-      ).relation('EU')
-    elsif !@geo_entities.empty? && @geo_entity_scope == :occurrences
-      @query = MTaxonConceptFilterByAppendixPopulationQuery.new(
-        @query, [], @geo_entities
-      ).relation
-    end
+    @query =
+      self.class.apply_geo_entities_filter(
+        self.class.apply_visibility_filter(@query, @visibility),
+        @geo_entities,
+        @geo_entity_scope
+      )
 
     if @scientific_name.present?
       @query = @query.
@@ -75,5 +58,41 @@ private
         )
     end
     @query = @query
+  end
+
+  def self.apply_visibility_filter(original_query, visibility)
+    if visibility == :speciesplus
+      return original_query.where(show_in_species_plus: true)
+    elsif visibility == :elibrary
+      return original_query.where("show_in_species_plus OR name_status = 'N'")
+    end
+
+    original_query
+  end
+
+  def self.apply_geo_entities_filter(
+    original_query, geo_entities, geo_entity_scope
+  )
+    if geo_entities.blank?
+      return original_query
+    end
+
+    if geo_entity_scope == :cms
+      MTaxonConceptFilterByAppendixPopulationQuery.new(
+        original_query, [ 'I', 'II' ], geo_entities
+      ).relation('CMS')
+    elsif geo_entity_scope == :cites
+      MTaxonConceptFilterByAppendixPopulationQuery.new(
+        original_query, [ 'I', 'II', 'III' ], geo_entities
+      ).relation('CITES')
+    elsif geo_entity_scope == :eu
+      MTaxonConceptFilterByAppendixPopulationQuery.new(
+        original_query, [ 'A', 'B', 'C', 'D' ], geo_entities
+      ).relation('EU')
+    elsif geo_entity_scope == :occurrences
+      MTaxonConceptFilterByAppendixPopulationQuery.new(
+        original_query, [], geo_entities
+      ).relation
+    end
   end
 end

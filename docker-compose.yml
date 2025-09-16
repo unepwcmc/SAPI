@@ -113,6 +113,7 @@ services:
     stdin_open: true
     tty: true
     environment:
+      ALLOWED_HOSTS: sapi-rails
       MAILER_ADDRESS: sapi-mailcatcher
       SAPI_DATABASE_HOST: sapi-db
       SAPI_DATABASE_USERNAME: postgres
@@ -139,7 +140,11 @@ services:
     tty: true
     environment:
       SAPI_DATABASE_HOST: sapi-db
+      SAPI_DATABASE_USERNAME: postgres
+      SAPI_DATABASE_NAME: sapi_development
+      SAPI_DATABASE_PORT: 5432
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+      SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
       # Defaults to blank; used by AppSignal:
       USER: "$USER"
       USERNAME: "$USERNAME"

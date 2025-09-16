@@ -3,7 +3,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
   defaults resource_class: ListingChange,
     collection_name: 'listing_changes', instance_name: 'listing_change'
   belongs_to :taxon_concept, :designation
-  before_action :load_search, except: [ :create, :update, :destroy ]
+  before_action :load_search, except: [ :destroy ]
   layout 'taxon_concepts'
 
   authorize_resource class: false

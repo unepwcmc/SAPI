@@ -13,7 +13,10 @@ class Admin::SimpleCrudController < Admin::AdminController
       success.js { render 'create' }
       failure.js do
         load_associations
-        render 'new'
+
+        render 'new', assigns: {
+          resource:
+        }
       end
     end
   end
@@ -23,7 +26,10 @@ class Admin::SimpleCrudController < Admin::AdminController
       success.js { render 'create' }
       failure.js do
         load_associations
-        render 'new'
+
+        render 'new', assigns: {
+          resource:
+        }
       end
     end
   end

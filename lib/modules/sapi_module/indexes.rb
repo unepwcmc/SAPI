@@ -1,3 +1,9 @@
+##
+# This is exclusively used in the files
+#
+# - lib/tasks/import_trade_names.rake
+# - lib/tasks/import_trade_shipments.rake
+
 module SapiModule
   module Indexes
     # rewrite the code below to just use add_index and add UNIQUE to the mview ids
@@ -76,6 +82,7 @@ module SapiModule
       DROP INDEX IF EXISTS index_trade_shipments_on_import_permits_ids;
       DROP INDEX IF EXISTS index_trade_shipments_on_export_permits_ids;
       DROP INDEX IF EXISTS index_trade_shipments_on_origin_permits_ids;
+      DROP INDEX IF EXISTS index_trade_shipments_on_ifs_permits_ids;
       DROP INDEX IF EXISTS index_trade_shipments_on_legacy_shipment_number;
       SQL
       ApplicationRecord.connection.execute(sql)
@@ -171,6 +178,10 @@ module SapiModule
         ON trade_shipments
         USING GIN
         (origin_permits_ids);
+      CREATE INDEX index_trade_shipments_on_ifs_permits_ids
+        ON trade_shipments
+        USING GIN
+        (ifs_permits_ids);
       CREATE INDEX index_trade_shipments_on_legacy_shipment_number
         ON trade_shipments
         USING btree

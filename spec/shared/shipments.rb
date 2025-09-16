@@ -125,6 +125,7 @@ shared_context 'Shipments' do
       import_permit_number: 'AAA',
       export_permit_number: 'BBB;CCC',
       origin_permit_number: 'EEE',
+      ifs_permit_number: 'FFF',
       quantity: 20
     )
     @shipment2 = create(
@@ -218,6 +219,7 @@ shared_context 'Shipments' do
       import_permit_number: 'FFF',
       export_permit_number: 'DDD;KKK',
       origin_permit_number: 'EEE',
+      ifs_permit_number: 'JJJ',
       quantity: 30
     )
   end

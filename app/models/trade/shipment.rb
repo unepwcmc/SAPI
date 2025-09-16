@@ -8,6 +8,8 @@
 #  epix_updated_at               :datetime
 #  export_permit_number          :text
 #  export_permits_ids            :integer          is an Array
+#  ifs_permit_number             :text
+#  ifs_permits_ids               :integer          is an Array
 #  import_permit_number          :text
 #  import_permits_ids            :integer          is an Array
 #  legacy_shipment_number        :integer
@@ -42,6 +44,7 @@
 #  index_trade_shipments_on_created_by_id_and_updated_by_id  (created_by_id,updated_by_id)
 #  index_trade_shipments_on_export_permits_ids               (export_permits_ids) USING gin
 #  index_trade_shipments_on_exporter_id                      (exporter_id)
+#  index_trade_shipments_on_ifs_permits_ids                  (ifs_permits_ids) USING gin
 #  index_trade_shipments_on_import_permits_ids               (import_permits_ids) USING gin
 #  index_trade_shipments_on_importer_id                      (importer_id)
 #  index_trade_shipments_on_origin_permits_ids               (origin_permits_ids) USING gin
@@ -120,7 +123,8 @@ class Trade::Shipment < ApplicationRecord
     [
       import_permits_ids_was,
       export_permits_ids_was,
-      origin_permits_ids_was
+      origin_permits_ids_was,
+      ifs_permits_ids_was
     ].each do |permits_ids|
       @old_permits_ids += permits_ids ? permits_ids.dup : []
     end
@@ -166,6 +170,10 @@ class Trade::Shipment < ApplicationRecord
     set_permit_number('origin', str)
   end
 
+  def ifs_permit_number=(str)
+    set_permit_number('ifs', str)
+  end
+
   def import_permits_ids
     read_attribute(:import_permits_ids) || []
   end
@@ -190,9 +198,20 @@ class Trade::Shipment < ApplicationRecord
     write_attribute(:origin_permits_ids, "{#{ary && ary.join(',')}}")
   end
 
+  def ifs_permits_ids
+    read_attribute(:ifs_permits_ids) || []
+  end
+
+  def ifs_permits_ids=(ary)
+    write_attribute(:ifs_permits_ids, "{#{ary && ary.join(',')}}")
+  end
+
   def permits_ids
     (
-      import_permits_ids + export_permits_ids + origin_permits_ids
+      import_permits_ids +
+      export_permits_ids +
+      origin_permits_ids +
+      ifs_permits_ids
     ).uniq.compact || []
   end
 
@@ -205,8 +224,10 @@ private
     permits = str && str.split(';').compact.map do |number|
       Trade::Permit.find_or_create_by(number: number.strip.upcase)
     end
+
     # save the concatenated permit numbers in the precomputed field
     self["#{permit_type}_permit_number"] = permits && permits.map(&:number).join(';')
+
     # save the array of permit ids in the precomputed field
     send("#{permit_type}_permits_ids=", permits && permits.map(&:id))
   end

@@ -23,7 +23,8 @@ describe Trade::Shipment do
           :shipment,
           export_permit_number: 'a',
           import_permit_number: 'b',
-          origin_permit_number: 'c'
+          origin_permit_number: 'c',
+          ifs_permit_number: 'd'
         )
       end
 
@@ -37,6 +38,10 @@ describe Trade::Shipment do
 
       context 'when origin permit' do
         specify { expect(@shipment.origin_permit_number).to eq('C') }
+      end
+
+      context 'when IFS permit' do
+        specify { expect(@shipment.ifs_permit_number).to eq('D') }
       end
     end
   end

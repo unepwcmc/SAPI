@@ -26,6 +26,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   # all the shipments instead of the non-compliant ones only.
   def countries_reported_range(year)
     year = year.to_i
+
     years =
       case year
       when 2012
@@ -35,12 +36,15 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
       else
         [ year - 1, year, year + 1 ]
       end
-    hash = {}
+
+      hash = {}
+
     years.map do |y|
       data = countries_reported(y)
       hash[year] ||= []
       hash[year] << data
     end
+
     hash
   end
 
@@ -175,6 +179,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     time_range_end: 'year',
     year: 'year'
   }.freeze
+
   def self.filtering_attributes
     FILTERING_ATTRIBUTES
   end
@@ -310,6 +315,7 @@ private
         )
       ) AS countries
     SQL
+
     countries_reported = db.execute(sql).first['cnt'].to_i
 
     sql = <<-SQL.squish
@@ -317,12 +323,19 @@ private
       FROM #{shipments_table}
       WHERE year = #{year}
     SQL
+
     issues_reported = db.execute(sql).first['cnt'].to_i
+
     {
       year: year,
       issuesReported: issues_reported,
       countriesReported: countries_reported,
-      countriesYetToReport: COUNTRIES[year] - countries_reported
+      countriesYetToReport:
+        if COUNTRIES[year]
+          COUNTRIES[year] - countries_reported
+        else
+          0
+        end
     }
   end
 
@@ -330,8 +343,10 @@ private
     groupings.each do |grouping|
       rank_name = grouping[:rank] == 'Species' ? 'taxon' : grouping[:rank].downcase
       rank_name = "#{rank_name}_name"
+
       return true if shipment[rank_name] == grouping[:taxon_name]
     end
+
     false
   end
 

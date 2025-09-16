@@ -85,7 +85,7 @@ module AdminHelper
 
   def error_messages_for(resource)
     resource = instance_variable_get("@#{resource}") if resource.is_a? Symbol
-    return '' unless resource && resource.errors.any?
+    return '' unless resource&.errors&.any?
 
     content_tag(:div, class: 'alert alert-error') do
       link_to('×', '#', 'data-dismiss': 'alert', class: 'close') +
