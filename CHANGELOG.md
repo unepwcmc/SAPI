@@ -1,3 +1,8 @@
+### 1.20.1
+
+* Fix an issue where the "download species list" modal taxon list
+  on the Species+ homepage was empty since 1.20.0.
+
 ### 1.20.0
 
 **Species+**
