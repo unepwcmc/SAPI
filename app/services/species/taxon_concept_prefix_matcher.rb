@@ -75,7 +75,9 @@ private
       elsif text_search_strategies[:prefix_match]
         @query.where_prefix_matches @taxon_concept_query
       else
-        @query.where 'FALSE'
+        # The autocomplete on 'download species lists' is implemented by
+        # getting all taxons at level family and above using this matcher.
+        @query
       end
 
     desired_order =
