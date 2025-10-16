@@ -1,3 +1,26 @@
+### 1.21.0
+
+**Species+**
+
+* Fixes an issue with the login form being submitted multiple times in quick
+  succession
+
+**Species+ admin interface**
+
+* Fixes an issue where hash annotations could not be created
+
+**CITES Trade DB**
+
+* Branding update and visual improvements
+* Fixes a cache key collision affecting filtering on EU as an importer/exporter
+* Default year in search filters is now two years prior to the current year, as
+  normally this year and last year have incomplete data due to reporting lag.
+
+**CITES Wildlife Tradeview**
+
+* Fixes an issue where taxonomic groups filter (e.g. "Birds") worked only in
+  English.
+
 ### 1.20.1
 
 * Fix an issue where the "download species list" modal taxon list

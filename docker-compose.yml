@@ -128,6 +128,9 @@ services:
       - db
       - mailcatcher
       - minio
+    # Sometimes the db is not ready when we attempt to start
+    restart: on-failure:10
+
   deploy:
     container_name: sapi-cap-deploy
     build:
@@ -197,6 +200,8 @@ services:
       SAPI_S3_PORT: '${SAPI_CONTAINER_S3_PORT:-9000}'
       SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
       CAPTIVE_BREEDING_DATABASE_HOST: sapi-db
+    # Sometimes the db is not ready when we attempt to start
+    restart: on-failure:10
 
   mailcatcher:
     container_name: sapi-mailcatcher

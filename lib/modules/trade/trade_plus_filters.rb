@@ -199,7 +199,7 @@ class Trade::TradePlusFilters
           'taxonomic_groups' AS attribute_name,
           json_build_object(
             'name', COALESCE(g.name_#{@locale}, g.name_en),
-            'id',   g.name_en
+            'id',   g.code
           )::jsonb AS "data"
           FROM trade_taxon_groups g
           WHERE EXISTS (
