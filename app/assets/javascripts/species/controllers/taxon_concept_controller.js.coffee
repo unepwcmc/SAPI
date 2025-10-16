@@ -255,10 +255,6 @@ Species.TaxonConceptController = Ember.ObjectController.extend Species.SearchCon
     if @get('nomenclatureNoteEn') == null || @get('nomenclatureNoteEn').length <= 0 then no else yes
   ).property('nomenclatureNoteEn')
 
-  nomenclatureChangesHappened: ( ->
-    @get('nomenclatureNotification')
-  ).property('nomenclatureNotification')
-
   actions:
     openSearchPage: (taxonFullName) ->
       @get("controllers.search").openSearchPage taxonFullName
