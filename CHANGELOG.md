@@ -1,8 +1,9 @@
-### Forthcoming
+### 1.21.0
 
 **Species+**
 
-* Fixes an issue with the login form being submitted multiple times in quick succession
+* Fixes an issue with the login form being submitted multiple times in quick
+  succession
 
 **Species+ admin interface**
 
@@ -12,10 +13,13 @@
 
 * Branding update and visual improvements
 * Fixes a cache key collision affecting filtering on EU as an importer/exporter
+* Default year in search filters is now two years prior to the current year, as
+  normally this year and last year have incomplete data due to reporting lag.
 
 **CITES Wildlife Tradeview**
 
-* Fix an issue where taxonomic groups filter (e.g. "Birds") worked only in English
+* Fixes an issue where taxonomic groups filter (e.g. "Birds") worked only in
+  English.
 
 ### 1.20.1
 
