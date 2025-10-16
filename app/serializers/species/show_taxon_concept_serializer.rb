@@ -159,7 +159,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
   end
 
   def cache_key
-    key = [
+    [
       self.class.name,
       self.id,
       object.updated_at,
@@ -168,7 +168,5 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
       scope.current_user ? true : false,
       @options[:trimmed] == 'true'
     ]
-    Rails.logger.debug { "CACHE KEY: #{key.inspect}" }
-    key
   end
 end
