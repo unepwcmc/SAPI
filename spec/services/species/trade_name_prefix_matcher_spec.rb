@@ -27,6 +27,7 @@ describe Species::TaxonConceptPrefixMatcher do
     @trade_name_ac = MAutoCompleteTaxonConcept.find(@trade_name.id)
     @status_N_species_ac = MAutoCompleteTaxonConcept.find(@status_N_species.id)
   end
+
   describe :results do
     context 'when searching for status N species' do
       context 'when trade visibility' do
@@ -39,9 +40,11 @@ describe Species::TaxonConceptPrefixMatcher do
             }
           )
         end
+
         specify { expect(subject.results).to include(@status_N_species_ac) }
-      end
-      context 'when trade internal visibility' do
+        end
+
+        context 'when trade internal visibility' do
         subject do
           Species::TaxonConceptPrefixMatcher.new(
             {
@@ -51,9 +54,11 @@ describe Species::TaxonConceptPrefixMatcher do
             }
           )
         end
+
         specify { expect(subject.results).to include(@status_N_species_ac) }
-      end
-      context 'when speciesplus visibility' do
+        end
+
+        context 'when speciesplus visibility' do
         subject do
           Species::TaxonConceptPrefixMatcher.new(
             {
@@ -62,9 +67,11 @@ describe Species::TaxonConceptPrefixMatcher do
             }
           )
         end
+
         specify { expect(subject.results).not_to include(@status_N_species_ac) }
       end
     end
+
     context 'when searching for trade name' do
       context 'when trade visibility' do
         subject do
@@ -76,9 +83,11 @@ describe Species::TaxonConceptPrefixMatcher do
             }
           )
         end
+
         specify { expect(subject.results).not_to include(@trade_name_ac) }
         specify { expect(subject.results).to include(@accepted_name_ac) }
       end
+
       context 'when trade internal visibility' do
         subject do
           Species::TaxonConceptPrefixMatcher.new(
@@ -89,9 +98,11 @@ describe Species::TaxonConceptPrefixMatcher do
             }
           )
         end
+
         specify { expect(subject.results).to include(@trade_name_ac) }
         specify { expect(subject.results).to include(@accepted_name_ac) }
       end
+
       context 'when speciesplus visibility' do
         subject do
           Species::TaxonConceptPrefixMatcher.new(
@@ -101,6 +112,7 @@ describe Species::TaxonConceptPrefixMatcher do
             }
           )
         end
+
         specify { expect(subject.results).not_to include(@trade_name_ac) }
         specify { expect(subject.results).to include(@accepted_name_ac) }
       end
