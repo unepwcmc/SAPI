@@ -13,8 +13,10 @@ describe Species::TaxonConceptPrefixMatcher do
             }
           )
         end
+
         specify { expect(subject.results).to include(@hybrid_ac) }
       end
+
       context 'when trade internal visibility' do
         subject do
           Species::TaxonConceptPrefixMatcher.new(
@@ -25,8 +27,10 @@ describe Species::TaxonConceptPrefixMatcher do
             }
           )
         end
+
         specify { expect(subject.results).to include(@hybrid_ac) }
       end
+
       context 'when speciesplus visibility' do
         subject do
           Species::TaxonConceptPrefixMatcher.new(
@@ -36,6 +40,7 @@ describe Species::TaxonConceptPrefixMatcher do
             }
           )
         end
+
         specify { expect(subject.results).to be_empty }
       end
     end
