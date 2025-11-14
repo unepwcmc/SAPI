@@ -63,6 +63,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   belongs_to :trading_country, class_name: 'GeoEntity'
   validates :csv_source_file, csv_column_headers: true, on: :create
+  has_many :trade_validation_errors, class_name: 'Trade::ValidationError'
 
   scope :created_by_sapi, -> {
     where(epix_created_by_id: nil)
@@ -98,9 +99,11 @@ class Trade::AnnualReportUpload < ApplicationRecord
     return [] if submitted_at.present?
 
     run_primary_validations
+
     if @validation_errors.count == 0
       run_secondary_validations
     end
+
     @validation_errors
   end
 
@@ -122,6 +125,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
 
   def submit(submitter)
     run_primary_validations
+
     unless @validation_errors.count == 0
       self.errors[:base] << 'Submit failed, primary validation errors present.'
       return false
@@ -131,9 +135,12 @@ class Trade::AnnualReportUpload < ApplicationRecord
     records_submitted = sandbox.moved_rows_cnt
     # remove uploaded file
     store_dir = csv_source_file.store_dir
+
     remove_csv_source_file!
+
     Rails.logger.debug '### removing uploads dir ###'
     Rails.logger.debug Rails.public_path.join(store_dir)
+
     FileUtils.remove_dir(Rails.public_path.join(store_dir), force: true)
 
     # clear downloads cache
@@ -158,15 +165,36 @@ class Trade::AnnualReportUpload < ApplicationRecord
     submitted_at.present?
   end
 
+  def last_validated_at
+    trade_validation_errors.maximum(:updated_at)
+  end
+
+  ##
+  # Attempts to determine if validation rules need to be rerun, based on
+  # whether any shipments exist which have been edited since the last error
+  def is_revalidation_needed?
+    sandbox.ar_klass.exists?(updated_at: ..last_validated_at)
+  end
+
 private
 
   # Expects a relation object
   def run_validations(validation_rules)
     validation_errors = []
+
+    ##
+    # Important to calculate this now before we start updating errors.
+    #
+    # `vr.refresh_errors_if_needed` is more refresh errors unless you are
+    # certain no records are changed.
+    is_any_validation_needed = is_revalidation_needed?
+
     validation_rules.order(:run_order).each do |vr|
-      vr.refresh_errors_if_needed(self)
+      vr.refresh_errors_if_needed(self) if is_any_validation_needed
+
       validation_errors << vr.validation_errors_for_aru(self)
     end
+
     validation_errors.flatten
   end
 

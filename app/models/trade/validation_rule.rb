@@ -125,10 +125,25 @@ private
     end
   end
 
+  ##
+  # Use this to determine if validation errors (which are stored in the db)
+  # need regenerating for a given ARU. Returns true if:
+  #
+  # - the sandbox has no shipments
+  # - the sandbox has no errors in the db for this rule
+  # - any shipment has been updated since the last set of rules were last calculated.
+  #
   def refresh_needed?(annual_report_upload)
-    sandbox_updated_at = Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name).maximum(:updated_at)
-    errors_updated_at = validation_errors_for_aru(annual_report_upload).maximum(:updated_at)
-    sandbox_updated_at.blank? || errors_updated_at.blank? || sandbox_updated_at > errors_updated_at
+    sandbox_updated_at = Trade::SandboxTemplate.ar_klass(
+      annual_report_upload.sandbox.table_name
+    ).maximum(:updated_at)
+
+    errors_updated_at = validation_errors_for_aru(
+      annual_report_upload
+    ).maximum(:updated_at)
+
+    sandbox_updated_at.blank? || errors_updated_at.blank? ||
+      sandbox_updated_at > errors_updated_at
   end
 
   # If sandbox scope was :source_code => { :inclusion => ['W'] }, shipments
