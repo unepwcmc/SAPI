@@ -1,3 +1,10 @@
+### 1.21.1
+
+**CITES Trade DB**
+
+* Background image changed from rhinos to orchids.
+* Fix an issue where IFS permit ids were not output in CSVs.
+
 ### 1.21.0
 
 **Species+**
