@@ -8,12 +8,14 @@ describe TaxonConceptPrefixMatcher do
       taxon_name: create(:taxon_name, scientific_name: 'Aaa')
     )
   end
+
   let!(:taxon_concept2) do
     create_cites_eu_family(
       taxon_name: create(:taxon_name, scientific_name: 'Aac'),
       parent: taxon_concept1
     )
   end
+
   let!(:taxon_concept3) do
     create_cites_eu_subfamily(
       taxon_name: create(:taxon_name, scientific_name: 'Aab'),
@@ -32,23 +34,28 @@ describe TaxonConceptPrefixMatcher do
       parent: taxon_concept3
     )
   end
+
   let!(:hybrid) do
-    tmp = create_cites_eu_genus(
+    hybrid_genus = create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Abc'),
       name_status: 'H'
     )
+
     create(
       :taxon_relationship,
       taxon_concept: taxon_concept4,
-      other_taxon_concept: tmp,
+      other_taxon_concept: hybrid_genus,
       taxon_relationship_type: hybrid_relationship_type
     )
-    tmp
+
+    hybrid_genus
   end
+
   context 'when name status not specified' do
     let(:matcher_params) do
       SearchParams.new(taxonomy: { id: taxonomy.id }, scientific_name: 'Ab')
     end
+
     let(:matcher) { TaxonConceptPrefixMatcher.new matcher_params }
     specify { expect(matcher.taxon_concepts).to include(taxon_concept4) }
     specify { expect(matcher.taxon_concepts).not_to include(hybrid) }
@@ -58,7 +65,9 @@ describe TaxonConceptPrefixMatcher do
     let(:matcher_params) do
       SearchParams.new(taxonomy: { id: taxonomy.id }, scientific_name: 'Ab', name_status: 'H')
     end
+
     let(:matcher) { TaxonConceptPrefixMatcher.new matcher_params }
+
     specify { expect(matcher.taxon_concepts).not_to include(taxon_concept4) }
     specify { expect(matcher.taxon_concepts).to include(hybrid) }
   end
@@ -71,6 +80,7 @@ describe TaxonConceptPrefixMatcher do
         scientific_name: 'A'
       )
     end
+
     let(:parent_matcher) do
       TaxonConceptPrefixMatcher.new parent_matcher_params
     end
@@ -88,6 +98,7 @@ describe TaxonConceptPrefixMatcher do
         scientific_name: 'AAA'
       )
     end
+
     let(:ancestor_matcher) do
       TaxonConceptPrefixMatcher.new ancestor_matcher_params
     end
@@ -105,6 +116,7 @@ describe TaxonConceptPrefixMatcher do
         scientific_name: 'AAA'
       )
     end
+
     let(:self_and_ancestor_matcher) do
       TaxonConceptPrefixMatcher.new self_and_ancestor_matcher_params
     end
@@ -140,6 +152,7 @@ describe TaxonConceptPrefixMatcher do
         scientific_name: 'A'
       )
     end
+
     let(:descendant_matcher) do
       TaxonConceptPrefixMatcher.new descendant_matcher_params
     end
