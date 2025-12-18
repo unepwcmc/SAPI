@@ -171,6 +171,7 @@ class ListingChange < ApplicationRecord
         comparison_attributes.merge(comparison_attributes_override.symbolize_keys)
       )
     )
+
     if party_listing_distribution
       relation = relation.includes(:party_listing_distribution).references(:party_listing_distribution).where(
         party_listing_distribution.comparison_conditions(
@@ -178,11 +179,13 @@ class ListingChange < ApplicationRecord
         )
       )
     end
+
     if annotation
       relation = relation.includes(:annotation).references(:annotation).where(
         annotation.comparison_conditions
       )
     end
+
     relation
   end
 
@@ -223,22 +226,11 @@ private
     end
   end
 
-  def listing_change_before_save_callback
-    # check if annotation should be deleted
-    if annotation &&
-       annotation.short_note_en.blank? &&
-       annotation.short_note_fr.blank? &&
-       annotation.short_note_es.blank? &&
-       annotation.full_note_en.blank? &&
-       annotation.full_note_fr.blank? &&
-       annotation.full_note_es.blank?
-      ann = annotation
-      self.annotation = nil
-      if ann.reload.listing_changes.empty?
-        ann.delete
-      end
-    end
-
+  ##
+  # Called before save: if either excluded_geo_entities_ids or
+  # excluded_taxon_concepts_ids are set, create or replace ListingChanges with
+  # type `EXCEPTION` linked to this ListingChange (as the parent) accordingly.
+  def populate_exceptions_from_exclusions
     original_change_type = ChangeType.find(change_type_id)
 
     @excluded_geo_entities_ids = @excluded_geo_entities_ids &&
@@ -251,7 +243,6 @@ private
     return self if @excluded_geo_entities_ids.nil? &&
       @excluded_taxon_concepts_ids.nil?
 
-    new_exclusions = []
     exclusion_change_type = ChangeType.find_by(
       name: ChangeType::EXCEPTION, designation_id: original_change_type.designation_id
     )
@@ -259,26 +250,62 @@ private
     # geographic exclusions
     excluded_geo_entities =
       if @excluded_geo_entities_ids.present?
-        new_exclusions << ListingChange.new(
-          change_type_id: exclusion_change_type.id,
-          species_listing_id: species_listing_id,
-          taxon_concept_id: taxon_concept_id,
-          geo_entity_ids: @excluded_geo_entities_ids
-        )
+        [
+          ListingChange.new(
+            change_type_id: exclusion_change_type.id,
+            species_listing_id: species_listing_id,
+            taxon_concept_id: taxon_concept_id,
+            geo_entity_ids: @excluded_geo_entities_ids,
+            effective_at: effective_at
+          )
+        ]
+      else
+        []
       end
 
     # taxonomic exclusions
     excluded_taxon_concepts =
       if @excluded_taxon_concepts_ids.present?
         @excluded_taxon_concepts_ids.map do |id|
-          new_exclusions << ListingChange.new(
+          ListingChange.new(
             change_type_id: exclusion_change_type.id,
             species_listing_id: species_listing_id,
-            taxon_concept_id: id
+            taxon_concept_id: id,
+            effective_at: effective_at
           )
         end
+      else
+        []
       end
 
-    self.exclusions = new_exclusions
+    self.exclusions = excluded_taxon_concepts + excluded_geo_entities
+
+    self
+  end
+
+  ##
+  # Before save, check if annotation should be deleted
+  def delete_empty_annotation
+    if (
+      annotation &&
+      annotation.short_note_en.blank? &&
+      annotation.short_note_fr.blank? &&
+      annotation.short_note_es.blank? &&
+      annotation.full_note_en.blank? &&
+      annotation.full_note_fr.blank? &&
+      annotation.full_note_es.blank?
+    )
+      ann = annotation
+      self.annotation = nil
+
+      if ann.reload.listing_changes.empty?
+        ann.delete
+      end
+    end
+  end
+
+  def listing_change_before_save_callback
+    delete_empty_annotation
+    populate_exceptions_from_exclusions
   end
 end
