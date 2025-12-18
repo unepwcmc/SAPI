@@ -42,6 +42,10 @@ Layout/IndentationConsistency:
   Exclude:
     - 'db/migrate/*'
 
+Style/ParenthesesAroundCondition:
+  Enabled: true
+  AllowInMultilineConditions: true
+
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: symmetrical, new_line, same_line
 Layout/MultilineArrayBraceLayout:
@@ -108,7 +112,6 @@ Layout/ExtraSpacing:
   AllowForAlignment: true
   Exclude:
     - 'db/migrate/*'
-
 
 # Detect hard tabs, no hard tabs.
 Layout/IndentationStyle:
