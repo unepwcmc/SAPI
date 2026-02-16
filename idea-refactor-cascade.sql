@@ -248,17 +248,21 @@ WITH RECURSIVE listing_changes_timeline AS (
     designation_id,
     affected_taxon_concept_id AS original_taxon_concept_id,
     taxon_concept_id AS current_taxon_concept_id,
-    CASE -- context
-      WHEN inclusion_taxon_concept_id IS NULL
-      THEN HSTORE(species_listing_id::TEXT, taxon_concept_id::TEXT)
-      ELSE HSTORE(species_listing_id::TEXT, inclusion_taxon_concept_id::TEXT)
-    END AS context,
     inclusion_taxon_concept_id,
     party_id,
     species_listing_id,
     change_type_id,
     event_id,
     effective_at,
+    CASE -- context
+      WHEN inclusion_taxon_concept_id IS NULL
+      THEN HSTORE(species_listing_id::TEXT, taxon_concept_id::TEXT)
+      ELSE HSTORE(species_listing_id::TEXT, inclusion_taxon_concept_id::TEXT)
+    END AS context,
+    CASE WHEN
+      THEN
+      ELSE
+    HSTORE(tree_distance::TEXT, lc.id::TEXT) AS listing_change_ids_by_distance,
     is_current,
     tree_distance AS context_tree_distance,
     timeline_position,
@@ -304,6 +308,12 @@ WITH RECURSIVE listing_changes_timeline AS (
     hi.designation_id,
     listing_changes_timeline.original_taxon_concept_id,
     hi.taxon_concept_id,
+    hi.inclusion_taxon_concept_id,
+    hi.party_id,
+    hi.species_listing_id,
+    hi.change_type_id,
+    hi.event_id,
+    hi.effective_at,
     CASE -- context
       WHEN hi.inclusion_taxon_concept_id IS NOT NULL
         AND (
@@ -335,12 +345,10 @@ WITH RECURSIVE listing_changes_timeline AS (
       THEN listing_changes_timeline.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
       ELSE listing_changes_timeline.context
     END AS context,
-    hi.inclusion_taxon_concept_id,
-    hi.party_id,
-    hi.species_listing_id,
-    hi.change_type_id,
-    hi.event_id,
-    hi.effective_at,
+    listing_changes_timeline
+    listing_changes_timeline.listing_change_ids_by_distance || HSTORE(
+      tree_distance::TEXT, lc.id::TEXT
+    ) AS listing_change_ids_by_distance,
     hi.is_current,
     CASE -- context_tree_distance
       WHEN (
