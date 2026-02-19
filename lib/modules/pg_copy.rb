@@ -178,6 +178,6 @@ module PgCopy
       float: PG::BinaryEncoder::Float4,
       boolean: PG::BinaryEncoder::Boolean,
       datetime: PG::BinaryEncoder::Date
-    }
+    }.with_indifferent_access
   end
 end
