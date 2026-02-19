@@ -1,3 +1,11 @@
+### 1.21.2
+
+**Species+**
+
+* Front page includes temporary banner noting post-CoP CITES work ongoing.
+* Fixes for common names importer to facilitate new CMS names.
+* New importer for changing `name_status` to promote N names to A names in bulk.
+
 ### 1.21.1
 
 **CITES Trade DB**
