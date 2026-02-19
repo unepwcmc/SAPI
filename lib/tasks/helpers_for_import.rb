@@ -407,6 +407,10 @@ class CsvToDbMap
       'Status' => 'status varchar',
       'Species author' => 'author varchar',
       'notes' => 'notes varchar'
+    },
+    'name_status_import' => {
+      'ID' => 'id integer',
+      'Status' => 'name_status varchar'
     }
   }
 
