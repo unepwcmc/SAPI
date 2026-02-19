@@ -464,7 +464,7 @@ class CsvImportHelper
   end
 
   def create_table_from_column_array(table_name, column_names)
-    raise StandardError(
+    raise StandardError.new(
       'Not in a transaction - cannot create temp table'
     ) unless ActiveRecord::Base.connection.open_transactions > 0
 
