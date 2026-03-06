@@ -33,6 +33,153 @@ namespace :db do
     'db:vacuum_full'
   ]
 
+  task trim_taxonomies: :environment do
+    import_helper = CsvImportHelper.new
+    table_name = 'temp_retained_taxons'
+    file_path = Rails.root.join 'lib/files/problem_taxons.csv'
+
+    ApplicationRecord.transaction do
+      import_helper.create_table_from_csv_headers(file_path, table_name)
+      import_helper.copy_data(file_path, table_name)
+
+      ApplicationRecord.connection.execute <<-SQL.squish
+        INSERT INTO #{table_name}
+        SELECT 'trade_taxon_concept_term_pairs', taxon_concept_id
+        FROM trade_taxon_concept_term_pairs;
+      SQL
+
+      # ApplicationRecord.connection.execute <<-SQL.squish
+      #   INSERT INTO #{table_name}
+      #   SELECT 'taxon_instruments', taxon_concept_id
+      #   FROM taxon_instruments;
+      # SQL
+
+      ids_results = ApplicationRecord.connection.execute <<-SQL.squish
+        WITH relevant_relationship_types AS (
+          SELECT id FROM taxon_relationship_types
+          WHERE name IN ('HAS_SYNONYM', 'HAS_HYBRID', 'HAS_TRADE_NAME')
+        ), original_taxon_concept_ids AS (
+          SELECT id FROM taxon_concepts tc
+          JOIN #{table_name} rt ON rt.taxon_name = tc.full_name
+          UNION
+          SELECT atc.id
+          FROM taxon_concepts otc
+          JOIN #{table_name} rt ON rt.taxon_name = otc.full_name
+          JOIN taxon_relationships tr ON tr.other_taxon_concept_id = otc.id
+          JOIN relevant_relationship_types rr ON tr.taxon_relationship_type_id = rr.id
+          JOIN taxon_concepts atc ON atc.id = tr.taxon_concept_id AND atc.name_status = 'A'
+        ), ancestor_taxon_concept_ids AS (
+          SELECT tca.ancestor_taxon_concept_id AS id
+          FROM taxon_concepts_and_ancestors_mview tca
+          JOIN original_taxon_concept_ids otc ON tca.taxon_concept_id = otc.id
+        ), descendant_taxon_concept_ids AS (
+          SELECT tca.taxon_concept_id AS id
+          FROM taxon_concepts_and_ancestors_mview tca
+          JOIN original_taxon_concept_ids otc ON tca.ancestor_taxon_concept_id = otc.id
+        ), accepted_taxon_concept_ids AS (
+          SELECT id FROM original_taxon_concept_ids
+          UNION
+          SELECT id FROM ancestor_taxon_concept_ids
+          UNION
+          SELECT id FROM descendant_taxon_concept_ids
+        )
+        SELECT id FROM accepted_taxon_concept_ids
+        UNION
+        SELECT otc.id
+        FROM accepted_taxon_concept_ids atc
+        JOIN taxon_relationships tr ON atc.id = tr.taxon_concept_id
+        JOIN taxon_concepts otc ON tr.other_taxon_concept_id = otc.id
+        JOIN relevant_relationship_types rr ON tr.taxon_relationship_type_id = rr.id
+      SQL
+
+      ids_to_preserve = ids_results.field_values(:id).map(&:to_i)
+
+      original_tc_count = TaxonConcept.count
+      deleted_tc_count = TaxonConcept.where.not(id: ids_to_preserve).count
+
+      distributions_to_delete_relation = Distribution.where.not(
+        taxon_concept_id: ids_to_preserve
+      )
+
+      DistributionReference.where(
+        distribution: distributions_to_delete_relation
+      ).delete_all
+
+      distributions_to_delete_relation.in_batches do |batch_relation|
+        NomenclatureChange::DistributionReassignment.where(
+          reassignable_id: batch_relation.map(&:id),
+          reassignable_type: 'Distribution'
+        )
+      end
+
+      DistributionReference.where.not(
+        distribution: Distribution.where(
+          taxon_concept_id: ids_to_preserve
+        )
+      ).delete_all
+
+      distributions_to_delete_relation.delete_all
+      # TODO: delete Distribution taggings
+
+      [
+        # Make sure we delete ranks from the bottom up in order to preserve
+        # referential integrity. Technically we should join on rank and use
+        # taxonomic order here.
+
+        Rank::KINGDOM,
+        Rank::PHYLUM,
+        Rank::CLASS,
+        Rank::ORDER,
+        Rank::FAMILY,
+        Rank::SUBFAMILY,
+        Rank::GENUS,
+        Rank::SPECIES,
+        Rank::SUBSPECIES,
+        Rank::VARIETY
+      ].reverse.each do |rank_name|
+        rank = Rank.find_by! name: rank_name
+
+        taxon_concepts_to_delete_relation = TaxonConcept.where(
+          rank_id: rank.id
+        ).where.missing(
+          # In case ancestor_taxon_concept_ids returned incomplete results,
+          # avoid deleting taxons which still have children.
+          :child_taxons
+        ).where.not(
+          id: ids_to_preserve
+        )
+
+        # Speed things up by deleting these in bulk in advance
+        Trade::Shipment.where(
+          taxon_concept: taxon_concepts_to_delete_relation
+        ).delete_all
+
+        # Speed things up by deleting these in bulk in advance
+        ListingDistribution.where(
+          listing_change: ListingChange.where(
+            taxon_concept: taxon_concepts_to_delete_relation
+          )
+        ).delete_all
+
+        ListingChange.where(
+          taxon_concept: taxon_concepts_to_delete_relation
+        ).delete_all
+
+        taxon_concepts_to_delete_relation.order(
+          # Make sure we delete accepted names last
+          'name_status DESC',
+        ).in_batches do |batch_relation|
+          batch_relation.destroy_all
+        end
+      end
+
+      puts "Preserving #{ids_to_preserve} taxon concepts"
+      puts "Originally #{original_tc_count} taxon concepts"
+      puts "Reduced by #{deleted_tc_count} taxon concepts"
+      puts "Ultimately #{TaxonConcept.count} taxon concepts"
+    end
+  end
+
   ##
   # Drop all tables of the form /^trade_sandbox_\d+$/
   # and their associated views and indexes

@@ -415,7 +415,11 @@ class CsvToDbMap
   }
 
   def csv_to_db(table, field)
-    MAPPING[table][field]
+    if MAPPING[table]
+      return MAPPING[table][field]
+    end
+
+  "#{field} text"
   end
 end
 
@@ -484,7 +488,7 @@ class CsvImportHelper
           if column_names.is_a? Array
             quoted_table_name = connection.quote_table_name(table_name)
 
-            if column_names[0]&.match? /\b(?:varchar|integer|boolean|float)$/i
+            if column_names[0]&.match? /\b(?:varchar|text|integer|boolean|float)$/i
               "#{quoted_table_name} (#{column_names.join(', ')})"
             else
               column_names_quoted = column_names.map do |name|
