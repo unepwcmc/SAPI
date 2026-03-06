@@ -97,29 +97,9 @@ namespace :db do
       original_tc_count = TaxonConcept.count
       deleted_tc_count = TaxonConcept.where.not(id: ids_to_preserve).count
 
-      distributions_to_delete_relation = Distribution.where.not(
+      Distribution.where.not(
         taxon_concept_id: ids_to_preserve
-      )
-
-      DistributionReference.where(
-        distribution: distributions_to_delete_relation
-      ).delete_all
-
-      distributions_to_delete_relation.in_batches do |batch_relation|
-        NomenclatureChange::DistributionReassignment.where(
-          reassignable_id: batch_relation.map(&:id),
-          reassignable_type: 'Distribution'
-        )
-      end
-
-      DistributionReference.where.not(
-        distribution: Distribution.where(
-          taxon_concept_id: ids_to_preserve
-        )
-      ).delete_all
-
-      distributions_to_delete_relation.delete_all
-      # TODO: delete Distribution taggings
+      ).cascade_delete!
 
       [
         # Make sure we delete ranks from the bottom up in order to preserve
@@ -169,7 +149,7 @@ namespace :db do
           # Make sure we delete accepted names last
           'name_status DESC',
         ).in_batches do |batch_relation|
-          batch_relation.destroy_all
+          batch_relation.cascade_delete!
         end
       end
 
