@@ -42,11 +42,12 @@ namespace :db do
       import_helper.create_table_from_csv_headers(file_path, table_name)
       import_helper.copy_data(file_path, table_name)
 
-      ApplicationRecord.connection.execute <<-SQL.squish
-        INSERT INTO #{table_name}
-        SELECT 'trade_taxon_concept_term_pairs', taxon_concept_id
-        FROM trade_taxon_concept_term_pairs;
-      SQL
+      # ApplicationRecord.connection.execute <<-SQL.squish
+      #   INSERT INTO #{table_name}
+      #   SELECT 'trade_taxon_concept_term_pairs', tc.full_name
+      #   FROM trade_taxon_concept_term_pairs tp
+      #   JOIN taxon_concepts tc ON tc.id = tp.taxon_concept_id;
+      # SQL
 
       # ApplicationRecord.connection.execute <<-SQL.squish
       #   INSERT INTO #{table_name}
@@ -132,22 +133,28 @@ namespace :db do
         # Speed things up by deleting these in bulk in advance
         Trade::Shipment.where(
           taxon_concept: taxon_concepts_to_delete_relation
-        ).delete_all
+        ).cascade_delete!
 
         # Speed things up by deleting these in bulk in advance
         ListingDistribution.where(
           listing_change: ListingChange.where(
             taxon_concept: taxon_concepts_to_delete_relation
           )
-        ).delete_all
+        ).cascade_delete!
 
         ListingChange.where(
           taxon_concept: taxon_concepts_to_delete_relation
-        ).delete_all
+        ).cascade_delete!
 
-        taxon_concepts_to_delete_relation.order(
+        taxon_concepts_to_delete_relation.where.not(
           # Make sure we delete accepted names last
-          'name_status DESC',
+          name_status: 'A',
+        ).in_batches do |batch_relation|
+          batch_relation.cascade_delete!
+        end
+
+        taxon_concepts_to_delete_relation.where(
+          name_status: 'A',
         ).in_batches do |batch_relation|
           batch_relation.cascade_delete!
         end

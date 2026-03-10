@@ -265,7 +265,7 @@ class TaxonConcept < ApplicationRecord
     inverse_of: :reported_taxon_concept
 
   # Associations: Comments
-  has_many :comments, as: 'commentable', inverse_of: :taxon_concept
+  has_many :comments, as: 'commentable', inverse_of: :commentable
   has_one :general_comment, -> { where comment_type: 'General' }, class_name: 'Comment', as: 'commentable', dependent: IGNORE
   has_one :nomenclature_comment, -> { where comment_type: 'Nomenclature' }, class_name: 'Comment', as: 'commentable', dependent: IGNORE
   has_one :distribution_comment, -> { where comment_type: 'Distribution' }, class_name: 'Comment', as: 'commentable', dependent: IGNORE
