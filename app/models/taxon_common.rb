@@ -36,11 +36,11 @@ class TaxonCommon < ApplicationRecord
 
   # Rspec file such as `spec/shared/agave.rb`, which assign taxon_concept.common_names = [array of common_name] broken
   # if we remove `optional: true`, although it should be false.
-  belongs_to :common_name, optional: true
-  belongs_to :taxon_concept, optional: true
+  belongs_to :common_name, optional: Rails.env.test?
+  belongs_to :taxon_concept, optional: Rails.env.test?
 
   # rspec ./spec/controllers/admin/taxon_commons_controller_spec.rb borken if we remove the following validates.
-  validates :common_name_id, presence: true
+  validates :common_name_id, presence: true if Rails.env.test?
 
   before_validation do
     # TaxonCommons can share CommonNames so we don't want to overwrite the

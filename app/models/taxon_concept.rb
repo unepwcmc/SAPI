@@ -195,7 +195,13 @@ class TaxonConcept < ApplicationRecord
   has_many :geo_entities, through: :distributions
 
   # Associations: Listing changes
-  has_many :listing_changes, dependent: :destroy, inverse_of: :taxon_concept
+  has_many :listing_changes,
+    dependent: :destroy,
+    inverse_of: :taxon_concept
+  has_many :listing_change_inclusions,
+    class_name: 'ListingChange',
+    dependent: :destroy,
+    inverse_of: :inclusion
   has_many :current_listing_changes,
     -> { where 'is_current = true' },
     class_name: 'ListingChange',
@@ -280,11 +286,12 @@ class TaxonConcept < ApplicationRecord
     dependent: :destroy
   has_many :nomenclature_change_outputs,
     class_name: 'NomenclatureChange::Output',
-    dependent: :destroy
+    dependent: :nullify
   has_many :nomenclature_change_outputs_as_new,
     class_name: 'NomenclatureChange::Output',
     foreign_key: :new_taxon_concept_id,
-    dependent: :destroy
+    inverse_of: :new_taxon_concept,
+    dependent: :nullify
 
   has_many :document_citation_taxon_concepts,
     inverse_of: :taxon_concept,

@@ -3,8 +3,8 @@ module CascadeDeletable
 
   class_methods do
     def cascade_delete!
-      cascade_delete_associated!
       cascade_nullify_associated!
+      cascade_delete_associated!
 
       delete_all
     end
@@ -37,7 +37,7 @@ module CascadeDeletable
           inverted_assoc_rel = assoc.klass.where(assoc.inverse_of.name => all)
 
           inverted_assoc_rel.update_all( # rubocop:disable Rails/SkipsModelValidations
-            assoc.inverse_of.foreign_key => nil
+            assoc.inverse_of.foreign_key.to_sym => nil
           )
         end
       end

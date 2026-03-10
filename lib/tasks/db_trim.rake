@@ -83,11 +83,34 @@ namespace :db do
           SELECT id FROM ancestor_taxon_concept_ids
           UNION
           SELECT id FROM descendant_taxon_concept_ids
+        ), accepted_and_changed_taxon_concept_ids AS (
+          SELECT id
+          FROM accepted_taxon_concept_ids atc
+          UNION
+          SELECT nci.taxon_concept_id AS id
+          FROM accepted_taxon_concept_ids atc
+          JOIN nomenclature_change_outputs nco ON atc.id = nco.taxon_concept_id
+          JOIN nomenclature_change_inputs nci ON nco.nomenclature_change_id = nci.nomenclature_change_id
+          UNION
+          SELECT nco.taxon_concept_id AS id
+          FROM accepted_taxon_concept_ids atc
+          JOIN nomenclature_change_inputs nci ON atc.id = nci.taxon_concept_id
+          JOIN nomenclature_change_outputs nco ON nco.nomenclature_change_id = nci.nomenclature_change_id
+          UNION
+          SELECT lc_b.taxon_concept_id AS id
+          FROM accepted_taxon_concept_ids atc
+          JOIN listing_changes lc_a ON atc.id = lc_a.taxon_concept_id
+          JOIN listing_changes lc_b ON lc_b.id = lc_a.original_id AND lc_b.taxon_concept_id != lc_a.taxon_concept_id
+          UNION
+          SELECT lc_b.taxon_concept_id AS id
+          FROM accepted_taxon_concept_ids atc
+          JOIN listing_changes lc_a ON atc.id = lc_a.taxon_concept_id
+          JOIN listing_changes lc_b ON lc_b.id = lc_a.parent_id AND lc_b.taxon_concept_id != lc_a.taxon_concept_id
         )
-        SELECT id FROM accepted_taxon_concept_ids
+        SELECT id FROM accepted_and_changed_taxon_concept_ids
         UNION
         SELECT otc.id
-        FROM accepted_taxon_concept_ids atc
+        FROM accepted_and_changed_taxon_concept_ids atc
         JOIN taxon_relationships tr ON atc.id = tr.taxon_concept_id
         JOIN taxon_concepts otc ON tr.other_taxon_concept_id = otc.id
         JOIN relevant_relationship_types rr ON tr.taxon_relationship_type_id = rr.id
@@ -98,7 +121,12 @@ namespace :db do
       original_tc_count = TaxonConcept.count
       deleted_tc_count = TaxonConcept.where.not(id: ids_to_preserve).count
 
+      # More efficient to do these up front
       Distribution.where.not(
+        taxon_concept_id: ids_to_preserve
+      ).cascade_delete!
+
+      ListingChange.where.not(
         taxon_concept_id: ids_to_preserve
       ).cascade_delete!
 
@@ -132,17 +160,6 @@ namespace :db do
 
         # Speed things up by deleting these in bulk in advance
         Trade::Shipment.where(
-          taxon_concept: taxon_concepts_to_delete_relation
-        ).cascade_delete!
-
-        # Speed things up by deleting these in bulk in advance
-        ListingDistribution.where(
-          listing_change: ListingChange.where(
-            taxon_concept: taxon_concepts_to_delete_relation
-          )
-        ).cascade_delete!
-
-        ListingChange.where(
           taxon_concept: taxon_concepts_to_delete_relation
         ).cascade_delete!
 
