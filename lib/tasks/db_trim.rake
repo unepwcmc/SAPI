@@ -55,7 +55,8 @@ namespace :db do
       #   FROM taxon_instruments;
       # SQL
 
-      ids_results = ApplicationRecord.connection.execute <<-SQL.squish
+      ApplicationRecord.connection.execute <<-SQL.squish
+        CREATE TEMP TABLE preserved_taxons ON COMMIT DROP AS
         WITH relevant_relationship_types AS (
           SELECT id FROM taxon_relationship_types
           WHERE name IN ('HAS_SYNONYM', 'HAS_HYBRID', 'HAS_TRADE_NAME')
@@ -116,18 +117,30 @@ namespace :db do
         JOIN relevant_relationship_types rr ON tr.taxon_relationship_type_id = rr.id
       SQL
 
+      ApplicationRecord.connection.execute <<-SQL.squish
+        CREATE INDEX ON preserved_taxons (id)
+      SQL
+
+      ids_results = ApplicationRecord.connection.execute <<-SQL.squish
+        SELECT * FROM preserved_taxons
+      SQL
+
       ids_to_preserve = ids_results.field_values(:id).map(&:to_i)
 
       original_tc_count = TaxonConcept.count
       deleted_tc_count = TaxonConcept.where.not(id: ids_to_preserve).count
 
       # More efficient to do these up front
-      Distribution.where.not(
-        taxon_concept_id: ids_to_preserve
+      Distribution.where(
+        'taxon_concept_id NOT IN (SELECT id FROM preserved_taxons)'
       ).cascade_delete!
 
-      ListingChange.where.not(
-        taxon_concept_id: ids_to_preserve
+      ListingChange.where(
+        'taxon_concept_id NOT IN (SELECT id FROM preserved_taxons)'
+      ).cascade_delete!
+
+      Trade::Shipment.where(
+        'taxon_concept_id NOT IN (SELECT id FROM preserved_taxons)'
       ).cascade_delete!
 
       [
@@ -154,27 +167,18 @@ namespace :db do
           # In case ancestor_taxon_concept_ids returned incomplete results,
           # avoid deleting taxons which still have children.
           :child_taxons
-        ).where.not(
-          id: ids_to_preserve
+        ).where(
+          'taxon_concepts.id NOT IN (SELECT id FROM preserved_taxons)'
         )
-
-        # Speed things up by deleting these in bulk in advance
-        Trade::Shipment.where(
-          taxon_concept: taxon_concepts_to_delete_relation
-        ).cascade_delete!
 
         taxon_concepts_to_delete_relation.where.not(
           # Make sure we delete accepted names last
           name_status: 'A',
-        ).in_batches do |batch_relation|
-          batch_relation.cascade_delete!
-        end
+        ).cascade_delete!
 
         taxon_concepts_to_delete_relation.where(
           name_status: 'A',
-        ).in_batches do |batch_relation|
-          batch_relation.cascade_delete!
-        end
+        ).cascade_delete!
       end
 
       puts "Preserving #{ids_to_preserve} taxon concepts"
