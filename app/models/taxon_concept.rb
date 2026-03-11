@@ -292,7 +292,12 @@ class TaxonConcept < ApplicationRecord
     foreign_key: :new_taxon_concept_id,
     inverse_of: :new_taxon_concept,
     dependent: :nullify
+  has_many :nomenclature_change_outputs_as_new_parent,
+    class_name: 'NomenclatureChange::Output',
+    foreign_key: :new_parent_id,
+    inverse_of: :new_parent
 
+  # todo:  PG::ForeignKeyViolation: ERROR:  update or delete on table "taxon_concepts" violates foreign key constraint "nomenclature_change_outputs_new_parent_id_fk" on table "nomenclature_change_outputs" (PG::ForeignKeyViolation)
   has_many :document_citation_taxon_concepts,
     inverse_of: :taxon_concept,
     dependent: :destroy

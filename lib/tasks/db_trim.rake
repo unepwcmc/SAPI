@@ -33,6 +33,7 @@ namespace :db do
     'db:vacuum_full'
   ]
 
+  desc 'Removes all taxons other than those needed to reproduce frequent issues'
   task trim_taxonomies: :environment do
     import_helper = CsvImportHelper.new
     table_name = 'temp_retained_taxons'
@@ -56,6 +57,76 @@ namespace :db do
       # SQL
 
       ApplicationRecord.connection.execute <<-SQL.squish
+        CREATE TEMPORARY VIEW taxon_ancestors_dv AS
+          WITH RECURSIVE ancestries AS (
+            SELECT
+              "taxonomy_id",
+              "id",
+              "rank_id",
+              '{}'::BIGINT[] AS "ancestor_ids"
+            FROM "taxon_concepts" roots
+            WHERE "parent_id" IS NULL
+          UNION ALL
+            SELECT
+              "child"."taxonomy_id",
+              "child"."id",
+              "child"."rank_id",
+              "parent"."ancestor_ids" || ARRAY["parent"."id"::BIGINT]
+            FROM "ancestries" parent
+            JOIN "taxon_concepts" child
+              ON "child"."taxonomy_id" = "parent"."taxonomy_id"
+              AND "child"."parent_id" = "parent"."id"
+          ), taxon_ancestors AS (
+            SELECT
+              "taxonomy_id", "id", "rank_id",
+              unnest(ancestor_ids) AS ancestor_id,
+              "ancestor_ids"
+            FROM "ancestries"
+          ), rank_depths AS (
+            SELECT
+              "id" AS "rank_id",
+              ROW_NUMBER() OVER() AS "rank_depth"
+            FROM (
+              SELECT (
+                '{' || translate(taxonomic_position, '.', ',') || '}'
+              )::INT[],
+                *
+              FROM ranks
+              ORDER BY 1
+            ) r
+          ), rank_distances AS (
+            SELECT
+              "ancestor_rank"."rank_id"      ancestor_rank_id,
+              "ancestor_rank"."rank_depth"   ancestor_rank_depth,
+              "descendant_rank"."rank_id"    descendant_rank_id,
+              "descendant_rank"."rank_depth" descendant_rank_depth,
+              "descendant_rank"."rank_depth" - "ancestor_rank"."rank_depth" AS rank_distance
+            FROM "rank_depths" ancestor_rank
+            JOIN "rank_depths" descendant_rank
+              ON "ancestor_rank"."rank_depth" <= "descendant_rank"."rank_depth"
+          )
+          SELECT
+            "ta"."taxonomy_id",
+            "ta"."id",
+            "ta"."rank_id",
+            "ta"."ancestor_ids",
+            "ta"."ancestor_ids"[(
+              array_position("ta"."ancestor_ids", "ta"."ancestor_id")
+            ):] "path_ids",
+            "ta"."ancestor_id",
+            "ancestor_rank_id",
+            "ancestor_rank_depth",
+            "descendant_rank_depth" AS "rank_depth",
+            "rd"."rank_distance"
+          FROM "taxon_ancestors" ta
+          JOIN "taxon_concepts" atc
+            ON "ancestor_id" = "atc"."id"
+          JOIN "rank_distances" rd
+            ON "rd"."descendant_rank_id" = "ta"."rank_id"
+            AND "rd"."ancestor_rank_id" = "atc"."rank_id"
+      SQL
+
+      ApplicationRecord.connection.execute <<-SQL.squish
         CREATE TEMP TABLE preserved_taxons ON COMMIT DROP AS
         WITH relevant_relationship_types AS (
           SELECT id FROM taxon_relationship_types
@@ -69,15 +140,20 @@ namespace :db do
           JOIN #{table_name} rt ON rt.taxon_name = otc.full_name
           JOIN taxon_relationships tr ON tr.other_taxon_concept_id = otc.id
           JOIN relevant_relationship_types rr ON tr.taxon_relationship_type_id = rr.id
-          JOIN taxon_concepts atc ON atc.id = tr.taxon_concept_id AND atc.name_status = 'A'
+          JOIN taxon_concepts atc ON atc.id = tr.taxon_concept_id
         ), ancestor_taxon_concept_ids AS (
-          SELECT tca.ancestor_taxon_concept_id AS id
-          FROM taxon_concepts_and_ancestors_mview tca
-          JOIN original_taxon_concept_ids otc ON tca.taxon_concept_id = otc.id
+          SELECT tca.ancestor_id AS id
+          FROM taxon_ancestors_dv tca
+          JOIN original_taxon_concept_ids otc
+            ON tca.id = otc.id
+            AND rank_distance > 0
         ), descendant_taxon_concept_ids AS (
-          SELECT tca.taxon_concept_id AS id
-          FROM taxon_concepts_and_ancestors_mview tca
-          JOIN original_taxon_concept_ids otc ON tca.ancestor_taxon_concept_id = otc.id
+          SELECT tca.id AS id
+          FROM taxon_ancestors_dv tca
+          JOIN original_taxon_concept_ids otc
+            ON tca.ancestor_id = otc.id
+            AND rank_distance > 0
+            AND ancestor_id IS NOT NULL
         ), accepted_taxon_concept_ids AS (
           SELECT id FROM original_taxon_concept_ids
           UNION
@@ -107,14 +183,8 @@ namespace :db do
           FROM accepted_taxon_concept_ids atc
           JOIN listing_changes lc_a ON atc.id = lc_a.taxon_concept_id
           JOIN listing_changes lc_b ON lc_b.id = lc_a.parent_id AND lc_b.taxon_concept_id != lc_a.taxon_concept_id
-        )
-        SELECT id FROM accepted_and_changed_taxon_concept_ids
-        UNION
-        SELECT otc.id
-        FROM accepted_and_changed_taxon_concept_ids atc
-        JOIN taxon_relationships tr ON atc.id = tr.taxon_concept_id
-        JOIN taxon_concepts otc ON tr.other_taxon_concept_id = otc.id
-        JOIN relevant_relationship_types rr ON tr.taxon_relationship_type_id = rr.id
+          )
+          SELECT id FROM accepted_and_changed_taxon_concept_ids WHERE id IS NOT NULL
       SQL
 
       ApplicationRecord.connection.execute <<-SQL.squish
@@ -128,7 +198,9 @@ namespace :db do
       ids_to_preserve = ids_results.field_values(:id).map(&:to_i)
 
       original_tc_count = TaxonConcept.count
-      deleted_tc_count = TaxonConcept.where.not(id: ids_to_preserve).count
+      deleted_tc_count = TaxonConcept.where(
+        'taxon_concepts.id NOT IN (SELECT id FROM preserved_taxons)'
+      ).count
 
       # More efficient to do these up front
       Distribution.where(
@@ -141,7 +213,13 @@ namespace :db do
 
       Trade::Shipment.where(
         'taxon_concept_id NOT IN (SELECT id FROM preserved_taxons)'
-      ).cascade_delete!
+      )
+
+      TaxonConcept.where(
+        'id in (SELECT id FROM preserved_taxons) AND parent_id NOT IN (SELECT id FROM preserved_taxons)'
+      ).update_all(
+        parent_id: nil
+      )
 
       [
         # Make sure we delete ranks from the bottom up in order to preserve
@@ -163,10 +241,6 @@ namespace :db do
 
         taxon_concepts_to_delete_relation = TaxonConcept.where(
           rank_id: rank.id
-        ).where.missing(
-          # In case ancestor_taxon_concept_ids returned incomplete results,
-          # avoid deleting taxons which still have children.
-          :child_taxons
         ).where(
           'taxon_concepts.id NOT IN (SELECT id FROM preserved_taxons)'
         )
@@ -181,7 +255,7 @@ namespace :db do
         ).cascade_delete!
       end
 
-      puts "Preserving #{ids_to_preserve} taxon concepts"
+      puts "Preserving #{ids_to_preserve.size} taxon concepts"
       puts "Originally #{original_tc_count} taxon concepts"
       puts "Reduced by #{deleted_tc_count} taxon concepts"
       puts "Ultimately #{TaxonConcept.count} taxon concepts"
