@@ -273,7 +273,7 @@ namespace :db do
 
     sandbox_query =
       <<-SQL.squish
-        SELECT count(*) FROM information_schema.tables
+        SELECT table_name FROM information_schema.tables
         WHERE table_name LIKE 'trade_sandbox%'
           AND table_name != 'trade_sandbox_template'
           AND table_type != 'VIEW'
@@ -281,7 +281,7 @@ namespace :db do
 
     sandbox_count =
       ApplicationRecord.connection.execute(
-        sandbox_query
+        "SELECT COUNT(*) FROM (#{sandbox_query}) s"
       )[0]['count'].to_i
 
     (
