@@ -217,9 +217,8 @@ namespace :db do
 
       TaxonConcept.where(
         <<-SQL.squish
-          name_status != 'A'
+          parent_id NOT IN (SELECT id FROM preserved_taxons)
           AND id IN (SELECT id FROM preserved_taxons)
-          AND parent_id NOT IN (SELECT id FROM preserved_taxons)
         SQL
       ).update_all(
         parent_id: nil
