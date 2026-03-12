@@ -74,22 +74,64 @@ class ListingChange < ApplicationRecord
     :excluded_taxon_concepts_ids # String
 
   belongs_to :event, optional: true
-  has_many :listing_change_copies, foreign_key: :original_id,
-    class_name: 'ListingChange', dependent: :nullify
+
+  ##
+  # listing_changes_parent_id_fk describes exclusions
+  belongs_to :parent,
+    class_name: 'ListingChange',
+    inverse_of: :exclusions,
+    optional: true
+  has_many :exclusions,
+    class_name: 'ListingChange',
+    dependent: :destroy,
+    foreign_key: 'parent_id',
+    inverse_of: :parent
+
+  # listing_changes_source_id_fk
+  belongs_to :original,
+    class_name: 'ListingChange',
+    inverse_of: :listing_change_copies,
+    optional: true
+  has_many :listing_change_copies,
+    class_name: 'ListingChange',
+    dependent: :nullify,
+    foreign_key: :original_id,
+    inverse_of: :original
+
   belongs_to :species_listing
   belongs_to :taxon_concept
   belongs_to :change_type
-  has_many :listing_distributions, -> { where is_party: false }, inverse_of: :listing_change, dependent: :destroy
-  has_one :party_listing_distribution, -> { where is_party: true }, class_name: 'ListingDistribution',
-    dependent: :destroy, inverse_of: :listing_change
-  has_many :geo_entities, through: :listing_distributions
-  has_one :party_geo_entity, class_name: 'GeoEntity',
-    through: :party_listing_distribution, source: :geo_entity
+
+  has_many :all_listing_distributions,
+    class_name: 'ListingDistribution',
+    inverse_of: :listing_change,
+    dependent: :destroy
+  has_many :listing_distributions, # non-party distributions
+    -> { where is_party: false },
+    dependent: :destroy
+  has_one :party_listing_distribution,
+    -> { where is_party: true },
+    class_name: 'ListingDistribution',
+    dependent: :destroy,
+    inverse_of: :listing_change
+
+  has_many :geo_entities,
+    through: :listing_distributions
+  has_one :party_geo_entity,
+    class_name: 'GeoEntity',
+    through: :party_listing_distribution,
+    source: :geo_entity
+
   belongs_to :annotation, optional: true
-  belongs_to :hash_annotation, class_name: 'Annotation', optional: true
-  belongs_to :parent, class_name: 'ListingChange', optional: true
-  belongs_to :inclusion, class_name: 'TaxonConcept', foreign_key: 'inclusion_taxon_concept_id', optional: true
-  has_many :exclusions, class_name: 'ListingChange', foreign_key: 'parent_id', dependent: :destroy
+  belongs_to :hash_annotation,
+    class_name: 'Annotation',
+    optional: true
+  belongs_to :inclusion,
+    class_name: 'TaxonConcept',
+    foreign_key: 'inclusion_taxon_concept_id',
+    optional: true,
+    inverse_of: :listing_change_inclusions
+
   validates :effective_at, presence: true
   validate :inclusion_at_higher_rank
   validate :species_listing_designation_mismatch

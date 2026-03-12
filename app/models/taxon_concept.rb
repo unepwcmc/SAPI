@@ -74,6 +74,9 @@ class TaxonConcept < ApplicationRecord
   include Deletable
   extend Mobility
   include TrackWhoDoesIt
+
+  IGNORE = nil
+
   has_paper_trail versions: { class_name: 'TaxonConceptVersion' }, on: :destroy,
     meta: {
       taxon_concept_id: :id,
@@ -102,95 +105,202 @@ class TaxonConcept < ApplicationRecord
   # serialize :data, coder: ActiveRecord::Coders::Hstore
   # serialize :listing, coder: ActiveRecord::Coders::Hstore
 
-  has_one :m_taxon_concept, foreign_key: :id
-
-  belongs_to :dependents_updater, foreign_key: :dependents_updated_by_id, class_name: 'User', optional: true
+  # Associations: general
+  has_one :m_taxon_concept, foreign_key: :id, inverse_of: :taxon_concept
+  belongs_to :dependents_updater,
+    foreign_key: :dependents_updated_by_id,
+    class_name: 'User',
+    optional: true
   belongs_to :parent, class_name: 'TaxonConcept', optional: true
-  has_many :children, -> { where(name_status: [ 'A', 'N' ]) }, class_name: 'TaxonConcept', foreign_key: :parent_id # conditions: { name_status: ['A', 'N'] }
+  has_many :children,
+    -> { where(name_status: [ 'A', 'N' ]) },
+    class_name: 'TaxonConcept',
+    foreign_key: :parent_id,
+    dependent: IGNORE
+
+  has_many :child_taxons,
+    class_name: 'TaxonConcept',
+    foreign_key: :parent_id,
+    dependent: :destroy
   belongs_to :rank
   belongs_to :taxonomy
   has_many :designations, through: :taxonomy
   belongs_to :taxon_name, optional: true
+
+  # Associations: Taxon relationships
   has_many :taxon_relationships, dependent: :destroy
-  has_many :inverse_taxon_relationships, class_name: 'TaxonRelationship',
-    foreign_key: :other_taxon_concept_id, dependent: :destroy
-  has_many :related_taxon_concepts, class_name: 'TaxonConcept',
+  has_many :inverse_taxon_relationships,
+    class_name: 'TaxonRelationship',
+    foreign_key: :other_taxon_concept_id,
+    dependent: :destroy
+  has_many :related_taxon_concepts,
+    class_name: 'TaxonConcept',
     through: :taxon_relationships
-  has_many :synonym_relationships, -> { TaxonRelationship.synonyms },
-    class_name: 'TaxonRelationship', dependent: :destroy
 
-  has_many :inverse_synonym_relationships, -> { TaxonRelationship.synonyms },
+  # Associations: Synonyms
+  has_many :synonym_relationships,
+    -> { TaxonRelationship.synonyms },
     class_name: 'TaxonRelationship',
-    foreign_key: :other_taxon_concept_id, dependent: :destroy
-
+    dependent: IGNORE
+  has_many :inverse_synonym_relationships,
+    -> { TaxonRelationship.synonyms },
+    class_name: 'TaxonRelationship',
+    foreign_key: :other_taxon_concept_id,
+    dependent: IGNORE
   has_many :synonyms, class_name: 'TaxonConcept',
-    through: :synonym_relationships, source: :other_taxon_concept
+    through: :synonym_relationships,
+    source: :other_taxon_concept
   has_many :accepted_names, class_name: 'TaxonConcept',
-    through: :inverse_synonym_relationships, source: :taxon_concept
-  has_many :hybrid_relationships, -> { TaxonRelationship.hybrids },
-    class_name: 'TaxonRelationship', dependent: :destroy
+    through: :inverse_synonym_relationships,
+    source: :taxon_concept
 
-  has_many :inverse_hybrid_relationships, -> { TaxonRelationship.hybrids },
+  # Associations: Hybrids
+  has_many :hybrid_relationships,
+    -> { TaxonRelationship.hybrids },
     class_name: 'TaxonRelationship',
-    foreign_key: :other_taxon_concept_id, dependent: :destroy
-
-  has_many :hybrids, class_name: 'TaxonConcept',
-    through: :hybrid_relationships, source: :other_taxon_concept
-  has_many :hybrid_parents, class_name: 'TaxonConcept',
-    through: :inverse_hybrid_relationships, source: :taxon_concept
-  has_many :trade_name_relationships, -> { TaxonRelationship.trades },
-    class_name: 'TaxonRelationship', dependent: :destroy
-
-  has_many :inverse_trade_name_relationships, -> { TaxonRelationship.trades },
+    dependent: IGNORE
+  has_many :inverse_hybrid_relationships,
+    -> { TaxonRelationship.hybrids },
     class_name: 'TaxonRelationship',
-    foreign_key: :other_taxon_concept_id, dependent: :destroy
+    foreign_key: :other_taxon_concept_id,
+    dependent: IGNORE
+  has_many :hybrids,
+    class_name: 'TaxonConcept',
+    through: :hybrid_relationships,
+    source: :other_taxon_concept
+  has_many :hybrid_parents,
+    class_name: 'TaxonConcept',
+    through: :inverse_hybrid_relationships,
+    source: :taxon_concept
 
+  # Associations: Trade name
+  has_many :trade_name_relationships,
+    -> { TaxonRelationship.trades },
+    class_name: 'TaxonRelationship',
+    dependent: IGNORE
+  has_many :inverse_trade_name_relationships,
+    -> { TaxonRelationship.trades },
+    class_name: 'TaxonRelationship',
+    foreign_key: :other_taxon_concept_id,
+    dependent: IGNORE
   has_many :trade_names, class_name: 'TaxonConcept',
-    through: :trade_name_relationships, source: :other_taxon_concept
-  has_many :accepted_names_for_trade_name, class_name: 'TaxonConcept',
-    through: :inverse_trade_name_relationships, source: :taxon_concept
-  has_many :distributions, dependent: :destroy
+    through: :trade_name_relationships,
+    source: :other_taxon_concept
+  has_many :accepted_names_for_trade_name,
+    class_name: 'TaxonConcept',
+    through: :inverse_trade_name_relationships,
+    source: :taxon_concept
+
+  has_many :distributions, dependent: :destroy, inverse_of: :taxon_concept
   has_many :geo_entities, through: :distributions
-  has_many :listing_changes
-  has_many :current_listing_changes, -> { where 'is_current = true' }, class_name: 'ListingChange'
+
+  # Associations: Listing changes
+  has_many :listing_changes,
+    dependent: :destroy,
+    inverse_of: :taxon_concept
+  has_many :listing_change_inclusions,
+    class_name: 'ListingChange',
+    dependent: :destroy,
+    inverse_of: :inclusion
+  has_many :current_listing_changes,
+    -> { where 'is_current = true' },
+    class_name: 'ListingChange',
+    dependent: IGNORE,
+    inverse_of: :taxon_concept
   has_many :species_listings, through: :listing_changes
-  has_many :taxon_commons, -> { includes :common_name }, dependent: :destroy
+
+  # Associations: Common names
+  has_many :taxon_commons, -> { includes :common_name },
+    dependent: :destroy,
+    inverse_of: :taxon_concept
   has_many :common_names, through: :taxon_commons
 
-  has_many :taxon_concept_references, -> { includes :reference }, dependent: :destroy
+  # Associations: References (citations)
+  has_many :taxon_concept_references,
+    -> { includes :reference }, dependent: :destroy, inverse_of: :taxon_concept
   has_many :references, through: :taxon_concept_references
 
-  has_many :quotas, -> { order 'start_date DESC' }
-  has_many :current_quotas, -> { where 'is_current = true' }, class_name: 'Quota'
+  # Associations: CITES quotas
+  has_many :quotas,
+    -> { order 'start_date DESC' },
+    dependent: :destroy,
+    inverse_of: :taxon_concept
+  has_many :current_quotas,
+    -> { where 'is_current = true' },
+    class_name: 'Quota',
+    dependent: :destroy,
+    inverse_of: :taxon_concept
 
-  has_many :cites_suspensions
-  has_many :current_cites_suspensions, -> { where 'is_current = true' }, class_name: 'CitesSuspension'
+  # Associations: CITES suspensions
+  has_many :cites_suspensions, dependent: :destroy, inverse_of: :taxon_concept
+  has_many :current_cites_suspensions,
+    -> { where 'is_current = true' },
+    class_name: 'CitesSuspension',
+    dependent: :destroy,
+    inverse_of: :taxon_concept
 
-  has_many :eu_opinions
-  has_many :current_eu_opinions, -> { where 'is_current = true' }, class_name: 'EuOpinion'
-  has_many :eu_suspensions
-  has_many :current_eu_suspensions, -> { where 'is_current = true' }, class_name: 'EuSuspension'
+  # Association: CITES processes
+  has_many :cites_processes
+  has_many :cites_captivity_processes
 
-  has_many :taxon_instruments
+  # Associations: EU Opinions and Suspensions
+  has_many :eu_opinions, dependent: :destroy, inverse_of: :taxon_concept
+  has_many :current_eu_opinions, -> { where 'is_current = true' }, class_name: 'EuOpinion', dependent: IGNORE
+  has_many :eu_suspensions, dependent: :destroy, inverse_of: :taxon_concept
+  has_many :current_eu_suspensions, -> { where 'is_current = true' }, class_name: 'EuSuspension', dependent: IGNORE
+
+  # Associations: CMS Instruments
+  has_many :taxon_instruments,
+    dependent: :destroy,
+    inverse_of: :taxon_concept
   has_many :instruments, through: :taxon_instruments
-  has_many :shipments, class_name: 'Trade::Shipment'
-  has_many :reported_shipments, class_name: 'Trade::Shipment',
-    foreign_key: :reported_taxon_concept_id
-  has_many :comments, as: 'commentable'
-  has_one :general_comment, -> { where comment_type: 'General' }, class_name: 'Comment', as: 'commentable'
-  has_one :nomenclature_comment, -> { where comment_type: 'Nomenclature' }, class_name: 'Comment', as: 'commentable'
-  has_one :distribution_comment, -> { where comment_type: 'Distribution' }, class_name: 'Comment', as: 'commentable'
+
+  # Associations: Trade DB
+  has_many :trade_term_pairs,
+    class_name: 'Trade::TaxonConceptTermPair',
+    dependent: :destroy,
+    inverse_of: :taxon_concept
+  has_many :shipments,
+    class_name: 'Trade::Shipment',
+    dependent: :destroy,
+    inverse_of: :taxon_concept
+  has_many :reported_shipments,
+    class_name: 'Trade::Shipment',
+    foreign_key: :reported_taxon_concept_id,
+    dependent: :nullify,
+    inverse_of: :reported_taxon_concept
+
+  # Associations: Comments
+  has_many :comments, as: 'commentable', inverse_of: :commentable
+  has_one :general_comment, -> { where comment_type: 'General' }, class_name: 'Comment', as: 'commentable', dependent: IGNORE
+  has_one :nomenclature_comment, -> { where comment_type: 'Nomenclature' }, class_name: 'Comment', as: 'commentable', dependent: IGNORE
+  has_one :distribution_comment, -> { where comment_type: 'Distribution' }, class_name: 'Comment', as: 'commentable', dependent: IGNORE
+
+  # Associations: Nomenclature changes
   has_many :parent_reassignments,
     class_name: 'NomenclatureChange::ParentReassignment',
     as: :reassignable,
     dependent: :destroy
-  has_many :nomenclature_change_inputs, class_name: 'NomenclatureChange::Input'
-  has_many :nomenclature_change_outputs, class_name: 'NomenclatureChange::Output'
-  has_many :nomenclature_change_outputs_as_new, class_name: 'NomenclatureChange::Output',
-    foreign_key: :new_taxon_concept_id
-  has_many :document_citation_taxon_concepts
-  has_many :cites_processes
-  has_many :cites_captivity_processes
+  has_many :nomenclature_change_inputs,
+    class_name: 'NomenclatureChange::Input',
+    dependent: :destroy
+  has_many :nomenclature_change_outputs,
+    class_name: 'NomenclatureChange::Output',
+    dependent: :nullify
+  has_many :nomenclature_change_outputs_as_new,
+    class_name: 'NomenclatureChange::Output',
+    foreign_key: :new_taxon_concept_id,
+    inverse_of: :new_taxon_concept,
+    dependent: :nullify
+  has_many :nomenclature_change_outputs_as_new_parent,
+    class_name: 'NomenclatureChange::Output',
+    foreign_key: :new_parent_id,
+    inverse_of: :new_parent
+
+  # todo:  PG::ForeignKeyViolation: ERROR:  update or delete on table "taxon_concepts" violates foreign key constraint "nomenclature_change_outputs_new_parent_id_fk" on table "nomenclature_change_outputs" (PG::ForeignKeyViolation)
+  has_many :document_citation_taxon_concepts,
+    inverse_of: :taxon_concept,
+    dependent: :destroy
 
   validates :name_status, presence: true
   validates :parent_id, presence: true,
@@ -276,6 +386,7 @@ class TaxonConcept < ApplicationRecord
         AND ranks.taxonomic_position >= ?
         AND ranks.taxonomic_position < ?
     SQL
+
     joins(
       sanitize_sql_array(
         [
@@ -290,6 +401,7 @@ class TaxonConcept < ApplicationRecord
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position < ?
     SQL
+
     joins(
       sanitize_sql_array([ joins_sql, rank.taxonomic_position ])
     )
@@ -300,6 +412,7 @@ class TaxonConcept < ApplicationRecord
       INNER JOIN ranks ON ranks.id = taxon_concepts.rank_id
         AND ranks.taxonomic_position <= ?
     SQL
+
     joins(
       sanitize_sql_array([ joins_sql, rank.taxonomic_position ])
     )

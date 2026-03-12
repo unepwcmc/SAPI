@@ -134,7 +134,13 @@ private
   def changeable_bump_dependents_timestamp_part_one(taxon_concept, updated_by_id)
     return unless taxon_concept
 
-    TaxonConcept.where(id: taxon_concept.id).update_all(
+    # Be precise with our where clause to avoid touching the same taxon concept
+    # multiple times in the same transaction.
+    # Purposefully skip validation with update_all, this is a touch.
+    TaxonConcept.where(
+      'id = ? and (updated_at < now() or id is distinct from ?)',
+      [ taxon_concept.id ], [ updated_by_id ]
+    ).update_all( # rubocop:disable Rails/SkipsModelValidations
       dependents_updated_at: Time.now,
       dependents_updated_by_id: updated_by_id
     )
@@ -147,6 +153,6 @@ private
   end
 
   def changeable_clear_show_tc_serializer_cache
-    Rails.cache.delete_matched("*ShowTaxonConceptSerializer*")
+    Rails.cache.delete_matched('*ShowTaxonConceptSerializer*')
   end
 end

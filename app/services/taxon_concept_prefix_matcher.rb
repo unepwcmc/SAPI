@@ -21,7 +21,8 @@ protected
         #{Taxonomy.table_name}.name AS taxonomy_name,
         #{TaxonConcept.table_name}.id,
         full_name,
-        name_status
+        name_status,
+        rank_id
       SQL
     ).joins(:taxonomy).order(:full_name)
   end
