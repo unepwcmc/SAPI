@@ -13,6 +13,7 @@ class Checklist::HigherTaxaItem
         [ 'PHYLUM', 'CLASS', 'ORDER', 'FAMILY', 'SUBFAMILY' ]
       end
     current_idx = taxa.index(rank_name) || 0
+
     0.upto(current_idx).map do |i|
       taxa[i]
     end

@@ -32,25 +32,26 @@ class Checklist::Pdf::IndexQuery
         english: "REGEXP_REPLACE(UNNEST(english_names_ary), '(.+) (.+)', '\\2, \\1')",
         spanish: 'UNNEST(spanish_names_ary)',
         french: 'UNNEST(french_names_ary)',
-        synonym: if @authors
-                   <<-SQL.squish
-            UNNEST(ARRAY(SELECT synonym ||
-            CASE
-            WHEN author_year IS NOT NULL
-            THEN ' ' || author_year
-            ELSE ''
-            END
-            FROM (
-              (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms
-              LEFT JOIN
-              (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
-              ON synonyms.id = author_years.id
-            )
-            ))
+        synonym:
+          if @authors
+            <<-SQL.squish
+              UNNEST(ARRAY(SELECT synonym ||
+              CASE
+              WHEN author_year IS NOT NULL
+              THEN ' ' || author_year
+              ELSE ''
+              END
+              FROM (
+                (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms
+                LEFT JOIN
+                (SELECT author_year, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_author_years_ary) AS author_year) q) author_years
+                ON synonyms.id = author_years.id
+              )
+              ))
             SQL
-                 else
-                   'UNNEST(synonyms_ary)'
-                 end
+          else
+            'UNNEST(synonyms_ary)'
+          end
       },
       lng: {
         english: "'E'",
@@ -65,6 +66,7 @@ class Checklist::Pdf::IndexQuery
           (distinct_columns_values[dc][name_type] || 'null') + " AS #{dc}"
         end + shared_columns
       ).join(',') + ' FROM taxon_concept_matches'
+
       instance_variable_set("@#{name_type}_select_clause", select_clause)
     end
   end
@@ -75,19 +77,20 @@ class Checklist::Pdf::IndexQuery
         #{@rel.to_sql}
       )
     SQL
+
     inner_query << @basic_select_clause
     inner_query << " UNION #{@english_select_clause}" if @english_common_names
     inner_query << " UNION #{@spanish_select_clause}" if @spanish_common_names
     inner_query << " UNION #{@french_select_clause}" if @french_common_names
     inner_query << " UNION #{@synonym_select_clause}" if @synonyms
 
-    outer_query = <<-SQL.squish
-    WITH name_matches AS (
-      #{inner_query}
-    )
-    SELECT * FROM name_matches WHERE sort_name IS NOT NULL
-    ORDER BY UPPER(sort_name) COLLATE "en_US"
-    LIMIT #{limit} OFFSET #{offset}
+    <<-SQL.squish
+      WITH name_matches AS (
+        #{inner_query}
+      )
+      SELECT * FROM name_matches WHERE sort_name IS NOT NULL
+      ORDER BY UPPER(sort_name) COLLATE "en_US"
+      LIMIT #{limit} OFFSET #{offset}
     SQL
   end
 end
