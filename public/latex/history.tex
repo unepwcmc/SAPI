@@ -1,3 +1,16 @@
+% This file how the "History of CITES listings" PDF is built.
+%
+% The document exists in three languages and contains:
+%
+% - Frontmatter:
+%   - A cover page
+%   - Copyright notices page
+%   - Foreword & acknowledgements page
+%   - Introduction
+% - Fauna (Animalia) listings
+% - Flora (Plantae) listings
+% - Historical summary of annotations
+
 \documentclass[a4paper]{article}
 \usepackage{graphicx}
 \usepackage{multicol}
@@ -28,6 +41,7 @@
 
 \pagestyle{fancy}
 \fancyfoot{}
+% Define footer "History of CITES listings– 1"
 \fancyfoot[C]{\historyFooter – \thepage}
 \renewcommand{\headrulewidth}{0pt}
 
@@ -53,36 +67,60 @@
 \newcommand{\csection}[1]{\addcontentsline{toc}{section}{#1}\section*{\centering #1}}
 
 \newcommand{\footlabel}[2]{%
-    \addtocounter{footnote}{1}%
-    \footnotetext[\thefootnote]{%
-        \addtocounter{footnote}{-1}%
-        \refstepcounter{footnote}\label{#1}%
-        #2%
-    }%
-    $^{\ref{#1}}$%
+  \addtocounter{footnote}{1}%
+  \footnotetext[\thefootnote]{%
+    \addtocounter{footnote}{-1}%
+    \refstepcounter{footnote}\label{#1}%
+    #2%
+  }%
+  $^{\ref{#1}}$%
 }
 
 \providecommand{\footref}[1]{%
-    $^{\ref{#1}}$%
+  $^{\ref{#1}}$%
 }
 \renewcommand{\footref}[1]{%
-    $^{\ref{#1}}$%
+  $^{\ref{#1}}$%
 }
 
 \setlength{\extrarowheight}{1.5pt}
 
+% Defines `\listingtablefauna`. The table has the following structure:
+%
+% Taxon name       App.  Party Effective at Notes
+% ---------------- ----- ----- ------------ ----------------------------------------------
+% PSITTACIDAE spp. III   GH    26/02/1976   Listing subsequently changed to named species.
+%                  III/r DK    24/10/1977
+%
+% The table is instantiated for each family
 \newcommand{\listingtablefauna}[1]{
   \begin{longtable}[t]{>{\raggedright\arraybackslash}p{5cm}p{0.5cm}p{0.5cm}p{1.5cm}>{\raggedright\arraybackslash}p{8.5cm}}
   #1
   \end{longtable}
 }
 
+% Defines `\listingtableflora`. The table has the following structure:
+%
+% Taxon name   App.  Party Effective at Annotation Notes
+% ------------ ----- ----- ------------ ---------- ---------------------------
+% Afzelia spp. II          23/02/2023   CoP19#17   African populations.
+%              II/r  CA    23/02/2023
+%
+% The table is instantiated for each family
 \newcommand{\listingtableflora}[1]{
   \begin{longtable}[t]{>{\raggedright\arraybackslash}p{4.25cm}p{0.5cm}p{0.5cm}p{1.5cm}p{1.75cm}>{\raggedright\arraybackslash}p{7.5cm}}
   #1
   \end{longtable}
 }
 
+% Defines `\hashannotationstable`. The tables look like this:
+%
+% CoP3 Valid from 06/06/1981
+% #1   Designates roots
+% #2   Designates timber
+% #3   Designates trunks
+%
+% The table is instantiated for each CoP
 \newcommand{\hashannotationstable}[1]{
   \begin{longtable}[t]{>{\raggedright\arraybackslash}p{1.25cm}>{\raggedright\arraybackslash}p{15.25cm}}
   #1
@@ -92,8 +130,8 @@
 \rmfamily
 
 \ifintro
-\includepdf[pages=1]{\historyIntroductionFile}
-\includepdf[pages=2-]{\historyIntroductionFile}
+  \includepdf[pages=1]{\historyIntroductionFile}
+  \includepdf[pages=2-]{\historyIntroductionFile}
 \fi
 
 \hypertarget{contentstart}{}
