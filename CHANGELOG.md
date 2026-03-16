@@ -11,6 +11,11 @@
 * Fixes an issue where the serialisation of the autocomplete results for new
   taxon concepts is broken until they go through the cascade.
 
+**CITES Checklist**
+
+* Fixes an issue where the serialisation of listing changes in the History
+  downloads for the CITES Checklist were in an unintuitive order.
+
 ### 1.21.1
 
 **CITES Trade DB**
