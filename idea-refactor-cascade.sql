@@ -259,10 +259,10 @@ WITH RECURSIVE listing_changes_timeline AS (
       THEN HSTORE(species_listing_id::TEXT, taxon_concept_id::TEXT)
       ELSE HSTORE(species_listing_id::TEXT, inclusion_taxon_concept_id::TEXT)
     END AS context,
-    CASE WHEN
-      THEN
-      ELSE
-    HSTORE(tree_distance::TEXT, lc.id::TEXT) AS listing_change_ids_by_distance,
+    -- CASE WHEN
+    --   THEN
+    --   ELSE
+    HSTORE(tree_distance::TEXT, (lc.id)::TEXT) AS listing_change_ids_by_distance,
     is_current,
     tree_distance AS context_tree_distance,
     timeline_position,
@@ -345,9 +345,9 @@ WITH RECURSIVE listing_changes_timeline AS (
       THEN listing_changes_timeline.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
       ELSE listing_changes_timeline.context
     END AS context,
-    listing_changes_timeline
+    -- listing_changes_timeline,
     listing_changes_timeline.listing_change_ids_by_distance || HSTORE(
-      tree_distance::TEXT, lc.id::TEXT
+      tree_distance::TEXT, listing_changes_timeline.id::TEXT
     ) AS listing_change_ids_by_distance,
     hi.is_current,
     CASE -- context_tree_distance
@@ -464,7 +464,7 @@ CREATE OR REPLACE VIEW all_listing_changes_and_synthetics_view (
   "change_type_id",
   "event_id",
   "effective_at",
-  "is_current"
+  "is_current",
   "context_tree_distance",
   "timeline_position",
   "is_applicable",
@@ -642,3 +642,42 @@ explain analyse
 create table synth_listing_changes_timeline_dt
 as select * from all_listing_changes_and_synthetics_view where designation_id = 1;
 
+
+--  CTE Scan on fake_deletions  (cost=2358.58..2358.61 rows=1 width=86) (actual time=359431.642..359435.274 rows=28 loops=1)
+--    Filter: (designation_id = 1)
+--    Rows Removed by Filter: 18
+--    CTE addition_change_types
+--      ->  Seq Scan on change_types  (cost=0.00..1.19 rows=1 width=636) (actual time=0.007..0.011 rows=3 loops=1)
+--            Filter: ((name)::text = 'ADDITION'::text)
+--            Rows Removed by Filter: 12
+--    CTE deletion_change_types
+--      ->  Seq Scan on change_types change_types_1  (cost=0.00..1.19 rows=1 width=636) (actual time=0.012..0.014 rows=3 loops=1)
+--            Filter: ((name)::text = 'DELETION'::text)
+--            Rows Removed by Filter: 12
+--    CTE prev_lc
+--      ->  Nested Loop  (cost=0.45..2356.13 rows=1 width=83) (actual time=0.143..162253.135 rows=335815170 loops=1)
+--            ->  Hash Join  (cost=0.03..2153.73 rows=366 width=86) (actual time=0.029..150.562 rows=63307 loops=1)
+--                  Hash Cond: (lc.change_type_id = ct.id)
+--                  ->  Seq Scan on applicable_listing_changes_timeline_mv lc  (cost=0.00..1875.39 rows=73239 width=82) (actual time=0.007..31.230 rows=73239 loops=1)
+--                  ->  Hash  (cost=0.02..0.02 rows=1 width=4) (actual time=0.014..0.015 rows=3 loops=1)
+--                        Buckets: 1024  Batches: 1  Memory Usage: 9kB
+--                        ->  CTE Scan on addition_change_types ct  (cost=0.00..0.02 rows=1 width=4) (actual time=0.008..0.012 rows=3 loops=1)
+--            ->  Index Scan using applicable_listing_changes_ti_current_taxon_concept_id_chan_idx on applicable_listing_changes_timeline_mv next_lc  (cost=0.42..0.54 rows=1 width=24) (actual time=0.016..1.573 rows=5305 loops=63307)
+--                  Index Cond: ((current_taxon_concept_id = lc.current_taxon_concept_id) AND (change_type_id = lc.change_type_id) AND (lc.effective_at < effective_at))
+--                  Filter: ((NOT (party_id IS DISTINCT FROM lc.party_id)) AND (((original_taxon_concept_id = current_taxon_concept_id) AND (lc.original_taxon_concept_id <> lc.current_taxon_concept_id)) OR ((original_taxon_concept_id = current_taxon_concept_id) AND (lc.original_taxon_concept_id = lc.current_taxon_concept_id) AND (lc.inclusion_taxon_concept_id IS NOT NULL) AND (NOT lc.is_current)) OR ((original_taxon_concept_id <> current_taxon_concept_id) AND (lc.original_taxon_concept_id <> lc.current_taxon_concept_id)) OR ((original_taxon_concept_id <> current_taxon_concept_id) AND (lc.original_taxon_concept_id = lc.current_taxon_concept_id) AND (lc.inclusion_taxon_concept_id IS NOT NULL) AND ((lc.inclusion_taxon_concept_id = original_taxon_concept_id) OR (NOT lc.is_current)))))
+--                  Rows Removed by Filter: 44
+--    CTE fake_deletions
+--      ->  Unique  (cost=0.07..0.08 rows=1 width=86) (actual time=359431.636..359435.238 rows=46 loops=1)
+--            ->  Sort  (cost=0.07..0.07 rows=1 width=86) (actual time=359431.634..359432.354 rows=13415 loops=1)
+--                  Sort Key: lc_1.original_taxon_concept_id, lc_1.current_taxon_concept_id, lc_1.designation_id, lc_1.species_listing_id, lc_1.party_id
+--                  Sort Method: quicksort  Memory: 2271kB
+--                  ->  Nested Loop  (cost=0.00..0.06 rows=1 width=86) (actual time=11359.141..359426.368 rows=13415 loops=1)
+--                        Join Filter: (lc_1.designation_id = ct_1.designation_id)
+--                        Rows Removed by Join Filter: 26830
+--                        ->  CTE Scan on prev_lc lc_1  (cost=0.00..0.02 rows=1 width=40) (actual time=11359.123..359415.743 rows=13415 loops=1)
+--                              Filter: appendix_change
+--                              Rows Removed by Filter: 335801755
+--                        ->  CTE Scan on deletion_change_types ct_1  (cost=0.00..0.02 rows=1 width=8) (actual time=0.000..0.000 rows=3 loops=13415)
+--  Planning time: 1.459 ms
+--  Execution time: 360161.079 ms
+-- (37 rows)
