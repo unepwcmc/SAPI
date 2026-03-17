@@ -1,6 +1,22 @@
 require 'sidekiq/web'
 require 'sidekiq/cron/web'
 
+if %w[test development].exclude?(Rails.env)
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    # Protect against timing attacks:
+    # - See https://codahale.com/a-lesson-in-timing-attacks/
+    # - See https://thisdata.com/blog/timing-attacks-against-string-comparison/
+    # - Use & (do not use &&) so that it doesn't short circuit.
+    # - Use digests to stop length information leaking (see also ActiveSupport::SecurityUtils.variable_size_secure_compare)
+    sidekiq_username = Rails.application.credentials.sidekiq.username!
+    sidekiq_password = Rails.application.credentials.sidekiq.password!
+    ActiveSupport::SecurityUtils.secure_compare(Digest::SHA256.hexdigest(username),
+      Digest::SHA256.hexdigest(sidekiq_username)) &
+      ActiveSupport::SecurityUtils.secure_compare(Digest::SHA256.hexdigest(password),
+        Digest::SHA256.hexdigest(sidekiq_password))
+  end
+end
+
 Rails.application.routes.draw do
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

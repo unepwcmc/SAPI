@@ -24,7 +24,7 @@ Rails.application.configure do
     config.action_controller.enable_fragment_cache_logging = true
 
     # Use a redis instance as a cache store in local development.
-    config.cache_store = :redis_cache_store, { url: ENV.fetch('SAPI_SIDEKIQ_REDIS_CACHE_URL') }
+    config.cache_store = :redis_cache_store, { url: ENV.fetch('SAPI_SIDEKIQ_REDIS_CACHE_URL', '') }
     config.public_file_server.headers = {
       'Cache-Control' => "public, max-age=#{2.days.to_i}"
     }
