@@ -1,7 +1,6 @@
 # Name of the container image
 image: ghcr.io/unepwcmc/sapi/rails-staging
 
-# Define services (servers for Kamal 2.5.2 compatibility)
 servers:
   web:
     hosts:
