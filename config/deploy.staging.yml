@@ -10,9 +10,9 @@ servers:
     proxy:
       hosts:
         - sapi-web-staging-01.internal.unep-wcmc.org # Public-facing domain
-      ssl: true
-      tls_certificate_path: /etc/ssl/kamal/star.internal.unep-wcmc.org.crt
-      tls_private_key_path: /etc/ssl/kamal/star.internal.unep-wcmc.org.key
+      ssl:
+        certificate_pem: CERTIFICATE_PEM
+        private_key_pem: PRIVATE_KEY_PEM
       forward_headers: true # Forward headers like X-Forwarded-Proto
       healthcheck:
         path: /up
