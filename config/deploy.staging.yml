@@ -1,5 +1,5 @@
 # Name of the container image
-image: ghcr.io/unepwcmc/sapi/rails-staging
+image: unepwcmc/sapi/rails-staging
 
 servers:
   web:

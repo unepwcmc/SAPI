@@ -33,11 +33,29 @@ jobs:
     needs: validate-input
     runs-on: self-hosted
     environment: ${{ github.event.inputs.environment }}
+    env:
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      SAPI_DATABASE_HOST: ${{ secrets.SAPI_DATABASE_HOST }}
+      SAPI_DATABASE_NAME: ${{ secrets.SAPI_DATABASE_NAME }}
+      SAPI_DATABASE_USERNAME: ${{ secrets.SAPI_DATABASE_USERNAME }}
+      SAPI_DATABASE_PASSWORD: ${{ secrets.SAPI_DATABASE_PASSWORD }}
+      SAPI_DATABASE_PORT: ${{ secrets.SAPI_DATABASE_PORT }}
+      CAPTIVE_BREEDING_DATABASE_HOST: ${{ secrets.CAPTIVE_BREEDING_DATABASE_HOST }}
+      CAPTIVE_BREEDING_DATABASE_NAME: ${{ secrets.CAPTIVE_BREEDING_DATABASE_NAME }}
+      CAPTIVE_BREEDING_DATABASE_USERNAME: ${{ secrets.CAPTIVE_BREEDING_DATABASE_USERNAME }}
+      CAPTIVE_BREEDING_DATABASE_PASSWORD: ${{ secrets.CAPTIVE_BREEDING_DATABASE_PASSWORD }}
+      CAPTIVE_BREEDING_DATABASE_PORT: ${{ secrets.CAPTIVE_BREEDING_DATABASE_PORT }}
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      SAPI_SIDEKIQ_REDIS_URL: ${{ secrets.SAPI_SIDEKIQ_REDIS_URL }}
+      SAPI_SIDEKIQ_REDIS_CACHE_URL: ${{ secrets.SAPI_SIDEKIQ_REDIS_CACHE_URL }}
     steps:
       - name: Set workflow start time
         run: |
           echo "START_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_ENV
-          echo "ACTION_TYPE=Setup" >> $GITHUB_ENV
 
       - uses: actions/checkout@v4
 
@@ -61,64 +79,20 @@ jobs:
           runner-name: ${{ runner.name }}
           start-time: ${{ env.START_TIME }}
 
-      - name: Validate and Populate Secrets
-        uses: unepwcmc/devops-actions/.github/actions/validate-secrets@v1
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          secrets-file: '.kamal/secrets-common'
-          environment: ${{ github.event.inputs.environment }}
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          SAPI_DATABASE_HOST: ${{ secrets.SAPI_DATABASE_HOST }}
-          SAPI_DATABASE_NAME: ${{ secrets.SAPI_DATABASE_NAME }}
-          SAPI_DATABASE_USERNAME: ${{ secrets.SAPI_DATABASE_USERNAME }}
-          SAPI_DATABASE_PASSWORD: ${{ secrets.SAPI_DATABASE_PASSWORD }}
-          SAPI_DATABASE_PORT: ${{ secrets.SAPI_DATABASE_PORT }}
-          CAPTIVE_BREEDING_DATABASE_HOST: ${{ secrets.CAPTIVE_BREEDING_DATABASE_HOST }}
-          CAPTIVE_BREEDING_DATABASE_NAME: ${{ secrets.CAPTIVE_BREEDING_DATABASE_NAME }}
-          CAPTIVE_BREEDING_DATABASE_USERNAME: ${{ secrets.CAPTIVE_BREEDING_DATABASE_USERNAME }}
-          CAPTIVE_BREEDING_DATABASE_PASSWORD: ${{ secrets.CAPTIVE_BREEDING_DATABASE_PASSWORD }}
-          CAPTIVE_BREEDING_DATABASE_PORT: ${{ secrets.CAPTIVE_BREEDING_DATABASE_PORT }}
-          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          SAPI_SIDEKIQ_REDIS_URL: ${{ secrets.SAPI_SIDEKIQ_REDIS_URL }}
-          SAPI_SIDEKIQ_REDIS_CACHE_URL: ${{ secrets.SAPI_SIDEKIQ_REDIS_CACHE_URL }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Setup SAPI with Kamal v2
-        uses: unepwcmc/devops-actions/.github/actions/kamal-v2-setup@v1
-        with:
-          environment: ${{ github.event.inputs.environment }}
-          working-directory: '.'
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          KAMAL_REGISTRY_USERNAME: local
-          KAMAL_REGISTRY_PASSWORD: local
-          # The kamal-v2-setup action requires generic DATABASE_* names
-          DATABASE_HOST: ${{ secrets.SAPI_DATABASE_HOST }}
-          DATABASE_NAME: ${{ secrets.SAPI_DATABASE_NAME }}
-          DATABASE_USERNAME: ${{ secrets.SAPI_DATABASE_USERNAME }}
-          DATABASE_PASSWORD: ${{ secrets.SAPI_DATABASE_PASSWORD }}
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          SAPI_DATABASE_HOST: ${{ secrets.SAPI_DATABASE_HOST }}
-          SAPI_DATABASE_NAME: ${{ secrets.SAPI_DATABASE_NAME }}
-          SAPI_DATABASE_USERNAME: ${{ secrets.SAPI_DATABASE_USERNAME }}
-          SAPI_DATABASE_PASSWORD: ${{ secrets.SAPI_DATABASE_PASSWORD }}
-          SAPI_DATABASE_PORT: ${{ secrets.SAPI_DATABASE_PORT }}
-          CAPTIVE_BREEDING_DATABASE_HOST: ${{ secrets.CAPTIVE_BREEDING_DATABASE_HOST }}
-          CAPTIVE_BREEDING_DATABASE_NAME: ${{ secrets.CAPTIVE_BREEDING_DATABASE_NAME }}
-          CAPTIVE_BREEDING_DATABASE_USERNAME: ${{ secrets.CAPTIVE_BREEDING_DATABASE_USERNAME }}
-          CAPTIVE_BREEDING_DATABASE_PASSWORD: ${{ secrets.CAPTIVE_BREEDING_DATABASE_PASSWORD }}
-          CAPTIVE_BREEDING_DATABASE_PORT: ${{ secrets.CAPTIVE_BREEDING_DATABASE_PORT }}
-          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          SAPI_SIDEKIQ_REDIS_URL: ${{ secrets.SAPI_SIDEKIQ_REDIS_URL }}
-          SAPI_SIDEKIQ_REDIS_CACHE_URL: ${{ secrets.SAPI_SIDEKIQ_REDIS_CACHE_URL }}
+      - name: Install Kamal
+        run: |
+          cd deploy
+          bundle install --quiet
+
+      - name: Run Kamal setup
+        run: |
+          cd deploy
+          bundle exec kamal setup -d ${{ github.event.inputs.environment }}
 
       - name: Set workflow end time and calculate duration
         if: always()

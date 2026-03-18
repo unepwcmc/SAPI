@@ -3,7 +3,7 @@ service: sapi
 
 # Credentials for your image host.
 registry:
-  server: localhost:5555
+  server: dcr.internal.unep-wcmc.org
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets.{environment})
 env:
