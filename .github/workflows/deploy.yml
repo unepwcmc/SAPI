@@ -1,0 +1,196 @@
+name: Deploy SAPI Rails API
+on:
+  push:
+    branches:
+      - deploy/staging/rails-api
+      - deploy/production/rails-api
+  release:
+    types: [published]
+
+jobs:
+  determine-environment:
+    runs-on: self-hosted
+    outputs:
+      environment: ${{ steps.env.outputs.environment }}
+      deploy-type: ${{ steps.env.outputs.deploy-type }}
+      kamal-secrets-file: ${{ steps.env.outputs.kamal-secrets-file }}
+    steps:
+      - id: env
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+            echo "deploy-type=release" >> $GITHUB_OUTPUT
+            echo "kamal-secrets-file=.kamal/secrets-common" >> $GITHUB_OUTPUT
+            echo "🚀 Production deployment triggered by release: ${{ github.event.release.tag_name }}"
+          elif [[ "${{ github.ref }}" == "refs/heads/deploy/production/rails-api" ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+            echo "deploy-type=branch" >> $GITHUB_OUTPUT
+            echo "kamal-secrets-file=.kamal/secrets-common" >> $GITHUB_OUTPUT
+            echo "🚀 Production deployment triggered by push to deploy/production/rails-api"
+          elif [[ "${{ github.ref }}" == "refs/heads/deploy/staging/rails-api" ]]; then
+            echo "environment=staging" >> $GITHUB_OUTPUT
+            echo "deploy-type=branch" >> $GITHUB_OUTPUT
+            echo "kamal-secrets-file=.kamal/secrets-common" >> $GITHUB_OUTPUT
+            echo "🔧 Staging deployment triggered by push to deploy/staging/rails-api"
+          else
+            echo "❌ No deployment configured for this trigger"
+            exit 1
+          fi
+
+  deploy:
+    needs: determine-environment
+    runs-on: self-hosted
+    environment: ${{ needs.determine-environment.outputs.environment }}
+    steps:
+      - name: Set workflow start time
+        run: |
+          echo "START_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_ENV
+          echo "ACTION_TYPE=Deploy" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v4
+
+      - name: Notify deployment start
+        id: notify-start
+        uses: unepwcmc/devops-actions/.github/actions/slack-notify@v1
+        with:
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          slack-channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          notification-type: started
+          action-type: Deploy
+          environment: ${{ needs.determine-environment.outputs.environment }}
+          repository: ${{ github.repository }}
+          repository-url: ${{ github.server_url }}/${{ github.repository }}
+          action-run-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          actor: ${{ github.actor }}
+          actor-url: ${{ github.server_url }}/${{ github.actor }}
+          workflow-name: ${{ github.workflow }}
+          run-id: ${{ github.run_id }}
+          commit-message: ${{ github.event.head_commit.message || github.event.release.name || 'Manual workflow trigger' }}
+          runner-name: ${{ runner.name }}
+          start-time: ${{ env.START_TIME }}
+
+      - name: Export and validate kamal secrets
+        shell: bash
+        env:
+          SECRETS_JSON: ${{ toJSON(secrets) }}
+          KAMAL_SECRETS_FILE: ${{ needs.determine-environment.outputs.kamal-secrets-file }}
+        run: |
+          if [[ -z "$KAMAL_SECRETS_FILE" ]]; then
+            echo "Error: kamal secrets file path not provided."
+            exit 1
+          fi
+          if [[ ! -f "$KAMAL_SECRETS_FILE" ]]; then
+            echo "Error: $KAMAL_SECRETS_FILE file not found."
+            exit 1
+          fi
+
+          temp_secrets="$(mktemp)"
+          trap 'rm -f "$temp_secrets"' EXIT
+          printf '%s' "$SECRETS_JSON" > "$temp_secrets"
+
+          needed_vars=()
+          while IFS= read -r line; do
+            trimmed="$(echo "$line" | tr -d '\r' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+            [[ -z "$trimmed" || "$trimmed" == \#* ]] && continue
+            [[ "$trimmed" != *=* ]] && continue
+
+            value="${trimmed#*=}"
+            value="${value#"${value%%[![:space:]]*}"}"
+            value="${value%"${value##*[![:space:]]}"}"
+
+            [[ "$value" != \$* ]] && continue
+            [[ "$value" == '$('* ]] && continue
+
+            if [[ "$value" == \$\{* ]]; then
+              if [[ "$value" =~ ^\$\{([A-Z0-9_]+) ]]; then
+                needed_vars+=("${BASH_REMATCH[1]}")
+              fi
+            elif [[ "$value" =~ ^\$([A-Z0-9_]+) ]]; then
+              needed_vars+=("${BASH_REMATCH[1]}")
+            fi
+          done < "$KAMAL_SECRETS_FILE"
+
+          IFS=$'\n' read -r -d '' -a unique_vars < <(printf '%s\n' "${needed_vars[@]}" | sort -u && printf '\0')
+
+          for var in "${unique_vars[@]}"; do
+            value=$(jq -r --arg key "$var" '.[$key] // empty' "$temp_secrets")
+            if [[ -z "$value" ]]; then
+              echo "Missing environment variable required in .kamal/secrets-common: ${var}" >&2
+              exit 1
+            fi
+
+            {
+              echo "${var}<<EOF"
+              echo "$value"
+              echo "EOF"
+            } >> "$GITHUB_ENV"
+          done
+
+          echo "✅ All required kamal secrets are validated and available as environment variables"
+
+      - name: Deploy with Kamal v2
+        uses: unepwcmc/devops-actions/.github/actions/kamal-v2.x-deploy@v1
+        with:
+          environment: ${{ needs.determine-environment.outputs.environment }}
+          working-directory: .
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Set workflow end time and calculate duration
+        if: always()
+        run: |
+          echo "END_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_ENV
+          if [[ -n "$START_TIME" ]]; then
+            start_timestamp=$(date -d "$START_TIME" +%s)
+            end_timestamp=$(date -d "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" +%s)
+            duration=$((end_timestamp - start_timestamp))
+            echo "DEPLOYMENT_DURATION=${duration}" >> $GITHUB_ENV
+          else
+            echo "DEPLOYMENT_DURATION=0" >> $GITHUB_ENV
+          fi
+
+      - name: Notify deployment success
+        if: success()
+        uses: unepwcmc/devops-actions/.github/actions/slack-notify@v1
+        with:
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          slack-channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          notification-type: success
+          action-type: Deploy
+          environment: ${{ needs.determine-environment.outputs.environment }}
+          repository: ${{ github.repository }}
+          repository-url: ${{ github.server_url }}/${{ github.repository }}
+          action-run-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          actor: ${{ github.actor }}
+          actor-url: ${{ github.server_url }}/${{ github.actor }}
+          workflow-name: ${{ github.workflow }}
+          run-id: ${{ github.run_id }}
+          commit-message: ${{ github.event.head_commit.message || github.event.release.name || 'Manual workflow trigger' }}
+          runner-name: ${{ runner.name }}
+          start-time: ${{ env.START_TIME }}
+          end-time: ${{ env.END_TIME }}
+          deployment-duration: ${{ env.DEPLOYMENT_DURATION }}
+          update-message-ts: ${{ steps.notify-start.outputs.message-ts }}
+
+      - name: Notify deployment failure
+        if: failure()
+        uses: unepwcmc/devops-actions/.github/actions/slack-notify@v1
+        with:
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          slack-channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          notification-type: failure
+          action-type: Deploy
+          environment: ${{ needs.determine-environment.outputs.environment }}
+          repository: ${{ github.repository }}
+          repository-url: ${{ github.server_url }}/${{ github.repository }}
+          action-run-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          actor: ${{ github.actor }}
+          actor-url: ${{ github.server_url }}/${{ github.actor }}
+          workflow-name: ${{ github.workflow }}
+          run-id: ${{ github.run_id }}
+          commit-message: ${{ github.event.head_commit.message || github.event.release.name || 'Manual workflow trigger' }}
+          runner-name: ${{ runner.name }}
+          start-time: ${{ env.START_TIME }}
+          end-time: ${{ env.END_TIME }}
+          deployment-duration: ${{ env.DEPLOYMENT_DURATION }}
+          update-message-ts: ${{ steps.notify-start.outputs.message-ts }}
