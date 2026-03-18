@@ -94,6 +94,8 @@ jobs:
           working-directory: '.'
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          KAMAL_REGISTRY_USERNAME: local
+          KAMAL_REGISTRY_PASSWORD: local
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           SAPI_DATABASE_HOST: ${{ secrets.SAPI_DATABASE_HOST }}
           SAPI_DATABASE_NAME: ${{ secrets.SAPI_DATABASE_NAME }}
