@@ -36,9 +36,10 @@ env:
 ssh:
   user: wcmc
 
-# Configure builder setup
+# Configure builder setup — builds remotely on the server so localhost:5555 registry works
 builder:
   arch: amd64
   dockerfile: Dockerfile.deploy
   args:
     RUBY_VERSION: 3.2.5
+  remote: ssh://wcmc@172.20.0.146
