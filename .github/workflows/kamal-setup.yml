@@ -84,15 +84,19 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: deploy
+          bundler-cache: false
+
       - name: Install Kamal
-        run: |
-          cd deploy
-          bundle install --quiet
+        working-directory: deploy
+        run: bundle install --quiet
 
       - name: Run Kamal setup
-        run: |
-          cd deploy
-          bundle exec kamal setup -d ${{ github.event.inputs.environment }}
+        working-directory: deploy
+        run: bundle exec kamal setup -d ${{ github.event.inputs.environment }}
 
       - name: Set workflow end time and calculate duration
         if: always()
