@@ -1,8 +1,6 @@
 name: Deploy SAPI Rails API
 on:
-  push:
-    branches:
-      - staging
+  workflow_dispatch:
 
 jobs:
   deploy:
