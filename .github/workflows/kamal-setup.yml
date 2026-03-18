@@ -96,6 +96,11 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           KAMAL_REGISTRY_USERNAME: local
           KAMAL_REGISTRY_PASSWORD: local
+          # The kamal-v2-setup action requires generic DATABASE_* names
+          DATABASE_HOST: ${{ secrets.SAPI_DATABASE_HOST }}
+          DATABASE_NAME: ${{ secrets.SAPI_DATABASE_NAME }}
+          DATABASE_USERNAME: ${{ secrets.SAPI_DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.SAPI_DATABASE_PASSWORD }}
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           SAPI_DATABASE_HOST: ${{ secrets.SAPI_DATABASE_HOST }}
           SAPI_DATABASE_NAME: ${{ secrets.SAPI_DATABASE_NAME }}
