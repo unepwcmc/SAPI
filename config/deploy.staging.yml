@@ -29,8 +29,6 @@ servers:
     options:
       add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
     cmd: bundle exec sidekiq -C config/sidekiq.yml
-    healthcheck:
-      cmd: /rails/bin/docker-sidekiq-healthcheck
 
 # Environment variables
 env:
