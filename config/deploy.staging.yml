@@ -30,6 +30,10 @@ servers:
       add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
     cmd: bundle exec sidekiq -C config/sidekiq.yml
 
+# Use staging-specific Dockerfile that starts puma (Dockerfile.deploy uses tail -f /dev/null for Capistrano)
+builder:
+  dockerfile: Dockerfile.staging
+
 # Environment variables
 env:
   clear:
