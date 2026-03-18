@@ -52,6 +52,8 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       SAPI_SIDEKIQ_REDIS_URL: ${{ secrets.SAPI_SIDEKIQ_REDIS_URL }}
       SAPI_SIDEKIQ_REDIS_CACHE_URL: ${{ secrets.SAPI_SIDEKIQ_REDIS_CACHE_URL }}
+      CERTIFICATE_PEM: ${{ secrets.CERTIFICATE_PEM }}
+      PRIVATE_KEY_PEM: ${{ secrets.PRIVATE_KEY_PEM }}
     steps:
       - name: Set workflow start time
         run: |
