@@ -10,7 +10,6 @@ servers:
     proxy:
       hosts:
         - sapi-web-staging-01.internal.unep-wcmc.org
-        - staging.speciesplus.net # Cloudflare tunnel endpoint
       ssl:
         certificate_pem: CERTIFICATE_PEM
         private_key_pem: PRIVATE_KEY_PEM
