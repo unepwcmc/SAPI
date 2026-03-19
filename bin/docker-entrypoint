@@ -35,5 +35,9 @@ mkdir -p {./,spec/}public/downloads/taxon_concepts_names
 #   ./bin/rails db:prepare
 # fi
 
+# Remove stale PID file — survives Docker restarts on the same writable layer
+# and causes Rails to refuse to start (finds a PID it thinks is already running)
+rm -f /rails/tmp/pids/server.pid
+
 # This is the main rails/sidekiq command
 exec "${@}"
