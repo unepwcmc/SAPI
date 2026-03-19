@@ -9,7 +9,8 @@ servers:
       add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
     proxy:
       hosts:
-        - sapi-web-staging-01.internal.unep-wcmc.org # Public-facing domain
+        - sapi-web-staging-01.internal.unep-wcmc.org
+        - staging.speciesplus.net # Cloudflare tunnel endpoint
       ssl:
         certificate_pem: CERTIFICATE_PEM
         private_key_pem: PRIVATE_KEY_PEM
