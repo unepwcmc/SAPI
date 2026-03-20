@@ -629,11 +629,13 @@ class CsvImportHelper
 
     Rails.logger.debug error_message
 
-    raise StandardError.new(error_message)
-
     failing_rows = ApplicationRecord.connection.execute(query)
 
-    failing_rows
+    if block_given?
+      yield failing_rows
+    end
+
+    raise StandardError.new(error_message)
   end
 
 

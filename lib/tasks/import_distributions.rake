@@ -142,16 +142,24 @@ namespace :import do
           SQL
         ) if has_tc_id
 
-        import_helper.assert_no_rows(
-          (
-            <<-SQL.squish
-              SELECT FROM #{TMP_TABLE} tmp
-              LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
-              WHERE tc.id IS NULL
-            SQL
-          ),
-          'unidentified taxon concepts'
-        ) if has_tc_id
+        if has_tc_id
+          import_helper.assert_no_rows(
+            (
+              <<-SQL.squish
+                SELECT DISTINCT tmp.taxon_concept_id FROM #{TMP_TABLE} tmp
+                LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
+                WHERE tc.id IS NULL
+              SQL
+            ),
+            'unidentified taxon concepts'
+          ) do |failing_rows|
+            i = 0
+
+            failing_rows.each do |row|
+              puts "#{row['taxon_concept_id']}" if ++i < 100
+            end
+          end
+        end
 
         if has_reference_id
           sql = <<-SQL.squish
@@ -191,39 +199,55 @@ namespace :import do
           )
         end
 
-        import_helper.assert_no_rows(
-          (
-            <<-SQL.squish
-              SELECT tmp.* FROM #{TMP_TABLE} tmp
-              LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
-              LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
-              LEFT JOIN distributions d
-                ON d.taxon_concept_id = tmp.taxon_concept_id
-                AND d.geo_entity_id = ge.id
-              WHERE d.id IS NULL
-            SQL
-          ),
-          'missing taxon concepts distributions'
-        ) if has_tc_id
+        if has_tc_id
+          import_helper.assert_no_rows(
+            (
+              <<-SQL.squish
+                SELECT tmp.* FROM #{TMP_TABLE} tmp
+                LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
+                LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
+                LEFT JOIN distributions d
+                  ON d.taxon_concept_id = tmp.taxon_concept_id
+                  AND d.geo_entity_id = ge.id
+                WHERE d.id IS NULL
+              SQL
+            ),
+            'missing taxon concepts distributions'
+          ) do |failing_rows|
+            i = 0
 
-        import_helper.assert_no_rows(
-          (
-            <<-SQL.squish
-              SELECT tmp.* FROM #{TMP_TABLE} tmp
-              LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
-              LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
-              LEFT JOIN distributions d
-                ON d.taxon_concept_id = tmp.taxon_concept_id
-                AND d.geo_entity_id = ge.id
-              LEFT JOIN distribution_references dr
-                ON dr.distribution_id = d.id
-                AND dr.reference_id = tmp.reference_id
-              WHERE tmp.reference_id IS NOT NULL
-                AND dr.id IS NULL
-            SQL
-          ),
-          'taxon concept distributions without references'
-        ) if has_tc_id && has_reference_id
+            failing_rows.each do |row|
+              puts "#{row['taxon_concept_id']}\t#{row['iso2']}" if ++i < 100
+            end
+          end
+        end
+
+        if has_tc_id && has_reference_id
+          import_helper.assert_no_rows(
+            (
+              <<-SQL.squish
+                SELECT tmp.* FROM #{TMP_TABLE} tmp
+                LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
+                LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
+                LEFT JOIN distributions d
+                  ON d.taxon_concept_id = tmp.taxon_concept_id
+                  AND d.geo_entity_id = ge.id
+                LEFT JOIN distribution_references dr
+                  ON dr.distribution_id = d.id
+                  AND dr.reference_id = tmp.reference_id
+                WHERE tmp.reference_id IS NOT NULL
+                  AND dr.id IS NULL
+              SQL
+            ),
+            'taxon concept distributions without references'
+          ) do |failing_rows|
+            i = 0
+
+            failing_rows.each do |row|
+              puts "#{row['taxon_concept_id']}\t#{row['iso2']}\t#{row['reference_id']}" if ++i < 100
+            end
+          end
+        end
 
         if has_reference
           sql = <<-SQL.squish
