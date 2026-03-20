@@ -10,7 +10,8 @@ CREATE OR REPLACE VIEW taxon_ancestors_dv AS
       '{}'::BIGINT[] AS "ancestor_ids"
     FROM "taxon_concepts" roots
     WHERE "parent_id" IS NULL
-      AND "name_status" = 'A'
+    -- It turns out that some non-A names have ancestries
+    -- AND "name_status" = 'A'
   UNION ALL
     SELECT
       "child"."taxonomy_id",
@@ -30,7 +31,7 @@ CREATE OR REPLACE VIEW taxon_ancestors_dv AS
   ), rank_depths AS (
     SELECT
       "id" AS "rank_id",
-      ROW_NUMBER() OVER() AS "rank_depth"
+      row_number() OVER() AS "rank_depth"
     FROM (
       SELECT (
         '{' || translate(taxonomic_position, '.', ',') || '}'
@@ -69,6 +70,23 @@ CREATE OR REPLACE VIEW taxon_ancestors_dv AS
   JOIN "rank_distances" rd
     ON "rd"."descendant_rank_id" = "ta"."rank_id"
     AND "rd"."ancestor_rank_id" = "atc"."rank_id"
+UNION ALL
+  SELECT
+    "ta"."taxonomy_id",
+    "ta"."id",
+    "ta"."rank_id",
+    "ta"."ancestor_ids",
+    '{}'                    AS "path_ids",
+    "ta"."id"               AS "ancestor_id",
+    "ta"."rank_id"          AS "ancestor_rank_id",
+    "descendant_rank_depth" AS "ancestor_rank_depth",
+    "descendant_rank_depth" AS "rank_depth",
+    0                       AS "rank_distance"
+  FROM "taxon_ancestors" ta
+  JOIN "rank_distances" rd
+    ON "rd"."descendant_rank_id" = "ta"."rank_id"
+    AND "rd"."ancestor_rank_id"  = "ta"."rank_id"
+
 ;
 
 create materialized view taxon_ancestors_mv
@@ -101,7 +119,7 @@ SELECT
     WHEN ct.name = 'EXCEPTION' THEN 3
     WHEN ct.name = 'ADDITION' THEN 4
     WHEN ct.name = 'RESERVATION' THEN 5
-  END change_type_rank
+  END change_type_rank,
   CASE
     WHEN ct.name IN ('ADDITION', 'DELETION', 'EXCEPTION') THEN 1
     ELSE 2
@@ -115,12 +133,12 @@ CREATE OR REPLACE VIEW implied_listing_changes_view AS
 -- (i.e. it is an ancestor's listing change).
 WITH designations_and_intervals AS (
   SELECT
-    designations.id          designation_id,
-    designations.name        designation_name,
-    designations.taxonomy_id taxonomy_id,
-    intervals.start_date     interval_start_date,
-    intervals.end_date       interval_end_date,
-    intervals.events_ids     interval_events_ids
+    designations.id          AS designation_id,
+    designations.name        AS designation_name,
+    designations.taxonomy_id AS taxonomy_id,
+    intervals.start_date     AS interval_start_date,
+    intervals.end_date       AS interval_end_date,
+    intervals.events_ids     AS interval_events_ids
   FROM designations
   LEFT JOIN eu_regulations_applicability_view intervals
     ON designations.name = 'EU'
@@ -129,7 +147,7 @@ WITH designations_and_intervals AS (
   SELECT
     lc.id,
     ct.designation_id,
-    interval_events_ids,
+    designations_and_intervals.interval_events_ids,
     lc.taxon_concept_id,
     lc.species_listing_id,
     lc.inclusion_taxon_concept_id,
@@ -137,7 +155,9 @@ WITH designations_and_intervals AS (
     ct.change_type_rank AS change_type_rank,
     ct.name             AS change_type_name,
     lc.event_id,
-    lc.effective_at::DATE,
+    -- A bug exists where EXCLUSIONS have `effective_at='2012-09-21 07:32:20'`,
+    -- instead of that of the parent.
+    COALESCE(included_lc.effective_at, lc.effective_at)::DATE AS effective_at,
     lc.is_current,
     ARRAY_AGG_NOTNULL(taxonomic_exclusions.taxon_concept_id) AS excluded_taxon_concept_ids
   FROM listing_changes lc
@@ -152,21 +172,12 @@ WITH designations_and_intervals AS (
       OR ARRAY_UPPER(designations_and_intervals.interval_events_ids, 1) IS NULL
       OR lc.event_id = ANY(designations_and_intervals.interval_events_ids)
     )
-  GROUP BY
-    lc.id,
-    ct.designation_id,
-    interval_events_ids,
-    lc.taxon_concept_id,
-    lc.species_listing_id,
-    lc.inclusion_taxon_concept_id,
-    ct.id,
-    ct.name,
-    ct.change_type_rank,
-    lc.event_id,
-    lc.effective_at::DATE,
-    lc.is_current
+  LEFT JOIN listing_changes included_lc
+    ON lc.parent_id = included_lc.id
+  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
 ), aggregate_lc AS (
--- the purpose of this CTE is to aggregate listed and excluded populations
+  -- the purpose of this CTE is to aggregate listed and excluded populations
+  -- All rows in this table will go into implied_listing_changes_view
   SELECT
     lc.id,
     lc.designation_id,
@@ -241,6 +252,7 @@ WITH designations_and_intervals AS (
       )
     ) AS additions_by_listing_id,
     hstore(
+      -- todo: multiple listing changes per appendix is possible
       array_agg(ARRAY[species_listing_id, lc.id]::TEXT[]) FILTER (
         WHERE lc.change_type_name = 'DELETION'
       ) OVER (
@@ -336,7 +348,6 @@ WITH designations_and_intervals AS (
       AND ag.party_id IS NOT DISTINCT FROM dg.party_id
       AND ag.add_del_group_rank > dg.add_del_group_rank
       AND prev_ag.add_del_group_rank < dg.add_del_group_rank
-    WHERE NOT all_additions_are_inclusions
   ) AS ag
 )
 SELECT
@@ -356,7 +367,7 @@ SELECT
   ag.party_id         AS party_id,
   '{}'                AS listed_geo_entities_ids,
   '{}'                AS excluded_geo_entities_ids
-FROM fake_deletions_needed ag
+FROM synthetic_deletions_needed ag
 JOIN change_types_view ct
   ON ct.designation_id = ag.designation_id
   AND ct.name = 'DELETION'
@@ -365,17 +376,17 @@ SELECT * FROM aggregate_lc;
 
 DROP VIEW IF EXISTS inherited_listing_changes_view CASCADE;
 CREATE OR REPLACE VIEW inherited_listing_changes_view AS
-SELECT
-  lc.id,
+SELECT DISTINCT
   tc.id AS taxon_concept_id,
-  lc.taxon_concept_id AS original_taxon_concept_id,
-  -- Make the tree distance reflect distance from inclusion
-  -- TODO TEST Rhinopittecus roxellana
-  COALESCE(itc.rank_distance, tc.rank_distance) rank_distance,
+  lc.id AS listing_change_id,
   lc.designation_id,
   lc.interval_events_ids,
   lc.species_listing_id,
   lc.inclusion_taxon_concept_id,
+  lc.taxon_concept_id AS original_taxon_concept_id,
+  -- Make the tree distance reflect distance from inclusion
+  -- TODO TEST Rhinopittecus roxellana
+  COALESCE(itc.rank_distance, tc.rank_distance) rank_distance,
   lc.change_type_id,
   lc.change_type_name,
   lc.change_type_rank,
@@ -386,17 +397,23 @@ SELECT
   lc.party_id,
   lc.listed_geo_entities_ids,
   lc.excluded_geo_entities_ids,
-  -- the following ROW_NUMBER call will assign chronological order to listing changes
-  -- in scope of the affected taxon concept and a particular designation
-  ROW_NUMBER() OVER (
+  -- The following dense_rank() call will assign a unique id to each combination
+  -- of affected taxon concept, designation, and party.
+  dense_rank() OVER (
+    ORDER BY
+      lc.taxon_concept_id,
+      lc.designation_id,
+      lc.interval_events_ids,
+      lc.party_id
+  )::BIGINT taxon_party_timeline_id,
+  -- The following dense_rank() call will assign chronological order to listing
+  -- changes in scope of the affected taxon concept and a particular
+  -- designation/party combination
+  dense_rank() OVER (
     PARTITION BY
       lc.taxon_concept_id,
       lc.designation_id,
       lc.interval_events_ids,
-      -- fix Agapornis fischeri, which has
-      --
-      -- CH R..W
-      -- LI R..W
       lc.party_id
     ORDER BY
       lc.effective_at,
@@ -504,6 +521,10 @@ CREATE INDEX ON applicable_listing_changes_timeline_mv (
 );
 
 CREATE INDEX ON applicable_listing_changes_timeline_mv (
+  taxon_party_timeline_id
+);
+
+CREATE INDEX ON applicable_listing_changes_timeline_mv (
   taxon_concept_id, change_type_id, effective_at, original_taxon_concept_id
 );
 CREATE INDEX ON applicable_listing_changes_timeline_mv (
@@ -527,9 +548,165 @@ CREATE INDEX ON applicable_listing_changes_timeline_mv (
 );
 
 CREATE INDEX ON applicable_listing_changes_timeline_mv (
-  taxon_concept_id, effective_at, id
+  taxon_concept_id, effective_at, listing_change_id
 );
 
 CREATE INDEX ON applicable_listing_changes_timeline_mv (
-  id, taxon_concept_id
+  listing_change_id, taxon_concept_id
 );
+
+CREATE INDEX ON applicable_listing_changes_timeline_mv (
+  taxon_party_timeline_id, change_type_name
+);
+
+-- target #- path
+-- jsonb_insert(target, path, newval)
+CREATE OR REPLACE FUNCTION jsonb_object_merge(
+
+) RETURNS jsonb LANGUAGE SQL AS
+$jsonb_object_merge$
+$jsonb_object_merge$
+
+CREATE OR REPLACE FUNCTION merge_listing_state_changes(
+  initial_state jsonb,
+  state_change jsonb
+) RETURNS jsonb LANGUAGE SQL AS
+$merge_listing_state_changes$
+  SELECT
+    'ADDITION', (
+      SELECT jsonb_object_agg(
+      FROM jsonb_each(initial_state->'ADDITION')
+    )
+    'RESERVATION', initial_state->'RESERVATION'
+
+$merge_listing_state_changes$
+
+WITH listing_change_groups AS (
+  SELECT
+    DISTINCT ON (
+      lc.taxon_party_timeline_id,
+      lc.effective_at,
+      lc.change_type_name IN ('ADDITION', 'DELETION', 'EXCLUSION')
+    )
+    lc.taxon_party_timeline_id,
+    lc.designation_id,
+    lc.interval_events_ids,
+    lc.party_id,
+    lc.taxon_concept_id,
+    lc.effective_at,
+    lc.change_type_name IN ('ADDITION', 'DELETION', 'EXCLUSION') AS is_adx,
+    -- Build jsonbs of the form:
+    -- [rank_distance][species_listing_id][listing_change_id]: TRUE
+    array_agg(
+      ARRAY[lc.change_type_name, lc.rank_distance, lc.species_listing_id, lc.listing_change_id]::TEXT[]
+    ) OVER (
+      PARTITION BY
+        lc.taxon_party_timeline_id,
+        lc.effective_at,
+        lc.change_type_name IN ('ADDITION', 'DELETION', 'EXCLUSION')
+    ) listing_changes,
+    dense_rank() OVER (
+      PARTITION BY
+        lc.taxon_party_timeline_id,
+        lc.change_type_name IN ('ADDITION', 'DELETION', 'EXCLUSION')
+      ORDER BY
+        lc.effective_at
+    )::INT AS change_group_rank
+  FROM applicable_listing_changes_timeline_mv lc
+  ORDER BY
+    lc.taxon_party_timeline_id,
+    lc.effective_at,
+    lc.change_type_name IN ('ADDITION', 'DELETION', 'EXCLUSION')
+), listing_change_groups_with_keyed_info as (
+  SELECT *, (
+  CASE
+  WHEN listing_changes IS NULL OR array_length(listing_changes, 1) < 1
+  THEN NULL
+  ELSE (
+    SELECT jsonb_object_agg(
+      d.change_type_name,
+      d.by_rank_distance
+    ) by_change_type_name
+    FROM (
+      SELECT
+        d.change_type_name,
+        jsonb_object_agg(
+          d.rank_distance::text,
+          d.by_species_listing_id
+        ) OVER (
+          PARTITION BY d.change_type_name
+        ) by_rank_distance
+      FROM (
+        SELECT
+          d.change_type_name,
+          d.rank_distance,
+          jsonb_object_agg(
+            d.species_listing_id::text, by_listing_change_id
+          ) OVER (
+            PARTITION BY
+              d.change_type_name,
+              d.rank_distance
+          ) AS by_species_listing_id
+        FROM (
+          SELECT
+            d.change_type_name,
+            d.rank_distance,
+            d.species_listing_id,
+            jsonb_object_agg(
+              d.listing_change_id::text, true
+            ) OVER (
+              PARTITION BY
+                d.change_type_name,
+                d.rank_distance,
+                d.species_listing_id
+            ) AS by_listing_change_id
+          FROM (
+            SELECT
+              unnest((listing_changes::TEXT[][])[1:][1:1]),
+              unnest((listing_changes::TEXT[][])[1:][2:2]),
+              unnest((listing_changes::TEXT[][])[1:][3:3]),
+              unnest((listing_changes::TEXT[][])[1:][4:4])
+          ) d (change_type_name, rank_distance, species_listing_id, listing_change_id)
+        ) d
+      ) d
+    ) d
+  )
+  END
+) listing_state_changes
+ FROM listing_change_groups
+) RECURSIVE stateful_listing_change_groups AS (
+  SELECT
+    SELECT
+      lcg.taxon_party_timeline_id,
+      lcg.designation_id,
+      lcg.interval_events_ids,
+      lcg.party_id,
+      lcg.taxon_concept_id,
+      lcg.effective_at,
+      lcg.is_adx,
+      lcg.listing_state_changes,
+      lcg.listing_state_changes AS listing_state
+    FROM listing_change_groups_with_keyed_info lcg
+    WHERE lcg.change_group_rank = 1
+  UNION
+    SELECT
+      lcg.taxon_party_timeline_id,
+      lcg.designation_id,
+      lcg.interval_events_ids,
+      lcg.party_id,
+      lcg.taxon_concept_id,
+      lcg.effective_at,
+      lcg.is_adx,
+      lcg.listing_state_changes,
+      merge_listing_state_changes(
+        lcg.listing_state,
+        lcg.listing_state_changes
+      ) AS listing_state
+    FROM listing_change_groups_with_keyed_info lcg
+    JOIN stateful_listing_change_groups prev_lcg
+      ON lcg.taxon_party_timeline_id = prev_lcg.taxon_party_timeline_id
+      AND lcg.change_group_rank = prev_lcg.change_group_rank + 1
+)
+select * from foo where taxon_concept_id = 6353 and designation_id = 1;
+
+select * from applicable_listing_changes_timeline_mv lc where taxon_concept_id = 6353 and designation_id = 1;
