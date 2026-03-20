@@ -415,7 +415,9 @@ class CsvToDbMap
   }
 
   def csv_to_db(table, field)
-    MAPPING[table][field]
+    (
+      field && table && MAPPING[table] && MAPPING[table][field]
+    ) || "#{ field&.parameterize&.underscore || '' } text"
   end
 end
 
@@ -453,7 +455,7 @@ class CsvImportHelper
 
     # work out the db columns to create
     csv_columns = csv_headers(path_to_file)
-    db_columns = csv_columns.map { |col| m.csv_to_db(table_name, col) || '' }
+    db_columns = csv_columns.map { |col| m.csv_to_db(table_name, col) }
     db_columns = db_columns.map { |col| col&.sub(/\s\w+$/, '') } unless include_data_type
 
     db_columns.select(&:present?)
@@ -484,7 +486,7 @@ class CsvImportHelper
           if column_names.is_a? Array
             quoted_table_name = connection.quote_table_name(table_name)
 
-            if column_names[0]&.match? /\b(?:varchar|integer|boolean|float)$/i
+            if column_names[0]&.match? /\b(?:varchar|integer|boolean|float|text)$/i
               "#{quoted_table_name} (#{column_names.join(', ')})"
             else
               column_names_quoted = column_names.map do |name|
