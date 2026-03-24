@@ -400,7 +400,7 @@ SELECT DISTINCT
   -- of affected taxon concept, designation, and party.
   dense_rank() OVER (
     ORDER BY
-      lc.taxon_concept_id,
+      tc.id,
       lc.designation_id,
       lc.interval_events_ids,
       lc.party_id
@@ -453,7 +453,7 @@ JOIN (
   JOIN ranks r ON ta.ancestor_rank_id = r.id
   GROUP BY ta.id
 ) ta ON tc.id = ta.id
-JOIN (
+LEFT JOIN (
   SELECT
     taxon_concept_id "id",
     array_agg(geo_entity_id) AS geo_entity_ids
@@ -462,8 +462,9 @@ JOIN (
 ) td ON tc.id = td.id;
 
 
-DROP VIEW IF EXISTS applicable_implied_taxon_listing_changes_view CASCADE;
-CREATE OR REPLACE VIEW applicable_implied_taxon_listing_changes_view AS
+-- this one is quite slow on staging - 2m for SELECT 2688636
+DROP VIEW IF EXISTS applicable_inherited_taxon_listing_changes_dv CASCADE;
+CREATE OR REPLACE VIEW applicable_inherited_taxon_listing_changes_dv AS
 SELECT
   lc.*,
   (
@@ -497,8 +498,8 @@ SELECT
   includer.interval_events_ids,
   includer.species_listing_id,
   includer.inclusion_taxon_concept_id,
-  includer.taxon_concept_id  AS original_taxon_concept_id,
-  included.id AS original_listing_change_id,
+  included.taxon_concept_id AS original_taxon_concept_id,
+  included.id               AS original_listing_change_id,
   -- TODO TEST Rhinopittecus roxellana
   includer.rank_distance,
   includer.change_type_id,
@@ -506,8 +507,8 @@ SELECT
   includer.change_type_rank,
   includer.event_id,
   includer.effective_at,
-  includer.is_current,
-  includer.excluded_taxon_concept_ids,
+  included.is_current,
+  included.excluded_taxon_concept_ids,
   includer.party_id,
   included.listed_geo_entities_ids,
   included.excluded_geo_entities_ids,
@@ -518,6 +519,7 @@ SELECT
 FROM inherited_listing_changes_view includer
 JOIN implied_listing_changes_view included
   ON includer.inclusion_taxon_concept_id = included.taxon_concept_id
+  AND included.species_listing_id = includer.species_listing_id
   AND included.change_type_name = 'ADDITION'
   AND included.effective_at <= includer.effective_at
   AND NOT EXISTS (
@@ -554,33 +556,33 @@ DROP TABLE IF EXISTS tmp_all_listing_changes_timeline_matview;
 DROP TABLE IF EXISTS applicable_listing_changes_timeline_dt;
 DROP TABLE IF EXISTS applicable_listing_changes_timeline_mt;
 
-CREATE MATERIALIZED VIEW applicable_listing_changes_timeline_mv AS
-  SELECT * FROM applicable_implied_taxon_listing_changes_view;
+CREATE MATERIALIZED VIEW applicable_inherited_taxon_listing_changes_mv AS
+  SELECT * FROM applicable_inherited_taxon_listing_changes_dv;
 
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   taxon_concept_id, designation_id, change_type_id, party_id, effective_at
 );
 
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   taxon_party_timeline_id
 );
 
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   taxon_concept_id, change_type_id, effective_at, original_taxon_concept_id
 );
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   change_type_id, taxon_concept_id, original_taxon_concept_id
 );
 
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   species_listing_id, taxon_concept_id
 );
 
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   taxon_concept_id, designation_id, party_id
 );
 
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   original_taxon_concept_id,
   taxon_concept_id,
   designation_id,
@@ -588,19 +590,19 @@ CREATE INDEX ON applicable_listing_changes_timeline_mv (
   party_id
 );
 
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   taxon_concept_id, effective_at, listing_change_id
 );
 
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   listing_change_id, taxon_concept_id
 );
 
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   taxon_party_timeline_id, change_type_name
 );
 
-CREATE INDEX ON applicable_listing_changes_timeline_mv (
+CREATE INDEX ON applicable_inherited_taxon_listing_changes_mv (
   taxon_party_timeline_id, effective_at
 );
 
@@ -729,31 +731,31 @@ $merge_listing_state_changes$
         FROM continuation_records
       ) rd
     )
-    SELECT * FROM deletion_records
+    SELECT listing_state_change FROM deletion_records
     UNION
-    SELECT * FROM reservation_withdrawal_records
+    SELECT listing_state_change FROM reservation_withdrawal_records
     UNION
-    SELECT * FROM continuation_records
+    SELECT listing_state_change FROM continuation_records
     UNION
-    SELECT * FROM addition_and_reservation_records
+    SELECT listing_state_change FROM addition_and_reservation_records
     UNION
-    -- SUPPRESSIONS
+    -- SUPPRESSION
     SELECT
       r.listing_state_change || hstore(
         ARRAY[['change_type_name', 'SUPPRESSION']]
       ) AS listing_state_change
     FROM (
-      SELECT * FROM continuation_records
+      SELECT listing_state_change FROM continuation_records
       UNION
-      SELECT * FROM addition_and_reservation_records
+      SELECT listing_state_change FROM addition_and_reservation_records
     ) r
     WHERE EXISTS (
       SELECT TRUE
-      FROM listing_state_distance lsd
-      WHERE lsd.rank_distance::INTEGER < (r.listing_state_change->'rank_distance')::INTEGER
+      FROM listing_changes_distance lcd
+      WHERE lcd.rank_distance::INTEGER < (r.listing_state_change->'rank_distance')::INTEGER
     )
     UNION
-    -- UNSUPPRESSIONS
+    -- UNSUPPRESSION
     SELECT
       r.listing_state_change || hstore(
         ARRAY[['change_type_name', 'UNSUPPRESSION']]
@@ -772,6 +774,7 @@ $merge_listing_state_changes$
 $merge_listing_state_changes$;
 
 
+-- slow on staging - 2-3m for SELECT 2116404 rows
 DROP VIEW IF EXISTS stateful_listing_change_groups_dv CASCADE;
 CREATE OR REPLACE VIEW stateful_listing_change_groups_dv AS
   WITH RECURSIVE stateful_listing_change_groups AS (
@@ -811,7 +814,7 @@ CREATE OR REPLACE VIEW stateful_listing_change_groups_dv AS
           ORDER BY
             lc.effective_at
         )::INTEGER AS change_group_max_rank
-      FROM applicable_listing_changes_timeline_mv lc
+      FROM applicable_inherited_taxon_listing_changes_mv lc
       ORDER BY
         lc.taxon_party_timeline_id,
         lc.effective_at
@@ -861,6 +864,7 @@ CREATE INDEX ON stateful_listing_change_groups_mv (
   taxon_party_timeline_id, effective_at
 );
 
+-- 1-2m on staging
 DROP VIEW IF EXISTS complete_listing_changes_dv CASCADE;
 CREATE OR REPLACE VIEW complete_listing_changes_dv AS
 WITH to_list AS (
@@ -878,7 +882,7 @@ WITH to_list AS (
         lc.listing_change_id
     ) AS effective_at,
     lc.change_type_name
-  FROM applicable_listing_changes_timeline_mv lc
+  FROM applicable_inherited_taxon_listing_changes_mv lc
   JOIN stateful_listing_change_groups_mv lcg
     ON lcg.taxon_party_timeline_id = lc.taxon_party_timeline_id
     AND lcg.effective_at = lc.effective_at
@@ -898,14 +902,15 @@ WITH to_list AS (
         lc.listing_change_id
     ) AS effective_at,
     'DELETION' AS change_type_name
-  FROM applicable_listing_changes_timeline_mv lc
+  FROM applicable_inherited_taxon_listing_changes_mv lc
   JOIN stateful_listing_change_groups_mv lcg
     ON lcg.taxon_party_timeline_id = lc.taxon_party_timeline_id
     AND lcg.effective_at > lc.effective_at
     AND EXISTS (
       SELECT TRUE
       FROM unnest(lcg.listing_state) AS group_listing_state
-      WHERE group_listing_state->'species_listing_id' = species_listing_id::TEXT
+      WHERE group_listing_state->'species_listing_id' = lc.species_listing_id::TEXT
+        AND group_listing_state->'rank_distance' = lc.rank_distance::TEXT
         AND group_listing_state->'change_type_name' = 'DELETION'
     )
   UNION ALL
@@ -923,7 +928,7 @@ WITH to_list AS (
         lc.listing_change_id
     ) AS effective_at,
     'SUPPRESSION' AS change_type_name
-  FROM applicable_listing_changes_timeline_mv lc
+  FROM applicable_inherited_taxon_listing_changes_mv lc
   JOIN stateful_listing_change_groups_mv lcg
     ON lcg.taxon_party_timeline_id = lc.taxon_party_timeline_id
     AND lcg.effective_at >= lc.effective_at
@@ -947,7 +952,7 @@ WITH to_list AS (
         lc.listing_change_id
     ) AS effective_at,
     'UNSUPPRESSION' AS change_type_name
-  FROM applicable_listing_changes_timeline_mv lc
+  FROM applicable_inherited_taxon_listing_changes_mv lc
   JOIN stateful_listing_change_groups_mv lcg
     ON lcg.taxon_party_timeline_id = lc.taxon_party_timeline_id
     AND lcg.effective_at > lc.effective_at
@@ -976,8 +981,7 @@ SELECT
   lc.original_taxon_concept_id,
   lc.original_listing_change_id,
   lc.rank_distance,
-  ct.id   AS change_type_id,
-  ct.name AS change_type_name,
+  lx.change_type_name,
   lc.event_id,
   lx.effective_at,
   lc.is_current,
@@ -990,13 +994,10 @@ SELECT
   lc.is_geographically_excluded,
   lc.is_taxonomically_excluded
 FROM
-  applicable_listing_changes_timeline_mv lc
+  applicable_inherited_taxon_listing_changes_mv lc
 JOIN to_list lx
   ON lx.taxon_party_timeline_id = lc.taxon_party_timeline_id
   AND lx.listing_change_id = lc.listing_change_id
-JOIN change_types_view ct
-  ON ct.designation_id = lc.designation_id
-  AND ct.name = lx.change_type_name
 ORDER BY
   lc.taxon_party_timeline_id,
   lc.listing_change_id,
@@ -1015,9 +1016,38 @@ CREATE INDEX ON complete_listing_changes_mv (
   taxon_party_timeline_id, effective_at
 );
 
-SELECT * FROM complete_listing_changes_mv WHERE designation_id = 1 AND taxon_concept_id = (
-  SELECT taxon_concept_id FROM complete_listing_changes_mv WHERE designation_id = 1 AND change_type_name = 'UNSUPPRESSION'
-);
-;
 
--- select * from applicable_listing_changes_timeline_mv lc where taxon_concept_id = 6353 and designation_id = 1;
+SELECT
+  change_type_name, min(taxon_concept_id), count(*)
+FROM complete_listing_changes_mv
+WHERE designation_id = 1
+group by 1;
+
+--  change_type_name | min | count
+-- ------------------+-----+--------
+--  RESERVATION      | 136 |  64610
+--  ADDITION         |  50 | 590385
+--  SUPPRESSION      | 186 |  14598
+--  UNSUPPRESSION    | 788 |    305
+--  DELETION         | 186 |  26388
+
+-- SELECT
+--   change_type_name, min(taxon_concept_id), count(*)
+-- FROM cites_listing_changes_mview
+-- group by 1;
+--
+--     change_type_name    | min | count
+-- ------------------------+-----+--------
+--  ADDITION               |  50 | 395506
+--  DELETION               | 186 |   3645
+--  EXCEPTION              | 395 |   2364
+--  RESERVATION            | 136 |  42609
+--  RESERVATION_WITHDRAWAL | 136 |  40981
+-- (5 rows)
+
+-- SELECT * FROM complete_listing_changes_mv WHERE designation_id = 1 AND taxon_concept_id = (
+--   SELECT taxon_concept_id FROM complete_listing_changes_mv WHERE designation_id = 1 AND change_type_name = 'UNSUPPRESSION'
+-- );
+
+
+-- select * from applicable_inherited_taxon_listing_changes_mv lc where taxon_concept_id = 6353 and designation_id = 1;
