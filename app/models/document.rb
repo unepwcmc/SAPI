@@ -56,27 +56,27 @@ class Document < ApplicationRecord
   include PgSearch::Model
 
   ACCEPTED_CONTENT_TYPES = [
-    "image/jpeg",                                           # jpg
-    "image/jpeg",                                           # jpeg
-    "image/gif",                                            # gif
-    "image/png",                                            # png
-    "image/bmp",                                            # bmp
-    "image/tiff",                                           # tif
-    "image/tiff",                                           # tiff
-    "application/vnd.ms-powerpoint",                        # ppt
-    "application/vnd.openxmlformats-officedocument.presentationml.presentation",  # pptx
-    "application/vnd.ms-excel",                             # xls
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",          # xlsx
-    "application/rtf",                                      # rtf
-    "text/plain",                                           # txt
-    "application/msword",                                   # doc
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",    # docx
-    "application/pdf",                                      # pdf
-    "text/csv",                                             # csv
-    "text/tab-separated-values",                            # tsv
-    "application/vnd.oasis.opendocument.text",              # odt
-    "application/vnd.oasis.opendocument.spreadsheet",       # ods
-    "application/vnd.oasis.opendocument.presentation"       # odp
+    'image/jpeg',                                                                 # jpg
+    'image/jpeg',                                                                 # jpeg
+    'image/gif',                                                                  # gif
+    'image/png',                                                                  # png
+    'image/bmp',                                                                  # bmp
+    'image/tiff',                                                                 # tif
+    'image/tiff',                                                                 # tiff
+    'application/vnd.ms-powerpoint',                                              # ppt
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',  # pptx
+    'application/vnd.ms-excel',                                                   # xls
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',          # xlsx
+    'application/rtf',                                                            # rtf
+    'text/plain',                                                                 # txt
+    'application/msword',                                                         # doc
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',    # docx
+    'application/pdf',                                                            # pdf
+    'text/csv',                                                                   # csv
+    'text/tab-separated-values',                                                  # tsv
+    'application/vnd.oasis.opendocument.text',                                    # odt
+    'application/vnd.oasis.opendocument.spreadsheet',                             # ods
+    'application/vnd.oasis.opendocument.presentation'                             # odp
   ].freeze
 
   pg_search_scope :search_by_title, against: :title,

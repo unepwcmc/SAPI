@@ -4,10 +4,12 @@ describe Species::TaxonConceptPrefixMatcher do
     @accepted_name = create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Pavona')
     )
+
     @trade_name = create_cites_eu_species(
       taxon_name: create(:taxon_name, scientific_name: 'Pavona minor'),
       name_status: 'T'
     )
+
     @status_N_species = create_cites_eu_species(
       taxon_name: create(:taxon_name, scientific_name: 'Paradisaea'),
       parent: create_cites_eu_genus(
@@ -15,14 +17,18 @@ describe Species::TaxonConceptPrefixMatcher do
       ),
       name_status: 'N'
     )
+
     create(
       :taxon_relationship,
       taxon_concept: @accepted_name,
       other_taxon_concept: @trade_name,
       taxon_relationship_type: trade_name_relationship_type
     )
+
     create_cites_I_addition(taxon_concept: @accepted_name)
+
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
+
     @accepted_name_ac = MAutoCompleteTaxonConcept.find(@accepted_name.id)
     @trade_name_ac = MAutoCompleteTaxonConcept.find(@trade_name.id)
     @status_N_species_ac = MAutoCompleteTaxonConcept.find(@status_N_species.id)
@@ -42,9 +48,9 @@ describe Species::TaxonConceptPrefixMatcher do
         end
 
         specify { expect(subject.results).to include(@status_N_species_ac) }
-        end
+      end
 
-        context 'when trade internal visibility' do
+      context 'when trade internal visibility' do
         subject do
           Species::TaxonConceptPrefixMatcher.new(
             {
@@ -56,9 +62,9 @@ describe Species::TaxonConceptPrefixMatcher do
         end
 
         specify { expect(subject.results).to include(@status_N_species_ac) }
-        end
+      end
 
-        context 'when speciesplus visibility' do
+      context 'when speciesplus visibility' do
         subject do
           Species::TaxonConceptPrefixMatcher.new(
             {
