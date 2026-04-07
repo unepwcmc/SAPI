@@ -10,7 +10,9 @@ module PgCopy
   #
   # ```
   # PgCopy.copy_to_db(
-  #   'temp_names', column_names: ['taxon_id', 'name']
+  #   'temp_names',
+  #   column_names: ['taxon_id', 'name'],
+  #   column_types: ['integer', 'text']
   # ) do |raw_connection|
   #   CSV.foreach(
   #     import_args[:csv], **csv_options
@@ -18,7 +20,7 @@ module PgCopy
   #     row_hash = csv_row.to_h
   #
   #     raw_connection.put_copy_data(
-  #       [row_hash['taxon_id', row_hash['name']]
+  #       [row_hash['taxon_id'], row_hash['name']]
   #     )
   #   end
   # end
@@ -176,6 +178,6 @@ module PgCopy
       float: PG::BinaryEncoder::Float4,
       boolean: PG::BinaryEncoder::Boolean,
       datetime: PG::BinaryEncoder::Date
-    }
+    }.with_indifferent_access
   end
 end
