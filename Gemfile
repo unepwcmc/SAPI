@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '3.2.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '7.1.3.4'
+gem 'rails', '7.2.3.1'
 
 # Configure Cross-Origin resource sharing
 gem 'rack-cors'
@@ -34,10 +34,10 @@ gem 'coffee-rails', '~> 5.0'
 # gem 'mini_racer', platforms: :ruby
 
 gem 'active_model_serializers', '0.8.4' # Deprecated
-gem "active_storage_validations", "~> 2.0"
+gem 'active_storage_validations', '~> 2.0'
 
 # Use redis for caching
-gem "redis", "~> 4.8"
+gem 'redis', '~> 4.8'
 
 # Use PostgreSQL database
 gem 'pg', '~> 1.5', '>= 1.5.4'
@@ -229,5 +229,3 @@ gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will ch
 # It might be possible to fix this if we had an nginx version which supported
 # the config: `passenger_preload_bundler on;`
 gem 'base64', '0.1.1'
-
-
