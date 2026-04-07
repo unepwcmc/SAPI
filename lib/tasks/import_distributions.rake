@@ -47,6 +47,55 @@ namespace :import do
 
           taxonomy = Taxonomy.find_by(name: taxonomy_name)
 
+          if ActiveModel::Type::Boolean.new.cast(
+            ENV.fetch('IMPORT_DISTRIBUTIONS_DELETE_EXISTING', nil)
+          )
+            deletion_result = ApplicationRecord.connection.execute(
+              <<-SQL.squish
+                WITH distributions_to_delete AS (
+                  SELECT distributions.id
+                  FROM distributions
+                  WHERE taxon_concept_id IN (
+                    SELECT DISTINCT taxon_concepts.id
+                    FROM #{TMP_TABLE}
+                    INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}.rank))
+                    INNER JOIN taxon_concepts
+                      ON #{
+                        if has_tc_id
+                          "taxon_concepts.id = #{TMP_TABLE}.taxon_concept_id"
+                        else
+                          "#{TMP_TABLE}.legacy_id AND taxon_concepts.legacy_type = '#{kingdom}'"
+                        end
+                      }
+                      AND taxon_concepts.rank_id = ranks.id
+                  )
+                ), deleted_distribution_references AS (
+                  DELETE FROM distribution_references
+                  WHERE distribution_id IN (
+                    SELECT id from distributions_to_delete
+                  )
+                  RETURNING id, distribution_id
+                ), deleted_distributions AS (
+                  DELETE FROM distributions
+                  WHERE id IN (
+                    SELECT id from distributions_to_delete
+                  )
+                  RETURNING id, taxon_concept_id
+                )
+                SELECT
+                  count(distinct ddr.id)              AS deleted_distribution_references_count,
+                  count(distinct ddr.distribution_id) AS deleted_distribution_references_distribution_count,
+                  count(distinct dd.id)               AS deleted_distributions_count,
+                  count(distinct dd.taxon_concept_id) AS deleted_distribution_taxon_concepts_count
+                FROM deleted_distributions dd
+                LEFT JOIN deleted_distribution_references ddr
+                  ON dd.id = ddr.distribution_id
+              SQL
+            )
+
+            puts "Deleted: #{deletion_result[0]}"
+          end
+
           sql = <<-SQL.squish
             INSERT INTO distributions(taxon_concept_id, geo_entity_id, created_at, updated_at)
             SELECT subquery.*, NOW(), NOW()
@@ -93,19 +142,26 @@ namespace :import do
           SQL
         ) if has_tc_id
 
-        import_helper.assert_no_rows(
-          (
-            <<-SQL.squish
-              SELECT FROM #{TMP_TABLE} tmp
-              LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
-              WHERE tc.id IS NULL
-            SQL
-          ),
-          'unidentified taxon concepts'
-        ) if has_tc_id
+        if has_tc_id
+          import_helper.assert_no_rows(
+            (
+              <<-SQL.squish
+                SELECT DISTINCT tmp.taxon_concept_id FROM #{TMP_TABLE} tmp
+                LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
+                WHERE tc.id IS NULL
+              SQL
+            ),
+            'unidentified taxon concepts'
+          ) do |failing_rows|
+            i = 0
+
+            failing_rows.each do |row|
+              puts "#{row['taxon_concept_id']}" if ++i < 100
+            end
+          end
+        end
 
         if has_reference_id
-
           sql = <<-SQL.squish
             INSERT INTO "distribution_references"
               (distribution_id, reference_id, created_at, updated_at)
@@ -143,39 +199,55 @@ namespace :import do
           )
         end
 
-        import_helper.assert_no_rows(
-          (
-            <<-SQL.squish
-              SELECT tmp.* FROM #{TMP_TABLE} tmp
-              LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
-              LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
-              LEFT JOIN distributions d
-                ON d.taxon_concept_id = tmp.taxon_concept_id
-                AND d.geo_entity_id = ge.id
-              WHERE d.id IS NULL
-            SQL
-          ),
-          'missing taxon concepts distributions'
-        ) if has_tc_id
+        if has_tc_id
+          import_helper.assert_no_rows(
+            (
+              <<-SQL.squish
+                SELECT tmp.* FROM #{TMP_TABLE} tmp
+                LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
+                LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
+                LEFT JOIN distributions d
+                  ON d.taxon_concept_id = tmp.taxon_concept_id
+                  AND d.geo_entity_id = ge.id
+                WHERE d.id IS NULL
+              SQL
+            ),
+            'missing taxon concepts distributions'
+          ) do |failing_rows|
+            i = 0
 
-        import_helper.assert_no_rows(
-          (
-            <<-SQL.squish
-              SELECT tmp.* FROM #{TMP_TABLE} tmp
-              LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
-              LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
-              LEFT JOIN distributions d
-                ON d.taxon_concept_id = tmp.taxon_concept_id
-                AND d.geo_entity_id = ge.id
-              LEFT JOIN distribution_references dr
-                ON dr.distribution_id = d.id
-                AND dr.reference_id = tmp.reference_id
-              WHERE tmp.reference_id IS NOT NULL
-                AND dr.id IS NULL
-            SQL
-          ),
-          'taxon concept distributions without references'
-        ) if has_tc_id && has_reference_id
+            failing_rows.each do |row|
+              puts "#{row['taxon_concept_id']}\t#{row['iso2']}" if ++i < 100
+            end
+          end
+        end
+
+        if has_tc_id && has_reference_id
+          import_helper.assert_no_rows(
+            (
+              <<-SQL.squish
+                SELECT tmp.* FROM #{TMP_TABLE} tmp
+                LEFT JOIN taxon_concepts tc ON tc.id = tmp.taxon_concept_id
+                LEFT JOIN geo_entities ge ON ge.iso_code2 = tmp.iso2
+                LEFT JOIN distributions d
+                  ON d.taxon_concept_id = tmp.taxon_concept_id
+                  AND d.geo_entity_id = ge.id
+                LEFT JOIN distribution_references dr
+                  ON dr.distribution_id = d.id
+                  AND dr.reference_id = tmp.reference_id
+                WHERE tmp.reference_id IS NOT NULL
+                  AND dr.id IS NULL
+              SQL
+            ),
+            'taxon concept distributions without references'
+          ) do |failing_rows|
+            i = 0
+
+            failing_rows.each do |row|
+              puts "#{row['taxon_concept_id']}\t#{row['iso2']}\t#{row['reference_id']}" if ++i < 100
+            end
+          end
+        end
 
         if has_reference
           sql = <<-SQL.squish

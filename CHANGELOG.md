@@ -1,3 +1,16 @@
+### 1.21.2
+
+**Species+**
+
+* Front page includes temporary banner noting post-CoP CITES work ongoing.
+* Fixes for common names importer to facilitate new CMS names.
+* New importer for changing `name_status` to promote N names to A names in bulk.
+
+**Species+ admin interface**
+
+* Fixes an issue where the serialisation of the autocomplete results for new
+  taxon concepts is broken until they go through the cascade.
+
 ### 1.21.1
 
 **CITES Trade DB**

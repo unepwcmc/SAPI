@@ -100,3 +100,6 @@
 
 !.keep
 !.gitkeep
+
+# MS Windows downloads hidden file
+*:Zone.Identifier

@@ -64,8 +64,6 @@ Species.DocumentResultComponent = Ember.Component.extend
 
   actions:
     startDownload: () ->
-      url = "/api/v1/documents/#{@get('documentId')}"
-
       analytics.gtag('event', 'download_single', {
         document_type: @get('document_type'),
         event_type: @get('event_type'),
@@ -73,4 +71,4 @@ Species.DocumentResultComponent = Ember.Component.extend
         count: 1
       })
 
-      window.open(url, '_blank')
+      window.open(@get('documentUrl'), '_blank')

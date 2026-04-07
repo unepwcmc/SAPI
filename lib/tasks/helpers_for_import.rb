@@ -407,11 +407,17 @@ class CsvToDbMap
       'Status' => 'status varchar',
       'Species author' => 'author varchar',
       'notes' => 'notes varchar'
+    },
+    'name_status_import' => {
+      'ID' => 'id integer',
+      'Status' => 'name_status varchar'
     }
   }
 
   def csv_to_db(table, field)
-    MAPPING[table][field]
+    (
+      field && table && MAPPING[table] && MAPPING[table][field]
+    ) || "#{ field&.parameterize&.underscore || '' } text"
   end
 end
 
@@ -449,7 +455,7 @@ class CsvImportHelper
 
     # work out the db columns to create
     csv_columns = csv_headers(path_to_file)
-    db_columns = csv_columns.map { |col| m.csv_to_db(table_name, col) || '' }
+    db_columns = csv_columns.map { |col| m.csv_to_db(table_name, col) }
     db_columns = db_columns.map { |col| col&.sub(/\s\w+$/, '') } unless include_data_type
 
     db_columns.select(&:present?)
@@ -464,7 +470,7 @@ class CsvImportHelper
   end
 
   def create_table_from_column_array(table_name, column_names)
-    raise StandardError(
+    raise StandardError.new(
       'Not in a transaction - cannot create temp table'
     ) unless ActiveRecord::Base.connection.open_transactions > 0
 
@@ -480,7 +486,7 @@ class CsvImportHelper
           if column_names.is_a? Array
             quoted_table_name = connection.quote_table_name(table_name)
 
-            if column_names[0]&.match? /\b(?:varchar|integer|boolean|float)$/i
+            if column_names[0]&.match? /\b(?:varchar|integer|boolean|float|text)$/i
               "#{quoted_table_name} (#{column_names.join(', ')})"
             else
               column_names_quoted = column_names.map do |name|
@@ -623,11 +629,13 @@ class CsvImportHelper
 
     Rails.logger.debug error_message
 
-    raise StandardError.new(error_message)
-
     failing_rows = ApplicationRecord.connection.execute(query)
 
-    failing_rows
+    if block_given?
+      yield failing_rows
+    end
+
+    raise StandardError.new(error_message)
   end
 
 
@@ -637,5 +645,135 @@ class CsvImportHelper
     end if ActiveModel::Type::Boolean.new.cast(
       ENV.fetch('DRY_RUN', nil)
     )
+  end
+end
+
+class TaxonImportHelper
+  def self.import_data_for_all_ranks(source_table, kingdom, synonyms = nil)
+    TaxonImportHelper.import_data_for source_table, kingdom, Rank::PHYLUM, synonyms
+    TaxonImportHelper.import_data_for source_table, kingdom, Rank::CLASS, synonyms
+    TaxonImportHelper.import_data_for source_table, kingdom, Rank::ORDER, synonyms
+    TaxonImportHelper.import_data_for source_table, kingdom, Rank::FAMILY, synonyms
+    TaxonImportHelper.import_data_for source_table, kingdom, Rank::SUBFAMILY, synonyms
+    TaxonImportHelper.import_data_for source_table, kingdom, Rank::GENUS, synonyms
+    TaxonImportHelper.import_data_for source_table, kingdom, Rank::SPECIES, synonyms
+    TaxonImportHelper.import_data_for source_table, kingdom, Rank::SUBSPECIES, synonyms
+
+    if kingdom == 'Plantae'
+      TaxonImportHelper.import_data_for TMP_TABLE, kingdom, Rank::VARIETY, synonyms
+    end
+  end
+  # Copies data from the temporary table to the correct tables in the database
+  #
+  # @param [String] which the rank to be copied.
+  def self.import_data_for(source_table, kingdom, rank, synonyms = nil)
+    Rails.logger.debug { "Importing #{rank}" }
+
+    rank_id = Rank.select(:id).where(name: rank).first.id
+    existing = TaxonConcept.where(rank_id: rank_id).count
+
+    Rails.logger.debug { "There were #{existing} #{rank} before we started" }
+
+    sql = <<-SQL.squish
+      INSERT INTO taxon_names(scientific_name, created_at, updated_at)
+        SELECT DISTINCT INITCAP(BTRIM(#{source_table}.name)), current_date, current_date
+        FROM #{source_table}
+        WHERE NOT EXISTS (
+          SELECT scientific_name
+          FROM taxon_names
+          WHERE UPPER(BTRIM(scientific_name)) = UPPER(BTRIM(#{source_table}.name))
+        )
+        AND UPPER(BTRIM(#{source_table}.name)) <> 'NULL'
+        AND UPPER(BTRIM(#{source_table}.rank)) = UPPER('#{rank}')
+        AND (
+          BTRIM(#{source_table}.taxonomy) iLIKE '%CITES%'
+          OR BTRIM(#{source_table}.taxonomy) iLIKE '%CMS%'
+        )
+    SQL
+
+    ApplicationRecord.connection.execute(sql)
+
+    if synonyms
+      ApplicationRecord.connection.execute('DROP INDEX IF EXISTS synonym_import_name')
+      ApplicationRecord.connection.execute('CREATE INDEX synonym_import_name ON synonym_import (name)')
+    else
+      ApplicationRecord.connection.execute('DROP INDEX IF EXISTS species_import_name')
+      ApplicationRecord.connection.execute('CREATE INDEX species_import_name ON species_import (name)')
+    end
+
+    [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
+      Rails.logger.debug { "Import #{taxonomy_name} taxa" }
+
+      taxonomy = Taxonomy.find_by(name: taxonomy_name)
+
+      sql = <<-SQL.squish
+        WITH to_be_inserted AS (
+          SELECT DISTINCT
+            taxon_names.id AS taxon_name_id,
+            #{rank_id} AS rank_id,
+            #{taxonomy.id} AS taxonomy_id,
+            parent_taxon_concepts.id AS parent_id,
+            parent_taxon_concepts.full_name || ' ' || tmp.name AS full_name,
+            CASE
+              WHEN UPPER(BTRIM(tmp.author)) = 'NULL' THEN NULL
+              ELSE BTRIM(tmp.author)
+            END AS author_year,
+            '#{kingdom}' AS legacy_type,
+            tmp.notes,
+            UPPER(BTRIM(tmp.status)) AS name_status,
+            hstore('accepted_id', #{synonyms ? 'accepted_id::VARCHAR' : 'NULL'}) ||
+            hstore('accepted_rank', #{synonyms ? 'UPPER(BTRIM(accepted_rank))' : 'NULL'}) AS data,
+            current_date, current_date
+          FROM #{source_table} tmp
+          INNER JOIN taxon_names
+            ON UPPER(taxon_names.scientific_name) = UPPER(BTRIM(tmp.name))
+          LEFT JOIN taxon_names AS tn
+            ON UPPER(tn.scientific_name) = UPPER(BTRIM(tmp.name))
+            AND tn.id < taxon_names.id
+          LEFT JOIN ranks parent_ranks
+            ON UPPER(BTRIM(parent_ranks.name)) = UPPER(BTRIM(tmp.parent_rank))
+          LEFT JOIN taxon_concepts parent_taxon_concepts
+            ON (
+              parent_taxon_concepts.id = tmp.parent_id
+              AND parent_taxon_concepts.rank_id = parent_ranks.id
+              AND parent_taxon_concepts.taxonomy_id = #{taxonomy.id}
+            )
+          WHERE
+          UPPER(BTRIM(tmp.rank)) = UPPER('#{rank}')
+          AND UPPER(BTRIM(tmp.taxonomy)) LIKE UPPER('%#{taxonomy.name}%')
+          AND (
+            parent_taxon_concepts.id IS NOT NULL AND parent_ranks.id IS NOT NULL
+            OR tmp.parent_id IS NULL
+          )
+          AND tn.id IS NULL
+        )
+        INSERT INTO taxon_concepts(
+          taxon_name_id, rank_id, taxonomy_id, parent_id, full_name,
+          author_year, legacy_type, notes, name_status, data,
+          created_at, updated_at
+        )
+        SELECT *
+        FROM to_be_inserted
+        EXCEPT
+        SELECT to_be_inserted.*
+        FROM to_be_inserted
+        INNER JOIN taxon_concepts
+          ON
+            taxon_concepts.taxon_name_id = to_be_inserted.taxon_name_id
+            AND taxon_concepts.rank_id = to_be_inserted.rank_id
+            AND taxon_concepts.taxonomy_id = to_be_inserted.taxonomy_id
+            AND taxon_concepts.parent_id = to_be_inserted.parent_id
+            AND UPPER(taxon_concepts.name_status) = UPPER(to_be_inserted.name_status)
+            AND UPPER(taxon_concepts.legacy_type) = UPPER(to_be_inserted.legacy_type)
+            AND UPPER(BTRIM(taxon_concepts.data->'accepted_rank')) = to_be_inserted.data->'accepted_rank'
+            AND taxon_concepts.author_year = to_be_inserted.author_year
+        RETURNING id;
+      SQL
+
+      # puts "#{taxonomy.name} #{rank} #{kingdom}"
+      ApplicationRecord.connection.execute(sql)
+    end
+
+    Rails.logger.debug { "#{TaxonConcept.where(rank_id: rank_id).count - existing} #{rank} added" }
   end
 end
