@@ -145,7 +145,11 @@ group :development do
   gem 'bcrypt_pbkdf', '1.1.0'
   gem 'ed25519', '1.2.4'
 
-  # @TODO: bring back when ruby updated to > 2.6 # gem 'net-ssh', '7.0.0.beta1' # openssl 3.0 compatibility @see https://stackoverflow.com/q/72068406/1090438
+  ##
+  # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
+  gem 'brakeman', require: false
+
+  gem 'net-ssh', '7.0.0.beta1'
 end
 
 group :test, :development do
