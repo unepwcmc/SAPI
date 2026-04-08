@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '3.2.5'
+ruby '3.4.9'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '7.2.3.1'
@@ -48,6 +48,7 @@ gem 'devise', '~> 4.9', '>= 4.9.3'
 gem 'cancancan', '~> 3.5'
 gem 'ahoy_matey', '~> 5.0', '>= 5.0.2'
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
+gem 'csv', '~> 3.3.5' # no longer a default gem from Ruby 3.4.0 onwards
 
 gem 'wicked', '2.0.0'
 
@@ -165,7 +166,7 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 3.26'
-  gem 'selenium-webdriver', '>= 4.0.0.rc1'
+  gem 'selenium-webdriver', '~> 4.41'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
 
@@ -232,4 +233,4 @@ gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will ch
 #
 # It might be possible to fix this if we had an nginx version which supported
 # the config: `passenger_preload_bundler on;`
-gem 'base64', '0.1.1'
+gem 'base64', '0.2.0'

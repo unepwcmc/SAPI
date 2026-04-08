@@ -130,7 +130,7 @@ GEM
     barber (0.12.2)
       ember-source (>= 1.0, < 3.1)
       execjs (>= 1.2, < 3)
-    base64 (0.1.1)
+    base64 (0.2.0)
     bcrypt (3.1.22)
     bcrypt_pbkdf (1.1.0)
     benchmark (0.5.0)
@@ -207,6 +207,7 @@ GEM
       thor (~> 1.2)
       tins (~> 1.32)
     crass (1.0.6)
+    csv (3.3.5)
     database_cleaner (2.1.0)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.2.2)
@@ -259,7 +260,7 @@ GEM
     factory_bot_rails (6.5.1)
       factory_bot (~> 6.5)
       railties (>= 6.1.0)
-    ffi (1.17.4)
+    ffi (1.17.4-x86_64-linux-gnu)
     file_exists (0.2.0)
     fugit (1.12.1)
       et-orbi (~> 1.4)
@@ -395,7 +396,7 @@ GEM
       ruby-rc4
       ttfunk
     pdfkit (0.8.7.3)
-    pg (1.6.3)
+    pg (1.6.3-x86_64-linux)
     pg_array_parser (0.0.9)
     pg_search (2.3.7)
       activerecord (>= 6.1)
@@ -571,9 +572,11 @@ GEM
       sprockets-rails
       tilt
     securerandom (0.4.1)
-    selenium-webdriver (4.16.0)
+    selenium-webdriver (4.41.0)
+      base64 (~> 0.2)
+      logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2, < 3.0)
+      rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
     sidekiq (6.5.12)
       connection_pool (>= 2.2.5, < 3)
@@ -671,7 +674,7 @@ GEM
     zeitwerk (2.7.5)
 
 PLATFORMS
-  ruby
+  x86_64-linux-gnu
 
 DEPENDENCIES
   active_model_serializers (= 0.8.4)
@@ -681,7 +684,7 @@ DEPENDENCIES
   annotaterb (~> 4.22.0)
   appsignal (~> 3.13.1)
   aws-sdk-s3 (~> 1.143)
-  base64 (= 0.1.1)
+  base64 (= 0.2.0)
   bcrypt_pbkdf (= 1.1.0)
   bootsnap (>= 1.4.4)
   bootstrap-sass (= 2.3.2.2)
@@ -701,6 +704,7 @@ DEPENDENCIES
   chartkick (~> 5.0, >= 5.0.5)
   coffee-rails (~> 5.0)
   coveralls_reborn (~> 0.28.0)
+  csv (~> 3.3.5)
   database_cleaner (~> 2.0, >= 2.0.2)
   devise (~> 4.9, >= 4.9.3)
   dotenv-rails (= 2.0.1)
@@ -755,7 +759,7 @@ DEPENDENCIES
   rubocop-rspec_rails
   rubyzip (~> 2.3, >= 2.3.2)
   sass-rails (~> 6)
-  selenium-webdriver (>= 4.0.0.rc1)
+  selenium-webdriver (~> 4.41)
   sidekiq (< 7)
   sidekiq-cron (~> 1.12)
   sidekiq-status (~> 3.0, >= 3.0.3)
@@ -776,7 +780,7 @@ DEPENDENCIES
   wkhtmltopdf-binary (~> 0.12.6.6)
 
 RUBY VERSION
-   ruby 3.2.5p208
+   ruby 3.4.9p82
 
 BUNDLED WITH
    2.5.17

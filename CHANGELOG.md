@@ -5,6 +5,7 @@ The primary goal of this release is to upgrade the Rails version without causing
 any breaking changes to functionality.
 
 * Upgrades Rails 7.1.3.4 to 7.2.3.1
+* Upgrades Ruby 3.2.5 to 3.4.9
 * Some dependency updates/changes allowed or required by the above:
   * Upgraded `sprockets` from 3.7.2 to 4.0.3
   * Upgraded `papertrail` from 15.1.0 to 17.0.0

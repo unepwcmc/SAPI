@@ -4,7 +4,7 @@
 # or SUS-ORS project.
 
 # Dockerfile
-FROM ruby:3.2.5
+FROM ruby:3.4.9
 
 # Rails and SAPI has some additional dependencies, e.g. rake requires a JS
 # runtime, so attempt to get these from apt, where possible
@@ -25,7 +25,7 @@ WORKDIR /SAPI
 # Don't need to do these, as we have done this with Docker bindings
 #   COPY Gemfile /SAPI/Gemfile
 #   COPY Gemfile.lock /SAPI/Gemfile.lock
-RUN gem install bundler -v 2.5.17
+RUN gem install bundler -v 4.0.10
 
 ##
 # This happens in the entrypoint

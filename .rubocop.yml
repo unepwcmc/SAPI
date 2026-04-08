@@ -12,7 +12,7 @@ require:
 Rails:
   Enabled: true
 AllCops:
-  TargetRubyVersion: 3.2
+  TargetRubyVersion: 3.4
   TargetRailsVersion: 7.2
 
 Style/StringLiterals:
