@@ -14,15 +14,10 @@ gem 'rack-cors'
 gem 'puma', '~> 5.0'
 
 # Use SCSS for stylesheets
-# TODO: Can't upgrade sass-rails to 6.0, it raise the following error when running `RAILS_ENV=staging rake assets:precompile`.
-# SassC::SyntaxError: Error: Invalid CSS after "...in-bottom:-3px;": expected "}", was ".margin-bottom:-3px"
-#         on line 3712:5063 of stdin
-# >> ction=135,Strength=3)";_margin-bottom:-3px;.margin-bottom:-3px;}/*!Add round
-# gem 'sass-rails', '>= 6'
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 6'
 
 # https://stackoverflow.com/questions/55213868/rails-6-how-to-disable-webpack-and-use-sprockets-instead
-gem 'sprockets', '3.7.2'
+gem 'sprockets', '~> 4'
 gem 'sprockets-rails', require: 'sprockets/railtie'
 
 # Use Terser as compressor for JavaScript assets
@@ -98,17 +93,22 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # To use Jbuilder templates for JSON
 # gem 'jbuilder', '~> 2.7'
 
+gem 'erb', '~> 6.0.2'
+
 group :development do
+  ##
   # Adds comments at the top of models describing table column
   # (replaces annotate)
-  gem 'annotaterb', '~> 4.10.2'
+  gem 'annotaterb', '~> 4.22.0'
 
+  ##
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'web-console', '>= 4.1.0'
+  gem 'web-console'
+
   # Display performance information such as SQL time and flame graphs for each request in your browser.
   # Can be configured to work on production as well see: https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md
-  gem 'rack-mini-profiler', '~> 2.0'
-  gem 'listen', '~> 3.3'
+  gem 'rack-mini-profiler', '~> 4.0.1'
+  gem 'listen', '~> 3.10.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 
@@ -149,11 +149,11 @@ group :development do
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem 'brakeman', require: false
 
-  gem 'net-ssh', '7.0.0.beta1'
+  gem 'net-ssh', '7.3.2'
 end
 
 group :test, :development do
-  gem 'rspec-rails', '~> 6.1', '>= 6.1.1'
+  gem 'rspec-rails', '~> 7.1'
   gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
   gem 'json_spec', '~> 1.1', '>= 1.1.5'
   gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
@@ -170,7 +170,7 @@ group :test do
   gem 'webdrivers'
 
   gem 'rails-controller-testing'
-  gem 'factory_bot_rails', '5.2.0'
+  gem 'factory_bot_rails', '~> 6.5.1'
   gem 'simplecov', '~> 0.22.0', require: false
   gem 'coveralls_reborn', '~> 0.28.0', require: false
 end
@@ -178,7 +178,7 @@ end
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
 
 gem 'request_store', '~> 1.5', '>= 1.5.1'
-gem 'paper_trail', '15.1.0'
+gem 'paper_trail', '~> 17.0.0'
 
 gem 'dotenv-rails', '2.0.1'
 
