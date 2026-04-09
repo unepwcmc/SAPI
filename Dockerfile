@@ -21,11 +21,13 @@ RUN apt-get update && apt-get install -y --force-yes \
 RUN mkdir /SAPI
 WORKDIR /SAPI
 
-#
-# Don't need to do these, as we have done this with Docker bindings
-#   COPY Gemfile /SAPI/Gemfile
-#   COPY Gemfile.lock /SAPI/Gemfile.lock
-RUN gem install bundler -v 4.0.10
+COPY Gemfile.lock /SAPI/Gemfile.lock
+
+RUN grep -A1 '^BUNDLED WITH$' Gemfile.lock | tail -n1 | tr -d ' ' \
+  | xargs -I _BUNDLER_VERSION_ gem install bundler -v _BUNDLER_VERSION_
+
+# Don't this any more, as we get it with Docker bindings
+RUN rm /SAPI/Gemfile.lock
 
 ##
 # This happens in the entrypoint

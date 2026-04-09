@@ -29,9 +29,11 @@ COPY Gemfile /SAPI/Gemfile
 COPY Gemfile.lock /SAPI/Gemfile.lock
 
 ENV BUNDLE_SILENCE_ROOT_WARNING=1
+
 RUN /bin/bash -c "source /etc/profile.d/rvm.sh \
-  && gem install bundler:4.0.10 \
-  && bundle"
+  && grep -A1 '^BUNDLED WITH$' Gemfile.lock | tail -n1 | tr -d ' ' \
+  | xargs -I _BUNDLER_VERSION_ gem install bundler -v _BUNDLER_VERSION_ \
+  && bundle install"
 
 ENTRYPOINT ["/bin/bash", "-l"]
 
