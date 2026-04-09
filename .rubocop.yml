@@ -12,8 +12,8 @@ require:
 Rails:
   Enabled: true
 AllCops:
-  TargetRubyVersion: 3.2.5
-  TargetRailsVersion: 7.1
+  TargetRubyVersion: 3.4
+  TargetRailsVersion: 7.2
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
