@@ -61,11 +61,11 @@ Rails.application.configure do
   # Lets keep this for now, its development mode only.
   config.assets.debug = true
 
+  # Append comments with runtime information tags to SQL queries in logs.
+  config.active_record.query_log_tags_enabled = true
+
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
-
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
