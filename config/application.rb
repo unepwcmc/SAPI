@@ -11,7 +11,7 @@ Bundler.require(*Rails.groups)
 module SAPI
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.1
+    config.load_defaults 7.2
 
     # Since Rails 5, on submit, submission buttons in `form_for` are disabled.
     # However, if errors are thrown and the whole form is not rerendered, then
