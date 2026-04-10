@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-ruby '3.2.5'
+ruby '3.4.9'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '7.1.3.4'
+gem 'rails', '8.1.3'
 
 # Configure Cross-Origin resource sharing
 gem 'rack-cors'
@@ -14,15 +14,10 @@ gem 'rack-cors'
 gem 'puma', '~> 5.0'
 
 # Use SCSS for stylesheets
-# TODO: Can't upgrade sass-rails to 6.0, it raise the following error when running `RAILS_ENV=staging rake assets:precompile`.
-# SassC::SyntaxError: Error: Invalid CSS after "...in-bottom:-3px;": expected "}", was ".margin-bottom:-3px"
-#         on line 3712:5063 of stdin
-# >> ction=135,Strength=3)";_margin-bottom:-3px;.margin-bottom:-3px;}/*!Add round
-# gem 'sass-rails', '>= 6'
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 6'
 
 # https://stackoverflow.com/questions/55213868/rails-6-how-to-disable-webpack-and-use-sprockets-instead
-gem 'sprockets', '3.7.2'
+gem 'sprockets', '~> 4'
 gem 'sprockets-rails', require: 'sprockets/railtie'
 
 # Use Terser as compressor for JavaScript assets
@@ -34,10 +29,10 @@ gem 'coffee-rails', '~> 5.0'
 # gem 'mini_racer', platforms: :ruby
 
 gem 'active_model_serializers', '0.8.4' # Deprecated
-gem "active_storage_validations", "~> 2.0"
+gem 'active_storage_validations', '~> 2.0'
 
 # Use redis for caching
-gem "redis", "~> 4.8"
+gem 'redis', '~> 4.8'
 
 # Use PostgreSQL database
 gem 'pg', '~> 1.5', '>= 1.5.4'
@@ -47,30 +42,31 @@ gem 'pg_search', '~> 2.3', '>= 2.3.6'
 
 gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
 gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmin/inherited_resources#notice)
-gem 'nokogiri', '~> 1.18', force_ruby_platform: true
+gem 'nokogiri', '~> 1.19.2', force_ruby_platform: true
 gem 'mobility', '~> 1.2', '>= 1.2.9'
-gem 'devise', '~> 4.9', '>= 4.9.3'
+gem 'devise', '~> 5', '>= 5.0.3'
 gem 'cancancan', '~> 3.5'
 gem 'ahoy_matey', '~> 5.0', '>= 5.0.2'
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
+gem 'csv', '~> 3.3.5' # no longer a default gem from Ruby 3.4.0 onwards
 
 gem 'wicked', '2.0.0'
 
-gem 'groupdate', '~> 6.4'
+gem 'groupdate', '~> 6.8.0'
 
-gem 'rubyzip', '~> 2.3', '>= 2.3.2'
-gem 'responders', '~> 3.1', '>= 3.1.1' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
+gem 'rubyzip', '~> 3.2.2'
+gem 'responders', '~> 3.2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
-gem 'sidekiq', '< 7' # TODO, latest is 7, which required Redis 6.2+, but our servers running Redis 4.0.9.
-gem 'sidekiq-status', '~> 3.0', '>= 3.0.3'
-gem 'sidekiq-unique-jobs', '7.1.33' # TODO: can upgrade to latest when sidekiq upgrade to 7
-gem 'sidekiq-cron', '~> 1.12'
+gem 'sidekiq', '< 9'
+gem 'sidekiq-status', '~> 4.0'
+gem 'sidekiq-unique-jobs', '~> 8', '>= 8.1.0'
+gem 'sidekiq-cron', '~> 2.3.1'
 
-gem 'httparty', '~> 0.21.0'
+gem 'httparty', '~> 0.24.2'
 
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
-gem 'acts-as-taggable-on', '~> 10.0' # TODO: refuses to install against Rails 7.2
+gem 'acts-as-taggable-on', '~> 13.0'
 gem 'carrierwave', '~> 3.0', '>= 3.0.5'
 
 # PDF
@@ -84,7 +80,7 @@ gem 'aws-sdk-s3', '~> 1.143', require: false
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
 
-gem 'strong_migrations', '~> 1.7'
+gem 'strong_migrations', '~> 1.7' # v2 drops support for pg<12
 
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -98,17 +94,22 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # To use Jbuilder templates for JSON
 # gem 'jbuilder', '~> 2.7'
 
+gem 'erb', '~> 6.0.2'
+
 group :development do
+  ##
   # Adds comments at the top of models describing table column
   # (replaces annotate)
-  gem 'annotaterb', '~> 4.10.2'
+  gem 'annotaterb', '~> 4.22.0'
 
+  ##
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'web-console', '>= 4.1.0'
+  gem 'web-console'
+
   # Display performance information such as SQL time and flame graphs for each request in your browser.
   # Can be configured to work on production as well see: https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md
-  gem 'rack-mini-profiler', '~> 2.0'
-  gem 'listen', '~> 3.3'
+  gem 'rack-mini-profiler', '~> 4.0.1'
+  gem 'listen', '~> 3.10.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 
@@ -145,11 +146,15 @@ group :development do
   gem 'bcrypt_pbkdf', '1.1.0'
   gem 'ed25519', '1.2.4'
 
-  # @TODO: bring back when ruby updated to > 2.6 # gem 'net-ssh', '7.0.0.beta1' # openssl 3.0 compatibility @see https://stackoverflow.com/q/72068406/1090438
+  ##
+  # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
+  gem 'brakeman', require: false
+
+  gem 'net-ssh', '7.3.2'
 end
 
 group :test, :development do
-  gem 'rspec-rails', '~> 6.1', '>= 6.1.1'
+  gem 'rspec-rails', '~> 8.0'
   gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
   gem 'json_spec', '~> 1.1', '>= 1.1.5'
   gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
@@ -161,26 +166,26 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 3.26'
-  gem 'selenium-webdriver', '>= 4.0.0.rc1'
+  gem 'selenium-webdriver', '~> 4.41'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
 
   gem 'rails-controller-testing'
-  gem 'factory_bot_rails', '5.2.0'
+  gem 'factory_bot_rails', '~> 6.5.1'
   gem 'simplecov', '~> 0.22.0', require: false
   gem 'coveralls_reborn', '~> 0.28.0', require: false
 end
 
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
 
-gem 'request_store', '~> 1.5', '>= 1.5.1'
-gem 'paper_trail', '15.1.0'
+gem 'request_store', '~> 1.7', '>= 1.7.0'
+gem 'paper_trail', '~> 17.0.0'
 
-gem 'dotenv-rails', '2.0.1'
+gem 'dotenv-rails', '3.2.0'
 
 gem 'sitemap_generator', '~> 6.3'
 
-gem 'appsignal', '~> 3.13.1'
+gem 'appsignal', '~> 4'
 
 ### GEM for frontend ###
 # Remove the `jquery-rails` gem to eliminate any dependency issues that may block the upgrade process.
@@ -228,6 +233,4 @@ gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will ch
 #
 # It might be possible to fix this if we had an nginx version which supported
 # the config: `passenger_preload_bundler on;`
-gem 'base64', '0.1.1'
-
-
+gem 'base64', '0.2.0'
