@@ -42,9 +42,9 @@ gem 'pg_search', '~> 2.3', '>= 2.3.6'
 
 gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
 gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmin/inherited_resources#notice)
-gem 'nokogiri', '~> 1.18', force_ruby_platform: true
+gem 'nokogiri', '~> 1.19.2', force_ruby_platform: true
 gem 'mobility', '~> 1.2', '>= 1.2.9'
-gem 'devise', '~> 4.9', '>= 4.9.3'
+gem 'devise', '~> 5', '>= 5.0.3'
 gem 'cancancan', '~> 3.5'
 gem 'ahoy_matey', '~> 5.0', '>= 5.0.2'
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
@@ -52,17 +52,17 @@ gem 'csv', '~> 3.3.5' # no longer a default gem from Ruby 3.4.0 onwards
 
 gem 'wicked', '2.0.0'
 
-gem 'groupdate', '~> 6.4'
+gem 'groupdate', '~> 6.8.0'
 
-gem 'rubyzip', '~> 2.3', '>= 2.3.2'
-gem 'responders', '~> 3.1', '>= 3.1.1' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
+gem 'rubyzip', '~> 3.2.2'
+gem 'responders', '~> 3.2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
 gem 'sidekiq', '< 9'
 gem 'sidekiq-status', '~> 4.0'
 gem 'sidekiq-unique-jobs', '~> 8', '>= 8.1.0'
 gem 'sidekiq-cron', '~> 2.3.1'
 
-gem 'httparty', '~> 0.21.0'
+gem 'httparty', '~> 0.24.2'
 
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
@@ -80,7 +80,7 @@ gem 'aws-sdk-s3', '~> 1.143', require: false
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', :platforms => :ruby
 
-gem 'strong_migrations', '~> 1.7'
+gem 'strong_migrations', '~> 1.7' # v2 drops support for pg<12
 
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -154,7 +154,7 @@ group :development do
 end
 
 group :test, :development do
-  gem 'rspec-rails', '~> 7.1'
+  gem 'rspec-rails', '~> 8.0'
   gem 'rspec-collection_matchers', '~> 1.2', '>= 1.2.1'
   gem 'json_spec', '~> 1.1', '>= 1.1.5'
   gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
@@ -178,14 +178,14 @@ end
 
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018
 
-gem 'request_store', '~> 1.5', '>= 1.5.1'
+gem 'request_store', '~> 1.7', '>= 1.7.0'
 gem 'paper_trail', '~> 17.0.0'
 
-gem 'dotenv-rails', '2.0.1'
+gem 'dotenv-rails', '3.2.0'
 
 gem 'sitemap_generator', '~> 6.3'
 
-gem 'appsignal', '~> 3.13.1'
+gem 'appsignal', '~> 4'
 
 ### GEM for frontend ###
 # Remove the `jquery-rails` gem to eliminate any dependency issues that may block the upgrade process.
