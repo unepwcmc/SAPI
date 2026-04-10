@@ -12,7 +12,7 @@ Rails.application.configure do
   # Full error reports are disabled.
   config.consider_all_requests_local = false
 
-  # Turn on fragment caching in view templates
+  # Turn on fragment caching in view templates.
   config.action_controller.perform_caching = true
 
   # Disable serving static files from `public/`, relying on NGINX/Apache to do so instead.
@@ -45,11 +45,10 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ "http://example.com", /http:\/\/example.*/ ]
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
-  # Can be used together with config.force_ssl for Strict-Transport-Security and secure cookies.
   # config.assume_ssl = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true # TODO: should we enable it? Rails enable it by default since 7.1
+  # config.force_ssl = true
 
   # TODO: Since Rails 7.1, the log no longer output to file, but STDOUT, which is the better approach, specially suitable
   # for docker. However this project still deploying use cap, we may need to change it back until we ready?
@@ -89,7 +88,7 @@ Rails.application.configure do
   # Use a redis instance as a cache store on production.
   config.cache_store = :redis_cache_store, { url: ENV.fetch('SAPI_SIDEKIQ_REDIS_CACHE_URL', Rails.application.credentials.dig(:redis_cache, :url)) }
 
-  # Use a real queuing backend for Active Job (and separate queues per environment).
+  # Replace the default in-process and non-durable queuing backend for Active Job.
   # config.active_job.queue_adapter = :resque
   # config.active_job.queue_name_prefix = "sapi_production"
 
