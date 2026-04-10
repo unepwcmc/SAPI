@@ -57,10 +57,10 @@ gem 'groupdate', '~> 6.4'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'responders', '~> 3.1', '>= 3.1.1' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
-gem 'sidekiq', '< 7' # TODO, latest is 7, which required Redis 6.2+, but our servers running Redis 4.0.9.
-gem 'sidekiq-status', '~> 3.0', '>= 3.0.3'
-gem 'sidekiq-unique-jobs', '7.1.33' # TODO: can upgrade to latest when sidekiq upgrade to 7
-gem 'sidekiq-cron', '~> 1.12'
+gem 'sidekiq', '>= 7.3.10', '< 8'
+gem 'sidekiq-status', '~> 4.0'
+gem 'sidekiq-unique-jobs', '~> 8', '>= 8.1.0'
+gem 'sidekiq-cron', '~> 2.3.1'
 
 gem 'httparty', '~> 0.21.0'
 
