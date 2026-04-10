@@ -13,7 +13,7 @@ Rails:
   Enabled: true
 AllCops:
   TargetRubyVersion: 3.4
-  TargetRailsVersion: 8.0
+  TargetRailsVersion: 8.1
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
