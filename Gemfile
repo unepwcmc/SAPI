@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 ruby '3.4.9'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '8.0.5'
+gem 'rails', '8.1.3'
 
 # Configure Cross-Origin resource sharing
 gem 'rack-cors'
@@ -66,7 +66,7 @@ gem 'httparty', '~> 0.21.0'
 
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
-gem 'acts-as-taggable-on', '~> 12.0'
+gem 'acts-as-taggable-on', '~> 13.0'
 gem 'carrierwave', '~> 3.0', '>= 3.0.5'
 
 # PDF
