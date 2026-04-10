@@ -57,7 +57,7 @@ gem 'groupdate', '~> 6.4'
 gem 'rubyzip', '~> 2.3', '>= 2.3.2'
 gem 'responders', '~> 3.1', '>= 3.1.1' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
-gem 'sidekiq', '>= 7.3.10', '< 8'
+gem 'sidekiq', '< 9'
 gem 'sidekiq-status', '~> 4.0'
 gem 'sidekiq-unique-jobs', '~> 8', '>= 8.1.0'
 gem 'sidekiq-cron', '~> 2.3.1'

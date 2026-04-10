@@ -767,7 +767,7 @@ DEPENDENCIES
   rubyzip (~> 2.3, >= 2.3.2)
   sass-rails (~> 6)
   selenium-webdriver (~> 4.41)
-  sidekiq (>= 7.3.10, < 8)
+  sidekiq (< 9)
   sidekiq-cron (~> 2.3.1)
   sidekiq-status (~> 4.0)
   sidekiq-unique-jobs (~> 8, >= 8.1.0)
