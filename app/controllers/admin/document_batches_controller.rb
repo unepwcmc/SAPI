@@ -15,6 +15,7 @@ class Admin::DocumentBatchesController < Admin::StandardAuthorizationController
   def create
     @event = Event.find(params[:event_id]) if params[:event_id]
     @document_batch = DocumentBatch.new(document_batch_params)
+
     if @document_batch.save
       if @event
         redirect_to admin_event_documents_url(@event)
@@ -44,9 +45,18 @@ protected
   def document_batch_params
     params.require(:document_batch).permit(
       :event_id, :date, :language_id, :is_public,
-      documents_attributes: [
-        :type
-      ], files: []
+      documents_attributes: [ :type ],
+      files: []
     )
+
+    # TODO: for some reason the following won't work
+    # params.expect(
+    #   document_batch: [
+    #     :event_id, :date, :language_id, :is_public,
+    #     files: [ [] ],
+    #     documents_attributes: [ [ :type ] ],
+    #   ]
+    # )
+
   end
 end

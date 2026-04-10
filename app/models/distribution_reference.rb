@@ -29,8 +29,6 @@
 class DistributionReference < ApplicationRecord
   include TrackWhoDoesIt
   # Used by app/models/cms_mapping_manager.rb
-  # attr_accessible :reference_id, :distribution_id, :created_by_id,
-  #   :updated_by_id
 
   belongs_to :reference
   belongs_to :distribution, touch: true

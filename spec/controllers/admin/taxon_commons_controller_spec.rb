@@ -11,6 +11,7 @@ describe Admin::TaxonCommonsController do
   describe "XHR GET 'new'" do
     it 'returns http success and renders the new template' do
       get :new, params: { taxon_concept_id: @taxon_concept.id, format: 'js' }, xhr: true
+
       expect(response).to be_successful
       expect(response).to render_template('new')
     end
@@ -18,7 +19,8 @@ describe Admin::TaxonCommonsController do
 
   describe 'XHR POST create' do
     it 'renders create when successful' do
-      post :create, xhr: true,
+      post :create,
+        xhr: true,
         params: {
           taxon_concept_id: @taxon_concept.id,
           taxon_common: {
@@ -26,14 +28,18 @@ describe Admin::TaxonCommonsController do
             language_id: @common_name.language_id
           }
         }
+
       expect(response).to render_template('create')
     end
+
     it 'renders new when not successful' do
-      post :create, xhr: true,
+      post :create,
+        xhr: true,
         params: {
           taxon_concept_id: @taxon_concept.id,
-          taxon_common: { dummy: 'test' }
+          taxon_common: { name: nil }
         }
+
       expect(response).to render_template('new')
     end
   end
@@ -46,12 +52,16 @@ describe Admin::TaxonCommonsController do
         taxon_concept_id: @taxon_concept.id
       )
     end
+
     it 'renders the edit template' do
       get :edit, params: { taxon_concept_id: @taxon_concept.id, id: @taxon_common.id }, xhr: true
+
       expect(response).to render_template('new')
     end
+
     it 'assigns the  taxon common variable' do
       get :edit, params: { taxon_concept_id: @taxon_concept.id, id: @taxon_common.id }, xhr: true
+
       expect(assigns(:taxon_common)).not_to be_nil
     end
   end
@@ -64,8 +74,11 @@ describe Admin::TaxonCommonsController do
         taxon_concept_id: @taxon_concept.id
       )
     end
+
     it 'renders create when successful' do
-      put :update, format: 'js', xhr: true,
+      put :update,
+        format: 'js',
+        xhr: true,
         params: {
           taxon_concept_id: @taxon_concept.id,
           id: @taxon_common.id,
@@ -74,10 +87,13 @@ describe Admin::TaxonCommonsController do
             language_id: @common_name.language_id
           }
         }
+
       expect(response).to render_template('create')
     end
     it 'renders new when not successful' do
-      put :update, format: 'js', xhr: true,
+      put :update,
+        format: 'js',
+        xhr: true,
         params: {
           taxon_concept_id: @taxon_concept.id,
           id: @taxon_common.id,
@@ -85,6 +101,7 @@ describe Admin::TaxonCommonsController do
             common_name_id: nil
           }
         }
+
       expect(response).to render_template('new')
     end
   end
@@ -97,8 +114,10 @@ describe Admin::TaxonCommonsController do
         common_name: @common_name
       )
     end
+
     it 'redirects after delete' do
       delete :destroy, params: { taxon_concept_id: @taxon_concept.id, id: taxon_common.id }
+
       expect(response).to redirect_to(
         admin_taxon_concept_names_url(@taxon_concept)
       )
@@ -124,7 +143,9 @@ describe Admin::TaxonCommonsController do
       expect(@taxon_concept.reload.dependents_updated_at).not_to be_nil
       old_date = @taxon_concept.dependents_updated_at
 
-      put :update, format: 'js', xhr: true,
+      put :update,
+        format: 'js',
+        xhr: true,
         params: {
           taxon_concept_id: @taxon_concept.id,
           id: @taxon_common.id,
@@ -155,6 +176,7 @@ describe Admin::TaxonCommonsController do
 
   describe 'Authorization for contributors' do
     login_contributor
+
     let(:taxon_common) do
       create(
         :taxon_common,
@@ -162,10 +184,13 @@ describe Admin::TaxonCommonsController do
         common_name: @common_name
       )
     end
+
     describe 'DELETE destroy' do
       it 'fails to delete and redirects' do
         @request.env['HTTP_REFERER'] = admin_taxon_concept_names_url(@taxon_concept)
+
         delete :destroy, params: { id: taxon_common.id, taxon_concept_id: @taxon_concept.id }
+
         expect(response).to redirect_to(
           admin_taxon_concept_names_url(@taxon_concept)
         )

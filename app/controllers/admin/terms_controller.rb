@@ -29,6 +29,6 @@ protected
 private
 
   def term_params
-    params.require(:term).permit(:code, :type, :name_en, :name_es, :name_fr)
+    params.expect(term: [ :code, :type, :name_en, :name_es, :name_fr ])
   end
 end

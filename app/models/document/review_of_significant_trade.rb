@@ -55,7 +55,6 @@ class Document::ReviewOfSignificantTrade < Document
   end
 
   # Used by DocumentsController.
-  # attr_accessible :review_details_attributes
 
   has_one :review_details,
     class_name: 'ReviewDetails',

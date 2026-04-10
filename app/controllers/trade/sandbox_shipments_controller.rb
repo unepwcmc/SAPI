@@ -46,8 +46,8 @@ class Trade::SandboxShipmentsController < TradeController
   end
 
   def destroy_batch
-    aru = Trade::AnnualReportUpload.find(params[:annual_report_upload_id])
-    ve = Trade::ValidationError.find(params[:validation_error_id])
+    aru = Trade::AnnualReportUpload.find(destroy_batch_params[:annual_report_upload_id])
+    ve = Trade::ValidationError.find(destroy_batch_params[:validation_error_id])
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
     sandbox_klass.destroy_batch(ve, aru)
 
@@ -59,22 +59,25 @@ class Trade::SandboxShipmentsController < TradeController
 private
 
   def sandbox_shipment_params
-    params.require(:sandbox_shipment).permit(*sandbox_shipment_attributes)
+    params.expect(sandbox_shipment: sandbox_shipment_attribute_names)
   end
 
   def destroy_batch_params
-    params.permit(:annual_report_upload_id, :validation_error_id)
-  end
-
-  def update_batch_params
     params.permit(
       :annual_report_upload_id,
-      :validation_error_id,
-      updates: sandbox_shipment_attributes
+      :validation_error_id
     )
   end
 
-  def sandbox_shipment_attributes
+  def update_batch_params
+    params.expect(
+      :annual_report_upload_id,
+      :validation_error_id,
+      updates: sandbox_shipment_attribute_names
+    )
+  end
+
+  def sandbox_shipment_attribute_names
     [
       :appendix,
       :taxon_concept_id,

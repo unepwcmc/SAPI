@@ -18,8 +18,7 @@
 
 class TradeCode < ApplicationRecord
   extend Mobility
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :code, :type, :name_en, :name_es, :name_fr
+
   translates :name
 
   has_many :taxon_concept_term_pairs,

@@ -103,11 +103,12 @@ private
   end
 
   def download_params
-    params.require(:download).permit(
-      # attributes used in this controller.
-      :doc_type,
-      # other attributes were in model `attr_accessible`.
-      :format
+    params.expect(
+      download: [
+        # attributes used in this controller.
+        :doc_type,
+        :format
+      ]
     )
   end
 

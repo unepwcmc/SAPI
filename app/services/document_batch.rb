@@ -18,6 +18,7 @@ class DocumentBatch
     return false unless valid?
 
     success = true
+
     Document.transaction do
       @documents.each do |d|
         unless d.save
@@ -26,6 +27,7 @@ class DocumentBatch
       end
       raise ActiveRecord::Rollback unless success
     end
+
     success
   end
 
@@ -37,18 +39,19 @@ private
 
   def initialize_documents(documents_attributes, files)
     @documents = []
+
     if documents_attributes && files
       for idx in 0..(files.length - 1) do
         document_params =
           if files[idx].respond_to?(:read) # Filter out invalid params for ActiveStorage.
             {
-              type: documents_attributes[idx.to_s][:type],
+              type: documents_attributes[idx][:type],
               file: files[idx],
               title: document_title(files[idx])
             }
           else
             {
-              type: documents_attributes[idx.to_s][:type],
+              type: documents_attributes[idx][:type]
             }
           end
         @documents.push(Document.new(common_attributes.merge(document_params)))
@@ -71,6 +74,7 @@ private
 
   def document_title(file)
     original_filename = file.is_a?(Hash) ? file[:filename].original_filename : file.original_filename
+
     File.basename(original_filename, File.extname(original_filename))
   end
 end

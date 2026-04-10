@@ -17,6 +17,7 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
       format.js { render 'new' }
     end
   end
+
   def create
     create! do |success, failure|
       success.js do
@@ -65,10 +66,11 @@ protected
 private
 
   def taxon_common_params
-    params.require(:taxon_common).permit(
-      # attributes were in model `attr_accessible`.
-      :common_name_id, :taxon_concept_id, :created_by_id,
-      :updated_by_id, :name, :language_id
+    params.expect(
+      taxon_common: [
+        :common_name_id, :taxon_concept_id, :created_by_id,
+        :updated_by_id, :name, :language_id
+      ]
     )
   end
 end

@@ -84,11 +84,7 @@ private
   end
 
   def shipment_params
-    params.require(:shipment).permit(
-      *(shipment_attributes + [
-        :ignore_warnings
-      ])
-    )
+    params.expect(shipment: shipment_attributes + [ :ignore_warnings ])
   end
 
   def batch_update_params

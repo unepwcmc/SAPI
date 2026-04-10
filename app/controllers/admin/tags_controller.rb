@@ -18,9 +18,6 @@ protected
 private
 
   def tag_params
-    params.require(:tag).permit(
-      # attributes were in model `attr_accessible`.
-      :model, :name
-    )
+    params.expect(tag: [ :model, :name ])
   end
 end

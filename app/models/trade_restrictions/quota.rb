@@ -54,8 +54,6 @@
 
 class Quota < TradeRestriction
   include Changeable
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :public_display
 
   validates :quota, presence: true
   validates :quota, numericality: { greater_than_or_equal_to: -1.0 }
@@ -98,10 +96,8 @@ class Quota < TradeRestriction
           SQL
         ),
         year: params[:year].to_i,
-        excluded_geo_entities: params[:excluded_geo_entities_ids].present? ?
-          params[:excluded_geo_entities_ids].map(&:to_i) : nil,
-        included_geo_entities: params[:included_geo_entities_ids].present? ?
-          params[:included_geo_entities_ids].map(&:to_i) : nil,
+        excluded_geo_entities: (params[:excluded_geo_entities_ids].presence&.map(&:to_i)),
+        included_geo_entities: (params[:included_geo_entities_ids].presence&.map(&:to_i)),
         excluded_taxon_concepts: params[:excluded_taxon_concepts_ids].present? ?
           params[:excluded_taxon_concepts_ids].split(',').map(&:to_i) : nil,
         included_taxon_concepts: params[:included_taxon_concepts_ids].present? ?

@@ -29,8 +29,6 @@ protected
 private
 
   def unit_params
-    params.require(:unit).permit(
-      :code, :type, :name_en, :name_es, :name_fr
-    )
+    params.expect(unit: [ :code, :type, :name_en, :name_es, :name_fr ])
   end
 end

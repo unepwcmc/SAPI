@@ -136,24 +136,26 @@ protected
 private
 
   def listing_change_params
-    params.require(:listing_change).permit(
-      :taxon_concept_id, :species_listing_id, :change_type_id,
-      :effective_at, :is_current, :parent_id,
-      :inclusion_taxon_concept_id, :hash_annotation_id, :event_id,
-      :internal_notes,
-      :excluded_taxon_concepts_ids, # String
-      :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-      :created_by_id, :updated_by_id,
-      annotation_attributes: [
-        :listing_change_id, :symbol, :parent_symbol, :short_note_en,
-        :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
-        :display_in_index, :display_in_footnote, :event_id, :id, :_destroy
-      ],
-      party_listing_distribution_attributes: [
-        :id, :_destroy, :geo_entity_id, :listing_change_id, :is_party
-      ],
-      geo_entity_ids: [],
-      excluded_geo_entities_ids: []
+    params.expect(
+      listing_change: [
+        :taxon_concept_id, :species_listing_id, :change_type_id,
+        :effective_at, :is_current, :parent_id,
+        :inclusion_taxon_concept_id, :hash_annotation_id, :event_id,
+        :internal_notes,
+        :excluded_taxon_concepts_ids, # String
+        :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
+        :created_by_id, :updated_by_id,
+        annotation_attributes: [
+          :listing_change_id, :symbol, :parent_symbol, :short_note_en,
+          :full_note_en, :short_note_fr, :full_note_fr, :short_note_es, :full_note_es,
+          :display_in_index, :display_in_footnote, :event_id, :id, :_destroy
+        ],
+        party_listing_distribution_attributes: [
+          :id, :_destroy, :geo_entity_id, :listing_change_id, :is_party
+        ],
+        geo_entity_ids: [ [] ],
+        excluded_geo_entities_ids: [ [] ]
+      ]
     )
   end
 end

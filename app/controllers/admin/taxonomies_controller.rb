@@ -25,6 +25,6 @@ protected
 private
 
   def taxonomy_params
-    params.require(:taxonomy).permit(:name)
+    params.expect(taxonomy: [ :name ])
   end
 end

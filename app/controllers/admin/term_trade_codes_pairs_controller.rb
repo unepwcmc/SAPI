@@ -57,8 +57,8 @@ protected
 private
 
   def term_trade_codes_pair_params
-    params.require(:term_trade_codes_pair).permit(
-      :trade_code_id, :trade_code_type, :term_id
+    params.expect(
+      term_trade_codes_pair: [ :trade_code_id, :trade_code_type, :term_id ]
     )
   end
 end
