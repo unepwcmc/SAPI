@@ -50,6 +50,9 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
+  # Skip http-to-https redirect for the default health check endpoint.
+  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+
   # TODO: Since Rails 7.1, the log no longer output to file, but STDOUT, which is the better approach, specially suitable
   # for docker. However this project still deploying use cap, we may need to change it back until we ready?
   # Log to STDOUT by default

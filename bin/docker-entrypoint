@@ -4,11 +4,12 @@ if [[ "${@}" =~ "rails server" ]]; then
   rm -f ./tmp/pids/server.pid;
 fi
 
+# Removed per https://railsdiff.org/8.0.5/8.1.3
 # Enable jemalloc for reduced memory usage and latency.
-if [ -z "${LD_PRELOAD+x}" ]; then
-  LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
-  export LD_PRELOAD
-fi
+# if [ -z "${LD_PRELOAD+x}" ]; then
+#   LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
+#   export LD_PRELOAD
+# fi
 
 bundle install
 
