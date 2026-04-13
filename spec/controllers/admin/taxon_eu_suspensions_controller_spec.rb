@@ -29,8 +29,8 @@ describe Admin::TaxonEuSuspensionsController do
     end
 
     it 'assigns @geo_entities (country and territory) with two objects' do
-      territory = create(:geo_entity, geo_entity_type_id: territory_geo_entity_type.id)
-      country = create(:geo_entity)
+      create(:geo_entity, geo_entity_type_id: territory_geo_entity_type.id)
+      create(:geo_entity)
 
       get :new, params: { taxon_concept_id: @taxon_concept.id }
 

@@ -175,6 +175,11 @@ Layout/AssignmentIndentation:
 
 Metrics/MethodLength:
   Enabled: false
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
 
 Naming/VariableNumber:
   Enabled: false
@@ -185,6 +190,15 @@ Layout/HashAlignment:
 
 Rails/NotNullColumn:
   Enabled: false
+
+Rails/ExampleLength:
+  Enabled: true
+  Max: 10
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
 
 Rails/UnknownEnv:
   Enabled: true

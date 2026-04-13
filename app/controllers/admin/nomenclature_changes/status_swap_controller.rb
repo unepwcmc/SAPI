@@ -1,8 +1,9 @@
 class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChanges::BuildController
-  steps *NomenclatureChange::StatusSwap::STEPS
+  steps(*NomenclatureChange::StatusSwap::STEPS)
 
   def show
     builder = klass::Constructor.new(@nomenclature_change)
+
     case step
     when :primary_output
       set_events
@@ -21,6 +22,7 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
       processor = klass::Processor.new(@nomenclature_change)
       @summary = processor.summary
     end
+
     render_wizard
   end
 

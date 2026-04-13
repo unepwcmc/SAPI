@@ -1,5 +1,5 @@
 class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::BuildController
-  steps *NomenclatureChange::Lump::STEPS
+  steps(*NomenclatureChange::Lump::STEPS)
 
   def show
     builder = NomenclatureChange::Lump::Constructor.new(@nomenclature_change)
@@ -22,6 +22,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       skip_or_previous_step if @nomenclature_change.inputs.map(&:legislation_reassignments).flatten.empty?
     when :summary
       builder.build_document_reassignments
+
       processor = NomenclatureChange::Lump::Processor.new(@nomenclature_change)
       @summary = processor.summary
     end

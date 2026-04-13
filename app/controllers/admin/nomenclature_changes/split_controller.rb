@@ -29,6 +29,7 @@ class Admin::NomenclatureChanges::SplitController < Admin::NomenclatureChanges::
       skip_or_previous_step if @nomenclature_change.input.legislation_reassignments.empty?
     when :summary
       builder.build_document_reassignments
+
       processor = NomenclatureChange::Split::Processor.new(@nomenclature_change)
       @summary = processor.summary
     end
