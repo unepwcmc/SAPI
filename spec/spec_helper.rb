@@ -103,6 +103,20 @@ RSpec.configure do |config|
       Sidekiq::Testing.fake!
     end
   end
+
+  config.before(:each) do |example|
+    if example.metadata[:cache]
+      memory_store = ActiveSupport::Cache.lookup_store(:memory_store)
+
+      allow(
+        Rails.application.config.action_controller
+      ).to receive(:perform_caching).and_return(true)
+
+      allow(Rails).to receive(:cache).and_return(memory_store)
+
+      Rails.cache.clear
+    end
+  end
 end
 
 def build_attributes(*args)

@@ -6,9 +6,12 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore all environment files (except templates).
+# Ignore all environment files
 /.env*
-!/.env*.erb
+
+# Ignore Kamal files.
+/config/deploy*.yml
+/.kamal
 
 # Ignore all default key files.
 /config/master.key

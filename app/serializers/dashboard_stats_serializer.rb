@@ -18,7 +18,7 @@ class DashboardStatsSerializer < ActiveModel::Serializer
   end
 
   def cache_key
-    key = [
+    [
       self.class.name,
       @object.geo_entity.id,
       @object.kingdom,
@@ -26,7 +26,5 @@ class DashboardStatsSerializer < ActiveModel::Serializer
       @object.time_range_start,
       @object.time_range_end
     ]
-    Rails.logger.debug { "CACHE KEY: #{key.inspect}" }
-    key
   end
 end
