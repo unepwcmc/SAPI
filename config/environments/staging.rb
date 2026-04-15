@@ -136,7 +136,8 @@ Rails.application.configure do
   config.ember.variant = :production
 
   # Custom email settings
-  mailer_credentials = Rails.application.credentials[:mailer]
+  # Can be nil when doing asset compilation
+  mailer_credentials = Rails.application.credentials[:mailer] || {}
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {

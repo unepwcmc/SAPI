@@ -92,38 +92,39 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
+      target: exec-develop
     command: bundle exec rails server -p 3000 -b '0.0.0.0'
     volumes: &rails_volumes
       # Used for both rails and sidekiq
 
       # The following paths are commonly written by the application at runtime
-      - 'app_tmp:/SAPI/tmp'
-      - 'app_log:/SAPI/log'
-      - 'app_storage:/SAPI/storage'
-      - 'app_public_uploads:/SAPI/public/uploads'
-      - 'app_public_downloads:/SAPI/public/downloads'
-      - 'app_private_elibrary:/SAPI/private/elibrary'
-      - 'app_spec_public:/SAPI/spec/public/'
+      # - 'app_tmp:/rails/tmp'
+      # - 'app_log:/rails/log'
+      # - 'app_storage:/rails/storage'
+      # - 'app_public_uploads:/rails/public/uploads'
+      # - 'app_public_downloads:/rails/public/downloads'
+      # - 'app_private_elibrary:/rails/private/elibrary'
+      # - 'app_spec_public:/rails/spec/public/'
 
       # The following paths are writable during build/development
-      - './Gemfile.lock:/SAPI/Gemfile.lock'
+      - './Gemfile.lock:/rails/Gemfile.lock'
 
       # Most rest of the application should not be writable, except to run
       # specific tasks like db migrations
-      - './app:/SAPI/app:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './bin:/SAPI/bin:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './config:/SAPI/config:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './db:/SAPI/db:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './db_init:/SAPI/db_init:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './doc:/SAPI/doc:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './lib:/SAPI/lib:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './script:/SAPI/script:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './spec:/SAPI/spec:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './vendor:/SAPI/vendor:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './app:/rails/app:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './bin:/rails/bin:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './config:/rails/config:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './db:/rails/db:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './db_init:/rails/db_init:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './doc:/rails/doc:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './lib:/rails/lib:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './script:/rails/script:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './spec:/rails/spec:${SAPI_CONTAINER_FS_MODE:-ro}'
+      - './vendor:/rails/vendor:${SAPI_CONTAINER_FS_MODE:-ro}'
 
       # During deploy public/assets is removed and re-added
-      - './public:/SAPI/public'
-      - '.:/SAPI'
+      - './public:/rails/public'
+      - '.:/rails'
 
       # Keep the cache of bundler gems for sharing across install commands
       - bundler_gems:/usr/local/bundle
@@ -153,29 +154,29 @@ services:
     # Sometimes the db is not ready when we attempt to start
     restart: on-failure:10
 
-  deploy:
-    container_name: sapi-cap-deploy
-    build:
-      context: ./
-      dockerfile: Dockerfile.cap-deploy
-    volumes: *rails_volumes
-    networks:
-      - sapi
-    stdin_open: true
-    tty: true
-    environment:
-      SAPI_DATABASE_HOST: sapi-db-pg17
-      SAPI_DATABASE_USERNAME: postgres
-      SAPI_DATABASE_NAME: sapi_development
-      SAPI_DATABASE_PORT: 5432
-      SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
-      SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
-      # Defaults to blank; used by AppSignal:
-      USER: "$USER"
-      USERNAME: "$USERNAME"
-    secrets:
-      - host_ssh_key
-      - host_ssh_config
+  # deploy:
+  #   container_name: sapi-cap-deploy
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile.cap-deploy
+  #   volumes: *rails_volumes
+  #   networks:
+  #     - sapi
+  #   stdin_open: true
+  #   tty: true
+  #   environment:
+  #     SAPI_DATABASE_HOST: sapi-db-pg17
+  #     SAPI_DATABASE_USERNAME: postgres
+  #     SAPI_DATABASE_NAME: sapi_development
+  #     SAPI_DATABASE_PORT: 5432
+  #     SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
+  #     SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
+  #     # Defaults to blank; used by AppSignal:
+  #     USER: "$USER"
+  #     USERNAME: "$USERNAME"
+  #   secrets:
+  #     - host_ssh_key
+  #     - host_ssh_config
 
   redis:
     container_name: sapi-redis

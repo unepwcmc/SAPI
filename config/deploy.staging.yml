@@ -32,7 +32,8 @@ servers:
 
 # Use staging-specific Dockerfile that starts puma (Dockerfile.deploy uses tail -f /dev/null for Capistrano)
 builder:
-  dockerfile: Dockerfile.staging
+  dockerfile: Dockerfile
+  target: exec-staging
 
 # Environment variables
 env:
