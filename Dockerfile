@@ -1,7 +1,3 @@
-# Staging Dockerfile — identical to Dockerfile.deploy but with puma as CMD.
-# Dockerfile.deploy uses `tail -f /dev/null` for production (Capistrano manages the process).
-# Kamal manages the process via Docker, so we start puma directly here.
-
 ARG RUBY_VERSION=3.4.9
 
 FROM ruby:$RUBY_VERSION-slim AS base
