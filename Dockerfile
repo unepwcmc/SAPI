@@ -155,7 +155,7 @@ FROM build-develop AS built-develop
 
 ##
 # The build step for staging
-FROM build AS built-staging
+FROM build AS build-staging
   ENV NODE_ENV="production" \
     RAILS_ENV="staging" \
     BUNDLE_DEPLOYMENT="1" \
@@ -183,7 +183,7 @@ FROM build AS built-staging
 
   RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-FROM base AS base-staging
+FROM base AS built-staging
   ARG DEFAULT_GROUPNAME=railsgroup
   ARG DEFAULT_USERNAME=railsuser
   ENV BUNDLE_PATH="/usr/local/bundle"
