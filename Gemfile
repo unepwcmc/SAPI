@@ -11,7 +11,7 @@ gem 'rack-cors'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
-gem 'puma', '~> 5.0'
+gem 'puma', '~> 8.0'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 6'
@@ -21,7 +21,7 @@ gem 'sprockets', '~> 4'
 gem 'sprockets-rails', require: 'sprockets/railtie'
 
 # Use Terser as compressor for JavaScript assets
-gem 'terser', '~> 1.2.3'
+gem 'terser', '~> 1.2.7'
 
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 5.0'
@@ -35,15 +35,15 @@ gem 'active_storage_validations', '~> 2.0'
 gem 'redis', '~> 4.8'
 
 # Use PostgreSQL database
-gem 'pg', '~> 1.5', '>= 1.5.4'
+gem 'pg', '~> 1.6', '>= 1.6.3'
 gem 'pg_array_parser', '~> 0.0.9'
 gem 'nested-hstore', '~> 0.1.2'
-gem 'pg_search', '~> 2.3', '>= 2.3.6'
+gem 'pg_search', '~> 2.3', '>= 2.3.7'
 
-gem 'oj', '~> 3.16', '>= 3.16.3' # optimised JSON (picked by multi_json)
+gem 'oj', '~> 3.16', '>= 3.16.17' # optimised JSON (picked by multi_json)
 gem 'inherited_resources', '~> 1.14' # Deprecated (https://github.com/activeadmin/inherited_resources#notice)
 gem 'nokogiri', '~> 1.19.2', force_ruby_platform: true
-gem 'mobility', '~> 1.2', '>= 1.2.9'
+gem 'mobility', '~> 1.3', '>= 1.3.2'
 gem 'devise', '~> 5', '>= 5.0.3'
 gem 'cancancan', '~> 3.5'
 gem 'ahoy_matey', '~> 5.0', '>= 5.0.2'
@@ -89,7 +89,7 @@ gem 'strong_migrations', '~> 1.7' # v2 drops support for pg<12
 # gem 'mini_magick', '~> 4.8'
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.4.4', require: false
+gem 'bootsnap', '>= 1.23.0', require: false
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder', '~> 2.7'
