@@ -178,17 +178,13 @@ private
           ]
         ],
         proposal_details_attributes: [
-          [
-            :id, :_destroy, :document_id,
-            :proposal_nature, :proposal_outcome_id,
-            :representation, :proposal_number
-          ]
+          :id, :_destroy, :document_id,
+          :proposal_nature, :proposal_outcome_id,
+          :representation, :proposal_number
         ],
         review_details_attributes: [
-          [
-            :id, :_destroy, :document_id,
-            :review_phase_id, :process_stage_id, :recommended_category
-          ]
+          :id, :_destroy, :document_id,
+          :review_phase_id, :process_stage_id, :recommended_category
         ]
       ]
     )

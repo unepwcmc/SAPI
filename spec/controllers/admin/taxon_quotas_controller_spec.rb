@@ -61,14 +61,21 @@ describe Admin::TaxonQuotasController do
 
     it 'renders new when not successful' do
       post :create,
-        params: { quota: { year: 0 }, taxon_concept_id: @taxon_concept.id }
+        params: {
+          quota: {
+            unit_id: 0,
+            publication_date: 1.week.ago,
+            geo_entity_id: @geo_entity.id
+          },
+          taxon_concept_id: @taxon_concept.id
+        }
 
       expect(response).to render_template('new')
     end
   end
 
   describe 'GET edit' do
-    before(:each) do
+    before do
       @quota = create(
         :quota,
         unit_id: @unit.id,
@@ -93,7 +100,7 @@ describe Admin::TaxonQuotasController do
   end
 
   describe 'PUT update' do
-    before(:each) do
+    before do
       @quota = create(
         :quota,
         unit_id: @unit.id,
@@ -130,7 +137,7 @@ describe Admin::TaxonQuotasController do
   end
 
   describe 'DELETE destroy' do
-    before(:each) do
+    before do
       @quota = create(
         :quota,
         unit_id: @unit.id,

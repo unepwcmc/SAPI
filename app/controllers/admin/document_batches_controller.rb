@@ -46,7 +46,7 @@ protected
     params.require(:document_batch).permit(
       :event_id, :date, :language_id, :is_public,
       documents_attributes: [ :type ],
-      files: []
+      files: [ {} ]
     )
 
     # TODO: for some reason the following won't work
@@ -57,6 +57,5 @@ protected
     #     documents_attributes: [ [ :type ] ],
     #   ]
     # )
-
   end
 end

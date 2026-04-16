@@ -95,7 +95,10 @@ describe Admin::EuOpinionsController do
 
     context 'when not successful' do
       it 'renders new' do
-        post :create, params: { eu_opinion: { dummy: 'test' }, taxon_concept_id: @taxon_concept.id }
+        post :create, params: {
+          eu_opinion: { geo_entity_id: 0 },
+          taxon_concept_id: @taxon_concept.id
+        }
 
         expect(response).to render_template('new')
       end
@@ -112,7 +115,11 @@ describe Admin::EuOpinionsController do
     end
 
     it 'renders the edit template' do
-      get :edit, params: { id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id, start_event_id: @eu_regulation.id }
+      get :edit, params: {
+        id: @eu_opinion.id,
+        taxon_concept_id: @taxon_concept.id,
+        start_event_id: @eu_regulation.id
+      }
 
       expect(response).to render_template('edit')
     end
@@ -120,7 +127,11 @@ describe Admin::EuOpinionsController do
     it 'assigns @geo_entities' do
       territory = create(:geo_entity, geo_entity_type_id: territory_geo_entity_type.id)
 
-      get :edit, params: { id: @eu_opinion.id, taxon_concept_id: @taxon_concept.id, start_event_id: @eu_regulation.id }
+      get :edit, params: {
+        id: @eu_opinion.id,
+        taxon_concept_id: @taxon_concept.id,
+        start_event_id: @eu_regulation.id
+      }
 
       expect(assigns(:geo_entities)).to include(territory)
     end

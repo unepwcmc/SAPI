@@ -84,6 +84,8 @@ private
     params.expect(
       nomenclature_change_lump: [
         :event_id, :status,
+        ##
+        # Note: `inputs` is plural, because lump is many -> one
         inputs_attributes: [
           [
             *input_attribute_names,
@@ -93,6 +95,8 @@ private
             legislation_reassignments_attributes: [ output_reassignment_attribute_names ]
           ]
         ],
+        ##
+        # Note: `outputs` is singular, because lump is many -> one
         output_attributes: output_attribute_names
       ]
     )

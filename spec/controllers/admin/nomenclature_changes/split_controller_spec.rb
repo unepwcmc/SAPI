@@ -182,7 +182,9 @@ describe Admin::NomenclatureChanges::SplitController do
           params: {
             nomenclature_change_split: {
               input_attributes: { taxon_concept_id: create_cites_eu_species.id }
-            }, nomenclature_change_id: @split.id, id: 'inputs'
+            },
+            nomenclature_change_id: @split.id,
+            id: 'inputs'
           }
 
         expect(response).to redirect_to(
@@ -222,11 +224,12 @@ describe Admin::NomenclatureChanges::SplitController do
         it 'redirects to nomenclature changes path' do
           pending('Strange render mismatch after upgrading to Rails 4')
 
-          put :update, params: {
-            nomenclature_change_id: @split.id,
-            id: 'summary',
-            nomenclature_change_split: { dummy: 'test' }
-          }
+          put :update,
+            params: {
+              nomenclature_change_id: @split.id,
+              id: 'summary',
+              nomenclature_change_split: { event_id: 0 }
+            }
 
           expect(response).to be_successful
           expect(response).to render_template('nomenclature_changes')

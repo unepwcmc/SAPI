@@ -87,16 +87,18 @@ private
     params.expect(
       nomenclature_change_split: [
         :event_id, :status,
-        inputs_attributes: [
-          [
-            *input_attribute_names,
-            parent_reassignments_attributes: [ output_parent_reassignment_attribute_names ],
-            name_reassignments_attributes: [ output_reassignment_attribute_names ],
-            distribution_reassignments_attributes: [ output_reassignment_attribute_names ],
-            legislation_reassignments_attributes: [ output_reassignment_attribute_names ]
-          ]
+        ##
+        # Note: `input` is singular, because split is one -> many
+        input_attributes: [
+          *input_attribute_names,
+          parent_reassignments_attributes: [ output_parent_reassignment_attribute_names ],
+          name_reassignments_attributes: [ output_reassignment_attribute_names ],
+          distribution_reassignments_attributes: [ output_reassignment_attribute_names ],
+          legislation_reassignments_attributes: [ output_reassignment_attribute_names ]
         ],
-        output_attributes: output_attribute_names
+        ##
+        # Note: `outputs` is plural, because split is one -> many
+        outputs_attributes: [ output_attribute_names ]
       ]
     )
   end

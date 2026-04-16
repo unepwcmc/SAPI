@@ -4,7 +4,7 @@ describe Admin::TaxonConceptsController do
   login_admin
 
   describe 'GET index' do
-    before(:each) do
+    before do
       @taxon = create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: 'indefinitus'),
         taxonomic_position: '1.1.2',
@@ -17,6 +17,7 @@ describe Admin::TaxonConceptsController do
 
     it 'renders the index template' do
       get :index
+
       expect(response).to render_template('index')
       expect(response).to render_template('layouts/admin')
     end
@@ -62,7 +63,7 @@ describe Admin::TaxonConceptsController do
     end
 
     it 'renders new when not successful' do
-      post :create, params: { taxon_concept: { dummy: 'test' } }, xhr: true
+      post :create, params: { taxon_concept: { name_status: '' } }, xhr: true
 
       expect(response).to render_template('new')
     end
@@ -75,6 +76,7 @@ describe Admin::TaxonConceptsController do
 
     it 'renders new_hybrid when not successful H' do
       post :create, params: { taxon_concept: { name_status: 'H' } }, xhr: true
+
       expect(response).to render_template('new_hybrid')
     end
 
@@ -90,23 +92,30 @@ describe Admin::TaxonConceptsController do
 
     context 'when JSON' do
       it 'responds with 200 when successful' do
-        put :update, format: 'json', params: {
-          id: taxon_concept.id,
-          taxon_concept: { taxonomic_position: '1.1.3' }
-        }, xhr: true
+        put :update,
+          format: 'json',
+          params: {
+            id: taxon_concept.id,
+            taxon_concept: { taxonomic_position: '1.1.3' }
+          },
+          xhr: true
 
         expect(response).to be_successful
       end
 
       it 'responds with json error when not successful' do
-        put :update, format: 'json', params: {
-          id: taxon_concept.id,
-          taxon_concept: { taxonomy_id: nil }
-        }, xhr: true
+        put :update,
+          format: 'json',
+          params: {
+            id: taxon_concept.id,
+            taxon_concept: { taxonomy_id: nil }
+          },
+          xhr: true
 
         expect(response.parsed_body).to include('errors')
       end
     end
+
     context 'when HTML' do
       it 'redirects to edit when successful' do
         put :update,
@@ -119,7 +128,11 @@ describe Admin::TaxonConceptsController do
       end
 
       it 'renders edit when not successful' do
-        put :update, params: { id: taxon_concept.id, taxon_concept: { taxonomy_id: nil } }
+        put :update,
+          params: {
+            id: taxon_concept.id,
+            taxon_concept: { taxonomy_id: nil }
+          }
 
         expect(response).to render_template('edit')
       end
@@ -138,6 +151,7 @@ describe Admin::TaxonConceptsController do
 
   describe "DELETE destroy doesn't work for non managers" do
     login_contributor
+
     let(:taxon_concept) { create(:taxon_concept) }
 
     it "redirects to admin root path and doesn't delete" do

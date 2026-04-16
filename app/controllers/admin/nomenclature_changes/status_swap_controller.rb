@@ -70,26 +70,26 @@ private
       input_attribute_names,
       output_attribute_names,
       output_reassignment_attribute_names,
-      parent_reassignments_attribute_names,
+      output_parent_reassignments_attribute_names,
     ) = common_nomenclature_change_attribute_names.values_at(
       :input_attribute_names,
       :output_attribute_names,
       :output_reassignment_attribute_names,
-      :parent_reassignments_attribute_names,
+      :output_parent_reassignments_attribute_names,
     )
 
     params.expect(
       nomenclature_change_status_swap: [
         :event_id, :status,
-        primary_output_attributes: [ output_attribute_names ],
-        secondary_output_attributes: [ output_attribute_names ],
+        primary_output_attributes: output_attribute_names,
+        secondary_output_attributes: output_attribute_names,
         input_attributes: [
           *input_attribute_names,
-          parent_reassignments_attributes: [ parent_reassignments_attribute_names ]
-        ],
-        name_reassignments_attributes: [ output_reassignment_attribute_names ],
-        distribution_reassignments_attributes: [ output_reassignment_attribute_names ],
-        legislation_reassignments_attributes: [ output_reassignment_attribute_names ]
+          parent_reassignments_attributes: [ output_parent_reassignments_attribute_names ],
+          name_reassignments_attributes: [ output_reassignment_attribute_names ],
+          distribution_reassignments_attributes: [ output_reassignment_attribute_names ],
+          legislation_reassignments_attributes: [ output_reassignment_attribute_names ]
+        ]
       ]
     )
   end

@@ -70,11 +70,11 @@ private
         secondary_output_attributes: output_attribute_names,
         input_attributes: [
           *input_attribute_names,
-          parent_reassignments_attributes: [ parent_reassignments_attribute_names ]
-        ],
-        name_reassignments_attributes: [ output_reassignment_attribute_names ],
-        distribution_reassignments_attributes: [ output_reassignment_attribute_names ],
-        legislation_reassignments_attributes: [ output_reassignment_attribute_names ]
+          parent_reassignments_attributes: [ parent_reassignments_attribute_names ],
+          name_reassignments_attributes: [ output_reassignment_attribute_names ],
+          distribution_reassignments_attributes: [ output_reassignment_attribute_names ],
+          legislation_reassignments_attributes: [ output_reassignment_attribute_names ]
+        ]
       ]
     )
   end

@@ -39,7 +39,7 @@ class Trade::SandboxShipmentsController < TradeController
     sandbox_klass = Trade::SandboxTemplate.ar_klass(aru.sandbox.table_name)
 
     sandbox_klass.update_batch(
-      update_batch_params[:updates], ve, aru
+      update_batch_params, ve, aru
     )
 
     head :no_content
@@ -71,8 +71,6 @@ private
 
   def update_batch_params
     params.expect(
-      :annual_report_upload_id,
-      :validation_error_id,
       updates: sandbox_shipment_attribute_names
     )
   end

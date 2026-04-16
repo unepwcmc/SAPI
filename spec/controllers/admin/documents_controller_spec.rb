@@ -220,7 +220,8 @@ describe Admin::DocumentsController, sidekiq: :inline do
       it 'assign review phase to Review' do
         put :update,
           params: {
-            id: document.id, document: {
+            id: document.id,
+            document: {
               date: Date.today,
               review_details_attributes: { review_phase_id: review_phase.id }
             }
