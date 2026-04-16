@@ -7,10 +7,6 @@
 #   export LD_PRELOAD
 # fi
 
-if [[ "$RAILS_ENV" =~ "develop" ]]; then
-  bundle install
-fi
-
 mkdir -p {./,spec/}public/downloads/checklist
 mkdir -p {./,spec/}public/downloads/cites_listings
 mkdir -p {./,spec/}public/downloads/cites_suspensions

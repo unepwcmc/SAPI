@@ -204,11 +204,7 @@ FROM built-staging AS deploy-staging
   CMD ["tail", "-f", "/dev/null"]
 
 FROM built-staging AS exec-staging
-  ENV NODE_ENV="production" \
-    RAILS_ENV="staging" \
-    BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+  ENV RAILS_ENV="staging"
 
   ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
@@ -220,7 +216,7 @@ FROM built-develop AS deploy-develop
   CMD ["tail", "-f", "/dev/null"]
 
 FROM built-develop AS exec-develop
-  ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+  ENTRYPOINT ["/rails/bin/docker-entrypoint-develop"]
 
   EXPOSE 80
 
