@@ -41,4 +41,9 @@ builder:
   arch: amd64
   args:
     RUBY_VERSION: 3.4.9
+  dockerfile: Dockerfile
+  target: exec-staging
+  # Use the version in the dockerfile
+  # args:
+  #  RUBY_VERSION: 3.4.9
   remote: ssh://wcmc@172.20.0.146

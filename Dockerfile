@@ -108,7 +108,7 @@ FROM build AS build-develop
     | xargs -I _BUNDLER_VERSION_ gem install bundler -v _BUNDLER_VERSION_ \
   ;
 
-FROM build-develop AS exec-develop
+FROM build-develop AS built-develop
   ##
   # You may wish to do the following:
   #
@@ -143,7 +143,7 @@ FROM build-develop AS exec-develop
   # Ensure writable dirs for the non-root user
   RUN mkdir -p /usr/local/bundle \
       ./ ./db ./log ./storage ./tmp \
-    && chown -R "${LOCAL_UID}:${LOCAL_GID}" \
+    && chown -R $LOCAL_UID:$LOCAL_GID \
       /usr/local/bundle \
       ./ ./db ./log ./storage ./tmp \
   ;
@@ -153,15 +153,9 @@ FROM build-develop AS exec-develop
   # a user
   USER ${LOCAL_UID}:${LOCAL_GID}
 
-  ENTRYPOINT ["/rails/bin/docker-entrypoint"]
-
-  EXPOSE 80
-
-  CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
-
 ##
 # The build step for staging
-FROM build AS build-staging
+FROM build AS built-staging
   ENV NODE_ENV="production" \
     RAILS_ENV="staging" \
     BUNDLE_DEPLOYMENT="1" \
@@ -187,9 +181,9 @@ FROM build AS build-staging
 
   RUN bundle exec bootsnap precompile app/ lib/
 
-  # RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+  RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-FROM base AS exec-staging
+FROM base AS base-staging
   ARG DEFAULT_GROUPNAME=railsgroup
   ARG DEFAULT_USERNAME=railsuser
   ENV BUNDLE_PATH="/usr/local/bundle"
@@ -206,10 +200,22 @@ FROM base AS exec-staging
   COPY --from="build-staging" --chown=1000:1000 $BUNDLE_PATH $BUNDLE_PATH
   COPY --from="build-staging" --chown=1000:1000 /rails/ /rails/
 
+FROM built-staging AS deploy-staging
+  CMD ["tail", "-f", "/dev/null"]
+
+FROM built-staging AS exec-staging
   ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
   EXPOSE 80
 
   CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
 
-FROM exec-develop AS default
+FROM built-develop AS deploy-develop
+  CMD ["tail", "-f", "/dev/null"]
+
+FROM built-develop AS exec-develop
+  ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+
+  EXPOSE 80
+
+  CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
