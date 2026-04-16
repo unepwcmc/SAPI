@@ -201,10 +201,14 @@ FROM base AS built-staging
   COPY --from="build-staging" --chown=1000:1000 /rails/ /rails/
 
 FROM built-staging AS deploy-staging
+  ENV RAILS_ENV="staging" \
+    BUNDLE_WITHOUT="development"
+
   CMD ["tail", "-f", "/dev/null"]
 
 FROM built-staging AS exec-staging
-  ENV RAILS_ENV="staging"
+  ENV RAILS_ENV="staging" \
+    BUNDLE_WITHOUT="development"
 
   ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
