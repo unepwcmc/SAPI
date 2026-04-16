@@ -204,6 +204,12 @@ FROM built-staging AS deploy-staging
   CMD ["tail", "-f", "/dev/null"]
 
 FROM built-staging AS exec-staging
+  ENV NODE_ENV="production" \
+    RAILS_ENV="staging" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT="development"
+
   ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
   EXPOSE 80
