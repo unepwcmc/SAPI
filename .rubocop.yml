@@ -2,7 +2,7 @@
 inherit_gem:
   rubocop-rails-omakase: rubocop.yml
 
-require:
+plugins:
   - rubocop-capybara
   - rubocop-factory_bot
   - rubocop-rails
@@ -126,6 +126,16 @@ Layout/IndentationWidth:
 Layout/ClosingParenthesisIndentation:
   Enabled: true
 
+Layout/EmptyLinesAfterModuleInclusion:
+  Enabled: true
+
+Layout/EmptyLineAfterMultilineCondition:
+  Enabled: true
+
+Style/ParenthesesAroundCondition:
+  Enabled: true
+  AllowInMultilineConditions: true
+
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SupportedStyles.
 # SupportedStyles: space, no_space
 Layout/SpaceInsideHashLiteralBraces:
@@ -191,7 +201,12 @@ Layout/HashAlignment:
 Rails/NotNullColumn:
   Enabled: false
 
-Rails/ExampleLength:
+
+# Harmless. Make this very large.
+RSpec/NestedGroups:
+  Max: 10
+
+RSpec/ExampleLength:
   Enabled: true
   Max: 10
   CountAsOne:
@@ -565,6 +580,20 @@ Rails/WhereNotWithMultipleConditions: # new in 2.17
   Enabled: true
 Rails/WhereRange: # new in 2.25
   Enabled: true
+Rails/EnumSyntax: # new in 2.26
+  Enabled: true
+Rails/FindByOrAssignmentMemoization: # new in 2.33
+  Enabled: true
+Rails/HttpStatusNameConsistency: # new in 2.34
+  Enabled: true
+Rails/MultipleRoutePaths: # new in 2.29
+  Enabled: true
+Rails/OrderArguments: # new in 2.33
+  Enabled: true
+Rails/RedirectBackOrTo: # new in 2.34
+  Enabled: true
+Rails/StrongParametersExpect: # new in 2.29
+  Enabled: true
 
 Capybara/ClickLinkOrButtonStyle: # new in 2.19
   Enabled: true
@@ -583,6 +612,10 @@ Capybara/SpecificMatcher: # new in 2.12
 Capybara/RSpec/HaveSelector: # new in 2.19
   Enabled: true
 Capybara/RSpec/PredicateMatcher: # new in 2.19
+  Enabled: true
+Capybara/FindAllFirst: # new in 2.22
+  Enabled: true
+Capybara/NegationMatcherAfterVisit: # new in 2.22
   Enabled: true
 FactoryBot/AssociationStyle: # new in 2.23
   Enabled: true
@@ -611,4 +644,8 @@ RSpecRails/MinitestAssertions: # new in 2.17
 RSpecRails/NegationBeValid: # new in 2.23
   Enabled: true
 RSpecRails/TravelAround: # new in 2.19
+  Enabled: true
+RSpec/IncludeExamples: # new in 3.6
+  Enabled: true
+RSpec/LeakyLocalVariable: # new in 3.8
   Enabled: true
