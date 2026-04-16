@@ -9,7 +9,6 @@ servers:
       add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
     proxy:
       hosts:
-        - staging.speciesplus.net # Public-facing domain
         - sapi-web-staging-01.internal.unep-wcmc.org
       ssl:
         certificate_pem: CERTIFICATE_PEM

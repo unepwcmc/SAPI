@@ -39,7 +39,6 @@ ssh:
 # Configure builder setup — builds remotely on the server so localhost:5555 registry works
 builder:
   arch: amd64
-  dockerfile: Dockerfile.deploy
   args:
-    RUBY_VERSION: 3.2.5
+    RUBY_VERSION: 3.4.9
   remote: ssh://wcmc@172.20.0.146
