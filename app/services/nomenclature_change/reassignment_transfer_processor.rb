@@ -21,6 +21,7 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
 
     if reassignment.kind_of?(NomenclatureChange::ParentReassignment) ||
       reassignment.kind_of?(NomenclatureChange::OutputParentReassignment)
+
       reassignable.parent_id = new_taxon_concept.id
 
       reassignable
@@ -63,6 +64,7 @@ class NomenclatureChange::ReassignmentTransferProcessor < NomenclatureChange::Re
         reassignable.is_a?(CitesSuspension) || reassignable.is_a?(Quota) ||
         reassignable.is_a?(EuSuspension) || reassignable.is_a?(EuOpinion)
       )
+
         transferred_object.assign_attributes(
           notes(transferred_object, reassignment)
         )

@@ -7,6 +7,7 @@ class Admin::ExportsController < Admin::AdminController
         csv_separator:
           if filter_params && filter_params[:csv_separator] &&
             filter_params[:csv_separator].downcase.strip.to_sym == :semicolon
+
             :semicolon
           else
             :comma

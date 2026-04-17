@@ -50,6 +50,7 @@ namespace :import do
           if ActiveModel::Type::Boolean.new.cast(
             ENV.fetch('IMPORT_DISTRIBUTIONS_DELETE_EXISTING', nil)
           )
+
             deletion_result = ApplicationRecord.connection.execute(
               <<-SQL.squish
                 WITH distributions_to_delete AS (

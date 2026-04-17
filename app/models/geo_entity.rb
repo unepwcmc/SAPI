@@ -31,6 +31,7 @@ class GeoEntity < ApplicationRecord
   include Changeable
   include Deletable
   extend Mobility
+
   translates :name
   belongs_to :geo_entity_type
   has_many :geo_relationships

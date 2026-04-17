@@ -87,7 +87,7 @@ private
           name_reassignments_attributes: [ output_reassignment_attribute_names ],
           distribution_reassignments_attributes: [ output_reassignment_attribute_names ],
           legislation_reassignments_attributes: [ output_reassignment_attribute_names ]
-        ],
+        ]
       ]
     )
   end

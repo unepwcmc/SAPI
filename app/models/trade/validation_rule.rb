@@ -94,6 +94,7 @@ class Trade::ValidationRule < ApplicationRecord
         Trade::SandboxTemplate.column_names +
         [ 'point_of_view', 'importer', 'exporter', 'rank' ]
       ).include? scope_column
+
         res[scope_column] = scope_def
       end
     end

@@ -1,9 +1,11 @@
 # Implements "raw" shipments export
 class Trade::ShipmentsExport < Species::CsvCopyExport
   include Trade::ShipmentReportQueries
+
   PUBLIC_CSV_LIMIT = 1000000
   PUBLIC_WEB_LIMIT = 50000
   include ActiveModel::SerializerSupport
+
   delegate :report_type, to: :@search
   delegate :page, to: :@search
   delegate :per_page, to: :@search

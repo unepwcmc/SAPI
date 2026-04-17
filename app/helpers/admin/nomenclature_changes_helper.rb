@@ -158,6 +158,7 @@ module Admin::NomenclatureChangesHelper
       elsif ff.object.taxon_concept &&
         ff.object.new_scientific_name.present? &&
         ff.object.taxon_concept.full_name != ff.object.new_scientific_name
+
         # this scenario occurrs when an existing taxon will change name
         'existing_subspecies'
       else

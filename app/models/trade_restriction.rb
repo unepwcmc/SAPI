@@ -207,6 +207,7 @@ class TradeRestriction < ApplicationRecord
       until (
         objs = export_query(filters).limit(limit).offset(offset)
       ).empty?
+
         objs.each do |q|
           row = []
           row += Species::RestrictionsExport.fill_taxon_columns(q)

@@ -54,6 +54,7 @@
 # change.
 class NomenclatureChange::Output < ApplicationRecord
   include TrackWhoDoesIt
+
   attr_accessor :output_type # New taxon, Existing subspecies, Existing taxon
 
   belongs_to :nomenclature_change
@@ -211,6 +212,7 @@ class NomenclatureChange::Output < ApplicationRecord
 
       if [ :parent_id, :rank, :name_status, :author_year, :full_name ].
           include?(attribute)
+
         errors.add(:"new_#{attribute}", message)
       else
         errors.add(:new_taxon_concept, message)
@@ -231,6 +233,7 @@ class NomenclatureChange::Output < ApplicationRecord
   def default_parent
     if [ 'S', 'T' ].include?(name_status) &&
       parent_full_name = expected_parent_name
+
       TaxonConcept.where(
         taxonomy_id: Taxonomy.find_by(name: Taxonomy::CITES_EU).try(:id),
         rank_id: Rank.find_by(name: rank.parent_rank_name).try(:id),

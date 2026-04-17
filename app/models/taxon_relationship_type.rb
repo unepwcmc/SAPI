@@ -14,6 +14,7 @@ class TaxonRelationshipType < ApplicationRecord
   # Used by seed and rake task.
 
   include Dictionary
+
   build_dictionary :equal_to, :includes, :overlaps, :disjunct, :has_synonym,
     :has_hybrid, :has_trade_name
 

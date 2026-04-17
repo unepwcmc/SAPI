@@ -60,6 +60,7 @@ class Trade::SandboxTemplate < ApplicationRecord
           has_paper_trail
 
           include ActiveModel::ForbiddenAttributesProtection
+
           # Previously, `attr_accesssible` was used here for:
           #   :appendix,
           #   :taxon_name,

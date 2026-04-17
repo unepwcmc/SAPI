@@ -1,5 +1,6 @@
 class Checklist::TimelineEvent
   include ActiveModel::SerializerSupport
+
   attr_accessor :id, :change_type_name, :species_listing_name, :effective_at,
     :party_id, :is_current, :pos, :auto_note, :short_note, :full_note,
     :hash_full_note, :hash_ann_symbol, :hash_ann_parent_symbol,

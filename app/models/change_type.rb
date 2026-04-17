@@ -28,6 +28,7 @@ class ChangeType < ApplicationRecord
   include Deletable
   extend Mobility
   include Dictionary
+
   build_dictionary :addition, :deletion, :reservation, :reservation_withdrawal, :exception
 
   translates :display_name

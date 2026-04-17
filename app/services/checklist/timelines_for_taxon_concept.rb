@@ -1,5 +1,6 @@
 class Checklist::TimelinesForTaxonConcept
   include ActiveModel::SerializerSupport
+
   attr_reader :id, :taxon_concept_id, :raw_timelines, :timelines,
     :timeline_years, :has_descendant_timelines, :has_events, :has_reservations
 

@@ -81,7 +81,7 @@ private
       else
         # Download the file from S3, put in temp folder.
         path_to_file = Rails.root.join(tmp_dir_path, document.file.filename.to_s).to_s
-        File.open(path_to_file, "wb") do |out|
+        File.open(path_to_file, 'wb') do |out|
           # stream download in chunks
           document.file.blob.service.download(document.file.blob.key) do |chunk|
             out.write(chunk)

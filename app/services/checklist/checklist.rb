@@ -2,6 +2,7 @@ class Checklist::Checklist
   include ActiveModel::SerializerSupport
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
+
   attr_accessor :animalia, :plantae, :authors, :synonyms, :synonyms_with_authors,
     :english_common_names, :spanish_common_names, :french_common_names, :total_cnt
   attr_reader :query
@@ -142,6 +143,7 @@ class Checklist::Checklist
           !@countries.empty?) &&
          (@countries_count > 0 ||
           @regions_count > 0)
+
         summary << I18n.t('filter_summary.on_appx')
       else
         summary << I18n.t('filter_summary.from_appx')

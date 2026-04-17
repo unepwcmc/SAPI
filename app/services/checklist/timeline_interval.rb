@@ -1,5 +1,6 @@
 class Checklist::TimelineInterval
   include ActiveModel::SerializerSupport
+
   attr_accessor :id, :start_pos, :end_pos
   # options to be passed:
   # :start_pos - start position (%)

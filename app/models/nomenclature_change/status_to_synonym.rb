@@ -33,6 +33,7 @@
 # involved between the input and one of the outputs.
 class NomenclatureChange::StatusToSynonym < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
+
   build_steps(
     :primary_output, :relay, :accepted_name, :legislation, :summary
   )
@@ -63,6 +64,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
   def required_secondary_output
     if (needs_to_relay_associations? || requires_accepted_name_assignment?) &&
       secondary_output.nil?
+
       errors.add(:secondary_output, 'Must have a secondary output')
       return false
     end

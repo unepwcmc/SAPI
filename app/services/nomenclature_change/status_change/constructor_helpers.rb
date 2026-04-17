@@ -22,6 +22,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
     if @nomenclature_change.needs_to_relay_associations? && (
       input.nil? || input.taxon_concept_id != output.taxon_concept_id
     )
+
       # we need to create an input with same taxon as this output
       @nomenclature_change.build_input(
         taxon_concept_id: output.taxon_concept_id

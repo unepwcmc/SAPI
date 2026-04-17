@@ -28,6 +28,7 @@
 
 class DocumentCitationGeoEntity < ApplicationRecord
   include TrackWhoDoesIt
+
   # Used by app/models/nomenclature_change/reassignment_copy_processor.rb and lib/tasks/elibrary/identification_docs_distributions_importer.rb
 
   belongs_to :geo_entity

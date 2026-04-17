@@ -74,6 +74,7 @@ class TaxonConcept < ApplicationRecord
   include Deletable
   extend Mobility
   include TrackWhoDoesIt
+
   has_paper_trail versions: { class_name: 'TaxonConceptVersion' }, on: :destroy,
     meta: {
       taxon_concept_id: :id,
@@ -228,6 +229,7 @@ class TaxonConcept < ApplicationRecord
        saved_change_to_taxon_name_id? ||
        saved_change_to_parent_id? ||
        saved_change_to_name_status?
+
       Species::Search.increment_cache_iterator
       Species::TaxonConceptPrefixMatcher.increment_cache_iterator
       Checklist::Checklist.increment_cache_iterator
@@ -409,6 +411,7 @@ class TaxonConcept < ApplicationRecord
   def expected_full_name(parent)
     if self.rank &&
       Rank.in_range(Rank::VARIETY, Rank::SPECIES).include?(self.rank.name)
+
       parent.full_name +
         if self.rank.name == Rank::VARIETY
           ' var. '
@@ -592,6 +595,7 @@ private
 
     unless parent.rank.taxonomic_position >= rank.parent_rank_lower_bound &&
       parent.rank.taxonomic_position < rank.taxonomic_position
+
       errors.add(:parent_id, 'must be at immediately higher rank')
       false
     end

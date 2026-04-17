@@ -27,6 +27,7 @@
 
 class TradeRestrictionTerm < ApplicationRecord
   include TrackWhoDoesIt
+
   # Relationship model between TradeCode(term) and TradeRestriction
   belongs_to :trade_restriction
   belongs_to :term, class_name: 'TradeCode'

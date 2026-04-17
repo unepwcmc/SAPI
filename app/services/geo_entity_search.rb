@@ -22,6 +22,7 @@ private
     @locale =
       if options[:locale] &&
         [ 'en', 'es', 'fr' ].include?(options[:locale].downcase)
+
         options[:locale]
       else
         I18n.locale

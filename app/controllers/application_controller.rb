@@ -22,6 +22,7 @@ protected
         then :bad_request
       when ActionController::UnknownFormat,
         ActionDispatch::Http::MimeNegotiation::InvalidType
+
         then :not_acceptable
       else
         :unprocessable_entity

@@ -10,14 +10,20 @@ class MTaxonConceptFilterByIdWithDescendants
       Rank::GENUS, Rank::FAMILY, Rank::ORDER, Rank::CLASS, Rank::PHYLUM,
       Rank::KINGDOM
     ] # TODO: SUBFAMILY is missing here. we don't have it in listings mviews.
-    fields_to_check = (
-      [ :id ] +
-      ancestor_ranks.map { |r| "#{r.downcase}_id" }
-    ).map { |c| "#{@table}.#{c}" }
+
+    fields_to_check =
+      (
+        [ :id ] + ancestor_ranks.map do |r|
+          "#{r.downcase}_id"
+        end
+      ).map do |c|
+        "#{@table}.#{c}"
+      end
+
     @relation.where(
       <<-SQL.squish
-      ARRAY[#{fields_to_check.join(', ')}] &&
-      ARRAY[#{@ids.join(', ')}]
+        ARRAY[#{fields_to_check.join(', ')}] &&
+        ARRAY[#{@ids.join(', ')}]
       SQL
     )
   end

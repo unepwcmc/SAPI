@@ -1,5 +1,6 @@
 class Checklist::TimelineYear
   include ActiveModel::SerializerSupport
+
   attr_accessor :id, :year, :pos
   # options to be passed:
   # :year - year on the timeline

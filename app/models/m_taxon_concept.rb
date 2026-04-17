@@ -116,6 +116,7 @@
 
 class MTaxonConcept < ApplicationRecord
   extend Mobility
+
   self.table_name = :taxon_concepts_mview
   self.primary_key = :id
 

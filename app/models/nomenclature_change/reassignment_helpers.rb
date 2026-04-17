@@ -2,6 +2,7 @@ module NomenclatureChange::ReassignmentHelpers
   def self.included(base)
     base.class_eval do
       include TrackWhoDoesIt
+
       belongs_to :reassignable, polymorphic: true, optional: true
       has_many :reassignment_targets,
         inverse_of: :reassignment,

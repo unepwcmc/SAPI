@@ -1,5 +1,6 @@
 class RefreshDocumentsWorker
   include Sidekiq::Worker
+
   sidekiq_options queue: :admin, backtrace: 50, lock: :until_and_while_executing
 
   def perform

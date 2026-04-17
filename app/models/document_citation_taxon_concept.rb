@@ -28,6 +28,7 @@
 
 class DocumentCitationTaxonConcept < ApplicationRecord
   include TrackWhoDoesIt
+
   # Used by other models, not controllers.
 
   belongs_to :taxon_concept

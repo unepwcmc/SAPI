@@ -46,6 +46,7 @@ private
             Trade::ShipmentsExportFactory.public_report_types.include?(
               report_type = original_params[:report_type].downcase.strip.to_sym
             )
+
             report_type
           else
             :comptab

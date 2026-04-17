@@ -81,6 +81,7 @@ class NomenclatureChange::Split < NomenclatureChange
       outputs.map do |o|
         o.try(:new_rank_id) || o.try(:taxon_concept).try(:rank_id)
       end.uniq - [ input.try(:taxon_concept).try(:rank_id) ]).empty?
+
       errors.add(:outputs, 'Must be at same rank as input')
       false
     end
@@ -92,6 +93,7 @@ class NomenclatureChange::Split < NomenclatureChange
         output.new_scientific_name.present? ||
         (output.taxon_concept && output.taxon_concept.name_status != 'A')
       )
+
         output.new_name_status = 'A'
       end
     end
@@ -103,6 +105,7 @@ class NomenclatureChange::Split < NomenclatureChange
         output.new_scientific_name.present? ||
         (output.taxon_concept && output.taxon_concept.rank_id != new_output_rank.id)
       )
+
         output.new_rank_id = new_output_rank.id
       end
     end

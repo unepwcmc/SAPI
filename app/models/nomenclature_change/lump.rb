@@ -78,6 +78,7 @@ class NomenclatureChange::Lump < NomenclatureChange
       output.new_scientific_name.present? ||
       (output.taxon_concept && output.taxon_concept.name_status != 'A')
     )
+
       output.new_name_status = 'A'
     end
   end

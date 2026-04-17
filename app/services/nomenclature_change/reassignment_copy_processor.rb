@@ -24,6 +24,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
       reassignable
     elsif reassignable.is_a?(TaxonRelationship) &&
       reassignable.taxon_relationship_type.name == TaxonRelationshipType::HAS_TRADE_NAME
+
       reassignable.taxon_concept_id = new_taxon_concept.id
 
       reassignable
@@ -79,6 +80,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
         reassignable.is_a?(CitesSuspension) || reassignable.is_a?(Quota) ||
         reassignable.is_a?(EuSuspension) || reassignable.is_a?(EuOpinion)
       )
+
         copied_object.assign_attributes(notes(copied_object, reassignment))
       end
 

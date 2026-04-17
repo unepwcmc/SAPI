@@ -31,6 +31,7 @@
 # to secondary output
 class NomenclatureChange::StatusSwap < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
+
   build_steps(
     :primary_output, :secondary_output, :notes, :legislation, :summary
   )

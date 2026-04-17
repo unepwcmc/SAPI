@@ -181,6 +181,7 @@ module NomenclatureChange::ConstructorHelpers
         if !dc_ge_ids_to_reassign.empty? ||
           tc_distributions.empty? ||
           dc_geo_entities.empty?
+
           reassignment.reassignment_targets.build(nomenclature_change_output_id: output.id)
         end
       end

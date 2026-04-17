@@ -207,6 +207,7 @@ class Document < ApplicationRecord
     if saved_change_to_sort_index?
       if primary_language_document &&
         primary_language_document_id != id
+
         primary_language_document.update_attribute(
           :sort_index,
           sort_index

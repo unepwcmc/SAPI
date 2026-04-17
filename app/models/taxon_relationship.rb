@@ -82,6 +82,7 @@ class TaxonRelationship < ApplicationRecord
   def update_higher_taxa_for_hybrid_child
     if other_taxon_concept && taxon_relationship_type &&
       taxon_relationship_type.name == TaxonRelationshipType::HAS_HYBRID
+
       tcd = TaxonConceptData.new(other_taxon_concept)
       data = tcd.to_h
       other_taxon_concept.update_column(:data, data)
@@ -136,6 +137,7 @@ private
       ).
           joins(:taxon_relationship_type).
           where(taxon_relationship_types: { is_intertaxonomic: true }).where.not(taxon_relationship_types: { id: self.taxon_relationship_type_id }).any?
+
       errors.add(:taxon_concept_id, 'these taxon are already related through another relationship.')
     end
   end

@@ -4,6 +4,7 @@
 # Array parameters are sorted for caching purposes.
 class Trade::SandboxSearchParams < Hash
   include SearchParamSanitiser
+
   def initialize(params)
     sanitized_params = {
       annual_report_upload_id: sanitise_positive_integer(params[:annual_report_upload_id], nil),

@@ -27,6 +27,7 @@
 
 class TradeRestrictionPurpose < ApplicationRecord
   include TrackWhoDoesIt
+
   # Relationship model between TradeCode(purpose) and TradeRestriction
 
   belongs_to :trade_restriction

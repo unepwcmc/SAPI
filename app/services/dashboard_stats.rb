@@ -64,6 +64,7 @@ private
 
     if @time_range_start && @time_range_end &&
       @time_range_start <= @time_range_end
+
       shipments_for_country = shipments_for_country.where(year: @time_range_start..@time_range_end)
     end
 

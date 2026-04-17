@@ -133,6 +133,7 @@ protected
       params[:taxon_concept].key?(ids_list_key) &&
       (stringified_ids_list = params[:taxon_concept][ids_list_key]) &&
       stringified_ids_list.is_a?(String)
+
       params[:taxon_concept][ids_list_key] = stringified_ids_list.split(',').map(&:to_i)
     end
   end

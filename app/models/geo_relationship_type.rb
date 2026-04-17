@@ -12,5 +12,6 @@ class GeoRelationshipType < ApplicationRecord
   # Used by seed only.
 
   include Dictionary
+
   build_dictionary :contains, :intersects
 end

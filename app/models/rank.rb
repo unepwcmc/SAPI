@@ -24,6 +24,7 @@ class Rank < ApplicationRecord
   include Deletable
   extend Mobility
   include Dictionary
+
   build_dictionary :kingdom, :phylum, :class, :order, :family, :subfamily, :genus, :species, :subspecies, :variety
 
   translates :display_name

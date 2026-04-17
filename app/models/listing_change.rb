@@ -224,6 +224,7 @@ private
        annotation.full_note_en.blank? &&
        annotation.full_note_fr.blank? &&
        annotation.full_note_es.blank?
+
       ann = annotation
       self.annotation = nil
       if ann.reload.listing_changes.empty?

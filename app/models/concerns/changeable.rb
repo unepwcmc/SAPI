@@ -68,6 +68,7 @@ private
     # == Changed to fix deprecation warnings ==
     if (taxon_concept.nil? && taxon_concept_id_before_last_save) ||
       (taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save)
+
       previous_taxon_concept = TaxonConcept.find_by(id: taxon_concept_id_before_last_save)
       if previous_taxon_concept
         changeable_bump_dependents_timestamp_part_one(previous_taxon_concept, updated_by_id)
@@ -118,6 +119,7 @@ private
     # == Changed to fix deprecation warnings ==
     if (taxon_concept.nil? && taxon_concept_id_before_last_save) ||
       (taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save)
+
       previous_taxon_concept = TaxonConcept.find_by(id: taxon_concept_id_before_last_save)
       if previous_taxon_concept
         changeable_bump_dependents_timestamp_part_two
@@ -147,6 +149,6 @@ private
   end
 
   def changeable_clear_show_tc_serializer_cache
-    Rails.cache.delete_matched("*ShowTaxonConceptSerializer*")
+    Rails.cache.delete_matched('*ShowTaxonConceptSerializer*')
   end
 end

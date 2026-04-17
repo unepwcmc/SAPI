@@ -12,6 +12,7 @@ class GeoEntityType < ApplicationRecord
   # Look like the only place create GeoEntityType is lib/tasks/import_trade_shipments.rake
 
   include Dictionary
+
   build_dictionary :country, :cites_region, :region, :territory,
     :aquatic_territory, :bru, :trade_entity
 

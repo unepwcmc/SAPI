@@ -1,5 +1,6 @@
 class PermitCleanupWorker
   include Sidekiq::Worker
+
   sidekiq_options queue: :admin, backtrace: 50
 
   def perform(permits_ids = [])

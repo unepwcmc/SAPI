@@ -1,5 +1,6 @@
 class SubmissionWorker
   include Sidekiq::Worker
+
   sidekiq_options queue: :admin
 
   def perform(aru_id, submitter_id)

@@ -1,5 +1,6 @@
 class QuotasCopyWorker
   include Sidekiq::Worker
+
   sidekiq_options queue: :admin, retry: false, backtrace: 50
 
   def perform(options)

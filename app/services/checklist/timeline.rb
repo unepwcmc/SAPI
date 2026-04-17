@@ -1,5 +1,6 @@
 class Checklist::Timeline
   include ActiveModel::SerializerSupport
+
   attr_reader :id, :appendix, :party_id, :timeline_events, :timeline_intervals,
     :parties, :timelines, :continues_in_present, :has_nested_timelines
   def initialize(options)
@@ -56,6 +57,7 @@ class Checklist::Timeline
         ) &&
           event.is_addition? &&
           (event.party_id.nil? || event.party_id == prev_event.party_id)
+
           event.change_type_name = 'AMENDMENT'
         end
         prev_event = event
@@ -73,6 +75,7 @@ class Checklist::Timeline
               (event.is_deletion? && next_event.is_addition?) ||
               (event.is_reservation_withdrawal? && next_event.is_reservation?)
             )
+
               Checklist::TimelineInterval.new(
                 taxon_concept_id: @taxon_concept_id,
                 listing_change_id: event.id,
@@ -86,6 +89,7 @@ class Checklist::Timeline
             # the timeline if appdx III is still current
             if ((event.is_addition? || event.is_amendment? || event.is_deletion?) &&
               @current) || (event.is_reservation? && event.is_current)
+
               @continues_in_present = true
               Checklist::TimelineInterval.new(
                 taxon_concept_id: @taxon_concept_id,

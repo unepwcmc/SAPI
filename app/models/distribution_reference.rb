@@ -28,6 +28,7 @@
 
 class DistributionReference < ApplicationRecord
   include TrackWhoDoesIt
+
   # Used by app/models/cms_mapping_manager.rb
 
   belongs_to :reference
