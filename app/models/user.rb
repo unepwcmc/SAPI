@@ -146,7 +146,7 @@ private
   def sync_with_captive_breeding_db
     # Only interested if role, name, encrypted_password, and email is changed.
     # Or user deleted.
-    return unless (previous_changes.keys & %w[email role name encrypted_password]).present? || destroyed?
+    return unless previous_changes.keys.intersect?(%w[email role name encrypted_password]) || destroyed?
 
     role_was = previous_changes['role']&.first
     action =

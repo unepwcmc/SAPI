@@ -590,14 +590,14 @@ class CsvImportHelper
           row_count += 1
 
           row_as_hash =
-            csv_row.map do |cell|
+            csv_row.to_h do |cell|
               [
                 m.csv_to_db(
                   table_name, cell[0]
                 )&.split(/\s+/)&.first || cell[0],
                 cell[1]
               ]
-            end.to_h
+            end
 
 
           row_values =
