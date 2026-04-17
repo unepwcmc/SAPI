@@ -127,21 +127,21 @@ Rails.application.configure do
   # Custom email settings
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: "smtp.sendgrid.net",
+    address: 'smtp.sendgrid.net',
     port: 587,
-    domain: "unep-wcmc.org",
-    user_name: ENV['MAIL_USERNAME'],
-    password: ENV['MAIL_PASSWORD'],
+    domain: 'unep-wcmc.org',
+    user_name: ENV.fetch('MAIL_USERNAME', nil),
+    password: ENV.fetch('MAIL_PASSWORD', nil),
     authentication: :login,
     enable_starttls_auto: true
   }
 
   config.action_mailer.default_url_options = {
-    host: "www.speciesplus.net"
+    host: 'www.speciesplus.net'
   }
 
   config.action_mailer.default_options = {
-    from: "no-reply@unep-wcmc.org",
-    reply_to: "no-reply@unep-wcmc.org"
+    from: 'no-reply@unep-wcmc.org',
+    reply_to: 'no-reply@unep-wcmc.org'
   }
 end

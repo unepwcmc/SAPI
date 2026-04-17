@@ -122,8 +122,8 @@ RSpec.configure do |config|
   end
 end
 
-def build_attributes(*args)
-  FactoryBot.build(*args).attributes.delete_if do |k, v|
+def build_attributes(*)
+  FactoryBot.build(*).attributes.delete_if do |k, v|
     [ 'id', 'created_at', 'updated_at', 'touched_at' ].member?(k)
   end
 end

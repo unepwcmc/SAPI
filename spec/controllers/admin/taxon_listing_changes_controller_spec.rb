@@ -101,9 +101,9 @@ describe Admin::TaxonListingChangesController do
 
       post :create,
         params: {
-         listing_change: { change_type_id: 0 },
-         taxon_concept_id: @taxon_concept.id,
-         designation_id: @designation.id
+          listing_change: { change_type_id: 0 },
+          taxon_concept_id: @taxon_concept.id,
+          designation_id: @designation.id
         }
 
       expect(response).to render_template('new')
