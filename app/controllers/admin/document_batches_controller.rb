@@ -43,10 +43,15 @@ protected
   end
 
   def document_batch_params
-    params.require(:document_batch).permit(
-      :event_id, :date, :language_id, :is_public,
-      documents_attributes: [ :type ],
-      files: [ {} ]
+    params.expect(
+      document_batch: [
+        :event_id,
+        :date,
+        :language_id,
+        :is_public,
+        documents_attributes: [ [ :type ] ],
+        files: []
+      ]
     )
 
     # TODO: for some reason the following won't work

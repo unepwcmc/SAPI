@@ -52,7 +52,7 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
             params: {
               document_batch: {
                 date: Date.today,
-                documents_attributes: { '0': document_attrs },
+                documents_attributes: [ document_attrs ],
                 files: files
               }
             }
@@ -78,7 +78,7 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
             params: {
               document_batch: {
                 date: nil,
-                documents_attributes: { '0': document_attrs },
+                documents_attributes: [ document_attrs ],
                 files: files
               }
             }
@@ -90,7 +90,7 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
           params: {
             document_batch: {
               date: nil,
-              documents_attributes: { '0': document_attrs },
+              documents_attributes: [ document_attrs ],
               files: files
             }
           }
@@ -107,7 +107,7 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
           params: {
             event_id: event.id, document_batch: {
               date: Date.today,
-              documents_attributes: { '0': document_attrs },
+              documents_attributes: [ document_attrs ],
               files: files
             }
           }
@@ -120,7 +120,7 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
           params: {
             event_id: event.id, document_batch: {
               date: nil,
-              documents_attributes: { '0': document_attrs },
+              documents_attributes: [ document_attrs ],
               files: files
             }
           }
