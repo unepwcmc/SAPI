@@ -25,7 +25,7 @@ module MaterialDocIdsRetriever
                 params['taxon_name'],
                 { synonyms: true, common_names: true, subspecies: false }
               ).order(
-                'rank_id ASC, full_name'
+                :rank_id, :full_name
               ).pluck(:id)
           end
 

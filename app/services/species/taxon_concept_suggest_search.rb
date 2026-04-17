@@ -4,7 +4,7 @@ class Species::TaxonConceptSuggestSearch < Species::Search
 
     @query.order(
       'length(name_for_matching) ASC'
-    ).limit(@per_page * 2).order('name_for_matching').each do |row, i|
+    ).limit(@per_page * 2).order(:name_for_matching).each do |row, i|
       # filter out 'panthera leo leo' if we have already seen 'panthera leo'
       seen_before =
         filtered_results.find do |existing_result|

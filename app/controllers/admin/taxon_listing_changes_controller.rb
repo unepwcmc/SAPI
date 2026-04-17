@@ -108,9 +108,9 @@ protected
       end
     @events =
       if @designation.is_eu?
-        EuRegulation.order('effective_at DESC')
+        EuRegulation.order(effective_at: :desc)
       elsif @designation.is_cites?
-        CitesCop.order('effective_at DESC')
+        CitesCop.order(effective_at: :desc)
       else
         []
       end

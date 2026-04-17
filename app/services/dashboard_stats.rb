@@ -79,7 +79,7 @@ private
       includes(:m_taxon_concept).
       select('taxon_concept_id, sum(quantity) as count_all').
       group(:taxon_concept_id).
-      order('count_all desc').
+      order(count_all: :desc).
       limit(@trade_limit)
     {
       totals: shipments_for_country.count,

@@ -79,7 +79,7 @@ class Quota < TradeRestriction
 
   def self.years_array
     self.select('EXTRACT(year from start_date)::VARCHAR years').
-      group(:years).order('years DESC').map(&:years)
+      group(:years).order(years: :desc).map(&:years)
   end
 
   def self.count_matching(params)

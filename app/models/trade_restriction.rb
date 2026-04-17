@@ -141,7 +141,7 @@ class TradeRestriction < ApplicationRecord
     return false unless export_query(filters).any?
 
     path = "public/downloads/#{self.to_s.tableize}/"
-    latest = self.order('updated_at DESC').
+    latest = self.order(updated_at: :desc).
       limit(1).first.updated_at.strftime('%d%m%Y-%H%M%S')
     public_file_name = "#{self.to_s.downcase}s_#{latest}_#{filters[:csv_separator]}_separated.csv"
     file_name = Digest::SHA1.hexdigest(

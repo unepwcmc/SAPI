@@ -1,7 +1,7 @@
 class Species::CommonNamesExport < Species::CsvCopyExport
   def query
     rel = MTaxonConcept.from(table_name).
-      order('taxonomic_position, common_name_language, common_name')
+      order(:taxonomic_position, :common_name_language, :common_name)
     rel = rel.where("#{table_name}.taxonomy_id" => @taxonomy.id) if @taxonomy
     rel.select(sql_columns)
   end

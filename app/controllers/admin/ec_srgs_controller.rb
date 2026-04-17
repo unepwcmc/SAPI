@@ -8,7 +8,7 @@ protected
 
   def collection
     @ec_srgs ||= end_of_association_chain.order(
-      'designation_id, effective_at DESC'
+      :designation_id, effective_at: :desc
     ).includes(:designation).page(
       params[:page]
     ).search(

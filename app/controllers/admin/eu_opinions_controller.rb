@@ -49,12 +49,12 @@ protected
     @ec_srgs = Event.where(
       "type = 'EcSrg' OR
       type = 'EuRegulation' AND name IN ('No 338/97', 'No 938/97', 'No 750/2013')"
-    ).order('effective_at DESC')
+    ).order(effective_at: :desc)
     # this will only return intersessional docs
     @documents = Document.where(
       "event_id IS NULL AND type = 'Document::CommissionNotes'"
     ).order(
-      'date DESC, title'
+      date: :desc, title: :asc
     )
   end
 

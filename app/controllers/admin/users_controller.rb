@@ -53,7 +53,7 @@ protected
         'geo_entity_types.name' => [ GeoEntityType::COUNTRY, GeoEntityType::TERRITORY ],
         is_current: true
       ).
-      order('name_en')
+      order(:name_en)
   end
 
 private

@@ -144,12 +144,12 @@ class MTaxonConcept < ApplicationRecord
     class_name: 'MCitesListingChange'
 
   has_many :current_cites_additions,
-    -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
+    -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order(effective_at: :desc, species_listing_name: :asc) },
     foreign_key: :taxon_concept_id,
     class_name: 'MCitesListingChange'
 
   has_many :current_cms_additions,
-    -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order('effective_at DESC, species_listing_name ASC') },
+    -> { where(is_current: true, change_type_name: ChangeType::ADDITION).order(effective_at: :desc, species_listing_name: :asc) },
     foreign_key: :taxon_concept_id,
     class_name: 'MCmsListingChange'
 
@@ -176,7 +176,7 @@ class MTaxonConcept < ApplicationRecord
 
   scope :at_level_of_listing, -> { where(cites_listed: 't') }
 
-  scope :taxonomic_layout, -> { order('taxonomic_position') }
+  scope :taxonomic_layout, -> { order(:taxonomic_position) }
   scope :alphabetical_layout, -> { order([ 'kingdom_position', 'full_name' ]) }
   translates :rank_display_name,
     :all_distribution_ary, :native_distribution_ary,

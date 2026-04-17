@@ -152,7 +152,7 @@ class TaxonConcept < ApplicationRecord
   has_many :taxon_concept_references, -> { includes :reference }, dependent: :destroy
   has_many :references, through: :taxon_concept_references
 
-  has_many :quotas, -> { order 'start_date DESC' }
+  has_many :quotas, -> { order start_date: :desc }
   has_many :current_quotas, -> { where 'is_current = true' }, class_name: 'Quota'
 
   has_many :cites_suspensions

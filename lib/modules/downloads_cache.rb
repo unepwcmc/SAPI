@@ -153,12 +153,12 @@ module DownloadsCache
       modules.each do |m|
         elapsed_time =
           Benchmark.realtime do
-            puts m::Index.new(params).generate
+            Rails.logger.debug m::Index.new(params).generate
           end
         Rails.logger.debug { "#{Time.now} #{m}::Index download #{locale} generated in #{elapsed_time}s" }
         elapsed_time =
           Benchmark.realtime do
-            puts m::History.new(params).generate
+            Rails.logger.debug m::History.new(params).generate
           end
         Rails.logger.debug { "#{Time.now} #{m}::History download #{locale} generated in #{elapsed_time}s" }
       end

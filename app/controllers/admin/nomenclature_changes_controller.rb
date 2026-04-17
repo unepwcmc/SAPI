@@ -17,7 +17,7 @@ protected
     @collection ||= NomenclatureChange.includes(
       [ :event, :creator ]
     ).order(
-      'created_at DESC'
+      created_at: :desc
     ).page(
       params[:page]
     ).per(10).search(

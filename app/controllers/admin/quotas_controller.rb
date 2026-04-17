@@ -35,7 +35,7 @@ protected
 
   def collection
     @quotas ||= end_of_association_chain.order(
-      'start_date DESC'
+      start_date: :desc
     ).page(
       params[:page]
     ).search(

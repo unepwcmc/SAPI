@@ -1,7 +1,7 @@
 class Species::TaxonConceptsDistributionsExport < Species::CsvCopyExport
   def query
     rel = TaxonConcept.from(table_name).
-      order('taxonomic_position, geo_entity_name')
+      order(:taxonomic_position, :geo_entity_name)
     rel = rel.where("#{table_name}.taxonomy_id" => @taxonomy.id) if @taxonomy
     rel.select(sql_columns)
   end

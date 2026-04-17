@@ -5,7 +5,7 @@ protected
     @change_types ||= end_of_association_chain.includes(
       :designation
     ).order(
-      'designation_id, name'
+      :designation_id, :name
     ).page(
       params[:page]
     ).search(

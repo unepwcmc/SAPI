@@ -22,6 +22,6 @@ private
       where([ 'time > ? AND time <= ?', @start_date, @end_date ]).
       where([ "properties->>'taxonomy_name' = ?", @taxonomy ]).
       group("properties->>'id', properties->>'full_name'").
-      order('number_of_visits DESC')
+      order(number_of_visits: :desc)
   end
 end

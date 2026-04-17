@@ -14,7 +14,7 @@ protected
 
   def collection
     @taxon_concept_term_pairs ||= end_of_association_chain.order(
-      'term_id'
+      :term_id
     ).page(
       params[:page]
     ).search(

@@ -112,7 +112,7 @@ class User < ApplicationRecord
       Reference, TaxonConceptReference, DistributionReference,
       Trade::AnnualReportUpload, Trade::Shipment
     ]
-    for i in 0..tracked_objects.length - 1
+    for i in 0..(tracked_objects.length - 1)
       if tracked_objects[i].where([ 'created_by_id = :id OR updated_by_id = :id', id: self.id ]).limit(1).count > 0
         return false
       end

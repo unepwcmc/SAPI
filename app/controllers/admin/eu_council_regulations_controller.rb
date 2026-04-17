@@ -7,7 +7,7 @@ protected
 
   def collection
     @eu_council_regulations ||= end_of_association_chain.order(
-      'effective_at DESC, name ASC'
+      effective_at: :desc, name: :asc
     ).page(
       params[:page]
     ).search(

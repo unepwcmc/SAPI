@@ -97,7 +97,7 @@ private
   end
 
   def set_events
-    @events = CitesCop.order('effective_at DESC')
+    @events = CitesCop.order(effective_at: :desc)
   end
 
   def set_taxonomy

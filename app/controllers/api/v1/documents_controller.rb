@@ -47,7 +47,7 @@ class Api::V1::DocumentsController < ApplicationController
 
         children_ids =
           taxa.map(&:children).map do |children|
-            children.pluck(:id) if children.present?
+            (children.presence&.pluck(:id))
           end.flatten.uniq.compact
 
         ancestor_ids = MaterialDocIdsRetriever.ancestors_ids(

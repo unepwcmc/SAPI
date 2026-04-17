@@ -12,7 +12,7 @@ class Checklist::Pdf::HistoryAnnotationsKey
 
   def hash_annotations_key
     tex = '\\hashAnnotationsHistoryInfo' + "\n\n"
-    cops = CitesCop.order('effective_at')
+    cops = CitesCop.order(:effective_at)
     cops.each do |cop|
       annotations = cop.hash_annotations.order(Arel.sql('SUBSTRING(symbol FROM 2)::INT'))
       if annotations.empty?

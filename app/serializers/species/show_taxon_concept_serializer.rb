@@ -67,12 +67,12 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
 
   def accepted_names
     object.accepted_names.
-      order('full_name')
+      order(:full_name)
   end
 
   def synonyms
     object.synonyms.
-      order('full_name')
+      order(:full_name)
   end
 
   def object_and_children
@@ -107,7 +107,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
           ELSE false
         END AS convention_language
       SQL
-    ).group('language_name_en').order('language_name_en').all
+    ).group('language_name_en').order(:language_name_en).all
   end
 
   def distributions_with_tags_and_references
@@ -118,7 +118,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     ).select(
       "name_en AS name, name_en AS country, ARRAY_TO_STRING(tags,  ',') AS tags_list, ARRAY_TO_STRING(citations, '; ') AS country_references"
     ).order(
-      'name_en'
+      :name_en
     ).all
   end
 
@@ -134,7 +134,7 @@ class Species::ShowTaxonConceptSerializer < ActiveModel::Serializer
     ).select(
       "iso_code2, ARRAY_TO_STRING(tags,  ',') AS tags_list"
     ).order(
-      'iso_code2'
+      :iso_code2
     ).all
   end
 

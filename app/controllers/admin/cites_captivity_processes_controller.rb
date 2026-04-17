@@ -44,7 +44,7 @@ protected
     @status = CitesCaptivityProcess::STATUS
     @events = Event.where(
       "type IN ('CitesAc','CitesPc')"
-    ).order('effective_at DESC')
+    ).order(effective_at: :desc)
   end
 
   def collection

@@ -73,7 +73,7 @@ protected
         name: GeoEntityType::SETS[GeoEntityType::DEFAULT_SET]
       }
     )
-    @eu_regulations = EuSuspensionRegulation.order('effective_at DESC')
+    @eu_regulations = EuSuspensionRegulation.order(effective_at: :desc)
     @eu_decision_types = EuDecisionType.suspensions
   end
 

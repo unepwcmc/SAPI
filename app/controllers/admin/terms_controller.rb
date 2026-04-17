@@ -18,7 +18,7 @@ protected
 
   def collection
     @terms ||= end_of_association_chain.order(
-      'code'
+      :code
     ).page(
       params[:page]
     ).search(

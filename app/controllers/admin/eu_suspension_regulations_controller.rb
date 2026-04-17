@@ -25,7 +25,7 @@ protected
     @eu_suspension_regulations ||= end_of_association_chain.includes(
       [ :creator, :updater ]
     ).order(
-      'effective_at DESC, name ASC'
+      effective_at: :desc, name: :asc
     ).page(
       params[:page]
     ).search(
@@ -35,7 +35,7 @@ protected
 
   def load_associations
     @eu_suspension_regulations_for_dropdown = EuSuspensionRegulation.order(
-      'effective_at DESC, name ASC'
+      effective_at: :desc, name: :asc
     )
   end
 

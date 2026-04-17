@@ -1,7 +1,7 @@
 class Species::OrphanedTaxonConceptsExport < Species::CsvCopyExport
   def query
     rel = TaxonConcept.from(table_name).
-      order('full_name')
+      order(:full_name)
     rel = rel.where("#{table_name}.taxonomy_id" => @taxonomy.id) if @taxonomy
     rel.select(sql_columns)
   end

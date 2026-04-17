@@ -46,7 +46,7 @@ class ApiRequest < ApplicationRecord
     ).group(:user_id).
       where.not(user_id: nil)
     self.from("(#{subquery.to_sql}) AS api_requests").
-      order('cnt DESC').limit(50)
+      order(cnt: :desc).limit(50)
   end
 
   def self.recent_requests(user = nil)

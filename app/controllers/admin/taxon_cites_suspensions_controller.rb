@@ -61,7 +61,7 @@ class Admin::TaxonCitesSuspensionsController < Admin::SimpleCrudController
     @suspension_notifications = CitesSuspensionNotification.select(
       [ :id, :name ]
     ).order(
-      'effective_at DESC'
+      effective_at: :desc
     )
   end
 

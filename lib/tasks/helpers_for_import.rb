@@ -458,7 +458,7 @@ class CsvImportHelper
     db_columns = csv_columns.map { |col| m.csv_to_db(table_name, col) }
     db_columns = db_columns.map { |col| col&.sub(/\s\w+$/, '') } unless include_data_type
 
-    db_columns.select(&:present?)
+    db_columns.compact_blank
   end
 
   def create_table_from_csv_headers(path_to_file, table_name)

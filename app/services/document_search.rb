@@ -209,7 +209,7 @@ private
       if @events_ids.present?
         @query.order([ 'date_raw DESC', :title, 'id DESC' ])
       else
-        @query.order('created_at DESC', 'id DESC')
+        @query.order(created_at: :desc, id: :desc)
       end
   end
 

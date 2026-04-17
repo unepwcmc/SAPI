@@ -50,13 +50,13 @@ protected
     @suspension_notifications = CitesSuspensionNotification.select(
       [ :id, :name ]
     ).order(
-      'effective_at DESC'
+      effective_at: :desc
     )
   end
 
   def collection
     @cites_suspensions ||= end_of_association_chain.order(
-      'start_date DESC'
+      start_date: :desc
     ).page(
       params[:page]
     ).search(

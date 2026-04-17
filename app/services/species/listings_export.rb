@@ -28,7 +28,7 @@ class Species::ListingsExport < Species::CsvCopyExport
         table_name
       ).select(
         sql_columns_with_table_name
-      ).order('taxonomic_position')
+      ).order(:taxonomic_position)
 
     rel =
       if @geo_entities_ids
