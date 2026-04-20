@@ -11,9 +11,18 @@ plugins:
 
 Rails:
   Enabled: true
+
 AllCops:
   TargetRubyVersion: 3.4
   TargetRailsVersion: 8.1
+  Exclude:
+    # do not worry about old migrations
+    - 'db/migrate/201*'
+    - 'db/migrate/2020*'
+    - 'db/migrate/2021*'
+    - 'db/migrate/2022*'
+    - 'db/migrate/2023*'
+    - 'db/migrate/2024*'
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
@@ -201,9 +210,20 @@ Layout/HashAlignment:
 Rails/NotNullColumn:
   Enabled: false
 
+Rails/UnknownEnv:
+  Enabled: true
+  Environments:
+    - development
+    - test
+    - staging
+    - production
 
-# Harmless. Make this very large.
+##
+# Increase the limit of these advisory cops.
 RSpec/NestedGroups:
+  Max: 10
+
+RSpec/MultipleMemoizedHelpers:
   Max: 10
 
 RSpec/ExampleLength:
@@ -215,13 +235,19 @@ RSpec/ExampleLength:
     - heredoc
     - method_call
 
-Rails/UnknownEnv:
-  Enabled: true
-  Environments:
-    - development
-    - test
-    - staging
-    - production
+# TODO: Not enabled as too many changes required for now.
+RSpec/ContextWording:
+  Enabled: false
+RSpec/DescribedClass:
+  Enabled: false
+RSpec/DescribeSymbol:
+  Enabled: false
+RSpec/InstanceVariable:
+  Enabled: false
+RSpec/NamedSubject:
+  Enabled: false
+RSpec/SharedExamples:
+  Enabled: false
 
 Style/Documentation:
   Enabled: false
