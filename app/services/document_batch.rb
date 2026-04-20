@@ -45,13 +45,7 @@ private
   def initialize_documents(documents_attributes, files)
     @documents = []
 
-    debugger
-
-    if (
-      documents_attributes &&
-      files
-    )
-
+    if documents_attributes && files
       unless documents_attributes.try(:length) == files.try(:length)
         raise StandardError(
           'documents_attributes and files should have the same number of elements'
