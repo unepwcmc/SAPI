@@ -8,11 +8,15 @@ require 'spec_helper'
 #     it "concats two strings with spaces" do
 #       helper.concat_strings("this","that").should == "this that"
 #     end
+
 #   end
+
 # end
+
 describe Admin::NomenclatureChangesHelper do
   describe 'split_blurb' do
     include_context 'split_definitions'
+
     context 'split with input' do
       before { @nomenclature_change = split_with_input }
 
@@ -34,6 +38,7 @@ describe Admin::NomenclatureChangesHelper do
 
   describe 'lump_blurb' do
     include_context 'lump_definitions'
+
     context 'lump with inputs' do
       before { @nomenclature_change = lump_with_inputs }
 
@@ -55,6 +60,7 @@ describe Admin::NomenclatureChangesHelper do
 
   describe 'status_change_blurb' do
     include_context 'status_change_definitions'
+
     context 'status upgrade with primary output' do
       before { @nomenclature_change = t_to_a_with_primary_output }
 

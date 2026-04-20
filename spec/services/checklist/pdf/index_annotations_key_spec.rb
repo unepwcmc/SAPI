@@ -46,7 +46,6 @@ describe Checklist::Pdf::IndexAnnotationsKey do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
 
-
     specify do
       expect(subject.hash_annotations_key).to eq("\\newpage\n\\section*{\\hashAnnotations}\n\\hashAnnotationsIndexInfo\n\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP2 & \\validFrom \\hspace{2 pt} 01/07/2013\\\\\n\\#1 & Only bark \\\\\n\n}\n")
     end
@@ -104,7 +103,6 @@ describe Checklist::Pdf::IndexAnnotationsKey do
       )
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
-
 
     specify do
       allow(LatexToPdf).to receive(:html2latex).and_return('x')

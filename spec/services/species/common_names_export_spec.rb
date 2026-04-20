@@ -41,7 +41,6 @@ describe Species::CommonNamesExport do
         FileUtils.remove_dir('spec/public/downloads/common_names', true)
       end
 
-
       context 'when file not cached' do
         specify do
           subject.export

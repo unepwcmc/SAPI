@@ -44,6 +44,7 @@ module NomenclatureChange::ConstructorHelpers
         reassignment.build_reassignment_target(nomenclature_change_output_id: output.id)
       end
     end
+
     reassignment
   end
 
@@ -60,6 +61,7 @@ module NomenclatureChange::ConstructorHelpers
           taxon_concepts_ids.include?(relationship.other_taxon_concept_id)
         end
     end
+
     input.name_reassignments =
       relationships.map do |relationship|
         _build_name_reassignment(relationship, input, outputs)
@@ -84,6 +86,7 @@ module NomenclatureChange::ConstructorHelpers
                       end
       )
     end
+
     reassignment
   end
 
@@ -114,6 +117,7 @@ module NomenclatureChange::ConstructorHelpers
         end
       end
     end
+
     reassignment
   end
 
@@ -124,10 +128,12 @@ module NomenclatureChange::ConstructorHelpers
     ].map do |legislation_collection_name|
       _build_legislation_type_reassignment(legislation_collection_name, input)
     end.compact
+
     input.legislation_reassignments.each do |reassignment|
       if input.is_a?(NomenclatureChange::Input)
         _build_multiple_targets(reassignment, outputs)
       end
+
       input.reassignments << reassignment
     end
   end
@@ -164,6 +170,7 @@ module NomenclatureChange::ConstructorHelpers
       tc_distributions = input.taxon_concept.distributions
       input_tc_ge_ids = tc_distributions.map(&:geo_entity_id)
       distribution_reassignments = input.distribution_reassignments
+
       outputs.each do |output|
         reassigned_distributions = distribution_reassignments.select do |dr|
           dr.reassignment_targets.
@@ -186,6 +193,7 @@ module NomenclatureChange::ConstructorHelpers
         end
       end
     end
+
     reassignment
   end
 
@@ -206,6 +214,7 @@ module NomenclatureChange::ConstructorHelpers
       if input.is_a?(NomenclatureChange::Input)
         _build_multiple_targets(reassignment, outputs)
       end
+
       input.reassignments << reassignment
     end
   end
@@ -216,6 +225,7 @@ module NomenclatureChange::ConstructorHelpers
       if input.is_a?(NomenclatureChange::Input)
         _build_multiple_targets(reassignment, outputs)
       end
+
       input.reassignments << reassignment
     end
   end
@@ -242,6 +252,7 @@ module NomenclatureChange::ConstructorHelpers
 
   def multi_lingual_legislation_note(note_type)
     result = {}
+
     [ :en, :es, :fr ].each do |lng|
       result[lng] =
         legislation_note(lng) do |input_html, output_html|
@@ -254,6 +265,7 @@ module NomenclatureChange::ConstructorHelpers
           end
         end
     end
+
     result
   end
 

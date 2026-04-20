@@ -75,6 +75,7 @@ module ComparisonAttributes
           a.table[attr_name].eq(attr_val).to_sql
         end
       end
+
     arel_nodes.join(' AND ')
   end
 
@@ -90,6 +91,7 @@ module ComparisonAttributes
   # if row.duplicates({ parent_id: new_parent_id })
   #   raise "Cannot reassign row #{row.id} from parent #{row.parent_id} to #{new_parent_id} - duplicate exists"
   # end
+
   # ```
   #
   # This is used heavily in code relating to nomenclature changes.

@@ -29,6 +29,7 @@ module NomenclatureChange::StatusChangeHelpers
       errors.add(:primary_output, 'Must have a primary output')
       return false
     end
+
     true
   end
 end

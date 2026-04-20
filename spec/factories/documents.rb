@@ -10,9 +10,11 @@ FactoryBot.define do
     factory :review_of_significant_trade, class: 'Document::ReviewOfSignificantTrade' do
       type { 'Document::ReviewOfSignificantTrade' }
     end
+
     factory :proposal, class: 'Document::Proposal' do
       type { 'Document::Proposal' }
     end
+
     factory :commission_note, class: 'Document::CommissionNotes' do
       type { 'Document::CommissionNotes' }
     end

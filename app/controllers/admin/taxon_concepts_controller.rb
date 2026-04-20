@@ -29,6 +29,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   def create
     create! do |success, failure|
       success.js { render('create') }
+
       failure.js do
         load_taxonomies
         load_ranks
@@ -41,6 +42,7 @@ class Admin::TaxonConceptsController < Admin::StandardAuthorizationController
   def update
     @taxon_concept = TaxonConcept.find(params[:id])
     rebuild_taxonomy = @taxon_concept.rebuild_taxonomy?(params)
+
     update! do |success, failure|
       success.js do
         UpdateTaxonomyWorker.perform_async if rebuild_taxonomy
@@ -129,6 +131,7 @@ protected
       when 'T' then :accepted_names_for_trade_name_ids
       when 'H' then :hybrid_parents_ids
       end
+
     if ids_list_key &&
       params[:taxon_concept].key?(ids_list_key) &&
       (stringified_ids_list = params[:taxon_concept][ids_list_key]) &&

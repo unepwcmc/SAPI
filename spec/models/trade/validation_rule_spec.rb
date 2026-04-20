@@ -9,6 +9,7 @@ describe Trade::ValidationRule, :drops_tables do
     annual_report.save(validate: false)
     annual_report
   end
+
   let(:sandbox_klass) do
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   end
@@ -89,6 +90,7 @@ describe Trade::ValidationRule, :drops_tables do
         travel_to(Time.now + 1) do
           @shipment2.update(taxon_name: 'Canis lupus')
           @shipment3.update(taxon_name: 'Canis lupus')
+
           expect do
             validation_rule.refresh_errors_if_needed(annual_report_upload)
           end.to change { Trade::ValidationError.count }.by(-1)
@@ -100,6 +102,7 @@ describe Trade::ValidationRule, :drops_tables do
       specify 'error record is updated to reflect new error_count' do
         travel_to(Time.now + 1) do
           @shipment2.update(taxon_name: 'Canis lupus')
+
           expect do
             validation_rule.refresh_errors_if_needed(annual_report_upload)
           end.to change { @validation_error.reload.error_count }.by(-1)

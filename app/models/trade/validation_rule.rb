@@ -89,6 +89,7 @@ class Trade::ValidationRule < ApplicationRecord
   # This method is public, because it is exposed in the serializer
   def sanitized_sandbox_scope
     res = {}
+
     scope && scope.each do |scope_column, scope_def|
       if (
         Trade::SandboxTemplate.column_names +
@@ -98,6 +99,7 @@ class Trade::ValidationRule < ApplicationRecord
         res[scope_column] = scope_def
       end
     end
+
     res
   end
 
@@ -135,6 +137,7 @@ private
   # scope needs to be :source_code => { :inclusion => [ID of W] }
   def sanitized_shipments_scope
     res = {}
+
     sanitized_sandbox_scope.each do |scope_column, scope_def|
       case scope_column
       when 'taxon_name', 'rank'
@@ -143,26 +146,33 @@ private
         res[scope_column] = scope_def
       when 'exporter', 'importer', 'country_of_origin'
         tmp_def = {}
+
         (scope_def.keys & [ 'inclusion', 'exclusion' ]).each do |k|
           tmp_def[k] = scope_def[k].map { |value| GeoEntity.find_by(iso_code2: value).id }
         end
+
         tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
         res[scope_column + '_id'] = tmp_def
       when /(.+)_code$/
         tmp_def = {}
+
         (scope_def.keys & [ 'inclusion', 'exclusion' ]).each do |k|
           tmp_def[k] = scope_def[k].map { |value| TradeCode.find_by(type: $1.capitalize, code: value).id }
         end
+
         tmp_def['blank'] = scope_def['blank'] if scope_def.key?('blank')
         res[$1 + '_id'] = tmp_def
       else
         tmp_def = {}
+
         (scope_def.keys & [ 'inclusion', 'exclusion', 'blank' ]).each do |k|
           tmp_def[k] = scope_def[k]
         end
+
         res[scope_column + '_id'] = tmp_def
       end
     end
+
     res
   end
 
@@ -174,17 +184,21 @@ private
       if scope_def['inclusion']
         shipment_in_scope = false unless scope_def['inclusion'].include?(value)
       end
+
       if scope_def['exclusion']
         shipment_in_scope = false if scope_def['exclusion'].include?(value)
       end
+
       if scope_def['blank']
         shipment_in_scope = false if shipment.send(scope_column).present?
       end
     end
+
     # make sure the validated fields are not blank
     required_shipments_columns.each do |column|
       shipment_in_scope = false if shipment.send(column).blank?
     end
+
     shipment_in_scope
   end
 

@@ -58,6 +58,7 @@ private
       else
         @filters.to_hash.symbolize_keys!.sort.to_s
       end
+
     digest = Digest::SHA1.hexdigest(value)
     # Include locale string to differentiate cached files.
     locale_string = I18n.locale&.to_s

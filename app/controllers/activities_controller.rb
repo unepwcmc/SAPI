@@ -6,6 +6,7 @@ class ActivitiesController < ApplicationController
     if linechart_start_date < 1.year.ago
       linechart_start_date = 1.year.ago
     end
+
     linechart_end_date = Time.now
     @start_week = params[:start_week] && Date.parse(params[:start_week])
     topten_start_date, topten_end_date =
@@ -15,6 +16,7 @@ class ActivitiesController < ApplicationController
       else
         [ linechart_start_date, linechart_end_date ]
       end
+
     @toptens_cites = TaxonConceptViewStats.new(
       topten_start_date, topten_end_date, Taxonomy::CITES_EU
     ).results

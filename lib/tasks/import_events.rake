@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import events from csv file (usage: rake import:events[path/to/file,path/to/another])'
+
   task :events, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 

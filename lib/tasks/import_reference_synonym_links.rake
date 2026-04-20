@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import reference synonym links from csv file (usage: rake import:reference_synonym_links[path/to/file,path/to/another])'
+
   task :reference_synonym_links, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'reference_synonym_links_import'
     puts "There are #{TaxonConceptReference.count} taxon concept references in the database."
@@ -10,6 +11,7 @@ namespace :import do
     ApplicationRecord.connection.execute('CREATE INDEX index_references_on_legacy_id_and_legacy_type ON "references" (legacy_id, legacy_type)')
 
     files = import_helper.files_from_args(t, args)
+
     files.each do |file|
       import_helper.drop_table(TMP_TABLE)
       import_helper.create_table_from_csv_headers(file, TMP_TABLE)

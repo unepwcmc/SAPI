@@ -16,6 +16,7 @@ class Trade::Sandbox
 
   def copy_from_sandbox_to_shipments(submitter)
     success = true
+
     Trade::Shipment.transaction do
       pg_result = Trade::SandboxTemplate.connection.execute(
         Trade::SandboxTemplate.send(
@@ -35,6 +36,7 @@ class Trade::Sandbox
         raise ActiveRecord::Rollback
       end
     end
+
     success
   end
 

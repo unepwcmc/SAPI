@@ -3,6 +3,7 @@ require 'spec_helper'
 describe TaxonConcept do
   context 'Boa constrictor' do
     include_context 'Boa constrictor'
+
     context 'TAXONOMY' do
       describe :full_name do
         context 'for subspecies Boa constrictor occidentalis' do

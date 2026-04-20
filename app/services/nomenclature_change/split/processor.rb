@@ -21,10 +21,12 @@ private
       map(&:taxon_concept_id).include?(@input.taxon_concept_id)
 
     chain << NomenclatureChange::InputTaxonConceptProcessor.new(@input)
+
     @outputs.each_with_index do |output, idx|
       if @input.taxon_concept_id != output.taxon_concept_id
         chain << NomenclatureChange::OutputTaxonConceptProcessor.new(output)
       end
+
       if output.will_create_taxon?
         # for the case when an existing accepted subspecies is turned into a species
         if output.name_status == 'A'
@@ -38,6 +40,7 @@ private
       elsif !output.will_create_taxon? && output.name_status == 'S'
         chain << NomenclatureChange::StatusUpgradeProcessor.new(output)
       end
+
       if @input.taxon_concept_id != output.taxon_concept_id || output.will_create_taxon?
         # if input is not one of outputs and this is the last output
         # transfer the associations rather than copy them
@@ -48,18 +51,22 @@ private
           chain << NomenclatureChange::ReassignmentCopyProcessor.new(@input, output)
         end
       end
+
       if @input.taxon_concept_id != output.taxon_concept_id
         chain << NomenclatureChange::CascadingNotesProcessor.new(output)
       end
     end
+
     unless input_is_one_of_outputs
       chain << NomenclatureChange::CascadingNotesProcessor.new(@input)
     end
+
     unless input_is_one_of_outputs
       chain << NomenclatureChange::StatusDowngradeProcessor.new(@input, @outputs)
     else
       chain << NomenclatureChange::DeleteUnreassignedProcessor.new(@input)
     end
+
     chain
   end
 

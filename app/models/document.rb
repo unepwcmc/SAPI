@@ -128,6 +128,7 @@ class Document < ApplicationRecord
   def is_link?
     self.type == 'Document::VirtualCollege' && !is_pdf?
   end
+
   alias_method :is_link, :is_link? # Used by Serializer.
 
   def self.display_name

@@ -28,6 +28,7 @@ module Checklist::Pdf::IndexContent
             main_entry(tc)
           end
         end
+
       tex << entries.join("\n\n")
       kingdom = fetcher.next
     end while !kingdom.empty?
@@ -52,6 +53,7 @@ module Checklist::Pdf::IndexContent
       res += " #{"#{tc.family_name}".upcase}" if tc.rank_name != 'FAMILY'
       res += " (#{tc.class_name})" if tc.class_name.present?
     end
+
     res += common_names_with_lng_initials(tc)
     res
   end
@@ -68,9 +70,11 @@ module Checklist::Pdf::IndexContent
       symbol = LatexToPdf.escape_latex(taxon_concept.hash_ann_symbol)
       res = " #{symbol}#{res}"
     end
+
     if taxon_concept.ann_symbol.present?
       res += "\\superscript{#{taxon_concept.ann_symbol}}"
     end
+
     res
   end
 end

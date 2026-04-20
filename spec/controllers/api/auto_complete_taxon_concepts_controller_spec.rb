@@ -94,7 +94,6 @@ describe Api::V1::AutoCompleteTaxonConceptsController do
       )
     end
 
-
     it 'returns no results when searching for single letter' do
       get :index, params: { taxonomy: 'CITES', taxon_concept_query: 'B' }
 

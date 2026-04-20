@@ -6,6 +6,7 @@ shared_context 'legislation_reassignments_processor_examples' do
       iso_code2: 'PL'
     )
   end
+
   let(:portugal) do
     create(
       :geo_entity,
@@ -13,6 +14,7 @@ shared_context 'legislation_reassignments_processor_examples' do
       iso_code2: 'PT'
     )
   end
+
   before do
     lc1_annotation = create(:annotation)
     original_lc1 = create_cites_III_addition(

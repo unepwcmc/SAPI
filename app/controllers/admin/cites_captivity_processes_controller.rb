@@ -12,12 +12,14 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
         ),
           notice: 'Operation successful'
       end
+
       failure.html do
         load_search
         render 'new'
       end
     end
   end
+
   def update
     update! do |success, failure|
       success.html do
@@ -26,6 +28,7 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
         ),
           notice: 'Operation successful'
       end
+
       failure.html do
         load_lib_objects
         load_search
@@ -33,7 +36,6 @@ class Admin::CitesCaptivityProcessesController < Admin::SimpleCrudController
       end
     end
   end
-
 
 protected
 

@@ -193,6 +193,7 @@ module SapiModule
       print_count_for 'TaxonCommons', stats[:common_names]
 
       Rails.logger.debug ''
+
       Rank.order(:taxonomic_position).each do |r|
         Rails.logger.debug { "##############   Rank: #{r.name} ####################" }
         ranked_taxon_concept_ids = TaxonConcept.
@@ -204,6 +205,7 @@ module SapiModule
           taxon_concept_id: ranked_taxon_concept_ids
         ).count
       end
+
       Rails.logger.debug '#####################################################'
       Rails.logger.debug ''
     end

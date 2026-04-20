@@ -31,6 +31,7 @@ private
     if @event
       note << following_taxonomic_changes(@event, lng)
     end
+
     note + '.</p>'
   end
 end

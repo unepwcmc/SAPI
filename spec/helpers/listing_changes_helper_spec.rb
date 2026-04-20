@@ -8,17 +8,22 @@ require 'spec_helper'
 #     it "concats two strings with spaces" do
 #       helper.concat_strings("this","that").should == "this that"
 #     end
+
 #   end
+
 # end
+
 describe ListingChangesHelper do
   let(:poland) do
     GeoEntity.find_by(iso_code2: 'PL') || create(:geo_entity, iso_code2: 'PL', name: 'Poland')
   end
+
   let(:taxon_concept) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Foobarus')
     )
   end
+
   let(:annotation) do
     create(
       :annotation,
@@ -26,6 +31,7 @@ describe ListingChangesHelper do
       full_note_en: 'Only population of Poland'
     )
   end
+
   let(:hash_annotation) do
     create(
       :annotation,
@@ -34,6 +40,7 @@ describe ListingChangesHelper do
       full_note_en: 'Only seeds and roots.'
     )
   end
+
   let(:listing_change) do
     create_cites_I_addition(
       taxon_concept_id: taxon_concept.id,
@@ -87,6 +94,7 @@ describe ListingChangesHelper do
           taxon_concept_id: listing_change.taxon_concept_id
         )
       end
+
       let!(:listing_distribution) do
         create(
           :listing_distribution,

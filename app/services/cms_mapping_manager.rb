@@ -19,6 +19,7 @@ class CmsMappingManager
 
   #       analyse mapping
   #     end
+
   #   end
 
   #   def analyse(mapping)
@@ -46,9 +47,11 @@ class CmsMappingManager
   #           else
   #             nil
   #           end
+
   #       }
   #       mapping.save
   #     end
+
   #   end
 
   #   # Finds CITES' taxon concepts that match the CMS Species or Subspecies and
@@ -76,12 +79,16 @@ class CmsMappingManager
   #           DistributionReference.find_or_create_by(
   #             distribution_id: distribution.id, reference_id: reference.reference_id)
   #         end
+
   #       end
+
   #       puts "creating taxon relationship"
   #       TaxonRelationship.create(:taxon_concept_id => matching_cites_taxon.id,
   #                                :other_taxon_concept_id => taxon.id,
   #                                :taxon_relationship_type_id => equal_to.id)
   #     end
+
   #   end
+
   # end
 end

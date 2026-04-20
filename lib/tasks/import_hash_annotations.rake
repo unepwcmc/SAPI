@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import hash annotations from csv file (usage: rake import:hash_annotations[path/to/file,path/to/another])'
+
   task :hash_annotations, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 
@@ -40,6 +41,7 @@ namespace :import do
   end
 
   desc 'Import hash annotation translations'
+
   task hash_annotations_cites_translations: [ :environment ] do
     import_helper = CsvImportHelper.new
 

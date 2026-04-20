@@ -115,6 +115,7 @@ private
         distr_ref.comparison_attributes
       )
     end
+
     # taggings
     copy_distribution_taggings(reassignable, copied_object)
   end

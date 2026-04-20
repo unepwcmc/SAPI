@@ -21,10 +21,12 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
     unless csv_cached?
       to_csv
     end
+
     unless csv_created?
       Rails.logger.error('Unable to generate output')
       return false
     end
+
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
     @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}_separated.csv"
     [

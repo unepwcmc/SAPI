@@ -41,6 +41,7 @@ describe CitesSuspension, sidekiq: :inline do
       iso_code2: 'TZ'
     )
   end
+
   let(:rwanda) do
     create(
       :geo_entity,
@@ -273,7 +274,6 @@ describe CitesSuspension, sidekiq: :inline do
         CitesSuspension.export('set' => 'current')
       end
 
-
       specify { expect(subject).not_to be_empty }
     end
   end
@@ -296,7 +296,6 @@ describe CitesSuspension, sidekiq: :inline do
 
         s.destroy
       end
-
 
       specify do
         # Currently fails because the clearing happens in an after_commit hook,

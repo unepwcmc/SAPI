@@ -63,6 +63,7 @@ module Admin::NomenclatureChangesHelper
 
     html = ' into '
     total = @nomenclature_change.outputs.size
+
     @nomenclature_change.outputs.each_with_index do |output, idx|
       if output.taxon_concept && !output.new_full_name
         html += link_to(
@@ -72,8 +73,10 @@ module Admin::NomenclatureChangesHelper
       else
         html += content_tag(:span, output.display_full_name)
       end
+
       html += ', ' if idx < (total - 1)
     end
+
     html.html_safe
   end
 
@@ -81,6 +84,7 @@ module Admin::NomenclatureChangesHelper
     content_tag(:div, class: 'well well-small') do
       concat 'Lumping '
       total = @nomenclature_change.inputs.size
+
       @nomenclature_change.inputs.each_with_index do |input, idx|
         if input.taxon_concept
           concat link_to(
@@ -88,8 +92,10 @@ module Admin::NomenclatureChangesHelper
             admin_taxon_concept_names_path(input.taxon_concept)
           )
         end
+
         concat ', ' if idx < (total - 1)
       end
+
       concat lump_outputs_blurb
     end
   end
@@ -107,6 +113,7 @@ module Admin::NomenclatureChangesHelper
     else
       html += content_tag(:span, @nomenclature_change.output.display_full_name)
     end
+
     html.html_safe
   end
 
@@ -141,6 +148,7 @@ module Admin::NomenclatureChangesHelper
       :p, content_tag(:i, nil, class: 'icon-info-sign') +
       'Select a taxon below to populate all fields with that taxon.'
     )
+
     @nomenclature_change.outputs.map do |output|
       html +=
         content_tag(:div, class: 'species-checkbox') do
@@ -148,6 +156,7 @@ module Admin::NomenclatureChangesHelper
           content_tag(:span, output.display_full_name, class: 'species-name')
         end
     end
+
     html.html_safe
   end
 
@@ -164,6 +173,7 @@ module Admin::NomenclatureChangesHelper
       else
         'existing_taxon'
       end
+
     content_tag(:div, class: 'outputs_selection') do
       [ 'New taxon', 'Existing subspecies', 'Existing taxon' ].each do |opt|
         opt_val = opt.downcase.gsub(/\s+/, '_')
@@ -176,6 +186,7 @@ module Admin::NomenclatureChangesHelper
           ) + ' ' + opt
         )
       end
+
       concat ff.link_to_remove 'Remove output'
     end
   end
@@ -265,6 +276,7 @@ module Admin::NomenclatureChangesHelper
 
   def lump_output_content
     tc = @nc.output.new_taxon_concept || @nc.output.taxon_concept
+
     content_tag(:div, class: 'tab-content') do
       content_tag(
         :div, inner_content(@nc.output, tc),
@@ -275,6 +287,7 @@ module Admin::NomenclatureChangesHelper
 
   def lump_output_tag
     tc = @nc.output.new_taxon_concept || @nc.output.taxon_concept
+
     content_tag(:ul, class: 'nav nav-tabs') do
       content_tag(:li, class: 'active') do
         concat link_to(
@@ -310,6 +323,7 @@ module Admin::NomenclatureChangesHelper
 
   def outputs_tags
     outputs = Array.wrap(select_outputs)
+
     content_tag(:ul, class: 'nav nav-tabs') do
       outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
@@ -320,6 +334,7 @@ module Admin::NomenclatureChangesHelper
 
   def outputs_content
     outputs = Array.wrap(select_outputs)
+
     content_tag(:div, class: 'tab-content') do
       outputs.each_with_index do |output, idx|
         tc = output.new_taxon_concept || output.taxon_concept
@@ -370,6 +385,7 @@ module Admin::NomenclatureChangesHelper
   def name_reassignment_label(reassignment)
     taxon_relationship = reassignment.reassignable
     other_taxon_concept = taxon_relationship.other_taxon_concept
+
     content_tag(:label, class: 'control-label') do
       content_tag(:span, taxon_relationship.taxon_relationship_type.name) +
       tag.br() +
@@ -377,6 +393,7 @@ module Admin::NomenclatureChangesHelper
         other_taxon_concept.full_name,
         admin_taxon_concept_names_path(other_taxon_concept)
       ) +
+
       content_tag(:span) do
         ' (' + (other_taxon_concept.name_status || '--') + ')'
       end +

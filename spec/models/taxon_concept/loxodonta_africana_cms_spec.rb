@@ -3,6 +3,7 @@ require 'spec_helper'
 describe TaxonConcept do
   context 'Loxodonta africana CMS' do
     include_context 'Loxodonta africana CMS'
+
     context 'TAXONOMY' do
       describe :full_name do
         context 'for species Loxodonta africana' do

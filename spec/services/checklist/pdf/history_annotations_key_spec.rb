@@ -59,7 +59,6 @@ describe Checklist::Pdf::HistoryAnnotationsKey do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
 
-
     specify do
       expect(subject.hash_annotations_key).to eq("\\hashAnnotationsHistoryInfo\n\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP1 & \\validFrom \\hspace{2 pt} 01/07/2012\\\\\n\\#1 & Only trunks \\\\\n\n}\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP2 & \\validFrom \\hspace{2 pt} 01/07/2013\\\\\n\\#1 & Only bark \\\\\n\n}\n")
     end

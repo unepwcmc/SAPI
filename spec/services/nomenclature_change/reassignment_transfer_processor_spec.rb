@@ -2,11 +2,13 @@ require 'spec_helper'
 
 describe NomenclatureChange::ReassignmentTransferProcessor do
   include_context 'split_definitions'
+
   describe :run do
     context 'input reassignments' do
       let(:split) { split_with_input_and_output }
       let(:input) { split.input }
       let(:output) { split.outputs.first }
+
       let(:processor) do
         NomenclatureChange::ReassignmentTransferProcessor.new(input, output)
       end
@@ -57,9 +59,11 @@ describe NomenclatureChange::ReassignmentTransferProcessor do
       let(:output) { split.outputs.last }
       let(:old_output_subspecies) { output.taxon_concept }
       let(:new_output_species) { output.new_taxon_concept }
+
       let(:output_processor) do
         NomenclatureChange::OutputTaxonConceptProcessor.new(output)
       end
+
       let(:processor) do
         NomenclatureChange::ReassignmentTransferProcessor.new(output, output)
       end

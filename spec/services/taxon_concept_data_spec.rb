@@ -7,15 +7,18 @@ describe TaxonConceptData do
         taxon_name: create(:taxon_name, scientific_name: 'Canidae')
       )
     end
+
     let(:genus) do
       create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Canis'),
         parent: family
       )
     end
+
     let(:accepted_species) do
       create_cites_eu_species(parent: genus)
     end
+
     let(:tcd_to_h) { TaxonConceptData.new(taxon_concept).to_h }
 
     context 'when regular accepted name' do
@@ -38,6 +41,7 @@ describe TaxonConceptData do
       let(:taxon_concept) do
         create_cites_eu_subspecies(name_status: 'H')
       end
+
       let!(:hybrid_parent_relationship) do
         create(
           :taxon_relationship,
@@ -54,6 +58,7 @@ describe TaxonConceptData do
       let(:taxon_concept) do
         create_cites_eu_subspecies(name_status: 'S')
       end
+
       let!(:hybrid_parent_relationship) do
         create(
           :taxon_relationship,
@@ -70,6 +75,7 @@ describe TaxonConceptData do
       let(:taxon_concept) do
         create_cites_eu_subspecies(name_status: 'T')
       end
+
       let!(:hybrid_parent_relationship) do
         create(
           :taxon_relationship,

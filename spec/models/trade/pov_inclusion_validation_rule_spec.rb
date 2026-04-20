@@ -25,6 +25,7 @@ describe Trade::InclusionValidationRule, :drops_tables do
       iso_code2: 'CA'
     )
   end
+
   let(:argentina) do
     create(
       :geo_entity,
@@ -33,6 +34,7 @@ describe Trade::InclusionValidationRule, :drops_tables do
       iso_code2: 'AR'
     )
   end
+
   let(:xx) do
     create(
       :geo_entity,
@@ -75,7 +77,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
         )
       end
 
-
       specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru).size).to eq(1)
@@ -101,7 +102,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
           country_of_origin: argentina.iso_code2
         )
       end
-
 
       specify do
         subject.refresh_errors_if_needed(@aru)
@@ -129,7 +129,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
         )
       end
 
-
       specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru)).to be_empty
@@ -156,7 +155,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
         )
       end
 
-
       specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru)).to be_empty
@@ -176,7 +174,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
           taxon_name: 'Pecari tajacu', source_code: 'W', country_of_origin: argentina.iso_code2
         )
       end
-
 
       specify do
         expect { subject.validation_errors_for_aru(@aru) }.not_to raise_error

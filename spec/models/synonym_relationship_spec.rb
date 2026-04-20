@@ -7,18 +7,21 @@ describe TaxonRelationship do
         taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
       )
     end
+
     let!(:tc) do
       create_cites_eu_species(
         parent_id: parent.id,
         taxon_name: create(:taxon_name, scientific_name: 'lolatus')
       )
     end
+
     let!(:another_tc) do
       create_cites_eu_species(
         parent_id: parent.id,
         taxon_name: create(:taxon_name, scientific_name: 'lolcatus')
       )
     end
+
     let(:synonym) do
       create_cites_eu_species(
         name_status: 'S',
@@ -26,6 +29,7 @@ describe TaxonRelationship do
         scientific_name: 'Lolcatus lolus'
       )
     end
+
     let(:another_synonym) do
       create_cites_eu_species(
         name_status: 'S',
@@ -33,6 +37,7 @@ describe TaxonRelationship do
         scientific_name: 'Lolcatus lolatus'
       )
     end
+
     let(:synonymy_rel) do
       build(
         :taxon_relationship,
@@ -41,6 +46,7 @@ describe TaxonRelationship do
         other_taxon_concept_id: synonym.id
       )
     end
+
     let(:another_synonymy_rel) do
       build(
         :taxon_relationship,

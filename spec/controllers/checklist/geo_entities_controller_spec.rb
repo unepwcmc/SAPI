@@ -8,6 +8,7 @@ describe Checklist::GeoEntitiesController do
       name: 'Europe'
     )
   end
+
   let!(:france) do
     create(
       :geo_entity,
@@ -17,6 +18,7 @@ describe Checklist::GeoEntitiesController do
       designations: [ cites ]
     )
   end
+
   let!(:andorra) do
     create(
       :geo_entity,
@@ -25,6 +27,7 @@ describe Checklist::GeoEntitiesController do
       iso_code2: 'AD'
     )
   end
+
   let!(:french_guiana) do
     create(
       :geo_entity,

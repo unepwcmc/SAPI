@@ -20,6 +20,7 @@ private
         accepted_names = @secondary_output ? [ @secondary_output ] : []
         NomenclatureChange::StatusDowngradeProcessor.new(@primary_output, accepted_names)
       end
+
     chain.compact
   end
 

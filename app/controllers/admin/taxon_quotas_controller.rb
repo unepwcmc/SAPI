@@ -15,28 +15,31 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
         redirect_to admin_taxon_concept_quotas_url(params[:taxon_concept_id]),
           notice: 'Operation successful'
       end
+
       failure.html { render 'create' }
     end
   end
+
   def update
     update! do |success, failure|
       success.html do
         redirect_to admin_taxon_concept_quotas_url(params[:taxon_concept_id]),
           notice: 'Operation successful'
       end
+
       failure.html do
         load_lib_objects
         render 'new'
       end
 
       success.js { render 'create' }
+
       failure.js do
         load_lib_objects
         render 'new'
       end
     end
   end
-
 
   def destroy
     destroy! do |success, failure|

@@ -50,6 +50,7 @@ class Checklist::Timeline
   def change_consecutive_additions_to_amendments
     (@timelines + [ self ]).flatten.each do |timeline|
       prev_event = nil
+
       timeline.timeline_events.each_with_index do |event, idx|
         if prev_event && (
           prev_event.is_addition? ||
@@ -60,6 +61,7 @@ class Checklist::Timeline
 
           event.change_type_name = 'AMENDMENT'
         end
+
         prev_event = event
       end
     end
@@ -99,6 +101,7 @@ class Checklist::Timeline
               )
             end
           end
+
         timeline.timeline_intervals << interval if interval
       end
     end

@@ -19,6 +19,7 @@ private
     if @include_cites
       columns << :cites_listing_original
     end
+
     columns + [
       :original_taxon_concept_party_iso_code, :original_taxon_concept_full_name_with_spp,
       :original_taxon_concept_full_note_en, :original_taxon_concept_hash_full_note_en,
@@ -39,6 +40,7 @@ private
     if @include_cites
       headers << 'CITES'
     end
+
     headers + [
       'Party', 'Listed under', 'Full note', '# Full note',
       'All_DistributionFullNames', 'All_DistributionISOCodes',

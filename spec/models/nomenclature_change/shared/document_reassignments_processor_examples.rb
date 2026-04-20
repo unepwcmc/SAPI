@@ -27,6 +27,7 @@ shared_context 'document_reassignments_processor_examples' do
   end
 
   let!(:citation) { create_citation([ input_species ], [ poland ]) }
+
   let(:reassignment) do
     create(
       :nomenclature_change_document_citation_reassignment,

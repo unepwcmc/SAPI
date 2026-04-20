@@ -119,7 +119,6 @@ describe GeoEntitySearch do
       )
     end
 
-
     specify do
       subject.cached_results
       @burma.update({ is_current: false })

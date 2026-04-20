@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Apply name status changes from csv file (usage: rake import:taxon_name_status_changes[path/to/file,path/to/another])'
+
   task :taxon_name_status_changes, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 

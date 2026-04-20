@@ -138,6 +138,7 @@ module DownloadsCache
       Checklist::Csv,
       Checklist::Json
     ]
+
     [ 'en', 'es', 'fr' ].each do |locale|
       # full download parameters
       params = {
@@ -155,11 +156,13 @@ module DownloadsCache
           Benchmark.realtime do
             Rails.logger.debug m::Index.new(params).generate
           end
+
         Rails.logger.debug { "#{Time.now} #{m}::Index download #{locale} generated in #{elapsed_time}s" }
         elapsed_time =
           Benchmark.realtime do
             Rails.logger.debug m::History.new(params).generate
           end
+
         Rails.logger.debug { "#{Time.now} #{m}::History download #{locale} generated in #{elapsed_time}s" }
       end
     end
@@ -167,11 +170,13 @@ module DownloadsCache
 
   def self.update_species_downloads
     Rails.logger.debug 'Updating Species+ downloads'
+
     Designation.dict.each do |d|
       elapsed_time =
         Benchmark.realtime do
           Species::ListingsExportFactory.new(designation: d).export
         end
+
       Rails.logger.debug { "#{Time.now} #{d} Listings download generated in #{elapsed_time}s" }
     end
 
@@ -179,56 +184,66 @@ module DownloadsCache
       Benchmark.realtime do
         CitesSuspension.export('set' => 'current')
       end
+
     Rails.logger.debug { "#{Time.now} current CITES Suspensions download generated in #{elapsed_time}s" }
     elapsed_time =
       Benchmark.realtime do
         CitesSuspension.export('set' => 'all')
       end
+
     Rails.logger.debug { "#{Time.now} all CITES Suspensions download generated in #{elapsed_time}s" }
 
     elapsed_time =
       Benchmark.realtime do
         Quota.export('set' => 'current')
       end
+
     Rails.logger.debug { "#{Time.now} current CITES Quotas download generated in #{elapsed_time}s" }
     elapsed_time =
       Benchmark.realtime do
         Quota.export('set' => 'all')
       end
+
     Rails.logger.debug { "#{Time.now} all CITES Quotas download generated in #{elapsed_time}s" }
 
     elapsed_time =
       Benchmark.realtime do
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
       end
+
     Rails.logger.debug { "#{Time.now} current EU Decisions download generated in #{elapsed_time}s" }
     elapsed_time =
       Benchmark.realtime do
         Species::EuDecisionsExport.new(set: 'all', decision_types: {}).export
       end
+
     Rails.logger.debug { "#{Time.now} all EU Decisions download generated in #{elapsed_time}s" }
   end
 
   def self.update_admin_downloads
     Rails.logger.debug 'Updating admin downloads'
+
     [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|
       Rails.logger.debug { "#{taxonomy_name} Names" }
       elapsed_time =
         Benchmark.realtime do
           Species::TaxonConceptsNamesExport.new(taxonomy: taxonomy_name).export
         end
+
       Rails.logger.debug { "#{Time.now} Taxon Concepts Names #{taxonomy_name} download generated in #{elapsed_time}s" }
       Rails.logger.debug { "#{taxonomy_name} Synonyms and Trade Names" }
       elapsed_time =
         Benchmark.realtime do
           Species::SynonymsAndTradeNamesExport.new(taxonomy: taxonomy_name).export
         end
+
       Rails.logger.debug { "#{Time.now} Synonyms & Trade Names #{taxonomy_name} download generated in #{elapsed_time}s" }
       Rails.logger.debug { "#{taxonomy_name} Distributions" }
       elapsed_time =
         Benchmark.realtime do
           Species::TaxonConceptsDistributionsExport.new(taxonomy: taxonomy_name).export
         end
+
       Rails.logger.debug { "#{Time.now} Distributions #{taxonomy_name} download generated in #{elapsed_time}s" }
       Rails.logger.debug { "#{Time.now} Common Names #{taxonomy_name} download generated in #{elapsed_time}s" }
       Rails.logger.debug { "#{taxonomy_name} Common Names" }
@@ -236,6 +251,7 @@ module DownloadsCache
         Benchmark.realtime do
           Species::CommonNamesExport.new(taxonomy: taxonomy_name).export
         end
+
       Rails.logger.debug { "#{Time.now} Common Names #{taxonomy_name} download generated in #{elapsed_time}s" }
     end
   end

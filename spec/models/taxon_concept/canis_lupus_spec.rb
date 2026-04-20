@@ -3,6 +3,7 @@ require 'spec_helper'
 describe TaxonConcept do
   context 'Canis lupus' do
     include_context 'Canis lupus'
+
     context 'LISTING' do
       describe :cites_listing do
         context 'for species Canis lupus (population split listing)' do

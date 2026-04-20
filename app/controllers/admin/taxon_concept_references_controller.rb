@@ -22,6 +22,7 @@ class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationCont
       format.js { render 'new' }
     end
   end
+
   def create
     @references = TaxonConceptReference.where(taxon_concept_id: params['taxon_concept_id'])
 
@@ -42,10 +43,10 @@ class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationCont
         @taxon_concept_reference.reference = Reference.new
         render 'create'
       end
+
       failure.js { render 'new' }
     end
   end
-
 
   def update
     update! do |success, failure|
@@ -54,6 +55,7 @@ class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationCont
         @taxon_concept_reference.reference = Reference.new
         render 'create'
       end
+
       failure.js { render 'new' }
     end
   end
@@ -64,6 +66,7 @@ class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationCont
         redirect_to admin_taxon_concept_taxon_concept_references_path(@taxon_concept),
           notice: 'Operation successful'
       end
+
       failure.html do
         redirect_to admin_taxon_concept_taxon_concept_references_path(@taxon_concept),
           notice: 'Operation failed'

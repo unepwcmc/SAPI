@@ -6,6 +6,7 @@ namespace :species_without_legislation_or_trade do
   task delete: :environment do
     cnt = Trade::SpeciesWithoutLegislationOrTradeReport.new.query.count
     deleted_cnt = 0
+
     Rails.logger.warn("### BEGIN removal of #{cnt} species without legislation or trade")
     Trade::SpeciesWithoutLegislationOrTradeReport.new.query.each do |tc|
       if tc.destroy

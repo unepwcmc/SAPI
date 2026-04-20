@@ -96,6 +96,7 @@ describe NomenclatureChange::Lump::Constructor do
         let(:input) do
           create(:nomenclature_change_input, nomenclature_change: lump, note_en: 'blah')
         end
+
         let(:output) do
           create(:nomenclature_change_output, nomenclature_change: lump, note_en: 'blah')
         end
@@ -119,6 +120,7 @@ describe NomenclatureChange::Lump::Constructor do
           2.times { create_cites_eu_subspecies(parent: s) }
           s
         end
+
         let(:lump_with_inputs_and_output) { lump_with_inputs_and_same_output }
         let(:input) { lump.inputs_intersect_outputs.first }
         let(:default_output) { lump.output }
@@ -151,6 +153,7 @@ describe NomenclatureChange::Lump::Constructor do
       context 'when output = input' do
         let(:input_species) do
           s = create_cites_eu_species
+
           2.times do
             create(
               :taxon_relationship,
@@ -159,8 +162,10 @@ describe NomenclatureChange::Lump::Constructor do
               taxon_relationship_type: synonym_relationship_type
             )
           end
+
           s
         end
+
         let(:lump_with_inputs_and_output) { lump_with_inputs_and_same_output }
         let(:input) { lump.inputs_intersect_outputs.first }
         let(:default_output) { lump.output }

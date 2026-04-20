@@ -85,9 +85,11 @@ describe NomenclatureChange::Lump::Processor do
       let!(:input_species1_child) do
         create_cites_eu_subspecies(parent: input_species1)
       end
+
       let!(:input_species1_child_listing) do
         create_cites_I_addition(taxon_concept: input_species1_child)
       end
+
       let(:lump) do
         create(
           :nomenclature_change_lump,
@@ -143,13 +145,17 @@ describe NomenclatureChange::Lump::Processor do
       let!(:input_species1_child) do
         create_cites_eu_subspecies(parent: input_species1)
       end
+
       let(:output_species_genus_name) { output_species.parent.full_name }
+
       let!(:input_species1_child_listing) do
         create_cites_I_addition(taxon_concept: input_species1_child)
       end
+
       let!(:output_species_child) do
         create_cites_eu_subspecies(parent: output_species)
       end
+
       let(:lump) do
         create(
           :nomenclature_change_lump,
@@ -169,8 +175,10 @@ describe NomenclatureChange::Lump::Processor do
           status: NomenclatureChange::Lump::LEGISLATION
         )
       end
+
       let(:input) { lump.inputs.first }
       let(:output) { lump.output }
+
       let(:reassignment) do
         create(
           :nomenclature_change_parent_reassignment,
@@ -178,6 +186,7 @@ describe NomenclatureChange::Lump::Processor do
           reassignable_id: input_species1_child.id
         )
       end
+
       let!(:reassignment_target) do
         create(
           :nomenclature_change_reassignment_target,
@@ -185,13 +194,14 @@ describe NomenclatureChange::Lump::Processor do
           output: output
         )
       end
+
       let(:output_species_children) { output_species.children }
+
       let(:output_species1_child) do
         output_species_children.where.not(id: output_species_child.id).first
       end
 
       before { processor.run }
-
 
       specify 'input species has public nomenclature note set' do
         expect(input_species1.reload.nomenclature_note_en).to eq(' input species 1 has been lumped into output species')
@@ -243,7 +253,6 @@ describe NomenclatureChange::Lump::Processor do
         ).to eq(input_species1.reload.nomenclature_note_en)
       end
 
-
       specify 'original output species child retains higher taxa intact' do
         expect(output_species_child.data['genus_name']).to eq(output_species_genus_name)
       end
@@ -268,27 +277,33 @@ describe NomenclatureChange::Lump::Processor do
         taxon_name: create(:taxon_name, scientific_name: 'Crotalus')
       )
     end
+
     let(:input_genus_child) do
       create_cites_eu_species(
         parent: input_genus,
         taxon_name: create(:taxon_name, scientific_name: 'durissus')
       )
     end
+
     let!(:input_genus_child_child) do
       create_cites_eu_subspecies(
         parent: input_genus_child,
         taxon_name: create(:taxon_name, scientific_name: 'unicolor')
       )
     end
+
     let!(:quota) { create(:quota, taxon_concept: input_genus_child, geo_entity: create(:geo_entity)) }
+
     let!(:document_citation_taxon_concept_input_genus_child) do
       create(:document_citation_taxon_concept, taxon_concept: input_genus_child)
     end
+
     let(:output_genus) do
       create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Paracrotalus')
       )
     end
+
     let(:lump) do
       create(
         :nomenclature_change_lump,
@@ -300,6 +315,7 @@ describe NomenclatureChange::Lump::Processor do
         status: NomenclatureChange::Lump::LEGISLATION
       )
     end
+
     let(:reassignment) do
       create(
         :nomenclature_change_parent_reassignment,
@@ -307,6 +323,7 @@ describe NomenclatureChange::Lump::Processor do
         reassignable_id: input_genus_child.id
       )
     end
+
     let!(:reassignment_target) do
       create(
         :nomenclature_change_reassignment_target,

@@ -135,7 +135,8 @@ class MTaxonConcept < ApplicationRecord
           WHEN change_type_name = 'RESERVATION' THEN 1
           WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
           WHEN change_type_name = 'DELETION' THEN 3
-          END
+          end
+
         SQL
         )
       )

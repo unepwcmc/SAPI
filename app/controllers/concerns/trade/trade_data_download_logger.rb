@@ -18,9 +18,11 @@ module_function
     data['importer'] = self.get_field_values(search_params[:importers_ids], GeoEntity)
     data['exporter'] = self.get_field_values(search_params[:exporters_ids], GeoEntity)
     geo_ip_data = SapiModule::GeoIP.instance.resolve(request.ip)
+
     [ :country, :city, :organization ].each do |col|
       data[col] = geo_ip_data[col]
     end
+
     w = Trade::TradeDataDownload.new(data)
     w.save
   end
@@ -29,6 +31,7 @@ private
 
   def self.get_field_values(param, model)
     if param == '' then return 'All' end
+
     if param == nil then return '' end
 
     if model.to_s == 'GeoEntity'

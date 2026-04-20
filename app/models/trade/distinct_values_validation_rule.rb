@@ -23,11 +23,13 @@ class Trade::DistinctValuesValidationRule < Trade::InclusionValidationRule
 
     # if it is, check if validated columns are not equal
     distinct_values = true
+
     shipments_columns.each do |c1|
       shipments_columns.each do |c2|
         distinct_values = false if c1 != c2 && shipment.send(c1) == shipment.send(c2)
       end
     end
+
     return nil if distinct_values
 
     error_message

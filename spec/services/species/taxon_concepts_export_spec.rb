@@ -35,7 +35,6 @@ describe Species::TaxonConceptsNamesExport do
         FileUtils.remove_dir('spec/public/downloads/taxon_concepts_names', true)
       end
 
-
       context 'when file not cached' do
         specify do
           subject.export

@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import synonyms from csv file (usage: rake import:synonyms[path/to/file,path/to/another])'
+
   task :synonyms, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 

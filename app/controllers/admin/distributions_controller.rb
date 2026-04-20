@@ -26,12 +26,14 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
           @distribution.add_existing_references(params['reference']['id'])
         end
       end
+
       failure.js do
         load_tags_and_geo_entities
         render 'new'
       end
     end
   end
+
   def update
     update! do |success, failure|
       success.js do
@@ -39,8 +41,10 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
         if params['reference']['id'].present?
           @distribution.add_existing_references(params['reference']['id'])
         end
+
         render 'create'
       end
+
       failure.js do
         load_tags_and_geo_entities
         render 'new'
@@ -48,13 +52,13 @@ class Admin::DistributionsController < Admin::TaxonConceptAssociatedTypesControl
     end
   end
 
-
   def destroy
     destroy! do |success, failure|
       success.html do
         redirect_to admin_taxon_concept_distributions_url(@taxon_concept),
           notice: 'Operation succeeded'
       end
+
       failure.html do
         redirect_to admin_taxon_concept_distributions_url(@taxon_concept),
           notice: 'Operation failed'

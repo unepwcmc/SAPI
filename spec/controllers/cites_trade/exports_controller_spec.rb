@@ -28,6 +28,7 @@ describe CitesTrade::ExportsController do
         allow_any_instance_of(Trade::ShipmentsExport).to receive(:public_file_name).and_return('shipments.csv')
         allow(Trade::TradeDataDownloadLogger).to receive(:city_country_from).and_return([ 'Cambridge', 'United Kingdom' ])
         allow(Trade::TradeDataDownloadLogger).to receive(:organization_from).and_return('UNEP-WCMC')
+
         expect do
           get :download, params: {
             filters: {

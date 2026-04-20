@@ -10,6 +10,7 @@ shared_context 'output_document_reassignments_processor_examples' do
     )
     citation
   end
+
   before do
     create(
       :nomenclature_change_output_reassignment,

@@ -4,19 +4,23 @@ shared_context 'split_definitions' do
       taxon_name: create(:taxon_name, scientific_name: 'Genus1')
     )
   end
+
   let(:genus2) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Genus2')
     )
   end
+
   let(:input_species) { create_cites_eu_species(parent: genus1) }
   let(:output_species1) { create_cites_eu_species(parent: genus1) }
   let(:output_species2) { create_cites_eu_species(parent: genus2) }
+
   let(:errorus_genus) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Errorus')
     )
   end
+
   let(:output_subspecies2) do
     create_cites_eu_subspecies(
       taxon_name: create(:taxon_name, scientific_name: 'fatalus'),
@@ -26,15 +30,18 @@ shared_context 'split_definitions' do
       )
     )
   end
+
   let(:split_with_input) do
     create(
       :nomenclature_change_split,
       input_attributes: { taxon_concept_id: input_species.id }
     )
   end
+
   let(:split_with_input_and_output) do
     split_with_input_and_output_existing_taxon
   end
+
   let(:split_with_input_and_same_output) do
     create(
       :nomenclature_change_split,
@@ -46,6 +53,7 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   end
+
   let(:split_with_input_and_output_existing_taxon) do
     create(
       :nomenclature_change_split,
@@ -57,6 +65,7 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   end
+
   let(:split_with_input_and_output_new_taxon) do
     create(
       :nomenclature_change_split,
@@ -73,6 +82,7 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   end
+
   let(:split_with_input_and_outputs_status_change) do
     create(
       :nomenclature_change_split,
@@ -88,6 +98,7 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   end
+
   let(:split_with_input_and_outputs_name_change) do
     create(
       :nomenclature_change_split,
@@ -105,6 +116,7 @@ shared_context 'split_definitions' do
       status: NomenclatureChange::Split::OUTPUTS
     )
   end
+
   let(:split_with_input_with_reassignments) do
     2.times { create(:distribution, taxon_concept: input_species) }
     unreassigned_distribution = create(:distribution, taxon_concept: input_species)
@@ -133,6 +145,7 @@ shared_context 'split_definitions' do
       taxon_relationship_type: synonym_relationship_type
     )
     end
+
     name1 = create(
       :taxon_relationship,
       taxon_concept: input_species,

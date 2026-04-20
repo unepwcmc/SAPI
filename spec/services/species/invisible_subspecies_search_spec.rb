@@ -1,6 +1,7 @@
 require 'spec_helper'
 describe Species::Search do
   include_context 'Psittaciformes'
+
   describe :results do
     context 'when searching by scientific name' do
       context 'when subspecies never listed' do

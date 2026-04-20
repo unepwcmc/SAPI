@@ -66,6 +66,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
   }
 
   after_create :copy_to_sandbox
+
   before_destroy do
     success = sandbox && sandbox.destroy
     throw(:abort) unless success
@@ -98,6 +99,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
     if @validation_errors.count == 0
       run_secondary_validations
     end
+
     @validation_errors
   end
 
@@ -123,6 +125,7 @@ class Trade::AnnualReportUpload < ApplicationRecord
       self.errors[:base] << 'Submit failed, primary validation errors present.'
       return false
     end
+
     return false unless sandbox.copy_from_sandbox_to_shipments(submitter)
 
     records_submitted = sandbox.moved_rows_cnt
@@ -160,10 +163,12 @@ private
   # Expects a relation object
   def run_validations(validation_rules)
     validation_errors = []
+
     validation_rules.order(:run_order).each do |vr|
       vr.refresh_errors_if_needed(self)
       validation_errors << vr.validation_errors_for_aru(self)
     end
+
     validation_errors.flatten
   end
 

@@ -39,6 +39,7 @@ describe Api::V1::DocumentsController do
       get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response.body).to have_json_size(4).at_path('documents')
     end
+
     context 'GET index contributor' do
       login_contributor
 
@@ -61,6 +62,7 @@ describe Api::V1::DocumentsController do
       get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response.body).to have_json_size(3).at_path('documents')
     end
+
     context 'GET index api user' do
       login_api_user
 
@@ -81,6 +83,7 @@ describe Api::V1::DocumentsController do
       get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response.body).to have_json_size(3).at_path('documents')
     end
+
     context 'GET index api user' do
       login_secretariat_user
 
@@ -92,6 +95,7 @@ describe Api::V1::DocumentsController do
 
   context 'show action fails' do
     login_api_user
+
     it 'returns 403 status when permission denied' do
       get :show, params: { id: @document2.id }
       expect(response).to have_http_status(:forbidden)

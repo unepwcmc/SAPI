@@ -3,11 +3,13 @@ shared_context 'lump_definitions' do
   let(:input_species1) { input_species }
   let(:input_species2) { create_cites_eu_species }
   let(:output_species) { create_cites_eu_species }
+
   let(:errorus_genus) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Errorus')
     )
   end
+
   let(:output_subspecies) do
     create_cites_eu_subspecies(
       taxon_name: create(:taxon_name, scientific_name: 'fatalus'),
@@ -17,6 +19,7 @@ shared_context 'lump_definitions' do
       )
     )
   end
+
   let(:lump_with_inputs) do
     create(
       :nomenclature_change_lump,
@@ -26,9 +29,11 @@ shared_context 'lump_definitions' do
       }
     )
   end
+
   let(:lump_with_inputs_and_output) do
     lump_with_inputs_and_output_existing_taxon
   end
+
   let(:lump_with_inputs_and_same_output) do
     create(
       :nomenclature_change_lump,
@@ -42,6 +47,7 @@ shared_context 'lump_definitions' do
       status: NomenclatureChange::Lump::OUTPUTS
     )
   end
+
   let(:lump_with_inputs_and_output_existing_taxon) do
     create(
       :nomenclature_change_lump,
@@ -55,6 +61,7 @@ shared_context 'lump_definitions' do
       status: NomenclatureChange::Lump::OUTPUTS
     )
   end
+
   let(:lump_with_inputs_and_output_new_taxon) do
     create(
       :nomenclature_change_lump,
@@ -70,6 +77,7 @@ shared_context 'lump_definitions' do
       status: NomenclatureChange::Lump::OUTPUTS
     )
   end
+
   let(:lump_with_inputs_and_output_status_change) do
     create(
       :nomenclature_change_lump,
@@ -83,6 +91,7 @@ shared_context 'lump_definitions' do
       status: NomenclatureChange::Lump::OUTPUTS
     )
   end
+
   let(:lump_with_inputs_and_output_name_change) do
     create(
       :nomenclature_change_lump,

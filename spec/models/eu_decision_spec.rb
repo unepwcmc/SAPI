@@ -53,7 +53,6 @@ describe EuDecision, sidekiq: :inline do
         ).export
       end
 
-
       specify { expect(subject).not_to be_empty }
     end
   end
@@ -63,7 +62,6 @@ describe EuDecision, sidekiq: :inline do
       subject { eu_decision.save }
 
       let(:eu_decision) { build(:eu_decision, srg_history_id: nil, eu_decision_type_id: nil) }
-
 
       specify { expect(subject).to be_falsey }
 
@@ -103,7 +101,6 @@ describe EuDecision, sidekiq: :inline do
         d.destroy
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
       end
-
 
       specify { expect(subject).to be_empty }
     end

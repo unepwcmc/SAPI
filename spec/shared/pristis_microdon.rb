@@ -60,6 +60,7 @@ shared_context 'Pristis microdon' do
     )
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
+
     self.instance_variables.each do |t|
       # Skip old sapi context let statements,
       # which are now instance variables starting with _

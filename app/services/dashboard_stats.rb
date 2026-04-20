@@ -36,6 +36,7 @@ private
       kingdom_name: @kingdom
     )
     designation_name = (taxonomy_name == Taxonomy::CMS ? :cms : :cites)
+
     (classes && classes.map do |klass|
       cnt = MTaxonConcept.where(class_id: klass.id).
         where("countries_ids_ary && ARRAY[#{@geo_entity.id}]").

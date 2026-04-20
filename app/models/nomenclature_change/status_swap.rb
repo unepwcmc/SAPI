@@ -52,6 +52,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
       errors.add(:secondary_output, 'Must have a secondary output')
       return false
     end
+
     true
   end
 
@@ -60,6 +61,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
       errors.add(:primary_output, 'Must be A taxon')
       return false
     end
+
     true
   end
 
@@ -68,6 +70,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
       errors.add(:secondary_output, 'Must be S taxon')
       return false
     end
+
     true
   end
 
@@ -104,6 +107,7 @@ class NomenclatureChange::StatusSwap < NomenclatureChange
       builder.build_references_reassignments
       builder.build_documents_reassignments
     end
+
     true
   end
 

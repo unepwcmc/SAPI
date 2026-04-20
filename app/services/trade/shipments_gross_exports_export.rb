@@ -11,6 +11,7 @@ private
 
   def query_sql(options)
     headers = csv_column_headers
+
     select_columns = sql_columns.each_with_index.map do |c, i|
       "#{c} AS \"#{headers[i]}\""
     end + years_columns

@@ -23,6 +23,7 @@ private
           then 'Whole animals/plants'
         else 'Parts and derivatives'
       end
+
     SQL
 
     [

@@ -2,6 +2,7 @@ module Statistics
   def self.get_total_transactions_per_year
     trade_transactions = {}
     years = Trade::Shipment.where.not(year: nil).uniq.pluck(:year)
+
     years.each do |y|
       unless y.nil?
         reported_by_exporter = Trade::Shipment.where(
@@ -20,6 +21,7 @@ module Statistics
         }
       end
     end
+
     trade_transactions[:total] = {}
     trade_transactions[:total][:by_exporter] = Trade::Shipment.
       where(reported_by_exporter: true).

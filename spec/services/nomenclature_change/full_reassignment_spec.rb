@@ -7,7 +7,6 @@ describe NomenclatureChange::FullReassignment do
     let(:old_tc) { create_cites_eu_species }
     let(:new_tc) { create_cites_eu_species }
 
-
     context 'when distributions present' do
       before do
         create(:distribution, taxon_concept: old_tc)

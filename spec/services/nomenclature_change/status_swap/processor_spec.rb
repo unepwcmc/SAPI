@@ -21,7 +21,6 @@ describe NomenclatureChange::StatusSwap::Processor do
 
   before { synonym_relationship_type }
 
-
   describe :run do
     context 'from accepted name' do
       let(:accepted_name_parent) { create_cites_eu_genus }

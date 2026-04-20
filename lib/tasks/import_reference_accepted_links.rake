@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import reference accepted links from csv file (usage: rake import:reference_accepted_links[path/to/file,path/to/another])'
+
   task :reference_accepted_links, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 

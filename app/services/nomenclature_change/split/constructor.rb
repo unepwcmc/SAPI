@@ -26,6 +26,7 @@ class NomenclatureChange::Split::Constructor
     children = input.taxon_concept.children -
       @nomenclature_change.outputs.map(&:taxon_concept).compact
     _build_parent_reassignments(input, default_output, children)
+
     outputs_for_reassignments.each do |output|
       _build_parent_reassignments(output, output)
     end
@@ -36,6 +37,7 @@ class NomenclatureChange::Split::Constructor
     default_output = @nomenclature_change.outputs_intersect_inputs.first
     default_output ||= @nomenclature_change.outputs.first
     _build_names_reassignments(input, [ default_output ], @nomenclature_change.outputs)
+
     outputs_for_reassignments.each do |output|
       _build_names_reassignments(output, [ output ], @nomenclature_change.outputs)
     end
@@ -45,6 +47,7 @@ class NomenclatureChange::Split::Constructor
     input = @nomenclature_change.input
     default_outputs = @nomenclature_change.outputs
     _build_distribution_reassignments(input, default_outputs)
+
     outputs_for_reassignments.each do |output|
       _build_distribution_reassignments(output, [ output ])
     end
@@ -53,6 +56,7 @@ class NomenclatureChange::Split::Constructor
   def build_legislation_reassignments
     input = @nomenclature_change.input
     _build_legislation_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
+
     outputs_for_reassignments.each do |output|
       _build_legislation_reassignments(output, [ output ])
     end
@@ -62,6 +66,7 @@ class NomenclatureChange::Split::Constructor
     input = @nomenclature_change.input
     outputs = @nomenclature_change.outputs
     _build_document_reassignments(input, outputs)
+
     outputs_for_reassignments.each do |output|
       _build_document_reassignments(output, [ output ])
     end
@@ -70,6 +75,7 @@ class NomenclatureChange::Split::Constructor
   def build_common_names_reassignments
     input = @nomenclature_change.input
     _build_common_names_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
+
     outputs_for_reassignments.each do |output|
       _build_common_names_reassignments(output, [ output ])
     end
@@ -78,6 +84,7 @@ class NomenclatureChange::Split::Constructor
   def build_references_reassignments
     input = @nomenclature_change.input
     _build_references_reassignments(@nomenclature_change.input, @nomenclature_change.outputs)
+
     outputs_for_reassignments.each do |output|
       _build_references_reassignments(output, [ output ])
     end
@@ -85,6 +92,7 @@ class NomenclatureChange::Split::Constructor
 
   def input_split_into(input, outputs, lng)
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
+
     outputs_html = @nomenclature_change.outputs.map do |output|
       if output.scientific_name.present? && output.new_scientific_name.present?
         taxon_concept_html(
@@ -95,6 +103,7 @@ class NomenclatureChange::Split::Constructor
         taxon_concept_html(output.display_full_name, output.display_rank_name)
       end
     end.join(', ')
+
     I18n.with_locale(lng) do
       I18n.t(
         'split.input_split_into',
@@ -123,7 +132,9 @@ class NomenclatureChange::Split::Constructor
       else
         taxon_concept_html(output.display_full_name, output.display_rank_name)
       end
+
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
+
     I18n.with_locale(lng) do
       I18n.t(
         'split.output_split_from',
@@ -136,6 +147,7 @@ class NomenclatureChange::Split::Constructor
 
   def multi_lingual_input_note(input, outputs, event)
     result = {}
+
     [ :en, :es, :fr ].each do |lng|
       note = '<p>'
       note << input_split_into(input, @nomenclature_change.outputs, lng)
@@ -144,11 +156,13 @@ class NomenclatureChange::Split::Constructor
       note << '.</p>'
       result[lng] = note
     end
+
     result
   end
 
   def multi_lingual_output_note(output, input, event)
     result = {}
+
     [ :en, :es, :fr ].each do |lng|
       note = '<p>'
       note << output_split_from(output, input, lng)
@@ -157,6 +171,7 @@ class NomenclatureChange::Split::Constructor
       note << '.</p>'
       result[lng] = note
     end
+
     result
   end
 
@@ -167,6 +182,7 @@ class NomenclatureChange::Split::Constructor
     input.note_en = note[:en]
     input.note_es = note[:es]
     input.note_fr = note[:fr]
+
     @nomenclature_change.outputs_except_inputs.each do |output|
       note = multi_lingual_output_note(output, input, event)
       output.note_en = note[:en]
@@ -185,6 +201,7 @@ class NomenclatureChange::Split::Constructor
     if @nomenclature_change.event
       note << following_taxonomic_changes(@nomenclature_change.event, lng)
     end
+
     note = "<p>#{note}.</p>" if note.present?
   end
 

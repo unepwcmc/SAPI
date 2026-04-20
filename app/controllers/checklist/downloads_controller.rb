@@ -8,6 +8,7 @@ class Checklist::DownloadsController < ApplicationController
     ids = params[:ids] || ''
     @downloads = Download.where(id: ids).order(updated_at: :desc).limit(5)
     @downloads = @downloads.map { |v| v.attributes.except('filename', 'path') }
+
     @downloads.each do |v|
       v['updated_at'] = v['updated_at'].strftime('%A, %e %b %Y %H:%M')
     end
@@ -41,7 +42,6 @@ class Checklist::DownloadsController < ApplicationController
 
     render json: @download.to_json
   end
-
 
   # GET downloads/:id/download
   def download

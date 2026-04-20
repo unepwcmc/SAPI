@@ -76,7 +76,6 @@ describe Admin::InstrumentsController do
       expect(response).to redirect_to(admin_instruments_url)
     end
 
-
     it 'fails to delete instrument because there are dependent objects' do
       delete :destroy, params: { id: instrument2.id }
 

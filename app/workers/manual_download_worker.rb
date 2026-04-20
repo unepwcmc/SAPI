@@ -81,6 +81,7 @@ private
       else
         # Download the file from S3, put in temp folder.
         path_to_file = Rails.root.join(tmp_dir_path, document.file.filename.to_s).to_s
+
         File.open(path_to_file, 'wb') do |out|
           # stream download in chunks
           document.file.blob.service.download(document.file.blob.key) do |chunk|
@@ -105,11 +106,13 @@ private
           zip.add('missing_files.txt', missing_file_name)
         end
       end
+
     ensure
       FileUtils.rm_rf(tmp_dir_path)
       FileUtils.rm_rf(@cover_path)
       FileUtils.rm(@download_path)
     end
+
   rescue => exception
     Appsignal.add_exception(exception) if defined? Appsignal
     @download.status = 'failed'

@@ -56,11 +56,13 @@ describe NomenclatureChange::Split::Processor do
           taxon_name: create(:taxon_name, scientific_name: 'Notio mirabilis')
         )
       end
+
       let(:genus2) do
         create_cites_eu_genus(
           taxon_name: create(:taxon_name, scientific_name: 'Notio')
         )
       end
+
       let!(:split) { split_with_input_and_outputs_status_change }
 
       specify { expect { processor.run }.not_to change(TaxonConcept, :count) }
@@ -98,9 +100,11 @@ describe NomenclatureChange::Split::Processor do
       let!(:input_species_child) do
         create_cites_eu_subspecies(parent: input_species)
       end
+
       let!(:input_species_child_listing) do
         create_cites_I_addition(taxon_concept: input_species_child)
       end
+
       let(:split) do
         create(
           :nomenclature_change_split,
@@ -156,13 +160,17 @@ describe NomenclatureChange::Split::Processor do
       let!(:input_species_child) do
         create_cites_eu_subspecies(parent: input_species)
       end
+
       let(:output_species1_genus_name) { output_species1.parent.full_name }
+
       let!(:input_species_child_listing) do
         create_cites_I_addition(taxon_concept: input_species_child)
       end
+
       let!(:output_species1_child) do
         create_cites_eu_subspecies(parent: output_species1)
       end
+
       let(:split) do
         create(
           :nomenclature_change_split,
@@ -182,8 +190,10 @@ describe NomenclatureChange::Split::Processor do
           status: NomenclatureChange::Split::LEGISLATION
         )
       end
+
       let(:input) { split.input }
       let(:output) { split.outputs.first }
+
       let(:reassignment) do
         create(
           :nomenclature_change_parent_reassignment,
@@ -191,6 +201,7 @@ describe NomenclatureChange::Split::Processor do
           reassignable_id: input_species_child.id
         )
       end
+
       let!(:reassignment_target) do
         create(
           :nomenclature_change_reassignment_target,
@@ -198,13 +209,14 @@ describe NomenclatureChange::Split::Processor do
           output: output
         )
       end
+
       let(:output_species) { output.taxon_concept.reload }
+
       let(:output_species_child) do
         output.taxon_concept.children.where.not(id: output_species1_child.id).first
       end
 
       before { processor.run }
-
 
       specify 'input species has public nomenclature note set' do
         expect(input_species.reload.nomenclature_note_en).to eq(' input species was split into output species 1 and output species 2')
@@ -256,7 +268,6 @@ describe NomenclatureChange::Split::Processor do
         ).to eq(output_species.nomenclature_note_en)
       end
 
-
       specify 'original output species child retains higher taxa intact' do
         expect(output_species_child.data['genus_name']).to eq(output_species1_genus_name)
       end
@@ -281,27 +292,33 @@ describe NomenclatureChange::Split::Processor do
         taxon_name: create(:taxon_name, scientific_name: 'Crotalus')
       )
     end
+
     let(:input_genus_child) do
       create_cites_eu_species(
         parent: input_genus,
         taxon_name: create(:taxon_name, scientific_name: 'durissus')
       )
     end
+
     let!(:input_genus_child_child) do
       create_cites_eu_subspecies(
         parent: input_genus_child,
         taxon_name: create(:taxon_name, scientific_name: 'unicolor')
       )
     end
+
     let!(:quota) { create(:quota, taxon_concept: input_genus_child, geo_entity: create(:geo_entity)) }
+
     let!(:document_citation_taxon_concept_input_genus_child) do
       create(:document_citation_taxon_concept, taxon_concept: input_genus_child)
     end
+
     let(:output_genus) do
       create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Paracrotalus')
       )
     end
+
     let(:split) do
       create(
         :nomenclature_change_split,
@@ -313,6 +330,7 @@ describe NomenclatureChange::Split::Processor do
         status: NomenclatureChange::Split::LEGISLATION
       )
     end
+
     let(:reassignment) do
       create(
         :nomenclature_change_parent_reassignment,
@@ -320,6 +338,7 @@ describe NomenclatureChange::Split::Processor do
         reassignable_id: input_genus_child.id
       )
     end
+
     let!(:reassignment_target) do
       create(
         :nomenclature_change_reassignment_target,

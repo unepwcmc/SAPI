@@ -35,6 +35,7 @@ module Checklist::Pdf::Document
       [ tmp_dir_path, '/_dict.tex' ].join
     # set flags for latex
     flags_tex = [ tmp_dir_path, '/_flags.tex' ].join
+
     File.open(flags_tex, 'wb') do |tex|
       tex << (@intro ? "\\introtrue\n" : "\\introfalse\n")
     end
@@ -45,6 +46,7 @@ module Checklist::Pdf::Document
     File.open(@tmp_tex, 'wb') do |tex|
       yield tex
     end
+
     output = LatexToPdf.generate_pdf_from_file(tmp_dir_path, @input_name)
     # save output at download path
     FileUtils.cp output, @download_path

@@ -45,6 +45,7 @@ class NomenclatureChange::OutputTaxonConceptProcessor
       if @output.new_rank && @output.new_rank_id != @output.rank_id
         res << "#{@output.taxon_concept.full_name} rank changed from #{@output.taxon_concept.rank.name} to #{@output.new_rank.name}"
       end
+
       if @output.new_parent
         res <<
           if @output.taxon_concept.parent
@@ -53,13 +54,16 @@ class NomenclatureChange::OutputTaxonConceptProcessor
             "#{@output.taxon_concept.full_name} parent set to #{@output.new_parent.full_name}"
           end
       end
+
       if @output.new_name_status.present?
         res << "#{@output.taxon_concept.full_name} name status changed from #{@output.taxon_concept.name_status} to #{@output.new_name_status}"
       end
+
       if @output.new_author_year.present?
         res << "#{@output.taxon_concept.full_name} author year changed from #{@output.taxon_concept.author_year} to #{@output.new_author_year}"
       end
     end
+
     res
   end
 end

@@ -168,6 +168,7 @@ private
             '"' || COALESCE("#{column_reference}"::TEXT, '') || '"'
           EOT
         end
+
       <<-EOT
         '"' || '#{c}' || '": ' || #{value_or_column_reference_quoted}
       EOT
@@ -222,9 +223,11 @@ private
       required_column_names.map do |c|
         s[c].not_eq(nil)
       end
+
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each { |n| not_null_conds = not_null_conds.and(n) }
     result = s.project(Arel.star).where(not_null_conds)
+
     scope_nodes = sanitized_sandbox_scope.map do |scope_column, scope_def|
       tmp = []
 

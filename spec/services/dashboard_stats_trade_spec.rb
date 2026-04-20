@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe DashboardStats do
   include_context 'Shipments'
+
   describe '#trade' do
     before do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings

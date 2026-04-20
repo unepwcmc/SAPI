@@ -1,5 +1,6 @@
 namespace :rst_processes do
   desc 'Import RST(Significant Trade) cases from RST API'
+
   task import: :environment do
     ApplicationRecord.transaction do
       Import::Rst::RstCases.import_all

@@ -13,11 +13,13 @@ class Checklist::Pdf::IndexAnnotationsKey
 
   def non_hash_annotations_key
     tex = "\\section*{\\nonHashAnnotations}\n"
+
     non_hash_annotations.each do |a|
       box_colour = (a[:taxon_concept].kingdom_name == 'Animalia' ? 'orange' : 'green')
       tex << "\\cfbox{#{box_colour}}{\\superscript{#{a[:symbol]}} \\textbf{#{taxon_name_at_rank(a[:taxon_concept])}}}\n\n"
       tex << "#{LatexToPdf.html2latex(a[:note])}\n\n"
     end
+
     tex
   end
 
@@ -34,9 +36,11 @@ class Checklist::Pdf::IndexAnnotationsKey
 
     tex << "\\hashannotationstable{\n\\rowcolor{pale_aqua}\n"
     tex << "#{LatexToPdf.escape_latex(cop.name)} & \\validFrom \\hspace{2 pt} #{cop.effective_at_formatted}\\\\\n"
+
     annotations.each do |a|
       tex << "#{LatexToPdf.escape_latex(a.symbol)} & #{LatexToPdf.html2latex(a.full_note)} \\\\\n\n"
     end
+
     tex << "}\n"
     tex
   end
@@ -53,6 +57,7 @@ private
       ).
       where('taxon_concept_id = original_taxon_concept_id').
       where.not(cites_listing_changes_mview: { ann_symbol: nil }).
+
       order(Arel.sql('cites_listing_changes_mview.ann_symbol::INT')).map do |lc|
         {
           taxon_concept: lc.taxon_concept,

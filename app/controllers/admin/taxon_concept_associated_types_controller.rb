@@ -9,6 +9,7 @@ class Admin::TaxonConceptAssociatedTypesController < Admin::SimpleCrudController
         redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
           notice: 'Operation successful'
       end
+
       failure.html do
         redirect_to edit_admin_taxon_concept_url(params[:taxon_concept_id]),
           notice: 'Operation failed'

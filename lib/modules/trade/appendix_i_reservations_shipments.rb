@@ -99,10 +99,12 @@ private
 
   def except
     where = []
+
     CSV.foreach(RESERVATIONS_PATH, headers: true) do |row|
       @row = row
       where << "\n        (#{ATTRIBUTES.map { |a| send("parse_#{a}", row[a.to_s]) }.join(' AND ')})\n"
     end
+
     where.join("\n        OR\n")
   end
 end

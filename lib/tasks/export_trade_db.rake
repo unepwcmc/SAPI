@@ -63,6 +63,7 @@ namespace :export do
         File.open(path_to_file, 'a') do |file|
           if i == 1
             columns = results.fields
+
             columns.map do |column|
               column.capitalize!
               column.gsub! '_', ' '
@@ -80,6 +81,7 @@ namespace :export do
       end
       Rails.logger.info('Trade database completely exported!')
       zipfile = 'tmp/trade_db_files/trade_db.zip'
+
       Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
         zipfile.add(filename, path_to_file)
       end
@@ -137,6 +139,7 @@ namespace :export do
       end
       Rails.logger.info('Trade database completely exported!')
       zipfile = 'tmp/trade_db_files/trade_db.zip'
+
       Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
         range.each do |year|
           if (2012..2015).include?(year)
@@ -183,6 +186,7 @@ namespace :export do
       end
       Rails.logger.info('Trade database completely exported!')
       zipfile = 'tmp/trade_db_files/trade_db.zip'
+
       Zip::File.open(zipfile, Zip::File::CREATE) do |zipfile|
         (1..i).each do |index|
           filename = "trade_db_#{index}.csv"
@@ -205,6 +209,7 @@ namespace :export do
   def process_results(results, options)
     columns = results.fields
     unfrozen_columns = columns.deep_dup
+
     unfrozen_columns.map do |column|
       column.capitalize!
       column.gsub! '_', ' '
@@ -221,8 +226,10 @@ namespace :export do
       filename = 'trade_db_full_export.csv'
     end
     Rails.logger.info("Processing #{filename}.")
+
     File.open("#{options[:dir]}#{filename}", 'w') do |file|
       file.write unfrozen_columns.join('|')
+
       values.each do |record|
         file.write "\n"
         file.write record.join('|')

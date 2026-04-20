@@ -2,6 +2,7 @@ shared_context 'name_reassignments_processor_examples' do
   let(:input_species_synonym) do
     create_cites_eu_species(name_status: 'S')
   end
+
   let(:input_species_synonym_rel) do
     create(
       :taxon_relationship,
@@ -10,6 +11,7 @@ shared_context 'name_reassignments_processor_examples' do
       other_taxon_concept: input_species_synonym
     )
   end
+
   let(:reassignment) do
     create(
       :nomenclature_change_name_reassignment,
@@ -17,6 +19,7 @@ shared_context 'name_reassignments_processor_examples' do
       reassignable_id: input_species_synonym_rel.id
     )
   end
+
   let!(:reassignment_target) do
     create(
       :nomenclature_change_reassignment_target,
@@ -24,6 +27,7 @@ shared_context 'name_reassignments_processor_examples' do
       output: output
     )
   end
+
   before do
     processor.run
   end

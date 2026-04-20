@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import distributions from csv file (usage: rake import:distributions[path/to/file,path/to/another])'
+
   task :distributions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     ApplicationRecord.transaction do
       import_helper = CsvImportHelper.new

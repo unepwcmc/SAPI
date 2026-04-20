@@ -119,13 +119,16 @@ class Trade::Shipment < ApplicationRecord
     ].each do |permits_ids|
       @old_permits_ids += permits_ids ? permits_ids.dup : []
     end
+
     unless reported_taxon_concept_id
       self.reported_taxon_concept_id = taxon_concept_id
     end
   end
+
   before_destroy do
     @old_permits_ids = permits_ids.dup
   end
+
   after_commit :async_tasks_after_save, on: [ :create, :update ]
   after_commit :async_tasks_for_destroy, on: :destroy
 

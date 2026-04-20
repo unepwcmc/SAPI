@@ -33,6 +33,7 @@ class Admin::TaxonInstrumentsController < Admin::TaxonConceptAssociatedTypesCont
       success.html do
         redirect_to admin_taxon_concept_taxon_instruments_url(@taxon_concept)
       end
+
       failure.html do
         load_instruments
         render 'edit'

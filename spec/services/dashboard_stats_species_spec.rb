@@ -9,6 +9,7 @@ describe DashboardStats do
       iso_code2: 'AR'
     )
   end
+
   let(:ghana) do
     create(
       :geo_entity,
@@ -17,9 +18,11 @@ describe DashboardStats do
       iso_code2: 'GH'
     )
   end
+
   let(:ds_ar) do
     DashboardStats.new argentina, { kingdom: 'Animalia', trade_limit: 5 }
   end
+
   let(:ds_gh) do
     DashboardStats.new ghana, { kingdom: 'Animalia', trade_limit: 5 }
   end
@@ -32,6 +35,7 @@ describe DashboardStats do
 
   describe '#species' do
     include_context 'Caiman latirostris'
+
     it 'has one results for argentina' do
       expect(ds_ar.species[:cites_eu][0][:count]).to eq 1
     end

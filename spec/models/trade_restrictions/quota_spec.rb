@@ -47,7 +47,6 @@ describe Quota, sidekiq: :inline do
         Quota.export('set' => 'current')
       end
 
-
       specify { expect(subject).not_to be_empty }
     end
   end
@@ -69,7 +68,6 @@ describe Quota, sidekiq: :inline do
 
         q.destroy
       end
-
 
       specify do
         # Currently fails because the clearing happens in an after_commit hook,

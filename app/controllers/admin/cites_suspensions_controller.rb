@@ -7,6 +7,7 @@ class Admin::CitesSuspensionsController < Admin::StandardAuthorizationController
         redirect_to admin_cites_suspensions_url,
           notice: 'Operation successful'
       end
+
       failure.html do
         load_lib_objects
         render 'new'
@@ -20,6 +21,7 @@ class Admin::CitesSuspensionsController < Admin::StandardAuthorizationController
         redirect_to admin_cites_suspensions_url,
           notice: 'Operation successful'
       end
+
       failure.html do
         load_lib_objects
         render 'edit'

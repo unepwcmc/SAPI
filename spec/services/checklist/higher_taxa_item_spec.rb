@@ -17,7 +17,6 @@ describe Checklist::HigherTaxaItem do
         )
       end
 
-
       specify { expect(subject.ancestors_path).to eq('Chordata,Reptilia,Crocodylia,Alligatoridae') }
     end
 
@@ -35,7 +34,6 @@ describe Checklist::HigherTaxaItem do
           family_name: 'Agavaceae'
         )
       end
-
 
       specify { expect(subject.ancestors_path).to eq('Agavaceae') }
     end

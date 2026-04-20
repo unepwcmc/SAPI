@@ -23,6 +23,7 @@ class Admin::UsersController < Admin::SimpleCrudController
       else
         @user.update(user_params)
       end
+
     respond_to do |format|
       format.js do
         if update_result

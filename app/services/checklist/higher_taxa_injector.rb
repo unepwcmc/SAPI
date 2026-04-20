@@ -24,14 +24,17 @@ class Checklist::HigherTaxaInjector
 
   def run
     res = []
+
     @taxon_concepts.each_with_index do |tc, i|
       prev_item = (i > 0 ? @taxon_concepts[i - 1] : nil)
       res +=
         higher_taxa_headers(prev_item, tc).map do |ht|
           Checklist::HigherTaxaItem.new(ht)
         end
+
       res << tc
     end
+
     res
   end
 
@@ -41,6 +44,7 @@ class Checklist::HigherTaxaInjector
     res = []
     current_higher_taxon = nil
     current_higher_taxon_children_ids = []
+
     @taxon_concepts.each_with_index do |tc, i|
       prev_item = (i > 0 ? @taxon_concepts[i - 1] : nil)
       higher_taxon = higher_taxa_headers(prev_item, tc).first
@@ -54,8 +58,10 @@ class Checklist::HigherTaxaInjector
         current_higher_taxon = higher_taxon
         current_higher_taxon_children_ids = []
       end
+
       current_higher_taxon_children_ids << tc.id
     end
+
     # push the last one
     res.push(
       {
@@ -84,6 +90,7 @@ class Checklist::HigherTaxaInjector
             tmp << rank
           end
         end
+
         tmp.reverse
       end
 
@@ -91,6 +98,7 @@ class Checklist::HigherTaxaInjector
 
     res = []
     @last_ancestor_ids = @header_ranks.map { |rank| curr_item.send("#{rank.downcase}_id") }
+
     ranks.each_with_index do |rank, idx|
       higher_taxon_id = curr_item.send("#{rank.downcase}_id")
 
@@ -101,6 +109,7 @@ class Checklist::HigherTaxaInjector
         end
       end
     end
+
     res
   end
 end

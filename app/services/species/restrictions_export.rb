@@ -33,12 +33,14 @@ class Species::RestrictionsExport
     else
       taxon = nil
     end
+
     return [ '' ] * (TAXONOMY_COLUMNS.size + 1) unless taxon # return array with empty strings
 
     columns =
       TAXONOMY_COLUMNS.map do |c|
         taxon.send(c)
       end
+
     columns << remark
     columns
   end

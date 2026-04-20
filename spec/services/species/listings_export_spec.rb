@@ -1,6 +1,7 @@
 require 'spec_helper'
 describe Species::ListingsExport do
   include_context 'Canis lupus'
+
   describe :path do
     subject do
       Species::ListingsExportFactory.new(
@@ -50,7 +51,6 @@ describe Species::ListingsExport do
       after do
         FileUtils.remove_dir('spec/public/downloads/cites_listings', true)
       end
-
 
       context 'when file not cached' do
         specify do
@@ -141,7 +141,6 @@ describe Species::ListingsExport do
           )
           SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
-
 
         specify { expect(subject.query.to_a.size).to eq(1) }
       end

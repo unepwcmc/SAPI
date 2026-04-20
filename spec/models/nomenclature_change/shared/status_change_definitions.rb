@@ -1,6 +1,7 @@
 shared_context 'status_change_definitions' do
   let(:input_species) { create_cites_eu_species }
   let(:accepted_name) { create_cites_eu_species }
+
   let(:input_trade_name) do
     tc = create_cites_eu_species(
       name_status: 'T',
@@ -14,11 +15,13 @@ shared_context 'status_change_definitions' do
     )
     tc
   end
+
   let(:input_trade_name_genus) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Ridiculus')
     )
   end
+
   let(:input_synonym) do
     tc = create_cites_eu_species(
       name_status: 'S',
@@ -32,11 +35,13 @@ shared_context 'status_change_definitions' do
     )
     tc
   end
+
   let(:input_synonym_genus) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Confundus')
     )
   end
+
   let(:n_to_s_with_primary_output) do
     create(
       :nomenclature_change_status_to_synonym,
@@ -48,6 +53,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusToSynonym::PRIMARY_OUTPUT
     ).reload
   end
+
   let(:t_to_a_with_primary_output) do
     create(
       :nomenclature_change_status_to_accepted,
@@ -60,6 +66,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
     ).reload
   end
+
   let(:t_to_s_with_primary_and_secondary_output) do
     create(
       :nomenclature_change_status_to_synonym,
@@ -75,6 +82,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusToSynonym::RELAY
     ).reload
   end
+
   let(:n_to_s_with_input_and_secondary_output) do
     create(
       :nomenclature_change_status_to_synonym,
@@ -91,6 +99,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusToSynonym::RELAY
     ).reload
   end
+
   let(:a_to_s_with_swap_with_primary_output) do
     create(
       :nomenclature_change_status_swap,
@@ -102,6 +111,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusSwap::PRIMARY_OUTPUT
     ).reload
   end
+
   let(:a_to_s_with_swap) do
     create(
       :nomenclature_change_status_swap,
@@ -122,6 +132,7 @@ shared_context 'status_change_definitions' do
       status: NomenclatureChange::StatusSwap::SECONDARY_OUTPUT
     ).reload
   end
+
   let(:t_to_a_with_input) do
     create(
       :nomenclature_change_status_to_accepted,

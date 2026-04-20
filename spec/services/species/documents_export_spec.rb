@@ -34,7 +34,6 @@ describe Species::DocumentsExport do
         FileUtils.rm_rf(Dir.glob("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}/*"))
       end
 
-
       specify 'when file not cached it should not be generated' do
         expect(subject.export).to be_falsey
       end

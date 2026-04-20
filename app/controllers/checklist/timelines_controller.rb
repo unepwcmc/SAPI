@@ -9,6 +9,7 @@ class Checklist::TimelinesController < ApplicationController
 
         Checklist::TimelinesForTaxonConcept.new(tc) unless tc.nil?
       end
+
     render json: res, each_serializer: Checklist::TimelinesForTaxonConceptSerializer
   end
 

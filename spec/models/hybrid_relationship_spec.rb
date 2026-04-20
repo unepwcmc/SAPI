@@ -7,12 +7,14 @@ describe TaxonRelationship do
         taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
       )
     end
+
     let!(:tc) do
       create_cites_eu_species(
         parent_id: parent.id,
         taxon_name: create(:taxon_name, scientific_name: 'lolatus')
       )
     end
+
     let!(:another_tc) do
       create_cites_eu_species(
         parent_id: parent.id,
@@ -27,6 +29,7 @@ describe TaxonRelationship do
         scientific_name: 'Lolcatus lolatus x lolcatus'
       )
     end
+
     let(:another_hybrid) do
       create_cites_eu_species(
         name_status: 'H',
@@ -34,6 +37,7 @@ describe TaxonRelationship do
         scientific_name: 'Lolcatus lolcatus x ?'
       )
     end
+
     let(:hybrid_rel) do
       build(
         :taxon_relationship,
@@ -42,6 +46,7 @@ describe TaxonRelationship do
         other_taxon_concept_id: hybrid.id
       )
     end
+
     let(:another_hybrid_rel) do
       build(
         :taxon_relationship,

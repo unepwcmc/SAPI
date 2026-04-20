@@ -39,6 +39,7 @@ describe TaxonConcept do
           name_status: 'S'
         )
       end
+
       let(:tc) do
         build_species(
           taxonomy_id: cites_eu.id,
@@ -67,6 +68,7 @@ describe TaxonConcept do
           parent_id: kingdom_tc.id
         )
       end
+
       let(:tc) do
         build_kingdom(
           taxonomy_id: cites_eu.id,
@@ -103,12 +105,14 @@ describe TaxonConcept do
 
     context 'when full name is already given' do
       let(:tc_parent) { create_cites_eu_species }
+
       let!(:tc1) do
         create_cites_eu_subspecies(
           parent: tc_parent,
           taxon_name: create(:taxon_name, scientific_name: 'duplicatus')
         )
       end
+
       let(:tc2) do
         build_cites_eu_subspecies(
           parent: tc_parent,
@@ -126,18 +130,21 @@ describe TaxonConcept do
         taxon_name: create(:taxon_name, scientific_name: 'Felidae')
       )
     end
+
     let(:genus) do
       create_cites_eu_genus(
         parent: family,
         taxon_name: create(:taxon_name, scientific_name: 'Lynx')
       )
     end
+
     let(:species) do
       create_cites_eu_species(
         parent: genus,
         taxon_name: create(:taxon_name, scientific_name: 'Domesticus')
       )
     end
+
     let(:s_species) do
       create_cites_eu_species(
         parent: genus,
@@ -173,6 +180,7 @@ describe TaxonConcept do
           taxon_name: create(:taxon_name, scientific_name: 'Canidae')
         )
       end
+
       let(:new_genus) do
         create_cites_eu_genus(
           parent: new_family,

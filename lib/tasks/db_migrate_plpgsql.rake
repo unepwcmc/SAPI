@@ -1,6 +1,7 @@
 namespace :db do
   namespace :migrate do
     desc 'Run custom sql scripts'
+
     task sql: :environment do
       ApplicationRecord.transaction do
         connection = ApplicationRecord.connection
@@ -25,6 +26,7 @@ namespace :db do
     end
 
     desc 'Rebuild all computed values'
+
     task rebuild: :migrate do
       SapiModule.rebuild
     end
@@ -35,6 +37,7 @@ namespace :db do
   end
 
   desc 'Drop sandboxes in progress'
+
   task drop_sandboxes: :environment do
     Trade::AnnualReportUpload.where(is_done: false).find_each do |aru|
       aru.destroy
@@ -42,6 +45,7 @@ namespace :db do
   end
 
   desc 'Drop all trade (shipments, permits, arus & sandboxes - use responsibly)'
+
   task drop_trade: [ :environment ] do
     puts 'Deleting shipments'
     ApplicationRecord.connection.execute('DELETE FROM trade_shipments')

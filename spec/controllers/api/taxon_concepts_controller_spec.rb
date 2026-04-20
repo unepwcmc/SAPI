@@ -95,6 +95,7 @@ describe Api::V1::TaxonConceptsController do
       let!(:taxon_concept) do
         create(:taxon_concept)
       end
+
       let!(:m_taxon_concept) do
         taxon_concept.m_taxon_concept
       end

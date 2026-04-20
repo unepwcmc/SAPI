@@ -37,7 +37,6 @@ describe Species::StandardReferenceOutputExport do
         FileUtils.remove_dir('spec/public/downloads/standard_reference_output', true)
       end
 
-
       context 'when file not cached' do
         specify do
           subject.export

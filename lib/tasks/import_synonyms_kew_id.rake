@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import synonyms from csv file (usage: rake import:synonyms_kew_id[path/to/file,path/to/another])'
+
   task :synonyms_kew_id, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'synonym_kew_id_import'
     puts "There are #{TaxonRelationship.
@@ -12,6 +13,7 @@ namespace :import do
       find_by(name: TaxonRelationshipType::HAS_SYNONYM)
 
     files = import_helper.files_from_args(t, args)
+
     files.each do |file|
       import_helper.drop_table(TMP_TABLE)
       import_helper.create_table_from_csv_headers(file, TMP_TABLE)
@@ -31,6 +33,7 @@ namespace :import do
       if kingdom == 'Plantae'
         import_data_for_kew_id kingdom, Rank::VARIETY
       end
+
       # [END]copied over from import:species
 
       [ Taxonomy::CITES_EU, Taxonomy::CMS ].each do |taxonomy_name|

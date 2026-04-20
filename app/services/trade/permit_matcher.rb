@@ -47,6 +47,7 @@ private
           ApplicationRecord.connection.quote_string(qp)
         end
       end
+
     query_parts.join
   end
 end

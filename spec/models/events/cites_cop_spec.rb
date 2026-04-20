@@ -72,6 +72,7 @@ describe CitesCop do
 
       context 'when listing change and annotation' do
         let!(:annotation) { create(:annotation, event: cites_cop) }
+
         let!(:listing_change) do
           create_cites_I_addition(
             event: cites_cop,
@@ -84,6 +85,7 @@ describe CitesCop do
 
       context 'when listing change and hash annotation' do
         let!(:hash_annotation) { create(:annotation, event: cites_cop) }
+
         let!(:listing_change) do
           create_cites_I_addition(
             event: cites_cop,

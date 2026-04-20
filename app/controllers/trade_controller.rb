@@ -10,10 +10,10 @@ class TradeController < ApplicationController
   def create
     raise NoMethodError
   end
+
   def update
     raise NoMethodError
   end
-
 
   def submit
     raise NoMethodError

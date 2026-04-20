@@ -6,6 +6,7 @@ shared_context 'shipment_reassignments_processor_examples' do
       reassignable_type: 'Trade::Shipment'
     )
   end
+
   let!(:reassignment_target) do
     create(
       :nomenclature_change_reassignment_target,
@@ -13,6 +14,7 @@ shared_context 'shipment_reassignments_processor_examples' do
       output: output
     )
   end
+
   before do
     2.times { create(:shipment, taxon_concept: input_species) }
     processor.run

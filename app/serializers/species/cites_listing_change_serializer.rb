@@ -35,7 +35,6 @@ class Species::CitesListingChangeSerializer < Species::ListingChangeSerializer
     object.change_type_name == ChangeType::ADDITION
   end
 
-
   def excluded_geo_entities
     if object.party_full_name.blank?
       object.excluded_geo_entities_ids

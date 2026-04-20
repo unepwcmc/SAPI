@@ -214,6 +214,7 @@ describe Admin::TaxonEuSuspensionsController do
 
   describe 'Authorization for contributors' do
     login_contributor
+
     let!(:eu_suspension) do
       create(
         :eu_suspension,

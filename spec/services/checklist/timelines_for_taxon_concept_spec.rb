@@ -20,7 +20,6 @@ describe Checklist::TimelinesForTaxonConcept do
         MTaxonConcept.find(tc.id)
       end
 
-
       specify { expect(subject.raw_timelines['I'].timeline_events).not_to be_empty }
       specify { expect(subject.raw_timelines['II'].timeline_events).to be_empty }
     end
@@ -44,7 +43,6 @@ describe Checklist::TimelinesForTaxonConcept do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MTaxonConcept.find(tc.id)
       end
-
 
       specify { expect(subject.raw_timelines['III'].timeline_events).not_to be_empty }
       specify { expect(subject.raw_timelines['I'].timeline_events).to be_empty }
@@ -70,7 +68,6 @@ describe Checklist::TimelinesForTaxonConcept do
         MTaxonConcept.find(tc.id)
       end
 
-
       specify { expect(subject.raw_timelines['III'].timeline_events).to be_empty }
       specify { expect(subject.raw_timelines['III'].timelines.first.timeline_events).not_to be_empty }
       specify { expect(subject.raw_timelines['I'].timeline_events).to be_empty }
@@ -86,7 +83,6 @@ describe Checklist::TimelinesForTaxonConcept do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MTaxonConcept.find(tc.id)
       end
-
 
       specify { expect(subject.size).to eq(5) }
       specify { expect(subject.first.year).to eq(1975) }

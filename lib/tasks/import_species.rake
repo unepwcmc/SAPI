@@ -1,6 +1,7 @@
 require Rails.root.join('lib/tasks/helpers_for_import.rb')
 namespace :import do
   desc 'Import species records from csv files (usage: rake import:species[path/to/file,path/to/another])'
+
   task :species, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 

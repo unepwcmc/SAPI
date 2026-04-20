@@ -10,6 +10,7 @@ describe NomenclatureChange::DeleteUnreassignedProcessor do
   describe :run do
     let(:split) { split_with_input_with_reassignments }
     let(:input) { split.input }
+
     let(:processor) do
       NomenclatureChange::DeleteUnreassignedProcessor.new(input)
     end

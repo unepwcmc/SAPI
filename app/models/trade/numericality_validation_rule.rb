@@ -33,6 +33,7 @@ private
       arel_columns.map do |a|
         Arel::Nodes::NamedFunction.new 'isnumeric', [ a ]
       end
+
     arel_nodes = isnumeric_columns.map { |c| c.eq(false) }
     sandbox_klass.select('*').where(arel_nodes.inject(&:or))
   end

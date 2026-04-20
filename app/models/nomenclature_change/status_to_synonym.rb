@@ -56,6 +56,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
       errors.add(:primary_output, 'Must be N or T taxon')
       return false
     end
+
     true
   end
 
@@ -68,6 +69,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
       errors.add(:secondary_output, 'Must have a secondary output')
       return false
     end
+
     true
   end
 
@@ -105,6 +107,7 @@ class NomenclatureChange::StatusToSynonym < NomenclatureChange
       builder.build_common_names_reassignments
       builder.build_references_reassignments
     end
+
     true
   end
 end

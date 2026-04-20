@@ -3,6 +3,7 @@ class Admin::InstrumentsController < Admin::StandardAuthorizationController
 
   def index
     load_associations
+
     index! do |format|
       format.json do
         render json: end_of_association_chain.order(:name).

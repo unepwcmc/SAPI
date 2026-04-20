@@ -31,6 +31,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
       build_dependants
     end
   end
+
   def create
     @taxon_concept = TaxonConcept.find(params[:taxon_concept_id])
     @designation = Designation.find(params[:designation_id])
@@ -46,7 +47,6 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
     end
   end
 
-
   def update
     update! do |success, failure|
       success.html do
@@ -56,6 +56,7 @@ class Admin::TaxonListingChangesController < Admin::SimpleCrudController
           redirect_to admin_taxon_concept_designation_listing_changes_url(@taxon_concept, @designation)
         end
       end
+
       failure.html do
         load_change_types
         build_dependants
@@ -82,6 +83,7 @@ protected
         listing_change_params[:party_listing_distribution_attributes]
       )
     end
+
     unless @listing_change.annotation
       @listing_change.build_annotation(
         params[:listing_change] &&
@@ -106,6 +108,7 @@ protected
       else
         []
       end
+
     @events =
       if @designation.is_eu?
         EuRegulation.order(effective_at: :desc)

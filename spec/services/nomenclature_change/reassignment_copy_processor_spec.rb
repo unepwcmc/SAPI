@@ -2,10 +2,12 @@ require 'spec_helper'
 
 describe NomenclatureChange::ReassignmentCopyProcessor do
   include_context 'split_definitions'
+
   describe :run do
     let(:split) { split_with_input_and_same_output }
     let(:input) { split.input }
     let(:output) { split.outputs.first }
+
     let(:processor) do
       NomenclatureChange::ReassignmentCopyProcessor.new(input, output)
     end

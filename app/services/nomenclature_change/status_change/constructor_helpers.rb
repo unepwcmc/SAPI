@@ -83,6 +83,7 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
       output_old.display_full_name,
       output_old.display_rank_name
     )
+
     I18n.with_locale(lng) do
       I18n.t(
         'status_change.status_elevated_to_accepted_name',
@@ -95,9 +96,11 @@ module NomenclatureChange::StatusChange::ConstructorHelpers
 
   def multi_lingual_public_output_note(output_new, output_old, event)
     result = {}
+
     [ :en, :es, :fr ].each do |lng|
       result[lng] = public_output_note(output_new, output_old, event, lng)
     end
+
     result
   end
 
@@ -139,6 +142,7 @@ private
       elsif @nomenclature_change.needs_to_receive_associations?
         @nomenclature_change.primary_output
       end
+
     return false unless input && output
 
     yield(input, output)

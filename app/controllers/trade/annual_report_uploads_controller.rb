@@ -15,6 +15,7 @@ class Trade::AnnualReportUploadsController < TradeController
         null_cond
       )
     end
+
     render json: @annual_report_uploads,
       each_serializer: Trade::AnnualReportUploadSerializer
   end

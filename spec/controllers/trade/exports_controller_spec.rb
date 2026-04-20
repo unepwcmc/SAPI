@@ -14,6 +14,7 @@ describe Trade::ExportsController do
       it 'does not log download information from the admin interface' do
         create(:shipment)
         allow_any_instance_of(Trade::ShipmentsExport).to receive(:public_file_name).and_return('shipments.csv')
+
         expect do
           get :download, params: {
             filters: {

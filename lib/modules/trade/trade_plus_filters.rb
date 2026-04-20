@@ -221,7 +221,6 @@ class Trade::TradePlusFilters
     SQL
   end
 
-
 private
 
   def format_values(key, values)
@@ -287,6 +286,7 @@ private
   def ordering(attribute, attribute_value)
     if attribute == 'taxonomic_groups'
       # If there are unexpected attribute values put them at the end
+
       taxonomy_ordering.index(attribute_value) || taxonomy_ordering.length
     elsif attribute == 'units'
       unit_ordering.index(attribute_value) || unit_ordering.length

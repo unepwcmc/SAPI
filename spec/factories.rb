@@ -37,6 +37,7 @@ FactoryBot.define do
     factory :eu_regulation, class: 'EuRegulation' do
       end_date { '2012-01-01' }
     end
+
     factory :eu_suspension_regulation, class: 'EuSuspensionRegulation'
     factory :eu_implementing_regulation, class: 'EuImplementingRegulation'
     factory :eu_council_regulation, class: 'EuCouncilRegulation'

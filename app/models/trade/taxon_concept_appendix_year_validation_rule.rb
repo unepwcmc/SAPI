@@ -62,6 +62,7 @@ private
       column_names.map do |c|
         s[c].not_eq(nil)
       end
+
     not_null_conds = not_null_nodes.shift
     not_null_nodes.each { |n| not_null_conds = not_null_conds.and(n) }
     s.project(Arel.star).where(not_null_conds).except(valid_values)

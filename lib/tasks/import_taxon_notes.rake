@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Apply name status changes from csv file (usage: rake import:taxon_name_status_changes[path/to/file,path/to/another])'
+
   task :taxon_notes, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 
@@ -60,6 +61,7 @@ namespace :import do
                 NOW()                          AS created_at,
                 NOW()                          AS updated_at
               FROM note_changes itc
+
               -- Ensure that we do not insert comments for taxons which do not
               -- exist
               JOIN taxon_concepts tc

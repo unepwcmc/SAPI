@@ -4,6 +4,7 @@ class Admin::DesignationsController < Admin::StandardAuthorizationController
   def index
     load_associations
     @custom_title = 'MEAs'
+
     index! do |format|
       format.json do
         render json: end_of_association_chain.order(:name).

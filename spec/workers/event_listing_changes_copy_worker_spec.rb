@@ -8,6 +8,7 @@ describe EventListingChangesCopyWorker do
       is_current: true
     )
   end
+
   let(:eu_regulation) do
     create_eu_regulation(
       name: 'REGULATION 2.0',
@@ -16,12 +17,15 @@ describe EventListingChangesCopyWorker do
       is_current: true
     )
   end
+
   let(:species) do
     create_cites_eu_species
   end
+
   let(:subspecies) do
     create_cites_eu_subspecies(parent: species)
   end
+
   let!(:listing_change) do
     create_eu_A_addition(
       event_id: prev_eu_regulation.id,
@@ -59,12 +63,14 @@ describe EventListingChangesCopyWorker do
         taxon_concept_id: subspecies.id
       )
     end
+
     let!(:geographic_exclusion) do
       create_eu_A_exception(
         parent_id: listing_change.id,
         taxon_concept_id: species.id
       )
     end
+
     let!(:exclusion_distribution) do
       create(:listing_distribution, listing_change_id: geographic_exclusion.id)
     end

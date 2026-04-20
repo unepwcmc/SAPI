@@ -23,6 +23,7 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
       success.js do
         @taxon_commons = @taxon_concept.taxon_commons
       end
+
       failure.js do
         load_associations
         render 'new'
@@ -30,13 +31,13 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
     end
   end
 
-
   def update
     update! do |success, failure|
       success.js do
         @taxon_commons = @taxon_concept.taxon_commons
         render 'create'
       end
+
       failure.js do
         load_associations
         render 'new'
@@ -50,6 +51,7 @@ class Admin::TaxonCommonsController < Admin::TaxonConceptAssociatedTypesControll
         redirect_to admin_taxon_concept_names_url(@taxon_concept),
           notice: 'Operation succeeded'
       end
+
       failure.html do
         redirect_to admin_taxon_concept_names_url(@taxon_concept),
           notice: 'Operation failed'

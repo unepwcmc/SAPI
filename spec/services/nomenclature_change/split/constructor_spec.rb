@@ -88,6 +88,7 @@ describe NomenclatureChange::Split::Constructor do
         let(:input) do
           create(:nomenclature_change_input, nomenclature_change: split, note_en: 'blah')
         end
+
         let(:output) do
           create(:nomenclature_change_output, nomenclature_change: split, note_en: 'blah')
         end
@@ -111,6 +112,7 @@ describe NomenclatureChange::Split::Constructor do
           2.times { create_cites_eu_subspecies(parent: s) }
           s
         end
+
         let(:split_with_input_and_output) { split_with_input_and_same_output }
         let(:default_output) { split.outputs_intersect_inputs.first }
 
@@ -142,6 +144,7 @@ describe NomenclatureChange::Split::Constructor do
       context 'when output = input' do
         let(:input_species) do
           s = create_cites_eu_species
+
           2.times do
             create(
               :taxon_relationship,
@@ -150,8 +153,10 @@ describe NomenclatureChange::Split::Constructor do
               taxon_relationship_type: synonym_relationship_type
             )
           end
+
           s
         end
+
         let(:split_with_input_and_output) { split_with_input_and_same_output }
         let(:default_output) { split.outputs_intersect_inputs.first }
 
@@ -183,6 +188,7 @@ describe NomenclatureChange::Split::Constructor do
 
       context 'when geo_entity citations mismatch distribution' do
         let(:geo_entity) { create(:geo_entity) }
+
         let(:input_species) do
           s = create_cites_eu_species
           dc = create(:document_citation)
@@ -203,6 +209,7 @@ describe NomenclatureChange::Split::Constructor do
           )
           s
         end
+
         let(:default_output) { split.outputs.first }
         let(:non_default_output) { split.outputs.where.not(id: default_output.id).first }
 
@@ -214,7 +221,6 @@ describe NomenclatureChange::Split::Constructor do
           ).first
           non_default_target.destroy
           distribution_reassignment.reassignment_targets.reload
-
 
           # split.input.distribution_reassignments.first.
           #   update(output_ids: [split.outputs.first.id])

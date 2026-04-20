@@ -10,6 +10,7 @@ class Ability
     #   else
     #     can :read, :all
     #   end
+
     #
     # The first argument to `can` is the action you are giving the user
     # permission to do.
@@ -39,9 +40,11 @@ class Ability
       can [ :autocomplete, :read ], :all
       can :update, :all
       can :create, :all
+
       cannot :update, User do |u|
         u.id != user.id
       end
+
       cannot :manage, [
         Taxonomy, Rank, Designation,
         Instrument, SpeciesListing,

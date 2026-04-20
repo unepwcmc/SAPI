@@ -58,6 +58,7 @@ private
           'taxon_concepts_mview.*, matching_names.matched_names_ary AS synonyms_ary'
         )
     end
+
     @query = @query
   end
 

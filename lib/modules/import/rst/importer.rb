@@ -4,6 +4,7 @@ module Import::Rst::Importer
       # Array of CitesRstProcesses in current import we can use to
       # destroy records no longer being returned from the RST API.
       active_ids = []
+
       data.map do |item|
         taxon_concept = map_taxon_concept(item)
         unless taxon_concept

@@ -1,10 +1,12 @@
 namespace :import do
   desc 'Import reference distribution links from csv file (usage: rake import:reference_distribution_links[path/to/file,path/to/another])'
+
   task :reference_distribution_links, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'reference_distribution_links_import'
     puts "There are #{DistributionReference.count} distribution references in the database."
 
     files = import_helper.files_from_args(t, args)
+
     files.each do |file|
       import_helper.drop_table(TMP_TABLE)
       import_helper.create_table_from_csv_headers(file, TMP_TABLE)

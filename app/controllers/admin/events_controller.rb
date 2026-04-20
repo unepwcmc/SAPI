@@ -4,6 +4,7 @@ class Admin::EventsController < Admin::StandardAuthorizationController
 
   def index
     load_associations
+
     index! do |format|
       format.json do
         render json: end_of_association_chain.order(:effective_at, :name).
@@ -17,6 +18,7 @@ class Admin::EventsController < Admin::StandardAuthorizationController
       format.json { render json: resource, serializer: Admin::EventSerializer }
     end
   end
+
   def new
     new! do
       load_associations
@@ -29,7 +31,6 @@ class Admin::EventsController < Admin::StandardAuthorizationController
       format.js { render 'new' }
     end
   end
-
 
 protected
 

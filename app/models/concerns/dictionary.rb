@@ -10,6 +10,7 @@ module Dictionary
       # keys.each do |key|
       #   const_set key.to_s.upcase, key.to_s.upcase
       # end
+
       # define_singleton_method("dict") { keys.map{|k| k.to_s.upcase } }
       build_basic_dictionary(*keys) { |key| key.to_s.upcase }
     end
@@ -23,6 +24,7 @@ module Dictionary
             key
           end
       end
+
       define_singleton_method('dict') { keys.map { |k| k.to_s.upcase } }
     end
   end

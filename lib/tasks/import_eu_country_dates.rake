@@ -1,10 +1,12 @@
 namespace :import do
   desc 'Import EU country entry/exit dates from csv file usage: rake import:eu_country_dates'
+
   task eu_country_dates: :environment do
     file_path = "#{Rails.root.join("lib/files/CITES_trade_EU_countries_list.csv")}"
 
     if File.exist?(file_path)
       Rails.logger.info "There are #{EuCountryDate.count} records in the EuCoutryDate table"
+
       CSV.foreach(file_path, headers: true) do |row|
         geo_entity = GeoEntity.find_by(iso_code2: row['ISO2'])
         accession_year = row['EU_accession_year']

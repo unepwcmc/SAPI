@@ -36,7 +36,6 @@ class Admin::EuOpinionsController < Admin::StandardAuthorizationController
     end
   end
 
-
 protected
 
   def load_lib_objects

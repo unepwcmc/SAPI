@@ -15,6 +15,7 @@ class NomenclatureChange::Lump::Constructor
 
   def build_parent_reassignments
     output = @nomenclature_change.output
+
     @nomenclature_change.inputs.each do |input|
       children = input.taxon_concept.children - [ output.taxon_concept ]
       _build_parent_reassignments(input, output, children)
@@ -60,6 +61,7 @@ class NomenclatureChange::Lump::Constructor
   def input_lumped_into(input, output, lng)
     input_html = taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
+
     I18n.with_locale(lng) do
       I18n.t(
         'lump.input_lumped_into',
@@ -72,9 +74,11 @@ class NomenclatureChange::Lump::Constructor
 
   def output_lumped_from(output, inputs, lng)
     output_html = taxon_concept_html(output.display_full_name, output.display_rank_name)
+
     inputs_html = @nomenclature_change.inputs.map do |input|
       taxon_concept_html(input.taxon_concept.full_name, input.taxon_concept.rank.name)
     end.join(', ')
+
     I18n.with_locale(lng) do
       I18n.t(
         'lump.output_lumped_from',
@@ -87,6 +91,7 @@ class NomenclatureChange::Lump::Constructor
 
   def multi_lingual_input_note(input, output, event)
     result = {}
+
     [ :en, :es, :fr ].each do |lng|
       note = '<p>'
       note << input_lumped_into(input, output, lng)
@@ -95,11 +100,13 @@ class NomenclatureChange::Lump::Constructor
       note << '.</p>'
       result[lng] = note
     end
+
     result
   end
 
   def multi_lingual_output_note(output, inputs, event)
     result = {}
+
     [ :en, :es, :fr ].each do |lng|
       note = '<p>'
       note << output_lumped_from(output, @nomenclature_change.inputs, lng)
@@ -108,18 +115,21 @@ class NomenclatureChange::Lump::Constructor
       note << '.</p>'
       result[lng] = note
     end
+
     result
   end
 
   def build_input_and_output_notes
     output = @nomenclature_change.output
     event = @nomenclature_change.event
+
     @nomenclature_change.inputs_except_outputs.each do |input|
       note = multi_lingual_input_note(input, output, event)
       input.note_en = note[:en]
       input.note_es = note[:es]
       input.note_fr = note[:fr]
     end
+
     note = multi_lingual_output_note(output, @nomenclature_change.inputs, event)
     output.note_en = note[:en]
     output.note_es = note[:es]
@@ -136,6 +146,7 @@ class NomenclatureChange::Lump::Constructor
     if @nomenclature_change.event
       note << following_taxonomic_changes(@nomenclature_change.event, lng)
     end
+
     note = "<p>#{note}.</p>" if note.present?
   end
 

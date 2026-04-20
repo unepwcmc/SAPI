@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import EU decisions from csv file (usage: rake import:eu_decisions[path/to/file,path/to/another])'
+
   task :eu_decisions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'eu_decisions_import'
 
@@ -7,6 +8,7 @@ namespace :import do
     designation_id = Designation.find_by(name: 'EU').id
     puts "There are #{EuDecision.count} EU Decisions in the database."
     files = import_helper.files_from_args(t, args)
+
     files.each do |file|
       import_helper.drop_table(TMP_TABLE)
       import_helper.create_table_from_csv_headers(file, TMP_TABLE)

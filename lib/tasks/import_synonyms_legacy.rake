@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import synonyms from csv file (usage: rake import:synonyms[path/to/file,path/to/another])'
+
   task :synonyms_legacy, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 
@@ -15,6 +16,7 @@ namespace :import do
       find_by(name: TaxonRelationshipType::HAS_SYNONYM)
 
     files = import_helper.files_from_args(t, args)
+
     files.each do |file|
       import_helper.drop_table(TMP_TABLE)
       import_helper.create_table_from_csv_headers(file, TMP_TABLE)

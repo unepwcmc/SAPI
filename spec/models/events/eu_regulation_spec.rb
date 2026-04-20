@@ -107,6 +107,7 @@ describe EuRegulation do
 
       context 'when listing change and annotation' do
         let!(:annotation) { create(:annotation, event: eu_regulation) }
+
         let!(:listing_change) do
           create_eu_A_addition(
             event: eu_regulation,
@@ -119,6 +120,7 @@ describe EuRegulation do
 
       context 'when listing change and hash annotation' do
         let!(:hash_annotation) { create(:annotation, event: eu_regulation) }
+
         let!(:listing_change) do
           create_eu_A_addition(
             event: eu_regulation,

@@ -266,7 +266,8 @@ private
         THEN 'default'
         ELSE 'false'
         END
-      END
+      end
+
     SQL
   end
 

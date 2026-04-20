@@ -585,6 +585,7 @@ shared_context :sapi do # rubocop:disable RSpec/SharedExamples # too many change
     trade: GeoEntityType::TRADE_ENTITY
   }.each do |name, geo_type|
     met_name = "#{name}_geo_entity_type"
+
     define_method(met_name) do
       met_name = met_name.to_s
       var = instance_variable_get("@_#{met_name}")
@@ -606,6 +607,7 @@ shared_context :sapi do # rubocop:disable RSpec/SharedExamples # too many change
     hybrid: TaxonRelationshipType::HAS_HYBRID
   }.each do |name, rel_type|
     met_name = "#{name}_relationship_type"
+
     define_method(met_name) do
       met_name = met_name.to_s
       var = instance_variable_get("@_#{met_name}")

@@ -11,6 +11,7 @@ class IucnMappingManager
   #                        :taxonomy_id => taxonomy.id).each do |taxon_concept|
   #       sync_taxon_concept taxon_concept
   #     end
+
   #   end
 
   #   def sync_taxon_concept(taxon_concept)
@@ -20,12 +21,14 @@ class IucnMappingManager
   #                 else
   #                   taxon_concept.full_name
   #                 end
+
   #     data = fetch_data_for_name full_name
   #     if !data || !data["result"] || data["result"].empty?
   #       puts "#{taxon_concept.full_name} NO MATCH"
   #     else
   #       map_taxon_concept taxon_concept, mapping, data
   #     end
+
   #   end
 
   #   def fetch_data_for_name(full_name)
@@ -58,6 +61,7 @@ class IucnMappingManager
   #       puts "########################## EXCEPTION Taxon Concept #{taxon_concept.id} ###########"
   #       puts e.message
   #     end
+
   #   end
 
   #   def type_of_match(tc, match)
@@ -69,7 +73,9 @@ class IucnMappingManager
   #         puts "NAME_MATCH"
   #         "NAME_MATCH"
   #       end
+
   #     end
+
   #   end
 
   #   def strip_authors(author)
@@ -78,5 +84,6 @@ class IucnMappingManager
   #       reject { |p| ["and", "&", "&amp;", ","].include?(p) }.
   #       join(" ")
   #   end
+
   # end
 end

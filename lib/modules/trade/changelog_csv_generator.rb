@@ -31,6 +31,7 @@ class Trade::ChangelogCsvGenerator
             data_columns.map do |dc|
               shipment[dc]
             end
+
           values = values + [ duplicate ] if duplicates
           csv << values
 
@@ -52,6 +53,7 @@ class Trade::ChangelogCsvGenerator
               data_columns.map do |dc|
                 reified[dc]
               end
+
             values = values + [ '' ] if duplicates
             csv << values
           end
@@ -61,6 +63,7 @@ class Trade::ChangelogCsvGenerator
         end
       end
     end
+
     tempfile
   end
 end

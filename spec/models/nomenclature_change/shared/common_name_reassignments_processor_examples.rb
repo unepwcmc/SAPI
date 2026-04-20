@@ -6,6 +6,7 @@ shared_context 'common_name_reassignments_processor_examples' do
       reassignable_type: 'TaxonCommon'
     )
   end
+
   let!(:reassignment_target) do
     create(
       :nomenclature_change_reassignment_target,
@@ -13,6 +14,7 @@ shared_context 'common_name_reassignments_processor_examples' do
       output: output
     )
   end
+
   before do
     2.times { create(:taxon_common, taxon_concept: input_species) }
     processor.run

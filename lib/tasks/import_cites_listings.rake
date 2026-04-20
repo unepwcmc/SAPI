@@ -2,6 +2,7 @@ require Rails.root.join('lib/tasks/helpers_for_import.rb')
 
 namespace :import do
   desc 'Import CITES species listings from csv file (usage: rake import:cites_listings[path/to/file,path/to/another])'
+
   task :cites_listings, 10.times.map { |i| :"file_#{i}" } => [ :environment, 'cites_listings:defaults' ] do |t, args|
     import_helper = CsvImportHelper.new
 
@@ -34,6 +35,7 @@ namespace :import do
       where(species_listings: { designation_id: designation.id }).count
 
     files = import_helper.files_from_args(t, args)
+
     files.each do |file|
       import_helper.drop_table(TMP_TABLE)
       import_helper.create_table_from_csv_headers(file, TMP_TABLE)
@@ -276,6 +278,7 @@ namespace :import do
 
   namespace :cites_listings do
     desc 'Add defaults CITES listings and default ChangeTypes'
+
     task defaults: :environment do
       puts 'Going to create CITES default species listings, if they do not exist'
 
@@ -299,6 +302,7 @@ namespace :import do
     end
 
     desc 'Drop CITES species listings'
+
     task delete_all: :environment do
       designation = Designation.find_by(name: 'CITES')
 

@@ -1,6 +1,7 @@
 require Rails.root.join('lib/tasks/helpers_for_import.rb')
 namespace :import do
   desc 'import trade plus static data (usage: rake import:trade_plus_static_data[path/to/file])'
+
   task :trade_plus_static_data, [ :path_to_file ] => [ :environment ] do |t, args|
     abort('File not provided.') unless args[:path_to_file]
 

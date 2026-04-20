@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import standard reference links from csv file (usage: rake import:standard_references[path/to/file,path/to/another])'
+
   task :standard_reference_links, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 

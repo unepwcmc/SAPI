@@ -23,7 +23,9 @@ module PgCopy
   #       [row_hash['taxon_id'], row_hash['name']]
   #     )
   #   end
+
   # end
+
   # ```
   def self.copy_to_db(
     table_name,

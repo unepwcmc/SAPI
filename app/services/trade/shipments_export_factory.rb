@@ -6,6 +6,7 @@ class Trade::ShipmentsExportFactory
     unless report_types.include? @report_type
       @report_type = :comptab
     end
+
     case @report_type
     when :comptab
       Trade::ShipmentsComptabExport.new(filters)

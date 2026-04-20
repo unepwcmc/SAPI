@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Species::TaxonConceptPrefixMatcher do
   include_context 'Boa constrictor'
+
   describe :results do
     context 'when query in capital letters' do
       subject do

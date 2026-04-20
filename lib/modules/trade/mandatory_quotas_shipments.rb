@@ -70,10 +70,12 @@ class Trade::MandatoryQuotasShipments
 
   def initialize
     @queries = []
+
     CSV.foreach(QUOTAS_PATH, headers: true) do |row|
       @row = row
       run
     end
+
     @final_query = @queries.join("\n\s\s\s\sUNION\s\s\s\s\n")
   end
 

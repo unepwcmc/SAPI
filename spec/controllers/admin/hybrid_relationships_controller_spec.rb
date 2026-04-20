@@ -7,6 +7,7 @@ describe Admin::HybridRelationshipsController do
 
   let(:taxon_concept) { create(:taxon_concept) }
   let(:hybrid) { create(:taxon_concept, name_status: 'H') }
+
   let(:hybrid_relationship) do
     create(
       :taxon_relationship,

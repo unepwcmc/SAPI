@@ -4,6 +4,7 @@ class Admin::QuotasController < Admin::StandardAuthorizationController
     if params[:year] && @years.exclude?(params[:year])
       @years = @years.push(params[:year]).sort { |a, b| b <=> a }
     end
+
     index!
   end
 

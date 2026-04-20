@@ -31,6 +31,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     response.map do |value|
       value['id'], value['name'] = 'unreported', I18n.t('tradeplus.unreported') if value['id'].nil?
     end
+
     response.sort_by { |i| i['name'] }
     response.partition { |value| value['id'] != 'unreported' }.reduce(:+)
   end
@@ -39,6 +40,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     response.map do |value|
       value['id'], value['name'] = "reported_by_#{@reported_by}", "reported_by_#{@reported_by}" if value['id'].nil?
     end
+
     response.partition { |value| value['id'] != 'unreported' }.reduce(:+)
   end
 
@@ -51,9 +53,11 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def json_by_attribute(data, opts = {})
     key = data.fields.first
     hash = { "#{key}" => [] }
+
     data.each do |d|
       hash[key] << d
     end
+
     hash[key]
   end
 
@@ -173,6 +177,7 @@ private
         SQL
       ).values.first[0].to_i > 0
     end
+
     @opts['taxon_id'] = unique_taxa.join(',')
   end
 
@@ -185,7 +190,6 @@ private
         ON taxon_concept_id = taxon_id
     SQL
   end
-
 
   def child_taxa_condition
     return 'TRUE' if @opts['taxon_id'].blank?
@@ -269,7 +273,6 @@ private
     SQL
   end
 
-
   # TODO refactor to merge this method and the over_time one above together
   def aggregated_over_time_query
     quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
@@ -341,6 +344,7 @@ private
   def ancestors_ranks(taxonomic_level)
     taxa = [ 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'taxon' ]
     current_idx = taxa.index(taxonomic_level) || 0
+
     0.upto(current_idx).map do |i|
       taxa[i]
     end

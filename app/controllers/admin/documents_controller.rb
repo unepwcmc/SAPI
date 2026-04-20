@@ -53,6 +53,7 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
   def update
     update! do |success, failure|
       success.html { success_redirect }
+
       failure.html do
         load_associations
         render 'new'
@@ -66,7 +67,6 @@ class Admin::DocumentsController < Admin::StandardAuthorizationController
       failure.html { failure_redirect }
     end
   end
-
 
   def autocomplete
     title = params[:title]

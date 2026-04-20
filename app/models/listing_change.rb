@@ -170,11 +170,13 @@ class ListingChange < ApplicationRecord
         )
       )
     end
+
     if annotation
       relation = relation.includes(:annotation).references(:annotation).where(
         annotation.comparison_conditions
       )
     end
+
     relation
   end
 

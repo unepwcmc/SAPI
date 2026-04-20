@@ -9,6 +9,7 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables do
     annual_report.save(validate: false)
     annual_report
   end
+
   let(:sandbox_klass) do
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   end
@@ -24,7 +25,6 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables do
         sandbox_klass.create(source_code: 'A', taxon_name: @animal.full_name)
         sandbox_klass.create(source_code: 'B', taxon_name: @animal.full_name)
       end
-
 
       specify do
         subject.refresh_errors_if_needed(annual_report_upload)
@@ -50,7 +50,6 @@ describe Trade::TaxonConceptSourceValidationRule, :drops_tables do
         sandbox_klass.create(source_code: 'A', taxon_name: @plant.full_name)
         sandbox_klass.create(source_code: 'B', taxon_name: @plant.full_name)
       end
-
 
       specify do
         subject.refresh_errors_if_needed(annual_report_upload)

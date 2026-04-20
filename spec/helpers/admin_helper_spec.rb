@@ -8,8 +8,11 @@ require 'spec_helper'
 #     it "concats two strings with spaces" do
 #       helper.concat_strings("this","that").should == "this that"
 #     end
+
 #   end
+
 # end
+
 describe AdminHelper do
   describe 'edit_icon' do
     it 'ouputs pencil icon for edit' do

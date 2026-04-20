@@ -4,6 +4,7 @@ describe Checklist::Pdf::History do
   let(:en) { create(:language, name: 'English', iso_code1: 'EN') }
   let!(:fr) { create(:language, name: 'French', iso_code1: 'FR') }
   let!(:es) { create(:language, name: 'Spanish', iso_code1: 'ES') }
+
   let(:family_tc) do
     tc = create_cites_eu_family(
       taxon_name: create(:taxon_name, scientific_name: 'Foobaridae')
@@ -11,6 +12,7 @@ describe Checklist::Pdf::History do
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     MTaxonConcept.find(tc.id)
   end
+
   let(:genus_tc) do
     tc = create_cites_eu_genus(
       parent_id: family_tc.id,
@@ -25,6 +27,7 @@ describe Checklist::Pdf::History do
       subject { Checklist::Pdf::History.new(scientific_name: tc.full_name, show_english: true) }
 
       let(:tc) { family_tc }
+
       let!(:taxon_common) do
         create(
           :taxon_common,
@@ -38,7 +41,6 @@ describe Checklist::Pdf::History do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       end
 
-
       specify do
         expect(subject.higher_taxon_name(tc.reload)).to eq("\\subsection*{FOOBARIDAE  (E) Foobars }\n")
       end
@@ -50,6 +52,7 @@ describe Checklist::Pdf::History do
       subject { Checklist::Pdf::History.new(scientific_name: tc.full_name) }
 
       let(:tc) { family_tc }
+
       let!(:lc) do
         lc = create_cites_I_addition(
           taxon_concept_id: tc.id,
@@ -58,7 +61,6 @@ describe Checklist::Pdf::History do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MCitesListingChange.find(lc.id)
       end
-
 
       specify do
         expect(subject.listed_taxon_name(tc)).to eq('FOOBARIDAE spp.')
@@ -69,6 +71,7 @@ describe Checklist::Pdf::History do
       subject { Checklist::Pdf::History.new(scientific_name: tc.full_name) }
 
       let(:tc) { genus_tc }
+
       let!(:lc) do
         lc = create_cites_I_addition(
           taxon_concept_id: tc.id,
@@ -77,7 +80,6 @@ describe Checklist::Pdf::History do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MCitesListingChange.find(lc.id)
       end
-
 
       specify do
         expect(subject.listed_taxon_name(tc)).to eq('\emph{Foobarus} spp.')
@@ -97,7 +99,9 @@ describe Checklist::Pdf::History do
           display_in_footnote: true
         )
       end
+
       let(:tc) { genus_tc }
+
       let(:lc) do
         lc = create_cites_I_addition(
           taxon_concept_id: tc.id,
@@ -108,7 +112,6 @@ describe Checklist::Pdf::History do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MCitesListingChange.find(lc.id)
       end
-
 
       specify do
         expect(subject.annotation_for_language(lc, 'en')).to eq("Except \\textit{Foobarus cracoviensis}\n\nPreviously listed as \\textit{Foobarus polonicus}.\\footnote{...}")

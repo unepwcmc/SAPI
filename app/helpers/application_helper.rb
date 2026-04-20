@@ -21,6 +21,7 @@ module ApplicationHelper
     message =
       if field == :password_confirmation
         field = :password
+
         resource.errors.messages[:password].select do |message|
           message.include? 'confirmation'
         end

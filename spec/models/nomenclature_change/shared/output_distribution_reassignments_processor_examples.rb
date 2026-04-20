@@ -6,6 +6,7 @@ shared_context 'output_distribution_reassignments_processor_examples' do
       iso_code2: 'PL'
     )
   end
+
   before do
     create(:preset_tag, model: 'Distribution', name: 'extinct')
     d = create(

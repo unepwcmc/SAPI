@@ -7,6 +7,7 @@ describe Checklist do
   include_context 'Hirudo medicinalis'
   include_context 'Panax ginseng'
   include_context 'Agave'
+
   context 'when taxonomic order' do
     context('Plantae') do
       before(:all) do

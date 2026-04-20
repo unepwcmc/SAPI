@@ -8,7 +8,6 @@ class CitesTradeController < ApplicationController
     @db_download_size ||= db_download_config[:size]
   end
 
-
 private
 
   def search_params

@@ -9,9 +9,11 @@ describe Trade::InclusionValidationRule, :drops_tables do
     annual_report.save(validate: false)
     annual_report
   end
+
   let(:sandbox_klass) do
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   end
+
   let(:canis_lupus) do
     create_cites_eu_species(
       taxon_name: create(:taxon_name, scientific_name: 'lupus'),
@@ -99,6 +101,7 @@ describe Trade::InclusionValidationRule, :drops_tables do
         travel_to(Time.now + 1) do
           @shipment2.update(taxon_name: 'Canis lupus')
           @shipment3.update(taxon_name: 'Canis lupus')
+
           expect do
             validation_rule.refresh_errors_if_needed(annual_report_upload)
           end.to change { Trade::ValidationError.count }.by(-1)
@@ -110,6 +113,7 @@ describe Trade::InclusionValidationRule, :drops_tables do
       specify 'error record is updated to reflect new error_count' do
         travel_to(Time.now + 1) do
           @shipment2.update(taxon_name: 'Canis lupus')
+
           expect do
             validation_rule.refresh_errors_if_needed(annual_report_upload)
           end.to change { @validation_error.reload.error_count }.by(-1)
@@ -133,7 +137,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
           parent: genus
         )
       end
-
 
       specify do
         subject.refresh_errors_if_needed(annual_report_upload)
@@ -165,7 +168,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
           iso_code2: 'FR'
         )
       end
-
 
       specify do
         subject.refresh_errors_if_needed(annual_report_upload)
@@ -204,7 +206,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
           sandbox_klass.create(term_code: 'CAP', unit_code: 'BAG')
         end
 
-
         specify do
           subject.refresh_errors_if_needed(annual_report_upload)
           expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
@@ -219,7 +220,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
         before do
           sandbox_klass.create(term_code: 'CAP', unit_code: '')
         end
-
 
         specify do
           subject.refresh_errors_if_needed(annual_report_upload)
@@ -246,7 +246,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
         sandbox_klass.create(term_code: 'CAV', purpose_code: '')
       end
 
-
       specify do
         subject.refresh_errors_if_needed(annual_report_upload)
         expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(2)
@@ -264,7 +263,6 @@ describe Trade::InclusionValidationRule, :drops_tables do
         create(:term, code: 'BAL')
         @pair = create(:trade_taxon_concept_term_pair, term_id: cav.id, taxon_concept_id: @genus.id)
       end
-
 
       context 'when accepted name' do
         before do

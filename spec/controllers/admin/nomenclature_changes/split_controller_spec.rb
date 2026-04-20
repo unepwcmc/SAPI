@@ -213,6 +213,7 @@ describe Admin::NomenclatureChanges::SplitController do
     context 'when last step' do
       context 'when user is secretariat' do
         login_secretariat_user
+
         it 'redirects to admin root path' do
           put :update, params: { nomenclature_change_id: @split.id, id: 'summary' }
 

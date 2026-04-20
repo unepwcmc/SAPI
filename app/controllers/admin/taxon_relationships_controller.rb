@@ -34,6 +34,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
 
     create! do |success, failure|
       success.js { render 'create' }
+
       failure.js do
         # for Inter-taxonomic relationships
         @taxonomies = Taxonomy.order(:name).where.not(
@@ -56,6 +57,7 @@ class Admin::TaxonRelationshipsController < Admin::StandardAuthorizationControll
     # the *taxon_concept_id*.
     @taxon_relationship = TaxonRelationship.find(params[:id])
     type = @taxon_relationship.taxon_relationship_type.name
+
     destroy! do |success, failure|
       success.html { redirect_to collection_url(type: type), notice: 'Operation succeeded' }
     end
@@ -70,6 +72,7 @@ protected
       else
         TaxonRelationshipType.find_by(name: params[:type] || TaxonRelationshipType::EQUAL_TO)
       end
+
     @taxon_relationship_types = TaxonRelationshipType.order(:name).
       intertaxonomic
   end

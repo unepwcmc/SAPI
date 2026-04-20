@@ -19,6 +19,7 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
       format.js { render 'new' }
     end
   end
+
   def create
     params[:taxon_relationship][:taxon_relationship_type_id] =
       @hybrid_relationship_type.id
@@ -28,12 +29,12 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
           includes(:other_taxon_concept).order('taxon_concepts.full_name')
         render 'create'
       end
+
       failure.js do
         render 'new'
       end
     end
   end
-
 
   def update
     params[:taxon_relationship][:taxon_relationship_type_id] =
@@ -44,6 +45,7 @@ class Admin::HybridRelationshipsController < Admin::TaxonConceptAssociatedTypesC
           includes(:other_taxon_concept).order('taxon_concepts.full_name')
         render 'create'
       end
+
       failure.js { render 'new' }
     end
   end

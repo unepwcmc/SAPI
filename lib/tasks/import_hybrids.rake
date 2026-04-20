@@ -1,6 +1,7 @@
 require Rails.root.join('lib/tasks/helpers_for_import.rb')
 namespace :import do
   desc 'Import hybrids records from csv files (usage: rake import:hybrids[path/to/file,path/to/another])'
+
   task :hybrids, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'hybrids_import'
     taxonomy_id = Taxonomy.where(name: 'CITES_EU').first.id
@@ -12,6 +13,7 @@ namespace :import do
     ).count} Hybrids in the database"
 
     files = import_helper.files_from_args(t, args)
+
     files.each do |file|
       import_helper.drop_table(TMP_TABLE)
       import_helper.create_table_from_csv_headers(file, TMP_TABLE)

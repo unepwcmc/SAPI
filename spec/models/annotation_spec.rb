@@ -26,6 +26,7 @@ describe Annotation do
 
     context 'when event given' do
       let(:event) { create_cites_cop(name: 'CoP1') }
+
       let(:annotation) do
         create(:annotation, event_id: event.id, symbol: '#1')
       end

@@ -25,6 +25,7 @@ class LatexToPdf
           File.open("#{input}.log", 'a') do |io|
             io.write("#{$!.message}:\n#{$!.backtrace.join("\n")}\n")
           end
+
         ensure
           $stdout, $stderr = original_stdout, original_stderr
           Process.exit! 1
@@ -71,6 +72,7 @@ class LatexToPdf
           end
         end
       end
+
       # :startdoc:
     end
 

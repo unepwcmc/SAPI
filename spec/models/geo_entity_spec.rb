@@ -9,6 +9,7 @@ describe GeoEntity do
         name: 'Europe'
       )
     end
+
     let(:poland) do
       create(
         :geo_entity,
@@ -17,6 +18,7 @@ describe GeoEntity do
         iso_code2: 'PL'
       )
     end
+
     let(:wolin) do
       create(
         :geo_entity,
@@ -36,6 +38,7 @@ describe GeoEntity do
           related_geo_entity: wolin
         )
       end
+
       let!(:europe_contains_poland) do
         create(
           :geo_relationship,
@@ -44,7 +47,6 @@ describe GeoEntity do
           related_geo_entity: poland
         )
       end
-
 
       specify { expect(subject.map(&:id)).to include(europe.id, poland.id, wolin.id) }
       specify { expect(subject.size).to eq(3) }

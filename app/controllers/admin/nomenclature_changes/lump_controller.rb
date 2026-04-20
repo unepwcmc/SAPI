@@ -26,6 +26,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       processor = NomenclatureChange::Lump::Processor.new(@nomenclature_change)
       @summary = processor.summary
     end
+
     render_wizard
   end
 
@@ -52,6 +53,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
         set_taxonomy
         set_ranks
       end
+
     when :outputs
       unless success
         set_taxonomy

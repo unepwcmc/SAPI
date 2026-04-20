@@ -1,6 +1,7 @@
 require 'spec_helper'
 describe Species::TaxonConceptPrefixMatcher do
   include_context 'Boa constrictor'
+
   describe :results do
     context 'when searching by common name' do
       context 'when searching by hyphenated common name' do

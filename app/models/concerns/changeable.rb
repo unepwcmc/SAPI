@@ -44,6 +44,7 @@ private
     if taxon_concept
       changeable_bump_dependents_timestamp_part_one(taxon_concept, updated_by_id)
     end
+
     # Rails 5.1 to 5.2
     # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
     # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
@@ -64,7 +65,9 @@ private
     #   if previous_taxon_concept
     #     bump_dependents_timestamp(previous_taxon_concept, updated_by_id)
     #   end
+
     # end
+
     # == Changed to fix deprecation warnings ==
     if (taxon_concept.nil? && taxon_concept_id_before_last_save) ||
       (taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save)
@@ -95,6 +98,7 @@ private
     if taxon_concept
       changeable_bump_dependents_timestamp_part_two
     end
+
     # Rails 5.1 to 5.2
     # DEPRECATION WARNING: The behavior of `attribute_was` inside of after callbacks will be changing in the next version of Rails.
     # The new return value will reflect the behavior of calling the method after `save` returned (e.g. the opposite of what it returns now).
@@ -115,7 +119,9 @@ private
     #   if previous_taxon_concept
     #     bump_dependents_timestamp(previous_taxon_concept, updated_by_id)
     #   end
+
     # end
+
     # == Changed to fix deprecation warnings ==
     if (taxon_concept.nil? && taxon_concept_id_before_last_save) ||
       (taxon_concept && taxon_concept_id_before_last_save && taxon_concept_id != taxon_concept_id_before_last_save)

@@ -1,6 +1,7 @@
 namespace :db do
   namespace :common_names do
     desc 'Deletes detached common names'
+
     task cleanup: :environment do
       Rails.logger.warn '### rake db:common_names:cleanup'
 
@@ -23,6 +24,7 @@ namespace :db do
 
   namespace :taxon_names do
     desc 'Deletes detached taxon names'
+
     task cleanup: :environment do
       Rails.logger.warn '### rake db:taxon_names:cleanup'
 

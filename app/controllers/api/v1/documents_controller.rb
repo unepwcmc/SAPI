@@ -111,6 +111,7 @@ class Api::V1::DocumentsController < ApplicationController
             "{\n  title: #{document.title},\n  filename: #{document.filename}\n}"
         else
           zos.put_next_entry(document.file.filename)
+
           ActiveStorage::Blob.service.download(document.file.blob.key) do |chunk|
             zos.print(chunk)
           end

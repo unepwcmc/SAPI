@@ -58,7 +58,6 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables do
           )
         end
 
-
         specify do
           subject.refresh_errors_if_needed(@aru)
           expect(subject.validation_errors_for_aru(@aru).size).to eq(0)
@@ -78,7 +77,6 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables do
             taxon_name: 'Loxodonta africana', appendix: 'I', year: '1996'
           )
         end
-
 
         specify do
           subject.refresh_errors_if_needed(@aru)
@@ -103,7 +101,6 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables do
           )
         end
 
-
         specify do
           subject.refresh_errors_if_needed(@aru)
           expect(subject.validation_errors_for_aru(@aru).size).to eq(1)
@@ -126,7 +123,6 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables do
             taxon_name: 'Loxodonta cyclotis', appendix: 'I', year: '2013'
           )
         end
-
 
         specify do
           subject.refresh_errors_if_needed(@aru)
@@ -168,7 +164,6 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables do
           )
         end
 
-
         specify do
           subject.refresh_errors_if_needed(@aru)
           expect(subject.validation_errors_for_aru(@aru).size).to eq(0)
@@ -182,12 +177,12 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables do
       end
 
       include_context 'Cedrela montana'
+
       before do
         @sandbox_klass.create(
           taxon_name: 'Cedrela montana', appendix: 'N', year: '2013'
         )
       end
-
 
       specify do
         subject.refresh_errors_if_needed(@aru)
@@ -201,12 +196,12 @@ describe Trade::TaxonConceptAppendixYearValidationRule, :drops_tables do
       end
 
       include_context 'Agave'
+
       before do
         @sandbox_klass.create(
           taxon_name: 'Agave arizonica', appendix: 'N', year: '2013'
         )
       end
-
 
       specify do
         subject.refresh_errors_if_needed(@aru)

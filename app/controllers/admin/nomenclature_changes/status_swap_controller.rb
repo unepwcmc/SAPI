@@ -49,6 +49,7 @@ class Admin::NomenclatureChanges::StatusSwapController < Admin::NomenclatureChan
         set_events
         set_taxonomy
       end
+
     when :secondary_output
       unless success
         set_taxonomy

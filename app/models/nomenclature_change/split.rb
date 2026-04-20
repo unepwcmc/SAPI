@@ -59,6 +59,7 @@ class NomenclatureChange::Split < NomenclatureChange
       builder.build_common_names_reassignments
       builder.build_references_reassignments
     end
+
     true
   end
 

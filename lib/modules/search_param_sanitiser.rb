@@ -28,6 +28,7 @@ module SearchParamSanitiser
       else
         i
       end
+
     new_i && new_i > 0 ? new_i : default
   end
 
@@ -38,6 +39,7 @@ module SearchParamSanitiser
       else
         f
       end
+
     new_f || default
   end
 

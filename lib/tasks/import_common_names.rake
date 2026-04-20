@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import common names from csv file (usage: rake import:common_names[path/to/file,path/to/another])'
+
   task :common_names, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 
@@ -85,6 +86,7 @@ namespace :import do
 
   namespace :common_names do
     desc 'Delete all existing common names, and taxon commons'
+
     task delete_all: :environment do
       puts "Deleting #{TaxonCommon.delete_all} taxon commons"
       puts "Deleting #{CommonName.delete_all} common names"

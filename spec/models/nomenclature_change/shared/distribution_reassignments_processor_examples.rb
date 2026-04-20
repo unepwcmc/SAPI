@@ -6,6 +6,7 @@ shared_context 'distribution_reassignments_processor_examples' do
       reassignable_type: 'Distribution'
     )
   end
+
   let!(:reassignment_target) do
     create(
       :nomenclature_change_reassignment_target,
@@ -13,6 +14,7 @@ shared_context 'distribution_reassignments_processor_examples' do
       output: output
     )
   end
+
   let(:poland) do
     create(
       :geo_entity,
@@ -20,6 +22,7 @@ shared_context 'distribution_reassignments_processor_examples' do
       iso_code2: 'PL'
     )
   end
+
   let(:italy) do
     create(
       :geo_entity,
@@ -27,6 +30,7 @@ shared_context 'distribution_reassignments_processor_examples' do
       iso_code2: 'IT'
     )
   end
+
   let(:united_kingdom) do
     create(
       :geo_entity,
@@ -34,6 +38,7 @@ shared_context 'distribution_reassignments_processor_examples' do
       iso_code2: 'UK'
     )
   end
+
   before do
     original_d = create(
       :distribution,

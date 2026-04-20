@@ -60,11 +60,13 @@ class Trade::CsvSourceFileUploader < CarrierWave::Uploader::Base
       unless cleaned.valid_encoding?
         cleaned = content.encode('UTF-8', 'iso-8859-1')
       end
+
       content = cleaned
     rescue EncodingError
       # Force it to UTF-8, throwing out invalid bits
       content.encode!('UTF-8', invalid: :replace, undef: :replace)
     end
+
     File.write(current_path, content)
   end
 

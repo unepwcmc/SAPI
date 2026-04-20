@@ -14,12 +14,12 @@ describe Trade::InclusionValidationRule, :drops_tables do
       end
 
       include_context 'Pecari tajacu'
+
       before do
         @sandbox_klass.create(
           taxon_name: 'Pecari tajacu', source_code: 'W', country_of_origin: 'AR'
         )
       end
-
 
       specify do
         expect(subject.validation_errors.reload.size).to eq(0)
@@ -32,6 +32,7 @@ describe Trade::InclusionValidationRule, :drops_tables do
       end
 
       include_context 'Pecari tajacu'
+
       before do
         @sandbox_klass.create(
           taxon_name: 'Pecari tajacu', source_code: 'W', country_of_origin: 'PL'
@@ -45,12 +46,12 @@ describe Trade::InclusionValidationRule, :drops_tables do
       end
 
       include_context 'Pecari tajacu'
+
       before do
         @sandbox_klass.create(
           taxon_name: 'Pecari tajacu', source_code: 'W', country_of_origin: nil
         )
       end
-
 
       specify do
         expect(subject.validation_errors.reload.size).to eq(0)

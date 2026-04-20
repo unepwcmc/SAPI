@@ -56,7 +56,6 @@ describe NomenclatureChange::StatusSwap::Constructor do
       constructor.build_secondary_output_note
     end
 
-
     context 'when previously no notes in place' do
       specify { expect(primary_output.internal_note).to be_blank }
       specify { expect(secondary_output.note_en).not_to be_blank }
@@ -66,6 +65,7 @@ describe NomenclatureChange::StatusSwap::Constructor do
       let(:primary_output) do
         create(:nomenclature_change_output, nomenclature_change: status_change, internal_note: 'blah')
       end
+
       let(:secondary_output) do
         create(:nomenclature_change_output, nomenclature_change: status_change, note_en: 'blah')
       end

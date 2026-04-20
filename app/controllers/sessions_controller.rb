@@ -29,6 +29,7 @@ protected
   def invalid_login_attempt
     @user = User.new
     set_flash_message(:error, :invalid)
+
     respond_to do |format|
       format.html { render :new, status: :unauthorized }
       format.json { render json: flash[:error], status: :unauthorized }

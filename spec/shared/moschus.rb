@@ -19,6 +19,7 @@ shared_context 'Moschus' do
       instance_variable_set("@#{name}", country)
     end
   end
+
   before(:all) do
     @order = create_cites_eu_order(
       taxon_name: create(:taxon_name, scientific_name: 'Artiodactyla'),
@@ -52,6 +53,7 @@ shared_context 'Moschus' do
         geo_entity: country
       )
     end
+
     [ @species2, @subspecies ].each do |taxon|
       create(
         :distribution,
@@ -103,6 +105,7 @@ shared_context 'Moschus' do
       effective_at: '1983-07-29',
       is_current: true
     )
+
     [ bhutan, india, nepal ].each do |country|
       create(
         :listing_distribution,
@@ -111,6 +114,7 @@ shared_context 'Moschus' do
         is_party: false
       )
     end
+
     cites_lc2 = create_cites_II_addition(
       taxon_concept: @genus,
       effective_at: '1983-07-29',
@@ -122,6 +126,7 @@ shared_context 'Moschus' do
       effective_at: '1983-07-29',
       parent_id: cites_lc2.id
     )
+
     [ bhutan, india, nepal ].each do |country|
       create(
         :listing_distribution,
@@ -145,6 +150,7 @@ shared_context 'Moschus' do
     )
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
+
     self.instance_variables.each do |t|
       # Skip old sapi context let statements,
       # which are now instance variables starting with _

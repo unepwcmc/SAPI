@@ -42,7 +42,6 @@ describe Species::SynonymsAndTradeNamesExport do
         FileUtils.remove_dir('spec/public/downloads/synonyms_and_trade_names', true)
       end
 
-
       context 'when file not cached' do
         specify do
           subject.export

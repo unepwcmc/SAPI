@@ -94,7 +94,8 @@ private
         ARRAY_AGG_NOTNULL(
           DISTINCT CASE
             WHEN matched_name != full_name THEN matched_name ELSE NULL
-          END
+          end
+
           ORDER BY CASE
             WHEN matched_name != full_name THEN matched_name ELSE NULL
           END

@@ -13,6 +13,7 @@ class Admin::NomenclatureChanges::StatusToAcceptedController < Admin::Nomenclatu
       processor = klass::Processor.new(@nomenclature_change)
       @summary = processor.summary
     end
+
     render_wizard
   end
 

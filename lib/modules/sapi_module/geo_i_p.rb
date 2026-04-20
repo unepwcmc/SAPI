@@ -9,6 +9,7 @@ module SapiModule
       rescue Errno::ENOENT
         @city_db = nil
       end
+
       begin
         @org_db = GEO_IP_CONFIG['org_db'] && ::GeoIP.new(GEO_IP_CONFIG['org_db'])
       rescue Errno::ENOENT
@@ -18,6 +19,7 @@ module SapiModule
 
     def resolve(ip)
       result = country_and_city(ip).merge(organisation(ip))
+
       result.each do |k, v|
         result[k] =
           if v.nil?

@@ -5,9 +5,11 @@ describe Trade::SandboxFilter do
     aru.save(validate: false)
     aru
   end
+
   let(:sandbox_klass) do
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   end
+
   let(:canis_lupus) do
     create_cites_eu_species(
       taxon_name: create(:taxon_name, scientific_name: 'lupus'),
@@ -16,6 +18,7 @@ describe Trade::SandboxFilter do
       )
     )
   end
+
   let(:validation_rule) do
     create_taxon_concept_appendix_year_validation
   end

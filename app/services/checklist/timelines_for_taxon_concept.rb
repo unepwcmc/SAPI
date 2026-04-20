@@ -41,6 +41,7 @@ protected
 
   def generate_timelines
     @raw_timelines = {}
+
     [ 'I', 'II', 'III' ].each do |species_listing_name|
       @raw_timelines[species_listing_name] = Checklist::Timeline.new(
         taxon_concept_id: @taxon_concept_id,
@@ -50,6 +51,7 @@ protected
         current: @current_appendices.include?(species_listing_name)
       )
     end
+
     @timeline_events.each do |timeline_event|
       species_listing_name = timeline_event.species_listing_name ||
         (
@@ -60,11 +62,13 @@ protected
       @raw_timelines[species_listing_name] &&
       @raw_timelines[species_listing_name].add_event(timeline_event)
     end
+
     @raw_timelines.values.each do |t|
       t.change_consecutive_additions_to_amendments
       t.add_intervals
       @has_reservations = true if t.has_nested_timelines
     end
+
     @timelines = [ @raw_timelines['I'], @raw_timelines['II'], @raw_timelines['III'] ]
   end
 

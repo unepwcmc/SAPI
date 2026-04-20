@@ -22,12 +22,14 @@ describe TaxonConceptPrefixMatcher do
       parent: taxon_concept2
     )
   end
+
   let!(:taxon_concept4) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Abb'),
       parent: taxon_concept3
     )
   end
+
   let!(:taxon_concept4_sibling) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Aaab'),
@@ -89,6 +91,7 @@ describe TaxonConceptPrefixMatcher do
     let(:self_and_ancestor_matcher) do
       TaxonConceptPrefixMatcher.new self_and_ancestor_matcher_params
     end
+
     let(:self_and_ancestor_matcher_params) do
       SearchParams.new(
         taxonomy: { id: taxonomy.id },
@@ -96,9 +99,11 @@ describe TaxonConceptPrefixMatcher do
         scientific_name: 'AAA'
       )
     end
+
     let(:ancestor_matcher) do
       TaxonConceptPrefixMatcher.new ancestor_matcher_params
     end
+
     let(:ancestor_matcher_params) do
       SearchParams.new(
         taxonomy: { id: taxonomy.id },
@@ -113,15 +118,11 @@ describe TaxonConceptPrefixMatcher do
       )
     end
 
-
-
     specify do
       expect(ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
         [ 'Aaa' ]
       )
     end
-
-
 
     specify do
       expect(self_and_ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
@@ -138,6 +139,7 @@ describe TaxonConceptPrefixMatcher do
         scientific_name: 'A'
       )
     end
+
     let(:ancestor_matcher) do
       TaxonConceptPrefixMatcher.new ancestor_matcher_params
     end
@@ -145,6 +147,7 @@ describe TaxonConceptPrefixMatcher do
     let(:descendant_matcher) do
       TaxonConceptPrefixMatcher.new descendant_matcher_params
     end
+
     let(:descendant_matcher_params) do
       SearchParams.new(
         taxonomy: { id: taxonomy.id },
@@ -158,8 +161,6 @@ describe TaxonConceptPrefixMatcher do
         [ 'Aaa', 'Aab', 'Aac' ]
       )
     end
-
-
 
     specify do
       expect(descendant_matcher.taxon_concepts.map(&:full_name)).to eq(

@@ -49,8 +49,10 @@ private
           when 'T'
             @taxon_concept.accepted_names_for_trade_name.first
           end
+
         fake_parent && fake_parent.data
       end
+
     return nil unless data
 
     data.slice(*field_names)
@@ -65,6 +67,7 @@ private
         # all ranks
         Rank.in_range(nil, nil)
       end
+
     higher_taxa_ranks.map do |r|
       [ "#{r.downcase}_id", "#{r.downcase}_name" ]
     end.flatten

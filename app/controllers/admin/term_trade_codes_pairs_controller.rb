@@ -11,6 +11,7 @@ class Admin::TermTradeCodesPairsController < Admin::StandardAuthorizationControl
 
   def destroy
     @term_trade_codes_pair = TermTradeCodesPair.find params[:id]
+
     destroy! do |format|
       format.html do
         redirect_to admin_term_trade_codes_pairs_path(type: @term_trade_codes_pair.trade_code_type)

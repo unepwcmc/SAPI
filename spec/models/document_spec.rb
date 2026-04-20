@@ -22,6 +22,7 @@ describe Document, sidekiq: :inline do
 
     context 'when specified designation conflicts with event' do
       let(:cites_cop) { create_cites_cop }
+
       let(:document) do
         create(:document, event: cites_cop, designation: eu)
       end
@@ -32,6 +33,7 @@ describe Document, sidekiq: :inline do
     context 'when documents with same language and same primary document' do
       let(:language) { create(:language) }
       let(:primary_document) { create(:document) }
+
       let!(:document1) do create(
         :document,
         language_id: language.id,
@@ -55,6 +57,7 @@ describe Document, sidekiq: :inline do
     let(:primary_document) do
       create(:proposal, sort_index: 1)
     end
+
     let!(:secondary_document) do
       create(
         :proposal,
@@ -82,6 +85,7 @@ describe Document, sidekiq: :inline do
     let(:primary_document) do
       create(:proposal)
     end
+
     let!(:secondary_document) do
       create(:proposal, primary_language_document_id: primary_document.id)
     end

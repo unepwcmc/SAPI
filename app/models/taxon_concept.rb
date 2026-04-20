@@ -212,6 +212,7 @@ class TaxonConcept < ApplicationRecord
     }
 
   before_validation :ensure_taxonomic_position
+
   before_validation do
     before_validate_scientific_name
     before_validate_full_name
@@ -223,6 +224,7 @@ class TaxonConcept < ApplicationRecord
     Species::TaxonConceptPrefixMatcher.increment_cache_iterator
     Checklist::Checklist.increment_cache_iterator
   end
+
   after_update do
     ensure_species_touched
     if saved_change_to_rank_id? ||
@@ -235,6 +237,7 @@ class TaxonConcept < ApplicationRecord
       Checklist::Checklist.increment_cache_iterator
     end
   end
+
   after_save do
     if [ 'A', 'N' ].include? name_status
       tcd = TaxonConceptData.new(self)
@@ -242,22 +245,27 @@ class TaxonConcept < ApplicationRecord
       update_column(:data, data)
       self.data = data
     end
+
     if name_status == 'S'
       rebuild_relationships(accepted_names_ids)
     end
+
     if name_status == 'T'
       rebuild_relationships(accepted_names_for_trade_name_ids)
     end
+
     if name_status == 'H'
       rebuild_relationships(hybrid_parents_ids)
     end
   end
+
   after_destroy do
     ensure_species_touched
     Species::Search.increment_cache_iterator
     Species::TaxonConceptPrefixMatcher.increment_cache_iterator
     Checklist::Checklist.increment_cache_iterator
   end
+
   after_commit :cache_cleanup
   after_touch :ensure_species_touched
 
@@ -467,6 +475,7 @@ protected
       else
         @scientific_name || scientific_name
       end
+
     tn = TaxonName.where([ 'UPPER(scientific_name) = UPPER(?)', sanitized_scientific_name ]).first
     if tn
       self.taxon_name = tn
@@ -606,6 +615,7 @@ private
       errors.add(:hybrid_parents_ids, 'maximum 2 hybrid parents')
       return false
     end
+
     true
   end
 
@@ -626,6 +636,7 @@ private
       prev_taxonomic_position_parts << ((prev_taxonomic_position_parts.pop || 0).to_i + 1)
       self.taxonomic_position = prev_taxonomic_position_parts.join('.')
     end
+
     true
   end
 

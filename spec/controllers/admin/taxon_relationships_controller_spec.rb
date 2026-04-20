@@ -59,9 +59,11 @@ describe Admin::TaxonRelationshipsController do
       let(:taxon_concept) do
         create_cites_eu_species
       end
+
       let(:other_taxon_concept) do
         create_cms_species
       end
+
       let!(:rel) do
         create(
           :taxon_relationship,
@@ -92,9 +94,11 @@ describe Admin::TaxonRelationshipsController do
       let(:taxon_concept) do
         create_cites_eu_species
       end
+
       let(:other_taxon_concept) do
         create_cites_eu_species(name_status: 'S')
       end
+
       let!(:rel) do
         create(
           :taxon_relationship,

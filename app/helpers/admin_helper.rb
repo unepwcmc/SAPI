@@ -46,6 +46,7 @@ module AdminHelper
         content_tag(:b, 'Internal notes:') +
         content_tag(:p, record.internal_notes)
       end
+
     comment_icon_with_tooltip(info)
   end
 
@@ -94,6 +95,7 @@ module AdminHelper
         "#{pluralize(resource.errors.count, "error")} " +
         'prohibited this record from being saved:'
       ) +
+
       content_tag(:ul) do
         resource.errors.full_messages.collect do |item|
           concat(content_tag(:li, item))
@@ -165,6 +167,7 @@ module AdminHelper
           render partial: 'form'
         end
       end +
+
       content_tag(:div, class: 'modal-footer') do
         button_tag(
           type: 'button', class: 'btn', 'data-dismiss': 'modal',
@@ -223,9 +226,11 @@ module AdminHelper
       result << "#{column_name}_#{I18n.default_locale}" # default locale 2nd.
       remaining_locales -= I18n.default_locale
     end
+
     remaining_locales.sort.each do |locale| # alphabetically all remaining locales.
       result << "#{column_name}_#{locale}"
     end
+
     result.map(&:to_sym)
   end
 end

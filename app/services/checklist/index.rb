@@ -29,10 +29,12 @@ class Checklist::Index < Checklist::Checklist
   def generate
     if !File.exist?(@download_path)
       prepare_queries
+
       document do |doc|
         content(doc)
       end
     end
+
     ctime = File.ctime(@download_path).strftime('%Y-%m-%d %H:%M')
     doc_name = I18n.t('index_title').split.join('_')
     @download_name = "#{doc_name}_#{has_full_options? ? '' : '[CUSTOM]_'}#{ctime}.#{ext}"

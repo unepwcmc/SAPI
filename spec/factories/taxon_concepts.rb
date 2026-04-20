@@ -7,6 +7,7 @@ FactoryBot.define do
     name_status { 'A' }
     data { }
     listing { }
+
     before(:create) do |tc|
       if tc.parent.nil? && [ 'A', 'N' ].include?(tc.name_status) && tc.rank.try(:name) != 'KINGDOM'
         tc.parent = create(

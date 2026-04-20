@@ -9,12 +9,14 @@ describe TaxonConcept do
         taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
       )
     end
+
     let!(:tc) do
       create_cites_eu_species(
         parent_id: parent.id,
         taxon_name: create(:taxon_name, scientific_name: 'lolatus')
       )
     end
+
     let(:synonym) do
       create_cites_eu_species(
         name_status: 'S',
@@ -22,6 +24,7 @@ describe TaxonConcept do
         taxon_name: create(:taxon_name, scientific_name: 'Lolcatus lolus')
       )
     end
+
     let!(:synonym_rel) do
       create(
         :taxon_relationship,

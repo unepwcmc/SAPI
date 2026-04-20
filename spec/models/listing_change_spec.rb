@@ -7,6 +7,7 @@ describe ListingChange do
         let!(:exception_type) { cites_exception }
         let(:taxon_concept) { create_cites_eu_species }
         let(:excluded_taxon_concept) { create_cites_eu_subspecies(parent: taxon_concept) }
+
         let(:listing_change) do
           build(
             :listing_change,
@@ -23,6 +24,7 @@ describe ListingChange do
       context 'inclusion taxon concept is lower rank' do
         let(:inclusion) { create_cites_eu_subspecies }
         let(:taxon_concept) { create_cites_eu_species }
+
         let(:listing_change) do
           build(
             :listing_change,
@@ -37,6 +39,7 @@ describe ListingChange do
       context 'species listing designation mismatch' do
         let(:designation1) { create(:designation) }
         let(:designation2) { create(:designation) }
+
         let(:listing_change) do
           build(
             :listing_change,
@@ -51,6 +54,7 @@ describe ListingChange do
       context 'event designation mismatch' do
         let(:designation1) { create(:designation) }
         let(:designation2) { create(:designation) }
+
         let(:listing_change) do
           build(
             :listing_change,
@@ -76,6 +80,7 @@ describe ListingChange do
       lc.annotation = create(:annotation, full_note_en: ' ')
       lc
     end
+
     let(:lc2) do
       lc = create_cites_I_addition(effective_at: '2014-11-17')
       lc.annotation = create(:annotation, full_note_en: nil)

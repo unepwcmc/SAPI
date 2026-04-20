@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import EU decisions from csv file (usage: rake import:eu_opinions[path/to/file,path/to/another])'
+
   task :eu_opinions, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 

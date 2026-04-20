@@ -21,11 +21,13 @@ describe NomenclatureChange::StatusToAccepted::Processor do
     )
     tc
   end
+
   let(:trade_name_genus) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
     )
   end
+
   let(:synonym) do
     tc = create_cites_eu_species(
       name_status: 'S',
@@ -39,6 +41,7 @@ describe NomenclatureChange::StatusToAccepted::Processor do
     )
     tc
   end
+
   let(:synonym_genus) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Foobarus')
@@ -46,7 +49,6 @@ describe NomenclatureChange::StatusToAccepted::Processor do
   end
 
   before { synonym_relationship_type }
-
 
   describe :run do
     context 'from trade name' do

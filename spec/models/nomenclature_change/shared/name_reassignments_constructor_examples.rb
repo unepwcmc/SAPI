@@ -7,6 +7,7 @@ shared_context 'name_reassignments_constructor_examples' do
     context 'when names' do
       let(:input_species) do
         s = create_cites_eu_species
+
         2.times do
           create(
             :taxon_relationship,
@@ -15,6 +16,7 @@ shared_context 'name_reassignments_constructor_examples' do
             taxon_relationship_type: synonym_relationship_type
           )
         end
+
         s
       end
 

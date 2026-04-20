@@ -46,6 +46,7 @@ describe NomenclatureChange::Output do
 
     context 'when taxon concept specified' do
       let(:tc) { create_cites_eu_species }
+
       let(:output) do
         create(:nomenclature_change_output, taxon_concept_id: tc.id)
       end
@@ -62,34 +63,40 @@ describe NomenclatureChange::Output do
     let(:output) do
       create(:nomenclature_change_output, taxon_concept_id: tc.id)
     end
+
     let(:canis_genus) do
       create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Canis')
       )
     end
+
     let(:canis_species) do
       create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: 'lupus'),
         parent: canis_genus
       )
     end
+
     let(:canis_subspecies) do
       create_cites_eu_subspecies(
         taxon_name: create(:taxon_name, scientific_name: 'dingo'),
         parent: canis_species
       )
     end
+
     let(:magnolia_genus) do
       create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Magnolia')
       )
     end
+
     let(:magnolia_species) do
       create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: 'liliifera'),
         parent: magnolia_genus
       )
     end
+
     let(:magnolia_variety) do
       create_cites_eu_variety(
         taxon_name: create(:taxon_name, scientific_name: 'var. obovata'),

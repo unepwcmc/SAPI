@@ -31,6 +31,7 @@ module Trade::RebuildComplianceMviews
       when :mandatory_quotas then Trade::MandatoryQuotasShipments
       when :cites_suspensions then Trade::CitesSuspensionsShipments
       end
+
     compliance_type.new.generate_view(timestamp)
   end
 

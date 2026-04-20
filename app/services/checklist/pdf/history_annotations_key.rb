@@ -13,6 +13,7 @@ class Checklist::Pdf::HistoryAnnotationsKey
   def hash_annotations_key
     tex = '\\hashAnnotationsHistoryInfo' + "\n\n"
     cops = CitesCop.order(:effective_at)
+
     cops.each do |cop|
       annotations = cop.hash_annotations.order(Arel.sql('SUBSTRING(symbol FROM 2)::INT'))
       if annotations.empty?
@@ -21,11 +22,14 @@ class Checklist::Pdf::HistoryAnnotationsKey
 
       tex << "\\hashannotationstable{\n\\rowcolor{pale_aqua}\n"
       tex << "#{LatexToPdf.escape_latex(cop.name)} & \\validFrom \\hspace{2 pt} #{cop.effective_at_formatted}\\\\\n"
+
       annotations.each do |a|
         tex << "#{LatexToPdf.escape_latex(a.symbol)} & #{LatexToPdf.html2latex(a.full_note)} \\\\\n\n"
       end
+
       tex << "}\n"
     end
+
     tex
   end
 end

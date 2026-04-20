@@ -78,7 +78,6 @@ class TaxonRelationship < ApplicationRecord
     )
   }
 
-
   def update_higher_taxa_for_hybrid_child
     if other_taxon_concept && taxon_relationship_type &&
       taxon_relationship_type.name == TaxonRelationshipType::HAS_HYBRID

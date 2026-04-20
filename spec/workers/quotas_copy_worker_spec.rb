@@ -7,18 +7,21 @@ describe QuotasCopyWorker do
       name: 'CITES_EU'
     )
   end
+
   let(:geo_entity) do
     create(
       :geo_entity,
       name_en: 'Portugal'
     )
   end
+
   let(:taxon_concept) do
     create(
       :taxon_concept,
       taxonomy_id: taxonomy.id
     )
   end
+
   let!(:quota) do
     create(
       :quota,

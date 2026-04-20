@@ -2,6 +2,7 @@ shared_context 'parent_reassignments_processor_examples' do
   let(:input_species_child) do
     create_cites_eu_subspecies(parent: input_species)
   end
+
   let(:reassignment) do
     create(
       :nomenclature_change_parent_reassignment,
@@ -9,6 +10,7 @@ shared_context 'parent_reassignments_processor_examples' do
       reassignable_id: input_species_child.id
     )
   end
+
   let!(:reassignment_target) do
     create(
       :nomenclature_change_reassignment_target,
@@ -16,6 +18,7 @@ shared_context 'parent_reassignments_processor_examples' do
       output: output
     )
   end
+
   before do
     synonym_relationship_type
     processor.run

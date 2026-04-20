@@ -90,6 +90,7 @@ class Checklist::Checklist
       injector = Checklist::HigherTaxaInjector.new(@plantae)
       @plantae = injector.run
     end
+
     [ self ] # TODO: just for compatibility with frontend, no sensible reason for this
   end
 

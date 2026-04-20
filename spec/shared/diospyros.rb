@@ -17,6 +17,7 @@ shared_context 'Diospyros' do
       instance_variable_set("@#{name}", country)
     end
   end
+
   before(:all) do
     @order = create_cites_eu_order(
       taxon_name: create(:taxon_name, scientific_name: 'Ebenales'),
@@ -126,6 +127,7 @@ shared_context 'Diospyros' do
     )
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
+
     self.instance_variables.each do |t|
       # Skip old sapi context let statements,
       # which are now instance variables starting with _

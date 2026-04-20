@@ -9,12 +9,14 @@ describe EuRegulationActivationWorker do
       is_current: true
     )
   end
+
   let!(:listing_change) do
     create_eu_A_addition(
       event_id: prev_eu_regulation.id,
       is_current: true
     )
   end
+
   let!(:eu_regulation) do
     create_eu_regulation(
       name: 'REGULATION 2.0',

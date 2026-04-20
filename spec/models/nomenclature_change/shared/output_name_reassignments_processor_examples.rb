@@ -2,6 +2,7 @@ shared_context 'output_name_reassignments_processor_examples' do
   let(:output_subspecies2_synonym) do
     create_cites_eu_subspecies(name_status: 'S')
   end
+
   let(:output_subspecies2_synonym_rel) do
     create(
       :taxon_relationship,
@@ -10,6 +11,7 @@ shared_context 'output_name_reassignments_processor_examples' do
       other_taxon_concept: output_subspecies2_synonym
     )
   end
+
   before do
     create(
       :nomenclature_change_output_name_reassignment,

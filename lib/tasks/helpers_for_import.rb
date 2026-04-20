@@ -527,6 +527,7 @@ class CsvImportHelper
         "Could not drop table #{quoted_table_name}. " +
           'It might not exist if this is the first time you are running this rake task.'
       end
+
       Rails.logger.debug e.inspect
 
       raise e
@@ -599,7 +600,6 @@ class CsvImportHelper
               ]
             end
 
-
           row_values =
             column_names.map do |column_name|
               row_as_hash[column_name]
@@ -608,6 +608,7 @@ class CsvImportHelper
           writer.call(row_values)
         end
       end
+
     rescue StandardError => e
       Rails.logger.debug { "Failed at line #{row_count}" }
       Rails.logger.debug e.inspect
@@ -638,7 +639,6 @@ class CsvImportHelper
     raise StandardError.new(error_message)
   end
 
-
   def rollback_if_dry_run
     raise ActiveRecord::Rollback.new do
       'Rolling back: dry run'
@@ -663,6 +663,7 @@ class TaxonImportHelper
       TaxonImportHelper.import_data_for TMP_TABLE, kingdom, Rank::VARIETY, synonyms
     end
   end
+
   # Copies data from the temporary table to the correct tables in the database
   #
   # @param [String] which the rank to be copied.

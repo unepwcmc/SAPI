@@ -9,6 +9,7 @@ describe Trade::DistinctValuesValidationRule, :drops_tables do
       iso_code2: 'CA'
     )
   end
+
   let(:argentina) do
     create(
       :geo_entity,
@@ -38,7 +39,6 @@ describe Trade::DistinctValuesValidationRule, :drops_tables do
         @sandbox_klass.create(trading_partner: canada.iso_code2)
       end
 
-
       specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru).size).to eq(1)
@@ -61,7 +61,6 @@ describe Trade::DistinctValuesValidationRule, :drops_tables do
         @sandbox_klass.create(trading_partner: canada.iso_code2)
       end
 
-
       specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru).size).to eq(1)
@@ -77,7 +76,6 @@ describe Trade::DistinctValuesValidationRule, :drops_tables do
         @sandbox_klass.create(country_of_origin: argentina.iso_code2)
         @sandbox_klass.create(country_of_origin: canada.iso_code2)
       end
-
 
       specify do
         subject.refresh_errors_if_needed(@aru)

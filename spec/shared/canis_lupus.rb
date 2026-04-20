@@ -79,6 +79,7 @@ shared_context 'Canis lupus' do
       effective_at: '2010-06-23',
       parent_id: cites_lc_II.id
     )
+
     [ bhutan, india, nepal, pakistan ].each do |country|
       create(
         :listing_distribution,
@@ -129,6 +130,7 @@ shared_context 'Canis lupus' do
     end
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
+
     self.instance_variables.each do |t|
       # Skip old sapi context let statements,
       # which are now instance variables starting with _

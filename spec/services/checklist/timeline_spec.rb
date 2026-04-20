@@ -17,6 +17,7 @@ describe Checklist::Timeline do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     end
+
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.first }
 
@@ -77,6 +78,7 @@ describe Checklist::Timeline do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     end
+
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.last }
 
@@ -106,6 +108,7 @@ describe Checklist::Timeline do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     end
+
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.first }
 
@@ -148,6 +151,7 @@ describe Checklist::Timeline do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     end
+
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.first.timelines.first }
 
@@ -196,6 +200,7 @@ describe Checklist::Timeline do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     end
+
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.last.timelines.first }
 
@@ -221,6 +226,7 @@ describe Checklist::Timeline do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     end
+
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.first }
 
@@ -252,6 +258,7 @@ describe Checklist::Timeline do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       MTaxonConcept.find(tc.id)
     end
+
     let(:ttc) { Checklist::TimelinesForTaxonConcept.new(tc) }
     let(:subject) { ttc.timelines.first }
 

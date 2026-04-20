@@ -9,6 +9,7 @@ class RefreshDocumentsWorker
     else
       DocumentSearch.refresh_documents
     end
+
     DocumentSearch.increment_cache_iterator
   end
 end

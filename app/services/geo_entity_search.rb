@@ -27,6 +27,7 @@ private
       else
         I18n.locale
       end
+
     @options = {
       geo_entity_types_set: @geo_entity_types_set,
       locale: @locale
@@ -44,10 +45,12 @@ private
     if GeoEntityType::CURRENT_ONLY_SETS.include?(@geo_entity_types_set)
       @query = @query.current
     end
+
     unless geo_entity_types.empty?
       @query = @query.
         where('geo_entity_types.name' => geo_entity_types)
     end
+
     if @query_string.present?
       @query = @query.where("unaccent(name_#{@locale}) ILIKE unaccent(:q)", q: "%#{@query_string}%")
     end

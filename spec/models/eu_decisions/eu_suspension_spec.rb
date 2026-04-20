@@ -73,6 +73,7 @@ describe EuSuspension do
       let(:start_event) do
         create(:event, effective_at: 2.days.from_now)
       end
+
       let(:eu_suspension) do
         create(:eu_suspension, start_event: start_event, end_event: nil)
       end
@@ -84,6 +85,7 @@ describe EuSuspension do
       let(:start_event) do
         create(:event, effective_at: 2.days.ago, is_current: false)
       end
+
       let(:eu_suspension) do
         create(:eu_suspension, start_event: start_event, end_event: nil)
       end
@@ -95,9 +97,11 @@ describe EuSuspension do
       let(:start_event) do
         create(:event, effective_at: Date.today, is_current: true)
       end
+
       let(:start_event2) do
         create(:event, effective_at: 1.day.ago, is_current: true)
       end
+
       let(:eu_suspension) do
         create(:eu_suspension, start_event: start_event, end_event: nil)
       end
@@ -114,6 +118,7 @@ describe EuSuspension do
       let(:end_event) do
         create(:event, effective_at: Date.today)
       end
+
       let(:eu_suspension) do
         create(:eu_suspension, start_event: nil, end_event: end_event)
       end
@@ -125,9 +130,11 @@ describe EuSuspension do
       let(:end_event) do
         create(:event, effective_at: Date.today)
       end
+
       let(:start_event) do
         create(:event, effective_at: 1.day.from_now)
       end
+
       let(:eu_suspension) do
         create(:eu_suspension, start_event: start_event, end_event: end_event)
       end
@@ -139,9 +146,11 @@ describe EuSuspension do
       let(:end_event) do
         create(:event, effective_at: 1.day.from_now)
       end
+
       let(:start_event) do
         create(:event, effective_at: 1.day.ago, is_current: true)
       end
+
       let(:eu_suspension) do
         create(:eu_suspension, start_event: start_event, end_event: end_event)
       end
@@ -153,9 +162,11 @@ describe EuSuspension do
       let(:end_event) do
         create(:event, effective_at: 1.day.ago)
       end
+
       let(:start_event) do
         create(:event, effective_at: 2.days.ago)
       end
+
       let(:eu_suspension) do
         create(:eu_suspension, start_event: start_event, end_event: end_event)
       end
@@ -177,6 +188,7 @@ describe EuSuspension do
       let(:eu_suspension) do
         create(:eu_suspension, start_event: start_event)
       end
+
       let(:start_event) do
         create(:event, effective_at: 2.days.ago)
       end
@@ -198,6 +210,7 @@ describe EuSuspension do
       let(:eu_suspension) do
         create(:eu_suspension, end_event: end_event)
       end
+
       let(:end_event) do
         create(:event, effective_at: 2.days.ago)
       end

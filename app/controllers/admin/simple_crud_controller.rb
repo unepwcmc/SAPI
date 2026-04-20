@@ -11,6 +11,7 @@ class Admin::SimpleCrudController < Admin::AdminController
   def create
     create! do |success, failure|
       success.js { render 'create' }
+
       failure.js do
         load_associations
 
@@ -24,6 +25,7 @@ class Admin::SimpleCrudController < Admin::AdminController
   def update
     update! do |success, failure|
       success.js { render 'create' }
+
       failure.js do
         load_associations
 
@@ -40,6 +42,7 @@ class Admin::SimpleCrudController < Admin::AdminController
 
     destroy! do |success, failure|
       success.html { redirect_to collection_url, notice: 'Operation succeeded' }
+
       failure.html do
         redirect_to collection_url,
           alert:

@@ -6,6 +6,7 @@ describe DocumentSearch, sidekiq: :inline do
         taxon_name: create(:taxon_name, scientific_name: 'Meliaceae')
       )
     end
+
     let(:swietenia_macrophylla) do
       create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: 'Swietenia macrophylla'),
@@ -15,6 +16,7 @@ describe DocumentSearch, sidekiq: :inline do
         )
       )
     end
+
     let(:cedrela_odorata) do
       create_cites_eu_species(
         taxon_name: create(:taxon_name, scientific_name: 'Cedrela odorata'),
@@ -24,6 +26,7 @@ describe DocumentSearch, sidekiq: :inline do
         )
       )
     end
+
     let(:belize) do
       create(
         :geo_entity,
@@ -32,6 +35,7 @@ describe DocumentSearch, sidekiq: :inline do
         iso_code2: 'BZ'
       )
     end
+
     let(:brazil) do
       create(
         :geo_entity,
@@ -40,6 +44,7 @@ describe DocumentSearch, sidekiq: :inline do
         iso_code2: 'BR'
       )
     end
+
     let(:document_on_swietenia) do
       document = create(
         :proposal,
@@ -58,6 +63,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     end
+
     let(:document_on_swietenia_in_belize) do
       document = create(
         :proposal, is_public: true,
@@ -80,6 +86,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     end
+
     let(:document_on_swietenia_in_brazil) do
       document = create(
         :proposal, is_public: true,
@@ -102,6 +109,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     end
+
     let(:document_on_swietenia_in_belize_and_brazil) do
       document = create(
         :proposal, is_public: true,
@@ -129,6 +137,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     end
+
     let(:document_on_swietenia_in_belize_and_cedrela_in_brazil) do
       document = create(
         :proposal, is_public: true,
@@ -164,6 +173,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     end
+
     let(:document_on_brazil) do
       document = create(
         :proposal, is_public: true,
@@ -181,6 +191,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
       document
     end
+
     let(:document_without_citations) do
       document = create(
         :proposal, is_public: true,

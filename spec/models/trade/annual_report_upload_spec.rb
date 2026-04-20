@@ -24,6 +24,7 @@ describe Trade::AnnualReportUpload, :drops_tables do
       Rails.root.join('spec/support/annual_report_upload_invalid.csv').to_s
     )
   end
+
   describe :valid? do
     context 'when uploaded file as exporter with exporter column headers' do
       subject do
@@ -86,7 +87,6 @@ describe Trade::AnnualReportUpload, :drops_tables do
     let!(:format_validation_rule) do
       create_year_format_validation
     end
-
 
     specify { expect(subject.validation_errors).to be_empty }
   end

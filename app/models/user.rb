@@ -117,6 +117,7 @@ class User < ApplicationRecord
         return false
       end
     end
+
     true
   end
 
@@ -159,6 +160,7 @@ private
       else
         :none
       end
+
     return if action == :none
 
     email_was = previous_changes['email']&.first

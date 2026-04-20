@@ -351,6 +351,7 @@ describe Admin::DocumentsController, sidekiq: :inline do
 
   describe 'DELETE destroy' do
     login_admin
+
     let(:poland) do
       create(
         :geo_entity,

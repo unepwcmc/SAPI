@@ -29,21 +29,25 @@ module Checklist::Pdf::HistoryContent
       @skip_ancestor_ids = injector.last_ancestor_ids
 
       listed_taxa_ary = []
+
       kingdom.each do |tc|
         if tc.kind_of? Checklist::HigherTaxaItem
           unless listed_taxa_ary.empty?
             listed_taxa(tex, listed_taxa_ary, kingdom_name)
             listed_taxa_ary = []
           end
+
           tex << higher_taxon_name(tc)
         else
           listed_taxa_ary << tc
         end
       end
+
       unless listed_taxa_ary.empty?
         listed_taxa(tex, listed_taxa_ary, kingdom_name)
         listed_taxa_ary = []
       end
+
       kingdom = fetcher.next
     end while !kingdom.empty?
   end
@@ -51,9 +55,11 @@ module Checklist::Pdf::HistoryContent
   def listed_taxa(tex, listed_taxa_ary, kingdom_name = 'FAUNA')
     tex << "\\listingtable#{kingdom_name.downcase}{"
     rows = []
+
     listed_taxa_ary.each do |tc|
       listed_taxon_name = listed_taxon_name(tc)
       is_tc_row = true # it is the first row per taxon concept
+
       tc.historic_cites_listing_changes_for_downloads.each do |lc|
         is_lc_row = true # it is the first row per listing change
         ann = annotation_for_language(lc, I18n.locale)
@@ -68,12 +74,14 @@ module Checklist::Pdf::HistoryContent
         if kingdom_name == 'FLORA'
           row << (is_lc_row ? "#{LatexToPdf.escape_latex(lc.full_hash_ann_symbol)}" : '')
         end
+
         is_lc_row = false
         # ann fields
         row << ann
         rows << row.join(' & ')
       end
     end
+
     tex << rows.join("\\\\\n")
     tex << '}'
   end
@@ -85,6 +93,7 @@ module Checklist::Pdf::HistoryContent
       else
         listing_change.species_listing_name
       end
+
     change_type =
       if listing_change.change_type_name == ChangeType::RESERVATION
         '/r'
@@ -95,6 +104,7 @@ module Checklist::Pdf::HistoryContent
       else
         nil
       end
+
     "#{appendix}#{change_type}"
   end
 
@@ -122,9 +132,11 @@ module Checklist::Pdf::HistoryContent
       else
         taxon_concept.full_name
       end
+
     if [ 'SPECIES', 'SUBSPECIES', 'GENUS' ].include? taxon_concept.rank_name
       res = "\\emph{#{res}}"
     end
+
     res += " #{taxon_concept.spp}" if taxon_concept.spp
     res
   end

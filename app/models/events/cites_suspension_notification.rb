@@ -53,6 +53,7 @@ class CitesSuspensionNotification < Event
   validates :effective_at, presence: true
 
   before_save :handle_new_subtype
+
   before_validation do
     cites = Designation.find_by(name: 'CITES')
     self.designation_id = cites && cites.id

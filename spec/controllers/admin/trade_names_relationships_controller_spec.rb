@@ -7,6 +7,7 @@ describe Admin::TradeNameRelationshipsController do
 
   let(:taxon_concept) { create(:taxon_concept) }
   let(:trade_name) { create(:taxon_concept, name_status: 'T') }
+
   let(:trade_name_relationship) do
     create(
       :taxon_relationship,

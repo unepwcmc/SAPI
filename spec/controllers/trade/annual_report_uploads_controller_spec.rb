@@ -11,6 +11,7 @@ describe Trade::AnnualReportUploadsController do
       iso_code2: 'FR'
     )
   end
+
   let(:annual_report_upload) do
     create(
       :annual_report_upload,

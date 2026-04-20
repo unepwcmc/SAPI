@@ -3,6 +3,7 @@ class Api::V1::ShipmentsController < ApplicationController
 
   before_action :authenticate
   before_action :load_grouping_type
+
   after_action only: [ :grouped_query, :country_query ] do
     set_pagination_headers(:data, :grouped_params)
   end
@@ -130,6 +131,7 @@ class Api::V1::ShipmentsController < ApplicationController
       ) do
         Trade::DownloadDataRetriever.dashboard_download(download_params).to_a
       end
+
     render json: @download_data
   end
 

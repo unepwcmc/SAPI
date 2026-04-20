@@ -23,7 +23,6 @@ class Admin::NomenclatureChanges::BuildController < Admin::AdminController
     end
   end
 
-
   def update
     raise NoMethodError
   end

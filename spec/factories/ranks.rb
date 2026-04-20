@@ -58,6 +58,7 @@ FactoryBot.define do
         Rank::VARIETY
       ].sample
     end
+
     display_name_en { |r| r.name }
     initialize_with { Rank.find_by(name: name) || new(attributes_for_rank(name)) }
   end

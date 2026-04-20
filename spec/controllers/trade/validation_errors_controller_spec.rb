@@ -8,15 +8,19 @@ describe Trade::ValidationErrorsController do
     aru.save(validate: false)
     aru
   end
+
   let(:sandbox_klass) do
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   end
+
   let!(:shipment) do
     sandbox_klass.create(taxon_name: 'Caniis lupus')
   end
+
   let(:validation_rule) do
     create_taxon_concept_validation
   end
+
   let!(:validation_error) do
     create(
       :validation_error,

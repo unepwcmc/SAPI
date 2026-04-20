@@ -1,9 +1,11 @@
 namespace :import do
   desc 'Import references from csv file (usage: rake import:references[path/to/file,path/to/another])'
+
   task :references, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'references_import'
     puts "There are #{Reference.count} references in the database."
     files = import_helper.files_from_args(t, args)
+
     files.each do |file|
       import_helper.drop_table(TMP_TABLE)
       import_helper.create_table_from_csv_headers(file, TMP_TABLE)

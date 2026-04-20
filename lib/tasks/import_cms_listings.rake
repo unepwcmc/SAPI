@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import CMS species listings from csv file (usage: rake import:cms_listings[path/to/file,path/to/another])'
+
   task :cms_listings, 10.times.map { |i| :"file_#{i}" } => [ :environment, 'cms_listings:defaults' ] do |t, args|
     import_helper = CsvImportHelper.new
 
@@ -259,6 +260,7 @@ namespace :import do
 
   namespace :cms_listings do
     desc 'Add defaults CMS listings and default ChangeTypes'
+
     task defaults: :environment do
       puts 'Going to create CMS default species listings, if they do not exist'
 
@@ -278,6 +280,7 @@ namespace :import do
     end
 
     desc 'Drop CMS species listings'
+
     task delete_all: :environment do
       designation = Designation.find_by(name: 'CMS')
 

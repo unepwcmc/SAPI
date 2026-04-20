@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import distribution tags from csv file (usage: rake import:distribution_tags[path/to/file,path/to/another])'
+
   task :distribution_tags, 10.times.map { |i| :"file_#{i}" } => [ :environment ] do |t, args|
     TMP_TABLE = 'distribution_tags_import'
     import_helper = CsvImportHelper.new

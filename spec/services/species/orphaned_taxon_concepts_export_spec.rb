@@ -39,7 +39,6 @@ describe Species::OrphanedTaxonConceptsExport do
         FileUtils.remove_dir('spec/public/downloads/orphaned_taxon_concepts', true)
       end
 
-
       context 'when file not cached' do
         specify do
           subject.export

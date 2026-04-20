@@ -50,6 +50,7 @@ class Admin::NomenclatureChanges::StatusToSynonymController < Admin::Nomenclatur
         set_events
         set_taxonomy
       end
+
     when :relay, :accepted_name
       set_taxonomy unless success
     end

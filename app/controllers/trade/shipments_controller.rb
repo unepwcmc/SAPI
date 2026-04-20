@@ -44,6 +44,7 @@ class Trade::ShipmentsController < TradeController
   def destroy_batch
     @search = Trade::Filter.new(search_params)
     cnt = @search.query.count
+
     disconnected_permits_ids = @search.query.map do |s|
       s.permits_ids
     end.flatten.uniq
@@ -97,15 +98,19 @@ private
     if reporter_type.present?
       res[:reported_by_exporter] = Trade::Shipment.reporter_type_to_reported_by_exporter(reporter_type)
     end
+
     if res.key?(:import_permit_number) && res[:import_permit_number].nil?
       res[:import_permits_ids] = nil
     end
+
     if res.key?(:export_permit_number) && res[:export_permit_number].nil?
       res[:export_permits_ids] = nil
     end
+
     if res.key?(:origin_permit_number) && res[:origin_permit_number].nil?
       res[:origin_permits_ids] = nil
     end
+
     res
   end
 
@@ -117,6 +122,7 @@ private
       ).accepted_taxa.first
       update_params[:taxon_concept_id] = accepted_tc && accepted_tc.id
     end
+
     update_params
   end
 end

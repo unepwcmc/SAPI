@@ -21,6 +21,7 @@ class Species::ExportsController < ApplicationController
     when 'Processes'
       result = Species::CitesProcessesExport.new(@filters).export
     end
+
     respond_to do |format|
       format.html do
         if result.is_a?(Array)
@@ -33,6 +34,7 @@ class Species::ExportsController < ApplicationController
           redirect_to species_exports_path, notice: "There are no #{params[:data_type]} to download."
         end
       end
+
       format.json do
         render json: { total: result.is_a?(Array) ? 1 : 0 }
       end

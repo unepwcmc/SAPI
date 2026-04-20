@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import EU species listings from csv file (usage: rake import:eu_listings[path/to/file,path/to/another])'
+
   task :eu_listings, 10.times.map { |i| :"file_#{i}" } => [ :environment, 'eu_listings:defaults' ] do |t, args|
     import_helper = CsvImportHelper.new
 
@@ -237,13 +238,16 @@ namespace :import do
 
   namespace :eu_listings do
     desc 'Add defaults EU listings and default ChangeTypes'
+
     task defaults: :environment do
       puts 'Going to create EU default species listings, if they do not exist'
       designation = Designation.find_by(name: 'EU')
+
       [ 'A', 'B', 'C', 'D' ].each do |annex|
         SpeciesListing.find_or_create_by(name: "Annex #{annex}", abbreviation: annex, designation_id: designation.id)
       end
       puts 'Going to create change types defaults, if they dont already exist'
+
       ChangeType.dict.each do |c_type|
         ChangeType.find_or_create_by(name: c_type, designation_id: designation.id)
       end
@@ -251,6 +255,7 @@ namespace :import do
     end
 
     desc 'Drop EU species listings'
+
     task delete_all: :environment do
       designation = Designation.find_by(name: 'EU')
 

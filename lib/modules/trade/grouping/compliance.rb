@@ -80,8 +80,10 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
         end
       end
     end
+
     # Calculate percentages
     shipments_no = shipments.count
+
     conversion.map do |group, values|
       percent = (res[group].to_f / shipments_no.to_f * 100).round(2)
       {
@@ -111,12 +113,15 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
         merged_hash.map do |k, v|
           { "#{k}": merged_hash[k].merge(percentage: (v[:cnt] * 100.0 / v[:total_cnt]).round(2)) }
         end
+
       merged_hash.each do |country|
         country.values.first.merge!(country: country.keys.first.to_s)
         array << country.values.first
       end
+
       hash[params[:year]] = array.sort_by { |x| x[:cnt] }.reverse!
     end
+
     hash
   end
 
@@ -168,6 +173,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     end
 
     grouped_data = data.group_by { |d| d[attribute] }
+
     grouped_data.each do |key, values|
       # Fetch top 5 and rename 'cnt' to 'value'
       grouped_data[key] = values[0..4].each { |v| v['value'] = v.delete('cnt') }
@@ -190,6 +196,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
       time_range_end: 1.year.ago.year
     }.freeze
   end
+
   def self.default_filtering_attributes
     DEFAULT_FILTERING_ATTRIBUTES
   end
@@ -359,6 +366,7 @@ private
   #    else
   #      "#{ATTRIBUTES[key]} = #{value}"
   #    end
+
   #  end.join(' AND ')
   # end
 

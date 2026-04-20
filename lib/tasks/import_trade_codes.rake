@@ -1,5 +1,6 @@
 namespace :import do
   desc 'Import trade codes'
+
   task trade_codes: [ :environment ] do
     [ Purpose, Source, Term, Unit ].each do |klass|
       current_count = klass.count
@@ -18,6 +19,7 @@ namespace :import do
   end
 
   desc 'Import terms and purpose codes acceptable pairing'
+
   task :trade_codes_t_p_pairs, [ :clear ] => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 
@@ -58,6 +60,7 @@ namespace :import do
   end
 
   desc 'Import terms and unit codes acceptable pairing'
+
   task :trade_codes_t_u_pairs, [ :clear ] => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 
@@ -94,6 +97,7 @@ namespace :import do
   end
 
   desc 'Import taxon concepts terms acceptable pairing. (i.e.: which terms can go with each taxon concept)'
+
   task :taxon_concept_terms_pairs, [ :clear ] => [ :environment ] do |t, args|
     import_helper = CsvImportHelper.new
 
@@ -135,6 +139,7 @@ namespace :import do
   end
 
   desc 'Empties taxon_concept_term_pairs and term_trade_codes_pairs'
+
   task clear_acceptable_pairs: [ :environment ] do
     puts "#{TermTradeCodesPair.delete_all} term_trade_codes_pairs deleted"
     puts "#{Trade::TaxonConceptTermPair.delete_all} taxon_concept_term_pairs deleted"

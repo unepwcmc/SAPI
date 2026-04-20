@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Api::V1::DocumentGeoEntitiesController do
   context 'when searching by taxon concept name' do
     include_context 'Canis lupus'
+
     let!(:document_about_wolf_in_poland) do
       d = create(:document)
       c = create(:document_citation, document: d)
@@ -10,12 +11,14 @@ describe Api::V1::DocumentGeoEntitiesController do
       create(:document_citation_geo_entity, geo_entity: poland, document_citation: c)
       d
     end
+
     let!(:document_not_about_wolf_not_in_poland) do
       d = create(:document)
       c = create(:document_citation, document: d)
       create(:document_citation_geo_entity, geo_entity: nepal, document_citation: c)
       d
     end
+
     let!(:document_not_about_wolf_in_poland) do
       d = create(:document)
       c = create(:document_citation, document: d)

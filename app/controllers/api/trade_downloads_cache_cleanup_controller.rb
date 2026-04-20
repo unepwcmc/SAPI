@@ -8,6 +8,7 @@ class Api::TradeDownloadsCacheCleanupController < ApplicationController
     rescue
       message = 'Something went wrong'
     end
+
     message = 'Shipments downloads successfully cleared' if message.blank?
     render json: {
       message: message

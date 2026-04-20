@@ -17,12 +17,14 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
         ),
           notice: 'Operation successful'
       end
+
       failure.html do
         load_search
         render 'create'
       end
     end
   end
+
   def update
     update! do |success, failure|
       success.html do
@@ -52,7 +54,6 @@ class Admin::TaxonEuSuspensionsController < Admin::SimpleCrudController
       end
     end
   end
-
 
   def destroy
     destroy! do |success, failure|

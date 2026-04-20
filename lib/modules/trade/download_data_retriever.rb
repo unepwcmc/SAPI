@@ -32,6 +32,7 @@ module Trade::DownloadDataRetriever
       else
         "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year >= '2012' AND year <= '#{Date.today.year - 1}' ORDER BY year DESC"
       end
+
     query_runner(query)
   end
 
@@ -67,6 +68,7 @@ module Trade::DownloadDataRetriever
                 AND taxon_concept_id IN (#{id})
           SQL
         end
+
       when 'commodity'
         <<-SQL.squish
                SELECT #{ATTRIBUTES.join(',')}
@@ -75,12 +77,14 @@ module Trade::DownloadDataRetriever
                AND term_id IN (#{id})
         SQL
       end
+
     query_runner(query)
   end
 
   def self.taxonomic_download(params)
     mapping = Trade::Grouping::Compliance.new('').read_taxonomy_conversion
     array_ids = []
+
     mapping[params[:ids]].each do |m|
       rank_name = m[:rank] == 'Species' ? 'taxon' : m[:rank].downcase
 
@@ -90,6 +94,7 @@ module Trade::DownloadDataRetriever
       ids.each { |ob| array_ids << ob['id'] }
       array_ids = plant_timber_distinction(params[:year], mapping, array_ids) if params[:ids].include?('Plants')
     end
+
     return if array_ids.empty?
 
     query = "SELECT #{ATTRIBUTES.join(',')}
@@ -111,12 +116,14 @@ module Trade::DownloadDataRetriever
 
   def self.plant_timber_distinction(year, mapping, array)
     timber_ids = []
+
     mapping['Timber'].each do |mapp|
       rank_name = mapp[:rank] == 'Species' ? 'taxon' : mapp[:rank].downcase
       ids_query = ids_query(year, 'Timber', rank_name, mapp[:taxon_name])
       ids = query_runner(ids_query)
       ids.each { |ob| timber_ids << ob['id'] }
     end
+
     array.reject { |el| timber_ids.include? el }
   end
 

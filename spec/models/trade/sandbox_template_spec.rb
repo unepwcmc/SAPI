@@ -6,20 +6,24 @@ describe Trade::SandboxTemplate, :drops_tables do
     aru.save(validate: false)
     aru
   end
+
   let(:sandbox_klass) do
     Trade::SandboxTemplate.ar_klass(annual_report_upload.sandbox.table_name)
   end
+
   let(:canis) do
     create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Canis')
     )
   end
+
   let(:canis_lupus) do
     create_cites_eu_species(
       taxon_name: create(:taxon_name, scientific_name: 'lupus'),
       parent: canis
     )
   end
+
   let(:canis_aureus) do
     create_cites_eu_species(
       taxon_name: create(:taxon_name, scientific_name: 'aureus'),

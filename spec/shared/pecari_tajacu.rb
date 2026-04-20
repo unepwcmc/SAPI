@@ -46,6 +46,7 @@ shared_context 'Pecari tajacu' do
         iso_code2: 'US'
       )
   end
+
   before(:all) do
     @order = create_cites_eu_order(
       taxon_name: create(:taxon_name, scientific_name: 'Artiodactyla'),
@@ -75,6 +76,7 @@ shared_context 'Pecari tajacu' do
       parent_id: cites_lc1.id,
       is_current: true
     )
+
     [ america, mexico ].each do |country|
       create(
         :listing_distribution,
@@ -100,6 +102,7 @@ shared_context 'Pecari tajacu' do
         geo_relationship_type: contains_geo_relationship_type
       )
     end
+
     create(
       :geo_relationship,
       geo_entity: south_america,
@@ -108,6 +111,7 @@ shared_context 'Pecari tajacu' do
     )
 
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
+
     self.instance_variables.each do |t|
       # Skip old sapi context let statements,
       # which are now instance variables starting with _

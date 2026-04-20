@@ -125,8 +125,7 @@ describe Admin::TaxonCommonsController do
     end
   end
 
-  describe "ChangeObserver updates TaxonConcept's dependents_updated_at
-    when TaxonCommon is changed" do
+  describe "ChangeObserver updates TaxonConcept's dependents_updated_at when TaxonCommon is changed" do
     before do
       @taxon_common = create(
         :taxon_common,
@@ -159,8 +158,7 @@ describe Admin::TaxonCommonsController do
       expect(@taxon_concept.reload.dependents_updated_at).not_to eq(old_date)
     end
 
-    it "updates associated @taxon_concept's
-      dependents_updated_at when taxon common is deleted" do
+    it "updates associated @taxon_concept's dependents_updated_at when taxon common is deleted" do
       expect(@taxon_concept.dependents_updated_at).to be_nil
 
       # it gets updated by the creation of the taxon_common

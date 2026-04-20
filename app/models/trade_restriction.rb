@@ -153,6 +153,7 @@ class TradeRestriction < ApplicationRecord
     if !File.file?(path + file_name)
       self.to_csv(path + file_name, filters)
     end
+
     [
       path + file_name,
       { filename: public_file_name, type: 'text/csv' }
@@ -198,6 +199,7 @@ class TradeRestriction < ApplicationRecord
       when :semicolon then ';'
       else ','
       end
+
     CSV.open(file_path, 'wb', col_sep: csv_separator_char) do |csv|
       csv << (
         Species::RestrictionsExport::TAXONOMY_COLUMN_NAMES +

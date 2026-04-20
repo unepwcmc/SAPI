@@ -94,6 +94,7 @@ describe Checklist::Checklist do
         geo_entity_type_id: region_type.id
       )
     end
+
     let(:summary) do
       Checklist::Checklist.summarise_filters({ cites_region_ids: [ region.id ] })
     end
@@ -119,6 +120,7 @@ describe Checklist::Checklist do
       )
       [ region.id, region2.id ]
     end
+
     let(:summary) do
       Checklist::Checklist.summarise_filters({ cites_region_ids: regions })
     end

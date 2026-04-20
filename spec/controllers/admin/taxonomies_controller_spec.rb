@@ -67,6 +67,7 @@ describe Admin::TaxonomiesController do
 
   describe 'Authorization for contributors' do
     login_contributor
+
     describe 'GET index' do
       it 'redirects to admin root' do
         get :index

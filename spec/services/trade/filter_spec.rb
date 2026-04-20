@@ -90,7 +90,6 @@ describe Trade::Filter do
           @shipment_of_status_N = create(:shipment, taxon_concept_id: @status_N_species.id)
         end
 
-
         specify { expect(subject).to include(@shipment_of_status_N) }
       end
 
@@ -106,7 +105,6 @@ describe Trade::Filter do
         before do
           @shipment_of_subspecies = create(:shipment, taxon_concept_id: @subspecies.id)
         end
-
 
         specify { expect(subject).to include(@shipment_of_subspecies) }
       end
@@ -165,7 +163,6 @@ describe Trade::Filter do
             taxon_concept_id: @plant_species.id
           )
         end
-
 
         specify { expect(subject).to include(@shipment_of_trade_name) }
       end

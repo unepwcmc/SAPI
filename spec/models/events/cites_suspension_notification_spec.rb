@@ -104,7 +104,6 @@ describe CitesSuspensionNotification do
           suspension
         end
 
-
         specify do
           cites_suspension_notification.destroy
           expect(subject.reload).to be_empty
@@ -125,7 +124,6 @@ describe CitesSuspensionNotification do
     let!(:cites_suspension_notification1) { create_cites_suspension_notification(subtype: 'A') }
     let!(:cites_suspension_notification2) { create_cites_suspension_notification(subtype: 'A') }
     let!(:cites_suspension_notification3) { create_cites_suspension_notification(subtype: 'B') }
-
 
     specify { subject.length == 2 }
   end

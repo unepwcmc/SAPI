@@ -40,6 +40,7 @@ describe TaxonRelationship do
       let(:taxon_concept) { create(:taxon_concept, taxonomy_id: taxonomy.id) }
       let(:taxon_concept2) { create(:taxon_concept, taxonomy_id: taxonomy2.id) }
       let(:taxon_relationship_type) { create(:taxon_relationship_type) }
+
       let!(:taxon_relationship) do
         create(
           :taxon_relationship,
@@ -48,6 +49,7 @@ describe TaxonRelationship do
           taxon_relationship_type_id: taxon_relationship_type.id
         )
       end
+
       let(:taxon_relationship2) do
         build(
           :taxon_relationship,
@@ -69,6 +71,7 @@ describe TaxonRelationship do
       let(:taxon_concept2) { create(:taxon_concept, taxonomy_id: taxonomy2.id) }
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let(:taxon_relationship_type2) { create(:taxon_relationship_type, is_intertaxonomic: true) }
+
       let!(:taxon_relationship) do
         create(
           :taxon_relationship,
@@ -77,6 +80,7 @@ describe TaxonRelationship do
           taxon_relationship_type_id: taxon_relationship_type.id
         )
       end
+
       let(:taxon_relationship2) do
         build(
           :taxon_relationship,
@@ -98,6 +102,7 @@ describe TaxonRelationship do
       let(:taxon_concept2) { create(:taxon_concept, taxonomy_id: taxonomy2.id) }
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let(:taxon_relationship_type2) { create(:taxon_relationship_type, is_intertaxonomic: true) }
+
       let!(:taxon_relationship) do
         create(
           :taxon_relationship,
@@ -129,6 +134,7 @@ describe TaxonRelationship do
       let(:taxon_concept3) { create(:taxon_concept, taxonomy_id: taxonomy2.id) }
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_intertaxonomic: true) }
       let(:taxon_relationship_type2) { create(:taxon_relationship_type, is_intertaxonomic: true) }
+
       let!(:taxon_relationship) do
         create(
           :taxon_relationship,

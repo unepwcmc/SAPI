@@ -39,7 +39,8 @@ class Checklist::Pdf::IndexQuery
             WHEN author_year IS NOT NULL
             THEN ' ' || author_year
             ELSE ''
-            END
+            end
+
             FROM (
               (SELECT synonym, ROW_NUMBER() OVER() AS id FROM (SELECT * FROM UNNEST(synonyms_ary) AS synonym) q) synonyms
               LEFT JOIN

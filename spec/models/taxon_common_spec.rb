@@ -5,23 +5,27 @@ describe TaxonCommon do
     let(:language) do
       create(:language)
     end
+
     let(:parent) do
       create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Lolcatus')
       )
     end
+
     let!(:tc) do
       create_cites_eu_species(
         parent_id: parent.id,
         taxon_name: create(:taxon_name, scientific_name: 'lolatus')
       )
     end
+
     let!(:another_tc) do
       create_cites_eu_species(
         parent_id: parent.id,
         taxon_name: create(:taxon_name, scientific_name: 'lolcatus')
       )
     end
+
     let(:tc_common) do
       build(
         :taxon_common,

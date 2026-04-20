@@ -6,6 +6,7 @@ describe Checklist::Pdf::IndexFetcher do
     create(:language, name_en: 'Spanish', iso_code1: 'ES', iso_code3: 'SPA')
     create(:language, name_en: 'English', iso_code1: 'EN', iso_code3: 'ENG')
   end
+
   let(:es) do
     Language.find_by(name_en: 'Spanish')
   end
@@ -17,6 +18,7 @@ describe Checklist::Pdf::IndexFetcher do
       language: en
     )
   end
+
   let(:spanish_common_name) do
     create(
       :common_name,
@@ -24,6 +26,7 @@ describe Checklist::Pdf::IndexFetcher do
       language: es
     )
   end
+
   let!(:tc) do
     tc = create(
       :taxon_concept,
@@ -34,6 +37,7 @@ describe Checklist::Pdf::IndexFetcher do
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     tc
   end
+
   let(:rel) { MTaxonConcept.by_scientific_name('Lolcatus') }
 
   context 'with common names' do
@@ -48,7 +52,6 @@ describe Checklist::Pdf::IndexFetcher do
       )
     end
 
-
     specify { expect(subject.next.first.sort_name).to eq('lolcat, Domestic') }
   end
 
@@ -62,6 +65,7 @@ describe Checklist::Pdf::IndexFetcher do
         scientific_name: 'Catus fluffianus'
       )
     end
+
     let!(:synonymy_rel) do
       create(
         :taxon_relationship,
@@ -71,6 +75,7 @@ describe Checklist::Pdf::IndexFetcher do
       )
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
+
     let(:query) do
       Checklist::Pdf::IndexQuery.new(
         rel, {
@@ -79,7 +84,6 @@ describe Checklist::Pdf::IndexFetcher do
         }
       )
     end
-
 
     specify { expect(subject.next.first.sort_name).to eq('Catus fluffianus') }
   end
