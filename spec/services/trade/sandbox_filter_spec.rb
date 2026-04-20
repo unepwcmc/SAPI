@@ -19,7 +19,8 @@ describe Trade::SandboxFilter do
   let(:validation_rule) do
     create_taxon_concept_appendix_year_validation
   end
-  before(:each) do
+
+  before do
     @shipment1 = sandbox_klass.create(
       taxon_name: canis_lupus.full_name,
       appendix: 'I',
@@ -61,6 +62,7 @@ describe Trade::SandboxFilter do
         validation_error_id: @validation_error.id
       ).results
     end
+
     specify { expect(subject).to include(@shipment2) }
     specify { expect(subject).not_to include(@shipment1) }
   end

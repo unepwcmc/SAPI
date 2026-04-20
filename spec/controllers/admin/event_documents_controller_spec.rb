@@ -5,7 +5,7 @@ describe Admin::EventDocumentsController, sidekiq: :inline do
   let(:event) { create(:event, published_at: DateTime.new(2014, 12, 25)) }
 
   describe 'ordering' do
-    before(:each) do
+    before do
       @document1 = create(:document, event: event, sort_index: 2)
       @document2 = create(:document, event: event, sort_index: 1)
       DocumentSearch.refresh_citations_and_documents

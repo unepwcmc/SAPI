@@ -12,6 +12,7 @@ describe Admin::CitesSuspensionsController do
       get :index
       expect(response).to render_template('index')
     end
+
     it 'assigns @cites_suspensions' do
       get :index
       assigns(:cites_suspensions)
@@ -23,6 +24,7 @@ describe Admin::CitesSuspensionsController do
       get :new
       expect(response).to render_template('new')
     end
+
     it 'assigns @geo_entities (country and territory) with two objects' do
       geo_entity_type_t = create(:geo_entity_type, name: 'TERRITORY')
       territory = create(:geo_entity, geo_entity_type_id: geo_entity_type_t.id)
@@ -45,6 +47,7 @@ describe Admin::CitesSuspensionsController do
         )
       end
     end
+
     it 'renders new when not successful' do
       post :create, params: { cites_suspension: { notes: 'DUMMY' } }
 
@@ -53,16 +56,18 @@ describe Admin::CitesSuspensionsController do
   end
 
   describe 'GET edit' do
-    before(:each) do
+    before do
       @cites_suspension = create(
         :cites_suspension,
         start_notification: create_cites_suspension_notification
       )
     end
+
     it 'renders the edit template' do
       get :edit, params: { id: @cites_suspension.id }
       expect(response).to render_template('edit')
     end
+
     it 'assigns @geo_entities (country and territory) with two objects' do
       geo_entity_type_t = create(:geo_entity_type, name: 'TERRITORY')
       territory = create(:geo_entity, geo_entity_type_id: geo_entity_type_t.id)
@@ -73,7 +78,7 @@ describe Admin::CitesSuspensionsController do
   end
 
   describe 'PUT update' do
-    before(:each) do
+    before do
       @cites_suspension = create(
         :cites_suspension,
         start_notification: create_cites_suspension_notification
@@ -104,12 +109,13 @@ describe Admin::CitesSuspensionsController do
   end
 
   describe 'DELETE destroy' do
-    before(:each) do
+    before do
       @cites_suspension = create(
         :cites_suspension,
         start_notification: create_cites_suspension_notification
       )
     end
+
     it 'redirects after delete' do
       delete :destroy, params: { id: @cites_suspension.id }
       expect(response).to redirect_to(

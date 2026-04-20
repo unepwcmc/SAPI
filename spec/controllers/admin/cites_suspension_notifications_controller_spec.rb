@@ -4,7 +4,7 @@ describe Admin::CitesSuspensionNotificationsController do
   login_admin
 
   describe 'index' do
-    before(:each) do
+    before do
       @cites_suspension_notification1 = create_cites_suspension_notification(name: 'B')
       @cites_suspension_notification2 = create_cites_suspension_notification(name: 'A')
     end
@@ -18,6 +18,7 @@ describe Admin::CitesSuspensionNotificationsController do
           ]
         )
       end
+
       it 'renders the index template' do
         get :index
         expect(response).to render_template('index')

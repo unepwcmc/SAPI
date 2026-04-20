@@ -9,6 +9,7 @@ describe TaxonConcept do
         context 'for family Pristidae' do
           specify { expect(@family.cites_listing).to eq('I') }
         end
+
         context 'for species Pristis microdon' do
           specify { expect(@species.cites_listing).to eq('I') }
         end
@@ -30,6 +31,7 @@ describe TaxonConcept do
         context 'for family Pristidae' do
           specify { expect(@family.eu_listing).to eq('A') }
         end
+
         context 'for species Pristis microdon' do
           specify { expect(@species.eu_listing).to eq('A') }
         end

@@ -9,8 +9,10 @@ describe NomenclatureChange::ReassignmentTarget do
           nomenclature_change_reassignment_id: nil
         )
       end
+
       specify { expect(reassignment_target).not_to be_valid }
     end
+
     context 'when output not specified' do
       let(:reassignment_target) do
         build(
@@ -18,6 +20,7 @@ describe NomenclatureChange::ReassignmentTarget do
           nomenclature_change_output_id: nil
         )
       end
+
       specify { expect(reassignment_target).not_to be_valid }
     end
   end

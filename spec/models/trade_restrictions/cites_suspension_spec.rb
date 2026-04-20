@@ -49,6 +49,7 @@ describe CitesSuspension, sidekiq: :inline do
       iso_code2: 'RW'
     )
   end
+
   before do
     travel -10.minutes
     @genus = create_cites_eu_genus
@@ -77,10 +78,12 @@ describe CitesSuspension, sidekiq: :inline do
             start_notification: create_cites_suspension_notification
           )
         end
+
         specify do
           expect { subject.save }.to change { @taxon_concept.reload.dependents_updated_at }
         end
       end
+
       context 'when global suspension' do
         subject do
           build(
@@ -90,10 +93,12 @@ describe CitesSuspension, sidekiq: :inline do
             start_notification: create_cites_suspension_notification
           )
         end
+
         specify do
           expect { subject.save }.to change { @taxon_concept.reload.dependents_updated_at }
         end
       end
+
       context 'when suspension at higher taxonomic level' do
         subject do
           create(
@@ -102,11 +107,13 @@ describe CitesSuspension, sidekiq: :inline do
             start_notification: create_cites_suspension_notification
           )
         end
+
         specify do
           expect { subject.save }.to change { @taxon_concept.reload.dependents_updated_at }
         end
       end
     end
+
     describe :update do
       context 'when taxon specific suspension' do
         subject do
@@ -116,11 +123,13 @@ describe CitesSuspension, sidekiq: :inline do
             start_notification: create_cites_suspension_notification
           )
         end
+
         specify do
           expect { subject.update_attribute(:taxon_concept_id, @another_taxon_concept.id) }.
             to change { @taxon_concept.reload.dependents_updated_at }
         end
       end
+
       context 'when global suspension' do
         subject do
           create(
@@ -130,15 +139,18 @@ describe CitesSuspension, sidekiq: :inline do
             start_notification: create_cites_suspension_notification
           )
         end
+
         specify do
           expect { subject.update_attribute(:geo_entity_id, rwanda.id) }.
             to change { @taxon_concept.reload.dependents_updated_at }
         end
+
         specify do
           expect { subject.update_attribute(:geo_entity_id, rwanda.id) }.
             to change { @another_taxon_concept.reload.dependents_updated_at }
         end
       end
+
       context 'when suspension at higher taxonomic level' do
         subject do
           create(
@@ -147,12 +159,14 @@ describe CitesSuspension, sidekiq: :inline do
             start_notification: create_cites_suspension_notification
           )
         end
+
         specify do
           expect { subject.update_attribute(:geo_entity_id, rwanda.id) }.
             to change { @taxon_concept.reload.dependents_updated_at }
         end
       end
     end
+
     describe :destroy do
       context 'when taxon specific suspension' do
         subject do
@@ -162,10 +176,12 @@ describe CitesSuspension, sidekiq: :inline do
             start_notification: create_cites_suspension_notification
           )
         end
+
         specify do
           expect { subject.destroy }.to change { @taxon_concept.reload.dependents_updated_at }
         end
       end
+
       context 'when global suspension' do
         subject do
           create(
@@ -175,11 +191,13 @@ describe CitesSuspension, sidekiq: :inline do
             start_notification: create_cites_suspension_notification
           )
         end
+
         specify do
           expect { subject.destroy }.
             to change { @taxon_concept.reload.dependents_updated_at }
         end
       end
+
       context 'when suspension at higher taxonomic level' do
         subject do
           create(
@@ -188,6 +206,7 @@ describe CitesSuspension, sidekiq: :inline do
             start_notification: create_cites_suspension_notification
           )
         end
+
         specify do
           expect { subject.destroy }.
             to change { @taxon_concept.reload.dependents_updated_at }
@@ -241,7 +260,9 @@ describe CitesSuspension, sidekiq: :inline do
 
   describe :create do
     context 'downloads cache should be populated' do
-      before(:each) do
+      subject { Dir["#{DownloadsCache.cites_suspensions_path}/*"] }
+
+      before do
         DownloadsCache.clear_cites_suspensions
         create(
           :cites_suspension,
@@ -251,14 +272,17 @@ describe CitesSuspension, sidekiq: :inline do
         )
         CitesSuspension.export('set' => 'current')
       end
-      subject { Dir["#{DownloadsCache.cites_suspensions_path}/*"] }
+
+
       specify { expect(subject).not_to be_empty }
     end
   end
 
   describe :destroy do
     context 'downloads cache should be cleared' do
-      before(:each) do
+      subject { Dir["#{DownloadsCache.cites_suspensions_path}/*"] }
+
+      before do
         DownloadsCache.clear_cites_suspensions
 
         s = create(
@@ -273,7 +297,7 @@ describe CitesSuspension, sidekiq: :inline do
         s.destroy
       end
 
-      subject { Dir["#{DownloadsCache.cites_suspensions_path}/*"] }
+
       specify do
         # Currently fails because the clearing happens in an after_commit hook,
         # which does not run until the test is over.

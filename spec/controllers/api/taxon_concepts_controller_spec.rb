@@ -8,7 +8,7 @@ describe Api::V1::TaxonConceptsController do
       expect do
         get :index, params: { taxonomy: 'cites_eu', taxon_concept_query: 'stork', geo_entity_scope: 'cites', page: 1 }
       end.to change { Ahoy::Event.count }.by(1)
-      expect(Ahoy::Event.last.visit_id).to_not be(nil)
+      expect(Ahoy::Event.last.visit_id).not_to be_nil
 
       expect do
         get :index, params: { taxonomy: 'cites_eu', taxon_concept_query: 'dolphin', geo_entity_scope: 'cites', page: 1 }

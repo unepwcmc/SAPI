@@ -20,9 +20,11 @@ describe TaxonConcept do
         context 'for family Mustelinae' do
           specify { expect(@family.cites_listed).to eq(false) }
         end
+
         context 'for genus Mellivora' do
           specify { expect(@genus.cites_listed).to eq(false) }
         end
+
         context 'for species Mellivora capensis' do
           specify { expect(@species.cites_listed).to be_truthy }
         end
@@ -32,9 +34,11 @@ describe TaxonConcept do
         context 'for family Mustelinae' do
           specify { expect(@family.eu_listed).to eq(false) }
         end
+
         context 'for genus Mellivora' do
           specify { expect(@genus.eu_listed).to eq(false) }
         end
+
         context 'for species Mellivora capensis' do
           specify { expect(@species.eu_listed).to be_truthy }
         end

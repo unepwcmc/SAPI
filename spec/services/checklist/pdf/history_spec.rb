@@ -19,8 +19,11 @@ describe Checklist::Pdf::History do
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     MTaxonConcept.find(tc.id)
   end
+
   describe :higher_taxon_name do
     context 'when family' do
+      subject { Checklist::Pdf::History.new(scientific_name: tc.full_name, show_english: true) }
+
       let(:tc) { family_tc }
       let!(:taxon_common) do
         create(
@@ -34,7 +37,8 @@ describe Checklist::Pdf::History do
         )
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       end
-      subject { Checklist::Pdf::History.new(scientific_name: tc.full_name, show_english: true) }
+
+
       specify do
         expect(subject.higher_taxon_name(tc.reload)).to eq("\\subsection*{FOOBARIDAE  (E) Foobars }\n")
       end
@@ -43,6 +47,8 @@ describe Checklist::Pdf::History do
 
   describe :listed_taxon_name do
     context 'when family' do
+      subject { Checklist::Pdf::History.new(scientific_name: tc.full_name) }
+
       let(:tc) { family_tc }
       let!(:lc) do
         lc = create_cites_I_addition(
@@ -52,12 +58,16 @@ describe Checklist::Pdf::History do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MCitesListingChange.find(lc.id)
       end
-      subject { Checklist::Pdf::History.new(scientific_name: tc.full_name) }
+
+
       specify do
         expect(subject.listed_taxon_name(tc)).to eq('FOOBARIDAE spp.')
       end
     end
+
     context 'when genus' do
+      subject { Checklist::Pdf::History.new(scientific_name: tc.full_name) }
+
       let(:tc) { genus_tc }
       let!(:lc) do
         lc = create_cites_I_addition(
@@ -67,7 +77,8 @@ describe Checklist::Pdf::History do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MCitesListingChange.find(lc.id)
       end
-      subject { Checklist::Pdf::History.new(scientific_name: tc.full_name) }
+
+
       specify do
         expect(subject.listed_taxon_name(tc)).to eq('\emph{Foobarus} spp.')
       end
@@ -76,6 +87,8 @@ describe Checklist::Pdf::History do
 
   describe :annotation_for_language do
     context 'annotation with footnote' do
+      subject { Checklist::Pdf::History.new({}) }
+
       let(:annotation) do
         create(
           :annotation,
@@ -95,7 +108,8 @@ describe Checklist::Pdf::History do
         SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         MCitesListingChange.find(lc.id)
       end
-      subject { Checklist::Pdf::History.new({}) }
+
+
       specify do
         expect(subject.annotation_for_language(lc, 'en')).to eq("Except \\textit{Foobarus cracoviensis}\n\nPreviously listed as \\textit{Foobarus polonicus}.\\footnote{...}")
       end

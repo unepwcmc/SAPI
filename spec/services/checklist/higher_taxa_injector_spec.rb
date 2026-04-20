@@ -118,6 +118,7 @@ describe Checklist::HigherTaxaInjector do
             ]
           )
         end
+
         specify do
           headers = hti_different_class.higher_taxa_headers(
             @species1_1_1,
@@ -126,6 +127,7 @@ describe Checklist::HigherTaxaInjector do
           expect(headers.map(&:full_name)).to eq([ 'Memaridae' ])
         end
       end
+
       context 'when two species from different classes and expand_headers set' do
         let(:hti_different_class) do
           Checklist::HigherTaxaInjector.new(
@@ -135,6 +137,7 @@ describe Checklist::HigherTaxaInjector do
             ], { expand_headers: true }
           )
         end
+
         specify do
           headers = hti_different_class.higher_taxa_headers(
             @species1_1_1,
@@ -144,6 +147,7 @@ describe Checklist::HigherTaxaInjector do
         end
       end
     end
+
     context 'when same order' do
       context 'when two species from different families' do
         let(:hti_different_family) do
@@ -154,10 +158,12 @@ describe Checklist::HigherTaxaInjector do
             ]
           )
         end
+
         specify do
           expect(hti_different_family.run.size).to eq(4)
         end
       end
+
       context 'when two species from different families and skip family set' do
         let(:hti_different_family) do
           Checklist::HigherTaxaInjector.new(
@@ -167,6 +173,7 @@ describe Checklist::HigherTaxaInjector do
             ], { skip_ancestor_ids: [ @family1.id ] }
           )
         end
+
         specify do
           expect(hti_different_family.run.size).to eq(3)
         end
@@ -184,11 +191,13 @@ describe Checklist::HigherTaxaInjector do
             ]
           )
         end
+
         specify do
           headers = hti_one_species.higher_taxa_headers(nil, @species1_1_1)
           expect(headers.map(&:full_name)).to eq([ 'Lolcatidae' ])
         end
       end
+
       context 'when one species and skip family set' do
         let(:hti_one_species_skip_family) do
           Checklist::HigherTaxaInjector.new(
@@ -197,10 +206,12 @@ describe Checklist::HigherTaxaInjector do
             ], { skip_ancestor_ids: [ @family1.id ] }
           )
         end
+
         specify do
           expect(hti_one_species_skip_family.higher_taxa_headers(nil, @species1_1_1)).to be_empty
         end
       end
+
       context 'when one species and expand headers set' do
         let(:hti_one_species_expand_headers) do
           Checklist::HigherTaxaInjector.new(
@@ -209,6 +220,7 @@ describe Checklist::HigherTaxaInjector do
             ], { expand_headers: true }
           )
         end
+
         specify do
           headers = hti_one_species_expand_headers.higher_taxa_headers(nil, @species1_1_1)
           expect(headers.map(&:full_name)).to eq(
@@ -216,6 +228,7 @@ describe Checklist::HigherTaxaInjector do
           )
         end
       end
+
       context 'when two species' do
         let(:hti_same_genus) do
           Checklist::HigherTaxaInjector.new(
@@ -225,10 +238,12 @@ describe Checklist::HigherTaxaInjector do
             ]
           )
         end
+
         specify do
           expect(hti_same_genus.higher_taxa_headers(@species1_1_1, @species1_1_2)).to be_empty
         end
       end
+
       context 'when species and subspecies' do
         let(:hti_species_subspecies) do
           Checklist::HigherTaxaInjector.new(
@@ -238,11 +253,13 @@ describe Checklist::HigherTaxaInjector do
             ]
           )
         end
+
         specify do
           expect(hti_species_subspecies.higher_taxa_headers(@species1_1_2, @subspecies1_1_1_1)).to be_empty
         end
       end
     end
+
     context 'when same family' do
       context 'when two species from different genera' do
         let(:hti_same_family) do
@@ -253,11 +270,13 @@ describe Checklist::HigherTaxaInjector do
             ]
           )
         end
+
         specify do
           expect(hti_same_family.higher_taxa_headers(@species1_1_1, @species1_2_1)).to be_empty
         end
       end
     end
+
     context 'when same order' do
       context 'when two species from different families' do
         let(:hti_different_family) do
@@ -268,6 +287,7 @@ describe Checklist::HigherTaxaInjector do
             ]
           )
         end
+
         specify do
           headers = hti_different_family.higher_taxa_headers(@species1_1_1, @species2_1_1)
           expect(headers.map(&:full_name)).to eq(
@@ -275,6 +295,7 @@ describe Checklist::HigherTaxaInjector do
           )
         end
       end
+
       context 'when two species from different families and expand headers set' do
         let(:hti_different_family) do
           Checklist::HigherTaxaInjector.new(
@@ -284,6 +305,7 @@ describe Checklist::HigherTaxaInjector do
             ], { expand_headers: true }
           )
         end
+
         specify do
           headers = hti_different_family.higher_taxa_headers(@species1_1_1, @species2_1_1)
           expect(headers.map(&:full_name)).to eq(
@@ -291,6 +313,7 @@ describe Checklist::HigherTaxaInjector do
           )
         end
       end
+
       context 'when genus and different family' do
         let(:hti_genus_family) do
           Checklist::HigherTaxaInjector.new(
@@ -300,6 +323,7 @@ describe Checklist::HigherTaxaInjector do
             ]
           )
         end
+
         specify do
           headers = hti_genus_family.higher_taxa_headers(@genus1_1, @family2)
           expect(headers.map(&:full_name)).to eq(
@@ -307,6 +331,7 @@ describe Checklist::HigherTaxaInjector do
           )
         end
       end
+
       context 'when family and genus in different family' do
         let(:hti_family_genus) do
           Checklist::HigherTaxaInjector.new(
@@ -316,6 +341,7 @@ describe Checklist::HigherTaxaInjector do
             ]
           )
         end
+
         specify do
           headers = hti_family_genus.higher_taxa_headers(@family1, @genus2_1)
           expect(headers.map(&:full_name)).to eq(
@@ -324,6 +350,7 @@ describe Checklist::HigherTaxaInjector do
         end
       end
     end
+
     context 'when same class' do
       context 'when order and genus from different order' do
         let(:hti_different_orders) do
@@ -334,6 +361,7 @@ describe Checklist::HigherTaxaInjector do
             ]
           )
         end
+
         specify do
           headers = hti_different_orders.higher_taxa_headers(@order2, @genus2_1)
           expect(headers.map(&:full_name)).to eq(
@@ -341,6 +369,7 @@ describe Checklist::HigherTaxaInjector do
           )
         end
       end
+
       context 'when order and genus from different order and expand headers set' do
         let(:hti_different_orders_expand) do
           Checklist::HigherTaxaInjector.new(
@@ -350,6 +379,7 @@ describe Checklist::HigherTaxaInjector do
             ], { expand_headers: true }
           )
         end
+
         specify do
           headers = hti_different_orders_expand.higher_taxa_headers(@order2, @genus2_1)
           expect(headers.map(&:full_name)).to eq(

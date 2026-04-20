@@ -9,6 +9,7 @@ describe TaxonConcept do
         context 'for family Cheloniidae' do
           specify { expect(@family.cites_listing).to eq('I') }
         end
+
         context 'for species Natator depressus' do
           specify { expect(@species.cites_listing).to eq('I') }
         end

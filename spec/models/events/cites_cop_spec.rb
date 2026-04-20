@@ -34,9 +34,11 @@ describe CitesCop do
           designation: eu
         )
       end
+
       specify { expect(cites_cop).not_to be_valid }
       specify { expect(cites_cop).to have(1).error_on(:designation_id) }
     end
+
     context 'when effective_at is blank' do
       let(:cites_cop) do
         build(
@@ -44,6 +46,7 @@ describe CitesCop do
           effective_at: nil
         )
       end
+
       specify { expect(cites_cop).not_to be_valid }
       specify { expect(cites_cop).to have(1).error_on(:effective_at) }
     end
@@ -63,6 +66,7 @@ describe CitesCop do
       # listing changes are deleted.
       context 'when listing changes exist' do
         let!(:listing_change) { create_cites_I_addition(event: cites_cop) }
+
         specify { expect(cites_cop.destroy).to be_falsey }
       end
 

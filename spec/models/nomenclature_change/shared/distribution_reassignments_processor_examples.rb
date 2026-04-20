@@ -34,7 +34,7 @@ shared_context 'distribution_reassignments_processor_examples' do
       iso_code2: 'UK'
     )
   end
-  before(:each) do
+  before do
     original_d = create(
       :distribution,
       taxon_concept: output_species1,
@@ -75,10 +75,11 @@ shared_context 'distribution_reassignments_processor_examples' do
     create(:distribution, taxon_concept: input_species)
     processor.run
   end
+
   specify { expect(output_species1.distributions.count).to eq(4) }
   specify { expect(output_species1.distributions.find_by(geo_entity_id: poland.id)).not_to be_nil }
   specify { expect(output_species1.distributions.find_by(geo_entity_id: poland.id).tag_list).to eq([]) }
-  specify { expect(output_species1.distributions.find_by(geo_entity_id: italy.id).tag_list).to match_array([ 'extinct', 'reintroduced' ]) }
+  specify { expect(output_species1.distributions.find_by(geo_entity_id: italy.id).tag_list).to contain_exactly('extinct', 'reintroduced') }
   specify { expect(output_species1.distributions.find_by(geo_entity_id: united_kingdom.id).tag_list).to eq([]) }
   specify { expect(output_species1.distributions.find_by(geo_entity_id: poland.id).distribution_references.count).to eq(2) }
 end

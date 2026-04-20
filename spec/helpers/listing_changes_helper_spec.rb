@@ -51,10 +51,12 @@ describe ListingChangesHelper do
         is_party: false
       )
     end
+
     it 'outputs all geo entities comma separated' do
       expect(helper.geo_entities_tooltip(listing_change)).to eq('Poland')
     end
   end
+
   describe 'annotation_tooltip' do
     it 'outputs the regular annotation in both short and long English form' do
       expect(helper.annotation_tooltip(listing_change)).to eq(
@@ -62,6 +64,7 @@ describe ListingChangesHelper do
       )
     end
   end
+
   describe 'hash_annotation_tooltip' do
     it 'outputs the hash annotation in long English form' do
       expect(helper.hash_annotation_tooltip(listing_change)).to eq(
@@ -69,9 +72,10 @@ describe ListingChangesHelper do
       )
     end
   end
+
   describe 'excluded_geo_entities_tooltip' do
     context 'no exclusions' do
-      it 'should output blank exception' do
+      it 'outputs blank exception' do
         expect(helper.excluded_geo_entities_tooltip(listing_change)).to be_blank
       end
     end
@@ -91,11 +95,13 @@ describe ListingChangesHelper do
           is_party: false
         )
       end
-      it 'should list geographic exception' do
+
+      it 'lists geographic exception' do
         expect(helper.excluded_geo_entities_tooltip(listing_change)).to eq('Poland')
       end
     end
   end
+
   describe 'excluded_taxon_concepts_tooltip' do
     let(:child_taxon_concept) do
       create_cites_eu_species(
@@ -103,8 +109,9 @@ describe ListingChangesHelper do
         taxon_name: create(:taxon_name, scientific_name: 'cracovianus')
       )
     end
+
     context 'no exclusions' do
-      it 'should output blank exception' do
+      it 'outputs blank exception' do
         expect(helper.excluded_taxon_concepts_tooltip(listing_change)).to be_blank
       end
     end
@@ -116,7 +123,8 @@ describe ListingChangesHelper do
           parent_id: listing_change.id
         )
       end
-      it 'should list taxonomic exception' do
+
+      it 'lists taxonomic exception' do
         expect(helper.excluded_taxon_concepts_tooltip(listing_change)).to eq('Foobarus cracovianus')
       end
     end

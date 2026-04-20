@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Trade::InclusionValidationRule, drops_tables: true do
+describe Trade::InclusionValidationRule, :drops_tables do
   let(:annual_report_upload) do
     annual_report = build(
       :annual_report_upload,
@@ -25,7 +25,8 @@ describe Trade::InclusionValidationRule, drops_tables: true do
     let(:validation_rule) do
       create_taxon_concept_validation
     end
-    before(:each) do
+
+    before do
       @shipment1 = sandbox_klass.create(
         taxon_name: canis_lupus.full_name
       )
@@ -45,6 +46,7 @@ describe Trade::InclusionValidationRule, drops_tables: true do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       validation_rule.refresh_errors_if_needed(annual_report_upload)
     end
+
     specify do
       expect(
         validation_rule.matching_records_for_aru_and_error(
@@ -59,7 +61,8 @@ describe Trade::InclusionValidationRule, drops_tables: true do
     let(:validation_rule) do
       create_taxon_concept_validation
     end
-    before(:each) do
+
+    before do
       @shipment1 = sandbox_klass.create(
         taxon_name: canis_lupus.full_name
       )
@@ -117,7 +120,11 @@ describe Trade::InclusionValidationRule, drops_tables: true do
 
   describe :validation_errors_for_aru do
     context 'species name may have extra whitespace between name segments' do
-      before(:each) do
+      subject do
+        create_taxon_concept_validation
+      end
+
+      before do
         genus = create_cites_eu_genus(
           taxon_name: create(:taxon_name, scientific_name: 'Acipenser')
         )
@@ -126,28 +133,15 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           parent: genus
         )
       end
-      subject do
-        create_taxon_concept_validation
-      end
+
+
       specify do
         subject.refresh_errors_if_needed(annual_report_upload)
         expect(subject.validation_errors_for_aru(annual_report_upload)).to be_empty
       end
     end
+
     context 'trading partner should be a valid iso code' do
-      before(:each) do
-        sandbox_klass.create(trading_partner: 'Neverland')
-        sandbox_klass.create(trading_partner: '')
-        sandbox_klass.create(trading_partner: nil)
-      end
-      let!(:france) do
-        create(
-          :geo_entity,
-          geo_entity_type: country_geo_entity_type,
-          name: 'France',
-          iso_code2: 'FR'
-        )
-      end
       subject do
         create(
           :inclusion_validation_rule,
@@ -156,11 +150,29 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           is_strict: true
         )
       end
+
+      before do
+        sandbox_klass.create(trading_partner: 'Neverland')
+        sandbox_klass.create(trading_partner: '')
+        sandbox_klass.create(trading_partner: nil)
+      end
+
+      let!(:france) do
+        create(
+          :geo_entity,
+          geo_entity_type: country_geo_entity_type,
+          name: 'France',
+          iso_code2: 'FR'
+        )
+      end
+
+
       specify do
         subject.refresh_errors_if_needed(annual_report_upload)
         expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
       end
     end
+
     context 'term can only be paired with unit as defined by term_trade_codes_pairs table' do
       before do
         cap = create(:term, code: 'CAP')
@@ -182,32 +194,45 @@ describe Trade::InclusionValidationRule, drops_tables: true do
         sandbox_klass.create(term_code: 'CAV', unit_code: 'KIL')
         sandbox_klass.create(term_code: 'CAV', unit_code: '')
       end
+
       context 'when invalid combination' do
-        before(:each) do
-          sandbox_klass.create(term_code: 'CAP', unit_code: 'BAG')
-        end
         subject do
           create_term_unit_validation
         end
+
+        before do
+          sandbox_klass.create(term_code: 'CAP', unit_code: 'BAG')
+        end
+
+
         specify do
           subject.refresh_errors_if_needed(annual_report_upload)
           expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
         end
       end
+
       context 'when required unit blank' do
-        before(:each) do
-          sandbox_klass.create(term_code: 'CAP', unit_code: '')
-        end
         subject do
           create_term_unit_validation
         end
+
+        before do
+          sandbox_klass.create(term_code: 'CAP', unit_code: '')
+        end
+
+
         specify do
           subject.refresh_errors_if_needed(annual_report_upload)
           expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
         end
       end
     end
+
     context 'term can only be paired with purpose as defined by term_trade_codes_pairs table' do
+      subject do
+        create_term_purpose_validation
+      end
+
       before do
         cav = create(:term, code: 'CAV')
         create(:purpose, code: 'B')
@@ -220,37 +245,42 @@ describe Trade::InclusionValidationRule, drops_tables: true do
         sandbox_klass.create(term_code: 'CAV', purpose_code: 'P')
         sandbox_klass.create(term_code: 'CAV', purpose_code: '')
       end
-      subject do
-        create_term_purpose_validation
-      end
+
+
       specify do
         subject.refresh_errors_if_needed(annual_report_upload)
         expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(2)
       end
     end
+
     context 'taxon_concept_id can only be paired with term as defined by trade_taxon_concept_term_pairs table' do
+      subject do
+        create_taxon_concept_term_validation
+      end
+
       before do
         @genus = create_cites_eu_genus
         cav = create(:term, code: 'CAV')
         create(:term, code: 'BAL')
         @pair = create(:trade_taxon_concept_term_pair, term_id: cav.id, taxon_concept_id: @genus.id)
       end
-      subject do
-        create_taxon_concept_term_validation
-      end
+
+
       context 'when accepted name' do
-        before(:each) do
+        before do
           @species = create_cites_eu_species(parent: @genus)
           sandbox_klass.create(term_code: 'CAV', taxon_name: @species.full_name)
           sandbox_klass.create(term_code: 'BAL', taxon_name: @species.full_name)
         end
+
         specify do
           subject.refresh_errors_if_needed(annual_report_upload)
           expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
         end
       end
+
       context 'when hybrid' do
-        before(:each) do
+        before do
           @hybrid = create_cites_eu_species(parent: @genus, name_status: 'H')
           create(
             :taxon_relationship,
@@ -261,6 +291,7 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           sandbox_klass.create(term_code: 'CAV', taxon_name: @hybrid.full_name)
           sandbox_klass.create(term_code: 'BAL', taxon_name: @hybrid.full_name)
         end
+
         specify do
           subject.refresh_errors_if_needed(annual_report_upload)
           expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)

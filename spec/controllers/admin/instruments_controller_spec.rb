@@ -4,7 +4,7 @@ describe Admin::InstrumentsController do
   login_admin
 
   describe 'GET index' do
-    before(:each) do
+    before do
       @instrument1 = create(:instrument, name: 'BB', designation: create(:designation))
       @instrument2 = create(:instrument, name: 'AA', designation: create(:designation))
     end
@@ -39,6 +39,7 @@ describe Admin::InstrumentsController do
 
       expect(response).to render_template('create')
     end
+
     it 'renders new when not successful' do
       post :create, params: { instrument: { name: nil } }, xhr: true
 
@@ -64,6 +65,9 @@ describe Admin::InstrumentsController do
   describe 'DELETE destroy' do
     let(:instrument) { create(:instrument) }
 
+    let!(:taxon_instrument) { create(:taxon_instrument, instrument_id: instrument2.id) }
+    let(:instrument2) { create(:instrument) }
+
     it 'redirects after delete' do
       delete :destroy, params: { id: instrument.id }
 
@@ -72,8 +76,6 @@ describe Admin::InstrumentsController do
       expect(response).to redirect_to(admin_instruments_url)
     end
 
-    let(:instrument2) { create(:instrument) }
-    let!(:taxon_instrument) { create(:taxon_instrument, instrument_id: instrument2.id) }
 
     it 'fails to delete instrument because there are dependent objects' do
       delete :destroy, params: { id: instrument2.id }

@@ -9,12 +9,15 @@ describe TaxonConcept do
         context 'for genus Moschus' do
           specify { expect(@genus.cites_listing).to eq('I/II') }
         end
+
         context 'for species Moschus leucogaster' do
           specify { expect(@species1.cites_listing).to eq('I') }
         end
+
         context 'for species Moschus moschiferus' do
           specify { expect(@species2.cites_listing).to eq('II') }
         end
+
         context 'for subspecies Moschus moschiferus moschiferus' do
           specify { expect(@subspecies.cites_listing).to eq('II') }
         end
@@ -24,12 +27,15 @@ describe TaxonConcept do
         context 'for genus Moschus' do
           specify { expect(@genus.cites_listed).to be_truthy }
         end
+
         context 'for species Moschus leucogaster' do
           specify { expect(@species1.cites_listed).to eq(false) }
         end
+
         context 'for species Moschus moschiferus' do
           specify { expect(@species2.cites_listed).to eq(false) }
         end
+
         context 'for subspecies Moschus moschiferus moschiferus' do
           specify { expect(@subspecies.cites_listed).to eq(false) }
         end
@@ -47,6 +53,7 @@ describe TaxonConcept do
             expect(addition.species_listing_name).to eq('I')
           end
         end
+
         context 'for species Moschus moschiferus' do
           specify do
             expect(@species2.current_cites_additions.size).to eq(1)
@@ -56,6 +63,7 @@ describe TaxonConcept do
             expect(addition.species_listing_name).to eq('II')
           end
         end
+
         context 'for subspecies Moschus moschiferus moschiferus' do
           specify do
             expect(@subspecies.current_cites_additions.size).to eq(1)

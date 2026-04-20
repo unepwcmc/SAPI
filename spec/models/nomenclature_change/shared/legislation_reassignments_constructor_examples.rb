@@ -3,6 +3,7 @@ shared_context 'legislation_reassignments_constructor_examples' do
     context 'when no CITES listings' do
       specify { expect(input.legislation_reassignments.size).to eq(0) }
     end
+
     context 'when CITES listings' do
       let(:input_species) do
         s = create_cites_eu_species
@@ -10,15 +11,18 @@ shared_context 'legislation_reassignments_constructor_examples' do
         create_cites_II_addition(taxon_concept: s)
         s
       end
+
       specify { expect(input.legislation_reassignments.size).to eq(1) }
     end
   end
+
   context 'when previously reassignments in place' do
     let(:input) do
       i = create(:nomenclature_change_input, nomenclature_change: nc, taxon_concept: input_species)
       create(:nomenclature_change_legislation_reassignment, input: i)
       i
     end
+
     specify { expect(input.legislation_reassignments).to eq(@old_reassignments) }
   end
 end

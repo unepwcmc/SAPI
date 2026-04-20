@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Trade::SandboxTemplate, drops_tables: true do
+describe Trade::SandboxTemplate, :drops_tables do
   let(:annual_report_upload) do
     aru = build(:annual_report_upload)
     aru.save(validate: false)
@@ -28,9 +28,10 @@ describe Trade::SandboxTemplate, drops_tables: true do
   end
 
   describe :update do
-    before(:each) do
+    before do
       @shipment1 = sandbox_klass.create(taxon_name: canis_lupus.full_name)
     end
+
     specify do
       @shipment1.update(taxon_name: canis_aureus.full_name)
       expect(@shipment1.reload.taxon_concept_id).to eq(canis_aureus.id)
@@ -38,7 +39,7 @@ describe Trade::SandboxTemplate, drops_tables: true do
   end
 
   describe :update_batch do
-    before(:each) do
+    before do
       canis_lupus
       @shipment = sandbox_klass.create(taxon_name: 'Caniis lupus')
       validation_rule = create_taxon_concept_validation
@@ -53,6 +54,7 @@ describe Trade::SandboxTemplate, drops_tables: true do
         error_count: 1
       )
     end
+
     specify do
       expect(@shipment.reload.taxon_concept_id).to be_nil
       sandbox_klass.update_batch(

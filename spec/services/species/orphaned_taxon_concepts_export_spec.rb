@@ -8,7 +8,7 @@ describe Species::OrphanedTaxonConceptsExport do
     specify { expect(subject.path).to eq('public/downloads/orphaned_taxon_concepts/') }
   end
 
-  describe :export, cache: true do
+  describe :export, :cache do
     context 'when no results' do
       subject do
         Species::OrphanedTaxonConceptsExport.new({})
@@ -18,7 +18,11 @@ describe Species::OrphanedTaxonConceptsExport do
     end
 
     context 'when results' do
-      before(:each) do
+      subject do
+        Species::OrphanedTaxonConceptsExport.new({})
+      end
+
+      before do
         tc = create(:taxon_concept)
 
         tc.update_attribute(:parent_id, nil) # skipping validations
@@ -31,13 +35,10 @@ describe Species::OrphanedTaxonConceptsExport do
           and_return('spec/public/downloads/orphaned_taxon_concepts/')
       end
 
-      after(:each) do
+      after do
         FileUtils.remove_dir('spec/public/downloads/orphaned_taxon_concepts', true)
       end
 
-      subject do
-        Species::OrphanedTaxonConceptsExport.new({})
-      end
 
       context 'when file not cached' do
         specify do

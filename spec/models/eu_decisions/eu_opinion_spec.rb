@@ -65,6 +65,7 @@ describe EuOpinion do
       before do
         @eu_regulation = create(:ec_srg)
       end
+
       let(:eu_opinion) { build(:eu_opinion, start_event: @eu_regulation) }
 
       specify { expect(eu_opinion).to be_valid }

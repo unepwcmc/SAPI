@@ -24,8 +24,9 @@ shared_context 'name_reassignments_processor_examples' do
       output: output
     )
   end
-  before(:each) do
+  before do
     processor.run
   end
+
   specify { expect(output_species1.synonyms).to include(input_species_synonym) }
 end

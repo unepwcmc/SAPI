@@ -12,8 +12,10 @@ describe Species::TaxonConceptPrefixMatcher do
           }
         )
       end
+
       specify { expect(subject.results.size).to eq(3) }
     end
+
     context 'when match on accepted name' do
       subject do
         Species::TaxonConceptPrefixMatcher.new(
@@ -23,8 +25,10 @@ describe Species::TaxonConceptPrefixMatcher do
           }
         )
       end
+
       specify { expect(subject.results.size).to eq(3) }
     end
+
     context 'when match on synonym' do
       subject do
         Species::TaxonConceptPrefixMatcher.new(
@@ -34,8 +38,10 @@ describe Species::TaxonConceptPrefixMatcher do
           }
         )
       end
+
       specify { expect(subject.results.size).to eq(2) }
     end
+
     context 'when match on common name' do
       subject do
         Species::TaxonConceptPrefixMatcher.new(
@@ -45,6 +51,7 @@ describe Species::TaxonConceptPrefixMatcher do
           }
         )
       end
+
       specify { expect(subject.results.size).to eq(1) }
     end
   end

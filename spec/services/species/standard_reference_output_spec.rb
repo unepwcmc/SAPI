@@ -8,7 +8,7 @@ describe Species::StandardReferenceOutputExport do
     specify { expect(subject.path).to eq('public/downloads/standard_reference_output/') }
   end
 
-  describe :export, cache: true do
+  describe :export, :cache do
     context 'when no results' do
       subject do
         Species::StandardReferenceOutputExport.new({})
@@ -18,7 +18,11 @@ describe Species::StandardReferenceOutputExport do
     end
 
     context 'when results' do
-      before(:each) do
+      subject do
+        Species::StandardReferenceOutputExport.new({})
+      end
+
+      before do
         create_cites_eu_species
 
         FileUtils.mkpath(
@@ -29,13 +33,10 @@ describe Species::StandardReferenceOutputExport do
           and_return('spec/public/downloads/standard_reference_output/')
       end
 
-      after(:each) do
+      after do
         FileUtils.remove_dir('spec/public/downloads/standard_reference_output', true)
       end
 
-      subject do
-        Species::StandardReferenceOutputExport.new({})
-      end
 
       context 'when file not cached' do
         specify do

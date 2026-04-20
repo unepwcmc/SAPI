@@ -9,6 +9,7 @@ describe TaxonConcept do
         context 'for genus Notomys' do
           specify { expect(@genus.cites_listing).to eq('NC') }
         end
+
         context 'for species Notomys aquilo' do
           specify { expect(@species.cites_listing).to eq('NC') }
         end
@@ -18,6 +19,7 @@ describe TaxonConcept do
         context 'for genus Notomys' do
           specify { expect(@genus.cites_show).to be_falsey }
         end
+
         context 'for species Notomys aquilo' do
           specify { expect(@species.cites_show).to be_falsey }
         end

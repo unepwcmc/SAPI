@@ -135,7 +135,7 @@ describe EuSuspension do
       specify { expect(eu_suspension.is_current).to be_falsey }
     end
 
-    context 'when  start_event is set, and end_event is set with date in the future' do
+    context 'when start_event is set, and end_event is set with date in the future' do
       let(:end_event) do
         create(:event, effective_at: 1.day.from_now)
       end
@@ -149,7 +149,7 @@ describe EuSuspension do
       specify { expect(eu_suspension.is_current).to be_truthy }
     end
 
-    context 'when  start_event is set, and end_event is set with date in the past' do
+    context 'when start_event is set, and end_event is set with date in the past' do
       let(:end_event) do
         create(:event, effective_at: 1.day.ago)
       end
@@ -169,6 +169,7 @@ describe EuSuspension do
       let(:eu_suspension) do
         create(:eu_suspension, start_event: nil)
       end
+
       specify { expect(eu_suspension.start_date_formatted).to be_empty }
     end
 
@@ -179,6 +180,7 @@ describe EuSuspension do
       let(:start_event) do
         create(:event, effective_at: 2.days.ago)
       end
+
       specify { expect(eu_suspension.start_date_formatted).to eq(2.days.ago.strftime('%d/%m/%Y')) }
     end
   end
@@ -188,6 +190,7 @@ describe EuSuspension do
       let(:eu_suspension) do
         create(:eu_suspension, end_event: nil)
       end
+
       specify { expect(eu_suspension.end_date_formatted).to be_empty }
     end
 
@@ -198,6 +201,7 @@ describe EuSuspension do
       let(:end_event) do
         create(:event, effective_at: 2.days.ago)
       end
+
       specify { expect(eu_suspension.end_date_formatted).to eq(2.days.ago.strftime('%d/%m/%Y')) }
     end
   end

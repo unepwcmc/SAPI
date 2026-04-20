@@ -10,8 +10,10 @@ describe NomenclatureChange::StatusToSynonym do
             status: NomenclatureChange::StatusToSynonym::PRIMARY_OUTPUT
           )
         end
+
         specify { expect(status_change).to have(1).error_on(:primary_output) }
       end
+
       context 'when submitting' do
         let(:status_change) do
           build(
@@ -19,9 +21,11 @@ describe NomenclatureChange::StatusToSynonym do
             status: NomenclatureChange::StatusToSynonym::SUBMITTED
           )
         end
+
         specify { expect(status_change).to have(1).error_on(:primary_output) }
       end
     end
+
     context 'when primary output has invalid name status' do
       context 'when primary_output' do
         let(:status_change) do
@@ -33,9 +37,11 @@ describe NomenclatureChange::StatusToSynonym do
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
           )
         end
+
         specify { expect(status_change.error_on(:primary_output).size).to eq(1) }
       end
     end
+
     context 'when primary output has valid name status' do
       context 'when primary_output' do
         let(:status_change) do
@@ -47,9 +53,11 @@ describe NomenclatureChange::StatusToSynonym do
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
           )
         end
+
         specify { expect(status_change.errors_on(:primary_output).size).to eq(0) }
       end
     end
+
     context 'when required secondary output missing' do
       context 'when relay' do
         let(:status_change) do
@@ -59,8 +67,10 @@ describe NomenclatureChange::StatusToSynonym do
             status: NomenclatureChange::StatusToSynonym::RELAY
           )
         end
+
         specify { expect(status_change.error_on(:secondary_output).size).to eq(1) }
       end
+
       context 'when submitting' do
         let(:status_change) do
           build(
@@ -69,6 +79,7 @@ describe NomenclatureChange::StatusToSynonym do
             status: NomenclatureChange::StatusToSynonym::SUBMITTED
           )
         end
+
         specify { expect(status_change.error_on(:secondary_output).size).to eq(1) }
       end
     end

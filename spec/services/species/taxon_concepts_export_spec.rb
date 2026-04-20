@@ -8,7 +8,7 @@ describe Species::TaxonConceptsNamesExport do
     specify { expect(subject.path).to eq('public/downloads/taxon_concepts_names/') }
   end
 
-  describe :export, cache: true do
+  describe :export, :cache do
     context 'when no results' do
       subject do
         Species::TaxonConceptsNamesExport.new({})
@@ -18,7 +18,11 @@ describe Species::TaxonConceptsNamesExport do
     end
 
     context 'when results' do
-      before(:each) do
+      subject do
+        Species::TaxonConceptsNamesExport.new({})
+      end
+
+      before do
         create(:taxon_concept)
         FileUtils.mkpath(
           File.expand_path('spec/public/downloads/taxon_concepts_names')
@@ -27,13 +31,10 @@ describe Species::TaxonConceptsNamesExport do
           and_return('spec/public/downloads/taxon_concepts_names/')
       end
 
-      after(:each) do
+      after do
         FileUtils.remove_dir('spec/public/downloads/taxon_concepts_names', true)
       end
 
-      subject do
-        Species::TaxonConceptsNamesExport.new({})
-      end
 
       context 'when file not cached' do
         specify do

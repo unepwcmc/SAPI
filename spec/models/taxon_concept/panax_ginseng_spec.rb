@@ -9,6 +9,7 @@ describe TaxonConcept do
         context 'for species Panax ginseng' do
           specify { expect(@species.cites_listed).to be_truthy }
         end
+
         context 'for genus Panax' do
           specify { expect(@genus.cites_listed).to eq(false) }
         end
@@ -18,6 +19,7 @@ describe TaxonConcept do
         context 'for species Panax ginseng' do
           specify { expect(@species.eu_listed).to be_truthy }
         end
+
         context 'for genus Panax' do
           specify { expect(@genus.eu_listed).to eq(false) }
         end

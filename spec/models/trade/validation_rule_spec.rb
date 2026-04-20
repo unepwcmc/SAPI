@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Trade::ValidationRule, drops_tables: true do
+describe Trade::ValidationRule, :drops_tables do
   let(:annual_report_upload) do
     annual_report = build(
       :annual_report_upload,
@@ -17,7 +17,8 @@ describe Trade::ValidationRule, drops_tables: true do
     let(:validation_rule) do
       create_taxon_name_presence_validation
     end
-    before(:each) do
+
+    before do
       @shipment1 = sandbox_klass.create(
         taxon_name: 'Canis lupus'
       )
@@ -36,6 +37,7 @@ describe Trade::ValidationRule, drops_tables: true do
       )
       validation_rule.refresh_errors_if_needed(annual_report_upload)
     end
+
     specify do
       expect(
         validation_rule.matching_records_for_aru_and_error(
@@ -50,7 +52,8 @@ describe Trade::ValidationRule, drops_tables: true do
     let(:validation_rule) do
       create_taxon_name_presence_validation
     end
-    before(:each) do
+
+    before do
       @shipment1 = sandbox_klass.create(
         taxon_name: 'Canis lupus'
       )
@@ -107,9 +110,10 @@ describe Trade::ValidationRule, drops_tables: true do
 
   describe Trade::PresenceValidationRule do
     describe :validation_errors_for_aru do
-      before(:each) do
+      before do
         sandbox_klass.create(trading_partner: nil)
       end
+
       context 'trading_partner should not be blank' do
         subject do
           create(
@@ -117,6 +121,7 @@ describe Trade::ValidationRule, drops_tables: true do
             column_names: [ 'trading_partner' ]
           )
         end
+
         specify do
           subject.refresh_errors_if_needed(annual_report_upload)
           expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
@@ -127,9 +132,10 @@ describe Trade::ValidationRule, drops_tables: true do
 
   describe Trade::NumericalityValidationRule do
     describe :validation_errors_for_aru do
-      before(:each) do
+      before do
         sandbox_klass.create(quantity: 'www')
       end
+
       context 'quantity should be a number' do
         subject do
           create(
@@ -138,6 +144,7 @@ describe Trade::ValidationRule, drops_tables: true do
             is_strict: true
           )
         end
+
         specify do
           subject.refresh_errors_if_needed(annual_report_upload)
           expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)
@@ -148,13 +155,15 @@ describe Trade::ValidationRule, drops_tables: true do
 
   describe Trade::FormatValidationRule do
     describe :validation_errors_for_aru do
-      before(:each) do
+      before do
         sandbox_klass.create(year: '33333')
       end
+
       context 'year should be a 4 digit value' do
         subject do
           create_year_format_validation
         end
+
         specify do
           subject.refresh_errors_if_needed(annual_report_upload)
           expect(subject.validation_errors_for_aru(annual_report_upload).size).to eq(1)

@@ -13,10 +13,11 @@ shared_context 'shipment_reassignments_processor_examples' do
       output: output
     )
   end
-  before(:each) do
+  before do
     2.times { create(:shipment, taxon_concept: input_species) }
     processor.run
   end
+
   specify { expect(output_species1.shipments.count).to eq(2) }
   specify { expect(input_species.shipments).to be_empty }
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Trade::AnnualReportUpload, drops_tables: true do
+describe Trade::AnnualReportUpload, :drops_tables do
   def exporter_file
     Rack::Test::UploadedFile.new(
       Rails.root.join('spec/support/annual_report_upload_exporter.csv').to_s
@@ -33,8 +33,10 @@ describe Trade::AnnualReportUpload, drops_tables: true do
           csv_source_file: exporter_file
         )
       end
+
       specify { expect(subject).to be_valid }
     end
+
     context 'when uploaded file as importer with exporter column headers' do
       subject do
         build(
@@ -43,8 +45,10 @@ describe Trade::AnnualReportUpload, drops_tables: true do
           csv_source_file: exporter_file
         )
       end
+
       specify { expect(subject).not_to be_valid }
     end
+
     context 'when uploaded file as importer with importer column headers' do
       subject do
         build(
@@ -53,8 +57,10 @@ describe Trade::AnnualReportUpload, drops_tables: true do
           csv_source_file: importer_file
         )
       end
+
       specify { expect(subject).to be_valid }
     end
+
     context 'when uploaded file as exporter with importer column headers' do
       subject do
         build(
@@ -63,14 +69,12 @@ describe Trade::AnnualReportUpload, drops_tables: true do
           csv_source_file: importer_file
         )
       end
+
       specify { expect(subject).not_to be_valid }
     end
   end
 
   describe :validation_errors do
-    let!(:format_validation_rule) do
-      create_year_format_validation
-    end
     subject do
       create(
         :annual_report_upload,
@@ -78,11 +82,18 @@ describe Trade::AnnualReportUpload, drops_tables: true do
         csv_source_file: importer_file
       )
     end
+
+    let!(:format_validation_rule) do
+      create_year_format_validation
+    end
+
+
     specify { expect(subject.validation_errors).to be_empty }
   end
 
   describe :create do
-    before(:each) { Trade::CsvSourceFileUploader.enable_processing = true }
+    before { Trade::CsvSourceFileUploader.enable_processing = true }
+
     context 'when blank lines in import file' do
       subject do
         create(
@@ -91,6 +102,7 @@ describe Trade::AnnualReportUpload, drops_tables: true do
           csv_source_file: importer_file_w_blanks
         )
       end
+
       specify do
         sandbox_klass = Trade::SandboxTemplate.ar_klass(subject.sandbox.table_name)
         expect(sandbox_klass.count).to eq(10)
@@ -106,6 +118,7 @@ describe Trade::AnnualReportUpload, drops_tables: true do
         csv_source_file: importer_file
       )
     end
+
     specify do
       expect(subject.sandbox).to receive(:destroy)
       subject.destroy
@@ -113,7 +126,7 @@ describe Trade::AnnualReportUpload, drops_tables: true do
   end
 
   describe :submit do
-    before(:each) do
+    before do
       genus = create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Acipenser')
       )
@@ -140,6 +153,7 @@ describe Trade::AnnualReportUpload, drops_tables: true do
 
       @submitter = create(:user, role: User::MANAGER)
     end
+
     pending 'it calls submission worker' do
       # This has been disabled due to some issues with asynchronous reports submission"
       subject do # aru no primary errors
@@ -160,6 +174,7 @@ describe Trade::AnnualReportUpload, drops_tables: true do
         create_year_format_validation
         aru
       end
+
       specify do
         expect { subject.submit(@submitter) }.to change(SubmissionWorker.jobs, :size).by(1)
       end

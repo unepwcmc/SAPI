@@ -4,7 +4,7 @@ describe Admin::CitesTcsController do
   login_admin
 
   describe 'index' do
-    before(:each) do
+    before do
       @cites_tc1 = create_cites_tc(name: 'Tc1')
       @cites_tc2 = create_cites_tc(name: 'Tc2')
     end
@@ -14,6 +14,7 @@ describe Admin::CitesTcsController do
         get :index
         expect(assigns(:cites_tcs)).to eq([ @cites_tc1, @cites_tc2 ])
       end
+
       it 'renders the index template' do
         get :index
         expect(response).to render_template('index')

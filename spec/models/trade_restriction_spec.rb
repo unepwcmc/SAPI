@@ -6,18 +6,21 @@ describe TradeRestriction do
       @unit = create(:unit, code: 'ABC')
       @geo_entity = create(:geo_entity)
     end
+
     describe 'filter_is_current' do
       before do
         @quota1 = create(:quota, is_current: true, unit_id: @unit.id, geo_entity_id: @geo_entity.id)
         @quota2 = create(:quota, is_current: false, unit_id: @unit.id, geo_entity_id: @geo_entity.id)
       end
-      it 'should return @quota1 if filter set to current' do
+
+      it 'returns @quota1 if filter set to current' do
         result = Quota.filter_is_current('current')
         expect(result).to eq([ @quota1 ])
       end
-      it 'should return both @quota1 and @quota2 if filter set to "all"' do
+
+      it 'returns both @quota1 and @quota2 if filter set to "all"' do
         result = Quota.filter_is_current('all')
-        expect(result).to match_array([ @quota1, @quota2 ])
+        expect(result).to contain_exactly(@quota1, @quota2)
       end
     end
 
@@ -32,17 +35,20 @@ describe TradeRestriction do
         @quota3 = create(:quota, geo_entity_id: @geo_entity1.id, unit_id: @unit.id)
         @quota4 = create(:quota, geo_entity_id: @geo_entity3.id, unit_id: @unit.id)
       end
-      it 'should get all quotas if geo_entities filter not set' do
+
+      it 'gets all quotas if geo_entities filter not set' do
         result = Quota.filter_geo_entities({})
-        expect(result).to match_array([ @quota1, @quota2, @quota3, @quota4 ])
+        expect(result).to contain_exactly(@quota1, @quota2, @quota3, @quota4)
       end
-      it 'should return quota1 and quota3 if geo_entities filter set to @geo_entity1' do
+
+      it 'returns quota1 and quota3 if geo_entities filter set to @geo_entity1' do
         result = Quota.filter_geo_entities({ 'geo_entities_ids' => [ @geo_entity1.id ] })
-        expect(result).to match_array([ @quota1, @quota3 ])
+        expect(result).to contain_exactly(@quota1, @quota3)
       end
-      it 'should return quota1, quota3, and quota4 if geo_entities filter set to @geo_entity1 and @geo_entity3' do
+
+      it 'returns quota1, quota3, and quota4 if geo_entities filter set to @geo_entity1 and @geo_entity3' do
         result = Quota.filter_geo_entities({ 'geo_entities_ids' => [ @geo_entity1.id, @geo_entity3.id ] })
-        expect(result).to match_array([ @quota1, @quota3, @quota4 ])
+        expect(result).to contain_exactly(@quota1, @quota3, @quota4)
       end
     end
 
@@ -54,17 +60,20 @@ describe TradeRestriction do
         @quota3 = create(:quota, start_date: '01/09/2012', unit_id: @unit.id, geo_entity_id: @geo_entity.id)
         @quota4 = create(:quota, start_date: '01/06/2013', unit_id: @unit.id, geo_entity_id: @geo_entity.id)
       end
-      it 'should get all quotas if years filter not set' do
+
+      it 'gets all quotas if years filter not set' do
         result = Quota.filter_years({})
-        expect(result).to match_array([ @quota1, @quota2, @quota3, @quota4 ])
+        expect(result).to contain_exactly(@quota1, @quota2, @quota3, @quota4)
       end
-      it 'should return quota1 and quota3 if years filter set to 2012' do
+
+      it 'returns quota1 and quota3 if years filter set to 2012' do
         result = Quota.filter_years({ 'years' => [ 2012 ] })
-        expect(result).to match_array([ @quota1, @quota3 ])
+        expect(result).to contain_exactly(@quota1, @quota3)
       end
-      it 'should return quota1, quota3, and quota4 if years filter set to 2012 and 2013' do
+
+      it 'returns quota1, quota3, and quota4 if years filter set to 2012 and 2013' do
         result = Quota.filter_years({ 'years' => [ 2012, 2013 ] })
-        expect(result).to match_array([ @quota1, @quota3, @quota4 ])
+        expect(result).to contain_exactly(@quota1, @quota3, @quota4)
       end
     end
   end

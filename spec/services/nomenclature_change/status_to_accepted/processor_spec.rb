@@ -4,6 +4,9 @@ describe NomenclatureChange::StatusToAccepted::Processor do
   include_context 'status_change_definitions'
 
   let(:accepted_name) { create_cites_eu_species }
+  let(:processor) { NomenclatureChange::StatusToAccepted::Processor.new(status_change) }
+  let(:primary_output_taxon_concept) { status_change.primary_output.taxon_concept }
+  let(:secondary_output_taxon_concept) { status_change.secondary_output.taxon_concept }
 
   let(:trade_name) do
     tc = create_cites_eu_species(
@@ -41,16 +44,16 @@ describe NomenclatureChange::StatusToAccepted::Processor do
       taxon_name: create(:taxon_name, scientific_name: 'Foobarus')
     )
   end
-  before(:each) { synonym_relationship_type }
-  let(:processor) { NomenclatureChange::StatusToAccepted::Processor.new(status_change) }
-  let(:primary_output_taxon_concept) { status_change.primary_output.taxon_concept }
-  let(:secondary_output_taxon_concept) { status_change.secondary_output.taxon_concept }
+
+  before { synonym_relationship_type }
+
 
   describe :run do
     context 'from trade name' do
       let(:output_species) { secondary_output_taxon_concept }
       let(:status_change) { t_to_a_with_input }
-      before(:each) do
+
+      before do
         @shipment = create(
           :shipment,
           taxon_concept: accepted_name,
@@ -58,6 +61,7 @@ describe NomenclatureChange::StatusToAccepted::Processor do
         )
         processor.run
       end
+
       specify { expect(primary_output_taxon_concept.name_status).to eq('A') }
       specify { expect(primary_output_taxon_concept.accepted_names_for_trade_name).to be_empty }
       specify { expect(primary_output_taxon_concept.shipments).to include(@shipment) }

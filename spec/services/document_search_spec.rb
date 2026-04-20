@@ -190,7 +190,7 @@ describe DocumentSearch, sidekiq: :inline do
       )
     end
 
-    before(:each) do
+    before do
       document_on_swietenia
       document_on_swietenia_in_belize
       document_on_swietenia_in_brazil
@@ -210,6 +210,7 @@ describe DocumentSearch, sidekiq: :inline do
           'admin'
         ).results
       end
+
       specify do
         expect(subject.pluck('id').sort).to eq(
           [
@@ -232,6 +233,7 @@ describe DocumentSearch, sidekiq: :inline do
           'admin'
         ).results
       end
+
       specify do
         expect(subject.pluck('id').sort).to eq(
           [
@@ -254,6 +256,7 @@ describe DocumentSearch, sidekiq: :inline do
           'admin'
         ).results
       end
+
       specify do
         expect(subject.pluck('id').sort).to eq(
           [
@@ -274,6 +277,7 @@ describe DocumentSearch, sidekiq: :inline do
           'admin'
         ).results
       end
+
       specify do
         expect(subject.pluck('id').sort).to eq(
           [
@@ -297,7 +301,7 @@ describe DocumentSearch, sidekiq: :inline do
     # In these tests we will check that making changes to @d 4 minutes ago
     # causes documents_need_refreshing to become true.
 
-    before(:each) do
+    before do
       @d = nil
 
       travel_to(Time.now - (DocumentSearch::REFRESH_INTERVAL + 1).minutes) do
@@ -358,7 +362,7 @@ describe DocumentSearch, sidekiq: :inline do
     # cause documents_need_refreshing to become true, by amending the attribute
     # updated_at on @c and @d
 
-    before(:each) do
+    before do
       @refresh_threshold = Time.now - (DocumentSearch::REFRESH_INTERVAL).minutes
       @recent_time = Time.now - (DocumentSearch::REFRESH_INTERVAL - 1).minutes
 

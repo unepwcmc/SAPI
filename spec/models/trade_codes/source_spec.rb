@@ -18,10 +18,13 @@ describe Source do
   describe :destroy do
     context 'when no dependent objects attached' do
       let(:source) { create(:source) }
+
       specify { expect(source.destroy).to be_truthy }
     end
+
     context 'when dependent objects attached' do
       let(:source) { create(:source) }
+
       context 'when CITES suspension' do
         let!(:cites_suspension) do
           create(
@@ -30,15 +33,20 @@ describe Source do
             start_notification_id: create_cites_suspension_notification.id
           )
         end
+
         specify { expect(source.destroy).to be_falsey }
       end
+
       context 'when CITES quota' do
         let(:geo_entity) { create(:geo_entity) }
         let!(:quota) { create(:quota, sources: [ source ], geo_entity_id: geo_entity.id) }
+
         specify { expect(source.destroy).to be_falsey }
       end
+
       context 'when shipments' do
-        before(:each) { create(:shipment, source: source) }
+        before { create(:shipment, source: source) }
+
         specify { expect(source.destroy).to be_falsey }
       end
     end

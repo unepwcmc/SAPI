@@ -47,10 +47,12 @@ describe Admin::ListingChangesController do
       expect(assigns(:listing_changes)).to eq([ listing_change2, listing_change1 ])
       expect(assigns(:eu_regulation)).to eq @eu_regulation
     end
+
     it 'renders the index template' do
       get :index, params: { eu_regulation_id: @eu_regulation.id }
       expect(response).to render_template('index')
     end
+
     it 'renders the admin layout' do
       get :index, params: { eu_regulation_id: @eu_regulation.id }
       expect(response).to render_template('layouts/admin')
@@ -58,7 +60,7 @@ describe Admin::ListingChangesController do
   end
 
   describe 'DELETE destroy' do
-    before(:each) do
+    before do
       @listing_change = create(
         :listing_change,
         taxon_concept_id: @taxon_concept.id,
@@ -68,6 +70,7 @@ describe Admin::ListingChangesController do
         effective_at: 1.week.ago
       )
     end
+
     it 'redirects after delete' do
       delete :destroy, params: { id: @listing_change.id, eu_regulation_id: @eu_regulation.id }
       expect(response).to redirect_to(

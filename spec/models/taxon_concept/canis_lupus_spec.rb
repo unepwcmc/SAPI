@@ -20,6 +20,7 @@ describe TaxonConcept do
         context 'for species Canis lupus' do
           specify { expect(@species.cites_listed).to be_truthy }
         end
+
         context 'for subspecies Canis lupus crassodon' do
           specify { expect(@subspecies.cites_listed).to be_blank }
         end
@@ -35,6 +36,7 @@ describe TaxonConcept do
         context 'for species Canis lupus' do
           specify { expect(@species_ac.show_in_species_plus_ac).to be_truthy }
         end
+
         context 'for subspecies Canis lupus crassodon' do
           specify { expect(@subspecies_ac.show_in_species_plus_ac).to be_truthy }
         end
@@ -44,6 +46,7 @@ describe TaxonConcept do
         context 'for species Canis lupus' do
           specify { expect(@species_ac.show_in_checklist_ac).to be_truthy }
         end
+
         context 'for subspecies Canis lupus crassodon' do
           specify { expect(@subspecies_ac.show_in_checklist_ac).to be_falsey }
         end
@@ -53,6 +56,7 @@ describe TaxonConcept do
         context 'for species Canis lupus' do
           specify { expect(@species.show_in_species_plus).to be_truthy }
         end
+
         context 'for subspecies Canis lupus crassodon' do
           specify { expect(@subspecies.show_in_species_plus).to be_truthy }
         end

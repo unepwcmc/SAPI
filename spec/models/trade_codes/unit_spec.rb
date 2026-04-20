@@ -18,17 +18,23 @@ describe Unit do
   describe :destroy do
     context 'when no dependent objects attached' do
       let(:unit) { create(:unit) }
+
       specify { expect(unit.destroy).to be_truthy }
     end
+
     context 'when dependent objects attached' do
       let(:unit) { create(:unit) }
+
       context 'when quotas' do
         let(:geo_entity) { create(:geo_entity) }
         let!(:quota) { create(:quota, unit: unit, geo_entity_id: geo_entity.id) }
+
         specify { expect(unit.destroy).to be_falsey }
       end
+
       context 'when shipments' do
-        before(:each) { create(:shipment, unit: unit) }
+        before { create(:shipment, unit: unit) }
+
         specify { expect(unit.destroy).to be_falsey }
       end
     end

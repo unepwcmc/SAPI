@@ -9,15 +9,18 @@ describe TaxonConcept do
           specify { expect(@family.full_name).to eq('Tapiridae') }
         end
       end
+
       describe :rank do
         context 'for family Tapiridae' do
           specify { expect(@family.rank_name).to eq('FAMILY') }
         end
       end
+
       describe :ancestors do
         context 'order' do
           specify { @species.order_name == 'Perissodactyla' }
         end
+
         context 'class' do
           specify { @species.class_name == 'Mammalia' }
         end
@@ -29,6 +32,7 @@ describe TaxonConcept do
         context 'for family Tapiridae' do
           specify { expect(@family.cites_listing).to eq('I/II') }
         end
+
         context 'for species Tapirus terrestris' do
           specify { expect(@species.cites_listing).to eq('II') }
         end
@@ -38,6 +42,7 @@ describe TaxonConcept do
         context 'for family Tapiridae' do
           specify { expect(@family.eu_listing).to eq('A/B') }
         end
+
         context 'for species Tapirus terrestris' do
           specify { expect(@species.eu_listing).to eq('B') }
         end
@@ -47,9 +52,11 @@ describe TaxonConcept do
         context 'for family Tapiridae' do
           specify { expect(@family.cites_listed).to be_truthy }
         end
+
         context 'for genus Tapirus' do
           specify { expect(@genus.cites_listed).to eq(false) }
         end
+
         context 'for species Tapirus terrestris' do
           specify { expect(@species.cites_listed).to be_truthy }
         end
@@ -59,9 +66,11 @@ describe TaxonConcept do
         context 'for family Tapiridae' do
           specify { expect(@family.eu_listed).to be_truthy }
         end
+
         context 'for genus Tapirus' do
           specify { expect(@genus.eu_listed).to eq(false) }
         end
+
         context 'for species Tapirus terrestris' do
           specify { expect(@species.eu_listed).to be_truthy }
         end

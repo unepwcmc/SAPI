@@ -10,7 +10,7 @@ describe Species::CommonNamesExport do
     end
   end
 
-  describe :export, cache: true do
+  describe :export, :cache do
     context 'when no results' do
       subject do
         Species::CommonNamesExport.new({})
@@ -22,7 +22,11 @@ describe Species::CommonNamesExport do
     end
 
     context 'when results' do
-      before(:each) do
+      subject do
+        Species::CommonNamesExport.new({})
+      end
+
+      before do
         create_cites_eu_species
 
         FileUtils.mkpath(
@@ -33,13 +37,10 @@ describe Species::CommonNamesExport do
           and_return('spec/public/downloads/common_names/')
       end
 
-      after(:each) do
+      after do
         FileUtils.remove_dir('spec/public/downloads/common_names', true)
       end
 
-      subject do
-        Species::CommonNamesExport.new({})
-      end
 
       context 'when file not cached' do
         specify do

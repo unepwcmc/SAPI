@@ -39,19 +39,24 @@ describe Quota, sidekiq: :inline do
 
   describe :create do
     context 'downloads cache should be populated' do
-      before(:each) do
+      subject { Dir["#{DownloadsCache.quotas_path}/*"] }
+
+      before do
         DownloadsCache.clear_quotas
         create(:quota, start_date: Time.utc(2013), geo_entity: create(:geo_entity))
         Quota.export('set' => 'current')
       end
-      subject { Dir["#{DownloadsCache.quotas_path}/*"] }
+
+
       specify { expect(subject).not_to be_empty }
     end
   end
 
   describe :destroy do
     context 'downloads cache should be cleared' do
-      before(:each) do
+      subject { Dir["#{DownloadsCache.quotas_path}/*"] }
+
+      before do
         DownloadsCache.clear_quotas
 
         q = create(
@@ -64,7 +69,8 @@ describe Quota, sidekiq: :inline do
 
         q.destroy
       end
-      subject { Dir["#{DownloadsCache.quotas_path}/*"] }
+
+
       specify do
         # Currently fails because the clearing happens in an after_commit hook,
         # which does not run until the test is over.

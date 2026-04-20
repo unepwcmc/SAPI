@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Admin::HybridRelationshipsController do
   login_admin
 
-  before(:each) { hybrid_relationship_type }
+  before { hybrid_relationship_type }
+
   let(:taxon_concept) { create(:taxon_concept) }
   let(:hybrid) { create(:taxon_concept, name_status: 'H') }
   let(:hybrid_relationship) do
@@ -14,11 +15,13 @@ describe Admin::HybridRelationshipsController do
       other_taxon_concept: hybrid
     )
   end
+
   describe 'XHR GET new' do
     it 'renders the new template' do
       get :new, params: { taxon_concept_id: taxon_concept.id }, xhr: true
       expect(response).to render_template('new')
     end
+
     it 'assigns the hybrid_relationship variable' do
       get :new, params: { taxon_concept_id: taxon_concept.id }, xhr: true
       expect(assigns(:hybrid_relationship)).not_to be_nil
@@ -36,6 +39,7 @@ describe Admin::HybridRelationshipsController do
         }
       expect(response).to render_template('create')
     end
+
     it 'renders new when not successful' do
       post :create, xhr: true, params: {
         taxon_concept_id: taxon_concept.id,
@@ -52,6 +56,7 @@ describe Admin::HybridRelationshipsController do
       get :edit, params: { taxon_concept_id: taxon_concept.id, id: hybrid_relationship.id }, xhr: true
       expect(response).to render_template('new')
     end
+
     it 'assigns the hybrid_relationship variable' do
       get :edit, params: { taxon_concept_id: taxon_concept.id, id: hybrid_relationship.id }, xhr: true
       expect(assigns(:hybrid_relationship)).not_to be_nil
@@ -69,6 +74,7 @@ describe Admin::HybridRelationshipsController do
       }
       expect(response).to render_template('create')
     end
+
     it 'responds with json when not successful' do
       put :update, format: 'js', xhr: true, params: {
         taxon_concept_id: taxon_concept.id,

@@ -3,6 +3,8 @@ require 'spec_helper'
 describe Checklist::HigherTaxaItem do
   describe :ancestors_path do
     context 'when animal' do
+      subject { Checklist::HigherTaxaItem.new(taxon_concept) }
+
       let(:taxon_concept) do
         obj = double(
           'MTaxonConcept',
@@ -14,10 +16,14 @@ describe Checklist::HigherTaxaItem do
           family_name: 'Alligatoridae'
         )
       end
-      subject { Checklist::HigherTaxaItem.new(taxon_concept) }
+
+
       specify { expect(subject.ancestors_path).to eq('Chordata,Reptilia,Crocodylia,Alligatoridae') }
     end
+
     context 'when plant' do
+      subject { Checklist::HigherTaxaItem.new(taxon_concept) }
+
       let(:taxon_concept) do
         obj = double(
           'MTaxonConcept',
@@ -29,7 +35,8 @@ describe Checklist::HigherTaxaItem do
           family_name: 'Agavaceae'
         )
       end
-      subject { Checklist::HigherTaxaItem.new(taxon_concept) }
+
+
       specify { expect(subject.ancestors_path).to eq('Agavaceae') }
     end
   end

@@ -4,7 +4,7 @@ describe Admin::GeoEntitiesController do
   login_admin
 
   describe 'index' do
-    before(:each) do
+    before do
       @geo_entity1 = create(
         :geo_entity,
         geo_entity_type: country_geo_entity_type,
@@ -24,6 +24,7 @@ describe Admin::GeoEntitiesController do
         get :index
         expect(assigns(:geo_entities)).to eq([ @geo_entity2, @geo_entity1 ])
       end
+
       it 'renders the index template' do
         get :index
         expect(response).to render_template('index')
@@ -42,6 +43,7 @@ describe Admin::GeoEntitiesController do
       }
       expect(response).to render_template('create')
     end
+
     it 'renders new when not successful' do
       post :create, xhr: true, params: {
         geo_entity: {
@@ -55,10 +57,12 @@ describe Admin::GeoEntitiesController do
 
   describe 'XHR PUT update JSON' do
     let(:geo_entity) { create(:geo_entity, geo_entity_type: country_geo_entity_type) }
+
     it 'responds with 200 when successful' do
       put :update, format: 'json', params: { id: geo_entity.id, geo_entity: { iso_code2: 'ZZ' } }, xhr: true
       expect(response).to be_successful
     end
+
     it 'responds with json when not successful' do
       put :update, format: 'json', params: { id: geo_entity.id, geo_entity: { iso_code2: nil } }, xhr: true
       expect(response.parsed_body).to include('errors')
@@ -67,6 +71,7 @@ describe Admin::GeoEntitiesController do
 
   describe 'DELETE destroy' do
     let(:geo_entity) { create(:geo_entity) }
+
     it 'redirects after delete' do
       delete :destroy, params: { id: geo_entity.id }
       expect(response).to redirect_to(admin_geo_entities_url)

@@ -9,6 +9,7 @@ describe TaxonConcept do
         context 'for subspecies Pseudomys fieldi preaconis' do
           specify { expect(@subspecies.cites_listing).to eq('I') }
         end
+
         context 'for species Pseudomys fieldi' do
           specify { expect(@species.cites_listing).to eq('I/NC') }
         end
@@ -18,6 +19,7 @@ describe TaxonConcept do
         context 'for subspecies Pseudomys fieldi preaconis' do
           specify { expect(@subspecies.eu_listing).to eq('A') }
         end
+
         context 'for species Pseudomys fieldi' do
           specify { expect(@species.eu_listing).to eq('A/NC') }
         end
@@ -27,6 +29,7 @@ describe TaxonConcept do
         context 'for subspecies Pseudomys fieldi preaconis' do
           specify { expect(@subspecies.cites_show).to be_truthy }
         end
+
         context 'for species Pseudomys fieldi' do
           specify { expect(@species.cites_show).to be_truthy }
         end

@@ -111,7 +111,7 @@ describe Admin::TaxonListingChangesController do
   end
 
   describe 'GET edit' do
-    before(:each) do
+    before do
       @listing_change = create(
         :listing_change,
         taxon_concept_id: @taxon_concept.id,
@@ -135,7 +135,7 @@ describe Admin::TaxonListingChangesController do
   end
 
   describe 'PUT update' do
-    before(:each) do
+    before do
       @annotation = create(:annotation)
       @listing_change = create(
         :listing_change,
@@ -250,7 +250,7 @@ describe Admin::TaxonListingChangesController do
   end
 
   describe 'DELETE destroy' do
-    before(:each) do
+    before do
       @listing_change = create(
         :listing_change,
         taxon_concept_id: @taxon_concept.id,
@@ -273,6 +273,7 @@ describe Admin::TaxonListingChangesController do
       )
     end
   end
+
   describe 'Authorization for contributors' do
     login_contributor
 
@@ -299,6 +300,7 @@ describe Admin::TaxonListingChangesController do
         expect(response).to render_template('layouts/taxon_concepts')
       end
     end
+
     describe 'DELETE destroy' do
       it 'fails to delete and redirects' do
         @request.env['HTTP_REFERER'] =

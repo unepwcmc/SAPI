@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DashboardStats do
   include_context 'Shipments'
   describe '#trade' do
-    before(:each) do
+    before do
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
       @shipment4_by_partner = create(
         :shipment,
@@ -36,6 +36,7 @@ describe DashboardStats do
         quantity: 1
       )
     end
+
     context 'when no time range specified' do
       subject do
         DashboardStats.new(
@@ -45,12 +46,14 @@ describe DashboardStats do
           }
         ).trade
       end
+
       it 'argentina should have 40 exported animals and no imports' do
         expect(subject[:exports][:top_traded].length).to eq(1)
         expect(subject[:exports][:top_traded][0][:count]).to eq 40
         expect(subject[:imports][:top_traded].length).to eq 0
       end
     end
+
     context 'when time range specified' do
       subject do
         DashboardStats.new(
@@ -61,6 +64,7 @@ describe DashboardStats do
           }
         ).trade
       end
+
       it 'argentina should have no exports in 2012-2012' do
         expect(subject[:exports][:top_traded].length).to eq(0)
       end

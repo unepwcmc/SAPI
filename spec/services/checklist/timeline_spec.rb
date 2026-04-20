@@ -229,6 +229,7 @@ describe Checklist::Timeline do
         [ 'ADDITION', 'AMENDMENT' ]
       )
     end
+
     specify { expect(subject.timeline_intervals.count).to eq(2) }
     specify { expect(subject.timeline_intervals[1].end_pos).to eq(1) }
   end
@@ -259,6 +260,7 @@ describe Checklist::Timeline do
         [ 'ADDITION', 'DELETION' ]
       )
     end
+
     specify { expect(subject.timeline_intervals.count).to eq(1) }
     specify { expect(subject.timeline_intervals[0].end_pos).to eq(subject.timeline_events[1].pos) }
   end

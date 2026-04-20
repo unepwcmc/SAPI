@@ -4,7 +4,7 @@ describe Admin::DesignationsController do
   login_admin
 
   describe 'GET index' do
-    before(:each) do
+    before do
       @designation1 = create(:designation, name: 'BB', taxonomy: create(:taxonomy))
       @designation2 = create(:designation, name: 'AA', taxonomy: create(:taxonomy))
     end

@@ -14,11 +14,13 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject.first.full_name).to eq(@species2.full_name)
         expect(subject.size).to eq(1)
       end
     end
+
     context 'by common name' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -29,6 +31,7 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject.first.full_name).to eq(@species2.full_name)
         expect(subject.size).to eq(1)

@@ -10,7 +10,7 @@ shared_context 'output_document_reassignments_processor_examples' do
     )
     citation
   end
-  before(:each) do
+  before do
     create(
       :nomenclature_change_output_reassignment,
       output: output,
@@ -20,6 +20,7 @@ shared_context 'output_document_reassignments_processor_examples' do
     output_processor.run
     processor.run
   end
+
   specify { expect(new_output_species.document_citation_taxon_concepts.count).to eq(1) }
   specify { expect(old_output_subspecies.document_citation_taxon_concepts).to be_empty }
 end

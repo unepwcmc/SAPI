@@ -15,8 +15,10 @@ describe TaxonConcept do
           taxonomic_position: nil
         )
       end
+
       specify { expect(tc.taxonomic_position).to eq('1.1') }
     end
+
     context 'taxonomic position given for fixed order rank' do
       let(:tc) do
         create_cites_eu_phylum(
@@ -24,14 +26,17 @@ describe TaxonConcept do
           taxonomic_position: '1.2'
         )
       end
+
       specify { expect(tc.taxonomic_position).to eq('1.2') }
     end
+
     context 'taxonomic position not given for fixed order root rank' do
       let(:tc) do
         create_cites_eu_kingdom(
           taxonomic_position: nil
         )
       end
+
       specify { expect(tc.taxonomic_position).to eq('1') }
     end
   end
@@ -44,12 +49,14 @@ describe TaxonConcept do
         )
       )
     end
+
     context 'data should be populated when creating a child' do
       let(:tc) do
         create_cites_eu_species(
           parent_id: genus_tc.id
         )
       end
+
       specify { expect(tc.data['family_name']).to eq('Derp') }
       specify { expect(tc.data['rank_name']).to eq(Rank::SPECIES) }
     end

@@ -5,11 +5,14 @@ describe TaxonRelationship do
     context 'a relationship with no opposite' do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_bidirectional: false) }
       let!(:taxon_relationship) { create(:taxon_relationship, taxon_relationship_type_id: taxon_relationship_type.id) }
+
       specify { expect(taxon_relationship.has_opposite?).to eq(false) }
     end
+
     context 'with an opposite' do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_bidirectional: true) }
       let(:taxon_relationship) { create(:taxon_relationship, taxon_relationship_type_id: taxon_relationship_type.id) }
+
       specify { expect(taxon_relationship.has_opposite?).to eq(true) }
     end
   end
@@ -18,12 +21,14 @@ describe TaxonRelationship do
     context 'when creating a bidirectional relationship' do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_bidirectional: true) }
       let!(:taxon_relationship) { create(:taxon_relationship, taxon_relationship_type_id: taxon_relationship_type.id) }
+
       specify { expect(taxon_relationship.has_opposite?).to eq(true) }
     end
 
     context 'when creating a non bidirectional relationship' do
       let(:taxon_relationship_type) { create(:taxon_relationship_type, is_bidirectional: false) }
       let!(:taxon_relationship) { create(:taxon_relationship, taxon_relationship_type_id: taxon_relationship_type.id) }
+
       specify { expect(taxon_relationship.has_opposite?).to eq(false) }
     end
   end
@@ -51,6 +56,7 @@ describe TaxonRelationship do
           taxon_relationship_type_id: taxon_relationship_type.id
         )
       end
+
       specify { taxon_relationship2.valid? == false }
     end
   end
@@ -79,10 +85,12 @@ describe TaxonRelationship do
           taxon_relationship_type_id: taxon_relationship_type2.id
         )
       end
+
       specify do
         expect(taxon_relationship2.valid?).to eq(false)
       end
     end
+
     context 'adding an intertaxonomic relationship between taxon concepts that are already related in the opposite direction (B -> A)' do
       let(:taxonomy) { create(:taxonomy) }
       let(:taxonomy2) { create(:taxonomy) }
@@ -107,10 +115,12 @@ describe TaxonRelationship do
           taxon_relationship_type_id: taxon_relationship_type2.id
         )
       end
+
       specify do
         expect(taxon_relationship2.valid?).to eq(false)
       end
     end
+
     context 'adding an intertaxonomic relationship between taxon concepts that are not already related' do
       let(:taxonomy) { create(:taxonomy) }
       let(:taxonomy2) { create(:taxonomy) }

@@ -9,7 +9,7 @@ class EmailMessageStub
 end
 
 describe SubmissionWorker do
-  before(:each) do
+  before do
     genus = create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Acipenser')
     )
@@ -43,10 +43,11 @@ describe SubmissionWorker do
     allow_any_instance_of(SubmissionWorker).to receive(:upload_on_S3)
     allow_any_instance_of(NotificationMailer).to receive(:mail).and_return(EmailMessageStub.new())
   end
+
   context 'when no primary errors' do
     pending(PENDING_REASON) if PENDING_REASON
 
-    before(:each) do
+    before do
       @aru = build(:annual_report_upload, trading_country_id: @argentina.id, point_of_view: 'I')
       @aru.save(validate: false)
       sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
@@ -65,27 +66,33 @@ describe SubmissionWorker do
       )
       create_year_format_validation
     end
+
     specify do
       expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Shipment.count }.by(1)
     end
+
     specify do
       expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Permit.count }.by(5)
     end
+
     specify 'leading space is stripped' do
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
       expect(Trade::Permit.find_by(number: 'BBB')).not_to be_nil
     end
+
     context 'when permit previously reported' do
-      before(:each) { create(:permit, number: 'xxx') }
+      before { create(:permit, number: 'xxx') }
+
       specify do
         expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Permit.count }.by(4)
       end
     end
   end
+
   context 'when primary errors present' do
     pending(PENDING_REASON) if PENDING_REASON
 
-    before(:each) do
+    before do
       @aru = build(:annual_report_upload)
       @aru.save(validate: false)
       sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
@@ -98,14 +105,16 @@ describe SubmissionWorker do
       )
       create_year_format_validation
     end
+
     specify do
       expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.not_to change { Trade::Shipment.count }
     end
   end
+
   context 'when reported under a synonym' do
     pending(PENDING_REASON) if PENDING_REASON
 
-    before(:each) do
+    before do
       @synonym = create_cites_eu_species(
         name_status: 'S',
         scientific_name: 'Acipenser stenorrhynchus'
@@ -132,13 +141,16 @@ describe SubmissionWorker do
       )
       create_year_format_validation
     end
+
     specify do
       expect { SubmissionWorker.new.perform(@aru.id, @submitter.id) }.to change { Trade::Shipment.count }.by(1)
     end
+
     specify do
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
       expect(Trade::Shipment.first.taxon_concept_id).to eq(@species.id)
     end
+
     specify do
       SubmissionWorker.new.perform(@aru.id, @submitter.id)
       expect(Trade::Shipment.first.reported_taxon_concept_id).to eq(@synonym.id)

@@ -9,6 +9,7 @@ describe TaxonConcept do
         context 'for species Dalbergia abbreviata' do
           specify { expect(@species1.cites_listing).to eq('NC') }
         end
+
         context 'for species Dalbergia abrahamii' do
           specify { expect(@species2.cites_listing).to eq('II') }
         end
@@ -18,6 +19,7 @@ describe TaxonConcept do
         context 'for species Dalbergia abbreviata' do
           specify { expect(@species1.cites_listed).to be_nil }
         end
+
         context 'for species Dalbergia abrahamii' do
           specify { expect(@species2.cites_listed).to eq(false) }
         end
@@ -27,6 +29,7 @@ describe TaxonConcept do
         context 'for species Dalbergia abbreviata' do
           specify { expect(@species1.cites_show).to be_falsey }
         end
+
         context 'for species Dalbergia abrahamii' do
           specify { expect(@species2.cites_show).to be_truthy }
         end

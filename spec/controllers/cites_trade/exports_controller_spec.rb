@@ -11,6 +11,7 @@ describe CitesTrade::ExportsController do
         expect(parse_json(response.body)['total']).to eq(1)
       end
     end
+
     context 'comptab' do
       it 'returns comptab shipments file' do
         create(:shipment)
@@ -21,6 +22,7 @@ describe CitesTrade::ExportsController do
         expect(response.content_type).to eq('text/csv')
         expect(response.headers['Content-Disposition']).to eq("attachment; filename=\"shipments.csv\"; filename*=UTF-8''shipments.csv")
       end
+
       it 'logs download information from public interface to the TradeDataDownload model' do
         create(:shipment)
         allow_any_instance_of(Trade::ShipmentsExport).to receive(:public_file_name).and_return('shipments.csv')
@@ -38,10 +40,12 @@ describe CitesTrade::ExportsController do
         end.to change(Trade::TradeDataDownload, :count).by(1)
       end
     end
+
     context 'when shipments cannot be retrieved' do
-      before(:each) do
+      before do
         allow_any_instance_of(Trade::ShipmentsExport).to receive(:export).and_return(false)
       end
+
       it 'redirects to home page' do
         get :download, params: { filters: { report_type: :comptab } }
         expect(response).to redirect_to(cites_trade_root_url)

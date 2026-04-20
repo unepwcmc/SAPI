@@ -16,7 +16,7 @@
 
 require 'spec_helper'
 
-describe Trade::InclusionValidationRule, drops_tables: true do
+describe Trade::InclusionValidationRule, :drops_tables do
   let(:canada) do
     create(
       :geo_entity,
@@ -41,7 +41,8 @@ describe Trade::InclusionValidationRule, drops_tables: true do
       iso_code2: 'XX'
     )
   end
-  before(:each) do
+
+  before do
     genus = create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Pecari')
     )
@@ -55,9 +56,14 @@ describe Trade::InclusionValidationRule, drops_tables: true do
       geo_entity: argentina
     )
   end
+
   describe :validation_errors_for_aru do
     context "when W source and country of origin blank and exporter doesn't match distribution (E)" do
-      before(:each) do
+      subject do
+        create_taxon_concept_exporter_validation
+      end
+
+      before do
         @aru = build(:annual_report_upload, point_of_view: 'E', trading_country_id: canada.id)
         @aru.save(validate: false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
@@ -68,16 +74,20 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           taxon_name: 'Pecari tajacu', source_code: 'W', country_of_origin: argentina.iso_code2
         )
       end
-      subject do
-        create_taxon_concept_exporter_validation
-      end
+
+
       specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru).size).to eq(1)
       end
     end
+
     context "when W source and country of origin blank and exporter doesn't match distribution (I)" do
-      before(:each) do
+      subject do
+        create_taxon_concept_exporter_validation
+      end
+
+      before do
         @aru = build(:annual_report_upload, point_of_view: 'I', trading_country_id: argentina.id)
         @aru.save(validate: false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
@@ -91,16 +101,20 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           country_of_origin: argentina.iso_code2
         )
       end
-      subject do
-        create_taxon_concept_exporter_validation
-      end
+
+
       specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru).size).to eq(1)
       end
     end
+
     context 'when W source and country XX' do
-      before(:each) do
+      subject do
+        create_taxon_concept_exporter_validation
+      end
+
+      before do
         @aru = build(:annual_report_upload, point_of_view: 'I', trading_country_id: argentina.id)
         @aru.save(validate: false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
@@ -114,16 +128,20 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           country_of_origin: argentina.iso_code2
         )
       end
-      subject do
-        create_taxon_concept_exporter_validation
-      end
+
+
       specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru)).to be_empty
       end
     end
+
     context "when W source and country doesn't match distribution of higher taxa" do
-      before(:each) do
+      subject do
+        create_taxon_concept_exporter_validation
+      end
+
+      before do
         @aru = build(:annual_report_upload, point_of_view: 'I', trading_country_id: argentina.id)
         @aru.save(validate: false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
@@ -137,16 +155,20 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           country_of_origin: canada.iso_code2
         )
       end
-      subject do
-        create_taxon_concept_exporter_validation
-      end
+
+
       specify do
         subject.refresh_errors_if_needed(@aru)
         expect(subject.validation_errors_for_aru(@aru)).to be_empty
       end
     end
+
     context 'when invalid scope specified' do
-      before(:each) do
+      subject do
+        create_taxon_concept_exporter_validation
+      end
+
+      before do
         @aru = build(:annual_report_upload, point_of_view: 'E', trading_country_id: canada.id)
         @aru.save(validate: false)
         sandbox_klass = Trade::SandboxTemplate.ar_klass(@aru.sandbox.table_name)
@@ -154,11 +176,10 @@ describe Trade::InclusionValidationRule, drops_tables: true do
           taxon_name: 'Pecari tajacu', source_code: 'W', country_of_origin: argentina.iso_code2
         )
       end
-      subject do
-        create_taxon_concept_exporter_validation
-      end
+
+
       specify do
-        expect { subject.validation_errors_for_aru(@aru) }.to_not raise_error
+        expect { subject.validation_errors_for_aru(@aru) }.not_to raise_error
       end
     end
   end

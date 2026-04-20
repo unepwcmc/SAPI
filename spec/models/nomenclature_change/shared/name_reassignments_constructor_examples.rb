@@ -3,6 +3,7 @@ shared_context 'name_reassignments_constructor_examples' do
     context 'when no names' do
       specify { expect(input.name_reassignments.size).to eq(0) }
     end
+
     context 'when names' do
       let(:input_species) do
         s = create_cites_eu_species
@@ -16,15 +17,18 @@ shared_context 'name_reassignments_constructor_examples' do
         end
         s
       end
+
       specify { expect(input.name_reassignments.size).to eq(2) }
     end
   end
+
   context 'when previously reassignments in place' do
     let(:input) do
       i = create(:nomenclature_change_input, nomenclature_change: nc, taxon_concept: input_species)
       create(:nomenclature_change_name_reassignment, input: i)
       i
     end
+
     specify { expect(input.name_reassignments).to eq(@old_reassignments) }
   end
 end

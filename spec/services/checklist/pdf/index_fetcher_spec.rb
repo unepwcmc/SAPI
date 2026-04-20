@@ -37,6 +37,8 @@ describe Checklist::Pdf::IndexFetcher do
   let(:rel) { MTaxonConcept.by_scientific_name('Lolcatus') }
 
   context 'with common names' do
+    subject { Checklist::Pdf::IndexFetcher.new(query) }
+
     let(:query) do
       Checklist::Pdf::IndexQuery.new(
         rel, {
@@ -45,10 +47,14 @@ describe Checklist::Pdf::IndexFetcher do
         }
       )
     end
-    subject { Checklist::Pdf::IndexFetcher.new(query) }
+
+
     specify { expect(subject.next.first.sort_name).to eq('lolcat, Domestic') }
   end
+
   context 'with synonyms and authors' do
+    subject { Checklist::Pdf::IndexFetcher.new(query) }
+
     let!(:synonym) do
       create(
         :taxon_concept,
@@ -73,7 +79,8 @@ describe Checklist::Pdf::IndexFetcher do
         }
       )
     end
-    subject { Checklist::Pdf::IndexFetcher.new(query) }
+
+
     specify { expect(subject.next.first.sort_name).to eq('Catus fluffianus') }
   end
 end

@@ -10,6 +10,7 @@ describe TaxonConcept do
           specify { expect(@species1.full_name).to eq('Alligator cynocephalus') }
         end
       end
+
       describe :rank_name do
         context 'for species synonym Alligator cynocephalus' do
           specify { expect(@species1.rank_name).to eq(Rank::SPECIES) }
@@ -22,16 +23,19 @@ describe TaxonConcept do
         context 'for species Caiman latirostris' do
           specify { expect(@species.cites_accepted).to be_truthy }
         end
+
         context 'for synonym species Alligator cynocephalus' do
           specify { expect(@species1.cites_accepted).to eq(false) }
         end
       end
+
       describe :standard_taxon_concept_references do
         context 'for species Caiman latirostris' do
           specify { expect(@species.taxon_concept.standard_taxon_concept_references.map(&:reference_id)).to include @ref.id }
         end
       end
     end
+
     context 'LISTING' do
       describe :cites_listing do
         context 'for species Caiman latirostris' do
@@ -49,12 +53,15 @@ describe TaxonConcept do
         context 'for order Crocodylia' do
           specify { expect(@order.cites_listed).to be_truthy }
         end
+
         context 'for family Alligatoridae' do
           specify { expect(@family.cites_listed).to eq(false) }
         end
+
         context 'for genus Caiman' do
           specify { expect(@genus.cites_listed).to eq(false) }
         end
+
         context 'for species Caiman latoristris' do
           specify { expect(@species.cites_listed).to be_truthy }
         end
@@ -64,12 +71,15 @@ describe TaxonConcept do
         context 'for order Crocodylia' do
           specify { expect(@order.eu_listed).to be_truthy }
         end
+
         context 'for family Alligatoridae' do
           specify { expect(@family.eu_listed).to eq(false) }
         end
+
         context 'for genus Caiman' do
           specify { expect(@genus.eu_listed).to eq(false) }
         end
+
         context 'for species Caiman latoristris' do
           specify { expect(@species.eu_listed).to be_truthy }
         end
@@ -79,15 +89,19 @@ describe TaxonConcept do
         context 'for order Crocodylia' do
           specify { expect(@order.cites_show).to be_truthy }
         end
+
         context 'for family Alligatoridae' do
           specify { expect(@family.cites_show).to be_truthy }
         end
+
         context 'for genus Caiman' do
           specify { expect(@genus.cites_show).to be_truthy }
         end
+
         context 'for species Caiman latoristris' do
           specify { expect(@species.cites_show).to be_truthy }
         end
+
         context 'for synonym species Alligator cynocephalus' do
           specify { expect(@species1.cites_show).to be_falsey }
         end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Api::V1::DocumentsController do
-  before(:each) do
+  before do
     @taxon_concept = create_cites_eu_species
     @subspecies = create_cites_eu_subspecies(parent: @taxon_concept)
     @document = create(:proposal, is_public: true, event: create_cites_cop)
@@ -61,13 +61,14 @@ describe Api::V1::DocumentsController do
       get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response.body).to have_json_size(3).at_path('documents')
     end
-    context 'GET index api user ' do
+    context 'GET index api user' do
       login_api_user
 
       it 'returns only public documents' do
         get_public_documents
       end
     end
+
     context 'GET index no user' do |variable|
       it 'returns only public documents' do
         get_public_documents
@@ -80,7 +81,7 @@ describe Api::V1::DocumentsController do
       get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response.body).to have_json_size(3).at_path('documents')
     end
-    context 'GET index api user ' do
+    context 'GET index api user' do
       login_secretariat_user
 
       it 'returns only public documents' do
@@ -91,9 +92,9 @@ describe Api::V1::DocumentsController do
 
   context 'show action fails' do
     login_api_user
-    it 'should return 403 status when permission denied' do
+    it 'returns 403 status when permission denied' do
       get :show, params: { id: @document2.id }
-      expect(response).to have_http_status(403)
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
@@ -106,12 +107,13 @@ describe Api::V1::DocumentsController do
 
   context 'download documents' do
     context 'single document selected' do
-      it 'should return 404 if file is missing' do
+      it 'returns 404 if file is missing' do
         @document2.file.purge
         get :download_zip, params: { ids: @document2.id }
-        expect(response).to have_http_status(404)
+        expect(response).to have_http_status(:not_found)
       end
-      it 'should return zip file if file is found' do
+
+      it 'returns zip file if file is found' do
         allow(controller).to receive(:render)
         get :download_zip, params: { ids: @document2.id }
         expect(response.headers['Content-Type']).to eq 'application/zip'
@@ -119,14 +121,14 @@ describe Api::V1::DocumentsController do
     end
 
     context 'multiple documents selected' do
-      it 'should return 404 if all files are missing' do
+      it 'returns 404 if all files are missing' do
         @document.file.purge
         @document2.file.purge
         get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
-        expect(response).to have_http_status(404)
+        expect(response).to have_http_status(:not_found)
       end
 
-      it 'should return zip file if at least a file is found' do
+      it 'returns zip file if at least a file is found' do
         @document.file.purge
         get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
         expect(response.headers['Content-Type']).to eq 'application/zip'
@@ -134,7 +136,7 @@ describe Api::V1::DocumentsController do
     end
 
     context 'cascading documents logic' do
-      it 'should get subspecies documents' do
+      it 'gets subspecies documents' do
         get :index, params: { taxon_concepts_ids: [ @taxon_concept.id ] }
         expect(response.body).to have_json_size(3).at_path('documents')
       end

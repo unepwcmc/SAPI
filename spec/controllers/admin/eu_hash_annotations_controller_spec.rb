@@ -4,7 +4,7 @@ describe Admin::EuHashAnnotationsController do
   login_admin
 
   describe 'index' do
-    before(:each) do
+    before do
       reg1 = create_eu_regulation(name: 'Regulation1')
       reg2 = create_eu_regulation(name: 'Regulation2')
       @annotation1 = create(
@@ -22,6 +22,7 @@ describe Admin::EuHashAnnotationsController do
         get :index
         expect(assigns(:annotations)).to eq([ @annotation2, @annotation1 ])
       end
+
       it 'renders the index template' do
         get :index
         expect(response).to render_template('index')

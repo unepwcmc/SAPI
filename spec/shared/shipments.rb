@@ -1,5 +1,5 @@
 shared_context 'Shipments' do
-  before(:each) do
+  before do
     @animal_family = create_cites_eu_family(
       parent: create_cites_eu_order(
         parent: cites_eu_mammalia

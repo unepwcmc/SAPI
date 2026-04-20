@@ -5,7 +5,7 @@ describe ApiRequest do
     create(:user, role: 'api')
   end
 
-  before(:each) do
+  before do
     create(
       :api_request,
       user_id: api_user.id,
@@ -34,6 +34,7 @@ describe ApiRequest do
     subject do
       ApiRequest.top_50_most_active_users
     end
+
     specify do
       expect(subject.first.user_id).to eq(api_user.id)
     end
@@ -43,6 +44,7 @@ describe ApiRequest do
     subject do
       ApiRequest.recent_requests
     end
+
     specify do
       expect(subject).to eq(
         {
@@ -59,6 +61,7 @@ describe ApiRequest do
     subject do
       ApiRequest.requests_by_response_status
     end
+
     specify do
       expect(subject).to eq(
         {
@@ -77,6 +80,7 @@ describe ApiRequest do
     subject do
       ApiRequest.requests_by_controller
     end
+
     specify do
       expect(subject).to eq(
         {

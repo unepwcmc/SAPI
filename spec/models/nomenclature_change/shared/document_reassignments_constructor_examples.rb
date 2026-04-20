@@ -3,6 +3,7 @@ shared_context 'document_reassignments_constructor_examples' do
     context 'when no document citations' do
       specify { expect(input.document_citation_reassignments.size).to eq(0) }
     end
+
     context 'when document citations' do
       let(:input_species) do
         s = create_cites_eu_species
@@ -11,6 +12,7 @@ shared_context 'document_reassignments_constructor_examples' do
         2.times { create(:document_citation, taxon_concepts: [ s ], geo_entities: [ ge ]) }
         s
       end
+
       specify { expect(input.document_citation_reassignments.size).to eq(2) }
     end
   end

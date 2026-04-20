@@ -9,9 +9,11 @@ describe TaxonConcept do
         context 'for genus Pereskia (not listed, shown)' do
           specify { expect(@genus1.cites_listing).to eq('NC') }
         end
+
         context 'for genus Ariocarpus' do
           specify { expect(@genus2.cites_listing).to eq('I') }
         end
+
         context 'for family Cactaceae' do
           specify { expect(@family.cites_listing).to eq('I/II/NC') }
         end
@@ -21,9 +23,11 @@ describe TaxonConcept do
         context 'for genus Pereskia (not listed, shown)' do
           specify { expect(@genus1.eu_listing).to eq('NC') }
         end
+
         context 'for genus Ariocarpus' do
           specify { expect(@genus2.eu_listing).to eq('A') }
         end
+
         context 'for family Cactaceae' do
           specify { expect(@family.eu_listing).to eq('A/B/NC') }
         end
@@ -33,6 +37,7 @@ describe TaxonConcept do
         context 'for family Cactaceae' do
           specify { expect(@family.cites_listed).to be_truthy }
         end
+
         context 'for genus Pereskia' do
           specify { expect(@genus1.cites_listed).to be_nil }
         end
@@ -42,6 +47,7 @@ describe TaxonConcept do
         context 'for family Cactaceae' do
           specify { expect(@family.eu_listed).to be_truthy }
         end
+
         context 'for genus Pereskia' do
           specify { expect(@genus1.eu_listed).to be_nil }
         end

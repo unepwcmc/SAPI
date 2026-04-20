@@ -4,7 +4,7 @@ describe Admin::TaxonomiesController do
   login_admin
 
   describe 'index' do
-    before(:each) do
+    before do
       @taxonomy1 = create(:taxonomy, name: 'BB')
       @taxonomy2 = create(:taxonomy, name: 'AA')
     end
@@ -14,11 +14,13 @@ describe Admin::TaxonomiesController do
         get :index
         expect(assigns(:taxonomies)).to eq([ @taxonomy2, @taxonomy1 ])
       end
+
       it 'renders the index template' do
         get :index
         expect(response).to render_template('index')
       end
     end
+
     describe 'XHR GET index JSON' do
       it 'renders json for dropdown' do
         get :index, format: 'json', xhr: true
@@ -33,6 +35,7 @@ describe Admin::TaxonomiesController do
       post :create, params: { taxonomy: attributes_for(:taxonomy) }, xhr: true
       expect(response).to render_template('create')
     end
+
     it 'renders new when not successful' do
       post :create, params: { taxonomy: { name: nil } }, xhr: true
       expect(response).to render_template('new')
@@ -41,10 +44,12 @@ describe Admin::TaxonomiesController do
 
   describe 'XHR PUT update JSON' do
     let(:taxonomy) { create(:taxonomy) }
+
     it 'responds with 200 when successful' do
       put :update, format: 'json', params: { id: taxonomy.id, taxonomy: { name: 'ZZ' } }, xhr: true
       expect(response).to be_successful
     end
+
     it 'responds with json when not successful' do
       put :update, format: 'json', params: { id: taxonomy.id, taxonomy: { name: nil } }, xhr: true
       expect(response.parsed_body).to include('errors')
@@ -53,6 +58,7 @@ describe Admin::TaxonomiesController do
 
   describe 'DELETE destroy' do
     let(:taxonomy) { create(:taxonomy) }
+
     it 'redirects after delete' do
       delete :destroy, params: { id: taxonomy.id }
       expect(response).to redirect_to(admin_taxonomies_url)
@@ -67,8 +73,10 @@ describe Admin::TaxonomiesController do
         expect(response).to redirect_to admin_root_path
       end
     end
+
     describe 'DELETE destroy' do
       let(:taxonomy) { create(:taxonomy) }
+
       it 'fails to delete and redirects to admin_root_path' do
         delete :destroy, params: { id: taxonomy.id }
         expect(response).to redirect_to(admin_root_path)

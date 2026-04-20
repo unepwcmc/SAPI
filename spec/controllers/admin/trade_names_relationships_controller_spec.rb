@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Admin::TradeNameRelationshipsController do
   login_admin
 
-  before(:each) { trade_name_relationship_type }
+  before { trade_name_relationship_type }
+
   let(:taxon_concept) { create(:taxon_concept) }
   let(:trade_name) { create(:taxon_concept, name_status: 'T') }
   let(:trade_name_relationship) do
@@ -14,11 +15,13 @@ describe Admin::TradeNameRelationshipsController do
       other_taxon_concept: trade_name
     )
   end
+
   describe 'XHR GET new' do
     it 'renders the new template' do
       get :new, params: { taxon_concept_id: taxon_concept.id }, xhr: true
       expect(response).to render_template('new')
     end
+
     it 'assigns the trade_name_relationship variable' do
       get :new, params: { taxon_concept_id: taxon_concept.id }, xhr: true
       expect(assigns(:trade_name_relationship)).not_to be_nil
@@ -36,6 +39,7 @@ describe Admin::TradeNameRelationshipsController do
         }
       expect(response).to render_template('create')
     end
+
     it 'renders new when not successful' do
       post :create, xhr: true,
         params: {
@@ -56,6 +60,7 @@ describe Admin::TradeNameRelationshipsController do
       }, xhr: true
       expect(response).to render_template('new')
     end
+
     it 'assigns the trade_name_relationship variable' do
       get :edit, params: {
         taxon_concept_id: taxon_concept.id,
@@ -77,6 +82,7 @@ describe Admin::TradeNameRelationshipsController do
         }
       expect(response).to render_template('create')
     end
+
     it 'responds with json when not successful' do
       put :update, format: 'js', xhr: true,
         params: {

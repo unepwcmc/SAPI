@@ -9,6 +9,7 @@ describe TaxonConcept do
         context 'for species Ailuropoda melanoleuca' do
           specify { expect(@species.cites_listing).to eq('I') }
         end
+
         context 'for genus level Ailuropoda' do
           specify { expect(@genus.cites_listing).to eq('I') }
         end
@@ -18,6 +19,7 @@ describe TaxonConcept do
         context 'for species Ailuropoda melanoleuca' do
           specify { expect(@species.eu_listing).to eq('A') }
         end
+
         context 'for genus level Ailuropoda' do
           specify { expect(@genus.eu_listing).to eq('A') }
         end
@@ -27,6 +29,7 @@ describe TaxonConcept do
         context 'for genus Ailuropoda' do
           specify { expect(@genus.cites_listed).to be_falsey }
         end
+
         context 'for species Ailuropoda melanoleuca' do
           specify { expect(@species.cites_listed).to be_truthy }
         end
@@ -36,6 +39,7 @@ describe TaxonConcept do
         context 'for genus Ailuropoda' do
           specify { expect(@genus.eu_listed).to be_falsey }
         end
+
         context 'for species Ailuropoda melanoleuca' do
           specify { expect(@species.eu_listed).to be_truthy }
         end

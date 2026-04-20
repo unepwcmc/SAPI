@@ -1,5 +1,5 @@
 shared_context 'output_common_name_reassignments_processor_examples' do
-  before(:each) do
+  before do
     create(
       :nomenclature_change_output_reassignment,
       output: output,
@@ -9,6 +9,7 @@ shared_context 'output_common_name_reassignments_processor_examples' do
     output_processor.run
     processor.run
   end
+
   specify { expect(new_output_species.common_names.count).to eq(2) }
   specify { expect(old_output_subspecies.common_names).to be_empty }
 end

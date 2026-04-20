@@ -14,6 +14,7 @@ describe Admin::EuSuspensionsController do
       get :index, params: { eu_suspension_regulation_id: @eu_suspension_regulation }
       expect(response).to render_template('index')
     end
+
     it 'renders the admin layout' do
       get :index, params: { eu_suspension_regulation_id: @eu_suspension_regulation }
       expect(response).to render_template('layouts/admin')
@@ -21,13 +22,14 @@ describe Admin::EuSuspensionsController do
   end
 
   describe 'DELETE destroy' do
-    before(:each) do
+    before do
       @eu_suspension = create(
         :eu_suspension,
         taxon_concept_id: @taxon_concept.id,
         start_event_id: @eu_suspension_regulation.id
       )
     end
+
     it 'redirects after delete' do
       delete :destroy, params: { id: @eu_suspension.id, eu_suspension_regulation_id: @eu_suspension_regulation.id }
       expect(response).to redirect_to(

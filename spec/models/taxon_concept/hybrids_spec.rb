@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  before(:each) { hybrid_relationship_type }
+  before { hybrid_relationship_type }
+
   describe :create do
     let(:parent) do
       create_cites_eu_genus(
@@ -29,36 +30,44 @@ describe TaxonConcept do
         other_taxon_concept_id: hybrid.id
       )
     end
+
     context 'when new' do
       specify do
         expect(tc.has_hybrids?).to be_truthy
       end
+
       specify do
         expect(hybrid.is_hybrid?).to be_truthy
       end
+
       specify do
         expect(hybrid.has_hybrid_parents?).to be_truthy
       end
+
       specify do
         expect(hybrid.full_name).to eq('Lolcatus lolcatus x lolatus')
       end
     end
+
     context 'when duplicate' do
       let(:duplicate) do
         hybrid.dup
       end
+
       specify do
         expect do
           duplicate.save
-        end.to change(TaxonConcept, :count).by(0)
+        end.not_to change(TaxonConcept, :count)
       end
     end
+
     context 'when duplicate but author name different' do
       let(:duplicate) do
         res = hybrid.dup
         res.author_year = 'Hemulen 2013'
         res
       end
+
       specify do
         expect do
           duplicate.save

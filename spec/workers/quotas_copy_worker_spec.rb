@@ -48,9 +48,10 @@ describe QuotasCopyWorker do
   end
 
   describe 'Copy single quota, for a given year' do
-    before(:each) do
+    before do
       QuotasCopyWorker.new.perform(job_defaults)
     end
+
     specify { expect(Quota.count(true)).to eq(2) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(1) }
     specify { expect(Quota.where(is_current: false).count(true)).to eq(1) }
@@ -58,7 +59,7 @@ describe QuotasCopyWorker do
   end
 
   describe 'Try to copy quota from wrong year' do
-    before(:each) do
+    before do
       QuotasCopyWorker.new.perform(
         job_defaults.merge(
           {
@@ -67,24 +68,26 @@ describe QuotasCopyWorker do
         )
       )
     end
+
     specify { expect(Quota.count(true)).to eq(1) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(1) }
     specify { expect(Quota.where(is_current: false).count(true)).to eq(0) }
   end
 
   describe 'Copy quota when there are no current quotas' do
-    before(:each) do
+    before do
       quota.is_current = false
       quota.save
       QuotasCopyWorker.new.perform(job_defaults)
     end
+
     specify { expect(Quota.count(true)).to eq(1) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(0) }
     specify { expect(Quota.where(is_current: false).count(true)).to eq(1) }
   end
 
   describe 'When multiple quotas copy quota for given country' do
-    before(:each) do
+    before do
       geo_entity2 = create(:geo_entity)
       tc2 = create(
         :taxon_concept,
@@ -106,6 +109,7 @@ describe QuotasCopyWorker do
         )
       )
     end
+
     specify { expect(Quota.count(true)).to eq(3) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
     specify { expect(Quota.where(is_current: true).map(&:id)).to include(@quota2.id) }
@@ -114,7 +118,7 @@ describe QuotasCopyWorker do
   end
 
   describe 'When multiple quotas copy quota for both countries' do
-    before(:each) do
+    before do
       geo_entity2 = create(:geo_entity)
       tc2 = create(
         :taxon_concept,
@@ -136,6 +140,7 @@ describe QuotasCopyWorker do
         )
       )
     end
+
     specify { expect(Quota.count(true)).to eq(4) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
     specify { expect(Quota.where(is_current: false).count(true)).to eq(2) }
@@ -144,7 +149,7 @@ describe QuotasCopyWorker do
   end
 
   describe "When multiple quotas don't copy quota for given country" do
-    before(:each) do
+    before do
       geo_entity2 = create(:geo_entity)
       tc2 = create(
         :taxon_concept,
@@ -166,6 +171,7 @@ describe QuotasCopyWorker do
         )
       )
     end
+
     specify { expect(Quota.count(true)).to eq(3) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
     specify { expect(Quota.where(is_current: true).map(&:id)).to include(@quota2.id) }
@@ -174,7 +180,7 @@ describe QuotasCopyWorker do
   end
 
   describe 'When multiple quotas copy quota for given taxon_concept' do
-    before(:each) do
+    before do
       geo_entity2 = create(:geo_entity)
       tc = create(:taxon_concept)
       @quota2 = create(
@@ -193,6 +199,7 @@ describe QuotasCopyWorker do
         )
       )
     end
+
     specify { expect(Quota.count(true)).to eq(3) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
     specify { expect(Quota.where(is_current: true).map(&:id)).to include(@quota2.id) }
@@ -201,7 +208,7 @@ describe QuotasCopyWorker do
   end
 
   describe 'When multiple quotas copy quota for both taxon_concepts' do
-    before(:each) do
+    before do
       geo_entity2 = create(:geo_entity)
       tc = create(
         :taxon_concept,
@@ -223,6 +230,7 @@ describe QuotasCopyWorker do
         )
       )
     end
+
     specify { expect(Quota.count(true)).to eq(4) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
     specify { expect(Quota.where(is_current: true).map(&:id)).not_to include(@quota2.id) }
@@ -231,7 +239,7 @@ describe QuotasCopyWorker do
   end
 
   describe "When multiple quotas don't copy quota for given taxon_concept" do
-    before(:each) do
+    before do
       geo_entity2 = create(:geo_entity)
       tc = create(:taxon_concept, taxonomy_id: taxonomy.id)
       @quota2 = create(
@@ -250,6 +258,7 @@ describe QuotasCopyWorker do
         )
       )
     end
+
     specify { expect(Quota.count(true)).to eq(3) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
     specify { expect(Quota.where(is_current: true).map(&:id)).to include(@quota2.id) }
@@ -258,7 +267,7 @@ describe QuotasCopyWorker do
   end
 
   describe 'When text to replace passed, should be replaced' do
-    before(:each) do
+    before do
       geo_entity2 = create(:geo_entity)
       tc = create(:taxon_concept, taxonomy_id: taxonomy.id)
       @quota2 = create(
@@ -279,6 +288,7 @@ describe QuotasCopyWorker do
         )
       )
     end
+
     specify { expect(Quota.count(true)).to eq(4) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
     specify { expect(Quota.where(is_current: true).map(&:id)).not_to include(@quota2.id) }
@@ -290,7 +300,7 @@ describe QuotasCopyWorker do
   end
 
   describe 'When url passed, should be replaced' do
-    before(:each) do
+    before do
       geo_entity2 = create(:geo_entity)
       tc = create(:taxon_concept, taxonomy_id: taxonomy.id)
       @quota2 = create(
@@ -304,6 +314,7 @@ describe QuotasCopyWorker do
       )
       QuotasCopyWorker.new.perform(job_defaults.merge({ 'url' => 'http://myurl.co.uk' }))
     end
+
     specify { expect(Quota.count(true)).to eq(4) }
     specify { expect(Quota.where(is_current: true).count(true)).to eq(2) }
     specify { expect(Quota.where(is_current: true).map(&:id)).not_to include(@quota2.id) }

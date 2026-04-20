@@ -71,27 +71,27 @@ RSpec.configure do |config|
     RequestStore.store[:track_who_does_it_current_user] = @user
   end
 
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.strategy = :transaction
   end
 
-  config.before(:each, drops_tables: true) do
+  config.before(:each, :drops_tables) do
     DatabaseCleaner.strategy = :deletion, { cache_tables: false }
     ApplicationRecord.connection.execute('SELECT * FROM drop_trade_sandboxes()')
   end
 
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.after do
     DatabaseCleaner.clean
     # this is duplicated here because of the :drops_tables specs
     @user = create(:user)
     RequestStore.store[:track_who_does_it_current_user] = @user
   end
 
-  config.before(:each) do |example|
+  config.before do |example|
     # Clears out the jobs for tests using the fake testing
     Sidekiq::Worker.clear_all
     # Get the current example from the example_method object
@@ -107,7 +107,7 @@ RSpec.configure do |config|
     end
   end
 
-  config.before(:each) do |example|
+  config.before do |example|
     if example.metadata[:cache]
       memory_store = ActiveSupport::Cache.lookup_store(:memory_store)
 

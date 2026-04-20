@@ -147,6 +147,7 @@ describe Species::TaxonConceptPrefixMatcher do
 
         specify { expect(subject.results).to include(@family_ac) }
       end
+
       # check ranks filtering
       context 'when explicitly listed higher taxon but ranks expected FAMILY' do
         subject do
@@ -176,7 +177,7 @@ describe Species::TaxonConceptPrefixMatcher do
         specify { expect(subject.results).to be_empty }
       end
 
-      context 'when searching for name that matches Species and Subspecies but  ranks expected SUBSPECIES' do
+      context 'when searching for name that matches Species and Subspecies but ranks expected SUBSPECIES' do
         subject do
           Species::TaxonConceptPrefixMatcher.new(
             {

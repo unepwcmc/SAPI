@@ -6,7 +6,7 @@ shared_context 'output_distribution_reassignments_processor_examples' do
       iso_code2: 'PL'
     )
   end
-  before(:each) do
+  before do
     create(:preset_tag, model: 'Distribution', name: 'extinct')
     d = create(
       :distribution,
@@ -24,6 +24,7 @@ shared_context 'output_distribution_reassignments_processor_examples' do
     output_processor.run
     processor.run
   end
+
   specify { expect(new_output_species.distributions.reload.count).to eq(2) }
   specify { expect(new_output_species.distributions.find_by(geo_entity_id: poland.id)).not_to be_nil }
   specify { expect(new_output_species.distributions.find_by(geo_entity_id: poland.id).tag_list).to eq([ 'extinct' ]) }

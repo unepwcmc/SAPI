@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe TaxonConcept do
-  before(:each) { synonym_relationship_type }
+  before { synonym_relationship_type }
+
   describe :create do
     let(:parent) do
       create_cites_eu_genus(
@@ -29,44 +30,53 @@ describe TaxonConcept do
         other_taxon_concept_id: synonym.id
       )
     end
+
     context 'when new' do
       specify do
         expect(tc.has_synonyms?).to be_truthy
       end
+
       specify do
         expect(synonym.is_synonym?).to be_truthy
       end
+
       specify do
         expect(synonym.has_accepted_names?).to be_truthy
       end
+
       specify do
         expect(synonym.full_name).to eq('Lolcatus lolus')
       end
     end
+
     context 'when duplicate' do
       let(:duplicate) do
         synonym.dup
       end
+
       specify do
         expect do
           duplicate.save
-        end.to change(TaxonConcept, :count).by(0)
+        end.not_to change(TaxonConcept, :count)
       end
     end
+
     context 'when duplicate but author name different' do
       let(:duplicate) do
         res = synonym.dup
         res.author_year = 'Hemulen 2013'
         res
       end
+
       specify do
         expect do
           duplicate.save
         end.to change(TaxonConcept, :count).by(1)
       end
     end
+
     context 'when has accepted parent' do
-      before(:each) do
+      before do
         @subspecies = create_cites_eu_subspecies(
           parent: tc,
           taxon_name: create(:taxon_name, scientific_name: 'perfidius')
@@ -84,12 +94,15 @@ describe TaxonConcept do
           other_taxon_concept: @synonym
         )
       end
+
       # should not modify a synonym's full name when saving
       specify { expect(@synonym.full_name).to eq('Lolcatus lolus furiatus') }
+
       context 'overnight calculations' do
-        before(:each) do
+        before do
           SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
+
         # should not modify a synonym's full name overnight
         specify { expect(@synonym.reload.full_name).to eq('Lolcatus lolus furiatus') }
       end

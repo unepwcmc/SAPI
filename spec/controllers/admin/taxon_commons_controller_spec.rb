@@ -59,7 +59,7 @@ describe Admin::TaxonCommonsController do
       expect(response).to render_template('new')
     end
 
-    it 'assigns the  taxon common variable' do
+    it 'assigns the taxon common variable' do
       get :edit, params: { taxon_concept_id: @taxon_concept.id, id: @taxon_common.id }, xhr: true
 
       expect(assigns(:taxon_common)).not_to be_nil
@@ -90,6 +90,7 @@ describe Admin::TaxonCommonsController do
 
       expect(response).to render_template('create')
     end
+
     it 'renders new when not successful' do
       put :update,
         format: 'js',

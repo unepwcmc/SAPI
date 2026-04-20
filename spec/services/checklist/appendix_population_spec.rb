@@ -4,7 +4,8 @@ describe Checklist do
   include_context 'Canis lupus'
 
   context 'search by cites populations' do
-    before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    before { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+
     context 'when Nepal' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -14,10 +15,12 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).to include(@species)
       end
     end
+
     context 'when Poland' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -27,13 +30,16 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).to include(@species)
       end
     end
   end
+
   context 'search by cites appendices' do
-    before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    before { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+
     context 'when App I' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -43,10 +49,12 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).to include(@species)
       end
     end
+
     context 'when App II' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -56,10 +64,12 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).to include(@species)
       end
     end
+
     context 'when App III' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -69,13 +79,16 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).not_to include(@species)
       end
     end
   end
+
   context 'search by cites populations and appendices' do
-    before(:each) { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+    before { SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings }
+
     context 'when Nepal' do
       context 'when App I' do
         subject do
@@ -87,10 +100,12 @@ describe Checklist do
           )
           checklist.results
         end
+
         specify do
           expect(subject).to include(@species)
         end
       end
+
       context 'when App II' do
         subject do
           checklist = Checklist::Checklist.new(
@@ -101,11 +116,13 @@ describe Checklist do
           )
           checklist.results
         end
+
         specify do
           expect(subject).not_to include(@species)
         end
       end
     end
+
     context 'when Poland' do
       context 'when App I' do
         subject do
@@ -117,10 +134,12 @@ describe Checklist do
           )
           checklist.results
         end
+
         specify do
           expect(subject).not_to include(@species)
         end
       end
+
       context 'when App II' do
         subject do
           checklist = Checklist::Checklist.new(
@@ -131,11 +150,13 @@ describe Checklist do
           )
           checklist.results
         end
+
         specify do
           expect(subject).to include(@species)
         end
       end
     end
+
     context 'when Poland or Nepal' do
       context 'when App I' do
         subject do
@@ -147,10 +168,12 @@ describe Checklist do
           )
           checklist.results
         end
+
         specify do
           expect(subject).to include(@species)
         end
       end
+
       context 'when App II' do
         subject do
           checklist = Checklist::Checklist.new(
@@ -161,11 +184,13 @@ describe Checklist do
           )
           checklist.results
         end
+
         specify do
           expect(subject).to include(@species)
         end
       end
     end
+
     context 'when App I or II' do
       context 'when Poland' do
         subject do
@@ -177,10 +202,12 @@ describe Checklist do
           )
           checklist.results
         end
+
         specify do
           expect(subject).to include(@species)
         end
       end
+
       context 'when Nepal' do
         subject do
           checklist = Checklist::Checklist.new(
@@ -191,6 +218,7 @@ describe Checklist do
           )
           checklist.results
         end
+
         specify do
           expect(subject).to include(@species)
         end

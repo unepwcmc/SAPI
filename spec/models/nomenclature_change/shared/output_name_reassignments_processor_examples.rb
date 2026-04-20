@@ -10,7 +10,7 @@ shared_context 'output_name_reassignments_processor_examples' do
       other_taxon_concept: output_subspecies2_synonym
     )
   end
-  before(:each) do
+  before do
     create(
       :nomenclature_change_output_name_reassignment,
       output: output,
@@ -19,6 +19,7 @@ shared_context 'output_name_reassignments_processor_examples' do
     output_processor.run
     processor.run
   end
+
   specify { expect(new_output_species.synonyms).to include(output_subspecies2_synonym) }
   specify { expect(old_output_subspecies.synonyms).to be_empty }
 end

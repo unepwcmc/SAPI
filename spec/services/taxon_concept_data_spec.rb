@@ -17,18 +17,23 @@ describe TaxonConceptData do
       create_cites_eu_species(parent: genus)
     end
     let(:tcd_to_h) { TaxonConceptData.new(taxon_concept).to_h }
+
     context 'when regular accepted name' do
       let(:taxon_concept) do
         create_cites_eu_subspecies(parent: accepted_species)
       end
+
       specify { expect(tcd_to_h['family_name']).to eq('Canidae') }
     end
+
     context 'when N accepted name' do
       let(:taxon_concept) do
         create_cites_eu_subspecies(name_status: 'N', parent: accepted_species)
       end
+
       specify { expect(tcd_to_h['family_name']).to eq('Canidae') }
     end
+
     context 'when hybrid' do
       let(:taxon_concept) do
         create_cites_eu_subspecies(name_status: 'H')
@@ -41,8 +46,10 @@ describe TaxonConceptData do
           other_taxon_concept: taxon_concept
         )
       end
+
       specify { expect(tcd_to_h['family_name']).to eq('Canidae') }
     end
+
     context 'when synonym' do
       let(:taxon_concept) do
         create_cites_eu_subspecies(name_status: 'S')
@@ -55,8 +62,10 @@ describe TaxonConceptData do
           other_taxon_concept: taxon_concept
         )
       end
+
       specify { expect(tcd_to_h['family_name']).to eq('Canidae') }
     end
+
     context 'when trade name' do
       let(:taxon_concept) do
         create_cites_eu_subspecies(name_status: 'T')
@@ -69,6 +78,7 @@ describe TaxonConceptData do
           other_taxon_concept: taxon_concept
         )
       end
+
       specify { expect(tcd_to_h['family_name']).to eq('Canidae') }
     end
   end

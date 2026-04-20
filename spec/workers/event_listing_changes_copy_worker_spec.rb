@@ -38,13 +38,16 @@ describe EventListingChangesCopyWorker do
         is_current: false
       )
     end
+
     before { EventListingChangesCopyWorker.new.perform(prev_eu_regulation.id, eu_regulation.id) }
+
     specify { expect(eu_regulation.listing_changes.reload.count).to eq(1) }
     specify { expect(eu_regulation.listing_changes.first.is_current).to be_falsey }
   end
 
   context 'when copy into current regulation' do
     before { EventListingChangesCopyWorker.new.perform(prev_eu_regulation.id, eu_regulation.id) }
+
     specify { expect(eu_regulation.listing_changes.reload.count).to eq(1) }
     specify { expect(eu_regulation.listing_changes.first.is_current).to be_truthy }
   end
@@ -67,6 +70,7 @@ describe EventListingChangesCopyWorker do
     end
 
     before { EventListingChangesCopyWorker.new.perform(prev_eu_regulation.id, eu_regulation.id) }
+
     specify { expect(eu_regulation.listing_changes.reload.count).to eq(1) }
     specify { expect(eu_regulation.listing_changes.first.exclusions.count).to eq(2) }
     specify { expect(eu_regulation.listing_changes.first.taxonomic_exclusions.count).to eq(1) }

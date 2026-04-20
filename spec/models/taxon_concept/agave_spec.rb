@@ -9,6 +9,7 @@ describe TaxonConcept do
         context 'for species Agave parviflora' do
           specify { expect(@species2.cites_listing).to eq('I') }
         end
+
         context 'for species Agave arizonica' do
           specify { expect(@species1.cites_listing).to eq('NC') }
         end
@@ -18,6 +19,7 @@ describe TaxonConcept do
         context 'for species Agave parviflora' do
           specify { expect(@species2.cites_listed).to be_truthy }
         end
+
         context 'for species Agave arizonica' do
           specify { expect(@species1.cites_listed).to be_nil }
         end
@@ -27,6 +29,7 @@ describe TaxonConcept do
         context 'for species Agave parviflora' do
           specify { expect(@species2.cites_show).to be_truthy }
         end
+
         context 'for species Agave arizonica' do
           specify { expect(@species1.cites_show).to be_falsey }
         end
@@ -36,6 +39,7 @@ describe TaxonConcept do
         context 'for species Agave parviflora' do
           specify { expect(@species2.eu_listing).to eq('A') }
         end
+
         context 'for species Agave arizonica' do
           specify { expect(@species1.eu_listing).to eq('NC') }
         end
@@ -45,6 +49,7 @@ describe TaxonConcept do
         context 'for species Agave parviflora' do
           specify { expect(@species2.eu_listed).to be_truthy }
         end
+
         context 'for species Agave arizonica' do
           specify { expect(@species1.eu_listed).to be_nil }
         end
@@ -54,6 +59,7 @@ describe TaxonConcept do
         context 'for species Agave parviflora' do
           specify { expect(@species2.eu_show).to be_truthy }
         end
+
         context 'for species Agave arizonica' do
           specify { expect(@species1.eu_show).to be_falsey }
         end

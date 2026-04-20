@@ -23,6 +23,7 @@ describe EuRegulationActivationWorker do
       is_current: false
     )
   end
+
   describe 'Set new EU regulation to true' do
     before do
       EventListingChangesCopyWorker.drain

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe RegistrationsController do
-  before(:each) do
+  before do
     @u1 = create(
       :user,
       password: '11111111', password_confirmation: '11111111'
@@ -10,8 +10,9 @@ describe RegistrationsController do
     @u3 = build(:user)
     @request.env['devise.mapping'] = Devise.mappings[:user]
   end
+
   context 'when editing own account' do
-    it 'should update name' do
+    it 'updates name' do
       sign_in(@u1)
       put :update, params: {
         id: @u1.id, user: {
@@ -21,7 +22,8 @@ describe RegistrationsController do
       expect(response).to redirect_to(admin_root_url)
       expect(@u1.reload.name).to eq('ZZ')
     end
-    it 'should update password' do
+
+    it 'updates password' do
       sign_in(@u1)
       put :update, params: {
         id: @u1.id, user: {
@@ -33,7 +35,8 @@ describe RegistrationsController do
       expect(response).to redirect_to(admin_root_url)
       expect(@u1.reload.valid_password?('22222222')).to eq(true)
     end
-    it 'should not update that account if not valid' do
+
+    it 'does not update that account if not valid' do
       sign_in(@u1)
       put :update, params: {
         id: @u1.id, user: {
@@ -46,7 +49,7 @@ describe RegistrationsController do
   end
 
   context "when editing another user's account" do
-    it 'should not update that account' do
+    it 'does not update that account' do
       sign_in(@u1)
       put :update, params: {
         id: @u2.id, user: {
@@ -58,7 +61,7 @@ describe RegistrationsController do
   end
 
   context 'when signing up' do
-    it 'should create an account with the role set to api' do
+    it 'creates an account with the role set to api' do
       expect do
         post :create, params: {
           user: {

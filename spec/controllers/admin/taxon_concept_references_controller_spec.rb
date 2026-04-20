@@ -53,7 +53,7 @@ describe Admin::TaxonConceptReferencesController do
       expect(response).to render_template('new')
     end
 
-    it 'assigns the  taxon concept reference variable' do
+    it 'assigns the taxon concept reference variable' do
       get :edit, params: { taxon_concept_id: @taxon_concept.id, id: @taxon_concept_reference.id }, xhr: true
 
       expect(assigns(:taxon_concept_reference)).not_to be_nil

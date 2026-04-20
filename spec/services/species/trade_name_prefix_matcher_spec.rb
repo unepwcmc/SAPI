@@ -1,6 +1,6 @@
 require 'spec_helper'
 describe Species::TaxonConceptPrefixMatcher do
-  before(:each) do
+  before do
     @accepted_name = create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Pavona')
     )

@@ -31,7 +31,7 @@ describe Trade::ValidationErrorsController do
   end
 
   describe 'PUT update' do
-    it 'should update is_ignored' do
+    it 'updates is_ignored' do
       put :update, params: {
         id: validation_error.id, validation_error: {
           is_ignored: true
@@ -42,7 +42,7 @@ describe Trade::ValidationErrorsController do
   end
 
   describe 'GET show' do
-    it 'should return success' do
+    it 'returns success' do
       get :show, params: { id: validation_error.id, format: :json }
       expect(response.body).to have_json_path('validation_error')
     end

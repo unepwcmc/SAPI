@@ -8,7 +8,7 @@ describe Species::SynonymsAndTradeNamesExport do
     specify { expect(subject.path).to eq('public/downloads/synonyms_and_trade_names/') }
   end
 
-  describe :export, cache: true do
+  describe :export, :cache do
     context 'when no results' do
       subject do
         Species::SynonymsAndTradeNamesExport.new({})
@@ -18,7 +18,11 @@ describe Species::SynonymsAndTradeNamesExport do
     end
 
     context 'when results' do
-      before(:each) do
+      subject do
+        Species::SynonymsAndTradeNamesExport.new({})
+      end
+
+      before do
         species = create_cites_eu_species
         synonym = create_cites_eu_species(name_status: 'S')
         create(
@@ -34,13 +38,10 @@ describe Species::SynonymsAndTradeNamesExport do
           and_return('spec/public/downloads/synonyms_and_trade_names/')
       end
 
-      after(:each) do
+      after do
         FileUtils.remove_dir('spec/public/downloads/synonyms_and_trade_names', true)
       end
 
-      subject do
-        Species::SynonymsAndTradeNamesExport.new({})
-      end
 
       context 'when file not cached' do
         specify do

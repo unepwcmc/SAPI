@@ -57,6 +57,7 @@ describe TaxonConceptPrefixMatcher do
     end
 
     let(:matcher) { TaxonConceptPrefixMatcher.new matcher_params }
+
     specify { expect(matcher.taxon_concepts).to include(taxon_concept4) }
     specify { expect(matcher.taxon_concepts).not_to include(hybrid) }
   end
@@ -85,12 +86,19 @@ describe TaxonConceptPrefixMatcher do
       TaxonConceptPrefixMatcher.new parent_matcher_params
     end
 
-    specify do
-      expect(parent_matcher.taxon_concepts.map(&:full_name)).to eq(
-        [ 'Aab', 'Aac' ]
+    let(:self_and_ancestor_matcher) do
+      TaxonConceptPrefixMatcher.new self_and_ancestor_matcher_params
+    end
+    let(:self_and_ancestor_matcher_params) do
+      SearchParams.new(
+        taxonomy: { id: taxonomy.id },
+        rank: { id: taxon_concept4.rank_id, scope: :self_and_ancestors },
+        scientific_name: 'AAA'
       )
     end
-
+    let(:ancestor_matcher) do
+      TaxonConceptPrefixMatcher.new ancestor_matcher_params
+    end
     let(:ancestor_matcher_params) do
       SearchParams.new(
         taxonomy: { id: taxonomy.id },
@@ -99,9 +107,13 @@ describe TaxonConceptPrefixMatcher do
       )
     end
 
-    let(:ancestor_matcher) do
-      TaxonConceptPrefixMatcher.new ancestor_matcher_params
+    specify do
+      expect(parent_matcher.taxon_concepts.map(&:full_name)).to eq(
+        [ 'Aab', 'Aac' ]
+      )
     end
+
+
 
     specify do
       expect(ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
@@ -109,17 +121,7 @@ describe TaxonConceptPrefixMatcher do
       )
     end
 
-    let(:self_and_ancestor_matcher_params) do
-      SearchParams.new(
-        taxonomy: { id: taxonomy.id },
-        rank: { id: taxon_concept4.rank_id, scope: :self_and_ancestors },
-        scientific_name: 'AAA'
-      )
-    end
 
-    let(:self_and_ancestor_matcher) do
-      TaxonConceptPrefixMatcher.new self_and_ancestor_matcher_params
-    end
 
     specify do
       expect(self_and_ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
@@ -127,6 +129,7 @@ describe TaxonConceptPrefixMatcher do
       )
     end
   end
+
   context 'when taxon concept scope applied' do
     let(:ancestor_matcher_params) do
       SearchParams.new(
@@ -139,12 +142,9 @@ describe TaxonConceptPrefixMatcher do
       TaxonConceptPrefixMatcher.new ancestor_matcher_params
     end
 
-    specify do
-      expect(ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
-        [ 'Aaa', 'Aab', 'Aac' ]
-      )
+    let(:descendant_matcher) do
+      TaxonConceptPrefixMatcher.new descendant_matcher_params
     end
-
     let(:descendant_matcher_params) do
       SearchParams.new(
         taxonomy: { id: taxonomy.id },
@@ -153,9 +153,13 @@ describe TaxonConceptPrefixMatcher do
       )
     end
 
-    let(:descendant_matcher) do
-      TaxonConceptPrefixMatcher.new descendant_matcher_params
+    specify do
+      expect(ancestor_matcher.taxon_concepts.map(&:full_name)).to eq(
+        [ 'Aaa', 'Aab', 'Aac' ]
+      )
     end
+
+
 
     specify do
       expect(descendant_matcher.taxon_concepts.map(&:full_name)).to eq(

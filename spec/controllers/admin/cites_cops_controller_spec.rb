@@ -4,7 +4,7 @@ describe Admin::CitesCopsController do
   login_admin
 
   describe 'index' do
-    before(:each) do
+    before do
       @cites_cop1 = create_cites_cop(name: 'CoP2')
       @cites_cop2 = create_cites_cop(name: 'CoP1')
     end

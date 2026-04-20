@@ -3,7 +3,7 @@ require 'spec_helper'
 describe NomenclatureChange::DeleteUnreassignedProcessor do
   include_context 'split_definitions'
 
-  before(:each) do
+  before do
     processor.run
   end
 

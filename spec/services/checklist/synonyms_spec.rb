@@ -14,7 +14,7 @@ describe Checklist do
       @taxon_concepts = @checklist.results
     end
 
-    it 'should return Alligator cynocephalus as synonym for Caiman latirostris' do
+    it 'returns Alligator cynocephalus as synonym for Caiman latirostris' do
       @caiman_latirostris = @taxon_concepts.select { |e| e.full_name == @species.full_name }.first
       expect(@caiman_latirostris.synonyms).to eq([ 'Alligator cynocephalus' ])
     end

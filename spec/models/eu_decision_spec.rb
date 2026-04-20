@@ -35,7 +35,9 @@ describe EuDecision, sidekiq: :inline do
 
   describe :create do
     context 'downloads cache should be populated' do
-      before(:each) do
+      subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
+
+      before do
         DownloadsCache.clear_eu_decisions
 
         create(
@@ -51,21 +53,23 @@ describe EuDecision, sidekiq: :inline do
         ).export
       end
 
-      subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
+
       specify { expect(subject).not_to be_empty }
     end
   end
 
   describe :save do
     context "Eu decision type and SRG history can't be blank at the same time" do
-      let(:eu_decision) { build(:eu_decision, srg_history_id: nil, eu_decision_type_id: nil) }
       subject { eu_decision.save }
+
+      let(:eu_decision) { build(:eu_decision, srg_history_id: nil, eu_decision_type_id: nil) }
+
 
       specify { expect(subject).to be_falsey }
 
-      it 'should have an error message' do
+      it 'has an error message' do
         subject
-        expect(eu_decision.errors[:base]).to_not be_empty
+        expect(eu_decision.errors[:base]).not_to be_empty
       end
     end
 
@@ -90,7 +94,9 @@ describe EuDecision, sidekiq: :inline do
 
   describe :destroy do
     context 'downloads cache should be cleared' do
-      before(:each) do
+      subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
+
+      before do
         DownloadsCache.clear_eu_decisions
         d = create(:eu_decision, start_date: Time.utc(2013))
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
@@ -98,7 +104,7 @@ describe EuDecision, sidekiq: :inline do
         Species::EuDecisionsExport.new(set: 'current', decision_types: {}).export
       end
 
-      subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
+
       specify { expect(subject).to be_empty }
     end
   end

@@ -4,9 +4,10 @@ describe Species::ExportsController do
   context 'when data type and filters not given' do
     it 'returns unprocessable entity status' do
       get :download
-      expect(response).to have_http_status(422)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
+
   context 'with ip address to csv separator conversion' do
     it 'sets separator to comma with local ip address' do
       allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return('127.0.0.1')
@@ -16,7 +17,7 @@ describe Species::ExportsController do
         }
       }
 
-      expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
+      expect(response.cookies['speciesplus.csv_separator']).not_to be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
       expect(assigns(:filters)[:csv_separator]).to eq(:comma)
     end
@@ -29,7 +30,7 @@ describe Species::ExportsController do
           'set' => 'current', 'decision_types' => {}, :csv_separator => ''
         }
       }
-      expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
+      expect(response.cookies['speciesplus.csv_separator']).not_to be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
       expect(assigns(:filters)[:csv_separator]).to eq(:comma)
     end
@@ -42,7 +43,7 @@ describe Species::ExportsController do
           'set' => 'current', 'decision_types' => {}, :csv_separator => ''
         }
       }
-      expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
+      expect(response.cookies['speciesplus.csv_separator']).not_to be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq('semicolon')
       expect(assigns(:filters)[:csv_separator]).to eq(:semicolon)
     end
@@ -54,7 +55,7 @@ describe Species::ExportsController do
           'set' => 'current', 'decision_types' => {}, :csv_separator => 'comma'
         }
       }
-      expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
+      expect(response.cookies['speciesplus.csv_separator']).not_to be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
       expect(assigns(:filters)[:csv_separator]).to eq(:comma)
     end
@@ -66,7 +67,7 @@ describe Species::ExportsController do
           'set' => 'current', 'decision_types' => {}, :csv_separator => ''
         }
       }
-      expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
+      expect(response.cookies['speciesplus.csv_separator']).not_to be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
       expect(assigns(:filters)[:csv_separator]).to eq(:comma)
     end
@@ -78,7 +79,7 @@ describe Species::ExportsController do
           'set' => 'current', 'decision_types' => {}, :csv_separator => ''
         }
       }
-      expect(response.cookies['speciesplus.csv_separator']).to_not be_nil
+      expect(response.cookies['speciesplus.csv_separator']).not_to be_nil
       expect(response.cookies['speciesplus.csv_separator']).to eq('comma')
       expect(assigns(:filters)[:csv_separator]).to eq(:comma)
     end

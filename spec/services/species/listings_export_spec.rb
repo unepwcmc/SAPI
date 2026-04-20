@@ -13,7 +13,7 @@ describe Species::ListingsExport do
     specify { expect(subject.path).to eq('public/downloads/cites_listings/') }
   end
 
-  describe :export, cache: true do
+  describe :export, :cache do
     context 'when no results' do
       subject do
         Species::ListingsExportFactory.new(
@@ -29,18 +29,6 @@ describe Species::ListingsExport do
     end
 
     context 'when results' do
-      before(:each) do
-        FileUtils.mkpath(
-          File.expand_path('spec/public/downloads/cites_listings')
-        )
-        allow_any_instance_of(Species::ListingsExport).to receive(:path).
-          and_return('spec/public/downloads/cites_listings/')
-      end
-
-      after(:each) do
-        FileUtils.remove_dir('spec/public/downloads/cites_listings', true)
-      end
-
       subject do
         Species::ListingsExportFactory.new(
           {
@@ -50,6 +38,19 @@ describe Species::ListingsExport do
           }
         )
       end
+
+      before do
+        FileUtils.mkpath(
+          File.expand_path('spec/public/downloads/cites_listings')
+        )
+        allow_any_instance_of(Species::ListingsExport).to receive(:path).
+          and_return('spec/public/downloads/cites_listings/')
+      end
+
+      after do
+        FileUtils.remove_dir('spec/public/downloads/cites_listings', true)
+      end
+
 
       context 'when file not cached' do
         specify do
@@ -125,13 +126,6 @@ describe Species::ListingsExport do
       end
 
       context 'when implicitly listed subspecies present' do
-        before(:each) do
-          create_cites_eu_subspecies(
-            parent_id: @species.id
-          )
-          SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
-        end
-
         subject do
           Species::ListingsExportFactory.new(
             {
@@ -140,6 +134,14 @@ describe Species::ListingsExport do
             }
           )
         end
+
+        before do
+          create_cites_eu_subspecies(
+            parent_id: @species.id
+          )
+          SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
+        end
+
 
         specify { expect(subject.query.to_a.size).to eq(1) }
       end

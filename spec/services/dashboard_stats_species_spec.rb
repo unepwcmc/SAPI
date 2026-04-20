@@ -35,6 +35,7 @@ describe DashboardStats do
     it 'has one results for argentina' do
       expect(ds_ar.species[:cites_eu][0][:count]).to eq 1
     end
+
     it 'has no results for ghana' do
       expect(ds_gh.species[:cites_eu][0][:count]).to eq 0
     end

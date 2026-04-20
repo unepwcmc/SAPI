@@ -13,10 +13,12 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).not_to include(@species)
       end
     end
+
     context 'when Mexico' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -26,10 +28,12 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).not_to include(@species)
       end
     end
+
     context 'when Canada' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -39,10 +43,12 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).not_to include(@species)
       end
     end
+
     context 'when Argentina' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -52,10 +58,12 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).to include(@species)
       end
     end
+
     context 'when South America' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -65,10 +73,12 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).to include(@species)
       end
     end
+
     context 'when North America' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -78,10 +88,12 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).not_to include(@species)
       end
     end
+
     context 'when North America and Argentina' do
       subject do
         checklist = Checklist::Checklist.new(
@@ -92,6 +104,7 @@ describe Checklist do
         )
         checklist.results
       end
+
       specify do
         expect(subject).to include(@species)
       end

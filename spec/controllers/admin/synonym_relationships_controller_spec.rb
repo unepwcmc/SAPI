@@ -3,7 +3,8 @@ require 'spec_helper'
 describe Admin::SynonymRelationshipsController do
   login_admin
 
-  before(:each) { synonym_relationship_type }
+  before { synonym_relationship_type }
+
   let(:taxon_concept) { create(:taxon_concept) }
   let(:synonym) { create(:taxon_concept, name_status: 'S') }
   let(:synonym_relationship) do
@@ -14,11 +15,13 @@ describe Admin::SynonymRelationshipsController do
       other_taxon_concept: synonym
     )
   end
+
   describe 'XHR GET new' do
     it 'renders the new template' do
       get :new, params: { taxon_concept_id: taxon_concept.id }, xhr: true
       expect(response).to render_template('new')
     end
+
     it 'assigns the synonym_relationship variable' do
       get :new, params: { taxon_concept_id: taxon_concept.id }, xhr: true
       expect(assigns(:synonym_relationship)).not_to be_nil
@@ -35,6 +38,7 @@ describe Admin::SynonymRelationshipsController do
       }, xhr: true
       expect(response).to render_template('create')
     end
+
     it 'renders new when not successful' do
       post :create, xhr: true, params: {
         taxon_concept_id: taxon_concept.id,
@@ -51,6 +55,7 @@ describe Admin::SynonymRelationshipsController do
       get :edit, params: { taxon_concept_id: taxon_concept.id, id: synonym_relationship.id }, xhr: true
       expect(response).to render_template('new')
     end
+
     it 'assigns the synonym_relationship variable' do
       get :edit, params: { taxon_concept_id: taxon_concept.id, id: synonym_relationship.id }, xhr: true
       expect(assigns(:synonym_relationship)).not_to be_nil
@@ -69,6 +74,7 @@ describe Admin::SynonymRelationshipsController do
         }
       expect(response).to render_template('create')
     end
+
     it 'responds with json when not successful' do
       put :update, format: 'js', xhr: true,
         params: {

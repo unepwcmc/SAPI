@@ -13,7 +13,7 @@ shared_context 'legislation_reassignments_processor_examples' do
       iso_code2: 'PT'
     )
   end
-  before(:each) do
+  before do
     lc1_annotation = create(:annotation)
     original_lc1 = create_cites_III_addition(
       taxon_concept: output_species1,
@@ -101,13 +101,16 @@ shared_context 'legislation_reassignments_processor_examples' do
     )
     processor.run
   end
+
   specify { expect(output_species1.listing_changes.count).to eq(2) }
+
   specify do
     expect(
       output_species1.listing_changes.
       find_by(effective_at: '2013-01-01', change_type_id: cites_addition.id)
     ).not_to be_nil
   end
+
   specify do
     expect(
       output_species1.listing_changes.
@@ -115,6 +118,7 @@ shared_context 'legislation_reassignments_processor_examples' do
       party_listing_distribution.geo_entity
     ).to eq(poland)
   end
+
   specify do
     expect(
       output_species1.listing_changes.
@@ -122,6 +126,7 @@ shared_context 'legislation_reassignments_processor_examples' do
       listing_distributions.count
     ).to eq(2)
   end
+
   specify do
     expect(
       output_species1.listing_changes.
@@ -129,6 +134,7 @@ shared_context 'legislation_reassignments_processor_examples' do
       annotation
     ).not_to be_nil
   end
+
   specify do
     expect(
       output_species1.listing_changes.
@@ -136,12 +142,14 @@ shared_context 'legislation_reassignments_processor_examples' do
       exclusions
     ).not_to be_empty
   end
+
   specify do
     expect(
       output_species1.listing_changes.
       find_by(effective_at: '2013-01-02', change_type_id: cites_addition.id)
     ).not_to be_nil
   end
+
   specify do
     expect(
       output_species1.listing_changes.
@@ -149,13 +157,16 @@ shared_context 'legislation_reassignments_processor_examples' do
       party_listing_distribution.geo_entity
     ).to eq(portugal)
   end
+
   specify { expect(output_species1.quotas.count).to eq(2) }
+
   specify do
     expect(
       output_species1.quotas.
       find_by(geo_entity_id: poland.id)
     ).not_to be_nil
   end
+
   specify do
     expect(
       output_species1.quotas.
@@ -163,6 +174,7 @@ shared_context 'legislation_reassignments_processor_examples' do
       terms
     ).not_to be_empty
   end
+
   specify do
     expect(
       output_species1.quotas.
@@ -170,6 +182,7 @@ shared_context 'legislation_reassignments_processor_examples' do
       sources
     ).not_to be_empty
   end
+
   specify do
     expect(
       output_species1.quotas.
@@ -177,5 +190,6 @@ shared_context 'legislation_reassignments_processor_examples' do
       purposes
     ).not_to be_empty
   end
+
   specify { expect(output_species1.cites_suspensions.count).to eq(2) }
 end

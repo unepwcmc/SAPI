@@ -2,7 +2,7 @@ require 'spec_helper'
 describe GeoEntitySearch do
   describe :results do
     context 'when searching by geo entity types set' do
-      before(:each) do
+      before do
         @asia = create(
           :geo_entity,
           geo_entity_type: cites_region_geo_entity_type,
@@ -44,29 +44,37 @@ describe GeoEntitySearch do
           iso_code2: 'ZZ'
         )
       end
+
       context 'default set' do
         context 'default locale' do
           subject { GeoEntitySearch.new({}).results }
+
           specify { expect(subject).to include(@myanmar) }
           specify { expect(subject).not_to include(@burma) }
         end
       end
+
       context 'Checklist regions (1)' do
         subject { GeoEntitySearch.new({ geo_entity_types_set: '1' }).results }
+
         specify { expect(subject).to include(@asia) }
         specify { expect(subject.length).to eq(1) }
       end
+
       context 'Checklist countries & territories (2)' do
         subject { GeoEntitySearch.new({ geo_entity_types_set: '2' }).results }
+
         specify { expect(subject).not_to include(@asia) }
         specify { expect(subject).to include(@burma) }
         specify { expect(subject).to include(@myanmar) }
         specify { expect(subject).to include(@samoa) }
         specify { expect(subject).not_to include(@intro_from_the_sea) }
       end
+
       context 'Species+ regions, countries & territories (3)' do
         context 'English locale' do
           subject { GeoEntitySearch.new({ geo_entity_types_set: '3', locale: 'EN' }).results }
+
           specify { expect(subject).to include(@asia) }
           specify { expect(subject).not_to include(@burma) }
           specify { expect(subject).to include(@myanmar) }
@@ -74,8 +82,10 @@ describe GeoEntitySearch do
           specify { expect(subject.index(@samoa)).to eq(1) }
           specify { expect(subject.index(@myanmar)).to eq(2) }
         end
+
         context 'Spanish locale' do
           subject { GeoEntitySearch.new({ geo_entity_types_set: '3', locale: 'ES' }).results }
+
           specify { expect(subject).to include(@asia) }
           specify { expect(subject).not_to include(@burma) }
           specify { expect(subject).to include(@myanmar) }
@@ -84,8 +94,10 @@ describe GeoEntitySearch do
           specify { expect(subject.index(@myanmar)).to eq(1) }
         end
       end
+
       context 'Trade countries, territories and trade entities (4)' do
         subject { GeoEntitySearch.new({ geo_entity_types_set: '4' }).results }
+
         specify { expect(subject).not_to include(@asia) }
         specify { expect(subject).to include(@burma) }
         specify { expect(subject).to include(@myanmar) }
@@ -96,7 +108,9 @@ describe GeoEntitySearch do
   end
 
   describe :cached_results do
-    before(:each) do
+    subject { GeoEntitySearch.new({ geo_entity_types_set: '3' }) }
+
+    before do
       @burma = create(
         :geo_entity,
         geo_entity_type: country_geo_entity_type,
@@ -104,7 +118,8 @@ describe GeoEntitySearch do
         iso_code2: 'BU'
       )
     end
-    subject { GeoEntitySearch.new({ geo_entity_types_set: '3' }) }
+
+
     specify do
       subject.cached_results
       @burma.update({ is_current: false })

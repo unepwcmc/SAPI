@@ -5,6 +5,7 @@ describe Checklist::Pdf::IndexAnnotationsKey do
 
   describe :annotations_key do
     subject { Checklist::Pdf::IndexAnnotationsKey.new }
+
     specify do
       allow(subject).to receive(:non_hash_annotations_key).and_return('x')
       allow(subject).to receive(:hash_annotations_key).and_return('x')
@@ -13,7 +14,9 @@ describe Checklist::Pdf::IndexAnnotationsKey do
   end
 
   describe :hash_annotations_key do
-    before(:each) do
+    subject { Checklist::Pdf::IndexAnnotationsKey.new }
+
+    before do
       plant_genus = create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Foobaria'),
         parent: create_cites_eu_family(
@@ -42,14 +45,17 @@ describe Checklist::Pdf::IndexAnnotationsKey do
       )
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
-    subject { Checklist::Pdf::IndexAnnotationsKey.new }
+
+
     specify do
       expect(subject.hash_annotations_key).to eq("\\newpage\n\\section*{\\hashAnnotations}\n\\hashAnnotationsIndexInfo\n\n\\hashannotationstable{\n\\rowcolor{pale_aqua}\nCoP2 & \\validFrom \\hspace{2 pt} 01/07/2013\\\\\n\\#1 & Only bark \\\\\n\n}\n")
     end
   end
 
   describe :non_hash_annotations_key do
-    before(:each) do
+    subject { Checklist::Pdf::IndexAnnotationsKey.new }
+
+    before do
       animal_genus = create_cites_eu_genus(
         taxon_name: create(:taxon_name, scientific_name: 'Foobarus'),
         parent: create_cites_eu_family(
@@ -98,7 +104,8 @@ describe Checklist::Pdf::IndexAnnotationsKey do
       )
       SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
     end
-    subject { Checklist::Pdf::IndexAnnotationsKey.new }
+
+
     specify do
       allow(LatexToPdf).to receive(:html2latex).and_return('x')
       expect(subject.non_hash_annotations_key).to eq("\\section*{\\nonHashAnnotations}\n\\cfbox{orange}{\\superscript{1} \\textbf{\\textit{Foobarus bizarrus}}}\n\nx\n\n\\cfbox{green}{\\superscript{2} \\textbf{\\textit{Foobaria curiosa}}}\n\nx\n\n")

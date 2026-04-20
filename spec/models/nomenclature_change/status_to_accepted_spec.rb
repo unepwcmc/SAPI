@@ -10,8 +10,10 @@ describe NomenclatureChange::StatusToAccepted do
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
           )
         end
+
         specify { expect(status_change).to have(1).error_on(:primary_output) }
       end
+
       context 'when submitting' do
         let(:status_change) do
           build(
@@ -19,9 +21,11 @@ describe NomenclatureChange::StatusToAccepted do
             status: NomenclatureChange::StatusToAccepted::SUBMITTED
           )
         end
+
         specify { expect(status_change).to have(1).error_on(:primary_output) }
       end
     end
+
     context 'when primary output has invalid name status' do
       context 'when primary_output' do
         let(:status_change) do
@@ -33,9 +37,11 @@ describe NomenclatureChange::StatusToAccepted do
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
           )
         end
+
         specify { expect(status_change.error_on(:primary_output).size).to eq(1) }
       end
     end
+
     context 'when primary output has valid name status' do
       context 'when primary_output' do
         let(:status_change) do
@@ -47,6 +53,7 @@ describe NomenclatureChange::StatusToAccepted do
             status: NomenclatureChange::StatusToAccepted::PRIMARY_OUTPUT
           )
         end
+
         specify { expect(status_change.errors_on(:primary_output).size).to eq(0) }
       end
     end

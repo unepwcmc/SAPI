@@ -13,12 +13,16 @@ describe Checklist do
       )
       @taxon_concepts = @checklist.results
     end
+
     context 'for species Caiman latirostris' do
       subject { @taxon_concepts.select { |e| e.full_name == 'Caiman latirostris' }.first }
+
       specify { expect(subject.ann_symbol).to eq('1') }
     end
+
     context 'for species Panax ginseng' do
       subject { @taxon_concepts.select { |e| e.full_name == 'Panax ginseng' }.first }
+
       specify { expect(subject.ann_symbol).to eq('2') }
     end
   end

@@ -53,16 +53,17 @@ shared_context 'document_reassignments_processor_examples' do
   end
 
   context 'when output species had no citations in place' do
-    before(:each) do
+    before do
       processor.run
     end
+
     specify do
       expect(output_species1.document_citation_taxon_concepts.count).to eq(1)
     end
   end
 
   context 'when output species had an identical citation in place' do
-    before(:each) do
+    before do
       processor.run
     end
 

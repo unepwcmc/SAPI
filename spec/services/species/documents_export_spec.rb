@@ -12,8 +12,8 @@ describe Species::DocumentsExport do
 
   SPEC_DOCUMENTS_DOWNLOAD_PATH = 'spec/public/downloads/documents'
 
-  describe :export, cache: true do
-    before(:each) do
+  describe :export, :cache do
+    before do
       FileUtils.mkpath(
         File.expand_path("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}")
       )
@@ -21,18 +21,19 @@ describe Species::DocumentsExport do
         and_return("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}/")
     end
 
-    after(:each) do
+    after do
       FileUtils.remove_dir("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}", true)
     end
 
     context 'when no results' do
-      before(:each) do
-        FileUtils.rm_rf(Dir.glob("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}/*"))
-      end
-
       subject do
         Species::DocumentsExport.new({})
       end
+
+      before do
+        FileUtils.rm_rf(Dir.glob("#{SPEC_DOCUMENTS_DOWNLOAD_PATH}/*"))
+      end
+
 
       specify 'when file not cached it should not be generated' do
         expect(subject.export).to be_falsey

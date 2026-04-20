@@ -9,6 +9,7 @@ describe TaxonConcept do
         context 'for genus Colophon' do
           specify { expect(@genus.cites_listing).to eq('III') }
         end
+
         context 'for species Colophon barnardi' do
           specify { expect(@species.cites_listing).to eq('III') }
         end
@@ -18,6 +19,7 @@ describe TaxonConcept do
         context 'for genus Colophon' do
           specify { expect(@genus.eu_listing).to eq('C') }
         end
+
         context 'for species Colophon barnardi' do
           specify { expect(@species.eu_listing).to eq('C') }
         end
@@ -27,6 +29,7 @@ describe TaxonConcept do
         context 'for genus Colophon' do
           specify { expect(@genus.cites_listed).to eq(true) }
         end
+
         context 'for species Colophon barnardi' do
           specify { expect(@species.cites_listed).to eq(false) }
         end
@@ -36,6 +39,7 @@ describe TaxonConcept do
         context 'for genus Colophon' do
           specify { expect(@genus.eu_listed).to eq(true) }
         end
+
         context 'for species Colophon barnardi' do
           specify { expect(@species.eu_listed).to eq(false) }
         end
@@ -45,6 +49,7 @@ describe TaxonConcept do
         context 'for order Coleoptera' do
           specify { expect(@order.cites_show).to be_falsey }
         end
+
         context 'for family Lucanidae' do
           specify { expect(@family.cites_show).to be_falsey }
         end
@@ -54,6 +59,7 @@ describe TaxonConcept do
         context 'for genus Colophon' do
           specify { expect(@genus.current_parties_ids).to eq([ GeoEntity.find_by(iso_code2: 'ZA').id ]) }
         end
+
         context 'for species Colophon barnardi' do
           specify { expect(@species.current_parties_ids).to eq([ GeoEntity.find_by(iso_code2: 'ZA').id ]) }
         end

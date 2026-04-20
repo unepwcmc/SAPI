@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Trade::Sandbox, drops_tables: true do
-  before(:each) do
+describe Trade::Sandbox, :drops_tables do
+  before do
     genus = create_cites_eu_genus(
       taxon_name: create(:taxon_name, scientific_name: 'Acipenser')
     )
@@ -26,6 +26,7 @@ describe Trade::Sandbox, drops_tables: true do
       iso_code2: 'PT'
     )
   end
+
   let(:annual_report_upload) do
     aru = build(:annual_report_upload, trading_country_id: @argentina.id, point_of_view: 'I')
     aru.save(validate: false)
@@ -44,8 +45,10 @@ describe Trade::Sandbox, drops_tables: true do
     create_year_format_validation
     aru
   end
+
   describe :destroy do
     subject { annual_report_upload.sandbox }
+
     specify do
       sandbox_klass = Trade::SandboxTemplate.ar_klass(subject.table_name)
       subject.destroy

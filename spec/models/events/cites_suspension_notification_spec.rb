@@ -34,9 +34,11 @@ describe CitesSuspensionNotification do
           designation: eu
         )
       end
+
       specify { expect(cites_suspension_notification).not_to be_valid }
       specify { expect(cites_suspension_notification).to have(1).error_on(:designation_id) }
     end
+
     context 'when effective_at is blank' do
       let(:cites_suspension_notification) do
         build(
@@ -44,6 +46,7 @@ describe CitesSuspensionNotification do
           effective_at: nil
         )
       end
+
       specify { expect(cites_suspension_notification).not_to be_valid }
       specify { expect(cites_suspension_notification).to have(1).error_on(:effective_at) }
     end
@@ -51,9 +54,11 @@ describe CitesSuspensionNotification do
 
   describe :destroy do
     let(:cites_suspension_notification) { create_cites_suspension_notification }
+
     context 'when no dependent objects attached' do
       specify { expect(cites_suspension_notification.destroy).to be_truthy }
     end
+
     context 'when dependent objects attached' do
       context 'when start notification' do
         let!(:cites_suspension) do
@@ -61,8 +66,10 @@ describe CitesSuspensionNotification do
             :cites_suspension, start_notification: cites_suspension_notification
           )
         end
+
         specify { expect(cites_suspension_notification.destroy).to be_falsey }
       end
+
       context 'when end notification' do
         let!(:cites_suspension) do
           create(
@@ -71,9 +78,13 @@ describe CitesSuspensionNotification do
             end_notification: cites_suspension_notification
           )
         end
+
         specify { expect(cites_suspension_notification.destroy).to be_falsey }
       end
+
       context 'when confirmation notification, make sure it gets destroyed' do
+        subject { cites_suspension_notification.cites_suspension_confirmations }
+
         let!(:cites_suspension) do
           # Ideally we would create this in a single statement but on upgrading
           # from rails 4.0 to 4.1 this started failing - the joining table
@@ -92,7 +103,8 @@ describe CitesSuspensionNotification do
 
           suspension
         end
-        subject { cites_suspension_notification.cites_suspension_confirmations }
+
+
         specify do
           cites_suspension_notification.destroy
           expect(subject.reload).to be_empty
@@ -103,14 +115,18 @@ describe CitesSuspensionNotification do
 
   describe :end_date_formatted do
     let(:cites_suspension_notification) { create_cites_suspension_notification(end_date: '2012-05-10') }
+
     specify { expect(cites_suspension_notification.end_date_formatted).to eq('10/05/2012') }
   end
 
   describe :bases_for_suspension do
+    subject { CitesSuspensionNotification.bases_for_suspension }
+
     let!(:cites_suspension_notification1) { create_cites_suspension_notification(subtype: 'A') }
     let!(:cites_suspension_notification2) { create_cites_suspension_notification(subtype: 'A') }
     let!(:cites_suspension_notification3) { create_cites_suspension_notification(subtype: 'B') }
-    subject { CitesSuspensionNotification.bases_for_suspension }
+
+
     specify { subject.length == 2 }
   end
 end

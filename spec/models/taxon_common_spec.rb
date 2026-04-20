@@ -30,6 +30,7 @@ describe TaxonCommon do
         language_id: language.id
       )
     end
+
     context 'when common name changed' do
       let(:another_tc_common) do
         build(
@@ -39,6 +40,7 @@ describe TaxonCommon do
           language_id: language.id
         )
       end
+
       specify do
         tc_common.save
         another_tc_common.save

@@ -49,10 +49,12 @@ describe TaxonRelationship do
         other_taxon_concept_id: synonym.id
       )
     end
+
     specify do
       synonymy_rel.save
       expect(tc.synonyms.map(&:full_name)).to include('Lolcatus lolus')
     end
+
     specify do
       synonymy_rel.save
       another_synonymy_rel.save

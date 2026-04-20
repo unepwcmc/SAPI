@@ -1,4 +1,4 @@
-shared_context :sapi do
+shared_context :sapi do # rubocop:disable RSpec/SharedExamples # too many changes
   def cites_eu
     @_cites_eu ||= create(:taxonomy, name: Taxonomy::CITES_EU)
   end
@@ -11,13 +11,17 @@ shared_context :sapi do
     return @_cites if @_cites
 
     d = Designation.find_by(taxonomy_id: cites_eu.id, name: Designation::CITES)
+
     unless d
       d = create(:designation, name: Designation::CITES, taxonomy: cites_eu)
+
       %w[ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION].each do |ch|
         ch_type = ChangeType.find_by(designation_id: d.id, name: ch)
+
         unless ch_type
           create(:change_type, name: ch, designation: d)
         end
+
         %w[I II III].each do |app|
           unless SpeciesListing.find_by(designation_id: d.id, abbreviation: app)
             create(
@@ -28,6 +32,7 @@ shared_context :sapi do
         end
       end
     end
+
     @_cites = d
   end
 
@@ -35,12 +40,15 @@ shared_context :sapi do
     return @_eu if @_eu
 
     d = Designation.find_by(taxonomy_id: cites_eu.id, name: Designation::EU)
+
     unless d
       d = create(:designation, name: Designation::EU, taxonomy: cites_eu)
+
       %w[ADDITION DELETION RESERVATION RESERVATION_WITHDRAWAL EXCEPTION].each do |ch|
         unless ChangeType.find_by(designation_id: d.id, name: ch)
           create(:change_type, name: ch, designation: d)
         end
+
         %w[A B C D].each do |app|
           unless SpeciesListing.find_by(designation_id: d.id, abbreviation: app)
             create(
@@ -51,6 +59,7 @@ shared_context :sapi do
         end
       end
     end
+
     @_eu ||= d
   end
 
@@ -58,12 +67,15 @@ shared_context :sapi do
     return @_cms_designation if @_cms_designation
 
     d = Designation.find_by(taxonomy_id: cms.id, name: Designation::CMS)
+
     unless d
       d = create(:designation, name: Designation::CMS, taxonomy: cms)
+
       %w[ADDITION DELETION EXCEPTION].each do |ch|
         unless ChangeType.find_by(designation_id: d.id, name: ch)
           create(:change_type, name: ch, designation: d)
         end
+
         %w[I II].each do |app|
           unless SpeciesListing.find_by(designation_id: d.id, abbreviation: app)
             create(
@@ -74,6 +86,7 @@ shared_context :sapi do
         end
       end
     end
+
     @_cms_designation = d
   end
 
@@ -90,6 +103,7 @@ shared_context :sapi do
       define_method "cites_#{app}" do
         SpeciesListing.find_by(designation_id: cites.id, abbreviation: app)
       end
+
       define_method "create_cites_#{app}_#{ch.downcase}" do |options = {}|
         create(
           :listing_change,
@@ -102,10 +116,12 @@ shared_context :sapi do
         )
       end
     end
+
     %w[A B C D].each do |app|
       define_method "eu_#{app}" do
         SpeciesListing.find_by(designation_id: eu.id, abbreviation: app)
       end
+
       define_method "create_eu_#{app}_#{ch.downcase}" do |options = {}|
         create(
           :listing_change,
@@ -129,6 +145,7 @@ shared_context :sapi do
       define_method "cms_#{app}" do
         SpeciesListing.find_by(designation_id: cms_designation.id, abbreviation: app)
       end
+
       define_method "create_cms_#{app}_#{ch.downcase}" do |options = {}|
         create(
           :listing_change,
@@ -150,6 +167,7 @@ shared_context :sapi do
         taxon_name: create(:taxon_name, scientific_name: 'Animalia')
       )
   end
+
   def cms_chordata
     @_cms_chordata ||=
       create_cms_phylum(
@@ -158,6 +176,7 @@ shared_context :sapi do
         parent: cms_animalia
       )
   end
+
   def cites_eu_mammalia
     @_cites_eu_mammalia ||= create_cites_eu_class(
       taxonomic_position: '1.1.1',
@@ -165,6 +184,7 @@ shared_context :sapi do
       parent: cites_eu_chordata
     )
   end
+
   def cms_mammalia
     @_cms_mammalia ||=
       create_cms_class(
@@ -173,6 +193,7 @@ shared_context :sapi do
         parent: cms_chordata
       )
   end
+
   def cites_eu_aves
     @_cites_eu_aves ||=
       create_cites_eu_class(
@@ -181,6 +202,7 @@ shared_context :sapi do
         parent: cites_eu_chordata
       )
   end
+
   def cms_reptilia
     @_cms_reptilia ||=
       create_cms_class(
@@ -189,6 +211,7 @@ shared_context :sapi do
         parent: cms_chordata
       )
   end
+
   def cites_eu_amphibia
     @_cites_eu_amphibia ||=
       create_cites_eu_class(
@@ -197,6 +220,7 @@ shared_context :sapi do
         parent: cites_eu_chordata
       )
   end
+
   def cites_eu_elasmobranchii
     @_cites_eu_elasmobranchii ||=
       create_cites_eu_class(
@@ -205,6 +229,7 @@ shared_context :sapi do
         parent: cites_eu_chordata
       )
   end
+
   def cites_eu_arthropoda
     @_cites_eu_arthropoda ||=
       create_cites_eu_phylum(
@@ -213,6 +238,7 @@ shared_context :sapi do
         parent: cites_eu_animalia
       )
   end
+
   def cites_eu_insecta
     @_cites_eu_insecta ||=
       create_cites_eu_class(
@@ -221,6 +247,7 @@ shared_context :sapi do
         parent: cites_eu_arthropoda
       )
   end
+
   def cites_eu_annelida
     @_cites_eu_annelida ||=
       create_cites_eu_phylum(
@@ -229,6 +256,7 @@ shared_context :sapi do
         parent: cites_eu_animalia
       )
   end
+
   def cites_eu_hirudinoidea
     @_cites_eu_hirudinoidea ||=
       create_cites_eu_class(
@@ -237,6 +265,7 @@ shared_context :sapi do
         parent: cites_eu_annelida
       )
   end
+
   def cites_eu_plantae
     @_cites_eu_plantae ||=
       create_cites_eu_kingdom(
@@ -295,12 +324,14 @@ shared_context :sapi do
         options.merge({ rank: create(:rank, name: rank) })
       )
     end
+
     define_method "build_#{rank.downcase}" do |options = {}|
       build(
         :taxon_concept,
         options.merge({ rank: create(:rank, name: rank) })
       )
     end
+
     define_method "create_cites_eu_#{rank.downcase}" do |options = {}|
       create(
         :taxon_concept,
@@ -312,6 +343,7 @@ shared_context :sapi do
         )
       )
     end
+
     define_method "build_cites_eu_#{rank.downcase}" do |options = {}|
       build(
         :taxon_concept,
@@ -323,6 +355,7 @@ shared_context :sapi do
         )
       )
     end
+
     define_method "create_cms_#{rank.downcase}" do |options = {}|
       create(
         :taxon_concept,
@@ -334,6 +367,7 @@ shared_context :sapi do
         )
       )
     end
+
     define_method "build_cms_#{rank.downcase}" do |options = {}|
       build(
         :taxon_concept,
@@ -357,6 +391,7 @@ shared_context :sapi do
         options.merge({ designation: cites })
       )
     end
+
     define_method "build_#{cites_event_type}" do |options = {}|
       build(
         cites_event_type,
@@ -364,6 +399,7 @@ shared_context :sapi do
       )
     end
   end
+
   [
     :eu_regulation, :eu_suspension_regulation, :eu_implementing_regulation,
     :eu_council_regulation, :ec_srg
@@ -374,6 +410,7 @@ shared_context :sapi do
         options.merge({ designation: eu })
       )
     end
+
     define_method "build_#{eu_event_type}" do |options = {}|
       build(
         eu_event_type,
@@ -508,6 +545,7 @@ shared_context :sapi do
         effective_at: '1997-06-01', end_date: '2000-12-18'
       )
   end
+
   def reg2005
     @_reg2005 ||=
       create(
@@ -515,6 +553,7 @@ shared_context :sapi do
         effective_at: '2005-08-22', end_date: '2008-04-11'
       )
   end
+
   def reg2008
     @_reg2008 ||=
       create(
@@ -522,6 +561,7 @@ shared_context :sapi do
         effective_at: '2008-04-11', end_date: '2009-05-22'
       )
   end
+
   def reg2012
     @_reg2012 ||=
       create(
@@ -529,6 +569,7 @@ shared_context :sapi do
         effective_at: '2012-12-15', end_date: '2013-08-10'
       )
   end
+
   def reg2013
     @_reg2013 ||=
       create(
@@ -579,6 +620,7 @@ shared_context :sapi do
       instance_variable_set("@_#{met_name}", relationship)
     end
   end
+
   def equal_relationship_type
     @_equal_relationship_type ||=
       create(
