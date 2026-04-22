@@ -135,6 +135,7 @@ GEM
     base64 (0.2.0)
     bcrypt (3.1.22)
     bcrypt_pbkdf (1.1.0)
+    benchmark (0.5.0)
     bigdecimal (4.1.1)
     bindex (0.8.1)
     bootsnap (1.23.0)
@@ -696,6 +697,7 @@ DEPENDENCIES
   aws-sdk-s3 (~> 1.143)
   base64 (= 0.2.0)
   bcrypt_pbkdf (= 1.1.0)
+  benchmark (~> 0.5.0)
   bootsnap (>= 1.23.0)
   bootstrap-sass (= 2.3.2.2)
   brakeman

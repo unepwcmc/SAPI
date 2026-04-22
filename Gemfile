@@ -234,3 +234,5 @@ gem 'handlebars-source', '1.0.12' # TODO: just a wrapwrapper. Any update will ch
 # It might be possible to fix this if we had an nginx version which supported
 # the config: `passenger_preload_bundler on;`
 gem 'base64', '0.2.0'
+
+gem "benchmark", "~> 0.5.0"
