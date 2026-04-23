@@ -11,25 +11,10 @@ FROM ruby:$RUBY_VERSION-slim AS base
   ##
   # Rails and SAPI has some additional dependencies, e.g. rake requires a JS
   # runtime, so attempt to get these from apt, where possible
-  RUN apt-get update -qq \
-    && apt-get install --no-install-recommends -y \
-      # Needed to install Node.js from official distribution archives.
-      curl ca-certificates xz-utils gnupg \
-      \
-      # Needed by psych native extension (`yaml.h`) when bundling on slim images.
-      libyaml-dev \
-      \
-      # Use jemalloc for long-running Rails/Sidekiq processes to reduce allocator fragmentation and lower RSS during
-      # memory-heavy jobs such as questionnaire publish loop expansion.
-      libjemalloc2 \
-      \
-      # Needed for variout library building activities
-      build-essential pkg-config \
-      \
-      # Do not install Postgres libraries from Debian; needs a specific version:
-      #   postgresql-client libpq
-      # Do not install Node.js from Debian; needs a specific version:
-      #   nodejs
+  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+    apt-get update -qq \
+    && docker_config/system_packages.sh common base | \
+      xargs apt-get install --no-install-recommends -y \
     \
     ##
     # Keep PostgreSQL client major version aligned with DB server major version
@@ -71,29 +56,19 @@ FROM ruby:$RUBY_VERSION-slim AS base
 
 FROM base AS runtime
   ARG DEBIAN_FRONTEND=noninteractive
-  RUN apt-get update -qq \
-    && apt-get install --no-install-recommends -y --force-yes \
-      # Install libvips for Active Storage preview support
-      libvips \
-      \
-      # Zip for exports
-      zip \
-      #
-      libsodium-dev libgmp3-dev libssl-dev \
-      \
-      # socat is just for binding ports within docker, not needed for the application
-      socat \
-      \
-      # TeX is used for the generation of CITES Checklist PDFs.
-      texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra \
+  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+    apt-get update -qq \
+    && docker_config/system_packages.sh common base | \
+      xargs apt-get install --no-install-recommends -y \
       && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
     ;
 
 FROM base AS build
   ARG DEBIAN_FRONTEND=noninteractive
-  RUN apt-get update -qq \
-    && apt-get install --no-install-recommends -y \
-      build-essential git libyaml-dev pkg-config \
+  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+    apt-get update -qq \
+    && docker_config/system_packages.sh common build | \
+      xargs apt-get install --no-install-recommends -y \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
   ;
 
@@ -109,11 +84,13 @@ FROM build AS build-develop
 
   ARG DEBIAN_FRONTEND=noninteractive
 
-  RUN apt-get update -qq \
-    && apt-get install --no-install-recommends -y --force-yes \
-      socat
-      && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
-    ;
+  ARG DEBIAN_FRONTEND=noninteractive
+  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+    apt-get update -qq \
+    && docker_config/system_packages.sh develop build | \
+      xargs apt-get install --no-install-recommends -y \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+  ;
 
   ##
   # Install the same version of bundler as the one used to create the lockfile
@@ -132,6 +109,13 @@ FROM build-develop AS runtime-develop
   ARG LOCAL_GID=1000
   ARG DEFAULT_GROUPNAME=railsgroup
   ARG DEFAULT_USERNAME=railsuser
+
+  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+    apt-get update -qq \
+    && docker_config/system_packages.sh develop runtime | \
+      xargs apt-get install --no-install-recommends -y \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+  ;
 
   ##
   # Docker UID/GID Mapping to Host: reuse or create group, then reuse or create
@@ -176,6 +160,13 @@ FROM build AS build-staging
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
+  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+    apt-get update -qq \
+    && docker_config/system_packages.sh staging build | \
+      xargs apt-get install --no-install-recommends -y \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+  ;
+
   COPY Gemfile Gemfile.lock ./
 
   RUN grep -A1 '^BUNDLED WITH$' Gemfile.lock | tail -n1 | tr -d ' ' \
@@ -201,6 +192,13 @@ FROM runtime AS runtime-staging
   ARG DEFAULT_GROUPNAME=railsgroup
   ARG DEFAULT_USERNAME=railsuser
   ENV BUNDLE_PATH="/usr/local/bundle"
+
+  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+    apt-get update -qq \
+    && docker_config/system_packages.sh staging runtime | \
+      xargs apt-get install --no-install-recommends -y \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+  ;
 
   # Run and own only the runtime files as a non-root user for security
   RUN groupadd $DEFAULT_GROUPNAME \
