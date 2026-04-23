@@ -7,9 +7,9 @@
 # @common/base
 # @common/build
 # @common/runtime
-# @develop/base
-# @develop/build
-# @develop/runtime
+# @development/base
+# @development/build
+# @development/runtime
 # @production/base
 # @production/build
 # @production/runtime
@@ -70,6 +70,6 @@ pkg-config                @common/build
 
 #                         socat is just for binding ports within docker, not
 #                         needed for the application
-socat                     @dev/runtime
+socat                     @development/runtime
 
 EOF

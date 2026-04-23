@@ -11,10 +11,12 @@ FROM ruby:$RUBY_VERSION-slim AS base
   ##
   # Rails and SAPI has some additional dependencies, e.g. rake requires a JS
   # runtime, so attempt to get these from apt, where possible
-  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+  RUN --mount=type=bind,source=docker_config/,target=docker_config/ \
+    --mount=type=cache,target=/var/lib/apt/lists \
+    --mount=type=cache,target=/var/cache/apt/archives \
     apt-get update -qq \
-    && docker_config/system_packages.sh common base | \
-      xargs apt-get install --no-install-recommends -y \
+    && bash docker_config/system_packages.sh common base | \
+      xargs -r apt-get install --no-install-recommends -y \
     \
     ##
     # Keep PostgreSQL client major version aligned with DB server major version
@@ -24,26 +26,12 @@ FROM ruby:$RUBY_VERSION-slim AS base
     # pg_dump requires that the client library >= the server (major) version
     # `postgresql-client-${POSTGRES_CLIENT_MAJOR}` requires PostgreSQL `apt`
     # repository.
-    && install -d /usr/share/postgresql-common/pgdg \
-    && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
-      | gpg --dearmor -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg \
-    && . /etc/os-release \
-    && echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt ${VERSION_CODENAME}-pgdg main" \
-      > /etc/apt/sources.list.d/pgdg.list \
-    \
-    && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+    && \
+    bash docker_config/install_pg.sh $POSTGRES_CLIENT_MAJOR \
+    && \
+    bash docker_config/install_node.sh $NODE_VERSION $TARGETARCH \
   ;
 
-  RUN case $TARGETARCH \
-      in \
-        amd64) NODE_ARCH=x64 ;; \
-        arm64) NODE_ARCH=arm64 ;; \
-        *) echo "Unsupported architecture: '$TARGETARCH'"; exit 1 ;; \
-      esac \
-    && echo https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$NODE_ARCH.tar.xz \
-    && curl -fsSL https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$NODE_ARCH.tar.xz \
-      | tar -xJ -C /usr/local --strip-components=1 \
-  ;
 
   # Debian installs jemalloc in an architecture-specific library directory. Resolve the actual path at build time and
   # expose one stable preload path so both the Rails web process and Sidekiq use the same allocator automatically.
@@ -56,20 +44,22 @@ FROM ruby:$RUBY_VERSION-slim AS base
 
 FROM base AS runtime
   ARG DEBIAN_FRONTEND=noninteractive
-  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+  RUN --mount=type=bind,source=docker_config/,target=docker_config/ \
+    --mount=type=cache,target=/var/lib/apt/lists \
+    --mount=type=cache,target=/var/cache/apt/archives \
     apt-get update -qq \
-    && docker_config/system_packages.sh common base | \
-      xargs apt-get install --no-install-recommends -y \
-      && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+    && bash docker_config/system_packages.sh common base | \
+      xargs -r apt-get install --no-install-recommends -y \
     ;
 
 FROM base AS build
   ARG DEBIAN_FRONTEND=noninteractive
-  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+RUN --mount=type=bind,source=docker_config/,target=docker_config/ \
+    --mount=type=cache,target=/var/lib/apt/lists \
+    --mount=type=cache,target=/var/cache/apt/archives \
     apt-get update -qq \
-    && docker_config/system_packages.sh common build | \
-      xargs apt-get install --no-install-recommends -y \
-    && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+    && bash docker_config/system_packages.sh common build | \
+      xargs -r apt-get install --no-install-recommends -y \
   ;
 
 ##
@@ -85,11 +75,12 @@ FROM build AS build-develop
   ARG DEBIAN_FRONTEND=noninteractive
 
   ARG DEBIAN_FRONTEND=noninteractive
-  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+  RUN --mount=type=bind,source=docker_config/,target=docker_config/ \
+    --mount=type=cache,target=/var/lib/apt/lists \
+    --mount=type=cache,target=/var/cache/apt/archives \
     apt-get update -qq \
-    && docker_config/system_packages.sh develop build | \
-      xargs apt-get install --no-install-recommends -y \
-    && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+    && bash docker_config/system_packages.sh development build | \
+      xargs -r apt-get install --no-install-recommends -y \
   ;
 
   ##
@@ -107,34 +98,20 @@ FROM build-develop AS runtime-develop
   #   export LOCAL_GID=$(id -g)
   ARG LOCAL_UID=1000
   ARG LOCAL_GID=1000
-  ARG DEFAULT_GROUPNAME=railsgroup
-  ARG DEFAULT_USERNAME=railsuser
 
-  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+  RUN --mount=type=bind,source=docker_config/,target=docker_config/ \
+    --mount=type=cache,target=/var/lib/apt/lists \
+    --mount=type=cache,target=/var/cache/apt/archives \
     apt-get update -qq \
-    && docker_config/system_packages.sh develop runtime | \
-      xargs apt-get install --no-install-recommends -y \
-    && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+    && bash docker_config/system_packages.sh development runtime | \
+      xargs -r apt-get install --no-install-recommends -y \
   ;
 
   ##
   # Docker UID/GID Mapping to Host: reuse or create group, then reuse or create
   # user, and give them passwordless sudo.
-  RUN if getent group $LOCAL_GID > /dev/null; then \
-        grp=$(getent group $LOCAL_GID | cut -d: -f1); \
-      else \
-        groupadd -g $LOCAL_GID $DEFAULT_GROUPNAME; \
-        grp=$DEFAULT_GROUPNAME; \
-      fi \
-    && if getent passwd $LOCAL_UID > /dev/null; then \
-        user=$(getent passwd $LOCAL_UID | cut -d: -f1); \
-      else \
-        useradd -m -u $LOCAL_UID -g "$grp" $DEFAULT_USERNAME; \
-        user=$DEFAULT_USERNAME; \
-      fi \
-    && mkdir -p /etc/sudoers.d/ \
-    && echo "${user} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${user}"\
-    && chmod 0440 "/etc/sudoers.d/${user}" \
+  RUN --mount=type=bind,source=docker_config/,target=docker_config/ \
+    bash docker_config/create_docker_user.sh \
   ;
 
   ##
@@ -160,11 +137,12 @@ FROM build AS build-staging
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
-  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+  RUN --mount=type=bind,source=docker_config/,target=docker_config/ \
+    --mount=type=cache,target=/var/lib/apt/lists \
+    --mount=type=cache,target=/var/cache/apt/archives \
     apt-get update -qq \
-    && docker_config/system_packages.sh staging build | \
-      xargs apt-get install --no-install-recommends -y \
-    && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+    && bash docker_config/system_packages.sh staging build | \
+      xargs -r apt-get install --no-install-recommends -y \
   ;
 
   COPY Gemfile Gemfile.lock ./
@@ -193,11 +171,12 @@ FROM runtime AS runtime-staging
   ARG DEFAULT_USERNAME=railsuser
   ENV BUNDLE_PATH="/usr/local/bundle"
 
-  RUN --mount=type=bind,source=docker_config/system_packages.sh,target=docker_config/system_packages.sh \
+  RUN --mount=type=bind,source=docker_config/,target=docker_config/ \
+    --mount=type=cache,target=/var/lib/apt/lists \
+    --mount=type=cache,target=/var/cache/apt/archives \
     apt-get update -qq \
-    && docker_config/system_packages.sh staging runtime | \
-      xargs apt-get install --no-install-recommends -y \
-    && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+    && bash docker_config/system_packages.sh staging runtime | \
+      xargs -r apt-get install --no-install-recommends -y \
   ;
 
   # Run and own only the runtime files as a non-root user for security
