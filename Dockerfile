@@ -46,20 +46,6 @@ FROM ruby:$RUBY_VERSION-slim AS base
     && echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt ${VERSION_CODENAME}-pgdg main" \
       > /etc/apt/sources.list.d/pgdg.list \
     \
-    && apt-get install --no-install-recommends -y --force-yes \
-      # Install libvips for Active Storage preview support
-      libvips \
-      \
-      # Zip for exports
-      zip \
-      #
-      libsodium-dev libgmp3-dev libssl-dev \
-      \
-      # socat is just for binding ports within docker, not needed for the application
-      socat \
-      \
-      # TeX is used for the generation of CITES Checklist PDFs.
-      texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra \
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
   ;
 
@@ -83,6 +69,26 @@ FROM ruby:$RUBY_VERSION-slim AS base
 
   ENV LD_PRELOAD=/usr/local/lib/libjemalloc.so.2
 
+FROM base AS runtime
+  ARG DEBIAN_FRONTEND=noninteractive
+  RUN apt-get update -qq \
+    && apt-get install --no-install-recommends -y --force-yes \
+      # Install libvips for Active Storage preview support
+      libvips \
+      \
+      # Zip for exports
+      zip \
+      #
+      libsodium-dev libgmp3-dev libssl-dev \
+      \
+      # socat is just for binding ports within docker, not needed for the application
+      socat \
+      \
+      # TeX is used for the generation of CITES Checklist PDFs.
+      texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra \
+      && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+    ;
+
 FROM base AS build
   ARG DEBIAN_FRONTEND=noninteractive
   RUN apt-get update -qq \
@@ -96,10 +102,18 @@ FROM base AS build
 FROM build AS build-develop
   ##
   # BUNDLE_DEPLOYMENT prevents changes to Gemfile.lock
-  ENV RAILS_ENV="development" \
-    NODE_ENV="production" \
-    BUNDLE_DEPLOYMENT="1" \
+  ARG RAILS_ENV="development"
+  ARG NODE_ENV="production"
+  ENV BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle"
+
+  ARG DEBIAN_FRONTEND=noninteractive
+
+  RUN apt-get update -qq \
+    && apt-get install --no-install-recommends -y --force-yes \
+      socat
+      && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
+    ;
 
   ##
   # Install the same version of bundler as the one used to create the lockfile
@@ -108,7 +122,7 @@ FROM build AS build-develop
     | xargs -I _BUNDLER_VERSION_ gem install bundler -v _BUNDLER_VERSION_ \
   ;
 
-FROM build-develop AS built-develop
+FROM build-develop AS runtime-develop
   ##
   # You may wish to do the following:
   #
@@ -183,7 +197,7 @@ FROM build AS build-staging
 
   RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-FROM base AS built-staging
+FROM runtime AS runtime-staging
   ARG DEFAULT_GROUPNAME=railsgroup
   ARG DEFAULT_USERNAME=railsuser
   ENV BUNDLE_PATH="/usr/local/bundle"
@@ -200,13 +214,13 @@ FROM base AS built-staging
   COPY --from="build-staging" --chown=1000:1000 $BUNDLE_PATH $BUNDLE_PATH
   COPY --from="build-staging" --chown=1000:1000 /rails/ /rails/
 
-FROM built-staging AS deploy-staging
+FROM runtime-staging AS deploy-staging
   ENV RAILS_ENV="staging" \
     BUNDLE_WITHOUT="development"
 
   CMD ["tail", "-f", "/dev/null"]
 
-FROM built-staging AS exec-staging
+FROM runtime-staging AS exec-staging
   ENV RAILS_ENV="staging" \
     BUNDLE_WITHOUT="development"
 
@@ -216,10 +230,10 @@ FROM built-staging AS exec-staging
 
   CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
 
-FROM built-develop AS deploy-develop
+FROM runtime-develop AS deploy-develop
   CMD ["tail", "-f", "/dev/null"]
 
-FROM built-develop AS exec-develop
+FROM runtime-develop AS exec-develop
   ENTRYPOINT ["/rails/bin/docker-entrypoint-develop"]
 
   EXPOSE 80
