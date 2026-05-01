@@ -30,10 +30,11 @@ class Checklist::DownloadsController < ApplicationController
   # POST downloads/
   def create
     @download = Download.create(download_params)
+
     if download_params[:doc_type] == 'citesidmanual'
-      ManualDownloadWorker.perform_async(@download.id, params.dup.permit!.to_hash)
+      ManualDownloadWorker.perform_async(@download.id, params.dup.permit!.as_json)
     else
-      DownloadWorker.perform_async(@download.id, params.dup.permit!.to_hash)
+      DownloadWorker.perform_async(@download.id, params.dup.permit!.as_json)
     end
 
     @download = @download.attributes.except('filename', 'path')
