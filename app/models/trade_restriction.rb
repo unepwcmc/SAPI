@@ -56,6 +56,7 @@ require 'digest/sha1'
 require 'csv'
 
 class TradeRestriction < ApplicationRecord
+  extend SearchParamSanitiser
   extend Mobility
   include TrackWhoDoesIt
 
@@ -250,17 +251,21 @@ class TradeRestriction < ApplicationRecord
   end
 
   def self.filter_taxon_concepts(filters)
-    if filters.key?('taxon_concepts_ids')
+    taxon_concepts_ids =
+      sanitise_integer_array(
+        filters[:taxon_concepts_ids] || filters['taxon_concepts_ids']
+      )
+    if taxon_concepts_ids.present?
       conds_str = <<-SQL.squish
         ARRAY[
           taxon_concepts_mview.id, taxon_concepts_mview.family_id,
           taxon_concepts_mview.order_id, taxon_concepts_mview.class_id,
           taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
-        ] && ARRAY[?]
+        ] && ARRAY[?]::integer[]
         OR trade_restrictions.taxon_concept_id IS NULL
       SQL
 
-      return where(conds_str, filters['taxon_concepts_ids'].map(&:to_i))
+      return where(conds_str, taxon_concepts_ids)
     end
 
     all

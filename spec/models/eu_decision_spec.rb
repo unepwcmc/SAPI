@@ -54,6 +54,25 @@ describe EuDecision, sidekiq: :inline do
       subject { Dir["#{DownloadsCache.eu_decisions_path}/*"] }
       specify { expect(subject).not_to be_empty }
     end
+
+    context 'when taxon concept filters come from params as strings' do
+      it 'casts them to integers before running the overlap query' do
+        create(
+          :eu_decision,
+          start_date: Time.utc(2013),
+          taxon_concept_id: @taxon_concept.id,
+          type: 'EuOpinion'
+        )
+
+        expect do
+          Species::EuDecisionsExport.new(
+            decision_types: {},
+            set: 'current',
+            taxon_concepts_ids: [ @taxon_concept.id.to_s ]
+          ).export
+        end.not_to raise_error
+      end
+    end
   end
 
   describe :save do

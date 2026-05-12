@@ -47,6 +47,27 @@ describe Quota, sidekiq: :inline do
       subject { Dir["#{DownloadsCache.quotas_path}/*"] }
       specify { expect(subject).not_to be_empty }
     end
+
+    context 'when taxon concept filters come from params as strings' do
+      it 'casts them to integers before running the overlap query' do
+        create(
+          :quota,
+          start_date: Time.utc(2013),
+          geo_entity: create(:geo_entity),
+          taxon_concept: @taxon_concept
+        )
+        # The export joins taxon_concepts_mview, so we rebuild it here to
+        # mirror production and prove the query survives string params.
+        SapiModule::StoredProcedures.execute_proc :rebuild_taxon_concepts_mview
+
+        expect do
+          Quota.export(
+            'set' => 'current',
+            'taxon_concepts_ids' => [ @taxon_concept.id.to_s ]
+          )
+        end.not_to raise_error
+      end
+    end
   end
 
   describe :destroy do
