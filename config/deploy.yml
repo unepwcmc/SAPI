@@ -32,6 +32,14 @@ env:
     - SAPI_SIDEKIQ_REDIS_URL
     - SAPI_SIDEKIQ_REDIS_CACHE_URL
 
+# Persist file-backed application data across deploys and restarts. These mounts
+# must be shared by both web and job containers because Sidekiq writes files
+# into `public/downloads` that the web role later serves.
+volumes:
+  - sapi_private:/rails/private
+  - sapi_public_downloads:/rails/public/downloads
+  - sapi_public_id_manual_volumes:/rails/public/ID_manual_volumes:ro
+
 # Use a different ssh user than root
 ssh:
   user: wcmc
