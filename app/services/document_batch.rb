@@ -47,9 +47,8 @@ private
 
     if documents_attributes && files
       unless documents_attributes.try(:length) == files.try(:length)
-        raise StandardError(
+        raise StandardError,
           'documents_attributes and files should have the same number of elements'
-        )
       end
 
       for idx in 0..(files.length - 1) do

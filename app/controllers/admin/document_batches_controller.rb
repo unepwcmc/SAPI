@@ -43,24 +43,55 @@ protected
   end
 
   def document_batch_params
-    params.expect(
+    document_batch = params.expect(
       document_batch: [
         :event_id,
         :date,
         :language_id,
         :is_public,
-        documents_attributes: [ [ :type ] ],
         files: []
       ]
     )
+    raw_documents_attributes = params.dig(:document_batch, :documents_attributes)
 
-    # TODO: for some reason the following won't work
-    # params.expect(
-    #   document_batch: [
-    #     :event_id, :date, :language_id, :is_public,
-    #     files: [ [] ],
-    #     documents_attributes: [ [ :type ] ],
-    #   ]
-    # )
+    # The batch-upload JavaScript submits nested fields as
+    # `documents_attributes[0][type]`, which Rails parses into a hash keyed by
+    # "0", "1", etc. Normalize that browser payload into the array shape
+    # expected by `DocumentBatch`, while still accepting callers that already
+    # send an array.
+    document_batch[:documents_attributes] =
+      normalized_documents_attributes(raw_documents_attributes)
+
+    document_batch
+  end
+
+  def normalized_documents_attributes(documents_attributes)
+    case documents_attributes
+    when nil
+      nil
+    when Array
+      documents_attributes.map { |attributes| normalize_document_attributes(attributes) }
+    else
+      documents_attributes.permit!.to_h.sort_by do |key, _|
+        Integer(key.to_s, 10)
+      rescue ArgumentError, TypeError
+        key.to_s
+      end.map { |_, attributes| normalize_document_attributes(attributes) }
+    end
+  end
+
+  def normalize_document_attributes(attributes)
+    attributes =
+      if attributes.respond_to?(:permit)
+        attributes.permit(:type).to_h
+      elsif attributes.respond_to?(:to_h)
+        attributes.to_h
+      else
+        attributes
+      end
+
+    {
+      type: attributes[:type] || attributes['type']
+    }
   end
 end

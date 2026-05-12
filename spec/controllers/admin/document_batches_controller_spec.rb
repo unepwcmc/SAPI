@@ -59,6 +59,19 @@ describe Admin::DocumentBatchesController, sidekiq: :inline do
         end.to change(Document, :count).by(1)
       end
 
+      it 'creates a new Document from browser-style indexed document attributes' do
+        expect do
+          post :create,
+            params: {
+              document_batch: {
+                date: Date.today,
+                documents_attributes: { '0' => document_attrs },
+                files: files
+              }
+            }
+        end.to change(Document, :count).by(1)
+      end
+
       it 'redirects to index when successful' do
         post :create,
           params: {
