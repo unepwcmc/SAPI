@@ -1,6 +1,8 @@
 # Usage:
 #   bundle exec rake active_storage:cleanup_orphaned_objects
 #   DRY_RUN=false bundle exec rake active_storage:cleanup_orphaned_objects
+#   bundle exec rake active_storage:backfill_missing_objects_from_production
+#   DRY_RUN=false bundle exec rake active_storage:backfill_missing_objects_from_production
 #
 # Requirements:
 # - Only run this in staging. Production is hard-blocked because
@@ -17,6 +19,8 @@
 #     and must be preserved for the next restore
 # - To preserve those newer replicated objects, the task only deletes orphaned
 #   objects older than the latest ActiveStorage blob row.
+# - The backfill task assumes the staging bucket name ends with `-staging` and
+#   the corresponding production bucket uses the same prefix with `-production`.
 #
 namespace :active_storage do
   desc 'Delete S3 objects that no longer have an active_storage_blobs row'
@@ -73,6 +77,63 @@ namespace :active_storage do
     ].join(' ')
 
     Rails.logger.info("ActiveStorage staging bucket cleanup complete #{summary}")
+    puts summary
+  end
+
+  desc 'Copy ActiveStorage objects referenced by the staging DB but missing from the staging bucket'
+  task backfill_missing_objects_from_production: :environment do
+    unless Rails.env.staging?
+      raise 'active_storage:backfill_missing_objects_from_production only supports staging'
+    end
+
+    service_name = Rails.application.config.active_storage.service
+    service_config = Rails.application.config.active_storage
+      .service_configurations
+      .fetch(service_name.to_s)
+    service_type = service_config.fetch('service')
+
+    unless service_type == 'S3'
+      raise "active_storage:backfill_missing_objects_from_production requires an S3-backed ActiveStorage service, got #{service_type.inspect}"
+    end
+
+    destination_bucket_name = service_config.fetch('bucket')
+    source_bucket_name = destination_bucket_name.sub(/-staging\z/, '-production')
+
+    if source_bucket_name == destination_bucket_name
+      raise "active_storage:backfill_missing_objects_from_production could not derive a production bucket name from #{destination_bucket_name.inspect}"
+    end
+
+    dry_run = ENV.fetch('DRY_RUN', 'true') != 'false'
+
+    s3_client = Aws::S3::Client.new(
+      access_key_id: service_config['access_key_id'],
+      secret_access_key: service_config['secret_access_key'],
+      session_token: service_config['session_token'],
+      region: service_config['region'],
+      endpoint: service_config['endpoint'],
+      force_path_style: service_config['force_path_style']
+    )
+
+    Rails.logger.info(
+      "ActiveStorage staging bucket backfill configured for source_bucket=#{source_bucket_name} destination_bucket=#{destination_bucket_name} dry_run=#{dry_run}"
+    )
+
+    result = ActiveStorage::StagingBucketBackfill.call(
+      s3_client:,
+      source_bucket_name:,
+      destination_bucket_name:,
+      dry_run:
+    )
+
+    summary = [
+      "scanned=#{result.scanned_blob_keys_count}",
+      "missing_in_staging=#{result.missing_in_staging_count}",
+      "copied=#{result.copied_objects_count}",
+      "missing_in_production=#{result.missing_in_production_count}",
+      "dry_run=#{result.dry_run}"
+    ].join(' ')
+
+    Rails.logger.info("ActiveStorage staging bucket backfill complete #{summary}")
     puts summary
   end
 end
