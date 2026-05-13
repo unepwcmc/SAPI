@@ -58,22 +58,25 @@ private
   def normalize_export_filters(raw_filters)
     normalized_filters = raw_filters.with_indifferent_access
 
-    normalize_array_filter(normalized_filters, raw_filters, :taxon_concepts_ids)
-    normalize_array_filter(normalized_filters, raw_filters, :geo_entities_ids)
-    normalize_array_filter(normalized_filters, raw_filters, :years)
-    normalize_array_filter(normalized_filters, raw_filters, :species_listings_ids)
-    normalize_integer_filter(normalized_filters, raw_filters, :designation_id)
+    normalize_array_filter!(normalized_filters, raw_filters, :taxon_concepts_ids)
+    normalize_array_filter!(normalized_filters, raw_filters, :geo_entities_ids)
+    normalize_array_filter!(normalized_filters, raw_filters, :years)
+    normalize_array_filter!(normalized_filters, raw_filters, :species_listings_ids)
+    normalize_integer_filter!(normalized_filters, raw_filters, :designation_id)
 
     normalized_filters
   end
 
-  def normalize_array_filter(normalized_filters, raw_filters, key)
+  # These helpers intentionally mutate `normalized_filters` in place so the
+  # caller can preserve the original key-presence semantics while replacing
+  # only the submitted values with sanitised equivalents.
+  def normalize_array_filter!(normalized_filters, raw_filters, key)
     return unless raw_filters.key?(key) || raw_filters.key?(key.to_s)
 
     normalized_filters[key] = sanitise_integer_array(raw_filters[key] || raw_filters[key.to_s])
   end
 
-  def normalize_integer_filter(normalized_filters, raw_filters, key)
+  def normalize_integer_filter!(normalized_filters, raw_filters, key)
     return unless raw_filters.key?(key) || raw_filters.key?(key.to_s)
 
     normalized_filters[key] = sanitise_positive_integer(raw_filters[key] || raw_filters[key.to_s])
