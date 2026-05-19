@@ -3,7 +3,6 @@ ARG RUBY_VERSION=3.4.9
 FROM ruby:$RUBY_VERSION-slim AS base
   ARG NODE_VERSION=18.20.8
   ARG POSTGRES_CLIENT_MAJOR=17
-  ARG TARGETARCH=amd64
   ARG DEBIAN_FRONTEND=noninteractive
 
   WORKDIR /rails
@@ -63,11 +62,17 @@ FROM ruby:$RUBY_VERSION-slim AS base
     && rm -rf /var/lib/apt/lists /var/cache/apt/archives \
   ;
 
-  RUN case $TARGETARCH \
+  # Detect the runtime architecture from the image itself instead of trusting a
+  # caller-provided build arg. Local Docker Compose builds do not reliably set
+  # TARGETARCH, and falling back to amd64 installs an x64 Node binary into an
+  # arm64 image. ExecJS then tries to launch that binary during template asset
+  # compilation and fails with the Rosetta loader error seen in development.
+  RUN image_arch="$(dpkg --print-architecture)" \
+    && case "$image_arch" \
       in \
         amd64) NODE_ARCH=x64 ;; \
         arm64) NODE_ARCH=arm64 ;; \
-        *) echo "Unsupported architecture: '$TARGETARCH'"; exit 1 ;; \
+        *) echo "Unsupported architecture: '$image_arch'"; exit 1 ;; \
       esac \
     && echo https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$NODE_ARCH.tar.xz \
     && curl -fsSL https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$NODE_ARCH.tar.xz \
