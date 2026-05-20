@@ -77,10 +77,7 @@ Rails.application.configure do
   config.log_tags = [ :request_id ]
 
   # Change to "debug" to log everything (including potentially personally-identifiable information!)
-  # config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
-  # Leonardo: override default behaviour and hard-code warn.
-  # @see https://github.com/heartcombo/devise#password-reset-tokens-and-rails-logs
-  config.log_level = 'warn'
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
   # Prevent health checks from clogging up the logs.
   config.silence_healthcheck_path = '/up'

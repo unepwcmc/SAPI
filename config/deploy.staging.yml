@@ -40,3 +40,4 @@ builder:
 env:
   clear:
     RAILS_ENV: staging
+    RAILS_LOG_LEVEL: info # for debugging `nomenclature_changes` ticket 191
