@@ -1,5 +1,5 @@
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 
 networks:
   sapi:
@@ -45,26 +45,26 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
 
-  db-pg10:
-    container_name: sapi-db-pg10
-    image: postgres:10
-    command: postgres -c max_wal_size=2GB
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      timeout: 45s
-      interval: 10s
-      retries: 10
-    volumes:
-      - ./db_init:/docker-entrypoint-initdb.d
-      - ./db/structure.sql:/docker-entrypoint-initdb.d/sapi_schema.sql
-      - 'pgdata:/var/lib/postgresql/data'
-    ports:
-      - "${SAPI_CONTAINER_DB_PORT:-5432}:5432"
-    networks:
-      - sapi
-    environment:
-      POSTGRES_HOST_AUTH_METHOD: "trust"
-      POSTGRES_DB: "sapi_development"
+  # db-pg10:
+  #   container_name: sapi-db-pg10
+  #   image: postgres:10
+  #   command: postgres -c max_wal_size=2GB
+  #   healthcheck:
+  #     test: ["CMD", "pg_isready", "-U", "postgres"]
+  #     timeout: 45s
+  #     interval: 10s
+  #     retries: 10
+  #   volumes:
+  #     - ./db_init:/docker-entrypoint-initdb.d
+  #     - ./db/structure.sql:/docker-entrypoint-initdb.d/sapi_schema.sql
+  #     - 'pgdata:/var/lib/postgresql/data'
+  #   ports:
+  #     - "${SAPI_CONTAINER_DB_PORT:-5432}:5432"
+  #   networks:
+  #     - sapi
+  #   environment:
+  #     POSTGRES_HOST_AUTH_METHOD: "trust"
+  #     POSTGRES_DB: "sapi_development"
 
   db-pg17:
     container_name: sapi-db-pg17
@@ -78,7 +78,7 @@ services:
     volumes:
       - ./db_init:/docker-entrypoint-initdb.d
       - ./db/structure.sql:/docker-entrypoint-initdb.d/sapi_schema.sql
-      - 'pg17data:/var/lib/postgresql/data'
+      - "pg17data:/var/lib/postgresql/data"
     ports:
       - "${SAPI_CONTAINER_DB_PORT:-5417}:5432"
     networks:
@@ -107,29 +107,29 @@ services:
       # - 'app_spec_public:/rails/spec/public/'
 
       # The following paths are writable during build/development
-      - './Gemfile.lock:/rails/Gemfile.lock'
+      - "./Gemfile.lock:/rails/Gemfile.lock"
 
       # Most rest of the application should not be writable, except to run
       # specific tasks like db migrations
-      - './app:/rails/app:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './bin:/rails/bin:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './config:/rails/config:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './db:/rails/db:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './db_init:/rails/db_init:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './doc:/rails/doc:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './lib:/rails/lib:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './script:/rails/script:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './spec:/rails/spec:${SAPI_CONTAINER_FS_MODE:-ro}'
-      - './vendor:/rails/vendor:${SAPI_CONTAINER_FS_MODE:-ro}'
+      # - "./app:/rails/app:${SAPI_CONTAINER_FS_MODE:-ro}"
+      # - "./bin:/rails/bin:${SAPI_CONTAINER_FS_MODE:-ro}"
+      # - "./config:/rails/config:${SAPI_CONTAINER_FS_MODE:-ro}"
+      # - "./db:/rails/db:${SAPI_CONTAINER_FS_MODE:-ro}"
+      # - "./db_init:/rails/db_init:${SAPI_CONTAINER_FS_MODE:-ro}"
+      # - "./doc:/rails/doc:${SAPI_CONTAINER_FS_MODE:-ro}"
+      # - "./lib:/rails/lib:${SAPI_CONTAINER_FS_MODE:-ro}"
+      # - "./script:/rails/script:${SAPI_CONTAINER_FS_MODE:-ro}"
+      # - "./spec:/rails/spec:${SAPI_CONTAINER_FS_MODE:-ro}"
+      # - "./vendor:/rails/vendor:${SAPI_CONTAINER_FS_MODE:-ro}"
 
       # During deploy public/assets is removed and re-added
-      - './public:/rails/public'
-      - '.:/rails'
+      - "./public:/rails/public"
+      - ".:/rails"
 
       # Keep the cache of bundler gems for sharing across install commands
       - bundler_gems:/usr/local/bundle
     ports:
-      - '${SAPI_CONTAINER_RAILS_PORT:-3000}:3000'
+      - "${SAPI_CONTAINER_RAILS_PORT:-3000}:3000"
     networks:
       - sapi
     stdin_open: true
@@ -143,11 +143,11 @@ services:
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
       SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
       CAPTIVE_BREEDING_DATABASE_HOST: sapi-db-pg17
-      SAPI_S3_PORT: '${SAPI_CONTAINER_S3_PORT:-9000}'
+      SAPI_S3_PORT: "${SAPI_CONTAINER_S3_PORT:-9000}"
     depends_on:
       - redis
       - redis_cache
-      - db-pg10
+      # - db-pg10
       - db-pg17
       - mailcatcher
       - minio
@@ -207,7 +207,7 @@ services:
     networks:
       - sapi
     depends_on:
-      - db-pg10
+      # - db-pg10
       - db-pg17
       - redis
       - redis_cache
@@ -220,7 +220,7 @@ services:
       SAPI_DATABASE_HOST: sapi-db-pg17
       SAPI_DATABASE_USERNAME: postgres
       SAPI_DATABASE_PORT: 5432
-      SAPI_S3_PORT: '${SAPI_CONTAINER_S3_PORT:-9000}'
+      SAPI_S3_PORT: "${SAPI_CONTAINER_S3_PORT:-9000}"
       SAPI_SIDEKIQ_REDIS_URL: redis://sapi-redis:6379/0
       SAPI_SIDEKIQ_REDIS_CACHE_URL: redis://sapi-redis-cache:6380/0
       CAPTIVE_BREEDING_DATABASE_HOST: sapi-db-pg17
