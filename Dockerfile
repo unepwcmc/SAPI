@@ -22,7 +22,7 @@ FROM ruby:$RUBY_VERSION-slim AS base
       # memory-heavy jobs such as questionnaire publish loop expansion.
       libjemalloc2 \
       \
-      # Needed for variout library building activities
+      # Needed for various library building activities
       build-essential pkg-config \
       \
       # Do not install Postgres libraries from Debian; needs a specific version:
@@ -46,6 +46,9 @@ FROM ruby:$RUBY_VERSION-slim AS base
       > /etc/apt/sources.list.d/pgdg.list \
     \
     && apt-get install --no-install-recommends -y --force-yes \
+      # Install the correct version of the postgres client
+      "postgresql-client-${POSTGRES_CLIENT_MAJOR}" libpq-dev \
+      \
       # Install libvips for Active Storage preview support
       libvips \
       \
