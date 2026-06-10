@@ -44,64 +44,129 @@ class Checklist::DocumentsController < ApplicationController
     render json: doc_ids.present?
   end
 
-  ##
-  # Produces and sends a zip file containing the ID manuals based on the
-  # params `locale` and `volumes`, taken from `./public/ID_manual_volumes`.
-  # At least one Document::IdManual in that Language must exist in the database.
   def volume_download
-    # We are building a path, so we must ensure that this is safe. to_i is
-    # sufficient.
+    language_code = (params['locale'] || I18n.locale)&.to_s&.upcase
+    raise ActiveRecord::RecordNotFound unless %w[EN ES FR].include?(language_code)
+
     volumes = Array.wrap(
       params['volume']
     ).map(&:to_i).filter(&:positive?).sort.uniq
 
-    # First, ensure the language exists. Default to the current
-    language = Language.find_by!(
-      iso_code1: (params['locale'] || I18n.locale)&.to_s&.upcase
-    )
+    document_volumes = volumes.presence || [ 1, 2, 3, 4, 5, 6 ]
+    raise ActiveRecord::RecordNotFound unless (document_volumes - [ 1, 2, 3, 4, 5, 6 ]).empty?
 
-    documents = Document::IdManual.where(
-      # If volumes is empty, get all volumes (expressed as `volume >= 1`)
-      # Note that there are many documents in each volume.
-      volume: volumes.presence || (1..),
-      language: language.id
-    )
+    filename = "Identifications-documents-volume-#{document_volumes.join(',')}.zip"
+    object_key = "ID_manual_volumes/prebuilt_zip/#{language_code.downcase}/#{filename}"
 
-    document_volumes = documents.pluck(:volume).sort.uniq
-
-    if document_volumes.size < volumes.size
-      raise ActiveRecord::RecordNotFound.new(
-        primary_key: 'volume',
-        id: document_volumes - volumes,
-        model: Document::IdManual,
-      )
-    end
-
-    temp_zip_file = full_volume_downloader(
-      volumes: document_volumes,
-      language_code: language.iso_code1,
-      temp_file: Tempfile.new(
-        'tmp-zip-' + request.remote_ip.to_s.gsub(/\W+/, '-')
-      )
-    )
-
-    unless temp_zip_file
-      render_404
-      return
-    end
-
+    # The prebuilt ZIP bucket is now the source of truth for this endpoint, so
+    # we fail with the same 404 path users already understand when the expected
+    # artifact has not been uploaded yet.
     begin
-      volumes_list = volumes.join(',')
-
-      send_file temp_zip_file.path,
-        type: 'application/zip',
-        filename: "Identifications-documents-volume-#{volumes_list}.zip"
-    ensure
-      temp_zip_file.close
+      s3_client.head_object(bucket: s3_bucket_name, key: object_key)
+    rescue Aws::S3::Errors::NotFound
+      raise ActiveRecord::RecordNotFound
     end
+
+    signed_url = s3_presigner.presigned_url(
+      :get_object,
+      bucket: s3_bucket_name,
+      key: object_key,
+      expires_in: 1.minute.to_i,
+      response_content_disposition: %(attachment; filename="#{filename}")
+    )
+
+    redirect_to signed_url, allow_other_host: true
   end
 
+  # Original version, for reference.
+  ##
+  # Produces and sends a zip file containing the ID manuals based on the
+  # params `locale` and `volumes`, taken from `./public/ID_manual_volumes`.
+  # At least one Document::IdManual in that Language must exist in the database.
+  # def volume_download
+  #   # We are building a path, so we must ensure that this is safe. to_i is
+  #   # sufficient.
+  #   volumes = Array.wrap(
+  #     params['volume']
+  #   ).map(&:to_i).filter(&:positive?).sort.uniq
+
+  #   # First, ensure the language exists. Default to the current
+  #   language = Language.find_by!(
+  #     iso_code1: (params['locale'] || I18n.locale)&.to_s&.upcase
+  #   )
+
+  #   documents = Document::IdManual.where(
+  #     # If volumes is empty, get all volumes (expressed as `volume >= 1`)
+  #     # Note that there are many documents in each volume.
+  #     volume: volumes.presence || (1..),
+  #     language: language.id
+  #   )
+
+  #   document_volumes = documents.pluck(:volume).sort.uniq
+
+  #   if document_volumes.size < volumes.size
+  #     raise ActiveRecord::RecordNotFound.new(
+  #       primary_key: 'volume',
+  #       id: document_volumes - volumes,
+  #       model: Document::IdManual,
+  #     )
+  #   end
+
+  #   temp_zip_file = full_volume_downloader(
+  #     volumes: document_volumes,
+  #     language_code: language.iso_code1,
+  #     temp_file: Tempfile.new(
+  #       'tmp-zip-' + request.remote_ip.to_s.gsub(/\W+/, '-')
+  #     )
+  #   )
+
+  #   unless temp_zip_file
+  #     render_404
+  #     return
+  #   end
+
+  #   begin
+  #     volumes_list = volumes.join(',')
+
+  #     send_file temp_zip_file.path,
+  #       type: 'application/zip',
+  #       filename: "Identifications-documents-volume-#{volumes_list}.zip"
+  #   ensure
+  #     temp_zip_file.close
+  #   end
+  # end
+
 private
+
+  def active_storage_s3_config
+    service_name = Rails.application.config.active_storage.service
+    service_config = Rails.application.config.active_storage
+      .service_configurations
+      .fetch(service_name.to_s)
+
+    raise 'Checklist::DocumentsController requires an S3-backed ActiveStorage service' unless service_config.fetch('service') == 'S3'
+
+    service_config
+  end
+
+  def s3_bucket_name
+    active_storage_s3_config.fetch('bucket')
+  end
+
+  def s3_client
+    @s3_client ||= Aws::S3::Client.new(
+      access_key_id: active_storage_s3_config['access_key_id'],
+      secret_access_key: active_storage_s3_config['secret_access_key'],
+      session_token: active_storage_s3_config['session_token'],
+      region: active_storage_s3_config['region'],
+      endpoint: active_storage_s3_config['endpoint'],
+      force_path_style: active_storage_s3_config['force_path_style']
+    )
+  end
+
+  def s3_presigner
+    @s3_presigner ||= Aws::S3::Presigner.new(client: s3_client)
+  end
 
   def access_denied?
     !current_user || current_user.is_api_user_or_secretariat?
@@ -126,56 +191,56 @@ private
   #
   # If no files are found, returns null. If some files are found, a list
   # of missing files is added to the archive.
-  def full_volume_downloader(**kwargs)
-    ##
-    # An array of integers, corresponding to the "volume" column
-    volumes = kwargs[:volumes] || []
+  # def full_volume_downloader(**kwargs)
+  #   ##
+  #   # An array of integers, corresponding to the "volume" column
+  #   volumes = kwargs[:volumes] || []
 
-    ##
-    # A two-letter ISO language code
-    language_code = kwargs[:language_code] || I18n.default_locale.to_s.upcase
+  #   ##
+  #   # A two-letter ISO language code
+  #   language_code = kwargs[:language_code] || I18n.default_locale.to_s.upcase
 
-    ##
-    # The file into which a zip archive will be written
-    temp_file = kwargs[:temp_file] || Tempfile.new
+  #   ##
+  #   # The file into which a zip archive will be written
+  #   temp_file = kwargs[:temp_file] || Tempfile.new
 
-    missing_files = []
+  #   missing_files = []
 
-    vol_path = "ID_manual_volumes/#{language_code.downcase}"
+  #   vol_path = "ID_manual_volumes/#{language_code.downcase}"
 
-    ##
-    # An array of Pathname objects
-    @pdf_file_paths =
-      volumes.map do |vol|
-        Rails.public_path.join(
-          "#{vol_path}/Volume#{vol}_#{language_code}.pdf"
-        )
-      end
+  #   ##
+  #   # An array of Pathname objects
+  #   @pdf_file_paths =
+  #     volumes.map do |vol|
+  #       Rails.public_path.join(
+  #         "#{vol_path}/Volume#{vol}_#{language_code}.pdf"
+  #       )
+  #     end
 
-    Zip::OutputStream.open(temp_file.path) do |zos|
-      @pdf_file_paths.each do |doc_path|
-        path_to_file = doc_path.dirname
-        filename = doc_path.basename
+  #   Zip::OutputStream.open(temp_file.path) do |zos|
+  #     @pdf_file_paths.each do |doc_path|
+  #       path_to_file = doc_path.dirname
+  #       filename = doc_path.basename
 
-        unless File.exist?(doc_path)
-          missing_files <<
-            "{\n  path: #{path_to_file},\n  filename: #{filename}\n}"
-        else
-          zos.put_next_entry("Identification-materials-#{filename}")
-          zos.print File.read(doc_path)
-        end
+  #       unless File.exist?(doc_path)
+  #         missing_files <<
+  #           "{\n  path: #{path_to_file},\n  filename: #{filename}\n}"
+  #       else
+  #         zos.put_next_entry("Identification-materials-#{filename}")
+  #         zos.print File.read(doc_path)
+  #       end
 
-        if missing_files.present?
-          if missing_files.length == @pdf_file_paths.count
-            return
-          end
+  #       if missing_files.present?
+  #         if missing_files.length == @pdf_file_paths.count
+  #           return
+  #         end
 
-          zos.put_next_entry('missing_files.txt')
-          zos.print missing_files.join("\n\n")
-        end
-      end
-    end
+  #         zos.put_next_entry('missing_files.txt')
+  #         zos.print missing_files.join("\n\n")
+  #       end
+  #     end
+  #   end
 
-    temp_file
-  end
+  #   temp_file
+  # end
 end
