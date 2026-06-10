@@ -127,7 +127,7 @@ services:
       - ".:/rails"
 
       # Keep the cache of bundler gems for sharing across install commands
-      - bundler_gems:/usr/local/bundle
+      - bundler_gems_ruby_3_4:/usr/local/bundle
     ports:
       - "${SAPI_CONTAINER_RAILS_PORT:-3000}:3000"
     networks:
@@ -238,7 +238,7 @@ services:
 volumes:
   pgdata:
   pg17data:
-  bundler_gems:
+  bundler_gems_ruby_3_4:
   redis_data:
   minio-data:
   redis_cache_data:
