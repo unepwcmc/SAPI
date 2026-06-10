@@ -214,7 +214,7 @@ AS $create_trade_sandbox_view$
         JOIN geo_entities ON geo_entities.id = aru.trading_country_id
         LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id;
       $format$,
-      target_table_name || _view,
+      target_table_name || '_view',
       target_table_name,
       idx
     );
