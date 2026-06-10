@@ -44,6 +44,11 @@ class Checklist::DocumentsController < ApplicationController
     render json: doc_ids.present?
   end
 
+  ##
+  # Redirects Checklist ID manual downloads to prebuilt ZIP artifacts produced
+  # by the `checklist_id_manual:prebuild_and_upload_zips` rake task and stored
+  # under `ID_manual_volumes/prebuilt_zip/<locale>/` in the Active Storage S3
+  # bucket.
   def volume_download
     language_code = (params['locale'] || I18n.locale)&.to_s&.upcase
     raise ActiveRecord::RecordNotFound unless %w[EN ES FR].include?(language_code)
