@@ -1,6 +1,16 @@
 require 'spec_helper'
 
-describe Api::V1::DocumentsController do
+describe Api::V1::DocumentsController,
+  skip_database_cleaner: true,
+  skip_bootstrap_user: true do
+  before(:all) do
+    ensure_download_zips_table!
+  end
+
+  before(:each) do
+    allow_any_instance_of(User).to receive(:sync_with_captive_breeding_db)
+  end
+
   before(:each) do
     @taxon_concept = create_cites_eu_species
     @subspecies = create_cites_eu_subspecies(parent: @taxon_concept)
@@ -105,32 +115,68 @@ describe Api::V1::DocumentsController do
   end
 
   context 'download documents' do
-    context 'single document selected' do
-      it 'should return 404 if file is missing' do
-        @document2.file.purge
-        get :download_zip, params: { ids: @document2.id }
-        expect(response).to have_http_status(404)
-      end
-      it 'should return zip file if file is found' do
-        allow(controller).to receive(:render)
-        get :download_zip, params: { ids: @document2.id }
-        expect(response.headers['Content-Type']).to eq 'application/zip'
-      end
+    def parsed_response
+      JSON.parse(response.body)
     end
 
-    context 'multiple documents selected' do
-      it 'should return 404 if all files are missing' do
-        @document.file.purge
-        @document2.file.purge
-        get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
-        expect(response).to have_http_status(404)
-      end
+    it 'returns 422 when no ids are provided' do
+      get :download_zip, params: { ids: '' }
 
-      it 'should return zip file if at least a file is found' do
-        @document.file.purge
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it 'returns 404 when any selected document row is missing' do
+      get :download_zip, params: { ids: "#{@document.id},999999999" }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'returns 404 when all selected files are missing' do
+      @document.file.purge
+      @document2.file.purge
+
+      get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'creates a pending download zip request and returns its JSON state' do
+      expect do
         get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
-        expect(response.headers['Content-Type']).to eq 'application/zip'
-      end
+      end.to change(DownloadZip, :count).by(1)
+
+      expect(response).to have_http_status(:accepted)
+      expect(parsed_response).to include(
+        'status' => DownloadZip::PENDING,
+        'error_message' => nil,
+        'processing_at' => nil,
+        'completed_at' => nil,
+        'download_url' => nil
+      )
+      expect(parsed_response['id']).to be_present
+    end
+
+    it 'reuses the same download zip request for the same ids in a different order' do
+      get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
+      first_response = parsed_response
+
+      expect do
+        get :download_zip, params: { ids: "#{@document2.id},#{@document.id}" }
+      end.not_to change(DownloadZip, :count)
+
+      expect(parsed_response['id']).to eq(first_response['id'])
+    end
+
+    it 'does not collapse a partially missing selection into the attached-only selection' do
+      @document.file.purge
+
+      get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
+      mixed_selection_id = parsed_response['id']
+
+      get :download_zip, params: { ids: @document2.id.to_s }
+
+      expect(parsed_response['id']).not_to eq(mixed_selection_id)
+      expect(DownloadZip.count).to eq(2)
     end
 
     context 'cascading documents logic' do

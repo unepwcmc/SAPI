@@ -18,7 +18,6 @@ namespace :checklist do
   resources :timelines, only: [ :index ]
   resources :documents do
     collection do
-      get 'download_zip'
       get 'volume_download'
       get 'check_doc_presence'
     end
