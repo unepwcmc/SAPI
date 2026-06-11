@@ -70,16 +70,17 @@ RSpec.describe DownloadZipJob do
     it 'returns early when the zip is already attached and completed' do
       download_zip = DownloadZip.create!(
         checksum: 'checksum-already-completed',
-        document_ids: [ attached_document.id ],
-        status: DownloadZip::COMPLETED,
-        completed_at: Time.current
+        document_ids: [ attached_document.id ]
       )
       download_zip.zip_file.attach(
         io: StringIO.new('existing zip'),
         filename: 'elibrary-documents.zip',
         content_type: 'application/zip'
       )
-      download_zip.save!
+      download_zip.update!(
+        status: DownloadZip::COMPLETED,
+        completed_at: Time.current
+      )
 
       processing_at = download_zip.processing_at
       completed_at = download_zip.completed_at

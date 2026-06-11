@@ -1,17 +1,11 @@
 require 'spec_helper'
 
-describe Api::V1::DocumentsController,
-  skip_database_cleaner: true,
-  skip_bootstrap_user: true do
-  before(:all) do
-    ensure_download_zips_table!
-  end
-
-  before(:each) do
+describe Api::V1::DocumentsController do
+  before do
     allow_any_instance_of(User).to receive(:sync_with_captive_breeding_db)
   end
 
-  before(:each) do
+  before do
     @taxon_concept = create_cites_eu_species
     @subspecies = create_cites_eu_subspecies(parent: @taxon_concept)
     @document = create(:proposal, is_public: true, event: create_cites_cop)
@@ -71,13 +65,14 @@ describe Api::V1::DocumentsController,
       get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response.body).to have_json_size(3).at_path('documents')
     end
-    context 'GET index api user ' do
+    context 'GET index api user' do
       login_api_user
 
       it 'returns only public documents' do
         get_public_documents
       end
     end
+
     context 'GET index no user' do |variable|
       it 'returns only public documents' do
         get_public_documents
@@ -90,7 +85,7 @@ describe Api::V1::DocumentsController,
       get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response.body).to have_json_size(3).at_path('documents')
     end
-    context 'GET index api user ' do
+    context 'GET index api user' do
       login_secretariat_user
 
       it 'returns only public documents' do
@@ -101,9 +96,9 @@ describe Api::V1::DocumentsController,
 
   context 'show action fails' do
     login_api_user
-    it 'should return 403 status when permission denied' do
+    it 'returns 403 status when permission denied' do
       get :show, params: { id: @document2.id }
-      expect(response).to have_http_status(403)
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
@@ -180,7 +175,7 @@ describe Api::V1::DocumentsController,
     end
 
     context 'cascading documents logic' do
-      it 'should get subspecies documents' do
+      it 'gets subspecies documents' do
         get :index, params: { taxon_concepts_ids: [ @taxon_concept.id ] }
         expect(response.body).to have_json_size(3).at_path('documents')
       end
