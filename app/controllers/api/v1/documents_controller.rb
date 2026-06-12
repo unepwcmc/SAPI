@@ -49,7 +49,7 @@ class Api::V1::DocumentsController < ApplicationController
 
         children_ids =
           taxa.map(&:children).map do |children|
-            children.pluck(:id) if children.present?
+            children.presence&.pluck(:id)
           end.flatten.uniq.compact
 
         ancestor_ids = MaterialDocIdsRetriever.ancestors_ids(
@@ -114,16 +114,13 @@ class Api::V1::DocumentsController < ApplicationController
 
     return render_404 if ids.length > @documents.count
 
-    missing_files = []
-
-    @documents.each do |document|
-      next if document.file.attached?
-
-      missing_files <<
-        "{\n  title: #{document.title},\n  filename: #{document.filename}\n}"
-    end
-
-    return render_404 if missing_files.length == @documents.count
+    # If there are missing files, we will generate a zip file with an additional
+    # file called `missing_files.txt`. But if all files are missing, then we can
+    # just return a 404 here.
+    return render_404 unless
+      @documents.any? do |document|
+        document.file.attached?
+      end.length
 
     # We key `DownloadZip` records by a deterministic checksum so identical
     # document selections converge on the same asynchronous ZIP request instead
@@ -134,9 +131,10 @@ class Api::V1::DocumentsController < ApplicationController
     checksum = documents_zip_checksum(@documents)
     document_ids = @documents.map(&:id).sort
 
-    download_zip = DownloadZip.create_or_find_by!(checksum:) do |record|
-      record.document_ids = document_ids
-    end
+    download_zip =
+      DownloadZip.create_or_find_by!(checksum:) do |record|
+        record.document_ids = document_ids
+      end
 
     render json: download_zip_response(download_zip), status: :accepted
   end
@@ -215,26 +213,27 @@ private
   end
 
   def documents_zip_checksum(documents)
-    checksum_input = documents.sort_by(&:id).map do |document|
-      if document.file.attached?
-        blob = document.file.blob
+    checksum_input =
+      documents.sort_by(&:id).map do |document|
+        if document.file.attached?
+          blob = document.file.blob
 
-        [
-          document.id,
-          blob.id,
-          blob.filename.to_s,
-          blob.byte_size,
-          blob.checksum
-        ].join(':')
-      else
-        [
-          document.id,
-          document.title,
-          document.filename,
-          'missing'
-        ].join(':')
+          [
+            document.id,
+            blob.id,
+            blob.filename.to_s,
+            blob.byte_size,
+            blob.checksum
+          ].join(':')
+        else
+          [
+            document.id,
+            document.title,
+            document.filename,
+            'missing'
+          ].join(':')
+        end
       end
-    end
 
     Digest::SHA256.hexdigest(checksum_input.join("\n"))
   end
