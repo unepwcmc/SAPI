@@ -15,6 +15,5 @@ class CreateDownloadZips < ActiveRecord::Migration[7.1]
     # must stay unique so identical document selections can converge on one
     # reusable artifact instead of racing to create duplicates.
     add_index :download_zips, :checksum, unique: true
-    add_index :download_zips, :status
   end
 end
