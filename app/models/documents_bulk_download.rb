@@ -1,24 +1,30 @@
 # == Schema Information
 #
-# Table name: download_zips
+# Table name: documents_bulk_downloads
 #
-#  id            :bigint           not null, primary key
-#  checksum     :string           not null
-#  document_ids :jsonb            not null
-#  error_message :text
-#  processing_at :datetime
-#  status       :string           default("pending"), not null
-#  completed_at  :datetime
+#  id               :bigint           not null, primary key
+#  checksum         :string           not null
+#  completed_at     :datetime
+#  document_ids     :jsonb            not null
+#  error_message    :text
 #  last_download_at :datetime
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  processing_at    :datetime
+#  status           :string           default("pending"), not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+# Indexes
+#
+#  index_documents_bulk_downloads_on_checksum          (checksum) UNIQUE
+#  index_documents_bulk_downloads_on_last_download_at  (last_download_at)
+#  index_documents_bulk_downloads_on_status            (status)
 #
 
-class DownloadZip < ApplicationRecord
-  PENDING   = 'pending'
+class DocumentsBulkDownload < ApplicationRecord
+  PENDING = 'pending'
   PROCESSING = 'processing'
   COMPLETED = 'completed'
-  FAILED    = 'failed'
+  FAILED = 'failed'
 
   STATUSES = [ PENDING, PROCESSING, COMPLETED, FAILED ].freeze
 
@@ -28,12 +34,11 @@ class DownloadZip < ApplicationRecord
   # artifacts so the same document selection can reuse an existing generated
   # file without inheriting the old local-cache lifecycle.
   #
-  # We intentionally do not duplicate artifact metadata such as filename or
-  # storage key here because the ZIP itself will live in Active Storage, which
-  # already owns that information. This table only keeps the state needed to
-  # deduplicate requests and track generation progress. `processing_at`
-  # records the moment the worker actually begins work, which is distinct from
-  # the initial row creation time while the job is still only queued.
+  # Active Storage still owns artifact metadata such as filename and storage
+  # key; this row only tracks deduplication and lifecycle state.
+  # `processing_at` records when the worker actually begins work, which is
+  # distinct from the initial row creation time while the job is still only
+  # queued.
   has_one_attached :zip_file
 
   # Generation must start only after commit so the worker never races against

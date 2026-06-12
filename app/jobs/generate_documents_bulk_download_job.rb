@@ -2,26 +2,26 @@ class GenerateDocumentsBulkDownloadJob < ApplicationJob
   DOWNLOAD_FILENAME = 'elibrary-documents.zip'.freeze
   ZIP_CONTENT_TYPE = 'application/zip'.freeze
 
-  def perform(download_zip_id)
-    download_zip = DownloadZip.find(download_zip_id)
+  def perform(documents_bulk_download_id)
+    documents_bulk_download = DocumentsBulkDownload.find(documents_bulk_download_id)
 
-    if download_zip.status == DownloadZip::COMPLETED && download_zip.zip_file.attached?
+    if documents_bulk_download.status == DocumentsBulkDownload::COMPLETED && documents_bulk_download.zip_file.attached?
       return
     end
 
     # This job owns the eventual ZIP generation lifecycle. Marking the record
     # as processing here makes the asynchronous state transition explicit
     # before we add the actual Active Storage artifact creation.
-    download_zip.update!(
-      status: DownloadZip::PROCESSING,
+    documents_bulk_download.update!(
+      status: DocumentsBulkDownload::PROCESSING,
       processing_at: Time.current,
       error_message: nil
     )
 
-    attached_documents, missing_files = selected_documents(download_zip.document_ids)
+    attached_documents, missing_files = selected_documents(documents_bulk_download.document_ids)
     raise 'No documents available to generate ZIP' if attached_documents.empty?
 
-    Tempfile.create([ download_zip.checksum, '.zip' ]) do |tempfile|
+    Tempfile.create([ documents_bulk_download.checksum, '.zip' ]) do |tempfile|
       build_zip_archive(tempfile:, documents: attached_documents, missing_files:)
 
       File.open(tempfile.path, 'rb') do |zip_file|
@@ -29,7 +29,7 @@ class GenerateDocumentsBulkDownloadJob < ApplicationJob
         # reopen the finished archive for attachment. Reusing the original
         # `Tempfile` handle here can produce a blob without a persisted
         # attachment in this app/test setup.
-        download_zip.zip_file.attach(
+        documents_bulk_download.zip_file.attach(
           io: zip_file,
           filename: DOWNLOAD_FILENAME,
           content_type: ZIP_CONTENT_TYPE
@@ -39,8 +39,8 @@ class GenerateDocumentsBulkDownloadJob < ApplicationJob
         # persisted record. If we dirty the model first, the attachment gets
         # queued in memory and can be dropped by the later save, which leaves
         # a "completed" row without any downloadable file.
-        download_zip.update!(
-          status: DownloadZip::COMPLETED,
+        documents_bulk_download.update!(
+          status: DocumentsBulkDownload::COMPLETED,
           completed_at: Time.current,
           error_message: nil
         )
@@ -49,8 +49,8 @@ class GenerateDocumentsBulkDownloadJob < ApplicationJob
   rescue => exception
     Appsignal.add_exception(exception) if defined? Appsignal
 
-    download_zip&.update(
-      status: DownloadZip::FAILED,
+    documents_bulk_download&.update(
+      status: DocumentsBulkDownload::FAILED,
       error_message: exception.message
     )
 

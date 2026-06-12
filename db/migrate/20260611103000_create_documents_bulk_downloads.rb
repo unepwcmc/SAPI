@@ -1,6 +1,6 @@
-class CreateDownloadZips < ActiveRecord::Migration[7.1]
+class CreateDocumentsBulkDownloads < ActiveRecord::Migration[7.1]
   def change
-    create_table :download_zips do |t|
+    create_table :documents_bulk_downloads do |t|
       t.string :checksum, null: false
       t.jsonb :document_ids, null: false, default: []
       t.string :status, null: false, default: 'pending'
@@ -14,6 +14,7 @@ class CreateDownloadZips < ActiveRecord::Migration[7.1]
     # The checksum is the content-addressed identity of a generated ZIP. It
     # must stay unique so identical document selections can converge on one
     # reusable artifact instead of racing to create duplicates.
-    add_index :download_zips, :checksum, unique: true
+    add_index :documents_bulk_downloads, :checksum, unique: true
+    add_index :documents_bulk_downloads, :status
   end
 end

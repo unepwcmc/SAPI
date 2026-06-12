@@ -121,7 +121,7 @@ class Api::V1::DocumentsController < ApplicationController
         document.file.attached?
       end
 
-    # We key `DownloadZip` records by a deterministic checksum so identical
+    # We key `DocumentsBulkDownload` records by a deterministic checksum so identical
     # document selections converge on the same asynchronous ZIP request instead
     # of queuing duplicate work. Sorting by document ID removes frontend
     # selection-order noise, and including missing-file metadata keeps the
@@ -131,7 +131,7 @@ class Api::V1::DocumentsController < ApplicationController
     document_ids = @documents.map(&:id).sort
 
     download_zip =
-      DownloadZip.create_or_find_by!(checksum:) do |record|
+      DocumentsBulkDownload.create_or_find_by!(checksum:) do |record|
         record.document_ids = document_ids
       end
     download_zip.touch_last_download_at!
@@ -212,7 +212,7 @@ private
   end
 
   def download_zip_download_url(download_zip)
-    return unless download_zip.status == DownloadZip::COMPLETED
+    return unless download_zip.status == DocumentsBulkDownload::COMPLETED
     return unless download_zip.zip_file.attached?
 
     # Signed URLs should stay short-lived because they grant direct access to

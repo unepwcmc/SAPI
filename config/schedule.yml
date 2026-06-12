@@ -24,9 +24,9 @@ purge_unattached_job:
   class: "PurgeUnattachedJob"
   queue: admin
 
-purge_download_zip_cache_job:
+purge_documents_bulk_downloads_cache_job:
   cron: "15 18 * * *"
-  class: "PurgeDownloadZipCacheJob"
+  class: "PurgeDocumentsBulkDownloadsCacheJob"
   queue: admin
 
 sunday_cleanup_job:

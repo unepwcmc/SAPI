@@ -144,11 +144,11 @@ describe Api::V1::DocumentsController do
     it 'creates a pending download zip request and returns its JSON state' do
       expect do
         get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
-      end.to change(DownloadZip, :count).by(1)
+      end.to change(DocumentsBulkDownload, :count).by(1)
 
       expect(response).to have_http_status(:accepted)
       expect(parsed_response).to include(
-        'status' => DownloadZip::PENDING,
+        'status' => DocumentsBulkDownload::PENDING,
         'error_message' => nil,
         'processing_at' => nil,
         'completed_at' => nil,
@@ -163,7 +163,7 @@ describe Api::V1::DocumentsController do
 
       expect do
         get :download_zip, params: { ids: "#{@download_document2.id},#{@download_document.id}" }
-      end.not_to change(DownloadZip, :count)
+      end.not_to change(DocumentsBulkDownload, :count)
 
       expect(parsed_response['id']).to eq(first_response['id'])
     end
@@ -177,7 +177,7 @@ describe Api::V1::DocumentsController do
       get :download_zip, params: { ids: @download_document2.id.to_s }
 
       expect(parsed_response['id']).not_to eq(mixed_selection_id)
-      expect(DownloadZip.count).to eq(2)
+      expect(DocumentsBulkDownload.count).to eq(2)
     end
 
     context 'cascading documents logic' do

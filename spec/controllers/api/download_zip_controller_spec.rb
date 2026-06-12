@@ -8,10 +8,10 @@ RSpec.describe Api::V1::DocumentsController, type: :controller do
       port: 80
     )
 
-    DownloadZip.find_each do |download_zip|
+    DocumentsBulkDownload.find_each do |download_zip|
       download_zip.zip_file.purge if download_zip.zip_file.attached?
     end
-    DownloadZip.delete_all
+    DocumentsBulkDownload.delete_all
   end
 
   def parsed_response
@@ -53,11 +53,11 @@ RSpec.describe Api::V1::DocumentsController, type: :controller do
     it 'creates a pending download zip request and returns its JSON state' do
       expect do
         get :download_zip, params: { ids: "#{first_document.id},#{second_document.id}" }
-      end.to change(DownloadZip, :count).by(1)
+      end.to change(DocumentsBulkDownload, :count).by(1)
 
       expect(response).to have_http_status(:accepted)
       expect(parsed_response).to include(
-        'status' => DownloadZip::PENDING,
+        'status' => DocumentsBulkDownload::PENDING,
         'error_message' => nil,
         'processing_at' => nil,
         'completed_at' => nil,
@@ -72,21 +72,21 @@ RSpec.describe Api::V1::DocumentsController, type: :controller do
 
       expect do
         get :download_zip, params: { ids: "#{second_document.id},#{first_document.id}" }
-      end.not_to change(DownloadZip, :count)
+      end.not_to change(DocumentsBulkDownload, :count)
 
       expect(parsed_response['id']).to eq(first_response['id'])
     end
 
     it 'updates last_download_at when a completed download zip is requested again' do
       get :download_zip, params: { ids: "#{first_document.id},#{second_document.id}" }
-      download_zip = DownloadZip.find(parsed_response['id'])
+      download_zip = DocumentsBulkDownload.find(parsed_response['id'])
       download_zip.zip_file.attach(
         io: StringIO.new('existing zip'),
         filename: 'elibrary-documents.zip',
         content_type: 'application/zip'
       )
       download_zip.update!(
-        status: DownloadZip::COMPLETED,
+        status: DocumentsBulkDownload::COMPLETED,
         completed_at: Time.current
       )
       download_zip.update_columns(last_download_at: 3.days.ago)
@@ -98,7 +98,7 @@ RSpec.describe Api::V1::DocumentsController, type: :controller do
 
     it 'does not update last_download_at when the download zip is not completed yet' do
       get :download_zip, params: { ids: "#{first_document.id},#{second_document.id}" }
-      download_zip = DownloadZip.find(parsed_response['id'])
+      download_zip = DocumentsBulkDownload.find(parsed_response['id'])
 
       expect do
         get :download_zip, params: { ids: "#{second_document.id},#{first_document.id}" }
@@ -114,7 +114,7 @@ RSpec.describe Api::V1::DocumentsController, type: :controller do
       get :download_zip, params: { ids: second_document.id.to_s }
 
       expect(parsed_response['id']).not_to eq(mixed_selection_id)
-      expect(DownloadZip.count).to eq(2)
+      expect(DocumentsBulkDownload.count).to eq(2)
     end
 
     it 'returns 404 when an anonymous user selects a public and a private document' do
@@ -147,7 +147,7 @@ RSpec.describe Api::V1::DocumentsController, type: :controller do
 
         expect(response).to have_http_status(:accepted)
         expect(parsed_response).to include(
-          'status' => DownloadZip::PENDING,
+          'status' => DocumentsBulkDownload::PENDING,
           'error_message' => nil,
           'processing_at' => nil,
           'completed_at' => nil,

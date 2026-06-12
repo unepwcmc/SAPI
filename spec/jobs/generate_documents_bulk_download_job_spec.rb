@@ -2,10 +2,10 @@ require 'spec_helper'
 
 RSpec.describe GenerateDocumentsBulkDownloadJob do
   before(:each) do
-    DownloadZip.find_each do |download_zip|
-      download_zip.zip_file.purge if download_zip.zip_file.attached?
+    DocumentsBulkDownload.find_each do |documents_bulk_download|
+      documents_bulk_download.zip_file.purge if documents_bulk_download.zip_file.attached?
     end
-    DownloadZip.delete_all
+    DocumentsBulkDownload.delete_all
   end
 
   let(:attached_document) do
@@ -18,28 +18,28 @@ RSpec.describe GenerateDocumentsBulkDownloadJob do
   describe '#perform' do
     it 'builds a zip, attaches it, and includes missing_files.txt when needed' do
       missing_document.file.purge
-      download_zip = DownloadZip.create!(
+      documents_bulk_download = DocumentsBulkDownload.create!(
         checksum: 'checksum-with-missing-file',
         document_ids: [ missing_document.id, attached_document.id ]
       )
 
-      described_class.perform_now(download_zip.id)
+      described_class.perform_now(documents_bulk_download.id)
 
-      download_zip.reload
+      documents_bulk_download.reload
 
-      expect(download_zip.status).to eq(DownloadZip::COMPLETED)
-      expect(download_zip.processing_at).to be_present
-      expect(download_zip.completed_at).to be_present
-      expect(download_zip.zip_file).to be_attached
+      expect(documents_bulk_download.status).to eq(DocumentsBulkDownload::COMPLETED)
+      expect(documents_bulk_download.processing_at).to be_present
+      expect(documents_bulk_download.completed_at).to be_present
+      expect(documents_bulk_download.zip_file).to be_attached
       expect(
         ActiveStorage::Attachment.exists?(
-          record_type: 'DownloadZip',
-          record_id: download_zip.id,
+          record_type: 'DocumentsBulkDownload',
+          record_id: documents_bulk_download.id,
           name: 'zip_file'
         )
       ).to eq(true)
 
-      Zip::File.open_buffer(download_zip.zip_file.download) do |zip_file|
+      Zip::File.open_buffer(documents_bulk_download.zip_file.download) do |zip_file|
         expect(zip_file.map(&:name)).to contain_exactly(
           attached_document.file.filename.to_s,
           'missing_files.txt'
@@ -51,48 +51,48 @@ RSpec.describe GenerateDocumentsBulkDownloadJob do
     it 'marks the request as failed when no files can be zipped' do
       missing_document.file.purge
       attached_document.file.purge
-      download_zip = DownloadZip.create!(
+      documents_bulk_download = DocumentsBulkDownload.create!(
         checksum: 'checksum-without-attachments',
         document_ids: [ missing_document.id, attached_document.id ]
       )
 
       expect do
-        described_class.perform_now(download_zip.id)
+        described_class.perform_now(documents_bulk_download.id)
       end.to raise_error('No documents available to generate ZIP')
 
-      download_zip.reload
+      documents_bulk_download.reload
 
-      expect(download_zip.status).to eq(DownloadZip::FAILED)
-      expect(download_zip.error_message).to eq('No documents available to generate ZIP')
-      expect(download_zip.zip_file).not_to be_attached
+      expect(documents_bulk_download.status).to eq(DocumentsBulkDownload::FAILED)
+      expect(documents_bulk_download.error_message).to eq('No documents available to generate ZIP')
+      expect(documents_bulk_download.zip_file).not_to be_attached
     end
 
     it 'returns early when the zip is already attached and completed' do
-      download_zip = DownloadZip.create!(
+      documents_bulk_download = DocumentsBulkDownload.create!(
         checksum: 'checksum-already-completed',
         document_ids: [ attached_document.id ]
       )
-      download_zip.zip_file.attach(
+      documents_bulk_download.zip_file.attach(
         io: StringIO.new('existing zip'),
         filename: 'elibrary-documents.zip',
         content_type: 'application/zip'
       )
-      download_zip.update!(
-        status: DownloadZip::COMPLETED,
+      documents_bulk_download.update!(
+        status: DocumentsBulkDownload::COMPLETED,
         completed_at: Time.current
       )
 
-      processing_at = download_zip.processing_at
-      completed_at = download_zip.completed_at
+      processing_at = documents_bulk_download.processing_at
+      completed_at = documents_bulk_download.completed_at
 
-      described_class.perform_now(download_zip.id)
+      described_class.perform_now(documents_bulk_download.id)
 
-      download_zip.reload
+      documents_bulk_download.reload
 
-      expect(download_zip.status).to eq(DownloadZip::COMPLETED)
-      expect(download_zip.processing_at).to eq(processing_at)
-      expect(download_zip.completed_at.to_i).to eq(completed_at.to_i)
-      expect(download_zip.zip_file).to be_attached
+      expect(documents_bulk_download.status).to eq(DocumentsBulkDownload::COMPLETED)
+      expect(documents_bulk_download.processing_at).to eq(processing_at)
+      expect(documents_bulk_download.completed_at.to_i).to eq(completed_at.to_i)
+      expect(documents_bulk_download.zip_file).to be_attached
     end
   end
 end
