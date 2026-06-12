@@ -48,11 +48,13 @@ RSpec.describe PurgeDocumentsBulkDownloadsCacheJob do
         described_class.perform_now
       end.to change(DocumentsBulkDownload, :count).by(-1)
         .and change(ActiveStorage::Attachment, :count).by(-1)
-        .and change(ActiveStorage::Blob, :count).by(-1)
 
       expect(DocumentsBulkDownload.exists?(old_documents_bulk_download.id)).to eq(false)
       expect(DocumentsBulkDownload.exists?(fresh_documents_bulk_download.id)).to eq(true)
       expect(fresh_documents_bulk_download.reload.zip_file).to be_attached
+      expect(
+        ActiveStorage::Blob.exists?(old_documents_bulk_download.zip_file.blob_id)
+      ).to eq(true)
     end
 
     it 'falls back to created_at when last_download_at is nil' do

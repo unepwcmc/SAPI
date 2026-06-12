@@ -6,6 +6,14 @@ describe Api::V1::DocumentsController do
   end
 
   before do
+    allow(ActiveStorage::Current).to receive(:url_options).and_return(
+      protocol: 'http',
+      host: 'test.host',
+      port: 80
+    )
+  end
+
+  before do
     @taxon_concept = create_cites_eu_species
     @subspecies = create_cites_eu_subspecies(parent: @taxon_concept)
     @document = create(:proposal, is_public: true, event: create_cites_cop)
@@ -168,6 +176,34 @@ describe Api::V1::DocumentsController do
       expect(parsed_response['id']).to eq(first_response['id'])
     end
 
+    it 'updates last_download_at when a completed bulk download is requested again' do
+      get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
+      documents_bulk_download = DocumentsBulkDownload.find(parsed_response['id'])
+      documents_bulk_download.zip_file.attach(
+        io: StringIO.new('existing zip'),
+        filename: 'elibrary-documents.zip',
+        content_type: 'application/zip'
+      )
+      documents_bulk_download.update!(
+        status: DocumentsBulkDownload::COMPLETED,
+        completed_at: Time.current
+      )
+      documents_bulk_download.update_columns(last_download_at: 3.days.ago)
+
+      expect do
+        get :download_zip, params: { ids: "#{@download_document2.id},#{@download_document.id}" }
+      end.to change { documents_bulk_download.reload.last_download_at&.to_i }
+    end
+
+    it 'does not update last_download_at when the bulk download is not completed yet' do
+      get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
+      documents_bulk_download = DocumentsBulkDownload.find(parsed_response['id'])
+
+      expect do
+        get :download_zip, params: { ids: "#{@download_document2.id},#{@download_document.id}" }
+      end.not_to change { documents_bulk_download.reload.last_download_at }
+    end
+
     it 'does not collapse a partially missing selection into the attached-only selection' do
       @download_document.file.purge
 
@@ -178,6 +214,46 @@ describe Api::V1::DocumentsController do
 
       expect(parsed_response['id']).not_to eq(mixed_selection_id)
       expect(DocumentsBulkDownload.count).to eq(2)
+    end
+
+    it 'returns 404 when an anonymous user selects a public and a private document' do
+      get :download_zip, params: { ids: "#{@download_document.id},#{@document2.id}" }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'returns 404 when an anonymous user selects only private documents' do
+      get :download_zip, params: { ids: @document2.id.to_s }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    context 'when signed in as an API user' do
+      login_api_user
+
+      it 'returns 404 when a public and private document are requested together' do
+        get :download_zip, params: { ids: "#{@download_document.id},#{@document2.id}" }
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'when signed in as an e-library viewer' do
+      login_elibrary_viewer
+
+      it 'allows a public and private document to be downloaded together' do
+        get :download_zip, params: { ids: "#{@download_document.id},#{@document2.id}" }
+
+        expect(response).to have_http_status(:accepted)
+        expect(parsed_response).to include(
+          'status' => DocumentsBulkDownload::PENDING,
+          'error_message' => nil,
+          'processing_at' => nil,
+          'completed_at' => nil,
+          'download_url' => nil
+        )
+        expect(parsed_response['id']).to be_present
+      end
     end
 
     context 'cascading documents logic' do
