@@ -48,20 +48,20 @@ AS $ancestor_listing_auto_note$
       SELECT
         UPPER(
           COALESCE(
-            ranks.%I$1,
+            ranks.%1$I,
             ranks.display_name_en,
             ranks.name
           )
         ) || ' ' || COALESCE(
-          change_types.%I$1,
+          change_types.%1$I,
           change_types.display_name_en,
           change_types.name
         ) || ' ' || full_name_with_spp(
-          ranks.name, %L$2, %L$3
+          ranks.name, %2$L, %3$L
         )
         FROM ranks, change_types
-        WHERE ranks.id = %L$4
-        AND change_types.id = %L$5
+        WHERE ranks.id = %4$L
+        AND change_types.id = %5$L
       $execute$,
       'display_name_' || locale,
       taxon_concept.full_name,
@@ -116,7 +116,7 @@ AS $drop_trade_sandboxes$
         AND table_name != 'trade_sandbox_template'
         AND table_type != 'VIEW'
     LOOP
-      EXECUTE format('DROP TABLE %I$1 CASCADE', current_table_name);
+      EXECUTE format('DROP TABLE %1$I CASCADE', current_table_name);
     END LOOP;
 
     RETURN;
@@ -138,7 +138,7 @@ LANGUAGE plpgsql AS $drop_trade_sandbox_views$
       WHERE table_name LIKE 'trade_sandbox%_view'
         AND table_type = 'VIEW'
     LOOP
-      EXECUTE format('DROP VIEW IF EXISTS %I$1 CASCADE', current_view_name);
+      EXECUTE format('DROP VIEW IF EXISTS %1$I CASCADE', current_view_name);
     END LOOP;
 
     RETURN;
@@ -193,7 +193,7 @@ AS $create_trade_sandbox_view$
   BEGIN
     EXECUTE format(
       $format$
-        CREATE VIEW %I$1 AS
+        CREATE VIEW %1$I AS
         SELECT aru.point_of_view,
           CASE
             WHEN aru.point_of_view = 'E'
@@ -208,9 +208,9 @@ AS $create_trade_sandbox_view$
           taxon_concepts.full_name AS accepted_taxon_name,
           taxon_concepts.data->'rank_name' AS rank,
           taxon_concepts.rank_id,
-          %I$2.*
-        FROM %I$2
-        JOIN trade_annual_report_uploads aru ON aru.id = %L$3
+          %2$I.*
+        FROM %2$I
+        JOIN trade_annual_report_uploads aru ON aru.id = %3$L
         JOIN geo_entities ON geo_entities.id = aru.trading_country_id
         LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id;
       $format$,
@@ -234,7 +234,7 @@ AS $drop_eu_lc_mviews$
       WHERE table_name LIKE 'eu_%_listing_changes_mview'
         AND table_type != 'VIEW'
     LOOP
-      EXECUTE format('DROP TABLE %I$1 CASCADE', current_table_name);
+      EXECUTE format('DROP TABLE %1$I CASCADE', current_table_name);
     END LOOP;
 
     RETURN;
