@@ -9,6 +9,7 @@
 #  processing_at :datetime
 #  status       :string           default("pending"), not null
 #  completed_at  :datetime
+#  last_download_at :datetime
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
@@ -48,6 +49,16 @@ class DownloadZip < ApplicationRecord
   validates :document_ids, presence: true
   validates :status, presence: true, inclusion: { in: STATUSES }
   validate :completed_download_must_have_attached_zip
+
+  def touch_last_download_at!
+    # Cache eviction should be based on the last successful reuse of a ready
+    # ZIP, not merely on row creation time. We only advance this timestamp for
+    # completed downloads so queued or failed rows do not look "recent" just
+    # because the polling endpoint was hit again.
+    return unless status == COMPLETED
+
+    touch(:last_download_at)
+  end
 
 private
 

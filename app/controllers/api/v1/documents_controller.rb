@@ -85,7 +85,7 @@ class Api::V1::DocumentsController < ApplicationController
   def show
     @document = Document.find(params[:id])
 
-    if access_denied? && !@document.is_public
+    if !can_see_private_documents? && !@document.is_public
       render_403
     elsif @document.is_link?
       redirect_to @document.elib_legacy_file_name, allow_other_host: true
@@ -135,6 +135,7 @@ class Api::V1::DocumentsController < ApplicationController
       DownloadZip.create_or_find_by!(checksum:) do |record|
         record.document_ids = document_ids
       end
+    download_zip.touch_last_download_at!
 
     render json: download_zip_response(download_zip), status: :accepted
   end

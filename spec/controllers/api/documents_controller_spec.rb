@@ -46,8 +46,9 @@ describe Api::V1::DocumentsController do
     context 'GET index contributor' do
       login_contributor
 
-      it 'returns all documents' do
-        get_all_documents
+      it 'returns only public documents' do
+        get :index, params: { taxon_concept_id: @taxon_concept.id }
+        expect(response.body).to have_json_size(3).at_path('documents')
       end
     end
 
@@ -110,6 +111,11 @@ describe Api::V1::DocumentsController do
   end
 
   context 'download documents' do
+    before do
+      @download_document = create(:proposal, is_public: true, event: create_cites_cop)
+      @download_document2 = create(:proposal, is_public: true, event: create_cites_cop)
+    end
+
     def parsed_response
       JSON.parse(response.body)
     end
@@ -121,23 +127,23 @@ describe Api::V1::DocumentsController do
     end
 
     it 'returns 404 when any selected document row is missing' do
-      get :download_zip, params: { ids: "#{@document.id},999999999" }
+      get :download_zip, params: { ids: "#{@download_document.id},999999999" }
 
       expect(response).to have_http_status(:not_found)
     end
 
     it 'returns 404 when all selected files are missing' do
-      @document.file.purge
-      @document2.file.purge
+      @download_document.file.purge
+      @download_document2.file.purge
 
-      get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
+      get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
 
       expect(response).to have_http_status(:not_found)
     end
 
     it 'creates a pending download zip request and returns its JSON state' do
       expect do
-        get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
+        get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
       end.to change(DownloadZip, :count).by(1)
 
       expect(response).to have_http_status(:accepted)
@@ -152,23 +158,23 @@ describe Api::V1::DocumentsController do
     end
 
     it 'reuses the same download zip request for the same ids in a different order' do
-      get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
+      get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
       first_response = parsed_response
 
       expect do
-        get :download_zip, params: { ids: "#{@document2.id},#{@document.id}" }
+        get :download_zip, params: { ids: "#{@download_document2.id},#{@download_document.id}" }
       end.not_to change(DownloadZip, :count)
 
       expect(parsed_response['id']).to eq(first_response['id'])
     end
 
     it 'does not collapse a partially missing selection into the attached-only selection' do
-      @document.file.purge
+      @download_document.file.purge
 
-      get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
+      get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
       mixed_selection_id = parsed_response['id']
 
-      get :download_zip, params: { ids: @document2.id.to_s }
+      get :download_zip, params: { ids: @download_document2.id.to_s }
 
       expect(parsed_response['id']).not_to eq(mixed_selection_id)
       expect(DownloadZip.count).to eq(2)

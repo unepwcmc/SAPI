@@ -2,6 +2,12 @@ require 'spec_helper'
 
 RSpec.describe Api::V1::DocumentsController, type: :controller do
   before(:each) do
+    allow(ActiveStorage::Current).to receive(:url_options).and_return(
+      protocol: 'http',
+      host: 'test.host',
+      port: 80
+    )
+
     DownloadZip.find_each do |download_zip|
       download_zip.zip_file.purge if download_zip.zip_file.attached?
     end
@@ -69,6 +75,34 @@ RSpec.describe Api::V1::DocumentsController, type: :controller do
       end.not_to change(DownloadZip, :count)
 
       expect(parsed_response['id']).to eq(first_response['id'])
+    end
+
+    it 'updates last_download_at when a completed download zip is requested again' do
+      get :download_zip, params: { ids: "#{first_document.id},#{second_document.id}" }
+      download_zip = DownloadZip.find(parsed_response['id'])
+      download_zip.zip_file.attach(
+        io: StringIO.new('existing zip'),
+        filename: 'elibrary-documents.zip',
+        content_type: 'application/zip'
+      )
+      download_zip.update!(
+        status: DownloadZip::COMPLETED,
+        completed_at: Time.current
+      )
+      download_zip.update_columns(last_download_at: 3.days.ago)
+
+      expect do
+        get :download_zip, params: { ids: "#{second_document.id},#{first_document.id}" }
+      end.to change { download_zip.reload.last_download_at&.to_i }
+    end
+
+    it 'does not update last_download_at when the download zip is not completed yet' do
+      get :download_zip, params: { ids: "#{first_document.id},#{second_document.id}" }
+      download_zip = DownloadZip.find(parsed_response['id'])
+
+      expect do
+        get :download_zip, params: { ids: "#{second_document.id},#{first_document.id}" }
+      end.not_to change { download_zip.reload.last_download_at }
     end
 
     it 'does not collapse a partially missing selection into the attached-only selection' do
