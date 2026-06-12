@@ -1,4 +1,6 @@
 class Api::V1::DocumentsController < ApplicationController
+  MAX_DOCUMENTS_COUNT_IN_BULK_DOWNLOAD = 100
+
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
 
   def index
@@ -109,6 +111,7 @@ class Api::V1::DocumentsController < ApplicationController
     ids = id_strings.map(&:to_i).reject(&:zero?).uniq
 
     return head :unprocessable_entity if ids.empty?
+    return head :unprocessable_entity if ids.length > MAX_DOCUMENTS_COUNT_IN_BULK_DOWNLOAD
 
     # This will raise ActiveRecord::RecordNotFound if any of the requested IDs are invalid, which is handled by the `rescue_from` at the top of this controller.
     @documents = accessible_documents.find(ids)

@@ -140,6 +140,20 @@ describe Api::V1::DocumentsController do
       expect(response).to have_http_status(:not_found)
     end
 
+    it 'returns 422 when too many document ids are provided' do
+      document_ids = create_list(
+        :proposal,
+        Api::V1::DocumentsController::MAX_DOCUMENTS_COUNT_IN_BULK_DOWNLOAD + 1,
+        is_public: true,
+        event: nil,
+        designation: nil
+      ).map(&:id)
+
+      get :download_zip, params: { ids: document_ids.join(',') }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
     it 'returns 404 when all selected files are missing' do
       @download_document.file.purge
       @download_document2.file.purge
