@@ -66,7 +66,7 @@ class Api::V1::DocumentsController < ApplicationController
     @search = DocumentSearch.new(
       params.merge(
         taxon_concepts_ids: @all_taxon_concepts_ids,
-        show_private: !access_denied?,
+        show_private: can_see_private_documents?,
         page: page,
         per_page: per_page,
       ),
@@ -105,10 +105,14 @@ class Api::V1::DocumentsController < ApplicationController
   # - `/#/documents`
   # - `/#/taxon_concepts/:taxon_concept_id/documents`
   def download_zip
-    ids = params[:ids].to_s.split(',').map(&:strip).reject(&:blank?)
+    id_strings = params[:ids].to_s.split(',')
+    ids = id_strings.map(&:to_i).reject(:zero?).uniq
+
     return head :unprocessable_entity if ids.empty?
 
-    @documents = Document.find(ids)
+    @documents = accessible_documents.find(ids)
+
+    return render_404 if ids.length > @documents.count
 
     missing_files = []
 
@@ -177,8 +181,29 @@ class Api::V1::DocumentsController < ApplicationController
 
 private
 
-  def access_denied?
-    !current_user || current_user.is_api_user_or_secretariat?
+  # All documents are public except SRG documents
+  #
+  # These should only be visible to:
+  #
+  # a) the e-Library users (those involved in the EU SRG process)
+  # b) Platform Managers (WCMC staff)
+  #
+  # There is no reason for CITES Secretariat members to have this access.
+  #
+  # People who sign up via the API site definitely don't have this access.
+  def can_see_private_documents?
+    current_user && (
+      current_user.is_elibrary_user? ||
+      current_user.is_manager?
+    )
+  end
+
+  def accessible_documents
+    if can_see_private_documents?
+      Document.all
+    else
+      Document.where(is_public: true)
+    end
   end
 
   def render_404
