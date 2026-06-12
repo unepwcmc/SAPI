@@ -110,9 +110,8 @@ class Api::V1::DocumentsController < ApplicationController
 
     return head :unprocessable_entity if ids.empty?
 
+    # This will raise ActiveRecord::RecordNotFound if any of the requested IDs are invalid, which is handled by the `rescue_from` at the top of this controller.
     @documents = accessible_documents.find(ids)
-
-    return render_404 if ids.length > @documents.count
 
     # If there are missing files, we will generate a zip file with an additional
     # file called `missing_files.txt`. But if all files are missing, then we can
@@ -139,44 +138,6 @@ class Api::V1::DocumentsController < ApplicationController
 
     render json: download_zip_response(download_zip), status: :accepted
   end
-
-  # old version for reference.
-  # def download_zip
-  #   @documents = Document.find(params[:ids].split(','))
-
-  #   t = Tempfile.new('tmp-zip-' + request.remote_ip)
-
-  #   missing_files = []
-
-  #   Zip::OutputStream.open(t.path) do |zos|
-  #     @documents.each do |document|
-  #       unless document.file.attached?
-  #         missing_files <<
-  #           "{\n  title: #{document.title},\n  filename: #{document.filename}\n}"
-  #       else
-  #         zos.put_next_entry(document.file.filename)
-  #         ActiveStorage::Blob.service.download(document.file.blob.key) do |chunk|
-  #           zos.print(chunk)
-  #         end
-  #       end
-  #     end
-
-  #     if missing_files.present?
-  #       if missing_files.length == @documents.count
-  #         render_404 && return
-  #       end
-
-  #       zos.put_next_entry('missing_files.txt')
-  #       zos.print missing_files.join("\n\n")
-  #     end
-  #   end
-
-  #   send_file t.path,
-  #     type: 'application/zip',
-  #     filename: 'elibrary-documents.zip'
-
-  #   t.close
-  # end
 
 private
 
