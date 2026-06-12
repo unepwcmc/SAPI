@@ -18,6 +18,9 @@ RSpec.describe Api::V1::DocumentsController, type: :controller do
   let(:second_document) do
     create(:proposal, is_public: true, event: nil, designation: nil)
   end
+  let(:private_document) do
+    create(:proposal, is_public: false, event: nil, designation: nil)
+  end
 
   describe 'GET download_zip' do
     it 'returns 422 when no ids are provided' do
@@ -78,6 +81,46 @@ RSpec.describe Api::V1::DocumentsController, type: :controller do
 
       expect(parsed_response['id']).not_to eq(mixed_selection_id)
       expect(DownloadZip.count).to eq(2)
+    end
+
+    it 'returns 404 when an anonymous user selects a public and a private document' do
+      get :download_zip, params: { ids: "#{first_document.id},#{private_document.id}" }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'returns 404 when an anonymous user selects only private documents' do
+      get :download_zip, params: { ids: private_document.id.to_s }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    context 'when signed in as an API user' do
+      login_api_user
+
+      it 'returns 404 when a public and private document are requested together' do
+        get :download_zip, params: { ids: "#{first_document.id},#{private_document.id}" }
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'when signed in as an e-library viewer' do
+      login_elibrary_viewer
+
+      it 'allows a public and private document to be downloaded together' do
+        get :download_zip, params: { ids: "#{first_document.id},#{private_document.id}" }
+
+        expect(response).to have_http_status(:accepted)
+        expect(parsed_response).to include(
+          'status' => DownloadZip::PENDING,
+          'error_message' => nil,
+          'processing_at' => nil,
+          'completed_at' => nil,
+          'download_url' => nil
+        )
+        expect(parsed_response['id']).to be_present
+      end
     end
   end
 end
