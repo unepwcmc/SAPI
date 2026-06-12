@@ -106,7 +106,7 @@ class Api::V1::DocumentsController < ApplicationController
   # - `/#/taxon_concepts/:taxon_concept_id/documents`
   def download_zip
     id_strings = params[:ids].to_s.split(',')
-    ids = id_strings.map(&:to_i).reject(:zero?).uniq
+    ids = id_strings.map(&:to_i).reject(&:zero?).uniq
 
     return head :unprocessable_entity if ids.empty?
 
@@ -120,7 +120,7 @@ class Api::V1::DocumentsController < ApplicationController
     return render_404 unless
       @documents.any? do |document|
         document.file.attached?
-      end.length
+      end
 
     # We key `DownloadZip` records by a deterministic checksum so identical
     # document selections converge on the same asynchronous ZIP request instead
