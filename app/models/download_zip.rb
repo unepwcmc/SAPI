@@ -33,11 +33,6 @@ class DownloadZip < ApplicationRecord
   # deduplicate requests and track generation progress. `processing_at`
   # records the moment the worker actually begins work, which is distinct from
   # the initial row creation time while the job is still only queued.
-  #
-  # The model keeps the default bigint primary key because this app's Active
-  # Storage tables still use a bigint `record_id` for polymorphic
-  # attachments. Using a UUID primary key here would cause generated ZIP
-  # attachments to be persisted against the wrong `record_id`.
   has_one_attached :zip_file
 
   # Generation must start only after commit so the worker never races against
@@ -57,7 +52,7 @@ class DownloadZip < ApplicationRecord
 private
 
   def enqueue_zip_generation
-    DownloadZipJob.perform_later(id)
+    GenerateDocumentsBulkDownloadJob.perform_later(id)
   end
 
   def completed_download_must_have_attached_zip

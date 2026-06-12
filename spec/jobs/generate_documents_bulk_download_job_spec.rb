@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe DownloadZipJob do
+RSpec.describe GenerateDocumentsBulkDownloadJob do
   before(:each) do
     DownloadZip.find_each do |download_zip|
       download_zip.zip_file.purge if download_zip.zip_file.attached?

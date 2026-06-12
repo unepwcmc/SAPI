@@ -1,4 +1,4 @@
-class DownloadZipJob < ApplicationJob
+class GenerateDocumentsBulkDownloadJob < ApplicationJob
   DOWNLOAD_FILENAME = 'elibrary-documents.zip'.freeze
   ZIP_CONTENT_TYPE = 'application/zip'.freeze
 
