@@ -87,15 +87,15 @@ private
       draft_query = draft_query.where(term_id: @terms_ids)
     end
 
-    unless @importers_ids.empty?
+    unless importers_ids.empty?
       draft_query = draft_query.where(
-        importer_id: resolve_eu(@importers_ids)
+        importer_id: resolve_eu(importers_ids)
       )
     end
 
-    unless @exporters_ids.empty?
+    unless exporters_ids.empty?
       draft_query = draft_query.where(
-        exporter_id: resolve_eu(@exporters_ids)
+        exporter_id: resolve_eu(exporters_ids)
       )
     end
 
@@ -144,11 +144,13 @@ private
 
     if importer_eu_country_ids.present?
       sub_query = eu_country_date_query(@time_range_start, @time_range_end, 'importer', importer_eu_country_ids)
-      draft_query = draft_query.where.not(sub_query) if date_query.present?
+
+      draft_query = draft_query.where.not(sub_query) if sub_query.present?
     end
 
     if exporter_eu_country_ids.present?
       sub_query = eu_country_date_query(@time_range_start, @time_range_end, 'exporter', exporter_eu_country_ids)
+
       draft_query = draft_query.where.not(sub_query) if sub_query.present?
     end
 
@@ -167,12 +169,20 @@ private
     EuCountryDate.pluck(:geo_entity_id)
   end
 
+  def importers_ids
+    @importers_ids&.presence&.map(&:to_i) || []
+  end
+
+  def exporters_ids
+    @exporters_ids&.presence&.map(&:to_i) || []
+  end
+
   # this is to collect only eu country IDs to apply EU rules query to
   # e.g. EU + Austria we don't have to apply EU rules to Austria
   def importer_eu_country_ids
     @importer_eu_country_ids ||=
-      if @importer_ids&.presence&.include?(eu_id)
-        eu_country_ids - @importer_ids
+      if importers_ids.include?(eu_id)
+        eu_country_ids - exporters_ids
       else
         []
       end
@@ -180,8 +190,8 @@ private
 
   def exporter_eu_country_ids
     @exporter_eu_country_ids ||=
-      if @exporter_ids&.presence&.include?(eu_id)
-        eu_country_ids - @exporter_ids
+      if exporters_ids.include?(eu_id)
+        eu_country_ids - exporters_ids
       else
         []
       end

@@ -1,9 +1,12 @@
 # Implements "raw" shipments export
 class Trade::ShipmentsExport < Species::CsvCopyExport
   include Trade::ShipmentReportQueries
+
   PUBLIC_CSV_LIMIT = 1000000
   PUBLIC_WEB_LIMIT = 50000
+
   include ActiveModel::SerializerSupport
+
   delegate :report_type, to: :@search
   delegate :page, to: :@search
   delegate :per_page, to: :@search
@@ -11,6 +14,7 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
   def initialize(filters)
     @search = Trade::Filter.new(filters)
     @filters = @search.options.merge(csv_separator: filters['csv_separator'])
+
     initialize_csv_separator(filters[:csv_separator])
     initialize_file_name
   end
@@ -19,12 +23,15 @@ class Trade::ShipmentsExport < Species::CsvCopyExport
     unless csv_cached?
       to_csv
     end
+
     unless csv_created?
       Rails.logger.error('Unable to generate output')
       return false
     end
+
     ctime = File.ctime(@file_name).strftime('%Y-%m-%d %H:%M')
     @public_file_name = "#{resource_name}_#{ctime}_#{@csv_separator}_separated.csv"
+
     [
       @file_name,
       { filename: public_file_name, type: 'text/csv' }
