@@ -1,3 +1,9 @@
+### 1.21.3
+
+**CITES Trade DB**
+
+* Fixes another issue affecting filtering on EU as an importer/exporter
+
 ### 1.21.2
 
 **Species+**
