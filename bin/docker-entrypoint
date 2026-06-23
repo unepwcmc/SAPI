@@ -1,10 +1,11 @@
 #!/bin/bash -e
 
-if [[ "${@}" =~ "rails server" ]]; then
-  rm -f ./tmp/pids/server.pid;
-fi
-
-bundle install
+# Removed per https://railsdiff.org/8.0.5/8.1.3
+# Enable jemalloc for reduced memory usage and latency.
+# if [ -z "${LD_PRELOAD+x}" ]; then
+#   LD_PRELOAD=$(find /usr/lib -name libjemalloc.so.2 -print -quit)
+#   export LD_PRELOAD
+# fi
 
 mkdir -p {./,spec/}public/downloads/checklist
 mkdir -p {./,spec/}public/downloads/cites_listings
@@ -31,9 +32,13 @@ mkdir -p {./,spec/}public/downloads/taxon_concepts_distributions
 mkdir -p {./,spec/}public/downloads/taxon_concepts_names
 
 # If running the rails server then create or migrate existing database
-# if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
+# if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
 #   ./bin/rails db:prepare
 # fi
+
+# Remove stale PID file — survives Docker restarts on the same writable layer
+# and causes Rails to refuse to start (finds a PID it thinks is already running)
+rm -f /rails/tmp/pids/server.pid
 
 # This is the main rails/sidekiq command
 exec "${@}"

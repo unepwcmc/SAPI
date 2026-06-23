@@ -27,15 +27,14 @@
 # A status change to A needs to have one output.
 class NomenclatureChange::StatusToAccepted < NomenclatureChange
   include NomenclatureChange::StatusChangeHelpers
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :created_by_id, :updated_by_id
-  build_steps(
-    :primary_output, :summary
-  )
+
+  build_steps :primary_output, :summary
+
   validates :status, inclusion: {
     in: self.status_dict,
     message: '%{value} is not a valid status'
   }
+
   validate :required_primary_output_name_status, if: :primary_output_or_submitting?
   before_validation :set_output_name_status, if: :primary_output_or_submitting?
   before_validation :set_output_rank_id, if: :primary_output_or_submitting?
@@ -46,6 +45,7 @@ class NomenclatureChange::StatusToAccepted < NomenclatureChange
       errors.add(:primary_output, 'Must be N or T taxon')
       return false
     end
+
     true
   end
 

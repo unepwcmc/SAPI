@@ -19,10 +19,9 @@
 #
 
 class Designation < ApplicationRecord
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :name, :taxonomy_id
   include Deletable
   include Dictionary
+
   build_dictionary :cites, :eu, :cms
 
   validates :name, presence: true, uniqueness: true

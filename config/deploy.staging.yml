@@ -1,0 +1,43 @@
+# Name of the container image
+image: unepwcmc/sapi/rails-staging
+
+servers:
+  web:
+    hosts:
+      - 172.20.0.146 # sapi-web-staging-01.internal.unep-wcmc.org
+    options:
+      add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
+    proxy:
+      hosts:
+        - sapi-web-staging-01.internal.unep-wcmc.org
+      ssl:
+        certificate_pem: CERTIFICATE_PEM
+        private_key_pem: PRIVATE_KEY_PEM
+      forward_headers: true # Forward headers like X-Forwarded-Proto
+      healthcheck:
+        path: /up
+      logging:
+        request_headers:
+          - Cache-Control
+          - User-Agent
+          - X-Forwarded-Proto # Critical for Rails to detect HTTPS
+        response_headers:
+          - X-Request-ID
+  job:
+    hosts:
+      - 172.20.0.146 # sapi-web-staging-01.internal.unep-wcmc.org
+    options:
+      add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
+    cmd: bundle exec sidekiq -C config/sidekiq.yml
+
+# Use staging-specific Dockerfile that starts puma
+# (uses tail -f /dev/null)
+builder:
+  dockerfile: Dockerfile
+  target: exec-staging
+
+# Environment variables
+env:
+  clear:
+    RAILS_ENV: staging
+    RAILS_LOG_LEVEL: info # for debugging `nomenclature_changes` ticket 191

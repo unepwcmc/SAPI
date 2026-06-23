@@ -15,8 +15,6 @@
 
 class PresetTag < ApplicationRecord
   include Deletable
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :model, :name
 
   TYPES = {
     Distribution: 'Distribution',

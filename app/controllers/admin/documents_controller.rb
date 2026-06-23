@@ -163,23 +163,29 @@ protected
 private
 
   def document_params
-    params.require(:document).permit(
-      # attributes were in model `attr_accessible`.
-      :event_id, :file, :date, :type, :title, :is_public,
-      :language_id,
-      :sort_index, :discussion_id, :discussion_sort_index,
-      :primary_language_document_id,
-      :designation_id,
-      citations_attributes: [
-        :id, :_destroy, :document_id, :stringy_taxon_concept_ids,
-        geo_entity_ids: []
-      ],
-      proposal_details_attributes: [
-        :id, :_destroy, :document_id, :proposal_nature, :proposal_outcome_id,
-        :representation, :proposal_number
-      ],
-      review_details_attributes: [
-        :id, :_destroy, :document_id, :review_phase_id, :process_stage_id, :recommended_category
+    params.expect(
+      document: [
+        :event_id, :file, :date, :type, :title, :is_public,
+        :language_id,
+        :sort_index, :discussion_id, :discussion_sort_index,
+        :primary_language_document_id,
+        :designation_id,
+        citations_attributes: [
+          [
+            :id, :_destroy, :document_id,
+            :stringy_taxon_concept_ids,
+            geo_entity_ids: []
+          ]
+        ],
+        proposal_details_attributes: [
+          :id, :_destroy, :document_id,
+          :proposal_nature, :proposal_outcome_id,
+          :representation, :proposal_number
+        ],
+        review_details_attributes: [
+          :id, :_destroy, :document_id,
+          :review_phase_id, :process_stage_id, :recommended_category
+        ]
       ]
     )
   end

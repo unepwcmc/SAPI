@@ -54,8 +54,6 @@
 
 class Quota < TradeRestriction
   include Changeable
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :public_display
 
   validates :quota, presence: true
   validates :quota, numericality: { greater_than_or_equal_to: -1.0 }
@@ -85,29 +83,26 @@ class Quota < TradeRestriction
   end
 
   def self.count_matching(params)
-    Quota.where(
-      [
-        (
-          <<-SQL.squish
-            EXTRACT(year from start_date)::INTEGER = :year
-            AND ((:excluded_geo_entities) IS NULL OR geo_entity_id NOT IN (:excluded_geo_entities))
-            AND ((:included_geo_entities) IS NULL OR geo_entity_id IN (:included_geo_entities))
-            AND ((:excluded_taxon_concepts) IS NULL OR taxon_concept_id NOT IN (:excluded_taxon_concepts))
-            AND ((:included_taxon_concepts) IS NULL OR taxon_concept_id IN (:included_taxon_concepts))
-            AND is_current = true
-          SQL
-        ),
-        year: params[:year].to_i,
-        excluded_geo_entities: params[:excluded_geo_entities_ids].present? ?
-          params[:excluded_geo_entities_ids].map(&:to_i) : nil,
-        included_geo_entities: params[:included_geo_entities_ids].present? ?
-          params[:included_geo_entities_ids].map(&:to_i) : nil,
-        excluded_taxon_concepts: params[:excluded_taxon_concepts_ids].present? ?
-          params[:excluded_taxon_concepts_ids].split(',').map(&:to_i) : nil,
-        included_taxon_concepts: params[:included_taxon_concepts_ids].present? ?
-          params[:included_taxon_concepts_ids].split(',').map(&:to_i) : nil
-      ]
-    ).count
+    included_geo_entities = sanitise_integer_array(params[:included_geo_entities_ids]).presence
+    excluded_geo_entities = sanitise_integer_array(params[:excluded_geo_entities_ids]).presence
+    included_taxon_concepts = sanitise_integer_array(params[:included_taxon_concepts_ids]).presence
+    excluded_taxon_concepts = sanitise_integer_array(params[:excluded_taxon_concepts_ids]).presence
+
+    relation = Quota.where(
+      'EXTRACT(year from start_date)::INTEGER = ? AND is_current = true',
+      params[:year].to_i
+    )
+
+    # PostgreSQL cannot infer a type for NULL/blank bind parameters when they
+    # are reused in both `IS NULL` and `IN (...)` checks. We normalize the admin
+    # filters first and only add the SQL clauses that the user actually asked
+    # for, so blank form values simply mean "do not filter".
+    relation = relation.where.not(geo_entity_id: excluded_geo_entities) if excluded_geo_entities.present?
+    relation = relation.where(geo_entity_id: included_geo_entities) if included_geo_entities.present?
+    relation = relation.where.not(taxon_concept_id: excluded_taxon_concepts) if excluded_taxon_concepts.present?
+    relation = relation.where(taxon_concept_id: included_taxon_concepts) if included_taxon_concepts.present?
+
+    relation.count
   end
 
 private

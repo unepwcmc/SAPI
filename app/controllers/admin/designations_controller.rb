@@ -31,9 +31,6 @@ protected
 private
 
   def designation_params
-    params.require(:designation).permit(
-      # attributes were in model `attr_accessible`.
-      :name, :taxonomy_id
-    )
+    params.expect(designation: [ :name, :taxonomy_id ])
   end
 end

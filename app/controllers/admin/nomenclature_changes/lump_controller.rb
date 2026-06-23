@@ -1,5 +1,5 @@
 class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::BuildController
-  steps *NomenclatureChange::Lump::STEPS
+  steps(*NomenclatureChange::Lump::STEPS)
 
   def show
     builder = NomenclatureChange::Lump::Constructor.new(@nomenclature_change)
@@ -22,6 +22,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
       skip_or_previous_step if @nomenclature_change.inputs.map(&:legislation_reassignments).flatten.empty?
     when :summary
       builder.build_document_reassignments
+
       processor = NomenclatureChange::Lump::Processor.new(@nomenclature_change)
       @summary = processor.summary
     end
@@ -30,13 +31,20 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
 
   def update
     @nomenclature_change.assign_attributes(
-      (nomenclature_change_lump_params || {}).merge(
+      begin
+        nomenclature_change_lump_params
+      rescue ActionController::ParameterMissing
+        # TODO: explain why we allow this to fail silently
+        {}
+      end.merge(
         {
           status: (step == steps.last ? NomenclatureChange::SUBMITTED : step.to_s)
         }
       )
     )
+
     success = @nomenclature_change.valid?
+
     case step
     when :inputs, :outputs
       unless success
@@ -50,6 +58,7 @@ class Admin::NomenclatureChanges::LumpController < Admin::NomenclatureChanges::B
         set_ranks
       end
     end
+
     render_wizard @nomenclature_change
   end
 
@@ -60,63 +69,36 @@ private
   end
 
   def nomenclature_change_lump_params
-    params.require(:nomenclature_change_lump).permit(
-      :event_id, :status,
-      inputs_attributes: [
-        :id, :_destroy,
-        :nomenclature_change_id, :taxon_concept_id,
-        :note_en, :note_es, :note_fr, :internal_note,
-        parent_reassignments_attributes: [
-          :id, :_destroy,
-          :type, :reassignable_id, :reassignable_type,
-          :nomenclature_change_input_id, :nomenclature_change_output_id,
-          :note_en, :note_es, :note_fr, :internal_note,
-          reassignment_target_attributes: [
-            :id, :_destroy,
-            :nomenclature_change_output_id,
-            :nomenclature_change_reassignment_id, :note
-          ],
-          output_ids: []
+    (
+      input_attribute_names,
+      output_attribute_names,
+      output_parent_reassignment_attribute_names,
+      output_reassignment_attribute_names,
+    ) = common_nomenclature_change_attribute_names.values_at(
+      :input_attribute_names,
+      :output_attribute_names,
+      :output_parent_reassignment_attribute_names,
+      :output_reassignment_attribute_names,
+    )
+
+    params.expect(
+      nomenclature_change_lump: [
+        :event_id, :status,
+        ##
+        # Note: `inputs` is plural, because lump is many -> one
+        inputs_attributes: [
+          [
+            *input_attribute_names,
+            parent_reassignments_attributes: [ output_parent_reassignment_attribute_names ],
+            name_reassignments_attributes: [ output_reassignment_attribute_names ],
+            distribution_reassignments_attributes: [ output_reassignment_attribute_names ],
+            legislation_reassignments_attributes: [ output_reassignment_attribute_names ]
+          ]
         ],
-        name_reassignments_attributes: [
-          :id, :_destroy,
-          :type, :reassignable_id, :reassignable_type,
-          :nomenclature_change_input_id, :nomenclature_change_output_id,
-          :note_en, :note_es, :note_fr, :internal_note,
-          output_ids: []
-        ],
-        distribution_reassignments_attributes: [
-          :id, :_destroy,
-          :type, :reassignable_id, :reassignable_type,
-          :nomenclature_change_input_id, :nomenclature_change_output_id,
-          :note_en, :note_es, :note_fr, :internal_note,
-          output_ids: []
-        ],
-        legislation_reassignments_attributes: [
-          :id, :_destroy,
-          :type, :reassignable_id, :reassignable_type,
-          :nomenclature_change_input_id, :nomenclature_change_output_id,
-          :note_en, :note_es, :note_fr, :internal_note,
-          output_ids: []
-        ]
-      ],
-      output_attributes: [
-        :id, :_destroy,
-        :nomenclature_change_id, :taxon_concept_id,
-        :new_taxon_concept_id, :rank_id, :new_scientific_name, :new_author_year,
-        :new_name_status, :new_parent_id, :new_rank_id, :taxonomy_id,
-        :note_en, :note_es, :note_fr, :internal_note, :is_primary_output,
-        :output_type, :created_by_id, :updated_by_id,
-        tag_list: []
-        # app/models/nomenclature_change/output.rb does not have `accepts_nested_attributes_for`, so
-        # xxx_attributes suppose not in-use.
-        # :parent_reassignments_attributes,
-        # :name_reassignments_attributes,
-        # :distribution_reassignments_attributes,
-        # :legislation_reassignments_attributes,
+        ##
+        # Note: `outputs` is singular, because lump is many -> one
+        output_attributes: output_attribute_names
       ]
     )
-  rescue ActionController::ParameterMissing
-    nil
   end
 end

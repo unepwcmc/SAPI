@@ -12,7 +12,6 @@
 
 class TaxonRelationshipType < ApplicationRecord
   # Used by seed and rake task.
-  # attr_accessible :name, :is_intertaxonomic, :is_bidirectional
 
   include Dictionary
   build_dictionary :equal_to, :includes, :overlaps, :disjunct, :has_synonym,

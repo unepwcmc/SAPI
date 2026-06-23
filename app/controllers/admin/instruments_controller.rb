@@ -30,9 +30,6 @@ protected
 private
 
   def instrument_params
-    params.require(:instrument).permit(
-      # attributes were in model `attr_accessible`.
-      :designation_id, :name
-    )
+    params.expect(instrument: [ :designation_id, :name ])
   end
 end

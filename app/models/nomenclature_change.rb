@@ -32,9 +32,6 @@ class NomenclatureChange < ApplicationRecord
 
   include TrackWhoDoesIt
 
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :event_id, :status
-
   belongs_to :event, optional: true
 
   validates :status, presence: true
@@ -69,16 +66,20 @@ class NomenclatureChange < ApplicationRecord
   end
 
   def cannot_update_when_locked
-    if status_was == NomenclatureChange::CLOSED ||
-      (status_was == NomenclatureChange::SUBMITTED &&
-      status != NomenclatureChange::CLOSED)
+    if status_was == NomenclatureChange::CLOSED || (
+        status_was == NomenclatureChange::SUBMITTED &&
+        status != NomenclatureChange::CLOSED
+      )
+
       errors.add(:base, 'Nomenclature change is locked for updates')
+
       false
     end
   end
 
   def next_step
     steps = self.class::STEPS
+
     return nil if steps.empty?
 
     if status == NomenclatureChange::NEW

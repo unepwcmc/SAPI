@@ -33,7 +33,7 @@ class NomenclatureChange::ReassignmentProcessor
 
   def process_reassignment_of_anonymous_reassignable(reassignment)
     if reassignment.reassignable_type == 'Trade::Shipment'
-      new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
+      new_taxon_concept = destination_taxon_concept!
 
       Trade::Shipment.where(
         taxon_concept_id: @input.taxon_concept_id
@@ -70,6 +70,16 @@ class NomenclatureChange::ReassignmentProcessor
   end
 
 protected
+
+  def destination_taxon_concept!
+    # Reassignments are only valid once the output has resolved to an existing
+    # or newly created taxon concept. Failing fast here preserves the real
+    # configuration error instead of crashing on a later nil.id access.
+    @output.new_taxon_concept || @output.taxon_concept || raise(
+      NomenclatureChange::Processor::ProcessingError,
+      "No destination taxon concept available for nomenclature change output #{@output.id}"
+    )
+  end
 
   def conflicting_listing_change_reassignment?(reassignment, reassignable)
     # this amazing condition to ensure that in cases when there are listing changes
