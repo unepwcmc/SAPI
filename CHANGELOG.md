@@ -10,6 +10,11 @@
 
 * Fixed a security issue where admins could in theory cause arbitrary SQL to
   be executed with sufficiently well-crafted taxon names.
+### 1.21.3
+
+**CITES Trade DB**
+
+* Fixes another issue affecting filtering on EU as an importer/exporter
 
 ### 1.21.2
 
