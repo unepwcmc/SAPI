@@ -15,10 +15,20 @@ any breaking changes to functionality.
   * Upgraded `puma` from 5.6.8 to 8.0.0
   * Upgraded `rubyzip` from 2.3.3 to 3.2.2
   * Upgraded `sidekiq` from 6.5.12 to 7.3.10
-  * Upgraded `sprockets` from 3.7.2 to 4.0.3
+* Upgraded `sprockets` from 3.7.2 to 4.0.3
 * We now target Postgres 17 (was 10) and Redis 7 (was 4.2).
 * Moving to `params.expect` over `require`/`permit` pattern.
 
+**CITES Checklist**
+
+* Fixed an issue where the authorship of synonyms was occasionally displaying
+  incorrectly. This happened when there were multiple synonyms and one or more
+  had no authorship information.
+
+**Species+ Admin Interface**
+
+* Fixed a security issue where admins could in theory cause arbitrary SQL to
+  be executed with sufficiently well-crafted taxon names.
 ### 1.21.3
 
 **CITES Trade DB**
