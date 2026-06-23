@@ -35,15 +35,15 @@ CREATE OR REPLACE FUNCTION rebuild_designation_listing_changes_mview(
     deletion_id INT;
   BEGIN
     SELECT listing_changes_mview_name('all', designation.name, events_ids)
-    INTO all_lc_table_name;
+      INTO all_lc_table_name;
     SELECT listing_changes_mview_name('tmp', designation.name, events_ids)
-    INTO raw_lc_table_name;
+      INTO raw_lc_table_name;
     SELECT listing_changes_mview_name('tmp_cascaded', designation.name, events_ids)
-    INTO tmp_lc_table_name;
+      INTO tmp_lc_table_name;
     SELECT listing_changes_mview_name('child', designation.name, events_ids)
-    INTO lc_table_name;
+      INTO lc_table_name;
     SELECT listing_changes_mview_name(NULL, designation.name, events_ids)
-    INTO master_lc_table_name;
+      INTO master_lc_table_name;
 
     RAISE INFO 'Creating %', tmp_lc_table_name;
 

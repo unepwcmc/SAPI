@@ -116,11 +116,13 @@ class User < ApplicationRecord
       Reference, TaxonConceptReference, DistributionReference,
       Trade::AnnualReportUpload, Trade::Shipment
     ]
+
     for i in 0..tracked_objects.length - 1
       if tracked_objects[i].where([ 'created_by_id = :id OR updated_by_id = :id', id: self.id ]).limit(1).count > 0
         return false
       end
     end
+
     true
   end
 
@@ -150,19 +152,25 @@ private
   def sync_with_captive_breeding_db
     # Only interested if role, name, encrypted_password, and email is changed.
     # Or user deleted.
-    return unless (previous_changes.keys & %w[email role name encrypted_password]).present? || destroyed?
+    return unless
+      previous_changes.keys.intersect?(
+        %w[email role name encrypted_password]
+      ).present? || destroyed?
 
     role_was = previous_changes['role']&.first
+
     action =
       if destroyed? # User record deleted.
         :delete
       elsif is_elibrary_user? || is_manager? # Is admin or elibrary.
         :create_or_update
-      elsif role_was == MANAGER || role_was == ELIBRARY_USER # Was admin or elibrary.
+      elsif role_was == MANAGER || role_was == ELIBRARY_USER # rubocop:disable Lint/DuplicateBranch
+        # Was admin or elibrary, but (because previous condition not met), is not any more
         :delete
       else
         :none
       end
+
     return if action == :none
 
     email_was = previous_changes['email']&.first
@@ -180,6 +188,7 @@ private
         CaptiveBreedingUser.create!(email:, name:, encrypted_password:)
       else # Update the first CB user record, which is using the new email address (if changed).
         existing_cb_users.first.update!(email:, name:, encrypted_password:)
+
         if existing_cb_users[1].present? # Duplicate user!? Remove it?
           # TODO: Do not have requirement for this yet, not sure is it safe to delete.
           # https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/241
