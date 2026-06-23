@@ -1,3 +1,15 @@
+### 1.22.0
+
+**CITES Checklist**
+
+* Fixed an issue where the authorship of synonyms was occasionally displaying
+  incorrectly. This happened when there were multiple synonyms and one or more
+  had no authorship information.
+
+**Species+ Admin Interface**
+
+* Fixed a security issue where admins could in theory cause arbitrary SQL to
+  be executed with sufficiently well-crafted taxon names.
 ### 1.21.3
 
 **CITES Trade DB**
