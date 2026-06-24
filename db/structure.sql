@@ -274,20 +274,20 @@ CREATE FUNCTION public.ancestor_listing_auto_note(taxon_concept public.taxon_con
       SELECT
         UPPER(
           COALESCE(
-            ranks.%I$1,
+            ranks.%1$I,
             ranks.display_name_en,
             ranks.name
           )
         ) || ' ' || COALESCE(
-          change_types.%I$1,
+          change_types.%1$I,
           change_types.display_name_en,
           change_types.name
         ) || ' ' || full_name_with_spp(
-          ranks.name, %L$2, %L$3
+          ranks.name, %2$L, %3$L
         )
         FROM ranks, change_types
-        WHERE ranks.id = %L$4
-        AND change_types.id = %L$5
+        WHERE ranks.id = %4$L
+        AND change_types.id = %5$L
       $execute$,
       'display_name_' || locale,
       taxon_concept.full_name,
@@ -564,7 +564,6 @@ DECLARE
 BEGIN
   sql := 'WITH RECURSIVE listing_changes_timeline AS (
     SELECT all_listing_changes_mview.id,
-    party_id,
     designation_id,
     affected_taxon_concept_id AS original_taxon_concept_id,
     taxon_concept_id AS current_taxon_concept_id,
@@ -573,7 +572,6 @@ BEGIN
       THEN HSTORE(species_listing_id::TEXT, taxon_concept_id::TEXT)
       ELSE HSTORE(species_listing_id::TEXT, inclusion_taxon_concept_id::TEXT)
     END AS context,
-
     inclusion_taxon_concept_id,
     species_listing_id,
     change_type_id,
@@ -581,90 +579,79 @@ BEGIN
     effective_at,
     tree_distance AS context_tree_distance,
     timeline_position,
-    ARRAY[timeline_position] AS timeline_positions,
-    0 AS prev_timeline_position,
     CASE
-      WHEN (
-        -- there are listed populations
-        ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL
-        -- and the taxon has its own distribution and does not occur in any of them
-        AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
-        AND NOT listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
-      )
-      -- when all populations are excluded
-      OR (
-        ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL
-        AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
-        AND excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
-      )
-      THEN FALSE
-
-      WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL
-      -- if taxon or any of its ancestors is excluded from this listing
-      AND excluded_taxon_concept_ids && ARRAY[
-        affected_taxon_concept_id,
-        taxon_concepts_mview.kingdom_id,
-        taxon_concepts_mview.phylum_id,
-        taxon_concepts_mview.class_id,
-        taxon_concepts_mview.order_id,
-        taxon_concepts_mview.family_id,
-        taxon_concepts_mview.genus_id,
-        taxon_concepts_mview.species_id
-      ]
-      THEN FALSE
-
-      ELSE TRUE
+     WHEN (
+      -- there are listed populations
+      ARRAY_UPPER(listed_geo_entities_ids, 1) IS NOT NULL
+      -- and the taxon has its own distribution and does not occur in any of them
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
+      AND NOT listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
+    )
+    -- when all populations are excluded
+    OR (
+      ARRAY_UPPER(excluded_geo_entities_ids, 1) IS NOT NULL
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
+      AND excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    )
+    THEN FALSE
+    WHEN ARRAY_UPPER(excluded_taxon_concept_ids, 1) IS NOT NULL
+    -- if taxon or any of its ancestors is excluded from this listing
+    AND excluded_taxon_concept_ids && ARRAY[
+      affected_taxon_concept_id,
+      taxon_concepts_mview.kingdom_id,
+      taxon_concepts_mview.phylum_id,
+      taxon_concepts_mview.class_id,
+      taxon_concepts_mview.order_id,
+      taxon_concepts_mview.family_id,
+      taxon_concepts_mview.genus_id,
+      taxon_concepts_mview.species_id
+    ]
+    THEN FALSE
+    ELSE
+    TRUE
     END AS is_applicable
     FROM ' || all_listing_changes_mview || ' all_listing_changes_mview
     JOIN cites_eu_tmp_taxon_concepts_mview taxon_concepts_mview
-      ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id
+    ON all_listing_changes_mview.affected_taxon_concept_id = taxon_concepts_mview.id
     WHERE all_listing_changes_mview.affected_taxon_concept_id = $1
-      AND timeline_position = 1
+    AND timeline_position = 1
 
     UNION
 
     SELECT hi.id,
     hi.designation_id,
-    hi.party_id,
-    prev_listing.original_taxon_concept_id,
+    listing_changes_timeline.original_taxon_concept_id,
     hi.taxon_concept_id,
     CASE
-      WHEN hi.inclusion_taxon_concept_id IS NOT NULL
-        AND (
-          AVALS(prev_listing.context) @> ARRAY[hi.taxon_concept_id::TEXT]
-          OR prev_listing.context = ''''::HSTORE
-        )
-      THEN HSTORE(hi.species_listing_id::TEXT, hi.inclusion_taxon_concept_id::TEXT)
-
-      WHEN change_types.name = ''DELETION''
-        AND hi.taxon_concept_id = hi.affected_taxon_concept_id
-      THEN prev_listing.context - ARRAY[hi.species_listing_id::TEXT]
-
-      WHEN change_types.name = ''DELETION''
-      THEN prev_listing.context - HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
-
-      -- if it is a new listing at closer level that replaces an older listing, wipe out the context
-      WHEN hi.tree_distance < prev_listing.context_tree_distance
-        AND hi.effective_at > prev_listing.effective_at
-        AND change_types.name = ''ADDITION''
-      THEN HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
-
-      -- if it is a same day split listing we don''t want to wipe the other part of the split from the context
-      WHEN hi.tree_distance < prev_listing.context_tree_distance
-        AND change_types.name = ''ADDITION''
-      THEN prev_listing.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
-
-      WHEN hi.tree_distance <= prev_listing.context_tree_distance
-        AND hi.affected_taxon_concept_id = hi.taxon_concept_id
-        AND change_types.name = ''ADDITION''
-      THEN HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
-
-      -- changing this to <= breaks Ursus arctos isabellinus
-      WHEN hi.tree_distance <= prev_listing.context_tree_distance
-        AND change_types.name = ''ADDITION''
-      THEN prev_listing.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
-
-      ELSE prev_listing.context
+    WHEN hi.inclusion_taxon_concept_id IS NOT NULL
+    AND (
+      AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT]
+      OR listing_changes_timeline.context = ''''::HSTORE
+    )
+    THEN HSTORE(hi.species_listing_id::TEXT, hi.inclusion_taxon_concept_id::TEXT)
+    WHEN change_types.name = ''DELETION''
+    AND hi.taxon_concept_id = hi.affected_taxon_concept_id
+    THEN listing_changes_timeline.context - ARRAY[hi.species_listing_id::TEXT]
+    WHEN change_types.name = ''DELETION''
+    THEN listing_changes_timeline.context - HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+    -- if it is a new listing at closer level that replaces an older listing, wipe out the context
+    WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+    AND hi.effective_at > listing_changes_timeline.effective_at
+    AND change_types.name = ''ADDITION''
+    THEN HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+    -- if it is a same day split listing we don''t want to wipe the other part of the split from the context
+    WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+    AND change_types.name = ''ADDITION''
+    THEN listing_changes_timeline.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+    WHEN hi.tree_distance <= listing_changes_timeline.context_tree_distance
+    AND hi.affected_taxon_concept_id = hi.taxon_concept_id
+    AND change_types.name = ''ADDITION''
+    THEN HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+    -- changing this to <= breaks Ursus arctos isabellinus
+    WHEN hi.tree_distance <= listing_changes_timeline.context_tree_distance
+    AND change_types.name = ''ADDITION''
+    THEN listing_changes_timeline.context || HSTORE(hi.species_listing_id::TEXT, hi.taxon_concept_id::TEXT)
+    ELSE listing_changes_timeline.context
     END,
     hi.inclusion_taxon_concept_id,
     hi.species_listing_id,
@@ -672,113 +659,72 @@ BEGIN
     hi.event_id,
     hi.effective_at,
     CASE
-      WHEN (
-          hi.inclusion_taxon_concept_id IS NOT NULL
-          AND AVALS(prev_listing.context) @> ARRAY[hi.taxon_concept_id::TEXT]
-        ) OR hi.tree_distance < prev_listing.context_tree_distance
-      THEN hi.tree_distance
-      ELSE prev_listing.context_tree_distance
+    WHEN (
+        hi.inclusion_taxon_concept_id IS NOT NULL
+        AND AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT]
+      ) OR hi.tree_distance < listing_changes_timeline.context_tree_distance
+    THEN hi.tree_distance
+    ELSE listing_changes_timeline.context_tree_distance
     END,
     hi.timeline_position,
-    hi.timeline_position || prev_listing.timeline_positions AS timeline_positions,
-    prev_listing.timeline_position AS prev_timeline_position,
     -- is applicable
     CASE
-      WHEN (
-        -- there are listed populations
-        ARRAY_UPPER(hi.listed_geo_entities_ids, 1) IS NOT NULL
-        -- and the taxon has its own distribution and does not occur in any of them
-        AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
-        AND NOT hi.listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
-      )
-      -- when all populations are excluded
-      OR (
-        ARRAY_UPPER(hi.excluded_geo_entities_ids, 1) IS NOT NULL
-        AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
-        AND hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
-      )
-      THEN FALSE
-      WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL
-      -- if taxon or any of its ancestors is excluded from this listing
-      AND hi.excluded_taxon_concept_ids && ARRAY[
-        hi.affected_taxon_concept_id,
-        taxon_concepts_mview.kingdom_id,
-        taxon_concepts_mview.phylum_id,
-        taxon_concepts_mview.class_id,
-        taxon_concepts_mview.order_id,
-        taxon_concepts_mview.family_id,
-        taxon_concepts_mview.genus_id,
-        taxon_concepts_mview.species_id
-      ]
-      THEN FALSE
-
-      -- If the taxon concept id of this listing is named in the context of the
-      -- previous listing change, then this listing is applicable
-      WHEN prev_listing.context -> hi.species_listing_id::TEXT = hi.taxon_concept_id::TEXT
-        OR hi.taxon_concept_id = prev_listing.original_taxon_concept_id
-        -- this line to make Moschus leucogaster happy
-        OR AVALS(prev_listing.context) @> ARRAY[hi.taxon_concept_id::TEXT]
-      THEN TRUE
-
-      -- Allow for re-listing when the last change is a deletion and this is an
-      -- addition. NB: context is empty in the case of deletions.
-      WHEN prev_listing.context = ''''::HSTORE
-        AND (
-          ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL
-          AND NOT hi.excluded_taxon_concept_ids && ARRAY[hi.affected_taxon_concept_id]
-          OR ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NULL
-        )
-        AND hi.inclusion_taxon_concept_id IS NULL
-        AND hi.change_type_name = ''ADDITION''
-      THEN TRUE -- allows for re-listing
-
-      -- When the distance from the taxon concept more specific or of equal
-      -- specificity, compared to the previous listing then it is relevant.
-      WHEN hi.tree_distance <= prev_listing.context_tree_distance
-      THEN TRUE
-      ELSE FALSE
+    WHEN (
+      -- there are listed populations
+      ARRAY_UPPER(hi.listed_geo_entities_ids, 1) IS NOT NULL
+      -- and the taxon has its own distribution and does not occur in any of them
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
+      AND NOT hi.listed_geo_entities_ids && taxon_concepts_mview.countries_ids_ary
+    )
+    -- when all populations are excluded
+    OR (
+      ARRAY_UPPER(hi.excluded_geo_entities_ids, 1) IS NOT NULL
+      AND ARRAY_UPPER(taxon_concepts_mview.countries_ids_ary, 1) IS NOT NULL
+      AND hi.excluded_geo_entities_ids @> taxon_concepts_mview.countries_ids_ary
+    )
+    THEN FALSE
+    WHEN ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL
+    -- if taxon or any of its ancestors is excluded from this listing
+    AND hi.excluded_taxon_concept_ids && ARRAY[
+      hi.affected_taxon_concept_id,
+      taxon_concepts_mview.kingdom_id,
+      taxon_concepts_mview.phylum_id,
+      taxon_concepts_mview.class_id,
+      taxon_concepts_mview.order_id,
+      taxon_concepts_mview.family_id,
+      taxon_concepts_mview.genus_id,
+      taxon_concepts_mview.species_id
+    ]
+    THEN FALSE
+    WHEN listing_changes_timeline.context -> hi.species_listing_id::TEXT = hi.taxon_concept_id::TEXT
+    OR hi.taxon_concept_id = listing_changes_timeline.original_taxon_concept_id
+    -- this line to make Moschus leucogaster happy
+    OR AVALS(listing_changes_timeline.context) @> ARRAY[hi.taxon_concept_id::TEXT]
+    THEN TRUE
+    WHEN listing_changes_timeline.context = ''''::HSTORE  --this would be the case when deleted
+    AND (
+      ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NOT NULL
+      AND NOT hi.excluded_taxon_concept_ids && ARRAY[hi.affected_taxon_concept_id]
+      OR ARRAY_UPPER(hi.excluded_taxon_concept_ids, 1) IS NULL
+    )
+    AND hi.inclusion_taxon_concept_id IS NULL
+    AND hi.change_type_name = ''ADDITION''
+    THEN TRUE -- allows for re-listing
+    WHEN hi.tree_distance < listing_changes_timeline.context_tree_distance
+    THEN TRUE
+    ELSE FALSE
     END
     FROM ' || all_listing_changes_mview || ' hi
-    JOIN listing_changes_timeline prev_listing
-      ON hi.species_listing_id = prev_listing.species_listing_id
-      AND prev_listing.original_taxon_concept_id = hi.affected_taxon_concept_id
-      AND prev_listing.timeline_position < hi.timeline_position
-      AND prev_listing.is_applicable
-
-    LEFT JOIN listing_distributions ld
-      ON hi.id = ld.listing_change_id
-      AND ld.is_party = TRUE
+    JOIN listing_changes_timeline
+    ON hi.designation_id = listing_changes_timeline.designation_id
+    AND listing_changes_timeline.original_taxon_concept_id = hi.affected_taxon_concept_id
+    AND listing_changes_timeline.timeline_position + 1 = hi.timeline_position
     JOIN change_types ON hi.change_type_id = change_types.id
     JOIN cites_eu_tmp_taxon_concepts_mview taxon_concepts_mview
-      ON hi.affected_taxon_concept_id = taxon_concepts_mview.id
-    WHERE ld.geo_entity_id IS NOT DISTINCT FROM hi.party_id
+    ON hi.affected_taxon_concept_id = taxon_concepts_mview.id
   )
-  SELECT cleaned.id
-  FROM (
-    SELECT DISTINCT ON (
-      original_taxon_concept_id,
-      species_listing_id,
-      party_id,
-      timeline_position
-    ) *
-    FROM listing_changes_timeline paths
-    -- WHERE NOT EXISTS (
-    --   SELECT 1
-    --   FROM listing_changes_timeline step
-    --   WHERE step.timeline_position = ANY(paths.timeline_positions)
-    --     AND step.id != paths.id
-    --     AND paths.designation_id = step.designation_id
-    --     AND step.original_taxon_concept_id = paths.affected_taxon_concept_id
-    --     AND step.timeline_position < paths.timeline_position
-    --     AND NOT step.is_applicable
-    -- )
-    ORDER BY
-      original_taxon_concept_id,
-      species_listing_id,
-      party_id,
-      timeline_position,
-      timeline_positions DESC
-  ) cleaned
+  SELECT listing_changes_timeline.id
+  FROM listing_changes_timeline
   WHERE is_applicable
   ORDER BY timeline_position';
 
@@ -1896,7 +1842,7 @@ CREATE FUNCTION public.create_trade_sandbox_view(target_table_name text, idx int
   BEGIN
     EXECUTE format(
       $format$
-        CREATE VIEW %I$1 AS
+        CREATE VIEW %1$I AS
         SELECT aru.point_of_view,
           CASE
             WHEN aru.point_of_view = 'E'
@@ -1911,13 +1857,13 @@ CREATE FUNCTION public.create_trade_sandbox_view(target_table_name text, idx int
           taxon_concepts.full_name AS accepted_taxon_name,
           taxon_concepts.data->'rank_name' AS rank,
           taxon_concepts.rank_id,
-          %I$2.*
-        FROM %I$2
-        JOIN trade_annual_report_uploads aru ON aru.id = %L$3
+          %2$I.*
+        FROM %2$I
+        JOIN trade_annual_report_uploads aru ON aru.id = %3$L
         JOIN geo_entities ON geo_entities.id = aru.trading_country_id
         LEFT JOIN taxon_concepts ON taxon_concept_id = taxon_concepts.id;
       $format$,
-      target_table_name || _view,
+      target_table_name || '_view',
       target_table_name,
       idx
     );
@@ -1975,7 +1921,7 @@ CREATE FUNCTION public.drop_eu_lc_mviews() RETURNS void
       WHERE table_name LIKE 'eu_%_listing_changes_mview'
         AND table_type != 'VIEW'
     LOOP
-      EXECUTE format('DROP TABLE %I$1 CASCADE', current_table_name);
+      EXECUTE format('DROP TABLE %1$I CASCADE', current_table_name);
     END LOOP;
 
     RETURN;
@@ -1998,7 +1944,7 @@ CREATE FUNCTION public.drop_trade_sandbox_views() RETURNS void
       WHERE table_name LIKE 'trade_sandbox%_view'
         AND table_type = 'VIEW'
     LOOP
-      EXECUTE format('DROP VIEW IF EXISTS %I$1 CASCADE', current_view_name);
+      EXECUTE format('DROP VIEW IF EXISTS %1$I CASCADE', current_view_name);
     END LOOP;
 
     RETURN;
@@ -2023,7 +1969,7 @@ CREATE FUNCTION public.drop_trade_sandboxes() RETURNS void
         AND table_name != 'trade_sandbox_template'
         AND table_type != 'VIEW'
     LOOP
-      EXECUTE format('DROP TABLE %I$1 CASCADE', current_table_name);
+      EXECUTE format('DROP TABLE %1$I CASCADE', current_table_name);
     END LOOP;
 
     RETURN;
@@ -2640,31 +2586,72 @@ CREATE FUNCTION public.rebuild_auto_complete_taxon_concepts_mview() RETURNS void
     LANGUAGE plpgsql
     AS $$
   BEGIN
+    DROP TABLE IF EXISTS auto_complete_taxon_concepts_mview_tmp CASCADE;
 
-    DROP table IF EXISTS auto_complete_taxon_concepts_mview_tmp CASCADE;
     RAISE INFO 'Creating auto complete taxon concepts materialized view (tmp)';
+
     CREATE TABLE auto_complete_taxon_concepts_mview_tmp AS
     SELECT * FROM auto_complete_taxon_concepts_view;
 
     RAISE INFO 'Creating indexes on auto complete taxon concepts materialized view (tmp)';
 
-    --this one used for Species+ autocomplete (both main and higher taxa in downloads)
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_species_plus_ac);
-    --this one used for Checklist autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_checklist_ac);
-    --this one used for Trade autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_ac);
-    --this one used for Trade internal autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_internal_ac);
+    CREATE INDEX idx_ac_taxon_gist_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING GIST(name_for_matching gist_trgm_ops);
+
+    -- For Species+ autocomplete (both main and higher taxa in downloads)
+    CREATE INDEX idx_ac_taxon_splus_btree_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match)
+      WHERE show_in_species_plus_ac;
+
+    -- For Species+ autocomplete (both main and higher taxa in downloads), GIST trigrams
+    CREATE INDEX idx_ac_taxon_splus_gist_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING GIST(name_for_matching gist_trgm_ops)
+      WHERE show_in_species_plus_ac;
+
+    -- For Checklist autocomplete
+    CREATE INDEX idx_ac_taxon_checklist_btree_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING BTREE(name_for_matching text_pattern_ops, type_of_match)
+      WHERE taxonomy_is_cites_eu AND show_in_checklist_ac;
+
+    -- For Checklist autocomplete, GIST trigrams
+    CREATE INDEX idx_ac_taxon_checklist_gist_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING GIST(name_for_matching gist_trgm_ops) WHERE taxonomy_is_cites_eu AND show_in_checklist_ac;
+
+    -- For Trade autocomplete
+    CREATE INDEX idx_ac_taxon_trade_ac_btree_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING BTREE(name_for_matching text_pattern_ops, type_of_match, taxonomy_is_cites_eu)
+      WHERE show_in_trade_ac;
+
+    -- For Trade autocomplete, GIST trigrams
+    CREATE INDEX idx_ac_taxon_trade_ac_gist_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING GIST(name_for_matching gist_trgm_ops)
+      WHERE show_in_trade_ac;
+
+    -- For Trade internal autocomplete
+    CREATE INDEX idx_ac_taxon_trade_internal_btree_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING BTREE(name_for_matching text_pattern_ops, type_of_match, taxonomy_is_cites_eu)
+      WHERE show_in_trade_internal_ac;
+
+    -- For Trade internal autocomplete, GIST trigrams
+    CREATE INDEX idx_ac_taxon_trade_internal_gist_tmp ON auto_complete_taxon_concepts_mview_tmp
+      USING GIST(name_for_matching gist_trgm_ops)
+      WHERE show_in_trade_internal_ac;
 
     RAISE INFO 'Swapping auto complete taxon concepts materialized view';
-    DROP table IF EXISTS auto_complete_taxon_concepts_mview CASCADE;
+
+    DROP TABLE IF EXISTS auto_complete_taxon_concepts_mview CASCADE;
+
     ALTER TABLE auto_complete_taxon_concepts_mview_tmp RENAME TO auto_complete_taxon_concepts_mview;
 
+    ALTER INDEX idx_ac_taxon_gist_tmp                 RENAME TO idx_ac_taxon_gist;
+    ALTER INDEX idx_ac_taxon_splus_btree_tmp          RENAME TO idx_ac_taxon_splus_btree;
+    ALTER INDEX idx_ac_taxon_splus_gist_tmp           RENAME TO idx_ac_taxon_splus_gist;
+    ALTER INDEX idx_ac_taxon_checklist_btree_tmp      RENAME TO idx_ac_taxon_checklist_btree;
+    ALTER INDEX idx_ac_taxon_checklist_gist_tmp       RENAME TO idx_ac_taxon_checklist_gist;
+    ALTER INDEX idx_ac_taxon_trade_ac_btree_tmp       RENAME TO idx_ac_taxon_trade_ac_btree;
+    ALTER INDEX idx_ac_taxon_trade_ac_gist_tmp        RENAME TO idx_ac_taxon_trade_ac_gist;
+    ALTER INDEX idx_ac_taxon_trade_internal_btree_tmp RENAME TO idx_ac_taxon_trade_internal_btree;
+    ALTER INDEX idx_ac_taxon_trade_internal_gist_tmp  RENAME TO idx_ac_taxon_trade_internal_gist;
   END;
   $$;
 
@@ -4013,22 +4000,18 @@ CREATE FUNCTION public.rebuild_designation_all_listing_changes_mview(taxonomy pu
       lc.*,
       tc.taxon_concept_id AS affected_taxon_concept_id,
       tc.tree_distance,
-      -- The following ROW_NUMBER call will assign chronological order to
-      -- listing changes which share
-      -- * affected taxon concept and
-      -- * a particular designation (e.g. Appendix II),
-      -- * a party_id, so that reservations and withdrawals are drawn separately
+      -- the following ROW_NUMBER call will assign chronological order to listing changes
+      -- in scope of the affected taxon concept and a particular designation
       ROW_NUMBER() OVER (
-        PARTITION BY
-          tc.taxon_concept_id,
-          species_listing_id,
-          party_id
-        ORDER BY
-          effective_at,
-          array_position(
-            ''{DELETION,RESERVATION_WITHDRAWAL,RESERVATION,EXCEPTION,ADDITION,AMENDMENT}''::TEXT[],
-            change_type_name::TEXT
-          ) ASC,
+          PARTITION BY tc.taxon_concept_id, designation_id
+          ORDER BY effective_at,
+          CASE
+            WHEN change_type_name = ''DELETION'' THEN 0
+            WHEN change_type_name = ''RESERVATION_WITHDRAWAL'' THEN 1
+            WHEN change_type_name = ''ADDITION'' THEN 2
+            WHEN change_type_name = ''RESERVATION'' THEN 3
+            WHEN change_type_name = ''EXCEPTION'' THEN 4
+          END,
           tree_distance
       )::INT AS timeline_position
     FROM ' || tmp_lc_table_name || ' lc
@@ -5781,52 +5764,38 @@ CREATE FUNCTION public.rebuild_taxon_concepts_mview() RETURNS void
     LANGUAGE plpgsql
     AS $$
   BEGIN
-    DROP table IF EXISTS taxon_concepts_mview_tmp CASCADE;
+    DROP TABLE IF EXISTS taxon_concepts_mview_tmp CASCADE;
 
     RAISE INFO 'Creating taxon concepts materialized view (tmp)';
     CREATE TABLE taxon_concepts_mview_tmp AS
     SELECT *,
-    false as dirty,
-    null::timestamp with time zone as expiry
+      FALSE AS dirty,
+      NULL::TIMESTAMP WITH TIME ZONE AS expiry
     FROM taxon_concepts_view;
 
     RAISE INFO 'Creating indexes on taxon concepts materialized view (tmp)';
-    CREATE INDEX ON taxon_concepts_mview_tmp (id);
-    CREATE INDEX ON taxon_concepts_mview_tmp (parent_id);
-    CREATE INDEX ON taxon_concepts_mview_tmp (taxonomy_is_cites_eu, cites_listed, kingdom_position);
-    CREATE INDEX ON taxon_concepts_mview_tmp (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name); -- cms csv download
-    CREATE INDEX ON taxon_concepts_mview_tmp (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name); -- cites csv download
-    CREATE INDEX ON taxon_concepts_mview_tmp (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name); -- eu csv download
-    CREATE INDEX ON taxon_concepts_mview_tmp USING GIN (countries_ids_ary);
+    CREATE INDEX idx_mtaxon_id_tmp               ON taxon_concepts_mview_tmp (id);
+    CREATE INDEX idx_mtaxon_parent_id_tmp        ON taxon_concepts_mview_tmp (parent_id);
+    CREATE INDEX idx_mtaxon_kingdom_position_tmp ON taxon_concepts_mview_tmp (taxonomy_is_cites_eu, cites_listed, kingdom_position);
+    CREATE INDEX idx_mtaxon_cms_csv_tmp          ON taxon_concepts_mview_tmp (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name); -- cms csv download
+    CREATE INDEX idx_mtaxon_cites_csv_tmp        ON taxon_concepts_mview_tmp (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name); -- cites csv download
+    CREATE INDEX idx_mtaxon_eu_csv_tmp           ON taxon_concepts_mview_tmp (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name); -- eu csv download
+    CREATE INDEX idx_mtaxon_id_countries_ids_tmp ON taxon_concepts_mview_tmp USING GIN (countries_ids_ary);
 
     RAISE INFO 'Swapping taxon concepts materialized view';
-    DROP table IF EXISTS taxon_concepts_mview CASCADE;
+
+    DROP TABLE IF EXISTS taxon_concepts_mview CASCADE;
     ALTER TABLE taxon_concepts_mview_tmp RENAME TO taxon_concepts_mview;
 
-    DROP table IF EXISTS auto_complete_taxon_concepts_mview_tmp CASCADE;
-    RAISE INFO 'Creating auto complete taxon concepts materialized view (tmp)';
-    CREATE TABLE auto_complete_taxon_concepts_mview_tmp AS
-    SELECT * FROM auto_complete_taxon_concepts_view;
+    ALTER INDEX idx_mtaxon_id_tmp               RENAME TO idx_mtaxon_id;
+    ALTER INDEX idx_mtaxon_parent_id_tmp        RENAME TO idx_mtaxon_parent_id;
+    ALTER INDEX idx_mtaxon_kingdom_position_tmp RENAME TO idx_mtaxon_kingdom_position;
+    ALTER INDEX idx_mtaxon_cms_csv_tmp          RENAME TO idx_mtaxon_cms_csv;
+    ALTER INDEX idx_mtaxon_cites_csv_tmp        RENAME TO idx_mtaxon_cites_csv;
+    ALTER INDEX idx_mtaxon_eu_csv_tmp           RENAME TO idx_mtaxon_eu_csv;
+    ALTER INDEX idx_mtaxon_id_countries_ids_tmp RENAME TO idx_mtaxon_id_countries_ids;
 
-    RAISE INFO 'Creating indexes on auto complete taxon concepts materialized view (tmp)';
-
-    --this one used for Species+ autocomplete (both main and higher taxa in downloads)
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_species_plus_ac);
-    --this one used for Checklist autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_checklist_ac);
-    --this one used for Trade autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_ac);
-    --this one used for Trade internal autocomplete
-    CREATE INDEX ON auto_complete_taxon_concepts_mview_tmp
-    USING BTREE(name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_internal_ac);
-
-    RAISE INFO 'Swapping auto complete taxon concepts materialized view';
-    DROP table IF EXISTS auto_complete_taxon_concepts_mview CASCADE;
-    ALTER TABLE auto_complete_taxon_concepts_mview_tmp RENAME TO auto_complete_taxon_concepts_mview;
-
+    PERFORM rebuild_auto_complete_taxon_concepts_mview();
   END;
   $$;
 
@@ -5835,7 +5804,7 @@ CREATE FUNCTION public.rebuild_taxon_concepts_mview() RETURNS void
 -- Name: FUNCTION rebuild_taxon_concepts_mview(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.rebuild_taxon_concepts_mview() IS 'Procedure to rebuild taxon concepts materialized view in the database.';
+COMMENT ON FUNCTION public.rebuild_taxon_concepts_mview() IS 'Procedure to rebuild taxon concepts managed table in the database.';
 
 
 --
@@ -9086,7 +9055,6 @@ CREATE TABLE public.child_cites_listing_changes_mview (
     taxon_concept_id integer,
     id integer,
     original_taxon_concept_id integer,
-    event_id integer,
     effective_at timestamp without time zone,
     species_listing_id integer,
     species_listing_name character varying(255),
@@ -9103,7 +9071,6 @@ CREATE TABLE public.child_cites_listing_changes_mview (
     party_full_name_en character varying(255),
     party_full_name_es character varying(255),
     party_full_name_fr character varying(255),
-    geo_entity_type character varying(255),
     ann_symbol character varying(255),
     full_note_en text,
     full_note_es text,
@@ -9138,7 +9105,9 @@ CREATE TABLE public.child_cites_listing_changes_mview (
     excluded_geo_entities_ids integer[],
     excluded_taxon_concept_ids integer[],
     dirty boolean,
-    expiry timestamp with time zone
+    expiry timestamp with time zone,
+    event_id integer,
+    geo_entity_type character varying(255)
 )
 INHERITS (public.cites_listing_changes_mview);
 
@@ -9215,7 +9184,6 @@ CREATE TABLE public.child_cms_listing_changes_mview (
     taxon_concept_id integer,
     id integer,
     original_taxon_concept_id integer,
-    event_id integer,
     effective_at timestamp without time zone,
     species_listing_id integer,
     species_listing_name character varying(255),
@@ -9232,7 +9200,6 @@ CREATE TABLE public.child_cms_listing_changes_mview (
     party_full_name_en character varying(255),
     party_full_name_es character varying(255),
     party_full_name_fr character varying(255),
-    geo_entity_type character varying(255),
     ann_symbol character varying(255),
     full_note_en text,
     full_note_es text,
@@ -9267,7 +9234,9 @@ CREATE TABLE public.child_cms_listing_changes_mview (
     excluded_geo_entities_ids integer[],
     excluded_taxon_concept_ids integer[],
     dirty boolean,
-    expiry timestamp with time zone
+    expiry timestamp with time zone,
+    event_id integer,
+    geo_entity_type character varying(255)
 )
 INHERITS (public.cms_listing_changes_mview);
 
@@ -14976,7 +14945,6 @@ CREATE TABLE public.child_eu_listing_changes_mview (
     taxon_concept_id integer,
     id integer,
     original_taxon_concept_id integer,
-    event_id integer,
     effective_at timestamp without time zone,
     species_listing_id integer,
     species_listing_name character varying(255),
@@ -14993,7 +14961,6 @@ CREATE TABLE public.child_eu_listing_changes_mview (
     party_full_name_en character varying(255),
     party_full_name_es character varying(255),
     party_full_name_fr character varying(255),
-    geo_entity_type character varying(255),
     ann_symbol character varying(255),
     full_note_en text,
     full_note_es text,
@@ -15028,7 +14995,9 @@ CREATE TABLE public.child_eu_listing_changes_mview (
     excluded_geo_entities_ids integer[],
     excluded_taxon_concept_ids integer[],
     dirty boolean,
-    expiry timestamp with time zone
+    expiry timestamp with time zone,
+    event_id integer,
+    geo_entity_type character varying(255)
 )
 INHERITS (public.eu_listing_changes_mview);
 
@@ -23137,7 +23106,7 @@ CREATE MATERIALIZED VIEW public.trade_shipments_mandatory_quotas_mview AS
 --
 
 CREATE VIEW public.non_compliant_shipments_view AS
- SELECT DISTINCT trade_shipments_appendix_i_mview.id,
+ SELECT trade_shipments_appendix_i_mview.id,
     trade_shipments_appendix_i_mview.year,
     trade_shipments_appendix_i_mview.appendix,
     trade_shipments_appendix_i_mview.taxon_concept_id,
@@ -23183,7 +23152,7 @@ CREATE VIEW public.non_compliant_shipments_view AS
     trade_shipments_appendix_i_mview.issue_type
    FROM public.trade_shipments_appendix_i_mview
 UNION ALL
- SELECT DISTINCT trade_shipments_mandatory_quotas_mview.id,
+ SELECT trade_shipments_mandatory_quotas_mview.id,
     trade_shipments_mandatory_quotas_mview.year,
     trade_shipments_mandatory_quotas_mview.appendix,
     trade_shipments_mandatory_quotas_mview.taxon_concept_id,
@@ -23229,7 +23198,7 @@ UNION ALL
     trade_shipments_mandatory_quotas_mview.issue_type
    FROM public.trade_shipments_mandatory_quotas_mview
 UNION ALL
- SELECT DISTINCT trade_shipments_cites_suspensions_mview.id,
+ SELECT trade_shipments_cites_suspensions_mview.id,
     trade_shipments_cites_suspensions_mview.year,
     trade_shipments_cites_suspensions_mview.appendix,
     trade_shipments_cites_suspensions_mview.taxon_concept_id,
@@ -24216,28 +24185,40 @@ CREATE VIEW public.taxon_concepts_view AS
             ct.english_names_ary,
             ct.spanish_names_ary,
             ct.french_names_ary
-           FROM public.crosstab('SELECT taxon_commons.taxon_concept_id AS taxon_concept_id_com, languages.iso_code1 AS lng,
-  ARRAY_AGG_NOTNULL(common_names.name ORDER BY common_names.name) AS common_names_ary
-  FROM "taxon_commons"
-  INNER JOIN "common_names"
-  ON "common_names"."id" = "taxon_commons"."common_name_id"
-  INNER JOIN "languages"
-  ON "languages"."id" = "common_names"."language_id" AND UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'')
-  GROUP BY taxon_commons.taxon_concept_id, languages.iso_code1
-  ORDER BY 1,2'::text, 'SELECT DISTINCT languages.iso_code1 FROM languages WHERE UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'') order by 1'::text) ct(taxon_concept_id_com integer, english_names_ary character varying[], spanish_names_ary character varying[], french_names_ary character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com)))
+           FROM public.crosstab('
+      SELECT
+        taxon_commons.taxon_concept_id AS taxon_concept_id_com,
+        languages.iso_code1 AS lng,
+        ARRAY_AGG_NOTNULL(common_names.name ORDER BY common_names.name) AS common_names_ary
+      FROM "taxon_commons"
+      INNER JOIN "common_names"
+        ON "common_names"."id" = "taxon_commons"."common_name_id"
+      INNER JOIN "languages"
+        ON "languages"."id" = "common_names"."language_id"
+        AND UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'')
+      GROUP BY
+        taxon_commons.taxon_concept_id,
+        languages.iso_code1
+      ORDER BY 1, 2
+    '::text, '
+      SELECT DISTINCT languages.iso_code1
+      FROM languages
+      WHERE UPPER(languages.iso_code1) IN (''EN'', ''FR'', ''ES'')
+      ORDER BY 1
+    '::text) ct(taxon_concept_id_com integer, english_names_ary character varying[], spanish_names_ary character varying[], french_names_ary character varying[])) common_names ON ((taxon_concepts.id = common_names.taxon_concept_id_com)))
      LEFT JOIN ( SELECT taxon_relationships.taxon_concept_id AS taxon_concept_id_syn,
-            public.array_agg_notnull(synonym_tc.full_name) AS synonyms_ary,
-            public.array_agg_notnull(synonym_tc.author_year) AS synonyms_author_years_ary
+            array_agg(synonym_tc.full_name ORDER BY synonym_tc.full_name) FILTER (WHERE (synonym_tc.id IS NOT NULL)) AS synonyms_ary,
+            array_agg(synonym_tc.author_year ORDER BY synonym_tc.full_name) FILTER (WHERE (synonym_tc.id IS NOT NULL)) AS synonyms_author_years_ary
            FROM ((public.taxon_relationships
              JOIN public.taxon_relationship_types ON (((taxon_relationship_types.id = taxon_relationships.taxon_relationship_type_id) AND ((taxon_relationship_types.name)::text = 'HAS_SYNONYM'::text))))
              JOIN public.taxon_concepts synonym_tc ON ((synonym_tc.id = taxon_relationships.other_taxon_concept_id)))
           GROUP BY taxon_relationships.taxon_concept_id) synonyms ON ((taxon_concepts.id = synonyms.taxon_concept_id_syn)))
      LEFT JOIN ( SELECT distributions.taxon_concept_id AS taxon_concept_id_cnt,
-            public.array_agg_notnull(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary,
-            public.array_agg_notnull(geo_entities.iso_code2 ORDER BY geo_entities.name_en) AS all_distribution_iso_codes_ary,
-            public.array_agg_notnull(geo_entities.name_en ORDER BY geo_entities.name_en) AS all_distribution_ary_en,
-            public.array_agg_notnull(geo_entities.name_en ORDER BY geo_entities.name_es) AS all_distribution_ary_es,
-            public.array_agg_notnull(geo_entities.name_en ORDER BY geo_entities.name_fr) AS all_distribution_ary_fr
+            array_agg(geo_entities.id ORDER BY geo_entities.name_en) AS countries_ids_ary,
+            array_agg(geo_entities.iso_code2 ORDER BY geo_entities.name_en) AS all_distribution_iso_codes_ary,
+            array_agg(geo_entities.name_en ORDER BY geo_entities.name_en) AS all_distribution_ary_en,
+            array_agg(geo_entities.name_es ORDER BY geo_entities.name_es) AS all_distribution_ary_es,
+            array_agg(geo_entities.name_fr ORDER BY geo_entities.name_fr) AS all_distribution_ary_fr
            FROM ((public.distributions
              JOIN public.geo_entities ON ((distributions.geo_entity_id = geo_entities.id)))
              JOIN public.geo_entity_types ON (((geo_entity_types.id = geo_entities.geo_entity_type_id) AND (((geo_entity_types.name)::text = 'COUNTRY'::text) OR ((geo_entity_types.name)::text = 'TERRITORY'::text)))))
@@ -24264,38 +24245,47 @@ CREATE VIEW public.taxon_concepts_view AS
             ct.extinct_distribution_ary_fr,
             ct.extinct_uncertain_distribution_ary_fr,
             ct.uncertain_distribution_ary_fr
-           FROM public.crosstab('SELECT distributions.taxon_concept_id,
-      CASE WHEN tags.name IS NULL THEN ''NATIVE'' ELSE UPPER(tags.name) END || ''_'' || lng AS tag,
-      ARRAY_AGG_NOTNULL(geo_entities.name ORDER BY geo_entities.name) AS locations_ary
-    FROM distributions
-    JOIN (
-      SELECT geo_entities.id, geo_entities.iso_code2, ''EN'' AS lng, geo_entities.name_en AS name FROM geo_entities
-      UNION
-      SELECT geo_entities.id, geo_entities.iso_code2, ''ES'' AS lng, geo_entities.name_es AS name FROM geo_entities
-      UNION
-      SELECT geo_entities.id, geo_entities.iso_code2, ''FR'' AS lng, geo_entities.name_fr AS name FROM geo_entities
-    ) geo_entities
-      ON geo_entities.id = distributions.geo_entity_id
-    LEFT JOIN taggings
-      ON taggable_id = distributions.id AND taggable_type = ''Distribution''
-    LEFT JOIN tags
-      ON tags.id = taggings.tag_id
-      AND (
-        UPPER(tags.name) IN (
-          ''INTRODUCED'', ''INTRODUCED (?)'', ''REINTRODUCED'',
+           FROM public.crosstab('
+      SELECT distributions.taxon_concept_id,
+        CASE WHEN tags.name IS NULL THEN ''NATIVE'' ELSE UPPER(tags.name) END || ''_'' || lng AS tag,
+        array_agg(geo_entities.name ORDER BY geo_entities.name) AS locations_ary
+      FROM distributions
+      JOIN (
+        SELECT geo_entities.id, geo_entities.iso_code2, ''EN'' AS lng, geo_entities.name_en AS name FROM geo_entities
+        UNION
+        SELECT geo_entities.id, geo_entities.iso_code2, ''ES'' AS lng, geo_entities.name_es AS name FROM geo_entities
+        UNION
+        SELECT geo_entities.id, geo_entities.iso_code2, ''FR'' AS lng, geo_entities.name_fr AS name FROM geo_entities
+      ) geo_entities
+        ON geo_entities.id = distributions.geo_entity_id
+      LEFT JOIN taggings
+        ON taggable_id = distributions.id AND taggable_type = ''Distribution''
+      LEFT JOIN tags
+        ON tags.id = taggings.tag_id
+        AND (
+          UPPER(tags.name) IN (
+            ''INTRODUCED'', ''INTRODUCED (?)'', ''REINTRODUCED'',
+            ''EXTINCT'', ''EXTINCT (?)'', ''DISTRIBUTION UNCERTAIN''
+          ) OR tags.name IS NULL
+        )
+      GROUP BY
+        distributions.taxon_concept_id,
+        tags.name,
+        geo_entities.lng
+    '::text, '
+      SELECT tag_name || ''_'' || lang_upper
+      FROM UNNEST(
+        ARRAY[
+          ''NATIVE'', ''INTRODUCED'', ''INTRODUCED (?)'', ''REINTRODUCED'',
           ''EXTINCT'', ''EXTINCT (?)'', ''DISTRIBUTION UNCERTAIN''
-        ) OR tags.name IS NULL
-      )
-    GROUP BY distributions.taxon_concept_id, tags.name, geo_entities.lng
-    '::text, 'SELECT * FROM UNNEST(
-      ARRAY[
-        ''NATIVE_EN'', ''INTRODUCED_EN'', ''INTRODUCED (?)_EN'', ''REINTRODUCED_EN'',
-        ''EXTINCT_EN'', ''EXTINCT (?)_EN'', ''DISTRIBUTION UNCERTAIN_EN'',
-        ''NATIVE_ES'', ''INTRODUCED_ES'', ''INTRODUCED (?)_ES'', ''REINTRODUCED_ES'',
-        ''EXTINCT_ES'', ''EXTINCT (?)_ES'', ''DISTRIBUTION UNCERTAIN_ES'',
-        ''NATIVE_FR'', ''INTRODUCED_FR'', ''INTRODUCED (?)_FR'', ''REINTRODUCED_FR'',
-        ''EXTINCT_FR'', ''EXTINCT (?)_FR'', ''DISTRIBUTION UNCERTAIN_FR''
-      ])'::text) ct(taxon_concept_id integer, native_distribution_ary_en character varying[], introduced_distribution_ary_en character varying[], introduced_uncertain_distribution_ary_en character varying[], reintroduced_distribution_ary_en character varying[], extinct_distribution_ary_en character varying[], extinct_uncertain_distribution_ary_en character varying[], uncertain_distribution_ary_en character varying[], native_distribution_ary_es character varying[], introduced_distribution_ary_es character varying[], introduced_uncertain_distribution_ary_es character varying[], reintroduced_distribution_ary_es character varying[], extinct_distribution_ary_es character varying[], extinct_uncertain_distribution_ary_es character varying[], uncertain_distribution_ary_es character varying[], native_distribution_ary_fr character varying[], introduced_distribution_ary_fr character varying[], introduced_uncertain_distribution_ary_fr character varying[], reintroduced_distribution_ary_fr character varying[], extinct_distribution_ary_fr character varying[], extinct_uncertain_distribution_ary_fr character varying[], uncertain_distribution_ary_fr character varying[])) distributions_by_tag ON ((taxon_concepts.id = distributions_by_tag.taxon_concept_id)));
+        ]
+      ) WITH ORDINALITY tag_names(tag_name, row_number)
+      JOIN UNNEST(
+        ARRAY[''EN'', ''FR'', ''ES'']
+      ) WITH ORDINALITY languages(lang_upper, row_number)
+      ON TRUE
+      ORDER BY languages.row_number, tag_names.row_number
+    '::text) ct(taxon_concept_id integer, native_distribution_ary_en character varying[], introduced_distribution_ary_en character varying[], introduced_uncertain_distribution_ary_en character varying[], reintroduced_distribution_ary_en character varying[], extinct_distribution_ary_en character varying[], extinct_uncertain_distribution_ary_en character varying[], uncertain_distribution_ary_en character varying[], native_distribution_ary_es character varying[], introduced_distribution_ary_es character varying[], introduced_uncertain_distribution_ary_es character varying[], reintroduced_distribution_ary_es character varying[], extinct_distribution_ary_es character varying[], extinct_uncertain_distribution_ary_es character varying[], uncertain_distribution_ary_es character varying[], native_distribution_ary_fr character varying[], introduced_distribution_ary_fr character varying[], introduced_uncertain_distribution_ary_fr character varying[], reintroduced_distribution_ary_fr character varying[], extinct_distribution_ary_fr character varying[], extinct_uncertain_distribution_ary_fr character varying[], uncertain_distribution_ary_fr character varying[])) distributions_by_tag ON ((taxon_concepts.id = distributions_by_tag.taxon_concept_id)));
 
 
 --
@@ -28104,34 +28094,6 @@ CREATE INDEX all_taxon_concepts_and_ancestors_mview_taxonomy_id_idx ON public.al
 
 
 --
--- Name: auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx1 ON public.auto_complete_taxon_concepts_mview USING btree (name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_checklist_ac);
-
-
---
--- Name: auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx2; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx2 ON public.auto_complete_taxon_concepts_mview USING btree (name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_ac);
-
-
---
--- Name: auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx3; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auto_complete_taxon_concepts__name_for_matching_taxonomy_i_idx3 ON public.auto_complete_taxon_concepts_mview USING btree (name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_trade_internal_ac);
-
-
---
--- Name: auto_complete_taxon_concepts__name_for_matching_taxonomy_is_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX auto_complete_taxon_concepts__name_for_matching_taxonomy_is_idx ON public.auto_complete_taxon_concepts_mview USING btree (name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match, show_in_species_plus_ac);
-
-
---
 -- Name: cites_listing_changes_mview_new_taxon_concept_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -28146,24 +28108,87 @@ CREATE INDEX cites_listing_changes_mview_old_taxon_concept_id_idx ON public.cite
 
 
 --
--- Name: cites_species_listing_mview_tmp_countries_ids_ary_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: cites_species_listing_mview_tmp_countries_ids_ary_idx1; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX cites_species_listing_mview_tmp_countries_ids_ary_idx ON public.cites_species_listing_mview USING gin (countries_ids_ary);
-
-
---
--- Name: cms_species_listing_mview_tmp_countries_ids_ary_idx1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX cms_species_listing_mview_tmp_countries_ids_ary_idx1 ON public.cms_species_listing_mview USING gin (countries_ids_ary);
+CREATE INDEX cites_species_listing_mview_tmp_countries_ids_ary_idx1 ON public.cites_species_listing_mview USING gin (countries_ids_ary);
 
 
 --
--- Name: eu_species_listing_mview_tmp_countries_ids_ary_idx; Type: INDEX; Schema: public; Owner: -
+-- Name: cms_species_listing_mview_tmp_countries_ids_ary_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX eu_species_listing_mview_tmp_countries_ids_ary_idx ON public.eu_species_listing_mview USING gin (countries_ids_ary);
+CREATE INDEX cms_species_listing_mview_tmp_countries_ids_ary_idx ON public.cms_species_listing_mview USING gin (countries_ids_ary);
+
+
+--
+-- Name: eu_species_listing_mview_tmp_countries_ids_ary_idx1; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX eu_species_listing_mview_tmp_countries_ids_ary_idx1 ON public.eu_species_listing_mview USING gin (countries_ids_ary);
+
+
+--
+-- Name: idx_ac_taxon_checklist_btree; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ac_taxon_checklist_btree ON public.auto_complete_taxon_concepts_mview USING btree (name_for_matching text_pattern_ops, type_of_match) WHERE (taxonomy_is_cites_eu AND show_in_checklist_ac);
+
+
+--
+-- Name: idx_ac_taxon_checklist_gist; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ac_taxon_checklist_gist ON public.auto_complete_taxon_concepts_mview USING gist (name_for_matching public.gist_trgm_ops) WHERE (taxonomy_is_cites_eu AND show_in_checklist_ac);
+
+
+--
+-- Name: idx_ac_taxon_gist; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ac_taxon_gist ON public.auto_complete_taxon_concepts_mview USING gist (name_for_matching public.gist_trgm_ops);
+
+
+--
+-- Name: idx_ac_taxon_splus_btree; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ac_taxon_splus_btree ON public.auto_complete_taxon_concepts_mview USING btree (name_for_matching text_pattern_ops, taxonomy_is_cites_eu, type_of_match) WHERE show_in_species_plus_ac;
+
+
+--
+-- Name: idx_ac_taxon_splus_gist; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ac_taxon_splus_gist ON public.auto_complete_taxon_concepts_mview USING gist (name_for_matching public.gist_trgm_ops) WHERE show_in_species_plus_ac;
+
+
+--
+-- Name: idx_ac_taxon_trade_ac_btree; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ac_taxon_trade_ac_btree ON public.auto_complete_taxon_concepts_mview USING btree (name_for_matching text_pattern_ops, type_of_match, taxonomy_is_cites_eu) WHERE show_in_trade_ac;
+
+
+--
+-- Name: idx_ac_taxon_trade_ac_gist; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ac_taxon_trade_ac_gist ON public.auto_complete_taxon_concepts_mview USING gist (name_for_matching public.gist_trgm_ops) WHERE show_in_trade_ac;
+
+
+--
+-- Name: idx_ac_taxon_trade_internal_btree; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ac_taxon_trade_internal_btree ON public.auto_complete_taxon_concepts_mview USING btree (name_for_matching text_pattern_ops, type_of_match, taxonomy_is_cites_eu) WHERE show_in_trade_internal_ac;
+
+
+--
+-- Name: idx_ac_taxon_trade_internal_gist; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ac_taxon_trade_internal_gist ON public.auto_complete_taxon_concepts_mview USING gist (name_for_matching public.gist_trgm_ops) WHERE show_in_trade_internal_ac;
 
 
 --
@@ -28178,6 +28203,55 @@ CREATE INDEX idx_events_where_is_current_on_type_subtype_designation ON public.e
 --
 
 CREATE INDEX idx_listing_changes_where_is_current_on_taxon_type_listing ON public.listing_changes USING btree (taxon_concept_id, change_type_id, species_listing_id) WHERE is_current;
+
+
+--
+-- Name: idx_mtaxon_cites_csv; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_mtaxon_cites_csv ON public.taxon_concepts_mview USING btree (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name);
+
+
+--
+-- Name: idx_mtaxon_cms_csv; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_mtaxon_cms_csv ON public.taxon_concepts_mview USING btree (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name);
+
+
+--
+-- Name: idx_mtaxon_eu_csv; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_mtaxon_eu_csv ON public.taxon_concepts_mview USING btree (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name);
+
+
+--
+-- Name: idx_mtaxon_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_mtaxon_id ON public.taxon_concepts_mview USING btree (id);
+
+
+--
+-- Name: idx_mtaxon_id_countries_ids; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_mtaxon_id_countries_ids ON public.taxon_concepts_mview USING gin (countries_ids_ary);
+
+
+--
+-- Name: idx_mtaxon_kingdom_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_mtaxon_kingdom_position ON public.taxon_concepts_mview USING btree (taxonomy_is_cites_eu, cites_listed, kingdom_position);
+
+
+--
+-- Name: idx_mtaxon_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_mtaxon_parent_id ON public.taxon_concepts_mview USING btree (parent_id);
 
 
 --
@@ -30313,55 +30387,6 @@ CREATE UNIQUE INDEX taxon_concepts_and_ancestors__ancestor_taxon_concept_id_tax_
 --
 
 CREATE INDEX taxon_concepts_and_ancestors_mview_taxonomy_id_idx ON public.taxon_concepts_and_ancestors_mview USING btree (taxonomy_id);
-
-
---
--- Name: taxon_concepts_mview_tmp_cites_show_name_status_cites_list_idx1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX taxon_concepts_mview_tmp_cites_show_name_status_cites_list_idx1 ON public.taxon_concepts_mview USING btree (cites_show, name_status, cites_listing_original, taxonomy_is_cites_eu, rank_name);
-
-
---
--- Name: taxon_concepts_mview_tmp_cms_show_name_status_cms_listing__idx1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX taxon_concepts_mview_tmp_cms_show_name_status_cms_listing__idx1 ON public.taxon_concepts_mview USING btree (cms_show, name_status, cms_listing_original, taxonomy_is_cites_eu, rank_name);
-
-
---
--- Name: taxon_concepts_mview_tmp_countries_ids_ary_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX taxon_concepts_mview_tmp_countries_ids_ary_idx ON public.taxon_concepts_mview USING gin (countries_ids_ary);
-
-
---
--- Name: taxon_concepts_mview_tmp_eu_show_name_status_eu_listing_or_idx1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX taxon_concepts_mview_tmp_eu_show_name_status_eu_listing_or_idx1 ON public.taxon_concepts_mview USING btree (eu_show, name_status, eu_listing_original, taxonomy_is_cites_eu, rank_name);
-
-
---
--- Name: taxon_concepts_mview_tmp_id_idx1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX taxon_concepts_mview_tmp_id_idx1 ON public.taxon_concepts_mview USING btree (id);
-
-
---
--- Name: taxon_concepts_mview_tmp_parent_id_idx1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX taxon_concepts_mview_tmp_parent_id_idx1 ON public.taxon_concepts_mview USING btree (parent_id);
-
-
---
--- Name: taxon_concepts_mview_tmp_taxonomy_is_cites_eu_cites_listed_idx1; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX taxon_concepts_mview_tmp_taxonomy_is_cites_eu_cites_listed_idx1 ON public.taxon_concepts_mview USING btree (taxonomy_is_cites_eu, cites_listed, kingdom_position);
 
 
 --
@@ -38458,6 +38483,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260612143100'),
 ('20260612143000'),
 ('20260611103000'),
+('20260608165100'),
 ('20250715111433'),
 ('20250606161500'),
 ('20250522113100'),

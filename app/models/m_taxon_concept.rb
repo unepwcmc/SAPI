@@ -105,13 +105,13 @@
 #
 # Indexes
 #
-#  taxon_concepts_mview_tmp_cites_show_name_status_cites_list_idx1  (cites_show,name_status,cites_listing_original,taxonomy_is_cites_eu,rank_name)
-#  taxon_concepts_mview_tmp_cms_show_name_status_cms_listing__idx1  (cms_show,name_status,cms_listing_original,taxonomy_is_cites_eu,rank_name)
-#  taxon_concepts_mview_tmp_countries_ids_ary_idx                   (countries_ids_ary) USING gin
-#  taxon_concepts_mview_tmp_eu_show_name_status_eu_listing_or_idx1  (eu_show,name_status,eu_listing_original,taxonomy_is_cites_eu,rank_name)
-#  taxon_concepts_mview_tmp_id_idx1                                 (id)
-#  taxon_concepts_mview_tmp_parent_id_idx1                          (parent_id)
-#  taxon_concepts_mview_tmp_taxonomy_is_cites_eu_cites_listed_idx1  (taxonomy_is_cites_eu,cites_listed,kingdom_position)
+#  idx_mtaxon_cites_csv         (cites_show,name_status,cites_listing_original,taxonomy_is_cites_eu,rank_name)
+#  idx_mtaxon_cms_csv           (cms_show,name_status,cms_listing_original,taxonomy_is_cites_eu,rank_name)
+#  idx_mtaxon_eu_csv            (eu_show,name_status,eu_listing_original,taxonomy_is_cites_eu,rank_name)
+#  idx_mtaxon_id                (id)
+#  idx_mtaxon_id_countries_ids  (countries_ids_ary) USING gin
+#  idx_mtaxon_kingdom_position  (taxonomy_is_cites_eu,cites_listed,kingdom_position)
+#  idx_mtaxon_parent_id         (parent_id)
 #
 
 class MTaxonConcept < ApplicationRecord
