@@ -17,7 +17,6 @@
 
 class Trade::InclusionValidationRule < Trade::ValidationRule
   # Only created by seed.
-  # attr_accessible :valid_values_view
 
   def matching_records_for_aru_and_error(annual_report_upload, validation_error)
     # The format of validation_error.matching_criteria seems to vary - sometimes

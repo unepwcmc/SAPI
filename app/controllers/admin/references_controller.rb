@@ -46,9 +46,6 @@ protected
 private
 
   def reference_params
-    params.require(:reference).permit(
-      # attributes were in model `attr_accessible`.
-      :citation, :created_by_id, :updated_by_id
-    )
+    params.expect(reference: [ :citation, :created_by_id, :updated_by_id ])
   end
 end

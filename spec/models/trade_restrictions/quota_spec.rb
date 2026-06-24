@@ -47,6 +47,27 @@ describe Quota, sidekiq: :inline do
       subject { Dir["#{DownloadsCache.quotas_path}/*"] }
       specify { expect(subject).not_to be_empty }
     end
+
+    context 'when taxon concept filters come from params as strings' do
+      it 'casts them to integers before running the overlap query' do
+        create(
+          :quota,
+          start_date: Time.utc(2013),
+          geo_entity: create(:geo_entity),
+          taxon_concept: @taxon_concept
+        )
+        # The export joins taxon_concepts_mview, so we rebuild it here to
+        # mirror production and prove the query survives string params.
+        SapiModule::StoredProcedures.execute_proc :rebuild_taxon_concepts_mview
+
+        expect do
+          Quota.export(
+            'set' => 'current',
+            'taxon_concepts_ids' => [ @taxon_concept.id.to_s ]
+          )
+        end.not_to raise_error
+      end
+    end
   end
 
   describe :destroy do
@@ -148,6 +169,42 @@ describe Quota, sidekiq: :inline do
         specify { quota.should_not be_valid }
         specify { quota.should have(1).error_on(:unit) }
       end
+    end
+  end
+
+  describe '.count_matching' do
+    let(:year) { 2025 }
+    let!(:matching_quota) do
+      create(
+        :quota,
+        start_date: Time.utc(year),
+        geo_entity: create(:geo_entity),
+        taxon_concept: @taxon_concept
+      )
+    end
+
+    it 'ignores blank admin filter params instead of sending untyped SQL binds' do
+      expect(
+        Quota.count_matching(
+          year: year.to_s,
+          included_geo_entities_ids: [''],
+          excluded_geo_entities_ids: [''],
+          included_taxon_concepts_ids: '',
+          excluded_taxon_concepts_ids: ''
+        )
+      ).to eq(1)
+    end
+
+    it 'applies only the filters that contain ids' do
+      expect(
+        Quota.count_matching(
+          year: year.to_s,
+          included_geo_entities_ids: [matching_quota.geo_entity_id.to_s],
+          excluded_geo_entities_ids: [''],
+          included_taxon_concepts_ids: matching_quota.taxon_concept_id.to_s,
+          excluded_taxon_concepts_ids: ''
+        )
+      ).to eq(1)
     end
   end
 end

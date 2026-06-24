@@ -1,7 +1,11 @@
 class Species::EuDecisionsExport < Species::CsvCopyExport
   def initialize(filters)
     @filters = filters
-    @taxon_concepts_ids = filters[:taxon_concepts_ids]
+    # Controllers pass filter values straight from params, so IDs can arrive as
+    # strings. We normalise them here because the overlap query must compare
+    # integer arrays on both sides; otherwise PostgreSQL infers a text[] bind
+    # and rejects the `&&` operator.
+    @taxon_concepts_ids = sanitize_integer_array(filters[:taxon_concepts_ids])
     @geo_entities_ids = filters[:geo_entities_ids]
     @years = filters[:years]
     @decision_types = filters[:decision_types]
@@ -59,10 +63,10 @@ class Species::EuDecisionsExport < Species::CsvCopyExport
         ARRAY[
           taxon_concept_id, eu_decisions.family_id, eu_decisions.order_id, eu_decisions.class_id,
           eu_decisions.phylum_id, eu_decisions.kingdom_id
-        ] && ARRAY[?]
+        ] && ARRAY[?]::integer[]
         OR taxon_concept_id IS NULL
       SQL
-      rel = rel.where(conds_str, @taxon_concepts_ids.map(&:to_i))
+      rel = rel.where(conds_str, @taxon_concepts_ids)
     end
 
     if @years.present?
@@ -136,5 +140,15 @@ private
     @excluded_decision_types ||= @decision_types&.map do |key, value|
       value == 'false' ? key.singularize.underscore.upcase : nil
     end&.compact || []
+  end
+
+  def sanitize_integer_array(values)
+    array = values.is_a?(String) ? values.split(',') : values
+    return [] unless array.is_a?(Array)
+
+    array.filter_map do |value|
+      integer = value.to_i
+      integer if integer.positive? && integer.to_s == value.to_s
+    end.sort
   end
 end

@@ -26,9 +26,6 @@
 
 class CommonName < ApplicationRecord
   include TrackWhoDoesIt
-  # Used by app/models/taxon_common.rb
-  # attr_accessible :language_id, :name,
-  #   :created_by_id, :updated_by_id
 
   belongs_to :language
 

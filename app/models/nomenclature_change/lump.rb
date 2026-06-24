@@ -26,8 +26,7 @@
 
 class NomenclatureChange::Lump < NomenclatureChange
   build_steps(:inputs, :outputs, :notes, :legislation, :summary)
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :inputs_attributes, :output_attributes
+
   has_many :inputs, inverse_of: :nomenclature_change,
     class_name: 'NomenclatureChange::Input',
     foreign_key: :nomenclature_change_id,

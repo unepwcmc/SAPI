@@ -13,9 +13,6 @@
 #  index_srg_histories_on_name  (name) UNIQUE
 #
 class SrgHistory < ApplicationRecord
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :name, :tooltip
-
   has_many :eu_decisions
 
   validates :name, presence: true, uniqueness: true

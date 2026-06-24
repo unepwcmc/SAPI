@@ -17,5 +17,4 @@ class AnalyticsEvent < ApplicationRecord
   validates :event_type, inclusion: { in: EVENT_TYPES }, presence: true
 
   # Used by `download_db` in app/controllers/cites_trade/home_controller.rb
-  # attr_accessible :event_name, :event_type
 end

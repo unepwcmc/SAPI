@@ -29,9 +29,6 @@ protected
 private
 
   def source_params
-    params.require(:source).permit(
-      # attributes were in model `attr_accessible`.
-      :code, :type, :name_en, :name_es, :name_fr
-    )
+    params.expect(source: [ :code, :type, :name_en, :name_es, :name_fr ])
   end
 end

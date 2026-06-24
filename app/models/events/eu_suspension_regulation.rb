@@ -42,8 +42,6 @@
 class EuSuspensionRegulation < EuEvent
   include Deletable
 
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :eu_suspensions_event_id
   attr_accessor :eu_suspensions_event_id
 
   # Because EuSuspensionRegulation events are created with many suspensions

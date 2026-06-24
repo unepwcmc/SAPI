@@ -51,9 +51,8 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  config.log_level = :warn # @see https://github.com/heartcombo/devise#password-reset-tokens-and-rails-logs
+  # Change to "debug" to log everything (including potentially personally-identifiable information!).
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
@@ -108,8 +107,6 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-  config.hosts += ENV['ALLOWED_HOSTS'].split(',') if ENV['ALLOWED_HOSTS'].present?
-
 
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector
@@ -136,31 +133,23 @@ Rails.application.configure do
   config.ember.variant = :production
 
   # Custom email settings
-  mailer_credentials = Rails.application.credentials[:mailer]
-
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: mailer_credentials[:address],
-    port: mailer_credentials[:port],
-    domain: mailer_credentials[:domain],
-    user_name: mailer_credentials[:username],
-    password: mailer_credentials[:password],
+    address: 'smtp.sendgrid.net',
+    port: 587,
+    domain: 'unep-wcmc.org',
+    user_name: ENV.fetch('MAIL_USERNAME', nil),
+    password: ENV.fetch('MAIL_PASSWORD', nil),
     authentication: :login,
     enable_starttls_auto: true
   }
 
   config.action_mailer.default_url_options = {
-    host: mailer_credentials[:host]
+    host: 'sapi.sapi-staging.linode.unep-wcmc.org'
   }
 
-  # fix for current version of mail gem: https://github.com/mikel/mail/issues/1538
-  # config.action_mailer.delivery_method = :sendmail
-  # config.action_mailer.sendmail_settings = {
-  #   location: '/usr/sbin/sendmail', arguments: ['-i']
-  # }
-
   config.action_mailer.default_options = {
-    from: mailer_credentials[:from],
-    reply_to: mailer_credentials[:from]
+    from: 'no-reply@unep-wcmc.org',
+    reply_to: 'no-reply@unep-wcmc.org'
   }
 end

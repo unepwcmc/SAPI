@@ -1,3 +1,5 @@
+# This file is copied to spec/ when you run 'rails generate rspec:install'
+
 require 'simplecov'
 require 'coveralls'
 
@@ -14,8 +16,9 @@ SimpleCov.start 'rails' do
   add_group 'Serializers', 'app/serializers'
 end
 
-# This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV['RAILS_ENV'] ||= 'test'
+# CHANGED
+ENV['RAILS_ENV'] = 'test'
+
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'sidekiq/testing'
@@ -57,6 +60,40 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include JsonSpec::Helpers
   config.include SapiSpec::Helpers
+
+  config.before(:suite) do
+    # `DatabaseCleaner.clean_with(:deletion, cache_tables: false)` used to be
+    # the suite-wide reset, but on this schema it needs far too many locks and
+    # eventually trips Postgres shared-memory / out-of-lock errors. We still
+    # need a clean starting point for each RSpec process because FactoryBot
+    # sequences restart from the beginning and will collide with stale rows in
+    # a reused test database. Truncating once up front keeps that deterministic
+    # empty baseline without repeating the old expensive table-by-table
+    # deletion sweep.
+    primary_tables = ApplicationRecord.connection.tables - %w[
+      ar_internal_metadata
+      schema_migrations
+      spatial_ref_sys
+    ]
+    if primary_tables.any?
+      quoted_primary_tables = primary_tables.map do |table_name|
+        ApplicationRecord.connection.quote_table_name(table_name)
+      end.join(', ')
+      ApplicationRecord.connection.execute(
+        "TRUNCATE TABLE #{quoted_primary_tables} RESTART IDENTITY CASCADE"
+      )
+    end
+
+    # The captive-breeding database is managed outside Rails' normal database
+    # tasks, but specs that create users still sync into its `users` table.
+    # Reset that table too when the auxiliary schema has been bootstrapped, so
+    # cross-database uniqueness checks start from a clean state as well.
+    if CaptiveBreedingRecord.connection.data_source_exists?('users')
+      CaptiveBreedingRecord.connection.execute(
+        'TRUNCATE TABLE public.users RESTART IDENTITY CASCADE'
+      )
+    end
+  end
 
   config.before(:all) do
     # https://github.com/thoughtbot/factory_bot/issues/1255

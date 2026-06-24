@@ -16,8 +16,6 @@
 
 class IucnMapping < ApplicationRecord
   # Used by IucnMappingManager
-  # attr_accessible :iucn_author, :iucn_category, :iucn_taxon_id,
-  #   :iucn_taxon_name, :taxon_concept_id, :details, :accepted_name_id
 
   # serialize :details, coder: ActiveRecord::Coders::Hstore
   belongs_to :taxon_concept

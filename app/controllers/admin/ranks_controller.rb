@@ -14,9 +14,11 @@ protected
 private
 
   def rank_params
-    params.require(:rank).permit(
-      # attributes were in model `attr_accessible`.
-      :name, :display_name_en, :display_name_es, :display_name_fr, :taxonomic_position, :fixed_order
+    params.expect(
+      rank: [
+        :name, :display_name_en, :display_name_es, :display_name_fr,
+        :taxonomic_position, :fixed_order
+      ]
     )
   end
 end

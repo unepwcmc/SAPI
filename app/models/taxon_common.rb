@@ -28,9 +28,6 @@
 class TaxonCommon < ApplicationRecord
   include Changeable
   include TrackWhoDoesIt
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :common_name_id, :taxon_concept_id, :created_by_id,
-  #   :updated_by_id, :name, :language_id
 
   attr_accessor :name, :language_id
 

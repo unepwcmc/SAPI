@@ -31,10 +31,11 @@ class Admin::TaxonConceptCommentsController < Admin::SimpleCrudController
 private
 
   def comment_params
-    params.require(:comment).permit(
-      # attributes were in model `attr_accessible`.
-      :comment_type, :commentable_id, :commentable_type, :note,
-      :created_by_id, :updated_by_id
+    params.expect(
+      comment: [
+        :comment_type, :commentable_id, :commentable_type, :note,
+        :created_by_id, :updated_by_id
+      ]
     )
   end
 end

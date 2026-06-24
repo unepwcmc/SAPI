@@ -29,9 +29,6 @@ protected
 private
 
   def purpose_params
-    params.require(:purpose).permit(
-      # attributes were in model `attr_accessible`.
-      :code, :type, :name_en, :name_es, :name_fr
-    )
+    params.expect(purpose: [ :code, :type, :name_en, :name_es, :name_fr ])
   end
 end
