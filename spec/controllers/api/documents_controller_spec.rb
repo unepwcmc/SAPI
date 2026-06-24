@@ -1,7 +1,19 @@
 require 'spec_helper'
 
 describe Api::V1::DocumentsController do
-  before(:each) do
+  before do
+    allow_any_instance_of(User).to receive(:sync_with_captive_breeding_db)
+  end
+
+  before do
+    allow(ActiveStorage::Current).to receive(:url_options).and_return(
+      protocol: 'http',
+      host: 'test.host',
+      port: 80
+    )
+  end
+
+  before do
     @taxon_concept = create_cites_eu_species
     @subspecies = create_cites_eu_subspecies(parent: @taxon_concept)
     @document = create(:proposal, is_public: true, event: create_cites_cop)
@@ -42,8 +54,9 @@ describe Api::V1::DocumentsController do
     context 'GET index contributor' do
       login_contributor
 
-      it 'returns all documents' do
-        get_all_documents
+      it 'returns only public documents' do
+        get :index, params: { taxon_concept_id: @taxon_concept.id }
+        expect(response.body).to have_json_size(3).at_path('documents')
       end
     end
 
@@ -61,13 +74,14 @@ describe Api::V1::DocumentsController do
       get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response.body).to have_json_size(3).at_path('documents')
     end
-    context 'GET index api user ' do
+    context 'GET index api user' do
       login_api_user
 
       it 'returns only public documents' do
         get_public_documents
       end
     end
+
     context 'GET index no user' do |variable|
       it 'returns only public documents' do
         get_public_documents
@@ -80,7 +94,7 @@ describe Api::V1::DocumentsController do
       get :index, params: { taxon_concept_id: @taxon_concept.id }
       expect(response.body).to have_json_size(3).at_path('documents')
     end
-    context 'GET index api user ' do
+    context 'GET index api user' do
       login_secretariat_user
 
       it 'returns only public documents' do
@@ -91,9 +105,9 @@ describe Api::V1::DocumentsController do
 
   context 'show action fails' do
     login_api_user
-    it 'should return 403 status when permission denied' do
+    it 'returns 403 status when permission denied' do
       get :show, params: { id: @document2.id }
-      expect(response).to have_http_status(403)
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
@@ -105,36 +119,159 @@ describe Api::V1::DocumentsController do
   end
 
   context 'download documents' do
-    context 'single document selected' do
-      it 'should return 404 if file is missing' do
-        @document2.file.purge
-        get :download_zip, params: { ids: @document2.id }
-        expect(response).to have_http_status(404)
-      end
-      it 'should return zip file if file is found' do
-        allow(controller).to receive(:render)
-        get :download_zip, params: { ids: @document2.id }
-        expect(response.headers['Content-Type']).to eq 'application/zip'
+    before do
+      @download_document = create(:proposal, is_public: true, event: create_cites_cop)
+      @download_document2 = create(:proposal, is_public: true, event: create_cites_cop)
+    end
+
+    def parsed_response
+      JSON.parse(response.body)
+    end
+
+    it 'returns 422 when no ids are provided' do
+      get :download_zip, params: { ids: '' }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it 'returns 404 when any selected document row is missing' do
+      get :download_zip, params: { ids: "#{@download_document.id},999999999" }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'returns 422 when too many document ids are provided' do
+      document_ids = create_list(
+        :proposal,
+        Api::V1::DocumentsController::MAX_DOCUMENTS_COUNT_IN_BULK_DOWNLOAD + 1,
+        is_public: true,
+        event: nil,
+        designation: nil
+      ).map(&:id)
+
+      get :download_zip, params: { ids: document_ids.join(',') }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it 'returns 404 when all selected files are missing' do
+      @download_document.file.purge
+      @download_document2.file.purge
+
+      get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'creates a pending download zip request and returns its JSON state' do
+      expect do
+        get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
+      end.to change(DocumentsBulkDownload, :count).by(1)
+
+      expect(response).to have_http_status(:accepted)
+      expect(parsed_response).to include(
+        'status' => DocumentsBulkDownload::PENDING,
+        'error_message' => nil,
+        'processing_at' => nil,
+        'completed_at' => nil,
+        'download_url' => nil
+      )
+      expect(parsed_response['id']).to be_present
+    end
+
+    it 'reuses the same download zip request for the same ids in a different order' do
+      get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
+      first_response = parsed_response
+
+      expect do
+        get :download_zip, params: { ids: "#{@download_document2.id},#{@download_document.id}" }
+      end.not_to change(DocumentsBulkDownload, :count)
+
+      expect(parsed_response['id']).to eq(first_response['id'])
+    end
+
+    it 'updates last_download_at when a completed bulk download is requested again' do
+      get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
+      documents_bulk_download = DocumentsBulkDownload.find(parsed_response['id'])
+      documents_bulk_download.zip_file.attach(
+        io: StringIO.new('existing zip'),
+        filename: 'elibrary-documents.zip',
+        content_type: 'application/zip'
+      )
+      documents_bulk_download.update!(
+        status: DocumentsBulkDownload::COMPLETED,
+        completed_at: Time.current
+      )
+      documents_bulk_download.update_columns(last_download_at: 3.days.ago)
+
+      expect do
+        get :download_zip, params: { ids: "#{@download_document2.id},#{@download_document.id}" }
+      end.to change { documents_bulk_download.reload.last_download_at&.to_i }
+    end
+
+    it 'does not update last_download_at when the bulk download is not completed yet' do
+      get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
+      documents_bulk_download = DocumentsBulkDownload.find(parsed_response['id'])
+
+      expect do
+        get :download_zip, params: { ids: "#{@download_document2.id},#{@download_document.id}" }
+      end.not_to change { documents_bulk_download.reload.last_download_at }
+    end
+
+    it 'does not collapse a partially missing selection into the attached-only selection' do
+      @download_document.file.purge
+
+      get :download_zip, params: { ids: "#{@download_document.id},#{@download_document2.id}" }
+      mixed_selection_id = parsed_response['id']
+
+      get :download_zip, params: { ids: @download_document2.id.to_s }
+
+      expect(parsed_response['id']).not_to eq(mixed_selection_id)
+      expect(DocumentsBulkDownload.count).to eq(2)
+    end
+
+    it 'returns 404 when an anonymous user selects a public and a private document' do
+      get :download_zip, params: { ids: "#{@download_document.id},#{@document2.id}" }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it 'returns 404 when an anonymous user selects only private documents' do
+      get :download_zip, params: { ids: @document2.id.to_s }
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    context 'when signed in as an API user' do
+      login_api_user
+
+      it 'returns 404 when a public and private document are requested together' do
+        get :download_zip, params: { ids: "#{@download_document.id},#{@document2.id}" }
+
+        expect(response).to have_http_status(:not_found)
       end
     end
 
-    context 'multiple documents selected' do
-      it 'should return 404 if all files are missing' do
-        @document.file.purge
-        @document2.file.purge
-        get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
-        expect(response).to have_http_status(404)
-      end
+    context 'when signed in as an e-library viewer' do
+      login_elibrary_viewer
 
-      it 'should return zip file if at least a file is found' do
-        @document.file.purge
-        get :download_zip, params: { ids: "#{@document.id},#{@document2.id}" }
-        expect(response.headers['Content-Type']).to eq 'application/zip'
+      it 'allows a public and private document to be downloaded together' do
+        get :download_zip, params: { ids: "#{@download_document.id},#{@document2.id}" }
+
+        expect(response).to have_http_status(:accepted)
+        expect(parsed_response).to include(
+          'status' => DocumentsBulkDownload::PENDING,
+          'error_message' => nil,
+          'processing_at' => nil,
+          'completed_at' => nil,
+          'download_url' => nil
+        )
+        expect(parsed_response['id']).to be_present
       end
     end
 
     context 'cascading documents logic' do
-      it 'should get subspecies documents' do
+      it 'gets subspecies documents' do
         get :index, params: { taxon_concepts_ids: [ @taxon_concept.id ] }
         expect(response.body).to have_json_size(3).at_path('documents')
       end
