@@ -3,14 +3,14 @@
 # Table name: cms_mappings
 #
 #  id               :integer          not null, primary key
-#  taxon_concept_id :integer
-#  cms_uuid         :string(255)
-#  cms_taxon_name   :string(255)
 #  cms_author       :string(255)
+#  cms_taxon_name   :string(255)
+#  cms_uuid         :string(255)
 #  details          :hstore
-#  accepted_name_id :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  accepted_name_id :integer
+#  taxon_concept_id :integer
 #
 
 class CmsMapping < ApplicationRecord
