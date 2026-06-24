@@ -6,9 +6,15 @@ class NomenclatureChange::OutputTaxonConceptProcessor
   def run
     tc = @output.tmp_taxon_concept || @output.taxon_concept
     # A split cannot continue unless each output resolves to a concrete taxon.
-    # Raising here keeps the failure attached to the invalid output instead of
-    # allowing downstream reassignment processors to crash on nil.id.
-    raise NomenclatureChange::Processor::ProcessingError, failure_message('No destination taxon concept available') unless tc
+    # When an output points at no existing taxon and also lacks the attributes
+    # needed to build a valid new one, tmp_taxon_concept returns a blank shell
+    # object. Treat that as an unresolved destination so the caller gets the
+    # domain error instead of downstream validation noise from an impossible
+    # save attempt.
+    if tc.nil? || (@output.taxon_concept.nil? && !tc.valid?)
+      raise NomenclatureChange::Processor::ProcessingError,
+        failure_message('No destination taxon concept available')
+    end
 
     tc.nomenclature_note_en = "#{tc.nomenclature_note_en} #{@output.note_en}"
     tc.nomenclature_note_es = "#{tc.nomenclature_note_es} #{@output.note_es}"
