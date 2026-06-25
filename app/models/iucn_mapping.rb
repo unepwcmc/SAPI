@@ -3,15 +3,15 @@
 # Table name: iucn_mappings
 #
 #  id               :integer          not null, primary key
-#  taxon_concept_id :integer
-#  iucn_taxon_id    :integer
-#  iucn_taxon_name  :string(255)
+#  details          :hstore
 #  iucn_author      :string(255)
 #  iucn_category    :string(255)
+#  iucn_taxon_name  :string(255)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  details          :hstore
 #  accepted_name_id :integer
+#  iucn_taxon_id    :integer
+#  taxon_concept_id :integer
 #
 
 class IucnMapping < ApplicationRecord

@@ -3,7 +3,7 @@
 # Table name: listing_changes
 #
 #  id                         :integer          not null, primary key
-#  effective_at               :datetime         default(Fri, 21 Sep 2012 07:32:20.000000000 UTC +00:00), not null
+#  effective_at               :datetime         default(2012-09-21 07:32:20.000000000 UTC +00:00), not null
 #  explicit_change            :boolean          default(TRUE)
 #  internal_notes             :text
 #  is_current                 :boolean          default(FALSE), not null

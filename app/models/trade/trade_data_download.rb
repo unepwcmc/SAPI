@@ -3,25 +3,25 @@
 # Table name: trade_trade_data_downloads
 #
 #  id             :integer          not null, primary key
-#  user_ip        :string(255)
-#  report_type    :string(255)
-#  year_from      :integer
-#  year_to        :integer
-#  taxon          :string(255)
 #  appendix       :string(255)
-#  importer       :text
-#  exporter       :text
-#  origin         :text
-#  term           :text
-#  unit           :text
-#  source         :text
-#  purpose        :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  number_of_rows :integer
 #  city           :string
 #  country        :string
+#  exporter       :text
+#  importer       :text
+#  number_of_rows :integer
 #  organization   :string
+#  origin         :text
+#  purpose        :text
+#  report_type    :string(255)
+#  source         :text
+#  taxon          :string(255)
+#  term           :text
+#  unit           :text
+#  user_ip        :string(255)
+#  year_from      :integer
+#  year_to        :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #
 
 class Trade::TradeDataDownload < ApplicationRecord

@@ -1,16 +1,5 @@
 ### 1.22.0
 
-**CITES Checklist**
-
-* Fixed an issue where the authorship of synonyms was occasionally displaying
-  incorrectly. This happened when there were multiple synonyms and one or more
-  had no authorship information.
-
-**Species+ Admin Interface**
-
-* Fixed a security issue where admins could in theory cause arbitrary SQL to
-  be executed with sufficiently well-crafted taxon names.
-
 **Rails 7.2 Upgrade**
 
 The primary goal of this release is to upgrade the Rails version without causing
@@ -30,6 +19,16 @@ any breaking changes to functionality.
 * We now target Postgres 17 (was 10) and Redis 7 (was 4.2).
 * Moving to `params.expect` over `require`/`permit` pattern.
 
+**CITES Checklist**
+
+* Fixed an issue where the authorship of synonyms was occasionally displaying
+  incorrectly. This happened when there were multiple synonyms and one or more
+  had no authorship information.
+
+**Species+ Admin Interface**
+
+* Fixed a security issue where admins could in theory cause arbitrary SQL to
+  be executed with sufficiently well-crafted taxon names.
 ### 1.21.3
 
 **CITES Trade DB**
