@@ -29,7 +29,14 @@ servers:
       - 172.20.0.158 # sapi-web-prod-01.internal.unep-wcmc.org
     options:
       add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
-      health-cmd: /rails/bin/docker-sidekiq-healthcheck # Docker-native healthcheck (non-proxy role)
+      # Docker-native healthcheck (non-proxy role). Explicit fast interval/start-period
+      # so the container reports healthy well within Kamal's readiness window — Docker's
+      # default 30s interval means the first check wouldn't fire in time otherwise.
+      health-cmd: /rails/bin/docker-sidekiq-healthcheck
+      health-interval: 5s
+      health-retries: 3
+      health-start-period: 5s
+      health-timeout: 3s
     cmd: bundle exec sidekiq -C config/sidekiq.yml
 
 # Build remotely on the production web server (not the staging server the base
