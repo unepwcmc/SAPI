@@ -1,6 +1,6 @@
 shared:
   version: "2026.1"
-  size: "486MB"
+  size: "464MB"
   file_path: public/downloads/Trade_database_download_v2026.1.zip
 
 production:
