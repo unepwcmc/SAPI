@@ -102,3 +102,6 @@
 
 # MS Windows downloads hidden file
 *:Zone.Identifier
+
+# Local workflow notes
+current-workflow.md
