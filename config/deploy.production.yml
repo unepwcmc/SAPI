@@ -29,9 +29,8 @@ servers:
       - 172.20.0.158 # sapi-web-prod-01.internal.unep-wcmc.org
     options:
       add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
+      health-cmd: /rails/bin/docker-sidekiq-healthcheck # Docker-native healthcheck (non-proxy role)
     cmd: bundle exec sidekiq -C config/sidekiq.yml
-    healthcheck:
-      cmd: /rails/bin/docker-sidekiq-healthcheck
 
 # Build remotely on the production web server (not the staging server the base
 # config points at), using the production-specific Docker target that starts puma.
