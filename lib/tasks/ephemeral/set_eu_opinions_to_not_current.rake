@@ -43,8 +43,12 @@ namespace :ephemeral do
         replacement_decision.is_current = false
         replacement_decision.eu_decision_type = new_type
         replacement_decision.start_event = new_event
-        replacement_decision.start_date = new_event.effective_at # todo - confirm
-        replacement_decision.note = 'All countries' # todo - specify
+
+        # The start date and the date in the note are in fact different for
+        # SRG 107 decisions, and this is intentional, per ticker 435.
+        replacement_decision.start_date = new_event.effective_at
+        replacement_decision.note =
+          'The decision came into effect when the Annex A listing for the species came into force on 29/06/2026'
 
         replacement_decision.save!
 
