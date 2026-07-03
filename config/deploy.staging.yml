@@ -14,13 +14,11 @@ servers:
         certificate_pem: CERTIFICATE_PEM
         private_key_pem: PRIVATE_KEY_PEM
       forward_headers: true # Forward headers like X-Forwarded-Proto
-      healthcheck:
-        path: /up
       logging:
         request_headers:
           - Cache-Control
           - User-Agent
-          - X-Forwarded-Proto # Critical for Rails to detect HTTPS
+          - X-Forwarded-Proto
         response_headers:
           - X-Request-ID
   job:
@@ -28,6 +26,15 @@ servers:
       - 172.20.0.146 # sapi-web-staging-01.internal.unep-wcmc.org
     options:
       add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
+      # Docker-native healthcheck (non-proxy role). Explicit fast interval/start-period
+      # so the container reports healthy well within Kamal's readiness window — Docker's
+      # default 30s interval means the first check wouldn't fire in time otherwise.
+      # https://docs.docker.com/engine/containers/run/#healthchecks
+      health-cmd: /rails/bin/docker-sidekiq-healthcheck
+      health-interval: 5s
+      health-retries: 3
+      health-start-period: 5s
+      health-timeout: 3s
     cmd: bundle exec sidekiq -C config/sidekiq.yml
 
 # Use staging-specific Dockerfile that starts puma
