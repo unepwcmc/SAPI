@@ -139,28 +139,33 @@ module DownloadsCache
       Checklist::Json
     ]
     [ 'en', 'es', 'fr' ].each do |locale|
-      # full download parameters
-      params = {
-        show_synonyms: '1',
-        show_author: '1',
-        show_english: '1',
-        show_spanish: '1',
-        show_french: '1',
-        intro: '1',
-        locale: locale
-      }
+      # The checklist cache key, translated labels, and PDF dictionary all read
+      # I18n.locale directly, so the prebuild must switch the active locale
+      # rather than only passing locale through params.
+      I18n.with_locale(locale) do
+        # full download parameters
+        params = {
+          show_synonyms: '1',
+          show_author: '1',
+          show_english: '1',
+          show_spanish: '1',
+          show_french: '1',
+          intro: '1',
+          locale: locale
+        }
 
-      modules.each do |m|
-        elapsed_time =
-          Benchmark.realtime do
-            puts m::Index.new(params).generate
-          end
-        Rails.logger.debug { "#{Time.now} #{m}::Index download #{locale} generated in #{elapsed_time}s" }
-        elapsed_time =
-          Benchmark.realtime do
-            puts m::History.new(params).generate
-          end
-        Rails.logger.debug { "#{Time.now} #{m}::History download #{locale} generated in #{elapsed_time}s" }
+        modules.each do |m|
+          elapsed_time =
+            Benchmark.realtime do
+              puts m::Index.new(params).generate
+            end
+          Rails.logger.debug { "#{Time.now} #{m}::Index download #{locale} generated in #{elapsed_time}s" }
+          elapsed_time =
+            Benchmark.realtime do
+              puts m::History.new(params).generate
+            end
+          Rails.logger.debug { "#{Time.now} #{m}::History download #{locale} generated in #{elapsed_time}s" }
+        end
       end
     end
   end

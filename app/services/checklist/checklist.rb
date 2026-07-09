@@ -186,15 +186,18 @@ class Checklist::Checklist
   def download_location(params, type, format)
     require 'digest/sha1'
 
-    params.delete(:action)
-    params.delete(:controller)
+    normalized_params = params.to_h.deep_dup.symbolize_keys
+    normalized_params.delete(:action)
+    normalized_params.delete(:controller)
+    # Respect an explicitly requested locale so cache prebuilds and ad hoc
+    # downloads produce distinct files per language instead of collapsing onto
+    # the process-global locale.
+    requested_locale = normalized_params.delete(:locale).presence || I18n.locale
 
     @filename = Digest::SHA1.hexdigest(
-      params.
+      normalized_params.
       merge(type: type).
-      merge(locale: I18n.locale).
-      to_hash.
-      symbolize_keys!.
+      merge(locale: requested_locale).
       sort.
       to_s
     )

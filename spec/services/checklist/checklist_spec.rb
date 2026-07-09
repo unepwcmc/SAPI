@@ -122,4 +122,25 @@ describe Checklist::Checklist do
       expect(summary).to eq('Results from 2 regions')
     end
   end
+
+  describe :download_location do
+    specify 'uses the explicit locale instead of the process locale for the cache key' do
+      checklist = described_class.allocate
+
+      french_path = I18n.with_locale(:en) do
+        checklist.download_location({ locale: 'fr' }, 'index', 'pdf')
+      end
+
+      expected_french_path = I18n.with_locale(:fr) do
+        checklist.download_location({}, 'index', 'pdf')
+      end
+
+      english_path = I18n.with_locale(:en) do
+        checklist.download_location({}, 'index', 'pdf')
+      end
+
+      expect(french_path).to eq(expected_french_path)
+      expect(french_path).not_to eq(english_path)
+    end
+  end
 end
