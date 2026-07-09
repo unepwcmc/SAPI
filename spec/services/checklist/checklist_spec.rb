@@ -123,9 +123,9 @@ describe Checklist::Checklist do
     end
   end
 
-  describe :download_location do
+  describe '#download_location' do
     specify 'uses the explicit locale instead of the process locale for the cache key' do
-      checklist = described_class.allocate
+      checklist = Checklist::Checklist.allocate
 
       french_path = I18n.with_locale(:en) do
         checklist.download_location({ locale: 'fr' }, 'index', 'pdf')

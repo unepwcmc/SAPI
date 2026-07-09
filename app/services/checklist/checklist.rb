@@ -192,7 +192,7 @@ class Checklist::Checklist
     # Respect an explicitly requested locale so cache prebuilds and ad hoc
     # downloads produce distinct files per language instead of collapsing onto
     # the process-global locale.
-    requested_locale = normalized_params.delete(:locale).presence || I18n.locale
+    requested_locale = (normalized_params.delete(:locale).presence || I18n.locale).to_s
 
     @filename = Digest::SHA1.hexdigest(
       normalized_params.
