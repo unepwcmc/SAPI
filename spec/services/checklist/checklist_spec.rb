@@ -142,5 +142,123 @@ describe Checklist::Checklist do
       expect(french_path).to eq(expected_french_path)
       expect(french_path).not_to eq(english_path)
     end
+
+    specify 'uses the same cache key for equivalent raw and sanitized params' do
+      checklist = Checklist::Checklist.allocate
+
+      raw_params_path = I18n.with_locale(:en) do
+        checklist.download_location(
+          {
+            show_synonyms: '1',
+            show_author: '1',
+            show_english: '1',
+            show_spanish: '1',
+            show_french: '1',
+            intro: '1',
+            locale: 'en'
+          },
+          'index',
+          'pdf'
+        )
+      end
+
+      sanitized_params_path = I18n.with_locale(:en) do
+        checklist.download_location(
+          Checklist::ChecklistParams.sanitize(
+            show_synonyms: '1',
+            show_author: '1',
+            show_english: '1',
+            show_spanish: '1',
+            show_french: '1',
+            intro: '1'
+          ),
+          'index',
+          'pdf'
+        )
+      end
+
+      expect(raw_params_path).to eq(sanitized_params_path)
+    end
+
+    specify 'ignores non-checklist request params when building the cache key' do
+      checklist = Checklist::Checklist.allocate
+
+      canonical_path = I18n.with_locale(:en) do
+        checklist.download_location(
+          {
+            show_synonyms: '1',
+            show_author: '1',
+            show_english: '1',
+            show_spanish: '1',
+            show_french: '1',
+            intro: '1',
+            locale: 'en'
+          },
+          'index',
+          'pdf'
+        )
+      end
+
+      noisy_request_path = I18n.with_locale(:en) do
+        checklist.download_location(
+          {
+            show_synonyms: '1',
+            show_author: '1',
+            show_english: '1',
+            show_spanish: '1',
+            show_french: '1',
+            intro: '1',
+            locale: 'en',
+            format: 'pdf',
+            action: 'download_index',
+            controller: 'checklist/downloads'
+          },
+          'index',
+          'pdf'
+        )
+      end
+
+      expect(noisy_request_path).to eq(canonical_path)
+    end
+
+    specify 'ignores pagination params when building the cache key' do
+      checklist = Checklist::Checklist.allocate
+
+      canonical_path = I18n.with_locale(:en) do
+        checklist.download_location(
+          {
+            show_synonyms: '1',
+            show_author: '1',
+            show_english: '1',
+            show_spanish: '1',
+            show_french: '1',
+            intro: '1',
+            locale: 'en'
+          },
+          'index',
+          'pdf'
+        )
+      end
+
+      paginated_request_path = I18n.with_locale(:en) do
+        checklist.download_location(
+          {
+            show_synonyms: '1',
+            show_author: '1',
+            show_english: '1',
+            show_spanish: '1',
+            show_french: '1',
+            intro: '1',
+            locale: 'en',
+            page: '9',
+            per_page: '250'
+          },
+          'index',
+          'pdf'
+        )
+      end
+
+      expect(paginated_request_path).to eq(canonical_path)
+    end
   end
 end

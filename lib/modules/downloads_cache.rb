@@ -143,8 +143,11 @@ module DownloadsCache
       # I18n.locale directly, so the prebuild must switch the active locale
       # rather than only passing locale through params.
       I18n.with_locale(locale) do
-        # full download parameters
-        params = {
+        # Build the same canonical checklist options that request-time
+        # downloads hash into their cache key. This keeps the scheduled
+        # prebuild filenames aligned with live download requests.
+        params = Checklist::Checklist.normalized_download_params(
+          {
           show_synonyms: '1',
           show_author: '1',
           show_english: '1',
@@ -152,7 +155,8 @@ module DownloadsCache
           show_french: '1',
           intro: '1',
           locale: locale
-        }
+          }
+        ).first
 
         modules.each do |m|
           elapsed_time =
