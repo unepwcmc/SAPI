@@ -146,7 +146,7 @@ module DownloadsCache
         # Build the same canonical checklist options that request-time
         # downloads hash into their cache key. This keeps the scheduled
         # prebuild filenames aligned with live download requests.
-        params = Checklist::Checklist.normalized_download_params(
+        params, _requested_locale = Checklist::Checklist.normalized_download_params(
           {
           show_synonyms: '1',
           show_author: '1',
@@ -156,7 +156,7 @@ module DownloadsCache
           intro: '1',
           locale: locale
           }
-        ).first
+        )
 
         modules.each do |m|
           elapsed_time =
