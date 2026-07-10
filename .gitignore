@@ -33,10 +33,10 @@
 /config/*.key
 /config/credentials/*.key
 
-/coverage
-/rdoc
-/private
-/public/system
+/coverage/*
+/rdoc/*
+/private/*
+/public/system/*
 /public/downloads/*.pdf
 #LaTeX
 /public/latex/*.aux
@@ -78,6 +78,9 @@
 /public/downloads/cms_mappings/*.csv
 /public/downloads/orphaned_taxon_concepts/*.csv
 /public/uploads/*
+
+!private/**/.keep
+!public/**/.keep
 
 # Ruby
 /vendor/ruby
