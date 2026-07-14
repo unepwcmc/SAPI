@@ -8,6 +8,7 @@ servers:
     options:
       add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
     proxy:
+      response_timeout: 120 # kamal-proxy timeout config, default 30, cloudflare max 120.
       hosts:
         - sapi-web-staging-01.internal.unep-wcmc.org
       ssl:
