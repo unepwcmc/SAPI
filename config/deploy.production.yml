@@ -11,7 +11,7 @@ servers:
       response_timeout: 120 # kamal-proxy timeout config, default 30, cloudflare max 120.
       hosts:
         - sapi-web-prod-01.internal.unep-wcmc.org
-        # Internal-only for now — public cutover to www.speciesplus.net is a separate, later step
+        # Internal-only for now — public cutover to www.speciesplus.net AND trade.cites.org is a separate, later step
       ssl:
         certificate_pem: CERTIFICATE_PEM
         private_key_pem: PRIVATE_KEY_PEM
