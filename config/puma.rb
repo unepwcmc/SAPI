@@ -10,6 +10,11 @@
 # default is already 1. You can set it to `auto` to automatically start a worker
 # for each available processor.
 #
+# Puma 8 automatically preloads the application when WEB_CONCURRENCY enables
+# multiple workers. We intentionally rely on that default instead of calling
+# `preload_app!`, because keeping the generated configuration minimal makes the
+# single-worker case clear while retaining copy-on-write savings in production.
+#
 # The ideal number of threads per worker depends both on how much time the
 # application spends waiting for IO operations and on how much you wish to
 # prioritize throughput over latency.

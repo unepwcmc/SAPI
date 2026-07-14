@@ -26,6 +26,11 @@ servers:
   job:
     hosts:
       - 172.20.0.158 # sapi-web-prod-01.internal.unep-wcmc.org
+    env:
+      clear:
+        # Sidekiq has ten job threads, so its database pool must override the
+        # five-connection web default. Remove this if Sidekiq returns to five.
+        SAPI_RAILS_MAX_THREADS: 10
     options:
       add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
       # Docker-native healthcheck (non-proxy role). Explicit fast interval/start-period
@@ -50,3 +55,11 @@ builder:
 env:
   clear:
     RAILS_ENV: production
+    # Six workers give the checklist's bursty API traffic most of the shared
+    # VM's capacity while leaving room for the other apps and Sidekiq. Revisit
+    # after production load testing or when adding another host.
+    WEB_CONCURRENCY: 6
+    RAILS_MAX_THREADS: 5 # Puma threads per worker; database pools are configured separately below.
+    # Keep each web database pool aligned with Puma's five request threads.
+    # The job role overrides this because Sidekiq has different concurrency.
+    SAPI_RAILS_MAX_THREADS: 5
