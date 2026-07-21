@@ -153,6 +153,7 @@ class MTaxonConcept < ApplicationRecord
     class_name: 'MCmsListingChange'
 
   has_many :cites_processes
+  has_many :distributions, foreign_key: :taxon_concept_id
 
   scope :by_cites_eu_taxonomy, -> { where(taxonomy_is_cites_eu: true) }
   scope :by_cms_taxonomy, -> { where(taxonomy_is_cites_eu: false) }
