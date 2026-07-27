@@ -1,3 +1,9 @@
+### 1.21.4
+
+**Species+**
+
+* Push a notification indicating planned downtime, to be reverted in next release.
+
 ### 1.21.3
 
 **CITES Trade DB**
