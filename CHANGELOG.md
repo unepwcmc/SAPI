@@ -29,6 +29,13 @@ any breaking changes to functionality.
 
 * Fixed a security issue where admins could in theory cause arbitrary SQL to
   be executed with sufficiently well-crafted taxon names.
+
+### 1.21.4
+
+**Species+**
+
+* Push a notification indicating planned downtime, to be reverted in next release.
+
 ### 1.21.3
 
 **CITES Trade DB**
