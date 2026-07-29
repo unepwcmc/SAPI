@@ -11,7 +11,10 @@ servers:
       response_timeout: 120 # kamal-proxy timeout config, default 30, cloudflare max 120.
       hosts:
         - sapi-web-prod-01.linode.unep-wcmc.org
-        # Internal-only for now — public cutover to www.speciesplus.net AND trade.cites.org is a separate, later step
+        - preflight.speciesplus.net
+        # preflight.speciesplus.net now A-records to this host (DNS-only), so
+        # kamal-proxy serves it and Let's Encrypt issues on first request.
+        # Public cutover to www.speciesplus.net AND trade.cites.org is a separate, later step
       ssl: true
       forward_headers: true # Forward headers like X-Forwarded-Proto
       logging:
