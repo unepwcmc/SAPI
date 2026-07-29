@@ -16,7 +16,6 @@ servers:
         # kamal-proxy serves it and Let's Encrypt issues on first request.
         # Public cutover to www.speciesplus.net AND trade.cites.org is a separate, later step
       ssl: true
-      forward_headers: true # Forward headers like X-Forwarded-Proto
       logging:
         request_headers:
           - Cache-Control
