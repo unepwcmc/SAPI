@@ -63,3 +63,18 @@ env:
     # Keep each web database pool aligned with Puma's five request threads.
     # The job role overrides this because Sidekiq has different concurrency.
     SAPI_RAILS_MAX_THREADS: 5
+
+# kamal-proxy daemon settings (top level = the shared proxy container itself,
+# distinct from the per-role `proxy:` blocks above which configure routing).
+#
+# metrics_port makes kamal-proxy publish Prometheus metrics — per-host request
+# counts, status classes and request durations — which Zabbix scrapes to graph
+# real per-site traffic. Without it the daemon runs with metrics disabled
+# (kamal-proxy's default is 0 = off) and there is nothing to pull.
+#
+# This is set in EVERY app because whichever app boots or reboots the shared
+# proxy determines the daemon's flags; if one repo lacked it, a reboot triggered
+# from that repo would silently drop metrics.
+proxy:
+  run:
+    metrics_port: 9091
