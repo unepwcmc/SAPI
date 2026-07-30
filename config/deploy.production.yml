@@ -11,10 +11,16 @@ servers:
       response_timeout: 120 # kamal-proxy timeout config, default 30, cloudflare max 120.
       hosts:
         - sapi-web-prod-01.linode.unep-wcmc.org
+        - www.speciesplus.net
         - preflight.speciesplus.net
-        # preflight.speciesplus.net now A-records to this host (DNS-only), so
-        # kamal-proxy serves it and Let's Encrypt issues on first request.
-        # Public cutover to www.speciesplus.net AND trade.cites.org is a separate, later step
+        # The public domain is listed BEFORE the DNS flip on purpose: kamal-proxy
+        # only requests a Let's Encrypt certificate for a host once it is routed
+        # here, and issuance needs the DNS record already pointing at this box.
+        # Adding it now means the cert is obtained on the first request after the
+        # flip, instead of the flip landing on a host with no route for that name.
+        # Records must be DNS-only (grey cloud) — Cloudflare terminates HTTP-01.
+        # The .linode host stays for internal checks; drop it once the public
+        # domain is proven.
       ssl: true
       logging:
         request_headers:
