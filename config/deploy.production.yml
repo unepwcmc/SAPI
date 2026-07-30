@@ -11,7 +11,9 @@ servers:
       response_timeout: 120 # kamal-proxy timeout config, default 30, cloudflare max 120.
       hosts:
         - sapi-web-prod-01.linode.unep-wcmc.org
+        - speciesplus.net
         - www.speciesplus.net
+        - trade.cites.org
         - preflight.speciesplus.net
         # The public domain is listed BEFORE the DNS flip on purpose: kamal-proxy
         # only requests a Let's Encrypt certificate for a host once it is routed
