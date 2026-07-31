@@ -18,6 +18,7 @@ class Admin::TaxonQuotasController < Admin::SimpleCrudController
       failure.html { render 'create' }
     end
   end
+
   def update
     update! do |success, failure|
       success.html do
@@ -87,9 +88,9 @@ private
         :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
         :created_by_id, :updated_by_id, :url,
         :taxon_concept_id,
-        term_ids: [ [] ],
-        source_ids: [ [] ],
-        purpose_ids: [ [] ]
+        term_ids: [],
+        source_ids: [],
+        purpose_ids: []
       ]
     )
   end
