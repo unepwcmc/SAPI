@@ -153,8 +153,8 @@ private
         party_listing_distribution_attributes: [
           :id, :_destroy, :geo_entity_id, :listing_change_id, :is_party
         ],
-        geo_entity_ids: [ [] ],
-        excluded_geo_entities_ids: [ [] ]
+        geo_entity_ids: [],
+        excluded_geo_entities_ids: []
       ]
     )
   end

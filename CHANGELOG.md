@@ -1,11 +1,11 @@
 ### 1.22.0
 
-**Rails 7.2 Upgrade**
+**Rails 8.1 Upgrade**
 
 The primary goal of this release is to upgrade the Rails version without causing
 any breaking changes to functionality.
 
-* Upgrades Rails from 7.1.3.4 to 8.0.5
+* Upgrades Rails from 7.1.3.4 to 8.1.3
 * Upgrades Ruby from 3.2.5 to 3.4.9
 * Some dependency updates/changes consequently allowed or required, in particular:
   * Upgraded `acts-as-taggable-on` from 10.0.0 to 13.0.0
@@ -18,6 +18,8 @@ any breaking changes to functionality.
   * Upgraded `sprockets` from 3.7.2 to 4.0.3
 * We now target Postgres 17 (was 10) and Redis 7 (was 4.2).
 * Moving to `params.expect` over `require`/`permit` pattern.
+* Deployments now happen via Kamal rather than Capistrano.
+* Rails is now served over `traefik` and `puma`, not `nginx` and `passenger`.
 
 **CITES Checklist**
 

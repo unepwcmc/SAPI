@@ -224,6 +224,69 @@ FROM built-staging AS exec-staging
 
   CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
 
+##
+# The build step for production
+FROM build AS build-production
+  ENV NODE_ENV="production" \
+    RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
+    BUNDLE_WITHOUT="development"
+
+  COPY Gemfile Gemfile.lock ./
+
+  RUN grep -A1 '^BUNDLED WITH$' Gemfile.lock | tail -n1 | tr -d ' ' \
+    | xargs -I _BUNDLER_VERSION_ \
+      gem install bundler -v _BUNDLER_VERSION_ \
+  ;
+
+  RUN bundle install \
+    && rm -rf \
+      ~/.bundle/ \
+      "${BUNDLE_PATH}"/ruby/*/cache \
+      "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git \
+    && bundle exec bootsnap precompile --gemfile \
+  ;
+
+  COPY . .
+
+  RUN bundle exec bootsnap precompile app/ lib/
+
+  RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+
+FROM base AS built-production
+  ARG DEFAULT_GROUPNAME=railsgroup
+  ARG DEFAULT_USERNAME=railsuser
+  ENV BUNDLE_PATH="/usr/local/bundle"
+
+  # Run and own only the runtime files as a non-root user for security
+  RUN groupadd $DEFAULT_GROUPNAME \
+      --gid 1000 --system \
+    && useradd $DEFAULT_USERNAME \
+      --uid 1000 --gid 1000 --create-home --shell /bin/bash \
+  ;
+
+  USER 1000:1000
+
+  COPY --from="build-production" --chown=1000:1000 $BUNDLE_PATH $BUNDLE_PATH
+  COPY --from="build-production" --chown=1000:1000 /rails/ /rails/
+
+FROM built-production AS deploy-production
+  ENV RAILS_ENV="production" \
+    BUNDLE_WITHOUT="development"
+
+  CMD ["tail", "-f", "/dev/null"]
+
+FROM built-production AS exec-production
+  ENV RAILS_ENV="production" \
+    BUNDLE_WITHOUT="development"
+
+  ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+
+  EXPOSE 80
+
+  CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
+
 FROM built-develop AS deploy-develop
   CMD ["tail", "-f", "/dev/null"]
 
