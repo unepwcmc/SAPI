@@ -4,18 +4,26 @@ image: unepwcmc/sapi/rails-production
 servers:
   web:
     hosts:
-      - 172.20.0.158 # sapi-web-prod-01.internal.unep-wcmc.org
+      - sapi-web-prod-01.linode.unep-wcmc.org
     options:
       add-host: host.docker.internal:host-gateway # Required to reach host-bound Redis
     proxy:
       response_timeout: 120 # kamal-proxy timeout config, default 30, cloudflare max 120.
       hosts:
-        - sapi-web-prod-01.internal.unep-wcmc.org
-        # Internal-only for now — public cutover to www.speciesplus.net AND trade.cites.org is a separate, later step
-      ssl:
-        certificate_pem: CERTIFICATE_PEM
-        private_key_pem: PRIVATE_KEY_PEM
-      forward_headers: true # Forward headers like X-Forwarded-Proto
+        - sapi-web-prod-01.linode.unep-wcmc.org
+        - speciesplus.net
+        - www.speciesplus.net
+        - trade.cites.org
+        - preflight.speciesplus.net
+        # The public domain is listed BEFORE the DNS flip on purpose: kamal-proxy
+        # only requests a Let's Encrypt certificate for a host once it is routed
+        # here, and issuance needs the DNS record already pointing at this box.
+        # Adding it now means the cert is obtained on the first request after the
+        # flip, instead of the flip landing on a host with no route for that name.
+        # Records must be DNS-only (grey cloud) — Cloudflare terminates HTTP-01.
+        # The .linode host stays for internal checks; drop it once the public
+        # domain is proven.
+      ssl: true
       logging:
         request_headers:
           - Cache-Control
@@ -25,7 +33,7 @@ servers:
           - X-Request-ID
   job:
     hosts:
-      - 172.20.0.158 # sapi-web-prod-01.internal.unep-wcmc.org
+      - sapi-web-prod-01.linode.unep-wcmc.org
     env:
       clear:
         # Sidekiq has ten job threads, so its database pool must override the
@@ -49,7 +57,7 @@ servers:
 builder:
   dockerfile: Dockerfile
   target: exec-production
-  remote: ssh://wcmc@172.20.0.158
+  remote: ssh://wcmc@sapi-web-prod-01.linode.unep-wcmc.org
 
 # Environment variables
 env:
@@ -63,3 +71,18 @@ env:
     # Keep each web database pool aligned with Puma's five request threads.
     # The job role overrides this because Sidekiq has different concurrency.
     SAPI_RAILS_MAX_THREADS: 5
+
+# kamal-proxy daemon settings (top level = the shared proxy container itself,
+# distinct from the per-role `proxy:` blocks above which configure routing).
+#
+# metrics_port makes kamal-proxy publish Prometheus metrics — per-host request
+# counts, status classes and request durations — which Zabbix scrapes to graph
+# real per-site traffic. Without it the daemon runs with metrics disabled
+# (kamal-proxy's default is 0 = off) and there is nothing to pull.
+#
+# This is set in EVERY app because whichever app boots or reboots the shared
+# proxy determines the daemon's flags; if one repo lacked it, a reboot triggered
+# from that repo would silently drop metrics.
+proxy:
+  run:
+    metrics_port: 9091
