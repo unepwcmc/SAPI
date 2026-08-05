@@ -6,6 +6,7 @@ describe Admin::SrgHistoriesController do
   describe 'GET index' do
     it 'renders the index template' do
       get :index
+
       expect(response).to render_template('index')
     end
   end
@@ -25,7 +26,7 @@ describe Admin::SrgHistoriesController do
 
     context 'when not successful' do
       it 'renders new' do
-        post :create, params: { srg_history: { dummy: 'test' }, format: :js }
+        post :create, params: { srg_history: { name: '' }, format: :js }
 
         expect(response).to render_template('new')
       end
@@ -33,13 +34,13 @@ describe Admin::SrgHistoriesController do
   end
 
   describe 'PUT update' do
-    before(:each) do
+    before do
       @srg_history = create(:srg_history)
     end
 
     context 'when successful' do
       it 'renders the create js template' do
-        put :update, params: { id: @srg_history.id, srg_history: { dummy: 'test' }, format: :js }
+        put :update, params: { id: @srg_history.id, srg_history: { name: 'Test SRG' }, format: :js }
 
         expect(response).to render_template('create')
       end
@@ -55,7 +56,7 @@ describe Admin::SrgHistoriesController do
   end
 
   describe 'DELETE destroy' do
-    before(:each) do
+    before do
       @srg_history = create(:srg_history)
     end
 

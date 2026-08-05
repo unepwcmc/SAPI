@@ -32,8 +32,6 @@
 
 class ListingDistribution < ApplicationRecord
   include TrackWhoDoesIt
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :geo_entity_id, :listing_change_id, :is_party
 
   belongs_to :geo_entity
   belongs_to :listing_change, inverse_of: :listing_distributions

@@ -37,12 +37,13 @@ private
   end
 
   def user_params
-    params.require(:user).permit(
-      # attributes needed by Devise and/or used in this controller.
-      :name, :email, :password, :password_confirmation, :current_password,
-      # other attributes were in model `attr_accessible`.
-      :remember_me, :role, :terms_and_conditions, :is_cites_authority,
-      :organisation, :geo_entity_id, :is_active
+    params.expect(
+      user: [
+        # attributes needed by Devise and/or used in this controller.
+        :name, :email, :password, :password_confirmation, :current_password,
+        :remember_me, :role, :terms_and_conditions, :is_cites_authority,
+        :organisation, :geo_entity_id, :is_active
+      ]
     )
   end
 end

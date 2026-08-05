@@ -22,9 +22,10 @@ protected
 private
 
   def eu_decision_type_params
-    params.require(:eu_decision_type).permit(
-      # attributes were in model `attr_accessible`.
-      :name, :tooltip, :decision_type
+    params.expect(
+      eu_decision_type: [
+        :name, :tooltip, :decision_type
+      ]
     )
   end
 end

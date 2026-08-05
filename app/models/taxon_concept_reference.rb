@@ -34,10 +34,6 @@
 class TaxonConceptReference < ApplicationRecord
   include Changeable
   include TrackWhoDoesIt
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
-  #   :excluded_taxon_concepts_ids, :reference_attributes,
-  #   :created_by_id, :updated_by_id
 
   belongs_to :reference
   belongs_to :taxon_concept

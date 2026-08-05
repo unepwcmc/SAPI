@@ -47,9 +47,10 @@ protected
 private
 
   def geo_relationship_params
-    params.require(:geo_relationship).permit(
-      # attributes were in model `attr_accessible`.
-      :geo_entity_id, :geo_relationship_type_id, :other_geo_entity_id
+    params.expect(
+      geo_relationship: [
+        :geo_entity_id, :geo_relationship_type_id, :other_geo_entity_id
+      ]
     )
   end
 end

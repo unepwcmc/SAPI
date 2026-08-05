@@ -35,10 +35,6 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :email, :name, :password, :password_confirmation,
-  #   :remember_me, :role, :terms_and_conditions, :is_cites_authority,
-  #   :organisation, :geo_entity_id, :is_active
 
   MANAGER = 'admin'
   CONTRIBUTOR = 'default' # nonsense

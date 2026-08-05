@@ -59,10 +59,12 @@ protected
 private
 
   def user_params
-    params.require(:user).permit(
-      :email, :name, :password, :password_confirmation,
-      :remember_me, :role, :terms_and_conditions, :is_cites_authority,
-      :organisation, :geo_entity_id, :is_active
+    params.expect(
+      user: [
+        :email, :name, :password, :password_confirmation,
+        :remember_me, :role, :terms_and_conditions, :is_cites_authority,
+        :organisation, :geo_entity_id, :is_active
+      ]
     )
   end
 end

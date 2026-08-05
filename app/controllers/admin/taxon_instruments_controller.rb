@@ -67,9 +67,10 @@ protected
 private
 
   def taxon_instrument_params
-    params.require(:taxon_instrument).permit(
-      # attributes were in model `attr_accessible`.
-      :effective_from, :instrument_id, :taxon_concept_id
+    params.expect(
+      taxon_instrument: [
+        :effective_from, :instrument_id, :taxon_concept_id
+      ]
     )
   end
 end

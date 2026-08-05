@@ -124,7 +124,6 @@ describe Api::V1::TaxonConceptsController do
           'distribution_references' => [],
           'name_status' => 'A',
           'nomenclature_note_en' => nil,
-          'nomenclature_notification' => false,
           'cites_listing' => nil,
           'eu_listing' => nil,
           'accepted_names' => [],

@@ -89,9 +89,11 @@ protected
 private
 
   def taxon_relationship_params
-    params.require(:taxon_relationship).permit(
-      :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
-      :created_by_id, :updated_by_id
+    params.expect(
+      taxon_relationship: [
+        :taxon_concept_id, :other_taxon_concept_id, :taxon_relationship_type_id,
+        :created_by_id, :updated_by_id
+      ]
     )
   end
 end

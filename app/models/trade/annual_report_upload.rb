@@ -56,9 +56,6 @@ class Trade::AnnualReportUpload < ApplicationRecord
   include TrackWhoDoesIt
 
   # Suppose use in controller, but controller using strong parameters...
-  # attr_accessible :csv_source_file, :trading_country_id, :point_of_view,
-  #                 :submitted_at, :submitted_by_id, :number_of_rows,
-  #                 :number_of_records_submitted, :aws_storage_path
 
   mount_uploader :csv_source_file, Trade::CsvSourceFileUploader
   belongs_to :trading_country, class_name: 'GeoEntity'

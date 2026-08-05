@@ -10,7 +10,6 @@
 
 class GeoRelationshipType < ApplicationRecord
   # Used by seed only.
-  # attr_accessible :name
 
   include Dictionary
   build_dictionary :contains, :intersects

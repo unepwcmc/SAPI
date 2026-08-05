@@ -16,10 +16,8 @@
 
 class EuDecisionType < ApplicationRecord
   include Deletable
-
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :name, :tooltip, :decision_type
   include Dictionary
+
   build_dictionary :negative_opinion, :positive_opinion, :no_opinion,
     :suspension, :srg_referral
 

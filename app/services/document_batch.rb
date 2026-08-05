@@ -1,8 +1,11 @@
 class DocumentBatch
   extend ActiveModel::Naming
+
   include ActiveModel::Conversion
   include ActiveModel::Validations
+
   attr_reader :event_id, :language_id, :date, :is_public, :documents
+
   validates :date, presence: true
   validates :documents, presence: true, allow_blank: false
 
@@ -11,6 +14,7 @@ class DocumentBatch
     @language_id = attributes[:language_id]
     @date = attributes[:date]
     @is_public = attributes[:is_public]
+
     initialize_documents(attributes[:documents_attributes], attributes[:files])
   end
 
@@ -18,14 +22,17 @@ class DocumentBatch
     return false unless valid?
 
     success = true
+
     Document.transaction do
       @documents.each do |d|
         unless d.save
           success = false
         end
       end
+
       raise ActiveRecord::Rollback unless success
     end
+
     success
   end
 
@@ -37,20 +44,27 @@ private
 
   def initialize_documents(documents_attributes, files)
     @documents = []
+
     if documents_attributes && files
+      unless documents_attributes.try(:length) == files.try(:length)
+        raise StandardError,
+          'documents_attributes and files should have the same number of elements'
+      end
+
       for idx in 0..(files.length - 1) do
         document_params =
           if files[idx].respond_to?(:read) # Filter out invalid params for ActiveStorage.
             {
-              type: documents_attributes[idx.to_s][:type],
+              type: documents_attributes[idx][:type],
               file: files[idx],
               title: document_title(files[idx])
             }
           else
             {
-              type: documents_attributes[idx.to_s][:type],
+              type: documents_attributes[idx][:type]
             }
           end
+
         @documents.push(Document.new(common_attributes.merge(document_params)))
       end
     end
@@ -71,6 +85,7 @@ private
 
   def document_title(file)
     original_filename = file.is_a?(Hash) ? file[:filename].original_filename : file.original_filename
+
     File.basename(original_filename, File.extname(original_filename))
   end
 end

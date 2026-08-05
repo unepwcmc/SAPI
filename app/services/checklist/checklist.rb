@@ -2,6 +2,28 @@ class Checklist::Checklist
   include ActiveModel::SerializerSupport
   include CacheIterator
   include SearchCache # this provides #cached_results and #cached_total_cnt
+  DOWNLOAD_CACHE_PARAM_KEYS = %i[
+    output_layout
+    level_of_listing
+    scientific_name
+    countries
+    country_ids
+    cites_regions
+    cites_region_ids
+    cites_appendices
+    english_common_names
+    show_english
+    spanish_common_names
+    show_spanish
+    french_common_names
+    show_french
+    synonyms
+    show_synonyms
+    authors
+    show_author
+    intro
+    locale
+  ].freeze
   attr_accessor :animalia, :plantae, :authors, :synonyms, :synonyms_with_authors,
     :english_common_names, :spanish_common_names, :french_common_names, :total_cnt
   attr_reader :query
@@ -175,6 +197,14 @@ class Checklist::Checklist
     end
   end
 
+  def self.normalized_download_params(params)
+    raw_params = params.to_h.deep_dup.symbolize_keys.slice(*DOWNLOAD_CACHE_PARAM_KEYS)
+    locale = (raw_params.delete(:locale).presence || I18n.locale).to_s
+    normalized_params = Checklist::ChecklistParams.sanitize(raw_params)
+
+    [ normalized_params, locale ]
+  end
+
   # Returns a file path where a download can be stored.
   #
   # Used in Checklist::[Pdf|Csv]::[History|Index] to handle cached file
@@ -186,15 +216,16 @@ class Checklist::Checklist
   def download_location(params, type, format)
     require 'digest/sha1'
 
-    params.delete(:action)
-    params.delete(:controller)
+    # Only checklist download inputs should affect the cache key. Requests and
+    # background jobs pass params in different shapes, so normalize aliases and
+    # defaults first to ensure equivalent downloads reuse the same file.
+    normalized_params, requested_locale =
+      self.class.normalized_download_params(params)
 
     @filename = Digest::SHA1.hexdigest(
-      params.
+      normalized_params.
       merge(type: type).
-      merge(locale: I18n.locale).
-      to_hash.
-      symbolize_keys!.
+      merge(locale: requested_locale).
       sort.
       to_s
     )

@@ -20,9 +20,11 @@ protected
 private
 
   def change_type_params
-    params.require(:change_type).permit(
-      # attributes were in model `attr_accessible`.
-      :name, :display_name_en, :display_name_es, :display_name_fr, :designation_id
+    params.expect(
+      change_type: [
+        :name, :designation_id,
+        :display_name_en, :display_name_es, :display_name_fr
+      ]
     )
   end
 end

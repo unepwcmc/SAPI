@@ -20,8 +20,6 @@
 #
 
 class Trade::TaxonConceptTermPair < ApplicationRecord
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :taxon_concept_id, :term_id
   validates :taxon_concept_id, uniqueness: { scope: :term_id }
 
   belongs_to :taxon_concept

@@ -31,7 +31,7 @@ namespace :db do
   end
 
   task migrate: :environment do
-    Rake::Task['db:migrate:sql'].invoke
+    ApplicationRecord.connection_pool.migration_context.migrate
   end
 
   desc 'Drop sandboxes in progress'

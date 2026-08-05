@@ -80,11 +80,15 @@ protected
 private
 
   def distribution_params
-    params.require(:distribution).permit(
-      # attributes were in model `attr_accessible`.
-      :geo_entity_id, :taxon_concept_id, :internal_notes, :created_by_id, :updated_by_id,
-      references_attributes: [ :citation, :created_by_id, :updated_by_id, :id, :_destroy ],
-      tag_list: []
+    params.expect(
+      distribution: [
+        :geo_entity_id, :taxon_concept_id, :internal_notes,
+        :created_by_id, :updated_by_id,
+        references_attributes: [
+          [ :id, :_destroy, :citation, :created_by_id, :updated_by_id ]
+        ],
+        tag_list: []
+      ]
     )
   end
 end

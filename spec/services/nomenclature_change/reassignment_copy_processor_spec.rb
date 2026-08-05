@@ -42,5 +42,20 @@ describe NomenclatureChange::ReassignmentCopyProcessor do
     context 'when shipments' do
       include_context 'shipment_reassignments_processor_examples'
     end
+    context 'when output has no destination taxon concept' do
+      let(:output) { build(:nomenclature_change_output, taxon_concept: nil) }
+
+      specify do
+        reassignment = input.parent_reassignments.first
+        reassignable = input_species.children.first
+
+        expect do
+          processor.copied_object_before_save(reassignment, reassignable)
+        end.to raise_error(
+          NomenclatureChange::Processor::ProcessingError,
+          /No destination taxon concept available/
+        )
+      end
+    end
   end
 end

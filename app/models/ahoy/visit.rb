@@ -48,6 +48,8 @@ module Ahoy
     # (https://github.com/ankane/ahoy/blob/v1.0.1/lib/generators/ahoy/stores/templates/active_record_visits_migration.rb)
     # However it has changed since version 1.4.0, from `id` to `visit_token`, and from `visitor_id` to `visitor_token`.
     # (https://github.com/ankane/ahoy/blob/v1.4.0/lib/generators/ahoy/stores/templates/active_record_visits_migration.rb)
+    # Note that this will bypass custom methods on the original attribute, which thankfully we don't have:
+    # (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#alias-attribute-now-bypasses-custom-methods-on-the-original-attribute)
     alias_attribute :visit_token, :id
     alias_attribute :visitor_token, :visitor_id
   end

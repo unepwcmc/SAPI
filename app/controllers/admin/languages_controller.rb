@@ -14,9 +14,8 @@ protected
 private
 
   def language_params
-    params.require(:language).permit(
-      # attributes were in model `attr_accessible`.
-      :iso_code1, :iso_code3, :name_en, :name_fr, :name_es
+    params.expect(
+      language: [ :iso_code1, :iso_code3, :name_en, :name_fr, :name_es ]
     )
   end
 end

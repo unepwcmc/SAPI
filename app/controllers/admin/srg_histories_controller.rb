@@ -14,9 +14,6 @@ protected
 private
 
   def srg_history_params
-    params.require(:srg_history).permit(
-      # attributes were in model `attr_accessible`.
-      :name, :tooltip
-    )
+    params.expect(srg_history: [ :name, :tooltip ])
   end
 end

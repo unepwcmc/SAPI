@@ -9,9 +9,11 @@ describe Species::ListingsExport do
         }
       )
     end
+
     specify { expect(subject.path).to eq('public/downloads/cites_listings/') }
   end
-  describe :export do
+
+  describe :export, cache: true do
     context 'when no results' do
       subject do
         Species::ListingsExportFactory.new(
@@ -22,8 +24,10 @@ describe Species::ListingsExport do
           }
         )
       end
+
       specify { expect(subject.export).to be_falsey }
     end
+
     context 'when results' do
       before(:each) do
         FileUtils.mkpath(
@@ -32,9 +36,11 @@ describe Species::ListingsExport do
         allow_any_instance_of(Species::ListingsExport).to receive(:path).
           and_return('spec/public/downloads/cites_listings/')
       end
+
       after(:each) do
         FileUtils.remove_dir('spec/public/downloads/cites_listings', true)
       end
+
       subject do
         Species::ListingsExportFactory.new(
           {
@@ -44,12 +50,14 @@ describe Species::ListingsExport do
           }
         )
       end
+
       context 'when file not cached' do
         specify do
           subject.export
           expect(File.file?(subject.file_name)).to be_truthy
         end
       end
+
       context 'when file cached' do
         specify do
           FileUtils.touch(subject.file_name)
@@ -59,6 +67,7 @@ describe Species::ListingsExport do
       end
     end
   end
+
   describe :query do
     context 'when CITES' do
       context 'when Appendix I' do
@@ -70,6 +79,7 @@ describe Species::ListingsExport do
             }
           )
         end
+
         specify { expect(subject.query.to_a.size).to eq(1) }
 
         context 'when Poland' do
@@ -82,6 +92,7 @@ describe Species::ListingsExport do
               }
             )
           end
+
           specify { expect(subject.query.to_a.size).to eq(0) }
         end
 
@@ -95,9 +106,11 @@ describe Species::ListingsExport do
               }
             )
           end
+
           specify { expect(subject.query.to_a.size).to eq(1) }
         end
       end
+
       context 'when higher taxon ids' do
         subject do
           Species::ListingsExportFactory.new(
@@ -107,8 +120,10 @@ describe Species::ListingsExport do
             }
           )
         end
+
         specify { expect(subject.query.to_a.size).to eq(1) }
       end
+
       context 'when implicitly listed subspecies present' do
         before(:each) do
           create_cites_eu_subspecies(
@@ -116,6 +131,7 @@ describe Species::ListingsExport do
           )
           SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
         end
+
         subject do
           Species::ListingsExportFactory.new(
             {
@@ -124,9 +140,11 @@ describe Species::ListingsExport do
             }
           )
         end
+
         specify { expect(subject.query.to_a.size).to eq(1) }
       end
     end
+
     context 'when EU' do
       context 'when Annex A' do
         subject do
@@ -137,6 +155,7 @@ describe Species::ListingsExport do
             }
           )
         end
+
         specify { expect(subject.query.to_a.size).to eq(1) }
 
         context 'when Spain' do
@@ -149,6 +168,7 @@ describe Species::ListingsExport do
               }
             )
           end
+
           specify { expect(subject.query.to_a.size).to eq(0) }
         end
 
@@ -162,9 +182,11 @@ describe Species::ListingsExport do
               }
             )
           end
+
           specify { expect(subject.query.to_a.size).to eq(1) }
         end
       end
+
       context 'when higher taxon ids' do
         subject do
           Species::ListingsExportFactory.new(
@@ -174,6 +196,7 @@ describe Species::ListingsExport do
             }
           )
         end
+
         specify { expect(subject.query.to_a.size).to eq(1) }
       end
     end

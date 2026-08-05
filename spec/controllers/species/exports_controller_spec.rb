@@ -83,6 +83,42 @@ describe Species::ExportsController do
       expect(assigns(:filters)[:csv_separator]).to eq(:comma)
     end
   end
+
+  context 'when export filters include taxon concept ids from params' do
+    it 'normalizes them before dispatching to the export implementation' do
+      expect(Quota).to receive(:export) do |filters|
+        expect(filters[:taxon_concepts_ids]).to eq([ 23 ])
+        expect(filters['taxon_concepts_ids']).to eq([ 23 ])
+        false
+      end
+
+      get :download, params: {
+        data_type: 'Quotas', filters: {
+          'set' => 'current',
+          'taxon_concepts_ids' => [ '23' ],
+          'csv_separator' => 'comma'
+        }
+      }
+    end
+
+    it 'does not invent empty filters that would exclude all rows' do
+      expect(Quota).to receive(:export) do |filters|
+        expect(filters.key?(:geo_entities_ids)).to be(false)
+        expect(filters.key?('geo_entities_ids')).to be(false)
+        expect(filters.key?(:years)).to be(false)
+        expect(filters.key?('years')).to be(false)
+        false
+      end
+
+      get :download, params: {
+        data_type: 'Quotas', filters: {
+          'set' => 'all',
+          'designation' => 'cites',
+          'csv_separator' => ''
+        }
+      }
+    end
+  end
 end
 
 # I have no clue why this is stalling the build

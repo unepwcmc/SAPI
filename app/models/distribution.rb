@@ -31,9 +31,6 @@
 class Distribution < ApplicationRecord
   include Changeable
   include TrackWhoDoesIt
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :geo_entity_id, :taxon_concept_id, :tag_list,
-  #   :references_attributes, :internal_notes, :created_by_id, :updated_by_id
 
   acts_as_taggable
 

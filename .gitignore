@@ -7,9 +7,8 @@
 # Ignore bundler config
 /.bundle
 
-# Ignore all environment files (except templates).
+# Ignore all environment files
 /.env*
-!/.env*.erb
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -30,14 +29,14 @@
 !/public/assets/.keep
 .byebug_history
 
-# Ignore master key for decrypting credentials and more.
-/config/master.key
+# Ignore key files for decrypting credentials and more.
+/config/*.key
 /config/credentials/*.key
 
-/coverage
-/rdoc
-/private
-/public/system
+/coverage/*
+/rdoc/*
+/private/*
+/public/system/*
 /public/downloads/*.pdf
 #LaTeX
 /public/latex/*.aux
@@ -80,6 +79,9 @@
 /public/downloads/orphaned_taxon_concepts/*.csv
 /public/uploads/*
 
+!private/**/.keep
+!public/**/.keep
+
 # Ruby
 /vendor/ruby
 /vendor/cache
@@ -103,3 +105,6 @@
 
 # MS Windows downloads hidden file
 *:Zone.Identifier
+
+# Local workflow notes
+current-workflow.md

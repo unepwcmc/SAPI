@@ -15,10 +15,13 @@ describe Admin::TaxonCitesSuspensionsController do
   describe 'GET index' do
     it 'renders the index template' do
       get :index, params: { taxon_concept_id: @taxon_concept.id }
+
       expect(response).to render_template('index')
     end
+
     it 'renders the taxon_concepts_layout' do
       get :index, params: { taxon_concept_id: @taxon_concept.id }
+
       expect(response).to render_template('layouts/taxon_concepts')
     end
   end
@@ -26,6 +29,7 @@ describe Admin::TaxonCitesSuspensionsController do
   describe 'GET new' do
     it 'renders the new template' do
       get :new, params: { taxon_concept_id: @taxon_concept.id }
+
       expect(response).to render_template('new')
     end
   end
@@ -33,18 +37,26 @@ describe Admin::TaxonCitesSuspensionsController do
   describe 'POST create' do
     context 'when successful' do
       it 'renders index' do
-        post :create, params: {
-          cites_suspension: {
-            start_notification_id: create_cites_suspension_notification.id
-          }, taxon_concept_id: @taxon_concept.id
-        }
+        post :create,
+          params: {
+            cites_suspension: {
+              start_notification_id: create_cites_suspension_notification.id
+            }, taxon_concept_id: @taxon_concept.id
+          }
+
         expect(response).to redirect_to(
           admin_taxon_concept_cites_suspensions_url(@taxon_concept)
         )
       end
     end
+
     it 'renders new when not successful' do
-      post :create, params: { cites_suspension: { dummy: 'test' }, taxon_concept_id: @taxon_concept.id }
+      post :create,
+        params: {
+          cites_suspension: { start_notification_id: 0 },
+          taxon_concept_id: @taxon_concept.id
+        }
+
       expect(response).to render_template('new')
     end
   end
@@ -52,6 +64,7 @@ describe Admin::TaxonCitesSuspensionsController do
   describe 'GET edit' do
     it 'renders the edit template' do
       get :edit, params: { id: @cites_suspension.id, taxon_concept_id: @taxon_concept.id }
+
       expect(response).to render_template('edit')
     end
   end
@@ -59,11 +72,13 @@ describe Admin::TaxonCitesSuspensionsController do
   describe 'PUT update' do
     context 'when successful' do
       it 'renders taxon_concepts cites suspensions page' do
-        put :update, params: {
-          cites_suspension: {
-            publication_date: 1.week.ago
-          }, id: @cites_suspension.id, taxon_concept_id: @taxon_concept.id
-        }
+        put :update,
+          params: {
+            cites_suspension: {
+              publication_date: 1.week.ago
+            }, id: @cites_suspension.id, taxon_concept_id: @taxon_concept.id
+          }
+
         expect(response).to redirect_to(
           admin_taxon_concept_cites_suspensions_url(@taxon_concept)
         )
@@ -71,11 +86,13 @@ describe Admin::TaxonCitesSuspensionsController do
     end
 
     it 'renders edit when not successful' do
-      put :update, params: {
-        cites_suspension: {
-          start_notification_id: nil
-        }, id: @cites_suspension.id, taxon_concept_id: @taxon_concept.id
-      }
+      put :update,
+        params: {
+          cites_suspension: {
+            start_notification_id: nil
+          }, id: @cites_suspension.id, taxon_concept_id: @taxon_concept.id
+        }
+
       expect(response).to render_template('edit')
     end
   end
@@ -83,6 +100,7 @@ describe Admin::TaxonCitesSuspensionsController do
   describe 'DELETE destroy' do
     it 'redirects after delete' do
       delete :destroy, params: { id: @cites_suspension.id, taxon_concept_id: @taxon_concept.id }
+
       expect(response).to redirect_to(
         admin_taxon_concept_cites_suspensions_url(@taxon_concept)
       )
@@ -95,17 +113,23 @@ describe Admin::TaxonCitesSuspensionsController do
     describe 'GET index' do
       it 'renders the index template' do
         get :index, params: { taxon_concept_id: @taxon_concept.id }
+
         expect(response).to render_template('index')
       end
+
       it 'renders the taxon_concepts_layout' do
         get :index, params: { taxon_concept_id: @taxon_concept.id }
+
         expect(response).to render_template('layouts/taxon_concepts')
       end
     end
+
     describe 'DELETE destroy' do
       it 'fails to delete and redirects' do
         @request.env['HTTP_REFERER'] = admin_taxon_concept_cites_suspensions_url(@taxon_concept)
+
         delete :destroy, params: { id: @cites_suspension.id, taxon_concept_id: @taxon_concept.id }
+
         expect(response).to redirect_to(
           admin_taxon_concept_cites_suspensions_url(@taxon_concept)
         )

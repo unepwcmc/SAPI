@@ -74,12 +74,16 @@ class Admin::TaxonConceptReferencesController < Admin::StandardAuthorizationCont
 private
 
   def taxon_concept_reference_params
-    params.require(:taxon_concept_reference).permit(
-      # attributes were in model `attr_accessible`.
-      :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
-      :created_by_id, :updated_by_id,
-      :excluded_taxon_concepts_ids, # String
-      reference_attributes: [ :citation, :created_by_id, :updated_by_id, :id, :_destroy ]
+    params.expect(
+      taxon_concept_reference: [
+        :reference_id, :taxon_concept_id, :is_standard, :is_cascaded,
+        :created_by_id, :updated_by_id,
+        :excluded_taxon_concepts_ids, # String
+        reference_attributes: [
+          # Expect a single object, not an array
+          :citation, :created_by_id, :updated_by_id, :id, :_destroy
+        ]
+      ]
     )
   end
 end

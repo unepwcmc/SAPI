@@ -17,7 +17,6 @@
 
 class Trade::ValidationRule < ApplicationRecord
   # Used by seed.
-  # attr_accessible :column_names, :run_order, :is_primary, :scope, :is_strict
   serialize :scope, coder: ActiveRecord::Coders::NestedHstore
   has_many :validation_errors, class_name: 'Trade::ValidationError'
 

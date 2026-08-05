@@ -5,7 +5,7 @@ module SearchParamSanitiser
   end
 
   def sanitise_upcase_string(s)
-    s && s.strip.mb_chars.upcase
+    s && s.strip.upcase
   end
 
   def sanitise_symbol(s, default = nil)

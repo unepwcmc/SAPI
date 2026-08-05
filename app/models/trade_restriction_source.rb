@@ -28,7 +28,6 @@
 class TradeRestrictionSource < ApplicationRecord
   include TrackWhoDoesIt
   # Relationship model between TradeCode(source) and TradeRestriction
-  # attr_accessible :source_id, :trade_restriction_id
 
   belongs_to :trade_restriction
   belongs_to :source, class_name: 'TradeCode'

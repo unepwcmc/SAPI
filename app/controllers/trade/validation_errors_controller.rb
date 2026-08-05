@@ -19,8 +19,6 @@ class Trade::ValidationErrorsController < TradeController
 private
 
   def validation_error_params
-    params.require(:validation_error).permit(
-      :is_ignored
-    )
+    params.expect(validation_error: [ :is_ignored ])
   end
 end

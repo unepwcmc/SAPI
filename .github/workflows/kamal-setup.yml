@@ -8,6 +8,7 @@ on:
         type: choice
         options:
           - staging
+          - production
       confirm:
         description: 'Type "CONFIRM" to proceed with setup'
         required: true

@@ -30,10 +30,11 @@ class Checklist::DownloadsController < ApplicationController
   # POST downloads/
   def create
     @download = Download.create(download_params)
+
     if download_params[:doc_type] == 'citesidmanual'
-      ManualDownloadWorker.perform_async(@download.id, params.dup.permit!.to_h)
+      ManualDownloadWorker.perform_async(@download.id, params.dup.permit!.as_json)
     else
-      DownloadWorker.perform_async(@download.id, params.dup.permit!.to_h)
+      DownloadWorker.perform_async(@download.id, params.dup.permit!.as_json)
     end
 
     @download = @download.attributes.except('filename', 'path')
@@ -103,11 +104,12 @@ private
   end
 
   def download_params
-    params.require(:download).permit(
-      # attributes used in this controller.
-      :doc_type,
-      # other attributes were in model `attr_accessible`.
-      :format
+    params.expect(
+      download: [
+        # attributes used in this controller.
+        :doc_type,
+        :format
+      ]
     )
   end
 

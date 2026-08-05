@@ -23,9 +23,6 @@
 class Rank < ApplicationRecord
   include Deletable
   extend Mobility
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :name, :display_name_en, :display_name_es, :display_name_fr,
-  #   :taxonomic_position, :fixed_order
   include Dictionary
   build_dictionary :kingdom, :phylum, :class, :order, :family, :subfamily, :genus, :species, :subspecies, :variety
 

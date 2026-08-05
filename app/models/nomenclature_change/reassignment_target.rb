@@ -27,9 +27,9 @@
 
 class NomenclatureChange::ReassignmentTarget < ApplicationRecord
   include TrackWhoDoesIt
+
   # Relationship table
-  # attr_accessible :nomenclature_change_output_id,
-  #   :nomenclature_change_reassignment_id, :note
+
   belongs_to :output, class_name: 'NomenclatureChange::Output',
     foreign_key: :nomenclature_change_output_id
   belongs_to :reassignment,

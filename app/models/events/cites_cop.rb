@@ -42,9 +42,6 @@
 class CitesCop < Event
   include Deletable
 
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :is_current
-
   ##
   # The only time we would delete a CoP/EU regulation is just after we've
   # created it by mistake, but we don't want to be able to delete the CoP

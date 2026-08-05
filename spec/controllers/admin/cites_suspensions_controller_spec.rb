@@ -46,7 +46,8 @@ describe Admin::CitesSuspensionsController do
       end
     end
     it 'renders new when not successful' do
-      post :create, params: { cites_suspension: { dummy: 'test' } }
+      post :create, params: { cites_suspension: { notes: 'DUMMY' } }
+
       expect(response).to render_template('new')
     end
   end

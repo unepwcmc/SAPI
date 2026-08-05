@@ -20,9 +20,6 @@ protected
 private
 
   def species_listing_params
-    params.require(:species_listing).permit(
-      # attributes were in model `attr_accessible`.
-      :designation_id, :name, :abbreviation
-    )
+    params.expect(species_listing: [ :designation_id, :name, :abbreviation ])
   end
 end

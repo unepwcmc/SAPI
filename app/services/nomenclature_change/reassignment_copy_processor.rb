@@ -14,7 +14,7 @@ class NomenclatureChange::ReassignmentCopyProcessor < NomenclatureChange::Reassi
   def copied_object_before_save(reassignment, reassignable)
     return nil if conflicting_listing_change_reassignment?(reassignment, reassignable)
 
-    new_taxon_concept = @output.new_taxon_concept || @output.taxon_concept
+    new_taxon_concept = destination_taxon_concept!
 
     Rails.logger.debug { "Processing #{reassignable.class} #{reassignable.id} copy to #{new_taxon_concept.full_name}" }
 

@@ -56,15 +56,9 @@ require 'digest/sha1'
 require 'csv'
 
 class TradeRestriction < ApplicationRecord
+  extend SearchParamSanitiser
   extend Mobility
   include TrackWhoDoesIt
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :end_date, :geo_entity_id, :is_current,
-  #   :notes, :publication_date, :purpose_ids, :quota, :type,
-  #   :source_ids, :start_date, :term_ids, :unit_id, :internal_notes,
-  #   :nomenclature_note_en, :nomenclature_note_es, :nomenclature_note_fr,
-  #   :created_by_id, :updated_by_id, :url,
-  #   :taxon_concept_id
 
   belongs_to :taxon_concept, optional: true
   belongs_to :m_taxon_concept, foreign_key: :taxon_concept_id, optional: true
@@ -257,17 +251,21 @@ class TradeRestriction < ApplicationRecord
   end
 
   def self.filter_taxon_concepts(filters)
-    if filters.key?('taxon_concepts_ids')
+    taxon_concepts_ids =
+      sanitise_integer_array(
+        filters[:taxon_concepts_ids] || filters['taxon_concepts_ids']
+      )
+    if taxon_concepts_ids.present?
       conds_str = <<-SQL.squish
         ARRAY[
           taxon_concepts_mview.id, taxon_concepts_mview.family_id,
           taxon_concepts_mview.order_id, taxon_concepts_mview.class_id,
           taxon_concepts_mview.phylum_id, taxon_concepts_mview.kingdom_id
-        ] && ARRAY[?]
+        ] && ARRAY[?]::integer[]
         OR trade_restrictions.taxon_concept_id IS NULL
       SQL
 
-      return where(conds_str, filters['taxon_concepts_ids'].map(&:to_i))
+      return where(conds_str, taxon_concepts_ids)
     end
 
     all

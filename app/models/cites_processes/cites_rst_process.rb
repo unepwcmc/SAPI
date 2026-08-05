@@ -25,7 +25,6 @@
 #
 class CitesRstProcess < CitesProcess
   # Used by lib/modules/import/rst/importer.rb
-  # attr_accessible :case_id
 
   STATUS = [ 'Initiated', 'Ongoing', 'Retained', 'Trade Suspension', 'Closed' ]
 

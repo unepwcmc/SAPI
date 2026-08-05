@@ -4,6 +4,7 @@ class Api::V1::EuDecisionsController < ApplicationController
 
   def index
     @eu_decisions = eu_decision_search(sanitized_params)
+
     render json: @eu_decisions,
       each_serializer: CaptiveBreeding::EuDecisionSerializer
   end

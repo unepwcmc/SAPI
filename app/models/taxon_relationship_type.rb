@@ -3,16 +3,15 @@
 # Table name: taxon_relationship_types
 #
 #  id                :integer          not null, primary key
-#  name              :string(255)      not null
-#  is_intertaxonomic :boolean          default(FALSE), not null
 #  is_bidirectional  :boolean          default(FALSE), not null
+#  is_intertaxonomic :boolean          default(FALSE), not null
+#  name              :string(255)      not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
 
 class TaxonRelationshipType < ApplicationRecord
   # Used by seed and rake task.
-  # attr_accessible :name, :is_intertaxonomic, :is_bidirectional
 
   include Dictionary
   build_dictionary :equal_to, :includes, :overlaps, :disjunct, :has_synonym,

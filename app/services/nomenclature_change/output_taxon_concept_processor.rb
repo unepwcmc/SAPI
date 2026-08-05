@@ -5,6 +5,17 @@ class NomenclatureChange::OutputTaxonConceptProcessor
 
   def run
     tc = @output.tmp_taxon_concept || @output.taxon_concept
+    # A split cannot continue unless each output resolves to a concrete taxon.
+    # When an output points at no existing taxon and also lacks the attributes
+    # needed to build a valid new one, tmp_taxon_concept returns a blank shell
+    # object. Treat that as an unresolved destination so the caller gets the
+    # domain error instead of downstream validation noise from an impossible
+    # save attempt.
+    if tc.nil? || (@output.taxon_concept.nil? && !tc.valid?)
+      raise NomenclatureChange::Processor::ProcessingError,
+        failure_message('No destination taxon concept available')
+    end
+
     tc.nomenclature_note_en = "#{tc.nomenclature_note_en} #{@output.note_en}"
     tc.nomenclature_note_es = "#{tc.nomenclature_note_es} #{@output.note_es}"
     tc.nomenclature_note_fr = "#{tc.nomenclature_note_fr} #{@output.note_fr}"
@@ -18,7 +29,9 @@ class NomenclatureChange::OutputTaxonConceptProcessor
     unless tc.save
       Rails.logger.warn "FAILED to save taxon #{tc.errors.inspect}"
 
-      return false
+      raise NomenclatureChange::Processor::ProcessingError, failure_message(
+        "Could not save destination taxon concept: #{tc.errors.full_messages.to_sentence}"
+      )
     end
 
     nomenclature_comment.save
@@ -61,5 +74,13 @@ class NomenclatureChange::OutputTaxonConceptProcessor
       end
     end
     res
+  end
+
+private
+
+  def failure_message(message)
+    output_name = @output.display_full_name || @output.new_scientific_name || @output.taxon_concept&.full_name || 'unknown output'
+
+    "#{message} for nomenclature change output #{output_name}"
   end
 end

@@ -55,7 +55,6 @@ class Document::Proposal < Document
   end
 
   # Used in Document Controller
-  # attr_accessible :proposal_details_attributes
 
   has_one :proposal_details,
     class_name: 'ProposalDetails',

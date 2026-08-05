@@ -29,8 +29,7 @@ class NomenclatureChange::Split < NomenclatureChange
     :inputs, :outputs, :notes, :children, :names, :distribution,
     :legislation, :summary
   )
-  # Migrated to controller (Strong Parameters)
-  # attr_accessible :input_attributes, :outputs_attributes
+
   has_one :input, inverse_of: :nomenclature_change,
     class_name: 'NomenclatureChange::Input',
     foreign_key: :nomenclature_change_id,

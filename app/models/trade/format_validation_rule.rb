@@ -17,7 +17,6 @@
 
 class Trade::FormatValidationRule < Trade::ValidationRule
   # Only created by seed.
-  # attr_accessible :format_re
 
   def error_message
     column_names.join(', ') + ' must be formatted as ' + format_re

@@ -97,7 +97,9 @@ private
 
       FileUtils.cp file_path, @download_path
 
-      Zip::File.open(zip_file_name, Zip::File::CREATE) do |zip|
+      # rubyzip 3 removed Zip::File::CREATE, so we pass `create: true`
+      # explicitly to keep manual downloads working on the current gem version.
+      Zip::File.open(zip_file_name, create: true) do |zip|
         zip.add("Identification-materials-#{@display_name}.pdf", @download_path)
 
         if missing_files.present?
