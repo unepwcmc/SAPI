@@ -9,12 +9,38 @@ jobs:
   deploy:
     runs-on: self-hosted
     environment: staging
+    # Only the secrets .kamal/secrets-common actually references. This job
+    # previously serialised the entire secrets context into one variable and
+    # picked through it at runtime, which handed every repository and
+    # environment secret to the job and wrote them all to a file on the
+    # self-hosted runner.
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      CAPTIVE_BREEDING_DATABASE_HOST: ${{ secrets.CAPTIVE_BREEDING_DATABASE_HOST }}
+      CAPTIVE_BREEDING_DATABASE_NAME: ${{ secrets.CAPTIVE_BREEDING_DATABASE_NAME }}
+      CAPTIVE_BREEDING_DATABASE_PASSWORD: ${{ secrets.CAPTIVE_BREEDING_DATABASE_PASSWORD }}
+      CAPTIVE_BREEDING_DATABASE_PORT: ${{ secrets.CAPTIVE_BREEDING_DATABASE_PORT }}
+      CAPTIVE_BREEDING_DATABASE_USERNAME: ${{ secrets.CAPTIVE_BREEDING_DATABASE_USERNAME }}
+      CERTIFICATE_PEM: ${{ secrets.CERTIFICATE_PEM }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      PRIVATE_KEY_PEM: ${{ secrets.PRIVATE_KEY_PEM }}
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      SAPI_DATABASE_HOST: ${{ secrets.SAPI_DATABASE_HOST }}
+      SAPI_DATABASE_NAME: ${{ secrets.SAPI_DATABASE_NAME }}
+      SAPI_DATABASE_PASSWORD: ${{ secrets.SAPI_DATABASE_PASSWORD }}
+      SAPI_DATABASE_PORT: ${{ secrets.SAPI_DATABASE_PORT }}
+      SAPI_DATABASE_USERNAME: ${{ secrets.SAPI_DATABASE_USERNAME }}
+      SAPI_SIDEKIQ_REDIS_CACHE_URL: ${{ secrets.SAPI_SIDEKIQ_REDIS_CACHE_URL }}
+      SAPI_SIDEKIQ_REDIS_URL: ${{ secrets.SAPI_SIDEKIQ_REDIS_URL }}
     steps:
       - name: Set workflow start time
         run: |
           echo "START_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Notify deployment start
         id: notify-start
@@ -36,59 +62,11 @@ jobs:
           runner-name: ${{ runner.name }}
           start-time: ${{ env.START_TIME }}
 
-      - name: Export and validate kamal secrets
-        shell: bash
-        env:
-          SECRETS_JSON: ${{ toJSON(secrets) }}
-        run: |
-          if [[ ! -f ".kamal/secrets-common" ]]; then
-            echo "Error: .kamal/secrets-common file not found."
-            exit 1
-          fi
-
-          temp_secrets="$(mktemp)"
-          trap 'rm -f "$temp_secrets"' EXIT
-          printf '%s' "$SECRETS_JSON" > "$temp_secrets"
-
-          needed_vars=()
-          while IFS= read -r line; do
-            trimmed="$(echo "$line" | tr -d '\r' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-            [[ -z "$trimmed" || "$trimmed" == \#* ]] && continue
-            [[ "$trimmed" != *=* ]] && continue
-
-            value="${trimmed#*=}"
-            value="${value#"${value%%[![:space:]]*}"}"
-            value="${value%"${value##*[![:space:]]}"}"
-
-            [[ "$value" != \$* ]] && continue
-            [[ "$value" == '$('* ]] && continue
-
-            if [[ "$value" == \$\{* ]]; then
-              if [[ "$value" =~ ^\$\{([A-Z0-9_]+) ]]; then
-                needed_vars+=("${BASH_REMATCH[1]}")
-              fi
-            elif [[ "$value" =~ ^\$([A-Z0-9_]+) ]]; then
-              needed_vars+=("${BASH_REMATCH[1]}")
-            fi
-          done < ".kamal/secrets-common"
-
-          IFS=$'\n' read -r -d '' -a unique_vars < <(printf '%s\n' "${needed_vars[@]}" | sort -u && printf '\0')
-
-          for var in "${unique_vars[@]}"; do
-            value=$(jq -r --arg key "$var" '.[$key] // empty' "$temp_secrets")
-            if [[ -z "$value" ]]; then
-              echo "Missing environment variable required in .kamal/secrets-common: ${var}" >&2
-              exit 1
-            fi
-
-            {
-              echo "${var}<<EOF"
-              echo "$value"
-              echo "EOF"
-            } >> "$GITHUB_ENV"
-          done
-
-          echo "✅ All required kamal secrets validated"
+      - name: Validate kamal secrets
+        uses: unepwcmc/devops-actions/.github/actions/validate-secrets@v1
+        with:
+          secrets-file: .kamal/secrets-common
+          environment: staging
 
       - name: Deploy with Kamal v2
         uses: unepwcmc/devops-actions/.github/actions/kamal-v2.x-deploy@v1
