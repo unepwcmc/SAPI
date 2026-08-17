@@ -10,10 +10,14 @@ if %w[test development].exclude?(Rails.env)
     # - Use digests to stop length information leaking (see also ActiveSupport::SecurityUtils.variable_size_secure_compare)
     sidekiq_username = Rails.application.credentials.sidekiq.username!
     sidekiq_password = Rails.application.credentials.sidekiq.password!
-    ActiveSupport::SecurityUtils.secure_compare(Digest::SHA256.hexdigest(username),
-      Digest::SHA256.hexdigest(sidekiq_username)) &
-      ActiveSupport::SecurityUtils.secure_compare(Digest::SHA256.hexdigest(password),
-        Digest::SHA256.hexdigest(sidekiq_password))
+
+    ActiveSupport::SecurityUtils.secure_compare(
+      Digest::SHA256.hexdigest(username),
+      Digest::SHA256.hexdigest(sidekiq_username)
+    ) & ActiveSupport::SecurityUtils.secure_compare(
+      Digest::SHA256.hexdigest(password),
+      Digest::SHA256.hexdigest(sidekiq_password)
+    )
   end
 end
 
@@ -22,7 +26,19 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get 'up' => 'rails/health#show', as: :rails_health_check
 
+  # Expose coverage files, which otherwise only exists inside the docker image
+  if %w[development].include?(Rails.env)
+    mount ActionDispatch::Static.new(
+      Rails.application, Rails.root.join('coverage').to_s
+    ), at: '/coverage'
+
+    mount ActionDispatch::Static.new(
+      Rails.application, Rails.root.join('coverage/assets').to_s
+    ), at: '/assets'
+  end
+
   devise_for :users, controllers: { passwords: 'passwords', registrations: 'registrations', sessions: 'sessions' }
+
   as :user do
     get 'users/edit' => 'registrations#edit', :as => 'edit_user_registratione'
     put 'users' => 'registrations#update', :as => 'user_registration_update'
