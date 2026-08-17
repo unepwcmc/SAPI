@@ -95,22 +95,109 @@ private
     hash.symbolize_keys
   end
 
-  FILTERING_ATTRIBUTES = {
-    time_range_start: 'year',
-    time_range_end: 'year',
-    term_ids: 'term_id',
-    source_ids: 'source_id',
-    purpose_ids: 'purpose_id',
-    unit_id: 'unit_id',
-    taxon_id: 'taxon_id',
-    importer_ids: 'importer_id',
-    exporter_ids: 'exporter_id',
-    origin_ids: 'origin_id',
-    appendices: 'appendix'
-  }.freeze
+  def self.filterable_attributes
+    # TODO: consider whether some columns take only some of these.
+    null_values = [ 'unreported', 'direct', 'items' ]
 
-  def self.filtering_attributes
-    FILTERING_ATTRIBUTES.merge(localize_filtering_attributes)
+    {
+      time_range_start: {
+        column_name: 'year',
+        operator: :gteq,
+        type: :integer,
+        default: 2.years.ago.year
+      },
+      time_range_end: {
+        column_name: 'year',
+        operator: :lteq,
+        type: :integer,
+        default: 1.year.ago.year
+      },
+      term_ids: {
+        column_name: 'term_id',
+        null_values: null_values,
+        multiple: true,
+        type: :integer
+      },
+      source_ids: {
+        column_name: 'source_id',
+        null_values: null_values,
+        multiple: true,
+        type: :integer
+      },
+      purpose_ids: {
+        column_name: 'purpose_id',
+        null_values: null_values,
+        multiple: true,
+        type: :integer
+      },
+      unit_id: {
+        column_name: 'unit_id',
+        null_values: null_values,
+        multiple: true,
+        type: :integer
+      },
+      taxon_id: {
+        column_name: 'taxon_id',
+        null_values: null_values,
+        multiple: true,
+        type: :integer
+      },
+      importer_ids: {
+        column_name: 'importer_id',
+        null_values: null_values,
+        multiple: true,
+        type: :integer
+      },
+      exporter_ids: {
+        column_name: 'exporter_id',
+        null_values: null_values,
+        multiple: true,
+        type: :integer
+      },
+      origin_ids: {
+        column_name: 'origin_id',
+        null_values: null_values,
+        multiple: true,
+        type: :integer
+      },
+      appendices: {
+        column_name: 'appendix',
+        multiple: true,
+        transform: :downcase,
+        type: :text
+      },
+      term_names: {
+        column_name: "term_#{@locale}",
+        multiple: true,
+        transform: :downcase,
+        type: :text
+      },
+      source_names: {
+        column_name: "source_#{@locale}",
+        multiple: true,
+        transform: :downcase,
+        type: :text
+      },
+      purpose_names: {
+        column_name: "purpose_#{@locale}",
+        multiple: true,
+        transform: :downcase,
+        type: :text
+      },
+      unit_name: {
+        column_name: "unit_#{@locale}",
+        multiple: true,
+        transform: :downcase,
+        type: :text,
+        default: 'Number of specimens'
+      },
+      taxonomic_group: {
+        column_name: 'group_code', # group_code is indexed
+        multiple: true,
+        transform: :downcase,
+        type: :text
+      }
+    }
   end
 
   def self.localize_filtering_attributes
@@ -121,18 +208,6 @@ private
       unit_name: "unit_#{@locale}",
       taxonomic_group: 'group_code' # group_code is indexed
     }
-  end
-
-  def self.default_filtering_attributes
-    {
-      time_range_start: 2.years.ago.year,
-      time_range_end: 1.year.ago.year,
-      unit_name: 'Number of specimens'
-    }.freeze
-  end
-
-  def self.default_filtering_attributes
-    DEFAULT_FILTERING_ATTRIBUTES
   end
 
   GROUPING_ATTRIBUTES = {

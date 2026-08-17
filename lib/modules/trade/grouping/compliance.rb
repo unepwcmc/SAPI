@@ -174,24 +174,26 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     end
   end
 
-  FILTERING_ATTRIBUTES = {
-    time_range_start: 'year',
-    time_range_end: 'year',
-    year: 'year'
-  }.freeze
-
-  def self.filtering_attributes
-    FILTERING_ATTRIBUTES
-  end
-
-  def self.default_filtering_attributes
+  def self.filterable_attributes
     {
-      time_range_start: 2012,
-      time_range_end: 1.year.ago.year
-    }.freeze
-  end
-  def self.default_filtering_attributes
-    DEFAULT_FILTERING_ATTRIBUTES
+      time_range_start: {
+        column_name: 'year',
+        operator: :gteq,
+        type: :integer,
+        default: 2012
+      },
+      time_range_end: {
+        column_name: 'year',
+        operator: :lteq,
+        type: :integer,
+        default: 1.year.ago.year
+      },
+      year: {
+        column_name: 'year',
+        multiple: false,
+        type: :integer
+      }
+    }
   end
 
   GROUPING_ATTRIBUTES = {
@@ -349,18 +351,6 @@ private
 
     false
   end
-
-  # def sanitise_condition(condition)
-  #  # TODO
-  #  return nil if condition.blank?
-  #  condition.map do |key, value|
-  #    if value.is_a?(Array)
-  #      "#{ATTRIBUTES[key]} IN (#{value.join(',')})"
-  #    else
-  #      "#{ATTRIBUTES[key]} = #{value}"
-  #    end
-  #  end.join(' AND ')
-  # end
 
   def total_ships_exp_cnt(id, year)
     query_exp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE exporter_id = #{id} AND year = #{year}"

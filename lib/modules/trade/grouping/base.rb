@@ -27,7 +27,7 @@ class Trade::Grouping::Base
 
     @attributes = sanitise_params(attributes)
     @opts = opts.clone
-    @condition = sanitise_condition
+    @condition = sanitised_condition_sql
     @limit = sanitise_limit(opts[:limit])
     @pagination = sanitise_pagination(opts)
     @query = group_query
@@ -69,16 +69,45 @@ protected
     raise NoMethodError
   end
 
+  ##
+  # This defines which columns are selected and returned
   def attributes
     raise NoMethodError
   end
 
-  def self.filtering_attributes
+  ##
+  # This defines which attributes can be used for filtering, and how the
+  # parameters map to columns and SQL WHERE conditions.
+  #
+  # {
+  #   [attribute_name]: {
+  #     column_name: # the column in the view to reference
+  #     operator: :gteq # the Arel operator method to use, e.g. :gteq for time_range_start.
+  #     type: :integer # or :text
+  #     null_values = [ 'unreported', 'direct', 'items' ]
+  #     default: 0 # optional default value
+  #   }
+  # }
+  # ```
+  def self.filterable_attributes
     raise NoMethodError
   end
 
+  ##
+  # A hash whose keys are parameter names and whose values are the default
+  # values that are supplied if the parameters are not supplied.
+  #
+  # ```
+  # {
+  #   time_range_start: 2020
+  # }
+  # ```
   def self.default_filtering_attributes
-    raise NoMethodError
+    filterable_attributes.select do |key, value|
+      value.has_key? :default
+    end.transform_values do |value|
+      value[:default]
+    end
   end
 
   def self.grouping_attributes
@@ -87,11 +116,13 @@ protected
 
   def self.get_grouping_attributes(group, locale = nil)
     @locale = locale
+
     Array.new(grouping_attributes[group.to_sym])
   end
 
   def group_query
     columns = @attributes.compact.uniq.join(',')
+
     <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt
       FROM #{shipments_table}
@@ -134,16 +165,19 @@ private
     }
   end
 
-  def sanitise_condition
-    filtering_attributes = self.class.filtering_attributes
+  def sanitised_condition_sql
+    filterable_attributes = self.class.filterable_attributes
+
     condition_attributes =
       @opts.keep_if do |k, v|
-        filtering_attributes.key?(k.to_sym) && v.present?
+        filterable_attributes.has_key?(k.to_sym) && v.present?
       end
+
     unless condition_attributes.is_a?(Hash)
       condition_attributes.permit!
       condition_attributes = condition_attributes.to_h
     end
+
     # Get default attributes if missing from params
     if @opts[:with_defaults]
       condition_attributes.reverse_merge!(self.class.default_filtering_attributes)
@@ -152,16 +186,16 @@ private
     return 'TRUE' if condition_attributes.blank?
 
     condition_attributes.map do |key, value|
-      val = get_condition_value(key.to_sym, value)
-      column = filtering_attributes[key.to_sym]
+      filterable_attribute = filterable_attributes[key.to_sym]
+
+      next unless filterable_attribute && filterable_attribute[:column_name]
+
       # taxon_id equality check can be skipped as this is also managed through the recursive child_taxa query
       # in TradeVis
-      next if column == 'taxon_id' && skip_taxon_id?
+      next if filterable_attribute[:column_name] == 'taxon_id' && skip_taxon_id?
 
-      column = "LOWER(#{column})" unless [ 'year', 'appendix' ].include?(column) || is_id_column?(column)
-
-      "(#{column} #{val})"
-    end.compact.join(' AND ')
+      attribute_filter_sql(filterable_attribute, value)
+    end.compact.reduce(&:and).presence&.to_sql || 'TRUE'
   end
 
   def skip_taxon_id?
@@ -175,48 +209,65 @@ private
   # TODO This is shared between the ComplianceTool and TradePlus,
   # so make sure the other tool won't break after making changes for one of them,
   # or override this function in each related module.
-  def get_condition_value(key, value)
-    column_name = self.class.filtering_attributes[key.to_sym]
+  def attribute_filter_sql(filterable_attribute, value)
+    null_values = filterable_attribute[:null_values]
+    column_name = filterable_attribute[:column_name]
 
-    # It's not a number (positive number to be precise)
-    if !/\A\d+\z/.match(value)
-      case key
-      when :appendices
-        value = value.split(',').map { |v| "'#{v}'" }.join(',')
-        return "IN (#{value})"
-      when /_id(s)?/
-        null = []
-        values = value.split(',')
-        values.delete_if { |v| null << v if [ 'unreported', 'direct', 'items' ].include? v.downcase }
-        value = values.join(',')
-        if value.present? && null.present?
-          return "IN (#{value}) OR #{column_name} IS NULL"
-        elsif value.present?
-          return "IN (#{value})"
-        elsif null.present?
-          return 'IS NULL'
+    arel_table = Arel::Table.new(shipments_table.to_sym)
+    arel_attribute = arel_table[column_name.to_sym]
+
+    left_hand_side =
+      if filterable_attribute[:transform] == :downcase
+        Arel::Nodes::NamedFunction.new(
+          'LOWER', [ arel_attribute.as('TEXT') ]
+        )
+      else
+        arel_attribute
+      end
+
+    # Here on out we are constructing the return value for attribute_filter_sql
+    if value&.squish&.downcase == 'null'
+      # column_name IS NULL
+      arel_attribute.eq(nil)
+    elsif filterable_attribute[:multiple]
+      # column_name IN (...values)
+      operator_symbol = filterable_attribute[:operator] || :in
+      should_find_null = false
+      values = value.split(',').map(&:squish)
+      values =
+        if filterable_attribute[:transform] == :downcase
+          values.map(&:downcase)
+        elsif filterable_attribute[:type] == :integer
+          values.map(&:to_i)
         else
-          return ''
+          values
         end
-      else
-        value = value.split(',').map { |v| "'#{v.downcase}'" }.join(',')
-        return "IN (#{value})"
+
+      values.delete_if do |v|
+        should_find_null = true if null_values.include? v
       end
 
+      if values.present? && should_find_null
+        # column_name IN (1, 2) OR column_name IS NULL
+        left_hand_side.send(operator_symbol, values).or(
+          arel_attribute.eq(nil)
+        )
+      elsif values.present?
+        # column_name IN (1, 2)
+        left_hand_side.send(operator_symbol, values)
+      elsif should_find_null
+        arel_attribute.eq(nil)
+      else
+        # Only an explicit NULL is treated as a IS NULL condition
+        nil
+      end
+    elsif value.nil?
+      # Only an explicit NULL is treated as a IS NULL condition
+      nil
+    else
+      # column_name = 'value'
+      arel_attribute.send(filterable_attribute[:operator] || :eq, value)
     end
-
-    return 'IS NULL' if value == 'NULL'
-
-    operator =
-      case key
-      when :time_range_start
-        '>='
-      when :time_range_end
-        '<='
-      else
-        '='
-      end
-    "#{operator} #{value.to_i}"
   end
 
   def db
