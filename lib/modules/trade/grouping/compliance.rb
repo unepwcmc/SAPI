@@ -61,6 +61,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     # Get all the non-compliant shipments in a given year
     query = "SELECT * FROM #{shipments_table} WHERE year = #{year}"
     shipments = db.execute(query)
+
     return [] unless shipments.first
 
     # Loop through all the non-compliant shipments
@@ -80,6 +81,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
         end
       end
     end
+
     # Calculate percentages
     shipments_no = shipments.count
     conversion.map do |group, values|
@@ -94,23 +96,32 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
 
   def build_hash(data, params)
     hash, array = {}, []
-    if params[:group_by].include?('commodity') || params[:group_by].include?('species')
+    group_by = params[:group_by] || []
+
+    if group_by.include?('commodity') || group_by.include?('species')
       hash[params[:year]] = data.map { |d| d.except('year', 'percent') }
-    elsif params[:group_by].include?('exporting')
+    elsif group_by.include?('exporting')
       _grouping_attributes = Array.new(GROUPING_ATTRIBUTES[:importing]) << 'year'
+
       importers = Trade::Grouping::Compliance.new(_grouping_attributes, params).run
+
       data, importers = data.group_by { |d| d['exporter'] }, importers.group_by { |d| d['importer'] }
+
       sum = importer_exporter_countries(data, importers, params[:year])
       keys = sum.map { |s| s.keys }.flatten
       imp = only_importer_countries(importers, keys, params[:year])
+
       imp_hash, exp_hash = {}, {}
       imp.each { |el| el.each { |key, value| imp_hash[key] = value } }
       sum.each { |el| el.each { |key, value| exp_hash[key] = value } }
+
       merged_hash = imp_hash.merge(exp_hash)
+
       merged_hash =
         merged_hash.map do |k, v|
           { "#{k}": merged_hash[k].merge(percentage: (v[:cnt] * 100.0 / v[:total_cnt]).round(2)) }
         end
+
       merged_hash.each do |country|
         country.values.first.merge!(country: country.keys.first.to_s)
         array << country.values.first
@@ -283,12 +294,11 @@ private
   end
 
   def group_query
-    columns =
-      if @attributes
-        @attributes.compact.uniq.join(',')
-      else
-        attributes.values.join(',')
-      end
+    columns = sanitised_columns_sql
+
+    if columns.blank?
+      raise(ArgumentError, 'Missing list of columns')
+    end
 
     <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt, 100.0*COUNT(*)/(SUM(COUNT(*)) OVER (PARTITION BY year)) AS percent

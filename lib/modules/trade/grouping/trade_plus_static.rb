@@ -6,7 +6,6 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     @reported_by = opts[:reported_by] || 'importer'
     @reported_by_party = opts[:reported_by_party] || true
     @country_ids = opts[:country_ids]
-    @sanitised_column_names = []
     @locale = opts[:locale] || 'en'
     super
   end
@@ -214,6 +213,7 @@ private
     species: [ 'taxon_name', 'appendix', 'taxon_id' ],
     taxonomy: [ '' ]
   }.freeze
+
   def self.grouping_attributes
     GROUPING_ATTRIBUTES.merge(localize_grouping_attributes)
   end
@@ -248,6 +248,7 @@ private
         SQL
       ).values.first[0].to_i > 0
     end
+
     @opts['taxon_id'] = unique_taxa.join(',')
   end
 
@@ -270,18 +271,30 @@ private
   end
 
   def group_query
-    columns = @attributes.compact.uniq.join(',')
+    columns_for_select_sql = columns_with_aliases_sql
+    group_by_column_names_sql = sanitised_columns_sql
+
+    if columns_for_select_sql.blank?
+      raise(ArgumentError, 'Missing list of columns to select')
+    end
+
+    if group_by_column_names_sql.blank?
+      raise(ArgumentError, 'Missing list of columns to group by')
+    end
+
     quantity_field = "#{@reported_by}_reported_quantity"
+
     <<-SQL.squish
       SELECT
-        #{sanitise_column_names},
+        #{columns_for_select_sql},
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
-      FROM #{shipments_table}
-      #{child_taxa_join}
+      FROM
+        #{shipments_table}
+        #{child_taxa_join}
       WHERE #{@condition} AND #{quantity_field} IS NOT NULL
         AND #{child_taxa_condition}
-      GROUP BY #{columns}
+      GROUP BY #{group_by_column_names_sql}
       #{quantity_condition(quantity_field)}
       ORDER BY value DESC
       #{limit}
@@ -298,10 +311,21 @@ private
     # partners + importing = exporter_reported_quantity
     # partners + exporting = importer_reported_quantity
     quantity_field = "#{entity_quantity}_reported_quantity"
-    columns = @attributes.compact.uniq.join(',')
+
+    columns_for_select_sql = columns_with_aliases_sql
+    group_by_column_names_sql = sanitised_columns_sql
+
+    if columns_for_select_sql.blank?
+      raise(ArgumentError, 'Missing list of columns')
+    end
+
+    if group_by_column_names_sql.blank?
+      raise(ArgumentError, 'Missing list of columns to group by')
+    end
+
     <<-SQL
       SELECT
-        #{sanitise_column_names},
+        #{columns_for_select_sql},
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
@@ -310,7 +334,7 @@ private
       AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_ids})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_ids})))
       AND #{@condition} AND #{quantity_field} IS NOT NULL
       AND #{child_taxa_condition}
-      GROUP BY #{columns} -- exporter if @reported_by = importer and otherway round
+      GROUP BY #{group_by_column_names_sql} -- exporter if @reported_by = importer and otherway round
       #{quantity_condition(quantity_field)}
       ORDER BY value DESC
       #{limit}
@@ -319,27 +343,40 @@ private
 
   def over_time_query
     quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
-    columns = @attributes.compact.uniq.join(',')
-    # @sanitised_column_names value is assigned in the super class
-    # while the @query variable is assigned as well because of the grouped_query
-    sanitised_column_names = @sanitised_column_names.compact.uniq.join(',')
+    columns_for_select_sql = columns_with_aliases_sql
+    group_by_column_names_sql = sanitised_columns_sql
+
+    if columns_for_select_sql.blank?
+      raise(ArgumentError, 'Missing list of columns')
+    end
+
+    if group_by_column_names_sql.blank?
+      raise(ArgumentError, 'Missing list of columns to group by')
+    end
 
     <<-SQL.squish
       SELECT ROW_TO_JSON(row)
       FROM (
-        SELECT #{sanitised_column_names}, JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
+        SELECT
+          #{columns_aliases_only_sql},
+          JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
-          SELECT year, #{sanitise_column_names}, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
+          SELECT
+            year,
+            #{columns_for_select_sql},
+            ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
           #{child_taxa_join}
-          WHERE #{@condition} AND #{quantity_field} IS NOT NULL AND #{country_condition}
+          WHERE #{@condition}
+            AND #{quantity_field} IS NOT NULL
+            AND #{country_condition}
             AND #{child_taxa_condition}
-          GROUP BY year, #{columns}
+          GROUP BY year, #{group_by_column_names_sql}
           #{quantity_condition(quantity_field)}
           ORDER BY value DESC
           #{limit}
         ) t
-        GROUP BY #{sanitised_column_names}
+        GROUP BY #{columns_aliases_only_sql}
       ) row
     SQL
   end
@@ -416,6 +453,7 @@ private
   def ancestors_ranks(taxonomic_level)
     taxa = [ 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'taxon' ]
     current_idx = taxa.index(taxonomic_level) || 0
+
     0.upto(current_idx).map do |i|
       taxa[i]
     end
@@ -425,25 +463,51 @@ private
     return 'kingdom_name' if taxonomic_level == 'kingdom'
 
     ancestors_ranks(taxonomic_level).map do |rank|
-      "#{rank}_name"
-    end.join(',')
+      db.quote_column_name "#{rank}_name"
+    end.join(', ')
   end
 
-  def sanitise_column_names
-    return '' if @attributes.blank?
+  def columns_with_aliases(attribute_names = @attributes)
+    return [] if attribute_names.blank?
 
-    @attributes.map do |attribute|
-      next if attribute == 'year' || attribute.nil?
+    attribute_names.compact.uniq.map do |attribute|
+      next if attribute == 'year'
 
-      name = attribute.include?('id') ? 'id' : attribute.include?('iso') ? 'iso2' : attribute.include?('code') ? 'code' : 'name'
-      @sanitised_column_names << name
+      column_alias =
+        if attribute.include?('id')
+          'id'
+        elsif attribute.include?('iso')
+          'iso2'
+        elsif attribute.include?('code')
+          'code'
+        else
+          attribute
+        end
 
-      if attribute == "term_#{@locale}"
-        attribute = "UPPER(SUBSTRING(#{attribute} from 1 for 1)) || LOWER(SUBSTRING(#{attribute} from 2))"
-      end
+      column_expression =
+        if attribute == "term_#{@locale}"
+          <<-SQL.squish
+            UPPER(SUBSTRING(#{db.quote_column_name attribute} FROM 1 FOR 1)) ||
+            LOWER(SUBSTRING(#{db.quote_column_name attribute} FROM 2))
+          SQL
+        else
+          db.quote_column_name attribute
+        end
 
-      "#{attribute} AS #{name}"
-    end.compact.uniq.join(',')
+      { column_expression:, column_alias: }
+    end.compact
+  end
+
+  def columns_with_aliases_sql(attribute_names = @attributes)
+    columns_with_aliases(attribute_names).map do |col|
+      "#{col[:column_expression]} AS #{db.quote_column_name col[:column_alias]}"
+    end.join(', ')
+  end
+
+  def columns_aliases_only_sql(attribute_names = @attributes)
+    columns_with_aliases(attribute_names).map do |col|
+      db.quote_column_name col[:column_alias]
+    end.join(', ')
   end
 
   def sanitise_boolean(bool)

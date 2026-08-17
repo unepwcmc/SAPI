@@ -42,6 +42,7 @@ class Trade::Grouping::Base
       SELECT *
       FROM #{shipments_table}
     SQL
+
     db.execute(sql)
   end
 
@@ -114,14 +115,26 @@ protected
     raise NoMethodError
   end
 
-  def self.get_grouping_attributes(group, locale = nil)
+  #   def self.get_grouping_attributes(group, locale = nil)
+  #     return [] unless group
+  #
+  #     @locale = locale
+  #
+  #     Array.new(grouping_attributes[group.to_sym])
+  #   end
+
+  def self.get_grouping_attributes(group_by_param, locale = nil)
+    return [] if group_by_param.blank?
+
     @locale = locale
 
-    Array.new(grouping_attributes[group.to_sym])
+    Array.wrap(group_by_param).compact.map do |group_by_attr|
+      grouping_attributes[group_by_attr.to_sym]
+    end.flatten.compact.uniq
   end
 
   def group_query
-    columns = @attributes.compact.uniq.join(',')
+    columns = sanitised_columns_sql
 
     <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt
@@ -145,10 +158,12 @@ private
     attributes[group.to_sym]
   end
 
-  def sanitise_params(params)
-    return nil if params.blank?
+  def sanitise_params(params_attributes)
+    return [] if params_attributes.blank?
 
-    Array.wrap(params).map { |p| attributes[p.to_sym] }
+    Array.wrap(params_attributes.presence || []).compact.uniq.map do |p|
+      attributes[p.to_sym]
+    end.compact
   end
 
   def sanitise_limit(limit)
@@ -163,6 +178,14 @@ private
       page: page,
       per_page: per_page
     }
+  end
+
+  def sanitised_columns_sql(attribute_names = @attributes)
+    column_names = attribute_names&.compact&.uniq&.presence || attributes.values
+
+    column_names.map do |column_name|
+      db.quote_column_name column_name
+    end.join(', ')
   end
 
   def sanitised_condition_sql
