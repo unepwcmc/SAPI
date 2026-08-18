@@ -96,9 +96,14 @@ class Api::V1::ShipmentsController < ApplicationController
         query.build_hash(data, params_unsafely_permitted)
       end
 
-    @filtered_data = query.filter(@search_data, params_unsafely_permitted)
+    @filtered_data = query.filter(@search_data, params_unsafely_permitted) || []
 
-    render json: Kaminari.paginate_array(@filtered_data).page(params[:page]).per(params[:per_page]),
+    render json:
+      Kaminari.paginate_array(@filtered_data).page(
+        params[:page]
+      ).per(
+        params[:per_page]
+      ),
       meta: metadata(@filtered_data, params_unsafely_permitted)
   end
 
