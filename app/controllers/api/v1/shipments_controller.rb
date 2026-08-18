@@ -1,3 +1,9 @@
+# Used by:
+#
+# https://github.com/unepwcmc/cites-compliance-tool/blob/master/lib/modules/shipments_api_retriever.rb
+# https://github.com/unepwcmc/tradeplus/blob/master/lib/modules/shipments_api_retriever.rb
+# https://github.com/unepwcmc/sustainability-assessment-tool/blob/main/rails-api/lib/modules/sapi_api.rb
+
 class Api::V1::ShipmentsController < ApplicationController
   respond_to :json
 
