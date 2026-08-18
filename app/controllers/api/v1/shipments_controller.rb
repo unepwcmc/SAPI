@@ -43,10 +43,10 @@ class Api::V1::ShipmentsController < ApplicationController
       Rails.cache.fetch(
         [ 'grouped_data', grouped_params ], expires_in: 1.week
       ) do
-        if sanitized_attributes.first.empty?
-          query.taxonomic_grouping(taxonomic_params)
-        else
+        if sanitized_attributes&.first&.present?
           query.json_by_attribute(query.run, params_hash)
+        else
+          query.taxonomic_grouping(taxonomic_params)
         end
       end
 
@@ -74,10 +74,10 @@ class Api::V1::ShipmentsController < ApplicationController
         [ 'country_data', grouped_params ],
         expires_in: 1.week
       ) do
-        if sanitized_attributes.first.empty?
-          query.taxonomic_grouping(taxonomic_params)
-        else
+        if sanitized_attributes&.first&.present?
           query.json_by_attribute(query.country_data, params_hash)
+        else
+          query.taxonomic_grouping(taxonomic_params)
         end
       end
 
@@ -240,13 +240,18 @@ private
   end
 
   def sanitized_attributes
-    @grouping_class.get_grouping_attributes(params[:group_by], params[:locale])
+    @_sanitized_attributes =
+      @_sanitized_attributes || @grouping_class.get_grouping_attributes(
+        params[:group_by], params[:locale]
+      )
   end
 
   def authenticate
     token = request.headers['X-Authentication-Token']
+
     unless token == Rails.application.credentials.dig(:shipments_api_token)
       head :unauthorized
+
       false
     end
   end
