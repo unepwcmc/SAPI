@@ -54,6 +54,9 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def country_query
+    # This does not work for the Compliance grouping class
+    @grouping_class = Trade::Grouping::TradePlusStatic
+
     limit = grouped_params[:limit].present? ? grouped_params[:limit].to_i : ''
     _grouped_params = grouped_params.merge(limit: limit, with_defaults: true)
     taxonomic_params = {
@@ -100,6 +103,9 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def over_time_query
+    # This does not work for the Compliance grouping class
+    @grouping_class = Trade::Grouping::TradePlusStatic
+
     # TODO Remember to implement permitted parameters here
     query = @grouping_class.new(sanitized_attributes, params_unsafely_permitted)
 
@@ -115,6 +121,9 @@ class Api::V1::ShipmentsController < ApplicationController
 
   # TODO refactor to merge this method and the over_time one above together
   def aggregated_over_time_query
+    # This does not work for the Compliance grouping class
+    @grouping_class = Trade::Grouping::TradePlusStatic
+
     # TODO Remember to implement permitted parameters here
     query = @grouping_class.new(sanitized_attributes, params_unsafely_permitted)
 
