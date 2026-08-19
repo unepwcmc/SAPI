@@ -13,12 +13,14 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def over_time_data
     data = db.execute(over_time_query)
     response = data.map { |d| JSON.parse(d['row_to_json']) }
+
     sanitise_response_over_time_query(response)
   end
 
   def aggregated_over_time_data
     data = db.execute(aggregated_over_time_query)
     response = data.map { |d| JSON.parse(d['row_to_json']) }
+
     sanitise_response_aggregated_over_time_query(response)
   end
 
@@ -30,6 +32,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     response.map do |value|
       value['id'], value['name'] = 'unreported', I18n.t('tradeplus.unreported') if value['id'].nil?
     end
+
     response.sort_by { |i| i['name'] }
     response.partition { |value| value['id'] != 'unreported' }.reduce(:+)
   end
@@ -38,11 +41,13 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     response.map do |value|
       value['id'], value['name'] = "reported_by_#{@reported_by}", "reported_by_#{@reported_by}" if value['id'].nil?
     end
+
     response.partition { |value| value['id'] != 'unreported' }.reduce(:+)
   end
 
   def taxonomic_grouping(opts = {})
     data = db.execute(taxonomic_query(opts))
+
     data.map { |d| JSON.parse(d['row_to_json']) }
   end
 
@@ -50,9 +55,11 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   def json_by_attribute(data, opts = {})
     key = data.fields.first
     hash = { "#{key}" => [] }
+
     data.each do |d|
       hash[key] << d
     end
+
     hash[key]
   end
 
@@ -91,6 +98,7 @@ private
     hash = {}
     attrs = %w[importer exporter term unit purpose source group_name]
     attrs.each { |h| hash["#{h}_#{locale}"] = "#{h}_#{locale}" }
+
     hash.symbolize_keys
   end
 
@@ -211,7 +219,7 @@ private
 
   GROUPING_ATTRIBUTES = {
     species: [ 'taxon_name', 'appendix', 'taxon_id' ],
-    taxonomy: [ '' ]
+    taxonomy: []
   }.freeze
 
   def self.grouping_attributes
@@ -274,9 +282,10 @@ private
     columns_for_select_sql = columns_with_aliases_sql
     group_by_column_names_sql = sanitised_columns_sql
 
-    if columns_for_select_sql.blank?
-      raise(ArgumentError, 'Missing list of columns to select')
-    end
+    # Apparently this is ok
+    # if columns_for_select_sql.blank?
+    #   raise(ArgumentError, 'Missing list of columns to select')
+    # end
 
     if group_by_column_names_sql.blank?
       raise(ArgumentError, 'Missing list of columns to group by')
@@ -286,7 +295,7 @@ private
 
     <<-SQL.squish
       SELECT
-        #{columns_for_select_sql},
+        #{columns_for_select_sql&.+ ','}
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
       FROM
@@ -325,7 +334,7 @@ private
 
     <<-SQL
       SELECT
-        #{columns_for_select_sql},
+        #{columns_for_select_sql&.+ ','}
         ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
@@ -363,7 +372,7 @@ private
         FROM (
           SELECT
             year,
-            #{columns_for_select_sql},
+            #{columns_for_select_sql&.+ ','}
             ROUND(SUM(#{quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
           #{child_taxa_join}
@@ -501,21 +510,26 @@ private
   def columns_with_aliases_sql(attribute_names = @attributes)
     columns_with_aliases(attribute_names).map do |col|
       "#{col[:column_expression]} AS #{db.quote_column_name col[:column_alias]}"
-    end.join(', ')
+    end.join(', ').presence
   end
 
   def columns_aliases_only_sql(attribute_names = @attributes)
     columns_with_aliases(attribute_names).map do |col|
       db.quote_column_name col[:column_alias]
-    end.join(', ')
+    end.join(', ').presence
   end
 
+  ##
+  # returns `false` if the original value is the string `'false'`; otherwise
+  # returns `true.
   def sanitise_boolean(bool)
     return true unless [ 'true', 'false' ].include? bool
 
     bool == 'true'
   end
 
+  ##
+  # returns string `'importer'` or `'exporter'`
   def entity_quantity
     reported_by_party = sanitise_boolean(@reported_by_party)
     if (reported_by_party && (@reported_by == 'importer')) || (!reported_by_party && (@reported_by == 'exporter'))

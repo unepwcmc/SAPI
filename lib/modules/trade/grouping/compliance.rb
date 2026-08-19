@@ -213,8 +213,9 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     exporting: [ 'exporter', 'exporter_iso', 'exporter_id' ],
     importing: [ 'importer', 'importer_iso', 'importer_id' ],
     species: [ 'taxon_name', 'appendix', 'taxon_concept_id' ],
-    taxonomy: [ '' ]
+    taxonomy: []
   }.freeze
+
   def self.grouping_attributes
     GROUPING_ATTRIBUTES
   end
