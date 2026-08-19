@@ -257,17 +257,17 @@ private
       operator_symbol = filterable_attribute[:operator] || :in
       should_find_null = false
       values = value.split(',').map(&:squish)
-      values =
-        if filterable_attribute[:transform] == :downcase
-          values.map(&:downcase)
-        elsif filterable_attribute[:type] == :integer
-          values.map(&:to_i)
-        else
-          values
-        end
+
+      if filterable_attribute[:transform] == :downcase
+        values = values.map(&:downcase)
+      end
 
       values.delete_if do |v|
         should_find_null = true if null_values.include? v
+      end
+
+      if filterable_attribute[:type] == :integer
+        values = values.map(&:to_i)
       end
 
       if values.present? && should_find_null
