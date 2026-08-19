@@ -34,6 +34,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
     end
 
     response.sort_by { |i| i['name'] }
+
     response.partition { |value| value['id'] != 'unreported' }.reduce(:+)
   end
 
@@ -262,6 +263,7 @@ private
 
   def child_taxa_join(tc_id = nil)
     child_taxa_uniquify
+
     return '' if @opts['taxon_id'].blank? && !tc_id
 
     <<-SQL.squish
@@ -296,15 +298,15 @@ private
     <<-SQL.squish
       SELECT
         #{columns_for_select_sql&.+ ','}
-        ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
+        ROUND(SUM(#{db.quote_column_name quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
       FROM
         #{shipments_table}
         #{child_taxa_join}
-      WHERE #{@condition} AND #{quantity_field} IS NOT NULL
+      WHERE #{@condition} AND #{db.quote_column_name quantity_field} IS NOT NULL
         AND #{child_taxa_condition}
       GROUP BY #{group_by_column_names_sql}
-      #{quantity_condition(quantity_field)}
+      #{having_quantity_sql(quantity_field)}
       ORDER BY value DESC
       #{limit}
     SQL
@@ -333,15 +335,15 @@ private
     <<-SQL
       SELECT
         #{columns_for_select_sql&.+ ','}
-        ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
+        ROUND(SUM(#{db.quote_column_name quantity_field}::FLOAT)) AS value,
         COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
       #{child_taxa_join}
       WHERE #{country_condition}
-        AND #{@condition} AND #{quantity_field} IS NOT NULL
+        AND #{@condition} AND #{db.quote_column_name quantity_field} IS NOT NULL
         AND #{child_taxa_condition}
       GROUP BY #{group_by_column_names_sql} -- exporter if @reported_by = importer and otherway round
-      #{quantity_condition(quantity_field)}
+      #{having_quantity_sql(quantity_field)}
       ORDER BY value DESC
       #{limit}
     SQL
@@ -351,12 +353,13 @@ private
     quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
     columns_for_select_sql = columns_with_aliases_sql
     group_by_column_names_sql = sanitised_columns_sql
+    outer_group_by_column_names_sql = columns_aliases_only_sql
 
     if columns_for_select_sql.blank?
       raise(ArgumentError, 'Missing list of columns')
     end
 
-    if group_by_column_names_sql.blank?
+    if group_by_column_names_sql.blank? || outer_group_by_column_names_sql.blank?
       raise(ArgumentError, 'Missing list of columns to group by')
     end
 
@@ -364,25 +367,25 @@ private
       SELECT ROW_TO_JSON(row)
       FROM (
         SELECT
-          #{columns_aliases_only_sql},
+          #{outer_group_by_column_names_sql},
           JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
           SELECT
             year,
             #{columns_for_select_sql&.+ ','}
-            ROUND(SUM(#{quantity_field}::FLOAT)) AS value
+            ROUND(SUM(#{db.quote_column_name quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
           #{child_taxa_join}
           WHERE #{@condition}
-            AND #{quantity_field} IS NOT NULL
+            AND #{db.quote_column_name quantity_field} IS NOT NULL
             AND #{country_condition}
             AND #{child_taxa_condition}
           GROUP BY year, #{group_by_column_names_sql}
-          #{quantity_condition(quantity_field)}
+          #{having_quantity_sql(quantity_field)}
           ORDER BY value DESC
           #{limit}
         ) t
-        GROUP BY #{columns_aliases_only_sql}
+        GROUP BY #{outer_group_by_column_names_sql}
       ) row
     SQL
   end
@@ -397,13 +400,13 @@ private
       FROM (
         SELECT JSON_AGG(JSON_BUILD_OBJECT('x', year, 'y', value) ORDER BY year) AS datapoints
         FROM (
-          SELECT year, ROUND(SUM(#{quantity_field}::FLOAT)) AS value
+          SELECT year, ROUND(SUM(#{db.quote_column_name quantity_field}::FLOAT)) AS value
           FROM #{shipments_table}
           #{child_taxa_join}
-          WHERE #{@condition} AND #{quantity_field} IS NOT NULL AND #{country_condition}
+          WHERE #{@condition} AND #{db.quote_column_name quantity_field} IS NOT NULL AND #{country_condition}
             AND #{child_taxa_condition}
           GROUP BY year
-          #{quantity_condition(quantity_field)}
+          #{having_quantity_sql(quantity_field)}
           ORDER BY value DESC
           #{limit}
         ) t
@@ -418,7 +421,7 @@ private
     taxonomic_level_name = "#{taxonomic_level}_name"
     group_name = opts[:group_name]
 
-    group_name_condition = " AND LOWER(group_name) = '#{group_name.downcase}'" if group_name
+    group_name_condition = " AND LOWER(group_name) = #{db.quote group_name.downcase}" if group_name
     # Exclude blanks in taxonomic level (empty strings at the selected taxonomic level)
     # taxonomic_level_not_null = "#{taxonomic_level_name} IS NOT NULL"
 
@@ -437,19 +440,19 @@ private
         SELECT
           NULL AS id,
           #{fill_missing_taxonomy},
-          ROUND(SUM(#{quantity_field}::FLOAT)) AS value,
-          #{ancestors_list(taxonomic_level)},
+          ROUND(SUM(#{db.quote_column_name quantity_field}::FLOAT)) AS value,
+          #{ancestor_column_list_sql(taxonomic_level)},
           COUNT(*) OVER () AS total_count
         FROM #{shipments_table}
         #{child_taxa_join}
         WHERE #{@condition} AND
-        #{quantity_field} IS NOT NULL
+        #{db.quote_column_name quantity_field} IS NOT NULL
         #{group_name_condition}
         --AND taxonomic_level_not_null
         AND #{country_condition}
         AND #{child_taxa_condition}
-        GROUP BY #{ancestors_list(taxonomic_level)}
-        #{quantity_condition(quantity_field)}
+        GROUP BY #{ancestor_column_list_sql(taxonomic_level)}
+        #{having_quantity_sql(quantity_field)}
         ORDER BY value DESC
         #{limit}
       ) AS row
@@ -465,7 +468,7 @@ private
     end
   end
 
-  def ancestors_list(taxonomic_level)
+  def ancestor_column_list_sql(taxonomic_level)
     return 'kingdom_name' if taxonomic_level == 'kingdom'
 
     ancestors_ranks(taxonomic_level).map do |rank|
@@ -557,8 +560,8 @@ private
     SQL
   end
 
-  def quantity_condition(field)
-    "HAVING ROUND(SUM(#{field}::FLOAT)) > 0.49"
+  def having_quantity_sql(field)
+    "HAVING ROUND(SUM(#{db.quote_column_name field}::FLOAT)) > 0.49"
   end
 
   def limit
@@ -566,7 +569,7 @@ private
     per_page = pagination[:per_page]
     offset = (pagination[:page] - 1) * per_page
 
-    per_page > 0 ? "LIMIT #{pagination[:per_page]} OFFSET #{offset}" : ''
+    per_page > 0 ? "LIMIT #{pagination[:per_page].to_i} OFFSET #{offset.to_i}" : ''
   end
 
   # Used in the base class to skip taxon_id equality check
