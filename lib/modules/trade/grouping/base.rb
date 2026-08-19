@@ -233,8 +233,8 @@ private
   # so make sure the other tool won't break after making changes for one of them,
   # or override this function in each related module.
   def attribute_filter_sql(filterable_attribute, value)
-    null_values = filterable_attribute[:null_values]
     column_name = filterable_attribute[:column_name]
+    null_values = filterable_attribute[:null_values] || []
 
     arel_table = Arel::Table.new(shipments_table.to_sym)
     arel_attribute = arel_table[column_name.to_sym]
@@ -264,7 +264,7 @@ private
 
       values.delete_if do |v|
         should_find_null = true if null_values.include? v
-      end
+      end if null_values.present?
 
       if filterable_attribute[:type] == :integer
         values = values.map(&:to_i)

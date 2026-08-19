@@ -171,7 +171,6 @@ private
       appendices: {
         column_name: 'appendix',
         multiple: true,
-        transform: :downcase,
         type: :text
       },
       term_names: {
@@ -489,6 +488,13 @@ private
           'iso2'
         elsif attribute.include?('code')
           'code'
+        elsif [
+          "exporter_#{locale}",
+          "importer_#{locale}",
+          "term_#{locale}",
+          "source_#{locale}"
+        ].include?(attribute)
+          'name'
         else
           attribute
         end
@@ -542,7 +548,7 @@ private
   end
 
   def country_condition
-    country_ids_sql = Array.wrap(@country_ids || '')&.map(&:to_i)&.compact&.join(', ')
+    country_ids_sql = Array.wrap(@country_ids.presence || [])&.compact&.map(&:to_i)&.join(', ')
 
     return 'TRUE' if country_ids_sql.blank?
 
