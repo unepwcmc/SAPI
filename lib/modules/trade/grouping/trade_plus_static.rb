@@ -33,7 +33,7 @@ class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
       value['id'], value['name'] = 'unreported', I18n.t('tradeplus.unreported') if value['id'].nil?
     end
 
-    response.sort_by { |i| i['name'] }
+    response.sort_by { |i| i['name'] || '' }
 
     response.partition { |value| value['id'] != 'unreported' }.reduce(:+)
   end
