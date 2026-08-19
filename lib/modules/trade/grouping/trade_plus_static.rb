@@ -311,8 +311,6 @@ private
   end
 
   def country_query
-    # This should be true for reported_by_party tab, false for the reported_by_partners
-    reported_by_party = sanitise_boolean(@reported_by_party)
     # TODO Rename @reported_by as this is related to import-from and export-to charts here rather than importer/exporter tabs in other pages
     # As the quantity field is strictly related to the reported_by_exporter value this should change accordingly with the tabs/chart combination:
     # party + importing = importer_reported_quantity
@@ -339,10 +337,9 @@ private
         COUNT(*) OVER () AS total_count
       FROM #{shipments_table}
       #{child_taxa_join}
-      WHERE #{@reported_by}_id IN (#{country_ids}) -- @reported_by = importer if importing-from chart, exporter if exporting-to chart
-      AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_ids})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_ids})))
-      AND #{@condition} AND #{quantity_field} IS NOT NULL
-      AND #{child_taxa_condition}
+      WHERE #{country_condition}
+        AND #{@condition} AND #{quantity_field} IS NOT NULL
+        AND #{child_taxa_condition}
       GROUP BY #{group_by_column_names_sql} -- exporter if @reported_by = importer and otherway round
       #{quantity_condition(quantity_field)}
       ORDER BY value DESC
@@ -531,7 +528,9 @@ private
   ##
   # returns string `'importer'` or `'exporter'`
   def entity_quantity
+    # This should be true for reported_by_party tab, false for the reported_by_partners
     reported_by_party = sanitise_boolean(@reported_by_party)
+
     if (reported_by_party && (@reported_by == 'importer')) || (!reported_by_party && (@reported_by == 'exporter'))
       'importer'
     elsif (reported_by_party && (@reported_by == 'exporter')) || (!reported_by_party && (@reported_by == 'importer'))
@@ -540,10 +539,22 @@ private
   end
 
   def country_condition
-    return 'TRUE' unless @country_ids
+    country_ids_sql = Array.wrap(@country_ids || '')&.map(&:to_i)&.compact&.join(', ')
 
+    return 'TRUE' if country_ids_sql.blank?
+
+    # This should be true for reported_by_party tab, false for the reported_by_partners
     reported_by_party = sanitise_boolean(@reported_by_party)
-    "#{@reported_by}_id IN (#{country_ids}) AND ((reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_ids})) OR (reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_ids})))"
+
+    <<-SQL.squish
+      #{@reported_by}_id IN (#{country_ids_sql}) AND (
+        (
+          reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_ids_sql})
+        ) OR (
+          reported_by_exporter = #{reported_by_party} AND exporter_id IN (#{country_ids_sql})
+        )
+      )
+    SQL
   end
 
   def quantity_condition(field)
