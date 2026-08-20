@@ -126,7 +126,7 @@ protected
   def self.get_grouping_attributes(group_by_param, locale = nil)
     return [] if group_by_param.blank?
 
-    @locale = locale
+    @locale = locale || @locale || I18n.default_locale
 
     Array.wrap(group_by_param).compact.map do |group_by_attr|
       grouping_attributes[group_by_attr.to_sym]
@@ -241,9 +241,7 @@ private
 
     left_hand_side =
       if filterable_attribute[:transform] == :downcase
-        Arel::Nodes::NamedFunction.new(
-          'LOWER', [ arel_attribute.as('TEXT') ]
-        )
+        Arel::Nodes::NamedFunction.new('LOWER', [ arel_attribute ])
       else
         arel_attribute
       end

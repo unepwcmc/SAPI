@@ -247,7 +247,7 @@ private
   def sanitized_attributes
     @_sanitized_attributes =
       @_sanitized_attributes || @grouping_class.get_grouping_attributes(
-        params[:group_by], params[:locale]
+        params[:group_by], params[:locale] || I18n.locale
       )
   end
 

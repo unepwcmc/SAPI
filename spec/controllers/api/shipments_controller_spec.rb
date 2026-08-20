@@ -83,6 +83,27 @@ describe Api::V1::ShipmentsController do
             }
           end
         ),
+        *[
+          # check that :downcase works
+          {
+            params: {
+              grouping_type: 'TradePlusStatic',
+              term_names: 'CaViar',
+              group_by: 'taxonomy'
+            },
+            response_attributes: [
+              {
+                attribute: :data,
+                description: 'have a single record with a total count of 1',
+                satisfies: lambda do |attr_value|
+                  attr_value.instance_of?(Array) &&
+                    attr_value.length == 1 &&
+                    attr_value[0]['total_count'] == 1
+                end
+              }
+            ]
+          }
+        ],
         {
           params: {
             time_range_start: '2019',
