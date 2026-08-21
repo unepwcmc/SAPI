@@ -1,12 +1,12 @@
 class Trade::Grouping::TradePlusStatic < Trade::Grouping::Base
   attr_reader :country_ids, :locale
 
-  def initialize(attributes, opts = {})
-    # exporter or importer
+  def initialize(opts = {})
+    # exporter or importer # TODO: FIXME BAD BAD MORE INJECTIONS HERE
     @reported_by = opts[:reported_by] || 'importer'
     @reported_by_party = opts[:reported_by_party] || true
     @country_ids = opts[:country_ids]
-    @locale = opts[:locale] || 'en'
+
     super
   end
 
@@ -103,7 +103,7 @@ private
     hash.symbolize_keys
   end
 
-  def self.filterable_attributes
+  def filterable_attributes
     # TODO: consider whether some columns take only some of these.
     null_values = [ 'unreported', 'direct', 'items' ]
 
@@ -207,36 +207,15 @@ private
     }
   end
 
-  def self.localize_filtering_attributes
+  def self.build_grouping_attributes_by_group(locale_arg)
     {
-      term_names: "term_#{@locale}",
-      source_names: "source_#{@locale}",
-      purpose_names: "purpose_#{@locale}",
-      unit_name: "unit_#{@locale}",
-      taxonomic_group: 'group_code' # group_code is indexed
+      species: [ 'taxon_name', 'appendix', 'taxon_id' ],
+      taxonomy: [],
+      terms: [ "term_#{locale_arg}", 'term_id', 'term_code' ],
+      sources: [ "source_#{locale_arg}", 'source_id', 'source_code' ],
+      exporting: [ "exporter_#{locale_arg}", 'exporter_iso' ],
+      importing: [ "importer_#{locale_arg}", 'importer_iso' ]
     }
-  end
-
-  GROUPING_ATTRIBUTES = {
-    species: [ 'taxon_name', 'appendix', 'taxon_id' ],
-    taxonomy: []
-  }.freeze
-
-  def self.grouping_attributes
-    GROUPING_ATTRIBUTES.merge(localize_grouping_attributes)
-  end
-
-  def self.localize_grouping_attributes
-    {
-      terms: [ "term_#{@locale}", 'term_id', 'term_code' ],
-      sources: [ "source_#{@locale}", 'source_id', 'source_code' ],
-      exporting: [ "exporter_#{@locale}", 'exporter_iso' ],
-      importing: [ "importer_#{@locale}", 'importer_iso' ]
-    }
-  end
-
-  def self.get_grouping_attributes(group, locale = nil)
-    super
   end
 
   def child_taxa_uniquify
@@ -270,7 +249,6 @@ private
         ON taxon_concept_id = taxon_id
     SQL
   end
-
 
   def child_taxa_condition
     return 'TRUE' if @opts['taxon_id'].blank?
@@ -489,10 +467,10 @@ private
         elsif attribute.include?('code')
           'code'
         elsif [
-          "exporter_#{locale}",
-          "importer_#{locale}",
-          "term_#{locale}",
-          "source_#{locale}"
+          "exporter_#{@locale}",
+          "importer_#{@locale}",
+          "term_#{@locale}",
+          "source_#{@locale}"
         ].include?(attribute)
           'name'
         else

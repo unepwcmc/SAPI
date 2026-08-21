@@ -19,8 +19,11 @@ class Api::V1::ShipmentsController < ApplicationController
         [ 'chart_data', params_unsafely_permitted ],
         expires_in: 1.week
       ) do
-        @grouping_class.new([ 'issue_type', 'year' ]).
-          countries_reported_range(params[:year])
+        @grouping_class.new(
+          {
+            group_by: 'issue_type'
+          }
+        ).countries_reported_range(params[:year])
       end
 
     render json: @chart_data
@@ -28,22 +31,25 @@ class Api::V1::ShipmentsController < ApplicationController
 
   def grouped_query
     limit = grouped_params[:limit].present? ? grouped_params[:limit].to_i : ''
+
     _grouped_params = grouped_params.merge(limit: limit, with_defaults: true)
+
     taxonomic_params = {
       taxonomic_level: grouped_params[:taxonomic_level],
       group_name: grouped_params[:group_name]
     }
 
-    query = @grouping_class.new(sanitized_attributes, _grouped_params)
+    query = @grouping_class.new(_grouped_params)
+
     params_hash = { attribute: 'year' }
 
-    sanitized_attributes.map { |p| params_hash[p] = p }
+    query.grouping_attribute_names.map { |p| params_hash[p] = p }
 
     @data =
       Rails.cache.fetch(
         [ 'grouped_data', grouped_params ], expires_in: 1.week
       ) do
-        if sanitized_attributes&.first&.present?
+        if query.grouping_attribute_names&.first&.present?
           query.json_by_attribute(query.run, params_hash)
         else
           query.taxonomic_grouping(taxonomic_params)
@@ -64,17 +70,18 @@ class Api::V1::ShipmentsController < ApplicationController
       group_name: grouped_params[:group_name]
     }
 
-    query = @grouping_class.new(sanitized_attributes, _grouped_params)
+    query = @grouping_class.new(_grouped_params)
+
     params_hash = { attribute: 'year' }
 
-    sanitized_attributes.map { |p| params_hash[p] = p }
+    query.grouping_attribute_names.map { |p| params_hash[p] = p }
 
     @data =
       Rails.cache.fetch(
         [ 'country_data', grouped_params ],
         expires_in: 1.week
       ) do
-        if sanitized_attributes&.first&.present?
+        if query.grouping_attribute_names&.first&.present?
           query.json_by_attribute(query.country_data, params_hash)
         else
           query.taxonomic_grouping(taxonomic_params)
@@ -86,7 +93,7 @@ class Api::V1::ShipmentsController < ApplicationController
 
   # Compliance tool search & full list action
   def search_query
-    query = @grouping_class.new(sanitized_attributes, params_unsafely_permitted)
+    query = @grouping_class.new(params_unsafely_permitted)
     data = query.run
     @search_data =
       Rails.cache.fetch(
@@ -112,7 +119,7 @@ class Api::V1::ShipmentsController < ApplicationController
     @grouping_class = Trade::Grouping::TradePlusStatic
 
     # TODO Remember to implement permitted parameters here
-    query = @grouping_class.new(sanitized_attributes, params_unsafely_permitted)
+    query = @grouping_class.new(params_unsafely_permitted)
 
     @over_time_data =
       Rails.cache.fetch(
@@ -130,7 +137,7 @@ class Api::V1::ShipmentsController < ApplicationController
     @grouping_class = Trade::Grouping::TradePlusStatic
 
     # TODO Remember to implement permitted parameters here
-    query = @grouping_class.new(sanitized_attributes, params_unsafely_permitted)
+    query = @grouping_class.new(params_unsafely_permitted)
 
     @aggregated_over_time_data =
       Rails.cache.fetch(
@@ -165,8 +172,10 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def search_download_all_data
-    query = @grouping_class.new(sanitized_attributes, params_unsafely_permitted)
+    query = @grouping_class.new(params_unsafely_permitted)
+
     data = query.run
+
     @search_download_all_data =
       Rails.cache.fetch(
         [ 'search_download_all_data', params_unsafely_permitted ], expires_in: 1.week
@@ -242,13 +251,6 @@ private
       :origin_ids, :importer_ids, :exporter_ids, :locale,
       :call, :grouping, :format
     )
-  end
-
-  def sanitized_attributes
-    @_sanitized_attributes =
-      @_sanitized_attributes || @grouping_class.get_grouping_attributes(
-        params[:group_by], params[:locale] || I18n.locale
-      )
   end
 
   def authenticate

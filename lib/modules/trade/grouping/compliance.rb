@@ -15,7 +15,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     2011 => 175
   }.freeze
 
-  def initialize(attributes, opts = {})
+  def initialize(opts = {})
     super
   end
 
@@ -185,7 +185,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     end
   end
 
-  def self.filterable_attributes
+  def filterable_attributes
     {
       time_range_start: {
         column_name: 'year',
@@ -207,21 +207,16 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     }
   end
 
-  GROUPING_ATTRIBUTES = {
-    category: [ 'issue_type' ],
-    commodity: [ 'term', 'term_id' ],
-    exporting: [ 'exporter', 'exporter_iso', 'exporter_id' ],
-    importing: [ 'importer', 'importer_iso', 'importer_id' ],
-    species: [ 'taxon_name', 'appendix', 'taxon_concept_id' ],
-    taxonomy: []
-  }.freeze
-
-  def self.grouping_attributes
-    GROUPING_ATTRIBUTES
-  end
-
-  def self.get_grouping_attributes(group, locale = nil)
-    super(group) << 'year'
+  def self.build_grouping_attributes_by_group(locale_arg)
+    {
+      category: [ 'year', 'issue_type' ],
+      commodity: [ 'year', 'term', 'term_id' ],
+      exporting: [ 'year', 'exporter', 'exporter_iso', 'exporter_id' ],
+      importing: [ 'year', 'importer', 'importer_iso', 'importer_id' ],
+      issue_type: [ 'year', 'issue_type' ],
+      species: [ 'year', 'taxon_name', 'appendix', 'taxon_concept_id' ],
+      taxonomy: [ 'year' ]
+    }
   end
 
 private

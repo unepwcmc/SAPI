@@ -1,5 +1,5 @@
 class Trade::Grouping::TradePlus
-  def initialize(attributes, opts = {})
+  def initialize(opts = {})
     super
   end
 

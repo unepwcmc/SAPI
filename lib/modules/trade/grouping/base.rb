@@ -1,5 +1,6 @@
 class Trade::Grouping::Base
-  attr_reader :query
+  attr_reader :query, :grouping_attribute_names
+  attr_reader :grouping_attribute_names
 
   TAXONOMIC_GROUPING = 'lib/data/group_conversions.csv'.freeze
 
@@ -10,12 +11,14 @@ class Trade::Grouping::Base
   # Trade::Grouping::Compliance.new(['year, 'issue_type']})
   # Group by importer and limit result to 5 records
   # Trade::Grouping::Compliance.new('importer', {limit: 5})
-  def initialize(attributes, opts = {})
+  def initialize(opts = {})
+    @opts = opts.clone
+
     # TODO: there's certainly a better way to do this
     # See https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/347
     raise ArgumentError, 'Bad reported_by' unless opts[:reported_by].blank? || /\A\w+\z/.match?(opts[:reported_by])
     raise ArgumentError, 'Bad reported_by_party' unless opts[:reported_by_party].blank? || /\A\w+\z/.match?(opts[:reported_by_party])
-    raise ArgumentError, 'Bad locale' unless opts[:locale].blank? || /\A\w+\z/.match?(opts[:locale])
+    raise ArgumentError, 'Bad locale' unless I18n.available_locales.map(&:to_s).include?(@opts[:locale] ||= I18n.locale.to_s)
     raise ArgumentError, 'Bad taxonomic_level' unless opts[:taxonomic_level].blank? || /\A\w+\z/.match?(opts[:taxonomic_level])
     raise ArgumentError, 'Bad group_name' unless opts[:group_name].blank? || /\A\w+\z/.match?(opts[:group_name])
     raise ArgumentError, 'Bad country_ids' unless opts[:country_ids].blank? || /\A[\d,]+\z/.match?(opts[:country_ids])
@@ -25,8 +28,14 @@ class Trade::Grouping::Base
     raise ArgumentError, 'Bad time_range_start' unless opts[:time_range_start].blank? || /\A\d+\z/.match?(opts[:time_range_start])
     raise ArgumentError, 'Bad unit_id' unless opts[:unit_id].blank? || /\A[\w,]+\z/.match?(opts[:unit_id])
 
-    @attributes = sanitise_params(attributes)
-    @opts = opts.clone
+
+    @grouping_attribute_names = self.class.build_grouping_attributes(
+      @opts[:group_by], @opts[:locale]
+    )
+
+    @attributes = sanitise_params(@grouping_attribute_names)
+
+    @locale = @opts[:locale]
     @condition = sanitised_condition_sql
     @limit = sanitise_limit(opts[:limit])
     @pagination = sanitise_pagination(opts)
@@ -90,7 +99,7 @@ protected
   #   }
   # }
   # ```
-  def self.filterable_attributes
+  def filterable_attributes
     raise NoMethodError
   end
 
@@ -103,7 +112,7 @@ protected
   #   time_range_start: 2020
   # }
   # ```
-  def self.default_filtering_attributes
+  def default_filtering_attributes
     filterable_attributes.select do |key, value|
       value.has_key? :default
     end.transform_values do |value|
@@ -111,25 +120,22 @@ protected
     end
   end
 
-  def self.grouping_attributes
+  def grouping_attributes_by_group
+    self.class.build_grouping_attributes_by_group(@locale)
+  end
+
+  def self.build_grouping_attributes_by_group(locale_param)
     raise NoMethodError
   end
 
-  #   def self.get_grouping_attributes(group, locale = nil)
-  #     return [] unless group
-  #
-  #     @locale = locale
-  #
-  #     Array.new(grouping_attributes[group.to_sym])
-  #   end
-
-  def self.get_grouping_attributes(group_by_param, locale = nil)
+  def self.build_grouping_attributes(group_by_param, locale_param)
     return [] if group_by_param.blank?
 
-    @locale = locale || @locale || I18n.default_locale
+    built_grouping_attributes_by_group =
+      build_grouping_attributes_by_group(locale_param)
 
     Array.wrap(group_by_param).compact.map do |group_by_attr|
-      grouping_attributes[group_by_attr.to_sym]
+      built_grouping_attributes_by_group[group_by_attr.to_sym]
     end.flatten.compact.uniq
   end
 
@@ -189,8 +195,6 @@ private
   end
 
   def sanitised_condition_sql
-    filterable_attributes = self.class.filterable_attributes
-
     condition_attributes =
       @opts.keep_if do |k, v|
         filterable_attributes.has_key?(k.to_sym) && v.present?
@@ -203,7 +207,7 @@ private
 
     # Get default attributes if missing from params
     if @opts[:with_defaults]
-      condition_attributes.reverse_merge!(self.class.default_filtering_attributes)
+      condition_attributes.reverse_merge!(default_filtering_attributes)
     end
 
     return 'TRUE' if condition_attributes.blank?
