@@ -196,14 +196,9 @@ private
 
   def sanitised_condition_sql
     condition_attributes =
-      @opts.keep_if do |k, v|
+      @opts.select do |k, v|
         filterable_attributes.has_key?(k.to_sym) && v.present?
-      end
-
-    unless condition_attributes.is_a?(Hash)
-      condition_attributes.permit!
-      condition_attributes = condition_attributes.to_h
-    end
+      end.to_h
 
     # Get default attributes if missing from params
     if @opts[:with_defaults]
