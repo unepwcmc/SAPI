@@ -298,7 +298,7 @@ private
 
     <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt, 100.0*COUNT(*)/(SUM(COUNT(*)) OVER (PARTITION BY year)) AS percent
-      FROM non_compliant_shipments_view
+      FROM #{shipments_table}
       WHERE #{@condition}
       GROUP BY #{columns}
       ORDER BY percent DESC
