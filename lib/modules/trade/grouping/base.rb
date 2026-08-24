@@ -233,7 +233,7 @@ private
   # or override this function in each related module.
   def attribute_filter_sql(filterable_attribute, value)
     column_name = filterable_attribute[:column_name]
-    null_values = filterable_attribute[:null_values] || []
+    null_values = filterable_attribute[:null_values]&.map(&:downcase) || []
 
     arel_table = Arel::Table.new(shipments_table.to_sym)
     arel_attribute = arel_table[column_name.to_sym]
@@ -260,7 +260,7 @@ private
       end
 
       values.delete_if do |v|
-        should_find_null = true if null_values.include? v
+        should_find_null = true if null_values.include? v&.downcase
       end if null_values.present?
 
       if filterable_attribute[:type] == :integer
