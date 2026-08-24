@@ -156,6 +156,23 @@ protected
     @limit ? "LIMIT #{@limit}" : ''
   end
 
+  def sanitise_integer_array(original, param_name_for_error)
+    if original.is_a? Array
+      original
+    else
+      original&.to_s&.split(',') || []
+    end.compact.map(&:squish).map do |item|
+      if /\A[-+]?\d+\z/.match item
+        item.to_i
+      elsif param_name_for_error
+        raise(
+          ArgumentError, "Not an integer in #{param_name_for_error}"
+        )
+      else
+        nil
+      end
+    end.compact
+  end
 private
 
   def sanitise_group(group)
@@ -264,7 +281,7 @@ private
       end if null_values.present?
 
       if filterable_attribute[:type] == :integer
-        values = values.map(&:to_i)
+        values = sanitise_integer_array(values, column_name)
       end
 
       if values.present? && should_find_null

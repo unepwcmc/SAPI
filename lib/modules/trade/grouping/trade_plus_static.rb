@@ -225,22 +225,23 @@ private
   def child_taxa_uniquify
     return if @opts['taxon_id'].blank?
 
-    unique_taxa = []
-    taxa = @opts['taxon_id'].split(',').map(&:to_i)
-    return if taxa.count < 2
+    unique_taxon_ids = []
+    taxon_ids = sanitise_integer_array(@opts['taxon_id'], 'taxon_id')
 
-    taxa.each do |taxon|
-      unique_taxa.push(taxon) unless db.execute(
+    return if taxon_ids.count < 2
+
+    taxon_ids.each do |taxon_id|
+      unique_taxon_ids.push(taxon_id) unless db.execute(
         <<-SQL.squish
           SELECT COUNT(*)
           FROM all_taxon_concepts_and_ancestors_mview
-          WHERE ancestor_taxon_concept_id IN (#{(taxa - [ taxon.to_i ]).join(',')})
-            AND taxon_concept_id = #{taxon.to_i}
+          WHERE ancestor_taxon_concept_id IN (#{(taxon_ids - [ taxon_id ]).join(',')})
+            AND taxon_concept_id = #{taxon_id}
         SQL
       ).values.first[0].to_i > 0
     end
 
-    @opts['taxon_id'] = unique_taxa.join(',')
+    @opts['taxon_id'] = unique_taxon_ids.join(',')
   end
 
   def child_taxa_join(tc_id = nil)
@@ -530,7 +531,8 @@ private
   end
 
   def country_condition
-    country_ids_sql = Array.wrap(@country_ids.presence || [])&.compact&.map(&:to_i)&.join(', ')
+    country_ids_sql =
+      sanitise_integer_array(@country_ids, 'country_ids').join(', ')
 
     return 'TRUE' if country_ids_sql.blank?
 
