@@ -31,7 +31,14 @@ def test_endpoint_with(test_case)
     end
 
   it "returns HTTP #{expected_status} #{params_description}" do
-    get test_case[:controller_endpoint], format: :json, params: request_params
+    get test_case[:controller_endpoint],
+      format: :json,
+      params:
+        if test_case[:build_params]
+          test_case[:build_params].call(self, request_params)
+        else
+          request_params
+        end
 
     expect(response).to have_http_status(expected_status)
 
@@ -133,7 +140,87 @@ describe Api::V1::ShipmentsController do
       search_query: [ {} ],
 
       country_query: [
-        { params: { group_by: %w[species taxonomy] } }
+        *(
+          %w[species terms sources taxonomy exporting importing].map do |group_by|
+            {
+              params: {
+                grouping_type: 'TradePlusStatic',
+                group_by: group_by
+              },
+              response_attributes: [
+                {
+                  attribute: :data,
+                  description: 'be an array',
+                  satisfies: lambda do |attr_value|
+                    attr_value.instance_of? Array
+                  end
+                }
+              ]
+            }
+          end
+        ),
+        {
+          # Test country_ids parsing
+          params: {
+            locale: 'en',
+            grouping_type: 'TradePlusStatic',
+            group_by: 'sources',
+            reported_by: 'importer',
+            country_ids: '[@portugal.id], [@argentina.id]' # override this
+          },
+          build_params: lambda do |ctx, original_params|
+            {
+              **original_params,
+              country_ids: [
+                # Shipments sets @portugal, argentina
+                ctx.instance_values['portugal'].id,
+                ctx.instance_values['argentina'].id
+              ].join(',')
+            }
+          end,
+          response_attributes: [
+            {
+              attribute: :data,
+              description: 'return three records with codes U, W, nil',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 3 &&
+                  attr_value.pluck('code').tally == [ 'U', 'W', nil ].tally
+              end
+            }
+          ]
+        },
+        {
+          # Test country_ids accepting an array
+          params: {
+            locale: 'en',
+            grouping_type: 'TradePlusStatic',
+            group_by: 'sources',
+            reported_by: 'importer',
+            country_ids: '[@portugal.id], [@argentina.id]' # override this
+          },
+          build_params: lambda do |ctx, original_params|
+            {
+              **original_params,
+              country_ids: [
+                # Shipments sets @portugal, argentina
+                ctx.instance_values['portugal'].id,
+                ctx.instance_values['argentina'].id
+              ]
+            }
+          end,
+          response_attributes: [
+            {
+              attribute: :data,
+              description: 'return three records with codes U, W, nil',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 3 &&
+                  attr_value.pluck('code').tally == [ 'U', 'W', nil ].tally
+              end
+            }
+          ]
+        }
       ],
 
       over_time_query: [
@@ -216,5 +303,4 @@ describe Api::V1::ShipmentsController do
   )
 
   # TODO: download_data, search_download_data, search_download_all_data
-  # TODO: test array/string behaviour of country_ids
 end
