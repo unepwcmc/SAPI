@@ -246,7 +246,7 @@ private
       end
 
     # Here on out we are constructing the return value for attribute_filter_sql
-    if value&.squish&.downcase == 'null'
+    if value&.to_s&.squish&.downcase == 'null'
       # column_name IS NULL
       arel_attribute.eq(nil)
     elsif filterable_attribute[:multiple]
