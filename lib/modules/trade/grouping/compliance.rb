@@ -186,18 +186,22 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   end
 
   def filterable_attributes
+    # Note: defaults never worked correctly as with_defaults was not respected,
+    # so removed them as described in:
+    #
+    # https://github.com/unepwcmc/SAPI/pull/1067#discussion_r3821170905
     {
       time_range_start: {
         column_name: 'year',
         operator: :gteq,
-        type: :integer,
-        default: 2012
+        type: :integer
+        # default: 2012
       },
       time_range_end: {
         column_name: 'year',
         operator: :lteq,
-        type: :integer,
-        default: 1.year.ago.year
+        type: :integer
+        # default: 1.year.ago.year
       },
       year: {
         column_name: 'year',

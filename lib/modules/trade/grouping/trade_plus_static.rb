@@ -107,18 +107,22 @@ private
     # TODO: consider whether some columns take only some of these.
     null_values = [ 'unreported', 'direct', 'items' ]
 
+    # Note: defaults never worked correctly as with_defaults was not respected,
+    # so removed them as described in:
+    #
+    # https://github.com/unepwcmc/SAPI/pull/1067#discussion_r3821170905
     {
       time_range_start: {
         column_name: 'year',
         operator: :gteq,
-        type: :integer,
-        default: 2.years.ago.year
+        type: :integer
+        # default: 2.years.ago.year
       },
       time_range_end: {
         column_name: 'year',
         operator: :lteq,
-        type: :integer,
-        default: 1.year.ago.year
+        type: :integer
+        # default: 1.year.ago.year
       },
       term_ids: {
         column_name: 'term_id',
@@ -195,8 +199,8 @@ private
         column_name: "unit_#{@locale}",
         multiple: true,
         transform: :downcase,
-        type: :text,
-        default: 'Number of specimens'
+        type: :text
+        # default: 'Number of specimens'
       },
       taxonomic_group: {
         column_name: 'group_code', # group_code is indexed
