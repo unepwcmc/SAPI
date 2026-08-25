@@ -302,6 +302,29 @@ describe Api::V1::ShipmentsController do
             time_range_end: '2025',
             limit: '5'
           }
+        },
+        {
+          # Realistic example: Overview - Source over time chart
+          params: {
+            time_range_start: '2019',
+            time_range_end: '2025',
+            grouping_type: 'TradePlusStatic',
+            group_by: 'sources',
+            reported_by: 'exporter',
+            unit_id: 'items',
+            origin_ids: 'direct',
+            limit: '5',
+            locale: 'en'
+          },
+          response_attributes: [
+            {
+              attribute: :over_time_data,
+              description: 'be an array',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of? Array
+              end
+            }
+          ]
         }
       ],
 
