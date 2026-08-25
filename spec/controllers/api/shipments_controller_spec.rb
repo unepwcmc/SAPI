@@ -306,18 +306,22 @@ describe Api::V1::ShipmentsController do
       ],
 
       aggregated_over_time_query: [
-        {
-          params: { group_by: %w[species taxonomy] },
-          response_attributes: [
+        *(
+          %w[species taxonomy].map do |group_by|
             {
-              attribute: :aggregated_over_time_data,
-              description: 'be an array',
-              satisfies: lambda do |attr_value|
-                attr_value.instance_of? Array
-              end
+              params: { group_by: group_by },
+              response_attributes: [
+                {
+                  attribute: :aggregated_over_time_data,
+                  description: 'be an array',
+                  satisfies: lambda do |attr_value|
+                    attr_value.instance_of? Array
+                  end
+                }
+              ]
             }
-          ]
-        }
+          end
+        )
       ]
     }
   )
