@@ -239,15 +239,17 @@ describe Api::V1::ShipmentsController do
             grouping_type: 'TradePlusStatic',
             group_by: 'sources',
             reported_by: 'importer',
-            country_ids: '[@portugal.id], [@argentina.id]' # override this
+            country_ids: '[@argentina.id], [@portugal.id]' # override this
           },
           build_params: lambda do |ctx, original_params|
             {
               **original_params,
               country_ids: [
-                # Shipments sets @portugal, argentina
-                ctx.instance_values['portugal'].id,
-                ctx.instance_values['argentina'].id
+                # context Shipments sets @portugal, @argentina.
+                # They belong to portugal, so this also checks that it's not
+                # just picking the first one
+                ctx.instance_values['argentina'].id,
+                ctx.instance_values['portugal'].id
               ].join(',')
             }
           end,
@@ -259,6 +261,36 @@ describe Api::V1::ShipmentsController do
                 attr_value.instance_of?(Array) &&
                   attr_value.length == 3 &&
                   attr_value.pluck('code').tally == [ 'U', 'W', nil ].tally
+              end
+            }
+          ]
+        },
+        {
+          # Test country_ids parsing
+          params: {
+            locale: 'en',
+            grouping_type: 'TradePlusStatic',
+            group_by: 'sources',
+            reported_by: 'importer',
+            country_ids: '[@argentina.id]' # override this
+          },
+          build_params: lambda do |ctx, original_params|
+            {
+              **original_params,
+              country_ids: [
+                # context Shipments sets @argentina
+                # all the shipments belong to @portugal so we should get [] back
+                ctx.instance_values['argentina'].id
+              ].join(',')
+            }
+          end,
+          response_attributes: [
+            {
+              attribute: :data,
+              description: 'be an empty array',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 0
               end
             }
           ]
