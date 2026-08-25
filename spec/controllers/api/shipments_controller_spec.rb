@@ -178,7 +178,19 @@ describe Api::V1::ShipmentsController do
         }
       ],
 
-      search_query: [ {} ],
+      search_query: [
+        {
+          # Compliance tool: /search - countries and territories tab
+          params: {
+            year: '2022',
+            group_by: 'exporting',
+            filter: '',
+            id: '',
+            page: '1',
+            per_page: '25'
+          }
+        }
+      ],
 
       country_query: [
         *(

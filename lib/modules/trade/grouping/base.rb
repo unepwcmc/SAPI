@@ -8,11 +8,6 @@ class Trade::Grouping::Base
 
   YEARS = (2012..(Date.today.year - 1)).to_a
 
-  # Example usage
-  # Group by year considering compliance types:
-  # Trade::Grouping::Compliance.new(['year, 'issue_type']})
-  # Group by importer and limit result to 5 records
-  # Trade::Grouping::Compliance.new('importer', {limit: 5})
   def initialize(opts = {})
     @opts = opts.clone
 
