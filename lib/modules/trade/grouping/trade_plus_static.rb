@@ -341,9 +341,9 @@ private
 
   def over_time_query
     quantity_field = @country_ids.present? ? "#{entity_quantity}_reported_quantity" : "#{@reported_by}_reported_quantity"
-    columns_for_select_sql = columns_with_aliases_sql
-    group_by_column_names_sql = sanitised_columns_sql
-    outer_group_by_column_names_sql = columns_aliases_only_sql
+    columns_for_select_sql = columns_with_aliases_sql @grouping_attribute_names
+    group_by_column_names_sql = sanitised_columns_sql @grouping_attribute_names
+    outer_group_by_column_names_sql = columns_aliases_only_sql @grouping_attribute_names
 
     if columns_for_select_sql.blank?
       raise(ArgumentError, 'Missing list of columns')
