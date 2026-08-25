@@ -16,7 +16,7 @@ class Trade::Grouping::Base
 
     # TODO: there's certainly a better way to do this
     # See https://unep-wcmc.codebasehq.com/projects/cites-support-maintenance/tickets/347
-    raise ArgumentError, 'Bad reported_by' unless opts[:reported_by].blank? || /\A\w+\z/.match?(opts[:reported_by])
+    raise ArgumentError, 'Bad reported_by' unless opts[:reported_by].blank? || %w[importer exporter].include?(opts[:reported_by])
     raise ArgumentError, 'Bad reported_by_party' unless opts[:reported_by_party].blank? || /\A\w+\z/.match?(opts[:reported_by_party])
     raise ArgumentError, 'Bad locale' unless I18n.available_locales.map(&:to_s).include?(@opts[:locale] ||= I18n.locale.to_s)
     raise ArgumentError, 'Bad taxonomic_level' unless opts[:taxonomic_level].blank? || /\A\w+\z/.match?(opts[:taxonomic_level])

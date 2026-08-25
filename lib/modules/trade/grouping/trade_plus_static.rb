@@ -539,8 +539,15 @@ private
     # This should be true for reported_by_party tab, false for the reported_by_partners
     reported_by_party = sanitise_boolean(@reported_by_party)
 
+    reported_by_column_name =
+      if 'importer' == @reported_by
+        'importer_id'
+      else
+        'exporter_id'
+      end
+
     <<-SQL.squish
-      #{@reported_by}_id IN (#{country_ids_sql}) AND (
+      #{db.quote_column_name reported_by_column_name} IN (#{country_ids_sql}) AND (
         (
           reported_by_exporter = #{!reported_by_party} AND importer_id IN (#{country_ids_sql})
         ) OR (
