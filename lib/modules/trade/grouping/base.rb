@@ -243,10 +243,6 @@ private
     raise NoMethodError
   end
 
-  def is_id_column?(column)
-    column.match(/_id(s)?/).present?
-  end
-
   # TODO This is shared between the ComplianceTool and TradePlus,
   # so make sure the other tool won't break after making changes for one of them,
   # or override this function in each related module.
