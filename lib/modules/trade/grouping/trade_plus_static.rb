@@ -411,8 +411,8 @@ private
       CASE
         -- There are still taxa with empty kingdom, so adding this condition
         -- until this is resolved at the database level.
-        WHEN COALESCE(#{taxonomic_level_name}, kingdom_name, '') = '' THEN 'Unknown'
-        ELSE COALESCE(#{taxonomic_level_name}, kingdom_name)
+        WHEN COALESCE(#{db.quote_column_name taxonomic_level_name}, kingdom_name, '') = '' THEN 'Unknown'
+        ELSE COALESCE(#{db.quote_column_name taxonomic_level_name}, kingdom_name)
       END AS name
     SQL
 

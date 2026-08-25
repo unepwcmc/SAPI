@@ -2,6 +2,8 @@ class Trade::Grouping::Base
   attr_reader :query, :grouping_attribute_names
   attr_reader :grouping_attribute_names
 
+  # Not quite the same set as Rank.dict
+  TAXONOMIC_LEVELS = [ 'kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'taxon' ].freeze
   TAXONOMIC_GROUPING = 'lib/data/group_conversions.csv'.freeze
 
   YEARS = (2012..(Date.today.year - 1)).to_a
@@ -19,7 +21,7 @@ class Trade::Grouping::Base
     raise ArgumentError, 'Bad reported_by' unless opts[:reported_by].blank? || %w[importer exporter].include?(opts[:reported_by])
     raise ArgumentError, 'Bad reported_by_party' unless opts[:reported_by_party].blank? || /\A\w+\z/.match?(opts[:reported_by_party])
     raise ArgumentError, 'Bad locale' unless I18n.available_locales.map(&:to_s).include?(@opts[:locale] ||= I18n.locale.to_s)
-    raise ArgumentError, 'Bad taxonomic_level' unless opts[:taxonomic_level].blank? || /\A\w+\z/.match?(opts[:taxonomic_level])
+    raise ArgumentError, 'Bad taxonomic_level' unless opts[:taxonomic_level].blank? || TAXONOMIC_LEVELS.include?(opts[:taxonomic_level])
     raise ArgumentError, 'Bad group_name' unless opts[:group_name].blank? || /\A\w+\z/.match?(opts[:group_name])
     raise ArgumentError, 'Bad country_ids' unless opts[:country_ids].blank? || /\A[\d,]+\z/.match?(opts[:country_ids])
     raise ArgumentError, 'Bad origin_ids' unless opts[:origin_ids].blank? || /\A[\w,]+\z/.match?(opts[:origin_ids])
