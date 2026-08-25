@@ -49,10 +49,10 @@ class Api::V1::ShipmentsController < ApplicationController
       Rails.cache.fetch(
         [ 'grouped_data', grouped_params ], expires_in: 1.week
       ) do
-        if @grouping_instance.grouping_attribute_names&.first&.present?
-          @grouping_instance.json_by_attribute(@grouping_instance.run, params_hash)
-        else
+        if 'taxonomy' == grouped_params[:group_by]
           @grouping_instance.taxonomic_grouping(taxonomic_params)
+        else
+          @grouping_instance.json_by_attribute(@grouping_instance.run, params_hash)
         end
       end
 
@@ -81,10 +81,10 @@ class Api::V1::ShipmentsController < ApplicationController
         [ 'country_data', grouped_params ],
         expires_in: 1.week
       ) do
-        if @grouping_instance.grouping_attribute_names&.first&.present?
-          @grouping_instance.json_by_attribute(@grouping_instance.country_data, params_hash)
-        else
+        if 'taxonomy' == grouped_params[:group_by]
           @grouping_instance.taxonomic_grouping(taxonomic_params)
+        else
+          @grouping_instance.json_by_attribute(@grouping_instance.country_data, params_hash)
         end
       end
 

@@ -59,7 +59,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
 
     res = {}
     # Get all the non-compliant shipments in a given year
-    query = "SELECT * FROM #{shipments_table} WHERE year = #{year}"
+    query = "SELECT * FROM #{shipments_table} WHERE year = #{db.quote year}"
     shipments = db.execute(query)
 
     return [] unless shipments.first

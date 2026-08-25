@@ -154,6 +154,27 @@ describe Api::V1::ShipmentsController do
             reported_by: 'exporter',
             locale: 'en'
           }
+        },
+        {
+          params: {
+            grouping_type: 'Compliance',
+            group_by: 'taxonomy'
+          },
+          response_attributes: [
+            {
+              attribute: :data,
+              description: 'be a Hash keyed by year with values Array<{ taxon, cnt, percent }>',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Hash) &&
+                  attr_value.values.all? do |year_item|
+                    year_item.instance_of?(Array) &&
+                      year_item.all? do |item|
+                        item.keys.sort == %w[ cnt percent taxon ]
+                      end
+                  end
+              end
+            }
+          ]
         }
       ],
 
