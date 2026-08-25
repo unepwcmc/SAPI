@@ -271,8 +271,8 @@ private
   end
 
   def group_query
-    columns_for_select_sql = columns_with_aliases_sql
-    group_by_column_names_sql = sanitised_columns_sql
+    columns_for_select_sql = columns_with_aliases_sql @grouping_attribute_names
+    group_by_column_names_sql = sanitised_columns_sql @grouping_attribute_names
 
     # Apparently this is ok
     # if columns_for_select_sql.blank?

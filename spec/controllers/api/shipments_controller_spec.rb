@@ -73,7 +73,13 @@ describe Api::V1::ShipmentsController do
         {},
         *(
           {
+            terms: %w[ name id code value total_count ],
+            sources: %w[ code name id value total_count ],
+            exporting: %w[ name iso2 value total_count ],
+            importing: %w[ name iso2 value total_count ],
             species: %w[ taxon_name appendix id value total_count ],
+            # NB: order_name family_name genus_name taxon_name also available
+            # but taxonomic_level defaults to class
             taxonomy: %w[
               id
               name
@@ -81,16 +87,8 @@ describe Api::V1::ShipmentsController do
               kingdom_name
               phylum_name
               class_name
-              order_name
-              family_name
-              genus_name
-              taxon_name
               total_count
-            ],
-            terms: %w[ name id code value total_count ],
-            # sources: %w[ name id value total_count ],
-            exporting: %w[ name iso2 value total_count ],
-            importing: %w[ name iso2 value total_count ]
+            ]
           }.map do |group_by, expected_keys|
             {
               params: {
