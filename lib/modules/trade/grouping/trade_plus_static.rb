@@ -311,8 +311,8 @@ private
     # partners + exporting = importer_reported_quantity
     quantity_field = "#{entity_quantity}_reported_quantity"
 
-    columns_for_select_sql = columns_with_aliases_sql
-    group_by_column_names_sql = sanitised_columns_sql
+    columns_for_select_sql = columns_with_aliases_sql @grouping_attribute_names
+    group_by_column_names_sql = sanitised_columns_sql @grouping_attribute_names
 
     if columns_for_select_sql.blank?
       raise(ArgumentError, 'Missing list of columns')
