@@ -266,9 +266,7 @@ private
 
   def load_grouping_type
     @grouping_class =
-      if params[:grouping_type] == 'TradePlus'
-        Trade::Grouping::TradePlus
-      elsif params[:grouping_type] == 'TradePlusStatic'
+      if %w[TradePlus TradePlusStatic].include? params[:grouping_type]
         Trade::Grouping::TradePlusStatic
       else
         Trade::Grouping::Compliance
