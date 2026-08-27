@@ -255,8 +255,9 @@ private
 
   def authenticate
     token = request.headers['X-Authentication-Token']
+    expected_token = Rails.application.credentials.dig(:shipments_api_token)
 
-    unless token == Rails.application.credentials.dig(:shipments_api_token)
+    if expected_token.blank? || token != expected_token
       head :unauthorized
 
       false

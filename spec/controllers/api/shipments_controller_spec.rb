@@ -21,6 +21,7 @@ def test_endpoints_with(test_cases_by_endpoint)
 end
 
 def test_endpoint_with(test_case)
+  shipments_token = Rails.application.credentials.dig(:shipments_api_token)
   expected_status = test_case[:expected_status] || :success
   request_params = test_case[:params] || {}
   params_description =
@@ -38,7 +39,8 @@ def test_endpoint_with(test_case)
           test_case[:build_params].call(self, request_params)
         else
           request_params
-        end
+        end,
+      headers: { 'X-Authentication-Token' => shipments_token }
 
     expect(response).to have_http_status(expected_status)
 
