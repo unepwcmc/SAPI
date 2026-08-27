@@ -292,7 +292,7 @@ private
   end
 
   def group_query
-    columns = sanitised_columns_sql
+    columns = sanitised_columns_sql @attributes
 
     if columns.blank?
       raise(ArgumentError, 'Missing list of columns')

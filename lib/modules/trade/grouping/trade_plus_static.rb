@@ -95,8 +95,7 @@ private
     genus_name: 'genus_name',
     family_name: 'family_name',
     class_name: 'class_name',
-    taxon_id: 'taxon_id',
-    country_ids: 'country_ids'
+    taxon_id: 'taxon_id'
   }.freeze
 
   def attributes

@@ -137,7 +137,7 @@ protected
   end
 
   def group_query
-    columns = sanitised_columns_sql
+    columns = sanitised_columns_sql @attributes
 
     <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt
@@ -200,7 +200,10 @@ private
     }
   end
 
-  def sanitised_columns_sql(attribute_names = @attributes)
+  ##
+  # Given a list of column names, return an SQL string with a unique list of
+  # quoted column names. If this list is empty, `attributes` is used instead.
+  def sanitised_columns_sql(attribute_names)
     column_names = attribute_names&.compact&.uniq&.presence || attributes.values
 
     column_names.map do |column_name|
