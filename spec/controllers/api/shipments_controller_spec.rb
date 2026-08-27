@@ -32,6 +32,8 @@ def test_endpoint_with(test_case)
     end
 
   it "returns HTTP #{expected_status} #{params_description}" do
+    request.headers['X-Authentication-Token'] = shipments_token
+
     get test_case[:controller_endpoint],
       format: :json,
       params:
@@ -39,8 +41,7 @@ def test_endpoint_with(test_case)
           test_case[:build_params].call(self, request_params)
         else
           request_params
-        end,
-      headers: { 'X-Authentication-Token' => shipments_token }
+        end
 
     expect(response).to have_http_status(expected_status)
 
