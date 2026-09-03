@@ -357,8 +357,8 @@ describe Api::V1::ShipmentsController do
           # `taxonomy` is not ok for over_time, as we want to group by something
           # otherwise it's way too much data, and also the sql breaks
           #
-          # `category` and `commodity` fail with "Missing list of columns";
-          # not sure why.
+          # `category` and `commodity` fail with "Missing list of columns"; they
+          # are Compliance groupings and this route is TradePlusStatic-only.
           %w[exporting importing species].map do |group_by|
             {
               params: {
