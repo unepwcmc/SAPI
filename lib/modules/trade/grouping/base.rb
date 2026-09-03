@@ -204,9 +204,9 @@ private
 
   ##
   # Given a list of column names, return an SQL string with a unique list of
-  # quoted column names. If this list is empty, `attributes` is used instead.
+  # quoted column names.
   def sanitised_columns_sql(attribute_names)
-    column_names = attribute_names&.compact&.uniq&.presence || attributes.values
+    column_names = attribute_names&.compact&.uniq&.presence || []
 
     column_names.map do |column_name|
       db.quote_column_name column_name
