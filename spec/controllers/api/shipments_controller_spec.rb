@@ -433,9 +433,41 @@ describe Api::V1::ShipmentsController do
             }
           end
         )
+      ],
+      download_data: [
+        {
+          # Test ids parsing
+          params: {
+            appendix: 'I',
+            ids: '[@animal_species.id], [@animal_species2.id]', # override this
+            type: 'species'
+          },
+          build_params: lambda do |ctx, original_params|
+            {
+              **original_params,
+              appendix: 'I',
+              ids: [
+                # context Shipments sets @animal_species, @animal_species2.
+                ctx.instance_values['animal_species'].id,
+                ctx.instance_values['animal_species2'].id
+              ].join(',')
+            }
+          end,
+          response_attributes: [
+            {
+              attribute: :download_data,
+              description: 'empty array',
+              satisfies: lambda do |attr_value|
+                # None of the test shipments are non-compliant
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 0
+              end
+            }
+          ]
+        }
       ]
     }
   )
 
-  # TODO: download_data, search_download_data, search_download_all_data
+  # TODO: search_download_data, search_download_all_data
 end

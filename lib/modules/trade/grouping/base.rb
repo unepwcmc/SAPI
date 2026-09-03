@@ -70,6 +70,26 @@ class Trade::Grouping::Base
     conversion
   end
 
+  delegate :sanitise_integer_array, to: :class
+
+  def self.sanitise_integer_array(original, param_name_for_error)
+    if original.is_a? Array
+      original
+    else
+      original&.to_s&.split(',') || []
+    end.compact.map(&:squish).map do |item|
+      if /\A[-+]?\d+\z/.match item
+        item.to_i
+      elsif param_name_for_error
+        raise(
+          ArgumentError, "Not an integer in #{param_name_for_error}"
+        )
+      else
+        nil
+      end
+    end.compact
+  end
+
 protected
 
   def shipments_table
@@ -151,24 +171,6 @@ protected
 
   def limit
     @limit ? "LIMIT #{@limit}" : ''
-  end
-
-  def sanitise_integer_array(original, param_name_for_error)
-    if original.is_a? Array
-      original
-    else
-      original&.to_s&.split(',') || []
-    end.compact.map(&:squish).map do |item|
-      if /\A[-+]?\d+\z/.match item
-        item.to_i
-      elsif param_name_for_error
-        raise(
-          ArgumentError, "Not an integer in #{param_name_for_error}"
-        )
-      else
-        nil
-      end
-    end.compact
   end
 private
 

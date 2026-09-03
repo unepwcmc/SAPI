@@ -157,6 +157,7 @@ class Api::V1::ShipmentsController < ApplicationController
       ) do
         Trade::DownloadDataRetriever.dashboard_download(download_params).to_a
       end
+
     render json: @download_data
   end
 

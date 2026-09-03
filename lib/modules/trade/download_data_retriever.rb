@@ -27,8 +27,8 @@ module Trade::DownloadDataRetriever
 
           if params[:type] == 'species'
             {
-              taxon_concept_id: params[:ids],
-              appendix: params[:appendix]
+              taxon_concept_id: sanitise_integer_array(params[:ids], 'ids'),
+              appendix: params[:appendix]&.split(',')
             }
           end,
 
@@ -44,7 +44,7 @@ module Trade::DownloadDataRetriever
   end
 
   def self.search_download(params)
-    id = params[:ids]
+    id = sanitise_integer_array(params[:ids], 'ids')
     year = params[:year]
 
     return [] if id.empty?
@@ -84,9 +84,12 @@ module Trade::DownloadDataRetriever
     query_runner(query)
   end
 
+  # - `params[:year]` required
+  # - `params[:ids]` required: a group like 'Plants' (not sure why it's `ids`)
   def self.taxonomic_download(params)
     mapping = Trade::Grouping::Compliance.new().read_taxonomy_conversion
     array_ids = []
+
     mapping[params[:ids]].each do |m|
       rank_name = m[:rank] == 'Species' ? 'taxon' : m[:rank].downcase
 
@@ -149,5 +152,9 @@ module Trade::DownloadDataRetriever
 
   def self.query_runner(query)
     ApplicationRecord.connection.execute(query)
+  end
+
+  def self.sanitise_integer_array(original, param_name_for_error)
+    Trade::Grouping::Base.sanitise_integer_array(original, param_name_for_error)
   end
 end
