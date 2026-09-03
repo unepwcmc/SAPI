@@ -101,7 +101,9 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     if group_by.include?('commodity') || group_by.include?('species')
       hash[params[:year]] = data.map { |d| d.except('year', 'percent') }
     elsif group_by.include?('exporting')
-      importers = Trade::Grouping::Compliance.new(params).run
+      importers = Trade::Grouping::Compliance.new(
+        params.merge(group_by: 'importing')
+      ).run
 
       data, importers = data.group_by { |d| d['exporter'] }, importers.group_by { |d| d['importer'] }
 
