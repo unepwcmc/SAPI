@@ -44,32 +44,34 @@ module Trade::DownloadDataRetriever
   end
 
   def self.search_download(params)
-    id = sanitise_integer_array(params[:ids], 'ids')
+    ids = sanitise_integer_array(params[:ids], 'ids')
     year = params[:year]
 
-    return [] if id.empty?
+    return [] if ids.empty?
 
     query_condition =
       case params[:group_by]
-      when 'importing'
-      when 'exporting'
+      when 'importing', 'exporting'
         arel_table = Trade::NonCompliantShipmentsView.arel_table
 
-        arel_table[:exporter_id].in(id).or(
-          arel_table[:importer_id].in(id)
+        arel_table[:exporter_id].in(ids).or(
+          arel_table[:importer_id].in(ids)
         )
       when 'species'
         appendix = params[:appendix]
         if appendix.present?
           {
-            taxon_concept_id: id,
+            taxon_concept_id: ids,
             appendix: appendix
           }
         else
-          { taxon_concept_id: id }
+          { taxon_concept_id: ids }
         end
       when 'commodity'
-        { term_id: id }
+        { term_id: ids }
+      else
+        # We do not know what `ids` represents
+        return []
       end
 
       query =
