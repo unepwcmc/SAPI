@@ -78,38 +78,6 @@ private
     'trade_plus_complete_mview'
   end
 
-  # Allowed attributes
-  ATTRIBUTES = {
-    id: 'id',
-    year: 'year',
-    appendix: 'appendix',
-    importer_iso: 'importer_iso',
-    exporter_iso: 'exporter_iso',
-    term_id: 'term_id',
-    term_code: 'term_code',
-    unit_id: 'unit_id',
-    purpose_id: 'purpose_id',
-    source_id: 'source_id',
-    source_code: 'source_code',
-    taxon_name: 'taxon_name',
-    genus_name: 'genus_name',
-    family_name: 'family_name',
-    class_name: 'class_name',
-    taxon_id: 'taxon_id'
-  }.freeze
-
-  def attributes
-    ATTRIBUTES.merge(localize_attributes)
-  end
-
-  def localize_attributes
-    hash = {}
-    attrs = %w[importer exporter term unit purpose source group_name]
-    attrs.each { |h| hash["#{h}_#{locale}"] = "#{h}_#{locale}" }
-
-    hash.symbolize_keys
-  end
-
   def filterable_attributes
     # TODO: consider whether some columns take only some of these.
     null_values = [ 'unreported', 'direct', 'items' ]
@@ -221,12 +189,43 @@ private
   def self.build_grouping_attributes_by_group(locale_arg)
     {
       species: [ 'taxon_name', 'appendix', 'taxon_id' ],
-      taxonomy: [],
+      taxonomy: build_taxonomy_attributes(locale_arg),
       terms: [ "term_#{locale_arg}", 'term_id', 'term_code' ],
       sources: [ "source_#{locale_arg}", 'source_id', 'source_code' ],
       exporting: [ "exporter_#{locale_arg}", 'exporter_iso' ],
       importing: [ "importer_#{locale_arg}", 'importer_iso' ]
     }
+  end
+
+  def self.build_taxonomy_attributes(locale_arg)
+    %w[
+      id
+      year
+      appendix
+      importer_iso
+      exporter_iso
+      term_id
+      term_code
+      unit_id
+      purpose_id
+      source_id
+      source_code
+      taxon_name
+      genus_name
+      family_name
+      class_name
+      taxon_id
+    ] + %w[
+      importer
+      exporter
+      term
+      unit
+      purpose
+      source
+      group_name
+    ].map do |attr|
+      "#{attr}_#{locale_arg}"
+    end
   end
 
   def child_taxa_uniquify
@@ -465,7 +464,7 @@ private
     end.join(', ')
   end
 
-  def columns_with_aliases(attribute_names = @attributes)
+  def columns_with_aliases(attribute_names)
     return [] if attribute_names.blank?
 
     attribute_names.compact.uniq.map do |attribute|
@@ -503,13 +502,13 @@ private
     end.compact
   end
 
-  def columns_with_aliases_sql(attribute_names = @attributes)
+  def columns_with_aliases_sql(attribute_names)
     columns_with_aliases(attribute_names).map do |col|
       "#{col[:column_expression]} AS #{db.quote_column_name col[:column_alias]}"
     end.join(', ').presence
   end
 
-  def columns_aliases_only_sql(attribute_names = @attributes)
+  def columns_aliases_only_sql(attribute_names)
     columns_with_aliases(attribute_names).map do |col|
       db.quote_column_name col[:column_alias]
     end.join(', ').presence

@@ -229,34 +229,6 @@ private
     'non_compliant_shipments_view'
   end
 
-  # Allowed attributes
-  ATTRIBUTES = {
-    id: 'id',
-    year: 'year',
-    appendix: 'appendix',
-    importer: 'importer',
-    importer_iso: 'importer_iso',
-    importer_id: 'importer_id',
-    exporter: 'exporter',
-    exporter_iso: 'exporter_iso',
-    exporter_id: 'exporter_id',
-    term: 'term',
-    term_id: 'term_id',
-    unit: 'unit',
-    purpose: 'purpose',
-    source: 'source',
-    taxon_name: 'taxon_name',
-    genus_name: 'genus_name',
-    family_name: 'family_name',
-    class_name: 'class_name',
-    issue_type: 'issue_type',
-    taxon_concept_id: 'taxon_concept_id'
-  }.freeze
-
-  def attributes
-    ATTRIBUTES
-  end
-
   def importer_exporter_countries(data, importers, year)
     data.map do |k, v|
       unless importers[k]
@@ -294,7 +266,7 @@ private
   end
 
   def group_query
-    columns = sanitised_columns_sql @attributes
+    columns = sanitised_columns_sql @grouping_attribute_names
 
     if columns.blank?
       raise(ArgumentError, 'Missing list of columns')

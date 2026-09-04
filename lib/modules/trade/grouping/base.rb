@@ -25,12 +25,9 @@ class Trade::Grouping::Base
     raise ArgumentError, 'Bad time_range_start' unless opts[:time_range_start].blank? || /\A\d+\z/.match?(opts[:time_range_start])
     raise ArgumentError, 'Bad unit_id' unless opts[:unit_id].blank? || /\A[\w,]+\z/.match?(opts[:unit_id])
 
-
     @grouping_attribute_names = self.class.build_grouping_attributes(
       @opts[:group_by], @opts[:locale]
     )
-
-    @attributes = sanitise_params(@grouping_attribute_names)
 
     @locale = @opts[:locale]
     @condition = sanitised_condition_sql
@@ -157,7 +154,7 @@ protected
   end
 
   def group_query
-    columns = sanitised_columns_sql @attributes
+    columns = sanitised_columns_sql @grouping_attribute_names
 
     <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt
