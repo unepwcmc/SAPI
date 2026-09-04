@@ -1,5 +1,5 @@
 shared_context 'Shipments' do
-  before(:each) do
+  before do
     @animal_family = create_cites_eu_family(
       parent: create_cites_eu_order(
         parent: cites_eu_mammalia
@@ -28,12 +28,12 @@ shared_context 'Shipments' do
     )
     create_cites_I_addition(
       taxon_concept: @animal_species,
-      effective_at: 1.day.ago,
+      effective_at: Time.zone.parse('2015-06-01'),
       is_current: true
     )
     create_cites_I_addition(
       taxon_concept: @animal_species2,
-      effective_at: 1.day.ago,
+      effective_at: Time.zone.parse('2015-06-01'),
       is_current: true
     )
     @plant_genus = create_cites_eu_genus(
@@ -99,13 +99,13 @@ shared_context 'Shipments' do
       iso_code2: 'PT'
     )
 
-    @term_cav = create(:term, code: 'CAV')
-    @term_liv = create(:term, code: 'LIV')
-    @unit = create(:unit, code: 'KIL')
-    @purpose = create(:purpose, code: 'T')
-    @source = create(:source, code: 'C')
-    @source_wild = create(:source, code: 'W')
-    @source_unknown = create(:source, code: 'U')
+    @term_cav = create(:term, code: 'CAV', name_en: 'caviar')
+    @term_liv = create(:term, code: 'LIV', name_en: 'live', name_es: 'vivo', name_fr: 'vivant')
+    @unit = create(:unit, code: 'KIL', name_en: 'Kilometres')
+    @purpose = create(:purpose, code: 'T', name_en: 'Commercial',)
+    @source = create(:source, code: 'C', name_en: 'Caprive-bred animals')
+    @source_wild = create(:source, code: 'W', name_en: 'Wild')
+    @source_unknown = create(:source, code: 'U', name_en: 'Source unknown')
     @import_permit = create(:permit, number: 'AAA')
     @export_permit1 = create(:permit, number: 'BBB')
     @export_permit2 = create(:permit, number: 'CCC')

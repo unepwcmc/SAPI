@@ -15,7 +15,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     2011 => 175
   }.freeze
 
-  def initialize(attributes, opts = {})
+  def initialize(opts = {})
     super
   end
 
@@ -59,8 +59,9 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
 
     res = {}
     # Get all the non-compliant shipments in a given year
-    query = "SELECT * FROM #{shipments_table} WHERE year = #{year}"
+    query = "SELECT * FROM #{shipments_table} WHERE year = #{db.quote year}"
     shipments = db.execute(query)
+
     return [] unless shipments.first
 
     # Loop through all the non-compliant shipments
@@ -80,6 +81,7 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
         end
       end
     end
+
     # Calculate percentages
     shipments_no = shipments.count
     conversion.map do |group, values|
@@ -94,29 +96,40 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
 
   def build_hash(data, params)
     hash, array = {}, []
-    if params[:group_by].include?('commodity') || params[:group_by].include?('species')
+    group_by = params[:group_by] || []
+
+    if group_by.include?('commodity') || group_by.include?('species')
       hash[params[:year]] = data.map { |d| d.except('year', 'percent') }
-    elsif params[:group_by].include?('exporting')
-      _grouping_attributes = Array.new(GROUPING_ATTRIBUTES[:importing]) << 'year'
-      importers = Trade::Grouping::Compliance.new(_grouping_attributes, params).run
+    elsif group_by.include?('exporting')
+      importers = Trade::Grouping::Compliance.new(
+        params.merge(group_by: 'importing')
+      ).run
+
       data, importers = data.group_by { |d| d['exporter'] }, importers.group_by { |d| d['importer'] }
+
       sum = importer_exporter_countries(data, importers, params[:year])
       keys = sum.map { |s| s.keys }.flatten
       imp = only_importer_countries(importers, keys, params[:year])
+
       imp_hash, exp_hash = {}, {}
       imp.each { |el| el.each { |key, value| imp_hash[key] = value } }
       sum.each { |el| el.each { |key, value| exp_hash[key] = value } }
+
       merged_hash = imp_hash.merge(exp_hash)
+
       merged_hash =
         merged_hash.map do |k, v|
           { "#{k}": merged_hash[k].merge(percentage: (v[:cnt] * 100.0 / v[:total_cnt]).round(2)) }
         end
+
       merged_hash.each do |country|
         country.values.first.merge!(country: country.keys.first.to_s)
         array << country.values.first
       end
+
       hash[params[:year]] = array.sort_by { |x| x[:cnt] }.reverse!
     end
+
     hash
   end
 
@@ -174,74 +187,48 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     end
   end
 
-  FILTERING_ATTRIBUTES = {
-    time_range_start: 'year',
-    time_range_end: 'year',
-    year: 'year'
-  }.freeze
-
-  def self.filtering_attributes
-    FILTERING_ATTRIBUTES
-  end
-
-  def self.default_filtering_attributes
+  def filterable_attributes
+    # Note: defaults never worked correctly as with_defaults was not respected,
+    # so removed them as described in:
+    #
+    # https://github.com/unepwcmc/SAPI/pull/1067#discussion_r3821170905
     {
-      time_range_start: 2012,
-      time_range_end: 1.year.ago.year
-    }.freeze
-  end
-  def self.default_filtering_attributes
-    DEFAULT_FILTERING_ATTRIBUTES
+      time_range_start: {
+        column_name: 'year',
+        operator: :gteq,
+        type: :integer
+        # default: 2012
+      },
+      time_range_end: {
+        column_name: 'year',
+        operator: :lteq,
+        type: :integer
+        # default: 1.year.ago.year
+      },
+      year: {
+        column_name: 'year',
+        multiple: false,
+        type: :integer
+      }
+    }
   end
 
-  GROUPING_ATTRIBUTES = {
-    category: [ 'issue_type' ],
-    commodity: [ 'term', 'term_id' ],
-    exporting: [ 'exporter', 'exporter_iso', 'exporter_id' ],
-    importing: [ 'importer', 'importer_iso', 'importer_id' ],
-    species: [ 'taxon_name', 'appendix', 'taxon_concept_id' ],
-    taxonomy: [ '' ]
-  }.freeze
-  def self.grouping_attributes
-    GROUPING_ATTRIBUTES
-  end
-
-  def self.get_grouping_attributes(group, locale = nil)
-    super(group) << 'year'
+  def self.build_grouping_attributes_by_group(locale_arg)
+    {
+      category: [ 'year', 'issue_type' ],
+      commodity: [ 'year', 'term', 'term_id' ],
+      exporting: [ 'year', 'exporter', 'exporter_iso', 'exporter_id' ],
+      importing: [ 'year', 'importer', 'importer_iso', 'importer_id' ],
+      issue_type: [ 'year', 'issue_type' ],
+      species: [ 'year', 'taxon_name', 'appendix', 'taxon_concept_id' ],
+      taxonomy: [ 'year' ]
+    }
   end
 
 private
 
   def shipments_table
     'non_compliant_shipments_view'
-  end
-
-  # Allowed attributes
-  ATTRIBUTES = {
-    id: 'id',
-    year: 'year',
-    appendix: 'appendix',
-    importer: 'importer',
-    importer_iso: 'importer_iso',
-    importer_id: 'importer_id',
-    exporter: 'exporter',
-    exporter_iso: 'exporter_iso',
-    exporter_id: 'exporter_id',
-    term: 'term',
-    term_id: 'term_id',
-    unit: 'unit',
-    purpose: 'purpose',
-    source: 'source',
-    taxon_name: 'taxon_name',
-    genus_name: 'genus_name',
-    family_name: 'family_name',
-    class_name: 'class_name',
-    issue_type: 'issue_type',
-    taxon_concept_id: 'taxon_concept_id'
-  }.freeze
-
-  def attributes
-    ATTRIBUTES
   end
 
   def importer_exporter_countries(data, importers, year)
@@ -281,16 +268,15 @@ private
   end
 
   def group_query
-    columns =
-      if @attributes
-        @attributes.compact.uniq.join(',')
-      else
-        attributes.values.join(',')
-      end
+    columns = sanitised_columns_sql @grouping_attribute_names
+
+    if columns.blank?
+      raise(ArgumentError, 'Missing list of columns')
+    end
 
     <<-SQL.squish
       SELECT #{columns}, COUNT(*) AS cnt, 100.0*COUNT(*)/(SUM(COUNT(*)) OVER (PARTITION BY year)) AS percent
-      FROM non_compliant_shipments_view
+      FROM #{shipments_table}
       WHERE #{@condition}
       GROUP BY #{columns}
       ORDER BY percent DESC
@@ -299,32 +285,23 @@ private
   end
 
   def countries_reported(year)
+    year_shipments = Trade::NonCompliantShipmentsView.where(year:)
+
+    exporters_sql = year_shipments.select({ importer: :country, importer_iso: :iso }).distinct.to_sql
+    importers_sql = year_shipments.select({ exporter: :country, exporter_iso: :iso }).distinct.to_sql
+
     sql = <<-SQL.squish
       SELECT COUNT(*) AS cnt
       FROM(
-        (
-          SELECT DISTINCT importer AS country, importer_iso AS iso
-          FROM #{shipments_table}
-          WHERE year = #{year}
-        )
-        UNION
-        (
-          SELECT DISTINCT exporter AS country, exporter_iso AS iso
-          FROM #{shipments_table}
-          WHERE year = #{year}
-        )
+        (#{exporters_sql})
+      UNION
+        (#{importers_sql})
       ) AS countries
     SQL
 
     countries_reported = db.execute(sql).first['cnt'].to_i
 
-    sql = <<-SQL.squish
-      SELECT COUNT(*) AS cnt
-      FROM #{shipments_table}
-      WHERE year = #{year}
-    SQL
-
-    issues_reported = db.execute(sql).first['cnt'].to_i
+    issues_reported = Trade::NonCompliantShipmentsView.where(year:).count
 
     {
       year: year,
@@ -350,26 +327,26 @@ private
     false
   end
 
-  # def sanitise_condition(condition)
-  #  # TODO
-  #  return nil if condition.blank?
-  #  condition.map do |key, value|
-  #    if value.is_a?(Array)
-  #      "#{ATTRIBUTES[key]} IN (#{value.join(',')})"
-  #    else
-  #      "#{ATTRIBUTES[key]} = #{value}"
-  #    end
-  #  end.join(' AND ')
-  # end
-
   def total_ships_exp_cnt(id, year)
-    query_exp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE exporter_id = #{id} AND year = #{year}"
-    db.execute(query_exp).values.flatten.first.to_i
+    db.execute(
+      <<-SQL.squish
+        SELECT COUNT(*)
+        FROM trade_shipments_with_taxa_view
+        WHERE exporter_id = #{db.quote id}
+        AND year = #{db.quote year}
+      SQL
+    ).values.flatten.first.to_i
   end
 
   def total_ships_imp_cnt(id, year)
-    query_imp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE importer_id = #{id} AND year = #{year}"
-    db.execute(query_imp).values.flatten.first.to_i
+    db.execute(
+      <<-SQL.squish
+        SELECT COUNT(*)
+        FROM trade_shipments_with_taxa_view
+        WHERE importer_id = #{db.quote id}
+        AND year = #{db.quote year}
+      SQL
+    ).values.flatten.first.to_i
   end
 
   # Used in the base class to not skip taxon_id equality check.

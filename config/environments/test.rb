@@ -78,4 +78,5 @@ Rails.application.configure do
   }
 
   Rails.application.credentials.secret_key_base = Rails.application.credentials.secret_key_base.presence || SecureRandom.hex(64)
+  Rails.application.credentials.shipments_api_token = Rails.application.credentials.shipments_api_token.presence || SecureRandom.hex(64)
 end

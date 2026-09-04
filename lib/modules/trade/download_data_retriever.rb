@@ -16,71 +16,82 @@ module Trade::DownloadDataRetriever
   def self.dashboard_download(params)
     return taxonomic_download(params) if params[:type] == 'taxonomy'
 
+    default_year_range = 2012..(Date.today.year - 1)
+
     query =
-      if params[:year].present?
-        if params[:type].present?
+      Trade::NonCompliantShipmentsView.select(
+        ATTRIBUTES
+      ).where(
+        [
+          { year: params[:year].presence || default_year_range },
+
           if params[:type] == 'species'
-            "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]} AND #{ID_MAPPING[params[:type].to_sym]} IN (#{params[:ids]}) AND appendix = '#{params[:appendix]}'"
-          else
-            "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]} AND #{ID_MAPPING[params[:type].to_sym]} IN (#{params[:ids]})"
+            {
+              taxon_concept_id: sanitise_integer_array(params[:ids], 'ids'),
+              appendix: params[:appendix]&.split(',')
+            }
+          end,
+
+          if params[:compliance_type].presence
+            { issue_type: sanitize_compliance_param(params[:compliance_type]) }
           end
-        elsif params[:compliance_type].present?
-          "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]} AND issue_type = '#{sanitize_compliance_param(params[:compliance_type])}'"
-        else
-          "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year = #{params[:year]}"
-        end
-      else
-        "SELECT #{ATTRIBUTES.join(',')} FROM non_compliant_shipments_view WHERE year >= '2012' AND year <= '#{Date.today.year - 1}' ORDER BY year DESC"
-      end
+        ].compact.reduce(&:merge)
+      ).order(
+        year: :desc
+      ).to_sql
+
     query_runner(query)
   end
 
   def self.search_download(params)
-    id = params[:ids]
+    ids = sanitise_integer_array(params[:ids], 'ids')
     year = params[:year]
-    return [] if id.empty?
 
-    query =
+    return [] if ids.empty?
+
+    query_condition =
       case params[:group_by]
-      when 'exporting'
-        <<-SQL.squish
-               SELECT #{ATTRIBUTES.join(',')}
-               FROM non_compliant_shipments_view
-               WHERE year = #{year}
-               AND (exporter_id IN (#{id}) OR importer_id IN (#{id}))
-        SQL
+      when 'importing', 'exporting'
+        arel_table = Trade::NonCompliantShipmentsView.arel_table
+
+        arel_table[:exporter_id].in(ids).or(
+          arel_table[:importer_id].in(ids)
+        )
       when 'species'
         appendix = params[:appendix]
         if appendix.present?
-          <<-SQL.squish
-                SELECT #{ATTRIBUTES.join(',')}
-                FROM non_compliant_shipments_view
-                WHERE year = #{year}
-                AND taxon_concept_id IN (#{id})
-                AND appendix = '#{appendix}'
-          SQL
+          {
+            taxon_concept_id: ids,
+            appendix: appendix
+          }
         else
-          <<-SQL.squish
-                SELECT #{ATTRIBUTES.join(',')}
-                FROM non_compliant_shipments_view
-                WHERE year = #{year}
-                AND taxon_concept_id IN (#{id})
-          SQL
+          { taxon_concept_id: ids }
         end
       when 'commodity'
-        <<-SQL.squish
-               SELECT #{ATTRIBUTES.join(',')}
-               FROM non_compliant_shipments_view
-               WHERE year = #{year}
-               AND term_id IN (#{id})
-        SQL
+        { term_id: ids }
+      else
+        # We do not know what `ids` represents
+        return []
       end
+
+      query =
+        Trade::NonCompliantShipmentsView.select(
+          ATTRIBUTES
+        ).where(
+          year: year
+        ).where(
+          query_condition
+        ).to_sql
+
     query_runner(query)
   end
 
+  # - `params[:year]` required
+  # - `params[:ids]` required: a group like 'Plants' (not sure why it's `ids`)
   def self.taxonomic_download(params)
-    mapping = Trade::Grouping::Compliance.new('').read_taxonomy_conversion
+    mapping = Trade::Grouping::Compliance.new().read_taxonomy_conversion
     array_ids = []
+
     mapping[params[:ids]].each do |m|
       rank_name = m[:rank] == 'Species' ? 'taxon' : m[:rank].downcase
 
@@ -90,33 +101,44 @@ module Trade::DownloadDataRetriever
       ids.each { |ob| array_ids << ob['id'] }
       array_ids = plant_timber_distinction(params[:year], mapping, array_ids) if params[:ids].include?('Plants')
     end
+
     return if array_ids.empty?
 
-    query = "SELECT #{ATTRIBUTES.join(',')}
-             FROM non_compliant_shipments_view
-             WHERE year = #{params[:year]}
-             AND id IN (#{array_ids.join(',')})"
+    query =
+      Trade::NonCompliantShipmentsView.select(
+        ATTRIBUTES
+      ).where(
+        year: params[:year],
+        id: array_ids
+      ).to_sql
+
     query_runner(query)
   end
 
   def self.ids_query(year, id, rank, taxon)
-    "SELECT id FROM non_compliant_shipments_view
-     WHERE year = #{year}
-     AND #{ids_query_condition(id, rank, taxon)}"
-  end
-
-  def self.ids_query_condition(id, rank, taxon)
-    id.include?('Plants') ? 'class_id IS NULL' : "#{rank}_name = '#{taxon}'"
+    Trade::NonCompliantShipmentsView.select(
+      ATTRIBUTES
+    ).where(
+      year: year,
+    ).where(
+      if id.include?('Plants')
+        { class_id: nil }
+      else
+        { "#{rank}_name": taxon }
+      end
+    ).to_sql
   end
 
   def self.plant_timber_distinction(year, mapping, array)
     timber_ids = []
+
     mapping['Timber'].each do |mapp|
       rank_name = mapp[:rank] == 'Species' ? 'taxon' : mapp[:rank].downcase
       ids_query = ids_query(year, 'Timber', rank_name, mapp[:taxon_name])
       ids = query_runner(ids_query)
       ids.each { |ob| timber_ids << ob['id'] }
     end
+
     array.reject { |el| timber_ids.include? el }
   end
 
@@ -132,5 +154,9 @@ module Trade::DownloadDataRetriever
 
   def self.query_runner(query)
     ApplicationRecord.connection.execute(query)
+  end
+
+  def self.sanitise_integer_array(original, param_name_for_error)
+    Trade::Grouping::Base.sanitise_integer_array(original, param_name_for_error)
   end
 end

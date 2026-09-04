@@ -11,6 +11,7 @@ describe Trade::ShipmentsController, sidekiq: :inline do
       get :index, format: :json
       expect(response.body).to have_json_size(7).at_path('shipments')
     end
+
     it 'should return genus & species shipments when searching by genus' do
       get :index, params: { taxon_concepts_ids: [ @animal_genus.id ], format: :json }
       expect(response.body).to have_json_size(2).at_path('shipments')
