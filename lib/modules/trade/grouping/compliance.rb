@@ -126,8 +126,10 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
         country.values.first.merge!(country: country.keys.first.to_s)
         array << country.values.first
       end
+
       hash[params[:year]] = array.sort_by { |x| x[:cnt] }.reverse!
     end
+
     hash
   end
 
@@ -283,32 +285,23 @@ private
   end
 
   def countries_reported(year)
+    year_shipments = Trade::NonCompliantShipmentsView.where(year:)
+
+    exporters_sql = year_shipments.select({ importer: :country, importer_iso: :iso }).distinct.to_sql
+    importers_sql = year_shipments.select({ exporter: :country, exporter_iso: :iso }).distinct.to_sql
+
     sql = <<-SQL.squish
       SELECT COUNT(*) AS cnt
       FROM(
-        (
-          SELECT DISTINCT importer AS country, importer_iso AS iso
-          FROM #{shipments_table}
-          WHERE year = #{db.quote year}
-        )
-        UNION
-        (
-          SELECT DISTINCT exporter AS country, exporter_iso AS iso
-          FROM #{shipments_table}
-          WHERE year = #{db.quote year}
-        )
+        (#{exporters_sql})
+      UNION
+        (#{importers_sql})
       ) AS countries
     SQL
 
     countries_reported = db.execute(sql).first['cnt'].to_i
 
-    sql = <<-SQL.squish
-      SELECT COUNT(*) AS cnt
-      FROM #{shipments_table}
-      WHERE year = #{db.quote year}
-    SQL
-
-    issues_reported = db.execute(sql).first['cnt'].to_i
+    issues_reported = Trade::NonCompliantShipmentsView.where(year:).count
 
     {
       year: year,
