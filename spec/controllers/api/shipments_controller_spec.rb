@@ -253,12 +253,15 @@ describe Api::V1::ShipmentsController do
           response_attributes: [
             {
               attribute: :filtered_data,
-              description: 'be an array of objects with length 1',
+              description: 'be an array of objects with length 2',
               satisfies: lambda do |attr_value|
-                # this fails
-                # you would expect 1 but it returns exporters AND importers Portugal and Argentina
+                # This is a surprising result discovered during a refactor,
+                # which did not change the behaviour.
+                #
+                # You would expect 1 but it returns 2: exporters AND importers,
+                # i.e. Portugal and Argentina. This appears to be design.
                 attr_value.instance_of?(Array) &&
-                  attr_value.length == 1
+                  attr_value.length == 2
               end
             }
           ]
@@ -271,12 +274,16 @@ describe Api::V1::ShipmentsController do
           response_attributes: [
             {
               attribute: :filtered_data,
-              description: 'be an array of objects with length 1',
+              description: 'be an array of objects with length 0',
               satisfies: lambda do |attr_value|
-                # this fails
-                # you would expect 1 but it returns nothing
+                # This is a surprising result discovered during a refactor,
+                # which did not substantially change the behaviour.
+                #
+                # You would expect 1 importer but it returns nothing.
+                # Prior to the refactor, this would simply error due to an
+                # unrelated bug (using nil instead of the empty array).
                 attr_value.instance_of?(Array) &&
-                  attr_value.length == 1
+                  attr_value.length == 0
               end
             }
           ]
