@@ -289,13 +289,13 @@ private
         (
           SELECT DISTINCT importer AS country, importer_iso AS iso
           FROM #{shipments_table}
-          WHERE year = #{year}
+          WHERE year = #{db.quote year}
         )
         UNION
         (
           SELECT DISTINCT exporter AS country, exporter_iso AS iso
           FROM #{shipments_table}
-          WHERE year = #{year}
+          WHERE year = #{db.quote year}
         )
       ) AS countries
     SQL
@@ -305,7 +305,7 @@ private
     sql = <<-SQL.squish
       SELECT COUNT(*) AS cnt
       FROM #{shipments_table}
-      WHERE year = #{year}
+      WHERE year = #{db.quote year}
     SQL
 
     issues_reported = db.execute(sql).first['cnt'].to_i
@@ -335,13 +335,25 @@ private
   end
 
   def total_ships_exp_cnt(id, year)
-    query_exp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE exporter_id = #{id} AND year = #{year}"
-    db.execute(query_exp).values.flatten.first.to_i
+    db.execute(
+      <<-SQL.squish
+        SELECT COUNT(*)
+        FROM trade_shipments_with_taxa_view
+        WHERE exporter_id = #{db.quote id}
+        AND year = #{db.quote year}
+      SQL
+    ).values.flatten.first.to_i
   end
 
   def total_ships_imp_cnt(id, year)
-    query_imp = "SELECT COUNT(*) FROM trade_shipments_with_taxa_view WHERE importer_id = #{id} AND year = #{year}"
-    db.execute(query_imp).values.flatten.first.to_i
+    db.execute(
+      <<-SQL.squish
+        SELECT COUNT(*)
+        FROM trade_shipments_with_taxa_view
+        WHERE importer_id = #{db.quote id}
+        AND year = #{db.quote year}
+      SQL
+    ).values.flatten.first.to_i
   end
 
   # Used in the base class to not skip taxon_id equality check.
