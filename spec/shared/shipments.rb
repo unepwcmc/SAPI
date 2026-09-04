@@ -1,5 +1,5 @@
 shared_context 'Shipments' do
-  before(:each) do
+  before do
     @animal_family = create_cites_eu_family(
       parent: create_cites_eu_order(
         parent: cites_eu_mammalia
@@ -28,12 +28,12 @@ shared_context 'Shipments' do
     )
     create_cites_I_addition(
       taxon_concept: @animal_species,
-      effective_at: 1.day.ago,
+      effective_at: Time.zone.parse('2015-06-01'),
       is_current: true
     )
     create_cites_I_addition(
       taxon_concept: @animal_species2,
-      effective_at: 1.day.ago,
+      effective_at: Time.zone.parse('2015-06-01'),
       is_current: true
     )
     @plant_genus = create_cites_eu_genus(

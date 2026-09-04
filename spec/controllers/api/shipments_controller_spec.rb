@@ -2,8 +2,9 @@ require 'spec_helper'
 
 # This test file is aimed at coverage, to make sure the SQL being produced
 # executes without error. It doesn't guarantee good behaviour, in particular,
-# the shape of the response  and whether the filters supplied to the request
-# are correctly applied.
+# the shape of the response and whether the filters supplied to the request
+# are correctly applied, although at least some cases have been tested where
+# we have observed problems.
 
 def test_endpoints_with(test_cases_by_endpoint)
   test_cases_by_endpoint.entries.map do |controller_endpoint, test_cases|
@@ -61,7 +62,28 @@ describe Api::V1::ShipmentsController do
   include_context 'Shipments'
 
   before do
+    @non_compliant_shipment = create(
+      :shipment,
+      taxon_concept: @animal_species,
+      appendix: 'I',
+      purpose: @purpose,
+      source: @source_wild,
+      term: @term_cav,
+      unit: @unit,
+      importer: @argentina,
+      exporter: @portugal,
+      country_of_origin: @argentina,
+      year: 2016, # must be after appendix I creation date
+      reported_by_exporter: true,
+      import_permit_number: 'XXX',
+      export_permit_number: 'YYY',
+      origin_permit_number: 'ZZZ',
+      ifs_permit_number: '',
+      quantity: 20
+    )
+
     SapiModule::StoredProcedures.rebuild_cites_taxonomy_and_listings
+    SapiModule::StoredProcedures.rebuild_compliance_views
     SapiModule::StoredProcedures.rebuild_trade_plus
   end
 
@@ -176,9 +198,25 @@ describe Api::V1::ShipmentsController do
                   attr_value.values.all? do |year_item|
                     year_item.instance_of?(Array) &&
                       year_item.all? do |item|
-                        item.keys.sort == %w[ cnt percent taxon ]
+                        item.keys.map(&:to_s).sort == %w[ cnt percent taxon ]
                       end
                   end
+              end
+            },
+            {
+              attribute: :data,
+              description: 'have one shipment in 2016',
+              satisfies: lambda do |attr_value|
+                (
+                  # Only one year (2016) is populated
+                  attr_value.values.compact_blank.length == 1 &&
+
+                  # Eight different taxon groups are present in that year
+                  attr_value[:'2016'].length == 8 &&
+
+                  # Only one of those has any shipments
+                  attr_value[:'2016'].pluck(:cnt).reduce(&:+) == 1
+                )
               end
             }
           ]
@@ -195,7 +233,53 @@ describe Api::V1::ShipmentsController do
             id: '',
             page: '1',
             per_page: '25'
-          }
+          },
+          response_attributes: [
+            {
+              attribute: :filtered_data,
+              description: 'be an array of objects with length 0',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 0
+              end
+            }
+          ]
+        },
+        {
+          params: {
+            year: '2016',
+            group_by: 'exporting'
+          },
+          response_attributes: [
+            {
+              attribute: :filtered_data,
+              description: 'be an array of objects with length 1',
+              satisfies: lambda do |attr_value|
+                # this fails
+                # you would expect 1 but it returns exporters AND importers Portugal and Argentina
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 1
+              end
+            }
+          ]
+        },
+        {
+          params: {
+            year: '2016',
+            group_by: 'importing'
+          },
+          response_attributes: [
+            {
+              attribute: :filtered_data,
+              description: 'be an array of objects with length 1',
+              satisfies: lambda do |attr_value|
+                # this fails
+                # you would expect 1 but it returns nothing
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 1
+              end
+            }
+          ]
         }
       ],
 
@@ -443,7 +527,7 @@ describe Api::V1::ShipmentsController do
           # Test ids parsing
           params: {
             appendix: 'I',
-            ids: '[@animal_species.id], [@animal_species2.id]', # override this
+            ids: '[@animal_species2.id], [@animal_species.id]', # override this
             type: 'species'
           },
           build_params: lambda do |ctx, original_params|
@@ -452,19 +536,20 @@ describe Api::V1::ShipmentsController do
               appendix: 'I',
               ids: [
                 # context Shipments sets @animal_species, @animal_species2.
-                ctx.instance_values['animal_species'].id,
-                ctx.instance_values['animal_species2'].id
+                # The non-compliant shipment uses @animal_species - check it is
+                # not thrown away by a `.to_i` on the string
+                ctx.instance_values['animal_species2'].id,
+                ctx.instance_values['animal_species'].id
               ].join(',')
             }
           end,
           response_attributes: [
             {
               attribute: :download_data,
-              description: 'empty array',
+              description: 'array of one shipment',
               satisfies: lambda do |attr_value|
-                # None of the test shipments are non-compliant
                 attr_value.instance_of?(Array) &&
-                  attr_value.length == 0
+                  attr_value.length == 1
               end
             }
           ]
