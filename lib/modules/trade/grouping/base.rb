@@ -94,12 +94,6 @@ protected
   end
 
   ##
-  # This defines which columns are selected and returned
-  def attributes
-    raise NoMethodError
-  end
-
-  ##
   # This defines which attributes can be used for filtering, and how the
   # parameters map to columns and SQL WHERE conditions.
   #
@@ -172,16 +166,16 @@ protected
 private
 
   def sanitise_group(group)
-    return nil unless group
-
-    attributes[group.to_sym]
+    if @grouping_attribute_names.include? group.to_s
+      group.to_s
+    end
   end
 
   def sanitise_params(params_attributes)
     return [] if params_attributes.blank?
 
     Array.wrap(params_attributes.presence || []).compact.uniq.map do |p|
-      attributes[p.to_sym]
+      sanitise_group p
     end.compact
   end
 
@@ -191,6 +185,7 @@ private
 
   def sanitise_pagination(opts)
     page, per_page = [ opts[:page].to_i, opts[:per_page].to_i ]
+
     return {} unless page > 0 || per_page > 0
 
     {
