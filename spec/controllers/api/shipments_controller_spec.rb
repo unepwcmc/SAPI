@@ -563,6 +563,134 @@ describe Api::V1::ShipmentsController do
             }
           ]
         }
+      ],
+      search_download_data: [
+        {
+          params: {
+            group_by: 'exporting'
+          },
+          response_attributes: [
+            {
+              attribute: :download_data,
+              description: 'be an empty array (no ids)',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 0
+              end
+            }
+          ]
+        },
+        {
+          params: {
+            group_by: 'exporting',
+            year: 2016,
+            ids: '[@animal_species2.id], [@animal_species.id]'
+          },
+          build_params: lambda do |ctx, original_params|
+            {
+              **original_params,
+              ids: [
+                ctx.instance_values['argentina'].id,
+                ctx.instance_values['portugal'].id
+              ].join(',')
+            }
+          end,
+          response_attributes: [
+            {
+              attribute: :download_data,
+              description: 'be an array of one record',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 1
+              end
+            }
+          ]
+        },
+        {
+          params: {
+            group_by: 'species',
+            year: 2016,
+            ids: '[@animal_species2.id], [@animal_species.id]'
+          },
+          build_params: lambda do |ctx, original_params|
+            {
+              **original_params,
+              ids: [
+                ctx.instance_values['animal_species2'].id,
+                ctx.instance_values['animal_species'].id
+              ].join(',')
+            }
+          end,
+          response_attributes: [
+            {
+              attribute: :download_data,
+              description: 'be an array of one record',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 1
+              end
+            }
+          ]
+        },
+        {
+
+          params: {
+            group_by: 'species',
+            year: 2016,
+            ids: '[@animal_species2.id]'
+          },
+          build_params: lambda do |ctx, original_params|
+            {
+              group_by: 'species',
+              ids: ctx.instance_values['animal_species2'].id.to_s,
+              year: 2016
+            }
+          end,
+          response_attributes: [
+            {
+              attribute: :download_data,
+              description: 'be an empty array (species does not match)',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 0
+              end
+            }
+          ]
+        }
+      ],
+      search_download_all_data: [
+        {
+          # Test ids parsing
+          params: {
+            appendix: 'I',
+            ids: '[@animal_species2.id], [@animal_species.id]', # override this
+            group_by: 'species',
+            year: 2016
+          },
+          build_params: lambda do |ctx, original_params|
+            {
+              **original_params,
+              appendix: 'I',
+              ids: [
+                # context Shipments sets @animal_species, @animal_species2.
+                # The non-compliant shipment uses @animal_species - check it is
+                # not thrown away by a `.to_i` on the string
+                ctx.instance_values['animal_species2'].id,
+                ctx.instance_values['animal_species'].id
+              ].join(',')
+            }
+          end,
+          response_attributes: [
+            {
+              attribute: :search_download_all_data,
+              description: 'be an array of one shipment',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Array) &&
+                  attr_value.length == 1
+              end
+            }
+          ]
+        }
       ]
     }
   )
