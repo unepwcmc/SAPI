@@ -136,7 +136,13 @@ protected
     raise NoMethodError
   end
 
-  def self.build_grouping_attributes(group_by_param, locale_param)
+  def self.default_group
+    raise NoMethodError
+  end
+
+  def self.build_grouping_attributes(
+    group_by_param = default_group, locale_param
+  )
     return [] if group_by_param.blank?
 
     built_grouping_attributes_by_group =

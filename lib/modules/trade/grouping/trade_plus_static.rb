@@ -78,6 +78,10 @@ private
     'trade_plus_complete_mview'
   end
 
+  def self.default_group
+    :taxonomy
+  end
+
   def filterable_attributes
     # TODO: consider whether some columns take only some of these.
     null_values = [ 'unreported', 'direct', 'items' ]

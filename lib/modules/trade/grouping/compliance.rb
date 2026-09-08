@@ -187,6 +187,10 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
     end
   end
 
+  def self.default_group
+    :taxonomy
+  end
+
   def filterable_attributes
     # Note: defaults never worked correctly as with_defaults was not respected,
     # so removed them as described in:
