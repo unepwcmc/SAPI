@@ -31,6 +31,12 @@ class CommonName < ApplicationRecord
 
   has_many :taxon_commons, dependent: :destroy
 
+  validates :name,
+    format: {
+      with: TRIMMED_REGEX,
+      message: 'should not contain leading or traliling spaces'
+    }
+
   validates :name, presence: true,
     uniqueness: { scope: :language_id }
 
@@ -50,6 +56,10 @@ class CommonName < ApplicationRecord
   def convention_language
     value = self[:convention_language]
     ActiveRecord::Type::Boolean.new.cast(value)
+  end
+
+  def name=(original_value)
+    super(original_value&.to_s&.strip)
   end
 
 private

@@ -15,8 +15,13 @@ class TaxonName < ApplicationRecord
 
   validates :scientific_name, presence: true
 
+  def scientific_name=(original_value)
+    super(original_value&.to_s&.strip)
+  end
+
   def self.sanitize_scientific_name(some_scientific_name)
     last = some_scientific_name && some_scientific_name.split(/\s/).last
+
     (last && last.capitalize) || nil
   end
 end
