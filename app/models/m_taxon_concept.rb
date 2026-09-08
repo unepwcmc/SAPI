@@ -131,16 +131,30 @@ class MTaxonConcept < ApplicationRecord
         # used in the display of the timelines on the checklist website. The
         # checklist display is intended to identify the most important change,
         # and put it last (on top) whereas here we want a more human-readable
-        # order.
+        # order:
+        #
+        # - by date ascending,
+        # - by type, (deletions before additions, then withdrawals before reservations)
+        # - by appendix
+        # - by ISO code of the party, e.g.:
+        #
+        # 2000 III/r AA
+        # 2000 III/r CC
+        # 2001 III/w CC
+        # 2001 III/r AB
+        # 2002 II/del
+        # 2002 I
+        # 2002 II
+        # 2002 III/w AB
         Arel.sql <<-SQL.squish
           effective_at,
-          species_listing_name,
           CASE
           WHEN change_type_name = 'DELETION' THEN 0
           WHEN change_type_name = 'ADDITION' THEN 1
           WHEN change_type_name = 'RESERVATION_WITHDRAWAL' THEN 2
           WHEN change_type_name = 'RESERVATION' THEN 3
           END,
+          species_listing_name,
           party_iso_code
         SQL
       )
