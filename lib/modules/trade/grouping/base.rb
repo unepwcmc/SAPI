@@ -171,20 +171,6 @@ protected
   end
 private
 
-  def sanitise_group(group)
-    if @grouping_attribute_names.include? group.to_s
-      group.to_s
-    end
-  end
-
-  def sanitise_params(params_attributes)
-    return [] if params_attributes.blank?
-
-    Array.wrap(params_attributes.presence || []).compact.uniq.map do |p|
-      sanitise_group p
-    end.compact
-  end
-
   def sanitise_limit(limit)
     limit.is_a?(Integer) ? limit : nil
   end

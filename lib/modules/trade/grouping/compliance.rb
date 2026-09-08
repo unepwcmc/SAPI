@@ -171,14 +171,12 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
   end
 
   def json_by_attribute(data, opts = {})
-    attribute = sanitise_group(opts[:attribute])
-
-    begin
-      raise NoGroupingAttributeError unless attribute
-    rescue => e
-      attribute = 'year'
-      Rails.logger.info(e)
-    end
+    attribute =
+      if @grouping_attribute_names.include? group.to_s
+        group.to_s
+      else
+        'year'
+      end
 
     grouped_data = data.group_by { |d| d[attribute] }
     grouped_data.each do |key, values|
