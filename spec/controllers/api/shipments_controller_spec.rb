@@ -186,6 +186,31 @@ describe Api::V1::ShipmentsController do
             locale: 'en'
           }
         },
+        *(
+          %w[taxonomy category].map do |group_by|
+            {
+              params: {
+                grouping_type: 'Compliance',
+                group_by: group_by
+              },
+              response_attributes: [
+                {
+                  attribute: :data,
+                  description: 'be a Hash keyed by year with values Array<{ taxon, cnt, percent }>',
+                  satisfies: lambda do |attr_value|
+                    attr_value.instance_of?(Hash) &&
+                      attr_value.values.all? do |year_item|
+                        year_item.instance_of?(Array) &&
+                          year_item.all? do |item|
+                            item.keys.map(&:to_s).sort == %w[ cnt percent taxon ]
+                          end
+                      end
+                  end
+                }
+              ]
+            }
+          end
+        ),
         {
           params: {
             grouping_type: 'Compliance',
@@ -356,7 +381,7 @@ describe Api::V1::ShipmentsController do
           response_attributes: [
             {
               attribute: :data,
-              description: 'return three records with codes U, W, nil',
+              description: 'be an array of three records with codes U, W, nil',
               satisfies: lambda do |attr_value|
                 attr_value.instance_of?(Array) &&
                   attr_value.length == 3 &&
@@ -417,7 +442,7 @@ describe Api::V1::ShipmentsController do
           response_attributes: [
             {
               attribute: :data,
-              description: 'return three records with codes U, W, nil',
+              description: 'be an array of three records with codes U, W, nil',
               satisfies: lambda do |attr_value|
                 attr_value.instance_of?(Array) &&
                   attr_value.length == 3 &&
@@ -555,7 +580,7 @@ describe Api::V1::ShipmentsController do
           response_attributes: [
             {
               attribute: :download_data,
-              description: 'array of one shipment',
+              description: 'be an array of one shipment',
               satisfies: lambda do |attr_value|
                 attr_value.instance_of?(Array) &&
                   attr_value.length == 1
