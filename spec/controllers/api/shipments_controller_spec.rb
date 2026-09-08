@@ -62,6 +62,8 @@ describe Api::V1::ShipmentsController do
   include_context 'Shipments'
 
   before do
+    ##
+    # This shipment must be Appendix I, purpose T, source W.
     @non_compliant_shipment = create(
       :shipment,
       taxon_concept: @animal_species,

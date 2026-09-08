@@ -43,6 +43,16 @@ module Trade::DownloadDataRetriever
     query_runner(query)
   end
 
+  ##
+  # This wants at least:
+  #
+  # - `params[:ids]`
+  # - `params[:group_by]`
+  # - `params[:year]`
+  #
+  # And accepts:
+  #
+  # - `params[:appendix]` if `params[:group_by]` is a species
   def self.search_download(params)
     ids = sanitise_integer_array(params[:ids], 'ids')
     year = params[:year]
@@ -59,6 +69,7 @@ module Trade::DownloadDataRetriever
         )
       when 'species'
         appendix = params[:appendix]
+
         if appendix.present?
           {
             taxon_concept_id: ids,
@@ -86,6 +97,7 @@ module Trade::DownloadDataRetriever
     query_runner(query)
   end
 
+  ##
   # - `params[:year]` required
   # - `params[:ids]` required: a group like 'Plants' (not sure why it's `ids`)
   def self.taxonomic_download(params)

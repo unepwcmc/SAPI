@@ -173,6 +173,10 @@ class Api::V1::ShipmentsController < ApplicationController
   end
 
   def search_download_all_data
+    # This does not work for the TradePlusStatic grouping class:
+    # Trade::DownloadDataRetriever is based on Trade::NonCompliantShipmentsView
+    @grouping_class = Trade::Grouping::Compliance
+
     @grouping_instance = @grouping_class.new(params_unsafely_permitted)
 
     data = @grouping_instance.run
