@@ -186,31 +186,48 @@ describe Api::V1::ShipmentsController do
             locale: 'en'
           }
         },
-        *(
-          %w[taxonomy category].map do |group_by|
+        {
+          params: {
+            grouping_type: 'Compliance',
+            group_by: 'category'
+          },
+          response_attributes: [
             {
-              params: {
-                grouping_type: 'Compliance',
-                group_by: group_by
-              },
-              response_attributes: [
-                {
-                  attribute: :data,
-                  description: 'be a Hash keyed by year with values Array<{ taxon, cnt, percent }>',
-                  satisfies: lambda do |attr_value|
-                    attr_value.instance_of?(Hash) &&
-                      attr_value.values.all? do |year_item|
-                        year_item.instance_of?(Array) &&
-                          year_item.all? do |item|
-                            item.keys.map(&:to_s).sort == %w[ cnt percent taxon ]
-                          end
+              attribute: :data,
+              description: 'be a Hash keyed by year with values Array<{ issue_type, percent, value, year }>',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Hash) &&
+                  attr_value.values.all? do |year_item|
+                    year_item.instance_of?(Array) &&
+                      year_item.all? do |item|
+                        item.keys.map(&:to_s).sort == %w[ issue_type percent value year ]
                       end
                   end
-                }
-              ]
+              end
             }
-          end
-        ),
+          ]
+        },
+        {
+          params: {
+            grouping_type: 'Compliance',
+            group_by: 'exporting'
+          },
+          response_attributes: [
+            {
+              attribute: :data,
+              description: 'be a Hash keyed by year with values Array<{ exporter, exporter_id, exporter_iso, percent, value, year }>',
+              satisfies: lambda do |attr_value|
+                attr_value.instance_of?(Hash) &&
+                  attr_value.values.all? do |year_item|
+                    year_item.instance_of?(Array) &&
+                      year_item.all? do |item|
+                        item.keys.map(&:to_s).sort == %w[ exporter exporter_id exporter_iso percent value year ]
+                      end
+                  end
+              end
+            }
+          ]
+        },
         {
           params: {
             grouping_type: 'Compliance',
