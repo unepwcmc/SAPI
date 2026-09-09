@@ -172,8 +172,8 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
 
   def json_by_attribute(data, opts = {})
     attribute =
-      if @grouping_attribute_names.include? group.to_s
-        group.to_s
+      if @grouping_attribute_names.include? opts[:attribute].to_s
+        opts[:attribute].to_s
       else
         'year'
       end

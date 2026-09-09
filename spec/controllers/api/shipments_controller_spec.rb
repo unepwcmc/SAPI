@@ -141,6 +141,39 @@ describe Api::V1::ShipmentsController do
             }
           end
         ),
+        *(
+          {
+            category: %w[ percent value year issue_type ],
+            commodity: %w[ percent value year term term_id ],
+            exporting: %w[ percent value year exporter exporter_iso exporter_id ],
+            importing: %w[ percent value year importer importer_iso importer_id ],
+            issue_type: %w[ percent value year issue_type ],
+            species: %w[ percent value year taxon_name appendix taxon_concept_id ],
+            taxonomy: %w[ cnt percent taxon ]
+          }.map do |group_by, expected_keys|
+            {
+              params: {
+                grouping_type: 'Compliance',
+                group_by: group_by
+              },
+              response_attributes: [
+                {
+                  attribute: :data,
+                  description: "be an array of objects with keys #{expected_keys}",
+                  satisfies: lambda do |attr_value|
+                    attr_value.instance_of?(Hash) &&
+                      attr_value.values.all? do |year_item|
+                        year_item.instance_of?(Array) &&
+                          year_item.all? do |item|
+                            item.keys.map(&:to_s).sort == expected_keys.sort
+                          end
+                      end
+                  end
+                }
+              ]
+            }
+          end
+        ),
         *[
           # check that :downcase works
           {
