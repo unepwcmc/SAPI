@@ -23,10 +23,8 @@ jobs:
       CAPTIVE_BREEDING_DATABASE_PASSWORD: ${{ secrets.CAPTIVE_BREEDING_DATABASE_PASSWORD }}
       CAPTIVE_BREEDING_DATABASE_PORT: ${{ secrets.CAPTIVE_BREEDING_DATABASE_PORT }}
       CAPTIVE_BREEDING_DATABASE_USERNAME: ${{ secrets.CAPTIVE_BREEDING_DATABASE_USERNAME }}
-      CERTIFICATE_PEM: ${{ secrets.CERTIFICATE_PEM }}
       MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
       MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-      PRIVATE_KEY_PEM: ${{ secrets.PRIVATE_KEY_PEM }}
       RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       SAPI_DATABASE_HOST: ${{ secrets.SAPI_DATABASE_HOST }}
       SAPI_DATABASE_NAME: ${{ secrets.SAPI_DATABASE_NAME }}
@@ -61,6 +59,86 @@ jobs:
           commit-message: ${{ github.event.head_commit.message || 'Manual workflow trigger' }}
           runner-name: ${{ runner.name }}
           start-time: ${{ env.START_TIME }}
+
+      # The *.internal.unep-wcmc.org wildcard is renewed by certbot on
+      # wcmc-n8n-devops-01 and pushed to this host by
+      # /opt/internal-tls/distribute-internal-wildcard.sh, which fans it into every
+      # kamal-proxy app store via kamal-tls-sync. Reading it live, here, is what
+      # stops a deploy putting a different one back.
+      #
+      # It used to come from the CERTIFICATE_PEM / PRIVATE_KEY_PEM environment
+      # secrets. Those are snapshots: they go stale the moment the wildcard is
+      # renewed, and nothing ever updated them. Every deploy replayed a months-old
+      # cert over the good one. On 2026-09-08 this workflow put an Aug 24 cert back
+      # on a host the fleet job had repaired on Sep 4 -- TLS broke for all six
+      # staging apps behind kamal-proxy, cloudflared could no longer verify the
+      # origin, and TradeView's charts silently returned null for a day.
+      #
+      # Production does not need this: it uses `ssl: true` and kamal-proxy gets its
+      # own cert from Let's Encrypt.
+      - name: Read internal wildcard TLS from the deploy host
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          # The staging web host from config/deploy.staging.yml.
+          TLS_HOST: 172.20.0.146
+          TLS_USER: wcmc
+          TLS_BASE: /etc/ssl/kamal/star.internal.unep-wcmc.org
+        run: |
+          set -euo pipefail
+
+          key_file="$(mktemp)"
+          trap 'rm -f "$key_file"' EXIT
+          chmod 600 "$key_file"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$key_file"
+
+          fetch() {
+            ssh -i "$key_file" \
+                -o IdentitiesOnly=yes -o BatchMode=yes \
+                -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 \
+                "${TLS_USER}@${TLS_HOST}" "cat $1"
+          }
+
+          cert="$(fetch "${TLS_BASE}.crt")"
+          pkey="$(fetch "${TLS_BASE}.key")"
+
+          if [ -z "$cert" ] || [ -z "$pkey" ]; then
+            echo "::error::Read an empty cert or key from ${TLS_HOST}:${TLS_BASE}.*"
+            exit 1
+          fi
+
+          # Mask before anything else can echo it. The key is no longer a GitHub
+          # secret, so nothing masks it for us.
+          while IFS= read -r line; do
+            [ -n "$line" ] && echo "::add-mask::$line"
+          done <<< "$pkey"
+
+          # Refuse to ship a cert that is dead or dying. Deploying one is precisely
+          # the failure this step exists to prevent, and stopping here is far
+          # cheaper than six apps quietly serving it.
+          if ! openssl x509 -checkend 604800 -noout <<< "$cert" >/dev/null; then
+            echo "::error::Cert at ${TLS_HOST}:${TLS_BASE}.crt has expired or expires within 7 days. Redistribute first: run '/opt/internal-tls/distribute-internal-wildcard.sh sapi-web-staging' on wcmc-n8n-devops-01."
+            exit 1
+          fi
+
+          # A mismatched pair takes kamal-proxy down as surely as an expired cert.
+          cert_pub="$(openssl x509 -noout -pubkey <<< "$cert" | openssl sha256)"
+          key_pub="$(printf '%s\n' "$pkey" | openssl pkey -pubout | openssl sha256)"
+          if [ "$cert_pub" != "$key_pub" ]; then
+            echo "::error::Cert and key read from ${TLS_HOST} do not match"
+            exit 1
+          fi
+
+          echo "TLS from ${TLS_HOST}: $(openssl x509 -noout -subject -enddate <<< "$cert" | tr '\n' ' ')"
+
+          {
+            echo "CERTIFICATE_PEM<<KAMAL_TLS_EOF"
+            printf '%s\n' "$cert"
+            echo "KAMAL_TLS_EOF"
+            echo "PRIVATE_KEY_PEM<<KAMAL_TLS_EOF"
+            printf '%s\n' "$pkey"
+            echo "KAMAL_TLS_EOF"
+          } >> "$GITHUB_ENV"
 
       - name: Validate kamal secrets
         uses: unepwcmc/devops-actions/.github/actions/validate-secrets@v1
