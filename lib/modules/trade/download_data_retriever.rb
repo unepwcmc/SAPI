@@ -101,8 +101,16 @@ module Trade::DownloadDataRetriever
   # - `params[:year]` required
   # - `params[:ids]` required: a group like 'Plants' (not sure why it's `ids`)
   def self.taxonomic_download(params)
-    mapping = Trade::Grouping::Compliance.new().read_taxonomy_conversion
+    mapping =
+      Trade::Grouping::Compliance.new(
+        group_by: 'taxonomy'
+      ).read_taxonomy_conversion
+
     array_ids = []
+
+    if !mapping.has_key? params[:ids]
+      raise(ArgumentError, 'No mapping for this taxonomic group')
+    end
 
     mapping[params[:ids]].each do |m|
       rank_name = m[:rank] == 'Species' ? 'taxon' : m[:rank].downcase

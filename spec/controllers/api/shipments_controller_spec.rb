@@ -637,6 +637,17 @@ describe Api::V1::ShipmentsController do
               end
             }
           ]
+        },
+        {
+          params: {
+            action: 'download_data',
+            appendix: '',
+            compliance_type: '',
+            controller: 'api/v1/shipments',
+            ids: 'Reptiles',
+            type: 'taxonomy', # for some reason, this is type and not group_by
+            year: '2021'
+          }
         }
       ],
       search_download_data: [
