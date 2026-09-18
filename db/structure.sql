@@ -12676,6 +12676,79 @@ ALTER SEQUENCE public.listing_distributions_id_seq OWNED BY public.listing_distr
 
 
 --
+-- Name: mapping_matches; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mapping_matches (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    matchable_taxonomy_id bigint NOT NULL,
+    taxon_nid character varying NOT NULL,
+    foreign_matchable_taxonomy_id bigint NOT NULL,
+    foreign_taxon_nid character varying NOT NULL,
+    matched_name character varying NOT NULL,
+    matched_name_status character varying NOT NULL,
+    foreign_matched_name character varying NOT NULL,
+    foreign_matched_name_status character varying NOT NULL,
+    match_confidence character varying NOT NULL,
+    exclude boolean DEFAULT false NOT NULL,
+    source_file character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mapping_taxa; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mapping_taxa (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    matchable_taxonomy_id bigint NOT NULL,
+    taxon_nid character varying,
+    accepted_taxon_nid character varying,
+    name_status character varying NOT NULL,
+    rank_id integer,
+    scientific_name character varying NOT NULL,
+    author_year character varying,
+    source_file character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: matchable_taxonomies; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.matchable_taxonomies (
+    id bigint NOT NULL,
+    code character varying NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: matchable_taxonomies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.matchable_taxonomies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: matchable_taxonomies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.matchable_taxonomies_id_seq OWNED BY public.matchable_taxonomies.id;
+
+
+--
 -- Name: nomenclature_change_inputs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -139874,6 +139947,13 @@ ALTER TABLE ONLY public.listing_distributions ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: matchable_taxonomies id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.matchable_taxonomies ALTER COLUMN id SET DEFAULT nextval('public.matchable_taxonomies_id_seq'::regclass);
+
+
+--
 -- Name: nomenclature_change_inputs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -183812,6 +183892,30 @@ ALTER TABLE ONLY public.listing_distributions
 
 
 --
+-- Name: mapping_matches mapping_matches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mapping_matches
+    ADD CONSTRAINT mapping_matches_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mapping_taxa mapping_taxa_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mapping_taxa
+    ADD CONSTRAINT mapping_taxa_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: matchable_taxonomies matchable_taxonomies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.matchable_taxonomies
+    ADD CONSTRAINT matchable_taxonomies_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: nomenclature_change_inputs nomenclature_change_inputs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -201826,6 +201930,55 @@ CREATE INDEX index_listing_distributions_on_original_id ON public.listing_distri
 --
 
 CREATE INDEX index_listing_distributions_on_updated_by_id ON public.listing_distributions USING btree (updated_by_id);
+
+
+--
+-- Name: index_mapping_matches_on_foreign_side; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mapping_matches_on_foreign_side ON public.mapping_matches USING btree (foreign_matchable_taxonomy_id, foreign_taxon_nid);
+
+
+--
+-- Name: index_mapping_matches_on_near_side; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mapping_matches_on_near_side ON public.mapping_matches USING btree (matchable_taxonomy_id, taxon_nid);
+
+
+--
+-- Name: index_mapping_taxa_on_accepted_nid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mapping_taxa_on_accepted_nid ON public.mapping_taxa USING btree (matchable_taxonomy_id, taxon_nid) WHERE ((name_status)::text = 'A'::text);
+
+
+--
+-- Name: index_mapping_taxa_on_concept; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mapping_taxa_on_concept ON public.mapping_taxa USING btree (matchable_taxonomy_id, accepted_taxon_nid);
+
+
+--
+-- Name: index_mapping_taxa_on_matchable_taxonomy_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mapping_taxa_on_matchable_taxonomy_id ON public.mapping_taxa USING btree (matchable_taxonomy_id);
+
+
+--
+-- Name: index_mapping_taxa_on_rank_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mapping_taxa_on_rank_id ON public.mapping_taxa USING btree (rank_id);
+
+
+--
+-- Name: index_matchable_taxonomies_on_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_matchable_taxonomies_on_code ON public.matchable_taxonomies USING btree (code);
 
 
 --
@@ -350111,11 +350264,43 @@ ALTER TABLE ONLY public.bulk_downloads
 
 
 --
+-- Name: mapping_matches fk_rails_20773233d2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mapping_matches
+    ADD CONSTRAINT fk_rails_20773233d2 FOREIGN KEY (foreign_matchable_taxonomy_id) REFERENCES public.matchable_taxonomies(id);
+
+
+--
+-- Name: mapping_matches fk_rails_3c8cf1629c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mapping_matches
+    ADD CONSTRAINT fk_rails_3c8cf1629c FOREIGN KEY (matchable_taxonomy_id) REFERENCES public.matchable_taxonomies(id);
+
+
+--
+-- Name: mapping_taxa fk_rails_5f86211ff2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mapping_taxa
+    ADD CONSTRAINT fk_rails_5f86211ff2 FOREIGN KEY (matchable_taxonomy_id) REFERENCES public.matchable_taxonomies(id);
+
+
+--
 -- Name: active_storage_variant_records fk_rails_993965df05; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.active_storage_variant_records
     ADD CONSTRAINT fk_rails_993965df05 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
+
+
+--
+-- Name: mapping_taxa fk_rails_a5248d7db8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mapping_taxa
+    ADD CONSTRAINT fk_rails_a5248d7db8 FOREIGN KEY (rank_id) REFERENCES public.ranks(id);
 
 
 --
@@ -351109,6 +351294,9 @@ ALTER TABLE ONLY public.trade_validation_errors
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260918100200'),
+('20260918100100'),
+('20260918100000'),
 ('20260612143100'),
 ('20260612143000'),
 ('20260611103000'),
