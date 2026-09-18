@@ -1,0 +1,26 @@
+# Base importer — canonical copy lives in project-template.
+# Paths are relative to this file, so this manifest stays valid wherever the
+# directory is copied to in a client project.
+#
+#   ruby scripts/checksum.rb rails-api/app/services/importer
+#
+# 'include' is an allowlist: only what is listed here is tracked. Directories
+# are recursive, so a new file under parsers/ or loaders/ does change the
+# checksum, which is what we want — that is the shared code drifting.
+#
+# Everything else in this directory is deliberately out of scope and needs no
+# 'exclude' entry: the docs, this manifest, and CHANGELOG.md (which records the
+# checksum, so it could never be part of it). Application-specific example
+# importers (post_*_importer.rb) live outside this directory entirely, in
+# app/services/importers/ (plural) - this directory stays agnostic to any one
+# application.
+
+include:
+  - base.rb                              # entry point / facade + orchestration
+  - concerns/                            # config DSL + subclass-overridable hooks
+  - logger.rb                            # #logs
+  - row_transformer.rb                   # cast pipeline + derived/belongs_to validation
+  - parsers.rb                           # file-format -> parser class registry
+  - parsers/                             # CSV and Excel (.xlsx) file reading
+  - loaders.rb                           # mode -> loader class registry
+  - loaders/                             # the modes we support
