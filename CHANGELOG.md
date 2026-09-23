@@ -1,3 +1,7 @@
+### 1.22.1
+
+* Rails 7.2 blocks old browsers by default, but this is excessive; they mostly work.
+
 ### 1.22.0
 
 **Rails 8.1 Upgrade**
