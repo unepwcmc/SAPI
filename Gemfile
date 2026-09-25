@@ -116,17 +116,6 @@ group :development do
   # Used to fix capistrano-local-precompile on Ruby 3.2 - see comment in Capfile
   gem 'file_exists', '~> 0.2.0', require: false
 
-  # Deploy with Capistrano
-  gem 'capistrano', '3.18.0', require: false
-  gem 'capistrano-rails', '1.6.3', require: false
-  gem 'capistrano-bundler', '1.6.0', require: false
-  gem 'capistrano-rvm', '0.1.2', require: false
-  gem 'capistrano-maintenance', '1.0.0', require: false
-  gem 'capistrano-passenger', '0.2.0', require: false
-  gem 'capistrano-local-precompile', '1.2.0', require: false # NB: buggy on Ruby 3.2 - see comment in Capfile
-  gem 'capistrano-sidekiq', '~> 2.3', '>= 2.3.1'
-  gem 'slackistrano', '0.1.9', require: false
-
   gem 'jslint_on_rails', '1.1.1'
 
   ##
@@ -138,13 +127,6 @@ group :development do
   gem 'rubocop-rails-omakase'
   gem 'rubocop-rspec'
   gem 'rubocop-rspec_rails'
-
-  ##
-  # For capistrano ssh
-  gem 'rbnacl', '4.0.2'
-  gem 'rbnacl-libsodium', '1.0.16'
-  gem 'bcrypt_pbkdf', '1.1.0'
-  gem 'ed25519', '1.2.4'
 
   ##
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
