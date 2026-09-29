@@ -1,0 +1,133 @@
+<div class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h1>Taxon Mapping</h1>
+    </div>
+
+    <%= render 'upload' %>
+
+    <div class="page-header">
+      <%= link_to 'Manage taxonomies &rarr;'.html_safe, admin_taxon_mappings_taxonomies_path,
+        class: 'btn pull-right' %>
+      <h4>
+        Taxonomies
+        <small><%= @taxonomy_rows.count { |r| r[:names] } %> of <%= @taxonomy_rows.size %> loaded</small>
+      </h4>
+    </div>
+
+    <% if @taxonomy_rows.empty? %>
+      <div class="alert">
+        No taxonomies are registered yet, so nothing can be uploaded and every
+        lookup resolves to nothing.
+        <%= link_to 'Add the first one', admin_taxon_mappings_taxonomies_path %>.
+      </div>
+    <% end %>
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th class="text-right">Names</th>
+          <th class="text-right">Accepted</th>
+          <th>Source file</th>
+          <th>Loaded</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @taxonomy_rows.each do |row| %>
+          <tr class="<%= 'muted' unless row[:names] %>">
+            <td><strong><%= row[:taxonomy].code %></strong> <small><%= row[:taxonomy].name %></small></td>
+            <% if row[:names] %>
+              <td class="text-right"><%= number_with_delimiter(row[:names]) %></td>
+              <td class="text-right"><%= number_with_delimiter(row[:accepted]) %></td>
+              <td><code><%= row[:source_file] %></code></td>
+              <td><%= row[:loaded_at].to_fs(:long) %></td>
+            <% else %>
+              <td class="text-right">&mdash;</td>
+              <td class="text-right">&mdash;</td>
+              <td colspan="2"><span class="label">not loaded</span></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="page-header">
+      <h4>
+        Match pairs
+        <small><%= @pair_rows.count { |r| r[:matches] } %> of <%= @pair_rows.size %> loaded</small>
+      </h4>
+    </div>
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Pair</th>
+          <th class="text-right">Matches</th>
+          <th>Source file</th>
+          <th>Loaded</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pair_rows.each do |row| %>
+          <tr class="<%= 'muted' unless row[:matches] %>">
+            <td><strong><%= row[:near].code %> &harr; <%= row[:far].code %></strong></td>
+            <% if row[:matches] %>
+              <td class="text-right"><%= number_with_delimiter(row[:matches]) %></td>
+              <td><code><%= row[:source_file] %></code></td>
+              <td><%= row[:loaded_at].to_fs(:long) %></td>
+            <% else %>
+              <td class="text-right">&mdash;</td>
+              <td colspan="2"><span class="label">not loaded</span></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <% if @unresolved_rows.empty? %>
+      <%# Collapsed to a line when there is nothing to report: zero is the
+          expected state, and a heading over an empty table reads like a
+          section that failed to load. %>
+      <p class="muted">
+        <strong>Unresolved references:</strong> none. Every match resolves on both sides.
+      </p>
+    <% else %>
+      <div class="page-header">
+        <h4>
+          Unresolved references
+          <small>matches naming a taxon this system does not hold</small>
+        </h4>
+      </div>
+
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th class="text-right">Matches</th>
+            <th>From</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @unresolved_rows.each do |row| %>
+            <tr>
+              <td><strong><%= row[:taxonomy].code %></strong></td>
+              <td class="text-right"><%= number_with_delimiter(row[:unresolved]) %></td>
+              <td>
+                <code><%= row[:source_file] %></code>
+                <% unless row[:taxa_loaded] %>
+                  <span class="label label-warning">no taxa loaded for this platform</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <p class="muted">
+        Zero is the expected state. The file named here is the one that needs replacing.
+      </p>
+    <% end %>
+
+    <%= render 'imports' %>
+  </div>
+</div>

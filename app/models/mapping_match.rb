@@ -83,6 +83,55 @@ class MappingMatch < ApplicationRecord
     )
   end
 
+  # What is loaded, per taxonomy pair. Keyed by the pair's two ids sorted, so a
+  # file that named the platforms the other way round still lands on the same
+  # entry - which orientation a source file used is arbitrary.
+  def self.summary_by_pair
+    group(:matchable_taxonomy_id, :foreign_matchable_taxonomy_id).pluck(
+      Arel.sql('matchable_taxonomy_id'),
+      Arel.sql('foreign_matchable_taxonomy_id'),
+      Arel.sql('count(*)'),
+      Arel.sql('max(source_file)'),
+      Arel.sql('max(created_at)')
+    ).each_with_object({}) do |(near, far, matches, source_file, loaded_at), summary|
+      # The two orientations are separate groups in SQL but one pair here, so
+      # they are folded together rather than one overwriting the other.
+      entry = summary[[ near, far ].sort] ||= { matches: 0, source_file: nil, loaded_at: nil }
+      entry[:matches] += matches
+      entry[:source_file] = [ entry[:source_file], source_file ].compact.max
+      entry[:loaded_at] = [ entry[:loaded_at], loaded_at ].compact.max
+    end
+  end
+
+  # Matches naming a taxon this system does not hold, counted per platform and
+  # source file. The API omits these silently - its join onto mapping_taxa is an
+  # inner one - so this report is the only place they surface.
+  #
+  # Both sides are checked: a match dangles if either end is missing.
+  def self.unresolved_by_source
+    %i[near foreign].flat_map { |side| unresolved_for(side) }
+  end
+
+  def self.unresolved_for(side)
+    taxonomy_column = side == :near ? 'matchable_taxonomy_id' : 'foreign_matchable_taxonomy_id'
+    nid_column = side == :near ? 'taxon_nid' : 'foreign_taxon_nid'
+
+    where(
+      "NOT EXISTS (
+         SELECT 1 FROM mapping_taxa t
+         WHERE t.matchable_taxonomy_id = mapping_matches.#{taxonomy_column}
+           AND t.taxon_nid = mapping_matches.#{nid_column}
+           AND t.name_status = :accepted
+       )",
+      accepted: MappingTaxon::ACCEPTED
+    ).group(taxonomy_column, :source_file).pluck(
+      Arel.sql(taxonomy_column), Arel.sql('source_file'), Arel.sql('count(*)')
+    ).map do |taxonomy_id, source_file, count|
+      { matchable_taxonomy_id: taxonomy_id, source_file: source_file, unresolved: count }
+    end
+  end
+  private_class_method :unresolved_for
+
   # Reduces a freshly imported pair to one row per concept pair. The import
   # writes the file's name-level rows as they come - in the sample 18,186 of
   # them, describing 12,552 concept pairs, because one pair can match through

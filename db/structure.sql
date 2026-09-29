@@ -12402,6 +12402,45 @@ ALTER SEQUENCE public.geo_relationships_id_seq OWNED BY public.geo_relationships
 
 
 --
+-- Name: imports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.imports (
+    id bigint NOT NULL,
+    importable_type character varying,
+    importable_id bigint,
+    kind character varying NOT NULL,
+    params jsonb DEFAULT '{}'::jsonb NOT NULL,
+    status character varying DEFAULT 'pending'::character varying NOT NULL,
+    logs jsonb DEFAULT '[]'::jsonb NOT NULL,
+    started_at timestamp(6) without time zone,
+    finished_at timestamp(6) without time zone,
+    created_by_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: imports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.imports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: imports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.imports_id_seq OWNED BY public.imports.id;
+
+
+--
 -- Name: instruments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -139912,6 +139951,13 @@ ALTER TABLE ONLY public.geo_relationships ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: imports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.imports ALTER COLUMN id SET DEFAULT nextval('public.imports_id_seq'::regclass);
+
+
+--
 -- Name: instruments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -183860,6 +183906,14 @@ ALTER TABLE ONLY public.geo_relationships
 
 
 --
+-- Name: imports imports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.imports
+    ADD CONSTRAINT imports_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: instruments instruments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -201783,6 +201837,34 @@ CREATE INDEX index_geo_relationships_on_geo_relationship_type_id ON public.geo_r
 --
 
 CREATE INDEX index_geo_relationships_on_other_geo_entity_id ON public.geo_relationships USING btree (other_geo_entity_id);
+
+
+--
+-- Name: index_imports_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_imports_on_created_by_id ON public.imports USING btree (created_by_id);
+
+
+--
+-- Name: index_imports_on_importable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_imports_on_importable ON public.imports USING btree (importable_type, importable_id);
+
+
+--
+-- Name: index_imports_on_kind; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_imports_on_kind ON public.imports USING btree (kind);
+
+
+--
+-- Name: index_imports_on_status_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_imports_on_status_and_created_at ON public.imports USING btree (status, created_at);
 
 
 --
@@ -350288,6 +350370,14 @@ ALTER TABLE ONLY public.mapping_taxa
 
 
 --
+-- Name: imports fk_rails_95c52607d5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.imports
+    ADD CONSTRAINT fk_rails_95c52607d5 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: active_storage_variant_records fk_rails_993965df05; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -351294,6 +351384,7 @@ ALTER TABLE ONLY public.trade_validation_errors
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260929140000'),
 ('20260918100200'),
 ('20260918100100'),
 ('20260918100000'),

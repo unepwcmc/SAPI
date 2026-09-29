@@ -23,6 +23,80 @@ describe MappingMatch do
     end
   end
 
+  describe '.summary_by_pair' do
+    it 'counts a pair once however the source file ordered its two sides' do
+      # Which platform a file calls d1 is arbitrary and can differ between
+      # exports, so both orientations have to land on the same entry.
+      match(statuses: 'AA', confidence: 'high')
+      described_class.create!(
+        matchable_taxonomy: iucn, taxon_nid: '9',
+        foreign_matchable_taxonomy: cites, foreign_taxon_nid: '1',
+        matched_name: 'n', matched_name_status: 'A',
+        foreign_matched_name: 'n', foreign_matched_name_status: 'A',
+        match_confidence: 'high', source_file: 'f.csv'
+      )
+
+      expect(described_class.summary_by_pair.values).to contain_exactly(hash_including(matches: 2))
+    end
+
+    it 'keys on the two ids sorted' do
+      match(statuses: 'AA', confidence: 'high')
+
+      expect(described_class.summary_by_pair.keys).to eq [ [ cites.id, iucn.id ].sort ]
+    end
+  end
+
+  describe '.unresolved_by_source' do
+    def taxon(taxonomy, nid, status)
+      MappingTaxon.create!(
+        matchable_taxonomy: taxonomy, taxon_nid: nid, accepted_taxon_nid: nid,
+        name_status: status, scientific_name: 'n', source_file: 't.csv'
+      )
+    end
+
+    it 'counts a match whose own side names a taxon that is not held' do
+      match(statuses: 'AA', confidence: 'high')
+      taxon(iucn, '9', 'A')
+
+      expect(described_class.unresolved_by_source)
+        .to contain_exactly(hash_including(matchable_taxonomy_id: cites.id, unresolved: 1))
+    end
+
+    it 'counts the far side too' do
+      match(statuses: 'AA', confidence: 'high')
+      taxon(cites, '1', 'A')
+
+      expect(described_class.unresolved_by_source)
+        .to contain_exactly(hash_including(matchable_taxonomy_id: iucn.id, unresolved: 1))
+    end
+
+    it 'says nothing when both sides resolve' do
+      match(statuses: 'AA', confidence: 'high')
+      taxon(cites, '1', 'A')
+      taxon(iucn, '9', 'A')
+
+      expect(described_class.unresolved_by_source).to be_empty
+    end
+
+    it 'does not accept a synonym as the taxon a match names' do
+      # A match names an accepted concept. A synonym happening to carry that
+      # identifier is a different row and does not resolve it.
+      match(statuses: 'AA', confidence: 'high')
+      taxon(cites, '1', 'S')
+      taxon(iucn, '9', 'A')
+
+      expect(described_class.unresolved_by_source)
+        .to contain_exactly(hash_including(matchable_taxonomy_id: cites.id, unresolved: 1))
+    end
+
+    it 'names the file the unresolved matches came from' do
+      match(statuses: 'AA', confidence: 'high')
+      taxon(iucn, '9', 'A')
+
+      expect(described_class.unresolved_by_source.first[:source_file]).to eq 'f.csv'
+    end
+  end
+
   describe '.collapse!' do
     it 'keeps the direct match over a synonym-bridged one that scores higher' do
       # The AA pass matches on name without author, so it can never score above

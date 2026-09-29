@@ -57,6 +57,21 @@ class MappingTaxon < ApplicationRecord
     where(matchable_taxonomy: matchable_taxonomy)
   end
 
+  # What is loaded, per platform, for the admin page's resting state. Returns a
+  # hash keyed by matchable_taxonomy_id so the caller can merge it against the
+  # full registry and show the platforms that hold nothing.
+  def self.summary_by_taxonomy
+    group(:matchable_taxonomy_id).pluck(
+      Arel.sql('matchable_taxonomy_id'),
+      Arel.sql('count(*)'),
+      Arel.sql("count(*) FILTER (WHERE name_status = 'A')"),
+      Arel.sql('max(source_file)'),
+      Arel.sql('max(created_at)')
+    ).to_h do |id, names, accepted, source_file, loaded_at|
+      [ id, { names: names, accepted: accepted, source_file: source_file, loaded_at: loaded_at } ]
+    end
+  end
+
   def accepted?
     name_status == ACCEPTED
   end
