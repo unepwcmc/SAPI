@@ -24,11 +24,15 @@ class Importers::MappingTaxaImporter < Importer::Base
 
   derived_attributes %i[matchable_taxonomy_id rank_id source_file]
 
-  attr_reader :matchable_taxonomy
+  attr_reader :matchable_taxonomy, :source_file
 
-  def initialize(file_path:, matchable_taxonomy:)
+  # source_file is the name the file arrived under, which is not the path it is
+  # read from: an upload reaches disk as an ActiveStorage tempfile, and
+  # `ActiveStorage-16851-...xlsx` names nothing anyone can re-export.
+  def initialize(file_path:, matchable_taxonomy:, source_file: nil)
     super(file_path: file_path)
     @matchable_taxonomy = matchable_taxonomy
+    @source_file = source_file || File.basename(file_path)
   end
 
   private
@@ -41,7 +45,7 @@ class Importers::MappingTaxaImporter < Importer::Base
   end
 
   def cast_source_file(_raw_value)
-    File.basename(file_path)
+    source_file
   end
 
   # Stage 1 does not emit a Rank column yet. The column is nullable for exactly

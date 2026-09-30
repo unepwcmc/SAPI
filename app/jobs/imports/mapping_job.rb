@@ -17,7 +17,7 @@ class Imports::MappingJob < ApplicationJob
     return unless import.pending?
 
     import.update!(status: Import::RUNNING, started_at: Time.current)
-    result = with_file { |path| load(path) }
+    result = with_file { |path, source_file| load(path, source_file) }
 
     import.update!(
       status: result.success? ? Import::DONE : Import::FAILED,
@@ -33,7 +33,7 @@ class Imports::MappingJob < ApplicationJob
 
   attr_reader :import
 
-  def load(_path)
+  def load(_path, _source_file)
     raise NotImplementedError
   end
 
@@ -47,9 +47,18 @@ class Imports::MappingJob < ApplicationJob
   # someone meant to upload. ActiveStorage keeps the uploaded name's extension
   # on the tempfile, so it survives the round trip. Whether the file inside is
   # one the importer can read is Importer::Base's to say, not this job's.
+  # Yields the path to read and the name to record with the rows. They differ:
+  # ActiveStorage writes the attachment to a tempfile, so the path is called
+  # something like ActiveStorage-16851-20260930-8-9wqicn.xlsx, which names
+  # nothing anyone could re-export. For a zip it is the member's own name,
+  # which says more about which export it is than the wrapper does.
   def with_file(&)
     import.file.open do |file|
-      zip?(file.path) ? extract(file.path, &) : yield(file.path)
+      if zip?(file.path)
+        extract(file.path, &)
+      else
+        yield(file.path, import.filename)
+      end
     end
   end
 
@@ -67,7 +76,7 @@ class Imports::MappingJob < ApplicationJob
         # destination directory, so an absolute one comes out joined to the
         # working directory. Streaming also keeps a 200 MB member off the heap.
         entry.get_input_stream { |io| File.open(path, 'wb') { |out| IO.copy_stream(io, out) } }
-        yield path
+        yield path, File.basename(entry.name)
       end
     end
   end
