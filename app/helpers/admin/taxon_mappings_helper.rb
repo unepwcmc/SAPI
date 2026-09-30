@@ -24,6 +24,20 @@ module Admin::TaxonMappingsHelper
     entry['retained'] || entry['written']
   end
 
+  # Rendered for the browser to restyle: the app has no time_zone set, so Rails
+  # writes UTC, and whoever uploaded the file was not necessarily in it. The
+  # machine-readable value carries the offset and the JavaScript in
+  # admin/taxon_mapping_upload rewrites the text in the reader's own zone. With
+  # no JavaScript the UTC rendering stands, which is why it says so.
+  def local_time(time)
+    return '&mdash;'.html_safe if time.nil?
+
+    tag.time(
+      "#{time.utc.to_fs(:long)} UTC",
+      datetime: time.utc.iso8601, data: { local_time: true }
+    )
+  end
+
   def import_label_class(import)
     case import.status
     when Import::DONE then 'label-success'

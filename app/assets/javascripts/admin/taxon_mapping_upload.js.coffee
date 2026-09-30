@@ -37,7 +37,17 @@ class TaxonMappingUpload
       e.preventDefault()
       @$progress.text("Upload failed: #{e.originalEvent.detail.error}")
 
+# Server-rendered timestamps are UTC, because the app sets no time zone and the
+# people uploading these files are not all in one. The browser is the only party
+# that knows the reader's own, so it does the formatting.
+showLocalTimes = ->
+  $('time[data-local-time]').each ->
+    parsed = new Date(@getAttribute('datetime'))
+    @textContent = parsed.toLocaleString() unless isNaN(parsed)
+
 $(document).ready ->
+  showLocalTimes()
+
   $form = $('#taxon-mapping-upload')
   new TaxonMappingUpload($form).init() if $form.length
 

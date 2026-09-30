@@ -41,7 +41,7 @@
               <td class="text-right"><%= number_with_delimiter(row[:names]) %></td>
               <td class="text-right"><%= number_with_delimiter(row[:accepted]) %></td>
               <td><code><%= row[:source_file] %></code></td>
-              <td><%= row[:loaded_at].to_fs(:long) %></td>
+              <td><%= local_time(row[:loaded_at]) %></td>
             <% else %>
               <td class="text-right">&mdash;</td>
               <td class="text-right">&mdash;</td>
@@ -75,7 +75,7 @@
             <% if row[:matches] %>
               <td class="text-right"><%= number_with_delimiter(row[:matches]) %></td>
               <td><code><%= row[:source_file] %></code></td>
-              <td><%= row[:loaded_at].to_fs(:long) %></td>
+              <td><%= local_time(row[:loaded_at]) %></td>
             <% else %>
               <td class="text-right">&mdash;</td>
               <td colspan="2"><span class="label">not loaded</span></td>

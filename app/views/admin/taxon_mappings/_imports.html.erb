@@ -28,7 +28,7 @@
     <tbody>
       <% @imports.each do |import| %>
         <tr>
-          <td><%= (import.started_at || import.created_at).to_fs(:long) %></td>
+          <td><%= local_time(import.started_at || import.created_at) %></td>
           <td><code><%= import.filename %></code></td>
           <td><%= import_target(import) %></td>
           <td class="text-right">

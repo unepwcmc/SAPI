@@ -51,6 +51,12 @@ describe 'admin/taxon_mappings/index' do
     expect(rendered).to have_css 'input[type=file][data-direct-upload-url]'
   end
 
+  it "leaves the timestamp for the browser to put in the reader's own zone" do
+    draw
+
+    expect(rendered).to have_css 'time[data-local-time][datetime]'
+  end
+
   it 'says a taxonomy holding nothing is not loaded, rather than showing zero' do
     draw(taxonomy_rows: [ { taxonomy: iucn } ])
 
