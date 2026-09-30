@@ -17,7 +17,7 @@ class Imports::MappingJob < ApplicationJob
     return unless import.pending?
 
     import.update!(status: Import::RUNNING, started_at: Time.current)
-    result = with_csv { |path| load(path) }
+    result = with_file { |path| load(path) }
 
     import.update!(
       status: result.success? ? Import::DONE : Import::FAILED,
@@ -38,16 +38,23 @@ class Imports::MappingJob < ApplicationJob
   end
 
   # Importer::Base reads a path, so the attachment has to reach disk. A bare
-  # CSV is accepted as well as a zip, so a file can be re-run without wrapping
-  # it first.
-  def with_csv(&)
+  # spreadsheet is accepted as well as a zip, so a file can be re-run without
+  # wrapping it first.
+  #
+  # Which it is has to be decided by extension, not by the first four bytes: an
+  # .xlsx is itself a zip, so sniffing the magic number sends one down the
+  # unwrap path and reports the ten parts of its OOXML package as ten files
+  # someone meant to upload. ActiveStorage keeps the uploaded name's extension
+  # on the tempfile, so it survives the round trip. Whether the file inside is
+  # one the importer can read is Importer::Base's to say, not this job's.
+  def with_file(&)
     import.file.open do |file|
       zip?(file.path) ? extract(file.path, &) : yield(file.path)
     end
   end
 
   def zip?(path)
-    File.open(path, 'rb') { |f| f.read(4) } == "PK\x03\x04".b
+    File.extname(path).casecmp?('.zip')
   end
 
   def extract(zip_path)

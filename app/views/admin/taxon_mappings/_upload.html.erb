@@ -3,7 +3,7 @@
 <div class="page-header">
   <h4>
     Upload
-    <small>one zip holding one CSV, or the CSV itself</small>
+    <small>a CSV or XLSX, or a zip holding one of them</small>
   </h4>
 </div>
 
@@ -22,10 +22,11 @@
             through a Puma worker and whatever body limit the proxy enforces.
             The field then submits a signed id, which attach takes as readily
             as an uploaded file. %>
-        <%= f.file_field :file, required: true, accept: '.zip,.csv', direct_upload: true %>
+        <%= f.file_field :file, required: true, accept: '.zip,.csv,.tsv,.xlsx',
+          direct_upload: true %>
         <span class="help-block js-upload-progress">
-          Read as CSV, never split on lines: rows in these exports carry newlines
-          inside quoted fields.
+          A CSV is parsed, never split on lines: rows in these exports carry
+          newlines inside quoted fields.
         </span>
       </div>
     </div>

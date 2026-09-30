@@ -1,4 +1,6 @@
 require 'spec_helper'
+# caxlsx is require: false - it exists to build .xlsx fixtures, nothing else.
+require 'axlsx'
 
 # Imports::MappingJob is abstract, so its shared behaviour is exercised through
 # the taxa subclass; the matches subclass only adds where the far side comes
@@ -15,6 +17,21 @@ describe Imports::MappingJob do
     'd1_Id_Accepted,d1_Scientific.Name,d1_Status,' \
       "d2_Id_Accepted,d2_Scientific.Name,d2_Status,confidence_level,exclude\n" \
       "1,Panthera leo,A,9,Panthera leo,A,high,NA\n"
+  end
+
+  # The same rows the CSV above holds, as a real workbook.
+  def xlsx(csv)
+    rows = CSV.parse(csv)
+    file = Tempfile.new([ 'upload', '.xlsx' ])
+    file.close
+    Axlsx::Package.new do |package|
+      package.workbook.add_worksheet(name: 'Sheet1') do |sheet|
+        rows.each { |row| sheet.add_row row }
+      end
+    end.serialize(file.path)
+    File.binread(file.path)
+  ensure
+    file&.unlink
   end
 
   def zipped(members)
@@ -91,6 +108,33 @@ describe Imports::MappingJob do
       )
 
       expect(run_taxa(filename: 'taxonomies.zip', contents: contents).status).to eq Import::DONE
+    end
+
+    it 'reads a spreadsheet rather than mistaking it for a zip' do
+      # An .xlsx is itself a zip. Routing on the first four bytes would unwrap
+      # it and report the parts of its OOXML package as files someone uploaded.
+      import = import!(filename: 'cites_eu.xlsx', contents: xlsx(taxa_csv))
+
+      Imports::MappingTaxaJob.perform_now(import.id)
+
+      expect(import.reload.status).to eq Import::DONE
+    end
+
+    it 'writes what the spreadsheet held' do
+      import = import!(filename: 'cites_eu.xlsx', contents: xlsx(taxa_csv))
+
+      Imports::MappingTaxaJob.perform_now(import.id)
+
+      expect(MappingTaxon.where(matchable_taxonomy: cites).count).to eq 2
+    end
+
+    it 'unwraps a zip holding a spreadsheet' do
+      contents = zipped('cites_eu.xlsx' => xlsx(taxa_csv))
+      import = import!(filename: 'taxonomies.zip', contents: contents)
+
+      Imports::MappingTaxaJob.perform_now(import.id)
+
+      expect(MappingTaxon.count).to eq 2
     end
 
     it 'refuses a zip holding more than one file' do
