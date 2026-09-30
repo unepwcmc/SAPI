@@ -68,6 +68,24 @@ class MappingMatch < ApplicationRecord
     "#{matched_name_status}#{foreign_matched_name_status}"
   end
 
+  # Sort key, strongest first, by the same rule collapse! uses. An unknown
+  # match type or confidence sorts last rather than raising.
+  def precedence
+    [
+      MATCH_TYPE_PRECEDENCE.fetch(match_type, MATCH_TYPE_PRECEDENCE.values.max + 1),
+      CONFIDENCE_PRECEDENCE.index(match_confidence) || CONFIDENCE_PRECEDENCE.size
+    ]
+  end
+
+  # The confidence as the API reports it: an ordinal, highest strongest, so
+  # `low` is 1 and `verified` is 7. Only the order means anything - the steps
+  # are not equal. A value outside the list is nil. Provisional until R says
+  # whether its vocabulary is stable.
+  def confidence_score
+    index = CONFIDENCE_PRECEDENCE.index(match_confidence)
+    index && (CONFIDENCE_PRECEDENCE.size - index)
+  end
+
   # The scope an upload clears before inserting. A pair has to be matched in
   # either orientation, because which platform the source file called d1 is
   # arbitrary and may differ between exports.
@@ -82,6 +100,88 @@ class MappingMatch < ApplicationRecord
       )
     )
   end
+
+  # Every match for one taxon, read from that taxon's side: whichever
+  # orientation a row was stored in, the queried taxon comes back as the near
+  # side, so taxon_nid, matched_name and match_type all describe it and an
+  # AS stored backwards reads as SA. The far side's accepted name comes along
+  # as foreign_scientific_name and foreign_author_year.
+  #
+  # The join to the far side is an inner one onto accepted names only, so a
+  # match naming a taxon this system does not hold is dropped rather than
+  # returned nameless - unresolved_by_source is where those surface. Excluded
+  # matches are dropped too. Nothing is ordered: how to rank is the caller's
+  # call.
+  #
+  # Does not check the queried taxon itself exists; look it up with
+  # MappingTaxon.lookup first so a wrong id can be told apart from an empty
+  # answer.
+  #
+  # This is the only read of mapping_matches by taxon. Should versioning
+  # arrive, the version filter goes here.
+  def self.resolve(matchable_taxonomy:, taxon_nid:, foreign_matchable_taxonomies: nil)
+    oriented = [
+      oriented_arm(:forward, matchable_taxonomy, taxon_nid),
+      oriented_arm(:backward, matchable_taxonomy, taxon_nid)
+    ].join(' UNION ALL ')
+
+    resolved = sanitize_sql_array(
+      [
+        "SELECT oriented.*,
+              t.scientific_name AS foreign_scientific_name,
+              t.author_year AS foreign_author_year
+       FROM (#{oriented}) AS oriented
+       JOIN mapping_taxa t
+         ON t.matchable_taxonomy_id = oriented.foreign_matchable_taxonomy_id
+        AND t.taxon_nid = oriented.foreign_taxon_nid
+        AND t.name_status = :accepted",
+        { accepted: MappingTaxon::ACCEPTED }
+      ]
+    )
+
+    scope = from("(#{resolved}) AS mapping_matches").readonly
+    return scope if foreign_matchable_taxonomies.nil?
+
+    scope.where(foreign_matchable_taxonomy: foreign_matchable_taxonomies)
+  end
+
+  # Each near-side column and its far-side twin. Reading a row backwards swaps
+  # every pair, which is what turns a stored AS into the SA the caller sees.
+  SIDED_COLUMNS = [
+    %w[matchable_taxonomy_id foreign_matchable_taxonomy_id],
+    %w[taxon_nid foreign_taxon_nid],
+    %w[matched_name foreign_matched_name],
+    %w[matched_name_status foreign_matched_name_status]
+  ].freeze
+  private_constant :SIDED_COLUMNS
+
+  # One half of resolve's union: the rows that name the taxon on one side,
+  # projected so the taxon is always the near side.
+  def self.oriented_arm(direction, matchable_taxonomy, taxon_nid)
+    sided =
+      SIDED_COLUMNS.flat_map do |near, far|
+        if direction == :forward
+          [ "m.#{near}", "m.#{far}" ]
+        else
+          [ "m.#{far} AS #{near}", "m.#{near} AS #{far}" ]
+        end
+      end
+    taxonomy_column, nid_column =
+      direction == :forward ? %w[matchable_taxonomy_id taxon_nid] : %w[foreign_matchable_taxonomy_id foreign_taxon_nid]
+
+    sanitize_sql_array(
+      [
+        "SELECT m.id, #{sided.join(', ')}, m.match_confidence, m.exclude,
+              m.source_file, m.created_at, m.updated_at
+       FROM mapping_matches m
+       WHERE m.#{taxonomy_column} = :taxonomy
+         AND m.#{nid_column} = :taxon_nid
+         AND NOT m.exclude",
+        { taxonomy: matchable_taxonomy.id, taxon_nid: taxon_nid }
+      ]
+    )
+  end
+  private_class_method :oriented_arm
 
   # What is loaded, per taxonomy pair. Keyed by the pair's two ids sorted, so a
   # file that named the platforms the other way round still lands on the same
