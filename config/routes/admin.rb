@@ -112,6 +112,12 @@ namespace :admin do
       controller: 'nomenclature_changes/status_to_synonym'
     resources :status_swap, controller: 'nomenclature_changes/status_swap'
   end
+  resources :taxon_mappings, only: [ :index ]
+  # Reached from the Taxon Mapping page, not from the top bar.
+  namespace :taxon_mappings do
+    resources :taxonomies, only: [ :index, :create, :edit, :update, :destroy ]
+    resources :uploads, only: [ :create ]
+  end
   get 'exports' => 'exports#index'
   get 'exports/download' => 'exports#download' # not sure about this, post??
   get 'stats' => 'statistics#index'

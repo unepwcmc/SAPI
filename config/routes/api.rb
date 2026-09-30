@@ -17,6 +17,10 @@ namespace :api do
     resources :document_geo_entities, only: [ :index ]
     resources :events, only: [ :index ]
     resources :document_tags, only: [ :index ]
+    # The id is CODE:taxon_nid, and a taxon_nid may contain dots, so the
+    # default segment constraint (which stops at a dot) is lifted.
+    resources :intertaxonomic_mappings, only: [ :show ],
+      constraints: { id: %r{[^/]+} }, defaults: { format: :json }
     get '/dashboard_stats/:iso_code' => 'dashboard_stats#index'
     get '/shipments/chart' => 'shipments#chart_query'
     get '/shipments/grouped' => 'shipments#grouped_query'
