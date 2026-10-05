@@ -117,6 +117,7 @@ namespace :admin do
   namespace :taxon_mappings do
     resources :taxonomies, only: [ :index, :create, :edit, :update, :destroy ]
     resources :uploads, only: [ :create ]
+    resources :unresolved_matches, only: [ :index ]
   end
   get 'exports' => 'exports#index'
   get 'exports/download' => 'exports#download' # not sure about this, post??

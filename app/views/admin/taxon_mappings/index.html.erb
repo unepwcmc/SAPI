@@ -90,29 +90,38 @@
           expected state, and a heading over an empty table reads like a
           section that failed to load. %>
       <p class="muted">
-        <strong>Unresolved references:</strong> none. Every match resolves on both sides.
+        <strong>Unresolved references:</strong> none. Every match names a taxon we hold.
       </p>
     <% else %>
       <div class="page-header">
-        <h4>
-          Unresolved references
-          <small>matches naming a taxon this system does not hold</small>
-        </h4>
+        <h4>Unresolved references</h4>
       </div>
+
+      <p>
+        A match names a taxon on each side by id. These ones name a taxon we do
+        not hold, so the match is kept but the API cannot report it &mdash; there
+        is no accepted name to answer with.
+      </p>
 
       <table class="table table-bordered table-striped">
         <thead>
           <tr>
             <th>Platform</th>
             <th class="text-right">Matches</th>
-            <th>From</th>
+            <th>From the export</th>
           </tr>
         </thead>
         <tbody>
           <% @unresolved_rows.each do |row| %>
             <tr>
               <td><strong><%= row[:taxonomy].code %></strong></td>
-              <td class="text-right"><%= number_with_delimiter(row[:unresolved]) %></td>
+              <td class="text-right">
+                <%= link_to number_with_delimiter(row[:unresolved]),
+                  admin_taxon_mappings_unresolved_matches_path(
+                    matchable_taxonomy_id: row[:taxonomy].id,
+                    side: row[:side], source_file: row[:source_file]
+                  ) %>
+              </td>
               <td>
                 <code><%= row[:source_file] %></code>
                 <% unless row[:taxa_loaded] %>
@@ -124,7 +133,11 @@
         </tbody>
       </table>
       <p class="muted">
-        Zero is the expected state. The file named here is the one that needs replacing.
+        Zero is the expected state. Usually it means the export is newer than the
+        taxonomy file loaded for that platform, and the identifier has retired
+        since &mdash; so the file named here is the one to replace. Follow a count
+        to see which identifiers. Nothing is deleted: if a later taxonomy upload
+        brings an identifier back, its matches resolve on their own.
       </p>
     <% end %>
 

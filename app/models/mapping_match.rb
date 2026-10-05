@@ -214,13 +214,34 @@ class MappingMatch < ApplicationRecord
   # inner one - so this report is the only place they surface.
   #
   # Both sides are checked: a match dangles if either end is missing.
+  # Which columns name a taxon, per side. A match names one on each, and either
+  # can fail to resolve.
+  UNRESOLVED_SIDES = {
+    near: %w[matchable_taxonomy_id taxon_nid],
+    foreign: %w[foreign_matchable_taxonomy_id foreign_taxon_nid]
+  }.freeze
+  SIDES = UNRESOLVED_SIDES.keys.freeze
+
   def self.unresolved_by_source
-    %i[near foreign].flat_map { |side| unresolved_for(side) }
+    SIDES.flat_map { |side| unresolved_for(side) }
   end
 
-  def self.unresolved_for(side)
-    taxonomy_column = side == :near ? 'matchable_taxonomy_id' : 'foreign_matchable_taxonomy_id'
-    nid_column = side == :near ? 'taxon_nid' : 'foreign_taxon_nid'
+  # The matches themselves, for one platform and one export. What the summary
+  # counts, listed - so "111 unresolved" can be turned into 111 identifiers
+  # somebody can look up or send back upstream.
+  def self.unresolved(side:, matchable_taxonomy:, source_file:)
+    taxonomy_column, = UNRESOLVED_SIDES.fetch(side)
+
+    unresolved_scope(side)
+      .where(taxonomy_column => matchable_taxonomy.id, source_file: source_file)
+      .order(Arel.sql(UNRESOLVED_SIDES.fetch(side).last))
+  end
+
+  # Matches whose taxon on this side is not an accepted name we hold. Kept, not
+  # deleted: the taxa file may simply not have been uploaded yet, and if a later
+  # one brings the identifier back the match resolves on its own.
+  def self.unresolved_scope(side)
+    taxonomy_column, nid_column = UNRESOLVED_SIDES.fetch(side)
 
     where(
       "NOT EXISTS (
@@ -230,10 +251,20 @@ class MappingMatch < ApplicationRecord
            AND t.name_status = :accepted
        )",
       accepted: MappingTaxon::ACCEPTED
-    ).group(taxonomy_column, :source_file).pluck(
+    )
+  end
+  private_class_method :unresolved_scope
+
+  def self.unresolved_for(side)
+    taxonomy_column, = UNRESOLVED_SIDES.fetch(side)
+
+    unresolved_scope(side).group(taxonomy_column, :source_file).pluck(
       Arel.sql(taxonomy_column), Arel.sql('source_file'), Arel.sql('count(*)')
     ).map do |taxonomy_id, source_file, count|
-      { matchable_taxonomy_id: taxonomy_id, source_file: source_file, unresolved: count }
+      {
+        matchable_taxonomy_id: taxonomy_id, source_file: source_file,
+        unresolved: count, side: side
+      }
     end
   end
   private_class_method :unresolved_for

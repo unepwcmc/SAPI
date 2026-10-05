@@ -69,11 +69,24 @@ describe 'admin/taxon_mappings/index' do
     expect(rendered).to have_no_css 'th', text: 'Side'
   end
 
+  it 'links a count to the matches behind it, so the number can be acted on' do
+    draw(
+      unresolved_rows: [
+        {
+          taxonomy: cites, unresolved: 111, taxa_loaded: true, side: :near,
+          source_file: 'match-results-cites-iucn.csv'
+        }
+      ]
+    )
+
+    expect(rendered).to have_css "a[href*='unresolved_matches']", text: '111'
+  end
+
   it 'names the file behind an unresolved reference' do
     draw(
       unresolved_rows: [
         {
-          taxonomy: cites, unresolved: 119, taxa_loaded: true,
+          taxonomy: cites, unresolved: 119, taxa_loaded: true, side: :near,
           source_file: 'match-results-cites-iucn.csv'
         }
       ]
