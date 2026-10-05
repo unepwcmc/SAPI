@@ -119,9 +119,9 @@ class MappingMatch < ApplicationRecord
   # matches are dropped too. Nothing is ordered: how to rank is the caller's
   # call.
   #
-  # Does not check the queried taxon itself exists; look it up with
-  # MappingTaxon.lookup first so a wrong id can be told apart from an empty
-  # answer.
+  # Does not check the queried taxon itself exists - the caller does that, and
+  # Api::V1::IntertaxonomicMappingsController reports nothing at all when it
+  # does not, so that a missing taxon hides its matches whichever side it is on.
   #
   # This is the only read of mapping_matches by taxon. Should versioning
   # arrive, the version filter goes here.

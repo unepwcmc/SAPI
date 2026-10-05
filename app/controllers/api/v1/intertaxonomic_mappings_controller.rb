@@ -15,6 +15,28 @@ class Api::V1::IntertaxonomicMappingsController < ApplicationController
     return head :not_found if taxonomy.nil? || foreign_taxonomies == :not_found
 
     taxon = MappingTaxon.lookup(matchable_taxonomy: taxonomy, taxon_nid: taxon_nid).first
+
+    render json: {
+      taxon: {
+        taxonomy: taxonomy.code,
+        taxon_nid: taxon_nid,
+        scientific_name: taxon&.scientific_name,
+        author_year: taxon&.author_year
+      },
+      mappings: taxon.nil? ? [] : mappings_for(taxonomy, taxon_nid, foreign_taxonomies)
+    }
+  end
+
+private
+
+  # Nothing is reported for a taxon this system does not hold, even where a
+  # match names it. The far side is already filtered that way by resolve's inner
+  # join, and answering for one side but not the other would mean the same
+  # missing taxon changed the result depending on which end was asked about.
+  #
+  # So a null scientific_name always comes with an empty mappings list, and the
+  # two together mean the taxa export for that platform does not cover this id.
+  def mappings_for(taxonomy, taxon_nid, foreign_taxonomies)
     matches =
       MappingMatch.resolve(
         matchable_taxonomy: taxonomy,
@@ -22,20 +44,8 @@ class Api::V1::IntertaxonomicMappingsController < ApplicationController
         foreign_matchable_taxonomies: foreign_taxonomies
       ).includes(:foreign_matchable_taxonomy)
 
-    render json: {
-      taxon: {
-        taxonomy: taxonomy.code,
-        taxon_nid: taxon_nid,
-        # An id we do not hold is still answered: the taxa exports are not a
-        # complete record of each platform, so it may yet have matches.
-        scientific_name: taxon&.scientific_name,
-        author_year: taxon&.author_year
-      },
-      mappings: ranked(matches).map { |match, rank| mapping_json(match, rank) }
-    }
+    ranked(matches).map { |match, rank| mapping_json(match, rank) }
   end
-
-private
 
   # nil when the caller did not narrow the platforms, :not_found when any code
   # they named is not registered - a typo should not read as "no matches".

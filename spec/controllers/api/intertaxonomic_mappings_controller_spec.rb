@@ -93,10 +93,26 @@ describe Api::V1::IntertaxonomicMappingsController do
   end
 
   it 'answers a taxon it does not hold rather than refusing it' do
-    # The taxa exports are not a complete record of each platform.
     body = fetch('CITES_EU:404')
 
     expect([ response.status, body.dig('taxon', 'scientific_name'), body['mappings'] ]).to eq [ 200, nil, [] ]
+  end
+
+  it 'reports nothing for a taxon it does not hold, even where a match names it' do
+    # A match can reference an id the taxa export leaves out - 112 of the
+    # October matches do. The far side is already filtered that way by the
+    # inner join, so the near side is treated the same: a missing taxon hides
+    # its matches whichever end is asked about.
+    taxon(iucn, '9', 'Patagioenas goodsoni')
+    MappingMatch.create!(
+      matchable_taxonomy: cites, taxon_nid: '9121',
+      foreign_matchable_taxonomy: iucn, foreign_taxon_nid: '9',
+      matched_name: 'Patagioenas goodsoni', matched_name_status: 'S',
+      foreign_matched_name: 'Patagioenas goodsoni', foreign_matched_name_status: 'A',
+      match_confidence: 'medium-high', source_file: 'f.csv'
+    )
+
+    expect(fetch('CITES_EU:9121')['mappings']).to eq []
   end
 
   it 'accepts a taxon id containing a dot' do
