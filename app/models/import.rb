@@ -71,6 +71,10 @@ class Import < ApplicationRecord
   # Callers name the kinds they own. The table holds everyone's imports, and a
   # page that shows another feature's uploads is worse than showing none.
   scope :of_kind, ->(kinds) { where(kind: kinds) }
+  # Started but not finished - queued or being worked on. What counts as
+  # conflicting with one of these is the caller's to decide; the table only
+  # knows that something is still in flight.
+  scope :unfinished, -> { where(status: [ PENDING, RUNNING ]) }
 
   def pending? = status == PENDING
   def running? = status == RUNNING

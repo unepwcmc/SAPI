@@ -24,6 +24,13 @@ class Imports::MappingJob < ApplicationJob
       logs: result.logs,
       finished_at: Time.current
     )
+  rescue ActiveRecord::LockWaitTimeout => e
+    # The upload page refuses a second upload of a scope already in flight, so
+    # reaching here means two slipped through within the same instant. Caught
+    # separately because the raw message is about Postgres row locks and says
+    # nothing an admin could act on.
+    record_failure(e, 'Another import of the same data was already running. Upload this file again.')
+    raise
   rescue StandardError => e
     record_failure(e)
     raise
@@ -94,7 +101,7 @@ class Imports::MappingJob < ApplicationJob
     names.first
   end
 
-  def record_failure(error)
+  def record_failure(error, message = error.message)
     # A failure outside the importer - an unreadable zip, a taxonomy that has
     # since been deleted - leaves no logs, so the message is all there is.
     #
@@ -104,7 +111,7 @@ class Imports::MappingJob < ApplicationJob
     # rubocop:disable Rails/SkipsModelValidations
     import&.update_columns(
       status: Import::FAILED,
-      logs: [ { level: 'error', message: error.message } ],
+      logs: [ { level: 'error', message: message } ],
       finished_at: Time.current,
       updated_at: Time.current
     )
