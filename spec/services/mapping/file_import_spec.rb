@@ -5,8 +5,8 @@ describe Mapping::FileImport do
   let(:iucn) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
 
   let(:taxa_csv) do
-    "Status,Id,Id_Accepted,Scientific.Name,Author\n" \
-      "A,1,1,Panthera leo,Linnaeus\nS,2,1,Felis leo,Schreber\n"
+    "Status,Id,Id_Accepted,Rank,Scientific.Name,Author\n" \
+      "A,1,1,SPECIES,Panthera leo,Linnaeus\nS,2,1,SPECIES,Felis leo,Schreber\n"
   end
   let(:match_headers) do
     'd1_Id_Accepted,d1_Scientific.Name,d1_Status,' \
@@ -30,8 +30,8 @@ describe Mapping::FileImport do
     csv(contents) { |path| described_class.taxa(file_path: path, matchable_taxonomy: into) }
   end
 
-  def import_matches(near: cites, far: iucn)
-    csv("#{match_headers}\n#{match_rows}") do |path|
+  def import_matches(near: cites, far: iucn, headers: match_headers, rows: match_rows)
+    csv("#{headers}\n#{rows}") do |path|
       described_class.matches(
         file_path: path, matchable_taxonomy: near, foreign_matchable_taxonomy: far
       )
@@ -85,6 +85,34 @@ describe Mapping::FileImport do
       import_matches
 
       expect(MappingMatch.sole.match_type).to eq 'AA'
+    end
+
+    describe 'a file that disagrees about which taxonomies it is about' do
+      # The same rows, each stating the pair the other way round.
+      def import_labelled
+        import_matches(
+          headers: "#{match_headers},d1_dataset,d2_dataset",
+          rows: match_rows.lines.map { |row| "#{row.chomp},IUCNRL,CITES_EU\n" }.join
+        )
+      end
+
+      it 'reports a failure rather than raising' do
+        expect(import_labelled).to be_failure
+      end
+
+      it 'says which way round the file actually is' do
+        expect(import_labelled.logs.last[:message]).to include 'other way round'
+      end
+
+      it 'leaves what was already loaded in place' do
+        # The clear runs before the insert, so the guarantee worth testing is
+        # that refusing the file rolls it back rather than emptying the pair.
+        import_matches
+
+        import_labelled
+
+        expect(MappingMatch.count).to eq 1
+      end
     end
 
     it 'clears the pair whichever orientation the file used' do

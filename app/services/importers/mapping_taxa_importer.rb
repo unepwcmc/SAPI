@@ -17,12 +17,13 @@ class Importers::MappingTaxaImporter < Importer::Base
       'Id' => :taxon_nid,
       'Id_Accepted' => :accepted_taxon_nid,
       'Status' => :name_status,
+      'Rank' => :rank_id,
       'Scientific.Name' => :scientific_name,
       'Author' => :author_year
     }
   )
 
-  derived_attributes %i[matchable_taxonomy_id rank_id source_file]
+  derived_attributes %i[matchable_taxonomy_id source_file]
 
   attr_reader :matchable_taxonomy, :source_file
 
@@ -48,10 +49,37 @@ class Importers::MappingTaxaImporter < Importer::Base
     source_file
   end
 
-  # Stage 1 does not emit a Rank column yet. The column is nullable for exactly
-  # this reason; when the export carries it, Rank moves into required_headers
-  # and this caster resolves it against the ranks table.
-  def cast_rank_id(_raw_value)
+  # Rank arrives as a name - SPECIES, SUBSPECIES - and has to become a ranks.id.
+  #
+  # Not resolve_belongs_to, which is the framework's way of doing this: it
+  # raises on a name it cannot find, and these files legitimately carry ranks
+  # this application does not model. The Red List alone uses FORMA on 315 names
+  # and SUBSPECIES (PLANTAE) on 2,601, and `ranks` is Species+ taxonomy shared
+  # with the rest of the app, so it is not ours to add to. Those names are worth
+  # importing without a rank rather than not importing at all.
+  def cast_rank_id(raw_value)
+    name = raw_value.to_s.strip.upcase
+
+    return nil if name.empty? || name == 'NA'
+
+    rank_ids.fetch(name) { unknown_rank(name) }
+  end
+
+  # `ranks` is a ten-row dictionary, so one query serves the whole run.
+  def rank_ids
+    @rank_ids ||= Rank.pluck(:name, :id).to_h { |name, id| [ name.upcase, id ] }
+  end
+
+  # Reported once per distinct name. At one line per row the two Red List ranks
+  # above would bury every other entry in a log that is read in the browser.
+  def unknown_rank(name)
+    return nil unless reported_ranks.add?(name)
+
+    log_warning(message: "no rank named #{name}; those names are imported without one")
     nil
+  end
+
+  def reported_ranks
+    @reported_ranks ||= Set.new
   end
 end

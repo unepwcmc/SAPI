@@ -46,16 +46,65 @@ class Importers::MappingMatchesImporter < Importer::Base
 
   private
 
-  # 95% of the wide export is candidate pairs that did not match - 372,271 of
-  # 390,457 rows in the sample. They carry no confidence and no match, and are
-  # of no use here.
+  # The file now states which taxonomy each side is, but the upload form still
+  # asks, because the admin is choosing what gets replaced and a file can be
+  # pointed at the wrong pair. Checked rather than trusted either way round:
+  # an import clears everything already held for the pair it was told, so being
+  # wrong destroys data belonging to a pair nobody touched.
   #
-  # The narrower format the spec describes would emit matched rows only and
-  # carry no `matched` column, so its absence means every row counts.
-  def exclude_row?(row)
-    return false unless row.key?('matched')
+  # Raised rather than skipped - a file describing another pair is not a bad
+  # row, it is the wrong file. ImportError aborts the run, and because
+  # Mapping::FileImport rescues outside its transaction, the delete that ran
+  # before it has already rolled back.
+  def before_batch(batch)
+    batch.each { |entry| assert_datasets!(entry[:row]) }
+  end
 
-    Importer::RowTransformer.considered_blank?(row['matched']) || row['matched'].to_s.strip == 'NA'
+  # Exports before October carry no dataset columns, and a blank says nothing,
+  # so neither is treated as a disagreement.
+  def assert_datasets!(row)
+    near = row['d1_dataset'].to_s.strip
+    far = row['d2_dataset'].to_s.strip
+
+    return if states?(near, matchable_taxonomy) && states?(far, foreign_matchable_taxonomy)
+
+    # The likeliest mistake by far, and the one worth naming: both taxonomies
+    # are right, they were just chosen in the other order.
+    if states?(near, foreign_matchable_taxonomy) && states?(far, matchable_taxonomy)
+      raise Importer::Base::ImportError,
+        "This file has #{near} first and #{far} second, but it was uploaded the " \
+        'other way round. Swap the two taxonomies and upload it again.'
+    end
+
+    raise Importer::Base::ImportError,
+      "This file matches #{near} to #{far}, but it was uploaded as " \
+      "#{matchable_taxonomy.code} to #{foreign_matchable_taxonomy.code}."
+  end
+
+  def states?(value, taxonomy)
+    value.empty? || value == 'NA' || value.casecmp?(taxonomy.code)
+  end
+
+  # A wide export is mostly candidate pairs that did not match - 372,271 of
+  # 390,457 rows in the September file - and those are of no use here.
+  #
+  # A row counts if it carries either a match or a confidence, not only a match.
+  # `matched` names the rule that fired, so a match a person asserted has none:
+  # all three verified rows in the October export say matched = NA. Filtering on
+  # that column alone threw away precisely the hand-curated ones.
+  #
+  # An export carrying neither column has already been filtered, so every row
+  # counts.
+  def exclude_row?(row)
+    %w[matched confidence_level].none? { |header| stated?(row, header) }
+  end
+
+  def stated?(row, header)
+    return false unless row.key?(header)
+
+    value = row[header]
+
+    !Importer::RowTransformer.considered_blank?(value) && value.to_s.strip != 'NA'
   end
 
   def cast_matchable_taxonomy_id(_raw_value)
@@ -68,6 +117,24 @@ class Importers::MappingMatchesImporter < Importer::Base
 
   def cast_source_file(_raw_value)
     source_file
+  end
+
+  # A status is missing exactly when a person asserted the match rather than a
+  # rule finding it, and R writes that absence as the string NA. Stored as NULL
+  # so match_type can say there is no name-status pair, rather than reporting a
+  # match type of NANA.
+  def cast_matched_name_status(raw_value)
+    status_or_nil(raw_value)
+  end
+
+  def cast_foreign_matched_name_status(raw_value)
+    status_or_nil(raw_value)
+  end
+
+  def status_or_nil(raw_value)
+    value = raw_value.to_s.strip
+
+    value.empty? || value == 'NA' ? nil : value
   end
 
   # R writes NA for an unset boolean, and the column is NOT NULL. Unset means

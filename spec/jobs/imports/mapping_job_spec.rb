@@ -10,8 +10,8 @@ describe Imports::MappingJob do
   let(:iucn) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
 
   let(:taxa_csv) do
-    "Status,Id,Id_Accepted,Scientific.Name,Author\n" \
-      "A,1,1,Panthera leo,Linnaeus\nS,2,1,Felis leo,Schreber\n"
+    "Status,Id,Id_Accepted,Rank,Scientific.Name,Author\n" \
+      "A,1,1,SPECIES,Panthera leo,Linnaeus\nS,2,1,SPECIES,Felis leo,Schreber\n"
   end
   let(:matches_csv) do
     'd1_Id_Accepted,d1_Scientific.Name,d1_Status,' \

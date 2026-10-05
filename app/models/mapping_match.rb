@@ -5,11 +5,11 @@
 #  id                            :uuid             not null, primary key
 #  exclude                       :boolean          default(FALSE), not null
 #  foreign_matched_name          :string           not null
-#  foreign_matched_name_status   :string           not null
+#  foreign_matched_name_status   :string
 #  foreign_taxon_nid             :string           not null
 #  match_confidence              :string           not null
 #  matched_name                  :string           not null
-#  matched_name_status           :string           not null
+#  matched_name_status           :string
 #  source_file                   :string           not null
 #  taxon_nid                     :string           not null
 #  created_at                    :datetime         not null
@@ -64,7 +64,13 @@ class MappingMatch < ApplicationRecord
 
   # AA, SA, AS or SS - the two name statuses read together, in this row's own
   # orientation. Flipped rows report the mirrored pair.
+  #
+  # nil when either side has no status, which means a person asserted the match
+  # rather than a rule finding it. There is no name-status pair to report for
+  # one of those, and '' would read as though there were.
   def match_type
+    return nil if matched_name_status.blank? || foreign_matched_name_status.blank?
+
     "#{matched_name_status}#{foreign_matched_name_status}"
   end
 
