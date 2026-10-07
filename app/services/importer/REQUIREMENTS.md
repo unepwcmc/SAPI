@@ -298,7 +298,7 @@ unassisted.
   unchanged (`csv_delimiter`, `csv_encoding`, header rules, line numbers).
 - The inner file's own extension decides tab vs. `csv_delimiter`: `.tsv` is tab-separated.
 - The archive must contain exactly one file. Directory entries, `__MACOSX/` entries and
-  `._*` resource-fork files are ignored when counting. Zero files, more than one, or an
+  dotfiles (`._*` resource forks, `.DS_Store`) are ignored when counting. Zero files, more than one, or an
   entry not ending `.csv`/`.tsv` (a zipped `.xlsx` included) raises `ImportError`.
 - A file that is not a readable zip raises `ImportError`.
 - An entry larger than `max_uncompressed_bytes` (default 512 MB,

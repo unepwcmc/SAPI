@@ -13,8 +13,8 @@ require 'tempfile'
 # `ensure`; a standalone user must call it themselves.
 #
 # A .zip with anything other than one real file in it is rejected rather than guessed at.
-# Directory entries and macOS's `__MACOSX/` / `._*` resource-fork droppings are ignored,
-# since they ride along in any archive made with Finder.
+# Directory entries, macOS's `__MACOSX/` / `._*` resource-fork droppings and any other
+# dotfile (`.DS_Store`) are ignored, since they ride along in archives made with Finder.
 #
 # max_uncompressed_bytes (DEFAULT_MAX_UNCOMPRESSED_BYTES unless a subclass declares its
 # own) guards against a zip bomb. rubyzip also raises if an entry inflates past its own
@@ -103,7 +103,7 @@ class Importer::Parsers::ZippedCsv
   end
 
   def ignorable?(name)
-    name.start_with?('__MACOSX/') || File.basename(name).start_with?('._')
+    name.start_with?('__MACOSX/') || File.basename(name).start_with?('.')
   end
 
   def import_error(message) = Importer::Base::ImportError.new("#{@file_path}: #{message}")

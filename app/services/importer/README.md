@@ -169,7 +169,7 @@ FINDINGS.md for why.
   extracts that entry to a tempfile (removed when `import!` finishes, even on failure)
   and hands it to the CSV parser, so delimiter, encoding and line numbers behave exactly
   as for a plain `.csv`. The archive must hold exactly one real file, ending `.csv` or
-  `.tsv` - macOS `__MACOSX/` entries are ignored; anything else raises `ImportError`,
+  `.tsv` - macOS `__MACOSX/` entries and dotfiles such as `.DS_Store` are ignored; anything else raises `ImportError`,
   including a zipped `.xlsx`. An entry over 512 MB uncompressed is refused - raise or lower that with
   `max_uncompressed_bytes 100.megabytes` (any positive Integer; ActiveSupport's
   `kilobytes`/`megabytes`/`gigabytes` keep it readable). `file_format`

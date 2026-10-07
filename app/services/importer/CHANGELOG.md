@@ -35,7 +35,7 @@ not cover the docs or this file. Application-specific example importers
 
 ## 2.2.0 — 2026-10-06
 
-`c2c6d4af92ef74ab528d927a7dcc22361781149d7962da063f3fd8e105d8c5f1` (29 files)
+`49d9697ef77c27b066b1d731a06db41cf935f8e6aa5318d18bc2504acea11031` (29 files)
 
 Adds zipped single-CSV input. Purely additive: no existing config, hook or file format
 changes behavior, and `Gemfile` gains an explicit `rubyzip` (already present via `roo`).
@@ -45,7 +45,7 @@ Copy the new `parsers/zipped_csv.rb` plus the changes to `base.rb`, `parsers.rb`
 - A `.zip` is now an accepted `file_path`, read via the new
   `Importer::Parsers::ZippedCsv`: the one `.csv`/`.tsv` inside is extracted to a tempfile
   and parsed by the CSV parser, so delimiter, encoding and line numbers match a plain
-  `.csv`. The archive must hold exactly one such file (`__MACOSX/` entries ignored);
+  `.csv`. The archive must hold exactly one such file (`__MACOSX/` entries and dotfiles such as `.DS_Store` ignored);
   otherwise, including a zipped `.xlsx`, it raises `ImportError`. An entry over
   `max_uncompressed_bytes` (new macro, default 512 MB, must be a positive Integer) is
   refused; `concerns/config.rb` gains that macro.
@@ -68,7 +68,7 @@ Copy the new `parsers/zipped_csv.rb` plus the changes to `base.rb`, `parsers.rb`
 6ab977de2f25ee747c81584295fc19eaec3b49520e5d1d299881d012ff65b91a  ../../../spec/services/importer/loaders/unique_by_resolver_spec.rb
 5554fd131f5ca43a84a0309fe3578e97080c21bfb87572214f790e4524ec9c01  ../../../spec/services/importer/loaders_spec.rb
 cb157076bee8fc28082159e90992bcaed7f9837f0acba16ed4743252e03a98c2  ../../../spec/services/importer/logger_spec.rb
-c7c335a6cd6c873edc0dd45db1ddc0320bd58b0e04ba5d0b9b1f138ed88e3d9d  ../../../spec/services/importer/parsers_spec.rb
+b3df8dd8fa4e6776ed26f209acf723d2966238c9ab13b2e921b3eff41e1f7cae  ../../../spec/services/importer/parsers_spec.rb
 43c9d4ab31ddce24d0bce683d05963b21df484067506e54f535dc7a742ec7555  ../../../spec/services/importer/row_transformer_spec.rb
 a9c582fc005c25e79f7a52b57fbe203d26e92d5c90816152725069a92033f902  base.rb
 821dbdc11e40b2cb9d7a63435e13135b857b4bdc7c936fd33cfa396a21c831a2  concerns/config.rb
@@ -88,7 +88,7 @@ c5a33cf0814694d31150b91d1ae08b2a18f2af2815d235dd892da1834fc70fbd  parsers.rb
 0710b66425bff25fd24734fa8d7897403f4b275774c76995aa2ab4d970d51b56  parsers/excel_x.rb
 4a5f7069c1938bace2477da147e8433524373e4238d2d297c9520e3e94dd8ea3  parsers/excel_x/rich_text.rb
 401822c335c73bb0107305dc71cbf0f0205744b21a1cbc7049843df9efcf30c0  parsers/excel_x/xml_namespace_agnostic.rb
-7e93875ebddc71dd0f3b6c812b6c4113606f1af559746af6ce4b24576d800cfc  parsers/zipped_csv.rb
+054f15eebf786a75cd75a3a2598937094606982884730848977ba6966a379c64  parsers/zipped_csv.rb
 33d4a9251f093745c1f80b828d876e2ad1ddb279711beebbd6fc95828859b812  row_transformer.rb
 ```
 

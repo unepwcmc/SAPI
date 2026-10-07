@@ -201,8 +201,10 @@ RSpec.describe 'Importer::Parsers' do
       )
     end
 
-    it 'reports the inner file format, and ignores directory and __MACOSX entries' do
-      zip = write_zip({ 'dir/data.tsv' => "Name\tQuantity\nA\t1\n", '__MACOSX/dir/._data.tsv' => 'junk' })
+    it 'reports the inner file format, and ignores directory, __MACOSX and dotfile entries' do
+      zip = write_zip(
+        { 'dir/data.tsv' => "Name\tQuantity\nA\t1\n", '__MACOSX/dir/._data.tsv' => 'junk', 'dir/.DS_Store' => 'junk' }
+      )
       parser = build_parser(zip)
 
       expect(parser.format).to eq(:tsv)
