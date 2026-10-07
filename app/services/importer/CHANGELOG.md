@@ -26,11 +26,71 @@ out *which* file drifted without needing a copy of the original to diff
 against. They are emitted by `--files` and pasted in verbatim.
 
 The checksum covers `base.rb`, `concerns/`, `logger.rb`, `row_transformer.rb`,
-`parsers.rb`/`parsers/`, and `loaders.rb`/`loaders/` — see
+`parsers.rb`/`parsers/`, `loaders.rb`/`loaders/`, and (from 2.2.0) the specs in
+`spec/services/importer/` — see
 [`importer.checksum.yml`](importer.checksum.yml) for the exact scope. It does
 not cover the docs or this file. Application-specific example importers
 (`post_*_importer.rb`) live outside this directory entirely, in
 `app/services/importers/` (plural).
+
+## 2.2.0 — 2026-10-06
+
+`c2c6d4af92ef74ab528d927a7dcc22361781149d7962da063f3fd8e105d8c5f1` (29 files)
+
+Adds zipped single-CSV input. Purely additive: no existing config, hook or file format
+changes behavior, and `Gemfile` gains an explicit `rubyzip` (already present via `roo`).
+Copy the new `parsers/zipped_csv.rb` plus the changes to `base.rb`, `parsers.rb` and
+`concerns/config.rb`.
+
+- A `.zip` is now an accepted `file_path`, read via the new
+  `Importer::Parsers::ZippedCsv`: the one `.csv`/`.tsv` inside is extracted to a tempfile
+  and parsed by the CSV parser, so delimiter, encoding and line numbers match a plain
+  `.csv`. The archive must hold exactly one such file (`__MACOSX/` entries ignored);
+  otherwise, including a zipped `.xlsx`, it raises `ImportError`. An entry over
+  `max_uncompressed_bytes` (new macro, default 512 MB, must be a positive Integer) is
+  refused; `concerns/config.rb` gains that macro.
+- `import!` now closes its parser in an `ensure`, removing the tempfile on success or
+  failure.
+- **Checksum scope now includes the specs** (`spec/services/importer/`, 9 files), so a
+  client copy that drops or edits a test shows as drift. The manifest reaches them with a
+  relative path, so a copy must keep the Rails `app/services/importer` ↔
+  `spec/services/importer` layout. Consequence: `--verify --release 2.1.0` (or older) now
+  lists those specs as `added`, since earlier tables never recorded them - expected, not
+  real drift.
+- `file_format` asks the parser once it exists, so a zipped `.tsv` reports `:tsv`; before
+  `assert_configured!` it still resolves from the path alone (`:csv` for a `.zip`).
+
+```
+3916ad3fa26daa0ef6d647c48339f1bf99c21dd079945bbff877aecd161310e9  ../../../spec/services/importer/base_belongs_to_spec.rb
+9c727164b00474581439c2f0dc8bd1c20d75779fc8a7964ae553bed16388fc01  ../../../spec/services/importer/base_excel_parsing_spec.rb
+06ff569d091c14a866068d8b0fd5c95a48ef7c77ab98755ac88657834fd247b1  ../../../spec/services/importer/base_hooks_spec.rb
+3683254be4cbd6dfb57358c1733c8846e8722af655a45f122478acf47e095724  ../../../spec/services/importer/base_spec.rb
+6ab977de2f25ee747c81584295fc19eaec3b49520e5d1d299881d012ff65b91a  ../../../spec/services/importer/loaders/unique_by_resolver_spec.rb
+5554fd131f5ca43a84a0309fe3578e97080c21bfb87572214f790e4524ec9c01  ../../../spec/services/importer/loaders_spec.rb
+cb157076bee8fc28082159e90992bcaed7f9837f0acba16ed4743252e03a98c2  ../../../spec/services/importer/logger_spec.rb
+c7c335a6cd6c873edc0dd45db1ddc0320bd58b0e04ba5d0b9b1f138ed88e3d9d  ../../../spec/services/importer/parsers_spec.rb
+43c9d4ab31ddce24d0bce683d05963b21df484067506e54f535dc7a742ec7555  ../../../spec/services/importer/row_transformer_spec.rb
+a9c582fc005c25e79f7a52b57fbe203d26e92d5c90816152725069a92033f902  base.rb
+821dbdc11e40b2cb9d7a63435e13135b857b4bdc7c936fd33cfa396a21c831a2  concerns/config.rb
+18d3dd7e5ae26dda5f4c6223a9c921360b22fa3c8660d5c3885bbd169ebcca46  concerns/hooks.rb
+d71ffa9c427207af7f36546cc2531b2d27f9f01de7d81856844af1429bf8293e  loaders.rb
+9135fd7e7e308a18b73050c572c063ec60373c455a75c6b5f125e61e9a8172f6  loaders/activerecord_import.rb
+e961bca5f957ed5adcbc0f2f158d0afe803ea60d7f53f4ec7e2e1db0ee25683c  loaders/base.rb
+15a826a72d9c849f07e13825fc33fb81c3b4bf48c1ccf52892647c4cefd718cb  loaders/plain_record.rb
+92316a95aac786b499955d02acd68c9ffb52da70d496868cf40147935211782c  loaders/raw_insert_all.rb
+d57813098932080362e9e93aae65ed58d620350a1042a8591ea75d2cde67e53b  loaders/raw_upsert_all.rb
+e48e73858389fdba39410ec012b9537ef5d2dce1c3d1e5c8d5ae266aaa68e648  loaders/row_isolatable.rb
+4ae0914e9521047a3bf871fff1f0add00c9509f6887e595977853cdf712b2ef7  loaders/unique_by_config.rb
+3acf4bc210ae459512bb6055ae5d9cf2bca8fc218d1201903a7260bb0aad6d0b  loaders/unique_by_resolver.rb
+8c9319bc7a720c9592210ffe9bf5372275704be96bb9af9ad4461120c1dbb791  logger.rb
+c5a33cf0814694d31150b91d1ae08b2a18f2af2815d235dd892da1834fc70fbd  parsers.rb
+5545a9a80650f65f58dc439f43a6ea4bb23914fc7c665724201ff5ac215112e4  parsers/csv.rb
+0710b66425bff25fd24734fa8d7897403f4b275774c76995aa2ab4d970d51b56  parsers/excel_x.rb
+4a5f7069c1938bace2477da147e8433524373e4238d2d297c9520e3e94dd8ea3  parsers/excel_x/rich_text.rb
+401822c335c73bb0107305dc71cbf0f0205744b21a1cbc7049843df9efcf30c0  parsers/excel_x/xml_namespace_agnostic.rb
+7e93875ebddc71dd0f3b6c812b6c4113606f1af559746af6ce4b24576d800cfc  parsers/zipped_csv.rb
+33d4a9251f093745c1f80b828d876e2ad1ddb279711beebbd6fc95828859b812  row_transformer.rb
+```
 
 ## 2.1.0 — 2026-09-04
 

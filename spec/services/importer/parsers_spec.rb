@@ -167,4 +167,83 @@ RSpec.describe 'Importer::Parsers' do
       expect(excel.format).to eq(:xlsx)
     end
   end
+
+  describe Importer::Parsers::ZippedCsv do
+    def write_zip(entries, name: 'import.zip')
+      file = Tempfile.new([ File.basename(name, '.zip'), '.zip' ])
+      file.close
+      File.delete(file.path)
+      Zip::File.open(file.path, create: true) do |zip|
+        entries.each { |entry_name, content| zip.get_output_stream(entry_name) { |out| out.write(content) } }
+      end
+      file
+    end
+
+    def build_parser(zip, **overrides)
+      described_class.new(
+        file_path: zip.path, required_header_names: %w[Name Quantity], delimiter: ',', encoding: nil, strip_raw_value: true, **overrides
+      )
+    end
+
+    it 'reads rows from the single CSV inside the zip, with the same shape as Parsers::Csv' do
+      zip = write_zip({ 'data.csv' => "Name,Quantity\nWidget A,10\nWidget B,3\n" })
+      parser = build_parser(zip)
+
+      parser.validate_file!
+      parser.verify_headers!
+
+      rows = []
+      parser.each_row { |row, line_number| rows << [ line_number, row ] }
+      parser.close
+
+      expect(rows).to eq(
+        [ [ 2, { 'Name' => 'Widget A', 'Quantity' => '10' } ], [ 3, { 'Name' => 'Widget B', 'Quantity' => '3' } ] ]
+      )
+    end
+
+    it 'reports the inner file format, and ignores directory and __MACOSX entries' do
+      zip = write_zip({ 'dir/data.tsv' => "Name\tQuantity\nA\t1\n", '__MACOSX/dir/._data.tsv' => 'junk' })
+      parser = build_parser(zip)
+
+      expect(parser.format).to eq(:tsv)
+      parser.close
+    end
+
+    it 'removes its tempfile on close' do
+      zip = write_zip({ 'data.csv' => "Name,Quantity\nA,1\n" })
+      parser = build_parser(zip)
+      parser.verify_headers!
+      path = parser.send(:csv_parser).instance_variable_get(:@file_path)
+
+      expect(File.exist?(path)).to be(true)
+      parser.close
+      expect(File.exist?(path)).to be(false)
+    end
+
+    it 'rejects an empty zip, a multi-file zip, and a non-CSV entry' do
+      {
+        {} => /exactly one file, but it is empty/,
+        { 'a.csv' => "x\n", 'b.csv' => "x\n" } => /exactly one file, found 2/,
+        { 'a.txt' => "x\n" } => /must have one of these extensions/
+      }.each do |entries, message|
+        zip = write_zip(entries)
+        expect { build_parser(zip).verify_headers! }.to raise_error(Importer::Base::ImportError, message)
+      end
+    end
+
+    it 'rejects an entry over max_uncompressed_bytes before extracting it' do
+      zip = write_zip({ 'data.csv' => "Name,Quantity\nA,1\n" })
+
+      expect { build_parser(zip, max_uncompressed_bytes: 5).verify_headers! }
+        .to raise_error(Importer::Base::ImportError, /larger than 5 bytes/)
+    end
+
+    it 'rejects a file that is not a zip archive' do
+      file = Tempfile.new([ 'bogus', '.zip' ])
+      file.write('not a zip')
+      file.close
+
+      expect { build_parser(file).verify_headers! }.to raise_error(Importer::Base::ImportError, /not a readable zip/)
+    end
+  end
 end

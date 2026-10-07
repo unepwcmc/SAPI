@@ -102,11 +102,10 @@ describe Imports::MappingJob do
       expect(MappingTaxon.distinct.pluck(:source_file)).to eq [ 'cites_eu.csv' ]
     end
 
-    it 'records the member name when the upload was a zip' do
-      # Which export it is shows in the member's name, not the wrapper's.
+    it 'records the name of the zip the admin uploaded' do
       run_taxa(filename: 'taxonomies.zip', contents: zipped('cites_eu.csv' => taxa_csv))
 
-      expect(MappingTaxon.distinct.pluck(:source_file)).to eq [ 'cites_eu.csv' ]
+      expect(MappingTaxon.distinct.pluck(:source_file)).to eq [ 'taxonomies.zip' ]
     end
 
     it 'unwraps a zip holding one CSV' do
@@ -143,29 +142,20 @@ describe Imports::MappingJob do
       expect(MappingTaxon.where(matchable_taxonomy: cites).count).to eq 2
     end
 
-    it 'unwraps a zip holding a spreadsheet' do
+    it 'refuses a zip holding a spreadsheet' do
       contents = zipped('cites_eu.xlsx' => xlsx(taxa_csv))
-      import = import!(filename: 'taxonomies.zip', contents: contents)
+      import = run_taxa(filename: 'taxonomies.zip', contents: contents)
 
-      Imports::MappingTaxaJob.perform_now(import.id)
-
-      expect(MappingTaxon.count).to eq 2
+      expect(import).to have_attributes(status: Import::FAILED)
+      expect(import.logs.last['message']).to include 'must have one of these extensions'
     end
 
-    it 'refuses a zip holding more than one file' do
+    it 'refuses a zip holding more than one file, saying so' do
       contents = zipped('one.csv' => taxa_csv, 'two.csv' => taxa_csv)
-      import = import!(filename: 'taxonomies.zip', contents: contents)
+      import = run_taxa(filename: 'taxonomies.zip', contents: contents)
 
-      expect { Imports::MappingTaxaJob.perform_now(import.id) }
-        .to raise_error(ArgumentError, /found 2/)
-    end
-
-    it 'records a zip it refused, since the job raising tells the admin nothing' do
-      contents = zipped('one.csv' => taxa_csv, 'two.csv' => taxa_csv)
-      import = import!(filename: 'taxonomies.zip', contents: contents)
-      suppress(ArgumentError) { Imports::MappingTaxaJob.perform_now(import.id) }
-
-      expect(import.reload).to have_attributes(status: Import::FAILED)
+      expect(import).to have_attributes(status: Import::FAILED)
+      expect(import.logs.last['message']).to include 'found 2'
     end
 
     it 'marks a file the importer rejects as failed rather than raising' do

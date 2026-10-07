@@ -14,7 +14,7 @@ see [README.md](README.md#modes) - not duplicated here.
   format parser is in play. `file_path`'s own extension is the single source of truth,
   auto-detected the same way `.csv` vs `.tsv` already is. A subclass can read this
   decision back via `file_format`, callable from any `cast_<attribute>`, `exclude_row?`,
-  `on_row_skip`, `before_batch`, or `after_batch` - returns `:csv`, `:tsv`, or `:xlsx`.
+  `on_row_skip`, `before_batch`, or `after_batch` - returns `:csv`, `:tsv`, or `:xlsx` (for a `.zip`, the inner file's format - `:csv` or `:tsv`).
 - `required_headers` maps header text to a model attribute. Column order in the file
   doesn't matter. Header matching is whitespace-tolerant on both sides.
 - The file can have more columns than `required_headers` maps - only mapped columns are
@@ -289,6 +289,24 @@ unassisted.
 - A required header appearing more than once in the file raises. A *non-required*
   header appearing more than once is not checked - the second one silently wins if a
   subclass ever inspects it via `raw_header_value`/`exclude_row?`.
+
+## Zipped CSV (.zip)
+
+- `file_path` ending in `.zip` is read as the single CSV/TSV inside it, via
+  `Importer::Parsers::ZippedCsv`, which extracts the entry to a tempfile and delegates
+  every check and row to the CSV parser - all rules in the CSV / TSV section above apply
+  unchanged (`csv_delimiter`, `csv_encoding`, header rules, line numbers).
+- The inner file's own extension decides tab vs. `csv_delimiter`: `.tsv` is tab-separated.
+- The archive must contain exactly one file. Directory entries, `__MACOSX/` entries and
+  `._*` resource-fork files are ignored when counting. Zero files, more than one, or an
+  entry not ending `.csv`/`.tsv` (a zipped `.xlsx` included) raises `ImportError`.
+- A file that is not a readable zip raises `ImportError`.
+- An entry larger than `max_uncompressed_bytes` (default 512 MB,
+  `ZippedCsv::DEFAULT_MAX_UNCOMPRESSED_BYTES`) raises before extraction; the macro must be
+  a positive Integer or config validation raises `ArgumentError`; rubyzip also raises if an entry inflates past its declared size.
+- The tempfile is deleted when `import!` ends, success or failure. Using the parser
+  standalone, call `#close` yourself.
+- Extraction happens on first use, so a `skip_file_validation` run still extracts once.
 
 ## Excel (.xlsx)
 

@@ -8,6 +8,7 @@ module Importer::Parsers
   def self.class_for(file_path)
     case File.extname(file_path).downcase
     when '.xlsx' then Importer::Parsers::ExcelX
+    when '.zip' then Importer::Parsers::ZippedCsv
     else Importer::Parsers::Csv
     end
   end

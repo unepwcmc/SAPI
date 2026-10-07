@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'tempfile'
+require 'zip'
 
 RSpec.describe Importer::Base do
   # No migrated model has the mix of column types (integer/decimal/date/boolean) needed to
@@ -68,6 +69,16 @@ RSpec.describe Importer::Base do
     file.binmode
     file.write(content)
     file.close
+    file
+  end
+
+  def write_zip(entries)
+    file = Tempfile.new([ 'import', '.zip' ])
+    file.close
+    File.delete(file.path)
+    Zip::File.open(file.path, create: true) do |zip|
+      entries.each { |name, content| zip.get_output_stream(name) { |out| out.write(content) } }
+    end
     file
   end
 
@@ -142,6 +153,78 @@ RSpec.describe Importer::Base do
       )
 
       class_eval(&block) if block
+    end
+  end
+
+  describe 'zipped CSV input' do
+    let(:csv) { "Name,Quantity,Price,Delivered On,Active\nZip A,10,1.50,2026-01-02,true\nZip B,3,2.00,2026-01-03,false\n" }
+
+    it 'imports the single CSV inside a .zip exactly like a plain .csv' do
+      zip = write_zip({ 'widgets.csv' => csv })
+
+      importer = importer_class.new(file_path: zip.path).import!
+
+      expect(ImporterBaseSpecWidget.order(:name).pluck(:name, :quantity)).to eq([ [ 'Zip A', 10 ], [ 'Zip B', 3 ] ])
+      expect(importer.logs.last).to include(processed: 2, written: 2)
+    end
+
+    it 'honours csv_delimiter for the zipped file' do
+      zip = write_zip({ 'widgets.csv' => csv.tr(',', ';') })
+
+      importer_class { csv_delimiter ';' }.new(file_path: zip.path).import!
+
+      expect(ImporterBaseSpecWidget.pluck(:name)).to contain_exactly('Zip A', 'Zip B')
+    end
+
+    it 'reports the inner format through file_format - :tsv for a zipped .tsv, :csv for a zipped .csv' do
+      seen = []
+      klass = importer_class { define_method(:before_batch) { |_batch| seen << file_format } }
+
+      klass.new(file_path: write_zip({ 'w.tsv' => csv.tr(',', "\t") }).path).import!
+      klass.new(file_path: write_zip({ 'w.csv' => csv.sub('Zip A', 'Zip C').sub('Zip B', 'Zip D') }).path).import!
+
+      expect(seen).to eq(%i[tsv csv])
+    end
+
+    it 'rolls back and raises for a zip holding more than one file, importing nothing' do
+      zip = write_zip({ 'a.csv' => csv, 'b.csv' => csv })
+
+      expect { importer_class.new(file_path: zip.path).import! }
+        .to raise_error(Importer::Base::ImportError, /exactly one file, found 2/)
+      expect(ImporterBaseSpecWidget.count).to eq(0)
+    end
+
+    it 'refuses a zipped entry over a declared max_uncompressed_bytes, importing nothing' do
+      zip = write_zip({ 'widgets.csv' => csv })
+
+      expect { importer_class { max_uncompressed_bytes 10 }.new(file_path: zip.path).import! }
+        .to raise_error(Importer::Base::ImportError, /larger than 10 bytes/)
+      expect(ImporterBaseSpecWidget.count).to eq(0)
+    end
+
+    it 'rejects a non-positive or non-Integer max_uncompressed_bytes at config time' do
+      [ 0, -1, '1MB', 1.5 ].each do |bad|
+        expect { importer_class { max_uncompressed_bytes bad }.new(file_path: write_zip({ 'w.csv' => csv }).path).import! }
+          .to raise_error(ArgumentError, /max_uncompressed_bytes must be a positive Integer/)
+      end
+    end
+
+    it 'defaults max_uncompressed_bytes to 512 MB' do
+      expect(importer_class.max_uncompressed_bytes).to eq(512.megabytes)
+    end
+
+    it 'rejects a zipped Excel file rather than guessing' do
+      zip = write_zip({ 'widgets.xlsx' => 'PK' })
+
+      expect { importer_class.new(file_path: zip.path).import! }
+        .to raise_error(Importer::Base::ImportError, /must have one of these extensions/)
+    end
+
+    it 'reports missing headers from inside the zip' do
+      zip = write_zip({ 'widgets.csv' => "Name\nZip A\n" })
+
+      expect { importer_class.new(file_path: zip.path).import! }
+        .to raise_error(Importer::Base::ImportError, /Missing required headers/)
     end
   end
 

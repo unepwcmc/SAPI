@@ -2,7 +2,7 @@ require 'csv'
 require 'bigdecimal'
 
 # Base class for bulk-seeding a single ActiveRecord model from a source file (CSV, TSV,
-# or Excel). See README.md for the full picture (modes, config macros, file format
+# zipped CSV, or Excel). See README.md for the full picture (modes, config macros, file format
 # rules), REQUIREMENTS.md for the detailed per-mode behavior, and FINDINGS.md for the
 # reasoning and evidence behind the non-obvious decisions - not repeated here. Subclass
 # and declare `target_model`, `mode`, and `required_headers`; see
@@ -56,7 +56,8 @@ class Importer::Base
   include Importer::Concerns::Hooks
 
   SUPPORTED_FILE_EXTENSIONS = (
-    Importer::Parsers::Csv::SUPPORTED_EXTENSIONS + Importer::Parsers::ExcelX::SUPPORTED_EXTENSIONS
+    Importer::Parsers::Csv::SUPPORTED_EXTENSIONS + Importer::Parsers::ExcelX::SUPPORTED_EXTENSIONS +
+    Importer::Parsers::ZippedCsv::SUPPORTED_EXTENSIONS
   ).freeze
 
   # The config macros (target_model, mode, unique_by, etc.) are class methods, so this
@@ -129,6 +130,8 @@ class Importer::Base
     log_summary
 
     self
+  ensure
+    parser&.close if parser.respond_to?(:close)
   end
 
   private
@@ -146,7 +149,10 @@ class Importer::Base
   # even before assert_configured! has built one - otherwise calling it early failed with
   # a bare `NoMethodError: private method 'format' called for nil` (nil picking up
   # Kernel#format), naming neither this method nor the importer.
-  def file_format = Importer::Parsers.class_for(file_path).format(file_path)
+  #
+  # Once the parser exists it is asked instead, because only it can see inside a .zip to
+  # tell a zipped .csv from a zipped .tsv - the path alone can't.
+  def file_format = @parser ? @parser.format : Importer::Parsers.class_for(file_path).format(file_path)
   def excel_file? = file_format == :xlsx
 
   # Lets a cast_<attribute> override read a rich_text_headers column's full formatting
@@ -246,6 +252,8 @@ class Importer::Base
     Importer::Parsers::Csv.validate_config!(importer_class: self.class, delimiter: self.class.csv_delimiter, encoding: self.class.csv_encoding)
     Importer::Parsers::ExcelX.validate_config!(importer_class: self.class, header_row: self.class.header_row, data_start_row: self.class.data_start_row)
 
+    Importer::Parsers::ZippedCsv.validate_config!(importer_class: self.class, max_uncompressed_bytes: self.class.max_uncompressed_bytes)
+
     # Constructing the loader is what resolves+validates unique_by (and, for
     # activerecord_import, its own two extra checks) - see FINDINGS.md.
     @loader =
@@ -263,7 +271,8 @@ class Importer::Base
         file_path: file_path, required_header_names: self.class.required_headers.keys, delimiter: self.class.csv_delimiter,
         encoding: self.class.csv_encoding, sheet_name: self.class.sheet_name, header_row: self.class.header_row,
         data_start_row: self.class.data_start_row, batch_size: self.class.batch_size, strip_raw_value: self.class.strip_raw_value,
-        rich_text_headers: self.class.rich_text_headers
+        rich_text_headers: self.class.rich_text_headers,
+        max_uncompressed_bytes: self.class.max_uncompressed_bytes
       )
   end
 

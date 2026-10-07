@@ -123,6 +123,16 @@ module Importer::Concerns::Config
     @csv_encoding
   end
 
+  # Ceiling, in bytes, on the uncompressed size of the CSV/TSV inside a .zip - only for
+  # .zip. Default Importer::Parsers::ZippedCsv::DEFAULT_MAX_UNCOMPRESSED_BYTES (512 MB).
+  # A disk guard against a zip bomb, since the entry is extracted to a tempfile; it has no
+  # bearing on memory, which rows already bound. Must be a positive Integer
+  # (Importer::Parsers::ZippedCsv.validate_config!).
+  def max_uncompressed_bytes(value = nil)
+    @max_uncompressed_bytes = value if value
+    @max_uncompressed_bytes || Importer::Parsers::ZippedCsv::DEFAULT_MAX_UNCOMPRESSED_BYTES
+  end
+
   # Gates whether a caller-supplied primary key can be *written* (to insert a new row) -
   # not whether it can be looked up, which is always allowed (see Importer::Loaders::Base and
   # REQUIREMENTS.md's Primary key section). Default false: an unmatched primary key

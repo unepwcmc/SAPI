@@ -1,7 +1,7 @@
 # Importer
 
-`Importer::Base` bulk-seeds a single ActiveRecord model from a CSV, TSV, or Excel
-(`.xlsx`) file. Subclass it, declare `target_model`, `mode`, and `required_headers`, and
+`Importer::Base` bulk-seeds a single ActiveRecord model from a CSV, TSV, Excel
+(`.xlsx`), or zipped single-CSV (`.zip`) file. Subclass it, declare `target_model`, `mode`, and `required_headers`, and
 call `.new(file_path:).import!` - `file_path`'s own extension picks the format, nothing
 else to declare.
 
@@ -165,6 +165,15 @@ FINDINGS.md for why.
   subclass can read this decision back via `file_format` (`:csv`/`:tsv`/`:xlsx`) from
   any `cast_<attribute>` or hook, for whenever behavior needs to differ by source
   format.
+- **A `.zip` is read as the one CSV/TSV inside it.** `Importer::Parsers::ZippedCsv`
+  extracts that entry to a tempfile (removed when `import!` finishes, even on failure)
+  and hands it to the CSV parser, so delimiter, encoding and line numbers behave exactly
+  as for a plain `.csv`. The archive must hold exactly one real file, ending `.csv` or
+  `.tsv` - macOS `__MACOSX/` entries are ignored; anything else raises `ImportError`,
+  including a zipped `.xlsx`. An entry over 512 MB uncompressed is refused - raise or lower that with
+  `max_uncompressed_bytes 100.megabytes` (any positive Integer; ActiveSupport's
+  `kilobytes`/`megabytes`/`gigabytes` keep it readable). `file_format`
+  returns the inner file's format (`:csv` or `:tsv`).
 - **CSV or TSV, UTF-8 by default - or a declared `csv_encoding` for a source you don't
   control.** Encoding is checked as its own pass before any row is processed, so a bad
   file fails cheaply rather than partway through an import. `csv_encoding 'Windows-1252'`
