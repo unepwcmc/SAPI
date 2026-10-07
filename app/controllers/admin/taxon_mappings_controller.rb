@@ -5,8 +5,7 @@
 # is a different thing from the page that reports on it.
 class Admin::TaxonMappingsController < Admin::AdminController
   include TaxonMappingAccess
-
-  IMPORTS_PER_PAGE = 10
+  include TaxonMappingImports
 
   def index
     taxonomies = MatchableTaxonomy.order(:code).to_a
@@ -39,12 +38,6 @@ class Admin::TaxonMappingsController < Admin::AdminController
 
     @taxonomy_options = taxonomies.map { |t| [ "#{t.code} - #{t.name}", t.id ] }
 
-    @imports =
-      Import.of_kind(Imports::MappingJob::KINDS).recent
-        .includes(:creator, file_attachment: :blob)
-        .page(params[:page]).per(IMPORTS_PER_PAGE)
-    # A running import finishes in the background, so the page has to come back
-    # on its own or it goes stale in front of whoever started it.
-    @running_imports = @imports.any? { |import| import.pending? || import.running? }
+    load_imports
   end
 end

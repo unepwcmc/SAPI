@@ -1,13 +1,16 @@
 <%# Block D. An import outlives the request that started it, so this is where
     its state lives. Only the last few are shown: older ones say nothing that
     the tables above do not already say better. %>
-<div id="taxon-mapping-imports" data-running="<%= @running_imports %>">
+<%# Swapped in whole by the page's JavaScript while an import runs, so the
+    wrapper carries both where to ask again and whether to bother. %>
+<div id="taxon-mapping-imports" data-running="<%= @running_imports %>"
+  data-refresh-url="<%= admin_taxon_mappings_imports_path(page: params[:page]) %>">
 <div class="page-header">
   <h4>
     Recent imports
-    <% if @running_imports %>
-      <small>refreshing while one is running</small>
-    <% end %>
+    <small class="js-imports-polling">
+      <%= 'refreshing while one is running' if @running_imports %>
+    </small>
   </h4>
 </div>
 
@@ -80,5 +83,7 @@
   </table>
 <% end %>
 
-<%= paginate @imports %>
+<%# Pinned to the page: rendered from the polling endpoint, Kaminari would
+    otherwise build links back to it and paginate into a bare fragment. %>
+<%= paginate @imports, params: { controller: '/admin/taxon_mappings', action: 'index' } %>
 </div>

@@ -45,6 +45,46 @@ showLocalTimes = ->
     parsed = new Date(@getAttribute('datetime'))
     @textContent = parsed.toLocaleString() unless isNaN(parsed)
 
+# The recent-imports block, refreshed on its own while a job runs.
+#
+# Reloading the page would be simpler, but it throws away a half-filled upload
+# form - and a chosen file cannot be put back afterwards, because no browser
+# lets script set a file input. Swapping one block leaves the form alone.
+#
+# Only this block is refreshed, so the counts above it stay as they were until
+# the page is loaded again; when the last job finishes, the block says so.
+POLL_MS = 5000
+
+running = ($imports) -> $imports.data('running') is true
+
+refreshImports = ($imports) ->
+  $.get($imports.data('refresh-url'))
+    .done (html) ->
+      # Filtered to the block itself rather than used whole: the response does
+      # not begin with the element. In development Rails prefixes a partial
+      # with an HTML comment naming the template, and there is a leading
+      # newline either way, so the first parsed node is a comment or text.
+      # Reading data('running') off that gives undefined, which reads as
+      # nothing running and stops the poll after a single tick.
+      $next = $($.parseHTML(html)).filter('#taxon-mapping-imports')
+
+      return finished($imports) unless $next.length
+
+      $imports.replaceWith($next)
+      # The rows that just arrived carry their timestamps as UTC for the
+      # browser to restyle, exactly as the server-rendered ones did.
+      showLocalTimes()
+      if running($next) then pollImports($next) else finished($next)
+    # A failed poll stops it. The block is already showing something true, and
+    # retrying into a dead server would only fill the console.
+    .fail -> $imports.find('.js-imports-polling').text('refresh failed - reload the page')
+
+pollImports = ($imports) -> setTimeout((-> refreshImports($imports)), POLL_MS)
+
+finished = ($imports) ->
+  $imports.find('.js-imports-polling')
+    .text('finished - reload the page to update the counts above')
+
 $(document).ready ->
   showLocalTimes()
 
@@ -52,5 +92,4 @@ $(document).ready ->
   new TaxonMappingUpload($form).init() if $form.length
 
   $imports = $('#taxon-mapping-imports')
-  if $imports.length and $imports.data('running') is true
-    setTimeout((-> window.location.reload()), 5000)
+  pollImports($imports) if $imports.length and running($imports)

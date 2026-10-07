@@ -118,6 +118,8 @@ namespace :admin do
     resources :taxonomies, only: [ :index, :create, :edit, :update, :destroy ]
     resources :uploads, only: [ :create ]
     resources :unresolved_matches, only: [ :index ]
+    # Polled by the page's JavaScript; renders one block, not a page.
+    resources :imports, only: [ :index ]
   end
   get 'exports' => 'exports#index'
   get 'exports/download' => 'exports#download' # not sure about this, post??

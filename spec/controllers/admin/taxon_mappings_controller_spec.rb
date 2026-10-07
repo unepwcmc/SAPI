@@ -89,14 +89,14 @@ describe Admin::TaxonMappingsController do
       end
 
       it 'shows no more than a page at a time' do
-        (described_class::IMPORTS_PER_PAGE + 1).times { import_row }
+        (TaxonMappingImports::PER_PAGE + 1).times { import_row }
 
         get :index
-        expect(assigns(:imports).size).to eq described_class::IMPORTS_PER_PAGE
+        expect(assigns(:imports).size).to eq TaxonMappingImports::PER_PAGE
       end
 
       it 'has the rest on the next page' do
-        (described_class::IMPORTS_PER_PAGE + 1).times { import_row }
+        (TaxonMappingImports::PER_PAGE + 1).times { import_row }
 
         get :index, params: { page: 2 }
         expect(assigns(:imports).size).to eq 1
