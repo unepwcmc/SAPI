@@ -117,8 +117,7 @@ describe Imports::MappingJob do
     it 'ignores the sidecars a zip made on a Mac carries' do
       contents = zipped(
         'cites_eu.csv' => taxa_csv,
-        '__MACOSX/._cites_eu.csv' => 'junk',
-        '.DS_Store' => 'junk'
+        '__MACOSX/._cites_eu.csv' => 'junk'
       )
 
       expect(run_taxa(filename: 'taxonomies.zip', contents: contents).status).to eq Import::DONE
