@@ -50,12 +50,15 @@
         <% if import.failed? && (errors = import_errors(import)).present? %>
           <tr>
             <td colspan="6">
-              <%# Nothing was written - the previous upload is still in place - so
-                  what matters here is why, in enough detail to fix the file. The
-                  importer already records the row and column. %>
+              <%# The import clears its scope and inserts in one transaction, so a
+                  failure leaves whatever was there before exactly as it was -
+                  including nothing, when this was the first attempt. Worded so
+                  it does not claim a previous upload that may never have
+                  happened. What matters here is why it failed, in enough detail
+                  to fix the file; the importer records the row and column. %>
               <p class="muted">
-                Nothing was written. The previous upload for
-                <%= import_target(import) %> is still in place.
+                Nothing was written, and anything already loaded for
+                <%= import_target(import) %> is untouched.
               </p>
               <table class="table table-condensed table-bordered">
                 <thead>
