@@ -509,18 +509,3 @@ Trade::TaxonConceptSourceValidationRule.create!(
   is_strict: true
 )
 
-# Intertaxonomic mapping: the registry of platforms the service can resolve
-# between. Idempotent rather than delete-and-recreate, because mapping_taxa and
-# mapping_matches reference these rows and are loaded from uploaded files, not
-# from here. Adding a platform means adding a row, here or through the admin.
-[
-  [ 'CITES_EU', 'CITES / EU' ],
-  [ 'CMS', 'CMS' ],
-  [ 'IUCNRL', 'IUCN Red List' ],
-  [ 'Kew', 'Kew / WCSP' ],
-  [ 'WoRMS', 'World Register of Marine Species' ],
-  [ 'GARD', 'GARD' ]
-].each do |code, name|
-  MatchableTaxonomy.find_or_initialize_by(code: code).update!(name: name)
-end
-Rails.logger.debug { "#{MatchableTaxonomy.count} matchable taxonomies created" }
