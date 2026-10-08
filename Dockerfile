@@ -187,6 +187,9 @@ FROM build AS build-staging
 
   COPY . .
 
+  # Staging must not be indexed: swap in the staging robots.txt
+  RUN cp public/robots.staging.txt public/robots.txt
+
   RUN bundle exec bootsnap precompile app/ lib/
 
   RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile

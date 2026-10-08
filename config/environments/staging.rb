@@ -24,6 +24,14 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
+  # Keep staging out of search engines. The header is the signal that removes
+  # URLs from the index, so it goes on controller responses and on static
+  # files alike. It only works while crawling is allowed, which is why
+  # public/robots.staging.txt says `Allow: /`.
+  noindex = 'noindex, nofollow, noarchive, nosnippet'
+  config.action_dispatch.default_headers['X-Robots-Tag'] = noindex
+  config.public_file_server.headers = { 'X-Robots-Tag' => noindex }
+
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :terser
 
