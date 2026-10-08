@@ -1,0 +1,59 @@
+<%# Reached from the unresolved block on the Taxon Mapping page. Not in the top
+    bar: the numbers there are the only thing that makes it meaningful. %>
+<p><%= link_to '&larr; Taxon Mapping'.html_safe, admin_taxon_mappings_path %></p>
+
+<div class="page-header">
+  <h1>
+    Unresolved <%= @taxonomy.code %> references
+    <small><%= number_with_delimiter(@matches.total_count) %> in <%= @import_run.filename %></small>
+  </h1>
+</div>
+
+<p>
+  Each row below is a match that names a <strong><%= @taxonomy.code %></strong>
+  taxon we do not hold. The match is kept, but the API cannot report it, because
+  there is no accepted name to answer with.
+</p>
+<p class="muted">
+  Usually the export is newer than the taxonomy file loaded for
+  <%= @taxonomy.code %>, and the identifier has retired since. Uploading a
+  matching pair of files resolves them; nothing here needs deleting.
+</p>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th><%= @taxonomy.code %> id <small class="muted">not found</small></th>
+      <th>matched as</th>
+      <th>maps to</th>
+      <th>confidence</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @matches.each do |match| %>
+      <%# The id that failed to resolve is on the side this page was opened for;
+          the other side is shown as context, since it is what the match claims
+          this taxon corresponds to. %>
+      <% missing, missing_name, other, other_name =
+           if @side == :near
+             [ match.taxon_nid, match.matched_name,
+               match.foreign_matchable_taxonomy, match.foreign_matched_name ]
+           else
+             [ match.foreign_taxon_nid, match.foreign_matched_name,
+               match.matchable_taxonomy, match.matched_name ]
+           end %>
+      <tr>
+        <td><code><%= missing %></code></td>
+        <td><em><%= missing_name %></em></td>
+        <td>
+          <strong><%= other.code %></strong>
+          <code><%= @side == :near ? match.foreign_taxon_nid : match.taxon_nid %></code>
+          <em><%= other_name %></em>
+        </td>
+        <td><%= match.match_confidence %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @matches %>

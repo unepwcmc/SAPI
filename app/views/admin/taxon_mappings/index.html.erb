@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h1>Taxon Mapping</h1>
+    </div>
+
+    <%= render 'upload' %>
+
+    <%# Outside the summary, which is swapped out whenever an import finishes -
+        a modal open at that moment would go with it. Filled by
+        import_runs/show.js.erb when a timestamp is clicked.
+
+        Written out rather than built with admin_new_modal: that helper is for
+        editing, so it ends every modal with a Save changes button that submits
+        a form. There is nothing to save here. %>
+    <div id="import-run" class="modal hide fade" tabindex="-1" role="dialog"
+      aria-labelledby="import-run-label" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 id="import-run-label">Where these rows came from</h3>
+      </div>
+      <div class="modal-body" id="admin-import-run"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      </div>
+    </div>
+
+    <%= render 'summary' %>
+
+    <%= render 'imports' %>
+  </div>
+</div>

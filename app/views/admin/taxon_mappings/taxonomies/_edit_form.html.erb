@@ -1,0 +1,14 @@
+<%# Only the name. The code is what the API is addressed by, so changing it
+    would silently break every caller that already uses it. %>
+<%= form_for :taxonomy, url: resource_url(@taxonomy), method: :patch, remote: true do |f| %>
+  <%= error_messages_for(@taxonomy) %>
+
+  <label>Code</label>
+  <p><code><%= @taxonomy.code %></code></p>
+  <span class="help-block">
+    Fixed. Callers address the API by it, so it cannot be renamed here.
+  </span>
+
+  <label>Name</label>
+  <%= f.text_field :name, value: @taxonomy.name, placeholder: 'IUCN Red List' %>
+<% end %>
