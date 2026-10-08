@@ -1,6 +1,6 @@
 # What the two taxon mapping uploads happen to have in common. Not a framework
 # for imports in general - another kind of upload may need none of this shape,
-# and Import deliberately does not impose one.
+# and ImportRun deliberately does not impose one.
 #
 # Both mapping uploads are a zip holding one CSV (or a bare CSV or spreadsheet), replace everything in their
 # scope, and have nothing to do afterwards but record what the importer said.
@@ -11,16 +11,16 @@ class Imports::MappingJob < ApplicationJob
   KINDS = %w[mapping_taxa mapping_matches].freeze
 
   def perform(import_id)
-    @import = Import.find(import_id)
+    @import = ImportRun.find(import_id)
     # A retry of a job whose upload already ran would replace the scope a
     # second time, so only a pending row is picked up.
     return unless import.pending?
 
-    import.update!(status: Import::RUNNING, started_at: Time.current)
+    import.update!(status: ImportRun::RUNNING, started_at: Time.current)
     result = with_file { |path, source_file| load(path, source_file) }
 
     import.update!(
-      status: result.success? ? Import::DONE : Import::FAILED,
+      status: result.success? ? ImportRun::DONE : ImportRun::FAILED,
       logs: result.logs,
       finished_at: Time.current
     )
@@ -64,7 +64,7 @@ class Imports::MappingJob < ApplicationJob
     # of the one being handled.
     # rubocop:disable Rails/SkipsModelValidations
     import&.update_columns(
-      status: Import::FAILED,
+      status: ImportRun::FAILED,
       logs: [ { level: 'error', message: message } ],
       finished_at: Time.current,
       updated_at: Time.current

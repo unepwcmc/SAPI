@@ -40,9 +40,9 @@ module Admin::TaxonMappingsHelper
 
   def import_label_class(import)
     case import.status
-    when Import::DONE then 'label-success'
-    when Import::FAILED then 'label-important'
-    when Import::RUNNING then 'label-info'
+    when ImportRun::DONE then 'label-success'
+    when ImportRun::FAILED then 'label-important'
+    when ImportRun::RUNNING then 'label-info'
     else ''
     end
   end

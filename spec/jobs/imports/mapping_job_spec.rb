@@ -50,7 +50,7 @@ describe Imports::MappingJob do
     kind: 'mapping_taxa', importable: cites, filename: 'cites_eu.csv', contents: taxa_csv,
     **attributes
   )
-    Import.new(kind: kind, importable: importable, **attributes).tap do |import|
+    ImportRun.new(kind: kind, importable: importable, **attributes).tap do |import|
       import.file.attach(
         io: StringIO.new(contents), filename: filename, content_type: 'application/octet-stream'
       )
@@ -64,13 +64,13 @@ describe Imports::MappingJob do
 
   describe 'KINDS' do
     it 'names only kinds the imports table actually dispatches' do
-      # Import::JOBS is what decides which job a row is handed to; a kind listed
+      # ImportRun::JOBS is what decides which job a row is handed to; a kind listed
       # here and not there would show on the page and never run.
-      expect(described_class::KINDS - Import::JOBS.keys).to be_empty
+      expect(described_class::KINDS - ImportRun::JOBS.keys).to be_empty
     end
 
     it 'covers every job in this family' do
-      expect(described_class::KINDS.map { |kind| Import::JOBS.fetch(kind).constantize })
+      expect(described_class::KINDS.map { |kind| ImportRun::JOBS.fetch(kind).constantize })
         .to all(be < described_class)
     end
   end
@@ -83,7 +83,7 @@ describe Imports::MappingJob do
     end
 
     it 'marks it done' do
-      expect(run_taxa.status).to eq Import::DONE
+      expect(run_taxa.status).to eq ImportRun::DONE
     end
 
     it 'keeps the importer logs, which is where the counts live' do
@@ -121,7 +121,7 @@ describe Imports::MappingJob do
         '.DS_Store' => 'junk'
       )
 
-      expect(run_taxa(filename: 'taxonomies.zip', contents: contents).status).to eq Import::DONE
+      expect(run_taxa(filename: 'taxonomies.zip', contents: contents).status).to eq ImportRun::DONE
     end
 
     it 'reads a spreadsheet rather than mistaking it for a zip' do
@@ -131,7 +131,7 @@ describe Imports::MappingJob do
 
       Imports::MappingTaxaJob.perform_now(import.id)
 
-      expect(import.reload.status).to eq Import::DONE
+      expect(import.reload.status).to eq ImportRun::DONE
     end
 
     it 'writes what the spreadsheet held' do
@@ -146,7 +146,7 @@ describe Imports::MappingJob do
       contents = zipped('cites_eu.xlsx' => xlsx(taxa_csv))
       import = run_taxa(filename: 'taxonomies.zip', contents: contents)
 
-      expect(import).to have_attributes(status: Import::FAILED)
+      expect(import).to have_attributes(status: ImportRun::FAILED)
       expect(import.logs.last['message']).to include 'must have one of these extensions'
     end
 
@@ -154,12 +154,12 @@ describe Imports::MappingJob do
       contents = zipped('one.csv' => taxa_csv, 'two.csv' => taxa_csv)
       import = run_taxa(filename: 'taxonomies.zip', contents: contents)
 
-      expect(import).to have_attributes(status: Import::FAILED)
+      expect(import).to have_attributes(status: ImportRun::FAILED)
       expect(import.logs.last['message']).to include 'found 2'
     end
 
     it 'marks a file the importer rejects as failed rather than raising' do
-      expect(run_taxa(contents: "Nothing,Useful\n1,2\n").status).to eq Import::FAILED
+      expect(run_taxa(contents: "Nothing,Useful\n1,2\n").status).to eq ImportRun::FAILED
     end
 
     it 'says why the importer rejected it' do
@@ -207,7 +207,7 @@ describe Imports::MappingJob do
     it 'records that it failed, so the upload does not sit there looking pending' do
       suppress(ActiveRecord::RecordNotFound) { run_matches { iucn.destroy! } }
 
-      expect(Import.sole.status).to eq Import::FAILED
+      expect(ImportRun.sole.status).to eq ImportRun::FAILED
     end
   end
 end

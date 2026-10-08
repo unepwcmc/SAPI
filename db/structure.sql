@@ -12466,10 +12466,10 @@ ALTER SEQUENCE public.geo_relationships_id_seq OWNED BY public.geo_relationships
 
 
 --
--- Name: imports; Type: TABLE; Schema: public; Owner: -
+-- Name: import_runs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.imports (
+CREATE TABLE public.import_runs (
     id bigint NOT NULL,
     importable_type character varying,
     importable_id bigint,
@@ -12486,10 +12486,10 @@ CREATE TABLE public.imports (
 
 
 --
--- Name: imports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: import_runs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.imports_id_seq
+CREATE SEQUENCE public.import_runs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -12498,10 +12498,10 @@ CREATE SEQUENCE public.imports_id_seq
 
 
 --
--- Name: imports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: import_runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.imports_id_seq OWNED BY public.imports.id;
+ALTER SEQUENCE public.import_runs_id_seq OWNED BY public.import_runs.id;
 
 
 --
@@ -142181,10 +142181,10 @@ ALTER TABLE ONLY public.geo_relationships ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
--- Name: imports id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: import_runs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.imports ALTER COLUMN id SET DEFAULT nextval('public.imports_id_seq'::regclass);
+ALTER TABLE ONLY public.import_runs ALTER COLUMN id SET DEFAULT nextval('public.import_runs_id_seq'::regclass);
 
 
 --
@@ -186934,11 +186934,11 @@ ALTER TABLE ONLY public.geo_relationships
 
 
 --
--- Name: imports imports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: import_runs import_runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.imports
-    ADD CONSTRAINT imports_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.import_runs
+    ADD CONSTRAINT import_runs_pkey PRIMARY KEY (id);
 
 
 --
@@ -205172,31 +205172,31 @@ CREATE INDEX index_geo_relationships_on_other_geo_entity_id ON public.geo_relati
 
 
 --
--- Name: index_imports_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_import_runs_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_imports_on_created_by_id ON public.imports USING btree (created_by_id);
-
-
---
--- Name: index_imports_on_importable; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_imports_on_importable ON public.imports USING btree (importable_type, importable_id);
+CREATE INDEX index_import_runs_on_created_by_id ON public.import_runs USING btree (created_by_id);
 
 
 --
--- Name: index_imports_on_kind; Type: INDEX; Schema: public; Owner: -
+-- Name: index_import_runs_on_importable; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_imports_on_kind ON public.imports USING btree (kind);
+CREATE INDEX index_import_runs_on_importable ON public.import_runs USING btree (importable_type, importable_id);
 
 
 --
--- Name: index_imports_on_status_and_created_at; Type: INDEX; Schema: public; Owner: -
+-- Name: index_import_runs_on_kind; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_imports_on_status_and_created_at ON public.imports USING btree (status, created_at);
+CREATE INDEX index_import_runs_on_kind ON public.import_runs USING btree (kind);
+
+
+--
+-- Name: index_import_runs_on_status_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_import_runs_on_status_and_created_at ON public.import_runs USING btree (status, created_at);
 
 
 --
@@ -356425,11 +356425,11 @@ ALTER TABLE ONLY public.mapping_taxa
 
 
 --
--- Name: imports fk_rails_95c52607d5; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: import_runs fk_rails_8bb61dd2da; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.imports
-    ADD CONSTRAINT fk_rails_95c52607d5 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.import_runs
+    ADD CONSTRAINT fk_rails_8bb61dd2da FOREIGN KEY (created_by_id) REFERENCES public.users(id);
 
 
 --

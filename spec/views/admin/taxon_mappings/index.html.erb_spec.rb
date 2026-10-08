@@ -8,7 +8,7 @@ describe 'admin/taxon_mappings/index' do
   let(:iucn) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
 
   def import_row(**attributes)
-    Import.new(kind: 'mapping_taxa', importable: cites, **attributes).tap do |import|
+    ImportRun.new(kind: 'mapping_taxa', importable: cites, **attributes).tap do |import|
       import.file.attach(
         io: StringIO.new("Status,Id\nA,1\n"), filename: 'cites_eu.csv', content_type: 'text/csv'
       )
@@ -150,7 +150,7 @@ describe 'admin/taxon_mappings/index' do
   end
 
   it 'names the taxonomy an upload was aimed at' do
-    draw(imports: [ import_row(status: Import::DONE) ])
+    draw(imports: [ import_row(status: ImportRun::DONE) ])
 
     expect(rendered).to include 'CITES_EU'
   end
@@ -159,7 +159,7 @@ describe 'admin/taxon_mappings/index' do
     draw(
       imports: [
         import_row(
-          status: Import::DONE,
+          status: ImportRun::DONE,
           logs: [
             { 'level' => 'info', 'message' => 'import completed', 'written' => 18_186 },
             { 'level' => 'info', 'message' => 'rows retained', 'retained' => 12_675 }
@@ -174,7 +174,7 @@ describe 'admin/taxon_mappings/index' do
 
   it 'opens a failed upload on the problems that caused it' do
     failed = import_row(
-      status: Import::FAILED,
+      status: ImportRun::FAILED,
       logs: [
         {
           'level' => 'error', 'row' => 4812, 'column' => 'Status',
@@ -190,7 +190,7 @@ describe 'admin/taxon_mappings/index' do
 
   it 'leaves a successful upload with nothing to open' do
     done = import_row(
-      status: Import::DONE,
+      status: ImportRun::DONE,
       logs: [ { 'level' => 'info', 'message' => 'import completed', 'written' => 2 } ]
     )
 

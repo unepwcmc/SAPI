@@ -10,7 +10,7 @@ module TaxonMappingImports
 
   def load_imports
     @imports =
-      Import.of_kind(Imports::MappingJob::KINDS).recent
+      ImportRun.of_kind(Imports::MappingJob::KINDS).recent
         .includes(:creator, file_attachment: :blob)
         .page(params[:page]).per(PER_PAGE)
     # What the poll reads to decide whether to ask again. An import outlives

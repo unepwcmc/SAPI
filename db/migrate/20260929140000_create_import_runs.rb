@@ -1,10 +1,17 @@
-# A record of one file being loaded through Importer::Base, for any importer -
-# not only the taxon mapping ones that prompted it. An upload is slow enough to
-# outlive its request, so the state it leaves behind has to be readable
-# afterwards, and the row-level errors the importer collects are worth keeping.
-class CreateImports < ActiveRecord::Migration[8.1]
+# One run of an importer over one file, for any importer on Importer::Base -
+# not only the taxon mapping ones that prompted it.
+#
+# A run rather than an import: it may be queued, working, finished or failed,
+# and naming the record for the finished case makes the other three read oddly.
+# Importer::Base's own documentation already calls this record an ImportRun.
+#
+# A run outlives the request that started it - the largest mapping file is
+# 209 MB and takes about two minutes - so what it leaves behind has to be
+# readable afterwards, and the row-level errors the importer collects are worth
+# keeping.
+class CreateImportRuns < ActiveRecord::Migration[8.1]
   def change
-    create_table :imports do |t|
+    create_table :import_runs do |t|
       # What the import is about, where that is one record. Optional because
       # some imports target a combination rather than a row - the mapping match
       # files cover a pair of taxonomies, and neither side is the subject.
@@ -41,7 +48,7 @@ class CreateImports < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :imports, :kind
-    add_index :imports, [ :status, :created_at ]
+    add_index :import_runs, :kind
+    add_index :import_runs, [ :status, :created_at ]
   end
 end

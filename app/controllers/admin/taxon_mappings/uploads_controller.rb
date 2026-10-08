@@ -1,6 +1,6 @@
 # Block A of the Taxon Mapping page: hand a file to a background job.
 #
-# All this does is build the Import row. What the row means, which importers it
+# All this does is build the ImportRun row. What the row means, which importers it
 # runs and what it clears first is the job's business - see Imports::MappingJob.
 class Admin::TaxonMappings::UploadsController < Admin::AdminController
   include TaxonMappingAccess
@@ -21,7 +21,7 @@ class Admin::TaxonMappings::UploadsController < Admin::AdminController
 private
 
   # Which taxonomies a file is about is the page's question, not the table's -
-  # Import is generic, and a mapping upload is the only kind that needs two of
+  # ImportRun is generic, and a mapping upload is the only kind that needs two of
   # them. Checked here so the admin is told before a job is queued rather than
   # finding a failed row afterwards.
   def rejection_reason(import)
@@ -47,7 +47,8 @@ private
   # Unrelated uploads are deliberately left alone: a taxa file for CITES and one
   # for IUCN share nothing, and a large import takes minutes.
   def already_running(import)
-    other = Import.unfinished.of_kind(Imports::MappingJob::KINDS).find { |i| same_scope?(i, import) }
+    mine = ImportRun.unfinished.of_kind(Imports::MappingJob::KINDS)
+    other = mine.find { |run| same_scope?(run, import) }
 
     return nil if other.nil?
 
@@ -73,7 +74,7 @@ private
   end
 
   def build_import
-    Import.new(
+    ImportRun.new(
       kind: upload_params[:kind],
       importable: MatchableTaxonomy.find_by(id: upload_params[:matchable_taxonomy_id]),
       params: job_params,

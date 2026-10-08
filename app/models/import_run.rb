@@ -1,15 +1,19 @@
-# One upload, whatever it turns out to contain.
+# One run of an importer over one file.
+#
+# A run rather than an import: it may be queued, working, finished or failed,
+# and naming the record for the finished case makes the other three read oddly.
+# Importer::Base's own documentation already calls this record an ImportRun.
 #
 # This is the table and nothing more: the file, who sent it, what happened, and
 # which job to hand it to. How that job runs - which importers, how many files,
 # what it clears first, what it wraps in a transaction - is the job's business,
 # because none of that generalises across the things people import.
 #
-# An upload outlives its request; the largest mapping file is 209 MB and takes
-# about 45 seconds. The row is what the admin page reads afterwards.
+# A run outlives its request; the largest mapping file is 209 MB and takes about
+# two minutes. The row is what the admin page reads afterwards.
 # == Schema Information
 #
-# Table name: imports
+# Table name: import_runs
 #
 #  id              :bigint           not null, primary key
 #  finished_at     :datetime
@@ -26,16 +30,16 @@
 #
 # Indexes
 #
-#  index_imports_on_created_by_id          (created_by_id)
-#  index_imports_on_importable             (importable_type,importable_id)
-#  index_imports_on_kind                   (kind)
-#  index_imports_on_status_and_created_at  (status,created_at)
+#  index_import_runs_on_created_by_id          (created_by_id)
+#  index_import_runs_on_importable             (importable_type,importable_id)
+#  index_import_runs_on_kind                   (kind)
+#  index_import_runs_on_status_and_created_at  (status,created_at)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (created_by_id => users.id)
 #
-class Import < ApplicationRecord
+class ImportRun < ApplicationRecord
   PENDING = 'pending'.freeze
   RUNNING = 'running'.freeze
   DONE = 'done'.freeze

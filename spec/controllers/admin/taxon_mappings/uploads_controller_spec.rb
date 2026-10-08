@@ -20,13 +20,13 @@ describe Admin::TaxonMappings::UploadsController do
     it 'records a taxa upload against the taxonomy it was told' do
       upload(kind: 'mapping_taxa', matchable_taxonomy_id: cites.id)
 
-      expect(Import.sole.importable).to eq cites
+      expect(ImportRun.sole.importable).to eq cites
     end
 
     it 'keeps the file, which is what names the export to replace' do
       upload(kind: 'mapping_taxa', matchable_taxonomy_id: cites.id)
 
-      expect(Import.sole.filename).to eq 'cites_eu.csv'
+      expect(ImportRun.sole.filename).to eq 'cites_eu.csv'
     end
 
     it 'records who uploaded it' do
@@ -34,7 +34,7 @@ describe Admin::TaxonMappings::UploadsController do
       # afterwards by its own job, so there is no updater worth recording.
       upload(kind: 'mapping_taxa', matchable_taxonomy_id: cites.id)
 
-      expect(Import.sole.creator).to eq controller.current_user
+      expect(ImportRun.sole.creator).to eq controller.current_user
     end
 
     it 'takes a file the browser already put in storage' do
@@ -47,7 +47,7 @@ describe Admin::TaxonMappings::UploadsController do
         upload: { kind: 'mapping_taxa', matchable_taxonomy_id: cites.id, file: blob.signed_id }
       }
 
-      expect(Import.sole.file.blob).to eq blob
+      expect(ImportRun.sole.file.blob).to eq blob
     end
 
     it 'hands it to the job for its kind' do
@@ -61,7 +61,7 @@ describe Admin::TaxonMappings::UploadsController do
         foreign_matchable_taxonomy_id: iucn.id
       )
 
-      expect(Import.sole.params).to eq('foreign_matchable_taxonomy_id' => iucn.id.to_s)
+      expect(ImportRun.sole.params).to eq('foreign_matchable_taxonomy_id' => iucn.id.to_s)
     end
 
     it 'leaves a taxa upload no far side to be confused by' do
@@ -70,13 +70,13 @@ describe Admin::TaxonMappings::UploadsController do
         foreign_matchable_taxonomy_id: iucn.id
       )
 
-      expect(Import.sole.params).to eq({})
+      expect(ImportRun.sole.params).to eq({})
     end
 
     describe 'while one is already running' do
       def running(kind:, importable:, far: nil)
-        Import.new(
-          kind: kind, importable: importable, status: Import::RUNNING,
+        ImportRun.new(
+          kind: kind, importable: importable, status: ImportRun::RUNNING,
           params: far ? { 'foreign_matchable_taxonomy_id' => far.id.to_s } : {}
         ).tap do |import|
           import.file.attach(
@@ -91,7 +91,7 @@ describe Admin::TaxonMappings::UploadsController do
 
         upload(kind: 'mapping_taxa', matchable_taxonomy_id: cites.id)
 
-        expect(Import.count).to eq 1
+        expect(ImportRun.count).to eq 1
       end
 
       it 'names the file already running' do
@@ -107,7 +107,7 @@ describe Admin::TaxonMappings::UploadsController do
 
         upload(kind: 'mapping_taxa', matchable_taxonomy_id: iucn.id)
 
-        expect(Import.count).to eq 2
+        expect(ImportRun.count).to eq 2
       end
 
       it 'allows a match upload while a taxa upload runs' do
@@ -118,7 +118,7 @@ describe Admin::TaxonMappings::UploadsController do
           foreign_matchable_taxonomy_id: iucn.id
         )
 
-        expect(Import.count).to eq 2
+        expect(ImportRun.count).to eq 2
       end
 
       it 'refuses the same pair uploaded the other way round' do
@@ -131,7 +131,7 @@ describe Admin::TaxonMappings::UploadsController do
           foreign_matchable_taxonomy_id: iucn.id
         )
 
-        expect(Import.count).to eq 1
+        expect(ImportRun.count).to eq 1
       end
 
       it 'allows a different pair' do
@@ -143,15 +143,15 @@ describe Admin::TaxonMappings::UploadsController do
           foreign_matchable_taxonomy_id: gard.id
         )
 
-        expect(Import.count).to eq 2
+        expect(ImportRun.count).to eq 2
       end
 
       it 'lets a finished one be replaced' do
-        running(kind: 'mapping_taxa', importable: cites).update!(status: Import::DONE)
+        running(kind: 'mapping_taxa', importable: cites).update!(status: ImportRun::DONE)
 
         upload(kind: 'mapping_taxa', matchable_taxonomy_id: cites.id)
 
-        expect(Import.count).to eq 2
+        expect(ImportRun.count).to eq 2
       end
     end
 
@@ -159,7 +159,7 @@ describe Admin::TaxonMappings::UploadsController do
       it 'needs a taxonomy' do
         upload(kind: 'mapping_taxa', matchable_taxonomy_id: '')
 
-        expect(Import.count).to eq 0
+        expect(ImportRun.count).to eq 0
       end
 
       it 'says so' do
@@ -174,7 +174,7 @@ describe Admin::TaxonMappings::UploadsController do
           foreign_matchable_taxonomy_id: ''
         )
 
-        expect(Import.count).to eq 0
+        expect(ImportRun.count).to eq 0
       end
 
       it 'refuses a match file relating a taxonomy to itself' do
@@ -185,13 +185,13 @@ describe Admin::TaxonMappings::UploadsController do
           foreign_matchable_taxonomy_id: cites.id
         )
 
-        expect(Import.count).to eq 0
+        expect(ImportRun.count).to eq 0
       end
 
       it 'needs a file' do
         post :create, params: { upload: { kind: 'mapping_taxa', matchable_taxonomy_id: cites.id } }
 
-        expect(Import.count).to eq 0
+        expect(ImportRun.count).to eq 0
       end
     end
   end
@@ -202,7 +202,7 @@ describe Admin::TaxonMappings::UploadsController do
     it 'is refused' do
       upload(kind: 'mapping_taxa', matchable_taxonomy_id: cites.id)
 
-      expect(Import.count).to eq 0
+      expect(ImportRun.count).to eq 0
     end
   end
 end

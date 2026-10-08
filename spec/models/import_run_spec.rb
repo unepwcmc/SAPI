@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Import do
+describe ImportRun do
   let(:taxonomy) { MatchableTaxonomy.create!(code: 'CITES_EU', name: 'CITES / EU') }
 
   def build_import(kind: 'mapping_taxa', attach: true, **attributes)

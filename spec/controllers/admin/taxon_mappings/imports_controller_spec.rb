@@ -5,8 +5,8 @@ describe Admin::TaxonMappings::ImportsController do
 
   let!(:cites) { MatchableTaxonomy.create!(code: 'CITES', name: 'CITES') }
 
-  def import_row(status: Import::RUNNING, filename: 'cites.csv')
-    Import.new(kind: 'mapping_taxa', importable: cites, status: status).tap do |import|
+  def import_row(status: ImportRun::RUNNING, filename: 'cites.csv')
+    ImportRun.new(kind: 'mapping_taxa', importable: cites, status: status).tap do |import|
       import.file.attach(
         io: StringIO.new("Status,Id\nA,1\n"), filename: filename, content_type: 'text/csv'
       )
@@ -25,14 +25,14 @@ describe Admin::TaxonMappings::ImportsController do
     end
 
     it 'says an import is still working, which is what the poll reads' do
-      import_row(status: Import::RUNNING)
+      import_row(status: ImportRun::RUNNING)
 
       get :index
       expect(response.body).to include 'data-running="true"'
     end
 
     it 'says so when the last one has finished, so the poll can stop' do
-      import_row(status: Import::DONE)
+      import_row(status: ImportRun::DONE)
 
       get :index
       expect(response.body).to include 'data-running="false"'
@@ -46,8 +46,8 @@ describe Admin::TaxonMappings::ImportsController do
     end
 
     it 'leaves another feature uploads out, as the page does' do
-      stub_const('Import::JOBS', Import::JOBS.merge('elsewhere' => 'Imports::MappingTaxaJob'))
-      Import.new(kind: 'elsewhere', importable: cites).tap do |import|
+      stub_const('ImportRun::JOBS', ImportRun::JOBS.merge('elsewhere' => 'Imports::MappingTaxaJob'))
+      ImportRun.new(kind: 'elsewhere', importable: cites).tap do |import|
         import.file.attach(
           io: StringIO.new('x'), filename: 'not-ours.csv', content_type: 'text/csv'
         )

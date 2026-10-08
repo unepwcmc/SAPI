@@ -22,7 +22,7 @@ describe Admin::TaxonMappingsController do
   end
 
   def import_row(kind: 'mapping_taxa', validate: true)
-    Import.new(kind: kind, importable: cites).tap do |import|
+    ImportRun.new(kind: kind, importable: cites).tap do |import|
       import.file.attach(
         io: StringIO.new("Status,Id\nA,1\n"), filename: 'cites_eu.csv', content_type: 'text/csv'
       )
@@ -81,7 +81,7 @@ describe Admin::TaxonMappingsController do
         mine = import_row
         # Written past validation: the kind whitelist is read when the class
         # loads, so a kind that only exists inside this example cannot pass it.
-        stub_const('Import::JOBS', Import::JOBS.merge('elsewhere' => 'Imports::MappingTaxaJob'))
+        stub_const('ImportRun::JOBS', ImportRun::JOBS.merge('elsewhere' => 'Imports::MappingTaxaJob'))
         import_row(kind: 'elsewhere', validate: false)
 
         get :index
@@ -110,7 +110,7 @@ describe Admin::TaxonMappingsController do
       end
 
       it 'leaves the page alone once every upload has finished' do
-        import_row.update!(status: Import::DONE)
+        import_row.update!(status: ImportRun::DONE)
 
         get :index
         expect(assigns(:running_imports)).to be false
