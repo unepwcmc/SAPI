@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Importers::MappingMatchesImporter do
+  def import_run = @import_run ||= create(:import_run)
   let(:cites) { MatchableTaxonomy.create!(code: 'CITES_EU', name: 'CITES / EU') }
   let(:iucn) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
 
@@ -18,7 +19,8 @@ describe Importers::MappingMatchesImporter do
     file.write("#{headers}\n#{rows}")
     file.close
     described_class.new(
-      file_path: file.path, matchable_taxonomy: near, foreign_matchable_taxonomy: far
+      file_path: file.path, matchable_taxonomy: near, foreign_matchable_taxonomy: far,
+      import_run: import_run
     ).tap(&:import!)
   ensure
     file&.unlink

@@ -120,6 +120,14 @@ namespace :admin do
     resources :unresolved_matches, only: [ :index ]
     # Polled by the page's JavaScript; renders one block, not a page.
     resources :imports, only: [ :index ]
+    # Fetched once when an import finishes. controller: because a singular
+    # resource would otherwise look for SummariesController, and there is only
+    # ever the one summary.
+    resource :summary, only: [ :show ], controller: 'summary'
+    # Opened from a timestamp on the page; renders into a modal, not a page.
+    resources :import_runs, only: [ :show ] do
+      member { get :download }
+    end
   end
   get 'exports' => 'exports#index'
   get 'exports/download' => 'exports#download' # not sure about this, post??

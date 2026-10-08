@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Api::V1::IntertaxonomicMappingsController do
+  let(:import_run) { create(:import_run) }
   let(:cites) { MatchableTaxonomy.create!(code: 'CITES_EU', name: 'CITES / EU') }
   let(:iucn) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
   let(:kew) { MatchableTaxonomy.create!(code: 'Kew', name: 'Kew / WCSP') }
@@ -8,7 +9,7 @@ describe Api::V1::IntertaxonomicMappingsController do
   def taxon(taxonomy, nid, name, author: nil)
     MappingTaxon.create!(
       matchable_taxonomy: taxonomy, taxon_nid: nid, accepted_taxon_nid: nid,
-      name_status: 'A', scientific_name: name, author_year: author, source_file: 't.csv'
+      name_status: 'A', scientific_name: name, author_year: author, import_run: import_run
     )
   end
 
@@ -18,7 +19,7 @@ describe Api::V1::IntertaxonomicMappingsController do
       foreign_matchable_taxonomy: foreign, foreign_taxon_nid: foreign_nid,
       matched_name: name, matched_name_status: statuses[0],
       foreign_matched_name: foreign_name, foreign_matched_name_status: statuses[1],
-      match_confidence: confidence, source_file: 'f.csv'
+      match_confidence: confidence, import_run: import_run
     )
   end
 
@@ -109,7 +110,7 @@ describe Api::V1::IntertaxonomicMappingsController do
       foreign_matchable_taxonomy: iucn, foreign_taxon_nid: '9',
       matched_name: 'Patagioenas goodsoni', matched_name_status: 'S',
       foreign_matched_name: 'Patagioenas goodsoni', foreign_matched_name_status: 'A',
-      match_confidence: 'medium-high', source_file: 'f.csv'
+      match_confidence: 'medium-high', import_run: import_run
     )
 
     expect(fetch('CITES_EU:9121')['mappings']).to eq []

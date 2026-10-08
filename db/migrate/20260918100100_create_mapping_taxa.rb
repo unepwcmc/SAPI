@@ -16,7 +16,11 @@ class CreateMappingTaxa < ActiveRecord::Migration[8.1]
       t.references :rank, type: :integer, foreign_key: true
       t.string :scientific_name, null: false
       t.string :author_year
-      t.string :source_file, null: false
+      # The run that wrote this row, which is how a whole upload is found,
+      # replaced or deleted. Not the file's name: two uploads can share one,
+      # and the name alone says nothing about who sent it or when. The run
+      # holds the file itself, so the name is still reachable.
+      t.references :import_run, null: false, foreign_key: true
 
       t.timestamps
     end

@@ -5,12 +5,13 @@
 class Imports::MappingMatchesJob < Imports::MappingJob
   private
 
-  def load(path, source_file)
+  def load(path)
     Mapping::FileImport.matches(
       file_path: path,
-      matchable_taxonomy: import.importable,
-      foreign_matchable_taxonomy: MatchableTaxonomy.find(import.params['foreign_matchable_taxonomy_id']),
-      source_file: source_file
+      matchable_taxonomy: import_run.importable,
+      foreign_matchable_taxonomy:
+        MatchableTaxonomy.find(import_run.params['foreign_matchable_taxonomy_id']),
+      import_run: import_run
     )
   end
 end

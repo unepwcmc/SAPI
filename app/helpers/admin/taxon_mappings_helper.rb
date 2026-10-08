@@ -38,6 +38,18 @@ module Admin::TaxonMappingsHelper
     )
   end
 
+  # When a set of rows was loaded, and a way through to the run that loaded it.
+  # The run holds the file, who uploaded it and what the importer said, which is
+  # more than belongs in a table cell - so the cell opens it rather than
+  # carrying it.
+  def loaded_at_link(row)
+    return local_time(row[:loaded_at]) if row[:import_run].nil?
+
+    link_to local_time(row[:loaded_at]),
+      admin_taxon_mappings_import_run_path(row[:import_run]),
+      remote: true, title: 'Where these rows came from'
+  end
+
   def import_label_class(import)
     case import.status
     when ImportRun::DONE then 'label-success'

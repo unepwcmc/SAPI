@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Admin::TaxonMappings::TaxonomiesController do
+  let(:import_run) { create(:import_run) }
+
   describe 'as a manager' do
     login_admin
 
@@ -73,7 +75,7 @@ describe Admin::TaxonMappings::TaxonomiesController do
         # They could only come back by re-uploading the file they came from.
         MappingTaxon.create!(
           matchable_taxonomy: taxonomy, taxon_nid: '1', accepted_taxon_nid: '1',
-          name_status: 'A', scientific_name: 'Panthera leo', source_file: 'f.csv'
+          name_status: 'A', scientific_name: 'Panthera leo', import_run: import_run
         )
 
         delete :destroy, params: { id: taxonomy.id }
@@ -84,7 +86,7 @@ describe Admin::TaxonMappings::TaxonomiesController do
       it 'says what blocked it' do
         MappingTaxon.create!(
           matchable_taxonomy: taxonomy, taxon_nid: '1', accepted_taxon_nid: '1',
-          name_status: 'A', scientific_name: 'Panthera leo', source_file: 'f.csv'
+          name_status: 'A', scientific_name: 'Panthera leo', import_run: import_run
         )
 
         delete :destroy, params: { id: taxonomy.id }

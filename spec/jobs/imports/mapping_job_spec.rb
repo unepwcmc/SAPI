@@ -94,18 +94,13 @@ describe Imports::MappingJob do
       expect(run_taxa.duration).to be >= 0
     end
 
-    it 'records the name the admin uploaded, not the tempfile it arrived in' do
-      # ActiveStorage writes the attachment to ActiveStorage-<id>-....csv, which
-      # names nothing anyone could re-export.
-      run_taxa(filename: 'cites_eu.csv')
+    it 'stamps every row with the run that wrote it' do
+      # Not the file's name: two uploads can share one, and the path the file is
+      # read from is an ActiveStorage tempfile. The run holds the file, so the
+      # name is still reachable - and a whole upload can be found or removed.
+      import = run_taxa(filename: 'cites_eu.csv')
 
-      expect(MappingTaxon.distinct.pluck(:source_file)).to eq [ 'cites_eu.csv' ]
-    end
-
-    it 'records the name of the zip the admin uploaded' do
-      run_taxa(filename: 'taxonomies.zip', contents: zipped('cites_eu.csv' => taxa_csv))
-
-      expect(MappingTaxon.distinct.pluck(:source_file)).to eq [ 'taxonomies.zip' ]
+      expect(MappingTaxon.distinct.pluck(:import_run_id)).to eq [ import.id ]
     end
 
     it 'unwraps a zip holding one CSV' do

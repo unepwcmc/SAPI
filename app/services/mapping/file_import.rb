@@ -15,10 +15,10 @@
 # not even say which of its two platforms is d1 - the admin picks both from
 # dropdowns.
 #
-# Takes a path to a CSV or spreadsheet. Unwrapping an upload - zip,
-# ActiveStorage, tempfile - belongs to whatever is doing the uploading, which is
-# also why source_file is passed in rather than read off the path: the path is a
-# tempfile whose name identifies nothing anyone could re-export.
+# Takes a path to a CSV or spreadsheet and the run that is loading it.
+# Unwrapping an upload - zip, ActiveStorage, tempfile - belongs to whatever is
+# doing the uploading; the run is what every row is stamped with, so a whole
+# upload can be found or removed later.
 class Mapping::FileImport
   Result =
     Struct.new(:success, :written, :retained, :logs, keyword_init: true) do
@@ -26,22 +26,22 @@ class Mapping::FileImport
        def failure? = !success
     end
 
-  def self.taxa(file_path:, matchable_taxonomy:, source_file: nil)
+  def self.taxa(file_path:, matchable_taxonomy:, import_run:)
     new(
       importer: Importers::MappingTaxaImporter.new(
-        file_path: file_path, matchable_taxonomy: matchable_taxonomy, source_file: source_file
+        file_path: file_path, matchable_taxonomy: matchable_taxonomy, import_run: import_run
       ),
       scope: MappingTaxon.import_scope(matchable_taxonomy: matchable_taxonomy)
     ).call
   end
 
-  def self.matches(file_path:, matchable_taxonomy:, foreign_matchable_taxonomy:, source_file: nil)
+  def self.matches(file_path:, matchable_taxonomy:, foreign_matchable_taxonomy:, import_run:)
     new(
       importer: Importers::MappingMatchesImporter.new(
         file_path: file_path,
         matchable_taxonomy: matchable_taxonomy,
         foreign_matchable_taxonomy: foreign_matchable_taxonomy,
-        source_file: source_file
+        import_run: import_run
       ),
       scope: MappingMatch.import_scope(
         matchable_taxonomy: matchable_taxonomy,

@@ -2,9 +2,9 @@
 class Imports::MappingTaxaJob < Imports::MappingJob
   private
 
-  def load(path, source_file)
+  def load(path)
     Mapping::FileImport.taxa(
-      file_path: path, matchable_taxonomy: import.importable, source_file: source_file
+      file_path: path, matchable_taxonomy: import_run.importable, import_run: import_run
     )
   end
 end

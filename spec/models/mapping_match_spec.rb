@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe MappingMatch do
+  let(:import_run) { create(:import_run) }
   let(:cites) { MatchableTaxonomy.create!(code: 'CITES_EU', name: 'CITES / EU') }
   let(:pair) { described_class.import_scope(matchable_taxonomy: cites, foreign_matchable_taxonomy: iucn) }
   let(:iucn) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
@@ -12,7 +13,7 @@ describe MappingMatch do
       foreign_matchable_taxonomy: foreign || iucn, foreign_taxon_nid: foreign_nid,
       matched_name: name, matched_name_status: statuses[0],
       foreign_matched_name: name, foreign_matched_name_status: statuses[1],
-      match_confidence: confidence, source_file: 'f.csv'
+      match_confidence: confidence, import_run: import_run
     )
   end
 
@@ -27,7 +28,7 @@ describe MappingMatch do
     def taxon(taxonomy, nid, status: 'A', name: "name #{nid}", author: nil)
       MappingTaxon.create!(
         matchable_taxonomy: taxonomy, taxon_nid: nid, accepted_taxon_nid: nid,
-        name_status: status, scientific_name: name, author_year: author, source_file: 't.csv'
+        name_status: status, scientific_name: name, author_year: author, import_run: import_run
       )
     end
 
@@ -39,7 +40,7 @@ describe MappingMatch do
         foreign_matchable_taxonomy: cites, foreign_taxon_nid: '1',
         matched_name: near_name, matched_name_status: statuses[0],
         foreign_matched_name: far_name, foreign_matched_name_status: statuses[1],
-        match_confidence: 'low', source_file: 'f.csv'
+        match_confidence: 'low', import_run: import_run
       )
     end
 
@@ -139,7 +140,7 @@ describe MappingMatch do
         foreign_matchable_taxonomy: cites, foreign_taxon_nid: '1',
         matched_name: 'n', matched_name_status: 'A',
         foreign_matched_name: 'n', foreign_matched_name_status: 'A',
-        match_confidence: 'high', source_file: 'f.csv'
+        match_confidence: 'high', import_run: import_run
       )
 
       expect(described_class.summary_by_pair.values).to contain_exactly(hash_including(matches: 2))
@@ -156,7 +157,7 @@ describe MappingMatch do
     def taxon(taxonomy, nid, status)
       MappingTaxon.create!(
         matchable_taxonomy: taxonomy, taxon_nid: nid, accepted_taxon_nid: nid,
-        name_status: status, scientific_name: 'n', source_file: 't.csv'
+        name_status: status, scientific_name: 'n', import_run: import_run
       )
     end
 
@@ -199,7 +200,7 @@ describe MappingMatch do
       match(statuses: 'AA', confidence: 'high')
       taxon(iucn, '9', 'A')
 
-      expect(described_class.unresolved_by_source.first[:source_file]).to eq 'f.csv'
+      expect(described_class.unresolved_by_source.first[:import_run_id]).to eq import_run.id
     end
   end
 

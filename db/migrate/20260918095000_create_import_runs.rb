@@ -9,6 +9,9 @@
 # 209 MB and takes about two minutes - so what it leaves behind has to be
 # readable afterwards, and the row-level errors the importer collects are worth
 # keeping.
+#
+# Created before the mapping tables, which carry a foreign key to it: every row
+# they hold came from one of these runs and is deleted with it.
 class CreateImportRuns < ActiveRecord::Migration[8.1]
   def change
     create_table :import_runs do |t|

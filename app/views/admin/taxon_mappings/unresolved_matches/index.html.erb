@@ -5,7 +5,7 @@
 <div class="page-header">
   <h1>
     Unresolved <%= @taxonomy.code %> references
-    <small><%= number_with_delimiter(@matches.total_count) %> in <%= @source_file %></small>
+    <small><%= number_with_delimiter(@matches.total_count) %> in <%= @import_run.filename %></small>
   </h1>
 </div>
 

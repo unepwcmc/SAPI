@@ -1,13 +1,14 @@
 require 'spec_helper'
 
 describe MappingTaxon do
+  let(:import_run) { create(:import_run) }
   let(:cites) { MatchableTaxonomy.create!(code: 'CITES_EU', name: 'CITES / EU') }
   let(:iucn) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
 
-  def taxon(taxonomy, status, nid: '1', accepted: '1', file: 'cites.csv')
+  def taxon(taxonomy, status, nid: '1', accepted: '1', run: import_run)
     described_class.create!(
       matchable_taxonomy: taxonomy, taxon_nid: nid, accepted_taxon_nid: accepted,
-      name_status: status, scientific_name: 'Panthera leo', source_file: file
+      name_status: status, scientific_name: 'Panthera leo', import_run: run
     )
   end
 
@@ -20,10 +21,11 @@ describe MappingTaxon do
         .to include(names: 2, accepted: 1)
     end
 
-    it 'reports the file the rows came from' do
-      taxon(cites, 'A', file: 'cites-2026.csv')
+    it 'reports the run the rows came from, which is what names the file' do
+      later = create(:import_run)
+      taxon(cites, 'A', run: later)
 
-      expect(described_class.summary_by_taxonomy[cites.id][:source_file]).to eq 'cites-2026.csv'
+      expect(described_class.summary_by_taxonomy[cites.id][:import_run_id]).to eq later.id
     end
 
     it 'leaves out a platform holding nothing, so the caller can tell it apart from zero' do

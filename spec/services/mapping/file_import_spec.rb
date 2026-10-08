@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Mapping::FileImport do
+  def import_run = @import_run ||= create(:import_run)
   let(:cites) { MatchableTaxonomy.create!(code: 'CITES_EU', name: 'CITES / EU') }
   let(:iucn) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
 
@@ -26,14 +27,17 @@ describe Mapping::FileImport do
     file&.unlink
   end
 
-  def import_taxa(contents = taxa_csv, into: cites)
-    csv(contents) { |path| described_class.taxa(file_path: path, matchable_taxonomy: into) }
+  def import_taxa(contents = taxa_csv, into: cites, run: import_run)
+    csv(contents) do |path|
+      described_class.taxa(file_path: path, matchable_taxonomy: into, import_run: run)
+    end
   end
 
   def import_matches(near: cites, far: iucn, headers: match_headers, rows: match_rows)
     csv("#{headers}\n#{rows}") do |path|
       described_class.matches(
-        file_path: path, matchable_taxonomy: near, foreign_matchable_taxonomy: far
+        file_path: path, matchable_taxonomy: near, foreign_matchable_taxonomy: far,
+        import_run: import_run
       )
     end
   end

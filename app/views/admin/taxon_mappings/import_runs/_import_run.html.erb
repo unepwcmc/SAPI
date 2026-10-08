@@ -1,0 +1,67 @@
+<%# What a run was and how it went. Block D says the same of recent ones; this
+    is the way back to a run from the rows it wrote, however long ago. %>
+<table class="table table-condensed table-bordered">
+  <tbody>
+    <tr>
+      <th>File</th>
+      <td>
+        <code><%= @import_run.filename %></code>
+        <%# Through the controller, which checks who is asking and then hands
+            out a URL good for a minute. A rails_blob_path would be permanent
+            and need no credentials at all. %>
+        <%= link_to 'Download',
+          download_admin_taxon_mappings_import_run_path(@import_run),
+          class: 'btn btn-small pull-right' %>
+      </td>
+    </tr>
+    <tr>
+      <th>Loaded into</th>
+      <td><%= import_target(@import_run) %></td>
+    </tr>
+    <tr>
+      <th>State</th>
+      <td>
+        <span class="label <%= import_label_class(@import_run) %>"><%= @import_run.status %></span>
+        <% if @import_run.duration %>
+          <small>took <%= @import_run.duration.round %>s</small>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th>Rows</th>
+      <td>
+        <% rows = import_rows(@import_run) %>
+        <%= rows ? number_with_delimiter(rows) : '&mdash;'.html_safe %>
+      </td>
+    </tr>
+    <tr>
+      <th>Started</th>
+      <td><%= local_time(@import_run.started_at || @import_run.created_at) %></td>
+    </tr>
+    <tr>
+      <th>Uploaded by</th>
+      <td><%= @import_run.creator&.name || '&mdash;'.html_safe %></td>
+    </tr>
+  </tbody>
+</table>
+
+<% if (errors = import_errors(@import_run)).present? %>
+  <p class="muted">Nothing was written. What stopped it:</p>
+  <table class="table table-condensed table-bordered">
+    <thead>
+      <tr><th>Row</th><th>Column</th><th>Problem</th></tr>
+    </thead>
+    <tbody>
+      <% errors.first(20).each do |entry| %>
+        <tr>
+          <td><%= entry['row'] || '&mdash;'.html_safe %></td>
+          <td><code><%= entry['column'] %></code></td>
+          <td><%= entry['message'] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if errors.size > 20 %>
+    <p class="muted"><%= pluralize(errors.size - 20, 'further problem') %> not shown.</p>
+  <% end %>
+<% end %>

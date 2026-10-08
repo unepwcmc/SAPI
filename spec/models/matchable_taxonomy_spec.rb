@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe MatchableTaxonomy do
+  let(:import_run) { create(:import_run) }
+
   def platform(code = 'IUCNRL')
     described_class.create!(code: code, name: 'IUCN Red List')
   end
@@ -25,7 +27,7 @@ describe MatchableTaxonomy do
     it 'is refused while it holds names' do
       MappingTaxon.create!(
         matchable_taxonomy: iucn, taxon_nid: '1', accepted_taxon_nid: '1',
-        name_status: 'A', scientific_name: 'Panthera leo', source_file: 'f.csv'
+        name_status: 'A', scientific_name: 'Panthera leo', import_run: import_run
       )
 
       expect(iucn.destroy).to be false
@@ -37,7 +39,7 @@ describe MatchableTaxonomy do
         foreign_matchable_taxonomy: iucn, foreign_taxon_nid: '9',
         matched_name: 'n', matched_name_status: 'A',
         foreign_matched_name: 'n', foreign_matched_name_status: 'A',
-        match_confidence: 'high', source_file: 'f.csv'
+        match_confidence: 'high', import_run: import_run
       )
 
       expect(iucn.destroy).to be false
@@ -46,7 +48,7 @@ describe MatchableTaxonomy do
     it 'says what is blocking it' do
       MappingTaxon.create!(
         matchable_taxonomy: iucn, taxon_nid: '1', accepted_taxon_nid: '1',
-        name_status: 'A', scientific_name: 'Panthera leo', source_file: 'f.csv'
+        name_status: 'A', scientific_name: 'Panthera leo', import_run: import_run
       )
       iucn.destroy
 

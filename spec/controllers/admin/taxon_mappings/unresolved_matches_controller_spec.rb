@@ -1,29 +1,30 @@
 require 'spec_helper'
 
 describe Admin::TaxonMappings::UnresolvedMatchesController do
+  let(:import_run) { create(:import_run) }
   let!(:cites) { MatchableTaxonomy.create!(code: 'CITES', name: 'CITES') }
   let!(:iucn) { MatchableTaxonomy.create!(code: 'IUCN', name: 'IUCN Red List') }
 
-  def match(near_nid: '1', far_nid: '9', file: 'matches.csv')
+  def match(near_nid: '1', far_nid: '9', run: import_run)
     MappingMatch.create!(
       matchable_taxonomy: cites, taxon_nid: near_nid,
       foreign_matchable_taxonomy: iucn, foreign_taxon_nid: far_nid,
       matched_name: 'Panthera leo', matched_name_status: 'A',
       foreign_matched_name: 'Panthera leo', foreign_matched_name_status: 'A',
-      match_confidence: 'high', source_file: file
+      match_confidence: 'high', import_run: run
     )
   end
 
   def taxon(taxonomy, nid)
     MappingTaxon.create!(
       matchable_taxonomy: taxonomy, taxon_nid: nid, accepted_taxon_nid: nid,
-      name_status: 'A', scientific_name: 'Panthera leo', source_file: 'taxa.csv'
+      name_status: 'A', scientific_name: 'Panthera leo', import_run: import_run
     )
   end
 
-  def get_index(side: 'near', taxonomy: cites, file: 'matches.csv')
+  def get_index(side: 'near', taxonomy: cites, run: import_run)
     get :index, params: {
-      matchable_taxonomy_id: taxonomy.id, side: side, source_file: file
+      matchable_taxonomy_id: taxonomy.id, side: side, import_run_id: run.id
     }
   end
 
@@ -56,10 +57,10 @@ describe Admin::TaxonMappings::UnresolvedMatchesController do
       expect(assigns(:matches)).to eq [ unresolved ]
     end
 
-    it 'keeps to the export the count came from' do
-      match(near_nid: '1', file: 'other.csv')
+    it 'keeps to the run the count came from' do
+      match(near_nid: '1', run: create(:import_run))
 
-      get_index(file: 'matches.csv')
+      get_index
       expect(assigns(:matches)).to be_empty
     end
 

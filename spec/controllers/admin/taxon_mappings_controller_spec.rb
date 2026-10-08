@@ -1,13 +1,14 @@
 require 'spec_helper'
 
 describe Admin::TaxonMappingsController do
+  let(:import_run) { create(:import_run) }
   let!(:cites) { MatchableTaxonomy.create!(code: 'CITES_EU', name: 'CITES / EU') }
   let!(:iucn) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
 
   def taxon(taxonomy, nid, status = 'A')
     MappingTaxon.create!(
       matchable_taxonomy: taxonomy, taxon_nid: nid, accepted_taxon_nid: nid,
-      name_status: status, scientific_name: 'Panthera leo', source_file: 'f.csv'
+      name_status: status, scientific_name: 'Panthera leo', import_run: import_run
     )
   end
 
@@ -17,7 +18,7 @@ describe Admin::TaxonMappingsController do
       foreign_matchable_taxonomy: iucn, foreign_taxon_nid: '9',
       matched_name: 'n', matched_name_status: 'A',
       foreign_matched_name: 'n', foreign_matched_name_status: 'A',
-      match_confidence: 'high', source_file: 'm.csv'
+      match_confidence: 'high', import_run: import_run
     )
   end
 

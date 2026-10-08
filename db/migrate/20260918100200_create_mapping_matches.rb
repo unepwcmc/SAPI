@@ -19,7 +19,8 @@ class CreateMappingMatches < ActiveRecord::Migration[8.1]
 
       t.string :match_confidence, null: false
       t.boolean :exclude, null: false, default: false
-      t.string :source_file, null: false
+      # The run that wrote this row - see the same column on mapping_taxa.
+      t.references :import_run, null: false, foreign_key: true
 
       t.timestamps
     end

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Importers::MappingTaxaImporter do
+  let(:import_run) { create(:import_run) }
   let(:matchable_taxonomy) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
   let(:headers) { 'Status,Id,Id_Accepted,Rank,Scientific.Name,Author' }
 
@@ -8,7 +9,9 @@ describe Importers::MappingTaxaImporter do
     file = Tempfile.new([ 'taxa', '.csv' ])
     file.write("#{headers}\n#{rows}")
     file.close
-    described_class.new(file_path: file.path, matchable_taxonomy: matchable_taxonomy).tap(&:import!)
+    described_class.new(
+      file_path: file.path, matchable_taxonomy: matchable_taxonomy, import_run: import_run
+    ).tap(&:import!)
   ensure
     file&.unlink
   end
@@ -81,7 +84,7 @@ describe Importers::MappingTaxaImporter do
       file.write("Status,Id,Id_Accepted,Scientific.Name,Author\nA,1,1,Panthera leo,L\n")
       file.close
       described_class.new(
-        file_path: file.path, matchable_taxonomy: matchable_taxonomy
+        file_path: file.path, matchable_taxonomy: matchable_taxonomy, import_run: import_run
       ).import!
     ensure
       file&.unlink
@@ -93,7 +96,7 @@ describe Importers::MappingTaxaImporter do
 
     expect(MappingTaxon.sole).to have_attributes(
       matchable_taxonomy: matchable_taxonomy,
-      source_file: File.basename(importer.file_path)
+      import_run: import_run
     )
   end
 

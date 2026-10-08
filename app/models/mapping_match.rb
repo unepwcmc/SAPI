@@ -10,21 +10,23 @@
 #  match_confidence              :string           not null
 #  matched_name                  :string           not null
 #  matched_name_status           :string
-#  source_file                   :string           not null
 #  taxon_nid                     :string           not null
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #  foreign_matchable_taxonomy_id :bigint           not null
+#  import_run_id                 :bigint           not null
 #  matchable_taxonomy_id         :bigint           not null
 #
 # Indexes
 #
-#  index_mapping_matches_on_foreign_side  (foreign_matchable_taxonomy_id,foreign_taxon_nid)
-#  index_mapping_matches_on_near_side     (matchable_taxonomy_id,taxon_nid)
+#  index_mapping_matches_on_foreign_side   (foreign_matchable_taxonomy_id,foreign_taxon_nid)
+#  index_mapping_matches_on_import_run_id  (import_run_id)
+#  index_mapping_matches_on_near_side      (matchable_taxonomy_id,taxon_nid)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (foreign_matchable_taxonomy_id => matchable_taxonomies.id)
+#  fk_rails_...  (import_run_id => import_runs.id)
 #  fk_rails_...  (matchable_taxonomy_id => matchable_taxonomies.id)
 #
 # There is one source file per unordered pair and no reverse file, so a row is
@@ -43,7 +45,8 @@ class MappingMatch < ApplicationRecord
   validates :foreign_matched_name, presence: true
   validates :foreign_matched_name_status, presence: true
   validates :match_confidence, presence: true
-  validates :source_file, presence: true
+  # See the same association on MappingTaxon.
+  belongs_to :import_run
 
   scope :included, -> { where(exclude: false) }
 
@@ -178,7 +181,7 @@ class MappingMatch < ApplicationRecord
     sanitize_sql_array(
       [
         "SELECT m.id, #{sided.join(', ')}, m.match_confidence, m.exclude,
-              m.source_file, m.created_at, m.updated_at
+              m.import_run_id, m.created_at, m.updated_at
        FROM mapping_matches m
        WHERE m.#{taxonomy_column} = :taxonomy
          AND m.#{nid_column} = :taxon_nid
@@ -197,14 +200,14 @@ class MappingMatch < ApplicationRecord
       Arel.sql('matchable_taxonomy_id'),
       Arel.sql('foreign_matchable_taxonomy_id'),
       Arel.sql('count(*)'),
-      Arel.sql('max(source_file)'),
+      Arel.sql('max(import_run_id)'),
       Arel.sql('max(created_at)')
-    ).each_with_object({}) do |(near, far, matches, source_file, loaded_at), summary|
+    ).each_with_object({}) do |(near, far, matches, import_run_id, loaded_at), summary|
       # The two orientations are separate groups in SQL but one pair here, so
       # they are folded together rather than one overwriting the other.
-      entry = summary[[ near, far ].sort] ||= { matches: 0, source_file: nil, loaded_at: nil }
+      entry = summary[[ near, far ].sort] ||= { matches: 0, import_run_id: nil, loaded_at: nil }
       entry[:matches] += matches
-      entry[:source_file] = [ entry[:source_file], source_file ].compact.max
+      entry[:import_run_id] = [ entry[:import_run_id], import_run_id ].compact.max
       entry[:loaded_at] = [ entry[:loaded_at], loaded_at ].compact.max
     end
   end
@@ -229,11 +232,11 @@ class MappingMatch < ApplicationRecord
   # The matches themselves, for one platform and one export. What the summary
   # counts, listed - so "111 unresolved" can be turned into 111 identifiers
   # somebody can look up or send back upstream.
-  def self.unresolved(side:, matchable_taxonomy:, source_file:)
+  def self.unresolved(side:, matchable_taxonomy:, import_run:)
     taxonomy_column, = UNRESOLVED_SIDES.fetch(side)
 
     unresolved_scope(side)
-      .where(taxonomy_column => matchable_taxonomy.id, source_file: source_file)
+      .where(taxonomy_column => matchable_taxonomy.id, import_run: import_run)
       .order(Arel.sql(UNRESOLVED_SIDES.fetch(side).last))
   end
 
@@ -258,11 +261,11 @@ class MappingMatch < ApplicationRecord
   def self.unresolved_for(side)
     taxonomy_column, = UNRESOLVED_SIDES.fetch(side)
 
-    unresolved_scope(side).group(taxonomy_column, :source_file).pluck(
-      Arel.sql(taxonomy_column), Arel.sql('source_file'), Arel.sql('count(*)')
-    ).map do |taxonomy_id, source_file, count|
+    unresolved_scope(side).group(taxonomy_column, :import_run_id).pluck(
+      Arel.sql(taxonomy_column), Arel.sql('import_run_id'), Arel.sql('count(*)')
+    ).map do |taxonomy_id, import_run_id, count|
       {
-        matchable_taxonomy_id: taxonomy_id, source_file: source_file,
+        matchable_taxonomy_id: taxonomy_id, import_run_id: import_run_id,
         unresolved: count, side: side
       }
     end

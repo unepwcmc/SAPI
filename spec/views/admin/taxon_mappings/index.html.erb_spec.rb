@@ -4,6 +4,7 @@ require 'spec_helper'
 # compiles assets, which would make these the only examples in the suite that
 # need node installed. What the controller assigns is covered by its own spec.
 describe 'admin/taxon_mappings/index' do
+  let(:import_run) { create(:import_run) }
   let(:cites) { MatchableTaxonomy.create!(code: 'CITES_EU', name: 'CITES / EU') }
   let(:iucn) { MatchableTaxonomy.create!(code: 'IUCNRL', name: 'IUCN Red List') }
 
@@ -19,7 +20,7 @@ describe 'admin/taxon_mappings/index' do
   def draw(
     taxonomy_rows: [
       {
-        taxonomy: cites, names: 2, accepted: 1, source_file: 'cites_eu.csv',
+        taxonomy: cites, names: 2, accepted: 1, import_run: import_run,
         loaded_at: Time.current
       }
     ],
@@ -66,7 +67,7 @@ describe 'admin/taxon_mappings/index' do
   describe 'the match pairs table' do
     def pair_rows(loaded:, empty:)
       Array.new(loaded) { {
-        near: cites, far: iucn, matches: 5, source_file: 'm.csv',
+        near: cites, far: iucn, matches: 5, import_run: import_run,
         loaded_at: Time.current
       } } +
         Array.new(empty) { { near: cites, far: iucn } }
@@ -104,10 +105,18 @@ describe 'admin/taxon_mappings/index' do
       expect(rendered).to have_no_css '.js-toggle-empty-pairs'
     end
 
-    it 'hides nothing when no pair holds anything, since the table would be empty' do
+    it 'hides them even when nothing at all is loaded' do
+      # The heading still says 0 of 2, so the table being empty is not a
+      # mystery - and the button is there to open it.
       draw(pair_rows: pair_rows(loaded: 0, empty: 2))
 
-      expect(rendered).to have_no_css 'tr[style*="display: none"]', visible: :all
+      expect(rendered).to have_css 'tr.js-empty-pair[style*="display: none"]', count: 2, visible: :all
+    end
+
+    it 'offers the button when nothing at all is loaded' do
+      draw(pair_rows: pair_rows(loaded: 0, empty: 2))
+
+      expect(rendered).to have_css '.js-toggle-empty-pairs', text: '2 pairs'
     end
   end
 
@@ -122,7 +131,7 @@ describe 'admin/taxon_mappings/index' do
       unresolved_rows: [
         {
           taxonomy: cites, unresolved: 111, taxa_loaded: true, side: :near,
-          source_file: 'match-results-cites-iucn.csv'
+          import_run_id: import_run.id, import_run: import_run
         }
       ]
     )
@@ -130,17 +139,43 @@ describe 'admin/taxon_mappings/index' do
     expect(rendered).to have_css "a[href*='unresolved_matches']", text: '111'
   end
 
-  it 'names the file behind an unresolved reference' do
+  it 'opens the run behind a timestamp, rather than crowding the table with it' do
+    draw
+
+    expect(rendered).to have_css "a[href*='import_runs'][data-remote='true']"
+  end
+
+  it 'has somewhere for the run to be rendered into' do
+    # The id has to match what import_runs/show.js.erb fills, and a mismatch is
+    # silent: the modal opens empty.
+    draw
+
+    expect(rendered).to have_css '#import-run .modal-body#admin-import-run', visible: :all
+  end
+
+  it 'offers nothing to save, since the run is only being read' do
+    draw
+
+    expect(rendered).to have_no_css '#import-run .save-button', visible: :all
+  end
+
+  it 'leaves the file name out of the tables, since the run carries it' do
+    draw
+
+    expect(rendered).to have_no_css 'th', text: 'Source file'
+  end
+
+  it 'names the file behind an unresolved reference, looked up through the run' do
     draw(
       unresolved_rows: [
         {
           taxonomy: cites, unresolved: 119, taxa_loaded: true, side: :near,
-          source_file: 'match-results-cites-iucn.csv'
+          import_run_id: import_run.id, import_run: import_run
         }
       ]
     )
 
-    expect(rendered).to include 'match-results-cites-iucn.csv'
+    expect(rendered).to include import_run.filename
   end
 
   it 'says nothing has been uploaded yet when nothing has' do

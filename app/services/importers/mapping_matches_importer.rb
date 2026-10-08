@@ -30,18 +30,19 @@ class Importers::MappingMatchesImporter < Importer::Base
     }
   )
 
-  derived_attributes %i[matchable_taxonomy_id foreign_matchable_taxonomy_id source_file]
+  derived_attributes %i[matchable_taxonomy_id foreign_matchable_taxonomy_id import_run_id]
 
-  attr_reader :matchable_taxonomy, :foreign_matchable_taxonomy, :source_file
+  attr_reader :matchable_taxonomy, :foreign_matchable_taxonomy, :import_run
 
-  # source_file is the name the file arrived under, which is not the path it is
-  # read from: an upload reaches disk as an ActiveStorage tempfile, and
-  # `ActiveStorage-16851-...xlsx` names nothing anyone can re-export.
-  def initialize(file_path:, matchable_taxonomy:, foreign_matchable_taxonomy:, source_file: nil)
+  # The run is recorded on every row rather than the file's name: two uploads
+  # can share a name, and the path the file is read from is an ActiveStorage
+  # tempfile called nothing anyone could re-export. The run holds the file, so
+  # its name is still reachable - just said once.
+  def initialize(file_path:, matchable_taxonomy:, foreign_matchable_taxonomy:, import_run:)
     super(file_path: file_path)
     @matchable_taxonomy = matchable_taxonomy
     @foreign_matchable_taxonomy = foreign_matchable_taxonomy
-    @source_file = source_file || File.basename(file_path)
+    @import_run = import_run
   end
 
   private
@@ -115,8 +116,8 @@ class Importers::MappingMatchesImporter < Importer::Base
     foreign_matchable_taxonomy.id
   end
 
-  def cast_source_file(_raw_value)
-    source_file
+  def cast_import_run_id(_raw_value)
+    import_run.id
   end
 
   # A status is missing exactly when a person asserted the match rather than a

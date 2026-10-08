@@ -11,15 +11,15 @@ class Imports::MappingJob < ApplicationJob
   KINDS = %w[mapping_taxa mapping_matches].freeze
 
   def perform(import_id)
-    @import = ImportRun.find(import_id)
+    @import_run = ImportRun.find(import_id)
     # A retry of a job whose upload already ran would replace the scope a
     # second time, so only a pending row is picked up.
-    return unless import.pending?
+    return unless import_run.pending?
 
-    import.update!(status: ImportRun::RUNNING, started_at: Time.current)
-    result = with_file { |path, source_file| load(path, source_file) }
+    import_run.update!(status: ImportRun::RUNNING, started_at: Time.current)
+    result = with_file { |path| load(path) }
 
-    import.update!(
+    import_run.update!(
       status: result.success? ? ImportRun::DONE : ImportRun::FAILED,
       logs: result.logs,
       finished_at: Time.current
@@ -38,21 +38,21 @@ class Imports::MappingJob < ApplicationJob
 
   private
 
-  attr_reader :import
+  attr_reader :import_run
 
-  def load(_path, _source_file)
+  def load(_path)
     raise NotImplementedError
   end
 
   # Importer::Base reads a path, so the attachment has to reach disk. It reads
   # a .zip holding one CSV itself, and a bare CSV or spreadsheet as well.
   #
-  # The name recorded with the rows is the upload's own: ActiveStorage writes
-  # the attachment to a tempfile called something like
-  # ActiveStorage-16851-20260930-8-9wqicn.csv, which names nothing anyone could
-  # re-export.
+  # Nothing about the file's name is passed down: the rows record the run, and
+  # the run holds the file. Which is just as well - ActiveStorage writes the
+  # attachment to a tempfile called something like
+  # ActiveStorage-16851-20260930-8-9wqicn.csv.
   def with_file
-    import.file.open { |file| yield(file.path, import.filename) }
+    import_run.file.open { |file| yield(file.path) }
   end
 
   def record_failure(error, message = error.message)
@@ -63,7 +63,7 @@ class Imports::MappingJob < ApplicationJob
     # than the row being valid, and update! would raise a second error on top
     # of the one being handled.
     # rubocop:disable Rails/SkipsModelValidations
-    import&.update_columns(
+    import_run&.update_columns(
       status: ImportRun::FAILED,
       logs: [ { level: 'error', message: message } ],
       finished_at: Time.current,

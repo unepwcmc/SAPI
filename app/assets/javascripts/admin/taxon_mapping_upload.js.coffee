@@ -81,9 +81,24 @@ refreshImports = ($imports) ->
 
 pollImports = ($imports) -> setTimeout((-> refreshImports($imports)), POLL_MS)
 
+# The counts above the block all move when a run ends, and only then, so they
+# are fetched once at that point rather than on the timer. Working them out
+# groups over every name a platform holds and scans the matches twice.
 finished = ($imports) ->
-  $imports.find('.js-imports-polling')
-    .text('finished - reload the page to update the counts above')
+  $imports.find('.js-imports-polling').text('')
+  $summary = $('#taxon-mapping-summary')
+
+  return unless $summary.length
+
+  $.get($summary.data('refresh-url'))
+    .done (html) ->
+      $next = $($.parseHTML(html)).filter('#taxon-mapping-summary')
+
+      $summary.replaceWith($next) if $next.length
+      showLocalTimes()
+    .fail ->
+      $imports.find('.js-imports-polling')
+        .text('finished - reload the page to update the counts above')
 
 # The pairs holding nothing are rendered but hidden: six taxonomies make
 # fifteen pairs and most are usually empty, so showing them all buries the few

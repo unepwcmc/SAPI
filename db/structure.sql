@@ -12794,7 +12794,7 @@ CREATE TABLE public.mapping_matches (
     foreign_matched_name_status character varying,
     match_confidence character varying NOT NULL,
     exclude boolean DEFAULT false NOT NULL,
-    source_file character varying NOT NULL,
+    import_run_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -12813,7 +12813,7 @@ CREATE TABLE public.mapping_taxa (
     rank_id integer,
     scientific_name character varying NOT NULL,
     author_year character varying,
-    source_file character varying NOT NULL,
+    import_run_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -205354,6 +205354,13 @@ CREATE INDEX index_mapping_matches_on_foreign_side ON public.mapping_matches USI
 
 
 --
+-- Name: index_mapping_matches_on_import_run_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mapping_matches_on_import_run_id ON public.mapping_matches USING btree (import_run_id);
+
+
+--
 -- Name: index_mapping_matches_on_near_side; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -205372,6 +205379,13 @@ CREATE INDEX index_mapping_taxa_on_accepted_nid ON public.mapping_taxa USING btr
 --
 
 CREATE INDEX index_mapping_taxa_on_concept ON public.mapping_taxa USING btree (matchable_taxonomy_id, accepted_taxon_nid);
+
+
+--
+-- Name: index_mapping_taxa_on_import_run_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mapping_taxa_on_import_run_id ON public.mapping_taxa USING btree (import_run_id);
 
 
 --
@@ -356425,6 +356439,14 @@ ALTER TABLE ONLY public.mapping_taxa
 
 
 --
+-- Name: mapping_taxa fk_rails_7e6d221c47; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mapping_taxa
+    ADD CONSTRAINT fk_rails_7e6d221c47 FOREIGN KEY (import_run_id) REFERENCES public.import_runs(id);
+
+
+--
 -- Name: import_runs fk_rails_8bb61dd2da; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -356438,6 +356460,14 @@ ALTER TABLE ONLY public.import_runs
 
 ALTER TABLE ONLY public.active_storage_variant_records
     ADD CONSTRAINT fk_rails_993965df05 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
+
+
+--
+-- Name: mapping_matches fk_rails_9afd3ce2d9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mapping_matches
+    ADD CONSTRAINT fk_rails_9afd3ce2d9 FOREIGN KEY (import_run_id) REFERENCES public.import_runs(id);
 
 
 --
@@ -357440,10 +357470,10 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261005120000'),
-('20260929140000'),
 ('20260918100200'),
 ('20260918100100'),
 ('20260918100000'),
+('20260918095000'),
 ('20260612143100'),
 ('20260612143000'),
 ('20260611103000'),
