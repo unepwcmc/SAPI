@@ -24,6 +24,11 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
+  # Keep staging out of Google. Inserted at the very front of the stack so it
+  # also covers the static files served above — public/robots.txt included.
+  # Referenced by name so the constant is resolved after autoloading is set up.
+  config.middleware.insert_before 0, 'StagingNoindex'
+
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :terser
 
