@@ -85,8 +85,23 @@ finished = ($imports) ->
   $imports.find('.js-imports-polling')
     .text('finished - reload the page to update the counts above')
 
+# The pairs holding nothing are rendered but hidden: six taxonomies make
+# fifteen pairs and most are usually empty, so showing them all buries the few
+# that matter. They are worth keeping though - a blank row is the only thing
+# that shows a lookup will come back empty because nobody uploaded that file.
+toggleEmptyPairs = ($button) ->
+  $rows = $('.js-empty-pair')
+  showing = $rows.first().is(':hidden')
+
+  $rows.toggle(showing)
+  count = $button.data('hidden-count')
+  $button.text("#{if showing then 'Hide' else 'Show'} #{count} " +
+    "#{if count is 1 then 'pair' else 'pairs'} with nothing loaded")
+
 $(document).ready ->
   showLocalTimes()
+
+  $(document).on 'click', '.js-toggle-empty-pairs', -> toggleEmptyPairs($(@))
 
   $form = $('#taxon-mapping-upload')
   new TaxonMappingUpload($form).init() if $form.length

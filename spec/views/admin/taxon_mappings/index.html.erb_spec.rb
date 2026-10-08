@@ -63,6 +63,54 @@ describe 'admin/taxon_mappings/index' do
     expect(rendered).to include 'not loaded'
   end
 
+  describe 'the match pairs table' do
+    def pair_rows(loaded:, empty:)
+      Array.new(loaded) { {
+        near: cites, far: iucn, matches: 5, source_file: 'm.csv',
+        loaded_at: Time.current
+      } } +
+        Array.new(empty) { { near: cites, far: iucn } }
+    end
+
+    it 'hides the pairs holding nothing, so the loaded ones are not buried' do
+      draw(pair_rows: pair_rows(loaded: 1, empty: 2))
+
+      expect(rendered)
+        .to have_css 'tr.js-empty-pair[style*="display: none"]', count: 2, visible: :all
+    end
+
+    it 'still renders them, since a blank row is what shows an upload is missing' do
+      draw(pair_rows: pair_rows(loaded: 1, empty: 2))
+
+      expect(rendered).to have_css 'tr.js-empty-pair', count: 2, visible: :all
+    end
+
+    it 'offers a way to see them, saying how many there are' do
+      draw(pair_rows: pair_rows(loaded: 1, empty: 2))
+
+      expect(rendered).to have_css '.js-toggle-empty-pairs', text: '2 pairs'
+    end
+
+    it 'leaves the loaded ones alone' do
+      draw(pair_rows: pair_rows(loaded: 1, empty: 2))
+
+      expect(rendered)
+        .to have_no_css 'tr[style*="display: none"] td', text: '5', visible: :all
+    end
+
+    it 'offers no button when every pair holds something' do
+      draw(pair_rows: pair_rows(loaded: 2, empty: 0))
+
+      expect(rendered).to have_no_css '.js-toggle-empty-pairs'
+    end
+
+    it 'hides nothing when no pair holds anything, since the table would be empty' do
+      draw(pair_rows: pair_rows(loaded: 0, empty: 2))
+
+      expect(rendered).to have_no_css 'tr[style*="display: none"]', visible: :all
+    end
+  end
+
   it 'collapses the unresolved block to a line when there is nothing to report' do
     draw
 

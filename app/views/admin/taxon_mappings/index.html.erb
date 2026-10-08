@@ -57,6 +57,21 @@
         Match pairs
         <small><%= @pair_rows.count { |r| r[:matches] } %> of <%= @pair_rows.size %> loaded</small>
       </h4>
+      <%# Every pair is rendered, because a blank row is the only thing that
+          shows a lookup will come back empty for want of an upload - the API
+          cannot tell you that. Six taxonomies make fifteen pairs though, so
+          the empty ones start hidden rather than burying the loaded ones.
+          No button when there is nothing to hide, and nothing is hidden when
+          no pair holds anything, since an empty table says less than the
+          rows do. %>
+      <% empty_pairs = @pair_rows.count { |r| r[:matches].nil? } %>
+      <% hide_empty = empty_pairs.positive? && empty_pairs < @pair_rows.size %>
+      <% if hide_empty %>
+        <button type="button" class="btn btn-small js-toggle-empty-pairs"
+          data-hidden-count="<%= empty_pairs %>">
+          Show <%= pluralize(empty_pairs, 'pair') %> with nothing loaded
+        </button>
+      <% end %>
     </div>
 
     <table class="table table-bordered table-striped">
@@ -70,7 +85,10 @@
       </thead>
       <tbody>
         <% @pair_rows.each do |row| %>
-          <tr class="<%= 'muted' unless row[:matches] %>">
+          <%# Hidden with an inline style rather than a class, so jQuery's own
+              toggle can undo it without fighting a stylesheet. %>
+          <tr class="<%= 'muted js-empty-pair' unless row[:matches] %>"
+            style="<%= 'display: none' if hide_empty && row[:matches].nil? %>">
             <td><strong><%= row[:near].code %> &harr; <%= row[:far].code %></strong></td>
             <% if row[:matches] %>
               <td class="text-right"><%= number_with_delimiter(row[:matches]) %></td>
