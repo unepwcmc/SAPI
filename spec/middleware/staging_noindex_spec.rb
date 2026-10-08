@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+# lib/middleware is excluded from the autoloader (see config/application.rb),
+# so the class has to be required here the same way staging.rb requires it.
+require Rails.root.join('lib/middleware/staging_noindex')
+
 describe StagingNoindex do
   let(:downstream_headers) { { 'Content-Type' => 'text/html' } }
   let(:app) { ->(_env) { [200, downstream_headers, ['body']] } }

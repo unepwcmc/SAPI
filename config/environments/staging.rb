@@ -26,8 +26,14 @@ Rails.application.configure do
 
   # Keep staging out of Google. Inserted at the very front of the stack so it
   # also covers the static files served above — public/robots.txt included.
-  # Referenced by name so the constant is resolved after autoloading is set up.
-  config.middleware.insert_before 0, 'StagingNoindex'
+  #
+  # Required rather than autoloaded: the middleware stack stores the class and
+  # calls .name on it, so it has to be a real class here, and a constant
+  # referenced from an environment file is resolved before Zeitwerk is set up.
+  # lib/middleware is excluded from autoload_lib in config/application.rb so
+  # this require does not collide with the autoloader.
+  require Rails.root.join('lib/middleware/staging_noindex')
+  config.middleware.insert_before 0, StagingNoindex
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :terser
