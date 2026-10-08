@@ -1,10 +1,13 @@
 # Given a taxon in one platform, what it is in the others:
 #
-#   GET /api/v1/intertaxonomic_mappings/CITES_EU:68363?taxonomies=IUCNRL,GARD
+#   GET /api/v1/intertaxonomic_mappings/CITES:68363?taxonomies=IUCN,CMS
 #
-# Public, like the other species endpoints. The rules behind the response -
-# which matches are returned, how they are ranked, what an empty answer means -
-# are in doc/intertaxonomic_mapping_api.md.
+# The path carries a taxonomy's code and an accepted identifier within it. A
+# synonym identifier is not accepted: matches are held between concepts, so
+# there would be nothing to look up. `taxonomies` narrows the answer and can be
+# left off, in which case every platform we hold a match for is reported.
+#
+# Public, like the other species endpoints.
 class Api::V1::IntertaxonomicMappingsController < ApplicationController
   def show
     taxonomy_code, taxon_nid = params[:id].split(':', 2)
