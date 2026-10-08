@@ -1,4 +1,9 @@
-# Staging: keep crawlers out. Copied over robots.txt in the build-staging
-# stage of the Dockerfile; production keeps public/robots.txt.
+# Staging. Crawling is allowed on purpose: every response carries
+# X-Robots-Tag: noindex (see config/environments/staging.rb), and a crawler
+# has to fetch a URL to see it. Disallowing here would stop that signal being
+# read and leave already-indexed URLs in results.
+#
+# Copied over robots.txt in the build-staging stage of the Dockerfile;
+# production keeps public/robots.txt.
 User-agent: *
-Disallow: /
+Allow: /

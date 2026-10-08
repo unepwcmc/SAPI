@@ -187,7 +187,7 @@ FROM build AS build-staging
 
   COPY . .
 
-  # Staging must not be indexed: swap in the blocking robots.txt
+  # Staging must not be indexed: swap in the staging robots.txt
   RUN cp public/robots.staging.txt public/robots.txt
 
   RUN bundle exec bootsnap precompile app/ lib/
