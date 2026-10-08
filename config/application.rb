@@ -23,7 +23,7 @@ module SAPI
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(
-      ignore: %w[assets capistrano data files pt scripts tasks]
+      ignore: %w[assets capistrano data files middleware pt scripts tasks]
     )
 
     # TODO: figure out why we still need the following:
