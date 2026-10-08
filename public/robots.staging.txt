@@ -1,0 +1,4 @@
+# Staging: keep crawlers out. Copied over robots.txt in the build-staging
+# stage of the Dockerfile; production keeps public/robots.txt.
+User-agent: *
+Disallow: /
