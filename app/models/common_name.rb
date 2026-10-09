@@ -34,7 +34,7 @@ class CommonName < ApplicationRecord
   validates :name,
     format: {
       with: TRIMMED_REGEX,
-      message: 'should not contain leading or traliling spaces'
+      message: MESSAGE_SHOULD_BE_TRIMMED
     }
 
   validates :name, presence: true,

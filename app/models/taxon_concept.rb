@@ -198,7 +198,7 @@ class TaxonConcept < ApplicationRecord
   validates :full_name,
     format: {
       with: TRIMMED_REGEX,
-      message: 'should not contain leading or traliling spaces'
+      message: MESSAGE_SHOULD_BE_TRIMMED
     }
 
   validate :full_name_cannot_be_changed, on: :update
