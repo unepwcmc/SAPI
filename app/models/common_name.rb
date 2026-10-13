@@ -31,6 +31,8 @@ class CommonName < ApplicationRecord
 
   has_many :taxon_commons, dependent: :destroy
 
+  normalizes :name, with: ->(value) { value.squish }
+
   validates :name,
     format: {
       with: TRIMMED_REGEX,
@@ -56,10 +58,6 @@ class CommonName < ApplicationRecord
   def convention_language
     value = self[:convention_language]
     ActiveRecord::Type::Boolean.new.cast(value)
-  end
-
-  def name=(original_value)
-    super(original_value&.to_s&.squish)
   end
 
 private

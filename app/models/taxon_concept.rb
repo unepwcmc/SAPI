@@ -195,6 +195,8 @@ class TaxonConcept < ApplicationRecord
   validates :taxon_name_id, presence: true,
     unless: lambda { |tc| tc.taxon_name.try(:valid?) }
 
+  normalizes :full_name, :author_year, with: ->(value) { value.squish }
+
   validates :full_name,
     format: {
       with: TRIMMED_REGEX,
@@ -321,14 +323,6 @@ class TaxonConcept < ApplicationRecord
         SQL
       ).pluck('full_name')
     end
-  end
-
-  def full_name=(original_value)
-    super(original_value&.to_s&.squish)
-  end
-
-  def author_year=(original_value)
-    super(original_value&.to_s&.squish)
   end
 
   def scientific_name=(str)
