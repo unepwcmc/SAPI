@@ -38,14 +38,16 @@ namespace :import do
         FROM taxon_names
       ) AS subquery;
 
-      INSERT INTO taxon_concepts (full_name,
+      INSERT INTO taxon_concepts (
+        full_name,
         rank_id,
         taxon_name_id,
         legacy_trade_code,
         taxonomy_id,
         name_status,
         created_at,
-        updated_at)
+        updated_at
+      )
       SELECT
         subquery.*,
         now()::date AS created_at,
@@ -72,12 +74,13 @@ namespace :import do
 
       ) AS subquery;
 
-      INSERT INTO taxon_relationships
-        (taxon_concept_id,
+      INSERT INTO taxon_relationships(
+        taxon_concept_id,
         other_taxon_concept_id,
         taxon_relationship_type_id,
         created_at,
-        updated_at)
+        updated_at
+      )
       SELECT
         subquery.*,
         now()::date AS created_at,
@@ -101,7 +104,9 @@ namespace :import do
         WHERE taxon_relationship_type_id = #{taxon_relationship_type_id}
       ) AS subquery;
       SQL
+
       ApplicationRecord.connection.execute(sql)
+
       puts "There are #{TaxonConcept.where(
         name_status: "H",
         taxonomy_id: taxonomy_id
