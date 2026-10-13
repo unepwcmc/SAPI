@@ -59,7 +59,7 @@ class CommonName < ApplicationRecord
   end
 
   def name=(original_value)
-    super(original_value&.to_s&.strip)
+    super(original_value&.to_s&.squish)
   end
 
 private

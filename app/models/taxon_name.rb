@@ -16,7 +16,7 @@ class TaxonName < ApplicationRecord
   validates :scientific_name, presence: true
 
   def scientific_name=(original_value)
-    super(original_value&.to_s&.strip)
+    super(original_value&.to_s&.squish)
   end
 
   def self.sanitize_scientific_name(some_scientific_name)

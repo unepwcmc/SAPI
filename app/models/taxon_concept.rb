@@ -324,11 +324,11 @@ class TaxonConcept < ApplicationRecord
   end
 
   def full_name=(original_value)
-    super(original_value&.to_s&.strip)
+    super(original_value&.to_s&.squish)
   end
 
   def author_year=(original_value)
-    super(original_value&.to_s&.strip)
+    super(original_value&.to_s&.squish)
   end
 
   def scientific_name=(str)
@@ -485,7 +485,7 @@ protected
         TaxonName.sanitize_scientific_name(@scientific_name || scientific_name)
       else
         @scientific_name || scientific_name
-      end&.strip
+      end&.squish
 
     tn = TaxonName.where([ 'UPPER(scientific_name) = UPPER(?)', sanitized_scientific_name ]).first
 
@@ -587,7 +587,7 @@ private
     end
 
     # strip redundant whitespace between words
-    some_full_name = some_full_name.split(/\s/).join(' ').capitalize
+    some_full_name = some_full_name.squish.capitalize
   end
 
   def taxonomy_can_be_changed
