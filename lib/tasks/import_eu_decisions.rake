@@ -15,7 +15,7 @@ namespace :import do
       sql = <<-SQL
         -- import eu_decision_types
         INSERT INTO eu_decision_types (name, created_at, updated_at)
-        SELECT DISTINCT BTRIM(opinion), current_date, current_date FROM #{TMP_TABLE};
+        SELECT DISTINCT public.squish(opinion), current_date, current_date FROM #{TMP_TABLE};
 
         UPDATE eu_decision_types
         SET tooltip = 'no significant trade anticipated',
@@ -67,16 +67,16 @@ namespace :import do
           opinion, start_date, is_current, term, source,
           notes, internal_notes
         from #{TMP_TABLE} ) as q
-        INNER JOIN ranks ON UPPER(ranks.name) = BTRIM(UPPER(q.rank))
+        INNER JOIN ranks ON UPPER(ranks.name) = public.squish(UPPER(q.rank))
         INNER JOIN taxon_concepts ON taxon_concepts.legacy_id = q.legacy_id
-          AND UPPER(taxon_concepts.legacy_type) = BTRIM(UPPER(q.kingdom))
+          AND UPPER(taxon_concepts.legacy_type) = public.squish(UPPER(q.kingdom))
           AND taxon_concepts.rank_id = ranks.id
-        INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = BTRIM(UPPER(q.country_iso2))
-        INNER JOIN eu_decision_types ON UPPER(eu_decision_types.name) = BTRIM(UPPER(q.opinion)) -- Eu Decision Type can be empty now. Consider LEFT JOIN if importing other files
+        INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = public.squish(UPPER(q.country_iso2))
+        INNER JOIN eu_decision_types ON UPPER(eu_decision_types.name) = public.squish(UPPER(q.opinion)) -- Eu Decision Type can be empty now. Consider LEFT JOIN if importing other files
         INNER JOIN events ON events.legacy_id = q.event_legacy_id
           AND events.designation_id = #{designation_id}
-        LEFT JOIN trade_codes AS sources ON UPPER(sources.code) = BTRIM(UPPER(q.source))
-        LEFT JOIN trade_codes AS terms ON UPPER(terms.code) = BTRIM(UPPER(q.term))
+        LEFT JOIN trade_codes AS sources ON UPPER(sources.code) = public.squish(UPPER(q.source))
+        LEFT JOIN trade_codes AS terms ON UPPER(terms.code) = public.squish(UPPER(q.term))
         WHERE taxon_concepts.taxonomy_id = #{taxonomy_id};
       SQL
       puts 'Importing eu decision types and eu decisions'

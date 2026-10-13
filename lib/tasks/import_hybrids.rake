@@ -29,7 +29,7 @@ namespace :import do
         now()::date AS created_at,
         now()::date AS created_at
       FROM (
-        SELECT DISTINCT BTRIM(full_hybrid_name)
+        SELECT DISTINCT public.squish(full_hybrid_name)
         FROM #{TMP_TABLE}
 
         EXCEPT
@@ -54,14 +54,14 @@ namespace :import do
         now()::date AS updated_at
       FROM (
         SELECT
-          BTRIM(full_hybrid_name),
+          public.squish(full_hybrid_name),
           r.id as rank_id,
           tn.id as taxon_names_id,
           legacy_cites_taxon_code as legacy_trade_code,
           #{taxonomy_id}, 'H'
         FROM #{TMP_TABLE}
         INNER JOIN ranks r ON hybrid_rank = r.name
-        INNER JOIN taxon_names tn ON BTRIM(full_hybrid_name) = BTRIM(tn.scientific_name)
+        INNER JOIN taxon_names tn ON public.squish(full_hybrid_name) = public.squish(tn.scientific_name)
 
         EXCEPT
 
@@ -94,7 +94,7 @@ namespace :import do
         INNER JOIN taxon_concepts
         ON species_plus_id = taxon_concepts.id
         LEFT JOIN taxon_concepts other_taxon_concepts
-          ON BTRIM(full_hybrid_name) = other_taxon_concepts.full_name
+          ON public.squish(full_hybrid_name) = other_taxon_concepts.full_name
 
         EXCEPT
 

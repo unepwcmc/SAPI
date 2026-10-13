@@ -34,7 +34,7 @@ namespace :import do
         SELECT taxon_concepts.id, "references".id, NOW(), NOW()
           FROM reference_synonym_links
           INNER JOIN ranks
-            ON UPPER(BTRIM(reference_synonym_links.rank)) = UPPER(ranks.name)
+            ON UPPER(public.squish(reference_synonym_links.rank)) = UPPER(ranks.name)
           INNER JOIN taxon_concepts
             ON reference_synonym_links.taxon_legacy_id = taxon_concepts.legacy_id
               AND taxon_concepts.legacy_type = '#{kingdom}'::VARCHAR

@@ -39,9 +39,9 @@ namespace :import do
       FROM (
         SELECT DISTINCT terms.id, trade_codes.id, 'Purpose'
         FROM #{TMP_TABLE}
-        INNER JOIN trade_codes AS terms ON BTRIM(UPPER(terms.code)) = BTRIM(UPPER(#{TMP_TABLE}.TERM_CODE))
+        INNER JOIN trade_codes AS terms ON public.squish(UPPER(terms.code)) = public.squish(UPPER(#{TMP_TABLE}.TERM_CODE))
           AND terms.type = 'Term'
-        LEFT JOIN trade_codes AS trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.PURPOSE_CODE))
+        LEFT JOIN trade_codes AS trade_codes ON public.squish(UPPER(trade_codes.code)) = public.squish(UPPER(#{TMP_TABLE}.PURPOSE_CODE))
           AND trade_codes.type = 'Purpose'
 
         EXCEPT
@@ -77,9 +77,9 @@ namespace :import do
       FROM (
         SELECT DISTINCT terms.id, trade_codes.id, 'Unit'
         FROM #{TMP_TABLE}
-        INNER JOIN trade_codes AS terms ON BTRIM(UPPER(terms.code)) = BTRIM(UPPER(#{TMP_TABLE}.TERM_CODE))
+        INNER JOIN trade_codes AS terms ON public.squish(UPPER(terms.code)) = public.squish(UPPER(#{TMP_TABLE}.TERM_CODE))
           AND terms.type = 'Term'
-        LEFT JOIN trade_codes AS trade_codes ON BTRIM(UPPER(trade_codes.code)) = BTRIM(UPPER(#{TMP_TABLE}.UNIT_CODE))
+        LEFT JOIN trade_codes AS trade_codes ON public.squish(UPPER(trade_codes.code)) = public.squish(UPPER(#{TMP_TABLE}.UNIT_CODE))
           AND trade_codes.type = 'Unit'
 
         EXCEPT
@@ -115,9 +115,9 @@ namespace :import do
       FROM (
         SELECT DISTINCT taxon_concepts.id, terms.id
         FROM #{TMP_TABLE}
-        INNER JOIN taxon_concepts_mview AS taxon_concepts ON UPPER(BTRIM(taxon_concepts.full_name)) = UPPER(BTRIM(#{TMP_TABLE}.TAXON_FAMILY))
-          AND UPPER(BTRIM(taxon_concepts.rank_name)) = UPPER(BTRIM(#{TMP_TABLE}.RANK))
-        INNER JOIN trade_codes AS terms ON UPPER(BTRIM(terms.code)) = UPPER(BTRIM(#{TMP_TABLE}.TERM_CODE))
+        INNER JOIN taxon_concepts_mview AS taxon_concepts ON UPPER(public.squish(taxon_concepts.full_name)) = UPPER(public.squish(#{TMP_TABLE}.TAXON_FAMILY))
+          AND UPPER(public.squish(taxon_concepts.rank_name)) = UPPER(public.squish(#{TMP_TABLE}.RANK))
+        INNER JOIN trade_codes AS terms ON UPPER(public.squish(terms.code)) = UPPER(public.squish(#{TMP_TABLE}.TERM_CODE))
           AND terms.type = 'Term'
         WHERE taxon_concepts.taxonomy_is_cites_eu
 

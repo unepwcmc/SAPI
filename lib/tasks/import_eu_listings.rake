@@ -76,10 +76,10 @@ namespace :import do
         SELECT row_id,
           taxon_concepts.id,
           CASE
-            WHEN UPPER(BTRIM(TMP.annex)) like '%A' THEN #{annex_A.id}
-            WHEN UPPER(BTRIM(TMP.annex)) like '%B' THEN #{annex_B.id}
-            WHEN UPPER(BTRIM(TMP.annex)) like '%C' THEN #{annex_C.id}
-            WHEN UPPER(BTRIM(TMP.annex)) like '%D' THEN #{annex_D.id}
+            WHEN UPPER(public.squish(TMP.annex)) like '%A' THEN #{annex_A.id}
+            WHEN UPPER(public.squish(TMP.annex)) like '%B' THEN #{annex_B.id}
+            WHEN UPPER(public.squish(TMP.annex)) like '%C' THEN #{annex_C.id}
+            WHEN UPPER(public.squish(TMP.annex)) like '%D' THEN #{annex_D.id}
             ELSE NULL
           END,
           CASE
@@ -113,7 +113,7 @@ namespace :import do
         AND inclusion_taxon_concepts.taxonomy_id = #{taxonomy.id}
         LEFT JOIN new_annotations ON new_annotations.import_row_id = TMP.row_id
         LEFT JOIN annotations AS hash_annotations
-          ON UPPER(hash_annotations.symbol || ' ' || hash_annotations.parent_symbol) = BTRIM(UPPER(TMP.hash_note))
+          ON UPPER(hash_annotations.symbol || ' ' || hash_annotations.parent_symbol) = public.squish(UPPER(TMP.hash_note))
         LEFT JOIN events ON events.id = hash_annotations.event_id AND events.designation_id = #{designation.id}
         LEFT JOIN events AS events2 ON events2.legacy_id = TMP.event_legacy_id AND events2.designation_id = #{designation.id};
       SQL
@@ -144,7 +144,7 @@ namespace :import do
           NOW(), NOW()
           FROM eu_listings_import_per_taxon_exclusion
           INNER JOIN ranks exclusion_ranks
-            ON BTRIM(LOWER(exclusion_ranks.name)) = BTRIM(LOWER(exclusion_rank))
+            ON public.squish(LOWER(exclusion_ranks.name)) = public.squish(LOWER(exclusion_rank))
           INNER JOIN taxon_concepts exclusion_taxon_concepts
             ON exclusion_taxon_concepts.legacy_id = exclusion_legacy_id::INTEGER
             AND exclusion_taxon_concepts.legacy_type = '#{kingdom}'
@@ -186,7 +186,7 @@ namespace :import do
         INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
         SELECT excluded_populations.id, geo_entities.id, 'f', NOW(), NOW()
         FROM excluded_populations
-        INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(excluded_populations.iso_code2)) AND geo_entities.is_current = 't'
+        INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(public.squish(excluded_populations.iso_code2)) AND geo_entities.is_current = 't'
         SQL
 
         puts 'INSERTING population exceptions (listing distributions)'
@@ -201,7 +201,7 @@ namespace :import do
         INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
         SELECT listed_populations.id, geo_entities.id, 'f', NOW(), NOW()
         FROM listed_populations
-        INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(listed_populations.iso_code2)) AND geo_entities.is_current = 't'
+        INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(public.squish(listed_populations.iso_code2)) AND geo_entities.is_current = 't'
       SQL
 
       puts 'INSERTING listed populations (listing distributions)'
@@ -211,7 +211,7 @@ namespace :import do
         INSERT INTO listing_distributions(listing_change_id, geo_entity_id, is_party, created_at, updated_at)
         SELECT DISTINCT listing_changes.id, geo_entities.id, 't'::BOOLEAN, current_date, current_date
         FROM #{TMP_TABLE}_view AS TMP
-        INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) like UPPER(BTRIM(TMP.country_iso2))
+        INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) like UPPER(public.squish(TMP.country_iso2))
         INNER JOIN listing_changes ON TMP.row_id = listing_changes.import_row_id
         WHERE TMP.country_iso2 <> 'Null' AND TMP.country_iso2 IS NOT NULL AND geo_entities.is_current = 't'
       SQL
