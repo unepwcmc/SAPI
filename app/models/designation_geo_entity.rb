@@ -24,4 +24,9 @@ class DesignationGeoEntity < ApplicationRecord
   # Relationship table between Designation and GeoEntity.
   belongs_to :designation
   belongs_to :geo_entity
+
+  # Backed by a unique index. Importers::DesignationGeoEntitiesImporter writes
+  # with upsert_all and never reaches this; it is for a save made through the
+  # model, which gets an error rather than ActiveRecord::RecordNotUnique.
+  validates :geo_entity_id, uniqueness: { scope: :designation_id }
 end
