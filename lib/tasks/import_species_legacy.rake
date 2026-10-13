@@ -71,7 +71,7 @@ def import_data_with_legacy_for(kingdom, rank, synonyms = nil)
           #{rank_id} AS rank_id,
           #{taxonomy.id} AS taxonomy_id,
           parent_taxon_concepts.id AS parent_id,
-          parent_taxon_concepts.full_name || ' ' || tmp.name AS full_name,
+          parent_taxon_concepts.full_name || ' ' || BTRIM(tmp.name) AS full_name,
           CASE
             WHEN UPPER(BTRIM(tmp.author)) = 'NULL' THEN NULL
             ELSE BTRIM(tmp.author)

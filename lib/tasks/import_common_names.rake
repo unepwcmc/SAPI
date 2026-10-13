@@ -22,7 +22,12 @@ namespace :import do
           INSERT INTO common_names(name, language_id, created_at, updated_at)
           SELECT subquery.*, NOW(), NOW()
           FROM (
-            SELECT DISTINCT ON( BTRIM(UPPER(#{TMP_TABLE}.name)), languages.id) #{TMP_TABLE}.name,
+            SELECT
+              DISTINCT ON(
+                BTRIM(UPPER(#{TMP_TABLE}.name)),
+                languages.id
+              )
+              BTRIM(#{TMP_TABLE}.name),
               languages.id
             FROM #{TMP_TABLE}
             INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3)

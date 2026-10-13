@@ -47,7 +47,8 @@ def import_data_for_kew_id(kingdom, rank, synonyms = nil)
     INSERT INTO taxon_names(scientific_name, created_at, updated_at)
       SELECT DISTINCT
         CASE
-          WHEN #{TMP_TABLE}.Rank = 'Species' THEN INITCAP(BTRIM(SPLIT_PART(#{TMP_TABLE}.Name,' ',2)))
+          WHEN UPPER(BTRIM(#{TMP_TABLE}.Rank)) = 'SPECIES'
+          THEN INITCAP(BTRIM(SPLIT_PART(#{TMP_TABLE}.Name,' ',2)))
           ELSE INITCAP(BTRIM(#{TMP_TABLE}.Name))
         END, current_date, current_date
       FROM #{TMP_TABLE}
@@ -98,7 +99,7 @@ def import_data_for_kew_id(kingdom, rank, synonyms = nil)
           #{rank_id} AS rank_id,
           #{taxonomy.id} AS taxonomy_id,
           parent_taxon_concepts.id AS parent_id,
-          tmp.name AS full_name,
+          BTRIM(tmp.name) AS full_name,
           CASE
             WHEN UPPER(BTRIM(tmp.author)) = 'NULL' THEN NULL
             ELSE BTRIM(tmp.author)

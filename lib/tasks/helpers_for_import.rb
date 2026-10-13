@@ -713,10 +713,7 @@ class TaxonImportHelper
             #{rank_id} AS rank_id,
             #{taxonomy.id} AS taxonomy_id,
             parent_taxon_concepts.id AS parent_id,
-            CASE
-              WHEN UPPER(BTRIM(tmp.rank)) = 'SPECIES' THEN BTRIM(parent_taxon_concepts.full_name) || ' ' || BTRIM(tmp.name)
-              ELSE BTRIM(tmp.name)
-            AS full_name,
+            parent_taxon_concepts.full_name || ' ' || BTRIM(tmp.name) AS full_name,
             CASE
               WHEN UPPER(BTRIM(tmp.author)) = 'NULL' THEN NULL
               ELSE BTRIM(tmp.author)
