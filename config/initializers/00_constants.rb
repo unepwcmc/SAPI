@@ -5,5 +5,5 @@ PDF_SAFE_REGEX = /\A[\x20-\x7f\p{Latin}‘’“”–]*\z/
 MESSAGE_SHOULD_BE_PDF_SAFE = 'should only contain PDF-safe characters'
 
 # Strings which match this regex have no leading or trailing spaces
-TRIMMED_REGEX = /\A(?!\s).*(?<!\s)\z/m
+TRIMMED_REGEX = /\A(?![[:space:]]).*(?<![[:space:]])\z/m
 MESSAGE_SHOULD_BE_TRIMMED = 'should not contain leading or trailing spaces'
