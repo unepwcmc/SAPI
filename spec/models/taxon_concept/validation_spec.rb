@@ -91,19 +91,6 @@ describe TaxonConcept do
       specify { expect(tc.error_on(:taxon_name_id).size).to eq(1) }
     end
 
-    context 'full_name should have leading and trailing spaces trimmed' do
-      let(:tc) do
-        build_phylum(
-          taxonomy_id: cites_eu.id,
-          parent_id: kingdom_tc.id,
-          full_name: " Aa Bb\n"
-        )
-      end
-
-      specify { expect(tc.full_name).to eq('Aa Bb') }
-      specify { expect(tc.error_on(:full_name).size).to eq(0) }
-    end
-
     context 'when taxonomic position malformed' do
       let(:tc) do
         build_phylum(
@@ -183,6 +170,21 @@ describe TaxonConcept do
       specify 'cannot change genus scientific name' do
         genus.scientific_name = 'Felis'
         expect(genus.error_on(:full_name).size).to eq(1)
+      end
+
+      context 'should have leading and trailing spaces trimmed' do
+        let(:tc) do
+          build_genus(
+            taxonomy_id: cites_eu.id,
+            parent_id: family.id,
+            taxon_name: nil,
+            scientific_name: " Aaaaa\n"
+          )
+        end
+
+        before { tc.valid? }
+        specify { expect(tc.full_name).to eq('Aaaaa') }
+        specify { expect(tc.taxon_name.scientific_name).to eq('Aaaaa') }
       end
     end
 
