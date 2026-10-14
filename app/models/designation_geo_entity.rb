@@ -10,8 +10,9 @@
 #
 # Indexes
 #
-#  index_designation_geo_entities_on_designation_id  (designation_id)
-#  index_designation_geo_entities_on_geo_entity_id   (geo_entity_id)
+#  index_designation_geo_entities_on_designation_and_geo_entity  (designation_id,geo_entity_id) UNIQUE
+#  index_designation_geo_entities_on_designation_id              (designation_id)
+#  index_designation_geo_entities_on_geo_entity_id               (geo_entity_id)
 #
 # Foreign Keys
 #
@@ -23,4 +24,19 @@ class DesignationGeoEntity < ApplicationRecord
   # Relationship table between Designation and GeoEntity.
   belongs_to :designation
   belongs_to :geo_entity
+
+  # Backed by a unique index. Importers::DesignationGeoEntitiesImporter writes
+  # with upsert_all and never reaches this; it is for a save made through the
+  # model, which gets an error rather than ActiveRecord::RecordNotUnique.
+  validates :geo_entity_id, uniqueness: { scope: :designation_id }
+
+  # GeoEntitySearch caches geo entities with their designations, so a change
+  # here has to clear it, as a change to a geo entity does. Only for a save
+  # through the model: the importer's bulk writes skip callbacks and clear it
+  # themselves.
+  after_commit :geo_entity_search_increment_cache_iterator
+
+  def geo_entity_search_increment_cache_iterator
+    GeoEntitySearch.increment_cache_iterator
+  end
 end
