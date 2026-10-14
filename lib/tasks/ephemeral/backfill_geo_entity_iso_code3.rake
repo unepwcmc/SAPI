@@ -10,11 +10,11 @@ namespace :ephemeral do
   #
   # No geo entity has an iso_code3, and nothing else sets it. This fills it in
   # from iso_code2 for current geo entities, from the 249 officially assigned
-  # ISO 3166-1 codes, plus two agreed for #333: Netherlands Antilles (AN,
-  # withdrawn from ISO) gets ANT, and Serbia (Kosovo) (KV) gets XKX, the code
-  # in common use for Kosovo. Left without one: the trade-only codes (XX, XV,
-  # HS), the European Union (EU), Clipperton (CP, pending a decision) and every
-  # geo entity that is not current. An iso_code3 already set is kept, so this
+  # ISO 3166-1 codes, plus three agreed for #333: Netherlands Antilles (AN,
+  # withdrawn from ISO) gets ANT, Serbia (Kosovo) (KV) gets XKX, the code in
+  # common use for Kosovo, and Clipperton (CP) gets CPT, which ISO reserves for
+  # it as it does CP. Left without one: the trade-only codes (XX, XV, HS), the
+  # European Union (EU) and every geo entity that is not current. An iso_code3 already set is kept, so this
   # is safe to re-run.
   #
   # Saving through the model clears the GeoEntitySearch cache, so the API
@@ -55,7 +55,7 @@ namespace :ephemeral do
       'ZW' => 'ZWE'
     }.freeze
     # Not officially assigned ISO 3166-1 codes; see above.
-    OTHER_ISO_CODE3_BY_ISO_CODE2 = { 'AN' => 'ANT', 'KV' => 'XKX' }.freeze
+    OTHER_ISO_CODE3_BY_ISO_CODE2 = { 'AN' => 'ANT', 'CP' => 'CPT', 'KV' => 'XKX' }.freeze
     # Default to a dry run so this one-off data fix can be verified safely
     # before it is allowed to persist changes in production-like environments.
     DRY_RUN = ENV.fetch('DRY_RUN', 'true')
