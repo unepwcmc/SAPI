@@ -14,6 +14,7 @@ describe Api::V1::GeoEntitiesController do
       geo_entity_type: country_geo_entity_type,
       name: 'France',
       iso_code2: 'FR',
+      iso_code3: 'FRA',
       designations: [ cites ]
     )
   end
@@ -46,6 +47,18 @@ describe Api::V1::GeoEntitiesController do
     it 'returns countries & territories' do
       get :index, params: { geo_entity_types_set: '2' }
       expect(response.body).to have_json_size(3).at_path('geo_entities')
+    end
+
+    it 'returns both ISO codes' do
+      get :index, params: { geo_entity_types_set: '2' }
+      json = response.parsed_body['geo_entities'].find { |geo_entity| geo_entity['id'] == france.id }
+      expect(json.slice('iso_code2', 'iso_code3')).to eq('iso_code2' => 'FR', 'iso_code3' => 'FRA')
+    end
+
+    it 'returns a null iso_code3 for a geo entity without one' do
+      get :index, params: { geo_entity_types_set: '2' }
+      json = response.parsed_body['geo_entities'].find { |geo_entity| geo_entity['id'] == andorra.id }
+      expect(json).to include('iso_code3' => nil)
     end
 
     it 'returns the designations a geo entity is a Party to' do
