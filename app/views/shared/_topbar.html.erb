@@ -28,14 +28,16 @@
           <% controller_matches = ["taxonomies", "ranks", "designations", "change_types",
               "species_listings", "geo_entities", "languages", "tags", "purposes", "sources",
               "terms", "units"] %>
+          <%# controller_name alone is ambiguous: Taxon Mapping has a taxonomies
+              page of its own, and it belongs under Batch Updates. %>
           <li class="dropdown <%=
-              if controller_matches.include?(controller_name) then 'active' end%>">
+              if controller_matches.include?(controller_name) && !taxon_mapping_section? then 'active' end%>">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               Core Data
               <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-              <li class="<%= if controller_name == 'taxonomies' then 'active' end%>">
+              <li class="<%= if controller_path == 'admin/taxonomies' then 'active' end%>">
                 <%= link_to 'Taxonomies', admin_taxonomies_path %>
               </li>
               <li class="<%= if controller_name == 'ranks' then 'active' end%>">
@@ -146,7 +148,7 @@
 
         <% if current_user && current_user.is_manager_or_secretariat? %>
           <% controller_matches = ["cites_suspensions"] %>
-          <li class="dropdown <%= if controller_matches.include?(controller_name) then 'active' end %>">
+          <li class="dropdown <%= if controller_matches.include?(controller_name) || taxon_mapping_section? then 'active' end %>">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               Batch Updates
               <b class="caret"></b>
@@ -166,6 +168,9 @@
               </li>
               <li class="<%= if controller_name == 'documents' then 'active' end%>">
                 <%= link_to 'Documents', admin_documents_path %>
+              </li>
+              <li class="<%= if taxon_mapping_section? then 'active' end%>">
+                <%= link_to 'Taxon Mapping', admin_taxon_mappings_path %>
               </li>
             </ul>
           </li>

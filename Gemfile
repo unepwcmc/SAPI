@@ -50,6 +50,15 @@ gem 'ahoy_matey', '~> 5.0', '>= 5.0.2'
 gem 'uuidtools', '~> 2.2' # For Ahoy. (https://github.com/ankane/ahoy/blob/v2.2.1/docs/Ahoy-2-Upgrade.md#activerecordstore)
 gem 'csv', '~> 3.3.5' # no longer a default gem from Ruby 3.4.0 onwards
 
+# Importer::Base (app/services/importer) - see its README.md for the modes and
+# parsers these back.
+# .xlsx reading. Loaded eagerly even for CSV imports, because Importer::Base
+# validates both parsers' config on every run.
+gem 'roo', '~> 3.0'
+# Backs the :activerecord_import mode. Not referenced at load time, so the mode
+# is simply unavailable without it.
+gem 'activerecord-import', '~> 2.1'
+
 gem 'wicked', '2.0.0'
 
 gem 'groupdate', '~> 6.8.0'
@@ -174,6 +183,9 @@ group :test do
   gem 'factory_bot_rails', '~> 6.5.1'
   gem 'simplecov', '~> 0.22.0', require: false
   gem 'coveralls_reborn', '~> 0.28.0', require: false
+  # .xlsx fixture generation for the Importer::Base specs only - this app reads
+  # .xlsx (via roo) but never writes one.
+  gem 'caxlsx', '~> 4.1', require: false
 end
 
 gem 'geoip', '1.3.5' # TODO: no change logs, no idea if safe to update. Latest version is 1.6.4 @ 2018

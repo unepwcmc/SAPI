@@ -1,0 +1,92 @@
+<%# Block D. An import outlives the request that started it, so this is where
+    its state lives. Only the last few are shown: older ones say nothing that
+    the tables above do not already say better. %>
+<%# Swapped in whole by the page's JavaScript while an import runs, so the
+    wrapper carries both where to ask again and whether to bother. %>
+<div id="taxon-mapping-imports" data-running="<%= @running_imports %>"
+  data-refresh-url="<%= admin_taxon_mappings_imports_path(page: params[:page]) %>">
+<div class="page-header">
+  <h4>
+    Recent imports
+    <small class="js-imports-polling">
+      <%= 'refreshing while one is running' if @running_imports %>
+    </small>
+  </h4>
+</div>
+
+<% if @imports.empty? %>
+  <p class="muted">Nothing has been uploaded yet.</p>
+<% else %>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Started</th>
+        <th>File</th>
+        <th>Target</th>
+        <th class="text-right">Rows</th>
+        <th>By</th>
+        <th>State</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @imports.each do |import| %>
+        <tr>
+          <td><%= local_time(import.started_at || import.created_at) %></td>
+          <td><code><%= import.filename %></code></td>
+          <td><%= import_target(import) %></td>
+          <td class="text-right">
+            <% rows = import_rows(import) %>
+            <%= rows ? number_with_delimiter(rows) : '&mdash;'.html_safe %>
+          </td>
+          <td><%= import.creator&.name %></td>
+          <td>
+            <span class="label <%= import_label_class(import) %>"><%= import.status %></span>
+            <% if import.duration %>
+              <small><%= "#{import.duration.round}s" %></small>
+            <% end %>
+          </td>
+        </tr>
+
+        <% if import.failed? && (errors = import_errors(import)).present? %>
+          <tr>
+            <td colspan="6">
+              <%# The import clears its scope and inserts in one transaction, so a
+                  failure leaves whatever was there before exactly as it was -
+                  including nothing, when this was the first attempt. Worded so
+                  it does not claim a previous upload that may never have
+                  happened. What matters here is why it failed, in enough detail
+                  to fix the file; the importer records the row and column. %>
+              <p class="muted">
+                Nothing was written, and anything already loaded for
+                <%= import_target(import) %> is untouched.
+              </p>
+              <table class="table table-condensed table-bordered">
+                <thead>
+                  <tr><th>Row</th><th>Column</th><th>Problem</th></tr>
+                </thead>
+                <tbody>
+                  <% errors.first(20).each do |entry| %>
+                    <tr>
+                      <td><%= entry['row'] || '&mdash;'.html_safe %></td>
+                      <td><code><%= entry['column'] %></code></td>
+                      <td><%= entry['message'] %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              <% if errors.size > 20 %>
+                <p class="muted"><%= pluralize(errors.size - 20, 'further problem') %> not shown.</p>
+              <% end %>
+              <p class="muted">Row numbers are the file's, so they can be looked up in the source.</p>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<%# Pinned to the page: rendered from the polling endpoint, Kaminari would
+    otherwise build links back to it and paginate into a bare fragment. %>
+<%= paginate @imports, params: { controller: '/admin/taxon_mappings', action: 'index' } %>
+</div>

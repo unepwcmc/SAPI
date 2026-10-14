@@ -1,0 +1,27 @@
+<thead>
+  <th>Code</th>
+  <th>Name</th>
+  <th class="text-right">Names</th>
+  <th class="text-right">Matches</th>
+  <th width="10%">Actions</th>
+</thead>
+<tbody>
+  <% collection.each do |taxonomy| -%>
+    <tr>
+      <%# Neither column is editable in place: the code is fixed once callers
+          address the API by it, and the name is changed through the same modal
+          the row was created with. %>
+      <td><code><%= taxonomy.code %></code></td>
+      <td><%= taxonomy.name %></td>
+      <td class="text-right"><%= number_with_delimiter(taxonomy.mapping_taxa.count) %></td>
+      <td class="text-right">
+        <%= number_with_delimiter(taxonomy.mapping_matches.count + taxonomy.foreign_mapping_matches.count) %>
+      </td>
+      <td>
+        <%= link_to edit_icon, edit_resource_url(taxonomy), remote: true %>
+        <%= link_to delete_icon, resource_url(taxonomy),
+          data: { confirm: 'Warning: you are about to delete data. Are you sure?' }, method: :delete %>
+      </td>
+    </tr>
+  <% end -%>
+</tbody>

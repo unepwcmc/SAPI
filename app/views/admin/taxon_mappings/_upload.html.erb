@@ -1,0 +1,77 @@
+<%# Block A. Which taxonomies a file is about is asked, not inferred: the
+    filename is a hint at best, and a wrong guess replaces the wrong data. %>
+<div class="page-header">
+  <h4>
+    Upload
+    <small>a CSV or XLSX, or a zip holding one CSV</small>
+  </h4>
+</div>
+
+<% if @taxonomy_rows.empty? %>
+  <div class="alert">
+    Register a taxonomy before uploading anything.
+    <%= link_to 'Add the first one', admin_taxon_mappings_taxonomies_path %>.
+  </div>
+<% else %>
+  <%= form_with url: admin_taxon_mappings_uploads_path, scope: :upload, local: true,
+    html: { multipart: true, class: 'form-horizontal', id: 'taxon-mapping-upload' } do |f| %>
+    <div class="control-group">
+      <%= f.label :file, 'File', class: 'control-label' %>
+      <div class="controls">
+        <%# direct_upload, so a 200 MB export goes straight to S3 rather than
+            through a Puma worker and whatever body limit the proxy enforces.
+            The field then submits a signed id, which attach takes as readily
+            as an uploaded file. %>
+        <%= f.file_field :file, required: true, accept: '.zip,.csv,.tsv,.xlsx',
+          direct_upload: true %>
+        <span class="help-block js-upload-progress">
+          A CSV is parsed, never split on lines: rows in these exports carry
+          newlines inside quoted fields.
+        </span>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= label_tag nil, 'Kind', class: 'control-label' %>
+      <div class="controls">
+        <label class="radio inline">
+          <%= f.radio_button :kind, 'mapping_taxa', checked: true %> Single taxonomy
+        </label>
+        <label class="radio inline">
+          <%= f.radio_button :kind, 'mapping_matches' %> Match results
+        </label>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :matchable_taxonomy_id, 'Taxonomy', class: 'control-label js-near-label' %>
+      <div class="controls">
+        <%= f.select :matchable_taxonomy_id, @taxonomy_options,
+          { include_blank: 'Choose one' }, required: true %>
+        <span class="help-block js-near-hint" style="display: none;">
+          the side the file calls <code>d1</code>
+        </span>
+      </div>
+    </div>
+
+    <div class="control-group js-far-group" style="display: none;">
+      <%= f.label :foreign_matchable_taxonomy_id, 'Second taxonomy', class: 'control-label' %>
+      <div class="controls">
+        <%= f.select :foreign_matchable_taxonomy_id, @taxonomy_options,
+          include_blank: 'Choose one' %>
+        <span class="help-block">
+          the side the file calls <code>d2</code>. A match file does not say which
+          of its two taxonomies is which, so both are picked here.
+        </span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit 'Upload and replace', class: 'btn btn-primary' %>
+      <span class="help-inline">
+        Replaces every row already loaded for that taxonomy, or for that pair in
+        either direction.
+      </span>
+    </div>
+  <% end %>
+<% end %>

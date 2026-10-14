@@ -102,6 +102,13 @@ module AdminHelper
     end
   end
 
+  # Every page of the Taxon Mapping service, which lives under Batch Updates.
+  # controller_name is not enough to tell them apart: its taxonomies page is
+  # also called "taxonomies", and so is Core Data's.
+  def taxon_mapping_section?
+    controller_path.start_with?('admin/taxon_mappings')
+  end
+
   def admin_title
     content_tag(:div, class: 'admin-header') do
       content_tag(

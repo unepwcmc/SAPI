@@ -112,6 +112,23 @@ namespace :admin do
       controller: 'nomenclature_changes/status_to_synonym'
     resources :status_swap, controller: 'nomenclature_changes/status_swap'
   end
+  resources :taxon_mappings, only: [ :index ]
+  # Reached from the Taxon Mapping page, not from the top bar.
+  namespace :taxon_mappings do
+    resources :taxonomies, only: [ :index, :create, :edit, :update, :destroy ]
+    resources :uploads, only: [ :create ]
+    resources :unresolved_matches, only: [ :index ]
+    # Polled by the page's JavaScript; renders one block, not a page.
+    resources :imports, only: [ :index ]
+    # Fetched once when an import finishes. controller: because a singular
+    # resource would otherwise look for SummariesController, and there is only
+    # ever the one summary.
+    resource :summary, only: [ :show ], controller: 'summary'
+    # Opened from a timestamp on the page; renders into a modal, not a page.
+    resources :import_runs, only: [ :show ] do
+      member { get :download }
+    end
+  end
   get 'exports' => 'exports#index'
   get 'exports/download' => 'exports#download' # not sure about this, post??
   get 'stats' => 'statistics#index'

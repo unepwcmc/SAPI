@@ -38,7 +38,7 @@ private
     geo_entity_types = GeoEntityType::SETS[@geo_entity_types_set]
     @query = GeoEntity.
       joins(:geo_entity_type).
-      includes(:geo_entity_type).
+      includes(:geo_entity_type, :designations).
       order("name_#{@locale}")
     if GeoEntityType::CURRENT_ONLY_SETS.include?(@geo_entity_types_set)
       @query = @query.current

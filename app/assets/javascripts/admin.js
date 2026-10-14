@@ -21,4 +21,5 @@
 //= require html.sortable
 //= require underscore
 //= require chartkick
+//= require activestorage
 //= require_tree ./admin

@@ -14,6 +14,7 @@ describe Api::V1::GeoEntitiesController do
       geo_entity_type: country_geo_entity_type,
       name: 'France',
       iso_code2: 'FR',
+      iso_code3: 'FRA',
       designations: [ cites ]
     )
   end
@@ -35,6 +36,10 @@ describe Api::V1::GeoEntitiesController do
     )
   end
   describe 'GET index' do
+    def designations_of(geo_entity)
+      response.parsed_body['geo_entities'].find { |json| json['id'] == geo_entity.id }['designations']
+    end
+
     it 'returns regions' do
       get :index, params: { geo_entity_types_set: '1' }
       expect(response.body).to have_json_size(1).at_path('geo_entities')
@@ -42,6 +47,48 @@ describe Api::V1::GeoEntitiesController do
     it 'returns countries & territories' do
       get :index, params: { geo_entity_types_set: '2' }
       expect(response.body).to have_json_size(3).at_path('geo_entities')
+    end
+
+    it 'returns both ISO codes' do
+      get :index, params: { geo_entity_types_set: '2' }
+      json = response.parsed_body['geo_entities'].find { |geo_entity| geo_entity['id'] == france.id }
+      expect(json.slice('iso_code2', 'iso_code3')).to eq('iso_code2' => 'FR', 'iso_code3' => 'FRA')
+    end
+
+    it 'returns a null iso_code3 for a geo entity without one' do
+      get :index, params: { geo_entity_types_set: '2' }
+      json = response.parsed_body['geo_entities'].find { |geo_entity| geo_entity['id'] == andorra.id }
+      expect(json).to include('iso_code3' => nil)
+    end
+
+    it 'returns the designations a geo entity is a Party to' do
+      get :index, params: { geo_entity_types_set: '2' }
+      expect(designations_of(france)).to eq [ { 'id' => cites.id, 'name' => 'CITES' } ]
+    end
+
+    it 'returns no designations for a geo entity that is a Party to none' do
+      get :index, params: { geo_entity_types_set: '2' }
+      expect(designations_of(andorra)).to eq []
+    end
+
+    context 'with the search cached' do
+      # The test environment's cache is a null store, under which nothing is
+      # ever cached.
+      before { allow(Rails).to receive(:cache).and_return(ActiveSupport::Cache::MemoryStore.new) }
+
+      it 'serves the designations from the cache' do
+        get :index, params: { geo_entity_types_set: '2' }
+        DesignationGeoEntity.where(geo_entity: france).delete_all # skips callbacks, so clears nothing
+        get :index, params: { geo_entity_types_set: '2' }
+        expect(designations_of(france)).to eq [ { 'id' => cites.id, 'name' => 'CITES' } ]
+      end
+
+      it 'serves new designations once one changes' do
+        get :index, params: { geo_entity_types_set: '2' }
+        DesignationGeoEntity.where(geo_entity: france).destroy_all
+        get :index, params: { geo_entity_types_set: '2' }
+        expect(designations_of(france)).to eq []
+      end
     end
   end
 end

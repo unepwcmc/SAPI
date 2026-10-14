@@ -89,6 +89,11 @@ RSpec.configure do |config|
     # this is duplicated here because of the :drops_tables specs
     @user = create(:user)
     RequestStore.store[:track_who_does_it_current_user] = @user
+    # Admin::SimpleCrudController#destroy sets this and leaves the middleware
+    # to drop it at the end of the request. Controller specs run without that
+    # middleware, so without this the record stays visible to Deletable in
+    # every later example in the process.
+    RequestStore.store[:original_resource_to_delete] = nil
   end
 
   config.before(:each) do |example|

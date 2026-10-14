@@ -1,0 +1,13 @@
+<%# Mirrors app/views/admin/simple_crud/index.html.erb, with a way back added.
+    This page is not in the top bar, so without it the only route out is the
+    browser's back button. %>
+<p><%= link_to '&larr; Taxon Mapping'.html_safe, admin_taxon_mappings_path %></p>
+
+<%= admin_title %>
+
+<%= admin_new_modal %>
+<%# Filled in by edit.js.erb when a row's pencil is clicked. %>
+<%= admin_new_modal(id: 'edit-taxonomy', title: 'Rename taxonomy') { '' } %>
+<%= admin_table %>
+
+<%= paginate collection %>

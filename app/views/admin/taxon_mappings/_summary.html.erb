@@ -1,0 +1,154 @@
+<%# Blocks B and C: what is loaded, and what points at something missing.
+    Swapped in whole when an import finishes - the numbers here all move at
+    once, and until then they describe the state the page was loaded in. %>
+<div id="taxon-mapping-summary"
+  data-refresh-url="<%= admin_taxon_mappings_summary_path %>">
+    <div class="page-header">
+      <%= link_to 'Manage taxonomies &rarr;'.html_safe, admin_taxon_mappings_taxonomies_path,
+        class: 'btn pull-right' %>
+      <h4>
+        Taxonomies
+        <small><%= @taxonomy_rows.count { |r| r[:names] } %> of <%= @taxonomy_rows.size %> loaded</small>
+      </h4>
+    </div>
+
+    <% if @taxonomy_rows.empty? %>
+      <div class="alert">
+        No taxonomies are registered yet, so nothing can be uploaded and every
+        lookup resolves to nothing.
+        <%= link_to 'Add the first one', admin_taxon_mappings_taxonomies_path %>.
+      </div>
+    <% end %>
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th class="text-right">Names</th>
+          <th class="text-right">Accepted</th>
+          <th>Loaded</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @taxonomy_rows.each do |row| %>
+          <tr class="<%= 'muted' unless row[:names] %>">
+            <td><strong><%= row[:taxonomy].code %></strong> <small><%= row[:taxonomy].name %></small></td>
+            <% if row[:names] %>
+              <td class="text-right"><%= number_with_delimiter(row[:names]) %></td>
+              <td class="text-right"><%= number_with_delimiter(row[:accepted]) %></td>
+              <td><%= loaded_at_link(row) %></td>
+            <% else %>
+              <td class="text-right">&mdash;</td>
+              <td class="text-right">&mdash;</td>
+              <td><span class="label">not loaded</span></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="page-header">
+      <h4>
+        Match pairs
+        <small><%= @pair_rows.count { |r| r[:matches] } %> of <%= @pair_rows.size %> loaded</small>
+      </h4>
+      <%# Every pair is rendered, because a blank row is the only thing that
+          shows a lookup will come back empty for want of an upload - the API
+          cannot tell you that. Six taxonomies make fifteen pairs though, so
+          the empty ones start hidden rather than burying the loaded ones, and
+          the heading's count says how many there are either way. No button
+          only when there is nothing to hide. %>
+      <% empty_pairs = @pair_rows.count { |r| r[:matches].nil? } %>
+      <% hide_empty = empty_pairs.positive? %>
+      <% if hide_empty %>
+        <button type="button" class="btn btn-small js-toggle-empty-pairs"
+          data-hidden-count="<%= empty_pairs %>">
+          Show <%= pluralize(empty_pairs, 'pair') %> with nothing loaded
+        </button>
+      <% end %>
+    </div>
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Pair</th>
+          <th class="text-right">Matches</th>
+          <th>Loaded</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pair_rows.each do |row| %>
+          <%# Hidden with an inline style rather than a class, so jQuery's own
+              toggle can undo it without fighting a stylesheet. %>
+          <tr class="<%= 'muted js-empty-pair' unless row[:matches] %>"
+            style="<%= 'display: none' if hide_empty && row[:matches].nil? %>">
+            <td><strong><%= row[:near].code %> &harr; <%= row[:far].code %></strong></td>
+            <% if row[:matches] %>
+              <td class="text-right"><%= number_with_delimiter(row[:matches]) %></td>
+              <td><%= loaded_at_link(row) %></td>
+            <% else %>
+              <td class="text-right">&mdash;</td>
+              <td><span class="label">not loaded</span></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <% if @unresolved_rows.empty? %>
+      <%# Collapsed to a line when there is nothing to report: zero is the
+          expected state, and a heading over an empty table reads like a
+          section that failed to load. %>
+      <p class="muted">
+        <strong>Unresolved references:</strong> none. Every match names a taxon we hold.
+      </p>
+    <% else %>
+      <div class="page-header">
+        <h4>Unresolved references</h4>
+      </div>
+
+      <p>
+        A match names a taxon on each side by id. These ones name a taxon we do
+        not hold, so the match is kept but the API cannot report it &mdash; there
+        is no accepted name to answer with.
+      </p>
+
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th class="text-right">Matches</th>
+            <th>From the export</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @unresolved_rows.each do |row| %>
+            <tr>
+              <td><strong><%= row[:taxonomy].code %></strong></td>
+              <td class="text-right">
+                <%= link_to number_with_delimiter(row[:unresolved]),
+                  admin_taxon_mappings_unresolved_matches_path(
+                    matchable_taxonomy_id: row[:taxonomy].id,
+                    side: row[:side], import_run_id: row[:import_run_id]
+                  ) %>
+              </td>
+              <td>
+                <code><%= row[:import_run]&.filename %></code>
+                <% unless row[:taxa_loaded] %>
+                  <span class="label label-warning">no taxa loaded for this platform</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <p class="muted">
+        Zero is the expected state. Usually it means the export is newer than the
+        taxonomy file loaded for that platform, and the identifier has retired
+        since &mdash; so the file named here is the one to replace. Follow a count
+        to see which identifiers. Nothing is deleted: if a later taxonomy upload
+        brings an identifier back, its matches resolve on their own.
+      </p>
+    <% end %>
+
+</div>
