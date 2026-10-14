@@ -146,6 +146,14 @@ class Importers::DesignationGeoEntitiesImporter < Importer::Base
       remove_unlisted!
     end
 
+    # GeoEntitySearch caches geo entities with their designations, and
+    # upsert_all and delete_all skip the model's after_commit that would clear
+    # it. Cleared once the outermost transaction has committed - import_all!'s,
+    # when run from there - so a request in between cannot cache the old Party
+    # lists again; straight away when there is no transaction. Never on
+    # rollback, when nothing changed.
+    ActiveRecord.after_all_transactions_commit { GeoEntitySearch.increment_cache_iterator }
+
     self
   end
 

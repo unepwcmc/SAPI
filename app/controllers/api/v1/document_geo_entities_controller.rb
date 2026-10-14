@@ -1,6 +1,6 @@
 class Api::V1::DocumentGeoEntitiesController < ApplicationController
   def index
-    @geo_entities = GeoEntity.current.includes(:geo_entity_type).
+    @geo_entities = GeoEntity.current.includes(:geo_entity_type, :designations).
       order("name_#{I18n.locale}")
     @geo_entities = @geo_entities.
       joins(:geo_entity_type).

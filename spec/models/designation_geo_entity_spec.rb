@@ -12,4 +12,10 @@ describe DesignationGeoEntity do
   it 'allows the same geo entity for another designation' do
     expect(described_class.new(designation: cms_designation, geo_entity:)).to be_valid
   end
+
+  it 'clears the cached geo entity search, which carries designations' do
+    allow(GeoEntitySearch).to receive(:increment_cache_iterator)
+    described_class.create!(designation: cms_designation, geo_entity:)
+    expect(GeoEntitySearch).to have_received(:increment_cache_iterator)
+  end
 end

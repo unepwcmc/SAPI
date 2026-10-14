@@ -157,6 +157,29 @@ describe Importers::DesignationGeoEntitiesImporter do
     expect(count_validations { import(rows_for([ angola, 't', 't' ])) }).to eq 1
   end
 
+  describe 'the cached geo entity search' do
+    before { allow(GeoEntitySearch).to receive(:increment_cache_iterator) }
+
+    it 'is cleared once the import has committed' do
+      import(rows_for([ angola, 't', 't' ]))
+
+      expect(GeoEntitySearch).to have_received(:increment_cache_iterator).at_least(:once)
+    end
+
+    context 'when the file is refused' do
+      # That `maybe` is refused is covered under 'refusing the file'.
+      before do
+        import(rows_for([ angola, 't', 'maybe' ]))
+      rescue Importer::Base::ImportError
+        nil
+      end
+
+      it 'is left alone' do
+        expect(GeoEntitySearch).not_to have_received(:increment_cache_iterator)
+      end
+    end
+  end
+
   describe 'one importer run on its own' do
     it 'reads the headers itself' do
       import_one(cms_designation, rows_for([ angola, 't', 't' ]))
