@@ -1,0 +1,276 @@
+id,iso_code2,name_en,name,is_current,cites,cms
+19,AD,Andorra,COUNTRY,t,t,f
+107,AE,United Arab Emirates,COUNTRY,t,t,t
+203,AF,Afghanistan,COUNTRY,t,t,t
+54,AG,Antigua and Barbuda,COUNTRY,t,t,t
+46,AI,Anguilla (United Kingdom),TERRITORY,t,t,f
+172,AL,Albania,COUNTRY,t,t,t
+85,AM,Armenia,COUNTRY,t,t,t
+125,AN,Netherlands Antilles,TERRITORY,t,f,f
+105,AO,Angola,COUNTRY,t,t,t
+189,AQ,Antarctica,TERRITORY,t,f,f
+140,AR,Argentina,COUNTRY,t,t,t
+145,AS,American Samoa,TERRITORY,t,t,f
+98,AT,Austria,COUNTRY,t,t,t
+113,AU,Australia,COUNTRY,t,t,t
+136,AW,Aruba,TERRITORY,t,t,t
+81,AZ,Azerbaijan,COUNTRY,t,t,f
+35,BA,Bosnia and Herzegovina,COUNTRY,t,t,t
+157,BB,Barbados,COUNTRY,t,t,f
+191,BD,Bangladesh,COUNTRY,t,t,t
+104,BE,Belgium,COUNTRY,t,t,t
+148,BF,Burkina Faso,COUNTRY,t,t,t
+252,BG,Bulgaria,COUNTRY,t,t,t
+164,BH,Bahrain,COUNTRY,t,t,t
+209,BI,Burundi,COUNTRY,t,t,t
+110,BJ,Benin,COUNTRY,t,t,t
+227,BL,Saint-Barthélemy,TERRITORY,t,t,t
+119,BM,Bermuda (United Kingdom),TERRITORY,t,t,t
+170,BN,Brunei Darussalam,COUNTRY,t,t,f
+202,BO,Bolivia (Plurinational State of),COUNTRY,t,t,t
+272,BQ,"Bonaire, Saint Eustatius and Saba",TERRITORY,t,t,t
+97,BR,Brazil,COUNTRY,t,t,t
+93,BS,Bahamas,COUNTRY,t,t,f
+124,BT,Bhutan,COUNTRY,t,t,f
+91,BV,Bouvet Island,TERRITORY,t,t,t
+95,BW,Botswana,COUNTRY,t,t,f
+193,BY,Belarus,COUNTRY,t,t,t
+231,BZ,Belize,COUNTRY,t,t,f
+248,CA,Canada,COUNTRY,t,t,f
+162,CC,Cocos (Keeling) Islands,TERRITORY,t,t,t
+130,CD,Democratic Republic of the Congo,COUNTRY,t,t,t
+9,CF,Central African Republic,COUNTRY,t,t,t
+115,CG,Congo,COUNTRY,t,t,t
+238,CH,Switzerland,COUNTRY,t,t,t
+176,CI,Côte d'Ivoire,COUNTRY,t,t,t
+242,CK,Cook Islands,COUNTRY,t,f,t
+133,CL,Chile,COUNTRY,t,t,t
+181,CM,Cameroon,COUNTRY,t,t,t
+160,CN,China,COUNTRY,t,t,f
+116,CO,Colombia,COUNTRY,t,t,f
+73,CP,Clipperton,TERRITORY,t,t,t
+78,CR,Costa Rica,COUNTRY,t,t,t
+220,CS,Former Serbia and Montenegro,COUNTRY,f,f,f
+177,CU,Cuba,COUNTRY,t,t,t
+190,CV,Cabo Verde,COUNTRY,t,t,t
+269,CW,Curaçao,TERRITORY,t,t,t
+198,CX,Christmas Island,TERRITORY,t,t,t
+56,CY,Cyprus,COUNTRY,t,t,t
+178,CZ,Czech Republic,COUNTRY,t,t,t
+261,DD,Former East Germany,COUNTRY,f,f,f
+23,DE,Germany,COUNTRY,t,t,t
+222,DJ,Djibouti,COUNTRY,t,t,t
+137,DK,Denmark,COUNTRY,t,t,t
+51,DM,Dominica,COUNTRY,t,t,f
+63,DO,Dominican Republic,COUNTRY,t,t,t
+28,DZ,Algeria,COUNTRY,t,t,t
+84,EC,Ecuador,COUNTRY,t,t,t
+11,EE,Estonia,COUNTRY,t,t,t
+204,EG,Egypt,COUNTRY,t,t,t
+103,EH,Western Sahara,COUNTRY,t,f,f
+60,ER,Eritrea,COUNTRY,t,t,t
+214,ES,Spain,COUNTRY,t,t,t
+117,ET,Ethiopia,COUNTRY,t,t,t
+326,EU,European Union,REGION,t,t,t
+171,FI,Finland,COUNTRY,t,t,t
+158,FJ,Fiji,COUNTRY,t,t,t
+185,FK,Falkland Islands (Malvinas),TERRITORY,t,t,t
+205,FM,Micronesia (Federated States of),COUNTRY,t,f,f
+108,FO,Faroe Islands,TERRITORY,t,t,t
+48,FR,France,COUNTRY,t,t,t
+232,GA,Gabon,COUNTRY,t,t,t
+41,GB,United Kingdom of Great Britain and Northern Ireland,COUNTRY,t,t,t
+25,GD,Grenada,COUNTRY,t,t,f
+240,GE,Georgia,COUNTRY,t,t,t
+199,GF,French Guiana [FR],TERRITORY,t,t,t
+45,GG,Guernsey (United Kingdom),TERRITORY,t,t,t
+29,GH,Ghana,COUNTRY,t,t,t
+31,GI,Gibraltar (United Kingdom),TERRITORY,t,t,t
+129,GL,Greenland,TERRITORY,t,t,f
+49,GM,Gambia,COUNTRY,t,t,t
+225,GN,Guinea,COUNTRY,t,t,t
+10,GP,Guadeloupe,TERRITORY,t,t,t
+156,GQ,Equatorial Guinea,COUNTRY,t,t,t
+43,GR,Greece,COUNTRY,t,t,t
+59,GS,South Georgia and South Sandwich Islands (United Kingdom),TERRITORY,t,t,t
+234,GT,Guatemala,COUNTRY,t,t,f
+254,GU,Guam,TERRITORY,t,t,f
+187,GW,Guinea Bissau,COUNTRY,t,t,t
+65,GY,Guyana,COUNTRY,t,t,f
+167,HK,"Hong Kong, SAR",TERRITORY,t,t,f
+155,HM,Heard and McDonald Islands,TERRITORY,t,t,t
+243,HN,Honduras,COUNTRY,t,t,t
+149,HR,Croatia,COUNTRY,t,t,t
+276,HS,Introduction from the sea,TRADE_ENTITY,t,f,f
+12,HT,Haiti,COUNTRY,t,f,f
+69,HU,Hungary,COUNTRY,t,t,t
+16,ID,Indonesia,COUNTRY,t,t,f
+55,IE,Ireland,COUNTRY,t,t,t
+174,IL,Israel,COUNTRY,t,t,t
+213,IM,Isle of Man (United Kingdom),TERRITORY,t,t,t
+180,IN,India,COUNTRY,t,t,t
+224,IO,Territory formerly known as BIOT,AQUATIC_TERRITORY,f,f,f
+82,IQ,Iraq,COUNTRY,t,t,t
+182,IR,Iran (Islamic Republic of),COUNTRY,t,t,t
+79,IS,Iceland,COUNTRY,t,t,f
+122,IT,Italy,COUNTRY,t,t,t
+168,JE,Jersey (United Kingdom),TERRITORY,t,t,t
+38,JM,Jamaica,COUNTRY,t,t,f
+89,JO,Jordan,COUNTRY,t,t,t
+244,JP,Japan,COUNTRY,t,t,f
+30,KE,Kenya,COUNTRY,t,t,t
+210,KG,Kyrgyzstan,COUNTRY,t,t,t
+146,KH,Cambodia,COUNTRY,t,t,f
+212,KI,Kiribati,COUNTRY,t,f,f
+236,KM,Comoros,COUNTRY,t,t,f
+94,KN,Saint Kitts and Nevis,COUNTRY,t,t,f
+100,KP,Democratic People's Republic of Korea,COUNTRY,t,f,f
+67,KR,Republic of Korea,COUNTRY,t,t,f
+274,KV,Serbia (Kosovo),TRADE_ENTITY,t,f,f
+36,KW,Kuwait,COUNTRY,t,t,f
+144,KY,Cayman Islands (United Kingdom),TERRITORY,t,t,t
+39,KZ,Kazakhstan,COUNTRY,t,t,t
+40,LA,Lao People's Democratic Republic,COUNTRY,t,t,f
+21,LB,Lebanon,COUNTRY,t,t,t
+13,LC,Saint Lucia,COUNTRY,t,t,f
+169,LI,Liechtenstein,COUNTRY,t,t,t
+219,LK,Sri Lanka,COUNTRY,t,t,t
+47,LR,Liberia,COUNTRY,t,t,t
+239,LS,Lesotho,COUNTRY,t,t,f
+154,LT,Lithuania,COUNTRY,t,t,t
+44,LU,Luxembourg,COUNTRY,t,t,t
+196,LV,Latvia,COUNTRY,t,t,t
+249,LY,Libya,COUNTRY,t,t,t
+27,MA,Morocco,COUNTRY,t,t,t
+86,MC,Monaco,COUNTRY,t,t,t
+8,MD,Republic of Moldova,COUNTRY,t,t,t
+15,ME,Montenegro,COUNTRY,t,t,t
+215,MF,Saint-Martin,TERRITORY,t,t,t
+87,MG,Madagascar,COUNTRY,t,t,t
+96,MH,Marshall Islands,COUNTRY,t,f,f
+247,MK,North Macedonia,COUNTRY,t,t,t
+141,ML,Mali,COUNTRY,t,t,t
+127,MM,Myanmar,COUNTRY,t,t,f
+26,MN,Mongolia,COUNTRY,t,t,t
+217,MO,"Macao, SAR",TERRITORY,t,t,f
+62,MP,Northern Mariana Islands,TERRITORY,t,t,f
+123,MQ,Martinique,TERRITORY,t,t,t
+235,MR,Mauritania,COUNTRY,t,t,t
+7,MS,Montserrat (United Kingdom),TERRITORY,t,t,t
+126,MT,Malta,COUNTRY,t,t,t
+128,MU,Mauritius,COUNTRY,t,t,t
+150,MV,Maldives,COUNTRY,t,t,t
+253,MW,Malawi,COUNTRY,t,t,t
+138,MX,Mexico,COUNTRY,t,t,f
+153,MY,Malaysia,COUNTRY,t,t,f
+118,MZ,Mozambique,COUNTRY,t,t,t
+114,NA,Namibia,COUNTRY,t,t,f
+152,NC,New Caledonia,TERRITORY,t,t,t
+120,NE,Niger,COUNTRY,t,t,t
+17,NF,Norfolk Island,TERRITORY,t,t,t
+53,NG,Nigeria,COUNTRY,t,t,t
+237,NI,Nicaragua,COUNTRY,t,t,f
+165,NL,Netherlands,COUNTRY,t,t,t
+111,NO,Norway,COUNTRY,t,t,t
+186,NP,Nepal,COUNTRY,t,t,f
+58,NR,Nauru,COUNTRY,t,f,f
+265,NT,Neutral Zone,TERRITORY,f,f,f
+166,NU,Niue,TERRITORY,t,f,f
+179,NZ,New Zealand,COUNTRY,t,t,t
+188,OM,Oman,COUNTRY,t,t,f
+151,PA,Panama,COUNTRY,t,t,t
+262,PC,Former UN Pacific Island Trust Territories,TERRITORY,f,f,f
+228,PE,Peru,COUNTRY,t,t,t
+200,PF,French Polynesia,TERRITORY,t,t,t
+66,PG,Papua New Guinea,COUNTRY,t,t,f
+183,PH,Philippines,COUNTRY,t,t,t
+32,PK,Pakistan,COUNTRY,t,t,t
+75,PL,Poland,COUNTRY,t,t,t
+68,PM,Saint Pierre and Miquelon,TERRITORY,t,t,t
+147,PN,Pitcairn Islands (United Kingdom),TERRITORY,t,t,t
+24,PR,Puerto Rico,TERRITORY,t,t,f
+72,PS,State of Palestine,COUNTRY,t,f,f
+246,PT,Portugal,COUNTRY,t,t,t
+197,PW,Palau,COUNTRY,t,t,t
+163,PY,Paraguay,COUNTRY,t,t,t
+194,QA,Qatar,COUNTRY,t,t,f
+74,RE,Réunion,TERRITORY,t,t,t
+76,RO,Romania,COUNTRY,t,t,t
+270,RS,Serbia,COUNTRY,t,t,t
+208,RU,Russian Federation,COUNTRY,t,t,f
+192,RW,Rwanda,COUNTRY,t,t,t
+221,S1,Sudan [prior to secession of South Sudan],COUNTRY,f,f,f
+99,SA,Saudi Arabia,COUNTRY,t,t,t
+90,SB,Solomon Islands,COUNTRY,t,t,f
+42,SC,Seychelles,COUNTRY,t,t,t
+106,SD,Sudan,COUNTRY,t,t,f
+77,SE,Sweden,COUNTRY,t,t,t
+50,SG,Singapore,COUNTRY,t,t,f
+14,SH,Saint Helena and Dependencies (United Kingdom),TERRITORY,t,t,t
+134,SI,Slovenia,COUNTRY,t,t,t
+64,SJ,Svalbard and Jan Mayen Islands,TERRITORY,t,t,t
+139,SK,Slovakia,COUNTRY,t,t,t
+131,SL,Sierra Leone,COUNTRY,t,t,f
+229,SM,San Marino,COUNTRY,t,t,f
+226,SN,Senegal,COUNTRY,t,t,t
+109,SO,Somalia,COUNTRY,t,t,t
+251,SR,Suriname,COUNTRY,t,t,f
+22,SS,South Sudan,COUNTRY,t,f,f
+102,ST,Sao Tome and Principe,COUNTRY,t,t,t
+92,SU,Former USSR,COUNTRY,f,f,f
+88,SV,El Salvador,COUNTRY,t,t,f
+271,SX,Sint Maarten,TERRITORY,t,t,t
+61,SY,Syrian Arab Republic,COUNTRY,t,t,t
+159,SZ,Eswatini,COUNTRY,t,t,t
+175,TC,Turks and Caicos Islands (United Kingdom),TERRITORY,t,f,t
+121,TD,Chad,COUNTRY,t,t,t
+132,TF,French Southern and Antarctic Territories,TERRITORY,t,t,t
+173,TG,Togo,COUNTRY,t,t,t
+230,TH,Thailand,COUNTRY,t,t,f
+216,TJ,Tajikistan,COUNTRY,t,t,t
+255,TK,Tokelau,TERRITORY,t,t,f
+52,TL,Timor-Leste,COUNTRY,t,f,f
+135,TM,Turkmenistan,COUNTRY,t,t,t
+161,TN,Tunisia,COUNTRY,t,t,t
+241,TO,Tonga,COUNTRY,t,t,f
+112,TR,Türkiye,COUNTRY,t,t,f
+206,TT,Trinidad and Tobago,COUNTRY,t,t,t
+195,TV,Tuvalu,COUNTRY,t,f,f
+218,TW,"Taiwan, Province of China",TERRITORY,t,t,f
+33,TZ,United Republic of Tanzania,COUNTRY,t,t,t
+211,UA,Ukraine,COUNTRY,t,t,t
+223,UG,Uganda,COUNTRY,t,t,t
+57,UM,United States Minor Outlying Islands,TERRITORY,t,t,t
+80,US,United States of America,COUNTRY,t,t,f
+142,UY,Uruguay,COUNTRY,t,t,t
+256,UZ,Uzbekistan,COUNTRY,t,t,t
+207,VA,Holy See,COUNTRY,t,f,f
+70,VC,Saint Vincent and the Grenadines,COUNTRY,t,t,f
+34,VE,Venezuela (Bolivarian Republic of),COUNTRY,t,t,f
+233,VG,British Virgin Islands (United Kingdom),TERRITORY,t,t,t
+250,VI,Virgin Islands of the USA,TERRITORY,t,t,f
+245,VN,Viet Nam,COUNTRY,t,t,f
+37,VU,Vanuatu,COUNTRY,t,t,f
+101,WF,Wallis and Futuna Islands,TERRITORY,t,t,t
+184,WS,Samoa,COUNTRY,t,t,t
+267,XV,Various,TRADE_ENTITY,t,f,f
+266,XX,Unknown,TRADE_ENTITY,t,f,f
+263,YD,Former South Yemen,COUNTRY,f,f,f
+143,YE,Yemen,COUNTRY,t,t,t
+20,YT,Mayotte,TERRITORY,t,t,t
+18,YU,Former Yugoslavia,COUNTRY,f,f,f
+71,ZA,South Africa,COUNTRY,t,t,t
+264,ZC,Former Czechoslovakia,COUNTRY,f,f,f
+201,ZM,Zambia,COUNTRY,t,t,f
+83,ZW,Zimbabwe,COUNTRY,t,t,t
+5,,1- Africa,CITES_REGION,t,f,f
+3,,2- Asia,CITES_REGION,t,f,f
+2,,3- Central and South America and the Caribbean,CITES_REGION,t,f,f
+6,,4- Europe,CITES_REGION,t,f,f
+1,,5- North America,CITES_REGION,t,f,f
+4,,6- Oceania,CITES_REGION,t,f,f
+279,,All stocks,TERRITORY,t,f,f
+328,,Indian Ocean stock,TERRITORY,t,f,f
+329,,Mediterranean stock,TERRITORY,t,f,f
+277,,North Atlantic stock,TERRITORY,t,f,f
+278,,South Atlantic stock,TERRITORY,t,f,f

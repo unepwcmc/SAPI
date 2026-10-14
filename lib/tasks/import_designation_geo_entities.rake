@@ -1,3 +1,6 @@
+##
+# Usage:
+# bundle exec rails import:designation_geo_entities[lib/files/imports/2026-10-14/country-designations.csv]
 namespace :import do
   # The file needs id, iso_code2, name_en and name (the geo entity type), plus
   # one t/f column per designation, named after it in lowercase - cites, cms.
