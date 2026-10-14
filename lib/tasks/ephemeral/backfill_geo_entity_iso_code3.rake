@@ -9,10 +9,13 @@ namespace :ephemeral do
   #   DRY_RUN=false bundle exec rake ephemeral:backfill_geo_entity_iso_code3
   #
   # No geo entity has an iso_code3, and nothing else sets it. This fills it in
-  # from iso_code2, for the 249 officially assigned ISO 3166-1 codes. Codes
-  # that are not ISO (ZC, S1, KV, HS, XV, XX), reserved (EU, CP) or withdrawn
-  # (SU, YU, DD...) are left without one. An iso_code3 already set is kept, so
-  # this is safe to re-run.
+  # from iso_code2 for current geo entities, from the 249 officially assigned
+  # ISO 3166-1 codes, plus two agreed for #333: Netherlands Antilles (AN,
+  # withdrawn from ISO) gets ANT, and Serbia (Kosovo) (KV) gets XKX, the code
+  # in common use for Kosovo. Left without one: the trade-only codes (XX, XV,
+  # HS), the European Union (EU), Clipperton (CP, pending a decision) and every
+  # geo entity that is not current. An iso_code3 already set is kept, so this
+  # is safe to re-run.
   #
   # Saving through the model clears the GeoEntitySearch cache, so the API
   # serves the new codes straight away.
@@ -51,28 +54,31 @@ namespace :ephemeral do
       'VN' => 'VNM', 'VU' => 'VUT', 'WF' => 'WLF', 'WS' => 'WSM', 'YE' => 'YEM', 'YT' => 'MYT', 'ZA' => 'ZAF', 'ZM' => 'ZMB',
       'ZW' => 'ZWE'
     }.freeze
+    # Not officially assigned ISO 3166-1 codes; see above.
+    OTHER_ISO_CODE3_BY_ISO_CODE2 = { 'AN' => 'ANT', 'KV' => 'XKX' }.freeze
     # Default to a dry run so this one-off data fix can be verified safely
     # before it is allowed to persist changes in production-like environments.
     DRY_RUN = ENV.fetch('DRY_RUN', 'true')
     dry_run = ActiveModel::Type::Boolean.new.cast(DRY_RUN)
 
     ApplicationRecord.transaction do
-      geo_entities = GeoEntity.where.not(iso_code2: nil).order(:iso_code2)
+      geo_entities = GeoEntity.current.where.not(iso_code2: nil).order(:iso_code2)
 
       geo_entities.each do |geo_entity|
-        iso_code3 = ISO_CODE3_BY_ISO_CODE2[geo_entity.iso_code2]
+        iso_code3 = ISO_CODE3_BY_ISO_CODE2[geo_entity.iso_code2] ||
+          OTHER_ISO_CODE3_BY_ISO_CODE2[geo_entity.iso_code2]
 
         if iso_code3.nil?
-          puts "Skipped #{geo_entity.iso_code2} #{geo_entity.name_en}: not an ISO 3166-1 code" if geo_entity.iso_code3.nil?
+          puts "Skipped #{geo_entity.iso_code2} #{geo_entity.name_en}: no iso_code3 to give it" if geo_entity.iso_code3.nil?
         elsif geo_entity.iso_code3.nil?
           geo_entity.update!(iso_code3: iso_code3)
         elsif geo_entity.iso_code3 != iso_code3
-          puts "Kept #{geo_entity.iso_code2} #{geo_entity.name_en}: has #{geo_entity.iso_code3}, ISO says #{iso_code3}"
+          puts "Kept #{geo_entity.iso_code2} #{geo_entity.name_en}: has #{geo_entity.iso_code3}, expected #{iso_code3}"
         end
       end
 
       filled = geo_entities.where.not(iso_code3: nil).count
-      puts "#{filled} of #{geo_entities.count} geo entities with an iso_code2 now have an iso_code3"
+      puts "#{filled} of #{geo_entities.count} current geo entities with an iso_code2 now have an iso_code3"
 
       # Use an explicit rollback instead of a generic error so the task keeps the
       # transaction behavior intentional and predictable for dry-run verification.
