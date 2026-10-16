@@ -29,7 +29,7 @@ namespace :import do
         now()::date AS created_at,
         now()::date AS created_at
       FROM (
-        SELECT DISTINCT full_hybrid_name
+        SELECT DISTINCT public.squish(full_hybrid_name)
         FROM #{TMP_TABLE}
 
         EXCEPT
@@ -38,28 +38,30 @@ namespace :import do
         FROM taxon_names
       ) AS subquery;
 
-      INSERT INTO taxon_concepts (full_name,
+      INSERT INTO taxon_concepts (
+        full_name,
         rank_id,
         taxon_name_id,
         legacy_trade_code,
         taxonomy_id,
         name_status,
         created_at,
-        updated_at)
+        updated_at
+      )
       SELECT
         subquery.*,
         now()::date AS created_at,
         now()::date AS updated_at
       FROM (
         SELECT
-          full_hybrid_name,
+          public.squish(full_hybrid_name),
           r.id as rank_id,
           tn.id as taxon_names_id,
           legacy_cites_taxon_code as legacy_trade_code,
           #{taxonomy_id}, 'H'
         FROM #{TMP_TABLE}
         INNER JOIN ranks r ON hybrid_rank = r.name
-        INNER JOIN taxon_names tn ON full_hybrid_name = tn.scientific_name
+        INNER JOIN taxon_names tn ON public.squish(full_hybrid_name) = public.squish(tn.scientific_name)
 
         EXCEPT
 
@@ -72,12 +74,13 @@ namespace :import do
 
       ) AS subquery;
 
-      INSERT INTO taxon_relationships
-        (taxon_concept_id,
+      INSERT INTO taxon_relationships(
+        taxon_concept_id,
         other_taxon_concept_id,
         taxon_relationship_type_id,
         created_at,
-        updated_at)
+        updated_at
+      )
       SELECT
         subquery.*,
         now()::date AS created_at,
@@ -91,17 +94,21 @@ namespace :import do
         INNER JOIN taxon_concepts
         ON species_plus_id = taxon_concepts.id
         LEFT JOIN taxon_concepts other_taxon_concepts
-        ON full_hybrid_name = other_taxon_concepts.full_name
+          ON public.squish(full_hybrid_name) = other_taxon_concepts.full_name
 
         EXCEPT
 
-        SELECT taxon_concept_id, other_taxon_concept_id,
+        SELECT
+          taxon_concept_id,
+          other_taxon_concept_id,
           taxon_relationship_type_id
         FROM taxon_relationships
         WHERE taxon_relationship_type_id = #{taxon_relationship_type_id}
       ) AS subquery;
       SQL
+
       ApplicationRecord.connection.execute(sql)
+
       puts "There are #{TaxonConcept.where(
         name_status: "H",
         taxonomy_id: taxonomy_id

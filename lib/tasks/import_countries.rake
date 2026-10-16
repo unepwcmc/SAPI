@@ -18,17 +18,17 @@ namespace :import do
       import_helper.copy_data(file, TMP_TABLE)
       sql = <<-SQL.squish
           INSERT INTO geo_entities(name_en, iso_code2, geo_entity_type_id, legacy_type, created_at, updated_at, long_name, is_current)
-          SELECT DISTINCT BTRIM(TMP.name), BTRIM(TMP.iso2), geo_entity_types.id, UPPER(BTRIM(geo_entity_type)),
-          current_date, current_date, INITCAP(BTRIM(TMP.long_name)),
+          SELECT DISTINCT public.squish(TMP.name), public.squish(TMP.iso2), geo_entity_types.id, UPPER(public.squish(geo_entity_type)),
+          current_date, current_date, INITCAP(public.squish(TMP.long_name)),
           CASE
-            WHEN UPPER(BTRIM(current_name)) = 'Y' THEN TRUE
+            WHEN UPPER(public.squish(current_name)) = 'Y' THEN TRUE
             ELSE FALSE
           END
           FROM #{TMP_TABLE} AS TMP
-          INNER JOIN geo_entity_types ON geo_entity_types.name = UPPER(BTRIM(geo_entity_type))
+          INNER JOIN geo_entity_types ON geo_entity_types.name = UPPER(public.squish(geo_entity_type))
           WHERE NOT EXISTS (
             SELECT * FROM geo_entities
-            WHERE UPPER(geo_entities.iso_code2) = UPPER(BTRIM(TMP.iso2)) AND geo_entities.legacy_type = UPPER(BTRIM(geo_entity_type))
+            WHERE UPPER(geo_entities.iso_code2) = UPPER(public.squish(TMP.iso2)) AND geo_entities.legacy_type = UPPER(public.squish(geo_entity_type))
           )
       SQL
       ApplicationRecord.connection.execute(sql)
@@ -75,8 +75,8 @@ def link_countries
       geo_entity_types."name" = '#{GeoEntityType::CITES_REGION}' AND
       geo_entities."name_en" LIKE #{TMP_TABLE}.cites_region||'%' AND
       geo_relationship_types."name" = '#{GeoRelationshipType::CONTAINS}' AND
-      countries.iso_code2 = UPPER(BTRIM(#{TMP_TABLE}.iso2)) AND
-      UPPER(BTRIM(countries.legacy_type)) = '#{GeoEntityType::COUNTRY}' AND
+      countries.iso_code2 = UPPER(public.squish(#{TMP_TABLE}.iso2)) AND
+      UPPER(public.squish(countries.legacy_type)) = '#{GeoEntityType::COUNTRY}' AND
       NOT EXISTS (
         SELECT *
         FROM geo_relationships
@@ -104,10 +104,10 @@ def link_countries
     WHERE
       geo_entity_types.id = geo_entities.geo_entity_type_id AND
       geo_entity_types."name" = '#{GeoEntityType::COUNTRY}' AND
-      UPPER(geo_entities."iso_code2") = UPPER(BTRIM(#{TMP_TABLE}.parent_iso_code2)) AND
+      UPPER(geo_entities."iso_code2") = UPPER(public.squish(#{TMP_TABLE}.parent_iso_code2)) AND
       geo_relationship_types."name" = '#{GeoRelationshipType::CONTAINS}' AND
-      territories.iso_code2 = UPPER(BTRIM(#{TMP_TABLE}.iso2)) AND
-      UPPER(BTRIM(territories.legacy_type)) = '#{GeoEntityType::TERRITORY}' AND
+      territories.iso_code2 = UPPER(public.squish(#{TMP_TABLE}.iso2)) AND
+      UPPER(public.squish(territories.legacy_type)) = '#{GeoEntityType::TERRITORY}' AND
       NOT EXISTS (
         SELECT *
         FROM geo_relationships

@@ -22,7 +22,12 @@ namespace :import do
           INSERT INTO common_names(name, language_id, created_at, updated_at)
           SELECT subquery.*, NOW(), NOW()
           FROM (
-            SELECT DISTINCT ON( BTRIM(UPPER(#{TMP_TABLE}.name)), languages.id) #{TMP_TABLE}.name,
+            SELECT
+              DISTINCT ON(
+                public.squish(UPPER(#{TMP_TABLE}.name)),
+                languages.id
+              )
+              public.squish(#{TMP_TABLE}.name),
               languages.id
             FROM #{TMP_TABLE}
             INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3)
@@ -45,9 +50,9 @@ namespace :import do
             FROM (
               SELECT DISTINCT taxon_concepts.id, common_names.id
               FROM #{TMP_TABLE}
-              INNER JOIN common_names ON UPPER(BTRIM(#{TMP_TABLE}.name)) = UPPER(common_names.name)
+              INNER JOIN common_names ON UPPER(public.squish(#{TMP_TABLE}.name)) = UPPER(common_names.name)
               INNER JOIN languages ON UPPER(#{TMP_TABLE}.language) = UPPER(languages.iso_code3)
-              LEFT JOIN ranks ON UPPER(BTRIM(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
+              LEFT JOIN ranks ON UPPER(public.squish(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
               LEFT JOIN taxon_concepts ON taxon_concepts.id = #{TMP_TABLE}.legacy_id
                 AND taxon_concepts.rank_id = ranks.id
               LEFT JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id

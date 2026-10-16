@@ -27,7 +27,7 @@ namespace :import do
         SELECT distributions.id, "references".id
           FROM #{TMP_TABLE}
           INNER JOIN ranks
-            ON UPPER(BTRIM(rank)) = UPPER(ranks.name)
+            ON UPPER(public.squish(rank)) = UPPER(ranks.name)
           INNER JOIN taxon_concepts
             ON #{TMP_TABLE}.taxon_legacy_id = taxon_concepts.legacy_id
               AND taxon_concepts.legacy_type = '#{kingdom}'::VARCHAR

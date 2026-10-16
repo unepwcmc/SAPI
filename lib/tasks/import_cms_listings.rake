@@ -78,8 +78,8 @@ namespace :import do
             CASE
               WHEN (UPPER(TMP.appendix) = 'DELI' OR
                 UPPER(TMP.appendix) = 'DELII') AND TMP.is_current = 't'::BOOLEAN THEN NULL
-              WHEN UPPER(BTRIM(TMP.appendix)) like '%II%' THEN #{appendix_2.id}
-              WHEN UPPER(BTRIM(TMP.appendix)) like '%I%' THEN #{appendix_1.id}
+              WHEN UPPER(public.squish(TMP.appendix)) like '%II%' THEN #{appendix_2.id}
+              WHEN UPPER(public.squish(TMP.appendix)) like '%I%' THEN #{appendix_1.id}
               ELSE NULL
             END,
             CASE
@@ -142,7 +142,7 @@ namespace :import do
             NOW(), NOW()
             FROM cms_listings_import_per_taxon_exclusion
             INNER JOIN ranks exclusion_ranks
-              ON BTRIM(LOWER(exclusion_ranks.name)) = BTRIM(LOWER(exclusion_rank))
+              ON public.squish(LOWER(exclusion_ranks.name)) = public.squish(LOWER(exclusion_rank))
             INNER JOIN taxon_concepts exclusion_taxon_concepts
               ON exclusion_taxon_concepts.legacy_id = exclusion_legacy_id::INTEGER
               AND exclusion_taxon_concepts.legacy_type = '#{kingdom}'
@@ -184,7 +184,7 @@ namespace :import do
           INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
           SELECT excluded_populations.id, geo_entities.id, 'f', NOW(), NOW()
           FROM excluded_populations
-          INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(excluded_populations.iso_code2)) AND geo_entities.is_current = 't'
+          INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(public.squish(excluded_populations.iso_code2)) AND geo_entities.is_current = 't'
         SQL
 
         puts 'INSERTING population exceptions (listing distributions)'
@@ -199,7 +199,7 @@ namespace :import do
           INSERT INTO listing_distributions (listing_change_id, geo_entity_id, is_party, created_at, updated_at)
           SELECT listed_populations.id, geo_entities.id, 'f', NOW(), NOW()
           FROM listed_populations
-          INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(listed_populations.iso_code2)) AND geo_entities.is_current = 't'
+          INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(public.squish(listed_populations.iso_code2)) AND geo_entities.is_current = 't'
         SQL
 
         puts 'INSERTING listed populations (listing distributions)'
@@ -207,12 +207,12 @@ namespace :import do
 
         sql = <<-SQL.squish
           INSERT INTO instruments(name, designation_id, created_at, updated_at)
-          SELECT DISTINCT BTRIM(#{TMP_TABLE}.designation), #{designation.id},
+          SELECT DISTINCT public.squish(#{TMP_TABLE}.designation), #{designation.id},
             NOW(), NOW()
           FROM #{TMP_TABLE}
-          WHERE BTRIM(#{TMP_TABLE}.designation) <> 'CMS' AND NOT EXISTS (
+          WHERE public.squish(#{TMP_TABLE}.designation) <> 'CMS' AND NOT EXISTS (
             SELECT * FROM instruments
-            WHERE UPPER(name) = BTRIM(UPPER(#{TMP_TABLE}.designation))
+            WHERE UPPER(name) = public.squish(UPPER(#{TMP_TABLE}.designation))
           )
         SQL
 
@@ -227,7 +227,7 @@ namespace :import do
           INNER JOIN taxon_concepts t ON t.legacy_id = #{TMP_TABLE}.legacy_id
             AND t.legacy_type = '#{kingdom}'
             AND t.taxonomy_id = #{taxonomy.id}
-          INNER JOIN instruments i ON UPPER(i.name) = BTRIM(UPPER(#{TMP_TABLE}.designation))
+          INNER JOIN instruments i ON UPPER(i.name) = public.squish(UPPER(#{TMP_TABLE}.designation))
           WHERE #{TMP_TABLE}.appendix NOT IN ('I', 'II') AND
             NOT EXISTS(
               SELECT * FROM taxon_instruments ti

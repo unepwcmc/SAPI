@@ -20,7 +20,7 @@ namespace :import do
         INSERT INTO annotations (symbol, parent_symbol, event_id, full_note_en, created_at, updated_at)
         SELECT subquery.*, NOW(), NOW()
         FROM (
-          SELECT BTRIM(symbol), BTRIM(events.name), events.id, BTRIM(full_note_en)
+          SELECT public.squish(symbol), public.squish(events.name), events.id, public.squish(full_note_en)
           FROM #{TMP_TABLE}
           INNER JOIN events ON events.legacy_id = #{TMP_TABLE}.event_legacy_id
             AND events.designation_id = #{designation_id}
@@ -68,7 +68,7 @@ namespace :import do
           AND designations.name = 'CITES'
         JOIN annotations
         ON events.id = annotations.event_id
-          AND BTRIM(translations.symbol) = BTRIM(annotations.symbol)
+          AND public.squish(translations.symbol) = public.squish(annotations.symbol)
       )
       UPDATE annotations
       SET full_note_es = ta.full_note_es, full_note_fr = ta.full_note_fr

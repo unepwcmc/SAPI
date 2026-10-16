@@ -194,8 +194,18 @@ class TaxonConcept < ApplicationRecord
     if: lambda { |tc| tc.name_status == 'H' }
   validates :taxon_name_id, presence: true,
     unless: lambda { |tc| tc.taxon_name.try(:valid?) }
-  validates :full_name, uniqueness: { scope: [ :taxonomy_id, :author_year ] }
+
+  normalizes :full_name, :author_year, with: ->(value) { value.squish }
+
+  validates :full_name,
+    format: {
+      with: TRIMMED_REGEX,
+      message: MESSAGE_SHOULD_BE_TRIMMED
+    }
+
   validate :full_name_cannot_be_changed, on: :update
+  validates :full_name, uniqueness: { scope: [ :taxonomy_id, :author_year ] }
+
   validates :taxonomic_position,
     presence: true,
     format: { with: /\A\d(\.\d*)*\z/, message: 'Use prefix notation, e.g. 1.2' },
@@ -207,7 +217,13 @@ class TaxonConcept < ApplicationRecord
   validates :author_year,
     format: {
       with: PDF_SAFE_REGEX,
-      message: 'should only contain PDF-safe characters'
+      message: MESSAGE_SHOULD_BE_PDF_SAFE
+    }
+
+  validates :author_year,
+    format: {
+      with: TRIMMED_REGEX,
+      message: MESSAGE_SHOULD_BE_TRIMMED
     }
 
   before_validation :ensure_taxonomic_position
@@ -463,8 +479,10 @@ protected
         TaxonName.sanitize_scientific_name(@scientific_name || scientific_name)
       else
         @scientific_name || scientific_name
-      end
+      end&.squish
+
     tn = TaxonName.where([ 'UPPER(scientific_name) = UPPER(?)', sanitized_scientific_name ]).first
+
     if tn
       self.taxon_name = tn
       self.taxon_name_id = tn.id
@@ -563,7 +581,7 @@ private
     end
 
     # strip redundant whitespace between words
-    some_full_name = some_full_name.split(/\s/).join(' ').capitalize
+    some_full_name = some_full_name.squish.capitalize
   end
 
   def taxonomy_can_be_changed

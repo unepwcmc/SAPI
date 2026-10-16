@@ -15,8 +15,11 @@ class TaxonName < ApplicationRecord
 
   validates :scientific_name, presence: true
 
+  normalizes :scientific_name, with: ->(value) { value.squish }
+
   def self.sanitize_scientific_name(some_scientific_name)
-    last = some_scientific_name && some_scientific_name.split(/\s/).last
+    last = some_scientific_name && some_scientific_name.split(/[[:space:]]/).last
+
     (last && last.capitalize) || nil
   end
 end

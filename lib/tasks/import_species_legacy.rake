@@ -38,18 +38,18 @@ def import_data_with_legacy_for(kingdom, rank, synonyms = nil)
 
   sql = <<-SQL.squish
     INSERT INTO taxon_names(scientific_name, created_at, updated_at)
-      SELECT DISTINCT INITCAP(BTRIM(#{TMP_TABLE}.Name)), current_date, current_date
+      SELECT DISTINCT INITCAP(public.squish(#{TMP_TABLE}.Name)), current_date, current_date
       FROM #{TMP_TABLE}
       WHERE NOT EXISTS (
         SELECT scientific_name
         FROM taxon_names
-        WHERE UPPER(BTRIM(scientific_name)) = UPPER(BTRIM(#{TMP_TABLE}.Name))
+        WHERE UPPER(public.squish(scientific_name)) = UPPER(public.squish(#{TMP_TABLE}.Name))
       )
-      AND UPPER(BTRIM(#{TMP_TABLE}.Name)) <> 'NULL'
-      AND UPPER(BTRIM(#{TMP_TABLE}.Rank)) = UPPER('#{rank}')
+      AND UPPER(public.squish(#{TMP_TABLE}.Name)) <> 'NULL'
+      AND UPPER(public.squish(#{TMP_TABLE}.Rank)) = UPPER('#{rank}')
       AND (
-        BTRIM(#{TMP_TABLE}.Taxonomy) iLIKE '%CITES%'
-        OR BTRIM(#{TMP_TABLE}.Taxonomy) iLIKE '%CMS%'
+        public.squish(#{TMP_TABLE}.Taxonomy) iLIKE '%CITES%'
+        OR public.squish(#{TMP_TABLE}.Taxonomy) iLIKE '%CMS%'
       )
   SQL
   ApplicationRecord.connection.execute(sql)
@@ -71,26 +71,26 @@ def import_data_with_legacy_for(kingdom, rank, synonyms = nil)
           #{rank_id} AS rank_id,
           #{taxonomy.id} AS taxonomy_id,
           parent_taxon_concepts.id AS parent_id,
-          parent_taxon_concepts.full_name || ' ' || tmp.name AS full_name,
+          parent_taxon_concepts.full_name || ' ' || public.squish(tmp.name) AS full_name,
           CASE
-            WHEN UPPER(BTRIM(tmp.author)) = 'NULL' THEN NULL
-            ELSE BTRIM(tmp.author)
+            WHEN UPPER(public.squish(tmp.author)) = 'NULL' THEN NULL
+            ELSE public.squish(tmp.author)
           END AS author_year,
           tmp.legacy_id,
           '#{kingdom}' AS legacy_type,
           tmp.notes,
-          UPPER(BTRIM(tmp.status)) AS name_status,
+          UPPER(public.squish(tmp.status)) AS name_status,
           hstore('accepted_legacy_id', #{synonyms ? 'accepted_legacy_id::VARCHAR' : 'NULL'}) ||
-          hstore('accepted_rank', #{synonyms ? 'UPPER(BTRIM(accepted_rank))' : 'NULL'}) AS data,
+          hstore('accepted_rank', #{synonyms ? 'UPPER(public.squish(accepted_rank))' : 'NULL'}) AS data,
           current_date, current_date
         FROM #{TMP_TABLE} tmp
         INNER JOIN taxon_names
-          ON UPPER(taxon_names.scientific_name) = UPPER(BTRIM(tmp.name))
+          ON UPPER(taxon_names.scientific_name) = UPPER(public.squish(tmp.name))
         LEFT JOIN taxon_names AS tn
-          ON UPPER(tn.scientific_name) = UPPER(BTRIM(tmp.name))
+          ON UPPER(tn.scientific_name) = UPPER(public.squish(tmp.name))
           AND tn.id < taxon_names.id
         LEFT JOIN ranks parent_ranks
-          ON UPPER(BTRIM(parent_ranks.name)) = UPPER(BTRIM(tmp.parent_rank))
+          ON UPPER(public.squish(parent_ranks.name)) = UPPER(public.squish(tmp.parent_rank))
         LEFT JOIN taxon_concepts parent_taxon_concepts
           ON (
             parent_taxon_concepts.legacy_id = tmp.parent_legacy_id
@@ -99,8 +99,8 @@ def import_data_with_legacy_for(kingdom, rank, synonyms = nil)
             AND parent_taxon_concepts.taxonomy_id = #{taxonomy.id}
           )
         WHERE
-        UPPER(BTRIM(tmp.rank)) = UPPER('#{rank}')
-        AND UPPER(BTRIM(tmp.taxonomy)) LIKE UPPER('%#{taxonomy.name}%')
+        UPPER(public.squish(tmp.rank)) = UPPER('#{rank}')
+        AND UPPER(public.squish(tmp.taxonomy)) LIKE UPPER('%#{taxonomy.name}%')
         AND (
           parent_taxon_concepts.id IS NOT NULL AND parent_ranks.id IS NOT NULL
           OR tmp.parent_legacy_id IS NULL
@@ -130,7 +130,7 @@ def import_data_with_legacy_for(kingdom, rank, synonyms = nil)
             (taxon_concepts.data->'accepted_legacy_id')::INT IS NULL
             OR (
               (taxon_concepts.data->'accepted_legacy_id')::INT = (to_be_inserted.data->'accepted_legacy_id')::INT
-              AND UPPER(BTRIM(taxon_concepts.data->'accepted_rank')) = to_be_inserted.data->'accepted_rank'
+              AND UPPER(public.squish(taxon_concepts.data->'accepted_rank')) = to_be_inserted.data->'accepted_rank'
             )
           )
       RETURNING id;

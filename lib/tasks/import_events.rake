@@ -18,15 +18,15 @@ namespace :import do
         INSERT INTO "events" (legacy_id, designation_id, name, description, url, effective_at, type, subtype, created_at, updated_at)
         SELECT legacy_id, designations.id, #{TMP_TABLE}.name, description, url, effective_at,
           CASE
-            WHEN BTRIM(#{TMP_TABLE}.type) = 'Basic and amendments' THEN 'EuRegulation'
-            WHEN BTRIM(#{TMP_TABLE}.type) = 'Suspension' THEN 'EuSuspensionRegulation'
-            WHEN BTRIM(#{TMP_TABLE}.type) = 'CITES Suspension Notification' THEN 'CitesSuspensionNotification'
-            WHEN BTRIM(#{TMP_TABLE}.type) = 'CITES CoP' THEN 'CitesCop'
+            WHEN public.squish(#{TMP_TABLE}.type) = 'Basic and amendments' THEN 'EuRegulation'
+            WHEN public.squish(#{TMP_TABLE}.type) = 'Suspension' THEN 'EuSuspensionRegulation'
+            WHEN public.squish(#{TMP_TABLE}.type) = 'CITES Suspension Notification' THEN 'CitesSuspensionNotification'
+            WHEN public.squish(#{TMP_TABLE}.type) = 'CITES CoP' THEN 'CitesCop'
           END
           ,subtype
           ,current_date, current_date
           FROM #{TMP_TABLE}
-          INNER JOIN designations ON UPPER(designations.name) = UPPER(BTRIM(#{TMP_TABLE}.designation))
+          INNER JOIN designations ON UPPER(designations.name) = UPPER(public.squish(#{TMP_TABLE}.designation))
           WHERE #{TMP_TABLE}.name IS NOT NULL AND #{TMP_TABLE}.name != 'NULL' AND NOT EXISTS (
             SELECT name
             FROM "events"

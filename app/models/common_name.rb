@@ -31,6 +31,14 @@ class CommonName < ApplicationRecord
 
   has_many :taxon_commons, dependent: :destroy
 
+  normalizes :name, with: ->(value) { value.squish }
+
+  validates :name,
+    format: {
+      with: TRIMMED_REGEX,
+      message: MESSAGE_SHOULD_BE_TRIMMED
+    }
+
   validates :name, presence: true,
     uniqueness: { scope: :language_id }
 

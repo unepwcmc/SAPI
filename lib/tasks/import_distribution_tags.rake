@@ -51,7 +51,7 @@ namespace :import do
           INSERT INTO preset_tags(model, name, created_at, updated_at)
           SELECT subquery.*, NOW(), NOW()
           FROM (
-            SELECT DISTINCT 'Distribution', BTRIM(tmp.tag)
+            SELECT DISTINCT 'Distribution', public.squish(tmp.tag)
             FROM #{TMP_TABLE}, (
               SELECT DISTINCT regexp_split_to_table(
                 #{TMP_TABLE}.tags, E','
@@ -90,9 +90,9 @@ namespace :import do
               WHERE
                 #{
                   if taxonomy_name == Taxonomy::CITES_EU
-                    "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
+                    "( UPPER(public.squish(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(public.squish(#{TMP_TABLE}.designation)) like '%EU%')"
                   else
-                    "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
+                    "UPPER(public.squish(#{TMP_TABLE}.designation)) like '%CMS%'"
                   end
                 }
             )
@@ -101,15 +101,15 @@ namespace :import do
             FROM (
               SELECT tags.id, distributions.id, 'Distribution', 'tags'
               FROM tmp
-              INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(tmp.rank))
-              INNER JOIN geo_entity_types ON UPPER(geo_entity_types.name) = UPPER(BTRIM(tmp.geo_entity_type))
+              INNER JOIN ranks ON UPPER(ranks.name) = UPPER(public.squish(tmp.rank))
+              INNER JOIN geo_entity_types ON UPPER(geo_entity_types.name) = UPPER(public.squish(tmp.geo_entity_type))
               INNER JOIN taxon_concepts ON taxon_concepts.#{tc_id} = tmp.#{id_type} AND
                 #{has_legacy ? "taxon_concepts.legacy_type = '#{kingdom}' AND" : ''} taxon_concepts.rank_id = ranks.id
-              INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(BTRIM(tmp.iso_code2)) AND
+              INNER JOIN geo_entities ON UPPER(geo_entities.iso_code2) = UPPER(public.squish(tmp.iso_code2)) AND
                 geo_entities.geo_entity_type_id = geo_entity_types.id
               INNER JOIN distributions ON distributions.geo_entity_id = geo_entities.id AND
                 distributions.taxon_concept_id = taxon_concepts.id
-              INNER JOIN tags ON UPPER(tags.name) = UPPER(BTRIM(tmp.tag))
+              INNER JOIN tags ON UPPER(tags.name) = UPPER(public.squish(tmp.tag))
               INNER JOIN taxonomies ON taxonomies.id = taxon_concepts.taxonomy_id
               WHERE taxonomies.id = #{taxonomy.id}
 
@@ -146,7 +146,7 @@ namespace :import do
                   WHERE taggings.tag_id = tags.id
                     AND taggings.taggable_type = 'Distribution'
                 ) t
-                  ON UPPER(t.name) = UPPER(BTRIM(tmp.tag))
+                  ON UPPER(t.name) = UPPER(public.squish(tmp.tag))
                   AND d.id = t.taggable_id
                 WHERE t.id IS NULL
               SQL

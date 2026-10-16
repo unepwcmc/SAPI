@@ -48,7 +48,7 @@ namespace :import do
         SELECT taxon_concepts.id, "references".id, NOW(), NOW()
           FROM #{TMP_TABLE}
           INNER JOIN ranks
-            ON UPPER(BTRIM(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
+            ON UPPER(public.squish(#{TMP_TABLE}.rank)) = UPPER(ranks.name)
           INNER JOIN taxon_concepts
             ON #{TMP_TABLE}.taxon_legacy_id = taxon_concepts.legacy_id
               AND taxon_concepts.legacy_type = '#{kingdom}'::VARCHAR
@@ -84,9 +84,9 @@ namespace :import do
         is_cascaded
         FROM standard_references_per_exclusion
         INNER JOIN ranks
-          ON LOWER(ranks.name) = LOWER(BTRIM(rank))
+          ON LOWER(ranks.name) = LOWER(public.squish(rank))
         LEFT JOIN ranks exclusion_ranks
-          ON LOWER(exclusion_ranks.name) = LOWER(BTRIM(exclusion_rank))
+          ON LOWER(exclusion_ranks.name) = LOWER(public.squish(exclusion_rank))
         INNER JOIN taxon_concepts
           ON taxon_concepts.legacy_id = taxon_legacy_id
           AND taxon_concepts.legacy_type = standard_references_per_exclusion.legacy_type

@@ -58,7 +58,7 @@ namespace :import do
                   WHERE taxon_concept_id IN (
                     SELECT DISTINCT taxon_concepts.id
                     FROM #{TMP_TABLE}
-                    INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}.rank))
+                    INNER JOIN ranks ON UPPER(ranks.name) = UPPER(public.squish(#{TMP_TABLE}.rank))
                     INNER JOIN taxon_concepts
                       ON #{
                         if has_tc_id
@@ -102,8 +102,8 @@ namespace :import do
             FROM (
               SELECT DISTINCT taxon_concepts.id, geo_entities.id
               FROM #{TMP_TABLE}
-              INNER JOIN ranks ON UPPER(ranks.name) = UPPER(BTRIM(#{TMP_TABLE}.rank))
-              INNER JOIN geo_entities ON geo_entities.iso_code2 = #{TMP_TABLE}.iso2 AND UPPER(geo_entities.legacy_type) = UPPER(BTRIM(geo_entity_type))
+              INNER JOIN ranks ON UPPER(ranks.name) = UPPER(public.squish(#{TMP_TABLE}.rank))
+              INNER JOIN geo_entities ON geo_entities.iso_code2 = #{TMP_TABLE}.iso2 AND UPPER(geo_entities.legacy_type) = UPPER(public.squish(geo_entity_type))
               #{if has_tc_id
                   "INNER JOIN taxon_concepts ON taxon_concepts.id = #{TMP_TABLE}.taxon_concept_id"
                 else
@@ -114,9 +114,9 @@ namespace :import do
               WHERE taxon_concepts.id IS NOT NULL AND geo_entities.id IS NOT NULL
                 AND
                   #{if taxonomy_name == Taxonomy::CITES_EU
-                      "( UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%EU%')"
+                      "( UPPER(public.squish(#{TMP_TABLE}.designation)) like '%CITES%' OR UPPER(public.squish(#{TMP_TABLE}.designation)) like '%EU%')"
                     else
-                      "UPPER(BTRIM(#{TMP_TABLE}.designation)) like '%CMS%'"
+                      "UPPER(public.squish(#{TMP_TABLE}.designation)) like '%CMS%'"
                     end}
                 AND taxonomies.id = #{taxonomy.id}
 

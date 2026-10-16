@@ -16,7 +16,7 @@ namespace :import do
 
         sql = <<-SQL.squish
           UPDATE taxon_concepts tc
-          SET author_year = t.author, updated_at = NOW()
+          SET author_year = public.squish(t.author), updated_at = NOW()
           FROM #{TMP_TABLE} t
           WHERE t.legacy_id = tc.id
         SQL
