@@ -120,7 +120,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           subspecies_info DESC
         SQL
       )
-    ).all
+    ).includes([ :geo_entity, :sources ]).all
   end
 
   def cites_suspensions
@@ -184,7 +184,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           subspecies_info DESC
         SQL
       )
-    ).all
+    ).includes([ :geo_entity, :sources ]).all
   end
 
   def eu_decisions

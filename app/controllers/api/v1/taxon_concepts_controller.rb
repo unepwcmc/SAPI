@@ -31,9 +31,8 @@ class Api::V1::TaxonConceptsController < ApplicationController
       TaxonConcept.includes(
         common_names: :language,
         distributions: :geo_entity,
-        quotas: [ :geo_entity, :sources ],
-        cites_suspensions: [ :geo_entity, :sources ],
         cites_processes: :geo_entity
+        # quotas and sources have custom fetching in the serializer
       ).includes(:taxonomy).find(params[:id])
 
     serializer =
