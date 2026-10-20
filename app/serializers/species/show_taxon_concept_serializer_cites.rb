@@ -120,7 +120,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           subspecies_info DESC
         SQL
       )
-    ).includes([ :geo_entity, :sources ]).all
+    )
   end
 
   def cites_suspensions
@@ -184,7 +184,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           subspecies_info DESC
         SQL
       )
-    ).includes([ :geo_entity, :sources ]).all
+    )
   end
 
   def eu_decisions
@@ -227,7 +227,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           subspecies_info DESC
         SQL
       )
-    ).all
+    )
   end
 
   def eu_decision_select_attrs
@@ -338,7 +338,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           party_full_name_en ASC
         SQL
       )
-    ).all
+    )
   end
 
   def eu_listing_changes
@@ -411,7 +411,7 @@ class Species::ShowTaxonConceptSerializerCites < Species::ShowTaxonConceptSerial
           party_full_name_en ASC
         SQL
       )
-    ).all
+    )
   end
 
   def cites_listing
