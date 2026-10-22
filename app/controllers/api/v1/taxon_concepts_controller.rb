@@ -31,9 +31,9 @@ class Api::V1::TaxonConceptsController < ApplicationController
       TaxonConcept.includes(
         common_names: :language,
         distributions: :geo_entity,
-        quotas: [ :geo_entity, :sources ],
-        cites_suspensions: [ :geo_entity, :sources ],
-        cites_processes: :geo_entity
+        # CITES processes, quotas and suspensions have custom fetchers in the
+        # Species::ShowTaxonConceptSerializerCites serializer, so there is no
+        # benefit including them here.
       ).includes(:taxonomy).find(params[:id])
 
     serializer =

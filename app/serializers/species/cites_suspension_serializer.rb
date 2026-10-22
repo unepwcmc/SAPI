@@ -12,6 +12,10 @@ class Species::CitesSuspensionSerializer < ActiveModel::Serializer
     object['geo_entity_en']
   end
 
+  def source_ids
+    object['source_ids']
+  end
+
   def start_notification
     @options[:trimmed] == 'true' ? object['start_notification'].except('date') : object['start_notification']
   end

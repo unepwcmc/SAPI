@@ -6,6 +6,10 @@ class Species::QuotaSerializer < ActiveModel::Serializer
     :unit,
     :source_ids
 
+  def source_ids
+    object['source_ids']
+  end
+
   def include_nomenclature_note_fr?
     return true unless @options[:trimmed]
 
