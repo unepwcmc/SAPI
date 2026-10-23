@@ -122,13 +122,16 @@ class Trade::Grouping::Compliance < Trade::Grouping::Base
 
   def filter(data, params)
     if params[:filter].present?
+      # The filter is user input: escape it so it is matched literally rather
+      # than compiled as a regexp (ReDoS, and Onigmo memory-safety bugs).
+      filter_regexp = /#{Regexp.escape(params[:filter].to_s)}/i
 
       if params[:group_by].include?('commodity')
-        data = data[params[:year]].delete_if { |d| d['term'].index(/#{params[:filter]}/i).nil? }
+        data = data[params[:year]].delete_if { |d| d['term'].index(filter_regexp).nil? }
       elsif params[:group_by].include?('species')
-        data = data[params[:year]].delete_if { |d| d['taxon_name'].index(/#{params[:filter]}/i).nil? }
+        data = data[params[:year]].delete_if { |d| d['taxon_name'].index(filter_regexp).nil? }
       elsif params[:group_by].include?('exporting')
-        data = data[params[:year]].delete_if { |d| d[:country].index(/#{params[:filter]}/i).nil? }
+        data = data[params[:year]].delete_if { |d| d[:country].index(filter_regexp).nil? }
       end
 
     elsif params[:id].present?
