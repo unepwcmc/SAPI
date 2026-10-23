@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-ruby '3.4.9'
+ruby '3.4.12'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '8.1.3'
+gem 'rails', '8.1.3.1'
 
 # Configure Cross-Origin resource sharing
 gem 'rack-cors'
@@ -54,20 +54,21 @@ gem 'wicked', '2.0.0'
 
 gem 'groupdate', '~> 6.8.0'
 
-gem 'rubyzip', '~> 3.2.2'
+gem 'rubyzip', '>= 3.4.0'
 gem 'responders', '~> 3.2.0' # https://guides.rubyonrails.org/v4.2/upgrading_ruby_on_rails.html#responders
 
 gem 'sidekiq', '< 9'
 gem 'sidekiq-status', '~> 4.0'
 gem 'sidekiq-unique-jobs', '~> 8', '>= 8.1.0'
-gem 'sidekiq-cron', '~> 2.3.1'
+gem 'sidekiq-cron', '>= 2.4.0'
 
 gem 'httparty', '~> 0.24.2'
 
 gem 'kaminari', '~> 1.2', '>= 1.2.2' # TODO: Suggest migrate to pagy gem.
 
 gem 'acts-as-taggable-on', '~> 13.0'
-gem 'carrierwave', '~> 3.0', '>= 3.0.5'
+gem 'carrierwave', '~> 3.1.4'
+gem "ruby-vips", "~> 2.0"
 
 # PDF
 gem 'prawn', '0.13.2'
